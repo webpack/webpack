@@ -1,0 +1,29 @@
+<html>
+<head>
+	<title>webpack tests</title>
+	<script>
+		window.test = function(ok, message) {
+			document.write("<p>" + (ok?"OK: ":"FAILED: ")+message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</p>");
+		};
+		window.onerror = function(error) {
+			window.test(false, "Shouldn't throw error: " + error);
+		};
+		window.writing = true;
+	</script>
+	<script src="js/libary1.js"></script>
+	<script src="js/libary2.js"></script>
+	<script src="js/web.js"></script>
+	<script>
+		window.test = function(ok, message) {
+			var p = document.createElement("p");
+			p.appendChild(document.createTextNode((ok?"OK: ":"FAILED: ")+message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")));
+			document.body.appendChild(p);
+		};
+		window.writing = false;
+	</script>
+</head>
+
+<body>
+
+</body>
+</html>

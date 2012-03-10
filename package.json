@@ -1,0 +1,20 @@
+{
+	"name": "webpack",
+	"version": "0.1.0",
+	"author": "Tobias Koppers @sokra",
+	"description": "Bundle CommonJS modules into single script or multiple scripts for web browser",
+	"dependencies": {
+		"esprima": "0.9.8",
+		"optimist": "0.2.x",
+		"uglify-js": "1.2.5"
+	},
+	"devDependencies": {
+		"vows": "*"
+	},
+	"engines": {
+		"node":  ">=0.1.30"
+	},
+	"main": "lib/webpack.js",
+	"bin": "./bin/webpack.js",
+	"licence": "MIT"
+}
