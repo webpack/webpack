@@ -127,6 +127,7 @@ See [details](modules-webpack/tree/master/examples/require.context) for complete
 ### `require`-function
 
 As dependencies are resolved before running:
+
 * `require` should not be overwritten
 * `require` should not be called indirect as `var r = require; r("./a");`. Use `require.context`?
 * `require.ensure` should not be overwritten or called indirect
@@ -137,7 +138,7 @@ As dependencies are resolved before running:
 ### node.js specific modules
 
 As node.js specific modules like `fs` will not work in browser they are not included and cause an error.
-You should replace them be own modules if your use them.
+You should replace them by own modules if you want to use them.
 
 ```
 web_modules
@@ -204,6 +205,7 @@ minimize outputs with uglify-js
 add absolute filenames of input files as comments
 
 #### `callback`
+
 `function(err, source / stats)`
 `source` if `options.output` is not set
 else `stats` as json see [example](/modules-webpack/tree/master/examples/code-splitting)
