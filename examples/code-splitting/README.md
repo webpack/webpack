@@ -52,11 +52,11 @@ require.ensure(["c"], function(require) {
 /******/({a:".output.js",b:"webpackJsonp",c:"",
 /******/0: function(module, exports, require) {
 
-var a = require(1);
-var b = require(2);
+var a = require(/* a */1);
+var b = require(/* b */4);
 require.ensure(1, function(require) {
-    require(2).xyz();
-    var d = require(3);
+    require(/* b */4).xyz();
+    var d = require(/* d */2);
 });
 
 /******/},
@@ -67,7 +67,7 @@ require.ensure(1, function(require) {
 
 /******/},
 /******/
-/******/2: function(module, exports, require) {
+/******/4: function(module, exports, require) {
 
 // module b
 
@@ -111,7 +111,7 @@ webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
   modulesIncludingDuplicates: 5,
   modulesPerChunk: 2.5,
   modulesFirstChunk: 3,
-  fileSizes: { 'output.js': 1948, '1.output.js': 200 } }
+  fileSizes: { 'output.js': 1935, '1.output.js': 200 } }
 ```
 
 ## Minimized (uglify-js, no zip)

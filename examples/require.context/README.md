@@ -45,7 +45,7 @@ module.exports = function() {
 /******/0: function(module, exports, require) {
 
 function getTemplate(templateName) {
-	return require(1)("./"+templateName);
+	return require(/* ./templates */1)("./"+templateName);
 }
 console.log(getTemplate("a"));
 console.log(getTemplate("b"));
@@ -55,7 +55,7 @@ console.log(getTemplate("b"));
 /******/1: function(module, exports, require) {
 
 /***/module.exports = function(name) {
-/***/	var map = {"./b.js":3,"./a.js":2,"./c.js":4};
+/***/	var map = {"./a.js":2,"./b.js":3,"./c.js":4};
 /***/	return require(map[name]||map[name+".web.js"]||map[name+".js"]);
 /***/};
 
@@ -98,7 +98,7 @@ module.exports = function() {
   modulesIncludingDuplicates: 5,
   modulesPerChunk: 5,
   modulesFirstChunk: 5,
-  fileSizes: { 'output.js': 1454 } }
+  fileSizes: { 'output.js': 1471 } }
 ```
 
 ## Minimized (uglify-js, no zip)

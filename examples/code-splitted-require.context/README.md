@@ -58,7 +58,7 @@ getTemplate("b", function(b) {
 
 function getTemplate(templateName, callback) {
 	require.ensure(1, function(require) {
-		callback(require(1)("./"+templateName));
+		callback(require(/* ../require.context/templates */1)("./"+templateName));
 	});
 }
 getTemplate("a", function(a) {
@@ -123,7 +123,7 @@ module.exports = function() {
   modulesIncludingDuplicates: 5,
   modulesPerChunk: 2.5,
   modulesFirstChunk: 1,
-  fileSizes: { 'output.js': 1855, '1.output.js': 729 } }
+  fileSizes: { 'output.js': 1889, '1.output.js': 729 } }
 ```
 
 ## Minimized (uglify-js, no zip)
