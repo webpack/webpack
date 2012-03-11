@@ -16,6 +16,15 @@ window.test(require("./singluar.js").value === 1, "sigular module loaded");
 require("./singluar.js").value = 2;
 window.test(require("./singluar").value === 2, "exported object is singluar");
 window.test(require("subfilemodule") === "subfilemodule", "Modules as single file should load");
+window.test(require.context("../templates")("./tmpl") === "test template", "Context should work");
+window.test(require.context("../templates")("./subdir/tmpl.js") === "subdir test template", "Context should work with subdirectories");
+var template = "tmpl";
+window.test(require("../templates/" + template) === "test template", "Automatical context should work");
+
+require.ensure([], function(require) {
+	var contextRequire = require.context(".");
+	window.test(contextRequire("./singluar").value === 2, "Context works in chunk");
+});
 
 require.ensure([], function(require) {
 	require("./acircular");

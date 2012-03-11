@@ -5,7 +5,7 @@ argv.shift();
 argv.shift();
 var extraArgs = argv.join(" ");
 
-cp.exec("node ../bin/webpack.js "+extraArgs+" example.js js/output.js", function (error, stdout, stderr) {
+cp.exec("node ../../bin/webpack.js "+extraArgs+" example.js js/output.js", function (error, stdout, stderr) {
 	console.log('stdout:\n' + stdout);
 	console.log('stderr:\n ' + stderr);
 	if (error !== null) {
