@@ -1,3 +1,7 @@
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
 var vows = require("vows");
 var assert = require("assert");
 var path = require("path");

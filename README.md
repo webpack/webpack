@@ -218,10 +218,12 @@ However `webpack` has big differences:
 `webpack` replaces module names and paths with numbers. `webmake` don't do that and do resolves requires on client-side.
 This design of `webmake` was intended to support variables as arguments to require calls.
 `webpack` resolves requires in compile time and have no resolve code on client side. This results in smaller bundles.
-Variables as argments will be handled different and with more limitations.
+Variables as argments will be handled different and with more limitations in `webpack`.
 
 Another limitation in `webmake` which are based on the previous one is that modules must be in the current package scope.
 In `webpack` this is not a restriction.
+
+There is no `require.context` in `webmake`. Therefore there is a forced include list in options which allows modules to be required even if the names were not available at compile time.
 
 The design of `webmake` causes all modules with the same name to overlap.
 This can be problematic if different submodules rely on specific versions of the same module.
@@ -232,10 +234,11 @@ But in `webpack` this can (currently) cause duplicate code if a module is used i
 I want to face this issue (TODO).
 
 `webmake` do (currently) not support Code Splitting.
+But medikoo said he works at some related feature.
 
 ## Tests
 
-You can run the unit tests which `node_modules/.bin/vows`.
+You can run the unit tests with `npm test`.
 
 You can run the browser tests:
 
@@ -256,4 +259,4 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 
 ## License
 
-MIT
+MIT (http://www.opensource.org/licenses/mit-license.php)

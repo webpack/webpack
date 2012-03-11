@@ -8,12 +8,19 @@
 		"optimist": "0.2.x",
 		"uglify-js": "1.2.5"
 	},
+	"licenses": [
+		{
+			"type": "MIT",
+			"url": "http://www.opensource.org/licenses/mit-license.php"
+		}
+	],
 	"devDependencies": {
 		"vows": "*"
 	},
 	"engines": {
 		"node":  ">=0.1.30"
 	},
+	"homepage": "http://github.com/sokra/modules-webpack",
 	"main": "lib/webpack.js",
 	"bin": "./bin/webpack.js",
 	"scripts": {

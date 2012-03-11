@@ -1,31 +1,35 @@
 #!/usr/bin/env node
 
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
 var path = require("path");
 var fs = require("fs");
 var argv = require("optimist")
 	.usage("Usage: $0 <input> <output>")
-	
+
 	.boolean("single")
 	.describe("single", "Disable Code Splitting")
 	.default("single", false)
-	
+
 	.boolean("min")
 	.describe("min", "Minimize it with uglifyjs")
 	.default("min", false)
-	
+
 	.boolean("filenames")
 	.describe("filenames", "Output Filenames Into File")
 	.default("filenames", false)
-	
+
 	.string("options")
 	.describe("options", "Options JSON File")
-	
+
 	.string("script-src-prefix")
 	.describe("script-src-prefix", "Path Prefix For JavaScript Loading")
-	
+
 	.string("libary")
 	.describe("libary", "Stores the exports into this variable")
-	
+
 	.demand(1)
 	.argv;
 
