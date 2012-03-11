@@ -25,24 +25,22 @@ module.exports = function() {
 # js/output.js
 
 ``` javascript
-/******/(function(document, undefined) {
-/******/	return function(modules) {
-/******/		var installedModules = {};
-/******/		function require(moduleId) {
-/******/			if(installedModules[moduleId])
-/******/				return installedModules[moduleId];
-/******/			var module = installedModules[moduleId] = {
-/******/				exports: {}
-/******/			};
-/******/			modules[moduleId](module, module.exports, require);
-/******/			return module.exports;
-/******/		}
-/******/		require.ensure = function(chunkId, callback) {
-/******/			callback(require);
+/******/(function(modules) {
+/******/	var installedModules = {};
+/******/	function require(moduleId) {
+/******/		if(installedModules[moduleId])
+/******/			return installedModules[moduleId].exports;
+/******/		var module = installedModules[moduleId] = {
+/******/			exports: {}
 /******/		};
-/******/		return require(0);
+/******/		modules[moduleId](module, module.exports, require);
+/******/		return module.exports;
 /******/	}
-/******/})(document)
+/******/	require.ensure = function(chunkId, callback) {
+/******/		callback(require);
+/******/	};
+/******/	return require(0);
+/******/})
 /******/({
 /******/0: function(module, exports, require) {
 
@@ -57,7 +55,7 @@ console.log(getTemplate("b"));
 /******/1: function(module, exports, require) {
 
 /***/module.exports = function(name) {
-/***/	var map = {"./b.js":3,"./c.js":4,"./a.js":2};
+/***/	var map = {"./b.js":3,"./a.js":2,"./c.js":4};
 /***/	return require(map[name]||map[name+".web.js"]||map[name+".js"]);
 /***/};
 
@@ -100,7 +98,7 @@ module.exports = function() {
   modulesIncludingDuplicates: 5,
   modulesPerChunk: 5,
   modulesFirstChunk: 5,
-  fileSizes: { 'output.js': 1529 } }
+  fileSizes: { 'output.js': 1454 } }
 ```
 
 ## Minimized (uglify-js, no zip)
@@ -111,7 +109,7 @@ module.exports = function() {
   modulesIncludingDuplicates: 5,
   modulesPerChunk: 5,
   modulesFirstChunk: 5,
-  fileSizes: { 'output.js': 674 } }
+  fileSizes: { 'output.js': 650 } }
 ```
 
 # Code Splitting
