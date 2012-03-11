@@ -1,2 +1,2 @@
-// No poly fille needed when compiled with webpack
+// No polyfill needed when compiled with webpack
 module.exports = function(){}

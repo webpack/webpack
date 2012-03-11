@@ -5,14 +5,15 @@
 As developer you want to reuse existing code.
 As with node.js and web all file are already in the same language, but it is extra work to use your code with the node.js module system and the browser.
 The goal of `webpack` is to bundle CommonJs modules into javascript files which can be loaded by `<script>`-tags.
-Concating all required file has a disadvantage: many code to download (and execute) on page load.
-Therefor `webpack` uses the `require.ensure` function to split your code automatically into multiple bundles which are loaded on demand.
+Simply concating all required files has a disadvantage: many code to download (and execute) on page load.
+Therefore `webpack` uses the `require.ensure` function ([CommonJs/Modules/Async/A](http://wiki.commonjs.org/wiki/Modules/Async/A)) to split your code automatically into multiple bundles which are loaded on demand.
 This happens mostly transparent to the developer with a single function call. Dependencies are resolved for you.
 The result is a smaller inital code download which results in faster page load.
 
 **TL;DR**
 
-* bundle CommonJs modules
+* bundle CommonJs modules for browser
+* reuse server-side code (node.js) on client-side
 * create multiple files which are loaded on demand
 * dependencies managed for you
 * faster page load in big webapps
@@ -51,6 +52,31 @@ are compiled to
 })
 ```
 
+## Code Splitting
+
+### Example
+
+``` javascript
+var a = require("a");
+var b = require("b");
+require.ensure(["c"], function(require) {
+	require("b").xyz();
+	var d = require("d");
+});
+```
+
+```
+File 1: web.js
+- code of module a and dependencies
+- code of module b and dependencies
+
+File 2: 1.web.js
+- code of module c and dependencies (but code is not used)
+- code of module d and dependencies
+```
+
+See [details](modules-webpack/tree/master/example) for exact output.
+
 ## Browser replacements
 
 Somethings it happens that browsers require other code than node.js do.
@@ -87,31 +113,6 @@ web_modules
   ...
 ```
 
-## Code Splitting
-
-### Example
-
-``` javascript
-var a = require("a");
-var b = require("b");
-require.ensure(["c"], function(require) {
-	require("b").xyz();
-	var d = require("d");
-});
-```
-
-```
-File 1: web.js
-- code of module a and dependencies
-- code of module b and dependencies
-
-File 2: 1.web.js
-- code of module c and dependencies (but code is not used)
-- code of module d and dependencies
-```
-
-See [details](modules-webpack/tree/master/example) for exact output.
-
 ## Usage
 
 ### Shell
@@ -136,8 +137,10 @@ Options:
 
 ### Programmatically Usage
 
-`webpack(context, moduleName, [options], callback)`
-`webpack(absoluteModulePath, [options], callback)`
+``` javascript
+webpack(context, moduleName, [options], callback)
+webpack(absoluteModulePath, [options], callback)
+```
 
 #### `options`
 

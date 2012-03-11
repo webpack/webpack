@@ -2,7 +2,7 @@
 	"name": "webpack",
 	"version": "0.1.0",
 	"author": "Tobias Koppers @sokra",
-	"description": "Bundle CommonJS modules into single script or multiple scripts for web browser",
+	"description": "Packs CommonJs Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand.",
 	"dependencies": {
 		"esprima": "0.9.8",
 		"optimist": "0.2.x",
@@ -16,5 +16,8 @@
 	},
 	"main": "lib/webpack.js",
 	"bin": "./bin/webpack.js",
+	"scripts": {
+		"test": "node node_modules/vows/bin/vows"
+	},
 	"licence": "MIT"
 }
