@@ -18,8 +18,16 @@ window.test(require("./singluar").value === 2, "exported object is singluar");
 window.test(require("subfilemodule") === "subfilemodule", "Modules as single file should load");
 window.test(require.context("../templates")("./tmpl") === "test template", "Context should work");
 window.test(require . context ( "." + "." + "/" + "templ" + "ates" ) ( "./subdir/tmpl.js" ) === "subdir test template", "Context should work with subdirectories and splitted");
-var template = "tmpl";
+var template = "tmpl", templateFull = "./tmpl.js";
 window.test(require("../templates/" + template) === "test template", "Automatical context should work");
+window.test(require("../templates/templateLoader")(templateFull) === "test template", "Automatical context without prefix should work");
+window.test(require("../templates/templateLoaderIndirect")(templateFull) === "test template", "Automatical context should work with require identifier");
+window.test(function(require) { return require; }(1234) === 1234, "require overwrite in anonymos function");
+function testFunc(abc, require) {
+	return require;
+}
+window.test(testFunc(333, 678) === 678, "require overwrite in named function");
+
 
 require.ensure([], function(require) {
 	var contextRequire = require.context(".");

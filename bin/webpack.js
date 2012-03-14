@@ -30,6 +30,10 @@ var argv = require("optimist")
 	.string("libary")
 	.describe("libary", "Stores the exports into this variable")
 
+	.boolean("colors")
+	.describe("colors", "Output Stats with colors")
+	.default("colors", false)
+
 	.demand(1)
 	.argv;
 
@@ -92,6 +96,6 @@ if(argv.single) {
 			console.error(err);
 			return;
 		}
-		console.log(stats);
+		console.log(require("util").inspect(stats, false, 10, argv.colors));
 	});
 }

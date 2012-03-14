@@ -119,6 +119,9 @@ function getTemplate(templateName) {
 
 See [details](modules-webpack/tree/master/examples/require.context) for complete example.
 
+When try to store the `require` function in another variable or try to pass it as parameter,
+`webpack` convert it to a `require.context(".")` to be combatible.
+There is a warning emitted in this case.
 
 *Warning: The complete code in the directory are included. So use it carefully.*
 
@@ -128,12 +131,19 @@ See [details](modules-webpack/tree/master/examples/require.context) for complete
 
 As dependencies are resolved before running:
 
-* `require` should not be overwritten
-* `require` should not be called indirect as `var r = require; r("./a");`. Use `require.context`?
+* `require` should not be overwritten by variable declaration (`var require = ...`), by function parameter is allowed `function(require) {...}`.
 * `require.ensure` should not be overwritten or called indirect
-* the function passed to `require.ensure` should be inlined in the call.
 * `require.context` should not be overwritten or called indirect
 * the argument to `require.context` should be a literal or addition of multiple literals
+* An indirect call of `require` should access a file in current directory: This throws an exception: `var r = require; r("../file");`
+
+The following cases could result in too much code in result file if used wrong:
+
+* indirect call of `require`: `var r = require; r("./file");`
+* `require.context`. It includes the whole directory.
+* expressions in require arguments: `require(variable)`, `require(condition ? "a" : "b")` (TODO)
+* the function passed to `require.ensure` is not inlined in the call.
+
 
 ### node.js specific modules
 
@@ -146,6 +156,8 @@ web_modules
   path
   ...
 ```
+
+TODO provide some replacements
 
 ## Usage
 
@@ -167,6 +179,7 @@ Options:
   --options            Options JSON File                      [string]
   --script-src-prefix  Path Prefix For JavaScript Loading     [string]
   --libary             Stores the exports into this variable  [string]
+  --colors             Output Stats with colors               [boolean]  [default: false]
 ```
 
 ### Programmatically Usage
@@ -220,7 +233,7 @@ However `webpack` has big differences:
 `webpack` replaces module names and paths with numbers. `webmake` don't do that and do resolves requires on client-side.
 This design of `webmake` was intended to support variables as arguments to require calls.
 `webpack` resolves requires in compile time and have no resolve code on client side. This results in smaller bundles.
-Variables as argments will be handled different and with more limitations in `webpack`.
+Variables as arguments will be handled different and with more limitations in `webpack`.
 
 Another limitation in `webmake` which are based on the previous one is that modules must be in the current package scope.
 In `webpack` this is not a restriction.
