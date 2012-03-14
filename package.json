@@ -1,12 +1,13 @@
 {
 	"name": "webpack",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand.",
 	"dependencies": {
 		"esprima": "0.9.8",
 		"optimist": "0.2.x",
-		"uglify-js": "1.2.5"
+		"uglify-js": "1.2.5",
+		"sprintf": "0.1.x"
 	},
 	"licenses": [
 		{
