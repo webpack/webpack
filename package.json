@@ -1,6 +1,6 @@
 {
 	"name": "webpack",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand.",
 	"dependencies": {

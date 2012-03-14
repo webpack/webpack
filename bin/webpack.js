@@ -128,8 +128,11 @@ if(argv.single) {
 							case "context":
 								console.log("       \033[90mcontext from " + reason.filename + "\033[39m");
 								break;
-							case "ensure":
-								console.log("       \033[35mensure from " + reason.filename + "\033[39m");
+							case "async require":
+								console.log("       \033[35masync require (" + reason.count + "x) from " + reason.filename + "\033[39m");
+								break;
+							case "async context":
+								console.log("       \033[35masync context from " + reason.filename + "\033[39m");
 								break;
 							default:
 								console.log("       \033[31m" + reason.type + "\033[39m");
