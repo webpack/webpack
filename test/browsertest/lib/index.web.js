@@ -34,6 +34,15 @@ require.ensure([], function(require) {
 	window.test(contextRequire("./singluar").value === 2, "Context works in chunk");
 	var singl = "singl";
 	window.test(require("." + "/" + singl + "uar").value === 2, "Context works in chunk, when splitted");
+	window.test(typeof module.id === "string", "module.id should be a string");
+	window.test(process.argv && process.argv.length > 1, "process.argv should be an array");
+	process.nextTick(function() {
+		sum2++;
+	});
+	process.on("xyz", function() {
+		sum2++;
+	});
+	process.emit("xyz");
 });
 
 require.ensure([], function(require) {
@@ -57,6 +66,8 @@ require.ensure([], function(require) {
 	require("./duplicate2");
 	sum++;
 });
+var sum2 = 0;
 setTimeout(function() {
 	window.test(sum === 2, "Multiple callbacks on code load finish");
+	window.test(sum2 === 2, "process.nextTick and process.emit/on should be polyfilled");
 }, 3000);
