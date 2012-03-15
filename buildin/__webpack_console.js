@@ -1,3 +1,4 @@
+var console = window.console;
 exports.log = (console && console.log) || function() {};
 exports.info = (console && console.info) || function() {};
 exports.error = (console && console.error) || function() {};
@@ -11,9 +12,4 @@ exports.timeEnd = (console && console.timeEnd) || function() {
 	exports.log('%s: %dms', label, duration);
 };
 exports.trace = (console && console.trace) || function() {};
-exports.assert = (console && console.assert) || function() {
-	if (!expression) {
-		var arr = Array.prototype.slice.call(arguments, 1);
-		require('assert').ok(false, util.format.apply(this, arr));
-	}
-};
+exports.assert = (console && console.assert) || function() {};

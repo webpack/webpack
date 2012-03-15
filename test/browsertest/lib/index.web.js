@@ -43,6 +43,15 @@ require.ensure([], function(require) {
 		sum2++;
 	});
 	process.emit("xyz");
+	window.test(window === global, "window === global");
+	(function() {
+		var require = 123;
+		window.test(require === 123, "overwrite require via variable should be ok");
+	}());
+	(function() {
+		var module = 1233;
+		window.test(module === 1233, "overwrite module via variable should be ok");
+	}());
 });
 
 require.ensure([], function(require) {
