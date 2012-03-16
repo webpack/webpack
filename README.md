@@ -173,13 +173,15 @@ if invoked without arguments it prints a usage:
 Usage: webpack <options> <input> <output>
 
 Options:
-  --single             Disable Code Splitting                 [boolean]  [default: false]
-  --min                Minimize it with uglifyjs              [boolean]  [default: false]
-  --filenames          Output Filenames Into File             [boolean]  [default: false]
-  --options            Options JSON File                      [string]
-  --script-src-prefix  Path Prefix For JavaScript Loading     [string]
-  --libary             Stores the exports into this variable  [string]
-  --colors             Output Stats with colors               [boolean]  [default: false]
+  --single             Disable Code Splitting                                   [boolean]  [default: false]
+  --min                Minimize it with uglifyjs                                [boolean]  [default: false]
+  --filenames          Output Filenames Into File                               [boolean]  [default: false]
+  --options            Options JSON File                                        [string]
+  --script-src-prefix  Path Prefix For JavaScript Loading                       [string]
+  --libary             Stores the exports into this variable                    [string]
+  --colors             Output Stats with colors                                 [boolean]  [default: false]
+  --json               Output Stats as JSON                                     [boolean]  [default: false]
+  --alias              Set a alias name for a module. ex. http=http-browserify  [string]
 ```
 
 ### Programmatically Usage

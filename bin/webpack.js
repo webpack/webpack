@@ -39,6 +39,9 @@ var argv = require("optimist")
 	.boolean("json")
 	.describe("json", "Output Stats as JSON")
 	.default("json", false)
+	
+	.string("alias")
+	.describe("alias", "Set a alias name for a module. ex. http=http-browserify")
 
 	.demand(1)
 	.argv;
@@ -73,6 +76,18 @@ if(argv.filenames) {
 
 if(argv.libary) {
 	options.libary = argv.libary;
+}
+
+if(argv.alias) {
+	if(typeof argv.alias === "string")
+		argv.alias = [argv.alias];
+	options.resolve = options.resolve || {};
+	options.resolve.alias = options.resolve.alias || {};
+	var aliasObj = options.resolve.alias;
+	argv.alias.forEach(function(alias) {
+		alias = alias.split("=");
+		aliasObj[alias[0]] = alias[1];
+	});
 }
 
 var webpack = require("../lib/webpack.js");

@@ -1,6 +1,6 @@
 {
 	"name": "webpack",
-	"version": "0.2.4",
+	"version": "0.2.5",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand.",
 	"dependencies": {
@@ -8,6 +8,10 @@
 		"optimist": "0.2.x",
 		"uglify-js": "1.2.5",
 		"sprintf": "0.1.x"
+	},
+	"optionalDependencies": {
+		"http-browserify": "*",
+		"vm-browserify": "*"
 	},
 	"licenses": [
 		{
