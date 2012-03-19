@@ -17,6 +17,7 @@ require.ensure(["c"], function(require) {
 /******/	return function(modules) {
 /******/		var installedModules = {}, installedChunks = {0:1};
 /******/		function require(moduleId) {
+/******/			if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
 /******/			if(installedModules[moduleId])
 /******/				return installedModules[moduleId].exports;
 /******/			var module = installedModules[moduleId] = {
@@ -53,9 +54,9 @@ require.ensure(["c"], function(require) {
 /******/0: function(module, exports, require) {
 
 var a = require(/* a */1);
-var b = require(/* b */4);
+var b = require(/* b */3);
 require.ensure(1, function(require) {
-    require(/* b */4).xyz();
+    require(/* b */3).xyz();
     var d = require(/* d */2);
 });
 
@@ -67,7 +68,7 @@ require.ensure(1, function(require) {
 
 /******/},
 /******/
-/******/4: function(module, exports, require) {
+/******/3: function(module, exports, require) {
 
 // module b
 
@@ -80,7 +81,7 @@ require.ensure(1, function(require) {
 
 ``` javascript
 /******/webpackJsonp(1, {
-/******/3: function(module, exports, require) {
+/******/2: function(module, exports, require) {
 
 // module d
 
@@ -98,29 +99,55 @@ require.ensure(1, function(require) {
 Minimized
 
 ``` javascript
-webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
+webpackJsonp(1,{2:function(a,b,c){},4:function(a,b,c){}})
 ```
 
 # Info
 
 ## Uncompressed
 
-``` javascript
-{ chunkCount: 2,
-  modulesCount: 5,
-  modulesIncludingDuplicates: 5,
-  modulesPerChunk: 2.5,
-  modulesFirstChunk: 3,
-  fileSizes: { 'output.js': 1935, '1.output.js': 200 } }
+```
+Chunks: 2
+Modules: 5
+Modules including duplicates: 5
+Modules pre chunk: 2.5
+Modules first chunk: 3
+     output.js:     2033 characters
+   1.output.js:      200 characters
+output.js
+    0 [...]\examples\code-splitting\example.js
+       main
+    1 [...]\examples\code-splitting\node_modules\a.js
+       require (1x) from [...]\examples\code-splitting\example.js
+    3 [...]\examples\code-splitting\node_modules\b.js
+       require (2x) from [...]\examples\code-splitting\example.js
+1.output.js
+    2 [...]\examples\code-splitting\node_modules\d.js
+       async require (1x) from [...]\examples\code-splitting\example.js
+    4 [...]\examples\code-splitting\node_modules\c.js
+       async require (1x) from [...]\examples\code-splitting\example.js
 ```
 
 ## Minimized (uglify-js, no zip)
 
-``` javascript
-{ chunkCount: 2,
-  modulesCount: 5,
-  modulesIncludingDuplicates: 5,
-  modulesPerChunk: 2.5,
-  modulesFirstChunk: 3,
-  fileSizes: { 'output.js': 661, '1.output.js': 57 } }
+```
+Chunks: 2
+Modules: 5
+Modules including duplicates: 5
+Modules pre chunk: 2.5
+Modules first chunk: 3
+     output.js:      729 characters
+   1.output.js:       57 characters
+output.js
+    0 [...]\examples\code-splitting\example.js
+       main
+    1 [...]\examples\code-splitting\node_modules\a.js
+       require (1x) from [...]\examples\code-splitting\example.js
+    3 [...]\examples\code-splitting\node_modules\b.js
+       require (2x) from [...]\examples\code-splitting\example.js
+1.output.js
+    2 [...]\examples\code-splitting\node_modules\c.js
+       async require (1x) from [...]\examples\code-splitting\example.js
+    4 [...]\examples\code-splitting\node_modules\d.js
+       async require (1x) from [...]\examples\code-splitting\example.js
 ```
