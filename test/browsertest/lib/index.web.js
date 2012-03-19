@@ -27,7 +27,28 @@ function testFunc(abc, require) {
 	return require;
 }
 window.test(testFunc(333, 678) === 678, "require overwrite in named function");
+function testCase(number) {
+	//window.test(require("./folder/file" + (number === 1 ? 1 : "2")) === "file" + number);
+	window.test(require(number === 1 ? "../folder/file1" : number === 2 ? "../folder/file2" : number === 3 ? "../folder/file3" : "./missingModule") === "file" + number, "?: operator in require do not create context, test "+number);
+}
+testCase(1);
+testCase(2);
+testCase(3);
 
+var error = null;
+try {
+	testCase(4);
+} catch(e) {
+	error = e;
+}
+window.test(error instanceof Error, "Missing module should throw Error, indirect");
+error = null;
+try {
+	require("./missingModule2");
+} catch(e) {
+	error = e;
+}
+window.test(error instanceof Error, "Missing module should throw Error, direct");
 
 require.ensure([], function(require) {
 	var contextRequire = require.context(".");
