@@ -471,13 +471,13 @@ else `stats` as json see [example](/modules-webpack/tree/master/examples/code-sp
 	eliminate duplicate code
   </td>
   <td>
-	yes
+	no
   </td>
   <td>
 	no
   </td>
   <td>
-	yes
+	no
   </td>
  </tr>
 
