@@ -621,7 +621,20 @@ TODO more tests
 
 You are welcome to contribute by writing issues or pull requests.
 
-You are also welcome to correct any spelling mistakes or any language issues, because my english is not so good...
+You are also welcome to correct any spelling mistakes or any language issues, because my english is not perfect...
+
+## Future plans
+
+* resources `module.resource("./a.txt")`
+* loader plugins
+ * `require("css!./style.css")`
+ * `--loader .coffee=coffee-webpack-loader`
+ * default loaders: `js`, `coffee`
+ * optional included loaders: `css`, `less`, ...
+ * `module.resource("ror13!./a.txt");`
+ * loader is a exported `function([content], callback /* function(err, content) */)`
+* more polyfills for node.js buildin modules, but optional
+* require from protocol `require("http://...")`
 
 ## License
 
