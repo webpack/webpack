@@ -246,7 +246,7 @@ add absolute filenames of input files as comments
 
 `function(err, source / stats)`
 `source` if `options.output` is not set
-else `stats` as json see [example](/modules-webpack/tree/master/examples/code-splitting)
+else `stats` as json see [example](modules-webpack/tree/master/examples/code-splitting)
 
 ## Comparison
 
