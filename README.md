@@ -107,14 +107,17 @@ Somethings it happens that browsers require other code than node.js do.
 Modules in `web_modules` replace modules in `node_modules`.
 `filename.web.js` replaces `filename.js` when required without file extention.
 
-TODO specify replacements in options
+in options: `alias: { "http": "http-browserify" }`
+
+in shell: `--alias http=http-browserify`
 
 ## require.context
 
-If the `require`d module is not known while compile time we get into a problem.
+If the required module is not known while compile time we get into a problem.
 A solution is the method `require.context` which takes a directory as parameter
 and returns a function which behaves like the `require` function issued from a file
 in this directory (but only if used for files in that directory).
+The whole directory is included while compiling, so you have access to all files in it.
 
 ### Example
 
@@ -129,7 +132,7 @@ function getTemplate(templateName) {
 ```
 
 In addition to that `webpack` uses the `require.context` function automatically
-if you use variables or other non-literal things in the `require` function.
+if you use variables or other not parseable things in the `require` function.
 That means the following code behaves like the above:
 
 ``` javascript
@@ -137,12 +140,13 @@ function getTemplate(templateName) {
 	return require("./templates/" + templateName);
 }
 // is compiled like: return require.context("./templates")("./"+templateName)
+// which compiles to: return require(123)("./"+templateName)
 ```
 
 See [details](modules-webpack/tree/master/examples/require.context) for complete example.
 
 When try to store the `require` function in another variable or try to pass it as parameter,
-`webpack` convert it to a `require.context(".")` to be combatible.
+`webpack` convert it to a `require.context(".")` to be compatible.
 There is a warning emitted in this case.
 
 *Warning: The complete code in the directory are included. So use it carefully.*
@@ -151,18 +155,17 @@ There is a warning emitted in this case.
 
 ### `require`-function
 
-As dependencies are resolved before running:
-
+* `require` should not be overwritten
 * `require.ensure` should not be overwritten or called indirect
 * `require.context` should not be overwritten or called indirect
 * the argument to `require.context` should be a literal or addition of multiple literals
 * An indirect call of `require` should access a file in current directory: This throws an exception: `var r = require; r("../file");`
 
-The following cases could result in too much code in result file if used wrong:
+The following cases could result in **too much code** in result file if used wrong:
 
 * indirect call of `require`: `var r = require; r("./file");`
 * `require.context`. It includes the whole directory.
-* expressions in require arguments: `require(variable)`, webpack is smart enough for this `require(condition ? "a" : "b")`
+* expressions in require arguments: `require(variable)` (but `webpack` is smart enough for this `require(condition ? "a" : "b")`)
 * the function passed to `require.ensure` is not inlined in the call.
 
 
@@ -172,15 +175,16 @@ As node.js specific modules like `fs` will not work in browser they are not incl
 You should replace them by own modules if you want to use them.
 For some modules are replacements included in `webpack`.
 Some credit goes to the browserify contributors, as I took some replacements from them.
+Expensive replacements are not needed by everyone, so that are not included by default.
+You need to specify `--alias [module]=[replacement]` to use them.
+A warning saying that some module is missing is emitted in the case you use it.
 
-```
-web_modules
-  fs
-  path
-  ...
-```
+Here is a list of possible useful replacements:
 
-TODO provide some replacements (half way done...)
+* `http=http-browserify`
+* `vm=vm-browserify`
+* 
+* TODO provide some more replacements
 
 ## Usage
 
@@ -629,7 +633,7 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 * loader plugins
  * `require("css!./style.css")`
  * `--loader .coffee=coffee-webpack-loader`
- * default loaders: `js`, `coffee`
+ * default loaders: `js`, `coffee`, `jade`, `json`
  * optional included loaders: `css`, `less`, ...
  * `module.resource("ror13!./a.txt");`
  * loader is a exported `function([content], callback /* function(err, content) */)`
