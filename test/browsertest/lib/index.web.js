@@ -1,3 +1,6 @@
+// Should not break it... should not include complete directory...
+require = require("../../../require-polyfill")(require.valueOf());
+
 window.test(true, "index.js should be replaced with index.web.js");
 window.test(window.libary1, "libary1 loaded");
 window.test(window.libary2.ok, "libary2 loaded");
