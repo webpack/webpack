@@ -30,6 +30,7 @@ vows.describe("resolve").addBatch({
 	"resolve complex 1": testResolve(fixtures, "complexm/step1", path.join(fixtures, "node_modules", "complexm", "step1.js")),
 	"resolve complex 2": testResolve(path.join(fixtures, "node_modules", "complexm", "web_modules", "m1"),
 										"m2/b.js", path.join(fixtures, "node_modules", "m2", "b.js")),
+	"resolve loader 1": testResolve(fixtures, "m1/a!./main1.js", path.join(fixtures, "node_modules", "m1", "a.js") + "!" + path.join(fixtures, "main1.js")),
 
 
 }).export(module);

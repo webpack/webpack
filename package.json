@@ -1,17 +1,21 @@
 {
 	"name": "webpack",
-	"version": "0.2.8",
+	"version": "0.3.0",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand.",
 	"dependencies": {
-		"esprima": "0.9.8",
+		"esprima": "0.9.x",
 		"optimist": "0.2.x",
-		"uglify-js": "1.2.5",
+		"uglify-js": "1.2.x",
 		"sprintf": "0.1.x"
 	},
 	"optionalDependencies": {
 		"http-browserify": "*",
-		"vm-browserify": "*"
+		"vm-browserify": "*",
+		"raw-loader": "0.1.x",
+		"json-loader": "0.1.x",
+		"jade-loader": "0.1.x",
+		"coffee-loader": "0.1.x"
 	},
 	"licenses": [
 		{
@@ -31,5 +35,5 @@
 	"scripts": {
 		"test": "node node_modules/vows/bin/vows"
 	},
-	"licence": "MIT"
+	"license": "MIT"
 }

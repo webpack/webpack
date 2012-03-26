@@ -105,3 +105,19 @@ setTimeout(function() {
 	window.test(sum === 2, "Multiple callbacks on code load finish");
 	window.test(sum2 === 2, "process.nextTick and process.emit/on should be polyfilled");
 }, 3000);
+
+
+// Loader tests
+window.test(require("testloader!../resources/abc.txt") === "abcwebpack", "Loader in package.json");
+window.test(require("testloader/lib/loader!../resources/abc.txt") === "abcwebpack", "Loader with .webpack-loader.js extention");
+window.test(require("testloader/lib/loader.web-loader.js!../resources/abc.txt") === "abcweb", "Loader with .web-loader.js extention");
+window.test(require("testloader/lib/loader.loader.js!../resources/abc.txt") === "abcloader", "Loader with .loader.js extention");
+window.test(require("testloader/lib/loader-indirect!../resources/abc.txt") === "abcwebpack", "Loader with .js extention and requires in loader");
+window.test(require("testloader!../loaders/reverseloader!../resources/abc.txt") === "cbawebpack", "Multiple loaders and relative paths");
+window.test(require("raw!../resources/abc.txt") === "abc", "Buildin 'raw' loader");
+window.test(require("jade!../resources/template.jade")({abc: "abc"}) === "<p>abc</p>", "Buildin 'jade' loader");
+window.test(require("../resources/template.jade")({abc: "abc"}) === "<p>abc</p>", "Buildin 'jade' loader, by ext");
+window.test(require("json!../../../package.json").name === "webpack", "Buildin 'json' loader");
+window.test(require("../../../package.json").name === "webpack", "Buildin 'json' loader, by ext");
+window.test(require("coffee!../resources/script.coffee") === "coffee test", "Buildin 'coffee' loader");
+window.test(require("../resources/script.coffee") === "coffee test", "Buildin 'coffee' loader, by ext");
