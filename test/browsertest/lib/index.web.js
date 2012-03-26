@@ -37,6 +37,7 @@ function testCase(number) {
 testCase(1);
 testCase(2);
 testCase(3);
+window.test(require("../folder/typeof") === "function", "typeof require should be function");
 
 var error = null;
 try {
