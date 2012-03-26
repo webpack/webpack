@@ -105,7 +105,7 @@ Somethings it happens that browsers require other code than node.js do.
 `webpack` allow module developers to specify replacements which are used in the compile process of `webpack`.
 
 Modules in `web_modules` replace modules in `node_modules`.
-`filename.web.js` replaces `filename.js` when required without file extention.
+`filename.web.js` replaces `filename.js` when required without file extension.
 
 in options: `alias: { "http": "http-browserify" }`
 
@@ -490,7 +490,7 @@ else `stats` as json see [example](modules-webpack/tree/master/examples/code-spl
 	require JSON
   </td>
   <td>
-	no
+	yes (NEW)
   </td>
   <td>
 	no
@@ -517,10 +517,25 @@ else `stats` as json see [example](modules-webpack/tree/master/examples/code-spl
 
  <tr>
   <td>
-	compile coffee script
+	loaders
+  </td>
+  <td>
+	yes (NEW)
   </td>
   <td>
 	no
+  </td>
+  <td>
+	no
+  </td>
+ </tr>
+
+ <tr>
+  <td>
+	compile coffee script
+  </td>
+  <td>
+	yes (NEW)
   </td>
   <td>
 	no
@@ -606,6 +621,38 @@ else `stats` as json see [example](modules-webpack/tree/master/examples/code-spl
  </tr>
 </table>
 
+## Loaders
+
+You can use a syntax for loader plugins to preprocess files before emitting javascript code to the bundle.
+
+The following example loads the raw content of a file with the `raw` loader:
+
+``` javascript
+var content = require("raw!./file.txt");
+```
+
+Multiple loader plugins can be prepended by seperating them with `!`.
+The loader plugins are resolved like in normal `require` call but with different default extension.
+
+The `raw` loader plugin is looked up at modules `raw-webpack-web-loader`, `raw-webpack-loader`, `raw-web-loader`, `raw-loader`, `raw`
+and the following files are looked up: `index.webpack-web-loader.js`, `index.webpack-loader.js`, `index.web-loader.js`, `index.loader.js`, `index`, `index.js`.
+Note that the `web-` versions are omitted if loaders are used in node.js.
+
+See [example](modules-webpack/tree/master/examples/loader).
+
+The following loaders are included as optional dependencies:
+
+* `raw`: Loads raw content of a file
+* `json` (default at `.json`): Loads file as JSON
+* `jade` (default at `.jade`): Loads jade template and returns a function
+* `coffee` (default at `.coffee`): Loads coffee-script like javascript
+
+TODO
+
+* `css`: CSS rules are added to DOM on require
+* `less`, `sass`: like `css` but compiles
+
+
 ## Tests
 
 You can run the unit tests with `npm test`.
@@ -618,8 +665,6 @@ node build
 ```
 
 and open `test.html` in browser. There must be several OKs in the file and no FAIL.
-
-TODO more tests
 
 ## Contribution
 
