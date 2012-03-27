@@ -242,11 +242,17 @@ Expensive replacements are not needed by everyone, so that are not included by d
 You need to specify `--alias [module]=[replacement]` to use them.
 A warning saying that some module is missing is emitted in the case you use it.
 
-Here is a list of possible useful replacements:
+Included simple replacements:
+
+* `assert`: copy of node.js' version
+* `child_process`: disabled
+* `events`: copy of node.js' version
+* `util`: copy of node.js' version
+
+Here is a list of possible useful replacements: (intentionally not by default)
 
 * `http=http-browserify`
 * `vm=vm-browserify`
-*
 * TODO provide some more replacements
 
 ## Usage
@@ -553,7 +559,7 @@ else `stats` as json see [example](modules-webpack/tree/master/examples/code-spl
 	require JSON
   </td>
   <td>
-	yes (NEW)
+	yes **NEW**
   </td>
   <td>
 	no
@@ -583,7 +589,7 @@ else `stats` as json see [example](modules-webpack/tree/master/examples/code-spl
 	loaders
   </td>
   <td>
-	yes (NEW)
+	yes **NEW**
   </td>
   <td>
 	no
@@ -598,7 +604,7 @@ else `stats` as json see [example](modules-webpack/tree/master/examples/code-spl
 	compile coffee script
   </td>
   <td>
-	yes (NEW)
+	yes **NEW**
   </td>
   <td>
 	no
@@ -708,6 +714,7 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 
 * more polyfills for node.js buildin modules, but optional
 * require from protocol `require("http://...")`
+* watch mode
 
 ## License
 
