@@ -129,6 +129,16 @@ module.exports = {"foobar":1234}
 /******/})
 ```
 
+# Console output
+
+Prints in node.js (`node example.js`) and in browser:
+
+```
+{ answer: 42, foo: 'bar' }
+{ foobar: 1234 }
+{ foobar: 1234 }
+```
+
 # Info
 
 ## Uncompressed
