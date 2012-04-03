@@ -39,9 +39,13 @@ var argv = require("optimist")
 	.boolean("json")
 	.describe("json", "Output Stats as JSON")
 	.default("json", false)
-	
+
 	.string("alias")
 	.describe("alias", "Set a alias name for a module. ex. http=http-browserify")
+
+	.boolean("debug")
+	.describe("debug", "Prints debug info to output files")
+	.default("debug", false)
 
 	.demand(1)
 	.argv;
@@ -68,6 +72,10 @@ if(argv["script-src-prefix"]) {
 
 if(argv.min) {
 	options.minimize = true;
+}
+
+if(argv.debug) {
+	options.debug = true;
 }
 
 if(argv.filenames) {
@@ -159,6 +167,11 @@ if(argv.single) {
 			if(stats.warnings) {
 				stats.warnings.forEach(function(warning) {
 					console.log("\033[1m\033[33mWARNING: " + warning + "\033[39m\033[22m");
+				});
+			}
+			if(stats.errors) {
+				stats.errors.forEach(function(error) {
+					console.log("\033[1m\033[31mERROR: " + error + "\033[39m\033[22m");
 				});
 			}
 		}

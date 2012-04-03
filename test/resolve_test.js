@@ -19,6 +19,17 @@ function testResolve(context, moduleName, result) {
 		}
 	}
 }
+function testResolveContext(context, moduleName, result) {
+	return {
+		topic: function() {
+			resolve.context(context, moduleName, {}, this.callback);
+		},
+
+		"correct filename": function(filename) {
+			assert.equal(filename, result);
+		}
+	}
+}
 vows.describe("resolve").addBatch({
 
 	"resolve simple 1": testResolve(fixtures, "./main1.js", path.join(fixtures, "main1.js")),
@@ -31,6 +42,7 @@ vows.describe("resolve").addBatch({
 	"resolve complex 2": testResolve(path.join(fixtures, "node_modules", "complexm", "web_modules", "m1"),
 										"m2/b.js", path.join(fixtures, "node_modules", "m2", "b.js")),
 	"resolve loader 1": testResolve(fixtures, "m1/a!./main1.js", path.join(fixtures, "node_modules", "m1", "a.js") + "!" + path.join(fixtures, "main1.js")),
+	"resolve loader context 1": testResolveContext(fixtures, "m1/a!./", path.join(fixtures, "node_modules", "m1", "a.js") + "!" + fixtures),
 
 
 }).export(module);

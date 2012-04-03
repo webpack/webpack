@@ -2,6 +2,7 @@
 
 As developer you want to reuse existing code.
 As with node.js and web all file are already in the same language, but it is extra work to use your code with the node.js module system and the browser.
+
 The goal of `webpack` is to bundle CommonJs modules into javascript files which can be loaded by `<script>`-tags.
 Simply concating all required files has a disadvantage: many code to download (and execute) on page load.
 Therefore `webpack` uses the `require.ensure` function ([CommonJs/Modules/Async/A](http://wiki.commonjs.org/wiki/Modules/Async/A)) to split your code automatically into multiple bundles which are loaded on demand.
@@ -12,16 +13,16 @@ The result is a smaller inital code download which results in faster page load.
 
 * bundle CommonJs modules for browser
 * reuse server-side code (node.js) on client-side
-* create multiple files which are loaded on demand (faster page load in big webapps)
-* dependencies managed for you, on compile time
+* create multiple files which are loaded on demand (faster page load in big webapps or on mobile connections)
+* dependencies managed for you, on compile time (no resolution on runtime needed)
 
 ## Goals
 
-* minimize code size
+* make node.js and browser development similar
+* minimize code size (mobile connection)
  * minimize code size on inital download
  * download code only on demand
-* hide development details, like module names and folder structure
-* require minimal configuration
+* require minimal configuration, but offer a maximum
  * load polyfills for node-specific things if used
  * offer replacements for node buildin libaries
 
@@ -83,6 +84,10 @@ File 2: 1.web.js
 - code of module d and dependencies
 ```
 
+Initially only `web.js` is included (and loaded) by your application.
+`1.web.js` is loaded when the call to `require.ensure` happens.
+After the second bundle (`1.web.js`) is loaded, the callback function will be invoked.
+
 See [details](modules-webpack/tree/master/examples/code-splitting) for exact output.
 
 ## Reusing node.js code
@@ -143,7 +148,7 @@ function getTemplate(templateName) {
 // which compiles to: return require(123)("./"+templateName)
 ```
 
-See [details](modules-webpack/tree/master/examples/require.context) for complete example.
+See [details](/sokra/modules-webpack/tree/master/examples/require.context) for complete example.
 
 When try to store the `require` function in another variable or try to pass it as parameter,
 `webpack` convert it to a `require.context(".")` to be compatible.
@@ -168,7 +173,7 @@ The `raw` loader plugin is looked up at modules `raw-webpack-web-loader`, `raw-w
 and the following files are looked up: `index.webpack-web-loader.js`, `index.webpack-loader.js`, `index.web-loader.js`, `index.loader.js`, `index`, `index.js`.
 Note that the `web-` versions are omitted if loaders are used in node.js.
 
-See [example](modules-webpack/tree/master/examples/loader).
+See [example](/sokra/modules-webpack/tree/master/examples/loader).
 
 The following loaders are included as optional dependencies:
 
@@ -218,7 +223,7 @@ try `--min` to minimize with `uglify-js`.
 
 ### `require`-function
 
-* `require` should not be overwritten
+* `require` should not be overwritten, except from polyfill
 * `require.ensure` should not be overwritten or called indirect
 * `require.context` should not be overwritten or called indirect
 * the argument to `require.context` should be a literal or addition of multiple literals
@@ -226,21 +231,22 @@ try `--min` to minimize with `uglify-js`.
 
 The following cases could result in **too much code** in result file if used wrong:
 
-* indirect call of `require`: `var r = require; r("./file");`
+* indirect call of `require`: `var r = require; r("./file");`. It includes the whole directory.
 * `require.context`. It includes the whole directory.
-* expressions in require arguments: `require(variable)` (but `webpack` is smart enough for this `require(condition ? "a" : "b")`)
-* the function passed to `require.ensure` is not inlined in the call.
+* expressions in require arguments: `require(variable)`. It includes the whole directory. (except from `?:`-operator `require(condition ? "a" : "b")`)
+* the function passed to `require.ensure` is not inlined in the call. Only requires in inlined function move into the second bundle.
 
 
 ### node.js specific modules
 
-As node.js specific modules like `fs` will not work in browser they are not included and cause an error.
+As node.js specific modules like `fs` will not work in browser they are not included (by default) and cause an exception.
 You should replace them by own modules if you want to use them.
-For some modules are replacements included in `webpack`.
-Some credit goes to the browserify contributors, as I took some replacements from them.
+For some simple modules are replacements included in `webpack`.
 Expensive replacements are not needed by everyone, so that are not included by default.
 You need to specify `--alias [module]=[replacement]` to use them.
-A warning saying that some module is missing is emitted in the case you use it.
+A warning saying that some module is missing is emitted in the case you use it without providing a replacement.
+
+Some credit goes to the browserify contributors, you can use replacements provided by them.
 
 Included simple replacements:
 
@@ -289,31 +295,75 @@ webpack(absoluteModulePath, [options], callback)
 
 #### `options`
 
-you can save this options object in a JSON file and use it with the shell command.
+You can also save this options object in a JSON file and use it with the shell command.
 
 `outputJsonpFunction`
+
 JSONP function used to load chunks
 
 `scriptSrcPrefix`
+
 Path from where chunks are loaded
 
 `outputDirectory`
+
 write files to this directory (absolute path)
 
 `output`
+
 write first chunk to this file
 
 `outputPostfix`
+
 write chunks to files named chunkId plus outputPostfix
 
 `libary`
+
 exports of input file are stored in this variable
 
 `minimize`
+
 minimize outputs with uglify-js
 
 `includeFilenames`
+
 add absolute filenames of input files as comments
+
+`resolve.alias` (object)
+
+replace a module. ex. `{"old-module": "new-module"}`
+
+`resolve.paths` (array)
+
+search paths
+
+`resolve.extensions` (object)
+
+possible extensions for files
+
+default: `["", ".webpack.js", ".web.js", ".js"]`
+
+`resolve.loaders` (array)
+
+extension to loader mappings. ex. `[{test: /\.extension$/, loader: "myloader"}]`
+
+loads files that matches the RegExp to the loader if no other loader set
+
+`resolve.loaderExtensions` (array)
+
+possible extensions for loaders
+
+default: `[".webpack-web-loader.js", ".webpack-loader.js", ".web-loader.js", ".loader.js", "", ".js"]`
+
+`resolve.loaderPostfixes` (array)
+
+possible postfixes for loaders
+
+default: `["-webpack-web-loader", "-webpack-loader", "-web-loader", "-loader", ""]`
+
+`parse.overwrites` (object)
+
+free module variables which are replaced with a module. ex. `{ "$": "jquery" }`
 
 #### `callback`
 
@@ -439,13 +489,13 @@ else `stats` as json see [example](modules-webpack/tree/master/examples/code-spl
 	<code>require("http");</code>
   </td>
   <td>
-	some
+	some optional
   </td>
   <td>
 	no
   </td>
   <td>
-	many
+	many by default
   </td>
  </tr>
 
@@ -559,7 +609,7 @@ else `stats` as json see [example](modules-webpack/tree/master/examples/code-spl
 	require JSON
   </td>
   <td>
-	yes **NEW**
+	yes <em>NEW</em>
   </td>
   <td>
 	no
@@ -589,7 +639,7 @@ else `stats` as json see [example](modules-webpack/tree/master/examples/code-spl
 	loaders
   </td>
   <td>
-	yes **NEW**
+	yes <em>NEW</em>
   </td>
   <td>
 	no
@@ -604,7 +654,7 @@ else `stats` as json see [example](modules-webpack/tree/master/examples/code-spl
 	compile coffee script
   </td>
   <td>
-	yes **NEW**
+	yes <em>NEW</em>
   </td>
   <td>
 	no

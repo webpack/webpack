@@ -121,3 +121,9 @@ window.test(require("json!../../../package.json").name === "webpack", "Buildin '
 window.test(require("../../../package.json").name === "webpack", "Buildin 'json' loader, by ext");
 window.test(require("coffee!../resources/script.coffee") === "coffee test", "Buildin 'coffee' loader");
 window.test(require("../resources/script.coffee") === "coffee test", "Buildin 'coffee' loader, by ext");
+
+// Loader & Context
+var abc = "abc", scr = "script.coffee";
+window.test(require("../resources/" + scr) === "coffee test", "context should process extensions");
+window.test(require("raw!../resources/" + abc + ".txt") === "abc", "raw loader with context");
+

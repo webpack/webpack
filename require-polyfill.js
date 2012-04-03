@@ -1,7 +1,7 @@
 // Polyfill for node.js
 //  - adds require.ensure
 //  - adds require.context
-//  call it like this: 
+//  call it like this:
 //   require = require("webpack/require-polyfill")(require.valueOf());
 // This is only required when you want to use the special require.xxx methods
 //  in server-side code which should be so only in rar cases.
@@ -60,13 +60,40 @@ module.exports = function(req) {
 				if(cacheEntry)
 					return cacheEntry;
 				var content = [require("fs").readFileSync(resource, "utf-8")];
+				var values;
+				function exec(code, filename) {
+					var Module = require("module");
+					var m = new Module("exec in " + cacheLine, module);
+					m._compile(code, filename);
+					return m.exports;
+				}
 				resolved.forEach(function(loader) {
-					content = oldReq(loader)(content, {
+					var set = false, err = null;
+					var context = {
 						request: cacheLine,
-						filename: resource
-					});
+						filenames: [resource],
+						exec: exec,
+						async: function() { return false; },
+						callback: function() {
+							set = true;
+							content = Array.prototype.slice.apply(arguments);
+							err = content.shift();
+							values = context.values;
+						},
+						inputValues: values,
+						values: undefined
+					};
+					var retVal = oldReq(loader).apply(context, content);
+					if(set) {
+						if(err) throw err;
+					} else {
+						content = [retVal];
+						values = context.values;
+					}
 				});
-				return content;
+				if(values !== undefined)
+					return values[0];
+				return exec(content[0], cacheLine);
 			} else
 				return oldReq(name);
 		};

@@ -3,7 +3,7 @@
 	<title>webpack tests</title>
 	<script>
 		window.test = function(ok, message) {
-			document.write("<p>" + (ok?"OK: ":"FAILED: ")+message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</p>");
+			document.write("<p " + (ok?">OK: ":"style='color: red; font-weight: bold;'>FAILED: ")+message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</p>");
 		};
 		window.onerror = function(error) {
 			window.test(false, "Shouldn't throw error: " + error);
@@ -17,6 +17,8 @@
 		window.test = function(ok, message) {
 			var p = document.createElement("p");
 			p.appendChild(document.createTextNode((ok?"OK: ":"FAILED: ")+message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")));
+			if(!ok)
+				p.style = "color: red; font-weight: bold;";
 			document.body.appendChild(p);
 		};
 		window.writing = false;

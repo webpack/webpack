@@ -1,3 +1,3 @@
-module.exports = function(contents, options, callback) {
-	callback(null, contents[0].split("").reverse().join(""));
+module.exports = function(content) {
+	return content.split("").reverse().join("");
 }
