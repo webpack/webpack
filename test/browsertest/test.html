@@ -10,15 +10,15 @@
 		};
 		window.writing = true;
 	</script>
-	<script src="js/libary1.js"></script>
-	<script src="js/libary2.js"></script>
-	<script src="js/web.js"></script>
+	<script src="js/libary1.js" charset="utf-8"></script>
+	<script src="js/libary2.js" charset="utf-8"></script>
+	<script src="js/web.js" charset="utf-8"></script>
 	<script>
 		window.test = function(ok, message) {
 			var p = document.createElement("p");
 			p.appendChild(document.createTextNode((ok?"OK: ":"FAILED: ")+message.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")));
 			if(!ok)
-				p.style = "color: red; font-weight: bold;";
+				p.setAttribute("style", "color: red; font-weight: bold;");
 			document.body.appendChild(p);
 		};
 		window.writing = false;

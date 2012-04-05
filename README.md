@@ -88,7 +88,9 @@ Initially only `web.js` is included (and loaded) by your application.
 `1.web.js` is loaded when the call to `require.ensure` happens.
 After the second bundle (`1.web.js`) is loaded, the callback function will be invoked.
 
-See [details](modules-webpack/tree/master/examples/code-splitting) for exact output.
+See [details](/sokra/modules-webpack/tree/master/examples/code-splitting) for exact output.
+
+See [more examples](/sokra/modules-webpack/tree/master/examples).
 
 ## Reusing node.js code
 
@@ -250,9 +252,16 @@ Some credit goes to the browserify contributors, you can use replacements provid
 
 Included simple replacements:
 
-* `assert`: copy of node.js' version
+* `assert`: copy of node.js' version, small change
+* `buffer`: copy of node-browserify's version
+* `buffer_ieee754`: copy of node-browserify's version
 * `child_process`: disabled
 * `events`: copy of node.js' version
+* `path`: copy of node.js' version
+* `punycode`: copy of node.js' version, one line removed
+* `querystring`: copy of node.js' version
+* `string_decoder`: copy of node.js' version
+* `url`: copy of node.js' version
 * `util`: copy of node.js' version
 
 Here is a list of possible useful replacements: (intentionally not by default)
@@ -369,7 +378,7 @@ free module variables which are replaced with a module. ex. `{ "$": "jquery" }`
 
 `function(err, source / stats)`
 `source` if `options.output` is not set
-else `stats` as json see [example](modules-webpack/tree/master/examples/code-splitting)
+else `stats` as json see [example](/sokra/modules-webpack/tree/master/examples/code-splitting)
 
 ## Comparison
 

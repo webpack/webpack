@@ -127,3 +127,8 @@ var abc = "abc", scr = "script.coffee";
 window.test(require("../resources/" + scr) === "coffee test", "context should process extensions");
 window.test(require("raw!../resources/" + abc + ".txt") === "abc", "raw loader with context");
 
+
+require.ensure([], function(require) {
+	// Tests from node.js
+	require("../nodetests");
+});

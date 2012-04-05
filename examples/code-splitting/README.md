@@ -35,6 +35,7 @@ require.ensure(["c"], function(require) {
 /******/				var head = document.getElementsByTagName('head')[0];
 /******/				var script = document.createElement('script');
 /******/				script.type = 'text/javascript';
+/******/				script.charset = 'utf-8';
 /******/				script.src = modules.c+chunkId+modules.a;
 /******/				head.appendChild(script);
 /******/			}
@@ -53,24 +54,24 @@ require.ensure(["c"], function(require) {
 /******/({a:".output.js",b:"webpackJsonp",c:"",
 /******/0: function(module, exports, require) {
 
-var a = require(/* a */1);
-var b = require(/* b */3);
+var a = require(/* a */4);
+var b = require(/* b */1);
 require.ensure(1, function(require) {
-    require(/* b */3).xyz();
-    var d = require(/* d */2);
+    require(/* b */1).xyz();
+    var d = require(/* d */3);
 });
 
 /******/},
 /******/
 /******/1: function(module, exports, require) {
 
-// module a
+// module b
 
 /******/},
 /******/
-/******/3: function(module, exports, require) {
+/******/4: function(module, exports, require) {
 
-// module b
+// module a
 
 /******/},
 /******/
@@ -83,13 +84,13 @@ require.ensure(1, function(require) {
 /******/webpackJsonp(1, {
 /******/2: function(module, exports, require) {
 
-// module d
+// module c
 
 /******/},
 /******/
-/******/4: function(module, exports, require) {
+/******/3: function(module, exports, require) {
 
-// module c
+// module d
 
 /******/},
 /******/
@@ -99,7 +100,7 @@ require.ensure(1, function(require) {
 Minimized
 
 ``` javascript
-webpackJsonp(1,{2:function(a,b,c){},4:function(a,b,c){}})
+webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
 ```
 
 # Info
@@ -112,20 +113,20 @@ Modules: 5
 Modules including duplicates: 5
 Modules pre chunk: 2.5
 Modules first chunk: 3
-     output.js:     2033 characters
+     output.js:     2114 characters
    1.output.js:      200 characters
 output.js
-    0 [...]\examples\code-splitting\example.js
+    0 .\example.js
        main
-    1 [...]\examples\code-splitting\node_modules\a.js
-       require (1x) from [...]\examples\code-splitting\example.js
-    3 [...]\examples\code-splitting\node_modules\b.js
-       require (2x) from [...]\examples\code-splitting\example.js
+    1 .\node_modules\b.js
+       require (2x) from .\example.js
+    4 .\node_modules\a.js
+       require (1x) from .\example.js
 1.output.js
-    2 [...]\examples\code-splitting\node_modules\d.js
-       async require (1x) from [...]\examples\code-splitting\example.js
-    4 [...]\examples\code-splitting\node_modules\c.js
-       async require (1x) from [...]\examples\code-splitting\example.js
+    2 .\node_modules\c.js
+       async require (1x) from .\example.js
+    3 .\node_modules\d.js
+       async require (1x) from .\example.js
 ```
 
 ## Minimized (uglify-js, no zip)
@@ -136,18 +137,18 @@ Modules: 5
 Modules including duplicates: 5
 Modules pre chunk: 2.5
 Modules first chunk: 3
-     output.js:      729 characters
+     output.js:      747 characters
    1.output.js:       57 characters
 output.js
-    0 [...]\examples\code-splitting\example.js
+    0 .\example.js
        main
-    1 [...]\examples\code-splitting\node_modules\a.js
-       require (1x) from [...]\examples\code-splitting\example.js
-    3 [...]\examples\code-splitting\node_modules\b.js
-       require (2x) from [...]\examples\code-splitting\example.js
+    1 .\node_modules\a.js
+       require (1x) from .\example.js
+    2 .\node_modules\b.js
+       require (2x) from .\example.js
 1.output.js
-    2 [...]\examples\code-splitting\node_modules\c.js
-       async require (1x) from [...]\examples\code-splitting\example.js
-    4 [...]\examples\code-splitting\node_modules\d.js
-       async require (1x) from [...]\examples\code-splitting\example.js
+    3 .\node_modules\d.js
+       async require (1x) from .\example.js
+    4 .\node_modules\c.js
+       async require (1x) from .\example.js
 ```

@@ -40,6 +40,10 @@ var argv = require("optimist")
 	.describe("json", "Output Stats as JSON")
 	.default("json", false)
 
+	.boolean("verbose")
+	.describe("verbose", "Output dependencies in Stats")
+	.default("verbose", false)
+
 	.string("alias")
 	.describe("alias", "Set a alias name for a module. ex. http=http-browserify")
 
@@ -128,50 +132,75 @@ if(argv.single) {
 		if(argv.json)
 			console.log(util.inspect(stats, false, 10, argv.colors));
 		else {
-			console.log("Chunks: \033[1m" + stats.chunkCount + "\033[22m");
-			console.log("Modules: \033[1m" + stats.modulesCount + "\033[22m");
-			console.log("Modules including duplicates: \033[1m" + stats.modulesIncludingDuplicates + "\033[22m");
-			console.log("Modules pre chunk: \033[1m" + stats.modulesPerChunk + "\033[22m");
-			console.log("Modules first chunk: \033[1m" + stats.modulesFirstChunk + "\033[22m");
+			function c(str) {
+				return argv.colors ? str : "";
+			}
+			console.log("Chunks: "+c("\033[1m") + stats.chunkCount + c("\033[22m"));
+			console.log("Modules: "+c("\033[1m") + stats.modulesCount + c("\033[22m"));
+			console.log("Modules including duplicates: "+c("\033[1m") + stats.modulesIncludingDuplicates + c("\033[22m"));
+			console.log("Modules pre chunk: "+c("\033[1m") + stats.modulesPerChunk + c("\033[22m"));
+			console.log("Modules first chunk: "+c("\033[1m") + stats.modulesFirstChunk + c("\033[22m"));
 			if(stats.fileSizes)
 				for(var file in stats.fileSizes) {
-					console.log("\033[1m" + sprintf("%" + (5 + options.output.length) + "s", file) + "\033[22m: \033[1m" + sprintf("%8d", stats.fileSizes[file]) + "\033[22m characters");
+					console.log(c("\033[1m") + sprintf("%" + (5 + options.output.length) + "s", file) + c("\033[22m")+": "+c("\033[1m") + sprintf("%8d", stats.fileSizes[file]) + c("\033[22m") + " characters");
 				};
+			var cwd = process.cwd();
+			var cwdParent = path.dirname(cwd);
+			var buildins = path.join(__dirname, "..");
+			cwd = cwd.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+			cwd = new RegExp("^" + cwd + "|(!)" + cwd, "g");
+			cwdParent = cwdParent.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+			cwdParent = new RegExp("^" + cwdParent + "|(!)" + cwdParent, "g");
+			buildins = buildins.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+			buildins = new RegExp("^" + buildins + "|(!)" + buildins, "g");
+			function compressFilename(filename) {
+				if(!filename)
+					return filename;
+				filename = filename.replace(cwd, "!.");
+				filename = filename.replace(cwdParent, "!..");
+				filename = filename.replace(buildins, "!(webpack)");
+				return filename.replace(/^!/, "");
+			}
 			if(stats.fileModules) {
 				for(var file in stats.fileModules) {
-					console.log("\033[1m\033[32m" + file + "\033[39m\033[22m");
+					console.log(c("\033[1m\033[32m") + file + c("\033[39m\033[22m"));
 					var modules = stats.fileModules[file];
 					modules.forEach(function(module) {
-						console.log("  \033[1m" + sprintf("%3s", module.id+"") + " " + (module.filename || (module.dirname && ("generated " + module.dirname)) || "generated") + "\033[22m");
-						module.reasons.forEach(function(reason) {
-							switch(reason.type) {
-							case "require":
-								console.log("       \033[36mrequire (" + reason.count + "x) from " + reason.filename + "\033[39m");
-								break;
-							case "context":
-								console.log("       \033[90mcontext from " + reason.filename + "\033[39m");
-								break;
-							case "async require":
-								console.log("       \033[35masync require (" + reason.count + "x) from " + reason.filename + "\033[39m");
-								break;
-							case "async context":
-								console.log("       \033[35masync context from " + reason.filename + "\033[39m");
-								break;
-							default:
-								console.log("       \033[31m" + reason.type + "\033[39m");
-							}
-						});
+						console.log("  "+c("\033[1m") + sprintf("%3s", module.id+"") + " " +
+							(compressFilename(module.filename) ||
+							(module.dirname && ("[context] " + compressFilename(module.dirname))) ||
+							"[unknown]") + c("\033[22m"));
+					if(argv.verbose) {
+							module.reasons.forEach(function(reason) {
+								switch(reason.type) {
+								case "require":
+									console.log("       "+c("\033[36m")+"require (" + reason.count + "x) from " + compressFilename(reason.filename) + c("\033[39m"));
+									break;
+								case "context":
+									console.log("       "+c("\033[90m")+"context from " + compressFilename(reason.filename) + c("\033[39m"));
+									break;
+								case "async require":
+									console.log("       "+c("\033[35m")+"async require (" + reason.count + "x) from " + compressFilename(reason.filename) + c("\033[39m"));
+									break;
+								case "async context":
+									console.log("       "+c("\033[35ma")+"sync context from " + compressFilename(reason.filename) + c("\033[39m"));
+									break;
+								default:
+									console.log("       "+c("\033[31m") + reason.type + c("\033[39m"));
+								}
+							});
+						}
 					});
 				}
 			}
 			if(stats.warnings) {
 				stats.warnings.forEach(function(warning) {
-					console.log("\033[1m\033[33mWARNING: " + warning + "\033[39m\033[22m");
+					console.log(c("\033[1m\033[33m")+"WARNING: " + warning + c("\033[39m\033[22m"));
 				});
 			}
 			if(stats.errors) {
 				stats.errors.forEach(function(error) {
-					console.log("\033[1m\033[31mERROR: " + error + "\033[39m\033[22m");
+					console.log(c("\033[1m\033[31m")+"ERROR: " + error + c("\033[39m\033[22m"));
 				});
 			}
 		}

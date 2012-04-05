@@ -156,7 +156,7 @@ function _deepEqual(actual, expected) {
   if (actual === expected) {
     return true;
 
-  } else if (Buffer.isBuffer(actual) && Buffer.isBuffer(expected)) {
+  } else if (require("buffer").Buffer.isBuffer(actual) && require("buffer").Buffer.isBuffer(expected)) {
     if (actual.length != expected.length) return false;
 
     for (var i = 0; i < actual.length; i++) {

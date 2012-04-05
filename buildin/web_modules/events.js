@@ -186,8 +186,6 @@ EventEmitter.prototype.removeListener = function(type, listener) {
 
     if (position < 0) return this;
     list.splice(position, 1);
-    if (list.length == 0)
-      delete this._events[type];
   } else if (list === listener ||
              (list.listener && list.listener === listener))
   {
@@ -203,8 +201,15 @@ EventEmitter.prototype.removeAllListeners = function(type) {
     return this;
   }
 
-  // does not use listeners(), so no side effect of creating _events[type]
-  if (type && this._events && this._events[type]) this._events[type] = null;
+  var events = this._events && this._events[type];
+  if (!events) return this;
+
+  if (isArray(events)) {
+    events.splice(0);
+  } else {
+    this._events[type] = null;
+  }
+
   return this;
 };
 

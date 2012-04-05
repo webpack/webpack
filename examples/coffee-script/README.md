@@ -1,3 +1,4 @@
+
 # example.js
 
 ``` javascript
@@ -45,27 +46,28 @@ module.exports = 42
 /******/({
 /******/0: function(module, exports, require) {
 
-require(/* __webpack_console */1).log(require(/* ./cup1.coffee */2));
+/******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
+console.log(require(/* ./cup1.coffee */2));
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */1)))
 
 /******/},
 /******/
 /******/1: function(module, exports, require) {
 
 var console = window.console;
-exports.log = (console && console.log) || function() {};
-exports.info = (console && console.info) || function() {};
-exports.error = (console && console.error) || function() {};
-exports.warn = (console && console.warn) || function() {};
-exports.dir = (console && console.dir) || function() {};
-exports.time = (console && console.time) || function(label) {
+module.exports = console;
+for(var name in {log:1, info:1, error:1, warn:1, dir:1, trace:1, assert:1})
+	if(!console[name])
+		console[name] = function() {};
+if(!console.time)
+console.time = function(label) {
 	times[label] = Date.now();
 };
-exports.timeEnd = (console && console.timeEnd) || function() {
+if(!console.timeEnd)
+console.timeEnd = function() {
 	var duration = Date.now() - times[label];
-	exports.log('%s: %dms', label, duration);
+	console.log('%s: %dms', label, duration);
 };
-exports.trace = (console && console.trace) || function() {};
-exports.assert = (console && console.assert) || function() {};
 
 /******/},
 /******/
@@ -87,14 +89,16 @@ exports.assert = (console && console.assert) || function() {};
 /******/
 /******/3: function(module, exports, require) {
 
+/******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
 (function() {
 
-  require(/* __webpack_console */1).log("yeah coffee-script");
+  console.log("yeah coffee-script");
 
   module.exports = 42;
 
 }).call(this);
 
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */1)))
 
 /******/},
 /******/
@@ -111,17 +115,17 @@ Modules: 4
 Modules including duplicates: 4
 Modules pre chunk: 4
 Modules first chunk: 4
-     output.js:     2002 characters
+     output.js:     1968 characters
 output.js
-    0 [...]\examples\coffee-script\example.js
+    0 .\example.js
        main
-    1 [...]\buildin\__webpack_console.js
-       require (1x) from [...]\examples\coffee-script\example.js
-       require (1x) from [...]\examples\coffee-script\cup2.coffee
-    2 [...]\node_modules\coffee-loader.js![...]\examples\coffee-script\cup1.coffee
-       require (1x) from [...]\examples\coffee-script\example.js
-    3 [...]\node_modules\coffee-loader.js![...]\examples\coffee-script\cup2.coffee
-       require (2x) from [...]\examples\coffee-script\cup1.coffee
+    1 (webpack)\buildin\__webpack_console.js
+       require (1x) from .\example.js
+       require (1x) from .\cup2.coffee
+    2 (webpack)\node_modules\coffee-loader\index.js!.\cup1.coffee
+       require (1x) from .\example.js
+    3 (webpack)\node_modules\coffee-loader\index.js!.\cup2.coffee
+       require (2x) from .\cup1.coffee
 ```
 
 ## Minimized (uglify-js, no zip)
@@ -132,15 +136,15 @@ Modules: 4
 Modules including duplicates: 4
 Modules pre chunk: 4
 Modules first chunk: 4
-     output.js:      868 characters
+     output.js:      784 characters
 output.js
-    0 [...]\examples\coffee-script\example.js
+    0 .\example.js
        main
-    1 [...]\buildin\__webpack_console.js
-       require (1x) from [...]\examples\coffee-script\example.js
-       require (1x) from [...]\examples\coffee-script\cup2.coffee
-    2 [...]\node_modules\coffee-loader.js![...]\examples\coffee-script\cup1.coffee
-       require (1x) from [...]\examples\coffee-script\example.js
-    3 [...]\node_modules\coffee-loader.js![...]\examples\coffee-script\cup2.coffee
-       require (2x) from [...]\examples\coffee-script\cup1.coffee
+    1 (webpack)\buildin\__webpack_console.js
+       require (1x) from .\example.js
+       require (1x) from .\cup2.coffee
+    2 (webpack)\node_modules\coffee-loader\index.js!.\cup1.coffee
+       require (1x) from .\example.js
+    3 (webpack)\node_modules\coffee-loader\index.js!.\cup2.coffee
+       require (2x) from .\cup1.coffee
 ```
