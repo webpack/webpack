@@ -12,18 +12,18 @@ argv.shift();
 argv.shift();
 var extraArgs = argv.join(" ");
 
-cp.exec("node ../../bin/webpack.js --verbose "+extraArgs+" example.js js/output.js", function (error, stdout, stderr) {
+cp.exec("node ../../bin/webpack.js --verbose --min "+extraArgs+" example.js js/output.js", function (error, stdout, stderr) {
 	if(stderr)
 		console.log(stderr);
 	if (error !== null)
 		console.log(error);
-	var readme = tc(require("raw!"+require("path").join(process.cwd(), "template.md")), require.context("raw!"+process.cwd()), stdout.replace(/[\r\n]*$/, ""));
-	cp.exec("node ../../bin/webpack.js --verbose --no-colors --min "+extraArgs+" example.js js/output.js", function (error, stdout, stderr) {
+	var readme = tc(require("raw!"+require("path").join(process.cwd(), "template.md")), require.context("raw!"+process.cwd()), stdout.replace(/[\r\n]*$/, ""), "min");
+	cp.exec("node ../../bin/webpack.js --verbose "+extraArgs+" example.js js/output.js", function (error, stdout, stderr) {
 		if(stderr)
 			console.log(stderr);
 		if (error !== null)
 			console.log(error);
-		readme = tc(readme, require.context("raw!"+process.cwd()), stdout.replace(/[\r\n]*$/, ""), "min");
+		readme = tc(readme, require.context("raw!"+process.cwd()), stdout.replace(/[\r\n]*$/, ""));
 		require("fs").writeFile("README.md", readme, "utf-8", function() {});
 	});
 });
