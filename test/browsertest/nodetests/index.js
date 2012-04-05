@@ -1,22 +1,22 @@
 require("./common").globalCheck = false;
 
-require("./simple/test-assert.js");
-require("./simple/test-event-emitter-check-listener-leaks.js");
-require("./simple/test-event-emitter-modify-in-emit.js");
-require("./simple/test-event-emitter-num-args.js");
-require("./simple/test-event-emitter-remove-all-listeners.js");
-require("./simple/test-global.js");
-require("./simple/test-next-tick-doesnt-hang.js");
-require("./simple/test-next-tick-ordering2.js");
-require("./simple/test-path.js");
-require("./simple/test-querystring.js");
-require("./simple/test-sys.js");
-require("./simple/test-timers-zero-timeout.js");
-require("./simple/test-timers.js");
-require("./simple/test-url.js");
-require("./simple/test-util-format.js");
-require("./simple/test-util-inspect.js");
-require("./simple/test-util.js");
+try { require("./simple/test-assert.js");                               } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-event-emitter-check-listener-leaks.js");   } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-event-emitter-modify-in-emit.js");         } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-event-emitter-num-args.js");               } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-event-emitter-remove-all-listeners.js");   } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-global.js");                               } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-next-tick-doesnt-hang.js");                } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-next-tick-ordering2.js");                  } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-path.js");                                 } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-querystring.js");                          } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-sys.js");                                  } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-timers-zero-timeout.js");                  } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-timers.js");                               } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-url.js");                                  } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-util-format.js");                          } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-util-inspect.js");                         } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
+try { require("./simple/test-util.js");                                 } catch(e) { window.test(false, "Node.js Test should not fail with " + e ); }
 
 window.test(true, "Node.js simple tests should complete");
 
