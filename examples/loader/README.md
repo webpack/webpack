@@ -21,25 +21,8 @@ exports.foo = "bar";
 # loader.js
 
 ``` javascript
-module.exports = function(contents, options, callback) {
-	
-	if(contents.length !== 1)
-		throw new Error("loader takes exactly one file as parameter");
-	
-	if(callback) {
-		// compile for web
-		callback(null /* no error */, 
-			"exports.answer = 42;\n" + 
-			contents[0]);
-	} else {
-		// execute for node.js
-		var Module = require("module");
-		var m = new Module(options.request);
-		m.exports.answer = 42;
-		m._compile(contents[0], options.filename);
-		return m.exports;
-	}
-
+module.exports = function(content) {
+	return "exports.answer = 42;\n" + content;
 }
 ```
 
@@ -116,7 +99,8 @@ console.timeEnd = function() {
 /******/
 /******/3: function(module, exports, require) {
 
-
+exports.answer = 42;
+exports.foo = "bar";
 
 /******/},
 /******/
@@ -151,7 +135,7 @@ Modules: 5
 Modules including duplicates: 5
 Modules pre chunk: 5
 Modules first chunk: 5
-     output.js:     2048 characters
+     output.js:     2089 characters
 output.js
     0 .\example.js
        main
