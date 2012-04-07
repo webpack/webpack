@@ -105,7 +105,7 @@ module.exports = function(req) {
 				var loaders = module.exports.options.resolve.loaders;
 				for(var i = 0; i < loaders.length; i++)
 					if(loaders[i].test.test(resolved))
-						return req(loader.loader + "!" + name);
+						return req(loaders[i].loader + "!" + name);
 
 				return oldReq(name);
 			}
