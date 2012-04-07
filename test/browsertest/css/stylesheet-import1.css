@@ -1,4 +1,5 @@
-@import url(./stylesheet-import2.css);
+@import url(./stylesheet-import2.css) print, screen;
+@import url(./stylesheet-import3.css) print and screen;
 
 .rule-import1 {
 	background: green;

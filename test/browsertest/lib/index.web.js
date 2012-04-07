@@ -2,6 +2,7 @@
 require = require("../../../require-polyfill")(require.valueOf());
 
 window.test(true, "index.js should be replaced with index.web.js");
+require("script!../js/libary1.js");
 window.test(window.libary1, "libary1 loaded");
 window.test(window.libary2.ok, "libary2 loaded");
 require.ensure("subcontent", function(require) {

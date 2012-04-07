@@ -102,7 +102,7 @@ module.exports = function(req) {
 			} else {
 				var resolved = oldReq.resolve(name);
 				var match = false;
-				var loaders = module.exports.resolve.loaders;
+				var loaders = module.exports.options.resolve.loaders;
 				for(var i = 0; i < loaders.length; i++)
 					if(loaders[i].test.test(resolved))
 						return req(loader.loader + "!" + name);

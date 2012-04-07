@@ -1,6 +1,6 @@
 {
 	"name": "webpack",
-	"version": "0.3.1",
+	"version": "0.3.2",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand.",
 	"dependencies": {
@@ -15,7 +15,8 @@
 		"jade-loader": "0.1.x",
 		"coffee-loader": "0.1.x",
 		"css-loader": "0.1.x",
-		"style-loader": "0.1.x"
+		"style-loader": "0.1.x",
+		"script-loader": "0.1.x"
 	},
 	"licenses": [
 		{
