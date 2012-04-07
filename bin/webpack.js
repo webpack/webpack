@@ -40,6 +40,10 @@ var argv = require("optimist")
 	.describe("json", "Output Stats as JSON")
 	.default("json", false)
 
+	.boolean("by-size")
+	.describe("by-size", "Sort modules by size in Stats")
+	.default("by-size", false)
+
 	.boolean("verbose")
 	.describe("verbose", "Output dependencies in Stats")
 	.default("verbose", false)
@@ -162,11 +166,19 @@ if(argv.single) {
 				return filename.replace(/^!/, "");
 			}
 			if(stats.fileModules) {
+				console.log();
+				console.log(" <id>    <size>  <filename>");
+				if(argv.verbose)
+					console.log("       <reason> from <filename>");
 				for(var file in stats.fileModules) {
 					console.log(c("\033[1m\033[32m") + file + c("\033[39m\033[22m"));
 					var modules = stats.fileModules[file];
+					if(argv["by-size"])
+					modules.sort(function(a, b) {
+						return b.size - a.size;
+					});
 					modules.forEach(function(module) {
-						console.log("  "+c("\033[1m") + sprintf("%3s", module.id+"") + " " +
+						console.log("  "+c("\033[1m") + sprintf("%3s", module.id+"") + " " + (typeof module.size === "number" ? sprintf("%9s", Math.round(module.size)+"") : "         ") + "  " +
 							(compressFilename(module.filename) ||
 							(module.dirname && ("[context] " + compressFilename(module.dirname))) ||
 							"[unknown]") + c("\033[22m"));

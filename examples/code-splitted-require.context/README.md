@@ -61,7 +61,7 @@ getTemplate("b", function(b) {
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
 function getTemplate(templateName, callback) {
 	require.ensure(1, function(require) {
-		callback(require(/* ../require.context/templates */1)("./"+templateName));
+		callback(require(/* ../require.context/templates */2)("./"+templateName));
 	});
 }
 getTemplate("a", function(a) {
@@ -70,11 +70,11 @@ getTemplate("a", function(a) {
 getTemplate("b", function(b) {
 	console.log(b);
 });
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */2)))
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */1)))
 
 /******/},
 /******/
-/******/2: function(module, exports, require) {
+/******/1: function(module, exports, require) {
 
 var console = window.console;
 module.exports = console;
@@ -106,21 +106,24 @@ Modules: 6
 Modules including duplicates: 6
 Modules pre chunk: 3
 Modules first chunk: 2
-     output.js:     2707 characters
-   1.output.js:      780 characters
+     output.js:     2659 characters
+   1.output.js:      763 characters
+
+ <id>    <size>  <filename>
+       <reason> from <filename>
 output.js
-    0 .\example.js
+    0       162  .\example.js
        main
-    2 (webpack)\buildin\__webpack_console.js
+    1       332  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
 1.output.js
-    1 [context] ..\require.context\templates
+    2            [context] ..\require.context\templates
        sync context from .\example.js
-    3 ..\require.context\templates\a.js
+    3        72  ..\require.context\templates\a.js
        sync context from .\example.js
-    4 ..\require.context\templates\b.js
+    4        72  ..\require.context\templates\b.js
        sync context from .\example.js
-    5 ..\require.context\templates\c.js
+    5        72  ..\require.context\templates\c.js
        sync context from .\example.js
 ```
 
@@ -133,19 +136,22 @@ Modules including duplicates: 6
 Modules pre chunk: 3
 Modules first chunk: 2
      output.js:     1062 characters
-   1.output.js:      436 characters
+   1.output.js:      430 characters
+
+ <id>    <size>  <filename>
+       <reason> from <filename>
 output.js
-    0 .\example.js
+    0       162  .\example.js
        main
-    2 (webpack)\buildin\__webpack_console.js
+    1       332  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
 1.output.js
-    1 [context] ..\require.context\templates
+    2            [context] ..\require.context\templates
        sync context from .\example.js
-    3 ..\require.context\templates\a.js
+    3        72  ..\require.context\templates\a.js
        sync context from .\example.js
-    4 ..\require.context\templates\b.js
+    4        72  ..\require.context\templates\b.js
        sync context from .\example.js
-    5 ..\require.context\templates\c.js
+    5        72  ..\require.context\templates\c.js
        sync context from .\example.js
 ```

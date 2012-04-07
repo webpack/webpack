@@ -47,24 +47,15 @@ module.exports = function() {
 
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
 function getTemplate(templateName) {
-	return require(/* ./templates */1)("./"+templateName);
+	return require(/* ./templates */2)("./"+templateName);
 }
 console.log(getTemplate("a"));
 console.log(getTemplate("b"));
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */2)))
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */1)))
 
 /******/},
 /******/
 /******/1: function(module, exports, require) {
-
-/***/module.exports = function(name) {
-/***/	var map = {"./a.js":3,"./b.js":4,"./c.js":5};
-/***/	return require(map[name]||map[name+""]||map[name+".webpack.js"]||map[name+".web.js"]||map[name+".js"]||name);
-/***/};
-
-/******/},
-/******/
-/******/2: function(module, exports, require) {
 
 var console = window.console;
 module.exports = console;
@@ -80,6 +71,15 @@ console.timeEnd = function() {
 	var duration = Date.now() - times[label];
 	console.log('%s: %dms', label, duration);
 };
+
+/******/},
+/******/
+/******/2: function(module, exports, require) {
+
+/***/module.exports = function(name) {
+/***/	var map = {"./a.js":3,"./b.js":4,"./c.js":5};
+/***/	return require(map[name+""]||map[name+".webpack.js"]||map[name+".web.js"]||map[name+".js"]||name);
+/***/};
 
 /******/},
 /******/
@@ -120,19 +120,22 @@ Modules: 6
 Modules including duplicates: 6
 Modules pre chunk: 6
 Modules first chunk: 6
-     output.js:     2274 characters
+     output.js:     2236 characters
+
+ <id>    <size>  <filename>
+       <reason> from <filename>
 output.js
-    0 .\example.js
+    0       109  .\example.js
        main
-    1 [context] .\templates
-       context from .\example.js
-    2 (webpack)\buildin\__webpack_console.js
+    1       332  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
-    3 .\templates\a.js
+    2            [context] .\templates
        context from .\example.js
-    4 .\templates\b.js
+    3        72  .\templates\a.js
        context from .\example.js
-    5 .\templates\c.js
+    4        72  .\templates\b.js
+       context from .\example.js
+    5        72  .\templates\c.js
        context from .\example.js
 ```
 
@@ -144,22 +147,25 @@ Modules: 6
 Modules including duplicates: 6
 Modules pre chunk: 6
 Modules first chunk: 6
-     output.js:     1043 characters
+     output.js:     1037 characters
+
+ <id>    <size>  <filename>
+       <reason> from <filename>
 output.js
-    0 .\example.js
+    0       109  .\example.js
        main
-    1 [context] .\templates
-       context from .\example.js
-    2 (webpack)\buildin\__webpack_console.js
+    1       332  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
-    3 .\templates\a.js
+    2            [context] .\templates
        context from .\example.js
-    4 .\templates\b.js
+    3        72  .\templates\a.js
        context from .\example.js
-    5 .\templates\c.js
+    4        72  .\templates\b.js
+       context from .\example.js
+    5        72  .\templates\c.js
        context from .\example.js
 ```
 
 # Code Splitting
 
-See [this example combined with code splitting](code-splitted-require.context)
+See [this example combined with code splitting](/sokra/modules-webpack/tree/master/examples/code-splitted-require.context)

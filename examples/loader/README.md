@@ -59,26 +59,19 @@ module.exports = function(content) {
 
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
 // Polyfill require for node.js usage of loaders
-require = require(/* ../../require-polyfill */1)(require.valueOf());
+require = require(/* ../../require-polyfill */4)(require.valueOf());
 
 // use our loader
 console.dir(require(/* ./loader!./file */3));
 
 // use buildin json loader
-console.dir(require(/* ./test.json */4)); // default by extension
-console.dir(require(/* json!./test.json */4)); // manual
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */2)))
+console.dir(require(/* ./test.json */2)); // default by extension
+console.dir(require(/* json!./test.json */2)); // manual
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */1)))
 
 /******/},
 /******/
 /******/1: function(module, exports, require) {
-
-// No polyfill needed when compiled with webpack
-module.exports = function(r){return r}
-
-/******/},
-/******/
-/******/2: function(module, exports, require) {
 
 var console = window.console;
 module.exports = console;
@@ -97,6 +90,14 @@ console.timeEnd = function() {
 
 /******/},
 /******/
+/******/2: function(module, exports, require) {
+
+module.exports = {
+	"foobar": 1234
+}
+
+/******/},
+/******/
 /******/3: function(module, exports, require) {
 
 exports.answer = 42;
@@ -106,9 +107,8 @@ exports.foo = "bar";
 /******/
 /******/4: function(module, exports, require) {
 
-module.exports = {
-	"foobar": 1234
-}
+// No polyfill needed when compiled with webpack
+module.exports = function(r){return r}
 
 /******/},
 /******/
@@ -135,17 +135,20 @@ Modules: 5
 Modules including duplicates: 5
 Modules pre chunk: 5
 Modules first chunk: 5
-     output.js:     2089 characters
+     output.js:     2063 characters
+
+ <id>    <size>  <filename>
+       <reason> from <filename>
 output.js
-    0 .\example.js
+    0       109  .\example.js
        main
-    1 (webpack)\require-polyfill.web.js
-       require (1x) from .\example.js
-    2 (webpack)\buildin\__webpack_console.js
+    1       332  (webpack)\buildin\__webpack_console.js
        require (3x) from .\example.js
-    3 .\loader.js!.\file.js
+    2        28  (webpack)\node_modules\json-loader\index.js!.\test.json
        require (1x) from .\example.js
-    4 (webpack)\node_modules\json-loader\index.js!.\test.json
        require (1x) from .\example.js
+    3        35  .\loader.js!.\file.js
+       require (1x) from .\example.js
+    4        36  (webpack)\require-polyfill.web.js
        require (1x) from .\example.js
 ```

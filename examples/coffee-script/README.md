@@ -47,7 +47,7 @@ module.exports = 42
 /******/0: function(module, exports, require) {
 
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
-console.log(require(/* ./cup1.coffee */2));
+console.log(require(/* ./cup1.coffee */3));
 /******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */1)))
 
 /******/},
@@ -73,22 +73,6 @@ console.timeEnd = function() {
 /******/
 /******/2: function(module, exports, require) {
 
-(function() {
-
-  module.exports = {
-    cool: "stuff",
-    answer: 42,
-    external: require(/* ./cup2.coffee */3),
-    again: require(/* ./cup2.coffee */3)
-  };
-
-}).call(this);
-
-
-/******/},
-/******/
-/******/3: function(module, exports, require) {
-
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
 (function() {
 
@@ -99,6 +83,22 @@ console.timeEnd = function() {
 }).call(this);
 
 /******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */1)))
+
+/******/},
+/******/
+/******/3: function(module, exports, require) {
+
+(function() {
+
+  module.exports = {
+    cool: "stuff",
+    answer: 42,
+    external: require(/* ./cup2.coffee */2),
+    again: require(/* ./cup2.coffee */2)
+  };
+
+}).call(this);
+
 
 /******/},
 /******/
@@ -115,17 +115,20 @@ Modules: 4
 Modules including duplicates: 4
 Modules pre chunk: 4
 Modules first chunk: 4
-     output.js:     1968 characters
+     output.js:     1951 characters
+
+ <id>    <size>  <filename>
+       <reason> from <filename>
 output.js
-    0 .\example.js
+    0        23  .\example.js
        main
-    1 (webpack)\buildin\__webpack_console.js
+    1       332  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
        require (1x) from .\cup2.coffee
-    2 (webpack)\node_modules\coffee-loader\index.js!.\cup1.coffee
-       require (1x) from .\example.js
-    3 (webpack)\node_modules\coffee-loader\index.js!.\cup2.coffee
+    2        76  (webpack)\node_modules\coffee-loader\index.js!.\cup2.coffee
        require (2x) from .\cup1.coffee
+    3       101  (webpack)\node_modules\coffee-loader\index.js!.\cup1.coffee
+       require (1x) from .\example.js
 ```
 
 ## Minimized (uglify-js, no zip)
@@ -137,14 +140,17 @@ Modules including duplicates: 4
 Modules pre chunk: 4
 Modules first chunk: 4
      output.js:      784 characters
+
+ <id>    <size>  <filename>
+       <reason> from <filename>
 output.js
-    0 .\example.js
+    0        23  .\example.js
        main
-    1 (webpack)\buildin\__webpack_console.js
+    1       332  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
        require (1x) from .\cup2.coffee
-    2 (webpack)\node_modules\coffee-loader\index.js!.\cup1.coffee
-       require (1x) from .\example.js
-    3 (webpack)\node_modules\coffee-loader\index.js!.\cup2.coffee
+    2        76  (webpack)\node_modules\coffee-loader\index.js!.\cup2.coffee
        require (2x) from .\cup1.coffee
+    3       101  (webpack)\node_modules\coffee-loader\index.js!.\cup1.coffee
+       require (1x) from .\example.js
 ```

@@ -54,11 +54,11 @@ require.ensure(["c"], function(require) {
 /******/({a:".output.js",b:"webpackJsonp",c:"",
 /******/0: function(module, exports, require) {
 
-var a = require(/* a */4);
+var a = require(/* a */2);
 var b = require(/* b */1);
 require.ensure(1, function(require) {
     require(/* b */1).xyz();
-    var d = require(/* d */3);
+    var d = require(/* d */4);
 });
 
 /******/},
@@ -69,7 +69,7 @@ require.ensure(1, function(require) {
 
 /******/},
 /******/
-/******/4: function(module, exports, require) {
+/******/2: function(module, exports, require) {
 
 // module a
 
@@ -82,13 +82,13 @@ require.ensure(1, function(require) {
 
 ``` javascript
 /******/webpackJsonp(1, {
-/******/2: function(module, exports, require) {
+/******/3: function(module, exports, require) {
 
 // module c
 
 /******/},
 /******/
-/******/3: function(module, exports, require) {
+/******/4: function(module, exports, require) {
 
 // module d
 
@@ -113,19 +113,22 @@ Modules: 5
 Modules including duplicates: 5
 Modules pre chunk: 2.5
 Modules first chunk: 3
-     output.js:     2114 characters
+     output.js:     2071 characters
    1.output.js:      200 characters
+
+ <id>    <size>  <filename>
+       <reason> from <filename>
 output.js
-    0 .\example.js
+    0        82  .\example.js
        main
-    1 .\node_modules\b.js
+    1            .\node_modules\b.js
        require (2x) from .\example.js
-    4 .\node_modules\a.js
+    2            .\node_modules\a.js
        require (1x) from .\example.js
 1.output.js
-    2 .\node_modules\c.js
+    3            .\node_modules\c.js
        async require (1x) from .\example.js
-    3 .\node_modules\d.js
+    4            .\node_modules\d.js
        async require (1x) from .\example.js
 ```
 
@@ -139,16 +142,19 @@ Modules pre chunk: 2.5
 Modules first chunk: 3
      output.js:      747 characters
    1.output.js:       57 characters
+
+ <id>    <size>  <filename>
+       <reason> from <filename>
 output.js
-    0 .\example.js
+    0        82  .\example.js
        main
-    1 .\node_modules\a.js
-       require (1x) from .\example.js
-    2 .\node_modules\b.js
+    1            .\node_modules\b.js
        require (2x) from .\example.js
+    2            .\node_modules\a.js
+       require (1x) from .\example.js
 1.output.js
-    3 .\node_modules\d.js
+    3            .\node_modules\c.js
        async require (1x) from .\example.js
-    4 .\node_modules\c.js
+    4            .\node_modules\d.js
        async require (1x) from .\example.js
 ```

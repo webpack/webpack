@@ -1,13 +1,19 @@
 # modules-webpack
 
 As developer you want to reuse existing code.
-As with node.js and web all file are already in the same language, but it is extra work to use your code with the node.js module system and the browser.
+As with node.js and web all files are already in the same language, but it is extra work to use your code with the node.js module system and the browser.
 
 The goal of `webpack` is to bundle CommonJs modules into javascript files which can be loaded by `<script>`-tags.
 Simply concating all required files has a disadvantage: many code to download (and execute) on page load.
 Therefore `webpack` uses the `require.ensure` function ([CommonJs/Modules/Async/A](http://wiki.commonjs.org/wiki/Modules/Async/A)) to split your code automatically into multiple bundles which are loaded on demand.
-This happens mostly transparent to the developer with a single function call. Dependencies are resolved for you.
+This happens mostly transparent to the developer.
+Dependencies are resolved for you.
 The result is a smaller inital code download which results in faster page load.
+
+Another common thing in web development is that some files have to be preprocessed before send to the client (ex. template files).
+This introduce more complexity to the compile step.
+`webpack` supports loaders which process files before including them.
+You as developer can use such files like any other module.
 
 **TL;DR**
 
@@ -15,6 +21,7 @@ The result is a smaller inital code download which results in faster page load.
 * reuse server-side code (node.js) on client-side
 * create multiple files which are loaded on demand (faster page load in big webapps or on mobile connections)
 * dependencies managed for you, on compile time (no resolution on runtime needed)
+* loaders can preprocess files
 
 ## Goals
 
@@ -39,7 +46,7 @@ exports.stuff = function(text) {
 }
 ```
 
-are compiled to
+are compiled to (reformatted)
 
 ``` javascript
 (/* small webpack header */)
@@ -53,7 +60,7 @@ are compiled to
 1: function(module, exports, require) {
 
 	exports.stuff = function(text) {
-		console.log(text);
+		console.log(text)
 	}
 
 }
@@ -118,7 +125,7 @@ in options: `alias: { "http": "http-browserify" }`
 
 in shell: `--alias http=http-browserify`
 
-## require.context
+## Contexts
 
 If the required module is not known while compile time we get into a problem.
 A solution is the method `require.context` which takes a directory as parameter
@@ -177,15 +184,16 @@ Note that the `web-` versions are omitted if loaders are used in node.js.
 
 See [example](/sokra/modules-webpack/tree/master/examples/loader).
 
-The following loaders are included as optional dependencies:
+The following loaders are included in webpack:
 
-* `raw`: Loads raw content of a file
+* `raw`: Loads raw content of a file (as utf-8)
 * `json` (default at `.json`): Loads file as JSON
 * `jade` (default at `.jade`): Loads jade template and returns a function
 * `coffee` (default at `.coffee`): Loads coffee-script like javascript
-* `css`: Loads css file with resolved imports
+* `css`: Loads css file with resolved imports and returns css code
 * `style`: Adds result of javascript execution to DOM
-* `.css` defaults to `style!css` loader, so all css rules are added to DOM
+* (`.css` defaults to `style!css` loader, so all css rules are added to DOM)
+* `script`: Executes a javascript file once in global context (like in script tag), requires are not parsed. Use this to include a libary. ex. `require("script!./jquery.min.js")`. This is synchron, so the `$` variable is avalible after require.
 
 TODO
 
@@ -260,7 +268,7 @@ Included simple replacements:
 * `child_process`: disabled
 * `events`: copy of node.js' version
 * `path`: copy of node.js' version
-* `punycode`: copy of node.js' version, one line removed
+* `punycode`: copy of node.js' version, one line removed (http://mths.be/punycode by @mathias)
 * `querystring`: copy of node.js' version
 * `string_decoder`: copy of node.js' version
 * `url`: copy of node.js' version
@@ -294,7 +302,10 @@ Options:
   --libary             Stores the exports into this variable                    [string]
   --colors             Output Stats with colors                                 [boolean]  [default: false]
   --json               Output Stats as JSON                                     [boolean]  [default: false]
+  --by-size            Sort modules by size in Stats                            [boolean]  [default: false]
+  --verbose            Output dependencies in Stats                             [boolean]  [default: false]
   --alias              Set a alias name for a module. ex. http=http-browserify  [string]
+  --debug              Prints debug info to output files                        [boolean]  [default: false]
 ```
 
 ### Programmatically Usage
@@ -335,6 +346,10 @@ exports of input file are stored in this variable
 `minimize`
 
 minimize outputs with uglify-js
+
+`debug`
+
+prints debug info to output files.
 
 `includeFilenames`
 
@@ -500,13 +515,13 @@ else `stats` as json see [example](/sokra/modules-webpack/tree/master/examples/c
 	<code>require("http");</code>
   </td>
   <td>
-	some optional
+	yes
   </td>
   <td>
 	no
   </td>
   <td>
-	many by default
+	yes
   </td>
  </tr>
 
@@ -695,7 +710,7 @@ else `stats` as json see [example](/sokra/modules-webpack/tree/master/examples/c
 	debug mode
   </td>
   <td>
-	no
+	yes
   </td>
   <td>
 	no
@@ -763,7 +778,7 @@ cd test/browsertests
 node build
 ```
 
-and open `test.html` in browser. There must be several OKs in the file and no FAIL.
+and open `test.html` in browser. There must be several OKs in the file, no FAIL and no RED boxes.
 
 ## Contribution
 
@@ -773,9 +788,10 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 
 ## Future plans
 
+* watch mode
+* append hash of file to filename, for better caching
 * more polyfills for node.js buildin modules, but optional
 * require from protocol `require("http://...")`
-* watch mode
 
 ## License
 
