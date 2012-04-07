@@ -183,10 +183,12 @@ The following loaders are included as optional dependencies:
 * `json` (default at `.json`): Loads file as JSON
 * `jade` (default at `.jade`): Loads jade template and returns a function
 * `coffee` (default at `.coffee`): Loads coffee-script like javascript
+* `css`: Loads css file with resolved imports
+* `style`: Adds result of javascript execution to DOM
+* `.css` defaults to `style!css` loader, so all css rules are added to DOM
 
 TODO
 
-* `css`: CSS rules are added to DOM on require
 * `less`, `sass`: like `css` but compiles
 
 ## TL;DR

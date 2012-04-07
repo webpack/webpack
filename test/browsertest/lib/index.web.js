@@ -121,6 +121,11 @@ window.test(require("json!../../../package.json").name === "webpack", "Buildin '
 window.test(require("../../../package.json").name === "webpack", "Buildin 'json' loader, by ext");
 window.test(require("coffee!../resources/script.coffee") === "coffee test", "Buildin 'coffee' loader");
 window.test(require("../resources/script.coffee") === "coffee test", "Buildin 'coffee' loader, by ext");
+window.test(require("css!../css/stylesheet.css").indexOf(".rule-direct") !== -1, "Buildin 'css' loader, direct content");
+window.test(require("css!../css/stylesheet.css").indexOf(".rule-import1") !== -1, "Buildin 'css' loader, imported rule");
+window.test(require("css!../css/stylesheet.css").indexOf(".rule-import2") !== -1, "Buildin 'css' loader, double imported rule");
+// Buildin 'style' loader adds css to document
+require("../css/stylesheet.css");
 
 // Loader & Context
 var abc = "abc", scr = "script.coffee";

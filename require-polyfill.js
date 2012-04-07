@@ -10,7 +10,7 @@ module.exports = function(req) {
 		var oldReq = req;
 		req = function(name) {
 			if(name.indexOf("!") !== -1) {
-				var items = name.split(/!/g);
+				var items = name.replace(/^!|!$/g, "").replace(/!!/g, "!").split(/!/g);
 				var resource = oldReq.resolve(items.pop());
 				var resolved = [];
 				items.forEach(function(item, index) {
@@ -30,7 +30,7 @@ module.exports = function(req) {
 						relative = true;
 					var tries = [];
 					if(!relative) {
-						postfixes.forEach(function(postfix) {
+						module.exports.options.resolve.loaderPostfixes.forEach(function(postfix) {
 							if(item.indexOf("/") !== -1)
 								tries.push(item.replace("/", postfix+"/"));
 							else
@@ -38,6 +38,7 @@ module.exports = function(req) {
 						});
 					}
 					tries.push(item);
+					var extensions = module.exports.options.resolve.loaderExtensions;
 					for(var i = 0; i < tries.length; i++) {
 						for(var ext = 0; ext < extensions.length; ext++) {
 							try {
@@ -80,6 +81,10 @@ module.exports = function(req) {
 							err = content.shift();
 							values = context.values;
 						},
+						options: module.exports.options,
+						minimize: module.exports.options.minimize,
+						debug: module.exports.options.debug,
+						web: false,
 						inputValues: values,
 						values: undefined
 					};
@@ -94,8 +99,16 @@ module.exports = function(req) {
 				if(values !== undefined)
 					return values[0];
 				return exec(content[0], cacheLine);
-			} else
+			} else {
+				var resolved = oldReq.resolve(name);
+				var match = false;
+				var loaders = module.exports.resolve.loaders;
+				for(var i = 0; i < loaders.length; i++)
+					if(loaders[i].test.test(resolved))
+						return req(loader.loader + "!" + name);
+
 				return oldReq(name);
+			}
 		};
 		req.__proto__ = oldReq;
 		req.webpackPolyfill = true;
@@ -114,5 +127,15 @@ module.exports = function(req) {
 	}
 	return req;
 }
-var extensions = [".webpack-loader.js", ".loader.js", ".js", ""];
-var postfixes = ["-webpack-loader", "-loader", ""]
+var options = module.exports.options = {
+	resolve: {
+		loaders: [
+			{test: /\.coffee$/, loader: "coffee"},
+			// {test: /\.json$/, loader: "json"}, // This works out of the box in node.js
+			{test: /\.jade$/, loader: "jade"},
+			{test: /\.css$/, loader: "style!css"}
+		],
+		loaderExtensions: [".webpack-loader.js", ".loader.js", ".js", ""],
+		loaderPostfixes: ["-webpack-loader", "-loader", ""]
+	}
+};

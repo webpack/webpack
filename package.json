@@ -13,7 +13,9 @@
 		"raw-loader": "0.1.x",
 		"json-loader": "0.1.x",
 		"jade-loader": "0.1.x",
-		"coffee-loader": "0.1.x"
+		"coffee-loader": "0.1.x",
+		"css-loader": "0.1.x",
+		"style-loader": "0.1.x"
 	},
 	"licenses": [
 		{

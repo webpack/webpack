@@ -1,0 +1,5 @@
+@import url(./stylesheet-import2.css);
+
+.rule-import1 {
+	background: green;
+}
