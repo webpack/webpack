@@ -33,7 +33,11 @@ You as developer can use such files like any other module.
  * load polyfills for node-specific things if used
  * offer replacements for node buildin libaries
 
-## Example
+# Example
+
+See [example webapp](http://sokra.github.com/modules-webpack-example/).
+
+## Simple Example
 
 ``` javascript
 // a.js

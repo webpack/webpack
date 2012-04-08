@@ -160,9 +160,9 @@ if(argv.single) {
 			function compressFilename(filename) {
 				if(!filename)
 					return filename;
+				filename = filename.replace(buildins, "!(webpack)");
 				filename = filename.replace(cwd, "!.");
 				filename = filename.replace(cwdParent, "!..");
-				filename = filename.replace(buildins, "!(webpack)");
 				return filename.replace(/^!/, "");
 			}
 			if(stats.fileModules) {
