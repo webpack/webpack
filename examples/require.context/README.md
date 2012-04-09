@@ -120,7 +120,7 @@ Modules: 6
 Modules including duplicates: 6
 Modules pre chunk: 6
 Modules first chunk: 6
-     output.js:     2236 characters
+     output.js:     2263 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -129,7 +129,7 @@ output.js
        main
     1       332  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
-    2            [context] .\templates
+    2       143  [context] .\templates
        context from .\example.js
     3        72  .\templates\a.js
        context from .\example.js
@@ -156,7 +156,7 @@ output.js
        main
     1       332  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
-    2            [context] .\templates
+    2       143  [context] .\templates
        context from .\example.js
     3        72  .\templates\a.js
        context from .\example.js

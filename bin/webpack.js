@@ -153,6 +153,7 @@ if(argv.single) {
 			var buildins = path.join(__dirname, "..");
 			cwd = cwd.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 			cwd = new RegExp("^" + cwd + "|(!)" + cwd, "g");
+			var buildinsAsModule = cwd.test(buildins);
 			cwdParent = cwdParent.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
 			cwdParent = new RegExp("^" + cwdParent + "|(!)" + cwdParent, "g");
 			buildins = buildins.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -160,8 +161,11 @@ if(argv.single) {
 			function compressFilename(filename) {
 				if(!filename)
 					return filename;
-				filename = filename.replace(buildins, "!(webpack)");
+				if(buildinsAsModule)
+					filename = filename.replace(buildins, "!(webpack)");
 				filename = filename.replace(cwd, "!.");
+				if(!buildinsAsModule)
+					filename = filename.replace(buildins, "!(webpack)");
 				filename = filename.replace(cwdParent, "!..");
 				return filename.replace(/^!/, "");
 			}

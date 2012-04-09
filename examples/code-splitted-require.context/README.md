@@ -106,8 +106,8 @@ Modules: 6
 Modules including duplicates: 6
 Modules pre chunk: 3
 Modules first chunk: 2
-     output.js:     2659 characters
-   1.output.js:      763 characters
+     output.js:     2707 characters
+   1.output.js:      769 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -117,13 +117,13 @@ output.js
     1       332  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
 1.output.js
-    2            [context] ..\require.context\templates
+    2       143  [context] (webpack)\examples\require.context\templates
        sync context from .\example.js
-    3        72  ..\require.context\templates\a.js
+    3        72  (webpack)\examples\require.context\templates\a.js
        sync context from .\example.js
-    4        72  ..\require.context\templates\b.js
+    4        72  (webpack)\examples\require.context\templates\b.js
        sync context from .\example.js
-    5        72  ..\require.context\templates\c.js
+    5        72  (webpack)\examples\require.context\templates\c.js
        sync context from .\example.js
 ```
 
@@ -146,12 +146,12 @@ output.js
     1       332  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
 1.output.js
-    2            [context] ..\require.context\templates
+    2       143  [context] (webpack)\examples\require.context\templates
        sync context from .\example.js
-    3        72  ..\require.context\templates\a.js
+    3        72  (webpack)\examples\require.context\templates\a.js
        sync context from .\example.js
-    4        72  ..\require.context\templates\b.js
+    4        72  (webpack)\examples\require.context\templates\b.js
        sync context from .\example.js
-    5        72  ..\require.context\templates\c.js
+    5        72  (webpack)\examples\require.context\templates\c.js
        sync context from .\example.js
 ```

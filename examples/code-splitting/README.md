@@ -113,7 +113,7 @@ Modules: 5
 Modules including duplicates: 5
 Modules pre chunk: 2.5
 Modules first chunk: 3
-     output.js:     2071 characters
+     output.js:     2114 characters
    1.output.js:      200 characters
 
  <id>    <size>  <filename>
@@ -121,14 +121,14 @@ Modules first chunk: 3
 output.js
     0        82  .\example.js
        main
-    1            .\node_modules\b.js
+    1         0  .\node_modules\b.js
        require (2x) from .\example.js
-    2            .\node_modules\a.js
+    2         0  .\node_modules\a.js
        require (1x) from .\example.js
 1.output.js
-    3            .\node_modules\c.js
+    3         0  .\node_modules\c.js
        async require (1x) from .\example.js
-    4            .\node_modules\d.js
+    4         0  .\node_modules\d.js
        async require (1x) from .\example.js
 ```
 
@@ -148,13 +148,13 @@ Modules first chunk: 3
 output.js
     0        82  .\example.js
        main
-    1            .\node_modules\b.js
+    1         0  .\node_modules\b.js
        require (2x) from .\example.js
-    2            .\node_modules\a.js
+    2         0  .\node_modules\a.js
        require (1x) from .\example.js
 1.output.js
-    3            .\node_modules\c.js
+    3         0  .\node_modules\c.js
        async require (1x) from .\example.js
-    4            .\node_modules\d.js
+    4         0  .\node_modules\d.js
        async require (1x) from .\example.js
 ```

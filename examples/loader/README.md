@@ -135,7 +135,7 @@ Modules: 5
 Modules including duplicates: 5
 Modules pre chunk: 5
 Modules first chunk: 5
-     output.js:     2063 characters
+     output.js:     2089 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
