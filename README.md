@@ -401,11 +401,11 @@ free module variables which are replaced with a module. ex. `{ "$": "jquery" }`
 `source` if `options.output` is not set
 else `stats` as json see [example](/sokra/modules-webpack/tree/master/examples/code-splitting)
 
-## Bonus featues
+## Bonus features
 
 ### File hash
 
-You can use `[hash]` in `scriptSrcPrefix`, `output`, `outputDirectory` and `outputPostfix`.
+You can use `[hash]` in `scriptSrcPrefix`, `output`, `outputDirectory`, `outputPostfix` and in the shell parameters.
 `webpack` will replace it with a hash of your files, when writing.
 
 ## Comparison
