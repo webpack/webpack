@@ -195,13 +195,11 @@ The following loaders are included in webpack:
 * `jade` (default at `.jade`): Loads jade template and returns a function
 * `coffee` (default at `.coffee`): Loads coffee-script like javascript
 * `css`: Loads css file with resolved imports and returns css code
+* `less`: Loads and compiles a less file and returns css code
 * `style`: Adds result of javascript execution to DOM
 * (`.css` defaults to `style!css` loader, so all css rules are added to DOM)
+* (`.less` defaults to `style!less` loader, so all less rules are added to DOM)
 * `script`: Executes a javascript file once in global context (like in script tag), requires are not parsed. Use this to include a library. ex. `require("script!./jquery.min.js")`. This is synchron, so the `$` variable is available after require.
-
-TODO
-
-* `less`, `sass`: like `css` but compiles
 
 ## TL;DR
 
@@ -794,6 +792,7 @@ and open `test.html` in browser. There must be several OKs in the file, no FAIL 
 ## Contribution
 
 You are welcome to contribute by writing issues or pull requests.
+It would be nice if you open source your own loaders oder webmodules. :)
 
 You are also welcome to correct any spelling mistakes or any language issues, because my english is not perfect...
 
@@ -801,7 +800,9 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 
 * watch mode
 * more polyfills for node.js buildin modules, but optional
+* `require("webpack/require-polyfill.install")` to install for all modules
 * require from protocol `require("http://...")`
+* write an issue if you have more ideas...
 
 ## License
 
