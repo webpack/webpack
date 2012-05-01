@@ -125,8 +125,12 @@ window.test(require("../resources/script.coffee") === "coffee test", "Buildin 'c
 window.test(require("css!../css/stylesheet.css").indexOf(".rule-direct") !== -1, "Buildin 'css' loader, direct content");
 window.test(require("css!../css/stylesheet.css").indexOf(".rule-import1") !== -1, "Buildin 'css' loader, imported rule");
 window.test(require("css!../css/stylesheet.css").indexOf(".rule-import2") !== -1, "Buildin 'css' loader, double imported rule");
+window.test(require("less!../less/stylesheet.less").indexOf(".less-rule-direct") !== -1, "Buildin 'less' loader, direct content");
+window.test(require("less!../less/stylesheet.less").indexOf(".less-rule-import1") !== -1, "Buildin 'less' loader, imported rule");
+window.test(require("less!../less/stylesheet.less").indexOf(".less-rule-import2") !== -1, "Buildin 'less' loader, double imported rule");
 // Buildin 'style' loader adds css to document
 require("../css/stylesheet.css");
+require("../less/stylesheet.less");
 
 // Loader & Context
 var abc = "abc", scr = "script.coffee";

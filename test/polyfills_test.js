@@ -65,24 +65,24 @@ vows.describe("polyfills").addBatch({
 					cb(null, require("./fixtures/a"));
 				});
 			},
-			
+
 			"executed": function(a) {
 				assert.equal(a(), "This is a");
 			}
 		}
 	},
-	
+
 	"polyfill loaders": {
 		"buildin raw loader": {
 			topic: require("raw!./fixtures/abc.txt"),
-			
+
 			"raw loaded": function(abc) {
 				assert.equal(abc, "abc");
 			}
 		},
 		"buildin json loader": {
 			topic: require("json!../package.json"),
-			
+
 			"json loaded": function(packageJson) {
 				assert.equal(packageJson.name, "webpack");
 			}
@@ -91,7 +91,7 @@ vows.describe("polyfills").addBatch({
 			topic: function() {
 				return require("jade!./browsertest/resources/template.jade");
 			},
-			
+
 			"jade loaded": function(template) {
 				assert.equal(template({abc:"abc"}), "<p>abc</p>");
 			}
@@ -100,9 +100,31 @@ vows.describe("polyfills").addBatch({
 			topic: function() {
 				return require("coffee!./browsertest/resources/script.coffee") || 1;
 			},
-			
+
 			"coffee loaded": function(result) {
 				assert.equal(result, "coffee test");
+			}
+		},
+		"buildin css loader": {
+			topic: function() {
+				return require("css!./browsertest/css/stylesheet.css") || 1;
+			},
+
+			"css loaded": function(result) {
+				assert.isTrue(result.indexOf(".rule-direct")  !== -1);
+				assert.isTrue(result.indexOf(".rule-import1") !== -1);
+				assert.isTrue(result.indexOf(".rule-import2") !== -1);
+			}
+		},
+		"buildin less loader": {
+			topic: function() {
+				return require("less!./browsertest/less/stylesheet.less") || 1;
+			},
+
+			"less loaded": function(result) {
+				assert.isTrue(result.indexOf(".less-rule-direct")  !== -1);
+				assert.isTrue(result.indexOf(".less-rule-import1") !== -1);
+				assert.isTrue(result.indexOf(".less-rule-import2") !== -1);
 			}
 		}
 	}
