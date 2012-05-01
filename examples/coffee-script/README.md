@@ -110,6 +110,7 @@ console.timeEnd = function() {
 ## Uncompressed
 
 ```
+Hash: 473faf0d98f59635bba5232deb86646a
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4
@@ -134,6 +135,7 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
+Hash: 473faf0d98f59635bba5232deb86646a
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4

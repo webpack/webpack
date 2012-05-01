@@ -108,6 +108,7 @@ webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
 ## Uncompressed
 
 ```
+Hash: efedb0352f230f80a7d673655c226d6b
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5
@@ -135,6 +136,7 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
+Hash: efedb0352f230f80a7d673655c226d6b
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5

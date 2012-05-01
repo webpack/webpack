@@ -130,6 +130,7 @@ Prints in node.js (`node example.js`) and in browser:
 ## Uncompressed
 
 ```
+Hash: 7286e7c84a0b1d6841f47269de641d85
 Chunks: 1
 Modules: 5
 Modules including duplicates: 5

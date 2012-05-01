@@ -401,6 +401,13 @@ free module variables which are replaced with a module. ex. `{ "$": "jquery" }`
 `source` if `options.output` is not set
 else `stats` as json see [example](/sokra/modules-webpack/tree/master/examples/code-splitting)
 
+## Bonus featues
+
+### File hash
+
+You can use `[hash]` in `scriptSrcPrefix`, `output`, `outputDirectory` and `outputPostfix`.
+`webpack` will replace it with a hash of your files, when writing.
+
 ## Comparison
 
 <table>
@@ -639,7 +646,7 @@ else `stats` as json see [example](/sokra/modules-webpack/tree/master/examples/c
 	require JSON
   </td>
   <td>
-	yes <em>NEW</em>
+	yes
   </td>
   <td>
 	no
@@ -669,7 +676,7 @@ else `stats` as json see [example](/sokra/modules-webpack/tree/master/examples/c
 	loaders
   </td>
   <td>
-	yes <em>NEW</em>
+	yes
   </td>
   <td>
 	no
@@ -684,7 +691,7 @@ else `stats` as json see [example](/sokra/modules-webpack/tree/master/examples/c
 	compile coffee script
   </td>
   <td>
-	yes <em>NEW</em>
+	yes
   </td>
   <td>
 	no
@@ -793,7 +800,6 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 ## Future plans
 
 * watch mode
-* append hash of file to filename, for better caching
 * more polyfills for node.js buildin modules, but optional
 * require from protocol `require("http://...")`
 

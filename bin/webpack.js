@@ -125,9 +125,6 @@ if(argv.single) {
 	if(!options.outputDirectory) options.outputDirectory = path.dirname(output);
 	if(!options.output) options.output = path.basename(output);
 	if(!options.outputPostfix) options.outputPostfix = "." + path.basename(output);
-	var outExists = path.existsSync(options.outputDirectory);
-	if(!outExists)
-		fs.mkdirSync(options.outputDirectory);
 	webpack(input, options, function(err, stats) {
 		if(err) {
 			console.error(err);
@@ -139,15 +136,16 @@ if(argv.single) {
 			function c(str) {
 				return argv.colors ? str : "";
 			}
+			console.log("Hash: "+c("\033[1m") + stats.hash + c("\033[22m"));
 			console.log("Chunks: "+c("\033[1m") + stats.chunkCount + c("\033[22m"));
 			console.log("Modules: "+c("\033[1m") + stats.modulesCount + c("\033[22m"));
 			console.log("Modules including duplicates: "+c("\033[1m") + stats.modulesIncludingDuplicates + c("\033[22m"));
 			console.log("Modules pre chunk: "+c("\033[1m") + stats.modulesPerChunk + c("\033[22m"));
 			console.log("Modules first chunk: "+c("\033[1m") + stats.modulesFirstChunk + c("\033[22m"));
 			if(stats.fileSizes)
-				for(var file in stats.fileSizes) {
+				Object.keys(stats.fileSizes).reverse().forEach(function(file) {
 					console.log(c("\033[1m") + sprintf("%" + (5 + options.output.length) + "s", file) + c("\033[22m")+": "+c("\033[1m") + sprintf("%8d", stats.fileSizes[file]) + c("\033[22m") + " characters");
-				};
+				});
 			var cwd = process.cwd();
 			var cwdParent = path.dirname(cwd);
 			var buildins = path.join(__dirname, "..");
@@ -174,7 +172,7 @@ if(argv.single) {
 				console.log(" <id>    <size>  <filename>");
 				if(argv.verbose)
 					console.log("       <reason> from <filename>");
-				for(var file in stats.fileModules) {
+				Object.keys(stats.fileModules).reverse().forEach(function(file) {
 					console.log(c("\033[1m\033[32m") + file + c("\033[39m\033[22m"));
 					var modules = stats.fileModules[file];
 					if(argv["by-size"])
@@ -207,7 +205,7 @@ if(argv.single) {
 							});
 						}
 					});
-				}
+				});
 			}
 			if(stats.warnings) {
 				stats.warnings.forEach(function(warning) {

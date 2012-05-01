@@ -115,6 +115,7 @@ module.exports = function() {
 ## Uncompressed
 
 ```
+Hash: 34e41b2aba89897d758177096351e8aa
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
@@ -142,6 +143,7 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
+Hash: 34e41b2aba89897d758177096351e8aa
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
