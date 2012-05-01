@@ -120,7 +120,7 @@ Modules: 6
 Modules including duplicates: 6
 Modules pre chunk: 6
 Modules first chunk: 6
-     output.js:     2263 characters
+     output.js:     2236 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>

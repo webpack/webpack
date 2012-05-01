@@ -10,6 +10,12 @@
 {{js/output.js}}
 ```
 
+# js/1.output.js
+
+``` javascript
+{{js/1.output.js}}
+```
+
 # Info
 
 ## Uncompressed

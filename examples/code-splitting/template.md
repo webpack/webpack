@@ -11,7 +11,7 @@
 {{js/output.js}}
 ```
 
-# 1.output.js
+# js/1.output.js
 
 ``` javascript
 {{js/1.output.js}}

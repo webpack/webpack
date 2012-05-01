@@ -78,7 +78,7 @@ require.ensure(1, function(require) {
 /******/})
 ```
 
-# 1.output.js
+# js/1.output.js
 
 ``` javascript
 /******/webpackJsonp(1, {
@@ -113,7 +113,7 @@ Modules: 5
 Modules including duplicates: 5
 Modules pre chunk: 2.5
 Modules first chunk: 3
-     output.js:     2114 characters
+     output.js:     2071 characters
    1.output.js:      200 characters
 
  <id>    <size>  <filename>
