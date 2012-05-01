@@ -6,11 +6,11 @@ example demonstrating a very simple case of Code Splitting.
 
 ## require.context
 
-example demonstrating to automatic creation of contextes when using variables in `require`.
+example demonstrating to automatic creation of contexts when using variables in `require`.
 
 ## code-splitted-require.context
 
-example demonstrating contextes in a code-splitted environment.
+example demonstrating contexts in a code-split environment.
 
 ## loader
 
