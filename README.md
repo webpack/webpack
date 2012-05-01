@@ -4,11 +4,11 @@ As developer you want to reuse existing code.
 As with node.js and web all files are already in the same language, but it is extra work to use your code with the node.js module system and the browser.
 
 The goal of `webpack` is to bundle CommonJs modules into javascript files which can be loaded by `<script>`-tags.
-Simply concating all required files has a disadvantage: many code to download (and execute) on page load.
+Simply concatenating all required files has a disadvantage: many code to download (and execute) on page load.
 Therefore `webpack` uses the `require.ensure` function ([CommonJs/Modules/Async/A](http://wiki.commonjs.org/wiki/Modules/Async/A)) to split your code automatically into multiple bundles which are loaded on demand.
 This happens mostly transparent to the developer.
 Dependencies are resolved for you.
-The result is a smaller inital code download which results in faster page load.
+The result is a smaller initial code download which results in faster page load.
 
 Another common thing in web development is that some files have to be preprocessed before send to the client (ex. template files).
 This introduce more complexity to the compile step.
@@ -27,11 +27,11 @@ You as developer can use such files like any other module.
 
 * make node.js and browser development similar
 * minimize code size (mobile connection)
- * minimize code size on inital download
+ * minimize code size on initial download
  * download code only on demand
 * require minimal configuration, but offer a maximum
  * load polyfills for node-specific things if used
- * offer replacements for node buildin libaries
+ * offer replacements for node buildin libraries
 
 # Example
 
@@ -150,7 +150,7 @@ function getTemplate(templateName) {
 ```
 
 In addition to that `webpack` uses the `require.context` function automatically
-if you use variables or other not parseable things in the `require` function.
+if you use variables or other not parse-able things in the `require` function.
 That means the following code behaves like the above:
 
 ``` javascript
@@ -179,7 +179,7 @@ The following example loads the raw content of a file with the `raw` loader:
 var content = require("raw!./file.txt");
 ```
 
-Multiple loader plugins can be prepended by seperating them with `!`.
+Multiple loader plugins can be prepended by separating them with `!`.
 The loader plugins are resolved like in normal `require` call but with different default extension.
 
 The `raw` loader plugin is looked up at modules `raw-webpack-web-loader`, `raw-webpack-loader`, `raw-web-loader`, `raw-loader`, `raw`
@@ -197,7 +197,7 @@ The following loaders are included in webpack:
 * `css`: Loads css file with resolved imports and returns css code
 * `style`: Adds result of javascript execution to DOM
 * (`.css` defaults to `style!css` loader, so all css rules are added to DOM)
-* `script`: Executes a javascript file once in global context (like in script tag), requires are not parsed. Use this to include a libary. ex. `require("script!./jquery.min.js")`. This is synchron, so the `$` variable is avalible after require.
+* `script`: Executes a javascript file once in global context (like in script tag), requires are not parsed. Use this to include a library. ex. `require("script!./jquery.min.js")`. This is synchron, so the `$` variable is available after require.
 
 TODO
 
