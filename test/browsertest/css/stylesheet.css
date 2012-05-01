@@ -1,5 +1,5 @@
-@import url(./stylesheet-import1.css);
+@import url(folder/stylesheet-import1.css);
 
 .rule-direct {
-	background: green;
+	background: lightgreen;
 }

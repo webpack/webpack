@@ -13,38 +13,38 @@ vows.describe("polyfills").addBatch({
 		topic: function() {
 			return require.context("./fixtures")
 		},
-		
+
 		"simple file": {
 			topic: function(context) {
 				return context("./a");
 			},
-			
+
 			"correct file": function(a) {
 				assert.equal(a(), "This is a");
 			}
 		},
-		
+
 		"simple file with extension": {
 			topic: function(context) {
 				return context("./a.js");
 			},
-			
+
 			"correct file": function(a) {
 				assert.equal(a(), "This is a");
 			}
 		},
-		
+
 		"file in folder": {
 			topic: function(context) {
 				return context("./lib/complex1");
 			},
-			
+
 			"correct file": function(complex1) {
 				assert.equal(complex1, "lib complex1");
 			}
 		}
 	},
-	
+
 	"polyfill ensure": {
 		"empty ensure list": {
 			topic: function() {
@@ -53,7 +53,7 @@ vows.describe("polyfills").addBatch({
 					cb(null, require("./fixtures/a"));
 				});
 			},
-			
+
 			"executed": function(a) {
 				assert.equal(a(), "This is a");
 			}

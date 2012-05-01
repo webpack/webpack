@@ -65,7 +65,9 @@ module.exports = function(req) {
 				function exec(code, filename) {
 					var Module = require("module");
 					var m = new Module("exec in " + cacheLine, module);
-					m._compile(code, filename);
+					m.filename = resource;
+					m.paths = Module._nodeModulePaths(require("path").dirname(resource));
+					m._compile("require = require(" + JSON.stringify(__filename) + ")(require.valueOf());" + code, filename);
 					return m.exports;
 				}
 				resolved.forEach(function(loader) {
@@ -74,6 +76,15 @@ module.exports = function(req) {
 						request: cacheLine,
 						filenames: [resource],
 						exec: exec,
+						resolve: function(context, path, cb) {
+							try {
+								var Module = require("module");
+								var virtModule = new Module(".", null);
+								virtModule.filename = require("path").join(context, "resolve.js");
+								virtModule.paths = Module._nodeModulePaths(context);
+								cb(null, Module._resolveFilename(path, virtModule));
+							} catch(e) { cb(e); }
+						},
 						async: function() { return false; },
 						callback: function() {
 							set = true;
