@@ -55,6 +55,14 @@ var argv = require("optimist")
 	.describe("debug", "Prints debug info to output files")
 	.default("debug", false)
 
+	.boolean("watch")
+	.describe("watch", "Recompiles on changes (except loaders)")
+	.default("watch", false)
+
+	.boolean("progress")
+	.describe("progress", "Displays a progress while compiling")
+	.default("progress", false)
+
 	.demand(1)
 	.argv;
 
@@ -86,6 +94,10 @@ if(argv.debug) {
 	options.debug = true;
 }
 
+if(argv.watch) {
+	options.watch = true;
+}
+
 if(argv.filenames) {
 	options.includeFilenames = true;
 }
@@ -108,7 +120,11 @@ if(argv.alias) {
 
 var webpack = require("../lib/webpack.js");
 
-if(argv.single) {
+function c(str) {
+	return argv.colors ? str : "";
+}
+
+if(!output) {
 	webpack(input, options, function(err, source) {
 		if(err) {
 			console.error(err);
@@ -125,7 +141,7 @@ if(argv.single) {
 	if(!options.outputDirectory) options.outputDirectory = path.dirname(output);
 	if(!options.output) options.output = path.basename(output);
 	if(!options.outputPostfix) options.outputPostfix = "." + path.basename(output);
-	webpack(input, options, function(err, stats) {
+	var events = webpack(input, options, function(err, stats) {
 		if(err) {
 			console.error(err);
 			return;
@@ -133,9 +149,6 @@ if(argv.single) {
 		if(argv.json)
 			console.log(util.inspect(stats, false, 10, argv.colors));
 		else {
-			function c(str) {
-				return argv.colors ? str : "";
-			}
 			console.log("Hash: "+c("\033[1m") + stats.hash + c("\033[22m"));
 			console.log("Chunks: "+c("\033[1m") + stats.chunkCount + c("\033[22m"));
 			console.log("Modules: "+c("\033[1m") + stats.modulesCount + c("\033[22m"));
@@ -219,4 +232,35 @@ if(argv.single) {
 			}
 		}
 	});
+	if(argv.progress) {
+		var sum = 0;
+		var finished = 0;
+		var chars = 0;
+		function print() {
+			var msg = "";
+			if(sum > 0) {
+				msg += "compiling... (" + c("\033[1m\033[33m");
+				msg += sprintf("%4s", finished+"") + "/" + sprintf("%4s", sum+"");
+				msg += " " + sprintf("%4s", Math.floor(finished*100/sum)+"%");
+				msg += c("\033[39m\033[22m") + ")";
+			}
+			for(var i = 0; i < chars; i++)
+				process.stdout.write("\b");
+			process.stdout.write(msg);
+			chars = msg.length;
+		}
+		events.on("task", function() {
+			sum++;
+			print();
+		});
+		events.on("task-end", function() {
+			finished++;
+			print();
+		});
+		events.on("bundle", function() {
+			sum = 0;
+			finished = 0;
+			print();
+		});
+	}
 }

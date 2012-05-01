@@ -7,7 +7,21 @@ var cp = require('child_process');
 var argv = process.argv;
 argv.shift();
 argv.shift();
-var extraArgs = argv.join(" ");
+var extraArgs = argv;
+
+function bindOutput(p) {
+	p.stdout.on("data", function(data) {
+		process.stdout.write(data);
+	});
+	p.stderr.on("data", function(data) {
+		process.stderr.write(data);
+	});
+}
+function join(a, b) {
+	a = a.slice(0);
+	Array.prototype.push.apply(a, b);
+	return a;
+}
 
 try {
 	require("vm-browserify");
@@ -21,26 +35,21 @@ try {
 }
 function compile() {
 	console.log("compile scripts...");
-	
-	cp.exec("node ../../bin/webpack.js "+extraArgs+" --colors --single --libary libary1 node_modules/libary1 js/libary1.js", function (error, stdout, stderr) {
-		console.log('libary1 stdout:\n' + stdout);
-		console.log('libary1 stderr:\n ' + stderr);
-		if (error !== null) {
-			console.log('libary1 error: ' + error);
-		}
-		cp.exec("node ../../bin/webpack.js "+extraArgs+" --colors --alias vm=vm-browserify --script-src-prefix js/ lib/index js/web.js", function (error, stdout, stderr) {
-			console.log('web stdout:\n' + stdout);
-			console.log('web stderr:\n ' + stderr);
-			if (error !== null) {
-				console.log('web error: ' + error);
-			}
-		});
-	});
-	cp.exec("node ../../bin/webpack.js "+extraArgs+" --colors --script-src-prefix js/ --libary libary2 node_modules/libary2 js/libary2.js", function (error, stdout, stderr) {
-		console.log('libary2 stdout:\n' + stdout);
-		console.log('libary2 stderr:\n ' + stderr);
-		if (error !== null) {
-			console.log('libary2 error: ' + error);
+
+	var extraArgsNoWatch = extraArgs.slice(0);
+	var watchIndex = extraArgsNoWatch.indexOf("--watch");
+	if(watchIndex != -1) extraArgsNoWatch.splice(watchIndex, 1);
+	var libary1 = cp.spawn("node", join(["../../bin/webpack.js", "--colors", "--single", "--libary", "libary1",
+											"node_modules/libary1", "js/libary1.js"], extraArgsNoWatch));
+	bindOutput(libary1);
+	libary1.on("exit", function(code) {
+		if(code === 0) {
+			var main = cp.spawn("node", join(["../../bin/webpack.js", "--colors", "--alias", "vm=vm-browserify",
+												"--script-src-prefix", "js/", "lib/index", "js/web.js"], extraArgs));
+			bindOutput(main);
 		}
 	});
+	var libary2 = cp.spawn("node", join(["../../bin/webpack.js", "--colors", "--libary", "libary2",
+										"--script-src-prefix", "js/", "node_modules/libary2", "js/libary2.js"], extraArgs));
+	bindOutput(libary2);
 }

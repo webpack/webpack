@@ -308,6 +308,8 @@ Options:
   --verbose            Output dependencies in Stats                             [boolean]  [default: false]
   --alias              Set a alias name for a module. ex. http=http-browserify  [string]
   --debug              Prints debug info to output files                        [boolean]  [default: false]
+  --watch              Recompiles on changes (except loaders)                   [boolean]  [default: false]
+  --progress           Displays a progress while compiling                      [boolean]  [default: false]
 ```
 
 ### Programmatically Usage
@@ -352,6 +354,10 @@ minimize outputs with uglify-js
 `debug`
 
 prints debug info to output files.
+
+`watch`
+
+recompiles on changes (except loaders)
 
 `includeFilenames`
 
@@ -405,6 +411,10 @@ else `stats` as json see [example](/sokra/modules-webpack/tree/master/examples/c
 
 You can use `[hash]` in `scriptSrcPrefix`, `output`, `outputDirectory`, `outputPostfix` and in the shell parameters.
 `webpack` will replace it with a hash of your files, when writing.
+
+### From shell
+
+Combine the options `--colors --watch --progress` to get a pretty shell compilation.
 
 ## Comparison
 
@@ -798,7 +808,6 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 
 ## Future plans
 
-* watch mode
 * more polyfills for node.js buildin modules, but optional
 * `require("webpack/require-polyfill.install")` to install for all modules
 * require from protocol `require("http://...")`
