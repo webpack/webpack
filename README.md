@@ -15,6 +15,8 @@ This introduce more complexity to the compile step.
 `webpack` supports loaders which process files before including them.
 You as developer can use such files like any other module.
 
+[![build status](https://secure.travis-ci.org/sokra/modules-webpack.png)](http://travis-ci.org/sokra/modules-webpack)
+
 **TL;DR**
 
 * bundle CommonJs modules for browser
