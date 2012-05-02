@@ -141,7 +141,49 @@ if(!output) {
 	if(!options.outputDirectory) options.outputDirectory = path.dirname(output);
 	if(!options.output) options.output = path.basename(output);
 	if(!options.outputPostfix) options.outputPostfix = "." + path.basename(output);
-	var events = webpack(input, options, function(err, stats) {
+	if(argv.progress) {
+		if(!options.events) options.events = new (require("events").EventEmitter)();
+		var events = options.events;
+		
+		var sum = 0;
+		var finished = 0;
+		var chars = 0;
+		function print() {
+			var msg = "";
+			if(sum > 0) {
+				msg += "compiling... (" + c("\033[1m\033[33m");
+				msg += sprintf("%4s", finished+"") + "/" + sprintf("%4s", sum+"");
+				msg += " " + sprintf("%4s", Math.floor(finished*100/sum)+"%");
+				msg += c("\033[39m\033[22m") + ")";
+			}
+			for(var i = 0; i < chars; i++)
+				process.stderr.write("\b");
+			process.stderr.write(msg);
+			chars = msg.length;
+		}
+		events.on("task", function(name) {
+			sum++;
+			print();
+		});
+		events.on("task-end", function(name) {
+			finished++;
+			if(name) {
+				for(var i = 0; i < chars; i++)
+					process.stderr.write("\b \b");
+				process.stderr.write(name + " " + c("\033[1m\033[32m") + "done" + c("\033[39m\033[22m") + "\n");
+				chars = 0;
+			}
+			print();
+		});
+		events.on("bundle", function(name) {
+			sum = 0;
+			finished = 0;
+			for(var i = 0; i < chars; i++)
+				process.stderr.write("\b \b");
+			chars = 0;
+		});
+	}
+	webpack(input, options, function(err, stats) {
 		if(err) {
 			console.error(err);
 			return;
@@ -232,35 +274,4 @@ if(!output) {
 			}
 		}
 	});
-	if(argv.progress) {
-		var sum = 0;
-		var finished = 0;
-		var chars = 0;
-		function print() {
-			var msg = "";
-			if(sum > 0) {
-				msg += "compiling... (" + c("\033[1m\033[33m");
-				msg += sprintf("%4s", finished+"") + "/" + sprintf("%4s", sum+"");
-				msg += " " + sprintf("%4s", Math.floor(finished*100/sum)+"%");
-				msg += c("\033[39m\033[22m") + ")";
-			}
-			for(var i = 0; i < chars; i++)
-				process.stdout.write("\b");
-			process.stdout.write(msg);
-			chars = msg.length;
-		}
-		events.on("task", function() {
-			sum++;
-			print();
-		});
-		events.on("task-end", function() {
-			finished++;
-			print();
-		});
-		events.on("bundle", function() {
-			sum = 0;
-			finished = 0;
-			print();
-		});
-	}
 }
