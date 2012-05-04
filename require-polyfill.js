@@ -144,7 +144,8 @@ var options = module.exports.options = {
 			{test: /\.coffee$/, loader: "coffee"},
 			// {test: /\.json$/, loader: "json"}, // This works out of the box in node.js
 			{test: /\.jade$/, loader: "jade"},
-			{test: /\.css$/, loader: "style!css"}
+			{test: /\.css$/, loader: "style!css"},
+			{test: /\.less$/, loader: "style!css!val!less"}
 		],
 		loaderExtensions: [".webpack-loader.js", ".loader.js", ".js", ""],
 		loaderPostfixes: ["-webpack-loader", "-loader", ""]

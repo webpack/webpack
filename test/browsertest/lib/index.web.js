@@ -125,6 +125,9 @@ window.test(require("../resources/script.coffee") === "coffee test", "Buildin 'c
 window.test(require("css!../css/stylesheet.css").indexOf(".rule-direct") !== -1, "Buildin 'css' loader, direct content");
 window.test(require("css!../css/stylesheet.css").indexOf(".rule-import1") !== -1, "Buildin 'css' loader, imported rule");
 window.test(require("css!../css/stylesheet.css").indexOf(".rule-import2") !== -1, "Buildin 'css' loader, double imported rule");
+window.test(require("css!val!../css/generateCss").indexOf("generated") !== -1, "Buildin 'val' loader, combined with css");
+window.test(require("css!val!../css/generateCss").indexOf(".rule-import2") !== -1, "Buildin 'val' loader, combined with css, imported css");
+window.test(require("raw!val!../css/generateCss").indexOf("generated") !== -1, "Buildin 'val' loader, combined with raw");
 window.test(require("less!../less/stylesheet.less").indexOf(".less-rule-direct") !== -1, "Buildin 'less' loader, direct content");
 window.test(require("less!../less/stylesheet.less").indexOf(".less-rule-import1") !== -1, "Buildin 'less' loader, imported rule");
 window.test(require("less!../less/stylesheet.less").indexOf(".less-rule-import2") !== -1, "Buildin 'less' loader, double imported rule");
@@ -138,7 +141,5 @@ window.test(require("../resources/" + scr) === "coffee test", "context should pr
 window.test(require("raw!../resources/" + abc + ".txt") === "abc", "raw loader with context");
 
 
-require.ensure([], function(require) {
-	// Tests from node.js
-	require("../nodetests");
-});
+// Tests from node.js
+require("bundle!../nodetests");

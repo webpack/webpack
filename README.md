@@ -198,10 +198,14 @@ The following loaders are included in webpack:
 * `coffee` (default at `.coffee`): Loads coffee-script like javascript
 * `css`: Loads css file with resolved imports and returns css code
 * `less`: Loads and compiles a less file and returns css code
+* `val`: Excutes code as module and consider exports as javascript code
+* `bundle`: Wraps request in a `require.ensure` block
 * `style`: Adds result of javascript execution to DOM
-* (`.css` defaults to `style!css` loader, so all css rules are added to DOM)
-* (`.less` defaults to `style!less` loader, so all less rules are added to DOM)
 * `script`: Executes a javascript file once in global context (like in script tag), requires are not parsed. Use this to include a library. ex. `require("script!./jquery.min.js")`. This is synchron, so the `$` variable is available after require.
+* (`.css` defaults to `style!css` loader, so all css rules are added to DOM)
+* (`.less` defaults to `style!css!val!less` loader, so all less rules are added to DOM)
+
+See docs for loader in github repo of the loader.
 
 ## TL;DR
 
