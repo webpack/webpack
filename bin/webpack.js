@@ -119,6 +119,7 @@ if(argv.alias) {
 }
 
 var webpack = require("../lib/webpack.js");
+var formatOutput = require("../lib/formatOutput.js");
 
 function c(str) {
 	return argv.colors ? str : "";
@@ -191,92 +192,11 @@ if(!output) {
 		if(argv.json)
 			console.log(util.inspect(stats, false, 10, argv.colors));
 		else {
-			console.log("Hash: "+c("\033[1m") + stats.hash + c("\033[22m"));
-			console.log("Chunks: "+c("\033[1m") + stats.chunkCount + c("\033[22m"));
-			console.log("Modules: "+c("\033[1m") + stats.modulesCount + c("\033[22m"));
-			console.log("Modules including duplicates: "+c("\033[1m") + stats.modulesIncludingDuplicates + c("\033[22m"));
-			console.log("Modules pre chunk: "+c("\033[1m") + stats.modulesPerChunk + c("\033[22m"));
-			console.log("Modules first chunk: "+c("\033[1m") + stats.modulesFirstChunk + c("\033[22m"));
-			if(stats.fileSizes)
-				Object.keys(stats.fileSizes).reverse().forEach(function(file) {
-					console.log(c("\033[1m") + sprintf("%" + (5 + options.output.length) + "s", file) + c("\033[22m")+": "+c("\033[1m") + sprintf("%8d", stats.fileSizes[file]) + c("\033[22m") + " characters");
-				});
-			var cwd = process.cwd();
-			var cwdParent = path.dirname(cwd);
-			var buildins = path.join(__dirname, "..");
-			cwd = cwd.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-			cwd = new RegExp("^" + cwd + "|(!)" + cwd, "g");
-			var buildinsAsModule = cwd.test(buildins);
-			cwdParent = cwdParent.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-			cwdParent = new RegExp("^" + cwdParent + "|(!)" + cwdParent, "g");
-			buildins = buildins.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-			buildins = new RegExp("^" + buildins + "|(!)" + buildins, "g");
-			var node_modulesRegExpA = /\/node_modules\//g;
-			var node_modulesRegExpB = /\\node_modules\\/g;
-			var index_jsRegExp = /[\\\/]index.js!/g;
-			function compressFilename(filename) {
-				if(!filename)
-					return filename;
-				if(buildinsAsModule)
-					filename = filename.replace(buildins, "!(webpack)");
-				filename = filename.replace(cwd, "!.");
-				if(!buildinsAsModule)
-					filename = filename.replace(buildins, "!(webpack)");
-				filename = filename.replace(node_modulesRegExpA, "/~/");
-				filename = filename.replace(node_modulesRegExpB, "\\~\\");
-				filename = filename.replace(index_jsRegExp, "!");
-				return filename.replace(/^!|!$/, "");
-			}
-			if(stats.fileModules) {
-				console.log();
-				console.log(" <id>    <size>  <filename>");
-				if(argv.verbose)
-					console.log("       <reason> from <filename>");
-				Object.keys(stats.fileModules).reverse().forEach(function(file) {
-					console.log(c("\033[1m\033[32m") + file + c("\033[39m\033[22m"));
-					var modules = stats.fileModules[file];
-					if(argv["by-size"])
-					modules.sort(function(a, b) {
-						return b.size - a.size;
-					});
-					modules.forEach(function(module) {
-						console.log("  "+c("\033[1m") + sprintf("%3s", module.id+"") + " " + (typeof module.size === "number" ? sprintf("%9s", Math.round(module.size)+"") : "         ") + "  " +
-							(compressFilename(module.filename) ||
-							(module.dirname && ("[context] " + compressFilename(module.dirname))) ||
-							"[unknown]") + c("\033[22m"));
-					if(argv.verbose) {
-							module.reasons.forEach(function(reason) {
-								switch(reason.type) {
-								case "require":
-									console.log("       "+c("\033[36m")+"require (" + reason.count + "x) from " + compressFilename(reason.filename) + c("\033[39m"));
-									break;
-								case "context":
-									console.log("       "+c("\033[90m")+"context from " + compressFilename(reason.filename) + c("\033[39m"));
-									break;
-								case "async require":
-									console.log("       "+c("\033[35m")+"async require (" + reason.count + "x) from " + compressFilename(reason.filename) + c("\033[39m"));
-									break;
-								case "async context":
-									console.log("       "+c("\033[35ma")+"sync context from " + compressFilename(reason.filename) + c("\033[39m"));
-									break;
-								default:
-									console.log("       "+c("\033[31m") + reason.type + c("\033[39m"));
-								}
-							});
-						}
-					});
-				});
-			}
-			if(stats.warnings) {
-				stats.warnings.forEach(function(warning) {
-					console.log(c("\033[1m\033[33m")+"WARNING: " + warning + c("\033[39m\033[22m"));
-				});
-			}
-			if(stats.errors) {
-				stats.errors.forEach(function(error) {
-					console.log(c("\033[1m\033[31m")+"ERROR: " + error + c("\033[39m\033[22m"));
-				});
-			}
+			console.log(formatOutput(stats, {
+				colors: argv.colors,
+				"by-size": argv["by-size"],
+				verbose: argv.verbose
+			}));
 		}
 	});
 }
