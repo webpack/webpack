@@ -1,5 +1,9 @@
 # examples
 
+## commonjs
+
+example demonstrating a very simple programm
+
 ## code-splitting
 
 example demonstrating a very simple case of Code Splitting.
@@ -19,6 +23,10 @@ example demonstrating to usage of loaders.
 ## coffee-script
 
 example demonstrating code written in coffee-script.
+
+## code-splitting-bundle-loader
+
+example demonstrating Code Splitting through the builder loader
 
 # Requests
 
