@@ -116,19 +116,19 @@ Modules: 4
 Modules including duplicates: 4
 Modules pre chunk: 4
 Modules first chunk: 4
-     output.js:     1951 characters
+   output.js:     1951 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0        23  .\example.js
+    0        43  .\example.js
        main
-    1       332  (webpack)\buildin\__webpack_console.js
+    1       420  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
        require (1x) from .\cup2.coffee
-    2        76  (webpack)\node_modules\coffee-loader\index.js!.\cup2.coffee
+    2        92  (webpack)\~\coffee-loader!.\cup2.coffee
        require (2x) from .\cup1.coffee
-    3       101  (webpack)\node_modules\coffee-loader\index.js!.\cup1.coffee
+    3       178  (webpack)\~\coffee-loader!.\cup1.coffee
        require (1x) from .\example.js
 ```
 
@@ -141,7 +141,7 @@ Modules: 4
 Modules including duplicates: 4
 Modules pre chunk: 4
 Modules first chunk: 4
-     output.js:      784 characters
+   output.js:      784 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -151,8 +151,8 @@ output.js
     1       332  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
        require (1x) from .\cup2.coffee
-    2        76  (webpack)\node_modules\coffee-loader\index.js!.\cup2.coffee
+    2        76  (webpack)\~\coffee-loader!.\cup2.coffee
        require (2x) from .\cup1.coffee
-    3       101  (webpack)\node_modules\coffee-loader\index.js!.\cup1.coffee
+    3       101  (webpack)\~\coffee-loader!.\cup1.coffee
        require (1x) from .\example.js
 ```

@@ -121,22 +121,22 @@ Modules: 6
 Modules including duplicates: 6
 Modules pre chunk: 6
 Modules first chunk: 6
-     output.js:     2236 characters
+   output.js:     2236 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       109  .\example.js
+    0       156  .\example.js
        main
-    1       332  (webpack)\buildin\__webpack_console.js
+    1       420  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
-    2       143  [context] .\templates
+    2       203  [context] .\templates
        context from .\example.js
-    3        72  .\templates\a.js
+    3        80  .\templates\a.js
        context from .\example.js
-    4        72  .\templates\b.js
+    4        80  .\templates\b.js
        context from .\example.js
-    5        72  .\templates\c.js
+    5        80  .\templates\c.js
        context from .\example.js
 ```
 
@@ -149,7 +149,7 @@ Modules: 6
 Modules including duplicates: 6
 Modules pre chunk: 6
 Modules first chunk: 6
-     output.js:     1037 characters
+   output.js:     1037 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
