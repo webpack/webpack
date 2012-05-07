@@ -721,7 +721,7 @@ Combine the options `--colors --watch --progress` to get a pretty shell compilat
 	watch mode
   </td>
   <td>
-	no
+	yes
   </td>
   <td>
 	no
@@ -809,7 +809,7 @@ and open `test.html` in browser. There must be several OKs in the file, no FAIL 
 ## Contribution
 
 You are welcome to contribute by writing issues or pull requests.
-It would be nice if you open source your own loaders oder webmodules. :)
+It would be nice if you open source your own loaders or webmodules. :)
 
 You are also welcome to correct any spelling mistakes or any language issues, because my english is not perfect...
 
@@ -818,7 +818,7 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 * more polyfills for node.js buildin modules, but optional
 * `require("webpack/require-polyfill.install")` to install for all modules
 * require from protocol `require("http://...")`
-* write an issue if you have more ideas...
+* write it into the wiki if you have more ideas...
 
 ## License
 
