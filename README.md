@@ -200,6 +200,7 @@ The following loaders are included in webpack:
 * `less`: Loads and compiles a less file and returns css code
 * `val`: Excutes code as module and consider exports as javascript code
 * `bundle`: Wraps request in a `require.ensure` block
+* `file`: Emits the file into the output folder and returns the (relative) url (`file/{ext}` for some extensions)
 * `style`: Adds result of javascript execution to DOM
 * `script`: Executes a javascript file once in global context (like in script tag), requires are not parsed. Use this to include a library. ex. `require("script!./jquery.min.js")`. This is synchron, so the `$` variable is available after require.
 * (`.css` defaults to `style!css` loader, so all css rules are added to DOM)

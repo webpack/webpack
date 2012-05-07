@@ -1,5 +1,6 @@
 /node_modules
 /test/js
 /test/browsertest/js
+/test/browsertest/node_modules/vm-browserify
 /examples
 README.md

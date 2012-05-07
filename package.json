@@ -17,6 +17,7 @@
 		"style-loader": "0.1.x",
 		"script-loader": "0.1.x",
 		"bundle-loader": "0.1.x",
+		"file-loader": "0.1.x",
 		"val-loader": "0.1.x"
 	},
 	"licenses": [
