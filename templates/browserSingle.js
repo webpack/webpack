@@ -13,5 +13,6 @@
 /******/	require.ensure = function(chunkId, callback) {
 /******/		callback(require);
 /******/	};
+/******/	require.modules = modules;
 /******/	return require(0);
 /******/})

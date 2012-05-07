@@ -25,6 +25,7 @@
 /******/				head.appendChild(script);
 /******/			}
 /******/		};
+/******/		require.modules = modules;
 /******/		window[modules.b] = function(chunkId, moreModules) {
 /******/			for(var moduleId in moreModules)
 /******/				modules[moduleId] = moreModules[moduleId];
