@@ -136,20 +136,20 @@ Modules: 5
 Modules including duplicates: 5
 Modules pre chunk: 5
 Modules first chunk: 5
-     output.js:     2063 characters
+   output.js:     2063 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       109  .\example.js
+    0       333  .\example.js
        main
-    1       332  (webpack)\buildin\__webpack_console.js
+    1       420  (webpack)\buildin\__webpack_console.js
        require (3x) from .\example.js
-    2        28  (webpack)\node_modules\json-loader\index.js!.\test.json
+    2        36  (webpack)\~\json-loader!.\test.json
        require (1x) from .\example.js
        require (1x) from .\example.js
-    3        35  .\loader.js!.\file.js
+    3        41  .\loader.js!.\file.js
        require (1x) from .\example.js
-    4        36  (webpack)\require-polyfill.web.js
+    4        87  (webpack)\require-polyfill.web.js
        require (1x) from .\example.js
 ```

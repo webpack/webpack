@@ -120,16 +120,16 @@ Modules first chunk: 3
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0        82  .\example.js
+    0       155  .\example.js
        main
-    1         0  .\node_modules\b.js
+    1        11  .\~\b.js
        require (2x) from .\example.js
-    2         0  .\node_modules\a.js
+    2        11  .\~\a.js
        require (1x) from .\example.js
 1.output.js
-    3         0  .\node_modules\c.js
+    3        11  .\~\c.js
        async require (1x) from .\example.js
-    4         0  .\node_modules\d.js
+    4        11  .\~\d.js
        async require (1x) from .\example.js
 ```
 
@@ -150,13 +150,13 @@ Modules first chunk: 3
 output.js
     0        82  .\example.js
        main
-    1         0  .\node_modules\b.js
+    1         0  .\~\b.js
        require (2x) from .\example.js
-    2         0  .\node_modules\a.js
+    2         0  .\~\a.js
        require (1x) from .\example.js
 1.output.js
-    3         0  .\node_modules\c.js
+    3         0  .\~\c.js
        async require (1x) from .\example.js
-    4         0  .\node_modules\d.js
+    4         0  .\~\d.js
        async require (1x) from .\example.js
 ```
