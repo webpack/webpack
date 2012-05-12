@@ -11,10 +11,6 @@ var sprintf = require("sprintf").sprintf;
 var argv = require("optimist")
 	.usage("Usage: $0 <input> <output>")
 
-	.boolean("single")
-	.describe("single", "Disable Code Splitting")
-	.default("single", false)
-
 	.boolean("min")
 	.describe("min", "Minimize it with uglifyjs")
 	.default("min", false)
@@ -26,8 +22,9 @@ var argv = require("optimist")
 	.string("options")
 	.describe("options", "Options JSON File")
 
-	.string("script-src-prefix")
-	.describe("script-src-prefix", "Path Prefix For JavaScript Loading")
+	.string("public-prefix")
+	.alias("public-prefix", "script-src-prefix")
+	.describe("public-prefix", "Path Prefix For JavaScript Loading")
 
 	.string("libary")
 	.describe("libary", "Stores the exports into this variable")
@@ -63,7 +60,7 @@ var argv = require("optimist")
 	.describe("progress", "Displays a progress while compiling")
 	.default("progress", false)
 
-	.demand(1)
+	.demand(1) // DEPRECATED
 	.argv;
 
 var input = argv._[0],
@@ -79,11 +76,11 @@ if (output && output[0] !== '/' && input[1] !== ':') {
 var options = {};
 
 if(argv.options) {
-	options = JSON.parse(fs.readFileSync(argv.options, "utf-8"));
+	options = require(path.join(process.cwd(), argv.options));
 }
 
-if(argv["script-src-prefix"]) {
-	options.scriptSrcPrefix = argv["script-src-prefix"];
+if(argv["public-prefix"]) {
+	options.publicPrefix = argv["public-prefix"];
 }
 
 if(argv.min) {
@@ -126,6 +123,7 @@ function c(str) {
 }
 
 if(!output) {
+	// DEPRECATED
 	webpack(input, options, function(err, source) {
 		if(err) {
 			console.error(err);
@@ -142,10 +140,12 @@ if(!output) {
 	if(!options.outputDirectory) options.outputDirectory = path.dirname(output);
 	if(!options.output) options.output = path.basename(output);
 	if(!options.outputPostfix) options.outputPostfix = "." + path.basename(output);
+
+	// some listeners for the progress display
 	if(argv.progress) {
 		if(!options.events) options.events = new (require("events").EventEmitter)();
 		var events = options.events;
-		
+
 		var sum = 0;
 		var finished = 0;
 		var chars = 0;
@@ -184,6 +184,8 @@ if(!output) {
 			chars = 0;
 		});
 	}
+
+	// do the stuff
 	webpack(input, options, function(err, stats) {
 		if(err) {
 			console.error(err);

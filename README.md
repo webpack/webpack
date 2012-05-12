@@ -303,11 +303,10 @@ if invoked without arguments it prints a usage:
 Usage: webpack <options> <input> <output>
 
 Options:
-  --single             Disable Code Splitting                                   [boolean]  [default: false]
   --min                Minimize it with uglifyjs                                [boolean]  [default: false]
   --filenames          Output Filenames Into File                               [boolean]  [default: false]
   --options            Options JSON File                                        [string]
-  --script-src-prefix  Path Prefix For JavaScript Loading                       [string]
+  --public-prefix      Path Prefix For JavaScript Loading                       [string]
   --libary             Stores the exports into this variable                    [string]
   --colors             Output Stats with colors                                 [boolean]  [default: false]
   --json               Output Stats as JSON                                     [boolean]  [default: false]
@@ -330,87 +329,143 @@ webpack(absoluteModulePath, [options], callback)
 
 You can also save this options object in a JSON file and use it with the shell command.
 
-`outputJsonpFunction`
+``` javascript
+{
+ output: "out/file.js", // required
+ // output file to initial chunk
 
-JSONP function used to load chunks
+ outputDirectory: "out/dir", // default: extract directory from output
+ // output directory for file
 
-`scriptSrcPrefix`
+ outputPostfix: ".chunk.js", // default: "." + output
+ // postfix appended to id of lazy loaded chunks
 
-Path from where chunks are loaded
+ ouputJsonpFunction: "myJsonp", // default: "webpackJsonp"
+ // jsonp function used for lazy loaded chunks,
+ // should be unique for all instances of webpack in a page
 
-`outputDirectory`
+ publicPrefix: "http://static.url.com/asserts/", // default: ""
+ // path to create the chunks url relative to page
+ // deprecated name: scriptSrcPrefix
 
-write files to this directory (absolute path)
+ libary: "mylib", // default: null
+ // store the exports of the entrace module in a variable of this name
+ // use this to create a libary from webpack
 
-`output`
+ includeFilenames: true, // default: false
+ // include the filename of each module as comment before the module
 
-write first chunk to this file
+ watch: true, // default: false
+ // recompiles on changes on module and contexts (currently not on loaders)
 
-`outputPostfix`
+ watchDelay: 1000, // default: 200
+ // delay in ms before recompile after the last file change
 
-write chunks to files named chunkId plus outputPostfix
+ events: new EventEmitter(), // default: new EventEmitter()
+ // EventEmitter on which events for the compile process are fired
+ // events: "bundle", "module", "context", "task", "task-end"
 
-`libary`
+ parse: {
+  // options for parsing
 
-exports of input file are stored in this variable
+  overwrites: {
+   "myglobal": "modulename-of-myglobal"
+   // defaults: (defaults are also included if you define your own)
+   // process: "__webpack_process",
+   // module: "__webpack_module",
+   // console: "__webpack_console",
+   // global: "__webpack_global",
+   // Buffer: "buffer+.Buffer" // -> require("buffer").Buffer
+   // "__dirname": "__webpack_dirname",
+   // "__filename": "__webpack_filename"
+  },
+  // inject a free variable named "myglobal" which are required as
+  // require("modulename-of-myglobal")
+  // to each module which uses "myglobal"
+ }
 
-`minimize`
+ resolve: {
+  // options for resolving
 
-minimize outputs with uglify-js
+  paths: ["/my/absolute/dirname"],
+  // default: (defaults are also included if you define your own)
+  //   [".../buildin",
+  //     ".../buildin/web_modules", ".../buildin/name_modules",
+  //     ".../node_modules"]
+  // search paths for modules
 
-`debug`
+  alias: {
+   "old-module": "new-module"
+  },
+  // replace a module
 
-prints debug info to output files.
+  extensions: ["", ".www.js", ".js"],
+  // defaults: (defaults are NOT included if you define your own)
+  //   ["", ".webpack.js", ".web.js", ".js"]
+  // postfixes for files to try
 
-`watch`
+  loaderExtensions: [".loader.js", ".www-loader.js", "", ".js"],
+  // defaults: (defaults are NOT included if you define your own)
+  //   [".webpack-web-loader.js", ".webpack-loader.js",
+  //      ".web-loader.js", ".loader.js", "", ".js"]
+  // postfixes for loaders to try
 
-recompiles on changes (except loaders)
+  loaderPostfixes: ["-loader", "-xyz", ""],
+  // defaults: (defaults are NOT included if you define your own)
+  //   ["-webpack-web-loader", "-webpack-loader",
+  //      "-web-loader", "-loader", ""]
+  // postfixes for loader modules to try
 
-`includeFilenames`
-
-add absolute filenames of input files as comments
-
-`resolve.alias` (object)
-
-replace a module. ex. `{"old-module": "new-module"}`
-
-`resolve.paths` (array)
-
-search paths
-
-`resolve.extensions` (object)
-
-possible extensions for files
-
-default: `["", ".webpack.js", ".web.js", ".js"]`
-
-`resolve.loaders` (array)
-
-extension to loader mappings. ex. `[{test: /\.extension$/, loader: "myloader"}]`
-
-loads files that matches the RegExp to the loader if no other loader set
-
-`resolve.loaderExtensions` (array)
-
-possible extensions for loaders
-
-default: `[".webpack-web-loader.js", ".webpack-loader.js", ".web-loader.js", ".loader.js", "", ".js"]`
-
-`resolve.loaderPostfixes` (array)
-
-possible postfixes for loaders
-
-default: `["-webpack-web-loader", "-webpack-loader", "-web-loader", "-loader", ""]`
-
-`parse.overwrites` (object)
-
-free module variables which are replaced with a module. ex. `{ "$": "jquery" }`
+  loaders: [{test: /\.generator.js/, loader: "val"}],
+  // default: (defaults are also included if you define your own)
+  //   [{test: /\.coffee$/, loader: "coffee"},
+  //    {test: /\.json$/, loader: "json"},
+  //    {test: /\.jade$/, loader: "jade"},
+  //    {test: /\.css$/, loader: "style!css"},
+  //    {test: /\.less$/, loader: "style!css!val!less"}]
+  // automatically use loaders if filename match RegExp
+  // and no loader is specified
+ }
+}
+```
 
 #### `callback`
 
 `function(err, source / stats)`
-`source` if `options.output` is not set
-else `stats` as json see [example](/sokra/modules-webpack/tree/master/examples/code-splitting)
+`source` if `options.output` is not set (DEPRECATED)
+else `stats` as json:
+
+``` javascript
+{
+ hash: "52bd9213...38d",
+ chunkCount: 2,
+ modulesCount: 10,
+ modulesIncludingDuplicates: 10,
+ modulesFirstChunk: 3,
+ fileSizes: {
+  "output.js": 1234,
+  "1.output.js": 2345
+ },
+ warnings: [ "Some warning" ],
+ errors: [ "Some error" ],
+ fileModules: {
+  "output.js": [
+   { id: 0, size: 123, filename: "/home/.../main.js", reasons: [
+    { type: "main" }
+   ]},
+   { id: 1, size: 234, filename: "...", reasons: [
+    { type: "require", // or "context", "async require", "async context"
+	  count: 2,
+	  filename: "/home/.../main.js",
+	  // or dirname: "..." // for type = "context" or "async context"
+	}
+   ]},
+   ...
+  ],
+  "1.output.js": [...]
+ }
+}
+```
 
 ## Bonus features
 
