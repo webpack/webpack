@@ -56,6 +56,10 @@ var argv = require("optimist")
 	.describe("watch", "Recompiles on changes (except loaders)")
 	.default("watch", false)
 
+	.string("watch-delay")
+	.describe("watch-delay", "Timeout to wait for the last change")
+	.default("watch", false)
+
 	.boolean("progress")
 	.describe("progress", "Displays a progress while compiling")
 	.default("progress", false)
@@ -93,6 +97,10 @@ if(argv.debug) {
 
 if(argv.watch) {
 	options.watch = true;
+}
+
+if(argv["watch-delay"]) {
+	options.watchDelay = parseInt(argv["watch-delay"], 10);
 }
 
 if(argv.filenames) {

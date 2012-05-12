@@ -315,6 +315,7 @@ Options:
   --alias              Set a alias name for a module. ex. http=http-browserify  [string]
   --debug              Prints debug info to output files                        [boolean]  [default: false]
   --watch              Recompiles on changes (except loaders)                   [boolean]  [default: false]
+  --watch-delay        Timeout to wait for the last change                      [string]
   --progress           Displays a progress while compiling                      [boolean]  [default: false]
 ```
 
@@ -466,6 +467,10 @@ else `stats` as json:
  }
 }
 ```
+
+### with grunt
+
+see [grunt-webpack](https://github.com/sokra/grunt-webpack).
 
 ## Bonus features
 
