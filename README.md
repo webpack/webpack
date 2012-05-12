@@ -192,17 +192,17 @@ See [example](/sokra/modules-webpack/tree/master/examples/loader).
 
 The following loaders are included in webpack:
 
-* `raw`: Loads raw content of a file (as utf-8)
-* `json` (default at `.json`): Loads file as JSON
-* `jade` (default at `.jade`): Loads jade template and returns a function
-* `coffee` (default at `.coffee`): Loads coffee-script like javascript
-* `css`: Loads css file with resolved imports and returns css code
-* `less`: Loads and compiles a less file and returns css code
-* `val`: Excutes code as module and consider exports as javascript code
-* `bundle`: Wraps request in a `require.ensure` block
-* `file`: Emits the file into the output folder and returns the (relative) url (`file/{ext}` for some extensions)
-* `style`: Adds result of javascript execution to DOM
-* `script`: Executes a javascript file once in global context (like in script tag), requires are not parsed. Use this to include a library. ex. `require("script!./jquery.min.js")`. This is synchron, so the `$` variable is available after require.
+* [`raw`](https://github.com/sokra/webpack-raw-loader): Loads raw content of a file (as utf-8)
+* [`json`](https://github.com/sokra/webpack-json-loader) (default at `.json`): Loads file as JSON
+* [`jade`](https://github.com/sokra/webpack-jade-loader) (default at `.jade`): Loads jade template and returns a function
+* [`coffee`](https://github.com/sokra/webpack-coffee-loader) (default at `.coffee`): Loads coffee-script like javascript
+* [`css`](https://github.com/sokra/webpack-css-loader): Loads css file with resolved imports and returns css code
+* [`less`](https://github.com/sokra/webpack-less-loader): Loads and compiles a less file and returns css code
+* [`val`](https://github.com/sokra/webpack-val-loader): Excutes code as module and consider exports as javascript code
+* [`bundle`](https://github.com/sokra/webpack-bundle-loader): Wraps request in a `require.ensure` block
+* [`file`](https://github.com/sokra/webpack-file-loader): Emits the file into the output folder and returns the (relative) url (`file/{ext}` for some extensions)
+* [`style`](https://github.com/sokra/webpack-style-loader): Adds result of javascript execution to DOM
+* [`script`](https://github.com/sokra/webpack-script-loader): Executes a javascript file once in global context (like in script tag), requires are not parsed. Use this to include a library. ex. `require("script!./jquery.min.js")`. This is synchron, so the `$` variable is available after require.
 * (`.css` defaults to `style!css` loader, so all css rules are added to DOM)
 * (`.less` defaults to `style!css!val!less` loader, so all less rules are added to DOM)
 
@@ -471,7 +471,7 @@ else `stats` as json:
 
 ### File hash
 
-You can use `[hash]` in `scriptSrcPrefix`, `output`, `outputDirectory`, `outputPostfix` and in the shell parameters.
+You can use `[hash]` in `publicPrefix`, `output`, `outputDirectory`, `outputPostfix` and in the shell parameters.
 `webpack` will replace it with a hash of your files, when writing.
 
 ### From shell
@@ -878,3 +878,10 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 ## License
 
 MIT (http://www.opensource.org/licenses/mit-license.php)
+
+## Dependencies
+
+* [esprima](http://esprima.org/)
+* [optimist](https://github.com/substack/node-optimist)
+* [uglify-js](https://github.com/mishoo/UglifyJS)
+* [sprintf](https://github.com/maritz/node-sprintf)
