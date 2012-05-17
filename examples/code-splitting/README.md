@@ -40,6 +40,7 @@ require.ensure(["c"], function(require) {
 /******/				head.appendChild(script);
 /******/			}
 /******/		};
+/******/		require.modules = modules;
 /******/		window[modules.b] = function(chunkId, moreModules) {
 /******/			for(var moduleId in moreModules)
 /******/				modules[moduleId] = moreModules[moduleId];
@@ -108,19 +109,19 @@ webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
 ## Uncompressed
 
 ```
-Hash: efedb0352f230f80a7d673655c226d6b
+Hash: 577dd7061ff75007eb7e3fb06343ac06
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5
 Modules pre chunk: 2.5
 Modules first chunk: 3
-     output.js:     2071 characters
-   1.output.js:      200 characters
+   output.js:     2152 characters
+ 1.output.js:      200 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       155  .\example.js
+    0       160  .\example.js
        main
     1        11  .\~\b.js
        require (2x) from .\example.js
@@ -136,14 +137,14 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: efedb0352f230f80a7d673655c226d6b
+Hash: 577dd7061ff75007eb7e3fb06343ac06
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5
 Modules pre chunk: 2.5
 Modules first chunk: 3
-     output.js:      747 characters
-   1.output.js:       57 characters
+   output.js:      759 characters
+ 1.output.js:       57 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>

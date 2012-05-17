@@ -41,6 +41,7 @@ module.exports = 42
 /******/	require.ensure = function(chunkId, callback) {
 /******/		callback(require);
 /******/	};
+/******/	require.modules = modules;
 /******/	return require(0);
 /******/})
 /******/({
@@ -110,13 +111,13 @@ console.timeEnd = function() {
 ## Uncompressed
 
 ```
-Hash: 473faf0d98f59635bba5232deb86646a
+Hash: cdda9f42593e23dad0fb5a55f58e1bf3
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4
 Modules pre chunk: 4
 Modules first chunk: 4
-   output.js:     1951 characters
+   output.js:     2005 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -135,13 +136,13 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 473faf0d98f59635bba5232deb86646a
+Hash: cdda9f42593e23dad0fb5a55f58e1bf3
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4
 Modules pre chunk: 4
 Modules first chunk: 4
-   output.js:      784 characters
+   output.js:      796 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>

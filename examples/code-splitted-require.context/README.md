@@ -44,6 +44,7 @@ getTemplate("b", function(b) {
 /******/				head.appendChild(script);
 /******/			}
 /******/		};
+/******/		require.modules = modules;
 /******/		window[modules.b] = function(chunkId, moreModules) {
 /******/			for(var moduleId in moreModules)
 /******/				modules[moduleId] = moreModules[moduleId];
@@ -102,10 +103,10 @@ console.timeEnd = function() {
 /******/webpackJsonp(1, {
 /******/2: function(module, exports, require) {
 
-/***/module.exports = function(name) {
-/***/	var map = {"./a.js":3,"./b.js":4,"./c.js":5};
+/***/	var map = {"./a.js":3,"./b.js":4,"./c.js":5},
+/***/requireInContext = module.exports = function(name) {
 /***/	return require(map[name+""]||map[name+".webpack.js"]||map[name+".web.js"]||map[name+".js"]||name);
-/***/};
+/***/};/***/requireInContext.keys = function() { return Object.keys(map) }
 
 /******/},
 /******/
@@ -141,44 +142,44 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 839970d2bf36067bbcc02e254658eee5
+Hash: 01859c2f76be42670086b095e6351393
 Chunks: 2
 Modules: 6
 Modules including duplicates: 6
 Modules pre chunk: 3
 Modules first chunk: 2
-     output.js:     2659 characters
-   1.output.js:      763 characters
+   output.js:     2745 characters
+ 1.output.js:      855 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       273  .\example.js
+    0       283  .\example.js
        main
     1       420  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
 1.output.js
-    2       203  [context] (webpack)\examples\require.context\templates
+    2       289  [context] (webpack)\examples\require.context\templates
        sync context from .\example.js
-    3        80  (webpack)\examples\require.context\templates\a.js
+    3        82  (webpack)\examples\require.context\templates\a.js
        sync context from .\example.js
-    4        80  (webpack)\examples\require.context\templates\b.js
+    4        82  (webpack)\examples\require.context\templates\b.js
        sync context from .\example.js
-    5        80  (webpack)\examples\require.context\templates\c.js
+    5        82  (webpack)\examples\require.context\templates\c.js
        sync context from .\example.js
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 839970d2bf36067bbcc02e254658eee5
+Hash: 01859c2f76be42670086b095e6351393
 Chunks: 2
 Modules: 6
 Modules including duplicates: 6
 Modules pre chunk: 3
 Modules first chunk: 2
-     output.js:     1062 characters
-   1.output.js:      430 characters
+   output.js:     1074 characters
+ 1.output.js:      473 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -188,7 +189,7 @@ output.js
     1       332  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
 1.output.js
-    2       143  [context] (webpack)\examples\require.context\templates
+    2       228  [context] (webpack)\examples\require.context\templates
        sync context from .\example.js
     3        72  (webpack)\examples\require.context\templates\a.js
        sync context from .\example.js
