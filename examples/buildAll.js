@@ -11,3 +11,4 @@ cp.exec("cd loader && node build.js", result);
 cp.exec("cd require.context && node build.js", result);
 cp.exec("cd code-splitting-bundle-loader && node build.js", result);
 cp.exec("cd commonjs && node build.js", result);
+cp.exec("cd named-chucks && node build.js", result);

@@ -28,6 +28,10 @@ example demonstrating code written in coffee-script.
 
 example demonstrating Code Splitting through the builder loader
 
+## names-chucks
+
+example demonstrating merging of chucks with named chucks
+
 # Requests
 
 If you think a example is missing, please report it as issue. :)
