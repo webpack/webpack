@@ -35,9 +35,11 @@ You as developer can use such files like any other module.
  * load polyfills for node-specific things if used
  * offer replacements for node buildin libraries
 
-# Example
+# Examples
 
 See [example webapp](http://sokra.github.com/modules-webpack-example/).
+
+More [examples](https://github.com/sokra/modules-webpack/tree/master/examples).
 
 ## Simple Example
 
@@ -204,7 +206,7 @@ The following loaders are included in webpack:
 * [`style`](https://github.com/sokra/webpack-style-loader): Adds result of javascript execution to DOM
 * [`script`](https://github.com/sokra/webpack-script-loader): Executes a javascript file once in global context (like in script tag), requires are not parsed. Use this to include a library. ex. `require("script!./jquery.min.js")`. This is synchron, so the `$` variable is available after require.
 * (`.css` defaults to `style!css` loader, so all css rules are added to DOM)
-* (`.less` defaults to `style!css!val!less` loader, so all less rules are added to DOM)
+* (`.less` defaults to `style!css!val/cacheable!less` loader, so all less rules are added to DOM)
 
 See docs for loader in github repo of the loader.
 
@@ -358,6 +360,7 @@ You can also save this options object in a JSON file and use it with the shell c
 
  watch: true, // default: false
  // recompiles on changes on module and contexts (currently not on loaders)
+ // unchanged files are cached for greater performance
 
  watchDelay: 1000, // default: 200
  // delay in ms before recompile after the last file change
