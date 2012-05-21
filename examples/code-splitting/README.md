@@ -26,7 +26,7 @@ require.ensure(["c"], function(require) {
 /******/			modules[moduleId](module, module.exports, require);
 /******/			return module.exports;
 /******/		}
-/******/		require.ensure = function(chunkId, callback) {
+/******/		require.e = function(chunkId, callback) {
 /******/			if(installedChunks[chunkId] === 1) return callback(require);
 /******/			if(installedChunks[chunkId] !== undefined)
 /******/				installedChunks[chunkId].push(callback);
@@ -57,7 +57,7 @@ require.ensure(["c"], function(require) {
 
 var a = require(/* a */2);
 var b = require(/* b */1);
-require.ensure(1, function(require) {
+require.e(1, function(require) {
     require(/* b */1).xyz();
     var d = require(/* d */4);
 });
@@ -109,19 +109,19 @@ webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
 ## Uncompressed
 
 ```
-Hash: 577dd7061ff75007eb7e3fb06343ac06
+Hash: 720a9171b98399abaa3843871ede8d47
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5
 Modules pre chunk: 2.5
 Modules first chunk: 3
-   output.js:     2152 characters
+   output.js:     2098 characters
  1.output.js:      200 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       160  .\example.js
+    0       150  .\example.js
        main
     1        11  .\~\b.js
        require (2x) from .\example.js
@@ -137,19 +137,19 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 577dd7061ff75007eb7e3fb06343ac06
+Hash: 720a9171b98399abaa3843871ede8d47
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5
 Modules pre chunk: 2.5
 Modules first chunk: 3
-   output.js:      759 characters
+   output.js:      749 characters
  1.output.js:       57 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0        82  .\example.js
+    0        77  .\example.js
        main
     1         0  .\~\b.js
        require (2x) from .\example.js

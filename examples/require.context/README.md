@@ -37,7 +37,7 @@ module.exports = function() {
 /******/		modules[moduleId](module, module.exports, require);
 /******/		return module.exports;
 /******/	}
-/******/	require.ensure = function(chunkId, callback) {
+/******/	require.e = function(chunkId, callback) {
 /******/		callback(require);
 /******/	};
 /******/	require.modules = modules;
@@ -116,41 +116,41 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 70817faf7ff0642c41a0e4abe288d1e3
+Hash: 868015ac6c7be0a08a6536fb5a46c735
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
 Modules pre chunk: 6
 Modules first chunk: 6
-   output.js:     2386 characters
+   output.js:     2353 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       160  .\example.js
+    0       156  .\example.js
        main
     1       420  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
     2       289  [context] .\templates
        context from .\example.js
-    3        82  .\templates\a.js
+    3        80  .\templates\a.js
        context from .\example.js
-    4        82  .\templates\b.js
+    4        80  .\templates\b.js
        context from .\example.js
-    5        82  .\templates\c.js
+    5        80  .\templates\c.js
        context from .\example.js
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 70817faf7ff0642c41a0e4abe288d1e3
+Hash: 868015ac6c7be0a08a6536fb5a46c735
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
 Modules pre chunk: 6
 Modules first chunk: 6
-   output.js:     1092 characters
+   output.js:     1087 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>

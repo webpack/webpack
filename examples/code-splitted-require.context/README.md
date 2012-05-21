@@ -30,7 +30,7 @@ getTemplate("b", function(b) {
 /******/			modules[moduleId](module, module.exports, require);
 /******/			return module.exports;
 /******/		}
-/******/		require.ensure = function(chunkId, callback) {
+/******/		require.e = function(chunkId, callback) {
 /******/			if(installedChunks[chunkId] === 1) return callback(require);
 /******/			if(installedChunks[chunkId] !== undefined)
 /******/				installedChunks[chunkId].push(callback);
@@ -61,7 +61,7 @@ getTemplate("b", function(b) {
 
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
 function getTemplate(templateName, callback) {
-	require.ensure(1, function(require) {
+	require.e(1, function(require) {
 		callback(require(/* ../require.context/templates */2)("./"+templateName));
 	});
 }
@@ -142,49 +142,49 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 01859c2f76be42670086b095e6351393
+Hash: 7281a8674ac10a5e3b42191954d8a974
 Chunks: 2
 Modules: 6
 Modules including duplicates: 6
 Modules pre chunk: 3
 Modules first chunk: 2
-   output.js:     2745 characters
- 1.output.js:      855 characters
+   output.js:     2686 characters
+ 1.output.js:      849 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       283  .\example.js
+    0       268  .\example.js
        main
     1       420  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
 1.output.js
     2       289  [context] (webpack)\examples\require.context\templates
        sync context from .\example.js
-    3        82  (webpack)\examples\require.context\templates\a.js
+    3        80  (webpack)\examples\require.context\templates\a.js
        sync context from .\example.js
-    4        82  (webpack)\examples\require.context\templates\b.js
+    4        80  (webpack)\examples\require.context\templates\b.js
        sync context from .\example.js
-    5        82  (webpack)\examples\require.context\templates\c.js
+    5        80  (webpack)\examples\require.context\templates\c.js
        sync context from .\example.js
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 01859c2f76be42670086b095e6351393
+Hash: 7281a8674ac10a5e3b42191954d8a974
 Chunks: 2
 Modules: 6
 Modules including duplicates: 6
 Modules pre chunk: 3
 Modules first chunk: 2
-   output.js:     1074 characters
+   output.js:     1064 characters
  1.output.js:      473 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       162  .\example.js
+    0       157  .\example.js
        main
     1       332  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js

@@ -11,7 +11,7 @@
 /******/			modules[moduleId](module, module.exports, require);
 /******/			return module.exports;
 /******/		}
-/******/		require.ensure = function(chunkId, callback) {
+/******/		require.e = function(chunkId, callback) {
 /******/			if(installedChunks[chunkId] === 1) return callback(require);
 /******/			if(installedChunks[chunkId] !== undefined)
 /******/				installedChunks[chunkId].push(callback);

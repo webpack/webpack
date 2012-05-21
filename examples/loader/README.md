@@ -49,7 +49,7 @@ module.exports = function(content) {
 /******/		modules[moduleId](module, module.exports, require);
 /******/		return module.exports;
 /******/	}
-/******/	require.ensure = function(chunkId, callback) {
+/******/	require.e = function(chunkId, callback) {
 /******/		callback(require);
 /******/	};
 /******/	require.modules = modules;
@@ -131,18 +131,18 @@ Prints in node.js (`node example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 9bbcdcb6e0748e6523fa958925025d6e
+Hash: c0831657fd53c5a777b1f944506cbfd2
 Chunks: 1
 Modules: 5
 Modules including duplicates: 5
 Modules pre chunk: 5
 Modules first chunk: 5
-   output.js:     2126 characters
+   output.js:     2094 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       341  .\example.js
+    0       333  .\example.js
        main
     1       420  (webpack)\buildin\__webpack_console.js
        require (3x) from .\example.js
@@ -151,6 +151,6 @@ output.js
        require (1x) from .\example.js
     3        41  .\loader.js!.\file.js
        require (1x) from .\example.js
-    4        88  (webpack)\require-polyfill.web.js
+    4        87  (webpack)\require-polyfill.web.js
        require (1x) from .\example.js
 ```

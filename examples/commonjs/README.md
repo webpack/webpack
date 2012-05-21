@@ -43,7 +43,7 @@ exports.add = function() {
 /******/		modules[moduleId](module, module.exports, require);
 /******/		return module.exports;
 /******/	}
-/******/	require.ensure = function(chunkId, callback) {
+/******/	require.e = function(chunkId, callback) {
 /******/		callback(require);
 /******/	};
 /******/	require.modules = modules;
@@ -87,13 +87,13 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: 78d982f18828c3bda28b488092c81257
+Hash: a6aade18f63e58074c48b3e95e18bdf1
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3
 Modules pre chunk: 3
 Modules first chunk: 3
-   output.js:     1254 characters
+   output.js:     1231 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -109,13 +109,13 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 78d982f18828c3bda28b488092c81257
+Hash: a6aade18f63e58074c48b3e95e18bdf1
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3
 Modules pre chunk: 3
 Modules first chunk: 3
-   output.js:      473 characters
+   output.js:      468 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>

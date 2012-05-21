@@ -10,7 +10,7 @@
 /******/		modules[moduleId](module, module.exports, require);
 /******/		return module.exports;
 /******/	}
-/******/	require.ensure = function(chunkId, callback) {
+/******/	require.e = function(chunkId, callback) {
 /******/		callback(require);
 /******/	};
 /******/	require.modules = modules;

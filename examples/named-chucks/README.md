@@ -40,7 +40,7 @@ require.ensure(["b"], function(require) {
 /******/			modules[moduleId](module, module.exports, require);
 /******/			return module.exports;
 /******/		}
-/******/		require.ensure = function(chunkId, callback) {
+/******/		require.e = function(chunkId, callback) {
 /******/			if(installedChunks[chunkId] === 1) return callback(require);
 /******/			if(installedChunks[chunkId] !== undefined)
 /******/				installedChunks[chunkId].push(callback);
@@ -69,30 +69,30 @@ require.ensure(["b"], function(require) {
 /******/({a:".output.js",b:"webpackJsonp",c:"",
 /******/0: function(module, exports, require) {
 
-var a = require(/* a */3);
+var a = require(/* a */1);
 
-require.ensure(2, function(require) {
+require.e(2, function(require) {
 	// a named chuck
 	var c = require(/* c */4);
 }, /* my own chuck */0);
 
-require.ensure(2, function(require) {
+require.e(2, function(require) {
 	// another chuck with the same name
-	var d = require(/* d */2);
+	var d = require(/* d */3);
 }, /* my own chuck */0);
 
-require.ensure(2, function(require) {
+require.e(2, function(require) {
 	// the same again
 }, /* my own chuck */0);
 
-require.ensure(1, function(require) {
+require.e(1, function(require) {
 	// chuck without name
-	var d = require(/* d */2);
+	var d = require(/* d */3);
 });
 
 /******/},
 /******/
-/******/3: function(module, exports, require) {
+/******/1: function(module, exports, require) {
 
 // module a
 
@@ -105,13 +105,13 @@ require.ensure(1, function(require) {
 
 ``` javascript
 /******/webpackJsonp(1, {
-/******/1: function(module, exports, require) {
+/******/2: function(module, exports, require) {
 
 // module b
 
 /******/},
 /******/
-/******/2: function(module, exports, require) {
+/******/3: function(module, exports, require) {
 
 // module d
 
@@ -124,13 +124,13 @@ require.ensure(1, function(require) {
 
 ``` javascript
 /******/webpackJsonp(2, {
-/******/1: function(module, exports, require) {
+/******/2: function(module, exports, require) {
 
 // module b
 
 /******/},
 /******/
-/******/2: function(module, exports, require) {
+/******/3: function(module, exports, require) {
 
 // module d
 
@@ -150,32 +150,32 @@ require.ensure(1, function(require) {
 ## Uncompressed
 
 ```
-Hash: c34ada3b77659fd95fec2420fcfbe923
+Hash: fd69516fa1f852063e95b93b06a4226f
 Chunks: 3
 Modules: 5
 Modules including duplicates: 7
 Modules pre chunk: 2.3
 Modules first chunk: 2
-   output.js:     2371 characters
+   output.js:     2288 characters
  1.output.js:      200 characters
  2.output.js:      282 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       461  .\example.js
+    0       422  .\example.js
        main
-    3        11  .\~\a.js
+    1        11  .\~\a.js
        require (1x) from .\example.js
 1.output.js
-    1        11  .\~\b.js
+    2        11  .\~\b.js
        async require (3x) from .\example.js
-    2        11  .\~\d.js
+    3        11  .\~\d.js
        async require (2x) from .\example.js
 2.output.js
-    1        11  .\~\b.js
+    2        11  .\~\b.js
        async require (3x) from .\example.js
-    2        11  .\~\d.js
+    3        11  .\~\d.js
        async require (2x) from .\example.js
     4        11  .\~\c.js
        async require (1x) from .\example.js
