@@ -880,10 +880,12 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 
 * more polyfills for node.js buildin modules, but optional
 * `require("webpack/require-polyfill.install")` to install for all modules
-* require from protocol `require("http://...")`
+* migrate tests to mocha
 * write it into the wiki if you have more ideas...
 
 ## License
+
+Copyright (c) 2012 Tobias Koppers
 
 MIT (http://www.opensource.org/licenses/mit-license.php)
 
