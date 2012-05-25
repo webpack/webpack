@@ -107,9 +107,13 @@ module.exports = function(req) {
 						values = context.values;
 					}
 				});
+				var ret;
 				if(values !== undefined)
-					return values[0];
-				return exec(content[0], cacheLine);
+					ret = values[0];
+				else
+					ret = exec(content[0], cacheLine);
+				oldReq.cache[cacheLine] = ret;
+				return ret;
 			} else {
 				var resolved = oldReq.resolve(name);
 				var match = false;

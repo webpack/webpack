@@ -1,6 +1,6 @@
 {
 	"name": "webpack",
-	"version": "0.4.7",
+	"version": "0.4.8",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loading of js, json, jade, coffee, css, ... out of the box and more with custom loaders.",
 	"dependencies": {
@@ -27,7 +27,8 @@
 		}
 	],
 	"devDependencies": {
-		"vows": "*"
+		"mocha": "*",
+		"should": "*"
 	},
 	"engines": {
 		"node":  ">=0.1.30"
@@ -36,7 +37,7 @@
 	"main": "lib/webpack.js",
 	"bin": "./bin/webpack.js",
 	"scripts": {
-		"test": "node node_modules/vows/bin/vows"
+		"test": "node node_modules/mocha/bin/_mocha --reporter spec"
 	},
 	"license": "MIT"
 }
