@@ -9,22 +9,24 @@ var resolve = require("../lib/resolve");
 var fixtures = path.join(__dirname, "fixtures");
 function testResolve(name, context, moduleName, result) {
 	describe(name, function() {
-		it("should resolve correctly", function() {
+		it("should resolve correctly", function(done) {
 			resolve(context, moduleName, {}, function(err, filename) {
-				should.not.exist(err);
+				if(err) done(err);
 				should.exist(filename);
 				filename.should.equal(result);
+				done();
 			});
 		});
 	});
 }
 function testResolveContext(name, context, moduleName, result) {
 	describe(name, function() {
-		it("should resolve correctly", function() {
+		it("should resolve correctly", function(done) {
 			resolve.context(context, moduleName, {}, function(err, filename) {
-				should.not.exist(err);
+				if(err) done(err);
 				should.exist(filename)
 				filename.should.equal(result);
+				done();
 			});
 		});
 	});
@@ -56,7 +58,7 @@ describe("resolve", function() {
 	testResolve("multiple loaders",
 		fixtures, "m1/a!m1/b!m2/b!./main1.js", path.join(fixtures, "node_modules", "m1", "a.js") + "!" +
 			path.join(fixtures, "node_modules", "m1", "b.js") + "!" +
-			path.join(fixtures, "node_modules", "m2", "b.js") + "!" +
+			path.join(fixtures, "node_modules", "m2-loader", "b.js") + "!" +
 			path.join(fixtures, "main1.js"));
 
 	testResolveContext("context for fixtures",
@@ -67,6 +69,6 @@ describe("resolve", function() {
 		fixtures, "m1/a!./", path.join(fixtures, "node_modules", "m1", "a.js") + "!" + fixtures);
 	testResolveContext("context with loaders in parent directory",
 		fixtures, "m1/a!m2/b.js!../", path.join(fixtures, "node_modules", "m1", "a.js") + "!" +
-			path.join(fixtures, "node_modules", "m1", "a.js") + "!" +
+			path.join(fixtures, "node_modules", "m2-loader", "b.js") + "!" +
 			path.join(fixtures, ".."));
 });
