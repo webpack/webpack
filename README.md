@@ -311,6 +311,7 @@ Options:
   --public-prefix      Path Prefix For JavaScript Loading                       [string]
   --libary             Stores the exports into this variable                    [string]
   --colors             Output Stats with colors                                 [boolean]  [default: false]
+  --single             Disable lazy loading                                     [boolean]  [default: false]
   --json               Output Stats as JSON                                     [boolean]  [default: false]
   --by-size            Sort modules by size in Stats                            [boolean]  [default: false]
   --verbose            Output dependencies in Stats                             [boolean]  [default: false]
@@ -357,6 +358,10 @@ You can also save this options object in a JSON file and use it with the shell c
 
  includeFilenames: true, // default: false
  // include the filename of each module as comment before the module
+
+ single: false, // default: false
+ // ignore all Code Splitting and emit only a single file
+ // all code is included and should work as with Code Splitting
 
  watch: true, // default: false
  // recompiles on changes on module and contexts (currently not on loaders)
@@ -879,7 +884,8 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 ## Future plans
 
 * more polyfills for node.js buildin modules, but optional
-* `require("webpack/require-polyfill.install")` to install for all modules
+* split require-polyfill from webpack and offer it as seperate module
+* cache in folder and allow reuseing it
 * migrate tests to mocha
 * write it into the wiki if you have more ideas...
 
