@@ -45,7 +45,7 @@ function compile() {
 	libary1.on("exit", function(code) {
 		if(code === 0) {
 			var main = cp.spawn("node", join(["../../bin/webpack.js", "--colors", "--alias", "vm=vm-browserify",
-												"--script-src-prefix", "js/", "lib/index", "js/web.js"], extraArgs));
+												"--public-prefix", "js/", "lib/index", "js/web.js"], extraArgs));
 			bindOutput(main);
 		}
 	});

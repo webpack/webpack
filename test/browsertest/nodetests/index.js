@@ -5,6 +5,7 @@ function simple(name) {
 		require("./simple/test-"+name);
 	} catch(e) {
 		window.test(false, "Node.js Test '"+name+"' should not fail with " + e );
+		console.error(e.stack);
 	}
 }
 
