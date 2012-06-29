@@ -23,7 +23,7 @@ cp.exec("node ../../bin/webpack.js --verbose --min "+extraArgs+" example.js js/o
 			console.log(stderr);
 		if (error !== null)
 			console.log(error);
-		readme = tc(readme, require.context("raw!"+process.cwd()), stdout.replace(/[\r\n]*$/, ""));
+		readme = tc(readme, require.context("raw!val!raw!"+process.cwd()), stdout.replace(/[\r\n]*$/, ""));
 		readme = readme.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
 		require("fs").writeFile("README.md", readme, "utf-8", function() {});
 	});

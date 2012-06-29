@@ -125,13 +125,13 @@ module.exports = "It works";
 ## Uncompressed
 
 ```
-Hash: e5b22112c9a0888d639d7484fc09e419
+Hash: 7d808097559327550b74824efe0fd368
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
 Modules pre chunk: 2
 Modules first chunk: 3
-   output.js:     2942 characters
+   output.js:     2947 characters
  1.output.js:      135 characters
 
  <id>    <size>  <filename>
@@ -141,7 +141,7 @@ output.js
        main
     1       420  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
-    2       362  (webpack)\~\bundle-loader!.\file.js
+    2       367  (webpack)\~\bundle-loader!.\file.js
        require (1x) from .\example.js
 1.output.js
     3        28  .\file.js
@@ -151,7 +151,7 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: e5b22112c9a0888d639d7484fc09e419
+Hash: 7d808097559327550b74824efe0fd368
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
