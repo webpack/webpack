@@ -33,6 +33,10 @@ var argv = require("optimist")
 	.describe("colors", "Output Stats with colors")
 	.default("colors", false)
 
+	.boolean("single")
+	.describe("single", "Disable lazy loading")
+	.default("single", false)
+
 	.boolean("json")
 	.describe("json", "Output Stats as JSON")
 	.default("json", false)
@@ -93,6 +97,10 @@ if(argv.min) {
 
 if(argv.debug) {
 	options.debug = true;
+}
+
+if(argv.single) {
+	options.single = true;
 }
 
 if(argv.watch) {
