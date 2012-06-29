@@ -1,3 +1,7 @@
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
 function Buffer() {
 	throw new Error("Buffer is not included in webpack by default. Add an alias 'buffer' = 'buffer-browserify'.");
 }
