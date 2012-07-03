@@ -25,6 +25,23 @@ You as developer can use such files like any other module.
 * dependencies managed for you, on compile time (no resolution on runtime needed)
 * loaders can preprocess files
 
+## Quick start guide
+
+``` javascript
+var moduleA = require("module/file");
+var moduleB = require("./relativeFile");
+var moduleC = require("../stuff/cup.coffee");
+function getTemplate(name) {
+	return require("./templates/" + name + ".jade");
+}
+require("bootstrap/less/bootstrap.less");
+```
+
+``` shell
+npm install webpack -g
+webpack lib/yourCommonJsEntryModule.js output/bundle.js
+```
+
 ## Goals
 
 * make node.js and browser development similar
