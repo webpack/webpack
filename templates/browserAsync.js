@@ -26,6 +26,7 @@
 /******/			}
 /******/		};
 /******/		require.modules = modules;
+/******/		require.cache = installedModules;
 /******/		window[modules.b] = function(chunkId, moreModules) {
 /******/			for(var moduleId in moreModules)
 /******/				modules[moduleId] = moreModules[moduleId];

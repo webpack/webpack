@@ -14,5 +14,6 @@
 /******/		callback(require);
 /******/	};
 /******/	require.modules = modules;
+/******/	require.cache = installedModules;
 /******/	return require(0);
 /******/})

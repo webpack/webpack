@@ -146,6 +146,16 @@ var abc = "abc", scr = "script.coffee";
 window.test(require("../resources/" + scr) === "coffee test", "context should process extensions");
 window.test(require("raw!../resources/" + abc + ".txt") === "abc", "raw loader with context");
 
+// require behavior
+var singlarObj = require("./singluar2");
+var singlarId = require.resolve("./singluar2");
+var singlarIdInConditional = require.resolve(true ? "./singluar2" : "./singluar");
+window.test(typeof singlarId == "number", "require.resolve returns a id");
+window.test(singlarIdInConditional === singlarId, "require.resolve returns a id if in conditional");
+window.test(typeof require.cache[singlarId] == "object", "require.cache can be read");
+delete require.cache[singlarId];
+window.test(require("./singluar2") !== singlarObj, "require.cache can be deleted");
+
 
 // Tests from node.js
 require("bundle!../nodetests");
