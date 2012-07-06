@@ -380,6 +380,10 @@ You can also save this options object in a JSON file and use it with the shell c
  // ignore all Code Splitting and emit only a single file
  // all code is included and should work as with Code Splitting
 
+ debug: true, // default: false
+ // put the source of the modules into annotated eval,
+ // which cause a nice debug experience in some dev tools
+
  watch: true, // default: false
  // recompiles on changes on module and contexts (currently not on loaders)
  // unchanged files are cached for greater performance
