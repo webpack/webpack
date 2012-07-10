@@ -459,7 +459,7 @@ You can also save this options object in a JSON file and use it with the shell c
   postprocess: {
    normal: [function(filename, callback) {
     // webpack will not find files including ".exclude."
-    if(/\.exclude\.[^\\\/]*/.test(filename))
+    if(/\.exclude\.[^\\\/]*$/.test(filename))
 	 return callback(new Error("File is excluded"));
 	callback(null, filename);
    }],
