@@ -455,6 +455,21 @@ You can also save this options object in a JSON file and use it with the shell c
   //    {test: /\.less$/, loader: "style!css!val!less"}]
   // automatically use loaders if filename match RegExp
   // and no loader is specified
+
+  postprocess: {
+   normal: [function(filename, callback) {
+    // webpack will not find files including ".exclude."
+    if(/\.exclude\.[^\\\/]*/.test(filename))
+	 return callback(new Error("File is excluded"));
+	callback(null, filename);
+   }],
+   // defaults: []
+   // postprocess resolved filenames by all specified async functions
+   // a postprocessor must call the callback
+
+   context: [],
+   // same as postprocess.normal but for contextes
+  }
  }
 }
 ```
