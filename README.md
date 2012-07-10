@@ -468,6 +468,7 @@ else `stats` as json:
 ``` javascript
 {
  hash: "52bd9213...38d",
+ time: 1234, // in ms
  chunkCount: 2,
  modulesCount: 10,
  modulesIncludingDuplicates: 10,
