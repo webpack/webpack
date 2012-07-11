@@ -18,7 +18,7 @@ cp.exec("node ../../bin/webpack.js --verbose --min "+extraArgs+" example.js js/o
 	if (error !== null)
 		console.log(error);
 	var readme = tc(require("raw!"+require("path").join(process.cwd(), "template.md")), require.context("raw!"+process.cwd()), stdout.replace(/[\r\n]*$/, ""), "min");
-	cp.exec("node ../../bin/webpack.js --verbose "+extraArgs+" example.js js/output.js", function (error, stdout, stderr) {
+	cp.exec("node ../../bin/webpack.js --filenames --verbose "+extraArgs+" example.js js/output.js", function (error, stdout, stderr) {
 		if(stderr)
 			console.log(stderr);
 		if (error !== null)
