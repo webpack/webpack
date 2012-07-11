@@ -476,6 +476,18 @@ You can also save this options object in a JSON file and use it with the shell c
    // same as postprocess.normal but for contextes
   }
  }
+
+ postLoaders: [{test: /\.export.js$/, loader: "export"}],
+ // default: []
+ // syntax like resolve.loaders
+ // all loaders which matches the file are applied after the
+ // normal loaders. This cannot be overridden in the require call.
+
+ preLoaders: [{test: /\.txt$|\.html$/, loader: "normalizeNLs"}],
+ // default: []
+ // syntax like resolve.loaders
+ // all loaders which matches the file are applied before the
+ // normal loaders. This cannot be overridden in the require call.
 }
 ```
 

@@ -50,6 +50,6 @@ function compile() {
 		}
 	});
 	var libary2 = cp.spawn("node", join(["../../bin/webpack.js", "--colors", "--libary", "libary2",
-										"--script-src-prefix", "js/", "node_modules/libary2", "js/libary2.js"], extraArgs));
+										"--script-src-prefix", "js/", "--options", "libary2config.js", "node_modules/libary2", "js/libary2.js"], extraArgs));
 	bindOutput(libary2);
 }
