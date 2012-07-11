@@ -41,6 +41,7 @@ require.ensure(["c"], function(require) {
 /******/			}
 /******/		};
 /******/		require.modules = modules;
+/******/		require.cache = installedModules;
 /******/		window[modules.b] = function(chunkId, moreModules) {
 /******/			for(var moduleId in moreModules)
 /******/				modules[moduleId] = moreModules[moduleId];
@@ -55,6 +56,8 @@ require.ensure(["c"], function(require) {
 /******/({a:".output.js",b:"webpackJsonp",c:"",
 /******/0: function(module, exports, require) {
 
+/*** .\example.js ***/
+
 var a = require(/* a */2);
 var b = require(/* b */1);
 require.e(1, function(require) {
@@ -66,11 +69,15 @@ require.e(1, function(require) {
 /******/
 /******/1: function(module, exports, require) {
 
+/*** .\~\b.js ***/
+
 // module b
 
 /******/},
 /******/
 /******/2: function(module, exports, require) {
+
+/*** .\~\a.js ***/
 
 // module a
 
@@ -85,11 +92,15 @@ require.e(1, function(require) {
 /******/webpackJsonp(1, {
 /******/3: function(module, exports, require) {
 
+/*** .\~\c.js ***/
+
 // module c
 
 /******/},
 /******/
 /******/4: function(module, exports, require) {
+
+/*** .\~\d.js ***/
 
 // module d
 
@@ -109,14 +120,15 @@ webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
 ## Uncompressed
 
 ```
-Hash: 720a9171b98399abaa3843871ede8d47
+Hash: 38f36e791a78bd79a3da8a151e3eca69
+Compile Time: 292ms
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5
-Modules pre chunk: 2.5
+Modules per chunk: 2.5
 Modules first chunk: 3
-   output.js:     2098 characters
- 1.output.js:      200 characters
+   output.js:     2206 characters
+ 1.output.js:      240 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -137,13 +149,14 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 720a9171b98399abaa3843871ede8d47
+Hash: acb96ffb60e2a4a3abff7ff64fc7b104
+Compile Time: 389ms
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5
-Modules pre chunk: 2.5
+Modules per chunk: 2.5
 Modules first chunk: 3
-   output.js:      749 characters
+   output.js:      759 characters
  1.output.js:       57 characters
 
  <id>    <size>  <filename>

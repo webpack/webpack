@@ -42,10 +42,13 @@ module.exports = 42
 /******/		callback(require);
 /******/	};
 /******/	require.modules = modules;
+/******/	require.cache = installedModules;
 /******/	return require(0);
 /******/})
 /******/({
 /******/0: function(module, exports, require) {
+
+/*** .\example.js ***/
 
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
 console.log(require(/* ./cup1.coffee */3));
@@ -54,6 +57,8 @@ console.log(require(/* ./cup1.coffee */3));
 /******/},
 /******/
 /******/1: function(module, exports, require) {
+
+/*** (webpack)\buildin\__webpack_console.js ***/
 
 var console = window.console;
 module.exports = console;
@@ -74,6 +79,8 @@ console.timeEnd = function() {
 /******/
 /******/2: function(module, exports, require) {
 
+/*** (webpack)\~\coffee-loader!.\cup2.coffee ***/
+
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
 (function() {
 
@@ -88,6 +95,8 @@ console.timeEnd = function() {
 /******/},
 /******/
 /******/3: function(module, exports, require) {
+
+/*** (webpack)\~\coffee-loader!.\cup1.coffee ***/
 
 (function() {
 
@@ -111,13 +120,14 @@ console.timeEnd = function() {
 ## Uncompressed
 
 ```
-Hash: f4d93fc41e8185f13f0adc785bb0d708
+Hash: 8740d241e371adf15f644bee773f2b4b
+Compile Time: 933ms
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4
-Modules pre chunk: 4
+Modules per chunk: 4
 Modules first chunk: 4
-   output.js:     1982 characters
+   output.js:     2201 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -136,13 +146,14 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: f4d93fc41e8185f13f0adc785bb0d708
+Hash: 71ac198c443b74812251971624a502c3
+Compile Time: 715ms
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4
-Modules pre chunk: 4
+Modules per chunk: 4
 Modules first chunk: 4
-   output.js:      791 characters
+   output.js:      801 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>

@@ -53,14 +53,17 @@ module.exports = function(content) {
 /******/		callback(require);
 /******/	};
 /******/	require.modules = modules;
+/******/	require.cache = installedModules;
 /******/	return require(0);
 /******/})
 /******/({
 /******/0: function(module, exports, require) {
 
+/*** .\example.js ***/
+
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
 // Polyfill require for node.js usage of loaders
-require = require(/* ../../require-polyfill */4)(require.valueOf());
+require = require(/* ../../require-polyfill */5)(require.valueOf());
 
 // use our loader
 console.dir(require(/* ./loader!./file */3));
@@ -73,6 +76,8 @@ console.dir(require(/* json!./test.json */2)); // manual
 /******/},
 /******/
 /******/1: function(module, exports, require) {
+
+/*** (webpack)\buildin\__webpack_console.js ***/
 
 var console = window.console;
 module.exports = console;
@@ -93,6 +98,8 @@ console.timeEnd = function() {
 /******/
 /******/2: function(module, exports, require) {
 
+/*** (webpack)\~\json-loader!.\test.json ***/
+
 module.exports = {
 	"foobar": 1234
 }
@@ -101,6 +108,8 @@ module.exports = {
 /******/
 /******/3: function(module, exports, require) {
 
+/*** .\loader.js!.\file.js ***/
+
 exports.answer = 42;
 exports.foo = "bar";
 
@@ -108,8 +117,18 @@ exports.foo = "bar";
 /******/
 /******/4: function(module, exports, require) {
 
+/*** (webpack)\~\enhanced-require\index.webpack.js ***/
+
 // No polyfill needed when compiled with webpack
 module.exports = function(r){return r}
+
+/******/},
+/******/
+/******/5: function(module, exports, require) {
+
+/*** (webpack)\require-polyfill.js ***/
+
+module.exports = require(/* enhanced-require */4)
 
 /******/},
 /******/
@@ -131,13 +150,14 @@ Prints in node.js (`node example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: c0831657fd53c5a777b1f944506cbfd2
+Hash: 68e416723e9da380bb503f78511ebe86
+Compile Time: 505ms
 Chunks: 1
-Modules: 5
-Modules including duplicates: 5
-Modules pre chunk: 5
-Modules first chunk: 5
-   output.js:     2094 characters
+Modules: 6
+Modules including duplicates: 6
+Modules per chunk: 6
+Modules first chunk: 6
+   output.js:     2509 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -151,6 +171,8 @@ output.js
        require (1x) from .\example.js
     3        41  .\loader.js!.\file.js
        require (1x) from .\example.js
-    4        87  (webpack)\require-polyfill.web.js
+    4        87  (webpack)\~\enhanced-require\index.webpack.js
+       require (1x) from (webpack)\require-polyfill.js
+    5        49  (webpack)\require-polyfill.js
        require (1x) from .\example.js
 ```

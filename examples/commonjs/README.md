@@ -47,10 +47,13 @@ exports.add = function() {
 /******/		callback(require);
 /******/	};
 /******/	require.modules = modules;
+/******/	require.cache = installedModules;
 /******/	return require(0);
 /******/})
 /******/({
 /******/0: function(module, exports, require) {
+
+/*** .\example.js ***/
 
 var inc = require(/* ./increment */1).increment;
 var a = 1;
@@ -60,6 +63,8 @@ inc(a); // 2
 /******/
 /******/1: function(module, exports, require) {
 
+/*** .\increment.js ***/
+
 var add = require(/* ./math */2).add;
 exports.increment = function(val) {
     return add(val, 1);
@@ -68,6 +73,8 @@ exports.increment = function(val) {
 /******/},
 /******/
 /******/2: function(module, exports, require) {
+
+/*** .\math.js ***/
 
 exports.add = function() {
     var sum = 0, i = 0, args = arguments, l = args.length;
@@ -87,13 +94,14 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: a6aade18f63e58074c48b3e95e18bdf1
+Hash: 9326ee6a998b5e42fd07a7a2f390ce57
+Compile Time: 94ms
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3
-Modules pre chunk: 3
+Modules per chunk: 3
 Modules first chunk: 3
-   output.js:     1231 characters
+   output.js:     1345 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -109,13 +117,14 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: a6aade18f63e58074c48b3e95e18bdf1
+Hash: 4131f4717fa510f9f9929b1b6a050226
+Compile Time: 172ms
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3
-Modules pre chunk: 3
+Modules per chunk: 3
 Modules first chunk: 3
-   output.js:      468 characters
+   output.js:      478 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>

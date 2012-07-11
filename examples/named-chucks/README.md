@@ -55,6 +55,7 @@ require.ensure(["b"], function(require) {
 /******/			}
 /******/		};
 /******/		require.modules = modules;
+/******/		require.cache = installedModules;
 /******/		window[modules.b] = function(chunkId, moreModules) {
 /******/			for(var moduleId in moreModules)
 /******/				modules[moduleId] = moreModules[moduleId];
@@ -68,6 +69,8 @@ require.ensure(["b"], function(require) {
 /******/})(document)
 /******/({a:".output.js",b:"webpackJsonp",c:"",
 /******/0: function(module, exports, require) {
+
+/*** .\example.js ***/
 
 var a = require(/* a */1);
 
@@ -94,6 +97,8 @@ require.e(1, function(require) {
 /******/
 /******/1: function(module, exports, require) {
 
+/*** .\~\a.js ***/
+
 // module a
 
 /******/},
@@ -107,11 +112,15 @@ require.e(1, function(require) {
 /******/webpackJsonp(1, {
 /******/2: function(module, exports, require) {
 
+/*** .\~\b.js ***/
+
 // module b
 
 /******/},
 /******/
 /******/3: function(module, exports, require) {
+
+/*** .\~\d.js ***/
 
 // module d
 
@@ -126,17 +135,23 @@ require.e(1, function(require) {
 /******/webpackJsonp(2, {
 /******/2: function(module, exports, require) {
 
+/*** .\~\b.js ***/
+
 // module b
 
 /******/},
 /******/
 /******/3: function(module, exports, require) {
 
+/*** .\~\d.js ***/
+
 // module d
 
 /******/},
 /******/
 /******/4: function(module, exports, require) {
+
+/*** .\~\c.js ***/
 
 // module c
 
@@ -150,15 +165,16 @@ require.e(1, function(require) {
 ## Uncompressed
 
 ```
-Hash: fd69516fa1f852063e95b93b06a4226f
+Hash: 87050fc2d94fd17f6817b17719aa6528
+Compile Time: 156ms
 Chunks: 3
 Modules: 5
 Modules including duplicates: 7
-Modules pre chunk: 2.3
+Modules per chunk: 2.3
 Modules first chunk: 2
-   output.js:     2288 characters
- 1.output.js:      200 characters
- 2.output.js:      282 characters
+   output.js:     2376 characters
+ 1.output.js:      240 characters
+ 2.output.js:      342 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
