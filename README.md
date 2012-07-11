@@ -361,6 +361,11 @@ You can also save this options object in a JSON file and use it with the shell c
  outputPostfix: ".chunk.js", // default: "." + output
  // postfix appended to id of lazy loaded chunks
 
+ context: "/home/node/stuff",
+ // default: [context] parameter if Programmatically Usage
+ // default: process.cwd() if Shell Usage
+ // paths in stats and debug sourceUrl are shortened to this base directory
+
  ouputJsonpFunction: "myJsonp", // default: "webpackJsonp"
  // jsonp function used for lazy loaded chunks,
  // should be unique for all instances of webpack in a page

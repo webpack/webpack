@@ -156,6 +156,7 @@ if(!output) {
 	if(!options.outputDirectory) options.outputDirectory = path.dirname(output);
 	if(!options.output) options.output = path.basename(output);
 	if(!options.outputPostfix) options.outputPostfix = "." + path.basename(output);
+	if(!options.context) options.context = process.cwd();
 
 	// some listeners for the progress display
 	if(argv.progress) {
@@ -213,7 +214,8 @@ if(!output) {
 			console.log(formatOutput(stats, {
 				colors: argv.colors,
 				"by-size": argv["by-size"],
-				verbose: argv.verbose
+				verbose: argv.verbose,
+				context: options.context
 			}));
 		}
 	});
