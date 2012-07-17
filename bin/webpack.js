@@ -74,11 +74,19 @@ var argv = require("optimist")
 var input = argv._[0],
 	output = argv._[1];
 
-if (input && input[0] !== '/' && input[1] !== ':') {
-	input = path.join(process.cwd(), input);
+var inputFile = input && input.split("!").pop()
+if (inputFile && inputFile[0] !== '/' && inputFile[1] !== ':') {
+	input = input.split("!");
+	input.pop();
+	input.push(path.join(process.cwd(), inputFile));
+	input = input.join("!");
 }
+var outputFile = output && output.split("!").pop();
 if (output && output[0] !== '/' && input[1] !== ':') {
-	output = path.join(process.cwd(), output);
+	output = output.split("!");
+	output.pop();
+	output.push(path.join(process.cwd(), outputFile));
+	output = output.join("!");
 }
 
 var options = {};
