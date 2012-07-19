@@ -8,6 +8,10 @@ example demonstrating a very simple programm
 
 example demonstrating a very simple case of Code Splitting.
 
+## require.resolve
+
+example demonstrating to cache clearing of modules with `require.resolve` and `require.cache`.
+
 ## require.context
 
 example demonstrating to automatic creation of contexts when using variables in `require`.
