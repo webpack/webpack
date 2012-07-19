@@ -1,14 +1,31 @@
 var cp = require('child_process');
 
-function result(error, stdout, stderr) {
-	console.log(stderr);
-}
+var cmds = [
+	"cd code-splitted-require.context && node build.js",
+	"cd code-splitting && node build.js",
+	"cd coffee-script && node build.js",
+	"cd loader && node build.js",
+	"cd require.context && node build.js",
+	"cd code-splitting-bundle-loader && node build.js",
+	"cd commonjs && node build.js",
+	"cd named-chucks && node build.js",
+	"cd require.resolve && node build.js",
+];
 
-cp.exec("cd code-splitted-require.context && node build.js", result);
-cp.exec("cd code-splitting && node build.js", result);
-cp.exec("cd coffee-script && node build.js", result);
-cp.exec("cd loader && node build.js", result);
-cp.exec("cd require.context && node build.js", result);
-cp.exec("cd code-splitting-bundle-loader && node build.js", result);
-cp.exec("cd commonjs && node build.js", result);
-cp.exec("cd named-chucks && node build.js", result);
+var stack = function() {
+	console.log("done");
+};
+for(var i = cmds.length-1; i >= 0; i--) {
+	var cmd = cmds[i];
+	stack = (function(next, cmd) {
+		return function() {
+			console.log(cmd);
+			cp.exec(cmd, function(error, stdout, stderr) {
+				if(error) console.error(error);
+				else if(stderr) console.error(stderr);
+				else next();
+			});
+		}
+	}(stack, cmd));
+}
+stack();
