@@ -708,7 +708,7 @@ Combine the options `--colors --watch --progress` to get a pretty shell compilat
 	<code>require.resolve</code>
   </td>
   <td>
-	no
+	yes
   </td>
   <td>
 	no
