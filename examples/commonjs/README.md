@@ -16,7 +16,7 @@ exports.increment = function(val) {
 };
 ```
 
-# math.coffee
+# math.js
 
 ``` javascript
 exports.add = function() {

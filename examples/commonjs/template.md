@@ -11,7 +11,7 @@
 {{increment.js}}
 ```
 
-# math.coffee
+# math.js
 
 ``` javascript
 {{math.js}}
