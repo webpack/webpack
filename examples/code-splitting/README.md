@@ -121,7 +121,7 @@ webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
 
 ```
 Hash: 38f36e791a78bd79a3da8a151e3eca69
-Compile Time: 292ms
+Compile Time: 50ms
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5
@@ -150,7 +150,7 @@ output.js
 
 ```
 Hash: acb96ffb60e2a4a3abff7ff64fc7b104
-Compile Time: 389ms
+Compile Time: 105ms
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5

@@ -73,11 +73,12 @@ require(/* bundle!./file.js */2)(function(fileJsExports) {
 
 /*** (webpack)\buildin\__webpack_console.js ***/
 
-var console = window.console;
+var console = (function() { return this["console"] || this["window"].console || {} }());
 module.exports = console;
 for(var name in {log:1, info:1, error:1, warn:1, dir:1, trace:1, assert:1})
 	if(!console[name])
 		console[name] = function() {};
+var times = {};
 if(!console.time)
 console.time = function(label) {
 	times[label] = Date.now();
@@ -134,14 +135,14 @@ module.exports = "It works";
 ## Uncompressed
 
 ```
-Hash: 822f2e94aed8321db2eb0683e517a04d
-Compile Time: 883ms
+Hash: 78ea2d6893a1c0365c7a34aae7bb3833
+Compile Time: 53ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
 Modules per chunk: 2
 Modules first chunk: 3
-   output.js:     3069 characters
+   output.js:     3145 characters
  1.output.js:      156 characters
 
  <id>    <size>  <filename>
@@ -149,7 +150,7 @@ Modules first chunk: 3
 output.js
     0        91  .\example.js
        main
-    1       420  (webpack)\buildin\__webpack_console.js
+    1       496  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
     2       324  (webpack)\~\bundle-loader!.\file.js
        require (1x) from .\example.js
@@ -161,14 +162,14 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 465c6d8774e021d375ab1fde093f6d70
-Compile Time: 888ms
+Hash: 26154bdd756af9972717cd33f9781f20
+Compile Time: 125ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
 Modules per chunk: 2
 Modules first chunk: 3
-   output.js:     1143 characters
+   output.js:     1188 characters
  1.output.js:       57 characters
 
  <id>    <size>  <filename>
@@ -176,7 +177,7 @@ Modules first chunk: 3
 output.js
     0        39  .\example.js
        main
-    1       332  (webpack)\buildin\__webpack_console.js
+    1       389  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
     2       164  (webpack)\~\bundle-loader!.\file.js
        require (1x) from .\example.js

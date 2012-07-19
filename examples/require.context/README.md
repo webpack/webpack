@@ -63,11 +63,12 @@ console.log(getTemplate("b"));
 
 /*** (webpack)\buildin\__webpack_console.js ***/
 
-var console = window.console;
+var console = (function() { return this["console"] || this["window"].console || {} }());
 module.exports = console;
 for(var name in {log:1, info:1, error:1, warn:1, dir:1, trace:1, assert:1})
 	if(!console[name])
 		console[name] = function() {};
+var times = {};
 if(!console.time)
 console.time = function(label) {
 	times[label] = Date.now();
@@ -129,21 +130,21 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 6f6b2204b89b8552dbb3c5dda47dfc73
-Compile Time: 214ms
+Hash: 97029f43f86efc04f78a18ce92552849
+Compile Time: 38ms
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
 Modules per chunk: 6
 Modules first chunk: 6
-   output.js:     2577 characters
+   output.js:     2653 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
     0       156  .\example.js
        main
-    1       420  (webpack)\buildin\__webpack_console.js
+    1       496  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
     2       289  [context] .\templates
        context from .\example.js
@@ -158,21 +159,21 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 0aacc1ce55478e88496e2eeb97b5398f
-Compile Time: 275ms
+Hash: 0cdc97a2c93e31c3f9a65d6fdddd9be4
+Compile Time: 103ms
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
 Modules per chunk: 6
 Modules first chunk: 6
-   output.js:     1097 characters
+   output.js:     1142 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
     0       109  .\example.js
        main
-    1       332  (webpack)\buildin\__webpack_console.js
+    1       389  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
     2       228  [context] .\templates
        context from .\example.js

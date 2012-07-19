@@ -60,11 +60,12 @@ console.log(require(/* ./cup1.coffee */3));
 
 /*** (webpack)\buildin\__webpack_console.js ***/
 
-var console = window.console;
+var console = (function() { return this["console"] || this["window"].console || {} }());
 module.exports = console;
 for(var name in {log:1, info:1, error:1, warn:1, dir:1, trace:1, assert:1})
 	if(!console[name])
 		console[name] = function() {};
+var times = {};
 if(!console.time)
 console.time = function(label) {
 	times[label] = Date.now();
@@ -120,21 +121,21 @@ console.timeEnd = function() {
 ## Uncompressed
 
 ```
-Hash: 8740d241e371adf15f644bee773f2b4b
-Compile Time: 933ms
+Hash: 6f847f3ae460f720cea4227c0a6befb2
+Compile Time: 139ms
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4
 Modules per chunk: 4
 Modules first chunk: 4
-   output.js:     2201 characters
+   output.js:     2277 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
     0        43  .\example.js
        main
-    1       420  (webpack)\buildin\__webpack_console.js
+    1       496  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
        require (1x) from .\cup2.coffee
     2        92  (webpack)\~\coffee-loader!.\cup2.coffee
@@ -146,21 +147,21 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 71ac198c443b74812251971624a502c3
-Compile Time: 715ms
+Hash: 59325c1d71d5ede2a056831707e21289
+Compile Time: 206ms
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4
 Modules per chunk: 4
 Modules first chunk: 4
-   output.js:      801 characters
+   output.js:      846 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
     0        23  .\example.js
        main
-    1       332  (webpack)\buildin\__webpack_console.js
+    1       389  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
        require (1x) from .\cup2.coffee
     2        76  (webpack)\~\coffee-loader!.\cup2.coffee
