@@ -5,11 +5,19 @@
 	Author Tobias Koppers @sokra
 */
 var path = require("path");
+// Local version replace global one
+try {
+	var localWebpack = require.resolve(path.join(process.cwd(), "node_modules", "webpack", "bin", "webpack.js"));
+	if(__filename != localWebpack) {
+		return require(localWebpack);
+	}
+} catch(e) {}
 var fs = require("fs");
 var util = require("util");
 var sprintf = require("sprintf").sprintf;
 var argv = require("optimist")
-	.usage("Usage: $0 <input> <output>")
+	.usage("webpack " + require("../package.json").version + "\n" +
+		"Usage: $0 <input> <output>")
 
 	.boolean("min")
 	.describe("min", "Minimize it with uglifyjs")
