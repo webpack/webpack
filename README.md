@@ -1,4 +1,4 @@
-# modules-webpack
+# webpack
 
 As developer you want to reuse existing code.
 As with node.js and web all files are already in the same language, but it is extra work to use your code with the node.js module system and the browser.
@@ -15,11 +15,11 @@ This introduce more complexity to the compile step.
 `webpack` supports loaders which process files before including them.
 You as developer can use such files like any other module.
 
-[![build status](https://secure.travis-ci.org/sokra/modules-webpack.png)](http://travis-ci.org/sokra/modules-webpack)
+[![build status](https://secure.travis-ci.org/webpack/webpack.png)](http://travis-ci.org/webpack/webpack)
 
 **TL;DR**
 
-* bundle CommonJs modules for browser
+* bundle CommonJs and/or AMD modules for browser
 * reuse server-side code (node.js) on client-side
 * create multiple files which are loaded on demand (faster page load in big webapps or on mobile connections)
 * dependencies managed for you, on compile time (no resolution on runtime needed)
@@ -54,9 +54,9 @@ webpack lib/yourCommonJsEntryModule.js output/bundle.js
 
 # Examples
 
-See [example webapp](http://sokra.github.com/modules-webpack-example/).
+See [example webapp](http://webpack.github.com/example-app/).
 
-More [examples](https://github.com/sokra/modules-webpack/tree/master/examples).
+More [examples](https://github.com/webpack/webpack/tree/master/examples).
 
 ## Simple Example
 
@@ -120,9 +120,9 @@ Initially only `web.js` is included (and loaded) by your application.
 `1.web.js` is loaded when the call to `require.ensure` happens.
 After the second bundle (`1.web.js`) is loaded, the callback function will be invoked.
 
-See [details](/sokra/modules-webpack/tree/master/examples/code-splitting) for exact output.
+See [details](/webpack/webpack/tree/master/examples/code-splitting) for exact output.
 
-See [more examples](/sokra/modules-webpack/tree/master/examples).
+See [more examples](/webpack/webpack/tree/master/examples).
 
 ## Reusing node.js code
 
@@ -182,7 +182,7 @@ function getTemplate(templateName) {
 // which compiles to: return require(123)("./"+templateName)
 ```
 
-See [details](/sokra/modules-webpack/tree/master/examples/require.context) for complete example.
+See [details](/webpack/webpack/tree/master/examples/require.context) for complete example.
 
 When try to store the `require` function in another variable or try to pass it as parameter,
 `webpack` convert it to a `require.context(".")` to be compatible.
@@ -207,21 +207,21 @@ The `raw` loader plugin is looked up at modules `raw-webpack-web-loader`, `raw-w
 and the following files are looked up: `index.webpack-web-loader.js`, `index.webpack-loader.js`, `index.web-loader.js`, `index.loader.js`, `index`, `index.js`.
 Note that the `web-` versions are omitted if loaders are used in node.js.
 
-See [example](/sokra/modules-webpack/tree/master/examples/loader).
+See [example](/webpack/webpack/tree/master/examples/loader).
 
 The following loaders are included in webpack:
 
-* [`raw`](https://github.com/sokra/webpack-raw-loader): Loads raw content of a file (as utf-8)
-* [`json`](https://github.com/sokra/webpack-json-loader) (default at `.json`): Loads file as JSON
-* [`jade`](https://github.com/sokra/webpack-jade-loader) (default at `.jade`): Loads jade template and returns a function
-* [`coffee`](https://github.com/sokra/webpack-coffee-loader) (default at `.coffee`): Loads coffee-script like javascript
-* [`css`](https://github.com/sokra/webpack-css-loader): Loads css file with resolved imports and returns css code
-* [`less`](https://github.com/sokra/webpack-less-loader): Loads and compiles a less file and returns css code
-* [`val`](https://github.com/sokra/webpack-val-loader): Excutes code as module and consider exports as javascript code
-* [`bundle`](https://github.com/sokra/webpack-bundle-loader): Wraps request in a `require.ensure` block
-* [`file`](https://github.com/sokra/webpack-file-loader): Emits the file into the output folder and returns the (relative) url (`file/{ext}` for some extensions)
-* [`style`](https://github.com/sokra/webpack-style-loader): Adds result of javascript execution to DOM
-* [`script`](https://github.com/sokra/webpack-script-loader): Executes a javascript file once in global context (like in script tag), requires are not parsed. Use this to include a library. ex. `require("script!./jquery.min.js")`. This is synchron, so the `$` variable is available after require.
+* [`raw`](https://github.com/webpack/raw-loader): Loads raw content of a file (as utf-8)
+* [`json`](https://github.com/webpack/json-loader) (default at `.json`): Loads file as JSON
+* [`jade`](https://github.com/webpack/jade-loader) (default at `.jade`): Loads jade template and returns a function
+* [`coffee`](https://github.com/webpack/coffee-loader) (default at `.coffee`): Loads coffee-script like javascript
+* [`css`](https://github.com/webpack/css-loader): Loads css file with resolved imports and returns css code
+* [`less`](https://github.com/webpack/less-loader): Loads and compiles a less file and returns css code
+* [`val`](https://github.com/webpack/val-loader): Excutes code as module and consider exports as javascript code
+* [`bundle`](https://github.com/webpack/bundle-loader): Wraps request in a `require.ensure` block
+* [`file`](https://github.com/webpack/file-loader): Emits the file into the output folder and returns the (relative) url (`file/{ext}` for some extensions)
+* [`style`](https://github.com/webpack/style-loader): Adds result of javascript execution to DOM
+* [`script`](https://github.com/webpack/script-loader): Executes a javascript file once in global context (like in script tag), requires are not parsed. Use this to include a library. ex. `require("script!./jquery.min.js")`. This is synchron, so the `$` variable is available after require.
 * (`.css` defaults to `style!css` loader, so all css rules are added to DOM)
 * (`.less` defaults to `style!css!val/cacheable!less` loader, so all less rules are added to DOM)
 
@@ -533,7 +533,7 @@ else `stats` as json:
 
 ### with grunt
 
-see [grunt-webpack](https://github.com/sokra/grunt-webpack).
+see [grunt-webpack](https://github.com/webpack/grunt-webpack).
 
 ## Bonus features
 
@@ -554,7 +554,7 @@ Combine the options `--colors --watch --progress` to get a pretty shell compilat
 	Feature
   </th>
   <th>
-	sokra/<br/>modules-<br/>webpack
+	webpack/<br/>webpack
   </th>
   <th>
 	medikoo/<br/>modules-<br/>webmake
