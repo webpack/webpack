@@ -36,6 +36,10 @@ example demonstrating Code Splitting through the builder loader
 
 example demonstrating merging of chucks with named chucks
 
+## mixed
+
+example demonstrating mixing CommonJs and AMD
+
 # Requests
 
 If you think a example is missing, please report it as issue. :)

@@ -150,7 +150,7 @@ output.js
 
 ```
 Hash: acb96ffb60e2a4a3abff7ff64fc7b104
-Compile Time: 105ms
+Compile Time: 104ms
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5

@@ -82,7 +82,7 @@ getTemplate("b", function(b) {
 
 /*** (webpack)\buildin\__webpack_console.js ***/
 
-var console = (function() { return this["console"] || this["window"].console || {} }());
+var console = (function() { return this["console"] || (this["window"] && this["window"].console) || {} }());
 module.exports = console;
 for(var name in {log:1, info:1, error:1, warn:1, dir:1, trace:1, assert:1})
 	if(!console[name])
@@ -156,14 +156,14 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 31dccb161bdcaed364272c7c6eb214ca
-Compile Time: 42ms
+Hash: c7f8c66d7e427c2d4fbe8d43782f1861
+Compile Time: 41ms
 Chunks: 2
 Modules: 6
 Modules including duplicates: 6
 Modules per chunk: 3
 Modules first chunk: 2
-   output.js:     2880 characters
+   output.js:     2900 characters
  1.output.js:     1088 characters
 
  <id>    <size>  <filename>
@@ -171,7 +171,7 @@ Modules first chunk: 2
 output.js
     0       268  .\example.js
        main
-    1       496  (webpack)\buildin\__webpack_console.js
+    1       516  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
 1.output.js
     2       289  [context] (webpack)\examples\require.context\templates
@@ -187,14 +187,14 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 92b150628c926c6aa61c9f5e72006164
-Compile Time: 119ms
+Hash: 580941dfbda8e981342d71fa2fbeae40
+Compile Time: 112ms
 Chunks: 2
 Modules: 6
 Modules including duplicates: 6
 Modules per chunk: 3
 Modules first chunk: 2
-   output.js:     1119 characters
+   output.js:     1132 characters
  1.output.js:      473 characters
 
  <id>    <size>  <filename>
@@ -202,7 +202,7 @@ Modules first chunk: 2
 output.js
     0       157  .\example.js
        main
-    1       389  (webpack)\buildin\__webpack_console.js
+    1       402  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
 1.output.js
     2       228  [context] (webpack)\examples\require.context\templates

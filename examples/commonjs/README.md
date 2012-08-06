@@ -50,7 +50,7 @@ exports.add = function() {
 /******/	require.cache = installedModules;
 /******/	return require(0);
 /******/})
-/******/({
+/******/({c:"",
 /******/0: function(module, exports, require) {
 
 /*** .\example.js ***/
@@ -95,13 +95,13 @@ exports.add = function() {
 
 ```
 Hash: 9326ee6a998b5e42fd07a7a2f390ce57
-Compile Time: 24ms
+Compile Time: 25ms
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3
 Modules per chunk: 3
 Modules first chunk: 3
-   output.js:     1345 characters
+   output.js:     1350 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -118,13 +118,13 @@ output.js
 
 ```
 Hash: 4131f4717fa510f9f9929b1b6a050226
-Compile Time: 74ms
+Compile Time: 73ms
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3
 Modules per chunk: 3
 Modules first chunk: 3
-   output.js:      478 characters
+   output.js:      483 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>

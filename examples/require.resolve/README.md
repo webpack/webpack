@@ -45,7 +45,7 @@ module.exports = Math.random();
 /******/	require.cache = installedModules;
 /******/	return require(0);
 /******/})
-/******/({
+/******/({c:"",
 /******/0: function(module, exports, require) {
 
 /*** .\example.js ***/
@@ -83,13 +83,13 @@ module.exports = Math.random();
 
 ```
 Hash: 8c012745533a08a15f1e6f422f4b96f8
-Compile Time: 20ms
+Compile Time: 21ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
 Modules per chunk: 2
 Modules first chunk: 2
-   output.js:     1220 characters
+   output.js:     1225 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -105,13 +105,13 @@ output.js
 
 ```
 Hash: bb8c15c0f6816c382b20abadbda51c0d
-Compile Time: 67ms
+Compile Time: 66ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
 Modules per chunk: 2
 Modules first chunk: 2
-   output.js:      410 characters
+   output.js:      415 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>

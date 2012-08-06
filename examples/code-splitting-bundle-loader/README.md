@@ -73,7 +73,7 @@ require(/* bundle!./file.js */2)(function(fileJsExports) {
 
 /*** (webpack)\buildin\__webpack_console.js ***/
 
-var console = (function() { return this["console"] || this["window"].console || {} }());
+var console = (function() { return this["console"] || (this["window"] && this["window"].console) || {} }());
 module.exports = console;
 for(var name in {log:1, info:1, error:1, warn:1, dir:1, trace:1, assert:1})
 	if(!console[name])
@@ -135,14 +135,14 @@ module.exports = "It works";
 ## Uncompressed
 
 ```
-Hash: 78ea2d6893a1c0365c7a34aae7bb3833
-Compile Time: 53ms
+Hash: 44dfbfa6a5cc501f02898703b4ef5937
+Compile Time: 51ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
 Modules per chunk: 2
 Modules first chunk: 3
-   output.js:     3145 characters
+   output.js:     3165 characters
  1.output.js:      156 characters
 
  <id>    <size>  <filename>
@@ -150,7 +150,7 @@ Modules first chunk: 3
 output.js
     0        91  .\example.js
        main
-    1       496  (webpack)\buildin\__webpack_console.js
+    1       516  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
     2       324  (webpack)\~\bundle-loader!.\file.js
        require (1x) from .\example.js
@@ -162,14 +162,14 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 26154bdd756af9972717cd33f9781f20
-Compile Time: 125ms
+Hash: 962468b3e6fafd1d80a8a957de5ea778
+Compile Time: 121ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
 Modules per chunk: 2
 Modules first chunk: 3
-   output.js:     1188 characters
+   output.js:     1201 characters
  1.output.js:       57 characters
 
  <id>    <size>  <filename>
@@ -177,7 +177,7 @@ Modules first chunk: 3
 output.js
     0        39  .\example.js
        main
-    1       389  (webpack)\buildin\__webpack_console.js
+    1       402  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
     2       164  (webpack)\~\bundle-loader!.\file.js
        require (1x) from .\example.js

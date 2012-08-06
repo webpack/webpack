@@ -56,7 +56,7 @@ module.exports = function(content) {
 /******/	require.cache = installedModules;
 /******/	return require(0);
 /******/})
-/******/({
+/******/({c:"",
 /******/0: function(module, exports, require) {
 
 /*** .\example.js ***/
@@ -79,7 +79,7 @@ console.dir(require(/* json!./test.json */2)); // manual
 
 /*** (webpack)\buildin\__webpack_console.js ***/
 
-var console = (function() { return this["console"] || this["window"].console || {} }());
+var console = (function() { return this["console"] || (this["window"] && this["window"].console) || {} }());
 module.exports = console;
 for(var name in {log:1, info:1, error:1, warn:1, dir:1, trace:1, assert:1})
 	if(!console[name])
@@ -151,21 +151,21 @@ Prints in node.js (`node example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 88a3c642e57308e55abb0438c64498e1
-Compile Time: 69ms
+Hash: 32d984116944fa5f4cb96f98c59402f4
+Compile Time: 66ms
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
 Modules per chunk: 6
 Modules first chunk: 6
-   output.js:     2585 characters
+   output.js:     2610 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
     0       333  .\example.js
        main
-    1       496  (webpack)\buildin\__webpack_console.js
+    1       516  (webpack)\buildin\__webpack_console.js
        require (3x) from .\example.js
     2        36  (webpack)\~\json-loader!.\test.json
        require (1x) from .\example.js

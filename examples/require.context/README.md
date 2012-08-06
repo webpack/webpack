@@ -44,7 +44,7 @@ module.exports = function() {
 /******/	require.cache = installedModules;
 /******/	return require(0);
 /******/})
-/******/({
+/******/({c:"",
 /******/0: function(module, exports, require) {
 
 /*** .\example.js ***/
@@ -63,7 +63,7 @@ console.log(getTemplate("b"));
 
 /*** (webpack)\buildin\__webpack_console.js ***/
 
-var console = (function() { return this["console"] || this["window"].console || {} }());
+var console = (function() { return this["console"] || (this["window"] && this["window"].console) || {} }());
 module.exports = console;
 for(var name in {log:1, info:1, error:1, warn:1, dir:1, trace:1, assert:1})
 	if(!console[name])
@@ -130,21 +130,21 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 97029f43f86efc04f78a18ce92552849
-Compile Time: 38ms
+Hash: 29c7a536162c4cd09e498e0d8bd5809b
+Compile Time: 37ms
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
 Modules per chunk: 6
 Modules first chunk: 6
-   output.js:     2653 characters
+   output.js:     2678 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
     0       156  .\example.js
        main
-    1       496  (webpack)\buildin\__webpack_console.js
+    1       516  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
     2       289  [context] .\templates
        context from .\example.js
@@ -159,21 +159,21 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 0cdc97a2c93e31c3f9a65d6fdddd9be4
-Compile Time: 103ms
+Hash: 93ac570895f40f12764ba0a3cf74bd2b
+Compile Time: 102ms
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
 Modules per chunk: 6
 Modules first chunk: 6
-   output.js:     1142 characters
+   output.js:     1160 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
     0       109  .\example.js
        main
-    1       389  (webpack)\buildin\__webpack_console.js
+    1       402  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
     2       228  [context] .\templates
        context from .\example.js
