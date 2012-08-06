@@ -4,9 +4,13 @@
 {{example.js}}
 ```
 
+# amd.js
+
 ``` javascript
 {{amd.js}}
 ```
+
+# commonjs.js
 
 ``` javascript
 {{commonjs.js}}

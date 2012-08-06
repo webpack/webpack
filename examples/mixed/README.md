@@ -16,6 +16,8 @@ require([
 );
 ```
 
+# amd.js
+
 ``` javascript
 // AMD Module Format
 define(
@@ -29,6 +31,8 @@ define(
 	}
 );
 ```
+
+# commonjs.js
 
 ``` javascript
 // CommonJs Module Format
