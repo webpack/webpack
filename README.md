@@ -526,7 +526,8 @@ else `stats` as json:
    ...
   ],
   "1.output.js": [...]
- }
+ },
+ subStats: [...], // stats for embedded webpacks
 }
 ```
 
