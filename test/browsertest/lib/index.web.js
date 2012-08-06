@@ -157,5 +157,19 @@ delete require.cache[singlarId];
 window.test(require("./singluar2") !== singlarObj, "require.cache can be deleted");
 
 
+// AMD
+var template = "tmpl";
+var amdLoaded = false;
+require(["./circular", "../templates/" + template, true ? "./circular" : "./circular"], function(circular, testTemplate, circular2) {
+	window.test(circular === 1, "AMD-style requires should work");
+	window.test(circular2 === 1, "AMD-style requires should work with conditionals");
+	window.test(testTemplate === "test template", "AMD-style requires should work with context");
+	amdLoaded = true;
+});
+window.test(amdLoaded, "AMD-style require should work (sync)");
+
+
+
+
 // Tests from node.js
 require("bundle!../nodetests");
