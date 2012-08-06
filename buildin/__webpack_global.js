@@ -1,1 +1,3 @@
-module.exports = window;
+(function() {
+	module.exports = this;
+}).call(null);

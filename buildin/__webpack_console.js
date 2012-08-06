@@ -1,4 +1,4 @@
-var console = (function() { return this["console"] || this["window"].console || {} }());
+var console = (function() { return this["console"] || (this["window"] && this["window"].console) || {} }());
 module.exports = console;
 for(var name in {log:1, info:1, error:1, warn:1, dir:1, trace:1, assert:1})
 	if(!console[name])
