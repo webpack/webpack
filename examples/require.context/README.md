@@ -86,9 +86,10 @@ console.timeEnd = function() {
 /*** .\templates ***/
 
 /***/	var map = {"./a.js":3,"./b.js":4,"./c.js":5},
-/***/requireInContext = module.exports = function(name) {
-/***/	return require(map[name+""]||map[name+".webpack.js"]||map[name+".web.js"]||map[name+".js"]||name);
-/***/};/***/requireInContext.keys = function() { return Object.keys(map) }
+/***/	requireInContext = module.exports = function(name) {
+/***/		return require(map[name+""] || map[name+".webpack.js"] || map[name+".web.js"] || map[name+".js"]||name);
+/***/	};
+/***/	requireInContext.keys = function() { return Object.keys(map) }
 
 /******/},
 /******/
@@ -130,14 +131,14 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 29c7a536162c4cd09e498e0d8bd5809b
+Hash: a6b10a94a35b77b825eb4a324b8f1a9b
 Compile Time: 37ms
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
 Modules per chunk: 6
 Modules first chunk: 6
-   output.js:     2678 characters
+   output.js:     2689 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -146,7 +147,7 @@ output.js
        main
     1       516  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
-    2       289  [context] .\templates
+    2       300  [context] .\templates
        context from .\example.js
     3        80  .\templates\a.js
        context from .\example.js
@@ -159,7 +160,7 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 93ac570895f40f12764ba0a3cf74bd2b
+Hash: 16045de5c5348f5d0540803222a18c39
 Compile Time: 102ms
 Chunks: 1
 Modules: 6
