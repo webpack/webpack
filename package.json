@@ -1,8 +1,8 @@
 {
 	"name": "webpack",
-	"version": "0.5.1",
+	"version": "0.5.2",
 	"author": "Tobias Koppers @sokra",
-	"description": "Packs CommonJs Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loading of js, json, jade, coffee, css, ... out of the box and more with custom loaders.",
+	"description": "Packs CommonJs/AMD Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loading of js, json, jade, coffee, css, ... out of the box and more with custom loaders.",
 	"dependencies": {
 		"esprima": "0.9.x",
 		"optimist": "0.2.x",
@@ -34,7 +34,7 @@
 	"engines": {
 		"node":  ">=0.1.30"
 	},
-	"homepage": "http://github.com/sokra/modules-webpack",
+	"homepage": "http://github.com/webpack/webpack",
 	"main": "lib/webpack.js",
 	"bin": "./bin/webpack.js",
 	"scripts": {

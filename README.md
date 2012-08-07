@@ -3,7 +3,7 @@
 As developer you want to reuse existing code.
 As with node.js and web all files are already in the same language, but it is extra work to use your code with the node.js module system and the browser.
 
-The goal of `webpack` is to bundle CommonJs modules into javascript files which can be loaded by `<script>`-tags.
+The goal of `webpack` is to bundle CommonJs (and AMD) modules into javascript files which can be loaded by `<script>`-tags.
 Simply concatenating all required files has a disadvantage: many code to download (and execute) on page load.
 Therefore `webpack` uses the `require.ensure` function ([CommonJs/Modules/Async/A](http://wiki.commonjs.org/wiki/Modules/Async/A)) to split your code automatically into multiple bundles which are loaded on demand.
 This happens mostly transparent to the developer.
@@ -19,7 +19,7 @@ You as developer can use such files like any other module.
 
 **TL;DR**
 
-* bundle CommonJs and/or AMD modules for browser
+* bundle [CommonJs](/webpack/webpack/tree/master/examples/commonjs/) and/or [AMD](/webpack/webpack/tree/master/examples/mixed/) modules for browser
 * reuse server-side code (node.js) on client-side
 * create multiple files which are loaded on demand (faster page load in big webapps or on mobile connections)
 * dependencies managed for you, on compile time (no resolution on runtime needed)
@@ -39,7 +39,7 @@ require("bootstrap/less/bootstrap.less");
 
 ``` shell
 npm install webpack -g
-webpack lib/yourCommonJsEntryModule.js output/bundle.js
+webpack lib/yourEntryModule.js output/bundle.js
 ```
 
 ## Goals
@@ -51,6 +51,7 @@ webpack lib/yourCommonJsEntryModule.js output/bundle.js
 * require minimal configuration, but offer a maximum
  * load polyfills for node-specific things if used
  * offer replacements for node buildin libraries
+* support [npm](https://npmjs.org/) and [jam](http://jamjs.org/)
 
 # Examples
 
@@ -143,7 +144,7 @@ For example this works out of the box:
 Somethings it happens that browsers require other code than node.js do.
 `webpack` allow module developers to specify replacements which are used in the compile process of `webpack`.
 
-Modules in `web_modules` replace modules in `node_modules`.
+Modules in `web_modules` and `jam` replace modules in `node_modules`.
 `filename.web.js` replaces `filename.js` when required without file extension.
 
 in options: `alias: { "http": "http-browserify" }`
@@ -428,6 +429,11 @@ You can also save this options object in a JSON file and use it with the shell c
   //     ".../buildin/web_modules", ".../buildin/name_modules",
   //     ".../node_modules"]
   // search paths for modules
+
+  modulesDirectorys: ["xyz_modules", "node_modules"],
+  // default: (defaults are NOT included if you define your own)
+  //  ["web_modules", "jam", "node_modules"];
+  // directories to be searched for modules
 
   alias: {
    "old-module": "new-module"

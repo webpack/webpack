@@ -9,6 +9,7 @@ require.ensure("subcontent", function(require) {
 	// Comments work!
 	exports.ok = true;
 	window.test(require("subcontent") === "replaced", "node_modules should be replaced with web_modules");
+	window.test(require("subcontent-jam") === "replaced", "node_modules should be replaced with jam");
 	window.test(require("subcontent2/file.js") === "orginal", "node_modules should still work when web_modules exists");
 });
 setTimeout(function() {
@@ -159,14 +160,36 @@ window.test(require("./singluar2") !== singlarObj, "require.cache can be deleted
 
 // AMD
 var template = "tmpl";
-var amdLoaded = false;
+var amdLoaded = 0;
 require(["./circular", "../templates/" + template, true ? "./circular" : "./circular"], function(circular, testTemplate, circular2) {
 	window.test(circular === 1, "AMD-style requires should work");
 	window.test(circular2 === 1, "AMD-style requires should work with conditionals");
 	window.test(testTemplate === "test template", "AMD-style requires should work with context");
-	amdLoaded = true;
+	amdLoaded++;
 });
-window.test(amdLoaded, "AMD-style require should work (sync)");
+define("name", ["./circular"], function(circular) {
+	window.test(circular === 1, "AMD-style requires should work, in define");
+	amdLoaded++;
+});
+define("name", [], function() {
+	amdLoaded++;
+});
+define(["./circular"], function(circular) {
+	window.test(circular === 1, "AMD-style requires should work, in define without name");
+	amdLoaded++;
+});
+define(function(require) {
+	window.test(require("./circular") === 1, "AMD-style requires should work, in define without name and requires");
+	amdLoaded++;
+});
+window.test(amdLoaded == 5, "AMD-style require should work (sync)");
+
+// cross module system support
+window.test(typeof require === "function", "require should be a function");
+window.test(typeof define === "function", "define should be a function");
+window.test(require.amd, "require.amd should be true");
+window.test(define.amd, "define.amd should be true");
+window.test(typeof module === "object", "module should be a object");
 
 
 
