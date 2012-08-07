@@ -8,6 +8,6 @@ module.exports = function(req) {
 	}
 	for(var name in req)
 		amdRequire[name] = req[name];
-	amdRequire.amd = true;
+	amdRequire.amd = {};
 	return amdRequire;
 }

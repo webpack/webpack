@@ -11,6 +11,6 @@ module.exports = function(module, req) {
 		}
 		return module.exports = fn.apply(module.exports, requires);
 	}
-	define.amd = true;
+	define.amd = {};
 	return define;
 }
