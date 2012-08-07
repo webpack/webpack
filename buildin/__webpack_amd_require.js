@@ -1,4 +1,4 @@
-module.exports = function(req) {
+module.exports = function amdRequireFactory(req) {
 	function amdRequire(requires, fn) {
 		if(!fn) {
 			// commonjs
@@ -8,6 +8,7 @@ module.exports = function(req) {
 	}
 	for(var name in req)
 		amdRequire[name] = req[name];
-	amdRequire.amd = {};
+	amdRequire.amd = amdRequireFactory.amd;
 	return amdRequire;
 }
+amdRequireFactory.amd = {};
