@@ -13,6 +13,7 @@ function amdRequireFactory(req) {
 	for(var name in req)
 		amdRequire[name] = req[name];
 	amdRequire.amd = amdRequireFactory.amd;
+	amdRequire.config = function() {/* config is ignored, use webpack options */};
 	return amdRequire;
 }
 amdRequireFactory.amd = {};
