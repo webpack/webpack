@@ -182,7 +182,16 @@ define(function(require) {
 	window.test(require("./circular") === 1, "AMD-style requires should work, in define without name and requires");
 	amdLoaded++;
 });
+require(["./circular"]);
+require(["./c"], function(c) {
+	window.test(c === "c", "AMD-style require should work, in chunk");
+	window.test(require("./d") === "d", "AMD-style require should work, in chunk");
+	amdLoaded++;
+});
 window.test(amdLoaded == 5, "AMD-style require should work (sync)");
+setTimeout(function() {
+	window.test(amdLoaded == 6, "AMD-style require should work (async)");
+}, 1500);
 
 // cross module system support
 window.test(typeof require === "function", "require should be a function");

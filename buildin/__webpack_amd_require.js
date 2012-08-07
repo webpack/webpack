@@ -1,10 +1,14 @@
-module.exports = function amdRequireFactory(req) {
-	function amdRequire(requires, fn) {
-		if(!fn) {
+function amdRequireFactory(req) {
+	function amdRequire(chunk, requiresFn, fn) {
+		if(!requiresFn) {
 			// commonjs
-			return req(requires);
+			return req(chunk);
 		}
-		return fn.apply(null, requires);
+		req.e(chunk, function() {
+			var modules = requiresFn();
+			if(fn)
+				return fn.apply(null, modules);
+		});
 	}
 	for(var name in req)
 		amdRequire[name] = req[name];
@@ -12,3 +16,4 @@ module.exports = function amdRequireFactory(req) {
 	return amdRequire;
 }
 amdRequireFactory.amd = {};
+module.exports = amdRequireFactory;
