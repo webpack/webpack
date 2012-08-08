@@ -1,5 +1,4 @@
-/node_modules
-/test/js
-/test/browsertest/js
-/test/browsertest/node_modules/vm-browserify
-/examples/*/js
+node_modules
+test/js
+test/browsertest/js
+examples/*/js

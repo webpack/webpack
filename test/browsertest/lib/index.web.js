@@ -137,7 +137,7 @@ require("../css/stylesheet.css");
 require("../less/stylesheet.less");
 
 // file loader
-window.test(require("file/png!../img/image.png").indexOf("js/") === 0, "Buildin 'file' loader, png");
+window.test(require("file/png!../img/image.png").indexOf("js/") >= 0, "Buildin 'file' loader, png");
 setTimeout(function() {
 	document.getElementById("image").src = require("file/png!../img/image.png");
 }, 200);
