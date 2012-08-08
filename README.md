@@ -399,7 +399,22 @@ You can also save this options object in a JSON file and use it with the shell c
 
  events: new EventEmitter(), // default: new EventEmitter()
  // EventEmitter on which events for the compile process are fired
- // events: "bundle", "module", "context", "task", "task-end"
+ // events:
+ //  -- bundling process --
+ //  "bundle"           (stats) the bundle is finished
+ //  "bundle-invalid"   () fired when the bundle gets invalid
+ //         [bundle-invalid is only fired in watch mode]
+ //  "start-writing"    (hash) fired when webpack starts writing
+ //  -- events for dependencies --
+ //  "module"           (module, filename) before a module is loaded
+ //  "context"          (module, dirname) before a context is loaded
+ //  "dependency"       (filename) before a dependency is loaded
+ //  -- events for progress --
+ //  "task"             (name?) start of a task
+ //  "task-end"         (name?) end of a task
+
+ noWrite: true, // default: undefined
+ // if true webpack do not write out any file
 
  parse: {
   // options for parsing
