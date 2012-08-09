@@ -289,11 +289,11 @@ output.js
        require (1x) from .\amd.js
 1.output.js
     5       300  [context] (webpack)\examples\require.context\templates
-       sync context from .\example.js
+       async context from .\example.js
     6        82  (webpack)\examples\require.context\templates\a.js
-       sync context from .\example.js
+       async context from .\example.js
     7        82  (webpack)\examples\require.context\templates\b.js
-       sync context from .\example.js
+       async context from .\example.js
     8        82  (webpack)\examples\require.context\templates\c.js
-       sync context from .\example.js
+       async context from .\example.js
 ```

@@ -176,13 +176,13 @@ output.js
        require (2x) from .\example.js
 1.output.js
     2       300  [context] (webpack)\examples\require.context\templates
-       sync context from .\example.js
+       async context from .\example.js
     3        80  (webpack)\examples\require.context\templates\a.js
-       sync context from .\example.js
     4        80  (webpack)\examples\require.context\templates\b.js
-       sync context from .\example.js
     5        80  (webpack)\examples\require.context\templates\c.js
-       sync context from .\example.js
+       async context from .\example.js
+       async context from .\example.js
+       async context from .\example.js
 ```
 
 ## Minimized (uglify-js, no zip)
@@ -207,11 +207,11 @@ output.js
        require (2x) from .\example.js
 1.output.js
     2       228  [context] (webpack)\examples\require.context\templates
-       sync context from .\example.js
+       async context from .\example.js
     3        72  (webpack)\examples\require.context\templates\a.js
-       sync context from .\example.js
+       async context from .\example.js
     4        72  (webpack)\examples\require.context\templates\b.js
-       sync context from .\example.js
+       async context from .\example.js
     5        72  (webpack)\examples\require.context\templates\c.js
-       sync context from .\example.js
+       async context from .\example.js
 ```

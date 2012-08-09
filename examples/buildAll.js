@@ -10,6 +10,7 @@ var cmds = [
 	"cd commonjs && node build.js",
 	"cd named-chucks && node build.js",
 	"cd require.resolve && node build.js",
+	"cd mixed && node build.js",
 ];
 
 var stack = function() {
