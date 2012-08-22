@@ -1,15 +1,20 @@
 var amdRequire = require("./__webpack_amd_require");
 module.exports = function(module, req) {
 	req = amdRequire(req);
-	function define(name, requires, fn) {
-		if(!fn) {
-			fn = requires;
-			requires = name;
+	function define(id, dependencies, factory) {
+		if(typeof id != "number") {
+			factory = dependencies;
+			dependencies = id;
+			id = null;
 		}
-		if(!fn) {
-			return module.exports = name.call(module.exports, req);
+		if(!factory) {
+			factory = dependencies;
+			dependencies = [req, module.exports, module];
 		}
-		return module.exports = fn.apply(module.exports, requires);
+		var result = typeof factory == "function" ? factory.apply(null, dependencies) : factory;
+		if(result !== undefined)
+			module.exports = result;
+		return module.exports;
 	}
 	define.amd = amdRequire.amd;
 	return define;

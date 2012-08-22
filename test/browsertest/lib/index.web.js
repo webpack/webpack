@@ -179,7 +179,19 @@ define(["./circular"], function(circular) {
 	window.test(circular === 1, "AMD-style requires should work, in define without name");
 	amdLoaded++;
 });
-define(function(require) {
+define("blaa", function() {
+	amdLoaded++;
+});
+var obj = {};
+define("blaaa", obj);
+window.test(obj === module.exports, "AMD-style define exports a object");
+var _test_require = require.valueOf();
+var _test_exports = module.exports;
+var _test_module = module;
+define(function(require, exports, module) {
+	window.test(typeof require == "function", "AMD-style define CommonJs: require is function");
+	window.test(exports == _test_exports, "AMD-style define CommonJs: exports is correct");
+	window.test(module == _test_module, "AMD-style define CommonJs: module is correct");
 	window.test(require("./circular") === 1, "AMD-style requires should work, in define without name and requires");
 	amdLoaded++;
 });
@@ -189,9 +201,9 @@ require(["./c"], function(c) {
 	window.test(require("./d") === "d", "AMD-style require should work, in chunk");
 	amdLoaded++;
 });
-window.test(amdLoaded == 5, "AMD-style require should work (sync)");
+window.test(amdLoaded == 6, "AMD-style require should work (sync)");
 setTimeout(function() {
-	window.test(amdLoaded == 6, "AMD-style require should work (async)");
+	window.test(amdLoaded == 7, "AMD-style require should work (async)");
 }, 1500);
 
 // cross module system support
