@@ -2,4 +2,4 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
-module.exports = "(require.valueOf().modules.c||'')";
+module.exports = "(require.modules.c||'')";
