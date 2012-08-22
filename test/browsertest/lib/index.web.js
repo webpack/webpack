@@ -61,7 +61,6 @@ require.ensure([], function(require) {
 	window.test(contextRequire("./singluar").value === 2, "Context works in chunk");
 	var singl = "singl";
 	window.test(require("." + "/" + singl + "uar").value === 2, "Context works in chunk, when splitted");
-	window.test(typeof module.id === "string", "module.id should be a string");
 	window.test(process.argv && process.argv.length > 1, "process.argv should be an array");
 	process.nextTick(function() {
 		sum2++;
@@ -80,6 +79,8 @@ require.ensure([], function(require) {
 		window.test(module === 1233, "overwrite module via variable should be ok");
 	}());
 });
+window.test(typeof module.id === "number", "module.id should be a number");
+window.test(module.id === require.resolve("./index.web.js"), "module.id should be a id of the module");
 
 require.ensure([], function(require) {
 	require("./acircular");

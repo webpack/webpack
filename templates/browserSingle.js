@@ -5,9 +5,12 @@
 /******/		if(installedModules[moduleId])
 /******/			return installedModules[moduleId].exports;
 /******/		var module = installedModules[moduleId] = {
-/******/			exports: {}
+/******/			exports: {},
+/******/			id: moduleId,
+/******/			loaded: false
 /******/		};
 /******/		modules[moduleId](module, module.exports, require);
+/******/		module.loaded = true;
 /******/		return module.exports;
 /******/	}
 /******/	require.e = function(chunkId, callback) {
