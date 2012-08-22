@@ -49,6 +49,8 @@ assert.AssertionError = function AssertionError(options) {
     Error.captureStackTrace(this, stackStartFunction);
   }
 };
+
+// assert.AssertionError instanceof Error
 util.inherits(assert.AssertionError, Error);
 
 function replacer(key, value) {
@@ -84,10 +86,6 @@ assert.AssertionError.prototype.toString = function() {
     ].join(' ');
   }
 };
-
-// assert.AssertionError instanceof Error
-
-assert.AssertionError.__proto__ = Error.prototype;
 
 // At present only the three keys mentioned above are used and
 // understood by the spec. Implementations or sub modules can pass
@@ -308,11 +306,11 @@ function _throws(shouldThrow, block, expected, message) {
             (message ? ' ' + message : '.');
 
   if (shouldThrow && !actual) {
-    fail('Missing expected exception' + message);
+    fail(actual, expected, 'Missing expected exception' + message);
   }
 
   if (!shouldThrow && expectedException(actual, expected)) {
-    fail('Got unwanted exception' + message);
+    fail(actual, expected, 'Got unwanted exception' + message);
   }
 
   if ((shouldThrow && actual && expected &&

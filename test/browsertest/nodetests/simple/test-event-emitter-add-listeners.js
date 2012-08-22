@@ -23,36 +23,46 @@ var common = require('../common');
 var assert = require('assert');
 var events = require('events');
 
+var e = new events.EventEmitter();
 
-function listener() {}
+var events_new_listener_emited = [];
+var listeners_new_listener_emited = [];
+var times_hello_emited = 0;
 
-var e1 = new events.EventEmitter();
-e1.on('foo', listener);
-e1.on('bar', listener);
-e1.on('baz', listener);
-e1.on('baz', listener);
-var fooListeners = e1.listeners('foo');
-var barListeners = e1.listeners('bar');
-var bazListeners = e1.listeners('baz');
-e1.removeAllListeners('bar');
-e1.removeAllListeners('baz');
-assert.deepEqual(e1.listeners('foo'), [listener]);
-assert.deepEqual(e1.listeners('bar'), []);
-assert.deepEqual(e1.listeners('baz'), []);
-// after calling removeAllListeners,
-// the old listeners array should stay unchanged
-assert.deepEqual(fooListeners, [listener]);
-assert.deepEqual(barListeners, [listener]);
-assert.deepEqual(bazListeners, [listener, listener]);
-// after calling removeAllListeners,
-// new listeners arrays are different from the old
-assert.notEqual(e1.listeners('bar'), barListeners);
-assert.notEqual(e1.listeners('baz'), bazListeners);
+// sanity check
+assert.equal(e.addListener, e.on);
 
-var e2 = new events.EventEmitter();
-e2.on('foo', listener);
-e2.on('bar', listener);
-e2.removeAllListeners();
-console.error(e2);
-assert.deepEqual([], e2.listeners('foo'));
-assert.deepEqual([], e2.listeners('bar'));
+e.on('newListener', function(event, listener) {
+  console.log('newListener: ' + event);
+  events_new_listener_emited.push(event);
+  listeners_new_listener_emited.push(listener);
+});
+
+function hello(a, b) {
+  console.log('hello');
+  times_hello_emited += 1;
+  assert.equal('a', a);
+  assert.equal('b', b);
+}
+e.on('hello', hello);
+
+var foo = function() {};
+e.once('foo', foo);
+
+console.log('start');
+
+e.emit('hello', 'a', 'b');
+
+
+// just make sure that this doesn't throw:
+var f = new events.EventEmitter();
+f.setMaxListeners(0);
+
+
+process.on('exit', function() {
+  assert.deepEqual(['hello', 'foo'], events_new_listener_emited);
+  assert.deepEqual([hello, foo], listeners_new_listener_emited);
+  assert.equal(1, times_hello_emited);
+});
+
+

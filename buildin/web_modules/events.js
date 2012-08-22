@@ -94,8 +94,6 @@ EventEmitter.prototype.emit = function() {
   }
 };
 
-// EventEmitter is defined in src/node_events.cc
-// EventEmitter.prototype.emit() is also defined there.
 EventEmitter.prototype.addListener = function(type, listener) {
   if ('function' !== typeof listener) {
     throw new Error('addListener only takes instances of Function');
@@ -186,6 +184,8 @@ EventEmitter.prototype.removeListener = function(type, listener) {
 
     if (position < 0) return this;
     list.splice(position, 1);
+    if (list.length == 0)
+      delete this._events[type];
   } else if (list === listener ||
              (list.listener && list.listener === listener))
   {
@@ -201,15 +201,8 @@ EventEmitter.prototype.removeAllListeners = function(type) {
     return this;
   }
 
-  var events = this._events && this._events[type];
-  if (!events) return this;
-
-  if (isArray(events)) {
-    events.splice(0);
-  } else {
-    this._events[type] = null;
-  }
-
+  // does not use listeners(), so no side effect of creating _events[type]
+  if (type && this._events && this._events[type]) this._events[type] = null;
   return this;
 };
 

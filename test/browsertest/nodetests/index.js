@@ -10,22 +10,27 @@ function simple(name) {
 }
 
 simple("assert");
+simple("event-emitter-add-listeners");
 simple("event-emitter-check-listener-leaks");
+simple("event-emitter-max-listeners");
 simple("event-emitter-modify-in-emit");
 simple("event-emitter-num-args");
+simple("event-emitter-once");
 simple("event-emitter-remove-all-listeners");
+simple("event-emitter-remove-listeners");
 simple("global");
 simple("next-tick-doesnt-hang");
 simple("next-tick-ordering2");
 simple("path");
+simple("punycode");
 simple("querystring");
 simple("sys");
-simple("timers-zero-timeout");
 simple("timers");
+simple("timers-zero-timeout");
 simple("url");
+simple("util");
 simple("util-format");
 simple("util-inspect");
-simple("util");
 
 window.test(true, "Node.js simple tests should complete");
 
