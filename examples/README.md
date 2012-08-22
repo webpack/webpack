@@ -20,6 +20,10 @@ example demonstrating to automatic creation of contexts when using variables in 
 
 example demonstrating contexts in a code-split environment.
 
+## code-splitted-require.context-amd
+
+example demonstrating contexts in a code-split environment with AMD.
+
 ## loader
 
 example demonstrating to usage of loaders.
@@ -39,6 +43,10 @@ example demonstrating merging of chucks with named chucks
 ## mixed
 
 example demonstrating mixing CommonJs and AMD
+
+## web-worker
+
+example demonstrating creating WebWorkers with webpack and the worker-loader.
 
 # Requests
 

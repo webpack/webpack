@@ -7,10 +7,9 @@ require = require("../require-polyfill")(require.valueOf());
 var cp = require('child_process');
 var tc = require("./template-common");
 
-var argv = process.argv;
-argv.shift();
-argv.shift();
-var extraArgs = argv.join(" ");
+var extraArgs = "";
+if(require("fs").existsSync(require("path").join(process.cwd(), "webpackOptions.js")))
+	extraArgs += "--options webpackOptions.js ";
 
 cp.exec("node ../../bin/webpack.js --verbose --min "+extraArgs+" example.js js/output.js", function (error, stdout, stderr) {
 	if(stderr)

@@ -29,6 +29,7 @@
 		}
 	],
 	"devDependencies": {
+		"worker-loader": "0.1.x",
 		"mocha": "*",
 		"should": "*",
 		"vm-browserify": "*",

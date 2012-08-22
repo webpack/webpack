@@ -2,6 +2,7 @@ var cp = require('child_process');
 
 var cmds = [
 	"cd code-splitted-require.context && node build.js",
+	"cd code-splitted-require.context-amd && node build.js",
 	"cd code-splitting && node build.js",
 	"cd coffee-script && node build.js",
 	"cd loader && node build.js",
@@ -11,6 +12,7 @@ var cmds = [
 	"cd named-chucks && node build.js",
 	"cd require.resolve && node build.js",
 	"cd mixed && node build.js",
+	"cd web-worker && node build.js",
 ];
 
 var stack = function() {
