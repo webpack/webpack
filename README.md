@@ -228,6 +228,8 @@ The following loaders are included in webpack:
 
 See docs for loader in github repo of the loader.
 
+[Bigger list of loaders](https://github.com/webpack/webpack/wiki/Loaders)
+
 ## TL;DR
 
 ``` javascript
@@ -580,11 +582,71 @@ Combine the options `--colors --watch --progress` to get a pretty shell compilat
 	webpack/<br/>webpack
   </th>
   <th>
-	medikoo/<br/>modules-<br/>webmake
+	jrburke/<br/>requirejs
   </th>
   <th>
 	substack/<br/>node-<br/>browserify
   </th>
+ </tr>
+
+ <tr>
+  <td>
+	sync <code>require</code>
+  </td>
+  <td>
+	yes
+  </td>
+  <td>
+	only wrapped
+  </td>
+  <td>
+	yes
+  </td>
+ </tr>
+
+ <tr>
+  <td>
+	sync <code>require.resolve</code>
+  </td>
+  <td>
+	yes
+  </td>
+  <td>
+	no
+  </td>
+  <td>
+	yes
+  </td>
+ </tr>
+
+ <tr>
+  <td>
+	<code>define</code>
+  </td>
+  <td>
+	yes
+  </td>
+  <td>
+	yes
+  </td>
+  <td>
+	no
+  </td>
+ </tr>
+
+ <tr>
+  <td>
+	async <code>require</code>
+  </td>
+  <td>
+	yes
+  </td>
+  <td>
+	yes
+  </td>
+  <td>
+	no
+  </td>
  </tr>
 
  <tr>
@@ -599,6 +661,21 @@ Combine the options `--colors --watch --progress` to get a pretty shell compilat
   </td>
   <td>
 	yes
+  </td>
+ </tr>
+
+ <tr>
+  <td>
+	load each file seperate
+  </td>
+  <td>
+	no
+  </td>
+  <td>
+	yes
+  </td>
+  <td>
+	no
   </td>
  </tr>
 
@@ -626,7 +703,7 @@ Combine the options `--colors --watch --progress` to get a pretty shell compilat
 	in directory
   </td>
   <td>
-	include by config option
+	yes (not bundled)
   </td>
   <td>
 	no
@@ -642,7 +719,7 @@ Combine the options `--colors --watch --progress` to get a pretty shell compilat
 	yes
   </td>
   <td>
-	yes
+	yes (not bundled)
   </td>
   <td>
 	no
@@ -658,7 +735,7 @@ Combine the options `--colors --watch --progress` to get a pretty shell compilat
 	yes, complete directory included
   </td>
   <td>
-	include by config option
+	yes (not bundled)
   </td>
   <td>
 	no
@@ -674,7 +751,7 @@ Combine the options `--colors --watch --progress` to get a pretty shell compilat
 	no
   </td>
   <td>
-	include by config option
+	yes (not bundled)
   </td>
   <td>
 	no
@@ -683,8 +760,83 @@ Combine the options `--colors --watch --progress` to get a pretty shell compilat
 
  <tr>
   <td>
+	requirable files
+  </td>
+  <td>
+	filesystem
+  </td>
+  <td>
+	web
+  </td>
+  <td>
+	filesystem
+  </td>
+ </tr>
+
+ <tr>
+  <td>
+	plugins
+  </td>
+  <td>
+	no
+  </td>
+  <td>
+	no
+  </td>
+  <td>
+	yes
+  </td>
+ </tr>
+
+ <tr>
+  <td>
+	loaders
+  </td>
+  <td>
+	yes
+  </td>
+  <td>
+	yes
+  </td>
+  <td>
+	no
+  </td>
+ </tr>
+
+ <tr>
+  <td>
+	watch mode
+  </td>
+  <td>
+	yes
+  </td>
+  <td>
+	not needed
+  </td>
+  <td>
+	yes
+  </td>
+ </tr>
+
+ <tr>
+  <td>
+	debug support
+  </td>
+  <td>
+	yes
+  </td>
+  <td>
+	yes
+  </td>
+  <td>
+	yes
+  </td>
+ </tr>
+
+ <tr>
+  <td>
 	node buildin libs
-	<code>require("http");</code>
+	<code>require("path");</code>
   </td>
   <td>
 	yes
@@ -714,36 +866,6 @@ Combine the options `--colors --watch --progress` to get a pretty shell compilat
 
  <tr>
   <td>
-	<code>module</code> polyfill
-  </td>
-  <td>
-	yes, on demand
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	no
-  </td>
- </tr>
-
- <tr>
-  <td>
-	<code>require.resolve</code>
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	yes
-  </td>
- </tr>
-
- <tr>
-  <td>
 	<code>global</code> to <code>window</code> mapping
   </td>
   <td>
@@ -759,181 +881,17 @@ Combine the options `--colors --watch --progress` to get a pretty shell compilat
 
  <tr>
   <td>
-	requirable files
+	node browser replacements
   </td>
   <td>
-	filesystem
-  </td>
-  <td>
-	directory scope
-  </td>
-  <td>
-	filesystem
-  </td>
- </tr>
-
- <tr>
-  <td>
-	different modules with same name
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	yes
-  </td>
- </tr>
-
- <tr>
-  <td>
-	eliminate duplicate code
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	no
-  </td>
- </tr>
-
- <tr>
-  <td>
-	require JSON
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	no
-  </td>
- </tr>
-
- <tr>
-  <td>
-	plugins
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	yes
-  </td>
- </tr>
-
- <tr>
-  <td>
-	loaders
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	no
-  </td>
- </tr>
-
- <tr>
-  <td>
-	compile coffee script
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	yes
-  </td>
- </tr>
-
- <tr>
-  <td>
-	watch mode
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	yes
-  </td>
- </tr>
-
- <tr>
-  <td>
-	debug mode
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	yes
-  </td>
- </tr>
-
- <tr>
-  <td>
-	libaries
-  </td>
-  <td>
-	on global obj
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	requirable
-  </td>
- </tr>
-
- <tr>
-  <td>
-	browser replacements
-  </td>
-  <td>
-	<code>web_modules</code> and <code>.web.js</code>
-  </td>
-  <td>
-	no
+	<code>web_modules</code> and <code>.web.js</code><br />
+	by alias config option
   </td>
   <td>
 	by alias config option
   </td>
- </tr>
-
- <tr>
   <td>
-	compiles with (optional) modules missing
-  </td>
-  <td>
-	yes, emit warnings
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	no
+	by alias config option
   </td>
  </tr>
 </table>
@@ -961,10 +919,8 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 
 ## Future plans
 
-* more polyfills for node.js buildin modules, but optional
-* split require-polyfill from webpack and offer it as seperate module
+* more and better polyfills for node.js buildin modules
 * cache in folder and allow reuseing it
-* migrate tests to mocha
 * write it into the wiki if you have more ideas...
 
 ## License
