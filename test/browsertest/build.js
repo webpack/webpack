@@ -39,5 +39,5 @@ libary1.on("exit", function(code) {
 	}
 });
 var libary2 = cp.spawn("node", join(["../../bin/webpack.js", "--colors", "--libary", "libary2",
-									"--script-src-prefix", "js/", "--options", "libary2config.js", "node_modules/libary2", "js/libary2.js"], extraArgsNoWatch));
+									"--public-prefix", "js/", "--options", "libary2config.js", "node_modules/libary2", "js/libary2.js"], extraArgsNoWatch));
 bindOutput(libary2);
