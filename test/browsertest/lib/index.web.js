@@ -1,5 +1,6 @@
 // Should not break it... should not include complete directory...
-require = require("../../../require-polyfill")(require.valueOf());
+require = require("enhanced-require")(module);
+if(typeof define != "function") var define = require.define;
 
 window.test(true, "index.js should be replaced with index.web.js");
 require("script!../js/libary1.js");
@@ -161,26 +162,26 @@ window.test(require("./singluar2") !== singlarObj, "require.cache can be deleted
 
 // AMD
 var template = "tmpl";
-var amdLoaded = 0;
+var amdLoaded = "";
 require(["./circular", "../templates/" + template, true ? "./circular" : "./circular"], function(circular, testTemplate, circular2) {
 	window.test(circular === 1, "AMD-style requires should work");
 	window.test(circular2 === 1, "AMD-style requires should work with conditionals");
 	window.test(testTemplate === "test template", "AMD-style requires should work with context");
-	amdLoaded++;
+	amdLoaded+=1;
 });
 define("name", ["./circular"], function(circular) {
 	window.test(circular === 1, "AMD-style requires should work, in define");
-	amdLoaded++;
+	amdLoaded+=2;
 });
 define("name", [], function() {
-	amdLoaded++;
+	amdLoaded+=3;
 });
 define(["./circular"], function(circular) {
 	window.test(circular === 1, "AMD-style requires should work, in define without name");
-	amdLoaded++;
+	amdLoaded+=4;
 });
 define("blaa", function() {
-	amdLoaded++;
+	amdLoaded+=5;
 });
 var obj = {};
 define("blaaa", obj);
@@ -193,17 +194,17 @@ define(function(require, exports, module) {
 	window.test(exports == _test_exports, "AMD-style define CommonJs: exports is correct");
 	window.test(module == _test_module, "AMD-style define CommonJs: module is correct");
 	window.test(require("./circular") === 1, "AMD-style requires should work, in define without name and requires");
-	amdLoaded++;
+	amdLoaded+=6;
 });
 require(["./circular"]);
 require(["./c"], function(c) {
 	window.test(c === "c", "AMD-style require should work, in chunk");
 	window.test(require("./d") === "d", "AMD-style require should work, in chunk");
-	amdLoaded++;
+	amdLoaded+=7;
 });
-window.test(amdLoaded == 6, "AMD-style require should work (sync)");
+window.test(amdLoaded == "123456", "AMD-style require should work (sync) "+amdLoaded);
 setTimeout(function() {
-	window.test(amdLoaded == 7, "AMD-style require should work (async)");
+	window.test(amdLoaded == "1234567", "AMD-style require should work (async) " + amdLoaded);
 }, 1500);
 
 // cross module system support

@@ -1,6 +1,5 @@
 var amdRequire = require("./__webpack_amd_require");
-module.exports = function(module, req) {
-	req = amdRequire(req);
+module.exports = function(module) {
 	function define(id, dependencies, factory) {
 		if(typeof id != "number") {
 			factory = dependencies;
@@ -9,7 +8,7 @@ module.exports = function(module, req) {
 		}
 		if(!factory) {
 			factory = dependencies;
-			dependencies = [req, module.exports, module];
+			dependencies = [amdRequire, module.exports, module];
 		}
 		var result = typeof factory == "function" ? factory.apply(null, dependencies) : factory;
 		if(result !== undefined)

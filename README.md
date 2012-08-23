@@ -238,7 +238,7 @@ var b = require("./b"); // and files
                           // like in node.js
 
 // polyfill require method to use the new members in node.js too
-require = require("enhanced-require")(__filename, require.valueOf());
+require = require("enhanced-require")(module);
 
 // create a lazy loaded bundle
 require.ensure([], function(require) {

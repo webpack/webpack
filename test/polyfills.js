@@ -4,7 +4,7 @@
 */
 var should = require("should");
 var path = require("path");
-require = require("enhanced-require")(__filename);
+require = require("enhanced-require")(module);
 
 describe("polyfill", function() {
 	describe("loader", function() {
