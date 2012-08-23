@@ -1,4 +1,4 @@
 /node_modules
-test/js
-test/browsertest/js
-examples/*/js
+/test/js
+/test/browsertest/js
+/examples/*/js
