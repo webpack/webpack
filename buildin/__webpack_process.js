@@ -39,7 +39,9 @@ exports.nextTick = (function(func) {
 	};
 }());
 exports.cwd = function() {
-	return "/app";
+	var pathname = (window.location.pathname+"").split("/");
+	pathname.pop();
+	return pathname.join("/");
 }
 exports.exit = exports.kill = 
 exports.chdir = 
