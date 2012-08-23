@@ -4,63 +4,9 @@
 */
 var should = require("should");
 var path = require("path");
-require = require("../require-polyfill")(require.valueOf());
+require = require("enhanced-require")(__filename);
 
 describe("polyfill", function() {
-
-	describe("require.context", function() {
-		var context = require.context("./fixtures")
-
-		it("should be able to require a file without extension", function() {
-			var a = context("./a");
-			should.exist(a);
-			a.should.be.a("function");
-			a().should.be.equal("This is a");
-		});
-
-		it("should be able to require a file with extension", function() {
-			var a = context("./a.js");
-			should.exist(a);
-			a.should.be.a("function");
-			a().should.be.equal("This is a");
-		});
-
-		it("should be able to require a file in a subdirectory", function() {
-			var complex1 = context("./lib/complex1");
-			should.exist(complex1);
-			complex1.should.be.equal("lib complex1");
-		});
-
-		it("should throw an exception if the module does not exists", function() {
-			(function() {
-				context("./notExists.js");
-			}).should.throw(/Cannot find module/);
-		});
-	});
-
-	describe("require.ensure", function() {
-		it("should be executed synchron", function() {
-			var executed = false;
-			var oldRequire = require;
-			require.ensure([], function(require) {
-				executed = true;
-				should.exist(require);
-				require.should.be.a("function");
-				require.should.be.equal(oldRequire);
-			});
-			executed.should.be.ok;
-		});
-		
-		it("should work with modules list", function() {
-			require.ensure(["./fixtures/a"], function(require) {
-				var a = require("./fixtures/a");
-				should.exist(a);
-				a.should.be.a("function");
-				a().should.be.equal("This is a");
-			});
-		});
-	});
-
 	describe("loader", function() {
 		describe("raw", function() {
 			it("should load abc", function() {

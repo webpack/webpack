@@ -31,7 +31,6 @@ var argv = require("optimist")
 	.describe("options", "Options JSON File")
 
 	.string("public-prefix")
-	.alias("public-prefix", "script-src-prefix")
 	.describe("public-prefix", "Path Prefix For JavaScript Loading")
 
 	.string("libary")
