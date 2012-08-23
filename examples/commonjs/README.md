@@ -38,9 +38,12 @@ exports.add = function() {
 /******/		if(installedModules[moduleId])
 /******/			return installedModules[moduleId].exports;
 /******/		var module = installedModules[moduleId] = {
-/******/			exports: {}
+/******/			exports: {},
+/******/			id: moduleId,
+/******/			loaded: false
 /******/		};
 /******/		modules[moduleId](module, module.exports, require);
+/******/		module.loaded = true;
 /******/		return module.exports;
 /******/	}
 /******/	require.e = function(chunkId, callback) {
@@ -94,14 +97,14 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: 9326ee6a998b5e42fd07a7a2f390ce57
-Compile Time: 25ms
+Hash: b1075afe2e2b2fd4519bc29c86dc97b9
+Compile Time: 23ms
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3
 Modules per chunk: 3
 Modules first chunk: 3
-   output.js:     1350 characters
+   output.js:     1455 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -117,14 +120,14 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 4131f4717fa510f9f9929b1b6a050226
-Compile Time: 73ms
+Hash: e7fbffd3f8f8581e96fa46569eda7c02
+Compile Time: 74ms
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3
 Modules per chunk: 3
 Modules first chunk: 3
-   output.js:      483 characters
+   output.js:      510 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>

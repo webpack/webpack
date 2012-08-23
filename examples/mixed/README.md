@@ -59,9 +59,12 @@ require(
 /******/			if(installedModules[moduleId])
 /******/				return installedModules[moduleId].exports;
 /******/			var module = installedModules[moduleId] = {
-/******/				exports: {}
+/******/				exports: {},
+/******/				id: moduleId,
+/******/				loaded: false
 /******/			};
 /******/			modules[moduleId](module, module.exports, require);
+/******/			module.loaded = true;
 /******/			return module.exports;
 /******/		}
 /******/		require.e = function(chunkId, callback) {
@@ -187,15 +190,20 @@ module.exports = amdRequireFactory;
 var amdRequire = require(/* ./__webpack_amd_require */3);
 module.exports = function(module, req) {
 	req = amdRequire(req);
-	function define(name, requires, fn) {
-		if(!fn) {
-			fn = requires;
-			requires = name;
+	function define(id, dependencies, factory) {
+		if(typeof id != "number") {
+			factory = dependencies;
+			dependencies = id;
+			id = null;
 		}
-		if(!fn) {
-			return module.exports = name.call(module.exports, req);
+		if(!factory) {
+			factory = dependencies;
+			dependencies = [req, module.exports, module];
 		}
-		return module.exports = fn.apply(module.exports, requires);
+		var result = typeof factory == "function" ? factory.apply(null, dependencies) : factory;
+		if(result !== undefined)
+			module.exports = result;
+		return module.exports;
 	}
 	define.amd = amdRequire.amd;
 	return define;
@@ -260,14 +268,14 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 9986bb6c742ccf2cf5339932388aa442
-Compile Time: 41ms
+Hash: 88afb807006dcc8b07a5c58531db820e
+Compile Time: 57ms
 Chunks: 2
 Modules: 9
 Modules including duplicates: 9
 Modules per chunk: 4.5
 Modules first chunk: 5
-   output.js:     4688 characters
+   output.js:     4963 characters
  1.output.js:     1105 characters
 
  <id>    <size>  <filename>
@@ -285,7 +293,7 @@ output.js
        require (1x) from .\example.js
        require (1x) from .\commonjs.js
        require (1x) from (webpack)\buildin\__webpack_amd_define.js
-    4       418  (webpack)\buildin\__webpack_amd_define.js
+    4       604  (webpack)\buildin\__webpack_amd_define.js
        require (1x) from .\amd.js
 1.output.js
     5       300  [context] (webpack)\examples\require.context\templates

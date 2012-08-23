@@ -33,9 +33,12 @@ module.exports = Math.random();
 /******/		if(installedModules[moduleId])
 /******/			return installedModules[moduleId].exports;
 /******/		var module = installedModules[moduleId] = {
-/******/			exports: {}
+/******/			exports: {},
+/******/			id: moduleId,
+/******/			loaded: false
 /******/		};
 /******/		modules[moduleId](module, module.exports, require);
+/******/		module.loaded = true;
 /******/		return module.exports;
 /******/	}
 /******/	require.e = function(chunkId, callback) {
@@ -82,19 +85,19 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: 8c012745533a08a15f1e6f422f4b96f8
+Hash: 1ba7e12ebb3bc92128a6075ee0c8ddd5
 Compile Time: 21ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
 Modules per chunk: 2
 Modules first chunk: 2
-   output.js:     1225 characters
+   output.js:     1342 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       283  .\example.js
+    0       295  .\example.js
        main
     1        31  .\a.js
        require (2x) from .\example.js
@@ -104,14 +107,14 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: bb8c15c0f6816c382b20abadbda51c0d
-Compile Time: 66ms
+Hash: be6434e486f1bd019d86a6d85591298e
+Compile Time: 68ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
 Modules per chunk: 2
 Modules first chunk: 2
-   output.js:      415 characters
+   output.js:      442 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>

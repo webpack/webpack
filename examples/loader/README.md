@@ -44,9 +44,12 @@ module.exports = function(content) {
 /******/		if(installedModules[moduleId])
 /******/			return installedModules[moduleId].exports;
 /******/		var module = installedModules[moduleId] = {
-/******/			exports: {}
+/******/			exports: {},
+/******/			id: moduleId,
+/******/			loaded: false
 /******/		};
 /******/		modules[moduleId](module, module.exports, require);
+/******/		module.loaded = true;
 /******/		return module.exports;
 /******/	}
 /******/	require.e = function(chunkId, callback) {
@@ -151,19 +154,19 @@ Prints in node.js (`node example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 32d984116944fa5f4cb96f98c59402f4
-Compile Time: 66ms
+Hash: ed4cb8f97093b66f4b08f0113e55e89f
+Compile Time: 72ms
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
 Modules per chunk: 6
 Modules first chunk: 6
-   output.js:     2610 characters
+   output.js:     2723 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       333  .\example.js
+    0       341  .\example.js
        main
     1       516  (webpack)\buildin\__webpack_console.js
        require (3x) from .\example.js

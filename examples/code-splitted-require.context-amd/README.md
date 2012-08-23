@@ -2,8 +2,8 @@
 
 ``` javascript
 function getTemplate(templateName, callback) {
-	require.ensure([], function(require) {
-		callback(require("../require.context/templates/"+templateName)());
+	require(["../require.context/templates/"+templateName], function(tmpl) {
+		callback(tmpl());
 	});
 }
 getTemplate("a", function(a) {
@@ -65,10 +65,10 @@ getTemplate("b", function(b) {
 
 /*** .\example.js ***/
 
-/******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
+/******/ /* WEBPACK FREE VAR INJECTION */ (function(require,console) {
 function getTemplate(templateName, callback) {
-	require.e(1, function(require) {
-		callback(require(/* ../require.context/templates */2)("./"+templateName)());
+	require(1, function() { return [require(/* ../require.context/templates */3)("./"+templateName)]}, function(tmpl) {
+		callback(tmpl());
 	});
 }
 getTemplate("a", function(a) {
@@ -77,7 +77,7 @@ getTemplate("a", function(a) {
 getTemplate("b", function(b) {
 	console.log(b);
 });
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */1)))
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_amd_require */2)(require),require(/* __webpack_console */1)))
 
 /******/},
 /******/
@@ -103,6 +103,33 @@ console.timeEnd = function() {
 
 /******/},
 /******/
+/******/2: function(module, exports, require) {
+
+/*** (webpack)\buildin\__webpack_amd_require.js ***/
+
+function amdRequireFactory(req) {
+	function amdRequire(chunk, requiresFn, fn) {
+		if(!requiresFn) {
+			// commonjs
+			return req(chunk);
+		}
+		req.e(chunk, function() {
+			var modules = requiresFn();
+			if(fn)
+				return fn.apply(null, modules);
+		});
+	}
+	for(var name in req)
+		amdRequire[name] = req[name];
+	amdRequire.amd = amdRequireFactory.amd;
+	amdRequire.config = function() {/* config is ignored, use webpack options */};
+	return amdRequire;
+}
+amdRequireFactory.amd = {};
+module.exports = amdRequireFactory;
+
+/******/},
+/******/
 /******/})
 ```
 
@@ -110,11 +137,11 @@ console.timeEnd = function() {
 
 ``` javascript
 /******/webpackJsonp(1, {
-/******/2: function(module, exports, require) {
+/******/3: function(module, exports, require) {
 
 /*** (webpack)\examples\require.context\templates ***/
 
-/***/	var map = {"./a.js":3,"./b.js":4,"./c.js":5},
+/***/	var map = {"./a.js":4,"./b.js":5,"./c.js":6},
 /***/	requireInContext = module.exports = function(name) {
 /***/		return require(map[name+""] || map[name+".webpack.js"] || map[name+".web.js"] || map[name+".js"]||name);
 /***/	};
@@ -122,7 +149,7 @@ console.timeEnd = function() {
 
 /******/},
 /******/
-/******/3: function(module, exports, require) {
+/******/4: function(module, exports, require) {
 
 /*** (webpack)\examples\require.context\templates\a.js ***/
 
@@ -132,7 +159,7 @@ module.exports = function() {
 
 /******/},
 /******/
-/******/4: function(module, exports, require) {
+/******/5: function(module, exports, require) {
 
 /*** (webpack)\examples\require.context\templates\b.js ***/
 
@@ -142,7 +169,7 @@ module.exports = function() {
 
 /******/},
 /******/
-/******/5: function(module, exports, require) {
+/******/6: function(module, exports, require) {
 
 /*** (webpack)\examples\require.context\templates\c.js ***/
 
@@ -160,61 +187,65 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 1782c323238112211ad2f04896d358db
-Compile Time: 39ms
+Hash: 134fe0606e3405dceb34be6f6ce6778f
+Compile Time: 50ms
 Chunks: 2
-Modules: 6
-Modules including duplicates: 6
-Modules per chunk: 3
-Modules first chunk: 2
-   output.js:     3041 characters
+Modules: 7
+Modules including duplicates: 7
+Modules per chunk: 3.5
+Modules first chunk: 3
+   output.js:     3779 characters
  1.output.js:     1105 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       280  .\example.js
+    0       304  .\example.js
        main
     1       516  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
+    2       534  (webpack)\buildin\__webpack_amd_require.js
+       require (1x) from .\example.js
 1.output.js
-    2       300  [context] (webpack)\examples\require.context\templates
+    3       300  [context] (webpack)\examples\require.context\templates
        async context from .\example.js
-    3        82  (webpack)\examples\require.context\templates\a.js
+    4        82  (webpack)\examples\require.context\templates\a.js
        async context from .\example.js
-    4        82  (webpack)\examples\require.context\templates\b.js
+    5        82  (webpack)\examples\require.context\templates\b.js
        async context from .\example.js
-    5        82  (webpack)\examples\require.context\templates\c.js
+    6        82  (webpack)\examples\require.context\templates\c.js
        async context from .\example.js
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 26040949e1e15270899471a6db72d142
-Compile Time: 120ms
+Hash: dbaccee5445c04556a63b1b0f35809e0
+Compile Time: 134ms
 Chunks: 2
-Modules: 6
-Modules including duplicates: 6
-Modules per chunk: 3
-Modules first chunk: 2
-   output.js:     1161 characters
+Modules: 7
+Modules including duplicates: 7
+Modules per chunk: 3.5
+Modules first chunk: 3
+   output.js:     1406 characters
  1.output.js:      473 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       159  .\example.js
+    0       185  .\example.js
        main
     1       402  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
+    2       264  (webpack)\buildin\__webpack_amd_require.js
+       require (1x) from .\example.js
 1.output.js
-    2       228  [context] (webpack)\examples\require.context\templates
+    3       228  [context] (webpack)\examples\require.context\templates
        async context from .\example.js
-    3        72  (webpack)\examples\require.context\templates\a.js
+    4        72  (webpack)\examples\require.context\templates\a.js
        async context from .\example.js
-    4        72  (webpack)\examples\require.context\templates\b.js
+    5        72  (webpack)\examples\require.context\templates\b.js
        async context from .\example.js
-    5        72  (webpack)\examples\require.context\templates\c.js
+    6        72  (webpack)\examples\require.context\templates\c.js
        async context from .\example.js
 ```

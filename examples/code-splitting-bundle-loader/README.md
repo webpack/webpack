@@ -24,9 +24,12 @@ module.exports = "It works";
 /******/			if(installedModules[moduleId])
 /******/				return installedModules[moduleId].exports;
 /******/			var module = installedModules[moduleId] = {
-/******/				exports: {}
+/******/				exports: {},
+/******/				id: moduleId,
+/******/				loaded: false
 /******/			};
 /******/			modules[moduleId](module, module.exports, require);
+/******/			module.loaded = true;
 /******/			return module.exports;
 /******/		}
 /******/		require.e = function(chunkId, callback) {
@@ -135,20 +138,20 @@ module.exports = "It works";
 ## Uncompressed
 
 ```
-Hash: 44dfbfa6a5cc501f02898703b4ef5937
-Compile Time: 51ms
+Hash: 666de730e77865c0f918eb2d4b2418dc
+Compile Time: 55ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
 Modules per chunk: 2
 Modules first chunk: 3
-   output.js:     3165 characters
+   output.js:     3296 characters
  1.output.js:      156 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0        91  .\example.js
+    0        93  .\example.js
        main
     1       516  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
@@ -162,14 +165,14 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 962468b3e6fafd1d80a8a957de5ea778
-Compile Time: 121ms
+Hash: d3a59169e3ef602b7e54516f7ac8f25c
+Compile Time: 129ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
 Modules per chunk: 2
 Modules first chunk: 3
-   output.js:     1201 characters
+   output.js:     1228 characters
  1.output.js:       57 characters
 
  <id>    <size>  <filename>

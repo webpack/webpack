@@ -35,9 +35,12 @@ require.ensure(["b"], function(require) {
 /******/			if(installedModules[moduleId])
 /******/				return installedModules[moduleId].exports;
 /******/			var module = installedModules[moduleId] = {
-/******/				exports: {}
+/******/				exports: {},
+/******/				id: moduleId,
+/******/				loaded: false
 /******/			};
 /******/			modules[moduleId](module, module.exports, require);
+/******/			module.loaded = true;
 /******/			return module.exports;
 /******/		}
 /******/		require.e = function(chunkId, callback) {
@@ -165,21 +168,21 @@ require.e(1, function(require) {
 ## Uncompressed
 
 ```
-Hash: 87050fc2d94fd17f6817b17719aa6528
-Compile Time: 50ms
+Hash: e8a5188136febe5f240b1f8cbc74cf2b
+Compile Time: 59ms
 Chunks: 3
 Modules: 5
 Modules including duplicates: 7
 Modules per chunk: 2.3
 Modules first chunk: 2
-   output.js:     2376 characters
+   output.js:     2524 characters
  1.output.js:      240 characters
  2.output.js:      342 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       422  .\example.js
+    0       441  .\example.js
        main
     1        11  .\~\a.js
        require (1x) from .\example.js

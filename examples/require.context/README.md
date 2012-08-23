@@ -32,9 +32,12 @@ module.exports = function() {
 /******/		if(installedModules[moduleId])
 /******/			return installedModules[moduleId].exports;
 /******/		var module = installedModules[moduleId] = {
-/******/			exports: {}
+/******/			exports: {},
+/******/			id: moduleId,
+/******/			loaded: false
 /******/		};
 /******/		modules[moduleId](module, module.exports, require);
+/******/		module.loaded = true;
 /******/		return module.exports;
 /******/	}
 /******/	require.e = function(chunkId, callback) {
@@ -131,43 +134,43 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: a6b10a94a35b77b825eb4a324b8f1a9b
-Compile Time: 37ms
+Hash: e4fced19a2a5efeaea1f7ec4141ae451
+Compile Time: 35ms
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
 Modules per chunk: 6
 Modules first chunk: 6
-   output.js:     2689 characters
+   output.js:     2804 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       156  .\example.js
+    0       160  .\example.js
        main
     1       516  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
     2       300  [context] .\templates
        context from .\example.js
-    3        80  .\templates\a.js
+    3        82  .\templates\a.js
        context from .\example.js
-    4        80  .\templates\b.js
+    4        82  .\templates\b.js
        context from .\example.js
-    5        80  .\templates\c.js
+    5        82  .\templates\c.js
        context from .\example.js
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 16045de5c5348f5d0540803222a18c39
-Compile Time: 102ms
+Hash: e4f892229bbb95c564b7d14805cc0c12
+Compile Time: 101ms
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
 Modules per chunk: 6
 Modules first chunk: 6
-   output.js:     1160 characters
+   output.js:     1187 characters
 
  <id>    <size>  <filename>
        <reason> from <filename>
