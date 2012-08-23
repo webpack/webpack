@@ -409,6 +409,7 @@ You can also save this options object in a JSON file and use it with the shell c
  //  "module"           (module, filename) before a module is loaded
  //  "context"          (module, dirname) before a context is loaded
  //  "dependency"       (filename) before a dependency is loaded
+ //  "static-dependency"(filename) after a dependency is flagged as not recompile-able
  //  "loader"           (filename) before a loader is required
  //  -- events for progress --
  //  "task"             (name?) start of a task
