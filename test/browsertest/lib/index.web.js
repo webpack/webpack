@@ -3,6 +3,8 @@ require = require("enhanced-require")(module);
 if(typeof define != "function") var define = require.define;
 
 window.test(true, "index.js should be replaced with index.web.js");
+window.test(new(require("./constructor"))(1234).value == 1234, "Parse require in new(...) should work");
+window.test(new ( require ( "./constructor" ) ) ( 1234 ) .value == 1234, "Parse require in new(...) should work, with spaces");
 require("script!../js/libary1.js");
 window.test(window.libary1, "libary1 loaded");
 window.test(window.libary2.ok, "libary2 loaded");
@@ -19,10 +21,13 @@ setTimeout(function() {
 
 window.test(require("./circular") === 1, "circular require should work");
 window.test(require("./singluar.js").value === 1, "sigular module loaded");
+window.test((require("./singluar.js")).value === 1, "sigular module loaded, in brackets");
 require("./sing" + "luar.js").value = 2;
 window.test(require("./singluar").value === 2, "exported object is singluar");
 window.test(require("subfilemodule") === "subfilemodule", "Modules as single file should load");
 window.test(require.context("../templates")("./tmpl") === "test template", "Context should work");
+window.test((require.context("../templates"))("./tmpl") === "test template", "Context should work, in brackets");
+window.test((require.context("../templates")("./tmpl")) === "test template", "Context should work, in brackets2");
 window.test(require . context ( "." + "." + "/" + "templ" + "ates" ) ( "./subdir/tmpl.js" ) === "subdir test template", "Context should work with subdirectories and splitted");
 var template = "tmpl", templateFull = "./tmpl.js";
 window.test(require("../templates/" + template) === "test template", "Automatical context should work");
