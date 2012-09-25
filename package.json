@@ -1,6 +1,6 @@
 {
 	"name": "webpack",
-	"version": "0.7.0-beta",
+	"version": "0.7.0-beta2",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs/AMD Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loading of js, json, jade, coffee, css, ... out of the box and more with custom loaders.",
 	"dependencies": {
@@ -8,7 +8,7 @@
 		"optimist": "0.2.x",
 		"uglify-js": "1.2.x",
 		"sprintf": "0.1.x",
-		"enhanced-require": "0.2.x",
+		"enhanced-require": "0.3.x",
 		"enhanced-resolve": "0.2.x",
 		"raw-loader": "0.2.x",
 		"json-loader": "0.2.x",
