@@ -5,7 +5,7 @@
 var webpack = require("./lib/webpack");
 var path = require("path");
 
-var TIMES = 2;
+var TIMES = 5;
 
 /* TESTS */
 

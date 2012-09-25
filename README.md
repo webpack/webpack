@@ -523,8 +523,7 @@ You can also save this options object in a JSON file and use it with the shell c
  //  overhead (~100-200ms). If loaders are used they need to have the
  //  seperable flag to work in worker process. If they havn't they work in
  //  the main process.
- // In watch mode, worker processes only start once. So workers = true
- //  is recommended for watch mode.
+ // Pushing jobs to worker processes has an addititional overhead of ~100ms.
 
  closeWorkers: false,
  // default: true
