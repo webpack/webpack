@@ -56,6 +56,10 @@ var argv = require("optimist")
 	.describe("verbose", "Output dependencies in Stats")
 	.default("verbose", false)
 
+	.boolean("profile")
+	.describe("profile", "Capture timings for modules")
+	.default("profile", false)
+
 	.string("alias")
 	.describe("alias", "Set a alias name for a module. ex. http=http-browserify")
 
@@ -67,9 +71,12 @@ var argv = require("optimist")
 	.describe("watch", "Recompiles on changes (except loaders)")
 	.default("watch", false)
 
-	.string("watch-delay")
 	.describe("watch-delay", "Timeout to wait for the last change")
 	.default("watch", false)
+
+	.boolean("workers")
+	.describe("workers", "Use worker processes to be faster (BETA)")
+	.default("workers", false)
 
 	.boolean("progress")
 	.describe("progress", "Displays a progress while compiling")
@@ -122,8 +129,16 @@ if(argv.watch) {
 	options.watch = true;
 }
 
+if(argv.workers) {
+	options.workers = true;
+}
+
+if(argv.profile) {
+	options.profile = true;
+}
+
 if(argv["watch-delay"]) {
-	options.watchDelay = parseInt(argv["watch-delay"], 10);
+	options.watchDelay = argv["watch-delay"];
 }
 
 if(argv.filenames) {
@@ -164,17 +179,25 @@ if(argv.progress) {
 	if(!options.events) options.events = new (require("events").EventEmitter)();
 	var events = options.events;
 
+	var nextUpdate = 0;
 	var sum = 0;
 	var finished = 0;
 	var chars = 0;
-	function print() {
+	function print(force) {
+		if(!force && nextUpdate > new Date().getTime()) return;
+		nextUpdate = new Date().getTime() + 100;
 		var msg = "";
 		if(sum > 0) {
+			var precentage = Math.floor(finished*100/sum);
 			msg += "compiling... (" + c("\033[1m\033[33m");
 			msg += sprintf("%4s", finished+"") + "/" + sprintf("%4s", sum+"");
-			msg += " " + sprintf("%4s", Math.floor(finished*100/sum)+"%");
+			msg += " " + sprintf("%4s", precentage+"%");
 			msg += c("\033[39m\033[22m") + ")";
+			for(var i = 0; i < Math.floor(precentage/2); i++)
+				msg += "#";
 		}
+		for(var i = msg.length; i < chars; i++)
+			msg += " ";
 		for(var i = 0; i < chars; i++)
 			process.stderr.write("\b");
 		process.stderr.write(msg);
@@ -191,6 +214,7 @@ if(argv.progress) {
 				process.stderr.write("\b \b");
 			process.stderr.write(name + " " + c("\033[1m\033[32m") + "done" + c("\033[39m\033[22m") + "\n");
 			chars = 0;
+			return print(true);
 		}
 		print();
 	});
@@ -210,7 +234,7 @@ webpack(input, options, function(err, stats) {
 		return;
 	}
 	if(argv.json)
-		console.log(JSON.stringify(stats));
+		console.log(JSON.stringify(stats, null, 2));
 	else {
 		console.log(formatOutput(stats, {
 			colors: argv.colors,

@@ -5,7 +5,7 @@
 var webpack = require("./lib/webpack");
 var path = require("path");
 
-var TIMES = 5;
+var TIMES = 2;
 
 /* TESTS */
 
@@ -27,22 +27,29 @@ var testCases = {
 var TESTS = {}
 
 Object.keys(testCases).forEach(function(name) {
-	TESTS[name + "                 "] = runWebpack.bind(null, name, testCases[name], false, false, false);
-	TESTS[name + " single          "] = runWebpack.bind(null, name, testCases[name], true,  false, false);
-	TESTS[name + "        debug    "] = runWebpack.bind(null, name, testCases[name], false, true,  false);
-	TESTS[name + " single debug    "] = runWebpack.bind(null, name, testCases[name], true,  true,  false);
-	TESTS[name + "              min"] = runWebpack.bind(null, name, testCases[name], false, false, true );
-	TESTS[name + " single       min"] = runWebpack.bind(null, name, testCases[name], true,  false, true );
-	TESTS[name + "        debug min"] = runWebpack.bind(null, name, testCases[name], false, true,  true );
-	TESTS[name + " single debug min"] = runWebpack.bind(null, name, testCases[name], true,  true,  true );
+	TESTS[name + "                     "] = runWebpack.bind(null, name, testCases[name], false, false, false, false);
+	TESTS[name + "              workers"] = runWebpack.bind(null, name, testCases[name], false, false, false, true);
+	TESTS[name + " single              "] = runWebpack.bind(null, name, testCases[name], true,  false, false, false);
+	TESTS[name + " single       workers"] = runWebpack.bind(null, name, testCases[name], true,  false, false, true);
+	TESTS[name + "        debug        "] = runWebpack.bind(null, name, testCases[name], false, true,  false, false);
+	TESTS[name + "        debug workers"] = runWebpack.bind(null, name, testCases[name], false, true,  false, true);
+	TESTS[name + " single debug        "] = runWebpack.bind(null, name, testCases[name], true,  true,  false, false);
+	TESTS[name + " single debug workers"] = runWebpack.bind(null, name, testCases[name], true,  true,  false, true);
+	TESTS[name + "        min          "] = runWebpack.bind(null, name, testCases[name], false, false, true , false);
+	TESTS[name + "        min   workers"] = runWebpack.bind(null, name, testCases[name], false, false, true , true);
+	TESTS[name + " single min          "] = runWebpack.bind(null, name, testCases[name], true,  false, true , false);
+	TESTS[name + " single min   workers"] = runWebpack.bind(null, name, testCases[name], true,  false, true , true);
 });
 
-function runWebpack(name, file, single, debug, min, cb) {
+var workers = new (require("./lib/Workers"))(path.join(__dirname, "lib", "buildModuleFork.js"), require("os").cpus().length)
+function runWebpack(name, file, single, debug, min, withWorkers, cb) {
 	webpack(file, {
 		output: path.join(root, "js", "bm", name.trim() + ".js"),
 		single: single,
 		debug: debug,
-		minimize: min
+		minimize: min,
+		workers: withWorkers && workers,
+		closeWorkers: false
 	}, cb);
 }
 
@@ -60,7 +67,9 @@ asyncForEach(Object.keys(TESTS), function(name, done) {
 			done();
 		});
 	});
-}, function() {});
+}, function() {
+	workers.close();
+});
 
 /* HELPERS */
 

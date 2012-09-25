@@ -325,21 +325,23 @@ if invoked without arguments it prints a usage:
 Usage: webpack <options> <input> <output>
 
 Options:
-  --min                Minimize it with uglifyjs                                [boolean]  [default: false]
-  --filenames          Output Filenames Into File                               [boolean]  [default: false]
-  --options            Options JSON File                                        [string]
-  --public-prefix      Path Prefix For JavaScript Loading                       [string]
-  --libary             Stores the exports into this variable                    [string]
-  --colors             Output Stats with colors                                 [boolean]  [default: false]
-  --single             Disable lazy loading                                     [boolean]  [default: false]
-  --json               Output Stats as JSON                                     [boolean]  [default: false]
-  --by-size            Sort modules by size in Stats                            [boolean]  [default: false]
-  --verbose            Output dependencies in Stats                             [boolean]  [default: false]
-  --alias              Set a alias name for a module. ex. http=http-browserify  [string]
-  --debug              Prints debug info to output files                        [boolean]  [default: false]
-  --watch              Recompiles on changes (except loaders)                   [boolean]  [default: false]
-  --watch-delay        Timeout to wait for the last change                      [string]
-  --progress           Displays a progress while compiling                      [boolean]  [default: false]
+  --min            Minimize it with uglifyjs                                [boolean]  [default: false]
+  --filenames      Output Filenames Into File                               [boolean]  [default: false]
+  --options        Options JSON File                                        [string]
+  --public-prefix  Path Prefix For JavaScript Loading                       [string]
+  --libary         Stores the exports into this variable                    [string]
+  --colors         Output Stats with colors                                 [boolean]  [default: false]
+  --single         Disable lazy loading                                     [boolean]  [default: false]
+  --json           Output Stats as JSON                                     [boolean]  [default: false]
+  --by-size        Sort modules by size in Stats                            [boolean]  [default: false]
+  --verbose        Output dependencies in Stats                             [boolean]  [default: false]
+  --profile        Capture timings for modules                              [boolean]  [default: false]
+  --alias          Set a alias name for a module. ex. http=http-browserify  [string]
+  --debug          Prints debug info to output files                        [boolean]  [default: false]
+  --watch          Recompiles on changes (except loaders)                   [boolean]  [default: false]
+  --watch-delay    Timeout to wait for the last change
+  --workers        Use worker processes to be faster (BETA)                 [boolean]  [default: false]
+  --progress       Displays a progress while compiling                      [boolean]  [default: false]
 ```
 
 ### Programmatically Usage
@@ -407,12 +409,11 @@ You can also save this options object in a JSON file and use it with the shell c
  //  "bundle-invalid"   () fired when the bundle gets invalid
  //         [bundle-invalid is only fired in watch mode]
  //  "start-writing"    (hash) fired when webpack starts writing
- //  -- events for dependencies --
- //  "module"           (module, filename) before a module is loaded
- //  "context"          (module, dirname) before a context is loaded
- //  "dependency"       (filename) before a dependency is loaded
- //  "static-dependency"(filename) after a dependency is flagged as not recompile-able
- //  "loader"           (filename) before a loader is required
+ //  "watch-end"        () watch ended because of loader change
+ //  -- events for modules --
+ //  "module"           (module, filename) after a module is loaded
+ //  "context-enum"     (module, dirname) before a context is enumerated
+ //  "context"          (module, dirname) after a context is loaded
  //  -- events for progress --
  //  "task"             (name?) start of a task
  //  "task-end"         (name?) end of a task
@@ -513,6 +514,26 @@ You can also save this options object in a JSON file and use it with the shell c
  // syntax like resolve.loaders
  // all loaders which matches the file are applied before the
  // normal loaders. This cannot be overridden in the require call.
+
+ workers: true,
+ // default: false
+ // options: true, false, number > 0, object of type webpack/lib/Workers
+ // Use worker processes to do some work.
+ // This *can* boost performance, but starting these processes has some
+ //  overhead (~100-200ms). If loaders are used they need to have the
+ //  seperable flag to work in worker process. If they havn't they work in
+ //  the main process.
+ // In watch mode, worker processes only start once. So workers = true
+ //  is recommended for watch mode.
+
+ closeWorkers: false,
+ // default: true
+ // close the worker processes on webpack exit.
+
+ profile: true,
+ // default: false
+ // capture timings for the build.
+ // they are stored in the stats
 }
 ```
 
@@ -525,6 +546,7 @@ else `stats` as json:
 ``` javascript
 {
  hash: "52bd9213...38d",
+ startTime: 237467691, // in ms since 1.1.1990
  time: 1234, // in ms
  chunkCount: 2,
  modulesCount: 10,
@@ -534,13 +556,20 @@ else `stats` as json:
   "output.js": 1234,
   "1.output.js": 2345
  },
+ chunkNameFiles: {
+  "main": "output.js",
+  "namedChunk": "1.output.js"
+ }
  warnings: [ "Some warning" ],
  errors: [ "Some error" ],
  fileModules: {
   "output.js": [
    { id: 0, size: 123, filename: "/home/.../main.js", reasons: [
     { type: "main" }
-   ]},
+   ],
+    dependencies: [ "filename", ... ],
+    loaders: [ "filename of loader", ... ]
+   },
    { id: 1, size: 234, filename: "...", reasons: [
     { type: "require", // or "context", "async require", "async context"
 	  count: 2,
@@ -919,9 +948,7 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 
 ## Future plans
 
-* more and better polyfills for node.js buildin modules
-* cache in folder and allow reuseing it
-* write it into the wiki if you have more ideas...
+see [/webpack/webpack/wiki/Ideas](wiki Ideas)
 
 ## License
 

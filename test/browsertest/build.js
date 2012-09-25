@@ -33,7 +33,7 @@ var libary1 = cp.spawn("node", join(["../../bin/webpack.js", "--colors", "--sing
 bindOutput(libary1);
 libary1.on("exit", function(code) {
 	if(code === 0) {
-		var main = cp.spawn("node", join(["../../bin/webpack.js", "--colors", "--alias", "vm=vm-browserify",
+		var main = cp.spawn("node", join(["../../bin/webpack.js", "--colors", "--alias", "vm=vm-browserify", "--workers",
 											"--public-prefix", "js/", "lib/index", "js/web.js"], extraArgs));
 		bindOutput(main);
 	}
