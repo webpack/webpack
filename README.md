@@ -497,6 +497,8 @@ You can also save this options object in a JSON file and use it with the shell c
    // defaults: []
    // postprocess resolved filenames by all specified async functions
    // a postprocessor must call the callback
+   // You must pass a filename instead of a function if you use workers
+   // The filename is required in the worker process.
 
    context: [],
    // same as postprocess.normal but for contextes
@@ -508,12 +510,14 @@ You can also save this options object in a JSON file and use it with the shell c
  // syntax like resolve.loaders
  // all loaders which matches the file are applied after the
  // normal loaders. This cannot be overridden in the require call.
+ // You must pass a string instead of a RegExp if you use workers
 
  preLoaders: [{test: /\.txt$|\.html$/, loader: "normalizeNLs"}],
  // default: []
  // syntax like resolve.loaders
  // all loaders which matches the file are applied before the
  // normal loaders. This cannot be overridden in the require call.
+ // You must pass a string instead of a RegExp if you use workers
 
  workers: true,
  // default: false
@@ -528,6 +532,11 @@ You can also save this options object in a JSON file and use it with the shell c
  closeWorkers: false,
  // default: true
  // close the worker processes on webpack exit.
+
+ workersNoResolve: true,
+ // default: false
+ // workers should not be used in the resolving process
+ // This may be useful if you want to have your postprocessors in the main process.
 
  profile: true,
  // default: false
