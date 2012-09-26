@@ -538,6 +538,10 @@ You can also save this options object in a JSON file and use it with the shell c
  // workers should not be used in the resolving process
  // This may be useful if you want to have your postprocessors in the main process.
 
+ workerMinLoaders: 2,
+ // default: 0
+ // only process file in seperate process if more or equal loaders applied to the file.
+
  profile: true,
  // default: false
  // capture timings for the build.
