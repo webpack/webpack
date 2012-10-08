@@ -161,14 +161,13 @@ module.exports = function() {
 
 ```
 Hash: 1782c323238112211ad2f04896d358db
-Compile Time: 39ms
+Compile Time: 38ms
 Chunks: 2
 Modules: 6
 Modules including duplicates: 6
-Modules per chunk: 3
 Modules first chunk: 2
-   output.js:     3041 characters
- 1.output.js:     1105 characters
+main     output.js:     3041 chars/bytes 
+   1   1.output.js:     1105 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -192,14 +191,13 @@ output.js
 
 ```
 Hash: 26040949e1e15270899471a6db72d142
-Compile Time: 120ms
+Compile Time: 135ms
 Chunks: 2
 Modules: 6
 Modules including duplicates: 6
-Modules per chunk: 3
 Modules first chunk: 2
-   output.js:     1161 characters
- 1.output.js:      473 characters
+main     output.js:     1161 chars/bytes 
+   1   1.output.js:      473 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>

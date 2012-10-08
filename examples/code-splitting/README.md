@@ -92,24 +92,7 @@ require.e(1, function(require) {
 # js/1.output.js
 
 ``` javascript
-/******/webpackJsonp(1, {
-/******/3: function(module, exports, require) {
-
-/*** .\~\c.js ***/
-
-// module c
-
-/******/},
-/******/
-/******/4: function(module, exports, require) {
-
-/*** .\~\d.js ***/
-
-// module d
-
-/******/},
-/******/
-/******/})
+webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
 ```
 
 Minimized
@@ -124,14 +107,13 @@ webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
 
 ```
 Hash: 50d0702166fd38f26c96b9cd8d421243
-Compile Time: 54ms
+Compile Time: 45ms
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5
-Modules per chunk: 2.5
 Modules first chunk: 3
-   output.js:     2340 characters
- 1.output.js:      240 characters
+main     output.js:     2340 chars/bytes 
+   1   1.output.js:      240 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -153,14 +135,13 @@ output.js
 
 ```
 Hash: cfe028c1c8ac12be33bebd83dc12aa80
-Compile Time: 113ms
+Compile Time: 141ms
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5
-Modules per chunk: 2.5
 Modules first chunk: 3
-   output.js:      786 characters
- 1.output.js:       57 characters
+main     output.js:      786 chars/bytes 
+   1   1.output.js:       57 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>

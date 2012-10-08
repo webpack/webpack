@@ -113,7 +113,7 @@ require(1, function() { return [
 		// Do something with it...
 	}
 );
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_amd_require */3)(require)))
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_amd_require */3)))
 
 /******/},
 /******/
@@ -133,7 +133,7 @@ define(
 		return 456;
 	}
 );
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_amd_define */4)(module,require)))
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_amd_define */4)(module)))
 
 /******/},
 /******/
@@ -152,7 +152,7 @@ require(
 		var amd2 = require(/* ./amd */1);
 	}
 );
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_amd_require */3)(require)))
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_amd_require */3)))
 
 /******/},
 /******/
@@ -160,26 +160,24 @@ require(
 
 /*** (webpack)\buildin\__webpack_amd_require.js ***/
 
-function amdRequireFactory(req) {
-	function amdRequire(chunk, requiresFn, fn) {
-		if(!requiresFn) {
-			// commonjs
-			return req(chunk);
-		}
-		req.e(chunk, function() {
-			var modules = requiresFn();
-			if(fn)
-				return fn.apply(null, modules);
-		});
+var req = require.valueOf();
+function amdRequire(chunk, requiresFn, fn) {
+	if(!requiresFn) {
+		// commonjs
+		return req(chunk);
 	}
-	for(var name in req)
-		amdRequire[name] = req[name];
-	amdRequire.amd = amdRequireFactory.amd;
-	amdRequire.config = function() {/* config is ignored, use webpack options */};
-	return amdRequire;
+	req.e(chunk, function() {
+		var modules = requiresFn();
+		if(fn)
+			return fn.apply(null, modules);
+	});
 }
-amdRequireFactory.amd = {};
-module.exports = amdRequireFactory;
+for(var name in req)
+	amdRequire[name] = req[name];
+amdRequire.amd = {};
+amdRequire.config = function() {/* config is ignored, use webpack options */};
+module.exports = amdRequire;
+
 
 /******/},
 /******/
@@ -188,8 +186,7 @@ module.exports = amdRequireFactory;
 /*** (webpack)\buildin\__webpack_amd_define.js ***/
 
 var amdRequire = require(/* ./__webpack_amd_require */3);
-module.exports = function(module, req) {
-	req = amdRequire(req);
+module.exports = function(module) {
 	function define(id, dependencies, factory) {
 		if(typeof id != "number") {
 			factory = dependencies;
@@ -198,7 +195,7 @@ module.exports = function(module, req) {
 		}
 		if(!factory) {
 			factory = dependencies;
-			dependencies = [req, module.exports, module];
+			dependencies = [amdRequire, module.exports, module];
 		}
 		var result = typeof factory == "function" ? factory.apply(null, dependencies) : factory;
 		if(result !== undefined)
@@ -268,15 +265,14 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 88afb807006dcc8b07a5c58531db820e
-Compile Time: 57ms
+Hash: 08f6b94c40913ca704ca33fe5a185c2b
+Compile Time: 50ms
 Chunks: 2
 Modules: 9
 Modules including duplicates: 9
-Modules per chunk: 4.5
 Modules first chunk: 5
-   output.js:     4963 characters
- 1.output.js:     1105 characters
+main     output.js:     4817 chars/bytes 
+   2   1.output.js:     1105 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -289,11 +285,11 @@ output.js
     2       214  .\commonjs.js
        require (3x) from .\example.js
        require (2x) from .\amd.js
-    3       534  (webpack)\buildin\__webpack_amd_require.js
+    3       437  (webpack)\buildin\__webpack_amd_require.js
        require (1x) from .\example.js
        require (1x) from .\commonjs.js
        require (1x) from (webpack)\buildin\__webpack_amd_define.js
-    4       604  (webpack)\buildin\__webpack_amd_define.js
+    4       581  (webpack)\buildin\__webpack_amd_define.js
        require (1x) from .\amd.js
 1.output.js
     5       300  [context] (webpack)\examples\require.context\templates

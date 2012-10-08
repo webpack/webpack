@@ -2,7 +2,7 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
-require = require("../require-polyfill")(require.valueOf());
+require = require("enhanced-require")(module);
 
 var cp = require('child_process');
 var tc = require("./template-common");

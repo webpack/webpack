@@ -119,7 +119,7 @@ onmessage = function(event) {
 	});
 }
 
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_amd_require */1)(require)))
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_amd_require */1)))
 
 /******/},
 /******/
@@ -127,26 +127,24 @@ onmessage = function(event) {
 
 /*** (webpack)\buildin\__webpack_amd_require.js ***/
 
-function amdRequireFactory(req) {
-	function amdRequire(chunk, requiresFn, fn) {
-		if(!requiresFn) {
-			// commonjs
-			return req(chunk);
-		}
-		req.e(chunk, function() {
-			var modules = requiresFn();
-			if(fn)
-				return fn.apply(null, modules);
-		});
+var req = require.valueOf();
+function amdRequire(chunk, requiresFn, fn) {
+	if(!requiresFn) {
+		// commonjs
+		return req(chunk);
 	}
-	for(var name in req)
-		amdRequire[name] = req[name];
-	amdRequire.amd = amdRequireFactory.amd;
-	amdRequire.config = function() {/* config is ignored, use webpack options */};
-	return amdRequire;
+	req.e(chunk, function() {
+		var modules = requiresFn();
+		if(fn)
+			return fn.apply(null, modules);
+	});
 }
-amdRequireFactory.amd = {};
-module.exports = amdRequireFactory;
+for(var name in req)
+	amdRequire[name] = req[name];
+amdRequire.amd = {};
+amdRequire.config = function() {/* config is ignored, use webpack options */};
+module.exports = amdRequire;
+
 
 /******/},
 /******/
@@ -159,15 +157,14 @@ module.exports = amdRequireFactory;
 
 ```
 Hash: 9a3fb6bf1155fd1c85b5a003f0e9fe77
-Compile Time: 83ms
+Compile Time: 72ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
-Modules per chunk: 2
 Modules first chunk: 2
-   output.js:     1354 characters
-1.hash.worker.js:     1105 characters
-hash.worker.js:     2345 characters
+main          output.js:     1354 chars/bytes 
+       1.hash.worker.js:     1105 chars/bytes 
+         hash.worker.js:     2239 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -178,12 +175,11 @@ output.js
        require (1x) from .\example.js
 Embedded Stats
  .\worker.js
-     Hash: 65bb224a2fa23725b7e946ce69f409df
-     Compile Time: 31ms
+     Hash: 6ce2177a70a0741653c759ba5e3e684f
+     Compile Time: 25ms
      Chunks: 2
      Modules: 6
      Modules including duplicates: 6
-     Modules per chunk: 3
      Modules first chunk: 2
      
       <id>    <size>  <filename>
@@ -191,7 +187,7 @@ Embedded Stats
      hash.worker.js
          0       211  .\worker.js
             main
-         1       534  (webpack)\buildin\__webpack_amd_require.js
+         1       437  (webpack)\buildin\__webpack_amd_require.js
             require (1x) from .\worker.js
      1.hash.worker.js
          2       300  [context] (webpack)\examples\require.context\templates
@@ -208,15 +204,14 @@ Embedded Stats
 
 ```
 Hash: 7c6135cf8b61087ca531a96e890b8f01
-Compile Time: 172ms
+Compile Time: 302ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
-Modules per chunk: 2
 Modules first chunk: 2
-   output.js:      477 characters
-1.hash.worker.js:      473 characters
-hash.worker.js:      801 characters
+main          output.js:      477 chars/bytes 
+       1.hash.worker.js:      473 chars/bytes 
+         hash.worker.js:      781 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -227,12 +222,11 @@ output.js
        require (1x) from .\example.js
 Embedded Stats
  .\worker.js
-     Hash: a1886641df5eb2595eadd73b78b81f70
-     Compile Time: 106ms
+     Hash: 32b01b30a4148ab0f233c37f6b7dcbc9
+     Compile Time: 143ms
      Chunks: 2
      Modules: 6
      Modules including duplicates: 6
-     Modules per chunk: 3
      Modules first chunk: 2
      
       <id>    <size>  <filename>
@@ -240,7 +234,7 @@ Embedded Stats
      hash.worker.js
          0       120  .\worker.js
             main
-         1       264  (webpack)\buildin\__webpack_amd_require.js
+         1       253  (webpack)\buildin\__webpack_amd_require.js
             require (1x) from .\worker.js
      1.hash.worker.js
          2       228  [context] (webpack)\examples\require.context\templates

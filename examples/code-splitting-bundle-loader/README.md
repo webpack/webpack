@@ -139,14 +139,13 @@ module.exports = "It works";
 
 ```
 Hash: 666de730e77865c0f918eb2d4b2418dc
-Compile Time: 55ms
+Compile Time: 53ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
-Modules per chunk: 2
 Modules first chunk: 3
-   output.js:     3296 characters
- 1.output.js:      156 characters
+main     output.js:     3296 chars/bytes 
+   1   1.output.js:      156 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -159,21 +158,20 @@ output.js
        require (1x) from .\example.js
 1.output.js
     3        28  .\file.js
-       async require (1x) from .\file.js
+       async require (1x) from (webpack)\~\bundle-loader!.\file.js
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
 Hash: d3a59169e3ef602b7e54516f7ac8f25c
-Compile Time: 129ms
+Compile Time: 144ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
-Modules per chunk: 2
 Modules first chunk: 3
-   output.js:     1228 characters
- 1.output.js:       57 characters
+main     output.js:     1228 chars/bytes 
+   1   1.output.js:       57 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -186,5 +184,5 @@ output.js
        require (1x) from .\example.js
 1.output.js
     3        25  .\file.js
-       async require (1x) from .\file.js
+       async require (1x) from (webpack)\~\bundle-loader!.\file.js
 ```

@@ -102,9 +102,8 @@ Compile Time: 23ms
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3
-Modules per chunk: 3
 Modules first chunk: 3
-   output.js:     1455 characters
+main   output.js:     1455 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -121,13 +120,12 @@ output.js
 
 ```
 Hash: e7fbffd3f8f8581e96fa46569eda7c02
-Compile Time: 74ms
+Compile Time: 94ms
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3
-Modules per chunk: 3
 Modules first chunk: 3
-   output.js:      510 characters
+main   output.js:      510 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>

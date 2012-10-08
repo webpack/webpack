@@ -1,4 +1,8 @@
-require = require("../require-polyfill")(require.valueOf());
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+require = require("enhanced-require")(module);
 
 var fs = require("fs");
 

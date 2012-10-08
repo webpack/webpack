@@ -169,15 +169,14 @@ require.e(1, function(require) {
 
 ```
 Hash: e8a5188136febe5f240b1f8cbc74cf2b
-Compile Time: 59ms
+Compile Time: 48ms
 Chunks: 3
 Modules: 5
 Modules including duplicates: 7
-Modules per chunk: 2.3
 Modules first chunk: 2
-   output.js:     2524 characters
- 1.output.js:      240 characters
- 2.output.js:      342 characters
+        main     output.js:     2524 chars/bytes 
+           1   1.output.js:      240 chars/bytes 
+my own chuck   2.output.js:      342 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>

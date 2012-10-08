@@ -77,7 +77,7 @@ getTemplate("a", function(a) {
 getTemplate("b", function(b) {
 	console.log(b);
 });
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_amd_require */2)(require),require(/* __webpack_console */1)))
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_amd_require */2),require(/* __webpack_console */1)))
 
 /******/},
 /******/
@@ -107,26 +107,24 @@ console.timeEnd = function() {
 
 /*** (webpack)\buildin\__webpack_amd_require.js ***/
 
-function amdRequireFactory(req) {
-	function amdRequire(chunk, requiresFn, fn) {
-		if(!requiresFn) {
-			// commonjs
-			return req(chunk);
-		}
-		req.e(chunk, function() {
-			var modules = requiresFn();
-			if(fn)
-				return fn.apply(null, modules);
-		});
+var req = require.valueOf();
+function amdRequire(chunk, requiresFn, fn) {
+	if(!requiresFn) {
+		// commonjs
+		return req(chunk);
 	}
-	for(var name in req)
-		amdRequire[name] = req[name];
-	amdRequire.amd = amdRequireFactory.amd;
-	amdRequire.config = function() {/* config is ignored, use webpack options */};
-	return amdRequire;
+	req.e(chunk, function() {
+		var modules = requiresFn();
+		if(fn)
+			return fn.apply(null, modules);
+	});
 }
-amdRequireFactory.amd = {};
-module.exports = amdRequireFactory;
+for(var name in req)
+	amdRequire[name] = req[name];
+amdRequire.amd = {};
+amdRequire.config = function() {/* config is ignored, use webpack options */};
+module.exports = amdRequire;
+
 
 /******/},
 /******/
@@ -187,15 +185,14 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 134fe0606e3405dceb34be6f6ce6778f
-Compile Time: 50ms
+Hash: b83e1a10c24b65db5ee14c7bcf8ebc85
+Compile Time: 47ms
 Chunks: 2
 Modules: 7
 Modules including duplicates: 7
-Modules per chunk: 3.5
 Modules first chunk: 3
-   output.js:     3779 characters
- 1.output.js:     1105 characters
+main     output.js:     3673 chars/bytes 
+   1   1.output.js:     1105 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -204,7 +201,7 @@ output.js
        main
     1       516  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
-    2       534  (webpack)\buildin\__webpack_amd_require.js
+    2       437  (webpack)\buildin\__webpack_amd_require.js
        require (1x) from .\example.js
 1.output.js
     3       300  [context] (webpack)\examples\require.context\templates
@@ -220,15 +217,14 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: dbaccee5445c04556a63b1b0f35809e0
-Compile Time: 134ms
+Hash: 7da1af67af62fe871b1f6a446eee7c04
+Compile Time: 168ms
 Chunks: 2
 Modules: 7
 Modules including duplicates: 7
-Modules per chunk: 3.5
 Modules first chunk: 3
-   output.js:     1406 characters
- 1.output.js:      473 characters
+main     output.js:     1386 chars/bytes 
+   1   1.output.js:      473 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -237,7 +233,7 @@ output.js
        main
     1       402  (webpack)\buildin\__webpack_console.js
        require (2x) from .\example.js
-    2       264  (webpack)\buildin\__webpack_amd_require.js
+    2       253  (webpack)\buildin\__webpack_amd_require.js
        require (1x) from .\example.js
 1.output.js
     3       228  [context] (webpack)\examples\require.context\templates

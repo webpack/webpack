@@ -66,7 +66,7 @@ module.exports = function(content) {
 
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
 // Polyfill require for node.js usage of loaders
-require = require(/* ../../require-polyfill */5)(require.valueOf());
+require = require("../../require-polyfill")(require.valueOf());
 
 // use our loader
 console.dir(require(/* ./loader!./file */3));
@@ -119,23 +119,6 @@ exports.foo = "bar";
 
 /******/},
 /******/
-/******/4: function(module, exports, require) {
-
-/*** (webpack)\~\enhanced-require\index.webpack.js ***/
-
-// No polyfill needed when compiled with webpack
-module.exports = function(r){return r}
-
-/******/},
-/******/
-/******/5: function(module, exports, require) {
-
-/*** (webpack)\require-polyfill.js ***/
-
-module.exports = require(/* enhanced-require */4)
-
-/******/},
-/******/
 /******/})
 ```
 
@@ -154,19 +137,18 @@ Prints in node.js (`node example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: ed4cb8f97093b66f4b08f0113e55e89f
-Compile Time: 72ms
+Hash: 847d13b98159af41faccdda862ec3e8d
+Compile Time: 53ms
 Chunks: 1
-Modules: 6
-Modules including duplicates: 6
-Modules per chunk: 6
-Modules first chunk: 6
-   output.js:     2723 characters
+Modules: 4
+Modules including duplicates: 4
+Modules first chunk: 4
+main   output.js:     2342 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       341  .\example.js
+    0       336  .\example.js
        main
     1       516  (webpack)\buildin\__webpack_console.js
        require (3x) from .\example.js
@@ -175,8 +157,8 @@ output.js
        require (1x) from .\example.js
     3        41  .\loader.js!.\file.js
        require (1x) from .\example.js
-    4        87  (webpack)\~\enhanced-require\index.webpack.js
-       require (1x) from (webpack)\require-polyfill.js
-    5        49  (webpack)\require-polyfill.js
-       require (1x) from .\example.js
+ERROR: Cannot find module '../../require-polyfill'
+ Error: Module "../../require-polyfill" not found in context "."
+  Error: Non of this files exists: C:\Users\Sokrates\Eigene Repos\node_modules\webpack\require-polyfill, C:\Users\Sokrates\Eigene Repos\node_modules\webpack\require-polyfill.webpack.js, C:\Users\Sokrates\Eigene Repos\node_modules\webpack\require-polyfill.web.js, C:\Users\Sokrates\Eigene Repos\node_modules\webpack\require-polyfill.js
+ @ .\example.js (line 2, column 17)
 ```
