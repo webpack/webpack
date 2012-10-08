@@ -588,10 +588,11 @@ else `stats` as json:
     loaders: [ "filename of loader", ... ]
    },
    { id: 1, size: 234, filename: "...", reasons: [
-    { type: "require", // or "context", "async require", "async context"
+    { type: "require", // or "context"
+      async: true,
       count: 2,
       filename: "/home/.../main.js",
-      // additionally: dirname: "..." // for type = "context" or "async context"
+      // additionally: dirname: "..." // for type = "context"
     }
    ]},
    ...
