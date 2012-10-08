@@ -572,22 +572,27 @@ else `stats` as json:
   "main": "output.js",
   "namedChunk": "1.output.js"
  }
+ dependencies: [ "filename", ... ],
+ loaders: [ "filename of loader", ... ]
+ contexts: [ "dirname of context", ... ]
  warnings: [ "Some warning" ],
  errors: [ "Some error" ],
  fileModules: {
   "output.js": [
-   { id: 0, size: 123, filename: "/home/.../main.js", reasons: [
-    { type: "main" }
-   ],
+   {
+    id: 0,
+    size: 123,
+    filename: "/home/.../main.js",
+    reasons: [ { type: "main" } ],
     dependencies: [ "filename", ... ],
     loaders: [ "filename of loader", ... ]
    },
    { id: 1, size: 234, filename: "...", reasons: [
     { type: "require", // or "context", "async require", "async context"
-	  count: 2,
-	  filename: "/home/.../main.js",
-	  // or dirname: "..." // for type = "context" or "async context"
-	}
+      count: 2,
+      filename: "/home/.../main.js",
+      // additionally: dirname: "..." // for type = "context" or "async context"
+    }
    ]},
    ...
   ],
