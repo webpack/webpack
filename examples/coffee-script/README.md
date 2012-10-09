@@ -125,7 +125,7 @@ console.timeEnd = function() {
 
 ```
 Hash: 474013c0b0bff5edce1407a1cb805a35
-Compile Time: 136ms
+Compile Time: 135ms
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4
@@ -150,7 +150,7 @@ output.js
 
 ```
 Hash: 19d4c8993b53d92be00e044dd3101c86
-Compile Time: 215ms
+Compile Time: 220ms
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4

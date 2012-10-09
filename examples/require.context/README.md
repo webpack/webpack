@@ -189,7 +189,7 @@ output.js
 
 ## Graph
 
-![webpack-graph](https://raw.github.com/webpack/webpack/master/examples/require.context/graph.svg)
+![webpack-graph](http://webpack.github.com/webpack/examples/require.context/graph.svg)
 
 # Code Splitting
 

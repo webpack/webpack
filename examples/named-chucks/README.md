@@ -169,7 +169,7 @@ require.e(1, function(require) {
 
 ```
 Hash: e8a5188136febe5f240b1f8cbc74cf2b
-Compile Time: 47ms
+Compile Time: 48ms
 Chunks: 3
 Modules: 5
 Modules including duplicates: 7

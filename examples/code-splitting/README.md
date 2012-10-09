@@ -107,7 +107,7 @@ webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
 
 ```
 Hash: 50d0702166fd38f26c96b9cd8d421243
-Compile Time: 49ms
+Compile Time: 45ms
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5
@@ -135,7 +135,7 @@ output.js
 
 ```
 Hash: cfe028c1c8ac12be33bebd83dc12aa80
-Compile Time: 123ms
+Compile Time: 126ms
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5
@@ -161,4 +161,4 @@ output.js
 
 ## Graph
 
-![webpack-graph](https://raw.github.com/webpack/webpack/master/examples/require.context/graph.svg)
+![webpack-graph](http://webpack.github.com/webpack/examples/code-splitting/graph.svg)

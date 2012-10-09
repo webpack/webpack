@@ -161,7 +161,7 @@ module.exports = function() {
 
 ```
 Hash: 1782c323238112211ad2f04896d358db
-Compile Time: 39ms
+Compile Time: 38ms
 Chunks: 2
 Modules: 6
 Modules including duplicates: 6
@@ -219,4 +219,4 @@ output.js
 
 ## Graph
 
-![webpack-graph](https://raw.github.com/webpack/webpack/master/examples/require.context/graph.svg)
+![webpack-graph](http://webpack.github.com/webpack/examples/code-splitted-require.context/graph.svg)
