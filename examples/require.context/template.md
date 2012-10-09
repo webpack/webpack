@@ -38,6 +38,10 @@ module.exports = function() {
 {{min:stdout}}
 ```
 
+## Graph
+
+![webpack-graph](https://raw.github.com/webpack/webpack/master/examples/require.context/graph.svg)
+
 # Code Splitting
 
 See [this example combined with code splitting](/sokra/modules-webpack/tree/master/examples/code-splitted-require.context)

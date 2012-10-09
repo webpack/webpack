@@ -139,7 +139,7 @@ module.exports = "It works";
 
 ```
 Hash: 666de730e77865c0f918eb2d4b2418dc
-Compile Time: 53ms
+Compile Time: 49ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
@@ -165,7 +165,7 @@ output.js
 
 ```
 Hash: d3a59169e3ef602b7e54516f7ac8f25c
-Compile Time: 144ms
+Compile Time: 140ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
@@ -186,3 +186,7 @@ output.js
     3        25  .\file.js
        async require (1x) from (webpack)\~\bundle-loader!.\file.js
 ```
+
+## Graph
+
+![webpack-graph](https://raw.github.com/webpack/webpack/master/examples/require.context/graph.svg)

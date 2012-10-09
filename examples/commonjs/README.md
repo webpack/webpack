@@ -98,7 +98,7 @@ exports.add = function() {
 
 ```
 Hash: b1075afe2e2b2fd4519bc29c86dc97b9
-Compile Time: 23ms
+Compile Time: 24ms
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3
@@ -120,7 +120,7 @@ output.js
 
 ```
 Hash: e7fbffd3f8f8581e96fa46569eda7c02
-Compile Time: 94ms
+Compile Time: 91ms
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3

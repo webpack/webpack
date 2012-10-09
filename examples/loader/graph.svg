@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" version="1.1" baseProfile="full" width="401.4967622263996" height="300"><line class="" x1="35.44047028561271" y1="81.19526283005192" x2="206.73997792007944" y2="101.37098137779809" style="stroke-width:1"/><line class="" x1="230.48006726091452" y1="264.5595297143873" x2="206.73997792007944" y2="101.37098137779809" style="stroke-width:1"/><line class="" x1="366.0562919407869" y1="35.440470285612705" x2="206.73997792007944" y2="101.37098137779809" style="stroke-width:1"/><line class="req" id="module0link0" x1="206.73997792007944" y1="101.37098137779809" x2="35.44047028561271" y2="81.19526283005192"/><line class="req" id="module0link1" x1="206.73997792007944" y1="101.37098137779809" x2="230.48006726091452" y2="264.5595297143873"/><line class="req" id="module0link2" x1="206.73997792007944" y1="101.37098137779809" x2="366.0562919407869" y2="35.440470285612705"/><line class="dep" id="module1link0" x1="35.44047028561271" y1="81.19526283005192" x2="206.73997792007944" y2="101.37098137779809"/><line class="dep" id="module2link0" x1="230.48006726091452" y1="264.5595297143873" x2="206.73997792007944" y2="101.37098137779809"/><line class="dep" id="module3link0" x1="366.0562919407869" y1="35.440470285612705" x2="206.73997792007944" y2="101.37098137779809"/><circle id="module0" cx="206.73997792007944" cy="101.37098137779809" r="8.860117571403178" fill="rgb(240,240,0)" stroke-width="1" onmouseover="a(0,3)" onmouseout="c()"><title>.\example.js
+
+Chunks:
+output.js</title></circle><circle id="module1" cx="35.44047028561271" cy="81.19526283005192" r="8.860117571403178" fill="rgb(240,240,0)" stroke-width="1" onmouseover="a(1,1)" onmouseout="c()"><title>(webpack)\buildin\__webpack_console.js
+
+Chunks:
+output.js</title></circle><circle id="module2" cx="230.48006726091452" cy="264.5595297143873" r="8.860117571403178" fill="rgb(240,240,0)" stroke-width="1" onmouseover="a(2,1)" onmouseout="c()"><title>(webpack)\~\json-loader
+
+.\test.json
+
+Chunks:
+output.js</title></circle><circle id="module3" cx="366.0562919407869" cy="35.440470285612705" r="8.860117571403178" fill="rgb(240,240,0)" stroke-width="1" onmouseover="a(3,1)" onmouseout="c()"><title>.\loader.js
+
+.\file.js
+
+Chunks:
+output.js</title></circle><script type="text/ecmascript">function addHover(node) {node.setAttribute(&quot;class&quot;, node.getAttribute(&quot;class&quot;) + " hover")}function removeHover(node) {var className = node.getAttribute(&quot;class&quot;).split(" ");className.splice(className.indexOf(&quot;hover&quot;), 1);node.setAttribute(&quot;class&quot;, className.join(" "))}function a(node, links) {document.getElementById(&quot;module&quot; + node).setAttribute(&quot;class&quot;,&quot;hover&quot;);for(var i = 0; i &lt; links; i++) {var link = document.getElementById(&quot;module&quot; + node + &quot;link&quot; + i);
+if(link) addHover(link);}}function c() {var elements = Array.prototype.slice.call(document.getElementsByClassName(&quot;hover&quot;));for(var i = 0; i &lt; elements.length; i++) removeHover(elements[i]);}</script><style type="text/css">line { stroke:black;}circle { stroke:black; stroke-width: 1}.dep, .req, .reqdep { stroke-width:0; }.async { stroke-dasharray: 4 4; }.reqdep.hover { stroke:#660; stroke-width: 3; }.req.hover { stroke:red; stroke-width: 3; }.dep.hover { stroke:green; stroke-width: 3; }circle.hover { stroke:blue; stroke-width: 1; }</style></svg>

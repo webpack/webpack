@@ -138,7 +138,7 @@ Prints in node.js (`node example.js`) and in browser:
 
 ```
 Hash: 847d13b98159af41faccdda862ec3e8d
-Compile Time: 53ms
+Compile Time: 50ms
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4

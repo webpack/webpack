@@ -161,7 +161,7 @@ module.exports = function() {
 
 ```
 Hash: 1782c323238112211ad2f04896d358db
-Compile Time: 38ms
+Compile Time: 39ms
 Chunks: 2
 Modules: 6
 Modules including duplicates: 6
@@ -191,7 +191,7 @@ output.js
 
 ```
 Hash: 26040949e1e15270899471a6db72d142
-Compile Time: 135ms
+Compile Time: 137ms
 Chunks: 2
 Modules: 6
 Modules including duplicates: 6
@@ -216,3 +216,7 @@ output.js
     5        72  (webpack)\examples\require.context\templates\c.js
        async context from .\example.js
 ```
+
+## Graph
+
+![webpack-graph](https://raw.github.com/webpack/webpack/master/examples/require.context/graph.svg)

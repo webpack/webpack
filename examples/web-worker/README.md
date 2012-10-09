@@ -157,7 +157,7 @@ module.exports = amdRequire;
 
 ```
 Hash: 9a3fb6bf1155fd1c85b5a003f0e9fe77
-Compile Time: 72ms
+Compile Time: 68ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
@@ -176,7 +176,7 @@ output.js
 Embedded Stats
  .\worker.js
      Hash: 6ce2177a70a0741653c759ba5e3e684f
-     Compile Time: 25ms
+     Compile Time: 26ms
      Chunks: 2
      Modules: 6
      Modules including duplicates: 6
@@ -204,7 +204,7 @@ Embedded Stats
 
 ```
 Hash: 7c6135cf8b61087ca531a96e890b8f01
-Compile Time: 302ms
+Compile Time: 178ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
@@ -223,7 +223,7 @@ output.js
 Embedded Stats
  .\worker.js
      Hash: 32b01b30a4148ab0f233c37f6b7dcbc9
-     Compile Time: 143ms
+     Compile Time: 116ms
      Chunks: 2
      Modules: 6
      Modules including duplicates: 6

@@ -86,7 +86,7 @@ module.exports = Math.random();
 
 ```
 Hash: 1ba7e12ebb3bc92128a6075ee0c8ddd5
-Compile Time: 21ms
+Compile Time: 22ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
@@ -107,7 +107,7 @@ output.js
 
 ```
 Hash: be6434e486f1bd019d86a6d85591298e
-Compile Time: 90ms
+Compile Time: 88ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2

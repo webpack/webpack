@@ -163,7 +163,7 @@ output.js
 
 ```
 Hash: e4f892229bbb95c564b7d14805cc0c12
-Compile Time: 122ms
+Compile Time: 120ms
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
@@ -186,6 +186,10 @@ output.js
     5        72  .\templates\c.js
        context from .\example.js
 ```
+
+## Graph
+
+![webpack-graph](https://raw.github.com/webpack/webpack/master/examples/require.context/graph.svg)
 
 # Code Splitting
 

@@ -29,3 +29,7 @@
 ```
 {{min:stdout}}
 ```
+
+## Graph
+
+![webpack-graph](https://raw.github.com/webpack/webpack/master/examples/require.context/graph.svg)
