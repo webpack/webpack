@@ -477,7 +477,11 @@ You can also save this options object in a JSON file and use it with the shell c
   //      "-web-loader", "-loader", ""]
   // postfixes for loader modules to try
 
-  loaders: [{test: /\.generator.js/, loader: "val"}],
+  loaders: [{
+    test: /\.generator\.js/,
+    exclude: /\.no\.generator\.js/,
+    loader: "val"
+  }],
   // default: (defaults are also included if you define your own)
   //   [{test: /\.coffee$/, loader: "coffee"},
   //    {test: /\.json$/, loader: "json"},
@@ -485,7 +489,8 @@ You can also save this options object in a JSON file and use it with the shell c
   //    {test: /\.css$/, loader: "style!css"},
   //    {test: /\.less$/, loader: "style!css!val!less"}]
   // automatically use loaders if filename match RegExp
-  // and no loader is specified
+  // and no loader is specified.
+  // you can pass a RegExp as string, or multiple RegExps/strings in an array
 
   postprocess: {
    normal: [function(filename, callback) {
