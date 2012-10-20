@@ -52,7 +52,7 @@ describe("buildDeps", function() {
 				done();
 			});
 		});
-		
+
 		it("should compile", function() {
 			depTree.should.have.property("modulesByFile").and.be.a("object");
 			depTree.should.have.property("modules").and.be.a("object");
@@ -90,7 +90,7 @@ describe("buildDeps", function() {
 				done();
 			});
 		});
-		
+
 		it("should compile", function() {
 			depTree.should.have.property("modulesByFile").and.be.a("object");
 			depTree.should.have.property("modules").and.be.a("object");
@@ -111,7 +111,7 @@ describe("buildDeps", function() {
 			depTree.modulesByFile[path.join(__dirname, "fixtures", "a.js")].chunks.should.be.eql(["main", 1]);
 			depTree.modulesByFile[path.join(__dirname, "fixtures", "c.js")].chunks.should.be.eql([1]);
 		});
-		
+
 		it("should have correct chucks", function() {
 			var main3id = ""+depTree.modulesByFile[path.join(__dirname, "fixtures", "main3.js")].id;
 			var aid = ""+depTree.modulesByFile[path.join(__dirname, "fixtures", "a.js")].id;
@@ -125,5 +125,27 @@ describe("buildDeps", function() {
 			depTree.chunks[1].modules[aid].should.be.equal("in-parent");
 			depTree.chunks[1].modules[cid].should.be.equal("include");
 		});
+	});
+
+	describe("of main4", function() {
+		var depTree;
+		before(function(done) {
+			buildDeps(path.join(__dirname, "fixtures"), "./main4.js", {
+				maxChunks: 5,
+				template: require("../templates/node")
+			}, function(err, tree) {
+				if(err) return done(err);
+				should.not.exist(err);
+				should.exist(tree);
+				depTree = tree;
+				done();
+			});
+		});
+
+		it("should have 5 chunks", function() {
+			console.dir(depTree.chunks);
+			Object.keys(depTree.chunkCount).length.should.be.eql(5);
+		});
+
 	});
 });
