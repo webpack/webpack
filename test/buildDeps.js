@@ -131,8 +131,7 @@ describe("buildDeps", function() {
 		var depTree;
 		before(function(done) {
 			buildDeps(path.join(__dirname, "fixtures"), "./main4.js", {
-				maxChunks: 5,
-				template: require("../templates/node")
+				maxChunks: 5
 			}, function(err, tree) {
 				if(err) return done(err);
 				should.not.exist(err);
@@ -143,8 +142,7 @@ describe("buildDeps", function() {
 		});
 
 		it("should have 5 chunks", function() {
-			console.dir(depTree.chunks);
-			Object.keys(depTree.chunkCount).length.should.be.eql(5);
+			depTree.chunkCount.should.be.eql(5);
 		});
 
 	});
