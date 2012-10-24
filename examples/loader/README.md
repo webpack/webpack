@@ -2,7 +2,7 @@
 
 ``` javascript
 // Polyfill require for node.js usage of loaders
-require = require("../../require-polyfill")(require.valueOf());
+require = require("enhanced-require")(module);
 
 // use our loader
 console.dir(require("./loader!./file"));
@@ -64,17 +64,17 @@ module.exports = function(content) {
 
 /*** .\example.js ***/
 
-/******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
+/******/ /* WEBPACK FREE VAR INJECTION */ (function(module,console) {
 // Polyfill require for node.js usage of loaders
-require = require("../../require-polyfill")(require.valueOf());
+require = require(/* enhanced-require */3)(module);
 
 // use our loader
-console.dir(require(/* ./loader!./file */3));
+console.dir(require(/* ./loader!./file */6));
 
 // use buildin json loader
 console.dir(require(/* ./test.json */2)); // default by extension
 console.dir(require(/* json!./test.json */2)); // manual
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */1)))
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_module */5)(module),require(/* __webpack_console */1)))
 
 /******/},
 /******/
@@ -112,6 +112,63 @@ module.exports = {
 /******/
 /******/3: function(module, exports, require) {
 
+/*** C:\Users\Sokrates\Eigene Repos\~\enhanced-require\lib\require.webpack.js ***/
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+module.exports = function() {
+	return require(/* __webpack_amd_require */4);
+}
+
+/******/},
+/******/
+/******/4: function(module, exports, require) {
+
+/*** (webpack)\buildin\__webpack_amd_require.js ***/
+
+var req = require.valueOf();
+function amdRequire(chunk, requiresFn, fn) {
+	if(!requiresFn) {
+		// commonjs
+		return req(chunk);
+	}
+	req.e(chunk, function() {
+		var modules = requiresFn();
+		if(fn)
+			return fn.apply(null, modules);
+	});
+}
+for(var name in req)
+	amdRequire[name] = req[name];
+amdRequire.amd = {};
+amdRequire.config = function() {/* config is ignored, use webpack options */};
+module.exports = amdRequire;
+
+
+/******/},
+/******/
+/******/5: function(module, exports, require) {
+
+/*** (webpack)\buildin\__webpack_module.js ***/
+
+module.exports = function(module) {
+	if(!module.webpackPolyfill) {
+		module.deprecate = function() {};
+		module.paths = [];
+		// module.parent = undefined by default
+		module.children = [];
+		module.webpackPolyfill = 1;
+	}
+	return module;
+}
+
+
+/******/},
+/******/
+/******/6: function(module, exports, require) {
+
 /*** .\loader.js!.\file.js ***/
 
 exports.answer = 42;
@@ -137,28 +194,30 @@ Prints in node.js (`node example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 847d13b98159af41faccdda862ec3e8d
-Compile Time: 50ms
+Hash: e2cfa8bed2279a5142b9e0400f596012
+Compile Time: 74ms
 Chunks: 1
-Modules: 4
-Modules including duplicates: 4
-Modules first chunk: 4
-main   output.js:     2342 chars/bytes 
+Modules: 7
+Modules including duplicates: 7
+Modules first chunk: 7
+main   output.js:     3650 chars/bytes 
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       336  .\example.js
+    0       324  .\example.js
        main
     1       516  (webpack)\buildin\__webpack_console.js
        require (3x) from .\example.js
     2        36  (webpack)\~\json-loader!.\test.json
        require (1x) from .\example.js
        require (1x) from .\example.js
-    3        41  .\loader.js!.\file.js
+    3       184  C:\Users\Sokrates\Eigene Repos\~\enhanced-require\lib\require.webpack.js
        require (1x) from .\example.js
-ERROR: Cannot find module '../../require-polyfill'
- Error: Module "../../require-polyfill" not found in context "."
-  Error: Non of this files exists: C:\Users\Sokrates\Eigene Repos\node_modules\webpack\require-polyfill, C:\Users\Sokrates\Eigene Repos\node_modules\webpack\require-polyfill.webpack.js, C:\Users\Sokrates\Eigene Repos\node_modules\webpack\require-polyfill.web.js, C:\Users\Sokrates\Eigene Repos\node_modules\webpack\require-polyfill.js
- @ .\example.js (line 2, column 17)
+    4       437  (webpack)\buildin\__webpack_amd_require.js
+       require (1x) from C:\Users\Sokrates\Eigene Repos\~\enhanced-require\lib\require.webpack.js
+    5       251  (webpack)\buildin\__webpack_module.js
+       require (1x) from .\example.js
+    6        41  .\loader.js!.\file.js
+       require (1x) from .\example.js
 ```
