@@ -1,4 +1,4 @@
-# webpack
+[![webpack](http://webpack.github.com/assets/logo.png)](http://webpack.github.com)
 
 As developer you want to reuse existing code.
 As with node.js and web all files are already in the same language, but it is extra work to use your code with the node.js module system and the browser.
@@ -14,8 +14,6 @@ Another common thing in web development is that some files have to be preprocess
 This introduce more complexity to the compile step.
 `webpack` supports loaders which process files before including them.
 You as developer can use such files like any other module.
-
-[![build status](https://secure.travis-ci.org/webpack/webpack.png)](http://travis-ci.org/webpack/webpack)
 
 **TL;DR**
 
@@ -347,8 +345,8 @@ Options:
 ### Programmatically Usage
 
 ``` javascript
-webpack(context, moduleName, [options], callback)
-webpack(absoluteModulePath, [options], callback)
+webpack(context, moduleName, options, callback)
+webpack(absoluteModulePath, options, callback)
 ```
 
 #### `options`
@@ -612,6 +610,8 @@ else `stats` as json:
 
 see [grunt-webpack](https://github.com/webpack/grunt-webpack).
 
+
+
 ## Bonus features
 
 ### File hash
@@ -623,335 +623,19 @@ You can use `[hash]` in `publicPrefix`, `output`, `outputDirectory`, `outputPost
 
 Combine the options `--colors --watch --progress` to get a pretty shell compilation.
 
-## Comparison
+### Webpack features in node.js
 
-<table>
- <tr>
-  <th>
-	Feature
-  </th>
-  <th>
-	webpack/<br/>webpack
-  </th>
-  <th>
-	jrburke/<br/>requirejs
-  </th>
-  <th>
-	substack/<br/>node-<br/>browserify
-  </th>
- </tr>
+see [enhanced-require](https://github.com/webpack/enhanced-require).
 
- <tr>
-  <td>
-	sync <code>require</code>
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	only wrapped
-  </td>
-  <td>
-	yes
-  </td>
- </tr>
+### More
 
- <tr>
-  <td>
-	sync <code>require.resolve</code>
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	yes
-  </td>
- </tr>
+see [wiki](https://github.com/webpack/webpack/wiki)
 
- <tr>
-  <td>
-	<code>define</code>
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
- </tr>
-
- <tr>
-  <td>
-	async <code>require</code>
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
- </tr>
-
- <tr>
-  <td>
-	single bundle
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	yes
-  </td>
- </tr>
-
- <tr>
-  <td>
-	load each file seperate
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
- </tr>
-
- <tr>
-  <td>
-	multiple bundles, Code Splitting
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	no
-  </td>
- </tr>
-
- <tr>
-  <td>
-	indirect require
-	<code>var r = require; r("./file");</code>
-  </td>
-  <td>
-	in directory
-  </td>
-  <td>
-	yes (not bundled)
-  </td>
-  <td>
-	no
-  </td>
- </tr>
-
- <tr>
-  <td>
-	concat in require
-	<code>require("./fi" + "le")</code>
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	yes (not bundled)
-  </td>
-  <td>
-	no
-  </td>
- </tr>
-
- <tr>
-  <td>
-	variables in require (local)
-	<code>require("./templates/"+template)</code>
-  </td>
-  <td>
-	yes, complete directory included
-  </td>
-  <td>
-	yes (not bundled)
-  </td>
-  <td>
-	no
-  </td>
- </tr>
-
- <tr>
-  <td>
-	variables in require (global)
-	<code>require(moduleName)</code>
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	yes (not bundled)
-  </td>
-  <td>
-	no
-  </td>
- </tr>
-
- <tr>
-  <td>
-	requirable files
-  </td>
-  <td>
-	filesystem
-  </td>
-  <td>
-	web
-  </td>
-  <td>
-	filesystem
-  </td>
- </tr>
-
- <tr>
-  <td>
-	plugins
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	yes
-  </td>
- </tr>
-
- <tr>
-  <td>
-	loaders
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
- </tr>
-
- <tr>
-  <td>
-	watch mode
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	not needed
-  </td>
-  <td>
-	yes
-  </td>
- </tr>
-
- <tr>
-  <td>
-	debug support
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	yes
-  </td>
- </tr>
-
- <tr>
-  <td>
-	node buildin libs
-	<code>require("path");</code>
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	yes
-  </td>
- </tr>
-
- <tr>
-  <td>
-	<code>process</code> polyfill
-  </td>
-  <td>
-	yes, on demand
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	yes, ever
-  </td>
- </tr>
-
- <tr>
-  <td>
-	<code>global</code> to <code>window</code> mapping
-  </td>
-  <td>
-	yes
-  </td>
-  <td>
-	no
-  </td>
-  <td>
-	no
-  </td>
- </tr>
-
- <tr>
-  <td>
-	node browser replacements
-  </td>
-  <td>
-	<code>web_modules</code> and <code>.web.js</code><br />
-	by alias config option
-  </td>
-  <td>
-	by alias config option
-  </td>
-  <td>
-	by alias config option
-  </td>
- </tr>
-</table>
 
 
 ## Tests
 
-You can run the unit tests with `npm test`.
+You can run the unit tests with `npm test`. [![build status](https://secure.travis-ci.org/webpack/webpack.png)](http://travis-ci.org/webpack/webpack)
 
 You can run the browser tests:
 
@@ -962,6 +646,8 @@ node build
 
 and open `test.html` in browser. There must be several OKs in the file, no FAIL and no RED boxes.
 
+
+
 ## Contribution
 
 You are welcome to contribute by writing issues or pull requests.
@@ -969,15 +655,21 @@ It would be nice if you open source your own loaders or webmodules. :)
 
 You are also welcome to correct any spelling mistakes or any language issues, because my english is not perfect...
 
+
+
 ## Future plans
 
 see [/webpack/webpack/wiki/Ideas](wiki Ideas)
+
+
 
 ## License
 
 Copyright (c) 2012 Tobias Koppers
 
 MIT (http://www.opensource.org/licenses/mit-license.php)
+
+
 
 ## Dependencies
 
