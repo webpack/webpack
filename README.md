@@ -49,7 +49,6 @@ webpack lib/yourEntryModule.js output/bundle.js
 * require minimal configuration, but offer a maximum
  * load polyfills for node-specific things if used
  * offer replacements for node buildin libraries
-* support [npm](https://npmjs.org/) and [jam](http://jamjs.org/)
 
 # Examples
 
@@ -142,7 +141,7 @@ For example this works out of the box:
 Somethings it happens that browsers require other code than node.js do.
 `webpack` allow module developers to specify replacements which are used in the compile process of `webpack`.
 
-Modules in `web_modules` and `jam` replace modules in `node_modules`.
+Modules in `web_modules` replace modules in `node_modules`.
 `filename.web.js` replaces `filename.js` when required without file extension.
 
 in options: `alias: { "http": "http-browserify" }`
@@ -448,9 +447,9 @@ You can also save this options object in a JSON file and use it with the shell c
   //     ".../node_modules"]
   // search paths for modules
 
-  modulesDirectorys: ["xyz_modules", "node_modules"],
+  modulesDirectorys: ["jam", "xyz_modules", "node_modules"],
   // default: (defaults are NOT included if you define your own)
-  //  ["web_modules", "jam", "node_modules"];
+  //  ["web_modules", "node_modules"];
   // directories to be searched for modules
 
   alias: {
