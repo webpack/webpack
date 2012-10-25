@@ -10,5 +10,6 @@ module.exports = {
 				}
 			]
 		}
-	}
+	},
+	maxChunks: 2
 }

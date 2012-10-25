@@ -522,6 +522,16 @@ You can also save this options object in a JSON file and use it with the shell c
  // normal loaders. This cannot be overridden in the require call.
  // You must pass a string instead of a RegExp if you use workers
 
+ maxChunks: 5, // (experimental)
+ // default: undefined
+ // limit the maximum number of chunks.
+ // chunks are merged until the required number is reached
+
+ mergeSizeRatio: 2, // (experimental)
+ // default: 0.2
+ // when choosing the merged chunks the maximum of this formular is searched:
+ // sizeSaveByChunkMerging - mergedChunkSize * mergeSizeRatio
+
  workers: true,
  // default: false
  // options: true, false, number > 0, object of type webpack/lib/Workers
