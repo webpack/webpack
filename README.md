@@ -673,7 +673,7 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 
 ## Future plans
 
-see [/webpack/webpack/wiki/Ideas](wiki Ideas)
+see [https://github.com/webpack/webpack/wiki/Ideas](wiki Ideas)
 
 
 
