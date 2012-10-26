@@ -564,9 +564,9 @@ You can also save this options object in a JSON file and use it with the shell c
 
 #### `callback`
 
-`function(err, source / stats)`
-`source` if `options.output` is not set (DEPRECATED)
-else `stats` as json:
+`function(err, stats)`
+
+`stats` as json:
 
 ``` javascript
 {
