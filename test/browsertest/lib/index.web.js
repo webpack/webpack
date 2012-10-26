@@ -215,8 +215,8 @@ setTimeout(function() {
 // cross module system support
 window.test(typeof require === "function", "require should be a function");
 window.test(typeof define === "function", "define should be a function");
-window.test(require.amd, "require.amd should be true");
-window.test(define.amd, "define.amd should be true");
+window.test(typeof require.amd === "object", "require.amd should be an object");
+window.test(typeof define.amd === "object", "define.amd should be an object");
 window.test(typeof module === "object", "module should be a object");
 
 

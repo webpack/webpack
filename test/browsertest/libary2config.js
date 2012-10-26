@@ -11,5 +11,8 @@ module.exports = {
 			]
 		}
 	},
-	maxChunks: 2
+	maxChunks: 2,
+	amd: {
+		fromOptions: true
+	}
 }

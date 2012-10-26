@@ -555,6 +555,10 @@ You can also save this options object in a JSON file and use it with the shell c
  // default: 0
  // only process file in seperate process if more or equal loaders applied to the file.
 
+ amd: { jQuery: true },
+ // default: {}
+ // specify the value of require.amd and define.amd
+
  profile: true,
  // default: false
  // capture timings for the build.
