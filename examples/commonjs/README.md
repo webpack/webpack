@@ -87,8 +87,7 @@ exports.add = function() {
     return sum;
 };
 
-/******/},
-/******/
+/******/}
 /******/})
 ```
 
@@ -97,13 +96,13 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: b1075afe2e2b2fd4519bc29c86dc97b9
-Compile Time: 23ms
+Hash: 66aa415d33bdf1acf41348bf6e4efdf8
+Compile Time: 24ms
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3
 Modules first chunk: 3
-main   output.js:     1455 chars/bytes 
+main   output.js:     1445 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -119,13 +118,13 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: e7fbffd3f8f8581e96fa46569eda7c02
-Compile Time: 92ms
+Hash: 31e830be36f22f3ae4755eb3127cbf51
+Compile Time: 95ms
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3
 Modules first chunk: 3
-main   output.js:      510 chars/bytes 
+main   output.js:      510 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>

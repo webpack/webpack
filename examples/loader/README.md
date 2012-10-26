@@ -69,7 +69,7 @@ module.exports = function(content) {
 require = require(/* enhanced-require */3)(module);
 
 // use our loader
-console.dir(require(/* ./loader!./file */6));
+console.dir(require(/* ./loader!./file */7));
 
 // use buildin json loader
 console.dir(require(/* ./test.json */2)); // default by extension
@@ -142,7 +142,7 @@ function amdRequire(chunk, requiresFn, fn) {
 }
 for(var name in req)
 	amdRequire[name] = req[name];
-amdRequire.amd = {};
+amdRequire.amd = require(/* ./__webpack_options_amd.loader.js!./__webpack_options_amd.loader.js */6);
 amdRequire.config = function() {/* config is ignored, use webpack options */};
 module.exports = amdRequire;
 
@@ -169,13 +169,20 @@ module.exports = function(module) {
 /******/
 /******/6: function(module, exports, require) {
 
+/*** (webpack)\buildin\__webpack_options_amd.loader.js!(webpack)\buildin\__webpack_options_amd.loader.js ***/
+
+/* empty to return {} */
+
+/******/},
+/******/
+/******/7: function(module, exports, require) {
+
 /*** .\loader.js!.\file.js ***/
 
 exports.answer = 42;
 exports.foo = "bar";
 
-/******/},
-/******/
+/******/}
 /******/})
 ```
 
@@ -194,13 +201,13 @@ Prints in node.js (`node example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: e2cfa8bed2279a5142b9e0400f596012
-Compile Time: 74ms
+Hash: bb4c9bbb141488f861c777eaa92fdbbf
+Compile Time: 78ms
 Chunks: 1
-Modules: 7
-Modules including duplicates: 7
-Modules first chunk: 7
-main   output.js:     3650 chars/bytes 
+Modules: 8
+Modules including duplicates: 8
+Modules first chunk: 8
+main   output.js:     3927 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -214,10 +221,12 @@ output.js
        require (1x) from .\example.js
     3       184  C:\Users\Sokrates\Eigene Repos\~\enhanced-require\lib\require.webpack.js
        require (1x) from .\example.js
-    4       437  (webpack)\buildin\__webpack_amd_require.js
+    4       518  (webpack)\buildin\__webpack_amd_require.js
        require (1x) from C:\Users\Sokrates\Eigene Repos\~\enhanced-require\lib\require.webpack.js
     5       251  (webpack)\buildin\__webpack_module.js
        require (1x) from .\example.js
-    6        41  .\loader.js!.\file.js
+    6        24  (webpack)\buildin\__webpack_options_amd.loader.js!(webpack)\buildin\__webpack_options_amd.loader.js
+       require (1x) from (webpack)\buildin\__webpack_amd_require.js
+    7        41  .\loader.js!.\file.js
        require (1x) from .\example.js
 ```

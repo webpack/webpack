@@ -75,8 +75,7 @@ if(a == a2) throw new Error("Cache clear failed :(");
 
 module.exports = Math.random();
 
-/******/},
-/******/
+/******/}
 /******/})
 ```
 
@@ -85,13 +84,13 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: 1ba7e12ebb3bc92128a6075ee0c8ddd5
-Compile Time: 23ms
+Hash: a17a8967ca2bfedfb9b56d043420c318
+Compile Time: 22ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
 Modules first chunk: 2
-main   output.js:     1342 chars/bytes 
+main   output.js:     1332 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -106,13 +105,13 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: be6434e486f1bd019d86a6d85591298e
-Compile Time: 89ms
+Hash: dd19a31556f41b87caf32b874541c423
+Compile Time: 91ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
 Modules first chunk: 2
-main   output.js:      442 chars/bytes 
+main   output.js:      442 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>

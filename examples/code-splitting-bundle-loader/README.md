@@ -113,23 +113,21 @@ require.e(1, function(require) {
 	}
 });
 
-/******/},
-/******/
+/******/}
 /******/})
 ```
 
 # js/1.output.js
 
 ``` javascript
-/******/webpackJsonp(1, {
+/******/webpackJsonp(1,{
 /******/3: function(module, exports, require) {
 
 /*** .\file.js ***/
 
 module.exports = "It works";
 
-/******/},
-/******/
+/******/}
 /******/})
 ```
 
@@ -138,14 +136,14 @@ module.exports = "It works";
 ## Uncompressed
 
 ```
-Hash: 666de730e77865c0f918eb2d4b2418dc
-Compile Time: 51ms
+Hash: 60284675d5cd32ec24e3d56cc8eac547
+Compile Time: 49ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
 Modules first chunk: 3
-main     output.js:     3296 chars/bytes 
-   1   1.output.js:      156 chars/bytes 
+main     output.js:     3286 chars/bytes
+       1.output.js:      145 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -164,14 +162,14 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: d3a59169e3ef602b7e54516f7ac8f25c
-Compile Time: 141ms
+Hash: 44f27dc223b65d4face7b5e15274cb93
+Compile Time: 143ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
 Modules first chunk: 3
-main     output.js:     1228 chars/bytes 
-   1   1.output.js:       57 chars/bytes 
+main     output.js:     1228 chars/bytes
+       1.output.js:       57 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
