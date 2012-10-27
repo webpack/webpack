@@ -463,6 +463,10 @@ You can also save this options object in a JSON file and use it with the shell c
   //   ["", ".webpack.js", ".web.js", ".js"]
   // postfixes for files to try
 
+  packageMains: ["abc", "main"]
+  // defaults: ["webpack", "browserify", "main"]
+  // lookup fields in package.json
+
   loaderExtensions: [".loader.js", ".www-loader.js", "", ".js"],
   // defaults: (defaults are NOT included if you define your own)
   //   [".webpack-web-loader.js", ".webpack-loader.js",
@@ -474,6 +478,10 @@ You can also save this options object in a JSON file and use it with the shell c
   //   ["-webpack-web-loader", "-webpack-loader",
   //      "-web-loader", "-loader", ""]
   // postfixes for loader modules to try
+
+  loaderPackageMains: ["loader", "main"]
+  // defaults: ["webpackLoader", "loader", "webpack", "main"]
+  // lookup fields for loaders in package.json
 
   loaders: [{
     test: /\.generator\.js/,
