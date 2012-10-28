@@ -666,7 +666,7 @@ cd test/browsertests
 node build
 ```
 
-and open `test.html` in browser. There must be several OKs in the file, no FAIL and no RED boxes.
+and open `tests.html` in browser.
 
 
 
