@@ -206,18 +206,15 @@ describe("main", function() {
 				test(process.argv && process.argv.length > 1, "process.argv should be an array");
 				process.nextTick(function() {
 					sum2++;
+					sum2.should.be.eql(2);
+					done();
 				});
 				process.on("xyz", function() {
 					sum2++;
 				});
 				process.emit("xyz");
 				test(global === window, "global === window");
-				done();
 			});
-		});
-
-		after(function() {
-			test(sum2 === 2, "process.nextTick and process.emit/on should be polyfilled");
 		});
 	});
 
