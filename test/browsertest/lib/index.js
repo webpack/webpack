@@ -1,1 +1,5 @@
-window.test(false, "index.js should be replaced with index.web.js");
+describe("main", function() {
+	it("should load index.web.js instead of index.js", function() {
+		should.fail();
+	});
+});
