@@ -50,7 +50,6 @@ describe("main", function() {
 				// Comments work!
 				exports.ok = true;
 				test(require("subcontent") === "replaced", "node_modules should be replaced with web_modules");
-				test(require("subcontent-jam") === "replaced", "node_modules should be replaced with jam");
 				test(require("subcontent2/file.js") === "orginal", "node_modules should still work when web_modules exists");
 				done();
 			});
@@ -287,6 +286,38 @@ describe("main", function() {
 				require("file/png!../img/image.png").should.match(/^js\/.+\.png$/);
 				document.getElementById("image").src = require("file/png!../img/image.png");
 			});
+		});
+	});
+
+	describe("query", function() {
+		it("should pass query to loader", function() {
+			var result = require("../loaders/queryloader?query!./a?resourcequery");
+			result.should.be.eql({
+				resourceQuery: "?resourcequery",
+				query: "?query",
+				prev: "module.exports = \"a\";"
+			});
+		});
+
+		it("should pass query to loader without resource", function() {
+			var result = require("../loaders/queryloader?query!?resourcequery");
+			result.should.be.eql({
+				resourceQuery: "?resourcequery",
+				query: "?query",
+				prev: null
+			});
+		});
+
+		it("should pass query to multiple loaders", function() {
+			var result = require("../loaders/queryloader?query1!../loaders/queryloader?query2!./a?resourcequery");
+			result.should.be.a("object");
+			result.should.have.property("resourceQuery").be.eql("?resourcequery");
+			result.should.have.property("query").be.eql("?query1");
+			result.should.have.property("prev").be.eql("module.exports = " + JSON.stringify({
+				resourceQuery: "?resourcequery",
+				query: "?query2",
+				prev: "module.exports = \"a\";"
+			}));
 		});
 	});
 
