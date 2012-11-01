@@ -8,7 +8,7 @@
 		"optimist": "0.2.x",
 		"uglify-js": "1.2.x",
 		"sprintf": "0.1.x",
-		"enhanced-require": "0.3.x",
+		"enhanced-require": "0.4.x",
 		"enhanced-resolve": "0.4.x",
 		"raw-loader": "0.2.x",
 		"json-loader": "0.2.x",
