@@ -319,6 +319,16 @@ describe("main", function() {
 				prev: "module.exports = \"a\";"
 			}));
 		});
+
+		it("should pass query to loader over context", function() {
+			var test = "test";
+			var result = require("../loaders/queryloader?query!../context-query-test/" + test);
+			result.should.be.eql({
+				resourceQuery: null,
+				query: "?query",
+				prev: "test content"
+			});
+		});
 	});
 
 	describe("AMD", function() {
