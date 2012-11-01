@@ -462,6 +462,10 @@ You can also save this options object in a JSON file and use it with the shell c
   //   ["", ".webpack.js", ".web.js", ".js"]
   // postfixes for files to try
 
+  packageMains: ["abc", "main"]
+  // defaults: ["webpack", "browserify", "main"]
+  // lookup fields in package.json
+
   loaderExtensions: [".loader.js", ".www-loader.js", "", ".js"],
   // defaults: (defaults are NOT included if you define your own)
   //   [".webpack-web-loader.js", ".webpack-loader.js",
@@ -473,6 +477,10 @@ You can also save this options object in a JSON file and use it with the shell c
   //   ["-webpack-web-loader", "-webpack-loader",
   //      "-web-loader", "-loader", ""]
   // postfixes for loader modules to try
+
+  loaderPackageMains: ["loader", "main"]
+  // defaults: ["webpackLoader", "loader", "webpack", "main"]
+  // lookup fields for loaders in package.json
 
   loaders: [{
     test: /\.generator\.js/,
@@ -554,6 +562,10 @@ You can also save this options object in a JSON file and use it with the shell c
  // default: 0
  // only process file in seperate process if more or equal loaders applied to the file.
 
+ amd: { jQuery: true },
+ // default: {}
+ // specify the value of require.amd and define.amd
+
  profile: true,
  // default: false
  // capture timings for the build.
@@ -563,9 +575,9 @@ You can also save this options object in a JSON file and use it with the shell c
 
 #### `callback`
 
-`function(err, source / stats)`
-`source` if `options.output` is not set (DEPRECATED)
-else `stats` as json:
+`function(err, stats)`
+
+`stats` as json:
 
 ``` javascript
 {
@@ -653,7 +665,7 @@ cd test/browsertests
 node build
 ```
 
-and open `test.html` in browser. There must be several OKs in the file, no FAIL and no RED boxes.
+and open `tests.html` in browser.
 
 
 
@@ -668,7 +680,7 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 
 ## Future plans
 
-see [/webpack/webpack/wiki/Ideas](wiki Ideas)
+see [https://github.com/webpack/webpack/wiki/Ideas](wiki Ideas)
 
 
 

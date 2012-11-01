@@ -114,8 +114,7 @@ console.timeEnd = function() {
 }).call(this);
 
 
-/******/},
-/******/
+/******/}
 /******/})
 ```
 
@@ -124,13 +123,13 @@ console.timeEnd = function() {
 ## Uncompressed
 
 ```
-Hash: 474013c0b0bff5edce1407a1cb805a35
-Compile Time: 135ms
+Hash: e9eb805924952c05925eb7085af31eb6
+Compile Time: 139ms
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4
 Modules first chunk: 4
-main   output.js:     2407 chars/bytes 
+main   output.js:     2397 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
@@ -149,13 +148,13 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 19d4c8993b53d92be00e044dd3101c86
-Compile Time: 220ms
+Hash: ef4bff35456c0136e6928ce6cd478a51
+Compile Time: 222ms
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4
 Modules first chunk: 4
-main   output.js:      891 chars/bytes 
+main   output.js:      891 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>

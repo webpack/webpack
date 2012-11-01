@@ -104,15 +104,14 @@ require.e(1, function(require) {
 
 // module a
 
-/******/},
-/******/
+/******/}
 /******/})
 ```
 
 # js/1.output.js
 
 ``` javascript
-/******/webpackJsonp(1, {
+/******/webpackJsonp(1,{
 /******/2: function(module, exports, require) {
 
 /*** .\~\b.js ***/
@@ -127,15 +126,14 @@ require.e(1, function(require) {
 
 // module d
 
-/******/},
-/******/
+/******/}
 /******/})
 ```
 
 # js/2.output.js
 
 ``` javascript
-/******/webpackJsonp(2, {
+/******/webpackJsonp(2,{
 /******/2: function(module, exports, require) {
 
 /*** .\~\b.js ***/
@@ -158,8 +156,7 @@ require.e(1, function(require) {
 
 // module c
 
-/******/},
-/******/
+/******/}
 /******/})
 ```
 
@@ -168,15 +165,15 @@ require.e(1, function(require) {
 ## Uncompressed
 
 ```
-Hash: e8a5188136febe5f240b1f8cbc74cf2b
+Hash: 190bbdfb18c66805d75b39aebd025eea
 Compile Time: 48ms
 Chunks: 3
 Modules: 5
 Modules including duplicates: 7
 Modules first chunk: 2
-        main     output.js:     2524 chars/bytes 
-           1   1.output.js:      240 chars/bytes 
-my own chuck   2.output.js:      342 chars/bytes 
+        main     output.js:     2514 chars/bytes
+               1.output.js:      229 chars/bytes
+my own chuck   2.output.js:      331 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>

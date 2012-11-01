@@ -1,12 +1,12 @@
-require("./common").globalCheck = false;
-
-function simple(name) {
-	try {
-		require("./simple/test-"+name);
-	} catch(e) {
-		window.test(false, "Node.js Test '"+name+"' should not fail with " + e );
-		console.error(e.stack);
-	}
+function simple(name, cleanup) {
+	it("should pass the " + name + " test", function(done) {
+		require.ensure([], function(require) {
+			require("./common").globalCheck = false;
+			require("./simple/test-"+name);
+			if(cleanup) cleanup();
+			done();
+		});
+	});
 }
 
 simple("assert");
@@ -18,7 +18,12 @@ simple("event-emitter-num-args");
 simple("event-emitter-once");
 simple("event-emitter-remove-all-listeners");
 simple("event-emitter-remove-listeners");
-simple("global");
+simple("global", function() {
+	delete window.baseFoo;
+	delete window.baseBar;
+	delete window.foo;
+	delete window.bar;
+});
 simple("next-tick-doesnt-hang");
 simple("next-tick-ordering2");
 simple("path");
@@ -32,9 +37,9 @@ simple("util");
 simple("util-format");
 simple("util-inspect");
 
-window.test(true, "Node.js simple tests should complete");
-
-setTimeout(function() {
-	process.emit("exit");
-	window.test(true, "Node.js simple tests should complete on process exit");
-}, 3000);
+it("should not throw exceptions on process exit", function(done) {
+	require.ensure([], function(require) {
+		process.emit("exit");
+		done();
+	});
+});
