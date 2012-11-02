@@ -18,9 +18,9 @@
 		"less-loader": "0.2.x",
 		"style-loader": "0.2.x",
 		"script-loader": "0.2.x",
-		"bundle-loader": "0.2.x",
+		"bundle-loader": "0.3.x",
 		"file-loader": "0.1.x",
-		"val-loader": "0.1.x"
+		"val-loader": "0.2.x"
 	},
 	"licenses": [
 		{

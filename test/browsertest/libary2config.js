@@ -1,6 +1,6 @@
 module.exports = {
 	postLoaders: [
-		{ test: /extra2\.js/, loader: "raw!extra!val/cacheable" }
+		{ test: /extra2\.js/, loader: "raw!extra!val?cacheable" }
 	],
 	resolve: {
 		postprocess: {
