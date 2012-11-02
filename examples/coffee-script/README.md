@@ -123,8 +123,8 @@ console.timeEnd = function() {
 ## Uncompressed
 
 ```
-Hash: e9eb805924952c05925eb7085af31eb6
-Compile Time: 139ms
+Hash: 90f5b455ffdd07fef078aeec91668b79
+Compile Time: 137ms
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4
@@ -138,9 +138,9 @@ output.js
        main
     1       516  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
-       require (1x) from (webpack)\~\coffee-loader!.\cup2.coffee
+       require (1x) from .\cup2.coffee
     2        92  (webpack)\~\coffee-loader!.\cup2.coffee
-       require (2x) from (webpack)\~\coffee-loader!.\cup1.coffee
+       require (2x) from .\cup1.coffee
     3       178  (webpack)\~\coffee-loader!.\cup1.coffee
        require (1x) from .\example.js
 ```
@@ -148,7 +148,7 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: ef4bff35456c0136e6928ce6cd478a51
+Hash: 300e8ce0fb1edd862261d22a352e3709
 Compile Time: 222ms
 Chunks: 1
 Modules: 4
@@ -163,9 +163,9 @@ output.js
        main
     1       402  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
-       require (1x) from (webpack)\~\coffee-loader!.\cup2.coffee
+       require (1x) from .\cup2.coffee
     2        76  (webpack)\~\coffee-loader!.\cup2.coffee
-       require (2x) from (webpack)\~\coffee-loader!.\cup1.coffee
+       require (2x) from .\cup1.coffee
     3       101  (webpack)\~\coffee-loader!.\cup1.coffee
        require (1x) from .\example.js
 ```

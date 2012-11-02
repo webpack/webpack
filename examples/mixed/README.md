@@ -276,8 +276,8 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: dc788a893afbbfee841b401d90861dfb
-Compile Time: 54ms
+Hash: 3872a8625fcbd6c38f747d2f3e6913be
+Compile Time: 50ms
 Chunks: 2
 Modules: 10
 Modules including duplicates: 10

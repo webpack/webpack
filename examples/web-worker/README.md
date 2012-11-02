@@ -162,8 +162,8 @@ module.exports = amdRequire;
 ## Uncompressed
 
 ```
-Hash: b160f7a1d79c2fe43ce512d04ff9d6f0
-Compile Time: 75ms
+Hash: c2de46929d402a9fb282b65a8dc209d4
+Compile Time: 68ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
@@ -181,8 +181,8 @@ output.js
        require (1x) from .\example.js
 Embedded Stats
  .\worker.js
-     Hash: 298c3929049d075b374671d6ffaaf39c
-     Compile Time: 32ms
+     Hash: eb1a9118ff25b2c3649752fb58a2d9a7
+     Compile Time: 29ms
      Chunks: 2
      Modules: 7
      Modules including duplicates: 7
@@ -211,8 +211,8 @@ Embedded Stats
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 791cb1f5a0f58f02d73b04d290c397a2
-Compile Time: 189ms
+Hash: 99567edad84c128fdecfc241e757c672
+Compile Time: 175ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
@@ -230,8 +230,8 @@ output.js
        require (1x) from .\example.js
 Embedded Stats
  .\worker.js
-     Hash: ed019f52a77300b2a4a162477066a180
-     Compile Time: 126ms
+     Hash: 6dcd6cc368c6c6deae6e157365c1362c
+     Compile Time: 118ms
      Chunks: 2
      Modules: 7
      Modules including duplicates: 7

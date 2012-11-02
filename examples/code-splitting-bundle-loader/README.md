@@ -105,7 +105,7 @@ module.exports = function(cb) {
 	else cb(data);
 }
 require.e(1, function(require) {
-	data = require(/* (webpack)\examples\code-splitting-bundle-loader\file.js */3);
+	data = require(/* !.\file.js */3);
 	var callbacks = cbs;
 	cbs = null;
 	for(var i = 0, l = callbacks.length; i < l; i++) {
@@ -136,13 +136,13 @@ module.exports = "It works";
 ## Uncompressed
 
 ```
-Hash: 60284675d5cd32ec24e3d56cc8eac547
-Compile Time: 49ms
+Hash: 747136afbc291b1f4fe63eb41c7ba38c
+Compile Time: 51ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
 Modules first chunk: 3
-main     output.js:     3286 chars/bytes
+main     output.js:     3329 chars/bytes
        1.output.js:      145 chars/bytes
 
  <id>    <size>  <filename>
@@ -152,18 +152,18 @@ output.js
        main
     1       516  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
-    2       324  (webpack)\~\bundle-loader!.\file.js
+    2       367  (webpack)\~\bundle-loader!.\file.js
        require (1x) from .\example.js
 1.output.js
     3        28  .\file.js
-       async require (1x) from (webpack)\~\bundle-loader!.\file.js
+       async require (1x) from .\file.js
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 44f27dc223b65d4face7b5e15274cb93
-Compile Time: 143ms
+Hash: 1e7be01a44bf74a282c81825f1a680f2
+Compile Time: 144ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
@@ -182,7 +182,7 @@ output.js
        require (1x) from .\example.js
 1.output.js
     3        25  .\file.js
-       async require (1x) from (webpack)\~\bundle-loader!.\file.js
+       async require (1x) from .\file.js
 ```
 
 ## Graph

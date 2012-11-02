@@ -84,8 +84,8 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: a17a8967ca2bfedfb9b56d043420c318
-Compile Time: 22ms
+Hash: e3bebd500895b11b166c6f9aa8c64511
+Compile Time: 19ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
@@ -105,8 +105,8 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: dd19a31556f41b87caf32b874541c423
-Compile Time: 91ms
+Hash: dc4475e5357fac67b3019df5ae00c8c9
+Compile Time: 84ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2

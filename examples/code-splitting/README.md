@@ -105,7 +105,7 @@ webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
 ## Uncompressed
 
 ```
-Hash: 2d23c918ccfcbc8bc40574260e722003
+Hash: 97a3ba3e9235f75a1170bf320b32bffd
 Compile Time: 46ms
 Chunks: 2
 Modules: 5
@@ -133,8 +133,8 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 93b6f029672d1b53521c6e7b6ce527b6
-Compile Time: 128ms
+Hash: 36da635119180689b7fcc01c42ff482f
+Compile Time: 121ms
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5

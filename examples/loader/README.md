@@ -201,8 +201,8 @@ Prints in node.js (`node example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: bb4c9bbb141488f861c777eaa92fdbbf
-Compile Time: 78ms
+Hash: 3d8baf386d1b33530021b2545124dfa5
+Compile Time: 73ms
 Chunks: 1
 Modules: 8
 Modules including duplicates: 8

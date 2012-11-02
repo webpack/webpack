@@ -96,8 +96,8 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: 66aa415d33bdf1acf41348bf6e4efdf8
-Compile Time: 24ms
+Hash: e54d90f4016e4d0d551501c655ccd2c4
+Compile Time: 21ms
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3
@@ -118,8 +118,8 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 31e830be36f22f3ae4755eb3127cbf51
-Compile Time: 95ms
+Hash: 65d06d4f8f4001424fca569430ce5166
+Compile Time: 88ms
 Chunks: 1
 Modules: 3
 Modules including duplicates: 3

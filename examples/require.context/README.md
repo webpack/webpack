@@ -138,8 +138,8 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: c7cdc7d18b69470e85fa8adf3d362ce0
-Compile Time: 37ms
+Hash: b42127e18132de767e9b425f1c4471f9
+Compile Time: 31ms
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6
@@ -166,8 +166,8 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 78a30e5f642d276f87eca337f1f8fedc
-Compile Time: 122ms
+Hash: 5bcf05d650a8c326eaaa5fc5875fda30
+Compile Time: 117ms
 Chunks: 1
 Modules: 6
 Modules including duplicates: 6

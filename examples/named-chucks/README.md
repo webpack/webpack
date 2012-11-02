@@ -165,8 +165,8 @@ require.e(1, function(require) {
 ## Uncompressed
 
 ```
-Hash: 190bbdfb18c66805d75b39aebd025eea
-Compile Time: 48ms
+Hash: b9c52b41a83120623d46e725984a0b43
+Compile Time: 46ms
 Chunks: 3
 Modules: 5
 Modules including duplicates: 7
