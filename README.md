@@ -680,7 +680,7 @@ You are also welcome to correct any spelling mistakes or any language issues, be
 
 ## Future plans
 
-see [https://github.com/webpack/webpack/wiki/Ideas](wiki Ideas)
+see [wiki Ideas](https://github.com/webpack/webpack/wiki/Ideas)
 
 
 
