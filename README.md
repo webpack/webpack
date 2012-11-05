@@ -326,7 +326,7 @@ Options:
   --filenames      Output Filenames Into File                               [boolean]  [default: false]
   --options        Options JSON File                                        [string]
   --public-prefix  Path Prefix For JavaScript Loading                       [string]
-  --libary         Stores the exports into this variable                    [string]
+  --library        Stores the exports into this variable                    [string]
   --colors         Output Stats with colors                                 [boolean]  [default: false]
   --single         Disable lazy loading                                     [boolean]  [default: false]
   --json           Output Stats as JSON                                     [boolean]  [default: false]
@@ -376,9 +376,9 @@ You can also save this options object in a JSON file and use it with the shell c
  // path to create the chunks url relative to page
  // deprecated name: scriptSrcPrefix
 
- libary: "mylib", // default: null
+ library: "mylib", // default: null
  // store the exports of the entrace module in a variable of this name
- // use this to create a libary from webpack
+ // use this to create a library from webpack
 
  includeFilenames: true, // default: false
  // include the filename of each module as comment before the module

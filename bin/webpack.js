@@ -33,8 +33,8 @@ var argv = require("optimist")
 	.string("public-prefix")
 	.describe("public-prefix", "Path Prefix For JavaScript Loading")
 
-	.string("libary")
-	.describe("libary", "Stores the exports into this variable")
+	.string("library")
+	.describe("library", "Stores the exports into this variable")
 
 	.boolean("colors")
 	.describe("colors", "Output Stats with colors")
@@ -145,8 +145,8 @@ if(argv.filenames) {
 	options.includeFilenames = true;
 }
 
-if(argv.libary) {
-	options.libary = argv.libary;
+if(argv.library) {
+	options.library = argv.library;
 }
 
 if(argv.alias) {

@@ -6,8 +6,8 @@ function test(cond, message) {
 	if(!cond) throw new Error(message);
 }
 
-// load tests from libary1, with script loader
-require("script!../js/libary1.js");
+// load tests from library1, with script loader
+require("script!../js/library1.js");
 
 // Buildin 'style' loader adds css to document
 require("../css/stylesheet.css");
@@ -25,15 +25,15 @@ function testCase(number) {
 }
 
 describe("main", function() {
-	it("should load libary1 with script-loader", function() {
-		should.exist(window.libary1);
-		window.libary1.should.be.eql(true);
+	it("should load library1 with script-loader", function() {
+		should.exist(window.library1);
+		window.library1.should.be.eql(true);
 	});
 
-	it("should load libary1 with script-loader", function() {
-		should.exist(window.libary2);
-		should.exist(window.libary2.ok);
-		window.libary2.ok.should.be.eql(true);
+	it("should load library1 with script-loader", function() {
+		should.exist(window.library2);
+		should.exist(window.library2.ok);
+		window.library2.ok.should.be.eql(true);
 	});
 
 	describe("resolving", function() {
