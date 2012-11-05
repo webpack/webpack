@@ -28,16 +28,16 @@ console.log("compile scripts...");
 var extraArgsNoWatch = extraArgs.slice(0);
 var watchIndex = extraArgsNoWatch.indexOf("--watch");
 if(watchIndex != -1) extraArgsNoWatch.splice(watchIndex, 1);
-var libary1 = cp.spawn("node", join(["../../bin/webpack.js", "--colors", "--single", "--libary", "libary1",
-										"node_modules/libary1", "js/libary1.js"], extraArgsNoWatch));
-bindOutput(libary1);
-libary1.on("exit", function(code) {
+var library1 = cp.spawn("node", join(["../../bin/webpack.js", "--colors", "--single", "--library", "library1",
+										"node_modules/library1", "js/library1.js"], extraArgsNoWatch));
+bindOutput(library1);
+library1.on("exit", function(code) {
 	if(code === 0) {
 		var main = cp.spawn("node", join(["../../bin/webpack.js", "--colors", "--alias", "vm=vm-browserify", "--workers",
 											"--public-prefix", "js/", "lib/index", "js/web.js"], extraArgs));
 		bindOutput(main);
 	}
 });
-var libary2 = cp.spawn("node", join(["../../bin/webpack.js", "--colors", "--libary", "libary2",
-									"--public-prefix", "js/", "--options", "libary2config.js", "node_modules/libary2", "js/libary2.js"], extraArgsNoWatch));
-bindOutput(libary2);
+var library2 = cp.spawn("node", join(["../../bin/webpack.js", "--colors", "--library", "library2",
+									"--public-prefix", "js/", "--options", "library2config.js", "node_modules/library2", "js/library2.js"], extraArgsNoWatch));
+bindOutput(library2);
