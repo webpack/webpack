@@ -439,6 +439,7 @@ You can also save this options object in a JSON file and use it with the shell c
 
  resolve: {
   // options for resolving
+  // see https://github.com/webpack/enhanced-resolve for more
 
   paths: ["/my/absolute/dirname"],
   // default: (defaults are also included if you define your own)
@@ -463,7 +464,7 @@ You can also save this options object in a JSON file and use it with the shell c
   // postfixes for files to try
 
   packageMains: ["abc", "main"]
-  // defaults: ["webpack", "browserify", "main"]
+  // defaults: ["webpack", "browserify", "web", "main"]
   // lookup fields in package.json
 
   loaderExtensions: [".loader.js", ".www-loader.js", "", ".js"],
@@ -479,7 +480,7 @@ You can also save this options object in a JSON file and use it with the shell c
   // postfixes for loader modules to try
 
   loaderPackageMains: ["loader", "main"]
-  // defaults: ["webpackLoader", "loader", "webpack", "main"]
+  // defaults: ["webpackLoader", "webLoader", "loader", "main"]
   // lookup fields for loaders in package.json
 
   loaders: [{
@@ -488,11 +489,11 @@ You can also save this options object in a JSON file and use it with the shell c
     loader: "val"
   }],
   // default: (defaults are also included if you define your own)
-  //   [{test: /\.coffee$/, loader: "coffee"},
-  //    {test: /\.json$/, loader: "json"},
-  //    {test: /\.jade$/, loader: "jade"},
-  //    {test: /\.css$/, loader: "style!css"},
-  //    {test: /\.less$/, loader: "style!css!val!less"}]
+  //   [{test: "\\\\.coffee$", loader: "coffee"},
+  //    {test: "\\\\.json$", loader: "json"},
+  //    {test: "\\\\.jade$", loader: "jade"},
+  //    {test: "\\\\.css$", loader: "style!css"},
+  //    {test: "\\\\.less$", loader: "style!css!val/separable?cacheable!less"}]
   // automatically use loaders if filename match RegExp
   // and no loader is specified.
   // you can pass a RegExp as string, or multiple RegExps/strings in an array
