@@ -51,17 +51,17 @@ module.exports = 42
 /******/({c:"",
 /******/0: function(module, exports, require) {
 
-/*** .\example.js ***/
+/**! .\example.js !**/
 
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
-console.log(require(/* ./cup1.coffee */3));
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */1)))
+console.log(require(/*! ./cup1.coffee */3));
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/*! __webpack_console */1)))
 
 /******/},
 /******/
 /******/1: function(module, exports, require) {
 
-/*** (webpack)\buildin\__webpack_console.js ***/
+/**! (webpack)\buildin\__webpack_console.js !**/
 
 var console = (function() { return this["console"] || (this["window"] && this["window"].console) || {} }());
 module.exports = console;
@@ -83,7 +83,7 @@ console.timeEnd = function() {
 /******/
 /******/2: function(module, exports, require) {
 
-/*** (webpack)\~\coffee-loader!.\cup2.coffee ***/
+/**! (webpack)\~\coffee-loader!.\cup2.coffee !**/
 
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
 (function() {
@@ -94,21 +94,21 @@ console.timeEnd = function() {
 
 }).call(this);
 
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */1)))
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/*! __webpack_console */1)))
 
 /******/},
 /******/
 /******/3: function(module, exports, require) {
 
-/*** (webpack)\~\coffee-loader!.\cup1.coffee ***/
+/**! (webpack)\~\coffee-loader!.\cup1.coffee !**/
 
 (function() {
 
   module.exports = {
     cool: "stuff",
     answer: 42,
-    external: require(/* ./cup2.coffee */2),
-    again: require(/* ./cup2.coffee */2)
+    external: require(/*! ./cup2.coffee */2),
+    again: require(/*! ./cup2.coffee */2)
   };
 
 }).call(this);
@@ -123,49 +123,49 @@ console.timeEnd = function() {
 ## Uncompressed
 
 ```
-Hash: 90f5b455ffdd07fef078aeec91668b79
-Compile Time: 137ms
+Hash: 9dcd6efedf6b645ea544a56aa1edd41e
+Compile Time: 141ms
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4
 Modules first chunk: 4
-main   output.js:     2397 chars/bytes
+main   output.js:     2366 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0        43  .\example.js
+    0        44  .\example.js
        main
-    1       516  (webpack)\buildin\__webpack_console.js
+    1       502  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
        require (1x) from .\cup2.coffee
     2        92  (webpack)\~\coffee-loader!.\cup2.coffee
        require (2x) from .\cup1.coffee
-    3       178  (webpack)\~\coffee-loader!.\cup1.coffee
+    3       180  (webpack)\~\coffee-loader!.\cup1.coffee
        require (1x) from .\example.js
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 300e8ce0fb1edd862261d22a352e3709
-Compile Time: 222ms
+Hash: f87b323b005d7bd0a92f3f7cde2344aa
+Compile Time: 328ms
 Chunks: 1
 Modules: 4
 Modules including duplicates: 4
 Modules first chunk: 4
-main   output.js:      891 chars/bytes
+main   output.js:      884 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0        23  .\example.js
+    0        24  .\example.js
        main
-    1       402  (webpack)\buildin\__webpack_console.js
+    1       403  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
        require (1x) from .\cup2.coffee
-    2        76  (webpack)\~\coffee-loader!.\cup2.coffee
+    2        77  (webpack)\~\coffee-loader!.\cup2.coffee
        require (2x) from .\cup1.coffee
-    3       101  (webpack)\~\coffee-loader!.\cup1.coffee
+    3       102  (webpack)\~\coffee-loader!.\cup1.coffee
        require (1x) from .\example.js
 ```

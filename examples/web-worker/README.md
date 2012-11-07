@@ -50,9 +50,9 @@ onmessage = function(event) {
 /******/({c:"",
 /******/0: function(module, exports, require) {
 
-/*** .\example.js ***/
+/**! .\example.js !**/
 
-var Worker = require(/* worker!./worker */1);
+var Worker = require(/*! worker!./worker */1);
 var worker = new Worker;
 worker.postMessage("b");
 worker.onmessage = function(event) {
@@ -63,7 +63,7 @@ worker.onmessage = function(event) {
 /******/
 /******/1: function(module, exports, require) {
 
-/*** (webpack)\~\worker-loader!.\worker.js ***/
+/**! (webpack)\~\worker-loader!.\worker.js !**/
 
 module.exports = function() {
   return new Worker((require.modules.c||'') + "hash.worker.js");
@@ -108,23 +108,23 @@ module.exports = function() {
 /******/({a:".hash.worker.js",b:"webpackJsonp",c:"",
 /******/0: function(module, exports, require) {
 
-/*** .\worker.js ***/
+/**! .\worker.js !**/
 
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(require) {
 onmessage = function(event) {
 	var template = event.data;
-	require(1, function() { return [require(/* ../require.context/templates */3)("./" + event.data)]}, function(tmpl) {
+	require(1, function() { return [require(/*! ../require.context/templates */3)("./" + event.data)]}, function(tmpl) {
 		postMessage(tmpl());
 	});
 }
 
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_amd_require */1)))
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/*! __webpack_amd_require */1)))
 
 /******/},
 /******/
 /******/1: function(module, exports, require) {
 
-/*** (webpack)\buildin\__webpack_amd_require.js ***/
+/**! (webpack)\buildin\__webpack_amd_require.js !**/
 
 var req = require.valueOf();
 function amdRequire(chunk, requiresFn, fn) {
@@ -140,7 +140,7 @@ function amdRequire(chunk, requiresFn, fn) {
 }
 for(var name in req)
 	amdRequire[name] = req[name];
-amdRequire.amd = require(/* ./__webpack_options_amd.loader.js!./__webpack_options_amd.loader.js */2);
+amdRequire.amd = require(/*! ./__webpack_options_amd.loader.js!./__webpack_options_amd.loader.js */2);
 amdRequire.config = function() {/* config is ignored, use webpack options */};
 module.exports = amdRequire;
 
@@ -149,7 +149,7 @@ module.exports = amdRequire;
 /******/
 /******/2: function(module, exports, require) {
 
-/*** (webpack)\buildin\__webpack_options_amd.loader.js!(webpack)\buildin\__webpack_options_amd.loader.js ***/
+/**! (webpack)\buildin\__webpack_options_amd.loader.js!(webpack)\buildin\__webpack_options_amd.loader.js !**/
 
 /* empty to return {} */
 
@@ -162,27 +162,27 @@ module.exports = amdRequire;
 ## Uncompressed
 
 ```
-Hash: c2de46929d402a9fb282b65a8dc209d4
-Compile Time: 68ms
+Hash: a017658b60f538eb1b15676e358061da
+Compile Time: 70ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
 Modules first chunk: 2
-main          output.js:     1344 chars/bytes
-       1.hash.worker.js:     1116 chars/bytes
-         hash.worker.js:     2516 chars/bytes
+main          output.js:     1318 chars/bytes
+       1.hash.worker.js:     1110 chars/bytes
+         hash.worker.js:     2496 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       211  .\example.js
+    0       207  .\example.js
        main
     1        96  (webpack)\~\worker-loader!.\worker.js
        require (1x) from .\example.js
 Embedded Stats
  .\worker.js
-     Hash: eb1a9118ff25b2c3649752fb58a2d9a7
-     Compile Time: 29ms
+     Hash: 5287351eed0ecaf472b73b4bca2c6807
+     Compile Time: 28ms
      Chunks: 2
      Modules: 7
      Modules including duplicates: 7
@@ -191,47 +191,47 @@ Embedded Stats
       <id>    <size>  <filename>
             <reason> from <filename>
      hash.worker.js
-         0       211  .\worker.js
+         0       206  .\worker.js
             main
-         1       518  (webpack)\buildin\__webpack_amd_require.js
+         1       502  (webpack)\buildin\__webpack_amd_require.js
             require (1x) from .\worker.js
          2        24  (webpack)\buildin\__webpack_options_amd.loader.js!(webpack)\buildin\__webpack_options_amd.loader.js
             require (1x) from (webpack)\buildin\__webpack_amd_require.js
      1.hash.worker.js
          3       322  [context] (webpack)\examples\require.context\templates
             async context from .\worker.js
-         4        82  (webpack)\examples\require.context\templates\a.js
+         4        80  (webpack)\examples\require.context\templates\a.js
             async context from .\worker.js
-         5        82  (webpack)\examples\require.context\templates\b.js
+         5        80  (webpack)\examples\require.context\templates\b.js
             async context from .\worker.js
-         6        82  (webpack)\examples\require.context\templates\c.js
+         6        80  (webpack)\examples\require.context\templates\c.js
             async context from .\worker.js
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 99567edad84c128fdecfc241e757c672
-Compile Time: 175ms
+Hash: b00ed9ef0ffbad2cdb698fc88413d6c7
+Compile Time: 310ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
 Modules first chunk: 2
-main          output.js:      477 chars/bytes
-       1.hash.worker.js:      467 chars/bytes
-         hash.worker.js:      803 chars/bytes
+main          output.js:      468 chars/bytes
+       1.hash.worker.js:      456 chars/bytes
+         hash.worker.js:      804 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       106  .\example.js
+    0       101  .\example.js
        main
-    1        86  (webpack)\~\worker-loader!.\worker.js
+    1        87  (webpack)\~\worker-loader!.\worker.js
        require (1x) from .\example.js
 Embedded Stats
  .\worker.js
-     Hash: 6dcd6cc368c6c6deae6e157365c1362c
-     Compile Time: 118ms
+     Hash: 59734387e963771414968c9e4f9bcbeb
+     Compile Time: 233ms
      Chunks: 2
      Modules: 7
      Modules including duplicates: 7
@@ -240,19 +240,19 @@ Embedded Stats
       <id>    <size>  <filename>
             <reason> from <filename>
      hash.worker.js
-         0       120  .\worker.js
+         0       115  .\worker.js
             main
-         1       261  (webpack)\buildin\__webpack_amd_require.js
+         1       271  (webpack)\buildin\__webpack_amd_require.js
             require (1x) from .\worker.js
          2         0  (webpack)\buildin\__webpack_options_amd.loader.js!(webpack)\buildin\__webpack_options_amd.loader.js
             require (1x) from (webpack)\buildin\__webpack_amd_require.js
      1.hash.worker.js
-         3       212  [context] (webpack)\examples\require.context\templates
+         3       213  [context] (webpack)\examples\require.context\templates
             async context from .\worker.js
-         4        72  (webpack)\examples\require.context\templates\a.js
+         4        73  (webpack)\examples\require.context\templates\a.js
             async context from .\worker.js
-         5        72  (webpack)\examples\require.context\templates\b.js
+         5        73  (webpack)\examples\require.context\templates\b.js
             async context from .\worker.js
-         6        72  (webpack)\examples\require.context\templates\c.js
+         6        73  (webpack)\examples\require.context\templates\c.js
             async context from .\worker.js
 ```

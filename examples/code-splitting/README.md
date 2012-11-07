@@ -59,20 +59,20 @@ require.ensure(["c"], function(require) {
 /******/({a:".output.js",b:"webpackJsonp",c:"",
 /******/0: function(module, exports, require) {
 
-/*** .\example.js ***/
+/**! .\example.js !**/
 
-var a = require(/* a */2);
-var b = require(/* b */1);
+var a = require(/*! a */2);
+var b = require(/*! b */1);
 require.e(1, function(require) {
-    require(/* b */1).xyz();
-    var d = require(/* d */4);
+    require(/*! b */1).xyz();
+    var d = require(/*! d */4);
 });
 
 /******/},
 /******/
 /******/1: function(module, exports, require) {
 
-/*** .\~\b.js ***/
+/**! .\~\b.js !**/
 
 // module b
 
@@ -80,7 +80,7 @@ require.e(1, function(require) {
 /******/
 /******/2: function(module, exports, require) {
 
-/*** .\~\a.js ***/
+/**! .\~\a.js !**/
 
 // module a
 
@@ -91,13 +91,13 @@ require.e(1, function(require) {
 # js/1.output.js
 
 ``` javascript
-webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
+webpackJsonp(1,{3:function(){},4:function(){}});
 ```
 
 Minimized
 
 ``` javascript
-webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
+webpackJsonp(1,{3:function(){},4:function(){}});
 ```
 
 # Info
@@ -105,19 +105,19 @@ webpackJsonp(1,{3:function(a,b,c){},4:function(a,b,c){}})
 ## Uncompressed
 
 ```
-Hash: 97a3ba3e9235f75a1170bf320b32bffd
-Compile Time: 46ms
+Hash: f9f9457a3d5544cebb5ce4117187a471
+Compile Time: 47ms
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5
 Modules first chunk: 3
-main     output.js:     2330 chars/bytes
+main     output.js:     2286 chars/bytes
        1.output.js:      229 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       155  .\example.js
+    0       154  .\example.js
        main
     1        11  .\~\b.js
        require (2x) from .\example.js
@@ -133,19 +133,19 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 36da635119180689b7fcc01c42ff482f
-Compile Time: 121ms
+Hash: b4b348db91689f6fb88a039e9d987a96
+Compile Time: 203ms
 Chunks: 2
 Modules: 5
 Modules including duplicates: 5
 Modules first chunk: 3
-main     output.js:      786 chars/bytes
-       1.output.js:       57 chars/bytes
+main     output.js:      759 chars/bytes
+       1.output.js:       48 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0        77  .\example.js
+    0        72  .\example.js
        main
     1         0  .\~\b.js
        require (2x) from .\example.js

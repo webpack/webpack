@@ -73,34 +73,34 @@ require.ensure(["b"], function(require) {
 /******/({a:".output.js",b:"webpackJsonp",c:"",
 /******/0: function(module, exports, require) {
 
-/*** .\example.js ***/
+/**! .\example.js !**/
 
-var a = require(/* a */1);
+var a = require(/*! a */1);
 
 require.e(2, function(require) {
 	// a named chuck
-	var c = require(/* c */4);
-}, /* my own chuck */0);
+	var c = require(/*! c */4);
+}, /*! my own chuck */0);
 
 require.e(2, function(require) {
 	// another chuck with the same name
-	var d = require(/* d */3);
-}, /* my own chuck */0);
+	var d = require(/*! d */3);
+}, /*! my own chuck */0);
 
 require.e(2, function(require) {
 	// the same again
-}, /* my own chuck */0);
+}, /*! my own chuck */0);
 
 require.e(1, function(require) {
 	// chuck without name
-	var d = require(/* d */3);
+	var d = require(/*! d */3);
 });
 
 /******/},
 /******/
 /******/1: function(module, exports, require) {
 
-/*** .\~\a.js ***/
+/**! .\~\a.js !**/
 
 // module a
 
@@ -114,7 +114,7 @@ require.e(1, function(require) {
 /******/webpackJsonp(1,{
 /******/2: function(module, exports, require) {
 
-/*** .\~\b.js ***/
+/**! .\~\b.js !**/
 
 // module b
 
@@ -122,7 +122,7 @@ require.e(1, function(require) {
 /******/
 /******/3: function(module, exports, require) {
 
-/*** .\~\d.js ***/
+/**! .\~\d.js !**/
 
 // module d
 
@@ -136,7 +136,7 @@ require.e(1, function(require) {
 /******/webpackJsonp(2,{
 /******/2: function(module, exports, require) {
 
-/*** .\~\b.js ***/
+/**! .\~\b.js !**/
 
 // module b
 
@@ -144,7 +144,7 @@ require.e(1, function(require) {
 /******/
 /******/3: function(module, exports, require) {
 
-/*** .\~\d.js ***/
+/**! .\~\d.js !**/
 
 // module d
 
@@ -152,7 +152,7 @@ require.e(1, function(require) {
 /******/
 /******/4: function(module, exports, require) {
 
-/*** .\~\c.js ***/
+/**! .\~\c.js !**/
 
 // module c
 
@@ -165,20 +165,20 @@ require.e(1, function(require) {
 ## Uncompressed
 
 ```
-Hash: b9c52b41a83120623d46e725984a0b43
-Compile Time: 46ms
+Hash: 28f68bf80483c70750a9e7d6fa895c7d
+Compile Time: 54ms
 Chunks: 3
 Modules: 5
 Modules including duplicates: 7
 Modules first chunk: 2
-        main     output.js:     2514 chars/bytes
+        main     output.js:     2459 chars/bytes
                1.output.js:      229 chars/bytes
 my own chuck   2.output.js:      331 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       441  .\example.js
+    0       429  .\example.js
        main
     1        11  .\~\a.js
        require (1x) from .\example.js

@@ -62,25 +62,25 @@ module.exports = function(content) {
 /******/({c:"",
 /******/0: function(module, exports, require) {
 
-/*** .\example.js ***/
+/**! .\example.js !**/
 
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(module,console) {
 // Polyfill require for node.js usage of loaders
-require = require(/* enhanced-require */3)(module);
+require = require(/*! enhanced-require */7)(module);
 
 // use our loader
-console.dir(require(/* ./loader!./file */7));
+console.dir(require(/*! ./loader!./file */6));
 
 // use buildin json loader
-console.dir(require(/* ./test.json */2)); // default by extension
-console.dir(require(/* json!./test.json */2)); // manual
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_module */5)(module),require(/* __webpack_console */1)))
+console.dir(require(/*! ./test.json */2)); // default by extension
+console.dir(require(/*! json!./test.json */2)); // manual
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/*! __webpack_module */4)(module),require(/*! __webpack_console */1)))
 
 /******/},
 /******/
 /******/1: function(module, exports, require) {
 
-/*** (webpack)\buildin\__webpack_console.js ***/
+/**! (webpack)\buildin\__webpack_console.js !**/
 
 var console = (function() { return this["console"] || (this["window"] && this["window"].console) || {} }());
 module.exports = console;
@@ -102,7 +102,7 @@ console.timeEnd = function() {
 /******/
 /******/2: function(module, exports, require) {
 
-/*** (webpack)\~\json-loader!.\test.json ***/
+/**! (webpack)\~\json-loader!.\test.json !**/
 
 module.exports = {
 	"foobar": 1234
@@ -112,21 +112,7 @@ module.exports = {
 /******/
 /******/3: function(module, exports, require) {
 
-/*** C:\Users\Sokrates\Eigene Repos\~\enhanced-require\lib\require.webpack.js ***/
-
-/*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
-*/
-module.exports = function() {
-	return require(/* __webpack_amd_require */4);
-}
-
-/******/},
-/******/
-/******/4: function(module, exports, require) {
-
-/*** (webpack)\buildin\__webpack_amd_require.js ***/
+/**! (webpack)\buildin\__webpack_amd_require.js !**/
 
 var req = require.valueOf();
 function amdRequire(chunk, requiresFn, fn) {
@@ -142,16 +128,16 @@ function amdRequire(chunk, requiresFn, fn) {
 }
 for(var name in req)
 	amdRequire[name] = req[name];
-amdRequire.amd = require(/* ./__webpack_options_amd.loader.js!./__webpack_options_amd.loader.js */6);
+amdRequire.amd = require(/*! ./__webpack_options_amd.loader.js!./__webpack_options_amd.loader.js */5);
 amdRequire.config = function() {/* config is ignored, use webpack options */};
 module.exports = amdRequire;
 
 
 /******/},
 /******/
-/******/5: function(module, exports, require) {
+/******/4: function(module, exports, require) {
 
-/*** (webpack)\buildin\__webpack_module.js ***/
+/**! (webpack)\buildin\__webpack_module.js !**/
 
 module.exports = function(module) {
 	if(!module.webpackPolyfill) {
@@ -167,20 +153,34 @@ module.exports = function(module) {
 
 /******/},
 /******/
-/******/6: function(module, exports, require) {
+/******/5: function(module, exports, require) {
 
-/*** (webpack)\buildin\__webpack_options_amd.loader.js!(webpack)\buildin\__webpack_options_amd.loader.js ***/
+/**! (webpack)\buildin\__webpack_options_amd.loader.js!(webpack)\buildin\__webpack_options_amd.loader.js !**/
 
 /* empty to return {} */
 
 /******/},
 /******/
-/******/7: function(module, exports, require) {
+/******/6: function(module, exports, require) {
 
-/*** .\loader.js!.\file.js ***/
+/**! .\loader.js!.\file.js !**/
 
 exports.answer = 42;
 exports.foo = "bar";
+
+/******/},
+/******/
+/******/7: function(module, exports, require) {
+
+/**! (webpack)\~\enhanced-require\lib\require.webpack.js !**/
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+module.exports = function() {
+	return require(/*! __webpack_amd_require */3);
+}
 
 /******/}
 /******/})
@@ -201,32 +201,32 @@ Prints in node.js (`node example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 3d8baf386d1b33530021b2545124dfa5
-Compile Time: 73ms
+Hash: ca21531724184f0e1ca4cf691ca027d1
+Compile Time: 68ms
 Chunks: 1
 Modules: 8
 Modules including duplicates: 8
 Modules first chunk: 8
-main   output.js:     3927 chars/bytes
+main   output.js:     3837 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       324  .\example.js
+    0       320  .\example.js
        main
-    1       516  (webpack)\buildin\__webpack_console.js
+    1       502  (webpack)\buildin\__webpack_console.js
        require (3x) from .\example.js
     2        36  (webpack)\~\json-loader!.\test.json
        require (1x) from .\example.js
        require (1x) from .\example.js
-    3       184  C:\Users\Sokrates\Eigene Repos\~\enhanced-require\lib\require.webpack.js
+    3       502  (webpack)\buildin\__webpack_amd_require.js
+       require (1x) from (webpack)\~\enhanced-require\lib\require.webpack.js
+    4       241  (webpack)\buildin\__webpack_module.js
        require (1x) from .\example.js
-    4       518  (webpack)\buildin\__webpack_amd_require.js
-       require (1x) from C:\Users\Sokrates\Eigene Repos\~\enhanced-require\lib\require.webpack.js
-    5       251  (webpack)\buildin\__webpack_module.js
-       require (1x) from .\example.js
-    6        24  (webpack)\buildin\__webpack_options_amd.loader.js!(webpack)\buildin\__webpack_options_amd.loader.js
+    5        24  (webpack)\buildin\__webpack_options_amd.loader.js!(webpack)\buildin\__webpack_options_amd.loader.js
        require (1x) from (webpack)\buildin\__webpack_amd_require.js
-    7        41  .\loader.js!.\file.js
+    6        41  .\loader.js!.\file.js
+       require (1x) from .\example.js
+    7       179  (webpack)\~\enhanced-require\lib\require.webpack.js
        require (1x) from .\example.js
 ```

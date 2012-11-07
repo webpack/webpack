@@ -62,19 +62,19 @@ module.exports = "It works";
 /******/({a:".output.js",b:"webpackJsonp",c:"",
 /******/0: function(module, exports, require) {
 
-/*** .\example.js ***/
+/**! .\example.js !**/
 
 /******/ /* WEBPACK FREE VAR INJECTION */ (function(console) {
-require(/* bundle!./file.js */2)(function(fileJsExports) {
+require(/*! bundle!./file.js */2)(function(fileJsExports) {
 	console.log(fileJsExports);
 });
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/* __webpack_console */1)))
+/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/*! __webpack_console */1)))
 
 /******/},
 /******/
 /******/1: function(module, exports, require) {
 
-/*** (webpack)\buildin\__webpack_console.js ***/
+/**! (webpack)\buildin\__webpack_console.js !**/
 
 var console = (function() { return this["console"] || (this["window"] && this["window"].console) || {} }());
 module.exports = console;
@@ -96,7 +96,7 @@ console.timeEnd = function() {
 /******/
 /******/2: function(module, exports, require) {
 
-/*** (webpack)\~\bundle-loader!.\file.js ***/
+/**! (webpack)\~\bundle-loader!.\file.js !**/
 
 var cbs = [], 
 	data;
@@ -105,7 +105,7 @@ module.exports = function(cb) {
 	else cb(data);
 }
 require.e(1, function(require) {
-	data = require(/* !.\file.js */3);
+	data = require(/*! !.\file.js */3);
 	var callbacks = cbs;
 	cbs = null;
 	for(var i = 0, l = callbacks.length; i < l; i++) {
@@ -123,7 +123,7 @@ require.e(1, function(require) {
 /******/webpackJsonp(1,{
 /******/3: function(module, exports, require) {
 
-/*** .\file.js ***/
+/**! .\file.js !**/
 
 module.exports = "It works";
 
@@ -136,23 +136,23 @@ module.exports = "It works";
 ## Uncompressed
 
 ```
-Hash: 747136afbc291b1f4fe63eb41c7ba38c
-Compile Time: 51ms
+Hash: 578af2d2eeef37e82cc9e8248511201d
+Compile Time: 53ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
 Modules first chunk: 3
-main     output.js:     3329 chars/bytes
+main     output.js:     3303 chars/bytes
        1.output.js:      145 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0        93  .\example.js
+    0        92  .\example.js
        main
-    1       516  (webpack)\buildin\__webpack_console.js
+    1       502  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
-    2       367  (webpack)\~\bundle-loader!.\file.js
+    2       398  (webpack)\~\bundle-loader!.\file.js
        require (1x) from .\example.js
 1.output.js
     3        28  .\file.js
@@ -162,26 +162,26 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 1e7be01a44bf74a282c81825f1a680f2
-Compile Time: 144ms
+Hash: 5e7ee4f471c7ea9d20a78d163e3645da
+Compile Time: 254ms
 Chunks: 2
 Modules: 4
 Modules including duplicates: 4
 Modules first chunk: 3
-main     output.js:     1228 chars/bytes
-       1.output.js:       57 chars/bytes
+main     output.js:     1221 chars/bytes
+       1.output.js:       54 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0        39  .\example.js
+    0        40  .\example.js
        main
-    1       402  (webpack)\buildin\__webpack_console.js
+    1       403  (webpack)\buildin\__webpack_console.js
        require (1x) from .\example.js
-    2       164  (webpack)\~\bundle-loader!.\file.js
+    2       165  (webpack)\~\bundle-loader!.\file.js
        require (1x) from .\example.js
 1.output.js
-    3        25  .\file.js
+    3        26  .\file.js
        async require (1x) from .\file.js
 ```
 
