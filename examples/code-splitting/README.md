@@ -91,7 +91,23 @@ require.e(1, function(require) {
 # js/1.output.js
 
 ``` javascript
-webpackJsonp(1,{3:function(){},4:function(){}});
+/******/webpackJsonp(1,{
+/******/3: function(module, exports, require) {
+
+/**! .\~\c.js !**/
+
+// module c
+
+/******/},
+/******/
+/******/4: function(module, exports, require) {
+
+/**! .\~\d.js !**/
+
+// module d
+
+/******/}
+/******/})
 ```
 
 Minimized
