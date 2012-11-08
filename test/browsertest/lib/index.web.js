@@ -290,6 +290,18 @@ describe("main", function() {
 	});
 
 	describe("query", function() {
+		it("should make different modules for query", function() {
+			var a = require("./empty");
+			var b = require("./empty?1");
+			var c = require("./empty?2");
+			should.exist(a);
+			should.exist(b);
+			should.exist(c);
+			a.should.be.not.equal(b);
+			a.should.be.not.equal(c);
+			b.should.be.not.equal(c);
+		});
+
 		it("should pass query to loader", function() {
 			var result = require("../loaders/queryloader?query!./a?resourcequery");
 			result.should.be.eql({
