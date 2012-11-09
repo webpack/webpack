@@ -388,6 +388,11 @@ You can also save this options object in a JSON file and use it with the shell c
  // ignore all Code Splitting and emit only a single file
  // all code is included and should work as with Code Splitting
 
+ minimize: true, // default: false
+ // minimize resources for production use
+ // javascript is minimized with uglify-js2
+ // loaders will minimize other resources
+
  debug: true, // default: false
  // put the source of the modules into annotated eval,
  // which cause a nice debug experience in some dev tools
