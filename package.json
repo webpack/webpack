@@ -1,6 +1,6 @@
 {
 	"name": "webpack",
-	"version": "0.8.0-beta1",
+	"version": "0.8.0-beta2",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs/AMD Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loading of js, json, jade, coffee, css, ... out of the box and more with custom loaders.",
 	"dependencies": {
