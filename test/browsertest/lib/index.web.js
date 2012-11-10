@@ -311,10 +311,18 @@ describe("main", function() {
 			});
 		});
 
-		it("should pass query to loader without resource", function() {
+		it("should pass query to loader without resource with resource query", function() {
 			var result = require("../loaders/queryloader?query!?resourcequery");
 			result.should.be.eql({
 				resourceQuery: "?resourcequery",
+				query: "?query",
+				prev: null
+			});
+		});
+
+		it("should pass query to loader without resource", function() {
+			var result = require("../loaders/queryloader?query!");
+			result.should.be.eql({
 				query: "?query",
 				prev: null
 			});
