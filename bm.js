@@ -41,7 +41,7 @@ Object.keys(testCases).forEach(function(name) {
 	TESTS[name + " single min   workers"] = runWebpack.bind(null, name, testCases[name], true,  false, true , true);
 });
 
-var workers = new (require("./lib/Workers"))(path.join(__dirname, "lib", "buildModuleFork.js"), require("os").cpus().length)
+var workers = new (require("./lib/Workers"))(path.join(__dirname, "lib", "worker.js"), require("os").cpus().length)
 function runWebpack(name, file, single, debug, min, withWorkers, cb) {
 	webpack(file, {
 		output: path.join(root, "js", "bm", name.trim() + ".js"),
