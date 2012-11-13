@@ -6,8 +6,8 @@ function test(cond, message) {
 	if(!cond) throw new Error(message);
 }
 
-// load tests from libary1, with script loader
-require("script!../js/libary1.js");
+// load tests from library1, with script loader
+require("script!../js/library1.js");
 
 // Buildin 'style' loader adds css to document
 require("../css/stylesheet.css");
@@ -25,15 +25,15 @@ function testCase(number) {
 }
 
 describe("main", function() {
-	it("should load libary1 with script-loader", function() {
-		should.exist(window.libary1);
-		window.libary1.should.be.eql(true);
+	it("should load library1 with script-loader", function() {
+		should.exist(window.library1);
+		window.library1.should.be.eql(true);
 	});
 
-	it("should load libary1 with script-loader", function() {
-		should.exist(window.libary2);
-		should.exist(window.libary2.ok);
-		window.libary2.ok.should.be.eql(true);
+	it("should load library1 with script-loader", function() {
+		should.exist(window.library2);
+		should.exist(window.library2.ok);
+		window.library2.ok.should.be.eql(true);
 	});
 
 	describe("resolving", function() {
@@ -50,7 +50,6 @@ describe("main", function() {
 				// Comments work!
 				exports.ok = true;
 				test(require("subcontent") === "replaced", "node_modules should be replaced with web_modules");
-				test(require("subcontent-jam") === "replaced", "node_modules should be replaced with jam");
 				test(require("subcontent2/file.js") === "orginal", "node_modules should still work when web_modules exists");
 				done();
 			});
@@ -286,6 +285,68 @@ describe("main", function() {
 			it("should handle the file loader correctly", function() {
 				require("file/png!../img/image.png").should.match(/^js\/.+\.png$/);
 				document.getElementById("image").src = require("file/png!../img/image.png");
+			});
+		});
+	});
+
+	describe("query", function() {
+		it("should make different modules for query", function() {
+			var a = require("./empty");
+			var b = require("./empty?1");
+			var c = require("./empty?2");
+			should.exist(a);
+			should.exist(b);
+			should.exist(c);
+			a.should.be.not.equal(b);
+			a.should.be.not.equal(c);
+			b.should.be.not.equal(c);
+		});
+
+		it("should pass query to loader", function() {
+			var result = require("../loaders/queryloader?query!./a?resourcequery");
+			result.should.be.eql({
+				resourceQuery: "?resourcequery",
+				query: "?query",
+				prev: "module.exports = \"a\";"
+			});
+		});
+
+		it("should pass query to loader without resource with resource query", function() {
+			var result = require("../loaders/queryloader?query!?resourcequery");
+			result.should.be.eql({
+				resourceQuery: "?resourcequery",
+				query: "?query",
+				prev: null
+			});
+		});
+
+		it("should pass query to loader without resource", function() {
+			var result = require("../loaders/queryloader?query!");
+			result.should.be.eql({
+				query: "?query",
+				prev: null
+			});
+		});
+
+		it("should pass query to multiple loaders", function() {
+			var result = require("../loaders/queryloader?query1!../loaders/queryloader?query2!./a?resourcequery");
+			result.should.be.a("object");
+			result.should.have.property("resourceQuery").be.eql("?resourcequery");
+			result.should.have.property("query").be.eql("?query1");
+			result.should.have.property("prev").be.eql("module.exports = " + JSON.stringify({
+				resourceQuery: "?resourcequery",
+				query: "?query2",
+				prev: "module.exports = \"a\";"
+			}));
+		});
+
+		it("should pass query to loader over context", function() {
+			var test = "test";
+			var result = require("../loaders/queryloader?query!../context-query-test/" + test);
+			result.should.be.eql({
+				resourceQuery: null,
+				query: "?query",
+				prev: "test content"
 			});
 		});
 	});

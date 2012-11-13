@@ -49,7 +49,6 @@ webpack lib/yourEntryModule.js output/bundle.js
 * require minimal configuration, but offer a maximum
  * load polyfills for node-specific things if used
  * offer replacements for node buildin libraries
-* support [npm](https://npmjs.org/) and [jam](http://jamjs.org/)
 
 # Examples
 
@@ -142,7 +141,7 @@ For example this works out of the box:
 Somethings it happens that browsers require other code than node.js do.
 `webpack` allow module developers to specify replacements which are used in the compile process of `webpack`.
 
-Modules in `web_modules` and `jam` replace modules in `node_modules`.
+Modules in `web_modules` replace modules in `node_modules`.
 `filename.web.js` replaces `filename.js` when required without file extension.
 
 in options: `alias: { "http": "http-browserify" }`
@@ -327,7 +326,7 @@ Options:
   --filenames      Output Filenames Into File                               [boolean]  [default: false]
   --options        Options JSON File                                        [string]
   --public-prefix  Path Prefix For JavaScript Loading                       [string]
-  --libary         Stores the exports into this variable                    [string]
+  --library        Stores the exports into this variable                    [string]
   --colors         Output Stats with colors                                 [boolean]  [default: false]
   --single         Disable lazy loading                                     [boolean]  [default: false]
   --json           Output Stats as JSON                                     [boolean]  [default: false]
@@ -377,9 +376,9 @@ You can also save this options object in a JSON file and use it with the shell c
  // path to create the chunks url relative to page
  // deprecated name: scriptSrcPrefix
 
- libary: "mylib", // default: null
+ library: "mylib", // default: null
  // store the exports of the entrace module in a variable of this name
- // use this to create a libary from webpack
+ // use this to create a library from webpack
 
  includeFilenames: true, // default: false
  // include the filename of each module as comment before the module
@@ -445,6 +444,7 @@ You can also save this options object in a JSON file and use it with the shell c
 
  resolve: {
   // options for resolving
+  // see https://github.com/webpack/enhanced-resolve for more
 
   paths: ["/my/absolute/dirname"],
   // default: (defaults are also included if you define your own)
@@ -453,9 +453,9 @@ You can also save this options object in a JSON file and use it with the shell c
   //     ".../node_modules"]
   // search paths for modules
 
-  modulesDirectorys: ["xyz_modules", "node_modules"],
+  modulesDirectorys: ["jam", "xyz_modules", "node_modules"],
   // default: (defaults are NOT included if you define your own)
-  //  ["web_modules", "jam", "node_modules"];
+  //  ["web_modules", "node_modules"];
   // directories to be searched for modules
 
   alias: {
@@ -469,7 +469,7 @@ You can also save this options object in a JSON file and use it with the shell c
   // postfixes for files to try
 
   packageMains: ["abc", "main"]
-  // defaults: ["webpack", "browserify", "main"]
+  // defaults: ["webpack", "browserify", "web", "main"]
   // lookup fields in package.json
 
   loaderExtensions: [".loader.js", ".www-loader.js", "", ".js"],
@@ -485,7 +485,7 @@ You can also save this options object in a JSON file and use it with the shell c
   // postfixes for loader modules to try
 
   loaderPackageMains: ["loader", "main"]
-  // defaults: ["webpackLoader", "loader", "webpack", "main"]
+  // defaults: ["webpackLoader", "webLoader", "loader", "main"]
   // lookup fields for loaders in package.json
 
   loaders: [{
@@ -494,11 +494,11 @@ You can also save this options object in a JSON file and use it with the shell c
     loader: "val"
   }],
   // default: (defaults are also included if you define your own)
-  //   [{test: /\.coffee$/, loader: "coffee"},
-  //    {test: /\.json$/, loader: "json"},
-  //    {test: /\.jade$/, loader: "jade"},
-  //    {test: /\.css$/, loader: "style!css"},
-  //    {test: /\.less$/, loader: "style!css!val!less"}]
+  //   [{test: "\\\\.coffee$", loader: "coffee"},
+  //    {test: "\\\\.json$", loader: "json"},
+  //    {test: "\\\\.jade$", loader: "jade"},
+  //    {test: "\\\\.css$", loader: "style!css"},
+  //    {test: "\\\\.less$", loader: "style!css!val/separable?cacheable!less"}]
   // automatically use loaders if filename match RegExp
   // and no loader is specified.
   // you can pass a RegExp as string, or multiple RegExps/strings in an array

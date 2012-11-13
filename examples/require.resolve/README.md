@@ -51,18 +51,18 @@ module.exports = Math.random();
 /******/({c:"",
 /******/0: function(module, exports, require) {
 
-/*** .\example.js ***/
+/**! .\example.js !**/
 
-var a = require(/* ./a */1);
+var a = require(/*! ./a */1);
 
 // get module id
-var aId = (/* ./a.js */1);
+var aId = (/*! ./a.js */1);
 
 // clear module in require.cache
 delete require.cache[aId];
 
 // require module again, it should be reexecuted
-var a2 = require(/* ./a */1);
+var a2 = require(/*! ./a */1);
 
 // vertify it
 if(a == a2) throw new Error("Cache clear failed :(");
@@ -71,7 +71,7 @@ if(a == a2) throw new Error("Cache clear failed :(");
 /******/
 /******/1: function(module, exports, require) {
 
-/*** .\a.js ***/
+/**! .\a.js !**/
 
 module.exports = Math.random();
 
@@ -84,18 +84,18 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: a17a8967ca2bfedfb9b56d043420c318
-Compile Time: 22ms
+Hash: df30902a418a948159ac2acfb6d7aad0
+Compile Time: 21ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
 Modules first chunk: 2
-main   output.js:     1332 chars/bytes
+main   output.js:     1301 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       295  .\example.js
+    0       286  .\example.js
        main
     1        31  .\a.js
        require (2x) from .\example.js
@@ -105,20 +105,20 @@ output.js
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: dd19a31556f41b87caf32b874541c423
-Compile Time: 91ms
+Hash: 3e7997ad1d37f38ab08fa290b9b2f638
+Compile Time: 157ms
 Chunks: 1
 Modules: 2
 Modules including duplicates: 2
 Modules first chunk: 2
-main   output.js:      442 chars/bytes
+main   output.js:      431 chars/bytes
 
  <id>    <size>  <filename>
        <reason> from <filename>
 output.js
-    0       116  .\example.js
+    0       113  .\example.js
        main
-    1        28  .\a.js
+    1        29  .\a.js
        require (2x) from .\example.js
        require (1x) from .\example.js
 ```
