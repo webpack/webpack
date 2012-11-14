@@ -1,6 +1,6 @@
 {
 	"name": "webpack",
-	"version": "0.8.0-beta4",
+	"version": "0.8.0",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs/AMD Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loading of js, json, jade, coffee, css, ... out of the box and more with custom loaders.",
 	"dependencies": {
@@ -30,10 +30,10 @@
 	],
 	"devDependencies": {
 		"worker-loader": "0.1.x",
-		"mocha": "*",
-		"should": "*",
-		"vm-browserify": "*",
-		"express": "*",
+		"mocha": "1.3.x",
+		"should": "1.1.x",
+		"vm-browserify": "0.0.x",
+		"express": "3.0.x",
 		"webpack-dev-middleware": "0.5.x"
 	},
 	"engines": {
