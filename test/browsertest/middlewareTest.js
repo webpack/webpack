@@ -6,15 +6,17 @@ var app = express();
 
 app.configure(function() {
 	app.use(webpackMiddleware(path.join(__dirname, "lib", "index"), {
-		publicPrefix: "http://localhost:8080/js/",
-		watch: true,
-		watchDelay: 5000,
-		debug: true,
-		output: "web.js",
-		outputPostfix: ".web.js",
-		resolve: {
-			alias: {
-				vm: "vm-browserify"
+		webpack: {
+			publicPrefix: "http://localhost:8080/js/",
+			watch: true,
+			watchDelay: 5000,
+			debug: true,
+			output: "web.js",
+			outputPostfix: ".web.js",
+			resolve: {
+				alias: {
+					vm: "vm-browserify"
+				}
 			}
 		}
 	}));
