@@ -6,7 +6,7 @@
 	"dependencies": {
 		"esprima": "0.9.x",
 		"optimist": "0.2.x",
-		"uglify-js2": "2.1.x",
+		"uglify-js": "2.2.x",
 		"sprintf": "0.1.x",
 		"enhanced-require": "0.4.x",
 		"enhanced-resolve": "0.4.x",
