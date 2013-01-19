@@ -190,7 +190,7 @@ There is a warning emitted in this case.
 
 ## Loaders
 
-You can use a syntax for loader plugins to preprocess files before emitting javascript code to the bundle.
+You can use a syntax for [loader plugins](http://wiki.commonjs.org/wiki/Modules/LoaderPlugin) to preprocess files before emitting javascript code to the bundle.
 
 The following example loads the raw content of a file with the `raw` loader:
 
