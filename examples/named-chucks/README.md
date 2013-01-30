@@ -27,137 +27,146 @@ require.ensure(["b"], function(require) {
 # js/output.js
 
 ``` javascript
-/******/(function(document, undefined) {
-/******/	return function(modules) {
-/******/		var installedModules = {}, installedChunks = {0:1};
-/******/		function require(moduleId) {
-/******/			if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
-/******/			if(installedModules[moduleId])
-/******/				return installedModules[moduleId].exports;
-/******/			var module = installedModules[moduleId] = {
-/******/				exports: {},
-/******/				id: moduleId,
-/******/				loaded: false
-/******/			};
-/******/			modules[moduleId](module, module.exports, require);
-/******/			module.loaded = true;
-/******/			return module.exports;
-/******/		}
-/******/		require.e = function(chunkId, callback) {
-/******/			if(installedChunks[chunkId] === 1) return callback(require);
-/******/			if(installedChunks[chunkId] !== undefined)
-/******/				installedChunks[chunkId].push(callback);
-/******/			else {
-/******/				installedChunks[chunkId] = [callback];
-/******/				var head = document.getElementsByTagName('head')[0];
-/******/				var script = document.createElement('script');
-/******/				script.type = 'text/javascript';
-/******/				script.charset = 'utf-8';
-/******/				script.src = modules.c+chunkId+modules.a;
-/******/				head.appendChild(script);
-/******/			}
-/******/		};
-/******/		require.modules = modules;
-/******/		require.cache = installedModules;
-/******/		window[modules.b] = function(chunkId, moreModules) {
-/******/			for(var moduleId in moreModules)
-/******/				modules[moduleId] = moreModules[moduleId];
-/******/			var callbacks = installedChunks[chunkId];
-/******/			installedChunks[chunkId] = 1;
-/******/			for(var i = 0; i < callbacks.length; i++)
-/******/				callbacks[i](require);
-/******/		};
-/******/		return require(0);
-/******/	}
-/******/})(document)
-/******/({a:".output.js",b:"webpackJsonp",c:"",
-/******/0: function(module, exports, require) {
+/******/ (function webpackBootstrap(modules) {
+/******/ 	var installedModules = {};
+/******/ 	function require(moduleId) {
+/******/ 		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		module.loaded = true;
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	require.e = function requireEnsure(chunkId, callback) {
+/******/ 		if(installedChunks[chunkId] === 1) return callback.call(null, require);
+/******/ 		if(installedChunks[chunkId] !== undefined)
+/******/ 			installedChunks[chunkId].push(callback);
+/******/ 		else {
+/******/ 			installedChunks[chunkId] = [callback];
+/******/ 			var head = document.getElementsByTagName('head')[0];
+/******/ 			var script = document.createElement('script');
+/******/ 			script.type = 'text/javascript';
+/******/ 			script.charset = 'utf-8';
+/******/ 			script.src = modules.c+""+chunkId+".output.js";
+/******/ 			head.appendChild(script);
+/******/ 		}
+/******/ 	};
+/******/ 	require.modules = modules;
+/******/ 	require.cache = installedModules;
+/******/ 	var installedChunks = {0:1};
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkId, moreModules) {
+/******/ 		for(var moduleId in moreModules)
+/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 		var callbacks = installedChunks[chunkId];
+/******/ 		installedChunks[chunkId] = 1;
+/******/ 		for(var i = 0; i < callbacks.length; i++)
+/******/ 			callbacks[i].call(null, require);
+/******/ 	};
+/******/ 	return require(0);
+/******/ })({
+/******/ c: "",
 
-/**! .\example.js !**/
+/***/ 0:
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/***/ function(module, exports, require) {
 
-var a = require(/*! a */1);
+	var a = require(/*! a */ 3);
+	
+	require.e/*nsure*/(2, function(require) {
+		// a named chuck
+		var c = require(/*! c */ 4);
+	}, /*! my own chuck */ 0);
+	
+	require.e/*nsure*/(1, function(require) {
+		// another chuck with the same name
+		var d = require(/*! d */ 2);
+	}, /*! my own chuck */ 0);
+	
+	require.e/*nsure*/(0/* empty */, function(require) {
+		// the same again
+	}, /*! my own chuck */ 0);
+	
+	require.e/*nsure*/(1/* duplicate */, function(require) {
+		// chuck without name
+		var d = require(/*! d */ 2);
+	});
 
-require.e(2, function(require) {
-	// a named chuck
-	var c = require(/*! c */4);
-}, /*! my own chuck */0);
+/***/ },
 
-require.e(2, function(require) {
-	// another chuck with the same name
-	var d = require(/*! d */3);
-}, /*! my own chuck */0);
+/***/ 3:
+/*!****************!*\
+  !*** ./~/a.js ***!
+  \****************/
+/***/ function(module, exports, require) {
 
-require.e(2, function(require) {
-	// the same again
-}, /*! my own chuck */0);
+	// module a
 
-require.e(1, function(require) {
-	// chuck without name
-	var d = require(/*! d */3);
-});
+/***/ }
+/******/ })
 
-/******/},
-/******/
-/******/1: function(module, exports, require) {
-
-/**! .\~\a.js !**/
-
-// module a
-
-/******/}
-/******/})
 ```
 
 # js/1.output.js
 
 ``` javascript
-/******/webpackJsonp(1,{
-/******/2: function(module, exports, require) {
+webpackJsonp(1, {
 
-/**! .\~\b.js !**/
+/***/ 1:
+/*!****************!*\
+  !*** ./~/b.js ***!
+  \****************/
+/***/ function(module, exports, require) {
 
-// module b
+	// module b
 
-/******/},
-/******/
-/******/3: function(module, exports, require) {
+/***/ },
 
-/**! .\~\d.js !**/
+/***/ 2:
+/*!****************!*\
+  !*** ./~/d.js ***!
+  \****************/
+/***/ function(module, exports, require) {
 
-// module d
+	// module d
 
-/******/}
-/******/})
+/***/ }
+
+})
 ```
 
 # js/2.output.js
 
 ``` javascript
-/******/webpackJsonp(2,{
-/******/2: function(module, exports, require) {
+webpackJsonp(2, {
 
-/**! .\~\b.js !**/
+/***/ 1:
+/*!****************!*\
+  !*** ./~/b.js ***!
+  \****************/
+/***/ function(module, exports, require) {
 
-// module b
+	// module b
 
-/******/},
-/******/
-/******/3: function(module, exports, require) {
+/***/ },
 
-/**! .\~\d.js !**/
+/***/ 4:
+/*!****************!*\
+  !*** ./~/c.js ***!
+  \****************/
+/***/ function(module, exports, require) {
 
-// module d
+	// module c
 
-/******/},
-/******/
-/******/4: function(module, exports, require) {
+/***/ }
 
-/**! .\~\c.js !**/
-
-// module c
-
-/******/}
-/******/})
+})
 ```
 
 # Info
@@ -165,33 +174,29 @@ require.e(1, function(require) {
 ## Uncompressed
 
 ```
-Hash: 28f68bf80483c70750a9e7d6fa895c7d
-Compile Time: 54ms
-Chunks: 3
-Modules: 5
-Modules including duplicates: 7
-Modules first chunk: 2
-        main     output.js:     2459 chars/bytes
-               1.output.js:      229 chars/bytes
-my own chuck   2.output.js:      331 chars/bytes
-
- <id>    <size>  <filename>
-       <reason> from <filename>
-output.js
-    0       429  .\example.js
-       main
-    1        11  .\~\a.js
-       require (1x) from .\example.js
-1.output.js
-    2        11  .\~\b.js
-       async require (3x) from .\example.js
-    3        11  .\~\d.js
-       async require (2x) from .\example.js
-2.output.js
-    2        11  .\~\b.js
-       async require (3x) from .\example.js
-    3        11  .\~\d.js
-       async require (2x) from .\example.js
-    4        11  .\~\c.js
-       async require (1x) from .\example.js
+Hash: 7ac2e7d0ae14244993a1334d177f915d
+Time: 57ms
+      Asset  Size  Chunks  Chunk Names 
+  output.js  2659       0  main        
+1.output.js   304       1  my own chuck
+2.output.js   304       2  my own chuck
+chunk    {0} output.js (main) 431
+    [0] ./example.js 420 [built] {0}
+    [3] ./~/a.js 11 [built] {0}
+        cjs require a [0] ./example.js 1:8-20
+chunk    {1} 1.output.js (my own chuck) 22 {0} 
+    [1] ./~/b.js 11 [built] {1} {2}
+        require.ensure item b [0] ./example.js 3:0-6:18
+        require.ensure item b [0] ./example.js 8:0-11:18
+        require.ensure item b [0] ./example.js 17:0-20:2
+    [2] ./~/d.js 11 [built] {1}
+        cjs require d [0] ./example.js 10:9-21
+        cjs require d [0] ./example.js 19:9-21
+chunk    {2} 2.output.js (my own chuck) 22 {0} 
+    [1] ./~/b.js 11 [built] {1} {2}
+        require.ensure item b [0] ./example.js 3:0-6:18
+        require.ensure item b [0] ./example.js 8:0-11:18
+        require.ensure item b [0] ./example.js 17:0-20:2
+    [4] ./~/c.js 11 [built] {2}
+        cjs require c [0] ./example.js 5:9-21
 ```

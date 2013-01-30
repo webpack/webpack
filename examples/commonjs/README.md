@@ -31,64 +31,72 @@ exports.add = function() {
 # js/output.js
 
 ``` javascript
-/******/(function(modules) {
-/******/	var installedModules = {};
-/******/	function require(moduleId) {
-/******/		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
-/******/		if(installedModules[moduleId])
-/******/			return installedModules[moduleId].exports;
-/******/		var module = installedModules[moduleId] = {
-/******/			exports: {},
-/******/			id: moduleId,
-/******/			loaded: false
-/******/		};
-/******/		modules[moduleId](module, module.exports, require);
-/******/		module.loaded = true;
-/******/		return module.exports;
-/******/	}
-/******/	require.e = function(chunkId, callback) {
-/******/		callback(require);
-/******/	};
-/******/	require.modules = modules;
-/******/	require.cache = installedModules;
-/******/	return require(0);
-/******/})
-/******/({c:"",
-/******/0: function(module, exports, require) {
+/******/ (function webpackBootstrap(modules) {
+/******/ 	var installedModules = {};
+/******/ 	function require(moduleId) {
+/******/ 		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		module.loaded = true;
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	require.e = function requireEnsure(chunkId, callback) {
+/******/ 		callback.call(null, require);
+/******/ 	};
+/******/ 	require.modules = modules;
+/******/ 	require.cache = installedModules;
+/******/ 	return require(0);
+/******/ })({
+/******/ c: "",
 
-/**! .\example.js !**/
+/***/ 0:
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/***/ function(module, exports, require) {
 
-var inc = require(/*! ./increment */1).increment;
-var a = 1;
-inc(a); // 2
+	var inc = require(/*! ./increment */ 1).increment;
+	var a = 1;
+	inc(a); // 2
 
-/******/},
-/******/
-/******/1: function(module, exports, require) {
+/***/ },
 
-/**! .\increment.js !**/
+/***/ 1:
+/*!**********************!*\
+  !*** ./increment.js ***!
+  \**********************/
+/***/ function(module, exports, require) {
 
-var add = require(/*! ./math */2).add;
-exports.increment = function(val) {
-    return add(val, 1);
-};
+	var add = require(/*! ./math */ 2).add;
+	exports.increment = function(val) {
+	    return add(val, 1);
+	};
 
-/******/},
-/******/
-/******/2: function(module, exports, require) {
+/***/ },
 
-/**! .\math.js !**/
+/***/ 2:
+/*!*****************!*\
+  !*** ./math.js ***!
+  \*****************/
+/***/ function(module, exports, require) {
 
-exports.add = function() {
-    var sum = 0, i = 0, args = arguments, l = args.length;
-    while (i < l) {
-        sum += args[i++];
-    }
-    return sum;
-};
+	exports.add = function() {
+	    var sum = 0, i = 0, args = arguments, l = args.length;
+	    while (i < l) {
+	        sum += args[i++];
+	    }
+	    return sum;
+	};
 
-/******/}
-/******/})
+/***/ }
+/******/ })
+
 ```
 
 # Info
@@ -96,43 +104,29 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: 6db0166b9d91e61d78ba00dd6df13b79
-Compile Time: 22ms
-Chunks: 1
-Modules: 3
-Modules including duplicates: 3
-Modules first chunk: 3
-main   output.js:     1414 chars/bytes
-
- <id>    <size>  <filename>
-       <reason> from <filename>
-output.js
-    0        73  .\example.js
-       main
-    1       101  .\increment.js
-       require (1x) from .\example.js
-    2       156  .\math.js
-       require (1x) from .\increment.js
+Hash: ed0d146781bfd63a8c38eb49000feb94
+Time: 31ms
+    Asset  Size  Chunks  Chunk Names
+output.js  1657       0  main       
+chunk    {0} output.js (main) 318
+    [0] ./example.js 67 [built] {0}
+    [1] ./increment.js 95 [built] {0}
+        cjs require ./increment [0] ./example.js 1:10-32
+    [2] ./math.js 156 [built] {0}
+        cjs require ./math [1] ./increment.js 1:10-27
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 5bb0d64ae4ed4d0462683c11c6455963
-Compile Time: 170ms
-Chunks: 1
-Modules: 3
-Modules including duplicates: 3
-Modules first chunk: 3
-main   output.js:      504 chars/bytes
-
- <id>    <size>  <filename>
-       <reason> from <filename>
-output.js
-    0        40  .\example.js
-       main
-    1        70  .\increment.js
-       require (1x) from .\example.js
-    2        87  .\math.js
-       require (1x) from .\increment.js
+Hash: ed0d146781bfd63a8c38eb49000feb94
+Time: 77ms
+    Asset  Size  Chunks  Chunk Names
+output.js   524       0  main       
+chunk    {0} output.js (main) 318
+    [0] ./example.js 67 [built] {0}
+    [1] ./increment.js 95 [built] {0}
+        cjs require ./increment [0] ./example.js 1:10-32
+    [2] ./math.js 156 [built] {0}
+        cjs require ./math [1] ./increment.js 1:10-27
 ```

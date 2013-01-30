@@ -26,57 +26,63 @@ module.exports = Math.random();
 # js/output.js
 
 ``` javascript
-/******/(function(modules) {
-/******/	var installedModules = {};
-/******/	function require(moduleId) {
-/******/		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
-/******/		if(installedModules[moduleId])
-/******/			return installedModules[moduleId].exports;
-/******/		var module = installedModules[moduleId] = {
-/******/			exports: {},
-/******/			id: moduleId,
-/******/			loaded: false
-/******/		};
-/******/		modules[moduleId](module, module.exports, require);
-/******/		module.loaded = true;
-/******/		return module.exports;
-/******/	}
-/******/	require.e = function(chunkId, callback) {
-/******/		callback(require);
-/******/	};
-/******/	require.modules = modules;
-/******/	require.cache = installedModules;
-/******/	return require(0);
-/******/})
-/******/({c:"",
-/******/0: function(module, exports, require) {
+/******/ (function webpackBootstrap(modules) {
+/******/ 	var installedModules = {};
+/******/ 	function require(moduleId) {
+/******/ 		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		module.loaded = true;
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	require.e = function requireEnsure(chunkId, callback) {
+/******/ 		callback.call(null, require);
+/******/ 	};
+/******/ 	require.modules = modules;
+/******/ 	require.cache = installedModules;
+/******/ 	return require(0);
+/******/ })({
+/******/ c: "",
 
-/**! .\example.js !**/
+/***/ 0:
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/***/ function(module, exports, require) {
 
-var a = require(/*! ./a */1);
+	var a = require(/*! ./a */ 1);
+	
+	// get module id
+	var aId = /*require.resolve*/(/*! ./a.js */ 1);
+	
+	// clear module in require.cache
+	delete require.cache[aId];
+	
+	// require module again, it should be reexecuted
+	var a2 = require(/*! ./a */ 1);
+	
+	// vertify it
+	if(a == a2) throw new Error("Cache clear failed :(");
 
-// get module id
-var aId = (/*! ./a.js */1);
+/***/ },
 
-// clear module in require.cache
-delete require.cache[aId];
+/***/ 1:
+/*!**************!*\
+  !*** ./a.js ***!
+  \**************/
+/***/ function(module, exports, require) {
 
-// require module again, it should be reexecuted
-var a2 = require(/*! ./a */1);
+	module.exports = Math.random();
 
-// vertify it
-if(a == a2) throw new Error("Cache clear failed :(");
+/***/ }
+/******/ })
 
-/******/},
-/******/
-/******/1: function(module, exports, require) {
-
-/**! .\a.js !**/
-
-module.exports = Math.random();
-
-/******/}
-/******/})
 ```
 
 # Info
@@ -84,41 +90,29 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: df30902a418a948159ac2acfb6d7aad0
-Compile Time: 21ms
-Chunks: 1
-Modules: 2
-Modules including duplicates: 2
-Modules first chunk: 2
-main   output.js:     1301 chars/bytes
-
- <id>    <size>  <filename>
-       <reason> from <filename>
-output.js
-    0       286  .\example.js
-       main
-    1        31  .\a.js
-       require (2x) from .\example.js
-       require (1x) from .\example.js
+Hash: 36093810c3120b88e12bd57e8b271458
+Time: 28ms
+    Asset  Size  Chunks  Chunk Names
+output.js  1507       0  main       
+chunk    {0} output.js (main) 314
+    [0] ./example.js 283 [built] {0}
+    [1] ./a.js 31 [built] {0}
+        require.resolve ./a.js [0] ./example.js 4:10-35
+        cjs require ./a [0] ./example.js 1:8-22
+        cjs require ./a [0] ./example.js 10:9-23
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 3e7997ad1d37f38ab08fa290b9b2f638
-Compile Time: 157ms
-Chunks: 1
-Modules: 2
-Modules including duplicates: 2
-Modules first chunk: 2
-main   output.js:      431 chars/bytes
-
- <id>    <size>  <filename>
-       <reason> from <filename>
-output.js
-    0       113  .\example.js
-       main
-    1        29  .\a.js
-       require (2x) from .\example.js
-       require (1x) from .\example.js
+Hash: 36093810c3120b88e12bd57e8b271458
+Time: 71ms
+    Asset  Size  Chunks  Chunk Names
+output.js   451       0  main       
+chunk    {0} output.js (main) 314
+    [0] ./example.js 283 [built] {0}
+    [1] ./a.js 31 [built] {0}
+        require.resolve ./a.js [0] ./example.js 4:10-35
+        cjs require ./a [0] ./example.js 1:8-22
+        cjs require ./a [0] ./example.js 10:9-23
 ```

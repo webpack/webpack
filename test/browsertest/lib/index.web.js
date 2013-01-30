@@ -30,7 +30,7 @@ describe("main", function() {
 		window.library1.should.be.eql(true);
 	});
 
-	it("should load library1 with script-loader", function() {
+	it("should load library2 exported as global", function() {
 		should.exist(window.library2);
 		should.exist(window.library2.ok);
 		window.library2.ok.should.be.eql(true);
@@ -135,7 +135,11 @@ describe("main", function() {
 
 		it("should automatically create contexts", function() {
 			var template = "tmpl", templateFull = "./tmpl.js";
+			var mp = "mp", tmp = "tmp", mpl = "mpl";
 			require("../templates/" + template).should.be.eql("test template");
+			require("../templates/" + tmp + "l").should.be.eql("test template");
+			require("../templates/t" + mpl).should.be.eql("test template");
+			require("../templates/t" + mp + "l").should.be.eql("test template");
 			require("../templates/templateLoader")(templateFull).should.be.eql("test template");
 			require("../templates/templateLoaderIndirect")(templateFull).should.be.eql("test template");
 		});
@@ -256,35 +260,35 @@ describe("main", function() {
 				require("raw!../resources/abc.txt").should.be.eql("abc");
 			});
 			it("should handle the json loader correctly", function() {
-				require("json!../../../package.json").name.should.be.eql("webpack");
+				require("!json!../../../package.json").name.should.be.eql("webpack");
 				require("../../../package.json").name.should.be.eql("webpack");
 			});
 			it("should handle the jade loader correctly", function() {
-				require("jade!../resources/template.jade")({abc: "abc"}).should.be.eql("<p>abc</p>");
+				require("!jade!../resources/template.jade")({abc: "abc"}).should.be.eql("<p>abc</p>");
 				require("../resources/template.jade")({abc: "abc"}).should.be.eql("<p>abc</p>");
 			});
 			it("should handle the coffee loader correctly", function() {
-				require("coffee!../resources/script.coffee").should.be.eql("coffee test");
+				require("!coffee!../resources/script.coffee").should.be.eql("coffee test");
 				require("../resources/script.coffee").should.be.eql("coffee test");
 			});
 			it("should handle the css loader correctly", function() {
-				require("css!../css/stylesheet.css").indexOf(".rule-direct").should.not.be.eql(-1);
-				require("css!../css/stylesheet.css").indexOf(".rule-import1").should.not.be.eql(-1);
-				require("css!../css/stylesheet.css").indexOf(".rule-import2").should.not.be.eql(-1);
+				require("!css!../css/stylesheet.css").indexOf(".rule-direct").should.not.be.eql(-1);
+				require("!css!../css/stylesheet.css").indexOf(".rule-import1").should.not.be.eql(-1);
+				require("!css!../css/stylesheet.css").indexOf(".rule-import2").should.not.be.eql(-1);
 			});
 			it("should handle the val loader (piped with css loader) correctly", function() {
-				require("css!val!../css/generateCss").indexOf("generated").should.not.be.eql(-1);
-				require("css!val!../css/generateCss").indexOf(".rule-import2").should.not.be.eql(-1);
-				require("raw!val!../css/generateCss").indexOf("generated").should.not.be.eql(-1);
+				require("!css!val!../css/generateCss").indexOf("generated").should.not.be.eql(-1);
+				require("!css!val!../css/generateCss").indexOf(".rule-import2").should.not.be.eql(-1);
+				require("!raw!val!../css/generateCss").indexOf("generated").should.not.be.eql(-1);
 			});
 			it("should handle the val loader (piped with css loader) correctly", function() {
-				require("less!../less/stylesheet.less").indexOf(".less-rule-direct").should.not.be.eql(-1);
-				require("less!../less/stylesheet.less").indexOf(".less-rule-import1").should.not.be.eql(-1);
-				require("less!../less/stylesheet.less").indexOf(".less-rule-import2").should.not.be.eql(-1);
+				require("!raw!less!../less/stylesheet.less").indexOf(".less-rule-direct").should.not.be.eql(-1);
+				require("!raw!less!../less/stylesheet.less").indexOf(".less-rule-import1").should.not.be.eql(-1);
+				require("!raw!less!../less/stylesheet.less").indexOf(".less-rule-import2").should.not.be.eql(-1);
 			});
 			it("should handle the file loader correctly", function() {
-				require("file/png!../img/image.png").should.match(/^js\/.+\.png$/);
-				document.getElementById("image").src = require("file/png!../img/image.png");
+				require("!file!../img/image.png").should.match(/js\/.+\.png$/);
+				document.getElementById("image").src = require("file?prefix=img/!../img/image.png");
 			});
 		});
 	});
@@ -392,7 +396,7 @@ describe("main", function() {
 		});
 		it("should offer AMD-style define for CommonJs", function(done) {
 			var _test_require = require.valueOf();
-			var _test_exports = module.exports;
+			var _test_exports = exports;
 			var _test_module = module;
 			define(function(require, exports, module) {
 				(typeof require).should.be.eql("function");

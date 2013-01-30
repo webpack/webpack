@@ -2,11 +2,10 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
-require = require("enhanced-require")(module);
-
 var fs = require("fs");
+var path = require("path");
 
-module.exports = function(template, filesReq, stdout, prefix) {
+module.exports = function(template, baseDir, stdout, prefix) {
 
 	var regexp = new RegExp("\\{\\{" + (prefix ? prefix+":" : "") + "([^:\\}]+)\\}\\}", "g")
 	var cwd = process.cwd();
@@ -17,7 +16,7 @@ module.exports = function(template, filesReq, stdout, prefix) {
 		match = match.substr(2 + (prefix ? prefix.length+1 : 0), match.length - 4 - (prefix ? prefix.length+1 : 0));
 		if(match === "stdout")
 			return stdout;
-		return filesReq("./" + match);
+		return fs.readFileSync(path.join(baseDir, match), "utf-8");
 	}).replace(cwd, ".");
 	
 }

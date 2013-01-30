@@ -18,11 +18,12 @@ simple("event-emitter-num-args");
 simple("event-emitter-once");
 simple("event-emitter-remove-all-listeners");
 simple("event-emitter-remove-listeners");
+mocha.globals(["baseFoo", "baseBar"]);
 simple("global", function() {
-	delete window.baseFoo;
-	delete window.baseBar;
-	delete window.foo;
-	delete window.bar;
+	delete baseFoo;
+	delete baseBar;
+	delete foo;
+	delete bar;
 });
 simple("next-tick-doesnt-hang");
 simple("next-tick-ordering2");

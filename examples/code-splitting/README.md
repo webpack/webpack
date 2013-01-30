@@ -13,101 +13,114 @@ require.ensure(["c"], function(require) {
 # js/output.js
 
 ``` javascript
-/******/(function(document, undefined) {
-/******/	return function(modules) {
-/******/		var installedModules = {}, installedChunks = {0:1};
-/******/		function require(moduleId) {
-/******/			if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
-/******/			if(installedModules[moduleId])
-/******/				return installedModules[moduleId].exports;
-/******/			var module = installedModules[moduleId] = {
-/******/				exports: {},
-/******/				id: moduleId,
-/******/				loaded: false
-/******/			};
-/******/			modules[moduleId](module, module.exports, require);
-/******/			module.loaded = true;
-/******/			return module.exports;
-/******/		}
-/******/		require.e = function(chunkId, callback) {
-/******/			if(installedChunks[chunkId] === 1) return callback(require);
-/******/			if(installedChunks[chunkId] !== undefined)
-/******/				installedChunks[chunkId].push(callback);
-/******/			else {
-/******/				installedChunks[chunkId] = [callback];
-/******/				var head = document.getElementsByTagName('head')[0];
-/******/				var script = document.createElement('script');
-/******/				script.type = 'text/javascript';
-/******/				script.charset = 'utf-8';
-/******/				script.src = modules.c+chunkId+modules.a;
-/******/				head.appendChild(script);
-/******/			}
-/******/		};
-/******/		require.modules = modules;
-/******/		require.cache = installedModules;
-/******/		window[modules.b] = function(chunkId, moreModules) {
-/******/			for(var moduleId in moreModules)
-/******/				modules[moduleId] = moreModules[moduleId];
-/******/			var callbacks = installedChunks[chunkId];
-/******/			installedChunks[chunkId] = 1;
-/******/			for(var i = 0; i < callbacks.length; i++)
-/******/				callbacks[i](require);
-/******/		};
-/******/		return require(0);
-/******/	}
-/******/})(document)
-/******/({a:".output.js",b:"webpackJsonp",c:"",
-/******/0: function(module, exports, require) {
+/******/ (function webpackBootstrap(modules) {
+/******/ 	var installedModules = {};
+/******/ 	function require(moduleId) {
+/******/ 		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		module.loaded = true;
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	require.e = function requireEnsure(chunkId, callback) {
+/******/ 		if(installedChunks[chunkId] === 1) return callback.call(null, require);
+/******/ 		if(installedChunks[chunkId] !== undefined)
+/******/ 			installedChunks[chunkId].push(callback);
+/******/ 		else {
+/******/ 			installedChunks[chunkId] = [callback];
+/******/ 			var head = document.getElementsByTagName('head')[0];
+/******/ 			var script = document.createElement('script');
+/******/ 			script.type = 'text/javascript';
+/******/ 			script.charset = 'utf-8';
+/******/ 			script.src = modules.c+""+chunkId+".output.js";
+/******/ 			head.appendChild(script);
+/******/ 		}
+/******/ 	};
+/******/ 	require.modules = modules;
+/******/ 	require.cache = installedModules;
+/******/ 	var installedChunks = {0:1};
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkId, moreModules) {
+/******/ 		for(var moduleId in moreModules)
+/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 		var callbacks = installedChunks[chunkId];
+/******/ 		installedChunks[chunkId] = 1;
+/******/ 		for(var i = 0; i < callbacks.length; i++)
+/******/ 			callbacks[i].call(null, require);
+/******/ 	};
+/******/ 	return require(0);
+/******/ })({
+/******/ c: "",
 
-/**! .\example.js !**/
+/***/ 0:
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/***/ function(module, exports, require) {
 
-var a = require(/*! a */2);
-var b = require(/*! b */1);
-require.e(1, function(require) {
-    require(/*! b */1).xyz();
-    var d = require(/*! d */4);
-});
+	var a = require(/*! a */ 2);
+	var b = require(/*! b */ 1);
+	require.e/*nsure*/(1, function(require) {
+	    require(/*! b */ 1).xyz();
+	    var d = require(/*! d */ 4);
+	});
 
-/******/},
-/******/
-/******/1: function(module, exports, require) {
+/***/ },
 
-/**! .\~\b.js !**/
+/***/ 1:
+/*!****************!*\
+  !*** ./~/b.js ***!
+  \****************/
+/***/ function(module, exports, require) {
 
-// module b
+	// module b
 
-/******/},
-/******/
-/******/2: function(module, exports, require) {
+/***/ },
 
-/**! .\~\a.js !**/
+/***/ 2:
+/*!****************!*\
+  !*** ./~/a.js ***!
+  \****************/
+/***/ function(module, exports, require) {
 
-// module a
+	// module a
 
-/******/}
-/******/})
+/***/ }
+/******/ })
+
 ```
 
 # js/1.output.js
 
 ``` javascript
-/******/webpackJsonp(1,{
-/******/3: function(module, exports, require) {
+webpackJsonp(1, {
 
-/**! .\~\c.js !**/
+/***/ 3:
+/*!****************!*\
+  !*** ./~/c.js ***!
+  \****************/
+/***/ function(module, exports, require) {
 
-// module c
+	// module c
 
-/******/},
-/******/
-/******/4: function(module, exports, require) {
+/***/ },
 
-/**! .\~\d.js !**/
+/***/ 4:
+/*!****************!*\
+  !*** ./~/d.js ***!
+  \****************/
+/***/ function(module, exports, require) {
 
-// module d
+	// module d
 
-/******/}
-/******/})
+/***/ }
+
+})
 ```
 
 Minimized
@@ -121,57 +134,45 @@ webpackJsonp(1,{3:function(){},4:function(){}});
 ## Uncompressed
 
 ```
-Hash: f9f9457a3d5544cebb5ce4117187a471
-Compile Time: 47ms
-Chunks: 2
-Modules: 5
-Modules including duplicates: 5
-Modules first chunk: 3
-main     output.js:     2286 chars/bytes
-       1.output.js:      229 chars/bytes
-
- <id>    <size>  <filename>
-       <reason> from <filename>
-output.js
-    0       154  .\example.js
-       main
-    1        11  .\~\b.js
-       require (2x) from .\example.js
-    2        11  .\~\a.js
-       require (1x) from .\example.js
-1.output.js
-    3        11  .\~\c.js
-       async require (1x) from .\example.js
-    4        11  .\~\d.js
-       async require (1x) from .\example.js
+Hash: e3da5eef20b37553da43a1d3e38f42f5
+Time: 39ms
+      Asset  Size  Chunks  Chunk Names
+  output.js  2456       0  main       
+1.output.js   304       1             
+chunk    {0} output.js (main) 161
+    [0] ./example.js 139 [built] {0}
+    [1] ./~/b.js 11 [built] {0}
+        cjs require b [0] ./example.js 2:8-20
+        cjs require b [0] ./example.js 4:4-16
+    [2] ./~/a.js 11 [built] {0}
+        cjs require a [0] ./example.js 1:8-20
+chunk    {1} 1.output.js 22 {0} 
+    [3] ./~/c.js 11 [built] {1}
+        require.ensure item c [0] ./example.js 3:0-6:2
+    [4] ./~/d.js 11 [built] {1}
+        cjs require d [0] ./example.js 5:12-24
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b4b348db91689f6fb88a039e9d987a96
-Compile Time: 203ms
-Chunks: 2
-Modules: 5
-Modules including duplicates: 5
-Modules first chunk: 3
-main     output.js:      759 chars/bytes
-       1.output.js:       48 chars/bytes
-
- <id>    <size>  <filename>
-       <reason> from <filename>
-output.js
-    0        72  .\example.js
-       main
-    1         0  .\~\b.js
-       require (2x) from .\example.js
-    2         0  .\~\a.js
-       require (1x) from .\example.js
-1.output.js
-    3         0  .\~\c.js
-       async require (1x) from .\example.js
-    4         0  .\~\d.js
-       async require (1x) from .\example.js
+Hash: e3da5eef20b37553da43a1d3e38f42f5
+Time: 107ms
+      Asset  Size  Chunks  Chunk Names
+  output.js   768       0  main       
+1.output.js    48       1             
+chunk    {0} output.js (main) 161
+    [0] ./example.js 139 [built] {0}
+    [1] ./~/b.js 11 [built] {0}
+        cjs require b [0] ./example.js 2:8-20
+        cjs require b [0] ./example.js 4:4-16
+    [2] ./~/a.js 11 [built] {0}
+        cjs require a [0] ./example.js 1:8-20
+chunk    {1} 1.output.js 22 {0} 
+    [3] ./~/c.js 11 [built] {1}
+        require.ensure item c [0] ./example.js 3:0-6:2
+    [4] ./~/d.js 11 [built] {1}
+        cjs require d [0] ./example.js 5:12-24
 ```
 
 ## Graph
