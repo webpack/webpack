@@ -240,6 +240,25 @@ describe("main", function() {
 				if(firstOne) done();
 			});
 		});
+
+		it("should handle named chunks", function(done) {
+			var sync = false;
+			require.ensure([], function(require) {
+				require("./empty?a");
+				require("./empty?b");
+				sync = true;
+				testLoad();
+				sync = false;
+				done();
+			}, "named-chunk");
+			function testLoad() {
+				require.ensure([], function(require) {
+					require("./empty?c");
+					require("./empty?d");
+					sync.should.be.ok;
+				}, "named-chunk");
+			}
+		});
 	});
 
 	describe("loaders", function() {

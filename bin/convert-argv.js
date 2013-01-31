@@ -241,15 +241,22 @@ module.exports = function(optimist, argv, convertOptions) {
 		}
 	}
 
-	if(argv._.length > 1) {
+	if(argv._.length > 0) {
 		ensureObject(options, "entry");
+		function addTo(name, entry) {
+			if(options.entry[name]) {
+				if(!Array.isArray(options.entry[name]))
+					options.entry[name] = [options.entry[name]];
+				options.entry[name].push(entry);
+			} else {
+				options.entry[name] = entry;
+			}
+		}
 		argv._.forEach(function(content) {
 			var i = content.indexOf("=");
-			if(i < 0) throw new Error("Each element must be <string>=<string>.");
-			else return options.entry[content.substr(0, i)] = content.substr(i+1);
+			if(i < 0) addTo("main", content);
+			else addTo(content.substr(0, i), content.substr(i+1))
 		});
-	} else if(argv._.length == 1) {
-		options.entry = argv._[0];
 	}
 
 	return options;
