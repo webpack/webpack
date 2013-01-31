@@ -81,9 +81,9 @@ module.exports = function(content) {
 /***/ },
 
 /***/ 1:
-/*!***********************************************************************************************************!*\
-  !*** C:/Documents and Settings/kopperts/My Documents/repos/webpack-development/~/json-loader!./test.json ***!
-  \***********************************************************************************************************/
+/*!************************************************************************************!*\
+  !*** C:/Users/Sokrates/Eigene Repos/webpack-development/~/json-loader!./test.json ***!
+  \************************************************************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = {
@@ -151,16 +151,16 @@ Prints in node.js (`node example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: be1bfb66ba06ce71b31bcddbcf2f9965
-Time: 58ms
+Hash: 62f35121ae16eff2526b8ac568437057
+Time: 52ms
     Asset  Size  Chunks  Chunk Names
-output.js  2922       0  main       
-chunk    {0} output.js (main) 674
-    [0] ./example.js 296 [built] {0}
-    [1] C:/Documents and Settings/kopperts/My Documents/repos/webpack-development/~/json-loader!./test.json 36 [built] {0}
+output.js  2853       0  main       
+chunk    {0} output.js (main) 692
+    [0] ./example.js 304 [built] {0}
+    [1] C:/Users/Sokrates/Eigene Repos/webpack-development/~/json-loader!./test.json 36 [built] {0}
         cjs require json!./test.json [0] ./example.js 9:12-39
-    [2] (webpack)/buildin/module.js 241 [built] {0}
-        cjs require module [0] ./example.js 1:0-132
+    [2] (webpack)/buildin/module.js 251 [built] {0}
+        cjs require module [0] ./example.js 1:0-108
     [3] (webpack)/buildin/return-require.js 60 [built] {0}
         cjs require enhanced-require [0] ./example.js 2:10-37
     [4] ./loader.js!./file.js 41 [not cacheable] [built] {0}

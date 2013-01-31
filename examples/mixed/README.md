@@ -220,33 +220,33 @@ webpackJsonp(1, {
 ## Uncompressed
 
 ```
-Hash: 578635659acd728459ebbd30abf93f14
-Time: 49ms
+Hash: 6d725ab24bc3aec4ef5415bed7020c11
+Time: 37ms
       Asset  Size  Chunks  Chunk Names
   output.js  3621       0  main       
 1.output.js  1403       1             
-chunk    {0} output.js (main) 728
-    [0] ./example.js 358 [built] {0}
-    [1] ./amd.js 208 [built] {0}
+chunk    {0} output.js (main) 759
+    [0] ./example.js 370 [built] {0}
+    [1] ./amd.js 218 [built] {0}
         amd require ./amd [2] ./commonjs.js 5:0-10:1
         cjs require ./amd [2] ./commonjs.js 8:13-29
         cjs require ./amd [0] ./example.js 3:11-27
         amd require ./amd [0] ./example.js 6:0-13:1
         amd require ./amd [0] ./example.js 6:0-13:1
-    [2] ./commonjs.js 162 [built] {0}
+    [2] ./commonjs.js 171 [built] {0}
         cjs require ./commonjs [0] ./example.js 2:16-37
         amd require ./commonjs [0] ./example.js 6:0-13:1
         amd require ./commonjs [0] ./example.js 6:0-13:1
         amd require ./commonjs [1] ./amd.js 2:0-11:1
         cjs require ./commonjs [1] ./amd.js 7:18-39
-chunk    {1} 1.output.js 433 {0} 
+chunk    {1} 1.output.js 439 {0} 
     [3] ./require.context/templates ^\.\/.*\.js$ 193 [built] {1}
         amd require context ../require.context/templates [0] ./example.js 6:0-13:1
-    [4] ./require.context/templates/a.js 80 [built] {1}
+    [4] ./require.context/templates/a.js 82 [built] {1}
         context element ./a.js [3] ./require.context/templates ^\.\/.*\.js$
-    [5] ./require.context/templates/b.js 80 [built] {1}
+    [5] ./require.context/templates/b.js 82 [built] {1}
         context element ./b.js [3] ./require.context/templates ^\.\/.*\.js$
-    [6] ./require.context/templates/c.js 80 [built] {1}
+    [6] ./require.context/templates/c.js 82 [built] {1}
         context element ./c.js [3] ./require.context/templates ^\.\/.*\.js$
 ```
 

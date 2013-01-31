@@ -65,13 +65,13 @@ onmessage = function(event) {
 /***/ },
 
 /***/ 1:
-/*!*************************************************************************************************************!*\
-  !*** C:/Documents and Settings/kopperts/My Documents/repos/webpack-development/~/worker-loader!./worker.js ***!
-  \*************************************************************************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/Users/Sokrates/Eigene Repos/webpack-development/~/worker-loader!./worker.js ***!
+  \**************************************************************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = function() {
-		return new Worker(require.modules.c + "ee96caf8cd75d7dfea98abc0dabcc23d.worker.js");
+		return new Worker(require.modules.c + "hash.worker.js");
 	};
 
 /***/ }
@@ -82,85 +82,54 @@ onmessage = function(event) {
 # js/[hash].worker.js
 
 ``` javascript
-/******/(function(modules) {
-/******/	var installedModules = {}, installedChunks = {0:1};
-/******/	function require(moduleId) {
-/******/		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
-/******/		if(installedModules[moduleId])
-/******/			return installedModules[moduleId].exports;
-/******/		var module = installedModules[moduleId] = {
-/******/			exports: {},
-/******/			id: moduleId,
-/******/			loaded: false
-/******/		};
-/******/		modules[moduleId](module, module.exports, require);
-/******/		module.loaded = true;
-/******/		return module.exports;
-/******/	}
-/******/	require.e = function(chunkId, callback) {
-/******/		if(installedChunks[chunkId] === 1) return callback(require);
-/******/		importScripts(chunkId+modules.a);
-/******/		callback(require);
-/******/	};
-/******/	require.modules = modules;
-/******/	require.cache = installedModules;
-/******/	this[modules.b] = function(chunkId, moreModules) {
-/******/		for(var moduleId in moreModules)
-/******/			modules[moduleId] = moreModules[moduleId];
-/******/		installedChunks[chunkId] = 1;
-/******/	};
-/******/	return require(0);
-/******/})
-/******/({a:".hash.worker.js",b:"webpackJsonp",c:"",
-/******/0: function(module, exports, require) {
+/******/ (function webpackBootstrap(modules) {
+/******/ 	var installedModules = {};
+/******/ 	function require(moduleId) {
+/******/ 		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		module.loaded = true;
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	require.e = function requireEnsure(chunkId, callback) {
+/******/ 		if(installedChunks[chunkId] === 1) return callback.call(null, require);
+/******/ 		importScripts(""+chunkId+".bundle.js");
+/******/ 		callback.call(null, require);
+/******/ 	};
+/******/ 	require.modules = modules;
+/******/ 	require.cache = installedModules;
+/******/ 	var installedChunks = {0:1};
+/******/ 	this["webpackChunk"] = function webpackChunkCallback(moreModules) {
+/******/ 		for(var moduleId in moreModules)
+/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 	};
+/******/ 	return require(0);
+/******/ })({
+/******/ c: "",
 
-/**! .\worker.js !**/
+/***/ 0:
+/*!*******************!*\
+  !*** ./worker.js ***!
+  \*******************/
+/***/ function(module, exports, require) {
 
-/******/ /* WEBPACK FREE VAR INJECTION */ (function(require) {
-onmessage = function(event) {
-	var template = event.data;
-	require(1, function() { return [require(/*! ../require.context/templates */3)("./" + event.data)]}, function(tmpl) {
-		postMessage(tmpl());
-	});
-}
-
-/******/ /* WEBPACK FREE VAR INJECTION */ }(require(/*! __webpack_amd_require */1)))
-
-/******/},
-/******/
-/******/1: function(module, exports, require) {
-
-/**! (webpack)\buildin\__webpack_amd_require.js !**/
-
-var req = require.valueOf();
-function amdRequire(chunk, requiresFn, fn) {
-	if(!requiresFn) {
-		// commonjs
-		return req(chunk);
+	onmessage = function(event) {
+		var template = event.data;
+		require.e/* require */(1, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [require(/*! ../require.context/templates */ 1)("./" + event.data)]; (function(tmpl) {
+			postMessage(tmpl());
+		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 	}
-	req.e(chunk, function() {
-		var modules = requiresFn();
-		if(fn)
-			return fn.apply(null, modules);
-	});
-}
-for(var name in req)
-	amdRequire[name] = req[name];
-amdRequire.amd = require(/*! ./__webpack_options_amd.loader.js!./__webpack_options_amd.loader.js */2);
-amdRequire.config = function() {/* config is ignored, use webpack options */};
-module.exports = amdRequire;
+	
 
+/***/ }
+/******/ })
 
-/******/},
-/******/
-/******/2: function(module, exports, require) {
-
-/**! (webpack)\buildin\__webpack_options_amd.loader.js!(webpack)\buildin\__webpack_options_amd.loader.js !**/
-
-/* empty to return {} */
-
-/******/}
-/******/})
 ```
 
 # Info
@@ -168,43 +137,43 @@ module.exports = amdRequire;
 ## Uncompressed
 
 ```
-Hash: 1cc98da1fc32c4cce0b59747baf7d03e
-Time: 72ms
-                                         Asset  Size  Chunks  Chunk Names
-    ee96caf8cd75d7dfea98abc0dabcc23d.worker.js  1701                     
-[i].ee96caf8cd75d7dfea98abc0dabcc23d.worker.js  1424                     
-                                     output.js  1774       0  main       
-chunk    {0} output.js (main) 325
-    [0] ./example.js 201 [built] {0}
-    [1] C:/Documents and Settings/kopperts/My Documents/repos/webpack-development/~/worker-loader!./worker.js 124 [not cacheable] [built] {0}
+Hash: 457a4d61bec8a96b0716a97eace04243
+Time: 71ms
+           Asset  Size  Chunks  Chunk Names
+  hash.worker.js  1701                     
+1.hash.worker.js  1424                     
+       output.js  1677       0  main       
+chunk    {0} output.js (main) 302
+    [0] ./example.js 206 [built] {0}
+    [1] C:/Users/Sokrates/Eigene Repos/webpack-development/~/worker-loader!./worker.js 96 [not cacheable] [built] {0}
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
-    Hash: ee96caf8cd75d7dfea98abc0dabcc23d
-                                             Asset  Size  Chunks  Chunk Names
-        ee96caf8cd75d7dfea98abc0dabcc23d.worker.js  1701       0  main       
-    [i].ee96caf8cd75d7dfea98abc0dabcc23d.worker.js  1424       1             
-    chunk    {0} ee96caf8cd75d7dfea98abc0dabcc23d.worker.js (main) 162
-    chunk    {1} [i].ee96caf8cd75d7dfea98abc0dabcc23d.worker.js 457 {0} 
+    Hash: 68a1c224412cf9f9d63329c7b225e850
+               Asset  Size  Chunks  Chunk Names
+      hash.worker.js  1701       0  main       
+    1.hash.worker.js  1424       1             
+    chunk    {0} hash.worker.js (main) 168
+    chunk    {1} 1.hash.worker.js 463 {0} 
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 1cc98da1fc32c4cce0b59747baf7d03e
-Time: 168ms
-                                         Asset  Size  Chunks  Chunk Names
-    ee96caf8cd75d7dfea98abc0dabcc23d.worker.js   586                     
-[i].ee96caf8cd75d7dfea98abc0dabcc23d.worker.js   492                     
-                                     output.js   510       0  main       
-chunk    {0} output.js (main) 325
-    [0] ./example.js 201 [built] {0}
-    [1] C:/Documents and Settings/kopperts/My Documents/repos/webpack-development/~/worker-loader!./worker.js 124 [not cacheable] [built] {0}
+Hash: 457a4d61bec8a96b0716a97eace04243
+Time: 196ms
+           Asset  Size  Chunks  Chunk Names
+  hash.worker.js   586                     
+1.hash.worker.js   492                     
+       output.js   482       0  main       
+chunk    {0} output.js (main) 302
+    [0] ./example.js 206 [built] {0}
+    [1] C:/Users/Sokrates/Eigene Repos/webpack-development/~/worker-loader!./worker.js 96 [not cacheable] [built] {0}
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
-    Hash: ee96caf8cd75d7dfea98abc0dabcc23d
-                                             Asset  Size  Chunks  Chunk Names
-        ee96caf8cd75d7dfea98abc0dabcc23d.worker.js   586       0  main       
-    [i].ee96caf8cd75d7dfea98abc0dabcc23d.worker.js   492       1             
-    chunk    {0} ee96caf8cd75d7dfea98abc0dabcc23d.worker.js (main) 162
-    chunk    {1} [i].ee96caf8cd75d7dfea98abc0dabcc23d.worker.js 457 {0} 
+    Hash: 68a1c224412cf9f9d63329c7b225e850
+               Asset  Size  Chunks  Chunk Names
+      hash.worker.js   586       0  main       
+    1.hash.worker.js   492       1             
+    chunk    {0} hash.worker.js (main) 168
+    chunk    {1} 1.hash.worker.js 463 {0} 
 ```

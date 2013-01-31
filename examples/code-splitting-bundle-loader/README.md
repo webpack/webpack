@@ -73,9 +73,9 @@ module.exports = "It works";
 /***/ },
 
 /***/ 1:
-/*!***********************************************************************************************************!*\
-  !*** C:/Documents and Settings/kopperts/My Documents/repos/webpack-development/~/bundle-loader!./file.js ***!
-  \***********************************************************************************************************/
+/*!************************************************************************************!*\
+  !*** C:/Users/Sokrates/Eigene Repos/webpack-development/~/bundle-loader!./file.js ***!
+  \************************************************************************************/
 /***/ function(module, exports, require) {
 
 	var cbs = [], 
@@ -121,35 +121,35 @@ webpackJsonp(1, {
 ## Uncompressed
 
 ```
-Hash: cc24cfb25787184810a9e9dd0e4c4999
-Time: 56ms
+Hash: f0f680a57941ff04619105b75b92abf2
+Time: 41ms
       Asset  Size  Chunks  Chunk Names
-  output.js  2802       0  main       
+  output.js  2733       0  main       
 1.output.js   182       1             
-chunk    {0} output.js (main) 508
-    [0] ./example.js 86 [built] {0}
-    [1] C:/Documents and Settings/kopperts/My Documents/repos/webpack-development/~/bundle-loader!./file.js 422 [built] {0}
+chunk    {0} output.js (main) 486
+    [0] ./example.js 88 [built] {0}
+    [1] C:/Users/Sokrates/Eigene Repos/webpack-development/~/bundle-loader!./file.js 398 [built] {0}
         cjs require bundle!./file.js [0] ./example.js 1:0-27
 chunk    {1} 1.output.js 28 {0} 
     [2] ./file.js 28 [built] {1}
-        cjs require !!.\file.js [1] C:/Documents and Settings/kopperts/My Documents/repos/webpack-development/~/bundle-loader!./file.js 8:8-171
+        cjs require !!.\file.js [1] C:/Users/Sokrates/Eigene Repos/webpack-development/~/bundle-loader!./file.js 8:8-147
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: cc24cfb25787184810a9e9dd0e4c4999
-Time: 127ms
+Hash: f0f680a57941ff04619105b75b92abf2
+Time: 120ms
       Asset  Size  Chunks  Chunk Names
   output.js   877       0  main       
 1.output.js    54       1             
-chunk    {0} output.js (main) 508
-    [0] ./example.js 86 [built] {0}
-    [1] C:/Documents and Settings/kopperts/My Documents/repos/webpack-development/~/bundle-loader!./file.js 422 [built] {0}
+chunk    {0} output.js (main) 486
+    [0] ./example.js 88 [built] {0}
+    [1] C:/Users/Sokrates/Eigene Repos/webpack-development/~/bundle-loader!./file.js 398 [built] {0}
         cjs require bundle!./file.js [0] ./example.js 1:0-27
 chunk    {1} 1.output.js 28 {0} 
     [2] ./file.js 28 [built] {1}
-        cjs require !!.\file.js [1] C:/Documents and Settings/kopperts/My Documents/repos/webpack-development/~/bundle-loader!./file.js 8:8-171
+        cjs require !!.\file.js [1] C:/Users/Sokrates/Eigene Repos/webpack-development/~/bundle-loader!./file.js 8:8-147
 ```
 
 ## Graph

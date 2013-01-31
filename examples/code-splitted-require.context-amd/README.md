@@ -157,23 +157,23 @@ webpackJsonp(1, {
 ## Uncompressed
 
 ```
-Hash: f1fb37f49e400b26b20b56805a789ef3
-Time: 47ms
+Hash: 8dc53faea591ea4fe486e278127320dd
+Time: 30ms
       Asset  Size  Chunks  Chunk Names
   output.js  2403       0  main       
 1.output.js  1427       1             
-chunk    {0} output.js (main) 251
-    [0] ./example.js 251 [built] {0}
-chunk    {1} 1.output.js 457 {0} 
+chunk    {0} output.js (main) 261
+    [0] ./example.js 261 [built] {0}
+chunk    {1} 1.output.js 463 {0} 
     [1] ./require.context/templates ^\.\/.*$ 217 [built] {1}
         amd require context ../require.context/templates [0] ./example.js 2:1-4:3
-    [2] ./require.context/templates/a.js 80 [built] {1}
+    [2] ./require.context/templates/a.js 82 [built] {1}
         context element ./a [1] ./require.context/templates ^\.\/.*$
         context element ./a.js [1] ./require.context/templates ^\.\/.*$
-    [3] ./require.context/templates/b.js 80 [built] {1}
+    [3] ./require.context/templates/b.js 82 [built] {1}
         context element ./b [1] ./require.context/templates ^\.\/.*$
         context element ./b.js [1] ./require.context/templates ^\.\/.*$
-    [4] ./require.context/templates/c.js 80 [built] {1}
+    [4] ./require.context/templates/c.js 82 [built] {1}
         context element ./c [1] ./require.context/templates ^\.\/.*$
         context element ./c.js [1] ./require.context/templates ^\.\/.*$
 ```
@@ -181,23 +181,23 @@ chunk    {1} 1.output.js 457 {0}
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: f1fb37f49e400b26b20b56805a789ef3
-Time: 122ms
+Hash: 8dc53faea591ea4fe486e278127320dd
+Time: 116ms
       Asset  Size  Chunks  Chunk Names
   output.js   855       0  main       
 1.output.js   494       1             
-chunk    {0} output.js (main) 251
-    [0] ./example.js 251 [built] {0}
-chunk    {1} 1.output.js 457 {0} 
+chunk    {0} output.js (main) 261
+    [0] ./example.js 261 [built] {0}
+chunk    {1} 1.output.js 463 {0} 
     [1] ./require.context/templates ^\.\/.*$ 217 [built] {1}
         amd require context ../require.context/templates [0] ./example.js 2:1-4:3
-    [2] ./require.context/templates/a.js 80 [built] {1}
+    [2] ./require.context/templates/a.js 82 [built] {1}
         context element ./a [1] ./require.context/templates ^\.\/.*$
         context element ./a.js [1] ./require.context/templates ^\.\/.*$
-    [3] ./require.context/templates/b.js 80 [built] {1}
+    [3] ./require.context/templates/b.js 82 [built] {1}
         context element ./b [1] ./require.context/templates ^\.\/.*$
         context element ./b.js [1] ./require.context/templates ^\.\/.*$
-    [4] ./require.context/templates/c.js 80 [built] {1}
+    [4] ./require.context/templates/c.js 82 [built] {1}
         context element ./c [1] ./require.context/templates ^\.\/.*$
         context element ./c.js [1] ./require.context/templates ^\.\/.*$
 ```

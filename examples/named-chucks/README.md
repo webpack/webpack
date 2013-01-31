@@ -79,7 +79,7 @@ require.ensure(["b"], function(require) {
 
 	var a = require(/*! a */ 3);
 	
-	require.e/*nsure*/(2, function(require) {
+	require.e/*nsure*/(1, function(require) {
 		// a named chuck
 		var c = require(/*! c */ 4);
 	}, /*! my own chuck */ 0);
@@ -89,11 +89,11 @@ require.ensure(["b"], function(require) {
 		var d = require(/*! d */ 2);
 	}, /*! my own chuck */ 0);
 	
-	require.e/*nsure*/(0/* empty */, function(require) {
+	require.e/*nsure*/(1, function(require) {
 		// the same again
 	}, /*! my own chuck */ 0);
 	
-	require.e/*nsure*/(1/* duplicate */, function(require) {
+	require.e/*nsure*/(2, function(require) {
 		// chuck without name
 		var d = require(/*! d */ 2);
 	});
@@ -136,6 +136,16 @@ webpackJsonp(1, {
 
 	// module d
 
+/***/ },
+
+/***/ 4:
+/*!****************!*\
+  !*** ./~/c.js ***!
+  \****************/
+/***/ function(module, exports, require) {
+
+	// module c
+
 /***/ }
 
 })
@@ -156,13 +166,13 @@ webpackJsonp(2, {
 
 /***/ },
 
-/***/ 4:
+/***/ 2:
 /*!****************!*\
-  !*** ./~/c.js ***!
+  !*** ./~/d.js ***!
   \****************/
 /***/ function(module, exports, require) {
 
-	// module c
+	// module d
 
 /***/ }
 
@@ -174,29 +184,32 @@ webpackJsonp(2, {
 ## Uncompressed
 
 ```
-Hash: 7ac2e7d0ae14244993a1334d177f915d
-Time: 57ms
+Hash: 4c7a9daee9a94a253b0935f891b5e28e
+Time: 33ms
       Asset  Size  Chunks  Chunk Names 
-  output.js  2659       0  main        
-1.output.js   304       1  my own chuck
-2.output.js   304       2  my own chuck
-chunk    {0} output.js (main) 431
-    [0] ./example.js 420 [built] {0}
+  output.js  2633       0  main        
+1.output.js   446       1  my own chuck
+2.output.js   304       2              
+chunk    {0} output.js (main) 450
+    [0] ./example.js 439 [built] {0}
     [3] ./~/a.js 11 [built] {0}
         cjs require a [0] ./example.js 1:8-20
-chunk    {1} 1.output.js (my own chuck) 22 {0} 
+chunk    {1} 1.output.js (my own chuck) 33 {0} 
     [1] ./~/b.js 11 [built] {1} {2}
         require.ensure item b [0] ./example.js 3:0-6:18
         require.ensure item b [0] ./example.js 8:0-11:18
         require.ensure item b [0] ./example.js 17:0-20:2
-    [2] ./~/d.js 11 [built] {1}
+    [2] ./~/d.js 11 [built] {1} {2}
         cjs require d [0] ./example.js 10:9-21
         cjs require d [0] ./example.js 19:9-21
-chunk    {2} 2.output.js (my own chuck) 22 {0} 
+    [4] ./~/c.js 11 [built] {1}
+        cjs require c [0] ./example.js 5:9-21
+chunk    {2} 2.output.js 22 {0} 
     [1] ./~/b.js 11 [built] {1} {2}
         require.ensure item b [0] ./example.js 3:0-6:18
         require.ensure item b [0] ./example.js 8:0-11:18
         require.ensure item b [0] ./example.js 17:0-20:2
-    [4] ./~/c.js 11 [built] {2}
-        cjs require c [0] ./example.js 5:9-21
+    [2] ./~/d.js 11 [built] {1} {2}
+        cjs require d [0] ./example.js 10:9-21
+        cjs require d [0] ./example.js 19:9-21
 ```
