@@ -3,7 +3,7 @@ var path = require("path");
 
 var webpack = require("../lib/webpack");
 
-describe("webpack", function() {
+describe("Integration", function() {
 	it("should compile library1", function(done) {
 		webpack({
 			entry: "library1",
@@ -16,9 +16,8 @@ describe("webpack", function() {
 			}
 		}, function(err, stats) {
 			if(err) throw err;
-			stats.errors.should.be.eql([]);
-			stats.warnings.should.be.eql([]);
-			console.dir(stats);
+			stats.hasErrors().should.be.not.ok;
+			stats.hasWarnings().should.be.not.ok;
 			done();
 		});
 	});
@@ -56,9 +55,8 @@ describe("webpack", function() {
 			}
 		}, function(err, stats) {
 			if(err) throw err;
-			stats.errors.should.be.eql([]);
-			stats.warnings.should.be.eql([]);
-			console.dir(stats);
+			stats.hasErrors().should.be.not.ok;
+			stats.hasWarnings().should.be.not.ok;
 			done();
 		});
 	});
