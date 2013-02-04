@@ -9,8 +9,6 @@ app.configure(function() {
 	app.use(webpackMiddleware(webpack({
 		context: __dirname,
 		entry: "./lib/index",
-		watch: true,
-		watchDelay: 5000,
 		debug: true,
 		devtool: "eval",
 		module: {
@@ -32,7 +30,8 @@ app.configure(function() {
 			filename: "web.js"
 		}
 	}), {
-		lazy: true,
+		lazy: false,
+		watchDelay: 5000,
 		publicPath: "/js/",
 		filename: "web.js",
 		stats: {
