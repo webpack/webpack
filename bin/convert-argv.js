@@ -23,9 +23,15 @@ module.exports = function(optimist, argv, convertOptions) {
 		}, init);
 	}
 
-	function mapArgToBoolean(name, optionName) {
+	function ifBooleanArg(name, fn) {
 		ifArg(name, function(bool) {
-			options[optionName] = bool;
+			if(bool) fn();
+		});
+	}
+
+	function mapArgToBoolean(name, optionName) {
+		ifBooleanArg(name, function() {
+			options[optionName] = true;
 		});
 	}
 
@@ -147,9 +153,9 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.output.publicPath = value;
 	});
 
-	ifArg("output-pathinfo", function(bool) {
+	ifBooleanArg("output-pathinfo", function() {
 		ensureObject(options, "output");
-		options.output.pathinfo = bool;
+		options.output.pathinfo = true;
 	});
 
 	ifArg("output-library", function(value) {
@@ -172,8 +178,7 @@ module.exports = function(optimist, argv, convertOptions) {
 
 	mapArgToBoolean("debug", "debug");
 
-	ifArg("progress", function(value) {
-		if(!value) return;
+	ifBooleanArg("progress", function() {
 		var ProgressPlugin = require("../lib/ProgressPlugin");
 		ensureArray(options, "plugins");
 		var chars = 0;
@@ -214,9 +219,9 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.optimize.maxChunks = parseInt(value, 10);
 	});
 
-	ifArg("optimize-minimize", function(bool) {
+	ifBooleanArg("optimize-minimize", function() {
 		ensureObject(options, "optimize");
-		options.optimize.minimize = bool;
+		options.optimize.minimize = true;
 	});
 
 	ifArg("plugin", function(value) {
