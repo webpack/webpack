@@ -159,6 +159,15 @@ describe("main", function() {
 			require("../resources/" + scr).should.be.eql("coffee test");
 			require("raw!../resources/" + abc + ".txt").should.be.eql("abc");
 		});
+
+		it("should resolve loaders relative to require", function() {
+			var index = "index";
+			require("../loaders/queryloader?query!../node_modules/subcontent/" + index + ".js").should.be.eql({
+				resourceQuery: null,
+				query: "?query",
+				prev: "module.exports = \"error\";"
+			});
+		});
 	});
 
 	describe("parsing", function() {
