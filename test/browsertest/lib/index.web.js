@@ -207,6 +207,19 @@ describe("main", function() {
 		it("should not create a context for typeof require", function() {
 			require("../folder/typeof").should.be.eql("function");
 		});
+
+		it("should not parse filtered stuff", function() {
+			if(typeof require != "function") require("fail");
+			if(typeof require !== "function") require("fail");
+			if(!(typeof require == "function")) require("fail");
+			if(!(typeof require === "function")) require("fail");
+			if(typeof require == "undefined") require = require("fail");
+			if(typeof require === "undefined") require = require("fail");
+			if(typeof module == "undefined") module = require("fail");
+			if(typeof module === "undefined") module = require("fail");
+			if(typeof module != "object") module = require("fail");
+			if(typeof exports == "undefined") exports = require("fail");
+		});
 	});
 
 	describe("polyfilling", function() {
