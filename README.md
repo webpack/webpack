@@ -127,3 +127,5 @@ MIT (http://www.opensource.org/licenses/mit-license.php)
 * [async](https://github.com/caolan/async)
 * [mkdirp](http://esprima.org/)
 * [clone](https://github.com/pvorb/node-clone)
+
+[![Dependency Status](http://david-dm.org/webpack/webpack.png)](http://david-dm.org/webpack/webpack)
