@@ -14,6 +14,9 @@ module.exports = {
 	amd: {
 		fromOptions: true
 	},
+	provide: {
+		s3: "submodule3"
+	},
 	plugins: [
 		function() {
 			this.plugin("normal-module-factory", function(nmf) {
