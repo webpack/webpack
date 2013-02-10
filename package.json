@@ -1,14 +1,14 @@
 {
 	"name": "webpack",
-	"version": "0.9.0-beta12",
+	"version": "0.9.0-beta13",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs/AMD Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
 	"dependencies": {
 		"esprima": "1.0.x",
 		"mkdirp": "0.3.x",
-		"optimist": "0.2.x",
+		"optimist": "0.3.x",
 		"uglify-js": "2.2.x",
-		"async": "0.1.x",
+		"async": "0.2.x",
 		"enhanced-resolve": "0.5.x",
 		"clone": "0.1.x",
 		"webpack-core": "0.1.x",
