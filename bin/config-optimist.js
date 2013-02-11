@@ -45,6 +45,8 @@ module.exports = function(optimist) {
 
 	.describe("optimize-max-chunks")
 
+	.describe("optimize-min-chunk-size")
+
 	.boolean("optimize-minimize").describe("optimize-minimize")
 
 	.string("plugin").describe("plugin")

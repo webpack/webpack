@@ -219,6 +219,11 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.optimize.maxChunks = parseInt(value, 10);
 	});
 
+	ifArg("optimize-min-chunk-size", function(value) {
+		ensureObject(options, "optimize");
+		options.optimize.minChunkSize = parseInt(value, 10);
+	});
+
 	ifBooleanArg("optimize-minimize", function() {
 		ensureObject(options, "optimize");
 		options.optimize.minimize = true;

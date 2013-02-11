@@ -2,15 +2,11 @@ module.exports = {
 	module: {
 		postLoaders: [
 			{ test: /extra2?\.js/, loader: "raw!extra!val?cacheable" }
-		],
-		afterResolve: [
-			function(result, callback) {
-				result.request = result.request.replace(/extra\.js/, "extra2.js");
-				callback(null, result);
-			}
 		]
 	},
-	maxChunks: 2,
+	optimize: {
+		maxChunks: 2,
+	},
 	amd: {
 		fromOptions: true
 	},
