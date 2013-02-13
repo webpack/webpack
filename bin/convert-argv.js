@@ -189,10 +189,12 @@ module.exports = function(optimist, argv, convertOptions) {
 				if(percentage < 100) msg = " " + msg;
 				if(percentage < 10) msg = " " + msg;
 			}
+			for(; chars > msg.length; chars--)
+				process.stderr.write("\b \b");
+			chars = msg.length;
 			for(var i = 0; i < chars; i++)
 				process.stderr.write("\b");
 			process.stderr.write(msg);
-			chars = msg.length;
 		}));
 	});
 
