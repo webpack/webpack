@@ -65,9 +65,9 @@ onmessage = function(event) {
 /***/ },
 
 /***/ 1:
-/*!**************************************************************************************!*\
-  !*** C:/Users/Sokrates/Eigene Repos/webpack-development/~/worker-loader!./worker.js ***!
-  \**************************************************************************************/
+/*!*********************************************!*\
+  !*** (webpack)/~/worker-loader!./worker.js ***!
+  \*********************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = function() {
@@ -137,43 +137,67 @@ onmessage = function(event) {
 ## Uncompressed
 
 ```
-Hash: 457a4d61bec8a96b0716a97eace04243
-Time: 71ms
+Hash: 07cf6d04253aa75e1b198f7d7a9b91fc
+Time: 98ms
            Asset  Size  Chunks  Chunk Names
   hash.worker.js  1701                     
-1.hash.worker.js  1424                     
-       output.js  1677       0  main       
-chunk    {0} output.js (main) 302
-    [0] ./example.js 206 [built] {0}
-    [1] C:/Users/Sokrates/Eigene Repos/webpack-development/~/worker-loader!./worker.js 96 [not cacheable] [built] {0}
+1.hash.worker.js  1443                     
+       output.js  1554       0  main       
+chunk    {0} output.js (main) 297
+    [0] ./example.js 201 [built] {0}
+    [1] (webpack)/~/worker-loader!./worker.js 96 [not cacheable] [built] {0}
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
-    Hash: 68a1c224412cf9f9d63329c7b225e850
+    Hash: ee96caf8cd75d7dfea98abc0dabcc23d
                Asset  Size  Chunks  Chunk Names
       hash.worker.js  1701       0  main       
-    1.hash.worker.js  1424       1             
-    chunk    {0} hash.worker.js (main) 168
-    chunk    {1} 1.hash.worker.js 463 {0} 
+    1.hash.worker.js  1443       1             
+    chunk    {0} hash.worker.js (main) 162
+        [0] ./worker.js 162 [built] {0}
+    chunk    {1} 1.hash.worker.js 457 {0} 
+        [1] ./require.context/templates ^\.\/.*$ 217 [built] {1}
+            amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
+        [2] ./require.context/templates/a.js 80 [built] {1}
+            context element ./a [1] ./require.context/templates ^\.\/.*$
+            context element ./a.js [1] ./require.context/templates ^\.\/.*$
+        [3] ./require.context/templates/b.js 80 [built] {1}
+            context element ./b [1] ./require.context/templates ^\.\/.*$
+            context element ./b.js [1] ./require.context/templates ^\.\/.*$
+        [4] ./require.context/templates/c.js 80 [built] {1}
+            context element ./c [1] ./require.context/templates ^\.\/.*$
+            context element ./c.js [1] ./require.context/templates ^\.\/.*$
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 457a4d61bec8a96b0716a97eace04243
-Time: 196ms
+Hash: 07cf6d04253aa75e1b198f7d7a9b91fc
+Time: 202ms
            Asset  Size  Chunks  Chunk Names
   hash.worker.js   586                     
-1.hash.worker.js   492                     
+1.hash.worker.js   489                     
        output.js   482       0  main       
-chunk    {0} output.js (main) 302
-    [0] ./example.js 206 [built] {0}
-    [1] C:/Users/Sokrates/Eigene Repos/webpack-development/~/worker-loader!./worker.js 96 [not cacheable] [built] {0}
+chunk    {0} output.js (main) 297
+    [0] ./example.js 201 [built] {0}
+    [1] (webpack)/~/worker-loader!./worker.js 96 [not cacheable] [built] {0}
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
-    Hash: 68a1c224412cf9f9d63329c7b225e850
+    Hash: ee96caf8cd75d7dfea98abc0dabcc23d
                Asset  Size  Chunks  Chunk Names
       hash.worker.js   586       0  main       
-    1.hash.worker.js   492       1             
-    chunk    {0} hash.worker.js (main) 168
-    chunk    {1} 1.hash.worker.js 463 {0} 
+    1.hash.worker.js   489       1             
+    chunk    {0} hash.worker.js (main) 162
+        [0] ./worker.js 162 [built] {0}
+    chunk    {1} 1.hash.worker.js 457 {0} 
+        [1] ./require.context/templates ^\.\/.*$ 217 [built] {1}
+            amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
+        [2] ./require.context/templates/a.js 80 [built] {1}
+            context element ./a [1] ./require.context/templates ^\.\/.*$
+            context element ./a.js [1] ./require.context/templates ^\.\/.*$
+        [3] ./require.context/templates/b.js 80 [built] {1}
+            context element ./b [1] ./require.context/templates ^\.\/.*$
+            context element ./b.js [1] ./require.context/templates ^\.\/.*$
+        [4] ./require.context/templates/c.js 80 [built] {1}
+            context element ./c [1] ./require.context/templates ^\.\/.*$
+            context element ./c.js [1] ./require.context/templates ^\.\/.*$
 ```

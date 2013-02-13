@@ -113,7 +113,7 @@ require.ensure(["b"], function(require) {
 
 ```
 
-# js/1.output.js
+# js/1.output.js and js/my own chunk.js
 
 ``` javascript
 webpackJsonp(1, {
@@ -184,17 +184,18 @@ webpackJsonp(2, {
 ## Uncompressed
 
 ```
-Hash: 4c7a9daee9a94a253b0935f891b5e28e
-Time: 33ms
-      Asset  Size  Chunks  Chunk Names 
-  output.js  2633       0  main        
-1.output.js   446       1  my own chuck
-2.output.js   304       2              
-chunk    {0} output.js (main) 450
-    [0] ./example.js 439 [built] {0}
+Hash: 49077f8acd8331d6d27cdb1c525501ce
+Time: 54ms
+          Asset  Size  Chunks  Chunk Names 
+      output.js  2633       0  main        
+    1.output.js   446       1  my own chuck
+my own chuck.js   446       1  my own chuck
+    2.output.js   304       2              
+chunk    {0} output.js (main) 431
+    [0] ./example.js 420 [built] {0}
     [3] ./~/a.js 11 [built] {0}
         cjs require a [0] ./example.js 1:8-20
-chunk    {1} 1.output.js (my own chuck) 33 {0} 
+chunk    {1} 1.output.js, my own chuck.js (my own chuck) 33 {0} 
     [1] ./~/b.js 11 [built] {1} {2}
         require.ensure item b [0] ./example.js 3:0-6:18
         require.ensure item b [0] ./example.js 8:0-11:18

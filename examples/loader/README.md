@@ -9,7 +9,7 @@ console.dir(require("./loader!./file"));
 
 // use buildin json loader
 console.dir(require("./test.json")); // default by extension
-console.dir(require("json!./test.json")); // manual
+console.dir(require("!json!./test.json")); // manual
 ```
 
 # file.js
@@ -74,16 +74,16 @@ module.exports = function(content) {
 	console.dir(require(/*! ./loader!./file */ 4));
 	
 	// use buildin json loader
-	console.dir(require((function webpackMissingModule() { throw new Error("Cannot find module \"./test.json\""); }()))); // default by extension
+	console.dir(require(/*! ./test.json */ 1)); // default by extension
 	console.dir(require(/*! json!./test.json */ 1)); // manual
 	/* WEBPACK VAR INJECTION */}(require(/*! (webpack)/buildin/module.js */ 2)(module)))
 
 /***/ },
 
 /***/ 1:
-/*!************************************************************************************!*\
-  !*** C:/Users/Sokrates/Eigene Repos/webpack-development/~/json-loader!./test.json ***!
-  \************************************************************************************/
+/*!*******************************************!*\
+  !*** (webpack)/~/json-loader!./test.json ***!
+  \*******************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = {
@@ -151,25 +151,19 @@ Prints in node.js (`node example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 62f35121ae16eff2526b8ac568437057
-Time: 52ms
+Hash: 824d50e8de622e45feddc93ab6ff45e9
+Time: 60ms
     Asset  Size  Chunks  Chunk Names
-output.js  2853       0  main       
-chunk    {0} output.js (main) 692
-    [0] ./example.js 304 [built] {0}
-    [1] C:/Users/Sokrates/Eigene Repos/webpack-development/~/json-loader!./test.json 36 [built] {0}
-        cjs require json!./test.json [0] ./example.js 9:12-39
-    [2] (webpack)/buildin/module.js 251 [built] {0}
-        cjs require module [0] ./example.js 1:0-108
+output.js  2656       0  main       
+chunk    {0} output.js (main) 675
+    [0] ./example.js 297 [built] {0}
+    [1] (webpack)/~/json-loader!./test.json 36 [built] {0}
+        cjs require ./test.json [0] ./example.js 8:12-34
+        cjs require !json!./test.json [0] ./example.js 9:12-40
+    [2] (webpack)/buildin/module.js 241 [built] {0}
+        cjs require module [0] ./example.js 1:0-132
     [3] (webpack)/buildin/return-require.js 60 [built] {0}
         cjs require enhanced-require [0] ./example.js 2:10-37
     [4] ./loader.js!./file.js 41 [not cacheable] [built] {0}
         cjs require ./loader!./file [0] ./example.js 5:12-38
-
-ERROR in .\test.json
-Module parse failed: .\test.json Line 2: Unexpected token :
-{
-	"foobar": 1234
-}
- @ ./example.js 8:12-34
 ```

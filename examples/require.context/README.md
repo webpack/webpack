@@ -106,19 +106,20 @@ module.exports = function() {
 /***/ function(module, exports, require) {
 
 	var map = {
-		"./a.js": 1,
 		"./a": 1,
-		"./b.js": 2,
+		"./a.js": 1,
 		"./b": 2,
-		"./c.js": 3,
-		"./c": 3
+		"./b.js": 2,
+		"./c": 3,
+		"./c.js": 3
 	};
-	module.exports = function webpackContext(req) {
-		return require(map[req] || (function() { throw new Error("Cannot find module " + req + ".") }()));
+	function webpackContext(req) {
+		return require(map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }()));
 	};
-	module.exports.keys = function webpackContextKeys() {
+	webpackContext.keys = function webpackContextKeys() {
 		return Object.keys(map);
 	};
+	module.exports = webpackContext;
 	
 
 /***/ }
@@ -131,19 +132,19 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 7231254bb49d861170c8f0ba9b1d3047
-Time: 27ms
+Hash: 1fe0d041cafa3e29d3084946180e73a8
+Time: 33ms
     Asset  Size  Chunks  Chunk Names
-output.js  2408       0  main       
-chunk    {0} output.js (main) 613
-    [0] ./example.js 150 [built] {0}
-    [1] ./templates/a.js 82 [built] {0}
+output.js  2427       0  main       
+chunk    {0} output.js (main) 603
+    [0] ./example.js 146 [built] {0}
+    [1] ./templates/a.js 80 [built] {0}
         context element ./a [4] ./templates ^\.\/.*$
         context element ./a.js [4] ./templates ^\.\/.*$
-    [2] ./templates/b.js 82 [built] {0}
+    [2] ./templates/b.js 80 [built] {0}
         context element ./b [4] ./templates ^\.\/.*$
         context element ./b.js [4] ./templates ^\.\/.*$
-    [3] ./templates/c.js 82 [built] {0}
+    [3] ./templates/c.js 80 [built] {0}
         context element ./c [4] ./templates ^\.\/.*$
         context element ./c.js [4] ./templates ^\.\/.*$
     [4] ./templates ^\.\/.*$ 217 [built] {0}
@@ -153,19 +154,19 @@ chunk    {0} output.js (main) 613
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 7231254bb49d861170c8f0ba9b1d3047
-Time: 81ms
+Hash: 1fe0d041cafa3e29d3084946180e73a8
+Time: 84ms
     Asset  Size  Chunks  Chunk Names
-output.js   873       0  main       
-chunk    {0} output.js (main) 613
-    [0] ./example.js 150 [built] {0}
-    [1] ./templates/a.js 82 [built] {0}
+output.js   870       0  main       
+chunk    {0} output.js (main) 603
+    [0] ./example.js 146 [built] {0}
+    [1] ./templates/a.js 80 [built] {0}
         context element ./a [4] ./templates ^\.\/.*$
         context element ./a.js [4] ./templates ^\.\/.*$
-    [2] ./templates/b.js 82 [built] {0}
+    [2] ./templates/b.js 80 [built] {0}
         context element ./b [4] ./templates ^\.\/.*$
         context element ./b.js [4] ./templates ^\.\/.*$
-    [3] ./templates/c.js 82 [built] {0}
+    [3] ./templates/c.js 80 [built] {0}
         context element ./c [4] ./templates ^\.\/.*$
         context element ./c.js [4] ./templates ^\.\/.*$
     [4] ./templates ^\.\/.*$ 217 [built] {0}

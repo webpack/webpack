@@ -134,13 +134,13 @@ webpackJsonp(1,{3:function(){},4:function(){}});
 ## Uncompressed
 
 ```
-Hash: f4d3fd8aadfe8654e3e8694388cf3443
-Time: 29ms
+Hash: e3da5eef20b37553da43a1d3e38f42f5
+Time: 40ms
       Asset  Size  Chunks  Chunk Names
   output.js  2456       0  main       
 1.output.js   304       1             
-chunk    {0} output.js (main) 166
-    [0] ./example.js 144 [built] {0}
+chunk    {0} output.js (main) 161
+    [0] ./example.js 139 [built] {0}
     [1] ./~/b.js 11 [built] {0}
         cjs require b [0] ./example.js 2:8-20
         cjs require b [0] ./example.js 4:4-16
@@ -156,13 +156,13 @@ chunk    {1} 1.output.js 22 {0}
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: f4d3fd8aadfe8654e3e8694388cf3443
-Time: 118ms
+Hash: e3da5eef20b37553da43a1d3e38f42f5
+Time: 103ms
       Asset  Size  Chunks  Chunk Names
   output.js   768       0  main       
 1.output.js    48       1             
-chunk    {0} output.js (main) 166
-    [0] ./example.js 144 [built] {0}
+chunk    {0} output.js (main) 161
+    [0] ./example.js 139 [built] {0}
     [1] ./~/b.js 11 [built] {0}
         cjs require b [0] ./example.js 2:8-20
         cjs require b [0] ./example.js 4:4-16
