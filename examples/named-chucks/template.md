@@ -11,7 +11,7 @@
 {{js/output.js}}
 ```
 
-# js/1.output.js
+# js/1.output.js and js/my own chunk.js
 
 ``` javascript
 {{js/1.output.js}}
