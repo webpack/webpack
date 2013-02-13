@@ -123,6 +123,13 @@ describe("main", function() {
 			delete require.cache[singlarId];
 			require("./singluar2").should.be.not.equal(singlarObj);
 		});
+
+		it("should have support for require.main", function() {
+			var value = require.main === module;
+			var otherModuleValue = require("./testRequireMain");
+			value.should.be.eql(true);
+			otherModuleValue.should.be.eql(false);
+		});
 	});
 
 	describe("context", function() {
