@@ -293,6 +293,16 @@ describe("main", function() {
 				}, "named-chunk");
 			}
 		});
+
+		it("should accept a require.include call", function() {
+			require.include("./require.include");
+			var value = null;
+			require.ensure([], function(require) {
+				value = require("./require.include");
+			});
+			should.exist(value);
+			value.should.be.eql("require.include");
+		});
 	});
 
 	describe("loaders", function() {
