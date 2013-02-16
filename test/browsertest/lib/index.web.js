@@ -416,6 +416,11 @@ describe("main", function() {
 				prev: "test content"
 			});
 		});
+
+		it("should evaluate __dirname and __resourceQuery", function() {
+			var result = require("../resourceQuery/index?" + __dirname);
+			result.should.be.eql("?resourceQuery");
+		});
 	});
 
 	describe("AMD", function() {
