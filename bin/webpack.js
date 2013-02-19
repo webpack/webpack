@@ -53,8 +53,6 @@ function ifArg(name, fn, init) {
 
 
 var outputOptions = {
-	modules: true,
-	chunks: false,
 	cached: false,
 	context: options.context
 };
@@ -79,14 +77,21 @@ ifArg("sort-assets-by", function(value) {
 	outputOptions.assetsSort = value;
 });
 
-ifArg("display-chunks", function(bool) {
-	outputOptions.modules = !bool;
-	outputOptions.chunks = bool;
-});
+if(!outputOptions.json) {
+	ifArg("display-chunks", function(bool) {
+		outputOptions.modules = !bool ;
+		outputOptions.chunks = bool;
+	});
 
-ifArg("display-reasons", function(bool) {
-	outputOptions.reasons = bool;
-});
+	ifArg("display-reasons", function(bool) {
+		outputOptions.reasons = bool;
+	});
+} else {
+	outputOptions.chunks = true;
+	outputOptions.modules = true;
+	outputOptions.chunkModules = true;
+	outputOptions.reasons = true;
+}
 
 var webpack = require("../lib/webpack.js");
 
