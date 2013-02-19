@@ -48,6 +48,10 @@ example demonstrating mixing CommonJs and AMD
 
 example demonstrating creating WebWorkers with webpack and the worker-loader.
 
+## i18n
+
+example demonstrating localization.
+
 # Requests
 
 If you think a example is missing, please report it as issue. :)

@@ -1,6 +1,6 @@
 {
 	"name": "webpack",
-	"version": "0.9.0-beta24",
+	"version": "0.9.0-beta25",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs/AMD Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
 	"dependencies": {
@@ -37,7 +37,8 @@
 		"script-loader": "0.5.x",
 		"bundle-loader": "0.5.x",
 		"file-loader": "0.5.x",
-		"val-loader": "0.5.x"
+		"val-loader": "0.5.x",
+		"i18n-webpack-plugin": "0.1.x"
 	},
 	"engines": {
 		"node":  ">=0.6"

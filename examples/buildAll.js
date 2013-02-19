@@ -13,6 +13,7 @@ var cmds = [
 	"cd require.resolve && node build.js",
 	"cd mixed && node build.js",
 	"cd web-worker && node build.js",
+	"cd i18n && node build.js",
 ];
 
 var stack = function() {
