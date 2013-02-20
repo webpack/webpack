@@ -28,7 +28,6 @@ module.exports = function() {
 /******/ (function webpackBootstrap(modules) {
 /******/ 	var installedModules = {};
 /******/ 	function require(moduleId) {
-/******/ 		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
 /******/ 		var module = installedModules[moduleId] = {
@@ -114,11 +113,15 @@ module.exports = function() {
 		"./c.js": 3
 	};
 	function webpackContext(req) {
-		return require(map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }()));
+		return require(webpackContextResolve(req));
+	};
+	function webpackContextResolve(req) {
+		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
 	};
 	webpackContext.keys = function webpackContextKeys() {
 		return Object.keys(map);
 	};
+	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
 	
 
@@ -132,19 +135,19 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 1fe0d041cafa3e29d3084946180e73a8
-Time: 33ms
+Hash: 7231254bb49d861170c8f0ba9b1d3047
+Time: 39ms
     Asset  Size  Chunks  Chunk Names
-output.js  2427       0  main       
-chunk    {0} output.js (main) 603
-    [0] ./example.js 146 [built] {0}
-    [1] ./templates/a.js 80 [built] {0}
+output.js  2458       0  main       
+chunk    {0} output.js (main) 613
+    [0] ./example.js 150 [built] {0}
+    [1] ./templates/a.js 82 [built] {0}
         context element ./a [4] ./templates ^\.\/.*$
         context element ./a.js [4] ./templates ^\.\/.*$
-    [2] ./templates/b.js 80 [built] {0}
+    [2] ./templates/b.js 82 [built] {0}
         context element ./b [4] ./templates ^\.\/.*$
         context element ./b.js [4] ./templates ^\.\/.*$
-    [3] ./templates/c.js 80 [built] {0}
+    [3] ./templates/c.js 82 [built] {0}
         context element ./c [4] ./templates ^\.\/.*$
         context element ./c.js [4] ./templates ^\.\/.*$
     [4] ./templates ^\.\/.*$ 217 [built] {0}
@@ -154,19 +157,19 @@ chunk    {0} output.js (main) 603
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 1fe0d041cafa3e29d3084946180e73a8
-Time: 84ms
+Hash: 7231254bb49d861170c8f0ba9b1d3047
+Time: 125ms
     Asset  Size  Chunks  Chunk Names
-output.js   870       0  main       
-chunk    {0} output.js (main) 603
-    [0] ./example.js 146 [built] {0}
-    [1] ./templates/a.js 80 [built] {0}
+output.js   844       0  main       
+chunk    {0} output.js (main) 613
+    [0] ./example.js 150 [built] {0}
+    [1] ./templates/a.js 82 [built] {0}
         context element ./a [4] ./templates ^\.\/.*$
         context element ./a.js [4] ./templates ^\.\/.*$
-    [2] ./templates/b.js 80 [built] {0}
+    [2] ./templates/b.js 82 [built] {0}
         context element ./b [4] ./templates ^\.\/.*$
         context element ./b.js [4] ./templates ^\.\/.*$
-    [3] ./templates/c.js 80 [built] {0}
+    [3] ./templates/c.js 82 [built] {0}
         context element ./c [4] ./templates ^\.\/.*$
         context element ./c.js [4] ./templates ^\.\/.*$
     [4] ./templates ^\.\/.*$ 217 [built] {0}

@@ -20,7 +20,6 @@ getTemplate("b", function(b) {
 /******/ (function webpackBootstrap(modules) {
 /******/ 	var installedModules = {};
 /******/ 	function require(moduleId) {
-/******/ 		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
 /******/ 		var module = installedModules[moduleId] = {
@@ -90,9 +89,9 @@ getTemplate("b", function(b) {
 webpackJsonp(1, {
 
 /***/ 1:
-/*!********************************************!*\
-  !*** ./require.context/templates ^\.\/.*$ ***!
-  \********************************************/
+/*!*********************************************!*\
+  !*** ../require.context/templates ^\.\/.*$ ***!
+  \*********************************************/
 /***/ function(module, exports, require) {
 
 	var map = {
@@ -104,20 +103,24 @@ webpackJsonp(1, {
 		"./c.js": 4
 	};
 	function webpackContext(req) {
-		return require(map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }()));
+		return require(webpackContextResolve(req));
+	};
+	function webpackContextResolve(req) {
+		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
 	};
 	webpackContext.keys = function webpackContextKeys() {
 		return Object.keys(map);
 	};
+	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
 	
 
 /***/ },
 
 /***/ 2:
-/*!****************************************!*\
-  !*** ./require.context/templates/a.js ***!
-  \****************************************/
+/*!*****************************************!*\
+  !*** ../require.context/templates/a.js ***!
+  \*****************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = function() {
@@ -127,9 +130,9 @@ webpackJsonp(1, {
 /***/ },
 
 /***/ 3:
-/*!****************************************!*\
-  !*** ./require.context/templates/b.js ***!
-  \****************************************/
+/*!*****************************************!*\
+  !*** ../require.context/templates/b.js ***!
+  \*****************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = function() {
@@ -139,9 +142,9 @@ webpackJsonp(1, {
 /***/ },
 
 /***/ 4:
-/*!****************************************!*\
-  !*** ./require.context/templates/c.js ***!
-  \****************************************/
+/*!*****************************************!*\
+  !*** ../require.context/templates/c.js ***!
+  \*****************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = function() {
@@ -158,49 +161,49 @@ webpackJsonp(1, {
 ## Uncompressed
 
 ```
-Hash: 8001dd58ca639f6177eeb7302f24a770
-Time: 40ms
+Hash: 3b8145dd91de8428f3345130600b0acd
+Time: 39ms
       Asset  Size  Chunks  Chunk Names
-  output.js  2291       0  main       
-1.output.js  1446       1             
-chunk    {0} output.js (main) 266
-    [0] ./example.js 266 [built] {0}
-chunk    {1} 1.output.js 457 {0} 
-    [1] ./require.context/templates ^\.\/.*$ 217 [built] {1}
+  output.js  2193       0  main       
+1.output.js  1587       1             
+chunk    {0} output.js (main) 276
+    [0] ./example.js 276 [built] {0}
+chunk    {1} 1.output.js 463 {0} 
+    [1] ../require.context/templates ^\.\/.*$ 217 [built] {1}
         cjs require context ../require.context/templates [0] ./example.js 3:11-64
-    [2] ./require.context/templates/a.js 80 [built] {1}
-        context element ./a [1] ./require.context/templates ^\.\/.*$
-        context element ./a.js [1] ./require.context/templates ^\.\/.*$
-    [3] ./require.context/templates/b.js 80 [built] {1}
-        context element ./b [1] ./require.context/templates ^\.\/.*$
-        context element ./b.js [1] ./require.context/templates ^\.\/.*$
-    [4] ./require.context/templates/c.js 80 [built] {1}
-        context element ./c [1] ./require.context/templates ^\.\/.*$
-        context element ./c.js [1] ./require.context/templates ^\.\/.*$
+    [2] ../require.context/templates/a.js 82 [built] {1}
+        context element ./a [1] ../require.context/templates ^\.\/.*$
+        context element ./a.js [1] ../require.context/templates ^\.\/.*$
+    [3] ../require.context/templates/b.js 82 [built] {1}
+        context element ./b [1] ../require.context/templates ^\.\/.*$
+        context element ./b.js [1] ../require.context/templates ^\.\/.*$
+    [4] ../require.context/templates/c.js 82 [built] {1}
+        context element ./c [1] ../require.context/templates ^\.\/.*$
+        context element ./c.js [1] ../require.context/templates ^\.\/.*$
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 8001dd58ca639f6177eeb7302f24a770
-Time: 154ms
+Hash: 3b8145dd91de8428f3345130600b0acd
+Time: 149ms
       Asset  Size  Chunks  Chunk Names
-  output.js   816       0  main       
-1.output.js   491       1             
-chunk    {0} output.js (main) 266
-    [0] ./example.js 266 [built] {0}
-chunk    {1} 1.output.js 457 {0} 
-    [1] ./require.context/templates ^\.\/.*$ 217 [built] {1}
+  output.js   752       0  main       
+1.output.js   529       1             
+chunk    {0} output.js (main) 276
+    [0] ./example.js 276 [built] {0}
+chunk    {1} 1.output.js 463 {0} 
+    [1] ../require.context/templates ^\.\/.*$ 217 [built] {1}
         cjs require context ../require.context/templates [0] ./example.js 3:11-64
-    [2] ./require.context/templates/a.js 80 [built] {1}
-        context element ./a [1] ./require.context/templates ^\.\/.*$
-        context element ./a.js [1] ./require.context/templates ^\.\/.*$
-    [3] ./require.context/templates/b.js 80 [built] {1}
-        context element ./b [1] ./require.context/templates ^\.\/.*$
-        context element ./b.js [1] ./require.context/templates ^\.\/.*$
-    [4] ./require.context/templates/c.js 80 [built] {1}
-        context element ./c [1] ./require.context/templates ^\.\/.*$
-        context element ./c.js [1] ./require.context/templates ^\.\/.*$
+    [2] ../require.context/templates/a.js 82 [built] {1}
+        context element ./a [1] ../require.context/templates ^\.\/.*$
+        context element ./a.js [1] ../require.context/templates ^\.\/.*$
+    [3] ../require.context/templates/b.js 82 [built] {1}
+        context element ./b [1] ../require.context/templates ^\.\/.*$
+        context element ./b.js [1] ../require.context/templates ^\.\/.*$
+    [4] ../require.context/templates/c.js 82 [built] {1}
+        context element ./c [1] ../require.context/templates ^\.\/.*$
+        context element ./c.js [1] ../require.context/templates ^\.\/.*$
 ```
 
 ## Graph

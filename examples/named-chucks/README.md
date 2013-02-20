@@ -30,7 +30,6 @@ require.ensure(["b"], function(require) {
 /******/ (function webpackBootstrap(modules) {
 /******/ 	var installedModules = {};
 /******/ 	function require(moduleId) {
-/******/ 		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
 /******/ 		var module = installedModules[moduleId] = {
@@ -184,15 +183,15 @@ webpackJsonp(2, {
 ## Uncompressed
 
 ```
-Hash: 49077f8acd8331d6d27cdb1c525501ce
-Time: 54ms
+Hash: 4c7a9daee9a94a253b0935f891b5e28e
+Time: 51ms
           Asset  Size  Chunks  Chunk Names 
-      output.js  2633       0  main        
+      output.js  2535       0  main        
     1.output.js   446       1  my own chuck
 my own chuck.js   446       1  my own chuck
     2.output.js   304       2              
-chunk    {0} output.js (main) 431
-    [0] ./example.js 420 [built] {0}
+chunk    {0} output.js (main) 450
+    [0] ./example.js 439 [built] {0}
     [3] ./~/a.js 11 [built] {0}
         cjs require a [0] ./example.js 1:8-20
 chunk    {1} 1.output.js, my own chuck.js (my own chuck) 33 {0} 

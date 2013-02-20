@@ -40,7 +40,6 @@ module.exports = function(content) {
 /******/ (function webpackBootstrap(modules) {
 /******/ 	var installedModules = {};
 /******/ 	function require(moduleId) {
-/******/ 		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
 /******/ 		var module = installedModules[moduleId] = {
@@ -151,17 +150,17 @@ Prints in node.js (`node example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 824d50e8de622e45feddc93ab6ff45e9
-Time: 60ms
+Hash: 1fc63791e8921db5e3ee47d7b25fa6a8
+Time: 84ms
     Asset  Size  Chunks  Chunk Names
-output.js  2656       0  main       
-chunk    {0} output.js (main) 675
-    [0] ./example.js 297 [built] {0}
+output.js  2558       0  main       
+chunk    {0} output.js (main) 693
+    [0] ./example.js 305 [built] {0}
     [1] (webpack)/~/json-loader!./test.json 36 [built] {0}
         cjs require ./test.json [0] ./example.js 8:12-34
         cjs require !json!./test.json [0] ./example.js 9:12-40
-    [2] (webpack)/buildin/module.js 241 [built] {0}
-        cjs require module [0] ./example.js 1:0-132
+    [2] (webpack)/buildin/module.js 251 [built] {0}
+        cjs require module [0] ./example.js 1:0-108
     [3] (webpack)/buildin/return-require.js 60 [built] {0}
         cjs require enhanced-require [0] ./example.js 2:10-37
     [4] ./loader.js!./file.js 41 [not cacheable] [built] {0}

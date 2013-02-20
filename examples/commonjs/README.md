@@ -34,7 +34,6 @@ exports.add = function() {
 /******/ (function webpackBootstrap(modules) {
 /******/ 	var installedModules = {};
 /******/ 	function require(moduleId) {
-/******/ 		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
 /******/ 		var module = installedModules[moduleId] = {
@@ -104,29 +103,29 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: ed0d146781bfd63a8c38eb49000feb94
-Time: 28ms
+Hash: c4847f298adeaf7480757f6363ea19f1
+Time: 32ms
     Asset  Size  Chunks  Chunk Names
-output.js  1657       0  main       
-chunk    {0} output.js (main) 318
-    [0] ./example.js 67 [built] {0}
-    [1] ./increment.js 95 [built] {0}
+output.js  1559       0  main       
+chunk    {0} output.js (main) 329
+    [0] ./example.js 69 [built] {0}
+    [1] ./increment.js 98 [built] {0}
         cjs require ./increment [0] ./example.js 1:10-32
-    [2] ./math.js 156 [built] {0}
+    [2] ./math.js 162 [built] {0}
         cjs require ./math [1] ./increment.js 1:10-27
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: ed0d146781bfd63a8c38eb49000feb94
-Time: 72ms
+Hash: c4847f298adeaf7480757f6363ea19f1
+Time: 95ms
     Asset  Size  Chunks  Chunk Names
-output.js   524       0  main       
-chunk    {0} output.js (main) 318
-    [0] ./example.js 67 [built] {0}
-    [1] ./increment.js 95 [built] {0}
+output.js   460       0  main       
+chunk    {0} output.js (main) 329
+    [0] ./example.js 69 [built] {0}
+    [1] ./increment.js 98 [built] {0}
         cjs require ./increment [0] ./example.js 1:10-32
-    [2] ./math.js 156 [built] {0}
+    [2] ./math.js 162 [built] {0}
         cjs require ./math [1] ./increment.js 1:10-27
 ```

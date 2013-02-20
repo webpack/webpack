@@ -29,7 +29,6 @@ module.exports = Math.random();
 /******/ (function webpackBootstrap(modules) {
 /******/ 	var installedModules = {};
 /******/ 	function require(moduleId) {
-/******/ 		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
 /******/ 		var module = installedModules[moduleId] = {
@@ -90,12 +89,12 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: 36093810c3120b88e12bd57e8b271458
-Time: 28ms
+Hash: c2d1386ba6213eab5cc76f848bd7dc78
+Time: 30ms
     Asset  Size  Chunks  Chunk Names
-output.js  1507       0  main       
-chunk    {0} output.js (main) 314
-    [0] ./example.js 283 [built] {0}
+output.js  1409       0  main       
+chunk    {0} output.js (main) 326
+    [0] ./example.js 295 [built] {0}
     [1] ./a.js 31 [built] {0}
         require.resolve ./a.js [0] ./example.js 4:10-35
         cjs require ./a [0] ./example.js 1:8-22
@@ -105,12 +104,12 @@ chunk    {0} output.js (main) 314
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 36093810c3120b88e12bd57e8b271458
-Time: 87ms
+Hash: c2d1386ba6213eab5cc76f848bd7dc78
+Time: 80ms
     Asset  Size  Chunks  Chunk Names
-output.js   451       0  main       
-chunk    {0} output.js (main) 314
-    [0] ./example.js 283 [built] {0}
+output.js   387       0  main       
+chunk    {0} output.js (main) 326
+    [0] ./example.js 295 [built] {0}
     [1] ./a.js 31 [built] {0}
         require.resolve ./a.js [0] ./example.js 4:10-35
         cjs require ./a [0] ./example.js 1:8-22

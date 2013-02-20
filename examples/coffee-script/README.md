@@ -29,7 +29,6 @@ module.exports = 42
 /******/ (function webpackBootstrap(modules) {
 /******/ 	var installedModules = {};
 /******/ 	function require(moduleId) {
-/******/ 		if(typeof moduleId !== "number") throw new Error("Cannot find module '"+moduleId+"'");
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
 /******/ 		var module = installedModules[moduleId] = {
@@ -100,9 +99,9 @@ module.exports = 42
 
 ```
 Hash: 23b825279ba1ed853a1a1b6ce00b97e8
-Time: 135ms
+Time: 284ms
     Asset  Size  Chunks  Chunk Names
-output.js  1563       0  main       
+output.js  1465       0  main       
 chunk    {0} output.js (main) 208
     [0] ./example.js 31 [built] {0}
     [1] ./cup2.coffee 58 [built] {0}
@@ -116,9 +115,9 @@ chunk    {0} output.js (main) 208
 
 ```
 Hash: 23b825279ba1ed853a1a1b6ce00b97e8
-Time: 164ms
+Time: 217ms
     Asset  Size  Chunks  Chunk Names
-output.js   482       0  main       
+output.js   418       0  main       
 chunk    {0} output.js (main) 208
     [0] ./example.js 31 [built] {0}
     [1] ./cup2.coffee 58 [built] {0}
