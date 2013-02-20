@@ -167,6 +167,11 @@ describe("main", function() {
 			require("raw!../resources/" + abc + ".txt").should.be.eql("abc");
 		});
 
+		it("should be able to require.resolve with automatical context", function() {
+			var template = "tmpl";
+			require.resolve("../templates/" + template).should.be.eql(require.resolve("../templates/tmpl"));
+		});
+
 		it("should resolve loaders relative to require", function() {
 			var index = "index", test = "test";
 			require("../loaders/queryloader?query!!!!../node_modules/subcontent/" + index + ".js").should.be.eql({
