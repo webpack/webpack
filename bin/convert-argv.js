@@ -1,4 +1,5 @@
 var path = require("path");
+var fs = require("fs");
 var resolve = require("enhanced-resolve");
 
 module.exports = function(optimist, argv, convertOptions) {
@@ -75,11 +76,9 @@ module.exports = function(optimist, argv, convertOptions) {
 	if(argv.config) {
 		options = require(path.resolve(argv.config));
 	} else {
-		try {
-			options = require(path.resolve("webpack.config.js"));
-		} catch(e) {
-			options = {};
-		}
+		var configPath = path.resolve("webpack.config.js");
+		if(fs.existsSync(configPath))
+			options = require(configPath);
 	}
 	if(typeof options != "object" || options === null) {
 		console.log("Config did not export a object.");
