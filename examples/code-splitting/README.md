@@ -28,7 +28,7 @@ require.ensure(["c"], function(require) {
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	require.e = function requireEnsure(chunkId, callback) {
-/******/ 		if(installedChunks[chunkId] === 1) return callback.call(null, require);
+/******/ 		if(installedChunks[chunkId] === 0) return callback.call(null, require);
 /******/ 		if(installedChunks[chunkId] !== undefined)
 /******/ 			installedChunks[chunkId].push(callback);
 /******/ 		else {
@@ -43,12 +43,16 @@ require.ensure(["c"], function(require) {
 /******/ 	};
 /******/ 	require.modules = modules;
 /******/ 	require.cache = installedModules;
-/******/ 	var installedChunks = {0:1};
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkId, moreModules) {
+/******/ 	var installedChunks = {0:0};
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
 /******/ 		for(var moduleId in moreModules)
 /******/ 			modules[moduleId] = moreModules[moduleId];
-/******/ 		var callbacks = installedChunks[chunkId];
-/******/ 		installedChunks[chunkId] = 1;
+/******/ 		var callbacks = [];
+/******/ 		for(var i = 0; i < chunkIds.length; i++) {
+/******/ 			var installedChunk = installedChunks[chunkIds[i]];
+/******/ 			if(installedChunk) callbacks.push.apply(callbacks, installedChunk);
+/******/ 			installedChunks[chunkIds[i]] = 0;
+/******/ 		}
 /******/ 		for(var i = 0; i < callbacks.length; i++)
 /******/ 			callbacks[i].call(null, require);
 /******/ 	};
@@ -97,7 +101,7 @@ require.ensure(["c"], function(require) {
 # js/1.output.js
 
 ``` javascript
-webpackJsonp(1, {
+webpackJsonp([1], {
 
 /***/ 3:
 /*!****************!*\
@@ -125,7 +129,7 @@ webpackJsonp(1, {
 Minimized
 
 ``` javascript
-webpackJsonp(1,{3:function(){},4:function(){}});
+webpackJsonp([1],{3:function(){},4:function(){}});
 ```
 
 # Info
@@ -133,11 +137,11 @@ webpackJsonp(1,{3:function(){},4:function(){}});
 ## Uncompressed
 
 ```
-Hash: f4d3fd8aadfe8654e3e8694388cf3443
-Time: 48ms
+Hash: 3d676be1f90fd9a9422053e02c1982e7
+Time: 40ms
       Asset  Size  Chunks  Chunk Names
-  output.js  2358       0  main       
-1.output.js   304       1             
+  output.js  2552       0  main       
+1.output.js   306       1             
 chunk    {0} output.js (main) 166
     [0] ./example.js 144 [built] {0}
     [1] ./~/b.js 11 [built] {0}
@@ -155,11 +159,11 @@ chunk    {1} 1.output.js 22 {0}
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: f4d3fd8aadfe8654e3e8694388cf3443
-Time: 130ms
+Hash: 3d676be1f90fd9a9422053e02c1982e7
+Time: 134ms
       Asset  Size  Chunks  Chunk Names
-  output.js   704       0  main       
-1.output.js    48       1             
+  output.js   764       0  main       
+1.output.js    50       1             
 chunk    {0} output.js (main) 166
     [0] ./example.js 144 [built] {0}
     [1] ./~/b.js 11 [built] {0}

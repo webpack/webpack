@@ -103,9 +103,11 @@ onmessage = function(event) {
 /******/ 	require.modules = modules;
 /******/ 	require.cache = installedModules;
 /******/ 	var installedChunks = {0:1};
-/******/ 	this["webpackChunk"] = function webpackChunkCallback(moreModules) {
+/******/ 	this["webpackChunk"] = function webpackChunkCallback(chunkIds, moreModules) {
 /******/ 		for(var moduleId in moreModules)
 /******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 		for(var i = 0; i < chunkIds.length; i++)
+/******/ 			installedChunks[chunkIds[i]] = 1;
 /******/ 	};
 /******/ 	return require(0);
 /******/ })({
@@ -135,21 +137,21 @@ onmessage = function(event) {
 ## Uncompressed
 
 ```
-Hash: 457a4d61bec8a96b0716a97eace04243
-Time: 83ms
+Hash: c7ce795e4c2122d3f175fa426dbb3130
+Time: 72ms
            Asset  Size  Chunks  Chunk Names
-  hash.worker.js  1603                     
-1.hash.worker.js  1584                     
+  hash.worker.js  1711                     
+1.hash.worker.js  1589                     
        output.js  1456       0  main       
 chunk    {0} output.js (main) 302
     [0] ./example.js 206 [built] {0}
     [1] (webpack)/~/worker-loader!./worker.js 96 [not cacheable] [built] {0}
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
-    Hash: 68a1c224412cf9f9d63329c7b225e850
+    Hash: ac1f44dac199ee427792d65ff79c83c3
                Asset  Size  Chunks  Chunk Names
-      hash.worker.js  1603       0  main       
-    1.hash.worker.js  1584       1             
+      hash.worker.js  1711       0  main       
+    1.hash.worker.js  1589       1             
     chunk    {0} hash.worker.js (main) 168
         [0] ./worker.js 168 [built] {0}
     chunk    {1} 1.hash.worker.js 463 {0} 
@@ -169,21 +171,21 @@ Child worker:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 457a4d61bec8a96b0716a97eace04243
-Time: 236ms
+Hash: c7ce795e4c2122d3f175fa426dbb3130
+Time: 218ms
            Asset  Size  Chunks  Chunk Names
-  hash.worker.js   522                     
-1.hash.worker.js   527                     
+  hash.worker.js   561                     
+1.hash.worker.js   531                     
        output.js   418       0  main       
 chunk    {0} output.js (main) 302
     [0] ./example.js 206 [built] {0}
     [1] (webpack)/~/worker-loader!./worker.js 96 [not cacheable] [built] {0}
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
-    Hash: 68a1c224412cf9f9d63329c7b225e850
+    Hash: ac1f44dac199ee427792d65ff79c83c3
                Asset  Size  Chunks  Chunk Names
-      hash.worker.js   522       0  main       
-    1.hash.worker.js   527       1             
+      hash.worker.js   561       0  main       
+    1.hash.worker.js   531       1             
     chunk    {0} hash.worker.js (main) 168
         [0] ./worker.js 168 [built] {0}
     chunk    {1} 1.hash.worker.js 463 {0} 

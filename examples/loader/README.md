@@ -1,9 +1,6 @@
 # example.js
 
 ``` javascript
-// Polyfill require for node.js usage of loaders
-require = require("enhanced-require")(module);
-
 // use our loader
 console.dir(require("./loader!./file"));
 
@@ -66,16 +63,12 @@ module.exports = function(content) {
   \********************/
 /***/ function(module, exports, require) {
 
-	/* WEBPACK VAR INJECTION */(function(module) {// Polyfill require for node.js usage of loaders
-	require = require(/*! enhanced-require */ 3)(module);
-	
 	// use our loader
-	console.dir(require(/*! ./loader!./file */ 4));
+	console.dir(require(/*! ./loader!./file */ 2));
 	
 	// use buildin json loader
 	console.dir(require(/*! ./test.json */ 1)); // default by extension
 	console.dir(require(/*! json!./test.json */ 1)); // manual
-	/* WEBPACK VAR INJECTION */}(require(/*! (webpack)/buildin/module.js */ 2)(module)))
 
 /***/ },
 
@@ -92,36 +85,6 @@ module.exports = function(content) {
 /***/ },
 
 /***/ 2:
-/*!***********************************!*\
-  !*** (webpack)/buildin/module.js ***!
-  \***********************************/
-/***/ function(module, exports, require) {
-
-	module.exports = function(module) {
-		if(!module.webpackPolyfill) {
-			module.deprecate = function() {};
-			module.paths = [];
-			// module.parent = undefined by default
-			module.children = [];
-			module.webpackPolyfill = 1;
-		}
-		return module;
-	}
-	
-
-/***/ },
-
-/***/ 3:
-/*!*******************************************!*\
-  !*** (webpack)/buildin/return-require.js ***!
-  \*******************************************/
-/***/ function(module, exports, require) {
-
-	module.exports = function() { return require; };
-
-/***/ },
-
-/***/ 4:
 /*!*****************************!*\
   !*** ./loader.js!./file.js ***!
   \*****************************/
@@ -137,7 +100,7 @@ module.exports = function(content) {
 
 # Console output
 
-Prints in node.js (`node example.js`) and in browser:
+Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 { answer: 42, foo: 'bar' }
@@ -150,19 +113,15 @@ Prints in node.js (`node example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 1fc63791e8921db5e3ee47d7b25fa6a8
-Time: 84ms
+Hash: 2f64cd43907e15c39cc8d84534efe0a2
+Time: 52ms
     Asset  Size  Chunks  Chunk Names
-output.js  2558       0  main       
-chunk    {0} output.js (main) 693
-    [0] ./example.js 305 [built] {0}
+output.js  1620       0  main       
+chunk    {0} output.js (main) 282
+    [0] ./example.js 205 [built] {0}
     [1] (webpack)/~/json-loader!./test.json 36 [built] {0}
-        cjs require ./test.json [0] ./example.js 8:12-34
-        cjs require !json!./test.json [0] ./example.js 9:12-40
-    [2] (webpack)/buildin/module.js 251 [built] {0}
-        cjs require module [0] ./example.js 1:0-108
-    [3] (webpack)/buildin/return-require.js 60 [built] {0}
-        cjs require enhanced-require [0] ./example.js 2:10-37
-    [4] ./loader.js!./file.js 41 [not cacheable] [built] {0}
-        cjs require ./loader!./file [0] ./example.js 5:12-38
+        cjs require ./test.json [0] ./example.js 5:12-34
+        cjs require !json!./test.json [0] ./example.js 6:12-40
+    [2] ./loader.js!./file.js 41 [not cacheable] [built] {0}
+        cjs require ./loader!./file [0] ./example.js 2:12-38
 ```

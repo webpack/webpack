@@ -66,7 +66,7 @@ require(
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	require.e = function requireEnsure(chunkId, callback) {
-/******/ 		if(installedChunks[chunkId] === 1) return callback.call(null, require);
+/******/ 		if(installedChunks[chunkId] === 0) return callback.call(null, require);
 /******/ 		if(installedChunks[chunkId] !== undefined)
 /******/ 			installedChunks[chunkId].push(callback);
 /******/ 		else {
@@ -81,12 +81,16 @@ require(
 /******/ 	};
 /******/ 	require.modules = modules;
 /******/ 	require.cache = installedModules;
-/******/ 	var installedChunks = {0:1};
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkId, moreModules) {
+/******/ 	var installedChunks = {0:0};
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
 /******/ 		for(var moduleId in moreModules)
 /******/ 			modules[moduleId] = moreModules[moduleId];
-/******/ 		var callbacks = installedChunks[chunkId];
-/******/ 		installedChunks[chunkId] = 1;
+/******/ 		var callbacks = [];
+/******/ 		for(var i = 0; i < chunkIds.length; i++) {
+/******/ 			var installedChunk = installedChunks[chunkIds[i]];
+/******/ 			if(installedChunk) callbacks.push.apply(callbacks, installedChunk);
+/******/ 			installedChunks[chunkIds[i]] = 0;
+/******/ 		}
 /******/ 		for(var i = 0; i < callbacks.length; i++)
 /******/ 			callbacks[i].call(null, require);
 /******/ 	};
@@ -152,7 +156,7 @@ require(
 # js/1.output.js
 
 ``` javascript
-webpackJsonp(1, {
+webpackJsonp([1], {
 
 /***/ 3:
 /*!*************************************************!*\
@@ -224,11 +228,11 @@ webpackJsonp(1, {
 ## Uncompressed
 
 ```
-Hash: 6d725ab24bc3aec4ef5415bed7020c11
-Time: 52ms
+Hash: 3299d1dc52c97bedc95376df6a882e8b
+Time: 48ms
       Asset  Size  Chunks  Chunk Names
-  output.js  3523       0  main       
-1.output.js  1563       1             
+  output.js  3717       0  main       
+1.output.js  1565       1             
 chunk    {0} output.js (main) 759
     [0] ./example.js 370 [built] {0}
     [1] ./amd.js 218 [built] {0}

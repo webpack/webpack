@@ -103,8 +103,8 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: c4847f298adeaf7480757f6363ea19f1
-Time: 32ms
+Hash: 4c611f00cd8c22d720b7d5e5cf4d0cc2
+Time: 30ms
     Asset  Size  Chunks  Chunk Names
 output.js  1559       0  main       
 chunk    {0} output.js (main) 329
@@ -118,8 +118,8 @@ chunk    {0} output.js (main) 329
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: c4847f298adeaf7480757f6363ea19f1
-Time: 95ms
+Hash: 4c611f00cd8c22d720b7d5e5cf4d0cc2
+Time: 81ms
     Asset  Size  Chunks  Chunk Names
 output.js   460       0  main       
 chunk    {0} output.js (main) 329

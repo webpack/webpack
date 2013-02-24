@@ -32,7 +32,7 @@ getTemplate("b", function(b) {
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	require.e = function requireEnsure(chunkId, callback) {
-/******/ 		if(installedChunks[chunkId] === 1) return callback.call(null, require);
+/******/ 		if(installedChunks[chunkId] === 0) return callback.call(null, require);
 /******/ 		if(installedChunks[chunkId] !== undefined)
 /******/ 			installedChunks[chunkId].push(callback);
 /******/ 		else {
@@ -47,12 +47,16 @@ getTemplate("b", function(b) {
 /******/ 	};
 /******/ 	require.modules = modules;
 /******/ 	require.cache = installedModules;
-/******/ 	var installedChunks = {0:1};
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkId, moreModules) {
+/******/ 	var installedChunks = {0:0};
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
 /******/ 		for(var moduleId in moreModules)
 /******/ 			modules[moduleId] = moreModules[moduleId];
-/******/ 		var callbacks = installedChunks[chunkId];
-/******/ 		installedChunks[chunkId] = 1;
+/******/ 		var callbacks = [];
+/******/ 		for(var i = 0; i < chunkIds.length; i++) {
+/******/ 			var installedChunk = installedChunks[chunkIds[i]];
+/******/ 			if(installedChunk) callbacks.push.apply(callbacks, installedChunk);
+/******/ 			installedChunks[chunkIds[i]] = 0;
+/******/ 		}
 /******/ 		for(var i = 0; i < callbacks.length; i++)
 /******/ 			callbacks[i].call(null, require);
 /******/ 	};
@@ -86,7 +90,7 @@ getTemplate("b", function(b) {
 # js/1.output.js
 
 ``` javascript
-webpackJsonp(1, {
+webpackJsonp([1], {
 
 /***/ 1:
 /*!*********************************************!*\
@@ -161,11 +165,11 @@ webpackJsonp(1, {
 ## Uncompressed
 
 ```
-Hash: 8dc53faea591ea4fe486e278127320dd
-Time: 45ms
+Hash: 053e43bcefccb7b19cd6a3e30104879a
+Time: 39ms
       Asset  Size  Chunks  Chunk Names
-  output.js  2305       0  main       
-1.output.js  1587       1             
+  output.js  2499       0  main       
+1.output.js  1589       1             
 chunk    {0} output.js (main) 261
     [0] ./example.js 261 [built] {0}
 chunk    {1} 1.output.js 463 {0} 
@@ -185,11 +189,11 @@ chunk    {1} 1.output.js 463 {0}
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 8dc53faea591ea4fe486e278127320dd
-Time: 163ms
+Hash: 053e43bcefccb7b19cd6a3e30104879a
+Time: 225ms
       Asset  Size  Chunks  Chunk Names
-  output.js   791       0  main       
-1.output.js   529       1             
+  output.js   851       0  main       
+1.output.js   531       1             
 chunk    {0} output.js (main) 261
     [0] ./example.js 261 [built] {0}
 chunk    {1} 1.output.js 463 {0} 

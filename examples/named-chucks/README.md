@@ -42,7 +42,7 @@ require.ensure(["b"], function(require) {
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	require.e = function requireEnsure(chunkId, callback) {
-/******/ 		if(installedChunks[chunkId] === 1) return callback.call(null, require);
+/******/ 		if(installedChunks[chunkId] === 0) return callback.call(null, require);
 /******/ 		if(installedChunks[chunkId] !== undefined)
 /******/ 			installedChunks[chunkId].push(callback);
 /******/ 		else {
@@ -57,12 +57,16 @@ require.ensure(["b"], function(require) {
 /******/ 	};
 /******/ 	require.modules = modules;
 /******/ 	require.cache = installedModules;
-/******/ 	var installedChunks = {0:1};
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkId, moreModules) {
+/******/ 	var installedChunks = {0:0};
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
 /******/ 		for(var moduleId in moreModules)
 /******/ 			modules[moduleId] = moreModules[moduleId];
-/******/ 		var callbacks = installedChunks[chunkId];
-/******/ 		installedChunks[chunkId] = 1;
+/******/ 		var callbacks = [];
+/******/ 		for(var i = 0; i < chunkIds.length; i++) {
+/******/ 			var installedChunk = installedChunks[chunkIds[i]];
+/******/ 			if(installedChunk) callbacks.push.apply(callbacks, installedChunk);
+/******/ 			installedChunks[chunkIds[i]] = 0;
+/******/ 		}
 /******/ 		for(var i = 0; i < callbacks.length; i++)
 /******/ 			callbacks[i].call(null, require);
 /******/ 	};
@@ -115,7 +119,7 @@ require.ensure(["b"], function(require) {
 # js/1.output.js and js/my own chunk.js
 
 ``` javascript
-webpackJsonp(1, {
+webpackJsonp([1,2], {
 
 /***/ 1:
 /*!****************!*\
@@ -153,7 +157,7 @@ webpackJsonp(1, {
 # js/2.output.js
 
 ``` javascript
-webpackJsonp(2, {
+webpackJsonp([2], {
 
 /***/ 1:
 /*!****************!*\
@@ -183,13 +187,13 @@ webpackJsonp(2, {
 ## Uncompressed
 
 ```
-Hash: 4c7a9daee9a94a253b0935f891b5e28e
-Time: 51ms
+Hash: 53bd38ca579a1775bb08ff04b8a8b963
+Time: 52ms
           Asset  Size  Chunks  Chunk Names 
-      output.js  2535       0  main        
-    1.output.js   446       1  my own chuck
-my own chuck.js   446       1  my own chuck
-    2.output.js   304       2              
+      output.js  2729       0  main        
+    1.output.js   450    1, 2  my own chuck
+my own chuck.js   450    1, 2  my own chuck
+    2.output.js   306       2              
 chunk    {0} output.js (main) 450
     [0] ./example.js 439 [built] {0}
     [3] ./~/a.js 11 [built] {0}

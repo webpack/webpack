@@ -89,8 +89,8 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: c2d1386ba6213eab5cc76f848bd7dc78
-Time: 30ms
+Hash: d7292c834fe164b92f73e1a3aecfecd1
+Time: 28ms
     Asset  Size  Chunks  Chunk Names
 output.js  1409       0  main       
 chunk    {0} output.js (main) 326
@@ -104,8 +104,8 @@ chunk    {0} output.js (main) 326
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: c2d1386ba6213eab5cc76f848bd7dc78
-Time: 80ms
+Hash: d7292c834fe164b92f73e1a3aecfecd1
+Time: 73ms
     Asset  Size  Chunks  Chunk Names
 output.js   387       0  main       
 chunk    {0} output.js (main) 326

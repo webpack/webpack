@@ -98,8 +98,8 @@ module.exports = 42
 ## Uncompressed
 
 ```
-Hash: 23b825279ba1ed853a1a1b6ce00b97e8
-Time: 284ms
+Hash: 30dcf8e5b6f3a18a2eb8eab2188e0643
+Time: 142ms
     Asset  Size  Chunks  Chunk Names
 output.js  1465       0  main       
 chunk    {0} output.js (main) 208
@@ -114,8 +114,8 @@ chunk    {0} output.js (main) 208
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 23b825279ba1ed853a1a1b6ce00b97e8
-Time: 217ms
+Hash: 30dcf8e5b6f3a18a2eb8eab2188e0643
+Time: 205ms
     Asset  Size  Chunks  Chunk Names
 output.js   418       0  main       
 chunk    {0} output.js (main) 208

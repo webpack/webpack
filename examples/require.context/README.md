@@ -135,8 +135,8 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 7231254bb49d861170c8f0ba9b1d3047
-Time: 39ms
+Hash: 7e957458daf8e24487e04864c255e550
+Time: 35ms
     Asset  Size  Chunks  Chunk Names
 output.js  2458       0  main       
 chunk    {0} output.js (main) 613
@@ -157,8 +157,8 @@ chunk    {0} output.js (main) 613
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 7231254bb49d861170c8f0ba9b1d3047
-Time: 125ms
+Hash: 7e957458daf8e24487e04864c255e550
+Time: 99ms
     Asset  Size  Chunks  Chunk Names
 output.js   844       0  main       
 chunk    {0} output.js (main) 613

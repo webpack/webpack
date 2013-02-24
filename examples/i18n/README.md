@@ -75,8 +75,8 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: 6eb19a8e6a58c779abfd201110649331
-Time: 19ms
+Hash: 6dd5f9550269e46e82b8dd537732bdfa
+Time: 17ms
     Asset  Size  Chunks  Chunk Names
 output.js   989       0  main       
 chunk    {0} output.js (main) 64
@@ -89,8 +89,8 @@ Missing localization: Missing Text
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 6eb19a8e6a58c779abfd201110649331
-Time: 57ms
+Hash: 6dd5f9550269e46e82b8dd537732bdfa
+Time: 61ms
     Asset  Size  Chunks  Chunk Names
 output.js   308       0  main       
 chunk    {0} output.js (main) 64

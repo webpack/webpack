@@ -31,7 +31,7 @@ module.exports = "It works";
 /******/ 		return module.exports;
 /******/ 	}
 /******/ 	require.e = function requireEnsure(chunkId, callback) {
-/******/ 		if(installedChunks[chunkId] === 1) return callback.call(null, require);
+/******/ 		if(installedChunks[chunkId] === 0) return callback.call(null, require);
 /******/ 		if(installedChunks[chunkId] !== undefined)
 /******/ 			installedChunks[chunkId].push(callback);
 /******/ 		else {
@@ -46,12 +46,16 @@ module.exports = "It works";
 /******/ 	};
 /******/ 	require.modules = modules;
 /******/ 	require.cache = installedModules;
-/******/ 	var installedChunks = {0:1};
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkId, moreModules) {
+/******/ 	var installedChunks = {0:0};
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
 /******/ 		for(var moduleId in moreModules)
 /******/ 			modules[moduleId] = moreModules[moduleId];
-/******/ 		var callbacks = installedChunks[chunkId];
-/******/ 		installedChunks[chunkId] = 1;
+/******/ 		var callbacks = [];
+/******/ 		for(var i = 0; i < chunkIds.length; i++) {
+/******/ 			var installedChunk = installedChunks[chunkIds[i]];
+/******/ 			if(installedChunk) callbacks.push.apply(callbacks, installedChunk);
+/******/ 			installedChunks[chunkIds[i]] = 0;
+/******/ 		}
 /******/ 		for(var i = 0; i < callbacks.length; i++)
 /******/ 			callbacks[i].call(null, require);
 /******/ 	};
@@ -100,7 +104,7 @@ module.exports = "It works";
 # js/1.output.js
 
 ``` javascript
-webpackJsonp(1, {
+webpackJsonp([1], {
 
 /***/ 2:
 /*!*****************!*\
@@ -120,11 +124,11 @@ webpackJsonp(1, {
 ## Uncompressed
 
 ```
-Hash: f0f680a57941ff04619105b75b92abf2
-Time: 72ms
+Hash: aaea93e88ddd185dbf5a5109059d3d08
+Time: 50ms
       Asset  Size  Chunks  Chunk Names
-  output.js  2512       0  main       
-1.output.js   182       1             
+  output.js  2706       0  main       
+1.output.js   184       1             
 chunk    {0} output.js (main) 486
     [0] ./example.js 88 [built] {0}
     [1] (webpack)/~/bundle-loader!./file.js 398 [built] {0}
@@ -137,11 +141,11 @@ chunk    {1} 1.output.js 28 {0}
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: f0f680a57941ff04619105b75b92abf2
-Time: 164ms
+Hash: aaea93e88ddd185dbf5a5109059d3d08
+Time: 142ms
       Asset  Size  Chunks  Chunk Names
-  output.js   813       0  main       
-1.output.js    54       1             
+  output.js   873       0  main       
+1.output.js    56       1             
 chunk    {0} output.js (main) 486
     [0] ./example.js 88 [built] {0}
     [1] (webpack)/~/bundle-loader!./file.js 398 [built] {0}
