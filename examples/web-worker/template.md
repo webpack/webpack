@@ -23,6 +23,12 @@
 {{js/hash.worker.js}}
 ```
 
+# js/1.[hash].worker.hs
+
+``` javascript
+{{js/1.hash.worker.js}}
+```
+
 # Info
 
 ## Uncompressed
