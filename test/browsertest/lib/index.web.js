@@ -132,61 +132,6 @@ describe("main", function() {
 		});
 	});
 
-	describe("context", function() {
-		it("should be able to load a file with the require.context method", function() {
-			require.context("../templates")("./tmpl").should.be.eql("test template");
-			(require.context("../././templates"))("./tmpl").should.be.eql("test template");
-			(require.context(".././templates/.")("./tmpl")).should.be.eql("test template");
-			require . context ( "." + "." + "/" + "templ" + "ates" ) ( "./subdir/tmpl.js" ).should.be.eql("subdir test template");
-		});
-
-		it("should automatically create contexts", function() {
-			var template = "tmpl", templateFull = "./tmpl.js";
-			var mp = "mp", tmp = "tmp", mpl = "mpl";
-			require("../templates/" + template).should.be.eql("test template");
-			require("../templates/" + tmp + "l").should.be.eql("test template");
-			require("../templates/t" + mpl).should.be.eql("test template");
-			require("../templates/t" + mp + "l").should.be.eql("test template");
-			require("../templates/templateLoader")(templateFull).should.be.eql("test template");
-			require("../templates/templateLoaderIndirect")(templateFull).should.be.eql("test template");
-		});
-
-		it("should also work in a chunk", function(done) {
-			require.ensure([], function(require) {
-				var contextRequire = require.context(".");
-				contextRequire("./two").should.be.eql(2);
-				var tw = "tw";
-				require("." + "/" + tw + "o").should.be.eql(2);
-				done();
-			});
-		});
-
-		it("should be able to use a context with a loader", function() {
-			var abc = "abc", scr = "script.coffee";
-			require("../resources/" + scr).should.be.eql("coffee test");
-			require("raw!../resources/" + abc + ".txt").should.be.eql("abc");
-		});
-
-		it("should be able to require.resolve with automatical context", function() {
-			var template = "tmpl";
-			require.resolve("../templates/" + template).should.be.eql(require.resolve("../templates/tmpl"));
-		});
-
-		it("should resolve loaders relative to require", function() {
-			var index = "index", test = "test";
-			require("../loaders/queryloader?query!!!!../node_modules/subcontent/" + index + ".js").should.be.eql({
-				resourceQuery: null,
-				query: "?query",
-				prev: "module.exports = \"error\";"
-			});
-			require("!../loaders/queryloader?query!../node_modules/subcontent/" + test + ".jade").should.be.eql({
-				resourceQuery: null,
-				query: "?query",
-				prev: "xyz: abc"
-			});
-		});
-	});
-
 	describe("parsing", function() {
 
 		it("should parse complex require calls", function() {
@@ -260,7 +205,6 @@ describe("main", function() {
 		});
 	});
 
-
 	describe("chunks", function() {
 		it("should handle duplicate chunks", function(done) {
 			var firstOne = false, secondOne = false;
@@ -307,6 +251,145 @@ describe("main", function() {
 			});
 			should.exist(value);
 			value.should.be.eql("require.include");
+		});
+
+		it("should not load a chunk which is included in a already loaded one", function(done) {
+			var async = false;
+			require.ensure(["./empty?x", "./empty?y", "./empty?z"], function(require) {
+				async.should.be.eql(true);
+				loadChunk();
+			});
+			async = true;
+			function loadChunk() {
+				var sync = true;
+				require.ensure(["./empty?x", "./empty?y"], function(require) {
+					sync.should.be.eql(true);
+					done();
+				});
+				sync = false;
+			}
+		});
+	});
+
+	describe("AMD", function() {
+		it("should be able to use AMD-style require", function(done) {
+			var template = "tmpl";
+			require(["./circular", "../templates/" + template, true ? "./circular" : "./circular"], function(circular, testTemplate, circular2) {
+				circular.should.be.eql(1);
+				circular2.should.be.eql(1);
+				testTemplate.should.be.eql("test template");
+				done();
+			});
+		});
+		it("should be able to use require.js-style define", function(done) {
+			define("name", ["./circular"], function(circular) {
+				circular.should.be.eql(1);
+				done();
+			});
+		});
+		it("should be able to use require.js-style define, without name", function(done) {
+			define(["./circular"], function(circular) {
+				circular.should.be.eql(1);
+				done();
+			});
+		});
+		it("should be able to use require.js-style define, with empty dependencies", function(done) {
+			define("name", [], function() {
+				done();
+			});
+		});
+		it("should be able to use require.js-style define, without dependencies", function(done) {
+			define("name", function() {
+				done();
+			});
+		});
+		var obj = {};
+		it("should be able to use require.js-style define, with an object", function() {
+			define("blaaa", obj);
+		});
+		after(function() {
+			module.exports.should.be.equal(obj);
+		});
+		it("should offer AMD-style define for CommonJs", function(done) {
+			var _test_require = require.valueOf();
+			var _test_exports = exports;
+			var _test_module = module;
+			define(function(require, exports, module) {
+				(typeof require).should.be.eql("function");
+				require.valueOf().should.be.equal(_test_require);
+				exports.should.be.equal(_test_exports);
+				module.should.be.equal(_test_module);
+				require("./circular").should.be.eql(1);
+				done();
+			});
+		});
+		it("should not crash on require.js require only with array", function() {
+			require(["./circular"]);
+		});
+		it("should create a chunk for require.js require", function(done) {
+			var sameTick = true;
+			require(["./c"], function(c) {
+				sameTick.should.be.eql(false);
+				c.should.be.eql("c");
+				require("./d").should.be.eql("d");
+				done();
+			});
+			sameTick = false;
+		});
+	});
+
+	describe("context", function() {
+		it("should be able to load a file with the require.context method", function() {
+			require.context("../templates")("./tmpl").should.be.eql("test template");
+			(require.context("../././templates"))("./tmpl").should.be.eql("test template");
+			(require.context(".././templates/.")("./tmpl")).should.be.eql("test template");
+			require . context ( "." + "." + "/" + "templ" + "ates" ) ( "./subdir/tmpl.js" ).should.be.eql("subdir test template");
+		});
+
+		it("should automatically create contexts", function() {
+			var template = "tmpl", templateFull = "./tmpl.js";
+			var mp = "mp", tmp = "tmp", mpl = "mpl";
+			require("../templates/" + template).should.be.eql("test template");
+			require("../templates/" + tmp + "l").should.be.eql("test template");
+			require("../templates/t" + mpl).should.be.eql("test template");
+			require("../templates/t" + mp + "l").should.be.eql("test template");
+			require("../templates/templateLoader")(templateFull).should.be.eql("test template");
+			require("../templates/templateLoaderIndirect")(templateFull).should.be.eql("test template");
+		});
+
+		it("should also work in a chunk", function(done) {
+			require.ensure([], function(require) {
+				var contextRequire = require.context(".");
+				contextRequire("./two").should.be.eql(2);
+				var tw = "tw";
+				require("." + "/" + tw + "o").should.be.eql(2);
+				done();
+			});
+		});
+
+		it("should be able to use a context with a loader", function() {
+			var abc = "abc", scr = "script.coffee";
+			require("../resources/" + scr).should.be.eql("coffee test");
+			require("raw!../resources/" + abc + ".txt").should.be.eql("abc");
+		});
+
+		it("should be able to require.resolve with automatical context", function() {
+			var template = "tmpl";
+			require.resolve("../templates/" + template).should.be.eql(require.resolve("../templates/tmpl"));
+		});
+
+		it("should resolve loaders relative to require", function() {
+			var index = "index", test = "test";
+			require("../loaders/queryloader?query!!!!../node_modules/subcontent/" + index + ".js").should.be.eql({
+				resourceQuery: null,
+				query: "?query",
+				prev: "module.exports = \"error\";"
+			});
+			require("!../loaders/queryloader?query!../node_modules/subcontent/" + test + ".jade").should.be.eql({
+				resourceQuery: null,
+				query: "?query",
+				prev: "xyz: abc"
+			});
 		});
 	});
 
@@ -425,73 +508,6 @@ describe("main", function() {
 		it("should evaluate __dirname and __resourceQuery", function() {
 			var result = require("../resourceQuery/index?" + __dirname);
 			result.should.be.eql("?resourceQuery");
-		});
-	});
-
-	describe("AMD", function() {
-		it("should be able to use AMD-style require", function(done) {
-			var template = "tmpl";
-			require(["./circular", "../templates/" + template, true ? "./circular" : "./circular"], function(circular, testTemplate, circular2) {
-				circular.should.be.eql(1);
-				circular2.should.be.eql(1);
-				testTemplate.should.be.eql("test template");
-				done();
-			});
-		});
-		it("should be able to use require.js-style define", function(done) {
-			define("name", ["./circular"], function(circular) {
-				circular.should.be.eql(1);
-				done();
-			});
-		});
-		it("should be able to use require.js-style define, without name", function(done) {
-			define(["./circular"], function(circular) {
-				circular.should.be.eql(1);
-				done();
-			});
-		});
-		it("should be able to use require.js-style define, with empty dependencies", function(done) {
-			define("name", [], function() {
-				done();
-			});
-		});
-		it("should be able to use require.js-style define, without dependencies", function(done) {
-			define("name", function() {
-				done();
-			});
-		});
-		var obj = {};
-		it("should be able to use require.js-style define, with an object", function() {
-			define("blaaa", obj);
-		});
-		after(function() {
-			module.exports.should.be.equal(obj);
-		});
-		it("should offer AMD-style define for CommonJs", function(done) {
-			var _test_require = require.valueOf();
-			var _test_exports = exports;
-			var _test_module = module;
-			define(function(require, exports, module) {
-				(typeof require).should.be.eql("function");
-				require.valueOf().should.be.equal(_test_require);
-				exports.should.be.equal(_test_exports);
-				module.should.be.equal(_test_module);
-				require("./circular").should.be.eql(1);
-				done();
-			});
-		});
-		it("should not crash on require.js require only with array", function() {
-			require(["./circular"]);
-		});
-		it("should create a chunk for require.js require", function(done) {
-			var sameTick = true;
-			require(["./c"], function(c) {
-				sameTick.should.be.eql(false);
-				c.should.be.eql("c");
-				require("./d").should.be.eql("d");
-				done();
-			});
-			sameTick = false;
 		});
 	});
 
