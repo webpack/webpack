@@ -1,6 +1,3 @@
-// Polyfill require for node.js usage of loaders
-require = require("enhanced-require")(module);
-
 // use our loader
 console.dir(require("./loader!./file"));
 

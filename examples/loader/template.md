@@ -30,7 +30,7 @@
 
 # Console output
 
-Prints in node.js (`node example.js`) and in browser:
+Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 { answer: 42, foo: 'bar' }
