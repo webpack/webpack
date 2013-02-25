@@ -190,7 +190,7 @@ describe("main", function() {
 			module.id.should.be.a("number");
 			module.id.should.be.eql(require.resolve("./index.web.js"));
 			require.ensure([], function(require) {
-				test(process.argv && process.argv.length > 1, "process.argv should be an array");
+				test(Array.isArray(process.argv), "process.argv should be an array");
 				process.nextTick(function() {
 					sum2++;
 					sum2.should.be.eql(2);
@@ -530,10 +530,6 @@ describe("main", function() {
 		it("should answer typeof exports correctly", function() {
 			(typeof exports).should.be.eql("object");
 		});
-	});
-
-	describe("node.js tests", function() {
-		require("../nodetests");
 	});
 
 });

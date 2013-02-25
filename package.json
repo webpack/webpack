@@ -1,6 +1,6 @@
 {
 	"name": "webpack",
-	"version": "0.9.0-beta28",
+	"version": "0.9.0-beta29",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs/AMD Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
 	"dependencies": {
@@ -12,6 +12,7 @@
 		"enhanced-resolve": "0.5.x",
 		"clone": "0.1.x",
 		"webpack-core": "0.1.x",
+		"node-libs-browser": "0.1.x",
 		"tapable": "0.1.x"
 	},
 	"licenses": [
