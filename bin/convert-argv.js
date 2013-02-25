@@ -265,7 +265,8 @@ module.exports = function(optimist, argv, convertOptions) {
 		}
 		argv._.forEach(function(content) {
 			var i = content.indexOf("=");
-			if(i < 0) addTo("main", content);
+			var j = content.indexOf("!");
+			if(i < 0 || (j >= 0 && j < i)) addTo("main", content);
 			else addTo(content.substr(0, i), content.substr(i+1))
 		});
 	}
