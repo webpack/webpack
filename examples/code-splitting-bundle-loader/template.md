@@ -36,7 +36,3 @@
 ```
 {{min:stdout}}
 ```
-
-## Graph
-
-![webpack-graph](http://webpack.github.com/webpack/examples/code-splitting-bundle-loader/graph.svg)

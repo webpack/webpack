@@ -177,7 +177,3 @@ chunk    {1} 1.output.js 22 {0}
     [4] ./~/d.js 11 [built] {1}
         cjs require d [0] ./example.js 5:12-24
 ```
-
-## Graph
-
-![webpack-graph](http://webpack.github.com/webpack/examples/code-splitting/graph.svg)

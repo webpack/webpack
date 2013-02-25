@@ -257,7 +257,3 @@ chunk    {1} 1.output.js 439 {0}
     [6] ../require.context/templates/c.js 82 [built] {1}
         context element ./c.js [3] ../require.context/templates ^\.\/.*\.js$
 ```
-
-## Graph
-
-![webpack-graph](http://webpack.github.com/webpack/examples/mixed/graph.svg)

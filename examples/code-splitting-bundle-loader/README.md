@@ -154,7 +154,3 @@ chunk    {1} 1.output.js 28 {0}
     [2] ./file.js 28 [built] {1}
         cjs require !!.\file.js [1] (webpack)/~/bundle-loader!./file.js 8:8-147
 ```
-
-## Graph
-
-![webpack-graph](http://webpack.github.com/webpack/examples/code-splitting-bundle-loader/graph.svg)

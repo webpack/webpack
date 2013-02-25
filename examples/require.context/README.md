@@ -176,10 +176,6 @@ chunk    {0} output.js (main) 613
         cjs require context ./templates [0] ./example.js 2:8-44
 ```
 
-## Graph
-
-![webpack-graph](http://webpack.github.com/webpack/examples/require.context/graph.svg)
-
 # Code Splitting
 
-See [this example combined with code splitting](/sokra/modules-webpack/tree/master/examples/code-splitted-require.context)
+See [this example combined with code splitting](../code-splitted-require.context)

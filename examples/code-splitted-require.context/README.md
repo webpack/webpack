@@ -209,7 +209,3 @@ chunk    {1} 1.output.js 463 {0}
         context element ./c [1] ../require.context/templates ^\.\/.*$
         context element ./c.js [1] ../require.context/templates ^\.\/.*$
 ```
-
-## Graph
-
-![webpack-graph](http://webpack.github.com/webpack/examples/code-splitted-require.context/graph.svg)

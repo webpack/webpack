@@ -36,7 +36,3 @@
 ```
 {{stdout}}
 ```
-
-## Graph
-
-![webpack-graph](http://webpack.github.com/webpack/examples/mixed/graph.svg)
