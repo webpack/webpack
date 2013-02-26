@@ -142,7 +142,7 @@ require(
 		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 	
 	// labeled modules requires
-	var __LABELED_MODULE_3 = require(/*! ./labeled */ 3), a = __LABELED_MODULE_3.a;
+	var __WEBPACK_LABELED_MODULE__3 = require(/*! ./labeled */ 3), a = __WEBPACK_LABELED_MODULE__3.a;
 	// with the require label you are only allowed to import labeled modules
 	// the module needs static information about exports
 
@@ -280,34 +280,34 @@ webpackJsonp([1], {
 Hash: 516dce8c57b3158b12d5ec4b5ec0c704
 Time: 62ms
       Asset  Size  Chunks  Chunk Names
-  output.js  4768       0  main       
+  output.js  4786       0  main       
 1.output.js  1565       1             
 chunk    {0} output.js (main) 1395
     [0] ./example.js 613 [built] {0}
     [1] ./amd.js 309 [built] {0}
         amd require ./amd [2] ./commonjs.js 5:0-11:1
         cjs require ./amd [2] ./commonjs.js 8:13-29
-        amd require ./amd [3] ./labeled.js 5:0-11:1
-        cjs require ./amd [3] ./labeled.js 9:13-29
         cjs require ./amd [0] ./example.js 3:11-27
         amd require ./amd [0] ./example.js 7:0-14:1
         amd require ./amd [0] ./example.js 7:0-14:1
+        amd require ./amd [3] ./labeled.js 5:0-11:1
+        cjs require ./amd [3] ./labeled.js 9:13-29
     [2] ./commonjs.js 234 [built] {0}
         cjs require ./commonjs [0] ./example.js 2:16-37
         amd require ./commonjs [0] ./example.js 7:0-14:1
         amd require ./commonjs [0] ./example.js 7:0-14:1
-        amd require ./commonjs [3] ./labeled.js 5:0-11:1
-        cjs require ./commonjs [3] ./labeled.js 8:18-39
         amd require ./commonjs [1] ./amd.js 2:0-12:1
         cjs require ./commonjs [1] ./amd.js 7:18-39
+        amd require ./commonjs [3] ./labeled.js 5:0-11:1
+        cjs require ./commonjs [3] ./labeled.js 8:18-39
     [3] ./labeled.js 239 [built] {0}
         amd require ./labeled [2] ./commonjs.js 5:0-11:1
         cjs require ./labeled [2] ./commonjs.js 9:17-37
+        amd require ./labeled [1] ./amd.js 2:0-12:1
+        cjs require ./labeled [1] ./amd.js 8:17-37
         cjs require ./labeled [0] ./example.js 4:15-35
         labeled require ./labeled [0] ./example.js 17:0-21
         amd require ./labeled [0] ./example.js 7:0-14:1
-        amd require ./labeled [1] ./amd.js 2:0-12:1
-        cjs require ./labeled [1] ./amd.js 8:17-37
 chunk    {1} 1.output.js 439 {0} 
     [4] ../require.context/templates ^\.\/.*\.js$ 193 [built] {1}
         amd require context ../require.context/templates [0] ./example.js 7:0-14:1

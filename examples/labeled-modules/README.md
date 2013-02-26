@@ -59,7 +59,7 @@ exports: function add() {
   \********************/
 /***/ function(module, exports, require) {
 
-	var __LABELED_MODULE_1 = require(/*! ./increment */ 1), increment = __LABELED_MODULE_1.increment;
+	var __WEBPACK_LABELED_MODULE__1 = require(/*! ./increment */ 1), increment = __WEBPACK_LABELED_MODULE__1.increment;
 	var a = 1;
 	increment(a); // 2
 
@@ -71,7 +71,7 @@ exports: function add() {
   \**********************/
 /***/ function(module, exports, require) {
 
-	var __LABELED_MODULE_2 = require(/*! ./math */ 2), add = __LABELED_MODULE_2.add;
+	var __WEBPACK_LABELED_MODULE__2 = require(/*! ./math */ 2), add = __WEBPACK_LABELED_MODULE__2.add;
 	exports: exports["increment"] = function increment(val) {
 	    return add(val, 1);
 	};
@@ -105,9 +105,9 @@ The remaining labels are removed while minimizing.
 
 ```
 Hash: 77a9971b44e556189b1ad3d848f5ea9c
-Time: 28ms
+Time: 29ms
     Asset  Size  Chunks  Chunk Names
-output.js  1691       0  main       
+output.js  1727       0  main       
 chunk    {0} output.js (main) 299
     [0] ./example.js 55 [built] {0}
     [1] ./increment.js 83 [built] {0}
