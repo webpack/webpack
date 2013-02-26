@@ -40,9 +40,13 @@ example demonstrating Code Splitting through the builder loader
 
 example demonstrating merging of chucks with named chucks
 
+## labeled-modules
+
+example demonstrating Labeled Modules
+
 ## mixed
 
-example demonstrating mixing CommonJs and AMD
+example demonstrating mixing CommonJs, AMD and Labeled Modules
 
 ## web-worker
 

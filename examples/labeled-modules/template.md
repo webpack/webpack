@@ -4,24 +4,17 @@
 {{example.js}}
 ```
 
-# amd.js
+# increment.js
 
 ``` javascript
-{{amd.js}}
+{{increment.js}}
 ```
 
-# commonjs.js
+# math.js
 
 ``` javascript
-{{commonjs.js}}
+{{math.js}}
 ```
-
-# labeled.js
-
-``` javascript
-{{labeled.js}}
-```
-
 
 # js/output.js
 
@@ -29,11 +22,7 @@
 {{js/output.js}}
 ```
 
-# js/1.output.js
-
-``` javascript
-{{js/1.output.js}}
-```
+The remaining labels are removed while minimizing.
 
 # Info
 
@@ -41,4 +30,10 @@
 
 ```
 {{stdout}}
+```
+
+## Minimized (uglify-js, no zip)
+
+```
+{{min:stdout}}
 ```

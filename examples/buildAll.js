@@ -14,6 +14,7 @@ var cmds = [
 	"cd mixed && node build.js",
 	"cd web-worker && node build.js",
 	"cd i18n && node build.js",
+	"cd labeled-modules && node build.js",
 ];
 
 var stack = function() {
