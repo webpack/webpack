@@ -165,6 +165,16 @@ describe("main", function() {
 			require("../folder/typeof").should.be.eql("function");
 		});
 
+		it("should parse and evaluate labeled modules", function() {
+			var lbm = require("./labeledModuleA");
+			lbm.should.have.property("x").be.eql("x");
+			lbm.should.have.property("y").be.a("function");
+			lbm.y().should.be.eql("y");
+			lbm.should.have.property("z").be.eql("z");
+			lbm.should.have.property("foo").be.a("function");
+			lbm.foo().should.be.eql("foo");
+		});
+
 		it("should not parse filtered stuff", function() {
 			if(typeof require != "function") require("fail");
 			if(typeof require !== "function") require("fail");
