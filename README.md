@@ -8,7 +8,7 @@ webpack is a bundler for modules. The main purpose is to bundle javascript files
 
 **TL;DR**
 
-* bundles CommonJs and/or AMD modules. (even combined)
+* bundles [CommonJs](http://www.commonjs.org/specs/modules/1.0/), [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) and/or [Labeled Modules](https://github.com/labeledmodules/labeled-modules-spec/wiki) modules. (even combined)
 * can create a single bundle or a bunch of chunks loaded on demand, to reduce initial loading time.
 * dependencies are resolved while compiling, this makes the runtime very small
 * loader can preprocess files while compiling, i. e. coffee-script to javascript
@@ -43,6 +43,7 @@ Take a look at the `examples` folder.
 
 ``` javascript
 var commonjs = require("./commonjs");
+require: "./labeled";
 define(["amd-module", "./file"], function(amdModule, file) {
 	require(["big-module/big/file"], function(big) {
 		// AMD require acts as split point
