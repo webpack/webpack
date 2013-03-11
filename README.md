@@ -129,4 +129,4 @@ MIT (http://www.opensource.org/licenses/mit-license.php)
 * [mkdirp](http://esprima.org/)
 * [clone](https://github.com/pvorb/node-clone)
 
-[![Dependency Status](http://david-dm.org/webpack/webpack.png)](http://david-dm.org/webpack/webpack)
+[![Dependency Status](https://david-dm.org/webpack/webpack.png)](https://david-dm.org/webpack/webpack)
