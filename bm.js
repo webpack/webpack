@@ -65,7 +65,6 @@ asyncForEach(Object.keys(TESTS), function(name, done) {
 		});
 	});
 }, function() {
-	workers.close();
 });
 
 /* HELPERS */
