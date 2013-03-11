@@ -1,5 +1,6 @@
 var path = require("path");
 var fs = require("fs");
+fs.existsSync = fs.existsSync || path.existsSync;
 var resolve = require("enhanced-resolve");
 
 module.exports = function(optimist, argv, convertOptions) {
@@ -266,8 +267,11 @@ module.exports = function(optimist, argv, convertOptions) {
 		argv._.forEach(function(content) {
 			var i = content.indexOf("=");
 			var j = content.indexOf("?");
-			if(i < 0 || (j >= 0 && j < i)) addTo("main", content);
-			else addTo(content.substr(0, i), content.substr(i+1))
+			if(i < 0 || (j >= 0 && j < i)) {
+				var resolved = path.resolve(content);
+				if(fs.existsSync(resolved)) addTo("main", resolved);
+				else addTo("main", content);
+			} else addTo(content.substr(0, i), content.substr(i+1))
 		});
 	}
 

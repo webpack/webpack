@@ -28,9 +28,9 @@ console.log("compile scripts...");
 var extraArgsNoWatch = extraArgs.slice(0);
 var watchIndex = extraArgsNoWatch.indexOf("--watch");
 if(watchIndex != -1) extraArgsNoWatch.splice(watchIndex, 1);
-// node ../../bin/webpack --output-pathinfo --colors --optimize-max-chunks 1 --output-library library1 library1 js/library1
+// node ../../bin/webpack --output-pathinfo --colors --optimize-max-chunks 1 --output-library library1 node_modules/library1 js/library1
 var library1 = cp.spawn("node", join(["../../bin/webpack.js", "--output-pathinfo", "--colors", "--optimize-max-chunks", "1", "--output-library", "library1",
-										"library1", "js/library1.js"], extraArgsNoWatch));
+										"node_modules/library1", "js/library1.js"], extraArgsNoWatch));
 bindOutput(library1);
 library1.on("exit", function(code) {
 	if(code === 0) {
