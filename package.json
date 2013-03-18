@@ -39,7 +39,8 @@
 		"bundle-loader": "0.5.x",
 		"file-loader": "0.5.x",
 		"val-loader": "0.5.x",
-		"i18n-webpack-plugin": "0.1.x"
+		"i18n-webpack-plugin": "0.1.x",
+		"component-webpack-plugin": "0.1.x"
 	},
 	"engines": {
 		"node":  ">=0.6"

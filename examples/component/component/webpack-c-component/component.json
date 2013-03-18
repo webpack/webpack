@@ -1,0 +1,11 @@
+{
+	"name": "c-component",
+	"repo": "webpack/c-component",
+	"version": "0.0.1",
+	"scripts": ["main.js"],
+	"main": "main.js",
+	"dependencies": {
+		"webpack/a-component": "*"
+	},
+	"license": "MIT"
+}

@@ -1,0 +1,7 @@
+{
+	"name": "b-component",
+	"version": "0.0.0",
+	"scripts": ["main.js"],
+	"main": "main.js",
+	"license": "MIT"
+}

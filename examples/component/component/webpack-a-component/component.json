@@ -1,0 +1,9 @@
+{
+	"name": "a-component",
+	"repo": "webpack/a-component",
+	"version": "0.0.1",
+	"scripts": ["index.js"],
+	"styles": ["style.css"],
+	"images": ["image.png"],
+	"license": "MIT"
+}
