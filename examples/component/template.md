@@ -25,7 +25,7 @@
 
 # component/webpack-a-component/style.css
 
-``` javascript
+``` css
 {{component/webpack-a-component/style.css}}
 ```
 

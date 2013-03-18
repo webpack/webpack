@@ -62,7 +62,7 @@ module.exports = {
 
 # component/webpack-a-component/style.css
 
-``` javascript
+``` css
 .a-component {
 	display: inline;
 	background: url(image.png) repeat;
