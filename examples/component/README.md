@@ -114,15 +114,15 @@ module.exports = {
   \***************************************************/
 /***/ function(module, exports, require) {
 
-	require(/*! style-loader!css-loader!./style.css */ 4);
+	require(/*! (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./style.css */ 4);
 	module.exports = require(/*! ./index.js */ 6);
 
 /***/ },
 
 /***/ 2:
-/*!*****************************************************************************************************************!*\
-  !*** C:/Users/Sokrates/Eigene Repos/webpack-development/~/css-loader!./component/webpack-a-component/style.css ***!
-  \*****************************************************************************************************************/
+/*!********************************************************************************************************************************************!*\
+  !*** (webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css ***!
+  \********************************************************************************************************************************************/
 /***/ function(module, exports, require) {
 
 	module.exports =
@@ -131,9 +131,9 @@ module.exports = {
 /***/ },
 
 /***/ 3:
-/*!*************************************************************************************!*\
-  !*** C:/Users/Sokrates/Eigene Repos/webpack-development/~/style-loader/addStyle.js ***!
-  \*************************************************************************************/
+/*!****************************************************************************************************************!*\
+  !*** (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js ***!
+  \****************************************************************************************************************/
 /***/ function(module, exports, require) {
 
 	/*
@@ -154,12 +154,12 @@ module.exports = {
 /***/ },
 
 /***/ 4:
-/*!***********************************************************************************************************************************************************************************!*\
-  !*** C:/Users/Sokrates/Eigene Repos/webpack-development/~/style-loader!C:/Users/Sokrates/Eigene Repos/webpack-development/~/css-loader!./component/webpack-a-component/style.css ***!
-  \***********************************************************************************************************************************************************************************/
+/*!*****************************************************************************************************************************************************************************************************************************************!*\
+  !*** (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css ***!
+  \*****************************************************************************************************************************************************************************************************************************************/
 /***/ function(module, exports, require) {
 
-	require(/*! C:/Users/Sokrates/Eigene Repos/webpack-development/~/style-loader/addStyle.js */ 3)(require(/*! !C:/Users/Sokrates/Eigene Repos/webpack-development/~/css-loader!./component/webpack-a-component/style.css */ 2))
+	require(/*! (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js */ 3)(require(/*! !(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css */ 2))
 
 /***/ },
 
@@ -231,23 +231,23 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: c5333db969c04ce8c2e232836957cc31
-Time: 132ms
+Hash: 9a9389bf1908b5568ad6f8fe413a0627
+Time: 120ms
     Asset  Size  Chunks  Chunk Names
-output.js  5493       0  main       
-chunk    {0} output.js (main) 1661
+output.js  6031       0  main       
+chunk    {0} output.js (main) 1981
     [0] ./example.js 111 [built] {0}
-    [1] ./component/webpack-a-component (component) 88 [built] {0}
+    [1] ./component/webpack-a-component (component) 328 [built] {0}
         cjs require a-component [0] ./example.js 1:12-34
         cjs require a-component [8] ./component/webpack-c-component/main.js 1:23-45
-    [2] C:/Users/Sokrates/Eigene Repos/webpack-development/~/css-loader!./component/webpack-a-component/style.css 113 [built] {0}
-        cjs require !!C:\Users\Sokrates\Eigene Repos\webpack-development\node_modules\css-loader\index.js!.\component\webpack-a-component\style.css [4] C:/Users/Sokrates/Eigene Repos/webpack-development/~/style-loader!C:/Users/Sokrates/Eigene Repos/webpack-development/~/css-loader!./component/webpack-a-component/style.css 1:108-353
-    [3] C:/Users/Sokrates/Eigene Repos/webpack-development/~/style-loader/addStyle.js 458 [built] {0}
-        cjs require !C:\Users\Sokrates\Eigene Repos\webpack-development\node_modules\style-loader\addStyle.js [4] C:/Users/Sokrates/Eigene Repos/webpack-development/~/style-loader!C:/Users/Sokrates/Eigene Repos/webpack-development/~/css-loader!./component/webpack-a-component/style.css 1:0-107
-    [4] C:/Users/Sokrates/Eigene Repos/webpack-development/~/style-loader!C:/Users/Sokrates/Eigene Repos/webpack-development/~/css-loader!./component/webpack-a-component/style.css 354 [built] {0}
-        cjs require !style-loader!css-loader!./style.css [1] ./component/webpack-a-component (component) 1:0-47
+    [2] (webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 113 [built] {0}
+        cjs require !!(webpack)/~\component-webpack-plugin\node_modules\css-loader\index.js!.\component\webpack-a-component\style.css [4] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 1:148-433
+    [3] (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js 458 [built] {0}
+        cjs require !(webpack)/~\component-webpack-plugin\node_modules\style-loader\addStyle.js [4] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 1:0-147
+    [4] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 434 [built] {0}
+        cjs require !(webpack)/~\component-webpack-plugin\node_modules\style-loader\index.js!(webpack)/~\component-webpack-plugin\node_modules\css-loader\index.js!./style.css [1] ./component/webpack-a-component (component) 1:0-287
     [5] ./component/webpack-a-component/image.png 373 [built] {0}
-        cjs require ./image.png [2] C:/Users/Sokrates/Eigene Repos/webpack-development/~/css-loader!./component/webpack-a-component/style.css 2:58-80
+        cjs require ./image.png [2] (webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 2:58-80
     [6] ./component/webpack-a-component/index.js 21 [built] {0}
         cjs require ./index.js [1] ./component/webpack-a-component (component) 2:17-38
     [7] ./component/webpack-c-component (component) 38 [built] {0}
@@ -263,23 +263,23 @@ chunk    {0} output.js (main) 1661
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 6b5b7c195c4fbf887e901c245d918524
-Time: 203ms
+Hash: 3347ab710ad08b8494aec6ba77f9509b
+Time: 199ms
     Asset  Size  Chunks  Chunk Names
 output.js  1243       0  main       
-chunk    {0} output.js (main) 1640
+chunk    {0} output.js (main) 1960
     [0] ./example.js 111 [built] {0}
-    [1] ./component/webpack-a-component (component) 88 [built] {0}
+    [1] ./component/webpack-a-component (component) 328 [built] {0}
         cjs require a-component [0] ./example.js 1:12-34
         cjs require a-component [8] ./component/webpack-c-component/main.js 1:23-45
-    [2] C:/Users/Sokrates/Eigene Repos/webpack-development/~/css-loader!./component/webpack-a-component/style.css 92 [built] {0}
-        cjs require !!C:\Users\Sokrates\Eigene Repos\webpack-development\node_modules\css-loader\index.js!.\component\webpack-a-component\style.css [4] C:/Users/Sokrates/Eigene Repos/webpack-development/~/style-loader!C:/Users/Sokrates/Eigene Repos/webpack-development/~/css-loader!./component/webpack-a-component/style.css 1:108-353
-    [3] C:/Users/Sokrates/Eigene Repos/webpack-development/~/style-loader/addStyle.js 458 [built] {0}
-        cjs require !C:\Users\Sokrates\Eigene Repos\webpack-development\node_modules\style-loader\addStyle.js [4] C:/Users/Sokrates/Eigene Repos/webpack-development/~/style-loader!C:/Users/Sokrates/Eigene Repos/webpack-development/~/css-loader!./component/webpack-a-component/style.css 1:0-107
-    [4] C:/Users/Sokrates/Eigene Repos/webpack-development/~/style-loader!C:/Users/Sokrates/Eigene Repos/webpack-development/~/css-loader!./component/webpack-a-component/style.css 354 [built] {0}
-        cjs require !style-loader!css-loader!./style.css [1] ./component/webpack-a-component (component) 1:0-47
+    [2] (webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 92 [built] {0}
+        cjs require !!(webpack)/~\component-webpack-plugin\node_modules\css-loader\index.js!.\component\webpack-a-component\style.css [4] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 1:148-433
+    [3] (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js 458 [built] {0}
+        cjs require !(webpack)/~\component-webpack-plugin\node_modules\style-loader\addStyle.js [4] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 1:0-147
+    [4] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 434 [built] {0}
+        cjs require !(webpack)/~\component-webpack-plugin\node_modules\style-loader\index.js!(webpack)/~\component-webpack-plugin\node_modules\css-loader\index.js!./style.css [1] ./component/webpack-a-component (component) 1:0-287
     [5] ./component/webpack-a-component/image.png 373 [built] {0}
-        cjs require ./image.png [2] C:/Users/Sokrates/Eigene Repos/webpack-development/~/css-loader!./component/webpack-a-component/style.css 2:47-69
+        cjs require ./image.png [2] (webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 2:47-69
     [6] ./component/webpack-a-component/index.js 21 [built] {0}
         cjs require ./index.js [1] ./component/webpack-a-component (component) 2:17-38
     [7] ./component/webpack-c-component (component) 38 [built] {0}

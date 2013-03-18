@@ -18,6 +18,7 @@ module.exports = "It works";
 ``` javascript
 /******/ (function webpackBootstrap(modules) {
 /******/ 	var installedModules = {};
+/******/ 	var installedChunks = {0:0};
 /******/ 	function require(moduleId) {
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
@@ -46,18 +47,17 @@ module.exports = "It works";
 /******/ 	};
 /******/ 	require.modules = modules;
 /******/ 	require.cache = installedModules;
-/******/ 	var installedChunks = {0:0};
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
-/******/ 		for(var moduleId in moreModules)
-/******/ 			modules[moduleId] = moreModules[moduleId];
-/******/ 		var callbacks = [];
-/******/ 		for(var i = 0; i < chunkIds.length; i++) {
-/******/ 			var installedChunk = installedChunks[chunkIds[i]];
-/******/ 			if(installedChunk) callbacks.push.apply(callbacks, installedChunk);
-/******/ 			installedChunks[chunkIds[i]] = 0;
+/******/ 		var moduleId, chunkId, callbacks = [];
+/******/ 		while(chunkIds.length) {
+/******/ 			chunkId = chunkIds.shift();
+/******/ 			if(installedChunks[chunkId]) callbacks.push.apply(callbacks, installedChunks[chunkId]);
+/******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
-/******/ 		for(var i = 0; i < callbacks.length; i++)
-/******/ 			callbacks[i].call(null, require);
+/******/ 		for(moduleId in moreModules)
+/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 		while(callbacks.length)
+/******/ 			callbacks.shift().call(null, require);
 /******/ 	};
 /******/ 	return require(0);
 /******/ })({
@@ -76,9 +76,9 @@ module.exports = "It works";
 /***/ },
 
 /***/ 1:
-/*!*******************************************!*\
+/*!************************************************************************************!*\
   !*** (webpack)/~/bundle-loader!./file.js ***!
-  \*******************************************/
+  \************************************************************************************/
 /***/ function(module, exports, require) {
 
 	var cbs = [], 
@@ -125,9 +125,9 @@ webpackJsonp([1], {
 
 ```
 Hash: aaea93e88ddd185dbf5a5109059d3d08
-Time: 50ms
+Time: 60ms
       Asset  Size  Chunks  Chunk Names
-  output.js  2706       0  main       
+  output.js  2806       0  main       
 1.output.js   184       1             
 chunk    {0} output.js (main) 486
     [0] ./example.js 88 [built] {0}
@@ -142,9 +142,9 @@ chunk    {1} 1.output.js 28 {0}
 
 ```
 Hash: aaea93e88ddd185dbf5a5109059d3d08
-Time: 142ms
+Time: 146ms
       Asset  Size  Chunks  Chunk Names
-  output.js   873       0  main       
+  output.js   853       0  main       
 1.output.js    56       1             
 chunk    {0} output.js (main) 486
     [0] ./example.js 88 [built] {0}

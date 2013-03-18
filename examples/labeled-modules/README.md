@@ -105,7 +105,7 @@ The remaining labels are removed while minimizing.
 
 ```
 Hash: 77a9971b44e556189b1ad3d848f5ea9c
-Time: 29ms
+Time: 30ms
     Asset  Size  Chunks  Chunk Names
 output.js  1727       0  main       
 chunk    {0} output.js (main) 299
@@ -120,7 +120,7 @@ chunk    {0} output.js (main) 299
 
 ```
 Hash: 77a9971b44e556189b1ad3d848f5ea9c
-Time: 81ms
+Time: 82ms
     Asset  Size  Chunks  Chunk Names
 output.js   468       0  main       
 chunk    {0} output.js (main) 299

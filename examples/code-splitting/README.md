@@ -15,6 +15,7 @@ require.ensure(["c"], function(require) {
 ``` javascript
 /******/ (function webpackBootstrap(modules) {
 /******/ 	var installedModules = {};
+/******/ 	var installedChunks = {0:0};
 /******/ 	function require(moduleId) {
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
@@ -43,18 +44,17 @@ require.ensure(["c"], function(require) {
 /******/ 	};
 /******/ 	require.modules = modules;
 /******/ 	require.cache = installedModules;
-/******/ 	var installedChunks = {0:0};
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
-/******/ 		for(var moduleId in moreModules)
-/******/ 			modules[moduleId] = moreModules[moduleId];
-/******/ 		var callbacks = [];
-/******/ 		for(var i = 0; i < chunkIds.length; i++) {
-/******/ 			var installedChunk = installedChunks[chunkIds[i]];
-/******/ 			if(installedChunk) callbacks.push.apply(callbacks, installedChunk);
-/******/ 			installedChunks[chunkIds[i]] = 0;
+/******/ 		var moduleId, chunkId, callbacks = [];
+/******/ 		while(chunkIds.length) {
+/******/ 			chunkId = chunkIds.shift();
+/******/ 			if(installedChunks[chunkId]) callbacks.push.apply(callbacks, installedChunks[chunkId]);
+/******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
-/******/ 		for(var i = 0; i < callbacks.length; i++)
-/******/ 			callbacks[i].call(null, require);
+/******/ 		for(moduleId in moreModules)
+/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 		while(callbacks.length)
+/******/ 			callbacks.shift().call(null, require);
 /******/ 	};
 /******/ 	return require(0);
 /******/ })({
@@ -138,9 +138,9 @@ webpackJsonp([1],{3:function(){},4:function(){}});
 
 ```
 Hash: 3d676be1f90fd9a9422053e02c1982e7
-Time: 40ms
+Time: 38ms
       Asset  Size  Chunks  Chunk Names
-  output.js  2552       0  main       
+  output.js  2529       0  main       
 1.output.js   306       1             
 chunk    {0} output.js (main) 166
     [0] ./example.js 144 [built] {0}
@@ -160,9 +160,9 @@ chunk    {1} 1.output.js 22 {0}
 
 ```
 Hash: 3d676be1f90fd9a9422053e02c1982e7
-Time: 134ms
+Time: 128ms
       Asset  Size  Chunks  Chunk Names
-  output.js   764       0  main       
+  output.js   744       0  main       
 1.output.js    50       1             
 chunk    {0} output.js (main) 166
     [0] ./example.js 144 [built] {0}

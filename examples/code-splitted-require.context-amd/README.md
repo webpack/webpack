@@ -19,6 +19,7 @@ getTemplate("b", function(b) {
 ``` javascript
 /******/ (function webpackBootstrap(modules) {
 /******/ 	var installedModules = {};
+/******/ 	var installedChunks = {0:0};
 /******/ 	function require(moduleId) {
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
@@ -47,18 +48,17 @@ getTemplate("b", function(b) {
 /******/ 	};
 /******/ 	require.modules = modules;
 /******/ 	require.cache = installedModules;
-/******/ 	var installedChunks = {0:0};
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
-/******/ 		for(var moduleId in moreModules)
-/******/ 			modules[moduleId] = moreModules[moduleId];
-/******/ 		var callbacks = [];
-/******/ 		for(var i = 0; i < chunkIds.length; i++) {
-/******/ 			var installedChunk = installedChunks[chunkIds[i]];
-/******/ 			if(installedChunk) callbacks.push.apply(callbacks, installedChunk);
-/******/ 			installedChunks[chunkIds[i]] = 0;
+/******/ 		var moduleId, chunkId, callbacks = [];
+/******/ 		while(chunkIds.length) {
+/******/ 			chunkId = chunkIds.shift();
+/******/ 			if(installedChunks[chunkId]) callbacks.push.apply(callbacks, installedChunks[chunkId]);
+/******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
-/******/ 		for(var i = 0; i < callbacks.length; i++)
-/******/ 			callbacks[i].call(null, require);
+/******/ 		for(moduleId in moreModules)
+/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 		while(callbacks.length)
+/******/ 			callbacks.shift().call(null, require);
 /******/ 	};
 /******/ 	return require(0);
 /******/ })({
@@ -166,9 +166,9 @@ webpackJsonp([1], {
 
 ```
 Hash: 053e43bcefccb7b19cd6a3e30104879a
-Time: 39ms
+Time: 38ms
       Asset  Size  Chunks  Chunk Names
-  output.js  2499       0  main       
+  output.js  2476       0  main       
 1.output.js  1589       1             
 chunk    {0} output.js (main) 261
     [0] ./example.js 261 [built] {0}
@@ -190,9 +190,9 @@ chunk    {1} 1.output.js 463 {0}
 
 ```
 Hash: 053e43bcefccb7b19cd6a3e30104879a
-Time: 225ms
+Time: 155ms
       Asset  Size  Chunks  Chunk Names
-  output.js   851       0  main       
+  output.js   831       0  main       
 1.output.js   531       1             
 chunk    {0} output.js (main) 261
     [0] ./example.js 261 [built] {0}

@@ -64,9 +64,9 @@ onmessage = function(event) {
 /***/ },
 
 /***/ 1:
-/*!*********************************************!*\
+/*!**************************************************************************************!*\
   !*** (webpack)/~/worker-loader!./worker.js ***!
-  \*********************************************/
+  \**************************************************************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = function() {
@@ -215,7 +215,7 @@ Time: 72ms
            Asset  Size  Chunks  Chunk Names
   hash.worker.js  1711                     
 1.hash.worker.js  1589                     
-       output.js  1456       0  main       
+       output.js  1579       0  main       
 chunk    {0} output.js (main) 302
     [0] ./example.js 206 [built] {0}
     [1] (webpack)/~/worker-loader!./worker.js 96 [not cacheable] [built] {0}
@@ -245,7 +245,7 @@ Child worker:
 
 ```
 Hash: c7ce795e4c2122d3f175fa426dbb3130
-Time: 218ms
+Time: 215ms
            Asset  Size  Chunks  Chunk Names
   hash.worker.js   561                     
 1.hash.worker.js   531                     

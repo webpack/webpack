@@ -82,7 +82,7 @@ output.js   989       0  main
 chunk    {0} output.js (main) 64
     [0] ./example.js 64 [built] {0}
 
-WARNING in ./example.js
+ERROR in ./example.js
 Missing localization: Missing Text
 ```
 
@@ -90,12 +90,12 @@ Missing localization: Missing Text
 
 ```
 Hash: 6dd5f9550269e46e82b8dd537732bdfa
-Time: 61ms
+Time: 52ms
     Asset  Size  Chunks  Chunk Names
 output.js   308       0  main       
 chunk    {0} output.js (main) 64
     [0] ./example.js 64 [built] {0}
 
-WARNING in ./example.js
+ERROR in ./example.js
 Missing localization: Missing Text
 ```

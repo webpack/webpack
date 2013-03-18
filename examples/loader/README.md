@@ -73,9 +73,9 @@ module.exports = function(content) {
 /***/ },
 
 /***/ 1:
-/*!*******************************************!*\
+/*!************************************************************************************!*\
   !*** (webpack)/~/json-loader!./test.json ***!
-  \*******************************************/
+  \************************************************************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = {
@@ -114,9 +114,9 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: 2f64cd43907e15c39cc8d84534efe0a2
-Time: 52ms
+Time: 50ms
     Asset  Size  Chunks  Chunk Names
-output.js  1620       0  main       
+output.js  1743       0  main       
 chunk    {0} output.js (main) 282
     [0] ./example.js 205 [built] {0}
     [1] (webpack)/~/json-loader!./test.json 36 [built] {0}

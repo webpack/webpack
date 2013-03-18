@@ -90,7 +90,7 @@ module.exports = Math.random();
 
 ```
 Hash: d7292c834fe164b92f73e1a3aecfecd1
-Time: 28ms
+Time: 26ms
     Asset  Size  Chunks  Chunk Names
 output.js  1409       0  main       
 chunk    {0} output.js (main) 326
@@ -105,7 +105,7 @@ chunk    {0} output.js (main) 326
 
 ```
 Hash: d7292c834fe164b92f73e1a3aecfecd1
-Time: 73ms
+Time: 70ms
     Asset  Size  Chunks  Chunk Names
 output.js   387       0  main       
 chunk    {0} output.js (main) 326
