@@ -27,7 +27,7 @@ module.exports = function(optimist) {
 
 	.string("output-library-target").describe("output-library-target")
 
-	.boolean("console").describe("console")
+	.string("target").describe("target")
 
 	.boolean("cache").describe("cache")
 
@@ -48,6 +48,8 @@ module.exports = function(optimist) {
 	.describe("optimize-min-chunk-size")
 
 	.boolean("optimize-minimize").describe("optimize-minimize")
+
+	.string("provide").describe("provide")
 
 	.string("plugin").describe("plugin")
 

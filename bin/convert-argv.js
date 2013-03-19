@@ -168,7 +168,10 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.output.libraryTarget = value;
 	});
 
-	mapArgToBoolean("console", "console");
+	ifArg("target", function(value) {
+		options.target = value;
+	});
+
 	mapArgToBoolean("cache", "cache");
 	mapArgToBoolean("watch", "watch");
 
@@ -229,6 +232,18 @@ module.exports = function(optimist, argv, convertOptions) {
 	ifBooleanArg("optimize-minimize", function() {
 		ensureObject(options, "optimize");
 		options.optimize.minimize = true;
+	});
+
+	ifArg("provide", function(value) {
+		ensureObject(options, "provide");
+		var idx = value.indexOf("=");
+		if(idx >= 0) {
+			var name = value.substr(0, idx);
+			value = value.substr(idx + 1);
+		} else {
+			var name = value;
+		}
+		options.provide[name] = value;
 	});
 
 	ifArg("plugin", function(value) {
