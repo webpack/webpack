@@ -425,7 +425,7 @@ describe("main", function() {
 				require("../../../package.json").name.should.be.eql("webpack");
 			});
 			it("should handle the jade loader correctly", function() {
-				require("!jade!../resources/template.jade")({abc: "abc"}).should.be.eql("<p>abc</p>");
+				require("!jade?self!../resources/template.jade")({abc: "abc"}).should.be.eql("<p>selfabc</p>");
 				require("../resources/template.jade")({abc: "abc"}).should.be.eql("<p>abc</p>");
 			});
 			it("should handle the coffee loader correctly", function() {

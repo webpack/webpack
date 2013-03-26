@@ -7,6 +7,16 @@ module.exports = function(optimist, argv, convertOptions) {
 
 	var options = {};
 
+	// Shortcuts
+	if(argv.d) {
+		argv.debug = true;
+		argv["output-pathinfo"] = true;
+		if(!argv.devtool) argv.devtool = "sourcemap";
+	}
+	if(argv.p) {
+		argv["optimize-minimize"] = true;
+	}
+
 	function ifArg(name, fn, init) {
 		if(Array.isArray(argv[name])) {
 			if(init) init();
@@ -146,6 +156,11 @@ module.exports = function(optimist, argv, convertOptions) {
 	ifArg("output-named-chunk-file", function(value) {
 		ensureObject(options, "output");
 		options.output.namedChunkFilename = value;
+	});
+
+	ifArg("output-source-map-file", function(value) {
+		ensureObject(options, "output");
+		options.output.sourceMapFilename = value;
 	});
 
 	ifArg("output-public-path", function(value) {

@@ -17,7 +17,7 @@ Check the [documentation](https://github.com/webpack/docs/wiki) if you want to k
 
 # Examples
 
-Take a look at the `examples` folder.
+Take a look at the [`examples`](https://github.com/webpack/webpack/tree/master/examples) folder.
 
 # Features
 
@@ -25,6 +25,7 @@ Take a look at the `examples` folder.
 * loaders run in node.js and can do a bunch of stuff
 * option to name your file with a hash of the content
 * watch mode
+* SourceUrl and SourceMap support
 * plugin system, extend webpack or build a complete different compiler
 * interfaces
  * CLI with arguments

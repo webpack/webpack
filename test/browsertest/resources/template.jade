@@ -1,4 +1,4 @@
 extends parent
 
 block content
-	= abc
+	= typeof abc === "undefined" ? "self" + self.abc : abc

@@ -19,6 +19,10 @@ module.exports = function(optimist) {
 
 	.string("output-chunk-file").describe("output-chunk-file")
 
+	.string("output-named-chunk-file").describe("output-named-chunk-file")
+
+	.string("output-source-map-file").describe("output-source-map-file")
+
 	.string("output-public-path").describe("output-public-path")
 
 	.boolean("output-pathinfo").describe("output-pathinfo")
@@ -53,5 +57,9 @@ module.exports = function(optimist) {
 
 	.string("plugin").describe("plugin")
 
-	.boolean("bail").describe("bail");
+	.boolean("bail").describe("bail")
+
+	.boolean("d").describe("d", "shortcut for --debug --devtool sourcemap --output-pathinfo")
+
+	.boolean("p").describe("p", "shortcut for --optimize-minimize");
 };
