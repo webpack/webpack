@@ -26,48 +26,67 @@ module.exports = Math.random();
 # js/output.js
 
 ``` javascript
-/******/ (function webpackBootstrap(modules) {
-/******/ 	var installedModules = {};
-/******/ 	function require(moduleId) {
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
-/******/ 		module.loaded = true;
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	require.e = function requireEnsure(chunkId, callback) {
-/******/ 		callback.call(null, require);
-/******/ 	};
-/******/ 	require.modules = modules;
-/******/ 	require.cache = installedModules;
-/******/ 	return require(0);
-/******/ })({
-/******/ c: "",
+(function(modules) { // webpackBootstrap
+// The module cache
+var installedModules = {};
 
+// The require function
+function require(moduleId) {
+	// Check if module is in cache
+	if(installedModules[moduleId])
+		return installedModules[moduleId].exports;
+	
+	// Create a new module (and put it into the cache)
+	var module = installedModules[moduleId] = {
+		exports: {},
+		id: moduleId,
+		loaded: false
+	};
+	
+	// Execute the module function
+	modules[moduleId].call(null, module, module.exports, require);
+	
+	// Flag the module as loaded
+	module.loaded = true;
+	
+	// Return the exports of the module
+	return module.exports;
+}
+
+require.e = function requireEnsure(_, callback) {
+	callback.call(null, require);
+};
+require.modules = modules;
+require.cache = installedModules;
+
+
+// Load entry module and return exports
+return require(0);
+})
+/************************************************************************/
+({
+// __webpack_public_path__
+
+c: "",
 /***/ 0:
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, require) {
 
-	var a = require(/*! ./a */ 1);
-	
-	// get module id
-	var aId = /*require.resolve*/(/*! ./a.js */ 1);
-	
-	// clear module in require.cache
-	delete require.cache[aId];
-	
-	// require module again, it should be reexecuted
-	var a2 = require(/*! ./a */ 1);
-	
-	// vertify it
-	if(a == a2) throw new Error("Cache clear failed :(");
+var a = require(/*! ./a */ 1);
+
+// get module id
+var aId = /*require.resolve*/(/*! ./a.js */ 1);
+
+// clear module in require.cache
+delete require.cache[aId];
+
+// require module again, it should be reexecuted
+var a2 = require(/*! ./a */ 1);
+
+// vertify it
+if(a == a2) throw new Error("Cache clear failed :(");
 
 /***/ },
 
@@ -77,11 +96,10 @@ module.exports = Math.random();
   \**************/
 /***/ function(module, exports, require) {
 
-	module.exports = Math.random();
+module.exports = Math.random();
 
 /***/ }
-/******/ })
-
+})
 ```
 
 # Info
@@ -89,10 +107,11 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: d7292c834fe164b92f73e1a3aecfecd1
-Time: 26ms
+Hash: f180ba3e87e5894643306820cbd115dc
+Version: webpack 0.10.0-beta1
+Time: 32ms
     Asset  Size  Chunks  Chunk Names
-output.js  1409       0  main       
+output.js  1559       0  main       
 chunk    {0} output.js (main) 326
     [0] ./example.js 295 [built] {0}
     [1] ./a.js 31 [built] {0}
@@ -104,8 +123,9 @@ chunk    {0} output.js (main) 326
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: d7292c834fe164b92f73e1a3aecfecd1
-Time: 70ms
+Hash: f180ba3e87e5894643306820cbd115dc
+Version: webpack 0.10.0-beta1
+Time: 81ms
     Asset  Size  Chunks  Chunk Names
 output.js   387       0  main       
 chunk    {0} output.js (main) 326

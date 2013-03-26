@@ -72,39 +72,58 @@ module.exports = {
 # js/output.js
 
 ``` javascript
-/******/ (function webpackBootstrap(modules) {
-/******/ 	var installedModules = {};
-/******/ 	function require(moduleId) {
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
-/******/ 		module.loaded = true;
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	require.e = function requireEnsure(chunkId, callback) {
-/******/ 		callback.call(null, require);
-/******/ 	};
-/******/ 	require.modules = modules;
-/******/ 	require.cache = installedModules;
-/******/ 	return require(0);
-/******/ })({
-/******/ c: "",
+(function(modules) { // webpackBootstrap
+// The module cache
+var installedModules = {};
 
+// The require function
+function require(moduleId) {
+	// Check if module is in cache
+	if(installedModules[moduleId])
+		return installedModules[moduleId].exports;
+	
+	// Create a new module (and put it into the cache)
+	var module = installedModules[moduleId] = {
+		exports: {},
+		id: moduleId,
+		loaded: false
+	};
+	
+	// Execute the module function
+	modules[moduleId].call(null, module, module.exports, require);
+	
+	// Flag the module as loaded
+	module.loaded = true;
+	
+	// Return the exports of the module
+	return module.exports;
+}
+
+require.e = function requireEnsure(_, callback) {
+	callback.call(null, require);
+};
+require.modules = modules;
+require.cache = installedModules;
+
+
+// Load entry module and return exports
+return require(0);
+})
+/************************************************************************/
+({
+// __webpack_public_path__
+
+c: "",
 /***/ 0:
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, require) {
 
-	console.log(require(/*! a-component */ 1));
-	console.log(require(/*! b-component */ 9));
-	console.log(require(/*! c-component */ 7));
-	
+console.log(require(/*! a-component */ 1));
+console.log(require(/*! b-component */ 9));
+console.log(require(/*! c-component */ 7));
+
 
 /***/ },
 
@@ -114,8 +133,8 @@ module.exports = {
   \***************************************************/
 /***/ function(module, exports, require) {
 
-	require(/*! (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./style.css */ 4);
-	module.exports = require(/*! ./index.js */ 6);
+require(/*! (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./style.css */ 4);
+module.exports = require(/*! ./index.js */ 6);
 
 /***/ },
 
@@ -125,8 +144,8 @@ module.exports = {
   \********************************************************************************************************************************************/
 /***/ function(module, exports, require) {
 
-	module.exports =
-		".a-component {\n\tdisplay: inline;\n\tbackground: url("+require(/*! ./image.png */ 5)+") repeat;\n}";
+module.exports =
+	".a-component {\n\tdisplay: inline;\n\tbackground: url("+require(/*! ./image.png */ 5)+") repeat;\n}";
 
 /***/ },
 
@@ -136,20 +155,20 @@ module.exports = {
   \****************************************************************************************************************/
 /***/ function(module, exports, require) {
 
-	/*
-		MIT License http://www.opensource.org/licenses/mit-license.php
-		Author Tobias Koppers @sokra
-	*/
-	module.exports = function(cssCode) {
-		var styleElement = document.createElement("style");
-		styleElement.type = "text/css";
-		if (styleElement.styleSheet) {
-			styleElement.styleSheet.cssText = cssCode;
-		} else {
-			styleElement.appendChild(document.createTextNode(cssCode));
-		}
-		document.getElementsByTagName("head")[0].appendChild(styleElement);
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+module.exports = function(cssCode) {
+	var styleElement = document.createElement("style");
+	styleElement.type = "text/css";
+	if (styleElement.styleSheet) {
+		styleElement.styleSheet.cssText = cssCode;
+	} else {
+		styleElement.appendChild(document.createTextNode(cssCode));
 	}
+	document.getElementsByTagName("head")[0].appendChild(styleElement);
+}
 
 /***/ },
 
@@ -159,7 +178,7 @@ module.exports = {
   \*****************************************************************************************************************************************************************************************************************************************/
 /***/ function(module, exports, require) {
 
-	require(/*! (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js */ 3)(require(/*! !(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css */ 2))
+require(/*! (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js */ 3)(require(/*! !(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css */ 2))
 
 /***/ },
 
@@ -169,7 +188,7 @@ module.exports = {
   \*************************************************/
 /***/ function(module, exports, require) {
 
-	module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAOCAIAAABGj2DjAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACNSURBVChTlZC7FQAREEWFylCKEoS6EalBKNWZEoR2zrLrWbO/Gzjjc9/MIep/upNS8t63+pXukCAE33ON4/vgdo3j+6zvkNuLBybn409MDo4UY9Ra09q2CD9bCIFkQkpZSumnB8PBwZRSzbHWthNkODiYc45qY8zZBBP52Yicc692MPHqfPm6q4N5PLVunPxwQxP50QkAAAAASUVORK5CYII="
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAOCAIAAABGj2DjAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACNSURBVChTlZC7FQAREEWFylCKEoS6EalBKNWZEoR2zrLrWbO/Gzjjc9/MIep/upNS8t63+pXukCAE33ON4/vgdo3j+6zvkNuLBybn409MDo4UY9Ra09q2CD9bCIFkQkpZSumnB8PBwZRSzbHWthNkODiYc45qY8zZBBP52Yicc692MPHqfPm6q4N5PLVunPxwQxP50QkAAAAASUVORK5CYII="
 
 /***/ },
 
@@ -179,7 +198,7 @@ module.exports = {
   \************************************************/
 /***/ function(module, exports, require) {
 
-	module.exports = "A";
+module.exports = "A";
 
 /***/ },
 
@@ -189,7 +208,7 @@ module.exports = {
   \***************************************************/
 /***/ function(module, exports, require) {
 
-	module.exports = require(/*! ./main.js */ 8);
+module.exports = require(/*! ./main.js */ 8);
 
 /***/ },
 
@@ -199,7 +218,7 @@ module.exports = {
   \***********************************************/
 /***/ function(module, exports, require) {
 
-	module.exports = "C" + require(/*! a-component */ 1);
+module.exports = "C" + require(/*! a-component */ 1);
 
 /***/ },
 
@@ -209,7 +228,7 @@ module.exports = {
   \**********************************************/
 /***/ function(module, exports, require) {
 
-	module.exports = require(/*! ./main.js */ 10);
+module.exports = require(/*! ./main.js */ 10);
 
 /***/ },
 
@@ -219,11 +238,10 @@ module.exports = {
   \******************************************/
 /***/ function(module, exports, require) {
 
-	module.exports = "B";
+module.exports = "B";
 
 /***/ }
-/******/ })
-
+})
 ```
 
 # Info
@@ -231,10 +249,11 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: 9a9389bf1908b5568ad6f8fe413a0627
-Time: 120ms
+Hash: 90defdf491ebab80d48bd42ea1f7c17d
+Version: webpack 0.10.0-beta1
+Time: 124ms
     Asset  Size  Chunks  Chunk Names
-output.js  6031       0  main       
+output.js  6167       0  main       
 chunk    {0} output.js (main) 1981
     [0] ./example.js 111 [built] {0}
     [1] ./component/webpack-a-component (component) 328 [built] {0}
@@ -263,8 +282,9 @@ chunk    {0} output.js (main) 1981
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 3347ab710ad08b8494aec6ba77f9509b
-Time: 199ms
+Hash: 347d579347a144b45a78b34863b12b79
+Version: webpack 0.10.0-beta1
+Time: 466ms
     Asset  Size  Chunks  Chunk Names
 output.js  1243       0  main       
 chunk    {0} output.js (main) 1960

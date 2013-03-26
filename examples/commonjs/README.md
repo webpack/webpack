@@ -31,38 +31,57 @@ exports.add = function() {
 # js/output.js
 
 ``` javascript
-/******/ (function webpackBootstrap(modules) {
-/******/ 	var installedModules = {};
-/******/ 	function require(moduleId) {
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
-/******/ 		module.loaded = true;
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	require.e = function requireEnsure(chunkId, callback) {
-/******/ 		callback.call(null, require);
-/******/ 	};
-/******/ 	require.modules = modules;
-/******/ 	require.cache = installedModules;
-/******/ 	return require(0);
-/******/ })({
-/******/ c: "",
+(function(modules) { // webpackBootstrap
+// The module cache
+var installedModules = {};
 
+// The require function
+function require(moduleId) {
+	// Check if module is in cache
+	if(installedModules[moduleId])
+		return installedModules[moduleId].exports;
+	
+	// Create a new module (and put it into the cache)
+	var module = installedModules[moduleId] = {
+		exports: {},
+		id: moduleId,
+		loaded: false
+	};
+	
+	// Execute the module function
+	modules[moduleId].call(null, module, module.exports, require);
+	
+	// Flag the module as loaded
+	module.loaded = true;
+	
+	// Return the exports of the module
+	return module.exports;
+}
+
+require.e = function requireEnsure(_, callback) {
+	callback.call(null, require);
+};
+require.modules = modules;
+require.cache = installedModules;
+
+
+// Load entry module and return exports
+return require(0);
+})
+/************************************************************************/
+({
+// __webpack_public_path__
+
+c: "",
 /***/ 0:
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, require) {
 
-	var inc = require(/*! ./increment */ 1).increment;
-	var a = 1;
-	inc(a); // 2
+var inc = require(/*! ./increment */ 1).increment;
+var a = 1;
+inc(a); // 2
 
 /***/ },
 
@@ -72,10 +91,10 @@ exports.add = function() {
   \**********************/
 /***/ function(module, exports, require) {
 
-	var add = require(/*! ./math */ 2).add;
-	exports.increment = function(val) {
-	    return add(val, 1);
-	};
+var add = require(/*! ./math */ 2).add;
+exports.increment = function(val) {
+    return add(val, 1);
+};
 
 /***/ },
 
@@ -85,17 +104,16 @@ exports.add = function() {
   \*****************/
 /***/ function(module, exports, require) {
 
-	exports.add = function() {
-	    var sum = 0, i = 0, args = arguments, l = args.length;
-	    while (i < l) {
-	        sum += args[i++];
-	    }
-	    return sum;
-	};
+exports.add = function() {
+    var sum = 0, i = 0, args = arguments, l = args.length;
+    while (i < l) {
+        sum += args[i++];
+    }
+    return sum;
+};
 
 /***/ }
-/******/ })
-
+})
 ```
 
 # Info
@@ -103,10 +121,11 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: 4c611f00cd8c22d720b7d5e5cf4d0cc2
-Time: 31ms
+Hash: b3372208595e483f54eaa29577bc99f8
+Version: webpack 0.10.0-beta1
+Time: 33ms
     Asset  Size  Chunks  Chunk Names
-output.js  1559       0  main       
+output.js  1708       0  main       
 chunk    {0} output.js (main) 329
     [0] ./example.js 69 [built] {0}
     [1] ./increment.js 98 [built] {0}
@@ -118,8 +137,9 @@ chunk    {0} output.js (main) 329
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 4c611f00cd8c22d720b7d5e5cf4d0cc2
-Time: 84ms
+Hash: b3372208595e483f54eaa29577bc99f8
+Version: webpack 0.10.0-beta1
+Time: 96ms
     Asset  Size  Chunks  Chunk Names
 output.js   460       0  main       
 chunk    {0} output.js (main) 329

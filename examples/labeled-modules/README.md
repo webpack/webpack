@@ -30,38 +30,57 @@ exports: function add() {
 # js/output.js
 
 ``` javascript
-/******/ (function webpackBootstrap(modules) {
-/******/ 	var installedModules = {};
-/******/ 	function require(moduleId) {
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
-/******/ 		module.loaded = true;
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	require.e = function requireEnsure(chunkId, callback) {
-/******/ 		callback.call(null, require);
-/******/ 	};
-/******/ 	require.modules = modules;
-/******/ 	require.cache = installedModules;
-/******/ 	return require(0);
-/******/ })({
-/******/ c: "",
+(function(modules) { // webpackBootstrap
+// The module cache
+var installedModules = {};
 
+// The require function
+function require(moduleId) {
+	// Check if module is in cache
+	if(installedModules[moduleId])
+		return installedModules[moduleId].exports;
+	
+	// Create a new module (and put it into the cache)
+	var module = installedModules[moduleId] = {
+		exports: {},
+		id: moduleId,
+		loaded: false
+	};
+	
+	// Execute the module function
+	modules[moduleId].call(null, module, module.exports, require);
+	
+	// Flag the module as loaded
+	module.loaded = true;
+	
+	// Return the exports of the module
+	return module.exports;
+}
+
+require.e = function requireEnsure(_, callback) {
+	callback.call(null, require);
+};
+require.modules = modules;
+require.cache = installedModules;
+
+
+// Load entry module and return exports
+return require(0);
+})
+/************************************************************************/
+({
+// __webpack_public_path__
+
+c: "",
 /***/ 0:
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, require) {
 
-	var __WEBPACK_LABELED_MODULE__1 = require(/*! ./increment */ 1), increment = __WEBPACK_LABELED_MODULE__1.increment;
-	var a = 1;
-	increment(a); // 2
+var __WEBPACK_LABELED_MODULE__1 = require(/*! ./increment */ 1), increment = __WEBPACK_LABELED_MODULE__1.increment;
+var a = 1;
+increment(a); // 2
 
 /***/ },
 
@@ -71,10 +90,10 @@ exports: function add() {
   \**********************/
 /***/ function(module, exports, require) {
 
-	var __WEBPACK_LABELED_MODULE__2 = require(/*! ./math */ 2), add = __WEBPACK_LABELED_MODULE__2.add;
-	exports: exports["increment"] = function increment(val) {
-	    return add(val, 1);
-	};
+var __WEBPACK_LABELED_MODULE__2 = require(/*! ./math */ 2), add = __WEBPACK_LABELED_MODULE__2.add;
+exports: exports["increment"] = function increment(val) {
+    return add(val, 1);
+};
 
 /***/ },
 
@@ -84,17 +103,16 @@ exports: function add() {
   \*****************/
 /***/ function(module, exports, require) {
 
-	exports: exports["add"] = function add() {
-	    var sum = 0, i = 0, args = arguments, l = args.length;
-	    while (i < l) {
-	        sum += args[i++];
-	    }
-	    return sum;
-	};
+exports: exports["add"] = function add() {
+    var sum = 0, i = 0, args = arguments, l = args.length;
+    while (i < l) {
+        sum += args[i++];
+    }
+    return sum;
+};
 
 /***/ }
-/******/ })
-
+})
 ```
 
 The remaining labels are removed while minimizing.
@@ -104,10 +122,11 @@ The remaining labels are removed while minimizing.
 ## Uncompressed
 
 ```
-Hash: 77a9971b44e556189b1ad3d848f5ea9c
-Time: 30ms
+Hash: 7167162ed42199dd8fc82db2097674eb
+Version: webpack 0.10.0-beta1
+Time: 35ms
     Asset  Size  Chunks  Chunk Names
-output.js  1727       0  main       
+output.js  1876       0  main       
 chunk    {0} output.js (main) 299
     [0] ./example.js 55 [built] {0}
     [1] ./increment.js 83 [built] {0}
@@ -119,8 +138,9 @@ chunk    {0} output.js (main) 299
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 77a9971b44e556189b1ad3d848f5ea9c
-Time: 82ms
+Hash: 7167162ed42199dd8fc82db2097674eb
+Version: webpack 0.10.0-beta1
+Time: 96ms
     Asset  Size  Chunks  Chunk Names
 output.js   468       0  main       
 chunk    {0} output.js (main) 299

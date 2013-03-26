@@ -34,41 +34,60 @@ module.exports = function(content) {
 # js/output.js
 
 ``` javascript
-/******/ (function webpackBootstrap(modules) {
-/******/ 	var installedModules = {};
-/******/ 	function require(moduleId) {
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
-/******/ 		module.loaded = true;
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	require.e = function requireEnsure(chunkId, callback) {
-/******/ 		callback.call(null, require);
-/******/ 	};
-/******/ 	require.modules = modules;
-/******/ 	require.cache = installedModules;
-/******/ 	return require(0);
-/******/ })({
-/******/ c: "",
+(function(modules) { // webpackBootstrap
+// The module cache
+var installedModules = {};
 
+// The require function
+function require(moduleId) {
+	// Check if module is in cache
+	if(installedModules[moduleId])
+		return installedModules[moduleId].exports;
+	
+	// Create a new module (and put it into the cache)
+	var module = installedModules[moduleId] = {
+		exports: {},
+		id: moduleId,
+		loaded: false
+	};
+	
+	// Execute the module function
+	modules[moduleId].call(null, module, module.exports, require);
+	
+	// Flag the module as loaded
+	module.loaded = true;
+	
+	// Return the exports of the module
+	return module.exports;
+}
+
+require.e = function requireEnsure(_, callback) {
+	callback.call(null, require);
+};
+require.modules = modules;
+require.cache = installedModules;
+
+
+// Load entry module and return exports
+return require(0);
+})
+/************************************************************************/
+({
+// __webpack_public_path__
+
+c: "",
 /***/ 0:
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, require) {
 
-	// use our loader
-	console.dir(require(/*! ./loader!./file */ 2));
-	
-	// use buildin json loader
-	console.dir(require(/*! ./test.json */ 1)); // default by extension
-	console.dir(require(/*! json!./test.json */ 1)); // manual
+// use our loader
+console.dir(require(/*! ./loader!./file */ 2));
+
+// use buildin json loader
+console.dir(require(/*! ./test.json */ 1)); // default by extension
+console.dir(require(/*! json!./test.json */ 1)); // manual
 
 /***/ },
 
@@ -78,9 +97,9 @@ module.exports = function(content) {
   \************************************************************************************/
 /***/ function(module, exports, require) {
 
-	module.exports = {
-		"foobar": 1234
-	}
+module.exports = {
+	"foobar": 1234
+}
 
 /***/ },
 
@@ -90,12 +109,11 @@ module.exports = function(content) {
   \*****************************/
 /***/ function(module, exports, require) {
 
-	exports.answer = 42;
-	exports.foo = "bar";
+exports.answer = 42;
+exports.foo = "bar";
 
 /***/ }
-/******/ })
-
+})
 ```
 
 # Console output
@@ -113,10 +131,11 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 2f64cd43907e15c39cc8d84534efe0a2
-Time: 50ms
+Hash: 5caaa03683d41f386ba25cd5e2812588
+Version: webpack 0.10.0-beta1
+Time: 57ms
     Asset  Size  Chunks  Chunk Names
-output.js  1743       0  main       
+output.js  1889       0  main       
 chunk    {0} output.js (main) 282
     [0] ./example.js 205 [built] {0}
     [1] (webpack)/~/json-loader!./test.json 36 [built] {0}
