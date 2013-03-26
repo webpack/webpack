@@ -11,7 +11,7 @@
 		"async": "0.2.x",
 		"enhanced-resolve": "0.5.x",
 		"clone": "0.1.x",
-		"webpack-core": "0.1.x",
+		"webpack-core": "0.2.x",
 		"node-libs-browser": "0.1.x",
 		"tapable": "0.1.x",
 		"base64-encode": "1.0.x"
