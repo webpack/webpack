@@ -73,41 +73,47 @@ module.exports = {
 
 ``` javascript
 (function(modules) { // webpackBootstrap
-// The module cache
-var installedModules = {};
-
-// The require function
-function require(moduleId) {
-	// Check if module is in cache
-	if(installedModules[moduleId])
-		return installedModules[moduleId].exports;
+	// The module cache
+	var installedModules = {};
 	
-	// Create a new module (and put it into the cache)
-	var module = installedModules[moduleId] = {
-		exports: {},
-		id: moduleId,
-		loaded: false
+	// The require function
+	function require(moduleId) {
+		// Check if module is in cache
+		if(installedModules[moduleId])
+			return installedModules[moduleId].exports;
+		
+		// Create a new module (and put it into the cache)
+		var module = installedModules[moduleId] = {
+			exports: {},
+			id: moduleId,
+			loaded: false
+		};
+		
+		// Execute the module function
+		modules[moduleId].call(null, module, module.exports, require);
+		
+		// Flag the module as loaded
+		module.loaded = true;
+		
+		// Return the exports of the module
+		return module.exports;
+	}
+	
+	// This file contains only the entry chunk.
+	// The chunk loading function for additional chunks
+	require.e = function requireEnsure(_, callback) {
+		callback.call(null, require);
 	};
 	
-	// Execute the module function
-	modules[moduleId].call(null, module, module.exports, require);
+	// expose the modules object (__webpack_modules__)
+	require.modules = modules;
 	
-	// Flag the module as loaded
-	module.loaded = true;
+	// expose the module cache
+	require.cache = installedModules;
 	
-	// Return the exports of the module
-	return module.exports;
-}
-
-require.e = function requireEnsure(_, callback) {
-	callback.call(null, require);
-};
-require.modules = modules;
-require.cache = installedModules;
-
-
-// Load entry module and return exports
-return require(0);
+	
+	// Load entry module and return exports
+	return require(0);
 })
 /************************************************************************/
 ({
@@ -250,10 +256,10 @@ module.exports = "B";
 
 ```
 Hash: 90defdf491ebab80d48bd42ea1f7c17d
-Version: webpack 0.10.0-beta1
+Version: webpack 0.10.0-beta3
 Time: 124ms
     Asset  Size  Chunks  Chunk Names
-output.js  6167       0  main       
+output.js  6384       0  main       
 chunk    {0} output.js (main) 1981
     [0] ./example.js 111 [built] {0}
     [1] ./component/webpack-a-component (component) 328 [built] {0}
@@ -283,8 +289,8 @@ chunk    {0} output.js (main) 1981
 
 ```
 Hash: 347d579347a144b45a78b34863b12b79
-Version: webpack 0.10.0-beta1
-Time: 466ms
+Version: webpack 0.10.0-beta3
+Time: 238ms
     Asset  Size  Chunks  Chunk Names
 output.js  1243       0  main       
 chunk    {0} output.js (main) 1960

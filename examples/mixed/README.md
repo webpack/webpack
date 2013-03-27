@@ -76,78 +76,83 @@ require(
 
 ``` javascript
 (function(modules) { // webpackBootstrap
-// The module cache
-var installedModules = {};
-
-// object to store loaded and loading chunks
-// "0" means "already loaded"
-// Array means "loading", array contains callbacks
-var installedChunks = {0:0};
-
-// The require function
-function require(moduleId) {
-	// Check if module is in cache
-	if(installedModules[moduleId])
-		return installedModules[moduleId].exports;
+	// The module cache
+	var installedModules = {};
 	
-	// Create a new module (and put it into the cache)
-	var module = installedModules[moduleId] = {
-		exports: {},
-		id: moduleId,
-		loaded: false
+	// object to store loaded and loading chunks
+	// "0" means "already loaded"
+	// Array means "loading", array contains callbacks
+	var installedChunks = {0:0};
+	
+	// The require function
+	function require(moduleId) {
+		// Check if module is in cache
+		if(installedModules[moduleId])
+			return installedModules[moduleId].exports;
+		
+		// Create a new module (and put it into the cache)
+		var module = installedModules[moduleId] = {
+			exports: {},
+			id: moduleId,
+			loaded: false
+		};
+		
+		// Execute the module function
+		modules[moduleId].call(null, module, module.exports, require);
+		
+		// Flag the module as loaded
+		module.loaded = true;
+		
+		// Return the exports of the module
+		return module.exports;
+	}
+	
+	// The bundle contains no chunks. A empty chunk loading function.
+	require.e = function requireEnsure(chunkId, callback) {
+		// "0" is the signal for "already loaded"
+		if(installedChunks[chunkId] === 0)
+			return callback.call(null, require);
+		
+		// an array means "currently loading".
+		if(installedChunks[chunkId] !== undefined) {
+			installedChunks[chunkId].push(callback);
+		} else {
+			// start chunk loading
+			installedChunks[chunkId] = [callback];
+			var head = document.getElementsByTagName('head')[0];
+			var script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.charset = 'utf-8';
+			script.src = modules.c + "" + chunkId + ".output.js";
+			head.appendChild(script);
+		}
 	};
 	
-	// Execute the module function
-	modules[moduleId].call(null, module, module.exports, require);
+	// expose the modules object (__webpack_modules__)
+	require.modules = modules;
 	
-	// Flag the module as loaded
-	module.loaded = true;
+	// expose the module cache
+	require.cache = installedModules;
 	
-	// Return the exports of the module
-	return module.exports;
-}
-
-require.e = function requireEnsure(chunkId, callback) {
-	// "0" is the signal for "already loaded"
-	if(installedChunks[chunkId] === 0)
-		return callback.call(null, require);
+	// install a JSONP callback for chunk loading
+	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
+		// add "moreModules" to the modules object,
+		// then flag all "chunkIds" as loaded and fire callback
+		var moduleId, chunkId, callbacks = [];
+		while(chunkIds.length) {
+			chunkId = chunkIds.shift();
+			if(installedChunks[chunkId])
+				callbacks.push.apply(callbacks, installedChunks[chunkId]);
+			installedChunks[chunkId] = 0;
+		}
+		for(moduleId in moreModules)
+			modules[moduleId] = moreModules[moduleId];
+		while(callbacks.length)
+			callbacks.shift().call(null, require);
+	};
 	
-	// an array means "currently loading".
-	if(installedChunks[chunkId] !== undefined) {
-		installedChunks[chunkId].push(callback);
-	} else {
-		// start chunk loading
-		installedChunks[chunkId] = [callback];
-		var head = document.getElementsByTagName('head')[0];
-		var script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.charset = 'utf-8';
-		script.src = modules.c + "" + chunkId + ".output.js";
-		head.appendChild(script);
-	}
-};
-require.modules = modules;
-require.cache = installedModules;
-
-// install a JSONP callback for chunk loading
-window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
-	// add "moreModules" to the modules object,
-	// then flag all "chunkIds" as loaded and fire callback
-	var moduleId, chunkId, callbacks = [];
-	while(chunkIds.length) {
-		chunkId = chunkIds.shift();
-		if(installedChunks[chunkId])
-			callbacks.push.apply(callbacks, installedChunks[chunkId]);
-		installedChunks[chunkId] = 0;
-	}
-	for(moduleId in moreModules)
-		modules[moduleId] = moreModules[moduleId];
-	while(callbacks.length)
-		callbacks.shift().call(null, require);
-};
-
-// Load entry module and return exports
-return require(0);
+	// Load entry module and return exports
+	return require(0);
 })
 /************************************************************************/
 ({
@@ -311,37 +316,37 @@ module.exports = function() {
 
 ```
 Hash: c742d10da02e7180be4429633fb7f3af
-Version: webpack 0.10.0-beta1
-Time: 77ms
+Version: webpack 0.10.0-beta3
+Time: 78ms
       Asset  Size  Chunks  Chunk Names
-  output.js  5100       0  main       
+  output.js  5323       0  main       
 1.output.js  1546       1             
 chunk    {0} output.js (main) 1395
     [0] ./example.js 613 [built] {0}
     [1] ./amd.js 309 [built] {0}
+        amd require ./amd [2] ./commonjs.js 5:0-11:1
+        cjs require ./amd [2] ./commonjs.js 8:13-29
         cjs require ./amd [0] ./example.js 3:11-27
         amd require ./amd [0] ./example.js 7:0-14:1
         amd require ./amd [0] ./example.js 7:0-14:1
         amd require ./amd [3] ./labeled.js 5:0-11:1
         cjs require ./amd [3] ./labeled.js 9:13-29
-        amd require ./amd [2] ./commonjs.js 5:0-11:1
-        cjs require ./amd [2] ./commonjs.js 8:13-29
     [2] ./commonjs.js 234 [built] {0}
+        cjs require ./commonjs [0] ./example.js 2:16-37
+        amd require ./commonjs [0] ./example.js 7:0-14:1
+        amd require ./commonjs [0] ./example.js 7:0-14:1
         amd require ./commonjs [1] ./amd.js 2:0-12:1
         cjs require ./commonjs [1] ./amd.js 7:18-39
         amd require ./commonjs [3] ./labeled.js 5:0-11:1
         cjs require ./commonjs [3] ./labeled.js 8:18-39
-        cjs require ./commonjs [0] ./example.js 2:16-37
-        amd require ./commonjs [0] ./example.js 7:0-14:1
-        amd require ./commonjs [0] ./example.js 7:0-14:1
     [3] ./labeled.js 239 [built] {0}
+        amd require ./labeled [2] ./commonjs.js 5:0-11:1
+        cjs require ./labeled [2] ./commonjs.js 9:17-37
         amd require ./labeled [1] ./amd.js 2:0-12:1
         cjs require ./labeled [1] ./amd.js 8:17-37
         cjs require ./labeled [0] ./example.js 4:15-35
         labeled require ./labeled [0] ./example.js 17:0-21
         amd require ./labeled [0] ./example.js 7:0-14:1
-        amd require ./labeled [2] ./commonjs.js 5:0-11:1
-        cjs require ./labeled [2] ./commonjs.js 9:17-37
 chunk    {1} 1.output.js 439 {0} 
     [4] ../require.context/templates ^\.\/.*\.js$ 193 [built] {1}
         amd require context ../require.context/templates [0] ./example.js 7:0-14:1
