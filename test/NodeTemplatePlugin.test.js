@@ -15,6 +15,9 @@ describe("NodeTemplatePlugin", function() {
 				chunkFilename: "[hash].result[id].js",
 				libraryTarget: "commonjs2",
 			},
+			optimize: {
+				minimize: true
+			},
 			entry: "./entry",
 
 		}, function(err, stats) {
