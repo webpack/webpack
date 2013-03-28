@@ -23,7 +23,6 @@ module.exports = function(template, baseDir, stdout, prefix) {
 	webpack = lessStrict(webpack.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
 	webpack = new RegExp(webpack, "g");
 	webpackParent = lessStrict(webpackParent.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
-	console.log(webpackParent);
 	webpackParent = new RegExp(webpackParent, "g");
 	
 	return template.replace(regexp, function(match) {
