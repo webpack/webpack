@@ -27,7 +27,7 @@
 		"should": "1.1.x",
 		"vm-browserify": "0.0.x",
 		"express": "3.0.x",
-		"webpack-dev-middleware": "0.9.x",
+		"webpack-dev-middleware": "0.10.x",
 		"worker-loader": "0.5.x",
 		"raw-loader": "0.5.x",
 		"json-loader": "0.5.x",
