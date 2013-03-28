@@ -30,63 +30,63 @@ exports: function add() {
 # js/output.js
 
 ``` javascript
-(function(modules) { // webpackBootstrap
-	// The module cache
-	var installedModules = {};
-	
-	// The require function
-	function require(moduleId) {
-		// Check if module is in cache
-		if(installedModules[moduleId])
-			return installedModules[moduleId].exports;
-		
-		// Create a new module (and put it into the cache)
-		var module = installedModules[moduleId] = {
-			exports: {},
-			id: moduleId,
-			loaded: false
-		};
-		
-		// Execute the module function
-		modules[moduleId].call(null, module, module.exports, require);
-		
-		// Flag the module as loaded
-		module.loaded = true;
-		
-		// Return the exports of the module
-		return module.exports;
-	}
-	
-	// This file contains only the entry chunk.
-	// The chunk loading function for additional chunks
-	require.e = function requireEnsure(_, callback) {
-		callback.call(null, require);
-	};
-	
-	// expose the modules object (__webpack_modules__)
-	require.modules = modules;
-	
-	// expose the module cache
-	require.cache = installedModules;
-	
-	
-	// Load entry module and return exports
-	return require(0);
-})
+/******/(function(modules) { // webpackBootstrap
+/******/	// The module cache
+/******/	var installedModules = {};
+/******/	
+/******/	// The require function
+/******/	function require(moduleId) {
+/******/		// Check if module is in cache
+/******/		if(installedModules[moduleId])
+/******/			return installedModules[moduleId].exports;
+/******/		
+/******/		// Create a new module (and put it into the cache)
+/******/		var module = installedModules[moduleId] = {
+/******/			exports: {},
+/******/			id: moduleId,
+/******/			loaded: false
+/******/		};
+/******/		
+/******/		// Execute the module function
+/******/		modules[moduleId].call(null, module, module.exports, require);
+/******/		
+/******/		// Flag the module as loaded
+/******/		module.loaded = true;
+/******/		
+/******/		// Return the exports of the module
+/******/		return module.exports;
+/******/	}
+/******/	
+/******/	// This file contains only the entry chunk.
+/******/	// The chunk loading function for additional chunks
+/******/	require.e = function requireEnsure(_, callback) {
+/******/		callback.call(null, require);
+/******/	};
+/******/	
+/******/	// expose the modules object (__webpack_modules__)
+/******/	require.modules = modules;
+/******/	
+/******/	// expose the module cache
+/******/	require.cache = installedModules;
+/******/	
+/******/	
+/******/	// Load entry module and return exports
+/******/	return require(0);
+/******/})
 /************************************************************************/
 ({
 // __webpack_public_path__
-
 c: "",
+
 /***/ 0:
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, require) {
 
-var __WEBPACK_LABELED_MODULE__1 = require(/*! ./increment */ 1), increment = __WEBPACK_LABELED_MODULE__1.increment;
-var a = 1;
-increment(a); // 2
+	var __WEBPACK_LABELED_MODULE__1 = require(/*! ./increment */ 1), increment = __WEBPACK_LABELED_MODULE__1.increment;
+	var a = 1;
+	increment(a); // 2
 
 /***/ },
 
@@ -96,10 +96,10 @@ increment(a); // 2
   \**********************/
 /***/ function(module, exports, require) {
 
-var __WEBPACK_LABELED_MODULE__2 = require(/*! ./math */ 2), add = __WEBPACK_LABELED_MODULE__2.add;
-exports: exports["increment"] = function increment(val) {
-    return add(val, 1);
-};
+	var __WEBPACK_LABELED_MODULE__2 = require(/*! ./math */ 2), add = __WEBPACK_LABELED_MODULE__2.add;
+	exports: exports["increment"] = function increment(val) {
+	    return add(val, 1);
+	};
 
 /***/ },
 
@@ -109,13 +109,13 @@ exports: exports["increment"] = function increment(val) {
   \*****************/
 /***/ function(module, exports, require) {
 
-exports: exports["add"] = function add() {
-    var sum = 0, i = 0, args = arguments, l = args.length;
-    while (i < l) {
-        sum += args[i++];
-    }
-    return sum;
-};
+	exports: exports["add"] = function add() {
+	    var sum = 0, i = 0, args = arguments, l = args.length;
+	    while (i < l) {
+	        sum += args[i++];
+	    }
+	    return sum;
+	};
 
 /***/ }
 })
@@ -129,10 +129,10 @@ The remaining labels are removed while minimizing.
 
 ```
 Hash: 7167162ed42199dd8fc82db2097674eb
-Version: webpack 0.10.0-beta3
-Time: 36ms
+Version: webpack 0.10.0-beta4
+Time: 37ms
     Asset  Size  Chunks  Chunk Names
-output.js  2093       0  main       
+output.js  2451       0  main       
 chunk    {0} output.js (main) 299
     [0] ./example.js 55 [built] {0}
     [1] ./increment.js 83 [built] {0}
@@ -145,8 +145,8 @@ chunk    {0} output.js (main) 299
 
 ```
 Hash: 7167162ed42199dd8fc82db2097674eb
-Version: webpack 0.10.0-beta3
-Time: 95ms
+Version: webpack 0.10.0-beta4
+Time: 106ms
     Asset  Size  Chunks  Chunk Names
 output.js   468       0  main       
 chunk    {0} output.js (main) 299

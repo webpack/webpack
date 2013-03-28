@@ -17,107 +17,107 @@ getTemplate("b", function(b) {
 # js/output.js
 
 ``` javascript
-(function(modules) { // webpackBootstrap
-	// The module cache
-	var installedModules = {};
-	
-	// object to store loaded and loading chunks
-	// "0" means "already loaded"
-	// Array means "loading", array contains callbacks
-	var installedChunks = {0:0};
-	
-	// The require function
-	function require(moduleId) {
-		// Check if module is in cache
-		if(installedModules[moduleId])
-			return installedModules[moduleId].exports;
-		
-		// Create a new module (and put it into the cache)
-		var module = installedModules[moduleId] = {
-			exports: {},
-			id: moduleId,
-			loaded: false
-		};
-		
-		// Execute the module function
-		modules[moduleId].call(null, module, module.exports, require);
-		
-		// Flag the module as loaded
-		module.loaded = true;
-		
-		// Return the exports of the module
-		return module.exports;
-	}
-	
-	// The bundle contains no chunks. A empty chunk loading function.
-	require.e = function requireEnsure(chunkId, callback) {
-		// "0" is the signal for "already loaded"
-		if(installedChunks[chunkId] === 0)
-			return callback.call(null, require);
-		
-		// an array means "currently loading".
-		if(installedChunks[chunkId] !== undefined) {
-			installedChunks[chunkId].push(callback);
-		} else {
-			// start chunk loading
-			installedChunks[chunkId] = [callback];
-			var head = document.getElementsByTagName('head')[0];
-			var script = document.createElement('script');
-			script.type = 'text/javascript';
-			script.charset = 'utf-8';
-			script.src = modules.c + "" + chunkId + ".output.js";
-			head.appendChild(script);
-		}
-	};
-	
-	// expose the modules object (__webpack_modules__)
-	require.modules = modules;
-	
-	// expose the module cache
-	require.cache = installedModules;
-	
-	// install a JSONP callback for chunk loading
-	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
-		// add "moreModules" to the modules object,
-		// then flag all "chunkIds" as loaded and fire callback
-		var moduleId, chunkId, callbacks = [];
-		while(chunkIds.length) {
-			chunkId = chunkIds.shift();
-			if(installedChunks[chunkId])
-				callbacks.push.apply(callbacks, installedChunks[chunkId]);
-			installedChunks[chunkId] = 0;
-		}
-		for(moduleId in moreModules)
-			modules[moduleId] = moreModules[moduleId];
-		while(callbacks.length)
-			callbacks.shift().call(null, require);
-	};
-	
-	// Load entry module and return exports
-	return require(0);
-})
+/******/(function(modules) { // webpackBootstrap
+/******/	// The module cache
+/******/	var installedModules = {};
+/******/	
+/******/	// object to store loaded and loading chunks
+/******/	// "0" means "already loaded"
+/******/	// Array means "loading", array contains callbacks
+/******/	var installedChunks = {0:0};
+/******/	
+/******/	// The require function
+/******/	function require(moduleId) {
+/******/		// Check if module is in cache
+/******/		if(installedModules[moduleId])
+/******/			return installedModules[moduleId].exports;
+/******/		
+/******/		// Create a new module (and put it into the cache)
+/******/		var module = installedModules[moduleId] = {
+/******/			exports: {},
+/******/			id: moduleId,
+/******/			loaded: false
+/******/		};
+/******/		
+/******/		// Execute the module function
+/******/		modules[moduleId].call(null, module, module.exports, require);
+/******/		
+/******/		// Flag the module as loaded
+/******/		module.loaded = true;
+/******/		
+/******/		// Return the exports of the module
+/******/		return module.exports;
+/******/	}
+/******/	
+/******/	// The bundle contains no chunks. A empty chunk loading function.
+/******/	require.e = function requireEnsure(chunkId, callback) {
+/******/		// "0" is the signal for "already loaded"
+/******/		if(installedChunks[chunkId] === 0)
+/******/			return callback.call(null, require);
+/******/		
+/******/		// an array means "currently loading".
+/******/		if(installedChunks[chunkId] !== undefined) {
+/******/			installedChunks[chunkId].push(callback);
+/******/		} else {
+/******/			// start chunk loading
+/******/			installedChunks[chunkId] = [callback];
+/******/			var head = document.getElementsByTagName('head')[0];
+/******/			var script = document.createElement('script');
+/******/			script.type = 'text/javascript';
+/******/			script.charset = 'utf-8';
+/******/			script.src = modules.c + "" + chunkId + ".output.js";
+/******/			head.appendChild(script);
+/******/		}
+/******/	};
+/******/	
+/******/	// expose the modules object (__webpack_modules__)
+/******/	require.modules = modules;
+/******/	
+/******/	// expose the module cache
+/******/	require.cache = installedModules;
+/******/	
+/******/	// install a JSONP callback for chunk loading
+/******/	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
+/******/		// add "moreModules" to the modules object,
+/******/		// then flag all "chunkIds" as loaded and fire callback
+/******/		var moduleId, chunkId, callbacks = [];
+/******/		while(chunkIds.length) {
+/******/			chunkId = chunkIds.shift();
+/******/			if(installedChunks[chunkId])
+/******/				callbacks.push.apply(callbacks, installedChunks[chunkId]);
+/******/			installedChunks[chunkId] = 0;
+/******/		}
+/******/		for(moduleId in moreModules)
+/******/			modules[moduleId] = moreModules[moduleId];
+/******/		while(callbacks.length)
+/******/			callbacks.shift().call(null, require);
+/******/	};
+/******/	
+/******/	// Load entry module and return exports
+/******/	return require(0);
+/******/})
 /************************************************************************/
 ({
 // __webpack_public_path__
-
 c: "",
+
 /***/ 0:
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, require) {
 
-function getTemplate(templateName, callback) {
-	require.e/* require */(1, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [require(/*! ../require.context/templates */ 1)("./"+templateName)]; (function(tmpl) {
-		callback(tmpl());
-	}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
-}
-getTemplate("a", function(a) {
-	console.log(a);
-});
-getTemplate("b", function(b) {
-	console.log(b);
-});
+	function getTemplate(templateName, callback) {
+		require.e/* require */(1, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [require(/*! ../require.context/templates */ 1)("./"+templateName)]; (function(tmpl) {
+			callback(tmpl());
+		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
+	}
+	getTemplate("a", function(a) {
+		console.log(a);
+	});
+	getTemplate("b", function(b) {
+		console.log(b);
+	});
 
 /***/ }
 })
@@ -135,26 +135,26 @@ webpackJsonp([1],
   \*********************************************/
 /***/ function(module, exports, require) {
 
-var map = {
-	"./a": 2,
-	"./a.js": 2,
-	"./b": 3,
-	"./b.js": 3,
-	"./c": 4,
-	"./c.js": 4
-};
-function webpackContext(req) {
-	return require(webpackContextResolve(req));
-};
-function webpackContextResolve(req) {
-	return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
-};
-webpackContext.keys = function webpackContextKeys() {
-	return Object.keys(map);
-};
-webpackContext.resolve = webpackContextResolve;
-module.exports = webpackContext;
-
+	var map = {
+		"./a": 2,
+		"./a.js": 2,
+		"./b": 3,
+		"./b.js": 3,
+		"./c": 4,
+		"./c.js": 4
+	};
+	function webpackContext(req) {
+		return require(webpackContextResolve(req));
+	};
+	function webpackContextResolve(req) {
+		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
+	};
+	webpackContext.keys = function webpackContextKeys() {
+		return Object.keys(map);
+	};
+	webpackContext.resolve = webpackContextResolve;
+	module.exports = webpackContext;
+	
 
 /***/ },
 
@@ -164,9 +164,9 @@ module.exports = webpackContext;
   \*****************************************/
 /***/ function(module, exports, require) {
 
-module.exports = function() {
-	return "This text was generated by template A";
-}
+	module.exports = function() {
+		return "This text was generated by template A";
+	}
 
 /***/ },
 
@@ -176,9 +176,9 @@ module.exports = function() {
   \*****************************************/
 /***/ function(module, exports, require) {
 
-module.exports = function() {
-	return "This text was generated by template B";
-}
+	module.exports = function() {
+		return "This text was generated by template B";
+	}
 
 /***/ },
 
@@ -188,9 +188,9 @@ module.exports = function() {
   \*****************************************/
 /***/ function(module, exports, require) {
 
-module.exports = function() {
-	return "This text was generated by template C";
-}
+	module.exports = function() {
+		return "This text was generated by template C";
+	}
 
 /***/ }
 
@@ -204,11 +204,11 @@ module.exports = function() {
 
 ```
 Hash: 7a6425e8fe46dc01a0db9eee1a97caca
-Version: webpack 0.10.0-beta3
-Time: 56ms
+Version: webpack 0.10.0-beta4
+Time: 54ms
       Asset  Size  Chunks  Chunk Names
-  output.js  3016       0  main       
-1.output.js  1567       1             
+  output.js  3659       0  main       
+1.output.js  1596       1             
 chunk    {0} output.js (main) 261
     [0] ./example.js 261 [built] {0}
 chunk    {1} 1.output.js 463 {0} 
@@ -229,8 +229,8 @@ chunk    {1} 1.output.js 463 {0}
 
 ```
 Hash: 7a6425e8fe46dc01a0db9eee1a97caca
-Version: webpack 0.10.0-beta3
-Time: 170ms
+Version: webpack 0.10.0-beta4
+Time: 169ms
       Asset  Size  Chunks  Chunk Names
   output.js   831       0  main       
 1.output.js   531       1             

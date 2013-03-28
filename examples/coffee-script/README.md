@@ -26,61 +26,61 @@ module.exports = 42
 # js/output.js
 
 ``` javascript
-(function(modules) { // webpackBootstrap
-	// The module cache
-	var installedModules = {};
-	
-	// The require function
-	function require(moduleId) {
-		// Check if module is in cache
-		if(installedModules[moduleId])
-			return installedModules[moduleId].exports;
-		
-		// Create a new module (and put it into the cache)
-		var module = installedModules[moduleId] = {
-			exports: {},
-			id: moduleId,
-			loaded: false
-		};
-		
-		// Execute the module function
-		modules[moduleId].call(null, module, module.exports, require);
-		
-		// Flag the module as loaded
-		module.loaded = true;
-		
-		// Return the exports of the module
-		return module.exports;
-	}
-	
-	// This file contains only the entry chunk.
-	// The chunk loading function for additional chunks
-	require.e = function requireEnsure(_, callback) {
-		callback.call(null, require);
-	};
-	
-	// expose the modules object (__webpack_modules__)
-	require.modules = modules;
-	
-	// expose the module cache
-	require.cache = installedModules;
-	
-	
-	// Load entry module and return exports
-	return require(0);
-})
+/******/(function(modules) { // webpackBootstrap
+/******/	// The module cache
+/******/	var installedModules = {};
+/******/	
+/******/	// The require function
+/******/	function require(moduleId) {
+/******/		// Check if module is in cache
+/******/		if(installedModules[moduleId])
+/******/			return installedModules[moduleId].exports;
+/******/		
+/******/		// Create a new module (and put it into the cache)
+/******/		var module = installedModules[moduleId] = {
+/******/			exports: {},
+/******/			id: moduleId,
+/******/			loaded: false
+/******/		};
+/******/		
+/******/		// Execute the module function
+/******/		modules[moduleId].call(null, module, module.exports, require);
+/******/		
+/******/		// Flag the module as loaded
+/******/		module.loaded = true;
+/******/		
+/******/		// Return the exports of the module
+/******/		return module.exports;
+/******/	}
+/******/	
+/******/	// This file contains only the entry chunk.
+/******/	// The chunk loading function for additional chunks
+/******/	require.e = function requireEnsure(_, callback) {
+/******/		callback.call(null, require);
+/******/	};
+/******/	
+/******/	// expose the modules object (__webpack_modules__)
+/******/	require.modules = modules;
+/******/	
+/******/	// expose the module cache
+/******/	require.cache = installedModules;
+/******/	
+/******/	
+/******/	// Load entry module and return exports
+/******/	return require(0);
+/******/})
 /************************************************************************/
 ({
 // __webpack_public_path__
-
 c: "",
+
 /***/ 0:
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, require) {
 
-console.log(require(/*! ./cup1 */ 2));
+	console.log(require(/*! ./cup1 */ 2));
 
 /***/ },
 
@@ -90,10 +90,10 @@ console.log(require(/*! ./cup1 */ 2));
   \*********************/
 /***/ function(module, exports, require) {
 
-console.log("yeah coffee-script");
-
-module.exports = 42;
-
+	console.log("yeah coffee-script");
+	
+	module.exports = 42;
+	
 
 /***/ },
 
@@ -103,13 +103,13 @@ module.exports = 42;
   \*********************/
 /***/ function(module, exports, require) {
 
-module.exports = {
-  cool: "stuff",
-  answer: 42,
-  external: require(/*! ./cup2.coffee */ 1),
-  again: require(/*! ./cup2 */ 1)
-};
-
+	module.exports = {
+	  cool: "stuff",
+	  answer: 42,
+	  external: require(/*! ./cup2.coffee */ 1),
+	  again: require(/*! ./cup2 */ 1)
+	};
+	
 
 /***/ }
 })
@@ -121,10 +121,10 @@ module.exports = {
 
 ```
 Hash: 5394516f6bbce8cc020e6c170fd62636
-Version: webpack 0.10.0-beta3
-Time: 178ms
+Version: webpack 0.10.0-beta4
+Time: 177ms
     Asset  Size  Chunks  Chunk Names
-output.js  1818       0  main       
+output.js  2174       0  main       
 chunk    {0} output.js (main) 206
     [0] ./example.js 31 [built] {0}
     [1] ./cup2.coffee 57 [built] {0}
@@ -138,8 +138,8 @@ chunk    {0} output.js (main) 206
 
 ```
 Hash: 5394516f6bbce8cc020e6c170fd62636
-Version: webpack 0.10.0-beta3
-Time: 231ms
+Version: webpack 0.10.0-beta4
+Time: 228ms
     Asset  Size  Chunks  Chunk Names
 output.js   418       0  main       
 chunk    {0} output.js (main) 206
