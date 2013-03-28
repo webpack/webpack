@@ -25,53 +25,52 @@ module.exports = function() {
 # js/output.js
 
 ``` javascript
-/******/(function(modules) { // webpackBootstrap
-/******/	// The module cache
-/******/	var installedModules = {};
-/******/	
-/******/	// The require function
-/******/	function require(moduleId) {
-/******/		// Check if module is in cache
-/******/		if(installedModules[moduleId])
-/******/			return installedModules[moduleId].exports;
-/******/		
-/******/		// Create a new module (and put it into the cache)
-/******/		var module = installedModules[moduleId] = {
-/******/			exports: {},
-/******/			id: moduleId,
-/******/			loaded: false
-/******/		};
-/******/		
-/******/		// Execute the module function
-/******/		modules[moduleId].call(null, module, module.exports, require);
-/******/		
-/******/		// Flag the module as loaded
-/******/		module.loaded = true;
-/******/		
-/******/		// Return the exports of the module
-/******/		return module.exports;
-/******/	}
-/******/	
-/******/	// This file contains only the entry chunk.
-/******/	// The chunk loading function for additional chunks
-/******/	require.e = function requireEnsure(_, callback) {
-/******/		callback.call(null, require);
-/******/	};
-/******/	
-/******/	// expose the modules object (__webpack_modules__)
-/******/	require.modules = modules;
-/******/	
-/******/	// expose the module cache
-/******/	require.cache = installedModules;
-/******/	
-/******/	
-/******/	// Load entry module and return exports
-/******/	return require(0);
-/******/})
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function require(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/ 		
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+/******/ 		
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// The bundle contains no chunks. A empty chunk loading function.
+/******/ 	require.e = function requireEnsure(_, callback) {
+/******/ 		callback.call(null, require);
+/******/ 	};
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	require.modules = modules;
+/******/ 	
+/******/ 	// expose the module cache
+/******/ 	require.cache = installedModules;
+/******/ 	
+/******/ 	
+/******/ 	// Load entry module and return exports
+/******/ 	return require(0);
+/******/ })
 /************************************************************************/
-({
-// __webpack_public_path__
-c: "",
+/******/ ({
+/******/ // __webpack_public_path__
+/******/ c: "",
 
 /***/ 0:
 /*!********************!*\
@@ -151,7 +150,7 @@ c: "",
 	
 
 /***/ }
-})
+/******/ })
 ```
 
 # Info
@@ -163,7 +162,7 @@ Hash: 6de61529e12c5c59a06afb519b285fc6
 Version: webpack 0.10.0-beta4
 Time: 40ms
     Asset  Size  Chunks  Chunk Names
-output.js  3181       0  main       
+output.js  3220       0  main       
 chunk    {0} output.js (main) 613
     [0] ./example.js 150 [built] {0}
     [1] ./templates/a.js 82 [built] {0}

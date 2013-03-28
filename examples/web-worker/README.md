@@ -25,53 +25,52 @@ onmessage = function(event) {
 # js/output.js
 
 ``` javascript
-/******/(function(modules) { // webpackBootstrap
-/******/	// The module cache
-/******/	var installedModules = {};
-/******/	
-/******/	// The require function
-/******/	function require(moduleId) {
-/******/		// Check if module is in cache
-/******/		if(installedModules[moduleId])
-/******/			return installedModules[moduleId].exports;
-/******/		
-/******/		// Create a new module (and put it into the cache)
-/******/		var module = installedModules[moduleId] = {
-/******/			exports: {},
-/******/			id: moduleId,
-/******/			loaded: false
-/******/		};
-/******/		
-/******/		// Execute the module function
-/******/		modules[moduleId].call(null, module, module.exports, require);
-/******/		
-/******/		// Flag the module as loaded
-/******/		module.loaded = true;
-/******/		
-/******/		// Return the exports of the module
-/******/		return module.exports;
-/******/	}
-/******/	
-/******/	// This file contains only the entry chunk.
-/******/	// The chunk loading function for additional chunks
-/******/	require.e = function requireEnsure(_, callback) {
-/******/		callback.call(null, require);
-/******/	};
-/******/	
-/******/	// expose the modules object (__webpack_modules__)
-/******/	require.modules = modules;
-/******/	
-/******/	// expose the module cache
-/******/	require.cache = installedModules;
-/******/	
-/******/	
-/******/	// Load entry module and return exports
-/******/	return require(0);
-/******/})
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/ 	
+/******/ 	// The require function
+/******/ 	function require(moduleId) {
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/ 		
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+/******/ 		
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/ 	
+/******/ 	// The bundle contains no chunks. A empty chunk loading function.
+/******/ 	require.e = function requireEnsure(_, callback) {
+/******/ 		callback.call(null, require);
+/******/ 	};
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	require.modules = modules;
+/******/ 	
+/******/ 	// expose the module cache
+/******/ 	require.cache = installedModules;
+/******/ 	
+/******/ 	
+/******/ 	// Load entry module and return exports
+/******/ 	return require(0);
+/******/ })
 /************************************************************************/
-({
-// __webpack_public_path__
-c: "",
+/******/ ({
+/******/ // __webpack_public_path__
+/******/ c: "",
 
 /***/ 0:
 /*!********************!*\
@@ -99,42 +98,71 @@ c: "",
 	};
 
 /***/ }
-})
+/******/ })
 ```
 
 # js/[hash].worker.js
 
 ``` javascript
-/******/ (function webpackBootstrap(modules) {
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
 /******/ 	var installedModules = {};
+/******/ 	
+/******/ 	// object to store loaded chunks
+/******/ 	// "1" means "already loaded"
+/******/ 	var installedChunks = {0:1};
+/******/ 	
+/******/ 	// The require function
 /******/ 	function require(moduleId) {
+/******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
+/******/ 		
+/******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
+/******/ 		
+/******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		
+/******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
+/******/ 		
+/******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
+/******/ 	
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
 /******/ 	require.e = function requireEnsure(chunkId, callback) {
-/******/ 		if(installedChunks[chunkId] === 1) return callback.call(null, require);
-/******/ 		importScripts(""+chunkId+".hash.worker.js");
+/******/ 		// "1" is the signal for "already loaded"
+/******/ 		if(!installedChunks[chunkId]) {
+/******/ 			importScripts("" + chunkId + ".hash.worker.js");
+/******/ 		}
 /******/ 		callback.call(null, require);
 /******/ 	};
+/******/ 	
+/******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	require.modules = modules;
+/******/ 	
+/******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
-/******/ 	var installedChunks = {0:1};
 /******/ 	this["webpackChunk"] = function webpackChunkCallback(chunkIds, moreModules) {
 /******/ 		for(var moduleId in moreModules)
 /******/ 			modules[moduleId] = moreModules[moduleId];
-/******/ 		for(var i = 0; i < chunkIds.length; i++)
-/******/ 			installedChunks[chunkIds[i]] = 1;
+/******/ 		while(chunkIds.length)
+/******/ 			installedChunks[chunkIds.pop()] = 1;
 /******/ 	};
+/******/ 	
+/******/ 	// Load entry module and return exports
 /******/ 	return require(0);
-/******/ })({
+/******/ })
+/************************************************************************/
+/******/ ({
+/******/ // __webpack_public_path__
 /******/ c: "",
 
 /***/ 0:
@@ -153,13 +181,13 @@ c: "",
 
 /***/ }
 /******/ })
-
 ```
 
 # js/1.[hash].worker.hs
 
 ``` javascript
-webpackChunk([1], {
+webpackChunk([1],
+{
 
 /***/ 1:
 /*!*********************************************!*\
@@ -226,7 +254,8 @@ webpackChunk([1], {
 
 /***/ }
 
-})
+}
+)
 ```
 
 # Info
@@ -236,21 +265,21 @@ webpackChunk([1], {
 ```
 Hash: b898016580f5af04be201a389d5bc652
 Version: webpack 0.10.0-beta4
-Time: 89ms
+Time: 84ms
            Asset  Size  Chunks  Chunk Names
-  hash.worker.js  1722                     
-1.hash.worker.js  1595                     
-       output.js  2297       0  main       
+  hash.worker.js  2619                     
+1.hash.worker.js  1596                     
+       output.js  2336       0  main       
 chunk    {0} output.js (main) 302
     [0] ./example.js 206 [built] {0}
     [1] (webpack)/~/worker-loader!./worker.js 96 [not cacheable] [built] {0}
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
-    Hash: d7a23ee9e23841a128556ef675f47aed
+    Hash: df2e39abee5b81accea763c727cac801
     Version: webpack 0.10.0-beta4
                Asset  Size  Chunks  Chunk Names
-      hash.worker.js  1722       0  main       
-    1.hash.worker.js  1595       1             
+      hash.worker.js  2619       0  main       
+    1.hash.worker.js  1596       1             
     chunk    {0} hash.worker.js (main) 168
         [0] ./worker.js 168 [built] {0}
     chunk    {1} 1.hash.worker.js 463 {0} 
@@ -272,9 +301,9 @@ Child worker:
 ```
 Hash: b898016580f5af04be201a389d5bc652
 Version: webpack 0.10.0-beta4
-Time: 562ms
+Time: 203ms
            Asset  Size  Chunks  Chunk Names
-  hash.worker.js   566                     
+  hash.worker.js   519                     
 1.hash.worker.js   531                     
        output.js   418       0  main       
 chunk    {0} output.js (main) 302
@@ -282,10 +311,10 @@ chunk    {0} output.js (main) 302
     [1] (webpack)/~/worker-loader!./worker.js 96 [not cacheable] [built] {0}
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
-    Hash: d7a23ee9e23841a128556ef675f47aed
+    Hash: df2e39abee5b81accea763c727cac801
     Version: webpack 0.10.0-beta4
                Asset  Size  Chunks  Chunk Names
-      hash.worker.js   566       0  main       
+      hash.worker.js   519       0  main       
     1.hash.worker.js   531       1             
     chunk    {0} hash.worker.js (main) 168
         [0] ./worker.js 168 [built] {0}
