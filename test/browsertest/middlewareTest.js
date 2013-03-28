@@ -10,7 +10,7 @@ app.configure(function() {
 		context: __dirname,
 		entry: "./lib/index",
 		debug: true,
-		devtool: "eval",
+		devtool: "sourcemap",
 		module: {
 			loaders: [
 				{ test: /\.json$/, loader: "json" },
@@ -24,6 +24,9 @@ app.configure(function() {
 			alias: {
 				vm: "vm-browserify"
 			}
+		},
+		optimize: {
+			minimize: true
 		},
 		output: {
 			publicPath: "http://localhost:8080/js/",
