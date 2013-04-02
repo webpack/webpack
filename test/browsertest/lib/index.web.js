@@ -1,6 +1,8 @@
-// Should not break it... should not include complete directory...
-require = require("enhanced-require")(module);
-if(typeof define != "function") var define = require.define;
+// Should not break it...
+if(typeof require !== "function")
+	var require = require("amdrequire");
+if(typeof define != "function")
+	var define = require("amdefine");
 
 function test(cond, message) {
 	if(!cond) throw new Error(message);
@@ -148,6 +150,12 @@ describe("main", function() {
 			(function() {
 				var require = 123;
 				require.should.be.eql(123);
+			}());
+			(function() {
+				function require() {
+					return 123;
+				};
+				require("error").should.be.eql(123);
 			}());
 			(function() {
 				var module = 1233;
