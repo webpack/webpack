@@ -274,6 +274,8 @@ module.exports = function(optimist, argv, convertOptions) {
 
 	mapArgToBoolean("bail", "bail");
 
+	mapArgToBoolean("profile", "profile");
+
 	if(!options.output || !options.output.filename) {
 		ensureObject(options, "output");
 		if(convertOptions && convertOptions.outputFilename) {

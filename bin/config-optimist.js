@@ -61,6 +61,8 @@ module.exports = function(optimist) {
 
 	.boolean("bail").describe("bail")
 
+	.boolean("profile").describe("profile")
+
 	.boolean("d").describe("d", "shortcut for --debug --devtool sourcemap --output-pathinfo")
 
 	.boolean("p").describe("p", "shortcut for --optimize-minimize");
