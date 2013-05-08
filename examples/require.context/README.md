@@ -158,20 +158,20 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 6de61529e12c5c59a06afb519b285fc6
-Version: webpack 0.10.0-beta4
-Time: 40ms
-    Asset  Size  Chunks  Chunk Names
-output.js  3220       0  main       
-chunk    {0} output.js (main) 613
-    [0] ./example.js 150 [built] {0}
-    [1] ./templates/a.js 82 [built] {0}
+Hash: 740455ffb121aee6bb93c7638ec1b15d
+Version: webpack 0.10.0-beta6
+Time: 35ms
+    Asset  Size  Chunks             Chunk Names
+output.js  3210       0  [emitted]  main       
+chunk    {0} output.js (main) 603 [rendered]
+    [0] ./example.js 146 [built] {0}
+    [1] ./templates/a.js 80 [built] {0}
         context element ./a [4] ./templates ^\.\/.*$
         context element ./a.js [4] ./templates ^\.\/.*$
-    [2] ./templates/b.js 82 [built] {0}
+    [2] ./templates/b.js 80 [built] {0}
         context element ./b [4] ./templates ^\.\/.*$
         context element ./b.js [4] ./templates ^\.\/.*$
-    [3] ./templates/c.js 82 [built] {0}
+    [3] ./templates/c.js 80 [built] {0}
         context element ./c [4] ./templates ^\.\/.*$
         context element ./c.js [4] ./templates ^\.\/.*$
     [4] ./templates ^\.\/.*$ 217 [built] {0}
@@ -181,20 +181,20 @@ chunk    {0} output.js (main) 613
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 6de61529e12c5c59a06afb519b285fc6
-Version: webpack 0.10.0-beta4
-Time: 114ms
-    Asset  Size  Chunks  Chunk Names
-output.js   844       0  main       
-chunk    {0} output.js (main) 613
-    [0] ./example.js 150 [built] {0}
-    [1] ./templates/a.js 82 [built] {0}
+Hash: 740455ffb121aee6bb93c7638ec1b15d
+Version: webpack 0.10.0-beta6
+Time: 88ms
+    Asset  Size  Chunks             Chunk Names
+output.js   844       0  [emitted]  main       
+chunk    {0} output.js (main) 603 [rendered]
+    [0] ./example.js 146 [built] {0}
+    [1] ./templates/a.js 80 [built] {0}
         context element ./a [4] ./templates ^\.\/.*$
         context element ./a.js [4] ./templates ^\.\/.*$
-    [2] ./templates/b.js 82 [built] {0}
+    [2] ./templates/b.js 80 [built] {0}
         context element ./b [4] ./templates ^\.\/.*$
         context element ./b.js [4] ./templates ^\.\/.*$
-    [3] ./templates/c.js 82 [built] {0}
+    [3] ./templates/c.js 80 [built] {0}
         context element ./c [4] ./templates ^\.\/.*$
         context element ./c.js [4] ./templates ^\.\/.*$
     [4] ./templates ^\.\/.*$ 217 [built] {0}

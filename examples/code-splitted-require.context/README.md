@@ -204,24 +204,24 @@ webpackJsonp([1],
 ## Uncompressed
 
 ```
-Hash: bfc8a0c89870057a328ac4537518a669
-Version: webpack 0.10.0-beta4
-Time: 53ms
-      Asset  Size  Chunks  Chunk Names
-  output.js  3702       0  main       
-1.output.js  1596       1             
-chunk    {0} output.js (main) 276
-    [0] ./example.js 276 [built] {0}
-chunk    {1} 1.output.js 463 {0} 
+Hash: a8c274d2392544e4d7c3e569c7917cad
+Version: webpack 0.10.0-beta6
+Time: 46ms
+      Asset  Size  Chunks             Chunk Names
+  output.js  3692       0  [emitted]  main       
+1.output.js  1590       1  [emitted]             
+chunk    {0} output.js (main) 266 [rendered]
+    [0] ./example.js 266 [built] {0}
+chunk    {1} 1.output.js 457 {0} [rendered]
     [1] ../require.context/templates ^\.\/.*$ 217 [built] {1}
         cjs require context ../require.context/templates [0] ./example.js 3:11-64
-    [2] ../require.context/templates/a.js 82 [built] {1}
+    [2] ../require.context/templates/a.js 80 [built] {1}
         context element ./a [1] ../require.context/templates ^\.\/.*$
         context element ./a.js [1] ../require.context/templates ^\.\/.*$
-    [3] ../require.context/templates/b.js 82 [built] {1}
+    [3] ../require.context/templates/b.js 80 [built] {1}
         context element ./b [1] ../require.context/templates ^\.\/.*$
         context element ./b.js [1] ../require.context/templates ^\.\/.*$
-    [4] ../require.context/templates/c.js 82 [built] {1}
+    [4] ../require.context/templates/c.js 80 [built] {1}
         context element ./c [1] ../require.context/templates ^\.\/.*$
         context element ./c.js [1] ../require.context/templates ^\.\/.*$
 ```
@@ -229,24 +229,24 @@ chunk    {1} 1.output.js 463 {0}
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: bfc8a0c89870057a328ac4537518a669
-Version: webpack 0.10.0-beta4
-Time: 163ms
-      Asset  Size  Chunks  Chunk Names
-  output.js   792       0  main       
-1.output.js   531       1             
-chunk    {0} output.js (main) 276
-    [0] ./example.js 276 [built] {0}
-chunk    {1} 1.output.js 463 {0} 
+Hash: a8c274d2392544e4d7c3e569c7917cad
+Version: webpack 0.10.0-beta6
+Time: 130ms
+      Asset  Size  Chunks             Chunk Names
+  output.js   792       0  [emitted]  main       
+1.output.js   531       1  [emitted]             
+chunk    {0} output.js (main) 266 [rendered]
+    [0] ./example.js 266 [built] {0}
+chunk    {1} 1.output.js 457 {0} [rendered]
     [1] ../require.context/templates ^\.\/.*$ 217 [built] {1}
         cjs require context ../require.context/templates [0] ./example.js 3:11-64
-    [2] ../require.context/templates/a.js 82 [built] {1}
+    [2] ../require.context/templates/a.js 80 [built] {1}
         context element ./a [1] ../require.context/templates ^\.\/.*$
         context element ./a.js [1] ../require.context/templates ^\.\/.*$
-    [3] ../require.context/templates/b.js 82 [built] {1}
+    [3] ../require.context/templates/b.js 80 [built] {1}
         context element ./b [1] ../require.context/templates ^\.\/.*$
         context element ./b.js [1] ../require.context/templates ^\.\/.*$
-    [4] ../require.context/templates/c.js 82 [built] {1}
+    [4] ../require.context/templates/c.js 80 [built] {1}
         context element ./c [1] ../require.context/templates ^\.\/.*$
         context element ./c.js [1] ../require.context/templates ^\.\/.*$
 ```

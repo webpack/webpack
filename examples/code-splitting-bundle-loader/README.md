@@ -114,9 +114,9 @@ module.exports = "It works";
 /***/ },
 
 /***/ 1:
-/*!************************************************************************************!*\
+/*!***********************************************************************************************************!*\
   !*** (webpack)/~/bundle-loader!./file.js ***!
-  \************************************************************************************/
+  \***********************************************************************************************************/
 /***/ function(module, exports, require) {
 
 	var cbs = [], 
@@ -163,35 +163,35 @@ webpackJsonp([1],
 ## Uncompressed
 
 ```
-Hash: d75e46ac811b482356205a47ab1dc1c0
-Version: webpack 0.10.0-beta4
-Time: 57ms
-      Asset  Size  Chunks  Chunk Names
-  output.js  4136       0  main       
-1.output.js   185       1             
-chunk    {0} output.js (main) 486
-    [0] ./example.js 88 [built] {0}
-    [1] (webpack)/~/bundle-loader!./file.js 398 [built] {0}
+Hash: a736de619594f70cfa552d06f59af048
+Version: webpack 0.10.0-beta6
+Time: 54ms
+      Asset  Size  Chunks             Chunk Names
+  output.js  4203       0  [emitted]  main       
+1.output.js   185       1  [emitted]             
+chunk    {0} output.js (main) 508 [rendered]
+    [0] ./example.js 86 [built] {0}
+    [1] (webpack)/~/bundle-loader!./file.js 422 [built] {0}
         cjs require bundle!./file.js [0] ./example.js 1:0-27
-chunk    {1} 1.output.js 28 {0} 
+chunk    {1} 1.output.js 28 {0} [rendered]
     [2] ./file.js 28 [built] {1}
-        cjs require !!.\file.js [1] (webpack)/~/bundle-loader!./file.js 8:8-147
+        cjs require !!.\file.js [1] (webpack)/~/bundle-loader!./file.js 8:8-171
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: d75e46ac811b482356205a47ab1dc1c0
-Version: webpack 0.10.0-beta4
-Time: 152ms
-      Asset  Size  Chunks  Chunk Names
-  output.js   853       0  main       
-1.output.js    56       1             
-chunk    {0} output.js (main) 486
-    [0] ./example.js 88 [built] {0}
-    [1] (webpack)/~/bundle-loader!./file.js 398 [built] {0}
+Hash: a736de619594f70cfa552d06f59af048
+Version: webpack 0.10.0-beta6
+Time: 140ms
+      Asset  Size  Chunks             Chunk Names
+  output.js   853       0  [emitted]  main       
+1.output.js    56       1  [emitted]             
+chunk    {0} output.js (main) 508 [rendered]
+    [0] ./example.js 86 [built] {0}
+    [1] (webpack)/~/bundle-loader!./file.js 422 [built] {0}
         cjs require bundle!./file.js [0] ./example.js 1:0-27
-chunk    {1} 1.output.js 28 {0} 
+chunk    {1} 1.output.js 28 {0} [rendered]
     [2] ./file.js 28 [built] {1}
-        cjs require !!.\file.js [1] (webpack)/~/bundle-loader!./file.js 8:8-147
+        cjs require !!.\file.js [1] (webpack)/~/bundle-loader!./file.js 8:8-171
 ```

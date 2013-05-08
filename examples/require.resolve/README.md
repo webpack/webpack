@@ -112,13 +112,13 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: f180ba3e87e5894643306820cbd115dc
-Version: webpack 0.10.0-beta4
-Time: 33ms
-    Asset  Size  Chunks  Chunk Names
-output.js  2173       0  main       
-chunk    {0} output.js (main) 326
-    [0] ./example.js 295 [built] {0}
+Hash: 995c10e31ea4676dccbdc20d8ed79bec
+Version: webpack 0.10.0-beta6
+Time: 30ms
+    Asset  Size  Chunks             Chunk Names
+output.js  2161       0  [emitted]  main       
+chunk    {0} output.js (main) 314 [rendered]
+    [0] ./example.js 283 [built] {0}
     [1] ./a.js 31 [built] {0}
         require.resolve ./a.js [0] ./example.js 4:10-35
         cjs require ./a [0] ./example.js 1:8-22
@@ -128,13 +128,13 @@ chunk    {0} output.js (main) 326
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: f180ba3e87e5894643306820cbd115dc
-Version: webpack 0.10.0-beta4
-Time: 82ms
-    Asset  Size  Chunks  Chunk Names
-output.js   387       0  main       
-chunk    {0} output.js (main) 326
-    [0] ./example.js 295 [built] {0}
+Hash: 995c10e31ea4676dccbdc20d8ed79bec
+Version: webpack 0.10.0-beta6
+Time: 63ms
+    Asset  Size  Chunks             Chunk Names
+output.js   387       0  [emitted]  main       
+chunk    {0} output.js (main) 314 [rendered]
+    [0] ./example.js 283 [built] {0}
     [1] ./a.js 31 [built] {0}
         require.resolve ./a.js [0] ./example.js 4:10-35
         cjs require ./a [0] ./example.js 1:8-22

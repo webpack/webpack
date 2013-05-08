@@ -127,31 +127,31 @@ The remaining labels are removed while minimizing.
 ## Uncompressed
 
 ```
-Hash: 7167162ed42199dd8fc82db2097674eb
-Version: webpack 0.10.0-beta4
-Time: 37ms
-    Asset  Size  Chunks  Chunk Names
-output.js  2490       0  main       
-chunk    {0} output.js (main) 299
-    [0] ./example.js 55 [built] {0}
-    [1] ./increment.js 83 [built] {0}
+Hash: 76e286b599e5c0a0757814519c4540d3
+Version: webpack 0.10.0-beta6
+Time: 39ms
+    Asset  Size  Chunks             Chunk Names
+output.js  2479       0  [emitted]  main       
+chunk    {0} output.js (main) 288 [rendered]
+    [0] ./example.js 53 [built] {0}
+    [1] ./increment.js 80 [built] {0}
         labeled require ./increment [0] ./example.js 1:0-23
-    [2] ./math.js 161 [built] {0}
+    [2] ./math.js 155 [built] {0}
         labeled require ./math [1] ./increment.js 1:0-18
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 7167162ed42199dd8fc82db2097674eb
-Version: webpack 0.10.0-beta4
-Time: 96ms
-    Asset  Size  Chunks  Chunk Names
-output.js   468       0  main       
-chunk    {0} output.js (main) 299
-    [0] ./example.js 55 [built] {0}
-    [1] ./increment.js 83 [built] {0}
+Hash: 76e286b599e5c0a0757814519c4540d3
+Version: webpack 0.10.0-beta6
+Time: 82ms
+    Asset  Size  Chunks             Chunk Names
+output.js   468       0  [emitted]  main       
+chunk    {0} output.js (main) 288 [rendered]
+    [0] ./example.js 53 [built] {0}
+    [1] ./increment.js 80 [built] {0}
         labeled require ./increment [0] ./example.js 1:0-23
-    [2] ./math.js 161 [built] {0}
+    [2] ./math.js 155 [built] {0}
         labeled require ./math [1] ./increment.js 1:0-18
 ```

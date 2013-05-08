@@ -126,31 +126,31 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: b3372208595e483f54eaa29577bc99f8
-Version: webpack 0.10.0-beta4
-Time: 37ms
-    Asset  Size  Chunks  Chunk Names
-output.js  2322       0  main       
-chunk    {0} output.js (main) 329
-    [0] ./example.js 69 [built] {0}
-    [1] ./increment.js 98 [built] {0}
+Hash: 58e793ed9773263580f89dd2c34efe6a
+Version: webpack 0.10.0-beta6
+Time: 36ms
+    Asset  Size  Chunks             Chunk Names
+output.js  2311       0  [emitted]  main       
+chunk    {0} output.js (main) 318 [rendered]
+    [0] ./example.js 67 [built] {0}
+    [1] ./increment.js 95 [built] {0}
         cjs require ./increment [0] ./example.js 1:10-32
-    [2] ./math.js 162 [built] {0}
+    [2] ./math.js 156 [built] {0}
         cjs require ./math [1] ./increment.js 1:10-27
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b3372208595e483f54eaa29577bc99f8
-Version: webpack 0.10.0-beta4
-Time: 93ms
-    Asset  Size  Chunks  Chunk Names
-output.js   460       0  main       
-chunk    {0} output.js (main) 329
-    [0] ./example.js 69 [built] {0}
-    [1] ./increment.js 98 [built] {0}
+Hash: 58e793ed9773263580f89dd2c34efe6a
+Version: webpack 0.10.0-beta6
+Time: 80ms
+    Asset  Size  Chunks             Chunk Names
+output.js   460       0  [emitted]  main       
+chunk    {0} output.js (main) 318 [rendered]
+    [0] ./example.js 67 [built] {0}
+    [1] ./increment.js 95 [built] {0}
         cjs require ./increment [0] ./example.js 1:10-32
-    [2] ./math.js 162 [built] {0}
+    [2] ./math.js 156 [built] {0}
         cjs require ./math [1] ./increment.js 1:10-27
 ```

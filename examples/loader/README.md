@@ -97,9 +97,9 @@ module.exports = function(content) {
 /***/ },
 
 /***/ 1:
-/*!************************************************************************************!*\
+/*!***********************************************************************************************************!*\
   !*** (webpack)/~/json-loader!./test.json ***!
-  \************************************************************************************/
+  \***********************************************************************************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = {
@@ -136,13 +136,13 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 5caaa03683d41f386ba25cd5e2812588
-Version: webpack 0.10.0-beta4
-Time: 56ms
-    Asset  Size  Chunks  Chunk Names
-output.js  2500       0  main       
-chunk    {0} output.js (main) 282
-    [0] ./example.js 205 [built] {0}
+Hash: a8ae2738f8417066d7fe12d977bf7fe4
+Version: webpack 0.10.0-beta6
+Time: 43ms
+    Asset  Size  Chunks             Chunk Names
+output.js  2564       0  [emitted]  main       
+chunk    {0} output.js (main) 277 [rendered]
+    [0] ./example.js 200 [built] {0}
     [1] (webpack)/~/json-loader!./test.json 36 [built] {0}
         cjs require ./test.json [0] ./example.js 5:12-34
         cjs require !json!./test.json [0] ./example.js 6:12-40

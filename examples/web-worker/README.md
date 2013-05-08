@@ -88,9 +88,9 @@ onmessage = function(event) {
 /***/ },
 
 /***/ 1:
-/*!**************************************************************************************!*\
+/*!*************************************************************************************************************!*\
   !*** (webpack)/~/worker-loader!./worker.js ***!
-  \**************************************************************************************/
+  \*************************************************************************************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = function() {
@@ -263,35 +263,35 @@ webpackChunk([1],
 ## Uncompressed
 
 ```
-Hash: b898016580f5af04be201a389d5bc652
-Version: webpack 0.10.0-beta4
-Time: 84ms
-           Asset  Size  Chunks  Chunk Names
-  hash.worker.js  2619                     
-1.hash.worker.js  1596                     
-       output.js  2336       0  main       
-chunk    {0} output.js (main) 302
-    [0] ./example.js 206 [built] {0}
+Hash: 475c548ff49814ae38449b4381b4c42e
+Version: webpack 0.10.0-beta6
+Time: 77ms
+           Asset  Size  Chunks             Chunk Names
+  hash.worker.js  2613          [emitted]             
+1.hash.worker.js  1590          [emitted]             
+       output.js  2400       0  [emitted]  main       
+chunk    {0} output.js (main) 297 [rendered]
+    [0] ./example.js 201 [built] {0}
     [1] (webpack)/~/worker-loader!./worker.js 96 [not cacheable] [built] {0}
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
-    Hash: df2e39abee5b81accea763c727cac801
-    Version: webpack 0.10.0-beta4
-               Asset  Size  Chunks  Chunk Names
-      hash.worker.js  2619       0  main       
-    1.hash.worker.js  1596       1             
-    chunk    {0} hash.worker.js (main) 168
-        [0] ./worker.js 168 [built] {0}
-    chunk    {1} 1.hash.worker.js 463 {0} 
+    Hash: feb0fce6c542e6569e65d26ac41239c7
+    Version: webpack 0.10.0-beta6
+               Asset  Size  Chunks             Chunk Names
+      hash.worker.js  2613       0  [emitted]  main       
+    1.hash.worker.js  1590       1  [emitted]             
+    chunk    {0} hash.worker.js (main) 162 [rendered]
+        [0] ./worker.js 162 [built] {0}
+    chunk    {1} 1.hash.worker.js 457 {0} [rendered]
         [1] ../require.context/templates ^\.\/.*$ 217 [built] {1}
             amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
-        [2] ../require.context/templates/a.js 82 [built] {1}
+        [2] ../require.context/templates/a.js 80 [built] {1}
             context element ./a [1] ../require.context/templates ^\.\/.*$
             context element ./a.js [1] ../require.context/templates ^\.\/.*$
-        [3] ../require.context/templates/b.js 82 [built] {1}
+        [3] ../require.context/templates/b.js 80 [built] {1}
             context element ./b [1] ../require.context/templates ^\.\/.*$
             context element ./b.js [1] ../require.context/templates ^\.\/.*$
-        [4] ../require.context/templates/c.js 82 [built] {1}
+        [4] ../require.context/templates/c.js 80 [built] {1}
             context element ./c [1] ../require.context/templates ^\.\/.*$
             context element ./c.js [1] ../require.context/templates ^\.\/.*$
 ```
@@ -299,35 +299,35 @@ Child worker:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b898016580f5af04be201a389d5bc652
-Version: webpack 0.10.0-beta4
-Time: 203ms
-           Asset  Size  Chunks  Chunk Names
-  hash.worker.js   519                     
-1.hash.worker.js   531                     
-       output.js   418       0  main       
-chunk    {0} output.js (main) 302
-    [0] ./example.js 206 [built] {0}
+Hash: 475c548ff49814ae38449b4381b4c42e
+Version: webpack 0.10.0-beta6
+Time: 164ms
+           Asset  Size  Chunks             Chunk Names
+  hash.worker.js   519          [emitted]             
+1.hash.worker.js   531          [emitted]             
+       output.js   418       0  [emitted]  main       
+chunk    {0} output.js (main) 297 [rendered]
+    [0] ./example.js 201 [built] {0}
     [1] (webpack)/~/worker-loader!./worker.js 96 [not cacheable] [built] {0}
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
-    Hash: df2e39abee5b81accea763c727cac801
-    Version: webpack 0.10.0-beta4
-               Asset  Size  Chunks  Chunk Names
-      hash.worker.js   519       0  main       
-    1.hash.worker.js   531       1             
-    chunk    {0} hash.worker.js (main) 168
-        [0] ./worker.js 168 [built] {0}
-    chunk    {1} 1.hash.worker.js 463 {0} 
+    Hash: feb0fce6c542e6569e65d26ac41239c7
+    Version: webpack 0.10.0-beta6
+               Asset  Size  Chunks             Chunk Names
+      hash.worker.js   519       0  [emitted]  main       
+    1.hash.worker.js   531       1  [emitted]             
+    chunk    {0} hash.worker.js (main) 162 [rendered]
+        [0] ./worker.js 162 [built] {0}
+    chunk    {1} 1.hash.worker.js 457 {0} [rendered]
         [1] ../require.context/templates ^\.\/.*$ 217 [built] {1}
             amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
-        [2] ../require.context/templates/a.js 82 [built] {1}
+        [2] ../require.context/templates/a.js 80 [built] {1}
             context element ./a [1] ../require.context/templates ^\.\/.*$
             context element ./a.js [1] ../require.context/templates ^\.\/.*$
-        [3] ../require.context/templates/b.js 82 [built] {1}
+        [3] ../require.context/templates/b.js 80 [built] {1}
             context element ./b [1] ../require.context/templates ^\.\/.*$
             context element ./b.js [1] ../require.context/templates ^\.\/.*$
-        [4] ../require.context/templates/c.js 82 [built] {1}
+        [4] ../require.context/templates/c.js 80 [built] {1}
             context element ./c [1] ../require.context/templates ^\.\/.*$
             context element ./c.js [1] ../require.context/templates ^\.\/.*$
 ```

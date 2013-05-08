@@ -228,19 +228,19 @@ webpackJsonp([2],
 ## Uncompressed
 
 ```
-Hash: af380ab476cbefc91864027374dff3e9
-Version: webpack 0.10.0-beta4
-Time: 53ms
-          Asset  Size  Chunks  Chunk Names 
-      output.js  4053       0  main        
-    1.output.js   451    1, 2  my own chuck
-my own chuck.js   451    1, 2  my own chuck
-    2.output.js   307       2              
-chunk    {0} output.js (main) 450
-    [0] ./example.js 439 [built] {0}
+Hash: 8800d998ebd282906b61b5434b8398af
+Version: webpack 0.10.0-beta6
+Time: 60ms
+          Asset  Size  Chunks             Chunk Names 
+      output.js  4034       0  [emitted]  main        
+    1.output.js   451    1, 2  [emitted]  my own chuck
+my own chuck.js   451    1, 2  [emitted]  my own chuck
+    2.output.js   307       2  [emitted]              
+chunk    {0} output.js (main) 431 [rendered]
+    [0] ./example.js 420 [built] {0}
     [3] ./~/a.js 11 [built] {0}
         cjs require a [0] ./example.js 1:8-20
-chunk    {1} 1.output.js, my own chuck.js (my own chuck) 33 {0} 
+chunk    {1} 1.output.js, my own chuck.js (my own chuck) 33 {0} [rendered]
     [1] ./~/b.js 11 [built] {1} {2}
         require.ensure item b [0] ./example.js 3:0-6:18
         require.ensure item b [0] ./example.js 8:0-11:18
@@ -250,7 +250,7 @@ chunk    {1} 1.output.js, my own chuck.js (my own chuck) 33 {0}
         cjs require d [0] ./example.js 19:9-21
     [4] ./~/c.js 11 [built] {1}
         cjs require c [0] ./example.js 5:9-21
-chunk    {2} 2.output.js 22 {0} 
+chunk    {2} 2.output.js 22 {0} [rendered]
     [1] ./~/b.js 11 [built] {1} {2}
         require.ensure item b [0] ./example.js 3:0-6:18
         require.ensure item b [0] ./example.js 8:0-11:18

@@ -176,20 +176,20 @@ webpackJsonp([1],{3:function(){},4:function(){}});
 ## Uncompressed
 
 ```
-Hash: 5543ff7619209e2d2e8aeebc12be7462
-Version: webpack 0.10.0-beta4
-Time: 44ms
-      Asset  Size  Chunks  Chunk Names
-  output.js  3862       0  main       
-1.output.js   307       1             
-chunk    {0} output.js (main) 166
-    [0] ./example.js 144 [built] {0}
+Hash: cf2ff7871ce5e43897eb09fa76d995de
+Version: webpack 0.10.0-beta6
+Time: 54ms
+      Asset  Size  Chunks             Chunk Names
+  output.js  3857       0  [emitted]  main       
+1.output.js   307       1  [emitted]             
+chunk    {0} output.js (main) 161 [rendered]
+    [0] ./example.js 139 [built] {0}
     [1] ./~/b.js 11 [built] {0}
         cjs require b [0] ./example.js 2:8-20
         cjs require b [0] ./example.js 4:4-16
     [2] ./~/a.js 11 [built] {0}
         cjs require a [0] ./example.js 1:8-20
-chunk    {1} 1.output.js 22 {0} 
+chunk    {1} 1.output.js 22 {0} [rendered]
     [3] ./~/c.js 11 [built] {1}
         require.ensure item c [0] ./example.js 3:0-6:2
     [4] ./~/d.js 11 [built] {1}
@@ -199,20 +199,20 @@ chunk    {1} 1.output.js 22 {0}
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 5543ff7619209e2d2e8aeebc12be7462
-Version: webpack 0.10.0-beta4
-Time: 132ms
-      Asset  Size  Chunks  Chunk Names
-  output.js   744       0  main       
-1.output.js    50       1             
-chunk    {0} output.js (main) 166
-    [0] ./example.js 144 [built] {0}
+Hash: cf2ff7871ce5e43897eb09fa76d995de
+Version: webpack 0.10.0-beta6
+Time: 99ms
+      Asset  Size  Chunks             Chunk Names
+  output.js   744       0  [emitted]  main       
+1.output.js    50       1  [emitted]             
+chunk    {0} output.js (main) 161 [rendered]
+    [0] ./example.js 139 [built] {0}
     [1] ./~/b.js 11 [built] {0}
         cjs require b [0] ./example.js 2:8-20
         cjs require b [0] ./example.js 4:4-16
     [2] ./~/a.js 11 [built] {0}
         cjs require a [0] ./example.js 1:8-20
-chunk    {1} 1.output.js 22 {0} 
+chunk    {1} 1.output.js 22 {0} [rendered]
     [3] ./~/c.js 11 [built] {1}
         require.ensure item c [0] ./example.js 3:0-6:2
     [4] ./~/d.js 11 [built] {1}

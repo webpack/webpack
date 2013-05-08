@@ -11,13 +11,13 @@ var path = require("path");
 
 var extraArgs = "";
 
-cp.exec("node ../../bin/webpack.js --display-reasons --display-chunks --optimize-minimize "+extraArgs+" ./example.js js/output.js", function (error, stdout, stderr) {
+cp.exec("node ../../bin/webpack.js --display-reasons --display-chunks -p "+extraArgs+" ./example.js js/output.js", function (error, stdout, stderr) {
 	if(stderr)
 		console.log(stderr);
 	if (error !== null)
 		console.log(error);
 	var readme = tc(fs.readFileSync(require("path").join(process.cwd(), "template.md"), "utf-8"), process.cwd(), stdout.replace(/[\r\n]*$/, ""), "min");
-	cp.exec("node ../../bin/webpack.js --display-reasons --display-chunks --output-pathinfo "+extraArgs+" ./example.js js/output.js", function (error, stdout, stderr) {
+	cp.exec("node ../../bin/webpack.js --display-reasons --display-chunks --optimize-occurence-order --output-pathinfo "+extraArgs+" ./example.js js/output.js", function (error, stdout, stderr) {
 		console.log(stdout);
 		if(stderr)
 			console.log(stderr);

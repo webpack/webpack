@@ -316,15 +316,15 @@ webpackJsonp([1],
 ## Uncompressed
 
 ```
-Hash: c742d10da02e7180be4429633fb7f3af
-Version: webpack 0.10.0-beta4
-Time: 80ms
-      Asset  Size  Chunks  Chunk Names
-  output.js  6151       0  main       
-1.output.js  1572       1             
-chunk    {0} output.js (main) 1395
-    [0] ./example.js 613 [built] {0}
-    [1] ./amd.js 309 [built] {0}
+Hash: 28e0b32bbfb5fe7ee70e82871f362aca
+Version: webpack 0.10.0-beta6
+Time: 68ms
+      Asset  Size  Chunks             Chunk Names
+  output.js  6114       0  [emitted]  main       
+1.output.js  1566       1  [emitted]             
+chunk    {0} output.js (main) 1346 [rendered]
+    [0] ./example.js 595 [built] {0}
+    [1] ./amd.js 298 [built] {0}
         amd require ./amd [2] ./commonjs.js 5:0-11:1
         cjs require ./amd [2] ./commonjs.js 8:13-29
         cjs require ./amd [0] ./example.js 3:11-27
@@ -332,7 +332,7 @@ chunk    {0} output.js (main) 1395
         amd require ./amd [0] ./example.js 7:0-14:1
         amd require ./amd [3] ./labeled.js 5:0-11:1
         cjs require ./amd [3] ./labeled.js 9:13-29
-    [2] ./commonjs.js 234 [built] {0}
+    [2] ./commonjs.js 224 [built] {0}
         cjs require ./commonjs [0] ./example.js 2:16-37
         amd require ./commonjs [0] ./example.js 7:0-14:1
         amd require ./commonjs [0] ./example.js 7:0-14:1
@@ -340,7 +340,7 @@ chunk    {0} output.js (main) 1395
         cjs require ./commonjs [1] ./amd.js 7:18-39
         amd require ./commonjs [3] ./labeled.js 5:0-11:1
         cjs require ./commonjs [3] ./labeled.js 8:18-39
-    [3] ./labeled.js 239 [built] {0}
+    [3] ./labeled.js 229 [built] {0}
         amd require ./labeled [2] ./commonjs.js 5:0-11:1
         cjs require ./labeled [2] ./commonjs.js 9:17-37
         amd require ./labeled [1] ./amd.js 2:0-12:1
@@ -348,13 +348,13 @@ chunk    {0} output.js (main) 1395
         cjs require ./labeled [0] ./example.js 4:15-35
         labeled require ./labeled [0] ./example.js 17:0-21
         amd require ./labeled [0] ./example.js 7:0-14:1
-chunk    {1} 1.output.js 439 {0} 
+chunk    {1} 1.output.js 433 {0} [rendered]
     [4] ../require.context/templates ^\.\/.*\.js$ 193 [built] {1}
         amd require context ../require.context/templates [0] ./example.js 7:0-14:1
-    [5] ../require.context/templates/a.js 82 [built] {1}
+    [5] ../require.context/templates/a.js 80 [built] {1}
         context element ./a.js [4] ../require.context/templates ^\.\/.*\.js$
-    [6] ../require.context/templates/b.js 82 [built] {1}
+    [6] ../require.context/templates/b.js 80 [built] {1}
         context element ./b.js [4] ../require.context/templates ^\.\/.*\.js$
-    [7] ../require.context/templates/c.js 82 [built] {1}
+    [7] ../require.context/templates/c.js 80 [built] {1}
         context element ./c.js [4] ../require.context/templates ^\.\/.*\.js$
 ```
