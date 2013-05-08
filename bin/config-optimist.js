@@ -53,6 +53,8 @@ module.exports = function(optimist) {
 
 	.boolean("optimize-minimize").describe("optimize-minimize")
 
+	.boolean("optimize-occurence-order").describe("optimize-occurence-order")
+
 	.string("provide").describe("provide")
 
 	.string("plugin").describe("plugin")

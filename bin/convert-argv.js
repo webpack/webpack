@@ -15,6 +15,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 	if(argv.p) {
 		argv["optimize-minimize"] = true;
+		argv["optimize-occurence-order"] = true;
 	}
 
 	function ifArg(name, fn, init) {
@@ -247,6 +248,11 @@ module.exports = function(optimist, argv, convertOptions) {
 	ifBooleanArg("optimize-minimize", function() {
 		ensureObject(options, "optimize");
 		options.optimize.minimize = true;
+	});
+
+	ifBooleanArg("optimize-occurence-order", function() {
+		ensureObject(options, "optimize");
+		options.optimize.occurenceOrder = true;
 	});
 
 	ifArg("provide", function(value) {
