@@ -34,9 +34,9 @@ var library1 = cp.spawn("node", join(["../../bin/webpack.js", "--output-pathinfo
 bindOutput(library1);
 library1.on("exit", function(code) {
 	if(code === 0) {
-		// node ../../bin/webpack --output-pathinfo --colors --resolve-alias vm=vm-browserify --output-public-path js/ --module-bind json --module-bind css=style!css --module-bind less=style!css!less --module-bind coffee --module-bind jade ./lib/index js/web.js
+		// node ../../bin/webpack --output-pathinfo --colors --resolve-alias vm=vm-browserify --output-public-path js/ --module-bind json --module-bind css=style!css --module-bind less=style!css!less --module-bind coffee --module-bind jade --prefetch ./less/stylesheet.less ./lib/index js/web.js
 		var main = cp.spawn("node", join(["../../bin/webpack.js", "--output-pathinfo", "--colors", "--resolve-alias", "vm=vm-browserify", "--workers",
-											"--output-public-path", "js/", "--module-bind", "json", "--module-bind", "css=style!css", "--module-bind", "less=style/url!file?postfix=.css&string!less", "--module-bind", "coffee", "--module-bind", "jade", "./lib/index", "js/web.js", "--progress"], extraArgs));
+											"--output-public-path", "js/", "--module-bind", "json", "--module-bind", "css=style!css", "--module-bind", "less=style/url!file?postfix=.css&string!less", "--module-bind", "coffee", "--module-bind", "jade", "--prefetch", "./less/stylesheet.less", "./lib/index", "js/web.js", "--progress"], extraArgs));
 		bindOutput(main);
 	}
 });

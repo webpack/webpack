@@ -255,6 +255,11 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.optimize.occurenceOrder = true;
 	});
 
+	ifArg("prefetch", function(request) {
+		ensureArray(options, "prefetch");
+		options.prefetch.push(request);
+	});
+
 	ifArg("provide", function(value) {
 		ensureObject(options, "provide");
 		var idx = value.indexOf("=");
