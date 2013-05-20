@@ -40,7 +40,7 @@ library1.on("exit", function(code) {
 		bindOutput(main);
 	}
 });
-// node ../../bin/webpack --output-pathinfo --colors --output-library library2 --output-public-path js/ --config library2config.js library2b library2 js/library2.js
+// node ../../bin/webpack --output-pathinfo --colors --output-library library2 --output-public-path js/ --output-chunk-file [chunkhash].lib2.js --config library2config.js library2b library2 js/library2.js
 var library2 = cp.spawn("node", join(["../../bin/webpack.js", "--output-pathinfo", "--colors", "--output-library", "library2",
-									"--output-public-path", "js/", "--config", "library2config.js", "library2b", "library2", "js/library2.js"], extraArgsNoWatch));
+									"--output-public-path", "js/", "--output-chunk-file", "[chunkhash].lib2.js", "--config", "library2config.js", "library2b", "library2", "js/library2.js"], extraArgsNoWatch));
 bindOutput(library2);
