@@ -1,4 +1,7 @@
 module.exports = {
+	output: {
+		hashDigestLength: 5
+	},
 	module: {
 		postLoaders: [
 			{ test: /extra2?\.js/, loader: "raw!extra!val?cacheable" }
