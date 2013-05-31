@@ -31,6 +31,12 @@ module.exports = function(optimist) {
 
 	.string("output-library-target").describe("output-library-target")
 
+	.string("records-input-path").describe("records-input-path")
+
+	.string("records-output-path").describe("records-output-path")
+
+	.string("records-path").describe("records-path")
+
 	.string("target").describe("target")
 
 	.boolean("cache").describe("cache")

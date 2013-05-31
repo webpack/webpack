@@ -4,7 +4,7 @@
 
 # Introduction
 
-webpack is a bundler for modules. The main purpose is to bundle javascript files for useage in browser.
+webpack is a bundler for modules. The main purpose is to bundle javascript files for usage in browser.
 
 **TL;DR**
 

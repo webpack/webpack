@@ -184,6 +184,18 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.output.libraryTarget = value;
 	});
 
+	ifArg("records-input-path", function(value) {
+		options.recordsInputPath = path.resolve(value);
+	});
+
+	ifArg("records-output-path", function(value) {
+		options.recordsOutputPath = path.resolve(value);
+	});
+
+	ifArg("records-path", function(value) {
+		options.recordsPath = path.resolve(value);
+	});
+
 	ifArg("target", function(value) {
 		options.target = value;
 	});
