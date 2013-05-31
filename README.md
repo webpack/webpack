@@ -27,11 +27,12 @@ Take a look at the [`examples`](https://github.com/webpack/webpack/tree/master/e
 * watch mode
 * SourceUrl and SourceMap support
 * plugin system, extend webpack or build a complete different compiler
-* interfaces
- * CLI with arguments
- * CLI with config file, arguments still possible
+ * i. e. [component](https://github.com/webpack/component-webpack-plugin), [rewire](https://github.com/jhnns/rewire-webpack) and [more...](https://github.com/webpack/docs/wiki/webpack-plugins)
+* [interfaces](https://github.com/webpack/docs/wiki/webpack-usage)
+ * CLI with [arguments](https://github.com/webpack/docs/wiki/webpack-detailed-usage)
+ * CLI with [config file](https://github.com/webpack/docs/wiki/webpack-options), [arguments](https://github.com/webpack/docs/wiki/webpack-detailed-usage) are still possible
  * usable as library from node.js
- * usable as grunt plugin
+ * usable as [grunt plugin](https://github.com/webpack/grunt-webpack)
 * browser replacements
  * comes with browser replacements for some node.js modules
 * see also
@@ -84,6 +85,12 @@ function loadTemplateAsync(name, callback) {
 
 
 
+## Documentation
+
+[documentation](https://github.com/webpack/docs/wiki)
+
+
+
 ## Tests
 
 You can run the unit tests with `npm test`. [![build status](https://secure.travis-ci.org/webpack/webpack.png)](http://travis-ci.org/webpack/webpack)
@@ -129,5 +136,6 @@ MIT (http://www.opensource.org/licenses/mit-license.php)
 * [async](https://github.com/caolan/async)
 * [mkdirp](http://esprima.org/)
 * [clone](https://github.com/pvorb/node-clone)
+* [base64-encode](https://github.com/ForbesLindesay/base64-encode)
 
 [![Dependency Status](https://david-dm.org/webpack/webpack.png)](https://david-dm.org/webpack/webpack)
