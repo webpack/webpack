@@ -6,8 +6,8 @@
 	"dependencies": {
 		"esprima": "1.0.x",
 		"mkdirp": "0.3.x",
-		"optimist": "0.3.x",
-		"uglify-js": "2.2.x",
+		"optimist": "0.5.x",
+		"uglify-js": "2.3.x",
 		"async": "0.2.x",
 		"enhanced-resolve": "0.5.x",
 		"clone": "0.1.x",
@@ -23,10 +23,10 @@
 		}
 	],
 	"devDependencies": {
-		"mocha": "1.8.x",
-		"should": "1.1.x",
+		"mocha": "1.10.x",
+		"should": "1.2.x",
 		"vm-browserify": "0.0.x",
-		"express": "3.0.x",
+		"express": "3.2.x",
 		"webpack-dev-middleware": "0.10.x",
 		"worker-loader": "0.5.x",
 		"raw-loader": "0.5.x",
