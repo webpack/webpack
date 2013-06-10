@@ -28,8 +28,10 @@ app.configure(function() {
 		optimize: {
 			minimize: true
 		},
+		recordsPath: path.join(__dirname, "webpack.records.json"),
 		output: {
 			publicPath: "http://localhost:8080/js/",
+			path: "/",
 			filename: "web.js"
 		}
 	}), {
