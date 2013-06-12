@@ -267,6 +267,11 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.optimize.occurenceOrder = true;
 	});
 
+	ifBooleanArg("optimize-dedupe", function() {
+		ensureObject(options, "optimize");
+		options.optimize.dedupe = true;
+	});
+
 	ifArg("prefetch", function(request) {
 		ensureArray(options, "prefetch");
 		options.prefetch.push(request);
