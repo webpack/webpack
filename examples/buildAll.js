@@ -17,6 +17,7 @@ var cmds = [
 	"cd labeled-modules && node build.js",
 	"cd component && node build.js",
 	"cd dedupe && node build.js",
+	"cd code-splitted-dedupe && node build.js",
 ];
 
 var stack = function() {
