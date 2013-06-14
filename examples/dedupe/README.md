@@ -105,12 +105,15 @@ module.exports = {"this is": "z"};
 /******/ })
 /************************************************************************/
 /******/ ((function(modules) {
+	// Check all modules for deduplicated modules
 	for(var i in modules) {
 		switch(typeof modules[i]) {
 		case "number":
+			// Module is a copy of another module
 			modules[i] = modules[modules[i]];
 			break;
 		case "object":
+			// Module can be created from a template
 			modules[i] = (function(_m) {
 				var args = _m.slice(1), fn = modules[_m[0]];
 				return function (a,b,c) {
@@ -207,29 +210,29 @@ module.exports = {"this is": "z"};
 ## Uncompressed
 
 ```
-Hash: 4afc9f4631bed4b86de9
-Version: webpack 0.10.0-beta20
-Time: 42ms
+Hash: 15b13398a7aae2eaaec9
+Version: webpack 0.10.0-beta22
+Time: 54ms
     Asset  Size  Chunks             Chunk Names
-output.js  3223       0  [emitted]  main       
-chunk    {0} output.js (main) 513 [rendered]
-    [0] ./example.js 73 {0} [built]
+output.js  3362       0  [emitted]  main       
+chunk    {0} output.js (main) 528 [rendered]
+    [0] ./example.js 76 {0} [built]
     [1] ./z.js 34 {0} [built]
         cjs require ../z [2] ./a/index.js 4:4-19
         cjs require ../z [5] ./b/index.js 4:4-19
-    [2] ./a/index.js 80 {0} [built]
+    [2] ./a/index.js 84 {0} [built]
         cjs require ./a [0] ./example.js 1:8-22
     [3] ./a/x.js 34 {0} [built]
         cjs require ./x [2] ./a/index.js 2:4-18
     [4] ./a/y.js 49 {0} [built]
         cjs require ./y [2] ./a/index.js 3:4-18
-    [5] ./b/index.js 80 {0} [built]
+    [5] ./b/index.js 84 {0} [built]
         cjs require ./b [0] ./example.js 2:8-22
     [6] ./b/x.js 34 {0} [built]
         cjs require ./x [5] ./b/index.js 2:4-18
     [7] ./b/y.js 49 {0} [built]
         cjs require ./y [5] ./b/index.js 3:4-18
-    [8]  80 {0} [not cacheable] [built]
+    [8]  84 {0} [not cacheable] [built]
         template 1 [2] ./a/index.js
         template 1 [5] ./b/index.js
 ```
@@ -237,29 +240,29 @@ chunk    {0} output.js (main) 513 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 4afc9f4631bed4b86de9
-Version: webpack 0.10.0-beta20
-Time: 98ms
+Hash: 15b13398a7aae2eaaec9
+Version: webpack 0.10.0-beta22
+Time: 137ms
     Asset  Size  Chunks             Chunk Names
-output.js   776       0  [emitted]  main       
-chunk    {0} output.js (main) 513 [rendered]
-    [0] ./example.js 73 {0} [built]
+output.js   777       0  [emitted]  main       
+chunk    {0} output.js (main) 528 [rendered]
+    [0] ./example.js 76 {0} [built]
     [1] ./z.js 34 {0} [built]
         cjs require ../z [2] ./a/index.js 4:4-19
         cjs require ../z [5] ./b/index.js 4:4-19
-    [2] ./a/index.js 80 {0} [built]
+    [2] ./a/index.js 84 {0} [built]
         cjs require ./a [0] ./example.js 1:8-22
     [3] ./a/x.js 34 {0} [built]
         cjs require ./x [2] ./a/index.js 2:4-18
     [4] ./a/y.js 49 {0} [built]
         cjs require ./y [2] ./a/index.js 3:4-18
-    [5] ./b/index.js 80 {0} [built]
+    [5] ./b/index.js 84 {0} [built]
         cjs require ./b [0] ./example.js 2:8-22
     [6] ./b/x.js 34 {0} [built]
         cjs require ./x [5] ./b/index.js 2:4-18
     [7] ./b/y.js 49 {0} [built]
         cjs require ./y [5] ./b/index.js 3:4-18
-    [8]  80 {0} [not cacheable] [built]
+    [8]  84 {0} [not cacheable] [built]
         template 1 [2] ./a/index.js
         template 1 [5] ./b/index.js
 ```

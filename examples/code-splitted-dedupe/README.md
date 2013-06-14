@@ -87,11 +87,15 @@ require(["../dedupe/b"]);
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
 /******/ 			var _m = moreModules[moduleId];
+/******/ 			
+/******/ 			// Check if module is deduplicated
 /******/ 			switch(typeof _m) {
 /******/ 			case "number":
+/******/ 				// Module is a copy of another module
 /******/ 				modules[moduleId] = modules[_m];
 /******/ 				break;
 /******/ 			case "object":
+/******/ 				// Module can be created from a template
 /******/ 				modules[moduleId] = (function(_m) {
 /******/ 					var args = _m.slice(1), fn = modules[_m[0]];
 /******/ 					return function (a,b,c) {
@@ -100,6 +104,7 @@ require(["../dedupe/b"]);
 /******/ 				}(_m));
 /******/ 				break;
 /******/ 			default:
+/******/ 				// Normal module
 /******/ 				modules[moduleId] = _m;
 /******/ 			}
 /******/ 		}
@@ -112,12 +117,15 @@ require(["../dedupe/b"]);
 /******/ })
 /************************************************************************/
 /******/ ((function(modules) {
+	// Check all modules for deduplicated modules
 	for(var i in modules) {
 		switch(typeof modules[i]) {
 		case "number":
+			// Module is a copy of another module
 			modules[i] = modules[modules[i]];
 			break;
 		case "object":
+			// Module can be created from a template
 			modules[i] = (function(_m) {
 				var args = _m.slice(1), fn = modules[_m[0]];
 				return function (a,b,c) {
@@ -360,10 +368,10 @@ webpackJsonp([4],
 
 ```
 Hash: 46d170ad35acc40bf3ea
-Version: webpack 0.10.0-beta20
-Time: 101ms
+Version: webpack 0.10.0-beta22
+Time: 95ms
       Asset  Size  Chunks             Chunk Names
-  output.js  4645       0  [emitted]  main       
+  output.js  4972       0  [emitted]  main       
 1.output.js  1485    1, 3  [emitted]             
 2.output.js   877    2, 4  [emitted]             
 3.output.js   875       3  [emitted]             
@@ -377,8 +385,8 @@ chunk    {1} 1.output.js 492 {0} [rendered]
     [3] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 207 {1} [built]
         amd require bundle?lazy!../dedupe/b [0] ./example.js 2:0-51
     [4] ../dedupe/z.js 34 {1} {2} {3} [built]
-        cjs require ../z [2] ../dedupe/b/index.js 4:4-19
         cjs require ../z [1] ../dedupe/a/index.js 4:4-19
+        cjs require ../z [2] ../dedupe/b/index.js 4:4-19
     [5] ../dedupe/a/x.js 34 {1} {3} [built]
         cjs require ./x [1] ../dedupe/a/index.js 2:4-18
     [6] ../dedupe/a/y.js 49 {1} {3} [built]
@@ -391,8 +399,8 @@ chunk    {2} 2.output.js 201 {0} [rendered]
         amd require ../dedupe/b [0] ./example.js 6:0-24
         cjs require !!(webpack)\examples\dedupe\b\index.js [3] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-126
     [4] ../dedupe/z.js 34 {1} {2} {3} [built]
-        cjs require ../z [2] ../dedupe/b/index.js 4:4-19
         cjs require ../z [1] ../dedupe/a/index.js 4:4-19
+        cjs require ../z [2] ../dedupe/b/index.js 4:4-19
     [7] ../dedupe/b/x.js 34 {2} {4} [built]
         cjs require ./x [2] ../dedupe/b/index.js 2:4-18
     [8] ../dedupe/b/y.js 49 {2} {4} [built]
@@ -402,8 +410,8 @@ chunk    {3} 3.output.js 201 {0} [rendered]
         amd require ../dedupe/a [0] ./example.js 2:0-51
         amd require ../dedupe/a [0] ./example.js 5:0-24
     [4] ../dedupe/z.js 34 {1} {2} {3} [built]
-        cjs require ../z [2] ../dedupe/b/index.js 4:4-19
         cjs require ../z [1] ../dedupe/a/index.js 4:4-19
+        cjs require ../z [2] ../dedupe/b/index.js 4:4-19
     [5] ../dedupe/a/x.js 34 {1} {3} [built]
         cjs require ./x [1] ../dedupe/a/index.js 2:4-18
     [6] ../dedupe/a/y.js 49 {1} {3} [built]
@@ -422,8 +430,8 @@ chunk    {4} 4.output.js 167 {1} [rendered]
 
 ```
 Hash: 46d170ad35acc40bf3ea
-Version: webpack 0.10.0-beta20
-Time: 273ms
+Version: webpack 0.10.0-beta22
+Time: 267ms
       Asset  Size  Chunks             Chunk Names
   output.js  1151       0  [emitted]  main       
 1.output.js   294    1, 3  [emitted]             
