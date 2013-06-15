@@ -362,6 +362,7 @@ describe("main", function() {
 			(require.context("../././templates"))("./tmpl").should.be.eql("test template");
 			(require.context(".././templates/.")("./tmpl")).should.be.eql("test template");
 			require . context ( "." + "." + "/" + "templ" + "ates" ) ( "./subdir/tmpl.js" ).should.be.eql("subdir test template");
+			require.context("../templates", true, /./)("xyz").should.be.eql("xyz");
 		});
 
 		it("should automatically create contexts", function() {
