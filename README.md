@@ -35,6 +35,8 @@ Take a look at the [`examples`](https://github.com/webpack/webpack/tree/master/e
  * usable as [grunt plugin](https://github.com/webpack/grunt-webpack)
 * browser replacements
  * comes with browser replacements for some node.js modules
+* [Hot Module Replacement](https://github.com/webpack/docs/wiki/hot-code-replacement)
+ * install updates without full page refresh
 * see also
  * [webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware)
  * [webpack-dev-server](https://github.com/webpack/webpack-dev-server)

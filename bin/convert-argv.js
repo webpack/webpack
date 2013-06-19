@@ -207,6 +207,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.watchDelay = value;
 	});
 
+	mapArgToBoolean("hot", "hot");
 	mapArgToBoolean("debug", "debug");
 
 	ifBooleanArg("progress", function() {

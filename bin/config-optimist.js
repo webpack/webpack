@@ -43,6 +43,8 @@ module.exports = function(optimist) {
 
 	.boolean("watch").alias("watch", "w").describe("watch")
 
+	.boolean("hot").alias("hot", "h").describe("hot")
+
 	.boolean("debug").alias("debug", "d").describe("debug")
 
 	.string("devtool").describe("devtool")
