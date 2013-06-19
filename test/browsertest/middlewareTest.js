@@ -8,7 +8,7 @@ var app = express();
 app.configure(function() {
 	app.use(webpackMiddleware(webpack({
 		context: __dirname,
-		entry: "./lib/index",
+		entry: ["../../hot/poll?10000", "./lib/index"],
 		debug: true,
 		devtool: "sourcemap",
 		module: {
@@ -26,8 +26,10 @@ app.configure(function() {
 			}
 		},
 		optimize: {
-			minimize: true
+			minimize: true,
+			dedupe: true
 		},
+		hot: true,
 		recordsPath: path.join(__dirname, "webpack.records.json"),
 		output: {
 			publicPath: "http://localhost:8080/js/",

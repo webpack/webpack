@@ -69,6 +69,7 @@ describe("main", function() {
 		});
 
 		it("should cache modules correctly", function(done) {
+			delete require.cache[require.resolve("./singluar.js")];
 			require("./singluar.js").value.should.be.eql(1);
 			(require("./singluar.js")).value.should.be.eql(1);
 			require("./sing" + "luar.js").value = 2;
@@ -561,3 +562,15 @@ describe("main", function() {
 	});
 
 });
+
+if(module.hot) {
+	module.hot.accept();
+	module.hot.dispose(function() {
+		mocha.suite.suites.length = 0;
+		var stats = document.getElementById("stats");
+		stats.parentNode.removeChild(stats);
+	});
+	if(module.data) {
+		mocha.run();
+	}
+}
