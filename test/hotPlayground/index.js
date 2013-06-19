@@ -38,6 +38,8 @@ window.onload = function() {
 
 	require("./style.js");
 
+	require("bundle!./style2.js");
+
 	if(module.hot) {
 
 		module.hot.accept("./html.js", function() {

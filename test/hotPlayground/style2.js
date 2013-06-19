@@ -3,7 +3,7 @@
 
 var addStyle = require("./addStyle");
 
-var dispose = addStyle("body { background: green; }");
+var dispose = addStyle("body { color: blue; }");
 
 if(module.hot) {
 	module.hot.accept();
