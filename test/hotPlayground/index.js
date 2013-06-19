@@ -38,7 +38,7 @@ window.onload = function() {
 
 	require("./style.js");
 
-	require("bundle!./style2.js");
+	require("./applyStyle2");
 
 	if(module.hot) {
 
@@ -52,6 +52,10 @@ window.onload = function() {
 			console.log("Replacing 'element.js' in 'index.js'");
 			element2 = require("./element.js");
 			document.body.appendChild(element2);
+		});
+
+		module.hot.accept("./applyStyle2", function() {
+			require("./applyStyle2");
 		});
 
 	}
