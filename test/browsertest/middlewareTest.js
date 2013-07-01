@@ -34,7 +34,8 @@ app.configure(function() {
 		output: {
 			publicPath: "http://localhost:8080/js/",
 			path: "/",
-			filename: "web.js"
+			filename: "web.js",
+			chunkFilename: "[chunkhash].chunk.js"
 		}
 	}), {
 		lazy: false,
