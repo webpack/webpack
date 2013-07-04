@@ -213,8 +213,9 @@ module.exports = function(optimist, argv, convertOptions) {
 	ifBooleanArg("progress", function() {
 		var ProgressPlugin = require("../lib/ProgressPlugin");
 		ensureArray(options, "plugins");
-		var chars = 0;
+		var chars = 0, lastState;
 		options.plugins.push(new ProgressPlugin(function(percentage, msg) {
+			var state = msg;
 			if(percentage < 1) {
 				percentage = Math.floor(percentage * 100);
 				msg = percentage + "% " + msg;
@@ -226,6 +227,20 @@ module.exports = function(optimist, argv, convertOptions) {
 			chars = msg.length;
 			for(var i = 0; i < chars; i++)
 				process.stderr.write("\b");
+			if(options.profile) {
+				state = state.replace(/^\d+\/\d+\s+/, "");
+				if(percentage === 0) {
+					lastState = null;
+					lastStateTime = +new Date();
+				} else if(state !== lastState || percentage === 1) {
+					var now = +new Date();
+					if(lastState) {
+						process.stderr.write((now - lastStateTime) + "ms " + lastState + "\n");
+					}
+					lastState = state;
+					lastStateTime = now;
+				}
+			}
 			process.stderr.write(msg);
 		}));
 	});
