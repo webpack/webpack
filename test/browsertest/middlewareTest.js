@@ -29,6 +29,9 @@ app.configure(function() {
 			minimize: true,
 			dedupe: true
 		},
+		resolve: {
+			unsafeCache: true
+		},
 		hot: true,
 		cache: true,
 		recordsPath: path.join(__dirname, "webpack.records.json"),
