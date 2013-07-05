@@ -8,6 +8,7 @@ describe("HotModuleReplacementPlugin", function() {
 	it("should not have circular hashes but equal if unmodified", function(done) {
 		var entryFile = path.join(__dirname, "js", "entry.js");
 		var recordsFile = path.join(__dirname, "js", "records.json");
+		try { fs.mkdirSync(path.join(__dirname, "js")); } catch(e) {}
 		try { fs.unlinkFileSync(recordsFile); } catch(e) {}
 		var compiler = webpack({
 			entry: entryFile,
