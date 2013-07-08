@@ -9,7 +9,7 @@ describe("HotModuleReplacementPlugin", function() {
 		var entryFile = path.join(__dirname, "js", "entry.js");
 		var recordsFile = path.join(__dirname, "js", "records.json");
 		try { fs.mkdirSync(path.join(__dirname, "js")); } catch(e) {}
-		try { fs.unlinkFileSync(recordsFile); } catch(e) {}
+		try { fs.unlinkSync(recordsFile); } catch(e) {}
 		var compiler = webpack({
 			entry: entryFile,
 			recordsPath: recordsFile,
