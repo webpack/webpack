@@ -1,6 +1,6 @@
 {
 	"name": "webpack",
-	"version": "0.11.0-beta12",
+	"version": "0.11.0-beta13",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs/AMD/Labeled Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
 	"dependencies": {
@@ -48,6 +48,7 @@
 	},
 	"homepage": "http://github.com/webpack/webpack",
 	"main": "lib/webpack.js",
+	"web": "lib/webpack.web.js",
 	"bin": "./bin/webpack.js",
 	"scripts": {
 		"test": "mocha --reporter spec"
