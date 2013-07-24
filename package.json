@@ -1,6 +1,6 @@
 {
 	"name": "webpack",
-	"version": "0.11.0-beta14",
+	"version": "0.11.0-beta15",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs/AMD/Labeled Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
 	"dependencies": {
@@ -45,6 +45,10 @@
 	},
 	"engines": {
 		"node":  ">=0.6"
+	},
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/webpack/webpack.git"
 	},
 	"homepage": "http://github.com/webpack/webpack",
 	"main": "lib/webpack.js",
