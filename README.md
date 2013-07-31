@@ -1,6 +1,6 @@
 [![webpack](http://webpack.github.com/assets/logo.png)](http://webpack.github.com)
 
-[![NPM version](https://badge.fury.io/js/webpack.png)](http://badge.fury.io/js/webpack)
+[![NPM version](https://badge.fury.io/js/webpack.png)](http://badge.fury.io/js/webpack) [![Stories in Ready](https://badge.waffle.io/webpack/webpack.png)](http://waffle.io/webpack/webpack)
 
 [documentation](https://github.com/webpack/docs/wiki)
 
