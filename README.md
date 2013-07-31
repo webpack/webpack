@@ -1,5 +1,7 @@
 [![webpack](http://webpack.github.com/assets/logo.png)](http://webpack.github.com)
 
+[![NPM version](https://badge.fury.io/js/webpack.png)](http://badge.fury.io/js/webpack)
+
 [documentation](https://github.com/webpack/docs/wiki)
 
 # Introduction
