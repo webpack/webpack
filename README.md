@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/webpack/webpack.png)](https://waffle.io/webpack/webpack)  
 [![webpack](http://webpack.github.com/assets/logo.png)](http://webpack.github.com)
 
 [![NPM version](https://badge.fury.io/js/webpack.png)](http://badge.fury.io/js/webpack)
