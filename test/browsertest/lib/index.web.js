@@ -196,6 +196,13 @@ describe("main", function() {
 			if(typeof module != "object") module = require("fail");
 			if(typeof exports == "undefined") exports = require("fail");
 		});
+
+		it("should define DEBUG", function() {
+			DEBUG.should.be.eql(false);
+			(typeof DEBUG).should.be.eql("boolean");
+			var x = require(DEBUG ? "fail" : "./a");
+			var y = DEBUG ? require("fail") : require("./a");
+		});
 	});
 
 	describe("polyfilling", function() {
