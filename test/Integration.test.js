@@ -43,6 +43,18 @@ describe("Integration", function() {
 			optimize: {
 				maxChunks: 2,
 			},
+			define: {
+				CONST_TRUE: true,
+				CONST_FALSE: false,
+				CONST_FUNCTION: function() { return "ok"; },
+				CONST_NUMBER: 123,
+				CONST_NUMBER_EXPR: "1*100+23",
+				CONST_OBJECT: {
+					A: 1,
+					B: JSON.stringify("B"),
+					C: function() { return "C"; }
+				}
+			},
 			amd: {
 				fromOptions: true
 			},
