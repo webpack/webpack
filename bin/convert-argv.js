@@ -139,6 +139,16 @@ module.exports = function(optimist, argv, convertOptions) {
 		ensureArray(options.module, "postLoaders");
 	});
 
+	ifArgPair("define", function(name, value) {
+		if(name === null) {
+			name = value;
+			value = true;
+		}
+		options.define[name] = value;
+	}, function() {
+		ensureObject(options, "define");
+	});
+
 	ifArg("output-path", function(value) {
 		ensureObject(options, "output");
 		options.output.path = value;

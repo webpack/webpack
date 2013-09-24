@@ -37,6 +37,8 @@ module.exports = function(optimist) {
 
 	.string("records-path").describe("records-path")
 
+	.string("define").describe("define")
+
 	.string("target").describe("target")
 
 	.boolean("cache").describe("cache")
