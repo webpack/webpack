@@ -90,7 +90,7 @@ module.exports = {"this is": "z"};
 /******/ 	
 /******/ 	// The bundle contains no chunks. A empty chunk loading function.
 /******/ 	require.e = function requireEnsure(_, callback) {
-/******/ 		callback.call(null, require);
+/******/ 		callback.call(null, this);
 /******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -210,11 +210,11 @@ module.exports = {"this is": "z"};
 ## Uncompressed
 
 ```
-Hash: 15b13398a7aae2eaaec9
-Version: webpack 0.10.0-beta22
-Time: 54ms
+Hash: fd48f2b5f2e70229c08f
+Version: webpack 0.11.0-beta19
+Time: 63ms
     Asset  Size  Chunks             Chunk Names
-output.js  3362       0  [emitted]  main       
+output.js  3359       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]
     [0] ./example.js 76 {0} [built]
     [1] ./z.js 34 {0} [built]
@@ -240,11 +240,11 @@ chunk    {0} output.js (main) 528 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 15b13398a7aae2eaaec9
-Version: webpack 0.10.0-beta22
-Time: 137ms
+Hash: fd48f2b5f2e70229c08f
+Version: webpack 0.11.0-beta19
+Time: 125ms
     Asset  Size  Chunks             Chunk Names
-output.js   777       0  [emitted]  main       
+output.js   780       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]
     [0] ./example.js 76 {0} [built]
     [1] ./z.js 34 {0} [built]

@@ -63,7 +63,7 @@ module.exports = function(content) {
 /******/ 	
 /******/ 	// The bundle contains no chunks. A empty chunk loading function.
 /******/ 	require.e = function requireEnsure(_, callback) {
-/******/ 		callback.call(null, require);
+/******/ 		callback.call(null, this);
 /******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -97,9 +97,9 @@ module.exports = function(content) {
 /***/ },
 
 /***/ 1:
-/*!***********************************************************************************************************!*\
+/*!************************************************************************************!*\
   !*** (webpack)/~/json-loader!./test.json ***!
-  \***********************************************************************************************************/
+  \************************************************************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = {
@@ -136,16 +136,16 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: a8ae2738f8417066d7fe12d977bf7fe4
-Version: webpack 0.10.0-beta6
-Time: 43ms
+Hash: fd22bd56561e719d2f55
+Version: webpack 0.11.0-beta19
+Time: 68ms
     Asset  Size  Chunks             Chunk Names
-output.js  2564       0  [emitted]  main       
-chunk    {0} output.js (main) 277 [rendered]
-    [0] ./example.js 200 [built] {0}
-    [1] (webpack)/~/json-loader!./test.json 36 [built] {0}
-        cjs require ./test.json [0] ./example.js 5:12-34
+output.js  2497       0  [emitted]  main       
+chunk    {0} output.js (main) 282 [rendered]
+    [0] ./example.js 205 {0} [built]
+    [1] (webpack)/~/json-loader!./test.json 36 {0} [built]
         cjs require !json!./test.json [0] ./example.js 6:12-40
-    [2] ./loader.js!./file.js 41 [not cacheable] [built] {0}
+        cjs require ./test.json [0] ./example.js 5:12-34
+    [2] ./loader.js!./file.js 41 {0} [not cacheable] [built]
         cjs require ./loader!./file [0] ./example.js 2:12-38
 ```

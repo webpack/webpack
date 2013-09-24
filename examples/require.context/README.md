@@ -54,7 +54,7 @@ module.exports = function() {
 /******/ 	
 /******/ 	// The bundle contains no chunks. A empty chunk loading function.
 /******/ 	require.e = function requireEnsure(_, callback) {
-/******/ 		callback.call(null, require);
+/******/ 		callback.call(null, this);
 /******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -158,46 +158,46 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 740455ffb121aee6bb93c7638ec1b15d
-Version: webpack 0.10.0-beta6
-Time: 35ms
+Hash: b164e1d4927693a98e5a
+Version: webpack 0.11.0-beta19
+Time: 59ms
     Asset  Size  Chunks             Chunk Names
-output.js  3210       0  [emitted]  main       
-chunk    {0} output.js (main) 603 [rendered]
-    [0] ./example.js 146 [built] {0}
-    [1] ./templates/a.js 80 [built] {0}
-        context element ./a [4] ./templates ^\.\/.*$
+output.js  3217       0  [emitted]  main       
+chunk    {0} output.js (main) 613 [rendered]
+    [0] ./example.js 150 {0} [built]
+    [1] ./templates/a.js 82 {0} [built]
         context element ./a.js [4] ./templates ^\.\/.*$
-    [2] ./templates/b.js 80 [built] {0}
-        context element ./b [4] ./templates ^\.\/.*$
+        context element ./a [4] ./templates ^\.\/.*$
+    [2] ./templates/b.js 82 {0} [built]
         context element ./b.js [4] ./templates ^\.\/.*$
-    [3] ./templates/c.js 80 [built] {0}
-        context element ./c [4] ./templates ^\.\/.*$
+        context element ./b [4] ./templates ^\.\/.*$
+    [3] ./templates/c.js 82 {0} [built]
         context element ./c.js [4] ./templates ^\.\/.*$
-    [4] ./templates ^\.\/.*$ 217 [built] {0}
+        context element ./c [4] ./templates ^\.\/.*$
+    [4] ./templates ^\.\/.*$ 217 {0} [built]
         cjs require context ./templates [0] ./example.js 2:8-44
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 740455ffb121aee6bb93c7638ec1b15d
-Version: webpack 0.10.0-beta6
-Time: 88ms
+Hash: b164e1d4927693a98e5a
+Version: webpack 0.11.0-beta19
+Time: 99ms
     Asset  Size  Chunks             Chunk Names
-output.js   844       0  [emitted]  main       
-chunk    {0} output.js (main) 603 [rendered]
-    [0] ./example.js 146 [built] {0}
-    [1] ./templates/a.js 80 [built] {0}
-        context element ./a [4] ./templates ^\.\/.*$
+output.js   847       0  [emitted]  main       
+chunk    {0} output.js (main) 613 [rendered]
+    [0] ./example.js 150 {0} [built]
+    [1] ./templates/a.js 82 {0} [built]
         context element ./a.js [4] ./templates ^\.\/.*$
-    [2] ./templates/b.js 80 [built] {0}
-        context element ./b [4] ./templates ^\.\/.*$
+        context element ./a [4] ./templates ^\.\/.*$
+    [2] ./templates/b.js 82 {0} [built]
         context element ./b.js [4] ./templates ^\.\/.*$
-    [3] ./templates/c.js 80 [built] {0}
-        context element ./c [4] ./templates ^\.\/.*$
+        context element ./b [4] ./templates ^\.\/.*$
+    [3] ./templates/c.js 82 {0} [built]
         context element ./c.js [4] ./templates ^\.\/.*$
-    [4] ./templates ^\.\/.*$ 217 [built] {0}
+        context element ./c [4] ./templates ^\.\/.*$
+    [4] ./templates ^\.\/.*$ 217 {0} [built]
         cjs require context ./templates [0] ./example.js 2:8-44
 ```
 

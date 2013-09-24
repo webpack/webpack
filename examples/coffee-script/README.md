@@ -55,7 +55,7 @@ module.exports = 42
 /******/ 	
 /******/ 	// The bundle contains no chunks. A empty chunk loading function.
 /******/ 	require.e = function requireEnsure(_, callback) {
-/******/ 		callback.call(null, require);
+/******/ 		callback.call(null, this);
 /******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -119,33 +119,33 @@ module.exports = 42
 ## Uncompressed
 
 ```
-Hash: 4f1f8d98b70c16b33ab9ec23ffc93899
-Version: webpack 0.10.0-beta6
-Time: 152ms
+Hash: 9a0f1fb7751394ed51be
+Version: webpack 0.11.0-beta19
+Time: 190ms
     Asset  Size  Chunks             Chunk Names
-output.js  2213       0  [emitted]  main       
+output.js  2210       0  [emitted]  main       
 chunk    {0} output.js (main) 206 [rendered]
-    [0] ./example.js 31 [built] {0}
-    [1] ./cup2.coffee 57 [built] {0}
-        cjs require ./cup2 [2] ./cup1.coffee 5:9-26
+    [0] ./example.js 31 {0} [built]
+    [1] ./cup2.coffee 57 {0} [built]
         cjs require ./cup2.coffee [2] ./cup1.coffee 4:12-36
-    [2] ./cup1.coffee 118 [built] {0}
+        cjs require ./cup2 [2] ./cup1.coffee 5:9-26
+    [2] ./cup1.coffee 118 {0} [built]
         cjs require ./cup1 [0] ./example.js 1:12-29
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 4f1f8d98b70c16b33ab9ec23ffc93899
-Version: webpack 0.10.0-beta6
-Time: 194ms
+Hash: 9a0f1fb7751394ed51be
+Version: webpack 0.11.0-beta19
+Time: 287ms
     Asset  Size  Chunks             Chunk Names
-output.js   418       0  [emitted]  main       
+output.js   421       0  [emitted]  main       
 chunk    {0} output.js (main) 206 [rendered]
-    [0] ./example.js 31 [built] {0}
-    [1] ./cup2.coffee 57 [built] {0}
-        cjs require ./cup2 [2] ./cup1.coffee 5:9-26
+    [0] ./example.js 31 {0} [built]
+    [1] ./cup2.coffee 57 {0} [built]
         cjs require ./cup2.coffee [2] ./cup1.coffee 4:12-36
-    [2] ./cup1.coffee 118 [built] {0}
+        cjs require ./cup2 [2] ./cup1.coffee 5:9-26
+    [2] ./cup1.coffee 118 {0} [built]
         cjs require ./cup1 [0] ./example.js 1:12-29
 ```

@@ -88,8 +88,9 @@ getTemplate("b", function(b) {
 /******/ 				callbacks.push.apply(callbacks, installedChunks[chunkId]);
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
-/******/ 		for(moduleId in moreModules)
+/******/ 		for(moduleId in moreModules) {
 /******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 		}
 /******/ 		while(callbacks.length)
 /******/ 			callbacks.shift().call(null, require);
 /******/ 	};
@@ -204,49 +205,49 @@ webpackJsonp([1],
 ## Uncompressed
 
 ```
-Hash: 08361c8809713d69acc74da127ca1b53
-Version: webpack 0.10.0-beta6
-Time: 47ms
+Hash: 72f1f454c411afcb0f06
+Version: webpack 0.11.0-beta19
+Time: 64ms
       Asset  Size  Chunks             Chunk Names
-  output.js  3804       0  [emitted]  main       
-1.output.js  1590       1  [emitted]             
-chunk    {0} output.js (main) 251 [rendered]
-    [0] ./example.js 251 [built] {0}
-chunk    {1} 1.output.js 457 {0} [rendered]
-    [1] ../require.context/templates ^\.\/.*$ 217 [built] {1}
+  output.js  3829       0  [emitted]  main       
+1.output.js  1596       1  [emitted]             
+chunk    {0} output.js (main) 261 [rendered]
+    [0] ./example.js 261 {0} [built]
+chunk    {1} 1.output.js 463 {0} [rendered]
+    [1] ../require.context/templates ^\.\/.*$ 217 {1} [built]
         amd require context ../require.context/templates [0] ./example.js 2:1-4:3
-    [2] ../require.context/templates/a.js 80 [built] {1}
-        context element ./a [1] ../require.context/templates ^\.\/.*$
+    [2] ../require.context/templates/a.js 82 {1} [built]
         context element ./a.js [1] ../require.context/templates ^\.\/.*$
-    [3] ../require.context/templates/b.js 80 [built] {1}
-        context element ./b [1] ../require.context/templates ^\.\/.*$
+        context element ./a [1] ../require.context/templates ^\.\/.*$
+    [3] ../require.context/templates/b.js 82 {1} [built]
         context element ./b.js [1] ../require.context/templates ^\.\/.*$
-    [4] ../require.context/templates/c.js 80 [built] {1}
-        context element ./c [1] ../require.context/templates ^\.\/.*$
+        context element ./b [1] ../require.context/templates ^\.\/.*$
+    [4] ../require.context/templates/c.js 82 {1} [built]
         context element ./c.js [1] ../require.context/templates ^\.\/.*$
+        context element ./c [1] ../require.context/templates ^\.\/.*$
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 08361c8809713d69acc74da127ca1b53
-Version: webpack 0.10.0-beta6
-Time: 122ms
+Hash: 72f1f454c411afcb0f06
+Version: webpack 0.11.0-beta19
+Time: 162ms
       Asset  Size  Chunks             Chunk Names
   output.js   831       0  [emitted]  main       
 1.output.js   531       1  [emitted]             
-chunk    {0} output.js (main) 251 [rendered]
-    [0] ./example.js 251 [built] {0}
-chunk    {1} 1.output.js 457 {0} [rendered]
-    [1] ../require.context/templates ^\.\/.*$ 217 [built] {1}
+chunk    {0} output.js (main) 261 [rendered]
+    [0] ./example.js 261 {0} [built]
+chunk    {1} 1.output.js 463 {0} [rendered]
+    [1] ../require.context/templates ^\.\/.*$ 217 {1} [built]
         amd require context ../require.context/templates [0] ./example.js 2:1-4:3
-    [2] ../require.context/templates/a.js 80 [built] {1}
-        context element ./a [1] ../require.context/templates ^\.\/.*$
+    [2] ../require.context/templates/a.js 82 {1} [built]
         context element ./a.js [1] ../require.context/templates ^\.\/.*$
-    [3] ../require.context/templates/b.js 80 [built] {1}
-        context element ./b [1] ../require.context/templates ^\.\/.*$
+        context element ./a [1] ../require.context/templates ^\.\/.*$
+    [3] ../require.context/templates/b.js 82 {1} [built]
         context element ./b.js [1] ../require.context/templates ^\.\/.*$
-    [4] ../require.context/templates/c.js 80 [built] {1}
-        context element ./c [1] ../require.context/templates ^\.\/.*$
+        context element ./b [1] ../require.context/templates ^\.\/.*$
+    [4] ../require.context/templates/c.js 82 {1} [built]
         context element ./c.js [1] ../require.context/templates ^\.\/.*$
+        context element ./c [1] ../require.context/templates ^\.\/.*$
 ```

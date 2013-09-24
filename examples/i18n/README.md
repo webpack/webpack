@@ -62,7 +62,7 @@ module.exports = {
 /******/ 	
 /******/ 	// The bundle contains no chunks. A empty chunk loading function.
 /******/ 	require.e = function requireEnsure(_, callback) {
-/******/ 		callback.call(null, require);
+/******/ 		callback.call(null, this);
 /******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -98,29 +98,29 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: a8c44c574f5009973fbd963c4710f86d
-Version: webpack 0.10.0-beta6
-Time: 25ms
+Hash: cb1e8401dd240b497fb8
+Version: webpack 0.11.0-beta19
+Time: 41ms
     Asset  Size  Chunks             Chunk Names
-output.js  1741       0  [emitted]  main       
+output.js  1738       0  [emitted]  main       
 chunk    {0} output.js (main) 64 [rendered]
-    [0] ./example.js 64 [built] {0}
+    [0] ./example.js 64 {0} [built] [1 warning]
 
-ERROR in ./example.js
+WARNING in ./example.js
 Missing localization: Missing Text
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: a8c44c574f5009973fbd963c4710f86d
-Version: webpack 0.10.0-beta6
-Time: 48ms
+Hash: cb1e8401dd240b497fb8
+Version: webpack 0.11.0-beta19
+Time: 60ms
     Asset  Size  Chunks             Chunk Names
-output.js   308       0  [emitted]  main       
+output.js   311       0  [emitted]  main       
 chunk    {0} output.js (main) 64 [rendered]
-    [0] ./example.js 64 [built] {0}
+    [0] ./example.js 64 {0} [built] [1 warning]
 
-ERROR in ./example.js
+WARNING in ./example.js
 Missing localization: Missing Text
 ```

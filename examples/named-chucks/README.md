@@ -98,8 +98,9 @@ require.ensure(["b"], function(require) {
 /******/ 				callbacks.push.apply(callbacks, installedChunks[chunkId]);
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
-/******/ 		for(moduleId in moreModules)
+/******/ 		for(moduleId in moreModules) {
 /******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 		}
 /******/ 		while(callbacks.length)
 /******/ 			callbacks.shift().call(null, require);
 /******/ 	};
@@ -228,34 +229,34 @@ webpackJsonp([2],
 ## Uncompressed
 
 ```
-Hash: 8800d998ebd282906b61b5434b8398af
-Version: webpack 0.10.0-beta6
-Time: 60ms
+Hash: 120ef41916d014813c0e
+Version: webpack 0.11.0-beta19
+Time: 75ms
           Asset  Size  Chunks             Chunk Names 
-      output.js  4034       0  [emitted]  main        
+      output.js  4068       0  [emitted]  main        
     1.output.js   451    1, 2  [emitted]  my own chuck
 my own chuck.js   451    1, 2  [emitted]  my own chuck
     2.output.js   307       2  [emitted]              
-chunk    {0} output.js (main) 431 [rendered]
-    [0] ./example.js 420 [built] {0}
-    [3] ./~/a.js 11 [built] {0}
+chunk    {0} output.js (main) 450 [rendered]
+    [0] ./example.js 439 {0} [built]
+    [3] ./~/a.js 11 {0} [built]
         cjs require a [0] ./example.js 1:8-20
 chunk    {1} 1.output.js, my own chuck.js (my own chuck) 33 {0} [rendered]
-    [1] ./~/b.js 11 [built] {1} {2}
+    [1] ./~/b.js 11 {1} {2} [built]
         require.ensure item b [0] ./example.js 3:0-6:18
         require.ensure item b [0] ./example.js 8:0-11:18
         require.ensure item b [0] ./example.js 17:0-20:2
-    [2] ./~/d.js 11 [built] {1} {2}
+    [2] ./~/d.js 11 {1} {2} [built]
         cjs require d [0] ./example.js 10:9-21
         cjs require d [0] ./example.js 19:9-21
-    [4] ./~/c.js 11 [built] {1}
+    [4] ./~/c.js 11 {1} [built]
         cjs require c [0] ./example.js 5:9-21
 chunk    {2} 2.output.js 22 {0} [rendered]
-    [1] ./~/b.js 11 [built] {1} {2}
+    [1] ./~/b.js 11 {1} {2} [built]
         require.ensure item b [0] ./example.js 3:0-6:18
         require.ensure item b [0] ./example.js 8:0-11:18
         require.ensure item b [0] ./example.js 17:0-20:2
-    [2] ./~/d.js 11 [built] {1} {2}
+    [2] ./~/d.js 11 {1} {2} [built]
         cjs require d [0] ./example.js 10:9-21
         cjs require d [0] ./example.js 19:9-21
 ```

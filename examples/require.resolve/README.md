@@ -55,7 +55,7 @@ module.exports = Math.random();
 /******/ 	
 /******/ 	// The bundle contains no chunks. A empty chunk loading function.
 /******/ 	require.e = function requireEnsure(_, callback) {
-/******/ 		callback.call(null, require);
+/******/ 		callback.call(null, this);
 /******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -112,31 +112,31 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: 995c10e31ea4676dccbdc20d8ed79bec
-Version: webpack 0.10.0-beta6
-Time: 30ms
+Hash: bacbd61be7a79b0899cc
+Version: webpack 0.11.0-beta19
+Time: 37ms
     Asset  Size  Chunks             Chunk Names
-output.js  2161       0  [emitted]  main       
-chunk    {0} output.js (main) 314 [rendered]
-    [0] ./example.js 283 [built] {0}
-    [1] ./a.js 31 [built] {0}
-        require.resolve ./a.js [0] ./example.js 4:10-35
+output.js  2170       0  [emitted]  main       
+chunk    {0} output.js (main) 326 [rendered]
+    [0] ./example.js 295 {0} [built]
+    [1] ./a.js 31 {0} [built]
         cjs require ./a [0] ./example.js 1:8-22
         cjs require ./a [0] ./example.js 10:9-23
+        require.resolve ./a.js [0] ./example.js 4:10-35
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 995c10e31ea4676dccbdc20d8ed79bec
-Version: webpack 0.10.0-beta6
-Time: 63ms
+Hash: bacbd61be7a79b0899cc
+Version: webpack 0.11.0-beta19
+Time: 78ms
     Asset  Size  Chunks             Chunk Names
-output.js   387       0  [emitted]  main       
-chunk    {0} output.js (main) 314 [rendered]
-    [0] ./example.js 283 [built] {0}
-    [1] ./a.js 31 [built] {0}
-        require.resolve ./a.js [0] ./example.js 4:10-35
+output.js   390       0  [emitted]  main       
+chunk    {0} output.js (main) 326 [rendered]
+    [0] ./example.js 295 {0} [built]
+    [1] ./a.js 31 {0} [built]
         cjs require ./a [0] ./example.js 1:8-22
         cjs require ./a [0] ./example.js 10:9-23
+        require.resolve ./a.js [0] ./example.js 4:10-35
 ```

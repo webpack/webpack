@@ -84,8 +84,9 @@ require.ensure(["c"], function(require) {
 /******/ 				callbacks.push.apply(callbacks, installedChunks[chunkId]);
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
-/******/ 		for(moduleId in moreModules)
+/******/ 		for(moduleId in moreModules) {
 /******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 		}
 /******/ 		while(callbacks.length)
 /******/ 			callbacks.shift().call(null, require);
 /******/ 	};
@@ -176,45 +177,50 @@ webpackJsonp([1],{3:function(){},4:function(){}});
 ## Uncompressed
 
 ```
-Hash: cf2ff7871ce5e43897eb09fa76d995de
-Version: webpack 0.10.0-beta6
-Time: 54ms
+Hash: e81e516782b1aa5b4def
+Version: webpack 0.11.0-beta19
+Time: 63ms
       Asset  Size  Chunks             Chunk Names
-  output.js  3857       0  [emitted]  main       
+  output.js  3877       0  [emitted]  main       
 1.output.js   307       1  [emitted]             
-chunk    {0} output.js (main) 161 [rendered]
-    [0] ./example.js 139 [built] {0}
-    [1] ./~/b.js 11 [built] {0}
+chunk    {0} output.js (main) 166 [rendered]
+    [0] ./example.js 144 {0} [built]
+    [1] ./~/b.js 11 {0} [built]
         cjs require b [0] ./example.js 2:8-20
         cjs require b [0] ./example.js 4:4-16
-    [2] ./~/a.js 11 [built] {0}
+    [2] ./~/a.js 11 {0} [built]
         cjs require a [0] ./example.js 1:8-20
 chunk    {1} 1.output.js 22 {0} [rendered]
-    [3] ./~/c.js 11 [built] {1}
+    [3] ./~/c.js 11 {1} [built]
         require.ensure item c [0] ./example.js 3:0-6:2
-    [4] ./~/d.js 11 [built] {1}
+    [4] ./~/d.js 11 {1} [built]
         cjs require d [0] ./example.js 5:12-24
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: cf2ff7871ce5e43897eb09fa76d995de
-Version: webpack 0.10.0-beta6
-Time: 99ms
+Hash: e81e516782b1aa5b4def
+Version: webpack 0.11.0-beta19
+Time: 117ms
       Asset  Size  Chunks             Chunk Names
   output.js   744       0  [emitted]  main       
 1.output.js    50       1  [emitted]             
-chunk    {0} output.js (main) 161 [rendered]
-    [0] ./example.js 139 [built] {0}
-    [1] ./~/b.js 11 [built] {0}
+chunk    {0} output.js (main) 166 [rendered]
+    [0] ./example.js 144 {0} [built]
+    [1] ./~/b.js 11 {0} [built]
         cjs require b [0] ./example.js 2:8-20
         cjs require b [0] ./example.js 4:4-16
-    [2] ./~/a.js 11 [built] {0}
+    [2] ./~/a.js 11 {0} [built]
         cjs require a [0] ./example.js 1:8-20
 chunk    {1} 1.output.js 22 {0} [rendered]
-    [3] ./~/c.js 11 [built] {1}
+    [3] ./~/c.js 11 {1} [built]
         require.ensure item c [0] ./example.js 3:0-6:2
-    [4] ./~/d.js 11 [built] {1}
+    [4] ./~/d.js 11 {1} [built]
         cjs require d [0] ./example.js 5:12-24
+
+WARNING in output.js from UglifyJs
+Side effects in initialization of unused variable a [./example.js:1,0]
+Side effects in initialization of unused variable b [./example.js:2,0]
+Side effects in initialization of unused variable d [./example.js:5,0]
 ```

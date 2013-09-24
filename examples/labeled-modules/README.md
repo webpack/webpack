@@ -59,7 +59,7 @@ exports: function add() {
 /******/ 	
 /******/ 	// The bundle contains no chunks. A empty chunk loading function.
 /******/ 	require.e = function requireEnsure(_, callback) {
-/******/ 		callback.call(null, require);
+/******/ 		callback.call(null, this);
 /******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -127,31 +127,31 @@ The remaining labels are removed while minimizing.
 ## Uncompressed
 
 ```
-Hash: 76e286b599e5c0a0757814519c4540d3
-Version: webpack 0.10.0-beta6
-Time: 39ms
+Hash: 06f5d80de99aa66b8ac0
+Version: webpack 0.11.0-beta19
+Time: 55ms
     Asset  Size  Chunks             Chunk Names
-output.js  2479       0  [emitted]  main       
-chunk    {0} output.js (main) 288 [rendered]
-    [0] ./example.js 53 [built] {0}
-    [1] ./increment.js 80 [built] {0}
+output.js  2487       0  [emitted]  main       
+chunk    {0} output.js (main) 299 [rendered]
+    [0] ./example.js 55 {0} [built]
+    [1] ./increment.js 83 {0} [built]
         labeled require ./increment [0] ./example.js 1:0-23
-    [2] ./math.js 155 [built] {0}
+    [2] ./math.js 161 {0} [built]
         labeled require ./math [1] ./increment.js 1:0-18
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 76e286b599e5c0a0757814519c4540d3
-Version: webpack 0.10.0-beta6
-Time: 82ms
+Hash: 06f5d80de99aa66b8ac0
+Version: webpack 0.11.0-beta19
+Time: 90ms
     Asset  Size  Chunks             Chunk Names
-output.js   468       0  [emitted]  main       
-chunk    {0} output.js (main) 288 [rendered]
-    [0] ./example.js 53 [built] {0}
-    [1] ./increment.js 80 [built] {0}
+output.js   471       0  [emitted]  main       
+chunk    {0} output.js (main) 299 [rendered]
+    [0] ./example.js 55 {0} [built]
+    [1] ./increment.js 83 {0} [built]
         labeled require ./increment [0] ./example.js 1:0-23
-    [2] ./math.js 155 [built] {0}
+    [2] ./math.js 161 {0} [built]
         labeled require ./math [1] ./increment.js 1:0-18
 ```
