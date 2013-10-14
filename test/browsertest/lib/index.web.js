@@ -314,7 +314,7 @@ describe("main", function() {
 			});
 		});
 		it("should be able to use require.js-style define, without name", function(done) {
-			define(["./circular"], function(circular) {
+			true && define(["./circular"], function(circular) {
 				circular.should.be.eql(1);
 				done();
 			});
@@ -325,12 +325,13 @@ describe("main", function() {
 			});
 		});
 		it("should be able to use require.js-style define, without dependencies", function(done) {
-			define("name", function() {
+			true && define("name", function() {
 				done();
 			});
 		});
 		var obj = {};
 		it("should be able to use require.js-style define, with an object", function() {
+			true && define("blaaa", obj);
 			define("blaaa", obj);
 		});
 		after(function() {
