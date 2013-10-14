@@ -106,6 +106,8 @@ webpack(options, function(err, stats) {
 	else {
 		console.log(stats.toString(outputOptions));
 	}
-	// Do not keep cache anymore
-	process.exit();
+	if(!options.watch) {
+		// Do not keep cache anymore
+		process.exit();
+	}
 });
