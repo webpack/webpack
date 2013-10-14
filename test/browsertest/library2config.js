@@ -8,9 +8,11 @@ module.exports = {
 		]
 	},
 	optimize: {
-		maxChunks: 2,
+		maxChunks: 2
 	},
 	define: {
+		CONST_UNDEFINED: undefined,
+		CONST_NULL: null,
 		CONST_TRUE: true,
 		CONST_FALSE: false,
 		CONST_FUNCTION: function() { return "ok"; },
