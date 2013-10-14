@@ -43,7 +43,7 @@ module.exports = function() {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -159,10 +159,10 @@ module.exports = function() {
 
 ```
 Hash: b164e1d4927693a98e5a
-Version: webpack 0.11.0-beta19
-Time: 59ms
+Version: webpack 0.11.0-beta27
+Time: 57ms
     Asset  Size  Chunks             Chunk Names
-output.js  3217       0  [emitted]  main       
+output.js  3227       0  [emitted]  main       
 chunk    {0} output.js (main) 613 [rendered]
     [0] ./example.js 150 {0} [built]
     [1] ./templates/a.js 82 {0} [built]
@@ -182,10 +182,10 @@ chunk    {0} output.js (main) 613 [rendered]
 
 ```
 Hash: b164e1d4927693a98e5a
-Version: webpack 0.11.0-beta19
-Time: 99ms
+Version: webpack 0.11.0-beta27
+Time: 105ms
     Asset  Size  Chunks             Chunk Names
-output.js   847       0  [emitted]  main       
+output.js   852       0  [emitted]  main       
 chunk    {0} output.js (main) 613 [rendered]
     [0] ./example.js 150 {0} [built]
     [1] ./templates/a.js 82 {0} [built]

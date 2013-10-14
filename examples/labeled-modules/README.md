@@ -48,7 +48,7 @@ exports: function add() {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -128,10 +128,10 @@ The remaining labels are removed while minimizing.
 
 ```
 Hash: 06f5d80de99aa66b8ac0
-Version: webpack 0.11.0-beta19
-Time: 55ms
+Version: webpack 0.11.0-beta27
+Time: 57ms
     Asset  Size  Chunks             Chunk Names
-output.js  2487       0  [emitted]  main       
+output.js  2497       0  [emitted]  main       
 chunk    {0} output.js (main) 299 [rendered]
     [0] ./example.js 55 {0} [built]
     [1] ./increment.js 83 {0} [built]
@@ -144,10 +144,10 @@ chunk    {0} output.js (main) 299 [rendered]
 
 ```
 Hash: 06f5d80de99aa66b8ac0
-Version: webpack 0.11.0-beta19
-Time: 90ms
+Version: webpack 0.11.0-beta27
+Time: 88ms
     Asset  Size  Chunks             Chunk Names
-output.js   471       0  [emitted]  main       
+output.js   476       0  [emitted]  main       
 chunk    {0} output.js (main) 299 [rendered]
     [0] ./example.js 55 {0} [built]
     [1] ./increment.js 83 {0} [built]

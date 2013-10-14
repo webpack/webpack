@@ -51,7 +51,7 @@ module.exports = {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -99,10 +99,10 @@ module.exports = {
 
 ```
 Hash: cb1e8401dd240b497fb8
-Version: webpack 0.11.0-beta19
+Version: webpack 0.11.0-beta27
 Time: 41ms
     Asset  Size  Chunks             Chunk Names
-output.js  1738       0  [emitted]  main       
+output.js  1748       0  [emitted]  main       
 chunk    {0} output.js (main) 64 [rendered]
     [0] ./example.js 64 {0} [built] [1 warning]
 
@@ -114,10 +114,10 @@ Missing localization: Missing Text
 
 ```
 Hash: cb1e8401dd240b497fb8
-Version: webpack 0.11.0-beta19
-Time: 60ms
+Version: webpack 0.11.0-beta27
+Time: 61ms
     Asset  Size  Chunks             Chunk Names
-output.js   311       0  [emitted]  main       
+output.js   316       0  [emitted]  main       
 chunk    {0} output.js (main) 64 [rendered]
     [0] ./example.js 64 {0} [built] [1 warning]
 

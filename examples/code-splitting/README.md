@@ -36,7 +36,7 @@ require.ensure(["c"], function(require) {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -178,10 +178,10 @@ webpackJsonp([1],{3:function(){},4:function(){}});
 
 ```
 Hash: e81e516782b1aa5b4def
-Version: webpack 0.11.0-beta19
-Time: 63ms
+Version: webpack 0.11.0-beta27
+Time: 67ms
       Asset  Size  Chunks             Chunk Names
-  output.js  3877       0  [emitted]  main       
+  output.js  3887       0  [emitted]  main       
 1.output.js   307       1  [emitted]             
 chunk    {0} output.js (main) 166 [rendered]
     [0] ./example.js 144 {0} [built]
@@ -201,10 +201,10 @@ chunk    {1} 1.output.js 22 {0} [rendered]
 
 ```
 Hash: e81e516782b1aa5b4def
-Version: webpack 0.11.0-beta19
-Time: 117ms
+Version: webpack 0.11.0-beta27
+Time: 120ms
       Asset  Size  Chunks             Chunk Names
-  output.js   744       0  [emitted]  main       
+  output.js   749       0  [emitted]  main       
 1.output.js    50       1  [emitted]             
 chunk    {0} output.js (main) 166 [rendered]
     [0] ./example.js 144 {0} [built]

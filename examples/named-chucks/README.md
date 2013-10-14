@@ -50,7 +50,7 @@ require.ensure(["b"], function(require) {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -230,10 +230,10 @@ webpackJsonp([2],
 
 ```
 Hash: 120ef41916d014813c0e
-Version: webpack 0.11.0-beta19
-Time: 75ms
+Version: webpack 0.11.0-beta27
+Time: 73ms
           Asset  Size  Chunks             Chunk Names 
-      output.js  4068       0  [emitted]  main        
+      output.js  4078       0  [emitted]  main        
     1.output.js   451    1, 2  [emitted]  my own chuck
 my own chuck.js   451    1, 2  [emitted]  my own chuck
     2.output.js   307       2  [emitted]              

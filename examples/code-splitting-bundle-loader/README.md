@@ -39,7 +39,7 @@ module.exports = "It works";
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -165,10 +165,10 @@ webpackJsonp([1],
 
 ```
 Hash: 44423c020c9e55356251
-Version: webpack 0.11.0-beta19
+Version: webpack 0.11.0-beta27
 Time: 79ms
       Asset  Size  Chunks             Chunk Names
-  output.js  4151       0  [emitted]  main       
+  output.js  4161       0  [emitted]  main       
 1.output.js   185       1  [emitted]             
 chunk    {0} output.js (main) 486 [rendered]
     [0] ./example.js 88 {0} [built]
@@ -183,10 +183,10 @@ chunk    {1} 1.output.js 28 {0} [rendered]
 
 ```
 Hash: 44423c020c9e55356251
-Version: webpack 0.11.0-beta19
-Time: 221ms
+Version: webpack 0.11.0-beta27
+Time: 151ms
       Asset  Size  Chunks             Chunk Names
-  output.js   853       0  [emitted]  main       
+  output.js   858       0  [emitted]  main       
 1.output.js    56       1  [emitted]             
 chunk    {0} output.js (main) 486 [rendered]
     [0] ./example.js 88 {0} [built]

@@ -37,7 +37,7 @@ require(["../dedupe/b"]);
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -368,10 +368,10 @@ webpackJsonp([4],
 
 ```
 Hash: e315623b9358082f9178
-Version: webpack 0.11.0-beta19
-Time: 104ms
+Version: webpack 0.11.0-beta27
+Time: 110ms
       Asset  Size  Chunks             Chunk Names
-  output.js  4972       0  [emitted]  main       
+  output.js  4982       0  [emitted]  main       
 1.output.js  1485    1, 3  [emitted]             
 2.output.js   877    2, 4  [emitted]             
 3.output.js   875       3  [emitted]             
@@ -430,10 +430,10 @@ chunk    {4} 4.output.js 167 {1} [rendered]
 
 ```
 Hash: e315623b9358082f9178
-Version: webpack 0.11.0-beta19
-Time: 254ms
+Version: webpack 0.11.0-beta27
+Time: 247ms
       Asset  Size  Chunks             Chunk Names
-  output.js  1151       0  [emitted]  main       
+  output.js  1156       0  [emitted]  main       
 1.output.js   294    1, 3  [emitted]             
 2.output.js   210    2, 4  [emitted]             
 3.output.js   208       3  [emitted]             

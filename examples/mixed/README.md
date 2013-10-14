@@ -98,7 +98,7 @@ require(
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -193,14 +193,14 @@ require(
   \****************/
 /***/ function(module, exports, require) {
 
-	// AMD Module Format
-	{var __WEBPACK_AMD_DEFINE_ARRAY__ = [(require(/*! ./commonjs */ 2)), (require(/*! ./labeled */ 3))]; var __WEBPACK_AMD_DEFINE_RESULT__ = (function(commonjs1, labeled1) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Format
+	(__WEBPACK_AMD_DEFINE_ARRAY__ = [(require(/*! ./commonjs */ 2)), (require(/*! ./labeled */ 3))], __WEBPACK_AMD_DEFINE_RESULT__ = (function(commonjs1, labeled1) {
 			// but you can use CommonJs-style requires:
 			var commonjs2 = require(/*! ./commonjs */ 2);
 			var labeled2 = require(/*! ./labeled */ 3);
 			// Do something...
 			return 456;
-		}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)); if(__WEBPACK_AMD_DEFINE_RESULT__ !== undefined) module.exports = __WEBPACK_AMD_DEFINE_RESULT__;};
+		}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ },
 
@@ -318,10 +318,10 @@ webpackJsonp([1],
 
 ```
 Hash: 2721b053405a030a8270
-Version: webpack 0.11.0-beta19
-Time: 86ms
+Version: webpack 0.11.0-beta27
+Time: 87ms
       Asset  Size  Chunks             Chunk Names
-  output.js  6166       0  [emitted]  main       
+  output.js  6232       0  [emitted]  main       
 1.output.js  1572       1  [emitted]             
 chunk    {0} output.js (main) 1395 [rendered]
     [0] ./example.js 613 {0} [built]
@@ -345,10 +345,10 @@ chunk    {0} output.js (main) 1395 [rendered]
         cjs require ./labeled [0] ./example.js 4:15-35
         labeled require ./labeled [0] ./example.js 17:0-21
         amd require ./labeled [0] ./example.js 7:0-14:1
-        amd require ./labeled [1] ./amd.js 2:0-12:1
-        cjs require ./labeled [1] ./amd.js 8:17-37
         amd require ./labeled [2] ./commonjs.js 5:0-11:1
         cjs require ./labeled [2] ./commonjs.js 9:17-37
+        amd require ./labeled [1] ./amd.js 2:0-12:1
+        cjs require ./labeled [1] ./amd.js 8:17-37
 chunk    {1} 1.output.js 439 {0} [rendered]
     [4] ../require.context/templates ^\.\/.*\.js$ 193 {1} [built]
         amd require context ../require.context/templates [0] ./example.js 7:0-14:1

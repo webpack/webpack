@@ -44,7 +44,7 @@ module.exports = Math.random();
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -113,10 +113,10 @@ module.exports = Math.random();
 
 ```
 Hash: bacbd61be7a79b0899cc
-Version: webpack 0.11.0-beta19
-Time: 37ms
+Version: webpack 0.11.0-beta27
+Time: 51ms
     Asset  Size  Chunks             Chunk Names
-output.js  2170       0  [emitted]  main       
+output.js  2180       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
     [0] ./example.js 295 {0} [built]
     [1] ./a.js 31 {0} [built]
@@ -129,14 +129,14 @@ chunk    {0} output.js (main) 326 [rendered]
 
 ```
 Hash: bacbd61be7a79b0899cc
-Version: webpack 0.11.0-beta19
-Time: 78ms
+Version: webpack 0.11.0-beta27
+Time: 80ms
     Asset  Size  Chunks             Chunk Names
-output.js   390       0  [emitted]  main       
+output.js   395       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
     [0] ./example.js 295 {0} [built]
     [1] ./a.js 31 {0} [built]
+        require.resolve ./a.js [0] ./example.js 4:10-35
         cjs require ./a [0] ./example.js 1:8-22
         cjs require ./a [0] ./example.js 10:9-23
-        require.resolve ./a.js [0] ./example.js 4:10-35
 ```

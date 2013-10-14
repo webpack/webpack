@@ -40,7 +40,7 @@ getTemplate("b", function(b) {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -206,10 +206,10 @@ webpackJsonp([1],
 
 ```
 Hash: 9314e8e482179e2ac7a6
-Version: webpack 0.11.0-beta19
-Time: 63ms
+Version: webpack 0.11.0-beta27
+Time: 65ms
       Asset  Size  Chunks             Chunk Names
-  output.js  3717       0  [emitted]  main       
+  output.js  3727       0  [emitted]  main       
 1.output.js  1596       1  [emitted]             
 chunk    {0} output.js (main) 276 [rendered]
     [0] ./example.js 276 {0} [built]
@@ -231,10 +231,10 @@ chunk    {1} 1.output.js 463 {0} [rendered]
 
 ```
 Hash: 9314e8e482179e2ac7a6
-Version: webpack 0.11.0-beta19
-Time: 152ms
+Version: webpack 0.11.0-beta27
+Time: 138ms
       Asset  Size  Chunks             Chunk Names
-  output.js   792       0  [emitted]  main       
+  output.js   797       0  [emitted]  main       
 1.output.js   531       1  [emitted]             
 chunk    {0} output.js (main) 276 [rendered]
     [0] ./example.js 276 {0} [built]

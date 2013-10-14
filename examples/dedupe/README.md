@@ -79,7 +79,7 @@ module.exports = {"this is": "z"};
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -211,10 +211,10 @@ module.exports = {"this is": "z"};
 
 ```
 Hash: fd48f2b5f2e70229c08f
-Version: webpack 0.11.0-beta19
-Time: 63ms
+Version: webpack 0.11.0-beta27
+Time: 65ms
     Asset  Size  Chunks             Chunk Names
-output.js  3359       0  [emitted]  main       
+output.js  3369       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]
     [0] ./example.js 76 {0} [built]
     [1] ./z.js 34 {0} [built]
@@ -241,15 +241,15 @@ chunk    {0} output.js (main) 528 [rendered]
 
 ```
 Hash: fd48f2b5f2e70229c08f
-Version: webpack 0.11.0-beta19
-Time: 125ms
+Version: webpack 0.11.0-beta27
+Time: 111ms
     Asset  Size  Chunks             Chunk Names
-output.js   780       0  [emitted]  main       
+output.js   785       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]
     [0] ./example.js 76 {0} [built]
     [1] ./z.js 34 {0} [built]
-        cjs require ../z [2] ./a/index.js 4:4-19
         cjs require ../z [5] ./b/index.js 4:4-19
+        cjs require ../z [2] ./a/index.js 4:4-19
     [2] ./a/index.js 84 {0} [built]
         cjs require ./a [0] ./example.js 1:8-22
     [3] ./a/x.js 34 {0} [built]

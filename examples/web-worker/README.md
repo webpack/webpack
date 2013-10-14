@@ -43,7 +43,7 @@ onmessage = function(event) {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -126,7 +126,7 @@ onmessage = function(event) {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -265,21 +265,21 @@ webpackChunk([1],
 
 ```
 Hash: 130ff49de5a4c4d44ed8
-Version: webpack 0.11.0-beta19
-Time: 104ms
+Version: webpack 0.11.0-beta27
+Time: 103ms
            Asset  Size  Chunks             Chunk Names
-  hash.worker.js  2634          [emitted]             
+  hash.worker.js  2644          [emitted]             
 1.hash.worker.js  1596          [emitted]             
-       output.js  2333       0  [emitted]  main       
+       output.js  2343       0  [emitted]  main       
 chunk    {0} output.js (main) 302 [rendered]
     [0] ./example.js 206 {0} [built]
     [1] (webpack)/~/worker-loader!./worker.js 96 {0} [not cacheable] [built]
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
     Hash: 2d89f2348fe5977ff752
-    Version: webpack 0.11.0-beta19
+    Version: webpack 0.11.0-beta27
                Asset  Size  Chunks             Chunk Names
-      hash.worker.js  2634       0  [emitted]  main       
+      hash.worker.js  2644       0  [emitted]  main       
     1.hash.worker.js  1596       1  [emitted]             
     chunk    {0} hash.worker.js (main) 168 [rendered]
         [0] ./worker.js 168 {0} [built]
@@ -301,12 +301,12 @@ Child worker:
 
 ```
 Hash: 130ff49de5a4c4d44ed8
-Version: webpack 0.11.0-beta19
-Time: 280ms
+Version: webpack 0.11.0-beta27
+Time: 209ms
            Asset  Size  Chunks             Chunk Names
-  hash.worker.js   519          [emitted]             
+  hash.worker.js   524          [emitted]             
 1.hash.worker.js   531          [emitted]             
-       output.js   421       0  [emitted]  main       
+       output.js   426       0  [emitted]  main       
 chunk    {0} output.js (main) 302 [rendered]
     [0] ./example.js 206 {0} [built]
     [1] (webpack)/~/worker-loader!./worker.js 96 {0} [not cacheable] [built]
@@ -316,9 +316,9 @@ WARNING in output.js from UglifyJs
 Side effects in initialization of unused variable templateB [./example.js:5,0]
 Child worker:
     Hash: 2d89f2348fe5977ff752
-    Version: webpack 0.11.0-beta19
+    Version: webpack 0.11.0-beta27
                Asset  Size  Chunks             Chunk Names
-      hash.worker.js   519       0  [emitted]  main       
+      hash.worker.js   524       0  [emitted]  main       
     1.hash.worker.js   531       1  [emitted]             
     chunk    {0} hash.worker.js (main) 168 [rendered]
         [0] ./worker.js 168 {0} [built]
