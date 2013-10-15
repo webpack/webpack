@@ -15,6 +15,9 @@ require("script!../js/library1.js");
 require("../css/stylesheet.css");
 require("../less/stylesheet.less");
 
+var should = require("should");
+should.exist = function(x) { should.strictEqual(x === undefined, false); should.strictEqual(x === null, false); }
+
 function testCase(number) {
 	//window.test(require("./folder/file" + (number === 1 ? 1 : "2")) === "file" + number);
 	require(number === 1 ? "../folder/file1" : number === 2 ? "../folder/file2" : number === 3 ? "../folder/file3" : "./missingModule").should.be.eql("file" + number);
@@ -118,11 +121,11 @@ describe("main", function() {
 			var singlarObj = require("./singluar2");
 			var singlarId = require.resolve("./singluar2");
 			var singlarIdInConditional = require.resolve(true ? "./singluar2" : "./singluar");
-			singlarId.should.be.a("number");
+			singlarId.should.have.type("number");
 			singlarIdInConditional.should.be.eql(singlarId);
 			should.exist(require.cache);
 			should.exist(require.cache[singlarId]);
-			require.cache[singlarId].should.be.a("object");
+			require.cache[singlarId].should.have.type("object");
 			delete require.cache[singlarId];
 			require("./singluar2").should.be.not.equal(singlarObj);
 		});
@@ -177,10 +180,10 @@ describe("main", function() {
 		it("should parse and evaluate labeled modules", function() {
 			var lbm = require("./labeledModuleA");
 			lbm.should.have.property("x").be.eql("x");
-			lbm.should.have.property("y").be.a("function");
+			lbm.should.have.property("y").have.type("function");
 			lbm.y().should.be.eql("y");
 			lbm.should.have.property("z").be.eql("z");
-			lbm.should.have.property("foo").be.a("function");
+			lbm.should.have.property("foo").have.type("function");
 			lbm.foo().should.be.eql("foo");
 		});
 
@@ -213,7 +216,7 @@ describe("main", function() {
 		});
 
 		it("should polyfill process and module", function(done) {
-			module.id.should.be.a("number");
+			module.id.should.have.type("number");
 			module.id.should.be.eql(require.resolve("./index.web.js"));
 			require.ensure([], function(require) {
 				test(Array.isArray(process.argv), "process.argv should be an array");
@@ -513,7 +516,7 @@ describe("main", function() {
 
 		it("should pass query to multiple loaders", function() {
 			var result = require("../loaders/queryloader?query1!../loaders/queryloader?query2!./a?resourcequery");
-			result.should.be.a("object");
+			result.should.have.type("object");
 			result.should.have.property("resourceQuery").be.eql("?resourcequery");
 			result.should.have.property("query").be.eql("?query1");
 			result.should.have.property("prev").be.eql("module.exports = " + JSON.stringify({

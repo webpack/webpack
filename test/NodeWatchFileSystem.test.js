@@ -22,7 +22,7 @@ describe("NodeWatchFileSystem", function() {
 			if(err) throw err;
 			filesModified.should.be.eql([fileDirect]);
 			dirsModified.should.be.eql([]);
-			fileTimestamps.should.have.property(fileDirect).be.a("number");
+			fileTimestamps.should.have.property(fileDirect).have.type("number");
 			dirTimestamps.should.be.eql({});
 			done();
 		});
@@ -38,7 +38,7 @@ describe("NodeWatchFileSystem", function() {
 				if(err) throw err;
 				filesModified.should.be.eql([fileDirect]);
 				dirsModified.should.be.eql([]);
-				fileTimestamps.should.have.property(fileDirect).be.a("number");
+				fileTimestamps.should.have.property(fileDirect).have.type("number");
 				dirTimestamps.should.be.eql({});
 				done();
 			});
@@ -53,7 +53,7 @@ describe("NodeWatchFileSystem", function() {
 			filesModified.should.be.eql([]);
 			dirsModified.should.be.eql([fixtures]);
 			fileTimestamps.should.be.eql({});
-			dirTimestamps.should.have.property(fixtures).be.a("number");
+			dirTimestamps.should.have.property(fixtures).have.type("number");
 			done();
 		});
 
@@ -69,7 +69,7 @@ describe("NodeWatchFileSystem", function() {
 				filesModified.should.be.eql([]);
 				dirsModified.should.be.eql([fixtures]);
 				fileTimestamps.should.be.eql({});
-				dirTimestamps.should.have.property(fixtures).be.a("number");
+				dirTimestamps.should.have.property(fixtures).have.type("number");
 				done();
 			});
 		}, 500);
@@ -83,7 +83,7 @@ describe("NodeWatchFileSystem", function() {
 			filesModified.should.be.eql([]);
 			dirsModified.should.be.eql([fixtures]);
 			fileTimestamps.should.be.eql({});
-			dirTimestamps.should.have.property(fixtures).be.a("number");
+			dirTimestamps.should.have.property(fixtures).have.type("number");
 			done();
 		});
 
@@ -99,7 +99,7 @@ describe("NodeWatchFileSystem", function() {
 				filesModified.should.be.eql([]);
 				dirsModified.should.be.eql([fixtures]);
 				fileTimestamps.should.be.eql({});
-				dirTimestamps.should.have.property(fixtures).be.a("number");
+				dirTimestamps.should.have.property(fixtures).have.type("number");
 				done();
 			});
 		}, 500);
@@ -113,9 +113,9 @@ describe("NodeWatchFileSystem", function() {
 				if(err) throw err;
 				filesModified.should.be.eql([fileSubdir, fileDirect]);
 				dirsModified.should.be.eql([fixtures]);
-				fileTimestamps.should.have.property(fileDirect).be.a("number");
-				fileTimestamps.should.have.property(fileSubdir).be.a("number");
-				dirTimestamps.should.have.property(fixtures).be.a("number");
+				fileTimestamps.should.have.property(fileDirect).have.type("number");
+				fileTimestamps.should.have.property(fileSubdir).have.type("number");
+				dirTimestamps.should.have.property(fixtures).have.type("number");
 				done();
 			});
 		}, 500);
@@ -129,9 +129,9 @@ describe("NodeWatchFileSystem", function() {
 				if(err) throw err;
 				filesModified.should.be.eql([fileSubdir, fileDirect]);
 				dirsModified.should.be.eql([fixtures]);
-				fileTimestamps.should.have.property(fileDirect).be.a("number");
-				fileTimestamps.should.have.property(fileSubdir).be.a("number");
-				dirTimestamps.should.have.property(fixtures).be.a("number");
+				fileTimestamps.should.have.property(fileDirect).have.type("number");
+				fileTimestamps.should.have.property(fileSubdir).have.type("number");
+				dirTimestamps.should.have.property(fixtures).have.type("number");
 				done();
 			});
 

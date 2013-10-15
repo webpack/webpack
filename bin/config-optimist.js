@@ -49,7 +49,7 @@ module.exports = function(optimist) {
 
 	.boolean("hot").alias("hot", "h").describe("hot")
 
-	.boolean("debug").alias("debug", "d").describe("debug")
+	.boolean("debug").describe("debug")
 
 	.string("devtool").describe("devtool")
 
