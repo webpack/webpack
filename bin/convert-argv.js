@@ -179,6 +179,11 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.output.publicPath = value;
 	});
 
+	ifArg("output-jsonp-function", function(value) {
+		ensureObject(options, "output");
+		options.output.jsonpFunction = value;
+	});
+
 	ifBooleanArg("output-pathinfo", function() {
 		ensureObject(options, "output");
 		options.output.pathinfo = true;

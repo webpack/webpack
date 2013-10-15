@@ -25,6 +25,8 @@ module.exports = function(optimist) {
 
 	.string("output-public-path").describe("output-public-path")
 
+	.string("output-jsonp-function").describe("output-jsonp-function")
+
 	.boolean("output-pathinfo").describe("output-pathinfo")
 
 	.string("output-library").describe("output-library")
