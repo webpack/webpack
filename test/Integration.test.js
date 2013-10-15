@@ -58,6 +58,11 @@ describe("Integration", function() {
 			amd: {
 				fromOptions: true
 			},
+			resolve: {
+				// cannot resolve should outside the outermost node_modules
+				// so it is injected here
+				alias: { should: require.resolve("should") }
+			},
 			plugins: {
 				"after-environment": function() {
 					this.resolver.plugin("module-resolved", function(request, callback) {

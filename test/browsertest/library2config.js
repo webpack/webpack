@@ -30,6 +30,11 @@ module.exports = {
 	provide: {
 		s3: "submodule3"
 	},
+	resolve: {
+		// cannot resolve should outside the outermost node_modules
+		// so it is injected here
+		alias: { should: require.resolve("should") }
+	},
 	plugins: [
 		function() {
 			this.plugin("normal-module-factory", function(nmf) {
