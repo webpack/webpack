@@ -22,9 +22,9 @@ describe("Errors", function() {
 		};
 		c.run(function(err, stats) {
 			if(err) throw err;
-			should.exist(stats);
+			should.strictEqual(typeof stats, "object");
 			stats = stats.toJson();
-			should.exist(stats);
+			should.strictEqual(typeof stats, "object");
 			stats.should.have.property("errors");
 			stats.should.have.property("warnings");
 			Array.isArray(stats.errors).should.be.ok;

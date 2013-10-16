@@ -40,12 +40,12 @@ describe("Compiler", function() {
 		});
 		c.run(function(err, stats) {
 			if(err) throw err;
-			should.exist(stats);
+			should.strictEqual(typeof stats, "object");
 			stats = stats.toJson({
 				modules: true,
 				reasons: true
 			});
-			should.exist(stats);
+			should.strictEqual(typeof stats, "object");
 			stats.should.have.property("errors");
 			Array.isArray(stats.errors).should.be.ok;
 			if(stats.errors.length > 0) {

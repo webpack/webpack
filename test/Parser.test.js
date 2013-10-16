@@ -134,7 +134,7 @@ describe("Parser", function() {
 				return true;
 			});
 			var actual = testParser.parse(source);
-			should.exist(actual);
+			should.strictEqual(typeof actual, "object");
 			actual.should.be.eql(state);
 		});
 	});
