@@ -190,9 +190,9 @@ module.exports = {"this is": "z"};
 /***/ },
 
 /***/ 8:
-/*!********!*\
-  !***  ***!
-  \********/
+/*!***********************************!*\
+  !*** template of 2 referencing 1 ***!
+  \***********************************/
 /***/ function(module, exports, require, __webpack_module_template_argument_0__, __webpack_module_template_argument_1__) {
 
 	module.exports = {
@@ -210,11 +210,11 @@ module.exports = {"this is": "z"};
 ## Uncompressed
 
 ```
-Hash: fd48f2b5f2e70229c08f
-Version: webpack 0.11.0-beta27
-Time: 65ms
+Hash: 5bb0f56756624f9a9ea2
+Version: webpack 0.11.0
+Time: 56ms
     Asset  Size  Chunks             Chunk Names
-output.js  3369       0  [emitted]  main       
+output.js  3450       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]
     [0] ./example.js 76 {0} [built]
     [1] ./z.js 34 {0} [built]
@@ -232,7 +232,7 @@ chunk    {0} output.js (main) 528 [rendered]
         cjs require ./x [5] ./b/index.js 2:4-18
     [7] ./b/y.js 49 {0} [built]
         cjs require ./y [5] ./b/index.js 3:4-18
-    [8]  84 {0} [not cacheable] [built]
+    [8] template of 2 referencing 1 84 {0} [not cacheable] [built]
         template 1 [2] ./a/index.js
         template 1 [5] ./b/index.js
 ```
@@ -241,15 +241,15 @@ chunk    {0} output.js (main) 528 [rendered]
 
 ```
 Hash: fd48f2b5f2e70229c08f
-Version: webpack 0.11.0-beta27
-Time: 111ms
+Version: webpack 0.11.0
+Time: 117ms
     Asset  Size  Chunks             Chunk Names
-output.js   785       0  [emitted]  main       
+output.js   784       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]
     [0] ./example.js 76 {0} [built]
     [1] ./z.js 34 {0} [built]
-        cjs require ../z [5] ./b/index.js 4:4-19
         cjs require ../z [2] ./a/index.js 4:4-19
+        cjs require ../z [5] ./b/index.js 4:4-19
     [2] ./a/index.js 84 {0} [built]
         cjs require ./a [0] ./example.js 1:8-22
     [3] ./a/x.js 34 {0} [built]
@@ -262,7 +262,7 @@ chunk    {0} output.js (main) 528 [rendered]
         cjs require ./x [5] ./b/index.js 2:4-18
     [7] ./b/y.js 49 {0} [built]
         cjs require ./y [5] ./b/index.js 3:4-18
-    [8]  84 {0} [not cacheable] [built]
+    [8] template of 2 referencing 1 84 {0} [not cacheable] [built]
         template 1 [2] ./a/index.js
         template 1 [5] ./b/index.js
 ```

@@ -147,7 +147,7 @@ module.exports = function() {
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	
+
 
 /***/ }
 /******/ })
@@ -158,11 +158,11 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: b164e1d4927693a98e5a
-Version: webpack 0.11.0-beta27
-Time: 57ms
+Hash: eb3fb23f0989a7b35fe9
+Version: webpack 0.11.0
+Time: 50ms
     Asset  Size  Chunks             Chunk Names
-output.js  3227       0  [emitted]  main       
+output.js  3226       0  [emitted]  main       
 chunk    {0} output.js (main) 613 [rendered]
     [0] ./example.js 150 {0} [built]
     [1] ./templates/a.js 82 {0} [built]
@@ -182,10 +182,10 @@ chunk    {0} output.js (main) 613 [rendered]
 
 ```
 Hash: b164e1d4927693a98e5a
-Version: webpack 0.11.0-beta27
-Time: 105ms
+Version: webpack 0.11.0
+Time: 100ms
     Asset  Size  Chunks             Chunk Names
-output.js   852       0  [emitted]  main       
+output.js   855       0  [emitted]  main       
 chunk    {0} output.js (main) 613 [rendered]
     [0] ./example.js 150 {0} [built]
     [1] ./templates/a.js 82 {0} [built]

@@ -147,11 +147,11 @@ require(["../dedupe/b"]);
 
 	// index.js and x.js can be deduplicated
 	require.e/* require */(1, function(require) {[(require(/*! ../dedupe/a */ 1)), (require(/*! bundle?lazy!../dedupe/b */ 3))];});
-	
+
 	// index.js and x.js cannot be deduplicated
 	require.e/* require */(3, function(require) {[(require(/*! ../dedupe/a */ 1))];});
 	require.e/* require */(2, function(require) {[(require(/*! ../dedupe/b */ 2))];});
-	
+
 
 /***/ }
 /******/ })))
@@ -211,9 +211,9 @@ webpackJsonp([1,3],
 /***/ },
 
 /***/ 9:
-/*!********!*\
-  !***  ***!
-  \********/
+/*!***********************************!*\
+  !*** template of 1 referencing 4 ***!
+  \***********************************/
 /***/ function(module, exports, require, __webpack_module_template_argument_0__, __webpack_module_template_argument_1__) {
 
 	module.exports = {
@@ -367,12 +367,12 @@ webpackJsonp([4],
 ## Uncompressed
 
 ```
-Hash: e315623b9358082f9178
-Version: webpack 0.11.0-beta27
-Time: 110ms
+Hash: cc4c2068ad94e7144df4
+Version: webpack 0.11.0
+Time: 91ms
       Asset  Size  Chunks             Chunk Names
-  output.js  4982       0  [emitted]  main       
-1.output.js  1485    1, 3  [emitted]             
+  output.js  4980       0  [emitted]  main       
+1.output.js  1566    1, 3  [emitted]             
 2.output.js   877    2, 4  [emitted]             
 3.output.js   875       3  [emitted]             
 4.output.js   261       4  [emitted]             
@@ -391,7 +391,7 @@ chunk    {1} 1.output.js 492 {0} [rendered]
         cjs require ./x [1] ../dedupe/a/index.js 2:4-18
     [6] ../dedupe/a/y.js 49 {1} {3} [built]
         cjs require ./y [1] ../dedupe/a/index.js 3:4-18
-    [9]  84 {1} [not cacheable] [built]
+    [9] template of 1 referencing 4 84 {1} [not cacheable] [built]
         template 4 [1] ../dedupe/a/index.js
         template 4 [2] ../dedupe/b/index.js
 chunk    {2} 2.output.js 201 {0} [rendered]
@@ -430,10 +430,10 @@ chunk    {4} 4.output.js 167 {1} [rendered]
 
 ```
 Hash: e315623b9358082f9178
-Version: webpack 0.11.0-beta27
-Time: 247ms
+Version: webpack 0.11.0
+Time: 260ms
       Asset  Size  Chunks             Chunk Names
-  output.js  1156       0  [emitted]  main       
+  output.js  1155       0  [emitted]  main       
 1.output.js   294    1, 3  [emitted]             
 2.output.js   210    2, 4  [emitted]             
 3.output.js   208       3  [emitted]             
@@ -453,7 +453,7 @@ chunk    {1} 1.output.js 492 {0} [rendered]
         cjs require ./x [1] ../dedupe/a/index.js 2:4-18
     [6] ../dedupe/a/y.js 49 {1} {3} [built]
         cjs require ./y [1] ../dedupe/a/index.js 3:4-18
-    [9]  84 {1} [not cacheable] [built]
+    [9] template of 1 referencing 4 84 {1} [not cacheable] [built]
         template 4 [1] ../dedupe/a/index.js
         template 4 [2] ../dedupe/b/index.js
 chunk    {2} 2.output.js 201 {0} [rendered]

@@ -80,16 +80,16 @@ module.exports = Math.random();
 /***/ function(module, exports, require) {
 
 	var a = require(/*! ./a */ 1);
-	
+
 	// get module id
 	var aId = /*require.resolve*/(/*! ./a.js */ 1);
-	
+
 	// clear module in require.cache
 	delete require.cache[aId];
-	
+
 	// require module again, it should be reexecuted
 	var a2 = require(/*! ./a */ 1);
-	
+
 	// vertify it
 	if(a == a2) throw new Error("Cache clear failed :(");
 
@@ -112,11 +112,11 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: bacbd61be7a79b0899cc
-Version: webpack 0.11.0-beta27
-Time: 51ms
+Hash: b0189f3c47b74e3b4e46
+Version: webpack 0.11.0
+Time: 29ms
     Asset  Size  Chunks             Chunk Names
-output.js  2180       0  [emitted]  main       
+output.js  2176       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
     [0] ./example.js 295 {0} [built]
     [1] ./a.js 31 {0} [built]
@@ -129,10 +129,10 @@ chunk    {0} output.js (main) 326 [rendered]
 
 ```
 Hash: bacbd61be7a79b0899cc
-Version: webpack 0.11.0-beta27
-Time: 80ms
+Version: webpack 0.11.0
+Time: 77ms
     Asset  Size  Chunks             Chunk Names
-output.js   395       0  [emitted]  main       
+output.js   398       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
     [0] ./example.js 295 {0} [built]
     [1] ./a.js 31 {0} [built]

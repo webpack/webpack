@@ -171,7 +171,7 @@ require(
 	var commonjs1 = require(/*! ./commonjs */ 2);
 	var amd1 = require(/*! ./amd */ 1);
 	var labeled1 = require(/*! ./labeled */ 3);
-	
+
 	// AMD-style requires (with all webpack features)
 	require.e/* require */(1, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [
 		(require(/*! ./commonjs */ 2)), (require(/*! ./amd */ 1)), (require(/*! ./labeled */ 3)),
@@ -179,7 +179,7 @@ require(
 		Math.random() < 0.5 ? (require(/*! ./commonjs */ 2)) : (require(/*! ./amd */ 1))]; (function(commonjs2, amd2, labeled2, template, randModule) {
 			// Do something with it...
 		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
-	
+
 	// labeled modules requires
 	var __WEBPACK_LABELED_MODULE__3 = require(/*! ./labeled */ 3), a = __WEBPACK_LABELED_MODULE__3.a;
 	// with the require label you are only allowed to import labeled modules
@@ -212,7 +212,7 @@ require(
 
 	// CommonJs Module Format
 	module.exports = 123;
-	
+
 	// but you can use amd style requires
 	require.e/* require */(0/* empty */, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [(require(/*! ./amd */ 1)), (require(/*! ./labeled */ 3))]; (function(amd1, labeled1) {
 			var amd2 = require(/*! ./amd */ 1);
@@ -229,7 +229,7 @@ require(
 
 	// Labeled Module Format
 	exports: var a = exports["a"] = 123;
-	
+
 	// but you can use amd and commonjs style requires
 	require.e/* require */(0/* empty */, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [(require(/*! ./commonjs */ 2)), (require(/*! ./amd */ 1))]; (function(amd1) {
 			var commonjs2 = require(/*! ./commonjs */ 2);
@@ -268,7 +268,7 @@ webpackJsonp([1],
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	
+
 
 /***/ },
 
@@ -317,12 +317,12 @@ webpackJsonp([1],
 ## Uncompressed
 
 ```
-Hash: 2721b053405a030a8270
-Version: webpack 0.11.0-beta27
-Time: 87ms
+Hash: afdf8d1d193c28a50902
+Version: webpack 0.11.0
+Time: 68ms
       Asset  Size  Chunks             Chunk Names
-  output.js  6232       0  [emitted]  main       
-1.output.js  1572       1  [emitted]             
+  output.js  6228       0  [emitted]  main       
+1.output.js  1571       1  [emitted]             
 chunk    {0} output.js (main) 1395 [rendered]
     [0] ./example.js 613 {0} [built]
     [1] ./amd.js 309 {0} [built]
@@ -345,10 +345,10 @@ chunk    {0} output.js (main) 1395 [rendered]
         cjs require ./labeled [0] ./example.js 4:15-35
         labeled require ./labeled [0] ./example.js 17:0-21
         amd require ./labeled [0] ./example.js 7:0-14:1
-        amd require ./labeled [2] ./commonjs.js 5:0-11:1
-        cjs require ./labeled [2] ./commonjs.js 9:17-37
         amd require ./labeled [1] ./amd.js 2:0-12:1
         cjs require ./labeled [1] ./amd.js 8:17-37
+        amd require ./labeled [2] ./commonjs.js 5:0-11:1
+        cjs require ./labeled [2] ./commonjs.js 9:17-37
 chunk    {1} 1.output.js 439 {0} [rendered]
     [4] ../require.context/templates ^\.\/.*\.js$ 193 {1} [built]
         amd require context ../require.context/templates [0] ./example.js 7:0-14:1

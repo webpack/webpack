@@ -128,7 +128,7 @@ module.exports = {
 	console.log(require(/*! a-component */ 1));
 	console.log(require(/*! b-component */ 9));
 	console.log(require(/*! c-component */ 7));
-	
+
 
 /***/ },
 
@@ -254,11 +254,11 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: 2a1e0743ed1a90a424a5
-Version: webpack 0.11.0-beta27
-Time: 143ms
+Hash: 4a8e87eacbe7fe7b3e98
+Version: webpack 0.11.0
+Time: 128ms
     Asset  Size  Chunks             Chunk Names
-output.js  6803       0  [emitted]  main       
+output.js  6802       0  [emitted]  main       
 chunk    {0} output.js (main) 1981 [rendered]
     [0] ./example.js 111 {0} [built]
     [1] ./component/webpack-a-component (component) 328 {0} [built]
@@ -288,10 +288,10 @@ chunk    {0} output.js (main) 1981 [rendered]
 
 ```
 Hash: cc757ebeecf266f9e91a
-Version: webpack 0.11.0-beta27
-Time: 203ms
+Version: webpack 0.11.0
+Time: 196ms
     Asset  Size  Chunks             Chunk Names
-output.js  1251       0  [emitted]  main       
+output.js  1250       0  [emitted]  main       
 chunk    {0} output.js (main) 1960 [rendered]
     [0] ./example.js 111 {0} [built]
     [1] ./component/webpack-a-component (component) 328 {0} [built]

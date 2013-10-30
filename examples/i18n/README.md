@@ -98,9 +98,9 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: cb1e8401dd240b497fb8
-Version: webpack 0.11.0-beta27
-Time: 41ms
+Hash: 1f701ded570c005a42a3
+Version: webpack 0.11.0
+Time: 36ms
     Asset  Size  Chunks             Chunk Names
 output.js  1748       0  [emitted]  main       
 chunk    {0} output.js (main) 64 [rendered]
@@ -114,10 +114,10 @@ Missing localization: Missing Text
 
 ```
 Hash: cb1e8401dd240b497fb8
-Version: webpack 0.11.0-beta27
-Time: 61ms
+Version: webpack 0.11.0
+Time: 56ms
     Asset  Size  Chunks             Chunk Names
-output.js   316       0  [emitted]  main       
+output.js   315       0  [emitted]  main       
 chunk    {0} output.js (main) 64 [rendered]
     [0] ./example.js 64 {0} [built] [1 warning]
 

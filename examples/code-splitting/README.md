@@ -177,9 +177,9 @@ webpackJsonp([1],{3:function(){},4:function(){}});
 ## Uncompressed
 
 ```
-Hash: e81e516782b1aa5b4def
-Version: webpack 0.11.0-beta27
-Time: 67ms
+Hash: 3697f3357eb0cd41dde7
+Version: webpack 0.11.0
+Time: 54ms
       Asset  Size  Chunks             Chunk Names
   output.js  3887       0  [emitted]  main       
 1.output.js   307       1  [emitted]             
@@ -201,10 +201,10 @@ chunk    {1} 1.output.js 22 {0} [rendered]
 
 ```
 Hash: e81e516782b1aa5b4def
-Version: webpack 0.11.0-beta27
-Time: 120ms
+Version: webpack 0.11.0
+Time: 118ms
       Asset  Size  Chunks             Chunk Names
-  output.js   749       0  [emitted]  main       
+  output.js   748       0  [emitted]  main       
 1.output.js    50       1  [emitted]             
 chunk    {0} output.js (main) 166 [rendered]
     [0] ./example.js 144 {0} [built]

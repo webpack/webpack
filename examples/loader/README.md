@@ -89,7 +89,7 @@ module.exports = function(content) {
 
 	// use our loader
 	console.dir(require(/*! ./loader!./file */ 2));
-	
+
 	// use buildin json loader
 	console.dir(require(/*! ./test.json */ 1)); // default by extension
 	console.dir(require(/*! json!./test.json */ 1)); // manual
@@ -136,11 +136,11 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: fd22bd56561e719d2f55
-Version: webpack 0.11.0-beta27
-Time: 70ms
+Hash: 9f1cb975f9699c5e33ae
+Version: webpack 0.11.0
+Time: 63ms
     Asset  Size  Chunks             Chunk Names
-output.js  2507       0  [emitted]  main       
+output.js  2506       0  [emitted]  main       
 chunk    {0} output.js (main) 282 [rendered]
     [0] ./example.js 205 {0} [built]
     [1] (webpack)/~/json-loader!./test.json 36 {0} [built]

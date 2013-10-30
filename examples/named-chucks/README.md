@@ -120,21 +120,21 @@ require.ensure(["b"], function(require) {
 /***/ function(module, exports, require) {
 
 	var a = require(/*! a */ 3);
-	
+
 	require.e/*nsure*/(1, function(require) {
 		// a named chuck
 		var c = require(/*! c */ 4);
 	}, /*! my own chuck */ 0);
-	
+
 	require.e/*nsure*/(1, function(require) {
 		// another chuck with the same name
 		var d = require(/*! d */ 2);
 	}, /*! my own chuck */ 0);
-	
+
 	require.e/*nsure*/(1, function(require) {
 		// the same again
 	}, /*! my own chuck */ 0);
-	
+
 	require.e/*nsure*/(2, function(require) {
 		// chuck without name
 		var d = require(/*! d */ 2);
@@ -229,11 +229,11 @@ webpackJsonp([2],
 ## Uncompressed
 
 ```
-Hash: 120ef41916d014813c0e
-Version: webpack 0.11.0-beta27
-Time: 73ms
+Hash: 237fbcde4daa57721a27
+Version: webpack 0.11.0
+Time: 66ms
           Asset  Size  Chunks             Chunk Names 
-      output.js  4078       0  [emitted]  main        
+      output.js  4074       0  [emitted]  main        
     1.output.js   451    1, 2  [emitted]  my own chuck
 my own chuck.js   451    1, 2  [emitted]  my own chuck
     2.output.js   307       2  [emitted]              

@@ -90,9 +90,9 @@ module.exports = 42
 /***/ function(module, exports, require) {
 
 	console.log("yeah coffee-script");
-	
+
 	module.exports = 42;
-	
+
 
 /***/ },
 
@@ -108,7 +108,7 @@ module.exports = 42
 	  external: require(/*! ./cup2.coffee */ 1),
 	  again: require(/*! ./cup2 */ 1)
 	};
-	
+
 
 /***/ }
 /******/ })
@@ -119,11 +119,11 @@ module.exports = 42
 ## Uncompressed
 
 ```
-Hash: 9a0f1fb7751394ed51be
-Version: webpack 0.11.0-beta27
-Time: 198ms
+Hash: b2d44b6f937b8599e7ae
+Version: webpack 0.11.0
+Time: 192ms
     Asset  Size  Chunks             Chunk Names
-output.js  2220       0  [emitted]  main       
+output.js  2217       0  [emitted]  main       
 chunk    {0} output.js (main) 206 [rendered]
     [0] ./example.js 31 {0} [built]
     [1] ./cup2.coffee 57 {0} [built]
@@ -137,10 +137,10 @@ chunk    {0} output.js (main) 206 [rendered]
 
 ```
 Hash: 9a0f1fb7751394ed51be
-Version: webpack 0.11.0-beta27
-Time: 242ms
+Version: webpack 0.11.0
+Time: 234ms
     Asset  Size  Chunks             Chunk Names
-output.js   426       0  [emitted]  main       
+output.js   425       0  [emitted]  main       
 chunk    {0} output.js (main) 206 [rendered]
     [0] ./example.js 31 {0} [built]
     [1] ./cup2.coffee 57 {0} [built]

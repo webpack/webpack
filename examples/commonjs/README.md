@@ -126,9 +126,9 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: aa265e31c4c71c025557
-Version: webpack 0.11.0-beta27
-Time: 55ms
+Hash: 1c559fb8e60d85bb6307
+Version: webpack 0.11.0
+Time: 32ms
     Asset  Size  Chunks             Chunk Names
 output.js  2329       0  [emitted]  main       
 chunk    {0} output.js (main) 329 [rendered]
@@ -143,10 +143,10 @@ chunk    {0} output.js (main) 329 [rendered]
 
 ```
 Hash: aa265e31c4c71c025557
-Version: webpack 0.11.0-beta27
-Time: 92ms
+Version: webpack 0.11.0
+Time: 87ms
     Asset  Size  Chunks             Chunk Names
-output.js   468       0  [emitted]  main       
+output.js   467       0  [emitted]  main       
 chunk    {0} output.js (main) 329 [rendered]
     [0] ./example.js 69 {0} [built]
     [1] ./increment.js 98 {0} [built]

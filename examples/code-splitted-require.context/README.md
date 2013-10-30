@@ -156,7 +156,7 @@ webpackJsonp([1],
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	
+
 
 /***/ },
 
@@ -205,12 +205,12 @@ webpackJsonp([1],
 ## Uncompressed
 
 ```
-Hash: 9314e8e482179e2ac7a6
-Version: webpack 0.11.0-beta27
-Time: 65ms
+Hash: 441c40ff7916528124e0
+Version: webpack 0.11.0
+Time: 53ms
       Asset  Size  Chunks             Chunk Names
   output.js  3727       0  [emitted]  main       
-1.output.js  1596       1  [emitted]             
+1.output.js  1595       1  [emitted]             
 chunk    {0} output.js (main) 276 [rendered]
     [0] ./example.js 276 {0} [built]
 chunk    {1} 1.output.js 463 {0} [rendered]
@@ -231,11 +231,11 @@ chunk    {1} 1.output.js 463 {0} [rendered]
 
 ```
 Hash: 9314e8e482179e2ac7a6
-Version: webpack 0.11.0-beta27
-Time: 138ms
+Version: webpack 0.11.0
+Time: 154ms
       Asset  Size  Chunks             Chunk Names
-  output.js   797       0  [emitted]  main       
-1.output.js   531       1  [emitted]             
+  output.js   796       0  [emitted]  main       
+1.output.js   535       1  [emitted]             
 chunk    {0} output.js (main) 276 [rendered]
     [0] ./example.js 276 {0} [built]
 chunk    {1} 1.output.js 463 {0} [rendered]
