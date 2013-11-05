@@ -291,6 +291,15 @@ describe("main", function() {
 			require.ensure([], f);
 		});
 
+		it("should parse expression in require.ensure, which isn't a function expression", function(done) {
+			require.ensure([], (function() {
+				require("./empty?require.ensure:test").should.be.eql({});
+				return function f() {
+					done();
+				}
+			}()));
+		});
+
 		it("should accept a require.include call", function() {
 			require.include("./require.include");
 			var value = null;
