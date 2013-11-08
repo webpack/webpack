@@ -206,6 +206,23 @@ describe("main", function() {
 			var x = require(DEBUG ? "fail" : "./a");
 			var y = DEBUG ? require("fail") : require("./a");
 		});
+		
+		it("should parse fancy function calls", function() {
+			("function"==typeof define && define.amd ?
+				define :
+				function(e,t){return t()}
+			)(["./constructor"], function(c) {
+				return new c(1324);
+			});
+			module.exports.should.have.property("value").be.eql(1324);
+			(("function"==typeof define && define.amd ?
+				define :
+				function(e,t){return t()}
+			)(["./constructor"], function(c) {
+				return new c(4231);
+			}));
+			module.exports.should.have.property("value").be.eql(4231);
+		});
 	});
 
 	describe("polyfilling", function() {
