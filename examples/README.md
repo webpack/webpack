@@ -56,6 +56,10 @@ example demonstrating creating WebWorkers with webpack and the worker-loader.
 
 example demonstrating localization.
 
+## multiple-entry-points
+
+example demonstrating multiple entry points with Code Splitting.
+
 # Requests
 
 If you think a example is missing, please report it as issue. :)
