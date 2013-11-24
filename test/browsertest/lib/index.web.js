@@ -207,6 +207,12 @@ describe("main", function() {
 			var y = DEBUG ? require("fail") : require("./a");
 		});
 		
+		it("should short-circut evaluating", function() {
+			var expr;
+			var a = DEBUG && expr ? require("fail") : require("./a");
+			var b = !DEBUG || expr ? require("./a") : require("fail");
+		});
+		
 		it("should parse fancy function calls", function() {
 			("function"==typeof define && define.amd ?
 				define :
