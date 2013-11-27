@@ -488,6 +488,20 @@ describe("main", function() {
 		it("should be able to pipe loaders", function() {
 			require("testloader!../loaders/reverseloader!../resources/abc.txt").should.be.eql("cbawebpack");
 		});
+		it("should allow combinations of async and sync loaders", function() {
+			require("../loaders/syncloader!./a").should.be.eql("a");
+			require("../loaders/asyncloader!./a").should.be.eql("a");
+
+			require("../loaders/syncloader!../loaders/syncloader!./a").should.be.eql("a");
+			require("../loaders/syncloader!../loaders/asyncloader!./a").should.be.eql("a");
+			require("../loaders/asyncloader!../loaders/syncloader!./a").should.be.eql("a");
+			require("../loaders/asyncloader!../loaders/asyncloader!./a").should.be.eql("a");
+
+			require("../loaders/asyncloader!../loaders/asyncloader!../loaders/asyncloader!./a").should.be.eql("a");
+			require("../loaders/asyncloader!../loaders/syncloader!../loaders/asyncloader!./a").should.be.eql("a");
+			require("../loaders/syncloader!../loaders/asyncloader!../loaders/syncloader!./a").should.be.eql("a");
+			require("../loaders/syncloader!../loaders/syncloader!../loaders/syncloader!./a").should.be.eql("a");
+		});
 		describe("buildin", function() {
 			it("should handle the raw loader correctly", function() {
 				require("raw!../resources/abc.txt").should.be.eql("abc");
