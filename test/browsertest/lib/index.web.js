@@ -407,6 +407,16 @@ describe("main", function() {
 		it("should not crash on require.js require only with array", function() {
 			require(["./circular"]);
 		});
+		it("should be able to use AMD require without function expression (empty array)", function(done) {
+			require([], done);
+		});
+		it("should be able to use AMD require without function expression", function(done) {
+			require(["./circular"], fn);
+			function fn(c) {
+				c.should.be.eql(1);
+				done();
+			}
+		});
 		it("should create a chunk for require.js require", function(done) {
 			var sameTick = true;
 			require(["./c"], function(c) {
