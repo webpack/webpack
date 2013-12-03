@@ -16,16 +16,28 @@
 {{webpack.config.js}}
 ```
 
-# js/pageA.bundle.js
+# pageA.html
 
-``` javascript
-{{js/pageA.bundle.js}}
+``` html
+{{pageA.html}}
 ```
 
-# js/pageB.bundle.js
+# js/commons.bundle.js
 
 ``` javascript
-{{js/pageB.bundle.js}}
+{{js/commons.bundle.js}}
+```
+
+# js/pageA.chunk.js
+
+``` javascript
+{{js/pageA.chunk.js}}
+```
+
+# js/pageB.chunk.js
+
+``` javascript
+{{js/pageB.chunk.js}}
 ```
 
 # js/1.chunk.js
