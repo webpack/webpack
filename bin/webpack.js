@@ -108,19 +108,7 @@ webpack(options, function(err, stats) {
 	}
 	if(!options.watch) {
 		// Do not keep cache anymore
-		// but wait until stdout has been written
-		process.nextTick(function() {
-			if(!process.stdout.write("")) {
-				process.stdout.once("drain", function() {
-					if(!process.stderr.write("")) {
-						process.stderr.once("drain", function() {
-							process.exit();
-						});
-					} else
-						process.exit();
-				});
-			} else
-				process.exit();
-		});
+		var ifs = stats.compilation.compiler.inputFileSystem;
+		if(ifs && ifs.purge) ifs.purge();
 	}
 });
