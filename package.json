@@ -1,6 +1,6 @@
 {
 	"name": "webpack",
-	"version": "0.11.10",
+	"version": "0.11.11",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs/AMD/Labeled Modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
 	"dependencies": {
