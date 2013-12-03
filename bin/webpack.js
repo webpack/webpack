@@ -102,12 +102,25 @@ webpack(options, function(err, stats) {
 		return;
 	}
 	if(outputOptions.json)
-		console.log(JSON.stringify(stats.toJson(outputOptions), null, 2));
+		process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
 	else {
-		console.log(stats.toString(outputOptions));
+		process.stdout.write(stats.toString(outputOptions) + "\n");
 	}
 	if(!options.watch) {
 		// Do not keep cache anymore
-		process.exit();
+		// but wait until stdout has been written
+		process.nextTick(function() {
+			if(!process.stdout.write("")) {
+				process.stdout.once("drain", function() {
+					if(!process.stderr.write("")) {
+						process.stderr.once("drain", function() {
+							process.exit();
+						});
+					} else
+						process.exit();
+				});
+			} else
+				process.exit();
+		});
 	}
 });
