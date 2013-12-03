@@ -30,11 +30,10 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, "js"),
 		filename: "[name].bundle.js",
-		chunkFilename: "[id].chunk.js",
-		namedChunkFilename: "[name].chunk.js"
+		chunkFilename: "[id].chunk.js"
 	},
 	plugins: [
-		new CommonsChunkPlugin("commons")
+		new CommonsChunkPlugin("commons.js")
 	]
 }
 ```
@@ -45,13 +44,13 @@ module.exports = {
 <html>
 	<head></head>
 	<body>
-		<script src="js/commons.bundle.js" charset="utf-8"></script>
-		<script src="js/pageA.chunk.js" charset="utf-8"></script>
+		<script src="js/commons.js" charset="utf-8"></script>
+		<script src="js/pageA.bundle.js" charset="utf-8"></script>
 	</body>
 </html>
 ```
 
-# js/commons.bundle.js
+# js/commons.js
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
@@ -149,7 +148,7 @@ module.exports = {
 /******/ })
 ```
 
-# js/pageA.chunk.js
+# js/pageA.bundle.js
 
 ``` javascript
 webpackJsonp([0],
@@ -172,7 +171,7 @@ webpackJsonp([0],
 )
 ```
 
-# js/pageB.chunk.js
+# js/pageB.bundle.js
 
 ``` javascript
 webpackJsonp([0],
@@ -208,6 +207,7 @@ webpackJsonp([1],
   \*******************/
 /***/ function(module, exports, require) {
 
+	var common = require(/*! ./common */ 1);
 	module.exports = function(msg) {
 		console.log(msg);
 	};
@@ -223,24 +223,25 @@ webpackJsonp([1],
 ## Uncompressed
 
 ```
-Hash: 5c54ce5e4829d6200e83
+Hash: 11ffff3a516cdab3d60b
 Version: webpack 0.11.9
-Time: 51ms
-            Asset  Size  Chunks             Chunk Names
-   pageB.chunk.js   323       0  [emitted]  pageB      
-   pageA.chunk.js   432       0  [emitted]  pageA      
-commons.bundle.js  3389       0  [emitted]  commons    
-       1.chunk.js   219       1  [emitted]             
-chunk    {0} pageB.chunk.js (pageB) 152 {0} [rendered]
+Time: 79ms
+          Asset  Size  Chunks             Chunk Names
+pageB.bundle.js   323       0  [emitted]  pageB      
+pageA.bundle.js   432       0  [emitted]  pageA      
+     commons.js  3389       0  [emitted]             
+     1.chunk.js   264       1  [emitted]             
+chunk    {0} pageB.bundle.js (pageB) 152 {0} [rendered]
     [0] ./pageB.js 152 {0} [built]
-chunk    {0} pageA.chunk.js (pageA) 108 {0} [rendered]
+chunk    {0} pageA.bundle.js (pageA) 108 {0} [rendered]
     [0] ./pageA.js 108 {0} [built]
-chunk    {0} commons.bundle.js (commons) 26 [rendered]
+chunk    {0} commons.js 26 [rendered]
     [1] ./common.js 26 {0} [built]
         cjs require ./common [0] ./pageA.js 1:13-32
         cjs require ./common [0] ./pageB.js 1:13-32
-chunk    {1} 1.chunk.js 54 {0} {0} [rendered]
-    [2] ./shared.js 54 {1} [built]
+        cjs require ./common [2] ./shared.js 1:13-32
+chunk    {1} 1.chunk.js 91 {0} {0} [rendered]
+    [2] ./shared.js 91 {1} [built]
         amd require ./shared [0] ./pageA.js 2:0-4:2
         require.ensure item ./shared [0] ./pageB.js 2:0-5:2
         cjs require ./shared [0] ./pageB.js 3:14-33
@@ -249,31 +250,35 @@ chunk    {1} 1.chunk.js 54 {0} {0} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 26bb5b48d267eb86b55c
+Hash: 3eff54cf05aeb3ab26cb
 Version: webpack 0.11.9
-Time: 125ms
-            Asset  Size  Chunks             Chunk Names
-   pageB.chunk.js    95       0  [emitted]  pageB      
-   pageA.chunk.js   126       0  [emitted]  pageA      
-commons.bundle.js   692       0  [emitted]  commons    
-       1.chunk.js    73       1  [emitted]             
-chunk    {0} pageB.chunk.js (pageB) 152 {0} [rendered]
+Time: 174ms
+          Asset  Size  Chunks             Chunk Names
+pageB.bundle.js    95       0  [emitted]  pageB      
+pageA.bundle.js   125       0  [emitted]  pageA      
+     commons.js   692       0  [emitted]             
+     1.chunk.js    82       1  [emitted]             
+chunk    {0} pageB.bundle.js (pageB) 152 {0} [rendered]
     [0] ./pageB.js 152 {0} [built]
-chunk    {0} pageA.chunk.js (pageA) 108 {0} [rendered]
+chunk    {0} pageA.bundle.js (pageA) 108 {0} [rendered]
     [0] ./pageA.js 108 {0} [built]
-chunk    {0} commons.bundle.js (commons) 26 [rendered]
+chunk    {0} commons.js 26 [rendered]
     [1] ./common.js 26 {0} [built]
-        cjs require ./common [0] ./pageB.js 1:13-32
         cjs require ./common [0] ./pageA.js 1:13-32
-chunk    {1} 1.chunk.js 54 {0} {0} [rendered]
-    [2] ./shared.js 54 {1} [built]
+        cjs require ./common [0] ./pageB.js 1:13-32
+        cjs require ./common [2] ./shared.js 1:13-32
+chunk    {1} 1.chunk.js 91 {0} {0} [rendered]
+    [2] ./shared.js 91 {1} [built]
+        amd require ./shared [0] ./pageA.js 2:0-4:2
         require.ensure item ./shared [0] ./pageB.js 2:0-5:2
         cjs require ./shared [0] ./pageB.js 3:14-33
-        amd require ./shared [0] ./pageA.js 2:0-4:2
 
-WARNING in pageB.chunk.js from UglifyJs
+WARNING in pageB.bundle.js from UglifyJs
 Side effects in initialization of unused variable common [./pageB.js:1,0]
 
-WARNING in pageA.chunk.js from UglifyJs
+WARNING in pageA.bundle.js from UglifyJs
 Side effects in initialization of unused variable common [./pageA.js:1,0]
+
+WARNING in 1.chunk.js from UglifyJs
+Side effects in initialization of unused variable common [./shared.js:1,0]
 ```

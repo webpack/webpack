@@ -22,22 +22,22 @@
 {{pageA.html}}
 ```
 
-# js/commons.bundle.js
+# js/commons.js
 
 ``` javascript
-{{js/commons.bundle.js}}
+{{js/commons.js}}
 ```
 
-# js/pageA.chunk.js
+# js/pageA.bundle.js
 
 ``` javascript
-{{js/pageA.chunk.js}}
+{{js/pageA.bundle.js}}
 ```
 
-# js/pageB.chunk.js
+# js/pageB.bundle.js
 
 ``` javascript
-{{js/pageB.chunk.js}}
+{{js/pageB.bundle.js}}
 ```
 
 # js/1.chunk.js

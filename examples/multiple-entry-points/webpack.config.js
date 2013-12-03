@@ -8,10 +8,9 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, "js"),
 		filename: "[name].bundle.js",
-		chunkFilename: "[id].chunk.js",
-		namedChunkFilename: "[name].chunk.js"
+		chunkFilename: "[id].chunk.js"
 	},
 	plugins: [
-		new CommonsChunkPlugin("commons")
+		new CommonsChunkPlugin("commons.js")
 	]
 }
