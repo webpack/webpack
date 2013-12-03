@@ -18,6 +18,7 @@ var cmds = [
 	"cd component && node build.js",
 	"cd dedupe && node build.js",
 	"cd code-splitted-dedupe && node build.js",
+	"cd multiple-entry-points && node build.js",
 ];
 
 var stack = function() {
