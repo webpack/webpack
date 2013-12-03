@@ -23,8 +23,8 @@
 		}
 	],
 	"devDependencies": {
-		"mocha": "1.13.x",
-		"should": "2.0.x",
+		"mocha": "1.15.x",
+		"should": "2.1.x",
 		"vm-browserify": "0.0.x",
 		"express": "3.4.x",
 		"webpack-dev-middleware": "0.11.x",
@@ -34,11 +34,12 @@
 		"jade-loader": "0.5.x",
 		"coffee-loader": "0.6.x",
 		"css-loader": "0.6.x",
-		"less-loader": "0.5.x",
+		"less-loader": "0.6.x",
 		"style-loader": "0.6.x",
 		"script-loader": "0.5.x",
 		"bundle-loader": "0.5.x",
 		"file-loader": "0.5.x",
+		"url-loader": "0.5.x",
 		"val-loader": "0.5.x",
 		"i18n-webpack-plugin": "0.2.x",
 		"component-webpack-plugin": "0.1.x"
