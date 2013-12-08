@@ -206,13 +206,13 @@ describe("main", function() {
 			var x = require(DEBUG ? "fail" : "./a");
 			var y = DEBUG ? require("fail") : require("./a");
 		});
-		
+
 		it("should short-circut evaluating", function() {
 			var expr;
 			var a = DEBUG && expr ? require("fail") : require("./a");
 			var b = !DEBUG || expr ? require("./a") : require("fail");
 		});
-		
+
 		it("should parse fancy function calls", function() {
 			("function"==typeof define && define.amd ?
 				define :
@@ -228,6 +228,17 @@ describe("main", function() {
 				return new c(4231);
 			}));
 			module.exports.should.have.property("value").be.eql(4231);
+		});
+
+		it("should parse fancy AMD calls", function() {
+			require("./constructor ./a".split(" "));
+			require("-> module module exports *constructor *a".replace("module", "require").substr(3).replace(/\*/g, "./").split(" "), function(require, module, exports, constructor, a) {
+				(typeof require).should.be.eql("function");
+				(typeof module).should.be.eql("object");
+				(typeof exports).should.be.eql("object");
+				(typeof constructor).should.be.eql("function");
+				a.should.be.eql("a");
+			});
 		});
 	});
 
