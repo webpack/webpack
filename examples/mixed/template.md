@@ -42,3 +42,9 @@
 ```
 {{stdout}}
 ```
+
+## Minimized (uglify-js, no zip)
+
+```
+{{min:stdout}}
+```
