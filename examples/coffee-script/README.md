@@ -27,6 +27,7 @@ module.exports = 42
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
@@ -64,16 +65,16 @@ module.exports = 42
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
 /******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
+/******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
 /******/ 	return require(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -82,8 +83,7 @@ module.exports = 42
 	console.log(require(/*! ./cup1 */ 2));
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /*!*********************!*\
   !*** ./cup2.coffee ***!
   \*********************/
@@ -95,8 +95,7 @@ module.exports = 42
 
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /*!*********************!*\
   !*** ./cup1.coffee ***!
   \*********************/
@@ -111,7 +110,7 @@ module.exports = 42
 
 
 /***/ }
-/******/ })
+/******/ ])
 ```
 
 # Info
@@ -119,11 +118,11 @@ module.exports = 42
 ## Uncompressed
 
 ```
-Hash: b2d44b6f937b8599e7ae
-Version: webpack 0.11.0
-Time: 192ms
+Hash: 0708e6a205d85bc0168c
+Version: webpack 0.11.14
+Time: 180ms
     Asset  Size  Chunks             Chunk Names
-output.js  2217       0  [emitted]  main       
+output.js  2244       0  [emitted]  main       
 chunk    {0} output.js (main) 206 [rendered]
     [0] ./example.js 31 {0} [built]
     [1] ./cup2.coffee 57 {0} [built]
@@ -136,11 +135,11 @@ chunk    {0} output.js (main) 206 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9a0f1fb7751394ed51be
-Version: webpack 0.11.0
-Time: 234ms
+Hash: 9c2d6b0ec4ae23e993d9
+Version: webpack 0.11.14
+Time: 228ms
     Asset  Size  Chunks             Chunk Names
-output.js   425       0  [emitted]  main       
+output.js   421       0  [emitted]  main       
 chunk    {0} output.js (main) 206 [rendered]
     [0] ./example.js 31 {0} [built]
     [1] ./cup2.coffee 57 {0} [built]

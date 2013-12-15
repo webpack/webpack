@@ -62,6 +62,7 @@ module.exports = {"this is": "z"};
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
@@ -99,6 +100,9 @@ module.exports = {"this is": "z"};
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
 /******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
+/******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
 /******/ 	return require(0);
@@ -123,11 +127,8 @@ module.exports = {"this is": "z"};
 		}
 	}
 	return modules;
-}({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+}([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -139,8 +140,7 @@ module.exports = {"this is": "z"};
 	a.y !== b.y;
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /*!**************!*\
   !*** ./z.js ***!
   \**************/
@@ -149,11 +149,9 @@ module.exports = {"this is": "z"};
 	module.exports = {"this is": "z"};
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 [8, 3, 4],
-
-/***/ 3:
+/* 3 */
 /*!****************!*\
   !*** ./a/x.js ***!
   \****************/
@@ -162,8 +160,7 @@ module.exports = {"this is": "z"};
 	module.exports = {"this is": "x"};
 
 /***/ },
-
-/***/ 4:
+/* 4 */
 /*!****************!*\
   !*** ./a/y.js ***!
   \****************/
@@ -172,14 +169,11 @@ module.exports = {"this is": "z"};
 	module.exports = {"this is": "y", "but in": "a"};
 
 /***/ },
-
-/***/ 5:
+/* 5 */
 [8, 6, 7],
-
-/***/ 6:
+/* 6 */
 3,
-
-/***/ 7:
+/* 7 */
 /*!****************!*\
   !*** ./b/y.js ***!
   \****************/
@@ -188,8 +182,7 @@ module.exports = {"this is": "z"};
 	module.exports = {"this is": "y", "but in": "b"};
 
 /***/ },
-
-/***/ 8:
+/* 8 */
 /*!***********************************!*\
   !*** template of 2 referencing 1 ***!
   \***********************************/
@@ -202,7 +195,7 @@ module.exports = {"this is": "z"};
 	}
 
 /***/ }
-/******/ })))
+/******/ ])))
 ```
 
 # Info
@@ -210,11 +203,11 @@ module.exports = {"this is": "z"};
 ## Uncompressed
 
 ```
-Hash: 5bb0f56756624f9a9ea2
-Version: webpack 0.11.0
+Hash: f9caf459d66e8e7789db
+Version: webpack 0.11.14
 Time: 56ms
     Asset  Size  Chunks             Chunk Names
-output.js  3450       0  [emitted]  main       
+output.js  3465       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]
     [0] ./example.js 76 {0} [built]
     [1] ./z.js 34 {0} [built]
@@ -240,11 +233,11 @@ chunk    {0} output.js (main) 528 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: fd48f2b5f2e70229c08f
-Version: webpack 0.11.0
-Time: 117ms
+Hash: 27f5698c4ab706a80424
+Version: webpack 0.11.14
+Time: 112ms
     Asset  Size  Chunks             Chunk Names
-output.js   784       0  [emitted]  main       
+output.js   768       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]
     [0] ./example.js 76 {0} [built]
     [1] ./z.js 34 {0} [built]

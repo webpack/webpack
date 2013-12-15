@@ -35,6 +35,7 @@ module.exports = function(content) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
@@ -72,16 +73,16 @@ module.exports = function(content) {
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
 /******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
+/******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
 /******/ 	return require(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -95,8 +96,7 @@ module.exports = function(content) {
 	console.dir(require(/*! json!./test.json */ 1)); // manual
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /*!************************************************************************************!*\
   !*** (webpack)/~/json-loader!./test.json ***!
   \************************************************************************************/
@@ -107,8 +107,7 @@ module.exports = function(content) {
 	}
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /*!*****************************!*\
   !*** ./loader.js!./file.js ***!
   \*****************************/
@@ -118,7 +117,7 @@ module.exports = function(content) {
 	exports.foo = "bar";
 
 /***/ }
-/******/ })
+/******/ ])
 ```
 
 # Console output
@@ -136,11 +135,28 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 9f1cb975f9699c5e33ae
-Version: webpack 0.11.0
-Time: 63ms
+Hash: 2e39452e20c47eec0042
+Version: webpack 0.11.14
+Time: 59ms
     Asset  Size  Chunks             Chunk Names
-output.js  2506       0  [emitted]  main       
+output.js  2533       0  [emitted]  main       
+chunk    {0} output.js (main) 282 [rendered]
+    [0] ./example.js 205 {0} [built]
+    [1] (webpack)/~/json-loader!./test.json 36 {0} [built]
+        cjs require !json!./test.json [0] ./example.js 6:12-40
+        cjs require ./test.json [0] ./example.js 5:12-34
+    [2] ./loader.js!./file.js 41 {0} [not cacheable] [built]
+        cjs require ./loader!./file [0] ./example.js 2:12-38
+```
+
+## Minimized (uglify-js, no zip)
+
+```
+Hash: 5ff354ec68e47cc7bad7
+Version: webpack 0.11.14
+Time: 89ms
+    Asset  Size  Chunks             Chunk Names
+output.js   396       0  [emitted]  main       
 chunk    {0} output.js (main) 282 [rendered]
     [0] ./example.js 205 {0} [built]
     [1] (webpack)/~/json-loader!./test.json 36 {0} [built]

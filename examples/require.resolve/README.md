@@ -27,6 +27,7 @@ module.exports = Math.random();
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
@@ -64,16 +65,16 @@ module.exports = Math.random();
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
 /******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
+/******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
 /******/ 	return require(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -94,8 +95,7 @@ module.exports = Math.random();
 	if(a == a2) throw new Error("Cache clear failed :(");
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
@@ -104,7 +104,7 @@ module.exports = Math.random();
 	module.exports = Math.random();
 
 /***/ }
-/******/ })
+/******/ ])
 ```
 
 # Info
@@ -112,11 +112,11 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: b0189f3c47b74e3b4e46
-Version: webpack 0.11.0
+Hash: 4aba9f7573b3558c57be
+Version: webpack 0.11.14
 Time: 29ms
     Asset  Size  Chunks             Chunk Names
-output.js  2176       0  [emitted]  main       
+output.js  2205       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
     [0] ./example.js 295 {0} [built]
     [1] ./a.js 31 {0} [built]
@@ -128,15 +128,15 @@ chunk    {0} output.js (main) 326 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: bacbd61be7a79b0899cc
-Version: webpack 0.11.0
-Time: 77ms
+Hash: f8d5777ec20edc908c39
+Version: webpack 0.11.14
+Time: 72ms
     Asset  Size  Chunks             Chunk Names
-output.js   398       0  [emitted]  main       
+output.js   396       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
     [0] ./example.js 295 {0} [built]
     [1] ./a.js 31 {0} [built]
-        require.resolve ./a.js [0] ./example.js 4:10-35
         cjs require ./a [0] ./example.js 1:8-22
         cjs require ./a [0] ./example.js 10:9-23
+        require.resolve ./a.js [0] ./example.js 4:10-35
 ```

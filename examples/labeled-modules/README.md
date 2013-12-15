@@ -31,6 +31,7 @@ exports: function add() {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
@@ -68,16 +69,16 @@ exports: function add() {
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
 /******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
+/******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
 /******/ 	return require(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -88,8 +89,7 @@ exports: function add() {
 	increment(a); // 2
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
@@ -101,8 +101,7 @@ exports: function add() {
 	};
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
@@ -117,7 +116,7 @@ exports: function add() {
 	};
 
 /***/ }
-/******/ })
+/******/ ])
 ```
 
 The remaining labels are removed while minimizing.
@@ -127,11 +126,11 @@ The remaining labels are removed while minimizing.
 ## Uncompressed
 
 ```
-Hash: db7b4bcdd5c72fd22e70
-Version: webpack 0.11.0
-Time: 31ms
+Hash: bfe393252b680d33ef28
+Version: webpack 0.11.14
+Time: 30ms
     Asset  Size  Chunks             Chunk Names
-output.js  2497       0  [emitted]  main       
+output.js  2524       0  [emitted]  main       
 chunk    {0} output.js (main) 299 [rendered]
     [0] ./example.js 55 {0} [built]
     [1] ./increment.js 83 {0} [built]
@@ -143,11 +142,11 @@ chunk    {0} output.js (main) 299 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 06f5d80de99aa66b8ac0
-Version: webpack 0.11.0
-Time: 86ms
+Hash: 474ae322ee9f0e822e44
+Version: webpack 0.11.14
+Time: 83ms
     Asset  Size  Chunks             Chunk Names
-output.js   475       0  [emitted]  main       
+output.js   471       0  [emitted]  main       
 chunk    {0} output.js (main) 299 [rendered]
     [0] ./example.js 55 {0} [built]
     [1] ./increment.js 83 {0} [built]

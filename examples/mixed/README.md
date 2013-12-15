@@ -76,13 +76,16 @@ require(
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
-/******/ 	var installedChunks = {0:0};
+/******/ 	var installedChunks = {
+/******/ 		0:0
+/******/ 	};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function require(moduleId) {
@@ -124,7 +127,7 @@ require(
 /******/ 			var script = document.createElement('script');
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
-/******/ 			script.src = modules.c + "" + chunkId + ".output.js";
+/******/ 			script.src = require.p + "" + chunkId + ".output.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -134,6 +137,9 @@ require(
 /******/ 	
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
+/******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
 /******/ 	
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
@@ -157,11 +163,8 @@ require(
 /******/ 	return require(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -186,8 +189,7 @@ require(
 	// the module needs static information about exports
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /*!****************!*\
   !*** ./amd.js ***!
   \****************/
@@ -203,8 +205,7 @@ require(
 		}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /*!*********************!*\
   !*** ./commonjs.js ***!
   \*********************/
@@ -220,8 +221,7 @@ require(
 		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 
 /***/ },
-
-/***/ 3:
+/* 3 */
 /*!********************!*\
   !*** ./labeled.js ***!
   \********************/
@@ -237,16 +237,18 @@ require(
 		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 
 /***/ }
-/******/ })
+/******/ ])
 ```
 
 # js/1.output.js
 
 ``` javascript
-webpackJsonp([1],
-{
-
-/***/ 4:
+webpackJsonp([1],[
+/* 0 */,
+/* 1 */,
+/* 2 */,
+/* 3 */,
+/* 4 */
 /*!*************************************************!*\
   !*** ../require.context/templates ^\.\/.*\.js$ ***!
   \*************************************************/
@@ -271,8 +273,7 @@ webpackJsonp([1],
 
 
 /***/ },
-
-/***/ 5:
+/* 5 */
 /*!*****************************************!*\
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
@@ -283,8 +284,7 @@ webpackJsonp([1],
 	}
 
 /***/ },
-
-/***/ 6:
+/* 6 */
 /*!*****************************************!*\
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
@@ -295,8 +295,7 @@ webpackJsonp([1],
 	}
 
 /***/ },
-
-/***/ 7:
+/* 7 */
 /*!*****************************************!*\
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
@@ -307,9 +306,7 @@ webpackJsonp([1],
 	}
 
 /***/ }
-
-}
-)
+])
 ```
 
 # Info
@@ -317,12 +314,12 @@ webpackJsonp([1],
 ## Uncompressed
 
 ```
-Hash: afdf8d1d193c28a50902
-Version: webpack 0.11.0
-Time: 68ms
+Hash: f9dc1fb1e6d5b72f30b6
+Version: webpack 0.11.14
+Time: 66ms
       Asset  Size  Chunks             Chunk Names
-  output.js  6228       0  [emitted]  main       
-1.output.js  1571       1  [emitted]             
+  output.js  6276       0  [emitted]  main       
+1.output.js  1596       1  [emitted]             
 chunk    {0} output.js (main) 1395 [rendered]
     [0] ./example.js 613 {0} [built]
     [1] ./amd.js 309 {0} [built]
@@ -358,4 +355,72 @@ chunk    {1} 1.output.js 439 {0} [rendered]
         context element ./b.js [4] ../require.context/templates ^\.\/.*\.js$
     [7] ../require.context/templates/c.js 82 {1} [built]
         context element ./c.js [4] ../require.context/templates ^\.\/.*\.js$
+```
+
+## Minimized (uglify-js, no zip)
+
+```
+Hash: 149d4cea4427686ac7c9
+Version: webpack 0.11.14
+Time: 213ms
+      Asset  Size  Chunks             Chunk Names
+  output.js  1148       0  [emitted]  main       
+1.output.js   507       1  [emitted]             
+chunk    {0} output.js (main) 1395 [rendered]
+    [0] ./example.js 613 {0} [built]
+    [1] ./amd.js 309 {0} [built]
+        cjs require ./amd [0] ./example.js 3:11-27
+        amd require ./amd [0] ./example.js 7:0-14:1
+        amd require ./amd [0] ./example.js 7:0-14:1
+        amd require ./amd [2] ./commonjs.js 5:0-11:1
+        cjs require ./amd [2] ./commonjs.js 8:13-29
+        amd require ./amd [3] ./labeled.js 5:0-11:1
+        cjs require ./amd [3] ./labeled.js 9:13-29
+    [2] ./commonjs.js 234 {0} [built]
+        cjs require ./commonjs [0] ./example.js 2:16-37
+        amd require ./commonjs [0] ./example.js 7:0-14:1
+        amd require ./commonjs [0] ./example.js 7:0-14:1
+        amd require ./commonjs [1] ./amd.js 2:0-12:1
+        cjs require ./commonjs [1] ./amd.js 7:18-39
+        amd require ./commonjs [3] ./labeled.js 5:0-11:1
+        cjs require ./commonjs [3] ./labeled.js 8:18-39
+    [3] ./labeled.js 239 {0} [built]
+        cjs require ./labeled [0] ./example.js 4:15-35
+        labeled require ./labeled [0] ./example.js 17:0-21
+        amd require ./labeled [0] ./example.js 7:0-14:1
+        amd require ./labeled [1] ./amd.js 2:0-12:1
+        cjs require ./labeled [1] ./amd.js 8:17-37
+        amd require ./labeled [2] ./commonjs.js 5:0-11:1
+        cjs require ./labeled [2] ./commonjs.js 9:17-37
+chunk    {1} 1.output.js 439 {0} [rendered]
+    [4] ../require.context/templates ^\.\/.*\.js$ 193 {1} [built]
+        amd require context ../require.context/templates [0] ./example.js 7:0-14:1
+    [5] ../require.context/templates/a.js 82 {1} [built]
+        context element ./a.js [4] ../require.context/templates ^\.\/.*\.js$
+    [6] ../require.context/templates/b.js 82 {1} [built]
+        context element ./b.js [4] ../require.context/templates ^\.\/.*\.js$
+    [7] ../require.context/templates/c.js 82 {1} [built]
+        context element ./c.js [4] ../require.context/templates ^\.\/.*\.js$
+
+WARNING in output.js from UglifyJs
+Side effects in initialization of unused variable commonjs1 [./example.js:2,0]
+Side effects in initialization of unused variable labeled1 [./example.js:4,0]
+Side effects in initialization of unused variable a [./example.js:17,0]
+Dropping unused function argument randModule [./example.js:11,0]
+Dropping unused function argument template [./example.js:11,0]
+Dropping unused function argument labeled2 [./example.js:11,0]
+Dropping unused function argument amd2 [./example.js:11,0]
+Dropping unused function argument commonjs2 [./example.js:11,0]
+Dropping unused function argument labeled1 [./amd.js:5,0]
+Dropping unused function argument commonjs1 [./amd.js:5,0]
+Side effects in initialization of unused variable commonjs2 [./amd.js:7,0]
+Side effects in initialization of unused variable labeled2 [./amd.js:8,0]
+Dropping unused function argument labeled1 [./commonjs.js:7,0]
+Dropping unused function argument amd1 [./commonjs.js:7,0]
+Side effects in initialization of unused variable amd2 [./commonjs.js:8,0]
+Side effects in initialization of unused variable labeled2 [./commonjs.js:9,0]
+Side effects in initialization of unused variable a [./labeled.js:2,0]
+Dropping unused function argument amd1 [./labeled.js:7,0]
+Side effects in initialization of unused variable commonjs2 [./labeled.js:8,0]
+Side effects in initialization of unused variable amd2 [./labeled.js:9,0]
 ```

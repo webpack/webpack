@@ -17,13 +17,16 @@ module.exports = "It works";
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
-/******/ 	var installedChunks = {0:0};
+/******/ 	var installedChunks = {
+/******/ 		0:0
+/******/ 	};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function require(moduleId) {
@@ -65,7 +68,7 @@ module.exports = "It works";
 /******/ 			var script = document.createElement('script');
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
-/******/ 			script.src = modules.c + "" + chunkId + ".output.js";
+/******/ 			script.src = require.p + "" + chunkId + ".output.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -75,6 +78,9 @@ module.exports = "It works";
 /******/ 	
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
+/******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
 /******/ 	
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
@@ -98,11 +104,8 @@ module.exports = "It works";
 /******/ 	return require(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -113,8 +116,7 @@ module.exports = "It works";
 	});
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /*!************************************************************************************!*\
   !*** (webpack)/~/bundle-loader!./file.js ***!
   \************************************************************************************/
@@ -136,14 +138,13 @@ module.exports = "It works";
 	});
 
 /***/ }
-/******/ })
+/******/ ])
 ```
 
 # js/1.output.js
 
 ``` javascript
-webpackJsonp([1],
-{
+webpackJsonp([1],{
 
 /***/ 2:
 /*!*****************!*\
@@ -155,8 +156,7 @@ webpackJsonp([1],
 
 /***/ }
 
-}
-)
+})
 ```
 
 # Info
@@ -164,12 +164,12 @@ webpackJsonp([1],
 ## Uncompressed
 
 ```
-Hash: dfd75b52b3c8c63fdf5d
-Version: webpack 0.11.0
-Time: 69ms
+Hash: fdb7a47b259e275381d6
+Version: webpack 0.11.14
+Time: 65ms
       Asset  Size  Chunks             Chunk Names
-  output.js  4161       0  [emitted]  main       
-1.output.js   185       1  [emitted]             
+  output.js  4213       0  [emitted]  main       
+1.output.js   183       1  [emitted]             
 chunk    {0} output.js (main) 486 [rendered]
     [0] ./example.js 88 {0} [built]
     [1] (webpack)/~/bundle-loader!./file.js 398 {0} [built]
@@ -182,11 +182,11 @@ chunk    {1} 1.output.js 28 {0} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 44423c020c9e55356251
-Version: webpack 0.11.0
-Time: 149ms
+Hash: dab164854f4cd96ce0c2
+Version: webpack 0.11.14
+Time: 140ms
       Asset  Size  Chunks             Chunk Names
-  output.js   857       0  [emitted]  main       
+  output.js   855       0  [emitted]  main       
 1.output.js    56       1  [emitted]             
 chunk    {0} output.js (main) 486 [rendered]
     [0] ./example.js 88 {0} [built]

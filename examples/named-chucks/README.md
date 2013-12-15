@@ -28,13 +28,16 @@ require.ensure(["b"], function(require) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
-/******/ 	var installedChunks = {0:0};
+/******/ 	var installedChunks = {
+/******/ 		0:0
+/******/ 	};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function require(moduleId) {
@@ -76,7 +79,7 @@ require.ensure(["b"], function(require) {
 /******/ 			var script = document.createElement('script');
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
-/******/ 			script.src = modules.c + "" + chunkId + ".output.js";
+/******/ 			script.src = require.p + "" + chunkId + ".output.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -86,6 +89,9 @@ require.ensure(["b"], function(require) {
 /******/ 	
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
+/******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
 /******/ 	
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
@@ -109,11 +115,8 @@ require.ensure(["b"], function(require) {
 /******/ 	return require(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -141,8 +144,9 @@ require.ensure(["b"], function(require) {
 	});
 
 /***/ },
-
-/***/ 3:
+/* 1 */,
+/* 2 */,
+/* 3 */
 /*!****************!*\
   !*** ./~/a.js ***!
   \****************/
@@ -151,16 +155,15 @@ require.ensure(["b"], function(require) {
 	// module a
 
 /***/ }
-/******/ })
+/******/ ])
 ```
 
 # js/1.output.js and js/my own chunk.js
 
 ``` javascript
-webpackJsonp([1,2],
-{
-
-/***/ 1:
+webpackJsonp([1,2],[
+/* 0 */,
+/* 1 */
 /*!****************!*\
   !*** ./~/b.js ***!
   \****************/
@@ -169,8 +172,7 @@ webpackJsonp([1,2],
 	// module b
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /*!****************!*\
   !*** ./~/d.js ***!
   \****************/
@@ -179,8 +181,8 @@ webpackJsonp([1,2],
 	// module d
 
 /***/ },
-
-/***/ 4:
+/* 3 */,
+/* 4 */
 /*!****************!*\
   !*** ./~/c.js ***!
   \****************/
@@ -189,18 +191,15 @@ webpackJsonp([1,2],
 	// module c
 
 /***/ }
-
-}
-)
+])
 ```
 
 # js/2.output.js
 
 ``` javascript
-webpackJsonp([2],
-{
-
-/***/ 1:
+webpackJsonp([2],[
+/* 0 */,
+/* 1 */
 /*!****************!*\
   !*** ./~/b.js ***!
   \****************/
@@ -209,8 +208,7 @@ webpackJsonp([2],
 	// module b
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /*!****************!*\
   !*** ./~/d.js ***!
   \****************/
@@ -219,9 +217,7 @@ webpackJsonp([2],
 	// module d
 
 /***/ }
-
-}
-)
+])
 ```
 
 # Info
@@ -229,14 +225,14 @@ webpackJsonp([2],
 ## Uncompressed
 
 ```
-Hash: 237fbcde4daa57721a27
-Version: webpack 0.11.0
-Time: 66ms
+Hash: 931a62feb95bcf44c71c
+Version: webpack 0.11.14
+Time: 59ms
           Asset  Size  Chunks             Chunk Names 
-      output.js  4074       0  [emitted]  main        
-    1.output.js   451    1, 2  [emitted]  my own chuck
-my own chuck.js   451    1, 2  [emitted]  my own chuck
-    2.output.js   307       2  [emitted]              
+      output.js  4144       0  [emitted]  main        
+    1.output.js   460    1, 2  [emitted]  my own chuck
+my own chuck.js   460    1, 2  [emitted]  my own chuck
+    2.output.js   309       2  [emitted]              
 chunk    {0} output.js (main) 450 [rendered]
     [0] ./example.js 439 {0} [built]
     [3] ./~/a.js 11 {0} [built]
@@ -259,4 +255,46 @@ chunk    {2} 2.output.js 22 {0} [rendered]
     [2] ./~/d.js 11 {1} {2} [built]
         cjs require d [0] ./example.js 10:9-21
         cjs require d [0] ./example.js 19:9-21
+```
+
+## Minimized (uglify-js, no zip)
+
+```
+Hash: 7849bb9756a439801ed9
+Version: webpack 0.11.14
+Time: 139ms
+          Asset  Size  Chunks             Chunk Names 
+      output.js   793       0  [emitted]  main        
+    1.output.js    63    1, 2  [emitted]  my own chuck
+my own chuck.js    63    1, 2  [emitted]  my own chuck
+    2.output.js    47       2  [emitted]              
+chunk    {0} output.js (main) 450 [rendered]
+    [0] ./example.js 439 {0} [built]
+    [3] ./~/a.js 11 {0} [built]
+        cjs require a [0] ./example.js 1:8-20
+chunk    {1} 1.output.js, my own chuck.js (my own chuck) 33 {0} [rendered]
+    [1] ./~/b.js 11 {1} {2} [built]
+        require.ensure item b [0] ./example.js 3:0-6:18
+        require.ensure item b [0] ./example.js 8:0-11:18
+        require.ensure item b [0] ./example.js 17:0-20:2
+    [2] ./~/d.js 11 {1} {2} [built]
+        cjs require d [0] ./example.js 10:9-21
+        cjs require d [0] ./example.js 19:9-21
+    [4] ./~/c.js 11 {1} [built]
+        cjs require c [0] ./example.js 5:9-21
+chunk    {2} 2.output.js 22 {0} [rendered]
+    [1] ./~/b.js 11 {1} {2} [built]
+        require.ensure item b [0] ./example.js 3:0-6:18
+        require.ensure item b [0] ./example.js 8:0-11:18
+        require.ensure item b [0] ./example.js 17:0-20:2
+    [2] ./~/d.js 11 {1} {2} [built]
+        cjs require d [0] ./example.js 10:9-21
+        cjs require d [0] ./example.js 19:9-21
+
+WARNING in output.js from UglifyJs
+Side effects in initialization of unused variable a [./example.js:1,0]
+Dropping unused function argument require [./example.js:13,0]
+Side effects in initialization of unused variable c [./example.js:5,0]
+Side effects in initialization of unused variable d [./example.js:10,0]
+Side effects in initialization of unused variable d [./example.js:19,0]
 ```

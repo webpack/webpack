@@ -26,6 +26,7 @@ module.exports = function() {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
@@ -63,16 +64,16 @@ module.exports = function() {
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
 /******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
+/******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
 /******/ 	return require(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -85,8 +86,7 @@ module.exports = function() {
 	console.log(getTemplate("b"));
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /*!************************!*\
   !*** ./templates/a.js ***!
   \************************/
@@ -97,8 +97,7 @@ module.exports = function() {
 	}
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /*!************************!*\
   !*** ./templates/b.js ***!
   \************************/
@@ -109,8 +108,7 @@ module.exports = function() {
 	}
 
 /***/ },
-
-/***/ 3:
+/* 3 */
 /*!************************!*\
   !*** ./templates/c.js ***!
   \************************/
@@ -121,8 +119,7 @@ module.exports = function() {
 	}
 
 /***/ },
-
-/***/ 4:
+/* 4 */
 /*!****************************!*\
   !*** ./templates ^\.\/.*$ ***!
   \****************************/
@@ -150,7 +147,7 @@ module.exports = function() {
 
 
 /***/ }
-/******/ })
+/******/ ])
 ```
 
 # Info
@@ -158,11 +155,11 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: eb3fb23f0989a7b35fe9
-Version: webpack 0.11.0
-Time: 50ms
+Hash: f21815510d3cb1af5252
+Version: webpack 0.11.14
+Time: 47ms
     Asset  Size  Chunks             Chunk Names
-output.js  3226       0  [emitted]  main       
+output.js  3249       0  [emitted]  main       
 chunk    {0} output.js (main) 613 [rendered]
     [0] ./example.js 150 {0} [built]
     [1] ./templates/a.js 82 {0} [built]
@@ -181,11 +178,11 @@ chunk    {0} output.js (main) 613 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b164e1d4927693a98e5a
-Version: webpack 0.11.0
-Time: 100ms
+Hash: 4912acd289ab26afb7b6
+Version: webpack 0.11.14
+Time: 99ms
     Asset  Size  Chunks             Chunk Names
-output.js   855       0  [emitted]  main       
+output.js   847       0  [emitted]  main       
 chunk    {0} output.js (main) 613 [rendered]
     [0] ./example.js 150 {0} [built]
     [1] ./templates/a.js 82 {0} [built]

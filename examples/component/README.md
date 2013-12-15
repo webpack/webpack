@@ -73,6 +73,7 @@ module.exports = {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
@@ -110,16 +111,16 @@ module.exports = {
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
 /******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
+/******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
 /******/ 	return require(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -131,8 +132,7 @@ module.exports = {
 
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /*!***************************************************!*\
   !*** ./component/webpack-a-component (component) ***!
   \***************************************************/
@@ -142,8 +142,7 @@ module.exports = {
 	module.exports = require(/*! ./index.js */ 6);
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /*!********************************************************************************************************************************************!*\
   !*** (webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css ***!
   \********************************************************************************************************************************************/
@@ -153,8 +152,7 @@ module.exports = {
 		".a-component {\n\tdisplay: inline;\n\tbackground: url("+require(/*! ./image.png */ 5)+") repeat;\n}";
 
 /***/ },
-
-/***/ 3:
+/* 3 */
 /*!****************************************************************************************************************!*\
   !*** (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js ***!
   \****************************************************************************************************************/
@@ -176,8 +174,7 @@ module.exports = {
 	}
 
 /***/ },
-
-/***/ 4:
+/* 4 */
 /*!*****************************************************************************************************************************************************************************************************************************************!*\
   !*** (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css ***!
   \*****************************************************************************************************************************************************************************************************************************************/
@@ -186,8 +183,7 @@ module.exports = {
 	require(/*! (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js */ 3)(require(/*! !(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css */ 2))
 
 /***/ },
-
-/***/ 5:
+/* 5 */
 /*!*************************************************!*\
   !*** ./component/webpack-a-component/image.png ***!
   \*************************************************/
@@ -196,8 +192,7 @@ module.exports = {
 	module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAOCAIAAABGj2DjAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACNSURBVChTlZC7FQAREEWFylCKEoS6EalBKNWZEoR2zrLrWbO/Gzjjc9/MIep/upNS8t63+pXukCAE33ON4/vgdo3j+6zvkNuLBybn409MDo4UY9Ra09q2CD9bCIFkQkpZSumnB8PBwZRSzbHWthNkODiYc45qY8zZBBP52Yicc692MPHqfPm6q4N5PLVunPxwQxP50QkAAAAASUVORK5CYII="
 
 /***/ },
-
-/***/ 6:
+/* 6 */
 /*!************************************************!*\
   !*** ./component/webpack-a-component/index.js ***!
   \************************************************/
@@ -206,8 +201,7 @@ module.exports = {
 	module.exports = "A";
 
 /***/ },
-
-/***/ 7:
+/* 7 */
 /*!***************************************************!*\
   !*** ./component/webpack-c-component (component) ***!
   \***************************************************/
@@ -216,8 +210,7 @@ module.exports = {
 	module.exports = require(/*! ./main.js */ 8);
 
 /***/ },
-
-/***/ 8:
+/* 8 */
 /*!***********************************************!*\
   !*** ./component/webpack-c-component/main.js ***!
   \***********************************************/
@@ -226,8 +219,7 @@ module.exports = {
 	module.exports = "C" + require(/*! a-component */ 1);
 
 /***/ },
-
-/***/ 9:
+/* 9 */
 /*!**********************************************!*\
   !*** ./my-component/b-component (component) ***!
   \**********************************************/
@@ -236,8 +228,7 @@ module.exports = {
 	module.exports = require(/*! ./main.js */ 10);
 
 /***/ },
-
-/***/ 10:
+/* 10 */
 /*!******************************************!*\
   !*** ./my-component/b-component/main.js ***!
   \******************************************/
@@ -246,7 +237,7 @@ module.exports = {
 	module.exports = "B";
 
 /***/ }
-/******/ })
+/******/ ])
 ```
 
 # Info
@@ -254,11 +245,11 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: 4a8e87eacbe7fe7b3e98
-Version: webpack 0.11.0
-Time: 128ms
+Hash: f4039370c9739d74063e
+Version: webpack 0.11.14
+Time: 124ms
     Asset  Size  Chunks             Chunk Names
-output.js  6802       0  [emitted]  main       
+output.js  6813       0  [emitted]  main       
 chunk    {0} output.js (main) 1981 [rendered]
     [0] ./example.js 111 {0} [built]
     [1] ./component/webpack-a-component (component) 328 {0} [built]
@@ -287,11 +278,11 @@ chunk    {0} output.js (main) 1981 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: cc757ebeecf266f9e91a
-Version: webpack 0.11.0
-Time: 196ms
+Hash: 4b3894867fa031b09d4d
+Version: webpack 0.11.14
+Time: 183ms
     Asset  Size  Chunks             Chunk Names
-output.js  1250       0  [emitted]  main       
+output.js  1229       0  [emitted]  main       
 chunk    {0} output.js (main) 1960 [rendered]
     [0] ./example.js 111 {0} [built]
     [1] ./component/webpack-a-component (component) 328 {0} [built]

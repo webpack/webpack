@@ -18,13 +18,16 @@ getTemplate("b", function(b) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
-/******/ 	var installedChunks = {0:0};
+/******/ 	var installedChunks = {
+/******/ 		0:0
+/******/ 	};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function require(moduleId) {
@@ -66,7 +69,7 @@ getTemplate("b", function(b) {
 /******/ 			var script = document.createElement('script');
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
-/******/ 			script.src = modules.c + "" + chunkId + ".output.js";
+/******/ 			script.src = require.p + "" + chunkId + ".output.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -76,6 +79,9 @@ getTemplate("b", function(b) {
 /******/ 	
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
+/******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
 /******/ 	
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
@@ -99,11 +105,8 @@ getTemplate("b", function(b) {
 /******/ 	return require(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -122,16 +125,15 @@ getTemplate("b", function(b) {
 	});
 
 /***/ }
-/******/ })
+/******/ ])
 ```
 
 # js/1.output.js
 
 ``` javascript
-webpackJsonp([1],
-{
-
-/***/ 1:
+webpackJsonp([1],[
+/* 0 */,
+/* 1 */
 /*!*********************************************!*\
   !*** ../require.context/templates ^\.\/.*$ ***!
   \*********************************************/
@@ -159,8 +161,7 @@ webpackJsonp([1],
 
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /*!*****************************************!*\
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
@@ -171,8 +172,7 @@ webpackJsonp([1],
 	}
 
 /***/ },
-
-/***/ 3:
+/* 3 */
 /*!*****************************************!*\
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
@@ -183,8 +183,7 @@ webpackJsonp([1],
 	}
 
 /***/ },
-
-/***/ 4:
+/* 4 */
 /*!*****************************************!*\
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
@@ -195,9 +194,7 @@ webpackJsonp([1],
 	}
 
 /***/ }
-
-}
-)
+])
 ```
 
 # Info
@@ -205,12 +202,12 @@ webpackJsonp([1],
 ## Uncompressed
 
 ```
-Hash: 441c40ff7916528124e0
-Version: webpack 0.11.0
-Time: 53ms
+Hash: bc0bd1a39376512e8dad
+Version: webpack 0.11.14
+Time: 38ms
       Asset  Size  Chunks             Chunk Names
-  output.js  3727       0  [emitted]  main       
-1.output.js  1595       1  [emitted]             
+  output.js  3781       0  [emitted]  main       
+1.output.js  1593       1  [emitted]             
 chunk    {0} output.js (main) 276 [rendered]
     [0] ./example.js 276 {0} [built]
 chunk    {1} 1.output.js 463 {0} [rendered]
@@ -230,12 +227,12 @@ chunk    {1} 1.output.js 463 {0} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9314e8e482179e2ac7a6
-Version: webpack 0.11.0
-Time: 154ms
+Hash: 5da2300c0dcb3acf4dfe
+Version: webpack 0.11.14
+Time: 145ms
       Asset  Size  Chunks             Chunk Names
   output.js   796       0  [emitted]  main       
-1.output.js   535       1  [emitted]             
+1.output.js   528       1  [emitted]             
 chunk    {0} output.js (main) 276 [rendered]
     [0] ./example.js 276 {0} [built]
 chunk    {1} 1.output.js 463 {0} [rendered]

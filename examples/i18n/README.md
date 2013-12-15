@@ -34,6 +34,7 @@ module.exports = {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
@@ -71,16 +72,16 @@ module.exports = {
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
 /******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
+/******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
 /******/ 	return require(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -90,7 +91,7 @@ module.exports = {
 	console.log("Missing Text");
 
 /***/ }
-/******/ })
+/******/ ])
 ```
 
 # Info
@@ -98,11 +99,11 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: 1f701ded570c005a42a3
-Version: webpack 0.11.0
-Time: 36ms
+Hash: 448533c1aacfb2907507
+Version: webpack 0.11.14
+Time: 35ms
     Asset  Size  Chunks             Chunk Names
-output.js  1748       0  [emitted]  main       
+output.js  1779       0  [emitted]  main       
 chunk    {0} output.js (main) 64 [rendered]
     [0] ./example.js 64 {0} [built] [1 warning]
 
@@ -113,8 +114,8 @@ Missing localization: Missing Text
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: cb1e8401dd240b497fb8
-Version: webpack 0.11.0
+Hash: e34c5aa0532f3bf677f3
+Version: webpack 0.11.14
 Time: 56ms
     Asset  Size  Chunks             Chunk Names
 output.js   315       0  [emitted]  main       

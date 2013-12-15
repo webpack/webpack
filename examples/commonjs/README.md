@@ -32,6 +32,7 @@ exports.add = function() {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
@@ -69,16 +70,16 @@ exports.add = function() {
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
 /******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
+/******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
 /******/ 	return require(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -89,8 +90,7 @@ exports.add = function() {
 	inc(a); // 2
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
@@ -102,8 +102,7 @@ exports.add = function() {
 	};
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
@@ -118,7 +117,7 @@ exports.add = function() {
 	};
 
 /***/ }
-/******/ })
+/******/ ])
 ```
 
 # Info
@@ -126,11 +125,11 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: 1c559fb8e60d85bb6307
-Version: webpack 0.11.0
+Hash: fca0e88842a12d859d32
+Version: webpack 0.11.14
 Time: 32ms
     Asset  Size  Chunks             Chunk Names
-output.js  2329       0  [emitted]  main       
+output.js  2356       0  [emitted]  main       
 chunk    {0} output.js (main) 329 [rendered]
     [0] ./example.js 69 {0} [built]
     [1] ./increment.js 98 {0} [built]
@@ -142,11 +141,11 @@ chunk    {0} output.js (main) 329 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: aa265e31c4c71c025557
-Version: webpack 0.11.0
-Time: 87ms
+Hash: 1430b50d6eaffc67e0ce
+Version: webpack 0.11.14
+Time: 84ms
     Asset  Size  Chunks             Chunk Names
-output.js   467       0  [emitted]  main       
+output.js   463       0  [emitted]  main       
 chunk    {0} output.js (main) 329 [rendered]
     [0] ./example.js 69 {0} [built]
     [1] ./increment.js 98 {0} [built]

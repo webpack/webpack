@@ -26,6 +26,7 @@ onmessage = function(event) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
@@ -63,16 +64,16 @@ onmessage = function(event) {
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
 /******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
+/******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
 /******/ 	return require(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -86,31 +87,33 @@ onmessage = function(event) {
 	}
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /*!**************************************************************************************!*\
   !*** (webpack)/~/worker-loader!./worker.js ***!
   \**************************************************************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = function() {
-		return new Worker(require.modules.c + "hash.worker.js");
+		return new Worker(require.p + "hash.worker.js");
 	};
 
 /***/ }
-/******/ })
+/******/ ])
 ```
 
 # js/[hash].worker.js
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
 /******/ 	// object to store loaded chunks
 /******/ 	// "1" means "already loaded"
-/******/ 	var installedChunks = {0:1};
+/******/ 	var installedChunks = {
+/******/ 		0:1
+/******/ 	};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function require(moduleId) {
@@ -150,6 +153,9 @@ onmessage = function(event) {
 /******/ 	
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
+/******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
 /******/ 	this["webpackChunk"] = function webpackChunkCallback(chunkIds, moreModules) {
 /******/ 		for(var moduleId in moreModules) {
 /******/ 			modules[moduleId] = moreModules[moduleId];
@@ -162,11 +168,8 @@ onmessage = function(event) {
 /******/ 	return require(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!*******************!*\
   !*** ./worker.js ***!
   \*******************/
@@ -181,16 +184,15 @@ onmessage = function(event) {
 
 
 /***/ }
-/******/ })
+/******/ ])
 ```
 
 # js/1.[hash].worker.hs
 
 ``` javascript
-webpackChunk([1],
-{
-
-/***/ 1:
+webpackChunk([1],[
+/* 0 */,
+/* 1 */
 /*!*********************************************!*\
   !*** ../require.context/templates ^\.\/.*$ ***!
   \*********************************************/
@@ -218,8 +220,7 @@ webpackChunk([1],
 
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /*!*****************************************!*\
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
@@ -230,8 +231,7 @@ webpackChunk([1],
 	}
 
 /***/ },
-
-/***/ 3:
+/* 3 */
 /*!*****************************************!*\
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
@@ -242,8 +242,7 @@ webpackChunk([1],
 	}
 
 /***/ },
-
-/***/ 4:
+/* 4 */
 /*!*****************************************!*\
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
@@ -254,9 +253,7 @@ webpackChunk([1],
 	}
 
 /***/ }
-
-}
-)
+])
 ```
 
 # Info
@@ -264,23 +261,23 @@ webpackChunk([1],
 ## Uncompressed
 
 ```
-Hash: 2ab6973f46b27f8b8c9f
-Version: webpack 0.11.0
-Time: 90ms
+Hash: db1567df5aea6382a0de
+Version: webpack 0.11.14
+Time: 84ms
            Asset  Size  Chunks             Chunk Names
-  hash.worker.js  2643          [emitted]             
-1.hash.worker.js  1595          [emitted]             
-       output.js  2343       0  [emitted]  main       
+  hash.worker.js  2697          [emitted]             
+1.hash.worker.js  1593          [emitted]             
+       output.js  2364       0  [emitted]  main       
 chunk    {0} output.js (main) 302 [rendered]
     [0] ./example.js 206 {0} [built]
     [1] (webpack)/~/worker-loader!./worker.js 96 {0} [not cacheable] [built]
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
-    Hash: 3cb3d51460baeae436c4
-    Version: webpack 0.11.0
+    Hash: d31417734d75657236f3
+    Version: webpack 0.11.14
                Asset  Size  Chunks             Chunk Names
-      hash.worker.js  2643       0  [emitted]  main       
-    1.hash.worker.js  1595       1  [emitted]             
+      hash.worker.js  2697       0  [emitted]  main       
+    1.hash.worker.js  1593       1  [emitted]             
     chunk    {0} hash.worker.js (main) 168 [rendered]
         [0] ./worker.js 168 {0} [built]
     chunk    {1} 1.hash.worker.js 463 {0} [rendered]
@@ -300,13 +297,13 @@ Child worker:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 130ff49de5a4c4d44ed8
-Version: webpack 0.11.0
+Hash: fa19da8994bb8560a22c
+Version: webpack 0.11.14
 Time: 210ms
            Asset  Size  Chunks             Chunk Names
   hash.worker.js   523          [emitted]             
-1.hash.worker.js   535          [emitted]             
-       output.js   425       0  [emitted]  main       
+1.hash.worker.js   528          [emitted]             
+       output.js   415       0  [emitted]  main       
 chunk    {0} output.js (main) 302 [rendered]
     [0] ./example.js 206 {0} [built]
     [1] (webpack)/~/worker-loader!./worker.js 96 {0} [not cacheable] [built]
@@ -315,11 +312,11 @@ chunk    {0} output.js (main) 302 [rendered]
 WARNING in output.js from UglifyJs
 Side effects in initialization of unused variable templateB [./example.js:5,0]
 Child worker:
-    Hash: 2d89f2348fe5977ff752
-    Version: webpack 0.11.0
+    Hash: 235c436ad864352371b0
+    Version: webpack 0.11.14
                Asset  Size  Chunks             Chunk Names
       hash.worker.js   523       0  [emitted]  main       
-    1.hash.worker.js   535       1  [emitted]             
+    1.hash.worker.js   528       1  [emitted]             
     chunk    {0} hash.worker.js (main) 168 [rendered]
         [0] ./worker.js 168 {0} [built]
     chunk    {1} 1.hash.worker.js 463 {0} [rendered]

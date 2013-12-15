@@ -15,13 +15,16 @@ require(["../dedupe/b"]);
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
-/******/ 	var installedChunks = {0:0};
+/******/ 	var installedChunks = {
+/******/ 		0:0
+/******/ 	};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function require(moduleId) {
@@ -63,7 +66,7 @@ require(["../dedupe/b"]);
 /******/ 			var script = document.createElement('script');
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
-/******/ 			script.src = modules.c + "" + chunkId + ".output.js";
+/******/ 			script.src = require.p + "" + chunkId + ".output.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -73,6 +76,9 @@ require(["../dedupe/b"]);
 /******/ 	
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
+/******/ 	
+/******/ 	// __webpack_public_path__
+/******/ 	require.p = "";
 /******/ 	
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
@@ -99,7 +105,7 @@ require(["../dedupe/b"]);
 /******/ 				modules[moduleId] = (function(_m) {
 /******/ 					var args = _m.slice(1), fn = modules[_m[0]];
 /******/ 					return function (a,b,c) {
-/******/ 						fn.apply(null, [a,b,c].concat(args));
+/******/ 						fn.apply(this, [a,b,c].concat(args));
 /******/ 					};
 /******/ 				}(_m));
 /******/ 				break;
@@ -135,11 +141,8 @@ require(["../dedupe/b"]);
 		}
 	}
 	return modules;
-}({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+}([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -154,19 +157,18 @@ require(["../dedupe/b"]);
 
 
 /***/ }
-/******/ })))
+/******/ ])))
 ```
 
 # js/1.output.js
 
 ``` javascript
-webpackJsonp([1,3],
-{
-
-/***/ 1:
+webpackJsonp([1,3],[
+/* 0 */,
+/* 1 */
 [9, 5, 6],
-
-/***/ 3:
+/* 2 */,
+/* 3 */
 /*!****************************************************************************************************!*\
   !*** (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js ***!
   \****************************************************************************************************/
@@ -179,8 +181,7 @@ webpackJsonp([1,3],
 	}
 
 /***/ },
-
-/***/ 4:
+/* 4 */
 /*!**********************!*\
   !*** ../dedupe/z.js ***!
   \**********************/
@@ -189,8 +190,7 @@ webpackJsonp([1,3],
 	module.exports = {"this is": "z"};
 
 /***/ },
-
-/***/ 5:
+/* 5 */
 /*!************************!*\
   !*** ../dedupe/a/x.js ***!
   \************************/
@@ -199,8 +199,7 @@ webpackJsonp([1,3],
 	module.exports = {"this is": "x"};
 
 /***/ },
-
-/***/ 6:
+/* 6 */
 /*!************************!*\
   !*** ../dedupe/a/y.js ***!
   \************************/
@@ -209,8 +208,9 @@ webpackJsonp([1,3],
 	module.exports = {"this is": "y", "but in": "a"};
 
 /***/ },
-
-/***/ 9:
+/* 7 */,
+/* 8 */,
+/* 9 */
 /*!***********************************!*\
   !*** template of 1 referencing 4 ***!
   \***********************************/
@@ -223,18 +223,16 @@ webpackJsonp([1,3],
 	}
 
 /***/ }
-
-}
-)
+])
 ```
 
 # js/2.output.js
 
 ``` javascript
-webpackJsonp([2,4],
-{
-
-/***/ 2:
+webpackJsonp([2,4],[
+/* 0 */,
+/* 1 */,
+/* 2 */
 /*!****************************!*\
   !*** ../dedupe/b/index.js ***!
   \****************************/
@@ -247,8 +245,8 @@ webpackJsonp([2,4],
 	}
 
 /***/ },
-
-/***/ 4:
+/* 3 */,
+/* 4 */
 /*!**********************!*\
   !*** ../dedupe/z.js ***!
   \**********************/
@@ -257,8 +255,9 @@ webpackJsonp([2,4],
 	module.exports = {"this is": "z"};
 
 /***/ },
-
-/***/ 7:
+/* 5 */,
+/* 6 */,
+/* 7 */
 /*!************************!*\
   !*** ../dedupe/b/x.js ***!
   \************************/
@@ -267,8 +266,7 @@ webpackJsonp([2,4],
 	module.exports = {"this is": "x"};
 
 /***/ },
-
-/***/ 8:
+/* 8 */
 /*!************************!*\
   !*** ../dedupe/b/y.js ***!
   \************************/
@@ -277,18 +275,15 @@ webpackJsonp([2,4],
 	module.exports = {"this is": "y", "but in": "b"};
 
 /***/ }
-
-}
-)
+])
 ```
 
 # js/3.output.js
 
 ``` javascript
-webpackJsonp([3],
-{
-
-/***/ 1:
+webpackJsonp([3],[
+/* 0 */,
+/* 1 */
 /*!****************************!*\
   !*** ../dedupe/a/index.js ***!
   \****************************/
@@ -301,8 +296,9 @@ webpackJsonp([3],
 	}
 
 /***/ },
-
-/***/ 4:
+/* 2 */,
+/* 3 */,
+/* 4 */
 /*!**********************!*\
   !*** ../dedupe/z.js ***!
   \**********************/
@@ -311,8 +307,7 @@ webpackJsonp([3],
 	module.exports = {"this is": "z"};
 
 /***/ },
-
-/***/ 5:
+/* 5 */
 /*!************************!*\
   !*** ../dedupe/a/x.js ***!
   \************************/
@@ -321,8 +316,7 @@ webpackJsonp([3],
 	module.exports = {"this is": "x"};
 
 /***/ },
-
-/***/ 6:
+/* 6 */
 /*!************************!*\
   !*** ../dedupe/a/y.js ***!
   \************************/
@@ -331,16 +325,13 @@ webpackJsonp([3],
 	module.exports = {"this is": "y", "but in": "a"};
 
 /***/ }
-
-}
-)
+])
 ```
 
 # js/4.output.js
 
 ``` javascript
-webpackJsonp([4],
-{
+webpackJsonp([4],{
 
 /***/ 2:
 [9, 7, 8],
@@ -358,8 +349,7 @@ webpackJsonp([4],
 
 /***/ }
 
-}
-)
+})
 ```
 
 # Info
@@ -367,15 +357,15 @@ webpackJsonp([4],
 ## Uncompressed
 
 ```
-Hash: cc4c2068ad94e7144df4
-Version: webpack 0.11.0
-Time: 91ms
+Hash: 4348fc3315b090ade366
+Version: webpack 0.11.14
+Time: 83ms
       Asset  Size  Chunks             Chunk Names
-  output.js  4980       0  [emitted]  main       
-1.output.js  1566    1, 3  [emitted]             
-2.output.js   877    2, 4  [emitted]             
-3.output.js   875       3  [emitted]             
-4.output.js   261       4  [emitted]             
+  output.js  5034       0  [emitted]  main       
+1.output.js  1587    1, 3  [emitted]             
+2.output.js   911    2, 4  [emitted]             
+3.output.js   891       3  [emitted]             
+4.output.js   259       4  [emitted]             
 chunk    {0} output.js (main) 197 [rendered]
     [0] ./example.js 197 {0} [built]
 chunk    {1} 1.output.js 492 {0} [rendered]
@@ -429,14 +419,14 @@ chunk    {4} 4.output.js 167 {1} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: e315623b9358082f9178
-Version: webpack 0.11.0
-Time: 260ms
+Hash: 9092d3c15f6e51b1d0fe
+Version: webpack 0.11.14
+Time: 244ms
       Asset  Size  Chunks             Chunk Names
   output.js  1155       0  [emitted]  main       
-1.output.js   294    1, 3  [emitted]             
-2.output.js   210    2, 4  [emitted]             
-3.output.js   208       3  [emitted]             
+1.output.js   286    1, 3  [emitted]             
+2.output.js   207    2, 4  [emitted]             
+3.output.js   203       3  [emitted]             
 4.output.js    88       4  [emitted]             
 chunk    {0} output.js (main) 197 [rendered]
     [0] ./example.js 197 {0} [built]
