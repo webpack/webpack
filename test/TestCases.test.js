@@ -17,54 +17,65 @@ describe("TestCases", function() {
 			})
 		};
 	});
-	categories.forEach(function(category) {
-		describe(category.name, function() {
-			category.tests.forEach(function(testName) {
-				var suite = describe(testName, function() {});
-				it("should compile " + testName, function(done) {
-					var testDirectory = path.join(casesPath, category.name, testName);
-					var outputDirectory = path.join(__dirname, "js", category.name, testName);
-					webpack({
-						context: casesPath,
-						entry: "./" + category.name + "/" + testName +"/index",
-						target: "async-node",
-						devtool: "eval",
-						output: {
-							pathinfo: true,
-							path: outputDirectory,
-							filename: "bundle.js"
-						},
-						module: {
-							loaders: [
-								{ test: /\.json$/, loader: "json" },
-								{ test: /\.coffee$/, loader: "coffee" },
-								{ test: /\.jade$/, loader: "jade" }
-							]
-						}
-					}, function(err, stats) {
-						if(err) return done(err);
-						var jsonStats = stats.toJson();
-						if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
-						if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
-						var exportedTest = 0;
-						function _it(title, fn) {
-							var test = new Test(title, fn);
-							suite.addTest(test);
-							exportedTest++;
-							return test;
-						}
-						function _require(module) {
-							if(module.substr(0, 2) === "./") {
-								var p = path.join(outputDirectory, module);
-								var fn = vm.runInThisContext("(function(require, module, exports, __dirname, it) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
-								var module = { exports: {} };
-								fn.call(module.exports, _require, module, module.exports, outputDirectory, _it);
-								return module.exports;
-							} else return require(module);
-						}
-						_require("./bundle.js");
-						if(exportedTest === 0) return done(new Error("No tests exported by test case"));
-						done();
+	[
+		{ name: "normal" },
+		{ name: "minimized", optimize: { minimize: true } },
+		{ name: "deduped", optimize: { dedupe: true } },
+		{ name: "minimized-deduped", optimize: { minimize: true, dedupe: true } },
+		{ name: "optimized", optimize: { minimize: true, dedupe: true, occurenceOrder: true } }
+	].forEach(function(config) {
+		describe(config.name, function() {
+			categories.forEach(function(category) {
+				describe(category.name, function() {
+					category.tests.forEach(function(testName) {
+						var suite = describe(testName, function() {});
+						it("should compile " + testName, function(done) {
+							var testDirectory = path.join(casesPath, category.name, testName);
+							var outputDirectory = path.join(__dirname, "js", config.name, category.name, testName);
+							webpack({
+								context: casesPath,
+								entry: "./" + category.name + "/" + testName +"/index",
+								target: "async-node",
+								devtool: "eval",
+								output: {
+									pathinfo: true,
+									path: outputDirectory,
+									filename: "bundle.js"
+								},
+								optimize: config.optimize,
+								module: {
+									loaders: [
+										{ test: /\.json$/, loader: "json" },
+										{ test: /\.coffee$/, loader: "coffee" },
+										{ test: /\.jade$/, loader: "jade" }
+									]
+								}
+							}, function(err, stats) {
+								if(err) return done(err);
+								var jsonStats = stats.toJson();
+								if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
+								if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
+								var exportedTest = 0;
+								function _it(title, fn) {
+									var test = new Test(title, fn);
+									suite.addTest(test);
+									exportedTest++;
+									return test;
+								}
+								function _require(module) {
+									if(module.substr(0, 2) === "./") {
+										var p = path.join(outputDirectory, module);
+										var fn = vm.runInThisContext("(function(require, module, exports, __dirname, it) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
+										var module = { exports: {} };
+										fn.call(module.exports, _require, module, module.exports, outputDirectory, _it);
+										return module.exports;
+									} else return require(module);
+								}
+								_require("./bundle.js");
+								if(exportedTest === 0) return done(new Error("No tests exported by test case"));
+								done();
+							});
+						});
 					});
 				});
 			});
