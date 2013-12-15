@@ -2,7 +2,7 @@ var should = require("should");
 var path = require("path");
 var fs = require("fs");
 var vm = require("vm");
-var Test = require("mocha/lib/Test");
+var Test = require("mocha/lib/test");
 
 var webpack = require("../lib/webpack");
 
