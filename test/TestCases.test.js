@@ -19,10 +19,14 @@ describe("TestCases", function() {
 	});
 	[
 		{ name: "normal" },
+		{ name: "hot", hot: true },
+		{ name: "devtool-eval", devtool: "eval" },
+		{ name: "devtool-source-map", devtool: "#@source-map" },
 		{ name: "minimized", optimize: { minimize: true } },
 		{ name: "deduped", optimize: { dedupe: true } },
 		{ name: "minimized-deduped", optimize: { minimize: true, dedupe: true } },
-		{ name: "optimized", optimize: { minimize: true, dedupe: true, occurenceOrder: true } }
+		{ name: "optimized", optimize: { minimize: true, dedupe: true, occurenceOrder: true } },
+		{ name: "all-combined", hot: true, devtool: "#@source-map", optimize: { minimize: true, dedupe: true, occurenceOrder: true } }
 	].forEach(function(config) {
 		describe(config.name, function() {
 			categories.forEach(function(category) {
@@ -32,17 +36,18 @@ describe("TestCases", function() {
 						it("should compile " + testName, function(done) {
 							var testDirectory = path.join(casesPath, category.name, testName);
 							var outputDirectory = path.join(__dirname, "js", config.name, category.name, testName);
-							webpack({
+							var options = {
 								context: casesPath,
 								entry: "./" + category.name + "/" + testName +"/index",
 								target: "async-node",
-								devtool: "eval",
+								devtool: config.devtool,
 								output: {
 									pathinfo: true,
 									path: outputDirectory,
 									filename: "bundle.js"
 								},
 								optimize: config.optimize,
+								hot: config.hot,
 								module: {
 									loaders: [
 										{ test: /\.json$/, loader: "json" },
@@ -50,7 +55,8 @@ describe("TestCases", function() {
 										{ test: /\.jade$/, loader: "jade" }
 									]
 								}
-							}, function(err, stats) {
+							};
+							webpack(options, function(err, stats) {
 								if(err) return done(err);
 								var jsonStats = stats.toJson();
 								if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
@@ -83,6 +89,7 @@ describe("TestCases", function() {
 	});
 	function checkArrayExpectation(testDirectory, object, kind, upperCaseKind, done) {
 		var array = object[kind+"s"].slice().sort();
+		if(kind === "warning") array = array.filter(function(item) { return !/from UglifyJs/.test(item); });
 		if(fs.existsSync(path.join(testDirectory, kind+ "s.js"))) {
 			var expected = require(path.join(testDirectory, kind + "s.js"));
 			if(expected.length < array.length)
