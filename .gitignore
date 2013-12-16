@@ -2,4 +2,5 @@
 /test/js
 /test/browsertest/js
 /examples/*/js
+/coverage
 .DS_Store
