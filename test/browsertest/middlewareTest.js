@@ -25,14 +25,9 @@ app.configure(function() {
 				vm: "vm-browserify"
 			}
 		},
-		optimize: {
-			minimize: true,
-			dedupe: true
-		},
 		resolve: {
 			unsafeCache: true
 		},
-		hot: true,
 		cache: true,
 		recordsPath: path.join(__dirname, "webpack.records.json"),
 		output: {
@@ -40,7 +35,13 @@ app.configure(function() {
 			path: "/",
 			filename: "web.js",
 			chunkFilename: "[chunkhash].chunk.js"
-		}
+		},
+		plugins: [
+			new webpack.dependencies.LabeledModulesPlugin(),
+			new webpack.optimize.UglifyJsPlugin(),
+			new webpack.optimize.DedupePlugin(),
+			new webpack.HotModuleReplacementPlugin()
+		]
 	}), {
 		lazy: false,
 		watchDelay: 5000,

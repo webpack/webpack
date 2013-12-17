@@ -16,7 +16,9 @@ describe("HotModuleReplacementPlugin", function() {
 			output: {
 				path: path.join(__dirname, "js")
 			},
-			hot: true
+			plugins: [
+				new webpack.HotModuleReplacementPlugin()
+			]
 		});
 		fs.writeFileSync(entryFile, "1", "utf-8");
 		compiler.run(function(err, stats) {

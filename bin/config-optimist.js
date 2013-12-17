@@ -73,6 +73,8 @@ module.exports = function(optimist) {
 
 	.string("provide").describe("provide")
 
+	.boolean("labeled-modules").describe("labeled-modules")
+
 	.string("plugin").describe("plugin")
 
 	.boolean("bail").describe("bail")

@@ -16,11 +16,10 @@ describe("NodeTemplatePlugin", function() {
 				library: "abc",
 				libraryTarget: "commonjs",
 			},
-			optimize: {
-				minimize: true
-			},
 			entry: "./entry",
-
+			plugins: [
+				new webpack.optimize.UglifyJsPlugin()
+			]
 		}, function(err, stats) {
 			if(err) return err;
 			stats.hasErrors().should.be.not.ok;
@@ -49,12 +48,11 @@ describe("NodeTemplatePlugin", function() {
 				library: "def",
 				libraryTarget: "umd",
 			},
-			optimize: {
-				minimize: true,
-				maxChunks: 1
-			},
 			entry: "./entry",
-
+			plugins: [
+				new webpack.optimize.LimitChunkCountPlugin(1),
+				new webpack.optimize.UglifyJsPlugin()
+			]
 		}, function(err, stats) {
 			if(err) return err;
 			stats.hasErrors().should.be.not.ok;

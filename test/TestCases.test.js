@@ -19,14 +19,32 @@ describe("TestCases", function() {
 	});
 	[
 		{ name: "normal" },
-		{ name: "hot", hot: true },
+		{ name: "hot", plugins: [
+			new webpack.HotModuleReplacementPlugin()
+		]},
 		{ name: "devtool-eval", devtool: "eval" },
 		{ name: "devtool-source-map", devtool: "#@source-map" },
-		{ name: "minimized", optimize: { minimize: true } },
-		{ name: "deduped", optimize: { dedupe: true } },
-		{ name: "minimized-deduped", optimize: { minimize: true, dedupe: true } },
-		{ name: "optimized", optimize: { minimize: true, dedupe: true, occurenceOrder: true } },
-		{ name: "all-combined", hot: true, devtool: "#@source-map", optimize: { minimize: true, dedupe: true, occurenceOrder: true } }
+		{ name: "minimized", plugins: [
+			new webpack.optimize.UglifyJsPlugin()
+		]},
+		{ name: "deduped", plugins: [
+			new webpack.optimize.DedupePlugin()
+		]},
+		{ name: "minimized-deduped", plugins: [
+			new webpack.optimize.DedupePlugin(),
+			new webpack.optimize.UglifyJsPlugin()
+		]},
+		{ name: "optimized", plugins: [
+			new webpack.optimize.DedupePlugin(),
+			new webpack.optimize.OccurenceOrderPlugin(),
+			new webpack.optimize.UglifyJsPlugin()
+		]},
+		{ name: "all-combined", devtool: "#@source-map", plugins: [
+			new webpack.HotModuleReplacementPlugin(),
+			new webpack.optimize.DedupePlugin(),
+			new webpack.optimize.OccurenceOrderPlugin(),
+			new webpack.optimize.UglifyJsPlugin()
+		]}
 	].forEach(function(config) {
 		describe(config.name, function() {
 			categories.forEach(function(category) {
@@ -46,15 +64,16 @@ describe("TestCases", function() {
 									path: outputDirectory,
 									filename: "bundle.js"
 								},
-								optimize: config.optimize,
-								hot: config.hot,
 								module: {
 									loaders: [
 										{ test: /\.json$/, loader: "json" },
 										{ test: /\.coffee$/, loader: "coffee" },
 										{ test: /\.jade$/, loader: "jade" }
 									]
-								}
+								},
+								plugins: (config.plugins || []).concat(
+									new webpack.dependencies.LabeledModulesPlugin()
+								)
 							};
 							webpack(options, function(err, stats) {
 								if(err) return done(err);

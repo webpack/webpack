@@ -40,21 +40,6 @@ describe("Integration", function() {
 					}
 				]
 			},
-			optimize: {
-				maxChunks: 2,
-			},
-			define: {
-				CONST_TRUE: true,
-				CONST_FALSE: false,
-				CONST_FUNCTION: function() { return "ok"; },
-				CONST_NUMBER: 123,
-				CONST_NUMBER_EXPR: "1*100+23",
-				CONST_OBJECT: {
-					A: 1,
-					B: JSON.stringify("B"),
-					C: function() { return "C"; }
-				}
-			},
 			amd: {
 				fromOptions: true
 			},
@@ -63,13 +48,28 @@ describe("Integration", function() {
 				// so it is injected here
 				alias: { should: require.resolve("should") }
 			},
-			plugins: {
-				"after-environment": function() {
-					this.resolver.plugin("module-resolved", function(request, callback) {
-						callback(null, request.replace(/extra\.js/, "extra2.js"));
+			plugins: [
+				new webpack.optimize.LimitChunkCountPlugin(1),
+				new webpack.DefinePlugin({
+					CONST_TRUE: true,
+					CONST_FALSE: false,
+					CONST_FUNCTION: function() { return "ok"; },
+					CONST_NUMBER: 123,
+					CONST_NUMBER_EXPR: "1*100+23",
+					CONST_OBJECT: {
+						A: 1,
+						B: JSON.stringify("B"),
+						C: function() { return "C"; }
+					}
+				}),
+				function() {
+					this.plugin("after-environment", function() {
+						this.resolver.plugin("module-resolved", function(request, callback) {
+							callback(null, request.replace(/extra\.js/, "extra2.js"));
+						});
 					});
 				}
-			}
+			]
 		}, function(err, stats) {
 			if(err) throw err;
 			stats.hasErrors().should.be.not.ok;

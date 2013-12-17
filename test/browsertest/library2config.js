@@ -1,3 +1,4 @@
+var webpack = require("../../");
 module.exports = {
 	output: {
 		hashDigestLength: 5
@@ -7,28 +8,8 @@ module.exports = {
 			{ test: /extra2?\.js/, loader: "raw!extra!val?cacheable" }
 		]
 	},
-	optimize: {
-		maxChunks: 2
-	},
-	define: {
-		CONST_UNDEFINED: undefined,
-		CONST_NULL: null,
-		CONST_TRUE: true,
-		CONST_FALSE: false,
-		CONST_FUNCTION: function() { return "ok"; },
-		CONST_NUMBER: 123,
-		CONST_NUMBER_EXPR: "1*100+23",
-		CONST_OBJECT: {
-			A: 1,
-			B: JSON.stringify("B"),
-			C: function() { return "C"; }
-		}
-	},
 	amd: {
 		fromOptions: true
-	},
-	provide: {
-		s3: "submodule3"
 	},
 	resolve: {
 		// cannot resolve should outside the outermost node_modules
@@ -36,6 +17,24 @@ module.exports = {
 		alias: { should: require.resolve("should") }
 	},
 	plugins: [
+		new webpack.optimize.LimitChunkCountPlugin(2),
+		new webpack.DefinePlugin({
+			CONST_UNDEFINED: undefined,
+			CONST_NULL: null,
+			CONST_TRUE: true,
+			CONST_FALSE: false,
+			CONST_FUNCTION: function() { return "ok"; },
+			CONST_NUMBER: 123,
+			CONST_NUMBER_EXPR: "1*100+23",
+			CONST_OBJECT: {
+				A: 1,
+				B: JSON.stringify("B"),
+				C: function() { return "C"; }
+			}
+		}),
+		new webpack.ProvidePlugin({
+			s3: "submodule3"
+		}),
 		function() {
 			this.plugin("normal-module-factory", function(nmf) {
 				nmf.plugin("after-resolve", function(data, callback) {

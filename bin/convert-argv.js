@@ -18,22 +18,24 @@ module.exports = function(optimist, argv, convertOptions) {
 		argv["optimize-occurence-order"] = true;
 	}
 
-	function ifArg(name, fn, init) {
+	function ifArg(name, fn, init, finalize) {
 		if(Array.isArray(argv[name])) {
 			if(init) init();
 			argv[name].forEach(fn);
+			if(finalize) finalize();
 		} else if(typeof argv[name] != "undefined") {
 			if(init) init();
 			fn(argv[name], -1);
+			if(finalize) finalize();
 		}
 	}
 
-	function ifArgPair(name, fn, init) {
+	function ifArgPair(name, fn, init, finalize) {
 		ifArg(name, function(content, idx) {
 			var i = content.indexOf("=");
 			if(i < 0) return fn(null, content, idx);
 			else return fn(content.substr(0, i), content.substr(i+1), idx);
-		}, init);
+		}, init, finalize);
 	}
 
 	function ifBooleanArg(name, fn) {
@@ -139,14 +141,19 @@ module.exports = function(optimist, argv, convertOptions) {
 		ensureArray(options.module, "postLoaders");
 	});
 
+	var defineObject;
 	ifArgPair("define", function(name, value) {
 		if(name === null) {
 			name = value;
 			value = true;
 		}
-		options.define[name] = value;
+		defineObject[name] = value;
 	}, function() {
-		ensureObject(options, "define");
+		defineObject = {}
+	}, function() {
+		ensureArray(options, "plugins");
+		var DefinePlugin = require("../lib/DefinePlugin");
+		options.plugins.push(new DefinePlugin(defineObject));
 	});
 
 	ifArg("output-path", function(value) {
@@ -222,7 +229,12 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.watchDelay = value;
 	});
 
-	mapArgToBoolean("hot", "hot");
+	ifBooleanArg("hot", function() {
+		ensureArray(options, "plugins");
+		var HotModuleReplacementPlugin = require("../lib/HotModuleReplacementPlugin");
+		options.plugins.push(new HotModuleReplacementPlugin());
+	});
+
 	mapArgToBoolean("debug", "debug");
 
 	ifBooleanArg("progress", function() {
@@ -279,37 +291,45 @@ module.exports = function(optimist, argv, convertOptions) {
 	});
 
 	ifArg("optimize-max-chunks", function(value) {
-		ensureObject(options, "optimize");
-		options.optimize.maxChunks = parseInt(value, 10);
+		ensureArray(options, "plugins");
+		var LimitChunkCountPlugin = require("../lib/optimize/LimitChunkCountPlugin");
+		options.plugins.push(new LimitChunkCountPlugin({
+			maxChunks: parseInt(value, 10)
+		}));
 	});
 
 	ifArg("optimize-min-chunk-size", function(value) {
-		ensureObject(options, "optimize");
-		options.optimize.minChunkSize = parseInt(value, 10);
+		ensureArray(options, "plugins");
+		var LimitChunkSizePlugin = require("../lib/optimize/LimitChunkSizePlugin");
+		options.plugins.push(new LimitChunkSizePlugin(parseInt(value, 10)));
 	});
 
 	ifBooleanArg("optimize-minimize", function() {
-		ensureObject(options, "optimize");
-		options.optimize.minimize = true;
+		ensureArray(options, "plugins");
+		var UglifyJsPlugin = require("../lib/optimize/UglifyJsPlugin");
+		options.plugins.push(new UglifyJsPlugin());
 	});
 
 	ifBooleanArg("optimize-occurence-order", function() {
-		ensureObject(options, "optimize");
-		options.optimize.occurenceOrder = true;
+		ensureArray(options, "plugins");
+		var OccurenceOrderPlugin = require("../lib/optimize/OccurenceOrderPlugin");
+		options.plugins.push(new OccurenceOrderPlugin());
 	});
 
 	ifBooleanArg("optimize-dedupe", function() {
-		ensureObject(options, "optimize");
-		options.optimize.dedupe = true;
+		ensureArray(options, "plugins");
+		var DedupePlugin = require("../lib/optimize/DedupePlugin");
+		options.plugins.push(new DedupePlugin());
 	});
 
 	ifArg("prefetch", function(request) {
-		ensureArray(options, "prefetch");
-		options.prefetch.push(request);
+		ensureArray(options, "plugins");
+		var PrefetchPlugin = require("../lib/PrefetchPlugin");
+		options.plugins.push(new PrefetchPlugin(request));
 	});
 
 	ifArg("provide", function(value) {
-		ensureObject(options, "provide");
+		ensureArray(options, "plugins");
 		var idx = value.indexOf("=");
 		if(idx >= 0) {
 			var name = value.substr(0, idx);
@@ -317,7 +337,14 @@ module.exports = function(optimist, argv, convertOptions) {
 		} else {
 			var name = value;
 		}
-		options.provide[name] = value;
+		var ProvidePlugin = require("../lib/ProvidePlugin");
+		options.plugins.push(new ProvidePlugin(name, value));
+	});
+
+	ifBooleanArg("labeled-modules", function() {
+		ensureArray(options, "plugins");
+		var LabeledModulesPlugin = require("../lib/dependencies/LabeledModulesPlugin");
+		options.plugins.push(new LabeledModulesPlugin());
 	});
 
 	ifArg("plugin", function(value) {
