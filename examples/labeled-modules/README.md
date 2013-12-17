@@ -127,8 +127,8 @@ The remaining labels are removed while minimizing.
 
 ```
 Hash: bfe393252b680d33ef28
-Version: webpack 0.11.14
-Time: 30ms
+Version: webpack 1.0.0-beta1
+Time: 49ms
     Asset  Size  Chunks             Chunk Names
 output.js  2524       0  [emitted]  main       
 chunk    {0} output.js (main) 299 [rendered]
@@ -143,8 +143,8 @@ chunk    {0} output.js (main) 299 [rendered]
 
 ```
 Hash: 474ae322ee9f0e822e44
-Version: webpack 0.11.14
-Time: 83ms
+Version: webpack 1.0.0-beta1
+Time: 85ms
     Asset  Size  Chunks             Chunk Names
 output.js   471       0  [emitted]  main       
 chunk    {0} output.js (main) 299 [rendered]

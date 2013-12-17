@@ -156,8 +156,8 @@ module.exports = function() {
 
 ```
 Hash: f21815510d3cb1af5252
-Version: webpack 0.11.14
-Time: 47ms
+Version: webpack 1.0.0-beta1
+Time: 46ms
     Asset  Size  Chunks             Chunk Names
 output.js  3249       0  [emitted]  main       
 chunk    {0} output.js (main) 613 [rendered]
@@ -179,7 +179,7 @@ chunk    {0} output.js (main) 613 [rendered]
 
 ```
 Hash: 4912acd289ab26afb7b6
-Version: webpack 0.11.14
+Version: webpack 1.0.0-beta1
 Time: 99ms
     Asset  Size  Chunks             Chunk Names
 output.js   847       0  [emitted]  main       

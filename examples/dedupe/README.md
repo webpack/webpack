@@ -204,8 +204,8 @@ module.exports = {"this is": "z"};
 
 ```
 Hash: f9caf459d66e8e7789db
-Version: webpack 0.11.14
-Time: 56ms
+Version: webpack 1.0.0-beta1
+Time: 55ms
     Asset  Size  Chunks             Chunk Names
 output.js  3465       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]
@@ -234,8 +234,8 @@ chunk    {0} output.js (main) 528 [rendered]
 
 ```
 Hash: 27f5698c4ab706a80424
-Version: webpack 0.11.14
-Time: 112ms
+Version: webpack 1.0.0-beta1
+Time: 117ms
     Asset  Size  Chunks             Chunk Names
 output.js   768       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]

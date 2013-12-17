@@ -315,7 +315,7 @@ webpackJsonp([1],[
 
 ```
 Hash: f9dc1fb1e6d5b72f30b6
-Version: webpack 0.11.14
+Version: webpack 1.0.0-beta1
 Time: 66ms
       Asset  Size  Chunks             Chunk Names
   output.js  6276       0  [emitted]  main       
@@ -361,10 +361,10 @@ chunk    {1} 1.output.js 439 {0} [rendered]
 
 ```
 Hash: 149d4cea4427686ac7c9
-Version: webpack 0.11.14
-Time: 213ms
+Version: webpack 1.0.0-beta1
+Time: 212ms
       Asset  Size  Chunks             Chunk Names
-  output.js  1148       0  [emitted]  main       
+  output.js  1153       0  [emitted]  main       
 1.output.js   507       1  [emitted]             
 chunk    {0} output.js (main) 1395 [rendered]
     [0] ./example.js 613 {0} [built]
@@ -403,14 +403,14 @@ chunk    {1} 1.output.js 439 {0} [rendered]
         context element ./c.js [4] ../require.context/templates ^\.\/.*\.js$
 
 WARNING in output.js from UglifyJs
-Side effects in initialization of unused variable commonjs1 [./example.js:2,0]
-Side effects in initialization of unused variable labeled1 [./example.js:4,0]
-Side effects in initialization of unused variable a [./example.js:17,0]
 Dropping unused function argument randModule [./example.js:11,0]
 Dropping unused function argument template [./example.js:11,0]
 Dropping unused function argument labeled2 [./example.js:11,0]
 Dropping unused function argument amd2 [./example.js:11,0]
 Dropping unused function argument commonjs2 [./example.js:11,0]
+Side effects in initialization of unused variable commonjs1 [./example.js:2,0]
+Side effects in initialization of unused variable labeled1 [./example.js:4,0]
+Side effects in initialization of unused variable a [./example.js:17,0]
 Dropping unused function argument labeled1 [./amd.js:5,0]
 Dropping unused function argument commonjs1 [./amd.js:5,0]
 Side effects in initialization of unused variable commonjs2 [./amd.js:7,0]
@@ -419,8 +419,8 @@ Dropping unused function argument labeled1 [./commonjs.js:7,0]
 Dropping unused function argument amd1 [./commonjs.js:7,0]
 Side effects in initialization of unused variable amd2 [./commonjs.js:8,0]
 Side effects in initialization of unused variable labeled2 [./commonjs.js:9,0]
-Side effects in initialization of unused variable a [./labeled.js:2,0]
 Dropping unused function argument amd1 [./labeled.js:7,0]
 Side effects in initialization of unused variable commonjs2 [./labeled.js:8,0]
 Side effects in initialization of unused variable amd2 [./labeled.js:9,0]
+Side effects in initialization of unused variable a [./labeled.js:2,0]
 ```

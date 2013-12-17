@@ -119,8 +119,8 @@ module.exports = 42
 
 ```
 Hash: 0708e6a205d85bc0168c
-Version: webpack 0.11.14
-Time: 180ms
+Version: webpack 1.0.0-beta1
+Time: 186ms
     Asset  Size  Chunks             Chunk Names
 output.js  2244       0  [emitted]  main       
 chunk    {0} output.js (main) 206 [rendered]
@@ -136,8 +136,8 @@ chunk    {0} output.js (main) 206 [rendered]
 
 ```
 Hash: 9c2d6b0ec4ae23e993d9
-Version: webpack 0.11.14
-Time: 228ms
+Version: webpack 1.0.0-beta1
+Time: 238ms
     Asset  Size  Chunks             Chunk Names
 output.js   421       0  [emitted]  main       
 chunk    {0} output.js (main) 206 [rendered]

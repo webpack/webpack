@@ -126,8 +126,8 @@ exports.add = function() {
 
 ```
 Hash: fca0e88842a12d859d32
-Version: webpack 0.11.14
-Time: 32ms
+Version: webpack 1.0.0-beta1
+Time: 45ms
     Asset  Size  Chunks             Chunk Names
 output.js  2356       0  [emitted]  main       
 chunk    {0} output.js (main) 329 [rendered]
@@ -142,7 +142,7 @@ chunk    {0} output.js (main) 329 [rendered]
 
 ```
 Hash: 1430b50d6eaffc67e0ce
-Version: webpack 0.11.14
+Version: webpack 1.0.0-beta1
 Time: 84ms
     Asset  Size  Chunks             Chunk Names
 output.js   463       0  [emitted]  main       

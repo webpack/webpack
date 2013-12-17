@@ -164,7 +164,7 @@ webpackJsonp([0],[
 /***/ function(module, exports, require) {
 
 	var common = require(/*! ./common */ 1);
-	require.e/* require */(1, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [(require(/*! ./shared */ 2))]; (function(shared) {
+	require.e/* require */(1/* duplicate */, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [(require(/*! ./shared */ 2))]; (function(shared) {
 		shared("This is page A");
 	}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 
@@ -183,7 +183,7 @@ webpackJsonp([0],[
 /***/ function(module, exports, require) {
 
 	var common = require(/*! ./common */ 1);
-	require.e/*nsure*/(1/* duplicate */, function(require) {
+	require.e/*nsure*/(1, function(require) {
 		var shared = require(/*! ./shared */ 2);
 		shared("This is page B");
 	});
@@ -218,12 +218,12 @@ webpackJsonp([1],{
 ## Uncompressed
 
 ```
-Hash: 2664c983f5e46b97efde
-Version: webpack 0.11.14
-Time: 37ms
+Hash: fd2b78c909997cc81b9c
+Version: webpack 1.0.0-beta1
+Time: 55ms
           Asset  Size  Chunks             Chunk Names
-pageB.bundle.js   333       0  [emitted]  pageB      
-pageA.bundle.js   412       0  [emitted]  pageA      
+pageB.bundle.js   318       0  [emitted]  pageB      
+pageA.bundle.js   427       0  [emitted]  pageA      
      1.chunk.js   262       1  [emitted]             
      commons.js  3468       2  [emitted]  commons.js 
 chunk    {0} pageB.bundle.js (pageB) 152 {2} [rendered]
@@ -232,22 +232,22 @@ chunk    {0} pageA.bundle.js (pageA) 108 {2} [rendered]
     [0] ./pageA.js 108 {0} [built]
 chunk    {1} 1.chunk.js 91 {0} {0} [rendered]
     [2] ./shared.js 91 {1} [built]
+        amd require ./shared [0] ./pageA.js 2:0-4:2
         require.ensure item ./shared [0] ./pageB.js 2:0-5:2
         cjs require ./shared [0] ./pageB.js 3:14-33
-        amd require ./shared [0] ./pageA.js 2:0-4:2
 chunk    {2} commons.js (commons.js) 26 [rendered]
     [1] ./common.js 26 {2} [built]
-        cjs require ./common [0] ./pageB.js 1:13-32
         cjs require ./common [0] ./pageA.js 1:13-32
+        cjs require ./common [0] ./pageB.js 1:13-32
         cjs require ./common [2] ./shared.js 1:13-32
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 617f7a9eb64e2ab04c10
-Version: webpack 0.11.14
-Time: 131ms
+Hash: 6648990858e530ece770
+Version: webpack 1.0.0-beta1
+Time: 147ms
           Asset  Size  Chunks             Chunk Names
 pageB.bundle.js    93       0  [emitted]  pageB      
 pageA.bundle.js   124       0  [emitted]  pageA      
@@ -259,13 +259,13 @@ chunk    {0} pageA.bundle.js (pageA) 108 {2} [rendered]
     [0] ./pageA.js 108 {0} [built]
 chunk    {1} 1.chunk.js 91 {0} {0} [rendered]
     [2] ./shared.js 91 {1} [built]
+        amd require ./shared [0] ./pageA.js 2:0-4:2
         require.ensure item ./shared [0] ./pageB.js 2:0-5:2
         cjs require ./shared [0] ./pageB.js 3:14-33
-        amd require ./shared [0] ./pageA.js 2:0-4:2
 chunk    {2} commons.js (commons.js) 26 [rendered]
     [1] ./common.js 26 {2} [built]
-        cjs require ./common [0] ./pageB.js 1:13-32
         cjs require ./common [0] ./pageA.js 1:13-32
+        cjs require ./common [0] ./pageB.js 1:13-32
         cjs require ./common [2] ./shared.js 1:13-32
 
 WARNING in pageB.bundle.js from UglifyJs

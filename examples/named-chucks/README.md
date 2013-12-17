@@ -226,8 +226,8 @@ webpackJsonp([2],[
 
 ```
 Hash: 931a62feb95bcf44c71c
-Version: webpack 0.11.14
-Time: 59ms
+Version: webpack 1.0.0-beta1
+Time: 61ms
           Asset  Size  Chunks             Chunk Names 
       output.js  4144       0  [emitted]  main        
     1.output.js   460    1, 2  [emitted]  my own chuck
@@ -261,8 +261,8 @@ chunk    {2} 2.output.js 22 {0} [rendered]
 
 ```
 Hash: 7849bb9756a439801ed9
-Version: webpack 0.11.14
-Time: 139ms
+Version: webpack 1.0.0-beta1
+Time: 160ms
           Asset  Size  Chunks             Chunk Names 
       output.js   793       0  [emitted]  main        
     1.output.js    63    1, 2  [emitted]  my own chuck
@@ -292,9 +292,9 @@ chunk    {2} 2.output.js 22 {0} [rendered]
         cjs require d [0] ./example.js 19:9-21
 
 WARNING in output.js from UglifyJs
-Side effects in initialization of unused variable a [./example.js:1,0]
-Dropping unused function argument require [./example.js:13,0]
 Side effects in initialization of unused variable c [./example.js:5,0]
 Side effects in initialization of unused variable d [./example.js:10,0]
+Dropping unused function argument require [./example.js:13,0]
 Side effects in initialization of unused variable d [./example.js:19,0]
+Side effects in initialization of unused variable a [./example.js:1,0]
 ```

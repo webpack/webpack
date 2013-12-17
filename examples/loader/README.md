@@ -136,8 +136,8 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: 2e39452e20c47eec0042
-Version: webpack 0.11.14
-Time: 59ms
+Version: webpack 1.0.0-beta1
+Time: 61ms
     Asset  Size  Chunks             Chunk Names
 output.js  2533       0  [emitted]  main       
 chunk    {0} output.js (main) 282 [rendered]
@@ -153,7 +153,7 @@ chunk    {0} output.js (main) 282 [rendered]
 
 ```
 Hash: 5ff354ec68e47cc7bad7
-Version: webpack 0.11.14
+Version: webpack 1.0.0-beta1
 Time: 89ms
     Asset  Size  Chunks             Chunk Names
 output.js   396       0  [emitted]  main       

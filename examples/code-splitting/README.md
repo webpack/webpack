@@ -177,8 +177,8 @@ webpackJsonp([1],[,,,function(){},function(){}]);
 
 ```
 Hash: 188706a414ae6969e603
-Version: webpack 0.11.14
-Time: 53ms
+Version: webpack 1.0.0-beta1
+Time: 54ms
       Asset  Size  Chunks             Chunk Names
   output.js  3937       0  [emitted]  main       
 1.output.js   327       1  [emitted]             
@@ -200,8 +200,8 @@ chunk    {1} 1.output.js 22 {0} [rendered]
 
 ```
 Hash: 555c21c8c103dd4d250e
-Version: webpack 0.11.14
-Time: 119ms
+Version: webpack 1.0.0-beta1
+Time: 120ms
       Asset  Size  Chunks             Chunk Names
   output.js   744       0  [emitted]  main       
 1.output.js    49       1  [emitted]             
@@ -219,7 +219,7 @@ chunk    {1} 1.output.js 22 {0} [rendered]
         cjs require d [0] ./example.js 5:12-24
 
 WARNING in output.js from UglifyJs
+Side effects in initialization of unused variable d [./example.js:5,0]
 Side effects in initialization of unused variable a [./example.js:1,0]
 Side effects in initialization of unused variable b [./example.js:2,0]
-Side effects in initialization of unused variable d [./example.js:5,0]
 ```

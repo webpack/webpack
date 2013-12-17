@@ -113,8 +113,8 @@ module.exports = Math.random();
 
 ```
 Hash: 4aba9f7573b3558c57be
-Version: webpack 0.11.14
-Time: 29ms
+Version: webpack 1.0.0-beta1
+Time: 30ms
     Asset  Size  Chunks             Chunk Names
 output.js  2205       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
@@ -129,8 +129,8 @@ chunk    {0} output.js (main) 326 [rendered]
 
 ```
 Hash: f8d5777ec20edc908c39
-Version: webpack 0.11.14
-Time: 72ms
+Version: webpack 1.0.0-beta1
+Time: 83ms
     Asset  Size  Chunks             Chunk Names
 output.js   396       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
