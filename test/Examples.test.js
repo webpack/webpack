@@ -20,7 +20,8 @@ describe("Examples", function() {
 			options.output = options.output || {};
 			options.optimize.occurenceOrder = true;
 			options.output.pathInfo = true;
-			options.output.path = path.join(examplePath, "js")
+			options.output.path = path.join(examplePath, "js");
+			options.output.publicPath = "js/";
 			if(!options.output.filename)
 				options.output.filename = "output.js";
 			if(!options.entry)
