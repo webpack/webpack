@@ -62,7 +62,6 @@ module.exports = {
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
-/******/ 		0:[function(require){require(0);}],
 /******/ 		2:0
 /******/ 	};
 /******/ 	
@@ -118,7 +117,7 @@ module.exports = {
 /******/ 	require.cache = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "";
+/******/ 	require.p = "js/";
 /******/ 	
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
@@ -136,6 +135,10 @@ module.exports = {
 /******/ 		}
 /******/ 		while(callbacks.length)
 /******/ 			callbacks.shift().call(null, require);
+/******/ 		if(0 in moreModules) {
+/******/ 			installedModules[0] = 0;
+/******/ 			require(0);
+/******/ 		}
 /******/ 	};
 /******/ })
 /************************************************************************/
@@ -218,14 +221,14 @@ webpackJsonp([1],{
 ## Uncompressed
 
 ```
-Hash: fd2b78c909997cc81b9c
-Version: webpack 1.0.0-beta1
-Time: 55ms
+Hash: ea16bdda04039e7a1bf4
+Version: webpack 1.0.0-beta2
+Time: 57ms
           Asset  Size  Chunks             Chunk Names
 pageB.bundle.js   318       0  [emitted]  pageB      
 pageA.bundle.js   427       0  [emitted]  pageA      
      1.chunk.js   262       1  [emitted]             
-     commons.js  3468       2  [emitted]  commons.js 
+     commons.js  3532       2  [emitted]  commons.js 
 chunk    {0} pageB.bundle.js (pageB) 152 {2} [rendered]
     [0] ./pageB.js 152 {0} [built]
 chunk    {0} pageA.bundle.js (pageA) 108 {2} [rendered]
@@ -245,14 +248,14 @@ chunk    {2} commons.js (commons.js) 26 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 6648990858e530ece770
-Version: webpack 1.0.0-beta1
-Time: 147ms
+Hash: f4140bf7c7d02fa3ee79
+Version: webpack 1.0.0-beta2
+Time: 182ms
           Asset  Size  Chunks             Chunk Names
 pageB.bundle.js    93       0  [emitted]  pageB      
 pageA.bundle.js   124       0  [emitted]  pageA      
      1.chunk.js    82       1  [emitted]             
-     commons.js   697       2  [emitted]  commons.js 
+     commons.js   700       2  [emitted]  commons.js 
 chunk    {0} pageB.bundle.js (pageB) 152 {2} [rendered]
     [0] ./pageB.js 152 {0} [built]
 chunk    {0} pageA.bundle.js (pageA) 108 {2} [rendered]

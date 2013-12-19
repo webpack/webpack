@@ -74,7 +74,7 @@ module.exports = function(content) {
 /******/ 	require.cache = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "";
+/******/ 	require.p = "js/";
 /******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
@@ -135,11 +135,11 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 2e39452e20c47eec0042
-Version: webpack 1.0.0-beta1
-Time: 61ms
+Hash: daa8449d3223b269e467
+Version: webpack 1.0.0-beta2
+Time: 62ms
     Asset  Size  Chunks             Chunk Names
-output.js  2533       0  [emitted]  main       
+output.js  2536       0  [emitted]  main       
 chunk    {0} output.js (main) 282 [rendered]
     [0] ./example.js 205 {0} [built]
     [1] (webpack)/~/json-loader!./test.json 36 {0} [built]
@@ -152,11 +152,11 @@ chunk    {0} output.js (main) 282 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 5ff354ec68e47cc7bad7
-Version: webpack 1.0.0-beta1
-Time: 89ms
+Hash: 909ecf4503665bb596ee
+Version: webpack 1.0.0-beta2
+Time: 132ms
     Asset  Size  Chunks             Chunk Names
-output.js   396       0  [emitted]  main       
+output.js   399       0  [emitted]  main       
 chunk    {0} output.js (main) 282 [rendered]
     [0] ./example.js 205 {0} [built]
     [1] (webpack)/~/json-loader!./test.json 36 {0} [built]

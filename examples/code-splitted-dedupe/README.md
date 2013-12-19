@@ -78,7 +78,7 @@ require(["../dedupe/b"]);
 /******/ 	require.cache = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "";
+/******/ 	require.p = "js/";
 /******/ 	
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
@@ -116,6 +116,7 @@ require(["../dedupe/b"]);
 /******/ 		}
 /******/ 		while(callbacks.length)
 /******/ 			callbacks.shift().call(null, require);
+/******/ 		
 /******/ 	};
 /******/ 	
 /******/ 	// Load entry module and return exports
@@ -355,11 +356,11 @@ webpackJsonp([4],[
 ## Uncompressed
 
 ```
-Hash: d755e256b8acc912ff5b
-Version: webpack 1.0.0-beta1
-Time: 84ms
+Hash: f2fa1556d8be1365101a
+Version: webpack 1.0.0-beta2
+Time: 91ms
       Asset  Size  Chunks             Chunk Names
-  output.js  5034       0  [emitted]  main       
+  output.js  5049       0  [emitted]  main       
 1.output.js  1587    1, 3  [emitted]             
 2.output.js   902    2, 4  [emitted]             
 3.output.js   873       3  [emitted]             
@@ -417,11 +418,11 @@ chunk    {4} 4.output.js 167 {1} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: bf7d66d54e41bc1fb831
-Version: webpack 1.0.0-beta1
-Time: 231ms
+Hash: bee74ee0daa14ad3ea21
+Version: webpack 1.0.0-beta2
+Time: 280ms
       Asset  Size  Chunks             Chunk Names
-  output.js  1155       0  [emitted]  main       
+  output.js  1158       0  [emitted]  main       
 1.output.js   286    1, 3  [emitted]             
 2.output.js   206    2, 4  [emitted]             
 3.output.js   201       3  [emitted]             

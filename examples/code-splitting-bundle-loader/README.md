@@ -80,7 +80,7 @@ module.exports = "It works";
 /******/ 	require.cache = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "";
+/******/ 	require.p = "js/";
 /******/ 	
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
@@ -98,6 +98,7 @@ module.exports = "It works";
 /******/ 		}
 /******/ 		while(callbacks.length)
 /******/ 			callbacks.shift().call(null, require);
+/******/ 		
 /******/ 	};
 /******/ 	
 /******/ 	// Load entry module and return exports
@@ -164,11 +165,11 @@ webpackJsonp([1],{
 ## Uncompressed
 
 ```
-Hash: fdb7a47b259e275381d6
-Version: webpack 1.0.0-beta1
-Time: 65ms
+Hash: eac1c1b23a01f18cfba1
+Version: webpack 1.0.0-beta2
+Time: 73ms
       Asset  Size  Chunks             Chunk Names
-  output.js  4213       0  [emitted]  main       
+  output.js  4228       0  [emitted]  main       
 1.output.js   183       1  [emitted]             
 chunk    {0} output.js (main) 486 [rendered]
     [0] ./example.js 88 {0} [built]
@@ -182,11 +183,11 @@ chunk    {1} 1.output.js 28 {0} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: dab164854f4cd96ce0c2
-Version: webpack 1.0.0-beta1
-Time: 145ms
+Hash: 6cb25d9ad397f7b09e09
+Version: webpack 1.0.0-beta2
+Time: 184ms
       Asset  Size  Chunks             Chunk Names
-  output.js   855       0  [emitted]  main       
+  output.js   858       0  [emitted]  main       
 1.output.js    56       1  [emitted]             
 chunk    {0} output.js (main) 486 [rendered]
     [0] ./example.js 88 {0} [built]

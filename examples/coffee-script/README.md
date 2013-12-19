@@ -66,7 +66,7 @@ module.exports = 42
 /******/ 	require.cache = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "";
+/******/ 	require.p = "js/";
 /******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
@@ -118,11 +118,11 @@ module.exports = 42
 ## Uncompressed
 
 ```
-Hash: 0708e6a205d85bc0168c
-Version: webpack 1.0.0-beta1
-Time: 186ms
+Hash: 1b43da558f0efc5868bd
+Version: webpack 1.0.0-beta2
+Time: 154ms
     Asset  Size  Chunks             Chunk Names
-output.js  2244       0  [emitted]  main       
+output.js  2247       0  [emitted]  main       
 chunk    {0} output.js (main) 206 [rendered]
     [0] ./example.js 31 {0} [built]
     [1] ./cup2.coffee 57 {0} [built]
@@ -135,11 +135,11 @@ chunk    {0} output.js (main) 206 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9c2d6b0ec4ae23e993d9
-Version: webpack 1.0.0-beta1
-Time: 238ms
+Hash: dbbf16e37ead64be318a
+Version: webpack 1.0.0-beta2
+Time: 213ms
     Asset  Size  Chunks             Chunk Names
-output.js   421       0  [emitted]  main       
+output.js   424       0  [emitted]  main       
 chunk    {0} output.js (main) 206 [rendered]
     [0] ./example.js 31 {0} [built]
     [1] ./cup2.coffee 57 {0} [built]

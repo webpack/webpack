@@ -70,7 +70,7 @@ exports: function add() {
 /******/ 	require.cache = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "";
+/******/ 	require.p = "js/";
 /******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
@@ -126,11 +126,11 @@ The remaining labels are removed while minimizing.
 ## Uncompressed
 
 ```
-Hash: bfe393252b680d33ef28
-Version: webpack 1.0.0-beta1
-Time: 49ms
+Hash: a09dcd87bf9b88c5e137
+Version: webpack 1.0.0-beta2
+Time: 50ms
     Asset  Size  Chunks             Chunk Names
-output.js  2524       0  [emitted]  main       
+output.js  2527       0  [emitted]  main       
 chunk    {0} output.js (main) 299 [rendered]
     [0] ./example.js 55 {0} [built]
     [1] ./increment.js 83 {0} [built]
@@ -142,11 +142,11 @@ chunk    {0} output.js (main) 299 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 474ae322ee9f0e822e44
-Version: webpack 1.0.0-beta1
-Time: 85ms
+Hash: c5a0d96368c81b0a0d63
+Version: webpack 1.0.0-beta2
+Time: 136ms
     Asset  Size  Chunks             Chunk Names
-output.js   471       0  [emitted]  main       
+output.js   474       0  [emitted]  main       
 chunk    {0} output.js (main) 299 [rendered]
     [0] ./example.js 55 {0} [built]
     [1] ./increment.js 83 {0} [built]

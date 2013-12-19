@@ -66,7 +66,7 @@ module.exports = Math.random();
 /******/ 	require.cache = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "";
+/******/ 	require.p = "js/";
 /******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
@@ -112,11 +112,11 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: 4aba9f7573b3558c57be
-Version: webpack 1.0.0-beta1
-Time: 30ms
+Hash: 692f1e5ca41c30b16a1a
+Version: webpack 1.0.0-beta2
+Time: 50ms
     Asset  Size  Chunks             Chunk Names
-output.js  2205       0  [emitted]  main       
+output.js  2208       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
     [0] ./example.js 295 {0} [built]
     [1] ./a.js 31 {0} [built]
@@ -128,11 +128,11 @@ chunk    {0} output.js (main) 326 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: f8d5777ec20edc908c39
-Version: webpack 1.0.0-beta1
-Time: 83ms
+Hash: 8d16797f9ba6ac6f0f5f
+Version: webpack 1.0.0-beta2
+Time: 113ms
     Asset  Size  Chunks             Chunk Names
-output.js   396       0  [emitted]  main       
+output.js   399       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
     [0] ./example.js 295 {0} [built]
     [1] ./a.js 31 {0} [built]

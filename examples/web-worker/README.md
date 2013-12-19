@@ -65,7 +65,7 @@ onmessage = function(event) {
 /******/ 	require.cache = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "";
+/******/ 	require.p = "js/";
 /******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
@@ -261,20 +261,20 @@ webpackChunk([1],[
 ## Uncompressed
 
 ```
-Hash: db1567df5aea6382a0de
-Version: webpack 1.0.0-beta1
-Time: 83ms
+Hash: 0455ace55f4457d74c88
+Version: webpack 1.0.0-beta2
+Time: 95ms
            Asset  Size  Chunks             Chunk Names
   hash.worker.js  2697          [emitted]             
 1.hash.worker.js  1593          [emitted]             
-       output.js  2364       0  [emitted]  main       
+       output.js  2367       0  [emitted]  main       
 chunk    {0} output.js (main) 302 [rendered]
     [0] ./example.js 206 {0} [built]
     [1] (webpack)/~/worker-loader!./worker.js 96 {0} [not cacheable] [built]
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
     Hash: 06665fad656fd443e8fb
-    Version: webpack 1.0.0-beta1
+    Version: webpack 1.0.0-beta2
                Asset  Size  Chunks             Chunk Names
       hash.worker.js  2697       0  [emitted]  main       
     1.hash.worker.js  1593       1  [emitted]             
@@ -297,13 +297,13 @@ Child worker:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: fa19da8994bb8560a22c
-Version: webpack 1.0.0-beta1
-Time: 198ms
+Hash: cc10317de66ca09839df
+Version: webpack 1.0.0-beta2
+Time: 231ms
            Asset  Size  Chunks             Chunk Names
   hash.worker.js   523          [emitted]             
 1.hash.worker.js   528          [emitted]             
-       output.js   415       0  [emitted]  main       
+       output.js   418       0  [emitted]  main       
 chunk    {0} output.js (main) 302 [rendered]
     [0] ./example.js 206 {0} [built]
     [1] (webpack)/~/worker-loader!./worker.js 96 {0} [not cacheable] [built]
@@ -313,7 +313,7 @@ WARNING in output.js from UglifyJs
 Side effects in initialization of unused variable templateB [./example.js:5,0]
 Child worker:
     Hash: 40f28a7999b10ab03960
-    Version: webpack 1.0.0-beta1
+    Version: webpack 1.0.0-beta2
                Asset  Size  Chunks             Chunk Names
       hash.worker.js   523       0  [emitted]  main       
     1.hash.worker.js   528       1  [emitted]             
