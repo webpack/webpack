@@ -35,36 +35,60 @@ it("should be able to use AMD-style require", function(done) {
 		done();
 	});
 });
+
 it("should be able to use require.js-style define", function(done) {
 	define("name", ["./circular"], function(circular) {
 		circular.should.be.eql(1);
 		done();
 	});
 });
+
 it("should be able to use require.js-style define, without name", function(done) {
 	true && define(["./circular"], function(circular) {
 		circular.should.be.eql(1);
 		done();
 	});
 });
+
 it("should be able to use require.js-style define, with empty dependencies", function(done) {
 	define("name", [], function() {
 		done();
 	});
 });
+
+it("should be able to use require.js-style define, with empty dependencies, with a expression", function(done) {
+	define([], done);
+});
+
+it("should be able to use require.js-style define, with empty dependencies, with a expression and name", function(done) {
+	define("name", [], done);
+});
+
 it("should be able to use require.js-style define, without dependencies", function(done) {
 	true && define("name", function() {
 		done();
 	});
 });
+
+it("should be able to use require.js-style define, without dependencies, with a expression", function(done) {
+	true && define("name", done);
+});
+
 var obj = {};
 it("should be able to use require.js-style define, with an object", function() {
+	module.exports = null;
+
 	true && define("blaaa", obj);
-	define("blaaa", obj);
-});
-after(function() {
+
 	module.exports.should.be.equal(obj);
+	module.exports = null;
+
+	define("blaaa", obj);
+
+	module.exports.should.be.equal(obj);
+	module.exports = null;
 });
+
 it("should offer AMD-style define for CommonJs", function(done) {
 	var _test_require = require.valueOf();
 	var _test_exports = exports;
@@ -78,12 +102,15 @@ it("should offer AMD-style define for CommonJs", function(done) {
 		done();
 	});
 });
+
 it("should not crash on require.js require only with array", function() {
 	require(["./circular"]);
 });
+
 it("should be able to use AMD require without function expression (empty array)", function(done) {
 	require([], done);
 });
+
 it("should be able to use AMD require without function expression", function(done) {
 	require(["./circular"], fn);
 	function fn(c) {
@@ -91,6 +118,7 @@ it("should be able to use AMD require without function expression", function(don
 		done();
 	}
 });
+
 it("should create a chunk for require.js require", function(done) {
 	var sameTick = true;
 	require(["./c"], function(c) {
@@ -100,4 +128,16 @@ it("should create a chunk for require.js require", function(done) {
 		done();
 	});
 	sameTick = false;
+});
+
+it("should not fail #138", function(done) {
+	(function (factory) {
+		if (typeof define === 'function' && define.amd) {
+			define([], factory); // AMD
+		} else if (typeof exports === 'object') {
+			module.exports = factory(); // Node
+		} else {
+			factory(); // Browser global
+		}
+	}(function () { done() }));
 });
