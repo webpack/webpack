@@ -57,7 +57,8 @@ it("should be able to use require.js-style define, with empty dependencies", fun
 });
 
 it("should be able to use require.js-style define, with empty dependencies, with a expression", function(done) {
-	define([], done);
+	define([], ok);
+	function ok() { done() };
 });
 
 it("should be able to use require.js-style define, with empty dependencies, with a expression and name", function(done) {
@@ -71,7 +72,8 @@ it("should be able to use require.js-style define, without dependencies", functi
 });
 
 it("should be able to use require.js-style define, without dependencies, with a expression", function(done) {
-	true && define("name", done);
+	true && define("name", ok);
+	function ok() { done() };
 });
 
 var obj = {};
@@ -108,7 +110,8 @@ it("should not crash on require.js require only with array", function() {
 });
 
 it("should be able to use AMD require without function expression (empty array)", function(done) {
-	require([], done);
+	require([], ok);
+	function ok() { done() };
 });
 
 it("should be able to use AMD require without function expression", function(done) {
@@ -140,4 +143,36 @@ it("should not fail #138", function(done) {
 			factory(); // Browser global
 		}
 	}(function () { done() }));
+});
+
+it("should parse a bound function expression 1", function(done) {
+	define(function(a, require, exports, module) {
+		a.should.be.eql(123);
+		require.should.be.type("function");
+		done();
+	}.bind(null, 123));
+});
+
+it("should parse a bound function expression 2", function(done) {
+	define("name", function(a, require, exports, module) {
+		a.should.be.eql(123);
+		require.should.be.type("function");
+		done();
+	}.bind(null, 123));
+});
+
+it("should parse a bound function expression 3", function(done) {
+	define(["./a"], function(number, a) {
+		number.should.be.eql(123);
+		a.should.be.eql("a");
+		done();
+	}.bind(null, 123));
+});
+
+it("should parse a bound function expression 4", function(done) {
+	define("name", ["./a"], function(number, a) {
+		number.should.be.eql(123);
+		a.should.be.eql("a");
+		done();
+	}.bind(null, 123));
 });
