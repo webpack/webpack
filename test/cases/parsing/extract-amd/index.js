@@ -179,6 +179,15 @@ it("should parse a bound function expression 4", function(done) {
 	}.bind(null, 123));
 });
 
+it("should create a context if require passed to IIFE (renaming todo)", function(done) {
+	require.ensure([], function(require) {
+		(function(req) {
+			req.keys.should.be.type("function");
+			done();
+		}(require));
+	});
+});
+
 it("should not fail issue #138 second", function() {
 	(function(define, global) { 'use strict';
 		define(function (require) {
