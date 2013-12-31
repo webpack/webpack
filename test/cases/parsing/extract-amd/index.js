@@ -178,3 +178,14 @@ it("should parse a bound function expression 4", function(done) {
 		done();
 	}.bind(null, 123));
 });
+
+it("should not fail issue #138 second", function() {
+	(function(define, global) { 'use strict';
+		define(function (require) {
+			(typeof require).should.be.eql("function");
+			require("./a").should.be.eql("a");
+			return "#138 2.";
+		});
+	})(typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }, this);
+	module.exports.should.be.eql("#138 2.");
+});
