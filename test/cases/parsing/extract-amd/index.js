@@ -148,7 +148,8 @@ it("should not fail #138", function(done) {
 it("should parse a bound function expression 1", function(done) {
 	define(function(a, require, exports, module) {
 		a.should.be.eql(123);
-		require.should.be.type("function");
+		(typeof require).should.be.eql("function");
+		require("./a").should.be.eql("a");
 		done();
 	}.bind(null, 123));
 });
@@ -156,7 +157,8 @@ it("should parse a bound function expression 1", function(done) {
 it("should parse a bound function expression 2", function(done) {
 	define("name", function(a, require, exports, module) {
 		a.should.be.eql(123);
-		require.should.be.type("function");
+		(typeof require).should.be.eql("function");
+		require("./a").should.be.eql("a");
 		done();
 	}.bind(null, 123));
 });
