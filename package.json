@@ -9,7 +9,7 @@
 		"optimist": "0.6.x",
 		"uglify-js": "2.4.x",
 		"async": "0.2.x",
-		"enhanced-resolve": "0.5.x",
+		"enhanced-resolve": "0.6.x",
 		"clone": "0.1.x",
 		"webpack-core": "0.2.x",
 		"node-libs-browser": "0.1.x",
