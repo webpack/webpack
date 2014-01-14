@@ -27,29 +27,33 @@ Take a look at the [`examples`](https://github.com/webpack/webpack/tree/master/e
 
 # Features
 
-* loaders are chainable
-* loaders run in node.js and can do a bunch of stuff
-* option to name your file with a hash of the content
-* watch mode
-* SourceUrl and SourceMap support
-* plugin system, extend webpack or build a complete different compiler
- * i. e. [component](https://github.com/webpack/component-webpack-plugin), [rewire](https://github.com/jhnns/rewire-webpack) and [more...](http://webpack.github.io/docs/webpack-plugins.html?utm_source=github&utm_medium=readme&utm_campaign=features)
-* [interfaces](http://webpack.github.io/docs/webpack-usage.html?utm_source=github&utm_medium=readme&utm_campaign=features)
- * CLI with [arguments](http://webpack.github.io/docs/webpack-detailed-usage.html?utm_source=github&utm_medium=readme&utm_campaign=features)
- * CLI with [config file](http://webpack.github.io/docs/webpack-options.html?utm_source=github&utm_medium=readme&utm_campaign=features), [arguments](http://webpack.github.io/docs/webpack-detailed-usage.html?utm_source=github&utm_medium=readme&utm_campaign=features) are still possible
- * usable as library from node.js
- * usable as [grunt plugin](https://github.com/webpack/grunt-webpack)
-* browser replacements
- * comes with browser replacements for some node.js modules
-* [Hot Module Replacement](http://webpack.github.io/docs/hot-code-replacement.html?utm_source=github&utm_medium=readme&utm_campaign=features)
- * install updates without full page refresh
-* see also
- * [webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware)
- * [webpack-dev-server](https://github.com/webpack/webpack-dev-server)
- * [enhanced-resolve](https://github.com/webpack/enhanced-resolve) and
- * [enhanced-require](https://github.com/webpack/enhanced-require)
+## Plugins
 
-## A small example what's possible
+webpack has a rich plugin interface. Most of the features are internal plugins using this interface. This makes webpack very **flexible**.
+
+## Performance
+
+webpack uses async I/O and has multiple caching levels. This makes webpack fast and incredible **fast** on incremental compilation.
+
+## Loaders
+
+webpack allows to use loaders to preprocess files. This allows you to bundle **any static resource** not only javascript. You can easily write your own loaders running in node.js.
+
+## Support
+
+webpack supports **AMD and CommonJs** module styles. It perform clever static analysis on the AST of your code. It even has a evaluation engine to evaluate simple expressions. This allows you to **support most existing libraries**.
+
+## Code Splitting
+
+webpack allows to split your codebase into chunks. Chunks are loaded **on demand**. This reduces initial loading time.
+
+## Optimizations
+
+webpack can do many optimizations to **reduce the output size**. It also cares about **caching** by using hashes.
+
+
+
+# A small example what's possible
 
 ``` javascript
 var commonjs = require("./commonjs");
@@ -100,7 +104,7 @@ function loadTemplateAsync(name, callback) {
 
 ## Tests
 
-You can run the unit tests with `npm test`. [![build status](https://secure.travis-ci.org/webpack/webpack.png)](http://travis-ci.org/webpack/webpack)
+You can run the node tests with `npm test`. [![build status](https://secure.travis-ci.org/webpack/webpack.png)](http://travis-ci.org/webpack/webpack)
 
 You can run the browser tests:
 
@@ -125,7 +129,7 @@ If you want to discus something or just need help, [here is a gitter.im room](ht
 
 ## License
 
-Copyright (c) 2012-2013 Tobias Koppers
+Copyright (c) 2012-2014 Tobias Koppers
 
 MIT (http://www.opensource.org/licenses/mit-license.php)
 
