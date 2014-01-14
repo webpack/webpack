@@ -2,7 +2,7 @@
 
 [![NPM version](https://badge.fury.io/js/webpack.png)](http://badge.fury.io/js/webpack)
 
-[documentation](http://webpack.github.io/docs/)
+[documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
 
 # Introduction
 
@@ -15,7 +15,7 @@ webpack is a bundler for modules. The main purpose is to bundle javascript files
 * dependencies are resolved while compiling, this makes the runtime very small
 * loader can preprocess files while compiling, i. e. coffee-script to javascript
 
-Check the [documentation](http://webpack.github.io/docs/) if you want to know more...
+Check the [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=trdr) if you want to know more...
 
 
 
@@ -33,15 +33,15 @@ Take a look at the [`examples`](https://github.com/webpack/webpack/tree/master/e
 * watch mode
 * SourceUrl and SourceMap support
 * plugin system, extend webpack or build a complete different compiler
- * i. e. [component](https://github.com/webpack/component-webpack-plugin), [rewire](https://github.com/jhnns/rewire-webpack) and [more...](http://webpack.github.io/docs/webpack-plugins.html)
-* [interfaces](http://webpack.github.io/docs/webpack-usage.html)
- * CLI with [arguments](http://webpack.github.io/docs/webpack-detailed-usage.html)
- * CLI with [config file](http://webpack.github.io/docs/webpack-options.html), [arguments](http://webpack.github.io/docs/webpack-detailed-usage.html) are still possible
+ * i. e. [component](https://github.com/webpack/component-webpack-plugin), [rewire](https://github.com/jhnns/rewire-webpack) and [more...](http://webpack.github.io/docs/webpack-plugins.html?utm_source=github&utm_medium=readme&utm_campaign=features)
+* [interfaces](http://webpack.github.io/docs/webpack-usage.html?utm_source=github&utm_medium=readme&utm_campaign=features)
+ * CLI with [arguments](http://webpack.github.io/docs/webpack-detailed-usage.html?utm_source=github&utm_medium=readme&utm_campaign=features)
+ * CLI with [config file](http://webpack.github.io/docs/webpack-options.html?utm_source=github&utm_medium=readme&utm_campaign=features), [arguments](http://webpack.github.io/docs/webpack-detailed-usage.html?utm_source=github&utm_medium=readme&utm_campaign=features) are still possible
  * usable as library from node.js
  * usable as [grunt plugin](https://github.com/webpack/grunt-webpack)
 * browser replacements
  * comes with browser replacements for some node.js modules
-* [Hot Module Replacement](http://webpack.github.io/docs/hot-code-replacement.html)
+* [Hot Module Replacement](http://webpack.github.io/docs/hot-code-replacement.html?utm_source=github&utm_medium=readme&utm_campaign=features)
  * install updates without full page refresh
 * see also
  * [webpack-dev-middleware](https://github.com/webpack/webpack-dev-middleware)
@@ -94,7 +94,7 @@ function loadTemplateAsync(name, callback) {
 
 ## Documentation
 
-[documentation](http://webpack.github.io/docs/)
+[documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=documentation)
 
 
 
