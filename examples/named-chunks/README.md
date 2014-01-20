@@ -4,21 +4,21 @@
 var a = require("a");
 
 require.ensure(["b"], function(require) {
-	// a named chuck
+	// a named chunk
 	var c = require("c");
-}, "my own chuck");
+}, "my own chunk");
 
 require.ensure(["b"], function(require) {
-	// another chuck with the same name
+	// another chunk with the same name
 	var d = require("d");
-}, "my own chuck");
+}, "my own chunk");
 
 require.ensure([], function(require) {
 	// the same again
-}, "my own chuck");
+}, "my own chunk");
 
 require.ensure(["b"], function(require) {
-	// chuck without name
+	// chunk without name
 	var d = require("d");
 });
 ```
@@ -28,47 +28,47 @@ require.ensure(["b"], function(require) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	
+/******/
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
 /******/ 		0:0
 /******/ 	};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function require(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/ 		
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
-/******/ 		
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/ 		
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	require.e = function requireEnsure(chunkId, callback) {
 /******/ 		// "0" is the signal for "already loaded"
 /******/ 		if(installedChunks[chunkId] === 0)
 /******/ 			return callback.call(null, require);
-/******/ 		
+/******/
 /******/ 		// an array means "currently loading".
 /******/ 		if(installedChunks[chunkId] !== undefined) {
 /******/ 			installedChunks[chunkId].push(callback);
@@ -83,16 +83,16 @@ require.ensure(["b"], function(require) {
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
-/******/ 	
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	require.modules = modules;
-/******/ 	
+/******/
 /******/ 	// expose the module cache
 /******/ 	require.cache = installedModules;
-/******/ 	
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	require.p = "js/";
-/******/ 	
+/******/
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
 /******/ 		// add "moreModules" to the modules object,
@@ -109,9 +109,9 @@ require.ensure(["b"], function(require) {
 /******/ 		}
 /******/ 		while(callbacks.length)
 /******/ 			callbacks.shift().call(null, require);
-/******/ 		
+/******/
 /******/ 	};
-/******/ 	
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return require(0);
 /******/ })
@@ -126,21 +126,21 @@ require.ensure(["b"], function(require) {
 	var a = require(/*! a */ 3);
 
 	require.e/*nsure*/(1, function(require) {
-		// a named chuck
+		// a named chunk
 		var c = require(/*! c */ 4);
-	}, /*! my own chuck */ 0);
+	}, /*! my own chunk */ 0);
 
 	require.e/*nsure*/(1, function(require) {
-		// another chuck with the same name
+		// another chunk with the same name
 		var d = require(/*! d */ 2);
-	}, /*! my own chuck */ 0);
+	}, /*! my own chunk */ 0);
 
 	require.e/*nsure*/(1, function(require) {
 		// the same again
-	}, /*! my own chuck */ 0);
+	}, /*! my own chunk */ 0);
 
 	require.e/*nsure*/(2, function(require) {
-		// chuck without name
+		// chunk without name
 		var d = require(/*! d */ 2);
 	});
 
@@ -229,16 +229,16 @@ webpackJsonp([2],[
 Hash: ef2dd48d55e44a03afbf
 Version: webpack 1.0.0-beta2
 Time: 62ms
-          Asset  Size  Chunks             Chunk Names 
-      output.js  4159       0  [emitted]  main        
-    1.output.js   460    1, 2  [emitted]  my own chuck
-my own chuck.js   460    1, 2  [emitted]  my own chuck
-    2.output.js   309       2  [emitted]              
+          Asset  Size  Chunks             Chunk Names
+      output.js  4159       0  [emitted]  main
+    1.output.js   460    1, 2  [emitted]  my own chunk
+my own chunk.js   460    1, 2  [emitted]  my own chunk
+    2.output.js   309       2  [emitted]
 chunk    {0} output.js (main) 450 [rendered]
     [0] ./example.js 439 {0} [built]
     [3] ./~/a.js 11 {0} [built]
         cjs require a [0] ./example.js 1:8-20
-chunk    {1} 1.output.js, my own chuck.js (my own chuck) 33 {0} [rendered]
+chunk    {1} 1.output.js, my own chunk.js (my own chunk) 33 {0} [rendered]
     [1] ./~/b.js 11 {1} {2} [built]
         require.ensure item b [0] ./example.js 3:0-6:18
         require.ensure item b [0] ./example.js 8:0-11:18
@@ -264,16 +264,16 @@ chunk    {2} 2.output.js 22 {0} [rendered]
 Hash: beec9bc49f67d6526e39
 Version: webpack 1.0.0-beta2
 Time: 178ms
-          Asset  Size  Chunks             Chunk Names 
-      output.js   796       0  [emitted]  main        
-    1.output.js    63    1, 2  [emitted]  my own chuck
-my own chuck.js    63    1, 2  [emitted]  my own chuck
-    2.output.js    47       2  [emitted]              
+          Asset  Size  Chunks             Chunk Names
+      output.js   796       0  [emitted]  main
+    1.output.js    63    1, 2  [emitted]  my own chunk
+my own chunk.js    63    1, 2  [emitted]  my own chunk
+    2.output.js    47       2  [emitted]
 chunk    {0} output.js (main) 450 [rendered]
     [0] ./example.js 439 {0} [built]
     [3] ./~/a.js 11 {0} [built]
         cjs require a [0] ./example.js 1:8-20
-chunk    {1} 1.output.js, my own chuck.js (my own chuck) 33 {0} [rendered]
+chunk    {1} 1.output.js, my own chunk.js (my own chunk) 33 {0} [rendered]
     [1] ./~/b.js 11 {1} {2} [built]
         require.ensure item b [0] ./example.js 3:0-6:18
         require.ensure item b [0] ./example.js 8:0-11:18

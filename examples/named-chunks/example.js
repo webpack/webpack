@@ -1,20 +1,20 @@
 var a = require("a");
 
 require.ensure(["b"], function(require) {
-	// a named chuck
+	// a named chunk
 	var c = require("c");
-}, "my own chuck");
+}, "my own chunk");
 
 require.ensure(["b"], function(require) {
-	// another chuck with the same name
+	// another chunk with the same name
 	var d = require("d");
-}, "my own chuck");
+}, "my own chunk");
 
 require.ensure([], function(require) {
 	// the same again
-}, "my own chuck");
+}, "my own chunk");
 
 require.ensure(["b"], function(require) {
-	// chuck without name
+	// chunk without name
 	var d = require("d");
 });
