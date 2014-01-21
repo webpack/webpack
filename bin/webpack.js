@@ -34,7 +34,10 @@ optimist
 
 	.boolean("display-chunks").describe("display-chunks")
 
+	.boolean("display-error-details").describe("display-error-details")
+
 	.boolean("display-reasons").alias("display-reasons", "verbose").alias("display-reasons", "v").describe("display-reasons");
+
 	
 var argv = optimist.argv;
 
@@ -85,6 +88,10 @@ if(!outputOptions.json) {
 
 	ifArg("display-reasons", function(bool) {
 		outputOptions.reasons = bool;
+	});
+
+	ifArg("display-error-details", function(bool) {
+		outputOptions.errorDetails = bool;
 	});
 } else {
 	outputOptions.chunks = true;

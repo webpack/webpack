@@ -23,7 +23,7 @@ describe("Errors", function() {
 		c.run(function(err, stats) {
 			if(err) throw err;
 			should.strictEqual(typeof stats, "object");
-			stats = stats.toJson();
+			stats = stats.toJson({ errorDetails: false });
 			should.strictEqual(typeof stats, "object");
 			stats.should.have.property("errors");
 			stats.should.have.property("warnings");
