@@ -34,7 +34,7 @@
 		"jade-loader": "0.5.x",
 		"coffee-loader": "0.6.x",
 		"css-loader": "0.6.x",
-		"less-loader": "0.6.x",
+		"less-loader": "0.7.x",
 		"style-loader": "0.6.x",
 		"script-loader": "0.5.x",
 		"bundle-loader": "0.5.x",
