@@ -36,9 +36,9 @@ example demonstrating code written in coffee-script.
 
 example demonstrating Code Splitting through the builder loader
 
-## names-chucks
+## names-chunks
 
-example demonstrating merging of chucks with named chucks
+example demonstrating merging of chunks with named chunks
 
 ## labeled-modules
 
