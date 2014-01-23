@@ -4,6 +4,6 @@ it("should load a utf-8 file with BOM", function() {
 });
 
 it("should load a css file with BOM", function() {
-	var css = require("css-loader!./bomfile.css");
+	var css = require("!css-loader!./bomfile.css");
 	css.should.be.eql("body{color:#abc}");
 });
