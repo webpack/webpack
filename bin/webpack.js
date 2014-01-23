@@ -36,6 +36,8 @@ optimist
 
 	.boolean("display-error-details").describe("display-error-details")
 
+	.boolean("display-origins").describe("display-origins")
+
 	.boolean("display-reasons").alias("display-reasons", "verbose").alias("display-reasons", "v").describe("display-reasons");
 
 	
@@ -92,6 +94,10 @@ if(!outputOptions.json) {
 
 	ifArg("display-error-details", function(bool) {
 		outputOptions.errorDetails = bool;
+	});
+
+	ifArg("display-origins", function(bool) {
+		outputOptions.chunkOrigins = bool;
 	});
 } else {
 	outputOptions.chunks = true;
