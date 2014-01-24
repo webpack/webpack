@@ -12,13 +12,13 @@ var path = require("path");
 var extraArgs = "";
 
 var targetArgs = global.NO_TARGET_ARGS?"":" ./example.js js/output.js"
-cp.exec("node ../../bin/webpack.js --display-reasons --display-chunks --output-public-path \"js/\" -p "+extraArgs+targetArgs, function (error, stdout, stderr) {
+cp.exec("node ../../bin/webpack.js --display-reasons --display-chunks --display-origins --output-public-path \"js/\" -p "+extraArgs+targetArgs, function (error, stdout, stderr) {
 	if(stderr)
 		console.log(stderr);
 	if (error !== null)
 		console.log(error);
 	var readme = tc(fs.readFileSync(require("path").join(process.cwd(), "template.md"), "utf-8"), process.cwd(), stdout.replace(/[\r\n]*$/, ""), "min");
-	cp.exec("node ../../bin/webpack.js --display-reasons --display-chunks --output-public-path \"js/\" --optimize-occurence-order --output-pathinfo "+extraArgs+targetArgs, function (error, stdout, stderr) {
+	cp.exec("node ../../bin/webpack.js --display-reasons --display-chunks --display-origins --output-public-path \"js/\" --optimize-occurence-order --output-pathinfo "+extraArgs+targetArgs, function (error, stdout, stderr) {
 		console.log(stdout);
 		if(stderr)
 			console.log(stderr);
