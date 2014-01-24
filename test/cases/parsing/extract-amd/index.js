@@ -24,6 +24,13 @@ it("should parse fancy AMD calls", function() {
 		(typeof constructor).should.be.eql("function");
 		a.should.be.eql("a");
 	});
+	define("-> module module exports *constructor *a".replace("module", "require").substr(3).replace(/\*/g, "./").split(" "), function(require, module, exports, constructor, a) {
+		(typeof require).should.be.eql("function");
+		(typeof module).should.be.eql("object");
+		(typeof exports).should.be.eql("object");
+		(typeof constructor).should.be.eql("function");
+		a.should.be.eql("a");
+	});
 });
 
 it("should be able to use AMD-style require", function(done) {
