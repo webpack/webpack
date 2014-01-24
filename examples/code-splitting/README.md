@@ -177,13 +177,14 @@ webpackJsonp([1],[,,,function(){},function(){}]);
 ## Uncompressed
 
 ```
-Hash: 1e4a30e55de3633f5f7b
-Version: webpack 1.0.0-beta2
-Time: 58ms
+Hash: 51eb9c135b6c6fe4e444
+Version: webpack 1.0.0-beta8
+Time: 82ms
       Asset  Size  Chunks             Chunk Names
   output.js  3952       0  [emitted]  main       
 1.output.js   327       1  [emitted]             
 chunk    {0} output.js (main) 166 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 144 {0} [built]
     [1] ./~/b.js 11 {0} [built]
         cjs require b [0] ./example.js 2:8-20
@@ -191,6 +192,7 @@ chunk    {0} output.js (main) 166 [rendered]
     [2] ./~/a.js 11 {0} [built]
         cjs require a [0] ./example.js 1:8-20
 chunk    {1} 1.output.js 22 {0} [rendered]
+    > [0] ./example.js 3:0-6:2
     [3] ./~/c.js 11 {1} [built]
         require.ensure item c [0] ./example.js 3:0-6:2
     [4] ./~/d.js 11 {1} [built]
@@ -200,13 +202,14 @@ chunk    {1} 1.output.js 22 {0} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 11d514009b88e143ed5b
-Version: webpack 1.0.0-beta2
-Time: 163ms
+Hash: 0b0f0366fa1aab3ebbc4
+Version: webpack 1.0.0-beta8
+Time: 172ms
       Asset  Size  Chunks             Chunk Names
   output.js   747       0  [emitted]  main       
 1.output.js    49       1  [emitted]             
 chunk    {0} output.js (main) 166 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 144 {0} [built]
     [1] ./~/b.js 11 {0} [built]
         cjs require b [0] ./example.js 2:8-20
@@ -214,6 +217,7 @@ chunk    {0} output.js (main) 166 [rendered]
     [2] ./~/a.js 11 {0} [built]
         cjs require a [0] ./example.js 1:8-20
 chunk    {1} 1.output.js 22 {0} [rendered]
+    > [0] ./example.js 3:0-6:2
     [3] ./~/c.js 11 {1} [built]
         require.ensure item c [0] ./example.js 3:0-6:2
     [4] ./~/d.js 11 {1} [built]

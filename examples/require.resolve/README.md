@@ -112,12 +112,13 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: 692f1e5ca41c30b16a1a
-Version: webpack 1.0.0-beta2
-Time: 50ms
+Hash: c2fdaa4ec2268af6ce80
+Version: webpack 1.0.0-beta8
+Time: 55ms
     Asset  Size  Chunks             Chunk Names
 output.js  2208       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 295 {0} [built]
     [1] ./a.js 31 {0} [built]
         cjs require ./a [0] ./example.js 1:8-22
@@ -128,12 +129,13 @@ chunk    {0} output.js (main) 326 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 8d16797f9ba6ac6f0f5f
-Version: webpack 1.0.0-beta2
-Time: 113ms
+Hash: 9035669d7274300bd13b
+Version: webpack 1.0.0-beta8
+Time: 124ms
     Asset  Size  Chunks             Chunk Names
 output.js   399       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 295 {0} [built]
     [1] ./a.js 31 {0} [built]
         cjs require ./a [0] ./example.js 1:8-22

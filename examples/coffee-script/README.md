@@ -118,12 +118,13 @@ module.exports = 42
 ## Uncompressed
 
 ```
-Hash: 1b43da558f0efc5868bd
-Version: webpack 1.0.0-beta2
-Time: 154ms
+Hash: c0e41294caebebf740e1
+Version: webpack 1.0.0-beta8
+Time: 169ms
     Asset  Size  Chunks             Chunk Names
 output.js  2247       0  [emitted]  main       
 chunk    {0} output.js (main) 206 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 31 {0} [built]
     [1] ./cup2.coffee 57 {0} [built]
         cjs require ./cup2.coffee [2] ./cup1.coffee 4:12-36
@@ -135,12 +136,13 @@ chunk    {0} output.js (main) 206 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: dbbf16e37ead64be318a
-Version: webpack 1.0.0-beta2
+Hash: 5aad8c5ad018219d8bf0
+Version: webpack 1.0.0-beta8
 Time: 213ms
     Asset  Size  Chunks             Chunk Names
 output.js   424       0  [emitted]  main       
 chunk    {0} output.js (main) 206 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 31 {0} [built]
     [1] ./cup2.coffee 57 {0} [built]
         cjs require ./cup2.coffee [2] ./cup1.coffee 4:12-36

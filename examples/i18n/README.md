@@ -99,13 +99,14 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: aacf76cf7c567530eab4
-Version: webpack 1.0.0-beta2
-Time: 41ms
+Hash: 3bd94df73dbb84d38341
+Version: webpack 1.0.0-beta8
+Time: 51ms
     Asset  Size  Chunks             Chunk Names
-output.js  1782       0  [emitted]  main       
-chunk    {0} output.js (main) 64 [rendered]
-    [0] ./example.js 64 {0} [built] [1 warning]
+output.js  1783       0  [emitted]  main       
+chunk    {0} output.js (main) 65 [rendered]
+    > main [0] ./example.js
+    [0] ./example.js 65 {0} [built] [1 warning]
 
 WARNING in ./example.js
 Missing localization: Missing Text
@@ -114,13 +115,14 @@ Missing localization: Missing Text
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 745ba28ffea7e8be49cd
-Version: webpack 1.0.0-beta2
-Time: 100ms
+Hash: 1ad5b360e07d437790fd
+Version: webpack 1.0.0-beta8
+Time: 107ms
     Asset  Size  Chunks             Chunk Names
 output.js   318       0  [emitted]  main       
-chunk    {0} output.js (main) 64 [rendered]
-    [0] ./example.js 64 {0} [built] [1 warning]
+chunk    {0} output.js (main) 65 [rendered]
+    > main [0] ./example.js
+    [0] ./example.js 65 {0} [built] [1 warning]
 
 WARNING in ./example.js
 Missing localization: Missing Text

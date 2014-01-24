@@ -156,11 +156,12 @@ module.exports = function() {
 
 ```
 Hash: 1853a9528b05335d6ca9
-Version: webpack 1.0.0-beta2
-Time: 56ms
+Version: webpack 1.0.0-beta8
+Time: 60ms
     Asset  Size  Chunks             Chunk Names
 output.js  3252       0  [emitted]  main       
 chunk    {0} output.js (main) 613 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 150 {0} [built]
     [1] ./templates/a.js 82 {0} [built]
         context element ./a.js [4] ./templates ^\.\/.*$
@@ -178,12 +179,13 @@ chunk    {0} output.js (main) 613 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: bbc488cc7f24e3ccbdb2
-Version: webpack 1.0.0-beta2
-Time: 153ms
+Hash: 368d2da3d6d88e7d3822
+Version: webpack 1.0.0-beta8
+Time: 139ms
     Asset  Size  Chunks             Chunk Names
 output.js   850       0  [emitted]  main       
 chunk    {0} output.js (main) 613 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 150 {0} [built]
     [1] ./templates/a.js 82 {0} [built]
         context element ./a.js [4] ./templates ^\.\/.*$

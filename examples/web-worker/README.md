@@ -88,9 +88,9 @@ onmessage = function(event) {
 
 /***/ },
 /* 1 */
-/*!**************************************************************************************!*\
+/*!*********************************************!*\
   !*** (webpack)/~/worker-loader!./worker.js ***!
-  \**************************************************************************************/
+  \*********************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = function() {
@@ -261,26 +261,29 @@ webpackChunk([1],[
 ## Uncompressed
 
 ```
-Hash: 0455ace55f4457d74c88
-Version: webpack 1.0.0-beta2
-Time: 95ms
+Hash: d3a484ec9964172dc379
+Version: webpack 1.0.0-beta8
+Time: 131ms
            Asset  Size  Chunks             Chunk Names
   hash.worker.js  2697          [emitted]             
 1.hash.worker.js  1593          [emitted]             
-       output.js  2367       0  [emitted]  main       
+       output.js  2244       0  [emitted]  main       
 chunk    {0} output.js (main) 302 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 206 {0} [built]
     [1] (webpack)/~/worker-loader!./worker.js 96 {0} [not cacheable] [built]
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
-    Hash: 06665fad656fd443e8fb
-    Version: webpack 1.0.0-beta2
+    Hash: f8be7dd704b535b316bd
+    Version: webpack 1.0.0-beta8
                Asset  Size  Chunks             Chunk Names
       hash.worker.js  2697       0  [emitted]  main       
     1.hash.worker.js  1593       1  [emitted]             
     chunk    {0} hash.worker.js (main) 168 [rendered]
+        > main [0] ./worker.js
         [0] ./worker.js 168 {0} [built]
     chunk    {1} 1.hash.worker.js 463 {0} [rendered]
+        > [0] ./worker.js 3:1-5:3
         [1] ../require.context/templates/a.js 82 {1} [built]
             context element ./a.js [4] ../require.context/templates ^\.\/.*$
             context element ./a [4] ../require.context/templates ^\.\/.*$
@@ -297,14 +300,15 @@ Child worker:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: cc10317de66ca09839df
-Version: webpack 1.0.0-beta2
-Time: 231ms
+Hash: e028e5c3f2a9ee017ccf
+Version: webpack 1.0.0-beta8
+Time: 245ms
            Asset  Size  Chunks             Chunk Names
   hash.worker.js   523          [emitted]             
 1.hash.worker.js   528          [emitted]             
        output.js   418       0  [emitted]  main       
 chunk    {0} output.js (main) 302 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 206 {0} [built]
     [1] (webpack)/~/worker-loader!./worker.js 96 {0} [not cacheable] [built]
         cjs require worker!./worker [0] ./example.js 1:13-39
@@ -312,14 +316,16 @@ chunk    {0} output.js (main) 302 [rendered]
 WARNING in output.js from UglifyJs
 Side effects in initialization of unused variable templateB [./example.js:5,0]
 Child worker:
-    Hash: 40f28a7999b10ab03960
-    Version: webpack 1.0.0-beta2
+    Hash: 5a60a9d218768e784433
+    Version: webpack 1.0.0-beta8
                Asset  Size  Chunks             Chunk Names
       hash.worker.js   523       0  [emitted]  main       
     1.hash.worker.js   528       1  [emitted]             
     chunk    {0} hash.worker.js (main) 168 [rendered]
+        > main [0] ./worker.js
         [0] ./worker.js 168 {0} [built]
     chunk    {1} 1.hash.worker.js 463 {0} [rendered]
+        > [0] ./worker.js 3:1-5:3
         [1] ../require.context/templates/a.js 82 {1} [built]
             context element ./a.js [4] ../require.context/templates ^\.\/.*$
             context element ./a [4] ../require.context/templates ^\.\/.*$

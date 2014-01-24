@@ -167,7 +167,7 @@ webpackJsonp([0],[
 /***/ function(module, exports, require) {
 
 	var common = require(/*! ./common */ 1);
-	require.e/* require */(1/* duplicate */, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [(require(/*! ./shared */ 2))]; (function(shared) {
+	require.e/* require */(1/* duplicate */, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [require(/*! ./shared */ 2)]; (function(shared) {
 		shared("This is page A");
 	}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 
@@ -221,19 +221,23 @@ webpackJsonp([1],{
 ## Uncompressed
 
 ```
-Hash: ea16bdda04039e7a1bf4
-Version: webpack 1.0.0-beta2
-Time: 57ms
+Hash: 47b86d59381d9838be03
+Version: webpack 1.0.0-beta8
+Time: 78ms
           Asset  Size  Chunks             Chunk Names
 pageB.bundle.js   318       0  [emitted]  pageB      
-pageA.bundle.js   427       0  [emitted]  pageA      
+pageA.bundle.js   425       0  [emitted]  pageA      
      1.chunk.js   262       1  [emitted]             
      commons.js  3532       2  [emitted]  commons.js 
 chunk    {0} pageB.bundle.js (pageB) 152 {2} [rendered]
+    > pageB [0] ./pageB.js
     [0] ./pageB.js 152 {0} [built]
 chunk    {0} pageA.bundle.js (pageA) 108 {2} [rendered]
+    > pageA [0] ./pageA.js
     [0] ./pageA.js 108 {0} [built]
 chunk    {1} 1.chunk.js 91 {0} {0} [rendered]
+    > [0] ./pageB.js 2:0-5:2
+    > duplicate [0] ./pageA.js 2:0-4:2
     [2] ./shared.js 91 {1} [built]
         amd require ./shared [0] ./pageA.js 2:0-4:2
         require.ensure item ./shared [0] ./pageB.js 2:0-5:2
@@ -248,19 +252,23 @@ chunk    {2} commons.js (commons.js) 26 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: f4140bf7c7d02fa3ee79
-Version: webpack 1.0.0-beta2
-Time: 182ms
+Hash: 1ac09da9c3c76f747c8b
+Version: webpack 1.0.0-beta8
+Time: 184ms
           Asset  Size  Chunks             Chunk Names
 pageB.bundle.js    93       0  [emitted]  pageB      
 pageA.bundle.js   124       0  [emitted]  pageA      
      1.chunk.js    82       1  [emitted]             
      commons.js   700       2  [emitted]  commons.js 
 chunk    {0} pageB.bundle.js (pageB) 152 {2} [rendered]
+    > pageB [0] ./pageB.js
     [0] ./pageB.js 152 {0} [built]
 chunk    {0} pageA.bundle.js (pageA) 108 {2} [rendered]
+    > pageA [0] ./pageA.js
     [0] ./pageA.js 108 {0} [built]
 chunk    {1} 1.chunk.js 91 {0} {0} [rendered]
+    > [0] ./pageB.js 2:0-5:2
+    > duplicate [0] ./pageA.js 2:0-4:2
     [2] ./shared.js 91 {1} [built]
         amd require ./shared [0] ./pageA.js 2:0-4:2
         require.ensure item ./shared [0] ./pageB.js 2:0-5:2

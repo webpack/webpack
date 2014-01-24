@@ -204,14 +204,16 @@ webpackJsonp([1],[
 
 ```
 Hash: 7548e3b0166c8c95d587
-Version: webpack 1.0.0-beta2
-Time: 60ms
+Version: webpack 1.0.0-beta8
+Time: 83ms
       Asset  Size  Chunks             Chunk Names
   output.js  3796       0  [emitted]  main       
 1.output.js  1593       1  [emitted]             
 chunk    {0} output.js (main) 276 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 276 {0} [built]
 chunk    {1} 1.output.js 463 {0} [rendered]
+    > [0] ./example.js 2:1-4:3
     [1] ../require.context/templates/a.js 82 {1} [built]
         context element ./a.js [4] ../require.context/templates ^\.\/.*$
         context element ./a [4] ../require.context/templates ^\.\/.*$
@@ -228,15 +230,17 @@ chunk    {1} 1.output.js 463 {0} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: bd06e9867e3c80378c7c
-Version: webpack 1.0.0-beta2
-Time: 193ms
+Hash: 8f939da6680c76bca24d
+Version: webpack 1.0.0-beta8
+Time: 184ms
       Asset  Size  Chunks             Chunk Names
   output.js   799       0  [emitted]  main       
 1.output.js   528       1  [emitted]             
 chunk    {0} output.js (main) 276 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 276 {0} [built]
 chunk    {1} 1.output.js 463 {0} [rendered]
+    > [0] ./example.js 2:1-4:3
     [1] ../require.context/templates/a.js 82 {1} [built]
         context element ./a.js [4] ../require.context/templates ^\.\/.*$
         context element ./a [4] ../require.context/templates ^\.\/.*$

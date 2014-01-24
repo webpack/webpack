@@ -178,9 +178,9 @@ require(
 
 	// AMD-style requires (with all webpack features)
 	require.e/* require */(1, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [
-		(require(/*! ./commonjs */ 2)), (require(/*! ./amd */ 1)), (require(/*! ./labeled */ 3)),
+		require(/*! ./commonjs */ 2), require(/*! ./amd */ 1), require(/*! ./labeled */ 3),
 		require(/*! ../require.context/templates */ 4)("./"+amd1+".js"),
-		Math.random() < 0.5 ? (require(/*! ./commonjs */ 2)) : (require(/*! ./amd */ 1))]; (function(commonjs2, amd2, labeled2, template, randModule) {
+		Math.random() < 0.5 ? require(/*! ./commonjs */ 2) : require(/*! ./amd */ 1)]; (function(commonjs2, amd2, labeled2, template, randModule) {
 			// Do something with it...
 		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 
@@ -197,7 +197,7 @@ require(
 /***/ function(module, exports, require) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Format
-	(__WEBPACK_AMD_DEFINE_ARRAY__ = [(require(/*! ./commonjs */ 2)), (require(/*! ./labeled */ 3))], __WEBPACK_AMD_DEFINE_RESULT__ = (function(commonjs1, labeled1) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [require(/*! ./commonjs */ 2), require(/*! ./labeled */ 3)], __WEBPACK_AMD_DEFINE_RESULT__ = (function(commonjs1, labeled1) {
 			// but you can use CommonJs-style requires:
 			var commonjs2 = require(/*! ./commonjs */ 2);
 			var labeled2 = require(/*! ./labeled */ 3);
@@ -216,10 +216,10 @@ require(
 	module.exports = 123;
 
 	// but you can use amd style requires
-	require.e/* require */(0/* empty */, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [(require(/*! ./amd */ 1)), (require(/*! ./labeled */ 3))]; (function(amd1, labeled1) {
+	!/* require */(/* empty */function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [require(/*! ./amd */ 1), require(/*! ./labeled */ 3)]; (function(amd1, labeled1) {
 			var amd2 = require(/*! ./amd */ 1);
 			var labeled2 = require(/*! ./labeled */ 3);
-		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
+		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}());
 
 /***/ },
 /* 3 */
@@ -232,10 +232,10 @@ require(
 	exports: var a = exports["a"] = 123;
 
 	// but you can use amd and commonjs style requires
-	require.e/* require */(0/* empty */, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [(require(/*! ./commonjs */ 2)), (require(/*! ./amd */ 1))]; (function(amd1) {
+	!/* require */(/* empty */function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [require(/*! ./commonjs */ 2), require(/*! ./amd */ 1)]; (function(amd1) {
 			var commonjs2 = require(/*! ./commonjs */ 2);
 			var amd2 = require(/*! ./amd */ 1);
-		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
+		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}());
 
 /***/ }
 /******/ ])
@@ -315,13 +315,14 @@ webpackJsonp([1],[
 ## Uncompressed
 
 ```
-Hash: e3df05377e62e3941dc6
-Version: webpack 1.0.0-beta2
-Time: 74ms
+Hash: f9a4e0a95f5952cff0ba
+Version: webpack 1.0.0-beta8
+Time: 91ms
       Asset  Size  Chunks             Chunk Names
-  output.js  6291       0  [emitted]  main       
+  output.js  6238       0  [emitted]  main       
 1.output.js  1596       1  [emitted]             
 chunk    {0} output.js (main) 1395 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 613 {0} [built]
     [1] ./amd.js 309 {0} [built]
         cjs require ./amd [0] ./example.js 3:11-27
@@ -348,6 +349,7 @@ chunk    {0} output.js (main) 1395 [rendered]
         amd require ./labeled [2] ./commonjs.js 5:0-11:1
         cjs require ./labeled [2] ./commonjs.js 9:17-37
 chunk    {1} 1.output.js 439 {0} [rendered]
+    > [0] ./example.js 7:0-14:1
     [4] ../require.context/templates ^\.\/.*\.js$ 193 {1} [built]
         amd require context ../require.context/templates [0] ./example.js 7:0-14:1
     [5] ../require.context/templates/a.js 82 {1} [built]
@@ -361,13 +363,14 @@ chunk    {1} 1.output.js 439 {0} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 597a02ce4256a8501080
-Version: webpack 1.0.0-beta2
-Time: 250ms
+Hash: fc7dcc7368e6ec3feb58
+Version: webpack 1.0.0-beta8
+Time: 258ms
       Asset  Size  Chunks             Chunk Names
-  output.js  1156       0  [emitted]  main       
+  output.js  1146       0  [emitted]  main       
 1.output.js   507       1  [emitted]             
 chunk    {0} output.js (main) 1395 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 613 {0} [built]
     [1] ./amd.js 309 {0} [built]
         cjs require ./amd [0] ./example.js 3:11-27
@@ -394,6 +397,7 @@ chunk    {0} output.js (main) 1395 [rendered]
         amd require ./labeled [2] ./commonjs.js 5:0-11:1
         cjs require ./labeled [2] ./commonjs.js 9:17-37
 chunk    {1} 1.output.js 439 {0} [rendered]
+    > [0] ./example.js 7:0-14:1
     [4] ../require.context/templates ^\.\/.*\.js$ 193 {1} [built]
         amd require context ../require.context/templates [0] ./example.js 7:0-14:1
     [5] ../require.context/templates/a.js 82 {1} [built]

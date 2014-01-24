@@ -203,12 +203,13 @@ module.exports = {"this is": "z"};
 ## Uncompressed
 
 ```
-Hash: 54e051a0e0c13804de0b
-Version: webpack 1.0.0-beta2
-Time: 61ms
+Hash: 668737aba027e3d941f2
+Version: webpack 1.0.0-beta8
+Time: 78ms
     Asset  Size  Chunks             Chunk Names
 output.js  3468       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 76 {0} [built]
     [1] ./z.js 34 {0} [built]
         cjs require ../z [2] ./a/index.js 4:4-19
@@ -233,12 +234,13 @@ chunk    {0} output.js (main) 528 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 204e4f431d39a53965b8
-Version: webpack 1.0.0-beta2
-Time: 155ms
+Hash: bc390fa076c28e8dc72c
+Version: webpack 1.0.0-beta8
+Time: 172ms
     Asset  Size  Chunks             Chunk Names
 output.js   771       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 76 {0} [built]
     [1] ./z.js 34 {0} [built]
         cjs require ../z [2] ./a/index.js 4:4-19

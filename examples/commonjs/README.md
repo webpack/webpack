@@ -125,12 +125,13 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: fac81313296358cd3ea3
-Version: webpack 1.0.0-beta2
-Time: 51ms
+Hash: 463200a36258bb3ff5b2
+Version: webpack 1.0.0-beta8
+Time: 60ms
     Asset  Size  Chunks             Chunk Names
 output.js  2359       0  [emitted]  main       
 chunk    {0} output.js (main) 329 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 69 {0} [built]
     [1] ./increment.js 98 {0} [built]
         cjs require ./increment [0] ./example.js 1:10-32
@@ -141,12 +142,13 @@ chunk    {0} output.js (main) 329 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 7e4d38095b79a2643c42
-Version: webpack 1.0.0-beta2
-Time: 138ms
+Hash: 434f28b7ad3542e91dda
+Version: webpack 1.0.0-beta8
+Time: 127ms
     Asset  Size  Chunks             Chunk Names
 output.js   466       0  [emitted]  main       
 chunk    {0} output.js (main) 329 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 69 {0} [built]
     [1] ./increment.js 98 {0} [built]
         cjs require ./increment [0] ./example.js 1:10-32

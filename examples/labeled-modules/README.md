@@ -127,11 +127,12 @@ The remaining labels are removed while minimizing.
 
 ```
 Hash: a09dcd87bf9b88c5e137
-Version: webpack 1.0.0-beta2
-Time: 50ms
+Version: webpack 1.0.0-beta8
+Time: 58ms
     Asset  Size  Chunks             Chunk Names
 output.js  2527       0  [emitted]  main       
 chunk    {0} output.js (main) 299 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 55 {0} [built]
     [1] ./increment.js 83 {0} [built]
         labeled require ./increment [0] ./example.js 1:0-23
@@ -142,12 +143,13 @@ chunk    {0} output.js (main) 299 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: c5a0d96368c81b0a0d63
-Version: webpack 1.0.0-beta2
-Time: 136ms
+Hash: 11e5fd17e7fdce2603db
+Version: webpack 1.0.0-beta8
+Time: 126ms
     Asset  Size  Chunks             Chunk Names
 output.js   474       0  [emitted]  main       
 chunk    {0} output.js (main) 299 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 55 {0} [built]
     [1] ./increment.js 83 {0} [built]
         labeled require ./increment [0] ./example.js 1:0-23

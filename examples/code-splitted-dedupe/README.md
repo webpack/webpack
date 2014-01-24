@@ -150,11 +150,11 @@ require(["../dedupe/b"]);
 /***/ function(module, exports, require) {
 
 	// index.js and x.js can be deduplicated
-	require.e/* require */(1, function(require) {[(require(/*! ../dedupe/a */ 2)), (require(/*! bundle?lazy!../dedupe/b */ 8))];});
+	require.e/* require */(1, function(require) {[require(/*! ../dedupe/a */ 2), require(/*! bundle?lazy!../dedupe/b */ 8)];});
 
 	// index.js and x.js cannot be deduplicated
-	require.e/* require */(3, function(require) {[(require(/*! ../dedupe/a */ 2))];});
-	require.e/* require */(2, function(require) {[(require(/*! ../dedupe/b */ 5))];});
+	require.e/* require */(3, function(require) {[require(/*! ../dedupe/a */ 2)];});
+	require.e/* require */(2, function(require) {[require(/*! ../dedupe/b */ 5)];});
 
 
 /***/ }
@@ -199,9 +199,9 @@ webpackJsonp([1,3],[
 /* 6 */,
 /* 7 */,
 /* 8 */
-/*!****************************************************************************************************!*\
+/*!***********************************************************!*\
   !*** (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js ***!
-  \****************************************************************************************************/
+  \***********************************************************/
 /***/ function(module, exports, require) {
 
 	module.exports = function(cb) {
@@ -356,18 +356,20 @@ webpackJsonp([4],[
 ## Uncompressed
 
 ```
-Hash: f2fa1556d8be1365101a
-Version: webpack 1.0.0-beta2
-Time: 91ms
+Hash: 77ef390609ebb4d64a0c
+Version: webpack 1.0.0-beta8
+Time: 100ms
       Asset  Size  Chunks             Chunk Names
-  output.js  5049       0  [emitted]  main       
-1.output.js  1587    1, 3  [emitted]             
+  output.js  5041       0  [emitted]  main       
+1.output.js  1464    1, 3  [emitted]             
 2.output.js   902    2, 4  [emitted]             
 3.output.js   873       3  [emitted]             
 4.output.js   297       4  [emitted]             
 chunk    {0} output.js (main) 197 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 197 {0} [built]
-chunk    {1} 1.output.js 492 {0} [rendered]
+chunk    {1} 1.output.js 464 {0} [rendered]
+    > [0] ./example.js 2:0-51
     [1] ../dedupe/z.js 34 {1} {2} {3} [built]
         cjs require ../z [2] ../dedupe/a/index.js 4:4-19
         cjs require ../z [5] ../dedupe/b/index.js 4:4-19
@@ -378,23 +380,25 @@ chunk    {1} 1.output.js 492 {0} [rendered]
         cjs require ./x [2] ../dedupe/a/index.js 2:4-18
     [4] ../dedupe/a/y.js 49 {1} {3} [built]
         cjs require ./y [2] ../dedupe/a/index.js 3:4-18
-    [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 207 {1} [built]
+    [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 179 {1} [built]
         amd require bundle?lazy!../dedupe/b [0] ./example.js 2:0-51
     [9] template of 2 referencing 1 84 {1} [not cacheable] [built]
         template 1 [2] ../dedupe/a/index.js
         template 1 [5] ../dedupe/b/index.js
 chunk    {2} 2.output.js 201 {0} [rendered]
+    > [0] ./example.js 6:0-24
     [1] ../dedupe/z.js 34 {1} {2} {3} [built]
         cjs require ../z [2] ../dedupe/a/index.js 4:4-19
         cjs require ../z [5] ../dedupe/b/index.js 4:4-19
     [5] ../dedupe/b/index.js 84 {2} {4} [built]
         amd require ../dedupe/b [0] ./example.js 6:0-24
-        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-126
+        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-98
     [6] ../dedupe/b/x.js 34 {2} {4} [built]
         cjs require ./x [5] ../dedupe/b/index.js 2:4-18
     [7] ../dedupe/b/y.js 49 {2} {4} [built]
         cjs require ./y [5] ../dedupe/b/index.js 3:4-18
 chunk    {3} 3.output.js 201 {0} [rendered]
+    > [0] ./example.js 5:0-24
     [1] ../dedupe/z.js 34 {1} {2} {3} [built]
         cjs require ../z [2] ../dedupe/a/index.js 4:4-19
         cjs require ../z [5] ../dedupe/b/index.js 4:4-19
@@ -406,9 +410,10 @@ chunk    {3} 3.output.js 201 {0} [rendered]
     [4] ../dedupe/a/y.js 49 {1} {3} [built]
         cjs require ./y [2] ../dedupe/a/index.js 3:4-18
 chunk    {4} 4.output.js 167 {1} [rendered]
+    > [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 2:1-4:3
     [5] ../dedupe/b/index.js 84 {2} {4} [built]
         amd require ../dedupe/b [0] ./example.js 6:0-24
-        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-126
+        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-98
     [6] ../dedupe/b/x.js 34 {2} {4} [built]
         cjs require ./x [5] ../dedupe/b/index.js 2:4-18
     [7] ../dedupe/b/y.js 49 {2} {4} [built]
@@ -418,9 +423,9 @@ chunk    {4} 4.output.js 167 {1} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: bee74ee0daa14ad3ea21
-Version: webpack 1.0.0-beta2
-Time: 280ms
+Hash: 19041a7eb5dca6ef83d5
+Version: webpack 1.0.0-beta8
+Time: 268ms
       Asset  Size  Chunks             Chunk Names
   output.js  1158       0  [emitted]  main       
 1.output.js   286    1, 3  [emitted]             
@@ -428,8 +433,10 @@ Time: 280ms
 3.output.js   201       3  [emitted]             
 4.output.js    87       4  [emitted]             
 chunk    {0} output.js (main) 197 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 197 {0} [built]
-chunk    {1} 1.output.js 492 {0} [rendered]
+chunk    {1} 1.output.js 464 {0} [rendered]
+    > [0] ./example.js 2:0-51
     [1] ../dedupe/z.js 34 {1} {2} {3} [built]
         cjs require ../z [2] ../dedupe/a/index.js 4:4-19
         cjs require ../z [5] ../dedupe/b/index.js 4:4-19
@@ -440,23 +447,25 @@ chunk    {1} 1.output.js 492 {0} [rendered]
         cjs require ./x [2] ../dedupe/a/index.js 2:4-18
     [4] ../dedupe/a/y.js 49 {1} {3} [built]
         cjs require ./y [2] ../dedupe/a/index.js 3:4-18
-    [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 207 {1} [built]
+    [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 179 {1} [built]
         amd require bundle?lazy!../dedupe/b [0] ./example.js 2:0-51
     [9] template of 2 referencing 1 84 {1} [not cacheable] [built]
         template 1 [2] ../dedupe/a/index.js
         template 1 [5] ../dedupe/b/index.js
 chunk    {2} 2.output.js 201 {0} [rendered]
+    > [0] ./example.js 6:0-24
     [1] ../dedupe/z.js 34 {1} {2} {3} [built]
         cjs require ../z [2] ../dedupe/a/index.js 4:4-19
         cjs require ../z [5] ../dedupe/b/index.js 4:4-19
     [5] ../dedupe/b/index.js 84 {2} {4} [built]
         amd require ../dedupe/b [0] ./example.js 6:0-24
-        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-126
+        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-98
     [6] ../dedupe/b/x.js 34 {2} {4} [built]
         cjs require ./x [5] ../dedupe/b/index.js 2:4-18
     [7] ../dedupe/b/y.js 49 {2} {4} [built]
         cjs require ./y [5] ../dedupe/b/index.js 3:4-18
 chunk    {3} 3.output.js 201 {0} [rendered]
+    > [0] ./example.js 5:0-24
     [1] ../dedupe/z.js 34 {1} {2} {3} [built]
         cjs require ../z [2] ../dedupe/a/index.js 4:4-19
         cjs require ../z [5] ../dedupe/b/index.js 4:4-19
@@ -468,9 +477,10 @@ chunk    {3} 3.output.js 201 {0} [rendered]
     [4] ../dedupe/a/y.js 49 {1} {3} [built]
         cjs require ./y [2] ../dedupe/a/index.js 3:4-18
 chunk    {4} 4.output.js 167 {1} [rendered]
+    > [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 2:1-4:3
     [5] ../dedupe/b/index.js 84 {2} {4} [built]
         amd require ../dedupe/b [0] ./example.js 6:0-24
-        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-126
+        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-98
     [6] ../dedupe/b/x.js 34 {2} {4} [built]
         cjs require ./x [5] ../dedupe/b/index.js 2:4-18
     [7] ../dedupe/b/y.js 49 {2} {4} [built]

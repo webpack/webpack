@@ -112,15 +112,16 @@ module.exports = "It works";
   \********************/
 /***/ function(module, exports, require) {
 
-	require(/*! bundle!./file.js */ 1)(function(fileJsExports) {
+	require(/*! bundle!./file.js */ 2)(function(fileJsExports) {
 		console.log(fileJsExports);
 	});
 
 /***/ },
-/* 1 */
-/*!************************************************************************************!*\
+/* 1 */,
+/* 2 */
+/*!*******************************************!*\
   !*** (webpack)/~/bundle-loader!./file.js ***!
-  \************************************************************************************/
+  \*******************************************/
 /***/ function(module, exports, require) {
 
 	var cbs = [], 
@@ -130,7 +131,7 @@ module.exports = "It works";
 		else cb(data);
 	}
 	require.e/*nsure*/(1, function(require) {
-		data = require(/*! !./file.js */ 2);
+		data = require(/*! !./file.js */ 1);
 		var callbacks = cbs;
 		cbs = null;
 		for(var i = 0, l = callbacks.length; i < l; i++) {
@@ -145,9 +146,9 @@ module.exports = "It works";
 # js/1.output.js
 
 ``` javascript
-webpackJsonp([1],{
-
-/***/ 2:
+webpackJsonp([1],[
+/* 0 */,
+/* 1 */
 /*!*****************!*\
   !*** ./file.js ***!
   \*****************/
@@ -156,8 +157,7 @@ webpackJsonp([1],{
 	module.exports = "It works";
 
 /***/ }
-
-})
+])
 ```
 
 # Info
@@ -165,35 +165,39 @@ webpackJsonp([1],{
 ## Uncompressed
 
 ```
-Hash: eac1c1b23a01f18cfba1
-Version: webpack 1.0.0-beta2
-Time: 73ms
+Hash: b48eaa219fe67eefd271
+Version: webpack 1.0.0-beta8
+Time: 83ms
       Asset  Size  Chunks             Chunk Names
-  output.js  4228       0  [emitted]  main       
-1.output.js   183       1  [emitted]             
-chunk    {0} output.js (main) 486 [rendered]
+  output.js  4114       0  [emitted]  main       
+1.output.js   189       1  [emitted]             
+chunk    {0} output.js (main) 458 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 88 {0} [built]
-    [1] (webpack)/~/bundle-loader!./file.js 398 {0} [built]
+    [2] (webpack)/~/bundle-loader!./file.js 370 {0} [built]
         cjs require bundle!./file.js [0] ./example.js 1:0-27
 chunk    {1} 1.output.js 28 {0} [rendered]
-    [2] ./file.js 28 {1} [built]
-        cjs require !!.\file.js [1] (webpack)/~/bundle-loader!./file.js 8:8-147
+    > [2] (webpack)/~/bundle-loader!./file.js 7:0-14:2
+    [1] ./file.js 28 {1} [built]
+        cjs require !!.\file.js [2] (webpack)/~/bundle-loader!./file.js 8:8-119
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 6cb25d9ad397f7b09e09
-Version: webpack 1.0.0-beta2
-Time: 184ms
+Hash: 64de800a2a6968acaf66
+Version: webpack 1.0.0-beta8
+Time: 197ms
       Asset  Size  Chunks             Chunk Names
-  output.js   858       0  [emitted]  main       
-1.output.js    56       1  [emitted]             
-chunk    {0} output.js (main) 486 [rendered]
+  output.js   859       0  [emitted]  main       
+1.output.js    55       1  [emitted]             
+chunk    {0} output.js (main) 458 [rendered]
+    > main [0] ./example.js
     [0] ./example.js 88 {0} [built]
-    [1] (webpack)/~/bundle-loader!./file.js 398 {0} [built]
+    [2] (webpack)/~/bundle-loader!./file.js 370 {0} [built]
         cjs require bundle!./file.js [0] ./example.js 1:0-27
 chunk    {1} 1.output.js 28 {0} [rendered]
-    [2] ./file.js 28 {1} [built]
-        cjs require !!.\file.js [1] (webpack)/~/bundle-loader!./file.js 8:8-147
+    > [2] (webpack)/~/bundle-loader!./file.js 7:0-14:2
+    [1] ./file.js 28 {1} [built]
+        cjs require !!.\file.js [2] (webpack)/~/bundle-loader!./file.js 8:8-119
 ```
