@@ -1,6 +1,6 @@
 [![webpack](http://webpack.github.io/assets/logo.png)](http://webpack.github.io)
 
-[![NPM version](https://badge.fury.io/js/webpack.png)](http://badge.fury.io/js/webpack) [![Gitter chat](https://badges.gitter.im/webpack/webpack.png)](https://gitter.im/webpack/webpack)
+[![NPM version](https://badge.fury.io/js/webpack.png)](http://badge.fury.io/js/webpack) [![Gitter chat](https://badges.gitter.im/webpack/webpack.png)](https://gitter.im/webpack/webpack) [![Gittip donate button](http://img.shields.io/gittip/sokra.png)](https://www.gittip.com/sokra/)
 
 [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
 
