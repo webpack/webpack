@@ -134,6 +134,13 @@ Copyright (c) 2012-2014 Tobias Koppers
 MIT (http://www.opensource.org/licenses/mit-license.php)
 
 
+## Sponsor
+
+This is a freetime project. My time investment fluctuates randomly. If you use webpack for a serious task you may want me to invest more time. Or if you make some good revenue you can give some money back. Keep in mind that this project may increase your income. It makes development and applications faster and reduce the required bandwidth.
+
+I'm very thankful for every dollar. If you leave your username or email I may show my thanks by giving you extra support.
+
+[![Donate to sokra](http://img.shields.io/dontate/sokra.png)](http://sokra.github.io/)
 
 
 ## Dependencies
