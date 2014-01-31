@@ -99,6 +99,46 @@ describe("Parser", function() {
 				fgh: ["", "test ttt", "test e"]
 			}
 		],
+		"renaming with var": [
+			function() {
+				var xyz = abc;
+				xyz("test");
+			},
+			{
+				abc: ["test"]
+			}
+		],
+		"renaming with assignment": [
+			function() {
+				var xyz;
+				xyz = abc;
+				xyz("test");
+			},
+			{
+				abc: ["test"]
+			}
+		],
+		"renaming with IIFE": [
+			function() {
+				!function(xyz) {
+					xyz("test");
+				}(abc);
+			},
+			{
+				abc: ["test"]
+			}
+		],
+		"renaming with IIFE (called)": [
+			function() {
+				!function(xyz) {
+					xyz("test");
+				}.call(fgh, abc);
+			},
+			{
+				abc: ["test"],
+				fgh: [""]
+			}
+		],
 	};
 
 	Object.keys(testCases).forEach(function(name) {
