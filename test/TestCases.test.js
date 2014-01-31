@@ -51,7 +51,7 @@ describe("TestCases", function() {
 				describe(category.name, function() {
 					category.tests.forEach(function(testName) {
 						var suite = describe(testName, function() {});
-						it("should compile " + testName, function(done) {
+						it(testName + " should compile", function(done) {
 							var testDirectory = path.join(casesPath, category.name, testName);
 							var outputDirectory = path.join(__dirname, "js", config.name, category.name, testName);
 							var options = {
