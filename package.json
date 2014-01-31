@@ -23,8 +23,8 @@
 		}
 	],
 	"devDependencies": {
-		"mocha": "1.15.x",
-		"should": "2.1.x",
+		"mocha": "1.17.x",
+		"should": "3.1.x",
 		"vm-browserify": "0.0.x",
 		"express": "3.4.x",
 		"webpack-dev-middleware": "1.x",
