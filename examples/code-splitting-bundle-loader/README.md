@@ -17,6 +17,8 @@ module.exports = "It works";
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// shortcut for better minimizing
+/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -32,7 +34,7 @@ module.exports = "It works";
 /******/ 	function require(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
+/******/ 			return installedModules[moduleId][exports];
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -42,13 +44,13 @@ module.exports = "It works";
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
+/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		return module[exports];
 /******/ 	}
 /******/ 	
 /******/ 	// This file contains only the entry chunk.
@@ -166,10 +168,10 @@ webpackJsonp([1],[
 
 ```
 Hash: b48eaa219fe67eefd271
-Version: webpack 1.0.0-beta8
-Time: 83ms
+Version: webpack 1.0.0-rc1
+Time: 86ms
       Asset  Size  Chunks             Chunk Names
-  output.js  4114       0  [emitted]  main       
+  output.js  4197       0  [emitted]  main       
 1.output.js   189       1  [emitted]             
 chunk    {0} output.js (main) 458 [rendered]
     > main [0] ./example.js
@@ -186,10 +188,10 @@ chunk    {1} 1.output.js 28 {0} [rendered]
 
 ```
 Hash: 64de800a2a6968acaf66
-Version: webpack 1.0.0-beta8
-Time: 197ms
+Version: webpack 1.0.0-rc1
+Time: 174ms
       Asset  Size  Chunks             Chunk Names
-  output.js   859       0  [emitted]  main       
+  output.js   851       0  [emitted]  main       
 1.output.js    55       1  [emitted]             
 chunk    {0} output.js (main) 458 [rendered]
     > main [0] ./example.js

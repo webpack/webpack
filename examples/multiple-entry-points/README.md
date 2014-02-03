@@ -54,6 +54,8 @@ module.exports = {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// shortcut for better minimizing
+/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -69,7 +71,7 @@ module.exports = {
 /******/ 	function require(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
+/******/ 			return installedModules[moduleId][exports];
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -79,13 +81,13 @@ module.exports = {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
+/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		return module[exports];
 /******/ 	}
 /******/ 	
 /******/ 	// This file contains only the entry chunk.
@@ -135,7 +137,7 @@ module.exports = {
 /******/ 		}
 /******/ 		while(callbacks.length)
 /******/ 			callbacks.shift().call(null, require);
-/******/ 		if(0 in moreModules) {
+/******/ 		if(moreModules[0]) {
 /******/ 			installedModules[0] = 0;
 /******/ 			require(0);
 /******/ 		}
@@ -222,13 +224,13 @@ webpackJsonp([1],{
 
 ```
 Hash: 47b86d59381d9838be03
-Version: webpack 1.0.0-beta8
-Time: 78ms
+Version: webpack 1.0.0-rc1
+Time: 68ms
           Asset  Size  Chunks             Chunk Names
 pageB.bundle.js   318       0  [emitted]  pageB      
 pageA.bundle.js   425       0  [emitted]  pageA      
      1.chunk.js   262       1  [emitted]             
-     commons.js  3532       2  [emitted]  commons.js 
+     commons.js  3613       2  [emitted]  commons.js 
 chunk    {0} pageB.bundle.js (pageB) 152 {2} [rendered]
     > pageB [0] ./pageB.js
     [0] ./pageB.js 152 {0} [built]
@@ -253,13 +255,13 @@ chunk    {2} commons.js (commons.js) 26 [rendered]
 
 ```
 Hash: 1ac09da9c3c76f747c8b
-Version: webpack 1.0.0-beta8
-Time: 184ms
+Version: webpack 1.0.0-rc1
+Time: 167ms
           Asset  Size  Chunks             Chunk Names
 pageB.bundle.js    93       0  [emitted]  pageB      
 pageA.bundle.js   124       0  [emitted]  pageA      
      1.chunk.js    82       1  [emitted]             
-     commons.js   700       2  [emitted]  commons.js 
+     commons.js   690       2  [emitted]  commons.js 
 chunk    {0} pageB.bundle.js (pageB) 152 {2} [rendered]
     > pageB [0] ./pageB.js
     [0] ./pageB.js 152 {0} [built]

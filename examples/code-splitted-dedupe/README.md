@@ -15,6 +15,8 @@ require(["../dedupe/b"]);
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// shortcut for better minimizing
+/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -30,7 +32,7 @@ require(["../dedupe/b"]);
 /******/ 	function require(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
+/******/ 			return installedModules[moduleId][exports];
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -40,13 +42,13 @@ require(["../dedupe/b"]);
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
+/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		return module[exports];
 /******/ 	}
 /******/ 	
 /******/ 	// This file contains only the entry chunk.
@@ -357,10 +359,10 @@ webpackJsonp([4],[
 
 ```
 Hash: 77ef390609ebb4d64a0c
-Version: webpack 1.0.0-beta8
-Time: 100ms
+Version: webpack 1.0.0-rc1
+Time: 102ms
       Asset  Size  Chunks             Chunk Names
-  output.js  5041       0  [emitted]  main       
+  output.js  5124       0  [emitted]  main       
 1.output.js  1464    1, 3  [emitted]             
 2.output.js   902    2, 4  [emitted]             
 3.output.js   873       3  [emitted]             
@@ -424,10 +426,10 @@ chunk    {4} 4.output.js 167 {1} [rendered]
 
 ```
 Hash: 19041a7eb5dca6ef83d5
-Version: webpack 1.0.0-beta8
-Time: 268ms
+Version: webpack 1.0.0-rc1
+Time: 245ms
       Asset  Size  Chunks             Chunk Names
-  output.js  1158       0  [emitted]  main       
+  output.js  1150       0  [emitted]  main       
 1.output.js   286    1, 3  [emitted]             
 2.output.js   206    2, 4  [emitted]             
 3.output.js   201       3  [emitted]             

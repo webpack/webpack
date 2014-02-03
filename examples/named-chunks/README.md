@@ -29,6 +29,8 @@ require.ensure(["b"], function(require) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// shortcut for better minimizing
+/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -44,7 +46,7 @@ require.ensure(["b"], function(require) {
 /******/ 	function require(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
+/******/ 			return installedModules[moduleId][exports];
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -54,13 +56,13 @@ require.ensure(["b"], function(require) {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
+/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		return module[exports];
 /******/ 	}
 /******/ 	
 /******/ 	// This file contains only the entry chunk.
@@ -229,10 +231,10 @@ webpackJsonp([2],[
 
 ```
 Hash: d6659e1367a79bf5a8ba
-Version: webpack 1.0.0-beta8
-Time: 79ms
+Version: webpack 1.0.0-rc1
+Time: 71ms
           Asset  Size  Chunks             Chunk Names 
-      output.js  4161       0  [emitted]  main        
+      output.js  4244       0  [emitted]  main        
     1.output.js   460    1, 2  [emitted]  my own chunk
 my own chunk.js   460    1, 2  [emitted]  my own chunk
     2.output.js   309       2  [emitted]              
@@ -269,10 +271,10 @@ chunk    {2} 2.output.js 22 {0} [rendered]
 
 ```
 Hash: 09fb39f6bd4bb14e4d65
-Version: webpack 1.0.0-beta8
-Time: 185ms
+Version: webpack 1.0.0-rc1
+Time: 174ms
           Asset  Size  Chunks             Chunk Names 
-      output.js   796       0  [emitted]  main        
+      output.js   788       0  [emitted]  main        
     1.output.js    63    1, 2  [emitted]  my own chunk
 my own chunk.js    63    1, 2  [emitted]  my own chunk
     2.output.js    47       2  [emitted]              

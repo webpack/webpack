@@ -26,6 +26,8 @@ module.exports = function() {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// shortcut for better minimizing
+/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -34,7 +36,7 @@ module.exports = function() {
 /******/ 	function require(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
+/******/ 			return installedModules[moduleId][exports];
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -44,19 +46,15 @@ module.exports = function() {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
+/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		return module[exports];
 /******/ 	}
 /******/ 	
-/******/ 	// The bundle contains no chunks. A empty chunk loading function.
-/******/ 	require.e = function requireEnsure(_, callback) {
-/******/ 		callback.call(null, this);
-/******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	require.modules = modules;
@@ -156,10 +154,10 @@ module.exports = function() {
 
 ```
 Hash: 1853a9528b05335d6ca9
-Version: webpack 1.0.0-beta8
-Time: 60ms
+Version: webpack 1.0.0-rc1
+Time: 58ms
     Asset  Size  Chunks             Chunk Names
-output.js  3252       0  [emitted]  main       
+output.js  3148       0  [emitted]  main       
 chunk    {0} output.js (main) 613 [rendered]
     > main [0] ./example.js
     [0] ./example.js 150 {0} [built]
@@ -180,10 +178,10 @@ chunk    {0} output.js (main) 613 [rendered]
 
 ```
 Hash: 368d2da3d6d88e7d3822
-Version: webpack 1.0.0-beta8
-Time: 139ms
+Version: webpack 1.0.0-rc1
+Time: 143ms
     Asset  Size  Chunks             Chunk Names
-output.js   850       0  [emitted]  main       
+output.js   805       0  [emitted]  main       
 chunk    {0} output.js (main) 613 [rendered]
     > main [0] ./example.js
     [0] ./example.js 150 {0} [built]

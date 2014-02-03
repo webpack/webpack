@@ -26,6 +26,8 @@ onmessage = function(event) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// shortcut for better minimizing
+/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -34,7 +36,7 @@ onmessage = function(event) {
 /******/ 	function require(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
+/******/ 			return installedModules[moduleId][exports];
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -44,19 +46,15 @@ onmessage = function(event) {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
+/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		return module[exports];
 /******/ 	}
 /******/ 	
-/******/ 	// The bundle contains no chunks. A empty chunk loading function.
-/******/ 	require.e = function requireEnsure(_, callback) {
-/******/ 		callback.call(null, this);
-/******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	require.modules = modules;
@@ -262,12 +260,12 @@ webpackChunk([1],[
 
 ```
 Hash: d3a484ec9964172dc379
-Version: webpack 1.0.0-beta8
-Time: 131ms
+Version: webpack 1.0.0-rc1
+Time: 114ms
            Asset  Size  Chunks             Chunk Names
   hash.worker.js  2697          [emitted]             
 1.hash.worker.js  1593          [emitted]             
-       output.js  2244       0  [emitted]  main       
+       output.js  2140       0  [emitted]  main       
 chunk    {0} output.js (main) 302 [rendered]
     > main [0] ./example.js
     [0] ./example.js 206 {0} [built]
@@ -275,7 +273,7 @@ chunk    {0} output.js (main) 302 [rendered]
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
     Hash: f8be7dd704b535b316bd
-    Version: webpack 1.0.0-beta8
+    Version: webpack 1.0.0-rc1
                Asset  Size  Chunks             Chunk Names
       hash.worker.js  2697       0  [emitted]  main       
     1.hash.worker.js  1593       1  [emitted]             
@@ -301,12 +299,12 @@ Child worker:
 
 ```
 Hash: e028e5c3f2a9ee017ccf
-Version: webpack 1.0.0-beta8
-Time: 245ms
+Version: webpack 1.0.0-rc1
+Time: 225ms
            Asset  Size  Chunks             Chunk Names
   hash.worker.js   523          [emitted]             
 1.hash.worker.js   528          [emitted]             
-       output.js   418       0  [emitted]  main       
+       output.js   373       0  [emitted]  main       
 chunk    {0} output.js (main) 302 [rendered]
     > main [0] ./example.js
     [0] ./example.js 206 {0} [built]
@@ -317,7 +315,7 @@ WARNING in output.js from UglifyJs
 Side effects in initialization of unused variable templateB [./example.js:5,0]
 Child worker:
     Hash: 5a60a9d218768e784433
-    Version: webpack 1.0.0-beta8
+    Version: webpack 1.0.0-rc1
                Asset  Size  Chunks             Chunk Names
       hash.worker.js   523       0  [emitted]  main       
     1.hash.worker.js   528       1  [emitted]             
