@@ -58,8 +58,27 @@ describe("Errors", function() {
 			errors.length.should.be.eql(0);
 			warnings.length.should.be.eql(1);
 			var lines = warnings[0].split("\n");
-			lines[0].should.match(/require.extensions.js/);
+			lines[0].should.match(/require.extensions\.js/);
 			lines[1].should.match(/require.extensions is not supported by webpack/);
+			done();
+		});
+	});
+	it("should throw an error if you try to require an entry point", function(done) {
+		getErrors({
+			entry: {
+				a: "./require-entry-point",
+				b: "./entry-point",
+				c: ["./entry-point2"]
+			}
+		}, function(errors, warnings) {
+			errors.length.should.be.eql(2);
+			warnings.length.should.be.eql(0);
+			var lines = errors[0].split("\n");
+			lines[0].should.match(/require-entry-point\.js/);
+			lines[1].should.match(/a dependency to an entry point is not allowed/);
+			lines = errors[1].split("\n");
+			lines[0].should.match(/require-entry-point\.js/);
+			lines[1].should.match(/a dependency to an entry point is not allowed/);
 			done();
 		});
 	});

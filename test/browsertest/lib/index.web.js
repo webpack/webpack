@@ -87,7 +87,6 @@ describe("main", function() {
 
 		it("should polyfill process and module", function(done) {
 			module.id.should.have.type("number");
-			module.id.should.be.eql(require.resolve("./index.web.js"));
 			require.ensure([], function(require) {
 				test(Array.isArray(process.argv), "process.argv should be an array");
 				process.nextTick(function() {
