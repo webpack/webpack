@@ -17,8 +17,8 @@ require(["./common"], function(common) {
 # pageC.js
 
 ``` javascript
-require(["./common"], function(common) {
-	common(require("./b"));
+require(["./a"], function(a) {
+	console.log(a + require("./b"));
 });
 ```
 
@@ -57,8 +57,8 @@ module.exports = {
 
 ```
 Hash: 07a5b689b878ca0906e9
-Version: webpack 1.0.0-rc1
-Time: 88ms
+Version: webpack 1.0.0-rc3
+Time: 81ms
           Asset  Size  Chunks             Chunk Names
 pageB.bundle.js  3963       0  [emitted]  pageB      
 pageA.bundle.js  3932       0  [emitted]  pageA      
@@ -100,8 +100,8 @@ chunk    {2} 2.chunk.js 42 {0} [rendered]
 
 ```
 Hash: 384afad3b82b7d3b3f0d
-Version: webpack 1.0.0-rc1
-Time: 259ms
+Version: webpack 1.0.0-rc3
+Time: 260ms
           Asset  Size  Chunks             Chunk Names
 pageB.bundle.js   764       0  [emitted]  pageB      
 pageA.bundle.js   763       0  [emitted]  pageA      

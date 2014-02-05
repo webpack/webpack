@@ -13,7 +13,7 @@
 # pageC.js
 
 ``` javascript
-{{pageB.js}}
+{{pageC.js}}
 ```
 
 # common.js
