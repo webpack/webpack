@@ -11,16 +11,16 @@
 {{js/output.js}}
 ```
 
-# js/1.output.js and js/my own chunk.js
+# js/0.output.js
+
+``` javascript
+{{js/0.output.js}}
+```
+
+# js/1.output.js
 
 ``` javascript
 {{js/1.output.js}}
-```
-
-# js/2.output.js
-
-``` javascript
-{{js/2.output.js}}
 ```
 
 # Info

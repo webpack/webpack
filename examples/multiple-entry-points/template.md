@@ -40,10 +40,10 @@
 {{js/pageB.bundle.js}}
 ```
 
-# js/1.chunk.js
+# js/0.chunk.js
 
 ``` javascript
-{{js/1.chunk.js}}
+{{js/0.chunk.js}}
 ```
 
 # Info
