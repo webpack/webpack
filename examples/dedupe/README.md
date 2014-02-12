@@ -202,8 +202,8 @@ module.exports = {"this is": "z"};
 
 ```
 Hash: 668737aba027e3d941f2
-Version: webpack 1.0.0-rc1
-Time: 76ms
+Version: webpack 1.0.0-rc5
+Time: 68ms
     Asset  Size  Chunks             Chunk Names
 output.js  3364       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]
@@ -232,9 +232,9 @@ chunk    {0} output.js (main) 528 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: bc390fa076c28e8dc72c
-Version: webpack 1.0.0-rc1
-Time: 152ms
+Hash: b0c93259c25f01cc85eb
+Version: webpack 1.0.0-rc5
+Time: 157ms
     Asset  Size  Chunks             Chunk Names
 output.js   726       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]

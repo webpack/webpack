@@ -134,8 +134,8 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: 547826c0f7b5903a42b6
-Version: webpack 1.0.0-rc1
-Time: 77ms
+Version: webpack 1.0.0-rc5
+Time: 78ms
     Asset  Size  Chunks             Chunk Names
 output.js  2309       0  [emitted]  main       
 chunk    {0} output.js (main) 282 [rendered]
@@ -151,9 +151,9 @@ chunk    {0} output.js (main) 282 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 2c75b96c30dd80131187
-Version: webpack 1.0.0-rc1
-Time: 124ms
+Hash: 7c660ac3e0efcdac24e2
+Version: webpack 1.0.0-rc5
+Time: 149ms
     Asset  Size  Chunks             Chunk Names
 output.js   354       0  [emitted]  main       
 chunk    {0} output.js (main) 282 [rendered]

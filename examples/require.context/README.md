@@ -154,8 +154,8 @@ module.exports = function() {
 
 ```
 Hash: 1853a9528b05335d6ca9
-Version: webpack 1.0.0-rc1
-Time: 58ms
+Version: webpack 1.0.0-rc5
+Time: 60ms
     Asset  Size  Chunks             Chunk Names
 output.js  3148       0  [emitted]  main       
 chunk    {0} output.js (main) 613 [rendered]
@@ -177,9 +177,9 @@ chunk    {0} output.js (main) 613 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 368d2da3d6d88e7d3822
-Version: webpack 1.0.0-rc1
-Time: 143ms
+Hash: bbc488cc7f24e3ccbdb2
+Version: webpack 1.0.0-rc5
+Time: 162ms
     Asset  Size  Chunks             Chunk Names
 output.js   805       0  [emitted]  main       
 chunk    {0} output.js (main) 613 [rendered]

@@ -64,7 +64,7 @@ module.exports = {
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
-/******/ 		2:0
+/******/ 		1:0
 /******/ 	};
 /******/ 	
 /******/ 	// The require function
@@ -161,7 +161,7 @@ module.exports = {
 # js/pageA.bundle.js
 
 ``` javascript
-webpackJsonp([0],[
+webpackJsonp([3],[
 /* 0 */
 /*!******************!*\
   !*** ./pageA.js ***!
@@ -169,7 +169,7 @@ webpackJsonp([0],[
 /***/ function(module, exports, require) {
 
 	var common = require(/*! ./common */ 1);
-	require.e/* require */(1/* duplicate */, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [require(/*! ./shared */ 2)]; (function(shared) {
+	require.e/* require */(0/* duplicate */, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [require(/*! ./shared */ 2)]; (function(shared) {
 		shared("This is page A");
 	}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 
@@ -180,7 +180,7 @@ webpackJsonp([0],[
 # js/pageB.bundle.js
 
 ``` javascript
-webpackJsonp([0],[
+webpackJsonp([2],[
 /* 0 */
 /*!******************!*\
   !*** ./pageB.js ***!
@@ -188,7 +188,7 @@ webpackJsonp([0],[
 /***/ function(module, exports, require) {
 
 	var common = require(/*! ./common */ 1);
-	require.e/*nsure*/(1, function(require) {
+	require.e/*nsure*/(0, function(require) {
 		var shared = require(/*! ./shared */ 2);
 		shared("This is page B");
 	});
@@ -197,10 +197,10 @@ webpackJsonp([0],[
 ])
 ```
 
-# js/1.chunk.js
+# js/0.chunk.js
 
 ``` javascript
-webpackJsonp([1],{
+webpackJsonp([0],{
 
 /***/ 2:
 /*!*******************!*\
@@ -223,70 +223,70 @@ webpackJsonp([1],{
 ## Uncompressed
 
 ```
-Hash: 47b86d59381d9838be03
-Version: webpack 1.0.0-rc1
-Time: 68ms
+Hash: 790c5174bb64d68297d6
+Version: webpack 1.0.0-rc5
+Time: 62ms
           Asset  Size  Chunks             Chunk Names
-pageB.bundle.js   318       0  [emitted]  pageB      
-pageA.bundle.js   425       0  [emitted]  pageA      
-     1.chunk.js   262       1  [emitted]             
-     commons.js  3613       2  [emitted]  commons.js 
-chunk    {0} pageB.bundle.js (pageB) 152 {2} [rendered]
-    > pageB [0] ./pageB.js
-    [0] ./pageB.js 152 {0} [built]
-chunk    {0} pageA.bundle.js (pageA) 108 {2} [rendered]
-    > pageA [0] ./pageA.js
-    [0] ./pageA.js 108 {0} [built]
-chunk    {1} 1.chunk.js 91 {0} {0} [rendered]
+     0.chunk.js   262       0  [emitted]             
+     commons.js  3613       1  [emitted]  commons.js 
+pageB.bundle.js   318       2  [emitted]  pageB      
+pageA.bundle.js   425       3  [emitted]  pageA      
+chunk    {0} 0.chunk.js 91 {2} {3} [rendered]
     > [0] ./pageB.js 2:0-5:2
     > duplicate [0] ./pageA.js 2:0-4:2
-    [2] ./shared.js 91 {1} [built]
+    [2] ./shared.js 91 {0} [built]
         amd require ./shared [0] ./pageA.js 2:0-4:2
         require.ensure item ./shared [0] ./pageB.js 2:0-5:2
         cjs require ./shared [0] ./pageB.js 3:14-33
-chunk    {2} commons.js (commons.js) 26 [rendered]
-    [1] ./common.js 26 {2} [built]
+chunk    {1} commons.js (commons.js) 26 [rendered]
+    [1] ./common.js 26 {1} [built]
         cjs require ./common [0] ./pageA.js 1:13-32
         cjs require ./common [0] ./pageB.js 1:13-32
         cjs require ./common [2] ./shared.js 1:13-32
+chunk    {2} pageB.bundle.js (pageB) 152 {1} [rendered]
+    > pageB [0] ./pageB.js
+    [0] ./pageB.js 152 {2} [built]
+chunk    {3} pageA.bundle.js (pageA) 108 {1} [rendered]
+    > pageA [0] ./pageA.js
+    [0] ./pageA.js 108 {3} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 1ac09da9c3c76f747c8b
-Version: webpack 1.0.0-rc1
-Time: 167ms
+Hash: 09f7a1e6c9a68dfb072e
+Version: webpack 1.0.0-rc5
+Time: 196ms
           Asset  Size  Chunks             Chunk Names
-pageB.bundle.js    93       0  [emitted]  pageB      
-pageA.bundle.js   124       0  [emitted]  pageA      
-     1.chunk.js    82       1  [emitted]             
-     commons.js   690       2  [emitted]  commons.js 
-chunk    {0} pageB.bundle.js (pageB) 152 {2} [rendered]
-    > pageB [0] ./pageB.js
-    [0] ./pageB.js 152 {0} [built]
-chunk    {0} pageA.bundle.js (pageA) 108 {2} [rendered]
-    > pageA [0] ./pageA.js
-    [0] ./pageA.js 108 {0} [built]
-chunk    {1} 1.chunk.js 91 {0} {0} [rendered]
+     0.chunk.js    82       0  [emitted]             
+     commons.js   690       1  [emitted]  commons.js 
+pageB.bundle.js    93       2  [emitted]  pageB      
+pageA.bundle.js   124       3  [emitted]  pageA      
+chunk    {0} 0.chunk.js 91 {2} {3} [rendered]
     > [0] ./pageB.js 2:0-5:2
     > duplicate [0] ./pageA.js 2:0-4:2
-    [2] ./shared.js 91 {1} [built]
+    [2] ./shared.js 91 {0} [built]
         amd require ./shared [0] ./pageA.js 2:0-4:2
         require.ensure item ./shared [0] ./pageB.js 2:0-5:2
         cjs require ./shared [0] ./pageB.js 3:14-33
-chunk    {2} commons.js (commons.js) 26 [rendered]
-    [1] ./common.js 26 {2} [built]
+chunk    {1} commons.js (commons.js) 26 [rendered]
+    [1] ./common.js 26 {1} [built]
         cjs require ./common [0] ./pageA.js 1:13-32
         cjs require ./common [0] ./pageB.js 1:13-32
         cjs require ./common [2] ./shared.js 1:13-32
+chunk    {2} pageB.bundle.js (pageB) 152 {1} [rendered]
+    > pageB [0] ./pageB.js
+    [0] ./pageB.js 152 {2} [built]
+chunk    {3} pageA.bundle.js (pageA) 108 {1} [rendered]
+    > pageA [0] ./pageA.js
+    [0] ./pageA.js 108 {3} [built]
+
+WARNING in 0.chunk.js from UglifyJs
+Side effects in initialization of unused variable common [./shared.js:1,0]
 
 WARNING in pageB.bundle.js from UglifyJs
 Side effects in initialization of unused variable common [./pageB.js:1,0]
 
 WARNING in pageA.bundle.js from UglifyJs
 Side effects in initialization of unused variable common [./pageA.js:1,0]
-
-WARNING in 1.chunk.js from UglifyJs
-Side effects in initialization of unused variable common [./shared.js:1,0]
 ```

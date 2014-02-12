@@ -111,8 +111,8 @@ module.exports = Math.random();
 
 ```
 Hash: c2fdaa4ec2268af6ce80
-Version: webpack 1.0.0-rc1
-Time: 52ms
+Version: webpack 1.0.0-rc5
+Time: 56ms
     Asset  Size  Chunks             Chunk Names
 output.js  2104       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
@@ -127,16 +127,16 @@ chunk    {0} output.js (main) 326 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9035669d7274300bd13b
-Version: webpack 1.0.0-rc1
-Time: 114ms
+Hash: b46fe025f3427e4ec971
+Version: webpack 1.0.0-rc5
+Time: 129ms
     Asset  Size  Chunks             Chunk Names
 output.js   354       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
     > main [0] ./example.js
     [0] ./example.js 295 {0} [built]
     [1] ./a.js 31 {0} [built]
+        require.resolve ./a.js [0] ./example.js 4:10-35
         cjs require ./a [0] ./example.js 1:8-22
         cjs require ./a [0] ./example.js 10:9-23
-        require.resolve ./a.js [0] ./example.js 4:10-35
 ```

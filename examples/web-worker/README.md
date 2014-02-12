@@ -103,6 +103,8 @@ onmessage = function(event) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
+/******/ 	// shortcut for better minimizing
+/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -110,14 +112,14 @@ onmessage = function(event) {
 /******/ 	// object to store loaded chunks
 /******/ 	// "1" means "already loaded"
 /******/ 	var installedChunks = {
-/******/ 		0:1
+/******/ 		1:1
 /******/ 	};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function require(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
+/******/ 			return installedModules[moduleId][exports];
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -127,13 +129,13 @@ onmessage = function(event) {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, require);
+/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module.exports;
+/******/ 		return module[exports];
 /******/ 	}
 /******/ 	
 /******/ 	// This file contains only the entry chunk.
@@ -175,7 +177,7 @@ onmessage = function(event) {
 
 	onmessage = function(event) {
 		var template = event.data;
-		require.e/* require */(1, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [require(/*! ../require.context/templates */ 4)("./" + event.data)]; (function(tmpl) {
+		require.e/* require */(0, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [require(/*! ../require.context/templates */ 4)("./" + event.data)]; (function(tmpl) {
 			postMessage(tmpl());
 		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 	}
@@ -185,10 +187,10 @@ onmessage = function(event) {
 /******/ ])
 ```
 
-# js/1.[hash].worker.hs
+# js/0.[hash].worker.hs
 
 ``` javascript
-webpackChunk([1],[
+webpackChunk([0],[
 /* 0 */,
 /* 1 */
 /*!*****************************************!*\
@@ -260,11 +262,11 @@ webpackChunk([1],[
 
 ```
 Hash: d3a484ec9964172dc379
-Version: webpack 1.0.0-rc1
-Time: 114ms
+Version: webpack 1.0.0-rc5
+Time: 104ms
            Asset  Size  Chunks             Chunk Names
-  hash.worker.js  2697          [emitted]             
-1.hash.worker.js  1593          [emitted]             
+0.hash.worker.js  1593          [emitted]             
+  hash.worker.js  2780          [emitted]             
        output.js  2140       0  [emitted]  main       
 chunk    {0} output.js (main) 302 [rendered]
     > main [0] ./example.js
@@ -272,38 +274,38 @@ chunk    {0} output.js (main) 302 [rendered]
     [1] (webpack)/~/worker-loader!./worker.js 96 {0} [not cacheable] [built]
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
-    Hash: f8be7dd704b535b316bd
-    Version: webpack 1.0.0-rc1
+    Hash: 374188a31a72007585d1
+    Version: webpack 1.0.0-rc5
                Asset  Size  Chunks             Chunk Names
-      hash.worker.js  2697       0  [emitted]  main       
-    1.hash.worker.js  1593       1  [emitted]             
-    chunk    {0} hash.worker.js (main) 168 [rendered]
-        > main [0] ./worker.js
-        [0] ./worker.js 168 {0} [built]
-    chunk    {1} 1.hash.worker.js 463 {0} [rendered]
+    0.hash.worker.js  1593       0  [emitted]             
+      hash.worker.js  2780       1  [emitted]  main       
+    chunk    {0} 0.hash.worker.js 463 {1} [rendered]
         > [0] ./worker.js 3:1-5:3
-        [1] ../require.context/templates/a.js 82 {1} [built]
+        [1] ../require.context/templates/a.js 82 {0} [built]
             context element ./a.js [4] ../require.context/templates ^\.\/.*$
             context element ./a [4] ../require.context/templates ^\.\/.*$
-        [2] ../require.context/templates/b.js 82 {1} [built]
+        [2] ../require.context/templates/b.js 82 {0} [built]
             context element ./b.js [4] ../require.context/templates ^\.\/.*$
             context element ./b [4] ../require.context/templates ^\.\/.*$
-        [3] ../require.context/templates/c.js 82 {1} [built]
+        [3] ../require.context/templates/c.js 82 {0} [built]
             context element ./c.js [4] ../require.context/templates ^\.\/.*$
             context element ./c [4] ../require.context/templates ^\.\/.*$
-        [4] ../require.context/templates ^\.\/.*$ 217 {1} [built]
+        [4] ../require.context/templates ^\.\/.*$ 217 {0} [built]
             amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
+    chunk    {1} hash.worker.js (main) 168 [rendered]
+        > main [0] ./worker.js
+        [0] ./worker.js 168 {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: e028e5c3f2a9ee017ccf
-Version: webpack 1.0.0-rc1
-Time: 225ms
+Hash: 8381d83ffdfd2b8b8d83
+Version: webpack 1.0.0-rc5
+Time: 259ms
            Asset  Size  Chunks             Chunk Names
-  hash.worker.js   523          [emitted]             
-1.hash.worker.js   528          [emitted]             
+0.hash.worker.js   528          [emitted]             
+  hash.worker.js   515          [emitted]             
        output.js   373       0  [emitted]  main       
 chunk    {0} output.js (main) 302 [rendered]
     > main [0] ./example.js
@@ -314,27 +316,27 @@ chunk    {0} output.js (main) 302 [rendered]
 WARNING in output.js from UglifyJs
 Side effects in initialization of unused variable templateB [./example.js:5,0]
 Child worker:
-    Hash: 5a60a9d218768e784433
-    Version: webpack 1.0.0-rc1
+    Hash: 0f222d50d7f40deb6fe4
+    Version: webpack 1.0.0-rc5
                Asset  Size  Chunks             Chunk Names
-      hash.worker.js   523       0  [emitted]  main       
-    1.hash.worker.js   528       1  [emitted]             
-    chunk    {0} hash.worker.js (main) 168 [rendered]
-        > main [0] ./worker.js
-        [0] ./worker.js 168 {0} [built]
-    chunk    {1} 1.hash.worker.js 463 {0} [rendered]
+    0.hash.worker.js   528       0  [emitted]             
+      hash.worker.js   515       1  [emitted]  main       
+    chunk    {0} 0.hash.worker.js 463 {1} [rendered]
         > [0] ./worker.js 3:1-5:3
-        [1] ../require.context/templates/a.js 82 {1} [built]
+        [1] ../require.context/templates/a.js 82 {0} [built]
             context element ./a.js [4] ../require.context/templates ^\.\/.*$
             context element ./a [4] ../require.context/templates ^\.\/.*$
-        [2] ../require.context/templates/b.js 82 {1} [built]
+        [2] ../require.context/templates/b.js 82 {0} [built]
             context element ./b.js [4] ../require.context/templates ^\.\/.*$
             context element ./b [4] ../require.context/templates ^\.\/.*$
-        [3] ../require.context/templates/c.js 82 {1} [built]
+        [3] ../require.context/templates/c.js 82 {0} [built]
             context element ./c.js [4] ../require.context/templates ^\.\/.*$
             context element ./c [4] ../require.context/templates ^\.\/.*$
-        [4] ../require.context/templates ^\.\/.*$ 217 {1} [built]
+        [4] ../require.context/templates ^\.\/.*$ 217 {0} [built]
             amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
+    chunk    {1} hash.worker.js (main) 168 [rendered]
+        > main [0] ./worker.js
+        [0] ./worker.js 168 {1} [built]
     
     WARNING in hash.worker.js from UglifyJs
     Side effects in initialization of unused variable template [./worker.js:2,0]

@@ -180,8 +180,8 @@ webpackJsonp([1],[,,,function(){},function(){}]);
 
 ```
 Hash: 51eb9c135b6c6fe4e444
-Version: webpack 1.0.0-rc1
-Time: 69ms
+Version: webpack 1.0.0-rc5
+Time: 64ms
       Asset  Size  Chunks             Chunk Names
   output.js  4035       0  [emitted]  main       
 1.output.js   327       1  [emitted]             
@@ -204,9 +204,9 @@ chunk    {1} 1.output.js 22 {0} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 0b0f0366fa1aab3ebbc4
-Version: webpack 1.0.0-rc1
-Time: 161ms
+Hash: 4085052a6dcc6389a6ba
+Version: webpack 1.0.0-rc5
+Time: 183ms
       Asset  Size  Chunks             Chunk Names
   output.js   739       0  [emitted]  main       
 1.output.js    49       1  [emitted]             

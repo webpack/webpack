@@ -117,8 +117,8 @@ module.exports = 42
 
 ```
 Hash: c0e41294caebebf740e1
-Version: webpack 1.0.0-rc1
-Time: 158ms
+Version: webpack 1.0.0-rc5
+Time: 157ms
     Asset  Size  Chunks             Chunk Names
 output.js  2143       0  [emitted]  main       
 chunk    {0} output.js (main) 206 [rendered]
@@ -134,9 +134,9 @@ chunk    {0} output.js (main) 206 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 5aad8c5ad018219d8bf0
-Version: webpack 1.0.0-rc1
-Time: 207ms
+Hash: 0cef4121d8a8c4eec502
+Version: webpack 1.0.0-rc5
+Time: 286ms
     Asset  Size  Chunks             Chunk Names
 output.js   379       0  [emitted]  main       
 chunk    {0} output.js (main) 206 [rendered]

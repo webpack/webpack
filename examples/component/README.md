@@ -136,7 +136,7 @@ module.exports = {
   \***************************************************/
 /***/ function(module, exports, require) {
 
-	require(/*! (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/css-loader!./style.css */ 8);
+	require(/*! (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./style.css */ 9);
 	module.exports = require(/*! ./index.js */ 2);
 
 /***/ },
@@ -186,6 +186,16 @@ module.exports = {
 
 /***/ },
 /* 7 */
+/*!***************************************************************************************************!*\
+  !*** (webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css ***!
+  \***************************************************************************************************/
+/***/ function(module, exports, require) {
+
+	module.exports =
+		".a-component {\n\tdisplay: inline;\n\tbackground: url("+require(/*! ./image.png */ 10)+") repeat;\n}";
+
+/***/ },
+/* 8 */
 /*!***********************************************************************!*\
   !*** (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js ***!
   \***********************************************************************/
@@ -207,26 +217,16 @@ module.exports = {
 	}
 
 /***/ },
-/* 8 */
-/*!****************************************************************************************************************************!*\
-  !*** (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/css-loader!./component/webpack-a-component/style.css ***!
-  \****************************************************************************************************************************/
+/* 9 */
+/*!*******************************************************************************************************************************************************!*\
+  !*** (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css ***!
+  \*******************************************************************************************************************************************************/
 /***/ function(module, exports, require) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
-	require(/*! (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js */ 7)
+	require(/*! (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js */ 8)
 		// The css code:
-		(require(/*! !(webpack)/~/css-loader!./component/webpack-a-component/style.css */ 9))
-
-/***/ },
-/* 9 */
-/*!************************************************************************!*\
-  !*** (webpack)/~/css-loader!./component/webpack-a-component/style.css ***!
-  \************************************************************************/
-/***/ function(module, exports, require) {
-
-	module.exports =
-		".a-component {\r\n\tdisplay: inline;\r\n\tbackground: url("+require(/*! ./image.png */ 10)+") repeat;\r\n}";
+		(require(/*! !(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css */ 7))
 
 /***/ },
 /* 10 */
@@ -246,15 +246,15 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: 4053dc5307d47a5e1c7d
-Version: webpack 1.0.0-rc1
-Time: 164ms
+Hash: 97c7420d2407160ad5df
+Version: webpack 1.0.0-rc5
+Time: 165ms
     Asset  Size  Chunks             Chunk Names
-output.js  5938       0  [emitted]  main       
-chunk    {0} output.js (main) 1948 [rendered]
+output.js  6145       0  [emitted]  main       
+chunk    {0} output.js (main) 2159 [rendered]
     > main [0] ./example.js
-    [0] ./example.js 114 {0} [built]
-    [1] ./component/webpack-a-component (component) 278 {0} [built]
+    [0] ./example.js 111 {0} [built]
+    [1] ./component/webpack-a-component (component) 374 {0} [built]
         cjs require a-component [0] ./example.js 1:12-34
         cjs require a-component [4] ./component/webpack-c-component/main.js 1:23-45
     [2] ./component/webpack-a-component/index.js 21 {0} [built]
@@ -267,28 +267,28 @@ chunk    {0} output.js (main) 1948 [rendered]
         cjs require b-component [0] ./example.js 2:12-34
     [6] ./my-component/b-component/main.js 21 {0} [built]
         cjs require ./main.js [5] ./my-component/b-component (component) 1:17-37
-    [7] (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js 458 {0} [built]
-        cjs require !(webpack)\node_modules\component-webpack-plugin\node_modules\style-loader\addStyle.js [8] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/css-loader!./component/webpack-a-component/style.css 2:0-142
-    [8] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/css-loader!./component/webpack-a-component/style.css 442 {0} [built]
-        cjs require !(webpack)\node_modules\component-webpack-plugin\node_modules\style-loader\index.js!(webpack)\node_modules\css-loader\index.js!./style.css [1] ./component/webpack-a-component (component) 1:0-237
-    [9] (webpack)/~/css-loader!./component/webpack-a-component/style.css 119 {0} [built]
-        cjs require !!(webpack)\node_modules\css-loader\index.js!.\component\webpack-a-component\style.css [8] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/css-loader!./component/webpack-a-component/style.css 4:2-214
+    [7] (webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 113 {0} [built]
+        cjs require !!(webpack)\node_modules\component-webpack-plugin\node_modules\css-loader\index.js!.\component\webpack-a-component\style.css [9] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 4:2-310
+    [8] (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js 458 {0} [built]
+        cjs require !(webpack)\node_modules\component-webpack-plugin\node_modules\style-loader\addStyle.js [9] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 2:0-170
+    [9] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 566 {0} [built]
+        cjs require !(webpack)\node_modules\component-webpack-plugin\node_modules\style-loader\index.js!(webpack)\node_modules\component-webpack-plugin\node_modules\css-loader\index.js!./style.css [1] ./component/webpack-a-component (component) 1:0-333
    [10] ./component/webpack-a-component/image.png 373 {0} [built]
-        cjs require ./image.png [9] (webpack)/~/css-loader!./component/webpack-a-component/style.css 2:62-84
+        cjs require ./image.png [7] (webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 2:58-80
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: f3bcd87b1b45637bb5fb
-Version: webpack 1.0.0-rc1
-Time: 252ms
+Hash: 2dad1063eed04c3d974f
+Version: webpack 1.0.0-rc5
+Time: 333ms
     Asset  Size  Chunks             Chunk Names
 output.js  1187       0  [emitted]  main       
-chunk    {0} output.js (main) 1921 [rendered]
+chunk    {0} output.js (main) 2138 [rendered]
     > main [0] ./example.js
-    [0] ./example.js 114 {0} [built]
-    [1] ./component/webpack-a-component (component) 278 {0} [built]
+    [0] ./example.js 111 {0} [built]
+    [1] ./component/webpack-a-component (component) 374 {0} [built]
         cjs require a-component [0] ./example.js 1:12-34
         cjs require a-component [4] ./component/webpack-c-component/main.js 1:23-45
     [2] ./component/webpack-a-component/index.js 21 {0} [built]
@@ -301,12 +301,12 @@ chunk    {0} output.js (main) 1921 [rendered]
         cjs require b-component [0] ./example.js 2:12-34
     [6] ./my-component/b-component/main.js 21 {0} [built]
         cjs require ./main.js [5] ./my-component/b-component (component) 1:17-37
-    [7] (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js 458 {0} [built]
-        cjs require !(webpack)\node_modules\component-webpack-plugin\node_modules\style-loader\addStyle.js [8] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/css-loader!./component/webpack-a-component/style.css 2:0-142
-    [8] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/css-loader!./component/webpack-a-component/style.css 442 {0} [built]
-        cjs require !(webpack)\node_modules\component-webpack-plugin\node_modules\style-loader\index.js!(webpack)\node_modules\css-loader\index.js!./style.css [1] ./component/webpack-a-component (component) 1:0-237
-    [9] (webpack)/~/css-loader!./component/webpack-a-component/style.css 92 {0} [built]
-        cjs require !!(webpack)\node_modules\css-loader\index.js!.\component\webpack-a-component\style.css [8] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/css-loader!./component/webpack-a-component/style.css 4:2-214
+    [7] (webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 92 {0} [built]
+        cjs require !!(webpack)\node_modules\component-webpack-plugin\node_modules\css-loader\index.js!.\component\webpack-a-component\style.css [9] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 4:2-310
+    [8] (webpack)/~/component-webpack-plugin/~/style-loader/addStyle.js 458 {0} [built]
+        cjs require !(webpack)\node_modules\component-webpack-plugin\node_modules\style-loader\addStyle.js [9] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 2:0-170
+    [9] (webpack)/~/component-webpack-plugin/~/style-loader!(webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 566 {0} [built]
+        cjs require !(webpack)\node_modules\component-webpack-plugin\node_modules\style-loader\index.js!(webpack)\node_modules\component-webpack-plugin\node_modules\css-loader\index.js!./style.css [1] ./component/webpack-a-component (component) 1:0-333
    [10] ./component/webpack-a-component/image.png 373 {0} [built]
-        cjs require ./image.png [9] (webpack)/~/css-loader!./component/webpack-a-component/style.css 2:47-69
+        cjs require ./image.png [7] (webpack)/~/component-webpack-plugin/~/css-loader!./component/webpack-a-component/style.css 2:47-69
 ```

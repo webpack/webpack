@@ -86,7 +86,7 @@ require(
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
-/******/ 		0:0
+/******/ 		1:0
 /******/ 	};
 /******/ 	
 /******/ 	// The require function
@@ -179,7 +179,7 @@ require(
 	var labeled1 = require(/*! ./labeled */ 3);
 
 	// AMD-style requires (with all webpack features)
-	require.e/* require */(1, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [
+	require.e/* require */(0, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [
 		require(/*! ./commonjs */ 2), require(/*! ./amd */ 1), require(/*! ./labeled */ 3),
 		require(/*! ../require.context/templates */ 4)("./"+amd1+".js"),
 		Math.random() < 0.5 ? require(/*! ./commonjs */ 2) : require(/*! ./amd */ 1)]; (function(commonjs2, amd2, labeled2, template, randModule) {
@@ -243,10 +243,10 @@ require(
 /******/ ])
 ```
 
-# js/1.output.js
+# js/0.output.js
 
 ``` javascript
-webpackJsonp([1],[
+webpackJsonp([0],[
 /* 0 */,
 /* 1 */,
 /* 2 */,
@@ -317,16 +317,26 @@ webpackJsonp([1],[
 ## Uncompressed
 
 ```
-Hash: f9a4e0a95f5952cff0ba
-Version: webpack 1.0.0-rc1
-Time: 90ms
+Hash: d84ff057dc3f2fd98e07
+Version: webpack 1.0.0-rc5
+Time: 93ms
       Asset  Size  Chunks             Chunk Names
-  output.js  6321       0  [emitted]  main       
-1.output.js  1596       1  [emitted]             
-chunk    {0} output.js (main) 1395 [rendered]
+0.output.js  1596       0  [emitted]             
+  output.js  6321       1  [emitted]  main       
+chunk    {0} 0.output.js 439 {1} [rendered]
+    > [0] ./example.js 7:0-14:1
+    [4] ../require.context/templates ^\.\/.*\.js$ 193 {0} [built]
+        amd require context ../require.context/templates [0] ./example.js 7:0-14:1
+    [5] ../require.context/templates/a.js 82 {0} [built]
+        context element ./a.js [4] ../require.context/templates ^\.\/.*\.js$
+    [6] ../require.context/templates/b.js 82 {0} [built]
+        context element ./b.js [4] ../require.context/templates ^\.\/.*\.js$
+    [7] ../require.context/templates/c.js 82 {0} [built]
+        context element ./c.js [4] ../require.context/templates ^\.\/.*\.js$
+chunk    {1} output.js (main) 1395 [rendered]
     > main [0] ./example.js
-    [0] ./example.js 613 {0} [built]
-    [1] ./amd.js 309 {0} [built]
+    [0] ./example.js 613 {1} [built]
+    [1] ./amd.js 309 {1} [built]
         cjs require ./amd [0] ./example.js 3:11-27
         amd require ./amd [0] ./example.js 7:0-14:1
         amd require ./amd [0] ./example.js 7:0-14:1
@@ -334,7 +344,7 @@ chunk    {0} output.js (main) 1395 [rendered]
         cjs require ./amd [2] ./commonjs.js 8:13-29
         amd require ./amd [3] ./labeled.js 5:0-11:1
         cjs require ./amd [3] ./labeled.js 9:13-29
-    [2] ./commonjs.js 234 {0} [built]
+    [2] ./commonjs.js 234 {1} [built]
         cjs require ./commonjs [0] ./example.js 2:16-37
         amd require ./commonjs [0] ./example.js 7:0-14:1
         amd require ./commonjs [0] ./example.js 7:0-14:1
@@ -342,7 +352,7 @@ chunk    {0} output.js (main) 1395 [rendered]
         cjs require ./commonjs [1] ./amd.js 7:18-39
         amd require ./commonjs [3] ./labeled.js 5:0-11:1
         cjs require ./commonjs [3] ./labeled.js 8:18-39
-    [3] ./labeled.js 239 {0} [built]
+    [3] ./labeled.js 239 {1} [built]
         cjs require ./labeled [0] ./example.js 4:15-35
         labeled require ./labeled [0] ./example.js 17:0-21
         amd require ./labeled [0] ./example.js 7:0-14:1
@@ -350,31 +360,31 @@ chunk    {0} output.js (main) 1395 [rendered]
         cjs require ./labeled [1] ./amd.js 8:17-37
         amd require ./labeled [2] ./commonjs.js 5:0-11:1
         cjs require ./labeled [2] ./commonjs.js 9:17-37
-chunk    {1} 1.output.js 439 {0} [rendered]
-    > [0] ./example.js 7:0-14:1
-    [4] ../require.context/templates ^\.\/.*\.js$ 193 {1} [built]
-        amd require context ../require.context/templates [0] ./example.js 7:0-14:1
-    [5] ../require.context/templates/a.js 82 {1} [built]
-        context element ./a.js [4] ../require.context/templates ^\.\/.*\.js$
-    [6] ../require.context/templates/b.js 82 {1} [built]
-        context element ./b.js [4] ../require.context/templates ^\.\/.*\.js$
-    [7] ../require.context/templates/c.js 82 {1} [built]
-        context element ./c.js [4] ../require.context/templates ^\.\/.*\.js$
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: fc7dcc7368e6ec3feb58
-Version: webpack 1.0.0-rc1
-Time: 236ms
+Hash: 34f1f856f9c038602d2f
+Version: webpack 1.0.0-rc5
+Time: 260ms
       Asset  Size  Chunks             Chunk Names
-  output.js  1138       0  [emitted]  main       
-1.output.js   507       1  [emitted]             
-chunk    {0} output.js (main) 1395 [rendered]
+0.output.js   507       0  [emitted]             
+  output.js  1138       1  [emitted]  main       
+chunk    {0} 0.output.js 439 {1} [rendered]
+    > [0] ./example.js 7:0-14:1
+    [4] ../require.context/templates ^\.\/.*\.js$ 193 {0} [built]
+        amd require context ../require.context/templates [0] ./example.js 7:0-14:1
+    [5] ../require.context/templates/a.js 82 {0} [built]
+        context element ./a.js [4] ../require.context/templates ^\.\/.*\.js$
+    [6] ../require.context/templates/b.js 82 {0} [built]
+        context element ./b.js [4] ../require.context/templates ^\.\/.*\.js$
+    [7] ../require.context/templates/c.js 82 {0} [built]
+        context element ./c.js [4] ../require.context/templates ^\.\/.*\.js$
+chunk    {1} output.js (main) 1395 [rendered]
     > main [0] ./example.js
-    [0] ./example.js 613 {0} [built]
-    [1] ./amd.js 309 {0} [built]
+    [0] ./example.js 613 {1} [built]
+    [1] ./amd.js 309 {1} [built]
         cjs require ./amd [0] ./example.js 3:11-27
         amd require ./amd [0] ./example.js 7:0-14:1
         amd require ./amd [0] ./example.js 7:0-14:1
@@ -382,7 +392,7 @@ chunk    {0} output.js (main) 1395 [rendered]
         cjs require ./amd [2] ./commonjs.js 8:13-29
         amd require ./amd [3] ./labeled.js 5:0-11:1
         cjs require ./amd [3] ./labeled.js 9:13-29
-    [2] ./commonjs.js 234 {0} [built]
+    [2] ./commonjs.js 234 {1} [built]
         cjs require ./commonjs [0] ./example.js 2:16-37
         amd require ./commonjs [0] ./example.js 7:0-14:1
         amd require ./commonjs [0] ./example.js 7:0-14:1
@@ -390,7 +400,7 @@ chunk    {0} output.js (main) 1395 [rendered]
         cjs require ./commonjs [1] ./amd.js 7:18-39
         amd require ./commonjs [3] ./labeled.js 5:0-11:1
         cjs require ./commonjs [3] ./labeled.js 8:18-39
-    [3] ./labeled.js 239 {0} [built]
+    [3] ./labeled.js 239 {1} [built]
         cjs require ./labeled [0] ./example.js 4:15-35
         labeled require ./labeled [0] ./example.js 17:0-21
         amd require ./labeled [0] ./example.js 7:0-14:1
@@ -398,16 +408,6 @@ chunk    {0} output.js (main) 1395 [rendered]
         cjs require ./labeled [1] ./amd.js 8:17-37
         amd require ./labeled [2] ./commonjs.js 5:0-11:1
         cjs require ./labeled [2] ./commonjs.js 9:17-37
-chunk    {1} 1.output.js 439 {0} [rendered]
-    > [0] ./example.js 7:0-14:1
-    [4] ../require.context/templates ^\.\/.*\.js$ 193 {1} [built]
-        amd require context ../require.context/templates [0] ./example.js 7:0-14:1
-    [5] ../require.context/templates/a.js 82 {1} [built]
-        context element ./a.js [4] ../require.context/templates ^\.\/.*\.js$
-    [6] ../require.context/templates/b.js 82 {1} [built]
-        context element ./b.js [4] ../require.context/templates ^\.\/.*\.js$
-    [7] ../require.context/templates/c.js 82 {1} [built]
-        context element ./c.js [4] ../require.context/templates ^\.\/.*\.js$
 
 WARNING in output.js from UglifyJs
 Dropping unused function argument randModule [./example.js:11,0]

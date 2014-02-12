@@ -39,7 +39,7 @@ require.ensure(["b"], function(require) {
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
-/******/ 		0:0
+/******/ 		2:0
 /******/ 	};
 /******/ 	
 /******/ 	// The require function
@@ -128,21 +128,21 @@ require.ensure(["b"], function(require) {
 
 	var a = require(/*! a */ 3);
 
-	require.e/*nsure*/(1, function(require) {
+	require.e/*nsure*/(0, function(require) {
 		// a named chunk
 		var c = require(/*! c */ 4);
 	}, /*! my own chunk */ 0);
 
-	require.e/*nsure*/(1, function(require) {
+	require.e/*nsure*/(0, function(require) {
 		// another chunk with the same name
 		var d = require(/*! d */ 2);
 	}, /*! my own chunk */ 0);
 
-	require.e/*nsure*/(1, function(require) {
+	require.e/*nsure*/(0, function(require) {
 		// the same again
 	}, /*! my own chunk */ 0);
 
-	require.e/*nsure*/(2, function(require) {
+	require.e/*nsure*/(1, function(require) {
 		// chunk without name
 		var d = require(/*! d */ 2);
 	});
@@ -163,10 +163,10 @@ require.ensure(["b"], function(require) {
 /******/ ])
 ```
 
-# js/1.output.js and js/my own chunk.js
+# js/0.output.js
 
 ``` javascript
-webpackJsonp([1,2],[
+webpackJsonp([0,1],[
 /* 0 */,
 /* 1 */
 /*!****************!*\
@@ -199,10 +199,10 @@ webpackJsonp([1,2],[
 ])
 ```
 
-# js/2.output.js
+# js/1.output.js
 
 ``` javascript
-webpackJsonp([2],[
+webpackJsonp([1],[
 /* 0 */,
 /* 1 */
 /*!****************!*\
@@ -230,81 +230,79 @@ webpackJsonp([2],[
 ## Uncompressed
 
 ```
-Hash: d6659e1367a79bf5a8ba
-Version: webpack 1.0.0-rc1
-Time: 71ms
-          Asset  Size  Chunks             Chunk Names 
-      output.js  4244       0  [emitted]  main        
-    1.output.js   460    1, 2  [emitted]  my own chunk
-my own chunk.js   460    1, 2  [emitted]  my own chunk
-    2.output.js   309       2  [emitted]              
-chunk    {0} output.js (main) 452 [rendered]
-    > main [0] ./example.js
-    [0] ./example.js 441 {0} [built]
-    [3] ./~/a.js 11 {0} [built]
-        cjs require a [0] ./example.js 1:8-20
-chunk    {1} 1.output.js, my own chunk.js (my own chunk) 33 {0} [rendered]
+Hash: 2eb88f7447c15bcee0b6
+Version: webpack 1.0.0-rc5
+Time: 67ms
+      Asset  Size  Chunks             Chunk Names 
+0.output.js   460    0, 1  [emitted]  my own chunk
+1.output.js   309       1  [emitted]              
+  output.js  4244       2  [emitted]  main        
+chunk    {0} 0.output.js (my own chunk) 33 {2} [rendered]
     > my own chunk [0] ./example.js 3:0-6:18
     > my own chunk [0] ./example.js 8:0-11:18
     > my own chunk [0] ./example.js 13:0-15:18
-    [1] ./~/b.js 11 {1} {2} [built]
+    [1] ./~/b.js 11 {0} {1} [built]
         require.ensure item b [0] ./example.js 3:0-6:18
         require.ensure item b [0] ./example.js 8:0-11:18
         require.ensure item b [0] ./example.js 17:0-20:2
-    [2] ./~/d.js 11 {1} {2} [built]
+    [2] ./~/d.js 11 {0} {1} [built]
         cjs require d [0] ./example.js 10:9-21
         cjs require d [0] ./example.js 19:9-21
-    [4] ./~/c.js 11 {1} [built]
+    [4] ./~/c.js 11 {0} [built]
         cjs require c [0] ./example.js 5:9-21
-chunk    {2} 2.output.js 22 {0} [rendered]
+chunk    {1} 1.output.js 22 {2} [rendered]
     > [0] ./example.js 17:0-20:2
-    [1] ./~/b.js 11 {1} {2} [built]
+    [1] ./~/b.js 11 {0} {1} [built]
         require.ensure item b [0] ./example.js 3:0-6:18
         require.ensure item b [0] ./example.js 8:0-11:18
         require.ensure item b [0] ./example.js 17:0-20:2
-    [2] ./~/d.js 11 {1} {2} [built]
+    [2] ./~/d.js 11 {0} {1} [built]
         cjs require d [0] ./example.js 10:9-21
         cjs require d [0] ./example.js 19:9-21
+chunk    {2} output.js (main) 452 [rendered]
+    > main [0] ./example.js
+    [0] ./example.js 441 {2} [built]
+    [3] ./~/a.js 11 {2} [built]
+        cjs require a [0] ./example.js 1:8-20
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 09fb39f6bd4bb14e4d65
-Version: webpack 1.0.0-rc1
-Time: 174ms
-          Asset  Size  Chunks             Chunk Names 
-      output.js   788       0  [emitted]  main        
-    1.output.js    63    1, 2  [emitted]  my own chunk
-my own chunk.js    63    1, 2  [emitted]  my own chunk
-    2.output.js    47       2  [emitted]              
-chunk    {0} output.js (main) 452 [rendered]
-    > main [0] ./example.js
-    [0] ./example.js 441 {0} [built]
-    [3] ./~/a.js 11 {0} [built]
-        cjs require a [0] ./example.js 1:8-20
-chunk    {1} 1.output.js, my own chunk.js (my own chunk) 33 {0} [rendered]
+Hash: 43d429ec15f56a083d20
+Version: webpack 1.0.0-rc5
+Time: 196ms
+      Asset  Size  Chunks             Chunk Names 
+0.output.js    63    0, 1  [emitted]  my own chunk
+1.output.js    47       1  [emitted]              
+  output.js   788       2  [emitted]  main        
+chunk    {0} 0.output.js (my own chunk) 33 {2} [rendered]
     > my own chunk [0] ./example.js 3:0-6:18
     > my own chunk [0] ./example.js 8:0-11:18
     > my own chunk [0] ./example.js 13:0-15:18
-    [1] ./~/b.js 11 {1} {2} [built]
+    [1] ./~/b.js 11 {0} {1} [built]
         require.ensure item b [0] ./example.js 3:0-6:18
         require.ensure item b [0] ./example.js 8:0-11:18
         require.ensure item b [0] ./example.js 17:0-20:2
-    [2] ./~/d.js 11 {1} {2} [built]
+    [2] ./~/d.js 11 {0} {1} [built]
         cjs require d [0] ./example.js 10:9-21
         cjs require d [0] ./example.js 19:9-21
-    [4] ./~/c.js 11 {1} [built]
+    [4] ./~/c.js 11 {0} [built]
         cjs require c [0] ./example.js 5:9-21
-chunk    {2} 2.output.js 22 {0} [rendered]
+chunk    {1} 1.output.js 22 {2} [rendered]
     > [0] ./example.js 17:0-20:2
-    [1] ./~/b.js 11 {1} {2} [built]
+    [1] ./~/b.js 11 {0} {1} [built]
         require.ensure item b [0] ./example.js 3:0-6:18
         require.ensure item b [0] ./example.js 8:0-11:18
         require.ensure item b [0] ./example.js 17:0-20:2
-    [2] ./~/d.js 11 {1} {2} [built]
+    [2] ./~/d.js 11 {0} {1} [built]
         cjs require d [0] ./example.js 10:9-21
         cjs require d [0] ./example.js 19:9-21
+chunk    {2} output.js (main) 452 [rendered]
+    > main [0] ./example.js
+    [0] ./example.js 441 {2} [built]
+    [3] ./~/a.js 11 {2} [built]
+        cjs require a [0] ./example.js 1:8-20
 
 WARNING in output.js from UglifyJs
 Side effects in initialization of unused variable c [./example.js:5,0]
