@@ -64,6 +64,17 @@ describe("TestCases", function() {
 									path: outputDirectory,
 									filename: "bundle.js"
 								},
+								resolve: {
+									modulesDirectories: ["web_modules", "node_modules"],
+									packageMains: ["webpack", "browser", "web", "browserify", ["jam", "main"], "main"],
+									extensions: ["", ".webpack.js", ".web.js", ".js"],
+									packageAlias: "browser"
+								},
+								resolveLoader: {
+									modulesDirectories: ["web_loaders", "web_modules", "node_loaders", "node_modules"],
+									packageMains: ["webpackLoader", "webLoader", "loader", "main"],
+									extensions: ["", ".webpack-loader.js", ".web-loader.js", ".loader.js", ".js"]
+								},
 								module: {
 									loaders: [
 										{ test: /\.json$/, loader: "json" },
@@ -77,7 +88,9 @@ describe("TestCases", function() {
 							};
 							webpack(options, function(err, stats) {
 								if(err) return done(err);
-								var jsonStats = stats.toJson();
+								var jsonStats = stats.toJson({
+									errorDetails: true
+								});
 								if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
 								if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
 								var exportedTest = 0;
