@@ -32,6 +32,8 @@ optimist
 
 	.string("sort-assets-by").describe("sort-assets-by")
 
+	.boolean("hide-modules").describe("hide-modules")
+
 	.boolean("display-chunks").describe("display-chunks")
 
 	.boolean("display-error-details").describe("display-error-details")
@@ -84,8 +86,12 @@ ifArg("sort-assets-by", function(value) {
 
 if(!outputOptions.json) {
 	ifArg("display-chunks", function(bool) {
-		outputOptions.modules = !bool ;
+		outputOptions.modules = !bool;
 		outputOptions.chunks = bool;
+	});
+
+	ifArg("hide-modules", function(bool) {
+		outputOptions.modules = !bool;
 	});
 
 	ifArg("display-reasons", function(bool) {
