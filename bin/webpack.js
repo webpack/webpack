@@ -90,10 +90,6 @@ if(!outputOptions.json) {
 		outputOptions.chunks = bool;
 	});
 
-	ifArg("hide-modules", function(bool) {
-		outputOptions.modules = !bool;
-	});
-
 	ifArg("display-reasons", function(bool) {
 		outputOptions.reasons = bool;
 	});
@@ -111,6 +107,13 @@ if(!outputOptions.json) {
 	outputOptions.chunkModules = true;
 	outputOptions.reasons = true;
 }
+
+ifArg("hide-modules", function(bool) {
+	if(bool) {
+		outputOptions.modules = false;
+		outputOptions.chunkModules = false;
+	}
+});
 
 var webpack = require("../lib/webpack.js");
 
