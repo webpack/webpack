@@ -7,6 +7,12 @@ module.exports = function(optimist, argv, convertOptions) {
 
 	var options = {};
 
+	// Help
+	if(argv.help) {
+		optimist.showHelp();
+		process.exit(-1);
+	}
+
 	// Shortcuts
 	if(argv.d) {
 		argv.debug = true;

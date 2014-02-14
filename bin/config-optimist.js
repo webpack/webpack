@@ -1,6 +1,8 @@
 module.exports = function(optimist) {
 	optimist
 
+	.boolean("help").alias("help", "h").alias("help", "?").describe("help")
+
 	.string("config").describe("config")
 
 	.string("context").describe("context")
