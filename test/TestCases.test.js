@@ -52,6 +52,7 @@ describe("TestCases", function() {
 					category.tests.forEach(function(testName) {
 						var suite = describe(testName, function() {});
 						it(testName + " should compile", function(done) {
+							this.timeout(10000);
 							var testDirectory = path.join(casesPath, category.name, testName);
 							var outputDirectory = path.join(__dirname, "js", config.name, category.name, testName);
 							var options = {
