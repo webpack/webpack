@@ -118,7 +118,12 @@ ifArg("hide-modules", function(bool) {
 var webpack = require("../lib/webpack.js");
 
 Error.stackTrackLimit = 30;
-webpack(options, function(err, stats) {
+var compiler = webpack(options, function(err, stats) {
+	if(!options.watch) {
+		// Do not keep cache anymore
+		var ifs = compiler.inputFileSystem;
+		if(ifs && ifs.purge) ifs.purge();
+	}
 	if(err) {
 		console.error(err.stack || err);
 		if(!options.watch) {
@@ -132,10 +137,5 @@ webpack(options, function(err, stats) {
 		process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
 	else {
 		process.stdout.write(stats.toString(outputOptions) + "\n");
-	}
-	if(!options.watch) {
-		// Do not keep cache anymore
-		var ifs = stats.compilation.compiler.inputFileSystem;
-		if(ifs && ifs.purge) ifs.purge();
 	}
 });
