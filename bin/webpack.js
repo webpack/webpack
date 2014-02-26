@@ -121,6 +121,11 @@ Error.stackTrackLimit = 30;
 webpack(options, function(err, stats) {
 	if(err) {
 		console.error(err.stack || err);
+		if(!options.watch) {
+			process.on("exit", function() {
+				process.exit(1);
+			});
+		}
 		return;
 	}
 	if(outputOptions.json)
