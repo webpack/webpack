@@ -126,6 +126,7 @@ var compiler = webpack(options, function(err, stats) {
 	}
 	if(err) {
 		console.error(err.stack || err);
+		if(err.details) console.error(err.details);
 		if(!options.watch) {
 			process.on("exit", function() {
 				process.exit(1);
