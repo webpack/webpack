@@ -20,6 +20,12 @@ it("should answer typeof module correctly", function() {
 it("should answer typeof exports correctly", function() {
 	(typeof exports).should.be.eql("object");
 });
+it("should answer typeof require.include correctly", function() {
+	(typeof require.include).should.be.eql("function");
+});
+it("should answer typeof require.ensure correctly", function() {
+	(typeof require.ensure).should.be.eql("function");
+});
 
 
 it("should not parse filtered stuff", function() {
@@ -33,4 +39,6 @@ it("should not parse filtered stuff", function() {
 	if(typeof module === "undefined") module = require("fail");
 	if(typeof module != "object") module = require("fail");
 	if(typeof exports == "undefined") exports = require("fail");
+	if(typeof require.include !== "function") require.include("fail");
+	if(typeof require.ensure !== "function") require.ensure(["fail"], function(){});
 });
