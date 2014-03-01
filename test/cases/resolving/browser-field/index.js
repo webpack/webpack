@@ -28,6 +28,12 @@ it("should ignore recursive module mappings", function() {
 	require("recursive-module").should.be.eql("new-module");
 });
 
+it("should use empty modules for ignored modules", function() {
+	require("ignoring-module").module.should.be.eql({});
+	require("ignoring-module").file.should.be.eql({});
+	require("ignoring-module").module.should.not.be.equal(require("ignoring-module").file);
+});
+
 // Errors
 require.include("recursive-file/a");
 require.include("recursive-file/b");
