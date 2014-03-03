@@ -99,12 +99,10 @@ it("should be able to use require.js-style define, with an object", function() {
 });
 
 it("should offer AMD-style define for CommonJs", function(done) {
-	var _test_require = require.valueOf();
 	var _test_exports = exports;
 	var _test_module = module;
 	define(function(require, exports, module) {
 		(typeof require).should.be.eql("function");
-		require.valueOf().should.be.equal(_test_require);
 		exports.should.be.equal(_test_exports);
 		module.should.be.equal(_test_module);
 		require("./circular").should.be.eql(1);
