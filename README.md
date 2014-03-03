@@ -165,7 +165,7 @@ I'm very thankful for every dollar. If you leave your username or email I may sh
 * [should](https://github.com/visionmedia/should.js)
 * [optimist](https://github.com/substack/node-optimist)
 * [async](https://github.com/caolan/async)
-* [mkdirp](http://esprima.org/)
+* [mkdirp](https://github.com/substack/node-mkdirp)
 * [clone](https://github.com/pvorb/node-clone)
 * [base64-encode](https://github.com/ForbesLindesay/base64-encode)
 
