@@ -4,6 +4,7 @@ var path = require("path");
 var webpack = require("../lib/webpack");
 
 describe("Integration", function() {
+	this.timeout(5000);
 	it("should compile library1", function(done) {
 		webpack({
 			entry: "library1",
