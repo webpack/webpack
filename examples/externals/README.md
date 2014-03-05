@@ -3,8 +3,9 @@
 
 ``` javascript
 var add = require("add");
+var subtract = require("subtract");
 
-module.exports = add(40, 2);
+exports.exampleValue = subtract(add(42, 2), 2);
 ```
 
 # webpack.config.js
@@ -12,18 +13,36 @@ module.exports = add(40, 2);
 ``` javascript
 module.exports = {
 	output: {
-		libraryTarget: "this"
+		libraryTarget: "umd"
 	},
-	externals: {
-		"add": true
-	}
+	externals: [
+		"add",
+		{
+			"subtract": {
+				root: "subtract",
+				commonjs2: "./subtract",
+				commonjs: ["./math", "subtract"],
+				amd: "subtract"
+			}
+		}
+	]
 }
 ```
 
 # js/output.js
 
 ``` javascript
-(function(e, a) { for(var i in a) e[i] = a[i]; }(this, /******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory(require("add"), require("./subtract"));
+	else if(typeof define === 'function' && define.amd)
+		define(["add", "subtract"], factory);
+	else {
+		var a = typeof exports === 'object' ? factory(require("add"), require("./math")["subtract"]) : factory(root["add"], root["subtract"]);
+		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
+	}
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__) {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -74,20 +93,32 @@ module.exports = {
 /***/ function(module, exports, __webpack_require__) {
 
 	var add = __webpack_require__(/*! add */ 1);
+	var subtract = __webpack_require__(/*! subtract */ 2);
 
-	module.exports = add(40, 2);
+	exports.exampleValue = subtract(add(42, 2), 2);
 
 /***/ },
 /* 1 */
-/*!********************!*\
-  !*** external add ***!
-  \********************/
+/*!**********************!*\
+  !*** external "add" ***!
+  \**********************/
 /***/ function(module, exports, __webpack_require__) {
 
-	(function() { module.exports = this["add"]; }());
+	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
+
+/***/ },
+/* 2 */
+/*!***************************************************************************************************************!*\
+  !*** external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} ***!
+  \***************************************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 
 /***/ }
-/******/ ])))
+/******/ ])
+})
+
 ```
 
 # Info
@@ -95,25 +126,25 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: 4b1215a5724ebdb340c6
+Hash: fe82a5dbd0c1deac91fe
 Version: webpack 1.1.0-beta1
-Time: 213ms
+Time: 127ms
     Asset  Size  Chunks             Chunk Names
-output.js  1949       0  [emitted]  main       
-chunk    {0} output.js (main) 99 [rendered]
+output.js  3045       0  [emitted]  main       
+chunk    {0} output.js (main) 197 [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 57 {0} [built]
+    [0] ./example.js 113 {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9397fce116b2fe76bdb7
+Hash: 477ae8800e910830898c
 Version: webpack 1.1.0-beta1
-Time: 293ms
+Time: 364ms
     Asset  Size  Chunks             Chunk Names
-output.js   344       0  [emitted]  main       
-chunk    {0} output.js (main) 99 [rendered]
+output.js   706       0  [emitted]  main       
+chunk    {0} output.js (main) 197 [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 57 {0} [built]
+    [0] ./example.js 113 {0} [built]
 ```

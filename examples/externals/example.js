@@ -1,3 +1,4 @@
 var add = require("add");
+var subtract = require("subtract");
 
-module.exports = add(40, 2);
+exports.exampleValue = subtract(add(42, 2), 2);
