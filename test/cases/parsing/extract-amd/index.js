@@ -21,6 +21,7 @@ it("should parse fancy AMD calls", function() {
 		(typeof require).should.be.eql("function");
 		(typeof module).should.be.eql("object");
 		(typeof exports).should.be.eql("object");
+		(typeof require("./constructor")).should.be.eql("function");
 		(typeof constructor).should.be.eql("function");
 		a.should.be.eql("a");
 	});
@@ -28,6 +29,7 @@ it("should parse fancy AMD calls", function() {
 		(typeof require).should.be.eql("function");
 		(typeof module).should.be.eql("object");
 		(typeof exports).should.be.eql("object");
+		(typeof require("./constructor")).should.be.eql("function");
 		(typeof constructor).should.be.eql("function");
 		a.should.be.eql("a");
 	});
@@ -46,6 +48,13 @@ it("should be able to use AMD-style require", function(done) {
 it("should be able to use require.js-style define", function(done) {
 	define("name", ["./circular"], function(circular) {
 		circular.should.be.eql(1);
+		done();
+	});
+});
+
+it("should be able to use require.js-style define, special string", function(done) {
+	define(["require"], function(require) {
+		require("./circular").should.be.eql(1);
 		done();
 	});
 });
