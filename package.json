@@ -12,7 +12,7 @@
 		"enhanced-resolve": "0.7.x",
 		"clone": "0.1.x",
 		"webpack-core": "0.3.x",
-		"node-libs-browser": "0.1.x",
+		"node-libs-browser": "0.2.x",
 		"tapable": "0.1.x",
 		"base64-encode": "1.0.x"
 	},

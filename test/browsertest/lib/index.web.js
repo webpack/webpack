@@ -94,10 +94,7 @@ describe("main", function() {
 					sum2.should.be.eql(2);
 					done();
 				});
-				process.on("xyz", function() {
-					sum2++;
-				});
-				process.emit("xyz");
+				sum2++;
 				test(global === window, "global === window");
 			});
 		});

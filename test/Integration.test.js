@@ -8,6 +8,7 @@ describe("Integration", function() {
 	it("should compile library1", function(done) {
 		webpack({
 			entry: "library1",
+			bail: true,
 			context: path.join(__dirname, "browsertest"),
 			output: {
 				pathinfo: true,
@@ -33,6 +34,7 @@ describe("Integration", function() {
 				publicPath: "js/",
 				library: "library2"
 			},
+			bail: true,
 			module: {
 				postLoaders: [
 					{
