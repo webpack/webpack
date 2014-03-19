@@ -1,14 +1,17 @@
 it("should be able to rename require by var", function() {
 	var cjsRequire; // just to make it difficult
-	var cjsRequire = require;
+	var cjsRequire = require, cjsRequire2 = typeof require !== "undefined" && require;
 	cjsRequire("./file").should.be.eql("ok");
+	cjsRequire2("./file").should.be.eql("ok");
 });
 
 it("should be able to rename require by assign", function() {
-	var cjsRequire;
+	var cjsRequire, cjsRequire2;
 	(function() {
 		cjsRequire = require;
+		cjsRequire2 = typeof require === "function" && require;
 		cjsRequire("./file").should.be.eql("ok");
+		cjsRequire2("./file").should.be.eql("ok");
 	}());
 });
 
