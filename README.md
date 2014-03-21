@@ -167,6 +167,5 @@ I'm very thankful for every dollar. If you leave your username or email I may sh
 * [async](https://github.com/caolan/async)
 * [mkdirp](https://github.com/substack/node-mkdirp)
 * [clone](https://github.com/pvorb/node-clone)
-* [base64-encode](https://github.com/ForbesLindesay/base64-encode)
 
 [![Dependency Status](https://david-dm.org/webpack/webpack.png)](https://david-dm.org/webpack/webpack)

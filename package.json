@@ -13,8 +13,7 @@
 		"clone": "0.1.x",
 		"webpack-core": "0.3.x",
 		"node-libs-browser": "0.2.x",
-		"tapable": "0.1.x",
-		"base64-encode": "1.0.x"
+		"tapable": "0.1.x"
 	},
 	"licenses": [
 		{
@@ -32,7 +31,7 @@
 		"raw-loader": "0.5.x",
 		"json-loader": "0.5.x",
 		"jade-loader": "0.5.x",
-		"coffee-loader": "0.6.x",
+		"coffee-loader": "0.7.x",
 		"css-loader": "0.6.x",
 		"less-loader": "0.7.x",
 		"style-loader": "0.6.x",
