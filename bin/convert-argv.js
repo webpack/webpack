@@ -52,13 +52,19 @@ module.exports = function(optimist, argv, convertOptions) {
 
 	function mapArgToBoolean(name, optionName) {
 		ifBooleanArg(name, function() {
-			options[optionName] = true;
+			options[optionName || name] = true;
+		});
+	}
+
+	function mapArgToBooleanInverse(name, optionName) {
+		ifArg(name, function(bool) {
+			if(!bool) options[optionName || name] = false;
 		});
 	}
 
 	function mapArgToPath(name, optionName) {
 		ifArg(name, function(str) {
-			options[optionName] = path.resolve(str);
+			options[optionName || name] = path.resolve(str);
 		});
 	}
 
@@ -228,8 +234,8 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.target = value;
 	});
 
-	mapArgToBoolean("cache", "cache");
-	mapArgToBoolean("watch", "watch");
+	mapArgToBooleanInverse("cache");
+	mapArgToBoolean("watch");
 
 	ifArg("watch-delay", function(value) {
 		options.watchDelay = value;
@@ -241,7 +247,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.plugins.push(new HotModuleReplacementPlugin());
 	});
 
-	mapArgToBoolean("debug", "debug");
+	mapArgToBoolean("debug");
 
 	ifBooleanArg("progress", function() {
 		var ProgressPlugin = require("../lib/ProgressPlugin");
@@ -358,9 +364,9 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.plugins.push(loadPlugin(value));
 	});
 
-	mapArgToBoolean("bail", "bail");
+	mapArgToBoolean("bail");
 
-	mapArgToBoolean("profile", "profile");
+	mapArgToBoolean("profile");
 
 	if(!options.output || !options.output.filename) {
 		ensureObject(options, "output");

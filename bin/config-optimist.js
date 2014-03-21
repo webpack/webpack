@@ -45,7 +45,7 @@ module.exports = function(optimist) {
 
 	.string("target").describe("target")
 
-	.boolean("cache").describe("cache")
+	.boolean("cache").describe("cache").default("cache", true)
 
 	.boolean("watch").alias("watch", "w").describe("watch")
 
