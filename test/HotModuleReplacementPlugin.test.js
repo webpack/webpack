@@ -11,6 +11,7 @@ describe("HotModuleReplacementPlugin", function() {
 		try { fs.mkdirSync(path.join(__dirname, "js")); } catch(e) {}
 		try { fs.unlinkSync(recordsFile); } catch(e) {}
 		var compiler = webpack({
+			cache: false,
 			entry: entryFile,
 			recordsPath: recordsFile,
 			output: {
@@ -33,6 +34,7 @@ describe("HotModuleReplacementPlugin", function() {
 				compiler.run(function(err, stats) {
 					if(err) throw err;
 					var lastHash2 = stats.toJson().hash;
+					lastHash2.should.not.be.eql(lastHash1);
 					fs.writeFileSync(entryFile, "1", "utf-8");
 					compiler.run(function(err, stats) {
 						if(err) throw err;
