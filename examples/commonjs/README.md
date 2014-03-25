@@ -32,17 +32,15 @@ exports.add = function() {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	// shortcut for better minimizing
-/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function require(moduleId) {
+/******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId][exports];
+/******/ 			return installedModules[moduleId].exports;
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -52,28 +50,28 @@ exports.add = function() {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module[exports];
+/******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	require.modules = modules;
+/******/ 	__webpack_require__.m = modules;
 /******/ 	
 /******/ 	// expose the module cache
-/******/ 	require.cache = installedModules;
+/******/ 	__webpack_require__.c = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "js/";
+/******/ 	__webpack_require__.p = "js/";
 /******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
-/******/ 	return require(0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -81,9 +79,9 @@ exports.add = function() {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var inc = require(/*! ./increment */ 1).increment;
+	var inc = __webpack_require__(/*! ./increment */ 1).increment;
 	var a = 1;
 	inc(a); // 2
 
@@ -92,9 +90,9 @@ exports.add = function() {
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var add = require(/*! ./math */ 2).add;
+	var add = __webpack_require__(/*! ./math */ 2).add;
 	exports.increment = function(val) {
 	    return add(val, 1);
 	};
@@ -104,7 +102,7 @@ exports.add = function() {
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	exports.add = function() {
 	    var sum = 0, i = 0, args = arguments, l = args.length;
@@ -124,12 +122,12 @@ exports.add = function() {
 
 ```
 Hash: 463200a36258bb3ff5b2
-Version: webpack 1.0.0-rc5
-Time: 55ms
+Version: webpack 1.1.0
+Time: 70ms
     Asset  Size  Chunks             Chunk Names
-output.js  2255       0  [emitted]  main       
+output.js  2294       0  [emitted]  main       
 chunk    {0} output.js (main) 329 [rendered]
-    > main [0] ./example.js
+    > main [0] ./example.js 
     [0] ./example.js 69 {0} [built]
     [1] ./increment.js 98 {0} [built]
         cjs require ./increment [0] ./example.js 1:10-32
@@ -140,13 +138,13 @@ chunk    {0} output.js (main) 329 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: feb30ccf606cb37939fb
-Version: webpack 1.0.0-rc5
-Time: 132ms
+Hash: 434f28b7ad3542e91dda
+Version: webpack 1.1.0
+Time: 129ms
     Asset  Size  Chunks             Chunk Names
-output.js   421       0  [emitted]  main       
+output.js   419       0  [emitted]  main       
 chunk    {0} output.js (main) 329 [rendered]
-    > main [0] ./example.js
+    > main [0] ./example.js 
     [0] ./example.js 69 {0} [built]
     [1] ./increment.js 98 {0} [built]
         cjs require ./increment [0] ./example.js 1:10-32

@@ -15,8 +15,6 @@ require(["../dedupe/b"]);
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	// shortcut for better minimizing
-/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -29,10 +27,10 @@ require(["../dedupe/b"]);
 /******/ 	};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function require(moduleId) {
+/******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId][exports];
+/******/ 			return installedModules[moduleId].exports;
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -42,21 +40,21 @@ require(["../dedupe/b"]);
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module[exports];
+/******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
-/******/ 	require.e = function requireEnsure(chunkId, callback) {
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
 /******/ 		// "0" is the signal for "already loaded"
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return callback.call(null, require);
+/******/ 			return callback.call(null, __webpack_require__);
 /******/ 		
 /******/ 		// an array means "currently loading".
 /******/ 		if(installedChunks[chunkId] !== undefined) {
@@ -68,27 +66,28 @@ require(["../dedupe/b"]);
 /******/ 			var script = document.createElement('script');
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
-/******/ 			script.src = require.p + "" + chunkId + ".output.js";
+/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	require.modules = modules;
+/******/ 	__webpack_require__.m = modules;
 /******/ 	
 /******/ 	// expose the module cache
-/******/ 	require.cache = installedModules;
+/******/ 	__webpack_require__.c = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "js/";
+/******/ 	__webpack_require__.p = "js/";
 /******/ 	
 /******/ 	// install a JSONP callback for chunk loading
+/******/ 	var parentJsonpFunction = window["webpackJsonp"];
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, callbacks = [];
-/******/ 		while(chunkIds.length) {
-/******/ 			chunkId = chunkIds.shift();
+/******/ 		var moduleId, chunkId, i = 0, callbacks = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId])
 /******/ 				callbacks.push.apply(callbacks, installedChunks[chunkId]);
 /******/ 			installedChunks[chunkId] = 0;
@@ -116,13 +115,14 @@ require(["../dedupe/b"]);
 /******/ 				modules[moduleId] = _m;
 /******/ 			}
 /******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
 /******/ 		while(callbacks.length)
-/******/ 			callbacks.shift().call(null, require);
+/******/ 			callbacks.shift().call(null, __webpack_require__);
 /******/ 		
 /******/ 	};
 /******/ 	
 /******/ 	// Load entry module and return exports
-/******/ 	return require(0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 /******/ ((function(modules) {
@@ -149,14 +149,14 @@ require(["../dedupe/b"]);
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	// index.js and x.js can be deduplicated
-	require.e/* require */(0, function(require) {[require(/*! ../dedupe/a */ 2), require(/*! bundle?lazy!../dedupe/b */ 8)];});
+	__webpack_require__.e/* require */(0, function(__webpack_require__) {[__webpack_require__(/*! ../dedupe/a */ 2), __webpack_require__(/*! bundle?lazy!../dedupe/b */ 8)];});
 
 	// index.js and x.js cannot be deduplicated
-	require.e/* require */(2, function(require) {[require(/*! ../dedupe/a */ 2)];});
-	require.e/* require */(1, function(require) {[require(/*! ../dedupe/b */ 5)];});
+	__webpack_require__.e/* require */(2, function(__webpack_require__) {[__webpack_require__(/*! ../dedupe/a */ 2)];});
+	__webpack_require__.e/* require */(1, function(__webpack_require__) {[__webpack_require__(/*! ../dedupe/b */ 5)];});
 
 
 /***/ }
@@ -172,7 +172,7 @@ webpackJsonp([0,2],[
 /*!**********************!*\
   !*** ../dedupe/z.js ***!
   \**********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {"this is": "z"};
 
@@ -183,7 +183,7 @@ webpackJsonp([0,2],[
 /*!************************!*\
   !*** ../dedupe/a/x.js ***!
   \************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {"this is": "x"};
 
@@ -192,7 +192,7 @@ webpackJsonp([0,2],[
 /*!************************!*\
   !*** ../dedupe/a/y.js ***!
   \************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {"this is": "y", "but in": "a"};
 
@@ -204,11 +204,11 @@ webpackJsonp([0,2],[
 /*!***********************************************************!*\
   !*** (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js ***!
   \***********************************************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(cb) {
-		require.e/*nsure*/(4, function(require) {
-			cb(require(/*! !../dedupe/b/index.js */ 5));
+		__webpack_require__.e/*nsure*/(4, function(require) {
+			cb(__webpack_require__(/*! !../dedupe/b/index.js */ 5));
 		});
 	}
 
@@ -217,12 +217,12 @@ webpackJsonp([0,2],[
 /*!***********************************!*\
   !*** template of 2 referencing 1 ***!
   \***********************************/
-/***/ function(module, exports, require, __webpack_module_template_argument_0__, __webpack_module_template_argument_1__) {
+/***/ function(module, exports, __webpack_require__, __webpack_module_template_argument_0__, __webpack_module_template_argument_1__) {
 
 	module.exports = {
-		x: require(__webpack_module_template_argument_0__),
-		y: require(__webpack_module_template_argument_1__),
-		z: require(/*! ../z */ 1)
+		x: __webpack_require__(__webpack_module_template_argument_0__),
+		y: __webpack_require__(__webpack_module_template_argument_1__),
+		z: __webpack_require__(/*! ../z */ 1)
 	}
 
 /***/ }
@@ -238,7 +238,7 @@ webpackJsonp([1,4],[
 /*!**********************!*\
   !*** ../dedupe/z.js ***!
   \**********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {"this is": "z"};
 
@@ -250,12 +250,12 @@ webpackJsonp([1,4],[
 /*!****************************!*\
   !*** ../dedupe/b/index.js ***!
   \****************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-		x: require(/*! ./x */ 6),
-		y: require(/*! ./y */ 7),
-		z: require(/*! ../z */ 1)
+		x: __webpack_require__(/*! ./x */ 6),
+		y: __webpack_require__(/*! ./y */ 7),
+		z: __webpack_require__(/*! ../z */ 1)
 	}
 
 /***/ },
@@ -263,7 +263,7 @@ webpackJsonp([1,4],[
 /*!************************!*\
   !*** ../dedupe/b/x.js ***!
   \************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {"this is": "x"};
 
@@ -272,7 +272,7 @@ webpackJsonp([1,4],[
 /*!************************!*\
   !*** ../dedupe/b/y.js ***!
   \************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {"this is": "y", "but in": "b"};
 
@@ -289,7 +289,7 @@ webpackJsonp([2],[
 /*!**********************!*\
   !*** ../dedupe/z.js ***!
   \**********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {"this is": "z"};
 
@@ -298,12 +298,12 @@ webpackJsonp([2],[
 /*!****************************!*\
   !*** ../dedupe/a/index.js ***!
   \****************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {
-		x: require(/*! ./x */ 3),
-		y: require(/*! ./y */ 4),
-		z: require(/*! ../z */ 1)
+		x: __webpack_require__(/*! ./x */ 3),
+		y: __webpack_require__(/*! ./y */ 4),
+		z: __webpack_require__(/*! ../z */ 1)
 	}
 
 /***/ },
@@ -311,7 +311,7 @@ webpackJsonp([2],[
 /*!************************!*\
   !*** ../dedupe/a/x.js ***!
   \************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {"this is": "x"};
 
@@ -320,7 +320,7 @@ webpackJsonp([2],[
 /*!************************!*\
   !*** ../dedupe/a/y.js ***!
   \************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {"this is": "y", "but in": "a"};
 
@@ -345,7 +345,7 @@ webpackJsonp([4],[
 /*!************************!*\
   !*** ../dedupe/b/y.js ***!
   \************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {"this is": "y", "but in": "b"};
 
@@ -358,16 +358,16 @@ webpackJsonp([4],[
 ## Uncompressed
 
 ```
-Hash: 86fefc17a6b40863cae1
-Version: webpack 1.0.0-rc5
-Time: 97ms
+Hash: dc7c5e807a634a4015c8
+Version: webpack 1.1.0
+Time: 104ms
       Asset  Size  Chunks             Chunk Names
-0.output.js  1464    0, 2  [emitted]             
-1.output.js   902    1, 4  [emitted]             
-2.output.js   873       2  [emitted]             
-  output.js  5124       3  [emitted]  main       
-4.output.js   297       4  [emitted]             
-chunk    {0} 0.output.js 492 {3} [rendered]
+0.output.js  1584    0, 2  [emitted]             
+1.output.js   986    1, 4  [emitted]             
+2.output.js   957       2  [emitted]             
+  output.js  5432       3  [emitted]  main       
+4.output.js   309       4  [emitted]             
+chunk    {0} 0.output.js 464 {3} [rendered]
     > [0] ./example.js 2:0-51
     [1] ../dedupe/z.js 34 {0} {1} {2} [built]
         cjs require ../z [2] ../dedupe/a/index.js 4:4-19
@@ -379,7 +379,7 @@ chunk    {0} 0.output.js 492 {3} [rendered]
         cjs require ./x [2] ../dedupe/a/index.js 2:4-18
     [4] ../dedupe/a/y.js 49 {0} {2} [built]
         cjs require ./y [2] ../dedupe/a/index.js 3:4-18
-    [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 207 {0} [built]
+    [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 179 {0} [built]
         amd require bundle?lazy!../dedupe/b [0] ./example.js 2:0-51
     [9] template of 2 referencing 1 84 {0} [not cacheable] [built]
         template 1 [2] ../dedupe/a/index.js
@@ -391,7 +391,7 @@ chunk    {1} 1.output.js 201 {3} [rendered]
         cjs require ../z [5] ../dedupe/b/index.js 4:4-19
     [5] ../dedupe/b/index.js 84 {1} {4} [built]
         amd require ../dedupe/b [0] ./example.js 6:0-24
-        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-126
+        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-98
     [6] ../dedupe/b/x.js 34 {1} {4} [built]
         cjs require ./x [5] ../dedupe/b/index.js 2:4-18
     [7] ../dedupe/b/y.js 49 {1} {4} [built]
@@ -409,13 +409,13 @@ chunk    {2} 2.output.js 201 {3} [rendered]
     [4] ../dedupe/a/y.js 49 {0} {2} [built]
         cjs require ./y [2] ../dedupe/a/index.js 3:4-18
 chunk    {3} output.js (main) 197 [rendered]
-    > main [0] ./example.js
+    > main [0] ./example.js 
     [0] ./example.js 197 {3} [built]
 chunk    {4} 4.output.js 167 {0} [rendered]
     > [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 2:1-4:3
     [5] ../dedupe/b/index.js 84 {1} {4} [built]
         amd require ../dedupe/b [0] ./example.js 6:0-24
-        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-126
+        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-98
     [6] ../dedupe/b/x.js 34 {1} {4} [built]
         cjs require ./x [5] ../dedupe/b/index.js 2:4-18
     [7] ../dedupe/b/y.js 49 {1} {4} [built]
@@ -425,16 +425,16 @@ chunk    {4} 4.output.js 167 {0} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 70e5d0854efd68bda480
-Version: webpack 1.0.0-rc5
-Time: 282ms
+Hash: b73e37bafcc7be2b644f
+Version: webpack 1.1.0
+Time: 265ms
       Asset  Size  Chunks             Chunk Names
-0.output.js   286    0, 2  [emitted]             
+0.output.js   285    0, 2  [emitted]             
 1.output.js   206    1, 4  [emitted]             
 2.output.js   201       2  [emitted]             
-  output.js  1150       3  [emitted]  main       
+  output.js  1187       3  [emitted]  main       
 4.output.js    87       4  [emitted]             
-chunk    {0} 0.output.js 492 {3} [rendered]
+chunk    {0} 0.output.js 464 {3} [rendered]
     > [0] ./example.js 2:0-51
     [1] ../dedupe/z.js 34 {0} {1} {2} [built]
         cjs require ../z [2] ../dedupe/a/index.js 4:4-19
@@ -446,7 +446,7 @@ chunk    {0} 0.output.js 492 {3} [rendered]
         cjs require ./x [2] ../dedupe/a/index.js 2:4-18
     [4] ../dedupe/a/y.js 49 {0} {2} [built]
         cjs require ./y [2] ../dedupe/a/index.js 3:4-18
-    [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 207 {0} [built]
+    [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 179 {0} [built]
         amd require bundle?lazy!../dedupe/b [0] ./example.js 2:0-51
     [9] template of 2 referencing 1 84 {0} [not cacheable] [built]
         template 1 [2] ../dedupe/a/index.js
@@ -458,7 +458,7 @@ chunk    {1} 1.output.js 201 {3} [rendered]
         cjs require ../z [5] ../dedupe/b/index.js 4:4-19
     [5] ../dedupe/b/index.js 84 {1} {4} [built]
         amd require ../dedupe/b [0] ./example.js 6:0-24
-        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-126
+        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-98
     [6] ../dedupe/b/x.js 34 {1} {4} [built]
         cjs require ./x [5] ../dedupe/b/index.js 2:4-18
     [7] ../dedupe/b/y.js 49 {1} {4} [built]
@@ -476,15 +476,18 @@ chunk    {2} 2.output.js 201 {3} [rendered]
     [4] ../dedupe/a/y.js 49 {0} {2} [built]
         cjs require ./y [2] ../dedupe/a/index.js 3:4-18
 chunk    {3} output.js (main) 197 [rendered]
-    > main [0] ./example.js
+    > main [0] ./example.js 
     [0] ./example.js 197 {3} [built]
 chunk    {4} 4.output.js 167 {0} [rendered]
     > [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 2:1-4:3
     [5] ../dedupe/b/index.js 84 {1} {4} [built]
         amd require ../dedupe/b [0] ./example.js 6:0-24
-        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-126
+        cjs require !!(webpack)\examples\dedupe\b\index.js [8] (webpack)/~/bundle-loader?lazy!../dedupe/b/index.js 3:5-98
     [6] ../dedupe/b/x.js 34 {1} {4} [built]
         cjs require ./x [5] ../dedupe/b/index.js 2:4-18
     [7] ../dedupe/b/y.js 49 {1} {4} [built]
         cjs require ./y [5] ../dedupe/b/index.js 3:4-18
+
+WARNING in 0.output.js from UglifyJs
+Dropping unused function argument require [(webpack)/~/bundle-loader?lazy!../dedupe/b/index.js:2,0]
 ```

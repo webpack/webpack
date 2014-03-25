@@ -127,8 +127,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 ```
 Hash: fe82a5dbd0c1deac91fe
-Version: webpack 1.1.0-beta1
-Time: 127ms
+Version: webpack 1.1.0
+Time: 55ms
     Asset  Size  Chunks             Chunk Names
 output.js  3045       0  [emitted]  main       
 chunk    {0} output.js (main) 197 [rendered]
@@ -139,9 +139,9 @@ chunk    {0} output.js (main) 197 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 477ae8800e910830898c
-Version: webpack 1.1.0-beta1
-Time: 364ms
+Hash: d8b6f8b3302f36a609b5
+Version: webpack 1.1.0
+Time: 147ms
     Asset  Size  Chunks             Chunk Names
 output.js   706       0  [emitted]  main       
 chunk    {0} output.js (main) 197 [rendered]

@@ -34,17 +34,15 @@ module.exports = {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	// shortcut for better minimizing
-/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function require(moduleId) {
+/******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId][exports];
+/******/ 			return installedModules[moduleId].exports;
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -54,28 +52,28 @@ module.exports = {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module[exports];
+/******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	require.modules = modules;
+/******/ 	__webpack_require__.m = modules;
 /******/ 	
 /******/ 	// expose the module cache
-/******/ 	require.cache = installedModules;
+/******/ 	__webpack_require__.c = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "js/";
+/******/ 	__webpack_require__.p = "js/";
 /******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
-/******/ 	return require(0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -83,7 +81,7 @@ module.exports = {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	console.log("Hallo Welt");
 	console.log("Missing Text");
@@ -97,14 +95,14 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: aacf76cf7c567530eab4
-Version: webpack 1.0.0-rc5
-Time: 43ms
+Hash: 3bd94df73dbb84d38341
+Version: webpack 1.1.0
+Time: 48ms
     Asset  Size  Chunks             Chunk Names
-output.js  1678       0  [emitted]  main       
-chunk    {0} output.js (main) 64 [rendered]
-    > main [0] ./example.js
-    [0] ./example.js 64 {0} [built] [1 warning]
+output.js  1670       0  [emitted]  main       
+chunk    {0} output.js (main) 65 [rendered]
+    > main [0] ./example.js 
+    [0] ./example.js 65 {0} [built] [1 warning]
 
 WARNING in ./example.js
 Missing localization: Missing Text
@@ -113,14 +111,14 @@ Missing localization: Missing Text
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 745ba28ffea7e8be49cd
-Version: webpack 1.0.0-rc5
-Time: 103ms
+Hash: 1ad5b360e07d437790fd
+Version: webpack 1.1.0
+Time: 107ms
     Asset  Size  Chunks             Chunk Names
-output.js   273       0  [emitted]  main       
-chunk    {0} output.js (main) 64 [rendered]
-    > main [0] ./example.js
-    [0] ./example.js 64 {0} [built] [1 warning]
+output.js   271       0  [emitted]  main       
+chunk    {0} output.js (main) 65 [rendered]
+    > main [0] ./example.js 
+    [0] ./example.js 65 {0} [built] [1 warning]
 
 WARNING in ./example.js
 Missing localization: Missing Text

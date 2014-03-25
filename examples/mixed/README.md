@@ -76,8 +76,6 @@ require(
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	// shortcut for better minimizing
-/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -90,10 +88,10 @@ require(
 /******/ 	};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function require(moduleId) {
+/******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId][exports];
+/******/ 			return installedModules[moduleId].exports;
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -103,21 +101,21 @@ require(
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module[exports];
+/******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
-/******/ 	require.e = function requireEnsure(chunkId, callback) {
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
 /******/ 		// "0" is the signal for "already loaded"
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return callback.call(null, require);
+/******/ 			return callback.call(null, __webpack_require__);
 /******/ 		
 /******/ 		// an array means "currently loading".
 /******/ 		if(installedChunks[chunkId] !== undefined) {
@@ -129,27 +127,28 @@ require(
 /******/ 			var script = document.createElement('script');
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
-/******/ 			script.src = require.p + "" + chunkId + ".output.js";
+/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	require.modules = modules;
+/******/ 	__webpack_require__.m = modules;
 /******/ 	
 /******/ 	// expose the module cache
-/******/ 	require.cache = installedModules;
+/******/ 	__webpack_require__.c = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "js/";
+/******/ 	__webpack_require__.p = "js/";
 /******/ 	
 /******/ 	// install a JSONP callback for chunk loading
+/******/ 	var parentJsonpFunction = window["webpackJsonp"];
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, callbacks = [];
-/******/ 		while(chunkIds.length) {
-/******/ 			chunkId = chunkIds.shift();
+/******/ 		var moduleId, chunkId, i = 0, callbacks = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId])
 /******/ 				callbacks.push.apply(callbacks, installedChunks[chunkId]);
 /******/ 			installedChunks[chunkId] = 0;
@@ -157,13 +156,14 @@ require(
 /******/ 		for(moduleId in moreModules) {
 /******/ 			modules[moduleId] = moreModules[moduleId];
 /******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
 /******/ 		while(callbacks.length)
-/******/ 			callbacks.shift().call(null, require);
+/******/ 			callbacks.shift().call(null, __webpack_require__);
 /******/ 		
 /******/ 	};
 /******/ 	
 /******/ 	// Load entry module and return exports
-/******/ 	return require(0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -171,23 +171,23 @@ require(
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	// CommonJs-style requires
-	var commonjs1 = require(/*! ./commonjs */ 2);
-	var amd1 = require(/*! ./amd */ 1);
-	var labeled1 = require(/*! ./labeled */ 3);
+	var commonjs1 = __webpack_require__(/*! ./commonjs */ 2);
+	var amd1 = __webpack_require__(/*! ./amd */ 1);
+	var labeled1 = __webpack_require__(/*! ./labeled */ 3);
 
 	// AMD-style requires (with all webpack features)
-	require.e/* require */(0, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [
-		require(/*! ./commonjs */ 2), require(/*! ./amd */ 1), require(/*! ./labeled */ 3),
-		require(/*! ../require.context/templates */ 4)("./"+amd1+".js"),
-		Math.random() < 0.5 ? require(/*! ./commonjs */ 2) : require(/*! ./amd */ 1)]; (function(commonjs2, amd2, labeled2, template, randModule) {
+	__webpack_require__.e/* require */(0, function(__webpack_require__) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [
+		__webpack_require__(/*! ./commonjs */ 2), __webpack_require__(/*! ./amd */ 1), __webpack_require__(/*! ./labeled */ 3),
+		__webpack_require__(/*! ../require.context/templates */ 4)("./"+amd1+".js"),
+		Math.random() < 0.5 ? __webpack_require__(/*! ./commonjs */ 2) : __webpack_require__(/*! ./amd */ 1)]; (function(commonjs2, amd2, labeled2, template, randModule) {
 			// Do something with it...
 		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 
 	// labeled modules requires
-	var __WEBPACK_LABELED_MODULE__3 = require(/*! ./labeled */ 3), a = __WEBPACK_LABELED_MODULE__3.a;
+	var __WEBPACK_LABELED_MODULE__3 = __webpack_require__(/*! ./labeled */ 3), a = __WEBPACK_LABELED_MODULE__3.a;
 	// with the require label you are only allowed to import labeled modules
 	// the module needs static information about exports
 
@@ -196,13 +196,13 @@ require(
 /*!****************!*\
   !*** ./amd.js ***!
   \****************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Format
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [require(/*! ./commonjs */ 2), require(/*! ./labeled */ 3)], __WEBPACK_AMD_DEFINE_RESULT__ = (function(commonjs1, labeled1) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./commonjs */ 2), __webpack_require__(/*! ./labeled */ 3)], __WEBPACK_AMD_DEFINE_RESULT__ = (function(commonjs1, labeled1) {
 			// but you can use CommonJs-style requires:
-			var commonjs2 = require(/*! ./commonjs */ 2);
-			var labeled2 = require(/*! ./labeled */ 3);
+			var commonjs2 = __webpack_require__(/*! ./commonjs */ 2);
+			var labeled2 = __webpack_require__(/*! ./labeled */ 3);
 			// Do something...
 			return 456;
 		}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -212,15 +212,15 @@ require(
 /*!*********************!*\
   !*** ./commonjs.js ***!
   \*********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	// CommonJs Module Format
 	module.exports = 123;
 
 	// but you can use amd style requires
-	!/* require */(/* empty */function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [require(/*! ./amd */ 1), require(/*! ./labeled */ 3)]; (function(amd1, labeled1) {
-			var amd2 = require(/*! ./amd */ 1);
-			var labeled2 = require(/*! ./labeled */ 3);
+	!/* require */(/* empty */function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./amd */ 1), __webpack_require__(/*! ./labeled */ 3)]; (function(amd1, labeled1) {
+			var amd2 = __webpack_require__(/*! ./amd */ 1);
+			var labeled2 = __webpack_require__(/*! ./labeled */ 3);
 		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}());
 
 /***/ },
@@ -228,15 +228,15 @@ require(
 /*!********************!*\
   !*** ./labeled.js ***!
   \********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	// Labeled Module Format
 	exports: var a = exports["a"] = 123;
 
 	// but you can use amd and commonjs style requires
-	!/* require */(/* empty */function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [require(/*! ./commonjs */ 2), require(/*! ./amd */ 1)]; (function(amd1) {
-			var commonjs2 = require(/*! ./commonjs */ 2);
-			var amd2 = require(/*! ./amd */ 1);
+	!/* require */(/* empty */function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./commonjs */ 2), __webpack_require__(/*! ./amd */ 1)]; (function(amd1) {
+			var commonjs2 = __webpack_require__(/*! ./commonjs */ 2);
+			var amd2 = __webpack_require__(/*! ./amd */ 1);
 		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}());
 
 /***/ }
@@ -255,7 +255,7 @@ webpackJsonp([0],[
 /*!*************************************************!*\
   !*** ../require.context/templates ^\.\/.*\.js$ ***!
   \*************************************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var map = {
 		"./a.js": 5,
@@ -263,7 +263,7 @@ webpackJsonp([0],[
 		"./c.js": 7
 	};
 	function webpackContext(req) {
-		return require(webpackContextResolve(req));
+		return __webpack_require__(webpackContextResolve(req));
 	};
 	function webpackContextResolve(req) {
 		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
@@ -280,7 +280,7 @@ webpackJsonp([0],[
 /*!*****************************************!*\
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function() {
 		return "This text was generated by template A";
@@ -291,7 +291,7 @@ webpackJsonp([0],[
 /*!*****************************************!*\
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function() {
 		return "This text was generated by template B";
@@ -302,7 +302,7 @@ webpackJsonp([0],[
 /*!*****************************************!*\
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function() {
 		return "This text was generated by template C";
@@ -318,11 +318,11 @@ webpackJsonp([0],[
 
 ```
 Hash: d84ff057dc3f2fd98e07
-Version: webpack 1.0.0-rc5
-Time: 93ms
+Version: webpack 1.1.0
+Time: 83ms
       Asset  Size  Chunks             Chunk Names
-0.output.js  1596       0  [emitted]             
-  output.js  6321       1  [emitted]  main       
+0.output.js  1656       0  [emitted]             
+  output.js  6833       1  [emitted]  main       
 chunk    {0} 0.output.js 439 {1} [rendered]
     > [0] ./example.js 7:0-14:1
     [4] ../require.context/templates ^\.\/.*\.js$ 193 {0} [built]
@@ -334,7 +334,7 @@ chunk    {0} 0.output.js 439 {1} [rendered]
     [7] ../require.context/templates/c.js 82 {0} [built]
         context element ./c.js [4] ../require.context/templates ^\.\/.*\.js$
 chunk    {1} output.js (main) 1395 [rendered]
-    > main [0] ./example.js
+    > main [0] ./example.js 
     [0] ./example.js 613 {1} [built]
     [1] ./amd.js 309 {1} [built]
         cjs require ./amd [0] ./example.js 3:11-27
@@ -365,12 +365,12 @@ chunk    {1} output.js (main) 1395 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 34f1f856f9c038602d2f
-Version: webpack 1.0.0-rc5
-Time: 260ms
+Hash: 27970b41e7a9e3dd45f3
+Version: webpack 1.1.0
+Time: 241ms
       Asset  Size  Chunks             Chunk Names
 0.output.js   507       0  [emitted]             
-  output.js  1138       1  [emitted]  main       
+  output.js  1175       1  [emitted]  main       
 chunk    {0} 0.output.js 439 {1} [rendered]
     > [0] ./example.js 7:0-14:1
     [4] ../require.context/templates ^\.\/.*\.js$ 193 {0} [built]
@@ -382,7 +382,7 @@ chunk    {0} 0.output.js 439 {1} [rendered]
     [7] ../require.context/templates/c.js 82 {0} [built]
         context element ./c.js [4] ../require.context/templates ^\.\/.*\.js$
 chunk    {1} output.js (main) 1395 [rendered]
-    > main [0] ./example.js
+    > main [0] ./example.js 
     [0] ./example.js 613 {1} [built]
     [1] ./amd.js 309 {1} [built]
         cjs require ./amd [0] ./example.js 3:11-27

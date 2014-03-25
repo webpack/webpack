@@ -17,8 +17,6 @@ module.exports = "It works";
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	// shortcut for better minimizing
-/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -31,10 +29,10 @@ module.exports = "It works";
 /******/ 	};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function require(moduleId) {
+/******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId][exports];
+/******/ 			return installedModules[moduleId].exports;
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -44,21 +42,21 @@ module.exports = "It works";
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module[exports];
+/******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
-/******/ 	require.e = function requireEnsure(chunkId, callback) {
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
 /******/ 		// "0" is the signal for "already loaded"
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return callback.call(null, require);
+/******/ 			return callback.call(null, __webpack_require__);
 /******/ 		
 /******/ 		// an array means "currently loading".
 /******/ 		if(installedChunks[chunkId] !== undefined) {
@@ -70,27 +68,28 @@ module.exports = "It works";
 /******/ 			var script = document.createElement('script');
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
-/******/ 			script.src = require.p + "" + chunkId + ".output.js";
+/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	require.modules = modules;
+/******/ 	__webpack_require__.m = modules;
 /******/ 	
 /******/ 	// expose the module cache
-/******/ 	require.cache = installedModules;
+/******/ 	__webpack_require__.c = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "js/";
+/******/ 	__webpack_require__.p = "js/";
 /******/ 	
 /******/ 	// install a JSONP callback for chunk loading
+/******/ 	var parentJsonpFunction = window["webpackJsonp"];
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, callbacks = [];
-/******/ 		while(chunkIds.length) {
-/******/ 			chunkId = chunkIds.shift();
+/******/ 		var moduleId, chunkId, i = 0, callbacks = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId])
 /******/ 				callbacks.push.apply(callbacks, installedChunks[chunkId]);
 /******/ 			installedChunks[chunkId] = 0;
@@ -98,13 +97,14 @@ module.exports = "It works";
 /******/ 		for(moduleId in moreModules) {
 /******/ 			modules[moduleId] = moreModules[moduleId];
 /******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
 /******/ 		while(callbacks.length)
-/******/ 			callbacks.shift().call(null, require);
+/******/ 			callbacks.shift().call(null, __webpack_require__);
 /******/ 		
 /******/ 	};
 /******/ 	
 /******/ 	// Load entry module and return exports
-/******/ 	return require(0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -112,9 +112,9 @@ module.exports = "It works";
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
-	require(/*! bundle!./file.js */ 2)(function(fileJsExports) {
+	__webpack_require__(/*! bundle!./file.js */ 2)(function(fileJsExports) {
 		console.log(fileJsExports);
 	});
 
@@ -124,7 +124,7 @@ module.exports = "It works";
 /*!*******************************************!*\
   !*** (webpack)/~/bundle-loader!./file.js ***!
   \*******************************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var cbs = [], 
 		data;
@@ -132,8 +132,8 @@ module.exports = "It works";
 		if(cbs) cbs.push(cb);
 		else cb(data);
 	}
-	require.e/*nsure*/(1, function(require) {
-		data = require(/*! !./file.js */ 1);
+	__webpack_require__.e/*nsure*/(1, function(require) {
+		data = __webpack_require__(/*! !./file.js */ 1);
 		var callbacks = cbs;
 		cbs = null;
 		for(var i = 0, l = callbacks.length; i < l; i++) {
@@ -154,7 +154,7 @@ webpackJsonp([1],[
 /*!*****************!*\
   !*** ./file.js ***!
   \*****************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = "It works";
 
@@ -167,39 +167,42 @@ webpackJsonp([1],[
 ## Uncompressed
 
 ```
-Hash: 49a1b963d0a8af6cf960
-Version: webpack 1.0.0-rc5
-Time: 82ms
+Hash: b48eaa219fe67eefd271
+Version: webpack 1.1.0
+Time: 79ms
       Asset  Size  Chunks             Chunk Names
-  output.js  4197       0  [emitted]  main       
-1.output.js   189       1  [emitted]             
-chunk    {0} output.js (main) 486 [rendered]
-    > main [0] ./example.js
+  output.js  4433       0  [emitted]  main       
+1.output.js   201       1  [emitted]             
+chunk    {0} output.js (main) 458 [rendered]
+    > main [0] ./example.js 
     [0] ./example.js 88 {0} [built]
-    [2] (webpack)/~/bundle-loader!./file.js 398 {0} [built]
+    [2] (webpack)/~/bundle-loader!./file.js 370 {0} [built]
         cjs require bundle!./file.js [0] ./example.js 1:0-27
 chunk    {1} 1.output.js 28 {0} [rendered]
     > [2] (webpack)/~/bundle-loader!./file.js 7:0-14:2
     [1] ./file.js 28 {1} [built]
-        cjs require !!.\file.js [2] (webpack)/~/bundle-loader!./file.js 8:8-147
+        cjs require !!.\file.js [2] (webpack)/~/bundle-loader!./file.js 8:8-119
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: c0cd3678fb865fb6e737
-Version: webpack 1.0.0-rc5
-Time: 201ms
+Hash: 64de800a2a6968acaf66
+Version: webpack 1.1.0
+Time: 176ms
       Asset  Size  Chunks             Chunk Names
-  output.js   851       0  [emitted]  main       
+  output.js   887       0  [emitted]  main       
 1.output.js    55       1  [emitted]             
-chunk    {0} output.js (main) 486 [rendered]
-    > main [0] ./example.js
+chunk    {0} output.js (main) 458 [rendered]
+    > main [0] ./example.js 
     [0] ./example.js 88 {0} [built]
-    [2] (webpack)/~/bundle-loader!./file.js 398 {0} [built]
+    [2] (webpack)/~/bundle-loader!./file.js 370 {0} [built]
         cjs require bundle!./file.js [0] ./example.js 1:0-27
 chunk    {1} 1.output.js 28 {0} [rendered]
     > [2] (webpack)/~/bundle-loader!./file.js 7:0-14:2
     [1] ./file.js 28 {1} [built]
-        cjs require !!.\file.js [2] (webpack)/~/bundle-loader!./file.js 8:8-147
+        cjs require !!.\file.js [2] (webpack)/~/bundle-loader!./file.js 8:8-119
+
+WARNING in output.js from UglifyJs
+Dropping unused function argument require [(webpack)/~/bundle-loader!./file.js:7,0]
 ```

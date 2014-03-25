@@ -54,8 +54,6 @@ module.exports = {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	// shortcut for better minimizing
-/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -68,10 +66,10 @@ module.exports = {
 /******/ 	};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function require(moduleId) {
+/******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId][exports];
+/******/ 			return installedModules[moduleId].exports;
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -81,21 +79,21 @@ module.exports = {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module[exports];
+/******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
-/******/ 	require.e = function requireEnsure(chunkId, callback) {
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
 /******/ 		// "0" is the signal for "already loaded"
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return callback.call(null, require);
+/******/ 			return callback.call(null, __webpack_require__);
 /******/ 		
 /******/ 		// an array means "currently loading".
 /******/ 		if(installedChunks[chunkId] !== undefined) {
@@ -107,27 +105,28 @@ module.exports = {
 /******/ 			var script = document.createElement('script');
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
-/******/ 			script.src = require.p + "" + chunkId + ".chunk.js";
+/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".chunk.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	require.modules = modules;
+/******/ 	__webpack_require__.m = modules;
 /******/ 	
 /******/ 	// expose the module cache
-/******/ 	require.cache = installedModules;
+/******/ 	__webpack_require__.c = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "js/";
+/******/ 	__webpack_require__.p = "js/";
 /******/ 	
 /******/ 	// install a JSONP callback for chunk loading
+/******/ 	var parentJsonpFunction = window["webpackJsonp"];
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, callbacks = [];
-/******/ 		while(chunkIds.length) {
-/******/ 			chunkId = chunkIds.shift();
+/******/ 		var moduleId, chunkId, i = 0, callbacks = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId])
 /******/ 				callbacks.push.apply(callbacks, installedChunks[chunkId]);
 /******/ 			installedChunks[chunkId] = 0;
@@ -135,11 +134,12 @@ module.exports = {
 /******/ 		for(moduleId in moreModules) {
 /******/ 			modules[moduleId] = moreModules[moduleId];
 /******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
 /******/ 		while(callbacks.length)
-/******/ 			callbacks.shift().call(null, require);
+/******/ 			callbacks.shift().call(null, __webpack_require__);
 /******/ 		if(moreModules[0]) {
 /******/ 			installedModules[0] = 0;
-/******/ 			require(0);
+/******/ 			__webpack_require__(0);
 /******/ 		}
 /******/ 	};
 /******/ })
@@ -150,7 +150,7 @@ module.exports = {
 /*!*******************!*\
   !*** ./common.js ***!
   \*******************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = "Common";
 
@@ -166,10 +166,10 @@ webpackJsonp([3],[
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var common = require(/*! ./common */ 1);
-	require.e/* require */(0/* duplicate */, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [require(/*! ./shared */ 2)]; (function(shared) {
+	var common = __webpack_require__(/*! ./common */ 1);
+	__webpack_require__.e/* require */(0/* duplicate */, function(__webpack_require__) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 2)]; (function(shared) {
 		shared("This is page A");
 	}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 
@@ -185,11 +185,11 @@ webpackJsonp([2],[
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var common = require(/*! ./common */ 1);
-	require.e/*nsure*/(0, function(require) {
-		var shared = require(/*! ./shared */ 2);
+	var common = __webpack_require__(/*! ./common */ 1);
+	__webpack_require__.e/*nsure*/(0, function(require) {
+		var shared = __webpack_require__(/*! ./shared */ 2);
 		shared("This is page B");
 	});
 
@@ -206,9 +206,9 @@ webpackJsonp([0],{
 /*!*******************!*\
   !*** ./shared.js ***!
   \*******************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var common = require(/*! ./common */ 1);
+	var common = __webpack_require__(/*! ./common */ 1);
 	module.exports = function(msg) {
 		console.log(msg);
 	};
@@ -224,13 +224,13 @@ webpackJsonp([0],{
 
 ```
 Hash: 790c5174bb64d68297d6
-Version: webpack 1.0.0-rc5
-Time: 62ms
+Version: webpack 1.1.0
+Time: 64ms
           Asset  Size  Chunks             Chunk Names
-     0.chunk.js   262       0  [emitted]             
-     commons.js  3613       1  [emitted]  commons.js 
-pageB.bundle.js   318       2  [emitted]  pageB      
-pageA.bundle.js   425       3  [emitted]  pageA      
+     0.chunk.js   286       0  [emitted]             
+     commons.js  3801       1  [emitted]  commons.js 
+pageB.bundle.js   366       2  [emitted]  pageB      
+pageA.bundle.js   485       3  [emitted]  pageA      
 chunk    {0} 0.chunk.js 91 {2} {3} [rendered]
     > [0] ./pageB.js 2:0-5:2
     > duplicate [0] ./pageA.js 2:0-4:2
@@ -244,23 +244,23 @@ chunk    {1} commons.js (commons.js) 26 [rendered]
         cjs require ./common [0] ./pageB.js 1:13-32
         cjs require ./common [2] ./shared.js 1:13-32
 chunk    {2} pageB.bundle.js (pageB) 152 {1} [rendered]
-    > pageB [0] ./pageB.js
+    > pageB [0] ./pageB.js 
     [0] ./pageB.js 152 {2} [built]
 chunk    {3} pageA.bundle.js (pageA) 108 {1} [rendered]
-    > pageA [0] ./pageA.js
+    > pageA [0] ./pageA.js 
     [0] ./pageA.js 108 {3} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 09f7a1e6c9a68dfb072e
-Version: webpack 1.0.0-rc5
-Time: 196ms
+Hash: af178c6be99868cf9cda
+Version: webpack 1.1.0
+Time: 189ms
           Asset  Size  Chunks             Chunk Names
      0.chunk.js    82       0  [emitted]             
-     commons.js   690       1  [emitted]  commons.js 
-pageB.bundle.js    93       2  [emitted]  pageB      
+     commons.js   727       1  [emitted]  commons.js 
+pageB.bundle.js    92       2  [emitted]  pageB      
 pageA.bundle.js   124       3  [emitted]  pageA      
 chunk    {0} 0.chunk.js 91 {2} {3} [rendered]
     > [0] ./pageB.js 2:0-5:2
@@ -275,16 +275,17 @@ chunk    {1} commons.js (commons.js) 26 [rendered]
         cjs require ./common [0] ./pageB.js 1:13-32
         cjs require ./common [2] ./shared.js 1:13-32
 chunk    {2} pageB.bundle.js (pageB) 152 {1} [rendered]
-    > pageB [0] ./pageB.js
+    > pageB [0] ./pageB.js 
     [0] ./pageB.js 152 {2} [built]
 chunk    {3} pageA.bundle.js (pageA) 108 {1} [rendered]
-    > pageA [0] ./pageA.js
+    > pageA [0] ./pageA.js 
     [0] ./pageA.js 108 {3} [built]
 
 WARNING in 0.chunk.js from UglifyJs
 Side effects in initialization of unused variable common [./shared.js:1,0]
 
 WARNING in pageB.bundle.js from UglifyJs
+Dropping unused function argument require [./pageB.js:2,0]
 Side effects in initialization of unused variable common [./pageB.js:1,0]
 
 WARNING in pageA.bundle.js from UglifyJs

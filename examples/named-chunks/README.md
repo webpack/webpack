@@ -29,8 +29,6 @@ require.ensure(["b"], function(require) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	// shortcut for better minimizing
-/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -43,10 +41,10 @@ require.ensure(["b"], function(require) {
 /******/ 	};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function require(moduleId) {
+/******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId][exports];
+/******/ 			return installedModules[moduleId].exports;
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -56,21 +54,21 @@ require.ensure(["b"], function(require) {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module[exports];
+/******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
-/******/ 	require.e = function requireEnsure(chunkId, callback) {
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
 /******/ 		// "0" is the signal for "already loaded"
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return callback.call(null, require);
+/******/ 			return callback.call(null, __webpack_require__);
 /******/ 		
 /******/ 		// an array means "currently loading".
 /******/ 		if(installedChunks[chunkId] !== undefined) {
@@ -82,27 +80,28 @@ require.ensure(["b"], function(require) {
 /******/ 			var script = document.createElement('script');
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
-/******/ 			script.src = require.p + "" + chunkId + ".output.js";
+/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	require.modules = modules;
+/******/ 	__webpack_require__.m = modules;
 /******/ 	
 /******/ 	// expose the module cache
-/******/ 	require.cache = installedModules;
+/******/ 	__webpack_require__.c = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "js/";
+/******/ 	__webpack_require__.p = "js/";
 /******/ 	
 /******/ 	// install a JSONP callback for chunk loading
+/******/ 	var parentJsonpFunction = window["webpackJsonp"];
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, callbacks = [];
-/******/ 		while(chunkIds.length) {
-/******/ 			chunkId = chunkIds.shift();
+/******/ 		var moduleId, chunkId, i = 0, callbacks = [];
+/******/ 		for(;i < chunkIds.length; i++) {
+/******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId])
 /******/ 				callbacks.push.apply(callbacks, installedChunks[chunkId]);
 /******/ 			installedChunks[chunkId] = 0;
@@ -110,13 +109,14 @@ require.ensure(["b"], function(require) {
 /******/ 		for(moduleId in moreModules) {
 /******/ 			modules[moduleId] = moreModules[moduleId];
 /******/ 		}
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
 /******/ 		while(callbacks.length)
-/******/ 			callbacks.shift().call(null, require);
+/******/ 			callbacks.shift().call(null, __webpack_require__);
 /******/ 		
 /******/ 	};
 /******/ 	
 /******/ 	// Load entry module and return exports
-/******/ 	return require(0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -124,27 +124,27 @@ require.ensure(["b"], function(require) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var a = require(/*! a */ 3);
+	var a = __webpack_require__(/*! a */ 3);
 
-	require.e/*nsure*/(0, function(require) {
+	__webpack_require__.e/*nsure*/(0, function(require) {
 		// a named chunk
-		var c = require(/*! c */ 4);
+		var c = __webpack_require__(/*! c */ 4);
 	}, /*! my own chunk */ 0);
 
-	require.e/*nsure*/(0, function(require) {
+	__webpack_require__.e/*nsure*/(0, function(require) {
 		// another chunk with the same name
-		var d = require(/*! d */ 2);
+		var d = __webpack_require__(/*! d */ 2);
 	}, /*! my own chunk */ 0);
 
-	require.e/*nsure*/(0, function(require) {
+	__webpack_require__.e/*nsure*/(0, function(require) {
 		// the same again
 	}, /*! my own chunk */ 0);
 
-	require.e/*nsure*/(1, function(require) {
+	__webpack_require__.e/*nsure*/(1, function(require) {
 		// chunk without name
-		var d = require(/*! d */ 2);
+		var d = __webpack_require__(/*! d */ 2);
 	});
 
 
@@ -155,7 +155,7 @@ require.ensure(["b"], function(require) {
 /*!****************!*\
   !*** ./~/a.js ***!
   \****************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	// module a
 
@@ -172,7 +172,7 @@ webpackJsonp([0,1],[
 /*!****************!*\
   !*** ./~/b.js ***!
   \****************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	// module b
 
@@ -181,7 +181,7 @@ webpackJsonp([0,1],[
 /*!****************!*\
   !*** ./~/d.js ***!
   \****************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	// module d
 
@@ -191,7 +191,7 @@ webpackJsonp([0,1],[
 /*!****************!*\
   !*** ./~/c.js ***!
   \****************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	// module c
 
@@ -208,7 +208,7 @@ webpackJsonp([1],[
 /*!****************!*\
   !*** ./~/b.js ***!
   \****************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	// module b
 
@@ -217,7 +217,7 @@ webpackJsonp([1],[
 /*!****************!*\
   !*** ./~/d.js ***!
   \****************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	// module d
 
@@ -231,12 +231,12 @@ webpackJsonp([1],[
 
 ```
 Hash: 2eb88f7447c15bcee0b6
-Version: webpack 1.0.0-rc5
-Time: 67ms
+Version: webpack 1.1.0
+Time: 94ms
       Asset  Size  Chunks             Chunk Names 
-0.output.js   460    0, 1  [emitted]  my own chunk
-1.output.js   309       1  [emitted]              
-  output.js  4244       2  [emitted]  main        
+0.output.js   496    0, 1  [emitted]  my own chunk
+1.output.js   333       1  [emitted]              
+  output.js  4540       2  [emitted]  main        
 chunk    {0} 0.output.js (my own chunk) 33 {2} [rendered]
     > my own chunk [0] ./example.js 3:0-6:18
     > my own chunk [0] ./example.js 8:0-11:18
@@ -260,7 +260,7 @@ chunk    {1} 1.output.js 22 {2} [rendered]
         cjs require d [0] ./example.js 10:9-21
         cjs require d [0] ./example.js 19:9-21
 chunk    {2} output.js (main) 452 [rendered]
-    > main [0] ./example.js
+    > main [0] ./example.js 
     [0] ./example.js 441 {2} [built]
     [3] ./~/a.js 11 {2} [built]
         cjs require a [0] ./example.js 1:8-20
@@ -269,13 +269,13 @@ chunk    {2} output.js (main) 452 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 43d429ec15f56a083d20
-Version: webpack 1.0.0-rc5
-Time: 196ms
+Hash: ce8f2578986b700b7792
+Version: webpack 1.1.0
+Time: 188ms
       Asset  Size  Chunks             Chunk Names 
 0.output.js    63    0, 1  [emitted]  my own chunk
 1.output.js    47       1  [emitted]              
-  output.js   788       2  [emitted]  main        
+  output.js   822       2  [emitted]  main        
 chunk    {0} 0.output.js (my own chunk) 33 {2} [rendered]
     > my own chunk [0] ./example.js 3:0-6:18
     > my own chunk [0] ./example.js 8:0-11:18
@@ -299,15 +299,18 @@ chunk    {1} 1.output.js 22 {2} [rendered]
         cjs require d [0] ./example.js 10:9-21
         cjs require d [0] ./example.js 19:9-21
 chunk    {2} output.js (main) 452 [rendered]
-    > main [0] ./example.js
+    > main [0] ./example.js 
     [0] ./example.js 441 {2} [built]
     [3] ./~/a.js 11 {2} [built]
         cjs require a [0] ./example.js 1:8-20
 
 WARNING in output.js from UglifyJs
+Dropping unused function argument require [./example.js:3,0]
 Side effects in initialization of unused variable c [./example.js:5,0]
+Dropping unused function argument require [./example.js:8,0]
 Side effects in initialization of unused variable d [./example.js:10,0]
 Dropping unused function argument require [./example.js:13,0]
+Dropping unused function argument require [./example.js:17,0]
 Side effects in initialization of unused variable d [./example.js:19,0]
 Side effects in initialization of unused variable a [./example.js:1,0]
 ```

@@ -26,17 +26,15 @@ onmessage = function(event) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	// shortcut for better minimizing
-/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function require(moduleId) {
+/******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId][exports];
+/******/ 			return installedModules[moduleId].exports;
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -46,28 +44,28 @@ onmessage = function(event) {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module[exports];
+/******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	require.modules = modules;
+/******/ 	__webpack_require__.m = modules;
 /******/ 	
 /******/ 	// expose the module cache
-/******/ 	require.cache = installedModules;
+/******/ 	__webpack_require__.c = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "js/";
+/******/ 	__webpack_require__.p = "js/";
 /******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
-/******/ 	return require(0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -75,9 +73,9 @@ onmessage = function(event) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var Worker = require(/*! worker!./worker */ 1);
+	var Worker = __webpack_require__(/*! worker!./worker */ 1);
 	var worker = new Worker;
 	worker.postMessage("b");
 	worker.onmessage = function(event) {
@@ -89,10 +87,10 @@ onmessage = function(event) {
 /*!*********************************************!*\
   !*** (webpack)/~/worker-loader!./worker.js ***!
   \*********************************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function() {
-		return new Worker(require.p + "hash.worker.js");
+		return new Worker(__webpack_require__.p + "hash.worker.js");
 	};
 
 /***/ }
@@ -103,8 +101,6 @@ onmessage = function(event) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	// shortcut for better minimizing
-/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -116,10 +112,10 @@ onmessage = function(event) {
 /******/ 	};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function require(moduleId) {
+/******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId][exports];
+/******/ 			return installedModules[moduleId].exports;
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -129,33 +125,33 @@ onmessage = function(event) {
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module[exports];
+/******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
-/******/ 	require.e = function requireEnsure(chunkId, callback) {
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
 /******/ 		// "1" is the signal for "already loaded"
 /******/ 		if(!installedChunks[chunkId]) {
 /******/ 			importScripts("" + chunkId + ".hash.worker.js");
 /******/ 		}
-/******/ 		callback.call(null, require);
+/******/ 		callback.call(null, __webpack_require__);
 /******/ 	};
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	require.modules = modules;
+/******/ 	__webpack_require__.m = modules;
 /******/ 	
 /******/ 	// expose the module cache
-/******/ 	require.cache = installedModules;
+/******/ 	__webpack_require__.c = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "";
+/******/ 	__webpack_require__.p = "";
 /******/ 	this["webpackChunk"] = function webpackChunkCallback(chunkIds, moreModules) {
 /******/ 		for(var moduleId in moreModules) {
 /******/ 			modules[moduleId] = moreModules[moduleId];
@@ -165,7 +161,7 @@ onmessage = function(event) {
 /******/ 	};
 /******/ 	
 /******/ 	// Load entry module and return exports
-/******/ 	return require(0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -173,11 +169,11 @@ onmessage = function(event) {
 /*!*******************!*\
   !*** ./worker.js ***!
   \*******************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	onmessage = function(event) {
 		var template = event.data;
-		require.e/* require */(0, function(require) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [require(/*! ../require.context/templates */ 4)("./" + event.data)]; (function(tmpl) {
+		__webpack_require__.e/* require */(0, function(__webpack_require__) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ../require.context/templates */ 4)("./" + event.data)]; (function(tmpl) {
 			postMessage(tmpl());
 		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 	}
@@ -196,7 +192,7 @@ webpackChunk([0],[
 /*!*****************************************!*\
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function() {
 		return "This text was generated by template A";
@@ -207,7 +203,7 @@ webpackChunk([0],[
 /*!*****************************************!*\
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function() {
 		return "This text was generated by template B";
@@ -218,7 +214,7 @@ webpackChunk([0],[
 /*!*****************************************!*\
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function() {
 		return "This text was generated by template C";
@@ -229,7 +225,7 @@ webpackChunk([0],[
 /*!*********************************************!*\
   !*** ../require.context/templates ^\.\/.*$ ***!
   \*********************************************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var map = {
 		"./a": 1,
@@ -240,7 +236,7 @@ webpackChunk([0],[
 		"./c.js": 3
 	};
 	function webpackContext(req) {
-		return require(webpackContextResolve(req));
+		return __webpack_require__(webpackContextResolve(req));
 	};
 	function webpackContextResolve(req) {
 		return map[req] || (function() { throw new Error("Cannot find module '" + req + "'.") }());
@@ -262,23 +258,23 @@ webpackChunk([0],[
 
 ```
 Hash: d3a484ec9964172dc379
-Version: webpack 1.0.0-rc5
-Time: 104ms
+Version: webpack 1.1.0
+Time: 108ms
            Asset  Size  Chunks             Chunk Names
-0.hash.worker.js  1593          [emitted]             
-  hash.worker.js  2780          [emitted]             
-       output.js  2140       0  [emitted]  main       
+0.hash.worker.js  1653          [emitted]             
+  hash.worker.js  2831          [emitted]             
+       output.js  2167       0  [emitted]  main       
 chunk    {0} output.js (main) 302 [rendered]
-    > main [0] ./example.js
+    > main [0] ./example.js 
     [0] ./example.js 206 {0} [built]
     [1] (webpack)/~/worker-loader!./worker.js 96 {0} [not cacheable] [built]
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
     Hash: 374188a31a72007585d1
-    Version: webpack 1.0.0-rc5
+    Version: webpack 1.1.0
                Asset  Size  Chunks             Chunk Names
-    0.hash.worker.js  1593       0  [emitted]             
-      hash.worker.js  2780       1  [emitted]  main       
+    0.hash.worker.js  1653       0  [emitted]             
+      hash.worker.js  2831       1  [emitted]  main       
     chunk    {0} 0.hash.worker.js 463 {1} [rendered]
         > [0] ./worker.js 3:1-5:3
         [1] ../require.context/templates/a.js 82 {0} [built]
@@ -293,22 +289,22 @@ Child worker:
         [4] ../require.context/templates ^\.\/.*$ 217 {0} [built]
             amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
     chunk    {1} hash.worker.js (main) 168 [rendered]
-        > main [0] ./worker.js
+        > main [0] ./worker.js 
         [0] ./worker.js 168 {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 8381d83ffdfd2b8b8d83
-Version: webpack 1.0.0-rc5
-Time: 259ms
+Hash: e028e5c3f2a9ee017ccf
+Version: webpack 1.1.0
+Time: 235ms
            Asset  Size  Chunks             Chunk Names
 0.hash.worker.js   528          [emitted]             
-  hash.worker.js   515          [emitted]             
-       output.js   373       0  [emitted]  main       
+  hash.worker.js   513          [emitted]             
+       output.js   371       0  [emitted]  main       
 chunk    {0} output.js (main) 302 [rendered]
-    > main [0] ./example.js
+    > main [0] ./example.js 
     [0] ./example.js 206 {0} [built]
     [1] (webpack)/~/worker-loader!./worker.js 96 {0} [not cacheable] [built]
         cjs require worker!./worker [0] ./example.js 1:13-39
@@ -316,11 +312,11 @@ chunk    {0} output.js (main) 302 [rendered]
 WARNING in output.js from UglifyJs
 Side effects in initialization of unused variable templateB [./example.js:5,0]
 Child worker:
-    Hash: 0f222d50d7f40deb6fe4
-    Version: webpack 1.0.0-rc5
+    Hash: f557b852479205b3c82c
+    Version: webpack 1.1.0
                Asset  Size  Chunks             Chunk Names
     0.hash.worker.js   528       0  [emitted]             
-      hash.worker.js   515       1  [emitted]  main       
+      hash.worker.js   513       1  [emitted]  main       
     chunk    {0} 0.hash.worker.js 463 {1} [rendered]
         > [0] ./worker.js 3:1-5:3
         [1] ../require.context/templates/a.js 82 {0} [built]
@@ -335,7 +331,7 @@ Child worker:
         [4] ../require.context/templates ^\.\/.*$ 217 {0} [built]
             amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
     chunk    {1} hash.worker.js (main) 168 [rendered]
-        > main [0] ./worker.js
+        > main [0] ./worker.js 
         [0] ./worker.js 168 {1} [built]
     
     WARNING in hash.worker.js from UglifyJs

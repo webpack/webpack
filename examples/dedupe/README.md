@@ -62,17 +62,15 @@ module.exports = {"this is": "z"};
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	// shortcut for better minimizing
-/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function require(moduleId) {
+/******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId][exports];
+/******/ 			return installedModules[moduleId].exports;
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -82,28 +80,28 @@ module.exports = {"this is": "z"};
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module[exports];
+/******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	require.modules = modules;
+/******/ 	__webpack_require__.m = modules;
 /******/ 	
 /******/ 	// expose the module cache
-/******/ 	require.cache = installedModules;
+/******/ 	__webpack_require__.c = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "js/";
+/******/ 	__webpack_require__.p = "js/";
 /******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
-/******/ 	return require(0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 /******/ ((function(modules) {
@@ -130,10 +128,10 @@ module.exports = {"this is": "z"};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var a = require(/*! ./a */ 2);
-	var b = require(/*! ./b */ 5);
+	var a = __webpack_require__(/*! ./a */ 2);
+	var b = __webpack_require__(/*! ./b */ 5);
 	a.x !== b.x;
 	a.y !== b.y;
 
@@ -142,7 +140,7 @@ module.exports = {"this is": "z"};
 /*!**************!*\
   !*** ./z.js ***!
   \**************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {"this is": "z"};
 
@@ -153,7 +151,7 @@ module.exports = {"this is": "z"};
 /*!****************!*\
   !*** ./a/x.js ***!
   \****************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {"this is": "x"};
 
@@ -162,7 +160,7 @@ module.exports = {"this is": "z"};
 /*!****************!*\
   !*** ./a/y.js ***!
   \****************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {"this is": "y", "but in": "a"};
 
@@ -175,7 +173,7 @@ module.exports = {"this is": "z"};
 /*!****************!*\
   !*** ./b/y.js ***!
   \****************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = {"this is": "y", "but in": "b"};
 
@@ -184,12 +182,12 @@ module.exports = {"this is": "z"};
 /*!***********************************!*\
   !*** template of 2 referencing 1 ***!
   \***********************************/
-/***/ function(module, exports, require, __webpack_module_template_argument_0__, __webpack_module_template_argument_1__) {
+/***/ function(module, exports, __webpack_require__, __webpack_module_template_argument_0__, __webpack_module_template_argument_1__) {
 
 	module.exports = {
-		x: require(__webpack_module_template_argument_0__),
-		y: require(__webpack_module_template_argument_1__),
-		z: require(/*! ../z */ 1)
+		x: __webpack_require__(__webpack_module_template_argument_0__),
+		y: __webpack_require__(__webpack_module_template_argument_1__),
+		z: __webpack_require__(/*! ../z */ 1)
 	}
 
 /***/ }
@@ -202,12 +200,12 @@ module.exports = {"this is": "z"};
 
 ```
 Hash: 668737aba027e3d941f2
-Version: webpack 1.0.0-rc5
+Version: webpack 1.1.0
 Time: 68ms
     Asset  Size  Chunks             Chunk Names
-output.js  3364       0  [emitted]  main       
+output.js  3475       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]
-    > main [0] ./example.js
+    > main [0] ./example.js 
     [0] ./example.js 76 {0} [built]
     [1] ./z.js 34 {0} [built]
         cjs require ../z [2] ./a/index.js 4:4-19
@@ -232,13 +230,13 @@ chunk    {0} output.js (main) 528 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b0c93259c25f01cc85eb
-Version: webpack 1.0.0-rc5
-Time: 157ms
+Hash: bc390fa076c28e8dc72c
+Version: webpack 1.1.0
+Time: 151ms
     Asset  Size  Chunks             Chunk Names
-output.js   726       0  [emitted]  main       
+output.js   724       0  [emitted]  main       
 chunk    {0} output.js (main) 528 [rendered]
-    > main [0] ./example.js
+    > main [0] ./example.js 
     [0] ./example.js 76 {0} [built]
     [1] ./z.js 34 {0} [built]
         cjs require ../z [2] ./a/index.js 4:4-19

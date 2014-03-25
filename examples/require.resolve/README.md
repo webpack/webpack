@@ -27,17 +27,15 @@ module.exports = Math.random();
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	// shortcut for better minimizing
-/******/ 	var exports = "exports";
 /******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/ 	
 /******/ 	// The require function
-/******/ 	function require(moduleId) {
+/******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId][exports];
+/******/ 			return installedModules[moduleId].exports;
 /******/ 		
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
@@ -47,28 +45,28 @@ module.exports = Math.random();
 /******/ 		};
 /******/ 		
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module[exports], module, module[exports], require);
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 		
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
 /******/ 		
 /******/ 		// Return the exports of the module
-/******/ 		return module[exports];
+/******/ 		return module.exports;
 /******/ 	}
 /******/ 	
 /******/ 	
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	require.modules = modules;
+/******/ 	__webpack_require__.m = modules;
 /******/ 	
 /******/ 	// expose the module cache
-/******/ 	require.cache = installedModules;
+/******/ 	__webpack_require__.c = installedModules;
 /******/ 	
 /******/ 	// __webpack_public_path__
-/******/ 	require.p = "js/";
+/******/ 	__webpack_require__.p = "js/";
 /******/ 	
 /******/ 	
 /******/ 	// Load entry module and return exports
-/******/ 	return require(0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -76,18 +74,18 @@ module.exports = Math.random();
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var a = require(/*! ./a */ 1);
+	var a = __webpack_require__(/*! ./a */ 1);
 
 	// get module id
 	var aId = /*require.resolve*/(/*! ./a.js */ 1);
 
 	// clear module in require.cache
-	delete require.cache[aId];
+	delete __webpack_require__.c[aId];
 
 	// require module again, it should be reexecuted
-	var a2 = require(/*! ./a */ 1);
+	var a2 = __webpack_require__(/*! ./a */ 1);
 
 	// vertify it
 	if(a == a2) throw new Error("Cache clear failed :(");
@@ -97,7 +95,7 @@ module.exports = Math.random();
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	module.exports = Math.random();
 
@@ -110,13 +108,13 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: c2fdaa4ec2268af6ce80
-Version: webpack 1.0.0-rc5
-Time: 56ms
+Hash: db32ef3c9bf333133af7
+Version: webpack 1.1.0
+Time: 65ms
     Asset  Size  Chunks             Chunk Names
-output.js  2104       0  [emitted]  main       
+output.js  2139       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
-    > main [0] ./example.js
+    > main [0] ./example.js 
     [0] ./example.js 295 {0} [built]
     [1] ./a.js 31 {0} [built]
         cjs require ./a [0] ./example.js 1:8-22
@@ -127,16 +125,16 @@ chunk    {0} output.js (main) 326 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b46fe025f3427e4ec971
-Version: webpack 1.0.0-rc5
-Time: 129ms
+Hash: e7483b5da73d6aa1fe3a
+Version: webpack 1.1.0
+Time: 130ms
     Asset  Size  Chunks             Chunk Names
-output.js   354       0  [emitted]  main       
+output.js   348       0  [emitted]  main       
 chunk    {0} output.js (main) 326 [rendered]
-    > main [0] ./example.js
+    > main [0] ./example.js 
     [0] ./example.js 295 {0} [built]
     [1] ./a.js 31 {0} [built]
-        require.resolve ./a.js [0] ./example.js 4:10-35
         cjs require ./a [0] ./example.js 1:8-22
         cjs require ./a [0] ./example.js 10:9-23
+        require.resolve ./a.js [0] ./example.js 4:10-35
 ```
