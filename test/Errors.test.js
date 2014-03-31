@@ -82,4 +82,17 @@ describe("Errors", function() {
 			done();
 		});
 	});
+	it("should warn about case-sensitive module names", function(done) {
+		getErrors({
+			entry: "./case-sensitive"
+		}, function(errors, warnings) {
+			errors.length.should.be.eql(0);
+			warnings.length.should.be.eql(2);
+			var lines = warnings[0].split("\n");
+			lines[0].should.match(/file\.js/);
+			lines = warnings[1].split("\n");
+			lines[0].should.match(/FILE\.js/);
+			done();
+		});
+	});
 });
