@@ -19,6 +19,10 @@ Check the [documentation](http://webpack.github.io/docs/?utm_source=github&utm_m
 
 # Installation
 
+project:
+npm install webpack --save-dev
+
+global:
 npm install webpack -g
 
 # Examples
