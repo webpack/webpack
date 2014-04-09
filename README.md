@@ -17,7 +17,13 @@ webpack is a bundler for modules. The main purpose is to bundle javascript files
 
 Check the [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=trdr) if you want to know more...
 
+# Installation
 
+project:
+`npm install webpack --save-dev`
+
+global:
+`npm install webpack -g`
 
 # Examples
 
