@@ -10,7 +10,7 @@
 		"b-component"
 	],
 	"paths": [
-		"my-component"
+		"my-components"
 	],
 	"scripts": ["example.js"],
 	"license": "MIT"

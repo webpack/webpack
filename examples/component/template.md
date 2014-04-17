@@ -17,16 +17,16 @@
 {{component.json}}
 ```
 
-# component/webpack-a-component/component.json
+# components/webpack-a-component/component.json
 
 ``` javascript
-{{component/webpack-a-component/component.json}}
+{{components/webpack-a-component/component.json}}
 ```
 
-# component/webpack-a-component/style.css
+# components/webpack-a-component/style.css
 
 ``` css
-{{component/webpack-a-component/style.css}}
+{{components/webpack-a-component/style.css}}
 ```
 
 # js/output.js

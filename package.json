@@ -41,7 +41,7 @@
 		"url-loader": "0.5.x",
 		"val-loader": "0.5.x",
 		"i18n-webpack-plugin": "0.2.x",
-		"component-webpack-plugin": "0.1.x"
+		"component-webpack-plugin": "0.2.x"
 	},
 	"engines": {
 		"node":  ">=0.6"
