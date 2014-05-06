@@ -6,14 +6,14 @@
 
 # Introduction
 
-webpack is a bundler for modules. The main purpose is to bundle javascript files for usage in browser.
+webpack is a bundler for modules. The main purpose is to bundle javascript files for usage in a browser.
 
 **TL;DR**
 
 * bundles [CommonJs](http://www.commonjs.org/specs/modules/1.0/) and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules. (even combined)
-* can create a single bundle or a bunch of chunks loaded on demand, to reduce initial loading time.
-* dependencies are resolved while compiling, this makes the runtime very small
-* loader can preprocess files while compiling, i. e. coffee-script to javascript
+* can create a single bundle or multiple chunks loaded on demand, to reduce initial loading time.
+* dependencies are resolved during compilation reducing the runtime size
+* loaders can preprocess files while compiling, i. e. coffee-script to javascript
 
 Check the [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=trdr) if you want to know more...
 
@@ -35,27 +35,27 @@ Take a look at the [`examples`](https://github.com/webpack/webpack/tree/master/e
 
 ## Plugins
 
-webpack has a rich plugin interface. Most of the features are internal plugins using this interface. This makes webpack very **flexible**.
+webpack has a [rich plugin interface](http://webpack.github.io/docs/plugins.html). Most of the features within webpack itself use this plugin interface. This makes webpack very **flexible**.
 
 ## Performance
 
-webpack uses async I/O and has multiple caching levels. This makes webpack fast and incredible **fast** on incremental compilation.
+webpack uses async I/O and has multiple caching levels. This makes webpack fast and incredibly **fast** on incremental compilations.
 
 ## Loaders
 
-webpack allows to use loaders to preprocess files. This allows you to bundle **any static resource** not only javascript. You can easily write your own loaders running in node.js.
+webpack enables use of loaders to preprocess files. This allows you to bundle **any static resource** way beyond javascript. You can easily [write your own loaders](http://webpack.github.io/docs/loaders.html) using node.js.
 
 ## Support
 
-webpack supports **AMD and CommonJs** module styles. It perform clever static analysis on the AST of your code. It even has a evaluation engine to evaluate simple expressions. This allows you to **support most existing libraries**.
+webpack supports **AMD and CommonJS** module styles. It performs clever static analysis on the AST of your code. It even has an evaluation engine to evaluate simple expressions. This allows you to **support most existing libraries**.
 
 ## Code Splitting
 
-webpack allows to split your codebase into chunks. Chunks are loaded **on demand**. This reduces initial loading time.
+webpack allows you to split your codebase into multiple chunks. Chunks are loaded **on demand**. This reduces the initial loading time.
 
 ## Optimizations
 
-webpack can do many optimizations to **reduce the output size**. It also cares about **caching** by using hashes.
+webpack can do many optimizations to **reduce the output size**. It also can make your chunks **cache friendly** by using hashes.
 
 
 
@@ -138,8 +138,8 @@ and open `tests.html` in browser.
 
 ## Contribution
 
-You are welcome to contribute by writing issues or pull requests.
-It would be nice if you open source your own loaders or webmodules. :)
+You are welcome to contribute by opening an issue or a pull request.
+It would be nice if you open sourced your own loaders or webmodules. :)
 
 You are also welcome to correct any spelling mistakes or any language issues, because my english is not perfect...
 
