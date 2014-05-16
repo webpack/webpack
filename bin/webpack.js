@@ -40,6 +40,8 @@ optimist
 
 	.boolean("display-origins").describe("display-origins")
 
+	.boolean("display-cached").describe("display-cached")
+
 	.boolean("display-reasons").alias("display-reasons", "verbose").alias("display-reasons", "v").describe("display-reasons");
 
 	
@@ -100,6 +102,11 @@ if(!outputOptions.json) {
 
 	ifArg("display-origins", function(bool) {
 		outputOptions.chunkOrigins = bool;
+	});
+
+	ifArg("display-cached", function(bool) {
+		if(bool)
+			outputOptions.cached = true;
 	});
 } else {
 	outputOptions.chunks = true;
