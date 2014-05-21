@@ -4,15 +4,15 @@
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
 	"dependencies": {
-		"esprima": "1.0.x",
-		"mkdirp": "0.3.x",
+		"esprima": "1.2.x",
+		"mkdirp": "0.5.x",
 		"optimist": "0.6.x",
 		"uglify-js": "2.4.x",
-		"async": "0.2.x",
+		"async": "0.9.x",
 		"enhanced-resolve": "0.7.x",
 		"clone": "0.1.x",
 		"webpack-core": "0.3.x",
-		"node-libs-browser": "0.2.x",
+		"node-libs-browser": "0.3.x",
 		"tapable": "0.1.x"
 	},
 	"licenses": [
@@ -22,15 +22,15 @@
 		}
 	],
 	"devDependencies": {
-		"mocha": "1.17.x",
-		"should": "3.1.x",
+		"mocha": "1.19.x",
+		"should": "3.3.x",
 		"vm-browserify": "0.0.x",
 		"express": "3.4.x",
 		"webpack-dev-middleware": "1.x",
 		"worker-loader": "0.5.x",
 		"raw-loader": "0.5.x",
 		"json-loader": "0.5.x",
-		"jade-loader": "0.5.x",
+		"jade-loader": "0.6.x",
 		"coffee-loader": "0.7.x",
 		"css-loader": "0.6.x",
 		"less-loader": "0.7.x",
