@@ -19,6 +19,7 @@ module.exports = {
 	plugins: [
 		new webpack.optimize.LimitChunkCountPlugin(2),
 		new webpack.DefinePlugin({
+			"typeof CONST_TYPEOF": JSON.stringify("typeof"),
 			CONST_UNDEFINED: undefined,
 			CONST_NULL: null,
 			CONST_TRUE: true,
