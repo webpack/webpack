@@ -38,16 +38,17 @@ describe("Errors", function() {
 		}, function(errors, warnings) {
 			errors.length.should.be.eql(2);
 			warnings.length.should.be.eql(0);
+			errors.sort();
 			var lines = errors[0].split("\n");
-			lines[0].should.match(/missingFile.js/);
-			lines[1].should.match(/^Module not found/);
-			lines[1].should.match(/\.\/missing/);
-			lines[2].should.match(/missingFile.js 4:0/);
-			var lines = errors[1].split("\n");
 			lines[0].should.match(/missingFile.js/);
 			lines[1].should.match(/^Module not found/);
 			lines[1].should.match(/\.\/dir\/missing2/);
 			lines[2].should.match(/missingFile.js 12:9/);
+			var lines = errors[1].split("\n");
+			lines[0].should.match(/missingFile.js/);
+			lines[1].should.match(/^Module not found/);
+			lines[1].should.match(/\.\/missing/);
+			lines[2].should.match(/missingFile.js 4:0/);
 			done();
 		});
 	});
