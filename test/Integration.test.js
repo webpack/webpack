@@ -54,6 +54,7 @@ describe("Integration", function() {
 			plugins: [
 				new webpack.optimize.LimitChunkCountPlugin(1),
 				new webpack.DefinePlugin({
+					"typeof CONST_TYPEOF": JSON.stringify("typeof"),
 					CONST_TRUE: true,
 					CONST_FALSE: false,
 					CONST_FUNCTION: function() { return "ok"; },
