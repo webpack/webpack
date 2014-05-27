@@ -55,6 +55,18 @@ it("should be able to rename stuff by IIFE call", function() {
 			require);
 });
 
+it("should accept less parameters in a IIFE call", function() {
+	(function(r, require) {
+		r("./file").should.be.eql("ok");
+		(typeof require).should.be.eql("undefined");
+	}(require));
+});
+
+it("should accept more parameters in a IIFE call", function() {
+	(function() {
+	}(require));
+});
+
 it("should be able to rename stuff by IIFE call", function() {
 	(function(_exports, _module, _define, _require) {
 		_define(function(R, E, M) {
