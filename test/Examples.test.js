@@ -13,8 +13,10 @@ describe("Examples", function() {
 	examples.forEach(function(examplePath) {
 		it("should compile " + path.basename(examplePath), function(done) {
 			var options = {};
-			if(fs.existsSync(path.join(examplePath, "webpack.config.js")))
-				options = require(path.join(examplePath, "webpack.config.js"));
+			var webpackConfigPath = path.join(examplePath, "webpack.config.js");
+			webpackConfigPath = webpackConfigPath.substr(0, 1).toUpperCase() + webpackConfigPath.substr(1);
+			if(fs.existsSync(webpackConfigPath))
+				options = require(webpackConfigPath);
 			options.context = examplePath;
 			options.optimize = options.optimize || {};
 			options.output = options.output || {};
