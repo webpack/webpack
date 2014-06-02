@@ -13,7 +13,7 @@
 		"clone": "0.1.x",
 		"webpack-core": "0.4.x",
 		"node-libs-browser": "0.3.x",
-		"tapable": "0.1.x"
+		"tapable": "~0.1.6"
 	},
 	"licenses": [
 		{
