@@ -125,6 +125,7 @@ ifArg("hide-modules", function(bool) {
 var webpack = require("../lib/webpack.js");
 
 Error.stackTrackLimit = 30;
+var lastHash = null;
 var compiler = webpack(options, function(err, stats) {
 	if(!options.watch) {
 		// Do not keep cache anymore
@@ -132,6 +133,7 @@ var compiler = webpack(options, function(err, stats) {
 		if(ifs && ifs.purge) ifs.purge();
 	}
 	if(err) {
+		lastHash = null;
 		console.error(err.stack || err);
 		if(err.details) console.error(err.details);
 		if(!options.watch) {
@@ -141,9 +143,10 @@ var compiler = webpack(options, function(err, stats) {
 		}
 		return;
 	}
-	if(outputOptions.json)
+	if(outputOptions.json) {
 		process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
-	else {
+	} else if(stats.compilation.hash !== lastHash) {
+		lastHash = stats.compilation.hash;
 		process.stdout.write(stats.toString(outputOptions) + "\n");
 	}
 });
