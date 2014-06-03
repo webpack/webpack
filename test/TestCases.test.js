@@ -23,6 +23,7 @@ describe("TestCases", function() {
 			new webpack.HotModuleReplacementPlugin()
 		]},
 		{ name: "devtool-eval", devtool: "eval" },
+		{ name: "devtool-eval-source-map", devtool: "#eval-source-map" },
 		{ name: "devtool-source-map", devtool: "#@source-map" },
 		{ name: "minimized", plugins: [
 			new webpack.optimize.UglifyJsPlugin()

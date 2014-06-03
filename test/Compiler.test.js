@@ -5,7 +5,6 @@ var NodeEnvironmentPlugin = require("../lib/node/NodeEnvironmentPlugin");
 var Compiler = require("../lib/Compiler");
 var WebpackOptionsApply = require("../lib/WebpackOptionsApply");
 var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
-var FunctionModuleTemplate = require("../lib/FunctionModuleTemplate");
 
 describe("Compiler", function() {
 	function compile(entry, options, callback) {
@@ -28,13 +27,6 @@ describe("Compiler", function() {
 				callback();
 			}
 		};
-		c.moduleTemplate = new FunctionModuleTemplate({ pathinfo: true }, {
-			shorten: function(p) {
-				var fixDir = path.join(__dirname, "fixtures");
-				if(p.indexOf(fixDir) == 0) p = "FIXDIR" + p.substr(fixDir.length);
-				return p.replace(/\\/g, "/");
-			}
-		});
 		c.plugin("compilation", function(compilation) {
 			compilation.bail = true;
 		});
@@ -62,8 +54,8 @@ describe("Compiler", function() {
 			var bundle = files["bundle.js"];
 			bundle.should.include("function __webpack_require__(");
 			bundle.should.include("__webpack_require__(/*! ./a */ 1);");
-			bundle.should.include("FIXDIR/c.js");
-			bundle.should.include("FIXDIR/a.js");
+			bundle.should.include("./c.js");
+			bundle.should.include("./a.js");
 			bundle.should.include("This is a");
 			bundle.should.include("This is c");
 			bundle.should.not.include("2: function(");
@@ -80,10 +72,10 @@ describe("Compiler", function() {
 			var bundle = files["bundle.js"];
 			bundle.should.include("function __webpack_require__(");
 			bundle.should.include("__webpack_require__(/*! ./a */");
-			bundle.should.include("FIXDIR/main1.js");
-			bundle.should.include("FIXDIR/a.js");
-			bundle.should.include("FIXDIR/b.js");
-			bundle.should.include("FIXDIR/node_modules/m1/a.js");
+			bundle.should.include("./main1.js");
+			bundle.should.include("./a.js");
+			bundle.should.include("./b.js");
+			bundle.should.include("./~/m1/a.js");
 			bundle.should.include("This is a");
 			bundle.should.include("This is b");
 			bundle.should.include("This is m1/a");
@@ -103,10 +95,10 @@ describe("Compiler", function() {
 			bundle.should.include("__webpack_require__(/*! ./a */");
 			bundle.should.include("__webpack_require__(/*! ./b */");
 			bundle.should.include("__webpack_require__(/*! ./c */");
-			bundle.should.include("FIXDIR/abc.js");
-			bundle.should.include("FIXDIR/a.js");
-			bundle.should.include("FIXDIR/b.js");
-			bundle.should.include("FIXDIR/c.js");
+			bundle.should.include("./abc.js");
+			bundle.should.include("./a.js");
+			bundle.should.include("./b.js");
+			bundle.should.include("./c.js");
 			bundle.should.include("This is a");
 			bundle.should.include("This is b");
 			bundle.should.include("This is c");
@@ -128,9 +120,9 @@ describe("Compiler", function() {
 			bundle.should.include("function __webpack_require__(");
 			bundle.should.include("__webpack_require__(/*! ./b */");
 			chunk.should.not.include("__webpack_require__(/* ./b */");
-			bundle.should.include("FIXDIR/chunks.js");
-			chunk.should.include("FIXDIR/a.js");
-			chunk.should.include("FIXDIR/b.js");
+			bundle.should.include("./chunks.js");
+			chunk.should.include("./a.js");
+			chunk.should.include("./b.js");
 			chunk.should.include("This is a");
 			bundle.should.not.include("This is a");
 			chunk.should.include("This is b");
