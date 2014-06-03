@@ -17,7 +17,9 @@ module.exports = function(optimist, argv, convertOptions) {
 	if(argv.d) {
 		argv.debug = true;
 		argv["output-pathinfo"] = true;
-		if(!argv.devtool) argv.devtool = "sourcemap";
+		if(!argv.devtool) {
+			argv.devtool = "sourcemap";
+		}
 	}
 	if(argv.p) {
 		argv["optimize-minimize"] = true;
@@ -26,27 +28,40 @@ module.exports = function(optimist, argv, convertOptions) {
 
 	function ifArg(name, fn, init, finalize) {
 		if(Array.isArray(argv[name])) {
-			if(init) init();
+			if(init) {
+				init();
+			}
 			argv[name].forEach(fn);
-			if(finalize) finalize();
+			if(finalize) {
+				finalize();
+			}
 		} else if(typeof argv[name] != "undefined") {
-			if(init) init();
+			if(init) {
+				init();
+			}
 			fn(argv[name], -1);
-			if(finalize) finalize();
+			if(finalize) {
+				finalize();
+			}
 		}
 	}
 
 	function ifArgPair(name, fn, init, finalize) {
 		ifArg(name, function(content, idx) {
 			var i = content.indexOf("=");
-			if(i < 0) return fn(null, content, idx);
-			else return fn(content.substr(0, i), content.substr(i+1), idx);
+			if(i < 0) {
+				return fn(null, content, idx);
+			} else {
+				return fn(content.substr(0, i), content.substr(i+1), idx);
+			}
 		}, init, finalize);
 	}
 
 	function ifBooleanArg(name, fn) {
 		ifArg(name, function(bool) {
-			if(bool) fn();
+			if(bool) {
+				fn();
+			}
 		});
 	}
 
@@ -58,7 +73,9 @@ module.exports = function(optimist, argv, convertOptions) {
 
 	function mapArgToBooleanInverse(name, optionName) {
 		ifArg(name, function(bool) {
-			if(!bool) options[optionName || name] = false;
+			if(!bool) {
+				options[optionName || name] = false;
+			}
 		});
 	}
 
@@ -69,14 +86,16 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	function loadPlugin(name) {
+		var path;
 		try {
-			var path = resolve.sync(process.cwd(), name);
+			path = resolve.sync(process.cwd(), name);
 		} catch(e) {
 			console.log("Cannot resolve plugin " + name + ".");
 			process.exit(-1);
 		}
+		var Plugin;
 		try {
-			var Plugin = require(path);
+			Plugin = require(path);
 		} catch(e) {
 			console.log("Cannot load plugin " + name + ". (" + path + ")");
 			throw e;
@@ -90,29 +109,34 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	function ensureObject(parent, name) {
-		if(typeof parent[name] != "object" || parent[name] === null)
+		if(typeof parent[name] !== "object" || parent[name] === null) {
 			parent[name] = {};
+		}
 	}
 
 	function ensureArray(parent, name) {
-		if(!Array.isArray(parent[name]))
+		if(!Array.isArray(parent[name])) {
 			parent[name] = [];
+		}
 	}
 
 	if(argv.config) {
 		options = require(path.resolve(argv.config));
 	} else {
 		var configPath = path.resolve("webpack.config.js");
-		if(fs.existsSync(configPath))
+		if(fs.existsSync(configPath)) {
 			options = require(configPath);
+		}
 	}
-	if(typeof options != "object" || options === null) {
+	if(typeof options !== "object" || options === null) {
 		console.log("Config did not export a object.");
 		process.exit(-1);
 	}
 
 	mapArgToPath("context", "context");
-	if(!options.context) options.context = process.cwd();
+	if(!options.context) {
+		options.context = process.cwd();
+	}
 
 	ifArgPair("entry", function(name, entry) {
 		options.entry[name] = entry;
@@ -121,7 +145,9 @@ module.exports = function(optimist, argv, convertOptions) {
 	});
 
 	ifArgPair("module-bind", function(name, binding) {
-		if(name === null) name = binding;
+		if(name === null) {
+			name = binding;
+		}
 		options.module.loaders.push({
 			test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
 			loader: binding
@@ -132,7 +158,9 @@ module.exports = function(optimist, argv, convertOptions) {
 	});
 
 	ifArgPair("module-bind-pre", function(name, binding) {
-		if(name === null) name = binding;
+		if(name === null) {
+			name = binding;
+		}
 		options.module.preLoaders.push({
 			test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
 			loader: binding
@@ -143,7 +171,9 @@ module.exports = function(optimist, argv, convertOptions) {
 	});
 
 	ifArgPair("module-bind-post", function(name, binding) {
-		if(name === null) name = binding;
+		if(name === null) {
+			name = binding;
+		}
 		options.module.postLoaders.push({
 			test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
 			loader: binding
@@ -161,7 +191,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		}
 		defineObject[name] = value;
 	}, function() {
-		defineObject = {}
+		defineObject = {};
 	}, function() {
 		ensureArray(options, "plugins");
 		var DefinePlugin = require("../lib/DefinePlugin");
@@ -252,20 +282,26 @@ module.exports = function(optimist, argv, convertOptions) {
 	ifBooleanArg("progress", function() {
 		var ProgressPlugin = require("../lib/ProgressPlugin");
 		ensureArray(options, "plugins");
-		var chars = 0, lastState;
+		var chars = 0, lastState, lastStateTime;
 		options.plugins.push(new ProgressPlugin(function(percentage, msg) {
 			var state = msg;
 			if(percentage < 1) {
 				percentage = Math.floor(percentage * 100);
 				msg = percentage + "% " + msg;
-				if(percentage < 100) msg = " " + msg;
-				if(percentage < 10) msg = " " + msg;
+				if(percentage < 100) {
+					msg = " " + msg;
+				}
+				if(percentage < 10) {
+					msg = " " + msg;
+				}
 			}
-			for(; chars > msg.length; chars--)
+			for(; chars > msg.length; chars--) {
 				process.stderr.write("\b \b");
+			}
 			chars = msg.length;
-			for(var i = 0; i < chars; i++)
+			for(var i = 0; i < chars; i++) {
 				process.stderr.write("\b");
+			}
 			if(options.profile) {
 				state = state.replace(/^\d+\/\d+\s+/, "");
 				if(percentage === 0) {
@@ -289,14 +325,18 @@ module.exports = function(optimist, argv, convertOptions) {
 	});
 
 	ifArgPair("resolve-alias", function(name, value) {
-		if(!name) throw new Error("--resolve-alias <string>=<string>");
+		if(!name) {
+			throw new Error("--resolve-alias <string>=<string>");
+		}
 		ensureObject(options, "resolve");
 		ensureObject(options.resolve, "alias");
 		options.resolve.alias[name] = value;
 	});
 
 	ifArgPair("resolve-loader-alias", function(name, value) {
-		if(!name) throw new Error("--resolve-loader-alias <string>=<string>");
+		if(!name) {
+			throw new Error("--resolve-loader-alias <string>=<string>");
+		}
 		ensureObject(options, "resolveLoader");
 		ensureObject(options.resolveLoader, "alias");
 		options.resolveLoader.alias[name] = value;
@@ -343,11 +383,12 @@ module.exports = function(optimist, argv, convertOptions) {
 	ifArg("provide", function(value) {
 		ensureArray(options, "plugins");
 		var idx = value.indexOf("=");
+		var name;
 		if(idx >= 0) {
-			var name = value.substr(0, idx);
+			name = value.substr(0, idx);
 			value = value.substr(idx + 1);
 		} else {
-			var name = value;
+			name = value;
 		}
 		var ProvidePlugin = require("../lib/ProvidePlugin");
 		options.plugins.push(new ProvidePlugin(name, value));
@@ -387,8 +428,9 @@ module.exports = function(optimist, argv, convertOptions) {
 		ensureObject(options, "entry");
 		function addTo(name, entry) {
 			if(options.entry[name]) {
-				if(!Array.isArray(options.entry[name]))
+				if(!Array.isArray(options.entry[name])) {
 					options.entry[name] = [options.entry[name]];
+				}
 				options.entry[name].push(entry);
 			} else {
 				options.entry[name] = entry;
@@ -399,9 +441,14 @@ module.exports = function(optimist, argv, convertOptions) {
 			var j = content.indexOf("?");
 			if(i < 0 || (j >= 0 && j < i)) {
 				var resolved = path.resolve(content);
-				if(fs.existsSync(resolved)) addTo("main", resolved);
-				else addTo("main", content);
-			} else addTo(content.substr(0, i), content.substr(i+1))
+				if(fs.existsSync(resolved)) {
+					addTo("main", resolved);
+				} else {
+					addTo("main", content);
+				}
+			} else {
+				addTo(content.substr(0, i), content.substr(i+1));
+			}
 		});
 	}
 
