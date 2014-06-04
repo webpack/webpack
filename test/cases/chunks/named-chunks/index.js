@@ -18,7 +18,7 @@ it("should handle named chunks", function(done) {
 });
 
 it("should handle empty named chunks", function(done) {
-	var sync = false;
+	var sync = true;
 	require.ensure([], function(require) {
 		sync.should.be.ok;
 	}, "empty-named-chunk");
