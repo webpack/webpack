@@ -16,3 +16,15 @@ it("should handle named chunks", function(done) {
 		}, "named-chunk");
 	}
 });
+
+it("should handle empty named chunks", function(done) {
+	var sync = false;
+	require.ensure([], function(require) {
+		sync.should.be.ok;
+	}, "empty-named-chunk");
+	require.ensure([], function(require) {
+		sync.should.be.ok;
+		done();
+	}, "empty-named-chunk");
+	sync = false;
+});
