@@ -129,8 +129,7 @@ var lastHash = null;
 var compiler = webpack(options, function(err, stats) {
 	if(!options.watch) {
 		// Do not keep cache anymore
-		var ifs = compiler.inputFileSystem;
-		if(ifs && ifs.purge) ifs.purge();
+		compiler.purgeInputFileSystem();
 	}
 	if(err) {
 		lastHash = null;
