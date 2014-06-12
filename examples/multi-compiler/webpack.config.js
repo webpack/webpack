@@ -2,6 +2,7 @@ var path = require("path");
 var webpack = require("../../");
 module.exports = [
 	{
+		name: "mobile",
 		entry: "./example",
 		output: {
 			path: path.join(__dirname, "js"),
@@ -14,6 +15,7 @@ module.exports = [
 		]
 	},
 	{
+		name: "desktop",
 		entry: "./example",
 		output: {
 			path: path.join(__dirname, "js"),
