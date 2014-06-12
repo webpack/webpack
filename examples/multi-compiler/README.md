@@ -15,6 +15,7 @@ var path = require("path");
 var webpack = require("../../");
 module.exports = [
 	{
+		name: "mobile",
 		entry: "./example",
 		output: {
 			path: path.join(__dirname, "js"),
@@ -27,6 +28,7 @@ module.exports = [
 		]
 	},
 	{
+		name: "desktop",
 		entry: "./example",
 		output: {
 			path: path.join(__dirname, "js"),
@@ -178,11 +180,11 @@ module.exports = [
 
 ```
 Hash: d6e452828343eb86930778c68edab053f09ed9ab
-Version: webpack 1.3.0-beta6
-Child
+Version: webpack 1.3.0-beta8
+Child mobile:
     Hash: d6e452828343eb869307
-    Version: webpack 1.3.0-beta6
-    Time: 173ms
+    Version: webpack 1.3.0-beta8
+    Time: 160ms
         Asset  Size  Chunks             Chunk Names
     mobile.js  1878       0  [emitted]  main
     chunk    {0} mobile.js (main) 117 [rendered]
@@ -190,10 +192,10 @@ Child
         [0] ./example.js 97 {0} [built]
         [1] ./mobile-stuff.js 20 {0} [built]
             cjs require ./mobile-stuff [0] ./example.js 2:1-26
-Child
+Child desktop:
     Hash: 78c68edab053f09ed9ab
-    Version: webpack 1.3.0-beta6
-    Time: 142ms
+    Version: webpack 1.3.0-beta8
+    Time: 132ms
          Asset  Size  Chunks             Chunk Names
     desktop.js  1673       0  [emitted]  main
     chunk    {0} desktop.js (main) 97 [rendered]
@@ -205,18 +207,18 @@ Child
 
 ```
 Hash: da2299fe1ab7a2394372713bc011a9ed62a0ec77
-Version: webpack 1.3.0-beta6
+Version: webpack 1.3.0-beta8
 
-WARNING in (undefined) mobile.js from UglifyJs
+WARNING in (mobile) mobile.js from UglifyJs
 Condition always true [./example.js:1,0]
 
-WARNING in (undefined) desktop.js from UglifyJs
+WARNING in (desktop) desktop.js from UglifyJs
 Condition always false [./example.js:1,0]
 Dropping unreachable code [./example.js:2,0]
-Child
+Child mobile:
     Hash: da2299fe1ab7a2394372
-    Version: webpack 1.3.0-beta6
-    Time: 536ms
+    Version: webpack 1.3.0-beta8
+    Time: 407ms
         Asset  Size  Chunks             Chunk Names
     mobile.js   276       0  [emitted]  main
     chunk    {0} mobile.js (main) 117 [rendered]
@@ -227,10 +229,10 @@ Child
     
     WARNING in mobile.js from UglifyJs
     Condition always true [./example.js:1,0]
-Child
+Child desktop:
     Hash: 713bc011a9ed62a0ec77
-    Version: webpack 1.3.0-beta6
-    Time: 498ms
+    Version: webpack 1.3.0-beta8
+    Time: 377ms
          Asset  Size  Chunks             Chunk Names
     desktop.js   254       0  [emitted]  main
     chunk    {0} desktop.js (main) 97 [rendered]
