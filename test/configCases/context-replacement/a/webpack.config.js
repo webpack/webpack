@@ -3,6 +3,6 @@ var webpack = require("../../../../");
 
 module.exports = {
 	plugins: [
-		new webpack.ContextReplacementPlugin(/context-replacement.a$/, path.join(__dirname, "new-context"), true, /^replaced$/)
+		new webpack.ContextReplacementPlugin(/context-replacement.a$/, "new-context", true, /^replaced$/)
 	]
 };
