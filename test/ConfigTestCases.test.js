@@ -27,12 +27,14 @@ describe("ConfigTestCases", function() {
 					var testDirectory = path.join(casesPath, category.name, testName);
 					var outputDirectory = path.join(__dirname, "js", "config", category.name, testName);
 					var options = require(path.join(testDirectory, "webpack.config.js"));
-					if(!options.context) options.context = testDirectory;
-					if(!options.entry) options.entry = "./index.js";
-					if(!options.target) options.target = "async-node";
-					if(!options.output) options.output = {};
-					if(!options.output.path) options.output.path = outputDirectory;
-					if(!options.output.filename) options.output.filename = "bundle.js";
+					[].concat(options).forEach(function(options, idx) {
+						if(!options.context) options.context = testDirectory;
+						if(!options.entry) options.entry = "./index.js";
+						if(!options.target) options.target = "async-node";
+						if(!options.output) options.output = {};
+						if(!options.output.path) options.output.path = outputDirectory;
+						if(!options.output.filename) options.output.filename = "bundle" + idx + ".js";
+					});
 					webpack(options, function(err, stats) {
 						if(err) return done(err);
 						var jsonStats = stats.toJson({
@@ -56,7 +58,8 @@ describe("ConfigTestCases", function() {
 								return module.exports;
 							} else return require(module);
 						}
-						_require("./bundle.js");
+						for(var i = 0; i < [].concat(options).length; i++)
+							_require("./bundle" + i + ".js");
 						if(exportedTest === 0) return done(new Error("No tests exported by test case"));
 						done();
 					});
