@@ -153,44 +153,23 @@ module.exports = function(optimist, argv, convertOptions) {
 			ensureObject(options, "entry");
 		});
 
-		ifArgPair("module-bind", function(name, binding) {
-			if(name === null) {
-				name = binding;
-			}
-			options.module.loaders.push({
-				test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
-				loader: binding
+		function bindLoaders(arg, collection) {
+			ifArgPair(arg, function(name, binding) {
+				if(name === null) {
+					name = binding;
+				}
+				options.module[collection].push({
+					test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
+					loader: binding
+				});
+			}, function() {
+				ensureObject(options, "module");
+				ensureArray(options.module, collection);
 			});
-		}, function() {
-			ensureObject(options, "module");
-			ensureArray(options.module, "loaders");
-		});
-
-		ifArgPair("module-bind-pre", function(name, binding) {
-			if(name === null) {
-				name = binding;
-			}
-			options.module.preLoaders.push({
-				test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
-				loader: binding
-			});
-		}, function() {
-			ensureObject(options, "module");
-			ensureArray(options.module, "preLoaders");
-		});
-
-		ifArgPair("module-bind-post", function(name, binding) {
-			if(name === null) {
-				name = binding;
-			}
-			options.module.postLoaders.push({
-				test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
-				loader: binding
-			});
-		}, function() {
-			ensureObject(options, "module");
-			ensureArray(options.module, "postLoaders");
-		});
+		}
+		bindLoaders("module-bind", "loaders");
+		bindLoaders("module-bind-pre", "preLoaders");
+		bindLoaders("module-bind-post", "postLoaders");
 
 		var defineObject;
 		ifArgPair("define", function(name, value) {
@@ -333,23 +312,18 @@ module.exports = function(optimist, argv, convertOptions) {
 			options.devtool = value;
 		});
 
-		ifArgPair("resolve-alias", function(name, value) {
-			if(!name) {
-				throw new Error("--resolve-alias <string>=<string>");
-			}
-			ensureObject(options, "resolve");
-			ensureObject(options.resolve, "alias");
-			options.resolve.alias[name] = value;
-		});
-
-		ifArgPair("resolve-loader-alias", function(name, value) {
-			if(!name) {
-				throw new Error("--resolve-loader-alias <string>=<string>");
-			}
-			ensureObject(options, "resolveLoader");
-			ensureObject(options.resolveLoader, "alias");
-			options.resolveLoader.alias[name] = value;
-		});
+		function processResolveAlias(arg, key) {
+			ifArgPair(arg, function(name, value) {
+				if(!name) {
+					throw new Error("--" + arg + " <string>=<string>");
+				}
+				ensureObject(options, key);
+				ensureObject(options[key], "alias");
+				options[key].alias[name] = value;
+			});
+		}
+		processResolveAlias("resolve-alias", "resolve");
+		processResolveAlias("resolve-loader-alias", "resolveLoader");
 
 		ifArg("optimize-max-chunks", function(value) {
 			ensureArray(options, "plugins");
