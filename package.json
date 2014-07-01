@@ -10,6 +10,7 @@
 		"uglify-js": "2.4.x",
 		"async": "0.9.x",
 		"enhanced-resolve": "0.7.x",
+		"memory-fs": "~0.1.0",
 		"clone": "0.1.x",
 		"webpack-core": "0.4.x",
 		"node-libs-browser": "0.3.x",
