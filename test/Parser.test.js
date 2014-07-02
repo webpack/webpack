@@ -148,6 +148,9 @@ describe("Parser", function() {
 			var state = testCases[name][1];
 
 			var testParser = new Parser({});
+			testParser.plugin("can-rename abc", function(expr) {
+				return true;
+			});
 			testParser.plugin("call abc", function(expr) {
 				if(!this.state.abc) this.state.abc = []
 				this.state.abc.push(this.parseString(expr.arguments[0]));
