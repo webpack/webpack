@@ -1,3 +1,5 @@
+var should = require("should");
+
 it("should parse fancy function calls", function() {
 	("function"==typeof define && define.amd ?
 		define :
@@ -48,6 +50,21 @@ it("should be able to use AMD-style require", function(done) {
 it("should be able to use require.js-style define", function(done) {
 	define("name", ["./circular"], function(circular) {
 		circular.should.be.eql(1);
+		done();
+	});
+});
+
+it("should be able to use require.js-style define, optional dependancies, exist"/*, function(done) {
+	// TODO: set up AMD shim config for optional dependancies
+	define("name", ["./optional"], function(optional) {
+		optional.a.should.be.eql("a");
+		done();
+	});
+}*/);
+
+it("should be able to use require.js-style define, optional dependancies, not exist", function(done) {
+	define("name", ["./optional"], function(optional) {
+		should(optional.b).not.exist;
 		done();
 	});
 });
