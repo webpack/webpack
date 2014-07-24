@@ -1,3 +1,10 @@
+This very simple example shows usage of CommonsJS.
+
+The three files `example.js`, `increment.js` and `math.js` form a dependency chain. They use `require(dependency)` to declare dependencies.
+
+You can see the output file that webpack creates by bundling them together in one file. Keep in mind that webpack adds comments to make reading this file easier. These commonent are removed when minimizing the file.
+
+You can also see the info messages webpack prints to console (for both normal and minimized build).
 
 # example.js
 
@@ -32,44 +39,43 @@ exports.add = function() {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/ 		
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 		
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/ 		
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
-/******/ 	
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/ 	
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/ 	
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/ 	
-/******/ 	
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -121,11 +127,11 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: 463200a36258bb3ff5b2
-Version: webpack 1.1.0
-Time: 70ms
+Hash: 9939e07d4b0ecbfa0916
+Version: webpack 1.3.2-beta4
+Time: 63ms
     Asset  Size  Chunks             Chunk Names
-output.js  2294       0  [emitted]  main       
+output.js  2257       0  [emitted]  main
 chunk    {0} output.js (main) 329 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 69 {0} [built]
@@ -138,11 +144,11 @@ chunk    {0} output.js (main) 329 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 434f28b7ad3542e91dda
-Version: webpack 1.1.0
-Time: 129ms
+Hash: 7649f5bb15f1f35689b1
+Version: webpack 1.3.2-beta4
+Time: 138ms
     Asset  Size  Chunks             Chunk Names
-output.js   419       0  [emitted]  main       
+output.js   419       0  [emitted]  main
 chunk    {0} output.js (main) 329 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 69 {0} [built]

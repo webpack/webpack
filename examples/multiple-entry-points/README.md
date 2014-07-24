@@ -1,3 +1,31 @@
+This example show how to use multiple entry points with a commons chunk.
+
+In this example you have two (HTML) pages `pageA` and `pageB`. You want to create individual bundles for each page. In addition to this you want to create a shared bundle that contains all modules that used in both pages (assuming there are many/big modules in common). The pages also use Code Splitting to load a less used part of the features on demand.
+
+You can see how to define multiple entry points via the `entry` option and the required changes (`[name]`) in the `output` option. You can also see how to use the CommonsChunkPlugin.
+
+You can see the output files:
+
+* `commons.js` contains:
+  * the module system
+  * chunk loading logic
+  * module `common.js` which is used in both pages
+* `pageA.bundle.js` contains: (`pageB.bundle.js` is similar)
+  * the entry point `pageA.js`
+  * it would contain any other module that is only used by `pageA`
+* `0.chunk.js` is an additional chunk which if used by both pages. It contains:
+  * module `shared.js`
+
+You can also see the info that is printed to console. It shows among others:
+
+* the generated files
+* the chunks with file, name and id
+  * see lines starting with `chunk`
+* the modules that are in this chunks
+* the reasons why the modules are included
+* the reasons why a chunk is created
+  * see lines starting with `>`
+
 # pageA.js
 
 ``` javascript
@@ -54,71 +82,6 @@ module.exports = {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/ 	
-/******/ 	// object to store loaded and loading chunks
-/******/ 	// "0" means "already loaded"
-/******/ 	// Array means "loading", array contains callbacks
-/******/ 	var installedChunks = {
-/******/ 		1:0
-/******/ 	};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-/******/ 		
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 		
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
-/******/ 		
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/******/ 	// This file contains only the entry chunk.
-/******/ 	// The chunk loading function for additional chunks
-/******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
-/******/ 		// "0" is the signal for "already loaded"
-/******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return callback.call(null, __webpack_require__);
-/******/ 		
-/******/ 		// an array means "currently loading".
-/******/ 		if(installedChunks[chunkId] !== undefined) {
-/******/ 			installedChunks[chunkId].push(callback);
-/******/ 		} else {
-/******/ 			// start chunk loading
-/******/ 			installedChunks[chunkId] = [callback];
-/******/ 			var head = document.getElementsByTagName('head')[0];
-/******/ 			var script = document.createElement('script');
-/******/ 			script.type = 'text/javascript';
-/******/ 			script.charset = 'utf-8';
-/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".chunk.js";
-/******/ 			head.appendChild(script);
-/******/ 		}
-/******/ 	};
-/******/ 	
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/ 	
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/ 	
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
-/******/ 	
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	var parentJsonpFunction = window["webpackJsonp"];
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
@@ -142,6 +105,71 @@ module.exports = {
 /******/ 			__webpack_require__(0);
 /******/ 		}
 /******/ 	};
+/******/
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// "0" means "already loaded"
+/******/ 	// Array means "loading", array contains callbacks
+/******/ 	var installedChunks = {
+/******/ 		1:0
+/******/ 	};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
+/******/ 		// "0" is the signal for "already loaded"
+/******/ 		if(installedChunks[chunkId] === 0)
+/******/ 			return callback.call(null, __webpack_require__);
+/******/
+/******/ 		// an array means "currently loading".
+/******/ 		if(installedChunks[chunkId] !== undefined) {
+/******/ 			installedChunks[chunkId].push(callback);
+/******/ 		} else {
+/******/ 			// start chunk loading
+/******/ 			installedChunks[chunkId] = [callback];
+/******/ 			var head = document.getElementsByTagName('head')[0];
+/******/ 			var script = document.createElement('script');
+/******/ 			script.type = 'text/javascript';
+/******/ 			script.charset = 'utf-8';
+/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".chunk.js";
+/******/ 			head.appendChild(script);
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -174,7 +202,7 @@ webpackJsonp([3],[
 	}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 
 /***/ }
-])
+]);
 ```
 
 # js/pageB.bundle.js
@@ -194,7 +222,7 @@ webpackJsonp([2],[
 	});
 
 /***/ }
-])
+]);
 ```
 
 # js/0.chunk.js
@@ -215,7 +243,7 @@ webpackJsonp([0],{
 
 /***/ }
 
-})
+});
 ```
 
 # Info
@@ -223,14 +251,14 @@ webpackJsonp([0],{
 ## Uncompressed
 
 ```
-Hash: 790c5174bb64d68297d6
-Version: webpack 1.1.0
-Time: 64ms
+Hash: b941917f11689dd6170d
+Version: webpack 1.3.2-beta4
+Time: 67ms
           Asset  Size  Chunks             Chunk Names
-     0.chunk.js   286       0  [emitted]             
-     commons.js  3801       1  [emitted]  commons.js 
-pageB.bundle.js   366       2  [emitted]  pageB      
-pageA.bundle.js   485       3  [emitted]  pageA      
+     0.chunk.js   287       0  [emitted]  
+     commons.js  3770       1  [emitted]  commons.js
+pageB.bundle.js   367       2  [emitted]  pageB
+pageA.bundle.js   486       3  [emitted]  pageA
 chunk    {0} 0.chunk.js 91 {2} {3} [rendered]
     > [0] ./pageB.js 2:0-5:2
     > duplicate [0] ./pageA.js 2:0-4:2
@@ -254,14 +282,14 @@ chunk    {3} pageA.bundle.js (pageA) 108 {1} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: af178c6be99868cf9cda
-Version: webpack 1.1.0
-Time: 189ms
+Hash: 600effac6bbe660ae72e
+Version: webpack 1.3.2-beta4
+Time: 179ms
           Asset  Size  Chunks             Chunk Names
-     0.chunk.js    82       0  [emitted]             
-     commons.js   727       1  [emitted]  commons.js 
-pageB.bundle.js    92       2  [emitted]  pageB      
-pageA.bundle.js   124       3  [emitted]  pageA      
+     0.chunk.js    82       0  [emitted]  
+     commons.js   727       1  [emitted]  commons.js
+pageB.bundle.js    92       2  [emitted]  pageB
+pageA.bundle.js   124       3  [emitted]  pageA
 chunk    {0} 0.chunk.js 91 {2} {3} [rendered]
     > [0] ./pageB.js 2:0-5:2
     > duplicate [0] ./pageA.js 2:0-4:2
