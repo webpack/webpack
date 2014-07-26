@@ -1,3 +1,8 @@
+This example demonstrates the usage of [component](https://github.com/component/component) built with webpack.
+
+Components declare scripts and styles in a special `component.json` file. This file is handled by the plugin. In addition to that there is a different resolution algorithm for components.
+
+You can see that the component-webpack-plugin handles these components including scripts, styles and other assets.
 
 # example.js
 
