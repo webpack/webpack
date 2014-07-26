@@ -29,3 +29,20 @@ it("should be able to use renaming combined with a context", function() {
 	var template = "tmpl";
 	renamedRequire("./templates/" + template).should.be.eql("test template");
 });
+
+it("should compile an empty context", function() {
+	var x = "";
+	(function() {
+		require("./templates/notExisting" + x);
+	}).toString().should.not.match(/require/);
+});
+
+it("should execute an empty context", function() {
+	var context;
+	(function() {
+		context = require.context("./templates/", true, /^\.\/notExisting/);
+	}).should.not.throw();
+	(function() {
+		context("");
+	}).should.throw();
+});
