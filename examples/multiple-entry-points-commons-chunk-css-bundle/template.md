@@ -11,6 +11,12 @@
 {{b.js}}
 ```
 
+# b.js
+
+``` javascript
+{{c.js}}
+```
+
 # style.css
 
 ``` css
@@ -27,6 +33,12 @@
 
 ``` css
 {{styleB.css}}
+```
+
+# styleC.css
+
+``` css
+{{styleC.css}}
 ```
 
 # webpack.config.js
@@ -63,6 +75,18 @@
 
 ``` css
 {{min:js/B.css}}
+```
+
+# js/C.css
+
+``` css
+{{js/C.css}}
+```
+
+# js/C.css (Minimized)
+
+``` css
+{{min:js/C.css}}
 ```
 
 # Info

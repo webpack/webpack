@@ -37,12 +37,7 @@ module.exports = {
 		loaders: [
 			{
 				test: /\.css$/,
-				loaders: [
-					ExtractTextPlugin.loader({ remove: true, extract: false }),
-					"style-loader",
-					ExtractTextPlugin.loader({ remove: true }),
-					"css-loader"
-				]
+				loader: ExtractTextPlugin.extract("style-loader", "css-loader")
 			},
 			{ test: /\.png$/, loader: "file-loader" }
 		]
@@ -155,7 +150,7 @@ module.exports = {
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! ./style.css */ 1);
-	__webpack_require__.e/* require */(0, function(__webpack_require__) {[__webpack_require__(/*! ./chunk */ 4)];});
+	__webpack_require__.e/* require */(0, function(__webpack_require__) {[__webpack_require__(/*! ./chunk */ 3)];});
 
 
 /***/ },
@@ -186,7 +181,7 @@ webpackJsonp([0],[
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	var dispose = __webpack_require__(/*! (webpack)/~/style-loader/addStyle.js */ 6)
 		// The css code:
-		(__webpack_require__(/*! !(webpack)/~/extract-text-webpack-plugin/loader.js?{"remove":true}!(webpack)/~/css-loader!./style2.css */ 3))
+		(__webpack_require__(/*! !(webpack)/~/css-loader!./style2.css */ 4))
 	if(false) {
 		module.hot.accept();
 		module.hot.dispose(dispose);
@@ -194,16 +189,6 @@ webpackJsonp([0],[
 
 /***/ },
 /* 3 */
-/*!**********************************************************************************************************************!*\
-  !*** (webpack)/~/extract-text-webpack-plugin/loader.js?{"remove":true}!(webpack)/~/css-loader!./style2.css ***!
-  \**********************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports =
-		".xyz {\r\n\tbackground: url("+__webpack_require__(/*! ./image2.png */ 5)+");\r\n}\r\n";
-
-/***/ },
-/* 4 */
 /*!******************!*\
   !*** ./chunk.js ***!
   \******************/
@@ -211,6 +196,16 @@ webpackJsonp([0],[
 
 	__webpack_require__(/*! ./style2.css */ 2);
 
+
+/***/ },
+/* 4 */
+/*!*******************************************!*\
+  !*** (webpack)/~/css-loader!./style2.css ***!
+  \*******************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports =
+		".xyz {\r\n\tbackground: url("+__webpack_require__(/*! ./image2.png */ 5)+");\r\n}\r\n";
 
 /***/ },
 /* 5 */
@@ -238,32 +233,30 @@ body {
 ## Uncompressed
 
 ```
-Hash: da8cc6c9a52fa919b115
-Version: webpack 1.3.2-beta2
-Time: 126ms
+Hash: 16bad7466ac50f139f21
+Version: webpack 1.3.2-beta8
+Time: 128ms
                                Asset  Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
                            style.css    71          [emitted]  
-                         0.output.js  1552       0  [emitted]  
+                         0.output.js  1252       0  [emitted]  
                            output.js  4080       1  [emitted]  main
-chunk    {0} 0.output.js 744 {1} [rendered]
+chunk    {0} 0.output.js 650 {1} [rendered]
     > [0] ./example.js 2:0-20
-    [2] ./style2.css 550 {0} [built]
-        cjs require ./style2.css [4] ./chunk.js 1:0-23
-    [3] (webpack)/~/extract-text-webpack-plugin/loader.js?{"remove":true}!(webpack)/~/css-loader!./style2.css 87 {0} [built]
-        cjs require !!(webpack)/~\extract-text-webpack-plugin\loader.js?{"remove":true}!(webpack)\node_modules\css-loader\index.js!.\style2.css [2] ./style2.css 4:2-282
-    [4] ./chunk.js 26 {0} [built]
+    [2] ./style2.css 456 {0} [built]
+        cjs require ./style2.css [3] ./chunk.js 1:0-23
+    [3] ./chunk.js 26 {0} [built]
         amd require ./chunk [0] ./example.js 2:0-20
+    [4] (webpack)/~/css-loader!./style2.css 87 {0} [built]
+        cjs require !!(webpack)\node_modules\css-loader\index.js!.\style2.css [2] ./style2.css 4:2-188
     [5] ./image2.png 81 {0} [built]
-        cjs require ./image2.png [3] (webpack)/~/extract-text-webpack-plugin/loader.js?{"remove":true}!(webpack)/~/css-loader!./style2.css 2:32-55
+        cjs require ./image2.png [4] (webpack)/~/css-loader!./style2.css 2:32-55
 chunk    {1} output.js (main) 89 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 48 {1} [built]
     [1] ./style.css 41 {1} [built]
         cjs require ./style.css [0] ./example.js 1:0-22
 Child extract-text-webpack-plugin:
-    Hash: d700e4ce4d0a140c5961
-    Version: webpack 1.3.2-beta2
                                    Asset  Size  Chunks       Chunk Names
     ce21cbdd9b894e6af794813eb3fdaf60.png   119               
     chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)\node_modules\css-loader\index.js!.\style.css 167 [rendered]
@@ -276,24 +269,24 @@ Child extract-text-webpack-plugin:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 5aa472e382f388bfdcb6
-Version: webpack 1.3.2-beta2
-Time: 202ms
+Hash: a1cb30e2febe8a9ad8eb
+Version: webpack 1.3.2-beta8
+Time: 209ms
                                Asset  Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
                            style.css    61          [emitted]  
                          0.output.js   202       0  [emitted]  
                            output.js   749       1  [emitted]  main
-chunk    {0} 0.output.js 727 {1} [rendered]
+chunk    {0} 0.output.js 633 {1} [rendered]
     > [0] ./example.js 2:0-20
-    [2] ./style2.css 550 {0} [built]
-        cjs require ./style2.css [4] ./chunk.js 1:0-23
-    [3] (webpack)/~/extract-text-webpack-plugin/loader.js?{"remove":true}!(webpack)/~/css-loader!./style2.css 70 {0} [built]
-        cjs require !!(webpack)/~\extract-text-webpack-plugin\loader.js?{"remove":true}!(webpack)\node_modules\css-loader\index.js!.\style2.css [2] ./style2.css 4:2-282
-    [4] ./chunk.js 26 {0} [built]
+    [2] ./style2.css 456 {0} [built]
+        cjs require ./style2.css [3] ./chunk.js 1:0-23
+    [3] ./chunk.js 26 {0} [built]
         amd require ./chunk [0] ./example.js 2:0-20
+    [4] (webpack)/~/css-loader!./style2.css 70 {0} [built]
+        cjs require !!(webpack)\node_modules\css-loader\index.js!.\style2.css [2] ./style2.css 4:2-188
     [5] ./image2.png 81 {0} [built]
-        cjs require ./image2.png [3] (webpack)/~/extract-text-webpack-plugin/loader.js?{"remove":true}!(webpack)/~/css-loader!./style2.css 2:24-47
+        cjs require ./image2.png [4] (webpack)/~/css-loader!./style2.css 2:24-47
 chunk    {1} output.js (main) 89 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 48 {1} [built]
@@ -301,12 +294,10 @@ chunk    {1} output.js (main) 89 [rendered]
         cjs require ./style.css [0] ./example.js 1:0-22
 
 WARNING in 0.output.js from UglifyJs
-Condition always false [(webpack)/~/extract-text-webpack-plugin/loader.js?{"remove":true,"extract":false}!(webpack)/~/style-loader!(webpack)/~/extract-text-webpack-plugin/loader.js?{"remove":true}!(webpack)/~/css-loader!./style2.css:5,0]
-Dropping unreachable code [(webpack)/~/extract-text-webpack-plugin/loader.js?{"remove":true,"extract":false}!(webpack)/~/style-loader!(webpack)/~/extract-text-webpack-plugin/loader.js?{"remove":true}!(webpack)/~/css-loader!./style2.css:6,0]
-Side effects in initialization of unused variable dispose [(webpack)/~/extract-text-webpack-plugin/loader.js?{"remove":true,"extract":false}!(webpack)/~/style-loader!(webpack)/~/extract-text-webpack-plugin/loader.js?{"remove":true}!(webpack)/~/css-loader!./style2.css:2,0]
+Condition always false [(webpack)/~/extract-text-webpack-plugin/loader.js?{"omit":1,"extract":true,"remove":true}!(webpack)/~/style-loader!(webpack)/~/css-loader!./style2.css:5,0]
+Dropping unreachable code [(webpack)/~/extract-text-webpack-plugin/loader.js?{"omit":1,"extract":true,"remove":true}!(webpack)/~/style-loader!(webpack)/~/css-loader!./style2.css:6,0]
+Side effects in initialization of unused variable dispose [(webpack)/~/extract-text-webpack-plugin/loader.js?{"omit":1,"extract":true,"remove":true}!(webpack)/~/style-loader!(webpack)/~/css-loader!./style2.css:2,0]
 Child extract-text-webpack-plugin:
-    Hash: d25490764bf82b317fae
-    Version: webpack 1.3.2-beta2
                                    Asset  Size  Chunks       Chunk Names
     ce21cbdd9b894e6af794813eb3fdaf60.png   119               
     chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)\node_modules\css-loader\index.js!.\style.css 150 [rendered]

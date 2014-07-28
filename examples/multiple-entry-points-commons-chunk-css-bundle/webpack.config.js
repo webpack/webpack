@@ -5,6 +5,7 @@ module.exports = {
 	entry: {
 		A: "./a",
 		B: "./b",
+		C: "./c",
 	},
 	output: {
 		path: path.join(__dirname, "js"),
@@ -14,18 +15,13 @@ module.exports = {
 		loaders: [
 			{
 				test: /\.css$/,
-				loaders: [
-					ExtractTextPlugin.loader({ remove: true, extract: false }),
-					"style-loader",
-					ExtractTextPlugin.loader({ remove: true }),
-					"css-loader"
-				]
+				loader: ExtractTextPlugin.extract("style-loader", "css-loader")
 			},
 			{ test: /\.png$/, loader: "file-loader" }
 		]
 	},
 	plugins: [
-		new CommonsChunkPlugin("commons", "commons.js"),
+		new CommonsChunkPlugin("commons", "commons.js", ["A", "B"]),
 		new ExtractTextPlugin("[name].css"),
 	]
 };

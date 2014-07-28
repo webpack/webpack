@@ -4,10 +4,7 @@ module.exports = {
 		loaders: [
 			{
 				test: /\.css$/,
-				loaders: [
-					ExtractTextPlugin.loader({ remove: true }),
-					"css-loader"
-				]
+				loader: ExtractTextPlugin.extract("css-loader")
 			},
 			{ test: /\.png$/, loader: "file-loader" }
 		]

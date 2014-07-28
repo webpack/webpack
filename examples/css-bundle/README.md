@@ -22,10 +22,7 @@ module.exports = {
 		loaders: [
 			{
 				test: /\.css$/,
-				loaders: [
-					ExtractTextPlugin.loader({ remove: true }),
-					"css-loader"
-				]
+				loader: ExtractTextPlugin.extract("css-loader")
 			},
 			{ test: /\.png$/, loader: "file-loader" }
 		]
@@ -117,8 +114,8 @@ body {
 
 ```
 Hash: 954e72d5ec1de4b4dc80
-Version: webpack 1.3.2-beta2
-Time: 95ms
+Version: webpack 1.3.2-beta8
+Time: 96ms
                                Asset  Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
                            style.css    69          [emitted]  
@@ -129,8 +126,6 @@ chunk    {0} output.js (main) 64 [rendered]
     [1] ./style.css 41 {0} [built]
         cjs require ./style.css [0] ./example.js 1:0-22
 Child extract-text-webpack-plugin:
-    Hash: ac8625c3bf3709b4c609
-    Version: webpack 1.3.2-beta2
                                    Asset  Size  Chunks             Chunk Names
     ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
     chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)\node_modules\css-loader\index.js!.\style.css 163 [rendered]
@@ -144,7 +139,7 @@ Child extract-text-webpack-plugin:
 
 ```
 Hash: 3abfd6ec08d4cc31f089
-Version: webpack 1.3.2-beta2
+Version: webpack 1.3.2-beta8
 Time: 136ms
                                Asset  Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
@@ -156,8 +151,6 @@ chunk    {0} output.js (main) 64 [rendered]
     [1] ./style.css 41 {0} [built]
         cjs require ./style.css [0] ./example.js 1:0-22
 Child extract-text-webpack-plugin:
-    Hash: efab1621ec9e016b9f16
-    Version: webpack 1.3.2-beta2
                                    Asset  Size  Chunks             Chunk Names
     ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
     chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)\node_modules\css-loader\index.js!.\style.css 150 [rendered]
