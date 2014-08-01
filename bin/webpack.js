@@ -146,6 +146,9 @@ var compiler = webpack(options, function(err, stats) {
 		process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
 	} else if(stats.hash !== lastHash) {
 		lastHash = stats.hash;
-		process.stdout.write(stats.toString(outputOptions) + "\n");
+		// Triggers the system bell when there is an error
+		// (on OS X it makes the Terminal.app's icon bounce in the dock)
+		var bell = stats.hasErrors() ? "\u0007" : "";
+		process.stdout.write(bell + stats.toString(outputOptions) + "\n");
 	}
 });
