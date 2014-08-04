@@ -42,11 +42,11 @@ describe("ConfigTestCases", function() {
 						});
 						if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
 						if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
-						var exportedTest = 0;
+						var exportedTests = 0;
 						function _it(title, fn) {
 							var test = new Test(title, fn);
 							suite.addTest(test);
-							exportedTest++;
+							exportedTests++;
 							return test;
 						}
 						function _require(module) {
@@ -58,9 +58,14 @@ describe("ConfigTestCases", function() {
 								return module.exports;
 							} else return require(module);
 						}
-						for(var i = 0; i < [].concat(options).length; i++)
-							_require("./bundle" + i + ".js");
-						if(exportedTest === 0) return done(new Error("No tests exported by test case"));
+						var filesCount = 0;
+						for(var i = 0; i < [].concat(options).length; i++) {
+							if(fs.existsSync(path.join(outputDirectory, "bundle" + i + ".js"))) {
+								filesCount++;
+								_require("./bundle" + i + ".js");
+							}
+						}
+						if(exportedTests < filesCount) return done(new Error("No tests exported by test case"));
 						done();
 					});
 				});
