@@ -1,5 +1,6 @@
 if(module.hot) {
 	function check() {
+		console.log("Checking for updates on the server...");
 		module.hot.check(function(err, updatedModules) {
 			if(err) {
 				if(module.hot.status() in {abort:1,fail:1})
