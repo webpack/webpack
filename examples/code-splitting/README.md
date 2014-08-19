@@ -1,3 +1,29 @@
+This example illustrate a very simple case of Code Splitting with `require.ensure`.
+
+* `a` and `b` are required normally via CommonsJs
+* `c` is depdended through the `require.ensure` array.
+  * This means: make it available, but don't execute it
+  * webpack will load it on demand
+* `b` and `d` are required via CommonJs in the `require.ensure` callback
+  * webpack detects that these are in the on-demand-callback and
+  * will load them on demand
+  * webpacks optimizer can optimize `b` away
+    * as it is already available through the parent chunks
+
+You can see that webpack outputs two files/chunks:
+
+* `output.js` is the entry chunks and contains
+  * the module system
+  * chunk loading logic
+  * the entry point `example.js`
+  * module `a`
+  * module `b`
+* `1.output.js` is an additional chunk (on demand loaded) and contains
+  * module `c`
+  * module `d`
+
+You can see that chunks are loaded via JSONP. The additional chunks are pretty small and minimize well.
+
 # example.js
 
 ``` javascript
@@ -14,71 +40,6 @@ require.ensure(["c"], function(require) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/ 	
-/******/ 	// object to store loaded and loading chunks
-/******/ 	// "0" means "already loaded"
-/******/ 	// Array means "loading", array contains callbacks
-/******/ 	var installedChunks = {
-/******/ 		0:0
-/******/ 	};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-/******/ 		
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 		
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
-/******/ 		
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/******/ 	// This file contains only the entry chunk.
-/******/ 	// The chunk loading function for additional chunks
-/******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
-/******/ 		// "0" is the signal for "already loaded"
-/******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return callback.call(null, __webpack_require__);
-/******/ 		
-/******/ 		// an array means "currently loading".
-/******/ 		if(installedChunks[chunkId] !== undefined) {
-/******/ 			installedChunks[chunkId].push(callback);
-/******/ 		} else {
-/******/ 			// start chunk loading
-/******/ 			installedChunks[chunkId] = [callback];
-/******/ 			var head = document.getElementsByTagName('head')[0];
-/******/ 			var script = document.createElement('script');
-/******/ 			script.type = 'text/javascript';
-/******/ 			script.charset = 'utf-8';
-/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".output.js";
-/******/ 			head.appendChild(script);
-/******/ 		}
-/******/ 	};
-/******/ 	
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/ 	
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/ 	
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
-/******/ 	
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	var parentJsonpFunction = window["webpackJsonp"];
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
@@ -97,9 +58,74 @@ require.ensure(["c"], function(require) {
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
 /******/ 		while(callbacks.length)
 /******/ 			callbacks.shift().call(null, __webpack_require__);
-/******/ 		
+/******/
 /******/ 	};
-/******/ 	
+/******/
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// "0" means "already loaded"
+/******/ 	// Array means "loading", array contains callbacks
+/******/ 	var installedChunks = {
+/******/ 		0:0
+/******/ 	};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
+/******/ 		// "0" is the signal for "already loaded"
+/******/ 		if(installedChunks[chunkId] === 0)
+/******/ 			return callback.call(null, __webpack_require__);
+/******/
+/******/ 		// an array means "currently loading".
+/******/ 		if(installedChunks[chunkId] !== undefined) {
+/******/ 			installedChunks[chunkId].push(callback);
+/******/ 		} else {
+/******/ 			// start chunk loading
+/******/ 			installedChunks[chunkId] = [callback];
+/******/ 			var head = document.getElementsByTagName('head')[0];
+/******/ 			var script = document.createElement('script');
+/******/ 			script.type = 'text/javascript';
+/******/ 			script.charset = 'utf-8';
+/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".output.js";
+/******/ 			head.appendChild(script);
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -165,7 +191,7 @@ webpackJsonp([1],[
 	// module d
 
 /***/ }
-])
+]);
 ```
 
 Minimized
@@ -179,12 +205,12 @@ webpackJsonp([1],[,,,function(){},function(){}]);
 ## Uncompressed
 
 ```
-Hash: 51eb9c135b6c6fe4e444
-Version: webpack 1.1.0
-Time: 85ms
+Hash: 4c109dd0b2e0d79d0950
+Version: webpack 1.3.2-beta4
+Time: 74ms
       Asset  Size  Chunks             Chunk Names
-  output.js  4307       0  [emitted]  main       
-1.output.js   351       1  [emitted]             
+  output.js  4271       0  [emitted]  main
+1.output.js   352       1  [emitted]  
 chunk    {0} output.js (main) 166 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 144 {0} [built]
@@ -204,12 +230,12 @@ chunk    {1} 1.output.js 22 {0} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 0b0f0366fa1aab3ebbc4
-Version: webpack 1.1.0
-Time: 174ms
+Hash: e2531cb5dcfe68287454
+Version: webpack 1.3.2-beta4
+Time: 165ms
       Asset  Size  Chunks             Chunk Names
-  output.js   775       0  [emitted]  main       
-1.output.js    49       1  [emitted]             
+  output.js   775       0  [emitted]  main
+1.output.js    49       1  [emitted]  
 chunk    {0} output.js (main) 166 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 144 {0} [built]

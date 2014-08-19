@@ -1,9 +1,22 @@
+This example show how to add support for Labeled Modules by adding the plugin to the configuration.
+
 # example.js
 
 ``` javascript
 require: "./increment";
 var a = 1;
 increment(a); // 2
+```
+
+# webpack.config.js
+
+``` javascript
+var webpack = require("../../");
+module.exports = {
+	plugins: [
+		new webpack.dependencies.LabeledModulesPlugin()
+	]
+}
 ```
 
 # increment.js
@@ -31,44 +44,43 @@ exports: function add() {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/ 		
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 		
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/ 		
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
-/******/ 	
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/ 	
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/ 	
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/ 	
-/******/ 	
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -122,11 +134,11 @@ The remaining labels are removed while minimizing.
 ## Uncompressed
 
 ```
-Hash: a09dcd87bf9b88c5e137
-Version: webpack 1.1.0
-Time: 57ms
+Hash: f8fc9eca6fb91df6e48a
+Version: webpack 1.3.2-beta7
+Time: 35ms
     Asset  Size  Chunks             Chunk Names
-output.js  2462       0  [emitted]  main       
+output.js  2425       0  [emitted]  main
 chunk    {0} output.js (main) 299 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 55 {0} [built]
@@ -139,11 +151,11 @@ chunk    {0} output.js (main) 299 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 11e5fd17e7fdce2603db
-Version: webpack 1.1.0
-Time: 123ms
+Hash: 34470e6917b261b891ed
+Version: webpack 1.3.2-beta7
+Time: 75ms
     Asset  Size  Chunks             Chunk Names
-output.js   427       0  [emitted]  main       
+output.js   427       0  [emitted]  main
 chunk    {0} output.js (main) 299 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 55 {0} [built]

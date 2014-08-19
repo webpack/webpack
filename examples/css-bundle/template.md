@@ -7,7 +7,7 @@
 
 # style.css
 
-``` javascript
+``` css
 {{style.css}}
 ```
 
@@ -25,7 +25,7 @@
 
 # js/style.css
 
-``` javascript
+``` css
 {{js/style.css}}
 ```
 

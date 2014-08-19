@@ -1,3 +1,16 @@
+This example demonstrates how to build a complex library with webpack. The library consist of multiple parts that are usable on its own and together.
+
+When using this library with script tags it exports itself to the namespace `MyLibrary` and each part to a property in this namespace (`MyLibrary.alpha` and `MyLibrary.beta`). When consuming the library with CommonsJs or AMD it just export each part.
+
+We are using mutliple entry points (`entry` option) to build every part of the library as separate output file. The `output.filename` option contains `[name]` to give each output file a different name.
+
+We are using the `libraryTarget` option to generate a UMD ([Universal Module Definition](https://github.com/umdjs/umd)) module that is consumable in CommonsJs, AMD and with script tags. The `library` option defines the namespace. We are using `[name]` in the `library` option to give every entry a different namespace.
+
+You can see that webpack automatically wraps your module so that it is consumable in every enviroment. All you need is this simple config.
+
+Note: You can also use the `library` and `libraryTarget` options without multiple entry points. Then you don't need `[name]`.
+
+Note: When your library has dependencies that should not be included in the compiled version, you can use the `externals` option. See [externals example](https://github.com/webpack/webpack/tree/master/examples/externals).
 
 # webpack.config.js
 
@@ -31,44 +44,43 @@ module.exports = {
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["alpha"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
-/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/ 		
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 		
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/ 		
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
-/******/ 	
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/ 	
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/ 	
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/ 	
-/******/ 	
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -85,7 +97,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ }
 /******/ ])
 })
-
 ```
 
 # js/MyLibrary.beta.js
@@ -102,44 +113,43 @@ return /******/ (function(modules) { // webpackBootstrap
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["beta"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
-/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/ 		
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 		
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/ 		
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
-/******/ 	
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/ 	
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/ 	
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/ 	
-/******/ 	
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -156,7 +166,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ }
 /******/ ])
 })
-
 ```
 
 # Info
@@ -164,12 +173,12 @@ return /******/ (function(modules) { // webpackBootstrap
 ## Uncompressed
 
 ```
-Hash: 188fa9bfc8c26494bc09
-Version: webpack 1.1.3
-Time: 126ms
+Hash: a78e403fffa13ff44a9b
+Version: webpack 1.3.2-beta7
+Time: 32ms
              Asset  Size  Chunks             Chunk Names
- MyLibrary.beta.js  2047       0  [emitted]  beta       
-MyLibrary.alpha.js  2053       1  [emitted]  alpha      
+ MyLibrary.beta.js  2010       0  [emitted]  beta
+MyLibrary.alpha.js  2016       1  [emitted]  alpha
 chunk    {0} MyLibrary.beta.js (beta) 24 [rendered]
     > beta [0] ./beta.js 
     [0] ./beta.js 24 {0} [built]
@@ -181,12 +190,12 @@ chunk    {1} MyLibrary.alpha.js (alpha) 25 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 7ddebca59251e5368cb3
-Version: webpack 1.1.3
-Time: 380ms
+Hash: 3789fe283a0b89d3215b
+Version: webpack 1.3.2-beta7
+Time: 87ms
              Asset  Size  Chunks             Chunk Names
- MyLibrary.beta.js   485       0  [emitted]  beta       
-MyLibrary.alpha.js   488       1  [emitted]  alpha      
+ MyLibrary.beta.js   485       0  [emitted]  beta
+MyLibrary.alpha.js   488       1  [emitted]  alpha
 chunk    {0} MyLibrary.beta.js (beta) 24 [rendered]
     > beta [0] ./beta.js 
     [0] ./beta.js 24 {0} [built]

@@ -1,6 +1,6 @@
 {
 	"name": "webpack",
-	"version": "1.3.2-beta1",
+	"version": "1.3.3-beta2",
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
 	"dependencies": {
@@ -23,8 +23,8 @@
 		}
 	],
 	"devDependencies": {
-		"mocha": "1.19.x",
-		"should": "3.3.x",
+		"mocha": "~1.21.1",
+		"should": "~4.0.4",
 		"vm-browserify": "0.0.x",
 		"express": "3.4.x",
 		"webpack-dev-middleware": "1.x",
@@ -33,16 +33,16 @@
 		"json-loader": "0.5.x",
 		"jade-loader": "0.6.x",
 		"coffee-loader": "0.7.x",
-		"css-loader": "0.6.x",
+		"css-loader": "0.7.x",
 		"less-loader": "0.7.x",
 		"style-loader": "0.6.x",
-		"script-loader": "0.5.x",
+		"script-loader": "0.6.x",
 		"bundle-loader": "0.5.x",
 		"file-loader": "0.5.x",
 		"url-loader": "0.5.x",
 		"val-loader": "0.5.x",
 		"i18n-webpack-plugin": "0.2.x",
-		"extract-text-webpack-plugin": "0.1.x",
+		"extract-text-webpack-plugin": "0.2.x",
 		"component-webpack-plugin": "0.2.x"
 	},
 	"engines": {
