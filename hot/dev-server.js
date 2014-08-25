@@ -35,10 +35,12 @@ if(module.hot) {
 		});
 	}
 	window.onmessage = function(event) {
-		if(module.hot.status() === "idle" && typeof event.data === "string" && event.data.indexOf("webpackHotUpdate") === 0) {
+		if(typeof event.data === "string" && event.data.indexOf("webpackHotUpdate") === 0) {
 			lastData = event.data;
-			console.log("[HMR] Checking for updates on the server...");
-			check();
+			if(module.hot.status() === "idle") {
+				console.log("[HMR] Checking for updates on the server...");
+				check();
+			}
 		}
 	};
 }
