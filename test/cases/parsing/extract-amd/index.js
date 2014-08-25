@@ -209,3 +209,8 @@ it("should parse an define with empty array and object", function() {
 	define([], obj);
 	module.exports.should.be.eql(obj);
 });
+it("should parse an define with object", function() {
+	var obj = {ok: 76243};
+	define(obj);
+	module.exports.should.be.eql(obj);
+});
