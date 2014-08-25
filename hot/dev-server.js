@@ -1,31 +1,43 @@
 if(module.hot) {
+	var lastData;
 	function check() {
-		console.log("Checking for updates on the server...");
 		module.hot.check(function(err, updatedModules) {
 			if(err) {
-				if(module.hot.status() in {abort:1,fail:1})
+				if(module.hot.status() in {abort:1,fail:1}) {
+					console.warn("[HMR] Cannot apply update. Need to do a full reload!");
 					window.location.reload();
-				else
-					console.warn("Update failed: " + err);
+				} else {
+					console.warn("[HMR] Update failed: " + err);
+				}
 				return;
 			}
 
 			if(!updatedModules)
-				return console.log("No Update found.");
+				return console.log("[HMR] No Update found.");
 
-			check();
+			var upToDate = lastData.indexOf(__webpack_hash__) >= 0;
+			if(!upToDate) {
+				check();
+			}
 
-			if(!updatedModules || updatedModules.length === 0)
-				return console.log("Update is empty.");
-			console.log("Updated modules:");
-			updatedModules.forEach(function(moduleId) {
-				console.log(" - " + moduleId);
-			});
+			if(!updatedModules || updatedModules.length === 0) {
+				console.log("[HMR] Update is empty.");
+			} else {
+				console.log("[HMR] Updated modules:");
+				updatedModules.forEach(function(moduleId) {
+					console.log("[HMR]  - " + moduleId);
+				});
+			}
+			if(upToDate) {
+				console.log("[HMR] App is up to date.");
+			}
 
 		});
 	}
 	window.onmessage = function(event) {
-		if(event.data === "webpackHotUpdate" && module.hot.status() === "idle") {
+		if(module.hot.status() === "idle" && typeof event.data === "string" && event.data.indexOf("webpackHotUpdate") === 0) {
+			lastData = event.data;
+			console.log("[HMR] Checking for updates on the server...");
 			check();
 		}
 	};
