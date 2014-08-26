@@ -220,3 +220,14 @@ it("should not fail issue #138 second", function() {
 	})(typeof define === 'function' && define.amd ? define : function (factory) { module.exports = factory(require); }, this);
 	module.exports.should.be.eql("#138 2.");
 });
+
+it("should parse an define with empty array and object", function() {
+	var obj = {ok: 95476};
+	define([], obj);
+	module.exports.should.be.eql(obj);
+});
+it("should parse an define with object", function() {
+	var obj = {ok: 76243};
+	define(obj);
+	module.exports.should.be.eql(obj);
+});
