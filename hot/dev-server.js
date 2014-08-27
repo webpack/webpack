@@ -43,4 +43,6 @@ if(module.hot) {
 			}
 		}
 	};
+} else {
+	throw new Error("[HMR] Hot Module Replacement is disabled");
 }
