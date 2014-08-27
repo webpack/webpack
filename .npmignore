@@ -1,5 +1,5 @@
-/node_modules
-/test/js
-/test/browsertest/js
-/examples
-/coverage
+./node_modules
+./test/js
+./test/browsertest/js
+./examples
+./coverage
