@@ -42,6 +42,8 @@ optimist
 
 	.boolean("display-cached").describe("display-cached")
 
+	.boolean("display-cached-assets").describe("display-cached-assets")
+
 	.boolean("display-reasons").alias("display-reasons", "verbose").alias("display-reasons", "v").describe("display-reasons");
 
 	
@@ -63,6 +65,7 @@ function ifArg(name, fn, init) {
 
 var outputOptions = {
 	cached: false,
+	cachedAssets: false,
 	context: options.context
 };
 
@@ -108,11 +111,18 @@ if(!outputOptions.json) {
 		if(bool)
 			outputOptions.cached = true;
 	});
+
+	ifArg("display-cached-assets", function(bool) {
+		if(bool)
+			outputOptions.cachedAssets = true;
+	});
 } else {
 	outputOptions.chunks = true;
 	outputOptions.modules = true;
 	outputOptions.chunkModules = true;
 	outputOptions.reasons = true;
+	outputOptions.cached = true;
+	outputOptions.cachedAssets = true;
 }
 
 ifArg("hide-modules", function(bool) {
