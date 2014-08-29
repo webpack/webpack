@@ -1,7 +1,7 @@
 if(module.hot) {
 	var lastData;
 	function check() {
-		module.hot.check(function(err, updatedModules) {
+		module.hot.check(true, function(err, updatedModules) {
 			if(err) {
 				if(module.hot.status() in {abort:1,fail:1}) {
 					console.warn("[HMR] Cannot apply update. Need to do a full reload!");
@@ -43,6 +43,7 @@ if(module.hot) {
 			}
 		}
 	};
+	console.log("[HMR] Waiting for update signal from WDS...");
 } else {
 	throw new Error("[HMR] Hot Module Replacement is disabled");
 }
