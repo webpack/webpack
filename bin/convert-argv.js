@@ -52,6 +52,14 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.context = process.cwd();
 	}
 
+	if(argv["watch"]) {
+		options.watch = true;
+	}
+
+	if(argv["watch-delay"]) {
+		options.watchDelay = +argv["watch-delay"];
+	}
+
 	function processOptions(options) {
 		function ifArg(name, fn, init, finalize) {
 			if(Array.isArray(argv[name])) {
