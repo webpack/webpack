@@ -1,5 +1,8 @@
 if(module.hot) {
 	var lastData;
+	function upToDate() {
+		return lastData.indexOf(__webpack_hash__) >= 0;
+	}
 	function check() {
 		module.hot.check(true, function(err, updatedModules) {
 			if(err) {
@@ -15,8 +18,7 @@ if(module.hot) {
 			if(!updatedModules)
 				return console.log("[HMR] No Update found.");
 
-			var upToDate = lastData.indexOf(__webpack_hash__) >= 0;
-			if(!upToDate) {
+			if(!upToDate()) {
 				check();
 			}
 
@@ -28,7 +30,7 @@ if(module.hot) {
 					console.log("[HMR]  - " + moduleId);
 				});
 			}
-			if(upToDate) {
+			if(upToDate()) {
 				console.log("[HMR] App is up to date.");
 			}
 
@@ -37,7 +39,7 @@ if(module.hot) {
 	window.onmessage = function(event) {
 		if(typeof event.data === "string" && event.data.indexOf("webpackHotUpdate") === 0) {
 			lastData = event.data;
-			if(module.hot.status() === "idle") {
+			if(!upToDate() && module.hot.status() === "idle") {
 				console.log("[HMR] Checking for updates on the server...");
 				check();
 			}
