@@ -1,9 +1,9 @@
 if(module.hot) {
 	var lastData;
-	function upToDate() {
+	var upToDate = function() {
 		return lastData.indexOf(__webpack_hash__) >= 0;
 	}
-	function check() {
+        var check = function() { 
 		module.hot.check(true, function(err, updatedModules) {
 			if(err) {
 				if(module.hot.status() in {abort:1,fail:1}) {
