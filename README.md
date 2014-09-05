@@ -143,7 +143,7 @@ It would be nice if you open sourced your own loaders or webmodules. :)
 
 You are also welcome to correct any spelling mistakes or any language issues, because my english is not perfect...
 
-If you want to discus something or just need help, [here is a gitter.im room](https://gitter.im/webpack/webpack).
+If you want to discuss something or just need help, [here is a gitter.im room](https://gitter.im/webpack/webpack).
 
 
 ## License
