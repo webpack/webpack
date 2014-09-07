@@ -42,7 +42,7 @@
 		"url-loader": "~0.5.0",
 		"val-loader": "~0.5.0",
 		"i18n-webpack-plugin": "~0.2.0",
-		"extract-text-webpack-plugin": "~0.2.3",
+		"extract-text-webpack-plugin": "~0.3.0",
 		"component-webpack-plugin": "~0.2.0"
 	},
 	"engines": {
