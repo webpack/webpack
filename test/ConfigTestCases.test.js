@@ -27,7 +27,8 @@ describe("ConfigTestCases", function() {
 					var testDirectory = path.join(casesPath, category.name, testName);
 					var outputDirectory = path.join(__dirname, "js", "config", category.name, testName);
 					var options = require(path.join(testDirectory, "webpack.config.js"));
-					[].concat(options).forEach(function(options, idx) {
+					var optionsArr = [].concat(options);
+					optionsArr.forEach(function(options, idx) {
 						if(!options.context) options.context = testDirectory;
 						if(!options.entry) options.entry = "./index.js";
 						if(!options.target) options.target = "async-node";
@@ -59,12 +60,26 @@ describe("ConfigTestCases", function() {
 							} else return require(module);
 						}
 						var filesCount = 0;
-						for(var i = 0; i < [].concat(options).length; i++) {
-							if(fs.existsSync(path.join(outputDirectory, "bundle" + i + ".js"))) {
+						var testConfig = {
+							findBundle: function (i, options) {
+								if(fs.existsSync(path.join(options.output.path, "bundle" + i + ".js"))) {
+									return "./bundle" + i + ".js";
+								}
+							}
+						};
+						try {
+							// try to load a test file
+							testConfig = require(path.join(testDirectory, "test.config.js"));
+						} catch(e) {}
+						for(var i = 0; i < optionsArr.length; i++) {
+							var bundlePath = testConfig.findBundle(i, optionsArr[i]);
+							if (bundlePath) {
 								filesCount++;
-								_require("./bundle" + i + ".js");
+								_require(bundlePath);
 							}
 						}
+						// give a free pass to compilation that generated an error
+						if(!jsonStats.errors.length && filesCount !== optionsArr.length) return done(new Error("Should have found at least one bundle file per webpack config"));
 						if(exportedTests < filesCount) return done(new Error("No tests exported by test case"));
 						done();
 					});
