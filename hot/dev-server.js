@@ -3,8 +3,8 @@ if(module.hot) {
 	var upToDate = function() {
 		return lastData.indexOf(__webpack_hash__) >= 0;
 	}
-        var check = function() { 
-		module.hot.check(true, function(err, updatedModules) {
+		var check = function() {
+			module.hot.check(true, function(err, updatedModules) {
 			if(err) {
 				if(module.hot.status() in {abort:1,fail:1}) {
 					console.warn("[HMR] Cannot apply update. Need to do a full reload!");
