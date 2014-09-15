@@ -34,6 +34,10 @@ optimist
 
 	.boolean("hide-modules").describe("hide-modules")
 
+	.string("display-exclude").describe("display-exclude")
+
+	.boolean("display-modules").describe("display-modules")
+
 	.boolean("display-chunks").describe("display-chunks")
 
 	.boolean("display-error-details").describe("display-error-details")
@@ -89,6 +93,10 @@ ifArg("sort-assets-by", function(value) {
 	outputOptions.assetsSort = value;
 });
 
+ifArg("display-exclude", function(value) {
+	outputOptions.exclude = value;
+});
+
 if(!outputOptions.json) {
 	ifArg("display-chunks", function(bool) {
 		outputOptions.modules = !bool;
@@ -116,6 +124,9 @@ if(!outputOptions.json) {
 		if(bool)
 			outputOptions.cachedAssets = true;
 	});
+	
+	if(!outputOptions.exclude && !argv["display-modules"])
+		outputOptions.exclude = ["node_modules", "bower_components", "jam", "components"];
 } else {
 	outputOptions.chunks = true;
 	outputOptions.modules = true;
