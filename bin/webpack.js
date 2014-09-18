@@ -16,7 +16,7 @@ var fs = require("fs");
 var util = require("util");
 var optimist = require("optimist")
 	.usage("webpack " + require("../package.json").version + "\n" +
-		"Usage: http://webpack.github.io/docs/webpack-detailed-usage.html")
+		"Usage: http://webpack.github.io/docs/cli.html")
 	
 require("./config-optimist")(optimist);
 
