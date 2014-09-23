@@ -1,3 +1,9 @@
+This example uses the I18nPlugin in combination with the multi-compiler feature.
+
+The `webpack.config.js` exports an array of all config combinations that should be compiled. In this example two different parameter for the I18nPlugin are used.
+
+The I18nPlugin replaces every occurrence of the i18n function `__(...)` with a const string. i. e. `__("Hello World")` with `"Hello World"` resp. `"Hallo Welt"`.
+
 
 # example.js
 
@@ -11,19 +17,22 @@
 {{webpack.config.js}}
 ```
 
-> I recommend to use `new I18nPlugin(null)` for development
-> and write a small script that generates bundles for every language
-
 # de.json
 
 ``` javascript
 {{de.json}}
 ```
 
-# js/output.js
+# js/de.output.js
 
 ``` javascript
-{{js/output.js}}
+{{js/de.output.js}}
+```
+
+# js/en.output.js
+
+``` javascript
+{{js/en.output.js}}
 ```
 
 # Info
