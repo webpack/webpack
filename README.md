@@ -59,7 +59,7 @@ webpack can do many optimizations to **reduce the output size**. It also can mak
 
 
 
-# A small example what's possible
+# A small example of what's possible
 
 ``` javascript
 // webpack is a module bundler
