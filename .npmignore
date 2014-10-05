@@ -1,5 +1,6 @@
-./node_modules
-./test/js
-./test/browsertest/js
-./examples
-./coverage
+test/
+examples/
+coverage/
+.travis.yml
+appveyor.yml
+bm.js
