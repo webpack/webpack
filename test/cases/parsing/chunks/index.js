@@ -13,3 +13,10 @@ it("should parse a bound function expression in require.ensure", function(done) 
 		done();
 	}.bind(this));
 });
+
+it("should parse a string in require.ensure", function(done) {
+	require.ensure("./file", function(require) {
+		require("./file").should.be.eql("ok");
+		done();
+	});
+});
