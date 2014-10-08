@@ -19,37 +19,6 @@ var optimist = require("optimist")
 		"Usage: http://webpack.github.io/docs/cli.html")
 	
 require("./config-optimist")(optimist);
-
-optimist
-
-	.boolean("json").alias("json", "j").describe("json")
-	
-	.boolean("colors").alias("colors", "c").describe("colors")
-
-	.string("sort-modules-by").describe("sort-modules-by")
-
-	.string("sort-chunks-by").describe("sort-chunks-by")
-
-	.string("sort-assets-by").describe("sort-assets-by")
-
-	.boolean("hide-modules").describe("hide-modules")
-
-	.string("display-exclude").describe("display-exclude")
-
-	.boolean("display-modules").describe("display-modules")
-
-	.boolean("display-chunks").describe("display-chunks")
-
-	.boolean("display-error-details").describe("display-error-details")
-
-	.boolean("display-origins").describe("display-origins")
-
-	.boolean("display-cached").describe("display-cached")
-
-	.boolean("display-cached-assets").describe("display-cached-assets")
-
-	.boolean("display-reasons").alias("display-reasons", "verbose").alias("display-reasons", "v").describe("display-reasons");
-
 	
 var argv = optimist.argv;
 
@@ -65,8 +34,6 @@ function ifArg(name, fn, init) {
 	}
 }
 
-
-
 var outputOptions = {
 	cached: false,
 	cachedAssets: false,
@@ -79,6 +46,14 @@ ifArg("json", function(bool) {
 
 ifArg("colors", function(bool) {
 	outputOptions.colors = bool;
+});
+
+ifArg("silent", function(bool) {
+	outputOptions.silent = bool;
+});
+
+ifArg("quiet", function(bool) {
+	outputOptions.quiet = bool;
 });
 
 ifArg("sort-modules-by", function(value) {
@@ -163,6 +138,7 @@ var compiler = webpack(options, function(err, stats) {
 		}
 		return;
 	}
+	if (outputOptions.silent) return;
 	if(outputOptions.json) {
 		process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
 	} else if(stats.hash !== lastHash) {

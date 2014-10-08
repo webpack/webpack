@@ -60,6 +60,14 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.watchDelay = +argv["watch-delay"];
 	}
 
+	if(argv["quiet"]) {
+		options.quiet = true;
+	}
+
+	if(argv["silent"]) {
+		options.silent = true;
+	}
+
 	function processOptions(options) {
 		function ifArg(name, fn, init, finalize) {
 			if(Array.isArray(argv[name])) {
@@ -266,6 +274,9 @@ module.exports = function(optimist, argv, convertOptions) {
 		ifArg("watch-delay", function(value) {
 			options.watchDelay = value;
 		});
+
+		mapArgToBoolean("silent");
+		mapArgToBoolean("quiet");
 
 		ifBooleanArg("hot", function() {
 			ensureArray(options, "plugins");
