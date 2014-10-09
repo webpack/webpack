@@ -67,9 +67,10 @@ describe("Integration", function() {
 					}
 				}),
 				function() {
-					this.plugin("after-environment", function() {
-						this.resolver.plugin("module-resolved", function(request, callback) {
-							callback(null, request.replace(/extra\.js/, "extra2.js"));
+					this.plugin("normal-module-factory", function(nmf) {
+						nmf.plugin("after-resolve", function(data, callback) {
+							data.resource = data.resource.replace(/extra\.js/, "extra2.js");
+							callback(null, data);
 						});
 					});
 				}
