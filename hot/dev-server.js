@@ -36,7 +36,10 @@ if(module.hot) {
 
 		});
 	}
-	window.addEventListener("message", function(event) {
+	var addEventListener = window.addEventListener || function (eventName, listener) {
+	  return attachEvent('on' + eventName, listener);
+	};
+	addEventListener("message", function(event) {
 		if(typeof event.data === "string" && event.data.indexOf("webpackHotUpdate") === 0) {
 			lastData = event.data;
 			if(!upToDate() && module.hot.status() === "idle") {
