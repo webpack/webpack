@@ -60,7 +60,10 @@ if(module.hot) {
 			});
 		});
 	}
-	window.onmessage = function(event) {
+	var addEventListener = window.addEventListener || function (eventName, listener) {
+		return attachEvent('on' + eventName, listener);
+	};
+	addEventListener("message", function(event) {
 		if(typeof event.data === "string" && event.data.indexOf("webpackHotUpdate") === 0) {
 			lastData = event.data;
 			if(!upToDate() && module.hot.status() === "idle") {
@@ -68,7 +71,7 @@ if(module.hot) {
 				check();
 			}
 		}
-	};
+	});
 	console.log("[HMR] Waiting for update signal from WDS...");
 } else {
 	throw new Error("[HMR] Hot Module Replacement is disabled");
