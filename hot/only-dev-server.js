@@ -1,9 +1,9 @@
 if(module.hot) {
 	var lastData;
-	function upToDate() {
+	var upToDate = function upToDate() {
 		return lastData.indexOf(__webpack_hash__) >= 0;
-	}
-	function check() {
+	};
+	var check = function check() {
 		module.hot.check(function(err, updatedModules) {
 			if(err) {
 				if(module.hot.status() in {abort:1,fail:1}) {
@@ -59,7 +59,7 @@ if(module.hot) {
 
 			});
 		});
-	}
+	};
 	var addEventListener = window.addEventListener || function (eventName, listener) {
 		return attachEvent('on' + eventName, listener);
 	};
