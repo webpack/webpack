@@ -37,7 +37,7 @@ if(module.hot) {
 		});
 	}
 	var addEventListener = window.addEventListener || function (eventName, listener) {
-	  return attachEvent('on' + eventName, listener);
+		return attachEvent('on' + eventName, listener);
 	};
 	addEventListener("message", function(event) {
 		if(typeof event.data === "string" && event.data.indexOf("webpackHotUpdate") === 0) {
