@@ -159,7 +159,7 @@ This is a freetime project. My time investment fluctuates randomly. If you use w
 
 I'm very thankful for every dollar. If you leave your username or email I may show my thanks by giving you extra support.
 
-[![Donate to sokra](http://img.shields.io/dontate/sokra.png)](http://sokra.github.io/)
+[![Donate to sokra](http://img.shields.io/donate/sokra.png)](http://sokra.github.io/)
 
 
 ## Dependencies
