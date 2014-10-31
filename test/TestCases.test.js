@@ -27,6 +27,11 @@ describe("TestCases", function() {
 		{ name: "devtool-eval-source-map", devtool: "#eval-source-map" },
 		{ name: "devtool-source-map", devtool: "#@source-map" },
 		{ name: "minimized", plugins: [
+			new webpack.optimize.UglifyJsPlugin({
+				sourceMap: false
+			})
+		]},
+		{ name: "minimized-source-map", plugins: [
 			new webpack.optimize.UglifyJsPlugin()
 		]},
 		{ name: "deduped", plugins: [
