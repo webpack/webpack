@@ -8,10 +8,12 @@ module.exports = [{
 	}
 }, {
 	output: {
-		filename: 'bundle.[chunkhash:8].js'
+		filename: 'bundle.[hash].js',
+		chunkFilename: '[id].bundle.[hash:8].js'
 	}
 }, {
 	output: {
-		filename: 'bundle.[chunkhash].js'
+		filename: 'bundle.[hash:6].js',
+		chunkFilename: '[id].bundle.[hash:8].js'
 	}
 }];
