@@ -11,7 +11,7 @@
 {{b.js}}
 ```
 
-# b.js
+# c.js
 
 ``` javascript
 {{c.js}}
