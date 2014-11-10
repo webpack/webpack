@@ -13,7 +13,7 @@ require("./style.css");
 require("./styleB.css");
 ```
 
-# b.js
+# c.js
 
 ``` javascript
 require("./style.css");
