@@ -148,4 +148,47 @@ describe("NodeWatchFileSystem", function() {
 			}, 500);
 		}, 500);
 	});
+	it("should only fire one change event per file update with no delay", function (doneWithTest) {
+		var watchFS = new NodeWatchFileSystem(),
+			watcherHdl,
+			eventsTriggered = 0,
+			done = false;
+
+		function runWatch() {
+			var startTime = new Date().getTime();
+			watcherHdl = watchFS.watch([fileDirect], [], startTime, 0 /* no delay */, function (err, filesModified, dirsModified, fileTimestamps, dirTimestamps) {
+				if (err) throw err;
+				eventsTriggered++;
+				filesModified.should.be.eql([fileDirect]);
+				dirsModified.should.be.eql([]);
+				fileTimestamps.should.have.property(fileDirect).have.type("number");
+
+				if (!done) {
+					// set up another watch, to make sure another event doesn't fire
+					runWatch();
+				} else {
+					throw Error('Multiple changes registered for single update');
+				}
+			});
+		}
+
+		runWatch();
+
+		// wait 1s to ensure that mtime is > truncated startTime
+		setTimeout(function () {
+			fs.writeFile(fileDirect, "", function () {});
+
+			// wait 3s to check # events triggered.
+			setTimeout(function () {
+				done = true;
+
+				// no matter how many times watch() is called, we should only register on change
+				eventsTriggered.should.be.eql(1);
+				if (watcherHdl) {
+					watcherHdl.close();
+				}
+				doneWithTest();
+			}, 2000);
+		}, 1000);
+	});
 });
