@@ -44,6 +44,15 @@ describe("Parser", function() {
 				fghsub: ["notry"]
 			}
 		],
+        "member expression": [
+            function() {
+                test[memberExpr]
+                test[+memberExpr]
+            },
+            {
+                expressions: ["memberExpr", "memberExpr"]
+            }
+        ],
 		"in function definition": [
 			function() {
 				(function(abc, cde, fgh) {
@@ -176,6 +185,11 @@ describe("Parser", function() {
 				this.state.fghsub.push(this.scope.inTry ? "try" : "notry");
 				return true;
 			});
+            testParser.plugin("expression memberExpr", function(expr) {
+                if(!this.state.expressions) this.state.expressions = []
+                this.state.expressions.push(expr.name);
+                return true;
+            });
 			var actual = testParser.parse(source);
 			should.strictEqual(typeof actual, "object");
 			actual.should.be.eql(state);
