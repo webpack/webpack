@@ -1,6 +1,7 @@
 var should = require("should");
 
 var Parser = require("../lib/Parser");
+var BasicEvaluatedExpression = require("../lib/BasicEvaluatedExpression");
 
 describe("Parser", function() {
 	var testCases = {
@@ -202,6 +203,12 @@ describe("Parser", function() {
 			parser.plugin("call test", function(expr) {
 				this.state.result = this.evaluateExpression(expr.arguments[0]);
 			});
+			parser.plugin("evaluate Identifier aString", function(expr) {
+				return new BasicEvaluatedExpression().setString("aString").setRange(expr.range);
+			});
+			parser.plugin("evaluate Identifier b.Number", function(expr) {
+				return new BasicEvaluatedExpression().setNumber(123).setRange(expr.range);
+			});
 			return parser.parse("test(" + source + ");").result;
 		}
 
@@ -228,6 +235,14 @@ describe("Parser", function() {
 			"a ? 'o1' : b ? 'o2' : c ? 'o3' : 'o4'": "options=['o1' string=o1],['o2' string=o2],['o3' string=o3],['o4' string=o4]",
 			"a ? 'o1' : b ? b : c ? 'o3' : c": "options=['o1' string=o1],[b],['o3' string=o3],[c]",
 			"['i1', 'i2', 3, a, b ? 4 : 5]": "items=['i1' string=i1],['i2' string=i2],[3 number=3],[a],[b ? 4 : 5 options=[4 number=4],[5 number=5]]",
+			"typeof 'str'": "string=string",
+			"typeof aString": "string=string",
+			"typeof b.Number": "string=number",
+			"typeof b[Number]": "",
+			"b.Number": "number=123",
+			"b[Number]": "",
+			"'abc'.substr(1)": "string=bc",
+			"'abc'[substr](1)": "",
 		};
 
 		Object.keys(testCases).forEach(function(key) {
