@@ -5,6 +5,12 @@ it("should define DEBUG", function() {
 	var y = DEBUG ? require("fail") : require("./a");
 });
 
+it("should evaluate null", function() {
+	var y = null ? require("fail") : require("./a");
+	if(null)
+		require("fail");
+});
+
 it("should short-circut evaluating", function() {
 	var expr;
 	var a = DEBUG && expr ? require("fail") : require("./a");
