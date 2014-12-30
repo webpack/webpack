@@ -64,7 +64,7 @@ webpack can do many optimizations to **reduce the output size**. It also can mak
 ``` javascript
 // webpack is a module bundler
 // This means webpack takes modules with dependencies
-//   and emit static assets representing that modules.
+//   and emits static assets representing those modules.
  
 // dependencies can be written in CommonJs
 var commonjs = require("./commonjs");
