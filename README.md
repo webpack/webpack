@@ -64,7 +64,7 @@ webpack can do many optimizations to **reduce the output size**. It also can mak
 ``` javascript
 // webpack is a module bundler
 // This means webpack takes modules with dependencies
-//   and emit static assets representing that modules.
+//   and emits static assets representing those modules.
  
 // dependencies can be written in CommonJs
 var commonjs = require("./commonjs");
@@ -96,8 +96,8 @@ require("./cup");
  
 function loadTemplate(name) {
 	return require("./templates/" + name + ".jade");
-	// many expression are supported in require calls
-	// a clever parser extract information and concludes
+	// many expressions are supported in require calls
+	// a clever parser extracts information and concludes
 	//  that everything in "./templates" that matches
 	//  /\.jade$/ should be included in the bundle, as it
 	//  can be required.
@@ -155,7 +155,7 @@ MIT (http://www.opensource.org/licenses/mit-license.php)
 
 ## Sponsor
 
-This is a freetime project. My time investment fluctuates randomly. If you use webpack for a serious task you may want me to invest more time. Or if you make some good revenue you can give some money back. Keep in mind that this project may increase your income. It makes development and applications faster and reduce the required bandwidth.
+This is a freetime project. My time investment fluctuates randomly. If you use webpack for a serious task you may want me to invest more time. Or if you make some good revenue you can give some money back. Keep in mind that this project may increase your income. It makes development and applications faster and reduces the required bandwidth.
 
 I'm very thankful for every dollar. If you leave your username or email I may show my thanks by giving you extra support.
 
