@@ -12,6 +12,10 @@ describe("Compiler", function() {
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");
 		options.output.pathinfo = true;
+		var logs = {
+			mkdirp: [],
+			writeFile: [],
+		};
 
 		var c = new Compiler();
 		c.options = new WebpackOptionsApply().process(options, c);
@@ -20,9 +24,11 @@ describe("Compiler", function() {
 		c.outputFileSystem = {
 			join: path.join.bind(path),
 			mkdirp: function(path, callback) {
+				logs.mkdirp.push(path);
 				callback();
 			},
 			writeFile: function(name, content, callback) {
+				logs.writeFile.push(name, content);
 				files[name] = content.toString("utf-8");
 				callback();
 			}
@@ -44,9 +50,26 @@ describe("Compiler", function() {
 				stats.errors[0].should.be.instanceOf(Error);
 				throw stats.errors[0];
 			}
+			stats.logs = logs;
 			callback(stats, files);
 		});
 	}
+	it("should compile a single file to deep output", function(done) {
+		var sep = path.sep;
+
+		compile("./c", {
+			output: {
+				path: 'what',
+				filename: 'the' + sep + 'hell.js',
+			}
+		}, function(stats, files) {
+			stats.logs.mkdirp.should.eql([
+				'what',
+				'what' + sep + 'the',
+			]);
+			done();
+		});
+	});
 	it("should compile a single file", function(done) {
 		compile("./c", {}, function(stats, files) {
 			files.should.have.property("bundle.js").have.type("string");
