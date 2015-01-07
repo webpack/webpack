@@ -55,7 +55,7 @@ describe("ConfigTestCases", function() {
 								var p = path.join(outputDirectory, module);
 								var fn;
 								if (options.target === "web") {
-									fn = vm.runInNewContext("(function(require, module, exports, __dirname, __filename, it) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
+									fn = vm.runInNewContext("(function(require, module, exports, __dirname, __filename, it) {" + fs.readFileSync(p, "utf-8") + "\n})", {}, p);
 								} else {
 									fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
 								}
