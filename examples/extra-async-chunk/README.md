@@ -1,3 +1,35 @@
+This example shows how to create a async loaded commons chunk.
+
+When a chunk has many child chunks which share common modules the `CommonsChunkPlugin` can extract these common modules into a commons chunk which is loaded in parallel to the requested child chunk.
+
+The example entry references two chunks:
+
+* entry chunk
+  * async require -> chunk X
+  * async require -> chunk Y
+* chunk X
+  * module `a`
+  * module `b`
+  * module `c`
+* chunk Y
+  * module `a`
+  * module `b`
+  * module `d`
+
+These chunks share modules `a` and `b`. The `CommonsChunkPlugin` extract these into chunk Z:
+
+* entry chunk
+  * async require -> chunk X & Z
+  * async require -> chunk Y & Z
+* chunk X
+  * module `c`
+* chunk Y
+  * module `d`
+* chunk Z
+  * module `a`
+  * module `b`
+
+Pretty useful for a router in a SPA.
 
 
 # example.js
@@ -217,7 +249,7 @@ webpackJsonp([3],{
 ```
 Hash: 310f71157717394fc874
 Version: webpack 1.4.15
-Time: 82ms
+Time: 50ms
       Asset  Size  Chunks             Chunk Names
 0.output.js   342       0  [emitted]  
   output.js  4694       1  [emitted]  main
@@ -250,7 +282,7 @@ chunk    {3} 3.output.js 21 {1} [rendered]
 ```
 Hash: 2bf4007377287b9601db
 Version: webpack 1.4.15
-Time: 287ms
+Time: 180ms
       Asset  Size  Chunks             Chunk Names
 0.output.js    75       0  [emitted]  
   output.js   931       1  [emitted]  main

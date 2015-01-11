@@ -28,7 +28,7 @@ These chunks share modules `a` and `b`. The `CommonsChunkPlugin` extract these i
 * chunk Z
   * module `a`
   * module `b`
-  
+
 Pretty useful for a router in a SPA.
 
 
