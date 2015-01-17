@@ -152,6 +152,7 @@ require(
 /******/ 			var script = document.createElement('script');
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
+/******/ 			script.async = true;
 /******/ 			script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
@@ -203,13 +204,13 @@ require(
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Format
-	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./commonjs */ 2), __webpack_require__(/*! ./labeled */ 3)], __WEBPACK_AMD_DEFINE_RESULT__ = (function(commonjs1, labeled1) {
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./commonjs */ 2), __webpack_require__(/*! ./labeled */ 3)], __WEBPACK_AMD_DEFINE_RESULT__ = function(commonjs1, labeled1) {
 			// but you can use CommonJs-style requires:
 			var commonjs2 = __webpack_require__(/*! ./commonjs */ 2);
 			var labeled2 = __webpack_require__(/*! ./labeled */ 3);
 			// Do something...
 			return 456;
-		}.apply(null, __WEBPACK_AMD_DEFINE_ARRAY__)), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ },
 /* 2 */
@@ -277,6 +278,7 @@ webpackJsonp([0],[
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
+	webpackContext.id = 4;
 
 
 /***/ },
@@ -321,12 +323,12 @@ webpackJsonp([0],[
 ## Uncompressed
 
 ```
-Hash: 19f67687fcc2adf344dc
-Version: webpack 1.3.2-beta7
-Time: 48ms
+Hash: eaf23592eedc3f55fb55
+Version: webpack 1.5.0
+Time: 55ms
       Asset  Size  Chunks             Chunk Names
-0.output.js  1657       0  [emitted]  
-  output.js  6797       1  [emitted]  main
+0.output.js  1681       0  [emitted]  
+  output.js  6831       1  [emitted]  main
 chunk    {0} 0.output.js 439 {1} [rendered]
     > [0] ./example.js 7:0-14:1
     [4] ../require.context/templates ^\.\/.*\.js$ 193 {0} [built]
@@ -369,12 +371,12 @@ chunk    {1} output.js (main) 1395 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 24d743a5e86090c3e7b3
-Version: webpack 1.3.2-beta7
-Time: 127ms
+Hash: 6dd277afcc9156b2aa18
+Version: webpack 1.5.0
+Time: 199ms
       Asset  Size  Chunks             Chunk Names
-0.output.js   507       0  [emitted]  
-  output.js  1175       1  [emitted]  main
+0.output.js   514       0  [emitted]  
+  output.js  1183       1  [emitted]  main
 chunk    {0} 0.output.js 439 {1} [rendered]
     > [0] ./example.js 7:0-14:1
     [4] ../require.context/templates ^\.\/.*\.js$ 193 {0} [built]

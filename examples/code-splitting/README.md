@@ -112,6 +112,7 @@ require.ensure(["c"], function(require) {
 /******/ 			var script = document.createElement('script');
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
+/******/ 			script.async = true;
 /******/ 			script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
@@ -139,7 +140,7 @@ require.ensure(["c"], function(require) {
 
 	var a = __webpack_require__(/*! a */ 2);
 	var b = __webpack_require__(/*! b */ 1);
-	__webpack_require__.e/*nsure*/(1, function(require) {
+	__webpack_require__.e/* nsure */(1, function(require) {
 	    __webpack_require__(/*! b */ 1).xyz();
 	    var d = __webpack_require__(/*! d */ 4);
 	});
@@ -205,11 +206,11 @@ webpackJsonp([1],[,,,function(){},function(){}]);
 ## Uncompressed
 
 ```
-Hash: 4c109dd0b2e0d79d0950
-Version: webpack 1.3.2-beta4
-Time: 74ms
+Hash: 3d57ab4ad229b0d3def4
+Version: webpack 1.5.0
+Time: 43ms
       Asset  Size  Chunks             Chunk Names
-  output.js  4271       0  [emitted]  main
+  output.js  4306       0  [emitted]  main
 1.output.js   352       1  [emitted]  
 chunk    {0} output.js (main) 166 [rendered]
     > main [0] ./example.js 
@@ -230,11 +231,11 @@ chunk    {1} 1.output.js 22 {0} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: e2531cb5dcfe68287454
-Version: webpack 1.3.2-beta4
-Time: 165ms
+Hash: 5ec4e073423ccd699e0e
+Version: webpack 1.5.0
+Time: 107ms
       Asset  Size  Chunks             Chunk Names
-  output.js   775       0  [emitted]  main
+  output.js   786       0  [emitted]  main
 1.output.js    49       1  [emitted]  
 chunk    {0} output.js (main) 166 [rendered]
     > main [0] ./example.js 

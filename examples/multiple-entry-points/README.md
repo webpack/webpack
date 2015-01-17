@@ -102,7 +102,7 @@ module.exports = {
 /******/ 			callbacks.shift().call(null, __webpack_require__);
 /******/ 		if(moreModules[0]) {
 /******/ 			installedModules[0] = 0;
-/******/ 			__webpack_require__(0);
+/******/ 			return __webpack_require__(0);
 /******/ 		}
 /******/ 	};
 /******/
@@ -157,6 +157,7 @@ module.exports = {
 /******/ 			var script = document.createElement('script');
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
+/******/ 			script.async = true;
 /******/ 			script.src = __webpack_require__.p + "" + chunkId + ".chunk.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
@@ -216,7 +217,7 @@ webpackJsonp([2],[
 /***/ function(module, exports, __webpack_require__) {
 
 	var common = __webpack_require__(/*! ./common */ 1);
-	__webpack_require__.e/*nsure*/(0, function(require) {
+	__webpack_require__.e/* nsure */(0, function(require) {
 		var shared = __webpack_require__(/*! ./shared */ 2);
 		shared("This is page B");
 	});
@@ -251,13 +252,13 @@ webpackJsonp([0],{
 ## Uncompressed
 
 ```
-Hash: b941917f11689dd6170d
-Version: webpack 1.3.2-beta4
-Time: 67ms
+Hash: b949c618c2e80c190aea
+Version: webpack 1.5.0
+Time: 45ms
           Asset  Size  Chunks             Chunk Names
      0.chunk.js   287       0  [emitted]  
-     commons.js  3770       1  [emitted]  commons.js
-pageB.bundle.js   367       2  [emitted]  pageB
+     commons.js  3810       1  [emitted]  commons.js
+pageB.bundle.js   369       2  [emitted]  pageB
 pageA.bundle.js   486       3  [emitted]  pageA
 chunk    {0} 0.chunk.js 91 {2} {3} [rendered]
     > [0] ./pageB.js 2:0-5:2
@@ -282,12 +283,12 @@ chunk    {3} pageA.bundle.js (pageA) 108 {1} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 600effac6bbe660ae72e
-Version: webpack 1.3.2-beta4
-Time: 179ms
+Hash: 4a59c0aaddb7b911a672
+Version: webpack 1.5.0
+Time: 139ms
           Asset  Size  Chunks             Chunk Names
      0.chunk.js    82       0  [emitted]  
-     commons.js   727       1  [emitted]  commons.js
+     commons.js   751       1  [emitted]  commons.js
 pageB.bundle.js    92       2  [emitted]  pageB
 pageA.bundle.js   124       3  [emitted]  pageA
 chunk    {0} 0.chunk.js 91 {2} {3} [rendered]

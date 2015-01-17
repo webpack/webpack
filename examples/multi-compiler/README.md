@@ -179,12 +179,12 @@ module.exports = [
 ## Uncompressed
 
 ```
-Hash: d6e452828343eb86930778c68edab053f09ed9ab
-Version: webpack 1.3.0-beta8
+Hash: f7ca6364953a74846973bca985cdc67a34d859e1
+Version: webpack 1.5.0
 Child mobile:
-    Hash: d6e452828343eb869307
-    Version: webpack 1.3.0-beta8
-    Time: 160ms
+    Hash: f7ca6364953a74846973
+    Version: webpack 1.5.0
+    Time: 42ms
         Asset  Size  Chunks             Chunk Names
     mobile.js  1878       0  [emitted]  main
     chunk    {0} mobile.js (main) 117 [rendered]
@@ -193,9 +193,9 @@ Child mobile:
         [1] ./mobile-stuff.js 20 {0} [built]
             cjs require ./mobile-stuff [0] ./example.js 2:1-26
 Child desktop:
-    Hash: 78c68edab053f09ed9ab
-    Version: webpack 1.3.0-beta8
-    Time: 132ms
+    Hash: bca985cdc67a34d859e1
+    Version: webpack 1.5.0
+    Time: 34ms
          Asset  Size  Chunks             Chunk Names
     desktop.js  1673       0  [emitted]  main
     chunk    {0} desktop.js (main) 97 [rendered]
@@ -206,8 +206,8 @@ Child desktop:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: da2299fe1ab7a2394372713bc011a9ed62a0ec77
-Version: webpack 1.3.0-beta8
+Hash: ddb8434066401a5c4dde50e9cbb599a11735e6bb
+Version: webpack 1.5.0
 
 WARNING in (mobile) mobile.js from UglifyJs
 Condition always true [./example.js:1,0]
@@ -216,9 +216,9 @@ WARNING in (desktop) desktop.js from UglifyJs
 Condition always false [./example.js:1,0]
 Dropping unreachable code [./example.js:2,0]
 Child mobile:
-    Hash: da2299fe1ab7a2394372
-    Version: webpack 1.3.0-beta8
-    Time: 407ms
+    Hash: ddb8434066401a5c4dde
+    Version: webpack 1.5.0
+    Time: 118ms
         Asset  Size  Chunks             Chunk Names
     mobile.js   276       0  [emitted]  main
     chunk    {0} mobile.js (main) 117 [rendered]
@@ -230,9 +230,9 @@ Child mobile:
     WARNING in mobile.js from UglifyJs
     Condition always true [./example.js:1,0]
 Child desktop:
-    Hash: 713bc011a9ed62a0ec77
-    Version: webpack 1.3.0-beta8
-    Time: 377ms
+    Hash: 50e9cbb599a11735e6bb
+    Version: webpack 1.5.0
+    Time: 110ms
          Asset  Size  Chunks             Chunk Names
     desktop.js   254       0  [emitted]  main
     chunk    {0} desktop.js (main) 97 [rendered]

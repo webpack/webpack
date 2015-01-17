@@ -132,7 +132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }
 /******/ ])
-})
+});
 ```
 
 # Info
@@ -140,25 +140,27 @@ return /******/ (function(modules) { // webpackBootstrap
 ## Uncompressed
 
 ```
-Hash: b71fd8ed4ddc8b851798
-Version: webpack 1.3.2-beta7
-Time: 33ms
+Hash: 320ff2cedec78f734047
+Version: webpack 1.5.0
+Time: 32ms
     Asset  Size  Chunks             Chunk Names
-output.js  3008       0  [emitted]  main
+output.js  3009       0  [emitted]  main
 chunk    {0} output.js (main) 197 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 113 {0} [built]
+     + 2 hidden modules
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 67a052a42079fa51aad1
-Version: webpack 1.3.2-beta7
-Time: 80ms
+Hash: 61dea4cfa2544dc85e83
+Version: webpack 1.5.0
+Time: 86ms
     Asset  Size  Chunks             Chunk Names
 output.js   706       0  [emitted]  main
 chunk    {0} output.js (main) 197 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 113 {0} [built]
+     + 2 hidden modules
 ```

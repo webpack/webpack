@@ -1,6 +1,6 @@
 This example uses the I18nPlugin in combination with the multi-compiler feature.
 
-The `webpack.config.js` exports an array of all config combinations that should be compiled. In this example two different parameter for the I18nPlugin are used.
+The `webpack.config.js` exports an array of all config combinations that should be compiled. In this example two different parameters for the I18nPlugin are used.
 
 The I18nPlugin replaces every occurrence of the i18n function `__(...)` with a const string. i. e. `__("Hello World")` with `"Hello World"` resp. `"Hallo Welt"`.
 
@@ -169,24 +169,24 @@ module.exports = Object.keys(languages).map(function(language) {
 ## Uncompressed
 
 ```
-Hash: 11d340dd3b946937d5b60050649a7d8d87a49cc1
-Version: webpack 1.4.3
+Hash: 10b995417061f97b4ba67e868bed7a01e88b0dbe
+Version: webpack 1.5.0
 
 WARNING in (de) ./example.js
 Missing localization: Missing Text
 Child en:
-    Hash: 11d340dd3b946937d5b6
-    Version: webpack 1.4.3
-    Time: 52ms
+    Hash: 10b995417061f97b4ba6
+    Version: webpack 1.5.0
+    Time: 40ms
            Asset  Size  Chunks             Chunk Names
     en.output.js  1634       0  [emitted]  main
     chunk    {0} en.output.js (main) 65 [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 {0} [built]
 Child de:
-    Hash: 0050649a7d8d87a49cc1
-    Version: webpack 1.4.3
-    Time: 39ms
+    Hash: 7e868bed7a01e88b0dbe
+    Version: webpack 1.5.0
+    Time: 32ms
            Asset  Size  Chunks             Chunk Names
     de.output.js  1633       0  [emitted]  main
     chunk    {0} de.output.js (main) 65 [rendered]
@@ -200,24 +200,24 @@ Child de:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 502a1d019f9df5485748bfc253e0ca08f68d64cf
-Version: webpack 1.4.3
+Hash: 9bb31b2ddd4c97648d685db1949f4b7d2da99d20
+Version: webpack 1.5.0
 
 WARNING in (de) ./example.js
 Missing localization: Missing Text
 Child en:
-    Hash: 502a1d019f9df5485748
-    Version: webpack 1.4.3
-    Time: 104ms
+    Hash: 9bb31b2ddd4c97648d68
+    Version: webpack 1.5.0
+    Time: 78ms
            Asset  Size  Chunks             Chunk Names
     en.output.js   272       0  [emitted]  main
     chunk    {0} en.output.js (main) 65 [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 {0} [built]
 Child de:
-    Hash: bfc253e0ca08f68d64cf
-    Version: webpack 1.4.3
-    Time: 96ms
+    Hash: 5db1949f4b7d2da99d20
+    Version: webpack 1.5.0
+    Time: 73ms
            Asset  Size  Chunks             Chunk Names
     de.output.js   271       0  [emitted]  main
     chunk    {0} de.output.js (main) 65 [rendered]

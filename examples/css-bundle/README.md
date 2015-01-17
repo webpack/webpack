@@ -113,14 +113,14 @@ body {
 ## Uncompressed
 
 ```
-Hash: 954e72d5ec1de4b4dc80
-Version: webpack 1.3.2-beta8
-Time: 96ms
+Hash: 964c893cb950ed2e3340
+Version: webpack 1.5.0
+Time: 166ms
                                Asset  Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
-                           style.css    69          [emitted]  
                            output.js  1809       0  [emitted]  main
-chunk    {0} output.js (main) 64 [rendered]
+                           style.css    69       0  [emitted]  main
+chunk    {0} output.js, style.css (main) 64 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 23 {0} [built]
     [1] ./style.css 41 {0} [built]
@@ -128,24 +128,26 @@ chunk    {0} output.js (main) 64 [rendered]
 Child extract-text-webpack-plugin:
                                    Asset  Size  Chunks             Chunk Names
     ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
-    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)\node_modules\css-loader\index.js!.\style.css 163 [rendered]
+    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)/~\css-loader\index.js!.\style.css 633 [rendered]
         > [0] (webpack)/~/css-loader!./style.css 
-        [0] (webpack)/~/css-loader!./style.css 82 {0} [built]
-        [1] ./image.png 81 {0} [built]
-            cjs require ./image.png [0] (webpack)/~/css-loader!./style.css 2:32-54
+        [0] (webpack)/~/css-loader!./style.css 200 {0} [built]
+        [1] (webpack)/~/css-loader/cssToString.js 352 {0} [built]
+            cjs require (webpack)/~\css-loader\cssToString.js [0] (webpack)/~/css-loader!./style.css 1:27-101
+        [2] ./image.png 81 {0} [built]
+            cjs require ./image.png [0] (webpack)/~/css-loader!./style.css 2:56-78
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 3abfd6ec08d4cc31f089
-Version: webpack 1.3.2-beta8
-Time: 136ms
+Hash: 773f1220b8a1a2d9560d
+Version: webpack 1.5.0
+Time: 184ms
                                Asset  Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
-                           style.css    61          [emitted]  
                            output.js   240       0  [emitted]  main
-chunk    {0} output.js (main) 64 [rendered]
+                           style.css    61       0  [emitted]  main
+chunk    {0} output.js, style.css (main) 64 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 23 {0} [built]
     [1] ./style.css 41 {0} [built]
@@ -153,9 +155,11 @@ chunk    {0} output.js (main) 64 [rendered]
 Child extract-text-webpack-plugin:
                                    Asset  Size  Chunks             Chunk Names
     ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
-    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)\node_modules\css-loader\index.js!.\style.css 150 [rendered]
+    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)/~\css-loader\index.js!.\style.css 620 [rendered]
         > [0] (webpack)/~/css-loader!./style.css 
-        [0] (webpack)/~/css-loader!./style.css 69 {0} [built]
-        [1] ./image.png 81 {0} [built]
-            cjs require ./image.png [0] (webpack)/~/css-loader!./style.css 2:24-46
+        [0] (webpack)/~/css-loader!./style.css 187 {0} [built]
+        [1] (webpack)/~/css-loader/cssToString.js 352 {0} [built]
+            cjs require (webpack)/~\css-loader\cssToString.js [0] (webpack)/~/css-loader!./style.css 1:27-101
+        [2] ./image.png 81 {0} [built]
+            cjs require ./image.png [0] (webpack)/~/css-loader!./style.css 2:48-70
 ```

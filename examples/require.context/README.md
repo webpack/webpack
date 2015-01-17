@@ -26,44 +26,43 @@ module.exports = function() {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/ 		
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 		
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/ 		
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
-/******/ 	
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/ 	
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/ 	
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/ 	
-/******/ 	
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -140,6 +139,7 @@ module.exports = function() {
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
+	webpackContext.id = 4;
 
 
 /***/ }
@@ -151,21 +151,21 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 1853a9528b05335d6ca9
-Version: webpack 1.1.0
-Time: 73ms
+Hash: 532ec4ba9a9dceec08e2
+Version: webpack 1.5.0
+Time: 53ms
     Asset  Size  Chunks             Chunk Names
-output.js  3211       0  [emitted]  main       
+output.js  3198       0  [emitted]  main
 chunk    {0} output.js (main) 613 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 150 {0} [built]
-    [1] ./templates/a.js 82 {0} [built]
+    [1] ./templates/a.js 82 {0} [optional] [built]
         context element ./a.js [4] ./templates ^\.\/.*$
         context element ./a [4] ./templates ^\.\/.*$
-    [2] ./templates/b.js 82 {0} [built]
+    [2] ./templates/b.js 82 {0} [optional] [built]
         context element ./b.js [4] ./templates ^\.\/.*$
         context element ./b [4] ./templates ^\.\/.*$
-    [3] ./templates/c.js 82 {0} [built]
+    [3] ./templates/c.js 82 {0} [optional] [built]
         context element ./c.js [4] ./templates ^\.\/.*$
         context element ./c [4] ./templates ^\.\/.*$
     [4] ./templates ^\.\/.*$ 217 {0} [built]
@@ -175,21 +175,21 @@ chunk    {0} output.js (main) 613 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 368d2da3d6d88e7d3822
-Version: webpack 1.1.0
-Time: 159ms
+Hash: 4e3b87900b36b810e8bc
+Version: webpack 1.5.0
+Time: 107ms
     Asset  Size  Chunks             Chunk Names
-output.js   803       0  [emitted]  main       
+output.js   810       0  [emitted]  main
 chunk    {0} output.js (main) 613 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 150 {0} [built]
-    [1] ./templates/a.js 82 {0} [built]
+    [1] ./templates/a.js 82 {0} [optional] [built]
         context element ./a.js [4] ./templates ^\.\/.*$
         context element ./a [4] ./templates ^\.\/.*$
-    [2] ./templates/b.js 82 {0} [built]
+    [2] ./templates/b.js 82 {0} [optional] [built]
         context element ./b.js [4] ./templates ^\.\/.*$
         context element ./b [4] ./templates ^\.\/.*$
-    [3] ./templates/c.js 82 {0} [built]
+    [3] ./templates/c.js 82 {0} [optional] [built]
         context element ./c.js [4] ./templates ^\.\/.*$
         context element ./c [4] ./templates ^\.\/.*$
     [4] ./templates ^\.\/.*$ 217 {0} [built]

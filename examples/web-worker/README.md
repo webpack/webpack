@@ -19,51 +19,49 @@ onmessage = function(event) {
 		postMessage(tmpl());
 	});
 }
-
 ```
 
 # js/output.js
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/ 		
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 		
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/ 		
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
-/******/ 	
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/ 	
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/ 	
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/ 	
-/******/ 	
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -101,39 +99,47 @@ onmessage = function(event) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	
+/******/ 	this["webpackChunk"] = function webpackChunkCallback(chunkIds, moreModules) {
+/******/ 		for(var moduleId in moreModules) {
+/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 		}
+/******/ 		while(chunkIds.length)
+/******/ 			installedChunks[chunkIds.pop()] = 1;
+/******/ 	};
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	
+/******/
 /******/ 	// object to store loaded chunks
 /******/ 	// "1" means "already loaded"
 /******/ 	var installedChunks = {
 /******/ 		1:1
 /******/ 	};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/ 		
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 		
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/ 		
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
+/******/
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
@@ -143,23 +149,16 @@ onmessage = function(event) {
 /******/ 		}
 /******/ 		callback.call(null, __webpack_require__);
 /******/ 	};
-/******/ 	
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/ 	
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/ 	
+/******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/ 	this["webpackChunk"] = function webpackChunkCallback(chunkIds, moreModules) {
-/******/ 		for(var moduleId in moreModules) {
-/******/ 			modules[moduleId] = moreModules[moduleId];
-/******/ 		}
-/******/ 		while(chunkIds.length)
-/******/ 			installedChunks[chunkIds.pop()] = 1;
-/******/ 	};
-/******/ 	
+/******/ 	__webpack_require__.p = "js/";
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -246,6 +245,7 @@ webpackChunk([0],[
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
+	webpackContext.id = 4;
 
 
 /***/ }
@@ -257,33 +257,31 @@ webpackChunk([0],[
 ## Uncompressed
 
 ```
-Hash: d3a484ec9964172dc379
-Version: webpack 1.1.0
-Time: 108ms
+Hash: 3c3f9999f18d1fd240ac
+Version: webpack 1.5.0
+Time: 66ms
            Asset  Size  Chunks             Chunk Names
-0.hash.worker.js  1653          [emitted]             
-  hash.worker.js  2831          [emitted]             
-       output.js  2167       0  [emitted]  main       
+0.hash.worker.js  1677          [emitted]  
+  hash.worker.js  2815          [emitted]  
+       output.js  2130       0  [emitted]  main
 chunk    {0} output.js (main) 302 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 206 {0} [built]
     [1] (webpack)/~/worker-loader!./worker.js 96 {0} [not cacheable] [built]
         cjs require worker!./worker [0] ./example.js 1:13-39
 Child worker:
-    Hash: 374188a31a72007585d1
-    Version: webpack 1.1.0
                Asset  Size  Chunks             Chunk Names
-    0.hash.worker.js  1653       0  [emitted]             
-      hash.worker.js  2831       1  [emitted]  main       
+    0.hash.worker.js  1677       0  [emitted]  
+      hash.worker.js  2815       1  [emitted]  main
     chunk    {0} 0.hash.worker.js 463 {1} [rendered]
         > [0] ./worker.js 3:1-5:3
-        [1] ../require.context/templates/a.js 82 {0} [built]
+        [1] ../require.context/templates/a.js 82 {0} [optional] [built]
             context element ./a.js [4] ../require.context/templates ^\.\/.*$
             context element ./a [4] ../require.context/templates ^\.\/.*$
-        [2] ../require.context/templates/b.js 82 {0} [built]
+        [2] ../require.context/templates/b.js 82 {0} [optional] [built]
             context element ./b.js [4] ../require.context/templates ^\.\/.*$
             context element ./b [4] ../require.context/templates ^\.\/.*$
-        [3] ../require.context/templates/c.js 82 {0} [built]
+        [3] ../require.context/templates/c.js 82 {0} [optional] [built]
             context element ./c.js [4] ../require.context/templates ^\.\/.*$
             context element ./c [4] ../require.context/templates ^\.\/.*$
         [4] ../require.context/templates ^\.\/.*$ 217 {0} [built]
@@ -296,13 +294,13 @@ Child worker:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: e028e5c3f2a9ee017ccf
-Version: webpack 1.1.0
-Time: 235ms
+Hash: 97014f6c5bd9622142f7
+Version: webpack 1.5.0
+Time: 225ms
            Asset  Size  Chunks             Chunk Names
-0.hash.worker.js   528          [emitted]             
-  hash.worker.js   513          [emitted]             
-       output.js   371       0  [emitted]  main       
+0.hash.worker.js   535          [emitted]  
+  hash.worker.js   516          [emitted]  
+       output.js   371       0  [emitted]  main
 chunk    {0} output.js (main) 302 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 206 {0} [built]
@@ -312,20 +310,18 @@ chunk    {0} output.js (main) 302 [rendered]
 WARNING in output.js from UglifyJs
 Side effects in initialization of unused variable templateB [./example.js:5,0]
 Child worker:
-    Hash: f557b852479205b3c82c
-    Version: webpack 1.1.0
                Asset  Size  Chunks             Chunk Names
-    0.hash.worker.js   528       0  [emitted]             
-      hash.worker.js   513       1  [emitted]  main       
+    0.hash.worker.js   535       0  [emitted]  
+      hash.worker.js   516       1  [emitted]  main
     chunk    {0} 0.hash.worker.js 463 {1} [rendered]
         > [0] ./worker.js 3:1-5:3
-        [1] ../require.context/templates/a.js 82 {0} [built]
+        [1] ../require.context/templates/a.js 82 {0} [optional] [built]
             context element ./a.js [4] ../require.context/templates ^\.\/.*$
             context element ./a [4] ../require.context/templates ^\.\/.*$
-        [2] ../require.context/templates/b.js 82 {0} [built]
+        [2] ../require.context/templates/b.js 82 {0} [optional] [built]
             context element ./b.js [4] ../require.context/templates ^\.\/.*$
             context element ./b [4] ../require.context/templates ^\.\/.*$
-        [3] ../require.context/templates/c.js 82 {0} [built]
+        [3] ../require.context/templates/c.js 82 {0} [optional] [built]
             context element ./c.js [4] ../require.context/templates ^\.\/.*$
             context element ./c [4] ../require.context/templates ^\.\/.*$
         [4] ../require.context/templates ^\.\/.*$ 217 {0} [built]

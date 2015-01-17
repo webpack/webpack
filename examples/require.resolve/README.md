@@ -27,44 +27,43 @@ module.exports = Math.random();
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/ 		
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 		
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/ 		
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
-/******/ 	
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/ 	
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/ 	
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/ 	
-/******/ 	
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -108,11 +107,11 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: db32ef3c9bf333133af7
-Version: webpack 1.1.0
-Time: 65ms
+Hash: 45aa578eb2865bbacfee
+Version: webpack 1.5.0
+Time: 37ms
     Asset  Size  Chunks             Chunk Names
-output.js  2139       0  [emitted]  main       
+output.js  2102       0  [emitted]  main
 chunk    {0} output.js (main) 326 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 295 {0} [built]
@@ -125,11 +124,11 @@ chunk    {0} output.js (main) 326 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: e7483b5da73d6aa1fe3a
-Version: webpack 1.1.0
-Time: 130ms
+Hash: 9b8f178b60158d934515
+Version: webpack 1.5.0
+Time: 92ms
     Asset  Size  Chunks             Chunk Names
-output.js   348       0  [emitted]  main       
+output.js   348       0  [emitted]  main
 chunk    {0} output.js (main) 326 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 295 {0} [built]

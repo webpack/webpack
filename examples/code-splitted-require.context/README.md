@@ -18,71 +18,6 @@ getTemplate("b", function(b) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/ 	
-/******/ 	// object to store loaded and loading chunks
-/******/ 	// "0" means "already loaded"
-/******/ 	// Array means "loading", array contains callbacks
-/******/ 	var installedChunks = {
-/******/ 		1:0
-/******/ 	};
-/******/ 	
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/ 		
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-/******/ 		
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 		
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
-/******/ 		
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/ 	
-/******/ 	// This file contains only the entry chunk.
-/******/ 	// The chunk loading function for additional chunks
-/******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
-/******/ 		// "0" is the signal for "already loaded"
-/******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return callback.call(null, __webpack_require__);
-/******/ 		
-/******/ 		// an array means "currently loading".
-/******/ 		if(installedChunks[chunkId] !== undefined) {
-/******/ 			installedChunks[chunkId].push(callback);
-/******/ 		} else {
-/******/ 			// start chunk loading
-/******/ 			installedChunks[chunkId] = [callback];
-/******/ 			var head = document.getElementsByTagName('head')[0];
-/******/ 			var script = document.createElement('script');
-/******/ 			script.type = 'text/javascript';
-/******/ 			script.charset = 'utf-8';
-/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".output.js";
-/******/ 			head.appendChild(script);
-/******/ 		}
-/******/ 	};
-/******/ 	
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/ 	
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/ 	
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
-/******/ 	
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	var parentJsonpFunction = window["webpackJsonp"];
 /******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
@@ -101,9 +36,75 @@ getTemplate("b", function(b) {
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
 /******/ 		while(callbacks.length)
 /******/ 			callbacks.shift().call(null, __webpack_require__);
-/******/ 		
+/******/
 /******/ 	};
-/******/ 	
+/******/
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// object to store loaded and loading chunks
+/******/ 	// "0" means "already loaded"
+/******/ 	// Array means "loading", array contains callbacks
+/******/ 	var installedChunks = {
+/******/ 		1:0
+/******/ 	};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+/******/
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/ 	// This file contains only the entry chunk.
+/******/ 	// The chunk loading function for additional chunks
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
+/******/ 		// "0" is the signal for "already loaded"
+/******/ 		if(installedChunks[chunkId] === 0)
+/******/ 			return callback.call(null, __webpack_require__);
+/******/
+/******/ 		// an array means "currently loading".
+/******/ 		if(installedChunks[chunkId] !== undefined) {
+/******/ 			installedChunks[chunkId].push(callback);
+/******/ 		} else {
+/******/ 			// start chunk loading
+/******/ 			installedChunks[chunkId] = [callback];
+/******/ 			var head = document.getElementsByTagName('head')[0];
+/******/ 			var script = document.createElement('script');
+/******/ 			script.type = 'text/javascript';
+/******/ 			script.charset = 'utf-8';
+/******/ 			script.async = true;
+/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".output.js";
+/******/ 			head.appendChild(script);
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -116,7 +117,7 @@ getTemplate("b", function(b) {
 /***/ function(module, exports, __webpack_require__) {
 
 	function getTemplate(templateName, callback) {
-		__webpack_require__.e/*nsure*/(0, function(require) {
+		__webpack_require__.e/* nsure */(0, function(require) {
 			callback(__webpack_require__(/*! ../require.context/templates */ 4)("./"+templateName)());
 		});
 	}
@@ -194,10 +195,11 @@ webpackJsonp([0],[
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
+	webpackContext.id = 4;
 
 
 /***/ }
-])
+]);
 ```
 
 # Info
@@ -205,21 +207,21 @@ webpackJsonp([0],[
 ## Uncompressed
 
 ```
-Hash: 34221e1e4ff9e1b6251f
-Version: webpack 1.1.0
-Time: 75ms
+Hash: 13eac9ca684bf610df0e
+Version: webpack 1.5.0
+Time: 50ms
       Asset  Size  Chunks             Chunk Names
-0.output.js  1653       0  [emitted]             
-  output.js  4091       1  [emitted]  main       
+0.output.js  1678       0  [emitted]  
+  output.js  4090       1  [emitted]  main
 chunk    {0} 0.output.js 463 {1} [rendered]
     > [0] ./example.js 2:1-4:3
-    [1] ../require.context/templates/a.js 82 {0} [built]
+    [1] ../require.context/templates/a.js 82 {0} [optional] [built]
         context element ./a.js [4] ../require.context/templates ^\.\/.*$
         context element ./a [4] ../require.context/templates ^\.\/.*$
-    [2] ../require.context/templates/b.js 82 {0} [built]
+    [2] ../require.context/templates/b.js 82 {0} [optional] [built]
         context element ./b.js [4] ../require.context/templates ^\.\/.*$
         context element ./b [4] ../require.context/templates ^\.\/.*$
-    [3] ../require.context/templates/c.js 82 {0} [built]
+    [3] ../require.context/templates/c.js 82 {0} [optional] [built]
         context element ./c.js [4] ../require.context/templates ^\.\/.*$
         context element ./c [4] ../require.context/templates ^\.\/.*$
     [4] ../require.context/templates ^\.\/.*$ 217 {0} [built]
@@ -232,21 +234,21 @@ chunk    {1} output.js (main) 276 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: ac2ed2b2450fb13eacb9
-Version: webpack 1.1.0
-Time: 201ms
+Hash: 9dee8d3661888c64dfee
+Version: webpack 1.5.0
+Time: 163ms
       Asset  Size  Chunks             Chunk Names
-0.output.js   528       0  [emitted]             
-  output.js   827       1  [emitted]  main       
+0.output.js   535       0  [emitted]  
+  output.js   838       1  [emitted]  main
 chunk    {0} 0.output.js 463 {1} [rendered]
     > [0] ./example.js 2:1-4:3
-    [1] ../require.context/templates/a.js 82 {0} [built]
+    [1] ../require.context/templates/a.js 82 {0} [optional] [built]
         context element ./a.js [4] ../require.context/templates ^\.\/.*$
         context element ./a [4] ../require.context/templates ^\.\/.*$
-    [2] ../require.context/templates/b.js 82 {0} [built]
+    [2] ../require.context/templates/b.js 82 {0} [optional] [built]
         context element ./b.js [4] ../require.context/templates ^\.\/.*$
         context element ./b [4] ../require.context/templates ^\.\/.*$
-    [3] ../require.context/templates/c.js 82 {0} [built]
+    [3] ../require.context/templates/c.js 82 {0} [optional] [built]
         context element ./c.js [4] ../require.context/templates ^\.\/.*$
         context element ./c [4] ../require.context/templates ^\.\/.*$
     [4] ../require.context/templates ^\.\/.*$ 217 {0} [built]

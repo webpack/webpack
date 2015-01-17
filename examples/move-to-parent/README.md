@@ -73,19 +73,19 @@ module.exports = {
 
 ```
 Hash: ff24adedc278bb766334
-Version: webpack 1.4.13
-Time: 100ms
+Version: webpack 1.5.0
+Time: 63ms
           Asset  Size           Chunks             Chunk Names
-pageD.bundle.js  4654            6, 11  [emitted]  pageD
+pageD.bundle.js  4578            6, 11  [emitted]  pageD
      0.chunk.js   186                0  [emitted]  
      2.chunk.js   356         2, 0, 10  [emitted]  
      3.chunk.js   517  3, 5, 8, 10, 11  [emitted]  
-pageB.bundle.js  4668         4, 0, 11  [emitted]  pageB
+pageB.bundle.js  4630         4, 0, 11  [emitted]  pageB
      5.chunk.js   363            5, 10  [emitted]  
      1.chunk.js   516   1, 0, 2, 5, 10  [emitted]  
-pageC.bundle.js  4609            7, 11  [emitted]  pageC
+pageC.bundle.js  4533            7, 11  [emitted]  pageC
      8.chunk.js   357        8, 10, 11  [emitted]  
-pageA.bundle.js  4540             9, 0  [emitted]  pageA
+pageA.bundle.js  4483             9, 0  [emitted]  pageA
     10.chunk.js   181               10  [emitted]  
     11.chunk.js   181               11  [emitted]  
 chunk    {0} 0.chunk.js 21 {7} {6} [rendered]
@@ -146,20 +146,20 @@ chunk   {11} 11.chunk.js 21 {9} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 90a2707d1d39b4dcbc79
-Version: webpack 1.4.13
-Time: 370ms
+Hash: 8e6c34485b020b23e506
+Version: webpack 1.5.0
+Time: 287ms
           Asset  Size           Chunks             Chunk Names
-pageD.bundle.js   885            6, 11  [emitted]  pageD
+pageD.bundle.js   881            6, 11  [emitted]  pageD
      0.chunk.js    48                0  [emitted]  
      2.chunk.js    81         2, 0, 10  [emitted]  
      3.chunk.js   113  3, 5, 8, 10, 11  [emitted]  
-pageB.bundle.js   857         4, 0, 11  [emitted]  pageB
+pageB.bundle.js   855         4, 0, 11  [emitted]  pageB
      5.chunk.js    80            5, 10  [emitted]  
      1.chunk.js   112   1, 0, 2, 5, 10  [emitted]  
-pageC.bundle.js   885            7, 11  [emitted]  pageC
+pageC.bundle.js   881            7, 11  [emitted]  pageC
      8.chunk.js    82        8, 10, 11  [emitted]  
-pageA.bundle.js   857             9, 0  [emitted]  pageA
+pageA.bundle.js   854             9, 0  [emitted]  pageA
     10.chunk.js    50               10  [emitted]  
     11.chunk.js    50               11  [emitted]  
 chunk    {0} 0.chunk.js 21 {7} {6} [rendered]

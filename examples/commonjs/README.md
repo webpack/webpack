@@ -127,9 +127,9 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: 9939e07d4b0ecbfa0916
-Version: webpack 1.3.2-beta4
-Time: 63ms
+Hash: f20c1cdaf768293603f5
+Version: webpack 1.5.0
+Time: 47ms
     Asset  Size  Chunks             Chunk Names
 output.js  2257       0  [emitted]  main
 chunk    {0} output.js (main) 329 [rendered]
@@ -144,9 +144,9 @@ chunk    {0} output.js (main) 329 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 7649f5bb15f1f35689b1
-Version: webpack 1.3.2-beta4
-Time: 138ms
+Hash: fd25a122b2db47818529
+Version: webpack 1.5.0
+Time: 132ms
     Asset  Size  Chunks             Chunk Names
 output.js   419       0  [emitted]  main
 chunk    {0} output.js (main) 329 [rendered]

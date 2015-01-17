@@ -35,44 +35,43 @@ module.exports = function(content) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/ 		
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/ 		
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/ 		
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
-/******/ 	
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/ 	
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/ 	
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/ 	
-/******/ 	
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -131,11 +130,11 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 547826c0f7b5903a42b6
-Version: webpack 1.1.0
-Time: 78ms
+Hash: 8ae83d82089bb36260e9
+Version: webpack 1.5.0
+Time: 58ms
     Asset  Size  Chunks             Chunk Names
-output.js  2360       0  [emitted]  main       
+output.js  2323       0  [emitted]  main
 chunk    {0} output.js (main) 282 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 205 {0} [built]
@@ -149,11 +148,11 @@ chunk    {0} output.js (main) 282 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 2c75b96c30dd80131187
-Version: webpack 1.1.0
-Time: 144ms
+Hash: 17799e695fe3c2a8b932
+Version: webpack 1.5.0
+Time: 102ms
     Asset  Size  Chunks             Chunk Names
-output.js   352       0  [emitted]  main       
+output.js   352       0  [emitted]  main
 chunk    {0} output.js (main) 282 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 205 {0} [built]

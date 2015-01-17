@@ -134,9 +134,9 @@ The remaining labels are removed while minimizing.
 ## Uncompressed
 
 ```
-Hash: f8fc9eca6fb91df6e48a
-Version: webpack 1.3.2-beta7
-Time: 35ms
+Hash: 76177991efc90e16a609
+Version: webpack 1.5.0
+Time: 52ms
     Asset  Size  Chunks             Chunk Names
 output.js  2425       0  [emitted]  main
 chunk    {0} output.js (main) 299 [rendered]
@@ -151,9 +151,9 @@ chunk    {0} output.js (main) 299 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 34470e6917b261b891ed
-Version: webpack 1.3.2-beta7
-Time: 75ms
+Hash: 3f31496b8f372dabffef
+Version: webpack 1.5.0
+Time: 158ms
     Asset  Size  Chunks             Chunk Names
 output.js   427       0  [emitted]  main
 chunk    {0} output.js (main) 299 [rendered]

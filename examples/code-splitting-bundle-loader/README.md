@@ -93,6 +93,7 @@ module.exports = "It works";
 /******/ 			var script = document.createElement('script');
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
+/******/ 			script.async = true;
 /******/ 			script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
@@ -136,7 +137,7 @@ module.exports = "It works";
 		if(cbs) cbs.push(cb);
 		else cb(data);
 	}
-	__webpack_require__.e/*nsure*/(1, function(require) {
+	__webpack_require__.e/* nsure */(1, function(require) {
 		data = __webpack_require__(/*! !./file.js */ 1);
 		var callbacks = cbs;
 		cbs = null;
@@ -171,41 +172,41 @@ webpackJsonp([1],[
 ## Uncompressed
 
 ```
-Hash: b389ce75f4a8788f2e19
-Version: webpack 1.3.2-beta4
-Time: 87ms
+Hash: 338a850354a8cd68b5c7
+Version: webpack 1.5.0
+Time: 57ms
       Asset  Size  Chunks             Chunk Names
-  output.js  4397       0  [emitted]  main
+  output.js  4432       0  [emitted]  main
 1.output.js   202       1  [emitted]  
-chunk    {0} output.js (main) 458 [rendered]
+chunk    {0} output.js (main) 453 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 88 {0} [built]
-    [2] (webpack)/~/bundle-loader!./file.js 370 {0} [built]
+    [2] (webpack)/~/bundle-loader!./file.js 365 {0} [built]
         cjs require bundle!./file.js [0] ./example.js 1:0-27
 chunk    {1} 1.output.js 28 {0} [rendered]
     > [2] (webpack)/~/bundle-loader!./file.js 7:0-14:2
     [1] ./file.js 28 {1} [built]
-        cjs require !!.\file.js [2] (webpack)/~/bundle-loader!./file.js 8:8-119
+        cjs require !!.\file.js [2] (webpack)/~/bundle-loader!./file.js 8:8-114
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 414fa29b08ae6edc6940
-Version: webpack 1.3.2-beta4
-Time: 185ms
+Hash: 1444d0062225001d8880
+Version: webpack 1.5.0
+Time: 144ms
       Asset  Size  Chunks             Chunk Names
-  output.js   887       0  [emitted]  main
+  output.js   898       0  [emitted]  main
 1.output.js    55       1  [emitted]  
-chunk    {0} output.js (main) 458 [rendered]
+chunk    {0} output.js (main) 453 [rendered]
     > main [0] ./example.js 
     [0] ./example.js 88 {0} [built]
-    [2] (webpack)/~/bundle-loader!./file.js 370 {0} [built]
+    [2] (webpack)/~/bundle-loader!./file.js 365 {0} [built]
         cjs require bundle!./file.js [0] ./example.js 1:0-27
 chunk    {1} 1.output.js 28 {0} [rendered]
     > [2] (webpack)/~/bundle-loader!./file.js 7:0-14:2
     [1] ./file.js 28 {1} [built]
-        cjs require !!.\file.js [2] (webpack)/~/bundle-loader!./file.js 8:8-119
+        cjs require !!.\file.js [2] (webpack)/~/bundle-loader!./file.js 8:8-114
 
 WARNING in output.js from UglifyJs
 Dropping unused function argument require [(webpack)/~/bundle-loader!./file.js:7,0]

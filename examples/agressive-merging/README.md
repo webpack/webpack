@@ -56,18 +56,18 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: f0835194a2e3ae886763
-Version: webpack 1.1.0
-Time: 79ms
+Hash: d79e3f1df7b5b1fce70b
+Version: webpack 1.5.0
+Time: 76ms
           Asset  Size  Chunks             Chunk Names
-     0.chunk.js  5737       0  [emitted]             
-pageB.bundle.js  4189       1  [emitted]  pageB      
-pageA.bundle.js  4202       2  [emitted]  pageA      
-     3.chunk.js   341       3  [emitted]             
-pageC.bundle.js  4023       4  [emitted]  pageC      
-chunk    {0} 0.chunk.js 5553 {1} {2} [rendered]
-    > [0] ./pageB.js 1:0-3:2
-    > aggressive-merge [0] ./pageA.js 1:0-3:2
+     0.chunk.js  5738       0  [emitted]  
+pageB.bundle.js  4208       1  [emitted]  pageB
+pageA.bundle.js  4177       2  [emitted]  pageA
+     3.chunk.js   342       3  [emitted]  
+pageC.bundle.js  4020       4  [emitted]  pageC
+chunk    {0} 0.chunk.js 5553 {2} {1} [rendered]
+    > [0] ./pageA.js 1:0-3:2
+    > aggressive-merge [0] ./pageB.js 1:0-3:2
     [3] ./common.js 5553 {0} [built]
         amd require ./common [0] ./pageA.js 1:0-3:2
         amd require ./common [0] ./pageB.js 1:0-3:2
@@ -99,15 +99,15 @@ chunk    {4} pageC.bundle.js (pageC) 70 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b5d04f82f70b4b11760f
-Version: webpack 1.1.0
-Time: 270ms
+Hash: ab85fb8904309de75c02
+Version: webpack 1.5.0
+Time: 277ms
           Asset  Size  Chunks             Chunk Names
-     0.chunk.js    73       0  [emitted]             
-pageB.bundle.js   801       1  [emitted]  pageB      
-pageA.bundle.js   800       2  [emitted]  pageA      
-     3.chunk.js    75       3  [emitted]             
-pageC.bundle.js   785       4  [emitted]  pageC      
+     0.chunk.js    73       0  [emitted]  
+pageB.bundle.js   812       1  [emitted]  pageB
+pageA.bundle.js   811       2  [emitted]  pageA
+     3.chunk.js    75       3  [emitted]  
+pageC.bundle.js   796       4  [emitted]  pageC
 chunk    {0} 0.chunk.js 5553 {1} {2} [rendered]
     > [0] ./pageB.js 1:0-3:2
     > aggressive-merge [0] ./pageA.js 1:0-3:2

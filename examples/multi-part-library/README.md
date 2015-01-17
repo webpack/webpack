@@ -96,7 +96,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }
 /******/ ])
-})
+});
 ```
 
 # js/MyLibrary.beta.js
@@ -165,7 +165,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }
 /******/ ])
-})
+});
 ```
 
 # Info
@@ -173,12 +173,12 @@ return /******/ (function(modules) { // webpackBootstrap
 ## Uncompressed
 
 ```
-Hash: a78e403fffa13ff44a9b
-Version: webpack 1.3.2-beta7
-Time: 32ms
+Hash: c7f999402520fa44f95c
+Version: webpack 1.5.0
+Time: 34ms
              Asset  Size  Chunks             Chunk Names
- MyLibrary.beta.js  2010       0  [emitted]  beta
-MyLibrary.alpha.js  2016       1  [emitted]  alpha
+ MyLibrary.beta.js  2011       0  [emitted]  beta
+MyLibrary.alpha.js  2017       1  [emitted]  alpha
 chunk    {0} MyLibrary.beta.js (beta) 24 [rendered]
     > beta [0] ./beta.js 
     [0] ./beta.js 24 {0} [built]
@@ -190,9 +190,9 @@ chunk    {1} MyLibrary.alpha.js (alpha) 25 [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 3789fe283a0b89d3215b
-Version: webpack 1.3.2-beta7
-Time: 87ms
+Hash: 0f9197c2217d2ca4cce4
+Version: webpack 1.5.0
+Time: 138ms
              Asset  Size  Chunks             Chunk Names
  MyLibrary.beta.js   485       0  [emitted]  beta
 MyLibrary.alpha.js   488       1  [emitted]  alpha

@@ -248,8 +248,8 @@ webpackJsonp([3],{
 
 ```
 Hash: 310f71157717394fc874
-Version: webpack 1.4.15
-Time: 50ms
+Version: webpack 1.5.0
+Time: 51ms
       Asset  Size  Chunks             Chunk Names
 0.output.js   342       0  [emitted]  
   output.js  4694       1  [emitted]  main
@@ -281,8 +281,8 @@ chunk    {3} 3.output.js 21 {1} [rendered]
 
 ```
 Hash: 2bf4007377287b9601db
-Version: webpack 1.4.15
-Time: 180ms
+Version: webpack 1.5.0
+Time: 136ms
       Asset  Size  Chunks             Chunk Names
 0.output.js    75       0  [emitted]  
   output.js   931       1  [emitted]  main

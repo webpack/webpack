@@ -164,100 +164,100 @@ body{background:url(js/ce21cbdd9b894e6af794813eb3fdaf60.png)}.c{background:url(j
 ## Uncompressed
 
 ```
-Hash: dc03b169830a24add842
-Version: webpack 1.3.2-beta8
-Time: 164ms
+Hash: e8a2218c834fc0d01407
+Version: webpack 1.5.0
+Time: 386ms
                                Asset  Size  Chunks             Chunk Names
-                               B.css    69          [emitted]  
-d090b6fba0f6d326d282a19146ff54a7.png   120          [emitted]  
-c2a2f62d69330b7d787782f5010f9d13.png   120          [emitted]  
-16155c689e517682064c99893cb832cc.png   120          [emitted]  
-                               A.css    69          [emitted]  
-                               C.css   140          [emitted]  
-ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
-                         commons.css    71          [emitted]  
-                                C.js  2051    0, 1  [emitted]  C
-                          commons.js  3828       1  [emitted]  commons
                                 B.js   458       2  [emitted]  B
+ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
+16155c689e517682064c99893cb832cc.png   120          [emitted]  
+d090b6fba0f6d326d282a19146ff54a7.png   120          [emitted]  
+                                C.js  2051    0, 1  [emitted]  C
+                          commons.js  3865       1  [emitted]  commons
+c2a2f62d69330b7d787782f5010f9d13.png   120          [emitted]  
                                 A.js   449       3  [emitted]  A
-chunk    {0} C.js (C) 133 [rendered]
+                               C.css   140    0, 1  [emitted]  C
+                               B.css    69       2  [emitted]  B
+                               A.css    69       3  [emitted]  A
+                         commons.css    71       1  [emitted]  commons
+chunk    {0} C.js, C.css (C) 133 [rendered]
     > C [0] ./c.js 
     [0] ./c.js 51 {0} [built]
     [1] ./style.css 41 {0} {1} [built]
-        cjs require ./style.css [0] ./a.js 1:0-22
         cjs require ./style.css [0] ./b.js 1:0-22
+        cjs require ./style.css [0] ./a.js 1:0-22
         cjs require ./style.css [0] ./c.js 1:0-22
     [4] ./styleC.css 41 {0} [built]
         cjs require ./styleC.css [0] ./c.js 2:0-23
-chunk    {1} commons.js (commons) 41 [rendered]
+chunk    {1} commons.js, commons.css (commons) 41 [rendered]
     [1] ./style.css 41 {0} {1} [built]
-        cjs require ./style.css [0] ./a.js 1:0-22
         cjs require ./style.css [0] ./b.js 1:0-22
+        cjs require ./style.css [0] ./a.js 1:0-22
         cjs require ./style.css [0] ./c.js 1:0-22
-chunk    {2} B.js (B) 92 {1} [rendered]
+chunk    {2} B.js, B.css (B) 92 {1} [rendered]
     > B [0] ./b.js 
     [0] ./b.js 51 {2} [built]
     [3] ./styleB.css 41 {2} [built]
         cjs require ./styleB.css [0] ./b.js 2:0-23
-chunk    {3} A.js (A) 92 {1} [rendered]
+chunk    {3} A.js, A.css (A) 92 {1} [rendered]
     > A [0] ./a.js 
     [0] ./a.js 51 {3} [built]
     [2] ./styleA.css 41 {3} [built]
         cjs require ./styleA.css [0] ./a.js 2:0-23
 Child extract-text-webpack-plugin:
-                                   Asset  Size  Chunks       Chunk Names
-    d090b6fba0f6d326d282a19146ff54a7.png   120               
-    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)\node_modules\css-loader\index.js!.\styleA.css 166 [rendered]
-        > [0] (webpack)/~/css-loader!./styleA.css 
-        [0] (webpack)/~/css-loader!./styleA.css 85 {0} [built]
-        [1] ./imageA.png 81 {0} [built]
-            cjs require ./imageA.png [0] (webpack)/~/css-loader!./styleA.css 2:30-53
-Child extract-text-webpack-plugin:
-                                   Asset  Size  Chunks       Chunk Names
-    ce21cbdd9b894e6af794813eb3fdaf60.png   119               
-    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)\node_modules\css-loader\index.js!.\style.css 167 [rendered]
+    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)/~\css-loader\index.js!.\style.css 637 [rendered]
         > [0] (webpack)/~/css-loader!./style.css 
-        [0] (webpack)/~/css-loader!./style.css 86 {0} [built]
-        [1] ./image.png 81 {0} [built]
-            cjs require ./image.png [0] (webpack)/~/css-loader!./style.css 2:32-54
+        [0] (webpack)/~/css-loader!./style.css 204 {0} [built]
+        [1] (webpack)/~/css-loader/cssToString.js 352 {0} [built]
+            cjs require (webpack)/~\css-loader\cssToString.js [0] (webpack)/~/css-loader!./style.css 1:27-101
+        [2] ./image.png 81 {0} [built]
+            cjs require ./image.png [0] (webpack)/~/css-loader!./style.css 2:56-78
 Child extract-text-webpack-plugin:
-                                   Asset  Size  Chunks       Chunk Names
-    c2a2f62d69330b7d787782f5010f9d13.png   120               
-    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)\node_modules\css-loader\index.js!.\styleC.css 166 [rendered]
+    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)/~\css-loader\index.js!.\styleC.css 636 [rendered]
         > [0] (webpack)/~/css-loader!./styleC.css 
-        [0] (webpack)/~/css-loader!./styleC.css 85 {0} [built]
-        [1] ./imageC.png 81 {0} [built]
-            cjs require ./imageC.png [0] (webpack)/~/css-loader!./styleC.css 2:30-53
+        [0] (webpack)/~/css-loader!./styleC.css 203 {0} [built]
+        [1] (webpack)/~/css-loader/cssToString.js 352 {0} [built]
+            cjs require (webpack)/~\css-loader\cssToString.js [0] (webpack)/~/css-loader!./styleC.css 1:27-101
+        [2] ./imageC.png 81 {0} [built]
+            cjs require ./imageC.png [0] (webpack)/~/css-loader!./styleC.css 2:54-77
 Child extract-text-webpack-plugin:
-                                   Asset  Size  Chunks       Chunk Names
-    16155c689e517682064c99893cb832cc.png   120               
-    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)\node_modules\css-loader\index.js!.\styleB.css 166 [rendered]
+    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)/~\css-loader\index.js!.\styleB.css 636 [rendered]
         > [0] (webpack)/~/css-loader!./styleB.css 
-        [0] (webpack)/~/css-loader!./styleB.css 85 {0} [built]
-        [1] ./imageB.png 81 {0} [built]
-            cjs require ./imageB.png [0] (webpack)/~/css-loader!./styleB.css 2:30-53
+        [0] (webpack)/~/css-loader!./styleB.css 203 {0} [built]
+        [1] (webpack)/~/css-loader/cssToString.js 352 {0} [built]
+            cjs require (webpack)/~\css-loader\cssToString.js [0] (webpack)/~/css-loader!./styleB.css 1:27-101
+        [2] ./imageB.png 81 {0} [built]
+            cjs require ./imageB.png [0] (webpack)/~/css-loader!./styleB.css 2:54-77
+Child extract-text-webpack-plugin:
+    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)/~\css-loader\index.js!.\styleA.css 636 [rendered]
+        > [0] (webpack)/~/css-loader!./styleA.css 
+        [0] (webpack)/~/css-loader!./styleA.css 203 {0} [built]
+        [1] (webpack)/~/css-loader/cssToString.js 352 {0} [built]
+            cjs require (webpack)/~\css-loader\cssToString.js [0] (webpack)/~/css-loader!./styleA.css 1:27-101
+        [2] ./imageA.png 81 {0} [built]
+            cjs require ./imageA.png [0] (webpack)/~/css-loader!./styleA.css 2:54-77
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 91ca5e0353e09572847f
-Version: webpack 1.3.2-beta8
-Time: 306ms
+Hash: 1f69290bb24df042174b
+Version: webpack 1.5.0
+Time: 385ms
                                Asset  Size  Chunks             Chunk Names
-                               C.css   120          [emitted]  
+                                B.js    62       2  [emitted]  B
 16155c689e517682064c99893cb832cc.png   120          [emitted]  
 ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
 c2a2f62d69330b7d787782f5010f9d13.png   120          [emitted]  
-                               B.css    59          [emitted]  
-                               A.css    59          [emitted]  
-d090b6fba0f6d326d282a19146ff54a7.png   120          [emitted]  
-                         commons.css    61          [emitted]  
                                 C.js   260    0, 1  [emitted]  C
-                          commons.js   735       1  [emitted]  commons
-                                B.js    62       2  [emitted]  B
+                          commons.js   752       1  [emitted]  commons
+d090b6fba0f6d326d282a19146ff54a7.png   120          [emitted]  
                                 A.js    61       3  [emitted]  A
-chunk    {0} C.js (C) 133 [rendered]
+                               B.css    59       2  [emitted]  B
+                               A.css    59       3  [emitted]  A
+                               C.css   120    0, 1  [emitted]  C
+                         commons.css    61       1  [emitted]  commons
+chunk    {0} C.js, C.css (C) 133 [rendered]
     > C [0] ./c.js 
     [0] ./c.js 51 {0} [built]
     [1] ./style.css 41 {0} {1} [built]
@@ -266,51 +266,51 @@ chunk    {0} C.js (C) 133 [rendered]
         cjs require ./style.css [0] ./c.js 1:0-22
     [4] ./styleC.css 41 {0} [built]
         cjs require ./styleC.css [0] ./c.js 2:0-23
-chunk    {1} commons.js (commons) 41 [rendered]
+chunk    {1} commons.js, commons.css (commons) 41 [rendered]
     [1] ./style.css 41 {0} {1} [built]
         cjs require ./style.css [0] ./a.js 1:0-22
         cjs require ./style.css [0] ./b.js 1:0-22
         cjs require ./style.css [0] ./c.js 1:0-22
-chunk    {2} B.js (B) 92 {1} [rendered]
+chunk    {2} B.js, B.css (B) 92 {1} [rendered]
     > B [0] ./b.js 
     [0] ./b.js 51 {2} [built]
     [3] ./styleB.css 41 {2} [built]
         cjs require ./styleB.css [0] ./b.js 2:0-23
-chunk    {3} A.js (A) 92 {1} [rendered]
+chunk    {3} A.js, A.css (A) 92 {1} [rendered]
     > A [0] ./a.js 
     [0] ./a.js 51 {3} [built]
     [2] ./styleA.css 41 {3} [built]
         cjs require ./styleA.css [0] ./a.js 2:0-23
 Child extract-text-webpack-plugin:
-                                   Asset  Size  Chunks       Chunk Names
-    16155c689e517682064c99893cb832cc.png   120               
-    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)\node_modules\css-loader\index.js!.\styleB.css 149 [rendered]
+    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)/~\css-loader\index.js!.\styleB.css 619 [rendered]
         > [0] (webpack)/~/css-loader!./styleB.css 
-        [0] (webpack)/~/css-loader!./styleB.css 68 {0} [built]
-        [1] ./imageB.png 81 {0} [built]
-            cjs require ./imageB.png [0] (webpack)/~/css-loader!./styleB.css 2:22-45
+        [0] (webpack)/~/css-loader!./styleB.css 186 {0} [built]
+        [1] (webpack)/~/css-loader/cssToString.js 352 {0} [built]
+            cjs require (webpack)/~\css-loader\cssToString.js [0] (webpack)/~/css-loader!./styleB.css 1:27-101
+        [2] ./imageB.png 81 {0} [built]
+            cjs require ./imageB.png [0] (webpack)/~/css-loader!./styleB.css 2:46-69
 Child extract-text-webpack-plugin:
-                                   Asset  Size  Chunks       Chunk Names
-    d090b6fba0f6d326d282a19146ff54a7.png   120               
-    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)\node_modules\css-loader\index.js!.\styleA.css 149 [rendered]
+    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)/~\css-loader\index.js!.\styleA.css 619 [rendered]
         > [0] (webpack)/~/css-loader!./styleA.css 
-        [0] (webpack)/~/css-loader!./styleA.css 68 {0} [built]
-        [1] ./imageA.png 81 {0} [built]
-            cjs require ./imageA.png [0] (webpack)/~/css-loader!./styleA.css 2:22-45
+        [0] (webpack)/~/css-loader!./styleA.css 186 {0} [built]
+        [1] (webpack)/~/css-loader/cssToString.js 352 {0} [built]
+            cjs require (webpack)/~\css-loader\cssToString.js [0] (webpack)/~/css-loader!./styleA.css 1:27-101
+        [2] ./imageA.png 81 {0} [built]
+            cjs require ./imageA.png [0] (webpack)/~/css-loader!./styleA.css 2:46-69
 Child extract-text-webpack-plugin:
-                                   Asset  Size  Chunks       Chunk Names
-    ce21cbdd9b894e6af794813eb3fdaf60.png   119               
-    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)\node_modules\css-loader\index.js!.\style.css 150 [rendered]
+    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)/~\css-loader\index.js!.\style.css 620 [rendered]
         > [0] (webpack)/~/css-loader!./style.css 
-        [0] (webpack)/~/css-loader!./style.css 69 {0} [built]
-        [1] ./image.png 81 {0} [built]
-            cjs require ./image.png [0] (webpack)/~/css-loader!./style.css 2:24-46
+        [0] (webpack)/~/css-loader!./style.css 187 {0} [built]
+        [1] (webpack)/~/css-loader/cssToString.js 352 {0} [built]
+            cjs require (webpack)/~\css-loader\cssToString.js [0] (webpack)/~/css-loader!./style.css 1:27-101
+        [2] ./image.png 81 {0} [built]
+            cjs require ./image.png [0] (webpack)/~/css-loader!./style.css 2:48-70
 Child extract-text-webpack-plugin:
-                                   Asset  Size  Chunks       Chunk Names
-    c2a2f62d69330b7d787782f5010f9d13.png   120               
-    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)\node_modules\css-loader\index.js!.\styleC.css 149 [rendered]
+    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)/~\css-loader\index.js!.\styleC.css 619 [rendered]
         > [0] (webpack)/~/css-loader!./styleC.css 
-        [0] (webpack)/~/css-loader!./styleC.css 68 {0} [built]
-        [1] ./imageC.png 81 {0} [built]
-            cjs require ./imageC.png [0] (webpack)/~/css-loader!./styleC.css 2:22-45
+        [0] (webpack)/~/css-loader!./styleC.css 186 {0} [built]
+        [1] (webpack)/~/css-loader/cssToString.js 352 {0} [built]
+            cjs require (webpack)/~\css-loader\cssToString.js [0] (webpack)/~/css-loader!./styleC.css 1:27-101
+        [2] ./imageC.png 81 {0} [built]
+            cjs require ./imageC.png [0] (webpack)/~/css-loader!./styleC.css 2:46-69
 ```
