@@ -14,8 +14,11 @@ if(module.hot) {
 				return;
 			}
 
-			if(!updatedModules)
-				return console.log("[HMR] No Update found.");
+			if(!updatedModules) {
+				console.warn("[HMR] Cannot find update. Need to do a full reload!");
+				console.warn("[HMR] (Propably because of restarting the webpack-dev-server)")
+				return;
+			}
 
 			module.hot.apply({
 				ignoreUnaccepted: true
