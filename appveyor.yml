@@ -7,8 +7,11 @@ init:
 # what combinations to test
 environment:
   matrix:
+    # node.js
     - nodejs_version: 0.10
     - nodejs_version: 0.11
+    # io.js
+    - nodejs_version: 1.04
 
 # combinations having this can fail
 matrix:
