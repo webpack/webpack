@@ -93,3 +93,7 @@ it("should provide a vm shim", function () {
 it("should provide a zlib shim", function () {
 	require("zlib").should.be.an.Object;
 });
+
+it("should provide a shim for a path in a build-in module", function () {
+	require("process/in.js").should.be.eql("in process");
+});
