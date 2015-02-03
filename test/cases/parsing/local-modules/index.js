@@ -41,3 +41,18 @@ it("should define and require a local module with deps", function() {
 	require("my-module3").should.be.eql(1234);
 	require("my-module4").should.be.eql(2345);
 });
+
+it("should define and require a local module that is relative", function () {
+	define("my-dir/my-module3", function() {
+		return 1234;
+	});
+	define("my-dir/my-other-dir/my-module4", function() {
+		return 2345;
+	});
+	define("my-dir/my-other-dir/my-module5", ["./my-module4", "../my-module3"], function(myModule4, myModule3) {
+		myModule3.should.be.eql(1234);
+		myModule4.should.be.eql(2345);
+		return 3456;
+	});
+	require("my-dir/my-other-dir/my-module5").should.be.eql(3456);
+})
