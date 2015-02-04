@@ -17,13 +17,13 @@ var util = require("util");
 var optimist = require("optimist")
 	.usage("webpack " + require("../package.json").version + "\n" +
 		"Usage: http://webpack.github.io/docs/cli.html")
-	
+
 require("./config-optimist")(optimist);
 
 optimist
 
 	.boolean("json").alias("json", "j").describe("json")
-	
+
 	.boolean("colors").alias("colors", "c").describe("colors")
 
 	.string("sort-modules-by").describe("sort-modules-by")
@@ -50,7 +50,7 @@ optimist
 
 	.boolean("display-reasons").alias("display-reasons", "verbose").alias("display-reasons", "v").describe("display-reasons");
 
-	
+
 var argv = optimist.argv;
 
 var options = require("./convert-argv")(optimist, argv);
@@ -124,7 +124,7 @@ if(!outputOptions.json) {
 		if(bool)
 			outputOptions.cachedAssets = true;
 	});
-	
+
 	if(!outputOptions.exclude && !argv["display-modules"])
 		outputOptions.exclude = ["node_modules", "bower_components", "jam", "components"];
 } else {
