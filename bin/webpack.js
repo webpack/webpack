@@ -77,9 +77,7 @@ ifArg("json", function(bool) {
 	outputOptions.json = bool;
 });
 
-ifArg("colors", function(bool) {
-	outputOptions.colors = bool;
-});
+outputOptions.colors = require("supports-color");
 
 ifArg("sort-modules-by", function(value) {
 	outputOptions.modulesSort = value;
