@@ -15,7 +15,8 @@
 		"webpack-core": "~0.4.8",
 		"node-libs-browser": "~0.4.0",
 		"watchpack": "^0.2.1",
-		"tapable": "~0.1.8"
+		"tapable": "~0.1.8",
+		"supports-color": "^1.2.0"
 	},
 	"licenses": [
 		{
