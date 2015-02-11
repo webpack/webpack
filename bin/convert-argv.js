@@ -291,13 +291,6 @@ module.exports = function(optimist, argv, convertOptions) {
 						msg = " " + msg;
 					}
 				}
-				for(; chars > msg.length; chars--) {
-					process.stderr.write("\b \b");
-				}
-				chars = msg.length;
-				for(var i = 0; i < chars; i++) {
-					process.stderr.write("\b");
-				}
 				if(options.profile) {
 					state = state.replace(/^\d+\/\d+\s+/, "");
 					if(percentage === 0) {
@@ -306,14 +299,29 @@ module.exports = function(optimist, argv, convertOptions) {
 					} else if(state !== lastState || percentage === 1) {
 						var now = +new Date();
 						if(lastState) {
-							process.stderr.write((now - lastStateTime) + "ms " + lastState + "\n");
+							var stateMsg = (now - lastStateTime) + "ms " + lastState;
+							goToLineStart(stateMsg);
+							process.stderr.write(stateMsg + "\n");
+							chars = 0;
 						}
 						lastState = state;
 						lastStateTime = now;
 					}
 				}
+				goToLineStart(msg);
 				process.stderr.write(msg);
 			}));
+			function goToLineStart(nextMessage) {
+				var str = "";
+				for(; chars > nextMessage.length; chars--) {
+					str += "\b \b";
+				}
+				chars = nextMessage.length;
+				for(var i = 0; i < chars; i++) {
+					str += "\b";
+				}
+				if(str) process.stderr.write(str);
+			}
 		});
 
 		ifArg("devtool", function(value) {
