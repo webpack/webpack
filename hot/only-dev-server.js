@@ -16,7 +16,7 @@ if(module.hot) {
 
 			if(!updatedModules) {
 				console.warn("[HMR] Cannot find update. Need to do a full reload!");
-				console.warn("[HMR] (Propably because of restarting the webpack-dev-server)")
+				console.warn("[HMR] (Probably because of restarting the webpack-dev-server)")
 				return;
 			}
 
@@ -79,5 +79,5 @@ if(module.hot) {
 	});
 	console.log("[HMR] Waiting for update signal from WDS...");
 } else {
-	throw new Error("[HMR] Hot Module Replacement is disabled");
+	throw new Error("[HMR] Hot Module Replacement is disabled.");
 }
