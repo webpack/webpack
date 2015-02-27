@@ -4,6 +4,7 @@ module.exports = {
 		new ProvidePlugin({
 			aaa: "./aaa",
 			"bbb.ccc": "./bbbccc",
+			"process.env.NODE_ENV": "./env",
 		})
 	]
 };

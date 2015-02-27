@@ -14,7 +14,7 @@ module.exports = {
 					REGEXP: /abc/i
 				}
 			},
-
+			"process.env.DEFINED_NESTED_KEY": 5
 		})
 	]
 }
