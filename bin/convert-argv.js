@@ -32,6 +32,9 @@ module.exports = function(optimist, argv, convertOptions) {
 		var configPath = path.resolve("webpack.config.js");
 		if(fs.existsSync(configPath)) {
 			options = require(configPath);
+		} else {
+			console.log("No config file found. For options see: webpack --help");
+			process.exit(-1);
 		}
 	}
 	if(typeof options !== "object" || options === null) {
