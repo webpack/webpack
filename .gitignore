@@ -4,3 +4,4 @@
 /examples/*/js
 /coverage
 .DS_Store
+*.swp
