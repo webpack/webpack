@@ -86,7 +86,7 @@ describe("ConfigTestCases", function() {
 						// give a free pass to compilation that generated an error
 						if(!jsonStats.errors.length && filesCount !== optionsArr.length) return done(new Error("Should have found at least one bundle file per webpack config"));
 						if(exportedTests < filesCount) return done(new Error("No tests exported by test case"));
-						done();
+						process.nextTick(done);
 					});
 				});
 			});
