@@ -4,7 +4,7 @@
 	"author": "Tobias Koppers @sokra",
 	"description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
 	"dependencies": {
-		"esprima": "~1.2.0",
+		"esprima-fb": "^8001.2001.0-dev-harmony-fb",
 		"mkdirp": "~0.5.0",
 		"optimist": "~0.6.0",
 		"uglify-js": "~2.4.13",
