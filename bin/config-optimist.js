@@ -5,6 +5,8 @@ module.exports = function(optimist) {
 
 	.string("config").describe("config")
 
+	.string("env").describe("env", "Enviroment passed to the config, when it is a function")
+
 	.string("context").describe("context")
 
 	.string("entry").describe("entry")
