@@ -167,4 +167,9 @@ var compiler = webpack(options, function(err, stats) {
 		lastHash = stats.hash;
 		process.stdout.write(stats.toString(outputOptions) + "\n");
 	}
+	if(!options.watch && stats.hasErrors()) {
+		process.on("exit", function() {
+			process.exit(2);
+		});
+	}
 });
