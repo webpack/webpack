@@ -209,11 +209,6 @@ module.exports = function(optimist, argv, convertOptions) {
 			options.output.chunkFilename = value;
 		});
 
-		ifArg("output-named-chunk-file", function(value) {
-			ensureObject(options, "output");
-			options.output.namedChunkFilename = value;
-		});
-
 		ifArg("output-source-map-file", function(value) {
 			ensureObject(options, "output");
 			options.output.sourceMapFilename = value;

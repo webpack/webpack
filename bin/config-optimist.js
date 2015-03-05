@@ -21,8 +21,6 @@ module.exports = function(optimist) {
 
 	.string("output-chunk-file").describe("output-chunk-file")
 
-	.string("output-named-chunk-file").describe("output-named-chunk-file")
-
 	.string("output-source-map-file").describe("output-source-map-file")
 
 	.string("output-public-path").describe("output-public-path")
