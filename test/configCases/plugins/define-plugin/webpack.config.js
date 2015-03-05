@@ -10,7 +10,7 @@ module.exports = {
 				SUB: {
 					UNDEFINED: undefined,
 					FUNCTION: function(a) { return a + 1; },
-					CODE: "1+2",
+					CODE: "(1+2)",
 					REGEXP: /abc/i
 				}
 			},
