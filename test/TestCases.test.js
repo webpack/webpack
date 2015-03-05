@@ -49,13 +49,13 @@ describe("TestCases", function() {
 		]},
 		{ name: "optimized", plugins: [
 			new webpack.optimize.DedupePlugin(),
-			new webpack.optimize.OccurenceOrderPlugin(),
+			new webpack.optimize.OccurrenceOrderPlugin(),
 			new webpack.optimize.UglifyJsPlugin()
 		]},
 		{ name: "all-combined", devtool: "#@source-map", plugins: [
 			new webpack.HotModuleReplacementPlugin(),
 			new webpack.optimize.DedupePlugin(),
-			new webpack.optimize.OccurenceOrderPlugin(),
+			new webpack.optimize.OccurrenceOrderPlugin(),
 			new webpack.optimize.UglifyJsPlugin()
 		]}
 	].forEach(function(config) {
