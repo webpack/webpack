@@ -70,6 +70,9 @@ describe("Errors", function() {
 				a: "./require-entry-point",
 				b: "./entry-point",
 				c: ["./entry-point2"]
+			},
+			output: {
+				filename: "[name].js"
 			}
 		}, function(errors, warnings) {
 			errors.length.should.be.eql(2);

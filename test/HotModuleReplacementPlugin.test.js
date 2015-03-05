@@ -19,7 +19,7 @@ describe("HotModuleReplacementPlugin", function() {
 			},
 			plugins: [
 				new webpack.HotModuleReplacementPlugin(),
-				new webpack.optimize.OccurenceOrderPlugin()
+				new webpack.optimize.OccurrenceOrderPlugin()
 			]
 		});
 		fs.writeFileSync(entryFile, "1", "utf-8");

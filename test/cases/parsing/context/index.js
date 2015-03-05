@@ -13,8 +13,6 @@ it("should automatically create contexts", function() {
 	require("./templates/" + tmp + "l").should.be.eql("test template");
 	require("./templates/t" + mpl).should.be.eql("test template");
 	require("./templates/t" + mp + "l").should.be.eql("test template");
-	require("./templates/templateLoader")(templateFull).should.be.eql("test template");
-	require("./templates/templateLoaderIndirect")(templateFull).should.be.eql("test template");
 });
 
 it("should be able to require.resolve with automatical context", function() {

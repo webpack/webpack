@@ -1,3 +1,10 @@
+it("should define FALSE", function() {
+	FALSE.should.be.eql(false);
+	(typeof TRUE).should.be.eql("boolean");
+	var x = require(FALSE ? "fail" : "./a");
+	var y = FALSE ? require("fail") : require("./a");
+});
+
 it("should define CODE", function() {
 	CODE.should.be.eql(3);
 	(typeof CODE).should.be.eql("number");
