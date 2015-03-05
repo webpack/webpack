@@ -65,8 +65,6 @@ module.exports = function(optimist) {
 
 	.boolean("optimize-minimize").describe("optimize-minimize")
 
-	.boolean("optimize-occurence-order").describe("optimize-occurence-order")
-
 	.boolean("optimize-dedupe").describe("optimize-dedupe")
 
 	.string("prefetch").describe("prefetch")

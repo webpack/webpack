@@ -23,7 +23,6 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 	if(argv.p) {
 		argv["optimize-minimize"] = true;
-		argv["optimize-occurence-order"] = true;
 	}
 
 	if(argv.config) {
@@ -354,12 +353,6 @@ module.exports = function(optimist, argv, convertOptions) {
 			ensureArray(options, "plugins");
 			var UglifyJsPlugin = require("../lib/optimize/UglifyJsPlugin");
 			options.plugins.push(new UglifyJsPlugin());
-		});
-
-		ifBooleanArg("optimize-occurence-order", function() {
-			ensureArray(options, "plugins");
-			var OccurenceOrderPlugin = require("../lib/optimize/OccurenceOrderPlugin");
-			options.plugins.push(new OccurenceOrderPlugin());
 		});
 
 		ifBooleanArg("optimize-dedupe", function() {
