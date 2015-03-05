@@ -18,7 +18,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		argv.debug = true;
 		argv["output-pathinfo"] = true;
 		if(!argv.devtool) {
-			argv.devtool = "sourcemap";
+			argv.devtool = "eval-source-map";
 		}
 	}
 	if(argv.p) {
