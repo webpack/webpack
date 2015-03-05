@@ -25,12 +25,15 @@ module.exports = function(optimist, argv, convertOptions) {
 		argv["optimize-minimize"] = true;
 	}
 
+	var configFileLoaded = false;
 	if(argv.config) {
 		options = require(path.resolve(argv.config));
+		configFileLoaded = true;
 	} else {
 		var configPath = path.resolve("webpack.config.js");
 		if(fs.existsSync(configPath)) {
 			options = require(configPath);
+			configFileLoaded = true;
 		}
 	}
 	if(typeof options !== "object" || options === null) {
@@ -405,6 +408,8 @@ module.exports = function(optimist, argv, convertOptions) {
 				options.output.filename = argv._.pop();
 				options.output.path = path.dirname(options.output.filename);
 				options.output.filename = path.basename(options.output.filename);
+			} else if(configFileLoaded) {
+				throw new Error("'output.filename' is required, either in config file or as --output-file");
 			} else {
 				optimist.showHelp();
 				process.exit(-1);
