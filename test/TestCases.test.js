@@ -23,6 +23,11 @@ describe("TestCases", function() {
 		{ name: "hot", plugins: [
 			new webpack.HotModuleReplacementPlugin()
 		]},
+		{ name: "hot-multi-step", plugins: [
+			new webpack.HotModuleReplacementPlugin({
+				multiStep: true
+			})
+		]},
 		{ name: "devtool-eval", devtool: "eval" },
 		{ name: "devtool-eval-source-map", devtool: "#eval-source-map" },
 		{ name: "devtool-inline-source-map", devtool: "inline-source-map" },
