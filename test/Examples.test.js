@@ -36,9 +36,10 @@ describe("Examples", function() {
 			}
 			webpack(options, function(err, stats) {
 				if(err) return done(err);
-				stats = stats.toJson();
-				if(stats.errors.length > 0)
-					return done(stats.errors[0]);
+				stats = stats.toJson({ errorDetails: true });
+				if(stats.errors.length > 0) {
+					return done(new Error(stats.errors[0]));
+				}
 				done();
 			});
 		});
