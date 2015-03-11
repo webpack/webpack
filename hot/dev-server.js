@@ -1,3 +1,7 @@
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
 if(module.hot) {
 	var lastData;
 	var upToDate = function upToDate() {
@@ -8,9 +12,10 @@ if(module.hot) {
 			if(err) {
 				if(module.hot.status() in {abort:1,fail:1}) {
 					console.warn("[HMR] Cannot apply update. Need to do a full reload!");
+					console.warn("[HMR] " + err.stack || err.message);
 					window.location.reload();
 				} else {
-					console.warn("[HMR] Update failed: " + err);
+					console.warn("[HMR] Update failed: " + err.stack || err.message);
 				}
 				return;
 			}
@@ -26,14 +31,8 @@ if(module.hot) {
 				check();
 			}
 
-			if(!updatedModules || updatedModules.length === 0) {
-				console.log("[HMR] Update is empty.");
-			} else {
-				console.log("[HMR] Updated modules:");
-				updatedModules.forEach(function(moduleId) {
-					console.log("[HMR]  - " + moduleId);
-				});
-			}
+			require("./log-apply-result")(updatedModules, updatedModules);
+
 			if(upToDate()) {
 				console.log("[HMR] App is up to date.");
 			}

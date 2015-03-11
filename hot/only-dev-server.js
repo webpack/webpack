@@ -1,3 +1,7 @@
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
 if(module.hot) {
 	var lastData;
 	var upToDate = function upToDate() {
@@ -8,8 +12,9 @@ if(module.hot) {
 			if(err) {
 				if(module.hot.status() in {abort:1,fail:1}) {
 					console.warn("[HMR] Cannot check for update. Need to do a full reload!");
+					console.warn("[HMR] " + err.stack || err.message);
 				} else {
-					console.warn("[HMR] Update check failed: " + err);
+					console.warn("[HMR] Update check failed: " + err.stack || err.message);
 				}
 				return;
 			}
@@ -25,9 +30,10 @@ if(module.hot) {
 			}, function(err, renewedModules) {
 				if(err) {
 					if(module.hot.status() in {abort:1,fail:1}) {
-						console.warn("[HMR] Cannot apply update (Need to do a full reload!): " + err);
+						console.warn("[HMR] Cannot apply update. Need to do a full reload!");
+						console.warn("[HMR] " + err.stack || err.message);
 					} else {
-						console.warn("[HMR] Update failed: " + err);
+						console.warn("[HMR] Update failed: " + err.stack || err.message);
 					}
 					return;
 				}
@@ -36,30 +42,11 @@ if(module.hot) {
 					check();
 				}
 
-				var unacceptedModules = updatedModules.filter(function(moduleId) {
-					return renewedModules.indexOf(moduleId) < 0;
-				});
+				require("./log-apply-result")(updatedModules, renewedModules);
 
-				if(unacceptedModules.length > 0) {
-					console.warn("[HMR] The following modules couldn't be hot updated: (They would need a full reload!)");
-					unacceptedModules.forEach(function(moduleId) {
-						console.warn("[HMR]  - " + moduleId);
-					});
-				}
-
-				if(!renewedModules || renewedModules.length === 0) {
-					console.log("[HMR] Nothing hot updated.");
-				} else {
-					console.log("[HMR] Updated modules:");
-					renewedModules.forEach(function(moduleId) {
-						console.log("[HMR]  - " + moduleId);
-					});
-				}
 				if(upToDate()) {
 					console.log("[HMR] App is up to date.");
 				}
-
-
 			});
 		});
 	};
