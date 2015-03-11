@@ -3,7 +3,13 @@ module.exports = function(optimist) {
 
 	.boolean("help").alias("help", "h").alias("help", "?").describe("help")
 
-	.string("config").describe("config")
+	.string("config")
+	.describe("config", "Read configuration from this module")
+	.default("config", "webpack.config")
+
+	.boolean("coffee")
+	.describe("coffee", "support CoffeeScript configuration files")
+	.default("coffee", false)
 
 	.string("context").describe("context")
 
