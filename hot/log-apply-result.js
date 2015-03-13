@@ -3,6 +3,10 @@
 	Author Tobias Koppers @sokra
 */
 module.exports = function(updatedModules, renewedModules) {
+	if(module.hot.quiet) {
+		return;
+	}
+
 	var unacceptedModules = updatedModules.filter(function(moduleId) {
 		return renewedModules && renewedModules.indexOf(moduleId) < 0;
 	});
@@ -10,7 +14,7 @@ module.exports = function(updatedModules, renewedModules) {
 	if(unacceptedModules.length > 0) {
 		console.warn("[HMR] The following modules couldn't be hot updated: (They would need a full reload!)");
 		unacceptedModules.forEach(function(moduleId) {
-			console.warn("[HMR]  - " + moduleId);
+			console.warn("[HMR] - " + moduleId);
 		});
 	}
 
@@ -19,7 +23,7 @@ module.exports = function(updatedModules, renewedModules) {
 	} else {
 		console.log("[HMR] Updated modules:");
 		renewedModules.forEach(function(moduleId) {
-			console.log("[HMR]  - " + moduleId);
+			console.log("[HMR] - " + moduleId);
 		});
 	}
 };

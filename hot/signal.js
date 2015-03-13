@@ -16,10 +16,13 @@ if(module.hot) {
 				return;
 			}
 			if(!updatedModules) {
-				if(fromUpdate)
-					console.log("[HMR] Update applied.");
-				else
+			    if(fromUpdate) {
+				    if(!module.hot.quiet)
+					    console.log("[HMR] Update applied.");
+                }
+				else {
 					console.warn("[HMR] Cannot find update.");
+                }
 				return;
 			}
 
@@ -38,7 +41,7 @@ if(module.hot) {
 				}
 
 				require("./log-apply-result")(updatedModules, renewedModules);
-				
+
 				checkForUpdate(true);
 			});
 		});
