@@ -6,7 +6,7 @@
 
 # Introduction
 
-Webpack is a bundler for modules. The main purpose is to bundle javascript
+webpack is a bundler for modules. The main purpose is to bundle javascript
 files for usage in a browser, yet it is also capable of transforming, bundling,
 or packaging just about any resource or asset.
 
@@ -21,7 +21,7 @@ or packaging just about any resource or asset.
 
 # Getting Started
 
-Check out Webpack's [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=trdr) for quick Getting Started guide, in-depth usage,
+Check out webpack's [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=trdr) for quick Getting Started guide, in-depth usage,
 tutorials and resources.
 
 # Installation
@@ -42,7 +42,7 @@ Take a look at the [`examples`](https://github.com/webpack/webpack/tree/master/e
 
 ## Plugins
 
-Webpack has a [rich plugin
+webpack has a [rich plugin
 interface](http://webpack.github.io/docs/plugins.html). Most of the features
 within webpack itself use this plugin interface. This makes webpack very
 **flexible**.
@@ -50,12 +50,12 @@ within webpack itself use this plugin interface. This makes webpack very
 
 ## Performance
 
-Webpack uses async I/O and has multiple caching levels. This makes webpack fast
+webpack uses async I/O and has multiple caching levels. This makes webpack fast
 and incredibly **fast** on incremental compilations.
 
 ## Loaders
 
-Webpack enables use of loaders to preprocess files. This allows you to bundle
+webpack enables use of loaders to preprocess files. This allows you to bundle
 **any static resource** way beyond javascript. You can easily [write your own
 loaders](http://webpack.github.io/docs/loaders.html) using node.js. 
 
@@ -114,20 +114,20 @@ For the full list of loaders, see [list of loaders](http://webpack.github.io/doc
 
 ## Module Format (AMD/CommonJS)
 
-Webpack supports **both** AMD and CommonJS module styles. It performs clever static
+webpack supports **both** AMD and CommonJS module styles. It performs clever static
 analysis on the AST of your code. It even has an evaluation engine to evaluate
 simple expressions. This allows you to **support most existing libraries** out of the box.
 
 ## Code Splitting
 
-Webpack allows you to split your codebase into multiple chunks. Chunks are
+webpack allows you to split your codebase into multiple chunks. Chunks are
 loaded asynchronously at runtime. This reduces the initial loading time.
 
 [Code Splitting documentation](http://webpack.github.io/docs/code-splitting.html)
 
 ## Optimizations
 
-Webpack can do many optimizations to **reduce the output size of your
+webpack can do many optimizations to **reduce the output size of your
 javascript** by deduplicating frequently used modules, minifying, and giving
 you full control of what is loaded initially and what is loaded at runtime
 through code splitting. It can also can make your code chunks **cache
@@ -218,7 +218,7 @@ and open `tests.html` in browser.
 
 ## Contribution
 
-Most of the time, if Webpack is not working correctly for you it is a simple configuration issue.
+Most of the time, if webpack is not working correctly for you it is a simple configuration issue.
 
 If you are still having difficulty after looking over your configuration carefully, please post
 a question to [StackOverflow with the webpack tag](http://stackoverflow.com/tags/webpack). Questions
