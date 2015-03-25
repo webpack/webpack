@@ -6,16 +6,17 @@
 
 # Introduction
 
-webpack is a bundler for modules. The main purpose is to bundle javascript files for usage in a browser.
+Webpack is a bundler for modules. The main purpose is to bundle javascript files for usage in a browser.
 
 **TL;DR**
 
-* bundles [CommonJs](http://www.commonjs.org/specs/modules/1.0/) and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules. (even combined)
-* can create a single bundle or multiple chunks loaded on demand, to reduce initial loading time.
-* dependencies are resolved during compilation reducing the runtime size
-* loaders can preprocess files while compiling, i. e. coffee-script to javascript
+* Bundles both [CommonJs](http://www.commonjs.org/specs/modules/1.0/) and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
+* Can create a single bundle or multiple chunks that are asynchronously loaded at runtime (to reduce initial loading time).
+* Dependencies are resolved during compilation reducing the runtime size.
+* Loaders can preprocess files while compiling, e.g. coffeescript to javascript, handlebars strings to compiled functions, images to Base64, etc.
 
-Check the [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=trdr) if you want to know more...
+Check out Webpack's [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=trdr) for quick Getting Started, in-depth usage,
+tutorials and resources.
 
 # Installation
 
@@ -30,33 +31,112 @@ global:
 Take a look at the [`examples`](https://github.com/webpack/webpack/tree/master/examples) folder.
 
 
-
 # Features
 
 ## Plugins
 
-webpack has a [rich plugin interface](http://webpack.github.io/docs/plugins.html). Most of the features within webpack itself use this plugin interface. This makes webpack very **flexible**.
+Webpack has a [rich plugin
+interface](http://webpack.github.io/docs/plugins.html). Most of the features
+within webpack itself use this plugin interface. This makes webpack very
+**flexible**.
 
 ## Performance
 
-webpack uses async I/O and has multiple caching levels. This makes webpack fast and incredibly **fast** on incremental compilations.
+Webpack uses async I/O and has multiple caching levels. This makes webpack fast
+and incredibly **fast** on incremental compilations.
 
 ## Loaders
 
-webpack enables use of loaders to preprocess files. This allows you to bundle **any static resource** way beyond javascript. You can easily [write your own loaders](http://webpack.github.io/docs/loaders.html) using node.js.
+Webpack enables use of loaders to preprocess files. This allows you to bundle
+**any static resource** way beyond javascript. You can easily [write your own
+loaders](http://webpack.github.io/docs/loaders.html) using node.js. 
+
+Loaders are activated by using `loadername!` strings in `require()` statements,
+or are automatically applied via regex from your webpack configuration.
+
+Please see [Using Loaders](http://webpack.github.io/docs/using-loaders.html) for more information.
+
+**basic**
+* [`json`](https://github.com/webpack/json-loader): Loads file as JSON
+* [`raw`](https://github.com/webpack/raw-loader): Loads raw content of a file (as utf-8)
+* [`val`](https://github.com/webpack/val-loader): Executes code as module and consider exports as JavaScript code
+* [`script`](https://github.com/webpack/script-loader): Executes a JavaScript file once in global context (like in script tag), requires are not parsed.
+
+**packaging**
+* [`file`](https://github.com/webpack/file-loader): Emits the file into the output folder and returns the (relative) url.
+* [`url`](https://github.com/webpack/url-loader): The url loader works like the file loader, but can return a Data Url if the file is smaller than a limit.
+* [`image`](https://github.com/tcoopman/image-webpack-loader): Compresses your images. Ideal to use together with `file` or `url`.
+* [`svgo-loader`](https://github.com/pozadi/svgo-loader): Compresses SVG images using [svgo](https://github.com/svg/svgo) library
+* [`baggage`](https://github.com/deepsweet/baggage-loader): Automatically require any resources related to the required one
+* [`polymer-loader`](https://github.com/JonDum/polymer-loader): Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules.
+
+**dialects**
+* [`coffee`](https://github.com/webpack/coffee-loader): Loads coffee-script like JavaScript
+* [`babel`](https://github.com/babel/babel-loader): Turn ES6 code into vanilla ES5 using [Babel](https://github.com/babel/babel).
+* [`livescript`](https://github.com/appedemic/livescript-loader): Loads LiveScript like JavaScript
+* [`sweetjs`](https://github.com/jlongster/sweetjs-loader): Use sweetjs macros. 
+* [`traceur`](https://github.com/jupl/traceur-loader): Use future JavaScript features with [Traceur](https://github.com/google/traceur-compiler).
+* [`typescript`](https://github.com/andreypopp/typescript-loader): Loads TypeScript like JavaScript.
+
+**templating**
+* [`html`](https://github.com/webpack/html-loader): Exports HTML as string, require references to static resources.
+* [`jade`](https://github.com/webpack/jade-loader): Loads jade template and returns a function
+* [`handlebars`](https://github.com/altano/handlebars-loader): Loads handlebars template and returns a function
+* [`ractive`](https://github.com/rstacruz/ractive-loader): Pre-compiles Ractive templates for interactive DOM manipulation
+* [`jsx`](https://github.com/petehunt/jsx-loader): Transform jsx code for [React](http://facebook.github.io/react/) to js code.
+* [`em`](https://github.com/yoshdog/emblem-loader): Compiles [Emblem](http://emblemjs.com/) to Handlebars.js
+* [`ejs`](https://github.com/okonet/ejs-loader): Loads EJS ([underscore](http://underscorejs.org/#template)( templating engine) template and returns a pre-compiled function
+* [`markdown`](https://github.com/peerigon/markdown-loader): Compiles Markdown to HTML
+* [`ng-cache`](https://github.com/teux/ng-cache-loader): Puts HTML partials in the Angular's $templateCache
+
+**styling**
+* [`bootstrap-sass`](https://github.com/justin808/bootstrap-sass-loader): Loads a configuration file for Twitter Bootstrap integration using Sass. Allows complete customization via Sass.
+* [`style`](https://github.com/webpack/style-loader): Add exports of a module as style to DOM
+* [`css`](https://github.com/webpack/css-loader): Loads css file with resolved imports and returns css code
+* [`less`](https://github.com/webpack/less-loader): Loads and compiles a less file
+* [`sass`](https://github.com/jtangelder/sass-loader): Loads and compiles a scss file
+* [`stylus`](https://github.com/shama/stylus-loader): Loads and compiles a stylus file
+* [`rework`](https://github.com/okonet/rework-loader): Post-process CSS with [Rework](https://github.com/reworkcss/rework) and returns CSS code
+* [`postcss`](https://github.com/postcss/postcss-loader): Post-process CSS with Autoprefixer and [other PostCSS plugins](https://github.com/postcss/postcss#built-with-postcss)
+* [`autoprefixer`](https://github.com/passy/autoprefixer-loader): Add vendor prefixes to CSS rules using values from Can I Use
+* [`namespace-css`](https://github.com/jeffling/namespace-css-loader): Namespace your css with a given selector (for encapsulating all rules in one subset of your site)
+
+**translation**
+* [`po`](https://github.com/dschissler/po-loader): Loads a PO gettext file and returns JSON
+
+**support**
+* [`mocha`](https://github.com/webpack/mocha-loader): do tests with mocha in browser or node.js
+* [`eslint`](https://github.com/MoOx/eslint-loader): PreLoader for linting code using ESLint.
+* [`jshint`](https://github.com/webpack/jshint-loader): PreLoader for linting code.
+* [`jscs`](https://github.com/unindented/jscs-loader): PreLoader for style checking.
+* [`injectable`](https://github.com/jauco/webpack-injectable): Allow to inject dependencies into modules
+* [`transform`](https://github.com/webpack/transform-loader): Use browserify transforms as loader.
+* [`image-size`](https://github.com/patcoll/image-size-loader): Loads an image and returns its dimensions and type
+
+For the full list of loaders, please see [list of loaders](http://webpack.github.io/docs/list-of-loaders.html)
 
 ## Support
 
-webpack supports **AMD and CommonJS** module styles. It performs clever static analysis on the AST of your code. It even has an evaluation engine to evaluate simple expressions. This allows you to **support most existing libraries**.
+Webpack supports **AMD and CommonJS** module styles. It performs clever static
+analysis on the AST of your code. It even has an evaluation engine to evaluate
+simple expressions. This allows you to **support most existing libraries**.
 
 ## Code Splitting
 
-webpack allows you to split your codebase into multiple chunks. Chunks are loaded **on demand**. This reduces the initial loading time.
+Webpack allows you to split your codebase into multiple chunks. Chunks are
+loaded asynchronously at runtime. This reduces the initial loading time.
+
+[Code Splitting documentation](http://webpack.github.io/docs/code-splitting.html)
 
 ## Optimizations
 
-webpack can do many optimizations to **reduce the output size**. It also can make your chunks **cache friendly** by using hashes.
+Webpack can do many optimizations to **reduce the output size of your
+javascript** by deduplicating frequently used modules, minifying, and giving
+you full control of what is loaded initially and what is loaded at runtime
+through code splitting. It can also can make your code chunks **cache
+friendly** by using hashes. 
 
+[Optimization documentation](http://webpack.github.io/docs/optimization.html)
 
 
 # A small example of what's possible
@@ -120,11 +200,9 @@ function loadTemplateAsync(name, callback) {
 [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=documentation)
 
 
-
 ## Changelog
 
 [changelog](http://webpack.github.io/docs/changelog.html)
-
 
 
 ## Tests
@@ -141,15 +219,22 @@ node build
 and open `tests.html` in browser.
 
 
-
 ## Contribution
 
-You are welcome to contribute by opening an issue or a pull request.
-It would be nice if you open sourced your own loaders or webmodules. :)
+Most of the time, if Webpack is not working correctly for you it is a simple configuration issue.
 
-You are also welcome to correct any spelling mistakes or any language issues, because my english is not perfect...
+If you are still having difficulty after looking over your configuration carefully, please post
+a question to [StackOverflow with the webpack tag](http://stackoverflow.com/tags/webpack). Questions
+that include your webpack.config.js and relevant files are more likely to receive responses.
 
-If you want to discuss something or just need help, [here is a gitter.im room](https://gitter.im/webpack/webpack).
+If you have discovered a bug or have a feature suggestion, feel free to create an issue on Github.
+
+If you create a lodaer or plugin, please consider open sourcing it, putting it
+on NPM and following the `x-loader`, `x-plugin` convention.
+
+You are also welcome to correct any spelling mistakes or any language issues.
+
+If you want to discuss something or just need help, [here is our gitter.im room](https://gitter.im/webpack/webpack).
 
 
 ## License
