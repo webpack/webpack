@@ -6,7 +6,10 @@
 
 # Introduction
 
-Webpack is a bundler for modules. The main purpose is to bundle javascript files for usage in a browser.
+Webpack is a bundler for modules. The main purpose is to bundle javascript
+files for usage in a browser, yet it is also capable of transforming, bundling,
+or packaging just about any resource or asset.
+
 
 **TL;DR**
 
@@ -14,8 +17,11 @@ Webpack is a bundler for modules. The main purpose is to bundle javascript files
 * Can create a single bundle or multiple chunks that are asynchronously loaded at runtime (to reduce initial loading time).
 * Dependencies are resolved during compilation reducing the runtime size.
 * Loaders can preprocess files while compiling, e.g. coffeescript to javascript, handlebars strings to compiled functions, images to Base64, etc.
+* Highly modular plugin system to do whatever else your application requires.
 
-Check out Webpack's [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=trdr) for quick Getting Started, in-depth usage,
+# Getting Started
+
+Check out Webpack's [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=trdr) for quick Getting Started guide, in-depth usage,
 tutorials and resources.
 
 # Installation
@@ -25,11 +31,12 @@ project:
 
 global:
 `npm install webpack -g`
+Usage
+http://webpack.github.io/docs/tutorials/getting-started/
 
 # Examples
 
 Take a look at the [`examples`](https://github.com/webpack/webpack/tree/master/examples) folder.
-
 
 # Features
 
@@ -39,6 +46,7 @@ Webpack has a [rich plugin
 interface](http://webpack.github.io/docs/plugins.html). Most of the features
 within webpack itself use this plugin interface. This makes webpack very
 **flexible**.
+
 
 ## Performance
 
@@ -51,7 +59,7 @@ Webpack enables use of loaders to preprocess files. This allows you to bundle
 **any static resource** way beyond javascript. You can easily [write your own
 loaders](http://webpack.github.io/docs/loaders.html) using node.js. 
 
-Loaders are activated by using `loadername!` strings in `require()` statements,
+Loaders are activated by using `loadername!` prefixes in `require()` statements,
 or are automatically applied via regex from your webpack configuration.
 
 Please see [Using Loaders](http://webpack.github.io/docs/using-loaders.html) for more information.
@@ -83,43 +91,32 @@ Please see [Using Loaders](http://webpack.github.io/docs/using-loaders.html) for
 * [`jade`](https://github.com/webpack/jade-loader): Loads jade template and returns a function
 * [`handlebars`](https://github.com/altano/handlebars-loader): Loads handlebars template and returns a function
 * [`ractive`](https://github.com/rstacruz/ractive-loader): Pre-compiles Ractive templates for interactive DOM manipulation
-* [`jsx`](https://github.com/petehunt/jsx-loader): Transform jsx code for [React](http://facebook.github.io/react/) to js code.
-* [`em`](https://github.com/yoshdog/emblem-loader): Compiles [Emblem](http://emblemjs.com/) to Handlebars.js
-* [`ejs`](https://github.com/okonet/ejs-loader): Loads EJS ([underscore](http://underscorejs.org/#template)( templating engine) template and returns a pre-compiled function
 * [`markdown`](https://github.com/peerigon/markdown-loader): Compiles Markdown to HTML
 * [`ng-cache`](https://github.com/teux/ng-cache-loader): Puts HTML partials in the Angular's $templateCache
 
 **styling**
-* [`bootstrap-sass`](https://github.com/justin808/bootstrap-sass-loader): Loads a configuration file for Twitter Bootstrap integration using Sass. Allows complete customization via Sass.
 * [`style`](https://github.com/webpack/style-loader): Add exports of a module as style to DOM
 * [`css`](https://github.com/webpack/css-loader): Loads css file with resolved imports and returns css code
 * [`less`](https://github.com/webpack/less-loader): Loads and compiles a less file
 * [`sass`](https://github.com/jtangelder/sass-loader): Loads and compiles a scss file
 * [`stylus`](https://github.com/shama/stylus-loader): Loads and compiles a stylus file
-* [`rework`](https://github.com/okonet/rework-loader): Post-process CSS with [Rework](https://github.com/reworkcss/rework) and returns CSS code
-* [`postcss`](https://github.com/postcss/postcss-loader): Post-process CSS with Autoprefixer and [other PostCSS plugins](https://github.com/postcss/postcss#built-with-postcss)
-* [`autoprefixer`](https://github.com/passy/autoprefixer-loader): Add vendor prefixes to CSS rules using values from Can I Use
-* [`namespace-css`](https://github.com/jeffling/namespace-css-loader): Namespace your css with a given selector (for encapsulating all rules in one subset of your site)
 
-**translation**
+**misc**
 * [`po`](https://github.com/dschissler/po-loader): Loads a PO gettext file and returns JSON
-
-**support**
-* [`mocha`](https://github.com/webpack/mocha-loader): do tests with mocha in browser or node.js
+* [`mocha`](https://github.com/webpack/mocha-loader): Do tests with mocha in browser or node.js
 * [`eslint`](https://github.com/MoOx/eslint-loader): PreLoader for linting code using ESLint.
 * [`jshint`](https://github.com/webpack/jshint-loader): PreLoader for linting code.
 * [`jscs`](https://github.com/unindented/jscs-loader): PreLoader for style checking.
 * [`injectable`](https://github.com/jauco/webpack-injectable): Allow to inject dependencies into modules
 * [`transform`](https://github.com/webpack/transform-loader): Use browserify transforms as loader.
-* [`image-size`](https://github.com/patcoll/image-size-loader): Loads an image and returns its dimensions and type
 
-For the full list of loaders, please see [list of loaders](http://webpack.github.io/docs/list-of-loaders.html)
+For the full list of loaders, see [list of loaders](http://webpack.github.io/docs/list-of-loaders.html).
 
-## Support
+## Module Format (AMD/CommonJS)
 
-Webpack supports **AMD and CommonJS** module styles. It performs clever static
+Webpack supports **both** AMD and CommonJS module styles. It performs clever static
 analysis on the AST of your code. It even has an evaluation engine to evaluate
-simple expressions. This allows you to **support most existing libraries**.
+simple expressions. This allows you to **support most existing libraries** out of the box.
 
 ## Code Splitting
 
