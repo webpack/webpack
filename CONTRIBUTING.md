@@ -1,7 +1,7 @@
 
 # Contributing
 
-Most of the time, if Webpack is not working correctly for you it is a simple configuration issue.
+Most of the time, if webpack is not working correctly for you it is a simple configuration issue.
 
 If you are still having difficulty after looking over your configuration carefully, please post
 a question to [StackOverflow with the webpack tag](http://stackoverflow.com/tags/webpack). Questions
@@ -17,7 +17,7 @@ documentation pages:
 
 ### Documentation
 
-Webpack is insanely feature rich and documentation is a huge time sink. We
+webpack is insanely feature rich and documentation is a huge time sink. We
 greatly appreciate any time spent fixing typos or clarifying sections in the
 documentation. 
 
