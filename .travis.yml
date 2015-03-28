@@ -3,3 +3,5 @@ language: node_js
 node_js:
   - "0.10"
   - "0.12"
+env:
+  - NO_WATCH_TESTS=1
