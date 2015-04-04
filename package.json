@@ -12,7 +12,7 @@
 		"enhanced-resolve": "~0.8.2",
 		"memory-fs": "~0.2.0",
 		"clone": "~0.1.15",
-		"webpack-core": "~0.5.0",
+		"webpack-core": "~0.6.0",
 		"node-libs-browser": "~0.4.0",
 		"watchpack": "^0.2.1",
 		"tapable": "~0.1.8",
