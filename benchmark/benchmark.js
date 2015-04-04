@@ -38,6 +38,20 @@ var tests = {
 			deferred.resolve();
 		});
 	}],
+	"eval dev build": [[0, 1, 2, 5, 10, 15], function(size, deferred) {
+		webpack({
+			context: fixtures,
+			entry: "./" + size + ".big.js",
+			output: {
+				path: outputPath,
+				filename: "bundle.js"
+			},
+			devtool: "eval"
+		}, function(err, stats) {
+			if(err) throw err;
+			deferred.resolve();
+		})
+	}],
 	"sourcemap build": [[0, 1, 2, 5, 10, 15], function(size, deferred) {
 		webpack({
 			context: fixtures,
@@ -47,6 +61,33 @@ var tests = {
 				filename: "bundle.js"
 			},
 			devtool: "source-map"
+		}, function(err, stats) {
+			if(err) throw err;
+			deferred.resolve();
+		})
+	}],
+	"cheap sourcemap build": [[0, 1, 2, 5, 10, 15], function(size, deferred) {
+		webpack({
+			context: fixtures,
+			entry: "./" + size + ".big.js",
+			output: {
+				path: outputPath,
+				filename: "bundle.js"
+			},
+			devtool: "cheap-source-map"
+		}, function(err, stats) {
+			if(err) throw err;
+			deferred.resolve();
+		})
+	}],
+	"build w/ chunks": [[0, 1, 5, 10, 50, 100, 200], function(size, deferred) {
+		webpack({
+			context: fixtures,
+			entry: "./" + size + ".async.js",
+			output: {
+				path: outputPath,
+				filename: "bundle.js"
+			}
 		}, function(err, stats) {
 			if(err) throw err;
 			deferred.resolve();
@@ -76,6 +117,19 @@ var tests = {
 			}
 		});
 		runTimes(compiler, 2, deferred);
+	}],
+	"incremental cheap sourcemap": [[1, 2, 3, 4, 5, 6], function(size, deferred) {
+		var compiler = webpack({
+			cache: true,
+			context: fixtures,
+			entry: "./200.js",
+			output: {
+				path: outputPath,
+				filename: "bundle.js"
+			},
+			devtool: "cheap-source-map"
+		});
+		runTimes(compiler, size, deferred);
 	}],
 	"incremental2": [[0, 1, 5, 10, 50, 100, 200], function(size, deferred) {
 		var compiler = webpack({
@@ -117,7 +171,11 @@ var tests = {
 
 var suite = new Benchmark.Suite;
 
-Object.keys(tests).forEach(function(name) {
+Object.keys(tests).filter(function(name) {
+	if(process.argv.length > 2)
+		return name.indexOf(process.argv[2]) >= 0;
+	return true;
+}).forEach(function(name) {
 	var test = tests[name];
 	test[0].forEach(function(size) {
 		suite.add(name + " " + size, function(deferred) {
