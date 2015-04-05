@@ -26,13 +26,15 @@ module.exports = function(optimist, argv, convertOptions) {
 		argv["optimize-occurence-order"] = true;
 	}
 
-	if(argv.config) {
+	if(argv.coffee || (argv.config && /\.coffee$/.test(argv.config))) {
+		require('coffee-script/register');
+	}
+
+	try {
 		options = require(path.resolve(argv.config));
-	} else {
-		var configPath = path.resolve("webpack.config.js");
-		if(fs.existsSync(configPath)) {
-			options = require(configPath);
-		}
+	} catch (e) {
+		console.log("Could not load configuration:\n", e);
+		process.exit(-1);
 	}
 	if(typeof options !== "object" || options === null) {
 		console.log("Config did not export a object.");
