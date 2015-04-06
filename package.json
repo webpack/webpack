@@ -5,6 +5,7 @@
 	"description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
 	"dependencies": {
 		"esprima": "~1.2.0",
+		"interpret": "^0.5.2",
 		"mkdirp": "~0.5.0",
 		"optimist": "~0.6.0",
 		"uglify-js": "~2.4.13",
