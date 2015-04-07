@@ -2,6 +2,7 @@ var path = require("path");
 var fs = require("fs");
 fs.existsSync = fs.existsSync || path.existsSync;
 var resolve = require("enhanced-resolve");
+var interpret = require('interpret');
 
 module.exports = function(optimist, argv, convertOptions) {
 
@@ -27,6 +28,16 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	if(argv.config) {
+		var ext = path.extname(argv.config);
+		if (Object.keys(require.extensions).indexOf(ext) === -1) {
+			var moduleName = interpret.extensions[ext];
+			var compiler = require(moduleName);
+			var register = interpret.register[moduleName];
+			var config = interpret.configurations[moduleName];
+			if (register) {
+				register(compiler, config);
+			}
+		}
 		options = require(path.resolve(argv.config));
 	} else {
 		var configPath = path.resolve("webpack.config.js");
