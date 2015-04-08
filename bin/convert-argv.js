@@ -27,24 +27,29 @@ module.exports = function(optimist, argv, convertOptions) {
 		argv["optimize-occurence-order"] = true;
 	}
 
-	if(argv.config) {
-		var ext = path.extname(argv.config);
-		if (Object.keys(require.extensions).indexOf(ext) === -1) {
-			var moduleName = interpret.extensions[ext];
-			var compiler = require(moduleName);
-			var register = interpret.register[moduleName];
-			var config = interpret.configurations[moduleName];
-			if (register) {
-				register(compiler, config);
-			}
-		}
-		options = require(path.resolve(argv.config));
+	var configPath, extname;
+	if (argv.config) {
+		configPath = argv.config;
+		extname = path.extname(configPath);
 	} else {
-		var configPath = path.resolve("webpack.config.js");
-		if(fs.existsSync(configPath)) {
-			options = require(configPath);
+		Object.keys(interpret.extensions).some(function(ext) {
+			extname = ext;
+			configPath = path.resolve('webpack.config' + ext);
+			return fs.existsSync(configPath);
+		});
+	}
+
+	var moduleName = interpret.extensions[extname];
+	if (moduleName) {
+		var compiler = require(moduleName);
+		var register = interpret.register[moduleName];
+		var config = interpret.configurations[moduleName];
+		if (register) {
+			register(compiler, config);
 		}
 	}
+	options = require(configPath);
+
 	if(typeof options !== "object" || options === null) {
 		console.log("Config did not export a object.");
 		process.exit(-1);
