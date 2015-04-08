@@ -27,19 +27,24 @@ module.exports = function(optimist, argv, convertOptions) {
 		argv["optimize-occurence-order"] = true;
 	}
 
-	var configPath, extname;
+	var configPath, ext;
 	if (argv.config) {
 		configPath = argv.config;
-		extname = path.extname(configPath);
+		ext = path.extname(configPath);
 	} else {
-		Object.keys(interpret.extensions).some(function(ext) {
-			extname = ext;
+		var found = Object.keys(interpret.extensions).some(function(extname) {
+			ext = extname;
 			configPath = path.resolve('webpack.config' + ext);
 			return fs.existsSync(configPath);
 		});
+
+		if (!found) {
+			configPath = 'webpack.config.js';
+			ext = '.js';
+		}
 	}
 
-	var moduleName = interpret.extensions[extname];
+	var moduleName = interpret.extensions[ext];
 	if (moduleName) {
 		var compiler = require(moduleName);
 		var register = interpret.register[moduleName];
