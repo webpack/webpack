@@ -226,7 +226,7 @@ that include your webpack.config.js and relevant files are more likely to receiv
 
 If you have discovered a bug or have a feature suggestion, feel free to create an issue on Github.
 
-If you create a lodaer or plugin, please consider open sourcing it, putting it
+If you create a loader or plugin, please consider open sourcing it, putting it
 on NPM and following the `x-loader`, `x-plugin` convention.
 
 You are also welcome to correct any spelling mistakes or any language issues.
