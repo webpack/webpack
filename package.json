@@ -1,67 +1,67 @@
 {
-	"name": "webpack",
-	"version": "1.7.3",
-	"author": "Tobias Koppers @sokra",
-	"description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
-	"dependencies": {
-		"esprima": "~1.2.0",
-		"mkdirp": "~0.5.0",
-		"optimist": "~0.6.0",
-		"uglify-js": "~2.4.13",
-		"async": "~0.9.0",
-		"enhanced-resolve": "~0.8.2",
-		"memory-fs": "~0.2.0",
-		"clone": "~0.1.15",
-		"webpack-core": "~0.6.0",
-		"node-libs-browser": "~0.4.0",
-		"watchpack": "^0.2.1",
-		"tapable": "~0.1.8",
-		"supports-color": "^1.2.0"
-	},
-	"licenses": [
-		{
-			"type": "MIT",
-			"url": "http://www.opensource.org/licenses/mit-license.php"
-		}
-	],
-	"devDependencies": {
-		"benchmark": "^1.0.0",
-		"bundle-loader": "~0.5.0",
-		"coffee-loader": "~0.7.1",
-		"component-webpack-plugin": "~0.2.0",
-		"css-loader": "~0.9.0",
-		"express": "~3.4.8",
-		"extract-text-webpack-plugin": "~0.3.0",
-		"file-loader": "~0.8.0",
-		"i18n-webpack-plugin": "~0.2.0",
-		"jade-loader": "~0.7.0",
-		"json-loader": "~0.5.1",
-		"less-loader": "^2.0.0",
-		"microtime": "^1.2.0",
-		"mocha": "~2.1.0",
-		"raw-loader": "~0.5.0",
-		"script-loader": "~0.6.0",
-		"should": "^4.6.0",
-		"style-loader": "~0.8.0",
-		"url-loader": "~0.5.0",
-		"val-loader": "~0.5.0",
-		"vm-browserify": "~0.0.0",
-		"webpack-dev-middleware": "^1.0.0",
-		"worker-loader": "~0.5.0"
-	},
-	"engines": {
-		"node": ">=0.6"
-	},
-	"repository": {
-		"type": "git",
-		"url": "http://github.com/webpack/webpack.git"
-	},
-	"homepage": "http://github.com/webpack/webpack",
-	"main": "lib/webpack.js",
-	"web": "lib/webpack.web.js",
-	"bin": "./bin/webpack.js",
-	"scripts": {
-		"test": "mocha --reporter spec",
-		"cover": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec"
-	}
+  "name": "webpack",
+  "version": "1.7.4",
+  "author": "Tobias Koppers @sokra",
+  "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
+  "dependencies": {
+    "esprima": "~1.2.0",
+    "mkdirp": "~0.5.0",
+    "optimist": "~0.6.0",
+    "uglify-js": "~2.4.13",
+    "async": "~0.9.0",
+    "enhanced-resolve": "~0.8.2",
+    "memory-fs": "~0.2.0",
+    "clone": "~0.1.15",
+    "webpack-core": "~0.6.0",
+    "node-libs-browser": "~0.4.0",
+    "watchpack": "^0.2.1",
+    "tapable": "~0.1.8",
+    "supports-color": "^1.2.0"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    }
+  ],
+  "devDependencies": {
+    "benchmark": "^1.0.0",
+    "bundle-loader": "~0.5.0",
+    "coffee-loader": "~0.7.1",
+    "component-webpack-plugin": "~0.2.0",
+    "css-loader": "~0.9.0",
+    "express": "~3.4.8",
+    "extract-text-webpack-plugin": "~0.3.0",
+    "file-loader": "~0.8.0",
+    "i18n-webpack-plugin": "~0.2.0",
+    "jade-loader": "~0.7.0",
+    "json-loader": "~0.5.1",
+    "less-loader": "^2.0.0",
+    "microtime": "^1.2.0",
+    "mocha": "~2.1.0",
+    "raw-loader": "~0.5.0",
+    "script-loader": "~0.6.0",
+    "should": "^4.6.0",
+    "style-loader": "~0.8.0",
+    "url-loader": "~0.5.0",
+    "val-loader": "~0.5.0",
+    "vm-browserify": "~0.0.0",
+    "webpack-dev-middleware": "^1.0.0",
+    "worker-loader": "~0.5.0"
+  },
+  "engines": {
+    "node": ">=0.6"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/webpack/webpack.git"
+  },
+  "homepage": "http://github.com/webpack/webpack",
+  "main": "lib/webpack.js",
+  "web": "lib/webpack.web.js",
+  "bin": "./bin/webpack.js",
+  "scripts": {
+    "test": "mocha --reporter spec",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec"
+  }
 }
