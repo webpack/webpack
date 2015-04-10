@@ -54,10 +54,13 @@ module.exports = function(optimist, argv, convertOptions) {
 			}
 		}
 		options = require(configPath);
+	} else {
+		console.log("Could not find a config file.");
+		process.exit(-1);
 	}
 
 	if(typeof options !== "object" || options === null) {
-		console.log("Config did not export a object.");
+		console.log("Config did not export an object.");
 		process.exit(-1);
 	}
 
