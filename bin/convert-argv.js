@@ -29,31 +29,32 @@ module.exports = function(optimist, argv, convertOptions) {
 
 	var configPath, ext;
 	if (argv.config) {
-		configPath = argv.config;
+		configPath = path.resolve(argv.config);
 		ext = path.extname(configPath);
 	} else {
-		var found = Object.keys(interpret.extensions).some(function(extname) {
-			ext = extname;
-			configPath = path.resolve('webpack.config' + ext);
-			return fs.existsSync(configPath);
-		});
-
-		if (!found) {
-			configPath = 'webpack.config.js';
-			ext = '.js';
+		var extensions = Object.keys(interpret.extensions);
+		for(var i = 0; i < extensions.length; i++) {
+			var webpackConfig = path.resolve('webpack.config' + extensions[i]);
+			if(fs.existsSync(webpackConfig)) {
+				ext = extensions[i];
+				configPath = webpackConfig;
+				break;
+			}
 		}
 	}
 
-	var moduleName = interpret.extensions[ext];
-	if (moduleName) {
-		var compiler = require(moduleName);
-		var register = interpret.register[moduleName];
-		var config = interpret.configurations[moduleName];
-		if (register) {
-			register(compiler, config);
+	if(configPath) {
+		var moduleName = interpret.extensions[ext];
+		if (moduleName) {
+			var compiler = require(moduleName);
+			var register = interpret.register[moduleName];
+			var config = interpret.configurations[moduleName];
+			if (register) {
+				register(compiler, config);
+			}
 		}
+		options = require(configPath);
 	}
-	options = require(configPath);
 
 	if(typeof options !== "object" || options === null) {
 		console.log("Config did not export a object.");
