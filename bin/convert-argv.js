@@ -2,6 +2,7 @@ var path = require("path");
 var fs = require("fs");
 fs.existsSync = fs.existsSync || path.existsSync;
 var resolve = require("enhanced-resolve");
+var interpret = require('interpret');
 
 module.exports = function(optimist, argv, convertOptions) {
 
@@ -26,15 +27,34 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	var configFileLoaded = false;
-	if(argv.config) {
-		options = require(path.resolve(argv.config));
-		configFileLoaded = true;
+	var configPath, ext;
+	if (argv.config) {
+		configPath = path.resolve(argv.config);
+		ext = path.extname(configPath);
 	} else {
-		var configPath = path.resolve("webpack.config.js");
-		if(fs.existsSync(configPath)) {
-			options = require(configPath);
-			configFileLoaded = true;
+		var extensions = Object.keys(interpret.extensions);
+		for(var i = 0; i < extensions.length; i++) {
+			var webpackConfig = path.resolve('webpack.config' + extensions[i]);
+			if(fs.existsSync(webpackConfig)) {
+				ext = extensions[i];
+				configPath = webpackConfig;
+				break;
+			}
 		}
+	}
+
+	if(configPath) {
+		var moduleName = interpret.extensions[ext];
+		if (moduleName) {
+			var compiler = require(moduleName);
+			var register = interpret.register[moduleName];
+			var config = interpret.configurations[moduleName];
+			if (register) {
+				register(compiler, config);
+			}
+		}
+		options = require(configPath);
+		configFileLoaded = true;
 	}
 
 	if(typeof options === "function") {
@@ -42,7 +62,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	if(typeof options !== "object" || options === null) {
-		console.log("Config did not export a object.");
+		console.log("Config did not export an object or a function returning an object.");
 		process.exit(-1);
 	}
 

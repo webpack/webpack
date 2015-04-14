@@ -4,6 +4,12 @@ it("should evaluate null", function() {
 		require("fail");
 });
 
+if("shouldn't evaluate expression", function() {
+	var value = "";
+	var x = (value + "") ? "fail" : "ok";
+	x.should.be.eql("ok");
+});
+
 it("should short-circut evaluating", function() {
 	var expr;
 	var a = false && expr ? require("fail") : require("./a");

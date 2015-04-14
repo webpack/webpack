@@ -1,3 +1,10 @@
+if(process.env.NO_WATCH_TESTS) {
+	describe("NodeWatchFileSystem", function() {
+		it("tests excluded");
+	});
+	return;
+}
+
 var should = require("should");
 var path = require("path");
 var fs = require("fs");
