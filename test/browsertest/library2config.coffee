@@ -23,7 +23,7 @@ module.exports =
 			CONST_FALSE: false,
 			CONST_FUNCTION: -> return "ok";
 			CONST_NUMBER: 123,
-			CONST_NUMBER_EXPR: "1*100+23",
+			CONST_NUMBER_EXPR: "(1*100+23)",
 			CONST_OBJECT: {
 				A: 1,
 				B: JSON.stringify("B"),
