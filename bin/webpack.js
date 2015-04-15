@@ -67,9 +67,9 @@ function ifArg(name, fn, init) {
 
 var outputOptions = options.stats || {};
 
-outputOptions.cached = false;
-outputOptions.cachedAssets = false;
-outputOptions.context = false;
+outputOptions.cached = outputOptions.cached || false;
+outputOptions.cachedAssets = outputOptions.cachedAssets || false;
+outputOptions.context = outputOptions.context || false;
 
 ifArg("json", function(bool) {
 	outputOptions.json = bool;
