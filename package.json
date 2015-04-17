@@ -63,6 +63,7 @@
   "bin": "./bin/webpack.js",
   "scripts": {
     "test": "mocha --reporter spec",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec"
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec",
+    "publish-patch": "mocha && npm version patch && git push && git push --tags && npm publish"
   }
 }
