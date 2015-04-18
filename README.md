@@ -1,5 +1,80 @@
 [![webpack](http://webpack.github.io/assets/logo.png)](http://webpack.github.io)
 
+# This fork adds support for split point error handling
+
+## Usage
+
+```javascript
+var JsonpErrorHandlerPlugin = require('webpack/lib/JsonpErrorHandlerPlugin');
+var RequireEnsureErrorHandlerPlugin = require('webpack/lib/dependencies/RequireEnsureErrorHandlerPlugin');
+var AMDRequireErrorHandlerPlugin = require('webpack/lib/dependencies/AMDRequireErrorHandlerPlugin');
+
+{
+	plugins: [
+		new JsonpErrorHandlerPlugin(),
+        new RequireEnsureErrorHandlerPlugin(),
+        new AMDRequireErrorHandlerPlugin()
+	]
+}
+```
+
+## JsonpErrorHandlerPlugin
+Adds an error callback to the jsonp transport method that is called when a chunk fails to load.
+
+## RequireEnsureErrorHandlerPlugin
+Adds support for the following signatures:
+
+```javascript
+require.ensure(['a'], function() {
+    // success
+}, function() {
+    // error
+}, 'a');
+
+require.ensure(['b'], function() {
+    // success
+}, function() {
+    // error
+});
+
+require.ensure(['c'], function() {
+    // success
+}, 'c');
+
+require.ensure(['d'], function() {
+    // success
+});
+```
+
+## AMDRequireErrorHandlerPlugin
+Adds support for the following signatures:
+
+```javascript
+require(['a']);
+
+require(['b'], function() {
+	// success
+});
+
+require(['c'], function() {
+	// success
+}, function() {
+	// error
+});
+```
+
+## Related
+- https://github.com/webpack/webpack/issues/758
+- https://github.com/webpack/webpack/pull/692
+- https://github.com/webpack/webpack/pull/763
+
+
+## Todo
+- [ ] Add support for named chunks using AMD, i.e. require(name?, deps, successCallback?, errorCallback?)
+- [ ] Update `bundle-loader` to support new `require.ensure` syntax.
+- [ ] Move out into separate plugin repo.
+- [ ] *Remove hacks* required to get this to work by, potentially, requesting changes to webpack to make it easier to hook in.
+
 [![NPM version](https://badge.fury.io/js/webpack.png)](http://badge.fury.io/js/webpack) [![Gitter chat](http://img.shields.io/gitter/webpack/webpack.png)](https://gitter.im/webpack/webpack) [![Gittip donate button](http://img.shields.io/gittip/sokra.png)](https://www.gittip.com/sokra/)
 
 [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
@@ -142,7 +217,7 @@ friendly** by using hashes.
 // webpack is a module bundler
 // This means webpack takes modules with dependencies
 //   and emits static assets representing those modules.
- 
+
 // dependencies can be written in CommonJs
 var commonjs = require("./commonjs");
 // or in AMD
@@ -160,8 +235,8 @@ define(["amd-module", "../file"], function(amdModule, file) {
 		//  of the AMD require
 	});
 });
- 
- 
+
+
 require("coffee!./cup.coffee");
 // "Loaders" can be used to preprocess files.
 // They can be prefixed in the require call
@@ -169,8 +244,8 @@ require("coffee!./cup.coffee");
 require("./cup");
 // This does the same when you add ".coffee" to the extensions
 //  and configure the "coffee" loader for /\.coffee$/
- 
- 
+
+
 function loadTemplate(name) {
 	return require("./templates/" + name + ".jade");
 	// many expressions are supported in require calls
@@ -179,11 +254,11 @@ function loadTemplate(name) {
 	//  /\.jade$/ should be included in the bundle, as it
 	//  can be required.
 }
- 
- 
+
+
 // ... and you can combine everything
 function loadTemplateAsync(name, callback) {
-	require(["bundle?lazy!./templates/" + name + ".jade"], 
+	require(["bundle?lazy!./templates/" + name + ".jade"],
 	  function(templateBundle) {
 		templateBundle(callback);
 	});
