@@ -34,6 +34,7 @@ describe("TestCases", function() {
 		{ name: "devtool-source-map", devtool: "#@source-map" },
 		{ name: "devtool-cheap-inline-source-map", devtool: "cheap-inline-source-map" },
 		{ name: "devtool-cheap-eval-source-map", devtool: "cheap-eval-source-map" },
+		{ name: "devtool-cheap-eval-module-source-map", devtool: "cheap-eval-module-source-map" },
 		{ name: "devtool-cheap-source-map", devtool: "cheap-source-map" },
 		{ name: "minimized", plugins: [
 			new webpack.optimize.UglifyJsPlugin({

@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "1.8.4",
+  "version": "1.8.7",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
   "dependencies": {
@@ -63,6 +63,7 @@
   "bin": "./bin/webpack.js",
   "scripts": {
     "test": "mocha --reporter spec",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec"
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec",
+    "publish-patch": "mocha && npm version patch && git push && git push --tags && npm publish"
   }
 }
