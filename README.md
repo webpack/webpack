@@ -11,7 +11,7 @@ files for usage in a browser, yet it is also capable of transforming, bundling,
 or packaging just about any resource or asset.
 
 
-**TL;DR**
+**TL; DR**
 
 * Bundles both [CommonJs](http://www.commonjs.org/specs/modules/1.0/) and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
 * Can create a single bundle or multiple chunks that are asynchronously loaded at runtime (to reduce initial loading time).
@@ -135,62 +135,60 @@ friendly** by using hashes.
 
 [Optimization documentation](http://webpack.github.io/docs/optimization.html)
 
+webpack optimizes in several ways. It also makes your chunks **cache-friendly** by using hashes.
 
 # A small example of what's possible
 
 ``` javascript
-// webpack is a module bundler
+// webpack is a module bundler.
 // This means webpack takes modules with dependencies
-//   and emits static assets representing those modules.
+// and emits static assets representing those modules.
  
-// dependencies can be written in CommonJs
+// Dependencies can be written in CommonJs
 var commonjs = require("./commonjs");
 // or in AMD
-define(["amd-module", "../file"], function(amdModule, file) {
-	// while previous constructs are sync
+define(["amd-module", "../file"], function (amdModule, file) {
+	// while previous constructs are sync,
 	// this is async
-	require(["big-module/big/file"], function(big) {
-		 // for async dependencies webpack splits
-		 //  your application into multiple "chunks".
+	require(["big-module/big/file"], function (big) {
+		 // For async dependencies, webpack splits
+		 // your application into multiple "chunks."
 		 // This part of your application is
-		 //  loaded on demand (Code Splitting)
+		 // loaded on demand (code-splitting).
 		var stuff = require("../my/stuff");
-		// "../my/stuff" is also loaded on demand
+		// "../my/stuff" is also loaded on-demand
 		//  because it's in the callback function
-		//  of the AMD require
+		//  of the AMD require.
 	});
 });
  
  
 require("coffee!./cup.coffee");
-// "Loaders" can be used to preprocess files.
+// "Loaders" are used to preprocess files.
 // They can be prefixed in the require call
-//  or configured in the configuration.
+// or configured in the configuration.
 require("./cup");
 // This does the same when you add ".coffee" to the extensions
-//  and configure the "coffee" loader for /\.coffee$/
- 
- 
-function loadTemplate(name) {
+// and configure the "coffee" loader for /\.coffee$/
+
+function loadTemplate (name) {
 	return require("./templates/" + name + ".jade");
-	// many expressions are supported in require calls
-	// a clever parser extracts information and concludes
-	//  that everything in "./templates" that matches
-	//  /\.jade$/ should be included in the bundle, as it
-	//  can be required.
+	// Many expressions are supported in require calls.
+	// A clever parser extracts information and concludes
+	// that everything in "./templates" that matches
+	// /\.jade$/ should be included in the bundle, as it
+	// can be required.
 }
- 
- 
-// ... and you can combine everything
-function loadTemplateAsync(name, callback) {
+
+
+// ...and you can combine everything.
+function loadTemplateAsync (name, callback) {
 	require(["bundle?lazy!./templates/" + name + ".jade"], 
-	  function(templateBundle) {
-		templateBundle(callback);
+	  function (templateBundle) {
+	          templateBundle(callback);
 	});
 }
 ```
-
-
 
 ## Documentation
 
@@ -204,7 +202,7 @@ function loadTemplateAsync(name, callback) {
 
 ## Tests
 
-You can run the node tests with `npm test`. [![build status (linux)](https://secure.travis-ci.org/webpack/webpack.png)](http://travis-ci.org/webpack/webpack) [![Build status (windows)](https://ci.appveyor.com/api/projects/status/vatlasj366jiyuh6/branch/master)](https://ci.appveyor.com/project/sokra/webpack/branch/master)
+You can run the Node tests with `npm test`. [![build status (linux)](https://secure.travis-ci.org/webpack/webpack.png)](http://travis-ci.org/webpack/webpack) [![Build status (windows)](https://ci.appveyor.com/api/projects/status/vatlasj366jiyuh6/branch/master)](https://ci.appveyor.com/project/sokra/webpack/branch/master)
 
 You can run the browser tests:
 
@@ -213,8 +211,7 @@ cd test/browsertests
 node build
 ```
 
-and open `tests.html` in browser.
-
+and open `tests.html` in the browser.
 
 ## Contribution
 
@@ -233,19 +230,17 @@ You are also welcome to correct any spelling mistakes or any language issues.
 
 If you want to discuss something or just need help, [here is our gitter.im room](https://gitter.im/webpack/webpack).
 
-
 ## License
 
 Copyright (c) 2012-2015 Tobias Koppers
 
 MIT (http://www.opensource.org/licenses/mit-license.php)
 
-
 ## Sponsor
 
-This is a freetime project. My time investment fluctuates randomly. If you use webpack for a serious task you may want me to invest more time. Or if you make some good revenue you can give some money back. Keep in mind that this project may increase your income. It makes development and applications faster and reduces the required bandwidth.
+This is a free-time project. The time I invest in it fluctuates. If you use webpack for a serious task, and you'd like me to invest more time on it, please donate. This project increases your income/productivity too. It makes development and applications faster and it reduces the required bandwidth.
 
-I'm very thankful for every dollar. If you leave your username or email I may show my thanks by giving you extra support.
+I'm very thankful for every dollar. If you leave your username or email, I may show my thanks by giving you extra support.
 
 [![Donate to sokra](http://img.shields.io/donate/sokra.png)](http://sokra.github.io/)
 
