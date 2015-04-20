@@ -1,9 +1,11 @@
 module.exports = [{
 	output: {
+		publicPath: "/[hash:6]/",
 		filename: 'bundle0.[hash:6].js'
 	}
 }, {
 	output: {
+		publicPath: "/[hash]/",
 		filename: 'bundle1.[hash].js'
 	}
 }, {
