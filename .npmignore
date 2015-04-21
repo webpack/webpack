@@ -1,6 +1,0 @@
-test/
-examples/
-coverage/
-.travis.yml
-appveyor.yml
-bm.js
