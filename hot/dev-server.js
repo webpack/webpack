@@ -33,7 +33,7 @@ if(module.hot) {
 
 			require("./log-apply-result")(updatedModules, updatedModules);
 
-			if(upToDate()) {
+			if(upToDate() && !module.hot.quiet) {
 				console.log("[HMR] App is up to date.");
 			}
 
@@ -48,12 +48,14 @@ if(module.hot) {
 		if(typeof event.data === "string" && event.data.indexOf("webpackHotUpdate") === 0) {
 			lastData = event.data;
 			if(!upToDate() && module.hot.status() === "idle") {
-				console.log("[HMR] Checking for updates on the server...");
+				if(!module.hot.quiet)
+					console.log("[HMR] Checking for updates on the server...");
 				check();
 			}
 		}
 	});
-	console.log("[HMR] Waiting for update signal from WDS...");
+	if(!module.hot.quiet)
+		console.log("[HMR] Waiting for update signal from WDS...");
 } else {
 	throw new Error("[HMR] Hot Module Replacement is disabled.");
 }

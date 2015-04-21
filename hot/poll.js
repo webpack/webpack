@@ -18,7 +18,8 @@ if(module.hot) {
 					return;
 				}
 				if(!updatedModules) {
-					if(fromUpdate) console.log("[HMR] Update applied.");
+					if(fromUpdate && !module.hot.quiet)
+						console.log("[HMR] Update applied.");
 					return;
 				}
 				require("./log-apply-result")(updatedModules, updatedModules);
