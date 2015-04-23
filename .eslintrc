@@ -1,0 +1,18 @@
+{
+	"env": {
+		"node": true
+	},
+	"rules": {
+		"strict": 0,
+		"curly": 0,
+		"eol-last": 0,
+		"no-shadow": 0,
+		"no-redeclare": 1,
+		"no-extra-bind": 1,
+		"no-underscore-dangle": 0,
+		"no-use-before-define": 0,
+		"consistent-return": 0,
+		"no-inner-declarations": 1,
+		"no-loop-func": 1
+	}
+}
