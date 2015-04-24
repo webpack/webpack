@@ -62,6 +62,13 @@
   "main": "lib/webpack.js",
   "web": "lib/webpack.web.js",
   "bin": "./bin/webpack.js",
+  "files": [
+    "lib/",
+    "bin/",
+    "buildin/",
+    "hot/",
+    "web_modules/"
+  ],
   "scripts": {
     "test": "eslint lib && mocha --reporter spec",
     "lint": "eslint lib",
