@@ -1,6 +1,6 @@
 [![webpack](http://webpack.github.io/assets/logo.png)](http://webpack.github.io)
 
-[![NPM version](https://badge.fury.io/js/webpack.png)](http://badge.fury.io/js/webpack) [![Gitter chat](http://img.shields.io/gitter/webpack/webpack.png)](https://gitter.im/webpack/webpack) [![Gittip donate button](http://img.shields.io/gittip/sokra.png)](https://www.gittip.com/sokra/)
+[![NPM version][npm-image]][npm-url] [![Gitter chat][gitter-image]][gitter-url] [![Gittip donate button][gittip-image]][gittip-url]
 
 [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
 
@@ -202,7 +202,7 @@ function loadTemplateAsync (name, callback) {
 
 ## Tests
 
-You can run the Node tests with `npm test`. [![build status (linux)](https://secure.travis-ci.org/webpack/webpack.png)](http://travis-ci.org/webpack/webpack) [![Build status (windows)](https://ci.appveyor.com/api/projects/status/vatlasj366jiyuh6/branch/master)](https://ci.appveyor.com/project/sokra/webpack/branch/master)
+You can run the Node tests with `npm test`. [![Build status (linux)][travis-image]][travis-url] [![Build status (windows)][appveyor-image]][appveyor-url] [![Test coverage][coveralls-image]][coveralls-url]
 
 You can run the browser tests:
 
@@ -242,7 +242,7 @@ This is a free-time project. The time I invest in it fluctuates. If you use webp
 
 I'm very thankful for every dollar. If you leave your username or email, I may show my thanks by giving you extra support.
 
-[![Donate to sokra](http://img.shields.io/donate/sokra.png)](http://sokra.github.io/)
+[![Donate to sokra][donate-image]][donate-url]
 
 
 ## Dependencies
@@ -257,4 +257,21 @@ I'm very thankful for every dollar. If you leave your username or email, I may s
 * [mkdirp](https://github.com/substack/node-mkdirp)
 * [clone](https://github.com/pvorb/node-clone)
 
-[![Dependency Status](https://david-dm.org/webpack/webpack.png)](https://david-dm.org/webpack/webpack)
+[![Dependency status][david-image]][david-url]
+
+[travis-url]: http://travis-ci.org/webpack/webpack
+[travis-image]: https://img.shields.io/travis/webpack/webpack.svg
+[appveyor-url]: https://ci.appveyor.com/project/sokra/webpack/branch/master
+[appveyor-image]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
+[coveralls-url]: https://coveralls.io/r/webpack/webpack/
+[coveralls-image]: https://img.shields.io/coveralls/webpack/webpack.svg
+[npm-url]: https://npmjs.org/package/webpack
+[npm-image]: https://img.shields.io/npm/v/webpack.svg
+[david-url]: https://david-dm.org/webpack/webpack
+[david-image]: https://img.shields.io/david/webpack/webpack.svg
+[donate-url]: http://sokra.github.io/
+[donate-image]: https://img.shields.io/badge/donate-sokra-brightgreen.svg
+[gittip-url]: https://www.gittip.com/sokra/
+[gittip-image]: http://img.shields.io/gittip/sokra.svg
+[gitter-url]: https://gitter.im/webpack/webpack
+[gitter-image]: https://img.shields.io/badge/gitter-webpack%2Fwebpack-brightgreen.svg
