@@ -1,3 +1,4 @@
+/*globals describe it */
 var should = require("should");
 var path = require("path");
 
@@ -6,9 +7,7 @@ var webpack = require("../lib/webpack");
 var base = path.join(__dirname, "fixtures", "errors");
 
 describe("Errors", function() {
-	function getErrors(options, callback) {
-		options.context = base;
-		var c = webpack(options);
+	function customOutputFilesystem(c) {
 		var files = {};
 		c.outputFileSystem = {
 			join: path.join.bind(path),
@@ -20,6 +19,12 @@ describe("Errors", function() {
 				callback();
 			}
 		};
+		return files;
+	}
+	function getErrors(options, callback) {
+		options.context = base;
+		var c = webpack(options);
+		customOutputFilesystem(c);
 		c.run(function(err, stats) {
 			if(err) throw err;
 			should.strictEqual(typeof stats, "object");
@@ -27,8 +32,8 @@ describe("Errors", function() {
 			should.strictEqual(typeof stats, "object");
 			stats.should.have.property("errors");
 			stats.should.have.property("warnings");
-			Array.isArray(stats.errors).should.be.ok;
-			Array.isArray(stats.warnings).should.be.ok;
+			Array.isArray(stats.errors).should.be.ok; // eslint-disable-line no-unused-expressions
+			Array.isArray(stats.warnings).should.be.ok; // eslint-disable-line no-unused-expressions
 			callback(stats.errors, stats.warnings);
 		});
 	}
@@ -44,7 +49,7 @@ describe("Errors", function() {
 			lines[1].should.match(/^Module not found/);
 			lines[1].should.match(/\.\/dir\/missing2/);
 			lines[2].should.match(/missingFile.js 12:9/);
-			var lines = errors[1].split("\n");
+			lines = errors[1].split("\n");
 			lines[0].should.match(/missingFile.js/);
 			lines[1].should.match(/^Module not found/);
 			lines[1].should.match(/\.\/missing/);
@@ -100,5 +105,26 @@ describe("Errors", function() {
 			}
 			done();
 		});
+	});
+	it("should throw an error when using incorrect CommonsChunkPlugin configuration", function(done) {
+		getErrors({
+			entry: {
+				a: "./entry-point",
+				b: "./entry-point",
+				c: "./entry-point"
+			},
+			plugins: [
+				new webpack.optimize.CommonsChunkPlugin("a", "a.js", Infinity),
+				new webpack.optimize.CommonsChunkPlugin("b", "b.js", Infinity)
+			]
+		}, function(errors, warnings) {
+			errors.length.should.be.eql(1);
+			warnings.length.should.be.eql(0);
+			var lines = errors[0].split("\n");
+			lines[0].should.match(/CommonsChunkPlugin/);
+			lines[0].should.match(/non-entry/);
+			done();
+		});
+
 	});
 });
