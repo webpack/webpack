@@ -30,6 +30,16 @@ describe("Stats", function() {
 					callback();
 				}
 			};
+			var ifs = c.inputFileSystem;
+			c.inputFileSystem = Object.create(ifs);
+			c.inputFileSystem.readFile = function() {
+				var args = Array.prototype.slice.call(arguments);
+				var callback = args.pop();
+				ifs.readFile.apply(ifs, args.concat([function(err, result) {
+					if(err) return callback(err);
+					callback(null, result.toString("utf-8").replace(/\r/g, ""));
+				}]));
+			};
 			c.apply(new webpack.optimize.OccurrenceOrderPlugin());
 			c.run(function(err, stats) {
 				if(err) return done(err);
@@ -37,8 +47,8 @@ describe("Stats", function() {
 					colors: false
 				});
 				(typeof actual).should.be.eql("string");
-				actual = actual.replace(/[0-9]+(\s?ms)/g, "X$1");
-				var expected = fs.readFileSync(path.join(base, testName, "expected.txt"), "utf-8");
+				actual = actual.replace(/[0-9]+(\s?ms)/g, "X$1").replace(/\r/g, "");
+				var expected = fs.readFileSync(path.join(base, testName, "expected.txt"), "utf-8").replace(/\r/g, "");
 				if(actual !== expected) {
 					fs.writeFileSync(path.join(base, testName, "actual.txt"), actual, "utf-8");
 				} else if(fs.existsSync(path.join(base, testName, "actual.txt"))) {

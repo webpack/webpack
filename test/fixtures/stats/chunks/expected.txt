@@ -1,24 +1,24 @@
-Hash: 5a1e8eb3492ffedbf5ac
+Hash: 80887ec4f74063cf6be8
 Version: webpack 1.8.9
 Time: Xms
       Asset       Size  Chunks             Chunk Names
   bundle.js    3.85 kB       0  [emitted]  main
-1.bundle.js  160 bytes       1  [emitted]  
-2.bundle.js  123 bytes       2  [emitted]  
-3.bundle.js  224 bytes       3  [emitted]  
-chunk    {0} bundle.js (main) 76 bytes [rendered]
-    [0] (webpack)/test/fixtures/stats/chunks/index.js 53 bytes {0} [built]
+1.bundle.js  159 bytes       1  [emitted]  
+2.bundle.js  122 bytes       2  [emitted]  
+3.bundle.js  222 bytes       3  [emitted]  
+chunk    {0} bundle.js (main) 73 bytes [rendered]
+    [0] (webpack)/test/fixtures/stats/chunks/index.js 51 bytes {0} [built]
        factory:Xms building:Xms = Xms
-    [1] (webpack)/test/fixtures/stats/chunks/a.js 23 bytes {0} [built]
+    [1] (webpack)/test/fixtures/stats/chunks/a.js 22 bytes {0} [built]
        [0] Xms -> factory:Xms building:Xms = Xms
-chunk    {1} 1.bundle.js 55 bytes {0} [rendered]
-    [3] (webpack)/test/fixtures/stats/chunks/c.js 55 bytes {1} [built]
+chunk    {1} 1.bundle.js 54 bytes {0} [rendered]
+    [3] (webpack)/test/fixtures/stats/chunks/c.js 54 bytes {1} [built]
        [0] Xms -> factory:Xms building:Xms = Xms
-chunk    {2} 2.bundle.js 23 bytes {0} [rendered]
-    [2] (webpack)/test/fixtures/stats/chunks/b.js 23 bytes {2} [built]
+chunk    {2} 2.bundle.js 22 bytes {0} [rendered]
+    [2] (webpack)/test/fixtures/stats/chunks/b.js 22 bytes {2} [built]
        [0] Xms -> factory:Xms building:Xms = Xms
-chunk    {3} 3.bundle.js 46 bytes {1} [rendered]
-    [4] (webpack)/test/fixtures/stats/chunks/d.js 23 bytes {3} [built]
+chunk    {3} 3.bundle.js 44 bytes {1} [rendered]
+    [4] (webpack)/test/fixtures/stats/chunks/d.js 22 bytes {3} [built]
        [0] Xms -> [3] Xms -> factory:Xms building:Xms = Xms
-    [5] (webpack)/test/fixtures/stats/chunks/e.js 23 bytes {3} [built]
+    [5] (webpack)/test/fixtures/stats/chunks/e.js 22 bytes {3} [built]
        [0] Xms -> [3] Xms -> factory:Xms building:Xms = Xms
