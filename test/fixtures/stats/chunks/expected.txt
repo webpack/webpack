@@ -1,5 +1,4 @@
 Hash: 80887ec4f74063cf6be8
-Version: webpack 1.8.9
 Time: Xms
       Asset       Size  Chunks             Chunk Names
   bundle.js    3.85 kB       0  [emitted]  main
