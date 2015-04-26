@@ -78,7 +78,7 @@
     "travis": "npm run cover -- --report lcovonly",
     "lint": "eslint lib",
     "precover": "npm run lint",
-    "cover": "istanbul cover -x HotModuleReplacementPlugin.js -x JsonpMainTemplatePlugin.js -x NodeMainTemplatePlugin.js _mocha",
+    "cover": "istanbul cover -x HotModuleReplacementPlugin.js -x JsonpMainTemplatePlugin.js -x NodeMainTemplatePlugin.js node_modules/mocha/bin/_mocha",
     "publish-patch": "mocha && npm version patch && git push && git push --tags && npm publish"
   }
 }
