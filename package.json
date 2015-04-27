@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "1.8.7",
+  "version": "1.8.10",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
   "dependencies": {
@@ -30,16 +30,20 @@
     "bundle-loader": "~0.5.0",
     "coffee-loader": "~0.7.1",
     "component-webpack-plugin": "~0.2.0",
+    "coveralls": "^2.11.2",
     "css-loader": "~0.10.1",
+    "eslint": "^0.19.0",
     "express": "~3.4.8",
     "extract-text-webpack-plugin": "~0.5.0",
     "file-loader": "~0.8.0",
     "i18n-webpack-plugin": "~0.2.0",
+    "istanbul": "^0.3.13",
     "jade-loader": "~0.7.0",
     "json-loader": "~0.5.1",
     "less-loader": "^2.0.0",
     "microtime": "^1.2.0",
     "mocha": "^2.1.0",
+    "mocha-lcov-reporter": "0.0.2",
     "raw-loader": "~0.5.0",
     "script-loader": "~0.6.0",
     "should": "^5.2.0",
@@ -61,9 +65,20 @@
   "main": "lib/webpack.js",
   "web": "lib/webpack.web.js",
   "bin": "./bin/webpack.js",
+  "files": [
+    "lib/",
+    "bin/",
+    "buildin/",
+    "hot/",
+    "web_modules/"
+  ],
   "scripts": {
-    "test": "mocha --reporter spec",
-    "cover": "istanbul cover node_modules/mocha/bin/_mocha -- -R spec",
+    "pretest": "npm run lint",
+    "test": "mocha",
+    "travis": "npm run cover -- --report lcovonly",
+    "lint": "eslint lib",
+    "precover": "npm run lint",
+    "cover": "istanbul cover -x HotModuleReplacementPlugin.js -x JsonpMainTemplatePlugin.js -x NodeMainTemplatePlugin.js node_modules/mocha/bin/_mocha",
     "publish-patch": "mocha && npm version patch && git push && git push --tags && npm publish"
   }
 }

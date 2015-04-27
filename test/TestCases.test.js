@@ -66,6 +66,7 @@ describe("TestCases", function() {
 		describe(config.name, function() {
 			categories.forEach(function(category) {
 				describe(category.name, function() {
+					this.timeout(10000);
 					category.tests.forEach(function(testName) {
 						var suite = describe(testName, function() {});
 						it(testName + " should compile", function(done) {
