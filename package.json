@@ -13,6 +13,7 @@
     "mkdirp": "~0.5.0",
     "node-libs-browser": "~0.4.0",
     "optimist": "~0.6.0",
+    "shortid": "^2.2.2",
     "supports-color": "^1.2.0",
     "tapable": "~0.1.8",
     "uglify-js": "~2.4.13",
