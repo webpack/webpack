@@ -10,6 +10,9 @@ module.exports = {
 		cachedAssets: true,
 		source: true,
 		errorDetails: true,
-		publicPath: true
+		publicPath: true,
+		excludeModules: [
+			/e\.js/
+		]
 	}
 };

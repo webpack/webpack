@@ -5,7 +5,7 @@ var fs = require("fs");
 
 var webpack = require("../lib/webpack");
 
-var base = path.join(__dirname, "fixtures", "stats");
+var base = path.join(__dirname, "statsCases");
 var tests = fs.readdirSync(base);
 
 describe("Stats", function() {
