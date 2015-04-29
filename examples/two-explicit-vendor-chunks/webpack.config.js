@@ -2,8 +2,8 @@ var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
 	entry: {
-		vendor1: "./vendor1",
-		vendor2: "./vendor2",
+		vendor1: ["./vendor1"],
+		vendor2: ["./vendor2"],
 		pageA: "./pageA",
 		pageB: "./pageB",
 		pageC: "./pageC"

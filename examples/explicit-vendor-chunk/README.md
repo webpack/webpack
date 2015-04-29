@@ -5,7 +5,7 @@ var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
 	entry: {
-		vendor: "./vendor",
+		vendor: ["./vendor"],
 		pageA: "./pageA",
 		pageB: "./pageB",
 		pageC: "./pageC"
@@ -20,7 +20,7 @@ module.exports = {
 			minChunks: Infinity
 		})
 	]
-}
+};
 ```
 
 # js/vendor.js
@@ -124,6 +124,16 @@ module.exports = {
 /************************************************************************/
 /******/ ([
 /* 0 */
+/*!********************!*\
+  !*** multi vendor ***!
+  \********************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(/*! ./vendor */1);
+
+
+/***/ },
+/* 1 */
 /*!*******************!*\
   !*** ./vendor.js ***!
   \*******************/
@@ -156,17 +166,19 @@ webpackJsonp([3],[
 ## Uncompressed
 
 ```
-Hash: 397b8d39eac5eeca4b98
-Version: webpack 1.8.10
-Time: 55ms
+Hash: 7ba2182676e9cab55532
+Version: webpack 1.8.11
+Time: 68ms
     Asset       Size  Chunks             Chunk Names
-vendor.js    3.85 kB       0  [emitted]  vendor
+vendor.js    4.06 kB       0  [emitted]  vendor
  pageC.js  193 bytes       1  [emitted]  pageC
  pageB.js  193 bytes       2  [emitted]  pageB
  pageA.js  193 bytes       3  [emitted]  pageA
-chunk    {0} vendor.js (vendor) 26 bytes [rendered]
-    > vendor [0] ./vendor.js 
-    [0] ./vendor.js 26 bytes {0} [built]
+chunk    {0} vendor.js (vendor) 54 bytes [rendered]
+    > vendor [0] multi vendor 
+    [0] multi vendor 28 bytes {0} [built]
+    [1] ./vendor.js 26 bytes {0} [built]
+        single entry ./vendor [0] multi vendor
 chunk    {1} pageC.js (pageC) 25 bytes {0} [rendered]
     > pageC [0] ./pageC.js 
     [0] ./pageC.js 25 bytes {1} [built]
@@ -181,17 +193,19 @@ chunk    {3} pageA.js (pageA) 25 bytes {0} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 397b8d39eac5eeca4b98
-Version: webpack 1.8.10
-Time: 150ms
+Hash: 7ba2182676e9cab55532
+Version: webpack 1.8.11
+Time: 194ms
     Asset       Size  Chunks             Chunk Names
-vendor.js  804 bytes       0  [emitted]  vendor
+vendor.js  836 bytes       0  [emitted]  vendor
  pageC.js   55 bytes       1  [emitted]  pageC
  pageB.js   55 bytes       2  [emitted]  pageB
  pageA.js   55 bytes       3  [emitted]  pageA
-chunk    {0} vendor.js (vendor) 26 bytes [rendered]
-    > vendor [0] ./vendor.js 
-    [0] ./vendor.js 26 bytes {0} [built]
+chunk    {0} vendor.js (vendor) 54 bytes [rendered]
+    > vendor [0] multi vendor 
+    [0] multi vendor 28 bytes {0} [built]
+    [1] ./vendor.js 26 bytes {0} [built]
+        single entry ./vendor [0] multi vendor
 chunk    {1} pageC.js (pageC) 25 bytes {0} [rendered]
     > pageC [0] ./pageC.js 
     [0] ./pageC.js 25 bytes {1} [built]

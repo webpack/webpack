@@ -2,7 +2,7 @@ var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
 	entry: {
-		vendor: "./vendor",
+		vendor: ["./vendor"],
 		pageA: "./pageA",
 		pageB: "./pageB",
 		pageC: "./pageC"
@@ -17,4 +17,4 @@ module.exports = {
 			minChunks: Infinity
 		})
 	]
-}
+};
