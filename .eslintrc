@@ -5,7 +5,7 @@
 	"rules": {
 		"strict": 0,
 		"curly": 0,
-		"eol-last": 0,
+		"eol-last": 1,
 		"no-shadow": 0,
 		"no-redeclare": 1,
 		"no-extra-bind": 1,

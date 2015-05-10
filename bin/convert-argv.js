@@ -2,7 +2,7 @@ var path = require("path");
 var fs = require("fs");
 fs.existsSync = fs.existsSync || path.existsSync;
 var resolve = require("enhanced-resolve");
-var interpret = require('interpret');
+var interpret = require("interpret");
 
 module.exports = function(optimist, argv, convertOptions) {
 
@@ -73,18 +73,37 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	if(argv.context) {
-		options.context = path.resolve(argv.context)
+		options.context = path.resolve(argv.context);
 	}
 	if(!options.context) {
 		options.context = process.cwd();
 	}
 
 	if(argv["watch"]) {
-		options.watch = true;
+		if(options.watchDelay) {
+			console.warn("watchDelay is deprecated: Use 'watch.aggregateTimeout' instead.");
+			options.watch = options.watch || {};
+			options.watch.aggregateTimeout = options.watchDelay;
+		}
+		options.doWatch = true;
 	}
 
 	if(argv["watch-delay"]) {
-		options.watchDelay = +argv["watch-delay"];
+		options.watch = options.watch || {};
+		options.watch.aggregateTimeout = +argv["watch-delay"];
+	}
+
+	if(argv["watch-aggregate-timeout"]) {
+		options.watch = options.watch || {};
+		options.watch.aggregateTimeout = +argv["watch-aggregate-timeout"];
+	}
+
+	if(argv["watch-poll"]) {
+		options.watch = options.watch || {};
+		if(typeof argv["watch-poll"] !== "boolean")
+			options.watch.poll = +argv["watch-poll"];
+		else
+			options.watch.poll = true;
 	}
 
 	function processOptions(options) {
@@ -97,7 +116,7 @@ module.exports = function(optimist, argv, convertOptions) {
 				if(finalize) {
 					finalize();
 				}
-			} else if(typeof argv[name] != "undefined") {
+			} else if(typeof argv[name] !== "undefined") {
 				if(init) {
 					init();
 				}
@@ -114,7 +133,7 @@ module.exports = function(optimist, argv, convertOptions) {
 				if(i < 0) {
 					return fn(null, content, idx);
 				} else {
-					return fn(content.substr(0, i), content.substr(i+1), idx);
+					return fn(content.substr(0, i), content.substr(i + 1), idx);
 				}
 			}, init, finalize);
 		}
@@ -283,11 +302,6 @@ module.exports = function(optimist, argv, convertOptions) {
 		});
 
 		mapArgToBooleanInverse("cache");
-		mapArgToBoolean("watch");
-
-		ifArg("watch-delay", function(value) {
-			options.watchDelay = value;
-		});
 
 		ifBooleanArg("hot", function() {
 			ensureArray(options, "plugins");
@@ -464,7 +478,7 @@ module.exports = function(optimist, argv, convertOptions) {
 						addTo("main", content);
 					}
 				} else {
-					addTo(content.substr(0, i), content.substr(i+1));
+					addTo(content.substr(0, i), content.substr(i + 1));
 				}
 			});
 		}

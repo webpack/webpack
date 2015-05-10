@@ -3,4 +3,5 @@ Time: Xms
     Asset     Size  Chunks             Chunk Names
 bundle.js  1.41 kB       0  [emitted]  main
 chunk    {0} bundle.js (main) 0 bytes [rendered]
-    [0] (webpack)/test/fixtures/stats/simple/index.js 0 bytes {0} [built]
+    [0] (webpack)/test/statsCases/simple-more-info/index.js 0 bytes {0} [built]
+       factory:Xms building:Xms = Xms

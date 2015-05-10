@@ -8,15 +8,13 @@ var path = require("path");
 // Local version replace global one
 try {
 	var localWebpack = require.resolve(path.join(process.cwd(), "node_modules", "webpack", "bin", "webpack.js"));
-	if(__filename != localWebpack) {
+	if(__filename !== localWebpack) {
 		return require(localWebpack);
 	}
 } catch(e) {}
-var fs = require("fs");
-var util = require("util");
 var optimist = require("optimist")
 	.usage("webpack " + require("../package.json").version + "\n" +
-		"Usage: http://webpack.github.io/docs/cli.html")
+		"Usage: http://webpack.github.io/docs/cli.html");
 
 require("./config-optimist")(optimist);
 
@@ -59,7 +57,7 @@ function ifArg(name, fn, init) {
 	if(Array.isArray(argv[name])) {
 		if(init) init();
 		argv[name].forEach(fn);
-	} else if(typeof argv[name] != "undefined") {
+	} else if(typeof argv[name] !== "undefined") {
 		if(init) init();
 		fn(argv[name], -1);
 	}
@@ -145,8 +143,9 @@ var webpack = require("../lib/webpack.js");
 
 Error.stackTrackLimit = 30;
 var lastHash = null;
-var compiler = webpack(options, function(err, stats) {
-	if(!options.watch) {
+var compiler = webpack(options);
+function compilerCallback(err, stats) {
+	if(!options.doWatch) {
 		// Do not keep cache anymore
 		compiler.purgeInputFileSystem();
 	}
@@ -154,7 +153,7 @@ var compiler = webpack(options, function(err, stats) {
 		lastHash = null;
 		console.error(err.stack || err);
 		if(err.details) console.error(err.details);
-		if(!options.watch) {
+		if(!options.doWatch) {
 			process.on("exit", function() {
 				process.exit(1);
 			});
@@ -167,9 +166,13 @@ var compiler = webpack(options, function(err, stats) {
 		lastHash = stats.hash;
 		process.stdout.write(stats.toString(outputOptions) + "\n");
 	}
-	if(!options.watch && stats.hasErrors()) {
+	if(!options.doWatch && stats.hasErrors()) {
 		process.on("exit", function() {
 			process.exit(2);
 		});
 	}
-});
+}
+if(options.doWatch)
+	compiler.watch(options.watch, compilerCallback);
+else
+	compiler.run(compilerCallback);

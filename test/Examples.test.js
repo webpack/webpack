@@ -1,4 +1,5 @@
-var should = require("should");
+/* globals describe it */
+require("should");
 var path = require("path");
 var fs = require("fs");
 var webpack = require("../");
@@ -25,7 +26,6 @@ describe("Examples", function() {
 				options.context = examplePath;
 				options.optimize = options.optimize || {};
 				options.output = options.output || {};
-				options.optimize.occurenceOrder = true;
 				options.output.pathInfo = true;
 				options.output.path = path.join(examplePath, "js");
 				options.output.publicPath = "js/";
