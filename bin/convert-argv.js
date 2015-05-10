@@ -88,9 +88,17 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.watch.aggregateTimeout = +argv["watch-delay"];
 	}
 
-	if(argv["watch-aggregateTimeout"]) {
+	if(argv["watch-aggregate-timeout"]) {
 		options.watch = options.watch || {};
-		options.watch.aggregateTimeout = +argv["watch-aggregateTimeout"];
+		options.watch.aggregateTimeout = +argv["watch-aggregate-timeout"];
+	}
+
+	if(argv["watch-poll"]) {
+		options.watch = options.watch || {};
+		if(typeof argv["watch-poll"] !== "boolean")
+			options.watch.poll = +argv["watch-poll"];
+		else
+			options.watch.poll = true;
 	}
 
 	function processOptions(options) {

@@ -49,6 +49,10 @@ module.exports = function(optimist) {
 
 	.boolean("watch").alias("watch", "w").describe("watch")
 
+	.describe("watch-aggregate-timeout")
+
+	.describe("watch-poll")
+
 	.boolean("hot").alias("hot", "h").describe("hot")
 
 	.boolean("debug").describe("debug")
