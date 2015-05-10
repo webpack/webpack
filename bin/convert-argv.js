@@ -75,12 +75,22 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	if(argv["watch"]) {
+		if(options.watchDelay) {
+			console.warn("watchDelay is deprecated: Use 'watch.aggregateTimeout' instead.");
+			options.watch = options.watch || {};
+			options.watch.aggregateTimeout = options.watchDelay;
+		}
 		options.doWatch = true;
 	}
 
 	if(argv["watch-delay"]) {
 		options.watch = options.watch || {};
 		options.watch.aggregateTimeout = +argv["watch-delay"];
+	}
+
+	if(argv["watch-aggregateTimeout"]) {
+		options.watch = options.watch || {};
+		options.watch.aggregateTimeout = +argv["watch-aggregateTimeout"];
 	}
 
 	function processOptions(options) {
@@ -284,11 +294,6 @@ module.exports = function(optimist, argv, convertOptions) {
 		});
 
 		mapArgToBooleanInverse("cache");
-		mapArgToBoolean("watch");
-
-		ifArg("watch-delay", function(value) {
-			options.watchDelay = value;
-		});
 
 		ifBooleanArg("hot", function() {
 			ensureArray(options, "plugins");
