@@ -75,30 +75,37 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	if(argv["watch"]) {
-		if(options.watchDelay) {
-			console.warn("watchDelay is deprecated: Use 'watch.aggregateTimeout' instead.");
-			options.watch = options.watch || {};
-			options.watch.aggregateTimeout = options.watchDelay;
+		// TODO remove this in next major version
+		if(options.watch && typeof options.watch === "object") {
+			console.warn("options.watch is deprecated: use options.watchOptions instead");
+			options.watchOptions = options.watch;
 		}
-		options.doWatch = true;
+		// TODO remove this in next major version
+		if(options.watchDelay) {
+			console.warn("options.watchDelay is deprecated: Use 'options.watchOptions.aggregateTimeout' instead");
+			options.watchOptions = options.watchOptions || {};
+			options.watchOptions.aggregateTimeout = options.watchDelay;
+		}
+		options.watch = true;
 	}
 
 	if(argv["watch-delay"]) {
-		options.watch = options.watch || {};
-		options.watch.aggregateTimeout = +argv["watch-delay"];
+		console.warn("--watch-delay is deprecated: Use '--watch-aggregate-timeout' instead");
+		options.watchOptions = options.watchOptions || {};
+		options.watchOptions.aggregateTimeout = +argv["watch-delay"];
 	}
 
 	if(argv["watch-aggregate-timeout"]) {
-		options.watch = options.watch || {};
-		options.watch.aggregateTimeout = +argv["watch-aggregate-timeout"];
+		options.watchOptions = options.watchOptions || {};
+		options.watchOptions.aggregateTimeout = +argv["watch-aggregate-timeout"];
 	}
 
 	if(argv["watch-poll"]) {
-		options.watch = options.watch || {};
+		options.watchOptions = options.watchOptions || {};
 		if(typeof argv["watch-poll"] !== "boolean")
-			options.watch.poll = +argv["watch-poll"];
+			options.watchOptions.poll = +argv["watch-poll"];
 		else
-			options.watch.poll = true;
+			options.watchOptions.poll = true;
 	}
 
 	function processOptions(options) {
