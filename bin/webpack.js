@@ -170,6 +170,6 @@ function compilerCallback(err, stats) {
 if(options.watch) {
 	var primaryOptions = !Array.isArray(options) ? options : options[0];
 	var watchOptions = primaryOptions.watchOptions || primaryOptions.watch || {};
-	compiler.watch(options.watch, compilerCallback);
+	compiler.watch(watchOptions, compilerCallback);
 } else
 	compiler.run(compilerCallback);
