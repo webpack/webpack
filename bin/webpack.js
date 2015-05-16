@@ -145,7 +145,7 @@ Error.stackTrackLimit = 30;
 var lastHash = null;
 var compiler = webpack(options);
 function compilerCallback(err, stats) {
-	if(!options.doWatch) {
+	if(!options.watch) {
 		// Do not keep cache anymore
 		compiler.purgeInputFileSystem();
 	}
@@ -153,7 +153,7 @@ function compilerCallback(err, stats) {
 		lastHash = null;
 		console.error(err.stack || err);
 		if(err.details) console.error(err.details);
-		if(!options.doWatch) {
+		if(!options.watch) {
 			process.on("exit", function() {
 				process.exit(1);
 			});
@@ -172,7 +172,9 @@ function compilerCallback(err, stats) {
 		});
 	}
 }
-if(options.doWatch)
-	compiler.watch(options.watch, compilerCallback);
-else
+if(options.watch) {
+	var primaryOptions = !Array.isArray(options) ? options : options[0];
+	var watchOptions = primaryOptions.watchOptions || primaryOptions.watch || {};
+	compiler.watch(watchOptions, compilerCallback);
+} else
 	compiler.run(compilerCallback);
