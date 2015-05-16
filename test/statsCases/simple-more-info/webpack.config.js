@@ -1,5 +1,8 @@
 module.exports = {
 	entry: "./index",
+	output: {
+		filename: "bundle.js"
+	},
 	profile: true,
 	stats: {
 		reasons: true,

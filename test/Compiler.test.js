@@ -72,9 +72,9 @@ describe("Compiler", function() {
 	});
 	it("should compile a single file", function(done) {
 		compile("./c", {}, function(stats, files) {
-			files.should.have.property("bundle.js").have.type("string");
-			Object.keys(files).should.be.eql(["bundle.js"]);
-			var bundle = files["bundle.js"];
+			files.should.have.property("main.js").have.type("string");
+			Object.keys(files).should.be.eql(["main.js"]);
+			var bundle = files["main.js"];
 			bundle.should.containEql("function __webpack_require__(");
 			bundle.should.containEql("__webpack_require__(/*! ./a */ 1);");
 			bundle.should.containEql("./c.js");
@@ -90,9 +90,9 @@ describe("Compiler", function() {
 	});
 	it("should compile a complex file", function(done) {
 		compile("./main1", {}, function(stats, files) {
-			files.should.have.property("bundle.js").have.type("string");
-			Object.keys(files).should.be.eql(["bundle.js"]);
-			var bundle = files["bundle.js"];
+			files.should.have.property("main.js").have.type("string");
+			Object.keys(files).should.be.eql(["main.js"]);
+			var bundle = files["main.js"];
 			bundle.should.containEql("function __webpack_require__(");
 			bundle.should.containEql("__webpack_require__(/*! ./a */");
 			bundle.should.containEql("./main1.js");
@@ -111,9 +111,9 @@ describe("Compiler", function() {
 	});
 	it("should compile a file with transitive dependencies", function(done) {
 		compile("./abc", {}, function(stats, files) {
-			files.should.have.property("bundle.js").have.type("string");
-			Object.keys(files).should.be.eql(["bundle.js"]);
-			var bundle = files["bundle.js"];
+			files.should.have.property("main.js").have.type("string");
+			Object.keys(files).should.be.eql(["main.js"]);
+			var bundle = files["main.js"];
 			bundle.should.containEql("function __webpack_require__(");
 			bundle.should.containEql("__webpack_require__(/*! ./a */");
 			bundle.should.containEql("__webpack_require__(/*! ./b */");
@@ -135,11 +135,11 @@ describe("Compiler", function() {
 	it("should compile a file with multiple chunks", function(done) {
 		compile("./chunks", {}, function(stats, files) {
 			stats.chunks.length.should.be.eql(2);
-			files.should.have.property("bundle.js").have.type("string");
-			files.should.have.property("0.bundle.js").have.type("string");
-			Object.keys(files).should.be.eql(["0.bundle.js", "bundle.js"]);
-			var bundle = files["bundle.js"];
-			var chunk = files["0.bundle.js"];
+			files.should.have.property("main.js").have.type("string");
+			files.should.have.property("0.js").have.type("string");
+			Object.keys(files).should.be.eql(["0.js", "main.js"]);
+			var bundle = files["main.js"];
+			var chunk = files["0.js"];
 			bundle.should.containEql("function __webpack_require__(");
 			bundle.should.containEql("__webpack_require__(/*! ./b */");
 			chunk.should.not.containEql("__webpack_require__(/* ./b */");
