@@ -6,9 +6,9 @@ module.exports = {
 			context: path.join(__dirname, "..", "dll"),
 			manifest: require("../dll/js/alpha-manifest.json")
 		}),
-/*		new DllReferencePlugin({
+		new DllReferencePlugin({
 			scope: "beta",
 			manifest: require("../dll/js/beta-manifest.json")
 		})
-*/	]
+	]
 };

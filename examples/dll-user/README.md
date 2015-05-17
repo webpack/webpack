@@ -4,8 +4,8 @@
 console.log(require("../dll/alpha"));
 console.log(require("../dll/a"));
 
-//console.log(require("beta/beta"));
-//console.log(require("beta/b"));
+console.log(require("beta/beta"));
+console.log(require("beta/b"));
 ```
 
 # js/output.js
@@ -63,15 +63,15 @@ console.log(require("../dll/a"));
 	console.log(__webpack_require__(/*! ../dll/alpha */ 1));
 	console.log(__webpack_require__(/*! ../dll/a */ 3));
 
-	//console.log(require("beta/beta"));
-	//console.log(require("beta/b"));
+	console.log(__webpack_require__(/*! beta/beta */ 4));
+	console.log(__webpack_require__(/*! beta/b */ 6));
 
 
 /***/ },
 /* 1 */
-/*!*****************************************************************!*\
-  !*** delegated 1 from dll-reference alpha_fda802f3c408a66ef744 ***!
-  \*****************************************************************/
+/*!**************************************************************************!*\
+  !*** delegated ./alpha.js from dll-reference alpha_fda802f3c408a66ef744 ***!
+  \**************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(1);
@@ -87,12 +87,39 @@ console.log(require("../dll/a"));
 
 /***/ },
 /* 3 */
-/*!*****************************************************************!*\
-  !*** delegated 2 from dll-reference alpha_fda802f3c408a66ef744 ***!
-  \*****************************************************************/
+/*!**********************************************************************!*\
+  !*** delegated ./a.js from dll-reference alpha_fda802f3c408a66ef744 ***!
+  \**********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = (__webpack_require__(2))(2);
+
+/***/ },
+/* 4 */
+/*!************************************************************************!*\
+  !*** delegated ./beta.js from dll-reference beta_fda802f3c408a66ef744 ***!
+  \************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = (__webpack_require__(5))(3);
+
+/***/ },
+/* 5 */
+/*!********************************************!*\
+  !*** external "beta_fda802f3c408a66ef744" ***!
+  \********************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = beta_fda802f3c408a66ef744;
+
+/***/ },
+/* 6 */
+/*!*********************************************************************!*\
+  !*** delegated ./b.js from dll-reference beta_fda802f3c408a66ef744 ***!
+  \*********************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = (__webpack_require__(5))(4);
 
 /***/ }
 /******/ ]);
@@ -103,27 +130,27 @@ console.log(require("../dll/a"));
 ## Uncompressed
 
 ```
-Hash: 08ef761d3df9cb02c0ab
+Hash: 0d8279ed7b443d36b536
 Version: webpack 1.9.5
-Time: 43ms
+Time: 84ms
     Asset     Size  Chunks             Chunk Names
-output.js  2.62 kB       0  [emitted]  main
-chunk    {0} output.js (main) 275 bytes [rendered]
+output.js  3.66 kB       0  [emitted]  main
+chunk    {0} output.js (main) 397 bytes [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 149 bytes {0} [built]
-     + 3 hidden modules
+    [0] ./example.js 145 bytes {0} [built]
+     + 6 hidden modules
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: c02a95197e755bb65192
+Hash: 1e9d431b3cebd3bcea12
 Version: webpack 1.9.5
-Time: 107ms
+Time: 170ms
     Asset       Size  Chunks             Chunk Names
-output.js  382 bytes       0  [emitted]  main
-chunk    {0} output.js (main) 275 bytes [rendered]
+output.js  541 bytes       0  [emitted]  main
+chunk    {0} output.js (main) 397 bytes [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 149 bytes {0} [built]
-     + 3 hidden modules
+    [0] ./example.js 145 bytes {0} [built]
+     + 6 hidden modules
 ```
