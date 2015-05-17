@@ -99,83 +99,16 @@ var alpha_fda802f3c408a66ef744 =
 /******/ ]);
 ```
 
-# js/MyDll.beta.js
+# js/alpha-manifest.json
 
 ``` javascript
-var beta_fda802f3c408a66ef744 =
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
-
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-
-
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
-
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/*!****************!*\
-  !*** dll beta ***!
-  \****************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__;
-
-/***/ },
-/* 1 */,
-/* 2 */,
-/* 3 */
-/*!*****************!*\
-  !*** ./beta.js ***!
-  \*****************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "beta";
-
-/***/ },
-/* 4 */
-/*!**************!*\
-  !*** ./b.js ***!
-  \**************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "b";
-
-/***/ }
-/******/ ]);
+{
+  "name": "alpha_fda802f3c408a66ef744",
+  "content": {
+    "./alpha.js": 1,
+    "./a.js": 2
+  }
+}
 ```
 
 # Info
@@ -185,7 +118,7 @@ var beta_fda802f3c408a66ef744 =
 ```
 Hash: fda802f3c408a66ef744
 Version: webpack 1.9.5
-Time: 54ms
+Time: 47ms
          Asset     Size  Chunks             Chunk Names
 MyDll.alpha.js  1.88 kB       0  [emitted]  alpha
  MyDll.beta.js  1.89 kB       1  [emitted]  beta
@@ -210,7 +143,7 @@ chunk    {1} MyDll.beta.js (beta) 57 bytes [rendered]
 ```
 Hash: 28b01778c3ed267edad7
 Version: webpack 1.9.5
-Time: 129ms
+Time: 130ms
          Asset       Size  Chunks             Chunk Names
  MyDll.beta.js  330 bytes       0  [emitted]  beta
 MyDll.alpha.js  330 bytes       1  [emitted]  alpha

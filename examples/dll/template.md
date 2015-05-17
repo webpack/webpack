@@ -10,10 +10,10 @@
 {{js/MyDll.alpha.js}}
 ```
 
-# js/MyDll.beta.js
+# js/alpha-manifest.json
 
 ``` javascript
-{{js/MyDll.beta.js}}
+{{js/alpha-manifest.json}}
 ```
 
 # Info
