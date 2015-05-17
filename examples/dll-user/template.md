@@ -1,3 +1,9 @@
+# webpack.config.js
+
+``` javascript
+{{webpack.config.js}}
+```
+
 # example.js
 
 ``` javascript
