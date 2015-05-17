@@ -1,5 +1,5 @@
 var path = require("path");
-var DllPlugin = require("../../lib/DllPlugin");
+var webpack = require("../../");
 module.exports = {
 	entry: {
 		alpha: ["./alpha", "./a"],
@@ -11,7 +11,7 @@ module.exports = {
 		library: "[name]_[hash]"
 	},
 	plugins: [
-		new DllPlugin({
+		new webpack.DllPlugin({
 			path: path.join(__dirname, "js", "[name]-manifest.json"),
 			name: "[name]_[hash]"
 		})
