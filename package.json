@@ -21,12 +21,7 @@
   "peerDependencies": {
     "node-libs-browser": ">= 0.4.0 <=0.5.0"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/mit-license.php"
-    }
-  ],
+  "license": "MIT",
   "devDependencies": {
     "benchmark": "^1.0.0",
     "bundle-loader": "~0.5.0",
