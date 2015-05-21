@@ -244,7 +244,7 @@ MIT (http://www.opensource.org/licenses/mit-license.php)
 * @medikoo for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a simlar project. webpack was born because I wanted Code Splitting for modules-webpack. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
 * @substack for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
 * @jrburke for [require.js](http://requirejs.org/), which is a similar project and source for many ideas.
-* @defunctzombie for the [browser-field spec](https://gist.github.com/defunctzombie/4339901), which is makes modules available for node.js, browserify and webpack.
+* @defunctzombie for the [browser-field spec](https://gist.github.com/defunctzombie/4339901), which makes modules available for node.js, browserify and webpack.
 * Every early webpack user, which contributed to webpack by writing issues or PRs. You influenced the direction...
 * @shama, @jhnns and @sokra for maintaining this project
 * Everyone who has written a loader for webpack. You are the ecosystem...
