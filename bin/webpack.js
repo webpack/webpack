@@ -63,19 +63,19 @@ function ifArg(name, fn, init) {
 	}
 }
 
+var firstOptions = Array.isArray(options) ? options[0] : options;
 
-
-var outputOptions = {
-	cached: false,
-	cachedAssets: false,
-	context: options.context
-};
+var outputOptions = Object.create(options.stats || firstOptions.stats || {});
+if(typeof outputOptions.context === "undefined")
+	outputOptions.context = firstOptions.context;
 
 ifArg("json", function(bool) {
-	outputOptions.json = bool;
+	if(bool)
+		outputOptions.json = bool;
 });
 
-outputOptions.colors = require("supports-color");
+if(typeof outputOptions.colors === "undefined")
+	outputOptions.colors = require("supports-color");
 
 ifArg("sort-modules-by", function(value) {
 	outputOptions.modulesSort = value;
@@ -94,6 +94,11 @@ ifArg("display-exclude", function(value) {
 });
 
 if(!outputOptions.json) {
+	if(typeof outputOptions.cached === "undefined")
+		outputOptions.cached = false;
+	if(typeof outputOptions.cachedAssets === "undefined")
+		outputOptions.cachedAssets = false;
+
 	ifArg("display-chunks", function(bool) {
 		outputOptions.modules = !bool;
 		outputOptions.chunks = bool;
@@ -124,12 +129,18 @@ if(!outputOptions.json) {
 	if(!outputOptions.exclude && !argv["display-modules"])
 		outputOptions.exclude = ["node_modules", "bower_components", "jam", "components"];
 } else {
-	outputOptions.chunks = true;
-	outputOptions.modules = true;
-	outputOptions.chunkModules = true;
-	outputOptions.reasons = true;
-	outputOptions.cached = true;
-	outputOptions.cachedAssets = true;
+	if(typeof outputOptions.chunks === "undefined")
+		outputOptions.chunks = true;
+	if(typeof outputOptions.modules === "undefined")
+		outputOptions.modules = true;
+	if(typeof outputOptions.chunkModules === "undefined")
+		outputOptions.chunkModules = true;
+	if(typeof outputOptions.reasons === "undefined")
+		outputOptions.reasons = true;
+	if(typeof outputOptions.cached === "undefined")
+		outputOptions.cached = true;
+	if(typeof outputOptions.cachedAssets === "undefined")
+		outputOptions.cachedAssets = true;
 }
 
 ifArg("hide-modules", function(bool) {
