@@ -70,7 +70,9 @@ describe("Integration", function() {
 					this.plugin("normal-module-factory", function(nmf) {
 						nmf.plugin("after-resolve", function(data, callback) {
 							data.resource = data.resource.replace(/extra\.js/, "extra2.js");
-							callback(null, data);
+							setTimeout(function() {
+								callback(null, data);
+							}, 50);
 						});
 					});
 				}

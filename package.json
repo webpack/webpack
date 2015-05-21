@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "1.9.6",
+  "version": "1.9.8",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
   "dependencies": {
@@ -19,14 +19,9 @@
     "webpack-core": "~0.6.0"
   },
   "peerDependencies": {
-    "node-libs-browser": ">= 0.4.0 <=0.5.0"
+    "node-libs-browser": ">= 0.4.0 <=0.6.0"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "http://www.opensource.org/licenses/mit-license.php"
-    }
-  ],
+  "license": "MIT",
   "devDependencies": {
     "benchmark": "^1.0.0",
     "bundle-loader": "~0.5.0",

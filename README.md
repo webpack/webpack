@@ -236,6 +236,21 @@ Copyright (c) 2012-2015 Tobias Koppers
 
 MIT (http://www.opensource.org/licenses/mit-license.php)
 
+## Thanks to
+
+(In chronological order)
+
+* @google for [Google Web Toolkit (GWT)](https://code.google.com/p/google-web-toolkit), which aims to compile Java to Javascript. It features a similar [Code Splitting](https://code.google.com/p/google-web-toolkit/wiki/CodeSplitting) as webpack.
+* @medikoo for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a simlar project. webpack was born because I wanted Code Splitting for modules-webpack. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
+* @substack for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
+* @jrburke for [require.js](http://requirejs.org/), which is a similar project and source for many ideas.
+* @defunctzombie for the [browser-field spec](https://gist.github.com/defunctzombie/4339901), which makes modules available for node.js, browserify and webpack.
+* Every early webpack user, which contributed to webpack by writing issues or PRs. You influenced the direction...
+* @shama, @jhnns and @sokra for maintaining this project
+* Everyone who has written a loader for webpack. You are the ecosystem...
+* Everyone I forgot to mention here, but also influenced webpack.
+
+
 ## Sponsor
 
 This is a free-time project. The time I invest in it fluctuates. If you use webpack for a serious task, and you'd like me to invest more time on it, please donate. This project increases your income/productivity too. It makes development and applications faster and it reduces the required bandwidth.

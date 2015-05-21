@@ -2,6 +2,7 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
+/*globals window __webpack_hash__ */
 if(module.hot) {
 	var lastData;
 	var upToDate = function upToDate() {
@@ -10,7 +11,7 @@ if(module.hot) {
 	var check = function check() {
 		module.hot.check(function(err, updatedModules) {
 			if(err) {
-				if(module.hot.status() in {abort:1,fail:1}) {
+				if(module.hot.status() in {abort: 1, fail: 1}) {
 					console.warn("[HMR] Cannot check for update. Need to do a full reload!");
 					console.warn("[HMR] " + err.stack || err.message);
 				} else {
@@ -21,7 +22,7 @@ if(module.hot) {
 
 			if(!updatedModules) {
 				console.warn("[HMR] Cannot find update. Need to do a full reload!");
-				console.warn("[HMR] (Probably because of restarting the webpack-dev-server)")
+				console.warn("[HMR] (Probably because of restarting the webpack-dev-server)");
 				return;
 			}
 
@@ -29,7 +30,7 @@ if(module.hot) {
 				ignoreUnaccepted: true
 			}, function(err, renewedModules) {
 				if(err) {
-					if(module.hot.status() in {abort:1,fail:1}) {
+					if(module.hot.status() in {abort: 1, fail: 1}) {
 						console.warn("[HMR] Cannot apply update. Need to do a full reload!");
 						console.warn("[HMR] " + err.stack || err.message);
 					} else {
@@ -53,7 +54,7 @@ if(module.hot) {
 	var addEventListener = window.addEventListener ? function(eventName, listener) {
 		window.addEventListener(eventName, listener, false);
 	} : function (eventName, listener) {
-		window.attachEvent('on' + eventName, listener);
+		window.attachEvent("on" + eventName, listener);
 	};
 	addEventListener("message", function(event) {
 		if(typeof event.data === "string" && event.data.indexOf("webpackHotUpdate") === 0) {
