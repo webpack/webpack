@@ -77,7 +77,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	if(argv["watch"]) {
 		// TODO remove this in next major version
 		if(options.watch && typeof options.watch === "object") {
-			console.warn("options.watch is deprecated: use options.watchOptions instead");
+			console.warn("options.watch is deprecated: Use 'options.watchOptions' instead");
 			options.watchOptions = options.watch;
 		}
 		// TODO remove this in next major version
