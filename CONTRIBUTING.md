@@ -9,7 +9,7 @@ that include your webpack.config.js and relevant files are more likely to receiv
 
 **If you have discovered a bug or have a feature suggestion, feel free to create an issue on Github.**
 
-If you have created your own loader/plugin please incude it on the relevant
+If you have created your own loader/plugin please include it on the relevant
 documentation pages:
 
 [List of loaders](http://webpack.github.io/docs/list-of-loaders.html)
