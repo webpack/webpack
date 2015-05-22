@@ -57,7 +57,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	if(typeof options !== "object" || options === null) {
-		console.log("Config did not export a object.");
+		console.log("Config did not export an object.");
 		process.exit(-1);
 	}
 
