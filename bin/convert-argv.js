@@ -57,7 +57,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	if(typeof options !== "object" || options === null) {
-		console.log("Config did not export a object.");
+		console.log("Config did not export an object.");
 		process.exit(-1);
 	}
 
@@ -77,7 +77,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	if(argv["watch"]) {
 		// TODO remove this in next major version
 		if(options.watch && typeof options.watch === "object") {
-			console.warn("options.watch is deprecated: use options.watchOptions instead");
+			console.warn("options.watch is deprecated: Use 'options.watchOptions' instead");
 			options.watchOptions = options.watch;
 		}
 		// TODO remove this in next major version
