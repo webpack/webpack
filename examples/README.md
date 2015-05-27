@@ -2,7 +2,7 @@
 
 ## commonjs
 
-example demonstrating a very simple programm
+example demonstrating a very simple program
 
 ## code-splitting
 
@@ -10,11 +10,11 @@ example demonstrating a very simple case of Code Splitting.
 
 ## require.resolve
 
-example demonstrating to cache clearing of modules with `require.resolve` and `require.cache`.
+example demonstrating how to cache clearing of modules with `require.resolve` and `require.cache`.
 
 ## require.context
 
-example demonstrating to automatic creation of contexts when using variables in `require`.
+example demonstrating automatic creation of contexts when using variables in `require`.
 
 ## code-splitted-require.context
 
@@ -26,7 +26,7 @@ example demonstrating contexts in a code-split environment with AMD.
 
 ## loader
 
-example demonstrating to usage of loaders.
+example demonstrating the usage of loaders.
 
 ## coffee-script
 
@@ -46,7 +46,7 @@ example demonstrating Labeled Modules
 
 ## mixed
 
-example demonstrating mixing CommonJs, AMD and Labeled Modules
+example demonstrating mixing CommonJs, AMD, and Labeled Modules
 
 ## web-worker
 
@@ -62,7 +62,7 @@ example demonstrating multiple entry points with Code Splitting.
 
 # Requests
 
-If you think a example is missing, please report it as issue. :)
+If you think an example is missing, please report it as issue. :)
 
 # Build
 
