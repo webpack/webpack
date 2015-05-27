@@ -467,6 +467,11 @@ module.exports = function(optimist, argv, convertOptions) {
 		}
 
 		if(argv._.length > 0) {
+			if(Array.isArray(options.entry) || typeof options.entry === "string") {
+				options.entry = {
+					main: options.entry
+				};
+			}
 			ensureObject(options, "entry");
 			function addTo(name, entry) {
 				if(options.entry[name]) {
