@@ -11,4 +11,7 @@ env:
 before_install:
   - '[ "${TRAVIS_NODE_VERSION}" != "0.10" ] || npm install -g npm'
 
-after_success: cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose && rm -rf ./coverage
+after_success:
+  - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
+  - cat ./coverage/coverage.json | node_modules/.bin/codecov.io/bin/codecov.io.js
+  - rm -rf ./coverage

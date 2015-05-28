@@ -25,6 +25,7 @@
   "devDependencies": {
     "benchmark": "^1.0.0",
     "bundle-loader": "~0.5.0",
+    "codecov.io": "^0.1.2",
     "coffee-loader": "~0.7.1",
     "component-webpack-plugin": "~0.2.0",
     "coveralls": "^2.11.2",
