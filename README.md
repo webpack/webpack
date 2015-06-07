@@ -152,7 +152,7 @@ define(["amd-module", "../file"], function (amdModule, file) {
 	// this is async
 	require(["big-module/big/file"], function (big) {
 		 // For async dependencies, webpack splits
-		 // your application into multiple "chunks."
+		 // your application into multiple "chunks".
 		 // This part of your application is
 		 // loaded on demand (code-splitting).
 		var stuff = require("../my/stuff");

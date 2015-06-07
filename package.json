@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "1.9.8",
+  "version": "1.9.10",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
   "dependencies": {
@@ -25,6 +25,7 @@
   "devDependencies": {
     "benchmark": "^1.0.0",
     "bundle-loader": "~0.5.0",
+    "codecov.io": "^0.1.2",
     "coffee-loader": "~0.7.1",
     "component-webpack-plugin": "~0.2.0",
     "coveralls": "^2.11.2",
