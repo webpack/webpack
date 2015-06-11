@@ -28,11 +28,23 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	var configPath, ext;
+	var extensions = Object.keys(interpret.extensions).sort(function(a, b){
+		return a.length - b.length;
+	});
+
 	if (argv.config) {
 		configPath = path.resolve(argv.config);
-		ext = path.extname(configPath);
+		for (var i = extensions.length - 1; i >= 0; i--) {
+			var tmpExt = extensions[i];
+			if (configPath.indexOf(tmpExt, configPath.length - tmpExt.length) > -1){
+				ext = tmpExt;
+				break;
+			}
+		};
+		if (!ext) {
+			ext = path.extname(configPath);
+		}
 	} else {
-		var extensions = Object.keys(interpret.extensions);
 		for(var i = 0; i < extensions.length; i++) {
 			var webpackConfig = path.resolve('webpack.config' + extensions[i]);
 			if(fs.existsSync(webpackConfig)) {
