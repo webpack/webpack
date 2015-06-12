@@ -6,7 +6,7 @@
 
 # Introduction
 
-webpack is a bundler for modules. The main purpose is to bundle javascript
+webpack is a bundler for modules. The main purpose is to bundle JavaScript
 files for usage in a browser, yet it is also capable of transforming, bundling,
 or packaging just about any resource or asset.
 
@@ -16,7 +16,7 @@ or packaging just about any resource or asset.
 * Bundles both [CommonJs](http://www.commonjs.org/specs/modules/1.0/) and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
 * Can create a single bundle or multiple chunks that are asynchronously loaded at runtime (to reduce initial loading time).
 * Dependencies are resolved during compilation reducing the runtime size.
-* Loaders can preprocess files while compiling, e.g. coffeescript to javascript, handlebars strings to compiled functions, images to Base64, etc.
+* Loaders can preprocess files while compiling, e.g. coffeescript to JavaScript, handlebars strings to compiled functions, images to Base64, etc.
 * Highly modular plugin system to do whatever else your application requires.
 
 # Getting Started
@@ -56,7 +56,7 @@ and incredibly **fast** on incremental compilations.
 ## Loaders
 
 webpack enables use of loaders to preprocess files. This allows you to bundle
-**any static resource** way beyond javascript. You can easily [write your own
+**any static resource** way beyond JavaScript. You can easily [write your own
 loaders](http://webpack.github.io/docs/loaders.html) using node.js. 
 
 Loaders are activated by using `loadername!` prefixes in `require()` statements,
@@ -128,7 +128,7 @@ loaded asynchronously at runtime. This reduces the initial loading time.
 ## Optimizations
 
 webpack can do many optimizations to **reduce the output size of your
-javascript** by deduplicating frequently used modules, minifying, and giving
+JavaScript** by deduplicating frequently used modules, minifying, and giving
 you full control of what is loaded initially and what is loaded at runtime
 through code splitting. It can also can make your code chunks **cache
 friendly** by using hashes. 
@@ -240,7 +240,7 @@ MIT (http://www.opensource.org/licenses/mit-license.php)
 
 (In chronological order)
 
-* @google for [Google Web Toolkit (GWT)](https://code.google.com/p/google-web-toolkit), which aims to compile Java to Javascript. It features a similar [Code Splitting](https://code.google.com/p/google-web-toolkit/wiki/CodeSplitting) as webpack.
+* @google for [Google Web Toolkit (GWT)](https://code.google.com/p/google-web-toolkit), which aims to compile Java to JavaScript. It features a similar [Code Splitting](https://code.google.com/p/google-web-toolkit/wiki/CodeSplitting) as webpack.
 * @medikoo for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a simlar project. webpack was born because I wanted Code Splitting for modules-webpack. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
 * @substack for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
 * @jrburke for [require.js](http://requirejs.org/), which is a similar project and source for many ideas.
