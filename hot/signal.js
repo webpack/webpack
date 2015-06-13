@@ -5,17 +5,7 @@
 /*globals __resourceQuery */
 if(module.hot) {
 	function checkForUpdate(fromUpdate) {
-		module.hot.check(function(err, updatedModules) {
-			if(err) {
-				if(module.hot.status() in {abort: 1, fail: 1}) {
-					console.warn("[HMR] Cannot apply update.");
-					console.warn("[HMR] " + err.stack || err.message);
-					console.warn("[HMR] You need to restart the application!");
-				} else {
-					console.warn("[HMR] Update failed: " + err.stack || err.message);
-				}
-				return;
-			}
+		module.hot.check().then(function(updatedModules) {
 			if(!updatedModules) {
 				if(fromUpdate)
 					console.log("[HMR] Update applied.");
@@ -42,6 +32,14 @@ if(module.hot) {
 
 				checkForUpdate(true);
 			});
+		}).catch(function(err) {
+			if(module.hot.status() in {abort: 1, fail: 1}) {
+				console.warn("[HMR] Cannot apply update.");
+				console.warn("[HMR] " + err.stack || err.message);
+				console.warn("[HMR] You need to restart the application!");
+			} else {
+				console.warn("[HMR] Update failed: " + err.stack || err.message);
+			}
 		});
 	}
 

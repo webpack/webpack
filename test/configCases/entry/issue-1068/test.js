@@ -1,5 +1,7 @@
+var order = global.order;
+delete global.order;
 it("should run the modules in the correct order", function() {
-	global.order.should.be.eql([
+	order.should.be.eql([
 		"a",
 		"b",
 		"c",

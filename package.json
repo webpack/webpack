@@ -72,7 +72,7 @@
   ],
   "scripts": {
     "pretest": "npm run lint",
-    "test": "mocha",
+    "test": "mocha --full-trace --check-leaks",
     "travis": "npm run cover -- --report lcovonly",
     "lint": "eslint lib",
     "precover": "npm run lint",

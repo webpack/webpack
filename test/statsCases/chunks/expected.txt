@@ -1,23 +1,23 @@
-Hash: c52d668f92c33bc92eac
+Hash: 7b96987784d9c0461816
 Time: Xms
       Asset       Size  Chunks             Chunk Names
-  bundle.js    3.83 kB       0  [emitted]  main
-1.bundle.js  159 bytes       1  [emitted]  
-2.bundle.js  101 bytes       2  [emitted]  
-3.bundle.js  180 bytes       3  [emitted]  
+  bundle.js    3.92 kB       0  [emitted]  main
+1.bundle.js  250 bytes       1  [emitted]  
+2.bundle.js  107 bytes       2  [emitted]  
+3.bundle.js  202 bytes       3  [emitted]  
 chunk    {0} bundle.js (main) 73 bytes [rendered]
-    [0] (webpack)/test/statsCases/chunks/index.js 51 bytes {0} [built]
+    [0] (webpack)/test/statsCases/chunks/a.js 22 bytes {0} [built]
+       [5] Xms -> factory:Xms building:Xms = Xms
+    [5] (webpack)/test/statsCases/chunks/index.js 51 bytes {0} [built]
        factory:Xms building:Xms = Xms
-    [1] (webpack)/test/statsCases/chunks/a.js 22 bytes {0} [built]
-       [0] Xms -> factory:Xms building:Xms = Xms
 chunk    {1} 1.bundle.js 54 bytes {0} [rendered]
-    [3] (webpack)/test/statsCases/chunks/c.js 54 bytes {1} [built]
-       [0] Xms -> factory:Xms building:Xms = Xms
+    [2] (webpack)/test/statsCases/chunks/c.js 54 bytes {1} [built]
+       [5] Xms -> factory:Xms building:Xms = Xms
 chunk    {2} 2.bundle.js 22 bytes {0} [rendered]
-    [2] (webpack)/test/statsCases/chunks/b.js 22 bytes {2} [built]
-       [0] Xms -> factory:Xms building:Xms = Xms
+    [1] (webpack)/test/statsCases/chunks/b.js 22 bytes {2} [built]
+       [5] Xms -> factory:Xms building:Xms = Xms
 chunk    {3} 3.bundle.js 44 bytes {1} [rendered]
-    [4] (webpack)/test/statsCases/chunks/d.js 22 bytes {3} [built]
-       [0] Xms -> [3] Xms -> factory:Xms building:Xms = Xms
-    [5] (webpack)/test/statsCases/chunks/e.js 22 bytes {3} [built]
-       [0] Xms -> [3] Xms -> factory:Xms building:Xms = Xms
+    [3] (webpack)/test/statsCases/chunks/d.js 22 bytes {3} [built]
+       [5] Xms -> [2] Xms -> factory:Xms building:Xms = Xms
+    [4] (webpack)/test/statsCases/chunks/e.js 22 bytes {3} [built]
+       [5] Xms -> [2] Xms -> factory:Xms building:Xms = Xms
