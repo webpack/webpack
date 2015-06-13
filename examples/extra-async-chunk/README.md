@@ -86,50 +86,50 @@ module.exports = {
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
 /******/ 		while(callbacks.length)
 /******/ 			callbacks.shift().call(null, __webpack_require__);
-/******/
+
 /******/ 	};
-/******/
+
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
-/******/ 		1:0
+/******/ 		0:0
 /******/ 	};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
+
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
 /******/ 		// "0" is the signal for "already loaded"
 /******/ 		if(installedChunks[chunkId] === 0)
 /******/ 			return callback.call(null, __webpack_require__);
-/******/
+
 /******/ 		// an array means "currently loading".
 /******/ 		if(installedChunks[chunkId] !== undefined) {
 /******/ 			installedChunks[chunkId].push(callback);
@@ -141,20 +141,21 @@ module.exports = {
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
 /******/ 			script.async = true;
+
 /******/ 			script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
-/******/
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -167,43 +168,35 @@ module.exports = {
 /***/ function(module, exports, __webpack_require__) {
 
 	// a chunks with a, b, c
-	(function(/* require */) {var __WEBPACK_REMAINING_CHUNKS__ = 2;var __WEBPACK_CALLBACK__ = function() {if(--__WEBPACK_REMAINING_CHUNKS__ < 1) (function(__webpack_require__) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 2), __webpack_require__(/*! ./c */ 3)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}(__webpack_require__));};__webpack_require__.e(0, __WEBPACK_CALLBACK__);__webpack_require__.e(3, __WEBPACK_CALLBACK__);}());
+	(function(/* require */) {var __WEBPACK_REMAINING_CHUNKS__ = 2;var __WEBPACK_CALLBACK__ = function() {if(--__WEBPACK_REMAINING_CHUNKS__ < 1) (function(__webpack_require__) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 2), __webpack_require__(/*! ./c */ 3)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}(__webpack_require__));};__webpack_require__.e(3, __WEBPACK_CALLBACK__);__webpack_require__.e(1, __WEBPACK_CALLBACK__);}());
 
 	// a chunk with a, b, d
 	(function(/* nsure */) {var __WEBPACK_REMAINING_CHUNKS__ = 2;var __WEBPACK_CALLBACK__ = function() {if(--__WEBPACK_REMAINING_CHUNKS__ < 1) (function(require) {
 		__webpack_require__(/*! ./b */ 2);
 		__webpack_require__(/*! ./d */ 4);
-	}(__webpack_require__));};__webpack_require__.e(0, __WEBPACK_CALLBACK__);__webpack_require__.e(2, __WEBPACK_CALLBACK__);}());
+	}(__webpack_require__));};__webpack_require__.e(3, __WEBPACK_CALLBACK__);__webpack_require__.e(2, __WEBPACK_CALLBACK__);}());
 
 
 /***/ }
-/******/ ])
+/******/ ]);
 ```
 
-# js/0.output.js
+# js/1.output.js
 
 ``` javascript
-webpackJsonp([0],[
-/* 0 */,
-/* 1 */
+webpackJsonp([1],{
+
+/***/ 3:
 /*!**************!*\
-  !*** ./a.js ***!
+  !*** ./c.js ***!
   \**************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	module.exports = "a";
-
-/***/ },
-/* 2 */
-/*!**************!*\
-  !*** ./b.js ***!
-  \**************/
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = "b";
+	module.exports = "c";
 
 /***/ }
-]);
+
+});
 ```
 
 # js/2.output.js
@@ -215,7 +208,7 @@ webpackJsonp([2],{
 /*!**************!*\
   !*** ./d.js ***!
   \**************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = "d";
 
@@ -227,19 +220,27 @@ webpackJsonp([2],{
 # js/3.output.js
 
 ``` javascript
-webpackJsonp([3],{
-
-/***/ 3:
+webpackJsonp([3],[
+/* 0 */,
+/* 1 */
 /*!**************!*\
-  !*** ./c.js ***!
+  !*** ./a.js ***!
   \**************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-	module.exports = "c";
+	module.exports = "a";
+
+/***/ },
+/* 2 */
+/*!**************!*\
+  !*** ./b.js ***!
+  \**************/
+/***/ function(module, exports) {
+
+	module.exports = "b";
 
 /***/ }
-
-});
+]);
 ```
 
 # Info
@@ -247,71 +248,65 @@ webpackJsonp([3],{
 ## Uncompressed
 
 ```
-Hash: 310f71157717394fc874
-Version: webpack 1.5.0
-Time: 51ms
-      Asset  Size  Chunks             Chunk Names
-0.output.js   342       0  [emitted]  
-  output.js  4694       1  [emitted]  main
-2.output.js   180       2  [emitted]  
-3.output.js   180       3  [emitted]  
-chunk    {0} 0.output.js 42 {1} [rendered]
+Hash: db978d34dbff329a5081
+Version: webpack 1.9.10
+Time: 80ms
+      Asset       Size  Chunks             Chunk Names
+  output.js    4.58 kB       0  [emitted]  main
+1.output.js  159 bytes       1  [emitted]  
+2.output.js  159 bytes       2  [emitted]  
+3.output.js  300 bytes       3  [emitted]  
+chunk    {0} output.js (main) 194 bytes [rendered]
+    > main [0] ./example.js 
+    [0] ./example.js 194 bytes {0} [built]
+chunk    {1} 1.output.js 21 bytes {0} [rendered]
+    > [0] ./example.js 2:0-52
+    [3] ./c.js 21 bytes {1} [built]
+        amd require ./c [0] ./example.js 2:0-52
+chunk    {2} 2.output.js 21 bytes {0} [rendered]
+    > [0] ./example.js 5:0-8:2
+    [4] ./d.js 21 bytes {2} [built]
+        cjs require ./d [0] ./example.js 7:1-15
+chunk    {3} 3.output.js 42 bytes {0} [rendered]
     > async commons [0] ./example.js 2:0-52
     > async commons [0] ./example.js 5:0-8:2
-    [1] ./a.js 21 {0} [built]
+    [1] ./a.js 21 bytes {3} [built]
         amd require ./a [0] ./example.js 2:0-52
         require.ensure item ./a [0] ./example.js 5:0-8:2
-    [2] ./b.js 21 {0} [built]
+    [2] ./b.js 21 bytes {3} [built]
         amd require ./b [0] ./example.js 2:0-52
         cjs require ./b [0] ./example.js 6:1-15
-chunk    {1} output.js (main) 194 [rendered]
-    > main [0] ./example.js 
-    [0] ./example.js 194 {1} [built]
-chunk    {2} 2.output.js 21 {1} [rendered]
-    > [0] ./example.js 5:0-8:2
-    [4] ./d.js 21 {2} [built]
-        cjs require ./d [0] ./example.js 7:1-15
-chunk    {3} 3.output.js 21 {1} [rendered]
-    > [0] ./example.js 2:0-52
-    [3] ./c.js 21 {3} [built]
-        amd require ./c [0] ./example.js 2:0-52
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 2bf4007377287b9601db
-Version: webpack 1.5.0
-Time: 136ms
-      Asset  Size  Chunks             Chunk Names
-0.output.js    75       0  [emitted]  
-  output.js   931       1  [emitted]  main
-2.output.js    49       2  [emitted]  
-3.output.js    49       3  [emitted]  
-chunk    {0} 0.output.js 42 {1} [rendered]
+Hash: cbbd2be424e6b302103a
+Version: webpack 1.9.10
+Time: 257ms
+      Asset       Size  Chunks             Chunk Names
+0.output.js   79 bytes       0  [emitted]  
+  output.js  937 bytes       1  [emitted]  main
+2.output.js   51 bytes       2  [emitted]  
+3.output.js   51 bytes       3  [emitted]  
+chunk    {0} 0.output.js 42 bytes {1} [rendered]
     > async commons [0] ./example.js 2:0-52
     > async commons [0] ./example.js 5:0-8:2
-    [1] ./a.js 21 {0} [built]
+    [1] ./a.js 21 bytes {0} [built]
         amd require ./a [0] ./example.js 2:0-52
         require.ensure item ./a [0] ./example.js 5:0-8:2
-    [2] ./b.js 21 {0} [built]
+    [2] ./b.js 21 bytes {0} [built]
         amd require ./b [0] ./example.js 2:0-52
         cjs require ./b [0] ./example.js 6:1-15
-chunk    {1} output.js (main) 194 [rendered]
+chunk    {1} output.js (main) 194 bytes [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 194 {1} [built]
-chunk    {2} 2.output.js 21 {1} [rendered]
+    [0] ./example.js 194 bytes {1} [built]
+chunk    {2} 2.output.js 21 bytes {1} [rendered]
     > [0] ./example.js 5:0-8:2
-    [4] ./d.js 21 {2} [built]
+    [4] ./d.js 21 bytes {2} [built]
         cjs require ./d [0] ./example.js 7:1-15
-chunk    {3} 3.output.js 21 {1} [rendered]
+chunk    {3} 3.output.js 21 bytes {1} [rendered]
     > [0] ./example.js 2:0-52
-    [3] ./c.js 21 {3} [built]
+    [3] ./c.js 21 bytes {3} [built]
         amd require ./c [0] ./example.js 2:0-52
-
-WARNING in output.js from UglifyJs
-Dropping unused function argument c [./example.js:2,0]
-Dropping unused function argument b [./example.js:2,0]
-Dropping unused function argument a [./example.js:2,0]
-Dropping unused function argument require [./example.js:5,0]
 ```

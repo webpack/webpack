@@ -39,41 +39,41 @@ module.exports = {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -92,12 +92,12 @@ module.exports = {
 /*!*******************!*\
   !*** ./style.css ***!
   \*******************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
 /***/ }
-/******/ ])
+/******/ ]);
 ```
 
 # js/style.css
@@ -113,53 +113,53 @@ body {
 ## Uncompressed
 
 ```
-Hash: 964c893cb950ed2e3340
-Version: webpack 1.5.0
-Time: 166ms
-                               Asset  Size  Chunks             Chunk Names
-ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
-                           output.js  1809       0  [emitted]  main
-                           style.css    69       0  [emitted]  main
-chunk    {0} output.js, style.css (main) 64 [rendered]
+Hash: 6511a21f95bc1fb98aa5
+Version: webpack 1.9.10
+Time: 333ms
+                               Asset       Size  Chunks             Chunk Names
+ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
+                           output.js     1.7 kB       0  [emitted]  main
+                           style.css   69 bytes       0  [emitted]  main
+chunk    {0} output.js, style.css (main) 64 bytes [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 23 {0} [built]
-    [1] ./style.css 41 {0} [built]
+    [0] ./example.js 23 bytes {0} [built]
+    [1] ./style.css 41 bytes {0} [built]
         cjs require ./style.css [0] ./example.js 1:0-22
 Child extract-text-webpack-plugin:
-                                   Asset  Size  Chunks             Chunk Names
-    ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
-    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)/~\css-loader\index.js!.\style.css 633 [rendered]
+                                   Asset       Size  Chunks             Chunk Names
+    ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
+    chunk    {0} extract-text-webpack-plugin-output-filename 1.77 kB [rendered]
         > [0] (webpack)/~/css-loader!./style.css 
-        [0] (webpack)/~/css-loader!./style.css 200 {0} [built]
-        [1] (webpack)/~/css-loader/cssToString.js 352 {0} [built]
-            cjs require (webpack)/~\css-loader\cssToString.js [0] (webpack)/~/css-loader!./style.css 1:27-101
-        [2] ./image.png 81 {0} [built]
+        [0] (webpack)/~/css-loader!./style.css 184 bytes {0} [built]
+        [1] (webpack)/~/css-loader/lib/css-base.js 1.51 kB {0} [built]
+            cjs require ./../../node_modules/css-loader/lib/css-base.js [0] (webpack)/~/css-loader!./style.css 1:27-85
+        [2] ./image.png 81 bytes {0} [built]
             cjs require ./image.png [0] (webpack)/~/css-loader!./style.css 2:56-78
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 773f1220b8a1a2d9560d
-Version: webpack 1.5.0
-Time: 184ms
-                               Asset  Size  Chunks             Chunk Names
-ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
-                           output.js   240       0  [emitted]  main
-                           style.css    61       0  [emitted]  main
-chunk    {0} output.js, style.css (main) 64 [rendered]
+Hash: f429175fc77e526a48ea
+Version: webpack 1.9.10
+Time: 425ms
+                               Asset       Size  Chunks             Chunk Names
+ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
+                           output.js  243 bytes       0  [emitted]  main
+                           style.css   61 bytes       0  [emitted]  main
+chunk    {0} output.js, style.css (main) 64 bytes [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 23 {0} [built]
-    [1] ./style.css 41 {0} [built]
+    [0] ./example.js 23 bytes {0} [built]
+    [1] ./style.css 41 bytes {0} [built]
         cjs require ./style.css [0] ./example.js 1:0-22
 Child extract-text-webpack-plugin:
-                                   Asset  Size  Chunks             Chunk Names
-    ce21cbdd9b894e6af794813eb3fdaf60.png   119          [emitted]  
-    chunk    {0} (webpack)/~\extract-text-webpack-plugin (webpack)/~\css-loader\index.js!.\style.css 620 [rendered]
+                                   Asset       Size  Chunks             Chunk Names
+    ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
+    chunk    {0} extract-text-webpack-plugin-output-filename 1.76 kB [rendered]
         > [0] (webpack)/~/css-loader!./style.css 
-        [0] (webpack)/~/css-loader!./style.css 187 {0} [built]
-        [1] (webpack)/~/css-loader/cssToString.js 352 {0} [built]
-            cjs require (webpack)/~\css-loader\cssToString.js [0] (webpack)/~/css-loader!./style.css 1:27-101
-        [2] ./image.png 81 {0} [built]
+        [0] (webpack)/~/css-loader!./style.css 171 bytes {0} [built]
+        [1] (webpack)/~/css-loader/lib/css-base.js 1.51 kB {0} [built]
+            cjs require ./../../node_modules/css-loader/lib/css-base.js [0] (webpack)/~/css-loader!./style.css 1:27-85
+        [2] ./image.png 81 bytes {0} [built]
             cjs require ./image.png [0] (webpack)/~/css-loader!./style.css 2:48-70
 ```

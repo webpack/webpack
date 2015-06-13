@@ -41,41 +41,41 @@ exports.add = function() {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -108,7 +108,7 @@ exports.add = function() {
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	exports.add = function() {
 	    var sum = 0, i = 0, args = arguments, l = args.length;
@@ -119,7 +119,7 @@ exports.add = function() {
 	};
 
 /***/ }
-/******/ ])
+/******/ ]);
 ```
 
 # Info
@@ -128,32 +128,32 @@ exports.add = function() {
 
 ```
 Hash: f20c1cdaf768293603f5
-Version: webpack 1.5.0
-Time: 47ms
-    Asset  Size  Chunks             Chunk Names
-output.js  2257       0  [emitted]  main
-chunk    {0} output.js (main) 329 [rendered]
+Version: webpack 1.9.10
+Time: 69ms
+    Asset     Size  Chunks             Chunk Names
+output.js  2.15 kB       0  [emitted]  main
+chunk    {0} output.js (main) 329 bytes [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 69 {0} [built]
-    [1] ./increment.js 98 {0} [built]
+    [0] ./example.js 69 bytes {0} [built]
+    [1] ./increment.js 98 bytes {0} [built]
         cjs require ./increment [0] ./example.js 1:10-32
-    [2] ./math.js 162 {0} [built]
+    [2] ./math.js 162 bytes {0} [built]
         cjs require ./math [1] ./increment.js 1:10-27
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: fd25a122b2db47818529
-Version: webpack 1.5.0
-Time: 132ms
-    Asset  Size  Chunks             Chunk Names
-output.js   419       0  [emitted]  main
-chunk    {0} output.js (main) 329 [rendered]
+Hash: f20c1cdaf768293603f5
+Version: webpack 1.9.10
+Time: 197ms
+    Asset       Size  Chunks             Chunk Names
+output.js  419 bytes       0  [emitted]  main
+chunk    {0} output.js (main) 329 bytes [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 69 {0} [built]
-    [1] ./increment.js 98 {0} [built]
+    [0] ./example.js 69 bytes {0} [built]
+    [1] ./increment.js 98 bytes {0} [built]
         cjs require ./increment [0] ./example.js 1:10-32
-    [2] ./math.js 162 {0} [built]
+    [2] ./math.js 162 bytes {0} [built]
         cjs require ./math [1] ./increment.js 1:10-27
 ```

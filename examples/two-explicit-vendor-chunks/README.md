@@ -59,7 +59,7 @@ module.exports = {
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
-/******/ 		0:0
+/******/ 		3:0
 /******/ 	};
 
 /******/ 	// The require function
@@ -105,7 +105,7 @@ module.exports = {
 /******/ 			script.charset = 'utf-8';
 /******/ 			script.async = true;
 
-/******/ 			script.src = __webpack_require__.p + "" + chunkId + "." + ({"1":"vendor2","2":"pageC","3":"pageB","4":"pageA"}[chunkId]||chunkId) + ".js";
+/******/ 			script.src = __webpack_require__.p + "" + chunkId + "." + ({"0":"pageA","1":"pageB","2":"pageC","4":"vendor2"}[chunkId]||chunkId) + ".js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -138,7 +138,7 @@ module.exports = {
 /*!********************!*\
   !*** ./vendor1.js ***!
   \********************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = "Vendor1";
 
@@ -149,7 +149,7 @@ module.exports = {
 # js/vendor2.js
 
 ``` javascript
-webpackJsonp([1],[
+webpackJsonp([4],[
 /* 0 */
 /*!*********************!*\
   !*** multi vendor2 ***!
@@ -178,7 +178,7 @@ webpackJsonp([1],[
 # js/pageA.js
 
 ``` javascript
-webpackJsonp([4],[
+webpackJsonp([0],[
 /* 0 */
 /*!******************!*\
   !*** ./pageA.js ***!
@@ -199,50 +199,50 @@ webpackJsonp([4],[
 ## Uncompressed
 
 ```
-Hash: 1faf7c0010d184985c19
-Version: webpack 1.8.11
-Time: 77ms
+Hash: 3e055899b35229db5633
+Version: webpack 1.9.10
+Time: 76ms
      Asset       Size  Chunks             Chunk Names
-vendor1.js    4.08 kB       0  [emitted]  vendor1
-vendor2.js  468 bytes       1  [emitted]  vendor2
-  pageC.js  193 bytes       2  [emitted]  pageC
-  pageB.js  193 bytes       3  [emitted]  pageB
-  pageA.js  281 bytes       4  [emitted]  pageA
-chunk    {0} vendor1.js (vendor1) 55 bytes [rendered]
+  pageA.js  281 bytes       0  [emitted]  pageA
+  pageB.js  172 bytes       1  [emitted]  pageB
+  pageC.js  172 bytes       2  [emitted]  pageC
+vendor1.js    4.06 kB       3  [emitted]  vendor1
+vendor2.js  468 bytes       4  [emitted]  vendor2
+chunk    {0} pageA.js (pageA) 73 bytes {4} [rendered]
+    > pageA [0] ./pageA.js 
+    [0] ./pageA.js 73 bytes {0} [built]
+chunk    {1} pageB.js (pageB) 25 bytes {4} [rendered]
+    > pageB [0] ./pageB.js 
+    [0] ./pageB.js 25 bytes {1} [built]
+chunk    {2} pageC.js (pageC) 25 bytes {4} [rendered]
+    > pageC [0] ./pageC.js 
+    [0] ./pageC.js 25 bytes {2} [built]
+chunk    {3} vendor1.js (vendor1) 55 bytes [rendered]
     > vendor1 [0] multi vendor1 
-    [0] multi vendor1 28 bytes {0} [built]
-    [1] ./vendor1.js 27 bytes {0} [built]
+    [0] multi vendor1 28 bytes {3} [built]
+    [1] ./vendor1.js 27 bytes {3} [built]
         single entry ./vendor1 [0] multi vendor1
         cjs require ./vendor1 [0] ./pageA.js 2:0-20
         cjs require ./vendor1 [2] ./vendor2.js 2:0-20
-chunk    {1} vendor2.js (vendor2) 80 bytes {0} [rendered]
+chunk    {4} vendor2.js (vendor2) 80 bytes {3} [rendered]
     > vendor2 [0] multi vendor2 
-    [0] multi vendor2 28 bytes {1} [built]
-    [2] ./vendor2.js 52 bytes {1} [built]
+    [0] multi vendor2 28 bytes {4} [built]
+    [2] ./vendor2.js 52 bytes {4} [built]
         single entry ./vendor2 [0] multi vendor2
         cjs require ./vendor2 [0] ./pageA.js 3:0-20
-chunk    {2} pageC.js (pageC) 25 bytes {1} [rendered]
-    > pageC [0] ./pageC.js 
-    [0] ./pageC.js 25 bytes {2} [built]
-chunk    {3} pageB.js (pageB) 25 bytes {1} [rendered]
-    > pageB [0] ./pageB.js 
-    [0] ./pageB.js 25 bytes {3} [built]
-chunk    {4} pageA.js (pageA) 73 bytes {1} [rendered]
-    > pageA [0] ./pageA.js 
-    [0] ./pageA.js 73 bytes {4} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
 Hash: 1faf7c0010d184985c19
-Version: webpack 1.8.11
-Time: 208ms
+Version: webpack 1.9.10
+Time: 232ms
      Asset       Size  Chunks             Chunk Names
-vendor1.js  849 bytes       0  [emitted]  vendor1
+vendor1.js  847 bytes       0  [emitted]  vendor1
 vendor2.js   95 bytes       1  [emitted]  vendor2
-  pageC.js   55 bytes       2  [emitted]  pageC
-  pageB.js   55 bytes       3  [emitted]  pageB
+  pageC.js   53 bytes       2  [emitted]  pageC
+  pageB.js   53 bytes       3  [emitted]  pageB
   pageA.js   65 bytes       4  [emitted]  pageA
 chunk    {0} vendor1.js (vendor1) 55 bytes [rendered]
     > vendor1 [0] multi vendor1 

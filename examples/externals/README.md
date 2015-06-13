@@ -61,41 +61,41 @@ module.exports = {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -117,7 +117,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!**********************!*\
   !*** external "add" ***!
   \**********************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
@@ -126,13 +126,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!***************************************************************************************************************!*\
   !*** external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} ***!
   \***************************************************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 
 /***/ }
 /******/ ])
 });
+;
 ```
 
 # Info
@@ -141,26 +142,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 ```
 Hash: 320ff2cedec78f734047
-Version: webpack 1.5.0
-Time: 32ms
-    Asset  Size  Chunks             Chunk Names
-output.js  3009       0  [emitted]  main
-chunk    {0} output.js (main) 197 [rendered]
+Version: webpack 1.9.10
+Time: 67ms
+    Asset     Size  Chunks             Chunk Names
+output.js  2.88 kB       0  [emitted]  main
+chunk    {0} output.js (main) 197 bytes [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 113 {0} [built]
+    [0] ./example.js 113 bytes {0} [built]
      + 2 hidden modules
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 61dea4cfa2544dc85e83
-Version: webpack 1.5.0
-Time: 86ms
-    Asset  Size  Chunks             Chunk Names
-output.js   706       0  [emitted]  main
-chunk    {0} output.js (main) 197 [rendered]
+Hash: 320ff2cedec78f734047
+Version: webpack 1.9.10
+Time: 170ms
+    Asset       Size  Chunks             Chunk Names
+output.js  710 bytes       0  [emitted]  main
+chunk    {0} output.js (main) 197 bytes [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 113 {0} [built]
+    [0] ./example.js 113 bytes {0} [built]
      + 2 hidden modules
 ```

@@ -91,49 +91,49 @@ module.exports = {
 /******/ 			return __webpack_require__(0);
 /******/ 		}
 /******/ 	};
-/******/
+
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
-/******/ 		0:0,
-/******/ 		1:0
+/******/ 		7:0,
+/******/ 		8:0
 /******/ 	};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
+
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
 /******/ 		// "0" is the signal for "already loaded"
 /******/ 		if(installedChunks[chunkId] === 0)
 /******/ 			return callback.call(null, __webpack_require__);
-/******/
+
 /******/ 		// an array means "currently loading".
 /******/ 		if(installedChunks[chunkId] !== undefined) {
 /******/ 			installedChunks[chunkId].push(callback);
@@ -145,50 +145,50 @@ module.exports = {
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
 /******/ 			script.async = true;
-/******/ 			script.src = __webpack_require__.p + "" + chunkId + "." + ({"3":"pageB","4":"pageA","6":"admin-commons.js","7":"adminPageB","8":"adminPageA"}[chunkId]||chunkId) + ".js";
+
+/******/ 			script.src = __webpack_require__.p + "" + chunkId + "." + ({"0":"adminPageA","1":"adminPageB","3":"pageA","4":"pageB","6":"admin-commons.js"}[chunkId]||chunkId) + ".js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
-/******/
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 1:
+/******/ ([
+/* 0 */,
+/* 1 */
 /*!**************************!*\
   !*** ./modules/a-b-c.js ***!
   \**************************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-
+	
 
 /***/ },
-
-/***/ 5:
+/* 2 */,
+/* 3 */
 /*!************************!*\
   !*** ./modules/a-b.js ***!
   \************************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-
+	
 
 /***/ }
-
-/******/ })
+/******/ ]);
 ```
 
 # js/pageA.js
 
 ``` javascript
-webpackJsonp([4],[
+webpackJsonp([3],[
 /* 0 */
 /*!******************!*\
   !*** ./pageA.js ***!
@@ -196,20 +196,21 @@ webpackJsonp([4],[
 /***/ function(module, exports, __webpack_require__) {
 
 	__webpack_require__(/*! ./modules/a-b-c */ 1);
-	__webpack_require__(/*! ./modules/a-b */ 5);
-	__webpack_require__(/*! ./modules/a-c */ 3);
+	__webpack_require__(/*! ./modules/a-b */ 3);
+	__webpack_require__(/*! ./modules/a-c */ 4);
 
 
 /***/ },
 /* 1 */,
 /* 2 */,
-/* 3 */
+/* 3 */,
+/* 4 */
 /*!************************!*\
   !*** ./modules/a-c.js ***!
   \************************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-
+	
 
 /***/ }
 ]);
@@ -224,9 +225,9 @@ webpackJsonp([6],{
 /*!**************************!*\
   !*** ./modules/admin.js ***!
   \**************************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
-
+	
 
 /***/ }
 
@@ -236,7 +237,7 @@ webpackJsonp([6],{
 # js/adminPageA.js
 
 ``` javascript
-webpackJsonp([8],[
+webpackJsonp([0],[
 /* 0 */
 /*!***********************!*\
   !*** ./adminPageA.js ***!
@@ -255,151 +256,151 @@ webpackJsonp([8],[
 ## Uncompressed
 
 ```
-Hash: c676a306c4af01dba069
-Version: webpack 1.5.0
-Time: 67ms
-           Asset  Size  Chunks             Chunk Names
-      commons.js  4085    0, 1  [emitted]  commons.js
-    c-commons.js  3857       1  [emitted]  c-commons.js
-        pageC.js   656       2  [emitted]  pageC
-        pageB.js   501       3  [emitted]  pageB
-        pageA.js   492       4  [emitted]  pageA
-   adminPageC.js   459    5, 6  [emitted]  adminPageC
-admin-commons.js   194       6  [emitted]  admin-commons.js
-   adminPageB.js   278       7  [emitted]  adminPageB
-   adminPageA.js   278       8  [emitted]  adminPageA
-chunk    {0} commons.js (commons.js) 0 [rendered]
-    [1] ./modules/a-b-c.js 0 {0} {1} [built]
-        cjs require ./modules/a-b-c [0] ./pageA.js 1:0-26
-        cjs require ./modules/a-b-c [0] ./pageB.js 1:0-26
-        cjs require ./modules/a-b-c [0] ./pageC.js 1:0-26
-        cjs require ./modules/a-b-c [0] ./adminPageA.js 1:0-26
-        cjs require ./modules/a-b-c [0] ./adminPageB.js 1:0-26
-        cjs require ./modules/a-b-c [0] ./adminPageC.js 1:0-26
-    [5] ./modules/a-b.js 0 {0} [built]
-        cjs require ./modules/a-b [0] ./pageA.js 2:0-24
-        cjs require ./modules/a-b [0] ./pageB.js 2:0-24
-chunk    {1} c-commons.js (c-commons.js) 0 [rendered]
-    [1] ./modules/a-b-c.js 0 {0} {1} [built]
-        cjs require ./modules/a-b-c [0] ./pageA.js 1:0-26
-        cjs require ./modules/a-b-c [0] ./pageB.js 1:0-26
-        cjs require ./modules/a-b-c [0] ./pageC.js 1:0-26
-        cjs require ./modules/a-b-c [0] ./adminPageA.js 1:0-26
-        cjs require ./modules/a-b-c [0] ./adminPageB.js 1:0-26
-        cjs require ./modules/a-b-c [0] ./adminPageC.js 1:0-26
-chunk    {2} pageC.js (pageC) 83 {1} [rendered]
-    > pageC [0] ./pageC.js 
-    [0] ./pageC.js 83 {2} [built]
-    [3] ./modules/a-c.js 0 {2} {4} [built]
-        cjs require ./modules/a-c [0] ./pageA.js 3:0-24
-        cjs require ./modules/a-c [0] ./pageC.js 3:0-24
-    [4] ./modules/b-c.js 0 {2} {3} [built]
-        cjs require ./modules/b-c [0] ./pageB.js 3:0-24
-        cjs require ./modules/b-c [0] ./pageC.js 2:0-24
-chunk    {3} pageB.js (pageB) 83 {0} [rendered]
-    > pageB [0] ./pageB.js 
-    [0] ./pageB.js 83 {3} [built]
-    [4] ./modules/b-c.js 0 {2} {3} [built]
-        cjs require ./modules/b-c [0] ./pageB.js 3:0-24
-        cjs require ./modules/b-c [0] ./pageC.js 2:0-24
-chunk    {4} pageA.js (pageA) 83 {0} [rendered]
-    > pageA [0] ./pageA.js 
-    [0] ./pageA.js 83 {4} [built]
-    [3] ./modules/a-c.js 0 {2} {4} [built]
-        cjs require ./modules/a-c [0] ./pageA.js 3:0-24
-        cjs require ./modules/a-c [0] ./pageC.js 3:0-24
-chunk    {5} adminPageC.js (adminPageC) 56 {1} [rendered]
-    > adminPageC [0] ./adminPageC.js 
-    [0] ./adminPageC.js 56 {5} [built]
-    [2] ./modules/admin.js 0 {5} {6} [built]
-        cjs require ./modules/admin [0] ./adminPageA.js 2:0-26
-        cjs require ./modules/admin [0] ./adminPageB.js 2:0-26
-        cjs require ./modules/admin [0] ./adminPageC.js 2:0-26
-chunk    {6} admin-commons.js (admin-commons.js) 0 {0} [rendered]
-    [2] ./modules/admin.js 0 {5} {6} [built]
-        cjs require ./modules/admin [0] ./adminPageA.js 2:0-26
-        cjs require ./modules/admin [0] ./adminPageB.js 2:0-26
-        cjs require ./modules/admin [0] ./adminPageC.js 2:0-26
-chunk    {7} adminPageB.js (adminPageB) 56 {6} [rendered]
-    > adminPageB [0] ./adminPageB.js 
-    [0] ./adminPageB.js 56 {7} [built]
-chunk    {8} adminPageA.js (adminPageA) 56 {6} [rendered]
+Hash: c8b70390c99c2fe1e001
+Version: webpack 1.9.10
+Time: 99ms
+           Asset       Size  Chunks             Chunk Names
+   adminPageA.js  278 bytes       0  [emitted]  adminPageA
+   adminPageB.js  278 bytes       1  [emitted]  adminPageB
+   adminPageC.js  439 bytes    2, 6  [emitted]  adminPageC
+        pageA.js  481 bytes       3  [emitted]  pageA
+        pageB.js  459 bytes       4  [emitted]  pageB
+        pageC.js  625 bytes       5  [emitted]  pageC
+admin-commons.js  174 bytes       6  [emitted]  admin-commons.js
+      commons.js    3.96 kB    7, 8  [emitted]  commons.js
+    c-commons.js    3.73 kB       8  [emitted]  c-commons.js
+chunk    {0} adminPageA.js (adminPageA) 56 bytes {6} [rendered]
     > adminPageA [0] ./adminPageA.js 
-    [0] ./adminPageA.js 56 {8} [built]
+    [0] ./adminPageA.js 56 bytes {0} [built]
+chunk    {1} adminPageB.js (adminPageB) 56 bytes {6} [rendered]
+    > adminPageB [0] ./adminPageB.js 
+    [0] ./adminPageB.js 56 bytes {1} [built]
+chunk    {2} adminPageC.js (adminPageC) 56 bytes {8} [rendered]
+    > adminPageC [0] ./adminPageC.js 
+    [0] ./adminPageC.js 56 bytes {2} [built]
+    [2] ./modules/admin.js 0 bytes {2} {6} [built]
+        cjs require ./modules/admin [0] ./adminPageA.js 2:0-26
+        cjs require ./modules/admin [0] ./adminPageB.js 2:0-26
+        cjs require ./modules/admin [0] ./adminPageC.js 2:0-26
+chunk    {3} pageA.js (pageA) 83 bytes {7} [rendered]
+    > pageA [0] ./pageA.js 
+    [0] ./pageA.js 83 bytes {3} [built]
+    [4] ./modules/a-c.js 0 bytes {3} {5} [built]
+        cjs require ./modules/a-c [0] ./pageC.js 3:0-24
+        cjs require ./modules/a-c [0] ./pageA.js 3:0-24
+chunk    {4} pageB.js (pageB) 83 bytes {7} [rendered]
+    > pageB [0] ./pageB.js 
+    [0] ./pageB.js 83 bytes {4} [built]
+    [5] ./modules/b-c.js 0 bytes {4} {5} [built]
+        cjs require ./modules/b-c [0] ./pageC.js 2:0-24
+        cjs require ./modules/b-c [0] ./pageB.js 3:0-24
+chunk    {5} pageC.js (pageC) 83 bytes {8} [rendered]
+    > pageC [0] ./pageC.js 
+    [0] ./pageC.js 83 bytes {5} [built]
+    [4] ./modules/a-c.js 0 bytes {3} {5} [built]
+        cjs require ./modules/a-c [0] ./pageC.js 3:0-24
+        cjs require ./modules/a-c [0] ./pageA.js 3:0-24
+    [5] ./modules/b-c.js 0 bytes {4} {5} [built]
+        cjs require ./modules/b-c [0] ./pageC.js 2:0-24
+        cjs require ./modules/b-c [0] ./pageB.js 3:0-24
+chunk    {6} admin-commons.js (admin-commons.js) 0 bytes {7} [rendered]
+    [2] ./modules/admin.js 0 bytes {2} {6} [built]
+        cjs require ./modules/admin [0] ./adminPageA.js 2:0-26
+        cjs require ./modules/admin [0] ./adminPageB.js 2:0-26
+        cjs require ./modules/admin [0] ./adminPageC.js 2:0-26
+chunk    {7} commons.js (commons.js) 0 bytes [rendered]
+    [1] ./modules/a-b-c.js 0 bytes {7} {8} [built]
+        cjs require ./modules/a-b-c [0] ./pageC.js 1:0-26
+        cjs require ./modules/a-b-c [0] ./pageB.js 1:0-26
+        cjs require ./modules/a-b-c [0] ./pageA.js 1:0-26
+        cjs require ./modules/a-b-c [0] ./adminPageA.js 1:0-26
+        cjs require ./modules/a-b-c [0] ./adminPageB.js 1:0-26
+        cjs require ./modules/a-b-c [0] ./adminPageC.js 1:0-26
+    [3] ./modules/a-b.js 0 bytes {7} [built]
+        cjs require ./modules/a-b [0] ./pageB.js 2:0-24
+        cjs require ./modules/a-b [0] ./pageA.js 2:0-24
+chunk    {8} c-commons.js (c-commons.js) 0 bytes [rendered]
+    [1] ./modules/a-b-c.js 0 bytes {7} {8} [built]
+        cjs require ./modules/a-b-c [0] ./pageC.js 1:0-26
+        cjs require ./modules/a-b-c [0] ./pageB.js 1:0-26
+        cjs require ./modules/a-b-c [0] ./pageA.js 1:0-26
+        cjs require ./modules/a-b-c [0] ./adminPageA.js 1:0-26
+        cjs require ./modules/a-b-c [0] ./adminPageB.js 1:0-26
+        cjs require ./modules/a-b-c [0] ./adminPageC.js 1:0-26
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 938fb556f034e70b50c6
-Version: webpack 1.5.0
-Time: 173ms
-           Asset  Size  Chunks             Chunk Names
-      commons.js   831    0, 1  [emitted]  commons.js
-    c-commons.js   765       1  [emitted]  c-commons.js
-        pageC.js    80       2  [emitted]  pageC
-        pageB.js    68       3  [emitted]  pageB
-        pageA.js    67       4  [emitted]  pageA
-   adminPageC.js    63    5, 6  [emitted]  adminPageC
-admin-commons.js    35       6  [emitted]  admin-commons.js
-   adminPageB.js    47       7  [emitted]  adminPageB
-   adminPageA.js    47       8  [emitted]  adminPageA
-chunk    {0} commons.js (commons.js) 0 [rendered]
-    [1] ./modules/a-b-c.js 0 {0} {1} [built]
-        cjs require ./modules/a-b-c [0] ./pageA.js 1:0-26
+Hash: c676a306c4af01dba069
+Version: webpack 1.9.10
+Time: 345ms
+           Asset       Size  Chunks             Chunk Names
+      commons.js  837 bytes    0, 1  [emitted]  commons.js
+    c-commons.js  768 bytes       1  [emitted]  c-commons.js
+        pageC.js   86 bytes       2  [emitted]  pageC
+        pageB.js   71 bytes       3  [emitted]  pageB
+        pageA.js   70 bytes       4  [emitted]  pageA
+   adminPageC.js   66 bytes    5, 6  [emitted]  adminPageC
+admin-commons.js   38 bytes       6  [emitted]  admin-commons.js
+   adminPageB.js   47 bytes       7  [emitted]  adminPageB
+   adminPageA.js   47 bytes       8  [emitted]  adminPageA
+chunk    {0} commons.js (commons.js) 0 bytes [rendered]
+    [1] ./modules/a-b-c.js 0 bytes {0} {1} [built]
         cjs require ./modules/a-b-c [0] ./pageB.js 1:0-26
+        cjs require ./modules/a-b-c [0] ./pageA.js 1:0-26
         cjs require ./modules/a-b-c [0] ./pageC.js 1:0-26
+        cjs require ./modules/a-b-c [0] ./adminPageB.js 1:0-26
         cjs require ./modules/a-b-c [0] ./adminPageA.js 1:0-26
         cjs require ./modules/a-b-c [0] ./adminPageC.js 1:0-26
-        cjs require ./modules/a-b-c [0] ./adminPageB.js 1:0-26
-    [5] ./modules/a-b.js 0 {0} [built]
-        cjs require ./modules/a-b [0] ./pageA.js 2:0-24
+    [5] ./modules/a-b.js 0 bytes {0} [built]
         cjs require ./modules/a-b [0] ./pageB.js 2:0-24
-chunk    {1} c-commons.js (c-commons.js) 0 [rendered]
-    [1] ./modules/a-b-c.js 0 {0} {1} [built]
-        cjs require ./modules/a-b-c [0] ./pageA.js 1:0-26
+        cjs require ./modules/a-b [0] ./pageA.js 2:0-24
+chunk    {1} c-commons.js (c-commons.js) 0 bytes [rendered]
+    [1] ./modules/a-b-c.js 0 bytes {0} {1} [built]
         cjs require ./modules/a-b-c [0] ./pageB.js 1:0-26
+        cjs require ./modules/a-b-c [0] ./pageA.js 1:0-26
         cjs require ./modules/a-b-c [0] ./pageC.js 1:0-26
+        cjs require ./modules/a-b-c [0] ./adminPageB.js 1:0-26
         cjs require ./modules/a-b-c [0] ./adminPageA.js 1:0-26
         cjs require ./modules/a-b-c [0] ./adminPageC.js 1:0-26
-        cjs require ./modules/a-b-c [0] ./adminPageB.js 1:0-26
-chunk    {2} pageC.js (pageC) 83 {1} [rendered]
+chunk    {2} pageC.js (pageC) 83 bytes {1} [rendered]
     > pageC [0] ./pageC.js 
-    [0] ./pageC.js 83 {2} [built]
-    [3] ./modules/a-c.js 0 {2} {4} [built]
+    [0] ./pageC.js 83 bytes {2} [built]
+    [3] ./modules/a-c.js 0 bytes {2} {4} [built]
         cjs require ./modules/a-c [0] ./pageA.js 3:0-24
         cjs require ./modules/a-c [0] ./pageC.js 3:0-24
-    [4] ./modules/b-c.js 0 {2} {3} [built]
+    [4] ./modules/b-c.js 0 bytes {2} {3} [built]
         cjs require ./modules/b-c [0] ./pageB.js 3:0-24
         cjs require ./modules/b-c [0] ./pageC.js 2:0-24
-chunk    {3} pageB.js (pageB) 83 {0} [rendered]
+chunk    {3} pageB.js (pageB) 83 bytes {0} [rendered]
     > pageB [0] ./pageB.js 
-    [0] ./pageB.js 83 {3} [built]
-    [4] ./modules/b-c.js 0 {2} {3} [built]
+    [0] ./pageB.js 83 bytes {3} [built]
+    [4] ./modules/b-c.js 0 bytes {2} {3} [built]
         cjs require ./modules/b-c [0] ./pageB.js 3:0-24
         cjs require ./modules/b-c [0] ./pageC.js 2:0-24
-chunk    {4} pageA.js (pageA) 83 {0} [rendered]
+chunk    {4} pageA.js (pageA) 83 bytes {0} [rendered]
     > pageA [0] ./pageA.js 
-    [0] ./pageA.js 83 {4} [built]
-    [3] ./modules/a-c.js 0 {2} {4} [built]
+    [0] ./pageA.js 83 bytes {4} [built]
+    [3] ./modules/a-c.js 0 bytes {2} {4} [built]
         cjs require ./modules/a-c [0] ./pageA.js 3:0-24
         cjs require ./modules/a-c [0] ./pageC.js 3:0-24
-chunk    {5} adminPageC.js (adminPageC) 56 {1} [rendered]
+chunk    {5} adminPageC.js (adminPageC) 56 bytes {1} [rendered]
     > adminPageC [0] ./adminPageC.js 
-    [0] ./adminPageC.js 56 {5} [built]
-    [2] ./modules/admin.js 0 {5} {6} [built]
+    [0] ./adminPageC.js 56 bytes {5} [built]
+    [2] ./modules/admin.js 0 bytes {5} {6} [built]
+        cjs require ./modules/admin [0] ./adminPageB.js 2:0-26
         cjs require ./modules/admin [0] ./adminPageA.js 2:0-26
         cjs require ./modules/admin [0] ./adminPageC.js 2:0-26
+chunk    {6} admin-commons.js (admin-commons.js) 0 bytes {0} [rendered]
+    [2] ./modules/admin.js 0 bytes {5} {6} [built]
         cjs require ./modules/admin [0] ./adminPageB.js 2:0-26
-chunk    {6} admin-commons.js (admin-commons.js) 0 {0} [rendered]
-    [2] ./modules/admin.js 0 {5} {6} [built]
         cjs require ./modules/admin [0] ./adminPageA.js 2:0-26
         cjs require ./modules/admin [0] ./adminPageC.js 2:0-26
-        cjs require ./modules/admin [0] ./adminPageB.js 2:0-26
-chunk    {7} adminPageB.js (adminPageB) 56 {6} [rendered]
+chunk    {7} adminPageB.js (adminPageB) 56 bytes {6} [rendered]
     > adminPageB [0] ./adminPageB.js 
-    [0] ./adminPageB.js 56 {7} [built]
-chunk    {8} adminPageA.js (adminPageA) 56 {6} [rendered]
+    [0] ./adminPageB.js 56 bytes {7} [built]
+chunk    {8} adminPageA.js (adminPageA) 56 bytes {6} [rendered]
     > adminPageA [0] ./adminPageA.js 
-    [0] ./adminPageA.js 56 {8} [built]
+    [0] ./adminPageA.js 56 bytes {8} [built]
 ```

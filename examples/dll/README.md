@@ -2,7 +2,7 @@
 
 ``` javascript
 var path = require("path");
-var DllPlugin = require("../../lib/DllPlugin");
+var webpack = require("../../");
 module.exports = {
 	entry: {
 		alpha: ["./alpha", "./a"],
@@ -14,7 +14,7 @@ module.exports = {
 		library: "[name]_[hash]"
 	},
 	plugins: [
-		new DllPlugin({
+		new webpack.DllPlugin({
 			path: path.join(__dirname, "js", "[name]-manifest.json"),
 			name: "[name]_[hash]"
 		})
@@ -82,7 +82,7 @@ var alpha_fda802f3c408a66ef744 =
 /*!******************!*\
   !*** ./alpha.js ***!
   \******************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = "alpha";
 
@@ -91,7 +91,7 @@ var alpha_fda802f3c408a66ef744 =
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = "a";
 
@@ -117,11 +117,11 @@ var alpha_fda802f3c408a66ef744 =
 
 ```
 Hash: fda802f3c408a66ef744
-Version: webpack 1.9.5
-Time: 47ms
+Version: webpack 1.9.10
+Time: 69ms
          Asset     Size  Chunks             Chunk Names
-MyDll.alpha.js  1.88 kB       0  [emitted]  alpha
- MyDll.beta.js  1.89 kB       1  [emitted]  beta
+MyDll.alpha.js  1.84 kB       0  [emitted]  alpha
+ MyDll.beta.js  1.85 kB       1  [emitted]  beta
 chunk    {0} MyDll.alpha.js (alpha) 58 bytes [rendered]
     > alpha [0] dll alpha 
     [0] dll alpha 12 bytes {0} [built]
@@ -142,11 +142,11 @@ chunk    {1} MyDll.beta.js (beta) 57 bytes [rendered]
 
 ```
 Hash: 28b01778c3ed267edad7
-Version: webpack 1.9.5
-Time: 130ms
+Version: webpack 1.9.10
+Time: 173ms
          Asset       Size  Chunks             Chunk Names
- MyDll.beta.js  330 bytes       0  [emitted]  beta
-MyDll.alpha.js  330 bytes       1  [emitted]  alpha
+ MyDll.beta.js  326 bytes       0  [emitted]  beta
+MyDll.alpha.js  326 bytes       1  [emitted]  alpha
 chunk    {0} MyDll.beta.js (beta) 57 bytes [rendered]
     > beta [0] dll beta 
     [0] dll beta 12 bytes {0} [built]
