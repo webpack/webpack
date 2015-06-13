@@ -52,41 +52,41 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -102,7 +102,7 @@ module.exports = Object.keys(languages).map(function(language) {
 	console.log("Missing Text");
 
 /***/ }
-/******/ ])
+/******/ ]);
 ```
 
 # js/en.output.js
@@ -111,41 +111,41 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -161,7 +161,7 @@ module.exports = Object.keys(languages).map(function(language) {
 	console.log("Missing Text");
 
 /***/ }
-/******/ ])
+/******/ ]);
 ```
 
 # Info
@@ -170,28 +170,28 @@ module.exports = Object.keys(languages).map(function(language) {
 
 ```
 Hash: 10b995417061f97b4ba67e868bed7a01e88b0dbe
-Version: webpack 1.5.0
+Version: webpack 1.9.10
 
 WARNING in (de) ./example.js
 Missing localization: Missing Text
 Child en:
     Hash: 10b995417061f97b4ba6
-    Version: webpack 1.5.0
-    Time: 40ms
-           Asset  Size  Chunks             Chunk Names
-    en.output.js  1634       0  [emitted]  main
-    chunk    {0} en.output.js (main) 65 [rendered]
+    Version: webpack 1.9.10
+    Time: 62ms
+           Asset     Size  Chunks             Chunk Names
+    en.output.js  1.55 kB       0  [emitted]  main
+    chunk    {0} en.output.js (main) 65 bytes [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 65 {0} [built]
+        [0] ./example.js 65 bytes {0} [built]
 Child de:
     Hash: 7e868bed7a01e88b0dbe
-    Version: webpack 1.5.0
-    Time: 32ms
-           Asset  Size  Chunks             Chunk Names
-    de.output.js  1633       0  [emitted]  main
-    chunk    {0} de.output.js (main) 65 [rendered]
+    Version: webpack 1.9.10
+    Time: 51ms
+           Asset     Size  Chunks             Chunk Names
+    de.output.js  1.55 kB       0  [emitted]  main
+    chunk    {0} de.output.js (main) 65 bytes [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 65 {0} [built] [1 warning]
+        [0] ./example.js 65 bytes {0} [built] [1 warning]
     
     WARNING in ./example.js
     Missing localization: Missing Text
@@ -200,29 +200,29 @@ Child de:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9bb31b2ddd4c97648d685db1949f4b7d2da99d20
-Version: webpack 1.5.0
+Hash: 10b995417061f97b4ba67e868bed7a01e88b0dbe
+Version: webpack 1.9.10
 
 WARNING in (de) ./example.js
 Missing localization: Missing Text
 Child en:
-    Hash: 9bb31b2ddd4c97648d68
-    Version: webpack 1.5.0
-    Time: 78ms
-           Asset  Size  Chunks             Chunk Names
-    en.output.js   272       0  [emitted]  main
-    chunk    {0} en.output.js (main) 65 [rendered]
+    Hash: 10b995417061f97b4ba6
+    Version: webpack 1.9.10
+    Time: 179ms
+           Asset       Size  Chunks             Chunk Names
+    en.output.js  277 bytes       0  [emitted]  main
+    chunk    {0} en.output.js (main) 65 bytes [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 65 {0} [built]
+        [0] ./example.js 65 bytes {0} [built]
 Child de:
-    Hash: 5db1949f4b7d2da99d20
-    Version: webpack 1.5.0
-    Time: 73ms
-           Asset  Size  Chunks             Chunk Names
-    de.output.js   271       0  [emitted]  main
-    chunk    {0} de.output.js (main) 65 [rendered]
+    Hash: 7e868bed7a01e88b0dbe
+    Version: webpack 1.9.10
+    Time: 168ms
+           Asset       Size  Chunks             Chunk Names
+    de.output.js  276 bytes       0  [emitted]  main
+    chunk    {0} de.output.js (main) 65 bytes [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 65 {0} [built] [1 warning]
+        [0] ./example.js 65 bytes {0} [built] [1 warning]
     
     WARNING in ./example.js
     Missing localization: Missing Text

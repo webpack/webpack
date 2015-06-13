@@ -39,50 +39,50 @@ module.exports = "It works";
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
 /******/ 		while(callbacks.length)
 /******/ 			callbacks.shift().call(null, __webpack_require__);
-/******/
+
 /******/ 	};
-/******/
+
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
 /******/ 		0:0
 /******/ 	};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
+
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
 /******/ 		// "0" is the signal for "already loaded"
 /******/ 		if(installedChunks[chunkId] === 0)
 /******/ 			return callback.call(null, __webpack_require__);
-/******/
+
 /******/ 		// an array means "currently loading".
 /******/ 		if(installedChunks[chunkId] !== undefined) {
 /******/ 			installedChunks[chunkId].push(callback);
@@ -94,20 +94,21 @@ module.exports = "It works";
 /******/ 			script.type = 'text/javascript';
 /******/ 			script.charset = 'utf-8';
 /******/ 			script.async = true;
+
 /******/ 			script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
-/******/
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -119,13 +120,12 @@ module.exports = "It works";
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(/*! bundle!./file.js */ 2)(function(fileJsExports) {
+	__webpack_require__(/*! bundle!./file.js */ 1)(function(fileJsExports) {
 		console.log(fileJsExports);
 	});
 
 /***/ },
-/* 1 */,
-/* 2 */
+/* 1 */
 /*!*******************************************!*\
   !*** (webpack)/~/bundle-loader!./file.js ***!
   \*******************************************/
@@ -138,7 +138,7 @@ module.exports = "It works";
 		else cb(data);
 	}
 	__webpack_require__.e/* nsure */(1, function(require) {
-		data = __webpack_require__(/*! !./file.js */ 1);
+		data = __webpack_require__(/*! !./file.js */ 2);
 		var callbacks = cbs;
 		cbs = null;
 		for(var i = 0, l = callbacks.length; i < l; i++) {
@@ -147,24 +147,25 @@ module.exports = "It works";
 	});
 
 /***/ }
-/******/ ])
+/******/ ]);
 ```
 
 # js/1.output.js
 
 ``` javascript
-webpackJsonp([1],[
-/* 0 */,
-/* 1 */
+webpackJsonp([1],{
+
+/***/ 2:
 /*!*****************!*\
   !*** ./file.js ***!
   \*****************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = "It works";
 
 /***/ }
-]);
+
+});
 ```
 
 # Info
@@ -172,42 +173,39 @@ webpackJsonp([1],[
 ## Uncompressed
 
 ```
-Hash: 338a850354a8cd68b5c7
-Version: webpack 1.5.0
-Time: 57ms
-      Asset  Size  Chunks             Chunk Names
-  output.js  4432       0  [emitted]  main
-1.output.js   202       1  [emitted]  
-chunk    {0} output.js (main) 453 [rendered]
+Hash: 401ee5c665e77176fd3f
+Version: webpack 1.9.10
+Time: 102ms
+      Asset       Size  Chunks             Chunk Names
+  output.js     4.3 kB       0  [emitted]  main
+1.output.js  175 bytes       1  [emitted]  
+chunk    {0} output.js (main) 369 bytes [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 88 {0} [built]
-    [2] (webpack)/~/bundle-loader!./file.js 365 {0} [built]
+    [0] ./example.js 88 bytes {0} [built]
+    [1] (webpack)/~/bundle-loader!./file.js 281 bytes {0} [built]
         cjs require bundle!./file.js [0] ./example.js 1:0-27
-chunk    {1} 1.output.js 28 {0} [rendered]
-    > [2] (webpack)/~/bundle-loader!./file.js 7:0-14:2
-    [1] ./file.js 28 {1} [built]
-        cjs require !!.\file.js [2] (webpack)/~/bundle-loader!./file.js 8:8-114
+chunk    {1} 1.output.js 28 bytes {0} [rendered]
+    > [1] (webpack)/~/bundle-loader!./file.js 7:0-14:2
+    [2] ./file.js 28 bytes {1} [built]
+        cjs require !!./file.js [1] (webpack)/~/bundle-loader!./file.js 8:8-30
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 1444d0062225001d8880
-Version: webpack 1.5.0
-Time: 144ms
-      Asset  Size  Chunks             Chunk Names
-  output.js   898       0  [emitted]  main
-1.output.js    55       1  [emitted]  
-chunk    {0} output.js (main) 453 [rendered]
+Hash: 05b29e396109d10b7d34
+Version: webpack 1.9.10
+Time: 235ms
+      Asset       Size  Chunks             Chunk Names
+  output.js  899 bytes       0  [emitted]  main
+1.output.js   57 bytes       1  [emitted]  
+chunk    {0} output.js (main) 369 bytes [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 88 {0} [built]
-    [2] (webpack)/~/bundle-loader!./file.js 365 {0} [built]
+    [0] ./example.js 88 bytes {0} [built]
+    [2] (webpack)/~/bundle-loader!./file.js 281 bytes {0} [built]
         cjs require bundle!./file.js [0] ./example.js 1:0-27
-chunk    {1} 1.output.js 28 {0} [rendered]
+chunk    {1} 1.output.js 28 bytes {0} [rendered]
     > [2] (webpack)/~/bundle-loader!./file.js 7:0-14:2
-    [1] ./file.js 28 {1} [built]
-        cjs require !!.\file.js [2] (webpack)/~/bundle-loader!./file.js 8:8-114
-
-WARNING in output.js from UglifyJs
-Dropping unused function argument require [(webpack)/~/bundle-loader!./file.js:7,0]
+    [1] ./file.js 28 bytes {1} [built]
+        cjs require !!./file.js [2] (webpack)/~/bundle-loader!./file.js 8:8-30
 ```

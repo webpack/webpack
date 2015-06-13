@@ -100,7 +100,7 @@ console.log(require("beta/b"));
 /*!*********************************************!*\
   !*** external "alpha_fda802f3c408a66ef744" ***!
   \*********************************************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = alpha_fda802f3c408a66ef744;
 
@@ -127,7 +127,7 @@ console.log(require("beta/b"));
 /*!********************************************!*\
   !*** external "beta_fda802f3c408a66ef744" ***!
   \********************************************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = beta_fda802f3c408a66ef744;
 
@@ -150,10 +150,10 @@ console.log(require("beta/b"));
 
 ```
 Hash: 0d8279ed7b443d36b536
-Version: webpack 1.9.5
-Time: 84ms
+Version: webpack 1.9.10
+Time: 78ms
     Asset     Size  Chunks             Chunk Names
-output.js  3.66 kB       0  [emitted]  main
+output.js  3.62 kB       0  [emitted]  main
 chunk    {0} output.js (main) 397 bytes [rendered]
     > main [0] ./example.js 
     [0] ./example.js 145 bytes {0} [built]
@@ -164,10 +164,10 @@ chunk    {0} output.js (main) 397 bytes [rendered]
 
 ```
 Hash: 1e9d431b3cebd3bcea12
-Version: webpack 1.9.5
-Time: 170ms
+Version: webpack 1.9.10
+Time: 201ms
     Asset       Size  Chunks             Chunk Names
-output.js  541 bytes       0  [emitted]  main
+output.js  537 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 397 bytes [rendered]
     > main [0] ./example.js 
     [0] ./example.js 145 bytes {0} [built]

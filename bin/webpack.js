@@ -152,7 +152,7 @@ ifArg("hide-modules", function(bool) {
 
 var webpack = require("../lib/webpack.js");
 
-Error.stackTrackLimit = 30;
+Error.stackTraceLimit = 30;
 var lastHash = null;
 var compiler = webpack(options);
 function compilerCallback(err, stats) {

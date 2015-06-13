@@ -3,6 +3,8 @@ var fs = require("fs");
 
 var fixtures = path.join(__dirname, "fixtures");
 
+try { fs.mkdirSync(fixtures); } catch(e) {}
+
 
 for(var i = 0; i < 1000; i++) {
 	var source = [];

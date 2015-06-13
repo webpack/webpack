@@ -49,41 +49,41 @@ module.exports = [
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -101,7 +101,7 @@ module.exports = [
 	console.log("Running " + ("desktop") + " build");
 
 /***/ }
-/******/ ])
+/******/ ]);
 ```
 
 # js/mobile.js
@@ -110,41 +110,41 @@ module.exports = [
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -166,12 +166,12 @@ module.exports = [
 /*!*************************!*\
   !*** ./mobile-stuff.js ***!
   \*************************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	// mobile only stuff
 
 /***/ }
-/******/ ])
+/******/ ]);
 ```
 
 # Info
@@ -180,34 +180,34 @@ module.exports = [
 
 ```
 Hash: f7ca6364953a74846973bca985cdc67a34d859e1
-Version: webpack 1.5.0
+Version: webpack 1.9.10
 Child mobile:
     Hash: f7ca6364953a74846973
-    Version: webpack 1.5.0
-    Time: 42ms
-        Asset  Size  Chunks             Chunk Names
-    mobile.js  1878       0  [emitted]  main
-    chunk    {0} mobile.js (main) 117 [rendered]
+    Version: webpack 1.9.10
+    Time: 75ms
+        Asset     Size  Chunks             Chunk Names
+    mobile.js  1.77 kB       0  [emitted]  main
+    chunk    {0} mobile.js (main) 117 bytes [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 97 {0} [built]
-        [1] ./mobile-stuff.js 20 {0} [built]
+        [0] ./example.js 97 bytes {0} [built]
+        [1] ./mobile-stuff.js 20 bytes {0} [built]
             cjs require ./mobile-stuff [0] ./example.js 2:1-26
 Child desktop:
     Hash: bca985cdc67a34d859e1
-    Version: webpack 1.5.0
-    Time: 34ms
-         Asset  Size  Chunks             Chunk Names
-    desktop.js  1673       0  [emitted]  main
-    chunk    {0} desktop.js (main) 97 [rendered]
+    Version: webpack 1.9.10
+    Time: 60ms
+         Asset     Size  Chunks             Chunk Names
+    desktop.js  1.59 kB       0  [emitted]  main
+    chunk    {0} desktop.js (main) 97 bytes [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 97 {0} [built]
+        [0] ./example.js 97 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: ddb8434066401a5c4dde50e9cbb599a11735e6bb
-Version: webpack 1.5.0
+Hash: f7ca6364953a74846973bca985cdc67a34d859e1
+Version: webpack 1.9.10
 
 WARNING in (mobile) mobile.js from UglifyJs
 Condition always true [./example.js:1,0]
@@ -216,28 +216,28 @@ WARNING in (desktop) desktop.js from UglifyJs
 Condition always false [./example.js:1,0]
 Dropping unreachable code [./example.js:2,0]
 Child mobile:
-    Hash: ddb8434066401a5c4dde
-    Version: webpack 1.5.0
-    Time: 118ms
-        Asset  Size  Chunks             Chunk Names
-    mobile.js   276       0  [emitted]  main
-    chunk    {0} mobile.js (main) 117 [rendered]
+    Hash: f7ca6364953a74846973
+    Version: webpack 1.9.10
+    Time: 193ms
+        Asset       Size  Chunks             Chunk Names
+    mobile.js  279 bytes       0  [emitted]  main
+    chunk    {0} mobile.js (main) 117 bytes [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 97 {0} [built]
-        [1] ./mobile-stuff.js 20 {0} [built]
+        [0] ./example.js 97 bytes {0} [built]
+        [1] ./mobile-stuff.js 20 bytes {0} [built]
             cjs require ./mobile-stuff [0] ./example.js 2:1-26
     
     WARNING in mobile.js from UglifyJs
     Condition always true [./example.js:1,0]
 Child desktop:
-    Hash: 50e9cbb599a11735e6bb
-    Version: webpack 1.5.0
-    Time: 110ms
-         Asset  Size  Chunks             Chunk Names
-    desktop.js   254       0  [emitted]  main
-    chunk    {0} desktop.js (main) 97 [rendered]
+    Hash: bca985cdc67a34d859e1
+    Version: webpack 1.9.10
+    Time: 178ms
+         Asset       Size  Chunks             Chunk Names
+    desktop.js  259 bytes       0  [emitted]  main
+    chunk    {0} desktop.js (main) 97 bytes [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 97 {0} [built]
+        [0] ./example.js 97 bytes {0} [built]
     
     WARNING in desktop.js from UglifyJs
     Condition always false [./example.js:1,0]

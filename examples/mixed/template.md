@@ -33,10 +33,10 @@ You see that everything is working nicely together.
 {{js/output.js}}
 ```
 
-# js/0.output.js
+# js/1.output.js
 
 ``` javascript
-{{js/0.output.js}}
+{{js/1.output.js}}
 ```
 
 # Info

@@ -46,41 +46,41 @@ module.exports = {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -90,13 +90,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!******************!*\
   !*** ./alpha.js ***!
   \******************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = "alpha";
 
 /***/ }
 /******/ ])
 });
+;
 ```
 
 # js/MyLibrary.beta.js
@@ -115,41 +116,41 @@ return /******/ (function(modules) { // webpackBootstrap
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-/******/
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -159,13 +160,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!*****************!*\
   !*** ./beta.js ***!
   \*****************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	module.exports = "beta";
 
 /***/ }
 /******/ ])
 });
+;
 ```
 
 # Info
@@ -173,33 +175,33 @@ return /******/ (function(modules) { // webpackBootstrap
 ## Uncompressed
 
 ```
-Hash: c7f999402520fa44f95c
-Version: webpack 1.5.0
-Time: 34ms
-             Asset  Size  Chunks             Chunk Names
- MyLibrary.beta.js  2011       0  [emitted]  beta
-MyLibrary.alpha.js  2017       1  [emitted]  alpha
-chunk    {0} MyLibrary.beta.js (beta) 24 [rendered]
-    > beta [0] ./beta.js 
-    [0] ./beta.js 24 {0} [built]
-chunk    {1} MyLibrary.alpha.js (alpha) 25 [rendered]
+Hash: 618b766e9f4c28be5133
+Version: webpack 1.9.10
+Time: 67ms
+             Asset     Size  Chunks             Chunk Names
+MyLibrary.alpha.js  1.91 kB       0  [emitted]  alpha
+ MyLibrary.beta.js   1.9 kB       1  [emitted]  beta
+chunk    {0} MyLibrary.alpha.js (alpha) 25 bytes [rendered]
     > alpha [0] ./alpha.js 
-    [0] ./alpha.js 25 {1} [built]
+    [0] ./alpha.js 25 bytes {0} [built]
+chunk    {1} MyLibrary.beta.js (beta) 24 bytes [rendered]
+    > beta [0] ./beta.js 
+    [0] ./beta.js 24 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 0f9197c2217d2ca4cce4
-Version: webpack 1.5.0
-Time: 138ms
-             Asset  Size  Chunks             Chunk Names
- MyLibrary.beta.js   485       0  [emitted]  beta
-MyLibrary.alpha.js   488       1  [emitted]  alpha
-chunk    {0} MyLibrary.beta.js (beta) 24 [rendered]
+Hash: c7f999402520fa44f95c
+Version: webpack 1.9.10
+Time: 186ms
+             Asset       Size  Chunks             Chunk Names
+ MyLibrary.beta.js  487 bytes       0  [emitted]  beta
+MyLibrary.alpha.js  490 bytes       1  [emitted]  alpha
+chunk    {0} MyLibrary.beta.js (beta) 24 bytes [rendered]
     > beta [0] ./beta.js 
-    [0] ./beta.js 24 {0} [built]
-chunk    {1} MyLibrary.alpha.js (alpha) 25 [rendered]
+    [0] ./beta.js 24 bytes {0} [built]
+chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [rendered]
     > alpha [0] ./alpha.js 
-    [0] ./alpha.js 25 {1} [built]
+    [0] ./alpha.js 25 bytes {1} [built]
 ```
