@@ -394,8 +394,10 @@ module.exports = function(optimist, argv, convertOptions) {
 
 		ifArg("optimize-min-chunk-size", function(value) {
 			ensureArray(options, "plugins");
-			var LimitChunkSizePlugin = require("../lib/optimize/LimitChunkSizePlugin");
-			options.plugins.push(new LimitChunkSizePlugin(parseInt(value, 10)));
+			var MinChunkSizePlugin = require("../lib/optimize/MinChunkSizePlugin");
+			options.plugins.push(new MinChunkSizePlugin({
+				minChunkSize: parseInt(value, 10)
+			}));
 		});
 
 		ifBooleanArg("optimize-minimize", function() {
