@@ -52,7 +52,7 @@ describe("Integration", function() {
 				alias: { should: require.resolve("should") }
 			},
 			plugins: [
-				new webpack.optimize.LimitChunkCountPlugin(1),
+				new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
 				new webpack.DefinePlugin({
 					"typeof CONST_TYPEOF": JSON.stringify("typeof"),
 					CONST_TRUE: true,
