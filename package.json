@@ -11,15 +11,13 @@
     "interpret": "^0.5.2",
     "memory-fs": "~0.2.0",
     "mkdirp": "~0.5.0",
+    "node-libs-browser": ">= 0.4.0 <=0.6.0",
     "optimist": "~0.6.0",
     "supports-color": "^1.2.0",
     "tapable": "~0.1.8",
     "uglify-js": "~2.4.13",
     "watchpack": "^0.2.1",
     "webpack-core": "~0.6.0"
-  },
-  "peerDependencies": {
-    "node-libs-browser": ">= 0.4.0 <=0.6.0"
   },
   "license": "MIT",
   "devDependencies": {
