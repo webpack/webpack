@@ -16,7 +16,8 @@ it("should be able the remove modules from cache with require.cache and require.
 	var singlarObj = require("./singluar2");
 	var singlarId = require.resolve("./singluar2");
 	var singlarIdInConditional = require.resolve(true ? "./singluar2" : "./singluar");
-	singlarId.should.have.type("number");
+	if(typeof singlarId !== "number" && typeof singlarId !== "string")
+		throw new Error("require.resolve should return a number or string");
 	singlarIdInConditional.should.be.eql(singlarId);
 	(require.cache).should.have.type("object");
 	(require.cache[singlarId]).should.have.type("object");
