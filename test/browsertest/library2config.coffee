@@ -14,7 +14,8 @@ module.exports =
 		alias:
 			should: require.resolve "should"
 	plugins: [
-		new webpack.optimize.LimitChunkCountPlugin 2
+		new webpack.optimize.LimitChunkCountPlugin
+			maxChunks: 2
 		new webpack.DefinePlugin
 			"typeof CONST_TYPEOF": JSON.stringify("typeof"),
 			CONST_UNDEFINED: undefined,

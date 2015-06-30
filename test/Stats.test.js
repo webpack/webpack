@@ -7,6 +7,7 @@ var webpack = require("../lib/webpack");
 
 var base = path.join(__dirname, "statsCases");
 var tests = fs.readdirSync(base);
+var Stats = require("../lib/Stats");
 
 describe("Stats", function() {
 	tests.forEach(function(testName) {
@@ -62,4 +63,43 @@ describe("Stats", function() {
 			});
 		});
 	});
+	describe("Error Handling", function(){
+		describe("does have", function(){
+			it("hasErrors", function() {
+				mockStats = new Stats({errors:['firstError'],hash:'1234'});
+				mockStats.hasErrors().should.be.ok;
+			});
+			it("hasWarnings", function() {
+				mockStats = new Stats({warnings:['firstError'],hash:'1234'});
+				mockStats.hasWarnings().should.be.ok;
+			});
+		});
+		describe("does not have", function(){
+			it("hasErrors", function() {
+				mockStats = new Stats({errors:[],hash:'1234'});
+				mockStats.hasErrors().should.not.be.ok;
+			});
+			it("hasWarnings", function() {
+				mockStats = new Stats({warnings:[],hash:'1234'});
+				mockStats.hasWarnings().should.not.be.ok;
+			});
+		});
+		it("formatError handles string errors", function(){
+			mockStats = new Stats({
+				errors:['firstError'],
+				warnings:[],
+				assets:[],
+				chunks:[],
+				modules:[],
+				children:[],
+				hash:'1234',
+				mainTemplate:{
+					getPublicPath:function(){return 'path';}
+				}
+			});
+			obj = mockStats.toJson();
+			obj.errors[0].should.be.equal('firstError');
+		});
+	});
+
 });

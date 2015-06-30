@@ -1,14 +1,15 @@
 var fs = require("fs");
+require("should");
 
 module.exports = {
 	findBundle: function(i, options) {
 		var files = fs.readdirSync(options.output.path);
-		var hashParamMatches = options.output.filename.match(/:(\d+)/);
-		var hashLength = hashParamMatches && hashParamMatches[1];
+		var expectedNameLength = options.output.expectedFilenameLength;
 		var bundleDetect = new RegExp("^bundle" + i, "i");
-		for (var i = 0, file; i < files.length; i++) {
-			file = files[i];
+		for(var j = 0, file; j < files.length; j++) {
+			file = files[j];
 			if (bundleDetect.test(file)) {
+				file.should.match(new RegExp("^.{" + expectedNameLength + "}$"));
 				return "./" + file;
 			}
 		}

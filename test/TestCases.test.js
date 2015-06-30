@@ -29,6 +29,9 @@ describe("TestCases", function() {
 			})
 		]},
 		{ name: "devtool-eval", devtool: "eval" },
+		{ name: "devtool-eval-named-modules", devtool: "eval", plugins: [
+			new webpack.NamedModulesPlugin()
+		]},
 		{ name: "devtool-eval-source-map", devtool: "#eval-source-map" },
 		{ name: "devtool-inline-source-map", devtool: "inline-source-map" },
 		{ name: "devtool-source-map", devtool: "#@source-map" },
@@ -45,7 +48,8 @@ describe("TestCases", function() {
 			new webpack.optimize.UglifyJsPlugin()
 		]},
 		{ name: "deduped", plugins: [
-			new webpack.optimize.DedupePlugin()
+			new webpack.optimize.DedupePlugin(),
+			new webpack.NamedModulesPlugin()
 		]},
 		{ name: "minimized-deduped", plugins: [
 			new webpack.optimize.DedupePlugin(),
@@ -60,7 +64,8 @@ describe("TestCases", function() {
 			new webpack.HotModuleReplacementPlugin(),
 			new webpack.optimize.DedupePlugin(),
 			new webpack.optimize.OccurrenceOrderPlugin(),
-			new webpack.optimize.UglifyJsPlugin()
+			new webpack.optimize.UglifyJsPlugin(),
+			new webpack.NamedModulesPlugin()
 		]}
 	].forEach(function(config) {
 		describe(config.name, function() {

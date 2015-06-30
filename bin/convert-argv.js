@@ -28,11 +28,23 @@ module.exports = function(optimist, argv, convertOptions) {
 
 	var configFileLoaded = false;
 	var configPath, ext;
+	var extensions = Object.keys(interpret.extensions).sort(function(a, b){
+		return a.length - b.length;
+	});
+
 	if (argv.config) {
 		configPath = path.resolve(argv.config);
-		ext = path.extname(configPath);
+		for (var i = extensions.length - 1; i >= 0; i--) {
+			var tmpExt = extensions[i];
+			if (configPath.indexOf(tmpExt, configPath.length - tmpExt.length) > -1){
+				ext = tmpExt;
+				break;
+			}
+		};
+		if (!ext) {
+			ext = path.extname(configPath);
+		}
 	} else {
-		var extensions = Object.keys(interpret.extensions);
 		for(var i = 0; i < extensions.length; i++) {
 			var webpackConfig = path.resolve('webpack.config' + extensions[i]);
 			if(fs.existsSync(webpackConfig)) {
@@ -396,8 +408,10 @@ module.exports = function(optimist, argv, convertOptions) {
 
 		ifArg("optimize-min-chunk-size", function(value) {
 			ensureArray(options, "plugins");
-			var LimitChunkSizePlugin = require("../lib/optimize/LimitChunkSizePlugin");
-			options.plugins.push(new LimitChunkSizePlugin(parseInt(value, 10)));
+			var MinChunkSizePlugin = require("../lib/optimize/MinChunkSizePlugin");
+			options.plugins.push(new MinChunkSizePlugin({
+				minChunkSize: parseInt(value, 10)
+			}));
 		});
 
 		ifBooleanArg("optimize-minimize", function() {
