@@ -13,7 +13,7 @@ it("should define and require a local module", function() {
 	require(["my-module"]);
 });
 
-it("should not create a chunk for a AMD require to a local module", function() {
+it("should not create a chunk for a AMD require to a local module", function(done) {
 	define("my-module2", function() {
 		return 1235;
 	});
@@ -22,7 +22,10 @@ it("should not create a chunk for a AMD require to a local module", function() {
 		myModule2.should.be.eql(1235);
 		sync = true;
 	});
-	sync.should.be.eql(true);
+	setImmediate(function() {
+		sync.should.be.eql(true);
+		done();
+	});
 });
 
 it("should define and require a local module with deps", function() {
