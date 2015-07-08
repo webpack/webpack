@@ -3,13 +3,13 @@
 		"node": true
 	},
 	"plugins": [
-    	"nodeca"
-  	],
+		"nodeca"
+	],
 	"rules": {
 		"strict": 0,
 		"curly": 0,
 		"indent": [0, "tab"],
-    	"nodeca/indent": [2, "tabs", 1 ],
+		"nodeca/indent": [2, "tabs", 1 ],
 		"eol-last": 1,
 		"no-shadow": 0,
 		"no-redeclare": 1,
