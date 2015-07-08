@@ -1,6 +1,10 @@
 [![webpack](http://webpack.github.io/assets/logo.png)](http://webpack.github.io)
 
-[![NPM version][npm-image]][npm-url] [![Gitter chat][gitter-image]][gitter-url] [![Gittip donate button][gittip-image]][gittip-url]
+[![NPM version][npm-image]][npm-url] [![Gitter chat][gitter-image]][gitter-url] [![Gittip donate button][gittip-image]][gittip-url] [![Downloads](http://img.shields.io/npm/dm/webpack.svg)](http://badge.fury.io/js/webpack)   
+[![Build Status](https://travis-ci.org/webpack/webpack.svg?branch=master)](https://travis-ci.org/webpack/webpack) [![Coverage Status](https://coveralls.io/repos/webpack/webpack/badge.svg?branch=master&service=github)](https://coveralls.io/github/webpack/webpack?branch=master)     
+[![Dependency Status](https://david-dm.org/webpack/webpack.svg)](https://david-dm.org/webpack/webpack) [![devDependency Status](https://david-dm.org/webpack/webpack/dev-status.svg)](https://david-dm.org/webpack/webpack#info=devDependencies) [![peerDependency Status](https://david-dm.org/webpack/webpack/peer-status.svg)](https://david-dm.org/webpack/webpack#info=peerDependencies)
+
+[![NPM](https://nodei.co/npm/webpack.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/webpack)
 
 [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
 
