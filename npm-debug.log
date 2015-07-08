@@ -1,0 +1,38 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/thaiat/.nvm/versions/node/v0.12.4/bin/node',
+1 verbose cli   '/Users/thaiat/.nvm/versions/node/v0.12.4/bin/npm',
+1 verbose cli   'run',
+1 verbose cli   'lint' ]
+2 info using npm@2.10.1
+3 info using node@v0.12.4
+4 verbose run-script [ 'prelint', 'lint', 'postlint' ]
+5 info prelint webpack@1.10.1
+6 info lint webpack@1.10.1
+7 verbose unsafe-perm in lifecycle true
+8 info webpack@1.10.1 Failed to exec lint script
+9 verbose stack Error: webpack@1.10.1 lint: `eslint lib`
+9 verbose stack Exit status 1
+9 verbose stack     at EventEmitter.<anonymous> (/Users/thaiat/.nvm/versions/node/v0.12.4/lib/node_modules/npm/lib/utils/lifecycle.js:213:16)
+9 verbose stack     at EventEmitter.emit (events.js:110:17)
+9 verbose stack     at ChildProcess.<anonymous> (/Users/thaiat/.nvm/versions/node/v0.12.4/lib/node_modules/npm/lib/utils/spawn.js:24:14)
+9 verbose stack     at ChildProcess.emit (events.js:110:17)
+9 verbose stack     at maybeClose (child_process.js:1015:16)
+9 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:1087:5)
+10 verbose pkgid webpack@1.10.1
+11 verbose cwd /Users/thaiat/Documents/Phonegap/webpack
+12 error Darwin 14.4.0
+13 error argv "/Users/thaiat/.nvm/versions/node/v0.12.4/bin/node" "/Users/thaiat/.nvm/versions/node/v0.12.4/bin/npm" "run" "lint"
+14 error node v0.12.4
+15 error npm  v2.10.1
+16 error code ELIFECYCLE
+17 error webpack@1.10.1 lint: `eslint lib`
+17 error Exit status 1
+18 error Failed at the webpack@1.10.1 lint script 'eslint lib'.
+18 error This is most likely a problem with the webpack package,
+18 error not with npm itself.
+18 error Tell the author that this fails on your system:
+18 error     eslint lib
+18 error You can get their info via:
+18 error     npm owner ls webpack
+18 error There is likely additional logging output above.
+19 verbose exit [ 1, true ]

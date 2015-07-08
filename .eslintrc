@@ -2,9 +2,14 @@
 	"env": {
 		"node": true
 	},
+	"plugins": [
+    	"nodeca"
+  	],
 	"rules": {
 		"strict": 0,
 		"curly": 0,
+		"indent": [0, "tab"],
+    	"nodeca/indent": [2, "tabs", 1 ],
 		"eol-last": 1,
 		"no-shadow": 0,
 		"no-redeclare": 1,
@@ -13,6 +18,7 @@
 		"no-use-before-define": 0,
 		"consistent-return": 0,
 		"no-inner-declarations": 1,
-		"no-loop-func": 1
+		"no-loop-func": 1,
+		"space-before-function-paren": [2, "never"] 
 	}
 }
