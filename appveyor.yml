@@ -15,8 +15,10 @@ matrix:
     - nodejs_version: 0.13
 
 install:
+  - npm install -g npm
   - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version)
   - npm install
+
 
 build: off
 
