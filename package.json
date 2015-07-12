@@ -38,6 +38,7 @@
     "i18n-webpack-plugin": "~0.2.0",
     "istanbul": "^0.3.13",
     "jade-loader": "~0.7.0",
+    "js-beautify": "^1.5.10",
     "json-loader": "~0.5.1",
     "less-loader": "^2.0.0",
     "microtime": "^1.2.0",
@@ -76,6 +77,7 @@
     "test": "mocha",
     "travis": "npm run cover -- --report lcovonly",
     "lint": "node_modules/eslint/bin/eslint.js lib",
+    "jsbeautify": "node_modules/js-beautify/js/bin/js-beautify.js lib/**/*.js -r",
     "precover": "npm run lint",
     "cover": "istanbul cover -x *.runtime.js node_modules/mocha/bin/_mocha",
     "publish-patch": "mocha && npm version patch && git push && git push --tags && npm publish"
