@@ -97,6 +97,7 @@ Please see [Using Loaders](http://webpack.github.io/docs/using-loaders.html) for
 **styling**
 * [`style`](https://github.com/webpack/style-loader): Add exports of a module as style to DOM
 * [`css`](https://github.com/webpack/css-loader): Loads css file with resolved imports and returns css code
+* [`cssnext`](https://github.com/cssnext/cssnext-loader): Loads and compiles a css file using [cssnext](http://cssnext.io/)
 * [`less`](https://github.com/webpack/less-loader): Loads and compiles a less file
 * [`sass`](https://github.com/jtangelder/sass-loader): Loads and compiles a scss file
 * [`stylus`](https://github.com/shama/stylus-loader): Loads and compiles a stylus file
