@@ -77,7 +77,7 @@
     "test": "mocha",
     "travis": "npm run cover -- --report lcovonly",
     "lint": "eslint lib",
-    "jsbeautify": "js-beautify --indent-with-tabs --end-with-newline --space-after-anon-function=false lib/**/*.js  -r",
+    "jsbeautify": "js-beautify --indent-with-tabs --end-with-newline lib/**/*.js lib/*.js -r",
     "precover": "npm run lint",
     "cover": "istanbul cover -x *.runtime.js node_modules/mocha/bin/_mocha",
     "publish-patch": "mocha && npm version patch && git push && git push --tags && npm publish"
