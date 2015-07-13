@@ -1,12 +1,22 @@
 [![webpack](http://webpack.github.io/assets/logo.png)](http://webpack.github.io)
 
-[![NPM version][npm-image]][npm-url] [![Gitter chat][gitter-image]][gitter-url] [![Gittip donate button][gittip-image]][gittip-url] [![Downloads][downloads-image]][downloads-url]   
+ 
+[![NPM version][npm-image]][npm-url] [![Gitter chat][gitter-image]][gitter-url] [![Downloads][downloads-image]][downloads-url]   
+[![NPM][nodei-image]][nodei-url]
+
+build  
 [![Build Status][travis-image]][travis-url] [![Appveyor Status][appveyor-image]][appveyor-url]  [![Coverage Status][coveralls-image]][coveralls-url]     
+
+dependencies   
 [![Dependency Status][david-image]][david-url] [![devDependency Status][david-dev-image]][david-dev-url] [![peerDependency Status][david-peer-image]][david-peer-url]
 
-[![Donate to sokra][donate-image]][donate-url]
+donation   
+[![Gittip donate button][gittip-image]][gittip-url] [![Donate to sokra][donate-image]][donate-url]
 
-[![NPM][nodei-image]][nodei-url]
+
+
+
+
 
 [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
 
