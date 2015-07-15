@@ -1,3 +1,3 @@
 exports.beautify = {
-	files: "lib/**/*.js"
+	files: "{{lib,hot,scripts}/**/*.js,benchmark/*.js}"
 };
