@@ -1,6 +1,22 @@
 [![webpack](http://webpack.github.io/assets/logo.png)](http://webpack.github.io)
 
-[![NPM version][npm-image]][npm-url] [![Gitter chat][gitter-image]][gitter-url] [![Gittip donate button][gittip-image]][gittip-url]
+ 
+[![NPM version][npm-image]][npm-url] [![Gitter chat][gitter-image]][gitter-url] [![Downloads][downloads-image]][downloads-url]   
+[![NPM][nodei-image]][nodei-url]
+
+build  
+[![Build Status][travis-image]][travis-url] [![Appveyor Status][appveyor-image]][appveyor-url]  [![Coverage Status][coveralls-image]][coveralls-url]     
+
+dependencies   
+[![Dependency Status][david-image]][david-url] [![devDependency Status][david-dev-image]][david-dev-url] [![peerDependency Status][david-peer-image]][david-peer-url]
+
+donation   
+[![Gittip donate button][gittip-image]][gittip-url] [![Donate to sokra][donate-image]][donate-url]
+
+
+
+
+
 
 [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
 
@@ -203,7 +219,7 @@ function loadTemplateAsync (name, callback) {
 
 ## Tests
 
-You can run the Node tests with `npm test`. [![Build status (linux)][travis-image]][travis-url] [![Build status (windows)][appveyor-image]][appveyor-url] [![Test coverage][coveralls-image]][coveralls-url]
+You can run the Node tests with `npm test`.
 
 You can run the browser tests:
 
@@ -258,8 +274,6 @@ This is a free-time project. The time I invest in it fluctuates. If you use webp
 
 I'm very thankful for every dollar. If you leave your username or email, I may show my thanks by giving you extra support.
 
-[![Donate to sokra][donate-image]][donate-url]
-
 
 ## Dependencies
 
@@ -273,7 +287,6 @@ I'm very thankful for every dollar. If you leave your username or email, I may s
 * [mkdirp](https://github.com/substack/node-mkdirp)
 * [clone](https://github.com/pvorb/node-clone)
 
-[![Dependency status][david-image]][david-url]
 
 [travis-url]: http://travis-ci.org/webpack/webpack
 [travis-image]: https://img.shields.io/travis/webpack/webpack.svg
@@ -283,8 +296,16 @@ I'm very thankful for every dollar. If you leave your username or email, I may s
 [coveralls-image]: https://img.shields.io/coveralls/webpack/webpack.svg
 [npm-url]: https://npmjs.org/package/webpack
 [npm-image]: https://img.shields.io/npm/v/webpack.svg
+[downloads-image]: http://img.shields.io/npm/dm/webpack.svg
+[downloads-url]: http://badge.fury.io/js/webpack
 [david-url]: https://david-dm.org/webpack/webpack
 [david-image]: https://img.shields.io/david/webpack/webpack.svg
+[david-dev-url]: https://david-dm.org/webpack/webpack#info=devDependencies
+[david-dev-image]: https://david-dm.org/webpack/webpack/dev-status.svg
+[david-peer-url]: https://david-dm.org/webpack/webpack#info=peerDependencies
+[david-peer-image]: https://david-dm.org/webpack/webpack/peer-status.svg
+[nodei-image]: https://nodei.co/npm/webpack.png?downloads=true&downloadRank=true&stars=true
+[nodei-url]: https://nodei.co/npm/webpack
 [donate-url]: http://sokra.github.io/
 [donate-image]: https://img.shields.io/badge/donate-sokra-brightgreen.svg
 [gittip-url]: https://www.gittip.com/sokra/
