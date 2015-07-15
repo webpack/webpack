@@ -28,11 +28,13 @@
     "component-webpack-plugin": "~0.2.0",
     "coveralls": "^2.11.2",
     "css-loader": "~0.14.0",
+    "diff": "^1.4.0",
     "eslint": "^0.24.0",
     "eslint-plugin-nodeca": "^1.0.3",
     "express": "~3.4.8",
     "extract-text-webpack-plugin": "~0.8.0",
     "file-loader": "~0.8.0",
+    "glob": "^5.0.14",
     "i18n-webpack-plugin": "~0.2.0",
     "istanbul": "^0.3.13",
     "jade-loader": "~0.7.0",
@@ -71,11 +73,12 @@
     "web_modules/"
   ],
   "scripts": {
-    "pretest": "npm run lint",
+    "pretest": "npm run lint && npm run beautify-lint",
     "test": "mocha",
     "travis": "npm run cover -- --report lcovonly",
     "lint": "eslint lib",
-    "jsbeautify": "js-beautify --indent-with-tabs --end-with-newline lib/**/*.js lib/*.js -r",
+    "beautify-lint": "node ./scripts/beautify-check",
+    "beautify": "node ./scripts/beautify-rewrite",
     "precover": "npm run lint",
     "cover": "istanbul cover -x *.runtime.js node_modules/mocha/bin/_mocha",
     "publish-patch": "mocha && npm version patch && git push && git push --tags && npm publish"

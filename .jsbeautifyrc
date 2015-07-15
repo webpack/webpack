@@ -1,4 +1,4 @@
-{ 
+{
   "js": {
     "allowed_file_extensions": ["js", "json", "jshintrc", "jsbeautifyrc"],
     "brace_style": "collapse",
@@ -9,7 +9,7 @@
     "indent_char": "\t",
     "indent_level": 0,
     "indent_size": 1,
-    "indent_with_tabs": false,
+    "indent_with_tabs": true,
     "jslint_happy": false,
     "jslint_happy_align_switch_case": true,
     "space_after_anon_function": false,
