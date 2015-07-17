@@ -6,3 +6,4 @@
 /examples/*/js
 /coverage
 .DS_Store
+*.log

@@ -28,7 +28,10 @@ if(module.hot) {
 			}
 
 		}).catch(function(err) {
-			if(module.hot.status() in {abort: 1, fail: 1}) {
+			if(module.hot.status() in {
+					abort: 1,
+					fail: 1
+				}) {
 				console.warn("[HMR] Cannot apply update. Need to do a full reload!");
 				console.warn("[HMR] " + err.stack || err.message);
 				window.location.reload();
@@ -39,7 +42,7 @@ if(module.hot) {
 	};
 	var addEventListener = window.addEventListener ? function(eventName, listener) {
 		window.addEventListener(eventName, listener, false);
-	} : function (eventName, listener) {
+	} : function(eventName, listener) {
 		window.attachEvent("on" + eventName, listener);
 	};
 	addEventListener("message", function(event) {

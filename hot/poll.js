@@ -5,6 +5,7 @@
 /*globals __resourceQuery */
 if(module.hot) {
 	var hotPollInterval = +(__resourceQuery.substr(1)) || (10 * 60 * 1000);
+
 	function checkForUpdate(fromUpdate) {
 		if(module.hot.status() === "idle") {
 			module.hot.check(true).then(function(updatedModules) {
@@ -15,7 +16,10 @@ if(module.hot) {
 				require("./log-apply-result")(updatedModules, updatedModules);
 				checkForUpdate(true);
 			}).catch(function(err) {
-				if(module.hot.status() in {abort: 1, fail: 1}) {
+				if(module.hot.status() in {
+						abort: 1,
+						fail: 1
+					}) {
 					console.warn("[HMR] Cannot apply update.");
 					console.warn("[HMR] " + err.stack || err.message);
 					console.warn("[HMR] You need to restart the application!");

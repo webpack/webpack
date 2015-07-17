@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
   "dependencies": {
@@ -11,15 +11,13 @@
     "interpret": "^0.5.2",
     "memory-fs": "~0.2.0",
     "mkdirp": "~0.5.0",
+    "node-libs-browser": ">= 0.4.0 <=0.6.0",
     "optimist": "~0.6.0",
     "supports-color": "^1.2.0",
     "tapable": "~0.1.8",
     "uglify-js": "~2.4.13",
     "watchpack": "^0.2.1",
     "webpack-core": "~0.6.0"
-  },
-  "peerDependencies": {
-    "node-libs-browser": ">= 0.4.0 <=0.6.0"
   },
   "license": "MIT",
   "devDependencies": {
@@ -30,13 +28,17 @@
     "component-webpack-plugin": "~0.2.0",
     "coveralls": "^2.11.2",
     "css-loader": "~0.14.0",
-    "eslint": "^0.21.0",
+    "diff": "^1.4.0",
+    "eslint": "^0.24.0",
+    "eslint-plugin-nodeca": "^1.0.3",
     "express": "~3.4.8",
     "extract-text-webpack-plugin": "~0.8.0",
     "file-loader": "~0.8.0",
+    "glob": "^5.0.14",
     "i18n-webpack-plugin": "~0.2.0",
     "istanbul": "^0.3.13",
     "jade-loader": "~0.7.0",
+    "js-beautify": "^1.5.10",
     "json-loader": "~0.5.1",
     "less-loader": "^2.0.0",
     "microtime": "^1.2.0",
@@ -71,10 +73,12 @@
     "web_modules/"
   ],
   "scripts": {
-    "pretest": "npm run lint",
+    "pretest": "npm run lint && npm run beautify-lint",
     "test": "mocha --full-trace --check-leaks",
     "travis": "npm run cover -- --report lcovonly",
     "lint": "eslint lib",
+    "beautify-lint": "node ./scripts/beautify-check",
+    "beautify": "node ./scripts/beautify-rewrite",
     "precover": "npm run lint",
     "cover": "istanbul cover -x *.runtime.js node_modules/mocha/bin/_mocha",
     "publish-patch": "mocha && npm version patch && git push && git push --tags && npm publish"

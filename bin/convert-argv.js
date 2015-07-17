@@ -265,6 +265,12 @@ module.exports = function(optimist, argv, convertOptions) {
 		});
 
 		ifArg("output-file", function(value) {
+			console.warn("output.file will be deprecated: Use 'output.filename' instead");
+			ensureObject(options, "output");
+			options.output.filename = value;
+		});
+
+		ifArg("output-filename", function(value) {
 			ensureObject(options, "output");
 			options.output.filename = value;
 		});
