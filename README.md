@@ -1,24 +1,20 @@
-[![webpack](http://webpack.github.io/assets/logo.png)](http://webpack.github.io)
+[![webpack](https://webpack.github.io/assets/logo.png)](https://webpack.github.io)
 
- 
-[![NPM version][npm-image]][npm-url] [![Gitter chat][gitter-image]][gitter-url] [![Downloads][downloads-image]][downloads-url]   
+
+[![NPM version][npm-image]][npm-url] [![Gitter chat][gitter-image]][gitter-url] [![Downloads][downloads-image]][downloads-url]
 [![NPM][nodei-image]][nodei-url]
 
-build  
-[![Build Status][travis-image]][travis-url] [![Appveyor Status][appveyor-image]][appveyor-url]  [![Coverage Status][coveralls-image]][coveralls-url]     
+build
+[![Build Status][travis-image]][travis-url] [![Appveyor Status][appveyor-image]][appveyor-url]  [![Coverage Status][coveralls-image]][coveralls-url]
 
-dependencies   
+dependencies
 [![Dependency Status][david-image]][david-url] [![devDependency Status][david-dev-image]][david-dev-url] [![peerDependency Status][david-peer-image]][david-peer-url]
 
-donation   
+donation
 [![Gittip donate button][gittip-image]][gittip-url] [![Donate to sokra][donate-image]][donate-url]
 
 
-
-
-
-
-[documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
+[documentation](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
 
 # Introduction
 
@@ -37,7 +33,7 @@ or packaging just about any resource or asset.
 
 # Getting Started
 
-Check out webpack's [documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=trdr) for quick Getting Started guide, in-depth usage,
+Check out webpack's [documentation](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=trdr) for quick Getting Started guide, in-depth usage,
 tutorials and resources.
 
 # Installation
@@ -48,7 +44,7 @@ project:
 global:
 `npm install webpack -g`
 Usage
-http://webpack.github.io/docs/tutorials/getting-started/
+https://webpack.github.io/docs/tutorials/getting-started/
 
 # Examples
 
@@ -59,7 +55,7 @@ Take a look at the [`examples`](https://github.com/webpack/webpack/tree/master/e
 ## Plugins
 
 webpack has a [rich plugin
-interface](http://webpack.github.io/docs/plugins.html). Most of the features
+interface](https://webpack.github.io/docs/plugins.html). Most of the features
 within webpack itself use this plugin interface. This makes webpack very
 **flexible**.
 
@@ -73,12 +69,12 @@ and incredibly **fast** on incremental compilations.
 
 webpack enables use of loaders to preprocess files. This allows you to bundle
 **any static resource** way beyond JavaScript. You can easily [write your own
-loaders](http://webpack.github.io/docs/loaders.html) using node.js. 
+loaders](https://webpack.github.io/docs/loaders.html) using node.js.
 
 Loaders are activated by using `loadername!` prefixes in `require()` statements,
 or are automatically applied via regex from your webpack configuration.
 
-Please see [Using Loaders](http://webpack.github.io/docs/using-loaders.html) for more information.
+Please see [Using Loaders](https://webpack.github.io/docs/using-loaders.html) for more information.
 
 **basic**
 * [`json`](https://github.com/webpack/json-loader): Loads file as JSON
@@ -98,7 +94,7 @@ Please see [Using Loaders](http://webpack.github.io/docs/using-loaders.html) for
 * [`coffee`](https://github.com/webpack/coffee-loader): Loads coffee-script like JavaScript
 * [`babel`](https://github.com/babel/babel-loader): Turn ES6 code into vanilla ES5 using [Babel](https://github.com/babel/babel).
 * [`livescript`](https://github.com/appedemic/livescript-loader): Loads LiveScript like JavaScript
-* [`sweetjs`](https://github.com/jlongster/sweetjs-loader): Use sweetjs macros. 
+* [`sweetjs`](https://github.com/jlongster/sweetjs-loader): Use sweetjs macros.
 * [`traceur`](https://github.com/jupl/traceur-loader): Use future JavaScript features with [Traceur](https://github.com/google/traceur-compiler).
 * [`typescript`](https://github.com/andreypopp/typescript-loader): Loads TypeScript like JavaScript.
 
@@ -127,7 +123,7 @@ Please see [Using Loaders](http://webpack.github.io/docs/using-loaders.html) for
 * [`injectable`](https://github.com/jauco/webpack-injectable): Allow to inject dependencies into modules
 * [`transform`](https://github.com/webpack/transform-loader): Use browserify transforms as loader.
 
-For the full list of loaders, see [list of loaders](http://webpack.github.io/docs/list-of-loaders.html).
+For the full list of loaders, see [list of loaders](https://webpack.github.io/docs/list-of-loaders.html).
 
 ## Module Format (AMD/CommonJS)
 
@@ -140,7 +136,7 @@ simple expressions. This allows you to **support most existing libraries** out o
 webpack allows you to split your codebase into multiple chunks. Chunks are
 loaded asynchronously at runtime. This reduces the initial loading time.
 
-[Code Splitting documentation](http://webpack.github.io/docs/code-splitting.html)
+[Code Splitting documentation](https://webpack.github.io/docs/code-splitting.html)
 
 ## Optimizations
 
@@ -148,9 +144,9 @@ webpack can do many optimizations to **reduce the output size of your
 JavaScript** by deduplicating frequently used modules, minifying, and giving
 you full control of what is loaded initially and what is loaded at runtime
 through code splitting. It can also can make your code chunks **cache
-friendly** by using hashes. 
+friendly** by using hashes.
 
-[Optimization documentation](http://webpack.github.io/docs/optimization.html)
+[Optimization documentation](https://webpack.github.io/docs/optimization.html)
 
 webpack optimizes in several ways. It also makes your chunks **cache-friendly** by using hashes.
 
@@ -160,7 +156,7 @@ webpack optimizes in several ways. It also makes your chunks **cache-friendly** 
 // webpack is a module bundler.
 // This means webpack takes modules with dependencies
 // and emits static assets representing those modules.
- 
+
 // Dependencies can be written in CommonJs
 var commonjs = require("./commonjs");
 // or in AMD
@@ -178,8 +174,8 @@ define(["amd-module", "../file"], function (amdModule, file) {
 		//  of the AMD require.
 	});
 });
- 
- 
+
+
 require("coffee!./cup.coffee");
 // "Loaders" are used to preprocess files.
 // They can be prefixed in the require call
@@ -200,7 +196,7 @@ function loadTemplate (name) {
 
 // ...and you can combine everything.
 function loadTemplateAsync (name, callback) {
-	require(["bundle?lazy!./templates/" + name + ".jade"], 
+	require(["bundle?lazy!./templates/" + name + ".jade"],
 	  function (templateBundle) {
 	          templateBundle(callback);
 	});
@@ -209,12 +205,12 @@ function loadTemplateAsync (name, callback) {
 
 ## Documentation
 
-[documentation](http://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=documentation)
+[documentation](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=documentation)
 
 
 ## Changelog
 
-[changelog](http://webpack.github.io/docs/changelog.html)
+[changelog](https://webpack.github.io/docs/changelog.html)
 
 
 ## Tests
