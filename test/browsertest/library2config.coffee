@@ -1,5 +1,7 @@
 webpack = require("../../");
 module.exports =
+	entry:
+		common: "library2/lib/common"
 	output:
 		hashDigestLength: 5
 	module:
@@ -15,7 +17,8 @@ module.exports =
 			should: require.resolve "should"
 	plugins: [
 		new webpack.optimize.LimitChunkCountPlugin
-			maxChunks: 2
+			maxChunks: 3
+		new webpack.optimize.CommonsChunkPlugin "common", "library2.commons.js"
 		new webpack.DefinePlugin
 			"typeof CONST_TYPEOF": JSON.stringify("typeof"),
 			CONST_UNDEFINED: undefined,

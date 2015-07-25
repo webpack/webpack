@@ -25,6 +25,9 @@ describe("main", function() {
 	});
 
 	it("should load library2 exported as global", function() {
+		should.exist(window.library2common);
+		should.exist(window.library2common.ok2);
+		window.library2common.ok2.should.be.eql(true);
 		should.exist(window.library2);
 		should.exist(window.library2.ok);
 		window.library2.ok.should.be.eql(true);
