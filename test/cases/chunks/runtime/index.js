@@ -22,7 +22,7 @@ it("should not load a chunk which is included in a already loaded one", function
 		async.should.be.eql(true);
 		loadChunk();
 	});
-	process.nextTick(function() {
+	Promise.resolve().then(function() {
 		async = true;
 	});
 	function loadChunk() {
@@ -31,7 +31,7 @@ it("should not load a chunk which is included in a already loaded one", function
 			sync.should.be.eql(true);
 			done();
 		});
-		process.nextTick(function() {
+		Promise.resolve().then(function() {
 			sync = false;
 		});
 	}
