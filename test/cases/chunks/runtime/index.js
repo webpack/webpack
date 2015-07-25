@@ -31,7 +31,7 @@ it("should not load a chunk which is included in a already loaded one", function
 			sync.should.be.eql(true);
 			done();
 		});
-		Promise.resolve().then(function() {
+		Promise.resolve().then(function() {}).then(function() {
 			sync = false;
 		});
 	}
