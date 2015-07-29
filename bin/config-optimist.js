@@ -24,6 +24,7 @@ module.exports = function(optimist) {
 		.string("target").describe("target")
 		.boolean("cache").describe("cache").default("cache", true)
 		.boolean("watch").alias("watch", "w").describe("watch")
+		.boolean("watch-stdin").alias("watch-stdin", "stdin").describe("watch which closes when stdin ends")
 		.describe("watch-aggregate-timeout")
 		.describe("watch-poll")
 		.boolean("hot").alias("hot", "h").describe("hot")
