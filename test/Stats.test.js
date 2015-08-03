@@ -63,7 +63,7 @@ describe("Stats", function() {
 								.replace(/Version:.+\n/, "")
 					      .replace(/[0-9]+(\s?ms)/g, "X$1")
 					      .replace(/\r/g, "")
-					      .replace(base, "Xdir");
+					      .replace(path.join(base, testName), "Xdir/" + testName);
 				var expected = fs.readFileSync(path.join(base, testName, "expected.txt"), "utf-8").replace(/\r/g, "");
 				if(actual !== expected) {
 					fs.writeFileSync(path.join(base, testName, "actual.txt"), actual, "utf-8");
