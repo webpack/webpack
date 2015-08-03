@@ -1,5 +1,5 @@
 /*globals describe it */
-require("should");
+var should = require("should");
 var path = require("path");
 var fs = require("fs");
 
@@ -44,11 +44,26 @@ describe("Stats", function() {
 			c.apply(new webpack.optimize.OccurrenceOrderPlugin());
 			c.run(function(err, stats) {
 				if(err) return done(err);
-				var actual = stats.toString({
-					colors: false
-				});
+				
+				if(/error$/.test(testName)) {
+					stats.compilation.errors.length.should.be.above(0);
+				} else {
+					stats.compilation.errors.length.should.equal(0);
+				}
+				
+				var toStringOptions = { colors: false };
+				if(typeof options.stats !== "undefined") {
+					toStringOptions = options.stats;
+				}
+
+				var actual = stats.toString(toStringOptions);
 				(typeof actual).should.be.eql("string");
-				actual = actual.replace(/Version:.+\n/, "").replace(/[0-9]+(\s?ms)/g, "X$1").replace(/\r/g, "");
+				actual = 
+					actual.replace(/\u001b\[[0-9;]*m/g, "")
+								.replace(/Version:.+\n/, "")
+					      .replace(/[0-9]+(\s?ms)/g, "X$1")
+					      .replace(/\r/g, "")
+					      .replace(base, "Xdir");
 				var expected = fs.readFileSync(path.join(base, testName, "expected.txt"), "utf-8").replace(/\r/g, "");
 				if(actual !== expected) {
 					fs.writeFileSync(path.join(base, testName, "actual.txt"), actual, "utf-8");
@@ -98,5 +113,55 @@ describe("Stats", function() {
 			obj.errors[0].should.be.equal('firstError');
 		});
 	});
-
+	describe("Presets", function(){
+		describe("presetToOptions", function() {
+			it("returns correct object with 'Normal'", function() {
+				Stats.presetToOptions("Normal").should.eql({
+					assets: false,
+					version: false,
+					timings: true,
+					hash: true,
+					chunks: true,
+					chunkModules: false,
+					errorDetails: true,
+					reasons: false,
+					colors: true
+				});
+			});
+			it("truthy values behave as 'normal'", function() {
+				var normalOpts = Stats.presetToOptions('normal');
+				Stats.presetToOptions("pizza").should.eql(normalOpts);
+				Stats.presetToOptions(true).should.eql(normalOpts);
+				Stats.presetToOptions(1).should.eql(normalOpts);
+				
+				Stats.presetToOptions("verbose").should.not.eql(normalOpts);
+				Stats.presetToOptions(false).should.not.eql(normalOpts);
+			});
+			it("returns correct object with 'none'", function() {
+				Stats.presetToOptions("none").should.eql({
+					hash: false,
+					version: false,
+					timings: false,
+					assets: false,
+					chunks: false,
+					modules: false,
+					reasons: false,
+					children: false,
+					source: false,
+					errors: false,
+					errorDetails: false,
+					warnings: false,
+					publicPath: false
+				});
+			});
+			it("falsy values behave as 'none'", function() {
+				var noneOpts = Stats.presetToOptions('none');
+				Stats.presetToOptions("").should.eql(noneOpts);
+				Stats.presetToOptions(null).should.eql(noneOpts);
+				Stats.presetToOptions().should.eql(noneOpts);
+				Stats.presetToOptions(0).should.eql(noneOpts);
+				Stats.presetToOptions(false).should.eql(noneOpts);
+			});
+		});
+	});
 });
