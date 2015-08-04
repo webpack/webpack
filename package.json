@@ -79,7 +79,7 @@
     "lint": "eslint lib",
     "beautify-lint": "node ./scripts/beautify-check",
     "beautify": "node ./scripts/beautify-rewrite",
-    "precover": "npm run lint",
+    "precover": "npm run lint && npm run beautify-lint",
     "cover": "istanbul cover -x *.runtime.js node_modules/mocha/bin/_mocha",
     "publish-patch": "mocha && npm version patch && git push && git push --tags && npm publish"
   }
