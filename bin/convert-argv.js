@@ -193,6 +193,19 @@ module.exports = function(optimist, argv, convertOptions) {
 		}
 
 		function loadPlugin(name) {
+			var loadUtils = require("loader-utils");
+			var args = null;
+			try {
+				var p = name && name.indexOf("?");
+				if (p > -1) {
+					args = loadUtils.parseQuery(name.substring(p));
+					name = name.substring(0, p);
+				}
+			} catch(e) {
+				console.log("Invalid plugin arguments" + e + ".");
+				process.exit(-1);
+			}
+
 			var path;
 			try {
 				path = resolve.sync(process.cwd(), name);
@@ -208,7 +221,7 @@ module.exports = function(optimist, argv, convertOptions) {
 				throw e;
 			}
 			try {
-				return new Plugin();
+				return new Plugin(args);
 			} catch(e) {
 				console.log("Cannot instantiate plugin " + name + ". (" + path + ")");
 				throw e;
