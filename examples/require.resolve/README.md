@@ -4,7 +4,7 @@
 var a = require("./a");
 
 // get module id
-var aId = require.resolve("./a.js");
+var aId = require.resolve("./a");
 
 // clear module in require.cache
 delete require.cache[aId];
@@ -12,7 +12,7 @@ delete require.cache[aId];
 // require module again, it should be reexecuted
 var a2 = require("./a");
 
-// vertify it
+// verify it
 if(a == a2) throw new Error("Cache clear failed :(");
 ```
 
@@ -78,7 +78,7 @@ module.exports = Math.random();
 	var a = __webpack_require__(/*! ./a */ 1);
 
 	// get module id
-	var aId = /*require.resolve*/(/*! ./a.js */ 1);
+	var aId = /*require.resolve*/(/*! ./a */ 1);
 
 	// clear module in require.cache
 	delete __webpack_require__.c[aId];
