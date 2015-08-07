@@ -78,7 +78,7 @@ module.exports = Math.random();
 	var a = __webpack_require__(/*! ./a */ 1);
 
 	// get module id
-	var aId = /*require.resolve*/(/*! ./a.js */ 1);
+	var aId = /*require.resolve*/(/*! ./a */ 1);
 
 	// clear module in require.cache
 	delete __webpack_require__.c[aId];
