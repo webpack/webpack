@@ -14,7 +14,7 @@ try {
 } catch(e) {}
 var optimist = require("optimist")
 	.usage("webpack " + require("../package.json").version + "\n" +
-		"Usage: http://webpack.github.io/docs/cli.html");
+		"Usage: https://webpack.github.io/docs/cli.html");
 
 require("./config-optimist")(optimist);
 
