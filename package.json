@@ -15,7 +15,7 @@
     "optimist": "~0.6.0",
     "supports-color": "^3.1.0",
     "tapable": "~0.1.8",
-    "uglify-js": "~2.4.13",
+    "uglify-js": "~2.3.6",
     "watchpack": "^0.2.1",
     "webpack-core": "~0.6.0"
   },
