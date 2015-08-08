@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "1.10.5",
+  "version": "1.11.0",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
   "dependencies": {
@@ -79,7 +79,7 @@
     "lint": "eslint lib",
     "beautify-lint": "node ./scripts/beautify-check",
     "beautify": "node ./scripts/beautify-rewrite",
-    "precover": "npm run lint",
+    "precover": "npm run lint && npm run beautify-lint",
     "cover": "istanbul cover -x *.runtime.js node_modules/mocha/bin/_mocha",
     "publish-patch": "mocha && npm version patch && git push && git push --tags && npm publish"
   }
