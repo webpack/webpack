@@ -41,7 +41,6 @@
     "js-beautify": "^1.5.10",
     "json-loader": "~0.5.1",
     "less-loader": "^2.0.0",
-    "microtime": "^1.2.0",
     "mocha": "~2.2.0",
     "mocha-lcov-reporter": "0.0.2",
     "raw-loader": "~0.5.0",
