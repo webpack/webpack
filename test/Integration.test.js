@@ -36,12 +36,10 @@ describe("Integration", function() {
 			},
 			bail: true,
 			module: {
-				postLoaders: [
-					{
-						test: /extra2\.js/,
-						loader: "raw!extra!val?cacheable"
-					}
-				]
+				postLoaders: [{
+					test: /extra2\.js/,
+					loader: "raw!extra!val?cacheable"
+				}]
 			},
 			amd: {
 				fromOptions: true
@@ -49,21 +47,29 @@ describe("Integration", function() {
 			resolve: {
 				// cannot resolve should outside the outermost node_modules
 				// so it is injected here
-				alias: { should: require.resolve("should") }
+				alias: {
+					should: require.resolve("should")
+				}
 			},
 			plugins: [
-				new webpack.optimize.LimitChunkCountPlugin({maxChunks: 1}),
+				new webpack.optimize.LimitChunkCountPlugin({
+					maxChunks: 1
+				}),
 				new webpack.DefinePlugin({
 					"typeof CONST_TYPEOF": JSON.stringify("typeof"),
 					CONST_TRUE: true,
 					CONST_FALSE: false,
-					CONST_FUNCTION: function() { return "ok"; },
+					CONST_FUNCTION: function() {
+						return "ok";
+					},
 					CONST_NUMBER: 123,
 					CONST_NUMBER_EXPR: "1*100+23",
 					CONST_OBJECT: {
 						A: 1,
 						B: JSON.stringify("B"),
-						C: function() { return "C"; }
+						C: function() {
+							return "C";
+						}
 					}
 				}),
 				function() {

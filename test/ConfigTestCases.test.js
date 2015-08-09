@@ -44,29 +44,33 @@ describe("ConfigTestCases", function() {
 						if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
 						if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
 						var exportedTests = 0;
+
 						function _it(title, fn) {
 							var test = new Test(title, fn);
 							suite.addTest(test);
 							exportedTests++;
 							return test;
 						}
+
 						function _require(module) {
 							if(module.substr(0, 2) === "./") {
 								var p = path.join(outputDirectory, module);
 								var fn;
-								if (options.target === "web") {
+								if(options.target === "web") {
 									fn = vm.runInNewContext("(function(require, module, exports, __dirname, __filename, it) {" + fs.readFileSync(p, "utf-8") + "\n})", {}, p);
 								} else {
 									fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
 								}
-								var module = { exports: {} };
+								var module = {
+									exports: {}
+								};
 								fn.call(module.exports, _require, module, module.exports, outputDirectory, p, _it);
 								return module.exports;
 							} else return require(module);
 						}
 						var filesCount = 0;
 						var testConfig = {
-							findBundle: function (i, options) {
+							findBundle: function(i, options) {
 								if(fs.existsSync(path.join(options.output.path, "bundle" + i + ".js"))) {
 									return "./bundle" + i + ".js";
 								}
@@ -78,7 +82,7 @@ describe("ConfigTestCases", function() {
 						} catch(e) {}
 						for(var i = 0; i < optionsArr.length; i++) {
 							var bundlePath = testConfig.findBundle(i, optionsArr[i]);
-							if (bundlePath) {
+							if(bundlePath) {
 								filesCount++;
 								_require(bundlePath);
 							}

@@ -44,26 +44,28 @@ describe("Stats", function() {
 			c.apply(new webpack.optimize.OccurrenceOrderPlugin());
 			c.run(function(err, stats) {
 				if(err) return done(err);
-				
+
 				if(/error$/.test(testName)) {
 					stats.compilation.errors.length.should.be.above(0);
 				} else {
 					stats.compilation.errors.length.should.equal(0);
 				}
-				
-				var toStringOptions = { colors: false };
+
+				var toStringOptions = {
+					colors: false
+				};
 				if(typeof options.stats !== "undefined") {
 					toStringOptions = options.stats;
 				}
 
 				var actual = stats.toString(toStringOptions);
 				(typeof actual).should.be.eql("string");
-				actual = 
+				actual =
 					actual.replace(/\u001b\[[0-9;]*m/g, "")
-								.replace(/Version:.+\n/, "")
-					      .replace(/[0-9]+(\s?ms)/g, "X$1")
-					      .replace(/\r/g, "")
-					      .replace(path.join(base, testName), "Xdir/" + testName);
+					.replace(/Version:.+\n/, "")
+					.replace(/[0-9]+(\s?ms)/g, "X$1")
+					.replace(/\r/g, "")
+					.replace(path.join(base, testName), "Xdir/" + testName);
 				var expected = fs.readFileSync(path.join(base, testName, "expected.txt"), "utf-8").replace(/\r/g, "");
 				if(actual !== expected) {
 					fs.writeFileSync(path.join(base, testName, "actual.txt"), actual, "utf-8");
@@ -75,45 +77,59 @@ describe("Stats", function() {
 			});
 		});
 	});
-	describe("Error Handling", function(){
-		describe("does have", function(){
+	describe("Error Handling", function() {
+		describe("does have", function() {
 			it("hasErrors", function() {
-				var mockStats = new Stats({errors:['firstError'],hash:'1234'});
+				var mockStats = new Stats({
+					errors: ['firstError'],
+					hash: '1234'
+				});
 				mockStats.hasErrors().should.be.ok;
 			});
 			it("hasWarnings", function() {
-				var mockStats = new Stats({warnings:['firstError'],hash:'1234'});
+				var mockStats = new Stats({
+					warnings: ['firstError'],
+					hash: '1234'
+				});
 				mockStats.hasWarnings().should.be.ok;
 			});
 		});
-		describe("does not have", function(){
+		describe("does not have", function() {
 			it("hasErrors", function() {
-				var mockStats = new Stats({errors:[],hash:'1234'});
+				var mockStats = new Stats({
+					errors: [],
+					hash: '1234'
+				});
 				mockStats.hasErrors().should.not.be.ok;
 			});
 			it("hasWarnings", function() {
-				var mockStats = new Stats({warnings:[],hash:'1234'});
+				var mockStats = new Stats({
+					warnings: [],
+					hash: '1234'
+				});
 				mockStats.hasWarnings().should.not.be.ok;
 			});
 		});
-		it("formatError handles string errors", function(){
+		it("formatError handles string errors", function() {
 			var mockStats = new Stats({
-				errors:['firstError'],
-				warnings:[],
-				assets:[],
-				chunks:[],
-				modules:[],
-				children:[],
-				hash:'1234',
-				mainTemplate:{
-					getPublicPath:function(){return 'path';}
+				errors: ['firstError'],
+				warnings: [],
+				assets: [],
+				chunks: [],
+				modules: [],
+				children: [],
+				hash: '1234',
+				mainTemplate: {
+					getPublicPath: function() {
+						return 'path';
+					}
 				}
 			});
 			var obj = mockStats.toJson();
 			obj.errors[0].should.be.equal('firstError');
 		});
 	});
-	describe("Presets", function(){
+	describe("Presets", function() {
 		describe("presetToOptions", function() {
 			it("returns correct object with 'Normal'", function() {
 				Stats.presetToOptions("Normal").should.eql({
@@ -133,7 +149,7 @@ describe("Stats", function() {
 				Stats.presetToOptions("pizza").should.eql(normalOpts);
 				Stats.presetToOptions(true).should.eql(normalOpts);
 				Stats.presetToOptions(1).should.eql(normalOpts);
-				
+
 				Stats.presetToOptions("verbose").should.not.eql(normalOpts);
 				Stats.presetToOptions(false).should.not.eql(normalOpts);
 			});

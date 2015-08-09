@@ -22,6 +22,7 @@ describe("Examples", function() {
 				options.forEach(processOptions);
 			else
 				processOptions(options);
+
 			function processOptions(options) {
 				options.context = examplePath;
 				options.optimize = options.optimize || {};

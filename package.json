@@ -76,7 +76,7 @@
     "pretest": "npm run lint && npm run beautify-lint",
     "test": "mocha",
     "travis": "npm run cover -- --report lcovonly",
-    "lint": "eslint lib bin",
+    "lint": "eslint lib bin hot scripts",
     "beautify-lint": "node ./scripts/beautify-check",
     "beautify": "node ./scripts/beautify-rewrite",
     "precover": "npm run lint && npm run beautify-lint",
