@@ -28,25 +28,25 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	var configPath, ext;
-	var extensions = Object.keys(interpret.extensions).sort(function(a, b){
+	var extensions = Object.keys(interpret.extensions).sort(function(a, b) {
 		return a.length - b.length;
 	});
 
-	if (argv.config) {
+	if(argv.config) {
 		configPath = path.resolve(argv.config);
-		for (var i = extensions.length - 1; i >= 0; i--) {
+		for(var i = extensions.length - 1; i >= 0; i--) {
 			var tmpExt = extensions[i];
-			if (configPath.indexOf(tmpExt, configPath.length - tmpExt.length) > -1){
+			if(configPath.indexOf(tmpExt, configPath.length - tmpExt.length) > -1) {
 				ext = tmpExt;
 				break;
 			}
-		};
-		if (!ext) {
+		}
+		if(!ext) {
 			ext = path.extname(configPath);
 		}
 	} else {
 		for(var i = 0; i < extensions.length; i++) {
-			var webpackConfig = path.resolve('webpack.config' + extensions[i]);
+			var webpackConfig = path.resolve("webpack.config" + extensions[i]);
 			if(fs.existsSync(webpackConfig)) {
 				ext = extensions[i];
 				configPath = webpackConfig;
@@ -58,8 +58,8 @@ module.exports = function(optimist, argv, convertOptions) {
 	if(configPath) {
 
 		function registerCompiler(moduleDescriptor) {
-			if (moduleDescriptor) {
-				if(typeof(moduleDescriptor) == "string") {
+			if(moduleDescriptor) {
+				if(typeof moduleDescriptor === "string") {
 					require(moduleDescriptor);
 				} else if(!Array.isArray(moduleDescriptor)) {
 					moduleDescriptor.register(require(moduleDescriptor.module));
@@ -98,7 +98,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		options.context = process.cwd();
 	}
 
-	if(argv["watch"]) {
+	if(argv.watch) {
 		// TODO remove this in next major version
 		if(options.watch && typeof options.watch === "object") {
 			console.warn("options.watch is deprecated: Use 'options.watchOptions' instead");
@@ -197,7 +197,7 @@ module.exports = function(optimist, argv, convertOptions) {
 			var args = null;
 			try {
 				var p = name && name.indexOf("?");
-				if (p > -1) {
+				if(p > -1) {
 					args = loadUtils.parseQuery(name.substring(p));
 					name = name.substring(0, p);
 				}
@@ -364,7 +364,8 @@ module.exports = function(optimist, argv, convertOptions) {
 		ifBooleanArg("progress", function() {
 			var ProgressPlugin = require("../lib/ProgressPlugin");
 			ensureArray(options, "plugins");
-			var chars = 0, lastState, lastStateTime;
+			var chars = 0,
+				lastState, lastStateTime;
 			options.plugins.push(new ProgressPlugin(function(percentage, msg) {
 				var state = msg;
 				if(percentage < 1) {
@@ -397,6 +398,7 @@ module.exports = function(optimist, argv, convertOptions) {
 				goToLineStart(msg);
 				process.stderr.write(msg);
 			}));
+
 			function goToLineStart(nextMessage) {
 				var str = "";
 				for(; chars > nextMessage.length; chars--) {
@@ -518,6 +520,7 @@ module.exports = function(optimist, argv, convertOptions) {
 				};
 			}
 			ensureObject(options, "entry");
+
 			function addTo(name, entry) {
 				if(options.entry[name]) {
 					if(!Array.isArray(options.entry[name])) {

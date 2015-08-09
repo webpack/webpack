@@ -19,35 +19,20 @@ var optimist = require("optimist")
 require("./config-optimist")(optimist);
 
 optimist
-
 	.boolean("json").alias("json", "j").describe("json")
-
 	.boolean("colors").alias("colors", "c").describe("colors")
-
 	.string("sort-modules-by").describe("sort-modules-by")
-
 	.string("sort-chunks-by").describe("sort-chunks-by")
-
 	.string("sort-assets-by").describe("sort-assets-by")
-
 	.boolean("hide-modules").describe("hide-modules")
-
 	.string("display-exclude").describe("display-exclude")
-
 	.boolean("display-modules").describe("display-modules")
-
 	.boolean("display-chunks").describe("display-chunks")
-
 	.boolean("display-error-details").describe("display-error-details")
-
 	.boolean("display-origins").describe("display-origins")
-
 	.boolean("display-cached").describe("display-cached")
-
 	.boolean("display-cached-assets").describe("display-cached-assets")
-
 	.boolean("display-reasons").alias("display-reasons", "verbose").alias("display-reasons", "v").describe("display-reasons");
-
 
 var argv = optimist.argv;
 
@@ -155,6 +140,7 @@ var webpack = require("../lib/webpack.js");
 Error.stackTraceLimit = 30;
 var lastHash = null;
 var compiler = webpack(options);
+
 function compilerCallback(err, stats) {
 	if(!options.watch) {
 		// Do not keep cache anymore
