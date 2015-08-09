@@ -22,7 +22,9 @@ describe("NodeWatchFileSystem", function() {
 	it("should register a file change (change delayed)", function(done) {
 		var startTime = new Date().getTime();
 		var wfs = new NodeWatchFileSystem();
-		var watcher = wfs.watch([fileDirect], [], [], startTime, { aggregateTimeout: 1000 }, function(err, filesModified, dirsModified, missingCreated, fileTimestamps /*, dirTimestamps */) {
+		var watcher = wfs.watch([fileDirect], [], [], startTime, {
+			aggregateTimeout: 1000
+		}, function(err, filesModified, dirsModified, missingCreated, fileTimestamps /*, dirTimestamps */ ) {
 			if(err) throw err;
 			filesModified.should.be.eql([fileDirect]);
 			dirsModified.should.be.eql([]);
@@ -39,7 +41,9 @@ describe("NodeWatchFileSystem", function() {
 		var startTime = new Date().getTime();
 		setTimeout(function() {
 			var wfs = new NodeWatchFileSystem();
-			var watcher = wfs.watch([fileDirect], [], [], startTime, { aggregateTimeout: 1000 }, function(err, filesModified, dirsModified, missingCreated, fileTimestamps /*, dirTimestamps */) {
+			var watcher = wfs.watch([fileDirect], [], [], startTime, {
+				aggregateTimeout: 1000
+			}, function(err, filesModified, dirsModified, missingCreated, fileTimestamps /*, dirTimestamps */ ) {
 				if(err) throw err;
 				filesModified.should.be.eql([fileDirect]);
 				dirsModified.should.be.eql([]);
@@ -54,7 +58,9 @@ describe("NodeWatchFileSystem", function() {
 	it("should register a context change (change delayed)", function(done) {
 		var startTime = new Date().getTime();
 		var wfs = new NodeWatchFileSystem();
-		var watcher = wfs.watch([], [fixtures], [], startTime, { aggregateTimeout: 1000 }, function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
+		var watcher = wfs.watch([], [fixtures], [], startTime, {
+			aggregateTimeout: 1000
+		}, function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
 			if(err) throw err;
 			filesModified.should.be.eql([]);
 			dirsModified.should.be.eql([fixtures]);
@@ -71,7 +77,9 @@ describe("NodeWatchFileSystem", function() {
 		var startTime = new Date().getTime();
 		setTimeout(function() {
 			var wfs = new NodeWatchFileSystem();
-			var watcher = wfs.watch([], [fixtures], [], startTime, { aggregateTimeout: 1000 }, function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
+			var watcher = wfs.watch([], [fixtures], [], startTime, {
+				aggregateTimeout: 1000
+			}, function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
 				if(err) throw err;
 				filesModified.should.be.eql([]);
 				dirsModified.should.be.eql([fixtures]);
@@ -86,7 +94,9 @@ describe("NodeWatchFileSystem", function() {
 	it("should register a context change (change delayed, subdirectory)", function(done) {
 		var startTime = new Date().getTime();
 		var wfs = new NodeWatchFileSystem();
-		var watcher = wfs.watch([], [fixtures], [], startTime, { aggregateTimeout: 1000 }, function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
+		var watcher = wfs.watch([], [fixtures], [], startTime, {
+			aggregateTimeout: 1000
+		}, function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
 			if(err) throw err;
 			filesModified.should.be.eql([]);
 			dirsModified.should.be.eql([fixtures]);
@@ -103,7 +113,9 @@ describe("NodeWatchFileSystem", function() {
 		var startTime = new Date().getTime();
 		setTimeout(function() {
 			var wfs = new NodeWatchFileSystem();
-			var watcher = wfs.watch([], [fixtures], [], startTime, { aggregateTimeout: 1000 }, function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
+			var watcher = wfs.watch([], [fixtures], [], startTime, {
+				aggregateTimeout: 1000
+			}, function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
 				if(err) throw err;
 				filesModified.should.be.eql([]);
 				dirsModified.should.be.eql([fixtures]);
@@ -119,7 +131,9 @@ describe("NodeWatchFileSystem", function() {
 		var startTime = new Date().getTime();
 		setTimeout(function() {
 			var wfs = new NodeWatchFileSystem();
-			var watcher = wfs.watch([fileDirect, fileSubdir], [fixtures], [], startTime, { aggregateTimeout: 1000 }, function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
+			var watcher = wfs.watch([fileDirect, fileSubdir], [fixtures], [], startTime, {
+				aggregateTimeout: 1000
+			}, function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
 				if(err) throw err;
 				filesModified.should.be.eql([fileSubdir, fileDirect]);
 				dirsModified.should.be.eql([fixtures]);
@@ -136,17 +150,19 @@ describe("NodeWatchFileSystem", function() {
 	});
 	it("should sum up multiple changes", function(done) {
 		var startTime = new Date().getTime();
-			var wfs = new NodeWatchFileSystem();
-			var watcher = wfs.watch([fileDirect, fileSubdir], [fixtures], [], startTime, { aggregateTimeout: 1000 }, function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
-				if(err) throw err;
-				filesModified.should.be.eql([fileSubdir, fileDirect]);
-				dirsModified.should.be.eql([fixtures]);
-				fileTimestamps.should.have.property(fileDirect).have.type("number");
-				fileTimestamps.should.have.property(fileSubdir).have.type("number");
-				dirTimestamps.should.have.property(fixtures).have.type("number");
-				watcher.close();
-				done();
-			});
+		var wfs = new NodeWatchFileSystem();
+		var watcher = wfs.watch([fileDirect, fileSubdir], [fixtures], [], startTime, {
+			aggregateTimeout: 1000
+		}, function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
+			if(err) throw err;
+			filesModified.should.be.eql([fileSubdir, fileDirect]);
+			dirsModified.should.be.eql([fixtures]);
+			fileTimestamps.should.have.property(fileDirect).have.type("number");
+			fileTimestamps.should.have.property(fileSubdir).have.type("number");
+			dirTimestamps.should.have.property(fixtures).have.type("number");
+			watcher.close();
+			done();
+		});
 
 		setTimeout(function() {
 			fs.writeFile(fileDirect, "", function() {});

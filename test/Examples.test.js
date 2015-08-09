@@ -22,6 +22,7 @@ describe("Examples", function() {
 				options.forEach(processOptions);
 			else
 				processOptions(options);
+
 			function processOptions(options) {
 				options.context = examplePath;
 				options.optimize = options.optimize || {};
@@ -36,7 +37,9 @@ describe("Examples", function() {
 			}
 			webpack(options, function(err, stats) {
 				if(err) return done(err);
-				stats = stats.toJson({ errorDetails: true });
+				stats = stats.toJson({
+					errorDetails: true
+				});
 				if(stats.errors.length > 0) {
 					return done(new Error(stats.errors[0]));
 				}

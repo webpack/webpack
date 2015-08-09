@@ -10,8 +10,12 @@ describe("HotModuleReplacementPlugin", function() {
 		var statsFile1 = path.join(__dirname, "js", "HotModuleReplacementPlugin.test.stats1.txt");
 		var statsFile2 = path.join(__dirname, "js", "HotModuleReplacementPlugin.test.stats2.txt");
 		var recordsFile = path.join(__dirname, "js", "records.json");
-		try { fs.mkdirSync(path.join(__dirname, "js")); } catch(e) {}
-		try { fs.unlinkSync(recordsFile); } catch(e) {}
+		try {
+			fs.mkdirSync(path.join(__dirname, "js"));
+		} catch(e) {}
+		try {
+			fs.unlinkSync(recordsFile);
+		} catch(e) {}
 		var compiler = webpack({
 			cache: false,
 			entry: entryFile,

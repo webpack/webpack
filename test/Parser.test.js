@@ -8,40 +8,35 @@ describe("Parser", function() {
 		"call ident": [
 			function() {
 				abc("test");
-			},
-			{
+			}, {
 				abc: ["test"]
 			}
 		],
 		"call member": [
 			function() {
 				cde.abc("membertest");
-			},
-			{
+			}, {
 				cdeabc: ["membertest"]
 			}
 		],
 		"call inner member": [
 			function() {
 				cde.ddd.abc("inner");
-			},
-			{
+			}, {
 				cdedddabc: ["inner"]
 			}
 		],
 		"expression": [
 			function() {
 				fgh;
-			},
-			{
+			}, {
 				fgh: [""]
 			}
 		],
 		"expression sub": [
 			function() {
 				fgh.sub;
-			},
-			{
+			}, {
 				fghsub: ["notry"]
 			}
 		],
@@ -49,8 +44,7 @@ describe("Parser", function() {
 			function() {
 				test[memberExpr]
 				test[+memberExpr]
-			},
-			{
+			}, {
 				expressions: ["memberExpr", "memberExpr"]
 			}
 		],
@@ -63,8 +57,7 @@ describe("Parser", function() {
 					fgh;
 					fgh.sub;
 				})();
-			},
-			{}
+			}, {}
 		],
 		"var definition": [
 			function() {
@@ -74,27 +67,28 @@ describe("Parser", function() {
 				cde.ddd.abc("test");
 				fgh;
 				fgh.sub;
-			},
-			{}
+			}, {}
 		],
 		"function definition": [
 			function() {
 				function abc() {}
+
 				function cde() {}
+
 				function fgh() {}
 				abc("test");
 				cde.abc("test");
 				cde.ddd.abc("test");
 				fgh;
 				fgh.sub;
-			},
-			{}
+			}, {}
 		],
 		"in try": [
 			function() {
 				try {
 					fgh.sub;
 					fgh;
+
 					function test(ttt) {
 						fgh.sub;
 						fgh;
@@ -103,8 +97,7 @@ describe("Parser", function() {
 					fgh.sub;
 					fgh;
 				}
-			},
-			{
+			}, {
 				fghsub: ["try", "notry", "notry"],
 				fgh: ["", "test ttt", "test e"]
 			}
@@ -113,8 +106,7 @@ describe("Parser", function() {
 			function() {
 				var xyz = abc;
 				xyz("test");
-			},
-			{
+			}, {
 				abc: ["test"]
 			}
 		],
@@ -123,28 +115,25 @@ describe("Parser", function() {
 				var xyz;
 				xyz = abc;
 				xyz("test");
-			},
-			{
+			}, {
 				abc: ["test"]
 			}
 		],
 		"renaming with IIFE": [
 			function() {
-				!function(xyz) {
+				! function(xyz) {
 					xyz("test");
 				}(abc);
-			},
-			{
+			}, {
 				abc: ["test"]
 			}
 		],
 		"renaming with IIFE (called)": [
 			function() {
-				!function(xyz) {
+				! function(xyz) {
 					xyz("test");
 				}.call(fgh, abc);
-			},
-			{
+			}, {
 				abc: ["test"],
 				fgh: [""]
 			}
@@ -266,7 +255,7 @@ describe("Parser", function() {
 					return result.join(" ");
 				}
 			}
-			
+
 			it("should eval " + key, function() {
 				var evalExpr = evaluateInParser(key);
 				evalExprToString(evalExpr).should.be.eql(testCases[key] ? key + " " + testCases[key] : key);
