@@ -202,7 +202,7 @@ module.exports = function(optimist, argv, convertOptions) {
 					name = name.substring(0, p);
 				}
 			} catch(e) {
-				console.log("Invalid plugin arguments" + e + ".");
+				console.log("Invalid plugin arguments " + name + " (" + e + ").");
 				process.exit(-1);
 			}
 
