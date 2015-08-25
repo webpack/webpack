@@ -29,6 +29,6 @@ module.exports = function forEachBeautifiedFile(fn, callback) {
 			if(err) return callback(err);
 			callback();
 		});
-	})
+	});
 
 };
