@@ -132,6 +132,12 @@ module.exports = function(optimist, argv, convertOptions) {
 			options.watchOptions.poll = true;
 	}
 
+	if(argv["watch-stdin"]) {
+		options.watchOptions = options.watchOptions || {};
+		options.watchOptions.stdin = true;
+		options.watch = true;
+	}
+
 	function processOptions(options) {
 		function ifArg(name, fn, init, finalize) {
 			if(Array.isArray(argv[name])) {
