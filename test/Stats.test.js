@@ -18,37 +18,43 @@ describe("Stats", function() {
 			if(fs.existsSync(path.join(base, testName, "webpack.config.js"))) {
 				options = require(path.join(base, testName, "webpack.config.js"));
 			}
-			options.context = path.join(base, testName);
+			(Array.isArray(options) ? options : [options]).forEach(function(options) {
+				options.context = path.join(base, testName);
+			});
 			var c = webpack(options);
 			var files = {};
-			c.outputFileSystem = {
-				join: path.join.bind(path),
-				mkdirp: function(path, callback) {
-					callback();
-				},
-				writeFile: function(name, content, callback) {
-					files[name] = content.toString("utf-8");
-					callback();
-				}
-			};
-			var ifs = c.inputFileSystem;
-			c.inputFileSystem = Object.create(ifs);
-			c.inputFileSystem.readFile = function() {
-				var args = Array.prototype.slice.call(arguments);
-				var callback = args.pop();
-				ifs.readFile.apply(ifs, args.concat([function(err, result) {
-					if(err) return callback(err);
-					callback(null, result.toString("utf-8").replace(/\r/g, ""));
-				}]));
-			};
-			c.apply(new webpack.optimize.OccurrenceOrderPlugin());
+			var compilers = c.compilers ? c.compilers : [c];
+			compilers.forEach(function(c) {
+				c.outputFileSystem = {
+					join: path.join.bind(path),
+					mkdirp: function(path, callback) {
+						callback();
+					},
+					writeFile: function(name, content, callback) {
+						files[name] = content.toString("utf-8");
+						callback();
+					}
+				};
+
+				var ifs = c.inputFileSystem;
+				c.inputFileSystem = Object.create(ifs);
+				c.inputFileSystem.readFile = function() {
+					var args = Array.prototype.slice.call(arguments);
+					var callback = args.pop();
+					ifs.readFile.apply(ifs, args.concat([function(err, result) {
+						if(err) return callback(err);
+						callback(null, result.toString("utf-8").replace(/\r/g, ""));
+					}]));
+				};
+				c.apply(new webpack.optimize.OccurrenceOrderPlugin());
+			});
 			c.run(function(err, stats) {
 				if(err) return done(err);
 
 				if(/error$/.test(testName)) {
-					stats.compilation.errors.length.should.be.above(0);
-				} else {
-					stats.compilation.errors.length.should.equal(0);
+					stats.hasErrors().should.be.equal(true);
+				} else if(stats.hasErrors()) {
+					done(new Error(stats.toJson().errors.join("\n\n")));
 				}
 
 				var toStringOptions = {
