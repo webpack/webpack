@@ -68,9 +68,9 @@ describe("Stats", function() {
 				(typeof actual).should.be.eql("string");
 				actual =
 					actual.replace(/\u001b\[[0-9;]*m/g, "")
-					.replace(/Version:.+\n/, "")
+					.replace(/\r\n?/g, "\n")
+					.replace(/[\t ]*Version:.+\n/g, "")
 					.replace(/[0-9]+(\s?ms)/g, "X$1")
-					.replace(/\r/g, "")
 					.replace(path.join(base, testName), "Xdir/" + testName);
 				var expected = fs.readFileSync(path.join(base, testName, "expected.txt"), "utf-8").replace(/\r/g, "");
 				if(actual !== expected) {
