@@ -1,7 +1,7 @@
 module.exports = function(optimist) {
 	optimist
 		.boolean("help").alias("help", "h").alias("help", "?").describe("help")
-		.string("config").describe("config")
+		.string("config").alias("config", "c").describe("config")
 		.string("context").describe("context")
 		.string("entry").describe("entry")
 		.string("module-bind").describe("module-bind")
