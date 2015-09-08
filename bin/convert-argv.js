@@ -515,6 +515,7 @@ module.exports = function(optimist, argv, convertOptions) {
 				options.output.filename = path.basename(options.output.filename);
 			} else {
 				optimist.showHelp();
+				console.error("Output filename not configured.");
 				process.exit(-1);
 			}
 		}
