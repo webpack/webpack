@@ -13,6 +13,8 @@ env:
 
 before_install:
   - '[ "${TRAVIS_NODE_VERSION}" != "0.10" ] || npm install -g npm'
+
+before_script:
   - npm link
   - npm link webpack
 
