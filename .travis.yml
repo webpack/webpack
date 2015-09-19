@@ -12,7 +12,7 @@ env:
   - NO_WATCH_TESTS=1
 
 before_install:
-  - '[ "${TRAVIS_NODE_VERSION}" != "0.10" ] || npm install -g npm'
+  - '[ "${TRAVIS_NODE_VERSION}" != "0.10" ] || npm install -g npm@^2'
 
 before_script:
   - npm link
