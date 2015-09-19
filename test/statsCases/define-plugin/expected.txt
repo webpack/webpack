@@ -1,0 +1,15 @@
+Hash: f1586c37fdb673bce3242fb8a280e30ecbe15114
+Child
+    Hash: f1586c37fdb673bce324
+    Time: Xms
+      Asset     Size  Chunks             Chunk Names
+    main.js  1.57 kB       0  [emitted]  main
+    chunk    {0} main.js (main) 24 bytes [rendered]
+        [0] (webpack)/test/statsCases/define-plugin/index.js 24 bytes {0} [built]
+Child
+    Hash: 2fb8a280e30ecbe15114
+    Time: Xms
+      Asset     Size  Chunks             Chunk Names
+    main.js  1.57 kB       0  [emitted]  main
+    chunk    {0} main.js (main) 24 bytes [rendered]
+        [0] (webpack)/test/statsCases/define-plugin/index.js 24 bytes {0} [built]

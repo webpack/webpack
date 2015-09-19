@@ -137,6 +137,12 @@ module.exports = function(optimist, argv, convertOptions) {
 			options.watchOptions.poll = true;
 	}
 
+	if(argv["watch-stdin"]) {
+		options.watchOptions = options.watchOptions || {};
+		options.watchOptions.stdin = true;
+		options.watch = true;
+	}
+
 	function processOptions(options) {
 		function ifArg(name, fn, init, finalize) {
 			if(Array.isArray(argv[name])) {
@@ -507,6 +513,7 @@ module.exports = function(optimist, argv, convertOptions) {
 				throw new Error("'output.filename' is required, either in config file or as --output-file");
 			} else {
 				optimist.showHelp();
+				console.error("Output filename not configured.");
 				process.exit(-1);
 			}
 		}
