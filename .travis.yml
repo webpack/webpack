@@ -14,6 +14,7 @@ env:
 before_install:
   - '[ "${TRAVIS_NODE_VERSION}" != "0.10" ] || npm install -g npm'
   - npm link
+  - npm link webpack
 
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
