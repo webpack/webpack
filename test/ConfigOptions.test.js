@@ -7,8 +7,8 @@ describe("ConfigOptions", function() {
 		it("should throw error if module not found", function() {
 			(function() {
 				new WebpackOptionsExtender().process({
-					extends: [
-						"./test/configOptions/extends/webpack.not-found.config.js"
+					extend: [
+						"./test/configOptions/extend/webpack.not-found.config.js"
 					]
 				});
 			}).should.throw(Error, {
@@ -18,8 +18,8 @@ describe("ConfigOptions", function() {
 
 		it("should process options correctly", function() {
 			var options = {
-				extends: [
-					"./test/configOptions/extends/webpack.3-0.config.js"
+				extend: [
+					"./test/configOptions/extend/webpack.3-0.config.js"
 				]
 			};
 
@@ -27,8 +27,8 @@ describe("ConfigOptions", function() {
 
 			should.deepEqual(options, {
 				debug: false,
-				extends: [
-					"./test/configOptions/extends/webpack.3-0.config.js"
+				extend: [
+					"./test/configOptions/extend/webpack.3-0.config.js"
 				],
 				plugins: [
 					new webpack.optimize.UglifyJsPlugin(),
