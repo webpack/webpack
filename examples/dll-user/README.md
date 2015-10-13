@@ -25,6 +25,8 @@ console.log(require("../dll/a"));
 
 console.log(require("beta/beta"));
 console.log(require("beta/b"));
+
+console.log(require("module"));
 ```
 
 # js/output.js
@@ -85,11 +87,13 @@ console.log(require("beta/b"));
 	console.log(__webpack_require__(/*! beta/beta */ 4));
 	console.log(__webpack_require__(/*! beta/b */ 6));
 
+	console.log(__webpack_require__(/*! module */ 7));
+
 
 /***/ },
 /* 1 */
 /*!**************************************************************************!*\
-  !*** delegated ./alpha.js from dll-reference alpha_fda802f3c408a66ef744 ***!
+  !*** delegated ./alpha.js from dll-reference alpha_fdf65b7c8f44aa643c94 ***!
   \**************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
@@ -98,16 +102,16 @@ console.log(require("beta/b"));
 /***/ },
 /* 2 */
 /*!*********************************************!*\
-  !*** external "alpha_fda802f3c408a66ef744" ***!
+  !*** external "alpha_fdf65b7c8f44aa643c94" ***!
   \*********************************************/
 /***/ function(module, exports) {
 
-	module.exports = alpha_fda802f3c408a66ef744;
+	module.exports = alpha_fdf65b7c8f44aa643c94;
 
 /***/ },
 /* 3 */
 /*!**********************************************************************!*\
-  !*** delegated ./a.js from dll-reference alpha_fda802f3c408a66ef744 ***!
+  !*** delegated ./a.js from dll-reference alpha_fdf65b7c8f44aa643c94 ***!
   \**********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
@@ -116,29 +120,38 @@ console.log(require("beta/b"));
 /***/ },
 /* 4 */
 /*!************************************************************************!*\
-  !*** delegated ./beta.js from dll-reference beta_fda802f3c408a66ef744 ***!
+  !*** delegated ./beta.js from dll-reference beta_fdf65b7c8f44aa643c94 ***!
   \************************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(5))(3);
+	module.exports = (__webpack_require__(5))(4);
 
 /***/ },
 /* 5 */
 /*!********************************************!*\
-  !*** external "beta_fda802f3c408a66ef744" ***!
+  !*** external "beta_fdf65b7c8f44aa643c94" ***!
   \********************************************/
 /***/ function(module, exports) {
 
-	module.exports = beta_fda802f3c408a66ef744;
+	module.exports = beta_fdf65b7c8f44aa643c94;
 
 /***/ },
 /* 6 */
 /*!*********************************************************************!*\
-  !*** delegated ./b.js from dll-reference beta_fda802f3c408a66ef744 ***!
+  !*** delegated ./b.js from dll-reference beta_fdf65b7c8f44aa643c94 ***!
   \*********************************************************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = (__webpack_require__(5))(4);
+	module.exports = (__webpack_require__(5))(5);
+
+/***/ },
+/* 7 */
+/*!*****************************************************************************************!*\
+  !*** delegated ../node_modules/module.js from dll-reference alpha_fdf65b7c8f44aa643c94 ***!
+  \*****************************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = (__webpack_require__(2))(3);
 
 /***/ }
 /******/ ]);
@@ -149,27 +162,27 @@ console.log(require("beta/b"));
 ## Uncompressed
 
 ```
-Hash: 0d8279ed7b443d36b536
-Version: webpack 1.9.10
-Time: 78ms
+Hash: 1ec5dd5375620450fa42
+Version: webpack 1.12.2
+Time: 126ms
     Asset     Size  Chunks             Chunk Names
-output.js  3.62 kB       0  [emitted]  main
-chunk    {0} output.js (main) 397 bytes [rendered]
+output.js  4.08 kB       0  [emitted]  main
+chunk    {0} output.js (main) 474 bytes [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 145 bytes {0} [built]
-     + 6 hidden modules
+    [0] ./example.js 180 bytes {0} [built]
+     + 7 hidden modules
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 1e9d431b3cebd3bcea12
-Version: webpack 1.9.10
-Time: 201ms
+Hash: 027c2207d2b3e0dfd65e
+Version: webpack 1.12.2
+Time: 268ms
     Asset       Size  Chunks             Chunk Names
-output.js  537 bytes       0  [emitted]  main
-chunk    {0} output.js (main) 397 bytes [rendered]
+output.js  590 bytes       0  [emitted]  main
+chunk    {0} output.js (main) 474 bytes [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 145 bytes {0} [built]
-     + 6 hidden modules
+    [0] ./example.js 180 bytes {0} [built]
+     + 7 hidden modules
 ```

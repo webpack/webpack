@@ -5,7 +5,7 @@ var path = require("path");
 var webpack = require("../../");
 module.exports = {
 	entry: {
-		alpha: ["./alpha", "./a"],
+		alpha: ["./alpha", "./a", "module"],
 		beta: ["./beta", "./b"]
 	},
 	output: {
@@ -25,7 +25,7 @@ module.exports = {
 # js/MyDll.alpha.js
 
 ``` javascript
-var alpha_fda802f3c408a66ef744 =
+var alpha_fdf65b7c8f44aa643c94 =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -95,6 +95,15 @@ var alpha_fda802f3c408a66ef744 =
 
 	module.exports = "a";
 
+/***/ },
+/* 3 */
+/*!**********************!*\
+  !*** ../~/module.js ***!
+  \**********************/
+/***/ function(module, exports) {
+
+	module.exports = "module";
+
 /***/ }
 /******/ ]);
 ```
@@ -103,10 +112,11 @@ var alpha_fda802f3c408a66ef744 =
 
 ``` javascript
 {
-  "name": "alpha_fda802f3c408a66ef744",
+  "name": "alpha_fdf65b7c8f44aa643c94",
   "content": {
     "./alpha.js": 1,
-    "./a.js": 2
+    "./a.js": 2,
+    "../node_modules/module.js": 3
   }
 }
 ```
@@ -116,49 +126,53 @@ var alpha_fda802f3c408a66ef744 =
 ## Uncompressed
 
 ```
-Hash: fda802f3c408a66ef744
-Version: webpack 1.9.10
-Time: 69ms
+Hash: fdf65b7c8f44aa643c94
+Version: webpack 1.12.2
+Time: 116ms
          Asset     Size  Chunks             Chunk Names
-MyDll.alpha.js  1.84 kB       0  [emitted]  alpha
+MyDll.alpha.js     2 kB       0  [emitted]  alpha
  MyDll.beta.js  1.85 kB       1  [emitted]  beta
-chunk    {0} MyDll.alpha.js (alpha) 58 bytes [rendered]
+chunk    {0} MyDll.alpha.js (alpha) 84 bytes [rendered]
     > alpha [0] dll alpha 
     [0] dll alpha 12 bytes {0} [built]
     [1] ./alpha.js 25 bytes {0} [built]
         single entry ./alpha [0] dll alpha
     [2] ./a.js 21 bytes {0} [built]
         single entry ./a [0] dll alpha
+    [3] ../~/module.js 26 bytes {0} [built]
+        single entry module [0] dll alpha
 chunk    {1} MyDll.beta.js (beta) 57 bytes [rendered]
     > beta [0] dll beta 
     [0] dll beta 12 bytes {1} [built]
-    [3] ./beta.js 24 bytes {1} [built]
+    [4] ./beta.js 24 bytes {1} [built]
         single entry ./beta [0] dll beta
-    [4] ./b.js 21 bytes {1} [built]
+    [5] ./b.js 21 bytes {1} [built]
         single entry ./b [0] dll beta
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 28b01778c3ed267edad7
-Version: webpack 1.9.10
-Time: 173ms
+Hash: 280629f3235a1e77e95f
+Version: webpack 1.12.2
+Time: 267ms
          Asset       Size  Chunks             Chunk Names
- MyDll.beta.js  326 bytes       0  [emitted]  beta
-MyDll.alpha.js  326 bytes       1  [emitted]  alpha
-chunk    {0} MyDll.beta.js (beta) 57 bytes [rendered]
-    > beta [0] dll beta 
-    [0] dll beta 12 bytes {0} [built]
-    [3] ./b.js 21 bytes {0} [built]
-        single entry ./b [0] dll beta
-    [4] ./beta.js 24 bytes {0} [built]
-        single entry ./beta [0] dll beta
-chunk    {1} MyDll.alpha.js (alpha) 58 bytes [rendered]
+MyDll.alpha.js  362 bytes       0  [emitted]  alpha
+ MyDll.beta.js  326 bytes       1  [emitted]  beta
+chunk    {0} MyDll.alpha.js (alpha) 84 bytes [rendered]
     > alpha [0] dll alpha 
-    [0] dll alpha 12 bytes {1} [built]
-    [1] ./a.js 21 bytes {1} [built]
+    [0] dll alpha 12 bytes {0} [built]
+    [1] ./a.js 21 bytes {0} [built]
         single entry ./a [0] dll alpha
-    [2] ./alpha.js 25 bytes {1} [built]
+    [2] ./alpha.js 25 bytes {0} [built]
         single entry ./alpha [0] dll alpha
+    [5] ../~/module.js 26 bytes {0} [built]
+        single entry module [0] dll alpha
+chunk    {1} MyDll.beta.js (beta) 57 bytes [rendered]
+    > beta [0] dll beta 
+    [0] dll beta 12 bytes {1} [built]
+    [3] ./b.js 21 bytes {1} [built]
+        single entry ./b [0] dll beta
+    [4] ./beta.js 24 bytes {1} [built]
+        single entry ./beta [0] dll beta
 ```
