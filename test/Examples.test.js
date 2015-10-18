@@ -8,7 +8,7 @@ describe("Examples", function() {
 	var examples = fs.readdirSync(path.join(__dirname, "..", "examples")).map(function(name) {
 		return path.join(__dirname, "..", "examples", name);
 	}).filter(function(p) {
-		return fs.statSync(p).isDirectory();
+		return fs.statSync(p).isDirectory() && fs.existsSync(path.join(p, "build.js"));
 	});
 
 	examples.forEach(function(examplePath) {

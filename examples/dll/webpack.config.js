@@ -2,7 +2,7 @@ var path = require("path");
 var webpack = require("../../");
 module.exports = {
 	entry: {
-		alpha: ["./alpha", "./a"],
+		alpha: ["./alpha", "./a", "module"],
 		beta: ["./beta", "./b"]
 	},
 	output: {

@@ -11,7 +11,7 @@ dependencies
 [![Dependency Status][david-image]][david-url] [![devDependency Status][david-dev-image]][david-dev-url] [![peerDependency Status][david-peer-image]][david-peer-url]
 
 donation
-[![Gittip donate button][gittip-image]][gittip-url] [![Donate to sokra][donate-image]][donate-url]
+[![gratipay donate button][gratipay-image]][gratipay-url] [![Donate to sokra][donate-image]][donate-url]
 
 
 [documentation](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
@@ -304,7 +304,7 @@ I'm very thankful for every dollar. If you leave your username or email, I may s
 [nodei-url]: https://nodei.co/npm/webpack
 [donate-url]: http://sokra.github.io/
 [donate-image]: https://img.shields.io/badge/donate-sokra-brightgreen.svg
-[gittip-url]: https://www.gittip.com/sokra/
-[gittip-image]: http://img.shields.io/gittip/sokra.svg
+[gratipay-url]: https://gratipay.com/webpack/
+[gratipay-image]: https://img.shields.io/gratipay/webpack.svg
 [gitter-url]: https://gitter.im/webpack/webpack
 [gitter-image]: https://img.shields.io/badge/gitter-webpack%2Fwebpack-brightgreen.svg
