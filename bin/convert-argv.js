@@ -26,6 +26,9 @@ module.exports = function(optimist, argv, convertOptions) {
 		argv["optimize-minimize"] = true;
 		argv["optimize-occurence-order"] = true;
 	}
+	if(argv.c) {
+		argv.config = argv.c;
+	}
 
 	var configPath, ext;
 	var extensions = Object.keys(interpret.extensions).sort(function(a, b) {
