@@ -7,6 +7,8 @@ var checkArrayExpectation = require("./checkArrayExpectation");
 
 var webpack = require("../lib/webpack");
 
+var harmony = (+process.versions.node.split(".")[0]) >= 4;
+
 describe("TestCases", function() {
 	var casesPath = path.join(__dirname, "cases");
 	var categories = fs.readdirSync(casesPath);
@@ -114,7 +116,8 @@ describe("TestCases", function() {
 				describe(category.name, function() {
 					this.timeout(10000);
 					category.tests.filter(function(test) {
-						return !config.excludeNominimize || test.indexOf("nominimize") < 0;
+						return (!config.excludeNominimize || test.indexOf("nominimize") < 0) &&
+							(!/^es6/.test(test) || harmony);
 					}).forEach(function(testName) {
 						var suite = describe(testName, function() {});
 						it(testName + " should compile", function(done) {
