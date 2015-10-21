@@ -3,6 +3,6 @@ var a = 1;
 inc(a); // 2
 
 // async loading
-System.import("./async-loaded").then((asyncLoaded) => {
+System.import("./async-loaded").then(function(asyncLoaded) {
 	console.log(asyncLoaded);
 });

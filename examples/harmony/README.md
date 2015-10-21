@@ -7,7 +7,7 @@ var a = 1;
 inc(a); // 2
 
 // async loading
-System.import("./async-loaded").then((asyncLoaded) => {
+System.import("./async-loaded").then(function(asyncLoaded) {
 	console.log(asyncLoaded);
 });
 ```
@@ -110,6 +110,9 @@ export function increment(val) {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// on error function for async loading
+/******/ 	__webpack_require__.oe = function(err) { throw err; };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 /******/ 	// Load entry module and return exports
@@ -124,7 +127,7 @@ export function increment(val) {
 /***/ function(module, exports, __webpack_require__) {
 
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__math__ = __webpack_require__(/*! ./math */ 3);
-	/* harmony export declaration */function increment(val) {
+	/* harmony export */function increment(val) {
 	    return /* harmony import */ __WEBPACK_IMPORTED_MODULE_0__math__["add"](val, 1);
 	}/* harmony export */ Object.defineProperty(exports, "increment", {configurable: false, enumerable: true, get: function() { return increment; }});;
 
@@ -142,7 +145,7 @@ export function increment(val) {
 	/* harmony import */ __WEBPACK_IMPORTED_MODULE_0__increment__["increment"](a); // 2
 
 	// async loading
-	__webpack_require__.e/* System.import */(1).then(__webpack_require__.bind(null, /*! ./async-loaded */ 1)).then((asyncLoaded) => {
+	__webpack_require__.e/* System.import */(1).then(__webpack_require__.bind(null, /*! ./async-loaded */ 1)).then(function(asyncLoaded) {
 		console.log(asyncLoaded);
 	});
 
@@ -154,7 +157,7 @@ export function increment(val) {
   \*****************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* harmony export declaration */function add() {
+	/* harmony export */function add() {
 		var sum = 0, i = 0, args = arguments, l = args.length;
 		while (i < l) {
 			sum += args[i++];
@@ -172,17 +175,17 @@ export function increment(val) {
 ## Uncompressed
 
 ```
-Hash: 12b612cd4c0d16b8de76
-Version: webpack 1.9.10
-Time: 99ms
+Hash: dec8d75fe696d2788f11
+Version: webpack 1.12.2
+Time: 142ms
       Asset       Size  Chunks             Chunk Names
-  output.js    4.96 kB       0  [emitted]  main
-1.output.js  387 bytes       1  [emitted]  
-chunk    {0} output.js (main) 421 bytes [rendered]
+  output.js    5.06 kB       0  [emitted]  main
+1.output.js  375 bytes       1  [emitted]  
+chunk    {0} output.js (main) 426 bytes [rendered]
     > main [2] ./example.js 
     [0] ./increment.js 94 bytes {0} [built]
         harmony import ./increment [2] ./example.js 1:0-47
-    [2] ./example.js 185 bytes {0} [built]
+    [2] ./example.js 190 bytes {0} [built]
     [3] ./math.js 142 bytes {0} [built]
         harmony import ./math [0] ./increment.js 1:0-29
 chunk    {1} 1.output.js 25 bytes {0} [rendered]
@@ -194,24 +197,21 @@ chunk    {1} 1.output.js 25 bytes {0} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 12b612cd4c0d16b8de76
-Version: webpack 1.9.10
-Time: 171ms
+Hash: dec8d75fe696d2788f11
+Version: webpack 1.12.2
+Time: 383ms
       Asset       Size  Chunks             Chunk Names
-  output.js    4.81 kB       0  [emitted]  main
+  output.js     1.2 kB       0  [emitted]  main
 1.output.js  138 bytes       1  [emitted]  
-chunk    {0} output.js (main) 421 bytes [rendered]
+chunk    {0} output.js (main) 426 bytes [rendered]
     > main [2] ./example.js 
     [0] ./increment.js 94 bytes {0} [built]
         harmony import ./increment [2] ./example.js 1:0-47
-    [2] ./example.js 185 bytes {0} [built]
+    [2] ./example.js 190 bytes {0} [built]
     [3] ./math.js 142 bytes {0} [built]
         harmony import ./math [0] ./increment.js 1:0-29
 chunk    {1} 1.output.js 25 bytes {0} [rendered]
     > [2] ./example.js 6:0-31
     [1] ./async-loaded.js 25 bytes {1} [built]
          ./async-loaded [2] ./example.js 6:0-31
-
-ERROR in output.js from UglifyJs
-Unexpected token: operator (>) [./example.js:6,0]
 ```
