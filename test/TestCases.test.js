@@ -116,8 +116,9 @@ describe("TestCases", function() {
 				describe(category.name, function() {
 					this.timeout(10000);
 					category.tests.filter(function(test) {
-						return (!config.excludeNominimize || test.indexOf("nominimize") < 0) &&
-							(!/^es6/.test(test) || harmony);
+						var minimizeCheckOk = !config.excludeNominimize || test.indexOf("nominimize") < 0;
+						var harmonyCheckOk = !/^es6/.test(test) || harmony;
+						return minimizeCheckOk && harmonyCheckOk;
 					}).forEach(function(testName) {
 						var suite = describe(testName, function() {});
 						it(testName + " should compile", function(done) {
