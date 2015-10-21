@@ -64,6 +64,7 @@ describe("TestCases", function() {
 		devtool: "cheap-source-map"
 	}, {
 		name: "minimized",
+		excludeNominimize: true,
 		plugins: [
 			new webpack.optimize.UglifyJsPlugin({
 				sourceMap: false
@@ -71,6 +72,7 @@ describe("TestCases", function() {
 		]
 	}, {
 		name: "minimized-source-map",
+		excludeNominimize: true,
 		plugins: [
 			new webpack.optimize.UglifyJsPlugin()
 		]
@@ -82,12 +84,14 @@ describe("TestCases", function() {
 		]
 	}, {
 		name: "minimized-deduped",
+		excludeNominimize: true,
 		plugins: [
 			new webpack.optimize.DedupePlugin(),
 			new webpack.optimize.UglifyJsPlugin()
 		]
 	}, {
 		name: "optimized",
+		excludeNominimize: true,
 		plugins: [
 			new webpack.optimize.DedupePlugin(),
 			new webpack.optimize.OccurrenceOrderPlugin(),
@@ -96,6 +100,7 @@ describe("TestCases", function() {
 	}, {
 		name: "all-combined",
 		devtool: "#@source-map",
+		excludeNominimize: true,
 		plugins: [
 			new webpack.HotModuleReplacementPlugin(),
 			new webpack.optimize.DedupePlugin(),
@@ -108,7 +113,9 @@ describe("TestCases", function() {
 			categories.forEach(function(category) {
 				describe(category.name, function() {
 					this.timeout(10000);
-					category.tests.forEach(function(testName) {
+					category.tests.filter(function(test) {
+						return !config.excludeNominimize || test.indexOf("nominimize") < 0;
+					}).forEach(function(testName) {
 						var suite = describe(testName, function() {});
 						it(testName + " should compile", function(done) {
 							this.timeout(10000);
