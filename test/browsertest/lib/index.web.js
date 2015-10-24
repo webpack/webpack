@@ -33,24 +33,6 @@ describe("main", function() {
 		window.library2.ok.should.be.eql(true);
 	});
 	
-	var testCasesContext = require.context("../../cases", true, /^\.\/[^\/_]+\/[^\/_]+\/index$/);
-	var testCasesMap = testCasesContext.keys().map(function(key) {
-		return key.substring(2, key.length - "/index".length).split("/");
-	}).reduce(function(map, x) {
-		if(!map[x[0]]) map[x[0]] = [x[1]];
-		else map[x[0]].push(x[1]);
-		return map;
-	}, {});
-	Object.keys(testCasesMap).forEach(function(category) {
-		describe(category, function() {
-			testCasesMap[category].forEach(function(name) {
-				describe(name, function() {
-					testCasesContext("./" + category + "/" + name + "/index");
-				});
-			});
-		});
-	});
-
 	describe("web resolving", function() {
 		it("should load index.web.js instead of index.js", function() {
 			true.should.be.eql(true);
@@ -107,6 +89,24 @@ describe("main", function() {
 		it("should handle the file loader correctly", function() {
 			require("!file!../img/image.png").should.match(/js\/.+\.png$/);
 			document.getElementById("image").src = require("file?prefix=img/!../img/image.png");
+		});
+	});
+
+	var testCasesContext = require.context("../../cases", true, /^\.\/[^\/_]+\/[^\/_]+\/index$/);
+	var testCasesMap = testCasesContext.keys().map(function(key) {
+		return key.substring(2, key.length - "/index".length).split("/");
+	}).reduce(function(map, x) {
+		if(!map[x[0]]) map[x[0]] = [x[1]];
+		else map[x[0]].push(x[1]);
+		return map;
+	}, {});
+	Object.keys(testCasesMap).forEach(function(category) {
+		describe(category, function() {
+			testCasesMap[category].forEach(function(name) {
+				describe(name, function() {
+					testCasesContext("./" + category + "/" + name + "/index");
+				});
+			});
 		});
 	});
 

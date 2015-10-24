@@ -31,6 +31,7 @@
     "coveralls": "^2.11.2",
     "css-loader": "~0.15.0",
     "diff": "^2.0.2",
+    "es6-promise-polyfill": "^1.1.1",
     "eslint": "^1.1.0",
     "eslint-plugin-nodeca": "^1.0.3",
     "express": "~4.13.1",
