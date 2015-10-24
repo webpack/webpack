@@ -92,6 +92,25 @@ describe("main", function() {
 		});
 	});
 
+	describe("chunk error handling", function() {
+		it("should be able to handle chunk loading errors and try again", function(done) {
+			var old = __webpack_public_path__;
+			__webpack_public_path__ += "wrong/";
+			System.import("./three").then(function() {
+				done(new Error("Chunk shouldn't be loaded"));
+			}).catch(function(err) {
+				err.should.be.instanceOf(Error);
+				__webpack_public_path__ = old;
+				System.import("./three").then(function(three) {
+					three.should.be.eql(3);
+					done();
+				}).catch(function(err) {
+					done(new Error("Shouldn't result in an chunk loading error"));
+				});
+			});
+		});
+	});
+
 	var testCasesContext = require.context("../../cases", true, /^\.\/[^\/_]+\/[^\/_]+\/index$/);
 	var testCasesMap = testCasesContext.keys().map(function(key) {
 		return key.substring(2, key.length - "/index".length).split("/");
