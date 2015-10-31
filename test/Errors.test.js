@@ -101,8 +101,16 @@ describe("Errors", function() {
 				filename: "[name].js"
 			},
 			plugins: [
-				new webpack.optimize.CommonsChunkPlugin("a", "a.js", Infinity),
-				new webpack.optimize.CommonsChunkPlugin("b", "b.js", Infinity)
+				new webpack.optimize.CommonsChunkPlugin({
+					name: "a",
+					filename: "a.js",
+					minChunks: Infinity
+				}),
+				new webpack.optimize.CommonsChunkPlugin({
+					name: "b",
+					filename: "b.js",
+					minChunks: Infinity
+				})
 			]
 		}, function(errors, warnings) {
 			errors.length.should.be.eql(1);

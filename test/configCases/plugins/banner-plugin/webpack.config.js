@@ -12,7 +12,8 @@ module.exports = {
 		filename: "[name].js"
 	},
 	plugins: [
-		new webpack.BannerPlugin("A test value", {
+		new webpack.BannerPlugin({
+			banner: "A test value",
 			exclude: ["vendors.js"]
 		})
 	]
