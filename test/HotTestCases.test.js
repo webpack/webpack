@@ -39,12 +39,10 @@ describe("HotTestCases", function() {
 							filename: "bundle.js"
 						},
 						module: {
-							loaders: [
-								{
-									test: /\.js$/,
-									loader: path.join(__dirname, "hotCases", "fake-update-loader.js")
-								}
-							]
+							loaders: [{
+								test: /\.js$/,
+								loader: path.join(__dirname, "hotCases", "fake-update-loader.js")
+							}]
 						},
 						target: "async-node",
 						plugins: [
