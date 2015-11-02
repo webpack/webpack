@@ -8,6 +8,7 @@
     "clone": "^1.0.2",
     "enhanced-resolve": "~0.9.0",
     "esprima": "^2.5.0",
+    "interop-require": "^1.0.0",
     "interpret": "^0.6.4",
     "loader-utils": "^0.2.11",
     "memory-fs": "~0.2.0",

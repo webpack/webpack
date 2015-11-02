@@ -3,6 +3,7 @@ var fs = require("fs");
 fs.existsSync = fs.existsSync || path.existsSync;
 var resolve = require("enhanced-resolve");
 var interpret = require("interpret");
+var interopRequire = require("interop-require");
 
 module.exports = function(optimist, argv, convertOptions) {
 
@@ -77,7 +78,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		}
 
 		registerCompiler(interpret.extensions[ext]);
-		options = require(configPath);
+		options = interopRequire(configPath);
 	}
 
 	if(typeof options !== "object" || options === null) {
