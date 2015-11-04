@@ -86,7 +86,7 @@ Please see [Using Loaders](https://webpack.github.io/docs/using-loaders.html) fo
 * [`file`](https://github.com/webpack/file-loader): Emits the file into the output folder and returns the (relative) url.
 * [`url`](https://github.com/webpack/url-loader): The url loader works like the file loader, but can return a Data Url if the file is smaller than a limit.
 * [`image`](https://github.com/tcoopman/image-webpack-loader): Compresses your images. Ideal to use together with `file` or `url`.
-* [`svgo-loader`](https://github.com/pozadi/svgo-loader): Compresses SVG images using [svgo](https://github.com/svg/svgo) library
+* [`svgo-loader`](https://github.com/rpominov/svgo-loader): Compresses SVG images using [svgo](https://github.com/svg/svgo) library
 * [`baggage`](https://github.com/deepsweet/baggage-loader): Automatically require any resources related to the required one
 * [`polymer-loader`](https://github.com/JonDum/polymer-loader): Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules.
 
@@ -115,7 +115,7 @@ Please see [Using Loaders](https://webpack.github.io/docs/using-loaders.html) fo
 * [`stylus`](https://github.com/shama/stylus-loader): Loads and compiles a stylus file
 
 **misc**
-* [`po`](https://github.com/dschissler/po-loader): Loads a PO gettext file and returns JSON
+* [`po`](https://github.com/perchlayer/po-loader): Loads a PO gettext file and returns JSON
 * [`mocha`](https://github.com/webpack/mocha-loader): Do tests with mocha in browser or node.js
 * [`eslint`](https://github.com/MoOx/eslint-loader): PreLoader for linting code using ESLint.
 * [`jshint`](https://github.com/webpack/jshint-loader): PreLoader for linting code.
@@ -247,13 +247,13 @@ If you want to discuss something or just need help, [here is our gitter.im room]
 
 Copyright (c) 2012-2015 Tobias Koppers
 
-MIT (http://www.opensource.org/licenses/mit-license.php)
+MIT (http://opensource.org/licenses/mit-license.php)
 
 ## Thanks to
 
 (In chronological order)
 
-* @google for [Google Web Toolkit (GWT)](https://code.google.com/p/google-web-toolkit), which aims to compile Java to JavaScript. It features a similar [Code Splitting](https://code.google.com/p/google-web-toolkit/wiki/CodeSplitting) as webpack.
+* @google for [Google Web Toolkit (GWT)](https://code.google.com/p/google-web-toolkit/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](https://code.google.com/p/google-web-toolkit//wiki/CodeSplitting) as webpack.
 * @medikoo for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webpack. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
 * @substack for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
 * @jrburke for [require.js](http://requirejs.org/), which is a similar project and source for many ideas.
@@ -276,23 +276,23 @@ I'm very thankful for every dollar. If you leave your username or email, I may s
 * [esprima](http://esprima.org/)
 * [enhanced-resolve](https://github.com/webpack/enhanced-resolve)
 * [uglify-js](https://github.com/mishoo/UglifyJS)
-* [mocha](https://github.com/visionmedia/mocha)
-* [should](https://github.com/visionmedia/should.js)
+* [mocha](https://github.com/mochajs/mocha)
+* [should](https://github.com/tj/should.js)
 * [optimist](https://github.com/substack/node-optimist)
 * [async](https://github.com/caolan/async)
 * [mkdirp](https://github.com/substack/node-mkdirp)
 * [clone](https://github.com/pvorb/node-clone)
 
 
-[travis-url]: http://travis-ci.org/webpack/webpack
+[travis-url]: https://travis-ci.org/webpack/webpack
 [travis-image]: https://img.shields.io/travis/webpack/webpack.svg
 [appveyor-url]: https://ci.appveyor.com/project/sokra/webpack/branch/master
 [appveyor-image]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
 [coveralls-url]: https://coveralls.io/r/webpack/webpack/
 [coveralls-image]: https://img.shields.io/coveralls/webpack/webpack.svg
-[npm-url]: https://npmjs.org/package/webpack
+[npm-url]: https://www.npmjs.com/package/webpack
 [npm-image]: https://img.shields.io/npm/v/webpack.svg
-[downloads-image]: http://img.shields.io/npm/dm/webpack.svg
+[downloads-image]: https://img.shields.io/npm/dm/webpack.svg
 [downloads-url]: http://badge.fury.io/js/webpack
 [david-url]: https://david-dm.org/webpack/webpack
 [david-image]: https://img.shields.io/david/webpack/webpack.svg
@@ -300,8 +300,8 @@ I'm very thankful for every dollar. If you leave your username or email, I may s
 [david-dev-image]: https://david-dm.org/webpack/webpack/dev-status.svg
 [david-peer-url]: https://david-dm.org/webpack/webpack#info=peerDependencies
 [david-peer-image]: https://david-dm.org/webpack/webpack/peer-status.svg
-[nodei-image]: https://nodei.co/npm/webpack.png?downloads=true&downloadRank=true&stars=true
-[nodei-url]: https://nodei.co/npm/webpack
+[nodei-image]: https://www.npmjs.com/package/webpack.png?downloads=true&downloadRank=true&stars=true
+[nodei-url]: https://www.npmjs.com/package/webpack
 [donate-url]: http://sokra.github.io/
 [donate-image]: https://img.shields.io/badge/donate-sokra-brightgreen.svg
 [gratipay-url]: https://gratipay.com/webpack/
