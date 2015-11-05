@@ -513,6 +513,9 @@ module.exports = function(optimist, argv, convertOptions) {
 				options.output.filename = argv._.pop();
 				options.output.path = path.dirname(options.output.filename);
 				options.output.filename = path.basename(options.output.filename);
+			} else if (options) {
+				console.log("Config is missing output.filename property.");
+    				process.exit(-1);
 			} else {
 				optimist.showHelp();
 				console.error("Output filename not configured.");
