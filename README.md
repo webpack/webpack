@@ -300,7 +300,7 @@ I'm very thankful for every dollar. If you leave your username or email, I may s
 [david-dev-image]: https://david-dm.org/webpack/webpack/dev-status.svg
 [david-peer-url]: https://david-dm.org/webpack/webpack#info=peerDependencies
 [david-peer-image]: https://david-dm.org/webpack/webpack/peer-status.svg
-[nodei-image]: https://www.npmjs.com/package/webpack.png?downloads=true&downloadRank=true&stars=true
+[nodei-image]: https://nodei.co/npm/webpack.png?downloads=true&downloadRank=true&stars=true
 [nodei-url]: https://www.npmjs.com/package/webpack
 [donate-url]: http://sokra.github.io/
 [donate-image]: https://img.shields.io/badge/donate-sokra-brightgreen.svg
