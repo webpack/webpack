@@ -7,6 +7,8 @@ var checkArrayExpectation = require("./checkArrayExpectation");
 
 var webpack = require("../lib/webpack");
 
+var harmony = (+process.versions.node.split(".")[0]) >= 4;
+
 describe("TestCases", function() {
 	var casesPath = path.join(__dirname, "cases");
 	var categories = fs.readdirSync(casesPath);
@@ -24,6 +26,13 @@ describe("TestCases", function() {
 		name: "hot",
 		plugins: [
 			new webpack.HotModuleReplacementPlugin()
+		]
+	}, {
+		name: "hot-multi-step",
+		plugins: [
+			new webpack.HotModuleReplacementPlugin({
+				multiStep: true
+			})
 		]
 	}, {
 		name: "devtool-eval",
@@ -57,6 +66,7 @@ describe("TestCases", function() {
 		devtool: "cheap-source-map"
 	}, {
 		name: "minimized",
+		excludeNominimize: true,
 		plugins: [
 			new webpack.optimize.UglifyJsPlugin({
 				sourceMap: false
@@ -64,6 +74,7 @@ describe("TestCases", function() {
 		]
 	}, {
 		name: "minimized-source-map",
+		excludeNominimize: true,
 		plugins: [
 			new webpack.optimize.UglifyJsPlugin()
 		]
@@ -75,24 +86,27 @@ describe("TestCases", function() {
 		]
 	}, {
 		name: "minimized-deduped",
+		excludeNominimize: true,
 		plugins: [
 			new webpack.optimize.DedupePlugin(),
 			new webpack.optimize.UglifyJsPlugin()
 		]
 	}, {
 		name: "optimized",
+		excludeNominimize: true,
 		plugins: [
 			new webpack.optimize.DedupePlugin(),
-			new webpack.optimize.OccurenceOrderPlugin(),
+			new webpack.optimize.OccurrenceOrderPlugin(),
 			new webpack.optimize.UglifyJsPlugin()
 		]
 	}, {
 		name: "all-combined",
 		devtool: "#@source-map",
+		excludeNominimize: true,
 		plugins: [
 			new webpack.HotModuleReplacementPlugin(),
 			new webpack.optimize.DedupePlugin(),
-			new webpack.optimize.OccurenceOrderPlugin(),
+			new webpack.optimize.OccurrenceOrderPlugin(),
 			new webpack.optimize.UglifyJsPlugin(),
 			new webpack.NamedModulesPlugin()
 		]
@@ -101,7 +115,11 @@ describe("TestCases", function() {
 			categories.forEach(function(category) {
 				describe(category.name, function() {
 					this.timeout(10000);
-					category.tests.forEach(function(testName) {
+					category.tests.filter(function(test) {
+						var minimizeCheckOk = !config.excludeNominimize || test.indexOf("nominimize") < 0;
+						var harmonyCheckOk = !/^es6/.test(test) || harmony;
+						return minimizeCheckOk && harmonyCheckOk;
+					}).forEach(function(testName) {
 						var suite = describe(testName, function() {});
 						it(testName + " should compile", function(done) {
 							this.timeout(10000);

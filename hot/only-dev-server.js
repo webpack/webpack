@@ -4,25 +4,12 @@
 */
 /*globals window __webpack_hash__ */
 if(module.hot) {
-	var lastData;
+	var lastHash;
 	var upToDate = function upToDate() {
-		return lastData.indexOf(__webpack_hash__) >= 0;
+		return lastHash.indexOf(__webpack_hash__) >= 0;
 	};
 	var check = function check() {
-		module.hot.check(function(err, updatedModules) {
-			if(err) {
-				if(module.hot.status() in {
-						abort: 1,
-						fail: 1
-					}) {
-					console.warn("[HMR] Cannot check for update. Need to do a full reload!");
-					console.warn("[HMR] " + err.stack || err.message);
-				} else {
-					console.warn("[HMR] Update check failed: " + err.stack || err.message);
-				}
-				return;
-			}
-
+		module.hot.check().then(function(updatedModules) {
 			if(!updatedModules) {
 				console.warn("[HMR] Cannot find update. Need to do a full reload!");
 				console.warn("[HMR] (Probably because of restarting the webpack-dev-server)");
@@ -55,20 +42,24 @@ if(module.hot) {
 					console.log("[HMR] App is up to date.");
 				}
 			});
+		}).catch(function(err) {
+			if(module.hot.status() in {
+					abort: 1,
+					fail: 1
+				}) {
+				console.warn("[HMR] Cannot check for update. Need to do a full reload!");
+				console.warn("[HMR] " + err.stack || err.message);
+			} else {
+				console.warn("[HMR] Update check failed: " + err.stack || err.message);
+			}
 		});
 	};
-	var addEventListener = window.addEventListener ? function(eventName, listener) {
-		window.addEventListener(eventName, listener, false);
-	} : function(eventName, listener) {
-		window.attachEvent("on" + eventName, listener);
-	};
-	addEventListener("message", function(event) {
-		if(typeof event.data === "string" && event.data.indexOf("webpackHotUpdate") === 0) {
-			lastData = event.data;
-			if(!upToDate() && module.hot.status() === "idle") {
-				console.log("[HMR] Checking for updates on the server...");
-				check();
-			}
+	var hotEmitter = require("./emitter");
+	hotEmitter.on("webpackHotUpdate", function(currentHash) {
+		lastHash = currentHash;
+		if(!upToDate() && module.hot.status() === "idle") {
+			console.log("[HMR] Checking for updates on the server...");
+			check();
 		}
 	});
 	console.log("[HMR] Waiting for update signal from WDS...");

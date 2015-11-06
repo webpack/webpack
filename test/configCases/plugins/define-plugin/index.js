@@ -1,3 +1,10 @@
+it("should define FALSE", function() {
+	FALSE.should.be.eql(false);
+	(typeof TRUE).should.be.eql("boolean");
+	var x = require(FALSE ? "fail" : "./a");
+	var y = FALSE ? require("fail") : require("./a");
+});
+
 it("should define CODE", function() {
 	CODE.should.be.eql(3);
 	(typeof CODE).should.be.eql("number");
@@ -5,7 +12,7 @@ it("should define CODE", function() {
 	if(typeof CODE !== "number") require("fail");
 });
 it("should define FUNCTION", function() {
-	FUNCTION(5).should.be.eql(6);
+	(FUNCTION(5)).should.be.eql(6);
 	(typeof FUNCTION).should.be.eql("function");
 	if(typeof FUNCTION !== "function") require("fail");
 });
@@ -34,7 +41,7 @@ it("should define OBJECT.SUB.CODE", function() {
 	}(OBJECT.SUB));
 });
 it("should define process.env.DEFINED_NESTED_KEY", function() {
-	process.env.DEFINED_NESTED_KEY.should.be.eql(5);
+	(process.env.DEFINED_NESTED_KEY).should.be.eql(5);
 	(typeof process.env.DEFINED_NESTED_KEY).should.be.eql("number");
 	if(process.env.DEFINED_NESTED_KEY !== 5) require("fail");
 	if(typeof process.env.DEFINED_NESTED_KEY !== "number") require("fail");
@@ -46,7 +53,7 @@ it("should define process.env.DEFINED_NESTED_KEY", function() {
 	(indirect.DEFINED_NESTED_KEY).should.be.eql(5);
 
 	(function(env) {
-		env.DEFINED_NESTED_KEY.should.be.eql(5);
+		(env.DEFINED_NESTED_KEY).should.be.eql(5);
 		(typeof env.DEFINED_NESTED_KEY).should.be.eql("number");
 		if(env.DEFINED_NESTED_KEY !== 5) require("fail");
 		if(typeof env.DEFINED_NESTED_KEY !== "number") require("fail");

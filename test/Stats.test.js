@@ -13,7 +13,10 @@ describe("Stats", function() {
 	tests.forEach(function(testName) {
 		it("should print correct stats for " + testName, function(done) {
 			var options = {
-				entry: "./index"
+				entry: "./index",
+				output: {
+					filename: "bundle.js"
+				}
 			};
 			if(fs.existsSync(path.join(base, testName, "webpack.config.js"))) {
 				options = require(path.join(base, testName, "webpack.config.js"));

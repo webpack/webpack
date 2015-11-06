@@ -19,14 +19,14 @@ module.exports = function(optimist, argv, convertOptions) {
 		argv.debug = true;
 		argv["output-pathinfo"] = true;
 		if(!argv.devtool) {
-			argv.devtool = "sourcemap";
+			argv.devtool = "eval-source-map";
 		}
 	}
 	if(argv.p) {
 		argv["optimize-minimize"] = true;
-		argv["optimize-occurence-order"] = true;
 	}
 
+	var configFileLoaded = false;
 	var configPath, ext;
 	var extensions = Object.keys(interpret.extensions).sort(function(a, b) {
 		return a.length - b.length;
@@ -78,10 +78,15 @@ module.exports = function(optimist, argv, convertOptions) {
 
 		registerCompiler(interpret.extensions[ext]);
 		options = require(configPath);
+		configFileLoaded = true;
+	}
+
+	if(typeof options === "function") {
+		options = options(argv.env, argv);
 	}
 
 	if(typeof options !== "object" || options === null) {
-		console.log("Config did not export an object.");
+		console.log("Config did not export an object or a function returning an object.");
 		process.exit(-1);
 	}
 
@@ -306,11 +311,6 @@ module.exports = function(optimist, argv, convertOptions) {
 			options.output.chunkFilename = value;
 		});
 
-		ifArg("output-named-chunk-file", function(value) {
-			ensureObject(options, "output");
-			options.output.namedChunkFilename = value;
-		});
-
 		ifArg("output-source-map-file", function(value) {
 			ensureObject(options, "output");
 			options.output.sourceMapFilename = value;
@@ -362,7 +362,9 @@ module.exports = function(optimist, argv, convertOptions) {
 		ifBooleanArg("hot", function() {
 			ensureArray(options, "plugins");
 			var HotModuleReplacementPlugin = require("../lib/HotModuleReplacementPlugin");
-			options.plugins.push(new HotModuleReplacementPlugin());
+			options.plugins.push(new HotModuleReplacementPlugin({
+				multiStep: true
+			}));
 		});
 
 		mapArgToBoolean("debug");
@@ -457,12 +459,6 @@ module.exports = function(optimist, argv, convertOptions) {
 			options.plugins.push(new UglifyJsPlugin());
 		});
 
-		ifBooleanArg("optimize-occurence-order", function() {
-			ensureArray(options, "plugins");
-			var OccurenceOrderPlugin = require("../lib/optimize/OccurenceOrderPlugin");
-			options.plugins.push(new OccurenceOrderPlugin());
-		});
-
 		ifBooleanArg("optimize-dedupe", function() {
 			ensureArray(options, "plugins");
 			var DedupePlugin = require("../lib/optimize/DedupePlugin");
@@ -513,6 +509,8 @@ module.exports = function(optimist, argv, convertOptions) {
 				options.output.filename = argv._.pop();
 				options.output.path = path.dirname(options.output.filename);
 				options.output.filename = path.basename(options.output.filename);
+			} else if(configFileLoaded) {
+				throw new Error("'output.filename' is required, either in config file or as --output-file");
 			} else {
 				optimist.showHelp();
 				console.error("Output filename not configured.");

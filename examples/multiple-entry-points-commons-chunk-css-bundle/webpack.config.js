@@ -21,7 +21,11 @@ module.exports = {
 		]
 	},
 	plugins: [
-		new CommonsChunkPlugin("commons", "commons.js", ["A", "B"]),
+		new CommonsChunkPlugin({
+			name: "commons",
+			filename: "commons.js",
+			chunks: ["A", "B"]
+		}),
 		new ExtractTextPlugin("[name].css"),
 	]
 };

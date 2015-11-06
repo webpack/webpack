@@ -25,29 +25,14 @@ describe("main", function() {
 	});
 
 	it("should load library2 exported as global", function() {
+		should.exist(window.library2common);
+		should.exist(window.library2common.ok2);
+		window.library2common.ok2.should.be.eql(true);
 		should.exist(window.library2);
 		should.exist(window.library2.ok);
 		window.library2.ok.should.be.eql(true);
 	});
 	
-	var testCasesContext = require.context("../../cases", true, /^\.\/[^\/_]+\/[^\/_]+\/index$/);
-	var testCasesMap = testCasesContext.keys().map(function(key) {
-		return key.substring(2, key.length - "/index".length).split("/");
-	}).reduce(function(map, x) {
-		if(!map[x[0]]) map[x[0]] = [x[1]];
-		else map[x[0]].push(x[1]);
-		return map;
-	}, {});
-	Object.keys(testCasesMap).forEach(function(category) {
-		describe(category, function() {
-			testCasesMap[category].forEach(function(name) {
-				describe(name, function() {
-					testCasesContext("./" + category + "/" + name + "/index");
-				});
-			});
-		});
-	});
-
 	describe("web resolving", function() {
 		it("should load index.web.js instead of index.js", function() {
 			true.should.be.eql(true);
@@ -104,6 +89,43 @@ describe("main", function() {
 		it("should handle the file loader correctly", function() {
 			require("!file!../img/image.png").should.match(/js\/.+\.png$/);
 			document.getElementById("image").src = require("file?prefix=img/!../img/image.png");
+		});
+	});
+
+	describe("chunk error handling", function() {
+		it("should be able to handle chunk loading errors and try again", function(done) {
+			var old = __webpack_public_path__;
+			__webpack_public_path__ += "wrong/";
+			System.import("./three").then(function() {
+				done(new Error("Chunk shouldn't be loaded"));
+			}).catch(function(err) {
+				err.should.be.instanceOf(Error);
+				__webpack_public_path__ = old;
+				System.import("./three").then(function(three) {
+					three.should.be.eql(3);
+					done();
+				}).catch(function(err) {
+					done(new Error("Shouldn't result in an chunk loading error"));
+				});
+			});
+		});
+	});
+
+	var testCasesContext = require.context("../../cases", true, /^\.\/[^\/_]+\/[^\/_]+\/index$/);
+	var testCasesMap = testCasesContext.keys().map(function(key) {
+		return key.substring(2, key.length - "/index".length).split("/");
+	}).reduce(function(map, x) {
+		if(!map[x[0]]) map[x[0]] = [x[1]];
+		else map[x[0]].push(x[1]);
+		return map;
+	}, {});
+	Object.keys(testCasesMap).forEach(function(category) {
+		describe(category, function() {
+			testCasesMap[category].forEach(function(name) {
+				describe(name, function() {
+					testCasesContext("./" + category + "/" + name + "/index");
+				});
+			});
 		});
 	});
 

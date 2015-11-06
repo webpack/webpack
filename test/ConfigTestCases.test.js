@@ -35,6 +35,7 @@ describe("ConfigTestCases", function() {
 						if(!options.output) options.output = {};
 						if(!options.output.path) options.output.path = outputDirectory;
 						if(!options.output.filename) options.output.filename = "bundle" + idx + ".js";
+						if(!options.output.chunkFilename) options.output.chunkFilename = "[id].bundle" + idx + ".js";
 					});
 					webpack(options, function(err, stats) {
 						if(err) return done(err);

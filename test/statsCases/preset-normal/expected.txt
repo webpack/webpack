@@ -1,6 +1,6 @@
-Hash: 27b51279f30c19c26769
+Hash: 5e20eab284e2a2922ffc
 Time: Xms
-chunk    {0} bundle.js (main) 73 bytes [rendered]
-chunk    {1} 1.bundle.js 54 bytes {0} [rendered]
-chunk    {2} 2.bundle.js 22 bytes {0} [rendered]
-chunk    {3} 3.bundle.js 44 bytes {1} [rendered]
+chunk    {0} main.js (main) 73 bytes [rendered]
+chunk    {1} 1.js 54 bytes {0} [rendered]
+chunk    {2} 2.js 22 bytes {0} [rendered]
+chunk    {3} 3.js 44 bytes {1} [rendered]

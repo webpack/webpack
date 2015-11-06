@@ -72,25 +72,6 @@ describe("Errors", function() {
 			done();
 		});
 	});
-	it("should throw an error if you try to require an entry point", function(done) {
-		getErrors({
-			entry: {
-				a: "./require-entry-point",
-				b: "./entry-point",
-				c: ["./entry-point2"]
-			}
-		}, function(errors, warnings) {
-			errors.length.should.be.eql(2);
-			warnings.length.should.be.eql(0);
-			var lines = errors[0].split("\n");
-			lines[0].should.match(/require-entry-point\.js/);
-			lines[1].should.match(/a dependency to an entry point is not allowed/);
-			lines = errors[1].split("\n");
-			lines[0].should.match(/require-entry-point\.js/);
-			lines[1].should.match(/a dependency to an entry point is not allowed/);
-			done();
-		});
-	});
 	it("should warn about case-sensitive module names", function(done) {
 		getErrors({
 			entry: "./case-sensitive"
@@ -116,9 +97,20 @@ describe("Errors", function() {
 				b: "./entry-point",
 				c: "./entry-point"
 			},
+			output: {
+				filename: "[name].js"
+			},
 			plugins: [
-				new webpack.optimize.CommonsChunkPlugin("a", "a.js", Infinity),
-				new webpack.optimize.CommonsChunkPlugin("b", "b.js", Infinity)
+				new webpack.optimize.CommonsChunkPlugin({
+					name: "a",
+					filename: "a.js",
+					minChunks: Infinity
+				}),
+				new webpack.optimize.CommonsChunkPlugin({
+					name: "b",
+					filename: "b.js",
+					minChunks: Infinity
+				})
 			]
 		}, function(errors, warnings) {
 			errors.length.should.be.eql(1);

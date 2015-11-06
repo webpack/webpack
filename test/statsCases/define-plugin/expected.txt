@@ -1,15 +1,15 @@
-Hash: 22655fdde3386763624eb84e3c3c9ea7106aac84
+Hash: ba6fdb03925de258ce9ad4e14cf054705a795103
 Child
-    Hash: 22655fdde3386763624e
+    Hash: ba6fdb03925de258ce9a
     Time: Xms
-        Asset     Size  Chunks             Chunk Names
-    bundle.js  1.43 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 24 bytes [rendered]
+      Asset     Size  Chunks             Chunk Names
+    main.js  1.57 kB       0  [emitted]  main
+    chunk    {0} main.js (main) 24 bytes [rendered]
         [0] (webpack)/test/statsCases/define-plugin/index.js 24 bytes {0} [built]
 Child
-    Hash: b84e3c3c9ea7106aac84
+    Hash: d4e14cf054705a795103
     Time: Xms
-        Asset     Size  Chunks             Chunk Names
-    bundle.js  1.43 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 24 bytes [rendered]
+      Asset     Size  Chunks             Chunk Names
+    main.js  1.57 kB       0  [emitted]  main
+    chunk    {0} main.js (main) 24 bytes [rendered]
         [0] (webpack)/test/statsCases/define-plugin/index.js 24 bytes {0} [built]

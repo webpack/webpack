@@ -14,15 +14,26 @@ module.exports = {
 	},
 	plugins: [
 		// check for common modules in children of pageA and move them to the parent
-		new CommonsChunkPlugin("pageA", null, false),
-		
+		new CommonsChunkPlugin({
+			name: "pageA",
+			children: true
+		}),
+
 		// the same for pageB but move them if at least 3 children share the module
-		new CommonsChunkPlugin("pageB", null, false, 3),
-		
+		new CommonsChunkPlugin({
+			name: "pageB",
+			children: true,
+			minChunks: 3
+		}),
+
 		// the same for pageC and pageD but with a custom logic for moving
-		new CommonsChunkPlugin(["pageC", "pageD"], null, false, function(module, count) {
-			// move only module "b"
-			return /b\.js$/.test(module.identifier());
+		new CommonsChunkPlugin({
+			names: ["pageC", "pageD"],
+			children: true,
+			minChunks: function(module, count) {
+				// move only module "b"
+				return /b\.js$/.test(module.identifier());
+			}
 		})
 	]
 }

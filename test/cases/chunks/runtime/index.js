@@ -22,13 +22,17 @@ it("should not load a chunk which is included in a already loaded one", function
 		async.should.be.eql(true);
 		loadChunk();
 	});
-	async = true;
+	Promise.resolve().then(function() {
+		async = true;
+	});
 	function loadChunk() {
 		var sync = true;
 		require.ensure(["./empty?x", "./empty?y"], function(require) {
 			sync.should.be.eql(true);
 			done();
 		});
-		sync = false;
+		Promise.resolve().then(function() {}).then(function() {
+			sync = false;
+		});
 	}
 });

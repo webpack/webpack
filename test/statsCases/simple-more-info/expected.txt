@@ -1,7 +1,7 @@
-Hash: 9293c413c247c48411c2
+Hash: 06fe17dbca7dc4164cff
 Time: Xms
     Asset     Size  Chunks             Chunk Names
-bundle.js  1.39 kB       0  [emitted]  main
+bundle.js  1.53 kB       0  [emitted]  main
 chunk    {0} bundle.js (main) 0 bytes [rendered]
     > main [0] (webpack)/test/statsCases/simple-more-info/index.js 
     [0] (webpack)/test/statsCases/simple-more-info/index.js 0 bytes {0} [built]

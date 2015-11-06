@@ -163,6 +163,11 @@ function compilerCallback(err, stats) {
 		lastHash = stats.hash;
 		process.stdout.write(stats.toString(outputOptions) + "\n");
 	}
+	if(!options.doWatch && stats.hasErrors()) {
+		process.on("exit", function() {
+			process.exit(2);
+		});
+	}
 }
 if(options.watch) {
 	var primaryOptions = !Array.isArray(options) ? options : options[0];

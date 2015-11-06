@@ -8,26 +8,24 @@ if(module.hot) {
 
 	function checkForUpdate(fromUpdate) {
 		if(module.hot.status() === "idle") {
-			module.hot.check(true, function(err, updatedModules) {
-				if(err) {
-					if(module.hot.status() in {
-							abort: 1,
-							fail: 1
-						}) {
-						console.warn("[HMR] Cannot apply update.");
-						console.warn("[HMR] " + err.stack || err.message);
-						console.warn("[HMR] You need to restart the application!");
-					} else {
-						console.warn("[HMR] Update failed: " + err.stack || err.message);
-					}
-					return;
-				}
+			module.hot.check(true).then(function(updatedModules) {
 				if(!updatedModules) {
 					if(fromUpdate) console.log("[HMR] Update applied.");
 					return;
 				}
 				require("./log-apply-result")(updatedModules, updatedModules);
 				checkForUpdate(true);
+			}).catch(function(err) {
+				if(module.hot.status() in {
+						abort: 1,
+						fail: 1
+					}) {
+					console.warn("[HMR] Cannot apply update.");
+					console.warn("[HMR] " + err.stack || err.message);
+					console.warn("[HMR] You need to restart the application!");
+				} else {
+					console.warn("[HMR] Update failed: " + err.stack || err.message);
+				}
 			});
 		}
 	}
