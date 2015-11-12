@@ -64,7 +64,7 @@ example demonstrating multiple entry points with Code Splitting.
 
 If you think an example is missing, please report it as issue. :)
 
-# Build
+# Building an Example
 
-There is a `build.js` file in each example directory.
-Run it with node in the example directory to compile it and the README.md file.
+1. Run `npm install` in the root of the project.
+2. Run `node build.js` in the specific example directory. (Ex: `cd examples/commonjs && node build.js`)
