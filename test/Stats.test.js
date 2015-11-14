@@ -63,17 +63,32 @@ describe("Stats", function() {
 				var toStringOptions = {
 					colors: false
 				};
+				var hasColorSetting = false;
+
 				if(typeof options.stats !== "undefined") {
 					toStringOptions = options.stats;
+
+					hasColorSetting = typeof options.stats.colors !== "undefined";
 				}
 
 				var actual = stats.toString(toStringOptions);
 				(typeof actual).should.be.eql("string");
-				actual =
-					actual.replace(/\u001b\[[0-9;]*m/g, "")
+				if(!hasColorSetting) {
+					actual = actual
+						.replace(/\u001b\[[0-9;]*m/g, "")
+						.replace(/[0-9]+(\s?ms)/g, "X$1");
+				} else {
+					actual = actual
+						.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
+						.replace(/\u001b\[1m/g, "<CLR=BOLD>")
+						.replace(/\u001b\[39m\u001b\[22m/g, "</CLR>")
+						.replace(/\u001b\[([0-9;]*)m/g, "<CLR=$1>")
+						.replace(/[0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2");
+				}
+
+				actual = actual
 					.replace(/\r\n?/g, "\n")
 					.replace(/[\t ]*Version:.+\n/g, "")
-					.replace(/[0-9]+(\s?ms)/g, "X$1")
 					.replace(path.join(base, testName), "Xdir/" + testName);
 				var expected = fs.readFileSync(path.join(base, testName, "expected.txt"), "utf-8").replace(/\r/g, "");
 				if(actual !== expected) {
