@@ -1,7 +1,7 @@
 module.exports = function(optimist) {
 	optimist
 		.boolean("help").alias("help", "h").alias("help", "?").describe("help")
-		.string("config").alias("config", "c").describe("config")
+		.string("config").describe("config")
 		.string("env").describe("env", "Enviroment passed to the config, when it is a function")
 		.string("context").describe("context")
 		.string("entry").describe("entry")
@@ -27,7 +27,7 @@ module.exports = function(optimist) {
 		.boolean("watch-stdin").alias("watch-stdin", "stdin").describe("watch which closes when stdin ends")
 		.describe("watch-aggregate-timeout")
 		.describe("watch-poll")
-		.boolean("hot").alias("hot", "h").describe("hot")
+		.boolean("hot").describe("hot")
 		.boolean("debug").describe("debug")
 		.string("devtool").describe("devtool")
 		.boolean("progress").describe("progress")
