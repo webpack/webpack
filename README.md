@@ -148,8 +148,6 @@ friendly** by using hashes.
 
 [Optimization documentation](https://webpack.github.io/docs/optimization.html)
 
-webpack optimizes in several ways. It also makes your chunks **cache-friendly** by using hashes.
-
 # A small example of what's possible
 
 ``` javascript
