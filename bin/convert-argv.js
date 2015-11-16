@@ -21,6 +21,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		if(!argv.devtool) {
 			argv.devtool = "eval-source-map";
 		}
+		argv["define"] = argv["define"].concat("process.env.NODE_ENV=\"production\"");
 	}
 	if(argv.p) {
 		argv["optimize-minimize"] = true;
