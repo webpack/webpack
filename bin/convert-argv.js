@@ -32,6 +32,14 @@ module.exports = function(optimist, argv, convertOptions) {
 	var extensions = Object.keys(interpret.extensions).sort(function(a, b) {
 		return a.length - b.length;
 	});
+	var configFiles = ["webpack.config", "webpackfile"].map(function(filename) {
+		return extensions.map(function(ext) {
+			return {
+				path: path.resolve(filename + ext),
+				ext: ext
+			};
+		});
+	}).reduce(function(a, i) { return a.concat(i); }, []);
 
 	if(argv.config) {
 		configPath = path.resolve(argv.config);
@@ -46,10 +54,10 @@ module.exports = function(optimist, argv, convertOptions) {
 			ext = path.extname(configPath);
 		}
 	} else {
-		for(var i = 0; i < extensions.length; i++) {
-			var webpackConfig = path.resolve("webpack.config" + extensions[i]);
+		for(var i = 0; i < configFiles.length; i++) {
+			var webpackConfig = configFiles[i].path;
 			if(fs.existsSync(webpackConfig)) {
-				ext = extensions[i];
+				ext = configFiles[i].ext;
 				configPath = webpackConfig;
 				break;
 			}
