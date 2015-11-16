@@ -2,7 +2,7 @@
 
 ## commonjs
 
-example demonstrating a very simple programm
+example demonstrating a very simple program
 
 ## code-splitting
 
@@ -10,11 +10,11 @@ example demonstrating a very simple case of Code Splitting.
 
 ## require.resolve
 
-example demonstrating to cache clearing of modules with `require.resolve` and `require.cache`.
+example demonstrating how to cache clearing of modules with `require.resolve` and `require.cache`.
 
 ## require.context
 
-example demonstrating to automatic creation of contexts when using variables in `require`.
+example demonstrating automatic creation of contexts when using variables in `require`.
 
 ## code-splitted-require.context
 
@@ -26,7 +26,7 @@ example demonstrating contexts in a code-split environment with AMD.
 
 ## loader
 
-example demonstrating to usage of loaders.
+example demonstrating the usage of loaders.
 
 ## coffee-script
 
@@ -36,9 +36,9 @@ example demonstrating code written in coffee-script.
 
 example demonstrating Code Splitting through the builder loader
 
-## names-chucks
+## names-chunks
 
-example demonstrating merging of chucks with named chucks
+example demonstrating merging of chunks with named chunks
 
 ## labeled-modules
 
@@ -46,7 +46,7 @@ example demonstrating Labeled Modules
 
 ## mixed
 
-example demonstrating mixing CommonJs, AMD and Labeled Modules
+example demonstrating mixing CommonJs, AMD, and Labeled Modules
 
 ## web-worker
 
@@ -56,11 +56,15 @@ example demonstrating creating WebWorkers with webpack and the worker-loader.
 
 example demonstrating localization.
 
+## multiple-entry-points
+
+example demonstrating multiple entry points with Code Splitting.
+
 # Requests
 
-If you think a example is missing, please report it as issue. :)
+If you think an example is missing, please report it as issue. :)
 
-# Build
+# Building an Example
 
-There is a `build.js` file in each example directory.
-Run it with node in the example directory to compile it and the README.md file.
+1. Run `npm install` in the root of the project.
+2. Run `node build.js` in the specific example directory. (Ex: `cd examples/commonjs && node build.js`)

@@ -45,3 +45,9 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ```
 {{stdout}}
 ```
+
+## Minimized (uglify-js, no zip)
+
+```
+{{min:stdout}}
+```

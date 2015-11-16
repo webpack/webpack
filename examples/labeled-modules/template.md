@@ -1,7 +1,15 @@
+This example show how to add support for Labeled Modules by adding the plugin to the configuration.
+
 # example.js
 
 ``` javascript
 {{example.js}}
+```
+
+# webpack.config.js
+
+``` javascript
+{{webpack.config.js}}
 ```
 
 # increment.js

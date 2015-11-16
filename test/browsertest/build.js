@@ -34,13 +34,14 @@ var library1 = cp.spawn("node", join(["../../bin/webpack.js", "--output-pathinfo
 bindOutput(library1);
 library1.on("exit", function(code) {
 	if(code === 0) {
-		// node ../../bin/webpack --output-pathinfo --colors --resolve-alias vm=vm-browserify --output-public-path js/ --module-bind json --module-bind css=style!css --module-bind less=style!css!less --module-bind coffee --module-bind jade --prefetch ./less/stylesheet.less --optimize-dedupe ./lib/index js/web.js
+		// node ../../bin/webpack --output-pathinfo --colors --resolve-alias vm=vm-browserify --output-public-path js/ --output-chunk-file [name].web.js --module-bind json --module-bind css=style!css --module-bind less=style!css!less --module-bind coffee --module-bind jade --prefetch ./lib/stylesheet.less --optimize-dedupe --labeled-modules ./lib/index "js/web.js?h=[hash]"
 		var main = cp.spawn("node", join(["../../bin/webpack.js", "--output-pathinfo", "--colors", "--resolve-alias", "vm=vm-browserify", "--workers",
-											"--output-public-path", "js/", "--module-bind", "json", "--module-bind", "css=style!css", "--module-bind", "less=style/url!file?postfix=.css&string!less", "--module-bind", "coffee", "--module-bind", "jade", "--prefetch", "./less/stylesheet.less", "--optimize-dedupe", "./lib/index", "js/web.js", "--progress"], extraArgs));
+											"--output-public-path", "js/", "--output-chunk-file", "[name].web.js",
+											"--module-bind", "json", "--module-bind", "css=style!css", "--module-bind", "less=style/url!file?postfix=.css&string!less", "--module-bind", "coffee", "--module-bind", "jade", "--prefetch", "./lib/stylesheet.less", "--optimize-dedupe", "--labeled-modules", "./lib/index", "js/web.js?h=[hash]", "--progress"], extraArgs));
 		bindOutput(main);
 	}
 });
-// node ../../bin/webpack --output-pathinfo --colors --output-library library2 --output-public-path js/ --output-chunk-file [chunkhash].lib2.js --config library2config.js library2b library2 js/library2.js
-var library2 = cp.spawn("node", join(["../../bin/webpack.js", "--output-pathinfo", "--colors", "--output-library", "library2",
-									"--output-public-path", "js/", "--output-chunk-file", "[chunkhash].lib2.js", "--config", "library2config.js", "library2b", "library2", "js/library2.js"], extraArgsNoWatch));
+// node ../../bin/webpack --output-pathinfo --colors --output-library-target umd --output-jsonp-function webpackJsonpLib2 --output-public-path js/ --output-chunk-file [chunkhash].lib2.js --config library2config.coffee library2b library2 js/library2.js
+var library2 = cp.spawn("node", join(["../../bin/webpack.js", "--output-pathinfo", "--colors", "--output-library-target", "umd", "--output-jsonp-function", "webpackJsonpLib2",
+									"--output-public-path", "js/", "--output-chunk-file", "[chunkhash].lib2.js", "--config", "library2config.coffee", "library2b", "library2", "js/library2.js"], extraArgsNoWatch));
 bindOutput(library2);

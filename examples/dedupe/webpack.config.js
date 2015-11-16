@@ -1,5 +1,6 @@
+var webpack = require("../../");
 module.exports = {
-	optimize: {
-		dedupe: true
-	}
+	plugins: [
+		new webpack.optimize.DedupePlugin()
+	]
 }

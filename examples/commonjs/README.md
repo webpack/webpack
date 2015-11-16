@@ -1,3 +1,10 @@
+This very simple example shows usage of CommonJS.
+
+The three files `example.js`, `increment.js` and `math.js` form a dependency chain. They use `require(dependency)` to declare dependencies.
+
+You can see the output file that webpack creates by bundling them together in one file. Keep in mind that webpack adds comments to make reading this file easier. These comments are removed when minimizing the file.
+
+You can also see the info messages webpack prints to console (for both normal and minimized build).
 
 # example.js
 
@@ -34,80 +41,74 @@ exports.add = function() {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	
+
 /******/ 	// The require function
-/******/ 	function require(moduleId) {
+/******/ 	function __webpack_require__(moduleId) {
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/ 		
+
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
-/******/ 		
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/ 		
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
-/******/ 	// The bundle contains no chunks. A empty chunk loading function.
-/******/ 	require.e = function requireEnsure(_, callback) {
-/******/ 		callback.call(null, require);
-/******/ 	};
-/******/ 	
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	require.modules = modules;
-/******/ 	
+/******/ 	__webpack_require__.m = modules;
+
 /******/ 	// expose the module cache
-/******/ 	require.cache = installedModules;
-/******/ 	
-/******/ 	
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// Load entry module and return exports
-/******/ 	return require(0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var inc = require(/*! ./increment */ 1).increment;
+	var inc = __webpack_require__(/*! ./increment */ 1).increment;
 	var a = 1;
 	inc(a); // 2
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var add = require(/*! ./math */ 2).add;
+	var add = __webpack_require__(/*! ./math */ 2).add;
 	exports.increment = function(val) {
 	    return add(val, 1);
 	};
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports) {
 
 	exports.add = function() {
 	    var sum = 0, i = 0, args = arguments, l = args.length;
@@ -118,7 +119,7 @@ exports.add = function() {
 	};
 
 /***/ }
-/******/ })
+/******/ ]);
 ```
 
 # Info
@@ -126,31 +127,33 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: 58e793ed9773263580f89dd2c34efe6a
-Version: webpack 0.10.0-beta6
-Time: 36ms
-    Asset  Size  Chunks             Chunk Names
-output.js  2311       0  [emitted]  main       
-chunk    {0} output.js (main) 318 [rendered]
-    [0] ./example.js 67 [built] {0}
-    [1] ./increment.js 95 [built] {0}
+Hash: f20c1cdaf768293603f5
+Version: webpack 1.9.10
+Time: 69ms
+    Asset     Size  Chunks             Chunk Names
+output.js  2.15 kB       0  [emitted]  main
+chunk    {0} output.js (main) 329 bytes [rendered]
+    > main [0] ./example.js 
+    [0] ./example.js 69 bytes {0} [built]
+    [1] ./increment.js 98 bytes {0} [built]
         cjs require ./increment [0] ./example.js 1:10-32
-    [2] ./math.js 156 [built] {0}
+    [2] ./math.js 162 bytes {0} [built]
         cjs require ./math [1] ./increment.js 1:10-27
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 58e793ed9773263580f89dd2c34efe6a
-Version: webpack 0.10.0-beta6
-Time: 80ms
-    Asset  Size  Chunks             Chunk Names
-output.js   460       0  [emitted]  main       
-chunk    {0} output.js (main) 318 [rendered]
-    [0] ./example.js 67 [built] {0}
-    [1] ./increment.js 95 [built] {0}
+Hash: f20c1cdaf768293603f5
+Version: webpack 1.9.10
+Time: 197ms
+    Asset       Size  Chunks             Chunk Names
+output.js  419 bytes       0  [emitted]  main
+chunk    {0} output.js (main) 329 bytes [rendered]
+    > main [0] ./example.js 
+    [0] ./example.js 69 bytes {0} [built]
+    [1] ./increment.js 98 bytes {0} [built]
         cjs require ./increment [0] ./example.js 1:10-32
-    [2] ./math.js 156 [built] {0}
+    [2] ./math.js 162 bytes {0} [built]
         cjs require ./math [1] ./increment.js 1:10-27
 ```

@@ -8,7 +8,7 @@ var app = express();
 app.configure(function() {
 	app.use(webpackMiddleware(webpack({
 		context: __dirname,
-		entry: "./lib/index",
+		entry: ["../../hot/poll?10000", "./lib/index"],
 		debug: true,
 		devtool: "sourcemap",
 		module: {
@@ -25,15 +25,23 @@ app.configure(function() {
 				vm: "vm-browserify"
 			}
 		},
-		optimize: {
-			minimize: true
+		resolve: {
+			unsafeCache: true
 		},
+		cache: true,
 		recordsPath: path.join(__dirname, "webpack.records.json"),
 		output: {
 			publicPath: "http://localhost:8080/js/",
 			path: "/",
-			filename: "web.js"
-		}
+			filename: "web.js",
+			chunkFilename: "[chunkhash].chunk.js"
+		},
+		plugins: [
+			new webpack.dependencies.LabeledModulesPlugin(),
+			new webpack.optimize.UglifyJsPlugin(),
+			new webpack.optimize.DedupePlugin(),
+			new webpack.HotModuleReplacementPlugin()
+		]
 	}), {
 		lazy: false,
 		watchDelay: 5000,

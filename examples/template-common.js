@@ -29,7 +29,7 @@ module.exports = function(template, baseDir, stdout, prefix) {
 		match = match.substr(2 + (prefix ? prefix.length+1 : 0), match.length - 4 - (prefix ? prefix.length+1 : 0));
 		if(match === "stdout")
 			return stdout;
-		return fs.readFileSync(path.join(baseDir, match), "utf-8");
+		return fs.readFileSync(path.join(baseDir, match), "utf-8").replace(/[\r\n]*$/, "");
 	}).replace(cwd, ".").replace(webpack, "(webpack)").replace(webpackParent, "(webpack)/~");
 	
 }

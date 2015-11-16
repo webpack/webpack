@@ -1,0 +1,5 @@
+{
+	"browser": {
+		"./file.js": "./new-file.js"
+	}
+}

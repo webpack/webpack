@@ -4,9 +4,11 @@ var path = require("path");
 var webpack = require("../lib/webpack");
 
 describe("Integration", function() {
+	this.timeout(5000);
 	it("should compile library1", function(done) {
 		webpack({
 			entry: "library1",
+			bail: true,
 			context: path.join(__dirname, "browsertest"),
 			output: {
 				pathinfo: true,
@@ -32,27 +34,55 @@ describe("Integration", function() {
 				publicPath: "js/",
 				library: "library2"
 			},
+			bail: true,
 			module: {
-				postLoaders: [
-					{
-						test: /extra2\.js/,
-						loader: "raw!extra!val?cacheable"
-					}
-				]
-			},
-			optimize: {
-				maxChunks: 2,
+				postLoaders: [{
+					test: /extra2\.js/,
+					loader: "raw!extra!val?cacheable"
+				}]
 			},
 			amd: {
 				fromOptions: true
 			},
-			plugins: {
-				"after-environment": function() {
-					this.resolver.plugin("module-resolved", function(request, callback) {
-						callback(null, request.replace(/extra\.js/, "extra2.js"));
+			resolve: {
+				// cannot resolve should outside the outermost node_modules
+				// so it is injected here
+				alias: {
+					should: require.resolve("should")
+				}
+			},
+			plugins: [
+				new webpack.optimize.LimitChunkCountPlugin({
+					maxChunks: 1
+				}),
+				new webpack.DefinePlugin({
+					"typeof CONST_TYPEOF": JSON.stringify("typeof"),
+					CONST_TRUE: true,
+					CONST_FALSE: false,
+					CONST_FUNCTION: function() {
+						return "ok";
+					},
+					CONST_NUMBER: 123,
+					CONST_NUMBER_EXPR: "1*100+23",
+					CONST_OBJECT: {
+						A: 1,
+						B: JSON.stringify("B"),
+						C: function() {
+							return "C";
+						}
+					}
+				}),
+				function() {
+					this.plugin("normal-module-factory", function(nmf) {
+						nmf.plugin("after-resolve", function(data, callback) {
+							data.resource = data.resource.replace(/extra\.js/, "extra2.js");
+							setTimeout(function() {
+								callback(null, data);
+							}, 50);
+						});
 					});
 				}
-			}
+			]
 		}, function(err, stats) {
 			if(err) throw err;
 			stats.hasErrors().should.be.not.ok;

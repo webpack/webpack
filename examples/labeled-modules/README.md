@@ -1,9 +1,22 @@
+This example show how to add support for Labeled Modules by adding the plugin to the configuration.
+
 # example.js
 
 ``` javascript
 require: "./increment";
 var a = 1;
 increment(a); // 2
+```
+
+# webpack.config.js
+
+``` javascript
+var webpack = require("../../");
+module.exports = {
+	plugins: [
+		new webpack.dependencies.LabeledModulesPlugin()
+	]
+}
 ```
 
 # increment.js
@@ -33,80 +46,74 @@ exports: function add() {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	
+
 /******/ 	// The require function
-/******/ 	function require(moduleId) {
+/******/ 	function __webpack_require__(moduleId) {
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/ 		
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/ 		
+
 /******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
-/******/ 		
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/ 		
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
-/******/ 	// The bundle contains no chunks. A empty chunk loading function.
-/******/ 	require.e = function requireEnsure(_, callback) {
-/******/ 		callback.call(null, require);
-/******/ 	};
-/******/ 	
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	require.modules = modules;
-/******/ 	
+/******/ 	__webpack_require__.m = modules;
+
 /******/ 	// expose the module cache
-/******/ 	require.cache = installedModules;
-/******/ 	
-/******/ 	
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// Load entry module and return exports
-/******/ 	return require(0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ({
-/******/ // __webpack_public_path__
-/******/ c: "",
-
-/***/ 0:
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_LABELED_MODULE__1 = require(/*! ./increment */ 1), increment = __WEBPACK_LABELED_MODULE__1.increment;
+	var __WEBPACK_LABELED_MODULE__1 = __webpack_require__(/*! ./increment */ 1), increment = __WEBPACK_LABELED_MODULE__1.increment;
 	var a = 1;
 	increment(a); // 2
 
 /***/ },
-
-/***/ 1:
+/* 1 */
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_LABELED_MODULE__2 = require(/*! ./math */ 2), add = __WEBPACK_LABELED_MODULE__2.add;
+	var __WEBPACK_LABELED_MODULE__2 = __webpack_require__(/*! ./math */ 2), add = __WEBPACK_LABELED_MODULE__2.add;
 	exports: exports["increment"] = function increment(val) {
 	    return add(val, 1);
 	};
 
 /***/ },
-
-/***/ 2:
+/* 2 */
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
-/***/ function(module, exports, require) {
+/***/ function(module, exports, __webpack_require__) {
 
 	exports: exports["add"] = function add() {
 	    var sum = 0, i = 0, args = arguments, l = args.length;
@@ -117,7 +124,7 @@ exports: function add() {
 	};
 
 /***/ }
-/******/ })
+/******/ ]);
 ```
 
 The remaining labels are removed while minimizing.
@@ -127,31 +134,33 @@ The remaining labels are removed while minimizing.
 ## Uncompressed
 
 ```
-Hash: 76e286b599e5c0a0757814519c4540d3
-Version: webpack 0.10.0-beta6
-Time: 39ms
-    Asset  Size  Chunks             Chunk Names
-output.js  2479       0  [emitted]  main       
-chunk    {0} output.js (main) 288 [rendered]
-    [0] ./example.js 53 [built] {0}
-    [1] ./increment.js 80 [built] {0}
+Hash: 76177991efc90e16a609
+Version: webpack 1.9.10
+Time: 67ms
+    Asset     Size  Chunks             Chunk Names
+output.js  2.34 kB       0  [emitted]  main
+chunk    {0} output.js (main) 299 bytes [rendered]
+    > main [0] ./example.js 
+    [0] ./example.js 55 bytes {0} [built]
+    [1] ./increment.js 83 bytes {0} [built]
         labeled require ./increment [0] ./example.js 1:0-23
-    [2] ./math.js 155 [built] {0}
+    [2] ./math.js 161 bytes {0} [built]
         labeled require ./math [1] ./increment.js 1:0-18
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 76e286b599e5c0a0757814519c4540d3
-Version: webpack 0.10.0-beta6
-Time: 82ms
-    Asset  Size  Chunks             Chunk Names
-output.js   468       0  [emitted]  main       
-chunk    {0} output.js (main) 288 [rendered]
-    [0] ./example.js 53 [built] {0}
-    [1] ./increment.js 80 [built] {0}
+Hash: 76177991efc90e16a609
+Version: webpack 1.9.10
+Time: 179ms
+    Asset       Size  Chunks             Chunk Names
+output.js  429 bytes       0  [emitted]  main
+chunk    {0} output.js (main) 299 bytes [rendered]
+    > main [0] ./example.js 
+    [0] ./example.js 55 bytes {0} [built]
+    [1] ./increment.js 83 bytes {0} [built]
         labeled require ./increment [0] ./example.js 1:0-23
-    [2] ./math.js 155 [built] {0}
+    [2] ./math.js 161 bytes {0} [built]
         labeled require ./math [1] ./increment.js 1:0-18
 ```
