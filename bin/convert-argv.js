@@ -19,7 +19,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		argv.debug = true;
 		argv["output-pathinfo"] = true;
 		if(!argv.devtool) {
-			argv.devtool = "eval-source-map";
+			argv.devtool = "eval-cheap-module-source-map";
 		}
 		argv["define"] = argv["define"].concat("process.env.NODE_ENV=\"production\"");
 	}
@@ -39,7 +39,9 @@ module.exports = function(optimist, argv, convertOptions) {
 				ext: ext
 			};
 		});
-	}).reduce(function(a, i) { return a.concat(i); }, []);
+	}).reduce(function(a, i) {
+		return a.concat(i);
+	}, []);
 
 	if(argv.config) {
 		configPath = path.resolve(argv.config);
@@ -392,7 +394,13 @@ module.exports = function(optimist, argv, convertOptions) {
 			}));
 		});
 
-		mapArgToBoolean("debug");
+		ifBooleanArg("debug", function() {
+			ensureArray(options, "plugins");
+			var LoaderOptionsPlugin = require("../lib/LoaderOptionsPlugin");
+			options.plugins.push(new LoaderOptionsPlugin({
+				debug: true
+			}));
+		});
 
 		ifBooleanArg("progress", function() {
 			var ProgressPlugin = require("../lib/ProgressPlugin");
@@ -481,7 +489,11 @@ module.exports = function(optimist, argv, convertOptions) {
 		ifBooleanArg("optimize-minimize", function() {
 			ensureArray(options, "plugins");
 			var UglifyJsPlugin = require("../lib/optimize/UglifyJsPlugin");
+			var LoaderOptionsPlugin = require("../lib/LoaderOptionsPlugin");
 			options.plugins.push(new UglifyJsPlugin());
+			options.plugins.push(new LoaderOptionsPlugin({
+				minimize: true
+			}));
 		});
 
 		ifBooleanArg("optimize-dedupe", function() {
