@@ -17,12 +17,12 @@ it("should be able to use expressions in System.import", function(done) {
 					sync.should.be.eql(true);
 					done();
 				});
-				setImmediate(function() {
+				Promise.resolve().then(function() {}).then(function() {}).then(function() {
 					sync = false;
 				});
 			});
 		});
-		setImmediate(function() {
+		Promise.resolve().then(function() {
 			sync = false;
 		});
 	});
