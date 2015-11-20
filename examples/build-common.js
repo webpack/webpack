@@ -16,7 +16,12 @@ var displayReasons = global.NO_REASONS ? "" : " --display-reasons";
 			console.log(stderr);
 		if (error !== null && remainingTimes === 1)
 			console.log(error);
-		var readme = tc(fs.readFileSync(require("path").join(process.cwd(), "template.md"), "utf-8"), process.cwd(), stdout.replace(/[\r\n]*$/, ""), "min");
+		try {
+			var readme = tc(fs.readFileSync(require("path").join(process.cwd(), "template.md"), "utf-8"), process.cwd(), stdout.replace(/[\r\n]*$/, ""), "min");
+		} catch(e) {
+			console.log(stderr);
+			throw e;
+		}
 		cp.exec("node ../../bin/webpack.js" + displayReasons + " --display-chunks --display-modules --display-origins --output-public-path \"js/\" --output-pathinfo " + extraArgs + targetArgs, function (error, stdout, stderr) {
 			if(remainingTimes === 1)
 				console.log(stdout);
