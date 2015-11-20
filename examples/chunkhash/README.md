@@ -54,7 +54,7 @@ module.exports = {
 
 # index.html
 
-``` javascript
+``` html
 <html>
 <head>
 </head>

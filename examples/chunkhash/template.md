@@ -28,7 +28,7 @@ The configuration required for this is:
 
 # index.html
 
-``` javascript
+``` html
 <html>
 <head>
 </head>
