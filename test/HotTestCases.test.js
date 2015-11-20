@@ -23,9 +23,10 @@ describe("HotTestCases", function() {
 	categories.forEach(function(category) {
 		describe(category.name, function() {
 			category.tests.forEach(function(testName) {
-				var suite = describe(testName, function() {});
-				it(testName + " should compile", function(done) {
+				var suite = describe(testName, function() {
 					this.timeout(10000);
+				});
+				it(testName + " should compile", function(done) {
 					var testDirectory = path.join(casesPath, category.name, testName);
 					var outputDirectory = path.join(__dirname, "js", "hot-cases", category.name, testName);
 					var recordsPath = path.join(outputDirectory, "records.json");
