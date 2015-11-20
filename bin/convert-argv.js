@@ -128,24 +128,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		}
 
 		if(argv.watch) {
-			// TODO remove this in next major version
-			if(options.watch && typeof options.watch === "object") {
-				console.warn("options.watch is deprecated: Use 'options.watchOptions' instead");
-				options.watchOptions = options.watch;
-			}
-			// TODO remove this in next major version
-			if(options.watchDelay) {
-				console.warn("options.watchDelay is deprecated: Use 'options.watchOptions.aggregateTimeout' instead");
-				options.watchOptions = options.watchOptions || {};
-				options.watchOptions.aggregateTimeout = options.watchDelay;
-			}
 			options.watch = true;
-		}
-
-		if(argv["watch-delay"]) {
-			console.warn("--watch-delay is deprecated: Use '--watch-aggregate-timeout' instead");
-			options.watchOptions = options.watchOptions || {};
-			options.watchOptions.aggregateTimeout = +argv["watch-delay"];
 		}
 
 		if(argv["watch-aggregate-timeout"]) {
@@ -320,12 +303,6 @@ module.exports = function(optimist, argv, convertOptions) {
 		ifArg("output-path", function(value) {
 			ensureObject(options, "output");
 			options.output.path = value;
-		});
-
-		ifArg("output-file", function(value) {
-			console.warn("output.file will be deprecated: Use 'output.filename' instead");
-			ensureObject(options, "output");
-			options.output.filename = value;
 		});
 
 		ifArg("output-filename", function(value) {
