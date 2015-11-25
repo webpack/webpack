@@ -22,6 +22,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "beautify-lint": "^1.0.3",
     "benchmark": "^1.0.0",
     "bundle-loader": "~0.5.0",
     "codecov.io": "^0.1.2",
@@ -80,9 +81,9 @@
     "pretest": "npm run lint && npm run beautify-lint",
     "test": "mocha --harmony --full-trace --check-leaks",
     "travis": "npm run cover -- --report lcovonly",
-    "lint": "eslint lib bin hot scripts",
-    "beautify-lint": "node ./scripts/beautify-check",
-    "beautify": "node ./scripts/beautify-rewrite",
+    "lint": "eslint lib bin hot",
+    "beautify-lint": "beautify-lint lib/**.js hot/**.js bin/**.js benchmark/*.js test/*.js",
+    "beautify": "beautify-rewrite lib/**.js hot/**.js bin/**.js benchmark/*.js test/*.js",
     "precover": "npm run lint && npm run beautify-lint",
     "cover": "istanbul cover -x *.runtime.js node_modules/mocha/bin/_mocha",
     "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
