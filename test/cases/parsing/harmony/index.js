@@ -12,8 +12,11 @@ import { a as rea, b as reb, c as rec, o as reo, two as retwo } from "reexport";
 
 import threeIsOdd, { even } from "circularEven";
 
+import { specA, specB } from "exports-specifier";
+
 import Thing, { Other } from "commonjs";
 import Thing2, { Other as Other2 } from "commonjs-trans";
+
 
 it("should import an identifier from a module", function() {
 	a.should.be.eql("a");
@@ -54,6 +57,11 @@ it("should reexport a module", function() {
 it("should support circular dependencies", function() {
 	threeIsOdd.should.be.eql(true);
 	even(4).should.be.eql(true);
+});
+
+it("should support export specifier", function() {
+	specA.should.be.eql(1);
+	specB.should.be.eql(2);
 });
 
 it("should be able to import commonjs", function() {
