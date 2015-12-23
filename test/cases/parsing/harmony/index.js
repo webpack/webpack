@@ -29,6 +29,7 @@ it("should import a whole module", function() {
 	var copy = (function(a) { return a; }(abc));
 	copy.a.should.be.eql("a");
 	copy.b.should.be.eql("b");
+	(typeof abc).should.be.eql("object");
 });
 
 it("should export functions", function() {
