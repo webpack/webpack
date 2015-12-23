@@ -26,9 +26,11 @@ it("should import an identifier from a module", function() {
 it("should import a whole module", function() {
 	abc.a.should.be.eql("a");
 	abc.b.should.be.eql("b");
+	abc.c.should.be.eql("c");
 	var copy = (function(a) { return a; }(abc));
 	copy.a.should.be.eql("a");
 	copy.b.should.be.eql("b");
+	copy.c.should.be.eql("c");
 	(typeof abc).should.be.eql("object");
 });
 
