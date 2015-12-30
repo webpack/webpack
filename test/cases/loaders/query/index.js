@@ -40,7 +40,7 @@ it("should pass query to loader over context", function() {
 	var test = "test";
 	var result = require("./loaders/queryloader?query!./context-query-test/" + test);
 	result.should.be.eql({
-		resourceQuery: null,
+		resourceQuery: "",
 		query: "?query",
 		prev: "test content"
 	});
