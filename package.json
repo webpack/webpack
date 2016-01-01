@@ -19,7 +19,8 @@
     "webpack-sources": "~0.1.0",
     "uglify-js": "~2.6.0",
     "watchpack": "^0.2.1",
-    "webpack-core": "~0.6.0"
+    "webpack-core": "~0.6.0",
+    "object-assign": "^4.0.1"
   },
   "license": "MIT",
   "devDependencies": {

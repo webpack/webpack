@@ -1,3 +1,3 @@
 module.exports = [
-	[/Module not found/, /Cannot resolve/, / \.\/fail /]
+	[/Module not found/, /Can't resolve '\.\/fail' /]
 ];

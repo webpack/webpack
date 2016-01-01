@@ -1,3 +1,3 @@
 module.exports = [
-	[/Module not found/, /Cannot resolve/, / \.\/missingModule /, /extract-require\/index.js/]
+	[/Module not found/, /Can't resolve '\.\/missingModule' /, /extract-require\/index.js/]
 ];

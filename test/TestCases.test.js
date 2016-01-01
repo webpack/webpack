@@ -136,14 +136,14 @@ describe("TestCases", function() {
 									filename: "bundle.js"
 								},
 								resolve: {
-									modulesDirectories: ["web_modules", "node_modules"],
-									packageMains: ["webpack", "browser", "web", "browserify", ["jam", "main"], "main"],
-									extensions: ["", ".webpack.js", ".web.js", ".js"],
-									packageAlias: "browser"
+									modules: ["web_modules", "node_modules"],
+									mainFields: ["webpack", "browser", "web", "browserify", ["jam", "main"], "main"],
+									aliasFields: ["browser"],
+									extensions: ["", ".webpack.js", ".web.js", ".js"]
 								},
 								resolveLoader: {
-									modulesDirectories: ["web_loaders", "web_modules", "node_loaders", "node_modules"],
-									packageMains: ["webpackLoader", "webLoader", "loader", "main"],
+									modules: ["web_loaders", "web_modules", "node_loaders", "node_modules"],
+									mainFields: ["webpackLoader", "webLoader", "loader", "main"],
 									extensions: ["", ".webpack-loader.js", ".web-loader.js", ".loader.js", ".js"]
 								},
 								module: {
@@ -164,6 +164,7 @@ describe("TestCases", function() {
 							};
 							webpack(options, function(err, stats) {
 								if(err) return done(err);
+								fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(), "utf-8");
 								var jsonStats = stats.toJson({
 									errorDetails: true
 								});
