@@ -34,6 +34,10 @@ it("should provide an assert shim", function () {
 	require("assert").should.be.a.Function;
 });
 
+it("should provide a util shim", function () {
+	require("util").should.be.an.Object;
+});
+
 it("should provide a buffer shim", function () {
 	require("buffer").should.be.an.Object;
 });

@@ -39,7 +39,10 @@ describe("ConfigTestCases", function() {
 					});
 					webpack(options, function(err, stats) {
 						if(err) return done(err);
-						fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(), "utf-8");
+						fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString({
+							reasons: true,
+							errorDetails: true
+						}), "utf-8");
 						var jsonStats = stats.toJson({
 							errorDetails: true
 						});
