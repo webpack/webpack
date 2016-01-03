@@ -37,7 +37,7 @@
     "eslint": "^1.1.0",
     "eslint-plugin-nodeca": "^1.0.3",
     "express": "~4.13.1",
-    "extract-text-webpack-plugin": "~0.9.0",
+    "extract-text-webpack-plugin": "^1.0.0",
     "file-loader": "~0.8.0",
     "i18n-webpack-plugin": "~0.2.0",
     "istanbul": "^0.4.1",
