@@ -16,6 +16,7 @@
     "node-libs-browser": ">= 0.4.0 <=0.6.0",
     "object-assign": "^4.0.1",
     "optimist": "~0.6.0",
+    "source-map": "^0.5.3",
     "supports-color": "^3.1.0",
     "tapable": "~0.2.1",
     "uglify-js": "~2.6.0",
