@@ -374,7 +374,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		});
 
 		ensureObject(options, "stats");
-		ifArg("color", function(value) {
+		ifArg("colors", function(value) {
 			options.stats.colors = require("supports-color");
 		});
 
