@@ -243,7 +243,7 @@ If you want to discuss something or just need help, [here is our gitter.im room]
 
 ## License
 
-Copyright (c) 2012-2015 Tobias Koppers
+Copyright (c) 2012-2016 Tobias Koppers
 
 MIT (http://opensource.org/licenses/mit-license.php)
 
