@@ -151,6 +151,13 @@ function processOptions(options) {
 	var lastHash = null;
 	var compiler = webpack(options);
 
+	if(argv.progress) {
+		var ProgressPlugin = require("../lib/ProgressPlugin");
+		compiler.apply(new ProgressPlugin({
+			profile: argv.profile
+		}));
+	}
+
 	function compilerCallback(err, stats) {
 		if(!options.watch) {
 			// Do not keep cache anymore

@@ -379,12 +379,6 @@ module.exports = function(optimist, argv, convertOptions) {
 			}));
 		});
 
-		ifBooleanArg("progress", function() {
-			var ProgressPlugin = require("../lib/ProgressPlugin");
-			ensureArray(options, "plugins");
-			options.plugins.push(new ProgressPlugin());
-		});
-
 		ifArg("devtool", function(value) {
 			options.devtool = value;
 		});
