@@ -8,9 +8,11 @@ var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 
 describe("Compiler", function() {
 	function compile(entry, options, callback) {
+		var noOutputPath = !options.output || !options.output.path;
 		new WebpackOptionsDefaulter().process(options);
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");
+		if(noOutputPath) options.output.path = "";
 		options.output.pathinfo = true;
 		var logs = {
 			mkdirp: [],
