@@ -12,31 +12,106 @@ try {
 		return require(localWebpack);
 	}
 } catch(e) {}
-var optimist = require("optimist")
+var yargs = require("yargs")
 	.usage("webpack " + require("../package.json").version + "\n" +
-		"Usage: https://webpack.github.io/docs/cli.html");
+		"Usage: https://webpack.github.io/docs/cli.html\n" +
+		"Usage without config file: webpack <entry> [<entry>] <output>\n" +
+		"Usage with config file: webpack");
 
-require("./config-optimist")(optimist);
+require("./config-yargs")(yargs);
 
-optimist
-	.boolean("json").alias("json", "j").describe("json")
-	.boolean("colors").alias("colors", "c").describe("colors")
-	.string("sort-modules-by").describe("sort-modules-by")
-	.string("sort-chunks-by").describe("sort-chunks-by")
-	.string("sort-assets-by").describe("sort-assets-by")
-	.boolean("hide-modules").describe("hide-modules")
-	.string("display-exclude").describe("display-exclude")
-	.boolean("display-modules").describe("display-modules")
-	.boolean("display-chunks").describe("display-chunks")
-	.boolean("display-error-details").describe("display-error-details")
-	.boolean("display-origins").describe("display-origins")
-	.boolean("display-cached").describe("display-cached")
-	.boolean("display-cached-assets").describe("display-cached-assets")
-	.boolean("display-reasons").alias("display-reasons", "verbose").alias("display-reasons", "v").describe("display-reasons");
+var DISPLAY_GROUP = "Stats options:";
 
-var argv = optimist.argv;
+yargs.options({
+	"json": {
+		type: "boolean",
+		alias: "j",
+		describe: "Prints the result as JSON."
+	},
+	"color": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Enables/Disables colors on the console"
+	},
+	"sort-modules-by": {
+		type: "string",
+		group: DISPLAY_GROUP,
+		describe: "Sorts the modules list by property in module"
+	},
+	"sort-chunks-by": {
+		type: "string",
+		group: DISPLAY_GROUP,
+		describe: "Sorts the chunks list by property in chunk"
+	},
+	"sort-assets-by": {
+		type: "string",
+		group: DISPLAY_GROUP,
+		describe: "Sorts the assets list by property in asset"
+	},
+	"hide-modules": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Hides info about modules"
+	},
+	"display-exclude": {
+		type: "string",
+		group: DISPLAY_GROUP,
+		describe: "Exclude modules in the output"
+	},
+	"display-modules": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Display even excluded modules in the output"
+	},
+	"display-chunks": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Display chunks in the output"
+	},
+	"display-origins": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Display origins of chunks in the output"
+	},
+	"display-cached": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Display also cached modules in the output"
+	},
+	"display-cached-assets": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Display also cached assets in the output"
+	},
+	"display-reasons": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Display reasons about module inclusion in the output"
+	},
+	"display-error-details": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Display details about errors"
+	},
+	"verbose": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		alias: "v",
+		describe: "Show more details"
+	}
+});
 
-var options = require("./convert-argv")(optimist, argv);
+var argv = yargs.argv;
+
+if(argv.verbose) {
+	argv["display-reasons"] = true;
+	argv["display-error-details"] = true;
+	argv["display-modules"] = true;
+	argv["display-cached"] = true;
+	argv["display-cached-assets"] = true;
+}
+
+var options = require("./convert-argv")(yargs, argv);
 
 function ifArg(name, fn, init) {
 	if(Array.isArray(argv[name])) {
