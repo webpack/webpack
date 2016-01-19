@@ -13,7 +13,7 @@
 		"nodeca/indent": [2, "tabs", 1 ],
 		"eol-last": 1,
 		"no-shadow": 0,
-		"no-redeclare": 1,
+		"no-redeclare": 2,
 		"no-extra-bind": 1,
 		"no-empty": 0,
 		"no-process-exit": 1,
