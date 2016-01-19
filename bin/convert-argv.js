@@ -156,6 +156,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	function processOptions(options) {
+		var noOutputFilenameDefined = !options.output || !options.output.filename;
 		new WebpackOptionsDefaulter().process(options);
 
 		function ifArg(name, fn, init, finalize) {
@@ -467,7 +468,7 @@ module.exports = function(optimist, argv, convertOptions) {
 
 		mapArgToBoolean("profile");
 
-		if(!options.output || !options.output.filename) {
+		if(noOutputFilenameDefined) {
 			ensureObject(options, "output");
 			if(convertOptions && convertOptions.outputFilename) {
 				options.output.path = path.dirname(convertOptions.outputFilename);
