@@ -142,6 +142,7 @@ module.exports = function(yargs) {
 			"cache": {
 				type: "boolean",
 				describe: "Enable in memory caching",
+				default: true,
 				group: ADVANCED_GROUP,
 				defaultDescription: "It's enabled by default when watching"
 			},
