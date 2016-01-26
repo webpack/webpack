@@ -7,7 +7,7 @@
     "acorn": "^2.4.0",
     "async": "^1.3.0",
     "clone": "^1.0.2",
-    "enhanced-resolve": "^2.0.0",
+    "enhanced-resolve": "^2.2.0",
     "interpret": "^1.0.0",
     "loader-runner": "^2.1.0",
     "loader-utils": "^0.2.11",

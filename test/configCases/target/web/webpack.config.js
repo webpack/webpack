@@ -1,3 +1,8 @@
 module.exports = {
-	target: "web"
+	target: "web",
+	module: {
+		loaders: [
+			{ test: /\.json$/, loader: "json-loader" }
+		]
+	}
 };

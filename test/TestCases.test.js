@@ -149,13 +149,13 @@ describe("TestCases", function() {
 								module: {
 									loaders: [{
 										test: /\.json$/,
-										loader: "json"
+										loader: "json-loader"
 									}, {
 										test: /\.coffee$/,
-										loader: "coffee"
+										loader: "coffee-loader"
 									}, {
 										test: /\.jade$/,
-										loader: "jade"
+										loader: "jade-loader"
 									}]
 								},
 								plugins: (config.plugins || []).concat(
