@@ -92,7 +92,7 @@ describe("LoaderList", function() {
 			],
 			loader: 'css'
 		}]);
-		(loader.match('style.css')).should.eql([]);
+		(loader.match('style.css')).should.eql(['css']);
 	});
 	it('should not match if include does not match', function() {
 		var loader = new LoadersList([{
