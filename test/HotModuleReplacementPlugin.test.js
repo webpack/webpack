@@ -5,6 +5,7 @@ var fs = require("fs");
 var webpack = require("../");
 
 describe("HotModuleReplacementPlugin", function() {
+	this.timeout(10000);
 	it("should not have circular hashes but equal if unmodified", function(done) {
 		var entryFile = path.join(__dirname, "js", "entry.js");
 		var statsFile1 = path.join(__dirname, "js", "HotModuleReplacementPlugin.test.stats1.txt");
