@@ -1,11 +1,13 @@
 sudo: false
 language: node_js
 node_js:
-  - "0.12"
   - node
-  - iojs-1
-  - iojs-2
+  - "5"
+  - "4"
   - iojs
+  - iojs-2
+  - iojs-1
+  - "0.12"
 script: npm run travis
 env:
   - NO_WATCH_TESTS=1
