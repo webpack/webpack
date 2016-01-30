@@ -15,7 +15,7 @@ describe("ConfigTestCases", function() {
 			name: cat,
 			tests: fs.readdirSync(path.join(casesPath, cat)).filter(function(folder) {
 				return folder.indexOf("_") < 0;
-			})
+			}).sort()
 		};
 	});
 	categories.forEach(function(category) {
@@ -58,7 +58,7 @@ describe("ConfigTestCases", function() {
 						}
 
 						function _require(module) {
-							if(module.substr(0, 2) === "./") {
+							if(/^\.\.?\//.test(module)) {
 								var p = path.join(outputDirectory, module);
 								var fn;
 								if(options.target === "web") {
@@ -85,6 +85,8 @@ describe("ConfigTestCases", function() {
 							// try to load a test file
 							testConfig = require(path.join(testDirectory, "test.config.js"));
 						} catch(e) {}
+
+						if(testConfig.noTests) return process.nextTick(done);
 						for(var i = 0; i < optionsArr.length; i++) {
 							var bundlePath = testConfig.findBundle(i, optionsArr[i]);
 							if(bundlePath) {
