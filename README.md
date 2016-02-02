@@ -109,7 +109,7 @@ Please see [Using Loaders](https://webpack.github.io/docs/using-loaders.html) fo
 **styling**
 * [`style`](https://github.com/webpack/style-loader): Add exports of a module as style to DOM
 * [`css`](https://github.com/webpack/css-loader): Loads css file with resolved imports and returns css code
-* [`cssnext`](https://github.com/cssnext/cssnext-loader): Loads and compiles a css file using [cssnext](http://cssnext.io/)
+* [`cssnext`](https://github.com/MoOx/cssnext-loader): Loads and compiles a css file using [cssnext](http://cssnext.io/)
 * [`less`](https://github.com/webpack/less-loader): Loads and compiles a less file
 * [`sass`](https://github.com/jtangelder/sass-loader): Loads and compiles a scss file
 * [`stylus`](https://github.com/shama/stylus-loader): Loads and compiles a stylus file
@@ -251,7 +251,7 @@ MIT (http://opensource.org/licenses/mit-license.php)
 
 (In chronological order)
 
-* @google for [Google Web Toolkit (GWT)](https://code.google.com/p/google-web-toolkit/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](https://code.google.com/p/google-web-toolkit/wiki/CodeSplitting) as webpack.
+* @google for [Google Web Toolkit (GWT)](https://code.google.com/archive/p/google-web-toolkit), which aims to compile Java to JavaScript. It features a similar [Code Splitting](https://code.google.com/archive/p/google-web-toolkit/wikis/CodeSplitting.wiki) as webpack.
 * @medikoo for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webpack. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
 * @substack for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
 * @jrburke for [require.js](http://requirejs.org/), which is a similar project and source for many ideas.
