@@ -21,10 +21,10 @@ The bundle loader is used to create a wrapper module for `file.js` that loads th
 {{js/output.js}}
 ```
 
-# js/1.output.js
+# js/1.js
 
 ``` javascript
-{{js/1.output.js}}
+{{js/1.js}}
 ```
 
 # Info

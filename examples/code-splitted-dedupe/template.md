@@ -11,28 +11,28 @@
 {{js/output.js}}
 ```
 
-# js/1.output.js
+# js/0.js
 
 ``` javascript
-{{js/1.output.js}}
+{{js/0.js}}
 ```
 
-# js/2.output.js
+# js/1.js
 
 ``` javascript
-{{js/2.output.js}}
+{{js/1.js}}
 ```
 
-# js/3.output.js
+# js/2.js
 
 ``` javascript
-{{js/3.output.js}}
+{{js/2.js}}
 ```
 
-# js/4.output.js
+# js/4.js
 
 ``` javascript
-{{js/4.output.js}}
+{{js/4.js}}
 ```
 
 # Info
