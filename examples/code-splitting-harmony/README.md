@@ -98,8 +98,21 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 		script.type = 'text/javascript';
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
+/******/ 		script.timeout = 120000;
 
-/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".output.js";
+/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".js";
+/******/ 		var timeout = setTimeout(onScriptComplete, 120000);
+/******/ 		script.onerror = script.onload = onScriptComplete;
+/******/ 		function onScriptComplete() {
+/******/ 			// avoid mem leaks in IE.
+/******/ 			script.onerror = script.onload = null;
+/******/ 			clearTimeout(timeout);
+/******/ 			var chunk = installedChunks[chunkId];
+/******/ 			if(chunk !== 0) {
+/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				installedChunks[chunkId] = undefined;
+/******/ 			}
+/******/ 		};
 /******/ 		head.appendChild(script);
 
 /******/ 		var promise = new Promise(function(resolve, reject) {
@@ -159,7 +172,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 	};
 	function webpackAsyncContext(req) {
 		var ids = map[req];	if(!ids)
-			throw new Error("Cannot find module '" + req + "'.");
+			return Promise.reject(new Error("Cannot find module '" + req + "'."));
 		return __webpack_require__.e(ids[1]).then(function() {
 			return __webpack_require__(ids[0]);
 		});
@@ -181,6 +194,9 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /***/ function(module, exports, __webpack_require__) {
 
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_a__ = __webpack_require__(/*! a */ 0);
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_a___default = __WEBPACK_IMPORTED_MODULE_0_a__ && __WEBPACK_IMPORTED_MODULE_0_a__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_0_a__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_0_a__; }
+	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_0_a___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_0_a___default });
+
 
 	__webpack_require__.e/* System.import */(3).then(__webpack_require__.bind(null, /*! b */ 5)).then(function(b) {
 		console.log("b loaded", b);
@@ -205,22 +221,22 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 ## Uncompressed
 
 ```
-Hash: 43678a0f919ae4b7120a
-Version: webpack 1.11.0
-Time: 126ms
-      Asset       Size  Chunks             Chunk Names
-0.output.js  163 bytes       0  [emitted]  
-1.output.js  163 bytes       1  [emitted]  
-  output.js    4.96 kB       2  [emitted]  main
-3.output.js  155 bytes       3  [emitted]  
-chunk    {0} 0.output.js 13 bytes {2} [rendered]
+Hash: cefcab66a83c5000d38e
+Version: webpack 2.0.6-beta
+Time: 141ms
+    Asset       Size  Chunks             Chunk Names
+     0.js  163 bytes       0  [emitted]  
+     1.js  163 bytes       1  [emitted]  
+output.js    5.95 kB       2  [emitted]  main
+     3.js  155 bytes       3  [emitted]  
+chunk    {0} 0.js 13 bytes {2} [rendered]
     [3] ./~/c/2.js 13 bytes {0} [optional] [built]
-        context element ./2.js [1] ./~/c async ^\.\/.*$
         context element ./2 [1] ./~/c async ^\.\/.*$
-chunk    {1} 1.output.js 13 bytes {2} [rendered]
+        context element ./2.js [1] ./~/c async ^\.\/.*$
+chunk    {1} 1.js 13 bytes {2} [rendered]
     [2] ./~/c/1.js 13 bytes {1} [optional] [built]
-        context element ./1.js [1] ./~/c async ^\.\/.*$
         context element ./1 [1] ./~/c async ^\.\/.*$
+        context element ./1.js [1] ./~/c async ^\.\/.*$
 chunk    {2} output.js (main) 440 bytes [rendered]
     > main [4] ./example.js 
     [0] ./~/a.js 11 bytes {2} [built]
@@ -228,31 +244,31 @@ chunk    {2} output.js (main) 440 bytes [rendered]
     [1] ./~/c async ^\.\/.*$ 160 bytes {2} [built]
         System.import context c [4] ./example.js 8:8-34
     [4] ./example.js 269 bytes {2} [built]
-chunk    {3} 3.output.js 11 bytes {2} [rendered]
+chunk    {3} 3.js 11 bytes {2} [rendered]
     > [4] ./example.js 3:0-18
     [5] ./~/b.js 11 bytes {3} [built]
-         b [4] ./example.js 3:0-18
+        System.import b [4] ./example.js 3:0-18
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 43678a0f919ae4b7120a
-Version: webpack 1.11.0
-Time: 306ms
-      Asset      Size  Chunks             Chunk Names
-0.output.js  38 bytes       0  [emitted]  
-1.output.js  38 bytes       1  [emitted]  
-  output.js   1.25 kB       2  [emitted]  main
-3.output.js  38 bytes       3  [emitted]  
-chunk    {0} 0.output.js 13 bytes {2} [rendered]
+Hash: cefcab66a83c5000d38e
+Version: webpack 2.0.6-beta
+Time: 326ms
+    Asset      Size  Chunks             Chunk Names
+     0.js  38 bytes       0  [emitted]  
+     1.js  38 bytes       1  [emitted]  
+output.js   1.56 kB       2  [emitted]  main
+     3.js  38 bytes       3  [emitted]  
+chunk    {0} 0.js 13 bytes {2} [rendered]
     [3] ./~/c/2.js 13 bytes {0} [optional] [built]
-        context element ./2.js [1] ./~/c async ^\.\/.*$
         context element ./2 [1] ./~/c async ^\.\/.*$
-chunk    {1} 1.output.js 13 bytes {2} [rendered]
+        context element ./2.js [1] ./~/c async ^\.\/.*$
+chunk    {1} 1.js 13 bytes {2} [rendered]
     [2] ./~/c/1.js 13 bytes {1} [optional] [built]
-        context element ./1.js [1] ./~/c async ^\.\/.*$
         context element ./1 [1] ./~/c async ^\.\/.*$
+        context element ./1.js [1] ./~/c async ^\.\/.*$
 chunk    {2} output.js (main) 440 bytes [rendered]
     > main [4] ./example.js 
     [0] ./~/a.js 11 bytes {2} [built]
@@ -260,11 +276,8 @@ chunk    {2} output.js (main) 440 bytes [rendered]
     [1] ./~/c async ^\.\/.*$ 160 bytes {2} [built]
         System.import context c [4] ./example.js 8:8-34
     [4] ./example.js 269 bytes {2} [built]
-chunk    {3} 3.output.js 11 bytes {2} [rendered]
+chunk    {3} 3.js 11 bytes {2} [rendered]
     > [4] ./example.js 3:0-18
     [5] ./~/b.js 11 bytes {3} [built]
-         b [4] ./example.js 3:0-18
-
-WARNING in output.js from UglifyJs
-Side effects in initialization of unused variable __WEBPACK_IMPORTED_MODULE_0_a__ [./example.js:1,0]
+        System.import b [4] ./example.js 3:0-18
 ```

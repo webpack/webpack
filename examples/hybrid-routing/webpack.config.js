@@ -18,7 +18,10 @@ module.exports = {
 	plugins: [
 		// Extract common modules from the entries to the commons.js file
 		// This is optional, but good for performance.
-		new CommonsChunkPlugin("commons.js")
+		new CommonsChunkPlugin({
+			name: "commons",
+			filename: "commons.js"
+		})
 		// The pages cannot run without the commons.js file now.
 	]
 }

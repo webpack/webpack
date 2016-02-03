@@ -6,7 +6,6 @@ In this example, only `add` and `multiply` in `./math.js` are used used by the a
 
 In addition to that, `library.js` simulates an entry point to a big library. `library.js` re-exports multiple identifiers from submodules. Often big parts of that is unused, like `abc.js`. Note how the usage information flows from `example.js` through `library.js` into `abc.js` and all declarations in `abc.js` are not included in the minimized bundle (Look for `console.log("a")` in the minimized bundle).
 
-
 # example.js
 
 ``` javascript
@@ -102,25 +101,25 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
   \*****************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* harmony export */function add() {
+	/* harmony export */ exports["a"] = add;/* harmony export */ exports["b"] = multiply;/* unused harmony export list */function add() {
 		var sum = 0, i = 0, args = arguments, l = args.length;
 		while (i < l) {
 			sum += args[i++];
 		}
 		return sum;
-	}/* harmony export */ Object.defineProperty(exports, "add", {configurable: false, enumerable: true, get: function() { return add; }});
+	}
 
-	/* harmony export */function multiply() {
+	function multiply() {
 		var product = 1, i = 0, args = arguments, l = args.length;
 		while (i < l) {
 			product *= args[i++];
 		}
 		return product;
-	}/* harmony export */ Object.defineProperty(exports, "multiply", {configurable: false, enumerable: true, get: function() { return multiply; }});
+	}
 
-	/* harmony export */function list() {
+	function list() {
 		return Array.from(arguments);
-	}/* ununsed harmony export list */;
+	}
 
 
 /***/ },
@@ -130,8 +129,10 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__abc__ = __webpack_require__(/*! ./abc */ 2);/* ununsed harmony reexport c */;/* ununsed harmony reexport b */;/* ununsed harmony reexport a */;
-	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__math__ = __webpack_require__(/*! ./math */ 0);/* harmony reexport */ Object.defineProperty(exports, "reexportedMultiply", {configurable: false, enumerable: true, get: function() { return __WEBPACK_IMPORTED_MODULE_1__math__["multiply"]; }});/* ununsed harmony reexport reexportedAdd */;
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__abc__ = __webpack_require__(/*! ./abc */ 2);
+	/* unused harmony reexport a *//* unused harmony reexport b *//* unused harmony reexport c *//* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__math__ = __webpack_require__(/*! ./math */ 0);
+	/* unused harmony reexport reexportedAdd *//* harmony reexport */ Object.defineProperty(exports, "a", {configurable: false, enumerable: true, get: function() { return __WEBPACK_IMPORTED_MODULE_1__math__["b"]; }});
+
 
 /***/ },
 /* 2 */
@@ -140,9 +141,9 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
   \****************/
 /***/ function(module, exports, __webpack_require__) {
 
-	/* harmony export */function a() { console.log("a"); }/* ununsed harmony export a */;
-	/* harmony export */function b() { console.log("b"); }/* ununsed harmony export b */;
-	/* harmony export */function c() { console.log("c"); }/* ununsed harmony export c */;
+	/* unused harmony export a *//* unused harmony export b *//* unused harmony export c */function a() { console.log("a"); }
+	function b() { console.log("b"); }
+	function c() { console.log("c"); }
 
 
 /***/ },
@@ -155,8 +156,10 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__math__ = __webpack_require__(/*! ./math */ 0);
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__library__ = __webpack_require__(/*! ./library */ 1);
 
-	/* harmony import */ __WEBPACK_IMPORTED_MODULE_0__math__["add"](1, 2);
-	/* harmony import */ __WEBPACK_IMPORTED_MODULE_1__library__["reexportedMultiply"](1, 2);
+
+
+	/* harmony import */ __WEBPACK_IMPORTED_MODULE_0__math__["a"](1, 2);
+	/* harmony import */ __WEBPACK_IMPORTED_MODULE_1__library__["a"](1, 2);
 
 
 /***/ }
@@ -166,7 +169,7 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 # js/output.js
 
 ``` javascript
-!function(e){function r(t){if(n[t])return n[t].exports;var u=n[t]={exports:{},id:t,loaded:!1};return e[t].call(u.exports,u,u.exports,r),u.loaded=!0,u.exports}var n={};return r.m=e,r.c=n,r.oe=function(e){throw e},r.p="js/",r(r.s=3)}([function(e,r,n){function t(){for(var e=0,r=0,n=arguments,t=n.length;t>r;)e+=n[r++];return e}function u(){for(var e=1,r=0,n=arguments,t=n.length;t>r;)e*=n[r++];return e}Object.defineProperty(r,"add",{configurable:!1,enumerable:!0,get:function(){return t}}),Object.defineProperty(r,"multiply",{configurable:!1,enumerable:!0,get:function(){return u}})},function(e,r,n){var t=(n(2),n(0));Object.defineProperty(r,"reexportedMultiply",{configurable:!1,enumerable:!0,get:function(){return t.multiply}})},function(e,r,n){},function(e,r,n){var t=n(0),u=n(1);t.add(1,2),u.reexportedMultiply(1,2)}]);
+!function(n){function r(e){if(t[e])return t[e].exports;var o=t[e]={exports:{},id:e,loaded:!1};return n[e].call(o.exports,o,o.exports,r),o.loaded=!0,o.exports}var t={};return r.m=n,r.c=t,r.oe=function(n){throw n},r.p="js/",r(r.s=3)}([function(n,r,t){function e(){for(var n=0,r=0,t=arguments,e=t.length;e>r;)n+=t[r++];return n}function o(){for(var n=1,r=0,t=arguments,e=t.length;e>r;)n*=t[r++];return n}r.a=e,r.b=o},function(n,r,t){var e=(t(2),t(0));Object.defineProperty(r,"a",{configurable:!1,enumerable:!0,get:function(){return e.b}})},function(n,r,t){},function(n,r,t){var e=t(0),o=t(1);e.a(1,2),o.a(1,2)}]);
 ```
 
 # Info
@@ -174,11 +177,11 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 ## Uncompressed
 
 ```
-Hash: 4a88e85220137007208d
-Version: webpack 1.12.2
-Time: 139ms
+Hash: 48af7445f2c32ec49eb2
+Version: webpack 2.0.6-beta
+Time: 93ms
     Asset     Size  Chunks             Chunk Names
-output.js  3.98 kB       0  [emitted]  main
+output.js  3.61 kB       0  [emitted]  main
 chunk    {0} output.js (main) 728 bytes [rendered]
     > main [3] ./example.js 
     [0] ./math.js 366 bytes {0} [built]
@@ -194,11 +197,11 @@ chunk    {0} output.js (main) 728 bytes [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 4a88e85220137007208d
-Version: webpack 1.12.2
-Time: 319ms
+Hash: 48af7445f2c32ec49eb2
+Version: webpack 2.0.6-beta
+Time: 180ms
     Asset       Size  Chunks             Chunk Names
-output.js  822 bytes       0  [emitted]  main
+output.js  610 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 728 bytes [rendered]
     > main [3] ./example.js 
     [0] ./math.js 366 bytes {0} [built]
@@ -212,7 +215,6 @@ chunk    {0} output.js (main) 728 bytes [rendered]
 
 WARNING in output.js from UglifyJs
 Dropping unused function list [./math.js:17,0]
-Side effects in initialization of unused variable __WEBPACK_IMPORTED_MODULE_0__abc__ [./library.js:1,0]
 Dropping unused function a [./abc.js:1,0]
 Dropping unused function b [./abc.js:2,0]
 Dropping unused function c [./abc.js:3,0]

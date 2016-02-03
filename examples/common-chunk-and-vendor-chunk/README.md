@@ -137,7 +137,7 @@ module.exports = {
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
 
-/******/ 		script.src = __webpack_require__.p + "" + chunkId + "." + ({"1":"common","2":"pageA","3":"pageC","4":"pageB"}[chunkId]||chunkId) + ".js";
+/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
 /******/ 		function onScriptComplete() {
@@ -299,7 +299,7 @@ webpackJsonp([3],{
 /***/ function(module, exports, __webpack_require__) {
 
 	var utility2 = __webpack_require__(/*! ./utility2 */ 0);
-	var utility4 = __webpack_require__(/*! ./utility3 */ 1);
+	var utility3 = __webpack_require__(/*! ./utility3 */ 1);
 
 	module.exports = "pageC";
 
@@ -313,15 +313,15 @@ webpackJsonp([3],{
 ## Uncompressed
 
 ```
-Hash: 9198c92456f7bd9db9cd
-Version: webpack 2.0.2-beta
-Time: 94ms
+Hash: ecc1460eefa0316fd425
+Version: webpack 2.0.6-beta
+Time: 108ms
     Asset       Size  Chunks             Chunk Names
-vendor.js    4.87 kB       0  [emitted]  vendor
+vendor.js    4.79 kB       0  [emitted]  vendor
 common.js  347 bytes       1  [emitted]  common
- pageA.js  482 bytes       2  [emitted]  pageA
- pageC.js  317 bytes       3  [emitted]  pageC
- pageB.js  317 bytes       4  [emitted]  pageB
+ pageA.js  485 bytes       2  [emitted]  pageA
+ pageC.js  320 bytes       3  [emitted]  pageC
+ pageB.js  320 bytes       4  [emitted]  pageB
 chunk    {0} vendor.js (vendor) 94 bytes [rendered]
     > vendor [8] multi vendor 
     [3] ./vendor1.js 27 bytes {0} [built]
@@ -337,27 +337,27 @@ chunk    {1} common.js (common) 56 bytes {0} [rendered]
     [1] ./utility3.js 28 bytes {1} [built]
         cjs require ./utility3 [6] ./pageB.js 2:15-36
         cjs require ./utility3 [7] ./pageC.js 2:15-36
-chunk    {2} pageA.js (pageA) 130 bytes {1} [rendered]
+chunk    {2} pageA.js (pageA) 133 bytes {1} [rendered]
     > pageA [5] ./pageA.js 
     [2] ./utility1.js 28 bytes {2} [built]
         cjs require ./utility1 [5] ./pageA.js 1:15-36
-    [5] ./pageA.js 102 bytes {2} [built]
-chunk    {3} pageC.js (pageC) 102 bytes {1} [rendered]
+    [5] ./pageA.js 105 bytes {2} [built]
+chunk    {3} pageC.js (pageC) 105 bytes {1} [rendered]
     > pageC [7] ./pageC.js 
-    [7] ./pageC.js 102 bytes {3} [built]
-chunk    {4} pageB.js (pageB) 102 bytes {1} [rendered]
+    [7] ./pageC.js 105 bytes {3} [built]
+chunk    {4} pageB.js (pageB) 105 bytes {1} [rendered]
     > pageB [6] ./pageB.js 
-    [6] ./pageB.js 102 bytes {4} [built]
+    [6] ./pageB.js 105 bytes {4} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9198c92456f7bd9db9cd
-Version: webpack 2.0.2-beta
-Time: 183ms
+Hash: ecc1460eefa0316fd425
+Version: webpack 2.0.6-beta
+Time: 248ms
     Asset       Size  Chunks             Chunk Names
-vendor.js    1.14 kB       0  [emitted]  vendor
+vendor.js    1.08 kB       0  [emitted]  vendor
 common.js   92 bytes       1  [emitted]  common
  pageA.js  109 bytes       2  [emitted]  pageA
  pageC.js   71 bytes       3  [emitted]  pageC
@@ -377,17 +377,17 @@ chunk    {1} common.js (common) 56 bytes {0} [rendered]
     [1] ./utility3.js 28 bytes {1} [built]
         cjs require ./utility3 [6] ./pageB.js 2:15-36
         cjs require ./utility3 [7] ./pageC.js 2:15-36
-chunk    {2} pageA.js (pageA) 130 bytes {1} [rendered]
+chunk    {2} pageA.js (pageA) 133 bytes {1} [rendered]
     > pageA [5] ./pageA.js 
     [2] ./utility1.js 28 bytes {2} [built]
         cjs require ./utility1 [5] ./pageA.js 1:15-36
-    [5] ./pageA.js 102 bytes {2} [built]
-chunk    {3} pageC.js (pageC) 102 bytes {1} [rendered]
+    [5] ./pageA.js 105 bytes {2} [built]
+chunk    {3} pageC.js (pageC) 105 bytes {1} [rendered]
     > pageC [7] ./pageC.js 
-    [7] ./pageC.js 102 bytes {3} [built]
-chunk    {4} pageB.js (pageB) 102 bytes {1} [rendered]
+    [7] ./pageC.js 105 bytes {3} [built]
+chunk    {4} pageB.js (pageB) 105 bytes {1} [rendered]
     > pageB [6] ./pageB.js 
-    [6] ./pageB.js 102 bytes {4} [built]
+    [6] ./pageB.js 105 bytes {4} [built]
 
 WARNING in pageA.js from UglifyJs
 Side effects in initialization of unused variable utility1 [./pageA.js:1,0]
@@ -395,7 +395,7 @@ Side effects in initialization of unused variable utility2 [./pageA.js:2,0]
 
 WARNING in pageC.js from UglifyJs
 Side effects in initialization of unused variable utility2 [./pageC.js:1,0]
-Side effects in initialization of unused variable utility4 [./pageC.js:2,0]
+Side effects in initialization of unused variable utility3 [./pageC.js:2,0]
 
 WARNING in pageB.js from UglifyJs
 Side effects in initialization of unused variable utility2 [./pageB.js:1,0]
