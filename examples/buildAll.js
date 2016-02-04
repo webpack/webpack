@@ -3,7 +3,7 @@ var path = require("path");
 var fs = require("fs");
 
 var cmds = fs.readdirSync(__dirname).filter(function(dirname) {
-	return fs.statSync(path.join(__dirname, dirname)).isDirectory();
+	return fs.statSync(path.join(__dirname, dirname)).isDirectory() && dirname !== "node_modules";
 }).sort().map(function(dirname) {
 	return "cd " + dirname + " && node build.js";
 });
