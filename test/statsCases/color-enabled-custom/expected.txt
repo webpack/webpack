@@ -1,4 +1,4 @@
-Hash: <CLR=BOLD>89a3f708bb368b935156</CLR>
+Hash: <CLR=BOLD>0fca0b37055d42f98682</CLR>
 Time: <CLR=BOLD>X</CLR>ms
   <CLR=BOLD>Asset</CLR>     <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=BOLD>Chunk Names</CLR>
 <CLR=32>main.js</CLR>  1.53 kB       <CLR=BOLD>0</CLR>  <CLR=32>[emitted]</CLR>  main

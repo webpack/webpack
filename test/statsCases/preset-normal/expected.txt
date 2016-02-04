@@ -1,4 +1,4 @@
-Hash: b3eaa29c0fa9e96a0ba5
+Hash: 8ca45b6d16d1f1e8be32
 Time: Xms
 chunk    {0} main.js (main) 73 bytes [rendered]
 chunk    {1} 1.js 54 bytes {0} [rendered]
