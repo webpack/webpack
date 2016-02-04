@@ -19,19 +19,23 @@ it("should handle duplicate chunks", function(done) {
 it("should not load a chunk which is included in a already loaded one", function(done) {
 	var async = false;
 	require.ensure(["./empty?x", "./empty?y", "./empty?z"], function(require) {
-		async.should.be.eql(true);
-		loadChunk();
+		try {
+			async.should.be.eql(true);
+			loadChunk();
+		} catch(e) { done(e); }
 	});
-	Promise.resolve().then(function() {
+	Promise.resolve().then(function() {}).then(function() {}).then(function() {
 		async = true;
 	});
 	function loadChunk() {
 		var sync = true;
 		require.ensure(["./empty?x", "./empty?y"], function(require) {
-			sync.should.be.eql(true);
-			done();
+			try {
+				sync.should.be.eql(true);
+				done();
+			} catch(e) { done(e); }
 		});
-		Promise.resolve().then(function() {}).then(function() {
+		Promise.resolve().then(function() {}).then(function() {}).then(function() {
 			sync = false;
 		});
 	}
