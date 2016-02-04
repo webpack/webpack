@@ -8,7 +8,7 @@ exports.default = new Promise (resolve, reject) ->
 				hashDigestLength: 5
 			module:
 				postLoaders: [
-					{ test: /extra2?\.js/, loader: "raw!extra!val?cacheable" }
+					{ test: /extra2?\.js/, loader: "raw!./node_modules/extra.loader.js!val?cacheable" }
 				]
 			amd:
 				fromOptions: true
@@ -19,7 +19,7 @@ exports.default = new Promise (resolve, reject) ->
 					should: require.resolve "should"
 			plugins: [
 				new webpack.optimize.LimitChunkCountPlugin
-					maxChunks: 2
+					maxChunks: 3
 				new webpack.optimize.CommonsChunkPlugin
 					name: "common"
 					filename: "library2.commons.js"
