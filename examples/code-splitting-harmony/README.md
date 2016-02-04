@@ -127,11 +127,12 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { throw err; };
 
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
@@ -255,7 +256,7 @@ chunk    {3} 3.js 11 bytes {2} [rendered]
 ```
 Hash: cefcab66a83c5000d38e
 Version: webpack 2.0.6-beta
-Time: 326ms
+Time: 239ms
     Asset      Size  Chunks             Chunk Names
      0.js  38 bytes       0  [emitted]  
      1.js  38 bytes       1  [emitted]  

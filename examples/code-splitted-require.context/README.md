@@ -116,11 +116,12 @@ getTemplate("b", function(b) {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { throw err; };
 
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -133,9 +134,9 @@ getTemplate("b", function(b) {
 /***/ function(module, exports, __webpack_require__) {
 
 	function getTemplate(templateName, callback) {
-		__webpack_require__.e/* nsure */(0).then(function(require) {
+		__webpack_require__.e/* nsure */(0).catch(function(err) { __webpack_require__.oe(err); }).then(function(require) {
 			callback(__webpack_require__(/*! ../require.context/templates */ 1)("./"+templateName)());
-		}.bind(null, __webpack_require__)).catch(function(err) { __webpack_require__.oe(err); });
+		}.bind(null, __webpack_require__));
 	}
 	getTemplate("a", function(a) {
 		console.log(a);
@@ -228,10 +229,10 @@ webpackJsonp([0],[
 ```
 Hash: 960f23ddeec29787cc42
 Version: webpack 2.0.6-beta
-Time: 101ms
+Time: 99ms
     Asset     Size  Chunks             Chunk Names
      0.js  1.65 kB       0  [emitted]  
-output.js  4.64 kB       1  [emitted]  main
+output.js  4.65 kB       1  [emitted]  main
 chunk    {0} 0.js 463 bytes {1} [rendered]
     > [0] ./example.js 2:1-4:3
     [1] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
@@ -255,7 +256,7 @@ chunk    {1} output.js (main) 276 bytes [rendered]
 ```
 Hash: 960f23ddeec29787cc42
 Version: webpack 2.0.6-beta
-Time: 302ms
+Time: 165ms
     Asset       Size  Chunks             Chunk Names
      0.js  544 bytes       0  [emitted]  
 output.js    1.14 kB       1  [emitted]  main

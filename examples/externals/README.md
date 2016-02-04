@@ -93,11 +93,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
-
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
@@ -145,9 +143,9 @@ return /******/ (function(modules) { // webpackBootstrap
 ```
 Hash: 94d30510034c2c70a921
 Version: webpack 2.0.6-beta
-Time: 90ms
-    Asset     Size  Chunks             Chunk Names
-output.js  3.02 kB       0  [emitted]  main
+Time: 66ms
+    Asset    Size  Chunks             Chunk Names
+output.js  2.9 kB       0  [emitted]  main
 chunk    {0} output.js (main) 197 bytes [rendered]
     > main [2] ./example.js 
     [2] ./example.js 113 bytes {0} [built]
@@ -159,9 +157,9 @@ chunk    {0} output.js (main) 197 bytes [rendered]
 ```
 Hash: 94d30510034c2c70a921
 Version: webpack 2.0.6-beta
-Time: 166ms
+Time: 165ms
     Asset       Size  Chunks             Chunk Names
-output.js  740 bytes       0  [emitted]  main
+output.js  714 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 197 bytes [rendered]
     > main [2] ./example.js 
     [2] ./example.js 113 bytes {0} [built]

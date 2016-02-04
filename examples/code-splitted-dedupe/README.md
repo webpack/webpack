@@ -133,11 +133,12 @@ require(["../dedupe/b"]);
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { throw err; };
 
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
@@ -174,11 +175,11 @@ require(["../dedupe/b"]);
 /***/ function(module, exports, __webpack_require__) {
 
 	// index.js and x.js can be deduplicated
-	__webpack_require__.e/* require */(0).then(function() {[__webpack_require__(/*! ../dedupe/a */ 0), __webpack_require__(/*! bundle?lazy!../dedupe/b */ 3)];}).catch(function(err) { __webpack_require__.oe(err); });
+	__webpack_require__.e/* require */(0).catch(function(err) { __webpack_require__.oe(err); }).then(function() {[__webpack_require__(/*! ../dedupe/a */ 0), __webpack_require__(/*! bundle?lazy!../dedupe/b */ 3)];});
 
 	// index.js and x.js cannot be deduplicated
-	__webpack_require__.e/* require */(2).then(function() {[__webpack_require__(/*! ../dedupe/a */ 0)];}).catch(function(err) { __webpack_require__.oe(err); });
-	__webpack_require__.e/* require */(1).then(function() {[__webpack_require__(/*! ../dedupe/b */ 1)];}).catch(function(err) { __webpack_require__.oe(err); });
+	__webpack_require__.e/* require */(2).catch(function(err) { __webpack_require__.oe(err); }).then(function() {[__webpack_require__(/*! ../dedupe/a */ 0)];});
+	__webpack_require__.e/* require */(1).catch(function(err) { __webpack_require__.oe(err); }).then(function() {[__webpack_require__(/*! ../dedupe/b */ 1)];});
 
 
 /***/ }
@@ -204,9 +205,9 @@ webpackJsonp([0,2],[
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(cb) {
-		__webpack_require__.e/* nsure */(4).then(function(require) {
+		__webpack_require__.e/* nsure */(4).catch(function(err) { __webpack_require__.oe(err); }).then(function(require) {
 			cb(__webpack_require__(/*! !./index.js */ 1));
-		}.bind(null, __webpack_require__)).catch(function(err) { __webpack_require__.oe(err); });
+		}.bind(null, __webpack_require__));
 	}
 
 /***/ },
@@ -394,7 +395,7 @@ webpackJsonp([4],{
 ```
 Hash: 16906a1f14360b9ac9e8
 Version: webpack 2.0.6-beta
-Time: 151ms
+Time: 170ms
     Asset       Size  Chunks             Chunk Names
      0.js    1.71 kB    0, 2  [emitted]  
      1.js  933 bytes    1, 4  [emitted]  
@@ -461,7 +462,7 @@ chunk    {4} 4.js 167 bytes {0} [rendered]
 ```
 Hash: 16906a1f14360b9ac9e8
 Version: webpack 2.0.6-beta
-Time: 402ms
+Time: 291ms
     Asset       Size  Chunks             Chunk Names
      0.js  342 bytes    0, 2  [emitted]  
      1.js  213 bytes    1, 4  [emitted]  

@@ -37,7 +37,7 @@ module.exports = {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define(factory);
+		define([], factory);
 	else if(typeof exports === 'object')
 		exports["alpha"] = factory();
 	else
@@ -82,7 +82,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "js/";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -107,7 +107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define(factory);
+		define([], factory);
 	else if(typeof exports === 'object')
 		exports["beta"] = factory();
 	else
@@ -152,11 +152,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "js/";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */
+/* 0 */,
+/* 1 */
 /*!*****************!*\
   !*** ./beta.js ***!
   \*****************/
@@ -175,32 +176,32 @@ return /******/ (function(modules) { // webpackBootstrap
 ## Uncompressed
 
 ```
-Hash: 618b766e9f4c28be5133
-Version: webpack 1.9.10
-Time: 67ms
+Hash: 9675eca99092bd148a2a
+Version: webpack 2.0.6-beta
+Time: 66ms
              Asset     Size  Chunks             Chunk Names
-MyLibrary.alpha.js  1.91 kB       0  [emitted]  alpha
- MyLibrary.beta.js   1.9 kB       1  [emitted]  beta
-chunk    {0} MyLibrary.alpha.js (alpha) 25 bytes [rendered]
+ MyLibrary.beta.js  1.94 kB       0  [emitted]  beta
+MyLibrary.alpha.js  1.94 kB       1  [emitted]  alpha
+chunk    {0} MyLibrary.beta.js (beta) 24 bytes [rendered]
+    > beta [1] ./beta.js 
+    [1] ./beta.js 24 bytes {0} [built]
+chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [rendered]
     > alpha [0] ./alpha.js 
-    [0] ./alpha.js 25 bytes {0} [built]
-chunk    {1} MyLibrary.beta.js (beta) 24 bytes [rendered]
-    > beta [0] ./beta.js 
-    [0] ./beta.js 24 bytes {1} [built]
+    [0] ./alpha.js 25 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: c7f999402520fa44f95c
-Version: webpack 1.9.10
-Time: 186ms
+Hash: 9675eca99092bd148a2a
+Version: webpack 2.0.6-beta
+Time: 200ms
              Asset       Size  Chunks             Chunk Names
- MyLibrary.beta.js  487 bytes       0  [emitted]  beta
-MyLibrary.alpha.js  490 bytes       1  [emitted]  alpha
+ MyLibrary.beta.js  495 bytes       0  [emitted]  beta
+MyLibrary.alpha.js  497 bytes       1  [emitted]  alpha
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [rendered]
-    > beta [0] ./beta.js 
-    [0] ./beta.js 24 bytes {0} [built]
+    > beta [1] ./beta.js 
+    [1] ./beta.js 24 bytes {0} [built]
 chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [rendered]
     > alpha [0] ./alpha.js 
     [0] ./alpha.js 25 bytes {1} [built]

@@ -82,31 +82,31 @@ exports: function add() {
 /******/ 	__webpack_require__.p = "js/";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_LABELED_MODULE__1 = __webpack_require__(/*! ./increment */ 1), increment = __WEBPACK_LABELED_MODULE__1.increment;
-	var a = 1;
-	increment(a); // 2
-
-/***/ },
-/* 1 */
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_LABELED_MODULE__2 = __webpack_require__(/*! ./math */ 2), add = __WEBPACK_LABELED_MODULE__2.add;
+	var __WEBPACK_LABELED_MODULE__ = __webpack_require__(/*! ./math */ 2), add = __WEBPACK_LABELED_MODULE__.add;
 	exports: exports["increment"] = function increment(val) {
 	    return add(val, 1);
 	};
+
+/***/ },
+/* 1 */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_LABELED_MODULE__ = __webpack_require__(/*! ./increment */ 0), increment = __WEBPACK_LABELED_MODULE__.increment;
+	var a = 1;
+	increment(a); // 2
 
 /***/ },
 /* 2 */
@@ -134,33 +134,33 @@ The remaining labels are removed while minimizing.
 ## Uncompressed
 
 ```
-Hash: 76177991efc90e16a609
-Version: webpack 1.9.10
-Time: 67ms
+Hash: be12e2072fd7c78b192b
+Version: webpack 2.0.6-beta
+Time: 64ms
     Asset     Size  Chunks             Chunk Names
-output.js  2.34 kB       0  [emitted]  main
+output.js  2.36 kB       0  [emitted]  main
 chunk    {0} output.js (main) 299 bytes [rendered]
-    > main [0] ./example.js 
-    [0] ./example.js 55 bytes {0} [built]
-    [1] ./increment.js 83 bytes {0} [built]
-        labeled require ./increment [0] ./example.js 1:0-23
+    > main [1] ./example.js 
+    [0] ./increment.js 83 bytes {0} [built]
+        labeled require ./increment [1] ./example.js 1:0-23
+    [1] ./example.js 55 bytes {0} [built]
     [2] ./math.js 161 bytes {0} [built]
-        labeled require ./math [1] ./increment.js 1:0-18
+        labeled require ./math [0] ./increment.js 1:0-18
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 76177991efc90e16a609
-Version: webpack 1.9.10
-Time: 179ms
+Hash: be12e2072fd7c78b192b
+Version: webpack 2.0.6-beta
+Time: 111ms
     Asset       Size  Chunks             Chunk Names
-output.js  429 bytes       0  [emitted]  main
+output.js  433 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 299 bytes [rendered]
-    > main [0] ./example.js 
-    [0] ./example.js 55 bytes {0} [built]
-    [1] ./increment.js 83 bytes {0} [built]
-        labeled require ./increment [0] ./example.js 1:0-23
+    > main [1] ./example.js 
+    [0] ./increment.js 83 bytes {0} [built]
+        labeled require ./increment [1] ./example.js 1:0-23
+    [1] ./example.js 55 bytes {0} [built]
     [2] ./math.js 161 bytes {0} [built]
-        labeled require ./math [1] ./increment.js 1:0-18
+        labeled require ./math [0] ./increment.js 1:0-18
 ```

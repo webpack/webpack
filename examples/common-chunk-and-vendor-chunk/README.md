@@ -164,11 +164,12 @@ module.exports = {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { throw err; };
 
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
@@ -315,7 +316,7 @@ webpackJsonp([3],{
 ```
 Hash: ecc1460eefa0316fd425
 Version: webpack 2.0.6-beta
-Time: 108ms
+Time: 127ms
     Asset       Size  Chunks             Chunk Names
 vendor.js    4.79 kB       0  [emitted]  vendor
 common.js  347 bytes       1  [emitted]  common
@@ -355,7 +356,7 @@ chunk    {4} pageB.js (pageB) 105 bytes {1} [rendered]
 ```
 Hash: ecc1460eefa0316fd425
 Version: webpack 2.0.6-beta
-Time: 248ms
+Time: 255ms
     Asset       Size  Chunks             Chunk Names
 vendor.js    1.08 kB       0  [emitted]  vendor
 common.js   92 bytes       1  [emitted]  common

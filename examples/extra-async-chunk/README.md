@@ -166,11 +166,12 @@ module.exports = {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { throw err; };
 
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
@@ -184,13 +185,13 @@ module.exports = {
 /***/ function(module, exports, __webpack_require__) {
 
 	// a chunks with a, b, c
-	Promise.all/* require */([__webpack_require__.e(0), __webpack_require__.e(3)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 2)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(function(err) { __webpack_require__.oe(err); });
+	Promise.all/* require */([__webpack_require__.e(0), __webpack_require__.e(3)]).catch(function(err) { __webpack_require__.oe(err); }).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 2)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 
 	// a chunk with a, b, d
-	Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(2)]).then(function(require) {
+	Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(2)]).catch(function(err) { __webpack_require__.oe(err); }).then(function(require) {
 		__webpack_require__(/*! ./b */ 1);
 		__webpack_require__(/*! ./d */ 3);
-	}.bind(null, __webpack_require__)).catch(function(err) { __webpack_require__.oe(err); });
+	}.bind(null, __webpack_require__));
 
 
 /***/ }
@@ -266,7 +267,7 @@ webpackJsonp([3],{
 ```
 Hash: 9143ea27ee1a62ea4b12
 Version: webpack 2.0.6-beta
-Time: 92ms
+Time: 142ms
     Asset       Size  Chunks             Chunk Names
      0.js  291 bytes       0  [emitted]  
 output.js    4.92 kB       1  [emitted]  main
@@ -299,7 +300,7 @@ chunk    {3} 3.js 21 bytes {1} [rendered]
 ```
 Hash: 9143ea27ee1a62ea4b12
 Version: webpack 2.0.6-beta
-Time: 231ms
+Time: 175ms
     Asset      Size  Chunks             Chunk Names
      0.js  78 bytes       0  [emitted]  
 output.js    1.2 kB       1  [emitted]  main

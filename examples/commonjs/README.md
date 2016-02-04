@@ -73,11 +73,9 @@ exports.add = function() {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
-
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
@@ -131,9 +129,9 @@ exports.add = function() {
 ```
 Hash: 604c5c1fe4f4a9772853
 Version: webpack 2.0.6-beta
-Time: 118ms
+Time: 75ms
     Asset     Size  Chunks             Chunk Names
-output.js  2.29 kB       0  [emitted]  main
+output.js  2.17 kB       0  [emitted]  main
 chunk    {0} output.js (main) 329 bytes [rendered]
     > main [1] ./example.js 
     [0] ./increment.js 98 bytes {0} [built]
@@ -148,9 +146,9 @@ chunk    {0} output.js (main) 329 bytes [rendered]
 ```
 Hash: 604c5c1fe4f4a9772853
 Version: webpack 2.0.6-beta
-Time: 162ms
+Time: 137ms
     Asset       Size  Chunks             Chunk Names
-output.js  449 bytes       0  [emitted]  main
+output.js  423 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 329 bytes [rendered]
     > main [1] ./example.js 
     [0] ./increment.js 98 bytes {0} [built]

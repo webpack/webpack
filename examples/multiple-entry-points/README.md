@@ -61,7 +61,10 @@ module.exports = {
 		chunkFilename: "[id].chunk.js"
 	},
 	plugins: [
-		new CommonsChunkPlugin("commons.js")
+		new CommonsChunkPlugin({
+			filename: "commons.js",
+			name: "commons"
+		})
 	]
 }
 ```
@@ -84,36 +87,33 @@ module.exports = {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	var parentJsonpFunction = window["webpackJsonp"];
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules) {
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModule) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, callbacks = [];
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId])
-/******/ 				callbacks.push.apply(callbacks, installedChunks[chunkId]);
+/******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
 /******/ 			modules[moduleId] = moreModules[moduleId];
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
-/******/ 		while(callbacks.length)
-/******/ 			callbacks.shift().call(null, __webpack_require__);
-/******/ 		if(moreModules[0]) {
-/******/ 			installedModules[0] = 0;
-/******/ 			return __webpack_require__(0);
+/******/ 		while(resolves.length)
+/******/ 			resolves.shift()();
+/******/ 		if(executeModule + 1) { // typeof executeModule === "number"
+/******/ 			return __webpack_require__(executeModule);
 /******/ 		}
 /******/ 	};
 
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
-/******/ 	// object to store loaded and loading chunks
-/******/ 	// "0" means "already loaded"
-/******/ 	// Array means "loading", array contains callbacks
+/******/ 	// objects to store loaded and loading chunks
 /******/ 	var installedChunks = {
-/******/ 		3:0
+/******/ 		1: 0
 /******/ 	};
 
 /******/ 	// The require function
@@ -142,26 +142,41 @@ module.exports = {
 
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
-/******/ 	__webpack_require__.e = function requireEnsure(chunkId, callback) {
-/******/ 		// "0" is the signal for "already loaded"
+/******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return callback.call(null, __webpack_require__);
+/******/ 			return Promise.resolve()
 
-/******/ 		// an array means "currently loading".
-/******/ 		if(installedChunks[chunkId] !== undefined) {
-/******/ 			installedChunks[chunkId].push(callback);
-/******/ 		} else {
-/******/ 			// start chunk loading
-/******/ 			installedChunks[chunkId] = [callback];
-/******/ 			var head = document.getElementsByTagName('head')[0];
-/******/ 			var script = document.createElement('script');
-/******/ 			script.type = 'text/javascript';
-/******/ 			script.charset = 'utf-8';
-/******/ 			script.async = true;
-
-/******/ 			script.src = __webpack_require__.p + "" + chunkId + ".chunk.js";
-/******/ 			head.appendChild(script);
+/******/ 		// an Promise means "currently loading".
+/******/ 		if(installedChunks[chunkId]) {
+/******/ 			return installedChunks[chunkId][2];
 /******/ 		}
+/******/ 		// start chunk loading
+/******/ 		var head = document.getElementsByTagName('head')[0];
+/******/ 		var script = document.createElement('script');
+/******/ 		script.type = 'text/javascript';
+/******/ 		script.charset = 'utf-8';
+/******/ 		script.async = true;
+/******/ 		script.timeout = 120000;
+
+/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".chunk.js";
+/******/ 		var timeout = setTimeout(onScriptComplete, 120000);
+/******/ 		script.onerror = script.onload = onScriptComplete;
+/******/ 		function onScriptComplete() {
+/******/ 			// avoid mem leaks in IE.
+/******/ 			script.onerror = script.onload = null;
+/******/ 			clearTimeout(timeout);
+/******/ 			var chunk = installedChunks[chunkId];
+/******/ 			if(chunk !== 0) {
+/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				installedChunks[chunkId] = undefined;
+/******/ 			}
+/******/ 		};
+/******/ 		head.appendChild(script);
+
+/******/ 		var promise = new Promise(function(resolve, reject) {
+/******/ 			installedChunks[chunkId] = [resolve, reject];
+/******/ 		});
+/******/ 		return installedChunks[chunkId][2] = promise;
 /******/ 	};
 
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -172,6 +187,9 @@ module.exports = {
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
+
+/******/ 	// on error function for async loading
+/******/ 	__webpack_require__.oe = function(err) { throw err; };
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -191,48 +209,51 @@ module.exports = {
 # js/pageA.bundle.js
 
 ``` javascript
-webpackJsonp([0],[
-/* 0 */
+webpackJsonp([3],{
+
+/***/ 2:
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var common = __webpack_require__(/*! ./common */ 1);
-	__webpack_require__.e/* require */(1, function(__webpack_require__) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 2)]; (function(shared) {
+	__webpack_require__.e/* require */(0).catch(function(err) { __webpack_require__.oe(err); }).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 0)]; (function(shared) {
 		shared("This is page A");
 	}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 
 /***/ }
-]);
+
+},[2]);
 ```
 
 # js/pageB.bundle.js
 
 ``` javascript
-webpackJsonp([2],[
-/* 0 */
+webpackJsonp([2],{
+
+/***/ 3:
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
 /***/ function(module, exports, __webpack_require__) {
 
 	var common = __webpack_require__(/*! ./common */ 1);
-	__webpack_require__.e/* nsure */(1/* duplicate */, function(require) {
-		var shared = __webpack_require__(/*! ./shared */ 2);
+	__webpack_require__.e/* nsure */(0/* duplicate */).catch(function(err) { __webpack_require__.oe(err); }).then(function(require) {
+		var shared = __webpack_require__(/*! ./shared */ 0);
 		shared("This is page B");
-	});
+	}.bind(null, __webpack_require__));
 
 /***/ }
-]);
+
+},[3]);
 ```
 
-# js/1.chunk.js
+# js/0.chunk.js
 
 ``` javascript
-webpackJsonp([1],{
-
-/***/ 2:
+webpackJsonp([0],[
+/* 0 */
 /*!*******************!*\
   !*** ./shared.js ***!
   \*******************/
@@ -244,8 +265,7 @@ webpackJsonp([1],{
 	};
 
 /***/ }
-
-});
+]);
 ```
 
 # Info
@@ -253,63 +273,63 @@ webpackJsonp([1],{
 ## Uncompressed
 
 ```
-Hash: 7061430bd2b90d83e1d2
-Version: webpack 1.9.10
-Time: 80ms
+Hash: 4f116ebe8131ab16cf5a
+Version: webpack 2.0.6-beta
+Time: 70ms
           Asset       Size  Chunks             Chunk Names
-pageA.bundle.js  471 bytes       0  [emitted]  pageA
-     1.chunk.js  287 bytes       1  [emitted]  
-pageB.bundle.js  384 bytes       2  [emitted]  pageB
-     commons.js    3.69 kB       3  [emitted]  commons.js
-chunk    {0} pageA.bundle.js (pageA) 108 bytes {3} [rendered]
-    > pageA [0] ./pageA.js 
-    [0] ./pageA.js 108 bytes {0} [built]
-chunk    {1} 1.chunk.js 91 bytes {0} {2} [rendered]
-    > [0] ./pageA.js 2:0-4:2
-    > duplicate [0] ./pageB.js 2:0-5:2
-    [2] ./shared.js 91 bytes {1} [built]
-        amd require ./shared [0] ./pageA.js 2:0-4:2
-        require.ensure item ./shared [0] ./pageB.js 2:0-5:2
-        cjs require ./shared [0] ./pageB.js 3:14-33
-chunk    {2} pageB.bundle.js (pageB) 152 bytes {3} [rendered]
-    > pageB [0] ./pageB.js 
-    [0] ./pageB.js 152 bytes {2} [built]
-chunk    {3} commons.js (commons.js) 26 bytes [rendered]
-    [1] ./common.js 26 bytes {3} [built]
-        cjs require ./common [0] ./pageA.js 1:13-32
-        cjs require ./common [0] ./pageB.js 1:13-32
-        cjs require ./common [2] ./shared.js 1:13-32
+     0.chunk.js  284 bytes       0  [emitted]  
+     commons.js    4.27 kB       1  [emitted]  commons
+pageB.bundle.js  482 bytes       2  [emitted]  pageB
+pageA.bundle.js  518 bytes       3  [emitted]  pageA
+chunk    {0} 0.chunk.js 91 bytes {3} {2} [rendered]
+    > [2] ./pageA.js 2:0-4:2
+    > duplicate [3] ./pageB.js 2:0-5:2
+    [0] ./shared.js 91 bytes {0} [built]
+        amd require ./shared [2] ./pageA.js 2:0-4:2
+        require.ensure item ./shared [3] ./pageB.js 2:0-5:2
+        cjs require ./shared [3] ./pageB.js 3:14-33
+chunk    {1} commons.js (commons) 26 bytes [rendered]
+    [1] ./common.js 26 bytes {1} [built]
+        cjs require ./common [0] ./shared.js 1:13-32
+        cjs require ./common [2] ./pageA.js 1:13-32
+        cjs require ./common [3] ./pageB.js 1:13-32
+chunk    {2} pageB.bundle.js (pageB) 152 bytes {1} [rendered]
+    > pageB [3] ./pageB.js 
+    [3] ./pageB.js 152 bytes {2} [built]
+chunk    {3} pageA.bundle.js (pageA) 108 bytes {1} [rendered]
+    > pageA [2] ./pageA.js 
+    [2] ./pageA.js 108 bytes {3} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 50883fab51924b1ba6bc
-Version: webpack 1.9.10
-Time: 254ms
+Hash: 4f116ebe8131ab16cf5a
+Version: webpack 2.0.6-beta
+Time: 216ms
           Asset       Size  Chunks             Chunk Names
-     0.chunk.js   82 bytes       0  [emitted]  
-     commons.js  753 bytes       1  [emitted]  commons.js
-pageB.bundle.js   93 bytes       2  [emitted]  pageB
-pageA.bundle.js  124 bytes       3  [emitted]  pageA
+     0.chunk.js   80 bytes       0  [emitted]  
+     commons.js  992 bytes       1  [emitted]  commons
+pageB.bundle.js  149 bytes       2  [emitted]  pageB
+pageA.bundle.js  166 bytes       3  [emitted]  pageA
 chunk    {0} 0.chunk.js 91 bytes {3} {2} [rendered]
-    > [0] ./pageA.js 2:0-4:2
-    > duplicate [0] ./pageB.js 2:0-5:2
-    [2] ./shared.js 91 bytes {0} [built]
-        amd require ./shared [0] ./pageA.js 2:0-4:2
-        require.ensure item ./shared [0] ./pageB.js 2:0-5:2
-        cjs require ./shared [0] ./pageB.js 3:14-33
-chunk    {1} commons.js (commons.js) 26 bytes [rendered]
+    > [2] ./pageA.js 2:0-4:2
+    > duplicate [3] ./pageB.js 2:0-5:2
+    [0] ./shared.js 91 bytes {0} [built]
+        amd require ./shared [2] ./pageA.js 2:0-4:2
+        require.ensure item ./shared [3] ./pageB.js 2:0-5:2
+        cjs require ./shared [3] ./pageB.js 3:14-33
+chunk    {1} commons.js (commons) 26 bytes [rendered]
     [1] ./common.js 26 bytes {1} [built]
-        cjs require ./common [0] ./pageA.js 1:13-32
-        cjs require ./common [0] ./pageB.js 1:13-32
-        cjs require ./common [2] ./shared.js 1:13-32
+        cjs require ./common [0] ./shared.js 1:13-32
+        cjs require ./common [2] ./pageA.js 1:13-32
+        cjs require ./common [3] ./pageB.js 1:13-32
 chunk    {2} pageB.bundle.js (pageB) 152 bytes {1} [rendered]
-    > pageB [0] ./pageB.js 
-    [0] ./pageB.js 152 bytes {2} [built]
+    > pageB [3] ./pageB.js 
+    [3] ./pageB.js 152 bytes {2} [built]
 chunk    {3} pageA.bundle.js (pageA) 108 bytes {1} [rendered]
-    > pageA [0] ./pageA.js 
-    [0] ./pageA.js 108 bytes {3} [built]
+    > pageA [2] ./pageA.js 
+    [2] ./pageA.js 108 bytes {3} [built]
 
 WARNING in 0.chunk.js from UglifyJs
 Side effects in initialization of unused variable common [./shared.js:1,0]
