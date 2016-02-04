@@ -1,4 +1,4 @@
-Hash: 89a3f708bb368b935156
+Hash: 0fca0b37055d42f98682
 Time: Xms
   Asset     Size  Chunks             Chunk Names
 main.js  1.53 kB       0  [emitted]  main
