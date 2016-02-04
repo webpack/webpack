@@ -138,11 +138,12 @@ require.ensure(["c"], function(require) {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { throw err; };
 
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
@@ -174,10 +175,10 @@ require.ensure(["c"], function(require) {
 
 	var a = __webpack_require__(/*! a */ 1);
 	var b = __webpack_require__(/*! b */ 0);
-	__webpack_require__.e/* nsure */(1).then(function(require) {
+	__webpack_require__.e/* nsure */(1).catch(function(err) { __webpack_require__.oe(err); }).then(function(require) {
 	    __webpack_require__(/*! b */ 0).xyz();
 	    var d = __webpack_require__(/*! d */ 4);
-	}.bind(null, __webpack_require__)).catch(function(err) { __webpack_require__.oe(err); });
+	}.bind(null, __webpack_require__));
 
 /***/ }
 /******/ ]);
@@ -224,7 +225,7 @@ webpackJsonp([1],[,,,function(n,c){},function(n,c){}]);
 ```
 Hash: 8c4d77ac26f67744ad74
 Version: webpack 2.0.6-beta
-Time: 112ms
+Time: 141ms
     Asset       Size  Chunks             Chunk Names
 output.js    4.82 kB       0  [emitted]  main
      1.js  310 bytes       1  [emitted]  
@@ -249,7 +250,7 @@ chunk    {1} 1.js 22 bytes {0} [rendered]
 ```
 Hash: 8c4d77ac26f67744ad74
 Version: webpack 2.0.6-beta
-Time: 233ms
+Time: 214ms
     Asset      Size  Chunks             Chunk Names
 output.js   1.09 kB       0  [emitted]  main
      1.js  55 bytes       1  [emitted]  

@@ -84,11 +84,9 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
-
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -145,11 +143,9 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
-
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -178,18 +174,18 @@ Version: webpack 2.0.6-beta
 Child en:
     Hash: 8376e07a0433da19dc73
     Version: webpack 2.0.6-beta
-    Time: 80ms
+    Time: 71ms
            Asset     Size  Chunks             Chunk Names
-    en.output.js  1.69 kB       0  [emitted]  main
+    en.output.js  1.57 kB       0  [emitted]  main
     chunk    {0} en.output.js (main) 65 bytes [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built]
 Child de:
     Hash: e2c5e5181623bc3405eb
     Version: webpack 2.0.6-beta
-    Time: 68ms
+    Time: 62ms
            Asset     Size  Chunks             Chunk Names
-    de.output.js  1.68 kB       0  [emitted]  main
+    de.output.js  1.57 kB       0  [emitted]  main
     chunk    {0} de.output.js (main) 65 bytes [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built] [1 warning]
@@ -206,18 +202,18 @@ Version: webpack 2.0.6-beta
 Child en:
     Hash: 8376e07a0433da19dc73
     Version: webpack 2.0.6-beta
-    Time: 156ms
+    Time: 145ms
            Asset       Size  Chunks             Chunk Names
-    en.output.js  307 bytes       0  [emitted]  main
+    en.output.js  281 bytes       0  [emitted]  main
     chunk    {0} en.output.js (main) 65 bytes [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built]
 Child de:
     Hash: e2c5e5181623bc3405eb
     Version: webpack 2.0.6-beta
-    Time: 145ms
+    Time: 136ms
            Asset       Size  Chunks             Chunk Names
-    de.output.js  306 bytes       0  [emitted]  main
+    de.output.js  280 bytes       0  [emitted]  main
     chunk    {0} de.output.js (main) 65 bytes [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built] [1 warning]

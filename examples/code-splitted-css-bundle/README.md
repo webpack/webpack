@@ -63,7 +63,7 @@ body {
 ```
 Hash: c9ce445a69a479e2ac91
 Version: webpack 2.0.6-beta
-Time: 1261ms
+Time: 759ms
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
                            output.js      14 kB       0  [emitted]  main
@@ -104,7 +104,7 @@ Child extract-text-webpack-plugin:
 ```
 Hash: 8d2a516760eae1b74b56
 Version: webpack 2.0.6-beta
-Time: 1598ms
+Time: 1138ms
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
                            output.js    4.71 kB       0  [emitted]  main

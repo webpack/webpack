@@ -58,13 +58,13 @@ module.exports = {
 ```
 Hash: 042a9d90b141419e1b34
 Version: webpack 2.0.6-beta
-Time: 112ms
+Time: 116ms
           Asset       Size  Chunks             Chunk Names
      0.chunk.js    5.72 kB       0  [emitted]  
 pageB.bundle.js    4.72 kB       1  [emitted]  pageB
-pageA.bundle.js    4.68 kB       2  [emitted]  pageA
+pageA.bundle.js    4.69 kB       2  [emitted]  pageA
      3.chunk.js  291 bytes       3  [emitted]  
-pageC.bundle.js    4.53 kB       4  [emitted]  pageC
+pageC.bundle.js    4.54 kB       4  [emitted]  pageC
 chunk    {0} 0.chunk.js 5.55 kB {2} {1} [rendered]
     > [3] ./pageA.js 1:0-3:2
     > aggressive-merge [4] ./pageB.js 1:0-3:2
@@ -101,7 +101,7 @@ chunk    {4} pageC.bundle.js (pageC) 70 bytes [rendered]
 ```
 Hash: 042a9d90b141419e1b34
 Version: webpack 2.0.6-beta
-Time: 565ms
+Time: 317ms
           Asset      Size  Chunks             Chunk Names
      0.chunk.js  75 bytes       0  [emitted]  
 pageB.bundle.js    1.1 kB       1  [emitted]  pageB

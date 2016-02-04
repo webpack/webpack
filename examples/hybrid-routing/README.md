@@ -195,11 +195,11 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
-
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
+
+/******/ 	// on error function for async loading
+/******/ 	__webpack_require__.oe = function(err) { throw err; };
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -276,7 +276,7 @@ webpackJsonp([1],{
 ```
 Hash: 99369bd55499f540a867
 Version: webpack 2.0.6-beta
-Time: 187ms
+Time: 158ms
                Asset       Size  Chunks             Chunk Names
           commons.js    4.29 kB       0  [emitted]  commons
           1.chunk.js  213 bytes       1  [emitted]  
@@ -327,7 +327,7 @@ chunk    {5} pageA.bundle.js (pageA) 150 bytes {0} [rendered]
 ```
 Hash: 99369bd55499f540a867
 Version: webpack 2.0.6-beta
-Time: 388ms
+Time: 266ms
                Asset       Size  Chunks             Chunk Names
           commons.js    1.01 kB       0  [emitted]  commons
           1.chunk.js   83 bytes       1  [emitted]  

@@ -85,7 +85,7 @@ module.exports = [
 /******/ 	__webpack_require__.p = "js/";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -98,7 +98,7 @@ module.exports = [
 	if(false) {
 		require("./mobile-stuff");
 	}
-	console.log("Running " + ("desktop") + " build");
+	console.log("Running " + "desktop" + " build");
 
 /***/ }
 /******/ ]);
@@ -146,29 +146,29 @@ module.exports = [
 /******/ 	__webpack_require__.p = "js/";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/***/ function(module, exports, __webpack_require__) {
-
-	if(true) {
-		__webpack_require__(/*! ./mobile-stuff */ 1);
-	}
-	console.log("Running " + ("mobile") + " build");
-
-/***/ },
-/* 1 */
 /*!*************************!*\
   !*** ./mobile-stuff.js ***!
   \*************************/
 /***/ function(module, exports) {
 
 	// mobile only stuff
+
+/***/ },
+/* 1 */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/***/ function(module, exports, __webpack_require__) {
+
+	if(true) {
+		__webpack_require__(/*! ./mobile-stuff */ 0);
+	}
+	console.log("Running " + "mobile" + " build");
 
 /***/ }
 /******/ ]);
@@ -179,25 +179,25 @@ module.exports = [
 ## Uncompressed
 
 ```
-Hash: f7ca6364953a74846973bca985cdc67a34d859e1
-Version: webpack 1.9.10
+Hash: 6ce19ec5d44a5170ba3b6af152727b3d5da03eaa
+Version: webpack 2.0.6-beta
 Child mobile:
-    Hash: f7ca6364953a74846973
-    Version: webpack 1.9.10
-    Time: 75ms
+    Hash: 6ce19ec5d44a5170ba3b
+    Version: webpack 2.0.6-beta
+    Time: 79ms
         Asset     Size  Chunks             Chunk Names
-    mobile.js  1.77 kB       0  [emitted]  main
+    mobile.js  1.79 kB       0  [emitted]  main
     chunk    {0} mobile.js (main) 117 bytes [rendered]
-        > main [0] ./example.js 
-        [0] ./example.js 97 bytes {0} [built]
-        [1] ./mobile-stuff.js 20 bytes {0} [built]
-            cjs require ./mobile-stuff [0] ./example.js 2:1-26
+        > main [1] ./example.js 
+        [0] ./mobile-stuff.js 20 bytes {0} [built]
+            cjs require ./mobile-stuff [1] ./example.js 2:1-26
+        [1] ./example.js 97 bytes {0} [built]
 Child desktop:
-    Hash: bca985cdc67a34d859e1
-    Version: webpack 1.9.10
-    Time: 60ms
+    Hash: 6af152727b3d5da03eaa
+    Version: webpack 2.0.6-beta
+    Time: 69ms
          Asset     Size  Chunks             Chunk Names
-    desktop.js  1.59 kB       0  [emitted]  main
+    desktop.js  1.61 kB       0  [emitted]  main
     chunk    {0} desktop.js (main) 97 bytes [rendered]
         > main [0] ./example.js 
         [0] ./example.js 97 bytes {0} [built]
@@ -206,35 +206,28 @@ Child desktop:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: f7ca6364953a74846973bca985cdc67a34d859e1
-Version: webpack 1.9.10
-
-WARNING in (mobile) mobile.js from UglifyJs
-Condition always true [./example.js:1,0]
-
-WARNING in (desktop) desktop.js from UglifyJs
-Condition always false [./example.js:1,0]
-Dropping unreachable code [./example.js:2,0]
+Hash: 6ce19ec5d44a5170ba3b6af152727b3d5da03eaa
+Version: webpack 2.0.6-beta
 Child mobile:
-    Hash: f7ca6364953a74846973
-    Version: webpack 1.9.10
-    Time: 193ms
+    Hash: 6ce19ec5d44a5170ba3b
+    Version: webpack 2.0.6-beta
+    Time: 191ms
         Asset       Size  Chunks             Chunk Names
-    mobile.js  279 bytes       0  [emitted]  main
+    mobile.js  283 bytes       0  [emitted]  main
     chunk    {0} mobile.js (main) 117 bytes [rendered]
-        > main [0] ./example.js 
-        [0] ./example.js 97 bytes {0} [built]
-        [1] ./mobile-stuff.js 20 bytes {0} [built]
-            cjs require ./mobile-stuff [0] ./example.js 2:1-26
+        > main [1] ./example.js 
+        [0] ./mobile-stuff.js 20 bytes {0} [built]
+            cjs require ./mobile-stuff [1] ./example.js 2:1-26
+        [1] ./example.js 97 bytes {0} [built]
     
     WARNING in mobile.js from UglifyJs
     Condition always true [./example.js:1,0]
 Child desktop:
-    Hash: bca985cdc67a34d859e1
-    Version: webpack 1.9.10
-    Time: 178ms
+    Hash: 6af152727b3d5da03eaa
+    Version: webpack 2.0.6-beta
+    Time: 180ms
          Asset       Size  Chunks             Chunk Names
-    desktop.js  259 bytes       0  [emitted]  main
+    desktop.js  263 bytes       0  [emitted]  main
     chunk    {0} desktop.js (main) 97 bytes [rendered]
         > main [0] ./example.js 
         [0] ./example.js 97 bytes {0} [built]

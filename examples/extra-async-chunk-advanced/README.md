@@ -146,11 +146,12 @@ module.exports = {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { throw err; };
 
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
@@ -163,22 +164,22 @@ module.exports = {
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
-	Promise.all/* require */([__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(5)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 2)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(function(err) { __webpack_require__.oe(err); });
+	Promise.all/* require */([__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(5)]).catch(function(err) { __webpack_require__.oe(err); }).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 2)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 
-	Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(4)]).then(function(require) {
+	Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(4)]).catch(function(err) { __webpack_require__.oe(err); }).then(function(require) {
 		__webpack_require__(/*! ./b */ 1);
 		__webpack_require__(/*! ./d */ 3);
-	}.bind(null, __webpack_require__)).catch(function(err) { __webpack_require__.oe(err); });
+	}.bind(null, __webpack_require__));
 
-	Promise.all/* nsure */([__webpack_require__.e(1), __webpack_require__.e(3)]).then(function(require) {
+	Promise.all/* nsure */([__webpack_require__.e(1), __webpack_require__.e(3)]).catch(function(err) { __webpack_require__.oe(err); }).then(function(require) {
 		__webpack_require__(/*! ./a */ 0);
-		Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(7)]).then(function(require) {
+		Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(7)]).catch(function(err) { __webpack_require__.oe(err); }).then(function(require) {
 			__webpack_require__(/*! ./f */ 6);
-		}.bind(null, __webpack_require__)).catch(function(err) { __webpack_require__.oe(err); });
-		Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(6)]).then(function(require) {
+		}.bind(null, __webpack_require__));
+		Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(6)]).catch(function(err) { __webpack_require__.oe(err); }).then(function(require) {
 			__webpack_require__(/*! ./g */ 7);
-		}.bind(null, __webpack_require__)).catch(function(err) { __webpack_require__.oe(err); });
-	}.bind(null, __webpack_require__)).catch(function(err) { __webpack_require__.oe(err); });
+		}.bind(null, __webpack_require__));
+	}.bind(null, __webpack_require__));
 
 
 /***/ }
@@ -193,7 +194,7 @@ module.exports = {
 ```
 Hash: 231957f90f3442d8bba6
 Version: webpack 2.0.6-beta
-Time: 117ms
+Time: 116ms
     Asset       Size  Chunks             Chunk Names
      0.js  165 bytes       0  [emitted]  async2
      1.js  156 bytes       1  [emitted]  async1
@@ -252,7 +253,7 @@ chunk    {7} 7.js 21 bytes {3} [rendered]
 ```
 Hash: 231957f90f3442d8bba6
 Version: webpack 2.0.6-beta
-Time: 312ms
+Time: 307ms
     Asset      Size  Chunks             Chunk Names
      0.js  50 bytes       0  [emitted]  async2
      1.js  49 bytes       1  [emitted]  async1

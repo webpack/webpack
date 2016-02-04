@@ -71,11 +71,9 @@ module.exports = {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
-
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
@@ -117,10 +115,10 @@ body {
 ```
 Hash: efccfc86a9d3318458a7
 Version: webpack 2.0.6-beta
-Time: 1161ms
+Time: 745ms
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js    1.84 kB       0  [emitted]  main
+                           output.js    1.73 kB       0  [emitted]  main
                            style.css   69 bytes       0  [emitted]  main
 chunk    {0} output.js, style.css (main) 64 bytes [rendered]
     > main [1] ./example.js 
@@ -144,10 +142,10 @@ Child extract-text-webpack-plugin:
 ```
 Hash: 6f441b96253266f73216
 Version: webpack 2.0.6-beta
-Time: 1406ms
+Time: 905ms
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js  273 bytes       0  [emitted]  main
+                           output.js  247 bytes       0  [emitted]  main
                            style.css   61 bytes       0  [emitted]  main
 chunk    {0} output.js, style.css (main) 64 bytes [rendered]
     > main [1] ./example.js 

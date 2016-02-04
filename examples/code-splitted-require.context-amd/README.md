@@ -116,11 +116,12 @@ getTemplate("b", function(b) {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { throw err; };
 
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -133,9 +134,9 @@ getTemplate("b", function(b) {
 /***/ function(module, exports, __webpack_require__) {
 
 	function getTemplate(templateName, callback) {
-		__webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ../require.context/templates */ 1)("./"+templateName)]; (function(tmpl) {
+		__webpack_require__.e/* require */(0).catch(function(err) { __webpack_require__.oe(err); }).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ../require.context/templates */ 1)("./"+templateName)]; (function(tmpl) {
 			callback(tmpl());
-		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(function(err) { __webpack_require__.oe(err); });
+		}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 	}
 	getTemplate("a", function(a) {
 		console.log(a);
@@ -228,7 +229,7 @@ webpackJsonp([0],[
 ```
 Hash: 55b93949150554c7414b
 Version: webpack 2.0.6-beta
-Time: 102ms
+Time: 103ms
     Asset     Size  Chunks             Chunk Names
      0.js  1.65 kB       0  [emitted]  
 output.js  4.72 kB       1  [emitted]  main
@@ -255,7 +256,7 @@ chunk    {1} output.js (main) 261 bytes [rendered]
 ```
 Hash: 55b93949150554c7414b
 Version: webpack 2.0.6-beta
-Time: 228ms
+Time: 265ms
     Asset       Size  Chunks             Chunk Names
      0.js  544 bytes       0  [emitted]  
 output.js    1.16 kB       1  [emitted]  main

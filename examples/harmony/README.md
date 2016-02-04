@@ -123,11 +123,12 @@ export function increment(val) {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { throw err; };
 
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
@@ -190,9 +191,9 @@ export function increment(val) {
 ## Uncompressed
 
 ```
-Hash: 23de5e15fc1a8ffd6650
+Hash: 03492ef5e250ea40b1d4
 Version: webpack 2.0.6-beta
-Time: 89ms
+Time: 115ms
     Asset       Size  Chunks             Chunk Names
 output.js    5.38 kB       0  [emitted]  main
      1.js  355 bytes       1  [emitted]  
@@ -212,9 +213,9 @@ chunk    {1} 1.js 25 bytes {0} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 23de5e15fc1a8ffd6650
+Hash: 03492ef5e250ea40b1d4
 Version: webpack 2.0.6-beta
-Time: 324ms
+Time: 210ms
     Asset       Size  Chunks             Chunk Names
 output.js    1.21 kB       0  [emitted]  main
      1.js  138 bytes       1  [emitted]  

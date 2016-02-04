@@ -61,11 +61,9 @@ var alpha_54a556952b9e02f550d5 =
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
-
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
@@ -132,10 +130,10 @@ var alpha_54a556952b9e02f550d5 =
 ```
 Hash: 54a556952b9e02f550d5
 Version: webpack 2.0.6-beta
-Time: 91ms
+Time: 93ms
          Asset     Size  Chunks             Chunk Names
-MyDll.alpha.js  2.16 kB       0  [emitted]  alpha
- MyDll.beta.js     2 kB       1  [emitted]  beta
+MyDll.alpha.js  2.04 kB       0  [emitted]  alpha
+ MyDll.beta.js  1.89 kB       1  [emitted]  beta
 chunk    {0} MyDll.alpha.js (alpha) 84 bytes [rendered]
     > alpha [5] dll alpha 
     [0] ./a.js 21 bytes {0} [built]
@@ -159,10 +157,10 @@ chunk    {1} MyDll.beta.js (beta) 57 bytes [rendered]
 ```
 Hash: 54a556952b9e02f550d5
 Version: webpack 2.0.6-beta
-Time: 173ms
+Time: 190ms
          Asset       Size  Chunks             Chunk Names
-MyDll.alpha.js  392 bytes       0  [emitted]  alpha
- MyDll.beta.js  358 bytes       1  [emitted]  beta
+MyDll.alpha.js  366 bytes       0  [emitted]  alpha
+ MyDll.beta.js  332 bytes       1  [emitted]  beta
 chunk    {0} MyDll.alpha.js (alpha) 84 bytes [rendered]
     > alpha [5] dll alpha 
     [0] ./a.js 21 bytes {0} [built]

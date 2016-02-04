@@ -96,11 +96,9 @@ module.exports = {"this is": "z"};
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
-
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 7);
 /******/ })
@@ -215,9 +213,9 @@ module.exports = {"this is": "z"};
 ```
 Hash: 1472bad5b49955010453
 Version: webpack 2.0.6-beta
-Time: 127ms
+Time: 104ms
     Asset     Size  Chunks             Chunk Names
-output.js  3.73 kB       0  [emitted]  main
+output.js  3.62 kB       0  [emitted]  main
 chunk    {0} output.js (main) 528 bytes [rendered]
     > main [7] ./example.js 
     [0] ./z.js 34 bytes {0} [built]
@@ -246,9 +244,9 @@ chunk    {0} output.js (main) 528 bytes [rendered]
 ```
 Hash: 1472bad5b49955010453
 Version: webpack 2.0.6-beta
-Time: 251ms
+Time: 244ms
     Asset       Size  Chunks             Chunk Names
-output.js  823 bytes       0  [emitted]  main
+output.js  797 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 528 bytes [rendered]
     > main [7] ./example.js 
     [0] ./z.js 34 bytes {0} [built]

@@ -119,11 +119,12 @@ module.exports = "It works";
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { throw err; };
 
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
@@ -141,14 +142,14 @@ module.exports = "It works";
 		if(cbs) cbs.push(cb);
 		else cb(data);
 	}
-	__webpack_require__.e/* nsure */(1).then(function(require) {
+	__webpack_require__.e/* nsure */(1).catch(function(err) { __webpack_require__.oe(err); }).then(function(require) {
 		data = __webpack_require__(/*! !./file.js */ 2);
 		var callbacks = cbs;
 		cbs = null;
 		for(var i = 0, l = callbacks.length; i < l; i++) {
 			callbacks[i](data);
 		}
-	}.bind(null, __webpack_require__)).catch(function(err) { __webpack_require__.oe(err); });
+	}.bind(null, __webpack_require__));
 
 /***/ },
 /* 1 */
@@ -190,7 +191,7 @@ webpackJsonp([1],{
 ```
 Hash: 5e83b5be2cdc348222db
 Version: webpack 2.0.6-beta
-Time: 112ms
+Time: 75ms
     Asset       Size  Chunks             Chunk Names
 output.js    4.98 kB       0  [emitted]  main
      1.js  175 bytes       1  [emitted]  
@@ -210,7 +211,7 @@ chunk    {1} 1.js 28 bytes {0} [rendered]
 ```
 Hash: 5e83b5be2cdc348222db
 Version: webpack 2.0.6-beta
-Time: 235ms
+Time: 249ms
     Asset      Size  Chunks             Chunk Names
 output.js   1.19 kB       0  [emitted]  main
      1.js  58 bytes       1  [emitted]  

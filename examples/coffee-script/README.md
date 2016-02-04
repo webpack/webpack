@@ -61,11 +61,9 @@ module.exports = 42
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
-
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
@@ -117,9 +115,9 @@ module.exports = 42
 ```
 Hash: fa6a322e8d9b34546553
 Version: webpack 2.0.6-beta
-Time: 182ms
+Time: 178ms
     Asset     Size  Chunks             Chunk Names
-output.js  2.19 kB       0  [emitted]  main
+output.js  2.07 kB       0  [emitted]  main
 chunk    {0} output.js (main) 206 bytes [rendered]
     > main [2] ./example.js 
     [0] ./cup2.coffee 57 bytes {0} [built]
@@ -135,9 +133,9 @@ chunk    {0} output.js (main) 206 bytes [rendered]
 ```
 Hash: fa6a322e8d9b34546553
 Version: webpack 2.0.6-beta
-Time: 255ms
+Time: 229ms
     Asset       Size  Chunks             Chunk Names
-output.js  409 bytes       0  [emitted]  main
+output.js  383 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 206 bytes [rendered]
     > main [2] ./example.js 
     [0] ./cup2.coffee 57 bytes {0} [built]
