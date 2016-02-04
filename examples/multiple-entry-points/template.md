@@ -68,10 +68,10 @@ You can also see the info that is printed to console. It shows among others:
 {{js/pageB.bundle.js}}
 ```
 
-# js/1.chunk.js
+# js/0.chunk.js
 
 ``` javascript
-{{js/1.chunk.js}}
+{{js/0.chunk.js}}
 ```
 
 # Info

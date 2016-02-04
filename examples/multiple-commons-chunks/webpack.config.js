@@ -15,16 +15,16 @@ module.exports = {
 	},
 	plugins: [
 		new CommonsChunkPlugin({
-			name: "admin-commons.js",
+			name: "admin-commons",
 			chunks: ["adminPageA", "adminPageB"]
 		}),
 		new CommonsChunkPlugin({
-			name: "commons.js",
+			name: "commons",
 			chunks: ["pageA", "pageB", "admin-commons.js"],
 			minChunks: 2
 		}),
 		new CommonsChunkPlugin({
-			name: "c-commons.js",
+			name: "c-commons",
 			chunks: ["pageC", "adminPageC"]
 		}),
 	]

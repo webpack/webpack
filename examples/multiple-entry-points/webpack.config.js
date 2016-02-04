@@ -11,6 +11,9 @@ module.exports = {
 		chunkFilename: "[id].chunk.js"
 	},
 	plugins: [
-		new CommonsChunkPlugin("commons.js")
+		new CommonsChunkPlugin({
+			filename: "commons.js",
+			name: "commons"
+		})
 	]
 }
