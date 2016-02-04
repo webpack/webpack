@@ -13,6 +13,7 @@ dependencies
 donation
 [![gratipay donate button][gratipay-image]][gratipay-url] [![Donate to sokra][donate-image]][donate-url]
 
+[![BADGINATOR][badginator-image]][badginator-url]
 
 [documentation](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
 
@@ -306,3 +307,5 @@ I'm very thankful for every dollar. If you leave your username or email, I may s
 [gratipay-image]: https://img.shields.io/gratipay/webpack.svg
 [gitter-url]: https://gitter.im/webpack/webpack
 [gitter-image]: https://img.shields.io/badge/gitter-webpack%2Fwebpack-brightgreen.svg
+[badginator-image]: https://badginator.herokuapp.com/webpack/webpack.svg
+[badginator-url]: https://github.com/defunctzombie/badginator
