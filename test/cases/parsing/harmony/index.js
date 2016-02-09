@@ -17,6 +17,12 @@ import { specA, specB } from "exports-specifier";
 import Thing, { Other } from "commonjs";
 import Thing2, { Other as Other2 } from "commonjs-trans";
 
+import defaultExport from "def";
+
+
+it("should import a default export from a module", function() {
+	defaultExport.should.be.eql("def");
+});
 
 it("should import an identifier from a module", function() {
 	a.should.be.eql("a");
