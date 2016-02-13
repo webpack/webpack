@@ -4,6 +4,22 @@ module.exports = function(module) {
 		module.paths = [];
 		// module.parent = undefined by default
 		module.children = [];
+		Object.defineProperty(module, "exports", {
+			enumerable: true,
+			configurable: false,
+			get: function() { return module.e; },
+			set: function(v) { return module.e = v; }
+		});
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			configurable: false,
+			get: function() { return module.l; }
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			configurable: false,
+			get: function() { return module.i; }
+		});
 		module.webpackPolyfill = 1;
 	}
 	return module;
