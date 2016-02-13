@@ -126,9 +126,6 @@ export function increment(val) {
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
-/******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
-
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
@@ -143,7 +140,7 @@ export function increment(val) {
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__math__ = __webpack_require__(/*! ./math */ 3);
 	/* harmony export */ exports["a"] = increment;
 	function increment(val) {
-	    return /* harmony import */ __WEBPACK_IMPORTED_MODULE_0__math__["a"](val, 1);
+	    return /* harmony import */__WEBPACK_IMPORTED_MODULE_0__math__["a"].bind()(val, 1);
 	};
 
 
@@ -158,7 +155,7 @@ export function increment(val) {
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__increment__ = __webpack_require__(/*! ./increment */ 0);
 
 	var a = 1;
-	/* harmony import */ __WEBPACK_IMPORTED_MODULE_0__increment__["a"](a); // 2
+	/* harmony import */__WEBPACK_IMPORTED_MODULE_0__increment__["a"].bind()(a); // 2
 
 	// async loading
 	__webpack_require__.e/* System.import */(1).then(__webpack_require__.bind(null, /*! ./async-loaded */ 1)).then(function(asyncLoaded) {
@@ -192,10 +189,10 @@ export function increment(val) {
 
 ```
 Hash: 03492ef5e250ea40b1d4
-Version: webpack 2.0.6-beta
+Version: webpack 2.0.7-beta
 Time: 115ms
     Asset       Size  Chunks             Chunk Names
-output.js    5.38 kB       0  [emitted]  main
+output.js    5.28 kB       0  [emitted]  main
      1.js  355 bytes       1  [emitted]  
 chunk    {0} output.js (main) 426 bytes [rendered]
     > main [2] ./example.js 
@@ -214,10 +211,10 @@ chunk    {1} 1.js 25 bytes {0} [rendered]
 
 ```
 Hash: 03492ef5e250ea40b1d4
-Version: webpack 2.0.6-beta
+Version: webpack 2.0.7-beta
 Time: 210ms
     Asset       Size  Chunks             Chunk Names
-output.js    1.21 kB       0  [emitted]  main
+output.js     1.2 kB       0  [emitted]  main
      1.js  138 bytes       1  [emitted]  
 chunk    {0} output.js (main) 426 bytes [rendered]
     > main [2] ./example.js 

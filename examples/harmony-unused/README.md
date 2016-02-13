@@ -156,8 +156,8 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 
 
 
-	/* harmony import */ __WEBPACK_IMPORTED_MODULE_0__math__["a"](1, 2);
-	/* harmony import */ __WEBPACK_IMPORTED_MODULE_1__library__["a"](1, 2);
+	/* harmony import */__WEBPACK_IMPORTED_MODULE_0__math__["a"].bind()(1, 2);
+	/* harmony import */__WEBPACK_IMPORTED_MODULE_1__library__["a"].bind()(1, 2);
 
 
 /***/ }
@@ -167,7 +167,7 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 # js/output.js
 
 ``` javascript
-!function(n){function r(e){if(t[e])return t[e].exports;var o=t[e]={exports:{},id:e,loaded:!1};return n[e].call(o.exports,o,o.exports,r),o.loaded=!0,o.exports}var t={};return r.m=n,r.c=t,r.p="js/",r(r.s=3)}([function(n,r,t){function e(){for(var n=0,r=0,t=arguments,e=t.length;e>r;)n+=t[r++];return n}function o(){for(var n=1,r=0,t=arguments,e=t.length;e>r;)n*=t[r++];return n}r.a=e,r.b=o},function(n,r,t){var e=(t(2),t(0));Object.defineProperty(r,"a",{configurable:!1,enumerable:!0,get:function(){return e.b}})},function(n,r,t){},function(n,r,t){var e=t(0),o=t(1);e.a(1,2),o.a(1,2)}]);
+!function(n){function r(e){if(t[e])return t[e].exports;var o=t[e]={exports:{},id:e,loaded:!1};return n[e].call(o.exports,o,o.exports,r),o.loaded=!0,o.exports}var t={};return r.m=n,r.c=t,r.p="js/",r(r.s=3)}([function(n,r,t){function e(){for(var n=0,r=0,t=arguments,e=t.length;e>r;)n+=t[r++];return n}function o(){for(var n=1,r=0,t=arguments,e=t.length;e>r;)n*=t[r++];return n}r.a=e,r.b=o},function(n,r,t){var e=(t(2),t(0));Object.defineProperty(r,"a",{configurable:!1,enumerable:!0,get:function(){return e.b}})},function(n,r,t){},function(n,r,t){var e=t(0),o=t(1);e.a.bind()(1,2),o.a.bind()(1,2)}]);
 ```
 
 # Info
@@ -176,10 +176,10 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 
 ```
 Hash: e3cda11c1e9e036a0c7b
-Version: webpack 2.0.6-beta
+Version: webpack 2.0.7-beta
 Time: 91ms
-    Asset    Size  Chunks             Chunk Names
-output.js  3.5 kB       0  [emitted]  main
+    Asset     Size  Chunks             Chunk Names
+output.js  3.51 kB       0  [emitted]  main
 chunk    {0} output.js (main) 728 bytes [rendered]
     > main [3] ./example.js 
     [0] ./math.js 366 bytes {0} [built]
@@ -196,10 +196,10 @@ chunk    {0} output.js (main) 728 bytes [rendered]
 
 ```
 Hash: e3cda11c1e9e036a0c7b
-Version: webpack 2.0.6-beta
+Version: webpack 2.0.7-beta
 Time: 188ms
     Asset       Size  Chunks             Chunk Names
-output.js  584 bytes       0  [emitted]  main
+output.js  598 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 728 bytes [rendered]
     > main [3] ./example.js 
     [0] ./math.js 366 bytes {0} [built]
