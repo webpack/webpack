@@ -1,13 +1,15 @@
+"use strict";
+
 function returnThis() {
 	return this;
 }
 
-var a = returnThis;
-var b = returnThis;
+var sa = returnThis;
+var sb = returnThis;
 
 export {
-	a,
-	b
+	sa,
+	sb
 }
 
 export default returnThis;

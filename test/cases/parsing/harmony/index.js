@@ -82,7 +82,9 @@ it("should be able to import commonjs", function() {
 	// next line doesn't end with semicolon
 	x
 	Thing.should.have.type("function");
+	x
 	Thing().should.be.eql("thing");
+	x
 	Other.should.be.eql("other");
 
 	Thing2.should.have.type("function");
