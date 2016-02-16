@@ -4,9 +4,6 @@ node_js:
   - node
   - "5"
   - "4"
-  - iojs
-  - iojs-2
-  - iojs-1
   - "0.12"
 script: npm run travis
 env:
