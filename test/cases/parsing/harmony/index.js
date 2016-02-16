@@ -8,7 +8,7 @@ import { one, two } from "exportKinds";
 
 import { test1, test2 } from "exportKinds";
 
-import { a as rea, b as reb, c as rec, o as reo, two as retwo } from "reexport";
+import { a as rea, b as reb, c as rec, o as reo, two as retwo, def as Thing3 } from "reexport";
 
 import threeIsOdd, { even } from "circularEven";
 
@@ -90,4 +90,5 @@ it("should be able to import commonjs", function() {
 	Thing2.should.have.type("function");
 	new Thing2().value.should.be.eql("thing");
 	Other2.should.be.eql("other");
+	Thing3().should.be.eql("thing");
 });
