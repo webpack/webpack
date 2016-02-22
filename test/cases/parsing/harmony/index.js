@@ -9,6 +9,7 @@ import { one, two } from "exportKinds";
 import { test1, test2 } from "exportKinds";
 
 import { a as rea, b as reb, c as rec, o as reo, two as retwo, def as Thing3 } from "reexport";
+import { a as rea2 } from "reexport2";
 
 import threeIsOdd, { even } from "circularEven";
 
@@ -65,6 +66,7 @@ it("should reexport a module", function() {
 	rec.should.be.eql("c");
 	reo.should.be.eql("one");
 	retwo.should.be.eql("two");
+	rea2.should.be.eql("a");
 });
 
 it("should support circular dependencies", function() {
