@@ -3,10 +3,8 @@ language: node_js
 node_js:
   - "0.10"
   - "0.12"
+  - 4
   - node
-  - iojs-1
-  - iojs-2
-  - iojs
 script: npm run travis
 env:
   - NO_WATCH_TESTS=1
