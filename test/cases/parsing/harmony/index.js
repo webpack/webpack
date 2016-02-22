@@ -20,6 +20,8 @@ import Thing2, { Other as Other2 } from "commonjs-trans";
 
 import defaultExport from "def";
 
+import "unused";
+
 
 it("should import a default export from a module", function() {
 	defaultExport.should.be.eql("def");
