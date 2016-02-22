@@ -50,6 +50,7 @@ it("should import a whole module", function() {
 it("should export functions", function() {
 	fn.should.have.type("function");
 	fn().should.be.eql("fn");
+	(fn === fn).should.be.eql(true);
 });
 
 it("should multiple variables with one statement", function() {
