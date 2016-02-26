@@ -49,6 +49,7 @@ describe("NodeTemplatePlugin", function() {
 				chunkFilename: "[hash].result2.[id].js",
 				library: "def",
 				libraryTarget: "umd",
+				auxiliaryComment: "test"
 			},
 			entry: "./entry",
 			plugins: [
