@@ -13,5 +13,5 @@ it("should write the correct manifest", function() {
 	manifest.should.have.key("content", "name");
 	manifest.content.should.not.have.property("./a.js");
 	manifest.content.should.have.property("./index.js");
-	manifest.content["./index.js"].should.eql(0);
+	manifest.content["./index.js"].should.eql(1);
 });
