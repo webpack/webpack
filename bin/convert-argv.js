@@ -94,7 +94,13 @@ module.exports = function(optimist, argv, convertOptions) {
 		configFileLoaded = true;
 	}
 
-	if(typeof options === "function") {
+	if(typeof options === "function" || (typeof options === "object" && typeof options["default"] === "object")) {
+		options = options(argv.env, argv);
+	}
+	
+	var isES6DefaultExportedFunc = (typeof options === "object" && typeof options["default"] === "function");
+	if(typeof options === "function" || isES6DefaultExportedFunc) {
+    		options = isES6DefaultExportedFunc ? options.default : options;
 		options = options(argv.env, argv);
 	}
 
