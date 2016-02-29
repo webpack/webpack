@@ -93,10 +93,10 @@ module.exports = function(optimist, argv, convertOptions) {
 		options = require(configPath);
 		configFileLoaded = true;
 	}
-	
+
 	var isES6DefaultExportedFunc = (typeof options === "object" && typeof options["default"] === "function");
 	if(typeof options === "function" || isES6DefaultExportedFunc) {
-    		options = isES6DefaultExportedFunc ? options.default : options;
+		options = isES6DefaultExportedFunc ? options.default : options;
 		options = options(argv.env, argv);
 	}
 
