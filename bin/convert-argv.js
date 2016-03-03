@@ -95,7 +95,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	var isES6DefaultExportedFunc = (
-		typeof options === "object" && options !== null && typeof options["default"] === "function"
+		typeof options === "object" && options !== null && typeof options.default === "function"
 	);
 
 	if(typeof options === "function" || isES6DefaultExportedFunc) {
@@ -117,8 +117,8 @@ module.exports = function(optimist, argv, convertOptions) {
 		}
 
 		// process ES6 default
-		if(typeof options === "object" && typeof options["default"] === "object") {
-			return processConfiguredOptions(options["default"]);
+		if(typeof options === "object" && typeof options.default === "object") {
+			return processConfiguredOptions(options.default);
 		}
 
 		if(Array.isArray(options)) {
