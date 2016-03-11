@@ -94,14 +94,19 @@ module.exports = function(optimist, argv, convertOptions) {
 		configFileLoaded = true;
 	}
 
-	if(typeof options === "function") {
+	var isES6DefaultExportedFunc = (
+		typeof options === "object" && options !== null && typeof options.default === "function"
+	);
+
+	if(typeof options === "function" || isES6DefaultExportedFunc) {
+		options = isES6DefaultExportedFunc ? options.default : options;
 		options = options(argv.env, argv);
 	}
 
 	return processConfiguredOptions(options);
 
 	function processConfiguredOptions(options) {
-		if(typeof options !== "object" || options === null) {
+		if(options === null || typeof options !== "object") {
 			console.error("Config did not export an object or a function returning an object.");
 			process.exit(-1); // eslint-disable-line
 		}
@@ -112,8 +117,8 @@ module.exports = function(optimist, argv, convertOptions) {
 		}
 
 		// process ES6 default
-		if(typeof options === "object" && typeof options["default"] === "object") {
-			return processConfiguredOptions(options["default"]);
+		if(typeof options === "object" && typeof options.default === "object") {
+			return processConfiguredOptions(options.default);
 		}
 
 		if(Array.isArray(options)) {
