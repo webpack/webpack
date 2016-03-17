@@ -31,7 +31,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	var configFileLoaded = false;
 	var configPath, ext;
 	var extensions = Object.keys(interpret.extensions).sort(function(a, b) {
-		return a.length - b.length;
+		return a === '.js' ? -1 : b === '.js' ? 1 : a.length - b.length;
 	});
 	var configFiles = ["webpack.config", "webpackfile"].map(function(filename) {
 		return extensions.map(function(ext) {
