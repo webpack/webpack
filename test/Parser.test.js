@@ -227,9 +227,9 @@ describe("Parser", function() {
 			"typeof 'str'": "string=string",
 			"typeof aString": "string=string",
 			"typeof b.Number": "string=number",
-			"typeof b[Number]": "",
+			"typeof b[Number]": "string=number",
 			"b.Number": "number=123",
-			"b[Number]": "",
+			"b[Number]": "number=123",
 			"'abc'.substr(1)": "string=bc",
 			"'abc'[substr](1)": "",
 		};
