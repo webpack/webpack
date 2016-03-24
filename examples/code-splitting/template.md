@@ -1,7 +1,7 @@
 This example illustrates a very simple case of Code Splitting with `require.ensure`.
 
 * `a` and `b` are required normally via CommonJS
-* `c` is depdended through the `require.ensure` array.
+* `c` is depended through the `require.ensure` array.
   * This means: make it available, but don't execute it
   * webpack will load it on demand
 * `b` and `d` are required via CommonJs in the `require.ensure` callback
