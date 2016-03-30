@@ -45,7 +45,8 @@ project:
 
 global:
 `npm install webpack -g`
-Usage
+
+Usage:
 https://webpack.github.io/docs/tutorials/getting-started/
 
 # Examples
