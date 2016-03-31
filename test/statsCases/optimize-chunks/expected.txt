@@ -1,0 +1,43 @@
+Hash: e3dc693bc52a75b4a39b
+Time: Xms
+  Asset       Size  Chunks             Chunk Names
+   0.js  243 bytes       0  [emitted]  cir1
+   1.js  215 bytes    1, 2  [emitted]  abd
+   2.js  131 bytes       2  [emitted]  ab
+main.js     5.1 kB       3  [emitted]  main
+   4.js  258 bytes       4  [emitted]  cir2
+   5.js  138 bytes    5, 7  [emitted]  chunk
+   6.js  317 bytes    6, 4  [emitted]  cir2 from cir1
+   7.js   79 bytes       7  [emitted]  ac in ab
+chunk    {0} 0.js (cir1) 81 bytes {3} {6} {4} [rendered]
+    > cir1 [7] (webpack)/test/statsCases/optimize-chunks/index.js 13:0-54
+    > duplicate cir1 from cir2 [3] (webpack)/test/statsCases/optimize-chunks/circular2.js 1:0-79
+    [2] (webpack)/test/statsCases/optimize-chunks/circular1.js 81 bytes {0} [built]
+chunk    {1} 1.js (abd) 0 bytes {3} [rendered]
+    > abd [7] (webpack)/test/statsCases/optimize-chunks/index.js 8:0-11:9
+    [0] (webpack)/test/statsCases/optimize-chunks/modules/a.js 0 bytes {1} {2} [built]
+    [1] (webpack)/test/statsCases/optimize-chunks/modules/b.js 0 bytes {1} {2} [built]
+    [5] (webpack)/test/statsCases/optimize-chunks/modules/d.js 0 bytes {1} {5} [built]
+chunk    {2} 2.js (ab) 0 bytes {3} [rendered]
+    > ab [7] (webpack)/test/statsCases/optimize-chunks/index.js 1:0-6:8
+    [0] (webpack)/test/statsCases/optimize-chunks/modules/a.js 0 bytes {1} {2} [built]
+    [1] (webpack)/test/statsCases/optimize-chunks/modules/b.js 0 bytes {1} {2} [built]
+chunk    {3} main.js (main) 523 bytes [rendered]
+    > main [7] (webpack)/test/statsCases/optimize-chunks/index.js 
+    [6] (webpack)/test/statsCases/optimize-chunks/modules/f.js 0 bytes {3} [built]
+    [7] (webpack)/test/statsCases/optimize-chunks/index.js 523 bytes {3} [built]
+chunk    {4} 4.js (cir2) 81 bytes {3} [rendered]
+    > cir2 [7] (webpack)/test/statsCases/optimize-chunks/index.js 14:0-54
+    [3] (webpack)/test/statsCases/optimize-chunks/circular2.js 81 bytes {4} {6} [built]
+chunk    {5} 5.js (chunk) 0 bytes {7} {1} [rendered]
+    > chunk [7] (webpack)/test/statsCases/optimize-chunks/index.js 3:2-4:13
+    > chunk [7] (webpack)/test/statsCases/optimize-chunks/index.js 9:1-10:12
+    [4] (webpack)/test/statsCases/optimize-chunks/modules/c.js 0 bytes {5} {7} [built]
+    [5] (webpack)/test/statsCases/optimize-chunks/modules/d.js 0 bytes {1} {5} [built]
+chunk    {6} 6.js (cir2 from cir1) 81 bytes {0} [rendered]
+    > cir2 from cir1 [2] (webpack)/test/statsCases/optimize-chunks/circular1.js 1:0-79
+    [3] (webpack)/test/statsCases/optimize-chunks/circular2.js 81 bytes {4} {6} [built]
+    [8] (webpack)/test/statsCases/optimize-chunks/modules/e.js 0 bytes {6} [built]
+chunk    {7} 7.js (ac in ab) 0 bytes {2} [rendered]
+    > ac in ab [7] (webpack)/test/statsCases/optimize-chunks/index.js 2:1-5:15
+    [4] (webpack)/test/statsCases/optimize-chunks/modules/c.js 0 bytes {5} {7} [built]
