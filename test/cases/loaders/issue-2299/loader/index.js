@@ -1,5 +1,6 @@
 var path = require('path');
 var async = require('async');
+var assign = require('object-assign');
 module.exports = function(content) {
 	var cb = this.async();
 	var json = JSON.parse(content);
@@ -19,7 +20,7 @@ module.exports = function(content) {
 			}
 			// Combine all the results into one object and return it
 			cb(null, 'module.exports = ' + JSON.stringify(results.reduce(function(prev, result) {
-				return Object.assign({}, prev, result);
+				return assign({}, prev, result);
 			}, json)));
 		}
 	);
