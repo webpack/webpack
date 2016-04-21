@@ -4,7 +4,7 @@ Time: Xms
    0.js  243 bytes       0  [emitted]  cir1
    1.js  215 bytes    1, 2  [emitted]  abd
    2.js  131 bytes       2  [emitted]  ab
-main.js     5.1 kB       3  [emitted]  main
+main.js    5.13 kB       3  [emitted]  main
    4.js  258 bytes       4  [emitted]  cir2
    5.js  138 bytes    5, 7  [emitted]  chunk
    6.js  317 bytes    6, 4  [emitted]  cir2 from cir1
