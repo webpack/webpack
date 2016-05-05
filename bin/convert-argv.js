@@ -376,9 +376,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		ifBooleanArg("hot", function() {
 			ensureArray(options, "plugins");
 			var HotModuleReplacementPlugin = require("../lib/HotModuleReplacementPlugin");
-			options.plugins.push(new HotModuleReplacementPlugin({
-				multiStep: true
-			}));
+			options.plugins.push(new HotModuleReplacementPlugin());
 		});
 
 		ifBooleanArg("debug", function() {
