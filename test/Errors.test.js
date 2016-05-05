@@ -77,12 +77,11 @@ describe("Errors", function() {
 			entry: "./case-sensitive"
 		}, function(errors, warnings) {
 			if(errors.length === 0) {
-				warnings.length.should.be.eql(2);
-				warnings.sort().reverse();
+				warnings.length.should.be.eql(1);
 				var lines = warnings[0].split("\n");
 				lines[0].should.match(/file\.js/);
-				lines = warnings[1].split("\n");
-				lines[0].should.match(/FILE\.js/);
+				lines[4].should.match(/file\.js/);
+				lines[5].should.match(/FILE\.js/);
 			} else {
 				errors.length.should.be.eql(1);
 				warnings.length.should.be.eql(0);
