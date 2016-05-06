@@ -114,7 +114,7 @@ describe("TestCases", function() {
 		describe(config.name, function() {
 			categories.forEach(function(category) {
 				describe(category.name, function() {
-					this.timeout(10000);
+					this.timeout(20000);
 					category.tests.filter(function(test) {
 						var minimizeCheckOk = !config.excludeNominimize || test.indexOf("nominimize") < 0;
 						var harmonyCheckOk = !/^es6/.test(test) || harmony;
