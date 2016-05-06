@@ -27,16 +27,19 @@ describe("WatchDetection", function() {
 				fs.writeFileSync(filePath, "require('./file2')", "utf-8");
 				fs.writeFileSync(file2Path, "original", "utf-8");
 			});
-			after(function() {
-				try {
-					fs.unlinkSync(filePath);
-				} catch(e) {}
-				try {
-					fs.unlinkSync(file2Path);
-				} catch(e) {}
-				try {
-					fs.rmdirSync(fixturePath);
-				} catch(e) {}
+			after(function(done) {
+				setTimeout(function() {
+					try {
+						fs.unlinkSync(filePath);
+					} catch(e) {}
+					try {
+						fs.unlinkSync(file2Path);
+					} catch(e) {}
+					try {
+						fs.rmdirSync(fixturePath);
+					} catch(e) {}
+					done();
+				}, 100); // cool down a bit
 			});
 			it("should build the bundle correctly", function(done) {
 				var compiler = webpack({
