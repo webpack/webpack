@@ -1,6 +1,4 @@
-# examples
-
-## Building an Example
+# Building an Example
 
 1. Run `npm install` in the root of the project.
   ```
@@ -14,6 +12,8 @@
   >/webpack/examples/commonjs node build.js
   ```
 
+# Examples
+  
 ## commonjs
 
 example demonstrating a very simple program
