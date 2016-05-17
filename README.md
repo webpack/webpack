@@ -288,7 +288,7 @@ I'm very thankful for every dollar. If you leave your username or email, I may s
 
 
 [travis-url]: https://travis-ci.org/webpack/webpack
-[travis-image]: https://img.shields.io/travis/webpack/webpack.svg
+[travis-image]: https://img.shields.io/travis/webpack/webpack/master.svg
 [appveyor-url]: https://ci.appveyor.com/project/sokra/webpack/branch/master
 [appveyor-image]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
 [coveralls-url]: https://coveralls.io/r/webpack/webpack/
