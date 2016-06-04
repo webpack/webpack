@@ -3,4 +3,4 @@ onmessage = function(event) {
 	require(["../require.context/templates/" + event.data], function(tmpl) {
 		postMessage(tmpl());
 	});
-}
+};
