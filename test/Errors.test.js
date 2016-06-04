@@ -81,7 +81,11 @@ describe("Errors", function() {
 				var lines = warnings[0].split("\n");
 				lines[0].should.match(/file\.js/);
 				lines[4].should.match(/file\.js/);
-				lines[5].should.match(/FILE\.js/);
+				lines[5].should.match(/Used by/);
+				lines[6].should.match(/case-sensitive/);
+				lines[7].should.match(/FILE\.js/);
+				lines[8].should.match(/Used by/);
+				lines[9].should.match(/case-sensitive/);
 			} else {
 				errors.length.should.be.eql(1);
 				warnings.length.should.be.eql(0);
