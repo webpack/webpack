@@ -7,8 +7,6 @@ var checkArrayExpectation = require("./checkArrayExpectation");
 
 var webpack = require("../lib/webpack");
 
-var harmony = (+process.versions.node.split(".")[0]) >= 4;
-
 describe("TestCases", function() {
 	var casesPath = path.join(__dirname, "cases");
 	var categories = fs.readdirSync(casesPath);
@@ -66,7 +64,7 @@ describe("TestCases", function() {
 		devtool: "cheap-source-map"
 	}, {
 		name: "minimized",
-		excludeNominimize: true,
+		minimize: true,
 		plugins: [
 			new webpack.optimize.UglifyJsPlugin({
 				sourceMap: false
@@ -74,7 +72,7 @@ describe("TestCases", function() {
 		]
 	}, {
 		name: "minimized-source-map",
-		excludeNominimize: true,
+		minimize: true,
 		plugins: [
 			new webpack.optimize.UglifyJsPlugin()
 		]
@@ -86,14 +84,14 @@ describe("TestCases", function() {
 		]
 	}, {
 		name: "minimized-deduped",
-		excludeNominimize: true,
+		minimize: true,
 		plugins: [
 			new webpack.optimize.DedupePlugin(),
 			new webpack.optimize.UglifyJsPlugin()
 		]
 	}, {
 		name: "optimized",
-		excludeNominimize: true,
+		minimize: true,
 		plugins: [
 			new webpack.optimize.DedupePlugin(),
 			new webpack.optimize.OccurrenceOrderPlugin(),
@@ -102,7 +100,7 @@ describe("TestCases", function() {
 	}, {
 		name: "all-combined",
 		devtool: "#@source-map",
-		excludeNominimize: true,
+		minimize: true,
 		plugins: [
 			new webpack.HotModuleReplacementPlugin(),
 			new webpack.optimize.DedupePlugin(),
@@ -116,9 +114,12 @@ describe("TestCases", function() {
 				describe(category.name, function() {
 					this.timeout(20000);
 					category.tests.filter(function(test) {
-						var minimizeCheckOk = !config.excludeNominimize || test.indexOf("nominimize") < 0;
-						var harmonyCheckOk = !/^es6/.test(test) || harmony;
-						return minimizeCheckOk && harmonyCheckOk;
+						var testDirectory = path.join(casesPath, category.name, test);
+						var filterPath = path.join(testDirectory, "test.filter.js");
+						if(fs.existsSync(filterPath)) {
+							return require(filterPath)(config);
+						}
+						return true;
 					}).forEach(function(testName) {
 						var suite = describe(testName, function() {});
 						it(testName + " should compile", function(done) {

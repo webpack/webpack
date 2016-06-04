@@ -8,7 +8,9 @@ var webpack = require("../lib/webpack");
 
 var base = path.join(__dirname, "statsCases");
 var outputBase = path.join(__dirname, "js", "stats");
-var tests = fs.readdirSync(base);
+var tests = fs.readdirSync(base).filter(function(testName) {
+	return fs.existsSync(path.join(base, testName, "index.js"))
+});
 var Stats = require("../lib/Stats");
 
 describe("Stats", function() {
