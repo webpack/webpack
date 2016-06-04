@@ -30,7 +30,7 @@ describe("HotTestCases", function() {
 					var testDirectory = path.join(casesPath, category.name, testName);
 					var outputDirectory = path.join(__dirname, "js", "hot-cases", category.name, testName);
 					var recordsPath = path.join(outputDirectory, "records.json");
-					if(fs.exists(recordsPath))
+					if(fs.existsSync(recordsPath))
 						fs.unlinkSync(recordsPath);
 					var options = {
 						context: testDirectory,
