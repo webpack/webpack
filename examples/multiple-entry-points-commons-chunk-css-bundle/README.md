@@ -171,15 +171,15 @@ body{background:url(js/ce21cbdd9b894e6af794813eb3fdaf60.png)}.c{background:url(j
 
 ```
 Hash: a27b5cbc25b7ed54ea02
-Version: webpack 2.0.6-beta
-Time: 801ms
+Version: webpack 2.1.0-beta.11
+Time: 1057ms
                                Asset       Size  Chunks             Chunk Names
                                 B.js  428 bytes       2  [emitted]  B
 d090b6fba0f6d326d282a19146ff54a7.png  120 bytes          [emitted]  
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
 c2a2f62d69330b7d787782f5010f9d13.png  120 bytes          [emitted]  
-                                C.js    1.72 kB       0  [emitted]  C
-                          commons.js    4.27 kB       1  [emitted]  commons
+                                C.js    1.86 kB       0  [emitted]  C
+                          commons.js    4.61 kB       1  [emitted]  commons
 16155c689e517682064c99893cb832cc.png  120 bytes          [emitted]  
                                 A.js  450 bytes       3  [emitted]  A
                                A.css   69 bytes       3  [emitted]  A
@@ -248,15 +248,15 @@ Child extract-text-webpack-plugin:
 
 ```
 Hash: feee54d8663ea06f8e31
-Version: webpack 2.0.6-beta
-Time: 1071ms
+Version: webpack 2.1.0-beta.11
+Time: 1114ms
                                Asset       Size  Chunks             Chunk Names
                                 B.js   71 bytes       2  [emitted]  B
 d090b6fba0f6d326d282a19146ff54a7.png  120 bytes          [emitted]  
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
 c2a2f62d69330b7d787782f5010f9d13.png  120 bytes          [emitted]  
-                                C.js  251 bytes       0  [emitted]  C
-                          commons.js  967 bytes       1  [emitted]  commons
+                                C.js  266 bytes       0  [emitted]  C
+                          commons.js    1.07 kB       1  [emitted]  commons
 16155c689e517682064c99893cb832cc.png  120 bytes          [emitted]  
                                 A.js   70 bytes       3  [emitted]  A
                                A.css   59 bytes       3  [emitted]  A

@@ -87,10 +87,10 @@ module.exports = {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	var parentJsonpFunction = window["webpackJsonp"];
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModule) {
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId])
@@ -98,14 +98,19 @@ module.exports = {
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
-/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
 /******/ 		}
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
 /******/ 		while(resolves.length)
 /******/ 			resolves.shift()();
-/******/ 		if(executeModule + 1) { // typeof executeModule === "number"
-/******/ 			return __webpack_require__(executeModule);
+/******/ 		if(executeModules) {
+/******/ 			for(i=0; i < executeModules.length; i++) {
+/******/ 				result = __webpack_require__(executeModules[i]);
+/******/ 			}
 /******/ 		}
+/******/ 		return result;
 /******/ 	};
 
 /******/ 	// The module cache
@@ -125,16 +130,16 @@ module.exports = {
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -144,7 +149,7 @@ module.exports = {
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve()
+/******/ 			return Promise.resolve();
 
 /******/ 		// an Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -185,11 +190,14 @@ module.exports = {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
 /******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -239,10 +247,10 @@ webpackJsonp([2],{
 /***/ function(module, exports, __webpack_require__) {
 
 	var common = __webpack_require__(/*! ./common */ 1);
-	__webpack_require__.e/* nsure */(0/* duplicate */).catch(function(err) { __webpack_require__.oe(err); }).then(function(require) {
+	__webpack_require__.e/* nsure */(0/* duplicate */).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
 		var shared = __webpack_require__(/*! ./shared */ 0);
 		shared("This is page B");
-	}.bind(null, __webpack_require__));
+	}).bind(null, __webpack_require__));
 
 /***/ }
 
@@ -274,12 +282,12 @@ webpackJsonp([0],[
 
 ```
 Hash: 4f116ebe8131ab16cf5a
-Version: webpack 2.0.6-beta
-Time: 70ms
+Version: webpack 2.1.0-beta.11
+Time: 71ms
           Asset       Size  Chunks             Chunk Names
      0.chunk.js  284 bytes       0  [emitted]  
-     commons.js    4.27 kB       1  [emitted]  commons
-pageB.bundle.js  482 bytes       2  [emitted]  pageB
+     commons.js    4.61 kB       1  [emitted]  commons
+pageB.bundle.js  484 bytes       2  [emitted]  pageB
 pageA.bundle.js  518 bytes       3  [emitted]  pageA
 chunk    {0} 0.chunk.js 91 bytes {3} {2} [rendered]
     > [2] ./pageA.js 2:0-4:2
@@ -305,11 +313,11 @@ chunk    {3} pageA.bundle.js (pageA) 108 bytes {1} [rendered]
 
 ```
 Hash: 4f116ebe8131ab16cf5a
-Version: webpack 2.0.6-beta
-Time: 216ms
+Version: webpack 2.1.0-beta.11
+Time: 158ms
           Asset       Size  Chunks             Chunk Names
      0.chunk.js   80 bytes       0  [emitted]  
-     commons.js  992 bytes       1  [emitted]  commons
+     commons.js     1.1 kB       1  [emitted]  commons
 pageB.bundle.js  149 bytes       2  [emitted]  pageB
 pageA.bundle.js  166 bytes       3  [emitted]  pageA
 chunk    {0} 0.chunk.js 91 bytes {3} {2} [rendered]
@@ -330,13 +338,4 @@ chunk    {2} pageB.bundle.js (pageB) 152 bytes {1} [rendered]
 chunk    {3} pageA.bundle.js (pageA) 108 bytes {1} [rendered]
     > pageA [2] ./pageA.js 
     [2] ./pageA.js 108 bytes {3} [built]
-
-WARNING in 0.chunk.js from UglifyJs
-Side effects in initialization of unused variable common [./shared.js:1,0]
-
-WARNING in pageB.bundle.js from UglifyJs
-Side effects in initialization of unused variable common [./pageB.js:1,0]
-
-WARNING in pageA.bundle.js from UglifyJs
-Side effects in initialization of unused variable common [./pageA.js:1,0]
 ```

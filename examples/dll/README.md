@@ -39,16 +39,16 @@ var alpha_54a556952b9e02f550d5 =
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -60,6 +60,9 @@ var alpha_54a556952b9e02f550d5 =
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -129,11 +132,11 @@ var alpha_54a556952b9e02f550d5 =
 
 ```
 Hash: 54a556952b9e02f550d5
-Version: webpack 2.0.6-beta
-Time: 93ms
+Version: webpack 2.1.0-beta.11
+Time: 76ms
          Asset     Size  Chunks             Chunk Names
-MyDll.alpha.js  2.04 kB       0  [emitted]  alpha
- MyDll.beta.js  1.89 kB       1  [emitted]  beta
+MyDll.alpha.js  2.19 kB       0  [emitted]  alpha
+ MyDll.beta.js  2.03 kB       1  [emitted]  beta
 chunk    {0} MyDll.alpha.js (alpha) 84 bytes [rendered]
     > alpha [5] dll alpha 
     [0] ./a.js 21 bytes {0} [built]
@@ -156,11 +159,11 @@ chunk    {1} MyDll.beta.js (beta) 57 bytes [rendered]
 
 ```
 Hash: 54a556952b9e02f550d5
-Version: webpack 2.0.6-beta
-Time: 190ms
+Version: webpack 2.1.0-beta.11
+Time: 119ms
          Asset       Size  Chunks             Chunk Names
-MyDll.alpha.js  366 bytes       0  [emitted]  alpha
- MyDll.beta.js  332 bytes       1  [emitted]  beta
+MyDll.alpha.js  381 bytes       0  [emitted]  alpha
+ MyDll.beta.js  347 bytes       1  [emitted]  beta
 chunk    {0} MyDll.alpha.js (alpha) 84 bytes [rendered]
     > alpha [5] dll alpha 
     [0] ./a.js 21 bytes {0} [built]

@@ -82,10 +82,10 @@ require(
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	var parentJsonpFunction = window["webpackJsonp"];
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModule) {
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId])
@@ -93,9 +93,11 @@ require(
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
-/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
 /******/ 		}
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
 /******/ 		while(resolves.length)
 /******/ 			resolves.shift()();
 
@@ -118,16 +120,16 @@ require(
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -137,7 +139,7 @@ require(
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve()
+/******/ 			return Promise.resolve();
 
 /******/ 		// an Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -178,11 +180,14 @@ require(
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
 /******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 3);
@@ -344,11 +349,11 @@ webpackJsonp([0],[
 
 ```
 Hash: e522c75d9311335767f2
-Version: webpack 2.0.6-beta
-Time: 149ms
+Version: webpack 2.1.0-beta.11
+Time: 111ms
     Asset     Size  Chunks             Chunk Names
      0.js  1.65 kB       0  [emitted]  
-output.js  7.43 kB       1  [emitted]  main
+output.js  7.71 kB       1  [emitted]  main
 chunk    {0} 0.js 439 bytes {1} [rendered]
     > [3] ./example.js 7:0-14:1
     [4] ../require.context/templates ^\.\/.*\.js$ 193 bytes {0} [built]
@@ -392,11 +397,11 @@ chunk    {1} output.js (main) 1.4 kB [rendered]
 
 ```
 Hash: e522c75d9311335767f2
-Version: webpack 2.0.6-beta
-Time: 396ms
+Version: webpack 2.1.0-beta.11
+Time: 192ms
     Asset       Size  Chunks             Chunk Names
      0.js  523 bytes       0  [emitted]  
-output.js    1.58 kB       1  [emitted]  main
+output.js    1.66 kB       1  [emitted]  main
 chunk    {0} 0.js 439 bytes {1} [rendered]
     > [3] ./example.js 7:0-14:1
     [4] ../require.context/templates ^\.\/.*\.js$ 193 bytes {0} [built]
@@ -434,16 +439,4 @@ chunk    {1} output.js (main) 1.4 kB [rendered]
         labeled require ./labeled [3] ./example.js 17:0-21
         amd require ./labeled [3] ./example.js 7:0-14:1
     [3] ./example.js 613 bytes {1} [built]
-
-WARNING in output.js from UglifyJs
-Side effects in initialization of unused variable commonjs2 [./amd.js:7,0]
-Side effects in initialization of unused variable labeled2 [./amd.js:8,0]
-Side effects in initialization of unused variable amd2 [./commonjs.js:8,0]
-Side effects in initialization of unused variable labeled2 [./commonjs.js:9,0]
-Side effects in initialization of unused variable commonjs2 [./labeled.js:8,0]
-Side effects in initialization of unused variable amd2 [./labeled.js:9,0]
-Side effects in initialization of unused variable a [./labeled.js:2,0]
-Side effects in initialization of unused variable commonjs1 [./example.js:2,0]
-Side effects in initialization of unused variable labeled1 [./example.js:4,0]
-Side effects in initialization of unused variable a [./example.js:17,0]
 ```

@@ -71,16 +71,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -92,6 +92,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -142,10 +145,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 ```
 Hash: 94d30510034c2c70a921
-Version: webpack 2.0.6-beta
-Time: 66ms
-    Asset    Size  Chunks             Chunk Names
-output.js  2.9 kB       0  [emitted]  main
+Version: webpack 2.1.0-beta.11
+Time: 48ms
+    Asset     Size  Chunks             Chunk Names
+output.js  3.05 kB       0  [emitted]  main
 chunk    {0} output.js (main) 197 bytes [rendered]
     > main [2] ./example.js 
     [2] ./example.js 113 bytes {0} [built]
@@ -156,10 +159,10 @@ chunk    {0} output.js (main) 197 bytes [rendered]
 
 ```
 Hash: 94d30510034c2c70a921
-Version: webpack 2.0.6-beta
-Time: 165ms
+Version: webpack 2.1.0-beta.11
+Time: 109ms
     Asset       Size  Chunks             Chunk Names
-output.js  714 bytes       0  [emitted]  main
+output.js  729 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 197 bytes [rendered]
     > main [2] ./example.js 
     [2] ./example.js 113 bytes {0} [built]

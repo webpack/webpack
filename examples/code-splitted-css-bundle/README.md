@@ -61,12 +61,12 @@ body {
 ## Uncompressed
 
 ```
-Hash: c9ce445a69a479e2ac91
-Version: webpack 2.0.6-beta
-Time: 759ms
+Hash: 798f77cd46cc3238c154
+Version: webpack 2.1.0-beta.11
+Time: 796ms
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js      14 kB       0  [emitted]  main
+                           output.js    14.3 kB       0  [emitted]  main
                                 1.js    2.06 kB       1  [emitted]  
                            style.css   71 bytes       0  [emitted]  main
 chunk    {0} output.js, style.css (main) 8.81 kB [rendered]
@@ -102,13 +102,13 @@ Child extract-text-webpack-plugin:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 8d2a516760eae1b74b56
-Version: webpack 2.0.6-beta
-Time: 1138ms
+Hash: 0cf75f910a1d3f58460d
+Version: webpack 2.1.0-beta.11
+Time: 1451ms
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js    4.71 kB       0  [emitted]  main
-                                1.js  311 bytes       1  [emitted]  
+                           output.js    4.79 kB       0  [emitted]  main
+                                1.js  309 bytes       1  [emitted]  
                            style.css   61 bytes       0  [emitted]  main
 chunk    {0} output.js, style.css (main) 8.81 kB [rendered]
     > main [2] ./example.js 
@@ -130,15 +130,6 @@ chunk    {1} 1.js 1.24 kB {0} [rendered]
         cjs require ./style2.css [1] ./chunk.js 1:0-23
     [7] ./image2.png 82 bytes {1} [built]
         cjs require ./image2.png [5] (webpack)/~/css-loader!./style2.css 6:50-73
-
-WARNING in output.js from UglifyJs
-Side effects in initialization of unused variable sourceMap [(webpack)/~/style-loader/addStyles.js:214,0]
-Side effects in initialization of unused variable media [(webpack)/~/style-loader/addStyles.js:232,0]
-
-WARNING in 1.js from UglifyJs
-Condition always false [(webpack)/~/extract-text-webpack-plugin/loader.js?{"omit":1,"extract":true,"remove":true}!(webpack)/~/style-loader!(webpack)/~/css-loader!./style2.css:10,0]
-Dropping unreachable code [(webpack)/~/extract-text-webpack-plugin/loader.js?{"omit":1,"extract":true,"remove":true}!(webpack)/~/style-loader!(webpack)/~/css-loader!./style2.css:12,0]
-Side effects in initialization of unused variable update [(webpack)/~/extract-text-webpack-plugin/loader.js?{"omit":1,"extract":true,"remove":true}!(webpack)/~/style-loader!(webpack)/~/css-loader!./style2.css:7,0]
 Child extract-text-webpack-plugin:
     chunk    {0} extract-text-webpack-plugin-output-filename 1.8 kB [rendered]
         > [2] (webpack)/~/css-loader!./style.css 

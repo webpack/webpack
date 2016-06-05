@@ -38,16 +38,16 @@ module.exports = function() {
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -59,6 +59,9 @@ module.exports = function() {
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -155,10 +158,10 @@ module.exports = function() {
 
 ```
 Hash: 450c039bc9254b2b669f
-Version: webpack 2.0.6-beta
-Time: 86ms
-    Asset    Size  Chunks             Chunk Names
-output.js  3.1 kB       0  [emitted]  main
+Version: webpack 2.1.0-beta.11
+Time: 71ms
+    Asset     Size  Chunks             Chunk Names
+output.js  3.25 kB       0  [emitted]  main
 chunk    {0} output.js (main) 613 bytes [rendered]
     > main [4] ./example.js 
     [0] ./templates/a.js 82 bytes {0} [optional] [built]
@@ -179,10 +182,10 @@ chunk    {0} output.js (main) 613 bytes [rendered]
 
 ```
 Hash: 450c039bc9254b2b669f
-Version: webpack 2.0.6-beta
-Time: 191ms
+Version: webpack 2.1.0-beta.11
+Time: 129ms
     Asset       Size  Chunks             Chunk Names
-output.js  823 bytes       0  [emitted]  main
+output.js  838 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 613 bytes [rendered]
     > main [4] ./example.js 
     [0] ./templates/a.js 82 bytes {0} [optional] [built]

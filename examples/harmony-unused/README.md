@@ -63,16 +63,16 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -84,6 +84,9 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -99,6 +102,7 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
   \*****************/
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
 	/* harmony export */ exports["a"] = add;/* harmony export */ exports["b"] = multiply;/* unused harmony export list */function add() {
 		var sum = 0, i = 0, args = arguments, l = args.length;
 		while (i < l) {
@@ -127,9 +131,15 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__abc__ = __webpack_require__(/*! ./abc */ 2);
-	/* unused harmony reexport a *//* unused harmony reexport b *//* unused harmony reexport c *//* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__math__ = __webpack_require__(/*! ./math */ 0);
-	/* unused harmony reexport reexportedAdd *//* harmony reexport */ Object.defineProperty(exports, "a", {configurable: false, enumerable: true, get: function() { return __WEBPACK_IMPORTED_MODULE_1__math__["b"]; }});
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__math__ = __webpack_require__(/*! ./math */ 0);
+	/* unused harmony reexport a */
+	/* unused harmony reexport b */
+	/* unused harmony reexport c */
+	/* unused harmony reexport reexportedAdd */
+	/* harmony reexport */ if(Object.prototype.hasOwnProperty.call(__WEBPACK_IMPORTED_MODULE_1__math__, "b")) Object.defineProperty(exports, "a", {configurable: false, enumerable: true, get: function() { return __WEBPACK_IMPORTED_MODULE_1__math__["b"]; }});
+
 
 
 /***/ },
@@ -139,6 +149,7 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
   \****************/
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
 	/* unused harmony export a *//* unused harmony export b *//* unused harmony export c */function a() { console.log("a"); }
 	function b() { console.log("b"); }
 	function c() { console.log("c"); }
@@ -151,13 +162,14 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__math__ = __webpack_require__(/*! ./math */ 0);
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__library__ = __webpack_require__(/*! ./library */ 1);
 
 
 
-	/* harmony import */__WEBPACK_IMPORTED_MODULE_0__math__["a"].bind()(1, 2);
-	/* harmony import */__WEBPACK_IMPORTED_MODULE_1__library__["a"].bind()(1, 2);
+	__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__math__["a" /* add */])(1, 2);
+	__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__library__["a" /* reexportedMultiply */])(1, 2);
 
 
 /***/ }
@@ -167,7 +179,7 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 # js/output.js
 
 ``` javascript
-!function(n){function r(e){if(t[e])return t[e].exports;var o=t[e]={exports:{},id:e,loaded:!1};return n[e].call(o.exports,o,o.exports,r),o.loaded=!0,o.exports}var t={};return r.m=n,r.c=t,r.p="js/",r(r.s=3)}([function(n,r,t){function e(){for(var n=0,r=0,t=arguments,e=t.length;e>r;)n+=t[r++];return n}function o(){for(var n=1,r=0,t=arguments,e=t.length;e>r;)n*=t[r++];return n}r.a=e,r.b=o},function(n,r,t){var e=(t(2),t(0));Object.defineProperty(r,"a",{configurable:!1,enumerable:!0,get:function(){return e.b}})},function(n,r,t){},function(n,r,t){var e=t(0),o=t(1);e.a.bind()(1,2),o.a.bind()(1,2)}]);
+!function(t){function r(e){if(n[e])return n[e].exports;var u=n[e]={i:e,l:!1,exports:{}};return t[e].call(u.exports,u,u.exports,r),u.l=!0,u.exports}var n={};return r.m=t,r.c=n,r.i=function(t){return t},r.p="js/",r(r.s=3)}([function(t,r,n){"use strict";function e(){for(var t=0,r=0,n=arguments,e=n.length;e>r;)t+=n[r++];return t}function u(){for(var t=1,r=0,n=arguments,e=n.length;e>r;)t*=n[r++];return t}r.a=e,r.b=u},function(t,r,n){"use strict";var e=(n(2),n(0));Object.prototype.hasOwnProperty.call(e,"b")&&Object.defineProperty(r,"a",{configurable:!1,enumerable:!0,get:function(){return e.b}})},function(t,r,n){"use strict"},function(t,r,n){"use strict";var e=n(0),u=n(1);n.i(e.a)(1,2),n.i(u.a)(1,2)}]);
 ```
 
 # Info
@@ -175,11 +187,11 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 ## Uncompressed
 
 ```
-Hash: e3cda11c1e9e036a0c7b
-Version: webpack 2.0.7-beta
-Time: 91ms
+Hash: 37f6daade0e3e46fb0a8
+Version: webpack 2.1.0-beta.11
+Time: 75ms
     Asset     Size  Chunks             Chunk Names
-output.js  3.51 kB       0  [emitted]  main
+output.js  3.83 kB       0  [emitted]  main
 chunk    {0} output.js (main) 728 bytes [rendered]
     > main [3] ./example.js 
     [0] ./math.js 366 bytes {0} [built]
@@ -195,11 +207,11 @@ chunk    {0} output.js (main) 728 bytes [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: e3cda11c1e9e036a0c7b
-Version: webpack 2.0.7-beta
-Time: 188ms
+Hash: 37f6daade0e3e46fb0a8
+Version: webpack 2.1.0-beta.11
+Time: 129ms
     Asset       Size  Chunks             Chunk Names
-output.js  598 bytes       0  [emitted]  main
+output.js  705 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 728 bytes [rendered]
     > main [3] ./example.js 
     [0] ./math.js 366 bytes {0} [built]
@@ -210,10 +222,4 @@ chunk    {0} output.js (main) 728 bytes [rendered]
     [2] ./abc.js 129 bytes {0} [built]
         harmony import ./abc [1] ./library.js 1:0-32
     [3] ./example.js 121 bytes {0} [built]
-
-WARNING in output.js from UglifyJs
-Dropping unused function list [./math.js:17,0]
-Dropping unused function a [./abc.js:1,0]
-Dropping unused function b [./abc.js:2,0]
-Dropping unused function c [./abc.js:3,0]
 ```
