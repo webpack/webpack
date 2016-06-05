@@ -269,7 +269,9 @@ function processOptions(options) {
 	if(options.watch) {
 		var primaryOptions = !Array.isArray(options) ? options : options[0];
 		var watchOptions = primaryOptions.watchOptions || primaryOptions.watch || {};
-		process.stdin.on('end', function() { process.exit(0) });
+		process.stdin.on('end', function() {
+			process.exit(0)
+		});
 		process.stdin.resume();
 		compiler.watch(watchOptions, compilerCallback);
 	} else
