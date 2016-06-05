@@ -39,16 +39,16 @@ module.exports = Math.random();
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -60,6 +60,9 @@ module.exports = Math.random();
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -108,10 +111,10 @@ module.exports = Math.random();
 
 ```
 Hash: ea909c1878908e23c0bf
-Version: webpack 2.0.6-beta
-Time: 65ms
+Version: webpack 2.1.0-beta.11
+Time: 59ms
     Asset     Size  Chunks             Chunk Names
-output.js  2.02 kB       0  [emitted]  main
+output.js  2.16 kB       0  [emitted]  main
 chunk    {0} output.js (main) 326 bytes [rendered]
     > main [1] ./example.js 
     [0] ./a.js 31 bytes {0} [built]
@@ -125,10 +128,10 @@ chunk    {0} output.js (main) 326 bytes [rendered]
 
 ```
 Hash: ea909c1878908e23c0bf
-Version: webpack 2.0.6-beta
-Time: 157ms
+Version: webpack 2.1.0-beta.11
+Time: 197ms
     Asset       Size  Chunks             Chunk Names
-output.js  354 bytes       0  [emitted]  main
+output.js  369 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 326 bytes [rendered]
     > main [1] ./example.js 
     [0] ./a.js 31 bytes {0} [built]

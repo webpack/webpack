@@ -47,16 +47,16 @@ module.exports = function(content) {
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -68,6 +68,9 @@ module.exports = function(content) {
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -131,10 +134,10 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: ce3e1279e28ab4e51a8d
-Version: webpack 2.0.6-beta
-Time: 79ms
+Version: webpack 2.1.0-beta.11
+Time: 89ms
     Asset     Size  Chunks             Chunk Names
-output.js  2.22 kB       0  [emitted]  main
+output.js  2.36 kB       0  [emitted]  main
 chunk    {0} output.js (main) 283 bytes [rendered]
     > main [2] ./example.js 
     [0] (webpack)/~/json-loader!./test.json 37 bytes {0} [built]
@@ -149,10 +152,10 @@ chunk    {0} output.js (main) 283 bytes [rendered]
 
 ```
 Hash: ce3e1279e28ab4e51a8d
-Version: webpack 2.0.6-beta
-Time: 221ms
+Version: webpack 2.1.0-beta.11
+Time: 180ms
     Asset       Size  Chunks             Chunk Names
-output.js  358 bytes       0  [emitted]  main
+output.js  373 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 283 bytes [rendered]
     > main [2] ./example.js 
     [0] (webpack)/~/json-loader!./test.json 37 bytes {0} [built]

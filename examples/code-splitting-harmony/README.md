@@ -31,10 +31,10 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	var parentJsonpFunction = window["webpackJsonp"];
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModule) {
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId])
@@ -42,9 +42,11 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
-/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
 /******/ 		}
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
 /******/ 		while(resolves.length)
 /******/ 			resolves.shift()();
 
@@ -67,16 +69,16 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -86,7 +88,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve()
+/******/ 			return Promise.resolve();
 
 /******/ 		// an Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -127,11 +129,14 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
 /******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 4);
@@ -194,8 +199,9 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
 	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_a__ = __webpack_require__(/*! a */ 0);
-	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_a___default = __WEBPACK_IMPORTED_MODULE_0_a__ && __WEBPACK_IMPORTED_MODULE_0_a__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_0_a__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_0_a__; }
+	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_a___default = __WEBPACK_IMPORTED_MODULE_0_a__ && __WEBPACK_IMPORTED_MODULE_0_a__.__esModule ? function() { return __WEBPACK_IMPORTED_MODULE_0_a__['default'] } : function() { return __WEBPACK_IMPORTED_MODULE_0_a__; };
 	/* harmony import */ Object.defineProperty(__WEBPACK_IMPORTED_MODULE_0_a___default, 'a', { get: __WEBPACK_IMPORTED_MODULE_0_a___default });
 
 
@@ -222,13 +228,13 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 ## Uncompressed
 
 ```
-Hash: cefcab66a83c5000d38e
-Version: webpack 2.0.6-beta
-Time: 141ms
+Hash: 507877571ed378d2f8fa
+Version: webpack 2.1.0-beta.11
+Time: 93ms
     Asset       Size  Chunks             Chunk Names
      0.js  163 bytes       0  [emitted]  
      1.js  163 bytes       1  [emitted]  
-output.js    5.95 kB       2  [emitted]  main
+output.js    6.25 kB       2  [emitted]  main
      3.js  155 bytes       3  [emitted]  
 chunk    {0} 0.js 13 bytes {2} [rendered]
     [3] ./~/c/2.js 13 bytes {0} [optional] [built]
@@ -254,13 +260,13 @@ chunk    {3} 3.js 11 bytes {2} [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: cefcab66a83c5000d38e
-Version: webpack 2.0.6-beta
-Time: 239ms
+Hash: 507877571ed378d2f8fa
+Version: webpack 2.1.0-beta.11
+Time: 192ms
     Asset      Size  Chunks             Chunk Names
      0.js  38 bytes       0  [emitted]  
      1.js  38 bytes       1  [emitted]  
-output.js   1.56 kB       2  [emitted]  main
+output.js   1.65 kB       2  [emitted]  main
      3.js  38 bytes       3  [emitted]  
 chunk    {0} 0.js 13 bytes {2} [rendered]
     [3] ./~/c/2.js 13 bytes {0} [optional] [built]

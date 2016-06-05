@@ -49,16 +49,16 @@ module.exports = {
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -70,6 +70,9 @@ module.exports = {
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -114,11 +117,11 @@ body {
 
 ```
 Hash: efccfc86a9d3318458a7
-Version: webpack 2.0.6-beta
-Time: 745ms
+Version: webpack 2.1.0-beta.11
+Time: 655ms
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js    1.73 kB       0  [emitted]  main
+                           output.js    1.87 kB       0  [emitted]  main
                            style.css   69 bytes       0  [emitted]  main
 chunk    {0} output.js, style.css (main) 64 bytes [rendered]
     > main [1] ./example.js 
@@ -141,11 +144,11 @@ Child extract-text-webpack-plugin:
 
 ```
 Hash: 6f441b96253266f73216
-Version: webpack 2.0.6-beta
-Time: 905ms
+Version: webpack 2.1.0-beta.11
+Time: 676ms
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js  247 bytes       0  [emitted]  main
+                           output.js  262 bytes       0  [emitted]  main
                            style.css   61 bytes       0  [emitted]  main
 chunk    {0} output.js, style.css (main) 64 bytes [rendered]
     > main [1] ./example.js 

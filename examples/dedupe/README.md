@@ -74,16 +74,16 @@ module.exports = {"this is": "z"};
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -95,6 +95,9 @@ module.exports = {"this is": "z"};
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -212,10 +215,10 @@ module.exports = {"this is": "z"};
 
 ```
 Hash: 1472bad5b49955010453
-Version: webpack 2.0.6-beta
-Time: 104ms
+Version: webpack 2.1.0-beta.11
+Time: 82ms
     Asset     Size  Chunks             Chunk Names
-output.js  3.62 kB       0  [emitted]  main
+output.js  3.76 kB       0  [emitted]  main
 chunk    {0} output.js (main) 528 bytes [rendered]
     > main [7] ./example.js 
     [0] ./z.js 34 bytes {0} [built]
@@ -243,10 +246,10 @@ chunk    {0} output.js (main) 528 bytes [rendered]
 
 ```
 Hash: 1472bad5b49955010453
-Version: webpack 2.0.6-beta
-Time: 244ms
+Version: webpack 2.1.0-beta.11
+Time: 146ms
     Asset       Size  Chunks             Chunk Names
-output.js  797 bytes       0  [emitted]  main
+output.js  812 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 528 bytes [rendered]
     > main [7] ./example.js 
     [0] ./z.js 34 bytes {0} [built]

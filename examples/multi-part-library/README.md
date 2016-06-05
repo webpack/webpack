@@ -56,16 +56,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -77,6 +77,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -126,16 +129,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -147,6 +150,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -177,11 +183,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 ```
 Hash: 9675eca99092bd148a2a
-Version: webpack 2.0.6-beta
-Time: 66ms
+Version: webpack 2.1.0-beta.11
+Time: 90ms
              Asset     Size  Chunks             Chunk Names
- MyLibrary.beta.js  1.94 kB       0  [emitted]  beta
-MyLibrary.alpha.js  1.94 kB       1  [emitted]  alpha
+ MyLibrary.beta.js  2.08 kB       0  [emitted]  beta
+MyLibrary.alpha.js  2.08 kB       1  [emitted]  alpha
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [rendered]
     > beta [1] ./beta.js 
     [1] ./beta.js 24 bytes {0} [built]
@@ -194,11 +200,11 @@ chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [rendered]
 
 ```
 Hash: 9675eca99092bd148a2a
-Version: webpack 2.0.6-beta
-Time: 200ms
+Version: webpack 2.1.0-beta.11
+Time: 120ms
              Asset       Size  Chunks             Chunk Names
- MyLibrary.beta.js  495 bytes       0  [emitted]  beta
-MyLibrary.alpha.js  497 bytes       1  [emitted]  alpha
+ MyLibrary.beta.js  510 bytes       0  [emitted]  beta
+MyLibrary.alpha.js  512 bytes       1  [emitted]  alpha
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [rendered]
     > beta [1] ./beta.js 
     [1] ./beta.js 24 bytes {0} [built]
