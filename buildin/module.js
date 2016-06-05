@@ -3,7 +3,7 @@ module.exports = function(module) {
 		module.deprecate = function() {};
 		module.paths = [];
 		// module.parent = undefined by default
-		module.children = [];
+		if(!module.children) module.children = [];
 		Object.defineProperty(module, "loaded", {
 			enumerable: true,
 			configurable: false,
