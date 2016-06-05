@@ -269,12 +269,8 @@ function processOptions(options) {
 	if(options.watch) {
 		var primaryOptions = !Array.isArray(options) ? options : options[0];
 		var watchOptions = primaryOptions.watchOptions || primaryOptions.watch || {};
-		if(watchOptions.stdin) {
-			process.stdin.on('end', function() {
-				process.exit(0); // eslint-disable-line
-			});
-			process.stdin.resume();
-		}
+		process.stdin.on('end', function() { process.exit(0) });
+		process.stdin.resume();
 		compiler.watch(watchOptions, compilerCallback);
 	} else
 		compiler.run(compilerCallback);
