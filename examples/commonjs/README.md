@@ -51,16 +51,16 @@ exports.add = function() {
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -72,6 +72,9 @@ exports.add = function() {
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -128,10 +131,10 @@ exports.add = function() {
 
 ```
 Hash: 604c5c1fe4f4a9772853
-Version: webpack 2.0.6-beta
-Time: 75ms
+Version: webpack 2.1.0-beta.11
+Time: 94ms
     Asset     Size  Chunks             Chunk Names
-output.js  2.17 kB       0  [emitted]  main
+output.js  2.32 kB       0  [emitted]  main
 chunk    {0} output.js (main) 329 bytes [rendered]
     > main [1] ./example.js 
     [0] ./increment.js 98 bytes {0} [built]
@@ -145,10 +148,10 @@ chunk    {0} output.js (main) 329 bytes [rendered]
 
 ```
 Hash: 604c5c1fe4f4a9772853
-Version: webpack 2.0.6-beta
-Time: 137ms
+Version: webpack 2.1.0-beta.11
+Time: 115ms
     Asset       Size  Chunks             Chunk Names
-output.js  423 bytes       0  [emitted]  main
+output.js  438 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 329 bytes [rendered]
     > main [1] ./example.js 
     [0] ./increment.js 98 bytes {0} [built]

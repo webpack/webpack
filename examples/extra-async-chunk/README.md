@@ -70,10 +70,10 @@ module.exports = {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	var parentJsonpFunction = window["webpackJsonp"];
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModule) {
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId])
@@ -81,9 +81,11 @@ module.exports = {
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
-/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
 /******/ 		}
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
 /******/ 		while(resolves.length)
 /******/ 			resolves.shift()();
 
@@ -106,16 +108,16 @@ module.exports = {
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -125,7 +127,7 @@ module.exports = {
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve()
+/******/ 			return Promise.resolve();
 
 /******/ 		// an Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -166,11 +168,14 @@ module.exports = {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
 /******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 4);
@@ -188,10 +193,10 @@ module.exports = {
 	Promise.all/* require */([__webpack_require__.e(0), __webpack_require__.e(3)]).catch(function(err) { __webpack_require__.oe(err); }).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 2)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 
 	// a chunk with a, b, d
-	Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(2)]).catch(function(err) { __webpack_require__.oe(err); }).then(function(require) {
+	Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(2)]).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
 		__webpack_require__(/*! ./b */ 1);
 		__webpack_require__(/*! ./d */ 3);
-	}.bind(null, __webpack_require__));
+	}).bind(null, __webpack_require__));
 
 
 /***/ }
@@ -266,11 +271,11 @@ webpackJsonp([3],{
 
 ```
 Hash: 9143ea27ee1a62ea4b12
-Version: webpack 2.0.6-beta
-Time: 142ms
+Version: webpack 2.1.0-beta.11
+Time: 81ms
     Asset       Size  Chunks             Chunk Names
      0.js  291 bytes       0  [emitted]  
-output.js    4.92 kB       1  [emitted]  main
+output.js    5.21 kB       1  [emitted]  main
      2.js  159 bytes       2  [emitted]  
      3.js  159 bytes       3  [emitted]  
 chunk    {0} 0.js 42 bytes {1} [rendered]
@@ -299,11 +304,11 @@ chunk    {3} 3.js 21 bytes {1} [rendered]
 
 ```
 Hash: 9143ea27ee1a62ea4b12
-Version: webpack 2.0.6-beta
-Time: 175ms
+Version: webpack 2.1.0-beta.11
+Time: 145ms
     Asset      Size  Chunks             Chunk Names
      0.js  78 bytes       0  [emitted]  
-output.js    1.2 kB       1  [emitted]  main
+output.js   1.28 kB       1  [emitted]  main
      2.js  51 bytes       2  [emitted]  
      3.js  51 bytes       3  [emitted]  
 chunk    {0} 0.js 42 bytes {1} [rendered]

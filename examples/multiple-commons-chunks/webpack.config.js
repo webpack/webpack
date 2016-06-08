@@ -20,7 +20,7 @@ module.exports = {
 		}),
 		new CommonsChunkPlugin({
 			name: "commons",
-			chunks: ["pageA", "pageB", "admin-commons.js"],
+			chunks: ["pageA", "pageB", "admin-commons"],
 			minChunks: 2
 		}),
 		new CommonsChunkPlugin({

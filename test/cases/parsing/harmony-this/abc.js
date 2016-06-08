@@ -1,4 +1,5 @@
 function returnThis() {
+	if(typeof this === "undefined") return "undefined";
 	return this;
 }
 

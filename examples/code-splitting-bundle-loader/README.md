@@ -23,10 +23,10 @@ module.exports = "It works";
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	var parentJsonpFunction = window["webpackJsonp"];
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModule) {
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId])
@@ -34,9 +34,11 @@ module.exports = "It works";
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
-/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
 /******/ 		}
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
 /******/ 		while(resolves.length)
 /******/ 			resolves.shift()();
 
@@ -59,16 +61,16 @@ module.exports = "It works";
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -78,7 +80,7 @@ module.exports = "It works";
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve()
+/******/ 			return Promise.resolve();
 
 /******/ 		// an Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -119,11 +121,14 @@ module.exports = "It works";
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
 /******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
@@ -142,14 +147,14 @@ module.exports = "It works";
 		if(cbs) cbs.push(cb);
 		else cb(data);
 	}
-	__webpack_require__.e/* nsure */(1).catch(function(err) { __webpack_require__.oe(err); }).then(function(require) {
+	__webpack_require__.e/* nsure */(1).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
 		data = __webpack_require__(/*! !./file.js */ 2);
 		var callbacks = cbs;
 		cbs = null;
 		for(var i = 0, l = callbacks.length; i < l; i++) {
 			callbacks[i](data);
 		}
-	}.bind(null, __webpack_require__));
+	}).bind(null, __webpack_require__));
 
 /***/ },
 /* 1 */
@@ -190,10 +195,10 @@ webpackJsonp([1],{
 
 ```
 Hash: 5e83b5be2cdc348222db
-Version: webpack 2.0.6-beta
-Time: 75ms
+Version: webpack 2.1.0-beta.11
+Time: 79ms
     Asset       Size  Chunks             Chunk Names
-output.js    4.98 kB       0  [emitted]  main
+output.js    5.26 kB       0  [emitted]  main
      1.js  175 bytes       1  [emitted]  
 chunk    {0} output.js (main) 369 bytes [rendered]
     > main [1] ./example.js 
@@ -210,10 +215,10 @@ chunk    {1} 1.js 28 bytes {0} [rendered]
 
 ```
 Hash: 5e83b5be2cdc348222db
-Version: webpack 2.0.6-beta
-Time: 249ms
+Version: webpack 2.1.0-beta.11
+Time: 164ms
     Asset      Size  Chunks             Chunk Names
-output.js   1.19 kB       0  [emitted]  main
+output.js   1.27 kB       0  [emitted]  main
      1.js  58 bytes       1  [emitted]  
 chunk    {0} output.js (main) 369 bytes [rendered]
     > main [1] ./example.js 

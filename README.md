@@ -27,7 +27,7 @@ or packaging just about any resource or asset.
 
 **TL; DR**
 
-* Bundles both [CommonJs](http://wiki.commonjs.org/) and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
+* Bundles both [CommonJS](http://wiki.commonjs.org/) and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
 * Can create a single bundle or multiple chunks that are asynchronously loaded at runtime (to reduce initial loading time).
 * Dependencies are resolved during compilation reducing the runtime size.
 * Loaders can preprocess files while compiling, e.g. coffeescript to JavaScript, handlebars strings to compiled functions, images to Base64, etc.
@@ -158,7 +158,7 @@ friendly** by using hashes.
 // This means webpack takes modules with dependencies
 // and emits static assets representing those modules.
 
-// Dependencies can be written in CommonJs
+// Dependencies can be written in CommonJS
 var commonjs = require("./commonjs");
 // or in AMD
 define(["amd-module", "../file"], function (amdModule, file) {
@@ -254,7 +254,7 @@ MIT (http://opensource.org/licenses/mit-license.php)
 
 (In chronological order)
 
-* @google for [Google Web Toolkit (GWT)](https://code.google.com/archive/p/google-web-toolkit), which aims to compile Java to JavaScript. It features a similar [Code Splitting](https://code.google.com/archive/p/google-web-toolkit/wikis/CodeSplitting.wiki) as webpack.
+* @google for [Google Web Toolkit (GWT)](https://code.google.com/archive/p/google-web-toolkit), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
 * @medikoo for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webpack. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
 * @substack for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
 * @jrburke for [require.js](http://requirejs.org/), which is a similar project and source for many ideas.
@@ -268,6 +268,8 @@ MIT (http://opensource.org/licenses/mit-license.php)
 ## Sponsor
 
 This is a free-time project. The time I invest in it fluctuates. If you use webpack for a serious task, and you'd like me to invest more time on it, please donate. This project increases your income/productivity too. It makes development and applications faster and it reduces the required bandwidth.
+
+Another way you can help fund Webpack is by buying the ebook ["SurviveJS - Webpack"](https://leanpub.com/survivejs-webpack), where around ~30% of the book's profit will go to me.
 
 I'm very thankful for every dollar. If you leave your username or email, I may show my thanks by giving you extra support.
 
@@ -286,7 +288,7 @@ I'm very thankful for every dollar. If you leave your username or email, I may s
 
 
 [travis-url]: https://travis-ci.org/webpack/webpack
-[travis-image]: https://img.shields.io/travis/webpack/webpack.svg
+[travis-image]: https://img.shields.io/travis/webpack/webpack/master.svg
 [appveyor-url]: https://ci.appveyor.com/project/sokra/webpack/branch/master
 [appveyor-image]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
 [coveralls-url]: https://coveralls.io/r/webpack/webpack/

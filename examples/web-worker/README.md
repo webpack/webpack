@@ -37,16 +37,16 @@ onmessage = function(event) {
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -58,6 +58,9 @@ onmessage = function(event) {
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -125,16 +128,16 @@ onmessage = function(event) {
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -155,6 +158,9 @@ onmessage = function(event) {
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -262,12 +268,12 @@ webpackChunk([0],[
 
 ```
 Hash: 2db16cd1ac2addf34b0e
-Version: webpack 2.0.6-beta
-Time: 148ms
+Version: webpack 2.1.0-beta.11
+Time: 121ms
            Asset     Size  Chunks             Chunk Names
 0.hash.worker.js  1.65 kB          [emitted]  
-  hash.worker.js  2.76 kB          [emitted]  
-       output.js  2.07 kB       0  [emitted]  main
+  hash.worker.js   2.9 kB          [emitted]  
+       output.js  2.21 kB       0  [emitted]  main
 chunk    {0} output.js (main) 302 bytes [rendered]
     > main [1] ./example.js 
     [0] (webpack)/~/worker-loader!./worker.js 96 bytes {0} [built]
@@ -276,7 +282,7 @@ chunk    {0} output.js (main) 302 bytes [rendered]
 Child worker:
                Asset     Size  Chunks             Chunk Names
     0.hash.worker.js  1.65 kB       0  [emitted]  
-      hash.worker.js  2.76 kB       1  [emitted]  main
+      hash.worker.js   2.9 kB       1  [emitted]  main
     chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
         > [1] ./worker.js 3:1-5:3
         [0] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
@@ -299,24 +305,21 @@ Child worker:
 
 ```
 Hash: 2db16cd1ac2addf34b0e
-Version: webpack 2.0.6-beta
-Time: 276ms
+Version: webpack 2.1.0-beta.11
+Time: 208ms
            Asset       Size  Chunks             Chunk Names
 0.hash.worker.js  544 bytes          [emitted]  
-  hash.worker.js  565 bytes          [emitted]  
-       output.js  375 bytes       0  [emitted]  main
+  hash.worker.js  580 bytes          [emitted]  
+       output.js  390 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 302 bytes [rendered]
     > main [1] ./example.js 
     [0] (webpack)/~/worker-loader!./worker.js 96 bytes {0} [built]
         cjs require worker!./worker [1] ./example.js 1:13-39
     [1] ./example.js 206 bytes {0} [built]
-
-WARNING in output.js from UglifyJs
-Side effects in initialization of unused variable templateB [./example.js:5,0]
 Child worker:
                Asset       Size  Chunks             Chunk Names
     0.hash.worker.js  544 bytes       0  [emitted]  
-      hash.worker.js  565 bytes       1  [emitted]  main
+      hash.worker.js  580 bytes       1  [emitted]  main
     chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
         > [1] ./worker.js 3:1-5:3
         [0] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
@@ -333,7 +336,4 @@ Child worker:
     chunk    {1} hash.worker.js (main) 168 bytes [rendered]
         > main [1] ./worker.js 
         [1] ./worker.js 168 bytes {1} [built]
-    
-    WARNING in hash.worker.js from UglifyJs
-    Side effects in initialization of unused variable template [./worker.js:2,0]
 ```
