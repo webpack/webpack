@@ -56,16 +56,16 @@ exports: function add() {
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -77,6 +77,9 @@ exports: function add() {
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -135,10 +138,10 @@ The remaining labels are removed while minimizing.
 
 ```
 Hash: be12e2072fd7c78b192b
-Version: webpack 2.0.6-beta
-Time: 64ms
-    Asset     Size  Chunks             Chunk Names
-output.js  2.36 kB       0  [emitted]  main
+Version: webpack 2.1.0-beta.11
+Time: 55ms
+    Asset    Size  Chunks             Chunk Names
+output.js  2.5 kB       0  [emitted]  main
 chunk    {0} output.js (main) 299 bytes [rendered]
     > main [1] ./example.js 
     [0] ./increment.js 83 bytes {0} [built]
@@ -152,10 +155,10 @@ chunk    {0} output.js (main) 299 bytes [rendered]
 
 ```
 Hash: be12e2072fd7c78b192b
-Version: webpack 2.0.6-beta
-Time: 111ms
+Version: webpack 2.1.0-beta.11
+Time: 130ms
     Asset       Size  Chunks             Chunk Names
-output.js  433 bytes       0  [emitted]  main
+output.js  448 bytes       0  [emitted]  main
 chunk    {0} output.js (main) 299 bytes [rendered]
     > main [1] ./example.js 
     [0] ./increment.js 83 bytes {0} [built]

@@ -84,17 +84,17 @@ module.exports = {
 
 ```
 Hash: eea5105c27290a4d0f9e
-Version: webpack 2.0.6-beta
-Time: 96ms
+Version: webpack 2.1.0-beta.11
+Time: 113ms
           Asset       Size      Chunks             Chunk Names
      0.chunk.js  567 bytes  0, 1, 2, 3  [emitted]  
      1.chunk.js  430 bytes     1, 2, 3  [emitted]  
      2.chunk.js  293 bytes        2, 3  [emitted]  
      3.chunk.js  156 bytes           3  [emitted]  
-pageD.bundle.js    5.11 kB           4  [emitted]  pageD
-pageC.bundle.js    5.11 kB           5  [emitted]  pageC
-pageB.bundle.js    5.11 kB           6  [emitted]  pageB
-pageA.bundle.js    5.05 kB           7  [emitted]  pageA
+pageD.bundle.js    5.39 kB           4  [emitted]  pageD
+pageC.bundle.js    5.39 kB           5  [emitted]  pageC
+pageB.bundle.js    5.39 kB           6  [emitted]  pageB
+pageA.bundle.js    5.33 kB           7  [emitted]  pageA
 chunk    {0} 0.chunk.js 84 bytes {7} {6} {5} {4} [rendered]
     > [4] ./page.js?A 4:0-37
     > duplicate [5] ./page.js?B 4:0-37
@@ -143,17 +143,17 @@ chunk    {7} pageA.bundle.js (pageA) 118 bytes [rendered]
 
 ```
 Hash: eea5105c27290a4d0f9e
-Version: webpack 2.0.6-beta
-Time: 283ms
+Version: webpack 2.1.0-beta.11
+Time: 267ms
           Asset       Size      Chunks             Chunk Names
      0.chunk.js  142 bytes  0, 1, 2, 3  [emitted]  
      1.chunk.js  111 bytes     1, 2, 3  [emitted]  
      2.chunk.js   80 bytes        2, 3  [emitted]  
      3.chunk.js   49 bytes           3  [emitted]  
-pageD.bundle.js    1.25 kB           4  [emitted]  pageD
-pageC.bundle.js    1.25 kB           5  [emitted]  pageC
-pageB.bundle.js    1.25 kB           6  [emitted]  pageB
-pageA.bundle.js    1.25 kB           7  [emitted]  pageA
+pageD.bundle.js    1.33 kB           4  [emitted]  pageD
+pageC.bundle.js    1.33 kB           5  [emitted]  pageC
+pageB.bundle.js    1.33 kB           6  [emitted]  pageB
+pageA.bundle.js    1.33 kB           7  [emitted]  pageA
 chunk    {0} 0.chunk.js 84 bytes {7} {6} {5} {4} [rendered]
     > [4] ./page.js?A 4:0-37
     > duplicate [5] ./page.js?B 4:0-37

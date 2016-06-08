@@ -133,7 +133,12 @@ function processOptions(options) {
 		return;
 	}
 
-	var firstOptions = Array.isArray(options) ? options[0] : options;
+	var firstOptions = Array.isArray(options) ? (options[0] || {}) : options;
+
+	if(typeof options.stats === "boolean" || typeof options.stats === "string") {
+		var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
+		options.stats = statsPresetToOptions(options.stats);
+	}
 
 	var outputOptions = Object.create(options.stats || firstOptions.stats || {});
 	if(typeof outputOptions.context === "undefined")

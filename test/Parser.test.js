@@ -19,9 +19,23 @@ describe("Parser", function() {
 				cdeabc: ["membertest"]
 			}
 		],
+		"call member using bracket notation": [
+			function() {
+				cde["abc"]("membertest");
+			}, {
+				cdeabc: ["membertest"]
+			}
+		],
 		"call inner member": [
 			function() {
 				cde.ddd.abc("inner");
+			}, {
+				cdedddabc: ["inner"]
+			}
+		],
+		"call inner member using bracket notation": [
+			function() {
+				cde.ddd["abc"]("inner");
 			}, {
 				cdedddabc: ["inner"]
 			}
@@ -227,10 +241,13 @@ describe("Parser", function() {
 			"typeof 'str'": "string=string",
 			"typeof aString": "string=string",
 			"typeof b.Number": "string=number",
+			"typeof b['Number']": "string=number",
 			"typeof b[Number]": "",
 			"b.Number": "number=123",
+			"b['Number']": "number=123",
 			"b[Number]": "",
 			"'abc'.substr(1)": "string=bc",
+			"'abc'[\"substr\"](1)": "string=bc",
 			"'abc'[substr](1)": "",
 		};
 

@@ -97,10 +97,10 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	var parentJsonpFunction = window["webpackJsonp"];
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModule) {
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId])
@@ -108,14 +108,19 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
-/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
 /******/ 		}
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
 /******/ 		while(resolves.length)
 /******/ 			resolves.shift()();
-/******/ 		if(executeModule + 1) { // typeof executeModule === "number"
-/******/ 			return __webpack_require__(executeModule);
+/******/ 		if(executeModules) {
+/******/ 			for(i=0; i < executeModules.length; i++) {
+/******/ 				result = __webpack_require__(executeModules[i]);
+/******/ 			}
 /******/ 		}
+/******/ 		return result;
 /******/ 	};
 
 /******/ 	// The module cache
@@ -135,16 +140,16 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -154,7 +159,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve()
+/******/ 			return Promise.resolve();
 
 /******/ 		// an Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -195,11 +200,14 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
 /******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -275,10 +283,10 @@ webpackJsonp([1],{
 
 ```
 Hash: 99369bd55499f540a867
-Version: webpack 2.0.6-beta
-Time: 158ms
+Version: webpack 2.1.0-beta.11
+Time: 111ms
                Asset       Size  Chunks             Chunk Names
-          commons.js    4.29 kB       0  [emitted]  commons
+          commons.js    4.64 kB       0  [emitted]  commons
           1.chunk.js  213 bytes       1  [emitted]  
           2.chunk.js  219 bytes       2  [emitted]  
 commons.js.bundle.js    3.21 kB       3  [emitted]  commons.js
@@ -326,10 +334,10 @@ chunk    {5} pageA.bundle.js (pageA) 150 bytes {0} [rendered]
 
 ```
 Hash: 99369bd55499f540a867
-Version: webpack 2.0.6-beta
-Time: 266ms
+Version: webpack 2.1.0-beta.11
+Time: 281ms
                Asset       Size  Chunks             Chunk Names
-          commons.js    1.01 kB       0  [emitted]  commons
+          commons.js    1.12 kB       0  [emitted]  commons
           1.chunk.js   83 bytes       1  [emitted]  
           2.chunk.js   82 bytes       2  [emitted]  
 commons.js.bundle.js  776 bytes       3  [emitted]  commons.js

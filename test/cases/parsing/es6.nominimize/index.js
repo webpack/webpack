@@ -1,5 +1,7 @@
 "use strict";
 
+import a from "./a";
+
 it("should parse classes", function() {
 	class MyClass {
 		constructor() {
@@ -32,6 +34,17 @@ it("should parse arrow function", function() {
 	(() => {
 		return require("./a");
 	})().should.be.eql("a");
+	require.ensure([], () => {
+		require("./a");
+	});
+	require.ensure([], () => {
+		require("./async");
+	});
+	if(module.hot) {
+		module.hot.accept("./a", () => {
+			var x = 1;
+		});
+	}
 });
 
 it("should parse template literals", function() {

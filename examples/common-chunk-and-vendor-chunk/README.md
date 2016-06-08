@@ -66,10 +66,10 @@ module.exports = {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	var parentJsonpFunction = window["webpackJsonp"];
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModule) {
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId])
@@ -77,14 +77,19 @@ module.exports = {
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
-/******/ 			modules[moduleId] = moreModules[moduleId];
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				modules[moduleId] = moreModules[moduleId];
+/******/ 			}
 /******/ 		}
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
 /******/ 		while(resolves.length)
 /******/ 			resolves.shift()();
-/******/ 		if(executeModule + 1) { // typeof executeModule === "number"
-/******/ 			return __webpack_require__(executeModule);
+/******/ 		if(executeModules) {
+/******/ 			for(i=0; i < executeModules.length; i++) {
+/******/ 				result = __webpack_require__(executeModules[i]);
+/******/ 			}
 /******/ 		}
+/******/ 		return result;
 /******/ 	};
 
 /******/ 	// The module cache
@@ -104,16 +109,16 @@ module.exports = {
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -123,7 +128,7 @@ module.exports = {
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve()
+/******/ 			return Promise.resolve();
 
 /******/ 		// an Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -164,11 +169,14 @@ module.exports = {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
 /******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 8);
@@ -315,10 +323,10 @@ webpackJsonp([3],{
 
 ```
 Hash: ecc1460eefa0316fd425
-Version: webpack 2.0.6-beta
-Time: 127ms
+Version: webpack 2.1.0-beta.11
+Time: 80ms
     Asset       Size  Chunks             Chunk Names
-vendor.js    4.79 kB       0  [emitted]  vendor
+vendor.js    5.13 kB       0  [emitted]  vendor
 common.js  347 bytes       1  [emitted]  common
  pageA.js  485 bytes       2  [emitted]  pageA
  pageC.js  320 bytes       3  [emitted]  pageC
@@ -355,10 +363,10 @@ chunk    {4} pageB.js (pageB) 105 bytes {1} [rendered]
 
 ```
 Hash: ecc1460eefa0316fd425
-Version: webpack 2.0.6-beta
-Time: 255ms
+Version: webpack 2.1.0-beta.11
+Time: 199ms
     Asset       Size  Chunks             Chunk Names
-vendor.js    1.08 kB       0  [emitted]  vendor
+vendor.js    1.19 kB       0  [emitted]  vendor
 common.js   92 bytes       1  [emitted]  common
  pageA.js  109 bytes       2  [emitted]  pageA
  pageC.js   71 bytes       3  [emitted]  pageC
@@ -389,16 +397,4 @@ chunk    {3} pageC.js (pageC) 105 bytes {1} [rendered]
 chunk    {4} pageB.js (pageB) 105 bytes {1} [rendered]
     > pageB [6] ./pageB.js 
     [6] ./pageB.js 105 bytes {4} [built]
-
-WARNING in pageA.js from UglifyJs
-Side effects in initialization of unused variable utility1 [./pageA.js:1,0]
-Side effects in initialization of unused variable utility2 [./pageA.js:2,0]
-
-WARNING in pageC.js from UglifyJs
-Side effects in initialization of unused variable utility2 [./pageC.js:1,0]
-Side effects in initialization of unused variable utility3 [./pageC.js:2,0]
-
-WARNING in pageB.js from UglifyJs
-Side effects in initialization of unused variable utility2 [./pageB.js:1,0]
-Side effects in initialization of unused variable utility3 [./pageB.js:2,0]
 ```

@@ -23,7 +23,7 @@ describe("ConfigTestCases", function() {
 			category.tests.forEach(function(testName) {
 				var suite = describe(testName, function() {});
 				it(testName + " should compile", function(done) {
-					this.timeout(10000);
+					this.timeout(30000);
 					var testDirectory = path.join(casesPath, category.name, testName);
 					var outputDirectory = path.join(__dirname, "js", "config", category.name, testName);
 					var options = require(path.join(testDirectory, "webpack.config.js"));

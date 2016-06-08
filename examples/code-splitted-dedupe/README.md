@@ -16,10 +16,10 @@ require(["../dedupe/b"]);
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	var parentJsonpFunction = window["webpackJsonp"];
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModule) {
+/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [];
+/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId])
@@ -27,30 +27,32 @@ require(["../dedupe/b"]);
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
-/******/ 			var _m = moreModules[moduleId];
+/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
+/******/ 				var _m = moreModules[moduleId];
 
-/******/ 			// Check if module is deduplicated
-/******/ 			switch(typeof _m) {
-/******/ 			case "object":
-/******/ 				// Module can be created from a template
-/******/ 				modules[moduleId] = (function(_m) {
-/******/ 					var args = _m.slice(1), templateId = _m[0];
-/******/ 					return function (a,b,c) {
-/******/ 						modules[templateId].apply(this, [a,b,c].concat(args));
-/******/ 					};
-/******/ 				}(_m));
-/******/ 				break;
-/******/ 			case "function":
-/******/ 				// Normal module
-/******/ 				modules[moduleId] = _m;
-/******/ 				break;
-/******/ 			default:
-/******/ 				// Module is a copy of another module
-/******/ 				modules[moduleId] = modules[_m];
-/******/ 				break;
+/******/ 				// Check if module is deduplicated
+/******/ 				switch(typeof _m) {
+/******/ 				case "object":
+/******/ 					// Module can be created from a template
+/******/ 					modules[moduleId] = (function(_m) {
+/******/ 						var args = _m.slice(1), templateId = _m[0];
+/******/ 						return function (a,b,c) {
+/******/ 							modules[templateId].apply(this, [a,b,c].concat(args));
+/******/ 						};
+/******/ 					}(_m));
+/******/ 					break;
+/******/ 				case "function":
+/******/ 					// Normal module
+/******/ 					modules[moduleId] = _m;
+/******/ 					break;
+/******/ 				default:
+/******/ 					// Module is a copy of another module
+/******/ 					modules[moduleId] = modules[_m];
+/******/ 					break;
+/******/ 				}
 /******/ 			}
 /******/ 		}
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
 /******/ 		while(resolves.length)
 /******/ 			resolves.shift()();
 
@@ -73,16 +75,16 @@ require(["../dedupe/b"]);
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -92,7 +94,7 @@ require(["../dedupe/b"]);
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
 /******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve()
+/******/ 			return Promise.resolve();
 
 /******/ 		// an Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -133,11 +135,14 @@ require(["../dedupe/b"]);
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
 /******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { throw err; };
+/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 2);
@@ -205,9 +210,9 @@ webpackJsonp([0,2],[
 /***/ function(module, exports, __webpack_require__) {
 
 	module.exports = function(cb) {
-		__webpack_require__.e/* nsure */(4).catch(function(err) { __webpack_require__.oe(err); }).then(function(require) {
+		__webpack_require__.e/* nsure */(4).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
 			cb(__webpack_require__(/*! !./index.js */ 1));
-		}.bind(null, __webpack_require__));
+		}).bind(null, __webpack_require__));
 	}
 
 /***/ },
@@ -394,13 +399,13 @@ webpackJsonp([4],{
 
 ```
 Hash: 16906a1f14360b9ac9e8
-Version: webpack 2.0.6-beta
-Time: 170ms
+Version: webpack 2.1.0-beta.11
+Time: 115ms
     Asset       Size  Chunks             Chunk Names
      0.js    1.71 kB    0, 2  [emitted]  
      1.js  933 bytes    1, 4  [emitted]  
      2.js  913 bytes       2  [emitted]  
-output.js    6.15 kB       3  [emitted]  main
+output.js    6.45 kB       3  [emitted]  main
      4.js  441 bytes       4  [emitted]  
 chunk    {0} 0.js 394 bytes {3} [rendered]
     > [2] ./example.js 2:0-51
@@ -461,13 +466,13 @@ chunk    {4} 4.js 167 bytes {0} [rendered]
 
 ```
 Hash: 16906a1f14360b9ac9e8
-Version: webpack 2.0.6-beta
-Time: 291ms
+Version: webpack 2.1.0-beta.11
+Time: 225ms
     Asset       Size  Chunks             Chunk Names
      0.js  342 bytes    0, 2  [emitted]  
      1.js  213 bytes    1, 4  [emitted]  
      2.js  209 bytes       2  [emitted]  
-output.js    1.62 kB       3  [emitted]  main
+output.js     1.7 kB       3  [emitted]  main
      4.js   90 bytes       4  [emitted]  
 chunk    {0} 0.js 394 bytes {3} [rendered]
     > [2] ./example.js 2:0-51

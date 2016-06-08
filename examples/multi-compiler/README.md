@@ -59,16 +59,16 @@ module.exports = [
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -80,6 +80,9 @@ module.exports = [
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -120,16 +123,16 @@ module.exports = [
 
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
 
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 
 /******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
+/******/ 		module.l = true;
 
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -141,6 +144,9 @@ module.exports = [
 
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
@@ -180,13 +186,13 @@ module.exports = [
 
 ```
 Hash: 6ce19ec5d44a5170ba3b6af152727b3d5da03eaa
-Version: webpack 2.0.6-beta
+Version: webpack 2.1.0-beta.11
 Child mobile:
     Hash: 6ce19ec5d44a5170ba3b
-    Version: webpack 2.0.6-beta
-    Time: 79ms
+    Version: webpack 2.1.0-beta.11
+    Time: 70ms
         Asset     Size  Chunks             Chunk Names
-    mobile.js  1.79 kB       0  [emitted]  main
+    mobile.js  1.94 kB       0  [emitted]  main
     chunk    {0} mobile.js (main) 117 bytes [rendered]
         > main [1] ./example.js 
         [0] ./mobile-stuff.js 20 bytes {0} [built]
@@ -194,10 +200,10 @@ Child mobile:
         [1] ./example.js 97 bytes {0} [built]
 Child desktop:
     Hash: 6af152727b3d5da03eaa
-    Version: webpack 2.0.6-beta
-    Time: 69ms
+    Version: webpack 2.1.0-beta.11
+    Time: 59ms
          Asset     Size  Chunks             Chunk Names
-    desktop.js  1.61 kB       0  [emitted]  main
+    desktop.js  1.75 kB       0  [emitted]  main
     chunk    {0} desktop.js (main) 97 bytes [rendered]
         > main [0] ./example.js 
         [0] ./example.js 97 bytes {0} [built]
@@ -207,32 +213,25 @@ Child desktop:
 
 ```
 Hash: 6ce19ec5d44a5170ba3b6af152727b3d5da03eaa
-Version: webpack 2.0.6-beta
+Version: webpack 2.1.0-beta.11
 Child mobile:
     Hash: 6ce19ec5d44a5170ba3b
-    Version: webpack 2.0.6-beta
-    Time: 191ms
+    Version: webpack 2.1.0-beta.11
+    Time: 115ms
         Asset       Size  Chunks             Chunk Names
-    mobile.js  283 bytes       0  [emitted]  main
+    mobile.js  298 bytes       0  [emitted]  main
     chunk    {0} mobile.js (main) 117 bytes [rendered]
         > main [1] ./example.js 
         [0] ./mobile-stuff.js 20 bytes {0} [built]
             cjs require ./mobile-stuff [1] ./example.js 2:1-26
         [1] ./example.js 97 bytes {0} [built]
-    
-    WARNING in mobile.js from UglifyJs
-    Condition always true [./example.js:1,0]
 Child desktop:
     Hash: 6af152727b3d5da03eaa
-    Version: webpack 2.0.6-beta
-    Time: 180ms
+    Version: webpack 2.1.0-beta.11
+    Time: 104ms
          Asset       Size  Chunks             Chunk Names
-    desktop.js  263 bytes       0  [emitted]  main
+    desktop.js  278 bytes       0  [emitted]  main
     chunk    {0} desktop.js (main) 97 bytes [rendered]
         > main [0] ./example.js 
         [0] ./example.js 97 bytes {0} [built]
-    
-    WARNING in desktop.js from UglifyJs
-    Condition always false [./example.js:1,0]
-    Dropping unreachable code [./example.js:2,0]
 ```
