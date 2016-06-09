@@ -2,9 +2,9 @@ Hash: 55b4e00b04fd0c502b1f
 Time: Xms
       Asset       Size  Chunks             Chunk Names
   bundle.js    5.29 kB       0  [emitted]  main
-1.bundle.js  252 bytes       1  [emitted]  
-2.bundle.js  107 bytes       2  [emitted]  
-3.bundle.js  202 bytes       3  [emitted]  
+1.bundle.js  251 bytes       1  [emitted]  
+2.bundle.js  106 bytes       2  [emitted]  
+3.bundle.js  200 bytes       3  [emitted]  
 chunk    {0} bundle.js (main) 73 bytes [rendered]
     > main [5] (webpack)/test/statsCases/chunks/index.js 
     [0] (webpack)/test/statsCases/chunks/a.js 22 bytes {0} [built]
