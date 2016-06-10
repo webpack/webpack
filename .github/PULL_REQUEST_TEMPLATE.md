@@ -24,7 +24,11 @@
 - [ ] Yes
 - [ ] No
 
-If this PR contains a breaking change, please describe the impact and migration path for existing applications: ...
+If this PR contains a breaking change, please describe the following... 
+
+* Impact:
+* Migration path for existing applications: 
+* Gihub Issue(s) this is regarding:
 
 
 **Other information**:
