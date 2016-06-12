@@ -28,7 +28,7 @@ If this PR contains a breaking change, please describe the following...
 
 * Impact:
 * Migration path for existing applications: 
-* Gihub Issue(s) this is regarding:
+* Github Issue(s) this is regarding:
 
 
 **Other information**:

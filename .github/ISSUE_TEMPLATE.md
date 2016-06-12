@@ -1,4 +1,4 @@
-## **BEFORE YOU SUBIMIT** please read the following:
+## **BEFORE YOU SUBMIT** please read the following:
 If you have a support request or question please 
 submit them to [StackOverflow](http://stackoverflow.com/questions/tagged/webpack) using the tag `[webpack]` or the [webpack Gitter](https://gitter.im/webpack/webpack). Future support requests will be closed.
 
@@ -11,10 +11,10 @@ I'm submitting a...
 - [ ] support request => Please do not submit support request here, see note at the top of this template. 
 
 
-** Webpack version: **
+**Webpack version:**
 1.10.x/2.x
 
-** Please tell us about your environment: **
+**Please tell us about your environment:**
 OSX 10.x / Linux / Windows 10
 
 **Current behavior:**
