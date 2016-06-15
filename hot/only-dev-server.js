@@ -18,20 +18,7 @@ if(module.hot) {
 
 			module.hot.apply({
 				ignoreUnaccepted: true
-			}, function(err, renewedModules) {
-				if(err) {
-					if(module.hot.status() in {
-							abort: 1,
-							fail: 1
-						}) {
-						console.warn("[HMR] Cannot apply update. Need to do a full reload!");
-						console.warn("[HMR] " + err.stack || err.message);
-					} else {
-						console.warn("[HMR] Update failed: " + err.stack || err.message);
-					}
-					return;
-				}
-
+			}).then(function(renewedModules) {
 				if(!upToDate()) {
 					check();
 				}
@@ -40,6 +27,16 @@ if(module.hot) {
 
 				if(upToDate()) {
 					console.log("[HMR] App is up to date.");
+				}
+			}).catch(function(err) {
+				if(module.hot.status() in {
+						abort: 1,
+						fail: 1
+					}) {
+					console.warn("[HMR] Cannot apply update. Need to do a full reload!");
+					console.warn("[HMR] " + err.stack || err.message);
+				} else {
+					console.warn("[HMR] Update failed: " + err.stack || err.message);
 				}
 			});
 		}).catch(function(err) {
