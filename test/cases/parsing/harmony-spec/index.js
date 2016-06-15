@@ -1,6 +1,5 @@
 import { value, add } from "./live";
 import { value as value2, add as add2 } from "./live-es5";
-import { value as valueEval, evalInModule } from "./eval";
 import { getLog } from "./order-tracker";
 import "./order-c";
 import cycleValue from "./export-cycle-a";
@@ -30,3 +29,5 @@ it("should execute modules in the correct order", function() {
 it("should bind exports before the module executes", function() {
 	cycleValue.should.be.eql(true);
 });
+
+import { value as valueEval, evalInModule } from "./eval";
