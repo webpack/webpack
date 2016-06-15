@@ -83,8 +83,8 @@
     "test": "mocha --harmony --full-trace --check-leaks",
     "travis": "npm run cover -- --report lcovonly",
     "lint": "eslint lib bin hot",
-    "beautify-lint": "beautify-lint lib/**.js hot/**.js bin/**.js benchmark/*.js test/*.js",
-    "beautify": "beautify-rewrite lib/**.js hot/**.js bin/**.js benchmark/*.js test/*.js",
+    "beautify-lint": "beautify-lint lib/**/*.js hot/**/*.js bin/**/*.js benchmark/*.js test/*.js",
+    "beautify": "beautify-rewrite lib/**/*.js hot/**/*.js bin/**/*.js benchmark/*.js test/*.js",
     "postcover": "npm run lint && npm run beautify-lint",
     "cover": "istanbul cover -x *.runtime.js node_modules/mocha/bin/_mocha",
     "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
