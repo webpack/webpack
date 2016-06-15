@@ -57,19 +57,33 @@ describe("ConfigTestCases", function() {
 							return test;
 						}
 
+						var globalContext = {
+							console: console
+						};
+
 						function _require(module) {
-							if(/^\.\.?\//.test(module)) {
-								var p = path.join(outputDirectory, module);
+							if(Array.isArray(module) || /^\.\.?\//.test(module)) {
 								var fn;
-								if(options.target === "web") {
-									fn = vm.runInNewContext("(function(require, module, exports, __dirname, __filename, it) {" + fs.readFileSync(p, "utf-8") + "\n})", {}, p);
+								var content;
+								if(Array.isArray(module)) {
+									var p = "...";
+									content = module.map(function(p) {
+										var p = path.join(outputDirectory, p);
+										return fs.readFileSync(p, "utf-8");
+									}).join("\n");
 								} else {
-									fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
+									var p = path.join(outputDirectory, module);
+									content = fs.readFileSync(p, "utf-8");
+								}
+								if(options.target === "web") {
+									fn = vm.runInNewContext("(function(require, module, exports, __dirname, __filename, it, window) {" + content + "\n})", globalContext, p);
+								} else {
+									fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it) {" + content + "\n})", p);
 								}
 								var module = {
 									exports: {}
 								};
-								fn.call(module.exports, _require, module, module.exports, outputDirectory, p, _it);
+								fn.call(module.exports, _require, module, module.exports, outputDirectory, p, _it, globalContext);
 								return module.exports;
 							} else return require(module);
 						}
