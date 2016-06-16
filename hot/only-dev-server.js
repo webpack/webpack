@@ -50,9 +50,14 @@ if(module.hot) {
 	var hotEmitter = require("./emitter");
 	hotEmitter.on("webpackHotUpdate", function(currentHash) {
 		lastHash = currentHash;
-		if(!upToDate() && module.hot.status() === "idle") {
-			console.log("[HMR] Checking for updates on the server...");
-			check();
+		if(!upToDate()) {
+			var status = module.hot.status();
+			if(status === "idle") {
+				console.log("[HMR] Checking for updates on the server...");
+				check();
+			} else if(["abort", "fail"].indexOf(status) >= 0) {
+				console.warn("[HMR] Cannot apply update as a previous update " + status + "ed. Need to do a full reload!");
+			}
 		}
 	});
 	console.log("[HMR] Waiting for update signal from WDS...");
