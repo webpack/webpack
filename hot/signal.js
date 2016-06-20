@@ -19,9 +19,9 @@ if(module.hot) {
 			}, function(err, renewedModules) {
 				if(err) {
 					if(module.hot.status() in {
-							abort: 1,
-							fail: 1
-						}) {
+						abort: 1,
+						fail: 1
+					}) {
 						console.warn("[HMR] Cannot apply update (Need to do a full reload!)");
 						console.warn("[HMR] " + err.stack || err.message);
 						console.warn("[HMR] You need to restart the application!");
@@ -37,9 +37,9 @@ if(module.hot) {
 			});
 		}).catch(function(err) {
 			if(module.hot.status() in {
-					abort: 1,
-					fail: 1
-				}) {
+				abort: 1,
+				fail: 1
+			}) {
 				console.warn("[HMR] Cannot apply update.");
 				console.warn("[HMR] " + err.stack || err.message);
 				console.warn("[HMR] You need to restart the application!");

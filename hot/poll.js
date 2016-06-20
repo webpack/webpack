@@ -17,9 +17,9 @@ if(module.hot) {
 				checkForUpdate(true);
 			}).catch(function(err) {
 				if(module.hot.status() in {
-						abort: 1,
-						fail: 1
-					}) {
+					abort: 1,
+					fail: 1
+				}) {
 					console.warn("[HMR] Cannot apply update.");
 					console.warn("[HMR] " + err.stack || err.message);
 					console.warn("[HMR] You need to restart the application!");
