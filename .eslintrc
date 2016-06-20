@@ -2,15 +2,11 @@
 	"env": {
 		"node": true
 	},
-	"plugins": [
-		"nodeca"
-	],
 	"rules": {
 		"strict": 0,
 		"camelcase": 0,
 		"curly": 0,
-		"indent": [0, "tab"],
-		"nodeca/indent": [2, "tabs", 1 ],
+		"indent": [2, "tab", { "SwitchCase": 1 }],
 		"eol-last": 1,
 		"no-shadow": 0,
 		"no-redeclare": 2,
