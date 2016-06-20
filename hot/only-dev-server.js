@@ -30,9 +30,9 @@ if(module.hot) {
 				}
 			}).catch(function(err) {
 				if(module.hot.status() in {
-						abort: 1,
-						fail: 1
-					}) {
+					abort: 1,
+					fail: 1
+				}) {
 					console.warn("[HMR] Cannot apply update. Need to do a full reload!");
 					console.warn("[HMR] " + err.stack || err.message);
 				} else {
@@ -41,9 +41,9 @@ if(module.hot) {
 			});
 		}).catch(function(err) {
 			if(module.hot.status() in {
-					abort: 1,
-					fail: 1
-				}) {
+				abort: 1,
+				fail: 1
+			}) {
 				console.warn("[HMR] Cannot check for update. Need to do a full reload!");
 				console.warn("[HMR] " + err.stack || err.message);
 			} else {
