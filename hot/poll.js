@@ -16,10 +16,8 @@ if(module.hot) {
 				require("./log-apply-result")(updatedModules, updatedModules);
 				checkForUpdate(true);
 			}).catch(function(err) {
-				if(module.hot.status() in {
-					abort: 1,
-					fail: 1
-				}) {
+				var status = module.hot.status();
+				if(["abort", "fail"].indexOf(status) >= 0) {
 					console.warn("[HMR] Cannot apply update.");
 					console.warn("[HMR] " + err.stack || err.message);
 					console.warn("[HMR] You need to restart the application!");
