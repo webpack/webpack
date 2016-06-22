@@ -14,6 +14,6 @@ it("should import a changed chunk", function(done) {
 				chunk2.counter.should.be.eql(0);
 				done();
 			}).catch(done);
-		}, 100);
+		}, 300);
 	}).catch(done);
 });
