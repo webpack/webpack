@@ -16,9 +16,7 @@ if(module.hot) {
 				return;
 			}
 
-			module.hot.apply({
-				ignoreUnaccepted: true
-			}).then(function(renewedModules) {
+			module.hot.apply().then(function(renewedModules) {
 				if(!upToDate()) {
 					check();
 				}
