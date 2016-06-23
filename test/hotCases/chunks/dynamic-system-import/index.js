@@ -11,6 +11,6 @@ it("should import a changed chunk (dynamic import)", function(done) {
 				chunk2.value.should.be.eql(2);
 				done();
 			}).catch(done);
-		}, 100);
+		}, 300);
 	}).catch(done);
 });
