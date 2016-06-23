@@ -1,3 +1,3 @@
 module.exports = [
-	[/Critical dependencies/, /a\/index\.js/]
+	[/Critical dependency/, /a\/index\.js/]
 ];
