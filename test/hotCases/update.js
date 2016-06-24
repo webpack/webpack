@@ -1,6 +1,6 @@
-module.exports = function(done) {
+module.exports = function(done, options) {
 	return function() {
-		module.hot.check(true).catch(function(err) {
+		module.hot.check(options || true).catch(function(err) {
 			done(err);
 		});
 	}

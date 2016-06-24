@@ -17,7 +17,14 @@ if(module.hot) {
 			}
 
 			module.hot.apply({
-				ignoreUnaccepted: true
+				ignoreUnaccepted: true,
+				ignoreDeclined: true,
+				onUnaccepted: function(data) {
+					console.warn("Ignored an update to unaccepted module " + data.chain.join(" -> "));
+				},
+				onDeclined: function(data) {
+					console.warn("Ignored an update to declined module " + data.chain.join(" -> "));
+				}
 			}).then(function(renewedModules) {
 				if(!upToDate()) {
 					check();

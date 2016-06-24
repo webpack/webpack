@@ -47,7 +47,8 @@ describe("HotTestCases", function() {
 						},
 						target: "async-node",
 						plugins: [
-							new webpack.HotModuleReplacementPlugin()
+							new webpack.HotModuleReplacementPlugin(),
+							new webpack.NamedModulesPlugin()
 						],
 						recordsPath: recordsPath,
 						updateIndex: 0
