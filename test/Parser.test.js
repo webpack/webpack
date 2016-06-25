@@ -279,4 +279,13 @@ describe("Parser", function() {
 			});
 		});
 	});
+
+	describe("async-await parsing", function() {
+		it("should parse async-await keywords", function () {
+			var parser = new Parser();
+			var source = "async function foo(){ await bar() }";
+			parser.parse(source);
+		})
+	})
+
 });
