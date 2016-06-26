@@ -276,6 +276,7 @@ function processOptions(options) {
 			process.stdin.resume();
 		}
 		compiler.watch(watchOptions, compilerCallback);
+		console.log('\nWebpack is watching the files…\n');
 	} else
 		compiler.run(compilerCallback);
 
