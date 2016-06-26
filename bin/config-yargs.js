@@ -195,6 +195,12 @@ module.exports = function(yargs) {
 				group: RESOLVE_GROUP,
 				requiresArg: true
 			},
+			"resolve-extensions": {
+				"type": "string",
+				describe: "Setup extensions that should be used to resolve modules (Example: --resolve-extensions '.es6,.js')",
+				group: RESOLVE_GROUP,
+				requiresArg: true
+			},
 			"resolve-loader-alias": {
 				type: "string",
 				describe: "Setup a loader alias for resolving",
