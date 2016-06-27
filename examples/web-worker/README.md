@@ -189,7 +189,7 @@ onmessage = function(event) {
 /******/ ]);
 ```
 
-# js/0.[hash].worker.hs
+# js/0.[hash].worker.js
 
 ``` javascript
 webpackChunk([0],[
