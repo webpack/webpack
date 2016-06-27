@@ -406,7 +406,11 @@ module.exports = function(optimist, argv, convertOptions) {
 
 		ifArg("resolve-extensions", function(value) {
 			ensureObject(options, "resolve");
-			options.resolve.extensions = value.split(/,\s*/);
+			if (Array.isArray(value)) {
+				options.resolve.extensions = value;
+			} else {
+				options.resolve.extensions = value.split(/,\s*/);
+			}
 		});
 
 		ifArg("optimize-max-chunks", function(value) {

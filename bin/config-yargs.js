@@ -196,8 +196,8 @@ module.exports = function(yargs) {
 				requiresArg: true
 			},
 			"resolve-extensions": {
-				"type": "string",
-				describe: "Setup extensions that should be used to resolve modules (Example: --resolve-extensions '.es6,.js')",
+				"type": "array",
+				describe: "Setup extensions that should be used to resolve modules (Example: --resolve-extensions .es6 .js)",
 				group: RESOLVE_GROUP,
 				requiresArg: true
 			},
