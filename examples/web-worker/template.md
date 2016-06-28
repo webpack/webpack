@@ -23,7 +23,7 @@
 {{js/hash.worker.js}}
 ```
 
-# js/0.[hash].worker.hs
+# js/0.[hash].worker.js
 
 ``` javascript
 {{js/0.hash.worker.js}}
