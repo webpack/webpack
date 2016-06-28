@@ -88,6 +88,11 @@ yargs.options({
 		group: DISPLAY_GROUP,
 		describe: "Display reasons about module inclusion in the output"
 	},
+	"display-used-exports": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Display information about used exports in modules (Tree Shaking)"
+	},
 	"display-error-details": {
 		type: "boolean",
 		group: DISPLAY_GROUP,
@@ -105,6 +110,7 @@ var argv = yargs.argv;
 
 if(argv.verbose) {
 	argv["display-reasons"] = true;
+	argv["display-used-exports"] = true;
 	argv["display-error-details"] = true;
 	argv["display-modules"] = true;
 	argv["display-cached"] = true;
@@ -181,6 +187,10 @@ function processOptions(options) {
 
 		ifArg("display-reasons", function(bool) {
 			outputOptions.reasons = bool;
+		});
+
+		ifArg("display-used-exports", function(bool) {
+			outputOptions.usedExports = bool;
 		});
 
 		ifArg("display-error-details", function(bool) {

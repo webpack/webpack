@@ -159,6 +159,7 @@ describe("Stats", function() {
 					chunkModules: false,
 					errorDetails: true,
 					reasons: false,
+					usedExports: false,
 					colors: true
 				});
 			});
@@ -180,6 +181,7 @@ describe("Stats", function() {
 					chunks: false,
 					modules: false,
 					reasons: false,
+					usedExports: false,
 					children: false,
 					source: false,
 					errors: false,

@@ -1,5 +1,5 @@
 import { add } from './math';
-import { reexportedMultiply } from "./library";
+import * as library from "./library";
 
 add(1, 2);
-reexportedMultiply(1, 2);
+library.reexportedMultiply(1, 2);
