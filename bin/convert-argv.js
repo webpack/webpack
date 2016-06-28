@@ -404,6 +404,15 @@ module.exports = function(optimist, argv, convertOptions) {
 		processResolveAlias("resolve-alias", "resolve");
 		processResolveAlias("resolve-loader-alias", "resolveLoader");
 
+		ifArg("resolve-extensions", function(value) {
+			ensureObject(options, "resolve");
+			if(Array.isArray(value)) {
+				options.resolve.extensions = value;
+			} else {
+				options.resolve.extensions = value.split(/,\s*/);
+			}
+		});
+
 		ifArg("optimize-max-chunks", function(value) {
 			ensureArray(options, "plugins");
 			var LimitChunkCountPlugin = require("../lib/optimize/LimitChunkCountPlugin");

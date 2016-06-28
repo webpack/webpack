@@ -32,6 +32,7 @@ module.exports = function(optimist) {
 		.string("devtool").describe("devtool", "Enable devtool for better debugging experience")
 		.boolean("progress").describe("progress", "Print compilation progress in percentage")
 		.string("resolve-alias").describe("resolve-alias", "Setup a module alias for resolving")
+		.string("resolve-extensions").describe("resolve-extensions", "Setup extensions that should be used to resolve modules")
 		.string("resolve-loader-alias").describe("resolve-loader-alias", "Setup a loader alias for resolving")
 		.describe("optimize-max-chunks", "Try to keep the chunk count below a limit")
 		.describe("optimize-min-chunk-size", "Try to keep the chunk size above a limit")
