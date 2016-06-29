@@ -55,6 +55,7 @@
     "val-loader": "~0.5.0",
     "vm-browserify": "~0.0.0",
     "webpack-dev-middleware": "^1.0.0",
+    "webpack-sources": "^0.1.2",
     "worker-loader": "~0.6.0"
   },
   "engines": {
