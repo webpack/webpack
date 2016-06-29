@@ -5,12 +5,7 @@ var options = { ignoreUnaccepted: true };
 
 it("should ignore unaccepted module updates", function(done) {
 	function waitForUpdate(fn) {
-		NEXT(require("../../update")(done, options));
-		setTimeout(function() {
-			try {
-				fn();
-			} catch(e) { done(e); }
-		}, 300);
+		NEXT(require("../../update")(done, options, fn));
 	}
 
 	a.should.be.eql(2);

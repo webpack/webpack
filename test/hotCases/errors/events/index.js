@@ -14,12 +14,11 @@ it("should fire the correct events", function(done) {
 	};
 
 	function waitForUpdate(fn) {
-		NEXT(require("../../update")(done, options));
-		setTimeout(function() {
+		NEXT(require("../../update")(done, options, function() {
 			try {
 				fn();
 			} catch(e) { done(e); }
-		}, 300);
+		}));
 	}
 
 	waitForUpdate(function() {

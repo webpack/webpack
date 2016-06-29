@@ -3,8 +3,7 @@ it("should import a changed chunk", function(done) {
 		chunk.value.should.be.eql(1);
 		chunk.value2.should.be.eql(3);
 		chunk.counter.should.be.eql(0);
-		NEXT(require("../../update")(done));
-		setTimeout(function() {
+		NEXT(require("../../update")(done, true, function() {
 			chunk.value.should.be.eql(2);
 			chunk.value2.should.be.eql(4);
 			chunk.counter.should.be.eql(1);
@@ -14,6 +13,6 @@ it("should import a changed chunk", function(done) {
 				chunk2.counter.should.be.eql(0);
 				done();
 			}).catch(done);
-		}, 300);
+		}));
 	}).catch(done);
 });
