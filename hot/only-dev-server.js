@@ -19,11 +19,15 @@ if(module.hot) {
 			module.hot.apply({
 				ignoreUnaccepted: true,
 				ignoreDeclined: true,
+				ignoreErrored: true,
 				onUnaccepted: function(data) {
 					console.warn("Ignored an update to unaccepted module " + data.chain.join(" -> "));
 				},
 				onDeclined: function(data) {
 					console.warn("Ignored an update to declined module " + data.chain.join(" -> "));
+				},
+				onErrored: function(data) {
+					console.warn("Ignored an error while updating module " + data.moduleId + " (" + data.type + ")");
 				}
 			}).then(function(renewedModules) {
 				if(!upToDate()) {

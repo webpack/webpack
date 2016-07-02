@@ -2,15 +2,19 @@ import a from "./a";
 import b from "./b";
 import d from "./d";
 import f from "./f";
+import h from "./h";
+import j from "./j";
 
 it("should fire the correct events", function(done) {
 	var events = [];
 	var options = {
 		ignoreUnaccepted: true,
 		ignoreDeclined: true,
+		ignoreErrored: true,
 		onDeclined: function(data) { events.push(data); },
 		onUnaccepted: function(data) { events.push(data); },
-		onAccepted: function(data) { events.push(data); }
+		onAccepted: function(data) { events.push(data); },
+		onErrored: function(data) { events.push(data); }
 	};
 
 	function waitForUpdate(fn) {
@@ -22,31 +26,51 @@ it("should fire the correct events", function(done) {
 	}
 
 	waitForUpdate(function() {
-		events.sort(function(a, b) {
-			if(a.type > b.type) return 1;
-			if(a.type < b.type) return -1;
-			return 0;
-		}).should.be.eql([
+		events.should.be.eql([
 			{
+				type: "unaccepted",
+				moduleId: "./index.js",
+				chain: [ "./a.js", "./index.js" ],
+			},
+			{
+				type: "accepted",
+				moduleId: "./c.js",
 				outdatedDependencies: { "./b.js": [ "./c.js" ] },
 				outdatedModules: [ "./c.js" ],
-				type: "accepted"
 			},
 			{
-				chain: [ "./g.js", "./f.js" ],
+				type: "self-declined",
+				moduleId: "./d.js",
+				chain: [ "./e.js", "./d.js" ],
+			},
+			{
+				type: "declined",
 				moduleId: "./g.js",
 				parentId: "./f.js",
-				type: "declined"
+				chain: [ "./g.js", "./f.js" ],
 			},
 			{
-				chain: [ "./e.js", "./d.js" ],
-				moduleId: "./d.js",
-				type: "self-declined"
+				type: "accepted",
+				moduleId: "./i.js",
+				outdatedDependencies: { "./h.js": [ "./i.js" ] },
+				outdatedModules: [ "./i.js" ],
 			},
 			{
-				chain: [ "./a.js", "./index.js" ],
-				moduleId: "./index.js",
-				type: "unaccepted"
+				type: "accepted",
+				moduleId: "./j.js",
+				outdatedDependencies: {},
+				outdatedModules: [ "./j.js" ],
+			},
+			{
+				type: "accept-errored",
+				moduleId: "./h.js",
+				dependencyId: "./i.js",
+				error: new Error("Error while loading module h")
+			},
+			{
+				type: "self-accept-errored",
+				moduleId: "./j.js",
+				error: new Error("Error while loading module j")
 			},
 		]);
 		done();
