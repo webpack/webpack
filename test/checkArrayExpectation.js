@@ -1,13 +1,18 @@
 var fs = require("fs");
 var path = require("path");
 
-module.exports = function checkArrayExpectation(testDirectory, object, kind, upperCaseKind, done) {
+module.exports = function checkArrayExpectation(testDirectory, object, kind, filename, upperCaseKind, done) {
+	if(!done) {
+		done = upperCaseKind;
+		upperCaseKind = filename;
+		filename = kind + "s";
+	}
 	var array = object[kind + "s"].slice().sort();
 	if(kind === "warning") array = array.filter(function(item) {
 		return !/from UglifyJs/.test(item);
 	});
-	if(fs.existsSync(path.join(testDirectory, kind + "s.js"))) {
-		var expected = require(path.join(testDirectory, kind + "s.js"));
+	if(fs.existsSync(path.join(testDirectory, filename + ".js"))) {
+		var expected = require(path.join(testDirectory, filename + ".js"));
 		if(expected.length < array.length)
 			return done(new Error("More " + kind + "s while compiling than expected:\n\n" + array.join("\n\n"))), true;
 		else if(expected.length > array.length)

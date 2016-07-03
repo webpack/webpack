@@ -77,8 +77,8 @@ describe("HotTestCases", function() {
 								var jsonStats = stats.toJson({
 									errorDetails: true
 								});
-								if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
-								if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
+								if(checkArrayExpectation(testDirectory, jsonStats, "error", "errors" + options.updateIndex, "Error", done)) return;
+								if(checkArrayExpectation(testDirectory, jsonStats, "warning", "warnings" + options.updateIndex, "Warning", done)) return;
 								if(callback) callback();
 							})
 						}
