@@ -16,7 +16,9 @@ import threeIsOdd, { even } from "circularEven";
 import { specA, specB } from "exports-specifier";
 
 import Thing, { Other } from "commonjs";
+import * as commonjs from "commonjs";
 import Thing2, { Other as Other2 } from "commonjs-trans";
+import * as commonjsTrans from "commonjs-trans";
 
 import defaultExport from "def";
 
@@ -96,4 +98,17 @@ it("should be able to import commonjs", function() {
 	new Thing2().value.should.be.eql("thing");
 	Other2.should.be.eql("other");
 	Thing3().should.be.eql("thing");
+});
+
+it("should be able to import commonjs with star import", function() {
+	var copyOfCommonjs = commonjs;
+	commonjs().should.be.eql("thing");
+	commonjs.Other.should.be.eql("other");
+	copyOfCommonjs().should.be.eql("thing");
+	copyOfCommonjs.Other.should.be.eql("other");
+	var copyOfCommonjsTrans = commonjsTrans;
+	new commonjsTrans.default().value.should.be.eql("thing");
+	commonjsTrans.Other.should.be.eql("other");
+	new copyOfCommonjsTrans.default().value.should.be.eql("thing");
+	copyOfCommonjsTrans.Other.should.be.eql("other");
 });
