@@ -1,0 +1,37 @@
+{
+  "nextFreeModuleId": 8,
+  "modules": {
+    "byIdentifier": {
+      "b.js": 0,
+      "c.js": 1,
+      "d.js": 2,
+      "e.js": 3,
+      "index.js": 4,
+      "a.js": 5,
+      "f.js": 6,
+      "g.js": 7
+    }
+  },
+  "nextFreeChunkId": 3,
+  "chunks": {
+    "byName": {},
+    "byBlocks": {}
+  },
+  "aggressiveSplits": [
+    {
+      "modules": [
+        "b.js",
+        "c.js"
+      ],
+      "hash": "48c8b1dae03a37363ec82be4f7b781bc",
+      "id": 1
+    },
+    {
+      "modules": [
+        "a.js",
+        "d.js"
+      ],
+      "hash": "40c7c5931738a3b1b7c5fa9661683148"
+    }
+  ]
+}
