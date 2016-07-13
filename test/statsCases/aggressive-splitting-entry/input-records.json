@@ -1,0 +1,27 @@
+{
+  "nextFreeModuleId": 5,
+  "modules": {
+    "byIdentifier": {
+      "b.js": 0,
+      "c.js": 1,
+      "d.js": 2,
+      "e.js": 3,
+      "index.js": 4
+    }
+  },
+  "nextFreeChunkId": 2,
+  "chunks": {
+    "byName": {},
+    "byBlocks": {}
+  },
+  "aggressiveSplits": [
+    {
+      "modules": [
+        "b.js",
+        "c.js"
+      ],
+      "hash": "48c8b1dae03a37363ec82be4f7b781bc",
+      "id": 1
+    }
+  ]
+}

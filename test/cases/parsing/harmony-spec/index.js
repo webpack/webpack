@@ -3,6 +3,7 @@ import { value as value2, add as add2 } from "./live-es5";
 import { getLog } from "./order-tracker";
 import "./order-c";
 import cycleValue from "./export-cycle-a";
+import { data } from "./self-cycle";
 
 it("should establish live binding of values", function() {
 	value.should.be.eql(0);
@@ -28,6 +29,10 @@ it("should execute modules in the correct order", function() {
 
 it("should bind exports before the module executes", function() {
 	cycleValue.should.be.eql(true);
+});
+
+it("should allow to import live variables from itself", function() {
+	data.should.be.eql([undefined, 1, 2]);
 });
 
 import { value as valueEval, evalInModule } from "./eval";

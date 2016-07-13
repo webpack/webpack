@@ -68,6 +68,11 @@ yargs.options({
 		group: DISPLAY_GROUP,
 		describe: "Display chunks in the output"
 	},
+	"display-entrypoints": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Display entry points in the output"
+	},
 	"display-origins": {
 		type: "boolean",
 		group: DISPLAY_GROUP,
@@ -110,6 +115,7 @@ var argv = yargs.argv;
 
 if(argv.verbose) {
 	argv["display-reasons"] = true;
+	argv["display-entrypoints"] = true;
 	argv["display-used-exports"] = true;
 	argv["display-error-details"] = true;
 	argv["display-modules"] = true;
@@ -185,6 +191,10 @@ function processOptions(options) {
 			outputOptions.chunks = bool;
 		});
 
+		ifArg("display-entrypoints", function(bool) {
+			outputOptions.entrypoints = bool;
+		});
+
 		ifArg("display-reasons", function(bool) {
 			outputOptions.reasons = bool;
 		});
@@ -216,6 +226,8 @@ function processOptions(options) {
 	} else {
 		if(typeof outputOptions.chunks === "undefined")
 			outputOptions.chunks = true;
+		if(typeof outputOptions.entrypoints === "undefined")
+			outputOptions.entrypoints = true;
 		if(typeof outputOptions.modules === "undefined")
 			outputOptions.modules = true;
 		if(typeof outputOptions.chunkModules === "undefined")
