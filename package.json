@@ -37,7 +37,7 @@
     "es6-promise-polyfill": "^1.1.1",
     "eslint": "^1.1.0",
     "express": "~4.13.1",
-    "extract-text-webpack-plugin": "~2.0.0-beta.0",
+    "extract-text-webpack-plugin": "^2.0.0-beta",
     "file-loader": "~0.8.0",
     "i18n-webpack-plugin": "^0.3.0",
     "istanbul": "^0.4.1",
