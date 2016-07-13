@@ -318,6 +318,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		ifArg("output-filename", function(value) {
 			ensureObject(options, "output");
 			options.output.filename = value;
+			noOutputFilenameDefined = false;
 		});
 
 		ifArg("output-chunk-filename", function(value) {
