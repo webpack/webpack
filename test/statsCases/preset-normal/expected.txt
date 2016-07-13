@@ -1,6 +1,6 @@
-Hash: 8ca45b6d16d1f1e8be32
+Hash: 85e57db9faf6765d1cf0
 Time: Xms
-chunk    {0} main.js (main) 73 bytes [rendered]
-chunk    {1} 1.js 54 bytes {0} [rendered]
-chunk    {2} 2.js 22 bytes {0} [rendered]
-chunk    {3} 3.js 44 bytes {1} [rendered]
+chunk    {0} 0.js 54 bytes {3} [rendered]
+chunk    {1} 1.js 22 bytes {3} [rendered]
+chunk    {2} 2.js 44 bytes {0} [rendered]
+chunk    {3} main.js (main) 73 bytes [entry] [rendered]
