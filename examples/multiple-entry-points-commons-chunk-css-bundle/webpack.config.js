@@ -15,7 +15,10 @@ module.exports = {
 		loaders: [
 			{
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract("style-loader", "css-loader")
+				loader: ExtractTextPlugin.extract({
+					notExtractLoader: "style-loader",
+					loader: "css-loader"
+				})
 			},
 			{ test: /\.png$/, loader: "file-loader" }
 		]
@@ -26,6 +29,8 @@ module.exports = {
 			filename: "commons.js",
 			chunks: ["A", "B"]
 		}),
-		new ExtractTextPlugin("[name].css"),
+		new ExtractTextPlugin({
+			filename: "[name].css"
+		}),
 	]
 };

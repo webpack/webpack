@@ -4,12 +4,17 @@ module.exports = {
 		loaders: [
 			{
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract("css-loader")
+				loader: ExtractTextPlugin.extract({
+					loader: "css-loader"
+				})
 			},
 			{ test: /\.png$/, loader: "file-loader" }
 		]
 	},
 	plugins: [
-		new ExtractTextPlugin("style.css", { allChunks: true })
+		new ExtractTextPlugin({
+			filename: "style.css",
+			allChunks: true
+		})
 	]
 };
