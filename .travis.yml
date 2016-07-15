@@ -8,7 +8,6 @@ node_js:
   - "6"
   - "5"
   - "4"
-  - "0.12"
 script: npm run travis
 env:
   - NO_WATCH_TESTS=1
