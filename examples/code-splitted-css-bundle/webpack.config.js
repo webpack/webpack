@@ -4,12 +4,17 @@ module.exports = {
 		loaders: [
 			{
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract("style-loader", "css-loader")
+				loader: ExtractTextPlugin.extract({
+					notExtractLoader: "style-loader",
+					loader: "css-loader"
+				})
 			},
 			{ test: /\.png$/, loader: "file-loader" }
 		]
 	},
 	plugins: [
-		new ExtractTextPlugin("style.css")
+		new ExtractTextPlugin({
+			filename: "style.css"
+		})
 	]
 };
