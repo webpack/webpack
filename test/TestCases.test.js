@@ -159,7 +159,16 @@ describe("TestCases", function() {
 									}]
 								},
 								plugins: (config.plugins || []).concat(
-									new webpack.dependencies.LabeledModulesPlugin()
+									new webpack.dependencies.LabeledModulesPlugin(),
+									function() {
+										this.plugin("compilation", function(compilation) {
+											["optimize", "optimize-modules-basic", "optimize-chunks-basic", "after-optimize-tree", "after-optimize-assets"].forEach(function(hook) {
+												compilation.plugin(hook, function() {
+													compilation.checkConstraints();
+												});
+											});
+										});
+									}
 								)
 							};
 							webpack(options, function(err, stats) {

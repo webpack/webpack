@@ -1,5 +1,4 @@
 {
-  "nextFreeModuleId": 5,
   "modules": {
     "byIdentifier": {
       "b.js": 0,
@@ -7,12 +6,22 @@
       "d.js": 2,
       "e.js": 3,
       "index.js": 4
+    },
+    "usedIds": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4
     }
   },
-  "nextFreeChunkId": 2,
   "chunks": {
     "byName": {},
-    "byBlocks": {}
+    "byBlocks": {},
+    "usedIds": {
+      "0": 0,
+      "1": 1
+    }
   },
   "aggressiveSplits": [
     {

@@ -1,5 +1,4 @@
 {
-  "nextFreeModuleId": 12,
   "modules": {
     "byIdentifier": {
       "a.js": 0,
@@ -14,9 +13,22 @@
       "index.js": 9,
       "j.js": 10,
       "k.js": 11
+    },
+    "usedIds": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4,
+      "5": 5,
+      "6": 6,
+      "7": 7,
+      "8": 8,
+      "9": 9,
+      "10": 10,
+      "11": 11
     }
   },
-  "nextFreeChunkId": 9,
   "chunks": {
     "byName": {
       "main": 6
@@ -32,6 +44,17 @@
       "index.js:4/4:0": 5,
       "index.js:2/4:0": 7,
       "index.js:0/4": 8
+    },
+    "usedIds": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4,
+      "5": 5,
+      "6": 6,
+      "7": 7,
+      "8": 8
     }
   },
   "aggressiveSplits": [
