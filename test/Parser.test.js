@@ -285,7 +285,18 @@ describe("Parser", function() {
 			var parser = new Parser();
 			var source = "async function foo(){ await bar() }";
 			parser.parse(source);
-		})
+		});
+		it("should parse async-await correctly", function () {
+			var parser = new Parser();
+			var source = `
+class User extends Store { 
+	async fetchCurrent(){ 
+	  var user = await request.get('/api/users?action=me'); 
+	  this.update(user) 
+	}
+}`;
+			parser.parse(source);
+		});
 	})
 
 });
