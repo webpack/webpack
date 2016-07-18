@@ -17,6 +17,9 @@ install:
 
 build: off
 
+matrix:
+  fast_finish: true
+
 test_script:
   - node --version
   - npm --version
