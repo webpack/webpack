@@ -13,6 +13,8 @@ environment:
 
 install:
   - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version)
+  - npm link
+  - npm link webpack
   - npm install --msvs_version=2013
 
 build: off
