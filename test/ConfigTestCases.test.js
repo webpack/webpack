@@ -66,7 +66,7 @@ describe("ConfigTestCases", function() {
 								var fn;
 								var content;
 								if(Array.isArray(module)) {
-									var p = "...";
+									var p = path.join(outputDirectory, module[0]);
 									content = module.map(function(p) {
 										var p = path.join(outputDirectory, p);
 										return fs.readFileSync(p, "utf-8");
@@ -85,6 +85,8 @@ describe("ConfigTestCases", function() {
 								};
 								fn.call(module.exports, _require, module, module.exports, outputDirectory, p, _it, globalContext);
 								return module.exports;
+							} else if(testConfig.modules && module in testConfig.modules) {
+								return testConfig.modules[module];
 							} else return require(module);
 						}
 						var filesCount = 0;
