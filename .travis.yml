@@ -12,8 +12,9 @@ script: npm run travis
 env:
   - NO_WATCH_TESTS=1
 
-before_script:
+install:
   - npm link ../webpack --force
+  - npm install
 
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
