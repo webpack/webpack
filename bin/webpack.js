@@ -29,9 +29,9 @@ yargs.options({
 		describe: "Prints the result as JSON."
 	},
 	"color": {
-		type: "boolean",,
- +		alias: "colors",
- +		default: function supportsColor() { return require("supports-color"); },
+		type: "boolean",
+  		alias: "colors",
+  		default: function supportsColor() { return require("supports-color"); },
 		group: DISPLAY_GROUP,
 		describe: "Enables/Disables colors on the console"
 	},
