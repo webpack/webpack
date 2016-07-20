@@ -53,7 +53,7 @@ export function increment(val) {
 
 /******/ 	// objects to store loaded and loading chunks
 /******/ 	var installedChunks = {
-/******/ 		0: 0
+/******/ 		1: 0
 /******/ 	};
 
 /******/ 	// The require function
@@ -128,6 +128,27 @@ export function increment(val) {
 /******/ 	// identity function for calling harmory imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
+/******/ 	// define getter function for harmory exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		Object.defineProperty(exports, name, {
+/******/ 			configurable: false,
+/******/ 			enumerable: true,
+/******/ 			get: getter
+/******/ 		});
+/******/ 	};
+
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
@@ -135,7 +156,7 @@ export function increment(val) {
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -145,49 +166,49 @@ export function increment(val) {
   \**********************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__math__ = __webpack_require__(/*! ./math */ 3);
-	/* harmony export */ exports["a"] = increment;
-	function increment(val) {
-	    return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__math__["a" /* add */])(val, 1);
-	};
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__math__ = __webpack_require__(/*! ./math */ 2);
+/* harmony export */ exports["a"] = increment;
+function increment(val) {
+    return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__math__["a" /* add */])(val, 1);
+};
 
 
 /***/ },
 /* 1 */,
 /* 2 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__increment__ = __webpack_require__(/*! ./increment */ 0);
-
-	var a = 1;
-	__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__increment__["a" /* increment */])(a); // 2
-
-	// async loading
-	__webpack_require__.e/* System.import */(1).then(__webpack_require__.bind(null, /*! ./async-loaded */ 1)).then(function(asyncLoaded) {
-		console.log(asyncLoaded);
-	});
-
-
-/***/ },
-/* 3 */
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
-	/* harmony export */ exports["a"] = add;function add() {
-		var sum = 0, i = 0, args = arguments, l = args.length;
-		while (i < l) {
-			sum += args[i++];
-		}
-		return sum;
+"use strict";
+/* harmony export */ exports["a"] = add;function add() {
+	var sum = 0, i = 0, args = arguments, l = args.length;
+	while (i < l) {
+		sum += args[i++];
 	}
+	return sum;
+}
+
+
+/***/ },
+/* 3 */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/***/ function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__increment__ = __webpack_require__(/*! ./increment */ 0);
+
+var a = 1;
+__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__increment__["a" /* increment */])(a); // 2
+
+// async loading
+__webpack_require__.e/* System.import */(0).then(__webpack_require__.bind(null, /*! ./async-loaded */ 1)).then(function(asyncLoaded) {
+	console.log(asyncLoaded);
+});
 
 
 /***/ }
@@ -199,43 +220,49 @@ export function increment(val) {
 ## Uncompressed
 
 ```
-Hash: 7c0c96380daef3d0f428
-Version: webpack 2.1.0-beta.11
-Time: 66ms
+Hash: b0a43c6029aaacb5e196
+Version: webpack 2.1.0-beta.19
+Time: 69ms
     Asset       Size  Chunks             Chunk Names
-output.js    5.74 kB       0  [emitted]  main
-     1.js  372 bytes       1  [emitted]  
-chunk    {0} output.js (main) 426 bytes [rendered]
-    > main [2] ./example.js 
-    [0] ./increment.js 94 bytes {0} [built]
-        harmony import ./increment [2] ./example.js 1:0-47
-    [2] ./example.js 190 bytes {0} [built]
-    [3] ./math.js 142 bytes {0} [built]
+     0.js  323 bytes       0  [emitted]  
+output.js     6.6 kB       1  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} 0.js 25 bytes {1} [rendered]
+    > [3] ./example.js 6:0-31
+    [1] ./async-loaded.js 25 bytes {0} [built]
+        System.import ./async-loaded [3] ./example.js 6:0-31
+chunk    {1} output.js (main) 426 bytes [entry] [rendered]
+    > main [3] ./example.js 
+    [0] ./increment.js 94 bytes {1} [built]
+        [only some exports used: increment]
+        harmony import ./increment [3] ./example.js 1:0-47
+    [2] ./math.js 142 bytes {1} [built]
+        [only some exports used: add]
         harmony import ./math [0] ./increment.js 1:0-29
-chunk    {1} 1.js 25 bytes {0} [rendered]
-    > [2] ./example.js 6:0-31
-    [1] ./async-loaded.js 25 bytes {1} [built]
-        System.import ./async-loaded [2] ./example.js 6:0-31
+    [3] ./example.js 190 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 7c0c96380daef3d0f428
-Version: webpack 2.1.0-beta.11
-Time: 159ms
-    Asset       Size  Chunks             Chunk Names
-output.js    1.34 kB       0  [emitted]  main
-     1.js  151 bytes       1  [emitted]  
-chunk    {0} output.js (main) 426 bytes [rendered]
-    > main [2] ./example.js 
-    [0] ./increment.js 94 bytes {0} [built]
-        harmony import ./increment [2] ./example.js 1:0-47
-    [2] ./example.js 190 bytes {0} [built]
-    [3] ./math.js 142 bytes {0} [built]
+Hash: b0a43c6029aaacb5e196
+Version: webpack 2.1.0-beta.19
+Time: 138ms
+    Asset      Size  Chunks             Chunk Names
+     0.js  97 bytes       0  [emitted]  
+output.js    1.6 kB       1  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} 0.js 25 bytes {1} [rendered]
+    > [3] ./example.js 6:0-31
+    [1] ./async-loaded.js 25 bytes {0} [built]
+        System.import ./async-loaded [3] ./example.js 6:0-31
+chunk    {1} output.js (main) 426 bytes [entry] [rendered]
+    > main [3] ./example.js 
+    [0] ./increment.js 94 bytes {1} [built]
+        [only some exports used: increment]
+        harmony import ./increment [3] ./example.js 1:0-47
+    [2] ./math.js 142 bytes {1} [built]
+        [only some exports used: add]
         harmony import ./math [0] ./increment.js 1:0-29
-chunk    {1} 1.js 25 bytes {0} [rendered]
-    > [2] ./example.js 6:0-31
-    [1] ./async-loaded.js 25 bytes {1} [built]
-        System.import ./async-loaded [2] ./example.js 6:0-31
+    [3] ./example.js 190 bytes {1} [built]
 ```

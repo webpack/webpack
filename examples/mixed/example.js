@@ -2,6 +2,7 @@
 var commonjs1 = require("./commonjs");
 var amd1 = require("./amd");
 var labeled1 = require("./labeled");
+var harmony1 = require("./harmony");
 
 // AMD-style requires (with all webpack features)
 require([

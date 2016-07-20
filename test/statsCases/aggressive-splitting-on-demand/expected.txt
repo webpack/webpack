@@ -6,7 +6,7 @@ Time: Xms
 5ae9e18455b866684bd0.js    1.94 kB       2  [emitted]  
 e91ec4902ca3057b42bb.js    1.93 kB       3  [emitted]  
 0947f0875d56ab0bfe02.js  977 bytes       4  [emitted]  
-6335d9dcc7fa048743b7.js    6.74 kB       6  [emitted]  main
+6335d9dcc7fa048743b7.js    7.15 kB       6  [emitted]  main
 cf500be0e585f01d2ccb.js  983 bytes       9  [emitted]  
 a7bfb642a544b4302cc4.js  975 bytes      11  [emitted]  
 Entrypoint main = 6335d9dcc7fa048743b7.js
