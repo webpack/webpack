@@ -13,8 +13,7 @@ env:
   - NO_WATCH_TESTS=1
 
 before_script:
-  - npm link
-  - npm link webpack
+  - npm link ../webpack --force
 
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
