@@ -29,7 +29,8 @@ yargs.options({
 		describe: "Prints the result as JSON."
 	},
 	"color": {
-		type: "boolean",
+		type: "boolean",,
+ +		alias: "colors",
 		group: DISPLAY_GROUP,
 		describe: "Enables/Disables colors on the console"
 	},
