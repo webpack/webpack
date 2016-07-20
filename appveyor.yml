@@ -9,7 +9,6 @@ environment:
   matrix:
     - nodejs_version: 6
     - nodejs_version: 5
-    - nodejs_version: 4
 
 install:
   - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version)
