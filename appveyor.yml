@@ -7,18 +7,20 @@ init:
 # what combinations to test
 environment:
   matrix:
-    - nodejs_version: 0.12
-
-# combinations having this can fail
-matrix:
-  allow_failures:
-    - nodejs_version: 0.13
+    - nodejs_version: 6
+    - nodejs_version: 5
+    - nodejs_version: 4
 
 install:
   - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version)
+  - npm link
+  - npm link webpack
   - npm install --msvs_version=2013
 
 build: off
+
+matrix:
+  fast_finish: true
 
 test_script:
   - node --version
