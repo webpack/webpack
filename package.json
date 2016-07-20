@@ -83,6 +83,7 @@
     "pretest": "npm run lint && npm run beautify-lint",
     "test": "mocha --harmony --full-trace --check-leaks",
     "travis": "npm run cover -- --report lcovonly",
+    "appveyor": "mocha --harmony --full-trace",
     "lint": "eslint lib bin hot",
     "beautify-lint": "beautify-lint lib/**/*.js hot/**/*.js bin/**/*.js benchmark/*.js test/*.js",
     "beautify": "beautify-rewrite lib/**/*.js hot/**/*.js bin/**/*.js benchmark/*.js test/*.js",
