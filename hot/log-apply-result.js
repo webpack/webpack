@@ -21,5 +21,10 @@ module.exports = function(updatedModules, renewedModules) {
 		renewedModules.forEach(function(moduleId) {
 			console.log("[HMR]  - " + moduleId);
 		});
+		var numberIds = renewedModules.every(function(moduleId) {
+			return typeof moduleId === "number";
+		});
+		if(numberIds)
+			console.log("[HMR] Consider using the NamedModulesPlugin for module names.")
 	}
 };
