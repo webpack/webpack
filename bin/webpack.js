@@ -30,6 +30,10 @@ yargs.options({
 	},
 	"color": {
 		type: "boolean",
+		alias: "colors",
+		default: function supportsColor() {
+			return require("supports-color");
+		},
 		group: DISPLAY_GROUP,
 		describe: "Enables/Disables colors on the console"
 	},
