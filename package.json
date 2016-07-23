@@ -49,6 +49,7 @@
     "less-loader": "^2.0.0",
     "mocha": "^2.3.4",
     "mocha-lcov-reporter": "^1.0.0",
+    "nsp": "^2.6.1",
     "raw-loader": "~0.5.0",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
@@ -85,9 +86,10 @@
     "travis": "npm run cover -- --report lcovonly",
     "appveyor": "mocha --harmony --full-trace",
     "lint": "eslint lib bin hot",
+    "nsp": "nsp check --output summary",
     "beautify-lint": "beautify-lint lib/**/*.js hot/**/*.js bin/**/*.js benchmark/*.js test/*.js",
     "beautify": "beautify-rewrite lib/**/*.js hot/**/*.js bin/**/*.js benchmark/*.js test/*.js",
-    "postcover": "npm run lint && npm run beautify-lint",
+    "postcover": "npm run lint && npm run beautify-lint && npm run nsp",
     "cover": "istanbul cover -x *.runtime.js node_modules/mocha/bin/_mocha",
     "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
   }
