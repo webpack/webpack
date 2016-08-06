@@ -16,7 +16,7 @@ if(module.hot) {
 				return;
 			}
 
-			module.hot.apply({
+			return module.hot.apply({
 				ignoreUnaccepted: true,
 				ignoreDeclined: true,
 				ignoreErrored: true,
