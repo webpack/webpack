@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "1.13.1",
+  "version": "1.13.2",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jade, coffee, css, less, ... and your custom stuff.",
   "dependencies": {
@@ -12,7 +12,7 @@
     "loader-utils": "^0.2.11",
     "memory-fs": "~0.3.0",
     "mkdirp": "~0.5.0",
-    "node-libs-browser": ">= 0.4.0 <=0.6.0",
+    "node-libs-browser": "^1.0.0",
     "optimist": "~0.6.0",
     "supports-color": "^3.1.0",
     "tapable": "~0.1.8",
