@@ -39,14 +39,6 @@ if(module.hot) {
 				if(upToDate()) {
 					console.log("[HMR] App is up to date.");
 				}
-			}).catch(function(err) {
-				var status = module.hot.status();
-				if(["abort", "fail"].indexOf(status) >= 0) {
-					console.warn("[HMR] Cannot apply update. Need to do a full reload!");
-					console.warn("[HMR] " + err.stack || err.message);
-				} else {
-					console.warn("[HMR] Update failed: " + err.stack || err.message);
-				}
 			});
 		}).catch(function(err) {
 			var status = module.hot.status();
