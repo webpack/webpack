@@ -14,21 +14,12 @@ if(module.hot) {
 				return;
 			}
 
-			module.hot.apply({
-				ignoreUnaccepted: true
-			}, function(err, renewedModules) {
-				if(err) {
-					var status = module.hot.status();
-					if(["abort", "fail"].indexOf(status) >= 0) {
-						console.warn("[HMR] Cannot apply update (Need to do a full reload!)");
-						console.warn("[HMR] " + err.stack || err.message);
-						console.warn("[HMR] You need to restart the application!");
-					} else {
-						console.warn("[HMR] Update failed: " + err.stack || err.message);
-					}
-					return;
-				}
-
+			return module.hot.apply({
+				ignoreUnaccepted: true,
+				onUnaccepted: function(data) {
+					console.warn("Ignored an update to unaccepted module " + data.chain.join(" -> "));
+				},
+			}).then(function(renewedModules) {
 				require("./log-apply-result")(updatedModules, renewedModules);
 
 				checkForUpdate(true);
