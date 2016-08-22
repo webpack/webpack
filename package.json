@@ -88,7 +88,7 @@
     "travis": "npm run cover -- --report lcovonly",
     "appveyor": "mocha --harmony --full-trace",
     "lint": "eslint lib bin hot",
-		"lint-files": "npm run lint && npm run beautify-lint",
+    "lint-files": "npm run lint && npm run beautify-lint",
     "nsp": "nsp check --output summary",
     "beautify-lint": "beautify-lint lib/**/*.js hot/**/*.js bin/**/*.js benchmark/*.js test/*.js",
     "beautify": "beautify-rewrite lib/**/*.js hot/**/*.js bin/**/*.js benchmark/*.js test/*.js",
