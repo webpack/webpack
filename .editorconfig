@@ -9,5 +9,8 @@ trim_trailing_whitespace = true
 insert_final_newline = true
 max_line_length = 233
 
+[test/cases/parsing/bom/bomfile.{css,js}]
+charset = utf-8-bom
+
 [*.md]
 trim_trailing_whitespace = false
