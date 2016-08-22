@@ -4,6 +4,7 @@ fs.existsSync = fs.existsSync || path.existsSync;
 var resolve = require("enhanced-resolve");
 var interpret = require("interpret");
 var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
+var isES6DefaultExportedFunc = require("../lib/isES6DefaultExportedFunc");
 
 module.exports = function(optimist, argv, convertOptions) {
 
@@ -94,12 +95,8 @@ module.exports = function(optimist, argv, convertOptions) {
 		configFileLoaded = true;
 	}
 
-	var isES6DefaultExportedFunc = (
-		typeof options === "object" && options !== null && typeof options.default === "function"
-	);
-
-	if(typeof options === "function" || isES6DefaultExportedFunc) {
-		options = isES6DefaultExportedFunc ? options.default : options;
+	if(typeof options === "function" || isES6DefaultExportedFunc(options)) {
+		options = isES6DefaultExportedFunc(options) ? options.default : options;
 		options = options(argv.env, argv);
 	}
 
