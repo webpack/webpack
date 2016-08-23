@@ -146,7 +146,7 @@ loaded asynchronously at runtime. This reduces the initial loading time.
 webpack can do many optimizations to **reduce the output size of your
 JavaScript** by deduplicating frequently used modules, minifying, and giving
 you full control of what is loaded initially and what is loaded at runtime
-through code splitting. It can also can make your code chunks **cache
+through code splitting. It can also make your code chunks **cache
 friendly** by using hashes.
 
 [Optimization documentation](https://webpack.github.io/docs/optimization.html)
