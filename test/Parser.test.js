@@ -222,7 +222,7 @@ describe("Parser", function() {
 		var actual = testParser.parse(source);
 		should.strictEqual(typeof actual, "object");
 		should.strictEqual(typeof actual.comments, "object");
-		state.forEach(function(element, index) {
+		actual.comments.forEach(function(element, index) {
 			should.strictEqual(typeof element.type, "string");
 			should.strictEqual(typeof element.value, "string");
 			element.type.should.be.eql(state[index].type);
