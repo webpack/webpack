@@ -22,6 +22,12 @@ module.exports = function(yargs) {
 				describe: "Enviroment passed to the config, when it is a function",
 				group: CONFIG_GROUP
 			},
+			"version": {
+				type: "string",
+				describe: "Print the webpack version",
+				alias: "v",
+				group: BASIC_GROUP,
+			},
 			"context": {
 				type: "string",
 				describe: "The root directory for resolving entry point and stats",
