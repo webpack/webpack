@@ -18,7 +18,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	// Version
 	if(argv.v || argv.version) {
 		console.log(require("../package.json").version);
-		process.exit(-1); // eslint-disable-line
+		process.exit(0); // eslint-disable-line
 	}
 
 	// Shortcuts

@@ -24,7 +24,7 @@ module.exports = function(yargs) {
 			},
 			"version": {
 				type: "string",
-				describe: "Print the webpack version",
+				describe: "Webpack version",
 				alias: "v",
 				group: BASIC_GROUP,
 			},
