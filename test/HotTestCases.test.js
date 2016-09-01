@@ -3,6 +3,7 @@ var path = require("path");
 var fs = require("fs");
 var vm = require("vm");
 var Test = require("mocha/lib/test");
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var checkArrayExpectation = require("./checkArrayExpectation");
 
 var webpack = require("../lib/webpack");
@@ -48,13 +49,20 @@ describe("HotTestCases", function() {
 							loaders: [{
 								test: /\.js$/,
 								loader: path.join(__dirname, "hotCases", "fake-update-loader.js")
+							}, {
+								test: /\.css$/,
+								loader: ExtractTextPlugin.extract({
+									fallbackLoader: "style-loader",
+									loader: "css-loader"
+								})
 							}]
 						},
 						target: "async-node",
 						plugins: [
 							new webpack.HotModuleReplacementPlugin(),
 							new webpack.NamedModulesPlugin(),
-							new webpack.LoaderOptionsPlugin(fakeUpdateLoaderOptions)
+							new webpack.LoaderOptionsPlugin(fakeUpdateLoaderOptions),
+							new ExtractTextPlugin("bundle.css")
 						],
 						recordsPath: recordsPath
 					}
@@ -84,18 +92,18 @@ describe("HotTestCases", function() {
 								});
 								if(checkArrayExpectation(testDirectory, jsonStats, "error", "errors" + fakeUpdateLoaderOptions.options.updateIndex, "Error", done)) return;
 								if(checkArrayExpectation(testDirectory, jsonStats, "warning", "warnings" + fakeUpdateLoaderOptions.options.updateIndex, "Warning", done)) return;
-								if(callback) callback();
+								if(callback) callback(jsonStats);
 							})
 						}
 
 						function _require(module) {
 							if(module.substr(0, 2) === "./") {
 								var p = path.join(outputDirectory, module);
-								var fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, NEXT) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
+								var fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, NEXT, STATS) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
 								var module = {
 									exports: {}
 								};
-								fn.call(module.exports, _require, module, module.exports, outputDirectory, p, _it, _next);
+								fn.call(module.exports, _require, module, module.exports, outputDirectory, p, _it, _next, jsonStats);
 								return module.exports;
 							} else return require(module);
 						}
