@@ -9,7 +9,8 @@ var webpack = require("../lib/webpack");
 var base = path.join(__dirname, "statsCases");
 var outputBase = path.join(__dirname, "js", "stats");
 var tests = fs.readdirSync(base).filter(function(testName) {
-	return fs.existsSync(path.join(base, testName, "index.js"))
+	return fs.existsSync(path.join(base, testName, "index.js")) ||
+		fs.existsSync(path.join(base, testName, "webpack.config.js"))
 });
 var Stats = require("../lib/Stats");
 
@@ -26,9 +27,9 @@ describe("Stats", function() {
 				options = require(path.join(base, testName, "webpack.config.js"));
 			}
 			(Array.isArray(options) ? options : [options]).forEach(function(options) {
-				options.context = path.join(base, testName);
-				options.output = options.output || {};
-				options.output.path = path.join(outputBase, testName);
+				if(!options.context) options.context = path.join(base, testName);
+				if(!options.output) options.output = options.output || {};
+				if(!options.output.path) options.output.path = path.join(outputBase, testName);
 			});
 			var c = webpack(options);
 			var compilers = c.compilers ? c.compilers : [c];
