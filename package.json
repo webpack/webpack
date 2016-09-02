@@ -90,7 +90,7 @@
     "beautify-lint": "beautify-lint lib/**/*.js hot/**/*.js bin/**/*.js benchmark/*.js test/*.js",
     "beautify": "beautify-rewrite lib/**/*.js hot/**/*.js bin/**/*.js benchmark/*.js test/*.js",
     "postcover": "npm run lint && npm run beautify-lint && npm run nsp",
-    "cover": "istanbul cover -x *.runtime.js node_modules/mocha/bin/_mocha",
+    "cover": "istanbul cover -x **/*.runtime.js node_modules/mocha/bin/_mocha",
     "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
   }
 }
