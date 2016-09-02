@@ -12,7 +12,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	// Help
 	if(argv.help) {
 		optimist.showHelp();
-		process.exit(-1); // eslint-disable-line
+		process.exit(0); // eslint-disable-line
 	}
 
 	// Version
