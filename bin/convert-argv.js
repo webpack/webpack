@@ -377,6 +377,12 @@ module.exports = function(optimist, argv, convertOptions) {
 		ifBooleanArg("hot", function() {
 			ensureArray(options, "plugins");
 			var HotModuleReplacementPlugin = require("../lib/HotModuleReplacementPlugin");
+			var alreadyHasPlugin = options.plugins.some(function(plugin) {
+				return plugin instanceof HotModuleReplacementPlugin;
+			});
+			if(alreadyHasPlugin) {
+				throw new Error("'HotModuleReplacementPlugin' should not be added to the config if using --hot");
+			}
 			options.plugins.push(new HotModuleReplacementPlugin());
 		});
 
