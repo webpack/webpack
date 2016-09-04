@@ -161,8 +161,8 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	function processOptions(options) {
-		var noOutputFilenameDefined = !options.output || !options.output.filename;
 		new WebpackOptionsDefaulter().process(options);
+		var noOutputFilenameDefined = !options.output || !options.output.filename;
 
 		function ifArg(name, fn, init, finalize) {
 			if(Array.isArray(argv[name])) {
