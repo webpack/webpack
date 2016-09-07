@@ -12,6 +12,8 @@ function lessStrict(regExpStr) {
 	return regExpStr;
 }
 
+var runtimeRegexp = /(```\s*(?:js|javascript)\n)(\/\*\*\*\*\*\*\/ \(function\(modules\) \{ \/\/ webpackBootstrap\n(?:.|\n)*\n\/\*\*\*\*\*\*\/ \}\)\n\/\**\/\n)/;
+
 module.exports = function(template, baseDir, stdout, prefix) {
 
 	var regexp = new RegExp("\\{\\{" + (prefix ? prefix+":" : "") + "([^:\\}]+)\\}\\}", "g")
@@ -30,6 +32,14 @@ module.exports = function(template, baseDir, stdout, prefix) {
 		if(match === "stdout")
 			return stdout;
 		return fs.readFileSync(path.join(baseDir, match), "utf-8").replace(/[\r\n]*$/, "");
-	}).replace(cwd, ".").replace(webpack, "(webpack)").replace(webpackParent, "(webpack)/~");
+	})
+		.replace(/\r\n/g, "\n")
+		.replace(cwd, ".")
+		.replace(webpack, "(webpack)")
+		.replace(webpackParent, "(webpack)/~")
+		.replace(runtimeRegexp, function(match) {
+			match = runtimeRegexp.exec(match);
+			return "<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>\n" + match[1] + match[2] + "```\n</details>\n" + match[1];
+		});
 	
 }
