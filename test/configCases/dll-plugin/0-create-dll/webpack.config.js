@@ -2,7 +2,10 @@ var path = require("path");
 var webpack = require("../../../../");
 
 module.exports = {
-	entry: ["./a", "./b", "./_d", "./_e"],
+	entry: ["./a", "./b", "./_d", "./_e", "./f"],
+	resolve: {
+		extensions: ['', '.js', '.jsx']
+	},
 	output: {
 		filename: "dll.js",
 		chunkFilename: "[id].dll.js",
