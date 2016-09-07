@@ -26,6 +26,7 @@ require.ensure(["b"], function(require) {
 
 # js/output.js
 
+<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
@@ -131,6 +132,27 @@ require.ensure(["b"], function(require) {
 /******/ 	// identity function for calling harmory imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
+/******/ 	// define getter function for harmory exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		Object.defineProperty(exports, name, {
+/******/ 			configurable: false,
+/******/ 			enumerable: true,
+/******/ 			get: getter
+/******/ 		});
+/******/ 	};
+
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
@@ -138,47 +160,55 @@ require.ensure(["b"], function(require) {
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
+```
+</details>
+``` javascript
 /******/ ([
 /* 0 */,
 /* 1 */,
 /* 2 */
+/* unknown exports provided */
+/* all exports used */
 /*!****************!*\
   !*** ./~/a.js ***!
   \****************/
 /***/ function(module, exports) {
 
-	// module a
+// module a
 
 /***/ },
-/* 3 */
+/* 3 */,
+/* 4 */
+/* unknown exports provided */
+/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var a = __webpack_require__(/*! a */ 2);
+var a = __webpack_require__(/*! a */ 2);
 
-	__webpack_require__.e/* nsure */(0/*! my own chunk */).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
-		// a named chunk
-		var c = __webpack_require__(/*! c */ 4);
-	}).bind(null, __webpack_require__));
+__webpack_require__.e/* nsure */(0/*! my own chunk */).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
+	// a named chunk
+	var c = __webpack_require__(/*! c */ 3);
+}).bind(null, __webpack_require__));
 
-	__webpack_require__.e/* nsure */(0/*! my own chunk */).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
-		// another chunk with the same name
-		var d = __webpack_require__(/*! d */ 1);
-	}).bind(null, __webpack_require__));
+__webpack_require__.e/* nsure */(0/*! my own chunk */).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
+	// another chunk with the same name
+	var d = __webpack_require__(/*! d */ 1);
+}).bind(null, __webpack_require__));
 
-	__webpack_require__.e/* nsure */(0/*! my own chunk */).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
-		// the same again
-	}).bind(null, __webpack_require__));
+__webpack_require__.e/* nsure */(0/*! my own chunk */).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
+	// the same again
+}).bind(null, __webpack_require__));
 
-	__webpack_require__.e/* nsure */(1).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
-		// chunk without name
-		var d = __webpack_require__(/*! d */ 1);
-	}).bind(null, __webpack_require__));
+__webpack_require__.e/* nsure */(1).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
+	// chunk without name
+	var d = __webpack_require__(/*! d */ 1);
+}).bind(null, __webpack_require__));
 
 
 /***/ }
@@ -190,32 +220,37 @@ require.ensure(["b"], function(require) {
 ``` javascript
 webpackJsonp([0,1],[
 /* 0 */
+/* unknown exports provided */
+/* all exports used */
 /*!****************!*\
   !*** ./~/b.js ***!
   \****************/
 /***/ function(module, exports) {
 
-	// module b
+// module b
 
 /***/ },
 /* 1 */
+/* unknown exports provided */
+/* all exports used */
 /*!****************!*\
   !*** ./~/d.js ***!
   \****************/
 /***/ function(module, exports) {
 
-	// module d
+// module d
 
 /***/ },
 /* 2 */,
-/* 3 */,
-/* 4 */
+/* 3 */
+/* unknown exports provided */
+/* all exports used */
 /*!****************!*\
   !*** ./~/c.js ***!
   \****************/
 /***/ function(module, exports) {
 
-	// module c
+// module c
 
 /***/ }
 ]);
@@ -226,21 +261,25 @@ webpackJsonp([0,1],[
 ``` javascript
 webpackJsonp([1],[
 /* 0 */
+/* unknown exports provided */
+/* all exports used */
 /*!****************!*\
   !*** ./~/b.js ***!
   \****************/
 /***/ function(module, exports) {
 
-	// module b
+// module b
 
 /***/ },
 /* 1 */
+/* unknown exports provided */
+/* all exports used */
 /*!****************!*\
   !*** ./~/d.js ***!
   \****************/
 /***/ function(module, exports) {
 
-	// module d
+// module d
 
 /***/ }
 ]);
@@ -251,77 +290,79 @@ webpackJsonp([1],[
 ## Uncompressed
 
 ```
-Hash: d5bad271e38640b37f6a
-Version: webpack 2.1.0-beta.11
-Time: 80ms
+Hash: 296a220c1414170a9986
+Version: webpack 2.1.0-beta.22
+Time: 197ms
     Asset       Size  Chunks             Chunk Names
-     0.js  434 bytes    0, 1  [emitted]  my own chunk
-     1.js  283 bytes       1  [emitted]  
-output.js    5.63 kB       2  [emitted]  main
+     0.js  584 bytes    0, 1  [emitted]  my own chunk
+     1.js  389 bytes       1  [emitted]  
+output.js    6.61 kB       2  [emitted]  main
+Entrypoint main = output.js
 chunk    {0} 0.js (my own chunk) 33 bytes {2} [rendered]
-    > my own chunk [3] ./example.js 3:0-6:18
-    > my own chunk [3] ./example.js 8:0-11:18
-    > my own chunk [3] ./example.js 13:0-15:18
+    > my own chunk [4] ./example.js 3:0-6:18
+    > my own chunk [4] ./example.js 8:0-11:18
+    > my own chunk [4] ./example.js 13:0-15:18
     [0] ./~/b.js 11 bytes {0} {1} [built]
-        require.ensure item b [3] ./example.js 3:0-6:18
-        require.ensure item b [3] ./example.js 8:0-11:18
-        require.ensure item b [3] ./example.js 17:0-20:2
+        require.ensure item b [4] ./example.js 3:0-6:18
+        require.ensure item b [4] ./example.js 8:0-11:18
+        require.ensure item b [4] ./example.js 17:0-20:2
     [1] ./~/d.js 11 bytes {0} {1} [built]
-        cjs require d [3] ./example.js 10:9-21
-        cjs require d [3] ./example.js 19:9-21
-    [4] ./~/c.js 11 bytes {0} [built]
-        cjs require c [3] ./example.js 5:9-21
+        cjs require d [4] ./example.js 10:9-21
+        cjs require d [4] ./example.js 19:9-21
+    [3] ./~/c.js 11 bytes {0} [built]
+        cjs require c [4] ./example.js 5:9-21
 chunk    {1} 1.js 22 bytes {2} [rendered]
-    > [3] ./example.js 17:0-20:2
+    > [4] ./example.js 17:0-20:2
     [0] ./~/b.js 11 bytes {0} {1} [built]
-        require.ensure item b [3] ./example.js 3:0-6:18
-        require.ensure item b [3] ./example.js 8:0-11:18
-        require.ensure item b [3] ./example.js 17:0-20:2
+        require.ensure item b [4] ./example.js 3:0-6:18
+        require.ensure item b [4] ./example.js 8:0-11:18
+        require.ensure item b [4] ./example.js 17:0-20:2
     [1] ./~/d.js 11 bytes {0} {1} [built]
-        cjs require d [3] ./example.js 10:9-21
-        cjs require d [3] ./example.js 19:9-21
-chunk    {2} output.js (main) 452 bytes [rendered]
-    > main [3] ./example.js 
+        cjs require d [4] ./example.js 10:9-21
+        cjs require d [4] ./example.js 19:9-21
+chunk    {2} output.js (main) 452 bytes [entry] [rendered]
+    > main [4] ./example.js 
     [2] ./~/a.js 11 bytes {2} [built]
-        cjs require a [3] ./example.js 1:8-20
-    [3] ./example.js 441 bytes {2} [built]
+        cjs require a [4] ./example.js 1:8-20
+    [4] ./example.js 441 bytes {2} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: d5bad271e38640b37f6a
-Version: webpack 2.1.0-beta.11
-Time: 207ms
+Hash: 296a220c1414170a9986
+Version: webpack 2.1.0-beta.22
+Time: 384ms
     Asset      Size  Chunks             Chunk Names
-     0.js  72 bytes    0, 1  [emitted]  my own chunk
+     0.js  71 bytes    0, 1  [emitted]  my own chunk
      1.js  52 bytes       1  [emitted]  
-output.js   1.36 kB       2  [emitted]  main
+output.js   1.63 kB       2  [emitted]  main
+Entrypoint main = output.js
 chunk    {0} 0.js (my own chunk) 33 bytes {2} [rendered]
-    > my own chunk [3] ./example.js 3:0-6:18
-    > my own chunk [3] ./example.js 8:0-11:18
-    > my own chunk [3] ./example.js 13:0-15:18
+    > my own chunk [4] ./example.js 3:0-6:18
+    > my own chunk [4] ./example.js 8:0-11:18
+    > my own chunk [4] ./example.js 13:0-15:18
     [0] ./~/b.js 11 bytes {0} {1} [built]
-        require.ensure item b [3] ./example.js 3:0-6:18
-        require.ensure item b [3] ./example.js 8:0-11:18
-        require.ensure item b [3] ./example.js 17:0-20:2
+        require.ensure item b [4] ./example.js 3:0-6:18
+        require.ensure item b [4] ./example.js 8:0-11:18
+        require.ensure item b [4] ./example.js 17:0-20:2
     [1] ./~/d.js 11 bytes {0} {1} [built]
-        cjs require d [3] ./example.js 10:9-21
-        cjs require d [3] ./example.js 19:9-21
-    [4] ./~/c.js 11 bytes {0} [built]
-        cjs require c [3] ./example.js 5:9-21
+        cjs require d [4] ./example.js 10:9-21
+        cjs require d [4] ./example.js 19:9-21
+    [3] ./~/c.js 11 bytes {0} [built]
+        cjs require c [4] ./example.js 5:9-21
 chunk    {1} 1.js 22 bytes {2} [rendered]
-    > [3] ./example.js 17:0-20:2
+    > [4] ./example.js 17:0-20:2
     [0] ./~/b.js 11 bytes {0} {1} [built]
-        require.ensure item b [3] ./example.js 3:0-6:18
-        require.ensure item b [3] ./example.js 8:0-11:18
-        require.ensure item b [3] ./example.js 17:0-20:2
+        require.ensure item b [4] ./example.js 3:0-6:18
+        require.ensure item b [4] ./example.js 8:0-11:18
+        require.ensure item b [4] ./example.js 17:0-20:2
     [1] ./~/d.js 11 bytes {0} {1} [built]
-        cjs require d [3] ./example.js 10:9-21
-        cjs require d [3] ./example.js 19:9-21
-chunk    {2} output.js (main) 452 bytes [rendered]
-    > main [3] ./example.js 
+        cjs require d [4] ./example.js 10:9-21
+        cjs require d [4] ./example.js 19:9-21
+chunk    {2} output.js (main) 452 bytes [entry] [rendered]
+    > main [4] ./example.js 
     [2] ./~/a.js 11 bytes {2} [built]
-        cjs require a [3] ./example.js 1:8-20
-    [3] ./example.js 441 bytes {2} [built]
+        cjs require a [4] ./example.js 1:8-20
+    [4] ./example.js 441 bytes {2} [built]
 ```

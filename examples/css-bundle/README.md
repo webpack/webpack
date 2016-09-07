@@ -40,6 +40,7 @@ module.exports = {
 
 # js/output.js
 
+<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -88,6 +89,15 @@ module.exports = {
 /******/ 		});
 /******/ 	};
 
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 
@@ -98,8 +108,13 @@ module.exports = {
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
+```
+</details>
+``` javascript
 /******/ ([
 /* 0 */
+/* unknown exports provided */
+/* all exports used */
 /*!*******************!*\
   !*** ./style.css ***!
   \*******************/
@@ -109,6 +124,8 @@ module.exports = {
 
 /***/ },
 /* 1 */
+/* unknown exports provided */
+/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -133,12 +150,12 @@ body {
 ## Uncompressed
 
 ```
-Hash: f8d8a115915513ecc64b
-Version: webpack 2.1.0-beta.17
-Time: 802ms
+Hash: a79c0dba55bcedbab63c
+Version: webpack 2.1.0-beta.22
+Time: 1205ms
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js    2.34 kB       0  [emitted]  main
+                           output.js    2.85 kB       0  [emitted]  main
                            style.css   69 bytes       0  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} output.js, style.css (main) 64 bytes [entry] [rendered]
@@ -162,12 +179,12 @@ Child extract-text-webpack-plugin:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 3cde0f728f30b6d2657b
-Version: webpack 2.1.0-beta.17
-Time: 1130ms
+Hash: e2def6a993090f0024e0
+Version: webpack 2.1.0-beta.22
+Time: 1392ms
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js  416 bytes       0  [emitted]  main
+                           output.js  530 bytes       0  [emitted]  main
                            style.css   61 bytes       0  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} output.js, style.css (main) 64 bytes [entry] [rendered]

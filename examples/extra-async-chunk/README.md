@@ -66,6 +66,7 @@ module.exports = {
 
 # js/output.js
 
+<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
@@ -96,7 +97,7 @@ module.exports = {
 
 /******/ 	// objects to store loaded and loading chunks
 /******/ 	var installedChunks = {
-/******/ 		1: 0
+/******/ 		3: 0
 /******/ 	};
 
 /******/ 	// The require function
@@ -171,6 +172,27 @@ module.exports = {
 /******/ 	// identity function for calling harmory imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
+/******/ 	// define getter function for harmory exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		Object.defineProperty(exports, name, {
+/******/ 			configurable: false,
+/******/ 			enumerable: true,
+/******/ 			get: getter
+/******/ 		});
+/******/ 	};
+
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
@@ -181,22 +203,27 @@ module.exports = {
 /******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
+```
+</details>
+``` javascript
 /******/ ({
 
 /***/ 4:
+/* unknown exports provided */
+/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
-	// a chunks with a, b, c
-	Promise.all/* require */([__webpack_require__.e(0), __webpack_require__.e(3)]).catch(function(err) { __webpack_require__.oe(err); }).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 2)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
+// a chunks with a, b, c
+Promise.all/* require */([__webpack_require__.e(0), __webpack_require__.e(2)]).catch(function(err) { __webpack_require__.oe(err); }).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 2)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
 
-	// a chunk with a, b, d
-	Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(2)]).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
-		__webpack_require__(/*! ./b */ 1);
-		__webpack_require__(/*! ./d */ 3);
-	}).bind(null, __webpack_require__));
+// a chunk with a, b, d
+Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(1)]).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
+	__webpack_require__(/*! ./b */ 1);
+	__webpack_require__(/*! ./d */ 3);
+}).bind(null, __webpack_require__));
 
 
 /***/ }
@@ -209,24 +236,48 @@ module.exports = {
 ``` javascript
 webpackJsonp([0],[
 /* 0 */
+/* unknown exports provided */
+/* all exports used */
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
 /***/ function(module, exports) {
 
-	module.exports = "a";
+module.exports = "a";
 
 /***/ },
 /* 1 */
+/* unknown exports provided */
+/* all exports used */
 /*!**************!*\
   !*** ./b.js ***!
   \**************/
 /***/ function(module, exports) {
 
-	module.exports = "b";
+module.exports = "b";
 
 /***/ }
 ]);
+```
+
+# js/1.js
+
+``` javascript
+webpackJsonp([1],{
+
+/***/ 3:
+/* unknown exports provided */
+/* all exports used */
+/*!**************!*\
+  !*** ./d.js ***!
+  \**************/
+/***/ function(module, exports) {
+
+module.exports = "d";
+
+/***/ }
+
+});
 ```
 
 # js/2.js
@@ -234,31 +285,15 @@ webpackJsonp([0],[
 ``` javascript
 webpackJsonp([2],{
 
-/***/ 3:
-/*!**************!*\
-  !*** ./d.js ***!
-  \**************/
-/***/ function(module, exports) {
-
-	module.exports = "d";
-
-/***/ }
-
-});
-```
-
-# js/3.js
-
-``` javascript
-webpackJsonp([3],{
-
 /***/ 2:
+/* unknown exports provided */
+/* all exports used */
 /*!**************!*\
   !*** ./c.js ***!
   \**************/
 /***/ function(module, exports) {
 
-	module.exports = "c";
+module.exports = "c";
 
 /***/ }
 
@@ -270,15 +305,16 @@ webpackJsonp([3],{
 ## Uncompressed
 
 ```
-Hash: 9143ea27ee1a62ea4b12
-Version: webpack 2.1.0-beta.11
-Time: 81ms
+Hash: d233f2ccd0d9940207fe
+Version: webpack 2.1.0-beta.22
+Time: 203ms
     Asset       Size  Chunks             Chunk Names
-     0.js  291 bytes       0  [emitted]  
-output.js    5.21 kB       1  [emitted]  main
-     2.js  159 bytes       2  [emitted]  
-     3.js  159 bytes       3  [emitted]  
-chunk    {0} 0.js 42 bytes {1} [rendered]
+     0.js  397 bytes       0  [emitted]  
+     1.js  212 bytes       1  [emitted]  
+     2.js  212 bytes       2  [emitted]  
+output.js    6.13 kB       3  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} 0.js 42 bytes {3} [rendered]
     > async commons [4] ./example.js 2:0-52
     > async commons [4] ./example.js 5:0-8:2
     [0] ./a.js 21 bytes {0} [built]
@@ -287,31 +323,32 @@ chunk    {0} 0.js 42 bytes {1} [rendered]
     [1] ./b.js 21 bytes {0} [built]
         amd require ./b [4] ./example.js 2:0-52
         cjs require ./b [4] ./example.js 6:1-15
-chunk    {1} output.js (main) 194 bytes [rendered]
-    > main [4] ./example.js 
-    [4] ./example.js 194 bytes {1} [built]
-chunk    {2} 2.js 21 bytes {1} [rendered]
+chunk    {1} 1.js 21 bytes {3} [rendered]
     > [4] ./example.js 5:0-8:2
-    [3] ./d.js 21 bytes {2} [built]
+    [3] ./d.js 21 bytes {1} [built]
         cjs require ./d [4] ./example.js 7:1-15
-chunk    {3} 3.js 21 bytes {1} [rendered]
+chunk    {2} 2.js 21 bytes {3} [rendered]
     > [4] ./example.js 2:0-52
-    [2] ./c.js 21 bytes {3} [built]
+    [2] ./c.js 21 bytes {2} [built]
         amd require ./c [4] ./example.js 2:0-52
+chunk    {3} output.js (main) 194 bytes [entry] [rendered]
+    > main [4] ./example.js 
+    [4] ./example.js 194 bytes {3} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9143ea27ee1a62ea4b12
-Version: webpack 2.1.0-beta.11
-Time: 145ms
+Hash: d233f2ccd0d9940207fe
+Version: webpack 2.1.0-beta.22
+Time: 336ms
     Asset      Size  Chunks             Chunk Names
      0.js  78 bytes       0  [emitted]  
-output.js   1.28 kB       1  [emitted]  main
+     1.js  51 bytes       1  [emitted]  
      2.js  51 bytes       2  [emitted]  
-     3.js  51 bytes       3  [emitted]  
-chunk    {0} 0.js 42 bytes {1} [rendered]
+output.js   1.55 kB       3  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} 0.js 42 bytes {3} [rendered]
     > async commons [4] ./example.js 2:0-52
     > async commons [4] ./example.js 5:0-8:2
     [0] ./a.js 21 bytes {0} [built]
@@ -320,15 +357,15 @@ chunk    {0} 0.js 42 bytes {1} [rendered]
     [1] ./b.js 21 bytes {0} [built]
         amd require ./b [4] ./example.js 2:0-52
         cjs require ./b [4] ./example.js 6:1-15
-chunk    {1} output.js (main) 194 bytes [rendered]
-    > main [4] ./example.js 
-    [4] ./example.js 194 bytes {1} [built]
-chunk    {2} 2.js 21 bytes {1} [rendered]
+chunk    {1} 1.js 21 bytes {3} [rendered]
     > [4] ./example.js 5:0-8:2
-    [3] ./d.js 21 bytes {2} [built]
+    [3] ./d.js 21 bytes {1} [built]
         cjs require ./d [4] ./example.js 7:1-15
-chunk    {3} 3.js 21 bytes {1} [rendered]
+chunk    {2} 2.js 21 bytes {3} [rendered]
     > [4] ./example.js 2:0-52
-    [2] ./c.js 21 bytes {3} [built]
+    [2] ./c.js 21 bytes {2} [built]
         amd require ./c [4] ./example.js 2:0-52
+chunk    {3} output.js (main) 194 bytes [entry] [rendered]
+    > main [4] ./example.js 
+    [4] ./example.js 194 bytes {3} [built]
 ```

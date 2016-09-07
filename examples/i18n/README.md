@@ -48,6 +48,7 @@ module.exports = Object.keys(languages).map(function(language) {
 
 # js/de.output.js
 
+<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -87,6 +88,27 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 	// identity function for calling harmory imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
+/******/ 	// define getter function for harmory exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		Object.defineProperty(exports, name, {
+/******/ 			configurable: false,
+/******/ 			enumerable: true,
+/******/ 			get: getter
+/******/ 		});
+/******/ 	};
+
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
@@ -96,13 +118,15 @@ module.exports = Object.keys(languages).map(function(language) {
 /************************************************************************/
 /******/ ([
 /* 0 */
+/* unknown exports provided */
+/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
-	console.log("Hallo Welt");
-	console.log("Missing Text");
+console.log("Hallo Welt");
+console.log("Missing Text");
 
 /***/ }
 /******/ ]);
@@ -149,6 +173,27 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 	// identity function for calling harmory imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
+/******/ 	// define getter function for harmory exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		Object.defineProperty(exports, name, {
+/******/ 			configurable: false,
+/******/ 			enumerable: true,
+/******/ 			get: getter
+/******/ 		});
+/******/ 	};
+
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
@@ -156,15 +201,20 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
+```
+</details>
+``` javascript
 /******/ ([
 /* 0 */
+/* unknown exports provided */
+/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
-	console.log("Hello World");
-	console.log("Missing Text");
+console.log("Hello World");
+console.log("Missing Text");
 
 /***/ }
 /******/ ]);
@@ -175,24 +225,26 @@ module.exports = Object.keys(languages).map(function(language) {
 ## Uncompressed
 
 ```
-Hash: 8376e07a0433da19dc73e2c5e5181623bc3405eb
-Version: webpack 2.1.0-beta.11
+Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
+Version: webpack 2.1.0-beta.22
 Child en:
-    Hash: 8376e07a0433da19dc73
-    Version: webpack 2.1.0-beta.11
-    Time: 51ms
+    Hash: b61d16621736c97f557e
+    Version: webpack 2.1.0-beta.22
+    Time: 123ms
            Asset     Size  Chunks             Chunk Names
-    en.output.js  1.71 kB       0  [emitted]  main
-    chunk    {0} en.output.js (main) 65 bytes [rendered]
+    en.output.js  2.65 kB       0  [emitted]  main
+    Entrypoint main = en.output.js
+    chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built]
 Child de:
-    Hash: e2c5e5181623bc3405eb
-    Version: webpack 2.1.0-beta.11
-    Time: 42ms
+    Hash: 52b4d8e68140f1345ef8
+    Version: webpack 2.1.0-beta.22
+    Time: 101ms
            Asset     Size  Chunks             Chunk Names
-    de.output.js  1.71 kB       0  [emitted]  main
-    chunk    {0} de.output.js (main) 65 bytes [rendered]
+    de.output.js  2.65 kB       0  [emitted]  main
+    Entrypoint main = de.output.js
+    chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built] [1 warning]
     
@@ -203,24 +255,26 @@ Child de:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 8376e07a0433da19dc73e2c5e5181623bc3405eb
-Version: webpack 2.1.0-beta.11
+Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
+Version: webpack 2.1.0-beta.22
 Child en:
-    Hash: 8376e07a0433da19dc73
-    Version: webpack 2.1.0-beta.11
-    Time: 124ms
+    Hash: b61d16621736c97f557e
+    Version: webpack 2.1.0-beta.22
+    Time: 256ms
            Asset       Size  Chunks             Chunk Names
-    en.output.js  296 bytes       0  [emitted]  main
-    chunk    {0} en.output.js (main) 65 bytes [rendered]
+    en.output.js  564 bytes       0  [emitted]  main
+    Entrypoint main = en.output.js
+    chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built]
 Child de:
-    Hash: e2c5e5181623bc3405eb
-    Version: webpack 2.1.0-beta.11
-    Time: 113ms
+    Hash: 52b4d8e68140f1345ef8
+    Version: webpack 2.1.0-beta.22
+    Time: 233ms
            Asset       Size  Chunks             Chunk Names
-    de.output.js  295 bytes       0  [emitted]  main
-    chunk    {0} de.output.js (main) 65 bytes [rendered]
+    de.output.js  563 bytes       0  [emitted]  main
+    Entrypoint main = de.output.js
+    chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built] [1 warning]
     
