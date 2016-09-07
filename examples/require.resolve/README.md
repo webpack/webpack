@@ -25,6 +25,7 @@ module.exports = Math.random();
 
 # js/output.js
 
+<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -64,6 +65,27 @@ module.exports = Math.random();
 /******/ 	// identity function for calling harmory imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
+/******/ 	// define getter function for harmory exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		Object.defineProperty(exports, name, {
+/******/ 			configurable: false,
+/******/ 			enumerable: true,
+/******/ 			get: getter
+/******/ 		});
+/******/ 	};
+
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
@@ -71,35 +93,42 @@ module.exports = Math.random();
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
+```
+</details>
+``` javascript
 /******/ ([
 /* 0 */
+/* unknown exports provided */
+/* all exports used */
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
 /***/ function(module, exports) {
 
-	module.exports = Math.random();
+module.exports = Math.random();
 
 /***/ },
 /* 1 */
+/* unknown exports provided */
+/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var a = __webpack_require__(/*! ./a */ 0);
+var a = __webpack_require__(/*! ./a */ 0);
 
-	// get module id
-	var aId = /*require.resolve*/(/*! ./a.js */ 0);
+// get module id
+var aId = /*require.resolve*/(/*! ./a.js */ 0);
 
-	// clear module in require.cache
-	delete __webpack_require__.c[aId];
+// clear module in require.cache
+delete __webpack_require__.c[aId];
 
-	// require module again, it should be reexecuted
-	var a2 = __webpack_require__(/*! ./a */ 0);
+// require module again, it should be reexecuted
+var a2 = __webpack_require__(/*! ./a */ 0);
 
-	// vertify it
-	if(a == a2) throw new Error("Cache clear failed :(");
+// vertify it
+if(a == a2) throw new Error("Cache clear failed :(");
 
 /***/ }
 /******/ ]);
@@ -110,12 +139,13 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: ea909c1878908e23c0bf
-Version: webpack 2.1.0-beta.11
-Time: 59ms
+Hash: 131f3b8d3804877f4b53
+Version: webpack 2.1.0-beta.22
+Time: 129ms
     Asset     Size  Chunks             Chunk Names
-output.js  2.16 kB       0  [emitted]  main
-chunk    {0} output.js (main) 326 bytes [rendered]
+output.js  3.14 kB       0  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] ./a.js 31 bytes {0} [built]
         cjs require ./a [1] ./example.js 1:8-22
@@ -127,12 +157,13 @@ chunk    {0} output.js (main) 326 bytes [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: ea909c1878908e23c0bf
-Version: webpack 2.1.0-beta.11
-Time: 197ms
+Hash: 131f3b8d3804877f4b53
+Version: webpack 2.1.0-beta.22
+Time: 249ms
     Asset       Size  Chunks             Chunk Names
-output.js  369 bytes       0  [emitted]  main
-chunk    {0} output.js (main) 326 bytes [rendered]
+output.js  637 bytes       0  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] ./a.js 31 bytes {0} [built]
         cjs require ./a [1] ./example.js 1:8-22

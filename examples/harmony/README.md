@@ -23,6 +23,7 @@ export function increment(val) {
 
 # js/output.js
 
+<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
@@ -159,8 +160,13 @@ export function increment(val) {
 /******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
+```
+</details>
+``` javascript
 /******/ ([
 /* 0 */
+/* exports provided: increment */
+/* exports used: increment */
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
@@ -168,7 +174,8 @@ export function increment(val) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__math__ = __webpack_require__(/*! ./math */ 2);
-/* harmony export */ exports["a"] = increment;
+/* harmony export (immutable) */ exports["a"] = increment;
+
 function increment(val) {
     return __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__math__["a" /* add */])(val, 1);
 };
@@ -177,13 +184,16 @@ function increment(val) {
 /***/ },
 /* 1 */,
 /* 2 */
+/* exports provided: add */
+/* exports used: add */
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony export */ exports["a"] = add;function add() {
+/* harmony export (immutable) */ exports["a"] = add;
+function add() {
 	var sum = 0, i = 0, args = arguments, l = args.length;
 	while (i < l) {
 		sum += args[i++];
@@ -194,6 +204,8 @@ function increment(val) {
 
 /***/ },
 /* 3 */
+/* unknown exports provided */
+/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -221,11 +233,11 @@ __webpack_require__.e/* System.import */(0).then(__webpack_require__.bind(null, 
 
 ```
 Hash: b0a43c6029aaacb5e196
-Version: webpack 2.1.0-beta.19
-Time: 69ms
+Version: webpack 2.1.0-beta.22
+Time: 150ms
     Asset       Size  Chunks             Chunk Names
-     0.js  323 bytes       0  [emitted]  
-output.js     6.6 kB       1  [emitted]  main
+     0.js  387 bytes       0  [emitted]  
+output.js     6.8 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.js 25 bytes {1} [rendered]
     > [3] ./example.js 6:0-31
@@ -246,8 +258,8 @@ chunk    {1} output.js (main) 426 bytes [entry] [rendered]
 
 ```
 Hash: b0a43c6029aaacb5e196
-Version: webpack 2.1.0-beta.19
-Time: 138ms
+Version: webpack 2.1.0-beta.22
+Time: 330ms
     Asset      Size  Chunks             Chunk Names
      0.js  97 bytes       0  [emitted]  
 output.js    1.6 kB       1  [emitted]  main

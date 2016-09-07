@@ -25,7 +25,7 @@ module.exports = {
 # js/MyDll.alpha.js
 
 ``` javascript
-var alpha_54a556952b9e02f550d5 =
+var alpha_bddd20dd00f7b888c2b8 =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -64,6 +64,27 @@ var alpha_54a556952b9e02f550d5 =
 /******/ 	// identity function for calling harmory imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
+/******/ 	// define getter function for harmory exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		Object.defineProperty(exports, name, {
+/******/ 			configurable: false,
+/******/ 			enumerable: true,
+/******/ 			get: getter
+/******/ 		});
+/******/ 	};
+
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
@@ -73,41 +94,49 @@ var alpha_54a556952b9e02f550d5 =
 /************************************************************************/
 /******/ ([
 /* 0 */
+/* unknown exports provided */
+/* all exports used */
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
 /***/ function(module, exports) {
 
-	module.exports = "a";
+module.exports = "a";
 
 /***/ },
 /* 1 */
+/* unknown exports provided */
+/* all exports used */
 /*!******************!*\
   !*** ./alpha.js ***!
   \******************/
 /***/ function(module, exports) {
 
-	module.exports = "alpha";
+module.exports = "alpha";
 
 /***/ },
 /* 2 */,
 /* 3 */,
 /* 4 */
+/* unknown exports provided */
+/* all exports used */
 /*!**********************!*\
   !*** ../~/module.js ***!
   \**********************/
 /***/ function(module, exports) {
 
-	module.exports = "module";
+module.exports = "module";
 
 /***/ },
 /* 5 */
+/* unknown exports provided */
+/* all exports used */
 /*!*****************!*\
   !*** dll alpha ***!
   \*****************/
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__;
+module.exports = __webpack_require__;
 
 /***/ }
 /******/ ]);
@@ -117,11 +146,20 @@ var alpha_54a556952b9e02f550d5 =
 
 ``` javascript
 {
-  "name": "alpha_54a556952b9e02f550d5",
+  "name": "alpha_bddd20dd00f7b888c2b8",
   "content": {
-    "./a.js": 0,
-    "./alpha.js": 1,
-    "../node_modules/module.js": 4
+    "./a.js": {
+      "id": 0,
+      "meta": {}
+    },
+    "./alpha.js": {
+      "id": 1,
+      "meta": {}
+    },
+    "../node_modules/module.js": {
+      "id": 4,
+      "meta": {}
+    }
   }
 }
 ```
@@ -131,13 +169,15 @@ var alpha_54a556952b9e02f550d5 =
 ## Uncompressed
 
 ```
-Hash: 54a556952b9e02f550d5
-Version: webpack 2.1.0-beta.11
-Time: 76ms
+Hash: bddd20dd00f7b888c2b8
+Version: webpack 2.1.0-beta.22
+Time: 157ms
          Asset     Size  Chunks             Chunk Names
-MyDll.alpha.js  2.19 kB       0  [emitted]  alpha
- MyDll.beta.js  2.03 kB       1  [emitted]  beta
-chunk    {0} MyDll.alpha.js (alpha) 84 bytes [rendered]
+MyDll.alpha.js  3.28 kB       0  [emitted]  alpha
+ MyDll.beta.js  3.07 kB       1  [emitted]  beta
+Entrypoint alpha = MyDll.alpha.js
+Entrypoint beta = MyDll.beta.js
+chunk    {0} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
     > alpha [5] dll alpha 
     [0] ./a.js 21 bytes {0} [built]
         single entry ./a [5] dll alpha
@@ -146,7 +186,7 @@ chunk    {0} MyDll.alpha.js (alpha) 84 bytes [rendered]
     [4] ../~/module.js 26 bytes {0} [built]
         single entry module [5] dll alpha
     [5] dll alpha 12 bytes {0} [built]
-chunk    {1} MyDll.beta.js (beta) 57 bytes [rendered]
+chunk    {1} MyDll.beta.js (beta) 57 bytes [entry] [rendered]
     > beta [6] dll beta 
     [2] ./b.js 21 bytes {1} [built]
         single entry ./b [6] dll beta
@@ -158,13 +198,15 @@ chunk    {1} MyDll.beta.js (beta) 57 bytes [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 54a556952b9e02f550d5
-Version: webpack 2.1.0-beta.11
-Time: 119ms
+Hash: bddd20dd00f7b888c2b8
+Version: webpack 2.1.0-beta.22
+Time: 307ms
          Asset       Size  Chunks             Chunk Names
-MyDll.alpha.js  381 bytes       0  [emitted]  alpha
- MyDll.beta.js  347 bytes       1  [emitted]  beta
-chunk    {0} MyDll.alpha.js (alpha) 84 bytes [rendered]
+MyDll.alpha.js  649 bytes       0  [emitted]  alpha
+ MyDll.beta.js  615 bytes       1  [emitted]  beta
+Entrypoint alpha = MyDll.alpha.js
+Entrypoint beta = MyDll.beta.js
+chunk    {0} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
     > alpha [5] dll alpha 
     [0] ./a.js 21 bytes {0} [built]
         single entry ./a [5] dll alpha
@@ -173,7 +215,7 @@ chunk    {0} MyDll.alpha.js (alpha) 84 bytes [rendered]
     [4] ../~/module.js 26 bytes {0} [built]
         single entry module [5] dll alpha
     [5] dll alpha 12 bytes {0} [built]
-chunk    {1} MyDll.beta.js (beta) 57 bytes [rendered]
+chunk    {1} MyDll.beta.js (beta) 57 bytes [entry] [rendered]
     > beta [6] dll beta 
     [2] ./b.js 21 bytes {1} [built]
         single entry ./b [6] dll beta

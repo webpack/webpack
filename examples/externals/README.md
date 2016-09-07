@@ -96,6 +96,27 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// identity function for calling harmory imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
+/******/ 	// define getter function for harmory exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		Object.defineProperty(exports, name, {
+/******/ 			configurable: false,
+/******/ 			enumerable: true,
+/******/ 			get: getter
+/******/ 		});
+/******/ 	};
+
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
@@ -105,33 +126,39 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
+/* unknown exports provided */
+/* all exports used */
 /*!**********************!*\
   !*** external "add" ***!
   \**********************/
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
+module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
 
 /***/ },
 /* 1 */
+/* unknown exports provided */
+/* all exports used */
 /*!***************************************************************************************************************!*\
   !*** external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} ***!
   \***************************************************************************************************************/
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
+module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
 /***/ },
 /* 2 */
+/* unknown exports provided */
+/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
-	var add = __webpack_require__(/*! add */ 0);
-	var subtract = __webpack_require__(/*! subtract */ 1);
+var add = __webpack_require__(/*! add */ 0);
+var subtract = __webpack_require__(/*! subtract */ 1);
 
-	exports.exampleValue = subtract(add(42, 2), 2);
+exports.exampleValue = subtract(add(42, 2), 2);
 
 /***/ }
 /******/ ])
@@ -144,12 +171,13 @@ return /******/ (function(modules) { // webpackBootstrap
 ## Uncompressed
 
 ```
-Hash: 94d30510034c2c70a921
-Version: webpack 2.1.0-beta.11
-Time: 48ms
+Hash: 29ce7a9675e2bb040e93
+Version: webpack 2.1.0-beta.22
+Time: 119ms
     Asset     Size  Chunks             Chunk Names
-output.js  3.05 kB       0  [emitted]  main
-chunk    {0} output.js (main) 197 bytes [rendered]
+output.js  4.08 kB       0  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > main [2] ./example.js 
     [2] ./example.js 113 bytes {0} [built]
      + 2 hidden modules
@@ -158,12 +186,13 @@ chunk    {0} output.js (main) 197 bytes [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 94d30510034c2c70a921
-Version: webpack 2.1.0-beta.11
-Time: 109ms
+Hash: 29ce7a9675e2bb040e93
+Version: webpack 2.1.0-beta.22
+Time: 250ms
     Asset       Size  Chunks             Chunk Names
-output.js  729 bytes       0  [emitted]  main
-chunk    {0} output.js (main) 197 bytes [rendered]
+output.js  997 bytes       0  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > main [2] ./example.js 
     [2] ./example.js 113 bytes {0} [built]
      + 2 hidden modules
