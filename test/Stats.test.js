@@ -162,6 +162,7 @@ describe("Stats", function() {
 					errorDetails: true,
 					reasons: false,
 					usedExports: false,
+					providedExports: false,
 					colors: true
 				});
 			});
@@ -185,6 +186,7 @@ describe("Stats", function() {
 					modules: false,
 					reasons: false,
 					usedExports: false,
+					providedExports: false,
 					children: false,
 					source: false,
 					errors: false,
