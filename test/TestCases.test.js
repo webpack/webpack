@@ -5,6 +5,7 @@ var vm = require("vm");
 var Test = require("mocha/lib/test");
 var checkArrayExpectation = require("./checkArrayExpectation");
 
+var Stats = require("../lib/Stats");
 var webpack = require("../lib/webpack");
 
 describe("TestCases", function() {
@@ -173,7 +174,9 @@ describe("TestCases", function() {
 							};
 							webpack(options, function(err, stats) {
 								if(err) return done(err);
-								fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(), "utf-8");
+								var statOptions = Stats.presetToOptions("verbose");
+								statOptions.colors = false;
+								fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
 								var jsonStats = stats.toJson({
 									errorDetails: true
 								});
