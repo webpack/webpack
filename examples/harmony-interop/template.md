@@ -5,34 +5,34 @@
 {{example.js}}
 ```
 
+# fs.js
+
+``` javascript
+{{fs.js}}
+```
+
+# reexport-commonjs.js
+
+``` javascript
+{{reexport-commonjs.js}}
+```
+
+# example2.js
+
+``` javascript
+{{example2.js}}
+```
+
+# harmony.js
+
+``` javascript
+{{harmony.js}}
+```
+
 # js/output.js
 
 ``` javascript
 {{js/output.js}}
-```
-
-# js/0.js
-
-``` javascript
-{{js/0.js}}
-```
-
-# js/1.js
-
-``` javascript
-{{js/1.js}}
-```
-
-# js/2.js
-
-``` javascript
-{{js/2.js}}
-```
-
-# js/4.js
-
-``` javascript
-{{js/4.js}}
 ```
 
 # Info
