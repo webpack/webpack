@@ -4,7 +4,7 @@ var webpack = require("../../../../");
 module.exports = {
 	entry: ["./a", "./b", "./_d", "./_e", "./f"],
 	resolve: {
-		extensions: ['', '.js', '.jsx']
+		extensions: [".js", ".jsx"]
 	},
 	output: {
 		filename: "dll.js",
