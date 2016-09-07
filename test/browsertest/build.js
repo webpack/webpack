@@ -34,10 +34,10 @@ var library1 = cp.spawn("node", join(["../../bin/webpack.js", "--output-pathinfo
 bindOutput(library1);
 library1.on("exit", function(code) {
 	if(code === 0) {
-		// node ../../bin/webpack --output-pathinfo --color --resolve-alias vm=vm-browserify --output-public-path js/ --output-chunk-filename [name].web.js --module-bind json --module-bind css=style!css --module-bind less=style!css!less --module-bind coffee --module-bind jade --prefetch ./lib/stylesheet.less --optimize-dedupe --labeled-modules ./lib/index "js/web.js?h=[hash]"
+		// node ../../bin/webpack --output-pathinfo --color --resolve-alias vm=vm-browserify --output-public-path js/ --output-chunk-filename [name].web.js --module-bind json --module-bind css=style!css --module-bind less=style!css!less --module-bind coffee --module-bind jade --prefetch ./lib/stylesheet.less ./lib/index "js/web.js?h=[hash]"
 		var main = cp.spawn("node", join(["../../bin/webpack.js", "--output-pathinfo", "--color", "--resolve-alias", "vm=vm-browserify",
 											"--output-public-path", "js/", "--output-chunk-filename", "[name].web.js",
-											"--module-bind", "json", "--module-bind", "css=style!css", "--module-bind", "less=style/url!file?postfix=.css&string!less", "--module-bind", "coffee", "--module-bind", "jade", "--prefetch", "./lib/stylesheet.less", "--optimize-dedupe", "--labeled-modules", "./lib/index", "js/web.js?h=[hash]", "--progress"], extraArgs));
+											"--module-bind", "json", "--module-bind", "css=style!css", "--module-bind", "less=style/url!file?postfix=.css&string!less", "--module-bind", "coffee", "--module-bind", "jade", "--prefetch", "./lib/stylesheet.less", "./lib/index", "js/web.js?h=[hash]", "--progress"], extraArgs));
 		bindOutput(main);
 	}
 });
