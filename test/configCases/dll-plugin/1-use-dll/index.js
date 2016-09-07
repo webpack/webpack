@@ -1,6 +1,7 @@
 var should = require("should");
 import d from "dll/d";
-import { x, y } from "dll/e";
+import { x1, y2 } from "./e";
+import { x2, y1 } from "dll/e";
 
 it("should load a module from dll", function() {
 	require("dll/a").should.be.eql("a");
@@ -17,6 +18,8 @@ it("should load an harmony module from dll (default export)", function() {
 });
 
 it("should load an harmony module from dll (star export)", function() {
-	x.should.be.eql(123);
-	y.should.be.eql(456);
+	x1.should.be.eql(123);
+	x2.should.be.eql(123);
+	y1.should.be.eql(456);
+	y2.should.be.eql(456);
 });
