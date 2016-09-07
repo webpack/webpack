@@ -102,6 +102,11 @@ yargs.options({
 		group: DISPLAY_GROUP,
 		describe: "Display information about used exports in modules (Tree Shaking)"
 	},
+	"display-provided-exports": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Display information about exports provided from modules"
+	},
 	"display-error-details": {
 		type: "boolean",
 		group: DISPLAY_GROUP,
