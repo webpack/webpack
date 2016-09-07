@@ -8,7 +8,8 @@ module.exports = {
 		}),
 		new webpack.DllReferencePlugin({
 			scope: "beta",
-			manifest: require("../dll/js/beta-manifest.json")
+			manifest: require("../dll/js/beta-manifest.json"),
+			extensions: [".js", ".jsx"]
 		})
 	]
 };
