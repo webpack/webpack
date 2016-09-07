@@ -9,7 +9,7 @@ var fs = require("fs");
 var extraArgs = "";
 
 var targetArgs = global.NO_TARGET_ARGS ? "" : " ./example.js js/output.js";
-var displayReasons = global.NO_REASONS ? "" : " --display-reasons --display-used-exports";
+var displayReasons = global.NO_REASONS ? "" : " --display-reasons --display-used-exports --display-provided-exports";
 (function doIt(remainingTimes) {
 	cp.exec("node ../../bin/webpack.js" + displayReasons + " --display-chunks --display-modules --display-origins --display-entrypoints --output-public-path \"js/\" -p " + extraArgs + targetArgs, function (error, stdout, stderr) {
 		if(stderr && remainingTimes === 1)
