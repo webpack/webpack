@@ -5,6 +5,7 @@ var vm = require("vm");
 var Test = require("mocha/lib/test");
 var checkArrayExpectation = require("./checkArrayExpectation");
 
+var Stats = require("../lib/Stats");
 var webpack = require("../lib/webpack");
 
 describe("ConfigTestCases", function() {
@@ -34,15 +35,15 @@ describe("ConfigTestCases", function() {
 						if(!options.target) options.target = "async-node";
 						if(!options.output) options.output = {};
 						if(!options.output.path) options.output.path = outputDirectory;
+						if(typeof options.output.pathinfo === "undefined") options.output.pathinfo = true;
 						if(!options.output.filename) options.output.filename = "bundle" + idx + ".js";
 						if(!options.output.chunkFilename) options.output.chunkFilename = "[id].bundle" + idx + ".js";
 					});
 					webpack(options, function(err, stats) {
 						if(err) return done(err);
-						fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString({
-							reasons: true,
-							errorDetails: true
-						}), "utf-8");
+						var statOptions = Stats.presetToOptions("verbose");
+						statOptions.colors = false;
+						fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
 						var jsonStats = stats.toJson({
 							errorDetails: true
 						});
