@@ -200,6 +200,36 @@ describe("Parser", function() {
 		});
 	});
 
+	it("should parse comments", function() {
+		var source = "//comment1\n/*comment2*/";
+		var state = [
+			{
+				type: 'Line',
+				value: 'comment1'
+			}, {
+				type: 'Block',
+				value: 'comment2'
+			}
+		];
+
+		var testParser = new Parser({});
+
+		testParser.plugin("program", function(ast, comments) {
+			if(!this.state.comments) this.state.comments = comments;
+			return true;
+		});
+
+		var actual = testParser.parse(source);
+		should.strictEqual(typeof actual, "object");
+		should.strictEqual(typeof actual.comments, "object");
+		actual.comments.forEach(function(element, index) {
+			should.strictEqual(typeof element.type, "string");
+			should.strictEqual(typeof element.value, "string");
+			element.type.should.be.eql(state[index].type);
+			element.value.should.be.eql(state[index].value);
+		});
+	});
+
 	describe("expression evaluation", function() {
 		function evaluateInParser(source) {
 			var parser = new Parser();
