@@ -202,15 +202,13 @@ describe("Parser", function() {
 
 	it("should parse comments", function() {
 		var source = "//comment1\n/*comment2*/";
-		var state = [
-			{
-				type: 'Line',
-				value: 'comment1'
-			}, {
-				type: 'Block',
-				value: 'comment2'
-			}
-		];
+		var state = [{
+			type: 'Line',
+			value: 'comment1'
+		}, {
+			type: 'Block',
+			value: 'comment2'
+		}];
 
 		var testParser = new Parser({});
 
