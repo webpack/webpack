@@ -1,9 +1,12 @@
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
+	resolve: {
+		extensions: ['.js', '.jsx']
+	},
 	entry: {
 		alpha: ["./alpha", "./a", "module"],
-		beta: ["./beta", "./b"]
+		beta: ["./beta", "./b", "./c"]
 	},
 	output: {
 		path: path.join(__dirname, "js"),
