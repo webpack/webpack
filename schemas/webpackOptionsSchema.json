@@ -132,6 +132,34 @@
       "additionalProperties": false,
       "description": "Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.",
       "properties": {
+        "auxiliaryComment": {
+          "description": "Add a comment in the UMD wrapper.",
+          "oneOf": [
+            {
+              "description": "Append the same comment above each import style.",
+              "type": "string"
+            },
+            {
+              "additionalProperties": false,
+              "description": "Set explicit comments for `commonjs`, `commonjs2`, `amd`, and `root`.",
+              "properties": {
+                "amd": {
+                  "type": "string"
+                },
+                "commonjs": {
+                  "type": "string"
+                },
+                "commonjs2": {
+                  "type": "string"
+                },
+                "root": {
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ]
+        },
         "chunkFilename": {
           "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
           "type": "string"
