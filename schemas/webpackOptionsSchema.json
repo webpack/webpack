@@ -398,6 +398,10 @@
 		"module": {
 			"#ref": "#/definitions/module"
 		},
+		"name": {
+			"description": "Name of the configuration. Used when loading multiple configurations.",
+			"type": "string"
+		},
 		"node": {
 			"description": "Include polyfills or mocks for various node stuff.",
 			"properties": {
