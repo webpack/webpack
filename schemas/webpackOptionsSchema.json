@@ -467,6 +467,26 @@
 		"resolveLoader": {
 			"#ref": "#/definitions/resolveLoader"
 		},
+		"stats": {
+			"description": "Used by the webpack CLI program to pass stats options.",
+			"oneOf": [
+				{
+					"type": "object"
+				},
+				{
+					"type": "boolean"
+				},
+				{
+					"enum": [
+						"none",
+						"errors-only",
+						"minimal",
+						"normal",
+						"verbose"
+					]
+				}
+			]
+		},
 		"target": {
 			"enum": [
 				"web",
