@@ -26,7 +26,6 @@ describe("Examples", function() {
 
 			function processOptions(options) {
 				options.context = examplePath;
-				options.optimize = options.optimize || {};
 				options.output = options.output || {};
 				options.output.pathInfo = true;
 				options.output.path = path.join(examplePath, "js");
