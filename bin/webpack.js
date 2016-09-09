@@ -115,7 +115,6 @@ yargs.options({
 	"verbose": {
 		type: "boolean",
 		group: DISPLAY_GROUP,
-		alias: "v",
 		describe: "Show more details"
 	}
 });
