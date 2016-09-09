@@ -126,6 +126,7 @@ if(argv.verbose) {
 	argv["display-reasons"] = true;
 	argv["display-entrypoints"] = true;
 	argv["display-used-exports"] = true;
+	argv["display-provided-exports"] = true;
 	argv["display-error-details"] = true;
 	argv["display-modules"] = true;
 	argv["display-cached"] = true;
@@ -210,6 +211,10 @@ function processOptions(options) {
 
 		ifArg("display-used-exports", function(bool) {
 			outputOptions.usedExports = bool;
+		});
+
+		ifArg("display-provided-exports", function(bool) {
+			outputOptions.providedExports = bool;
 		});
 
 		ifArg("display-error-details", function(bool) {
