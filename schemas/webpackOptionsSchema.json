@@ -383,7 +383,14 @@
 		},
 		"devtool": {
 			"description": "A developer tool to enhance debugging.",
-			"type": "string"
+			"oneOf": [
+				{
+					"type": "string"
+				},
+				{
+					"constant": false
+				}
+			]
 		},
 		"entry": {
 			"#ref": "#/definitions/entry"
