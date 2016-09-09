@@ -4,6 +4,7 @@ fs.existsSync = fs.existsSync || path.existsSync;
 var resolve = require("enhanced-resolve");
 var interpret = require("interpret");
 var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
+var validateWebpackOptions = require("../lib/validateWebpackOptions");
 
 module.exports = function(optimist, argv, convertOptions) {
 
@@ -551,6 +552,12 @@ module.exports = function(optimist, argv, convertOptions) {
 				console.error("A configuration file could be named 'webpack.config.js' in the current directory.");
 			}
 			console.error("Use --help to display the CLI options.");
+			process.exit(-1); // eslint-disable-line
+		}
+		var webpackOptionsValidationErrors = validateWebpackOptions(options);
+
+		if(webpackOptionsValidationErrors.length) {
+			console.error("Configuration is invalid. Fix the following errors:", webpackOptionsValidationErrors);
 			process.exit(-1); // eslint-disable-line
 		}
 	}
