@@ -2,67 +2,51 @@
 
 ``` javascript
 var path = require("path");
-var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
-module.exports = {
-	entry: {
-		vendor: ["./vendor"],
-		pageA: "./pageA",
-		pageB: "./pageB",
-		pageC: "./pageC"
+var webpack = require("../../");
+module.exports = [
+	{
+		name: "vendor",
+		entry: ["./vendor", "./vendor2"],
+		output: {
+			path: path.resolve(__dirname, "js"),
+			filename: "vendor.js",
+			library: "vendor_[hash]"
+		},
+		plugins: [
+			new webpack.DllPlugin({
+				name: "vendor_[hash]",
+				path: path.resolve(__dirname, "js/manifest.json")
+			})
+		]
 	},
-	output: {
-		path: path.join(__dirname, "js"),
-		filename: "[name].js"
-	},
-	plugins: [
-		new CommonsChunkPlugin({
-			name: "vendor",
-			minChunks: Infinity
-		})
-	]
-};
+	{
+		name: "app",
+		dependencies: ["vendor"],
+		entry: {
+			pageA: "./pageA",
+			pageB: "./pageB",
+			pageC: "./pageC"
+		},
+		output: {
+			path: path.join(__dirname, "js"),
+			filename: "[name].js"
+		},
+		plugins: [
+			new webpack.DllReferencePlugin({
+				manifest: path.resolve(__dirname, "js/manifest.json")
+			})
+		]
+	}
+];
 ```
 
 # js/vendor.js
 
-<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
 ``` javascript
+var vendor_32199746b38d6e93b44b =
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	// install a JSONP callback for chunk loading
-/******/ 	var parentJsonpFunction = window["webpackJsonp"];
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {
-/******/ 		// add "moreModules" to the modules object,
-/******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
-/******/ 		for(;i < chunkIds.length; i++) {
-/******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
-/******/ 				resolves.push(installedChunks[chunkId][0]);
-/******/ 			installedChunks[chunkId] = 0;
-/******/ 		}
-/******/ 		for(moduleId in moreModules) {
-/******/ 			if(Object.prototype.hasOwnProperty.call(moreModules, moduleId)) {
-/******/ 				modules[moduleId] = moreModules[moduleId];
-/******/ 			}
-/******/ 		}
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
-/******/ 			resolves.shift()();
-/******/ 		if(executeModules) {
-/******/ 			for(i=0; i < executeModules.length; i++) {
-/******/ 				result = __webpack_require__(__webpack_require__.s = executeModules[i]);
-/******/ 			}
-/******/ 		}
-/******/ 		return result;
-/******/ 	};
-
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
-/******/ 	// objects to store loaded and loading chunks
-/******/ 	var installedChunks = {
-/******/ 		3: 0
-/******/ 	};
 
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -88,44 +72,6 @@ module.exports = {
 /******/ 		return module.exports;
 /******/ 	}
 
-/******/ 	// This file contains only the entry chunk.
-/******/ 	// The chunk loading function for additional chunks
-/******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve();
-
-/******/ 		// an Promise means "currently loading".
-/******/ 		if(installedChunks[chunkId]) {
-/******/ 			return installedChunks[chunkId][2];
-/******/ 		}
-/******/ 		// start chunk loading
-/******/ 		var head = document.getElementsByTagName('head')[0];
-/******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
-/******/ 		script.charset = 'utf-8';
-/******/ 		script.async = true;
-/******/ 		script.timeout = 120000;
-
-/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".js";
-/******/ 		var timeout = setTimeout(onScriptComplete, 120000);
-/******/ 		script.onerror = script.onload = onScriptComplete;
-/******/ 		function onScriptComplete() {
-/******/ 			// avoid mem leaks in IE.
-/******/ 			script.onerror = script.onload = null;
-/******/ 			clearTimeout(timeout);
-/******/ 			var chunk = installedChunks[chunkId];
-/******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
-/******/ 				installedChunks[chunkId] = undefined;
-/******/ 			}
-/******/ 		};
-/******/ 		head.appendChild(script);
-
-/******/ 		var promise = new Promise(function(resolve, reject) {
-/******/ 			installedChunks[chunkId] = [resolve, reject];
-/******/ 		});
-/******/ 		return installedChunks[chunkId][2] = promise;
-/******/ 	};
 
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
@@ -160,16 +106,10 @@ module.exports = {
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
 
-/******/ 	// on error function for async loading
-/******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
-
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
-```
-</details>
-``` javascript
 /******/ ([
 /* 0 */
 /* unknown exports provided */
@@ -182,19 +122,26 @@ module.exports = {
 module.exports = "Vendor";
 
 /***/ },
-/* 1 */,
-/* 2 */,
-/* 3 */,
-/* 4 */
+/* 1 */
 /* unknown exports provided */
 /* all exports used */
 /*!********************!*\
-  !*** multi vendor ***!
+  !*** ./vendor2.js ***!
   \********************/
+/***/ function(module, exports) {
+
+module.exports = "Vendor2";
+
+/***/ },
+/* 2 */
+/* unknown exports provided */
+/* all exports used */
+/*!****************!*\
+  !*** dll main ***!
+  \****************/
 /***/ function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! ./vendor */0);
-
+module.exports = __webpack_require__;
 
 /***/ }
 /******/ ]);
@@ -202,21 +149,114 @@ module.exports = __webpack_require__(/*! ./vendor */0);
 
 # js/pageA.js
 
+<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
 ``` javascript
-webpackJsonp([2],[
-/* 0 */,
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+
+
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	__webpack_require__.i = function(value) { return value; };
+
+/******/ 	// define getter function for harmory exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		Object.defineProperty(exports, name, {
+/******/ 			configurable: false,
+/******/ 			enumerable: true,
+/******/ 			get: getter
+/******/ 		});
+/******/ 	};
+
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ })
+/************************************************************************/
+```
+</details>
+``` javascript
+/******/ ([
+/* 0 */
+/* unknown exports provided */
+/* all exports used */
+/*!**********************************************!*\
+  !*** external "vendor_32199746b38d6e93b44b" ***!
+  \**********************************************/
+/***/ function(module, exports) {
+
+module.exports = vendor_32199746b38d6e93b44b;
+
+/***/ },
 /* 1 */
+/* unknown exports provided */
+/* all exports used */
+/*!****************************************************************************!*\
+  !*** delegated ./vendor.js from dll-reference vendor_32199746b38d6e93b44b ***!
+  \****************************************************************************/
+/***/ function(module, exports, __webpack_require__) {
+
+module.exports = (__webpack_require__(0))(0);
+
+/***/ },
+/* 2 */,
+/* 3 */
 /* unknown exports provided */
 /* all exports used */
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
+console.log(__webpack_require__(/*! ./vendor */ 1));
 module.exports = "pageA";
 
 /***/ }
-],[1]);
+/******/ ]);
 ```
 
 # Info
@@ -224,61 +264,85 @@ module.exports = "pageA";
 ## Uncompressed
 
 ```
-Hash: 9f87222952220094b363
+Hash: 32199746b38d6e93b44b2dfd6525b32dabf48b1e
 Version: webpack 2.1.0-beta.22
-Time: 154ms
-    Asset       Size  Chunks             Chunk Names
- pageC.js  232 bytes       0  [emitted]  pageC
- pageB.js  232 bytes       1  [emitted]  pageB
- pageA.js  238 bytes       2  [emitted]  pageA
-vendor.js    5.96 kB       3  [emitted]  vendor
-Entrypoint pageA = vendor.js pageA.js
-Entrypoint pageB = vendor.js pageB.js
-Entrypoint pageC = vendor.js pageC.js
-Entrypoint vendor = vendor.js
-chunk    {0} pageC.js (pageC) 25 bytes {3} [initial] [rendered]
-    > pageC [3] ./pageC.js 
-    [3] ./pageC.js 25 bytes {0} [built]
-chunk    {1} pageB.js (pageB) 25 bytes {3} [initial] [rendered]
-    > pageB [2] ./pageB.js 
-    [2] ./pageB.js 25 bytes {1} [built]
-chunk    {2} pageA.js (pageA) 25 bytes {3} [initial] [rendered]
-    > pageA [1] ./pageA.js 
-    [1] ./pageA.js 25 bytes {2} [built]
-chunk    {3} vendor.js (vendor) 54 bytes [entry] [rendered]
-    > vendor [4] multi vendor 
-    [0] ./vendor.js 26 bytes {3} [built]
-        single entry ./vendor [4] multi vendor
-    [4] multi vendor 28 bytes {3} [built]
+Child vendor:
+    Hash: 32199746b38d6e93b44b
+    Version: webpack 2.1.0-beta.22
+    Time: 141ms
+        Asset     Size  Chunks             Chunk Names
+    vendor.js  3.07 kB       0  [emitted]  main
+    Entrypoint main = vendor.js
+    chunk    {0} vendor.js (main) 65 bytes [entry] [rendered]
+        > main [2] dll main 
+        [0] ./vendor.js 26 bytes {0} [built]
+            single entry ./vendor [2] dll main
+        [1] ./vendor2.js 27 bytes {0} [built]
+            single entry ./vendor2 [2] dll main
+        [2] dll main 12 bytes {0} [built]
+Child app:
+    Hash: 2dfd6525b32dabf48b1e
+    Version: webpack 2.1.0-beta.22
+    Time: 56ms
+       Asset     Size  Chunks             Chunk Names
+    pageB.js  3.41 kB       0  [emitted]  pageB
+    pageA.js   3.4 kB       1  [emitted]  pageA
+    pageC.js  2.59 kB       2  [emitted]  pageC
+    Entrypoint pageA = pageA.js
+    Entrypoint pageB = pageB.js
+    Entrypoint pageC = pageC.js
+    chunk    {0} pageB.js (pageB) 145 bytes [entry] [rendered]
+        > pageB [4] ./pageB.js 
+        [4] ./pageB.js 61 bytes {0} [built]
+         + 2 hidden modules
+    chunk    {1} pageA.js (pageA) 144 bytes [entry] [rendered]
+        > pageA [3] ./pageA.js 
+        [3] ./pageA.js 60 bytes {1} [built]
+         + 2 hidden modules
+    chunk    {2} pageC.js (pageC) 25 bytes [entry] [rendered]
+        > pageC [5] ./pageC.js 
+        [5] ./pageC.js 25 bytes {2} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9f87222952220094b363
+Hash: 32199746b38d6e93b44b2dfd6525b32dabf48b1e
 Version: webpack 2.1.0-beta.22
-Time: 294ms
-    Asset      Size  Chunks             Chunk Names
- pageC.js  59 bytes       0  [emitted]  pageC
- pageB.js  59 bytes       1  [emitted]  pageB
- pageA.js  58 bytes       2  [emitted]  pageA
-vendor.js   1.41 kB       3  [emitted]  vendor
-Entrypoint pageA = vendor.js pageA.js
-Entrypoint pageB = vendor.js pageB.js
-Entrypoint pageC = vendor.js pageC.js
-Entrypoint vendor = vendor.js
-chunk    {0} pageC.js (pageC) 25 bytes {3} [initial] [rendered]
-    > pageC [3] ./pageC.js 
-    [3] ./pageC.js 25 bytes {0} [built]
-chunk    {1} pageB.js (pageB) 25 bytes {3} [initial] [rendered]
-    > pageB [2] ./pageB.js 
-    [2] ./pageB.js 25 bytes {1} [built]
-chunk    {2} pageA.js (pageA) 25 bytes {3} [initial] [rendered]
-    > pageA [1] ./pageA.js 
-    [1] ./pageA.js 25 bytes {2} [built]
-chunk    {3} vendor.js (vendor) 54 bytes [entry] [rendered]
-    > vendor [4] multi vendor 
-    [0] ./vendor.js 26 bytes {3} [built]
-        single entry ./vendor [4] multi vendor
-    [4] multi vendor 28 bytes {3} [built]
+Child vendor:
+    Hash: 32199746b38d6e93b44b
+    Version: webpack 2.1.0-beta.22
+    Time: 231ms
+        Asset       Size  Chunks             Chunk Names
+    vendor.js  621 bytes       0  [emitted]  main
+    Entrypoint main = vendor.js
+    chunk    {0} vendor.js (main) 65 bytes [entry] [rendered]
+        > main [2] dll main 
+        [0] ./vendor.js 26 bytes {0} [built]
+            single entry ./vendor [2] dll main
+        [1] ./vendor2.js 27 bytes {0} [built]
+            single entry ./vendor2 [2] dll main
+        [2] dll main 12 bytes {0} [built]
+Child app:
+    Hash: 2dfd6525b32dabf48b1e
+    Version: webpack 2.1.0-beta.22
+    Time: 143ms
+       Asset       Size  Chunks             Chunk Names
+    pageB.js  635 bytes       0  [emitted]  pageB
+    pageA.js  634 bytes       1  [emitted]  pageA
+    pageC.js  527 bytes       2  [emitted]  pageC
+    Entrypoint pageA = pageA.js
+    Entrypoint pageB = pageB.js
+    Entrypoint pageC = pageC.js
+    chunk    {0} pageB.js (pageB) 145 bytes [entry] [rendered]
+        > pageB [4] ./pageB.js 
+        [4] ./pageB.js 61 bytes {0} [built]
+         + 2 hidden modules
+    chunk    {1} pageA.js (pageA) 144 bytes [entry] [rendered]
+        > pageA [3] ./pageA.js 
+        [3] ./pageA.js 60 bytes {1} [built]
+         + 2 hidden modules
+    chunk    {2} pageC.js (pageC) 25 bytes [entry] [rendered]
+        > pageC [5] ./pageC.js 
+        [5] ./pageC.js 25 bytes {2} [built]
 ```
