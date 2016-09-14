@@ -15,6 +15,7 @@
 		"no-process-exit": 1,
 		"no-underscore-dangle": 0,
 		"no-use-before-define": 0,
+		"no-undef": 2,
 		"no-unused-vars": 0,
 		"consistent-return": 0,
 		"no-inner-declarations": 1,
