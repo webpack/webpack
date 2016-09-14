@@ -92,19 +92,28 @@ describe("Compiler (caching)", function() {
 	var aFilepath = path.join(tempFixturePath, 'a.js');
 	var cFilepath = path.join(tempFixturePath, 'c.js');
 
-	after(function() {
-		try {
-			if(fs.statSync(tempFixturePath)) {
-				fs.unlinkSync(aFilepath);
-				fs.unlinkSync(cFilepath);
-				fs.rmdirSync(tempFixturePath);
-			}
-		} catch(e) {
-			if(e.code !== 'ENOENT') {
-				throw e;
+	function cleanup() {
+		function ignoreENOENT(fn) {
+			try {
+				return fn();
+			} catch(e) {
+				if(e.code !== 'ENOENT') {
+					throw e;
+				}
 			}
 		}
-	})
+		ignoreENOENT(function() {
+			fs.unlinkSync(aFilepath);
+		});
+		ignoreENOENT(function() {
+			fs.unlinkSync(cFilepath);
+		});
+		ignoreENOENT(function() {
+			fs.rmdirSync(tempFixturePath);
+		});
+	}
+	before(cleanup);
+	after(cleanup);
 
 	function createTempFixture() {
 
