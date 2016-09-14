@@ -3,11 +3,19 @@ module.exports = {
 		rules: [
 			{ oneOf: [
 				{
-					test: require.resolve("./ab"),
+					test: {
+						and: [
+							/a.\.js$/,
+							/b\.js$/
+						]
+					},
 					loader: "./loader?first"
 				},
 				{
-					test: require.resolve("./a"),
+					test: [
+						require.resolve("./a"),
+						require.resolve("./c"),
+					],
 					issuer: require.resolve("./b"),
 					use: [
 						"./loader?second-1",
@@ -24,7 +32,12 @@ module.exports = {
 					]
 				},
 				{
-					test: require.resolve("./a"),
+					test: {
+						or: [
+							require.resolve("./a"),
+							require.resolve("./c"),
+						]
+					},
 					loader: "./loader",
 					options: "third"
 				}
