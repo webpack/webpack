@@ -557,7 +557,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		var webpackOptionsValidationErrors = validateWebpackOptions(options);
 
 		if(webpackOptionsValidationErrors.length) {
-			console.error("Configuration is invalid. Fix the following errors:", webpackOptionsValidationErrors);
+			console.error("Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema. The following checks have failed.", webpackOptionsValidationErrors);
 			process.exit(-1); // eslint-disable-line
 		}
 	}
