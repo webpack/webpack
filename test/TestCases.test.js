@@ -140,12 +140,12 @@ describe("TestCases", function() {
 									modules: ["web_modules", "node_modules"],
 									mainFields: ["webpack", "browser", "web", "browserify", ["jam", "main"], "main"],
 									aliasFields: ["browser"],
-									extensions: ["", ".webpack.js", ".web.js", ".js"]
+									extensions: [".webpack.js", ".web.js", ".js"]
 								},
 								resolveLoader: {
 									modules: ["web_loaders", "web_modules", "node_loaders", "node_modules"],
 									mainFields: ["webpackLoader", "webLoader", "loader", "main"],
-									extensions: ["", ".webpack-loader.js", ".web-loader.js", ".loader.js", ".js"]
+									extensions: [".webpack-loader.js", ".web-loader.js", ".loader.js", ".js"]
 								},
 								module: {
 									loaders: [{

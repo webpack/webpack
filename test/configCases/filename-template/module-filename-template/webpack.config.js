@@ -1,6 +1,6 @@
 module.exports = {
 	output: {
-		lineToLine: true,
+		devtoolLineToLine: true,
 		devtoolModuleFilenameTemplate: function(info) {
 			return "dummy:///" + info.resourcePath;
 		}
