@@ -3,3 +3,7 @@ root = true
 [*.js]
 indent_style=tab
 trim_trailing_whitespace=true
+
+[*.json]
+indent_style = space
+indent_size = 2

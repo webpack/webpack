@@ -26,9 +26,8 @@ describe("Examples", function() {
 
 			function processOptions(options) {
 				options.context = examplePath;
-				options.optimize = options.optimize || {};
 				options.output = options.output || {};
-				options.output.pathInfo = true;
+				options.output.pathinfo = true;
 				options.output.path = path.join(examplePath, "js");
 				options.output.publicPath = "js/";
 				if(!options.output.filename)

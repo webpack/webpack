@@ -32,6 +32,11 @@ describe("HotTestCases", function() {
 					var recordsPath = path.join(outputDirectory, "records.json");
 					if(fs.existsSync(recordsPath))
 						fs.unlinkSync(recordsPath);
+					var fakeUpdateLoaderOptions = {
+						options: {
+							updateIndex: 0
+						}
+					};
 					var options = {
 						context: testDirectory,
 						entry: "./index.js",
@@ -48,10 +53,10 @@ describe("HotTestCases", function() {
 						target: "async-node",
 						plugins: [
 							new webpack.HotModuleReplacementPlugin(),
-							new webpack.NamedModulesPlugin()
+							new webpack.NamedModulesPlugin(),
+							new webpack.LoaderOptionsPlugin(fakeUpdateLoaderOptions)
 						],
-						recordsPath: recordsPath,
-						updateIndex: 0
+						recordsPath: recordsPath
 					}
 					var compiler = webpack(options);
 					compiler.run(function(err, stats) {
@@ -71,14 +76,14 @@ describe("HotTestCases", function() {
 						}
 
 						function _next(callback) {
-							options.updateIndex++;
+							fakeUpdateLoaderOptions.options.updateIndex++;
 							compiler.run(function(err, stats) {
 								if(err) return done(err);
 								var jsonStats = stats.toJson({
 									errorDetails: true
 								});
-								if(checkArrayExpectation(testDirectory, jsonStats, "error", "errors" + options.updateIndex, "Error", done)) return;
-								if(checkArrayExpectation(testDirectory, jsonStats, "warning", "warnings" + options.updateIndex, "Warning", done)) return;
+								if(checkArrayExpectation(testDirectory, jsonStats, "error", "errors" + fakeUpdateLoaderOptions.options.updateIndex, "Error", done)) return;
+								if(checkArrayExpectation(testDirectory, jsonStats, "warning", "warnings" + fakeUpdateLoaderOptions.options.updateIndex, "Warning", done)) return;
 								if(callback) callback();
 							})
 						}
