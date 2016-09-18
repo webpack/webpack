@@ -35,11 +35,11 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	var configFileLoaded = false;
-	var configPath, ext;
+	var configFile = {};
 	var extensions = Object.keys(interpret.extensions).sort(function(a, b) {
 		return a === '.js' ? -1 : b === '.js' ? 1 : a.length - b.length;
 	});
-	var configFiles = ["webpack.config", "webpackfile"].map(function(filename) {
+	var defaultConfigFiles = ["webpack.config", "webpackfile"].map(function(filename) {
 		return extensions.map(function(ext) {
 			return {
 				path: path.resolve(filename + ext),
@@ -52,30 +52,41 @@ module.exports = function(optimist, argv, convertOptions) {
 
 	var i;
 	if(argv.config) {
-		configPath = path.resolve(argv.config);
-		for(i = extensions.length - 1; i >= 0; i--) {
-			var tmpExt = extensions[i];
-			if(configPath.indexOf(tmpExt, configPath.length - tmpExt.length) > -1) {
-				ext = tmpExt;
-				break;
+		function getConfigExtension(configPath) {
+			for(i = extensions.length - 1; i >= 0; i--) {
+				var tmpExt = extensions[i];
+				if(configPath.indexOf(tmpExt, configPath.length - tmpExt.length) > -1) {
+					return tmpExt;
+					break;
+				}
 			}
+			return path.extname(configPath);
 		}
-		if(!ext) {
-			ext = path.extname(configPath);
+		if(Array.isArray(argv.config)) {
+			configFile = argv.config.map(function(configArg) {
+				var resolvedPath = path.resolve(configArg);
+				var extension = getConfigExtension(resolvedPath);
+				return {
+					path: resolvedPath,
+					ext: extension
+				};
+			});
+		} else {
+			configFile.path = path.resolve(argv.config);
+			configFile.ext = getConfigExtension(configFile.path);
 		}
 	} else {
-		for(i = 0; i < configFiles.length; i++) {
-			var webpackConfig = configFiles[i].path;
+		for(i = 0; i < defaultConfigFiles.length; i++) {
+			var webpackConfig = defaultConfigFiles[i].path;
 			if(fs.existsSync(webpackConfig)) {
-				ext = configFiles[i].ext;
-				configPath = webpackConfig;
+				configFile.ext = defaultConfigFiles[i].ext;
+				configFile.path = webpackConfig;
 				break;
 			}
 		}
 	}
 
-	if(configPath) {
-
+	if(configFile) {
 		function registerCompiler(moduleDescriptor) {
 			if(moduleDescriptor) {
 				if(typeof moduleDescriptor === "string") {
@@ -95,18 +106,30 @@ module.exports = function(optimist, argv, convertOptions) {
 			}
 		}
 
-		registerCompiler(interpret.extensions[ext]);
-		options = require(configPath);
-		configFileLoaded = true;
-	}
+		function requireConfig(configPath) {
+			var options = require(configPath);
+			var isES6DefaultExportedFunc = (
+				typeof options === "object" && options !== null && typeof options.default === "function"
+			);
+			if(typeof options === "function" || isES6DefaultExportedFunc) {
+				options = isES6DefaultExportedFunc ? options.default : options;
+				options = options(argv.env, argv);
+			}
+			return options;
+		}
 
-	var isES6DefaultExportedFunc = (
-		typeof options === "object" && options !== null && typeof options.default === "function"
-	);
-
-	if(typeof options === "function" || isES6DefaultExportedFunc) {
-		options = isES6DefaultExportedFunc ? options.default : options;
-		options = options(argv.env, argv);
+		if(Array.isArray(configFile)) {
+			options = [];
+			configFile.forEach(function(file) {
+				registerCompiler(interpret.extensions[file.ext]);
+				options.push(requireConfig(file.path));
+			});
+			configFileLoaded = true;
+		} else {
+			registerCompiler(interpret.extensions[configFile.ext]);
+			options = requireConfig(configFile.path);
+			configFileLoaded = true;
+		}
 	}
 
 	return processConfiguredOptions(options);
@@ -543,7 +566,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		}
 
 		if(!options.entry) {
-			if(configPath) {
+			if(configFile.path) {
 				console.error("Configuration file found but no entry configured.");
 			} else {
 				console.error("No configuration file found and no entry configured via CLI option.");
