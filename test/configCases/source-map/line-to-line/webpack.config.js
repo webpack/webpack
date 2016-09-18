@@ -1,6 +1,6 @@
 module.exports = {
 	output: {
-		lineToLine: true
+		devtoolLineToLine: true
 	},
 	node: {
 		__dirname: false,

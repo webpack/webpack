@@ -5,6 +5,6 @@ module.exports = {
 		]
 	},
 	resolve: {
-		extensions: ["", ".web.coffee", ".web.js", ".coffee", ".js"]
+		extensions: [".web.coffee", ".web.js", ".coffee", ".js"]
 	}
 }
