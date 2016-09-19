@@ -264,7 +264,20 @@ function processOptions(options) {
 
 	Error.stackTraceLimit = 30;
 	var lastHash = null;
-	var compiler = webpack(options);
+	var compiler;
+	try {
+		compiler = webpack(options);
+	} catch(e) {
+		var WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
+		if(e instanceof WebpackOptionsValidationError) {
+			if(argv.color)
+				console.error("\u001b[1m\u001b[31m" + e.message + "\u001b[39m\u001b[22m");
+			else
+				console.error(e.message);
+			process.exit(1);
+		}
+		throw e;
+	}
 
 	if(argv.progress) {
 		var ProgressPlugin = require("../lib/ProgressPlugin");

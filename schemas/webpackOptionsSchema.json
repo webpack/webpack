@@ -382,6 +382,18 @@
             }
           ]
         },
+        "hashFunction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hashDigest": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hashDigestLength": {
+          "type": "number",
+          "minimum": 1
+        },
         "chunkFilename": {
           "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
           "type": "string"
