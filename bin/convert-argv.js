@@ -8,7 +8,7 @@ var validateWebpackOptions = require("../lib/validateWebpackOptions");
 
 module.exports = function(optimist, argv, convertOptions) {
 
-	var options = {};
+	var options = [];
 
 	// Help
 	if(argv.help) {
@@ -36,11 +36,11 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	var configFileLoaded = false;
-	var configPath, ext;
+	var configFiles = [];
 	var extensions = Object.keys(interpret.extensions).sort(function(a, b) {
 		return a === '.js' ? -1 : b === '.js' ? 1 : a.length - b.length;
 	});
-	var configFiles = ["webpack.config", "webpackfile"].map(function(filename) {
+	var defaultConfigFiles = ["webpack.config", "webpackfile"].map(function(filename) {
 		return extensions.map(function(ext) {
 			return {
 				path: path.resolve(filename + ext),
@@ -53,30 +53,41 @@ module.exports = function(optimist, argv, convertOptions) {
 
 	var i;
 	if(argv.config) {
-		configPath = path.resolve(argv.config);
-		for(i = extensions.length - 1; i >= 0; i--) {
-			var tmpExt = extensions[i];
-			if(configPath.indexOf(tmpExt, configPath.length - tmpExt.length) > -1) {
-				ext = tmpExt;
-				break;
+		function getConfigExtension(configPath) {
+			for(i = extensions.length - 1; i >= 0; i--) {
+				var tmpExt = extensions[i];
+				if(configPath.indexOf(tmpExt, configPath.length - tmpExt.length) > -1) {
+					return tmpExt;
+				}
 			}
+			return path.extname(configPath);
 		}
-		if(!ext) {
-			ext = path.extname(configPath);
+
+		function mapConfigArg(configArg) {
+			var resolvedPath = path.resolve(configArg);
+			var extension = getConfigExtension(resolvedPath);
+			return {
+				path: resolvedPath,
+				ext: extension
+			};
 		}
+
+		var configArgList = Array.isArray(argv.config) ? argv.config : [argv.config];
+		configFiles = configArgList.map(mapConfigArg);
 	} else {
-		for(i = 0; i < configFiles.length; i++) {
-			var webpackConfig = configFiles[i].path;
+		for(i = 0; i < defaultConfigFiles.length; i++) {
+			var webpackConfig = defaultConfigFiles[i].path;
 			if(fs.existsSync(webpackConfig)) {
-				ext = configFiles[i].ext;
-				configPath = webpackConfig;
+				configFiles.push({
+					path: webpackConfig,
+					ext: defaultConfigFiles[i].ext
+				});
 				break;
 			}
 		}
 	}
 
-	if(configPath) {
-
+	if(configFiles.length > 0) {
 		function registerCompiler(moduleDescriptor) {
 			if(moduleDescriptor) {
 				if(typeof moduleDescriptor === "string") {
@@ -96,21 +107,32 @@ module.exports = function(optimist, argv, convertOptions) {
 			}
 		}
 
-		registerCompiler(interpret.extensions[ext]);
-		options = require(configPath);
+		function requireConfig(configPath) {
+			var options = require(configPath);
+			var isES6DefaultExportedFunc = (
+				typeof options === "object" && options !== null && typeof options.default === "function"
+			);
+			if(typeof options === "function" || isES6DefaultExportedFunc) {
+				options = isES6DefaultExportedFunc ? options.default : options;
+				options = options(argv.env, argv);
+			}
+			return options;
+		}
+
+		configFiles.forEach(function(file) {
+			registerCompiler(interpret.extensions[file.ext]);
+			options.push(requireConfig(file.path));
+		});
 		configFileLoaded = true;
 	}
 
-	var isES6DefaultExportedFunc = (
-		typeof options === "object" && options !== null && typeof options.default === "function"
-	);
-
-	if(typeof options === "function" || isES6DefaultExportedFunc) {
-		options = isES6DefaultExportedFunc ? options.default : options;
-		options = options(argv.env, argv);
+	if(!configFileLoaded) {
+		return processConfiguredOptions({});
+	} else if(options.length === 1) {
+		return processConfiguredOptions(options[0]);
+	} else {
+		return processConfiguredOptions(options);
 	}
-
-	return processConfiguredOptions(options);
 
 	function processConfiguredOptions(options) {
 		if(options === null || typeof options !== "object") {
@@ -543,7 +565,7 @@ module.exports = function(optimist, argv, convertOptions) {
 		}
 
 		if(!options.entry) {
-			if(configPath) {
+			if(configFileLoaded) {
 				console.error("Configuration file found but no entry configured.");
 			} else {
 				console.error("No configuration file found and no entry configured via CLI option.");
