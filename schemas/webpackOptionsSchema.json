@@ -25,6 +25,12 @@
         "exclude": {
           "$ref": "#/definitions/ruleSet-condition"
         },
+        "enforce": {
+          "enum": [
+            "left",
+            "right"
+          ]
+        },
         "loader": {
           "anyOf": [
             {
@@ -297,22 +303,6 @@
               "instanceof": "RegExp"
             }
           ]
-        },
-        "postLoaders": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/ruleSet-rules"
-            }
-          ],
-          "description": "An array of automatically applied loaders."
-        },
-        "preLoaders": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/ruleSet-rules"
-            }
-          ],
-          "description": "An array of automatically applied loaders."
         },
         "unknownContextRequest": {
           "type": "string"
