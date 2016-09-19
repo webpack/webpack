@@ -7,7 +7,8 @@ module.exports = {
 			manifest: require("../../../js/config/dll-plugin/manifest0.json"),
 			name: "../0-create-dll/dll.js",
 			scope: "dll",
-			sourceType: "commonjs2"
+			sourceType: "commonjs2",
+			extensions: ['.js', '.jsx']
 		})
 	]
 }
