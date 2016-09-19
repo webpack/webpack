@@ -19,7 +19,7 @@
     "source-map": "^0.5.3",
     "supports-color": "^3.1.0",
     "tapable": "~0.2.3",
-    "uglify-js": "~2.6.0",
+    "uglify-js": "~2.7.3",
     "watchpack": "^1.0.0",
     "webpack-sources": "^0.1.0",
     "yargs": "^4.7.1"
