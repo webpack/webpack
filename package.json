@@ -79,7 +79,8 @@
     "bin/",
     "buildin/",
     "hot/",
-    "web_modules/"
+    "web_modules/",
+    "schemas/"
   ],
   "scripts": {
     "pretest": "npm run lint && npm run beautify-lint",
