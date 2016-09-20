@@ -665,7 +665,8 @@
         "enum": [
           false,
           true,
-          "mock"
+          "mock",
+          "empty"
         ]
       },
       "properties": {
