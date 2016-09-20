@@ -37,7 +37,7 @@
     },
     "entry": {
       "description": "The entry point(s) of the compilation.",
-      "oneOf": [
+      "anyOf": [
         {
           "additionalProperties": {
             "$ref": "#/definitions/entry-item"
@@ -52,7 +52,7 @@
     },
     "entry-item": {
       "description": "The entry point for one output file.",
-      "oneOf": [
+      "anyOf": [
         {
           "description": "The string is resolved to a module which is loaded upon startup.",
           "minLength": 1,
@@ -124,7 +124,7 @@
         },
         "noParse": {
           "description": "Don't parse files matching. It's matched against the full resolved request.",
-          "oneOf": [
+          "anyOf": [
             {
               "items": {
                 "instanceof": "RegExp"
@@ -176,7 +176,7 @@
       "properties": {
         "auxiliaryComment": {
           "description": "Add a comment in the UMD wrapper.",
-          "oneOf": [
+          "anyOf": [
             {
               "description": "Append the same comment above each import style.",
               "type": "string"
@@ -220,7 +220,7 @@
         },
         "devtoolLineToLine": {
           "description": "Enable line to line mapped mode for all/specified modules. Line to line mapped mode uses a simple SourceMap where each line of the generated source is mapped to the same line of the original source. It’s a performance optimization. Only use it if your performance need to be better and you are sure that input lines match which generated lines.",
-          "oneOf": [
+          "anyOf": [
             {
               "description": "`true` enables it for all modules (not recommended)",
               "type": "boolean"
@@ -244,7 +244,7 @@
         },
         "devtoolModuleFilenameTemplate": {
           "description": "Filename template string of function for the sources array in a generated SourceMap.",
-          "oneOf": [
+          "anyOf": [
             {
               "type": "string"
             },
@@ -517,7 +517,7 @@
         "loaders": {
           "$ref": "#/definitions/ruleSet-use"
         },
-        "oneOf": {
+        "anyOf": {
           "$ref": "#/definitions/ruleSet-rules"
         },
         "options": {
@@ -597,7 +597,7 @@
     },
     "cache": {
       "description": "Cache generated modules and chunks to improve performance for multiple incremental builds.",
-      "oneOf": [
+      "anyOf": [
         {
           "description": "You can pass `false` to disable it.",
           "type": "boolean"
@@ -624,7 +624,7 @@
     },
     "devtool": {
       "description": "A developer tool to enhance debugging.",
-      "oneOf": [
+      "anyOf": [
         {
           "type": "string"
         },
@@ -719,7 +719,7 @@
     },
     "stats": {
       "description": "Used by the webpack CLI program to pass stats options.",
-      "oneOf": [
+      "anyOf": [
         {
           "type": "object"
         },
@@ -765,7 +765,7 @@
           "type": "number"
         },
         "poll": {
-          "oneOf": [
+          "anyOf": [
             {
               "description": "`true`: use polling.",
               "type": "boolean"
