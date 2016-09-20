@@ -36,9 +36,10 @@ describe("Integration", function() {
 			},
 			bail: true,
 			module: {
-				postLoaders: [{
+				rules: [{
 					test: /extra2\.js/,
-					loader: "raw!extra!val?cacheable"
+					loader: "raw!extra!val?cacheable",
+					enforce: "post"
 				}]
 			},
 			amd: {
