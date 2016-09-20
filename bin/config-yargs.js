@@ -190,11 +190,6 @@ module.exports = function(yargs) {
 				group: BASIC_GROUP,
 				requiresArg: true
 			},
-			"progress": {
-				type: "boolean",
-				describe: "Print compilation progress in percentage",
-				group: BASIC_GROUP
-			},
 			"resolve-alias": {
 				type: "string",
 				describe: "Setup a module alias for resolving (Example: jquery-plugin=jquery.plugin)",
