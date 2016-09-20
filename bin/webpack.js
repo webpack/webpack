@@ -118,6 +118,11 @@ yargs.options({
 		group: DISPLAY_GROUP,
 		describe: "Display details about errors"
 	},
+	"display-always": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Display stats in watch mode even when build output does not change (useful for linting)"
+	},
 	"verbose": {
 		type: "boolean",
 		group: DISPLAY_GROUP,
@@ -240,6 +245,11 @@ function processOptions(options) {
 				outputOptions.cachedAssets = true;
 		});
 
+		ifArg("display-always", function(bool) {
+			if(bool)
+				outputOptions.always = true;
+		});
+
 		if(!outputOptions.exclude && !argv["display-modules"])
 			outputOptions.exclude = ["node_modules", "bower_components", "jam", "components"];
 	} else {
@@ -310,7 +320,7 @@ function processOptions(options) {
 		}
 		if(outputOptions.json) {
 			process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
-		} else if(stats.hash !== lastHash) {
+		} else if(outputOptions.always || stats.hash !== lastHash) {
 			lastHash = stats.hash;
 			process.stdout.write(stats.toString(outputOptions) + "\n");
 		}
