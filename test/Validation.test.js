@@ -84,6 +84,27 @@ describe("Validation", function() {
 			" - configuration.module.rules[0].oneOf[0] has an unknown property 'paser'. These properties are valid:",
 			"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, query?, resource?, rules?, test?, use? }"
 		]
+	}, {
+		name: "additional key on root",
+		config: {
+			entry: "a",
+			postcss: function() {}
+		},
+		message: [
+			" - configuration has an unknown property 'postcss'. These properties are valid:",
+			"   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry, externals?, loader?, module?, name?, node?, output?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, stats?, target?, watch?, watchOptions? }",
+			"   For typos: please correct them.",
+			"   For loader options: webpack 2 no longer allows custom properties in configuration.",
+			"     Loaders should be updated to allow passing options via loader options in module.rules.",
+			"     Until loaders are updated one can use the LoaderOptionsPlugin to pass these options to the loader:",
+			"     plugins: {",
+			"       new webpack.LoaderOptionsPlugin({",
+			"         options: {",
+			"           postcss: ...",
+			"         }",
+			"       })",
+			"     }"
+		]
 	}];
 	testCases.forEach(function(testCase) {
 		it("should fail validation for " + testCase.name, function() {
