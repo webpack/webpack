@@ -517,7 +517,7 @@
         "loaders": {
           "$ref": "#/definitions/ruleSet-use"
         },
-        "anyOf": {
+        "oneOf": {
           "$ref": "#/definitions/ruleSet-rules"
         },
         "options": {
