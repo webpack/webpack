@@ -491,8 +491,8 @@
       "properties": {
         "enforce": {
           "enum": [
-            "left",
-            "right"
+            "pre",
+            "post"
           ]
         },
         "exclude": {
