@@ -1,219 +1,49 @@
 {
+  "additionalProperties": false,
   "definitions": {
-    "ruleSet-rules": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/ruleSet-rule"
-      }
-    },
-    "ruleSet-rule": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "resource": {
-          "$ref": "#/definitions/ruleSet-condition"
-        },
-        "issuer": {
-          "$ref": "#/definitions/ruleSet-condition"
-        },
-        "test": {
-          "$ref": "#/definitions/ruleSet-condition"
-        },
-        "include": {
-          "$ref": "#/definitions/ruleSet-condition"
-        },
-        "exclude": {
-          "$ref": "#/definitions/ruleSet-condition"
-        },
-        "enforce": {
-          "enum": [
-            "left",
-            "right"
-          ]
-        },
-        "loader": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ruleSet-loader"
-            },
-            {
-              "$ref": "#/definitions/ruleSet-use"
-            }
-          ]
-        },
-        "loaders": {
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ruleSet-loader"
-            },
-            {
-              "$ref": "#/definitions/ruleSet-use"
-            }
-          ]
-        },
-        "options": {
-          "$ref": "#/definitions/ruleSet-query"
-        },
-        "query": {
-          "$ref": "#/definitions/ruleSet-query"
-        },
-        "loaders": {
-          "$ref": "#/definitions/ruleSet-use"
-        },
-        "use": {
-          "$ref": "#/definitions/ruleSet-use"
-        },
-        "parser": {
-          "type": "object",
-          "additionalProperties": true
-        },
-        "rules": {
-          "$ref": "#/definitions/ruleSet-rules"
-        },
-        "oneOf": {
-          "$ref": "#/definitions/ruleSet-rules"
-        }
-      }
-    },
-    "ruleSet-use": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ruleSet-use-item"
-        },
-        {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ruleSet-use-item"
-          }
-        }
-      ]
-    },
-    "ruleSet-use-item": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/ruleSet-loader"
-        },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "loader": {
-              "$ref": "#/definitions/ruleSet-loader"
-            },
-            "options": {
-              "$ref": "#/definitions/ruleSet-query"
-            },
-            "query": {
-              "$ref": "#/definitions/ruleSet-query"
-            }
-          }
-        }
-      ]
-    },
-    "ruleSet-loader": {
-      "type": "string",
-      "minLength": 1
-    },
-    "ruleSet-query": {
-      "anyOf": [
-        {
-          "type": "object"
-        },
-        {
-          "type": "string"
-        }
-      ]
-    },
-    "ruleSet-conditions": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/ruleSet-condition"
-      }
-    },
-    "ruleSet-condition": {
-      "anyOf": [
-        {
-          "instanceof": "RegExp"
-        },
-        {
-          "type": "string",
-          "minLength": 1
-        },
-        {
-          "instanceof": "Function"
-        },
-        {
-          "$ref": "#/definitions/ruleSet-conditions"
-        },
-        {
-          "type": "object",
-          "additionalProperties": false,
-          "properties": {
-            "and": {
-              "$ref": "#/definitions/ruleSet-conditions"
-            },
-            "or": {
-              "$ref": "#/definitions/ruleSet-conditions"
-            },
-            "not": {
-              "$ref": "#/definitions/ruleSet-conditions"
-            },
-            "test": {
-              "$ref": "#/definitions/ruleSet-condition"
-            },
-            "include": {
-              "$ref": "#/definitions/ruleSet-condition"
-            },
-            "exclude": {
-              "$ref": "#/definitions/ruleSet-condition"
-            }
-          }
-        }
-      ]
-    },
-    "common.nonEmptyArrayOfUniqueStringValues": {
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
-      "minItems": 1,
-      "type": "array",
-      "uniqueItems": true
-    },
-    "common.arrayOfStringValues": {
-      "items": {
-        "type": "string",
-        "minLength": 1
-      },
-      "type": "array"
-    },
     "common.arrayOfStringOrStringArrayValues": {
       "items": {
         "anyOf": [
           {
-            "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "type": "string"
           },
           {
-            "type": "array",
             "items": {
-              "type": "string",
-              "minLength": 1
-            }
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
           }
         ]
       },
       "type": "array"
     },
+    "common.arrayOfStringValues": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "common.nonEmptyArrayOfUniqueStringValues": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
     "entry": {
       "description": "The entry point(s) of the compilation.",
-      "oneOf": [
+      "anyOf": [
         {
-          "description": "Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.",
-          "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/entry-item"
-          }
+          },
+          "description": "Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.",
+          "type": "object"
         },
         {
           "$ref": "#/definitions/entry-item"
@@ -222,11 +52,11 @@
     },
     "entry-item": {
       "description": "The entry point for one output file.",
-      "oneOf": [
+      "anyOf": [
         {
           "description": "The string is resolved to a module which is loaded upon startup.",
-          "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "type": "string"
         },
         {
           "allOf": [
@@ -239,18 +69,17 @@
       ]
     },
     "externals": {
-      "description": "Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.",
       "anyOf": [
         {
           "description": "An exact matched dependency becomes external. The same string is used as external dependency.",
           "type": "string"
         },
         {
-          "description": "If an dependency matches exactly a property of the object, the property value is used as dependency.",
-          "type": "object",
           "additionalProperties": {
             "type": "string"
-          }
+          },
+          "description": "If an dependency matches exactly a property of the object, the property value is used as dependency.",
+          "type": "object"
         },
         {
           "description": "`function(context, request, callback(err, result))` The function is called on each dependency.",
@@ -266,19 +95,24 @@
           },
           "type": "array"
         }
-      ]
+      ],
+      "description": "Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`."
     },
     "module": {
-      "description": "Options affecting the normal modules (`NormalModuleFactory`).",
       "additionalProperties": false,
+      "description": "Options affecting the normal modules (`NormalModuleFactory`).",
       "properties": {
-        "rules": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/ruleSet-rules"
-            }
-          ],
-          "description": "An array of rules applied for modules."
+        "exprContextCritical": {
+          "type": "boolean"
+        },
+        "exprContextRecursive": {
+          "type": "boolean"
+        },
+        "exprContextRegExp": {
+          "instanceof": "RegExp"
+        },
+        "exprContextRequest": {
+          "type": "string"
         },
         "loaders": {
           "allOf": [
@@ -290,7 +124,7 @@
         },
         "noParse": {
           "description": "Don't parse files matching. It's matched against the full resolved request.",
-          "oneOf": [
+          "anyOf": [
             {
               "items": {
                 "instanceof": "RegExp"
@@ -304,38 +138,34 @@
             }
           ]
         },
-        "unknownContextRequest": {
-          "type": "string"
-        },
-        "unknownContextRegExp": {
-          "instanceof": "RegExp"
-        },
-        "unknownContextRecursive": {
-          "type": "boolean"
+        "rules": {
+          "allOf": [
+            {
+              "$ref": "#/definitions/ruleSet-rules"
+            }
+          ],
+          "description": "An array of rules applied for modules."
         },
         "unknownContextCritical": {
           "type": "boolean"
         },
-        "exprContextRequest": {
+        "unknownContextRecursive": {
+          "type": "boolean"
+        },
+        "unknownContextRegExp": {
+          "instanceof": "RegExp"
+        },
+        "unknownContextRequest": {
           "type": "string"
         },
-        "exprContextRegExp": {
-          "instanceof": "RegExp"
-        },
-        "exprContextRecursive": {
+        "wrappedContextCritical": {
           "type": "boolean"
-        },
-        "exprContextCritical": {
-          "type": "boolean"
-        },
-        "wrappedContextRegExp": {
-          "instanceof": "RegExp"
         },
         "wrappedContextRecursive": {
           "type": "boolean"
         },
-        "wrappedContextCritical": {
-          "type": "boolean"
+        "wrappedContextRegExp": {
+          "instanceof": "RegExp"
         }
       },
       "type": "object"
@@ -346,7 +176,7 @@
       "properties": {
         "auxiliaryComment": {
           "description": "Add a comment in the UMD wrapper.",
-          "oneOf": [
+          "anyOf": [
             {
               "description": "Append the same comment above each import style.",
               "type": "string"
@@ -372,18 +202,6 @@
             }
           ]
         },
-        "hashFunction": {
-          "type": "string",
-          "minLength": 1
-        },
-        "hashDigest": {
-          "type": "string",
-          "minLength": 1
-        },
-        "hashDigestLength": {
-          "type": "number",
-          "minimum": 1
-        },
         "chunkFilename": {
           "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
           "type": "string"
@@ -402,7 +220,7 @@
         },
         "devtoolLineToLine": {
           "description": "Enable line to line mapped mode for all/specified modules. Line to line mapped mode uses a simple SourceMap where each line of the generated source is mapped to the same line of the original source. It’s a performance optimization. Only use it if your performance need to be better and you are sure that input lines match which generated lines.",
-          "oneOf": [
+          "anyOf": [
             {
               "description": "`true` enables it for all modules (not recommended)",
               "type": "boolean"
@@ -426,7 +244,7 @@
         },
         "devtoolModuleFilenameTemplate": {
           "description": "Filename template string of function for the sources array in a generated SourceMap.",
-          "oneOf": [
+          "anyOf": [
             {
               "type": "string"
             },
@@ -437,6 +255,18 @@
         },
         "filename": {
           "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
+          "type": "string"
+        },
+        "hashDigest": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "hashDigestLength": {
+          "minimum": 1,
+          "type": "number"
+        },
+        "hashFunction": {
+          "minLength": 1,
           "type": "string"
         },
         "hotUpdateChunkFilename": {
@@ -456,18 +286,18 @@
           "type": "string"
         },
         "library": {
-          "description": "If set, export the bundle as library. `output.library` is the name.",
           "anyOf": [
             {
               "type": "string"
             },
             {
-              "type": "array",
               "items": {
                 "type": "string"
-              }
+              },
+              "type": "array"
             }
-          ]
+          ],
+          "description": "If set, export the bundle as library. `output.library` is the name."
         },
         "libraryTarget": {
           "enum": [
@@ -515,64 +345,69 @@
     "resolve": {
       "additionalProperties": false,
       "properties": {
-        "modules": {
-          "$ref": "#/definitions/common.arrayOfStringValues"
-        },
-        "descriptionFiles": {
-          "$ref": "#/definitions/common.arrayOfStringValues"
-        },
-        "plugins": {
-          "type": "array"
-        },
-        "mainFields": {
-          "$ref": "#/definitions/common.arrayOfStringOrStringArrayValues"
-        },
-        "aliasFields": {
-          "$ref": "#/definitions/common.arrayOfStringOrStringArrayValues"
-        },
-        "mainFiles": {
-          "$ref": "#/definitions/common.arrayOfStringValues"
-        },
-        "extensions": {
-          "$ref": "#/definitions/common.arrayOfStringValues"
-        },
-        "enforceExtension": {
-          "type": "boolean"
-        },
-        "moduleExtensions": {
-          "$ref": "#/definitions/common.arrayOfStringValues"
-        },
-        "enforceModuleExtension": {
-          "type": "boolean"
-        },
         "alias": {
           "anyOf": [
             {
-              "type": "object",
               "additionalProperties": {
                 "type": "string"
-              }
+              },
+              "type": "object"
             },
             {
-              "type": "array",
               "items": {
-                "type": "object",
                 "additionalProperties": false,
                 "properties": {
-                  "name": {
+                  "alias": {
                     "type": "string"
                   },
-                  "alias": {
+                  "name": {
                     "type": "string"
                   },
                   "onlyModule": {
                     "type": "boolean"
                   }
-                }
-              }
+                },
+                "type": "object"
+              },
+              "type": "array"
             }
           ]
         },
+        "aliasFields": {
+          "$ref": "#/definitions/common.arrayOfStringOrStringArrayValues"
+        },
+        "cachePredicate": {
+          "instanceof": "Function"
+        },
+        "descriptionFiles": {
+          "$ref": "#/definitions/common.arrayOfStringValues"
+        },
+        "enforceExtension": {
+          "type": "boolean"
+        },
+        "enforceModuleExtension": {
+          "type": "boolean"
+        },
+        "extensions": {
+          "$ref": "#/definitions/common.arrayOfStringValues"
+        },
+        "fileSystem": {},
+        "mainFields": {
+          "$ref": "#/definitions/common.arrayOfStringOrStringArrayValues"
+        },
+        "mainFiles": {
+          "$ref": "#/definitions/common.arrayOfStringValues"
+        },
+        "moduleExtensions": {
+          "$ref": "#/definitions/common.arrayOfStringValues"
+        },
+        "modules": {
+          "$ref": "#/definitions/common.arrayOfStringValues"
+        },
+        "plugins": {
+          "type": "array"
+        },
+        "resolver": {},
         "symlinks": {
           "type": "boolean"
         },
@@ -582,21 +417,176 @@
               "type": "boolean"
             },
             {
-              "type": "object",
-              "additionalProperties": true
+              "additionalProperties": true,
+              "type": "object"
+            }
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "ruleSet-condition": {
+      "anyOf": [
+        {
+          "instanceof": "RegExp"
+        },
+        {
+          "minLength": 1,
+          "type": "string"
+        },
+        {
+          "instanceof": "Function"
+        },
+        {
+          "$ref": "#/definitions/ruleSet-conditions"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "and": {
+              "$ref": "#/definitions/ruleSet-conditions"
+            },
+            "exclude": {
+              "$ref": "#/definitions/ruleSet-condition"
+            },
+            "include": {
+              "$ref": "#/definitions/ruleSet-condition"
+            },
+            "not": {
+              "$ref": "#/definitions/ruleSet-conditions"
+            },
+            "or": {
+              "$ref": "#/definitions/ruleSet-conditions"
+            },
+            "test": {
+              "$ref": "#/definitions/ruleSet-condition"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "ruleSet-conditions": {
+      "items": {
+        "$ref": "#/definitions/ruleSet-condition"
+      },
+      "type": "array"
+    },
+    "ruleSet-loader": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "ruleSet-query": {
+      "anyOf": [
+        {
+          "type": "object"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "ruleSet-rule": {
+      "additionalProperties": false,
+      "properties": {
+        "enforce": {
+          "enum": [
+            "left",
+            "right"
+          ]
+        },
+        "exclude": {
+          "$ref": "#/definitions/ruleSet-condition"
+        },
+        "include": {
+          "$ref": "#/definitions/ruleSet-condition"
+        },
+        "issuer": {
+          "$ref": "#/definitions/ruleSet-condition"
+        },
+        "loader": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ruleSet-loader"
+            },
+            {
+              "$ref": "#/definitions/ruleSet-use"
             }
           ]
         },
-        "cachePredicate": {
-          "instanceof": "Function"
+        "loaders": {
+          "$ref": "#/definitions/ruleSet-use"
         },
-        "fileSystem": {},
-        "resolver": {}
+        "anyOf": {
+          "$ref": "#/definitions/ruleSet-rules"
+        },
+        "options": {
+          "$ref": "#/definitions/ruleSet-query"
+        },
+        "parser": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "query": {
+          "$ref": "#/definitions/ruleSet-query"
+        },
+        "resource": {
+          "$ref": "#/definitions/ruleSet-condition"
+        },
+        "rules": {
+          "$ref": "#/definitions/ruleSet-rules"
+        },
+        "test": {
+          "$ref": "#/definitions/ruleSet-condition"
+        },
+        "use": {
+          "$ref": "#/definitions/ruleSet-use"
+        }
       },
       "type": "object"
+    },
+    "ruleSet-rules": {
+      "items": {
+        "$ref": "#/definitions/ruleSet-rule"
+      },
+      "type": "array"
+    },
+    "ruleSet-use": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ruleSet-use-item"
+        },
+        {
+          "items": {
+            "$ref": "#/definitions/ruleSet-use-item"
+          },
+          "type": "array"
+        }
+      ]
+    },
+    "ruleSet-use-item": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ruleSet-loader"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "loader": {
+              "$ref": "#/definitions/ruleSet-loader"
+            },
+            "options": {
+              "$ref": "#/definitions/ruleSet-query"
+            },
+            "query": {
+              "$ref": "#/definitions/ruleSet-query"
+            }
+          },
+          "type": "object"
+        }
+      ]
     }
   },
-  "additionalProperties": false,
   "properties": {
     "amd": {
       "description": "Set the value of `require.amd` and `define.amd`."
@@ -607,7 +597,7 @@
     },
     "cache": {
       "description": "Cache generated modules and chunks to improve performance for multiple incremental builds.",
-      "oneOf": [
+      "anyOf": [
         {
           "description": "You can pass `false` to disable it.",
           "type": "boolean"
@@ -622,17 +612,26 @@
       "description": "The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.",
       "type": "string"
     },
+    "dependencies": {
+      "description": "References to other configurations to depend on.",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
     "devServer": {
       "type": "object"
     },
     "devtool": {
       "description": "A developer tool to enhance debugging.",
-      "oneOf": [
+      "anyOf": [
         {
           "type": "string"
         },
         {
-          "enum": [false]
+          "enum": [
+            false
+          ]
         }
       ]
     },
@@ -652,13 +651,6 @@
     "name": {
       "description": "Name of the configuration. Used when loading multiple configurations.",
       "type": "string"
-    },
-    "dependencies": {
-      "description": "References to other configurations to depend on.",
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
     },
     "node": {
       "description": "Include polyfills or mocks for various node stuff.",
@@ -727,7 +719,7 @@
     },
     "stats": {
       "description": "Used by the webpack CLI program to pass stats options.",
-      "oneOf": [
+      "anyOf": [
         {
           "type": "object"
         },
@@ -773,7 +765,7 @@
           "type": "number"
         },
         "poll": {
-          "oneOf": [
+          "anyOf": [
             {
               "description": "`true`: use polling.",
               "type": "boolean"
