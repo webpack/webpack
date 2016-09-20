@@ -21,12 +21,18 @@ var yargs = require("yargs")
 require("./config-yargs")(yargs);
 
 var DISPLAY_GROUP = "Stats options:";
+var BASIC_GROUP = "Basic options:";
 
 yargs.options({
 	"json": {
 		type: "boolean",
 		alias: "j",
 		describe: "Prints the result as JSON."
+	},
+	"progress": {
+		type: "boolean",
+		describe: "Print compilation progress in percentage",
+		group: BASIC_GROUP
 	},
 	"color": {
 		type: "boolean",
