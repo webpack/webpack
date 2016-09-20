@@ -216,7 +216,14 @@
         },
         "devtoolFallbackModuleFilenameTemplate": {
           "description": "Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ]
         },
         "devtoolLineToLine": {
           "description": "Enable line to line mapped mode for all/specified modules. Line to line mapped mode uses a simple SourceMap where each line of the generated source is mapped to the same line of the original source. It’s a performance optimization. Only use it if your performance need to be better and you are sure that input lines match which generated lines.",
@@ -654,6 +661,13 @@
     },
     "node": {
       "description": "Include polyfills or mocks for various node stuff.",
+      "additionalProperties": {
+        "enum": [
+          false,
+          true,
+          "mock"
+        ]
+      },
       "properties": {
         "Buffer": {
           "type": "boolean"
