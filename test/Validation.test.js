@@ -82,7 +82,7 @@ describe("Validation", function() {
 		},
 		message: [
 			" - configuration.module.rules[0].oneOf[0] has an unknown property 'paser'. These properties are valid:",
-			"   object { resource?, issuer?, test?, include?, exclude?, loader?, loaders?, options?, query?, use?, parser?, rules?, oneOf? }"
+			"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, query?, resource?, rules?, test?, use? }"
 		]
 	}];
 	testCases.forEach(function(testCase) {
