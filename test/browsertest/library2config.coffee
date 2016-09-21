@@ -8,7 +8,7 @@ exports.default = new Promise (resolve, reject) ->
 				hashDigestLength: 5
 			module:
 				rules: [
-					{ test: /extra2?\.js/, loader: "raw!./node_modules/extra.loader.js!val?cacheable", enforce: "left" }
+					{ test: /extra2?\.js/, loader: "raw!./node_modules/extra.loader.js!val?cacheable", enforce: "post" }
 				]
 			amd:
 				fromOptions: true
