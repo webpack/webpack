@@ -62,18 +62,18 @@ describe("ConfigTestCases", function() {
 							console: console
 						};
 
-						function _require(module) {
+						function _require(currentDirectory, module) {
 							if(Array.isArray(module) || /^\.\.?\//.test(module)) {
 								var fn;
 								var content;
 								if(Array.isArray(module)) {
-									var p = path.join(outputDirectory, module[0]);
+									var p = path.join(currentDirectory, module[0]);
 									content = module.map(function(p) {
-										var p = path.join(outputDirectory, p);
+										var p = path.join(currentDirectory, p);
 										return fs.readFileSync(p, "utf-8");
 									}).join("\n");
 								} else {
-									var p = path.join(outputDirectory, module);
+									var p = path.join(currentDirectory, module);
 									content = fs.readFileSync(p, "utf-8");
 								}
 								if(options.target === "web") {
@@ -84,7 +84,7 @@ describe("ConfigTestCases", function() {
 								var module = {
 									exports: {}
 								};
-								fn.call(module.exports, _require, module, module.exports, outputDirectory, p, _it, globalContext);
+								fn.call(module.exports, _require.bind(null, path.dirname(p)), module, module.exports, path.dirname(p), p, _it, globalContext);
 								return module.exports;
 							} else if(testConfig.modules && module in testConfig.modules) {
 								return testConfig.modules[module];
@@ -108,7 +108,7 @@ describe("ConfigTestCases", function() {
 							var bundlePath = testConfig.findBundle(i, optionsArr[i]);
 							if(bundlePath) {
 								filesCount++;
-								_require(bundlePath);
+								_require(outputDirectory, bundlePath);
 							}
 						}
 						// give a free pass to compilation that generated an error

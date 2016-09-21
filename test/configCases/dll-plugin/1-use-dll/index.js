@@ -11,10 +11,11 @@ it("should load a module of non-default type without extension from dll", functi
 	require("dll/f").should.be.eql("f");
 });
 
-it("should load an async module from dll", function() {
+it("should load an async module from dll", function(done) {
 	require("dll/b")().then(function(c) {
 		c.should.be.eql({ default: "c" });
-	});
+		done();
+	}).catch(done);
 });
 
 it("should load an harmony module from dll (default export)", function() {
