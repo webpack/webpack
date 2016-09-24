@@ -125,6 +125,7 @@ Please see [Using Loaders](https://webpack.github.io/docs/using-loaders.html) fo
 * [`jscs`](https://github.com/unindented/jscs-loader): PreLoader for style checking.
 * [`injectable`](https://github.com/jauco/webpack-injectable): Allow to inject dependencies into modules
 * [`transform`](https://github.com/webpack/transform-loader): Use browserify transforms as loader.
+* [`jsbeautify`](https://github.com/tomaszczechowski/jsbeautify-loader): PreLoader for formating code.
 
 For the full list of loaders, see [list of loaders](https://webpack.github.io/docs/list-of-loaders.html).
 
