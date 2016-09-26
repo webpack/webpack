@@ -11,7 +11,7 @@
     "enhanced-resolve": "^2.2.0",
     "interpret": "^1.0.0",
     "loader-runner": "^2.2.0",
-    "loader-utils": "^0.2.11",
+    "loader-utils": "^0.2.16",
     "memory-fs": "~0.3.0",
     "mkdirp": "~0.5.0",
     "node-libs-browser": "^1.0.0",
