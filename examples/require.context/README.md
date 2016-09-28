@@ -192,51 +192,51 @@ console.log(getTemplate("b"));
 ## Uncompressed
 
 ```
-Hash: 30c09c4705d58423325a
-Version: webpack 2.1.0-beta.22
-Time: 159ms
+Hash: 434f1ff7c7a1ef6454f5
+Version: webpack 2.1.0-beta.25
+Time: 121ms
     Asset     Size  Chunks             Chunk Names
-output.js  4.36 kB       0  [emitted]  main
+output.js  4.35 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 613 bytes [entry] [rendered]
+chunk    {0} output.js (main) 603 bytes [entry] [rendered]
     > main [4] ./example.js 
-    [0] ./templates/a.js 82 bytes {0} [optional] [built]
+    [0] ./templates/a.js 80 bytes {0} [optional] [built]
         context element ./a [3] ./templates ^\.\/.*$
         context element ./a.js [3] ./templates ^\.\/.*$
-    [1] ./templates/b.js 82 bytes {0} [optional] [built]
+    [1] ./templates/b.js 80 bytes {0} [optional] [built]
         context element ./b [3] ./templates ^\.\/.*$
         context element ./b.js [3] ./templates ^\.\/.*$
-    [2] ./templates/c.js 82 bytes {0} [optional] [built]
+    [2] ./templates/c.js 80 bytes {0} [optional] [built]
         context element ./c [3] ./templates ^\.\/.*$
         context element ./c.js [3] ./templates ^\.\/.*$
     [3] ./templates ^\.\/.*$ 217 bytes {0} [built]
         cjs require context ./templates [4] ./example.js 2:8-44
-    [4] ./example.js 150 bytes {0} [built]
+    [4] ./example.js 146 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 30c09c4705d58423325a
-Version: webpack 2.1.0-beta.22
-Time: 298ms
-    Asset     Size  Chunks             Chunk Names
-output.js  1.11 kB       0  [emitted]  main
+Hash: 434f1ff7c7a1ef6454f5
+Version: webpack 2.1.0-beta.25
+Time: 236ms
+    Asset    Size  Chunks             Chunk Names
+output.js  1.1 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 613 bytes [entry] [rendered]
+chunk    {0} output.js (main) 603 bytes [entry] [rendered]
     > main [4] ./example.js 
-    [0] ./templates/a.js 82 bytes {0} [optional] [built]
+    [0] ./templates/a.js 80 bytes {0} [optional] [built]
         context element ./a [3] ./templates ^\.\/.*$
         context element ./a.js [3] ./templates ^\.\/.*$
-    [1] ./templates/b.js 82 bytes {0} [optional] [built]
+    [1] ./templates/b.js 80 bytes {0} [optional] [built]
         context element ./b [3] ./templates ^\.\/.*$
         context element ./b.js [3] ./templates ^\.\/.*$
-    [2] ./templates/c.js 82 bytes {0} [optional] [built]
+    [2] ./templates/c.js 80 bytes {0} [optional] [built]
         context element ./c [3] ./templates ^\.\/.*$
         context element ./c.js [3] ./templates ^\.\/.*$
     [3] ./templates ^\.\/.*$ 217 bytes {0} [built]
         cjs require context ./templates [4] ./example.js 2:8-44
-    [4] ./example.js 150 bytes {0} [built]
+    [4] ./example.js 146 bytes {0} [built]
 ```
 
 # Code Splitting

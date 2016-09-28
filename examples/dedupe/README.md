@@ -255,20 +255,20 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: 4dc8b7461ebd65981538
-Version: webpack 2.1.0-beta.22
-Time: 174ms
+Hash: 4ef665e7da89c97bd89f
+Version: webpack 2.1.0-beta.25
+Time: 139ms
     Asset     Size  Chunks             Chunk Names
-output.js  5.06 kB       0  [emitted]  main
+output.js  5.05 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 528 bytes [entry] [rendered]
+chunk    {0} output.js (main) 513 bytes [entry] [rendered]
     > main [7] ./example.js 
     [0] ./z.js 34 bytes {0} [built]
         cjs require ../z [1] ./a/index.js 4:4-19
         cjs require ../z [2] ./b/index.js 4:4-19
-    [1] ./a/index.js 84 bytes {0} [built]
+    [1] ./a/index.js 80 bytes {0} [built]
         cjs require ./a [7] ./example.js 1:8-22
-    [2] ./b/index.js 84 bytes {0} [built]
+    [2] ./b/index.js 80 bytes {0} [built]
         cjs require ./b [7] ./example.js 2:8-22
     [3] ./a/x.js 34 bytes {0} [built]
         cjs require ./x [1] ./a/index.js 2:4-18
@@ -278,8 +278,8 @@ chunk    {0} output.js (main) 528 bytes [entry] [rendered]
         cjs require ./x [2] ./b/index.js 2:4-18
     [6] ./b/y.js 49 bytes {0} [built]
         cjs require ./y [2] ./b/index.js 3:4-18
-    [7] ./example.js 76 bytes {0} [built]
-    [8] template of 1 referencing 0 84 bytes {0} [not cacheable] [built]
+    [7] ./example.js 73 bytes {0} [built]
+    [8] template of 1 referencing 0 80 bytes {0} [not cacheable] [built]
         [no exports used]
         template 0 [1] ./a/index.js
         template 0 [2] ./b/index.js
@@ -288,20 +288,20 @@ chunk    {0} output.js (main) 528 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 4dc8b7461ebd65981538
-Version: webpack 2.1.0-beta.22
-Time: 333ms
+Hash: 4ef665e7da89c97bd89f
+Version: webpack 2.1.0-beta.25
+Time: 258ms
     Asset     Size  Chunks             Chunk Names
 output.js  1.08 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 528 bytes [entry] [rendered]
+chunk    {0} output.js (main) 513 bytes [entry] [rendered]
     > main [7] ./example.js 
     [0] ./z.js 34 bytes {0} [built]
         cjs require ../z [1] ./a/index.js 4:4-19
         cjs require ../z [2] ./b/index.js 4:4-19
-    [1] ./a/index.js 84 bytes {0} [built]
+    [1] ./a/index.js 80 bytes {0} [built]
         cjs require ./a [7] ./example.js 1:8-22
-    [2] ./b/index.js 84 bytes {0} [built]
+    [2] ./b/index.js 80 bytes {0} [built]
         cjs require ./b [7] ./example.js 2:8-22
     [3] ./a/x.js 34 bytes {0} [built]
         cjs require ./x [1] ./a/index.js 2:4-18
@@ -311,8 +311,8 @@ chunk    {0} output.js (main) 528 bytes [entry] [rendered]
         cjs require ./x [2] ./b/index.js 2:4-18
     [6] ./b/y.js 49 bytes {0} [built]
         cjs require ./y [2] ./b/index.js 3:4-18
-    [7] ./example.js 76 bytes {0} [built]
-    [8] template of 1 referencing 0 84 bytes {0} [not cacheable] [built]
+    [7] ./example.js 73 bytes {0} [built]
+    [8] template of 1 referencing 0 80 bytes {0} [not cacheable] [built]
         [no exports used]
         template 0 [1] ./a/index.js
         template 0 [2] ./b/index.js
