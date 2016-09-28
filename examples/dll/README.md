@@ -174,8 +174,8 @@ module.exports = __webpack_require__;
 
 ```
 Hash: 282e8826843b2bb4eeb1
-Version: webpack 2.1.0-beta.22
-Time: 76ms
+Version: webpack 2.1.0-beta.25
+Time: 114ms
          Asset     Size  Chunks             Chunk Names
  MyDll.beta.js  3.26 kB       0  [emitted]  beta
 MyDll.alpha.js  3.29 kB       1  [emitted]  alpha
@@ -205,8 +205,8 @@ chunk    {1} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
 
 ```
 Hash: 282e8826843b2bb4eeb1
-Version: webpack 2.1.0-beta.22
-Time: 144ms
+Version: webpack 2.1.0-beta.25
+Time: 241ms
          Asset       Size  Chunks             Chunk Names
  MyDll.beta.js  643 bytes       0  [emitted]  beta
 MyDll.alpha.js  647 bytes       1  [emitted]  alpha

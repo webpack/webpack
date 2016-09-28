@@ -11,16 +11,16 @@
 {{js/output.js}}
 ```
 
-# js/0.js
+# js/0.output.js
 
 ``` javascript
-{{js/0.js}}
+{{js/0.output.js}}
 ```
 
-# js/1.js
+# js/1.output.js
 
 ``` javascript
-{{js/1.js}}
+{{js/1.output.js}}
 ```
 
 # Info

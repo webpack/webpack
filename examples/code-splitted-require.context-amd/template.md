@@ -10,10 +10,10 @@
 {{js/output.js}}
 ```
 
-# js/0.js
+# js/0.output.js
 
 ``` javascript
-{{js/0.js}}
+{{js/0.output.js}}
 ```
 
 # Info

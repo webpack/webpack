@@ -264,12 +264,12 @@ module.exports = "pageA";
 ## Uncompressed
 
 ```
-Hash: 32199746b38d6e93b44b2dfd6525b32dabf48b1e
-Version: webpack 2.1.0-beta.22
+Hash: 32199746b38d6e93b44b914336663f48ecd8f351
+Version: webpack 2.1.0-beta.25
 Child vendor:
     Hash: 32199746b38d6e93b44b
-    Version: webpack 2.1.0-beta.22
-    Time: 141ms
+    Version: webpack 2.1.0-beta.25
+    Time: 102ms
         Asset     Size  Chunks             Chunk Names
     vendor.js  3.07 kB       0  [emitted]  main
     Entrypoint main = vendor.js
@@ -281,9 +281,9 @@ Child vendor:
             single entry ./vendor2 [2] dll main
         [2] dll main 12 bytes {0} [built]
 Child app:
-    Hash: 2dfd6525b32dabf48b1e
-    Version: webpack 2.1.0-beta.22
-    Time: 56ms
+    Hash: 914336663f48ecd8f351
+    Version: webpack 2.1.0-beta.25
+    Time: 40ms
        Asset     Size  Chunks             Chunk Names
     pageB.js  3.41 kB       0  [emitted]  pageB
     pageA.js   3.4 kB       1  [emitted]  pageA
@@ -291,13 +291,13 @@ Child app:
     Entrypoint pageA = pageA.js
     Entrypoint pageB = pageB.js
     Entrypoint pageC = pageC.js
-    chunk    {0} pageB.js (pageB) 145 bytes [entry] [rendered]
+    chunk    {0} pageB.js (pageB) 144 bytes [entry] [rendered]
         > pageB [4] ./pageB.js 
-        [4] ./pageB.js 61 bytes {0} [built]
+        [4] ./pageB.js 60 bytes {0} [built]
          + 2 hidden modules
-    chunk    {1} pageA.js (pageA) 144 bytes [entry] [rendered]
+    chunk    {1} pageA.js (pageA) 143 bytes [entry] [rendered]
         > pageA [3] ./pageA.js 
-        [3] ./pageA.js 60 bytes {1} [built]
+        [3] ./pageA.js 59 bytes {1} [built]
          + 2 hidden modules
     chunk    {2} pageC.js (pageC) 25 bytes [entry] [rendered]
         > pageC [5] ./pageC.js 
@@ -307,14 +307,14 @@ Child app:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 32199746b38d6e93b44b2dfd6525b32dabf48b1e
-Version: webpack 2.1.0-beta.22
+Hash: 32199746b38d6e93b44b914336663f48ecd8f351
+Version: webpack 2.1.0-beta.25
 Child vendor:
     Hash: 32199746b38d6e93b44b
-    Version: webpack 2.1.0-beta.22
-    Time: 231ms
+    Version: webpack 2.1.0-beta.25
+    Time: 190ms
         Asset       Size  Chunks             Chunk Names
-    vendor.js  621 bytes       0  [emitted]  main
+    vendor.js  618 bytes       0  [emitted]  main
     Entrypoint main = vendor.js
     chunk    {0} vendor.js (main) 65 bytes [entry] [rendered]
         > main [2] dll main 
@@ -324,23 +324,23 @@ Child vendor:
             single entry ./vendor2 [2] dll main
         [2] dll main 12 bytes {0} [built]
 Child app:
-    Hash: 2dfd6525b32dabf48b1e
-    Version: webpack 2.1.0-beta.22
-    Time: 143ms
+    Hash: 914336663f48ecd8f351
+    Version: webpack 2.1.0-beta.25
+    Time: 110ms
        Asset       Size  Chunks             Chunk Names
-    pageB.js  635 bytes       0  [emitted]  pageB
-    pageA.js  634 bytes       1  [emitted]  pageA
-    pageC.js  527 bytes       2  [emitted]  pageC
+    pageB.js  632 bytes       0  [emitted]  pageB
+    pageA.js  631 bytes       1  [emitted]  pageA
+    pageC.js  524 bytes       2  [emitted]  pageC
     Entrypoint pageA = pageA.js
     Entrypoint pageB = pageB.js
     Entrypoint pageC = pageC.js
-    chunk    {0} pageB.js (pageB) 145 bytes [entry] [rendered]
+    chunk    {0} pageB.js (pageB) 144 bytes [entry] [rendered]
         > pageB [4] ./pageB.js 
-        [4] ./pageB.js 61 bytes {0} [built]
+        [4] ./pageB.js 60 bytes {0} [built]
          + 2 hidden modules
-    chunk    {1} pageA.js (pageA) 144 bytes [entry] [rendered]
+    chunk    {1} pageA.js (pageA) 143 bytes [entry] [rendered]
         > pageA [3] ./pageA.js 
-        [3] ./pageA.js 60 bytes {1} [built]
+        [3] ./pageA.js 59 bytes {1} [built]
          + 2 hidden modules
     chunk    {2} pageC.js (pageC) 25 bytes [entry] [rendered]
         > pageC [5] ./pageC.js 

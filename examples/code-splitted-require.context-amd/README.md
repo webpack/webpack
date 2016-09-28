@@ -92,7 +92,7 @@ getTemplate("b", function(b) {
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
 
-/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".js";
+/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
 /******/ 		function onScriptComplete() {
@@ -182,7 +182,7 @@ getTemplate("b", function(b) {
 /******/ ]);
 ```
 
-# js/0.js
+# js/0.output.js
 
 ``` javascript
 webpackJsonp([0],[
@@ -268,55 +268,55 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: ab644f7e6c7bccd65473
-Version: webpack 2.1.0-beta.22
-Time: 173ms
-    Asset     Size  Chunks             Chunk Names
-     0.js  1.83 kB       0  [emitted]  
-output.js  5.93 kB       1  [emitted]  main
+Hash: 3a8c6c952f4b69614cc3
+Version: webpack 2.1.0-beta.25
+Time: 132ms
+      Asset     Size  Chunks             Chunk Names
+0.output.js  1.83 kB       0  [emitted]  
+  output.js  5.93 kB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.js 463 bytes {1} [rendered]
+chunk    {0} 0.output.js 457 bytes {1} [rendered]
     > [1] ./example.js 2:1-4:3
     [0] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
         amd require context ../require.context/templates [1] ./example.js 2:1-4:3
-    [2] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+    [2] ../require.context/templates/a.js 80 bytes {0} [optional] [built]
         context element ./a [0] ../require.context/templates ^\.\/.*$
         context element ./a.js [0] ../require.context/templates ^\.\/.*$
-    [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+    [3] ../require.context/templates/b.js 80 bytes {0} [optional] [built]
         context element ./b [0] ../require.context/templates ^\.\/.*$
         context element ./b.js [0] ../require.context/templates ^\.\/.*$
-    [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+    [4] ../require.context/templates/c.js 80 bytes {0} [optional] [built]
         context element ./c [0] ../require.context/templates ^\.\/.*$
         context element ./c.js [0] ../require.context/templates ^\.\/.*$
-chunk    {1} output.js (main) 261 bytes [entry] [rendered]
+chunk    {1} output.js (main) 251 bytes [entry] [rendered]
     > main [1] ./example.js 
-    [1] ./example.js 261 bytes {1} [built]
+    [1] ./example.js 251 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: ab644f7e6c7bccd65473
-Version: webpack 2.1.0-beta.22
-Time: 363ms
-    Asset       Size  Chunks             Chunk Names
-     0.js  544 bytes       0  [emitted]  
-output.js    1.51 kB       1  [emitted]  main
+Hash: 3a8c6c952f4b69614cc3
+Version: webpack 2.1.0-beta.25
+Time: 297ms
+      Asset       Size  Chunks             Chunk Names
+0.output.js  544 bytes       0  [emitted]  
+  output.js    1.51 kB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.js 463 bytes {1} [rendered]
+chunk    {0} 0.output.js 457 bytes {1} [rendered]
     > [1] ./example.js 2:1-4:3
     [0] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
         amd require context ../require.context/templates [1] ./example.js 2:1-4:3
-    [2] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a.js [0] ../require.context/templates ^\.\/.*$
+    [2] ../require.context/templates/a.js 80 bytes {0} [optional] [built]
         context element ./a [0] ../require.context/templates ^\.\/.*$
-    [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+        context element ./a.js [0] ../require.context/templates ^\.\/.*$
+    [3] ../require.context/templates/b.js 80 bytes {0} [optional] [built]
         context element ./b [0] ../require.context/templates ^\.\/.*$
         context element ./b.js [0] ../require.context/templates ^\.\/.*$
-    [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+    [4] ../require.context/templates/c.js 80 bytes {0} [optional] [built]
         context element ./c [0] ../require.context/templates ^\.\/.*$
         context element ./c.js [0] ../require.context/templates ^\.\/.*$
-chunk    {1} output.js (main) 261 bytes [entry] [rendered]
+chunk    {1} output.js (main) 251 bytes [entry] [rendered]
     > main [1] ./example.js 
-    [1] ./example.js 261 bytes {1} [built]
+    [1] ./example.js 251 bytes {1} [built]
 ```
