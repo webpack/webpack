@@ -99,14 +99,14 @@ describe("Validation", function() {
 			"   For loader options: webpack 2 no longer allows custom properties in configuration.",
 			"     Loaders should be updated to allow passing options via loader options in module.rules.",
 			"     Until loaders are updated one can use the LoaderOptionsPlugin to pass these options to the loader:",
-			"     plugins: {",
+			"     plugins: [",
 			"       new webpack.LoaderOptionsPlugin({",
 			"         // test: /\\.xxx$/, // may apply this only for some modules",
 			"         options: {",
 			"           postcss: ...",
 			"         }",
 			"       })",
-			"     }"
+			"     ]"
 		]
 	}];
 	testCases.forEach(function(testCase) {
