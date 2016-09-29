@@ -142,7 +142,7 @@ module.exports = {
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
 
-/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".js";
+/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
 /******/ 		function onScriptComplete() {
@@ -231,7 +231,7 @@ Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(1)]).cat
 /******/ });
 ```
 
-# js/0.js
+# js/0.output.js
 
 ``` javascript
 webpackJsonp([0],[
@@ -260,7 +260,7 @@ module.exports = "b";
 ]);
 ```
 
-# js/1.js
+# js/1.output.js
 
 ``` javascript
 webpackJsonp([1],{
@@ -280,7 +280,7 @@ module.exports = "d";
 });
 ```
 
-# js/2.js
+# js/2.output.js
 
 ``` javascript
 webpackJsonp([2],{
@@ -305,16 +305,16 @@ module.exports = "c";
 ## Uncompressed
 
 ```
-Hash: d233f2ccd0d9940207fe
-Version: webpack 2.1.0-beta.22
-Time: 203ms
-    Asset       Size  Chunks             Chunk Names
-     0.js  397 bytes       0  [emitted]  
-     1.js  212 bytes       1  [emitted]  
-     2.js  212 bytes       2  [emitted]  
-output.js    6.13 kB       3  [emitted]  main
+Hash: 2697c2e890ef9a735355
+Version: webpack 2.1.0-beta.25
+Time: 125ms
+      Asset       Size  Chunks             Chunk Names
+0.output.js  397 bytes       0  [emitted]  
+1.output.js  212 bytes       1  [emitted]  
+2.output.js  212 bytes       2  [emitted]  
+  output.js    6.13 kB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.js 42 bytes {3} [rendered]
+chunk    {0} 0.output.js 42 bytes {3} [rendered]
     > async commons [4] ./example.js 2:0-52
     > async commons [4] ./example.js 5:0-8:2
     [0] ./a.js 21 bytes {0} [built]
@@ -323,32 +323,32 @@ chunk    {0} 0.js 42 bytes {3} [rendered]
     [1] ./b.js 21 bytes {0} [built]
         amd require ./b [4] ./example.js 2:0-52
         cjs require ./b [4] ./example.js 6:1-15
-chunk    {1} 1.js 21 bytes {3} [rendered]
+chunk    {1} 1.output.js 21 bytes {3} [rendered]
     > [4] ./example.js 5:0-8:2
     [3] ./d.js 21 bytes {1} [built]
         cjs require ./d [4] ./example.js 7:1-15
-chunk    {2} 2.js 21 bytes {3} [rendered]
+chunk    {2} 2.output.js 21 bytes {3} [rendered]
     > [4] ./example.js 2:0-52
     [2] ./c.js 21 bytes {2} [built]
         amd require ./c [4] ./example.js 2:0-52
-chunk    {3} output.js (main) 194 bytes [entry] [rendered]
+chunk    {3} output.js (main) 186 bytes [entry] [rendered]
     > main [4] ./example.js 
-    [4] ./example.js 194 bytes {3} [built]
+    [4] ./example.js 186 bytes {3} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: d233f2ccd0d9940207fe
-Version: webpack 2.1.0-beta.22
-Time: 336ms
-    Asset      Size  Chunks             Chunk Names
-     0.js  78 bytes       0  [emitted]  
-     1.js  51 bytes       1  [emitted]  
-     2.js  51 bytes       2  [emitted]  
-output.js   1.55 kB       3  [emitted]  main
+Hash: 2697c2e890ef9a735355
+Version: webpack 2.1.0-beta.25
+Time: 279ms
+      Asset      Size  Chunks             Chunk Names
+0.output.js  78 bytes       0  [emitted]  
+1.output.js  51 bytes       1  [emitted]  
+2.output.js  51 bytes       2  [emitted]  
+  output.js   1.54 kB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.js 42 bytes {3} [rendered]
+chunk    {0} 0.output.js 42 bytes {3} [rendered]
     > async commons [4] ./example.js 2:0-52
     > async commons [4] ./example.js 5:0-8:2
     [0] ./a.js 21 bytes {0} [built]
@@ -357,15 +357,15 @@ chunk    {0} 0.js 42 bytes {3} [rendered]
     [1] ./b.js 21 bytes {0} [built]
         amd require ./b [4] ./example.js 2:0-52
         cjs require ./b [4] ./example.js 6:1-15
-chunk    {1} 1.js 21 bytes {3} [rendered]
+chunk    {1} 1.output.js 21 bytes {3} [rendered]
     > [4] ./example.js 5:0-8:2
     [3] ./d.js 21 bytes {1} [built]
         cjs require ./d [4] ./example.js 7:1-15
-chunk    {2} 2.js 21 bytes {3} [rendered]
+chunk    {2} 2.output.js 21 bytes {3} [rendered]
     > [4] ./example.js 2:0-52
     [2] ./c.js 21 bytes {2} [built]
         amd require ./c [4] ./example.js 2:0-52
-chunk    {3} output.js (main) 194 bytes [entry] [rendered]
+chunk    {3} output.js (main) 186 bytes [entry] [rendered]
     > main [4] ./example.js 
-    [4] ./example.js 194 bytes {3} [built]
+    [4] ./example.js 186 bytes {3} [built]
 ```

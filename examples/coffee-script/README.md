@@ -147,9 +147,9 @@ console.log(__webpack_require__(/*! ./cup1 */ 1));
 ## Uncompressed
 
 ```
-Hash: 1758089a2f80875f5e4b
-Version: webpack 2.1.0-beta.22
-Time: 287ms
+Hash: 0718a799b127b2e3e2e1
+Version: webpack 2.1.0-beta.25
+Time: 245ms
     Asset     Size  Chunks             Chunk Names
 output.js  3.25 kB       0  [emitted]  main
 Entrypoint main = output.js
@@ -166,11 +166,11 @@ chunk    {0} output.js (main) 206 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 1758089a2f80875f5e4b
-Version: webpack 2.1.0-beta.22
-Time: 416ms
+Hash: 0718a799b127b2e3e2e1
+Version: webpack 2.1.0-beta.25
+Time: 344ms
     Asset       Size  Chunks             Chunk Names
-output.js  666 bytes       0  [emitted]  main
+output.js  663 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 206 bytes [entry] [rendered]
     > main [2] ./example.js 

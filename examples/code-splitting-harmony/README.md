@@ -103,7 +103,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
 
-/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".js";
+/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
 /******/ 		function onScriptComplete() {
@@ -258,67 +258,67 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 ## Uncompressed
 
 ```
-Hash: c450242747f06432d4fa
-Version: webpack 2.1.0-beta.22
-Time: 206ms
-    Asset       Size  Chunks             Chunk Names
-     0.js  216 bytes       0  [emitted]  
-     1.js  216 bytes       1  [emitted]  
-     2.js  208 bytes       2  [emitted]  
-output.js    6.95 kB       3  [emitted]  main
+Hash: 4b129c7737355e51d1bd
+Version: webpack 2.1.0-beta.25
+Time: 151ms
+      Asset       Size  Chunks             Chunk Names
+0.output.js  216 bytes       0  [emitted]  
+1.output.js  216 bytes       1  [emitted]  
+2.output.js  208 bytes       2  [emitted]  
+  output.js    6.94 kB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.js 13 bytes {3} [rendered]
+chunk    {0} 0.output.js 13 bytes {3} [rendered]
     [3] ./~/c/2.js 13 bytes {0} [optional] [built]
         context element ./2 [1] ./~/c async ^\.\/.*$
         context element ./2.js [1] ./~/c async ^\.\/.*$
-chunk    {1} 1.js 13 bytes {3} [rendered]
+chunk    {1} 1.output.js 13 bytes {3} [rendered]
     [2] ./~/c/1.js 13 bytes {1} [optional] [built]
         context element ./1 [1] ./~/c async ^\.\/.*$
         context element ./1.js [1] ./~/c async ^\.\/.*$
-chunk    {2} 2.js 11 bytes {3} [rendered]
+chunk    {2} 2.output.js 11 bytes {3} [rendered]
     > [5] ./example.js 3:0-18
     [4] ./~/b.js 11 bytes {2} [built]
         System.import b [5] ./example.js 3:0-18
-chunk    {3} output.js (main) 440 bytes [entry] [rendered]
+chunk    {3} output.js (main) 427 bytes [entry] [rendered]
     > main [5] ./example.js 
     [0] ./~/a.js 11 bytes {3} [built]
         [no exports used]
         harmony import a [5] ./example.js 1:0-18
     [1] ./~/c async ^\.\/.*$ 160 bytes {3} [built]
         System.import context c [5] ./example.js 8:8-34
-    [5] ./example.js 269 bytes {3} [built]
+    [5] ./example.js 256 bytes {3} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: c450242747f06432d4fa
-Version: webpack 2.1.0-beta.22
-Time: 406ms
-    Asset      Size  Chunks             Chunk Names
-     0.js  38 bytes       0  [emitted]  
-     1.js  38 bytes       1  [emitted]  
-     2.js  38 bytes       2  [emitted]  
-output.js   1.82 kB       3  [emitted]  main
+Hash: 4b129c7737355e51d1bd
+Version: webpack 2.1.0-beta.25
+Time: 321ms
+      Asset      Size  Chunks             Chunk Names
+0.output.js  38 bytes       0  [emitted]  
+1.output.js  38 bytes       1  [emitted]  
+2.output.js  38 bytes       2  [emitted]  
+  output.js   1.83 kB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.js 13 bytes {3} [rendered]
+chunk    {0} 0.output.js 13 bytes {3} [rendered]
     [3] ./~/c/2.js 13 bytes {0} [optional] [built]
         context element ./2 [1] ./~/c async ^\.\/.*$
         context element ./2.js [1] ./~/c async ^\.\/.*$
-chunk    {1} 1.js 13 bytes {3} [rendered]
+chunk    {1} 1.output.js 13 bytes {3} [rendered]
     [2] ./~/c/1.js 13 bytes {1} [optional] [built]
         context element ./1 [1] ./~/c async ^\.\/.*$
         context element ./1.js [1] ./~/c async ^\.\/.*$
-chunk    {2} 2.js 11 bytes {3} [rendered]
+chunk    {2} 2.output.js 11 bytes {3} [rendered]
     > [5] ./example.js 3:0-18
     [4] ./~/b.js 11 bytes {2} [built]
         System.import b [5] ./example.js 3:0-18
-chunk    {3} output.js (main) 440 bytes [entry] [rendered]
+chunk    {3} output.js (main) 427 bytes [entry] [rendered]
     > main [5] ./example.js 
     [0] ./~/a.js 11 bytes {3} [built]
         [no exports used]
         harmony import a [5] ./example.js 1:0-18
     [1] ./~/c async ^\.\/.*$ 160 bytes {3} [built]
         System.import context c [5] ./example.js 8:8-34
-    [5] ./example.js 269 bytes {3} [built]
+    [5] ./example.js 256 bytes {3} [built]
 ```

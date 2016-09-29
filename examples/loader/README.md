@@ -164,37 +164,37 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 2847840b31f5517b4ca1
-Version: webpack 2.1.0-beta.22
-Time: 200ms
+Hash: 1f6b568690bccc6155af
+Version: webpack 2.1.0-beta.25
+Time: 141ms
     Asset     Size  Chunks             Chunk Names
 output.js  3.39 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 283 bytes [entry] [rendered]
+chunk    {0} output.js (main) 278 bytes [entry] [rendered]
     > main [2] ./example.js 
     [0] (webpack)/~/json-loader!./test.json 37 bytes {0} [built]
         cjs require !json!./test.json [2] ./example.js 6:12-40
         cjs require ./test.json [2] ./example.js 5:12-34
     [1] ./loader.js!./file.js 41 bytes {0} [built]
         cjs require ./loader!./file [2] ./example.js 2:12-38
-    [2] ./example.js 205 bytes {0} [built]
+    [2] ./example.js 200 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 2847840b31f5517b4ca1
-Version: webpack 2.1.0-beta.22
-Time: 437ms
+Hash: 1f6b568690bccc6155af
+Version: webpack 2.1.0-beta.25
+Time: 247ms
     Asset       Size  Chunks             Chunk Names
-output.js  641 bytes       0  [emitted]  main
+output.js  638 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 283 bytes [entry] [rendered]
+chunk    {0} output.js (main) 278 bytes [entry] [rendered]
     > main [2] ./example.js 
     [0] (webpack)/~/json-loader!./test.json 37 bytes {0} [built]
         cjs require !json!./test.json [2] ./example.js 6:12-40
         cjs require ./test.json [2] ./example.js 5:12-34
     [1] ./loader.js!./file.js 41 bytes {0} [built]
         cjs require ./loader!./file [2] ./example.js 2:12-38
-    [2] ./example.js 205 bytes {0} [built]
+    [2] ./example.js 200 bytes {0} [built]
 ```

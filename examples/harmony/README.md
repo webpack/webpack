@@ -99,7 +99,7 @@ export function increment(val) {
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
 
-/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".js";
+/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
 /******/ 		function onScriptComplete() {
@@ -232,49 +232,55 @@ __webpack_require__.e/* System.import */(0).then(__webpack_require__.bind(null, 
 ## Uncompressed
 
 ```
-Hash: b0a43c6029aaacb5e196
-Version: webpack 2.1.0-beta.22
-Time: 150ms
-    Asset       Size  Chunks             Chunk Names
-     0.js  387 bytes       0  [emitted]  
-output.js     6.8 kB       1  [emitted]  main
+Hash: e89d3b015e63670afc30
+Version: webpack 2.1.0-beta.25
+Time: 178ms
+      Asset       Size  Chunks             Chunk Names
+0.output.js  386 bytes       0  [emitted]  
+  output.js    6.78 kB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.js 25 bytes {1} [rendered]
+chunk    {0} 0.output.js 24 bytes {1} [rendered]
     > [3] ./example.js 6:0-31
-    [1] ./async-loaded.js 25 bytes {0} [built]
+    [1] ./async-loaded.js 24 bytes {0} [built]
+        [exports: answer]
         System.import ./async-loaded [3] ./example.js 6:0-31
-chunk    {1} output.js (main) 426 bytes [entry] [rendered]
+chunk    {1} output.js (main) 407 bytes [entry] [rendered]
     > main [3] ./example.js 
-    [0] ./increment.js 94 bytes {1} [built]
+    [0] ./increment.js 90 bytes {1} [built]
+        [exports: increment]
         [only some exports used: increment]
         harmony import ./increment [3] ./example.js 1:0-47
-    [2] ./math.js 142 bytes {1} [built]
+    [2] ./math.js 135 bytes {1} [built]
+        [exports: add]
         [only some exports used: add]
         harmony import ./math [0] ./increment.js 1:0-29
-    [3] ./example.js 190 bytes {1} [built]
+    [3] ./example.js 182 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b0a43c6029aaacb5e196
-Version: webpack 2.1.0-beta.22
-Time: 330ms
-    Asset      Size  Chunks             Chunk Names
-     0.js  97 bytes       0  [emitted]  
-output.js    1.6 kB       1  [emitted]  main
+Hash: e89d3b015e63670afc30
+Version: webpack 2.1.0-beta.25
+Time: 264ms
+      Asset      Size  Chunks             Chunk Names
+0.output.js  97 bytes       0  [emitted]  
+  output.js   1.61 kB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.js 25 bytes {1} [rendered]
+chunk    {0} 0.output.js 24 bytes {1} [rendered]
     > [3] ./example.js 6:0-31
-    [1] ./async-loaded.js 25 bytes {0} [built]
+    [1] ./async-loaded.js 24 bytes {0} [built]
+        [exports: answer]
         System.import ./async-loaded [3] ./example.js 6:0-31
-chunk    {1} output.js (main) 426 bytes [entry] [rendered]
+chunk    {1} output.js (main) 407 bytes [entry] [rendered]
     > main [3] ./example.js 
-    [0] ./increment.js 94 bytes {1} [built]
+    [0] ./increment.js 90 bytes {1} [built]
+        [exports: increment]
         [only some exports used: increment]
         harmony import ./increment [3] ./example.js 1:0-47
-    [2] ./math.js 142 bytes {1} [built]
+    [2] ./math.js 135 bytes {1} [built]
+        [exports: add]
         [only some exports used: add]
         harmony import ./math [0] ./increment.js 1:0-29
-    [3] ./example.js 190 bytes {1} [built]
+    [3] ./example.js 182 bytes {1} [built]
 ```

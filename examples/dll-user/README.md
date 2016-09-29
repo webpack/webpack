@@ -220,29 +220,29 @@ console.log(__webpack_require__(/*! module */ 7));
 ## Uncompressed
 
 ```
-Hash: c912c9e1b4764365c16e
-Version: webpack 2.1.0-beta.22
-Time: 76ms
-    Asset  Size  Chunks             Chunk Names
-output.js  6 kB       0  [emitted]  main
+Hash: d81e078ea638f600f312
+Version: webpack 2.1.0-beta.25
+Time: 120ms
+    Asset     Size  Chunks             Chunk Names
+output.js  5.99 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 549 bytes [entry] [rendered]
+chunk    {0} output.js (main) 541 bytes [entry] [rendered]
     > main [8] ./example.js 
-    [8] ./example.js 213 bytes {0} [built]
+    [8] ./example.js 205 bytes {0} [built]
      + 8 hidden modules
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: c912c9e1b4764365c16e
-Version: webpack 2.1.0-beta.22
-Time: 145ms
+Hash: d81e078ea638f600f312
+Version: webpack 2.1.0-beta.25
+Time: 221ms
     Asset       Size  Chunks             Chunk Names
 output.js  927 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 549 bytes [entry] [rendered]
+chunk    {0} output.js (main) 541 bytes [entry] [rendered]
     > main [8] ./example.js 
-    [8] ./example.js 213 bytes {0} [built]
+    [8] ./example.js 205 bytes {0} [built]
      + 8 hidden modules
 ```

@@ -95,7 +95,7 @@ module.exports = "It works";
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
 
-/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".js";
+/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
 /******/ 		function onScriptComplete() {
@@ -200,7 +200,7 @@ __webpack_require__(/*! bundle!./file.js */ 0)(function(fileJsExports) {
 /******/ ]);
 ```
 
-# js/0.js
+# js/0.output.js
 
 ``` javascript
 webpackJsonp([0],{
@@ -225,41 +225,41 @@ module.exports = "It works";
 ## Uncompressed
 
 ```
-Hash: d428fbce66ba11bdfd1c
-Version: webpack 2.1.0-beta.22
-Time: 177ms
-    Asset       Size  Chunks             Chunk Names
-     0.js  228 bytes       0  [emitted]  
-output.js    6.23 kB       1  [emitted]  main
+Hash: 4934f608e3c1f4ceb008
+Version: webpack 2.1.0-beta.25
+Time: 145ms
+      Asset       Size  Chunks             Chunk Names
+0.output.js  228 bytes       0  [emitted]  
+  output.js    6.24 kB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.js 28 bytes {1} [rendered]
+chunk    {0} 0.output.js 28 bytes {1} [rendered]
     > [0] (webpack)/~/bundle-loader!./file.js 7:0-14:2
     [2] ./file.js 28 bytes {0} [built]
         cjs require !!./file.js [0] (webpack)/~/bundle-loader!./file.js 8:8-30
-chunk    {1} output.js (main) 369 bytes [entry] [rendered]
+chunk    {1} output.js (main) 367 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] (webpack)/~/bundle-loader!./file.js 281 bytes {1} [built]
         cjs require bundle!./file.js [1] ./example.js 1:0-27
-    [1] ./example.js 88 bytes {1} [built]
+    [1] ./example.js 86 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: d428fbce66ba11bdfd1c
-Version: webpack 2.1.0-beta.22
-Time: 352ms
-    Asset      Size  Chunks             Chunk Names
-     0.js  58 bytes       0  [emitted]  
-output.js   1.54 kB       1  [emitted]  main
+Hash: 4934f608e3c1f4ceb008
+Version: webpack 2.1.0-beta.25
+Time: 304ms
+      Asset      Size  Chunks             Chunk Names
+0.output.js  58 bytes       0  [emitted]  
+  output.js   1.54 kB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.js 28 bytes {1} [rendered]
+chunk    {0} 0.output.js 28 bytes {1} [rendered]
     > [0] (webpack)/~/bundle-loader!./file.js 7:0-14:2
     [2] ./file.js 28 bytes {0} [built]
         cjs require !!./file.js [0] (webpack)/~/bundle-loader!./file.js 8:8-30
-chunk    {1} output.js (main) 369 bytes [entry] [rendered]
+chunk    {1} output.js (main) 367 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] (webpack)/~/bundle-loader!./file.js 281 bytes {1} [built]
         cjs require bundle!./file.js [1] ./example.js 1:0-27
-    [1] ./example.js 88 bytes {1} [built]
+    [1] ./example.js 86 bytes {1} [built]
 ```
