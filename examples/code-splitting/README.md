@@ -114,7 +114,7 @@ require.ensure(["c"], function(require) {
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
 
-/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".js";
+/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
 /******/ 		function onScriptComplete() {
@@ -222,7 +222,7 @@ __webpack_require__.e/* nsure */(0).catch(function(err) { __webpack_require__.oe
 /******/ ]);
 ```
 
-# js/0.js
+# js/0.output.js
 
 ``` javascript
 webpackJsonp([0],[
@@ -264,51 +264,51 @@ webpackJsonp([0],[,,function(n,c){},function(n,c){}]);
 ## Uncompressed
 
 ```
-Hash: 2dea52960a4aca822def
-Version: webpack 2.1.0-beta.22
-Time: 217ms
-    Asset       Size  Chunks             Chunk Names
-     0.js  407 bytes       0  [emitted]  
-output.js    6.16 kB       1  [emitted]  main
+Hash: 577f55cf480fb59add7d
+Version: webpack 2.1.0-beta.25
+Time: 150ms
+      Asset       Size  Chunks             Chunk Names
+0.output.js  407 bytes       0  [emitted]  
+  output.js    6.16 kB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.js 22 bytes {1} [rendered]
+chunk    {0} 0.output.js 22 bytes {1} [rendered]
     > [4] ./example.js 3:0-6:2
     [2] ./~/c.js 11 bytes {0} [built]
         require.ensure item c [4] ./example.js 3:0-6:2
     [3] ./~/d.js 11 bytes {0} [built]
         cjs require d [4] ./example.js 5:12-24
-chunk    {1} output.js (main) 166 bytes [entry] [rendered]
+chunk    {1} output.js (main) 161 bytes [entry] [rendered]
     > main [4] ./example.js 
     [0] ./~/b.js 11 bytes {1} [built]
         cjs require b [4] ./example.js 2:8-20
         cjs require b [4] ./example.js 4:4-16
     [1] ./~/a.js 11 bytes {1} [built]
         cjs require a [4] ./example.js 1:8-20
-    [4] ./example.js 144 bytes {1} [built]
+    [4] ./example.js 139 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 2dea52960a4aca822def
-Version: webpack 2.1.0-beta.22
-Time: 377ms
-    Asset      Size  Chunks             Chunk Names
-     0.js  54 bytes       0  [emitted]  
-output.js   1.44 kB       1  [emitted]  main
+Hash: 577f55cf480fb59add7d
+Version: webpack 2.1.0-beta.25
+Time: 292ms
+      Asset      Size  Chunks             Chunk Names
+0.output.js  54 bytes       0  [emitted]  
+  output.js   1.44 kB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.js 22 bytes {1} [rendered]
+chunk    {0} 0.output.js 22 bytes {1} [rendered]
     > [4] ./example.js 3:0-6:2
     [2] ./~/c.js 11 bytes {0} [built]
         require.ensure item c [4] ./example.js 3:0-6:2
     [3] ./~/d.js 11 bytes {0} [built]
         cjs require d [4] ./example.js 5:12-24
-chunk    {1} output.js (main) 166 bytes [entry] [rendered]
+chunk    {1} output.js (main) 161 bytes [entry] [rendered]
     > main [4] ./example.js 
     [0] ./~/b.js 11 bytes {1} [built]
         cjs require b [4] ./example.js 2:8-20
         cjs require b [4] ./example.js 4:4-16
     [1] ./~/a.js 11 bytes {1} [built]
         cjs require a [4] ./example.js 1:8-20
-    [4] ./example.js 144 bytes {1} [built]
+    [4] ./example.js 139 bytes {1} [built]
 ```

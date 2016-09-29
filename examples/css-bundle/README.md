@@ -150,13 +150,13 @@ body {
 ## Uncompressed
 
 ```
-Hash: a79c0dba55bcedbab63c
-Version: webpack 2.1.0-beta.22
-Time: 1205ms
+Hash: db83b66cc5606ff7b225
+Version: webpack 2.1.0-beta.25
+Time: 762ms
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
                            output.js    2.85 kB       0  [emitted]  main
-                           style.css   69 bytes       0  [emitted]  main
+                           style.css   67 bytes       0  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} output.js, style.css (main) 64 bytes [entry] [rendered]
     > main [1] ./example.js 
@@ -172,19 +172,19 @@ Child extract-text-webpack-plugin:
         [0] (webpack)/~/css-loader/lib/css-base.js 1.51 kB {0} [built]
             cjs require ./../../node_modules/css-loader/lib/css-base.js [2] (webpack)/~/css-loader!./style.css 1:27-85
         [1] ./image.png 82 bytes {0} [built]
-            cjs require ./image.png [2] (webpack)/~/css-loader!./style.css 6:58-80
-        [2] (webpack)/~/css-loader!./style.css 224 bytes {0} [built]
+            cjs require ./image.png [2] (webpack)/~/css-loader!./style.css 6:56-78
+        [2] (webpack)/~/css-loader!./style.css 220 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: e2def6a993090f0024e0
-Version: webpack 2.1.0-beta.22
-Time: 1392ms
+Hash: db83b66cc5606ff7b225
+Version: webpack 2.1.0-beta.25
+Time: 1038ms
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js  530 bytes       0  [emitted]  main
+                           output.js  527 bytes       0  [emitted]  main
                            style.css   61 bytes       0  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} output.js, style.css (main) 64 bytes [entry] [rendered]

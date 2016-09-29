@@ -225,28 +225,28 @@ console.log("Missing Text");
 ## Uncompressed
 
 ```
-Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 2.1.0-beta.22
+Hash: 4194dfc38a1d790c828d2b4d6ee6122bc1cc36c8
+Version: webpack 2.1.0-beta.25
 Child en:
-    Hash: b61d16621736c97f557e
-    Version: webpack 2.1.0-beta.22
-    Time: 123ms
+    Hash: 4194dfc38a1d790c828d
+    Version: webpack 2.1.0-beta.25
+    Time: 99ms
            Asset     Size  Chunks             Chunk Names
     en.output.js  2.65 kB       0  [emitted]  main
     Entrypoint main = en.output.js
-    chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
+    chunk    {0} en.output.js (main) 64 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 65 bytes {0} [built]
+        [0] ./example.js 64 bytes {0} [built]
 Child de:
-    Hash: 52b4d8e68140f1345ef8
-    Version: webpack 2.1.0-beta.22
-    Time: 101ms
+    Hash: 2b4d6ee6122bc1cc36c8
+    Version: webpack 2.1.0-beta.25
+    Time: 84ms
            Asset     Size  Chunks             Chunk Names
-    de.output.js  2.65 kB       0  [emitted]  main
+    de.output.js  2.64 kB       0  [emitted]  main
     Entrypoint main = de.output.js
-    chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
+    chunk    {0} de.output.js (main) 64 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 65 bytes {0} [built] [1 warning]
+        [0] ./example.js 64 bytes {0} [built] [1 warning]
     
     WARNING in ./example.js
     Missing localization: Missing Text
@@ -255,28 +255,28 @@ Child de:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 2.1.0-beta.22
+Hash: 4194dfc38a1d790c828d2b4d6ee6122bc1cc36c8
+Version: webpack 2.1.0-beta.25
 Child en:
-    Hash: b61d16621736c97f557e
-    Version: webpack 2.1.0-beta.22
-    Time: 256ms
+    Hash: 4194dfc38a1d790c828d
+    Version: webpack 2.1.0-beta.25
+    Time: 207ms
            Asset       Size  Chunks             Chunk Names
-    en.output.js  564 bytes       0  [emitted]  main
+    en.output.js  561 bytes       0  [emitted]  main
     Entrypoint main = en.output.js
-    chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
+    chunk    {0} en.output.js (main) 64 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 65 bytes {0} [built]
+        [0] ./example.js 64 bytes {0} [built]
 Child de:
-    Hash: 52b4d8e68140f1345ef8
-    Version: webpack 2.1.0-beta.22
-    Time: 233ms
+    Hash: 2b4d6ee6122bc1cc36c8
+    Version: webpack 2.1.0-beta.25
+    Time: 191ms
            Asset       Size  Chunks             Chunk Names
-    de.output.js  563 bytes       0  [emitted]  main
+    de.output.js  560 bytes       0  [emitted]  main
     Entrypoint main = de.output.js
-    chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
+    chunk    {0} de.output.js (main) 64 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 65 bytes {0} [built] [1 warning]
+        [0] ./example.js 64 bytes {0} [built] [1 warning]
     
     WARNING in ./example.js
     Missing localization: Missing Text
