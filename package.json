@@ -21,7 +21,7 @@
     "uglify-js": "~2.7.3",
     "watchpack": "^1.0.0",
     "webpack-sources": "^0.1.0",
-    "yargs": "^4.7.1"
+    "yargs": "^6.0.0"
   },
   "license": "MIT",
   "devDependencies": {
