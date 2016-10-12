@@ -19,8 +19,9 @@ env:
 
 install:
   - npm install yarn -g
-  - yarn link ../webpack --force
   - yarn install
+  - yarn link
+  - yarn link webpack
 
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
