@@ -1,5 +1,11 @@
 sudo: false
 language: node_js
+
+cache:
+  directories:
+    - $HOME/.npm
+    - $HOME/.yarn-cache
+
 os:
   - linux
   - osx
