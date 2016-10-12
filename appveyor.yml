@@ -12,8 +12,9 @@ environment:
 
 install:
   - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version)
-  - npm link ../webpack --force
-  - npm install --msvs_version=2013
+  - npm install yarn -g
+  - yarn link ../webpack --force
+  - yarn install --msvs_version=2013
 
 build: off
 
@@ -23,4 +24,5 @@ matrix:
 test_script:
   - node --version
   - npm --version
+  - yarn --version
   - cmd: npm run appveyor

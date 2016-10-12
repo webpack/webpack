@@ -18,8 +18,9 @@ env:
   - NO_WATCH_TESTS=1
 
 install:
-  - npm link ../webpack --force
-  - npm install
+  - npm install yarn -g
+  - yarn link ../webpack --force
+  - yarn install
 
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
