@@ -84,9 +84,9 @@
     "schemas/"
   ],
   "scripts": {
-    "test": "mocha --harmony --full-trace --check-leaks",
+    "test": "mocha --harmony --check-leaks",
     "travis": "npm run cover -- --report lcovonly",
-    "appveyor": "mocha --harmony --full-trace",
+    "appveyor": "mocha --harmony",
     "build:examples":"cd examples && node buildAll.js",
     "pretest": "npm run lint-files",
     "postcover": "npm run lint-files && npm run nsp",
