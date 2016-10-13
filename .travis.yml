@@ -10,9 +10,7 @@ os:
   - linux
   - osx
 node_js:
-  - node
   - "6"
-  - "5"
   - "4"
 
 matrix:
@@ -26,7 +24,7 @@ env:
 install:
   - npm install yarn -g
   - yarn install
-  - yarn link
+  - if [ ! -h "$HOME/.yarn-cache/.link/webpack" ]; then yarn link; fi
   - yarn link webpack
 
 after_success:

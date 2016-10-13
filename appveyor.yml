@@ -8,7 +8,6 @@ init:
 environment:
   matrix:
     - nodejs_version: 6
-    - nodejs_version: 5
 
 install:
   - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version)
