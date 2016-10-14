@@ -8,7 +8,7 @@ cache:
 
 os:
   - linux
-  - osx
+# - osx
 node_js:
   - "6"
   - "4"
