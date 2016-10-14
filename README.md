@@ -11,8 +11,9 @@ build
 dependencies
 [![Dependency Status][david-image]][david-url] [![devDependency Status][david-dev-image]][david-dev-url] [![peerDependency Status][david-peer-image]][david-peer-url]
 
-donation
-[![gratipay donate button][gratipay-image]][gratipay-url] [![Donate to sokra][donate-image]][donate-url]
+donations
+[![OpenCollective](https://opencollective.com/webpack/backers/badge.svg)](#backers) 
+[![OpenCollective](https://opencollective.com/webpack/sponsors/badge.svg)](#sponsors)
 
 [![BADGINATOR][badginator-image]][badginator-url]
 
