@@ -11,8 +11,6 @@ build
 dependencies
 [![Dependency Status][david-image]][david-url] [![devDependency Status][david-dev-image]][david-dev-url] [![peerDependency Status][david-peer-image]][david-peer-url]
 
-donations
-
 ## Sponsors
 
 Use webpack? Love webpack? Help [sponsor the project](https://opencollective.com/webpack#sponsor) and help us work with you to collaborate solving complex problems that could benefit the entire community.
