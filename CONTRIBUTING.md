@@ -28,15 +28,16 @@ documentation pages:
 ```bash
 git clone https://github.com/webpack/webpack.git
 cd webpack
-npm install
-npm link
-npm link webpack
+npm install -g yarn
+yarn install
+yarn link
+yarn link webpack
 ```
 
 To run the entire test suite use:
 
 ```bash
-npm test
+yarn test
 ```
 
 ## Submitting Changes
