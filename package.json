@@ -87,7 +87,7 @@
     "test": "mocha --harmony --check-leaks",
     "travis": "npm run cover -- --report lcovonly",
     "appveyor": "mocha --harmony",
-    "build:examples":"cd examples && node buildAll.js",
+    "build:examples": "cd examples && node buildAll.js",
     "pretest": "npm run lint-files",
     "postcover": "npm run lint-files && npm run nsp",
     "lint-files": "npm run lint && npm run beautify-lint && npm run lint-file-standard",
