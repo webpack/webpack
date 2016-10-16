@@ -308,15 +308,6 @@ MIT (http://opensource.org/licenses/mit-license.php)
 * Everyone I forgot to mention here, but also influenced webpack.
 
 
-## Sponsor
-
-This is a free-time project. The time I invest in it fluctuates. If you use webpack for a serious task, and you'd like me to invest more time on it, please donate. This project increases your income/productivity too. It makes development and applications faster and it reduces the required bandwidth.
-
-Another way you can help fund Webpack is by buying the ebook ["SurviveJS - Webpack"](https://leanpub.com/survivejs-webpack), where around ~30% of the book's profit will go to me.
-
-I'm very thankful for every dollar. If you leave your username or email, I may show my thanks by giving you extra support.
-
-
 ## Dependencies
 
 * [esprima](http://esprima.org/)
