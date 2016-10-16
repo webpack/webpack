@@ -11,8 +11,6 @@ build
 dependencies
 [![Dependency Status][david-image]][david-url] [![devDependency Status][david-dev-image]][david-dev-url] [![peerDependency Status][david-peer-image]][david-peer-url]
 
-donation
-[![gratipay donate button][gratipay-image]][gratipay-url] [![Donate to sokra][donate-image]][donate-url]
 
 [![BADGINATOR][badginator-image]][badginator-url]
 
@@ -23,7 +21,6 @@ donation
 webpack is a bundler for modules. The main purpose is to bundle JavaScript
 files for usage in a browser, yet it is also capable of transforming, bundling,
 or packaging just about any resource or asset.
-
 
 **TL; DR**
 
@@ -52,6 +49,8 @@ https://webpack.github.io/docs/tutorials/getting-started/
 # Examples
 
 Take a look at the [`examples`](https://github.com/webpack/webpack/tree/master/examples) folder.
+
+
 
 # Features
 
@@ -205,6 +204,52 @@ function loadTemplateAsync (name, callback) {
 }
 ```
 
+## Sponsors
+
+Use webpack? Love webpack? Help [sponsor the project](https://opencollective.com/webpack#sponsor) and help us work with you to collaborate solving complex problems that could benefit the entire community.
+
+  <a href="https://opencollective.com/webpack/sponsors/0/website" target="_blank"><img src="https://opencollective.com/webpack/sponsors/0/avatar"></a>
+  <a href="https://opencollective.com/webpack/sponsors/1/website" target="_blank"><img src="https://opencollective.com/webpack/sponsors/1/avatar"></a>
+  <a href="https://opencollective.com/webpack/sponsors/2/website" target="_blank"><img src="https://opencollective.com/webpack/sponsors/2/avatar"></a>
+  <a href="https://opencollective.com/webpack/sponsors/3/website" target="_blank"><img src="https://opencollective.com/webpack/sponsors/3/avatar"></a>
+  <a href="https://opencollective.com/webpack/sponsors/4/website" target="_blank"><img src="https://opencollective.com/webpack/sponsors/4/avatar"></a>
+
+## Backers
+
+Love our work and community? [Become a backer](https://opencollective.com/webpack).
+
+  <a href="https://opencollective.com/webpack/backers/0/website" target="_blank"><img src="https://opencollective.com/webpack/backers/0/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/1/website" target="_blank"><img src="https://opencollective.com/webpack/backers/1/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/2/website" target="_blank"><img src="https://opencollective.com/webpack/backers/2/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/3/website" target="_blank"><img src="https://opencollective.com/webpack/backers/3/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/4/website" target="_blank"><img src="https://opencollective.com/webpack/backers/4/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/5/website" target="_blank"><img src="https://opencollective.com/webpack/backers/5/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/6/website" target="_blank"><img src="https://opencollective.com/webpack/backers/6/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/7/website" target="_blank"><img src="https://opencollective.com/webpack/backers/7/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/8/website" target="_blank"><img src="https://opencollective.com/webpack/backers/8/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/9/website" target="_blank"><img src="https://opencollective.com/webpack/backers/9/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/10/website" target="_blank"><img src="https://opencollective.com/webpack/backers/10/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/11/website" target="_blank"><img src="https://opencollective.com/webpack/backers/11/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/12/website" target="_blank"><img src="https://opencollective.com/webpack/backers/12/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/13/website" target="_blank"><img src="https://opencollective.com/webpack/backers/13/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/14/website" target="_blank"><img src="https://opencollective.com/webpack/backers/14/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/15/website" target="_blank"><img src="https://opencollective.com/webpack/backers/15/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/16/website" target="_blank"><img src="https://opencollective.com/webpack/backers/16/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/17/website" target="_blank"><img src="https://opencollective.com/webpack/backers/17/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/18/website" target="_blank"><img src="https://opencollective.com/webpack/backers/18/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/19/website" target="_blank"><img src="https://opencollective.com/webpack/backers/19/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/20/website" target="_blank"><img src="https://opencollective.com/webpack/backers/20/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/21/website" target="_blank"><img src="https://opencollective.com/webpack/backers/21/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/22/website" target="_blank"><img src="https://opencollective.com/webpack/backers/22/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/23/website" target="_blank"><img src="https://opencollective.com/webpack/backers/23/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/24/website" target="_blank"><img src="https://opencollective.com/webpack/backers/24/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/25/website" target="_blank"><img src="https://opencollective.com/webpack/backers/25/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/26/website" target="_blank"><img src="https://opencollective.com/webpack/backers/26/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/27/website" target="_blank"><img src="https://opencollective.com/webpack/backers/27/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/28/website" target="_blank"><img src="https://opencollective.com/webpack/backers/28/avatar"></a>
+  <a href="https://opencollective.com/webpack/backers/29/website" target="_blank"><img src="https://opencollective.com/webpack/backers/29/avatar"></a>
+
+
 ## Documentation
 
 [documentation](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=documentation)
@@ -264,15 +309,6 @@ MIT (http://opensource.org/licenses/mit-license.php)
 * @shama, @jhnns and @sokra for maintaining this project
 * Everyone who has written a loader for webpack. You are the ecosystem...
 * Everyone I forgot to mention here, but also influenced webpack.
-
-
-## Sponsor
-
-This is a free-time project. The time I invest in it fluctuates. If you use webpack for a serious task, and you'd like me to invest more time on it, please donate. This project increases your income/productivity too. It makes development and applications faster and it reduces the required bandwidth.
-
-Another way you can help fund Webpack is by buying the ebook ["SurviveJS - Webpack"](https://leanpub.com/survivejs-webpack), where around ~30% of the book's profit will go to me.
-
-I'm very thankful for every dollar. If you leave your username or email, I may show my thanks by giving you extra support.
 
 
 ## Dependencies
