@@ -14,7 +14,7 @@ try {
 } catch(e) {}
 var yargs = require("yargs")
 	.usage("webpack " + require("../package.json").version + "\n" +
-		"Usage: https://webpack.github.io/docs/cli.html\n" +
+		"Usage: https://webpack.js.org/docs/cli.html\n" +
 		"Usage without config file: webpack <entry> [<entry>] <output>\n" +
 		"Usage with config file: webpack");
 

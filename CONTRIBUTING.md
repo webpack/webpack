@@ -20,8 +20,8 @@ that include your webpack.config.js and relevant files are more likely to receiv
 If you have created your own loader/plugin please include it on the relevant
 documentation pages:
 
-[List of loaders](https://webpack.github.io/docs/list-of-loaders.html)  
-[List of plugins](https://webpack.github.io/docs/list-of-plugins.html)
+[List of loaders](https://webpack.js.org/docs/list-of-loaders.html)
+[List of plugins](https://webpack.js.org/docs/list-of-plugins.html)
 
 ## Setup
 
