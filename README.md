@@ -17,7 +17,7 @@ dependencies
 donation
 [![gratipay donate button][gratipay-image]][gratipay-url] [![Donate to sokra][donate-image]][donate-url]
 
-[![BADGINATOR][badginator-image]][badginator-url]
+[![JS.ORG](https://img.shields.io/badge/js.org-webpack-ffb400.svg?style=flat-square)](http://js.org) [![BADGINATOR][badginator-image]][badginator-url]
 
 [documentation](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
 
