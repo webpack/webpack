@@ -268,4 +268,29 @@ describe("RuleSet", function() {
 			(match(loader, 'style.css')).should.eql(['css']);
 		}, /No loader specified/)
 	});
+	it('should throw with context if exclude array holds an undefined item', function() {
+		should.throws(function() {
+			var loader = new RuleSet([{
+				test: /\.css$/,
+				loader: 'css',
+				include: [
+					'src',
+				],
+				exclude: [
+					'node_modules',
+					undefined,
+				],
+			}]);
+			(match(loader, 'style.css')).should.eql(['css']);
+		}, function(err) {
+			if (/Expected condition but got falsy value/.test(err)
+				&& /test/.test(err)
+				&& /include/.test(err)
+				&& /exclude/.test(err)
+				&& /node_modules/.test(err)
+				&& /undefined/.test(err)) {
+				return true;
+			}
+		})
+	});
 });
