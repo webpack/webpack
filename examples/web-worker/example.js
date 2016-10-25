@@ -1,4 +1,4 @@
-var Worker = require("worker!./worker");
+var Worker = require("worker-loader!./worker");
 var worker = new Worker;
 worker.postMessage("b");
 worker.onmessage = function(event) {
