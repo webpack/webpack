@@ -84,7 +84,7 @@
     "schemas/"
   ],
   "scripts": {
-    "test": "mocha --harmony --check-leaks",
+    "test": "mocha --harmony --check-leaks --globals addresses",
     "travis": "npm run cover -- --report lcovonly",
     "appveyor": "mocha --harmony",
     "build:examples": "cd examples && node buildAll.js",
