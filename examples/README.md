@@ -1,5 +1,19 @@
-# examples
+# Building an Example
 
+1. Run `npm install` in the root of the project.
+  ```
+  >/webpack npm install
+  ```
+
+2. Run `node build.js` in the specific example directory.
+
+  ```
+  >/webpack cd examples/commonjs
+  >/webpack/examples/commonjs node build.js
+  ```
+
+# Examples
+  
 ## commonjs
 
 example demonstrating a very simple program
@@ -64,7 +78,4 @@ example demonstrating multiple entry points with Code Splitting.
 
 If you think an example is missing, please report it as issue. :)
 
-# Building an Example
 
-1. Run `npm install` in the root of the project.
-2. Run `node build.js` in the specific example directory. (Ex: `cd examples/commonjs && node build.js`)
