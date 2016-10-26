@@ -24,7 +24,8 @@ env:
 install:
   - npm install yarn -g
   - yarn install
-  - if [ ! -h "$HOME/.yarn-cache/.link/webpack" ]; then yarn link; fi
+  # - if [ ! -h "$HOME/.yarn-cache/.link/webpack" ]; then yarn link; fi
+  - yarn link || yarn link webpack
   - yarn link webpack
 
 after_success:
