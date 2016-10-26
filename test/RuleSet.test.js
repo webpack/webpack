@@ -268,4 +268,66 @@ describe("RuleSet", function() {
 			(match(loader, 'style.css')).should.eql(['css']);
 		}, /No loader specified/)
 	});
+	describe('when exclude array holds an undefined item', function() {
+		function errorHasContext(err) {
+			if (/Expected condition but got falsy value/.test(err)
+				&& /test/.test(err)
+				&& /include/.test(err)
+				&& /exclude/.test(err)
+				&& /node_modules/.test(err)
+				&& /undefined/.test(err)) {
+				return true;
+			}
+		}
+		it('should throw with context', function() {
+			should.throws(function() {
+				var loader = new RuleSet([{
+					test: /\.css$/,
+					loader: 'css',
+					include: [
+						'src',
+					],
+					exclude: [
+						'node_modules',
+						undefined,
+					],
+				}]);
+				(match(loader, 'style.css')).should.eql(['css']);
+			}, errorHasContext)
+		});
+		it('in resource should throw with context', function() {
+			should.throws(function() {
+				var loader = new RuleSet([{
+					resource: {
+						test: /\.css$/,
+						include: [
+							'src',
+						],
+						exclude: [
+							'node_modules',
+							undefined,
+						],
+					},
+				}]);
+				(match(loader, 'style.css')).should.eql(['css']);
+			}, errorHasContext)
+		});
+		it('in issuer should throw with context', function() {
+			should.throws(function() {
+				var loader = new RuleSet([{
+					issuer: {
+						test: /\.css$/,
+						include: [
+							'src',
+						],
+						exclude: [
+							'node_modules',
+							undefined,
+						],
+					},
+				}]);
+				(match(loader, 'style.css')).should.eql(['css']);
+			}, errorHasContext)
+		});
+	});
 });
