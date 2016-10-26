@@ -270,12 +270,12 @@ describe("RuleSet", function() {
 	});
 	describe('when exclude array holds an undefined item', function() {
 		function errorHasContext(err) {
-			if (/Expected condition but got falsy value/.test(err)
-				&& /test/.test(err)
-				&& /include/.test(err)
-				&& /exclude/.test(err)
-				&& /node_modules/.test(err)
-				&& /undefined/.test(err)) {
+			if(/Expected condition but got falsy value/.test(err) &&
+				/test/.test(err) &&
+				/include/.test(err) &&
+				/exclude/.test(err) &&
+				/node_modules/.test(err) &&
+				/undefined/.test(err)) {
 				return true;
 			}
 		}
