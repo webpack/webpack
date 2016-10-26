@@ -1,0 +1,21 @@
+# Node generated files
+node_modules
+npm-debug.log
+# OS generated files
+Thumbs.db
+.DS_Store
+
+# Test and examples
+examples
+test
+
+# Other build related files and outputs
+benchmark
+coverage
+.*
+*.log
+yarn.lock
+
+!/LICENSE
+!/package.json
+!/README.md
