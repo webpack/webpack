@@ -23,6 +23,7 @@ script: npm run travis
 env:
   - NO_WATCH_TESTS=1
 
+before_install: if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
 install:
   - bash ./ci/travis-install.sh
 after_success:
