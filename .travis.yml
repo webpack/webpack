@@ -24,7 +24,7 @@ env:
   - NO_WATCH_TESTS=1
 
 install:
-  - sh ./ci/travis-install.sh
+  - bash ./ci/travis-install.sh
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
   - cat ./coverage/coverage.json | node_modules/codecov.io/bin/codecov.io.js
