@@ -10,12 +10,15 @@ os:
   - linux
 # - osx
 node_js:
+  - "7"
   - "6"
   - "4"
+  - "0.12"
 
 matrix:
   allow_failures:
     - node_js: "4"
+    - node_js: "0.12"
 
 script: npm run travis
 env:
