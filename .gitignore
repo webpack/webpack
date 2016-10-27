@@ -9,3 +9,4 @@
 *.log
 .idea
 yarn.lock
+.vscode
