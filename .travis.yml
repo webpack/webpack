@@ -18,7 +18,6 @@ node_js:
 matrix:
   allow_failures:
     - node_js: "4"
-    - node_js: "v0.12.17"
 
 script: npm run travis
 env:
