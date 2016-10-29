@@ -671,7 +671,11 @@
       },
       "properties": {
         "Buffer": {
-          "type": "boolean"
+          "enum": [
+            false,
+            true,
+            "mock"
+          ]
         },
         "__dirname": {
           "enum": [
@@ -688,7 +692,11 @@
           ]
         },
         "console": {
-          "type": "boolean"
+          "enum": [
+            false,
+            true,
+            "mock"
+          ]
         },
         "global": {
           "type": "boolean"
@@ -761,7 +769,10 @@
             "node",
             "async-node",
             "node-webkit",
-            "electron"
+            "atom",
+            "electron",
+            "electron-main",
+            "electron-renderer"
           ]
         },
         {

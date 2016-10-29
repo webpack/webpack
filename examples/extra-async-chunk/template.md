@@ -50,22 +50,22 @@ Pretty useful for a router in a SPA.
 {{js/output.js}}
 ```
 
-# js/0.js
+# js/0.output.js
 
 ``` javascript
-{{js/0.js}}
+{{js/0.output.js}}
 ```
 
-# js/1.js
+# js/1.output.js
 
 ``` javascript
-{{js/1.js}}
+{{js/1.output.js}}
 ```
 
-# js/2.js
+# js/2.output.js
 
 ``` javascript
-{{js/2.js}}
+{{js/2.output.js}}
 ```
 
 # Info

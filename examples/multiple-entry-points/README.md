@@ -314,29 +314,29 @@ module.exports = function(msg) {
 ## Uncompressed
 
 ```
-Hash: 8ccc79cdf2183770dc18
-Version: webpack 2.1.0-beta.22
-Time: 167ms
+Hash: 8f412be4af558f9cbd3b
+Version: webpack 2.1.0-beta.25
+Time: 148ms
           Asset       Size  Chunks             Chunk Names
-     0.chunk.js  334 bytes       0  [emitted]  
-pageB.bundle.js  533 bytes       1  [emitted]  pageB
-pageA.bundle.js  568 bytes       2  [emitted]  pageA
+     0.chunk.js  331 bytes       0  [emitted]  
+pageB.bundle.js  529 bytes       1  [emitted]  pageB
+pageA.bundle.js  565 bytes       2  [emitted]  pageA
      commons.js    5.57 kB       3  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
-chunk    {0} 0.chunk.js 91 bytes {2} {1} [rendered]
+chunk    {0} 0.chunk.js 88 bytes {2} {1} [rendered]
     > duplicate [2] ./pageA.js 2:0-4:2
     > duplicate [3] ./pageB.js 2:0-5:2
-    [0] ./shared.js 91 bytes {0} [built]
+    [0] ./shared.js 88 bytes {0} [built]
         amd require ./shared [2] ./pageA.js 2:0-4:2
         require.ensure item ./shared [3] ./pageB.js 2:0-5:2
         cjs require ./shared [3] ./pageB.js 3:14-33
-chunk    {1} pageB.bundle.js (pageB) 152 bytes {3} [initial] [rendered]
+chunk    {1} pageB.bundle.js (pageB) 148 bytes {3} [initial] [rendered]
     > pageB [3] ./pageB.js 
-    [3] ./pageB.js 152 bytes {1} [built]
-chunk    {2} pageA.bundle.js (pageA) 108 bytes {3} [initial] [rendered]
+    [3] ./pageB.js 148 bytes {1} [built]
+chunk    {2} pageA.bundle.js (pageA) 105 bytes {3} [initial] [rendered]
     > pageA [2] ./pageA.js 
-    [2] ./pageA.js 108 bytes {2} [built]
+    [2] ./pageA.js 105 bytes {2} [built]
 chunk    {3} commons.js (commons) 26 bytes [entry] [rendered]
     [1] ./common.js 26 bytes {3} [built]
         cjs require ./common [0] ./shared.js 1:13-32
@@ -347,29 +347,29 @@ chunk    {3} commons.js (commons) 26 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 8ccc79cdf2183770dc18
-Version: webpack 2.1.0-beta.22
-Time: 351ms
+Hash: 8f412be4af558f9cbd3b
+Version: webpack 2.1.0-beta.25
+Time: 279ms
           Asset       Size  Chunks             Chunk Names
      0.chunk.js   80 bytes       0  [emitted]  
-pageB.bundle.js  149 bytes       1  [emitted]  pageB
-pageA.bundle.js  166 bytes       2  [emitted]  pageA
+pageB.bundle.js  146 bytes       1  [emitted]  pageB
+pageA.bundle.js  163 bytes       2  [emitted]  pageA
      commons.js    1.37 kB       3  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
-chunk    {0} 0.chunk.js 91 bytes {2} {1} [rendered]
+chunk    {0} 0.chunk.js 88 bytes {2} {1} [rendered]
     > duplicate [2] ./pageA.js 2:0-4:2
     > duplicate [3] ./pageB.js 2:0-5:2
-    [0] ./shared.js 91 bytes {0} [built]
+    [0] ./shared.js 88 bytes {0} [built]
         amd require ./shared [2] ./pageA.js 2:0-4:2
         require.ensure item ./shared [3] ./pageB.js 2:0-5:2
         cjs require ./shared [3] ./pageB.js 3:14-33
-chunk    {1} pageB.bundle.js (pageB) 152 bytes {3} [initial] [rendered]
+chunk    {1} pageB.bundle.js (pageB) 148 bytes {3} [initial] [rendered]
     > pageB [3] ./pageB.js 
-    [3] ./pageB.js 152 bytes {1} [built]
-chunk    {2} pageA.bundle.js (pageA) 108 bytes {3} [initial] [rendered]
+    [3] ./pageB.js 148 bytes {1} [built]
+chunk    {2} pageA.bundle.js (pageA) 105 bytes {3} [initial] [rendered]
     > pageA [2] ./pageA.js 
-    [2] ./pageA.js 108 bytes {2} [built]
+    [2] ./pageA.js 105 bytes {2} [built]
 chunk    {3} commons.js (commons) 26 bytes [entry] [rendered]
     [1] ./common.js 26 bytes {3} [built]
         cjs require ./common [0] ./shared.js 1:13-32

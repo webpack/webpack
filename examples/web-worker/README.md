@@ -2,7 +2,7 @@
 # example.js
 
 ``` javascript
-var Worker = require("worker!./worker");
+var Worker = require("worker-loader!./worker");
 var worker = new Worker;
 worker.postMessage("b");
 worker.onmessage = function(event) {
@@ -327,77 +327,84 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: f624930b0e9bf410537f
-Version: webpack 2.1.0-beta.22
-Time: 243ms
+Hash: e29ee95ab00f5a45ee69
+Version: webpack 2.1.0-beta.25
+Time: 191ms
            Asset     Size  Chunks             Chunk Names
 0.hash.worker.js  1.83 kB          [emitted]  
   hash.worker.js  3.83 kB          [emitted]  
-       output.js  3.19 kB       0  [emitted]  main
+       output.js  3.18 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 302 bytes [entry] [rendered]
-    > main [1] ./example.js 
+    > main [1] ./example.js
     [0] (webpack)/~/worker-loader!./worker.js 96 bytes {0} [built]
         cjs require worker!./worker [1] ./example.js 1:13-39
-    [1] ./example.js 206 bytes {0} [built]
+    [1] ./example.js 201 bytes {0} [built]
 Child worker:
                Asset     Size  Chunks             Chunk Names
     0.hash.worker.js  1.83 kB       0  [emitted]  
       hash.worker.js  3.83 kB       1  [emitted]  main
     Entrypoint main = hash.worker.js
-    chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
+    chunk    {0} 0.hash.worker.js 457 bytes {1} [rendered]
         > [1] ./worker.js 3:1-5:3
         [0] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
             amd require context ../require.context/templates [1] ./worker.js 3:1-5:3
-        [2] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+        [2] ../require.context/templates/a.js 80 bytes {0} [optional] [built]
             context element ./a [0] ../require.context/templates ^\.\/.*$
             context element ./a.js [0] ../require.context/templates ^\.\/.*$
-        [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+        [3] ../require.context/templates/b.js 80 bytes {0} [optional] [built]
             context element ./b [0] ../require.context/templates ^\.\/.*$
             context element ./b.js [0] ../require.context/templates ^\.\/.*$
-        [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+        [4] ../require.context/templates/c.js 80 bytes {0} [optional] [built]
             context element ./c [0] ../require.context/templates ^\.\/.*$
             context element ./c.js [0] ../require.context/templates ^\.\/.*$
+
+ 8ee92337ff6112b0fe42a6aa1f479e12b4423ae3
+    chunk    {1} hash.worker.js (main) 162 bytes [entry] [rendered]
+        > main [1] ./worker.js
+        [1] ./worker.js 162 bytes {1} [built]
+=======
     chunk    {1} hash.worker.js (main) 168 bytes [entry] [rendered]
-        > main [1] ./worker.js 
+        > main [1] ./worker.js
         [1] ./worker.js 168 bytes {1} [built]
+>>>>>>> fix-2986: Remove automatic -loader module name extension
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: f624930b0e9bf410537f
-Version: webpack 2.1.0-beta.22
-Time: 426ms
+Hash: e29ee95ab00f5a45ee69
+Version: webpack 2.1.0-beta.25
+Time: 329ms
            Asset       Size  Chunks             Chunk Names
 0.hash.worker.js  544 bytes          [emitted]  
-  hash.worker.js  848 bytes          [emitted]  
-       output.js  658 bytes       0  [emitted]  main
+  hash.worker.js  842 bytes          [emitted]  
+       output.js  655 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 302 bytes [entry] [rendered]
-    > main [1] ./example.js 
+    > main [1] ./example.js
     [0] (webpack)/~/worker-loader!./worker.js 96 bytes {0} [built]
         cjs require worker!./worker [1] ./example.js 1:13-39
-    [1] ./example.js 206 bytes {0} [built]
+    [1] ./example.js 201 bytes {0} [built]
 Child worker:
                Asset       Size  Chunks             Chunk Names
     0.hash.worker.js  544 bytes       0  [emitted]  
-      hash.worker.js  848 bytes       1  [emitted]  main
+      hash.worker.js  842 bytes       1  [emitted]  main
     Entrypoint main = hash.worker.js
-    chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
+    chunk    {0} 0.hash.worker.js 457 bytes {1} [rendered]
         > [1] ./worker.js 3:1-5:3
         [0] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
             amd require context ../require.context/templates [1] ./worker.js 3:1-5:3
-        [2] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+        [2] ../require.context/templates/a.js 80 bytes {0} [optional] [built]
             context element ./a [0] ../require.context/templates ^\.\/.*$
             context element ./a.js [0] ../require.context/templates ^\.\/.*$
-        [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+        [3] ../require.context/templates/b.js 80 bytes {0} [optional] [built]
             context element ./b [0] ../require.context/templates ^\.\/.*$
             context element ./b.js [0] ../require.context/templates ^\.\/.*$
-        [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+        [4] ../require.context/templates/c.js 80 bytes {0} [optional] [built]
             context element ./c [0] ../require.context/templates ^\.\/.*$
             context element ./c.js [0] ../require.context/templates ^\.\/.*$
     chunk    {1} hash.worker.js (main) 168 bytes [entry] [rendered]
-        > main [1] ./worker.js 
+        > main [1] ./worker.js
         [1] ./worker.js 168 bytes {1} [built]
 ```

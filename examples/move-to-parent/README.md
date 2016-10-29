@@ -83,9 +83,9 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: cc02f492e44f68d8c237
-Version: webpack 2.1.0-beta.22
-Time: 224ms
+Hash: db7e340b8115120a2cdc
+Version: webpack 2.1.0-beta.25
+Time: 173ms
           Asset       Size      Chunks             Chunk Names
      0.chunk.js  779 bytes  0, 1, 2, 3  [emitted]  
      1.chunk.js  589 bytes     1, 2, 3  [emitted]  
@@ -94,7 +94,7 @@ Time: 224ms
 pageD.bundle.js    6.32 kB           4  [emitted]  pageD
 pageC.bundle.js    6.32 kB           5  [emitted]  pageC
 pageB.bundle.js    6.32 kB           6  [emitted]  pageB
-pageA.bundle.js    6.26 kB           7  [emitted]  pageA
+pageA.bundle.js    6.25 kB           7  [emitted]  pageA
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js
@@ -129,35 +129,35 @@ chunk    {3} 3.chunk.js 21 bytes {7} {6} {5} {4} [rendered]
     > duplicate [6] ./page.js?C 1:0-16
     > duplicate [7] ./page.js?D 1:0-16
     [0] ./a.js 21 bytes {0} {1} {2} {3} [built]
-chunk    {4} pageD.bundle.js (pageD) 118 bytes [entry] [rendered]
+chunk    {4} pageD.bundle.js (pageD) 114 bytes [entry] [rendered]
     > pageD [7] ./page.js?D 
-    [7] ./page.js?D 118 bytes {4} [built]
-chunk    {5} pageC.bundle.js (pageC) 118 bytes [entry] [rendered]
+    [7] ./page.js?D 114 bytes {4} [built]
+chunk    {5} pageC.bundle.js (pageC) 114 bytes [entry] [rendered]
     > pageC [6] ./page.js?C 
-    [6] ./page.js?C 118 bytes {5} [built]
-chunk    {6} pageB.bundle.js (pageB) 118 bytes [entry] [rendered]
+    [6] ./page.js?C 114 bytes {5} [built]
+chunk    {6} pageB.bundle.js (pageB) 114 bytes [entry] [rendered]
     > pageB [5] ./page.js?B 
-    [5] ./page.js?B 118 bytes {6} [built]
-chunk    {7} pageA.bundle.js (pageA) 118 bytes [entry] [rendered]
+    [5] ./page.js?B 114 bytes {6} [built]
+chunk    {7} pageA.bundle.js (pageA) 114 bytes [entry] [rendered]
     > pageA [4] ./page.js?A 
-    [4] ./page.js?A 118 bytes {7} [built]
+    [4] ./page.js?A 114 bytes {7} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: cc02f492e44f68d8c237
-Version: webpack 2.1.0-beta.22
-Time: 673ms
+Hash: db7e340b8115120a2cdc
+Version: webpack 2.1.0-beta.25
+Time: 466ms
           Asset       Size      Chunks             Chunk Names
      0.chunk.js  142 bytes  0, 1, 2, 3  [emitted]  
      1.chunk.js  111 bytes     1, 2, 3  [emitted]  
      2.chunk.js   80 bytes        2, 3  [emitted]  
      3.chunk.js   49 bytes           3  [emitted]  
-pageD.bundle.js     1.6 kB           4  [emitted]  pageD
-pageC.bundle.js     1.6 kB           5  [emitted]  pageC
-pageB.bundle.js     1.6 kB           6  [emitted]  pageB
-pageA.bundle.js     1.6 kB           7  [emitted]  pageA
+pageD.bundle.js    1.58 kB           4  [emitted]  pageD
+pageC.bundle.js    1.58 kB           5  [emitted]  pageC
+pageB.bundle.js    1.58 kB           6  [emitted]  pageB
+pageA.bundle.js    1.58 kB           7  [emitted]  pageA
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js
@@ -192,16 +192,16 @@ chunk    {3} 3.chunk.js 21 bytes {7} {6} {5} {4} [rendered]
     > duplicate [6] ./page.js?C 1:0-16
     > duplicate [7] ./page.js?D 1:0-16
     [0] ./a.js 21 bytes {0} {1} {2} {3} [built]
-chunk    {4} pageD.bundle.js (pageD) 118 bytes [entry] [rendered]
+chunk    {4} pageD.bundle.js (pageD) 114 bytes [entry] [rendered]
     > pageD [7] ./page.js?D 
-    [7] ./page.js?D 118 bytes {4} [built]
-chunk    {5} pageC.bundle.js (pageC) 118 bytes [entry] [rendered]
+    [7] ./page.js?D 114 bytes {4} [built]
+chunk    {5} pageC.bundle.js (pageC) 114 bytes [entry] [rendered]
     > pageC [6] ./page.js?C 
-    [6] ./page.js?C 118 bytes {5} [built]
-chunk    {6} pageB.bundle.js (pageB) 118 bytes [entry] [rendered]
+    [6] ./page.js?C 114 bytes {5} [built]
+chunk    {6} pageB.bundle.js (pageB) 114 bytes [entry] [rendered]
     > pageB [5] ./page.js?B 
-    [5] ./page.js?B 118 bytes {6} [built]
-chunk    {7} pageA.bundle.js (pageA) 118 bytes [entry] [rendered]
+    [5] ./page.js?B 114 bytes {6} [built]
+chunk    {7} pageA.bundle.js (pageA) 114 bytes [entry] [rendered]
     > pageA [4] ./page.js?A 
-    [4] ./page.js?A 118 bytes {7} [built]
+    [4] ./page.js?A 114 bytes {7} [built]
 ```

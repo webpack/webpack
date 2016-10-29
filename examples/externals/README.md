@@ -171,29 +171,29 @@ exports.exampleValue = subtract(add(42, 2), 2);
 ## Uncompressed
 
 ```
-Hash: 29ce7a9675e2bb040e93
-Version: webpack 2.1.0-beta.22
-Time: 119ms
+Hash: 9f84bc757816705143ff
+Version: webpack 2.1.0-beta.25
+Time: 102ms
     Asset     Size  Chunks             Chunk Names
 output.js  4.08 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 197 bytes [entry] [rendered]
+chunk    {0} output.js (main) 194 bytes [entry] [rendered]
     > main [2] ./example.js 
-    [2] ./example.js 113 bytes {0} [built]
+    [2] ./example.js 110 bytes {0} [built]
      + 2 hidden modules
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 29ce7a9675e2bb040e93
-Version: webpack 2.1.0-beta.22
-Time: 250ms
+Hash: 9f84bc757816705143ff
+Version: webpack 2.1.0-beta.25
+Time: 215ms
     Asset       Size  Chunks             Chunk Names
-output.js  997 bytes       0  [emitted]  main
+output.js  994 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 197 bytes [entry] [rendered]
+chunk    {0} output.js (main) 194 bytes [entry] [rendered]
     > main [2] ./example.js 
-    [2] ./example.js 113 bytes {0} [built]
+    [2] ./example.js 110 bytes {0} [built]
      + 2 hidden modules
 ```

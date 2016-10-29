@@ -252,55 +252,57 @@ __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__reexport_commonjs__["readFile
 ## Uncompressed
 
 ```
-Hash: 3f17961fede26a0f4dee
-Version: webpack 2.1.0-beta.22
-Time: 157ms
+Hash: 9fcf8b5e9ebb2df45bb7
+Version: webpack 2.1.0-beta.25
+Time: 118ms
     Asset     Size  Chunks             Chunk Names
-output.js  5.88 kB       0  [emitted]  main
+output.js  5.84 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 1.2 kB [entry] [rendered]
+chunk    {0} output.js (main) 1.16 kB [entry] [rendered]
     > main [4] ./example.js 
-    [0] ./fs.js 265 bytes {0} [built]
+    [0] ./fs.js 258 bytes {0} [built]
         [only some exports used: default, readFile]
         harmony import ./fs [2] ./reexport-commonjs.js 2:0-21
         harmony import ./fs [4] ./example.js 4:0-22
         harmony import ./fs [4] ./example.js 5:0-32
         harmony import ./fs [4] ./example.js 6:0-28
-    [1] ./example2.js 159 bytes {0} [built]
+    [1] ./example2.js 152 bytes {0} [built]
         [no exports used]
         harmony import ./example2 [4] ./example.js 16:0-20
-    [2] ./reexport-commonjs.js 308 bytes {0} [built]
+    [2] ./reexport-commonjs.js 301 bytes {0} [built]
         [only some exports used: readFile]
         harmony import ./reexport-commonjs [4] ./example.js 12:0-60
-    [3] ./harmony.js 77 bytes {0} [built]
+    [3] ./harmony.js 74 bytes {0} [built]
+        [exports: default, named]
         cjs require ./harmony [1] ./example2.js 4:13-33
-    [4] ./example.js 389 bytes {0} [built]
+    [4] ./example.js 373 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 3f17961fede26a0f4dee
-Version: webpack 2.1.0-beta.22
-Time: 303ms
+Hash: 9fcf8b5e9ebb2df45bb7
+Version: webpack 2.1.0-beta.25
+Time: 241ms
     Asset       Size  Chunks             Chunk Names
-output.js  957 bytes       0  [emitted]  main
+output.js  948 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 1.2 kB [entry] [rendered]
+chunk    {0} output.js (main) 1.16 kB [entry] [rendered]
     > main [4] ./example.js 
-    [0] ./fs.js 265 bytes {0} [built]
+    [0] ./fs.js 258 bytes {0} [built]
         [only some exports used: default, readFile]
         harmony import ./fs [2] ./reexport-commonjs.js 2:0-21
         harmony import ./fs [4] ./example.js 4:0-22
         harmony import ./fs [4] ./example.js 5:0-32
         harmony import ./fs [4] ./example.js 6:0-28
-    [1] ./example2.js 159 bytes {0} [built]
+    [1] ./example2.js 152 bytes {0} [built]
         [no exports used]
         harmony import ./example2 [4] ./example.js 16:0-20
-    [2] ./reexport-commonjs.js 308 bytes {0} [built]
+    [2] ./reexport-commonjs.js 301 bytes {0} [built]
         [only some exports used: readFile]
         harmony import ./reexport-commonjs [4] ./example.js 12:0-60
-    [3] ./harmony.js 77 bytes {0} [built]
+    [3] ./harmony.js 74 bytes {0} [built]
+        [exports: default, named]
         cjs require ./harmony [1] ./example2.js 4:13-33
-    [4] ./example.js 389 bytes {0} [built]
+    [4] ./example.js 373 bytes {0} [built]
 ```

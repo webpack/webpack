@@ -237,57 +237,57 @@ console.log("Running " + "mobile" + " build");
 ## Uncompressed
 
 ```
-Hash: a607047e68455846998bcceba4bc5163d755f291
-Version: webpack 2.1.0-beta.22
+Hash: 4b2d49e03773278d9a9728f5d936e54472e7499c
+Version: webpack 2.1.0-beta.25
 Child mobile:
-    Hash: a607047e68455846998b
-    Version: webpack 2.1.0-beta.22
-    Time: 148ms
+    Hash: 4b2d49e03773278d9a97
+    Version: webpack 2.1.0-beta.25
+    Time: 116ms
         Asset     Size  Chunks             Chunk Names
     mobile.js  2.92 kB       0  [emitted]  main
     Entrypoint main = mobile.js
-    chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
+    chunk    {0} mobile.js (main) 114 bytes [entry] [rendered]
         > main [1] ./example.js 
         [0] ./mobile-stuff.js 20 bytes {0} [built]
             cjs require ./mobile-stuff [1] ./example.js 2:1-26
-        [1] ./example.js 97 bytes {0} [built]
+        [1] ./example.js 94 bytes {0} [built]
 Child desktop:
-    Hash: cceba4bc5163d755f291
-    Version: webpack 2.1.0-beta.22
-    Time: 125ms
+    Hash: 28f5d936e54472e7499c
+    Version: webpack 2.1.0-beta.25
+    Time: 98ms
          Asset     Size  Chunks             Chunk Names
     desktop.js  2.68 kB       0  [emitted]  main
     Entrypoint main = desktop.js
-    chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
+    chunk    {0} desktop.js (main) 94 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 97 bytes {0} [built]
+        [0] ./example.js 94 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: a607047e68455846998bcceba4bc5163d755f291
-Version: webpack 2.1.0-beta.22
+Hash: 4b2d49e03773278d9a9728f5d936e54472e7499c
+Version: webpack 2.1.0-beta.25
 Child mobile:
-    Hash: a607047e68455846998b
-    Version: webpack 2.1.0-beta.22
-    Time: 274ms
+    Hash: 4b2d49e03773278d9a97
+    Version: webpack 2.1.0-beta.25
+    Time: 228ms
         Asset       Size  Chunks             Chunk Names
-    mobile.js  566 bytes       0  [emitted]  main
+    mobile.js  563 bytes       0  [emitted]  main
     Entrypoint main = mobile.js
-    chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
+    chunk    {0} mobile.js (main) 114 bytes [entry] [rendered]
         > main [1] ./example.js 
         [0] ./mobile-stuff.js 20 bytes {0} [built]
             cjs require ./mobile-stuff [1] ./example.js 2:1-26
-        [1] ./example.js 97 bytes {0} [built]
+        [1] ./example.js 94 bytes {0} [built]
 Child desktop:
-    Hash: cceba4bc5163d755f291
-    Version: webpack 2.1.0-beta.22
-    Time: 253ms
+    Hash: 28f5d936e54472e7499c
+    Version: webpack 2.1.0-beta.25
+    Time: 211ms
          Asset       Size  Chunks             Chunk Names
-    desktop.js  546 bytes       0  [emitted]  main
+    desktop.js  543 bytes       0  [emitted]  main
     Entrypoint main = desktop.js
-    chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
+    chunk    {0} desktop.js (main) 94 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 97 bytes {0} [built]
+        [0] ./example.js 94 bytes {0} [built]
 ```

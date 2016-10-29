@@ -229,8 +229,8 @@ module.exports = "beta";
 
 ```
 Hash: 082bbeea226fa367215b
-Version: webpack 2.1.0-beta.22
-Time: 115ms
+Version: webpack 2.1.0-beta.25
+Time: 104ms
              Asset     Size  Chunks             Chunk Names
  MyLibrary.beta.js  3.02 kB       0  [emitted]  beta
 MyLibrary.alpha.js  3.01 kB       1  [emitted]  alpha
@@ -248,11 +248,11 @@ chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
 
 ```
 Hash: 082bbeea226fa367215b
-Version: webpack 2.1.0-beta.22
-Time: 289ms
+Version: webpack 2.1.0-beta.25
+Time: 248ms
              Asset       Size  Chunks             Chunk Names
- MyLibrary.beta.js  778 bytes       0  [emitted]  beta
-MyLibrary.alpha.js  780 bytes       1  [emitted]  alpha
+ MyLibrary.beta.js  775 bytes       0  [emitted]  beta
+MyLibrary.alpha.js  777 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
