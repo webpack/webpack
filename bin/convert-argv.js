@@ -53,7 +53,7 @@ module.exports = function(optimist, argv, convertOptions) {
 
 	var i;
 	if(argv.config) {
-		function getConfigExtension(configPath) {
+		var getConfigExtension = function getConfigExtension(configPath) {
 			for(i = extensions.length - 1; i >= 0; i--) {
 				var tmpExt = extensions[i];
 				if(configPath.indexOf(tmpExt, configPath.length - tmpExt.length) > -1) {
@@ -63,7 +63,7 @@ module.exports = function(optimist, argv, convertOptions) {
 			return path.extname(configPath);
 		}
 
-		function mapConfigArg(configArg) {
+		var mapConfigArg = function mapConfigArg(configArg) {
 			var resolvedPath = path.resolve(configArg);
 			var extension = getConfigExtension(resolvedPath);
 			return {
@@ -88,7 +88,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	if(configFiles.length > 0) {
-		function registerCompiler(moduleDescriptor) {
+		var registerCompiler = function registerCompiler(moduleDescriptor) {
 			if(moduleDescriptor) {
 				if(typeof moduleDescriptor === "string") {
 					require(moduleDescriptor);
@@ -107,7 +107,7 @@ module.exports = function(optimist, argv, convertOptions) {
 			}
 		}
 
-		function requireConfig(configPath) {
+		var requireConfig = function requireConfig(configPath) {
 			var options = require(configPath);
 			var isES6DefaultExportedFunc = (
 				typeof options === "object" && options !== null && typeof options.default === "function"
@@ -538,7 +538,7 @@ module.exports = function(optimist, argv, convertOptions) {
 			}
 			ensureObject(options, "entry");
 
-			function addTo(name, entry) {
+			var addTo = function addTo(name, entry) {
 				if(options.entry[name]) {
 					if(!Array.isArray(options.entry[name])) {
 						options.entry[name] = [options.entry[name]];
