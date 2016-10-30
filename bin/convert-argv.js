@@ -6,21 +6,9 @@ var interpret = require("interpret");
 var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 var validateWebpackOptions = require("../lib/validateWebpackOptions");
 
-module.exports = function(optimist, argv, convertOptions) {
+module.exports = function(yargs, argv, convertOptions) {
 
 	var options = [];
-
-	// Help
-	if(argv.help) {
-		optimist.showHelp();
-		process.exit(0); // eslint-disable-line
-	}
-
-	// Version
-	if(argv.v || argv.version) {
-		console.log(require("../package.json").version);
-		process.exit(0); // eslint-disable-line
-	}
 
 	// Shortcuts
 	if(argv.d) {
