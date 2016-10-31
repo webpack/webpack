@@ -307,4 +307,53 @@ describe("Parser", function() {
 			});
 		});
 	});
+
+	describe("async/await support", function() {
+		describe("should accept", function() {
+			var cases = {
+				"async function": "async function x() {}",
+				"async arrow function": "async () => {}",
+				"await expression": "async function x(y) { await y }"
+			};
+			var parser = new Parser();
+			Object.keys(cases).forEach(function(name) {
+				var expr = cases[name];
+				it(name, function() {
+					var actual = parser.parse(expr);
+					should.strictEqual(typeof actual, "object");
+				});
+			});
+		});
+		describe("should parse await", function() {
+			var cases = {
+				"require": [
+					"async function x() { await require('y'); }", {
+						param: "y"
+					}
+				],
+				"System.import": [
+					"async function x() { var y = await System.import('z'); }", {
+						param: "z"
+					}
+				]
+			};
+
+			var parser = new Parser();
+			parser.plugin("call require", function(expr) {
+				var param = this.evaluateExpression(expr.arguments[0]);
+				this.state.param = param.string;
+			});
+			parser.plugin("call System.import", function(expr) {
+				var param = this.evaluateExpression(expr.arguments[0]);
+				this.state.param = param.string;
+			});
+
+			Object.keys(cases).forEach(function(name) {
+				it(name, function() {
+					var actual = parser.parse(cases[name][0]);
+					actual.should.be.eql(cases[name][1]);
+				});
+			});
+		});
+	})
 });

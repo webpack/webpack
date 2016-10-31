@@ -4,7 +4,7 @@
 */
 /*globals __resourceQuery */
 if(module.hot) {
-	function checkForUpdate(fromUpdate) {
+	var checkForUpdate = function checkForUpdate(fromUpdate) {
 		module.hot.check().then(function(updatedModules) {
 			if(!updatedModules) {
 				if(fromUpdate)

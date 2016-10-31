@@ -10,6 +10,8 @@ module.exports = function(yargs) {
 	yargs
 		.help("help")
 		.alias("help", "h", "?")
+		.version()
+		.alias("version", "v")
 		.options({
 			"config": {
 				type: "string",
@@ -21,12 +23,6 @@ module.exports = function(yargs) {
 			"env": {
 				describe: "Enviroment passed to the config, when it is a function",
 				group: CONFIG_GROUP
-			},
-			"version": {
-				type: "string",
-				describe: "Webpack version",
-				alias: "v",
-				group: BASIC_GROUP,
 			},
 			"context": {
 				type: "string",
