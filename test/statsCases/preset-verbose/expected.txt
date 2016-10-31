@@ -4,7 +4,7 @@ Time: Xms
    0.js  251 bytes       0  [emitted]  
    1.js  106 bytes       1  [emitted]  
    2.js  200 bytes       2  [emitted]  
-main.js    5.69 kB       3  [emitted]  main
+main.js    5.81 kB       3  [emitted]  main
 Entrypoint main = main.js
 chunk    {0} 0.js 54 bytes {3} [rendered]
     [2] (webpack)/test/statsCases/preset-verbose/c.js 54 bytes {0} [built]
