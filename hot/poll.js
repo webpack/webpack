@@ -6,7 +6,7 @@
 if(module.hot) {
 	var hotPollInterval = +(__resourceQuery.substr(1)) || (10 * 60 * 1000);
 
-	function checkForUpdate(fromUpdate) {
+	var checkForUpdate = function checkForUpdate(fromUpdate) {
 		if(module.hot.status() === "idle") {
 			module.hot.check(true).then(function(updatedModules) {
 				if(!updatedModules) {
