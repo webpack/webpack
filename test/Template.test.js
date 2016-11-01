@@ -1,4 +1,4 @@
-ould = require("should");
+var should = require("should");
 var path = require("path");
 
 var template = require("../lib/Template");
