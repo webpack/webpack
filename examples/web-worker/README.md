@@ -358,16 +358,9 @@ Child worker:
         [4] ../require.context/templates/c.js 80 bytes {0} [optional] [built]
             context element ./c [0] ../require.context/templates ^\.\/.*$
             context element ./c.js [0] ../require.context/templates ^\.\/.*$
-
- 8ee92337ff6112b0fe42a6aa1f479e12b4423ae3
-    chunk    {1} hash.worker.js (main) 162 bytes [entry] [rendered]
-        > main [1] ./worker.js
-        [1] ./worker.js 162 bytes {1} [built]
-=======
     chunk    {1} hash.worker.js (main) 168 bytes [entry] [rendered]
         > main [1] ./worker.js
         [1] ./worker.js 168 bytes {1} [built]
->>>>>>> fix-2986: Remove automatic -loader module name extension
 ```
 
 ## Minimized (uglify-js, no zip)
