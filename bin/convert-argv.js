@@ -4,7 +4,6 @@ fs.existsSync = fs.existsSync || path.existsSync;
 var resolve = require("enhanced-resolve");
 var interpret = require("interpret");
 var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
-var validateWebpackOptions = require("../lib/validateWebpackOptions");
 
 module.exports = function(yargs, argv, convertOptions) {
 
