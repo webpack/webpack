@@ -1,0 +1,3 @@
+chunk    {0} main.js (main) 0 bytes [entry] [rendered]
+
+WARNING in EmmittedAssetSizeWarning: This asset exceeds 250kB. Consider reducing the size for optimal web performance.
