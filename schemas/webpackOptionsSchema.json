@@ -76,7 +76,14 @@
         },
         {
           "additionalProperties": {
-            "type": "string"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              }
+            ]
           },
           "description": "If an dependency matches exactly a property of the object, the property value is used as dependency.",
           "type": "object"
@@ -109,7 +116,14 @@
           "type": "boolean"
         },
         "exprContextRegExp": {
-          "instanceof": "RegExp"
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "instanceof": "RegExp"
+            }
+          ]
         },
         "exprContextRequest": {
           "type": "string"
@@ -153,7 +167,14 @@
           "type": "boolean"
         },
         "unknownContextRegExp": {
-          "instanceof": "RegExp"
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "instanceof": "RegExp"
+            }
+          ]
         },
         "unknownContextRequest": {
           "type": "string"
