@@ -38,11 +38,11 @@ describe("Validation", function() {
 		config: {
 			entry: "a",
 			module: {
-				exprContextRegExp: 1337
+				wrappedContextRegExp: 1337
 			}
 		},
 		message: [
-			" - configuration.module.exprContextRegExp should be an instance of RegExp.",
+			" - configuration.module.wrappedContextRegExp should be an instance of RegExp.",
 		]
 	}, {
 		name: "multiple errors",
