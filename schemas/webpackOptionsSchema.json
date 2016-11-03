@@ -714,6 +714,21 @@
     "output": {
       "$ref": "#/definitions/output"
     },
+    "performance": {
+      "description": "Configuration for web performance recommendations.",
+      "additionalProperties": false,
+      "properties": {
+        "maxAssetSize": {
+          "description": "Filesize limit (in kb) when exceeded, that webpack will provide performance hints",
+          "type": "number"
+        },
+        "hints": {
+          "description": "Turn hints on or off",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "plugins": {
       "description": "Add additional plugins to the compiler.",
       "type": "array"
