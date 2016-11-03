@@ -752,7 +752,7 @@
       "additionalProperties": false,
       "properties": {
         "maxAssetSize": {
-          "description": "Filesize limit (in kb) when exceeded, that webpack will provide performance hints",
+          "description": "Filesize limit (in kB) when exceeded, that webpack will provide performance hints",
           "type": "number"
         },
         "hints": {
