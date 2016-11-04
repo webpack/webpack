@@ -6,6 +6,7 @@
   "dependencies": {
     "acorn": "^4.0.3",
     "ajv": "^4.7.0",
+    "ajv-keywords": "^1.1.1",
     "async": "^2.1.2",
     "enhanced-resolve": "^2.2.0",
     "interpret": "^1.0.0",
