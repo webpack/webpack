@@ -751,13 +751,17 @@
       "description": "Configuration for web performance recommendations.",
       "additionalProperties": false,
       "properties": {
-        "maxAssetSize": {
-          "description": "Filesize limit (in kB) when exceeded, that webpack will provide performance hints",
-          "type": "number"
-        },
         "hints": {
           "description": "Turn hints on or off",
           "type": "boolean"
+        },
+        "maxInitialChunkSize": {
+          "description": "Total size of all initial chunks (in kb)",
+          "type": "number"
+        },
+        "maxAssetSize": {
+          "description": "Filesize limit (in kB) when exceeded, that webpack will provide performance hints",
+          "type": "number"
         }
       },
       "type": "object"
