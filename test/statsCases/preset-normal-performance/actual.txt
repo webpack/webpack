@@ -19,6 +19,6 @@ chunk    {<CLR=33,BOLD>3</CLR>} <CLR=32,BOLD>main.js</CLR> (main) 413 kB<CLR=33,
     [3] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance/a.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
     [8] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance/index.js</CLR> 93 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 
-<CLR=33,BOLD>WARNING in EmmittedAssetSizeWarning: Highlighted chunks are large and are likely to impact web performance. Consider keeping total chunks of page < 250kB</CLR>
+<CLR=33,BOLD>WARNING in EmmittedAssetSizeWarning: Highlighted chunks are large and are likely to impact web performance. Consider keeping total chunks of page < 300kB</CLR>
 
 <CLR=33,BOLD>WARNING in EmittedAssetSizeWarning: The total initial download cost for these assets are likey to impact web performance. Consider keeping the total size of your initial assets < 300kB</CLR>
