@@ -1,8 +1,0 @@
-Hash: 0bd4f09244f0e8c60354
-Time: Xms
-    Asset     Size  Chunks             Chunk Names
-bundle.js  2.43 kB       0  [emitted]  main
-chunk    {0} bundle.js (main) 0 bytes [entry] [rendered]
-    [0] (webpack)/test/statsCases/simple/index.js 0 bytes {0} [built]
-
-WARNING in EmmittedAssetSizeWarning: This asset exceeds 250kB. Consider reducing the size for optimal web performance.
