@@ -34,6 +34,17 @@ describe("Validation", function() {
 			"   The entry point(s) of the compilation."
 		]
 	}, {
+		name: "invalid instanceof",
+		config: {
+			entry: "a",
+			module: {
+				wrappedContextRegExp: 1337
+			}
+		},
+		message: [
+			" - configuration.module.wrappedContextRegExp should be an instance of RegExp.",
+		]
+	}, {
 		name: "multiple errors",
 		config: {
 			entry: [/a/],
