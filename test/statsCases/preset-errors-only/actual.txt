@@ -1,2 +1,0 @@
-
-WARNING in EmmittedAssetSizeWarning: This asset exceeds 250kB. Consider reducing the size for optimal web performance.

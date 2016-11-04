@@ -144,6 +144,15 @@ describe("Stats", function() {
 					getPublicPath: function() {
 						return 'path';
 					}
+				},
+				compiler: {
+					options: {
+						performance: {
+							hints: true,
+							maxAssetSize: 250
+						},
+						target: "web"
+					}
 				}
 			});
 			var obj = mockStats.toJson();

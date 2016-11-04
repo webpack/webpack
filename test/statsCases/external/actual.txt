@@ -1,9 +1,0 @@
-Hash: 5957a4911072fb217ca1
-Time: Xms
-  Asset     Size  Chunks             Chunk Names
-main.js  2.57 kB       0  [emitted]  main
-chunk    {0} main.js (main) 59 bytes [entry] [rendered]
-    [0] external "test" 42 bytes {0} [not cacheable]
-    [1] (webpack)/test/statsCases/external/index.js 17 bytes {0} [built]
-
-WARNING in EmmittedAssetSizeWarning: This asset exceeds 250kB. Consider reducing the size for optimal web performance.

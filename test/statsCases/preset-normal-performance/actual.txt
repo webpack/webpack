@@ -1,10 +1,10 @@
-Hash: <CLR=BOLD>8f8b70c74c2686431118</CLR>
+Hash: <CLR=BOLD>c7f6ee32a46b85267894</CLR>
 Time: <CLR=BOLD>X</CLR>ms
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=BOLD>Chunk Names</CLR>
    <CLR=32,BOLD>0.js</CLR>  251 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
    <CLR=32,BOLD>1.js</CLR>  100 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
    <CLR=32,BOLD>2.js</CLR>  178 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-<CLR=32,BOLD>main.js</CLR>     419 kB       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
+<CLR=33,BOLD>main.js</CLR>     <CLR=33,BOLD>419 kB</CLR>       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
 chunk    {<CLR=33,BOLD>0</CLR>} <CLR=32,BOLD>0.js</CLR> 54 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [rendered]</CLR>
     [5] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance/c.js</CLR> 54 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
 chunk    {<CLR=33,BOLD>1</CLR>} <CLR=32,BOLD>1.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [rendered]</CLR>
@@ -19,6 +19,4 @@ chunk    {<CLR=33,BOLD>3</CLR>} <CLR=32,BOLD>main.js</CLR> (main) 413 kB<CLR=33,
     [3] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance/a.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
     [8] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance/index.js</CLR> 93 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 
-<CLR=33,BOLD>WARNING in EmmittedAssetSizeWarning: This asset exceeds 250kB. Consider reducing the size for optimal web performance.</CLR>
-
-<CLR=33,BOLD>WARNING in EmmittedAssetSizeWarning: This asset exceeds 250kB. Consider reducing the size for optimal web performance.</CLR>
+<CLR=33,BOLD>WARNING in EmmittedAssetSizeWarning: Highlighted chunks are large and are likely to impact web performance. Consider keeping total chunks of page < 250kB</CLR>
