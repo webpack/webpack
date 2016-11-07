@@ -8,7 +8,7 @@ cache:
 
 os:
   - linux
-# - osx
+  - osx
 node_js:
   - "7"
   - "6"
@@ -19,6 +19,7 @@ matrix:
   allow_failures:
     - node_js: "4"
     - node_js: "v0.12.17"
+    - os: osx
 
 script: npm run travis
 env:
