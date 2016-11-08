@@ -117,8 +117,9 @@ describe("TestCases", function() {
 					category.tests.filter(function(test) {
 						var testDirectory = path.join(casesPath, category.name, test);
 						var filterPath = path.join(testDirectory, "test.filter.js");
-						if(fs.existsSync(filterPath)) {
-							return require(filterPath)(config);
+						if(fs.existsSync(filterPath) && !require(filterPath)(config)) {
+							describe.skip(test, function() { it('filtered')});
+							return false;
 						}
 						return true;
 					}).forEach(function(testName) {
