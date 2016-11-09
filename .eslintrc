@@ -1,0 +1,28 @@
+{
+	"env": {
+		"node": true
+	},
+	"plugins": [
+		"nodeca"
+	],
+	"rules": {
+		"strict": 0,
+		"camelcase": 0,
+		"curly": 0,
+		"indent": [0, "tab"],
+		"nodeca/indent": [2, "tabs", 1 ],
+		"eol-last": 1,
+		"no-shadow": 0,
+		"no-redeclare": 1,
+		"no-extra-bind": 1,
+		"no-empty": 0,
+		"no-process-exit": 1,
+		"no-underscore-dangle": 0,
+		"no-use-before-define": 0,
+		"no-unused-vars": 0,
+		"consistent-return": 0,
+		"no-inner-declarations": 1,
+		"no-loop-func": 1,
+		"space-before-function-paren": [2, "never"] 
+	}
+}

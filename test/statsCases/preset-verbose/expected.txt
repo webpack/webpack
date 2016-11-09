@@ -1,0 +1,28 @@
+Hash: 27b51279f30c19c26769
+Time: Xms
+      Asset       Size  Chunks             Chunk Names
+  bundle.js    3.83 kB       0  [emitted]  main
+1.bundle.js  159 bytes       1  [emitted]  
+2.bundle.js  101 bytes       2  [emitted]  
+3.bundle.js  180 bytes       3  [emitted]  
+chunk    {0} bundle.js (main) 73 bytes [rendered]
+    [0] (webpack)/test/statsCases/preset-verbose/index.js 51 bytes {0} [built]
+       factory:Xms building:Xms = Xms
+    [1] (webpack)/test/statsCases/preset-verbose/a.js 22 bytes {0} [built]
+        cjs require ./a [0] (webpack)/test/statsCases/preset-verbose/index.js 1:0-14
+       [0] Xms -> factory:Xms building:Xms = Xms
+chunk    {1} 1.bundle.js 54 bytes {0} [rendered]
+    [3] (webpack)/test/statsCases/preset-verbose/c.js 54 bytes {1} [built]
+        amd require ./c [0] (webpack)/test/statsCases/preset-verbose/index.js 3:0-16
+       [0] Xms -> factory:Xms building:Xms = Xms
+chunk    {2} 2.bundle.js 22 bytes {0} [rendered]
+    [2] (webpack)/test/statsCases/preset-verbose/b.js 22 bytes {2} [built]
+        amd require ./b [0] (webpack)/test/statsCases/preset-verbose/index.js 2:0-16
+       [0] Xms -> factory:Xms building:Xms = Xms
+chunk    {3} 3.bundle.js 44 bytes {1} [rendered]
+    [4] (webpack)/test/statsCases/preset-verbose/d.js 22 bytes {3} [built]
+        require.ensure item ./d [3] (webpack)/test/statsCases/preset-verbose/c.js 1:0-52
+       [0] Xms -> [3] Xms -> factory:Xms building:Xms = Xms
+    [5] (webpack)/test/statsCases/preset-verbose/e.js 22 bytes {3} [built]
+        require.ensure item ./e [3] (webpack)/test/statsCases/preset-verbose/c.js 1:0-52
+       [0] Xms -> [3] Xms -> factory:Xms building:Xms = Xms

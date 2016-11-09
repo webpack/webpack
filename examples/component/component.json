@@ -1,0 +1,17 @@
+{
+	"name": "component-webpack-example",
+	"repo": "webpack/webpack",
+	"version": "0.0.1",
+	"dependencies": {
+		"webpack/a-component": "*",
+		"webpack/c-component": "*"
+	},
+	"local": [
+		"b-component"
+	],
+	"paths": [
+		"my-components"
+	],
+	"scripts": ["example.js"],
+	"license": "MIT"
+}

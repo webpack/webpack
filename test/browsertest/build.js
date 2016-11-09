@@ -1,28 +1,47 @@
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
 var cp = require('child_process');
 
 var argv = process.argv;
 argv.shift();
 argv.shift();
-var extraArgs = argv.join(" ");
+var extraArgs = argv;
 
-cp.exec("node ../../bin/webpack.js "+extraArgs+" --single --libary libary1 node_modules/libary1 js/libary1.js", function (error, stdout, stderr) {
-	console.log('libary1 stdout:\n' + stdout);
-	console.log('libary1 stderr:\n ' + stderr);
-	if (error !== null) {
-		console.log('libary1 error: ' + error);
+function bindOutput(p) {
+	p.stdout.on("data", function(data) {
+		process.stdout.write(data);
+	});
+	p.stderr.on("data", function(data) {
+		process.stderr.write(data);
+	});
+}
+function join(a, b) {
+	a = a.slice(0);
+	Array.prototype.push.apply(a, b);
+	return a;
+}
+
+console.log("compile scripts...");
+
+var extraArgsNoWatch = extraArgs.slice(0);
+var watchIndex = extraArgsNoWatch.indexOf("--watch");
+if(watchIndex != -1) extraArgsNoWatch.splice(watchIndex, 1);
+// node ../../bin/webpack --output-pathinfo --colors --optimize-max-chunks 1 --output-library library1 node_modules/library1 js/library1
+var library1 = cp.spawn("node", join(["../../bin/webpack.js", "--output-pathinfo", "--colors", "--optimize-max-chunks", "1", "--output-library", "library1",
+										"node_modules/library1", "js/library1.js"], extraArgsNoWatch));
+bindOutput(library1);
+library1.on("exit", function(code) {
+	if(code === 0) {
+		// node ../../bin/webpack --output-pathinfo --colors --resolve-alias vm=vm-browserify --output-public-path js/ --output-chunk-file [name].web.js --module-bind json --module-bind css=style!css --module-bind less=style!css!less --module-bind coffee --module-bind jade --prefetch ./lib/stylesheet.less --optimize-dedupe --labeled-modules ./lib/index "js/web.js?h=[hash]"
+		var main = cp.spawn("node", join(["../../bin/webpack.js", "--output-pathinfo", "--colors", "--resolve-alias", "vm=vm-browserify", "--workers",
+											"--output-public-path", "js/", "--output-chunk-file", "[name].web.js",
+											"--module-bind", "json", "--module-bind", "css=style!css", "--module-bind", "less=style/url!file?postfix=.css&string!less", "--module-bind", "coffee", "--module-bind", "jade", "--prefetch", "./lib/stylesheet.less", "--optimize-dedupe", "--labeled-modules", "./lib/index", "js/web.js?h=[hash]", "--progress"], extraArgs));
+		bindOutput(main);
 	}
 });
-cp.exec("node ../../bin/webpack.js "+extraArgs+" --script-src-prefix js/ --libary libary2 node_modules/libary2 js/libary2.js", function (error, stdout, stderr) {
-	console.log('libary2 stdout:\n' + stdout);
-	console.log('libary2 stderr:\n ' + stderr);
-	if (error !== null) {
-		console.log('libary2 error: ' + error);
-	}
-});
-cp.exec("node ../../bin/webpack.js "+extraArgs+" --script-src-prefix js/ lib/index js/web.js", function (error, stdout, stderr) {
-	console.log('web stdout:\n' + stdout);
-	console.log('web stderr:\n ' + stderr);
-	if (error !== null) {
-		console.log('web error: ' + error);
-	}
-});
+// node ../../bin/webpack --output-pathinfo --colors --output-library-target umd --output-jsonp-function webpackJsonpLib2 --output-public-path js/ --output-chunk-file [chunkhash].lib2.js --config library2config.coffee library2b library2 js/library2.js
+var library2 = cp.spawn("node", join(["../../bin/webpack.js", "--output-pathinfo", "--colors", "--output-library-target", "umd", "--output-jsonp-function", "webpackJsonpLib2",
+									"--output-public-path", "js/", "--output-chunk-file", "[chunkhash].lib2.js", "--config", "library2config.coffee", "library2b", "library2", "js/library2.js"], extraArgsNoWatch));
+bindOutput(library2);

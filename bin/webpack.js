@@ -1,93 +1,192 @@
 #!/usr/bin/env node
 
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
 var path = require("path");
-var fs = require("fs");
-var argv = require("optimist")
-	.usage("Usage: $0 <input> <output>")
-	
-	.boolean("single")
-	.describe("single", "Disable Code Splitting")
-	.default("single", false)
-	
-	.boolean("min")
-	.describe("min", "Minimize it with uglifyjs")
-	.default("min", false)
-	
-	.boolean("filenames")
-	.describe("filenames", "Output Filenames Into File")
-	.default("filenames", false)
-	
-	.string("options")
-	.describe("options", "Options JSON File")
-	
-	.string("script-src-prefix")
-	.describe("script-src-prefix", "Path Prefix For JavaScript Loading")
-	
-	.string("libary")
-	.describe("libary", "Stores the exports into this variable")
-	
-	.demand(1)
-	.argv;
+// Local version replace global one
+try {
+	var localWebpack = require.resolve(path.join(process.cwd(), "node_modules", "webpack", "bin", "webpack.js"));
+	if(__filename !== localWebpack) {
+		return require(localWebpack);
+	}
+} catch(e) {}
+var optimist = require("optimist")
+	.usage("webpack " + require("../package.json").version + "\n" +
+		"Usage: https://webpack.github.io/docs/cli.html");
 
-var input = argv._[0],
-	output = argv._[1];
+require("./config-optimist")(optimist);
 
-if (input && input[0] !== '/' && input[1] !== ':') {
-	input = path.join(process.cwd(), input);
-}
-if (output && output[0] !== '/' && input[1] !== ':') {
-	output = path.join(process.cwd(), output);
-}
+optimist
+	.boolean("json").alias("json", "j").describe("json")
+	.boolean("colors").alias("colors", "c").describe("colors")
+	.string("sort-modules-by").describe("sort-modules-by")
+	.string("sort-chunks-by").describe("sort-chunks-by")
+	.string("sort-assets-by").describe("sort-assets-by")
+	.boolean("hide-modules").describe("hide-modules")
+	.string("display-exclude").describe("display-exclude")
+	.boolean("display-modules").describe("display-modules")
+	.boolean("display-chunks").describe("display-chunks")
+	.boolean("display-error-details").describe("display-error-details")
+	.boolean("display-origins").describe("display-origins")
+	.boolean("display-cached").describe("display-cached")
+	.boolean("display-cached-assets").describe("display-cached-assets")
+	.boolean("display-reasons").alias("display-reasons", "verbose").alias("display-reasons", "v").describe("display-reasons");
 
-var options = {};
+var argv = optimist.argv;
 
-if(argv.options) {
-	options = JSON.parse(fs.readFileSync(argv.options, "utf-8"));
-}
+var options = require("./convert-argv")(optimist, argv);
 
-if(argv["script-src-prefix"]) {
-	options.scriptSrcPrefix = argv["script-src-prefix"];
+function ifArg(name, fn, init) {
+	if(Array.isArray(argv[name])) {
+		if(init) init();
+		argv[name].forEach(fn);
+	} else if(typeof argv[name] !== "undefined") {
+		if(init) init();
+		fn(argv[name], -1);
+	}
 }
 
-if(argv.min) {
-	options.minimize = true;
-}
+function processOptions(options) {
+	// process Promise
+	if(typeof options.then === "function") {
+		options.then(processOptions).catch(function(err) {
+			console.error(err.stack || err);
+			process.exit(); // eslint-disable-line
+		});
+		return;
+	}
 
-if(argv.filenames) {
-	options.includeFilenames = true;
-}
+	var firstOptions = Array.isArray(options) ? options[0] : options;
 
-if(argv.libary) {
-	options.libary = argv.libary;
-}
+	var outputOptions = Object.create(options.stats || firstOptions.stats || {});
+	if(typeof outputOptions.context === "undefined")
+		outputOptions.context = firstOptions.context;
 
-var webpack = require("../lib/webpack.js");
+	ifArg("json", function(bool) {
+		if(bool)
+			outputOptions.json = bool;
+	});
 
-if(argv.single) {
-	webpack(input, options, function(err, source) {
-		if(err) {
-			console.error(err);
-			return;
-		}
-		if(output) {
-			fs.writeFileSync(output, source, "utf-8");
-		} else {
-			process.stdout.write(source);
+	if(typeof outputOptions.colors === "undefined")
+		outputOptions.colors = require("supports-color");
+
+	ifArg("sort-modules-by", function(value) {
+		outputOptions.modulesSort = value;
+	});
+
+	ifArg("sort-chunks-by", function(value) {
+		outputOptions.chunksSort = value;
+	});
+
+	ifArg("sort-assets-by", function(value) {
+		outputOptions.assetsSort = value;
+	});
+
+	ifArg("display-exclude", function(value) {
+		outputOptions.exclude = value;
+	});
+
+	if(!outputOptions.json) {
+		if(typeof outputOptions.cached === "undefined")
+			outputOptions.cached = false;
+		if(typeof outputOptions.cachedAssets === "undefined")
+			outputOptions.cachedAssets = false;
+
+		ifArg("display-chunks", function(bool) {
+			outputOptions.modules = !bool;
+			outputOptions.chunks = bool;
+		});
+
+		ifArg("display-reasons", function(bool) {
+			outputOptions.reasons = bool;
+		});
+
+		ifArg("display-error-details", function(bool) {
+			outputOptions.errorDetails = bool;
+		});
+
+		ifArg("display-origins", function(bool) {
+			outputOptions.chunkOrigins = bool;
+		});
+
+		ifArg("display-cached", function(bool) {
+			if(bool)
+				outputOptions.cached = true;
+		});
+
+		ifArg("display-cached-assets", function(bool) {
+			if(bool)
+				outputOptions.cachedAssets = true;
+		});
+
+		if(!outputOptions.exclude && !argv["display-modules"])
+			outputOptions.exclude = ["node_modules", "bower_components", "jam", "components"];
+	} else {
+		if(typeof outputOptions.chunks === "undefined")
+			outputOptions.chunks = true;
+		if(typeof outputOptions.modules === "undefined")
+			outputOptions.modules = true;
+		if(typeof outputOptions.chunkModules === "undefined")
+			outputOptions.chunkModules = true;
+		if(typeof outputOptions.reasons === "undefined")
+			outputOptions.reasons = true;
+		if(typeof outputOptions.cached === "undefined")
+			outputOptions.cached = true;
+		if(typeof outputOptions.cachedAssets === "undefined")
+			outputOptions.cachedAssets = true;
+	}
+
+	ifArg("hide-modules", function(bool) {
+		if(bool) {
+			outputOptions.modules = false;
+			outputOptions.chunkModules = false;
 		}
 	});
-} else {
-	output = output || path.join(process.cwd(), "js", "web.js");
-	if(!options.outputDirectory) options.outputDirectory = path.dirname(output);
-	if(!options.output) options.output = path.basename(output);
-	if(!options.outputPostfix) options.outputPostfix = "." + path.basename(output);
-	var outExists = path.existsSync(options.outputDirectory);
-	if(!outExists)
-		fs.mkdirSync(options.outputDirectory);
-	webpack(input, options, function(err, stats) {
+
+	var webpack = require("../lib/webpack.js");
+
+	Error.stackTraceLimit = 30;
+	var lastHash = null;
+	var compiler = webpack(options);
+
+	function compilerCallback(err, stats) {
+		if(!options.watch) {
+			// Do not keep cache anymore
+			compiler.purgeInputFileSystem();
+		}
 		if(err) {
-			console.error(err);
+			lastHash = null;
+			console.error(err.stack || err);
+			if(err.details) console.error(err.details);
+			if(!options.watch) {
+				process.on("exit", function() {
+					process.exit(1); // eslint-disable-line
+				});
+			}
 			return;
 		}
-		console.log(stats);
-	});
+		if(outputOptions.json) {
+			process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
+		} else if(stats.hash !== lastHash) {
+			lastHash = stats.hash;
+			process.stdout.write(stats.toString(outputOptions) + "\n");
+		}
+	}
+	if(options.watch) {
+		var primaryOptions = !Array.isArray(options) ? options : options[0];
+		var watchOptions = primaryOptions.watchOptions || primaryOptions.watch || {};
+		if(watchOptions.stdin) {
+			process.stdin.on('end', function() {
+				process.exit(0); // eslint-disable-line
+			});
+			process.stdin.resume();
+		}
+		compiler.watch(watchOptions, compilerCallback);
+	} else
+		compiler.run(compilerCallback);
+
 }
+
+processOptions(options);

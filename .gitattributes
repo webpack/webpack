@@ -1,0 +1,3 @@
+* text=auto
+examples/* eol=lf
+bin/* eol=lf

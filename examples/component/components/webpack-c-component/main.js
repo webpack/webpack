@@ -1,0 +1,1 @@
+module.exports = "C" + require("a-component") + require("webpack-a-component");

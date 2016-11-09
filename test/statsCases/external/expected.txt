@@ -1,0 +1,7 @@
+Hash: b9e9ee409ba36136a5ea
+Time: Xms
+    Asset     Size  Chunks             Chunk Names
+bundle.js  1.52 kB       0  [emitted]  main
+chunk    {0} bundle.js (main) 59 bytes [rendered]
+    [0] (webpack)/test/statsCases/external/index.js 17 bytes {0} [built]
+    [1] external "test" 42 bytes {0} [not cacheable]

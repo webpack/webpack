@@ -1,0 +1,6 @@
+{
+	"browser": {
+		"wrong-module": false,
+		"./file.js": false
+	}
+}
