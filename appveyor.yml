@@ -12,7 +12,7 @@ environment:
 install:
   - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version)
   - npm install yarn -g
-  - yarn install --msvs_version=2013
+  - yarn install
   - yarn link
   - yarn link webpack
 

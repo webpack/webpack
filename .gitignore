@@ -8,3 +8,5 @@
 .DS_Store
 *.log
 .idea
+yarn.lock
+.vscode

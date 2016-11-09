@@ -2,7 +2,7 @@
 # example.js
 
 ``` javascript
-var Worker = require("worker!./worker");
+var Worker = require("worker-loader!./worker");
 var worker = new Worker;
 worker.postMessage("b");
 worker.onmessage = function(event) {
@@ -335,9 +335,9 @@ Time: 191ms
   hash.worker.js  3.83 kB          [emitted]  
        output.js  3.18 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 297 bytes [entry] [rendered]
-    > main [1] ./example.js 
-    [0] (webpack)/~/worker-loader!./worker.js 96 bytes {0} [not cacheable] [built]
+chunk    {0} output.js (main) 302 bytes [entry] [rendered]
+    > main [1] ./example.js
+    [0] (webpack)/~/worker-loader!./worker.js 96 bytes {0} [built]
         cjs require worker!./worker [1] ./example.js 1:13-39
     [1] ./example.js 201 bytes {0} [built]
 Child worker:
@@ -358,9 +358,9 @@ Child worker:
         [4] ../require.context/templates/c.js 80 bytes {0} [optional] [built]
             context element ./c [0] ../require.context/templates ^\.\/.*$
             context element ./c.js [0] ../require.context/templates ^\.\/.*$
-    chunk    {1} hash.worker.js (main) 162 bytes [entry] [rendered]
-        > main [1] ./worker.js 
-        [1] ./worker.js 162 bytes {1} [built]
+    chunk    {1} hash.worker.js (main) 168 bytes [entry] [rendered]
+        > main [1] ./worker.js
+        [1] ./worker.js 168 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
@@ -374,9 +374,9 @@ Time: 329ms
   hash.worker.js  842 bytes          [emitted]  
        output.js  655 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 297 bytes [entry] [rendered]
-    > main [1] ./example.js 
-    [0] (webpack)/~/worker-loader!./worker.js 96 bytes {0} [not cacheable] [built]
+chunk    {0} output.js (main) 302 bytes [entry] [rendered]
+    > main [1] ./example.js
+    [0] (webpack)/~/worker-loader!./worker.js 96 bytes {0} [built]
         cjs require worker!./worker [1] ./example.js 1:13-39
     [1] ./example.js 201 bytes {0} [built]
 Child worker:
@@ -397,7 +397,7 @@ Child worker:
         [4] ../require.context/templates/c.js 80 bytes {0} [optional] [built]
             context element ./c [0] ../require.context/templates ^\.\/.*$
             context element ./c.js [0] ../require.context/templates ^\.\/.*$
-    chunk    {1} hash.worker.js (main) 162 bytes [entry] [rendered]
-        > main [1] ./worker.js 
-        [1] ./worker.js 162 bytes {1} [built]
+    chunk    {1} hash.worker.js (main) 168 bytes [entry] [rendered]
+        > main [1] ./worker.js
+        [1] ./worker.js 168 bytes {1} [built]
 ```
