@@ -257,6 +257,11 @@ module.exports = function(yargs) {
 				describe: "Profile the compilation and include information in stats",
 				group: ADVANCED_GROUP
 			},
+			"require": {
+				type: "string",
+				describe: "Module to preload (option can be repeated)",
+				group: ADVANCED_GROUP
+			},
 			"d": {
 				type: "boolean",
 				describe: "shortcut for --debug --devtool eval-cheap-module-source-map --output-pathinfo",
@@ -266,6 +271,11 @@ module.exports = function(yargs) {
 				type: "boolean",
 				describe: "shortcut for --optimize-minimize --define process.env.NODE_ENV=\"production\"",
 				group: BASIC_GROUP
-			}
+			},
+			"r": {
+				type: "string",
+				describe: "shortcut for --require",
+				group: ADVANCED_GROUP
+			},
 		}).strict();
 };
