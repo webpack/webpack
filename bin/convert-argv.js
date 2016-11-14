@@ -296,6 +296,7 @@ module.exports = function(yargs, argv, convertOptions) {
 			ifArgPair(arg, function(name, binding) {
 				if(name === null) {
 					name = binding;
+					binding += "-loader";
 				}
 				options.module[collection].push({
 					test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
