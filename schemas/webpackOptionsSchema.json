@@ -144,8 +144,7 @@
                 "instanceof": "RegExp"
               },
               "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
+              "type": "array"
             },
             {
               "instanceof": "RegExp"
