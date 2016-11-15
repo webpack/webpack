@@ -219,11 +219,6 @@ module.exports = function(yargs) {
 				describe: "Minimize javascript and switches loaders to minimizing",
 				group: OPTIMIZE_GROUP
 			},
-			"optimize-dedupe": {
-				type: "boolean",
-				describe: "Optimize duplicate module sources in the bundle",
-				group: OPTIMIZE_GROUP
-			},
 			"prefetch": {
 				type: "string",
 				describe: "Prefetch this request (Example: --prefetch ./file.js)",

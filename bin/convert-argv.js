@@ -457,12 +457,6 @@ module.exports = function(yargs, argv, convertOptions) {
 			}));
 		});
 
-		ifBooleanArg("optimize-dedupe", function() {
-			ensureArray(options, "plugins");
-			var DedupePlugin = require("../lib/optimize/DedupePlugin");
-			options.plugins.push(new DedupePlugin());
-		});
-
 		ifArg("prefetch", function(request) {
 			ensureArray(options, "plugins");
 			var PrefetchPlugin = require("../lib/PrefetchPlugin");
