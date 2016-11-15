@@ -73,30 +73,17 @@ describe("TestCases", function() {
 		]
 	}, {
 		name: "minimized-source-map",
+		devtool: "eval-cheap-module-source-map",
 		minimize: true,
 		plugins: [
 			new webpack.optimize.UglifyJsPlugin()
 		]
 	}, {
-		name: "deduped",
-		plugins: [
-			new webpack.optimize.DedupePlugin(),
-			new webpack.NamedModulesPlugin()
-		]
-	}, {
-		name: "minimized-deduped",
+		name: "minimized-hashed-modules",
 		minimize: true,
 		plugins: [
-			new webpack.optimize.DedupePlugin(),
-			new webpack.optimize.UglifyJsPlugin()
-		]
-	}, {
-		name: "optimized",
-		minimize: true,
-		plugins: [
-			new webpack.optimize.DedupePlugin(),
-			new webpack.optimize.OccurrenceOrderPlugin(),
-			new webpack.optimize.UglifyJsPlugin()
+			new webpack.optimize.UglifyJsPlugin(),
+			new webpack.HashedModuleIdsPlugin()
 		]
 	}, {
 		name: "all-combined",
@@ -104,8 +91,6 @@ describe("TestCases", function() {
 		minimize: true,
 		plugins: [
 			new webpack.HotModuleReplacementPlugin(),
-			new webpack.optimize.DedupePlugin(),
-			new webpack.optimize.OccurrenceOrderPlugin(),
 			new webpack.optimize.UglifyJsPlugin(),
 			new webpack.NamedModulesPlugin()
 		]
@@ -113,7 +98,7 @@ describe("TestCases", function() {
 		describe(config.name, function() {
 			categories.forEach(function(category) {
 				describe(category.name, function() {
-					this.timeout(20000);
+					this.timeout(30000);
 					category.tests.filter(function(test) {
 						var testDirectory = path.join(casesPath, category.name, test);
 						var filterPath = path.join(testDirectory, "test.filter.js");
