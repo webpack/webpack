@@ -26,7 +26,9 @@ it("should parse template strings in sync requires", function() {
 	var imports = [
 		require(`./sync/${name}Test`),
 		require(`./sync/${name}${suffix}`),
-		require(String.raw`./sync/${name.slice(0, 1)}y${name.slice(2)}${suffix}`)
+		require(String.raw`./sync/${name.slice(0, 1)}y${name.slice(2)}${suffix}`),
+		require(`./sync/sync${"Test"}`),
+		require(String.raw`./sync/${"sync"}Test`)
 	];
 
 	for (var i = 0; i < imports.length; i++) {
