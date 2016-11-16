@@ -1,7 +1,7 @@
-[![webpack](https://webpack.github.io/assets/logo.png)](https://webpack.github.io)
+[![webpack](https://webpack.js.org/assets/logo.png)](https://webpack.js.org)
 
 
-[![OpenCollective](https://opencollective.com/webpack/backers/badge.svg)](#backers) 
+[![OpenCollective](https://opencollective.com/webpack/backers/badge.svg)](#backers)
 [![OpenCollective](https://opencollective.com/webpack/sponsors/badge.svg)](#sponsors)
 
 [![NPM version][npm-image]][npm-url] [![Gitter chat][gitter-image]][gitter-url] [![Downloads][downloads-image]][downloads-url]
@@ -19,7 +19,7 @@ donation
 
 [![BADGINATOR][badginator-image]][badginator-url]
 
-[documentation](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
+[documentation](https://webpack.js.org/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
 
 # Introduction
 
@@ -38,7 +38,7 @@ or packaging just about any resource or asset.
 
 # Getting Started
 
-Check out webpack's [documentation](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=trdr) for quick Getting Started guide, in-depth usage,
+Check out webpack's [documentation](https://webpack.js.org/docs/?utm_source=github&utm_medium=readme&utm_campaign=trdr) for quick Getting Started guide, in-depth usage,
 tutorials and resources.
 
 # Installation
@@ -50,7 +50,7 @@ global:
 `npm install webpack -g`
 
 Usage:
-https://webpack.github.io/docs/tutorials/getting-started/
+https://webpack.js.org/docs/tutorials/getting-started/
 
 # Examples
 
@@ -61,7 +61,7 @@ Take a look at the [`examples`](https://github.com/webpack/webpack/tree/master/e
 ## Plugins
 
 webpack has a [rich plugin
-interface](https://webpack.github.io/docs/plugins.html). Most of the features
+interface](https://webpack.js.org/docs/plugins.html). Most of the features
 within webpack itself use this plugin interface. This makes webpack very
 **flexible**.
 
@@ -75,12 +75,12 @@ and incredibly **fast** on incremental compilations.
 
 webpack enables use of loaders to preprocess files. This allows you to bundle
 **any static resource** way beyond JavaScript. You can easily [write your own
-loaders](https://webpack.github.io/docs/loaders.html) using node.js.
+loaders](https://webpack.js.org/docs/loaders.html) using node.js.
 
 Loaders are activated by using `loadername!` prefixes in `require()` statements,
 or are automatically applied via regex from your webpack configuration.
 
-Please see [Using Loaders](https://webpack.github.io/docs/using-loaders.html) for more information.
+Please see [Using Loaders](https://webpack.js.org/docs/using-loaders.html) for more information.
 
 **basic**
 * [`json`](https://github.com/webpack/json-loader): Loads file as JSON
@@ -130,7 +130,7 @@ Please see [Using Loaders](https://webpack.github.io/docs/using-loaders.html) fo
 * [`transform`](https://github.com/webpack/transform-loader): Use browserify transforms as loader.
 * [`jsbeautify`](https://github.com/tomaszczechowski/jsbeautify-loader): Autoformatting code.
 
-For the full list of loaders, see [list of loaders](https://webpack.github.io/docs/list-of-loaders.html).
+For the full list of loaders, see [list of loaders](https://webpack.js.org/docs/list-of-loaders.html).
 
 ## Module Format (AMD/CommonJS)
 
@@ -143,7 +143,7 @@ simple expressions. This allows you to **support most existing libraries** out o
 webpack allows you to split your codebase into multiple chunks. Chunks are
 loaded asynchronously at runtime. This reduces the initial loading time.
 
-[Code Splitting documentation](https://webpack.github.io/docs/code-splitting.html)
+[Code Splitting documentation](https://webpack.js.org/docs/code-splitting.html)
 
 ## Optimizations
 
@@ -153,7 +153,7 @@ you full control of what is loaded initially and what is loaded at runtime
 through code splitting. It can also make your code chunks **cache
 friendly** by using hashes.
 
-[Optimization documentation](https://webpack.github.io/docs/optimization.html)
+[Optimization documentation](https://webpack.js.org/docs/optimization.html)
 
 # A small example of what's possible
 
@@ -210,12 +210,12 @@ function loadTemplateAsync (name, callback) {
 
 ## Documentation
 
-[documentation](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=documentation)
+[documentation](https://webpack.js.org/docs/?utm_source=github&utm_medium=readme&utm_campaign=documentation)
 
 
 ## Changelog
 
-[changelog](https://webpack.github.io/docs/changelog.html)
+[changelog](https://webpack.js.org/docs/changelog.html)
 
 
 ## Tests
