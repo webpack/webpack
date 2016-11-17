@@ -362,6 +362,10 @@
           "description": "Prefixes every line of the source in the bundle with this string.",
           "type": "string"
         },
+        "strictModuleExceptionHandling": {
+          "description": "Handles exceptions in module loading correctly at a performance cost.",
+          "type": "boolean"
+        },
         "umdNamedDefine": {
           "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
           "type": "boolean"
