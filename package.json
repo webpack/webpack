@@ -85,7 +85,7 @@
   "scripts": {
     "test": "mocha --harmony --check-leaks",
     "travis": "npm run cover -- --report lcovonly",
-    "appveyor": "mocha --harmony",
+    "appveyor": "node --max_old_space_size=4096 node_modules\\mocha\\bin\\mocha --harmony",
     "build:examples": "cd examples && node buildAll.js",
     "pretest": "npm run lint-files",
     "postcover": "npm run lint-files && npm run nsp",
