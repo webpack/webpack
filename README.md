@@ -108,7 +108,7 @@ Please see [Using Loaders](https://webpack.github.io/docs/using-loaders.html) fo
 
 **templating**
 * [`html`](https://github.com/webpack/html-loader): Exports HTML as string, require references to static resources.
-* [`jade`](https://github.com/webpack/jade-loader): Loads jade template and returns a function
+* [`pug`](https://github.com/pugjs/pug-loader): Loads pug template and returns a function
 * [`handlebars`](https://github.com/altano/handlebars-loader): Loads handlebars template and returns a function
 * [`ractive`](https://github.com/rstacruz/ractive-loader): Pre-compiles Ractive templates for interactive DOM manipulation
 * [`markdown`](https://github.com/peerigon/markdown-loader): Compiles Markdown to HTML
