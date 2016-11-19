@@ -82,6 +82,9 @@
               },
               {
                 "type": "object"
+              },
+              {
+                "type": "boolean"
               }
             ]
           },
