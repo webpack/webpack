@@ -1,5 +1,8 @@
 {
 	"root": true,
+	"extends": [
+		"eslint:recommended"
+	],
 	"env": {
 		"node": true
 	},
@@ -21,6 +24,8 @@
 		"consistent-return": 0,
 		"no-inner-declarations": 1,
 		"no-loop-func": 1,
-		"space-before-function-paren": [2, "never"] 
+		"space-before-function-paren": [2, "never"],
+		"no-console": 0,
+		"comma-dangle": 0
 	}
 }
