@@ -280,7 +280,7 @@ function processOptions(options) {
 				console.error("\u001b[1m\u001b[31m" + e.message + "\u001b[39m\u001b[22m");
 			else
 				console.error(e.message);
-			process.exit(1);
+			process.exit(1); // eslint-disable-line no-process-exit
 		}
 		throw e;
 	}
