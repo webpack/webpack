@@ -8,4 +8,8 @@ it("should match rule with resource query", function() {
 		"a",
 		"?query"
 	]);
+	var a3 = require("./a?other");
+	a3.should.be.eql([
+		"a"
+	]);
 });
