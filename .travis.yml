@@ -35,6 +35,7 @@ matrix:
   allow_failures:
     - node_js: "v0.12.17"
     - os: osx
+  fast_finish: true
 
 script: npm run travis:$JOB_PART
 
