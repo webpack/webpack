@@ -762,6 +762,10 @@
         "maxAssetSize": {
           "description": "Filesize limit (in bytes) when exceeded, that webpack will provide performance hints",
           "type": "number"
+        },
+        "errorOnHint": {
+          "description": "Throw errors instead of warnings when performance hints are found",
+          "type": "boolean"
         }
       },
       "type": "object"
