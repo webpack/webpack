@@ -567,6 +567,9 @@
         "resource": {
           "$ref": "#/definitions/ruleSet-condition"
         },
+        "resourceQuery": {
+          "$ref": "#/definitions/ruleSet-condition"
+        },
         "rules": {
           "$ref": "#/definitions/ruleSet-rules"
         },
@@ -589,6 +592,9 @@
       "anyOf": [
         {
           "$ref": "#/definitions/ruleSet-use-item"
+        },
+        {
+          "instanceof": "Function"
         },
         {
           "items": {
