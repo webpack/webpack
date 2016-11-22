@@ -756,7 +756,7 @@
           "type": "boolean"
         },
         "maxInitialChunkSize": {
-          "description": "Total size of all initial chunks (in kb)",
+          "description": "Total size of all initial chunks (in bytes)",
           "type": "number"
         },
         "maxAssetSize": {
