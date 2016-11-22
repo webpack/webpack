@@ -760,7 +760,7 @@
           "type": "number"
         },
         "maxAssetSize": {
-          "description": "Filesize limit (in kB) when exceeded, that webpack will provide performance hints",
+          "description": "Filesize limit (in bytes) when exceeded, that webpack will provide performance hints",
           "type": "number"
         }
       },
