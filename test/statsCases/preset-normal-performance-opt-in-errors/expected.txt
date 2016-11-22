@@ -1,0 +1,32 @@
+Hash: <CLR=BOLD>c45568f88684e80dbde5</CLR>
+Time: <CLR=BOLD>X</CLR>ms
+  <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=BOLD>Chunk Names</CLR>
+   <CLR=32,BOLD>0.js</CLR>  227 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
+   <CLR=32,BOLD>1.js</CLR>  100 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
+   <CLR=32,BOLD>2.js</CLR>  178 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
+<CLR=33,BOLD>main.js</CLR>     <CLR=33,BOLD>419 kB</CLR>       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
+chunk    {<CLR=33,BOLD>0</CLR>} <CLR=32,BOLD>0.js</CLR> 54 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [rendered]</CLR>
+    [5] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance-opt-in-errors/c.js</CLR> 54 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+chunk    {<CLR=33,BOLD>1</CLR>} <CLR=32,BOLD>1.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [rendered]</CLR>
+    [4] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance-opt-in-errors/b.js</CLR> 22 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
+chunk    {<CLR=33,BOLD>2</CLR>} <CLR=32,BOLD>2.js</CLR> 44 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [rendered]</CLR>
+    [6] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance-opt-in-errors/d.js</CLR> 22 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
+    [7] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance-opt-in-errors/e.js</CLR> 22 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
+chunk    {<CLR=33,BOLD>3</CLR>} <CLR=32,BOLD>main.js</CLR> (main) 413 kB<CLR=33,BOLD> [entry]</CLR><CLR=32,BOLD> [rendered]</CLR>
+    [0] <CLR=BOLD>(webpack)/buildin/global.js</CLR> 487 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+    [1] <CLR=BOLD>(webpack)/buildin/module.js</CLR> 528 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+    [2] <CLR=BOLD>(webpack)/~/lodash/index.js</CLR> 411 kB {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+    [3] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance-opt-in-errors/a.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+    [8] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance-opt-in-errors/index.js</CLR> 93 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+
+<CLR=31,BOLD>ERROR in asset size limit: The following assets exceed the recommended size limit (300 kB). 
+This can impact web performance.
+Assets: 
+  main.js</CLR>
+
+<CLR=31,BOLD>ERROR in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (300 kB). This can impact web performance.
+Entrypoints: 
+
+  main: 419 kB
+      main.js: 419 kB
+</CLR>

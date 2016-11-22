@@ -1,3 +1,4 @@
+/*globals describe it before after  */
 var should = require("should");
 var path = require("path");
 var fs = require("fs");
