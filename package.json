@@ -83,11 +83,11 @@
   ],
   "scripts": {
     "test": "mocha --harmony --check-leaks",
-    "travis": "npm run cover -- --report lcovonly",
+    "travis:test": "npm run cover -- --report lcovonly",
+    "travis:lint": "npm run lint-files && npm run nsp",
     "appveyor": "node --max_old_space_size=4096 node_modules\\mocha\\bin\\mocha --harmony",
     "build:examples": "cd examples && node buildAll.js",
     "pretest": "npm run lint-files",
-    "postcover": "npm run lint-files && npm run nsp",
     "lint-files": "npm run lint && npm run beautify-lint",
     "lint": "eslint lib bin hot",
     "beautify-lint": "beautify-lint lib/**/*.js hot/**/*.js bin/**/*.js benchmark/*.js test/*.js",
