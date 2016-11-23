@@ -1,20 +1,99 @@
 {
-	"name": "webpack",
-	"version": "0.1.0",
-	"author": "Tobias Koppers @sokra",
-	"description": "Bundle CommonJS modules into single script or multiple scripts for web browser",
-	"dependencies": {
-		"esprima": "0.9.8",
-		"optimist": "0.2.x",
-		"uglify-js": "1.2.5"
-	},
-	"devDependencies": {
-		"vows": "*"
-	},
-	"engines": {
-		"node":  ">=0.1.30"
-	},
-	"main": "lib/webpack.js",
-	"bin": "./bin/webpack.js",
-	"licence": "MIT"
+  "name": "webpack",
+  "version": "2.1.0-beta.27",
+  "author": "Tobias Koppers @sokra",
+  "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
+  "dependencies": {
+    "acorn": "^4.0.3",
+    "ajv": "^4.7.0",
+    "ajv-keywords": "^1.1.1",
+    "async": "^2.1.2",
+    "enhanced-resolve": "^2.2.0",
+    "interpret": "^1.0.0",
+    "loader-runner": "^2.2.0",
+    "loader-utils": "^0.2.16",
+    "memory-fs": "~0.3.0",
+    "mkdirp": "~0.5.0",
+    "node-libs-browser": "^2.0.0",
+    "object-assign": "^4.0.1",
+    "source-map": "^0.5.3",
+    "supports-color": "^3.1.0",
+    "tapable": "~0.2.3",
+    "uglify-js": "~2.7.3",
+    "watchpack": "^1.0.0",
+    "webpack-sources": "^0.1.0",
+    "yargs": "^6.0.0"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "beautify-lint": "^1.0.3",
+    "benchmark": "^2.1.1",
+    "bundle-loader": "~0.5.0",
+    "codecov.io": "^0.1.2",
+    "coffee-loader": "~0.7.1",
+    "coffee-script": "^1.10.0",
+    "coveralls": "^2.11.2",
+    "css-loader": "~0.25.0",
+    "es6-promise-polyfill": "^1.1.1",
+    "eslint": "^1.1.0",
+    "express": "~4.13.1",
+    "extract-text-webpack-plugin": "^2.0.0-beta",
+    "file-loader": "~0.9.0",
+    "i18n-webpack-plugin": "^0.3.0",
+    "istanbul": "^0.4.1",
+    "jade": "^1.11.0",
+    "jade-loader": "~0.8.0",
+    "js-beautify": "^1.5.10",
+    "json-loader": "~0.5.1",
+    "less": "^2.5.1",
+    "less-loader": "^2.0.0",
+    "mocha": "^3.1.0",
+    "mocha-lcov-reporter": "^1.0.0",
+    "nsp": "^2.6.1",
+    "raw-loader": "~0.5.0",
+    "react": "^15.2.1",
+    "react-dom": "^15.2.1",
+    "script-loader": "~0.7.0",
+    "should": "^11.1.1",
+    "style-loader": "~0.13.0",
+    "url-loader": "~0.5.0",
+    "val-loader": "~0.5.0",
+    "vm-browserify": "~0.0.0",
+    "webpack-dev-middleware": "^1.0.0",
+    "worker-loader": "~0.7.0"
+  },
+  "engines": {
+    "node": ">=0.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webpack/webpack.git"
+  },
+  "homepage": "https://github.com/webpack/webpack",
+  "main": "lib/webpack.js",
+  "web": "lib/webpack.web.js",
+  "bin": "./bin/webpack.js",
+  "files": [
+    "lib/",
+    "bin/",
+    "buildin/",
+    "hot/",
+    "web_modules/",
+    "schemas/"
+  ],
+  "scripts": {
+    "test": "mocha --harmony --check-leaks",
+    "travis": "npm run cover -- --report lcovonly",
+    "appveyor": "node --max_old_space_size=4096 node_modules\\mocha\\bin\\mocha --harmony",
+    "build:examples": "cd examples && node buildAll.js",
+    "pretest": "npm run lint-files",
+    "postcover": "npm run lint-files && npm run nsp",
+    "lint-files": "npm run lint && npm run beautify-lint",
+    "lint": "eslint lib bin hot",
+    "beautify-lint": "beautify-lint lib/**/*.js hot/**/*.js bin/**/*.js benchmark/*.js test/*.js",
+    "nsp": "nsp check --output summary",
+    "cover": "istanbul cover -x '**/*.runtime.js' node_modules/mocha/bin/_mocha",
+    "beautify": "beautify-rewrite lib/**/*.js hot/**/*.js bin/**/*.js benchmark/*.js test/*.js",
+    "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
+  }
 }

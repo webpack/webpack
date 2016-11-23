@@ -1,0 +1,49 @@
+Hash: 160bbe49f674da1a2284
+Time: Xms
+      Asset       Size  Chunks             Chunk Names
+0.bundle.js  227 bytes       0  [emitted]  
+1.bundle.js  106 bytes       1  [emitted]  
+2.bundle.js  200 bytes       2  [emitted]  
+  bundle.js    5.65 kB       3  [emitted]  main
+chunk    {0} 0.bundle.js 54 bytes {3} [rendered]
+    > [5] (webpack)/test/statsCases/chunks/index.js 3:0-16
+    [2] (webpack)/test/statsCases/chunks/c.js 54 bytes {0} [built]
+        amd require ./c [5] (webpack)/test/statsCases/chunks/index.js 3:0-16
+        [] -> factory:Xms building:Xms = Xms
+chunk    {1} 1.bundle.js 22 bytes {3} [rendered]
+    > [5] (webpack)/test/statsCases/chunks/index.js 2:0-16
+    [1] (webpack)/test/statsCases/chunks/b.js 22 bytes {1} [built]
+        amd require ./b [5] (webpack)/test/statsCases/chunks/index.js 2:0-16
+        [] -> factory:Xms building:Xms = Xms
+chunk    {2} 2.bundle.js 44 bytes {0} [rendered]
+    > [2] (webpack)/test/statsCases/chunks/c.js 1:0-52
+    [3] (webpack)/test/statsCases/chunks/d.js 22 bytes {2} [built]
+        require.ensure item ./d [2] (webpack)/test/statsCases/chunks/c.js 1:0-52
+        [] -> factory:Xms building:Xms = Xms
+    [4] (webpack)/test/statsCases/chunks/e.js 22 bytes {2} [built]
+        require.ensure item ./e [2] (webpack)/test/statsCases/chunks/c.js 1:0-52
+        [] -> factory:Xms building:Xms = Xms
+chunk    {3} bundle.js (main) 73 bytes [entry] [rendered]
+    > main [5] (webpack)/test/statsCases/chunks/index.js 
+    [0] (webpack)/test/statsCases/chunks/a.js 22 bytes {3} [built]
+        cjs require ./a [5] (webpack)/test/statsCases/chunks/index.js 1:0-14
+        [] -> factory:Xms building:Xms = Xms
+    [5] (webpack)/test/statsCases/chunks/index.js 51 bytes {3} [built]
+         factory:Xms building:Xms = Xms
+   [0] (webpack)/test/statsCases/chunks/a.js 22 bytes {3} [built]
+       cjs require ./a [5] (webpack)/test/statsCases/chunks/index.js 1:0-14
+       [] -> factory:Xms building:Xms = Xms
+   [1] (webpack)/test/statsCases/chunks/b.js 22 bytes {1} [built]
+       amd require ./b [5] (webpack)/test/statsCases/chunks/index.js 2:0-16
+       [] -> factory:Xms building:Xms = Xms
+   [2] (webpack)/test/statsCases/chunks/c.js 54 bytes {0} [built]
+       amd require ./c [5] (webpack)/test/statsCases/chunks/index.js 3:0-16
+       [] -> factory:Xms building:Xms = Xms
+   [3] (webpack)/test/statsCases/chunks/d.js 22 bytes {2} [built]
+       require.ensure item ./d [2] (webpack)/test/statsCases/chunks/c.js 1:0-52
+       [] -> factory:Xms building:Xms = Xms
+   [4] (webpack)/test/statsCases/chunks/e.js 22 bytes {2} [built]
+       require.ensure item ./e [2] (webpack)/test/statsCases/chunks/c.js 1:0-52
+       [] -> factory:Xms building:Xms = Xms
+   [5] (webpack)/test/statsCases/chunks/index.js 51 bytes {3} [built]
+        factory:Xms building:Xms = Xms

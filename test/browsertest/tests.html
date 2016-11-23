@@ -1,0 +1,46 @@
+<html>
+	<head>
+		<title>Mocha</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="mocha.css" />
+	</head>
+	<body>
+		<script src="mocha.js"></script>
+		<script src="../../node_modules/es6-promise-polyfill/promise.js"></script>
+		<script>
+			mocha.setup('bdd');
+		</script>
+		<script src="js/library2.commons.js" charset="utf-8"></script>
+		<script src="js/library2.js" charset="utf-8"></script>
+		<script src="js/web.js" charset="utf-8"></script>
+		<!-- fixtures -->
+		<style>
+			.style-test {
+				background: red;
+			}
+			p {
+				margin: 0;
+			}
+		</style>
+		<div id="mocha">
+		<ul class="report">
+		<li class="suite">
+		<h1>styling</h1>
+		<ul>
+			<li class="test">
+				<h2 class="css-styles style-test">style!css loader</h2>
+			</li>
+			<li class="test">
+				<h2 class="less-styles style-test">style!less loader</h2>
+			</li>
+			<li class="test">
+				<h2>file loader: <img src="img/fail.png" id="image" /></h2>
+			</li>
+			</ul>
+		</ul>
+		</div>
+		<script>
+			mocha.run();
+		</script>
+	</body>
+</html>

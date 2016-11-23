@@ -1,0 +1,1 @@
+module.exports = "replacing-module4/module";

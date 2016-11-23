@@ -1,0 +1,5 @@
+@import url(folder/stylesheet-import1.css);
+
+.rule-direct {
+	background: lightgreen;
+}

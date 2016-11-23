@@ -1,199 +1,228 @@
-# modules-webpack
+[![webpack](https://webpack.github.io/assets/logo.png)](https://webpack.github.io)
 
-## Goal
+[![NPM version][npm-image]][npm-url] [![Gitter chat][gitter-image]][gitter-url] [![Downloads][downloads-image]][downloads-url]
 
-As developer you want to reuse existing code.
-As with node.js and web all file are already in the same language, but it is extra work to use your code with the node.js module system and the browser.
-The goal of `webpack` is to bundle CommonJs modules into javascript files which can be loaded by `<script>`-tags.
-Concating all required file has a disadvantage: many code to download (and execute) on page load.
-Therefor `webpack` uses the `require.ensure` function to split your code automatically into multiple bundles which are loaded on demand.
-This happens mostly transparent to the developer with a single function call. Dependencies are resolved for you.
-The result is a smaller inital code download which results in faster page load.
+[![NPM][nodei-image]][nodei-url]
 
-**TL;DR**
+build
+[![Build Status][travis-image]][travis-url] [![Appveyor Status][appveyor-image]][appveyor-url]  [![Coverage Status][coveralls-image]][coveralls-url]
 
-* bundle CommonJs modules
-* create multiple files which are loaded on demand
-* dependencies managed for you
-* faster page load in big webapps
+dependencies
+[![Dependency Status][david-image]][david-url] [![devDependency Status][david-dev-image]][david-dev-url] [![peerDependency Status][david-peer-image]][david-peer-url]
 
-## Example
+donation
+[[![OpenCollective](https://opencollective.com/webpack/backers/badge.svg)](#backers)](https://opencollective.com/webpack#support)
+[[![OpenCollective](https://opencollective.com/webpack/sponsors/badge.svg)](#sponsors)](https://opencollective.com/webpack#support)
+[![gratipay donate button][gratipay-image]][gratipay-url]
 
-``` javascript
-// a.js
-var b = require("./b");
-b.stuff("It works");
+[![BADGINATOR][badginator-image]][badginator-url]
 
-// b.js
-exports.stuff = function(text) {
-	console.log(text);
-}
-```
+[documentation v1.x](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top)
 
-are compiled to
+[documentation v2.x beta](https://webpack.js.org/?utm_source=github&utm_medium=readme&utm_campaign=top)
 
-``` javascript
-(/* small webpack header */)
-({
-0: function(module, exports, require) {
+This README reflects v1.x.
 
-	var b = require(1);
-	b.stuff("It works");
+# Introduction
 
-},
-1: function(module, exports, require) {
+webpack is a bundler for modules. The main purpose is to bundle JavaScript
+files for usage in a browser, yet it is also capable of transforming, bundling,
+or packaging just about any resource or asset.
 
-	exports.stuff = function(text) {
-		console.log(text);
-	}
 
-}
-})
-```
+**TL; DR**
 
-## Browser replacements
+* Bundles both [CommonJS](http://wiki.commonjs.org/) and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
+* Can create a single bundle or multiple chunks that are asynchronously loaded at runtime (to reduce initial loading time).
+* Dependencies are resolved during compilation reducing the runtime size.
+* Loaders can preprocess files while compiling, e.g. coffeescript to JavaScript, handlebars strings to compiled functions, images to Base64, etc.
+* Highly modular plugin system to do whatever else your application requires.
 
-Somethings it happens that browsers require other code than node.js do.
-`webpack` allow module developers to specify replacements which are used in the compile process of `webpack`.
+# Getting Started
 
-Modules in `web_modules` replace modules in `node_modules`.
-`filename.web.js` replaces `filename.js` when required without file extention.
+Check out webpack's [documentation](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=trdr) for quick Getting Started guide, in-depth usage,
+tutorials and resources.
 
-TODO specify replacements in options
+# Installation
 
-## Limitations
+project:
+`npm install webpack --save-dev`
 
-### `require`-function
+global:
+`npm install webpack -g`
 
-As dependencies are resolved before running:
-* `require` should not be overwritten
-* `require` should not be called indirect as `var r = require; r("./a");`
-* arguments of `require` should be literals. `"./abc" + "/def"` is allowed to support long lines.
-* `require.ensure` has the same limitations as `require`
-* the function passed to `require.ensure` should be inlined in the call.
+Usage:
+https://webpack.github.io/docs/tutorials/getting-started/
 
-TODO allow variables passing to `require` like `require("./templates/" + mytemplate)`
-(this will cause all modules matching this pattern to be included in addition to a mapping table)
+# Examples
 
-### node.js specific modules
+Take a look at the [`examples`](https://github.com/webpack/webpack/tree/master/examples) folder.
 
-As node.js specific modules like `fs` will not work in browser they are not included and cause an error.
-You should replace them be own modules if your use them.
+# Features
 
-```
-web_modules
-  fs
-  path
-  ...
-```
+## Plugins
+
+webpack has a [rich plugin
+interface](https://webpack.github.io/docs/plugins.html). Most of the features
+within webpack itself use this plugin interface. This makes webpack very
+**flexible**.
+
+
+## Performance
+
+webpack uses async I/O and has multiple caching levels. This makes webpack fast
+and incredibly **fast** on incremental compilations.
+
+## Loaders
+
+webpack enables use of loaders to preprocess files. This allows you to bundle
+**any static resource** way beyond JavaScript. You can easily [write your own
+loaders](https://webpack.github.io/docs/loaders.html) using node.js.
+
+Loaders are activated by using `loadername!` prefixes in `require()` statements,
+or are automatically applied via regex from your webpack configuration.
+
+Please see [Using Loaders](https://webpack.github.io/docs/using-loaders.html) for more information.
+
+**basic**
+* [`json`](https://github.com/webpack/json-loader): Loads file as JSON
+* [`raw`](https://github.com/webpack/raw-loader): Loads raw content of a file (as utf-8)
+* [`val`](https://github.com/webpack/val-loader): Executes code as module and consider exports as JavaScript code
+* [`script`](https://github.com/webpack/script-loader): Executes a JavaScript file once in global context (like in script tag), requires are not parsed.
+
+**packaging**
+* [`file`](https://github.com/webpack/file-loader): Emits the file into the output folder and returns the (relative) url.
+* [`url`](https://github.com/webpack/url-loader): The url loader works like the file loader, but can return a Data Url if the file is smaller than a limit.
+* [`image`](https://github.com/tcoopman/image-webpack-loader): Compresses your images. Ideal to use together with `file` or `url`.
+* [`svgo-loader`](https://github.com/rpominov/svgo-loader): Compresses SVG images using [svgo](https://github.com/svg/svgo) library
+* [`baggage`](https://github.com/deepsweet/baggage-loader): Automatically require any resources related to the required one
+* [`polymer-loader`](https://github.com/JonDum/polymer-loader): Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules.
+
+**dialects**
+* [`coffee`](https://github.com/webpack/coffee-loader): Loads coffee-script like JavaScript
+* [`babel`](https://github.com/babel/babel-loader): Turn ES6 code into vanilla ES5 using [Babel](https://github.com/babel/babel).
+* [`livescript`](https://github.com/appedemic/livescript-loader): Loads LiveScript like JavaScript
+* [`sweetjs`](https://github.com/jlongster/sweetjs-loader): Use sweetjs macros.
+* [`traceur`](https://github.com/jupl/traceur-loader): Use future JavaScript features with [Traceur](https://github.com/google/traceur-compiler).
+* [`typescript`](https://github.com/andreypopp/typescript-loader): Loads TypeScript like JavaScript.
+
+**templating**
+* [`html`](https://github.com/webpack/html-loader): Exports HTML as string, require references to static resources.
+* [`jade`](https://github.com/webpack/jade-loader): Loads jade template and returns a function
+* [`handlebars`](https://github.com/altano/handlebars-loader): Loads handlebars template and returns a function
+* [`ractive`](https://github.com/rstacruz/ractive-loader): Pre-compiles Ractive templates for interactive DOM manipulation
+* [`markdown`](https://github.com/peerigon/markdown-loader): Compiles Markdown to HTML
+* [`ng-cache`](https://github.com/teux/ng-cache-loader): Puts HTML partials in the Angular's $templateCache
+
+**styling**
+* [`style`](https://github.com/webpack/style-loader): Add exports of a module as style to DOM
+* [`css`](https://github.com/webpack/css-loader): Loads css file with resolved imports and returns css code
+* [`postcss`](https://github.com/postcss/postcss-loader): Loads and compiles css using various [plugins](https://github.com/postcss/postcss#plugins)
+* [`less`](https://github.com/webpack/less-loader): Loads and compiles a less file
+* [`sass`](https://github.com/jtangelder/sass-loader): Loads and compiles a scss file
+* [`stylus`](https://github.com/shama/stylus-loader): Loads and compiles a stylus file
+
+**misc**
+* [`po`](https://github.com/perchlayer/po-loader): Loads a PO gettext file and returns JSON
+* [`mocha`](https://github.com/webpack/mocha-loader): Do tests with mocha in browser or node.js
+* [`eslint`](https://github.com/MoOx/eslint-loader): PreLoader for linting code using ESLint.
+* [`jshint`](https://github.com/webpack/jshint-loader): PreLoader for linting code.
+* [`jscs`](https://github.com/unindented/jscs-loader): PreLoader for style checking.
+* [`injectable`](https://github.com/jauco/webpack-injectable): Allow to inject dependencies into modules
+* [`transform`](https://github.com/webpack/transform-loader): Use browserify transforms as loader.
+* [`jsbeautify`](https://github.com/tomaszczechowski/jsbeautify-loader): Autoformatting code.
+
+For the full list of loaders, see [list of loaders](https://webpack.github.io/docs/list-of-loaders.html).
+
+## Module Format (AMD/CommonJS)
+
+webpack supports **both** AMD and CommonJS module styles. It performs clever static
+analysis on the AST of your code. It even has an evaluation engine to evaluate
+simple expressions. This allows you to **support most existing libraries** out of the box.
 
 ## Code Splitting
 
-### Example
+webpack allows you to split your codebase into multiple chunks. Chunks are
+loaded asynchronously at runtime. This reduces the initial loading time.
+
+[Code Splitting documentation](https://webpack.github.io/docs/code-splitting.html)
+
+## Optimizations
+
+webpack can do many optimizations to **reduce the output size of your
+JavaScript** by deduplicating frequently used modules, minifying, and giving
+you full control of what is loaded initially and what is loaded at runtime
+through code splitting. It can also make your code chunks **cache
+friendly** by using hashes.
+
+[Optimization documentation](https://webpack.github.io/docs/optimization.html)
+
+# A small example of what's possible
 
 ``` javascript
-var a = require("a");
-var b = require("b");
-require.ensure(["c"], function(require) {
-	require("b").xyz();
-	var d = require("d");
+// webpack is a module bundler.
+// This means webpack takes modules with dependencies
+// and emits static assets representing those modules.
+
+// Dependencies can be written in CommonJS
+var commonjs = require("./commonjs");
+// or in AMD
+define(["amd-module", "../file"], function (amdModule, file) {
+	// while previous constructs are sync,
+	// this is async
+	require(["big-module/big/file"], function (big) {
+		 // For async dependencies, webpack splits
+		 // your application into multiple "chunks".
+		 // This part of your application is
+		 // loaded on demand (code-splitting).
+		var stuff = require("../my/stuff");
+		// "../my/stuff" is also loaded on-demand
+		//  because it's in the callback function
+		//  of the AMD require.
+	});
 });
+
+
+require("coffee!./cup.coffee");
+// "Loaders" are used to preprocess files.
+// They can be prefixed in the require call
+// or configured in the configuration.
+require("./cup");
+// This does the same when you add ".coffee" to the extensions
+// and configure the "coffee" loader for /\.coffee$/
+
+function loadTemplate (name) {
+	return require("./templates/" + name + ".jade");
+	// Many expressions are supported in require calls.
+	// A clever parser extracts information and concludes
+	// that everything in "./templates" that matches
+	// /\.jade$/ should be included in the bundle, as it
+	// can be required.
+}
+
+
+// ...and you can combine everything.
+function loadTemplateAsync (name, callback) {
+	require(["bundle?lazy!./templates/" + name + ".jade"],
+	  function (templateBundle) {
+	          templateBundle(callback);
+	});
+}
 ```
 
-```
-File 1: web.js
-- code of module a and dependencies
-- code of module b and dependencies
+## Documentation
 
-File 2: 1.web.js
-- code of module c and dependencies (but code is not used)
-- code of module d and dependencies
-```
+[documentation](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=documentation)
 
-See [details](modules-webpack/tree/master/example) for exact output.
 
-## Usage
+## Changelog
 
-### Shell
+[changelog](https://webpack.github.io/docs/changelog.html)
 
-`webpack` offers a command line interface:
-
-after `npm install webpack -g` you can use the `webpack` command
-
-if invoked without arguments it prints a usage:
-
-```
-Usage: webpack <options> <input> <output>
-
-Options:
-  --single             Disable Code Splitting                 [boolean]  [default: false]
-  --min                Minimize it with uglifyjs              [boolean]  [default: false]
-  --filenames          Output Filenames Into File             [boolean]  [default: false]
-  --options            Options JSON File                      [string]
-  --script-src-prefix  Path Prefix For JavaScript Loading     [string]
-  --libary             Stores the exports into this variable  [string]
-```
-
-### Programmatically Usage
-
-`webpack(context, moduleName, [options], callback)`
-`webpack(absoluteModulePath, [options], callback)`
-
-#### `options`
-
-you can save this options object in a JSON file and use it with the shell command.
-
-`outputJsonpFunction`
-JSONP function used to load chunks
-
-`scriptSrcPrefix`
-Path from where chunks are loaded
-
-`outputDirectory`
-write files to this directory (absolute path)
-
-`output`
-write first chunk to this file
-
-`outputPostfix`
-write chunks to files named chunkId plus outputPostfix
-
-`libary`
-exports of input file are stored in this variable
-
-`minimize`
-minimize outputs with uglify-js
-
-`includeFilenames`
-add absolute filenames of input files as comments
-
-#### `callback`
-`function(err, source / stats)`
-`source` if `options.output` is not set
-else `stats` as json see [example](/modules-webpack/tree/master/example)
-
-## medikoo/modules-webmake
-
-`webpack` as originally intended as fork for `webmake` for @medikoo so it shared several ideas with it.
-So big credit goes to medikoo.
-
-However `webpack` has big differences:
-
-`webpack` replaces module names and paths with numbers. `webmake` don't do that and do resolves requires on client-side.
-This design of `webmake` wes intended to support variables as arguments to require calls.
-`webpack` resolves requires in compile time and have no resolve code on client side. This results in smaller bundles.
-Variables as argments will be handled different and with more limitations.
-
-Another limitation in `webmake` which are based on the previous one is that modules must be in the current package scope.
-In `webpack` this is not a restriction.
-
-The design of `webmake` causes all modules with the same name to overlap. This can be problematic if different submodules rely on specific versions of the same module. The behaivior also differs from the behaivior of node.js, because node.js installs a module for each instance in submodules and `webmake` cause them the merge into a single module which is only installed once. In `webpack` this is not the case. Different versions do not overlap and modules are installed multiple times. But in `webpack` this can (currently) cause duplicate code if a module is used in multiple modules. I want to face this issue (TODO).
-
-`webmake` do (currently) not support Code Splitting.
 
 ## Tests
 
-You can run the unit tests which `node_modules/.bin/vows`.
+You can run the Node tests with `npm test`.
 
 You can run the browser tests:
 
@@ -202,16 +231,319 @@ cd test/browsertests
 node build
 ```
 
-and open `test.html` in browser. There must be several OKs in the file and no FAIL.
-
-TODO more tests
+and open `tests.html` in the browser.
 
 ## Contribution
 
-You are welcome to contribute by writing issues or pull requests.
+Most of the time, if webpack is not working correctly for you it is a simple configuration issue.
 
-You are also welcome to correct any spelling mistakes or any language issues, because my english is not so good...
+If you are still having difficulty after looking over your configuration carefully, please post
+a question to [StackOverflow with the webpack tag](http://stackoverflow.com/tags/webpack). Questions
+that include your webpack.config.js and relevant files are more likely to receive responses.
+
+If you have discovered a bug or have a feature suggestion, feel free to create an issue on Github.
+
+If you create a loader or plugin, please consider open sourcing it, putting it
+on NPM and following the `x-loader`, `x-plugin` convention.
+
+You are also welcome to correct any spelling mistakes or any language issues.
+
+If you want to discuss something or just need help, [here is our gitter.im room](https://gitter.im/webpack/webpack).
 
 ## License
 
-MIT
+Copyright (c) JS Foundation
+
+MIT (http://opensource.org/licenses/mit-license.php)
+
+## Thanks to
+
+(In chronological order)
+
+* @google for [Google Web Toolkit (GWT)](https://code.google.com/archive/p/google-web-toolkit), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
+* @medikoo for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webpack. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
+* @substack for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
+* @jrburke for [require.js](http://requirejs.org/), which is a similar project and source for many ideas.
+* @defunctzombie for the [browser-field spec](https://gist.github.com/defunctzombie/4339901), which makes modules available for node.js, browserify and webpack.
+* Every early webpack user, which contributed to webpack by writing issues or PRs. You influenced the direction...
+* @shama, @jhnns and @sokra for maintaining this project
+* Everyone who has written a loader for webpack. You are the ecosystem...
+* Everyone I forgot to mention here, but also influenced webpack.
+
+## Sponsoring
+
+Most of the core team members, webpack contributors and contributors in the ecosystem do this open source work in their free time. If you use webpack for a serious task, and you'd like us to invest more time on it, please donate. This project increases your income/productivity too. It makes development and applications faster and it reduces the required bandwidth.
+
+This is how we use the donations:
+
+* Allow the core team to work on weback
+* Thank contributors if they invested a large amount of time in contributing
+* Support projects in the ecosystem that are of great value for users
+* Support projects that are voted most (work in progress)
+* Infrastructure cost
+* Fees for money handling
+
+### Core team
+
+The note shows the main area of involvement. Of course we all contribute in many areas.
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center">
+        <img src="https://github.com/sokra.png?size=150"><br>
+        <a href="https://github.com/sokra">Tobias Koppers</a>
+      </td>
+      <td>
+        Core<br><br>
+        Founder of webpack
+      </td>
+     </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center">
+        <img src="https://github.com/jhnns.png?size=150"><br>
+        <a href="https://github.com/jhnns">Johannes Ewald</a>
+      </td>
+      <td>
+        Styling loaders &amp; plugins<br><br>
+        Early adopter of webpack
+      </td>
+     </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center">
+        <img src="https://github.com/TheLarkInn.png?size=150"><br>
+        <a href="https://github.com/TheLarkInn">Sean T. Larkin</a>
+      </td>
+      <td>
+        Public relations<br><br>
+        Pushed the core team forming
+      </td>
+     </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center">
+        <img src="https://github.com/bebraw.png?size=150"><br>
+        <a href="https://github.com/bebraw">Juho Vepsäläinen</a>
+      </td>
+      <td>
+        Documentation<br><br>
+        Wrote the ebook <a href="https://leanpub.com/survivejs-webpack"><img src="https://cloud.githubusercontent.com/assets/1365881/20286923/93e325c0-aac9-11e6-964d-cabe218c584c.png"> - Webpack</a>
+      </td>
+     </tr>
+  </tbody>
+</table>
+
+<table>
+  <tbody>
+    <tr>
+      <td align="center">
+        <img src="https://github.com/spacek33z.png?size=150"><br>
+        <a href="https://github.com/spacek33z">Kees Kluskens</a>
+      </td>
+      <td>
+        webpack-dev-server<br><br>
+        <a href="https://codeyellow.nl/"><img height="15" src="https://cloud.githubusercontent.com/assets/1365881/20286583/ad62eb04-aac7-11e6-9c14-a0fef35b9b56.png"></a> supports his open source work on webpack
+      </td>
+     </tr>
+  </tbody>
+</table>
+
+### Early Backers and Sponsors
+
+We had other sources of donations before starting to use OpenCollective. We want to acknowledge these early sponsors and backers, but donations were not public and we are not sure of donors want to stay anonymous. So if you want to be in this list, just drop @sokra a note via mail (`t____.k____@gmail.com`, insert fullname here).
+
+### Sponsors
+
+Become a sponsor and get your logo on our README on Github with a link to your site. [[Become a sponsor](https://opencollective.com/webpack#sponsor)]
+
+<a href="https://opencollective.com/webpack/sponsor/0/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/1/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/2/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/3/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/4/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/5/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/6/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/7/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/8/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/9/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/9/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/10/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/10/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/11/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/11/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/12/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/12/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/13/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/13/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/14/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/14/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/15/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/15/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/16/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/16/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/17/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/17/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/18/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/18/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/19/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/19/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/20/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/20/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/21/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/21/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/22/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/22/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/23/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/23/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/24/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/24/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/25/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/25/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/26/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/26/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/27/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/27/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/28/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/28/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/sponsor/29/website" target="_blank"><img src="https://opencollective.com/webpack/sponsor/29/avatar.svg"></a>
+
+## Backers
+
+Become a backer and get your image on our README on Github with a link to your site. [[Become a backer](https://opencollective.com/webpack#backer)]
+
+<a href="https://opencollective.com/webpack/backer/0/website" target="_blank"><img src="https://opencollective.com/webpack/backer/0/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/1/website" target="_blank"><img src="https://opencollective.com/webpack/backer/1/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/2/website" target="_blank"><img src="https://opencollective.com/webpack/backer/2/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/3/website" target="_blank"><img src="https://opencollective.com/webpack/backer/3/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/4/website" target="_blank"><img src="https://opencollective.com/webpack/backer/4/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/5/website" target="_blank"><img src="https://opencollective.com/webpack/backer/5/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/6/website" target="_blank"><img src="https://opencollective.com/webpack/backer/6/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/7/website" target="_blank"><img src="https://opencollective.com/webpack/backer/7/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/8/website" target="_blank"><img src="https://opencollective.com/webpack/backer/8/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/9/website" target="_blank"><img src="https://opencollective.com/webpack/backer/9/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/10/website" target="_blank"><img src="https://opencollective.com/webpack/backer/10/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/11/website" target="_blank"><img src="https://opencollective.com/webpack/backer/11/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/12/website" target="_blank"><img src="https://opencollective.com/webpack/backer/12/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/13/website" target="_blank"><img src="https://opencollective.com/webpack/backer/13/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/14/website" target="_blank"><img src="https://opencollective.com/webpack/backer/14/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/15/website" target="_blank"><img src="https://opencollective.com/webpack/backer/15/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/16/website" target="_blank"><img src="https://opencollective.com/webpack/backer/16/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/17/website" target="_blank"><img src="https://opencollective.com/webpack/backer/17/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/18/website" target="_blank"><img src="https://opencollective.com/webpack/backer/18/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/19/website" target="_blank"><img src="https://opencollective.com/webpack/backer/19/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/20/website" target="_blank"><img src="https://opencollective.com/webpack/backer/20/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/21/website" target="_blank"><img src="https://opencollective.com/webpack/backer/21/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/22/website" target="_blank"><img src="https://opencollective.com/webpack/backer/22/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/23/website" target="_blank"><img src="https://opencollective.com/webpack/backer/23/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/24/website" target="_blank"><img src="https://opencollective.com/webpack/backer/24/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/25/website" target="_blank"><img src="https://opencollective.com/webpack/backer/25/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/26/website" target="_blank"><img src="https://opencollective.com/webpack/backer/26/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/27/website" target="_blank"><img src="https://opencollective.com/webpack/backer/27/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/28/website" target="_blank"><img src="https://opencollective.com/webpack/backer/28/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/29/website" target="_blank"><img src="https://opencollective.com/webpack/backer/29/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/30/website" target="_blank"><img src="https://opencollective.com/webpack/backer/30/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/31/website" target="_blank"><img src="https://opencollective.com/webpack/backer/31/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/32/website" target="_blank"><img src="https://opencollective.com/webpack/backer/32/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/33/website" target="_blank"><img src="https://opencollective.com/webpack/backer/33/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/34/website" target="_blank"><img src="https://opencollective.com/webpack/backer/34/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/35/website" target="_blank"><img src="https://opencollective.com/webpack/backer/35/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/36/website" target="_blank"><img src="https://opencollective.com/webpack/backer/36/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/37/website" target="_blank"><img src="https://opencollective.com/webpack/backer/37/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/38/website" target="_blank"><img src="https://opencollective.com/webpack/backer/38/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/39/website" target="_blank"><img src="https://opencollective.com/webpack/backer/39/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/40/website" target="_blank"><img src="https://opencollective.com/webpack/backer/40/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/41/website" target="_blank"><img src="https://opencollective.com/webpack/backer/41/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/42/website" target="_blank"><img src="https://opencollective.com/webpack/backer/42/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/43/website" target="_blank"><img src="https://opencollective.com/webpack/backer/43/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/44/website" target="_blank"><img src="https://opencollective.com/webpack/backer/44/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/45/website" target="_blank"><img src="https://opencollective.com/webpack/backer/45/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/46/website" target="_blank"><img src="https://opencollective.com/webpack/backer/46/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/47/website" target="_blank"><img src="https://opencollective.com/webpack/backer/47/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/48/website" target="_blank"><img src="https://opencollective.com/webpack/backer/48/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/49/website" target="_blank"><img src="https://opencollective.com/webpack/backer/49/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/50/website" target="_blank"><img src="https://opencollective.com/webpack/backer/50/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/51/website" target="_blank"><img src="https://opencollective.com/webpack/backer/51/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/52/website" target="_blank"><img src="https://opencollective.com/webpack/backer/52/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/53/website" target="_blank"><img src="https://opencollective.com/webpack/backer/53/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/54/website" target="_blank"><img src="https://opencollective.com/webpack/backer/54/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/55/website" target="_blank"><img src="https://opencollective.com/webpack/backer/55/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/56/website" target="_blank"><img src="https://opencollective.com/webpack/backer/56/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/57/website" target="_blank"><img src="https://opencollective.com/webpack/backer/57/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/58/website" target="_blank"><img src="https://opencollective.com/webpack/backer/58/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/59/website" target="_blank"><img src="https://opencollective.com/webpack/backer/59/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/60/website" target="_blank"><img src="https://opencollective.com/webpack/backer/60/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/61/website" target="_blank"><img src="https://opencollective.com/webpack/backer/61/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/62/website" target="_blank"><img src="https://opencollective.com/webpack/backer/62/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/63/website" target="_blank"><img src="https://opencollective.com/webpack/backer/63/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/64/website" target="_blank"><img src="https://opencollective.com/webpack/backer/64/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/65/website" target="_blank"><img src="https://opencollective.com/webpack/backer/65/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/66/website" target="_blank"><img src="https://opencollective.com/webpack/backer/66/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/67/website" target="_blank"><img src="https://opencollective.com/webpack/backer/67/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/68/website" target="_blank"><img src="https://opencollective.com/webpack/backer/68/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/69/website" target="_blank"><img src="https://opencollective.com/webpack/backer/69/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/70/website" target="_blank"><img src="https://opencollective.com/webpack/backer/70/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/71/website" target="_blank"><img src="https://opencollective.com/webpack/backer/71/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/72/website" target="_blank"><img src="https://opencollective.com/webpack/backer/72/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/73/website" target="_blank"><img src="https://opencollective.com/webpack/backer/73/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/74/website" target="_blank"><img src="https://opencollective.com/webpack/backer/74/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/75/website" target="_blank"><img src="https://opencollective.com/webpack/backer/75/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/76/website" target="_blank"><img src="https://opencollective.com/webpack/backer/76/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/77/website" target="_blank"><img src="https://opencollective.com/webpack/backer/77/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/78/website" target="_blank"><img src="https://opencollective.com/webpack/backer/78/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/79/website" target="_blank"><img src="https://opencollective.com/webpack/backer/79/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/80/website" target="_blank"><img src="https://opencollective.com/webpack/backer/80/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/81/website" target="_blank"><img src="https://opencollective.com/webpack/backer/81/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/82/website" target="_blank"><img src="https://opencollective.com/webpack/backer/82/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/83/website" target="_blank"><img src="https://opencollective.com/webpack/backer/83/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/84/website" target="_blank"><img src="https://opencollective.com/webpack/backer/84/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/85/website" target="_blank"><img src="https://opencollective.com/webpack/backer/85/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/86/website" target="_blank"><img src="https://opencollective.com/webpack/backer/86/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/87/website" target="_blank"><img src="https://opencollective.com/webpack/backer/87/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/88/website" target="_blank"><img src="https://opencollective.com/webpack/backer/88/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/89/website" target="_blank"><img src="https://opencollective.com/webpack/backer/89/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/90/website" target="_blank"><img src="https://opencollective.com/webpack/backer/90/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/91/website" target="_blank"><img src="https://opencollective.com/webpack/backer/91/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/92/website" target="_blank"><img src="https://opencollective.com/webpack/backer/92/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/93/website" target="_blank"><img src="https://opencollective.com/webpack/backer/93/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/94/website" target="_blank"><img src="https://opencollective.com/webpack/backer/94/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/95/website" target="_blank"><img src="https://opencollective.com/webpack/backer/95/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/96/website" target="_blank"><img src="https://opencollective.com/webpack/backer/96/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/97/website" target="_blank"><img src="https://opencollective.com/webpack/backer/97/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/98/website" target="_blank"><img src="https://opencollective.com/webpack/backer/98/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/99/website" target="_blank"><img src="https://opencollective.com/webpack/backer/99/avatar.svg"></a>
+<a href="https://opencollective.com/webpack/backer/100/website" target="_blank"><img src="https://opencollective.com/webpack/backer/100/avatar.svg"></a>
+
+
+## Dependencies
+
+* [esprima](http://esprima.org/)
+* [enhanced-resolve](https://github.com/webpack/enhanced-resolve)
+* [uglify-js](https://github.com/mishoo/UglifyJS)
+* [mocha](https://github.com/mochajs/mocha)
+* [should](https://github.com/tj/should.js)
+* [optimist](https://github.com/substack/node-optimist)
+* [async](https://github.com/caolan/async)
+* [mkdirp](https://github.com/substack/node-mkdirp)
+* [clone](https://github.com/pvorb/node-clone)
+
+
+[travis-url]: https://travis-ci.org/webpack/webpack
+[travis-image]: https://img.shields.io/travis/webpack/webpack/master.svg
+[appveyor-url]: https://ci.appveyor.com/project/sokra/webpack/branch/master
+[appveyor-image]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
+[coveralls-url]: https://coveralls.io/r/webpack/webpack/
+[coveralls-image]: https://img.shields.io/coveralls/webpack/webpack.svg
+[npm-url]: https://www.npmjs.com/package/webpack
+[npm-image]: https://img.shields.io/npm/v/webpack.svg
+[downloads-image]: https://img.shields.io/npm/dm/webpack.svg
+[downloads-url]: http://badge.fury.io/js/webpack
+[david-url]: https://david-dm.org/webpack/webpack
+[david-image]: https://img.shields.io/david/webpack/webpack.svg
+[david-dev-url]: https://david-dm.org/webpack/webpack#info=devDependencies
+[david-dev-image]: https://david-dm.org/webpack/webpack/dev-status.svg
+[david-peer-url]: https://david-dm.org/webpack/webpack#info=peerDependencies
+[david-peer-image]: https://david-dm.org/webpack/webpack/peer-status.svg
+[nodei-image]: https://nodei.co/npm/webpack.png?downloads=true&downloadRank=true&stars=true
+[nodei-url]: https://www.npmjs.com/package/webpack
+[donate-url]: http://sokra.github.io/
+[donate-image]: https://img.shields.io/badge/donate-sokra-brightgreen.svg
+[gratipay-url]: https://gratipay.com/webpack/
+[gratipay-image]: https://img.shields.io/gratipay/webpack.svg
+[gitter-url]: https://gitter.im/webpack/webpack
+[gitter-image]: https://img.shields.io/badge/gitter-webpack%2Fwebpack-brightgreen.svg
+[badginator-image]: https://badginator.herokuapp.com/webpack/webpack.svg
+[badginator-url]: https://github.com/defunctzombie/badginator

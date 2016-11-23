@@ -1,0 +1,4 @@
+chunk    {0} 0.js 54 bytes {3} [rendered]
+chunk    {1} 1.js 22 bytes {3} [rendered]
+chunk    {2} 2.js 44 bytes {0} [rendered]
+chunk    {3} main.js (main) 73 bytes [entry] [rendered]

@@ -1,0 +1,1 @@
+module.exports = require("./loader.webpack-loader.js");

@@ -1,0 +1,4 @@
+* text=auto
+test/statsCases/* eol=lf
+examples/* eol=lf
+bin/* eol=lf
