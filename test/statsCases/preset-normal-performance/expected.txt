@@ -1,4 +1,3 @@
-Hash: <CLR=BOLD>710ad0e8dd83288e7156</CLR>
 Time: <CLR=BOLD>X</CLR>ms
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=BOLD>Chunk Names</CLR>
    <CLR=32,BOLD>0.js</CLR>  227 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
