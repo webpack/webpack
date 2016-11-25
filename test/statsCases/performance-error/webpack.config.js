@@ -1,7 +1,8 @@
 module.exports = {
 	entry: "./index",
 	stats: {
-		colors: true
+		colors: true,
+		hash: false
 	},
 	performance: {
 		errorOnHint: true
