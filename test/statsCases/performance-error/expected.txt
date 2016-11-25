@@ -18,12 +18,12 @@ chunk    {<CLR=33,BOLD>3</CLR>} <CLR=32,BOLD>main.js</CLR> (main) 540 kB<CLR=33,
     [3] <CLR=BOLD>(webpack)/test/statsCases/performance-error/a.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
     [8] <CLR=BOLD>(webpack)/test/statsCases/performance-error/index.js</CLR> 93 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 
-<CLR=31,BOLD>ERROR in asset size limit: The following assets exceed the recommended size limit (300 kB). 
+<CLR=31,BOLD>ERROR in asset size limit: The following assets exceed the recommended size limit (250 kB). 
 This can impact web performance.
 Assets: 
   main.js</CLR>
 
-<CLR=31,BOLD>ERROR in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (300 kB). This can impact web performance.
+<CLR=31,BOLD>ERROR in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (250 kB). This can impact web performance.
 Entrypoints: 
 
   main: 546 kB
