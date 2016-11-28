@@ -314,7 +314,7 @@ function processOptions(options) {
 			lastHash = stats.hash;
 			process.stdout.write(stats.toString(outputOptions) + "\n");
 		}
-		if(!options.doWatch && stats.hasErrors()) {
+		if(!options.watch && stats.hasErrors()) {
 			process.on("exit", function() {
 				process.exit(2); // eslint-disable-line
 			});
