@@ -16,7 +16,7 @@ chunk    {<CLR=33,BOLD>3</CLR>} <CLR=32,BOLD>main.js</CLR> (main) 540 kB<CLR=33,
     [1] <CLR=BOLD>(webpack)/buildin/module.js</CLR> 528 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
     [2] <CLR=BOLD>(webpack)/~/lodash/lodash.js</CLR> 539 kB {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
     [3] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance/a.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-    [8] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance/index.js</CLR> 93 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+    [8] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance/index.js</CLR> 71 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 
 <CLR=33,BOLD>WARNING in asset size limit: The following assets exceed the recommended size limit (250 kB). 
 This can impact web performance.
@@ -27,5 +27,5 @@ Assets:
 Entrypoints: 
 
   main: 546 kB
-      main.js: 546 kB
+      main.js
 </CLR>

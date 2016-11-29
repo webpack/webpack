@@ -140,21 +140,9 @@ describe("Stats", function() {
 				modules: [],
 				children: [],
 				hash: '1234',
-				isWebTarget: function() {
-					return "web";
-				},
 				mainTemplate: {
 					getPublicPath: function() {
 						return 'path';
-					}
-				},
-				compiler: {
-					options: {
-						performance: {
-							hints: true,
-							maxAssetSize: 250
-						},
-						target: "web"
 					}
 				}
 			});
