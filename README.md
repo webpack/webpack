@@ -276,7 +276,7 @@ Most of the core team members, webpack contributors and contributors in the ecos
 
 This is how we use the donations:
 
-* Allow the core team to work on weback
+* Allow the core team to work on webpack
 * Thank contributors if they invested a large amount of time in contributing
 * Support projects in the ecosystem that are of great value for users
 * Support projects that are voted most (work in progress)
