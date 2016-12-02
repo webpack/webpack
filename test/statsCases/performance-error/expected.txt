@@ -1,9 +1,9 @@
 Time: <CLR=BOLD>X</CLR>ms
-  <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=BOLD>Chunk Names</CLR>
-   <CLR=32,BOLD>0.js</CLR>  227 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-   <CLR=32,BOLD>1.js</CLR>  106 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-   <CLR=32,BOLD>2.js</CLR>  200 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-<CLR=33,BOLD>main.js</CLR>     <CLR=33,BOLD>306 kB</CLR>       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
+  <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
+   <CLR=32,BOLD>0.js</CLR>  227 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>1.js</CLR>  106 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>2.js</CLR>  200 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+<CLR=33,BOLD>main.js</CLR>     <CLR=33,BOLD>306 kB</CLR>       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
 chunk    {<CLR=33,BOLD>0</CLR>} <CLR=32,BOLD>0.js</CLR> 54 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [rendered]</CLR>
     [2] <CLR=BOLD>(webpack)/test/statsCases/performance-error/c.js</CLR> 54 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
 chunk    {<CLR=33,BOLD>1</CLR>} <CLR=32,BOLD>1.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [rendered]</CLR>
@@ -15,14 +15,13 @@ chunk    {<CLR=33,BOLD>3</CLR>} <CLR=32,BOLD>main.js</CLR> (main) 300 kB<CLR=33,
     [0] <CLR=BOLD>(webpack)/test/statsCases/performance-error/a.js</CLR> 300 kB {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
     [5] <CLR=BOLD>(webpack)/test/statsCases/performance-error/index.js</CLR> 52 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 
-<CLR=31,BOLD>ERROR in asset size limit: The following assets exceed the recommended size limit (250 kB). 
+<CLR=31,BOLD>ERROR in asset size limit: The following asset(s) exceed the recommended size limit (250 kB). 
 This can impact web performance.
 Assets: 
-  main.js</CLR>
+  main.js (306 kB)</CLR>
 
 <CLR=31,BOLD>ERROR in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (250 kB). This can impact web performance.
-Entrypoints: 
-
-  main: 306 kB
+Entrypoints:
+  main (306 kB)
       main.js
 </CLR>
