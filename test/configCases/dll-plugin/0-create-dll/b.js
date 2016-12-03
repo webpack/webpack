@@ -1,3 +1,3 @@
 module.exports = function() {
-	return System.import("./c");
+	return import("./c");
 }

@@ -5,6 +5,7 @@
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "dependencies": {
     "acorn": "^4.0.3",
+    "acorn-dynamic-import": "^2.0.0",
     "ajv": "^4.7.0",
     "ajv-keywords": "^1.1.1",
     "async": "^2.1.2",
