@@ -471,6 +471,9 @@
               "type": "object"
             }
           ]
+        },
+        "useSyncFileSystemCalls": {
+          "type": "boolean"
         }
       },
       "type": "object"
