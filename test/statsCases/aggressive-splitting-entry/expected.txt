@@ -1,7 +1,7 @@
 Hash: 8e46421d7f7a7d266a00
 Time: Xms
                   Asset       Size  Chunks             Chunk Names
-48c8b1dae03a37363ec8.js    4.17 kB       1  [emitted]  
+48c8b1dae03a37363ec8.js    4.24 kB       1  [emitted]  
 2fa7af5012a3d8b778dd.js    2.22 kB       2  [emitted]  
 a5b577236621262c2bcf.js    1.93 kB       3  [emitted]  
 88d78642a86768757078.js  977 bytes       4  [emitted]  
