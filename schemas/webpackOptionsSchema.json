@@ -187,6 +187,16 @@
         "unknownContextRequest": {
           "type": "string"
         },
+        "unsafeCache": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ]
+        },
         "wrappedContextCritical": {
           "type": "boolean"
         },
