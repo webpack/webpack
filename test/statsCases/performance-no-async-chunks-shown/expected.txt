@@ -11,10 +11,6 @@ This can impact web performance.
 Assets: 
   main.js (303 kB)</CLR>
 
-<CLR=33,BOLD>WARNING in webpack performance recommendations: 
-You can limit the size of your bundles by using System.import() or require.ensure to lazy load some parts of your application.
-For more info visit https://webpack.js.org/guides/code-splitting/</CLR>
-
 <CLR=33,BOLD>WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (250 kB). This can impact web performance.
 Entrypoints:
   main (303 kB)
