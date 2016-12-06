@@ -299,7 +299,6 @@ function processOptions(options) {
 	var webpack = require("../lib/webpack.js");
 
 	Error.stackTraceLimit = 30;
-	var lastHash = null;
 	var compiler;
 	try {
 		compiler = webpack(options);
@@ -322,6 +321,22 @@ function processOptions(options) {
 		}));
 	}
 
+	var lastHash = null;
+	var lastErrors = [];
+	var lastWarnings = [];
+
+	var arrayEquals = require("../lib/arrayEquals");
+
+	function shouldReprintStats(stats, statsJson) {
+		var reprint = stats.hash !== lastHash ||
+			!arrayEquals(lastErrors, statsJson.errors) ||
+			!arrayEquals(lastWarnings, statsJson.warnings);
+		lastHash = stats.hash;
+		lastErrors = statsJson.errors;
+		lastWarnings = statsJson.warnings;
+		return reprint;
+	}
+
 	function compilerCallback(err, stats) {
 		if(!options.watch || err) {
 			// Do not keep cache anymore
@@ -335,9 +350,11 @@ function processOptions(options) {
 		}
 		if(outputOptions.json) {
 			process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
-		} else if(stats.hash !== lastHash) {
-			lastHash = stats.hash;
-			process.stdout.write(stats.toString(outputOptions) + "\n");
+		} else {
+			var statsFormatted = stats.toStringAndJson(outputOptions);
+			if(shouldReprintStats(stats, statsFormatted.json)) {
+				process.stdout.write(statsFormatted.string + "\n");
+			}
 		}
 		if(!options.watch && stats.hasErrors()) {
 			process.on("exit", function() {
@@ -345,6 +362,7 @@ function processOptions(options) {
 			});
 		}
 	}
+
 	if(firstOptions.watch || options.watch) {
 		var watchOptions = firstOptions.watchOptions || firstOptions.watch || options.watch || {};
 		if(watchOptions.stdin) {
