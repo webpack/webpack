@@ -9,6 +9,8 @@ module.exports = {
 			filename: "[file].map",
 			cheap: true
 		}),
-		new webpack.optimize.UglifyJsPlugin()
+		new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true
+    })
 	]
 };
