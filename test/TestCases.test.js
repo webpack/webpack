@@ -128,7 +128,7 @@ describe("TestCases", function() {
 									modules: ["web_modules", "node_modules"],
 									mainFields: ["webpack", "browser", "web", "browserify", ["jam", "main"], "main"],
 									aliasFields: ["browser"],
-									extensions: [".webpack.js", ".web.js", ".js"]
+									extensions: [".webpack.js", ".web.js", ".js", ".json"]
 								},
 								resolveLoader: {
 									modules: ["web_loaders", "web_modules", "node_loaders", "node_modules"],
@@ -137,9 +137,6 @@ describe("TestCases", function() {
 								},
 								module: {
 									loaders: [{
-										test: /\.json$/,
-										loader: "json-loader"
-									}, {
 										test: /\.coffee$/,
 										loader: "coffee-loader"
 									}, {
