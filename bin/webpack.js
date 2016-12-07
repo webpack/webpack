@@ -176,9 +176,6 @@ function processOptions(options) {
 			outputOptions.json = bool;
 	});
 
-	if(typeof outputOptions.colors === "undefined")
-		outputOptions.colors = require("supports-color");
-
 	ifArg("sort-modules-by", function(value) {
 		outputOptions.modulesSort = value;
 	});

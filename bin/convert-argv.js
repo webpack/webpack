@@ -388,6 +388,11 @@ module.exports = function(yargs, argv, convertOptions) {
 			options.target = value;
 		});
 
+		ensureObject(options, "stats");
+		ifArg("colors", function(value) {
+			options.stats.colors = require("supports-color");
+		});
+
 		mapArgToBooleanInverse("cache");
 
 		ifBooleanArg("hot", function() {
