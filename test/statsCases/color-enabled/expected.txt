@@ -1,6 +1,6 @@
 Hash: <CLR=BOLD>6c781fe6bf412ba6435b</CLR>
 Time: <CLR=BOLD>X</CLR>ms
-  <CLR=BOLD>Asset</CLR>     <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=BOLD>Chunk Names</CLR>
+  <CLR=BOLD>Asset</CLR>     <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22><CLR=BOLD>Chunk Names</CLR>
 <CLR=32,BOLD>main.js</CLR>  2.51 kB       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
 chunk    {<CLR=33,BOLD>0</CLR>} <CLR=32,BOLD>main.js</CLR> (main) 0 bytes<CLR=33,BOLD> [entry]</CLR><CLR=32,BOLD> [rendered]</CLR>
     [0] <CLR=BOLD>(webpack)/test/statsCases/color-enabled/index.js</CLR> 0 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
