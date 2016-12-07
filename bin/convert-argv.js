@@ -188,7 +188,7 @@ module.exports = function(yargs, argv, convertOptions) {
 				if(finalize) {
 					finalize();
 				}
-			} else if(typeof argv[name] !== "undefined") {
+			} else if(typeof argv[name] !== "undefined" && argv[name] !== null) {
 				if(init) {
 					init();
 				}
@@ -219,16 +219,11 @@ module.exports = function(yargs, argv, convertOptions) {
 		}
 
 		function mapArgToBoolean(name, optionName) {
-			ifBooleanArg(name, function() {
-				options[optionName || name] = true;
-			});
-		}
-
-		function mapArgToBooleanInverse(name, optionName) {
 			ifArg(name, function(bool) {
-				if(!bool) {
+				if(bool === true)
+					options[optionName || name] = true;
+				else if(bool === false)
 					options[optionName || name] = false;
-				}
 			});
 		}
 
@@ -388,7 +383,7 @@ module.exports = function(yargs, argv, convertOptions) {
 			options.target = value;
 		});
 
-		mapArgToBooleanInverse("cache");
+		mapArgToBoolean("cache");
 
 		ifBooleanArg("hot", function() {
 			ensureArray(options, "plugins");
