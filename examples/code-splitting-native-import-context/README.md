@@ -3,11 +3,6 @@
 This example illustrates how to leverage the `import()` syntax to create ContextModules which are separated into separate chunks for each module in the `./templates` folder.
 
 ``` javascript
-// function getTemplate(templateName) {
-// 	return import("./templates/"+templateName);
-// }
-// console.log(getTemplate("a"));
-// console.log(getTemplate("b"));
 
 async function getTemplate(templateName) {
 	try {
