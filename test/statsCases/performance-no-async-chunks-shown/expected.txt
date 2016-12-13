@@ -18,5 +18,5 @@ Entrypoints:
 </CLR>
 
 <CLR=33,BOLD>WARNING in webpack performance recommendations: 
-You can limit the size of your bundles by using System.import() or require.ensure to lazy load some parts of your application.
+You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/</CLR>
