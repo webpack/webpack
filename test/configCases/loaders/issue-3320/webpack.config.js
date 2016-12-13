@@ -13,6 +13,14 @@ module.exports = {
 						loader: "any-loader"
 					}
 				]
+			},
+			{
+				test: /b\.js$/,
+				use: [
+					{
+						loader: 'any-loader?foo="someOtherMessage"'
+					}
+				]
 			}
 		]
 	}
