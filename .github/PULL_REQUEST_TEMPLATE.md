@@ -1,35 +1,24 @@
-**Please check if the PR fulfills these requirements**
-- [ ] Tests for the changes have been added (for bug fixes / features)
-- [ ] Docs have been added / updated (for bug fixes / features)
+<!-- Thanks for submitting a pull request! Please provide enough information so that others can review your pull request. -->
 
+**What kind of change does this PR introduce?**
 
-**What kind of change does this PR introduce?** (Bug fix, feature, docs update, ...)
-- [ ] Bugfix
-- [ ] Feature
-- [ ] Code style update (formatting, local variables)
-- [ ] Refactoring (no functional changes, no api changes)
-- [ ] Build related changes
-- [ ] CI related changes
-- [ ] Other... Please describe:
+<!-- E.g. a bugfix, feature, refactoring, build related change, etc… -->
 
-**What is the current behavior?** (You can also link to an open issue here)
+**Did you add tests for your changes?**
 
+<!-- Note that we won't merge your changes if you don't add tests -->
 
+**If relevant, link to documentation update:**
 
-**What is the new behavior?**
+<!-- Link PR from webpack/webpack.js.org here, or N/A -->
 
+**Summary**
 
+<!-- Explain the **motivation** for making this change. What existing problem does the pull request solve? -->
+<!-- Try to link to an open issue for more information. -->
 
 **Does this PR introduce a breaking change?**
-- [ ] Yes
-- [ ] No
 
-If this PR contains a breaking change, please describe the following... 
+<!-- If this PR introduces a breaking change, please describe the impact and a migration path for existing applications. -->
 
-* Impact:
-* Migration path for existing applications: 
-* Github Issue(s) this is regarding:
-
-
-**Other information**:
-
+**Other information**

@@ -4,9 +4,9 @@
 // use our loader
 console.dir(require("./loader!./file"));
 
-// use buildin json loader
-console.dir(require("./test.json")); // default by extension
-console.dir(require("!json!./test.json")); // manual
+// use buildin css loader
+console.dir(require("./test.css")); // default by extension
+console.dir(require("!css-loader!./test.css")); // manual
 ```
 
 # file.js
@@ -23,11 +23,11 @@ module.exports = function(content) {
 }
 ```
 
-# test.json
+# test.css
 
-``` javascript
-{
-	"foobar": 1234
+```css
+.some-class {
+	color: hotpink;
 }
 ```
 
@@ -70,10 +70,10 @@ module.exports = function(content) {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
-/******/ 	// define getter function for harmory exports
+/******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		Object.defineProperty(exports, name, {
 /******/ 			configurable: false,
@@ -109,7 +109,7 @@ module.exports = function(content) {
 /* unknown exports provided */
 /* all exports used */
 /*!*******************************************!*\
-  !*** (webpack)/~/json-loader!./test.json ***!
+  !*** (webpack)/~/css-loader!./test.css ***!
   \*******************************************/
 /***/ function(module, exports) {
 
@@ -141,9 +141,9 @@ exports.foo = "bar";
 // use our loader
 console.dir(__webpack_require__(/*! ./loader!./file */ 1));
 
-// use buildin json loader
-console.dir(__webpack_require__(/*! ./test.json */ 0)); // default by extension
-console.dir(__webpack_require__(/*! json!./test.json */ 0)); // manual
+// use buildin css loader
+console.dir(__webpack_require__(/*! ./test.css */ 0)); // default by extension
+console.dir(__webpack_require__(/*! css-loader!./test.css */ 0)); // manual
 
 /***/ }
 /******/ ]);
@@ -172,9 +172,9 @@ output.js  3.39 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 278 bytes [entry] [rendered]
     > main [2] ./example.js 
-    [0] (webpack)/~/json-loader!./test.json 37 bytes {0} [built]
-        cjs require !json!./test.json [2] ./example.js 6:12-40
-        cjs require ./test.json [2] ./example.js 5:12-34
+    [0] (webpack)/~/css-loader!./test.css 37 bytes {0} [built]
+        cjs require !css!./test.css [2] ./example.js 6:12-40
+        cjs require ./test.css [2] ./example.js 5:12-34
     [1] ./loader.js!./file.js 41 bytes {0} [built]
         cjs require ./loader!./file [2] ./example.js 2:12-38
     [2] ./example.js 200 bytes {0} [built]
@@ -191,9 +191,9 @@ output.js  638 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 278 bytes [entry] [rendered]
     > main [2] ./example.js 
-    [0] (webpack)/~/json-loader!./test.json 37 bytes {0} [built]
-        cjs require !json!./test.json [2] ./example.js 6:12-40
-        cjs require ./test.json [2] ./example.js 5:12-34
+    [0] (webpack)/~/css-loader!./test.css 37 bytes {0} [built]
+        cjs require !css-loader!./test.css [2] ./example.js 6:12-40
+        cjs require ./test.css [2] ./example.js 5:12-34
     [1] ./loader.js!./file.js 41 bytes {0} [built]
         cjs require ./loader!./file [2] ./example.js 2:12-38
     [2] ./example.js 200 bytes {0} [built]

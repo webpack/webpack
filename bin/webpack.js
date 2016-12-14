@@ -280,7 +280,7 @@ function processOptions(options) {
 				console.error("\u001b[1m\u001b[31m" + e.message + "\u001b[39m\u001b[22m");
 			else
 				console.error(e.message);
-			process.exit(1);
+			process.exit(1); // eslint-disable-line no-process-exit
 		}
 		throw e;
 	}
@@ -293,7 +293,7 @@ function processOptions(options) {
 	}
 
 	function compilerCallback(err, stats) {
-		if(!options.watch) {
+		if(!options.watch || err) {
 			// Do not keep cache anymore
 			compiler.purgeInputFileSystem();
 		}
@@ -301,11 +301,7 @@ function processOptions(options) {
 			lastHash = null;
 			console.error(err.stack || err);
 			if(err.details) console.error(err.details);
-			if(!options.watch) {
-				process.on("exit", function() {
-					process.exit(1); // eslint-disable-line
-				});
-			}
+			process.exit(1); // eslint-disable-line
 			return;
 		}
 		if(outputOptions.json) {
@@ -314,7 +310,7 @@ function processOptions(options) {
 			lastHash = stats.hash;
 			process.stdout.write(stats.toString(outputOptions) + "\n");
 		}
-		if(!options.doWatch && stats.hasErrors()) {
+		if(!options.watch && stats.hasErrors()) {
 			process.on("exit", function() {
 				process.exit(2); // eslint-disable-line
 			});

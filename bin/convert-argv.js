@@ -1,10 +1,8 @@
 var path = require("path");
 var fs = require("fs");
 fs.existsSync = fs.existsSync || path.existsSync;
-var resolve = require("enhanced-resolve");
 var interpret = require("interpret");
 var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
-var validateWebpackOptions = require("../lib/validateWebpackOptions");
 
 module.exports = function(yargs, argv, convertOptions) {
 
@@ -189,7 +187,7 @@ module.exports = function(yargs, argv, convertOptions) {
 				if(finalize) {
 					finalize();
 				}
-			} else if(typeof argv[name] !== "undefined") {
+			} else if(typeof argv[name] !== "undefined" && argv[name] !== null) {
 				if(init) {
 					init();
 				}
@@ -220,16 +218,11 @@ module.exports = function(yargs, argv, convertOptions) {
 		}
 
 		function mapArgToBoolean(name, optionName) {
-			ifBooleanArg(name, function() {
-				options[optionName || name] = true;
-			});
-		}
-
-		function mapArgToBooleanInverse(name, optionName) {
 			ifArg(name, function(bool) {
-				if(!bool) {
+				if(bool === true)
+					options[optionName || name] = true;
+				else if(bool === false)
 					options[optionName || name] = false;
-				}
 			});
 		}
 
@@ -255,6 +248,7 @@ module.exports = function(yargs, argv, convertOptions) {
 
 			var path;
 			try {
+				var resolve = require("enhanced-resolve");
 				path = resolve.sync(process.cwd(), name);
 			} catch(e) {
 				console.log("Cannot resolve plugin " + name + ".");
@@ -297,6 +291,7 @@ module.exports = function(yargs, argv, convertOptions) {
 			ifArgPair(arg, function(name, binding) {
 				if(name === null) {
 					name = binding;
+					binding += "-loader";
 				}
 				options.module[collection].push({
 					test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
@@ -388,7 +383,7 @@ module.exports = function(yargs, argv, convertOptions) {
 			options.target = value;
 		});
 
-		mapArgToBooleanInverse("cache");
+		mapArgToBoolean("cache");
 
 		ifBooleanArg("hot", function() {
 			ensureArray(options, "plugins");
@@ -456,12 +451,6 @@ module.exports = function(yargs, argv, convertOptions) {
 			options.plugins.push(new LoaderOptionsPlugin({
 				minimize: true
 			}));
-		});
-
-		ifBooleanArg("optimize-dedupe", function() {
-			ensureArray(options, "plugins");
-			var DedupePlugin = require("../lib/optimize/DedupePlugin");
-			options.plugins.push(new DedupePlugin());
 		});
 
 		ifArg("prefetch", function(request) {

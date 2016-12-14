@@ -1,39 +1,15 @@
-## **BEFORE YOU SUBMIT** please read the following:
-If you have a support request or question please 
-submit them to [StackOverflow](http://stackoverflow.com/questions/tagged/webpack) using the tag `[webpack]` or the [webpack Gitter](https://gitter.im/webpack/webpack). Future support requests will be closed.
-(remove this from issue)
+<!-- Before creating an issue please make sure you are using the latest version of webpack. -->
 
+**Do you want to request a *feature* or report a *bug*?**
+<!-- Please ask questions on StackOverflow or the webpack Gitter (https://gitter.im/webpack/webpack). Questions will be closed. -->
 
+**What is the current behavior?**
 
-**I'm submitting a bug report**
-**I'm submitting a feature request**
-**I'm submitting a support request** => Please do not submit support request here, see note at the top of this template.
-(remove inappropriate sentences)
+**If the current behavior is a bug, please provide the steps to reproduce.**
+<!-- A great way to do this is to provide your configuration via a GitHub gist. -->
 
+**What is the expected behavior?**
 
-**Webpack version:**
-1.10.x/2.x
+**If this is a feature request, what is motivation or use case for changing the behavior?**
 
-
-**Please tell us about your environment:**
-OSX 10.x / Linux / Windows 10
-
-
-**Current behavior:**
-
-
-**Expected/desired behavior:**
-
-
-* **If the current behavior is a bug, please provide the steps to reproduce and if possible a minimal demo of the problem along with a gist/jsbin of your webpack configuration.** 
-
-
-* **What is the expected behavior?**
-
-
-* **What is the motivation / use case for changing the behavior?**
-
- 
-* **Browser:** [all | Chrome XX | Firefox XX | IE XX | Safari XX | Mobile Chrome XX | Android X.X Web Browser | iOS XX Safari | iOS XX UIWebView | iOS XX WKWebView ] 
- 
-* **Language:** [all | TypeScript X.X | ES6/7 | ES5 | Dart | ...] 
+**Please mention other relevant information such as the browser version, Node.js version, Operating System and programming language.**
