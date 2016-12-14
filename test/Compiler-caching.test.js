@@ -44,7 +44,11 @@ describe("Compiler (caching)", function() {
 
 		var compilerIteration = 1;
 
-		function runCompiler(callback) {
+		function runCompiler(options, callback) {
+			if(typeof options === "function") {
+				callback = options;
+				options = {};
+			}
 			c.run(function(err, stats) {
 				if(err) throw err;
 				should.strictEqual(typeof stats, "object");
@@ -55,9 +59,13 @@ describe("Compiler (caching)", function() {
 				should.strictEqual(typeof stats, "object");
 				stats.should.have.property("errors");
 				Array.isArray(stats.errors).should.be.ok;
-				if(stats.errors.length > 0) {
-					stats.errors[0].should.be.instanceOf(Error);
-					throw stats.errors[0];
+				if(options.expectErrors) {
+					stats.errors.length.should.be.eql(options.expectErrors);
+				} else {
+					if(stats.errors.length > 0) {
+						stats.errors[0].should.be.type("string");
+						throw new Error(stats.errors[0]);
+					}
 				}
 				stats.logs = logs;
 				callback(stats, files, compilerIteration++);
@@ -285,6 +293,44 @@ describe("Compiler (caching)", function() {
 				//stats.modules[1].built.should.be.exactly(false, 'c.js should not have built');
 
 				var aContent = fs.readFileSync(tempFixture.aFilepath).toString().replace('This is a', 'This is a MODIFIED');
+
+				fs.writeFileSync(tempFixture.aFilepath, aContent);
+
+				helper.runAgain(function(stats, files, iteration) {
+
+					// And only a.js built after it was modified
+					stats.modules[0].name.should.containEql('a.js');
+					stats.modules[0].built.should.be.exactly(true, 'a.js should have been built');
+
+					stats.modules[1].name.should.containEql('c.js');
+					//stats.modules[1].built.should.be.exactly(false, 'c.js should not have built');
+
+					done();
+				});
+			});
+		});
+	});
+
+	it("should build not keep error after fix", function(done) {
+
+		var options = {};
+		var tempFixture = createTempFixture();
+
+		var helper = compile("./temp-cache-fixture/c", options, function(stats, files) {
+
+			// Built the first time
+			stats.modules[0].name.should.containEql('a.js');
+			stats.modules[0].built.should.be.exactly(true, 'a.js should have been built');
+
+			var aContent = fs.readFileSync(tempFixture.aFilepath).toString().replace('This is a', '\"))))This is a');
+
+			fs.writeFileSync(tempFixture.aFilepath, aContent);
+
+			helper.runAgain({
+				expectErrors: 1
+			}, function(stats, files, iteration) {
+
+				var aContent = fs.readFileSync(tempFixture.aFilepath).toString().replace('\"))))This is a', 'This is a again');
 
 				fs.writeFileSync(tempFixture.aFilepath, aContent);
 
