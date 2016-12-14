@@ -1,7 +1,6 @@
 var path = require("path");
 var fs = require("fs");
 fs.existsSync = fs.existsSync || path.existsSync;
-var resolve = require("enhanced-resolve");
 var interpret = require("interpret");
 var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 
@@ -249,6 +248,7 @@ module.exports = function(yargs, argv, convertOptions) {
 
 			var path;
 			try {
+				var resolve = require("enhanced-resolve");
 				path = resolve.sync(process.cwd(), name);
 			} catch(e) {
 				console.log("Cannot resolve plugin " + name + ".");

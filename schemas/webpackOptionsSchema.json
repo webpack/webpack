@@ -187,6 +187,16 @@
         "unknownContextRequest": {
           "type": "string"
         },
+        "unsafeCache": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ]
+        },
         "wrappedContextCritical": {
           "type": "boolean"
         },
@@ -461,6 +471,9 @@
               "type": "object"
             }
           ]
+        },
+        "useSyncFileSystemCalls": {
+          "type": "boolean"
         }
       },
       "type": "object"

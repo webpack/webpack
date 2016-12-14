@@ -23,8 +23,8 @@ describe("Compiler (caching)", function() {
 		};
 
 		var c = new Compiler();
-		c.options = new WebpackOptionsApply().process(options, c);
 		new NodeEnvironmentPlugin().apply(c);
+		c.options = new WebpackOptionsApply().process(options, c);
 		var files = {};
 		c.outputFileSystem = {
 			join: path.join.bind(path),
