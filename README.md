@@ -25,7 +25,7 @@
 	</a>
   <h1>webpack</h1>
   <p>
-    webpack is a bundler for modules. The main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
+    webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
   <p>
 </div>
 
@@ -48,7 +48,7 @@ or packaging just about any resource or asset.
 * Bundles [ES Modules](http://www.2ality.com/2014/09/es6-modules-final.html), [CommonJS](http://wiki.commonjs.org/) and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
 * Can create a single bundle or multiple chunks that are asynchronously loaded at runtime (to reduce initial loading time).
 * Dependencies are resolved during compilation, reducing the runtime size.
-* Loaders can preprocess files while compiling, e.g. CoffeeScript to JavaScript, Handlebars strings to compiled functions, images to Base64, etc.
+* Loaders can preprocess files while compiling, e.g. TypeScript to JavaScript, Handlebars strings to compiled functions, images to Base64, etc.
 * Highly modular plugin system to do whatever else your application requires.
 
 ### [Get Started](https://webpack.js.org/get-started/)
@@ -119,7 +119,7 @@ or are automatically applied via regex from your webpack configuration.
 
 |Name|Status|Description|
 |:--:|:----:|:----------|
-|<img width="48" height="48" src="https://worldvectorlogo.com/logos/json.svg">|![json-npm]|Loads a JSON file|
+|<img width="48" height="48" src="https://worldvectorlogo.com/logos/json.svg">|![json-npm]|Loads a JSON file (included by default)|
 |<img width="48" height="48" src="https://cdn.rawgit.com/json5/json5-logo/master/json5-logo.svg">|![json5-npm]|Loads and transpiles a JSON 5 file|
 |<img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg">|![cson-npm]|Loads and transpiles a CSON file|
 
@@ -138,8 +138,8 @@ or are automatically applied via regex from your webpack configuration.
 |`<script>`|![script-npm]|Executes a JavaScript file once in global context (like in script tag), requires are not parsed|
 |<img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg">|[![babel-npm]][babel]|Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a>|
 |<img width="48" height="48" src="https://google.github.com/traceur-compiler/logo/tc.svg">|![traceur-npm]|Loads ES2015+ code and transpiles to ES5 using [Traceur](https://github.com/google/traceur)|
-|<img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg">|![coffee-npm]|Loads CoffeeScript like JavaScript|
 |<img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg">|![type-npm]|Loads TypeScript like JavaScript|
+|<img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg">|![coffee-npm]|Loads CoffeeScript like JavaScript|
 
 
 [script]: https://github.com/webpack/script-loader
