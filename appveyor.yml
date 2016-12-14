@@ -7,10 +7,11 @@ init:
 # what combinations to test
 environment:
   matrix:
+    - nodejs_version: 7
     - nodejs_version: 6
 
 install:
-  - ps: Install-Product node (Get-NodeJsLatestBuild $env:nodejs_version) x64
+  - ps: Install-Product node $env:nodejs_version x64
   - npm install yarn -g
   - yarn install
   - yarn link
