@@ -1,7 +1,11 @@
 module.exports = {
-	entry: "./index",
+	entry: {
+		main: "./index",
+		sec: "./index2"
+	},
 	stats: {
 		colors: true,
-		hash: false
+		hash: false,
+		entrypoints: true
 	}
 };
