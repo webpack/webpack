@@ -5,6 +5,6 @@ module.exports = {
 		hash: false
 	},
 	performance: {
-		errorOnHint: true
+		hints: "error"
 	}
 };
