@@ -8,8 +8,8 @@ async function getTemplate(templateName) {
 	}
 }
 
-getTemplate("a");
-getTemplate("b");
-getTemplate("c");
+getTemplate("foo");
+getTemplate("bar");
+getTemplate("baz");
 
 
