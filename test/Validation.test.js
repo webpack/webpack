@@ -20,7 +20,7 @@ describe("Validation", function() {
 		config: {},
 		message: [
 			" - configuration misses the property 'entry'.",
-			"   object { <key>: string | [string] } | string | [string]",
+			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]",
 			"   The entry point(s) of the compilation."
 		]
 	}, {
@@ -30,8 +30,13 @@ describe("Validation", function() {
 		},
 		message: [
 			" - configuration.entry should be one of these:",
-			"   object { <key>: string | [string] } | string | [string]",
-			"   The entry point(s) of the compilation."
+			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]",
+			"   The entry point(s) of the compilation.",
+			"   Details:",
+			"    * configuration.entry should be an object.",
+			"    * configuration.entry should not be empty.",
+			"    * configuration.entry should be an array:",
+			"      [non-empty string]"
 		]
 	}, {
 		name: "invalid instanceof",
@@ -53,10 +58,13 @@ describe("Validation", function() {
 			}
 		},
 		message: [
-			" - configuration.entry[0] should be a string.",
 			" - configuration.entry should be one of these:",
-			"   object { <key>: string | [string] } | string | [string]",
+			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]",
 			"   The entry point(s) of the compilation.",
+			"   Details:",
+			"    * configuration.entry should be an object.",
+			"    * configuration.entry should be a string.",
+			"    * configuration.entry[0] should be a string.",
 			" - configuration.output.filename should be a string."
 		]
 	}, {
@@ -70,10 +78,13 @@ describe("Validation", function() {
 			}
 		}],
 		message: [
-			" - configuration[0].entry[0] should be a string.",
 			" - configuration[0].entry should be one of these:",
-			"   object { <key>: string | [string] } | string | [string]",
+			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]",
 			"   The entry point(s) of the compilation.",
+			"   Details:",
+			"    * configuration[0].entry should be an object.",
+			"    * configuration[0].entry should be a string.",
+			"    * configuration[0].entry[0] should be a string.",
 			" - configuration[1].output.filename should be a string."
 		]
 	}, {
