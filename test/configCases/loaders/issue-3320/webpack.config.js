@@ -1,7 +1,7 @@
 module.exports = {
 	resolveLoader: {
 		alias: {
-			"any-loader": 'any-loader?foo="someMessage"'
+			"some-loader": 'any-loader?foo=someMessage'
 		}
 	},
 	module: {
@@ -10,7 +10,7 @@ module.exports = {
 				test: /a\.js$/,
 				use: [
 					{
-						loader: "any-loader"
+						loader: "some-loader"
 					}
 				]
 			},
@@ -18,8 +18,21 @@ module.exports = {
 				test: /b\.js$/,
 				use: [
 					{
-						loader: 'any-loader?foo="someOtherMessage"'
+						loader: 'some-loader',
+						options: {
+							foo: "someOtherMessage"
+						}
 					}
+				]
+			},
+			{
+				test: /b2\.js$/,
+				loader: 'some-loader?foo=someOtherMessage'
+			},
+			{
+				test: /b3\.js$/,
+				use: [
+					'some-loader?foo=someOtherMessage'
 				]
 			}
 		]
