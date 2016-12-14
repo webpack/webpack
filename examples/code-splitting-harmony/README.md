@@ -103,6 +103,9 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
 
+/******/ 		if (__webpack_require__.nc) {
+/******/ 			script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 		}
 /******/ 		script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
@@ -116,12 +119,14 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
-/******/ 		head.appendChild(script);
 
 /******/ 		var promise = new Promise(function(resolve, reject) {
 /******/ 			installedChunks[chunkId] = [resolve, reject];
 /******/ 		});
-/******/ 		return installedChunks[chunkId][2] = promise;
+/******/ 		installedChunks[chunkId][2] = promise;
+
+/******/ 		head.appendChild(script);
+/******/ 		return promise;
 /******/ 	};
 
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -135,11 +140,13 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -231,11 +238,12 @@ webpackAsyncContext.id = 1;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_a__ = __webpack_require__(/*! a */ 0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_a___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_a__);
 
 
-__webpack_require__.e/* System.import */(2).then(__webpack_require__.bind(null, /*! b */ 4)).then(function(b) {
+__webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, /*! b */ 4)).then(function(b) {
 	console.log("b loaded", b);
 })
 
@@ -258,14 +266,13 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 ## Uncompressed
 
 ```
-Hash: 4b129c7737355e51d1bd
-Version: webpack 2.1.0-beta.25
-Time: 151ms
+Hash: a7c705649f12226cfe93
+Version: webpack 2.2.0-rc.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  216 bytes       0  [emitted]  
 1.output.js  216 bytes       1  [emitted]  
 2.output.js  208 bytes       2  [emitted]  
-  output.js    6.94 kB       3  [emitted]  main
+  output.js    7.22 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
     [3] ./~/c/2.js 13 bytes {0} [optional] [built]
@@ -278,28 +285,27 @@ chunk    {1} 1.output.js 13 bytes {3} [rendered]
 chunk    {2} 2.output.js 11 bytes {3} [rendered]
     > [5] ./example.js 3:0-18
     [4] ./~/b.js 11 bytes {2} [built]
-        System.import b [5] ./example.js 3:0-18
-chunk    {3} output.js (main) 427 bytes [entry] [rendered]
+        import() b [5] ./example.js 3:0-18
+chunk    {3} output.js (main) 440 bytes [entry] [rendered]
     > main [5] ./example.js 
     [0] ./~/a.js 11 bytes {3} [built]
         [no exports used]
         harmony import a [5] ./example.js 1:0-18
     [1] ./~/c async ^\.\/.*$ 160 bytes {3} [built]
         System.import context c [5] ./example.js 8:8-34
-    [5] ./example.js 256 bytes {3} [built]
+    [5] ./example.js 269 bytes {3} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 4b129c7737355e51d1bd
-Version: webpack 2.1.0-beta.25
-Time: 321ms
+Hash: a7c705649f12226cfe93
+Version: webpack 2.2.0-rc.2
       Asset      Size  Chunks             Chunk Names
 0.output.js  38 bytes       0  [emitted]  
 1.output.js  38 bytes       1  [emitted]  
 2.output.js  38 bytes       2  [emitted]  
-  output.js   1.83 kB       3  [emitted]  main
+  output.js   1.92 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
     [3] ./~/c/2.js 13 bytes {0} [optional] [built]
@@ -312,13 +318,13 @@ chunk    {1} 1.output.js 13 bytes {3} [rendered]
 chunk    {2} 2.output.js 11 bytes {3} [rendered]
     > [5] ./example.js 3:0-18
     [4] ./~/b.js 11 bytes {2} [built]
-        System.import b [5] ./example.js 3:0-18
-chunk    {3} output.js (main) 427 bytes [entry] [rendered]
+        import() b [5] ./example.js 3:0-18
+chunk    {3} output.js (main) 440 bytes [entry] [rendered]
     > main [5] ./example.js 
     [0] ./~/a.js 11 bytes {3} [built]
         [no exports used]
         harmony import a [5] ./example.js 1:0-18
     [1] ./~/c async ^\.\/.*$ 160 bytes {3} [built]
         System.import context c [5] ./example.js 8:8-34
-    [5] ./example.js 256 bytes {3} [built]
+    [5] ./example.js 269 bytes {3} [built]
 ```

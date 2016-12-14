@@ -59,7 +59,7 @@ var namedExport = module.named;
 # harmony.js
 
 ``` javascript
-// just som exports
+// just some exports
 export default "default";
 export var named = "named";
 ```
@@ -108,11 +108,13 @@ export var named = "named";
 
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -204,8 +206,9 @@ var namedExport = module.named;
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /* harmony export (binding) */ __webpack_require__.d(exports, "named", function() { return named; });
-// just som exports
+// just some exports
 /* harmony default export */ exports["default"] = "default";
 var named = "named";
 
@@ -220,6 +223,7 @@ var named = "named";
 /***/ function(module, exports, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__fs__ = __webpack_require__(/*! ./fs */ 0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__fs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__fs__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__reexport_commonjs__ = __webpack_require__(/*! ./reexport-commonjs */ 2);
@@ -252,57 +256,55 @@ __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__reexport_commonjs__["readFile
 ## Uncompressed
 
 ```
-Hash: 9fcf8b5e9ebb2df45bb7
-Version: webpack 2.1.0-beta.25
-Time: 118ms
+Hash: c7c57e77df6373b61b12
+Version: webpack 2.2.0-rc.2
     Asset     Size  Chunks             Chunk Names
-output.js  5.84 kB       0  [emitted]  main
+output.js  6.08 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 1.16 kB [entry] [rendered]
+chunk    {0} output.js (main) 1.2 kB [entry] [rendered]
     > main [4] ./example.js 
-    [0] ./fs.js 258 bytes {0} [built]
+    [0] ./fs.js 265 bytes {0} [built]
         [only some exports used: default, readFile]
         harmony import ./fs [2] ./reexport-commonjs.js 2:0-21
         harmony import ./fs [4] ./example.js 4:0-22
         harmony import ./fs [4] ./example.js 5:0-32
         harmony import ./fs [4] ./example.js 6:0-28
-    [1] ./example2.js 152 bytes {0} [built]
+    [1] ./example2.js 159 bytes {0} [built]
         [no exports used]
         harmony import ./example2 [4] ./example.js 16:0-20
-    [2] ./reexport-commonjs.js 301 bytes {0} [built]
+    [2] ./reexport-commonjs.js 308 bytes {0} [built]
         [only some exports used: readFile]
         harmony import ./reexport-commonjs [4] ./example.js 12:0-60
-    [3] ./harmony.js 74 bytes {0} [built]
+    [3] ./harmony.js 78 bytes {0} [built]
         [exports: default, named]
         cjs require ./harmony [1] ./example2.js 4:13-33
-    [4] ./example.js 373 bytes {0} [built]
+    [4] ./example.js 389 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9fcf8b5e9ebb2df45bb7
-Version: webpack 2.1.0-beta.25
-Time: 241ms
-    Asset       Size  Chunks             Chunk Names
-output.js  948 bytes       0  [emitted]  main
+Hash: c7c57e77df6373b61b12
+Version: webpack 2.2.0-rc.2
+    Asset     Size  Chunks             Chunk Names
+output.js  1.06 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 1.16 kB [entry] [rendered]
+chunk    {0} output.js (main) 1.2 kB [entry] [rendered]
     > main [4] ./example.js 
-    [0] ./fs.js 258 bytes {0} [built]
+    [0] ./fs.js 265 bytes {0} [built]
         [only some exports used: default, readFile]
         harmony import ./fs [2] ./reexport-commonjs.js 2:0-21
         harmony import ./fs [4] ./example.js 4:0-22
         harmony import ./fs [4] ./example.js 5:0-32
         harmony import ./fs [4] ./example.js 6:0-28
-    [1] ./example2.js 152 bytes {0} [built]
+    [1] ./example2.js 159 bytes {0} [built]
         [no exports used]
         harmony import ./example2 [4] ./example.js 16:0-20
-    [2] ./reexport-commonjs.js 301 bytes {0} [built]
+    [2] ./reexport-commonjs.js 308 bytes {0} [built]
         [only some exports used: readFile]
         harmony import ./reexport-commonjs [4] ./example.js 12:0-60
-    [3] ./harmony.js 74 bytes {0} [built]
+    [3] ./harmony.js 78 bytes {0} [built]
         [exports: default, named]
         cjs require ./harmony [1] ./example2.js 4:13-33
-    [4] ./example.js 373 bytes {0} [built]
+    [4] ./example.js 389 bytes {0} [built]
 ```

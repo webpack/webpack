@@ -126,12 +126,14 @@ export default foo;
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
-/******/ 		head.appendChild(script);
 
 /******/ 		var promise = new Promise(function(resolve, reject) {
 /******/ 			installedChunks[chunkId] = [resolve, reject];
 /******/ 		});
-/******/ 		return installedChunks[chunkId][2] = promise;
+/******/ 		installedChunks[chunkId][2] = promise;
+
+/******/ 		head.appendChild(script);
+/******/ 		return promise;
 /******/ 	};
 
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -266,14 +268,13 @@ getTemplate("baz");
 ## Uncompressed
 
 ```
-Hash: 7808f67813880d1df93e
-Version: webpack 2.1.0-beta.27
-Time: 188ms
+Hash: a8f8b7fb22a89feb3e0f
+Version: webpack 2.2.0-rc.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  402 bytes       0  [emitted]  
 1.output.js  402 bytes       1  [emitted]  
 2.output.js  408 bytes       2  [emitted]  
-  output.js    6.81 kB       3  [emitted]  main
+  output.js    6.83 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 41 bytes {3} [rendered]
     [3] ./templates/foo.js 41 bytes {0} [optional] [built]
@@ -300,14 +301,13 @@ chunk    {3} output.js (main) 456 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 7808f67813880d1df93e
-Version: webpack 2.1.0-beta.27
-Time: 293ms
+Hash: a8f8b7fb22a89feb3e0f
+Version: webpack 2.2.0-rc.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  125 bytes       0  [emitted]  
 1.output.js  125 bytes       1  [emitted]  
 2.output.js  124 bytes       2  [emitted]  
-  output.js    6.49 kB       3  [emitted]  main
+  output.js    6.51 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 41 bytes {3} [rendered]
     [3] ./templates/foo.js 41 bytes {0} [optional] [built]
@@ -331,5 +331,5 @@ chunk    {3} output.js (main) 456 bytes [entry] [rendered]
     [4] ./example.js 296 bytes {3} [built]
 
 ERROR in output.js from UglifyJs
-SyntaxError: Unexpected token: keyword (function) [output.js:192,6]
+SyntaxError: Unexpected token: keyword (function) [output.js:194,6]
 ```

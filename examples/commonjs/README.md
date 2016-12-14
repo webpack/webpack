@@ -79,11 +79,13 @@ exports.add = function() {
 
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -161,35 +163,33 @@ inc(a); // 2
 ## Uncompressed
 
 ```
-Hash: 347d551e233e017e5be5
-Version: webpack 2.1.0-beta.25
-Time: 114ms
+Hash: e1255027e5264a895afa
+Version: webpack 2.2.0-rc.2
     Asset     Size  Chunks             Chunk Names
-output.js  3.33 kB       0  [emitted]  main
+output.js  3.42 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 318 bytes [entry] [rendered]
+chunk    {0} output.js (main) 329 bytes [entry] [rendered]
     > main [2] ./example.js 
-    [0] ./increment.js 95 bytes {0} [built]
+    [0] ./increment.js 98 bytes {0} [built]
         cjs require ./increment [2] ./example.js 1:10-32
-    [1] ./math.js 156 bytes {0} [built]
+    [1] ./math.js 162 bytes {0} [built]
         cjs require ./math [0] ./increment.js 1:10-27
-    [2] ./example.js 67 bytes {0} [built]
+    [2] ./example.js 69 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 347d551e233e017e5be5
-Version: webpack 2.1.0-beta.25
-Time: 219ms
+Hash: e1255027e5264a895afa
+Version: webpack 2.2.0-rc.2
     Asset       Size  Chunks             Chunk Names
-output.js  703 bytes       0  [emitted]  main
+output.js  713 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 318 bytes [entry] [rendered]
+chunk    {0} output.js (main) 329 bytes [entry] [rendered]
     > main [2] ./example.js 
-    [0] ./increment.js 95 bytes {0} [built]
+    [0] ./increment.js 98 bytes {0} [built]
         cjs require ./increment [2] ./example.js 1:10-32
-    [1] ./math.js 156 bytes {0} [built]
+    [1] ./math.js 162 bytes {0} [built]
         cjs require ./math [0] ./increment.js 1:10-27
-    [2] ./example.js 67 bytes {0} [built]
+    [2] ./example.js 69 bytes {0} [built]
 ```

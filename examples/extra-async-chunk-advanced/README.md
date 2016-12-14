@@ -122,6 +122,9 @@ module.exports = {
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
 
+/******/ 		if (__webpack_require__.nc) {
+/******/ 			script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 		}
 /******/ 		script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
@@ -135,12 +138,14 @@ module.exports = {
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
-/******/ 		head.appendChild(script);
 
 /******/ 		var promise = new Promise(function(resolve, reject) {
 /******/ 			installedChunks[chunkId] = [resolve, reject];
 /******/ 		});
-/******/ 		return installedChunks[chunkId][2] = promise;
+/******/ 		installedChunks[chunkId][2] = promise;
+
+/******/ 		head.appendChild(script);
+/******/ 		return promise;
 /******/ 	};
 
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -154,11 +159,13 @@ module.exports = {
 
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -196,22 +203,22 @@ module.exports = {
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
-Promise.all/* require */([__webpack_require__.e(1), __webpack_require__.e(0), __webpack_require__.e(4)]).catch(function(err) { __webpack_require__.oe(err); }).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 2)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
+Promise.all/* require */([__webpack_require__.e(1), __webpack_require__.e(0), __webpack_require__.e(4)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 2)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 
-Promise.all/* nsure */([__webpack_require__.e(1), __webpack_require__.e(0), __webpack_require__.e(3)]).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
+Promise.all/* require.ensure */([__webpack_require__.e(1), __webpack_require__.e(0), __webpack_require__.e(3)]).then((function(require) {
 	__webpack_require__(/*! ./b */ 1);
 	__webpack_require__(/*! ./d */ 3);
-}).bind(null, __webpack_require__));
+}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-Promise.all/* nsure */([__webpack_require__.e(1), __webpack_require__.e(2)]).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
+Promise.all/* require.ensure */([__webpack_require__.e(1), __webpack_require__.e(2)]).then((function(require) {
 	__webpack_require__(/*! ./a */ 0);
-	Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(6)]).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
+	Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e(6)]).then((function(require) {
 		__webpack_require__(/*! ./f */ 5);
-	}).bind(null, __webpack_require__));
-	Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(5)]).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
+	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+	Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e(5)]).then((function(require) {
 		__webpack_require__(/*! ./g */ 6);
-	}).bind(null, __webpack_require__));
-}).bind(null, __webpack_require__));
+	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
 
 /***/ }
@@ -224,9 +231,8 @@ Promise.all/* nsure */([__webpack_require__.e(1), __webpack_require__.e(2)]).cat
 ## Uncompressed
 
 ```
-Hash: 09bb2a8779c90d5320d0
-Version: webpack 2.1.0-beta.25
-Time: 150ms
+Hash: 632a15ef6fe4372394ce
+Version: webpack 2.2.0-rc.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  218 bytes       0  [emitted]  async2
 1.output.js  209 bytes       1  [emitted]  async1
@@ -235,9 +241,9 @@ Time: 150ms
 4.output.js  212 bytes       4  [emitted]  
 5.output.js  212 bytes       5  [emitted]  
 6.output.js  212 bytes       6  [emitted]  
-  output.js    6.83 kB       7  [emitted]  main
+  output.js    6.98 kB       7  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js (async2) 21 bytes {7} {2} [rendered]
+chunk    {0} 0.output.js (async2) 21 bytes {2} {7} [rendered]
     > async commons duplicate [7] ./example.js 1:0-52
     > async commons duplicate [7] ./example.js 3:0-6:2
     > async commons duplicate [7] ./example.js 10:1-12:3
@@ -276,17 +282,16 @@ chunk    {6} 6.output.js 21 bytes {2} [rendered]
     > [7] ./example.js 10:1-12:3
     [5] ./f.js 21 bytes {6} [built]
         cjs require ./f [7] ./example.js 11:2-16
-chunk    {7} output.js (main) 346 bytes [entry] [rendered]
+chunk    {7} output.js (main) 362 bytes [entry] [rendered]
     > main [7] ./example.js 
-    [7] ./example.js 346 bytes {7} [built]
+    [7] ./example.js 362 bytes {7} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 09bb2a8779c90d5320d0
-Version: webpack 2.1.0-beta.25
-Time: 324ms
+Hash: 632a15ef6fe4372394ce
+Version: webpack 2.2.0-rc.2
       Asset      Size  Chunks             Chunk Names
 0.output.js  50 bytes       0  [emitted]  async2
 1.output.js  49 bytes       1  [emitted]  async1
@@ -295,9 +300,9 @@ Time: 324ms
 4.output.js  51 bytes       4  [emitted]  
 5.output.js  51 bytes       5  [emitted]  
 6.output.js  51 bytes       6  [emitted]  
-  output.js   1.84 kB       7  [emitted]  main
+  output.js   1.81 kB       7  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js (async2) 21 bytes {7} {2} [rendered]
+chunk    {0} 0.output.js (async2) 21 bytes {2} {7} [rendered]
     > async commons duplicate [7] ./example.js 1:0-52
     > async commons duplicate [7] ./example.js 3:0-6:2
     > async commons duplicate [7] ./example.js 10:1-12:3
@@ -336,7 +341,7 @@ chunk    {6} 6.output.js 21 bytes {2} [rendered]
     > [7] ./example.js 10:1-12:3
     [5] ./f.js 21 bytes {6} [built]
         cjs require ./f [7] ./example.js 11:2-16
-chunk    {7} output.js (main) 346 bytes [entry] [rendered]
+chunk    {7} output.js (main) 362 bytes [entry] [rendered]
     > main [7] ./example.js 
-    [7] ./example.js 346 bytes {7} [built]
+    [7] ./example.js 362 bytes {7} [built]
 ```
