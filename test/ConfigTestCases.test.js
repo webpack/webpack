@@ -11,6 +11,7 @@ var webpack = require("../lib/webpack");
 describe("ConfigTestCases", function() {
 	var casesPath = path.join(__dirname, "configCases");
 	var categories = fs.readdirSync(casesPath);
+
 	categories = categories.map(function(cat) {
 		return {
 			name: cat,
