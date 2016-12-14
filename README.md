@@ -51,9 +51,9 @@ or packaging just about any resource or asset.
 * Loaders can preprocess files while compiling, e.g. TypeScript to JavaScript, Handlebars strings to compiled functions, images to Base64, etc.
 * Highly modular plugin system to do whatever else your application requires.
 
-### [Get Started](https://webpack.js.org/get-started/)
+### Get Started
 
-Check out webpack's [documentation](https://webpack.js.org/guides/) in-depth usage, tutorials and resources.
+Check out webpack's quick [**Get Started**](https://webpack.js.org/get-started/) guide and the [other guides](https://webpack.js.org/guides/).
 
 <h2 align="center">Concepts</h2>
 
