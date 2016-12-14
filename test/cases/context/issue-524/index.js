@@ -1,6 +1,6 @@
 it("should support an empty context", function() {
 	var c = require.context(".", true, /^nothing$/);
-	c.id.should.be.type("number");
+	(typeof c.id).should.be.oneOf(["number", "string"]);
 	(function() {
 		c.resolve("");
 	}).should.throw();
