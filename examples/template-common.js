@@ -12,7 +12,8 @@ function lessStrict(regExpStr) {
 	return regExpStr;
 }
 
-var runtimeRegexp = /(```\s*(?:js|javascript)\n)(\/\*\*\*\*\*\*\/ \(function\(modules\) \{ \/\/ webpackBootstrap\n(?:.|\n)*\n\/\*\*\*\*\*\*\/ \}\)\n\/\**\/\n)/;
+var runtimeRegexp = /(```\s*(?:js|javascript)\n)?(.*)(\/\*\*\*\*\*\*\/ \(function\(modules\) \{ \/\/ webpackBootstrap\n(?:.|\n)*?\n\/\*\*\*\*\*\*\/ \}\)\n\/\**\/\n)/;
+var timeRegexp = /\s*Time: \d+ms/g;
 
 module.exports = function(template, baseDir, stdout, prefix) {
 
@@ -26,7 +27,7 @@ module.exports = function(template, baseDir, stdout, prefix) {
 	webpack = new RegExp(webpack, "g");
 	webpackParent = lessStrict(webpackParent.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
 	webpackParent = new RegExp(webpackParent, "g");
-	
+
 	return template.replace(regexp, function(match) {
 		match = match.substr(2 + (prefix ? prefix.length+1 : 0), match.length - 4 - (prefix ? prefix.length+1 : 0));
 		if(match === "stdout")
@@ -37,9 +38,12 @@ module.exports = function(template, baseDir, stdout, prefix) {
 		.replace(cwd, ".")
 		.replace(webpack, "(webpack)")
 		.replace(webpackParent, "(webpack)/~")
+		.replace(timeRegexp, "")
 		.replace(runtimeRegexp, function(match) {
 			match = runtimeRegexp.exec(match);
-			return "<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>\n" + match[1] + match[2] + "```\n</details>\n" + match[1];
+			var prefix = match[1] ? "" : "```\n";
+			var inner = match[1] ? match[1] : "``` js\n";
+			return prefix + "<details><summary>`" + match[2] + "/******/ (function(modules) { /* webpackBootstrap */ })`</summary>\n" + inner + match[2] + match[3] + "```\n</details>\n" + inner;
 		});
-	
+
 }
