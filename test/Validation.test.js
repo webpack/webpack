@@ -130,6 +130,20 @@ describe("Validation", function() {
 			"       })",
 			"     ]"
 		]
+	}, {
+		name: "enum",
+		config: {
+			entry: "a",
+			devtool: true
+		},
+		message: [
+			" - configuration.devtool should be one of these:",
+			"   string | false",
+			"   A developer tool to enhance debugging.",
+			"   Details:",
+			"    * configuration.devtool should be a string.",
+			"    * configuration.devtool should be false"
+		]
 	}];
 	testCases.forEach(function(testCase) {
 		it("should fail validation for " + testCase.name, function() {
