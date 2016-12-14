@@ -46,3 +46,7 @@ after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
   - cat ./coverage/coverage.json | node_modules/codecov.io/bin/codecov.io.js
   - rm -rf ./coverage
+
+notifications:
+  slack:
+    secure: JduSdKWwbnLCwo7Z4E59SGE+Uw832UwnXzQiKEpg1BV45MYDPRiGltly1tRHmPh9OGjvGx3XSkC2tNGOBLtL4UL2SCkf012x0t7jDutKRfcv/njynl8jk8l+UhPmaWiHXDQAgGiiKdL4RfzPLW3HeVHCOWm0LKMzcarTa8tw+rE=
