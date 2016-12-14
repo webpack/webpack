@@ -1,10 +1,18 @@
 Time: <CLR=BOLD>X</CLR>ms
-  <CLR=BOLD>Asset</CLR>    <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-<CLR=33,BOLD>main.js</CLR>  <CLR=33,BOLD>303 kB</CLR>       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
-chunk    {<CLR=33,BOLD>0</CLR>} <CLR=32,BOLD>main.js</CLR> (main) 300 kB<CLR=33,BOLD> [entry]</CLR><CLR=32,BOLD> [rendered]</CLR>
-    [0] <CLR=BOLD>(webpack)/test/statsCases/performance-no-async-chunks-shown/a.js</CLR> 300 kB {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
-    [1] <CLR=BOLD>(webpack)/test/statsCases/performance-no-async-chunks-shown/b.js</CLR> 22 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
-    [2] <CLR=BOLD>(webpack)/test/statsCases/performance-no-async-chunks-shown/index.js</CLR> 32 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+  <CLR=BOLD>Asset</CLR>     <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
+ <CLR=32,BOLD>sec.js</CLR>  2.85 kB       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         sec
+<CLR=33,BOLD>main.js</CLR>   <CLR=33,BOLD>303 kB</CLR>       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
+Entrypoint <CLR=BOLD>sec</CLR> = <CLR=32,BOLD>sec.js</CLR>
+chunk    {<CLR=33,BOLD>0</CLR>} <CLR=32,BOLD>sec.js</CLR> (sec) 114 bytes<CLR=33,BOLD> [entry]</CLR><CLR=32,BOLD> [rendered]</CLR>
+    [0] <CLR=BOLD>(webpack)/test/statsCases/performance-no-async-chunks-shown/b.js</CLR> 22 bytes {<CLR=33,BOLD>0</CLR>} {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
+    [2] <CLR=BOLD>(webpack)/test/statsCases/performance-no-async-chunks-shown/c.js</CLR> 22 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+    [3] <CLR=BOLD>(webpack)/test/statsCases/performance-no-async-chunks-shown/d.js</CLR> 22 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+    [5] <CLR=BOLD>(webpack)/test/statsCases/performance-no-async-chunks-shown/index2.js</CLR> 48 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+chunk    {<CLR=33,BOLD>1</CLR>} <CLR=32,BOLD>main.js</CLR> (main) 300 kB<CLR=33,BOLD> [entry]</CLR><CLR=32,BOLD> [rendered]</CLR>
+    [0] <CLR=BOLD>(webpack)/test/statsCases/performance-no-async-chunks-shown/b.js</CLR> 22 bytes {<CLR=33,BOLD>0</CLR>} {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
+    [1] <CLR=BOLD>(webpack)/test/statsCases/performance-no-async-chunks-shown/a.js</CLR> 300 kB {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
+    [4] <CLR=BOLD>(webpack)/test/statsCases/performance-no-async-chunks-shown/index.js</CLR> 32 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
 
 <CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (250 kB). 
 This can impact web performance.

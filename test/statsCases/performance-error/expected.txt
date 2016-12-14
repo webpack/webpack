@@ -4,6 +4,7 @@ Time: <CLR=BOLD>X</CLR>ms
    <CLR=32,BOLD>1.js</CLR>  106 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
    <CLR=32,BOLD>2.js</CLR>  200 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
 <CLR=33,BOLD>main.js</CLR>     <CLR=33,BOLD>306 kB</CLR>       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
 chunk    {<CLR=33,BOLD>0</CLR>} <CLR=32,BOLD>0.js</CLR> 54 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [rendered]</CLR>
     [2] <CLR=BOLD>(webpack)/test/statsCases/performance-error/c.js</CLR> 54 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
 chunk    {<CLR=33,BOLD>1</CLR>} <CLR=32,BOLD>1.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [rendered]</CLR>
