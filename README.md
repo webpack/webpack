@@ -53,7 +53,7 @@ or packaging just about any resource or asset.
 
 ### [Get Started](https://webpack.js.org/get-started/)
 
-Check out webpack's [docs](https://webpack.js.org/guides/) for quick Getting Started guide, in-depth usage, tutorials and resources.
+Check out webpack's [documentation](https://webpack.js.org/guides/) in-depth usage, tutorials and resources.
 
 <h2 align="center">Concepts</h2>
 
@@ -225,7 +225,7 @@ or are automatically applied via regex from your webpack configuration.
 
 |Name|Status|Description|
 |:--:|:----:|:----------|
-|<img width="48" height="48" src="https://worldvectorlogo.com/logos/vue-9.svg">|![vue-npm]|Loads an compiles Vue Conents|
+|<img width="48" height="48" src="https://worldvectorlogo.com/logos/vue-9.svg">|![vue-npm]|Loads and compiles Vue Components|
 |<img width="48" height="48" src="https://worldvectorlogo.com/logos/polymer.svg">|![polymer-npm]|Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules|
 |<img width="48" height="48" src="https://worldvectorlogo.com/logos/angular-icon-1.svg">|![angular-npm]| Loads and compiles Angular 2 Components|
 
@@ -259,100 +259,6 @@ JavaScript** by deduplicating frequently used modules, minifying, and giving
 you full control of what is loaded initially and what is loaded at runtime
 through code splitting. It can also make your code chunks **cache
 friendly** by using hashes.
-
-<h2 align="center">Example</h2>
-
-**app.js**
-```js
-
-import React from 'react';
-import { render } from 'react-dom';
-
-import $ from './styles/app.scss';
-
-class App extends React.Component {
-  render () {
-    return (
-      <div className={$.intro}>
-        <h1 className={$.intro__title}>Hello Webpack!</h1>
-      </div>
-    );
-  }
-}
-
-render(<App />, document.getElementbyId('app'));
-```
-
-**webpack.config.js**
-```js
-const { CommonChunksPlugin } = require('webpack').optimize;
-
-const HTMLPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-
-module.exports = {
-  context: `${__dirname}/src`,
-  entry: {
-    app: 'app.js',
-    vendor: ['react', 'react-dom']
-  },
-  output: {
-    path: `${__dirname}/dest/`,
-    filename: '[name].bundle.js'
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(js|jsx)$/,
-        use: [
-          { loader: 'babel-loader', options: { exclude: /node_modules/ } }
-        ]
-      },
-      {
-        test: /\.(sass|scss)$/,
-        use: [ ExtractTextPlugin.extract({
-          fallbackLoader: 'style-loader',
-          loader: [
-            { loader: 'css-loader', options: { importLoaders: 1 } },
-            'sass-loader'
-          ]
-        })]
-      }
-    ]
-  },
-  plugins: [
-    new HTMLPlugin({ template: 'src/index.html' }),
-    new ExtractTextPlugin('[name].bundle.css'),
-    new CommonChunkPlugin({
-      name: 'vendor',
-      filename: '[name].bundle.js',
-      chunks: ['app'],
-      minChunks: Infinity
-    })
-  ]
-}
-```
-
-**app.bundle.css,
-app.bundle.js,
-vendor.bundle.js**
-```html
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Webpack</title>
-    <link rel="stylesheet" href="app.bundle.css">
-  </head>
-  <body>
-    <div id="app">
-
-
-    <script src="vendor.bundle.js"></script>
-    <script src="app.bundle.js"></script>
-  </body>
-</html>
-```
 
 <h2 align="center">Contributing</h2>
 
@@ -440,7 +346,7 @@ This is how we use the donations:
 * Infrastructure cost
 * Fees for money handling
 
-### Early Backers && Sponsors
+### Early Backers and Sponsors
 
 We had other sources of donations before starting to use OpenCollective. We want to acknowledge these early sponsors and backers, but donations were not public and we are not sure of donors want to stay anonymous. So if you want to be in this list, just drop @sokra a note via mail (`t____.k____@gmail.com`, insert fullname here).
 
