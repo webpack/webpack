@@ -104,7 +104,7 @@ describe("TestCases", function() {
 						var filterPath = path.join(testDirectory, "test.filter.js");
 						if(fs.existsSync(filterPath) && !require(filterPath)(config)) {
 							describe.skip(test, function() {
-								it('filtered')
+								it('filtered');
 							});
 							return false;
 						}
