@@ -2,6 +2,6 @@ var webpack = require("../../../../");
 
 module.exports = {
 	plugins: [
-		new webpack.WatchIgnorePlugin()
+		new webpack.WatchIgnorePlugin([/file\.js$/])
 	]
 };
