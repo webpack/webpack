@@ -293,7 +293,7 @@ function processOptions(options) {
 	}
 
 	function compilerCallback(err, stats) {
-		if(!options.watch) {
+		if(!options.watch || err) {
 			// Do not keep cache anymore
 			compiler.purgeInputFileSystem();
 		}
@@ -301,11 +301,7 @@ function processOptions(options) {
 			lastHash = null;
 			console.error(err.stack || err);
 			if(err.details) console.error(err.details);
-			if(!options.watch) {
-				process.on("exit", function() {
-					process.exit(1); // eslint-disable-line
-				});
-			}
+			process.exit(1); // eslint-disable-line
 			return;
 		}
 		if(outputOptions.json) {
