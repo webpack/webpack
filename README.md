@@ -71,7 +71,7 @@ within webpack itself use this plugin interface. This makes webpack very
 |[component-webpack-plugin][component]|![component-npm]|Use components with webpack|
 |[compression-webpack-plugin][compression]|![compression-npm]|Prepare compressed versions of assets to serve them with Content-Encoding|
 |[i18n-webpack-plugin][i18n]|![i18n-npm]|Adds i18n support to your bundles|
-|[html-webpack-plugin][html]|![html-npm]| Simplifies creation of HTML files (`index.html`) to serve your bundles|
+|[html-webpack-plugin][html-plugin]|![html-plugin-npm]| Simplifies creation of HTML files (`index.html`) to serve your bundles|
 
 
 [common]: https://github.com/webpack/webpack/blob/master/lib/optimize/CommonsChunkPlugin.js
@@ -84,8 +84,8 @@ within webpack itself use this plugin interface. This makes webpack very
 [compression-npm]: https://img.shields.io/npm/v/compression-webpack-plugin.svg
 [i18n]: https://github.com/webpack/i18n-webpack-plugin
 [i18n-npm]: https://img.shields.io/npm/v/i18n-webpack-plugin.svg
-[html]: https://github.com/ampedandwired/html-webpack-plugin
-[html-npm]: https://img.shields.io/npm/v/component-webpack-plugin.svg
+[html-plugin]: https://github.com/ampedandwired/html-webpack-plugin
+[html-plugin-npm]: https://img.shields.io/npm/v/component-webpack-plugin.svg
 
 ### [Loaders](https://webpack.js.org/loaders/)
 
