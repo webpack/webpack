@@ -85,7 +85,7 @@ within webpack itself use this plugin interface. This makes webpack very
 [i18n]: https://github.com/webpack/i18n-webpack-plugin
 [i18n-npm]: https://img.shields.io/npm/v/i18n-webpack-plugin.svg
 [html-plugin]: https://github.com/ampedandwired/html-webpack-plugin
-[html-plugin-npm]: https://img.shields.io/npm/v/component-webpack-plugin.svg
+[html-plugin-npm]: https://img.shields.io/npm/v/html-webpack-plugin.svg
 
 ### [Loaders](https://webpack.js.org/loaders/)
 
