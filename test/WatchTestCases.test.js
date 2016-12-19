@@ -95,11 +95,16 @@ describe("WatchTestCases", function() {
 
 						var runIdx = 0;
 						var run = runs[runIdx];
+						var lastHash = "";
 						copyDiff(path.join(testDirectory, run.name), tempDirectory);
 
 						var compiler = webpack(options);
 						compiler.watch({}, function(err, stats) {
-							if(run.done) return;
+							if(stats.hash === lastHash)
+								return;
+							lastHash = stats.hash;
+							if(run.done)
+								return done(new Error("Compilation changed but no change was issued " + lastHash + " != " + stats.hash + " (run " + runIdx + ")"));
 							run.done = true;
 							if(err) return done(err);
 							var statOptions = Stats.presetToOptions("verbose");
