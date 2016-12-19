@@ -47,6 +47,7 @@ describe("Stats", function() {
 				c.apply(new webpack.optimize.OccurrenceOrderPlugin());
 			});
 			c.run(function(err, stats) {
+				options = Array.isArray(options) ? options[0] : options;
 				if(err) return done(err);
 
 				if(/error$/.test(testName)) {
@@ -59,7 +60,6 @@ describe("Stats", function() {
 					colors: false
 				};
 				var hasColorSetting = false;
-
 				if(typeof options.stats !== "undefined") {
 					toStringOptions = options.stats;
 
@@ -165,7 +165,8 @@ describe("Stats", function() {
 					reasons: false,
 					usedExports: false,
 					providedExports: false,
-					colors: true
+					colors: true,
+					performance: true
 				});
 			});
 			it("truthy values behave as 'normal'", function() {
@@ -194,7 +195,8 @@ describe("Stats", function() {
 					errors: false,
 					errorDetails: false,
 					warnings: false,
-					publicPath: false
+					publicPath: false,
+					performance: false
 				});
 			});
 			it("falsy values behave as 'none'", function() {

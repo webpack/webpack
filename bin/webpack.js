@@ -150,6 +150,15 @@ function ifArg(name, fn, init) {
 	}
 }
 
+function hasPresetPredicate(options) {
+	return typeof options.stats === "boolean" || typeof options.stats === "string";
+}
+
+function hasPreset(optionsArray) {
+	options = Array.isArray(optionsArray) ? optionsArray : [optionsArray];
+	return options.some(hasPresetPredicate);
+}
+
 function processOptions(options) {
 	// process Promise
 	if(typeof options.then === "function") {
@@ -160,11 +169,20 @@ function processOptions(options) {
 		return;
 	}
 
+	// var firstOptions = Array.isArray(options) ? (options[0] || {}) : options;
 	var firstOptions = Array.isArray(options) ? (options[0] || {}) : options;
-
-	if(typeof options.stats === "boolean" || typeof options.stats === "string") {
+	if(hasPreset(options)) {
 		var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
-		options.stats = statsPresetToOptions(options.stats);
+
+		if(Array.isArray(options)) {
+
+			options = options.map(function(singleOption) {
+				singleOption.stats = statsPresetToOptions(singleOption.stats);
+				return singleOption;
+			})
+		} else {
+			options.stats = statsPresetToOptions(options.stats);
+		}
 	}
 
 	var outputOptions = Object.create(options.stats || firstOptions.stats || {});
