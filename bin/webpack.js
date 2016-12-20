@@ -169,17 +169,14 @@ function processOptions(options) {
 		return;
 	}
 
-	// var firstOptions = Array.isArray(options) ? (options[0] || {}) : options;
 	var firstOptions = Array.isArray(options) ? (options[0] || {}) : options;
 	if(hasPreset(options)) {
 		var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
 
 		if(Array.isArray(options)) {
-
-			options = options.map(function(singleOption) {
+			options = options.forEach(function(singleOption) {
 				singleOption.stats = statsPresetToOptions(singleOption.stats);
-				return singleOption;
-			})
+			});
 		} else {
 			options.stats = statsPresetToOptions(options.stats);
 		}
