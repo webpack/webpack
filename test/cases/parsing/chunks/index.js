@@ -27,3 +27,11 @@ it("should parse a string in require.ensure with arrow function expression", fun
 		done();
 	});
 });
+
+
+it("should parse a string in require.ensure with arrow function array expression", function(done) {
+	require.ensure("./file", require => (require("./file").should.be.eql("ok"), done()));
+});
+
+
+
