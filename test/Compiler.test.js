@@ -2,7 +2,7 @@ var should = require("should");
 var path = require("path");
 
 var NodeEnvironmentPlugin = require("../lib/node/NodeEnvironmentPlugin");
-var Compiler = require("../lib/Compiler");
+var webpack = require("../");
 var WebpackOptionsApply = require("../lib/WebpackOptionsApply");
 var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 
@@ -19,9 +19,7 @@ describe("Compiler", function() {
 			writeFile: [],
 		};
 
-		var c = new Compiler();
-		new NodeEnvironmentPlugin().apply(c);
-		c.options = new WebpackOptionsApply().process(options, c);
+		var c = webpack(options);
 		var files = {};
 		c.outputFileSystem = {
 			join: path.join.bind(path),

@@ -70,7 +70,9 @@ describe("WatchTestCases", function() {
 				describe(testName, function() {
 					var tempDirectory = path.join(__dirname, "js", "watch-src", category.name, testName);
 					var testDirectory = path.join(casesPath, category.name, testName);
-					var runs = fs.readdirSync(testDirectory).sort().map(function(name) {
+					var runs = fs.readdirSync(testDirectory).sort().filter(function(name) {
+						return fs.statSync(path.join(testDirectory, name)).isDirectory();
+					}).map(function(name) {
 						return {
 							name: name,
 							suite: describe(name, function() {})
@@ -83,15 +85,17 @@ describe("WatchTestCases", function() {
 						this.timeout(30000);
 						var outputDirectory = path.join(__dirname, "js", "watch", category.name, testName);
 
-						var options = {
-							context: tempDirectory,
-							entry: "./index.js",
-							output: {
-								path: outputDirectory,
-								pathinfo: true,
-								filename: "bundle.js"
-							}
-						};
+						var options = {};
+						var configPath = path.join(testDirectory, "webpack.config.js");
+						if(fs.existsSync(configPath))
+							options = require(configPath);
+						if(!options.context) options.context = tempDirectory;
+						if(!options.entry) options.entry = "./index.js";
+						if(!options.target) options.target = "async-node";
+						if(!options.output) options.output = {};
+						if(!options.output.path) options.output.path = outputDirectory;
+						if(typeof options.output.pathinfo === "undefined") options.output.pathinfo = true;
+						if(!options.output.filename) options.output.filename = "bundle.js";
 
 						var runIdx = 0;
 						var run = runs[runIdx];
