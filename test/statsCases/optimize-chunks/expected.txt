@@ -8,7 +8,7 @@ Time: Xms
    4.js  136 bytes    4, 6  [emitted]  chunk
    5.js  293 bytes    5, 3  [emitted]  cir2 from cir1
    6.js   78 bytes       6  [emitted]  ac in ab
-main.js    6.45 kB       7  [emitted]  main
+main.js    6.47 kB       7  [emitted]  main
 chunk    {0} 0.js (cir1) 81 bytes {3} {5} {7} [rendered]
     > duplicate cir1 from cir2 [3] (webpack)/test/statsCases/optimize-chunks/circular2.js 1:0-79
     > duplicate cir1 [8] (webpack)/test/statsCases/optimize-chunks/index.js 13:0-54
