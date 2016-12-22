@@ -264,10 +264,14 @@ describe("RuleSet", function() {
 			test: /\.css$/,
 			use: [
 				function(data) {
-					return {loader: 'style-loader'}
+					return {
+						loader: 'style-loader'
+					}
 				},
 				function(data) {
-					return {loader: 'css-loader'}
+					return {
+						loader: 'css-loader'
+					}
 				},
 			]
 		}]);
@@ -279,7 +283,9 @@ describe("RuleSet", function() {
 			use: [
 				"style-loader",
 				function(data) {
-					return {loader: 'css-loader'}
+					return {
+						loader: 'css-loader'
+					}
 				},
 			]
 		}]);
@@ -293,7 +299,9 @@ describe("RuleSet", function() {
 					return 'style-loader'
 				},
 				function(data) {
-					return {loader: 'css-loader'}
+					return {
+						loader: 'css-loader'
+					}
 				},
 			]
 		}]);
