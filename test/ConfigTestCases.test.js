@@ -8,6 +8,10 @@ var checkArrayExpectation = require("./checkArrayExpectation");
 var Stats = require("../lib/Stats");
 var webpack = require("../lib/webpack");
 
+function getConfig(testDirectory) {
+	return require(path.join(testDirectory, "webpack.config.js"));
+}
+
 describe("ConfigTestCases", function() {
 	var casesPath = path.join(__dirname, "configCases");
 	var categories = fs.readdirSync(casesPath);
@@ -25,7 +29,7 @@ describe("ConfigTestCases", function() {
 			category.tests.filter(function(testName) {
 				var testDirectory = path.join(casesPath, category.name, testName);
 				var filterPath = path.join(testDirectory, "test.filter.js");
-				var config = require(path.join(testDirectory, "webpack.config.js"));
+				var config = getConfig(testDirectory);
 				if(fs.existsSync(filterPath) && !require(filterPath)(config)) {
 					describe.skip(testName, function() {
 						it('filtered');
@@ -36,7 +40,7 @@ describe("ConfigTestCases", function() {
 			}).forEach(function(testName) {
 				var testDirectory = path.join(casesPath, category.name, testName);
 				var filterPath = path.join(testDirectory, "test.filter.js");
-				var options = require(path.join(testDirectory, "webpack.config.js"));
+				var options = getConfig(testDirectory);
 				var suite = describe(testName, function() {});
 				it(testName + " should compile", function(done) {
 					this.timeout(30000);
