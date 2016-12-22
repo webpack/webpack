@@ -22,13 +22,25 @@ describe("ConfigTestCases", function() {
 	});
 	categories.forEach(function(category) {
 		describe(category.name, function() {
-			category.tests.forEach(function(testName) {
+			category.tests.filter(function(testName) {
+				var testDirectory = path.join(casesPath, category.name, testName);
+				var filterPath = path.join(testDirectory, "test.filter.js");
+				var config = require(path.join(testDirectory, "webpack.config.js"));
+				if(fs.existsSync(filterPath) && !require(filterPath)(config)) {
+					describe.skip(testName, function() {
+						it('filtered');
+					});
+					return false;
+				}
+				return true;
+			}).forEach(function(testName) {
+				var testDirectory = path.join(casesPath, category.name, testName);
+				var filterPath = path.join(testDirectory, "test.filter.js");
+				var options = require(path.join(testDirectory, "webpack.config.js"));
 				var suite = describe(testName, function() {});
 				it(testName + " should compile", function(done) {
 					this.timeout(30000);
-					var testDirectory = path.join(casesPath, category.name, testName);
 					var outputDirectory = path.join(__dirname, "js", "config", category.name, testName);
-					var options = require(path.join(testDirectory, "webpack.config.js"));
 					var optionsArr = [].concat(options);
 					optionsArr.forEach(function(options, idx) {
 						if(!options.context) options.context = testDirectory;
