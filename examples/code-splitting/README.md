@@ -213,7 +213,7 @@ require.ensure(["c"], function(require) {
 
 var a = __webpack_require__(/*! a */ 1);
 var b = __webpack_require__(/*! b */ 0);
-__webpack_require__.e/* nsure */(0).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
+__webpack_require__.e/* ensure */(0).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
     __webpack_require__(/*! b */ 0).xyz();
     var d = __webpack_require__(/*! d */ 3);
 }).bind(null, __webpack_require__));
