@@ -116,6 +116,8 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
+</details>
+``` javascript
 /******/ ([
 /* 0 */
 /* unknown exports provided */
@@ -134,6 +136,7 @@ console.log("Missing Text");
 
 # js/en.output.js
 
+<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
