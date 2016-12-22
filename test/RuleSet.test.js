@@ -259,6 +259,46 @@ describe("RuleSet", function() {
 		}]);
 		(match(loader, 'style.css')).should.eql(['style-loader', 'css-loader']);
 	});
+	it('should work when using an array of functions returning a loader', function() {
+		var loader = new RuleSet([{
+			test: /\.css$/,
+			use: [
+				function(data) {
+					return {loader: 'style-loader'}
+				},
+				function(data) {
+					return {loader: 'css-loader'}
+				},
+			]
+		}]);
+		(match(loader, 'style.css')).should.eql(['style-loader', 'css-loader']);
+	});
+	it('should work when using an array of either functions or strings returning a loader', function() {
+		var loader = new RuleSet([{
+			test: /\.css$/,
+			use: [
+				"style-loader",
+				function(data) {
+					return {loader: 'css-loader'}
+				},
+			]
+		}]);
+		(match(loader, 'style.css')).should.eql(['style-loader', 'css-loader']);
+	});
+	it('should work when using an array of functions returning either a loader obejct or loader name string', function() {
+		var loader = new RuleSet([{
+			test: /\.css$/,
+			use: [
+				function(data) {
+					return 'style-loader'
+				},
+				function(data) {
+					return {loader: 'css-loader'}
+				},
+			]
+		}]);
+		(match(loader, 'style.css')).should.eql(['style-loader', 'css-loader']);
+	});
 	it('should throw if using array loaders with invalid type', function() {
 		should.throws(function() {
 			var loader = new RuleSet([{
