@@ -2,7 +2,6 @@
 function createFunctionArrayFromUseArray(useArray) {
 	return useArray.map(function(useItem) {
 		return function(data) {
-			debugger;
 			return useItem;
 		};
 	});
@@ -21,8 +20,6 @@ var useArray = createFunctionArrayFromUseArray([
 		}
 	}
 ]);
-
-debugger;
 
 module.exports = {
 	module: {
