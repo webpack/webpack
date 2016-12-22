@@ -629,6 +629,9 @@
           "$ref": "#/definitions/ruleSet-loader"
         },
         {
+          "instanceof": "Function"
+        },
+        {
           "additionalProperties": false,
           "properties": {
             "loader": {
