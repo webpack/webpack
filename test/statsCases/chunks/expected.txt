@@ -4,7 +4,7 @@ Time: Xms
 0.bundle.js  227 bytes       0  [emitted]  
 1.bundle.js  106 bytes       1  [emitted]  
 2.bundle.js  200 bytes       2  [emitted]  
-  bundle.js    5.84 kB       3  [emitted]  main
+  bundle.js    5.86 kB       3  [emitted]  main
 chunk    {0} 0.bundle.js 54 bytes {3} [rendered]
     > [5] (webpack)/test/statsCases/chunks/index.js 3:0-16
     [2] (webpack)/test/statsCases/chunks/c.js 54 bytes {0} [built]
