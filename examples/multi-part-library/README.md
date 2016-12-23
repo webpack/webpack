@@ -43,6 +43,9 @@ module.exports = {
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["alpha"] = factory();
 })(this, function() {
+```
+<details><summary>`return /******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+``` js
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -83,11 +86,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -109,6 +114,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
+```
+</details>
+``` js
 /******/ ([
 /* 0 */
 /* unknown exports provided */
@@ -121,9 +129,8 @@ return /******/ (function(modules) { // webpackBootstrap
 module.exports = "alpha";
 
 /***/ }
-/******/ ])
+/******/ ]);
 });
-;
 ```
 
 # js/MyLibrary.beta.js
@@ -179,11 +186,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -218,9 +227,8 @@ return /******/ (function(modules) { // webpackBootstrap
 module.exports = "beta";
 
 /***/ }
-/******/ ])
+/******/ ]);
 });
-;
 ```
 
 # Info
@@ -229,11 +237,10 @@ module.exports = "beta";
 
 ```
 Hash: 082bbeea226fa367215b
-Version: webpack 2.1.0-beta.25
-Time: 104ms
+Version: webpack 2.2.0-rc.2
              Asset     Size  Chunks             Chunk Names
- MyLibrary.beta.js  3.02 kB       0  [emitted]  beta
-MyLibrary.alpha.js  3.01 kB       1  [emitted]  alpha
+ MyLibrary.beta.js  3.09 kB       0  [emitted]  beta
+MyLibrary.alpha.js  3.08 kB       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
@@ -248,11 +255,10 @@ chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
 
 ```
 Hash: 082bbeea226fa367215b
-Version: webpack 2.1.0-beta.25
-Time: 248ms
+Version: webpack 2.2.0-rc.2
              Asset       Size  Chunks             Chunk Names
- MyLibrary.beta.js  775 bytes       0  [emitted]  beta
-MyLibrary.alpha.js  777 bytes       1  [emitted]  alpha
+ MyLibrary.beta.js  785 bytes       0  [emitted]  beta
+MyLibrary.alpha.js  787 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]

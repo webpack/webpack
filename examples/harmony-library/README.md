@@ -1,33 +1,35 @@
-
-# example.js
+# webpack.config.js
 
 ``` javascript
-console.log(require("./cup1"));
+var path = require("path");
+module.exports = {
+	entry: "./example",
+	output: {
+		path: path.join(__dirname, "js"),
+		filename: "MyLibrary.umd.js",
+		library: "MyLibrary",
+		libraryTarget: "umd"
+	}
+};
 ```
 
-# cup1.coffee
+# js/MyLibrary.umd.js
 
-``` coffee-script
-module.exports =
-	cool: "stuff"
-	answer: 42
-	external: require "./cup2.coffee"
-	again: require "./cup2"
-```
-
-# cup2.coffee
-
-``` coffee-script
-console.log "yeah coffee-script"
-
-module.exports = 42
-```
-
-# js/output.js
-
-<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
 ``` javascript
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["MyLibrary"] = factory();
+	else
+		root["MyLibrary"] = factory();
+})(this, function() {
+```
+<details><summary>`return /******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+``` js
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -92,56 +94,35 @@ module.exports = 42
 /******/ 	__webpack_require__.p = "js/";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
 </details>
-``` javascript
+``` js
 /******/ ([
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
-/*!*********************!*\
-  !*** ./cup2.coffee ***!
-  \*********************/
-/***/ function(module, exports) {
-
-console.log("yeah coffee-script");
-
-module.exports = 42;
-
-
-/***/ },
-/* 1 */
-/* unknown exports provided */
-/* all exports used */
-/*!*********************!*\
-  !*** ./cup1.coffee ***!
-  \*********************/
-/***/ function(module, exports, __webpack_require__) {
-
-module.exports = {
-  cool: "stuff",
-  answer: 42,
-  external: __webpack_require__(/*! ./cup2.coffee */ 0),
-  again: __webpack_require__(/*! ./cup2 */ 0)
-};
-
-
-/***/ },
-/* 2 */
-/* unknown exports provided */
+/* exports provided: value, increment, default */
 /* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
-console.log(__webpack_require__(/*! ./cup1 */ 1));
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(exports, "value", function() { return value; });
+/* harmony export (immutable) */ exports["increment"] = increment;
+var value = 0;
+function increment() {
+	value++;
+}
+/* harmony default export */ exports["default"] = "MyLibrary";
+
 
 /***/ }
 /******/ ]);
+});
 ```
 
 # Info
@@ -149,35 +130,27 @@ console.log(__webpack_require__(/*! ./cup1 */ 1));
 ## Uncompressed
 
 ```
-Hash: 909077149c791bec4711
+Hash: 0f7e47813bc19e17e857
 Version: webpack 2.2.0-rc.2
-    Asset     Size  Chunks             Chunk Names
-output.js  3.32 kB       0  [emitted]  main
-Entrypoint main = output.js
-chunk    {0} output.js (main) 206 bytes [entry] [rendered]
-    > main [2] ./example.js 
-    [0] ./cup2.coffee 57 bytes {0} [built]
-        cjs require ./cup2.coffee [1] ./cup1.coffee 4:12-36
-        cjs require ./cup2 [1] ./cup1.coffee 5:9-26
-    [1] ./cup1.coffee 118 bytes {0} [built]
-        cjs require ./cup1 [2] ./example.js 1:12-29
-    [2] ./example.js 31 bytes {0} [built]
+           Asset     Size  Chunks             Chunk Names
+MyLibrary.umd.js  3.42 kB       0  [emitted]  main
+Entrypoint main = MyLibrary.umd.js
+chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
+    > main [0] ./example.js 
+    [0] ./example.js 97 bytes {0} [built]
+        [exports: value, increment, default]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 909077149c791bec4711
+Hash: 0f7e47813bc19e17e857
 Version: webpack 2.2.0-rc.2
-    Asset       Size  Chunks             Chunk Names
-output.js  673 bytes       0  [emitted]  main
-Entrypoint main = output.js
-chunk    {0} output.js (main) 206 bytes [entry] [rendered]
-    > main [2] ./example.js 
-    [0] ./cup2.coffee 57 bytes {0} [built]
-        cjs require ./cup2.coffee [1] ./cup1.coffee 4:12-36
-        cjs require ./cup2 [1] ./cup1.coffee 5:9-26
-    [1] ./cup1.coffee 118 bytes {0} [built]
-        cjs require ./cup1 [2] ./example.js 1:12-29
-    [2] ./example.js 31 bytes {0} [built]
+           Asset       Size  Chunks             Chunk Names
+MyLibrary.umd.js  898 bytes       0  [emitted]  main
+Entrypoint main = MyLibrary.umd.js
+chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
+    > main [0] ./example.js 
+    [0] ./example.js 97 bytes {0} [built]
+        [exports: value, increment, default]
 ```
