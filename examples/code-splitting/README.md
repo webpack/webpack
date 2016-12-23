@@ -114,6 +114,9 @@ require.ensure(["c"], function(require) {
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
 
+/******/ 		if (__webpack_require__.nc) {
+/******/ 			script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 		}
 /******/ 		script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
@@ -127,12 +130,14 @@ require.ensure(["c"], function(require) {
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
-/******/ 		head.appendChild(script);
 
 /******/ 		var promise = new Promise(function(resolve, reject) {
 /******/ 			installedChunks[chunkId] = [resolve, reject];
 /******/ 		});
-/******/ 		return installedChunks[chunkId][2] = promise;
+/******/ 		installedChunks[chunkId][2] = promise;
+
+/******/ 		head.appendChild(script);
+/******/ 		return promise;
 /******/ 	};
 
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -146,11 +151,13 @@ require.ensure(["c"], function(require) {
 
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -213,10 +220,10 @@ require.ensure(["c"], function(require) {
 
 var a = __webpack_require__(/*! a */ 1);
 var b = __webpack_require__(/*! b */ 0);
-__webpack_require__.e/* nsure */(0).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
+__webpack_require__.e/* require.ensure */(0).then((function(require) {
     __webpack_require__(/*! b */ 0).xyz();
     var d = __webpack_require__(/*! d */ 3);
-}).bind(null, __webpack_require__));
+}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
 /***/ }
 /******/ ]);
@@ -264,12 +271,11 @@ webpackJsonp([0],[,,function(n,c){},function(n,c){}]);
 ## Uncompressed
 
 ```
-Hash: 577f55cf480fb59add7d
-Version: webpack 2.1.0-beta.25
-Time: 150ms
+Hash: 199e267fd7f9f732d06f
+Version: webpack 2.2.0-rc.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  407 bytes       0  [emitted]  
-  output.js    6.16 kB       1  [emitted]  main
+  output.js    6.36 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes {1} [rendered]
     > [4] ./example.js 3:0-6:2
@@ -277,25 +283,24 @@ chunk    {0} 0.output.js 22 bytes {1} [rendered]
         require.ensure item c [4] ./example.js 3:0-6:2
     [3] ./~/d.js 11 bytes {0} [built]
         cjs require d [4] ./example.js 5:12-24
-chunk    {1} output.js (main) 161 bytes [entry] [rendered]
+chunk    {1} output.js (main) 166 bytes [entry] [rendered]
     > main [4] ./example.js 
     [0] ./~/b.js 11 bytes {1} [built]
         cjs require b [4] ./example.js 2:8-20
         cjs require b [4] ./example.js 4:4-16
     [1] ./~/a.js 11 bytes {1} [built]
         cjs require a [4] ./example.js 1:8-20
-    [4] ./example.js 139 bytes {1} [built]
+    [4] ./example.js 144 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 577f55cf480fb59add7d
-Version: webpack 2.1.0-beta.25
-Time: 292ms
+Hash: 199e267fd7f9f732d06f
+Version: webpack 2.2.0-rc.2
       Asset      Size  Chunks             Chunk Names
 0.output.js  54 bytes       0  [emitted]  
-  output.js   1.44 kB       1  [emitted]  main
+  output.js   1.47 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes {1} [rendered]
     > [4] ./example.js 3:0-6:2
@@ -303,12 +308,12 @@ chunk    {0} 0.output.js 22 bytes {1} [rendered]
         require.ensure item c [4] ./example.js 3:0-6:2
     [3] ./~/d.js 11 bytes {0} [built]
         cjs require d [4] ./example.js 5:12-24
-chunk    {1} output.js (main) 161 bytes [entry] [rendered]
+chunk    {1} output.js (main) 166 bytes [entry] [rendered]
     > main [4] ./example.js 
     [0] ./~/b.js 11 bytes {1} [built]
         cjs require b [4] ./example.js 2:8-20
         cjs require b [4] ./example.js 4:4-16
     [1] ./~/a.js 11 bytes {1} [built]
         cjs require a [4] ./example.js 1:8-20
-    [4] ./example.js 139 bytes {1} [built]
+    [4] ./example.js 144 bytes {1} [built]
 ```

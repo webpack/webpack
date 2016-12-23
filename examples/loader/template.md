@@ -18,7 +18,7 @@
 
 # test.css
 
-``` javascript
+``` css
 {{test.css}}
 ```
 
