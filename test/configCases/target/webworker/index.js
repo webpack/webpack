@@ -1,29 +1,17 @@
-require("should");
-
+var should = require("should");
 // shimming global window object so the http-module is happy.
 // window is assigned without var on purpose.
-window = {
-	XMLHttpRequest: function() {}
-};
+global.XMLHttpRequest = function() {};
+global.XMLHttpRequest.prototype.open = function() {};
 
 it("should provide a global Buffer constructor", function() {
 	Buffer.should.be.a.Function;
 });
 
-// Webpack is not providing a console shim by default
-// @see lib/WebpackOptionsDefaulter.js
-// Uncomment this when defaults are changed
-//it("should provide a global console shim", function () {
-//	console.should.be.an.Object;
-//	console.time.should.be.a.Function;
-//});
-
-it("should have default chunkCallback name", function() {
-	var fs = require("fs");
-	var source = fs.readFileSync(__filename, "utf-8");
-
-	source.should.containEql("webpackChunk");
-})
+it("should provide a global console shim", function () {
+	console.should.be.an.Object;
+	console.time.should.be.a.Function;
+});
 
 it("should provide a global process shim", function () {
 	process.should.be.an.Object;
