@@ -1,3 +1,4 @@
+/* globals describe it */
 var should = require("should");
 var path = require("path");
 var fs = require("fs");
@@ -7,10 +8,6 @@ var checkArrayExpectation = require("./checkArrayExpectation");
 
 var Stats = require("../lib/Stats");
 var webpack = require("../lib/webpack");
-
-function getConfig(testDirectory) {
-	return require(path.join(testDirectory, "webpack.config.js"));
-}
 
 describe("ConfigTestCases", function() {
 	var casesPath = path.join(__dirname, "configCases");
@@ -24,8 +21,7 @@ describe("ConfigTestCases", function() {
 			}).sort().filter(function(testName) {
 				var testDirectory = path.join(casesPath, cat, testName);
 				var filterPath = path.join(testDirectory, "test.filter.js");
-				var config = getConfig(testDirectory);
-				if(fs.existsSync(filterPath) && !require(filterPath)(config)) {
+				if(fs.existsSync(filterPath) && !require(filterPath)()) {
 					describe.skip(testName, function() {
 						it('filtered');
 					});
