@@ -21,13 +21,8 @@ describe("ConfigTestCases", function() {
 			name: cat,
 			tests: fs.readdirSync(path.join(casesPath, cat)).filter(function(folder) {
 				return folder.indexOf("_") < 0;
-			}).sort()
-		};
-	});
-	categories.forEach(function(category) {
-		describe(category.name, function() {
-			category.tests.filter(function(testName) {
-				var testDirectory = path.join(casesPath, category.name, testName);
+			}).sort().filter(function(testName) {
+				var testDirectory = path.join(casesPath, cat, testName);
 				var filterPath = path.join(testDirectory, "test.filter.js");
 				var config = getConfig(testDirectory);
 				if(fs.existsSync(filterPath) && !require(filterPath)(config)) {
@@ -37,14 +32,18 @@ describe("ConfigTestCases", function() {
 					return false;
 				}
 				return true;
-			}).forEach(function(testName) {
-				var testDirectory = path.join(casesPath, category.name, testName);
-				var filterPath = path.join(testDirectory, "test.filter.js");
-				var options = getConfig(testDirectory);
+			})
+		};
+	});
+	categories.forEach(function(category) {
+		describe(category.name, function() {
+			category.tests.forEach(function(testName) {
 				var suite = describe(testName, function() {});
 				it(testName + " should compile", function(done) {
 					this.timeout(30000);
+					var testDirectory = path.join(casesPath, category.name, testName);
 					var outputDirectory = path.join(__dirname, "js", "config", category.name, testName);
+					var options = require(path.join(testDirectory, "webpack.config.js"));
 					var optionsArr = [].concat(options);
 					optionsArr.forEach(function(options, idx) {
 						if(!options.context) options.context = testDirectory;
