@@ -40,19 +40,25 @@
       "anyOf": [
         {
           "additionalProperties": {
-            "$ref": "#/definitions/entry-item"
+            "anyOf": [
+              {
+                "description": "The string is resolved to a module which is loaded upon startup.",
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "#/definitions/common.nonEmptyArrayOfUniqueStringValues"
+                  }
+                ],
+                "description": "All modules are loaded upon startup. The last one is exported."
+              }
+            ]
           },
           "description": "Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.",
           "type": "object"
         },
-        {
-          "$ref": "#/definitions/entry-item"
-        }
-      ]
-    },
-    "entry-item": {
-      "description": "The entry point for one output file.",
-      "anyOf": [
         {
           "description": "The string is resolved to a module which is loaded upon startup.",
           "minLength": 1,
@@ -76,7 +82,17 @@
         },
         {
           "additionalProperties": {
-            "type": "string"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
           },
           "description": "If an dependency matches exactly a property of the object, the property value is used as dependency.",
           "type": "object"
@@ -109,7 +125,14 @@
           "type": "boolean"
         },
         "exprContextRegExp": {
-          "instanceof": "RegExp"
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "instanceof": "RegExp"
+            }
+          ]
         },
         "exprContextRequest": {
           "type": "string"
@@ -130,8 +153,7 @@
                 "instanceof": "RegExp"
               },
               "minItems": 1,
-              "type": "array",
-              "uniqueItems": true
+              "type": "array"
             },
             {
               "instanceof": "RegExp"
@@ -153,10 +175,27 @@
           "type": "boolean"
         },
         "unknownContextRegExp": {
-          "instanceof": "RegExp"
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "instanceof": "RegExp"
+            }
+          ]
         },
         "unknownContextRequest": {
           "type": "string"
+        },
+        "unsafeCache": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ]
         },
         "wrappedContextCritical": {
           "type": "boolean"
@@ -342,6 +381,10 @@
           "description": "Prefixes every line of the source in the bundle with this string.",
           "type": "string"
         },
+        "strictModuleExceptionHandling": {
+          "description": "Handles exceptions in module loading correctly at a performance cost.",
+          "type": "boolean"
+        },
         "umdNamedDefine": {
           "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
           "type": "boolean"
@@ -428,6 +471,9 @@
               "type": "object"
             }
           ]
+        },
+        "useSyncFileSystemCalls": {
+          "type": "boolean"
         }
       },
       "type": "object"
@@ -540,6 +586,9 @@
         "resource": {
           "$ref": "#/definitions/ruleSet-condition"
         },
+        "resourceQuery": {
+          "$ref": "#/definitions/ruleSet-condition"
+        },
         "rules": {
           "$ref": "#/definitions/ruleSet-rules"
         },
@@ -564,6 +613,9 @@
           "$ref": "#/definitions/ruleSet-use-item"
         },
         {
+          "instanceof": "Function"
+        },
+        {
           "items": {
             "$ref": "#/definitions/ruleSet-use-item"
           },
@@ -575,6 +627,9 @@
       "anyOf": [
         {
           "$ref": "#/definitions/ruleSet-loader"
+        },
+        {
+          "instanceof": "Function"
         },
         {
           "additionalProperties": false,
@@ -713,6 +768,42 @@
     },
     "output": {
       "$ref": "#/definitions/output"
+    },
+    "performance": {
+      "description": "Configuration for web performance recommendations.",
+      "anyOf": [
+        {
+          "enum": [
+            false
+          ]
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "assetFilter": {
+              "description": "Filter function to select assets that are checked",
+              "instanceof": "Function"
+            },
+            "hints": {
+              "description": "Sets the format of the hints: warnings, errors or nothing at all",
+              "enum": [
+                false,
+                "warning",
+                "error"
+              ]
+            },
+            "maxEntrypointSize": {
+              "description": "Total size of an entry point (in bytes)",
+              "type": "number"
+            },
+            "maxAssetSize": {
+              "description": "Filesize limit (in bytes) when exceeded, that webpack will provide performance hints",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        }
+      ]
     },
     "plugins": {
       "description": "Add additional plugins to the compiler.",

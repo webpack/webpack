@@ -143,6 +143,9 @@ module.exports = {
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
 
+/******/ 		if (__webpack_require__.nc) {
+/******/ 			script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 		}
 /******/ 		script.src = __webpack_require__.p + "" + chunkId + ".js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
@@ -156,12 +159,14 @@ module.exports = {
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
-/******/ 		head.appendChild(script);
 
 /******/ 		var promise = new Promise(function(resolve, reject) {
 /******/ 			installedChunks[chunkId] = [resolve, reject];
 /******/ 		});
-/******/ 		return installedChunks[chunkId][2] = promise;
+/******/ 		installedChunks[chunkId][2] = promise;
+
+/******/ 		head.appendChild(script);
+/******/ 		return promise;
 /******/ 	};
 
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -170,16 +175,18 @@ module.exports = {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
-/******/ 	// define getter function for harmory exports
+/******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -365,15 +372,14 @@ module.exports = "pageC";
 ## Uncompressed
 
 ```
-Hash: 811ddf3b9dbcf66e3362
-Version: webpack 2.1.0-beta.25
-Time: 140ms
+Hash: 765ab186904b368e4ffb
+Version: webpack 2.2.0-rc.2
     Asset       Size  Chunks             Chunk Names
 common.js  453 bytes       0  [emitted]  common
- pageA.js  586 bytes       1  [emitted]  pageA
- pageC.js  368 bytes       2  [emitted]  pageC
- pageB.js  368 bytes       3  [emitted]  pageB
-vendor.js     6.2 kB       4  [emitted]  vendor
+ pageA.js  589 bytes       1  [emitted]  pageA
+ pageC.js  371 bytes       2  [emitted]  pageC
+ pageB.js  371 bytes       3  [emitted]  pageB
+vendor.js    6.41 kB       4  [emitted]  vendor
 Entrypoint vendor = vendor.js
 Entrypoint pageA = vendor.js common.js pageA.js
 Entrypoint pageB = vendor.js common.js pageB.js
@@ -386,17 +392,17 @@ chunk    {0} common.js (common) 56 bytes {4} [initial] [rendered]
     [1] ./utility3.js 28 bytes {0} [built]
         cjs require ./utility3 [6] ./pageB.js 2:15-36
         cjs require ./utility3 [7] ./pageC.js 2:15-36
-chunk    {1} pageA.js (pageA) 130 bytes {0} [initial] [rendered]
+chunk    {1} pageA.js (pageA) 133 bytes {0} [initial] [rendered]
     > pageA [5] ./pageA.js 
     [2] ./utility1.js 28 bytes {1} [built]
         cjs require ./utility1 [5] ./pageA.js 1:15-36
-    [5] ./pageA.js 102 bytes {1} [built]
-chunk    {2} pageC.js (pageC) 102 bytes {0} [initial] [rendered]
+    [5] ./pageA.js 105 bytes {1} [built]
+chunk    {2} pageC.js (pageC) 105 bytes {0} [initial] [rendered]
     > pageC [7] ./pageC.js 
-    [7] ./pageC.js 102 bytes {2} [built]
-chunk    {3} pageB.js (pageB) 102 bytes {0} [initial] [rendered]
+    [7] ./pageC.js 105 bytes {2} [built]
+chunk    {3} pageB.js (pageB) 105 bytes {0} [initial] [rendered]
     > pageB [6] ./pageB.js 
-    [6] ./pageB.js 102 bytes {3} [built]
+    [6] ./pageB.js 105 bytes {3} [built]
 chunk    {4} vendor.js (vendor) 94 bytes [entry] [rendered]
     > vendor [8] multi vendor 
     [3] ./vendor1.js 27 bytes {4} [built]
@@ -409,15 +415,14 @@ chunk    {4} vendor.js (vendor) 94 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 811ddf3b9dbcf66e3362
-Version: webpack 2.1.0-beta.25
-Time: 295ms
+Hash: 765ab186904b368e4ffb
+Version: webpack 2.2.0-rc.2
     Asset       Size  Chunks             Chunk Names
 common.js   92 bytes       0  [emitted]  common
  pageA.js  109 bytes       1  [emitted]  pageA
  pageC.js   71 bytes       2  [emitted]  pageC
  pageB.js   71 bytes       3  [emitted]  pageB
-vendor.js    1.45 kB       4  [emitted]  vendor
+vendor.js     1.5 kB       4  [emitted]  vendor
 Entrypoint vendor = vendor.js
 Entrypoint pageA = vendor.js common.js pageA.js
 Entrypoint pageB = vendor.js common.js pageB.js
@@ -430,17 +435,17 @@ chunk    {0} common.js (common) 56 bytes {4} [initial] [rendered]
     [1] ./utility3.js 28 bytes {0} [built]
         cjs require ./utility3 [6] ./pageB.js 2:15-36
         cjs require ./utility3 [7] ./pageC.js 2:15-36
-chunk    {1} pageA.js (pageA) 130 bytes {0} [initial] [rendered]
+chunk    {1} pageA.js (pageA) 133 bytes {0} [initial] [rendered]
     > pageA [5] ./pageA.js 
     [2] ./utility1.js 28 bytes {1} [built]
         cjs require ./utility1 [5] ./pageA.js 1:15-36
-    [5] ./pageA.js 102 bytes {1} [built]
-chunk    {2} pageC.js (pageC) 102 bytes {0} [initial] [rendered]
+    [5] ./pageA.js 105 bytes {1} [built]
+chunk    {2} pageC.js (pageC) 105 bytes {0} [initial] [rendered]
     > pageC [7] ./pageC.js 
-    [7] ./pageC.js 102 bytes {2} [built]
-chunk    {3} pageB.js (pageB) 102 bytes {0} [initial] [rendered]
+    [7] ./pageC.js 105 bytes {2} [built]
+chunk    {3} pageB.js (pageB) 105 bytes {0} [initial] [rendered]
     > pageB [6] ./pageB.js 
-    [6] ./pageB.js 102 bytes {3} [built]
+    [6] ./pageB.js 105 bytes {3} [built]
 chunk    {4} vendor.js (vendor) 94 bytes [entry] [rendered]
     > vendor [8] multi vendor 
     [3] ./vendor1.js 27 bytes {4} [built]

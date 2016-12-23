@@ -1,3 +1,4 @@
+/* globals describe it */
 var should = require("should");
 var path = require("path");
 var fs = require("fs");
@@ -11,12 +12,23 @@ var webpack = require("../lib/webpack");
 describe("ConfigTestCases", function() {
 	var casesPath = path.join(__dirname, "configCases");
 	var categories = fs.readdirSync(casesPath);
+
 	categories = categories.map(function(cat) {
 		return {
 			name: cat,
 			tests: fs.readdirSync(path.join(casesPath, cat)).filter(function(folder) {
 				return folder.indexOf("_") < 0;
-			}).sort()
+			}).sort().filter(function(testName) {
+				var testDirectory = path.join(casesPath, cat, testName);
+				var filterPath = path.join(testDirectory, "test.filter.js");
+				if(fs.existsSync(filterPath) && !require(filterPath)()) {
+					describe.skip(testName, function() {
+						it('filtered');
+					});
+					return false;
+				}
+				return true;
+			})
 		};
 	});
 	categories.forEach(function(category) {

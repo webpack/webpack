@@ -7,7 +7,7 @@ try {
 	fs.mkdirSync(fixtures);
 } catch(e) {}
 
-for(var i = 0; i < 1000; i++) {
+for(var i = 0; i < 10000; i++) {
 	var source = [];
 	if(i > 8)
 		source.push("require(" + JSON.stringify("./" + (i / 8 | 0) + ".js") + ");");
@@ -21,7 +21,7 @@ for(var i = 0; i < 1000; i++) {
 	fs.writeFileSync(path.join(fixtures, i + ".js"), source.join("\n"), "utf-8");
 }
 
-for(var i = 0; i < 1000; i++) {
+for(var i = 0; i < 10000; i++) {
 	var source = [];
 	source.push("require.ensure([], function(require) {");
 	if(i > 8)

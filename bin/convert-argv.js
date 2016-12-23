@@ -1,26 +1,12 @@
 var path = require("path");
 var fs = require("fs");
 fs.existsSync = fs.existsSync || path.existsSync;
-var resolve = require("enhanced-resolve");
 var interpret = require("interpret");
 var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
-var validateWebpackOptions = require("../lib/validateWebpackOptions");
 
-module.exports = function(optimist, argv, convertOptions) {
+module.exports = function(yargs, argv, convertOptions) {
 
 	var options = [];
-
-	// Help
-	if(argv.help) {
-		optimist.showHelp();
-		process.exit(0); // eslint-disable-line
-	}
-
-	// Version
-	if(argv.v || argv.version) {
-		console.log(require("../package.json").version);
-		process.exit(0); // eslint-disable-line
-	}
 
 	// Shortcuts
 	if(argv.d) {
@@ -53,7 +39,7 @@ module.exports = function(optimist, argv, convertOptions) {
 
 	var i;
 	if(argv.config) {
-		function getConfigExtension(configPath) {
+		var getConfigExtension = function getConfigExtension(configPath) {
 			for(i = extensions.length - 1; i >= 0; i--) {
 				var tmpExt = extensions[i];
 				if(configPath.indexOf(tmpExt, configPath.length - tmpExt.length) > -1) {
@@ -63,7 +49,7 @@ module.exports = function(optimist, argv, convertOptions) {
 			return path.extname(configPath);
 		}
 
-		function mapConfigArg(configArg) {
+		var mapConfigArg = function mapConfigArg(configArg) {
 			var resolvedPath = path.resolve(configArg);
 			var extension = getConfigExtension(resolvedPath);
 			return {
@@ -88,7 +74,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	if(configFiles.length > 0) {
-		function registerCompiler(moduleDescriptor) {
+		var registerCompiler = function registerCompiler(moduleDescriptor) {
 			if(moduleDescriptor) {
 				if(typeof moduleDescriptor === "string") {
 					require(moduleDescriptor);
@@ -107,7 +93,7 @@ module.exports = function(optimist, argv, convertOptions) {
 			}
 		}
 
-		function requireConfig(configPath) {
+		var requireConfig = function requireConfig(configPath) {
 			var options = require(configPath);
 			var isES6DefaultExportedFunc = (
 				typeof options === "object" && options !== null && typeof options.default === "function"
@@ -201,7 +187,7 @@ module.exports = function(optimist, argv, convertOptions) {
 				if(finalize) {
 					finalize();
 				}
-			} else if(typeof argv[name] !== "undefined") {
+			} else if(typeof argv[name] !== "undefined" && argv[name] !== null) {
 				if(init) {
 					init();
 				}
@@ -232,16 +218,11 @@ module.exports = function(optimist, argv, convertOptions) {
 		}
 
 		function mapArgToBoolean(name, optionName) {
-			ifBooleanArg(name, function() {
-				options[optionName || name] = true;
-			});
-		}
-
-		function mapArgToBooleanInverse(name, optionName) {
 			ifArg(name, function(bool) {
-				if(!bool) {
+				if(bool === true)
+					options[optionName || name] = true;
+				else if(bool === false)
 					options[optionName || name] = false;
-				}
 			});
 		}
 
@@ -267,6 +248,7 @@ module.exports = function(optimist, argv, convertOptions) {
 
 			var path;
 			try {
+				var resolve = require("enhanced-resolve");
 				path = resolve.sync(process.cwd(), name);
 			} catch(e) {
 				console.log("Cannot resolve plugin " + name + ".");
@@ -309,6 +291,7 @@ module.exports = function(optimist, argv, convertOptions) {
 			ifArgPair(arg, function(name, binding) {
 				if(name === null) {
 					name = binding;
+					binding += "-loader";
 				}
 				options.module[collection].push({
 					test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
@@ -400,7 +383,7 @@ module.exports = function(optimist, argv, convertOptions) {
 			options.target = value;
 		});
 
-		mapArgToBooleanInverse("cache");
+		mapArgToBoolean("cache");
 
 		ifBooleanArg("hot", function() {
 			ensureArray(options, "plugins");
@@ -470,12 +453,6 @@ module.exports = function(optimist, argv, convertOptions) {
 			}));
 		});
 
-		ifBooleanArg("optimize-dedupe", function() {
-			ensureArray(options, "plugins");
-			var DedupePlugin = require("../lib/optimize/DedupePlugin");
-			options.plugins.push(new DedupePlugin());
-		});
-
 		ifArg("prefetch", function(request) {
 			ensureArray(options, "plugins");
 			var PrefetchPlugin = require("../lib/PrefetchPlugin");
@@ -538,7 +515,7 @@ module.exports = function(optimist, argv, convertOptions) {
 			}
 			ensureObject(options, "entry");
 
-			function addTo(name, entry) {
+			var addTo = function addTo(name, entry) {
 				if(options.entry[name]) {
 					if(!Array.isArray(options.entry[name])) {
 						options.entry[name] = [options.entry[name]];

@@ -37,7 +37,6 @@ module.exports = function(optimist) {
 		.describe("optimize-max-chunks", "Try to keep the chunk count below a limit")
 		.describe("optimize-min-chunk-size", "Try to keep the chunk size above a limit")
 		.boolean("optimize-minimize").describe("optimize-minimize", "Minimize javascript and switches loaders to minimizing")
-		.boolean("optimize-dedupe").describe("optimize-dedupe", "Optimize duplicate module sources in the bundle")
 		.string("prefetch").describe("prefetch", "Prefetch this request")
 		.string("provide").describe("provide", "Provide these modules as free vars in all modules")
 		.boolean("labeled-modules").describe("labeled-modules", "Enables labeled modules")

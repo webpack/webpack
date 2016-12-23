@@ -20,7 +20,7 @@ describe("Validation", function() {
 		config: {},
 		message: [
 			" - configuration misses the property 'entry'.",
-			"   object { <key>: string | [string] } | string | [string]",
+			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]",
 			"   The entry point(s) of the compilation."
 		]
 	}, {
@@ -30,8 +30,24 @@ describe("Validation", function() {
 		},
 		message: [
 			" - configuration.entry should be one of these:",
-			"   object { <key>: string | [string] } | string | [string]",
-			"   The entry point(s) of the compilation."
+			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]",
+			"   The entry point(s) of the compilation.",
+			"   Details:",
+			"    * configuration.entry should be an object.",
+			"    * configuration.entry should not be empty.",
+			"    * configuration.entry should be an array:",
+			"      [non-empty string]"
+		]
+	}, {
+		name: "invalid instanceof",
+		config: {
+			entry: "a",
+			module: {
+				wrappedContextRegExp: 1337
+			}
+		},
+		message: [
+			" - configuration.module.wrappedContextRegExp should be an instance of RegExp.",
 		]
 	}, {
 		name: "multiple errors",
@@ -42,10 +58,13 @@ describe("Validation", function() {
 			}
 		},
 		message: [
-			" - configuration.entry[0] should be a string.",
 			" - configuration.entry should be one of these:",
-			"   object { <key>: string | [string] } | string | [string]",
+			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]",
 			"   The entry point(s) of the compilation.",
+			"   Details:",
+			"    * configuration.entry should be an object.",
+			"    * configuration.entry should be a string.",
+			"    * configuration.entry[0] should be a string.",
 			" - configuration.output.filename should be a string."
 		]
 	}, {
@@ -59,10 +78,13 @@ describe("Validation", function() {
 			}
 		}],
 		message: [
-			" - configuration[0].entry[0] should be a string.",
 			" - configuration[0].entry should be one of these:",
-			"   object { <key>: string | [string] } | string | [string]",
+			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]",
 			"   The entry point(s) of the compilation.",
+			"   Details:",
+			"    * configuration[0].entry should be an object.",
+			"    * configuration[0].entry should be a string.",
+			"    * configuration[0].entry[0] should be a string.",
 			" - configuration[1].output.filename should be a string."
 		]
 	}, {
@@ -82,7 +104,7 @@ describe("Validation", function() {
 		},
 		message: [
 			" - configuration.module.rules[0].oneOf[0] has an unknown property 'paser'. These properties are valid:",
-			"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, query?, resource?, rules?, test?, use? }"
+			"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, query?, resource?, resourceQuery?, rules?, test?, use? }"
 		]
 	}, {
 		name: "additional key on root",
@@ -93,7 +115,7 @@ describe("Validation", function() {
 		message: [
 			" - configuration has an unknown property 'postcss'. These properties are valid:",
 			"   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry, externals?, " +
-			"loader?, module?, name?, node?, output?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, " +
+			"loader?, module?, name?, node?, output?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, " +
 			"recordsPath?, resolve?, resolveLoader?, stats?, target?, watch?, watchOptions? }",
 			"   For typos: please correct them.",
 			"   For loader options: webpack 2 no longer allows custom properties in configuration.",
@@ -107,6 +129,20 @@ describe("Validation", function() {
 			"         }",
 			"       })",
 			"     ]"
+		]
+	}, {
+		name: "enum",
+		config: {
+			entry: "a",
+			devtool: true
+		},
+		message: [
+			" - configuration.devtool should be one of these:",
+			"   string | false",
+			"   A developer tool to enhance debugging.",
+			"   Details:",
+			"    * configuration.devtool should be a string.",
+			"    * configuration.devtool should be false"
 		]
 	}];
 	testCases.forEach(function(testCase) {

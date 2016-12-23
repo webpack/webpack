@@ -1,10 +1,8 @@
 require("should");
 
-// shimming global window object so the http-module is happy.
-// window is assigned without var on purpose.
-window = {
-	XMLHttpRequest: function() {}
-};
+// shimming global XMLHttpRequest object so the http-module is happy.
+global.XMLHttpRequest = function() {};
+global.XMLHttpRequest.prototype.open = function() {};
 
 it("should provide a global Buffer constructor", function() {
 	Buffer.should.be.a.Function;

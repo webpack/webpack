@@ -39,7 +39,6 @@ app.configure(function() {
 		plugins: [
 			new webpack.dependencies.LabeledModulesPlugin(),
 			new webpack.optimize.UglifyJsPlugin(),
-			new webpack.optimize.DedupePlugin(),
 			new webpack.HotModuleReplacementPlugin()
 		]
 	}), {

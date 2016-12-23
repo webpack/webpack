@@ -62,16 +62,18 @@ module.exports = 42
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
-/******/ 	// define getter function for harmory exports
+/******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -147,11 +149,10 @@ console.log(__webpack_require__(/*! ./cup1 */ 1));
 ## Uncompressed
 
 ```
-Hash: 0718a799b127b2e3e2e1
-Version: webpack 2.1.0-beta.25
-Time: 245ms
+Hash: 909077149c791bec4711
+Version: webpack 2.2.0-rc.2
     Asset     Size  Chunks             Chunk Names
-output.js  3.25 kB       0  [emitted]  main
+output.js  3.32 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 206 bytes [entry] [rendered]
     > main [2] ./example.js 
@@ -166,11 +167,10 @@ chunk    {0} output.js (main) 206 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 0718a799b127b2e3e2e1
-Version: webpack 2.1.0-beta.25
-Time: 344ms
+Hash: 909077149c791bec4711
+Version: webpack 2.2.0-rc.2
     Asset       Size  Chunks             Chunk Names
-output.js  663 bytes       0  [emitted]  main
+output.js  673 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 206 bytes [entry] [rendered]
     > main [2] ./example.js 

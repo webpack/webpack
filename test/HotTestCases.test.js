@@ -48,7 +48,8 @@ describe("HotTestCases", function() {
 						module: {
 							loaders: [{
 								test: /\.js$/,
-								loader: path.join(__dirname, "hotCases", "fake-update-loader.js")
+								loader: path.join(__dirname, "hotCases", "fake-update-loader.js"),
+								enforce: "pre"
 							}, {
 								test: /\.css$/,
 								loader: ExtractTextPlugin.extract({

@@ -2,7 +2,7 @@ This example demonstrates how to build a complex library with webpack. The libra
 
 When using this library with script tags it exports itself to the namespace `MyLibrary` and each part to a property in this namespace (`MyLibrary.alpha` and `MyLibrary.beta`). When consuming the library with CommonsJs or AMD it just export each part.
 
-We are using mutliple entry points (`entry` option) to build every part of the library as separate output file. The `output.filename` option contains `[name]` to give each output file a different name.
+We are using multiple entry points (`entry` option) to build every part of the library as separate output file. The `output.filename` option contains `[name]` to give each output file a different name.
 
 We are using the `libraryTarget` option to generate a UMD ([Universal Module Definition](https://github.com/umdjs/umd)) module that is consumable in CommonsJs, AMD and with script tags. The `library` option defines the namespace. We are using `[name]` in the `library` option to give every entry a different namespace.
 
@@ -43,6 +43,9 @@ module.exports = {
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["alpha"] = factory();
 })(this, function() {
+```
+<details><summary>`return /******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+``` js
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -78,16 +81,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
-/******/ 	// define getter function for harmory exports
+/******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -109,6 +114,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
+```
+</details>
+``` js
 /******/ ([
 /* 0 */
 /* unknown exports provided */
@@ -121,9 +129,8 @@ return /******/ (function(modules) { // webpackBootstrap
 module.exports = "alpha";
 
 /***/ }
-/******/ ])
+/******/ ]);
 });
-;
 ```
 
 # js/MyLibrary.beta.js
@@ -174,16 +181,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
-/******/ 	// define getter function for harmory exports
+/******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -218,9 +227,8 @@ return /******/ (function(modules) { // webpackBootstrap
 module.exports = "beta";
 
 /***/ }
-/******/ ])
+/******/ ]);
 });
-;
 ```
 
 # Info
@@ -229,11 +237,10 @@ module.exports = "beta";
 
 ```
 Hash: 082bbeea226fa367215b
-Version: webpack 2.1.0-beta.25
-Time: 104ms
+Version: webpack 2.2.0-rc.2
              Asset     Size  Chunks             Chunk Names
- MyLibrary.beta.js  3.02 kB       0  [emitted]  beta
-MyLibrary.alpha.js  3.01 kB       1  [emitted]  alpha
+ MyLibrary.beta.js  3.09 kB       0  [emitted]  beta
+MyLibrary.alpha.js  3.08 kB       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
@@ -248,11 +255,10 @@ chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
 
 ```
 Hash: 082bbeea226fa367215b
-Version: webpack 2.1.0-beta.25
-Time: 248ms
+Version: webpack 2.2.0-rc.2
              Asset       Size  Chunks             Chunk Names
- MyLibrary.beta.js  775 bytes       0  [emitted]  beta
-MyLibrary.alpha.js  777 bytes       1  [emitted]  alpha
+ MyLibrary.beta.js  785 bytes       0  [emitted]  beta
+MyLibrary.alpha.js  787 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
