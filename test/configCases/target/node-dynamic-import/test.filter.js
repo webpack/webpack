@@ -1,5 +1,5 @@
-var supportsES6 = require("../../../helpers/supportsES6");
+var supportsArrowFn = require("../../../helpers/supportsArrowFunctionExpression");
 
 module.exports = function(config) {
-	return supportsES6();
+	return supportsArrowFn();
 };
