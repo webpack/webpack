@@ -48,7 +48,7 @@ your pull request should be accepted quickly.
 
 Some things that will increase the chance that your pull request is accepted:
 
-* [Write tests](./test/README.m`d)
+* [Write tests](./test/README.md)
 * Follow the existing coding style
 * Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 
