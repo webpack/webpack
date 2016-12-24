@@ -92,6 +92,28 @@ describe("Errors", function() {
 			done();
 		});
 	});
+	it("should warn about NoErrorsPlugin being deprecated in favor of NoEmitOnErrorsPlugin", function(done) {
+		getErrors({
+			entry: "./no-errors-deprecate",
+			plugins: [
+				new webpack.NoErrorsPlugin()
+			]
+		}, function(errors, warnings) {
+			if(errors.length === 0) {
+				warnings.length.should.be.eql(1);
+				var lines = warnings[0].split("\n");
+				lines[0].should.match(/webpack/);
+				lines[0].should.match(/NoErrorsPlugin/);
+				lines[0].should.match(/deprecated/);
+				lines[1].should.match(/NoEmitOnErrorsPlugin/);
+				lines[1].should.match(/instead/);
+			} else {
+				errors.length.should.be.eql(1);
+				warnings.length.should.be.eql(0);
+			}
+			done();
+		});
+	});
 	it("should throw an error when using incorrect CommonsChunkPlugin configuration", function(done) {
 		getErrors({
 			entry: {
