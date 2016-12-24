@@ -16,7 +16,7 @@ Example: `$(npm bin)/mocha --grep ConfigTestCases`
 We use MochaJS for our tests. For more information on Mocha you can visit their [homepage](https://mochajs.org/)!
 
 ### Class Tests
-All test files can be found in *.test.js. There are many tests that simply test API's of a specific class/file (such as `Compiler`, `Errors`, Integration, Parser, RuleSet, Validation).
+All test files can be found in *.test.js. There are many tests that simply test API's of a specific class/file (such as `Compiler`, `Errors`, Integration, `Parser`, `RuleSet`, Validation).
 If the feature you are contributing involves one of those classes, then best to start there to understand the structure. 
 
 ### xCases
@@ -41,7 +41,7 @@ By default, the "expected" outcome is a pain to write by hand so instead when st
 
 * Checks for `expected.txt` file containing expected results.  
 * If the `expected.txt` doesn't match what is output, then an `actual.txt` stats output file will be created and the test will fail. (A typical workflow for stats cases is to fail the test and copy the results from `actual.txt` to `expected.txt`.)
-* If the actual output matches `expected.txt`, bingo, tests pas,  and submit that code with pride!!!
+* If the actual output matches `expected.txt`, the tests passes and you are free to submit that PR with pride!!!
 
 ## Questions? Comments? 
 If you are still nervous or don't quite understand, please submit an issue and tag us in it, and provide a relevant PR while working on!
