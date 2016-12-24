@@ -53,6 +53,22 @@
                   }
                 ],
                 "description": "All modules are loaded upon startup. The last one is exported."
+              },
+              {
+                "minProperties": 1,
+                "additionalProperties": {
+                  "anyOf": [
+                    {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/definitions/common.nonEmptyArrayOfUniqueStringValues"
+                    }
+                  ]
+                },
+                "description": "Multiple entry bundle. The key is the chunk name. The value can be a string or an array.",
+                "type": "object"
               }
             ]
           },
