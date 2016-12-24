@@ -114,6 +114,22 @@ describe("Errors", function() {
 			done();
 		});
 	});
+	it("should not warn if the NoEmitOnErrorsPlugin is used over the NoErrorsPlugin", function(done) {
+		getErrors({
+			entry: "./no-errors-deprecate",
+			plugins: [
+				new webpack.NoEmitOnErrorsPlugin()
+			]
+		}, function(errors, warnings) {
+			if(errors.length === 0) {
+				warnings.length.should.be.eql(0);
+			} else {
+				errors.length.should.be.eql(1);
+				warnings.length.should.be.eql(0);
+			}
+			done();
+		});
+	});
 	it("should throw an error when using incorrect CommonsChunkPlugin configuration", function(done) {
 		getErrors({
 			entry: {
