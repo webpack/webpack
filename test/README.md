@@ -10,7 +10,7 @@ But don't give up hope!!! Although our tests may appear complex and overwhelming
 	* `npm run test` or `npm t`
 * To run an individual suite: (recommended during development for easier isolated diffs)
 	
-Example: `$(npm bin)/mocha --grep ConfigTestCases
+Example: `$(npm bin)/mocha --grep ConfigTestCases`
 
 ## Test suite overview
 We use MochaJS for our tests. For more information on Mocha you can visit their [homepage](https://mochajs.org/)!
