@@ -9,7 +9,7 @@ module.exports = function checkArrayExpectation(testDirectory, object, kind, fil
 	}
 	var array = object[kind + "s"].slice().sort();
 	if(kind === "warning") array = array.filter(function(item) {
-		return !/from UglifyJs/.test(item);
+		return !/from UglifyJs|was applied \d+ times/.test(item);
 	});
 	if(fs.existsSync(path.join(testDirectory, filename + ".js"))) {
 		var expected = require(path.join(testDirectory, filename + ".js"));
