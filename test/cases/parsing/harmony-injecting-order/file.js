@@ -1,3 +1,3 @@
 export function f() {
-    return module;
+    return __dirname;
 };
