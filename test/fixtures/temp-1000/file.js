@@ -1,1 +1,0 @@
-require('./file2'); again
