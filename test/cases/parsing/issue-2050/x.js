@@ -1,6 +1,6 @@
 import { xa, xb, xc, xd } from "./module";
 
-module.exports = {
+__webpack_module__.exports = {
 	xa: xa,
 	xb: xb,
 	xc: xc,
