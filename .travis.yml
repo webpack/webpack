@@ -20,9 +20,6 @@ matrix:
     - os: linux
       node_js: "4"
       env: NO_WATCH_TESTS=1 JOB_PART=test
-    - os: linux
-      node_js: "v0.12.17"
-      env: NO_WATCH_TESTS=1 JOB_PART=test
     - os: osx
       node_js: "7"
       env: NO_WATCH_TESTS=1 JOB_PART=test
@@ -33,7 +30,6 @@ matrix:
       node_js: "4"
       env: NO_WATCH_TESTS=1 JOB_PART=test
   allow_failures:
-    - node_js: "v0.12.17"
     - os: osx
   fast_finish: true
 
