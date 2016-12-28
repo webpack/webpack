@@ -99,18 +99,13 @@ describe("Errors", function() {
 				new webpack.NoErrorsPlugin()
 			]
 		}, function(errors, warnings) {
-			if(errors.length === 0) {
-				warnings.length.should.be.eql(1);
-				var lines = warnings[0].split("\n");
-				lines[0].should.match(/webpack/);
-				lines[0].should.match(/NoErrorsPlugin/);
-				lines[0].should.match(/deprecated/);
-				lines[1].should.match(/NoEmitOnErrorsPlugin/);
-				lines[1].should.match(/instead/);
-			} else {
-				errors.length.should.be.eql(1);
-				warnings.length.should.be.eql(0);
-			}
+			warnings.length.should.be.eql(1);
+			var lines = warnings[0].split("\n");
+			lines[0].should.match(/webpack/);
+			lines[0].should.match(/NoErrorsPlugin/);
+			lines[0].should.match(/deprecated/);
+			lines[1].should.match(/NoEmitOnErrorsPlugin/);
+			lines[1].should.match(/instead/);
 			done();
 		});
 	});
@@ -121,12 +116,31 @@ describe("Errors", function() {
 				new webpack.NoEmitOnErrorsPlugin()
 			]
 		}, function(errors, warnings) {
-			if(errors.length === 0) {
-				warnings.length.should.be.eql(0);
-			} else {
-				errors.length.should.be.eql(1);
-				warnings.length.should.be.eql(0);
-			}
+			errors.length.should.be.eql(1);
+			warnings.length.should.be.eql(0);
+			done();
+		});
+	});
+	it("should not not emit if NoEmitOnErrorsPlugin is used and there is an error", function(done) {
+		getErrors({
+			entry: "./missingFile",
+			plugins: [
+				new webpack.NoEmitOnErrorsPlugin()
+			]
+		}, function(errors, warnings) {
+			errors.length.should.be.eql(2);
+			warnings.length.should.be.eql(0);
+			errors.sort();
+			var lines = errors[0].split("\n");
+			lines[0].should.match(/missingFile.js/);
+			lines[1].should.match(/^Module not found/);
+			lines[1].should.match(/\.\/dir\/missing2/);
+			lines[2].should.match(/missingFile.js 12:9/);
+			lines = errors[1].split("\n");
+			lines[0].should.match(/missingFile.js/);
+			lines[1].should.match(/^Module not found/);
+			lines[1].should.match(/\.\/missing/);
+			lines[2].should.match(/missingFile.js 4:0/);
 			done();
 		});
 	});
