@@ -109,7 +109,7 @@ describe("Errors", function() {
 			done();
 		});
 	});
-	it.only("should not warn if the NoEmitOnErrorsPlugin is used over the NoErrorsPlugin", function(done) {
+	it("should not warn if the NoEmitOnErrorsPlugin is used over the NoErrorsPlugin", function(done) {
 		getErrors({
 			entry: "./no-errors-deprecate",
 			plugins: [
