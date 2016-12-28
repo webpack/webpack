@@ -88,7 +88,7 @@ describe("ConfigTestCases", function() {
 									var p = path.join(currentDirectory, module);
 									content = fs.readFileSync(p, "utf-8");
 								}
-								if(options.target === "web") {
+								if(options.target === "web" || options.target === "webworker") {
 									fn = vm.runInNewContext("(function(require, module, exports, __dirname, __filename, it, window) {" + content + "\n})", globalContext, p);
 								} else {
 									fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it) {" + content + "\n})", p);
