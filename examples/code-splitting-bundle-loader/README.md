@@ -5,7 +5,7 @@ The bundle loader is used to create a wrapper module for `file.js` that loads th
 # example.js
 
 ``` javascript
-require("bundle!./file.js")(function(fileJsExports) {
+require("bundle-loader!./file.js")(function(fileJsExports) {
 	console.log(fileJsExports);
 });
 ```
@@ -95,6 +95,9 @@ module.exports = "It works";
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
 
+/******/ 		if (__webpack_require__.nc) {
+/******/ 			script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 		}
 /******/ 		script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
@@ -108,12 +111,14 @@ module.exports = "It works";
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
-/******/ 		head.appendChild(script);
 
 /******/ 		var promise = new Promise(function(resolve, reject) {
 /******/ 			installedChunks[chunkId] = [resolve, reject];
 /******/ 		});
-/******/ 		return installedChunks[chunkId][2] = promise;
+/******/ 		installedChunks[chunkId][2] = promise;
+
+/******/ 		head.appendChild(script);
+/******/ 		return promise;
 /******/ 	};
 
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -127,11 +132,13 @@ module.exports = "It works";
 
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -174,14 +181,14 @@ module.exports = function(cb) {
 	if(cbs) cbs.push(cb);
 	else cb(data);
 }
-__webpack_require__.e/* nsure */(0).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
+__webpack_require__.e/* require.ensure */(0).then((function(require) {
 	data = __webpack_require__(/*! !./file.js */ 2);
 	var callbacks = cbs;
 	cbs = null;
 	for(var i = 0, l = callbacks.length; i < l; i++) {
 		callbacks[i](data);
 	}
-}).bind(null, __webpack_require__));
+}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
 /***/ },
 /* 1 */
@@ -192,9 +199,10 @@ __webpack_require__.e/* nsure */(0).catch(function(err) { __webpack_require__.oe
   \********************/
 /***/ function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! bundle!./file.js */ 0)(function(fileJsExports) {
+__webpack_require__(/*! bundle-loader!./file.js */ 0)(function(fileJsExports) {
 	console.log(fileJsExports);
 });
+
 
 /***/ }
 /******/ ]);
@@ -225,41 +233,39 @@ module.exports = "It works";
 ## Uncompressed
 
 ```
-Hash: 4934f608e3c1f4ceb008
-Version: webpack 2.1.0-beta.25
-Time: 145ms
+Hash: 3760272aaec4944ab110
+Version: webpack 2.2.0-rc.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  228 bytes       0  [emitted]  
-  output.js    6.24 kB       1  [emitted]  main
+  output.js    6.45 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 28 bytes {1} [rendered]
     > [0] (webpack)/~/bundle-loader!./file.js 7:0-14:2
     [2] ./file.js 28 bytes {0} [built]
         cjs require !!./file.js [0] (webpack)/~/bundle-loader!./file.js 8:8-30
-chunk    {1} output.js (main) 367 bytes [entry] [rendered]
+chunk    {1} output.js (main) 378 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] (webpack)/~/bundle-loader!./file.js 281 bytes {1} [built]
-        cjs require bundle!./file.js [1] ./example.js 1:0-27
-    [1] ./example.js 86 bytes {1} [built]
+        cjs require bundle-loader!./file.js [1] ./example.js 1:0-34
+    [1] ./example.js 97 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 4934f608e3c1f4ceb008
-Version: webpack 2.1.0-beta.25
-Time: 304ms
+Hash: 3760272aaec4944ab110
+Version: webpack 2.2.0-rc.2
       Asset      Size  Chunks             Chunk Names
 0.output.js  58 bytes       0  [emitted]  
-  output.js   1.54 kB       1  [emitted]  main
+  output.js   1.57 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 28 bytes {1} [rendered]
     > [0] (webpack)/~/bundle-loader!./file.js 7:0-14:2
     [2] ./file.js 28 bytes {0} [built]
         cjs require !!./file.js [0] (webpack)/~/bundle-loader!./file.js 8:8-30
-chunk    {1} output.js (main) 367 bytes [entry] [rendered]
+chunk    {1} output.js (main) 378 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] (webpack)/~/bundle-loader!./file.js 281 bytes {1} [built]
-        cjs require bundle!./file.js [1] ./example.js 1:0-27
-    [1] ./example.js 86 bytes {1} [built]
+        cjs require bundle-loader!./file.js [1] ./example.js 1:0-34
+    [1] ./example.js 97 bytes {1} [built]
 ```

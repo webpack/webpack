@@ -104,7 +104,7 @@ describe("TestCases", function() {
 						var filterPath = path.join(testDirectory, "test.filter.js");
 						if(fs.existsSync(filterPath) && !require(filterPath)(config)) {
 							describe.skip(test, function() {
-								it('filtered')
+								it('filtered');
 							});
 							return false;
 						}
@@ -144,17 +144,15 @@ describe("TestCases", function() {
 										loader: "jade-loader"
 									}]
 								},
-								plugins: (config.plugins || []).concat(
-									function() {
-										this.plugin("compilation", function(compilation) {
-											["optimize", "optimize-modules-basic", "optimize-chunks-basic", "after-optimize-tree", "after-optimize-assets"].forEach(function(hook) {
-												compilation.plugin(hook, function() {
-													compilation.checkConstraints();
-												});
+								plugins: (config.plugins || []).concat(function() {
+									this.plugin("compilation", function(compilation) {
+										["optimize", "optimize-modules-basic", "optimize-chunks-basic", "after-optimize-tree", "after-optimize-assets"].forEach(function(hook) {
+											compilation.plugin(hook, function() {
+												compilation.checkConstraints();
 											});
 										});
-									}
-								)
+									});
+								})
 							};
 							webpack(options, function(err, stats) {
 								if(err) return done(err);

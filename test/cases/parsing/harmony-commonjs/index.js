@@ -1,3 +1,5 @@
+import { x, y } from "./b";
+
 it("should pass when required by CommonJS module", function () {
 	var test1 = require('./a').default;
 	test1().should.be.eql("OK");
@@ -12,4 +14,9 @@ it("should pass when use babeljs transpiler", function() {
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	var test2 = (0, _test2.default)();
 	test2.should.be.eql("OK");
-})
+});
+
+it("should double reexport from non-harmony modules correctly", function() {
+	y.should.be.eql("y");
+	x.should.be.eql("x");
+});

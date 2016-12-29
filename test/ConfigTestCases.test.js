@@ -1,3 +1,4 @@
+/* globals describe it */
 var should = require("should");
 var path = require("path");
 var fs = require("fs");
@@ -17,7 +18,17 @@ describe("ConfigTestCases", function() {
 			name: cat,
 			tests: fs.readdirSync(path.join(casesPath, cat)).filter(function(folder) {
 				return folder.indexOf("_") < 0;
-			}).sort()
+			}).sort().filter(function(testName) {
+				var testDirectory = path.join(casesPath, cat, testName);
+				var filterPath = path.join(testDirectory, "test.filter.js");
+				if(fs.existsSync(filterPath) && !require(filterPath)()) {
+					describe.skip(testName, function() {
+						it('filtered');
+					});
+					return false;
+				}
+				return true;
+			})
 		};
 	});
 	categories.forEach(function(category) {
@@ -77,7 +88,7 @@ describe("ConfigTestCases", function() {
 									var p = path.join(currentDirectory, module);
 									content = fs.readFileSync(p, "utf-8");
 								}
-								if(options.target === "web") {
+								if(options.target === "web" || options.target === "webworker") {
 									fn = vm.runInNewContext("(function(require, module, exports, __dirname, __filename, it, window) {" + content + "\n})", globalContext, p);
 								} else {
 									fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it) {" + content + "\n})", p);

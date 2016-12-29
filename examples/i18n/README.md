@@ -90,11 +90,13 @@ module.exports = Object.keys(languages).map(function(language) {
 
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -116,6 +118,9 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
+```
+</details>
+``` javascript
 /******/ ([
 /* 0 */
 /* unknown exports provided */
@@ -175,11 +180,13 @@ console.log("Missing Text");
 
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -201,9 +208,6 @@ console.log("Missing Text");
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
-```
-</details>
-``` javascript
 /******/ ([
 /* 0 */
 /* unknown exports provided */
@@ -225,28 +229,26 @@ console.log("Missing Text");
 ## Uncompressed
 
 ```
-Hash: 4194dfc38a1d790c828d2b4d6ee6122bc1cc36c8
-Version: webpack 2.1.0-beta.25
+Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
+Version: webpack 2.2.0-rc.2
 Child en:
-    Hash: 4194dfc38a1d790c828d
-    Version: webpack 2.1.0-beta.25
-    Time: 99ms
+    Hash: b61d16621736c97f557e
+    Version: webpack 2.2.0-rc.2
            Asset     Size  Chunks             Chunk Names
-    en.output.js  2.65 kB       0  [emitted]  main
+    en.output.js  2.72 kB       0  [emitted]  main
     Entrypoint main = en.output.js
-    chunk    {0} en.output.js (main) 64 bytes [entry] [rendered]
+    chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 64 bytes {0} [built]
+        [0] ./example.js 65 bytes {0} [built]
 Child de:
-    Hash: 2b4d6ee6122bc1cc36c8
-    Version: webpack 2.1.0-beta.25
-    Time: 84ms
+    Hash: 52b4d8e68140f1345ef8
+    Version: webpack 2.2.0-rc.2
            Asset     Size  Chunks             Chunk Names
-    de.output.js  2.64 kB       0  [emitted]  main
+    de.output.js  2.72 kB       0  [emitted]  main
     Entrypoint main = de.output.js
-    chunk    {0} de.output.js (main) 64 bytes [entry] [rendered]
+    chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 64 bytes {0} [built] [1 warning]
+        [0] ./example.js 65 bytes {0} [built] [1 warning]
     
     WARNING in ./example.js
     Missing localization: Missing Text
@@ -255,28 +257,26 @@ Child de:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 4194dfc38a1d790c828d2b4d6ee6122bc1cc36c8
-Version: webpack 2.1.0-beta.25
+Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
+Version: webpack 2.2.0-rc.2
 Child en:
-    Hash: 4194dfc38a1d790c828d
-    Version: webpack 2.1.0-beta.25
-    Time: 207ms
+    Hash: b61d16621736c97f557e
+    Version: webpack 2.2.0-rc.2
            Asset       Size  Chunks             Chunk Names
-    en.output.js  561 bytes       0  [emitted]  main
+    en.output.js  571 bytes       0  [emitted]  main
     Entrypoint main = en.output.js
-    chunk    {0} en.output.js (main) 64 bytes [entry] [rendered]
+    chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 64 bytes {0} [built]
+        [0] ./example.js 65 bytes {0} [built]
 Child de:
-    Hash: 2b4d6ee6122bc1cc36c8
-    Version: webpack 2.1.0-beta.25
-    Time: 191ms
+    Hash: 52b4d8e68140f1345ef8
+    Version: webpack 2.2.0-rc.2
            Asset       Size  Chunks             Chunk Names
-    de.output.js  560 bytes       0  [emitted]  main
+    de.output.js  570 bytes       0  [emitted]  main
     Entrypoint main = de.output.js
-    chunk    {0} de.output.js (main) 64 bytes [entry] [rendered]
+    chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 64 bytes {0} [built] [1 warning]
+        [0] ./example.js 65 bytes {0} [built] [1 warning]
     
     WARNING in ./example.js
     Missing localization: Missing Text
