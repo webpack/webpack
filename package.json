@@ -63,7 +63,7 @@
     "worker-loader": "~0.7.0"
   },
   "engines": {
-    "node": ">=4.2.3"
+    "node": ">=4.7"
   },
   "repository": {
     "type": "git",
