@@ -37,7 +37,7 @@
     "coveralls": "^2.11.2",
     "css-loader": "~0.25.0",
     "es6-promise-polyfill": "^1.1.1",
-    "eslint": "^1.1.0",
+    "eslint": "^3.12.2",
     "express": "~4.13.1",
     "extract-text-webpack-plugin": "^2.0.0-beta",
     "file-loader": "~0.9.0",
