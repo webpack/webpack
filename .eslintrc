@@ -9,21 +9,13 @@
 	},
 	"rules": {
 		"strict": "off",
-		"camelcase": "off",
-		"curly": "off",
 		"indent": ["error", "tab", { "SwitchCase": 1 }],
 		"eol-last": "warn",
-		"no-shadow": "off",
-		"no-redeclare": "error",
 		"no-extra-bind": "warn",
 		"no-empty": "off",
 		"no-process-exit": "warn",
-		"no-underscore-dangle": "off",
 		"no-use-before-define": "off",
-		"no-undef": "error",
 		"no-unused-vars": "off",
-		"consistent-return": "off",
-		"no-inner-declarations": "warn",
 		"no-loop-func": "warn",
 		"space-before-function-paren": ["error", "never"],
 		"space-before-blocks": ["error", "always"],
@@ -41,8 +33,6 @@
 			}
 		}],
 		"no-console": "off",
-		"comma-dangle": "off",
-		"no-unexpected-multiline": "error",
 		"valid-jsdoc": "error"
 	}
 }
