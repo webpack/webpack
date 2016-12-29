@@ -24,7 +24,7 @@ module.exports = function(yargs, argv, convertOptions) {
 	var configFileLoaded = false;
 	var configFiles = [];
 	var extensions = Object.keys(interpret.extensions).sort(function(a, b) {
-		return a === '.js' ? -1 : b === '.js' ? 1 : a.length - b.length;
+		return a === ".js" ? -1 : b === ".js" ? 1 : a.length - b.length;
 	});
 	var defaultConfigFiles = ["webpack.config", "webpackfile"].map(function(filename) {
 		return extensions.map(function(ext) {
