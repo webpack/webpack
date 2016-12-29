@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "2.2.0-rc.1",
+  "version": "2.2.0-rc.3",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "dependencies": {
@@ -14,14 +14,13 @@
     "json-loader": "^0.5.4",
     "loader-runner": "^2.2.0",
     "loader-utils": "^0.2.16",
-    "memory-fs": "^0.4.1",
+    "memory-fs": "~0.4.1",
     "mkdirp": "~0.5.0",
     "node-libs-browser": "^2.0.0",
-    "object-assign": "^4.0.1",
     "source-map": "^0.5.3",
     "supports-color": "^3.1.0",
     "tapable": "~0.2.5",
-    "uglify-js": "~2.7.3",
+    "uglify-js": "^2.7.5",
     "watchpack": "^1.0.0",
     "webpack-sources": "^0.1.0",
     "yargs": "^6.0.0"
@@ -37,12 +36,12 @@
     "coveralls": "^2.11.2",
     "css-loader": "~0.25.0",
     "es6-promise-polyfill": "^1.1.1",
-    "eslint": "^1.1.0",
+    "eslint": "3.12.2",
     "express": "~4.13.1",
     "extract-text-webpack-plugin": "^2.0.0-beta",
     "file-loader": "~0.9.0",
     "i18n-webpack-plugin": "^0.3.0",
-    "istanbul": "^0.4.1",
+    "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
     "js-beautify": "^1.5.10",
@@ -64,7 +63,7 @@
     "worker-loader": "~0.7.0"
   },
   "engines": {
-    "node": ">=0.12"
+    "node": ">=4.7"
   },
   "repository": {
     "type": "git",
@@ -93,8 +92,7 @@
     "lint": "eslint lib bin hot",
     "beautify-lint": "beautify-lint 'lib/**/*.js' 'hot/**/*.js' 'bin/**/*.js' 'benchmark/*.js' 'test/*.js'",
     "nsp": "nsp check --output summary",
-    "cover": "istanbul cover -x '**/*.runtime.js' node_modules/mocha/bin/_mocha",
-    "beautify": "beautify-rewrite 'lib/**/*.js' 'hot/**/*.js' 'bin/**/*.js' 'benchmark/*.js' 'test/*.js'",
+    "cover": "node --harmony ./node_modules/.bin/istanbul cover -x '**/*.runtime.js' node_modules/mocha/bin/_mocha",
     "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
   }
 }

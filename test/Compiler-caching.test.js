@@ -3,7 +3,7 @@ var path = require("path");
 var fs = require("fs");
 
 var NodeEnvironmentPlugin = require("../lib/node/NodeEnvironmentPlugin");
-var Compiler = require("../lib/Compiler");
+var webpack = require("../");
 var WebpackOptionsApply = require("../lib/WebpackOptionsApply");
 var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 
@@ -22,9 +22,7 @@ describe("Compiler (caching)", function() {
 			writeFile: [],
 		};
 
-		var c = new Compiler();
-		new NodeEnvironmentPlugin().apply(c);
-		c.options = new WebpackOptionsApply().process(options, c);
+		var c = webpack(options);
 		var files = {};
 		c.outputFileSystem = {
 			join: path.join.bind(path),
@@ -310,43 +308,4 @@ describe("Compiler (caching)", function() {
 			});
 		});
 	});
-
-	it("should build not keep error after fix", function(done) {
-
-		var options = {};
-		var tempFixture = createTempFixture();
-
-		var helper = compile("./temp-cache-fixture/c", options, function(stats, files) {
-
-			// Built the first time
-			stats.modules[0].name.should.containEql('a.js');
-			stats.modules[0].built.should.be.exactly(true, 'a.js should have been built');
-
-			var aContent = fs.readFileSync(tempFixture.aFilepath).toString().replace('This is a', '\"))))This is a');
-
-			fs.writeFileSync(tempFixture.aFilepath, aContent);
-
-			helper.runAgain({
-				expectErrors: 1
-			}, function(stats, files, iteration) {
-
-				var aContent = fs.readFileSync(tempFixture.aFilepath).toString().replace('\"))))This is a', 'This is a again');
-
-				fs.writeFileSync(tempFixture.aFilepath, aContent);
-
-				helper.runAgain(function(stats, files, iteration) {
-
-					// And only a.js built after it was modified
-					stats.modules[0].name.should.containEql('a.js');
-					stats.modules[0].built.should.be.exactly(true, 'a.js should have been built');
-
-					stats.modules[1].name.should.containEql('c.js');
-					//stats.modules[1].built.should.be.exactly(false, 'c.js should not have built');
-
-					done();
-				});
-			});
-		});
-	});
-
 });

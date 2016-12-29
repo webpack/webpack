@@ -1,0 +1,26 @@
+Hash: e36ab7d25d7661d1d913
+Time: Xms
+  Asset     Size  Chunks             Chunk Names
+main.js  5.76 kB       0  [emitted]  main
+chunk    {0} main.js (main) 1.18 kB [entry] [rendered]
+    [0] (webpack)/test/statsCases/max-modules/a.js?1 33 bytes {0} [built]
+    [1] (webpack)/test/statsCases/max-modules/a.js?10 33 bytes {0} [built]
+    [2] (webpack)/test/statsCases/max-modules/a.js?2 33 bytes {0} [built]
+    [3] (webpack)/test/statsCases/max-modules/a.js?3 33 bytes {0} [built]
+    [4] (webpack)/test/statsCases/max-modules/a.js?4 33 bytes {0} [built]
+    [5] (webpack)/test/statsCases/max-modules/a.js?5 33 bytes {0} [built]
+    [6] (webpack)/test/statsCases/max-modules/a.js?6 33 bytes {0} [built]
+    [7] (webpack)/test/statsCases/max-modules/a.js?7 33 bytes {0} [built]
+    [8] (webpack)/test/statsCases/max-modules/a.js?8 33 bytes {0} [built]
+    [9] (webpack)/test/statsCases/max-modules/a.js?9 33 bytes {0} [built]
+   [20] (webpack)/test/statsCases/max-modules/c.js?1 33 bytes {0} [built]
+   [21] (webpack)/test/statsCases/max-modules/c.js?10 33 bytes {0} [built]
+   [22] (webpack)/test/statsCases/max-modules/c.js?2 33 bytes {0} [built]
+   [23] (webpack)/test/statsCases/max-modules/c.js?3 33 bytes {0} [built]
+   [24] (webpack)/test/statsCases/max-modules/c.js?4 33 bytes {0} [built]
+   [25] (webpack)/test/statsCases/max-modules/c.js?5 33 bytes {0} [built]
+   [26] (webpack)/test/statsCases/max-modules/c.js?6 33 bytes {0} [built]
+   [27] (webpack)/test/statsCases/max-modules/c.js?7 33 bytes {0} [built]
+   [28] (webpack)/test/statsCases/max-modules/c.js?8 33 bytes {0} [built]
+   [30] (webpack)/test/statsCases/max-modules/index.js 181 bytes {0} [built]
+     + 11 hidden modules

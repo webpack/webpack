@@ -1,13 +1,13 @@
 Time: <CLR=BOLD>X</CLR>ms
-      <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22><CLR=BOLD>Chunk Names</CLR>
-       <CLR=32,BOLD>0.js</CLR>  257 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-       <CLR=32,BOLD>1.js</CLR>  136 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-       <CLR=32,BOLD>2.js</CLR>  230 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-    <CLR=33,BOLD>main.js</CLR>     <CLR=33,BOLD>306 kB</CLR>       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>main
-   <CLR=32,BOLD>0.js.map</CLR>  291 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-   <CLR=32,BOLD>1.js.map</CLR>  250 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-   <CLR=32,BOLD>2.js.map</CLR>  405 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-<CLR=32,BOLD>main.js.map</CLR>    1.81 MB       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
+      <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
+       <CLR=32,BOLD>0.js</CLR>  266 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+       <CLR=32,BOLD>1.js</CLR>  136 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+       <CLR=32,BOLD>2.js</CLR>  230 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+    <CLR=33,BOLD>main.js</CLR>     <CLR=33,BOLD>306 kB</CLR>       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+   <CLR=32,BOLD>0.js.map</CLR>  291 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>1.js.map</CLR>  250 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>2.js.map</CLR>  405 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+<CLR=32,BOLD>main.js.map</CLR>    1.81 MB       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         main
 chunk    {<CLR=33,BOLD>0</CLR>} <CLR=32,BOLD>0.js, 0.js.map</CLR> 54 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [rendered]</CLR>
     [2] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance-ensure-filter-sourcemaps/c.js</CLR> 54 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
 chunk    {<CLR=33,BOLD>1</CLR>} <CLR=32,BOLD>1.js, 1.js.map</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [rendered]</CLR>
