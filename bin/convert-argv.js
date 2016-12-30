@@ -2,7 +2,6 @@ var path = require("path");
 var fs = require("fs");
 fs.existsSync = fs.existsSync || path.existsSync;
 var interpret = require("interpret");
-var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 
 module.exports = function(yargs, argv, convertOptions) {
 
@@ -223,12 +222,6 @@ module.exports = function(yargs, argv, convertOptions) {
 					options[optionName || name] = true;
 				else if(bool === false)
 					options[optionName || name] = false;
-			});
-		}
-
-		function mapArgToPath(name, optionName) {
-			ifArg(name, function(str) {
-				options[optionName || name] = path.resolve(str);
 			});
 		}
 
