@@ -8,7 +8,7 @@
 		"es6": true
 	},
 	"rules": {
-		"quotes": [2, "double"],
+		"quotes": ["error", "double"],
 		"no-undef": "error",
 		"brace-style": "error",
 		"eol-last": "error",
