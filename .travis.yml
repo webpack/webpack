@@ -33,11 +33,11 @@ matrix:
     - os: osx
   fast_finish: true
 
+before_script:
+  - bash ./ci/travis-install.sh
+
 script: npm run travis:$JOB_PART
 
-before_install: if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
-after_install:
-  - bash ./ci/travis-install.sh
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
   - cat ./coverage/coverage.json | node_modules/codecov.io/bin/codecov.io.js
