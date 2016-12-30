@@ -36,7 +36,7 @@ matrix:
 script: npm run travis:$JOB_PART
 
 before_install: if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
-install:
+after_install:
   - bash ./ci/travis-install.sh
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
