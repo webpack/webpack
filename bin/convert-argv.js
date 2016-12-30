@@ -466,12 +466,6 @@ module.exports = function(yargs, argv, convertOptions) {
 			options.plugins.push(new ProvidePlugin(name, value));
 		});
 
-		ifBooleanArg("labeled-modules", function() {
-			ensureArray(options, "plugins");
-			var LabeledModulesPlugin = require("../lib/dependencies/LabeledModulesPlugin");
-			options.plugins.push(new LabeledModulesPlugin());
-		});
-
 		ifArg("plugin", function(value) {
 			ensureArray(options, "plugins");
 			options.plugins.push(loadPlugin(value));

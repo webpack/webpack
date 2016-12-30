@@ -1,11 +1,9 @@
 {
 	"root": true,
-	"extends": [
-		"eslint:recommended"
-	],
+	"plugins": ["node"],
+	"extends": ["eslint:recommended", "plugin:node/recommended"],
 	"env": {
-		"node": true,
-		"es6": true
+		"node": true
 	},
 	"rules": {
 		"quotes": ["error", "double"],
@@ -45,3 +43,4 @@
 		"valid-jsdoc": "error"
 	}
 }
+
