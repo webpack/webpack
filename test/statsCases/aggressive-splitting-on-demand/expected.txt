@@ -1,14 +1,14 @@
 Hash: a724b9eabbc88a7196a7
 Time: Xms
                   Asset       Size  Chunks             Chunk Names
-fc930a2adf8206ea2dc5.js    1.93 kB       0  [emitted]  
-cd45585186d59208602b.js    1.95 kB       1  [emitted]  
+fc930a2adf8206ea2dc5.js    1.94 kB       0  [emitted]  
+cd45585186d59208602b.js    1.96 kB       1  [emitted]  
 6b94c231e016c5aaccdb.js    1.94 kB       2  [emitted]  
-fd0985cee894c4f3f1a6.js    1.93 kB       3  [emitted]  
-d9fc46873c8ea924b895.js  977 bytes       4  [emitted]  
+fd0985cee894c4f3f1a6.js    1.94 kB       3  [emitted]  
+d9fc46873c8ea924b895.js  979 bytes       4  [emitted]  
 90b55464dc36b9c472a9.js    7.22 kB       6  [emitted]  main
-b08c507d4e1e05cbab45.js  983 bytes       9  [emitted]  
-5d50e858fe6e559aa47c.js  975 bytes      11  [emitted]  
+b08c507d4e1e05cbab45.js  985 bytes       9  [emitted]  
+5d50e858fe6e559aa47c.js  977 bytes      11  [emitted]  
 Entrypoint main = 90b55464dc36b9c472a9.js
 chunk    {0} fc930a2adf8206ea2dc5.js 1.8 kB {6}
     > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 4:0-51
