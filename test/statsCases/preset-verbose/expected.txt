@@ -2,9 +2,9 @@ Hash: 27b51279f30c19c26769
 Time: Xms
       Asset       Size  Chunks             Chunk Names
   bundle.js    3.83 kB       0  [emitted]  main
-1.bundle.js  159 bytes       1  [emitted]  
-2.bundle.js  101 bytes       2  [emitted]  
-3.bundle.js  180 bytes       3  [emitted]  
+1.bundle.js  161 bytes       1  [emitted]  
+2.bundle.js  103 bytes       2  [emitted]  
+3.bundle.js  184 bytes       3  [emitted]  
 chunk    {0} bundle.js (main) 73 bytes [rendered]
     [0] (webpack)/test/statsCases/preset-verbose/index.js 51 bytes {0} [built]
        factory:Xms building:Xms = Xms
