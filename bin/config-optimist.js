@@ -26,7 +26,7 @@ module.exports = function(optimist) {
 		.boolean("watch").alias("watch", "w").describe("watch", "Watch the filesystem for changes")
 		.boolean("watch-stdin").alias("watch-stdin", "stdin").describe("Exit the process when stdin is closed")
 		.describe("watch-aggregate-timeout", "Timeout for gathering changes while watching")
-		.describe("watch-poll", "The polling intervall for watching (also enable polling)")
+		.describe("watch-poll", "The polling interval for watching (also enable polling)")
 		.boolean("hot").describe("hot", "Enables Hot Module Replacement")
 		.boolean("debug").describe("debug", "Switch loaders to debug mode")
 		.string("devtool").describe("devtool", "Enable devtool for better debugging experience")
