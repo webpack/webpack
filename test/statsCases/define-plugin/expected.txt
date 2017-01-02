@@ -3,13 +3,13 @@ Child
     Hash: 22655fdde3386763624e
     Time: Xms
         Asset     Size  Chunks             Chunk Names
-    bundle.js  1.43 kB       0  [emitted]  main
+    bundle.js  1.44 kB       0  [emitted]  main
     chunk    {0} bundle.js (main) 24 bytes [rendered]
         [0] (webpack)/test/statsCases/define-plugin/index.js 24 bytes {0} [built]
 Child
     Hash: b84e3c3c9ea7106aac84
     Time: Xms
         Asset     Size  Chunks             Chunk Names
-    bundle.js  1.43 kB       0  [emitted]  main
+    bundle.js  1.44 kB       0  [emitted]  main
     chunk    {0} bundle.js (main) 24 bytes [rendered]
         [0] (webpack)/test/statsCases/define-plugin/index.js 24 bytes {0} [built]
