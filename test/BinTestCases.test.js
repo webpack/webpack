@@ -39,7 +39,6 @@ describe("BinTestCases", function() {
 					);
 				} catch(e) {}
 
-
 				execHandler(`${path.resolve(process.cwd(), "bin/webpack.js")}`, argsToArray(testArgs).concat(["--output-path", `${outputPath}`]), execOptions);
 			});
 		});
