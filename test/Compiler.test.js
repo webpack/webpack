@@ -46,7 +46,7 @@ describe("Compiler", function() {
 			});
 			should.strictEqual(typeof stats, "object");
 			stats.should.have.property("errors");
-			Array.isArray(stats.errors).should.be.ok;
+			Array.isArray(stats.errors).should.be.ok();
 			if(stats.errors.length > 0) {
 				stats.errors[0].should.be.instanceOf(Error);
 				throw stats.errors[0];

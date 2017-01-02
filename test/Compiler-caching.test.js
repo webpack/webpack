@@ -56,7 +56,7 @@ describe("Compiler (caching)", function() {
 				});
 				should.strictEqual(typeof stats, "object");
 				stats.should.have.property("errors");
-				Array.isArray(stats.errors).should.be.ok;
+				Array.isArray(stats.errors).should.be.ok();
 				if(options.expectErrors) {
 					stats.errors.length.should.be.eql(options.expectErrors);
 				} else {
