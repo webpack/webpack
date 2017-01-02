@@ -18,8 +18,8 @@ describe("Integration", function() {
 			}
 		}, function(err, stats) {
 			if(err) throw err;
-			stats.hasErrors().should.be.not.ok;
-			stats.hasWarnings().should.be.not.ok;
+			stats.hasErrors().should.be.not.ok();
+			stats.hasWarnings().should.be.not.ok();
 			done();
 		});
 	});
@@ -86,8 +86,8 @@ describe("Integration", function() {
 			]
 		}, function(err, stats) {
 			if(err) throw err;
-			stats.hasErrors().should.be.not.ok;
-			stats.hasWarnings().should.be.not.ok;
+			stats.hasErrors().should.be.not.ok();
+			stats.hasWarnings().should.be.not.ok();
 			done();
 		});
 	});

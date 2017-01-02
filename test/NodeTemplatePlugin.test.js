@@ -22,8 +22,8 @@ describe("NodeTemplatePlugin", function() {
 			]
 		}, function(err, stats) {
 			if(err) return err;
-			stats.hasErrors().should.be.not.ok;
-			stats.hasWarnings().should.be.not.ok;
+			stats.hasErrors().should.be.not.ok();
+			stats.hasWarnings().should.be.not.ok();
 			var result = require("./js/result").abc;
 			result.nextTick.should.be.equal(process.nextTick);
 			result.fs.should.be.equal(require("fs"));
@@ -60,7 +60,7 @@ describe("NodeTemplatePlugin", function() {
 			]
 		}, function(err, stats) {
 			if(err) return err;
-			stats.hasErrors().should.be.not.ok;
+			stats.hasErrors().should.be.not.ok();
 			var result = require("./js/result2");
 			result.nextTick.should.be.equal(process.nextTick);
 			result.fs.should.be.equal(require("fs"));
