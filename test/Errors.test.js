@@ -35,8 +35,8 @@ describe("Errors", function() {
 			should.strictEqual(typeof stats, "object");
 			stats.should.have.property("errors");
 			stats.should.have.property("warnings");
-			Array.isArray(stats.errors).should.be.ok; // eslint-disable-line no-unused-expressions
-			Array.isArray(stats.warnings).should.be.ok; // eslint-disable-line no-unused-expressions
+			Array.isArray(stats.errors).should.be.ok(); // eslint-disable-line no-unused-expressions
+			Array.isArray(stats.warnings).should.be.ok(); // eslint-disable-line no-unused-expressions
 			callback(stats.errors, stats.warnings);
 		});
 	}

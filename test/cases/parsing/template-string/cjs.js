@@ -41,5 +41,5 @@ it("should parse template strings in require.resolve", function() {
 
 	// Arbitrary assertion; can't use .ok() as it could be 0,
 	// can't use typeof as that depends on webpack config.
-	require.resolve(`./sync/${name}Test`).should.not.be.undefined;
+	require.resolve(`./sync/${name}Test`).should.not.be.undefined();
 })
