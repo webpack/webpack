@@ -1,3 +1,5 @@
+"use strict";
+
 /*globals it*/
 module.exports = function validateBinExec(cmd, args, opts) {
 	const spawn = require("child_process").spawn;
