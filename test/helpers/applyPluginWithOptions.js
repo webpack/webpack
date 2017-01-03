@@ -1,25 +1,8 @@
-function PluginEnvironment() {
-	var events = [];
-
-	this.getCompilerStub = function() {
-		return {
-			plugin: function(name, handler) {
-				events.push({
-					name,
-					handler
-				});
-			}
-		};
-	};
-
-	this.getEventBindings = function() {
-		return events;
-	};
-}
+var PluginEnvironment = require('./PluginEnvironment');
 
 module.exports = function applyPluginWithOptions(Plugin, options) {
 	var plugin = new Plugin(options);
 	var pluginEnvironment = new PluginEnvironment();
-	plugin.apply(pluginEnvironment.getCompilerStub());
+	plugin.apply(pluginEnvironment.getEnvironmentStub());
 	return pluginEnvironment.getEventBindings();
 };
