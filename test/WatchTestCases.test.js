@@ -89,14 +89,20 @@ describe("WatchTestCases", function() {
 						var configPath = path.join(testDirectory, "webpack.config.js");
 						if(fs.existsSync(configPath))
 							options = require(configPath);
-						if(!options.context) options.context = tempDirectory;
-						if(!options.entry) options.entry = "./index.js";
-						if(!options.target) options.target = "async-node";
-						if(!options.output) options.output = {};
-						if(!options.output.path) options.output.path = outputDirectory;
-						if(typeof options.output.pathinfo === "undefined") options.output.pathinfo = true;
-						if(!options.output.filename) options.output.filename = "bundle.js";
-
+						var applyConfig = function(options) {
+							if(!options.context) options.context = tempDirectory;
+							if(!options.entry) options.entry = "./index.js";
+							if(!options.target) options.target = "async-node";
+							if(!options.output) options.output = {};
+							if(!options.output.path) options.output.path = outputDirectory;
+							if(typeof options.output.pathinfo === "undefined") options.output.pathinfo = true;
+							if(!options.output.filename) options.output.filename = "bundle.js";
+						}
+						if(Array.isArray(options)) {
+							options.forEach(applyConfig)
+						} else {
+							applyConfig(options)
+						}
 						var runIdx = 0;
 						var run = runs[runIdx];
 						var lastHash = "";
@@ -142,11 +148,11 @@ describe("WatchTestCases", function() {
 										var p = path.join(currentDirectory, module);
 										content = fs.readFileSync(p, "utf-8");
 									}
-									fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP) {" + content + "\n})", p);
+									fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON) {" + content + "\n})", p);
 									var module = {
 										exports: {}
 									};
-									fn.call(module.exports, _require.bind(null, path.dirname(p)), module, module.exports, path.dirname(p), p, _it, run.name);
+									fn.call(module.exports, _require.bind(null, path.dirname(p)), module, module.exports, path.dirname(p), p, _it, run.name, jsonStats);
 									return module.exports;
 								} else if(testConfig.modules && module in testConfig.modules) {
 									return testConfig.modules[module];
