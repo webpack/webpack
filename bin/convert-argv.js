@@ -2,7 +2,6 @@ var path = require("path");
 var fs = require("fs");
 fs.existsSync = fs.existsSync || path.existsSync;
 var interpret = require("interpret");
-var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 
 module.exports = function(yargs, argv, convertOptions) {
 
@@ -24,7 +23,7 @@ module.exports = function(yargs, argv, convertOptions) {
 	var configFileLoaded = false;
 	var configFiles = [];
 	var extensions = Object.keys(interpret.extensions).sort(function(a, b) {
-		return a === '.js' ? -1 : b === '.js' ? 1 : a.length - b.length;
+		return a === ".js" ? -1 : b === ".js" ? 1 : a.length - b.length;
 	});
 	var defaultConfigFiles = ["webpack.config", "webpackfile"].map(function(filename) {
 		return extensions.map(function(ext) {
@@ -223,12 +222,6 @@ module.exports = function(yargs, argv, convertOptions) {
 					options[optionName || name] = true;
 				else if(bool === false)
 					options[optionName || name] = false;
-			});
-		}
-
-		function mapArgToPath(name, optionName) {
-			ifArg(name, function(str) {
-				options[optionName || name] = path.resolve(str);
 			});
 		}
 
@@ -471,12 +464,6 @@ module.exports = function(yargs, argv, convertOptions) {
 			}
 			var ProvidePlugin = require("../lib/ProvidePlugin");
 			options.plugins.push(new ProvidePlugin(name, value));
-		});
-
-		ifBooleanArg("labeled-modules", function() {
-			ensureArray(options, "plugins");
-			var LabeledModulesPlugin = require("../lib/dependencies/LabeledModulesPlugin");
-			options.plugins.push(new LabeledModulesPlugin());
 		});
 
 		ifArg("plugin", function(value) {

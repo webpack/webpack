@@ -326,7 +326,6 @@ function processOptions(options) {
 			console.error(err.stack || err);
 			if(err.details) console.error(err.details);
 			process.exit(1); // eslint-disable-line
-			return;
 		}
 		if(outputOptions.json) {
 			process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
@@ -344,13 +343,13 @@ function processOptions(options) {
 		var primaryOptions = !Array.isArray(options) ? options : options[0];
 		var watchOptions = primaryOptions.watchOptions || primaryOptions.watch || {};
 		if(watchOptions.stdin) {
-			process.stdin.on('end', function() {
+			process.stdin.on("end", function() {
 				process.exit(0); // eslint-disable-line
 			});
 			process.stdin.resume();
 		}
 		compiler.watch(watchOptions, compilerCallback);
-		console.log('\nWebpack is watching the files…\n');
+		console.log("\nWebpack is watching the files…\n");
 	} else
 		compiler.run(compilerCallback);
 
