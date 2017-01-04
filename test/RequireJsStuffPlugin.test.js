@@ -1,8 +1,9 @@
-var should = require("should");
-var sinon = require("sinon");
-var RequireJsStuffPlugin = require("../lib/RequireJsStuffPlugin");
-var applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
-var PluginEnvironment = require("./helpers/PluginEnvironment");
+"use strict";
+const should = require("should");
+const sinon = require("sinon");
+const RequireJsStuffPlugin = require("../lib/RequireJsStuffPlugin");
+const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
+const PluginEnvironment = require("./helpers/PluginEnvironment");
 
 describe("RequireJsStuffPlugin", function() {
 	it("has apply function", function() {
@@ -10,7 +11,8 @@ describe("RequireJsStuffPlugin", function() {
 	});
 
 	describe("when applied", function() {
-		var eventBindings, eventBinding;
+		let eventBindings;
+		let eventBinding;
 
 		beforeEach(function() {
 			eventBindings = applyPluginWithOptions(RequireJsStuffPlugin);
@@ -30,7 +32,9 @@ describe("RequireJsStuffPlugin", function() {
 			});
 
 			describe('when called', function() {
-				var pluginEnvironment, compilationEventBindings, compilation;
+				let pluginEnvironment;
+				let compilationEventBindings;
+				let compilation;
 
 				beforeEach(function() {
 					pluginEnvironment = new PluginEnvironment();
@@ -42,7 +46,7 @@ describe("RequireJsStuffPlugin", function() {
 							set: sinon.spy()
 						}
 					};
-					var params = {
+					const params = {
 						normalModuleFactory: pluginEnvironment.getEnvironmentStub()
 					};
 					eventBinding.handler(compilation, params);
@@ -62,7 +66,9 @@ describe("RequireJsStuffPlugin", function() {
 				});
 
 				describe("parser handler", function() {
-					var parser, parserEventBindings;
+					let parser;
+					let parserEventBindings;
+					let compilationEventBinding;
 
 					beforeEach(function() {
 						compilationEventBinding = compilationEventBindings[0];
@@ -88,7 +94,9 @@ describe("RequireJsStuffPlugin", function() {
 					});
 
 					describe('when called with empty parser options', function() {
-						var parserEventBinding, parserEventContext, expressionMock;
+						let parserEventBinding;
+						let parserEventContext;
+						let expressionMock;
 
 						beforeEach(function() {
 							parserEventContext = {
@@ -148,8 +156,8 @@ describe("RequireJsStuffPlugin", function() {
 								});
 
 								it('adds dependency to current state', function() {
-									var addDependencySpy = parserEventContext.state.current.addDependency;
-									var addedDependency = JSON.stringify(addDependencySpy.getCall(0).args[0]);
+									const addDependencySpy = parserEventContext.state.current.addDependency;
+									const addedDependency = JSON.stringify(addDependencySpy.getCall(0).args[0]);
 									addDependencySpy.callCount.should.be.exactly(1);
 									addedDependency.should.be.exactly('{"module":null,"expression":";","range":10,"loc":5}');
 								});
@@ -171,8 +179,8 @@ describe("RequireJsStuffPlugin", function() {
 								});
 
 								it('adds dependency to current state', function() {
-									var addDependencySpy = parserEventContext.state.current.addDependency;
-									var addedDependency = JSON.stringify(addDependencySpy.getCall(0).args[0]);
+									const addDependencySpy = parserEventContext.state.current.addDependency;
+									const addedDependency = JSON.stringify(addDependencySpy.getCall(0).args[0]);
 									addDependencySpy.callCount.should.be.exactly(1);
 									addedDependency.should.be.exactly('{"module":null,"expression":"\\"0.0.0\\"","range":10,"loc":5}');
 								});
@@ -194,8 +202,8 @@ describe("RequireJsStuffPlugin", function() {
 								});
 
 								it('adds dependency to current state', function() {
-									var addDependencySpy = parserEventContext.state.current.addDependency;
-									var addedDependency = JSON.stringify(addDependencySpy.getCall(0).args[0]);
+									const addDependencySpy = parserEventContext.state.current.addDependency;
+									const addedDependency = JSON.stringify(addDependencySpy.getCall(0).args[0]);
 									addDependencySpy.callCount.should.be.exactly(1);
 									addedDependency.should.be.exactly('{"module":null,"expression":"\\"__webpack_require__.oe\\"","range":10,"loc":5}');
 								});
