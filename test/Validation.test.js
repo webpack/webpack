@@ -39,6 +39,26 @@ describe("Validation", function() {
 			"      [non-empty string]"
 		]
 	}, {
+		name: "empty entry bundle array",
+		config: {
+			entry: {
+				"bundle": []
+			}
+		},
+		message: [
+			" - configuration.entry should be one of these:",
+			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]",
+			"   The entry point(s) of the compilation.",
+			"   Details:",
+			"    * configuration.entry['bundle'] should be a string.",
+			"    * configuration.entry['bundle'] should not be empty.",
+			"    * configuration.entry['bundle'] should be one of these:",
+			"      non-empty string | [non-empty string]",
+			"    * configuration.entry should be a string.",
+			"    * configuration.entry should be an array:",
+			"      [non-empty string]"
+		]
+	}, {
 		name: "invalid instanceof",
 		config: {
 			entry: "a",
