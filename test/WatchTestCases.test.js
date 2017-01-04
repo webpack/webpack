@@ -109,7 +109,7 @@ describe("WatchTestCases", function() {
 						copyDiff(path.join(testDirectory, run.name), tempDirectory);
 
 						var compiler = webpack(options);
-						compiler.watch({}, function(err, stats) {
+						var watching = compiler.watch({}, function(err, stats) {
 							if(stats.hash === lastHash)
 								return;
 							lastHash = stats.hash;
@@ -172,10 +172,11 @@ describe("WatchTestCases", function() {
 							runIdx++;
 							if(runIdx < runs.length) {
 								run = runs[runIdx];
-								setTimeout(function(){
+								setTimeout(function() {
 									copyDiff(path.join(testDirectory, run.name), tempDirectory);
 								}, 50);
 							} else {
+								watching.close();
 								process.nextTick(done);
 							}
 						});
