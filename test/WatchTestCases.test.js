@@ -172,7 +172,9 @@ describe("WatchTestCases", function() {
 							runIdx++;
 							if(runIdx < runs.length) {
 								run = runs[runIdx];
-								copyDiff(path.join(testDirectory, run.name), tempDirectory);
+								setTimeout(function(){
+									copyDiff(path.join(testDirectory, run.name), tempDirectory);
+								}, 50);
 							} else {
 								process.nextTick(done);
 							}
