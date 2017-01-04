@@ -62,7 +62,9 @@ describe("RequireJsStuffPlugin", function() {
 				});
 
 				describe("parser handler", function() {
-					var parser, parserEventBindings;
+					let parser;
+					let parserEventBindings;
+					let compilationEventBinding;
 
 					beforeEach(function() {
 						compilationEventBinding = compilationEventBindings[0];
