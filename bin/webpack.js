@@ -166,7 +166,7 @@ function processOptions(options) {
 	if(typeof options.then === "function") {
 		options.then(processOptions).catch(function(err) {
 			console.error(err.stack || err);
-			process.exit(); // eslint-disable-line
+			process.exit(1); // eslint-disable-line
 		});
 		return;
 	}
