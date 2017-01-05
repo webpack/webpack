@@ -176,16 +176,31 @@ describe("WatchTestCases", () => {
 							_require(outputDirectory, "./bundle.js");
 
 							if(exportedTests < 1) return done(new Error("No tests exported by test case"));
-							runIdx++;
-							if(runIdx < runs.length) {
-								run = runs[runIdx];
-								setTimeout(() => {
-									copyDiff(path.join(testDirectory, run.name), tempDirectory);
-								}, 1500);
-							} else {
-								watching.close();
-								process.nextTick(done);
-							}
+
+							const waitForWatchDelay = 1500;
+							const skipStepDelay = waitForWatchDelay * 2;
+							const nextStep = () => {
+								runIdx++;
+								if(runIdx < runs.length) {
+									run = runs[runIdx];
+									setTimeout(() => {
+										copyDiff(path.join(testDirectory, run.name), tempDirectory);
+										if(runIdx === runs.length) {
+											return;
+										}
+										const runReference = runIdx;
+										setTimeout(() => {
+											if(runReference === runIdx) {
+												nextStep();
+											}
+										}, skipStepDelay);
+									}, waitForWatchDelay);
+								} else {
+									watching.close();
+									process.nextTick(done);
+								}
+							};
+							nextStep();
 						});
 					});
 				});
