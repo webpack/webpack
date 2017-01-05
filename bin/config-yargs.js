@@ -167,7 +167,7 @@ module.exports = function(yargs) {
 			},
 			"watch-poll": {
 				type: "boolean",
-				describe: "The polling intervall for watching (also enable polling)",
+				describe: "The polling interval for watching (also enable polling)",
 				group: ADVANCED_GROUP
 			},
 			"hot": {
