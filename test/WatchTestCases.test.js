@@ -171,16 +171,27 @@ describe("WatchTestCases", function() {
 							_require(outputDirectory, "./bundle.js");
 
 							if(exportedTests < 1) return done(new Error("No tests exported by test case"));
-							runIdx++;
-							if(runIdx < runs.length) {
-								run = runs[runIdx];
-								setTimeout(function() {
-									copyDiff(path.join(testDirectory, run.name), tempDirectory);
-								}, 50);
-							} else {
-								watching.close();
-								process.nextTick(done);
-							}
+
+							var skipStepDelay = 500;
+							var nextStep = function() {
+								runIdx++;
+								if(runIdx < runs.length) {
+									run = runs[runIdx];
+									setTimeout(function() {
+										copyDiff(path.join(testDirectory, run.name), tempDirectory);
+										var runReference = runIdx;
+										setTimeout(function() {
+											if (runReference == runIdx) {
+												nextStep();
+											}
+										}, skipStepDelay);
+									}, 50);
+								} else {
+									watching.close();
+									process.nextTick(done);
+								}
+							};
+							nextStep();
 						});
 					});
 				});
