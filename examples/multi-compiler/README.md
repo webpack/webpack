@@ -82,16 +82,18 @@ module.exports = [
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
-/******/ 	// define getter function for harmory exports
+/******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -113,6 +115,9 @@ module.exports = [
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
+```
+</details>
+``` javascript
 /******/ ([
 /* 0 */
 /* unknown exports provided */
@@ -169,16 +174,18 @@ console.log("Running " + "desktop" + " build");
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
-/******/ 	// define getter function for harmory exports
+/******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -200,9 +207,6 @@ console.log("Running " + "desktop" + " build");
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
-```
-</details>
-``` javascript
 /******/ ([
 /* 0 */
 /* unknown exports provided */
@@ -237,57 +241,53 @@ console.log("Running " + "mobile" + " build");
 ## Uncompressed
 
 ```
-Hash: 4b2d49e03773278d9a9728f5d936e54472e7499c
-Version: webpack 2.1.0-beta.25
+Hash: 13bf2527439f032e7491cceba4bc5163d755f291
+Version: webpack 2.2.0-rc.2
 Child mobile:
-    Hash: 4b2d49e03773278d9a97
-    Version: webpack 2.1.0-beta.25
-    Time: 116ms
+    Hash: 13bf2527439f032e7491
+    Version: webpack 2.2.0-rc.2
         Asset     Size  Chunks             Chunk Names
-    mobile.js  2.92 kB       0  [emitted]  main
+    mobile.js  2.99 kB       0  [emitted]  main
     Entrypoint main = mobile.js
-    chunk    {0} mobile.js (main) 114 bytes [entry] [rendered]
+    chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
         > main [1] ./example.js 
         [0] ./mobile-stuff.js 20 bytes {0} [built]
             cjs require ./mobile-stuff [1] ./example.js 2:1-26
-        [1] ./example.js 94 bytes {0} [built]
+        [1] ./example.js 97 bytes {0} [built]
 Child desktop:
-    Hash: 28f5d936e54472e7499c
-    Version: webpack 2.1.0-beta.25
-    Time: 98ms
+    Hash: cceba4bc5163d755f291
+    Version: webpack 2.2.0-rc.2
          Asset     Size  Chunks             Chunk Names
-    desktop.js  2.68 kB       0  [emitted]  main
+    desktop.js  2.75 kB       0  [emitted]  main
     Entrypoint main = desktop.js
-    chunk    {0} desktop.js (main) 94 bytes [entry] [rendered]
+    chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 94 bytes {0} [built]
+        [0] ./example.js 97 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 4b2d49e03773278d9a9728f5d936e54472e7499c
-Version: webpack 2.1.0-beta.25
+Hash: 13bf2527439f032e7491cceba4bc5163d755f291
+Version: webpack 2.2.0-rc.2
 Child mobile:
-    Hash: 4b2d49e03773278d9a97
-    Version: webpack 2.1.0-beta.25
-    Time: 228ms
+    Hash: 13bf2527439f032e7491
+    Version: webpack 2.2.0-rc.2
         Asset       Size  Chunks             Chunk Names
-    mobile.js  563 bytes       0  [emitted]  main
+    mobile.js  573 bytes       0  [emitted]  main
     Entrypoint main = mobile.js
-    chunk    {0} mobile.js (main) 114 bytes [entry] [rendered]
+    chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
         > main [1] ./example.js 
         [0] ./mobile-stuff.js 20 bytes {0} [built]
             cjs require ./mobile-stuff [1] ./example.js 2:1-26
-        [1] ./example.js 94 bytes {0} [built]
+        [1] ./example.js 97 bytes {0} [built]
 Child desktop:
-    Hash: 28f5d936e54472e7499c
-    Version: webpack 2.1.0-beta.25
-    Time: 211ms
+    Hash: cceba4bc5163d755f291
+    Version: webpack 2.2.0-rc.2
          Asset       Size  Chunks             Chunk Names
-    desktop.js  543 bytes       0  [emitted]  main
+    desktop.js  553 bytes       0  [emitted]  main
     Entrypoint main = desktop.js
-    chunk    {0} desktop.js (main) 94 bytes [entry] [rendered]
+    chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 94 bytes {0} [built]
+        [0] ./example.js 97 bytes {0} [built]
 ```

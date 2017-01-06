@@ -62,16 +62,18 @@ module.exports = Math.random();
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
-/******/ 	// define getter function for harmory exports
+/******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -139,35 +141,33 @@ if(a == a2) throw new Error("Cache clear failed :(");
 ## Uncompressed
 
 ```
-Hash: 61b465fe869dc6143477
-Version: webpack 2.1.0-beta.25
-Time: 108ms
+Hash: 00060b879bc0621a21be
+Version: webpack 2.2.0-rc.2
     Asset     Size  Chunks             Chunk Names
-output.js  3.13 kB       0  [emitted]  main
+output.js  3.21 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 314 bytes [entry] [rendered]
+chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] ./a.js 31 bytes {0} [built]
         cjs require ./a [1] ./example.js 1:8-22
         cjs require ./a [1] ./example.js 10:9-23
         require.resolve ./a.js [1] ./example.js 4:10-35
-    [1] ./example.js 283 bytes {0} [built]
+    [1] ./example.js 295 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 61b465fe869dc6143477
-Version: webpack 2.1.0-beta.25
-Time: 213ms
+Hash: 00060b879bc0621a21be
+Version: webpack 2.2.0-rc.2
     Asset       Size  Chunks             Chunk Names
-output.js  634 bytes       0  [emitted]  main
+output.js  644 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 314 bytes [entry] [rendered]
+chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] ./a.js 31 bytes {0} [built]
         cjs require ./a [1] ./example.js 1:8-22
         cjs require ./a [1] ./example.js 10:9-23
         require.resolve ./a.js [1] ./example.js 4:10-35
-    [1] ./example.js 283 bytes {0} [built]
+    [1] ./example.js 295 bytes {0} [built]
 ```

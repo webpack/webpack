@@ -6,29 +6,43 @@ cache:
     - $HOME/.npm
     - $HOME/.yarn-cache
 
-os:
-  - linux
-  - osx
-node_js:
-  - "7"
-  - "6"
-  - "4"
-  - "v0.12.17"
-
 matrix:
-  allow_failures:
-    - node_js: "4"
-    - node_js: "v0.12.17"
+  include:
+    - os: linux
+      node_js: "7"
+      env: NO_WATCH_TESTS=1 JOB_PART=lint
+    - os: linux
+      node_js: "7"
+      env: NO_WATCH_TESTS=1 JOB_PART=test
+    - os: linux
+      node_js: "6"
+      env: NO_WATCH_TESTS=1 JOB_PART=test
+    - os: linux
+      node_js: "4"
+      env: NO_WATCH_TESTS=1 JOB_PART=test
     - os: osx
+      node_js: "7"
+      env: NO_WATCH_TESTS=1 JOB_PART=test
+    - os: osx
+      node_js: "6"
+      env: NO_WATCH_TESTS=1 JOB_PART=test
+    - os: osx
+      node_js: "4"
+      env: NO_WATCH_TESTS=1 JOB_PART=test
+  allow_failures:
+    - os: osx
+  fast_finish: true
 
-script: npm run travis
-env:
-  - NO_WATCH_TESTS=1
-
-before_install: if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
-install:
+before_script:
   - bash ./ci/travis-install.sh
+
+script: npm run travis:$JOB_PART
+
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
   - cat ./coverage/coverage.json | node_modules/codecov.io/bin/codecov.io.js
   - rm -rf ./coverage
+
+notifications:
+  slack:
+    secure: JduSdKWwbnLCwo7Z4E59SGE+Uw832UwnXzQiKEpg1BV45MYDPRiGltly1tRHmPh9OGjvGx3XSkC2tNGOBLtL4UL2SCkf012x0t7jDutKRfcv/njynl8jk8l+UhPmaWiHXDQAgGiiKdL4RfzPLW3HeVHCOWm0LKMzcarTa8tw+rE=

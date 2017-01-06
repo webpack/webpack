@@ -1,7 +1,7 @@
-Hash: 8bac53cc0c37d71baf6b
+Hash: 264630d9963a6039f9e0
 Time: Xms
     Asset     Size  Chunks             Chunk Names
-bundle.js  7.22 kB       0  [emitted]  main
+bundle.js  7.16 kB       0  [emitted]  main
 chunk    {0} bundle.js (main) 588 bytes [entry] [rendered]
    [0] (webpack)/test/statsCases/tree-shaking/a.js 13 bytes {0} [built]
        [exports: a]
@@ -10,7 +10,7 @@ chunk    {0} bundle.js (main) 588 bytes [entry] [rendered]
        [exports: b]
        [only some exports used: ]
    [2] (webpack)/test/statsCases/tree-shaking/unknown.js 0 bytes {0} [built]
-       [only some exports used: a, c]
+       [only some exports used: c]
    [3] (webpack)/test/statsCases/tree-shaking/edge.js 45 bytes {0} [built]
        [only some exports used: y]
    [4] (webpack)/test/statsCases/tree-shaking/reexport-known.js 49 bytes {0} [built]

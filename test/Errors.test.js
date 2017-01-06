@@ -35,8 +35,8 @@ describe("Errors", function() {
 			should.strictEqual(typeof stats, "object");
 			stats.should.have.property("errors");
 			stats.should.have.property("warnings");
-			Array.isArray(stats.errors).should.be.ok; // eslint-disable-line no-unused-expressions
-			Array.isArray(stats.warnings).should.be.ok; // eslint-disable-line no-unused-expressions
+			Array.isArray(stats.errors).should.be.ok(); // eslint-disable-line no-unused-expressions
+			Array.isArray(stats.warnings).should.be.ok(); // eslint-disable-line no-unused-expressions
 			callback(stats.errors, stats.warnings);
 		});
 	}
@@ -89,6 +89,58 @@ describe("Errors", function() {
 				errors.length.should.be.eql(1);
 				warnings.length.should.be.eql(0);
 			}
+			done();
+		});
+	});
+	it("should warn about NoErrorsPlugin being deprecated in favor of NoEmitOnErrorsPlugin", function(done) {
+		getErrors({
+			entry: "./no-errors-deprecate",
+			plugins: [
+				new webpack.NoErrorsPlugin()
+			]
+		}, function(errors, warnings) {
+			warnings.length.should.be.eql(1);
+			var lines = warnings[0].split("\n");
+			lines[0].should.match(/webpack/);
+			lines[0].should.match(/NoErrorsPlugin/);
+			lines[0].should.match(/deprecated/);
+			lines[1].should.match(/NoEmitOnErrorsPlugin/);
+			lines[1].should.match(/instead/);
+			done();
+		});
+	});
+	it("should not warn if the NoEmitOnErrorsPlugin is used over the NoErrorsPlugin", function(done) {
+		getErrors({
+			entry: "./no-errors-deprecate",
+			plugins: [
+				new webpack.NoEmitOnErrorsPlugin()
+			]
+		}, function(errors, warnings) {
+			errors.length.should.be.eql(0);
+			warnings.length.should.be.eql(0);
+			done();
+		});
+	});
+	it("should not not emit if NoEmitOnErrorsPlugin is used and there is an error", function(done) {
+		getErrors({
+			entry: "./missingFile",
+			plugins: [
+				new webpack.NoEmitOnErrorsPlugin()
+			]
+		}, function(errors, warnings) {
+			errors.length.should.be.eql(2);
+			warnings.length.should.be.eql(0);
+			errors.sort();
+			var lines = errors[0].split("\n");
+			lines[0].should.match(/missingFile.js/);
+			lines[1].should.match(/^Module not found/);
+			lines[1].should.match(/\.\/dir\/missing2/);
+			lines[2].should.match(/missingFile.js 12:9/);
+			lines = errors[1].split("\n");
+			lines[0].should.match(/missingFile.js/);
+			lines[1].should.match(/^Module not found/);
+			lines[1].should.match(/\.\/missing/);
+			lines[2].should.match(/missingFile.js 4:0/);
 			done();
 		});
 	});

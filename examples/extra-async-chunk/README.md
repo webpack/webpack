@@ -142,6 +142,9 @@ module.exports = {
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
 
+/******/ 		if (__webpack_require__.nc) {
+/******/ 			script.setAttribute("nonce", __webpack_require__.nc);
+/******/ 		}
 /******/ 		script.src = __webpack_require__.p + "" + chunkId + ".output.js";
 /******/ 		var timeout = setTimeout(onScriptComplete, 120000);
 /******/ 		script.onerror = script.onload = onScriptComplete;
@@ -155,12 +158,14 @@ module.exports = {
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
-/******/ 		head.appendChild(script);
 
 /******/ 		var promise = new Promise(function(resolve, reject) {
 /******/ 			installedChunks[chunkId] = [resolve, reject];
 /******/ 		});
-/******/ 		return installedChunks[chunkId][2] = promise;
+/******/ 		installedChunks[chunkId][2] = promise;
+
+/******/ 		head.appendChild(script);
+/******/ 		return promise;
 /******/ 	};
 
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -169,16 +174,18 @@ module.exports = {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
-/******/ 	// define getter function for harmory exports
+/******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -217,13 +224,13 @@ module.exports = {
 /***/ function(module, exports, __webpack_require__) {
 
 // a chunks with a, b, c
-Promise.all/* require */([__webpack_require__.e(0), __webpack_require__.e(2)]).catch(function(err) { __webpack_require__.oe(err); }).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 2)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));});
+Promise.all/* require */([__webpack_require__.e(0), __webpack_require__.e(2)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 2)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 
 // a chunk with a, b, d
-Promise.all/* nsure */([__webpack_require__.e(0), __webpack_require__.e(1)]).catch(function(err) { __webpack_require__.oe(err); }).then((function(require) {
+Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e(1)]).then((function(require) {
 	__webpack_require__(/*! ./b */ 1);
 	__webpack_require__(/*! ./d */ 3);
-}).bind(null, __webpack_require__));
+}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
 
 /***/ }
@@ -305,14 +312,13 @@ module.exports = "c";
 ## Uncompressed
 
 ```
-Hash: 2697c2e890ef9a735355
-Version: webpack 2.1.0-beta.25
-Time: 125ms
+Hash: 303428dc1404ff150977
+Version: webpack 2.2.0-rc.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  397 bytes       0  [emitted]  
 1.output.js  212 bytes       1  [emitted]  
 2.output.js  212 bytes       2  [emitted]  
-  output.js    6.13 kB       3  [emitted]  main
+  output.js    6.32 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes {3} [rendered]
     > async commons [4] ./example.js 2:0-52
@@ -331,22 +337,21 @@ chunk    {2} 2.output.js 21 bytes {3} [rendered]
     > [4] ./example.js 2:0-52
     [2] ./c.js 21 bytes {2} [built]
         amd require ./c [4] ./example.js 2:0-52
-chunk    {3} output.js (main) 186 bytes [entry] [rendered]
+chunk    {3} output.js (main) 194 bytes [entry] [rendered]
     > main [4] ./example.js 
-    [4] ./example.js 186 bytes {3} [built]
+    [4] ./example.js 194 bytes {3} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 2697c2e890ef9a735355
-Version: webpack 2.1.0-beta.25
-Time: 279ms
+Hash: 303428dc1404ff150977
+Version: webpack 2.2.0-rc.2
       Asset      Size  Chunks             Chunk Names
 0.output.js  78 bytes       0  [emitted]  
 1.output.js  51 bytes       1  [emitted]  
 2.output.js  51 bytes       2  [emitted]  
-  output.js   1.54 kB       3  [emitted]  main
+  output.js   1.56 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes {3} [rendered]
     > async commons [4] ./example.js 2:0-52
@@ -365,7 +370,7 @@ chunk    {2} 2.output.js 21 bytes {3} [rendered]
     > [4] ./example.js 2:0-52
     [2] ./c.js 21 bytes {2} [built]
         amd require ./c [4] ./example.js 2:0-52
-chunk    {3} output.js (main) 186 bytes [entry] [rendered]
+chunk    {3} output.js (main) 194 bytes [entry] [rendered]
     > main [4] ./example.js 
-    [4] ./example.js 186 bytes {3} [built]
+    [4] ./example.js 194 bytes {3} [built]
 ```

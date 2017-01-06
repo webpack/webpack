@@ -20,3 +20,18 @@ it("should parse a string in require.ensure", function(done) {
 		done();
 	});
 });
+
+it("should parse a string in require.ensure with arrow function expression", function(done) {
+	require.ensure("./file", require => {
+		require("./file").should.be.eql("ok");
+		done();
+	});
+});
+
+
+it("should parse a string in require.ensure with arrow function array expression", function(done) {
+	require.ensure("./file", require => (require("./file").should.be.eql("ok"), done()));
+});
+
+
+

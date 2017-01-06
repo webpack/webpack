@@ -9,7 +9,7 @@ it("should not produce a SourceMap for vendors chunk", function() {
 	var fs = require("fs"),
 			path = require("path"),
 			assert = require("assert");
-	fs.existsSync(path.join(__dirname, "vendors.js.map")).should.be.false;
+	fs.existsSync(path.join(__dirname, "vendors.js.map")).should.be.false();
 });
 
 require.include("./test.js");

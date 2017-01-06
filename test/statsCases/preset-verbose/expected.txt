@@ -1,29 +1,29 @@
 Hash: 85e57db9faf6765d1cf0
 Time: Xms
   Asset       Size  Chunks             Chunk Names
-   0.js  227 bytes       0  [emitted]  
-   1.js  106 bytes       1  [emitted]  
-   2.js  200 bytes       2  [emitted]  
-main.js    5.64 kB       3  [emitted]  main
+   0.js  238 bytes       0  [emitted]  
+   1.js  108 bytes       1  [emitted]  
+   2.js  204 bytes       2  [emitted]  
+main.js    5.86 kB       3  [emitted]  main
 Entrypoint main = main.js
 chunk    {0} 0.js 54 bytes {3} [rendered]
-    [2] (webpack)/test/statsCases/preset-verbose/c.js 54 bytes {0} [built]
+    [2] (webpack)/test/statsCases/preset-verbose/c.js 54 bytes {0} [depth 1] [built]
         amd require ./c [5] (webpack)/test/statsCases/preset-verbose/index.js 3:0-16
         [] -> factory:Xms building:Xms = Xms
 chunk    {1} 1.js 22 bytes {3} [rendered]
-    [1] (webpack)/test/statsCases/preset-verbose/b.js 22 bytes {1} [built]
+    [1] (webpack)/test/statsCases/preset-verbose/b.js 22 bytes {1} [depth 1] [built]
         amd require ./b [5] (webpack)/test/statsCases/preset-verbose/index.js 2:0-16
         [] -> factory:Xms building:Xms = Xms
 chunk    {2} 2.js 44 bytes {0} [rendered]
-    [3] (webpack)/test/statsCases/preset-verbose/d.js 22 bytes {2} [built]
+    [3] (webpack)/test/statsCases/preset-verbose/d.js 22 bytes {2} [depth 2] [built]
         require.ensure item ./d [2] (webpack)/test/statsCases/preset-verbose/c.js 1:0-52
         [] -> factory:Xms building:Xms = Xms
-    [4] (webpack)/test/statsCases/preset-verbose/e.js 22 bytes {2} [built]
+    [4] (webpack)/test/statsCases/preset-verbose/e.js 22 bytes {2} [depth 2] [built]
         require.ensure item ./e [2] (webpack)/test/statsCases/preset-verbose/c.js 1:0-52
         [] -> factory:Xms building:Xms = Xms
 chunk    {3} main.js (main) 73 bytes [entry] [rendered]
-    [0] (webpack)/test/statsCases/preset-verbose/a.js 22 bytes {3} [built]
+    [0] (webpack)/test/statsCases/preset-verbose/a.js 22 bytes {3} [depth 1] [built]
         cjs require ./a [5] (webpack)/test/statsCases/preset-verbose/index.js 1:0-14
         [] -> factory:Xms building:Xms = Xms
-    [5] (webpack)/test/statsCases/preset-verbose/index.js 51 bytes {3} [built]
+    [5] (webpack)/test/statsCases/preset-verbose/index.js 51 bytes {3} [depth 0] [built]
          factory:Xms building:Xms = Xms

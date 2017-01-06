@@ -58,6 +58,9 @@ module.exports = {
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
 })(this, function(__WEBPACK_EXTERNAL_MODULE_0__, __WEBPACK_EXTERNAL_MODULE_1__) {
+```
+<details><summary>`return /******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+``` js
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -93,16 +96,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 
-/******/ 	// identity function for calling harmory imports with the correct context
+/******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
 
-/******/ 	// define getter function for harmory exports
+/******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
 
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -124,6 +129,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
+```
+</details>
+``` js
 /******/ ([
 /* 0 */
 /* unknown exports provided */
@@ -161,9 +169,8 @@ var subtract = __webpack_require__(/*! subtract */ 1);
 exports.exampleValue = subtract(add(42, 2), 2);
 
 /***/ }
-/******/ ])
+/******/ ]);
 });
-;
 ```
 
 # Info
@@ -171,29 +178,27 @@ exports.exampleValue = subtract(add(42, 2), 2);
 ## Uncompressed
 
 ```
-Hash: 9f84bc757816705143ff
-Version: webpack 2.1.0-beta.25
-Time: 102ms
+Hash: db7da8a5fdfceab24e67
+Version: webpack 2.2.0-rc.2
     Asset     Size  Chunks             Chunk Names
-output.js  4.08 kB       0  [emitted]  main
+output.js  4.16 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 194 bytes [entry] [rendered]
+chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > main [2] ./example.js 
-    [2] ./example.js 110 bytes {0} [built]
+    [2] ./example.js 113 bytes {0} [built]
      + 2 hidden modules
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9f84bc757816705143ff
-Version: webpack 2.1.0-beta.25
-Time: 215ms
-    Asset       Size  Chunks             Chunk Names
-output.js  994 bytes       0  [emitted]  main
+Hash: db7da8a5fdfceab24e67
+Version: webpack 2.2.0-rc.2
+    Asset  Size  Chunks             Chunk Names
+output.js  1 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 194 bytes [entry] [rendered]
+chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > main [2] ./example.js 
-    [2] ./example.js 110 bytes {0} [built]
+    [2] ./example.js 113 bytes {0} [built]
      + 2 hidden modules
 ```

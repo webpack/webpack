@@ -1,7 +1,7 @@
 module.exports = {
 	module: {
 		loaders: [
-			{ test: /\.json$/, loader: "json-loader" }
+			{ test: /\.css$/, loader: "css-loader" }
 		]
 	}
-}
+};
