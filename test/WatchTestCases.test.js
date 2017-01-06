@@ -103,6 +103,8 @@ describe("WatchTestCases", function() {
 						} else {
 							applyConfig(options)
 						}
+
+						var state = {};
 						var runIdx = 0;
 						var run = runs[runIdx];
 						var lastHash = "";
@@ -148,11 +150,11 @@ describe("WatchTestCases", function() {
 										var p = path.join(currentDirectory, module);
 										content = fs.readFileSync(p, "utf-8");
 									}
-									fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON) {" + content + "\n})", p);
+									fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE) {" + content + "\n})", p);
 									var module = {
 										exports: {}
 									};
-									fn.call(module.exports, _require.bind(null, path.dirname(p)), module, module.exports, path.dirname(p), p, _it, run.name, jsonStats);
+									fn.call(module.exports, _require.bind(null, path.dirname(p)), module, module.exports, path.dirname(p), p, _it, run.name, jsonStats, state);
 									return module.exports;
 								} else if(testConfig.modules && module in testConfig.modules) {
 									return testConfig.modules[module];
