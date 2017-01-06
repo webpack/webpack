@@ -48,7 +48,7 @@ describe("RawModule", function() {
 				undefined
 			})
 			var currentTime = new Date().getTime();
-			myRawModule.builtTime.should.be.exactly(currentTime);
+			myRawModule.builtTime.should.be.eql(currentTime);
 		});
 	});
 
