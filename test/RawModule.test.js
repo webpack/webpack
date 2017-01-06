@@ -42,16 +42,6 @@ describe("RawModule", function() {
 		});
 	});
 
-	describe('build', function() {
-		it('sets builtTime attribute to current time value in milliseconds', function() {
-			myRawModule.build('', '', '', '', () => {
-				undefined
-			})
-			var currentTime = new Date().getTime();
-			myRawModule.builtTime.should.be.exactly(currentTime);
-		});
-	});
-
 	describe('source', function() {
 		it('returns a new OriginalSource instance with sourceStr attribute and\
         return value of identifier() function provided as constructor arguments',
