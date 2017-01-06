@@ -1,12 +1,14 @@
-var should = require("should");
 var RawModule = require("../lib/RawModule");
 var OriginalSource = require("webpack-sources").OriginalSource;
 var RawSource = require("webpack-sources").RawSource;
+var RequestShortener = require("../lib/RequestShortener");
+var should = require("should");
+var path = require("path")
 
 describe("RawModule", function() {
 	var myRawModule;
 
-	beforeEach(function() {
+	before(function() {
 		var source = 'sourceStr attribute';
 		var identifier = 'identifierStr attribute';
 		var readableIdentifier = 'readableIdentifierStr attribute';
@@ -21,14 +23,16 @@ describe("RawModule", function() {
 
 	describe('size', function() {
 		it('returns value for sourceStr attribute\'s length property', function() {
-			should(myRawModule.size()).be.exactly(19);
+			var sourceStrLength = myRawModule.sourceStr.length;
+			should(myRawModule.size()).be.exactly(sourceStrLength);
 		});
 	});
 
 	describe('readableIdentifier', function() {
 		it('returns result of calling provided requestShortener\'s shorten method\
      on readableIdentifierStr attribute', function() {
-			should(myRawModule.readableIdentifier()).exist();
+			var requestShortener = new RequestShortener(path.resolve());
+			should.exist(myRawModule.readableIdentifier(requestShortener));
 		});
 	});
 
@@ -44,7 +48,7 @@ describe("RawModule", function() {
 				undefined
 			})
 			var currentTime = new Date().getTime();
-			myRawModule.builtTime.should.be.exactly(currentTime)
+			myRawModule.builtTime.should.be.exactly(currentTime);
 		});
 	});
 
@@ -52,12 +56,16 @@ describe("RawModule", function() {
 		it('returns a new OriginalSource instance with sourceStr attribute and\
         return value of identifier() function provided as constructor arguments',
 			function() {
-				/* TODO */
+				var originalSource = new OriginalSource(myRawModule.sourceStr, myRawModule.identifier());
+				myRawModule.useSourceMap = true;
+				myRawModule.source().should.match(originalSource);
 			});
 
 		it('returns a new RawSource instance with sourceStr attribute provided\
         as constructor argument if useSourceMap is falsey', function() {
-			/* TODO */
+			var rawSource = new RawSource(myRawModule.sourceStr);
+			myRawModule.useSourceMap = false;
+			myRawModule.source().should.match(rawSource);
 		});
 	});
 });
