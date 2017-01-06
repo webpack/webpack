@@ -1,12 +1,4 @@
-it("should be able to use expressions in System.import", function(done) {
-	function load(name, expected, callback) {
-		System.import("./dir/" + name).then(function(result) {
-			result.should.be.eql(expected);
-			callback();
-		}).catch(function(err) {
-			done(err);
-		});
-	}
+function testCase(load, done) {
 	load("two", 2, function() {
 		var sync = true;
 		load("one", 1, function() {
@@ -26,4 +18,28 @@ it("should be able to use expressions in System.import", function(done) {
 			sync = false;
 		});
 	});
+}
+
+it("should be able to use expressions in import", function(done) {
+	function load(name, expected, callback) {
+		import("./dir/" + name).then(function(result) {
+			result.should.be.eql(expected);
+			callback();
+		}).catch(function(err) {
+			done(err);
+		});
+	}
+	testCase(load, done);
+});
+
+it("should be able to use expressions in System.import", function(done) {
+	function load(name, expected, callback) {
+		System.import("./dir2/" + name).then(function(result) {
+			result.should.be.eql(expected);
+			callback();
+		}).catch(function(err) {
+			done(err);
+		});
+	}
+	testCase(load, done);
 });

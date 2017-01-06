@@ -1,9 +1,9 @@
-Hash: 9ff2cfa8882f273c8c6d9ff2cfa8882f273c8c6d
+Hash: 961cb0ccbdd4410998cff853996e18b417486bde
 Child
-    Hash: 9ff2cfa8882f273c8c6d
+    Hash: 961cb0ccbdd4410998cf
     Time: Xms
                                    Asset      Size  Chunks             Chunk Names
-                 f49aa1e6c5ada5da859b.js   2.57 kB       0  [emitted]  main
+                 f49aa1e6c5ada5da859b.js   2.65 kB       0  [emitted]  main
     c815cf440254d4f3bba4e7041db00a28.css  26 bytes       0  [emitted]  main
     chunk    {0} f49aa1e6c5ada5da859b.js, c815cf440254d4f3bba4e7041db00a28.css (main) 64 bytes [entry] [rendered]
         [0] (webpack)/test/statsCases/separate-css-bundle/a/file.css 41 bytes {0} [built]
@@ -13,10 +13,10 @@ Child
             [0] (webpack)/~/css-loader/lib/css-base.js 1.46 kB {0} [built]
             [1] (webpack)/~/css-loader!(webpack)/test/statsCases/separate-css-bundle/a/file.css 192 bytes {0} [built]
 Child
-    Hash: 9ff2cfa8882f273c8c6d
+    Hash: f853996e18b417486bde
     Time: Xms
                                    Asset      Size  Chunks             Chunk Names
-                 f49aa1e6c5ada5da859b.js   2.57 kB       0  [emitted]  main
+                 f49aa1e6c5ada5da859b.js   2.65 kB       0  [emitted]  main
     a3f385680aef7a9bb2a517699532cc34.css  28 bytes       0  [emitted]  main
     chunk    {0} f49aa1e6c5ada5da859b.js, a3f385680aef7a9bb2a517699532cc34.css (main) 64 bytes [entry] [rendered]
         [0] (webpack)/test/statsCases/separate-css-bundle/b/file.css 41 bytes {0} [built]

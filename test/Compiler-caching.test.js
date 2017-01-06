@@ -3,7 +3,7 @@ var path = require("path");
 var fs = require("fs");
 
 var NodeEnvironmentPlugin = require("../lib/node/NodeEnvironmentPlugin");
-var Compiler = require("../lib/Compiler");
+var webpack = require("../");
 var WebpackOptionsApply = require("../lib/WebpackOptionsApply");
 var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 
@@ -22,9 +22,7 @@ describe("Compiler (caching)", function() {
 			writeFile: [],
 		};
 
-		var c = new Compiler();
-		c.options = new WebpackOptionsApply().process(options, c);
-		new NodeEnvironmentPlugin().apply(c);
+		var c = webpack(options);
 		var files = {};
 		c.outputFileSystem = {
 			join: path.join.bind(path),
@@ -44,7 +42,11 @@ describe("Compiler (caching)", function() {
 
 		var compilerIteration = 1;
 
-		function runCompiler(callback) {
+		function runCompiler(options, callback) {
+			if(typeof options === "function") {
+				callback = options;
+				options = {};
+			}
 			c.run(function(err, stats) {
 				if(err) throw err;
 				should.strictEqual(typeof stats, "object");
@@ -54,10 +56,14 @@ describe("Compiler (caching)", function() {
 				});
 				should.strictEqual(typeof stats, "object");
 				stats.should.have.property("errors");
-				Array.isArray(stats.errors).should.be.ok;
-				if(stats.errors.length > 0) {
-					stats.errors[0].should.be.instanceOf(Error);
-					throw stats.errors[0];
+				Array.isArray(stats.errors).should.be.ok();
+				if(options.expectErrors) {
+					stats.errors.length.should.be.eql(options.expectErrors);
+				} else {
+					if(stats.errors.length > 0) {
+						stats.errors[0].should.be.type("string");
+						throw new Error(stats.errors[0]);
+					}
 				}
 				stats.logs = logs;
 				callback(stats, files, compilerIteration++);
@@ -302,5 +308,4 @@ describe("Compiler (caching)", function() {
 			});
 		});
 	});
-
 });

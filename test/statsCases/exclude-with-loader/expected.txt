@@ -1,0 +1,8 @@
+Hash: affacd3db222d3fcb700
+Time: Xms
+    Asset     Size  Chunks             Chunk Names
+bundle.js  2.77 kB       0  [emitted]  main
+chunk    {0} bundle.js (main) 132 bytes [entry] [rendered]
+    [0] (webpack)/test/statsCases/exclude-with-loader/a.txt 43 bytes {0} [built]
+    [2] (webpack)/test/statsCases/exclude-with-loader/index.js 46 bytes {0} [built]
+     + 1 hidden modules

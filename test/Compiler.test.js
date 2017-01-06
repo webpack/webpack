@@ -2,7 +2,7 @@ var should = require("should");
 var path = require("path");
 
 var NodeEnvironmentPlugin = require("../lib/node/NodeEnvironmentPlugin");
-var Compiler = require("../lib/Compiler");
+var webpack = require("../");
 var WebpackOptionsApply = require("../lib/WebpackOptionsApply");
 var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 
@@ -19,9 +19,7 @@ describe("Compiler", function() {
 			writeFile: [],
 		};
 
-		var c = new Compiler();
-		c.options = new WebpackOptionsApply().process(options, c);
-		new NodeEnvironmentPlugin().apply(c);
+		var c = webpack(options);
 		var files = {};
 		c.outputFileSystem = {
 			join: path.join.bind(path),
@@ -41,19 +39,20 @@ describe("Compiler", function() {
 		c.run(function(err, stats) {
 			if(err) throw err;
 			should.strictEqual(typeof stats, "object");
+			var compilation = stats.compilation;
 			stats = stats.toJson({
 				modules: true,
 				reasons: true
 			});
 			should.strictEqual(typeof stats, "object");
 			stats.should.have.property("errors");
-			Array.isArray(stats.errors).should.be.ok;
+			Array.isArray(stats.errors).should.be.ok();
 			if(stats.errors.length > 0) {
 				stats.errors[0].should.be.instanceOf(Error);
 				throw stats.errors[0];
 			}
 			stats.logs = logs;
-			callback(stats, files);
+			callback(stats, files, compilation);
 		});
 	}
 	it("should compile a single file to deep output", function(done) {

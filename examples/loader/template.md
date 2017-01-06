@@ -16,10 +16,10 @@
 {{loader.js}}
 ```
 
-# test.json
+# test.css
 
-``` javascript
-{{test.json}}
+``` css
+{{test.css}}
 ```
 
 # js/output.js
