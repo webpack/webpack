@@ -181,7 +181,7 @@ describe("WatchTestCases", function() {
 										copyDiff(path.join(testDirectory, run.name), tempDirectory);
 										var runReference = runIdx;
 										setTimeout(function() {
-											if (runReference == runIdx) {
+											if(runReference == runIdx) {
 												nextStep();
 											}
 										}, skipStepDelay);
