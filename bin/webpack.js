@@ -5,6 +5,7 @@
 	Author Tobias Koppers @sokra
 */
 var path = require("path");
+
 function getNodeModulesPaths(startPath) {
 	var parts = startPath.split(path.sep);
 	var i = parts.length - 1;
@@ -22,6 +23,7 @@ function getNodeModulesPaths(startPath) {
 	}
 	return dirs;
 }
+
 function resolveLocalWebpack(startPath) {
 	var resolvedPath = __filename;
 	var paths = getNodeModulesPaths(startPath);
