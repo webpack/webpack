@@ -5,13 +5,45 @@
 	Author Tobias Koppers @sokra
 */
 var path = require("path");
-// Local version replace global one
-try {
-	var localWebpack = require.resolve(path.join(process.cwd(), "node_modules", "webpack", "bin", "webpack.js"));
-	if(__filename !== localWebpack) {
-		return require(localWebpack);
+
+function getNodeModulesPaths(startPath) {
+	var parts = startPath.split(path.sep);
+	var i = parts.length - 1;
+	var paths = [];
+	while(i >= 0) {
+		if(parts[i] === "node_modules") {
+			i--;
+			continue;
+		}
+		var dir = parts.slice(0, i).join(path.sep);
+		if(dir.length) {
+			paths.push(dir);
+		}
+		i--;
 	}
-} catch(e) {}
+	return paths;
+}
+
+function resolveLocalWebpack(startPath) {
+	var paths = getNodeModulesPaths(startPath);
+	for(var i = 0; i < paths.length; i++) {
+		var dirPath = paths[i];
+		try {
+			return require.resolve(
+				path.join(
+					dirPath, "node_modules",
+					"webpack", "bin", "webpack.js"
+				)
+			);
+		} catch(e) {}
+	}
+	return __filename;
+}
+// Local version replace global one
+var localWebpack = resolveLocalWebpack(process.cwd());
+if(__filename !== localWebpack) {
+	return require(localWebpack);
+}
 var yargs = require("yargs")
 	.usage("webpack " + require("../package.json").version + "\n" +
 		"Usage: https://webpack.github.io/docs/cli.html\n" +
