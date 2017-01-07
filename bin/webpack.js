@@ -9,7 +9,7 @@ var path = require("path");
 function getNodeModulesPaths(startPath) {
 	var parts = startPath.split(path.sep);
 	var i = parts.length - 1;
-	var dirs = [];
+	var paths = [];
 	while(i >= 0) {
 		if(parts[i] === "node_modules") {
 			i--;
@@ -17,11 +17,11 @@ function getNodeModulesPaths(startPath) {
 		}
 		var dir = parts.slice(0, i).join(path.sep);
 		if(dir.length) {
-			dirs.push(dir);
+			paths.push(dir);
 		}
 		i--;
 	}
-	return dirs;
+	return paths;
 }
 
 function resolveLocalWebpack(startPath) {
