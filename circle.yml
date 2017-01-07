@@ -18,4 +18,10 @@ test:
   pre:
     - npm run travis:lint
   override:
-    - npm run travis:test
+    - npm run travis:test:
+        parallel: true
+        files:
+          - test/ConfigTestCases.test.js
+          - test/TestCases.test.js
+          - test/Stats.test.js
+          - test/**/*.test.js
