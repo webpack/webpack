@@ -1,7 +1,0 @@
-{
-  "--entry": "./test.js",
-  "--config": "./webpack.config.js",
-  "--output-filename": "[name].chunk.js",
-  "--output-chunk-filename": "[id].chunk.js",
-  "--target": "async-node"
-}
