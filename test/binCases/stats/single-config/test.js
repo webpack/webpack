@@ -3,23 +3,13 @@
 module.exports = function testAssertions(code, stdout, stderr) {
 	code.should.be.oneOf(0, 1);
 
-	stdout.length.should.be.exactly(2);
+	stdout.should.be.ok();
+	stdout[3].should.containEql("Hash: ");
+	stdout[4].should.containEql("Version: ");
+	stdout[5].should.containEql("Time: ");
+	stdout[7].should.containEql("null.js");
+	stdout[8].should.containEql("./index.js");
+	stdout[8].should.containEql("[built]");
 
-	const dateOutput = stdout[0].toString();
-	dateOutput.should.be.ok();
-	isNaN(new Date(dateOutput)).should.be.false();
-
-	const buildOutput = stdout[1].toString();
-	buildOutput.should.be.ok();
-	buildOutput.should.startWith("Hash: ");
-	buildOutput.should.containEql("\nVersion:");
-	buildOutput.should.containEql("\nTime:");
-	buildOutput.should.containEql("null.js");
-	buildOutput.should.containEql("./index.js");
-	buildOutput.should.containEql("[built]");
-
-	stderr.map((data) => {
-		data.toString().should.be.ok();
-		throw new Error(data.toString());
-	});
+	stderr.should.be.empty();
 }
