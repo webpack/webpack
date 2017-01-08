@@ -26,6 +26,11 @@ function getTestSpecificArguments(testDirectory) {
 	}
 }
 
+function convertToArrayOfLines(outputArray) {
+	if(outputArray.length === 0) return outputArray;
+	return outputArray.join('').split('\n');
+}
+
 const casesPath = path.join(__dirname, "binCases");
 const defaultArgs = loadOptsFile(path.join(casesPath, "test.opts"));
 
@@ -65,7 +70,8 @@ describe("BinTestCases", function() {
 				describe(testName, function() {
 					before(function(done) {
 						this.timeout(20000);
-						const child = spawn(cmd, args, opts);
+
+						const child = spawn(process.execPath, [cmd].concat(args), opts);
 
 						child.on("close", function(code) {
 							env.code = code;
@@ -90,7 +96,9 @@ describe("BinTestCases", function() {
 					});
 
 					it("should run successfully", function() {
-						testAssertions(env.code, env.stdout, env.stderr);
+						const stdout = convertToArrayOfLines(env.stdout);
+						const stderr = convertToArrayOfLines(env.stderr);
+						testAssertions(env.code, stdout, stderr);
 					});
 				});
 			});

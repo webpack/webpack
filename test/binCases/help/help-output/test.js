@@ -3,23 +3,17 @@
 module.exports = function testAssertions(code, stdout, stderr) {
 	code.should.be.exactly(0);
 
-	stdout.length.should.be.exactly(1);
-	const output = stdout[0].toString();
+	stdout.should.be.ok();
+	stdout[0].should.startWith("webpack");
+	stdout.should.containEql("Config options:");
+	stdout.should.containEql("Basic options:");
+	stdout.should.containEql("Module options:");
+	stdout.should.containEql("Output options:");
+	stdout.should.containEql("Advanced options:");
+	stdout.should.containEql("Resolving options:");
+	stdout.should.containEql("Optimizing options:");
+	stdout.should.containEql("Stats options:");
+	stdout.should.containEql("Options:");
 
-	output.should.be.ok();
-	output.should.startWith("webpack");
-	output.should.containEql("\nConfig options:");
-	output.should.containEql("\nBasic options:");
-	output.should.containEql("\nModule options:");
-	output.should.containEql("\nOutput options:");
-	output.should.containEql("\nAdvanced options:");
-	output.should.containEql("\nResolving options:");
-	output.should.containEql("\nOptimizing options:");
-	output.should.containEql("\nStats options:");
-	output.should.containEql("\nOptions:");
-
-	stderr.map((data) => {
-		data.toString().should.be.ok();
-		throw new Error(data.toString());
-	});
+	stderr.should.be.empty();
 }
