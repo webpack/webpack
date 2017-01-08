@@ -1,32 +1,25 @@
 "use strict";
 
-/*globals it*/
-module.exports = function validateBinExec(cmd, args, opts) {
-	const spawn = require("child_process").spawn;
+module.exports = function testAssertions(code, stdout, stderr) {
+	code.should.be.oneOf(0, 1);
 
-	it("should compile successfully", function(done) {
-		this.timeout(20000);
-		let child = spawn(cmd, args, opts);
+	stdout.length.should.be.exactly(2);
 
-		child.on("close", function(code) {
-			code.should.be.oneOf(0, 1);
-			done();
-		});
+	const dateOutput = stdout[0].toString();
+	dateOutput.should.be.ok();
+	isNaN(new Date(dateOutput)).should.be.false();
 
-		child.on("error", function(error) {
-			throw new Error(error);
-		});
+	const buildOutput = stdout[1].toString();
+	buildOutput.should.be.ok();
+	buildOutput.should.startWith("Hash: ");
+	buildOutput.should.containEql("\nVersion:");
+	buildOutput.should.containEql("\nTime:");
+	buildOutput.should.containEql("null.js");
+	buildOutput.should.containEql("./index.js");
+	buildOutput.should.containEql("[built]");
 
-		child.stdout.on("data", (data) => {
-			data.toString().should.be.empty;
-			data.toString().should.be.ok;
-		});
-
-		child.stderr.on("data", (data) => {
-			data.toString().should.be.ok;
-			throw new Error(data.toString());
-		});
+	stderr.map((data) => {
+		data.toString().should.be.ok();
+		throw new Error(data.toString());
 	});
 }
-
-
