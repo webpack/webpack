@@ -25,22 +25,19 @@ function getNodeModulesPaths(startPath) {
 }
 
 function resolveLocalWebpack(startPath) {
-	var resolvedPath = __filename;
 	var paths = getNodeModulesPaths(startPath);
-	paths.some(function(dirPath, i) {
+	for(var i = 0; i < paths.length; i++) {
+		var dirPath = paths[i];
 		try {
-			var localWebpack = require.resolve(
+			return require.resolve(
 				path.join(
 					dirPath, "node_modules",
 					"webpack", "bin", "webpack.js"
 				)
 			);
-			resolvedPath = localWebpack;
-			return true;
 		} catch(e) {}
-		return false;
-	});
-	return resolvedPath;
+	}
+	return __filename;
 }
 // Local version replace global one
 var localWebpack = resolveLocalWebpack(process.cwd());
