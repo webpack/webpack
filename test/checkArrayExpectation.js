@@ -12,11 +12,12 @@ module.exports = function checkArrayExpectation(testDirectory, object, kind, fil
 		return !/from UglifyJs/.test(item);
 	});
 	if(fs.existsSync(path.join(testDirectory, filename + ".js"))) {
-		var expected = require(path.join(testDirectory, filename + ".js"));
+		var expectedFilename = path.join(testDirectory, filename + ".js");
+		var expected = require(expectedFilename);
 		if(expected.length < array.length)
-			return done(new Error("More " + kind + "s while compiling than expected:\n\n" + array.join("\n\n"))), true;
+			return done(new Error("More " + kind + "s while compiling than expected:\n\n" + array.join("\n\n") + ". Check expected warnings: " + filename)), true;
 		else if(expected.length > array.length)
-			return done(new Error("Less " + kind + "s while compiling than expected:\n\n" + array.join("\n\n"))), true;
+			return done(new Error("Less " + kind + "s while compiling than expected:\n\n" + array.join("\n\n") + ". Check expected warnings: " + filename)), true;
 		for(var i = 0; i < array.length; i++) {
 			if(Array.isArray(expected[i])) {
 				for(var j = 0; j < expected[i].length; j++) {
