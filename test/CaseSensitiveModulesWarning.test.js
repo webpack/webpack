@@ -19,9 +19,9 @@ describe("CaseSensitiveModulesWarning", function() {
 
 	beforeEach(function() {
 		modules = [
+			createModule('FOOBAR'),
 			createModule('FooBar', 1),
-			createModule('foobar', 2),
-			createModule('FOOBAR')
+			createModule('foobar', 2)
 		];
 		myCaseSensitiveModulesWarning = new CaseSensitiveModulesWarning(modules);
 	});
