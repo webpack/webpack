@@ -7,7 +7,7 @@ if(process.env.NO_WATCH_TESTS) {
 	return;
 }
 
-require("should");
+var should = require("should");
 var path = require("path");
 var fs = require("fs");
 
@@ -19,6 +19,49 @@ var fileSubdir = path.join(fixtures, "subdir", "watched-file.txt");
 
 describe("NodeWatchFileSystem", function() {
 	this.timeout(10000);
+
+	it('should throw if \'files\' argument is not an array', function() {
+		should(function() {
+			new NodeWatchFileSystem().watch(undefined)
+		}).throw("Invalid arguments: 'files'");
+	});
+
+	it('should throw if \'dirs\' argument is not an array', function() {
+		should(function() {
+			new NodeWatchFileSystem().watch([], undefined)
+		}).throw("Invalid arguments: 'dirs'");
+	});
+
+	it('should throw if \'missing\' argument is not an array', function() {
+		should(function() {
+			new NodeWatchFileSystem().watch([], [], undefined)
+		}).throw("Invalid arguments: 'missing'");
+	});
+
+	it('should throw if \'starttime\' argument is missing', function() {
+		should(function() {
+			new NodeWatchFileSystem().watch([], [], [], '42', {}, function() {})
+		}).throw("Invalid arguments: 'startTime'");
+	});
+
+	it('should throw if \'callback\' argument is missing', function() {
+		should(function() {
+			new NodeWatchFileSystem().watch([], [], [], 42, {}, undefined)
+		}).throw("Invalid arguments: 'callback'");
+	});
+
+	it('should throw if \'options\' argument is invalid', function() {
+		should(function() {
+			new NodeWatchFileSystem().watch([], [], [], 42, 'options', function() {})
+		}).throw("Invalid arguments: 'options'");
+	});
+
+	it('should throw if \'callbackUndelayed\' argument is invalid', function() {
+		should(function() {
+			new NodeWatchFileSystem().watch([], [], [], 42, {}, function() {}, 'undefined')
+		}).throw("Invalid arguments: 'callbackUndelayed'");
+	});
+
 	it("should register a file change (change delayed)", function(done) {
 		var startTime = new Date().getTime();
 		var wfs = new NodeWatchFileSystem();
