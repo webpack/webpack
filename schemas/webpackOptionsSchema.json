@@ -68,6 +68,10 @@
             }
           ],
           "description": "All modules are loaded upon startup. The last one is exported."
+        },
+        {
+          "description": "function returning an entry object or a promise.",
+          "instanceof": "Function"
         }
       ]
     },
