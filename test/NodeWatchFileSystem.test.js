@@ -1,25 +1,9 @@
 /* globals describe it */
 
-if(process.env.NO_WATCH_TESTS) {
-	describe("NodeWatchFileSystem", function() {
-		it("tests excluded");
-	});
-	return;
-}
-
 var should = require("should");
-var path = require("path");
-var fs = require("fs");
-
 var NodeWatchFileSystem = require("../lib/node/NodeWatchFileSystem");
 
-var fixtures = path.join(__dirname, "fixtures");
-var fileDirect = path.join(fixtures, "watched-file.txt");
-var fileSubdir = path.join(fixtures, "subdir", "watched-file.txt");
-
 describe("NodeWatchFileSystem", function() {
-	this.timeout(10000);
-
 	it('should throw if \'files\' argument is not an array', function() {
 		should(function() {
 			new NodeWatchFileSystem().watch(undefined)
@@ -61,6 +45,19 @@ describe("NodeWatchFileSystem", function() {
 			new NodeWatchFileSystem().watch([], [], [], 42, {}, function() {}, 'undefined')
 		}).throw("Invalid arguments: 'callbackUndelayed'");
 	});
+
+	if(process.env.NO_WATCH_TESTS) {
+		it("long running tests excluded");
+		return;
+	}
+
+	var path = require("path");
+	var fs = require("fs");
+	var fixtures = path.join(__dirname, "fixtures");
+	var fileDirect = path.join(fixtures, "watched-file.txt");
+	var fileSubdir = path.join(fixtures, "subdir", "watched-file.txt");
+
+	this.timeout(10000);
 
 	it("should register a file change (change delayed)", function(done) {
 		var startTime = new Date().getTime();
