@@ -185,8 +185,8 @@ function processOptions(options) {
 		var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
 
 		if(Array.isArray(options)) {
-			options = options.forEach(function(singleOption) {
-				singleOption.stats = statsPresetToOptions(singleOption.stats);
+			options.forEach(function(option) {
+				option.stats = statsPresetToOptions(option.stats);
 			});
 		} else {
 			options.stats = statsPresetToOptions(options.stats);
