@@ -1,13 +1,13 @@
-Hash: 98677d85dd05d16cbe7f
+Hash: 68b0a8c7311f83e54374
 Time: Xms
   Asset       Size  Chunks             Chunk Names
-   0.js  229 bytes       0  [emitted]  cir1
-   1.js  212 bytes    1, 2  [emitted]  abd
-   2.js  129 bytes       2  [emitted]  ab
-   3.js  244 bytes       3  [emitted]  cir2
-   4.js  136 bytes    4, 6  [emitted]  chunk
-   5.js  302 bytes    5, 3  [emitted]  cir2 from cir1
-   6.js   78 bytes       6  [emitted]  ac in ab
+   0.js  231 bytes       0  [emitted]  cir1
+   1.js  218 bytes    1, 2  [emitted]  abd
+   2.js  133 bytes       2  [emitted]  ab
+   3.js  246 bytes       3  [emitted]  cir2
+   4.js  140 bytes    4, 6  [emitted]  chunk
+   5.js  306 bytes    5, 3  [emitted]  cir2 from cir1
+   6.js   80 bytes       6  [emitted]  ac in ab
 main.js    6.53 kB       7  [emitted]  main
 chunk    {0} 0.js (cir1) 81 bytes {3} {5} {7} [rendered]
     > duplicate cir1 from cir2 [3] (webpack)/test/statsCases/optimize-chunks/circular2.js 1:0-79

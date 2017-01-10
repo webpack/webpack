@@ -175,7 +175,7 @@ function processOptions(options) {
 	if(typeof options.then === "function") {
 		options.then(processOptions).catch(function(err) {
 			console.error(err.stack || err);
-			process.exit(); // eslint-disable-line
+			process.exit(1); // eslint-disable-line
 		});
 		return;
 	}
@@ -341,13 +341,14 @@ function processOptions(options) {
 			console.error(err.stack || err);
 			if(err.details) console.error(err.details);
 			process.exit(1); // eslint-disable-line
-			return;
 		}
 		if(outputOptions.json) {
 			process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
 		} else if(stats.hash !== lastHash) {
 			lastHash = stats.hash;
+			process.stdout.write("\n" + new Date() + "\n" + "\n");
 			process.stdout.write(stats.toString(outputOptions) + "\n");
+			if(argv.s) lastHash = null;
 		}
 		if(!options.watch && stats.hasErrors()) {
 			process.on("exit", function() {

@@ -1,7 +1,7 @@
 require("should");
 
 it("should provide a global Buffer shim", function () {
-	Buffer.should.be.a.Function;
+	Buffer.should.be.a.Function();
 });
 
 it("should fail on the buffer module"/*, function () {
