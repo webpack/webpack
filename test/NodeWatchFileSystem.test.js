@@ -1,24 +1,64 @@
 /* globals describe it */
 
-if(process.env.NO_WATCH_TESTS) {
-	describe("NodeWatchFileSystem", function() {
-		it("tests excluded");
-	});
-	return;
-}
-
-require("should");
-var path = require("path");
-var fs = require("fs");
-
+var should = require("should");
 var NodeWatchFileSystem = require("../lib/node/NodeWatchFileSystem");
 
-var fixtures = path.join(__dirname, "fixtures");
-var fileDirect = path.join(fixtures, "watched-file.txt");
-var fileSubdir = path.join(fixtures, "subdir", "watched-file.txt");
-
 describe("NodeWatchFileSystem", function() {
+	it('should throw if \'files\' argument is not an array', function() {
+		should(function() {
+			new NodeWatchFileSystem().watch(undefined)
+		}).throw("Invalid arguments: 'files'");
+	});
+
+	it('should throw if \'dirs\' argument is not an array', function() {
+		should(function() {
+			new NodeWatchFileSystem().watch([], undefined)
+		}).throw("Invalid arguments: 'dirs'");
+	});
+
+	it('should throw if \'missing\' argument is not an array', function() {
+		should(function() {
+			new NodeWatchFileSystem().watch([], [], undefined)
+		}).throw("Invalid arguments: 'missing'");
+	});
+
+	it('should throw if \'starttime\' argument is missing', function() {
+		should(function() {
+			new NodeWatchFileSystem().watch([], [], [], '42', {}, function() {})
+		}).throw("Invalid arguments: 'startTime'");
+	});
+
+	it('should throw if \'callback\' argument is missing', function() {
+		should(function() {
+			new NodeWatchFileSystem().watch([], [], [], 42, {}, undefined)
+		}).throw("Invalid arguments: 'callback'");
+	});
+
+	it('should throw if \'options\' argument is invalid', function() {
+		should(function() {
+			new NodeWatchFileSystem().watch([], [], [], 42, 'options', function() {})
+		}).throw("Invalid arguments: 'options'");
+	});
+
+	it('should throw if \'callbackUndelayed\' argument is invalid', function() {
+		should(function() {
+			new NodeWatchFileSystem().watch([], [], [], 42, {}, function() {}, 'undefined')
+		}).throw("Invalid arguments: 'callbackUndelayed'");
+	});
+
+	if(process.env.NO_WATCH_TESTS) {
+		it("long running tests excluded");
+		return;
+	}
+
+	var path = require("path");
+	var fs = require("fs");
+	var fixtures = path.join(__dirname, "fixtures");
+	var fileDirect = path.join(fixtures, "watched-file.txt");
+	var fileSubdir = path.join(fixtures, "subdir", "watched-file.txt");
+
 	this.timeout(10000);
+
 	it("should register a file change (change delayed)", function(done) {
 		var startTime = new Date().getTime();
 		var wfs = new NodeWatchFileSystem();

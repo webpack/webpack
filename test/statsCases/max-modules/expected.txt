@@ -1,7 +1,7 @@
-Hash: e36ab7d25d7661d1d913
+Hash: 8f4b66734cb63e0581be
 Time: Xms
   Asset     Size  Chunks             Chunk Names
-main.js  5.76 kB       0  [emitted]  main
+main.js  5.82 kB       0  [emitted]  main
 chunk    {0} main.js (main) 1.18 kB [entry] [rendered]
     [0] (webpack)/test/statsCases/max-modules/a.js?1 33 bytes {0} [built]
     [1] (webpack)/test/statsCases/max-modules/a.js?10 33 bytes {0} [built]
