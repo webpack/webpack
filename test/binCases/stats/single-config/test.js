@@ -12,4 +12,4 @@ module.exports = function testAssertions(code, stdout, stderr) {
 	stdout[8].should.containEql("[built]");
 
 	stderr.should.be.empty();
-}
+};

@@ -5,13 +5,17 @@ module.exports = {
 			TRUE: true,
 			FALSE: false,
 			UNDEFINED: undefined,
-			FUNCTION: function(a) { return a + 1; },
+			FUNCTION: function(a) {
+				return a + 1;
+			},
 			CODE: "(1+2)",
 			REGEXP: /abc/i,
 			OBJECT: {
 				SUB: {
 					UNDEFINED: undefined,
-					FUNCTION: function(a) { return a + 1; },
+					FUNCTION: function(a) {
+						return a + 1;
+					},
 					CODE: "(1+2)",
 					REGEXP: /abc/i,
 					STRING: JSON.stringify("string")
@@ -21,4 +25,4 @@ module.exports = {
 			"process.env.DEFINED_NESTED_KEY_STRING": "\"string\""
 		})
 	]
-}
+};

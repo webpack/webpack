@@ -19,4 +19,4 @@ module.exports = {
 		__filename: false,
 		__dirname: false
 	}
-}
+};

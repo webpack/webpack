@@ -34,7 +34,7 @@ if(module.hot) {
 				console.warn("[HMR] Update failed: " + err.stack || err.message);
 			}
 		});
-	}
+	};
 
 	process.on(__resourceQuery.substr(1) || "SIGUSR2", function() {
 		if(module.hot.status() !== "idle") {

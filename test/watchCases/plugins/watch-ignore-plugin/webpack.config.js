@@ -1,5 +1,4 @@
 var webpack = require("../../../../");
-var path = require("path");
 
 module.exports = {
 	plugins: [
