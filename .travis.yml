@@ -1,6 +1,10 @@
 sudo: false
 language: node_js
 
+branches:
+  only:
+    - master
+
 cache:
   directories:
     - $HOME/.npm
@@ -22,12 +26,6 @@ matrix:
       env: NO_WATCH_TESTS=1 JOB_PART=test
     - os: osx
       node_js: "7"
-      env: NO_WATCH_TESTS=1 JOB_PART=test
-    - os: osx
-      node_js: "6"
-      env: NO_WATCH_TESTS=1 JOB_PART=test
-    - os: osx
-      node_js: "4"
       env: NO_WATCH_TESTS=1 JOB_PART=test
   allow_failures:
     - os: osx
