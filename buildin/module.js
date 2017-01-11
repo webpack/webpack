@@ -21,4 +21,4 @@ module.exports = function(module) {
 		module.webpackPolyfill = 1;
 	}
 	return module;
-}
+};

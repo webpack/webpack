@@ -7,4 +7,4 @@ module.exports = {
 		extensions: [".json", ".webpack-loader.js", ".web-loader.js", ".loader.js", ".js"],
 		mainFields: ["webpackLoader", "loader", "main"]
 	}
-}
+};

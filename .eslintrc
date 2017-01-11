@@ -8,6 +8,13 @@
 	"rules": {
 		"quotes": ["error", "double"],
 		"no-undef": "error",
+		"no-extra-semi": "error",
+		"semi": "error",
+		"no-template-curly-in-string": "error",
+		"no-caller": "error",
+		"yoda": "error",
+		"eqeqeq": "error",
+		"global-require": "off",
 		"brace-style": "error",
 		"eol-last": "error",
 		"indent": ["error", "tab", { "SwitchCase": 1 }],

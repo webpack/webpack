@@ -2,7 +2,7 @@ var path = require("path");
 var webpack = require("../../");
 module.exports = {
 	resolve: {
-		extensions: ['.js', '.jsx']
+		extensions: [".js", ".jsx"]
 	},
 	entry: {
 		alpha: ["./alpha", "./a", "module"],
