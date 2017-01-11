@@ -331,9 +331,7 @@ function processOptions(options) {
 			process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
 		} else if(stats.hash !== lastHash) {
 			lastHash = stats.hash;
-			process.stdout.write("\n" + new Date() + "\n" + "\n");
 			process.stdout.write(stats.toString(outputOptions) + "\n");
-			if(argv.s) lastHash = null;
 		}
 		if(!options.watch && stats.hasErrors()) {
 			process.on("exit", function() {
