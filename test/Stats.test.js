@@ -59,11 +59,13 @@ describe("Stats", function() {
 					colors: false
 				};
 				var hasColorSetting = false;
-
 				if(typeof options.stats !== "undefined") {
 					toStringOptions = options.stats;
 
 					hasColorSetting = typeof options.stats.colors !== "undefined";
+				}
+				if(Array.isArray(options) && !toStringOptions.children) {
+					toStringOptions.children = options.map(o => o.stats);
 				}
 
 				var actual = stats.toString(toStringOptions);
@@ -166,7 +168,8 @@ describe("Stats", function() {
 					depth: false,
 					usedExports: false,
 					providedExports: false,
-					colors: true
+					colors: true,
+					performance: true
 				});
 			});
 			it("truthy values behave as 'normal'", function() {
@@ -197,7 +200,8 @@ describe("Stats", function() {
 					errors: false,
 					errorDetails: false,
 					warnings: false,
-					publicPath: false
+					publicPath: false,
+					performance: false
 				});
 			});
 			it("falsy values behave as 'none'", function() {

@@ -1,0 +1,4 @@
+Child minimal:
+    chunk    {0} main.js (main) 8 bytes [entry] [rendered]
+Child verbose:
+    Entrypoint main = main.js

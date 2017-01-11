@@ -4,7 +4,7 @@
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "dependencies": {
-    "acorn": "^4.0.3",
+    "acorn": "^4.0.4",
     "acorn-dynamic-import": "^2.0.0",
     "ajv": "^4.7.0",
     "ajv-keywords": "^1.1.1",
@@ -61,7 +61,7 @@
     "url-loader": "~0.5.0",
     "val-loader": "~0.5.0",
     "vm-browserify": "~0.0.0",
-    "webpack-dev-middleware": "^1.0.0",
+    "webpack-dev-middleware": "^1.9.0",
     "worker-loader": "~0.7.0"
   },
   "engines": {

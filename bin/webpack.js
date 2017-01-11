@@ -171,14 +171,18 @@ function processOptions(options) {
 		return;
 	}
 
-	var firstOptions = Array.isArray(options) ? (options[0] || {}) : options;
+	var firstOptions = [].concat(options)[0];
+	var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
 
-	if(typeof options.stats === "boolean" || typeof options.stats === "string") {
-		var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
-		options.stats = statsPresetToOptions(options.stats);
+	var outputOptions = options.stats;
+	if(typeof outputOptions === "boolean" || typeof outputOptions === "string")
+		outputOptions = statsPresetToOptions(outputOptions);
+	else
+		outputOptions = {};
+	outputOptions = Object.create(outputOptions);
+	if(Array.isArray(options) && !outputOptions.children) {
+		outputOptions.children = options.map(o => o.stats);
 	}
-
-	var outputOptions = Object.create(options.stats || firstOptions.stats || {});
 	if(typeof outputOptions.context === "undefined")
 		outputOptions.context = firstOptions.context;
 
