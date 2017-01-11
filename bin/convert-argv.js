@@ -227,7 +227,7 @@ module.exports = function(yargs, argv, convertOptions) {
 
 		function loadPlugin(name) {
 			var loadUtils = require("loader-utils");
-			var args = null;
+			var args;
 			try {
 				var p = name && name.indexOf("?");
 				if(p > -1) {
