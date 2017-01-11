@@ -11,10 +11,12 @@ var createStat = function(overides) {
 		},
 		hasErrors: () => false,
 		hasWarnings: () => false,
-		toJson: () => ({
+		toJson: () => Object.assign({
+			hash: "foo",
+			version: "version",
 			warnings: [],
 			errors: []
-		})
+		}, overides)
 	}, overides);
 };
 
@@ -173,13 +175,11 @@ describe("MultiStats", function() {
 				})
 			];
 			myMultiStats = new MultiStats(stats);
-			result = myMultiStats.toJson();
+			result = myMultiStats.toJson({ version: false, hash: false });
 		});
 
 		it("returns plain object representation", function() {
 			result.should.deepEqual({
-				hash: "abc123xyz890",
-				version: "1.2.3",
 				errors: [
 					"(abc123-compilation) abc123-error"
 				],
@@ -235,9 +235,9 @@ describe("MultiStats", function() {
 				"Hash: abc123xyz890\n" +
 				"Version: webpack 1.2.3\n" +
 				"Child abc123-compilation:\n" +
-				"    \n" +
+				"    Hash: abc123\n" +
 				"Child xyz890-compilation:\n" +
-				"    "
+				"    Hash: xyz890"
 			);
 		});
 	});

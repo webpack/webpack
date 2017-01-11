@@ -161,15 +161,6 @@ function ifArg(name, fn, init) {
 	}
 }
 
-function hasPresetPredicate(options) {
-	return typeof options.stats === "boolean" || typeof options.stats === "string";
-}
-
-function hasPreset(optionsArray) {
-	options = Array.isArray(optionsArray) ? optionsArray : [optionsArray];
-	return options.some(hasPresetPredicate);
-}
-
 function processOptions(options) {
 	// process Promise
 	if(typeof options.then === "function") {
@@ -180,20 +171,18 @@ function processOptions(options) {
 		return;
 	}
 
-	var firstOptions = Array.isArray(options) ? (options[0] || {}) : options;
-	if(hasPreset(options)) {
-		var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
+	var firstOptions = [].concat(options)[0];
+	var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
 
-		if(Array.isArray(options)) {
-			options.forEach(function(option) {
-				option.stats = statsPresetToOptions(option.stats);
-			});
-		} else {
-			options.stats = statsPresetToOptions(options.stats);
-		}
+	let outputOptions = options.stats;
+	if(typeof outputOptions === "boolean" || typeof outputOptions === "string")
+		outputOptions = statsPresetToOptions(outputOptions);
+	else
+		outputOptions = {};
+	outputOptions = Object.create(outputOptions);
+	if(Array.isArray(options) && !outputOptions.children) {
+		outputOptions.children = options.map(o => o.stats);
 	}
-
-	var outputOptions = Object.create(options.stats || firstOptions.stats || {});
 	if(typeof outputOptions.context === "undefined")
 		outputOptions.context = firstOptions.context;
 

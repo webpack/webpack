@@ -47,7 +47,6 @@ describe("Stats", function() {
 				c.apply(new webpack.optimize.OccurrenceOrderPlugin());
 			});
 			c.run(function(err, stats) {
-				options = Array.isArray(options) ? options[0] : options;
 				if(err) return done(err);
 
 				if(/error$/.test(testName)) {
@@ -64,6 +63,9 @@ describe("Stats", function() {
 					toStringOptions = options.stats;
 
 					hasColorSetting = typeof options.stats.colors !== "undefined";
+				}
+				if(Array.isArray(options) && !toStringOptions.children) {
+					toStringOptions.children = options.map(o => o.stats);
 				}
 
 				var actual = stats.toString(toStringOptions);
