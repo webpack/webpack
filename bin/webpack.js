@@ -174,7 +174,7 @@ function processOptions(options) {
 	var firstOptions = [].concat(options)[0];
 	var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
 
-	let outputOptions = options.stats;
+	var outputOptions = options.stats;
 	if(typeof outputOptions === "boolean" || typeof outputOptions === "string")
 		outputOptions = statsPresetToOptions(outputOptions);
 	else
