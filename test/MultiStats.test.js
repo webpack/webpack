@@ -175,7 +175,10 @@ describe("MultiStats", function() {
 				})
 			];
 			myMultiStats = new MultiStats(stats);
-			result = myMultiStats.toJson({ version: false, hash: false });
+			result = myMultiStats.toJson({
+				version: false,
+				hash: false
+			});
 		});
 
 		it("returns plain object representation", function() {
