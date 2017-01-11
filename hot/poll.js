@@ -26,7 +26,7 @@ if(module.hot) {
 				}
 			});
 		}
-	}
+	};
 	setInterval(checkForUpdate, hotPollInterval);
 } else {
 	throw new Error("[HMR] Hot Module Replacement is disabled.");
