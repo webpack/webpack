@@ -91,7 +91,7 @@
     "build:examples": "cd examples && node buildAll.js",
     "pretest": "npm run lint-files",
     "lint-files": "npm run lint && npm run beautify-lint",
-    "lint": "eslint lib bin hot buildin",
+    "lint": "eslint lib bin hot buildin test/**/webpack.config.js test/binCases/**/test.js examples/**/webpack.config.js",
     "beautify-lint": "beautify-lint 'lib/**/*.js' 'hot/**/*.js' 'bin/**/*.js' 'benchmark/*.js' 'test/*.js'",
     "nsp": "nsp check --output summary",
     "cover": "node --harmony ./node_modules/.bin/istanbul cover -x '**/*.runtime.js' node_modules/mocha/bin/_mocha",

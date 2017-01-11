@@ -7,4 +7,4 @@ module.exports = {
 		colors: true,
 		chunks: true
 	}
-}
+};

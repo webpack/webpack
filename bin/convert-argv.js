@@ -46,7 +46,7 @@ module.exports = function(yargs, argv, convertOptions) {
 				}
 			}
 			return path.extname(configPath);
-		}
+		};
 
 		var mapConfigArg = function mapConfigArg(configArg) {
 			var resolvedPath = path.resolve(configArg);
@@ -55,7 +55,7 @@ module.exports = function(yargs, argv, convertOptions) {
 				path: resolvedPath,
 				ext: extension
 			};
-		}
+		};
 
 		var configArgList = Array.isArray(argv.config) ? argv.config : [argv.config];
 		configFiles = configArgList.map(mapConfigArg);
@@ -90,7 +90,7 @@ module.exports = function(yargs, argv, convertOptions) {
 					}
 				}
 			}
-		}
+		};
 
 		var requireConfig = function requireConfig(configPath) {
 			var options = require(configPath);
@@ -102,7 +102,7 @@ module.exports = function(yargs, argv, convertOptions) {
 				options = options(argv.env, argv);
 			}
 			return options;
-		}
+		};
 
 		configFiles.forEach(function(file) {
 			registerCompiler(interpret.extensions[file.ext]);
@@ -511,7 +511,7 @@ module.exports = function(yargs, argv, convertOptions) {
 				} else {
 					options.entry[name] = entry;
 				}
-			}
+			};
 			argv._.forEach(function(content) {
 				var i = content.indexOf("=");
 				var j = content.indexOf("?");
