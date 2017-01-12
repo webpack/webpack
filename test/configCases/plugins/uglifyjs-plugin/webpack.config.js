@@ -6,7 +6,8 @@ module.exports = {
 	},
 	entry: {
 		bundle0: ["./index.js"],
-		vendors: ["./vendors.js"]
+		vendors: ["./vendors.js"],
+		ie8: ["./ie8.js"]
 	},
 	output: {
 		filename: "[name].js"
@@ -14,7 +15,10 @@ module.exports = {
 	plugins: [
 		new webpack.optimize.UglifyJsPlugin({
 			comments: false,
-			exclude: ["vendors.js"]
+			exclude: ["vendors.js"],
+			mangle: {
+				screw_ie8: false
+			}
 		})
 	]
 };
