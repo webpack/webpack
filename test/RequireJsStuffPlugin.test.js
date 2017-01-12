@@ -136,7 +136,7 @@ describe("RequireJsStuffPlugin", function() {
 									var addDependencySpy = parserEventContext.state.current.addDependency;
 									var addedDependency = JSON.stringify(addDependencySpy.getCall(0).args[0]);
 									addDependencySpy.callCount.should.be.exactly(1);
-									addedDependency.should.be.exactly('{"module":null,"expression":";","range":10,"loc":5}');
+									addedDependency.should.be.exactly('{"module":null,"expression":"undefined","range":10,"loc":5}');
 								});
 							});
 						});
@@ -159,7 +159,7 @@ describe("RequireJsStuffPlugin", function() {
 									const addDependencySpy = parserEventContext.state.current.addDependency;
 									const addedDependency = JSON.stringify(addDependencySpy.getCall(0).args[0]);
 									addDependencySpy.callCount.should.be.exactly(1);
-									addedDependency.should.be.exactly('{"module":null,"expression":";","range":10,"loc":5}');
+									addedDependency.should.be.exactly('{"module":null,"expression":"undefined","range":10,"loc":5}');
 								});
 							});
 						});
