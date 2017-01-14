@@ -175,10 +175,11 @@ function processOptions(options) {
 	var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
 
 	var outputOptions = options.stats;
-	if(typeof outputOptions === "boolean" || typeof outputOptions === "string")
+	if(typeof outputOptions === "boolean" || typeof outputOptions === "string") {
 		outputOptions = statsPresetToOptions(outputOptions);
-	else
+	} else if(!outputOptions) {
 		outputOptions = {};
+	}
 	outputOptions = Object.create(outputOptions);
 	if(Array.isArray(options) && !outputOptions.children) {
 		outputOptions.children = options.map(o => o.stats);
