@@ -343,9 +343,8 @@ function processOptions(options) {
 			});
 		}
 	}
-	if(options.watch) {
-		var primaryOptions = !Array.isArray(options) ? options : options[0];
-		var watchOptions = primaryOptions.watchOptions || primaryOptions.watch || {};
+	if(firstOptions.watch) {
+		var watchOptions = firstOptions.watchOptions || firstOptions.watch || {};
 		if(watchOptions.stdin) {
 			process.stdin.on("end", function() {
 				process.exit(0); // eslint-disable-line
