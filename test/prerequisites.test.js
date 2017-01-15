@@ -47,12 +47,13 @@ describe("Prerequisites", function() {
 				});
 				it("should not return with a complaint", function() {
 					providedVersions.forEach(function(providedVersion) {
-						should(versionCheck(providedVersion, requiredVersion)).be.eql(`\u001b[31mYour node.js version (${providedVersion}) is not supported by Webpack(2.2.0-rc.4).\nThis may lead to unexpected behaviour or failures!\n\nPlease see below a list of supported node version(s) for Webpack 2.2.0-rc.4:\n\t- Node versions between >=4.7.0 and <5.0.1 - or\n\t- Node versions between >=7.0.0 and <8.0.0\u001b[39m`);
+						var output = versionCheck(providedVersion, requiredVersion);
+						should(output).containEql(`Your node.js version (${providedVersion}) is not supported`);
+						should(output).containEql("Node versions between >=4.7.0 and <5.0.1");
+						should(output).containEql("Node versions between >=7.0.0 and <8.0.0");
 					});
 				});
 			});
 		});
 	});
-
-
 });
