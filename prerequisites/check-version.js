@@ -5,19 +5,17 @@ var requiredVersion = packageJSON.engines.node;
 var webpackVersion = packageJSON.version;
 
 function requiredToList(requiredVersion) {
-	return requiredVersion.split("||").filter(Boolean).map(function(version) {
-		return new semver.Range(version).set[0];
-	}).map(function(set) {
-		if(!set) {
-			return null;
+	return new semver.Range("").set.map(function(set) {
+		if(!set[0].value) {
+			return "\t- No valid version found - please consult http://webpack.js.org";
 		}
 
 		if(set.length === 1) {
-			return "\t- At least node version " + set[0];
+			return "\t- At least node version " + set[0].value;
 		}
 
-		return "\t- Between node version " + set[0] + " and " + set[1];
-	}).join("\n");
+		return "\t- Node versions between " + set[0].value + " and " + set[1].value;
+	}).join(" - or\n");
 }
 
 if(!semver.satisfies(process.version, requiredVersion)) {
