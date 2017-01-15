@@ -5,6 +5,7 @@ module.exports = {
 	stats: {
 		assets: true,
 		colors: true,
-		chunks: true
+		chunks: true,
+		maxModules: 0
 	}
 };
