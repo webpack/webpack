@@ -1,5 +1,8 @@
 var semver = require("semver");
-var requiredVersion = require("../package.json").engines.node;
+var chalk = require("chalk");
+var packageJSON = require("../package.json");
+var requiredVersion = packageJSON.engines.node;
+var webpackVersion = packageJSON.version;
 
 function requiredToList(requiredVersion) {
 	return requiredVersion.split("||").filter(Boolean).map(function(version) {
@@ -18,11 +21,11 @@ function requiredToList(requiredVersion) {
 }
 
 if(!semver.satisfies(process.version, requiredVersion)) {
-	console.error(
-		"\033[0;31mYour node.js version (" + process.version + ") is not supported.\n" +
+	console.log(chalk.red(
+		"Your node.js version (" + process.version + ") is not supported by Webpack(" + webpackVersion + ").\n" +
 		"This may lead to unexpected behaviour or failures!\n\n" +
-		"Please see below a list of supported node version:\n" +
-		requiredToList(requiredVersion) + "\033[0m"
-	);
+		"Please see below a list of supported node version(s) for Webpack " + webpackVersion + ":\n" +
+		requiredToList(requiredVersion)
+	));
 }
 
