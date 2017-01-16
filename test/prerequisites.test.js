@@ -1,7 +1,7 @@
 /* globals describe it beforeEach */
 var should = require("should");
 
-var versionCheck = require("../prerequisites/check-version");
+var versionCheck = require("../bin/check-version");
 
 describe("Prerequisites", function() {
 

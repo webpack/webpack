@@ -104,6 +104,6 @@
     "cover": "node --harmony ./node_modules/istanbul/lib/cli.js cover -x '**/*.runtime.js' node_modules/mocha/bin/_mocha -- test/*.test.js",
     "cover:min": "node --harmony ./node_modules/.bin/istanbul cover -x '**/*.runtime.js' --report lcovonly node_modules/mocha/bin/_mocha -- test/*.test.js",
     "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish",
-    "postinstall": "node ./prerequisites/check-runner.js"
+    "postinstall": "node ./bin/check-runner.js"
   }
 }
