@@ -20,3 +20,11 @@ it("should double reexport from non-harmony modules correctly", function() {
 	y.should.be.eql("y");
 	x.should.be.eql("x");
 });
+
+
+import { a, b } from "./reexport"
+
+it("should be possible to reexport a module with unknown exports", function() {
+	a.should.be.eql("a");
+	b.should.be.eql("b");
+});
