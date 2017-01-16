@@ -69,7 +69,7 @@ describe("BinTestCases", function() {
 					error: []
 				};
 
-				if (async) {
+				if(async) {
 					describe(testName, function() {
 						it("should run successfully", function(done) {
 							this.timeout(10000);
@@ -92,7 +92,7 @@ describe("BinTestCases", function() {
 							});
 
 							setTimeout(() => {
-								if (env.code) {
+								if(env.code) {
 									done(env.error)
 								}
 
