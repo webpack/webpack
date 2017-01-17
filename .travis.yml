@@ -17,6 +17,9 @@ matrix:
       env: NO_WATCH_TESTS=1 JOB_PART=lint
     - os: linux
       node_js: "7"
+      env: NO_WATCH_TESTS=1 JOB_PART=benchmark
+    - os: linux
+      node_js: "7"
       env: NO_WATCH_TESTS=1 JOB_PART=test
     - os: linux
       node_js: "6"
