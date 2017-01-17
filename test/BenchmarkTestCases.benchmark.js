@@ -40,9 +40,18 @@ describe("BenchmarkTestCases", function() {
 					try {
 						fs.mkdirSync(baselinePath);
 					} catch(e) {}
-					git(baselinePath).raw(["--git-dir", path.join(rootPath, ".git"), "reset", "--hard", baselineRevision], err => {
+					const gitIndex = path.resolve(rootPath, ".git/index");
+					const index = fs.readFileSync(gitIndex);
+					git(rootPath).raw(["rev-list", "-n", "1", "HEAD"], (err, prevHead) => {
 						if(err) return callback(err);
-						doLoadWebpack();
+						git(baselinePath).raw(["--git-dir", path.join(rootPath, ".git"), "reset", "--hard", baselineRevision], err => {
+							if(err) return callback(err);
+							git(rootPath).raw(["reset", "--soft", prevHead.split("\n")[0]], err => {
+								if(err) return callback(err);
+								fs.writeFileSync(gitIndex, index);
+								doLoadWebpack();
+							});
+						});
 					});
 				}
 
@@ -100,6 +109,22 @@ describe("BenchmarkTestCases", function() {
 		});
 	}
 
+	function tDistribution(n) {
+		// two-sided, 90%
+		// https://en.wikipedia.org/wiki/Student%27s_t-distribution
+		if(n <= 30) {
+			//            1      2      ...
+			const data = [6.314, 2.920, 2.353, 2.132, 2.015, 1.943, 1.895, 1.860, 1.833, 1.812, 1.796, 1.782, 1.771, 1.761, 1.753, 1.746, 1.740, 1.734, 1.729, 1.725, 1.721, 1.717, 1.714, 1.711, 1.708, 1.706, 1.703, 1.701, 1.699, 1.697];
+			return data[n - 1];
+		} else if(n <= 120) {
+			//            40     50     60     70     80     90     100    110    120
+			const data = [1.684, 1.676, 1.671, 1.667, 1.664, 1.662, 1.660, 1.659, 1.658]
+			return data[Math.floor(n / 10) - 4];
+		} else {
+			return 1.645;
+		}
+	}
+
 	function runBenchmark(webpack, config, callback) {
 		// warmup
 		const warmupCompiler = webpack(config, (err, stats) => {
@@ -108,11 +133,11 @@ describe("BenchmarkTestCases", function() {
 				const compiler = webpack(config, (err, stats) => {
 					compiler.purgeInputFileSystem();
 					if(err) {
-						deferred.reject(err);
+						callback(err);
 						return;
 					}
 					if(stats.hasErrors()) {
-						deferred.reject(new Error(stats.toJson().errors.join("\n\n")));
+						callback(new Error(stats.toJson().errors.join("\n\n")));
 						return;
 					}
 					deferred.resolve();
@@ -122,6 +147,13 @@ describe("BenchmarkTestCases", function() {
 				defer: true,
 				initCount: 1,
 				onComplete: function() {
+					const stats = bench.stats;
+					const n = stats.sample.length;
+					const nSqrt = Math.sqrt(n);
+					const z = tDistribution(n - 1);
+					stats.minConfidence = stats.mean - z * stats.deviation / nSqrt;
+					stats.maxConfidence = stats.mean + z * stats.deviation / nSqrt;
+					stats.text = `${Math.round(stats.mean * 1000)}ms ± ${Math.round(stats.deviation * 1000)}ms [${Math.round(stats.minConfidence * 1000)}ms; ${Math.round(stats.maxConfidence * 1000)}ms]`;
 					callback(null, bench.stats);
 				},
 				onError: callback
@@ -153,7 +185,7 @@ describe("BenchmarkTestCases", function() {
 					if(!config.output.path) config.output.path = outputDirectory;
 					runBenchmark(baseline.webpack, config, (err, stats) => {
 						if(err) return done(err);
-						console.log(`        ${baseline.name} ${Math.round(stats.mean * 1000)}ms ± ${Math.round(stats.deviation * 1000)}ms`);
+						console.log(`        ${baseline.name} ${stats.text}`);
 						if(baseline.name === "HEAD")
 							headStats = stats;
 						else
@@ -164,10 +196,10 @@ describe("BenchmarkTestCases", function() {
 
 				if(baseline.name !== "HEAD") {
 					it(`HEAD should not be slower than ${baseline.name} (${baseline.rev})`, function() {
-						if(baselineStats.mean + baselineStats.deviation < headStats.mean - headStats.deviation) {
-							throw new Error(`HEAD (${baselineStats.mean} ± ${baselineStats.deviation}) is slower than ${baseline.name} (${headStats.mean} ± ${headStats.deviation})`);
-						} else if(baselineStats.mean - baselineStats.deviation > headStats.mean + headStats.deviation) {
-							console.log(`======> HEAD is ${Math.round(baselineStats.mean / headStats.mean * 100 - 100)}% faster than ${baseline.name}!`);
+						if(baselineStats.maxConfidence < headStats.minConfidence) {
+							throw new Error(`HEAD (${headStats.text}) is slower than ${baseline.name} (${baselineStats.text}) (90% confidence)`);
+						} else if(baselineStats.minConfidence > headStats.maxConfidence) {
+							console.log(`======> HEAD is ${Math.round(baselineStats.mean / headStats.mean * 100 - 100)}% faster than ${baseline.name} (90% confidence)!`);
 						}
 					});
 				}
