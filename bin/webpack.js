@@ -345,8 +345,8 @@ function processOptions(options) {
 			});
 		}
 	}
-	if(firstOptions.watch) {
-		var watchOptions = firstOptions.watchOptions || firstOptions.watch || {};
+	if(firstOptions.watch || options.watch) {
+		var watchOptions = firstOptions.watchOptions || firstOptions.watch || options.watch || {};
 		if(watchOptions.stdin) {
 			process.stdin.on("end", function() {
 				process.exit(0); // eslint-disable-line
