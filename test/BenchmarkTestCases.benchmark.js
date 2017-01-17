@@ -128,57 +128,77 @@ describe("BenchmarkTestCases", function() {
 		}
 	}
 
+	function getBenchmarkStability(stats) {
+		const samplesA = stats.sample.slice(0, Math.floor(stats.sample.length / 2));
+		const samplesB = stats.sample.slice(Math.floor(stats.sample.length / 2));
+		const mean = samples => samples.reduce((a, b) => a + b, 0) / samples.length;
+		const variance = (samples, mean) => samples.reduce((sum, s) => sum + Math.pow(s - mean, 2), 0) / (samples.length - 1);
+		const meanA = mean(samplesA);
+		const meanB = mean(samplesB);
+		const varA = variance(samplesA, meanA);
+		const varB = variance(samplesB, meanB);
+		const meanDiff = 1 - Math.abs(meanA - meanB) / Math.max(meanA, meanB);
+		const varDiff = 1 - Math.abs(varA - varB) / Math.max(varA, varB);
+		const stability = (meanDiff + varDiff) / 2;
+		return stability;
+	}
+
+	let runNumber = 0;
+
 	function runBenchmark(webpack, config, callback) {
 		// warmup
 		const warmupCompiler = webpack(config, (err, stats) => {
 			warmupCompiler.purgeInputFileSystem();
-			const bench = new Benchmark(function(deferred) {
-				const compiler = webpack(config, (err, stats) => {
-					compiler.purgeInputFileSystem();
-					if(err) {
-						callback(err);
-						return;
-					}
-					if(stats.hasErrors()) {
-						callback(new Error(stats.toJson().errors.join("\n\n")));
-						return;
-					}
-					deferred.resolve();
+			process.nextTick(() => {
+				const bench = new Benchmark(function(deferred) {
+					const compiler = webpack(config, (err, stats) => {
+						compiler.purgeInputFileSystem();
+						if(err) {
+							callback(err);
+							return;
+						}
+						if(stats.hasErrors()) {
+							callback(new Error(stats.toJson().errors.join("\n\n")));
+							return;
+						}
+						deferred.resolve();
+					});
+				}, {
+					maxTime: 60 + runNumber * 30,
+					defer: true,
+					initCount: 1,
+					onComplete: function() {
+						const stats = bench.stats;
+						const n = stats.sample.length;
+						const nSqrt = Math.sqrt(n);
+						const z = tDistribution(n - 1);
+						stats.minConfidence = stats.mean - stats.moe;
+						stats.maxConfidence = stats.mean + stats.moe;
+						stats.stability = getBenchmarkStability(stats);
+						stats.text = `${Math.round(stats.mean * 1000)}ms ± ${Math.round(stats.moe * 1000)}ms stability ${Math.round(stats.stability * 100)}%`;
+						callback(null, bench.stats);
+					},
+					onError: callback
 				});
-			}, {
-				maxTime: 30,
-				defer: true,
-				initCount: 1,
-				onComplete: function() {
-					const stats = bench.stats;
-					const n = stats.sample.length;
-					const nSqrt = Math.sqrt(n);
-					const z = tDistribution(n - 1);
-					stats.minConfidence = stats.mean - z * stats.deviation / nSqrt;
-					stats.maxConfidence = stats.mean + z * stats.deviation / nSqrt;
-					stats.text = `${Math.round(stats.mean * 1000)}ms ± ${Math.round(stats.deviation * 1000)}ms [${Math.round(stats.minConfidence * 1000)}ms; ${Math.round(stats.maxConfidence * 1000)}ms]`;
-					callback(null, bench.stats);
-				},
-				onError: callback
-			});
-			bench.run({
-				async: true
+				bench.run({
+					async: true
+				});
 			});
 		});
 	}
 
 	tests.forEach(testName => {
 		const testDirectory = path.join(casesPath, testName);
-		let headStats = null;
 		const suite = describe(testName, function() {});
 		it(`${testName} create benchmarks`, function() {
-			baselines.forEach(baseline => {
-				let baselineStats = null;
+			let headStats;
 
-				function it(title, fn) {
-					const test = new Test(title, fn);
-					suite.addTest(test);
-				}
+			function it(title, fn) {
+				const test = new Test(title, fn);
+				suite.addTest(test);
+			}
+
+			function enqueueBenchmark(baseline) {
 				it(`should benchmark ${baseline.name} (${baseline.rev})`, function(done) {
 					this.timeout(180000);
 					const outputDirectory = path.join(__dirname, "js", "benchmark", `baseline-${baseline.name}`, testName);
@@ -188,15 +208,16 @@ describe("BenchmarkTestCases", function() {
 					if(!config.output.path) config.output.path = outputDirectory;
 					runBenchmark(baseline.webpack, config, (err, stats) => {
 						if(err) return done(err);
-						console.log(`        ${baseline.name} ${stats.text}`);
+						console.log(`        ${baseline.name}.${runNumber} ${stats.text}`);
 						if(baseline.name === "HEAD")
 							headStats = stats;
-						else
-							baselineStats = stats;
+						baseline.stats = stats;
 						done();
 					});
 				});
+			}
 
+			function enqueueBenchmarkResult(baseline) {
 				if(baseline.name !== "HEAD") {
 					it(`HEAD should not be slower than ${baseline.name} (${baseline.rev})`, function() {
 						if(baselineStats.maxConfidence < headStats.minConfidence) {
@@ -206,7 +227,31 @@ describe("BenchmarkTestCases", function() {
 						}
 					});
 				}
-			});
+			}
+
+			function enqueueBenchmarks() {
+				baselines.forEach(baseline => enqueueBenchmark(baseline));
+			}
+
+			function enqueueStabliltyCheck() {
+				it("should be stable", () => {
+					if(baselines.every(baseline => baseline.stability > 0.5)) {
+						enqueueBenchmarkResults();
+					} else if(runNumber < 3) {
+						runNumber++;
+						enqueueBenchmarks();
+					} else {
+						throw new Error("Benchmarking is too unstable to complete.");
+					}
+				});
+			}
+
+			function enqueueBenchmarkResults() {
+				baselines.forEach(baseline => enqueueBenchmarkResult(baseline));
+			}
+
+			enqueueBenchmarks();
+			enqueueStabliltyCheck();
 		});
 	});
 });
