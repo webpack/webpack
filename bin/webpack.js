@@ -5,6 +5,7 @@
 	Author Tobias Koppers @sokra
 */
 var path = require("path");
+
 // Local version replace global one
 try {
 	var localWebpack = require.resolve(path.join(process.cwd(), "node_modules", "webpack", "bin", "webpack.js"));
