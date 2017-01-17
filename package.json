@@ -21,7 +21,7 @@
     "supports-color": "^3.1.0",
     "tapable": "~0.2.5",
     "uglify-js": "^2.8.5",
-    "watchpack": "^1.2.0",
+    "watchpack": "^1.2.1",
     "webpack-sources": "^0.2.0",
     "yargs": "^6.0.0"
   },
