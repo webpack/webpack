@@ -93,7 +93,7 @@ describe("BinTestCases", function() {
 
 							setTimeout(() => {
 								if(env.code) {
-									done(env.error)
+									done(`Watch didn't run ${env.error}`)
 								}
 
 								const stdout = convertToArrayOfLines(env.stdout);
