@@ -99,7 +99,7 @@ describe("Compiler", function() {
 			bundle.should.containEql("./main1.js");
 			bundle.should.containEql("./a.js");
 			bundle.should.containEql("./b.js");
-			bundle.should.containEql("./~/m1/a.js");
+			bundle.should.containEql("./node_modules/m1/a.js");
 			bundle.should.containEql("This is a");
 			bundle.should.containEql("This is b");
 			bundle.should.containEql("This is m1/a");
