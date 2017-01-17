@@ -50,32 +50,22 @@ describe("AmdMainTemplatePlugin", () => {
 		};
 	});
 
-	it("has apply function", () => {
-		(new AmdMainTemplatePlugin()).apply.should.be.a.Function();
-	});
+	it("has apply function", () => new AmdMainTemplatePlugin().apply.should.be.a.Function());
 
 	describe("when applied", () => {
-		beforeEach(() => {
-			env.templatePlugin = applyTemplatePluginWithOptions(AmdMainTemplatePlugin, "foo");
-		});
+		beforeEach(() =>
+			env.templatePlugin = applyTemplatePluginWithOptions(AmdMainTemplatePlugin, "foo"));
 
 		describe("event handlers", () => {
-			beforeEach(() => {
-				env.eventBindings = env.templatePlugin.getEventBindings();
-			});
+			beforeEach(() => env.eventBindings = env.templatePlugin.getEventBindings());
 
-			it("binds one handlers", () => {
-				env.eventBindings.length.should.be.exactly(1);
-			});
+			it("binds one handlers", () => env.eventBindings.length.should.be.exactly(1));
 
 			describe("render-with-entry handler", () => {
-				beforeEach(() => {
-					env.eventBinding = env.eventBindings[0];
-				});
+				beforeEach(() => env.eventBinding = env.eventBindings[0]);
 
-				it("binds to render-with-entry event", () => {
-					env.eventBinding.name.should.be.exactly("render-with-entry");
-				});
+				it("binds to render-with-entry event", () =>
+					env.eventBinding.name.should.be.exactly("render-with-entry"));
 
 				describe("with name", () => {
 					beforeEach(() => {
@@ -129,36 +119,25 @@ describe("AmdMainTemplatePlugin", () => {
 		});
 
 		describe("main template event handlers", () => {
-			beforeEach(() => {
-				env.mainTemplateBindings = env.templatePlugin.getMainTemplateBindings();
-			});
+			beforeEach(() =>
+				env.mainTemplateBindings = env.templatePlugin.getMainTemplateBindings());
 
-			it("binds two handlers", () => {
-				env.mainTemplateBindings.length.should.be.exactly(2);
-			});
+			it("binds two handlers", () => env.mainTemplateBindings.length.should.be.exactly(2));
 
 			describe("global-hash-paths handler", () => {
-				beforeEach(() => {
-					env.mainTemplateBinding = env.mainTemplateBindings[0];
-				});
+				beforeEach(() => env.mainTemplateBinding = env.mainTemplateBindings[0]);
 
-				it("binds to global-hash-paths event", () => {
-					env.mainTemplateBinding.name.should.be.exactly("global-hash-paths");
-				});
+				it("binds to global-hash-paths event", () =>
+					env.mainTemplateBinding.name.should.be.exactly("global-hash-paths"));
 
-				it("adds name to path array", () => {
-					env.mainTemplateBinding.handler([]).should.deepEqual(["foo"]);
-				});
+				it("adds name to path array", () =>
+					env.mainTemplateBinding.handler([]).should.deepEqual(["foo"]));
 			});
 
 			describe("hash handler", () => {
-				beforeEach(() => {
-					env.mainTemplateBinding = env.mainTemplateBindings[1];
-				});
+				beforeEach(() => env.mainTemplateBinding = env.mainTemplateBindings[1]);
 
-				it("binds to hash event", () => {
-					env.mainTemplateBinding.name.should.be.exactly("hash");
-				});
+				it("binds to hash event", () => env.mainTemplateBinding.name.should.be.exactly("hash"));
 
 				it("updates hash", () => {
 					const hash = {
