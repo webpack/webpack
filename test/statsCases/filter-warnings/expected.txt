@@ -4,7 +4,6 @@ Child
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.1 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
     
     WARNING in bundle.js from UglifyJs
     Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
@@ -23,43 +22,36 @@ Child
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.1 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
 Child
     Hash: e4d2b189bb205589ee1e
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.1 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
 Child
     Hash: e4d2b189bb205589ee1e
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.1 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
 Child
     Hash: e4d2b189bb205589ee1e
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.1 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
 Child
     Hash: e4d2b189bb205589ee1e
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.1 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
 Child
     Hash: e4d2b189bb205589ee1e
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.1 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
 Child
     Hash: e4d2b189bb205589ee1e
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.1 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
     
     WARNING in bundle.js from UglifyJs
     Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
@@ -78,7 +70,6 @@ Child
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.1 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
     
     WARNING in bundle.js from UglifyJs
     Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
@@ -97,7 +88,6 @@ Child
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.1 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
     
     WARNING in bundle.js from UglifyJs
     Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
@@ -116,7 +106,6 @@ Child
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.1 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
     
     WARNING in bundle.js from UglifyJs
     Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
@@ -135,7 +124,6 @@ Child
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.1 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
     
     WARNING in bundle.js from UglifyJs
     Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
@@ -154,7 +142,6 @@ Child
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.1 kB       0  [emitted]  main
-    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
     
     WARNING in bundle.js from UglifyJs
     Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
