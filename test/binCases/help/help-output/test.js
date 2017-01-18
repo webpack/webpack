@@ -16,4 +16,4 @@ module.exports = function testAssertions(code, stdout, stderr) {
 	stdout.should.containEql("Options:");
 
 	stderr.should.be.empty();
-}
+};
