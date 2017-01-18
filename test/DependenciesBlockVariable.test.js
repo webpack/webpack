@@ -1,13 +1,15 @@
-var should = require("should");
-var sinon = require("sinon");
-var DependenciesBlockVariable = require("../lib/DependenciesBlockVariable");
+"use strict";
 
-describe("DependenciesBlockVariable", function() {
-	var DependenciesBlockVariableInstance,
+const should = require("should");
+const sinon = require("sinon");
+const DependenciesBlockconstiable = require("../lib/DependenciesBlockvariable");
+
+describe("DependenciesBlockconstiable", () => {
+	let DependenciesBlockconstiableInstance,
 		dependencyMock,
 		sandbox;
 
-	before(function() {
+	before(() => {
 		sandbox = sinon.sandbox.create();
 		dependencyMock = {
 			constructor: {
@@ -16,59 +18,49 @@ describe("DependenciesBlockVariable", function() {
 			disconnect: sandbox.spy(),
 			updateHash: sandbox.spy()
 		};
-		DependenciesBlockVariableInstance = new DependenciesBlockVariable(
+		DependenciesBlockconstiableInstance = new DependenciesBlockconstiable(
 			"dependencies-name",
 			"expression", [dependencyMock]);
 	});
 
-	afterEach(function() {
-		sandbox.restore();
-	});
+	afterEach(() => sandbox.restore());
 
-	describe("hasDependencies", function() {
-		it("returns `true` if has dependencies", function() {
-			should(DependenciesBlockVariableInstance.hasDependencies()).be.true();
-		});
-	});
+	describe("hasDependencies", () =>
+		it("returns `true` if has dependencies", () =>
+			should(DependenciesBlockconstiableInstance.hasDependencies()).be.true()));
 
-	describe("disconnect", function() {
-		it("trigger dependencies disconnection", function() {
-			DependenciesBlockVariableInstance.disconnect();
+	describe("disconnect", () =>
+		it("trigger dependencies disconnection", () => {
+			DependenciesBlockconstiableInstance.disconnect();
 			should(dependencyMock.disconnect.calledOnce).be.true();
-		});
-	});
+		}));
 
-	describe("updateHash", function() {
-		var hash;
-		before(function() {
+	describe("updateHash", () => {
+		let hash;
+		before(() => {
 			hash = {
 				update: sandbox.spy()
 			};
-			DependenciesBlockVariableInstance.updateHash(hash);
+			DependenciesBlockconstiableInstance.updateHash(hash);
 		});
 
-		it("should update hash dependencies with name", function() {
-			should(hash.update.calledWith("dependencies-name")).be.true();
-		});
+		it("should update hash dependencies with name", () =>
+			should(hash.update.calledWith("dependencies-name")).be.true());
 
-		it("should update hash dependencies with expression", function() {
-			should(hash.update.calledWith("expression")).be.true();
-		});
+		it("should update hash dependencies with expression", () =>
+			should(hash.update.calledWith("expression")).be.true());
 
-		it("should update hash inside dependencies", function() {
-			should(dependencyMock.updateHash.calledOnce).be.true();
-		});
+		it("should update hash inside dependencies", () =>
+			should(dependencyMock.updateHash.calledOnce).be.true());
 	});
 
-	describe("expressionSource", function() {
-		var dependencyTemplates,
+	describe("expressionSource", () => {
+		let dependencyTemplates,
 			applyMock;
 
-		before(function() {
-			applyMock = sandbox.spy();
-		});
+		before(() => applyMock = sandbox.spy());
 
-		it("aplies information inside dependency templates", function() {
+		it("aplies information inside dependency templates", () => {
 			dependencyTemplates = {
 				get: function() {
 					return {
@@ -76,23 +68,23 @@ describe("DependenciesBlockVariable", function() {
 					};
 				}
 			};
-			DependenciesBlockVariableInstance.expressionSource(
+			DependenciesBlockconstiableInstance.expressionSource(
 				dependencyTemplates, {}, {}
 			);
 			should(applyMock.calledOnce).be.true();
 		});
 
-		it("aplies information inside dependency templates", function() {
+		it("aplies information inside dependency templates", () => {
 			dependencyTemplates = {
 				get: function() {
 					return false;
 				}
 			};
-			should(function() {
-				DependenciesBlockVariableInstance.expressionSource(
+			should(() => {
+				DependenciesBlockconstiableInstance.expressionSource(
 					dependencyTemplates, {}, {}
-				)
+				);
 			}).throw("No template for dependency: DependencyMock");
-		})
+		});
 	});
 });
