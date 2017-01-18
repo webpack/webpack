@@ -1,0 +1,3 @@
+module.exports = {
+	entry: "lodash"
+}

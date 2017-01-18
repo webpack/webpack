@@ -8,11 +8,17 @@ branches:
 init:
   - git config --global core.autocrlf input
 
+clone_depth: 50
+
 # what combinations to test
 environment:
   matrix:
     - nodejs_version: 7
+      job_part: test
     - nodejs_version: 6
+      job_part: test
+    - nodejs_version: 7
+      job_part: benchmark
 
 install:
   - ps: Install-Product node $env:nodejs_version x64
@@ -30,4 +36,4 @@ test_script:
   - node --version
   - npm --version
   - yarn --version
-  - cmd: npm run appveyor
+  - cmd: npm run appveyor:%job_part%
