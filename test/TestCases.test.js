@@ -1,22 +1,22 @@
-var should = require("should");
-var path = require("path");
-var fs = require("fs");
-var vm = require("vm");
-var Test = require("mocha/lib/test");
-var checkArrayExpectation = require("./checkArrayExpectation");
+"use strict";
 
-var Stats = require("../lib/Stats");
-var webpack = require("../lib/webpack");
+const should = require("should");
+const path = require("path");
+const fs = require("fs");
+const vm = require("vm");
+const Test = require("mocha/lib/test");
+const checkArrayExpectation = require("./checkArrayExpectation");
 
-describe("TestCases", function() {
-	var casesPath = path.join(__dirname, "cases");
-	var categories = fs.readdirSync(casesPath);
-	categories = categories.map(function(cat) {
+const Stats = require("../lib/Stats");
+const webpack = require("../lib/webpack");
+
+describe("TestCases", () => {
+	const casesPath = path.join(__dirname, "cases");
+	let categories = fs.readdirSync(casesPath);
+	categories = categories.map((cat) => {
 		return {
 			name: cat,
-			tests: fs.readdirSync(path.join(casesPath, cat)).filter(function(folder) {
-				return folder.indexOf("_") < 0;
-			})
+			tests: fs.readdirSync(path.join(casesPath, cat)).filter((folder) => folder.indexOf("_") < 0)
 		};
 	});
 	[{
@@ -94,27 +94,25 @@ describe("TestCases", function() {
 			new webpack.optimize.UglifyJsPlugin(),
 			new webpack.NamedModulesPlugin()
 		]
-	}].forEach(function(config) {
-		describe(config.name, function() {
-			categories.forEach(function(category) {
+	}].forEach((config) => {
+		describe(config.name, () => {
+			categories.forEach((category) => {
 				describe(category.name, function() {
 					this.timeout(30000);
-					category.tests.filter(function(test) {
-						var testDirectory = path.join(casesPath, category.name, test);
-						var filterPath = path.join(testDirectory, "test.filter.js");
+					category.tests.filter((test) => {
+						const testDirectory = path.join(casesPath, category.name, test);
+						const filterPath = path.join(testDirectory, "test.filter.js");
 						if(fs.existsSync(filterPath) && !require(filterPath)(config)) {
-							describe.skip(test, function() {
-								it('filtered');
-							});
+							describe.skip(test, () => it("filtered"));
 							return false;
 						}
 						return true;
-					}).forEach(function(testName) {
-						var suite = describe(testName, function() {});
-						it(testName + " should compile", function(done) {
-							var testDirectory = path.join(casesPath, category.name, testName);
-							var outputDirectory = path.join(__dirname, "js", config.name, category.name, testName);
-							var options = {
+					}).forEach((testName) => {
+						const suite = describe(testName, () => {});
+						it(testName + " should compile", (done) => {
+							const testDirectory = path.join(casesPath, category.name, testName);
+							const outputDirectory = path.join(__dirname, "js", config.name, category.name, testName);
+							const options = {
 								context: casesPath,
 								entry: "./" + category.name + "/" + testName + "/index",
 								target: "async-node",
@@ -145,29 +143,27 @@ describe("TestCases", function() {
 									}]
 								},
 								plugins: (config.plugins || []).concat(function() {
-									this.plugin("compilation", function(compilation) {
-										["optimize", "optimize-modules-basic", "optimize-chunks-basic", "after-optimize-tree", "after-optimize-assets"].forEach(function(hook) {
-											compilation.plugin(hook, function() {
-												compilation.checkConstraints();
-											});
+									this.plugin("compilation", (compilation) => {
+										["optimize", "optimize-modules-basic", "optimize-chunks-basic", "after-optimize-tree", "after-optimize-assets"].forEach((hook) => {
+											compilation.plugin(hook, () => compilation.checkConstraints());
 										});
 									});
 								})
 							};
-							webpack(options, function(err, stats) {
+							webpack(options, (err, stats) => {
 								if(err) return done(err);
-								var statOptions = Stats.presetToOptions("verbose");
+								const statOptions = Stats.presetToOptions("verbose");
 								statOptions.colors = false;
 								fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
-								var jsonStats = stats.toJson({
+								const jsonStats = stats.toJson({
 									errorDetails: true
 								});
 								if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
 								if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
-								var exportedTest = 0;
+								let exportedTest = 0;
 
 								function _it(title, fn) {
-									var test = new Test(title, fn);
+									const test = new Test(title, fn);
 									suite.addTest(test);
 									exportedTest++;
 									return test;
@@ -175,13 +171,13 @@ describe("TestCases", function() {
 
 								function _require(module) {
 									if(module.substr(0, 2) === "./") {
-										var p = path.join(outputDirectory, module);
-										var fn = vm.runInThisContext("(function(require, module, exports, __dirname, it) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
-										var module = {
+										const p = path.join(outputDirectory, module);
+										const fn = vm.runInThisContext("(function(require, module, exports, __dirname, it) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
+										const m = {
 											exports: {}
 										};
-										fn.call(module.exports, _require, module, module.exports, outputDirectory, _it);
-										return module.exports;
+										fn.call(m.exports, _require, m, m.exports, outputDirectory, _it);
+										return m.exports;
 									} else return require(module);
 								}
 								_require("./bundle.js");
