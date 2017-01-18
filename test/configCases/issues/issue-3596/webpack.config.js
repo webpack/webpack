@@ -11,7 +11,7 @@ module.exports = {
 			this.plugin("emit", function(compilation, callback) {
 				delete compilation.assets["b.js"];
 				callback();
-			})
+			});
 		}
 	]
-}
+};

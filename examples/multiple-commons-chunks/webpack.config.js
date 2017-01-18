@@ -28,4 +28,4 @@ module.exports = {
 			chunks: ["pageC", "adminPageC"]
 		}),
 	]
-}
+};

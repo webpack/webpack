@@ -3,7 +3,7 @@ module.exports = {
 		return Promise.resolve({
 			a: "./a",
 			b: ["./b"]
-		})
+		});
 	},
 	output: {
 		filename: "[name].js"
