@@ -75,4 +75,8 @@ it("should define process.env.DEFINED_NESTED_KEY", function() {
 });
 it("should define process.env.DEFINED_NESTED_KEY_STRING", function() {
 	if(process.env.DEFINED_NESTED_KEY_STRING !== "string") require("fail");
-})
+});
+it("should assign to process.env", function() {
+	process.env.TEST = "test";
+	process.env.TEST.should.be.eql("test");
+});
