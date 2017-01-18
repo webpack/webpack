@@ -1,3 +1,5 @@
+"use strict";
+
 const should = require("should");
 const CaseSensitiveModulesWarning = require("../lib/CaseSensitiveModulesWarning");
 
@@ -27,9 +29,7 @@ describe("CaseSensitiveModulesWarning", () => {
 		myCaseSensitiveModulesWarning = new CaseSensitiveModulesWarning(modules);
 	});
 
-	it("has the a name", () => {
-		myCaseSensitiveModulesWarning.name.should.be.exactly("CaseSensitiveModulesWarning");
-	});
+	it("has the a name", () => myCaseSensitiveModulesWarning.name.should.be.exactly("CaseSensitiveModulesWarning"));
 
 	it("has the a message", () => {
 		myCaseSensitiveModulesWarning.message.should.be.exactly(`
