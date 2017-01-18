@@ -1,4 +1,4 @@
-var webpack = require("../../../../")
+var webpack = require("../../../../");
 module.exports = {
 	entry: {
 		main: "./index",

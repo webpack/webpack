@@ -11,7 +11,7 @@ module.exports = {
 	},
 	output: {
 		path: path.join(__dirname, "js"),
-		publicPath: 'js/',
+		publicPath: "js/",
 		filename: "[name].bundle.js",
 		chunkFilename: "[id].chunk.js"
 	},
@@ -24,4 +24,4 @@ module.exports = {
 		})
 		// The pages cannot run without the commons.js file now.
 	]
-}
+};

@@ -5,6 +5,7 @@
 	Author Tobias Koppers @sokra
 */
 var path = require("path");
+
 // Local version replace global one
 try {
 	var localWebpack = require.resolve(path.join(process.cwd(), "node_modules", "webpack", "bin", "webpack.js"));
@@ -171,14 +172,19 @@ function processOptions(options) {
 		return;
 	}
 
-	var firstOptions = Array.isArray(options) ? (options[0] || {}) : options;
+	var firstOptions = [].concat(options)[0];
+	var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
 
-	if(typeof options.stats === "boolean" || typeof options.stats === "string") {
-		var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
-		options.stats = statsPresetToOptions(options.stats);
+	var outputOptions = options.stats;
+	if(typeof outputOptions === "boolean" || typeof outputOptions === "string") {
+		outputOptions = statsPresetToOptions(outputOptions);
+	} else if(!outputOptions) {
+		outputOptions = {};
 	}
-
-	var outputOptions = Object.create(options.stats || firstOptions.stats || {});
+	outputOptions = Object.create(outputOptions);
+	if(Array.isArray(options) && !outputOptions.children) {
+		outputOptions.children = options.map(o => o.stats);
+	}
 	if(typeof outputOptions.context === "undefined")
 		outputOptions.context = firstOptions.context;
 
@@ -331,9 +337,7 @@ function processOptions(options) {
 			process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
 		} else if(stats.hash !== lastHash) {
 			lastHash = stats.hash;
-			process.stdout.write("\n" + new Date() + "\n" + "\n");
 			process.stdout.write(stats.toString(outputOptions) + "\n");
-			if(argv.s) lastHash = null;
 		}
 		if(!options.watch && stats.hasErrors()) {
 			process.on("exit", function() {
@@ -341,9 +345,8 @@ function processOptions(options) {
 			});
 		}
 	}
-	if(options.watch) {
-		var primaryOptions = !Array.isArray(options) ? options : options[0];
-		var watchOptions = primaryOptions.watchOptions || primaryOptions.watch || {};
+	if(firstOptions.watch || options.watch) {
+		var watchOptions = firstOptions.watchOptions || firstOptions.watch || options.watch || {};
 		if(watchOptions.stdin) {
 			process.stdin.on("end", function() {
 				process.exit(0); // eslint-disable-line
