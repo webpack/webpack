@@ -1,13 +1,15 @@
-var should = require("should");
-var sinon = require("sinon");
-var ConcatSource = require("webpack-sources").ConcatSource;
-var WebWorkerHotUpdateChunkTemplatePlugin = require("../lib/webworker/WebWorkerHotUpdateChunkTemplatePlugin");
-var applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
+"use strict";
 
-describe("WebWorkerHotUpdateChunkTemplatePlugin", function() {
-	var handlerContext;
+const should = require("should");
+const sinon = require("sinon");
+const ConcatSource = require("webpack-sources").ConcatSource;
+const WebWorkerHotUpdateChunkTemplatePlugin = require("../lib/webworker/WebWorkerHotUpdateChunkTemplatePlugin");
+const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
 
-	beforeEach(function() {
+describe("WebWorkerHotUpdateChunkTemplatePlugin", () => {
+	let handlerContext;
+
+	beforeEach(() => {
 		handlerContext = {
 			outputOptions: {
 				hotUpdateFunction: "Foo",
@@ -16,63 +18,53 @@ describe("WebWorkerHotUpdateChunkTemplatePlugin", function() {
 		};
 	});
 
-	it("has apply function", function() {
-		(new WebWorkerHotUpdateChunkTemplatePlugin()).apply.should.be.a.Function();
-	});
+	it("has apply function", () => (new WebWorkerHotUpdateChunkTemplatePlugin()).apply.should.be.a.Function());
 
-	describe("when applied", function() {
-		var eventBindings, eventBinding;
+	describe("when applied", () => {
+		let eventBindings, eventBinding;
 
-		beforeEach(function() {
-			eventBindings = applyPluginWithOptions(WebWorkerHotUpdateChunkTemplatePlugin);
-		});
+		beforeEach(() => eventBindings = applyPluginWithOptions(WebWorkerHotUpdateChunkTemplatePlugin));
 
-		it("binds two event handlers", function() {
-			eventBindings.length.should.be.exactly(2);
-		});
+		it("binds two event handlers", () => eventBindings.length.should.be.exactly(2));
 
-		describe("render handler", function() {
-			beforeEach(function() {
-				eventBinding = eventBindings[0];
-			});
+		describe("render handler", () => {
+			beforeEach(() => eventBinding = eventBindings[0]);
 
-			it("binds to render event", function() {
-				eventBinding.name.should.be.exactly("render");
-			});
+			it("binds to render event", () => eventBinding.name.should.be.exactly("render"));
 
-			describe("with hot update function name set", function() {
-				it("creates source wrapper with function name", function() {
-					var source = eventBinding.handler.call(handlerContext, "moduleSource()", [], [], {}, 100);
+			describe("with hot update function name set", () => {
+				it("creates source wrapper with function name", () => {
+					const source = eventBinding.handler.call(handlerContext, "moduleSource()", [], [], {}, 100);
 					source.should.be.instanceof(ConcatSource);
 					source.source().should.be.exactly("Foo(100,moduleSource())");
 				});
 			});
 
-			describe("without hot update function name set", function() {
-				it("creates source wrapper with library name", function() {
+			describe("without hot update function name set", () => {
+				it("creates source wrapper with library name", () => {
 					delete handlerContext.outputOptions.hotUpdateFunction;
-					var source = eventBinding.handler.call(handlerContext, "moduleSource()", [], [], {}, 100);
+					const source = eventBinding.handler.call(handlerContext, "moduleSource()", [], [], {}, 100);
 					source.should.be.instanceof(ConcatSource);
 					source.source().should.be.exactly("webpackHotUpdateBar(100,moduleSource())");
 				});
 			});
 		});
 
-		describe("hash handler", function() {
-			var hashMock;
+		describe("hash handler", () => {
+			let hashMock;
 
-			beforeEach(function() {
+			beforeEach(() => {
 				eventBinding = eventBindings[1];
 				hashMock = {
 					update: sinon.spy()
 				};
 			});
 
-			it("binds to hash event", function() {
+			it("binds to hash event", () => {
 				eventBinding.name.should.be.exactly("hash");
 			});
 
-			it("updates hash object", function() {
+			it("updates hash object", () => {
 				eventBinding.handler.call(handlerContext, hashMock);
 				hashMock.update.callCount.should.be.exactly(4);
 				sinon.assert.calledWith(hashMock.update, "WebWorkerHotUpdateChunkTemplatePlugin");
