@@ -4,7 +4,7 @@ const should = require("should");
 const webpack = require("../lib/webpack");
 const WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
 
-describe("Validation", function() {
+describe("Validation", () => {
 	const testCases = [{
 		name: "undefined configuration",
 		config: undefined,
@@ -140,7 +140,7 @@ describe("Validation", function() {
 		name: "additional key on root",
 		config: {
 			entry: "a",
-			postcss: function() {}
+			postcss: () => {}
 		},
 		message: [
 			" - configuration has an unknown property 'postcss'. These properties are valid:",
@@ -175,8 +175,8 @@ describe("Validation", function() {
 			"    * configuration.devtool should be false"
 		]
 	}];
-	testCases.forEach(function(testCase) {
-		it("should fail validation for " + testCase.name, function() {
+	testCases.forEach((testCase) => {
+		it("should fail validation for " + testCase.name, () => {
 			try {
 				webpack(testCase.config);
 			} catch(e) {
@@ -187,6 +187,6 @@ describe("Validation", function() {
 				return;
 			}
 			throw new Error("Validation didn't fail");
-		})
+		});
 	});
 });
