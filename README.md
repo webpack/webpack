@@ -257,7 +257,7 @@ If you want to discuss something or just need help, [here is our Gitter room](ht
 <table>
   <tbody>
     <tr>
-      <td align="center">
+      <td align="center" valign="top">
         <img width="150" height="150" src="https://github.com/sokra.png?s=150">
         <br>
         <a href="https://github.com/sokra">Tobias Koppers</a>
@@ -265,7 +265,7 @@ If you want to discuss something or just need help, [here is our Gitter room](ht
         <br>
         <p>Founder of webpack</p>
       </td>
-      <td align="center">
+      <td align="center" valign="top">
         <img width="150" height="150" src="https://github.com/jhnns.png?s=150">
         <br>
         <a href="https://github.com/jhnns">Johannes Ewald</a>
@@ -273,7 +273,7 @@ If you want to discuss something or just need help, [here is our Gitter room](ht
         <br>
         <p>Early adopter of webpack</p>
       </td>
-      <td align="center" width="20%">
+      <td align="center" width="20%" valign="top">
         <img width="150" height="150" src="https://github.com/TheLarkInn.png?s=150">
         <br>
         <a href="https://github.com/TheLarkInn">Sean T. Larkin</a>
@@ -281,7 +281,7 @@ If you want to discuss something or just need help, [here is our Gitter room](ht
         <br>
         <p>Founder of the core team</p>
       </td>
-      <td align="center">
+      <td align="center" valign="top">
         <img width="150" height="150" src="https://github.com/bebraw.png?s=150">
         <br>
         <a href="https://github.com/bebraw">Juho Vepsäläinen</a>
@@ -291,18 +291,19 @@ If you want to discuss something or just need help, [here is our Gitter room](ht
         <a href="https://leanpub.com/survivejs-webpack">
           <img height="15" src="https://cloud.githubusercontent.com/assets/1365881/20286923/93e325c0-aac9-11e6-964d-cabe218c584c.png">
         </a>
+		<br>
       </td>
-      <td align="center">
+      <td align="center" valign="top">
         <img width="150" height="150" src="https://github.com/spacek33z.png?s=150">
         <br>
         <a href="https://github.com/spacek33z">Kees Kluskens</a>
         <p>Development</p>
         <br>
-        <br>
         <p>Sponsor<p>
         <a href="https://codeyellow.nl/">
-          <img height="15" src="https://cloud.githubusercontent.com/assets/1365881/20286583/ad62eb04-aac7-11e6-9c14-a0fef35b9b56.png">
+          <img height="15px" src="https://cloud.githubusercontent.com/assets/1365881/20286583/ad62eb04-aac7-11e6-9c14-a0fef35b9b56.png">
         </a>
+		<br>
       </td>
      </tr>
   </tbody>
