@@ -15,5 +15,13 @@ it("should contain comments in vendors chunk", function() {
 	source.should.containEql(" * comment should not be stripped vendors.3");
 });
 
+// this test is based off https://github.com/mishoo/UglifyJS2/blob/master/test/compress/screw-ie8.js
+it("should pass mangle options", function() {
+	var fs = require("fs"),
+		path = require("path");
+	var source = fs.readFileSync(path.join(__dirname, "ie8.js"), "utf-8");
+	source.should.containEql("function o(t,r){try{throw t+t}catch(o){r(o)}}");
+});
+
 
 require.include("./test.js");
