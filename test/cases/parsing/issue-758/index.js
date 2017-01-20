@@ -33,7 +33,7 @@ it("should call error callback on exception thrown in loading module", function(
 });
 
 it("should not call error callback on exception thrown in require callback", function(done) {
-	require.esnure(['./throwing'], function() {
+	require.ensure(['./throwing'], function() {
 		throw new Error('message');
 	}, function(error) {
 		error.should.be.instanceOf(Error);
