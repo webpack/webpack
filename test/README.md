@@ -6,7 +6,7 @@ But don't give up hope!!! Although our tests may appear complex and overwhelming
 ## tl;dr
 * Clone repo
 * install and link deps
-	* `yarn install.`
+	* `yarn install && yarn link && yarn link webpack`
 	* `npm run test` or `npm t`
 * To run an individual suite: (recommended during development for easier isolated diffs)
 	
