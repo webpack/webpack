@@ -19,7 +19,7 @@ module.exports = [{
 	},
 	amd: {
 		expectedFilenameLength: 31,
-   	expectedChunkFilenameLength: 33
+		expectedChunkFilenameLength: 33
 	}
 }, {
 	name: "chunkhash with length",
@@ -29,7 +29,7 @@ module.exports = [{
 	},
 	amd: {
 		expectedFilenameLength: 19,
-   	expectedChunkFilenameLength: 21
+		expectedChunkFilenameLength: 21
 	}
 }, {
 	name: "chunkhash",
@@ -39,7 +39,7 @@ module.exports = [{
 	},
 	amd: {
 		expectedFilenameLength: 31,
-   	expectedChunkFilenameLength: 33
+		expectedChunkFilenameLength: 33
 	}
 }, {
 	name: "hash with and without length",
@@ -49,7 +49,7 @@ module.exports = [{
 	},
 	amd: {
 		expectedFilenameLength: 31,
-  	expectedChunkFilenameLength: 21
+		expectedChunkFilenameLength: 21
 	}
 }, {
 	name: "hash with length",
@@ -59,7 +59,7 @@ module.exports = [{
 	},
 	amd: {
 		expectedFilenameLength: 17,
-  	expectedChunkFilenameLength: 21
+		expectedChunkFilenameLength: 21
 	}
 }, {
 	name: "chunkhash in chunkFilename ",
@@ -69,7 +69,7 @@ module.exports = [{
 	},
 	amd: {
 		expectedFilenameLength: 31,
-   	expectedChunkFilenameLength: 20
+		expectedChunkFilenameLength: 20
 	},
 	plugins: [
 		new webpack.HotModuleReplacementPlugin()
