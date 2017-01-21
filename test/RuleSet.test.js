@@ -1,5 +1,7 @@
+/* globals describe, it, beforeEach */
+"use strict";
+
 var should = require("should");
-/* globals describe, it */
 var RuleSet = require("../lib/RuleSet");
 
 function match(ruleSet, resource) {
@@ -376,6 +378,43 @@ describe("RuleSet", function() {
 				}]);
 				(match(loader, "style.css")).should.eql(["css"]);
 			}, errorHasContext);
+		});
+	});
+	describe("RuleSet::generateIdent", function() {
+		let useA;
+		beforeEach(function() {
+			useA = {
+				loader: "./loader2",
+				options: {
+					f: function() {
+						return "ok";
+					}
+				}
+			};
+		});
+		it("generates an md5-hash based id for a given loader item", () => {
+			RuleSet.generateIdent(useA).should.be.type("string");
+			RuleSet.generateIdent(useA).should.eql("VaITzDUqemZHRi89ZhYxhA==");
+		});
+		describe("given different use items", () => {
+			let useB;
+			beforeEach(function() {
+				useB = {
+					loader: "./loader2",
+					options: {
+						f: function() {
+							return "not ok";
+						}
+					}
+				};
+			});
+			it("generates always the same ident for the same object given", () => {
+				RuleSet.generateIdent(useA).should.eql(RuleSet.generateIdent(useA));
+				RuleSet.generateIdent(useB).should.eql(RuleSet.generateIdent(useB));
+			});
+			it("generates different idents for different use items", () => {
+				RuleSet.generateIdent(useB).should.not.eql(RuleSet.generateIdent(useA));
+			});
 		});
 	});
 });
