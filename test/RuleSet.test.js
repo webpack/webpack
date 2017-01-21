@@ -416,5 +416,21 @@ describe("RuleSet", function() {
 				RuleSet.generateIdent(useB).should.not.eql(RuleSet.generateIdent(useA));
 			});
 		});
+		describe("given an item with circular reference", () => {
+			let useC;
+			beforeEach(function() {
+				let a = {};
+				let b = {};
+				a.b = b;
+				b.a = a;
+				useC = {
+					a: a,
+					b: b,
+				};
+			});
+			it("handle circular references gracefully", () => {
+				RuleSet.generateIdent(useC).should.be.type("string");
+			});
+		});
 	});
 });
