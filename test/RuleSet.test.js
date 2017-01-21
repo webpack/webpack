@@ -190,7 +190,7 @@ describe("RuleSet", function() {
 				modules: 1
 			}
 		}]);
-		(match(loader, 'style.css')).should.eql(['css?{"modules":1}']);
+		(match(loader, 'style.css')).should.eql(['css?{"modules":1,"ident":"96REMT1/c781rQG9U9d6fQ=="}']);
 	});
 	it('should work with using array loaders with basic object notation', function() {
 		var loader = new RuleSet([{
