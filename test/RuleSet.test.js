@@ -384,6 +384,7 @@ describe("RuleSet", function() {
 		let useA;
 		beforeEach(function() {
 			useA = {
+				test: /some-regex/,
 				loader: "./loader2",
 				options: {
 					f: function() {
@@ -394,26 +395,44 @@ describe("RuleSet", function() {
 		});
 		it("generates an md5-hash based id for a given loader item", () => {
 			RuleSet.generateIdent(useA).should.be.type("string");
-			RuleSet.generateIdent(useA).should.eql("VaITzDUqemZHRi89ZhYxhA==");
+			RuleSet.generateIdent(useA).should.eql("7GgMweKMhCG7otxcesj12g==");
 		});
 		describe("given different use items", () => {
-			let useB;
+			let items;
 			beforeEach(function() {
-				useB = {
-					loader: "./loader2",
-					options: {
-						f: function() {
-							return "not ok";
-						}
-					}
+				const regexA = /some-regex-a/;
+				const regexB = /some-regex-b/;
+				const fnA = () => "a";
+				const fnB = () => "b";
+				const useA = {
+					regexA: regexA,
+					fnA: fnA,
 				};
+				const useB = {
+					regexA: regexB,
+					fnA: fnA,
+				};
+				const useC = {
+					regexA: regexA,
+					fnA: fnB,
+				};
+				const useD = {
+					regexA: regexB,
+					fnA: fnB,
+				};
+				items = [useA, useB, useC, useD];
 			});
 			it("generates always the same ident for the same object given", () => {
-				RuleSet.generateIdent(useA).should.eql(RuleSet.generateIdent(useA));
-				RuleSet.generateIdent(useB).should.eql(RuleSet.generateIdent(useB));
+				items.forEach(item => RuleSet.generateIdent(item).should.eql(RuleSet.generateIdent(item)));
 			});
 			it("generates different idents for different use items", () => {
-				RuleSet.generateIdent(useB).should.not.eql(RuleSet.generateIdent(useA));
+				items.forEach(itemA => {
+					items.forEach(itemB => {
+						if(itemA !== itemB) {
+							RuleSet.generateIdent(itemA).should.not.eql(RuleSet.generateIdent(itemB));
+						}
+					});
+				});
 			});
 		});
 		describe("given an item with circular reference", () => {
