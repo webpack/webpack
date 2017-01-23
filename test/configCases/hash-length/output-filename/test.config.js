@@ -36,6 +36,6 @@ module.exports = {
 			);
 		}
 
-		return './' + filename;
+		return "./" + filename;
 	}
 };
