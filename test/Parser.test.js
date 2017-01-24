@@ -85,6 +85,16 @@ describe("Parser", () => {
 				fgh.sub;
 			}, {}
 		],
+		"var definition": [
+			function() {
+				let abc, cde, fgh;
+				abc("test");
+				cde.abc("test");
+				cde.ddd.abc("test");
+				fgh;
+				fgh.sub;
+			}, {}
+		],
 		"function definition": [
 			function() {
 				function abc() {}
@@ -119,6 +129,14 @@ describe("Parser", () => {
 			}
 		],
 		"renaming with const": [
+			function() {
+				const xyz = abc;
+				xyz("test");
+			}, {
+				abc: ["test"]
+			}
+		],
+		"renaming with var": [
 			function() {
 				const xyz = abc;
 				xyz("test");
