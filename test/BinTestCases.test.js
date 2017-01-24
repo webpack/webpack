@@ -61,46 +61,84 @@ describe("BinTestCases", function() {
 					cwd: path.resolve("./", testDirectory)
 				};
 
+				const async = fs.existsSync(path.join(testDirectory, "async"));
+
 				const env = {
 					stdout: [],
 					stderr: [],
 					error: []
 				};
 
-				describe(testName, function() {
-					before(function(done) {
-						this.timeout(20000);
+				if(async) {
+					describe(testName, function() {
+						it("should run successfully", function(done) {
+							this.timeout(10000);
+							const child = spawn(process.execPath, [cmd].concat(args), opts);
 
-						const child = spawn(process.execPath, [cmd].concat(args), opts);
+							child.on("close", function(code) {
+								env.code = code;
+							});
 
-						child.on("close", function(code) {
-							env.code = code;
-							done();
+							child.on("error", function(error) {
+								env.error.push(error);
+							});
+
+							child.stdout.on("data", (data) => {
+								env.stdout.push(data);
+							});
+
+							child.stderr.on("data", (data) => {
+								env.stderr.push(data);
+							});
+
+							setTimeout(() => {
+								if(env.code) {
+									done(`Watch didn't run ${env.error}`)
+								}
+
+								const stdout = convertToArrayOfLines(env.stdout);
+								const stderr = convertToArrayOfLines(env.stderr);
+								testAssertions(stdout, stderr, done);
+								child.kill()
+							}, 3000); // wait a little to get an output
+						});
+					})
+				} else {
+					describe(testName, function() {
+						before(function(done) {
+							this.timeout(20000);
+
+							const child = spawn(process.execPath, [cmd].concat(args), opts);
+
+							child.on("close", function(code) {
+								env.code = code;
+								done();
+							});
+
+							child.on("error", function(error) {
+								env.error.push(error);
+							});
+
+							child.stdout.on("data", (data) => {
+								env.stdout.push(data);
+							});
+
+							child.stderr.on("data", (data) => {
+								env.stderr.push(data);
+							});
 						});
 
-						child.on("error", function(error) {
-							env.error.push(error);
+						it("should not cause any errors", function() {
+							should(env.error).be.empty();
 						});
 
-						child.stdout.on("data", (data) => {
-							env.stdout.push(data);
-						});
-
-						child.stderr.on("data", (data) => {
-							env.stderr.push(data);
+						it("should run successfully", function() {
+							const stdout = convertToArrayOfLines(env.stdout);
+							const stderr = convertToArrayOfLines(env.stderr);
+							testAssertions(env.code, stdout, stderr);
 						});
 					});
-
-					it("should not cause any errors", function() {
-						should(env.error).be.empty();
-					});
-
-					it("should run successfully", function() {
-						const stdout = convertToArrayOfLines(env.stdout);
-						const stderr = convertToArrayOfLines(env.stderr);
-						testAssertions(env.code, stdout, stderr);
-					});
-				});
+				}
 			});
 		});
 	});

@@ -1,15 +1,16 @@
 "use strict";
 
 module.exports = function testAssertions(code, stdout, stderr) {
-	code.should.be.oneOf(0, 1);
+	code.should.be.eql(0);
 
 	stdout.should.be.ok();
-	stdout[3].should.containEql("Hash: ");
-	stdout[4].should.containEql("Version: ");
-	stdout[5].should.containEql("Time: ");
-	stdout[7].should.containEql("null.js");
-	stdout[8].should.containEql("./index.js");
-	stdout[8].should.containEql("[built]");
+	stdout[0].should.containEql("Hash: ");
+	stdout[1].should.containEql("Version: ");
+	stdout[2].should.containEql("Time: ");
+	stdout[4].should.containEql("\u001b[1m\u001b[32mnull.js\u001b[39m\u001b[22m");
+	stdout[5].should.not.containEql("./index.js");
+	stdout[5].should.not.containEql("[built]");
+	stdout[5].should.containEql("1 hidden module");
 
 	stderr.should.be.empty();
-}
+};

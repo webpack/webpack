@@ -10,4 +10,4 @@ module.exports = {
 		library: ["MyLibrary", "[name]"],
 		libraryTarget: "umd"
 	}
-}
+};

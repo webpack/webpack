@@ -11,9 +11,9 @@ module.exports = {
 							resourceQuery: data.resourceQuery,
 							issuer: data.issuer.replace(/^.*[\\\/]/g, ""),
 						}
-					}
+					};
 				}
 			}
 		]
 	}
-}
+};
