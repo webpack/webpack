@@ -154,12 +154,6 @@ module.exports = function(yargs) {
 				describe: "Watch the filesystem for changes",
 				group: BASIC_GROUP
 			},
-			"save": {
-				type: "boolean",
-				alias: "s",
-				describe: "Rebuilds on save regardless of changes in watch mode",
-				group: BASIC_GROUP
-			},
 			"watch-stdin": {
 				type: "boolean",
 				alias: "stdin",

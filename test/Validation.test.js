@@ -1,9 +1,11 @@
-var should = require("should");
-var webpack = require("../lib/webpack");
-var WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
+"use strict";
+
+const should = require("should");
+const webpack = require("../lib/webpack");
+const WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
 
 describe("Validation", function() {
-	var testCases = [{
+	const testCases = [{
 		name: "undefined configuration",
 		config: undefined,
 		message: [

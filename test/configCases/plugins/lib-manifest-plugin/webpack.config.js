@@ -1,5 +1,4 @@
 var path = require("path");
-var webpack = require("../../../../");
 var LibManifestPlugin = require("../../../../lib/LibManifestPlugin");
 
 module.exports = {
@@ -8,11 +7,11 @@ module.exports = {
 	},
 	plugins: [
 		new LibManifestPlugin({
-			path: path.resolve(__dirname, '../../../js/config/plugins/lib-manifest-plugin/[name]-manifest.json'),
+			path: path.resolve(__dirname, "../../../js/config/plugins/lib-manifest-plugin/[name]-manifest.json"),
 			name: "[name]_[hash]"
 		})
 	],
 	node: {
 		__dirname: false
 	}
-}
+};

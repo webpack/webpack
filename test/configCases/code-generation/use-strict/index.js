@@ -16,11 +16,11 @@ it("should include only one use strict per module", function() {
 	}
 
 	matches.should.be.eql([
-		"Object.defineProperty(exports, \"__esModule\", { value: true });",
-		"Object.defineProperty(exports, \"__esModule\", { value: true });",
-		"Object.defineProperty(exports, \"__esModule\", { value: true });",
+		"Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });",
+		"Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });",
+		"Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });",
 		"/* unused harmony default export */ var _unused_webpack_default_export = \"a\";",
-		"Object.defineProperty(exports, \"__esModule\", { value: true });",
+		"Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });",
 		"it(\"should include only one use strict per module\", function() {"
 	]);
 });
