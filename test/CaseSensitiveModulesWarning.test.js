@@ -1,8 +1,10 @@
-var should = require("should");
-var CaseSensitiveModulesWarning = require("../lib/CaseSensitiveModulesWarning");
+"use strict";
 
-var createModule = function(identifier, numberOfReasons) {
-	var reasons = new Array(numberOfReasons || 0).fill(null).map(function(value, index) {
+const should = require("should");
+const CaseSensitiveModulesWarning = require("../lib/CaseSensitiveModulesWarning");
+
+const createModule = function(identifier, numberOfReasons) {
+	const reasons = new Array(numberOfReasons || 0).fill(null).map((value, index) => {
 		return {
 			module: createModule(`${identifier}-reason-${index}`)
 		};
@@ -14,23 +16,22 @@ var createModule = function(identifier, numberOfReasons) {
 	};
 };
 
-describe("CaseSensitiveModulesWarning", function() {
-	var myCaseSensitiveModulesWarning, modules;
+describe("CaseSensitiveModulesWarning", () => {
+	let myCaseSensitiveModulesWarning;
+	let modules;
 
-	beforeEach(function() {
+	beforeEach(() => {
 		modules = [
-			createModule('FOOBAR'),
-			createModule('FooBar', 1),
-			createModule('foobar', 2)
+			createModule("FOOBAR"),
+			createModule("FooBar", 1),
+			createModule("foobar", 2)
 		];
 		myCaseSensitiveModulesWarning = new CaseSensitiveModulesWarning(modules);
 	});
 
-	it('has the a name', function() {
-		myCaseSensitiveModulesWarning.name.should.be.exactly('CaseSensitiveModulesWarning');
-	});
+	it("has the a name", () => myCaseSensitiveModulesWarning.name.should.be.exactly("CaseSensitiveModulesWarning"));
 
-	it('has the a message', function() {
+	it("has the a message", () => {
 		myCaseSensitiveModulesWarning.message.should.be.exactly(`
 There are multiple modules with names that only differ in casing.
 This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
@@ -45,11 +46,9 @@ Use equal casing. Compare these module identifiers:
 `.trim());
 	});
 
-	it('has the an origin', function() {
-		myCaseSensitiveModulesWarning.origin.should.be.exactly(modules[0]);
-	});
+	it("has the an origin", () =>
+		myCaseSensitiveModulesWarning.origin.should.be.exactly(modules[0]));
 
-	it('has the a module', function() {
-		myCaseSensitiveModulesWarning.module.should.be.exactly(modules[0]);
-	});
+	it('has the a module', () =>
+		myCaseSensitiveModulesWarning.module.should.be.exactly(modules[0]));
 });

@@ -2,10 +2,10 @@ var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
 	entry: {
-		pageA: "./page?A",
-		pageB: "./page?B",
-		pageC: "./page?C",
-		pageD: "./page?D"
+		pageA: "./pageA",
+		pageB: "./pageB",
+		pageC: "./pageC",
+		pageD: "./pageD"
 	},
 	output: {
 		path: path.join(__dirname, "js"),
@@ -13,7 +13,7 @@ module.exports = {
 		chunkFilename: "[id].chunk.js"
 	},
 	plugins: [
-		// check for common modules in children of pageA and move them to the parent
+		//check for common modules in children of pageA and move them to the parent
 		new CommonsChunkPlugin({
 			name: "pageA",
 			children: true
@@ -32,8 +32,8 @@ module.exports = {
 			children: true,
 			minChunks: function(module, count) {
 				// move only module "b"
-				return /b\.js$/.test(module.identifier());
+				return !/b\.js$/.test(module.identifier());
 			}
 		})
 	]
-}
+};

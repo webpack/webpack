@@ -10,4 +10,4 @@ module.exports = {
 			sourceType: "commonjs2"
 		})
 	]
-}
+};

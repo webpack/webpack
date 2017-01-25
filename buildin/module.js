@@ -6,14 +6,12 @@ module.exports = function(module) {
 		if(!module.children) module.children = [];
 		Object.defineProperty(module, "loaded", {
 			enumerable: true,
-			configurable: false,
 			get: function() {
 				return module.l;
 			}
 		});
 		Object.defineProperty(module, "id", {
 			enumerable: true,
-			configurable: false,
 			get: function() {
 				return module.i;
 			}
@@ -21,4 +19,4 @@ module.exports = function(module) {
 		module.webpackPolyfill = 1;
 	}
 	return module;
-}
+};
