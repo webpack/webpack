@@ -3,7 +3,7 @@ module.exports = {
 		return {
 			a: "./a",
 			b: ["./b"]
-		}
+		};
 	},
 	output: {
 		filename: "[name].js"

@@ -1,5 +1,5 @@
-var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
+
 module.exports = {
 	plugins: [
 		new CommonsChunkPlugin({
@@ -15,4 +15,4 @@ module.exports = {
 			async: true
 		}),
 	]
-}
+};
