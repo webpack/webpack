@@ -2,12 +2,19 @@
 
 const should = require("should");
 const compareLocations = require("../lib/compareLocations");
-const createLocation = function(overides) {
+const createPosition = function(overides) {
 	return Object.assign({
 		line: 10,
-		column: 5,
-		index: 3
+		column: 5
 	}, overides);
+};
+
+const createLocation = function(start, end, index) {
+	return {
+		start: createPosition(start),
+		end: createPosition(end),
+		index: index || 3
+	};
 };
 
 describe("compareLocations", () => {
@@ -35,8 +42,9 @@ describe("compareLocations", () => {
 				});
 			});
 
-			it("returns -1 when the first location line number comes before the second location line number", () =>
-				compareLocations(a, b).should.be.exactly(-1));
+			it("returns -1 when the first location line number comes before the second location line number", () => {
+				return compareLocations(a, b).should.be.exactly(-1)
+			});
 
 			it("returns 1 when the first location line number comes after the second location line number", () =>
 				compareLocations(b, a).should.be.exactly(1));
@@ -61,12 +69,8 @@ describe("compareLocations", () => {
 
 		describe("location index number", () => {
 			beforeEach(() => {
-				a = createLocation({
-					index: 10
-				});
-				b = createLocation({
-					index: 20
-				});
+				a = createLocation(null, null, 10);
+				b = createLocation(null, null, 20);
 			});
 
 			it("returns -1 when the first location index number comes before the second location index number", () =>
@@ -85,27 +89,6 @@ describe("compareLocations", () => {
 			it("returns 0", () => {
 				compareLocations(a, b).should.be.exactly(0);
 			});
-		});
-
-		describe("start location set", () => {
-			beforeEach(() => {
-				a = {
-					start: createLocation({
-						line: 10
-					})
-				};
-				b = {
-					start: createLocation({
-						line: 20
-					})
-				};
-			});
-
-			it("returns -1 when the first location line number comes before the second location line number", () =>
-				compareLocations(a, b).should.be.exactly(-1));
-
-			it("returns 1 when the first location line number comes after the second location line number", () =>
-				compareLocations(b, a).should.be.exactly(1));
 		});
 	});
 
