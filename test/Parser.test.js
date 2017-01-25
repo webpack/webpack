@@ -87,7 +87,7 @@ describe("Parser", () => {
 		],
 		"var definition": [
 			function() {
-				let abc, cde, fgh;
+				var abc, cde, fgh;
 				abc("test");
 				cde.abc("test");
 				cde.ddd.abc("test");
@@ -138,7 +138,7 @@ describe("Parser", () => {
 		],
 		"renaming with var": [
 			function() {
-				const xyz = abc;
+				var xyz = abc;
 				xyz("test");
 			}, {
 				abc: ["test"]
