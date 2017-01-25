@@ -33,6 +33,7 @@
     "codecov.io": "^0.1.2",
     "coffee-loader": "~0.7.1",
     "coffee-script": "^1.10.0",
+    "conventional-changelog-cli": "^1.2.0",
     "coveralls": "^2.11.2",
     "css-loader": "~0.25.0",
     "es6-promise-polyfill": "^1.1.1",
@@ -101,6 +102,7 @@
     "benchmark": "mocha test/*.benchmark.js --harmony -R spec",
     "cover": "node --harmony ./node_modules/istanbul/lib/cli.js cover -x '**/*.runtime.js' node_modules/mocha/bin/_mocha -- test/*.test.js",
     "cover:min": "node --harmony ./node_modules/.bin/istanbul cover -x '**/*.runtime.js' --report lcovonly node_modules/mocha/bin/_mocha -- test/*.test.js",
-    "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
+    "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish",
+    "changelog:generate": "conventional-changelog -p eslint -i CHANGELOG.md -s"
   }
 }
