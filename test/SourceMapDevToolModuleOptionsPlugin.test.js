@@ -1,51 +1,42 @@
-var should = require("should");
-var SourceMapDevToolModuleOptionsPlugin = require("../lib/SourceMapDevToolModuleOptionsPlugin");
-var applyPluginWithOptions = require('./helpers/applyPluginWithOptions');
+"use strict";
 
-describe("SourceMapDevToolModuleOptionsPlugin", function() {
-	it("has apply function", function() {
-		(new SourceMapDevToolModuleOptionsPlugin()).apply.should.be.a.Function();
-	});
+const should = require("should");
+const SourceMapDevToolModuleOptionsPlugin = require("../lib/SourceMapDevToolModuleOptionsPlugin");
+const applyPluginWithOptions = require('./helpers/applyPluginWithOptions');
 
-	describe("when applied", function() {
-		var eventBindings;
+describe("SourceMapDevToolModuleOptionsPlugin", () => {
+	it("has apply function", () => (new SourceMapDevToolModuleOptionsPlugin()).apply.should.be.a.Function());
 
-		beforeEach(function() {
-			eventBindings = undefined;
-		});
+	describe("when applied", () => {
+		let eventBindings;
 
-		describe("with module false and line-to-line false", function() {
-			beforeEach(function() {
+		beforeEach(() => eventBindings = undefined);
+
+		describe("with module false and line-to-line false", () => {
+			beforeEach(() =>
 				eventBindings = applyPluginWithOptions(SourceMapDevToolModuleOptionsPlugin, {
 					module: false,
 					lineToLine: false
-				});
-			});
+				}));
 
-			it("does not bind any event handlers", function() {
-				eventBindings.length.should.be.exactly(0);
-			});
+			it("does not bind any event handlers", () => eventBindings.length.should.be.exactly(0));
 		});
 
-		describe("with module true", function() {
-			beforeEach(function() {
+		describe("with module true", () => {
+			beforeEach(() =>
 				eventBindings = applyPluginWithOptions(SourceMapDevToolModuleOptionsPlugin, {
 					module: true,
 					lineToLine: false
-				});
-			});
+				}));
 
-			it("binds one event handler", function() {
-				eventBindings.length.should.be.exactly(1);
-			});
+			it("binds one event handler", () => eventBindings.length.should.be.exactly(1));
 
-			describe("event handler", function() {
-				it("binds to build-module event", function() {
-					eventBindings[0].name.should.be.exactly("build-module");
-				});
+			describe("event handler", () => {
+				it("binds to build-module event", () =>
+					eventBindings[0].name.should.be.exactly("build-module"));
 
-				it("sets source map flag", function() {
-					var module = {};
+				it("sets source map flag", () => {
+					const module = {};
 					eventBindings[0].handler(module);
 					module.should.deepEqual({
 						useSourceMap: true
@@ -54,25 +45,20 @@ describe("SourceMapDevToolModuleOptionsPlugin", function() {
 			});
 		});
 
-		describe("with line-to-line true", function() {
-			beforeEach(function() {
+		describe("with line-to-line true", () => {
+			beforeEach(() =>
 				eventBindings = applyPluginWithOptions(SourceMapDevToolModuleOptionsPlugin, {
 					module: false,
 					lineToLine: true
-				});
-			});
+				}));
 
-			it("binds one event handler", function() {
-				eventBindings.length.should.be.exactly(1);
-			});
+			it("binds one event handler", () => eventBindings.length.should.be.exactly(1));
 
-			describe("event handler", function() {
-				it("binds to build-module event", function() {
-					eventBindings[0].name.should.be.exactly("build-module");
-				});
+			describe("event handler", () => {
+				it("binds to build-module event", () => eventBindings[0].name.should.be.exactly("build-module"));
 
-				it("sets line-to-line flag", function() {
-					var module = {};
+				it("sets line-to-line flag", () => {
+					const module = {};
 					eventBindings[0].handler(module);
 					module.should.deepEqual({
 						lineToLine: true
@@ -81,34 +67,29 @@ describe("SourceMapDevToolModuleOptionsPlugin", function() {
 			});
 		});
 
-		describe("with line-to-line object", function() {
-			beforeEach(function() {
+		describe("with line-to-line object", () => {
+			beforeEach(() =>
 				eventBindings = applyPluginWithOptions(SourceMapDevToolModuleOptionsPlugin, {
 					module: false,
 					lineToLine: {}
-				});
-			});
+				}));
 
-			it("binds one event handler", function() {
-				eventBindings.length.should.be.exactly(1);
-			});
+			it("binds one event handler", () => eventBindings.length.should.be.exactly(1));
 
-			describe("event handler", function() {
-				it("binds to build-module event", function() {
-					eventBindings[0].name.should.be.exactly("build-module");
-				});
+			describe("event handler", () => {
+				it("binds to build-module event", () => eventBindings[0].name.should.be.exactly("build-module"));
 
-				describe("when module has no resource", function() {
-					it("makes no changes", function() {
-						var module = {};
+				describe("when module has no resource", () => {
+					it("makes no changes", () => {
+						const module = {};
 						eventBindings[0].handler(module);
 						module.should.deepEqual({});
 					});
 				});
 
-				describe("when module has a resource", function() {
-					it("sets line-to-line flag", function() {
-						var module = {
+				describe("when module has a resource", () => {
+					it("sets line-to-line flag", () => {
+						const module = {
 							resource: "foo"
 						};
 						eventBindings[0].handler(module);
@@ -119,9 +100,9 @@ describe("SourceMapDevToolModuleOptionsPlugin", function() {
 					});
 				});
 
-				describe("when module has a resource with query", function() {
-					it("sets line-to-line flag", function() {
-						var module = {
+				describe("when module has a resource with query", () => {
+					it("sets line-to-line flag", () => {
+						const module = {
 							resource: "foo?bar"
 						};
 						eventBindings[0].handler(module);
