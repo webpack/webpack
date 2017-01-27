@@ -4,6 +4,7 @@ module.exports = {
 			"some-loader": "any-loader?foo=someMessage"
 		}
 	},
+	bail: true,
 	module: {
 		rules: [{
 			test: /a\.js$/,

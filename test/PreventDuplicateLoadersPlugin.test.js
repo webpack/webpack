@@ -1,14 +1,14 @@
 "use strict";
 
 require("should");
-// require("sinon");
+
 const sinon = require("sinon");
 const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
 const PluginEnvironment = require("./helpers/PluginEnvironment");
 
-const BeforeRunLoadersPlugin = require("../lib/BeforeRunLoadersPlugin");
+const PreventDuplicateLoadersPlugin = require("../lib/PreventDuplicateLoadersPlugin");
 
-describe("BeforeRunLoadersPlugin", () => {
+describe("PreventDuplicateLoadersPlugin", () => {
 	var env;
 
 	beforeEach(() => {
@@ -16,12 +16,12 @@ describe("BeforeRunLoadersPlugin", () => {
 	});
 
 	it("has apply function", () => {
-		(new BeforeRunLoadersPlugin()).apply.should.be.a.Function();
+		(new PreventDuplicateLoadersPlugin()).apply.should.be.a.Function();
 	});
 
 	describe("when applied", () => {
 		beforeEach(() => {
-			env.eventBindings = applyPluginWithOptions(BeforeRunLoadersPlugin);
+			env.eventBindings = applyPluginWithOptions(PreventDuplicateLoadersPlugin);
 		});
 
 		it("binds one event handler", () => {
@@ -49,6 +49,7 @@ describe("BeforeRunLoadersPlugin", () => {
 			describe("normal-module-loader", () => {
 				const loaderContextMock = {
 					emitError: sinon.spy(),
+					emitWarning: sinon.spy(),
 				};
 				const moduleWithoutErrors = {
 					loaders: [{
@@ -68,9 +69,27 @@ describe("BeforeRunLoadersPlugin", () => {
 				};
 				const moduleWithErrorsOnLinux = {
 					loaders: [{
-						loader: "/Folder1/Folder2/Folder3/windows-loader/index.js",
+						loader: "/Folder1/Folder2/Folder3/linux-loader/index.js",
 					}, {
-						loader: "/Folder1/Folder2/Folder3/windows-loader/index.js",
+						loader: "/Folder1/Folder2/Folder3/linux-loader/index.js",
+					}],
+				};
+				const moduleWithDifferentOptions = {
+					loaders: [{
+						loader: "/Folder1/linuxloader.js",
+						options: { foo: "someValue" },
+					}, {
+						loader: "/Folder1/linuxloader.js",
+						options: "bar=someValue",
+					}],
+				};
+				const moduleWithSameOptions = {
+					loaders: [{
+						loader: "/Folder1/linuxloader.js",
+						options: { foo: "someValue" },
+					}, {
+						loader: "/Folder1/linuxloader.js",
+						options: "foo=someValue",
 					}],
 				};
 
@@ -84,18 +103,28 @@ describe("BeforeRunLoadersPlugin", () => {
 					env.compilationEventBinding.name.should.be.exactly("normal-module-loader");
 				});
 
-				it("doesn't adds errors when are unique loaders", () => {
+				it("doesn't adds an error when loaders are unique", () => {
 					env.compilationEventBinding.handler(loaderContextMock, moduleWithoutErrors);
 					loaderContextMock.emitError.callCount.should.be.exactly(0);
 				});
 
-				it("adds errors when are repeated loaders (on Windows)", () => {
+				it("adds an error when are repeated loaders (on Windows)", () => {
 					env.compilationEventBinding.handler(loaderContextMock, moduleWithErrorsOnWindows);
 					loaderContextMock.emitError.callCount.should.be.exactly(1);
 				});
 
-				it("adds errors when are repeated loaders (on Linux)", () => {
+				it("adds an error when are repeated loaders (on Linux)", () => {
 					env.compilationEventBinding.handler(loaderContextMock, moduleWithErrorsOnLinux);
+					loaderContextMock.emitError.callCount.should.be.exactly(1);
+				});
+
+				it("adds a warning when they have different options?", () => {
+					env.compilationEventBinding.handler(loaderContextMock, moduleWithDifferentOptions);
+					loaderContextMock.emitWarning.callCount.should.be.exactly(1);
+				});
+
+				it("adds an error when they have the same options", () => {
+					env.compilationEventBinding.handler(loaderContextMock, moduleWithSameOptions);
 					loaderContextMock.emitError.callCount.should.be.exactly(1);
 				});
 			});

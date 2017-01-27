@@ -1,6 +1,6 @@
-var should = require("should");
+require("should");
 var SourceMapDevToolModuleOptionsPlugin = require("../lib/SourceMapDevToolModuleOptionsPlugin");
-var applyPluginWithOptions = require('./helpers/applyPluginWithOptions');
+var applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
 
 describe("SourceMapDevToolModuleOptionsPlugin", function() {
 	it("has apply function", function() {
