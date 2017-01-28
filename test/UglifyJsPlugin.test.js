@@ -1,14 +1,14 @@
 "use strict";
 const should = require("should");
 const sinon = require("sinon");
-const UglifyJSPlugin = require("../lib/optimize/UglifyJSPlugin");
+const UglifyJsPlugin = require("../lib/optimize/UglifyJsPlugin");
 const PluginEnvironment = require("./helpers/PluginEnvironment");
 const SourceMapSource = require("webpack-sources").SourceMapSource;
 const RawSource = require("webpack-sources").RawSource;
 
-describe("UglifyJSPlugin", function() {
+describe("UglifyJsPlugin", function() {
 	it("has apply function", function() {
-		(new UglifyJSPlugin()).apply.should.be.a.Function();
+		(new UglifyJsPlugin()).apply.should.be.a.Function();
 	});
 
 	describe("when applied with no options", function() {
@@ -20,7 +20,7 @@ describe("UglifyJSPlugin", function() {
 			const compilerEnv = pluginEnvironment.getEnvironmentStub();
 			compilerEnv.context = "";
 
-			const plugin = new UglifyJSPlugin();
+			const plugin = new UglifyJsPlugin();
 			plugin.apply(compilerEnv);
 			eventBindings = pluginEnvironment.getEventBindings();
 		});
@@ -176,7 +176,7 @@ describe("UglifyJSPlugin", function() {
 			const compilerEnv = pluginEnvironment.getEnvironmentStub();
 			compilerEnv.context = "";
 
-			const plugin = new UglifyJSPlugin({
+			const plugin = new UglifyJsPlugin({
 				output: {
 					"invalid-option": true
 				}
@@ -216,7 +216,7 @@ describe("UglifyJSPlugin", function() {
 			const compilerEnv = pluginEnvironment.getEnvironmentStub();
 			compilerEnv.context = "";
 
-			const plugin = new UglifyJSPlugin({
+			const plugin = new UglifyJsPlugin({
 				sourceMap: true,
 				compress: {
 					warnings: true,
