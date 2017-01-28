@@ -1,14 +1,16 @@
+"use strict";
+
 /*globals describe it */
-var should = require("should");
-var path = require("path");
+const should = require("should");
+const path = require("path");
 
-var webpack = require("../lib/webpack");
+const webpack = require("../lib/webpack");
 
-var base = path.join(__dirname, "fixtures", "errors");
+const base = path.join(__dirname, "fixtures", "errors");
 
-describe("Errors", function() {
+describe("Errors", () => {
 	function customOutputFilesystem(c) {
-		var files = {};
+		const files = {};
 		c.outputFileSystem = {
 			join: path.join.bind(path),
 			mkdirp: function(path, callback) {
@@ -24,9 +26,9 @@ describe("Errors", function() {
 
 	function getErrors(options, callback) {
 		options.context = base;
-		var c = webpack(options);
+		const c = webpack(options);
 		customOutputFilesystem(c);
-		c.run(function(err, stats) {
+		c.run((err, stats) => {
 			if(err) throw err;
 			should.strictEqual(typeof stats, "object");
 			stats = stats.toJson({
@@ -40,14 +42,14 @@ describe("Errors", function() {
 			callback(stats.errors, stats.warnings);
 		});
 	}
-	it("should throw an error if file doesn't exist", function(done) {
+	it("should throw an error if file doesn't exist", (done) => {
 		getErrors({
 			entry: "./missingFile"
-		}, function(errors, warnings) {
+		}, (errors, warnings) => {
 			errors.length.should.be.eql(2);
 			warnings.length.should.be.eql(0);
 			errors.sort();
-			var lines = errors[0].split("\n");
+			let lines = errors[0].split("\n");
 			lines[0].should.match(/missingFile.js/);
 			lines[1].should.match(/^Module not found/);
 			lines[1].should.match(/\.\/dir\/missing2/);
@@ -60,25 +62,25 @@ describe("Errors", function() {
 			done();
 		});
 	});
-	it("should report require.extensions as unsupported", function(done) {
+	it("should report require.extensions as unsupported", (done) => {
 		getErrors({
 			entry: "./require.extensions"
-		}, function(errors, warnings) {
+		}, (errors, warnings) => {
 			errors.length.should.be.eql(0);
 			warnings.length.should.be.eql(1);
-			var lines = warnings[0].split("\n");
+			const lines = warnings[0].split("\n");
 			lines[0].should.match(/require.extensions\.js/);
 			lines[1].should.match(/require.extensions is not supported by webpack/);
 			done();
 		});
 	});
-	it("should warn about case-sensitive module names", function(done) {
+	it("should warn about case-sensitive module names", (done) => {
 		getErrors({
 			entry: "./case-sensitive"
-		}, function(errors, warnings) {
+		}, (errors, warnings) => {
 			if(errors.length === 0) {
 				warnings.length.should.be.eql(1);
-				var lines = warnings[0].split("\n");
+				const lines = warnings[0].split("\n");
 				lines[4].should.match(/FILE\.js/);
 				lines[5].should.match(/Used by/);
 				lines[6].should.match(/case-sensitive/);
@@ -92,15 +94,15 @@ describe("Errors", function() {
 			done();
 		});
 	});
-	it("should warn about NoErrorsPlugin being deprecated in favor of NoEmitOnErrorsPlugin", function(done) {
+	it("should warn about NoErrorsPlugin being deprecated in favor of NoEmitOnErrorsPlugin", (done) => {
 		getErrors({
 			entry: "./no-errors-deprecate",
 			plugins: [
 				new webpack.NoErrorsPlugin()
 			]
-		}, function(errors, warnings) {
+		}, (errors, warnings) => {
 			warnings.length.should.be.eql(1);
-			var lines = warnings[0].split("\n");
+			const lines = warnings[0].split("\n");
 			lines[0].should.match(/webpack/);
 			lines[0].should.match(/NoErrorsPlugin/);
 			lines[0].should.match(/deprecated/);
@@ -109,29 +111,29 @@ describe("Errors", function() {
 			done();
 		});
 	});
-	it("should not warn if the NoEmitOnErrorsPlugin is used over the NoErrorsPlugin", function(done) {
+	it("should not warn if the NoEmitOnErrorsPlugin is used over the NoErrorsPlugin", (done) => {
 		getErrors({
 			entry: "./no-errors-deprecate",
 			plugins: [
 				new webpack.NoEmitOnErrorsPlugin()
 			]
-		}, function(errors, warnings) {
+		}, (errors, warnings) => {
 			errors.length.should.be.eql(0);
 			warnings.length.should.be.eql(0);
 			done();
 		});
 	});
-	it("should not not emit if NoEmitOnErrorsPlugin is used and there is an error", function(done) {
+	it("should not not emit if NoEmitOnErrorsPlugin is used and there is an error", (done) => {
 		getErrors({
 			entry: "./missingFile",
 			plugins: [
 				new webpack.NoEmitOnErrorsPlugin()
 			]
-		}, function(errors, warnings) {
+		}, (errors, warnings) => {
 			errors.length.should.be.eql(2);
 			warnings.length.should.be.eql(0);
 			errors.sort();
-			var lines = errors[0].split("\n");
+			let lines = errors[0].split("\n");
 			lines[0].should.match(/missingFile.js/);
 			lines[1].should.match(/^Module not found/);
 			lines[1].should.match(/\.\/dir\/missing2/);
@@ -144,7 +146,7 @@ describe("Errors", function() {
 			done();
 		});
 	});
-	it("should throw an error when using incorrect CommonsChunkPlugin configuration", function(done) {
+	it("should throw an error when using incorrect CommonsChunkPlugin configuration", (done) => {
 		getErrors({
 			entry: {
 				a: "./entry-point",
@@ -166,16 +168,16 @@ describe("Errors", function() {
 					minChunks: Infinity
 				})
 			]
-		}, function(errors, warnings) {
+		}, (errors, warnings) => {
 			errors.length.should.be.eql(1);
 			warnings.length.should.be.eql(0);
-			var lines = errors[0].split("\n");
+			const lines = errors[0].split("\n");
 			lines[0].should.match(/CommonsChunkPlugin/);
 			lines[0].should.match(/non-entry/);
 			done();
 		});
 	});
-	it("should throw an error when trying to use [chunkhash] when it's invalid", function(done) {
+	it("should throw an error when trying to use [chunkhash] when it's invalid", (done) => {
 		getErrors({
 			entry: {
 				a: "./entry-point",
@@ -188,11 +190,11 @@ describe("Errors", function() {
 			plugins: [
 				new webpack.HotModuleReplacementPlugin()
 			]
-		}, function(errors, warnings) {
+		}, (errors, warnings) => {
 			errors.length.should.be.eql(3);
 			warnings.length.should.be.eql(0);
-			errors.forEach(function(error) {
-				var lines = error.split("\n");
+			errors.forEach((error) => {
+				const lines = error.split("\n");
 				lines[0].should.match(/chunk (a|b|c)/);
 				lines[2].should.match(/\[chunkhash\].js/);
 				lines[2].should.match(/use \[hash\] instead/);
