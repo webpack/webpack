@@ -224,7 +224,16 @@ describe("UglifyJsPlugin", function() {
 				},
 				mangle: false,
 				beautify: true,
-				comments: false
+				comments: false,
+				extractComments: {
+					condition: 'should be extracted',
+					file: function(file) {
+						return file.replace(/(\.\w+)$/, '.license$1');
+					},
+					banner: function(licenseFile) {
+						return 'License information can be found in ' + licenseFile;
+					}
+				}
 			});
 			plugin.apply(compilerEnv);
 			eventBindings = pluginEnvironment.getEventBindings();
@@ -304,6 +313,19 @@ describe("UglifyJsPlugin", function() {
 									}
 								};
 							},
+						},
+						"test4.js": {
+							source: function() {
+								return "/*! this comment should be extracted */ function foo(longVariableName) { /* this will not be extracted */ longVariableName = 1; } // another comment that should be extracted to a separate file\n function foo2(bar) { return bar; }";
+							},
+							map: function() {
+								return {
+									version: 3,
+									sources: ["test.js"],
+									names: ["foo", "longVariableName"],
+									mappings: "AAAA,QAASA,KAAIC,kBACTA,iBAAmB"
+								};
+							}
 						},
 					};
 					compilation.errors = [];
@@ -522,6 +544,120 @@ describe("UglifyJsPlugin", function() {
 									compilation.warnings.length.should.be.exactly(0);
 								});
 							});
+						});
+					});
+
+					it("extracts license information to separate file", function() {
+						compilationEventBinding.handler([{
+							files: ["test4.js"]
+						}], function() {
+							compilation.errors.length.should.be.exactly(0);
+							compilation.assets["test4.license.js"]._value.should.containEql("/*! this comment should be extracted */");
+							compilation.assets["test4.license.js"]._value.should.containEql("// another comment that should be extracted to a separate file");
+							compilation.assets["test4.license.js"]._value.should.not.containEql("/* this will not be extracted */");
+						});
+					});
+				});
+			});
+		});
+	});
+
+	describe("when applied with extract option set to a single file", function() {
+		let eventBindings;
+		let eventBinding;
+
+		beforeEach(function() {
+			const pluginEnvironment = new PluginEnvironment();
+			const compilerEnv = pluginEnvironment.getEnvironmentStub();
+			compilerEnv.context = "";
+
+			const plugin = new UglifyJsPlugin({
+				comments: "all",
+				extractComments: {
+					condition: /.*/,
+					file: "extracted-comments.js"
+				}
+			});
+			plugin.apply(compilerEnv);
+			eventBindings = pluginEnvironment.getEventBindings();
+		});
+
+		it("binds one event handler", function() {
+			eventBindings.length.should.be.exactly(1);
+		});
+
+		describe("compilation handler", function() {
+			beforeEach(function() {
+				eventBinding = eventBindings[0];
+			});
+
+			it("binds to compilation event", function() {
+				eventBinding.name.should.be.exactly("compilation");
+			});
+
+			describe("when called", function() {
+				let chunkPluginEnvironment;
+				let compilationEventBindings;
+				let compilationEventBinding;
+				let compilation;
+
+				beforeEach(function() {
+					chunkPluginEnvironment = new PluginEnvironment();
+					compilation = chunkPluginEnvironment.getEnvironmentStub();
+					compilation.assets = {
+						"test.js": {
+							source: function() {
+								return "/* This is a comment from test.js */ function foo(bar) { return bar; }";
+							}
+						},
+						"test2.js": {
+							source: function() {
+								return "// This is a comment from test2.js\nfunction foo2(bar) { return bar; }";
+							}
+						},
+						"test3.js": {
+							source: function() {
+								return "/* This is a comment from test3.js */ function foo3(bar) { return bar; }\n// This is another comment from test3.js\nfunction foobar3(baz) { return baz; }";
+							}
+						},
+					};
+					compilation.errors = [];
+					compilation.warnings = [];
+
+					eventBinding.handler(compilation);
+					compilationEventBindings = chunkPluginEnvironment.getEventBindings();
+				});
+
+				it("binds one event handler", function() {
+					compilationEventBindings.length.should.be.exactly(1);
+				});
+
+				describe("optimize-chunk-assets handler", function() {
+					beforeEach(function() {
+						compilationEventBinding = compilationEventBindings[0];
+					});
+
+					it("preserves comments", function() {
+						compilationEventBinding.handler([{
+							files: ["test.js", "test2.js", "test3.js"]
+						}], function() {
+							compilation.assets["test.js"].source().should.containEql("/*");
+							compilation.assets["test2.js"].source().should.containEql("//");
+							compilation.assets["test3.js"].source().should.containEql("/*");
+							compilation.assets["test3.js"].source().should.containEql("//");
+						});
+					});
+
+					it("extracts comments to specified file", function() {
+						compilationEventBinding.handler([{
+							files: ["test.js", "test2.js", "test3.js"]
+						}], function() {
+							compilation.errors.length.should.be.exactly(0);
+							compilation.assets["extracted-comments.js"].source().should.containEql("/* This is a comment from test.js */");
+							compilation.assets["extracted-comments.js"].source().should.containEql("// This is a comment from test2.js");
+							compilation.assets["extracted-comments.js"].source().should.containEql("/* This is a comment from test3.js */");
+							compilation.assets["extracted-comments.js"].source().should.containEql("// This is another comment from test3.js");
+							compilation.assets["extracted-comments.js"].source().should.not.containEql("function");
 						});
 					});
 				});
