@@ -266,7 +266,7 @@ function processOptions(options) {
 		});
 
 		if(!outputOptions.exclude)
-			outputOptions.exclude = ["node_modules", "bower_components", "jam", "components"];
+			outputOptions.exclude = ["node_modules", "bower_components", "components"];
 
 		if(argv["display-modules"]) {
 			outputOptions.maxModules = Infinity;
