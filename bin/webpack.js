@@ -19,8 +19,6 @@ var yargs = require("yargs")
 		"Usage without config file: webpack <entry> [<entry>] <output>\n" +
 		"Usage with config file: webpack");
 
-require("./config-yargs")(yargs);
-
 var DISPLAY_GROUP = "Stats options:";
 var BASIC_GROUP = "Basic options:";
 
@@ -135,6 +133,8 @@ yargs.options({
 		describe: "Show more details"
 	}
 });
+
+require("./config-yargs")(yargs);
 
 var argv = yargs.argv;
 
