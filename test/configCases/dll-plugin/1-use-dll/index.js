@@ -28,3 +28,7 @@ it("should load an harmony module from dll (star export)", function() {
 	y1.should.be.eql(456);
 	y2.should.be.eql(456);
 });
+
+it("should load a module with loader applied", function() {
+	require("dll/g.abc.js").should.be.eql("number");
+});

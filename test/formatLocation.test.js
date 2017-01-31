@@ -1,8 +1,10 @@
-var should = require("should");
-var formatLocation = require("../lib/formatLocation");
+"use strict";
+
+const should = require("should");
+const formatLocation = require("../lib/formatLocation");
 
 describe("formatLocation", () => {
-	var testCases = [{
+	const testCases = [{
 		name: "undefined",
 		loc: undefined,
 		result: ""

@@ -5,6 +5,7 @@
 	Author Tobias Koppers @sokra
 */
 var path = require("path");
+
 // Local version replace global one
 try {
 	var localWebpack = require.resolve(path.join(process.cwd(), "node_modules", "webpack", "bin", "webpack.js"));
@@ -175,10 +176,11 @@ function processOptions(options) {
 	var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
 
 	var outputOptions = options.stats;
-	if(typeof outputOptions === "boolean" || typeof outputOptions === "string")
+	if(typeof outputOptions === "boolean" || typeof outputOptions === "string") {
 		outputOptions = statsPresetToOptions(outputOptions);
-	else
+	} else if(!outputOptions) {
 		outputOptions = {};
+	}
 	outputOptions = Object.create(outputOptions);
 	if(Array.isArray(options) && !outputOptions.children) {
 		outputOptions.children = options.map(o => o.stats);
@@ -343,9 +345,8 @@ function processOptions(options) {
 			});
 		}
 	}
-	if(options.watch) {
-		var primaryOptions = !Array.isArray(options) ? options : options[0];
-		var watchOptions = primaryOptions.watchOptions || primaryOptions.watch || {};
+	if(firstOptions.watch || options.watch) {
+		var watchOptions = firstOptions.watchOptions || firstOptions.watch || options.watch || {};
 		if(watchOptions.stdin) {
 			process.stdin.on("end", function() {
 				process.exit(0); // eslint-disable-line
