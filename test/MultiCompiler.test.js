@@ -299,9 +299,13 @@ describe("MultiCompiler", function() {
 			beforeEach(function() {
 				setupTwoCompilerEnvironment(env);
 				env.callback = sinon.spy();
-				env.options = {
-					testWatchOptions: true
-				};
+				env.options = [{
+						testWatchOptions: true
+					},
+					{
+						testWatchOptions2: true
+					}
+				];
 				env.result = env.myMultiCompiler.watch(env.options, env.callback);
 			});
 
@@ -312,9 +316,9 @@ describe("MultiCompiler", function() {
 
 			it("calls watch on each compiler with original options", function() {
 				env.compiler1WatchCallbacks.length.should.be.exactly(1);
-				env.compiler1WatchCallbacks[0].options.should.be.exactly(env.options);
+				env.compiler1WatchCallbacks[0].options.should.be.exactly(env.options[0]);
 				env.compiler2WatchCallbacks.length.should.be.exactly(1);
-				env.compiler2WatchCallbacks[0].options.should.be.exactly(env.options);
+				env.compiler2WatchCallbacks[0].options.should.be.exactly(env.options[1]);
 			});
 
 			it("calls the callback when all compilers watch", function() {
@@ -399,21 +403,25 @@ describe("MultiCompiler", function() {
 					name: "compiler2"
 				});
 				env.callback = sinon.spy();
-				env.options = {
-					testWatchOptions: true
-				};
+				env.options = [{
+						testWatchOptions: true
+					},
+					{
+						testWatchOptions2: true
+					}
+				];
 				env.result = env.myMultiCompiler.watch(env.options, env.callback);
 			});
 
 			it("calls run on each compiler in dependency order", function() {
 				env.compiler1WatchCallbacks.length.should.be.exactly(0);
 				env.compiler2WatchCallbacks.length.should.be.exactly(1);
-				env.compiler2WatchCallbacks[0].options.should.be.exactly(env.options);
+				env.compiler2WatchCallbacks[0].options.should.be.exactly(env.options[1]);
 				env.compiler2WatchCallbacks[0].callback(null, {
 					hash: 'bar'
 				});
 				env.compiler1WatchCallbacks.length.should.be.exactly(1);
-				env.compiler1WatchCallbacks[0].options.should.be.exactly(env.options);
+				env.compiler1WatchCallbacks[0].options.should.be.exactly(env.options[0]);
 			});
 
 			it("calls the callback when all compilers run in dependency order", function() {
