@@ -1,11 +1,9 @@
 "use strict";
 
-const os = require("os");
-
 const getErrorFor = (shouldBeAbsolute, data, schema) => {
 	const message = shouldBeAbsolute ?
-		`The provided value ${JSON.stringify(data)} is not an absolute path!${os.EOL}`
-		: `A non absolut path is expected. However the provided value ${JSON.stringify(data)} is an absolute path!${os.EOL}`;
+		`The provided value ${JSON.stringify(data)} is not an absolute path!\n`
+		: `A non-absolut path is expected. However the provided value ${JSON.stringify(data)} is an absolute path!\n`;
 
 	return {
 		keyword: "absolutePath",
@@ -19,7 +17,7 @@ module.exports = (ajv) => ajv.addKeyword("absolutePath", {
 	type: "string",
 	compile(expected, schema) {
 		function callback(data) {
-			const passes = expected === /^(?:[a-zA-Z]:)?(?:\/|\\)/.test(data);
+			const passes = expected === /^(?:[A-Z]:\\|\/)/.test(data);
 			if(!passes) {
 				callback.errors = [getErrorFor(expected, data, schema)];
 			}
