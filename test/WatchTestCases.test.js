@@ -82,7 +82,7 @@ describe("WatchTestCases", function() {
 						remove(tempDirectory);
 					});
 					it("should compile", function(done) {
-						this.timeout(30000);
+						this.timeout(50000);
 						var outputDirectory = path.join(__dirname, "js", "watch", category.name, testName);
 
 						var options = {};
