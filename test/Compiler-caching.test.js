@@ -1,3 +1,4 @@
+/* globals describe, it, before, after */
 "use strict";
 
 const should = require("should");

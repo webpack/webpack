@@ -1,6 +1,7 @@
+/* globals describe, it */
 "use strict";
 
-const should = require("should");
+require("should");
 const webpack = require("../lib/webpack");
 const WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
 
@@ -187,6 +188,6 @@ describe("Validation", function() {
 				return;
 			}
 			throw new Error("Validation didn't fail");
-		})
+		});
 	});
 });
