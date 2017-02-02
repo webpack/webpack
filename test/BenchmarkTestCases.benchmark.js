@@ -4,7 +4,8 @@ const should = require("should");
 const path = require("path");
 const fs = require("fs");
 const async = require("async");
-var Test = require("mocha/lib/test");
+const Test = require("mocha/lib/test");
+const Suite = require("mocha/lib/suite");
 
 const webpack = require("../lib/webpack");
 const Benchmark = require("benchmark");
@@ -187,7 +188,7 @@ describe("BenchmarkTestCases", function() {
 
 	tests.forEach(testName => {
 		const testDirectory = path.join(casesPath, testName);
-		const suite = describe(testName, function() {});
+		let suite = describe(testName, function() {});
 		it(`${testName} create benchmarks`, function() {
 			let headStats;
 			let runNumber = 0;
@@ -235,9 +236,15 @@ describe("BenchmarkTestCases", function() {
 			function enqueueStabliltyCheck() {
 				it("should be stable", () => {
 					if(baselines.every(baseline => baseline.stats.stability > 0.5)) {
+						let innerSuite = describe("results", suite.ctx);
+						suite.addSuite(innerSuite);
+						suite = innerSuite;
 						enqueueBenchmarkResults();
 					} else if(runNumber < 3) {
 						runNumber++;
+						let innerSuite = describe("retry", suite.ctx);
+						suite.addSuite(innerSuite);
+						suite = innerSuite;
 						enqueueBenchmarks();
 					} else {
 						throw new Error("Benchmarking is too unstable to complete.");
