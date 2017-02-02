@@ -828,11 +828,13 @@
     },
     "recordsInputPath": {
       "description": "Store compiler state to a json file.",
-      "type": "string"
+      "type": "string",
+      "absolutePath": true
     },
     "recordsOutputPath": {
       "description": "Load compiler state from a json file.",
-      "type": "string"
+      "type": "string",
+      "absolutePath": true
     },
     "recordsPath": {
       "description": "Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.",
