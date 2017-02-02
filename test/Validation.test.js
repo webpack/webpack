@@ -124,7 +124,7 @@ describe("Validation", function() {
 			module: {
 				rules: [{
 					oneOf: [{
-						test: "a",
+						test: "/a",
 						paser: {
 							amd: false
 						}
