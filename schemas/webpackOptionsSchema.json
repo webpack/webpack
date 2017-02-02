@@ -302,7 +302,8 @@
         },
         "filename": {
           "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
-          "type": "string"
+          "type": "string",
+          "absolutePath": false
         },
         "hashDigest": {
           "minLength": 1,
@@ -364,7 +365,8 @@
         },
         "path": {
           "description": "The output directory as **absolute path** (required).",
-          "type": "string"
+          "type": "string",
+          "absolutePath": true
         },
         "pathinfo": {
           "description": "Include comments with information about the modules.",
@@ -673,7 +675,8 @@
     },
     "context": {
       "description": "The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.",
-      "type": "string"
+      "type": "string",
+      "absolutePath": true
     },
     "dependencies": {
       "description": "References to other configurations to depend on.",
@@ -824,7 +827,8 @@
     },
     "recordsPath": {
       "description": "Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.",
-      "type": "string"
+      "type": "string",
+      "absolutePath": true
     },
     "resolve": {
       "$ref": "#/definitions/resolve"
