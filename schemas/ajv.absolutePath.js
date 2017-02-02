@@ -21,7 +21,6 @@ module.exports = (ajv) => ajv.addKeyword("absolutePath", {
 		function callback(data) {
 			const passes = expected === /^(?:[a-zA-Z]:)?(?:\/|\\)/.test(data);
 			if(!passes) {
-				getErrorFor(expected, data, schema);
 				callback.errors = [getErrorFor(expected, data, schema)];
 			}
 			return passes;
