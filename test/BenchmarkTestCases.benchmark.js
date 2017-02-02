@@ -143,9 +143,7 @@ describe("BenchmarkTestCases", function() {
 		return stability;
 	}
 
-	let runNumber = 0;
-
-	function runBenchmark(webpack, config, callback) {
+	function runBenchmark(webpack, config, maxTime, callback) {
 		// warmup
 		const warmupCompiler = webpack(config, (err, stats) => {
 			warmupCompiler.purgeInputFileSystem();
@@ -164,7 +162,7 @@ describe("BenchmarkTestCases", function() {
 						deferred.resolve();
 					});
 				}, {
-					maxTime: 60 + runNumber * 30,
+					maxTime: maxTime,
 					defer: true,
 					initCount: 1,
 					onComplete: function() {
@@ -192,6 +190,7 @@ describe("BenchmarkTestCases", function() {
 		const suite = describe(testName, function() {});
 		it(`${testName} create benchmarks`, function() {
 			let headStats;
+			let runNumber = 0;
 
 			function it(title, fn) {
 				const test = new Test(title, fn);
@@ -206,7 +205,7 @@ describe("BenchmarkTestCases", function() {
 					config.output = Object.create(config.output || {});
 					if(!config.context) config.context = testDirectory;
 					if(!config.output.path) config.output.path = outputDirectory;
-					runBenchmark(baseline.webpack, config, (err, stats) => {
+					runBenchmark(baseline.webpack, config, 60 + runNumber * 30, (err, stats) => {
 						if(err) return done(err);
 						console.log(`        ${baseline.name}.${runNumber} ${stats.text}`);
 						if(baseline.name === "HEAD")
@@ -235,7 +234,7 @@ describe("BenchmarkTestCases", function() {
 
 			function enqueueStabliltyCheck() {
 				it("should be stable", () => {
-					if(baselines.every(baseline => baseline.stability > 0.5)) {
+					if(baselines.every(baseline => baseline.stats.stability > 0.5)) {
 						enqueueBenchmarkResults();
 					} else if(runNumber < 3) {
 						runNumber++;
