@@ -158,6 +158,18 @@
             },
             {
               "instanceof": "RegExp"
+            },
+            {
+              "items": {
+                "type": "string",
+                "absolutePath": true
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "type": "string",
+              "absolutePath": true
             }
           ]
         },
