@@ -244,7 +244,8 @@
         },
         "chunkFilename": {
           "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
-          "type": "string"
+          "type": "string",
+          "absolutePath": false
         },
         "crossOriginLoading": {
           "description": "This option enables cross-origin loading of chunks.",
@@ -319,7 +320,8 @@
         },
         "hotUpdateChunkFilename": {
           "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
-          "type": "string"
+          "type": "string",
+          "absolutePath": false
         },
         "hotUpdateFunction": {
           "description": "The JSONP function used by webpack for async loading of hot update chunks.",
@@ -327,7 +329,8 @@
         },
         "hotUpdateMainFilename": {
           "description": "The filename of the Hot Update Main File. It is inside the `output.path` directory.",
-          "type": "string"
+          "type": "string",
+          "absolutePath": false
         },
         "jsonpFunction": {
           "description": "The JSONP function used by webpack for async loading of chunks.",
@@ -378,7 +381,8 @@
         },
         "sourceMapFilename": {
           "description": "The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.",
-          "type": "string"
+          "type": "string",
+          "absolutePath": false
         },
         "sourcePrefix": {
           "description": "Prefixes every line of the source in the bundle with this string.",
