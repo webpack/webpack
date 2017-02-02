@@ -1,9 +1,8 @@
+/* globals describe, it */
 var should = require("should");
 var path = require("path");
 
-var NodeEnvironmentPlugin = require("../lib/node/NodeEnvironmentPlugin");
 var webpack = require("../");
-var WebpackOptionsApply = require("../lib/WebpackOptionsApply");
 var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 
 describe("Compiler", function() {
@@ -60,13 +59,13 @@ describe("Compiler", function() {
 
 		compile("./c", {
 			output: {
-				path: '/what',
-				filename: 'the' + sep + 'hell.js',
+				path: "/what",
+				filename: "the" + sep + "hell.js",
 			}
 		}, function(stats, files) {
 			stats.logs.mkdirp.should.eql([
-				'/what',
-				'/what' + sep + 'the',
+				"/what",
+				"/what" + sep + "the",
 			]);
 			done();
 		});
