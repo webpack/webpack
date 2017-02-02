@@ -556,13 +556,16 @@
           ]
         },
         "exclude": {
-          "$ref": "#/definitions/ruleSet-condition"
+          "$ref": "#/definitions/ruleSet-condition",
+          "absolutePath": true
         },
         "include": {
-          "$ref": "#/definitions/ruleSet-condition"
+          "$ref": "#/definitions/ruleSet-condition",
+          "absolutePath": true
         },
         "issuer": {
-          "$ref": "#/definitions/ruleSet-condition"
+          "$ref": "#/definitions/ruleSet-condition",
+          "absolutePath": true
         },
         "loader": {
           "anyOf": [
@@ -591,7 +594,8 @@
           "$ref": "#/definitions/ruleSet-query"
         },
         "resource": {
-          "$ref": "#/definitions/ruleSet-condition"
+          "$ref": "#/definitions/ruleSet-condition",
+          "absolutePath": true
         },
         "resourceQuery": {
           "$ref": "#/definitions/ruleSet-condition"
@@ -600,7 +604,8 @@
           "$ref": "#/definitions/ruleSet-rules"
         },
         "test": {
-          "$ref": "#/definitions/ruleSet-condition"
+          "$ref": "#/definitions/ruleSet-condition",
+          "absolutePath": true
         },
         "use": {
           "$ref": "#/definitions/ruleSet-use"
