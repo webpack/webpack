@@ -30,8 +30,8 @@ describe("RawModule", () => {
 	});
 
 	describe("readableIdentifier", () => {
-		it("returns result of calling provided requestShortener\"s shorten method\
-     on readableIdentifierStr attribute", () => {
+		it("returns result of calling provided requestShortener\"s shorten method " +
+			"on readableIdentifierStr attribute", () => {
 			const requestShortener = new RequestShortener(path.resolve());
 			should.exist(myRawModule.readableIdentifier(requestShortener));
 		});
@@ -42,16 +42,16 @@ describe("RawModule", () => {
 	});
 
 	describe("source", () => {
-		it("returns a new OriginalSource instance with sourceStr attribute and\
-        return value of identifier() function provided as constructor arguments",
+		it("returns a new OriginalSource instance with sourceStr attribute and " +
+			"return value of identifier() function provided as constructor arguments",
 			() => {
 				const originalSource = new OriginalSource(myRawModule.sourceStr, myRawModule.identifier());
 				myRawModule.useSourceMap = true;
 				myRawModule.source().should.match(originalSource);
 			});
 
-		it("returns a new RawSource instance with sourceStr attribute provided\
-        as constructor argument if useSourceMap is falsey", () => {
+		it("returns a new RawSource instance with sourceStr attribute provided " +
+			"as constructor argument if useSourceMap is falsey", () => {
 			const rawSource = new RawSource(myRawModule.sourceStr);
 			myRawModule.useSourceMap = false;
 			myRawModule.source().should.match(rawSource);
