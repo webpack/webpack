@@ -1,24 +1,24 @@
-var should = require("should");
+"use strict";
 
-var path = require("path");
-var webpack = require("../lib/webpack");
+const should = require("should");
 
-var RecordIdsPlugin = require("../lib/RecordIdsPlugin");
+const path = require("path");
+const webpack = require("../lib/webpack");
+
+const RecordIdsPlugin = require("../lib/RecordIdsPlugin");
 
 function makeRelative(compiler, identifier) {
-	var context = compiler.context;
-	return identifier.split("|").map(function(str) {
-		return str.split("!").map(function(str) {
-			return path.relative(context, str);
-		}).join("!");
-	}).join("|");
+	const context = compiler.context;
+	return identifier.split("|").map((str) =>
+		str.split("!")
+		.map((str) => path.relative(context, str)).join("!")).join("|");
 }
 
-describe("RecordIdsPlugin", function() {
+describe("RecordIdsPlugin", () => {
 
-	var compiler;
+	let compiler;
 
-	before(function() {
+	before(() => {
 		compiler = webpack({
 			entry: "./nodetest/entry",
 			context: path.join(__dirname, "fixtures"),
@@ -28,18 +28,16 @@ describe("RecordIdsPlugin", function() {
 			}
 		});
 
-		compiler.plugin("compilation", function(compilation, callback) {
-			compilation.plugin("should-record", function() {
-				return true;
-			});
+		compiler.plugin("compilation", (compilation, callback) => {
+			compilation.plugin("should-record", () => true);
 		});
 	});
 
-	it("should cache identifiers", function(done) {
-		compiler.compile(function(err, compilation) {
+	it("should cache identifiers", (done) => {
+		compiler.compile((err, compilation) => {
 			if(err) done(err);
-			var pass = true;
-			for(var i = 0; i < compilation.modules.length; i++) {
+			let pass = true;
+			for(let i = 0; i < compilation.modules.length; i++) {
 				try {
 					should.exist(compilation.modules[i].portableId);
 					compilation.modules[i].portableId.should.equal(makeRelative(compiler, compilation.modules[i].identifier()));

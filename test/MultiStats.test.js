@@ -30,9 +30,7 @@ describe("MultiStats", () => {
 		packageJSON.version = "1.2.3";
 	});
 
-	afterEach(() => {
-		packageJSON.version = packageVersion;
-	});
+	afterEach(() => packageJSON.version = packageVersion);
 
 	describe("created", () => {
 		beforeEach(() => {
@@ -47,9 +45,7 @@ describe("MultiStats", () => {
 			myMultiStats = new MultiStats(stats);
 		});
 
-		it("creates a hash string", () => {
-			myMultiStats.hash.should.be.exactly("abc123xyz890");
-		});
+		it("creates a hash string", () => myMultiStats.hash.should.be.exactly("abc123xyz890"));
 	});
 
 	describe("hasErrors", () => {
@@ -66,9 +62,7 @@ describe("MultiStats", () => {
 				myMultiStats = new MultiStats(stats);
 			});
 
-			it("returns true", () => {
-				myMultiStats.hasErrors().should.be.exactly(true);
-			});
+			it("returns true", () => myMultiStats.hasErrors().should.be.exactly(true));
 		});
 
 		describe("when one has an error", () => {
@@ -82,9 +76,7 @@ describe("MultiStats", () => {
 				myMultiStats = new MultiStats(stats);
 			});
 
-			it("returns true", () => {
-				myMultiStats.hasErrors().should.be.exactly(true);
-			});
+			it("returns true", () => myMultiStats.hasErrors().should.be.exactly(true));
 		});
 
 		describe("when none have errors", () => {
@@ -96,9 +88,7 @@ describe("MultiStats", () => {
 				myMultiStats = new MultiStats(stats);
 			});
 
-			it("returns false", () => {
-				myMultiStats.hasErrors().should.be.exactly(false);
-			});
+			it("returns false", () => myMultiStats.hasErrors().should.be.exactly(false));
 		});
 	});
 
@@ -116,9 +106,7 @@ describe("MultiStats", () => {
 				myMultiStats = new MultiStats(stats);
 			});
 
-			it("returns true", () => {
-				myMultiStats.hasWarnings().should.be.exactly(true);
-			});
+			it("returns true", () => myMultiStats.hasWarnings().should.be.exactly(true));
 		});
 
 		describe("when one has a warning", () => {
@@ -132,9 +120,7 @@ describe("MultiStats", () => {
 				myMultiStats = new MultiStats(stats);
 			});
 
-			it("returns true", () => {
-				myMultiStats.hasWarnings().should.be.exactly(true);
-			});
+			it("returns true", () => myMultiStats.hasWarnings().should.be.exactly(true));
 		});
 
 		describe("when none have warnings", () => {
@@ -146,9 +132,7 @@ describe("MultiStats", () => {
 				myMultiStats = new MultiStats(stats);
 			});
 
-			it("returns false", () => {
-				myMultiStats.hasWarnings().should.be.exactly(false);
-			});
+			it("returns false", () => myMultiStats.hasWarnings().should.be.exactly(false));
 		});
 	});
 
@@ -234,6 +218,7 @@ describe("MultiStats", () => {
 			myMultiStats = new MultiStats(stats);
 			result = myMultiStats.toString();
 		});
+
 		it("returns string representation", () => {
 			result.should.be.exactly(
 				"Hash: abc123xyz890\n" +
