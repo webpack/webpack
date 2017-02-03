@@ -1,47 +1,39 @@
-var should = require("should");
-var sinon = require("sinon");
-var PluginEnvironment = require("./helpers/PluginEnvironment");
-var applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
-var WarnCaseSensitiveModulesPlugin = require("../lib/WarnCaseSensitiveModulesPlugin");
+"use strict";
 
-describe("WarnCaseSensitiveModulesPlugin", function() {
-	var env;
+const should = require("should");
+const sinon = require("sinon");
+const PluginEnvironment = require("./helpers/PluginEnvironment");
+const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
+const WarnCaseSensitiveModulesPlugin = require("../lib/WarnCaseSensitiveModulesPlugin");
 
-	beforeEach(function() {
-		env = {};
-	});
+describe("WarnCaseSensitiveModulesPlugin", () => {
+	let env;
 
-	it("has apply function", function() {
-		(new WarnCaseSensitiveModulesPlugin()).apply.should.be.a.Function();
-	});
+	beforeEach(() => env = {});
 
-	describe("when applied", function() {
-		beforeEach(function() {
-			env.eventBindings = applyPluginWithOptions(WarnCaseSensitiveModulesPlugin);
-		});
+	it("has apply function", () =>
+		(new WarnCaseSensitiveModulesPlugin()).apply.should.be.a.Function());
 
-		it("binds one event handler", function() {
-			env.eventBindings.length.should.be.exactly(1);
-		});
+	describe("when applied", () => {
+		beforeEach(() => env.eventBindings = applyPluginWithOptions(WarnCaseSensitiveModulesPlugin));
 
-		describe("compilation handler", function() {
-			beforeEach(function() {
+		it("binds one event handler", () => env.eventBindings.length.should.be.exactly(1));
+
+		describe("compilation handler", () => {
+			beforeEach(() => {
 				env.pluginEnvironment = new PluginEnvironment();
 				env.eventBinding = env.eventBindings[0];
 				env.eventBinding.handler(env.pluginEnvironment.getEnvironmentStub());
 				env.compilationEventBindings = env.pluginEnvironment.getEventBindings();
 			});
 
-			it("binds to compilation event", function() {
-				env.eventBinding.name.should.be.exactly("compilation");
-			});
+			it("binds to compilation event", () =>
+				env.eventBinding.name.should.be.exactly("compilation"));
 
-			it("binds one compilation event handler", function() {
-				env.compilationEventBindings.length.should.be.exactly(1);
-			});
+			it("binds one compilation event handler", () => env.compilationEventBindings.length.should.be.exactly(1));
 
-			describe("seal handler", function() {
-				beforeEach(function() {
+			describe("seal handler", () => {
+				beforeEach(() => {
 					env.compilationEventContext = {
 						modules: [{
 								identifier: () => "Foo",
@@ -62,11 +54,9 @@ describe("WarnCaseSensitiveModulesPlugin", function() {
 					env.compilationEventBinding.handler.call(env.compilationEventContext);
 				});
 
-				it("binds to seal event", function() {
-					env.compilationEventBinding.name.should.be.exactly("seal");
-				});
+				it("binds to seal event", () => env.compilationEventBinding.name.should.be.exactly("seal"));
 
-				it("adds warning for each plugin with case insensitive name", function() {
+				it("adds warning for each plugin with case insensitive name", () => {
 					env.compilationEventContext.warnings.length.should.be.exactly(1);
 					env.compilationEventContext.warnings[0].message.should.be.exactly(`
 There are multiple modules with names that only differ in casing.
