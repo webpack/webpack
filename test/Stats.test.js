@@ -9,10 +9,10 @@ const webpack = require("../lib/webpack");
 
 const base = path.join(__dirname, "statsCases");
 const outputBase = path.join(__dirname, "js", "stats");
-const tests = fs.readdirSync(base).filter(testName => {
+const tests = fs.readdirSync(base).filter(testName =>
 	fs.existsSync(path.join(base, testName, "index.js")) ||
-		fs.existsSync(path.join(base, testName, "webpack.config.js"));
-});
+	fs.existsSync(path.join(base, testName, "webpack.config.js"))
+);
 const Stats = require("../lib/Stats");
 
 describe("Stats", () => {
