@@ -2,10 +2,10 @@
 
 const should = require("should");
 const sinon = require("sinon");
-const DependenciesBlockconstiable = require("../lib/DependenciesBlockvariable");
+const DependenciesBlockVariable = require("../lib/DependenciesBlockvariable");
 
-describe("DependenciesBlockconstiable", () => {
-	let DependenciesBlockconstiableInstance,
+describe("DependenciesBlockVariable", () => {
+	let DependenciesBlockVariableInstance,
 		dependencyMock,
 		sandbox;
 
@@ -18,7 +18,7 @@ describe("DependenciesBlockconstiable", () => {
 			disconnect: sandbox.spy(),
 			updateHash: sandbox.spy()
 		};
-		DependenciesBlockconstiableInstance = new DependenciesBlockconstiable(
+		DependenciesBlockVariableInstance = new DependenciesBlockVariable(
 			"dependencies-name",
 			"expression", [dependencyMock]);
 	});
@@ -27,11 +27,11 @@ describe("DependenciesBlockconstiable", () => {
 
 	describe("hasDependencies", () =>
 		it("returns `true` if has dependencies", () =>
-			should(DependenciesBlockconstiableInstance.hasDependencies()).be.true()));
+			should(DependenciesBlockVariableInstance.hasDependencies()).be.true()));
 
 	describe("disconnect", () =>
 		it("trigger dependencies disconnection", () => {
-			DependenciesBlockconstiableInstance.disconnect();
+			DependenciesBlockVariableInstance.disconnect();
 			should(dependencyMock.disconnect.calledOnce).be.true();
 		}));
 
@@ -41,7 +41,7 @@ describe("DependenciesBlockconstiable", () => {
 			hash = {
 				update: sandbox.spy()
 			};
-			DependenciesBlockconstiableInstance.updateHash(hash);
+			DependenciesBlockVariableInstance.updateHash(hash);
 		});
 
 		it("should update hash dependencies with name", () =>
@@ -68,7 +68,7 @@ describe("DependenciesBlockconstiable", () => {
 					};
 				}
 			};
-			DependenciesBlockconstiableInstance.expressionSource(
+			DependenciesBlockVariableInstance.expressionSource(
 				dependencyTemplates, {}, {}
 			);
 			should(applyMock.calledOnce).be.true();
@@ -81,7 +81,7 @@ describe("DependenciesBlockconstiable", () => {
 				}
 			};
 			should(() => {
-				DependenciesBlockconstiableInstance.expressionSource(
+				DependenciesBlockVariableInstance.expressionSource(
 					dependencyTemplates, {}, {}
 				);
 			}).throw("No template for dependency: DependencyMock");
