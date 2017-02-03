@@ -8,6 +8,7 @@ module.exports = {
 			scope: "dll",
 			sourceType: "commonjs2",
 			extensions: [".js", ".jsx"]
-		})
+		}),
+		new webpack.NamedModulesPlugin()
 	]
 };
