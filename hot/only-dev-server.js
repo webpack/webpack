@@ -3,13 +3,15 @@
 	Author Tobias Koppers @sokra
 */
 /*globals __webpack_hash__ */
+"use strict";
+
 if(module.hot) {
-	var lastHash;
-	var upToDate = function upToDate() {
+	let lastHash;
+	const upToDate = function upToDate() {
 		return lastHash.indexOf(__webpack_hash__) >= 0;
 	};
-	var check = function check() {
-		module.hot.check().then(function(updatedModules) {
+	const check = function check() {
+		module.hot.check().then((updatedModules) => {
 			if(!updatedModules) {
 				console.warn("[HMR] Cannot find update. Need to do a full reload!");
 				console.warn("[HMR] (Probably because of restarting the webpack-dev-server)");
@@ -29,7 +31,7 @@ if(module.hot) {
 				onErrored: function(data) {
 					console.warn("Ignored an error while updating module " + data.moduleId + " (" + data.type + ")");
 				}
-			}).then(function(renewedModules) {
+			}).then((renewedModules) => {
 				if(!upToDate()) {
 					check();
 				}
@@ -40,8 +42,8 @@ if(module.hot) {
 					console.log("[HMR] App is up to date.");
 				}
 			});
-		}).catch(function(err) {
-			var status = module.hot.status();
+		}).catch((err) => {
+			const status = module.hot.status();
 			if(["abort", "fail"].indexOf(status) >= 0) {
 				console.warn("[HMR] Cannot check for update. Need to do a full reload!");
 				console.warn("[HMR] " + err.stack || err.message);
@@ -50,11 +52,11 @@ if(module.hot) {
 			}
 		});
 	};
-	var hotEmitter = require("./emitter");
-	hotEmitter.on("webpackHotUpdate", function(currentHash) {
+	const hotEmitter = require("./emitter");
+	hotEmitter.on("webpackHotUpdate", (currentHash) => {
 		lastHash = currentHash;
 		if(!upToDate()) {
-			var status = module.hot.status();
+			const status = module.hot.status();
 			if(status === "idle") {
 				console.log("[HMR] Checking for updates on the server...");
 				check();
