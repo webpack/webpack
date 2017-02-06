@@ -222,12 +222,12 @@ webpack supports ES2015+, CommonJS and AMD modules **out of the box**. It perfor
 analysis on the AST of your code. It even has an evaluation engine to evaluate
 simple expressions. This allows you to **support most existing libraries** out of the box.
 
-### [Code Splitting](https://webpack.github.io/docs/code-splitting.html)
+### [Code Splitting](https://webpack.js.org/guides/code-splitting/)
 
 webpack allows you to split your codebase into multiple chunks. Chunks are
 loaded asynchronously at runtime. This reduces the initial loading time.
 
-### [Optimizations](https://webpack.github.io/docs/optimization.html)
+### [Optimizations](https://webpack.js.org/guides/production-build/)
 
 webpack can do many optimizations to **reduce the output size of your
 JavaScript** by deduplicating frequently used modules, minifying, and giving
