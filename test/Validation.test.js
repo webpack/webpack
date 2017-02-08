@@ -184,25 +184,8 @@ describe("Validation", function() {
 			}
 		},
 		message: [
-			" - configuration.output.filename A non-absolut path is expected. However the provided value \"/bar\" is an absolute path!",
-			"    ({",
-			"     \"keyword\": \"absolutePath\",",
-			"     \"params\": {",
-			"       \"absolutePath\": \"/bar\"",
-			"     },",
-			"     \"message\": \"A non-absolut path is expected. However the provided value \\\"/bar\\\" is an absolute path!\\n\",",
-			"     \"parentSchema\": {",
-			"       \"description\": \"Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.\",",
-			"       \"type\": \"string\",",
-			"       \"absolutePath\": false",
-			"     },",
-			"     \"dataPath\": \".output.filename\",",
-			"     \"schemaPath\": \"#/definitions/output/properties/filename/absolutePath\",",
-			"     \"schema\": false,",
-			"     \"data\": \"/bar\"",
-			"   }).",
-			"   string",
-			"   Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files."
+			" - configuration.output.filename: A non-absolut path is expected. However the provided value \"/bar\" is an absolute path!",
+			"",
 		]
 	}, {
 		name: "absolute path",
@@ -214,25 +197,8 @@ describe("Validation", function() {
 			context: "baz"
 		},
 		message: [
-			" - configuration.context The provided value \"baz\" is not an absolute path!",
-			"    ({",
-			"     \"keyword\": \"absolutePath\",",
-			"     \"params\": {",
-			"       \"absolutePath\": \"baz\"",
-			"     },",
-			"     \"message\": \"The provided value \\\"baz\\\" is not an absolute path!\\n\",",
-			"     \"parentSchema\": {",
-			"       \"description\": \"The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.\",",
-			"       \"type\": \"string\",",
-			"       \"absolutePath\": true",
-			"     },",
-			"     \"dataPath\": \".context\",",
-			"     \"schemaPath\": \"#/properties/context/absolutePath\",",
-			"     \"schema\": true,",
-			"     \"data\": \"baz\"",
-			"   }).",
-			"   string",
-			"   The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory."
+			" - configuration.context: The provided value \"baz\" is not an absolute path!",
+			"",
 		]
 	}];
 	testCases.forEach(function(testCase) {
