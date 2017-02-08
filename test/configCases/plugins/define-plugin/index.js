@@ -1,3 +1,4 @@
+/* globals it, should */
 it("should define FALSE", function() {
 	FALSE.should.be.eql(false);
 	(typeof TRUE).should.be.eql("boolean");
@@ -86,4 +87,14 @@ it("should not have brakets on start", function() {
 	}
 	f // <- no semicolon here
 	OBJECT;
+});
+
+it("should not explode on recursive typeof calls", function() {
+	(typeof wurst).should.eql("undefined"); // <- is recursivly defined in config
+});
+
+it("should not explode on recursive statements", function() {
+	(function() {
+		wurst; // <- is recursivly defined in config
+	}).should.throw("suppe is not defined");
 });
