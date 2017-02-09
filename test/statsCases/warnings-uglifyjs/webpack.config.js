@@ -7,7 +7,7 @@ module.exports = {
 	},
 	plugins: [new webpack.optimize.UglifyJsPlugin({
 		warningsFilter: function(filename) {
-			return !/a\.js$/.test(filename);
+			return /a\.js$/.test(filename);
 		},
 		sourceMap: true,
 		compress: {

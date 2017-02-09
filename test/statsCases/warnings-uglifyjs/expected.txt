@@ -8,8 +8,8 @@ chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
    [2] (webpack)/test/statsCases/warnings-uglifyjs/index.js 299 bytes {0} [built]
 
 WARNING in bundle.js from UglifyJs
-Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-Dropping unused function someUnUsedFunction5 [./index.js:12,0]
+Dropping unused function someUnRemoteUsedFunction1 [./a.js:3,0]
+Dropping unused function someUnRemoteUsedFunction2 [./a.js:4,0]
+Dropping unused function someUnRemoteUsedFunction3 [./a.js:5,0]
+Dropping unused function someUnRemoteUsedFunction4 [./a.js:6,0]
+Dropping unused function someUnRemoteUsedFunction5 [./a.js:7,0]
