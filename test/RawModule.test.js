@@ -31,10 +31,12 @@ describe("RawModule", () => {
 
 	describe("readableIdentifier", () => {
 		it("returns result of calling provided requestShortener\"s shorten method " +
-			"on readableIdentifierStr attribute", () => {
-			const requestShortener = new RequestShortener(path.resolve());
-			should.exist(myRawModule.readableIdentifier(requestShortener));
-		});
+			"on readableIdentifierStr attribute",
+			() => {
+				const requestShortener = new RequestShortener(path.resolve());
+				should.exist(myRawModule.readableIdentifier(requestShortener));
+			}
+		);
 	});
 
 	describe("needRebuild", () => {
@@ -48,13 +50,16 @@ describe("RawModule", () => {
 				const originalSource = new OriginalSource(myRawModule.sourceStr, myRawModule.identifier());
 				myRawModule.useSourceMap = true;
 				myRawModule.source().should.match(originalSource);
-			});
+			}
+		);
 
 		it("returns a new RawSource instance with sourceStr attribute provided " +
-			"as constructor argument if useSourceMap is falsey", () => {
-			const rawSource = new RawSource(myRawModule.sourceStr);
-			myRawModule.useSourceMap = false;
-			myRawModule.source().should.match(rawSource);
-		});
+			"as constructor argument if useSourceMap is falsey",
+			() => {
+				const rawSource = new RawSource(myRawModule.sourceStr);
+				myRawModule.useSourceMap = false;
+				myRawModule.source().should.match(rawSource);
+			}
+		);
 	});
 });
