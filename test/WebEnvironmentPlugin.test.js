@@ -1,3 +1,5 @@
+"use strict";
+
 const should = require("should");
 const WebEnvironmentPlugin = require("../lib/web/WebEnvironmentPlugin");
 
