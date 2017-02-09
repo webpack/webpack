@@ -21,7 +21,9 @@ describe("Compiler", function() {
 		var c = webpack(options);
 		var files = {};
 		c.outputFileSystem = {
-			join: path.join.bind(path),
+			join: function() {
+				return [].join.call(arguments, "/").replace(/\/+/g, "/");	
+			},
 			mkdirp: function(path, callback) {
 				logs.mkdirp.push(path);
 				callback();
@@ -55,17 +57,15 @@ describe("Compiler", function() {
 		});
 	}
 	it("should compile a single file to deep output", function(done) {
-		var sep = path.sep;
-
 		compile("./c", {
 			output: {
 				path: "/what",
-				filename: "the" + sep + "hell.js",
+				filename: "the/hell.js",
 			}
 		}, function(stats, files) {
 			stats.logs.mkdirp.should.eql([
 				"/what",
-				"/what" + sep + "the",
+				"/what/the",
 			]);
 			done();
 		});
