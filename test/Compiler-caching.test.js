@@ -26,7 +26,9 @@ describe("Compiler (caching)", function() {
 		const c = webpack(options);
 		const files = {};
 		c.outputFileSystem = {
-			join: path.join.bind(path),
+			join: function() {
+				return [].join.call(arguments, "/").replace(/\/+/g, "/");
+			},
 			mkdirp: function(path, callback) {
 				logs.mkdirp.push(path);
 				callback();
