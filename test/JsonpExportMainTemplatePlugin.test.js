@@ -1,3 +1,5 @@
+"use strict";
+
 const should = require("should");
 const sinon = require("sinon");
 const TemplatePluginEnvironment = require("./helpers/TemplatePluginEnvironment");
