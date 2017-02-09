@@ -158,6 +158,18 @@
             },
             {
               "instanceof": "RegExp"
+            },
+            {
+              "items": {
+                "type": "string",
+                "absolutePath": true
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            {
+              "type": "string",
+              "absolutePath": true
             }
           ]
         },
@@ -244,7 +256,8 @@
         },
         "chunkFilename": {
           "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
-          "type": "string"
+          "type": "string",
+          "absolutePath": false
         },
         "crossOriginLoading": {
           "description": "This option enables cross-origin loading of chunks.",
@@ -302,7 +315,8 @@
         },
         "filename": {
           "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
-          "type": "string"
+          "type": "string",
+          "absolutePath": false
         },
         "hashDigest": {
           "minLength": 1,
@@ -318,7 +332,8 @@
         },
         "hotUpdateChunkFilename": {
           "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
-          "type": "string"
+          "type": "string",
+          "absolutePath": false
         },
         "hotUpdateFunction": {
           "description": "The JSONP function used by webpack for async loading of hot update chunks.",
@@ -326,7 +341,8 @@
         },
         "hotUpdateMainFilename": {
           "description": "The filename of the Hot Update Main File. It is inside the `output.path` directory.",
-          "type": "string"
+          "type": "string",
+          "absolutePath": false
         },
         "jsonpFunction": {
           "description": "The JSONP function used by webpack for async loading of chunks.",
@@ -364,7 +380,8 @@
         },
         "path": {
           "description": "The output directory as **absolute path** (required).",
-          "type": "string"
+          "type": "string",
+          "absolutePath": true
         },
         "pathinfo": {
           "description": "Include comments with information about the modules.",
@@ -376,7 +393,8 @@
         },
         "sourceMapFilename": {
           "description": "The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.",
-          "type": "string"
+          "type": "string",
+          "absolutePath": false
         },
         "sourcePrefix": {
           "description": "Prefixes every line of the source in the bundle with this string.",
@@ -550,13 +568,22 @@
           ]
         },
         "exclude": {
-          "$ref": "#/definitions/ruleSet-condition"
+          "allOf": [
+            {"$ref": "#/definitions/ruleSet-condition"},
+            {"absolutePath": true}
+          ]
         },
         "include": {
-          "$ref": "#/definitions/ruleSet-condition"
+          "allOf": [
+            {"$ref": "#/definitions/ruleSet-condition"},
+            {"absolutePath": true}
+          ]
         },
         "issuer": {
-          "$ref": "#/definitions/ruleSet-condition"
+          "allOf": [
+            {"$ref": "#/definitions/ruleSet-condition"},
+            {"absolutePath": true}
+          ]
         },
         "loader": {
           "anyOf": [
@@ -585,7 +612,10 @@
           "$ref": "#/definitions/ruleSet-query"
         },
         "resource": {
-          "$ref": "#/definitions/ruleSet-condition"
+          "allOf": [
+            {"$ref": "#/definitions/ruleSet-condition"},
+            {"absolutePath": true}
+          ]
         },
         "resourceQuery": {
           "$ref": "#/definitions/ruleSet-condition"
@@ -594,7 +624,10 @@
           "$ref": "#/definitions/ruleSet-rules"
         },
         "test": {
-          "$ref": "#/definitions/ruleSet-condition"
+          "allOf": [
+            {"$ref": "#/definitions/ruleSet-condition"},
+            {"absolutePath": true}
+          ]
         },
         "use": {
           "$ref": "#/definitions/ruleSet-use"
@@ -673,7 +706,8 @@
     },
     "context": {
       "description": "The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.",
-      "type": "string"
+      "type": "string",
+      "absolutePath": true
     },
     "dependencies": {
       "description": "References to other configurations to depend on.",
@@ -816,15 +850,18 @@
     },
     "recordsInputPath": {
       "description": "Store compiler state to a json file.",
-      "type": "string"
+      "type": "string",
+      "absolutePath": true
     },
     "recordsOutputPath": {
       "description": "Load compiler state from a json file.",
-      "type": "string"
+      "type": "string",
+      "absolutePath": true
     },
     "recordsPath": {
       "description": "Store/Load compiler state from/to a json file. This will result in persistent ids of modules and chunks. An absolute path is expected. `recordsPath` is used for `recordsInputPath` and `recordsOutputPath` if they left undefined.",
-      "type": "string"
+      "type": "string",
+      "absolutePath": true
     },
     "resolve": {
       "$ref": "#/definitions/resolve"
