@@ -22,7 +22,7 @@ describe("Compiler", function() {
 		var files = {};
 		c.outputFileSystem = {
 			join: function() {
-				return [].join.call(arguments, "/").replace(/\/+/g, "/");	
+				return [].join.call(arguments, "/").replace(/\/+/g, "/");
 			},
 			mkdirp: function(path, callback) {
 				logs.mkdirp.push(path);
