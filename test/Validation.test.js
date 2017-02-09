@@ -176,7 +176,7 @@ describe("Validation", function() {
 			"    * configuration.devtool should be false"
 		]
 	}, {
-		name: "non-absolute path",
+		name: "relative path",
 		config: {
 			entry: "foo.js",
 			output: {
@@ -184,7 +184,7 @@ describe("Validation", function() {
 			}
 		},
 		message: [
-			" - configuration.output.filename: A non-absolut path is expected. However the provided value \"/bar\" is an absolute path!",
+			" - configuration.output.filename: A relative path is expected. However the provided value \"/bar\" is an absolute path!",
 			"",
 		]
 	}, {
