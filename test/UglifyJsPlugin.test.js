@@ -1,5 +1,6 @@
+/* globals describe, it, beforeEach*/
 "use strict";
-const should = require("should");
+require("should");
 const sinon = require("sinon");
 const UglifyJsPlugin = require("../lib/optimize/UglifyJsPlugin");
 const PluginEnvironment = require("./helpers/PluginEnvironment");
@@ -407,6 +408,120 @@ describe("UglifyJsPlugin", function() {
 						}], function() {
 							compilation.errors.length.should.be.exactly(0);
 							compilation.assets["test3.js"].should.be.instanceof(SourceMapSource);
+						});
+					});
+
+					describe("with warningsFilter set", function() {
+						let compilationEventBindings, compilation;
+
+						describe("and the filter returns true", function() {
+							beforeEach(function() {
+								const pluginEnvironment = new PluginEnvironment();
+								const compilerEnv = pluginEnvironment.getEnvironmentStub();
+								compilerEnv.context = "";
+
+								const plugin = new UglifyJsPlugin({
+									warningsFilter: function() {
+										return true;
+									},
+									sourceMap: true,
+									compress: {
+										warnings: true,
+									},
+									mangle: false,
+									beautify: true,
+									comments: false
+								});
+								plugin.apply(compilerEnv);
+								const eventBindings = pluginEnvironment.getEventBindings();
+
+								const chunkPluginEnvironment = new PluginEnvironment();
+								compilation = chunkPluginEnvironment.getEnvironmentStub();
+								compilation.assets = {
+									"test2.js": {
+										source: function() {
+											return "function foo(x) { if (x) { return bar(); not_called1(); } }";
+										},
+										map: function() {
+											return {
+												version: 3,
+												sources: ["test1.js"],
+												names: ["foo", "x", "bar", "not_called1"],
+												mappings: "AAAA,QAASA,KAAIC,GACT,GAAIA,EAAG,CACH,MAAOC,MACPC"
+											};
+										}
+									},
+								};
+								compilation.errors = [];
+								compilation.warnings = [];
+
+								eventBindings[0].handler(compilation);
+								compilationEventBindings = chunkPluginEnvironment.getEventBindings();
+							});
+
+							it("should get all warnings", function() {
+								compilationEventBindings[1].handler([{
+									files: ["test2.js"]
+								}], function() {
+									compilation.warnings.length.should.be.exactly(1);
+									compilation.warnings[0].should.be.an.Error;
+									compilation.warnings[0].message.should.containEql("Dropping unreachable code");
+								});
+							});
+						});
+
+						describe("and the filter returns false", function() {
+							beforeEach(function() {
+								const pluginEnvironment = new PluginEnvironment();
+								const compilerEnv = pluginEnvironment.getEnvironmentStub();
+								compilerEnv.context = "";
+
+								const plugin = new UglifyJsPlugin({
+									warningsFilter: function() {
+										return false;
+									},
+									sourceMap: true,
+									compress: {
+										warnings: true,
+									},
+									mangle: false,
+									beautify: true,
+									comments: false
+								});
+								plugin.apply(compilerEnv);
+								const eventBindings = pluginEnvironment.getEventBindings();
+
+								const chunkPluginEnvironment = new PluginEnvironment();
+								compilation = chunkPluginEnvironment.getEnvironmentStub();
+								compilation.assets = {
+									"test2.js": {
+										source: function() {
+											return "function foo(x) { if (x) { return bar(); not_called1(); } }";
+										},
+										map: function() {
+											return {
+												version: 3,
+												sources: ["test1.js"],
+												names: ["foo", "x", "bar", "not_called1"],
+												mappings: "AAAA,QAASA,KAAIC,GACT,GAAIA,EAAG,CACH,MAAOC,MACPC"
+											};
+										}
+									},
+								};
+								compilation.errors = [];
+								compilation.warnings = [];
+
+								eventBindings[0].handler(compilation);
+								compilationEventBindings = chunkPluginEnvironment.getEventBindings();
+							});
+
+							it("should get no warnings", function() {
+								compilationEventBindings[1].handler([{
+									files: ["test2.js"]
+								}], function() {
+									compilation.warnings.length.should.be.exactly(0);
+								});
+							});
 						});
 					});
 				});
