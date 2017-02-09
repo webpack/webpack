@@ -1,6 +1,7 @@
+/* globals describe, it */
 "use strict";
 
-const should = require("should");
+require("should");
 const webpack = require("../lib/webpack");
 const WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
 
@@ -124,7 +125,7 @@ describe("Validation", function() {
 			module: {
 				rules: [{
 					oneOf: [{
-						test: "a",
+						test: "/a",
 						paser: {
 							amd: false
 						}
@@ -174,6 +175,31 @@ describe("Validation", function() {
 			"    * configuration.devtool should be a string.",
 			"    * configuration.devtool should be false"
 		]
+	}, {
+		name: "relative path",
+		config: {
+			entry: "foo.js",
+			output: {
+				filename: "/bar"
+			}
+		},
+		message: [
+			" - configuration.output.filename: A relative path is expected. However the provided value \"/bar\" is an absolute path!",
+			"",
+		]
+	}, {
+		name: "absolute path",
+		config: {
+			entry: "foo.js",
+			output: {
+				filename: "bar"
+			},
+			context: "baz"
+		},
+		message: [
+			" - configuration.context: The provided value \"baz\" is not an absolute path!",
+			"",
+		]
 	}];
 	testCases.forEach(function(testCase) {
 		it("should fail validation for " + testCase.name, function() {
@@ -187,6 +213,6 @@ describe("Validation", function() {
 				return;
 			}
 			throw new Error("Validation didn't fail");
-		})
+		});
 	});
 });
