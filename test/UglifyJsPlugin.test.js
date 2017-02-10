@@ -227,7 +227,7 @@ describe("UglifyJsPlugin", function() {
 				comments: false,
 				extractComments: {
 					condition: 'should be extracted',
-					file: function(file) {
+					filename: function(file) {
 						return file.replace(/(\.\w+)$/, '.license$1');
 					},
 					banner: function(licenseFile) {
@@ -575,7 +575,7 @@ describe("UglifyJsPlugin", function() {
 				comments: "all",
 				extractComments: {
 					condition: /.*/,
-					file: "extracted-comments.js"
+					filename: "extracted-comments.js"
 				}
 			});
 			plugin.apply(compilerEnv);
