@@ -1,24 +1,23 @@
-var should = require("should");
-var WebEnvironmentPlugin = require("../lib/web/WebEnvironmentPlugin");
+"use strict";
 
-describe("WebEnvironmentPlugin", function() {
-	var WebEnvironmentPluginInstance;
+const should = require("should");
+const WebEnvironmentPlugin = require("../lib/web/WebEnvironmentPlugin");
 
-	before(function() {
-		WebEnvironmentPluginInstance = new WebEnvironmentPlugin("inputFileSystem", "outputFileSystem");
-	});
+describe("WebEnvironmentPlugin", () => {
+	let WebEnvironmentPluginInstance;
 
-	describe("apply", function() {
-		var compileSpy;
-		before(function() {
+	before(() => WebEnvironmentPluginInstance = new WebEnvironmentPlugin("inputFileSystem", "outputFileSystem"));
+
+	describe("apply", () => {
+		let compileSpy;
+		before(() => {
 			compileSpy = {
 				outputFileSystem: "otherOutputFileSystem"
 			};
 			WebEnvironmentPluginInstance.apply(compileSpy);
 		});
 
-		it("should set compiler.outputFileSystem information with the same as setted in WebEnvironmentPlugin", function() {
-			should(compileSpy.outputFileSystem).be.eql(WebEnvironmentPluginInstance.outputFileSystem);
-		});
+		it("should set compiler.outputFileSystem information with the same as setted in WebEnvironmentPlugin", () =>
+			should(compileSpy.outputFileSystem).be.eql(WebEnvironmentPluginInstance.outputFileSystem));
 	});
 });
