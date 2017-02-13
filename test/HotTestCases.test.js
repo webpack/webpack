@@ -53,7 +53,7 @@ describe("HotTestCases", function() {
 							}, {
 								test: /\.css$/,
 								loader: ExtractTextPlugin.extract({
-									fallbackLoader: "style-loader",
+									fallback: "style-loader",
 									loader: "css-loader"
 								})
 							}]
