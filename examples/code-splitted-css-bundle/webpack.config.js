@@ -5,8 +5,8 @@ module.exports = {
 			{
 				test: /\.css$/,
 				loader: ExtractTextPlugin.extract({
-					notExtractLoader: "style-loader",
-					loader: "css-loader"
+					fallback: "style-loader",
+					use: "css-loader"
 				})
 			},
 			{ test: /\.png$/, loader: "file-loader" }
