@@ -897,7 +897,8 @@
           "properties": {
             "context": {
               "type": "string",
-              "description": "context directory for request shortening"
+              "description": "context directory for request shortening",
+              "absolutePath": true
             },
             "hash": {
               "type": "boolean",
