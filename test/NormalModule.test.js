@@ -205,17 +205,19 @@ describe("NormalModule", function() {
 		let contextDependencies;
 		let fileA;
 		let fileB;
+
 		function setDeps(
 			fileDependencies,
 			contextDependencies) {
 			normalModule.fileDependencies = fileDependencies;
 			normalModule.contextDependencies = contextDependencies;
 		}
+
 		beforeEach(function() {
 			fileA = "fileA";
 			fileB = "fileB";
-			fileDependencies = [ fileA, fileB ];
-			contextDependencies = [ fileA, fileB ];
+			fileDependencies = [fileA, fileB];
+			contextDependencies = [fileA, fileB];
 			fileTimestamps = {
 				[fileA]: 1,
 				[fileB]: 1,
@@ -268,12 +270,21 @@ describe("NormalModule", function() {
 	describe("#splitVariablesInUniqueNamedChunks", function() {
 		let variables;
 		beforeEach(function() {
-			variables = [
-				{ name: "foo" },
-				{ name: "bar" },
-				{ name: "baz" },
-				{ name: "wurst" },
-				{ name: "suppe" }
+			variables = [{
+					name: "foo"
+				},
+				{
+					name: "bar"
+				},
+				{
+					name: "baz"
+				},
+				{
+					name: "wurst"
+				},
+				{
+					name: "suppe"
+				}
 			];
 		});
 		describe("given an empty array of vars", function() {
