@@ -297,4 +297,128 @@ describe("NormalModule", function() {
 			});
 		});
 	});
+
+	describe("#applyNoParseRule", function() {
+		let rule;
+		let content;
+		describe("given a string as rule", function() {
+			beforeEach(function() {
+				rule = "some-rule";
+			});
+			describe("and the content starting with the string specified in rule", function() {
+				beforeEach(function() {
+					content = rule + "some-content";
+				});
+				it("returns true", function() {
+					normalModule.preventParsing(rule, content).should.eql(true);
+				});
+			});
+			describe("and the content does not start with the string specified in rule", function() {
+				beforeEach(function() {
+					content = "some-content";
+				});
+				it("returns false", function() {
+					normalModule.preventParsing(rule, content).should.eql(false);
+				});
+			});
+		});
+		describe("given a regex as rule", function() {
+			beforeEach(function() {
+				rule = /some-rule/;
+			});
+			describe("and the content matches the rule", function() {
+				beforeEach(function() {
+					content = rule + "some-content";
+				});
+				it("returns true", function() {
+					normalModule.preventParsing(rule, content).should.eql(true);
+				});
+			});
+			describe("and the content does not match the rule", function() {
+				beforeEach(function() {
+					content = "some-content";
+				});
+				it("returns false", function() {
+					normalModule.preventParsing(rule, content).should.eql(false);
+				});
+			});
+		});
+	});
+
+	describe("#preventParsing", function() {
+		let applyNoParseRuleSpy;
+		beforeEach(function() {
+			applyNoParseRuleSpy = sinon.stub();
+			normalModule.applyNoParseRule = applyNoParseRuleSpy;
+		});
+		describe("given no noParseRule", function() {
+			it("returns false", function() {
+				normalModule.preventParsing().should.eql(false);
+				applyNoParseRuleSpy.callCount.should.eql(0);
+			});
+		});
+		describe("given a noParseRule", function() {
+			let returnValOfSpy;
+			beforeEach(function() {
+				returnValOfSpy = Math.random() >= 0.5 ? true : false;
+				applyNoParseRuleSpy.returns(returnValOfSpy);
+			});
+			describe("that is a string", function() {
+				it("calls and returns whatever applyNoParseRule returns", function() {
+					normalModule.preventParsing("some rule").should.eql(returnValOfSpy);
+					applyNoParseRuleSpy.callCount.should.eql(1);
+				});
+			});
+			describe("that is a regex", function() {
+				it("calls and returns whatever applyNoParseRule returns", function() {
+					normalModule.preventParsing("some rule").should.eql(returnValOfSpy);
+					applyNoParseRuleSpy.callCount.should.eql(1);
+				});
+			});
+			describe("that is an array", function() {
+				describe("of strings and or regexs", function() {
+					let someRules;
+					beforeEach(function() {
+						someRules = [
+							Math.random() >= 0.5 ? "some rule" : /some rule/,
+							Math.random() >= 0.5 ? "some rule1" : /some rule1/,
+							Math.random() >= 0.5 ? "some rule2" : /some rule2/,
+						];
+					});
+					describe("and none of them match", function() {
+						beforeEach(function() {
+							returnValOfSpy = false;
+							applyNoParseRuleSpy.returns(returnValOfSpy);
+						});
+						it("returns false", function() {
+							normalModule.preventParsing(someRules).should.eql(returnValOfSpy);
+							applyNoParseRuleSpy.callCount.should.eql(3);
+						});
+					});
+					describe("and the first of them matches", function() {
+						beforeEach(function() {
+							returnValOfSpy = true;
+							applyNoParseRuleSpy.returns(returnValOfSpy);
+						});
+						it("returns true", function() {
+							normalModule.preventParsing(someRules).should.eql(returnValOfSpy);
+							applyNoParseRuleSpy.callCount.should.eql(1);
+						});
+					});
+					describe("and the last of them matches", function() {
+						beforeEach(function() {
+							returnValOfSpy = true;
+							applyNoParseRuleSpy.onCall(0).returns(false);
+							applyNoParseRuleSpy.onCall(1).returns(false);
+							applyNoParseRuleSpy.onCall(2).returns(true);
+						});
+						it("returns true", function() {
+							normalModule.preventParsing(someRules).should.eql(returnValOfSpy);
+							applyNoParseRuleSpy.callCount.should.eql(3);
+						});
+					});
+				});
+			});
+		});
+	});
 });
