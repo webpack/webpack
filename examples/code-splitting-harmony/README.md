@@ -291,7 +291,7 @@ chunk    {3} output.js (main) 414 bytes [entry] [rendered]
         [no exports used]
         harmony import a [4] ./example.js 1:0-18
     [1] ./~/c async ^\.\/.*$ 160 bytes {3} [built]
-        System.import context c [4] ./example.js 8:8-27
+        import() context c [4] ./example.js 8:8-27
     [4] ./example.js 243 bytes {3} [built]
 ```
 
@@ -324,6 +324,6 @@ chunk    {3} output.js (main) 414 bytes [entry] [rendered]
         [no exports used]
         harmony import a [4] ./example.js 1:0-18
     [1] ./~/c async ^\.\/.*$ 160 bytes {3} [built]
-        System.import context c [4] ./example.js 8:8-27
+        import() context c [4] ./example.js 8:8-27
     [4] ./example.js 243 bytes {3} [built]
 ```
