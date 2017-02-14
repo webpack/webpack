@@ -75,31 +75,6 @@ describe("NormalModule", function() {
 				}).should.eql("../userRequest!../other/userRequest!../thing/is/off/here");
 			});
 		});
-
-		describe("when running on a windows machine", function() {
-			let sep;
-			beforeEach(function() {
-				userRequest = "some\\userRequest!some\\other\\userRequest!some\\thing\\is\\off\\here";
-				sep = path.sep;
-				path.sep = "\\";
-				normalModule = new NormalModule(
-					request,
-					userRequest,
-					rawRequest,
-					loaders,
-					resource,
-					parser
-				);
-			});
-			afterEach(function() {
-				path.sep = sep;
-			});
-			it("contextifies every path in the userRequest", function() {
-				normalModule.libIdent({
-					context: "some/context"
-				}).should.eql("../../some/userRequest!../../some/other/userRequest!../../some/thing/is/off/here");
-			});
-		});
 	});
 
 	describe("#nameForCondition", function() {
