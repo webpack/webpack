@@ -23,7 +23,7 @@ describe("NormalModule", function() {
 		loaders = [];
 		resource = "some/resource";
 		parser = {
-			parser() {}
+			parse() {}
 		};
 		normalModule = new NormalModule(
 			request,
@@ -161,7 +161,7 @@ describe("NormalModule", function() {
 			});
 		});
 		describe("without the module having source", function() {
-			let expectedSource = "wurst suppe";
+			let expectedSource = "some source";
 			beforeEach(function() {
 				normalModule._source = new RawSource(expectedSource);
 			});
@@ -255,10 +255,10 @@ describe("NormalModule", function() {
 					name: "baz"
 				},
 				{
-					name: "wurst"
+					name: "some"
 				},
 				{
-					name: "suppe"
+					name: "more"
 				}
 			];
 		});
@@ -296,7 +296,7 @@ describe("NormalModule", function() {
 					content = rule + "some-content";
 				});
 				it("returns true", function() {
-					normalModule.preventParsing(rule, content).should.eql(true);
+					normalModule.shouldPreventParsing(rule, content).should.eql(true);
 				});
 			});
 			describe("and the content does not start with the string specified in rule", function() {
@@ -304,7 +304,7 @@ describe("NormalModule", function() {
 					content = "some-content";
 				});
 				it("returns false", function() {
-					normalModule.preventParsing(rule, content).should.eql(false);
+					normalModule.shouldPreventParsing(rule, content).should.eql(false);
 				});
 			});
 		});
@@ -317,7 +317,7 @@ describe("NormalModule", function() {
 					content = rule + "some-content";
 				});
 				it("returns true", function() {
-					normalModule.preventParsing(rule, content).should.eql(true);
+					normalModule.shouldPreventParsing(rule, content).should.eql(true);
 				});
 			});
 			describe("and the content does not match the rule", function() {
@@ -325,13 +325,13 @@ describe("NormalModule", function() {
 					content = "some-content";
 				});
 				it("returns false", function() {
-					normalModule.preventParsing(rule, content).should.eql(false);
+					normalModule.shouldPreventParsing(rule, content).should.eql(false);
 				});
 			});
 		});
 	});
 
-	describe("#preventParsing", function() {
+	describe("#shouldPreventParsing", function() {
 		let applyNoParseRuleSpy;
 		beforeEach(function() {
 			applyNoParseRuleSpy = sinon.stub();
@@ -339,25 +339,25 @@ describe("NormalModule", function() {
 		});
 		describe("given no noParseRule", function() {
 			it("returns false", function() {
-				normalModule.preventParsing().should.eql(false);
+				normalModule.shouldPreventParsing().should.eql(false);
 				applyNoParseRuleSpy.callCount.should.eql(0);
 			});
 		});
 		describe("given a noParseRule", function() {
 			let returnValOfSpy;
 			beforeEach(function() {
-				returnValOfSpy = Math.random() >= 0.5 ? true : false;
+				returnValOfSpy = true;
 				applyNoParseRuleSpy.returns(returnValOfSpy);
 			});
 			describe("that is a string", function() {
 				it("calls and returns whatever applyNoParseRule returns", function() {
-					normalModule.preventParsing("some rule").should.eql(returnValOfSpy);
+					normalModule.shouldPreventParsing("some rule").should.eql(returnValOfSpy);
 					applyNoParseRuleSpy.callCount.should.eql(1);
 				});
 			});
 			describe("that is a regex", function() {
 				it("calls and returns whatever applyNoParseRule returns", function() {
-					normalModule.preventParsing("some rule").should.eql(returnValOfSpy);
+					normalModule.shouldPreventParsing("some rule").should.eql(returnValOfSpy);
 					applyNoParseRuleSpy.callCount.should.eql(1);
 				});
 			});
@@ -366,9 +366,9 @@ describe("NormalModule", function() {
 					let someRules;
 					beforeEach(function() {
 						someRules = [
-							Math.random() >= 0.5 ? "some rule" : /some rule/,
-							Math.random() >= 0.5 ? "some rule1" : /some rule1/,
-							Math.random() >= 0.5 ? "some rule2" : /some rule2/,
+							"some rule",
+							/some rule1/,
+							"some rule2",
 						];
 					});
 					describe("and none of them match", function() {
@@ -377,7 +377,7 @@ describe("NormalModule", function() {
 							applyNoParseRuleSpy.returns(returnValOfSpy);
 						});
 						it("returns false", function() {
-							normalModule.preventParsing(someRules).should.eql(returnValOfSpy);
+							normalModule.shouldPreventParsing(someRules).should.eql(returnValOfSpy);
 							applyNoParseRuleSpy.callCount.should.eql(3);
 						});
 					});
@@ -387,7 +387,7 @@ describe("NormalModule", function() {
 							applyNoParseRuleSpy.returns(returnValOfSpy);
 						});
 						it("returns true", function() {
-							normalModule.preventParsing(someRules).should.eql(returnValOfSpy);
+							normalModule.shouldPreventParsing(someRules).should.eql(returnValOfSpy);
 							applyNoParseRuleSpy.callCount.should.eql(1);
 						});
 					});
@@ -399,7 +399,7 @@ describe("NormalModule", function() {
 							applyNoParseRuleSpy.onCall(2).returns(true);
 						});
 						it("returns true", function() {
-							normalModule.preventParsing(someRules).should.eql(returnValOfSpy);
+							normalModule.shouldPreventParsing(someRules).should.eql(returnValOfSpy);
 							applyNoParseRuleSpy.callCount.should.eql(3);
 						});
 					});
