@@ -246,25 +246,22 @@ describe("NormalModule", function() {
 		let variables;
 		beforeEach(function() {
 			variables = [{
-					name: "foo"
-				},
-				{
-					name: "bar"
-				},
-				{
-					name: "baz"
-				},
-				{
-					name: "some"
-				},
-				{
-					name: "more"
-				}
-			];
+				name: "foo"
+			}, {
+				name: "bar"
+			}, {
+				name: "baz"
+			}, {
+				name: "some"
+			}, {
+				name: "more"
+			}];
 		});
 		describe("given an empty array of vars", function() {
 			it("returns an empty array", function() {
-				normalModule.splitVariablesInUniqueNamedChunks([]).should.eql([]);
+				normalModule.splitVariablesInUniqueNamedChunks([]).should.eql([
+					[]
+				]);
 			});
 		});
 		describe("given an array of distrinct variables", function() {
