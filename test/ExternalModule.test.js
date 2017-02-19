@@ -164,7 +164,7 @@ describe("ExternalModule", function() {
 			// set up
 			const variableToCheck = "foo";
 			const request = "bar";
-			const expected = "if(typeof foo === 'undefined') {var e = new Error(\"Cannot find module \\\"bar\\\"\"); e.code = 'MODULE_NOT_FOUND';; throw e;}";
+			const expected = "if(typeof foo === 'undefined') {var e = new Error(\"Cannot find module \\\"bar\\\"\"); e.code = 'MODULE_NOT_FOUND'; throw e;}";
 
 			// invoke
 			const result = externalModule.checkExternalVariable(variableToCheck, request);
