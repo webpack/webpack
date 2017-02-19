@@ -164,13 +164,72 @@ describe("ExternalModule", function() {
 			// set up
 			const variableToCheck = "foo";
 			const request = "bar";
-			const expected = "if(typeof foo === 'undefined') {var e = new Error(\"Cannot find module \\\"bar\\\"\"); e.code = 'MODULE_NOT_FOUND'; throw e;}";
+			const expected = `if(typeof foo === 'undefined') {var e = new Error(\"Cannot find module \\\"bar\\\"\"); e.code = 'MODULE_NOT_FOUND'; throw e;}
+`;
 
 			// invoke
 			const result = externalModule.checkExternalVariable(variableToCheck, request);
 
 			// check
 			result.should.eql(expected);
+		});
+	});
+
+	describe("#getSourceForAmdOrUmdExternal", function() {
+		it("looks up a global variable as specified by the id", function() {
+			// set up
+			const id = "someId";
+			const optional = false;
+			const expected = "module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;";
+
+			// invoke
+			const result = externalModule.getSourceForAmdOrUmdExternal(id, optional, request);
+
+			// check
+			result.should.eql(expected);
+		});
+		describe("given an optinal check is set", function() {
+			it("ads a check for the existance of the variable before looking it up", function() {
+				// set up
+				const id = "someId";
+				const optional = true;
+				const expected = `if(typeof __WEBPACK_EXTERNAL_MODULE_someId__ === 'undefined') {var e = new Error("Cannot find module \\"some/request\\""); e.code = 'MODULE_NOT_FOUND'; throw e;}
+module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
+
+				// invoke
+				const result = externalModule.getSourceForAmdOrUmdExternal(id, optional, request);
+
+				// check
+				result.should.eql(expected);
+			});
+		});
+	});
+
+	describe("#getSourceForDefaultCase", function() {
+		it("returns the given request as lookup", function() {
+			// set up
+			const optional = false;
+			const expected = "module.exports = some/request;";
+
+			// invoke
+			const result = externalModule.getSourceForDefaultCase(optional, request);
+
+			// check
+			result.should.eql(expected);
+		});
+		describe("given an optinal check is requested", function() {
+			it("checks for the existance of the request setting it", function() {
+				// set up
+				const optional = true;
+				const expected = `if(typeof some/request === 'undefined') {var e = new Error("Cannot find module \\"some/request\\""); e.code = 'MODULE_NOT_FOUND'; throw e;}
+module.exports = some/request;`;
+
+				// invoke
+				const result = externalModule.getSourceForDefaultCase(optional, request);
+
+				// check
+				result.should.eql(expected);
+			});
 		});
 	});
 });
