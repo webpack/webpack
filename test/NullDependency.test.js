@@ -1,36 +1,26 @@
-var should = require("should");
-var sinon = require("sinon");
-var NullDependency = require("../lib/dependencies/NullDependency");
+"use strict";
 
-describe("NullDependency", function() {
-	var env;
+const should = require("should");
+const sinon = require("sinon");
+const NullDependency = require("../lib/dependencies/NullDependency");
 
-	beforeEach(function() {
-		env = {};
-	});
+describe("NullDependency", () => {
+	let env;
 
-	it("is a function", function() {
-		NullDependency.should.be.a.Function();
-	});
+	beforeEach(() => env = {});
 
-	describe("when created", function() {
-		beforeEach(function() {
-			env.nullDependency = new NullDependency();
-		});
+	it("is a function", () => NullDependency.should.be.a.Function());
 
-		it("has a null type", function() {
-			env.nullDependency.type.should.be.exactly("null");
-		});
+	describe("when created", () => {
+		beforeEach(() => env.nullDependency = new NullDependency());
 
-		it("is not an equal resource", function() {
-			env.nullDependency.isEqualResource().should.be.False();
-		});
+		it("has a null type", () => env.nullDependency.type.should.be.exactly("null"));
 
-		it("has update hash function", function() {
-			env.nullDependency.updateHash.should.be.Function();
-		});
+		it("is not an equal resource", () => env.nullDependency.isEqualResource().should.be.False());
 
-		it("does not update hash", function() {
+		it("has update hash function", () => env.nullDependency.updateHash.should.be.Function());
+
+		it("does not update hash", () => {
 			const hash = {
 				update: sinon.stub()
 			};
@@ -39,19 +29,13 @@ describe("NullDependency", function() {
 		});
 	});
 
-	describe("Template", function() {
-		it("is a function", function() {
-			NullDependency.Template.should.be.a.Function();
-		});
+	describe("Template", () => {
+		it("is a function", () => NullDependency.Template.should.be.a.Function());
 
-		describe("when created", function() {
-			beforeEach(function() {
-				env.nullDependencyTemplate = new NullDependency.Template();
-			});
+		describe("when created", () => {
+			beforeEach(() => env.nullDependencyTemplate = new NullDependency.Template());
 
-			it("has apply function", function() {
-				env.nullDependencyTemplate.apply.should.be.Function();
-			});
+			it("has apply function", () => env.nullDependencyTemplate.apply.should.be.Function());
 		});
 	});
 });
