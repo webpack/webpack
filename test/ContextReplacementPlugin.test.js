@@ -186,7 +186,7 @@ describe("ContextReplacementPlugin", () => {
 				should(spy.called).be.exactly(true)
 			});
 
-			it("default call where regex is correct", () => {
+			it("default call where regex is correct and using function as newContent Resource", () => {
 				let obj = buildPluginWithParams(/selector/,(result) => {
 					result.resource = "imadifferentselector"
 				}, true, /filter/);
