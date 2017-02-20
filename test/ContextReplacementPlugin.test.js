@@ -133,7 +133,8 @@ describe("ContextReplacementPlugin", () => {
 				let obj = buildPluginWithParams(/selector/, "./folder", true, /filter/);
 
 				let x = (nothing, result) => {
-					result.resource.should.containEql('/selector/folder')
+					result.resource.should.containEql('selector')
+					result.resource.should.containEql('folder')
 				};
 
 				let spy = sinon.spy(x);
@@ -194,7 +195,8 @@ describe("ContextReplacementPlugin", () => {
 				}, true, /filter/);
 
 				let x = (nothing, result) => {
-					result.resource.should.containEql('selector/imadifferentselector')
+					result.resource.should.containEql('selector')
+					result.resource.should.containEql('imadifferentselector')
 				};
 
 				let spy = sinon.spy(x);
