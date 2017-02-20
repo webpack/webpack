@@ -27,26 +27,22 @@ describe("AmdMainTemplatePlugin", () => {
 	beforeEach(() => {
 		env = {
 			modulesListWithExternals: [{
-					id: "module-1",
-					external: true,
-					request: {
-						amd: "external-amd-module"
-					}
-				},
-				{
-					id: "module-2",
-					external: true,
-					request: "external-non-amd-module"
-				},
-				{
-					id: "module-3",
-					external: true
-				},
-				{
-					id: "module-4",
-					external: false
+				id: "module-1",
+				external: true,
+				request: {
+					amd: "external-amd-module"
 				}
-			]
+			}, {
+				id: "module-2",
+				external: true,
+				request: "external-non-amd-module"
+			}, {
+				id: "module-3",
+				external: true
+			}, {
+				id: "module-4",
+				external: false
+			}]
 		};
 	});
 
@@ -112,7 +108,7 @@ describe("AmdMainTemplatePlugin", () => {
 					it("creates source wrapper with callback only", () => {
 						const source = env.eventBinding.handler("moduleSource()", env.chunk, "bar");
 						source.should.be.instanceof(ConcatSource);
-						source.source().should.be.exactly('define(function() { return moduleSource()});');
+						source.source().should.be.exactly("define(function() { return moduleSource()});");
 					});
 				});
 			});
@@ -150,6 +146,6 @@ describe("AmdMainTemplatePlugin", () => {
 					hash.update.secondCall.args[0].should.be.exactly("foo");
 				});
 			});
-		})
+		});
 	});
 });
