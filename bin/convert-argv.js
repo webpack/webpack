@@ -275,7 +275,11 @@ module.exports = function(yargs, argv, convertOptions) {
 		}
 
 		ifArgPair("entry", function(name, entry) {
-			options.entry[name] = entry;
+			if(typeof options.entry[name] !== "undefined" && options.entry[name] !== null) {
+				options.entry[name] = [].concat(options.entry[name]).concat(entry);
+			} else {
+				options.entry[name] = entry;
+			}
 		}, function() {
 			ensureObject(options, "entry");
 		});
