@@ -218,6 +218,9 @@
         },
         "wrappedContextRegExp": {
           "instanceof": "RegExp"
+        },
+        "strictExportPresence": {
+          "type": "boolean"
         }
       },
       "type": "object"
