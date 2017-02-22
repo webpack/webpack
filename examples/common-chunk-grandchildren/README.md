@@ -79,6 +79,26 @@ module.exports = function() {
 };
 ```
 
+# webpack.config.js
+
+``` javascript
+var webpack = require("../../");
+
+module.exports = {
+	entry: {
+		main: ["./example.js"]
+	},
+	plugins: [
+		new webpack.optimize.CommonsChunkPlugin({
+			name: "main",
+			minChunks: 2,
+			children: true,
+			deepChildren: true,
+		})
+	]
+};
+```
+
 # js/output.js
 
 <details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
@@ -388,7 +408,7 @@ chunk    {2} 2.output.js 136 bytes {3} [rendered]
     [3] ./pageA.js 136 bytes {2} [built]
         cjs require ./pageA [0] ./example.js 4:15-33
 chunk    {3} output.js (main) 325 bytes [entry] [rendered]
-    > main [1] multi ./example.js ./example.js 
+    > main [1] multi ./example.js ./example.js
     [0] ./example.js 216 bytes {3} [built]
         single entry ./example.js [1] multi ./example.js ./example.js main:100000
         single entry ./example.js [1] multi ./example.js ./example.js main:100001
@@ -422,7 +442,7 @@ chunk    {2} 2.output.js 136 bytes {3} [rendered]
     [3] ./pageA.js 136 bytes {2} [built]
         cjs require ./pageA [0] ./example.js 4:15-33
 chunk    {3} output.js (main) 325 bytes [entry] [rendered]
-    > main [1] multi ./example.js ./example.js 
+    > main [1] multi ./example.js ./example.js
     [0] ./example.js 216 bytes {3} [built]
         single entry ./example.js [1] multi ./example.js ./example.js main:100000
         single entry ./example.js [1] multi ./example.js ./example.js main:100001
