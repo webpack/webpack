@@ -636,6 +636,9 @@
         "resourceQuery": {
           "$ref": "#/definitions/ruleSet-condition"
         },
+        "compiler": {
+          "$ref": "#/definitions/ruleSet-condition"
+        },
         "rules": {
           "$ref": "#/definitions/ruleSet-rules"
         },
