@@ -302,6 +302,10 @@ block-stream@*:
   dependencies:
     inherits "~2.0.0"
 
+bluebird@^2.3, bluebird@^2.9.x:
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-2.11.0.tgz#534b9033c022c9579c56ba3b3e5a5caafbb650e1"
+
 bluebird@^3.0.5:
   version "3.4.7"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.4.7.tgz#f72d760be09b7f76d08ed8fae98b289a8d05fab3"
@@ -581,6 +585,17 @@ coa@~1.0.1:
   dependencies:
     q "^1.1.2"
 
+codacy-coverage@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/codacy-coverage/-/codacy-coverage-2.0.1.tgz#5ac7a0892031030dc35299a2cce7895b3763c28d"
+  dependencies:
+    bluebird "^2.9.x"
+    commander "^2.x"
+    joi "^6.4.x"
+    lcov-parse "0.x"
+    log-driver "^1.x"
+    request-promise "^0.x"
+
 code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
@@ -660,7 +675,7 @@ commander@2.8.x:
   dependencies:
     graceful-readlink ">= 1.0.0"
 
-commander@2.9.0, commander@^2.9.0:
+commander@2.9.0, commander@^2.9.0, commander@^2.x:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.9.0.tgz#9c99094176e12240cb22d6c5146098400fe0f7d4"
   dependencies:
@@ -2023,7 +2038,7 @@ jodid25519@^1.0.0:
   dependencies:
     jsbn "~0.1.0"
 
-joi@^6.9.1:
+joi@^6.4.x, joi@^6.9.1:
   version "6.10.1"
   resolved "https://registry.yarnpkg.com/joi/-/joi-6.10.1.tgz#4d50c318079122000fe5f16af1ff8e1917b77e06"
   dependencies:
@@ -2136,7 +2151,7 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
-lcov-parse@0.0.10:
+lcov-parse@0.0.10, lcov-parse@0.x:
   version "0.0.10"
   resolved "https://registry.yarnpkg.com/lcov-parse/-/lcov-parse-0.0.10.tgz#1b0b8ff9ac9c7889250582b70b71315d9da6d9a3"
 
@@ -2273,11 +2288,15 @@ lodash.words@^3.0.0:
   dependencies:
     lodash._root "^3.0.0"
 
+lodash@^3.10.0:
+  version "3.10.1"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
+
 lodash@^4.0.0, lodash@^4.14.0, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.3.0:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
-log-driver@1.2.5:
+log-driver@1.2.5, log-driver@^1.x:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/log-driver/-/log-driver-1.2.5.tgz#7ae4ec257302fd790d557cb10c97100d857b0056"
 
@@ -3097,11 +3116,7 @@ randombytes@^2.0.0, randombytes@^2.0.1:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/randombytes/-/randombytes-2.0.3.tgz#674c99760901c3c4112771a31e521dc349cc09ec"
 
-range-parser@^1.0.3:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.2.0.tgz#f49be6b487894ddc40dcc94a322f611092e00d5e"
-
-range-parser@~1.0.3:
+range-parser@^1.0.3, range-parser@~1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/range-parser/-/range-parser-1.0.3.tgz#6872823535c692e2c2a0103826afd82c2e0ff175"
 
@@ -3256,6 +3271,15 @@ repeat-string@^1.5.2:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/repeat-string/-/repeat-string-1.6.1.tgz#8dcae470e1c88abc2d600fff4a776286da75e637"
 
+request-promise@^0.x:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/request-promise/-/request-promise-0.4.3.tgz#3c8ddc82f06f8908d720aede1d6794258e22121c"
+  dependencies:
+    bluebird "^2.3"
+    chalk "^1.1.0"
+    lodash "^3.10.0"
+    request "^2.34"
+
 request@2.42.0:
   version "2.42.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.42.0.tgz#572bd0148938564040ac7ab148b96423a063304a"
@@ -3277,7 +3301,7 @@ request@2.42.0:
     stringstream "~0.0.4"
     tough-cookie ">=0.12.0"
 
-request@2.79.0, request@^2.72.0, request@^2.79.0:
+request@2.79.0, request@^2.34, request@^2.72.0, request@^2.79.0:
   version "2.79.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.79.0.tgz#4dfe5bf6be8b8cdc37fcf93e04b65577722710de"
   dependencies:
