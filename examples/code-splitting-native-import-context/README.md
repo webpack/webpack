@@ -294,7 +294,7 @@ chunk    {2} 2.output.js 38 bytes {3} [rendered]
 chunk    {3} output.js (main) 441 bytes [entry] [rendered]
     > main [4] ./example.js 
     [0] ./templates async ^\.\/.*$ 160 bytes {3} [optional] [built]
-        System.import context ./templates [4] ./example.js 3:23-60
+        import() context ./templates [4] ./example.js 3:23-60
     [4] ./example.js 281 bytes {3} [built]
 ```
 
@@ -327,7 +327,7 @@ chunk    {2} 2.output.js 38 bytes {3} [rendered]
 chunk    {3} output.js (main) 441 bytes [entry] [rendered]
     > main [4] ./example.js 
     [0] ./templates async ^\.\/.*$ 160 bytes {3} [optional] [built]
-        System.import context ./templates [4] ./example.js 3:23-60
+        import() context ./templates [4] ./example.js 3:23-60
     [4] ./example.js 281 bytes {3} [built]
 
 ERROR in output.js from UglifyJs

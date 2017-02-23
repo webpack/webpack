@@ -1,7 +1,8 @@
+/* globals describe, it, beforeEach */
 "use strict";
 
 const should = require("should");
-const path = require("path");
+const sinon = require("sinon");
 const Chunk = require("../lib/Chunk");
 
 describe("Chunk", () => {
@@ -25,7 +26,7 @@ describe("Chunk", () => {
 	describe("entry", () => {
 		it("returns an error if get entry", () =>
 			should(() => {
-				const entryTest = ChunkInstance.entry;
+				ChunkInstance.entry;
 			}).throw("Chunk.entry was removed. Use hasRuntime()"));
 
 		it("returns an error if set an entry", () =>
@@ -37,7 +38,7 @@ describe("Chunk", () => {
 	describe("initial", () => {
 		it("returns an error if get initial", () =>
 			should(() => {
-				const initialTest = ChunkInstance.initial;
+				ChunkInstance.initial;
 			}).throw("Chunk.initial was removed. Use isInitial()"));
 
 		it("returns an error if set an initial", () =>
@@ -82,6 +83,84 @@ describe("Chunk", () => {
 				isInitial: () => false
 			};
 			should(ChunkInstance.canBeIntegrated(other)).be.true();
+		});
+	});
+
+	describe("removeModule", function() {
+		let module;
+		let removeChunkSpy;
+		beforeEach(function() {
+			removeChunkSpy = sinon.spy();
+			module = {
+				removeChunk: removeChunkSpy
+			};
+		});
+		describe("and the chunk does not contain this module", function() {
+			it("returns false", function() {
+				ChunkInstance.removeModule(module).should.eql(false);
+			});
+		});
+		describe("and the chunk does contain this module", function() {
+			beforeEach(function() {
+				ChunkInstance.modules = [module];
+			});
+			it("calls module.removeChunk with itself and returns true", function() {
+				ChunkInstance.removeModule(module).should.eql(true);
+				removeChunkSpy.callCount.should.eql(1);
+				removeChunkSpy.args[0][0].should.eql(ChunkInstance);
+			});
+		});
+	});
+
+	describe("removeChunk", function() {
+		let chunk;
+		let removeParentSpy;
+		beforeEach(function() {
+			removeParentSpy = sinon.spy();
+			chunk = {
+				removeParent: removeParentSpy
+			};
+		});
+		describe("and the chunk does not contain this chunk", function() {
+			it("returns false", function() {
+				ChunkInstance.removeChunk(chunk).should.eql(false);
+			});
+		});
+		describe("and the chunk does contain this module", function() {
+			beforeEach(function() {
+				ChunkInstance.chunks = [chunk];
+			});
+			it("calls module.removeChunk with itself and returns true", function() {
+				ChunkInstance.removeChunk(chunk).should.eql(true);
+				removeParentSpy.callCount.should.eql(1);
+				removeParentSpy.args[0][0].should.eql(ChunkInstance);
+			});
+		});
+	});
+
+	describe("removeParent", function() {
+		let chunk;
+		let removeChunkSpy;
+		beforeEach(function() {
+			removeChunkSpy = sinon.spy();
+			chunk = {
+				removeChunk: removeChunkSpy
+			};
+		});
+		describe("and the chunk does not contain this chunk", function() {
+			it("returns false", function() {
+				ChunkInstance.removeParent(chunk).should.eql(false);
+			});
+		});
+		describe("and the chunk does contain this module", function() {
+			beforeEach(function() {
+				ChunkInstance.parents = [chunk];
+			});
+			it("calls module.removeChunk with itself and returns true", function() {
+				ChunkInstance.removeParent(chunk).should.eql(true);
+				removeChunkSpy.callCount.should.eql(1);
+				removeChunkSpy.args[0][0].should.eql(ChunkInstance);
+			});
 		});
 	});
 });

@@ -569,20 +569,32 @@
         },
         "exclude": {
           "allOf": [
-            {"$ref": "#/definitions/ruleSet-condition"},
-            {"absolutePath": true}
+            {
+              "$ref": "#/definitions/ruleSet-condition"
+            },
+            {
+              "absolutePath": true
+            }
           ]
         },
         "include": {
           "allOf": [
-            {"$ref": "#/definitions/ruleSet-condition"},
-            {"absolutePath": true}
+            {
+              "$ref": "#/definitions/ruleSet-condition"
+            },
+            {
+              "absolutePath": true
+            }
           ]
         },
         "issuer": {
           "allOf": [
-            {"$ref": "#/definitions/ruleSet-condition"},
-            {"absolutePath": true}
+            {
+              "$ref": "#/definitions/ruleSet-condition"
+            },
+            {
+              "absolutePath": true
+            }
           ]
         },
         "loader": {
@@ -613,11 +625,18 @@
         },
         "resource": {
           "allOf": [
-            {"$ref": "#/definitions/ruleSet-condition"},
-            {"absolutePath": true}
+            {
+              "$ref": "#/definitions/ruleSet-condition"
+            },
+            {
+              "absolutePath": true
+            }
           ]
         },
         "resourceQuery": {
+          "$ref": "#/definitions/ruleSet-condition"
+        },
+        "compiler": {
           "$ref": "#/definitions/ruleSet-condition"
         },
         "rules": {
@@ -625,8 +644,12 @@
         },
         "test": {
           "allOf": [
-            {"$ref": "#/definitions/ruleSet-condition"},
-            {"absolutePath": true}
+            {
+              "$ref": "#/definitions/ruleSet-condition"
+            },
+            {
+              "absolutePath": true
+            }
           ]
         },
         "use": {
@@ -873,7 +896,78 @@
       "description": "Used by the webpack CLI program to pass stats options.",
       "anyOf": [
         {
-          "type": "object"
+          "type": "object",
+          "properties": {
+            "context": {
+              "type": "string",
+              "description": "context directory for request shortening",
+              "absolutePath": true
+            },
+            "hash": {
+              "type": "boolean",
+              "description": "add the hash of the compilation"
+            },
+            "version": {
+              "type": "boolean",
+              "description": "add webpack version information"
+            },
+            "timings": {
+              "type": "boolean",
+              "description": "add timing information"
+            },
+            "assets": {
+              "type": "boolean",
+              "description": "add assets information"
+            },
+            "chunks": {
+              "type": "boolean",
+              "description": "add chunk information"
+            },
+            "chunkModules": {
+              "type": "boolean",
+              "description": "add built modules information to chunk information"
+            },
+            "modules": {
+              "type": "boolean",
+              "description": "add built modules information"
+            },
+            "children": {
+              "type": "boolean",
+              "description": "add children information"
+            },
+            "cached": {
+              "type": "boolean",
+              "description": "add also information about cached (not built) modules"
+            },
+            "reasons": {
+              "type": "boolean",
+              "description": "add information about the reasons why modules are included"
+            },
+            "source": {
+              "type": "boolean",
+              "description": "add the source code of modules"
+            },
+            "errorDetails": {
+              "type": "boolean",
+              "description": "add details to errors (like resolving log)"
+            },
+            "chunkOrigins": {
+              "type": "boolean",
+              "description": "add the origins of chunks and chunk merging info"
+            },
+            "modulesSort": {
+              "type": "string",
+              "description": "sort the modules by that field"
+            },
+            "chunksSort": {
+              "type": "string",
+              "description": "sort the chunks by that field"
+            },
+            "assetsSort": {
+              "type": "string",
+              "description": "sort the assets by that field"
+            }
+          }
         },
         {
           "type": "boolean"

@@ -52,8 +52,8 @@ describe("HotTestCases", function() {
 								enforce: "pre"
 							}, {
 								test: /\.css$/,
-								loader: ExtractTextPlugin.extract({
-									fallbackLoader: "style-loader",
+								use: ExtractTextPlugin.extract({
+									fallback: "style-loader",
 									loader: "css-loader"
 								})
 							}]
