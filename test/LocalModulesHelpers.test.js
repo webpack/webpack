@@ -12,7 +12,7 @@ describe("LocalModulesHelpers", () => {
 				module: "module_sample",
 				localModules: ["first", "second"]
 			};
-			should(LocalModulesHelpers.addLocalModule(state, "local_module_sample")).be.eql({
+			should(LocalModulesHelpers.addLocalModule(state, "local_module_sample")).be.an.instanceOf(Object).and.have.properties({
 				module: "module_sample",
 				name: "local_module_sample",
 				idx: 2,
