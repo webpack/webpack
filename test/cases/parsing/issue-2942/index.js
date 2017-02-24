@@ -1,5 +1,5 @@
 it("should polyfill System", function() {
-	if (typeof System === "object" && typeof System.register === "function") {
+	if (typeof System.register === "function") {
 		require("fail");
 	}
 	(typeof System).should.be.eql("object");
