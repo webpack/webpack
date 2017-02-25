@@ -1,6 +1,6 @@
-Hash: 4beee256fa6b8f69eae84beee256fa6b8f69eae84beee256fa6b8f69eae84beee256fa6b8f69eae84beee256fa6b8f69eae84beee256fa6b8f69eae84beee256fa6b8f69eae8
+Hash: e4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1e
 Child
-    Hash: 4beee256fa6b8f69eae8
+    Hash: e4d2b189bb205589ee1e
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.3 kB       0  [emitted]  main
@@ -10,18 +10,18 @@ Child
        [2] (webpack)/test/statsCases/filter-warnings/index.js 299 bytes {0} [built]
     
     WARNING in bundle.js from UglifyJs
-    Dropping unused function someUnRemoteUsedFunction1 [./a.js:3,0]
-    Dropping unused function someUnRemoteUsedFunction2 [./a.js:4,0]
-    Dropping unused function someUnRemoteUsedFunction3 [./a.js:5,0]
-    Dropping unused function someUnRemoteUsedFunction4 [./a.js:6,0]
-    Dropping unused function someUnRemoteUsedFunction5 [./a.js:7,0]
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
     Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     Dropping unused function someUnUsedFunction2 [./index.js:9,0]
     Dropping unused function someUnUsedFunction3 [./index.js:10,0]
     Dropping unused function someUnUsedFunction4 [./index.js:11,0]
     Dropping unused function someUnUsedFunction5 [./index.js:12,0]
 Child
-    Hash: 4beee256fa6b8f69eae8
+    Hash: e4d2b189bb205589ee1e
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.3 kB       0  [emitted]  main
@@ -30,7 +30,7 @@ Child
        [1] (webpack)/test/statsCases/filter-warnings/a.js 249 bytes {0} [built]
        [2] (webpack)/test/statsCases/filter-warnings/index.js 299 bytes {0} [built]
 Child
-    Hash: 4beee256fa6b8f69eae8
+    Hash: e4d2b189bb205589ee1e
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.3 kB       0  [emitted]  main
@@ -39,7 +39,7 @@ Child
        [1] (webpack)/test/statsCases/filter-warnings/a.js 249 bytes {0} [built]
        [2] (webpack)/test/statsCases/filter-warnings/index.js 299 bytes {0} [built]
 Child
-    Hash: 4beee256fa6b8f69eae8
+    Hash: e4d2b189bb205589ee1e
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.3 kB       0  [emitted]  main
@@ -48,7 +48,7 @@ Child
        [1] (webpack)/test/statsCases/filter-warnings/a.js 249 bytes {0} [built]
        [2] (webpack)/test/statsCases/filter-warnings/index.js 299 bytes {0} [built]
 Child
-    Hash: 4beee256fa6b8f69eae8
+    Hash: e4d2b189bb205589ee1e
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.3 kB       0  [emitted]  main
@@ -57,7 +57,7 @@ Child
        [1] (webpack)/test/statsCases/filter-warnings/a.js 249 bytes {0} [built]
        [2] (webpack)/test/statsCases/filter-warnings/index.js 299 bytes {0} [built]
 Child
-    Hash: 4beee256fa6b8f69eae8
+    Hash: e4d2b189bb205589ee1e
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.3 kB       0  [emitted]  main
@@ -66,7 +66,7 @@ Child
        [1] (webpack)/test/statsCases/filter-warnings/a.js 249 bytes {0} [built]
        [2] (webpack)/test/statsCases/filter-warnings/index.js 299 bytes {0} [built]
 Child
-    Hash: 4beee256fa6b8f69eae8
+    Hash: e4d2b189bb205589ee1e
     Time: Xms
         Asset    Size  Chunks             Chunk Names
     bundle.js  2.3 kB       0  [emitted]  main
@@ -74,3 +74,129 @@ Child
        [0] (webpack)/buildin/module.js 495 bytes {0} [built]
        [1] (webpack)/test/statsCases/filter-warnings/a.js 249 bytes {0} [built]
        [2] (webpack)/test/statsCases/filter-warnings/index.js 299 bytes {0} [built]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset    Size  Chunks             Chunk Names
+    bundle.js  2.3 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+       [0] (webpack)/buildin/module.js 495 bytes {0} [built]
+       [1] (webpack)/test/statsCases/filter-warnings/a.js 249 bytes {0} [built]
+       [2] (webpack)/test/statsCases/filter-warnings/index.js 299 bytes {0} [built]
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset    Size  Chunks             Chunk Names
+    bundle.js  2.3 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+       [0] (webpack)/buildin/module.js 495 bytes {0} [built]
+       [1] (webpack)/test/statsCases/filter-warnings/a.js 249 bytes {0} [built]
+       [2] (webpack)/test/statsCases/filter-warnings/index.js 299 bytes {0} [built]
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset    Size  Chunks             Chunk Names
+    bundle.js  2.3 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+       [0] (webpack)/buildin/module.js 495 bytes {0} [built]
+       [1] (webpack)/test/statsCases/filter-warnings/a.js 249 bytes {0} [built]
+       [2] (webpack)/test/statsCases/filter-warnings/index.js 299 bytes {0} [built]
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset    Size  Chunks             Chunk Names
+    bundle.js  2.3 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+       [0] (webpack)/buildin/module.js 495 bytes {0} [built]
+       [1] (webpack)/test/statsCases/filter-warnings/a.js 249 bytes {0} [built]
+       [2] (webpack)/test/statsCases/filter-warnings/index.js 299 bytes {0} [built]
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset    Size  Chunks             Chunk Names
+    bundle.js  2.3 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+       [0] (webpack)/buildin/module.js 495 bytes {0} [built]
+       [1] (webpack)/test/statsCases/filter-warnings/a.js 249 bytes {0} [built]
+       [2] (webpack)/test/statsCases/filter-warnings/index.js 299 bytes {0} [built]
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset    Size  Chunks             Chunk Names
+    bundle.js  2.3 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+       [0] (webpack)/buildin/module.js 495 bytes {0} [built]
+       [1] (webpack)/test/statsCases/filter-warnings/a.js 249 bytes {0} [built]
+       [2] (webpack)/test/statsCases/filter-warnings/index.js 299 bytes {0} [built]
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]

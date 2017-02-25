@@ -1,7 +1,7 @@
 module.export = function someUsedFunction() {};
 
-function someUnRemoteUsedFunction1() {}
-function someUnRemoteUsedFunction2() {}
-function someUnRemoteUsedFunction3() {}
-function someUnRemoteUsedFunction4() {}
-function someUnRemoteUsedFunction5() {}
+function someRemoteUnUsedFunction1() {}
+function someRemoteUnUsedFunction2() {}
+function someRemoteUnUsedFunction3() {}
+function someRemoteUnUsedFunction4() {}
+function someRemoteUnUsedFunction5() {}
