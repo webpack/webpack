@@ -39,7 +39,6 @@ module.exports = function(optimist) {
 		.boolean("optimize-minimize").describe("optimize-minimize", "Minimize javascript and switches loaders to minimizing")
 		.string("prefetch").describe("prefetch", "Prefetch this request")
 		.string("provide").describe("provide", "Provide these modules as free vars in all modules")
-		.boolean("labeled-modules").describe("labeled-modules", "Enables labeled modules")
 		.string("plugin").describe("plugin", "Load this plugin")
 		.boolean("bail").describe("bail", "Abort the compilation on first error")
 		.boolean("profile").describe("profile", "Profile the compilation and include information in stats")
