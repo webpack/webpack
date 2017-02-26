@@ -218,6 +218,9 @@
         },
         "wrappedContextRegExp": {
           "instanceof": "RegExp"
+        },
+        "strictExportPresence": {
+          "type": "boolean"
         }
       },
       "type": "object"
@@ -634,6 +637,9 @@
           ]
         },
         "resourceQuery": {
+          "$ref": "#/definitions/ruleSet-condition"
+        },
+        "compiler": {
           "$ref": "#/definitions/ruleSet-condition"
         },
         "rules": {

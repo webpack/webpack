@@ -17,8 +17,6 @@ environment:
       job_part: test
     - nodejs_version: 6
       job_part: test
-    - nodejs_version: 7
-      job_part: benchmark
 
 install:
   - ps: Install-Product node $env:nodejs_version x64
