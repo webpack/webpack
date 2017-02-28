@@ -56,6 +56,7 @@ describe("Compiler", () => {
 			callback(stats, files, compilation);
 		});
 	}
+
 	it("should compile a single file to deep output", (done) => {
 		compile("./c", {
 			output: {
@@ -71,7 +72,7 @@ describe("Compiler", () => {
 		});
 	});
 
-  it("should compile a single file", (done) => {
+	it("should compile a single file", (done) => {
 		compile("./c", {}, (stats, files) => {
 			files.should.have.property("/main.js").have.type("string");
 			Object.keys(files).should.be.eql(["/main.js"]);
@@ -90,7 +91,7 @@ describe("Compiler", () => {
 		});
 	});
 
-  it("should compile a complex file", (done) => {
+	it("should compile a complex file", (done) => {
 		compile("./main1", {}, (stats, files) => {
 			files.should.have.property("/main.js").have.type("string");
 			Object.keys(files).should.be.eql(["/main.js"]);
@@ -112,7 +113,7 @@ describe("Compiler", () => {
 		});
 	});
 
-  it("should compile a file with transitive dependencies", (done) => {
+	it("should compile a file with transitive dependencies", (done) => {
 		compile("./abc", {}, (stats, files) => {
 			files.should.have.property("/main.js").have.type("string");
 			Object.keys(files).should.be.eql(["/main.js"]);
@@ -136,7 +137,7 @@ describe("Compiler", () => {
 		});
 	});
 
-  it("should compile a file with multiple chunks", (done) => {
+	it("should compile a file with multiple chunks", (done) => {
 		compile("./chunks", {}, (stats, files) => {
 			stats.chunks.length.should.be.eql(2);
 			files.should.have.property("/main.js").have.type("string");
