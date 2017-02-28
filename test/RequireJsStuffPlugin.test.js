@@ -1,42 +1,33 @@
 "use strict";
+
 const should = require("should");
 const sinon = require("sinon");
 const RequireJsStuffPlugin = require("../lib/RequireJsStuffPlugin");
 const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
 const PluginEnvironment = require("./helpers/PluginEnvironment");
 
-describe("RequireJsStuffPlugin", function() {
-	it("has apply function", function() {
-		(new RequireJsStuffPlugin()).apply.should.be.a.Function();
-	});
+describe("RequireJsStuffPlugin", () => {
+	it("has apply function", () => (new RequireJsStuffPlugin()).apply.should.be.a.Function());
 
-	describe("when applied", function() {
+	describe("when applied", () => {
 		let eventBindings;
 		let eventBinding;
 
-		beforeEach(function() {
-			eventBindings = applyPluginWithOptions(RequireJsStuffPlugin);
-		});
+		beforeEach(() => eventBindings = applyPluginWithOptions(RequireJsStuffPlugin));
 
-		it("binds one event handler", function() {
-			eventBindings.length.should.be.exactly(1);
-		});
+		it("binds one event handler", () => eventBindings.length.should.be.exactly(1));
 
-		describe("compilation handler", function() {
-			beforeEach(function() {
-				eventBinding = eventBindings[0];
-			});
+		describe("compilation handler", () => {
+			beforeEach(() => eventBinding = eventBindings[0]);
 
-			it("binds to compilation event", function() {
-				eventBinding.name.should.be.exactly("compilation");
-			});
+			it("binds to compilation event", () => eventBinding.name.should.be.exactly("compilation"));
 
-			describe('when called', function() {
+			describe("when called", () => {
 				let pluginEnvironment;
 				let compilationEventBindings;
 				let compilation;
 
-				beforeEach(function() {
+				beforeEach(() => {
 					pluginEnvironment = new PluginEnvironment();
 					compilation = {
 						dependencyFactories: {
@@ -53,52 +44,44 @@ describe("RequireJsStuffPlugin", function() {
 					compilationEventBindings = pluginEnvironment.getEventBindings();
 				});
 
-				it('sets the dependency factory', function() {
-					compilation.dependencyFactories.set.callCount.should.be.exactly(1);
-				});
+				it("sets the dependency factory", () =>
+					compilation.dependencyFactories.set.callCount.should.be.exactly(1));
 
-				it('sets the dependency template', function() {
-					compilation.dependencyTemplates.set.callCount.should.be.exactly(1);
-				});
+				it("sets the dependency template", () =>
+					compilation.dependencyTemplates.set.callCount.should.be.exactly(1));
 
-				it("binds one event handler", function() {
-					compilationEventBindings.length.should.be.exactly(1);
-				});
+				it("binds one event handler", () => compilationEventBindings.length.should.be.exactly(1));
 
-				describe("parser handler", function() {
+				describe("parser handler", () => {
 					let parser;
 					let parserEventBindings;
 					let compilationEventBinding;
 
-					beforeEach(function() {
+					beforeEach(() => {
 						compilationEventBinding = compilationEventBindings[0];
 						pluginEnvironment = new PluginEnvironment();
 						parser = pluginEnvironment.getEnvironmentStub();
 					});
 
-					it("binds to parser event", function() {
-						compilationEventBinding.name.should.be.exactly("parser");
-					});
+					it("binds to parser event", () => compilationEventBinding.name.should.be.exactly("parser"));
 
-					describe('when called with parser options of requirejs as false', function() {
-						beforeEach(function() {
+					describe("when called with parser options of requirejs as false", () => {
+						beforeEach(() => {
 							compilationEventBinding.handler(parser, {
 								requireJs: false
 							});
 							parserEventBindings = pluginEnvironment.getEventBindings();
 						});
 
-						it("binds no event handlers", function() {
-							parserEventBindings.length.should.be.exactly(0);
-						});
+						it("binds no event handlers", () => parserEventBindings.length.should.be.exactly(0));
 					});
 
-					describe('when called with empty parser options', function() {
+					describe("when called with empty parser options", () => {
 						let parserEventBinding;
 						let parserEventContext;
 						let expressionMock;
 
-						beforeEach(function() {
+						beforeEach(() => {
 							parserEventContext = {
 								state: {
 									current: {
@@ -114,71 +97,57 @@ describe("RequireJsStuffPlugin", function() {
 							parserEventBindings = pluginEnvironment.getEventBindings();
 						});
 
-						it("binds four event handlers", function() {
-							parserEventBindings.length.should.be.exactly(4);
-						});
+						it("binds four event handlers", () => parserEventBindings.length.should.be.exactly(4));
 
-						describe("'call require.config' handler", function() {
-							beforeEach(function() {
-								parserEventBinding = parserEventBindings[0];
-							});
+						describe("'call require.config' handler", () => {
+							beforeEach(() => parserEventBinding = parserEventBindings[0]);
 
-							it("binds to 'call require.config' event", function() {
-								parserEventBinding.name.should.be.exactly("call require.config");
-							});
+							it("binds to 'call require.config' event", () =>
+								parserEventBinding.name.should.be.exactly("call require.config"));
 
-							describe('when called', function() {
-								beforeEach(function() {
-									parserEventBinding.handler.call(parserEventContext, expressionMock);
-								});
+							describe("when called", () => {
+								beforeEach(() =>
+									parserEventBinding.handler.call(parserEventContext, expressionMock));
 
-								it('adds dependency to current state', function() {
-									var addDependencySpy = parserEventContext.state.current.addDependency;
-									var addedDependency = JSON.stringify(addDependencySpy.getCall(0).args[0]);
-									addDependencySpy.callCount.should.be.exactly(1);
-									addedDependency.should.be.exactly('{"module":null,"expression":";","range":10,"loc":5}');
-								});
-							});
-						});
-
-						describe("'call requirejs.config' handler", function() {
-							beforeEach(function() {
-								parserEventBinding = parserEventBindings[1];
-							});
-
-							it("binds to 'call requirejs.config' event", function() {
-								parserEventBinding.name.should.be.exactly("call requirejs.config");
-							});
-
-							describe('when called', function() {
-								beforeEach(function() {
-									parserEventBinding.handler.call(parserEventContext, expressionMock);
-								});
-
-								it('adds dependency to current state', function() {
+								it("adds dependency to current state", () => {
 									const addDependencySpy = parserEventContext.state.current.addDependency;
 									const addedDependency = JSON.stringify(addDependencySpy.getCall(0).args[0]);
 									addDependencySpy.callCount.should.be.exactly(1);
-									addedDependency.should.be.exactly('{"module":null,"expression":";","range":10,"loc":5}');
+									addedDependency.should.be.exactly('{"module":null,"expression":"undefined","range":10,"loc":5}');
 								});
 							});
 						});
 
-						describe("'expression require.version' handler", function() {
-							beforeEach(function() {
-								parserEventBinding = parserEventBindings[2];
-							});
+						describe("'call requirejs.config' handler", () => {
+							beforeEach(() => parserEventBinding = parserEventBindings[1]);
 
-							it("binds to 'expression require.version' event", function() {
-								parserEventBinding.name.should.be.exactly("expression require.version");
-							});
+							it("binds to 'call requirejs.config' event", () =>
+								parserEventBinding.name.should.be.exactly("call requirejs.config"));
 
-							describe('when called', function() {
-								beforeEach(function() {
-									parserEventBinding.handler.call(parserEventContext, expressionMock);
+							describe("when called", () => {
+								beforeEach(() =>
+									parserEventBinding.handler.call(parserEventContext, expressionMock));
+
+								it("adds dependency to current state", () => {
+									const addDependencySpy = parserEventContext.state.current.addDependency;
+									const addedDependency = JSON.stringify(addDependencySpy.getCall(0).args[0]);
+									addDependencySpy.callCount.should.be.exactly(1);
+									addedDependency.should.be.exactly('{"module":null,"expression":"undefined","range":10,"loc":5}');
 								});
+							});
+						});
 
-								it('adds dependency to current state', function() {
+						describe("'expression require.version' handler", () => {
+							beforeEach(() => parserEventBinding = parserEventBindings[2]);
+
+							it("binds to 'expression require.version' event", () =>
+								parserEventBinding.name.should.be.exactly("expression require.version"));
+
+							describe("when called", () => {
+								beforeEach(() =>
+									parserEventBinding.handler.call(parserEventContext, expressionMock));
+
+								it("adds dependency to current state", () => {
 									const addDependencySpy = parserEventContext.state.current.addDependency;
 									const addedDependency = JSON.stringify(addDependencySpy.getCall(0).args[0]);
 									addDependencySpy.callCount.should.be.exactly(1);
@@ -187,21 +156,17 @@ describe("RequireJsStuffPlugin", function() {
 							});
 						});
 
-						describe("'expression requirejs.onError' handler", function() {
-							beforeEach(function() {
-								parserEventBinding = parserEventBindings[3];
-							});
+						describe("'expression requirejs.onError' handler", () => {
+							beforeEach(() => parserEventBinding = parserEventBindings[3]);
 
-							it("binds to 'expression requirejs.onError' event", function() {
-								parserEventBinding.name.should.be.exactly("expression requirejs.onError");
-							});
+							it("binds to 'expression requirejs.onError' event", () =>
+								parserEventBinding.name.should.be.exactly("expression requirejs.onError"));
 
-							describe('when called', function() {
-								beforeEach(function() {
-									parserEventBinding.handler.call(parserEventContext, expressionMock);
-								});
+							describe("when called", () => {
+								beforeEach(() =>
+									parserEventBinding.handler.call(parserEventContext, expressionMock));
 
-								it('adds dependency to current state', function() {
+								it("adds dependency to current state", () => {
 									const addDependencySpy = parserEventContext.state.current.addDependency;
 									const addedDependency = JSON.stringify(addDependencySpy.getCall(0).args[0]);
 									addDependencySpy.callCount.should.be.exactly(1);

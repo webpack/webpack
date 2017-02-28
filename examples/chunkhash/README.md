@@ -13,8 +13,8 @@ The configuration required for this is:
 ``` javascript
 import vendor from "./vendor";
 // some module
-System.import("./async1");
-System.import("./async2");
+import("./async1");
+import("./async2");
 ```
 
 # vendor.js
@@ -62,7 +62,7 @@ module.exports = {
 
 <!-- inlined minimized file "manifest.[chunkhash].js" -->
 <script>
-!function(e){function r(n){if(t[n])return t[n].exports;var o=t[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,r),o.l=!0,o.exports}var n=window.webpackJsonp;window.webpackJsonp=function(t,a,c){for(var u,i,f,s=0,l=[];s<t.length;s++)i=t[s],o[i]&&l.push(o[i][0]),o[i]=0;for(u in a)Object.prototype.hasOwnProperty.call(a,u)&&(e[u]=a[u]);for(n&&n(t,a,c);l.length;)l.shift()();if(c)for(s=0;s<c.length;s++)f=r(r.s=c[s]);return f};var t={},o={4:0};r.e=function(e){function n(){a.onerror=a.onload=null,clearTimeout(c);var r=o[e];0!==r&&(r&&r[1](new Error("Loading chunk "+e+" failed.")),o[e]=void 0)}if(0===o[e])return Promise.resolve();if(o[e])return o[e][2];var t=document.getElementsByTagName("head")[0],a=document.createElement("script");a.type="text/javascript",a.charset="utf-8",a.async=!0,a.timeout=12e4,r.nc&&a.setAttribute("nonce",r.nc),a.src=r.p+""+{0:"d8d9958181fae97ba27d",1:"36e4c03aa77bd58b0abc",2:"28b8ea2c1cc4eaebd919",3:"14bf1a160bee78ea17f7"}[e]+".js";var c=setTimeout(n,12e4);a.onerror=a.onload=n;var u=new Promise(function(r,n){o[e]=[r,n]});return o[e][2]=u,t.appendChild(a),u},r.m=e,r.c=t,r.i=function(e){return e},r.d=function(e,n,t){r.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:t})},r.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(n,"a",n),n},r.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},r.p="js/",r.oe=function(e){throw console.error(e),e}}([]);
+!function(e){function r(n){if(t[n])return t[n].exports;var o=t[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,r),o.l=!0,o.exports}var n=window.webpackJsonp;window.webpackJsonp=function(t,c,a){for(var u,i,f,s=0,d=[];s<t.length;s++)i=t[s],o[i]&&d.push(o[i][0]),o[i]=0;for(u in c)Object.prototype.hasOwnProperty.call(c,u)&&(e[u]=c[u]);for(n&&n(t,c,a);d.length;)d.shift()();if(a)for(s=0;s<a.length;s++)f=r(r.s=a[s]);return f};var t={},o={4:0};r.e=function(e){function n(){c.onerror=c.onload=null,clearTimeout(a);var r=o[e];0!==r&&(r&&r[1](new Error("Loading chunk "+e+" failed.")),o[e]=void 0)}if(0===o[e])return Promise.resolve();if(o[e])return o[e][2];var t=document.getElementsByTagName("head")[0],c=document.createElement("script");c.type="text/javascript",c.charset="utf-8",c.async=!0,c.timeout=12e4,r.nc&&c.setAttribute("nonce",r.nc),c.src=r.p+""+{0:"ecd2b16a48d8b92daf31",1:"3ab6307df46b05a2e3c3",2:"0910ffec005965d55bfb",3:"7e3d3299e6c5c1defd1d"}[e]+".js";var a=setTimeout(n,12e4);c.onerror=c.onload=n;var u=new Promise(function(r,n){o[e]=[r,n]});return o[e][2]=u,t.appendChild(c),u},r.m=e,r.c=t,r.i=function(e){return e},r.d=function(e,n,t){r.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:t})},r.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(n,"a",n),n},r.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},r.p="js/",r.oe=function(e){throw console.error(e),e}}([]);
 </script>
 
 <!-- optional when using the CommonChunkPlugin for vendor modules -->
@@ -84,30 +84,30 @@ webpackJsonp([2,4],[
 /*!*******************!*\
   !*** ./vendor.js ***!
   \*******************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 // some vendor lib (should be in common chunk)
-/* harmony default export */ exports["default"] = 123;
+/* harmony default export */ __webpack_exports__["default"] = (123);
 
 
-/***/ },
+/***/ }),
 /* 1 */,
 /* 2 */,
 /* 3 */,
 /* 4 */
 /* unknown exports provided */
 /* all exports used */
-/*!********************!*\
-  !*** multi common ***!
-  \********************/
-/***/ function(module, exports, __webpack_require__) {
+/*!**********************!*\
+  !*** multi ./vendor ***!
+  \**********************/
+/***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! ./vendor */0);
 
 
-/***/ }
+/***/ })
 ],[4]);
 ```
 
@@ -122,10 +122,10 @@ webpackJsonp([3,4],{
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__vendor__ = __webpack_require__(/*! ./vendor */ 0);
 
 // some module
@@ -133,7 +133,7 @@ __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, /*! .
 __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! ./async2 */ 2));
 
 
-/***/ }
+/***/ })
 
 },[3]);
 ```
@@ -143,67 +143,67 @@ __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! .
 ## Uncompressed
 
 ```
-Hash: 7b7e514d1f86a946849f
-Version: webpack 2.2.0-rc.2
+Hash: 4e82450959815ca9c86c
+Version: webpack 2.2.1
                   Asset       Size  Chunks             Chunk Names
-d8d9958181fae97ba27d.js  237 bytes    0, 4  [emitted]  
-36e4c03aa77bd58b0abc.js  243 bytes    1, 4  [emitted]  
-    common.chunkhash.js  701 bytes    2, 4  [emitted]  common
-      main.chunkhash.js  630 bytes    3, 4  [emitted]  main
+ecd2b16a48d8b92daf31.js  238 bytes    0, 4  [emitted]  
+3ab6307df46b05a2e3c3.js  244 bytes    1, 4  [emitted]  
+    common.chunkhash.js  747 bytes    2, 4  [emitted]  common
+      main.chunkhash.js  652 bytes    3, 4  [emitted]  main
   manifest.chunkhash.js    5.66 kB       4  [emitted]  manifest
 Entrypoint main = manifest.chunkhash.js common.chunkhash.js main.chunkhash.js
 Entrypoint common = manifest.chunkhash.js common.chunkhash.js
-chunk    {0} d8d9958181fae97ba27d.js 29 bytes {3} [rendered]
-    > [3] ./example.js 4:0-25
-    [2] ./async2.js 29 bytes {0} [built]
-        import() ./async2 [3] ./example.js 4:0-25
-chunk    {1} 36e4c03aa77bd58b0abc.js 29 bytes {3} [rendered]
-    > [3] ./example.js 3:0-25
-    [1] ./async1.js 29 bytes {1} [built]
-        import() ./async1 [3] ./example.js 3:0-25
-chunk    {2} common.chunkhash.js (common) 97 bytes {4} [initial] [rendered]
-    > common [4] multi common 
-    [0] ./vendor.js 69 bytes {2} [built]
+chunk    {0} ecd2b16a48d8b92daf31.js 28 bytes {3} [rendered]
+    > [3] ./example.js 4:0-18
+    [2] ./async2.js 28 bytes {0} [built]
+        import() ./async2 [3] ./example.js 4:0-18
+chunk    {1} 3ab6307df46b05a2e3c3.js 28 bytes {3} [rendered]
+    > [3] ./example.js 3:0-18
+    [1] ./async1.js 28 bytes {1} [built]
+        import() ./async1 [3] ./example.js 3:0-18
+chunk    {2} common.chunkhash.js (common) 95 bytes {4} [initial] [rendered]
+    > common [4] multi ./vendor 
+    [0] ./vendor.js 67 bytes {2} [built]
         [exports: default]
         harmony import ./vendor [3] ./example.js 1:0-30
-        single entry ./vendor [4] multi common
-    [4] multi common 28 bytes {2} [built]
-chunk    {3} main.chunkhash.js (main) 104 bytes {2} [initial] [rendered]
+        single entry ./vendor [4] multi ./vendor common:100000
+    [4] multi ./vendor 28 bytes {2} [built]
+chunk    {3} main.chunkhash.js (main) 86 bytes {2} [initial] [rendered]
     > main [3] ./example.js 
-    [3] ./example.js 104 bytes {3} [built]
+    [3] ./example.js 86 bytes {3} [built]
 chunk    {4} manifest.chunkhash.js (manifest) 0 bytes [entry] [rendered]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 7b7e514d1f86a946849f
-Version: webpack 2.2.0-rc.2
+Hash: 4e82450959815ca9c86c
+Version: webpack 2.2.1
                   Asset       Size  Chunks             Chunk Names
-d8d9958181fae97ba27d.js   40 bytes    0, 4  [emitted]  
-36e4c03aa77bd58b0abc.js   39 bytes    1, 4  [emitted]  
+ecd2b16a48d8b92daf31.js   40 bytes    0, 4  [emitted]  
+3ab6307df46b05a2e3c3.js   39 bytes    1, 4  [emitted]  
     common.chunkhash.js  154 bytes    2, 4  [emitted]  common
       main.chunkhash.js  168 bytes    3, 4  [emitted]  main
   manifest.chunkhash.js    1.48 kB       4  [emitted]  manifest
 Entrypoint main = manifest.chunkhash.js common.chunkhash.js main.chunkhash.js
 Entrypoint common = manifest.chunkhash.js common.chunkhash.js
-chunk    {0} d8d9958181fae97ba27d.js 29 bytes {3} [rendered]
-    > [3] ./example.js 4:0-25
-    [2] ./async2.js 29 bytes {0} [built]
-        import() ./async2 [3] ./example.js 4:0-25
-chunk    {1} 36e4c03aa77bd58b0abc.js 29 bytes {3} [rendered]
-    > [3] ./example.js 3:0-25
-    [1] ./async1.js 29 bytes {1} [built]
-        import() ./async1 [3] ./example.js 3:0-25
-chunk    {2} common.chunkhash.js (common) 97 bytes {4} [initial] [rendered]
-    > common [4] multi common 
-    [0] ./vendor.js 69 bytes {2} [built]
+chunk    {0} ecd2b16a48d8b92daf31.js 28 bytes {3} [rendered]
+    > [3] ./example.js 4:0-18
+    [2] ./async2.js 28 bytes {0} [built]
+        import() ./async2 [3] ./example.js 4:0-18
+chunk    {1} 3ab6307df46b05a2e3c3.js 28 bytes {3} [rendered]
+    > [3] ./example.js 3:0-18
+    [1] ./async1.js 28 bytes {1} [built]
+        import() ./async1 [3] ./example.js 3:0-18
+chunk    {2} common.chunkhash.js (common) 95 bytes {4} [initial] [rendered]
+    > common [4] multi ./vendor 
+    [0] ./vendor.js 67 bytes {2} [built]
         [exports: default]
         harmony import ./vendor [3] ./example.js 1:0-30
-        single entry ./vendor [4] multi common
-    [4] multi common 28 bytes {2} [built]
-chunk    {3} main.chunkhash.js (main) 104 bytes {2} [initial] [rendered]
+        single entry ./vendor [4] multi ./vendor common:100000
+    [4] multi ./vendor 28 bytes {2} [built]
+chunk    {3} main.chunkhash.js (main) 86 bytes {2} [initial] [rendered]
     > main [3] ./example.js 
-    [3] ./example.js 104 bytes {3} [built]
+    [3] ./example.js 86 bytes {3} [built]
 chunk    {4} manifest.chunkhash.js (manifest) 0 bytes [entry] [rendered]
 ```

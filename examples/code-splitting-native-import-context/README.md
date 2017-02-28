@@ -98,7 +98,7 @@ export default foo;
 /******/ 		if(installedChunks[chunkId] === 0)
 /******/ 			return Promise.resolve();
 
-/******/ 		// an Promise means "currently loading".
+/******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
 /******/ 			return installedChunks[chunkId][2];
 /******/ 		}
@@ -188,7 +188,7 @@ export default foo;
 /*!**********************************!*\
   !*** ./templates async ^\.\/.*$ ***!
   \**********************************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 var map = {
 	"./bar": [
@@ -230,7 +230,7 @@ module.exports = webpackAsyncContext;
 webpackAsyncContext.id = 0;
 
 
-/***/ },
+/***/ }),
 /* 1 */,
 /* 2 */,
 /* 3 */,
@@ -240,7 +240,7 @@ webpackAsyncContext.id = 0;
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 async function getTemplate(templateName) {
 	try {
@@ -259,7 +259,7 @@ getTemplate("baz");
 
 
 
-/***/ }
+/***/ })
 /******/ ]);
 ```
 
@@ -268,67 +268,67 @@ getTemplate("baz");
 ## Uncompressed
 
 ```
-Hash: a8f8b7fb22a89feb3e0f
-Version: webpack 2.2.0-rc.2
+Hash: 6ff942ea6efa4b698d2f
+Version: webpack 2.2.1
       Asset       Size  Chunks             Chunk Names
-0.output.js  402 bytes       0  [emitted]  
-1.output.js  402 bytes       1  [emitted]  
-2.output.js  408 bytes       2  [emitted]  
-  output.js    6.83 kB       3  [emitted]  main
+0.output.js  439 bytes       0  [emitted]  
+1.output.js  439 bytes       1  [emitted]  
+2.output.js  445 bytes       2  [emitted]  
+  output.js    6.82 kB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 41 bytes {3} [rendered]
-    [3] ./templates/foo.js 41 bytes {0} [optional] [built]
+chunk    {0} 0.output.js 38 bytes {3} [rendered]
+    [3] ./templates/foo.js 38 bytes {0} [optional] [built]
         [exports: default]
-        context element ./foo [0] ./templates async ^\.\/.*$
-        context element ./foo.js [0] ./templates async ^\.\/.*$
-chunk    {1} 1.output.js 41 bytes {3} [rendered]
-    [2] ./templates/baz.js 41 bytes {1} [optional] [built]
+        context element ./foo [0] ./templates async ^\.\/.*$ ./foo
+        context element ./foo.js [0] ./templates async ^\.\/.*$ ./foo.js
+chunk    {1} 1.output.js 38 bytes {3} [rendered]
+    [2] ./templates/baz.js 38 bytes {1} [optional] [built]
         [exports: default]
-        context element ./baz [0] ./templates async ^\.\/.*$
-        context element ./baz.js [0] ./templates async ^\.\/.*$
-chunk    {2} 2.output.js 41 bytes {3} [rendered]
-    [1] ./templates/bar.js 41 bytes {2} [optional] [built]
+        context element ./baz [0] ./templates async ^\.\/.*$ ./baz
+        context element ./baz.js [0] ./templates async ^\.\/.*$ ./baz.js
+chunk    {2} 2.output.js 38 bytes {3} [rendered]
+    [1] ./templates/bar.js 38 bytes {2} [optional] [built]
         [exports: default]
-        context element ./bar [0] ./templates async ^\.\/.*$
-        context element ./bar.js [0] ./templates async ^\.\/.*$
-chunk    {3} output.js (main) 456 bytes [entry] [rendered]
+        context element ./bar [0] ./templates async ^\.\/.*$ ./bar
+        context element ./bar.js [0] ./templates async ^\.\/.*$ ./bar.js
+chunk    {3} output.js (main) 441 bytes [entry] [rendered]
     > main [4] ./example.js 
     [0] ./templates async ^\.\/.*$ 160 bytes {3} [optional] [built]
-        System.import context ./templates [4] ./example.js 3:23-60
-    [4] ./example.js 296 bytes {3} [built]
+        import() context ./templates [4] ./example.js 3:23-60
+    [4] ./example.js 281 bytes {3} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: a8f8b7fb22a89feb3e0f
-Version: webpack 2.2.0-rc.2
+Hash: 6ff942ea6efa4b698d2f
+Version: webpack 2.2.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  125 bytes       0  [emitted]  
 1.output.js  125 bytes       1  [emitted]  
 2.output.js  124 bytes       2  [emitted]  
-  output.js    6.51 kB       3  [emitted]  main
+  output.js     6.5 kB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 41 bytes {3} [rendered]
-    [3] ./templates/foo.js 41 bytes {0} [optional] [built]
+chunk    {0} 0.output.js 38 bytes {3} [rendered]
+    [3] ./templates/foo.js 38 bytes {0} [optional] [built]
         [exports: default]
-        context element ./foo [0] ./templates async ^\.\/.*$
-        context element ./foo.js [0] ./templates async ^\.\/.*$
-chunk    {1} 1.output.js 41 bytes {3} [rendered]
-    [2] ./templates/baz.js 41 bytes {1} [optional] [built]
+        context element ./foo [0] ./templates async ^\.\/.*$ ./foo
+        context element ./foo.js [0] ./templates async ^\.\/.*$ ./foo.js
+chunk    {1} 1.output.js 38 bytes {3} [rendered]
+    [2] ./templates/baz.js 38 bytes {1} [optional] [built]
         [exports: default]
-        context element ./baz [0] ./templates async ^\.\/.*$
-        context element ./baz.js [0] ./templates async ^\.\/.*$
-chunk    {2} 2.output.js 41 bytes {3} [rendered]
-    [1] ./templates/bar.js 41 bytes {2} [optional] [built]
+        context element ./baz [0] ./templates async ^\.\/.*$ ./baz
+        context element ./baz.js [0] ./templates async ^\.\/.*$ ./baz.js
+chunk    {2} 2.output.js 38 bytes {3} [rendered]
+    [1] ./templates/bar.js 38 bytes {2} [optional] [built]
         [exports: default]
-        context element ./bar [0] ./templates async ^\.\/.*$
-        context element ./bar.js [0] ./templates async ^\.\/.*$
-chunk    {3} output.js (main) 456 bytes [entry] [rendered]
+        context element ./bar [0] ./templates async ^\.\/.*$ ./bar
+        context element ./bar.js [0] ./templates async ^\.\/.*$ ./bar.js
+chunk    {3} output.js (main) 441 bytes [entry] [rendered]
     > main [4] ./example.js 
     [0] ./templates async ^\.\/.*$ 160 bytes {3} [optional] [built]
-        System.import context ./templates [4] ./example.js 3:23-60
-    [4] ./example.js 296 bytes {3} [built]
+        import() context ./templates [4] ./example.js 3:23-60
+    [4] ./example.js 281 bytes {3} [built]
 
 ERROR in output.js from UglifyJs
 SyntaxError: Unexpected token: keyword (function) [output.js:194,6]
