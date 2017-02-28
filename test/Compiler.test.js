@@ -7,9 +7,6 @@ const path = require("path");
 const webpack = require("../");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 
-const webpack = require("../");
-const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
-
 describe("Compiler", () => {
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
