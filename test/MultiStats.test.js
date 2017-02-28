@@ -1,9 +1,11 @@
-var should = require("should");
-var sinon = require("sinon");
-var package = require("../package.json");
-var MultiStats = require("../lib/MultiStats");
+"use strict";
 
-var createStat = function(overides) {
+const should = require("should");
+const sinon = require("sinon");
+const packageJSON = require("../package.json");
+const MultiStats = require("../lib/MultiStats");
+
+const createStat = function(overides) {
 	return Object.assign({
 		hash: "foo",
 		compilation: {
@@ -20,20 +22,18 @@ var createStat = function(overides) {
 	}, overides);
 };
 
-describe("MultiStats", function() {
-	var packageVersion, stats, myMultiStats, result;
+describe("MultiStats", () => {
+	let packageVersion, stats, myMultiStats, result;
 
-	beforeEach(function() {
-		packageVersion = package.version;
-		package.version = "1.2.3";
+	beforeEach(() => {
+		packageVersion = packageJSON.version;
+		packageJSON.version = "1.2.3";
 	});
 
-	afterEach(function() {
-		package.version = packageVersion;
-	});
+	afterEach(() => packageJSON.version = packageVersion);
 
-	describe("created", function() {
-		beforeEach(function() {
+	describe("created", () => {
+		beforeEach(() => {
 			stats = [
 				createStat({
 					hash: "abc123"
@@ -45,14 +45,12 @@ describe("MultiStats", function() {
 			myMultiStats = new MultiStats(stats);
 		});
 
-		it("creates a hash string", function() {
-			myMultiStats.hash.should.be.exactly("abc123xyz890");
-		});
+		it("creates a hash string", () => myMultiStats.hash.should.be.exactly("abc123xyz890"));
 	});
 
-	describe("hasErrors", function() {
-		describe("when both have errors", function() {
-			beforeEach(function() {
+	describe("hasErrors", () => {
+		describe("when both have errors", () => {
+			beforeEach(() => {
 				stats = [
 					createStat({
 						hasErrors: () => true
@@ -64,13 +62,11 @@ describe("MultiStats", function() {
 				myMultiStats = new MultiStats(stats);
 			});
 
-			it("returns true", function() {
-				myMultiStats.hasErrors().should.be.exactly(true);
-			});
+			it("returns true", () => myMultiStats.hasErrors().should.be.exactly(true));
 		});
 
-		describe("when one has an error", function() {
-			beforeEach(function() {
+		describe("when one has an error", () => {
+			beforeEach(() => {
 				stats = [
 					createStat({
 						hasErrors: () => true
@@ -80,13 +76,11 @@ describe("MultiStats", function() {
 				myMultiStats = new MultiStats(stats);
 			});
 
-			it("returns true", function() {
-				myMultiStats.hasErrors().should.be.exactly(true);
-			});
+			it("returns true", () => myMultiStats.hasErrors().should.be.exactly(true));
 		});
 
-		describe("when none have errors", function() {
-			beforeEach(function() {
+		describe("when none have errors", () => {
+			beforeEach(() => {
 				stats = [
 					createStat(),
 					createStat()
@@ -94,15 +88,13 @@ describe("MultiStats", function() {
 				myMultiStats = new MultiStats(stats);
 			});
 
-			it("returns false", function() {
-				myMultiStats.hasErrors().should.be.exactly(false);
-			});
+			it("returns false", () => myMultiStats.hasErrors().should.be.exactly(false));
 		});
 	});
 
-	describe("hasWarnings", function() {
-		describe("when both have warnings", function() {
-			beforeEach(function() {
+	describe("hasWarnings", () => {
+		describe("when both have warnings", () => {
+			beforeEach(() => {
 				stats = [
 					createStat({
 						hasWarnings: () => true
@@ -114,13 +106,11 @@ describe("MultiStats", function() {
 				myMultiStats = new MultiStats(stats);
 			});
 
-			it("returns true", function() {
-				myMultiStats.hasWarnings().should.be.exactly(true);
-			});
+			it("returns true", () => myMultiStats.hasWarnings().should.be.exactly(true));
 		});
 
-		describe("when one has a warning", function() {
-			beforeEach(function() {
+		describe("when one has a warning", () => {
+			beforeEach(() => {
 				stats = [
 					createStat({
 						hasWarnings: () => true
@@ -130,13 +120,11 @@ describe("MultiStats", function() {
 				myMultiStats = new MultiStats(stats);
 			});
 
-			it("returns true", function() {
-				myMultiStats.hasWarnings().should.be.exactly(true);
-			});
+			it("returns true", () => myMultiStats.hasWarnings().should.be.exactly(true));
 		});
 
-		describe("when none have warnings", function() {
-			beforeEach(function() {
+		describe("when none have warnings", () => {
+			beforeEach(() => {
 				stats = [
 					createStat(),
 					createStat()
@@ -144,14 +132,12 @@ describe("MultiStats", function() {
 				myMultiStats = new MultiStats(stats);
 			});
 
-			it("returns false", function() {
-				myMultiStats.hasWarnings().should.be.exactly(false);
-			});
+			it("returns false", () => myMultiStats.hasWarnings().should.be.exactly(false));
 		});
 	});
 
-	describe("toJson", function() {
-		beforeEach(function() {
+	describe("toJson", () => {
+		beforeEach(() => {
 			stats = [
 				createStat({
 					hash: "abc123",
@@ -181,7 +167,7 @@ describe("MultiStats", function() {
 			});
 		});
 
-		it("returns plain object representation", function() {
+		it("returns plain object representation", () => {
 			result.should.deepEqual({
 				errors: [
 					"(abc123-compilation) abc123-error"
@@ -213,8 +199,8 @@ describe("MultiStats", function() {
 		});
 	});
 
-	describe("toString", function() {
-		beforeEach(function() {
+	describe("toString", () => {
+		beforeEach(() => {
 			stats = [
 				createStat({
 					hash: "abc123",
@@ -233,7 +219,7 @@ describe("MultiStats", function() {
 			result = myMultiStats.toString();
 		});
 
-		it("returns string representation", function() {
+		it("returns string representation", () => {
 			result.should.be.exactly(
 				"Hash: abc123xyz890\n" +
 				"Version: webpack 1.2.3\n" +

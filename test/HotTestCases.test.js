@@ -1,44 +1,43 @@
-var should = require("should");
-var path = require("path");
-var fs = require("fs");
-var vm = require("vm");
-var Test = require("mocha/lib/test");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-var checkArrayExpectation = require("./checkArrayExpectation");
+"use strict";
 
-var webpack = require("../lib/webpack");
+const should = require("should");
+const path = require("path");
+const fs = require("fs");
+const vm = require("vm");
+const Test = require("mocha/lib/test");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const checkArrayExpectation = require("./checkArrayExpectation");
 
-describe("HotTestCases", function() {
-	var casesPath = path.join(__dirname, "hotCases");
-	var categories = fs.readdirSync(casesPath).filter(function(dir) {
-		return fs.statSync(path.join(casesPath, dir)).isDirectory();
-	});
-	categories = categories.map(function(cat) {
+const webpack = require("../lib/webpack");
+
+describe("HotTestCases", () => {
+	const casesPath = path.join(__dirname, "hotCases");
+	let categories = fs.readdirSync(casesPath).filter((dir) =>
+		fs.statSync(path.join(casesPath, dir)).isDirectory());
+	categories = categories.map((cat) => {
 		return {
 			name: cat,
-			tests: fs.readdirSync(path.join(casesPath, cat)).filter(function(folder) {
-				return folder.indexOf("_") < 0;
-			})
+			tests: fs.readdirSync(path.join(casesPath, cat)).filter((folder) => folder.indexOf("_") < 0)
 		};
 	});
-	categories.forEach(function(category) {
-		describe(category.name, function() {
-			category.tests.forEach(function(testName) {
-				var suite = describe(testName, function() {
+	categories.forEach((category) => {
+		describe(category.name, () => {
+			category.tests.forEach((testName) => {
+				const suite = describe(testName, function() {
 					this.timeout(10000);
 				});
-				it(testName + " should compile", function(done) {
-					var testDirectory = path.join(casesPath, category.name, testName);
-					var outputDirectory = path.join(__dirname, "js", "hot-cases", category.name, testName);
-					var recordsPath = path.join(outputDirectory, "records.json");
+				it(testName + " should compile", (done) => {
+					const testDirectory = path.join(casesPath, category.name, testName);
+					const outputDirectory = path.join(__dirname, "js", "hot-cases", category.name, testName);
+					const recordsPath = path.join(outputDirectory, "records.json");
 					if(fs.existsSync(recordsPath))
 						fs.unlinkSync(recordsPath);
-					var fakeUpdateLoaderOptions = {
+					const fakeUpdateLoaderOptions = {
 						options: {
 							updateIndex: 0
 						}
 					};
-					var options = {
+					const options = {
 						context: testDirectory,
 						entry: "./index.js",
 						output: {
@@ -52,8 +51,8 @@ describe("HotTestCases", function() {
 								enforce: "pre"
 							}, {
 								test: /\.css$/,
-								loader: ExtractTextPlugin.extract({
-									fallbackLoader: "style-loader",
+								use: ExtractTextPlugin.extract({
+									fallback: "style-loader",
 									loader: "css-loader"
 								})
 							}]
@@ -66,19 +65,19 @@ describe("HotTestCases", function() {
 							new ExtractTextPlugin("bundle.css")
 						],
 						recordsPath: recordsPath
-					}
-					var compiler = webpack(options);
-					compiler.run(function(err, stats) {
+					};
+					const compiler = webpack(options);
+					compiler.run((err, stats) => {
 						if(err) return done(err);
-						var jsonStats = stats.toJson({
+						const jsonStats = stats.toJson({
 							errorDetails: true
 						});
 						if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
 						if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
-						var exportedTests = 0;
+						let exportedTests = 0;
 
 						function _it(title, fn) {
-							var test = new Test(title, fn);
+							const test = new Test(title, fn);
 							suite.addTest(test);
 							exportedTests++;
 							return test;
@@ -86,26 +85,26 @@ describe("HotTestCases", function() {
 
 						function _next(callback) {
 							fakeUpdateLoaderOptions.options.updateIndex++;
-							compiler.run(function(err, stats) {
+							compiler.run((err, stats) => {
 								if(err) return done(err);
-								var jsonStats = stats.toJson({
+								const jsonStats = stats.toJson({
 									errorDetails: true
 								});
 								if(checkArrayExpectation(testDirectory, jsonStats, "error", "errors" + fakeUpdateLoaderOptions.options.updateIndex, "Error", done)) return;
 								if(checkArrayExpectation(testDirectory, jsonStats, "warning", "warnings" + fakeUpdateLoaderOptions.options.updateIndex, "Warning", done)) return;
 								if(callback) callback(jsonStats);
-							})
+							});
 						}
 
 						function _require(module) {
 							if(module.substr(0, 2) === "./") {
-								var p = path.join(outputDirectory, module);
-								var fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, NEXT, STATS) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
-								var module = {
+								const p = path.join(outputDirectory, module);
+								const fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, NEXT, STATS) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
+								const m = {
 									exports: {}
 								};
-								fn.call(module.exports, _require, module, module.exports, outputDirectory, p, _it, _next, jsonStats);
-								return module.exports;
+								fn.call(m.exports, _require, m, m.exports, outputDirectory, p, _it, _next, jsonStats);
+								return m.exports;
 							} else return require(module);
 						}
 						_require("./bundle.js");
