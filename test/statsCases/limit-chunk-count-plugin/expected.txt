@@ -1,0 +1,61 @@
+Hash: 7785ad0c3d45a94a3238a8178dd1adacd47a6b70043f3d1f8be496acf7a6e0df24380874d11a123a
+Child
+    Hash: 7785ad0c3d45a94a3238
+    Time: Xms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  3.29 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 191 bytes [entry] [rendered]
+        [0] (webpack)/test/statsCases/limit-chunk-count-plugin/a.js 22 bytes {0} [built]
+        [1] (webpack)/test/statsCases/limit-chunk-count-plugin/b.js 22 bytes {0} [built]
+        [2] (webpack)/test/statsCases/limit-chunk-count-plugin/c.js 30 bytes {0} [built]
+        [3] (webpack)/test/statsCases/limit-chunk-count-plugin/d.js 22 bytes {0} [built]
+        [4] (webpack)/test/statsCases/limit-chunk-count-plugin/e.js 22 bytes {0} [built]
+        [5] (webpack)/test/statsCases/limit-chunk-count-plugin/index.js 73 bytes {0} [built]
+Child
+    Hash: a8178dd1adacd47a6b70
+    Time: Xms
+          Asset       Size  Chunks             Chunk Names
+    0.bundle.js  592 bytes       0  [emitted]  
+      bundle.js    5.88 kB       1  [emitted]  main
+    chunk    {0} 0.bundle.js 118 bytes {1} [rendered]
+        [0] (webpack)/test/statsCases/limit-chunk-count-plugin/a.js 22 bytes {0} [built]
+        [1] (webpack)/test/statsCases/limit-chunk-count-plugin/b.js 22 bytes {0} [built]
+        [2] (webpack)/test/statsCases/limit-chunk-count-plugin/c.js 30 bytes {0} [built]
+        [3] (webpack)/test/statsCases/limit-chunk-count-plugin/d.js 22 bytes {0} [built]
+        [4] (webpack)/test/statsCases/limit-chunk-count-plugin/e.js 22 bytes {0} [built]
+    chunk    {1} bundle.js (main) 73 bytes [entry] [rendered]
+        [5] (webpack)/test/statsCases/limit-chunk-count-plugin/index.js 73 bytes {1} [built]
+Child
+    Hash: 043f3d1f8be496acf7a6
+    Time: Xms
+          Asset       Size  Chunks             Chunk Names
+    0.bundle.js  445 bytes       0  [emitted]  
+    1.bundle.js  204 bytes       1  [emitted]  
+      bundle.js    5.87 kB       2  [emitted]  main
+    chunk    {0} 0.bundle.js 74 bytes {2} [rendered]
+        [0] (webpack)/test/statsCases/limit-chunk-count-plugin/a.js 22 bytes {0} [built]
+        [2] (webpack)/test/statsCases/limit-chunk-count-plugin/c.js 30 bytes {0} [built]
+        [3] (webpack)/test/statsCases/limit-chunk-count-plugin/d.js 22 bytes {0} [built]
+    chunk    {1} 1.bundle.js 44 bytes {0} {2} [rendered]
+        [1] (webpack)/test/statsCases/limit-chunk-count-plugin/b.js 22 bytes {1} [built]
+        [4] (webpack)/test/statsCases/limit-chunk-count-plugin/e.js 22 bytes {1} [built]
+    chunk    {2} bundle.js (main) 73 bytes [entry] [rendered]
+        [5] (webpack)/test/statsCases/limit-chunk-count-plugin/index.js 73 bytes {2} [built]
+Child
+    Hash: e0df24380874d11a123a
+    Time: Xms
+          Asset       Size  Chunks             Chunk Names
+    0.bundle.js  204 bytes       0  [emitted]  
+    1.bundle.js  195 bytes       1  [emitted]  
+    2.bundle.js  283 bytes       2  [emitted]  
+      bundle.js    5.86 kB       3  [emitted]  main
+    chunk    {0} 0.bundle.js 44 bytes {2} {3} [rendered]
+        [1] (webpack)/test/statsCases/limit-chunk-count-plugin/b.js 22 bytes {0} [built]
+        [4] (webpack)/test/statsCases/limit-chunk-count-plugin/e.js 22 bytes {0} [built]
+    chunk    {1} 1.bundle.js 44 bytes {2} {3} [rendered]
+        [0] (webpack)/test/statsCases/limit-chunk-count-plugin/a.js 22 bytes {1} [built]
+        [3] (webpack)/test/statsCases/limit-chunk-count-plugin/d.js 22 bytes {1} [built]
+    chunk    {2} 2.bundle.js 30 bytes {3} [rendered]
+        [2] (webpack)/test/statsCases/limit-chunk-count-plugin/c.js 30 bytes {2} [built]
+    chunk    {3} bundle.js (main) 73 bytes [entry] [rendered]
+        [5] (webpack)/test/statsCases/limit-chunk-count-plugin/index.js 73 bytes {3} [built]
