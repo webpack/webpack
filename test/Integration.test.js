@@ -1,11 +1,13 @@
-var should = require("should");
-var path = require("path");
+"use strict";
 
-var webpack = require("../lib/webpack");
+const should = require("should");
+const path = require("path");
+
+const webpack = require("../lib/webpack");
 
 describe("Integration", function() {
 	this.timeout(5000);
-	it("should compile library1", function(done) {
+	it("should compile library1", (done) => {
 		webpack({
 			entry: "library1",
 			bail: true,
@@ -16,14 +18,14 @@ describe("Integration", function() {
 				filename: "library1.js",
 				library: "library1"
 			}
-		}, function(err, stats) {
+		}, (err, stats) => {
 			if(err) throw err;
 			stats.hasErrors().should.be.not.ok();
 			stats.hasWarnings().should.be.not.ok();
 			done();
 		});
 	});
-	it("should compile library2", function(done) {
+	it("should compile library2", (done) => {
 		webpack({
 			entry: "library2",
 			context: path.join(__dirname, "browsertest"),
@@ -74,17 +76,15 @@ describe("Integration", function() {
 					}
 				}),
 				function() {
-					this.plugin("normal-module-factory", function(nmf) {
-						nmf.plugin("after-resolve", function(data, callback) {
+					this.plugin("normal-module-factory", (nmf) => {
+						nmf.plugin("after-resolve", (data, callback) => {
 							data.resource = data.resource.replace(/extra\.js/, "extra2.js");
-							setTimeout(function() {
-								callback(null, data);
-							}, 50);
+							setTimeout(() => callback(null, data), 50);
 						});
 					});
 				}
 			]
-		}, function(err, stats) {
+		}, (err, stats) => {
 			if(err) throw err;
 			stats.hasErrors().should.be.not.ok();
 			stats.hasWarnings().should.be.not.ok();

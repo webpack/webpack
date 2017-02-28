@@ -1,3 +1,4 @@
+/* globals it, should */
 it("should define FALSE", function() {
 	FALSE.should.be.eql(false);
 	(typeof TRUE).should.be.eql("boolean");
@@ -75,4 +76,25 @@ it("should define process.env.DEFINED_NESTED_KEY", function() {
 });
 it("should define process.env.DEFINED_NESTED_KEY_STRING", function() {
 	if(process.env.DEFINED_NESTED_KEY_STRING !== "string") require("fail");
-})
+});
+it("should assign to process.env", function() {
+	process.env.TEST = "test";
+	process.env.TEST.should.be.eql("test");
+});
+it("should not have brakets on start", function() {
+	function f() {
+		throw new Error("should not be called");
+	}
+	f // <- no semicolon here
+	OBJECT;
+});
+
+it("should not explode on recursive typeof calls", function() {
+	(typeof wurst).should.eql("undefined"); // <- is recursivly defined in config
+});
+
+it("should not explode on recursive statements", function() {
+	(function() {
+		wurst; // <- is recursivly defined in config
+	}).should.throw("suppe is not defined");
+});

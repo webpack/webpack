@@ -15,7 +15,7 @@ try {
 } catch(e) {}
 var yargs = require("yargs")
 	.usage("webpack " + require("../package.json").version + "\n" +
-		"Usage: https://webpack.github.io/docs/cli.html\n" +
+		"Usage: https://webpack.js.org/api/cli/\n" +
 		"Usage without config file: webpack <entry> [<entry>] <output>\n" +
 		"Usage with config file: webpack");
 
@@ -266,7 +266,7 @@ function processOptions(options) {
 		});
 
 		if(!outputOptions.exclude)
-			outputOptions.exclude = ["node_modules", "bower_components", "jam", "components"];
+			outputOptions.exclude = ["node_modules", "bower_components", "components"];
 
 		if(argv["display-modules"]) {
 			outputOptions.maxModules = Infinity;

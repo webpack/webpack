@@ -1,7 +1,11 @@
+/* globals describe, it */
 "use strict";
 
 const should = require("should");
 const path = require("path");
+
+const webpack = require("../");
+const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 
 const webpack = require("../");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
@@ -12,7 +16,7 @@ describe("Compiler", () => {
 		new WebpackOptionsDefaulter().process(options);
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");
-		if(noOutputPath) options.output.path = "";
+		if(noOutputPath) options.output.path = "/";
 		options.output.pathinfo = true;
 		const logs = {
 			mkdirp: [],
@@ -22,7 +26,9 @@ describe("Compiler", () => {
 		const c = webpack(options);
 		const files = {};
 		c.outputFileSystem = {
-			join: path.join.bind(path),
+			join: function() {
+				return [].join.call(arguments, "/").replace(/\/+/g, "/");
+			},
 			mkdirp: function(path, callback) {
 				logs.mkdirp.push(path);
 				callback();
@@ -54,26 +60,25 @@ describe("Compiler", () => {
 		});
 	}
 	it("should compile a single file to deep output", (done) => {
-		const sep = path.sep;
-
 		compile("./c", {
 			output: {
-				path: "what",
-				filename: "the" + sep + "hell.js",
+				path: "/what",
+				filename: "the/hell.js",
 			}
 		}, (stats, files) => {
 			stats.logs.mkdirp.should.eql([
-				"what",
-				"what" + sep + "the",
+				"/what",
+				"/what/the",
 			]);
 			done();
 		});
 	});
-	it("should compile a single file", (done) => {
+
+  it("should compile a single file", (done) => {
 		compile("./c", {}, (stats, files) => {
-			files.should.have.property("main.js").have.type("string");
-			Object.keys(files).should.be.eql(["main.js"]);
-			const bundle = files["main.js"];
+			files.should.have.property("/main.js").have.type("string");
+			Object.keys(files).should.be.eql(["/main.js"]);
+			const bundle = files["/main.js"];
 			bundle.should.containEql("function __webpack_require__(");
 			bundle.should.containEql("__webpack_require__(/*! ./a */ 0);");
 			bundle.should.containEql("./c.js");
@@ -87,11 +92,12 @@ describe("Compiler", () => {
 			done();
 		});
 	});
-	it("should compile a complex file", (done) => {
+
+  it("should compile a complex file", (done) => {
 		compile("./main1", {}, (stats, files) => {
-			files.should.have.property("main.js").have.type("string");
-			Object.keys(files).should.be.eql(["main.js"]);
-			const bundle = files["main.js"];
+			files.should.have.property("/main.js").have.type("string");
+			Object.keys(files).should.be.eql(["/main.js"]);
+			const bundle = files["/main.js"];
 			bundle.should.containEql("function __webpack_require__(");
 			bundle.should.containEql("__webpack_require__(/*! ./a */");
 			bundle.should.containEql("./main1.js");
@@ -108,11 +114,12 @@ describe("Compiler", () => {
 			done();
 		});
 	});
-	it("should compile a file with transitive dependencies", (done) => {
+
+  it("should compile a file with transitive dependencies", (done) => {
 		compile("./abc", {}, (stats, files) => {
-			files.should.have.property("main.js").have.type("string");
-			Object.keys(files).should.be.eql(["main.js"]);
-			const bundle = files["main.js"];
+			files.should.have.property("/main.js").have.type("string");
+			Object.keys(files).should.be.eql(["/main.js"]);
+			const bundle = files["/main.js"];
 			bundle.should.containEql("function __webpack_require__(");
 			bundle.should.containEql("__webpack_require__(/*! ./a */");
 			bundle.should.containEql("__webpack_require__(/*! ./b */");
@@ -131,15 +138,16 @@ describe("Compiler", () => {
 			done();
 		});
 	});
-	it("should compile a file with multiple chunks", (done) => {
+
+  it("should compile a file with multiple chunks", (done) => {
 		compile("./chunks", {}, (stats, files) => {
 			stats.chunks.length.should.be.eql(2);
-			files.should.have.property("main.js").have.type("string");
-			files.should.have.property("0.js").have.type("string");
-			Object.keys(files).should.be.eql(["0.js", "main.js"]);
-			const bundle = files["main.js"];
-			const chunk = files["0.js"];
-			bundle.should.containEql("function __webpack_require__(");
+			files.should.have.property("/main.js").have.type("string");
+			files.should.have.property("/0.js").have.type("string");
+			Object.keys(files).should.be.eql(["/0.js", "/main.js"]);
+			const bundle = files["/main.js"];
+			const chunk = files["/0.js"];
+      bundle.should.containEql("function __webpack_require__(");
 			bundle.should.containEql("__webpack_require__(/*! ./b */");
 			chunk.should.not.containEql("__webpack_require__(/* ./b */");
 			bundle.should.containEql("./chunks.js");
