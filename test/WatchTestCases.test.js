@@ -181,7 +181,7 @@ describe("WatchTestCases", () => {
 								run = runs[runIdx];
 								setTimeout(() => {
 									copyDiff(path.join(testDirectory, run.name), tempDirectory);
-								}, 50);
+								}, 1500);
 							} else {
 								watching.close();
 								process.nextTick(done);
