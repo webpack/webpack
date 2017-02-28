@@ -36,7 +36,7 @@ module.exports = {
 	},
 	output: {
 		path: path.join(__dirname, "js"),
-		filename: "[name].chunkhash.js",
+		filename: "[name].[chunkhash].js",
 		chunkFilename: "[chunkhash].js"
 	},
 	plugins: [
