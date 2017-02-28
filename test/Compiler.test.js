@@ -144,7 +144,7 @@ describe("Compiler", () => {
 			Object.keys(files).should.be.eql(["/0.js", "/main.js"]);
 			const bundle = files["/main.js"];
 			const chunk = files["/0.js"];
-      bundle.should.containEql("function __webpack_require__(");
+			bundle.should.containEql("function __webpack_require__(");
 			bundle.should.containEql("__webpack_require__(/*! ./b */");
 			chunk.should.not.containEql("__webpack_require__(/* ./b */");
 			bundle.should.containEql("./chunks.js");
