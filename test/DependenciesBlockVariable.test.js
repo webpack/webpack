@@ -2,7 +2,7 @@
 
 const should = require("should");
 const sinon = require("sinon");
-const DependenciesBlockVariable = require("../lib/DependenciesBlockvariable");
+const DependenciesBlockVariable = require("../lib/DependenciesBlockVariable");
 
 describe("DependenciesBlockVariable", () => {
 	let DependenciesBlockVariableInstance,
