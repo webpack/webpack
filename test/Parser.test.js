@@ -183,17 +183,17 @@ describe("Parser", () => {
 			testParser.plugin("can-rename abc", (expr) => true);
 			testParser.plugin("call abc", (expr) => {
 				if(!testParser.state.abc) testParser.state.abc = [];
-				testParser.state.abc.push(testParser.parseString(expr.arguments[0]));
+				testParser.state.abc.push(testParser.evaluateExpression(expr.arguments[0]).string);
 				return true;
 			});
 			testParser.plugin("call cde.abc", (expr) => {
 				if(!testParser.state.cdeabc) testParser.state.cdeabc = [];
-				testParser.state.cdeabc.push(testParser.parseString(expr.arguments[0]));
+				testParser.state.cdeabc.push(testParser.evaluateExpression(expr.arguments[0]).string);
 				return true;
 			});
 			testParser.plugin("call cde.ddd.abc", (expr) => {
 				if(!testParser.state.cdedddabc) testParser.state.cdedddabc = [];
-				testParser.state.cdedddabc.push(testParser.parseString(expr.arguments[0]));
+				testParser.state.cdedddabc.push(testParser.evaluateExpression(expr.arguments[0]).string);
 				return true;
 			});
 			testParser.plugin("expression fgh", (expr) => {
