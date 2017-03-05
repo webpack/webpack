@@ -21,7 +21,7 @@ module.exports = function(yargs) {
 				requiresArg: true
 			},
 			"env": {
-				describe: "Enviroment passed to the config, when it is a function",
+				describe: "Environment passed to the config, when it is a function",
 				group: CONFIG_GROUP
 			},
 			"context": {
@@ -137,7 +137,7 @@ module.exports = function(yargs) {
 			},
 			"target": {
 				type: "string",
-				describe: "The targeted execution enviroment",
+				describe: "The targeted execution environment",
 				group: ADVANCED_GROUP,
 				requiresArg: true
 			},
