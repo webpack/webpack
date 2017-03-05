@@ -251,9 +251,9 @@ describe("Parser", () => {
 			parser.plugin("call test", (expr) => {
 				parser.state.result = parser.evaluateExpression(expr.arguments[0]);
 			});
-			parser.evaluateIdentifierWalker.plugin("aString", (expr) =>
+			parser.evaluateIdentifierPlugin.plugin("aString", (expr) =>
 				new BasicEvaluatedExpression().setString("aString").setRange(expr.range));
-			parser.evaluateIdentifierWalker.plugin("b.Number", (expr) =>
+			parser.evaluateIdentifierPlugin.plugin("b.Number", (expr) =>
 				new BasicEvaluatedExpression().setNumber(123).setRange(expr.range));
 			return parser.parse("test(" + source + ");").result;
 		}
