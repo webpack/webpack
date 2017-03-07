@@ -10,6 +10,7 @@
     "ajv-keywords": "^1.1.1",
     "async": "^2.1.2",
     "enhanced-resolve": "^3.0.0",
+    "insight": "^0.8.4",
     "interpret": "^1.0.0",
     "json-loader": "^0.5.4",
     "loader-runner": "^2.3.0",
