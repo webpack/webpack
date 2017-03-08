@@ -61,3 +61,9 @@ it("should not provide for mjs", function(){
 	var foo = require("./foo.mjs").default;
 	expect(foo()).toBe("undefined");
 });
+
+it("should not provide a module in an excluded file", function() {
+	(function() {
+		require("./ggg");
+	}).should.throw("aaa is not defined");
+});
