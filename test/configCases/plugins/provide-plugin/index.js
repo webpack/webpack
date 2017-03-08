@@ -25,3 +25,9 @@ it("should provide a module for a property request", function() {
 	var x = dddeeefff;
 	x.should.be.eql("fff");
 });
+
+it("should not provide a module in an excluded file", function() {
+	(function() {
+		require("./ggg");
+	}).should.throw("aaa is not defined");
+});
