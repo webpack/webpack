@@ -4,6 +4,5 @@ it("should watch for changes", function() {
         STATS_JSON.modules[0].prefetched.should.be.true();
         STATS_JSON.modules[1].prefetched.should.be.true();
         STATS_JSON.modules[2].prefetched.should.be.true();
-
     }
 });
