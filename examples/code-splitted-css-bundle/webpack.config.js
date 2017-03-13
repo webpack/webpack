@@ -4,9 +4,9 @@ module.exports = {
 		loaders: [
 			{
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract({
-					notExtractLoader: "style-loader",
-					loader: "css-loader"
+				use: ExtractTextPlugin.extract({
+					fallback: "style-loader",
+					use: "css-loader"
 				})
 			},
 			{ test: /\.png$/, loader: "file-loader" }

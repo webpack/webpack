@@ -1,5 +1,6 @@
 "use strict";
 
+const Tapable = require("tapable");
 const should = require("should");
 const sinon = require("sinon");
 const MultiWatching = require("../lib/MultiWatching");
@@ -11,12 +12,21 @@ const createWatching = function() {
 	};
 };
 
+const createCompiler = () => {
+	const compiler = {
+		_plugins: {}
+	};
+	Tapable.mixin(compiler);
+	return compiler;
+};
+
 describe("MultiWatching", () => {
-	let watchings, myMultiWatching;
+	let watchings, compiler, myMultiWatching;
 
 	beforeEach(() => {
 		watchings = [createWatching(), createWatching()];
-		myMultiWatching = new MultiWatching(watchings);
+		compiler = createCompiler();
+		myMultiWatching = new MultiWatching(watchings, compiler);
 	});
 
 	describe("invalidate", () => {

@@ -23,5 +23,32 @@ it("should pass mangle options", function() {
 	source.should.containEql("function r(n){return function(n){try{t()}catch(t){n(t)}}}");
 });
 
+it("should extract comments to separate file", function() {
+	var fs = require("fs"),
+		path = require("path");
+	var source = fs.readFileSync(path.join(__dirname, "extract.js.LICENSE"), "utf-8");
+	source.should.containEql("comment should be extracted extract-test.1");
+	source.should.not.containEql("comment should be stripped extract-test.2");
+	source.should.containEql("comment should be extracted extract-test.3");
+	source.should.not.containEql("comment should be stripped extract-test.4");
+});
+
+it("should remove extracted comments and insert a banner", function() {
+	var fs = require("fs"),
+		path = require("path");
+	var source = fs.readFileSync(path.join(__dirname, "extract.js"), "utf-8");
+	source.should.not.containEql("comment should be extracted extract-test.1");
+	source.should.not.containEql("comment should be stripped extract-test.2");
+	source.should.not.containEql("comment should be extracted extract-test.3");
+	source.should.not.containEql("comment should be stripped extract-test.4");
+	source.should.containEql("/*! For license information please see extract.js.LICENSE */");
+});
+
+it("should pass compress options", function() {
+	var fs = require("fs"),
+		path = require("path");
+	var source = fs.readFileSync(path.join(__dirname, "compress.js"), "utf-8");
+	source.should.containEql("function e(){var n=2;n=3,console.log(1+n),console.log(n+3),console.log(4),console.log(1+n+3)}");
+});
 
 require.include("./test.js");
