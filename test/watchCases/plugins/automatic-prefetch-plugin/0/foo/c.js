@@ -1,3 +1,1 @@
 module.exports = "a test";
-
-
