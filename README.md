@@ -325,7 +325,7 @@ This is how we use the donations:
 
 <h2 align="center">Premium Partners</h2>
 
-<a href="https://www.ag-grid.com/?utm_source=webpack&utm_medium=banner&utm_campaign=sponsorship" target="_blank"><img align="center" src="https://lh5.googleusercontent.com/j7gIkQyr4FoWkX71pHQjlvHsk0dBlMGBZO9ZyAQU03HovPluiBrZu7cbWVNQylvE1Ri_uSIVLwyUsFc=w3840-h2400">
+<a href="https://www.ag-grid.com/?utm_source=webpack&utm_medium=banner&utm_campaign=sponsorship" target="_blank"><img align="center" src="https://raw.githubusercontent.com/webpack/media/2b399d58/horiz-banner-ad-ag-grid.png">
 </a>
 
 <h2 align="center">Other Backers and Sponsors</h2>
