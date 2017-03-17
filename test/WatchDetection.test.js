@@ -102,9 +102,9 @@ describe("WatchDetection", () => {
 				function step4() {
 					onChange = null;
 
-					watcher.close();
-
-					done();
+					watcher.close(() => {
+						setTimeout(done, 1000);
+					});
 				}
 
 				function handleError(err) {

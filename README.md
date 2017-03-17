@@ -322,9 +322,11 @@ This is how we use the donations:
 * Infrastructure cost
 * Fees for money handling
 
-### Early Backers and Sponsors
+<h2 align="center">Other Backers and Sponsors</h2>
 
-We had other sources of donations before starting to use OpenCollective. We want to acknowledge these early sponsors and backers, but donations were not public and we are not sure of donors want to stay anonymous. So if you want to be in this list, just drop @sokra a note via mail (`t____.k____@gmail.com`, insert fullname here).
+We had other sources of donations before starting to use OpenCollective (or people that can't donate via OpenCollective). We want to acknowledge these sponsors and backers, but donations were not public and we are not sure of donors want to stay anonymous. So if you want to be in this list, just send a PR.
+
+[Google Angular Team](https://angular.io/), [Architects.io](http://architects.io/), [Microapps](http://microapps.com/)
 
 <h2 align="center">Sponsors</h2>
 
