@@ -322,6 +322,12 @@ This is how we use the donations:
 * Infrastructure cost
 * Fees for money handling
 
+
+<h2 align="center">Premium Partners</h2>
+
+<a href="https://www.ag-grid.com/?utm_source=webpack&utm_medium=banner&utm_campaign=sponsorship" target="_blank"><img align="center" src="https://lh5.googleusercontent.com/j7gIkQyr4FoWkX71pHQjlvHsk0dBlMGBZO9ZyAQU03HovPluiBrZu7cbWVNQylvE1Ri_uSIVLwyUsFc=w3840-h2400">
+</a>
+
 <h2 align="center">Other Backers and Sponsors</h2>
 
 We had other sources of donations before starting to use OpenCollective (or people that can't donate via OpenCollective). We want to acknowledge these sponsors and backers, but donations were not public and we are not sure of donors want to stay anonymous. So if you want to be in this list, just send a PR.
