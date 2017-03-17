@@ -175,6 +175,7 @@ describe("Stats", function() {
 			it("truthy values behave as 'normal'", function() {
 				var normalOpts = Stats.presetToOptions('normal');
 				Stats.presetToOptions("pizza").should.eql(normalOpts);
+				Stats.presetToOptions("🐓").should.eql(normalOpts);
 				Stats.presetToOptions(true).should.eql(normalOpts);
 				Stats.presetToOptions(1).should.eql(normalOpts);
 
