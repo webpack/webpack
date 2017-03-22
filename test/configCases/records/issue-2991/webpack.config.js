@@ -7,20 +7,10 @@ module.exports = {
 	node: {
 		__dirname: false
 	},
-	plugins: [
-		{
-			apply(compiler) {
-				compiler.plugin("normal-module-factory", (nmf) => {
-					var oldResolve = nmf.resolvers.normal.resolve;
-					nmf.resolvers.normal.resolve = function(_, __, resource, callback) {
-						if(resource === "foo") {
-							callback(null, false, false);
-							return;
-						}
-						return oldResolve.apply(this, arguments);
-					};
-				});
-			}
+	resolve: {
+		aliasFields: [ "browser" ],
+		alias: {
+			pkgs: path.resolve(__dirname, "pkgs")
 		}
-	]
+	}
 };

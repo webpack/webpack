@@ -1,5 +1,5 @@
 try {
-	require("foo");
+	require("pkgs/somepackage/foo");
 } catch(e){}
 
 it("should write relative paths to records", function() {
@@ -11,7 +11,7 @@ it("should write relative paths to records", function() {
     "byIdentifier": {
       "../../../../external \\"fs\\"": 0,
       "../../../../external \\"path\\"": 1,
-      "../../../../ignored ../test/configCases/records/issue-2991 foo": 2,
+      "../../../../ignored ../test/configCases/records/issue-2991 pkgs/somepackage/foo": 2,
       "test.js": 3
     },
     "usedIds": {
