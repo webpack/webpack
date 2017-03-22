@@ -9,9 +9,13 @@ const RecordIdsPlugin = require("../lib/RecordIdsPlugin");
 
 function makeRelative(compiler, identifier) {
 	const context = compiler.context;
-	return identifier.split("|").map((str) =>
-		str.split("!")
-		.map((str) => path.relative(context, str)).join("!")).join("|");
+	return identifier.split("|")
+		.map(str => str.split("!")
+			.map(str => str.split(" ")
+				.map(str => path.relative(context, str))
+				.join(" "))
+			.join("!"))
+		.join("|");
 }
 
 describe("RecordIdsPlugin", () => {
