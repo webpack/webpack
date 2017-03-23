@@ -7,12 +7,14 @@ const webpack = require("../lib/webpack");
 
 const RecordIdsPlugin = require("../lib/RecordIdsPlugin");
 
+const looksLikeAbsolutePath = (maybeAbsolutePath) => /^(?:[a-z]:\\|\/)/i.test(maybeAbsolutePath);
+
 function makeRelative(compiler, identifier) {
 	const context = compiler.context;
 	return identifier.split("|")
 		.map(str => str.split("!")
 			.map(str => str.split(" ")
-				.map(str => path.relative(context, str))
+				.map(str => looksLikeAbsolutePath(str) ? path.relative(context, str) : str)
 				.join(" "))
 			.join("!"))
 		.join("|");

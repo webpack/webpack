@@ -6,12 +6,12 @@ it("should write relative paths to records", function() {
 	var fs = require("fs");
 	var path = require("path");
 	var content = fs.readFileSync(path.join(__dirname, "records.json"), "utf-8");
-	content.replace(/\\\\/g, "/").should.eql(`{
+	content.should.eql(`{
   "modules": {
     "byIdentifier": {
-      "../../../../external \\"fs\\"": 0,
-      "../../../../external \\"path\\"": 1,
-      "../../../../ignored ../test/configCases/records/issue-2991 pkgs/somepackage/foo": 2,
+      "external \\"fs\\"": 0,
+      "external \\"path\\"": 1,
+      "ignored  pkgs/somepackage/foo": 2,
       "test.js": 3
     },
     "usedIds": {
