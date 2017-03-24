@@ -185,6 +185,7 @@ describe("Validation", () => {
 		},
 		message: [
 			" - configuration.output.filename: A relative path is expected. However the provided value \"/bar\" is an absolute path!",
+			"   Please use output.path to specify absolute path and output.filename for the file name."
 		]
 	}, {
 		name: "absolute path",
