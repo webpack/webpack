@@ -33,3 +33,46 @@ it("should handle empty named chunks", function(done) {
 		sync = false;
 	});
 });
+
+it("should be able to use named chunks in import()", function(done) {
+	var sync = false;
+  import("./empty?e" /* webpackChunkName = "import-named-chunk" */).then(function(result){
+    import("./empty?f" /* webpackChunkName = "import-named-chunk" */).then(function(result){
+			sync.should.be.ok();
+    }).catch(function(err){
+      done(err);
+    });
+    import("./empty?g" /* webpackChunkName = "import-named-chunk-2" */).then(function(result){
+			sync.should.not.be.ok();
+			done();
+    }).catch(function(err){
+      done(err);
+    });
+		sync = true;
+    Promise.resolve().then(function(){}).then(function(){}).then(function(){
+      sync = false;
+    });
+  });
+});
+
+it("should be able to use named chunk in context import()", function(done) {
+  var mpty = "mpty";
+	var sync = false;
+  import("./e" + mpty + "2" /* webpackChunkName = "context-named-chunk" */).then(function(result) {
+    import("./e" + mpty + "3" /* webpackChunkName = "context-named-chunk" */).then(function(result){
+			sync.should.be.ok();
+    }).catch(function(err){
+      done(err);
+    });
+    import("./e" + mpty + "4" /* webpackChunkName = "context-named-chunk-2" */).then(function(result){
+			sync.should.not.be.ok();
+			done();
+    }).catch(function(err){
+      done(err);
+    });
+		sync = true;
+    Promise.resolve().then(function(){}).then(function(){}).then(function(){
+      sync = false;
+    });
+	});
+});
