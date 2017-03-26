@@ -1,6 +1,7 @@
+/* global describe, it*/
 "use strict";
 
-const should = require("should");
+require("should");
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
@@ -92,7 +93,8 @@ describe("TestCases", () => {
 		plugins: [
 			new webpack.HotModuleReplacementPlugin(),
 			new webpack.optimize.UglifyJsPlugin(),
-			new webpack.NamedModulesPlugin()
+			new webpack.NamedModulesPlugin(),
+			new webpack.NamedChunksPlugin()
 		]
 	}].forEach((config) => {
 		describe(config.name, () => {
