@@ -45,7 +45,8 @@ module.exports = [
 ``` javascript
 var vendor_32199746b38d6e93b44b =
 ```
-<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` js
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -116,7 +117,9 @@ var vendor_32199746b38d6e93b44b =
 /******/ })
 /************************************************************************/
 ```
+
 </details>
+
 ``` js
 /******/ ([
 /* 0 */
