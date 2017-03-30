@@ -79,7 +79,7 @@ rules:
       identifier: "tests-result"
       readd: true
       message: |-
-      It looks like this Pull Request doesn't include [enough test cases]({{status.html_url}}).
+        It looks like this Pull Request doesn't include [enough test cases]({{status.html_url}}).
         
         @{{issue.user.login}} Please add more test cases.
         
