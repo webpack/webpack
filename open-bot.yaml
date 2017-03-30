@@ -117,9 +117,9 @@ rules:
     comment:
       identifier: "review-outdated"
       readd: true
-	  message: |-
+      message: |-
         @{{commit.committer.login}} Thanks for your update.
-	    
+        
         I labeled the Pull Request so reviewers will review it again.
         
         @{{review.user.login}} Please review the new changes.
