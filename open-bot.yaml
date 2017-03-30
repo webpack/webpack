@@ -1,5 +1,9 @@
 bot: "webpack-bot"
 rules:
+
+# Add ci-ok, ci-not-ok labels depending on travis status
+# comment to point the user to the results
+# comment in case of success
 - filters:
     open: true
     status:
@@ -35,3 +39,56 @@ rules:
         
         Please take a look at the [CI results]({{status.target_url}}) and fix these issues.
 
+
+# add unreviewed, reviewed, review-outdated labels
+# comment to ping reviewer
+# comment on new PR
+- filters:
+    open: true
+    in_order:
+      commit: true
+      review:
+        state: APPROVED|CHANGES_REQUESTED
+  actions:
+    label:
+      add: "PR: reviewed"
+      remove:
+      - "PR: review-outdated"
+      - "PR: unreviewed"
+- filters:
+    open: true
+    in_order:
+      review:
+        state: APPROVED|CHANGES_REQUESTED
+      commit: true
+  actions:
+    label:
+      add: "PR: review-outdated"
+      remove:
+      - "PR: reviewed"
+      - "PR: unreviewed"
+    comment: |-
+      @{{commit.committer.login}} Thanks for your update.
+
+      I labeled the Pull Request so reviewers will review it again.
+      
+      @{{review.user.login}} Please review the new changes.
+- filters:
+    open: true
+    commit: true
+    not:
+      review:
+        state: APPROVED|CHANGES_REQUESTED
+  actions:
+    label: "PR: unreviewed"
+- filters:
+    open: true
+    commit: true
+    not:
+      review:
+        state: APPROVED|CHANGES_REQUESTED
+    age:
+      maximum: 1w
+  actions:
+    comment: |-
+      Thanks for your Pull Request. I labeled the Pull Request, so maintainers will review it.
