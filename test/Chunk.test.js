@@ -10,7 +10,7 @@ describe("Chunk", () => {
 
 	beforeEach(() => ChunkInstance = new Chunk("chunk-test", "module-test", "loc-test"));
 
-	it("should have debugId more than 100", () => should(ChunkInstance.debugId).be.above(100));
+	it("should have debugId more than 999", () => should(ChunkInstance.debugId).be.above(999));
 
 	it("returns a string with modules information", () => should(ChunkInstance.toString()).be.exactly("Chunk[]"));
 
