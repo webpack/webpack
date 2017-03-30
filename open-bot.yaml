@@ -40,6 +40,56 @@ rules:
         Please take a look at the [CI results]({{status.target_url}}) and fix these issues.
 
 
+
+# Add tests-needed label depending on codedov status
+# comment to point the user writing test cases
+# comment in case of success
+- filters:
+    open: true
+    status:
+      context: "codecov/patch"
+    ensure:
+      value: "{{status.state}}"
+      equals: "success"
+  actions:
+    label:
+      remove: "PR: tests-needed"
+- filters:
+    open: true
+    status:
+      context: "codecov/patch"
+    ensure:
+      value: "{{status.state}}"
+      equals: "success"
+    label: "PR: tests-needed"
+  actions:
+    comment:
+      identifier: "tests-result"
+      readd: true
+      message: |-
+        The minimum test ratio has been reached. Thanks!
+- filters:
+    open: true
+    status:
+      context: "codecov/patch"
+    ensure:
+      value: "{{status.state}}"
+      equals: "failure"
+  actions:
+    label:
+      add: "PR: tests-needed"
+    comment: 
+      identifier: "tests-result"
+      readd: true
+      message: |-
+	    It looks like this Pull Request doesn't include [enough test cases]({{status.html_url}}).
+		
+        @{{issue.user.login}} Please add more test cases.
+        
+        See [test readme](https://github.com/webpack/webpack/blob/master/test/README.md) for details how to write test cases.
+
+
+
 # add unreviewed, reviewed, review-outdated labels
 # comment to ping reviewer
 # comment on new PR
