@@ -27,7 +27,8 @@ module.exports = {
 		root["MyLibrary"] = factory();
 })(this, function() {
 ```
-<details><summary>`return /******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+<details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` js
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -98,7 +99,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ })
 /************************************************************************/
 ```
+
 </details>
+
 ``` js
 /******/ ([
 /* 0 */

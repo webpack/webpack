@@ -30,7 +30,8 @@ module.exports = {
 ``` javascript
 var alpha_282e8826843b2bb4eeb1 =
 ```
-<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` js
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -101,7 +102,9 @@ var alpha_282e8826843b2bb4eeb1 =
 /******/ })
 /************************************************************************/
 ```
+
 </details>
+
 ``` js
 /******/ ([
 /* 0 */
