@@ -92,49 +92,56 @@ module.exports = {
 /******/ 		}
 /******/ 		return result;
 /******/ 	};
-
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// objects to store loaded and loading chunks
 /******/ 	var installedChunks = {
 /******/ 		4: 0
 /******/ 	};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
+/******/
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
 /******/ 		if(installedChunks[chunkId] === 0)
 /******/ 			return Promise.resolve();
-
-/******/ 		// an Promise means "currently loading".
+/******/
+/******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
 /******/ 			return installedChunks[chunkId][2];
 /******/ 		}
+/******/
+/******/ 		// setup Promise in chunk cache
+/******/ 		var promise = new Promise(function(resolve, reject) {
+/******/ 			installedChunks[chunkId] = [resolve, reject];
+/******/ 		});
+/******/ 		installedChunks[chunkId][2] = promise;
+/******/
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
@@ -142,7 +149,7 @@ module.exports = {
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
-
+/******/
 /******/ 		if (__webpack_require__.nc) {
 /******/ 			script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 		}
@@ -159,25 +166,20 @@ module.exports = {
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
-
-/******/ 		var promise = new Promise(function(resolve, reject) {
-/******/ 			installedChunks[chunkId] = [resolve, reject];
-/******/ 		});
-/******/ 		installedChunks[chunkId][2] = promise;
-
 /******/ 		head.appendChild(script);
+/******/
 /******/ 		return promise;
 /******/ 	};
-
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -188,7 +190,7 @@ module.exports = {
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -197,16 +199,16 @@ module.exports = {
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-
+/******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
-
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
@@ -222,11 +224,11 @@ module.exports = {
 /*!********************!*\
   !*** ./vendor1.js ***!
   \********************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 module.exports = "vendor1";
 
-/***/ },
+/***/ }),
 
 /***/ 4:
 /* unknown exports provided */
@@ -234,25 +236,25 @@ module.exports = "vendor1";
 /*!********************!*\
   !*** ./vendor2.js ***!
   \********************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 module.exports = "vendor2";
 
-/***/ },
+/***/ }),
 
 /***/ 8:
 /* unknown exports provided */
 /* all exports used */
-/*!********************!*\
-  !*** multi vendor ***!
-  \********************/
-/***/ function(module, exports, __webpack_require__) {
+/*!*********************************!*\
+  !*** multi ./vendor1 ./vendor2 ***!
+  \*********************************/
+/***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ./vendor1 */3);
 module.exports = __webpack_require__(/*! ./vendor2 */4);
 
 
-/***/ }
+/***/ })
 
 /******/ });
 ```
@@ -267,22 +269,22 @@ webpackJsonp([0],[
 /*!*********************!*\
   !*** ./utility2.js ***!
   \*********************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 module.exports = "utility2";
 
-/***/ },
+/***/ }),
 /* 1 */
 /* unknown exports provided */
 /* all exports used */
 /*!*********************!*\
   !*** ./utility3.js ***!
   \*********************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 module.exports = "utility3";
 
-/***/ }
+/***/ })
 ]);
 ```
 
@@ -297,11 +299,11 @@ webpackJsonp([1],{
 /*!*********************!*\
   !*** ./utility1.js ***!
   \*********************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 module.exports = "utility1";
 
-/***/ },
+/***/ }),
 
 /***/ 5:
 /* unknown exports provided */
@@ -309,14 +311,14 @@ module.exports = "utility1";
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 var utility1 = __webpack_require__(/*! ./utility1 */ 2);
 var utility2 = __webpack_require__(/*! ./utility2 */ 0);
 
 module.exports = "pageA";
 
-/***/ }
+/***/ })
 
 },[5]);
 ```
@@ -332,14 +334,14 @@ webpackJsonp([3],{
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 var utility2 = __webpack_require__(/*! ./utility2 */ 0);
 var utility3 = __webpack_require__(/*! ./utility3 */ 1);
 
 module.exports = "pageB";
 
-/***/ }
+/***/ })
 
 },[6]);
 ```
@@ -355,14 +357,14 @@ webpackJsonp([2],{
 /*!******************!*\
   !*** ./pageC.js ***!
   \******************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 var utility2 = __webpack_require__(/*! ./utility2 */ 0);
 var utility3 = __webpack_require__(/*! ./utility3 */ 1);
 
 module.exports = "pageC";
 
-/***/ }
+/***/ })
 
 },[7]);
 ```
@@ -372,14 +374,14 @@ module.exports = "pageC";
 ## Uncompressed
 
 ```
-Hash: 765ab186904b368e4ffb
-Version: webpack 2.2.0-rc.2
+Hash: 03a4f8b5f1f257f40a63
+Version: webpack 2.3.2
     Asset       Size  Chunks             Chunk Names
-common.js  453 bytes       0  [emitted]  common
- pageA.js  589 bytes       1  [emitted]  pageA
- pageC.js  371 bytes       2  [emitted]  pageC
- pageB.js  371 bytes       3  [emitted]  pageB
-vendor.js    6.41 kB       4  [emitted]  vendor
+common.js  457 bytes       0  [emitted]  common
+ pageA.js  593 bytes       1  [emitted]  pageA
+ pageC.js  373 bytes       2  [emitted]  pageC
+ pageB.js  373 bytes       3  [emitted]  pageB
+vendor.js    6.68 kB       4  [emitted]  vendor
 Entrypoint vendor = vendor.js
 Entrypoint pageA = vendor.js common.js pageA.js
 Entrypoint pageB = vendor.js common.js pageB.js
@@ -404,19 +406,19 @@ chunk    {3} pageB.js (pageB) 105 bytes {0} [initial] [rendered]
     > pageB [6] ./pageB.js 
     [6] ./pageB.js 105 bytes {3} [built]
 chunk    {4} vendor.js (vendor) 94 bytes [entry] [rendered]
-    > vendor [8] multi vendor 
+    > vendor [8] multi ./vendor1 ./vendor2 
     [3] ./vendor1.js 27 bytes {4} [built]
-        single entry ./vendor1 [8] multi vendor
+        single entry ./vendor1 [8] multi ./vendor1 ./vendor2 vendor:100000
     [4] ./vendor2.js 27 bytes {4} [built]
-        single entry ./vendor2 [8] multi vendor
-    [8] multi vendor 40 bytes {4} [built]
+        single entry ./vendor2 [8] multi ./vendor1 ./vendor2 vendor:100001
+    [8] multi ./vendor1 ./vendor2 40 bytes {4} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 765ab186904b368e4ffb
-Version: webpack 2.2.0-rc.2
+Hash: 03a4f8b5f1f257f40a63
+Version: webpack 2.3.2
     Asset       Size  Chunks             Chunk Names
 common.js   92 bytes       0  [emitted]  common
  pageA.js  109 bytes       1  [emitted]  pageA
@@ -447,10 +449,10 @@ chunk    {3} pageB.js (pageB) 105 bytes {0} [initial] [rendered]
     > pageB [6] ./pageB.js 
     [6] ./pageB.js 105 bytes {3} [built]
 chunk    {4} vendor.js (vendor) 94 bytes [entry] [rendered]
-    > vendor [8] multi vendor 
+    > vendor [8] multi ./vendor1 ./vendor2 
     [3] ./vendor1.js 27 bytes {4} [built]
-        single entry ./vendor1 [8] multi vendor
+        single entry ./vendor1 [8] multi ./vendor1 ./vendor2 vendor:100000
     [4] ./vendor2.js 27 bytes {4} [built]
-        single entry ./vendor2 [8] multi vendor
-    [8] multi vendor 40 bytes {4} [built]
+        single entry ./vendor2 [8] multi ./vendor1 ./vendor2 vendor:100001
+    [8] multi ./vendor1 ./vendor2 40 bytes {4} [built]
 ```
