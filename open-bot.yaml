@@ -114,11 +114,15 @@ rules:
       remove:
       - "PR: reviewed"
       - "PR: unreviewed"
-    comment: |-
-      @{{commit.committer.login}} Thanks for your update.
-      I labeled the Pull Request so reviewers will review it again.
-      
-      @{{review.user.login}} Please review the new changes.
+    comment:
+      identifier: "review-outdated"
+      readd: true
+	  message: |-
+        @{{commit.committer.login}} Thanks for your update.
+	    
+        I labeled the Pull Request so reviewers will review it again.
+        
+        @{{review.user.login}} Please review the new changes.
 - filters:
     open: true
     commit: true
