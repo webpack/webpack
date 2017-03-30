@@ -4,7 +4,9 @@ rules:
     open: true
     status:
       context: "continuous-integration/travis-ci/pr"
-      state: "success"
+    ensure:
+      value: "{{status.state}}"
+      equals: "success"
   actions:
     label:
       add: "PR: CI-ok"
@@ -18,7 +20,9 @@ rules:
     open: true
     status:
       context: "continuous-integration/travis-ci/pr"
-      state: "failure"
+    ensure:
+      value: "{{status.state}}"
+      equals: "failure"
   actions:
     label:
       add: "PR: CI-not-ok"
@@ -30,3 +34,4 @@ rules:
         @{{issue.user.login}} The most important CI builds failed. This way your PR can't be merged.
         
         Please take a look at the [CI results]({{status.target_url}}) and fix these issues.
+
