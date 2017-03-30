@@ -19,7 +19,7 @@ rules:
       identifier: "ci-result"
       readd: true
       message: |-
-        The most important CI builds succeeded. Great work so far.
+        Thank you for your pull request! We’ll review it soon.
 - filters:
     open: true
     status:
