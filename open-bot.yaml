@@ -1,0 +1,32 @@
+bot: "webpack-bot"
+rules:
+- filters:
+    open: true
+    status:
+      context: "continuous-integration/travis-ci/pr"
+      state: "success"
+  actions:
+    label:
+      add: "PR: CI-ok"
+      remove: "PR: CI-not-ok"
+    comment:
+      identifier: "ci-result"
+      readd: true
+      message: |-
+        The most important CI builds succeeded. Great work so far.
+- filters:
+    open: true
+    status:
+      context: "continuous-integration/travis-ci/pr"
+      state: "failure"
+  actions:
+    label:
+      add: "PR: CI-not-ok"
+      remove: "PR: CI-ok"
+    comment: 
+      identifier: "ci-result"
+      readd: true
+      message: |-
+        @{{issue.user.login}} The most important CI builds failed. This way your PR can't be merged.
+        
+        Please take a look at the [CI results]({{status.target_url}}) and fix these issues.
