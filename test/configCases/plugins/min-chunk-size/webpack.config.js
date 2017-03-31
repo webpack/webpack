@@ -1,4 +1,5 @@
-var webpack = require("../../../../")
+//eslint-disable-next-line
+var webpack = require("../../../../");
 
 module.exports = {
 	plugins: [
@@ -6,4 +7,4 @@ module.exports = {
 			minChunkSize: 30
 		})
 	]
-}
+};
