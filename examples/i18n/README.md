@@ -48,46 +48,47 @@ module.exports = Object.keys(languages).map(function(language) {
 
 # js/de.output.js
 
-<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -98,7 +99,7 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -107,19 +108,21 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
+
 </details>
+
 ``` javascript
 /******/ ([
 /* 0 */
@@ -128,12 +131,12 @@ module.exports = Object.keys(languages).map(function(language) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 console.log("Hallo Welt");
 console.log("Missing Text");
 
-/***/ }
+/***/ })
 /******/ ]);
 ```
 
@@ -143,41 +146,41 @@ console.log("Missing Text");
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -188,7 +191,7 @@ console.log("Missing Text");
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -197,13 +200,13 @@ console.log("Missing Text");
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -215,12 +218,12 @@ console.log("Missing Text");
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 console.log("Hello World");
 console.log("Missing Text");
 
-/***/ }
+/***/ })
 /******/ ]);
 ```
 
@@ -230,21 +233,19 @@ console.log("Missing Text");
 
 ```
 Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 2.2.0-rc.2
+Version: webpack 2.3.2
 Child en:
     Hash: b61d16621736c97f557e
-    Version: webpack 2.2.0-rc.2
            Asset     Size  Chunks             Chunk Names
-    en.output.js  2.72 kB       0  [emitted]  main
+    en.output.js  2.84 kB       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built]
 Child de:
     Hash: 52b4d8e68140f1345ef8
-    Version: webpack 2.2.0-rc.2
            Asset     Size  Chunks             Chunk Names
-    de.output.js  2.72 kB       0  [emitted]  main
+    de.output.js  2.84 kB       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
@@ -258,10 +259,9 @@ Child de:
 
 ```
 Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 2.2.0-rc.2
+Version: webpack 2.3.2
 Child en:
     Hash: b61d16621736c97f557e
-    Version: webpack 2.2.0-rc.2
            Asset       Size  Chunks             Chunk Names
     en.output.js  571 bytes       0  [emitted]  main
     Entrypoint main = en.output.js
@@ -270,7 +270,6 @@ Child en:
         [0] ./example.js 65 bytes {0} [built]
 Child de:
     Hash: 52b4d8e68140f1345ef8
-    Version: webpack 2.2.0-rc.2
            Asset       Size  Chunks             Chunk Names
     de.output.js  570 bytes       0  [emitted]  main
     Entrypoint main = de.output.js

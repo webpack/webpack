@@ -48,7 +48,7 @@ module.exports = {
 			moveToParents: true
 		})
 	]
-}
+};
 ```
 
 # Info
@@ -56,14 +56,14 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: 06f18f1663d1b6555aff
-Version: webpack 2.2.0-rc.2
+Hash: 75bcce350a8b5f748873
+Version: webpack 2.3.2
           Asset       Size  Chunks             Chunk Names
      0.chunk.js    5.76 kB       0  [emitted]  
-     1.chunk.js  397 bytes       1  [emitted]  
-pageB.bundle.js    6.17 kB       2  [emitted]  pageB
-pageA.bundle.js    6.14 kB       3  [emitted]  pageA
-pageC.bundle.js    5.94 kB       4  [emitted]  pageC
+     1.chunk.js  401 bytes       1  [emitted]  
+pageB.bundle.js    6.41 kB       2  [emitted]  pageB
+pageA.bundle.js    6.38 kB       3  [emitted]  pageA
+pageC.bundle.js    6.17 kB       4  [emitted]  pageC
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js
@@ -101,8 +101,8 @@ chunk    {4} pageC.bundle.js (pageC) 70 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 06f18f1663d1b6555aff
-Version: webpack 2.2.0-rc.2
+Hash: 75bcce350a8b5f748873
+Version: webpack 2.3.2
           Asset      Size  Chunks             Chunk Names
      0.chunk.js  75 bytes       0  [emitted]  
      1.chunk.js  78 bytes       1  [emitted]  
