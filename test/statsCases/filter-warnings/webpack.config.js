@@ -17,9 +17,9 @@ const baseConfig = {
 	})],
 	stats: {
 		chunkModules: false,
-		modules: true,
-		providedExports: true,
-		usedExports: true,
+		modules: false,
+		providedExports: false,
+		usedExports: false,
 	}
 };
 
