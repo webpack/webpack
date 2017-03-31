@@ -50,7 +50,7 @@
     "less": "^2.5.1",
     "less-loader": "^2.0.0",
     "lodash": "^4.17.4",
-    "mocha": "^3.2.0",
+    "mocha": "3.2.0",
     "mocha-lcov-reporter": "^1.0.0",
     "nsp": "^2.6.1",
     "raw-loader": "~0.5.0",

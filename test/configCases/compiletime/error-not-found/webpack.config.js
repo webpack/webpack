@@ -1,5 +1,5 @@
 module.exports = {
-  module: {
-    strictExportPresence: true
-  }
+	module: {
+		strictExportPresence: true
+	}
 };
