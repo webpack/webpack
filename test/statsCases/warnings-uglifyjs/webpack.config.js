@@ -5,7 +5,6 @@ module.exports = {
 	output: {
 		filename: "bundle.js"
 	},
-	//eslint-disable-next-line
 	plugins: [new webpack.optimize.UglifyJsPlugin({
 		warningsFilter: function(filename) {
 			return /a\.js$/.test(filename);
