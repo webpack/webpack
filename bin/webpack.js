@@ -334,7 +334,10 @@ function processOptions(options) {
 			process.exit(1); // eslint-disable-line
 		}
 		if(outputOptions.json) {
-			process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
+			var stringify = require('JSONStream').stringify('', '', '');
+			stringify.pipe(process.stdout);
+			stringify.write(stats.toJson(outputOptions));
+			stringify.end();
 		} else if(stats.hash !== lastHash) {
 			lastHash = stats.hash;
 			process.stdout.write(stats.toString(outputOptions) + "\n");
