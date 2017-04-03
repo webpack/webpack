@@ -3,7 +3,6 @@
 require("should");
 const sinon = require("sinon");
 const NormalModule = require("../lib/NormalModule");
-const path = require("path");
 const SourceMapSource = require("webpack-sources").SourceMapSource;
 const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
@@ -37,6 +36,12 @@ describe("NormalModule", function() {
 	describe("#identifier", function() {
 		it("returns an identifier for this module", function() {
 			normalModule.identifier().should.eql(request);
+		});
+		it("returns an identifier from toString", function() {
+			normalModule.debugId = 1000;
+			normalModule.toString().should.eql("Module[1000]");
+			normalModule.id = 1;
+			normalModule.toString().should.eql("Module[1]");
 		});
 	});
 
