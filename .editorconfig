@@ -16,6 +16,10 @@ indent_size = 2
 indent_style = space
 indent_size = 2
 
+[*.yaml]
+indent_style = space
+indent_size = 2
+
 [test/cases/parsing/bom/bomfile.{css,js}]
 charset = utf-8-bom
 
