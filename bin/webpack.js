@@ -334,7 +334,7 @@ function processOptions(options) {
 			process.exit(1); // eslint-disable-line
 		}
 		if(outputOptions.json) {
-			var stringify = require('JSONStream').stringify('', '', '');
+			var stringify = require("JSONStream").stringify("", "", "");
 			stringify.pipe(process.stdout);
 			stringify.write(stats.toJson(outputOptions));
 			stringify.end();
