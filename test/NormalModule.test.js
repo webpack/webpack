@@ -3,6 +3,7 @@
 require("should");
 const sinon = require("sinon");
 const NormalModule = require("../lib/NormalModule");
+const NullDependency = require("../lib/dependencies/NullDependency");
 const SourceMapSource = require("webpack-sources").SourceMapSource;
 const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
@@ -186,6 +187,15 @@ describe("NormalModule", function() {
 				hashSpy.args[0][0].should.eql("source");
 				hashSpy.args[1][0].should.eql(expectedSource);
 			});
+		});
+	});
+	describe("#hasDependencies", function() {
+		it("returns true if has dependencies", function() {
+			normalModule.addDependency(new NullDependency());
+			normalModule.hasDependencies().should.eql(true);
+		});
+		it("returns false if has dependencies", function() {
+			normalModule.hasDependencies().should.eql(false);
 		});
 	});
 	describe("#needRebuild", function() {
