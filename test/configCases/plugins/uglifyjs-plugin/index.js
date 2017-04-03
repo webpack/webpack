@@ -44,4 +44,11 @@ it("should remove extracted comments and insert a banner", function() {
 	source.should.containEql("/*! For license information please see extract.js.LICENSE */");
 });
 
+it("should pass compress options", function() {
+	var fs = require("fs"),
+		path = require("path");
+	var source = fs.readFileSync(path.join(__dirname, "compress.js"), "utf-8");
+	source.should.containEql("function e(){var n=2;n=3,console.log(1+n),console.log(n+3),console.log(4),console.log(1+n+3)}");
+});
+
 require.include("./test.js");

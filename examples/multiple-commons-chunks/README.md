@@ -46,7 +46,7 @@ module.exports = {
 			chunks: ["pageC", "adminPageC"]
 		}),
 	]
-}
+};
 ```
 
 # pageA.html
@@ -76,7 +76,8 @@ module.exports = {
 
 # js/commons.js
 
-<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
@@ -106,50 +107,57 @@ module.exports = {
 /******/ 		}
 /******/ 		return result;
 /******/ 	};
-
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// objects to store loaded and loading chunks
 /******/ 	var installedChunks = {
 /******/ 		7: 0,
 /******/ 		8: 0
 /******/ 	};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
+/******/
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
 /******/ 		if(installedChunks[chunkId] === 0)
 /******/ 			return Promise.resolve();
-
-/******/ 		// an Promise means "currently loading".
+/******/
+/******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
 /******/ 			return installedChunks[chunkId][2];
 /******/ 		}
+/******/
+/******/ 		// setup Promise in chunk cache
+/******/ 		var promise = new Promise(function(resolve, reject) {
+/******/ 			installedChunks[chunkId] = [resolve, reject];
+/******/ 		});
+/******/ 		installedChunks[chunkId][2] = promise;
+/******/
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
@@ -157,7 +165,7 @@ module.exports = {
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
-
+/******/
 /******/ 		if (__webpack_require__.nc) {
 /******/ 			script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 		}
@@ -174,25 +182,20 @@ module.exports = {
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
-
-/******/ 		var promise = new Promise(function(resolve, reject) {
-/******/ 			installedChunks[chunkId] = [resolve, reject];
-/******/ 		});
-/******/ 		installedChunks[chunkId][2] = promise;
-
 /******/ 		head.appendChild(script);
+/******/
 /******/ 		return promise;
 /******/ 	};
-
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -203,7 +206,7 @@ module.exports = {
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -212,19 +215,21 @@ module.exports = {
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-
+/******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/ })
 /************************************************************************/
 ```
+
 </details>
+
 ``` javascript
 /******/ ([
 /* 0 */
@@ -233,11 +238,11 @@ module.exports = {
 /*!**************************!*\
   !*** ./modules/a-b-c.js ***!
   \**************************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 
 
-/***/ },
+/***/ }),
 /* 1 */,
 /* 2 */,
 /* 3 */,
@@ -247,11 +252,11 @@ module.exports = {
 /*!************************!*\
   !*** ./modules/a-b.js ***!
   \************************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 
 
-/***/ }
+/***/ })
 /******/ ]);
 ```
 
@@ -266,11 +271,11 @@ webpackJsonp([2],{
 /*!************************!*\
   !*** ./modules/a-c.js ***!
   \************************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 
 
-/***/ },
+/***/ }),
 
 /***/ 8:
 /* unknown exports provided */
@@ -278,14 +283,14 @@ webpackJsonp([2],{
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ./modules/a-b-c */ 0);
 __webpack_require__(/*! ./modules/a-b */ 4);
 __webpack_require__(/*! ./modules/a-c */ 2);
 
 
-/***/ }
+/***/ })
 
 },[8]);
 ```
@@ -301,11 +306,11 @@ webpackJsonp([4],[
 /*!**************************!*\
   !*** ./modules/admin.js ***!
   \**************************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 
 
-/***/ }
+/***/ })
 ]);
 ```
 
@@ -320,12 +325,12 @@ webpackJsonp([6],{
 /*!***********************!*\
   !*** ./adminPageA.js ***!
   \***********************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ./modules/a-b-c */ 0);
 __webpack_require__(/*! ./modules/admin */ 1);
 
-/***/ }
+/***/ })
 
 },[5]);
 ```
@@ -335,18 +340,18 @@ __webpack_require__(/*! ./modules/admin */ 1);
 ## Uncompressed
 
 ```
-Hash: 295aa8d9fd845ec1d1b0
-Version: webpack 2.2.0-rc.2
+Hash: 8813e8cc41a26866a673
+Version: webpack 2.3.2
            Asset       Size  Chunks             Chunk Names
-        pageC.js  768 bytes       0  [emitted]  pageC
-        pageB.js  567 bytes       1  [emitted]  pageB
-        pageA.js  567 bytes       2  [emitted]  pageA
-   adminPageC.js  544 bytes    3, 4  [emitted]  adminPageC
-admin-commons.js  233 bytes       4  [emitted]  admin-commons
-   adminPageB.js  337 bytes       5  [emitted]  adminPageB
-   adminPageA.js  337 bytes       6  [emitted]  adminPageA
-      commons.js       6 kB    7, 8  [emitted]  commons
-    c-commons.js    5.76 kB       8  [emitted]  c-commons
+        pageC.js  774 bytes       0  [emitted]  pageC
+        pageB.js  571 bytes       1  [emitted]  pageB
+        pageA.js  571 bytes       2  [emitted]  pageA
+   adminPageC.js  548 bytes    3, 4  [emitted]  adminPageC
+admin-commons.js  235 bytes       4  [emitted]  admin-commons
+   adminPageB.js  339 bytes       5  [emitted]  adminPageB
+   adminPageA.js  339 bytes       6  [emitted]  adminPageA
+      commons.js    6.23 kB    7, 8  [emitted]  commons
+    c-commons.js    5.98 kB       8  [emitted]  c-commons
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 Entrypoint pageC = c-commons.js pageC.js
@@ -416,8 +421,8 @@ chunk    {8} c-commons.js (c-commons) 0 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 295aa8d9fd845ec1d1b0
-Version: webpack 2.2.0-rc.2
+Hash: 8813e8cc41a26866a673
+Version: webpack 2.3.2
            Asset      Size  Chunks             Chunk Names
         pageC.js  96 bytes       0  [emitted]  pageC
         pageB.js  76 bytes       1  [emitted]  pageB
