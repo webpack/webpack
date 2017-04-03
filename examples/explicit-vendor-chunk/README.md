@@ -45,46 +45,47 @@ module.exports = [
 ``` javascript
 var vendor_32199746b38d6e93b44b =
 ```
-<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` js
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -95,7 +96,7 @@ var vendor_32199746b38d6e93b44b =
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -104,19 +105,21 @@ var vendor_32199746b38d6e93b44b =
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 ```
+
 </details>
+
 ``` js
 /******/ ([
 /* 0 */
@@ -125,33 +128,33 @@ var vendor_32199746b38d6e93b44b =
 /*!*******************!*\
   !*** ./vendor.js ***!
   \*******************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 module.exports = "Vendor";
 
-/***/ },
+/***/ }),
 /* 1 */
 /* unknown exports provided */
 /* all exports used */
 /*!********************!*\
   !*** ./vendor2.js ***!
   \********************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 module.exports = "Vendor2";
 
-/***/ },
+/***/ }),
 /* 2 */
 /* unknown exports provided */
 /* all exports used */
 /*!****************!*\
   !*** dll main ***!
   \****************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__;
 
-/***/ }
+/***/ })
 /******/ ]);
 ```
 
@@ -161,41 +164,41 @@ module.exports = __webpack_require__;
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -206,7 +209,7 @@ module.exports = __webpack_require__;
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -215,13 +218,13 @@ module.exports = __webpack_require__;
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
@@ -232,22 +235,22 @@ module.exports = __webpack_require__;
 /*!**********************************************!*\
   !*** external "vendor_32199746b38d6e93b44b" ***!
   \**********************************************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 module.exports = vendor_32199746b38d6e93b44b;
 
-/***/ },
+/***/ }),
 /* 1 */
 /* unknown exports provided */
 /* all exports used */
 /*!****************************************************************************!*\
   !*** delegated ./vendor.js from dll-reference vendor_32199746b38d6e93b44b ***!
   \****************************************************************************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(0))(0);
 
-/***/ },
+/***/ }),
 /* 2 */,
 /* 3 */
 /* unknown exports provided */
@@ -255,12 +258,12 @@ module.exports = (__webpack_require__(0))(0);
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 console.log(__webpack_require__(/*! ./vendor */ 1));
 module.exports = "pageA";
 
-/***/ }
+/***/ })
 /******/ ]);
 ```
 
@@ -269,28 +272,26 @@ module.exports = "pageA";
 ## Uncompressed
 
 ```
-Hash: 32199746b38d6e93b44b5135e2b2d565610f1fb4
-Version: webpack 2.2.0-rc.2
+Hash: 32199746b38d6e93b44ba8c4dfdaf5a935b1ed38
+Version: webpack 2.3.2
 Child vendor:
     Hash: 32199746b38d6e93b44b
-    Version: webpack 2.2.0-rc.2
         Asset     Size  Chunks             Chunk Names
-    vendor.js  3.14 kB       0  [emitted]  main
+    vendor.js  3.27 kB       0  [emitted]  main
     Entrypoint main = vendor.js
     chunk    {0} vendor.js (main) 65 bytes [entry] [rendered]
         > main [2] dll main 
         [0] ./vendor.js 26 bytes {0} [built]
-            single entry ./vendor [2] dll main
+            single entry ./vendor [2] dll main main:0
         [1] ./vendor2.js 27 bytes {0} [built]
-            single entry ./vendor2 [2] dll main
+            single entry ./vendor2 [2] dll main main:1
         [2] dll main 12 bytes {0} [built]
 Child app:
-    Hash: 5135e2b2d565610f1fb4
-    Version: webpack 2.2.0-rc.2
+    Hash: a8c4dfdaf5a935b1ed38
        Asset     Size  Chunks             Chunk Names
-    pageB.js  3.46 kB       0  [emitted]  pageB
-    pageA.js  3.45 kB       1  [emitted]  pageA
-    pageC.js  2.66 kB       2  [emitted]  pageC
+    pageB.js  3.59 kB       0  [emitted]  pageB
+    pageA.js  3.57 kB       1  [emitted]  pageA
+    pageC.js  2.79 kB       2  [emitted]  pageC
     Entrypoint pageA = pageA.js
     Entrypoint pageB = pageB.js
     Entrypoint pageC = pageC.js
@@ -314,24 +315,22 @@ Child app:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 32199746b38d6e93b44b5135e2b2d565610f1fb4
-Version: webpack 2.2.0-rc.2
+Hash: 32199746b38d6e93b44ba8c4dfdaf5a935b1ed38
+Version: webpack 2.3.2
 Child vendor:
     Hash: 32199746b38d6e93b44b
-    Version: webpack 2.2.0-rc.2
         Asset       Size  Chunks             Chunk Names
     vendor.js  628 bytes       0  [emitted]  main
     Entrypoint main = vendor.js
     chunk    {0} vendor.js (main) 65 bytes [entry] [rendered]
         > main [2] dll main 
         [0] ./vendor.js 26 bytes {0} [built]
-            single entry ./vendor [2] dll main
+            single entry ./vendor [2] dll main main:0
         [1] ./vendor2.js 27 bytes {0} [built]
-            single entry ./vendor2 [2] dll main
+            single entry ./vendor2 [2] dll main main:1
         [2] dll main 12 bytes {0} [built]
 Child app:
-    Hash: 5135e2b2d565610f1fb4
-    Version: webpack 2.2.0-rc.2
+    Hash: a8c4dfdaf5a935b1ed38
        Asset       Size  Chunks             Chunk Names
     pageB.js  642 bytes       0  [emitted]  pageB
     pageA.js  641 bytes       1  [emitted]  pageA

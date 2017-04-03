@@ -1,4 +1,4 @@
-const variables = ['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff', 'ggg', 'hhh'];
+const variables = ['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff', 'ggg', 'hhh', 'iii'];
 const modules = [{
 	name: 'aaa',
 	variables: ['aaa']
@@ -14,6 +14,9 @@ const modules = [{
 }, {
 	name: 'ggghhh',
 	variables: ['ggg', 'hhh']
+}, {
+	name: 'iii',
+	variables: ['iii']
 }];
 
 // build an array of regular expressions of expected errors

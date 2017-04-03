@@ -160,14 +160,14 @@ describe("MultiStats", () => {
 					})
 				})
 			];
+		});
+
+		it("returns plain object representation", () => {
 			myMultiStats = new MultiStats(stats);
 			result = myMultiStats.toJson({
 				version: false,
 				hash: false
 			});
-		});
-
-		it("returns plain object representation", () => {
 			result.should.deepEqual({
 				errors: [
 					"(abc123-compilation) abc123-error"
@@ -193,6 +193,36 @@ describe("MultiStats", () => {
 							"xyz890-warning-1",
 							"xyz890-warning-2"
 						]
+					}
+				]
+			});
+		});
+
+		it("returns plain object representation with json set to true", () => {
+			myMultiStats = new MultiStats(stats);
+			result = myMultiStats.toJson(true);
+			result.should.deepEqual({
+				errors: [
+					"(abc123-compilation) abc123-error"
+				],
+				warnings: [
+					"(abc123-compilation) abc123-warning",
+					"(xyz890-compilation) xyz890-warning-1",
+					"(xyz890-compilation) xyz890-warning-2"
+				],
+				hash: "abc123xyz890",
+				children: [{
+						warnings: ["abc123-warning"],
+						errors: ["abc123-error"],
+						name: "abc123-compilation"
+					},
+					{
+						warnings: [
+							"xyz890-warning-1",
+							"xyz890-warning-2"
+						],
+						errors: [],
+						name: "xyz890-compilation"
 					}
 				]
 			});

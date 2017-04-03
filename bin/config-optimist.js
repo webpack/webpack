@@ -2,7 +2,7 @@ module.exports = function(optimist) {
 	optimist
 		.boolean("help").alias("help", "h").alias("help", "?").describe("help")
 		.string("config").describe("config", "Path to the config file")
-		.string("env").describe("env", "Enviroment passed to the config, when it is a function")
+		.string("env").describe("env", "Environment passed to the config, when it is a function")
 		.string("context").describe("context", "The root directory for resolving entry point and stats")
 		.string("entry").describe("entry", "The entry point")
 		.string("module-bind").describe("module-bind", "Bind an extension to a loader")
@@ -21,7 +21,7 @@ module.exports = function(optimist) {
 		.string("records-output-path").describe("records-output-path", "Path to the records file (writing)")
 		.string("records-path").describe("records-path", "Path to the records file")
 		.string("define").describe("define", "Define any free var in the bundle")
-		.string("target").describe("target", "The targeted execution enviroment")
+		.string("target").describe("target", "The targeted execution environment")
 		.boolean("cache").describe("cache", "Enable in memory caching").default("cache", true)
 		.boolean("watch").alias("watch", "w").describe("watch", "Watch the filesystem for changes")
 		.boolean("watch-stdin").alias("watch-stdin", "stdin").describe("Exit the process when stdin is closed")
