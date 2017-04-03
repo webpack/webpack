@@ -1,4 +1,3 @@
-//eslint-disable-next-line
 var webpack = require("webpack");
 
 module.exports = {
