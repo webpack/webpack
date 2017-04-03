@@ -43,7 +43,7 @@ module.exports = function(template, baseDir, stdout, prefix) {
 			match = runtimeRegexp.exec(match);
 			var prefix = match[1] ? "" : "```\n";
 			var inner = match[1] ? match[1] : "``` js\n";
-			return prefix + "<details><summary>`" + match[2] + "/******/ (function(modules) { /* webpackBootstrap */ })`</summary>\n" + inner + match[2] + match[3] + "```\n</details>\n" + inner;
+			return prefix + "<details><summary><code>" + match[2] + "/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>\n\n" + inner + match[2] + match[3] + "```\n\n</details>\n\n" + inner;
 		});
 
 }

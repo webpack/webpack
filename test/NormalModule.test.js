@@ -141,6 +141,16 @@ describe("NormalModule", function() {
 		});
 	});
 
+	describe("#originalSource", function() {
+		let expectedSource = "some source";
+		beforeEach(function() {
+			normalModule._source = new RawSource(expectedSource);
+		});
+		it("returns an original Source", function() {
+			normalModule.originalSource().should.eql(normalModule._source);
+		});
+	});
+
 	describe("#updateHashWithSource", function() {
 		let hashSpy;
 		let hash;

@@ -1,0 +1,144 @@
+bot: "webpack-bot"
+rules:
+
+# Add ci-ok, ci-not-ok labels depending on travis status
+# comment to point the user to the results
+# comment in case of success
+- filters:
+    open: true
+    status:
+      context: "continuous-integration/travis-ci/pr"
+    ensure:
+      value: "{{status.state}}"
+      equals: "success"
+  actions:
+    label:
+      add: "PR: CI-ok"
+      remove: "PR: CI-not-ok"
+    comment:
+      identifier: "ci-result"
+      readd: true
+      message: |-
+        The most important CI builds succeeded. Great work so far.
+- filters:
+    open: true
+    status:
+      context: "continuous-integration/travis-ci/pr"
+    ensure:
+      value: "{{status.state}}"
+      equals: "failure"
+  actions:
+    label:
+      add: "PR: CI-not-ok"
+      remove: "PR: CI-ok"
+    comment: 
+      identifier: "ci-result"
+      readd: true
+      message: |-
+        @{{issue.user.login}} The most important CI builds failed. This way your PR can't be merged.
+        
+        Please take a look at the [CI results]({{status.target_url}}) and fix these issues.
+# Add tests-needed label depending on codedov status
+# comment to point the user writing test cases
+# comment in case of success
+- filters:
+    open: true
+    status:
+      context: "codecov/patch"
+    ensure:
+      value: "{{status.state}}"
+      equals: "success"
+  actions:
+    label:
+      remove: "PR: tests-needed"
+- filters:
+    open: true
+    status:
+      context: "codecov/patch"
+    ensure:
+      value: "{{status.state}}"
+      equals: "success"
+    label: "PR: tests-needed"
+  actions:
+    comment:
+      identifier: "tests-result"
+      readd: true
+      message: |-
+        The minimum test ratio has been reached. Thanks!
+- filters:
+    open: true
+    status:
+      context: "codecov/patch"
+    ensure:
+      value: "{{status.state}}"
+      equals: "failure"
+  actions:
+    label:
+      add: "PR: tests-needed"
+    comment: 
+      identifier: "tests-result"
+      readd: true
+      message: |-
+        It looks like this Pull Request doesn't include [enough test cases]({{status.target_url}}).
+        
+        @{{issue.user.login}} Please add more test cases.
+        
+        See [test readme](https://github.com/webpack/webpack/blob/master/test/README.md) for details how to write test cases.
+
+
+
+# add unreviewed, reviewed, review-outdated labels
+# comment to ping reviewer
+# comment on new PR
+- filters:
+    open: true
+    in_order:
+      commit: true
+      review:
+        state: APPROVED|CHANGES_REQUESTED
+  actions:
+    label:
+      add: "PR: reviewed"
+      remove:
+      - "PR: review-outdated"
+      - "PR: unreviewed"
+- filters:
+    open: true
+    in_order:
+      review:
+        state: APPROVED|CHANGES_REQUESTED
+      commit: true
+  actions:
+    label:
+      add: "PR: review-outdated"
+      remove:
+      - "PR: reviewed"
+      - "PR: unreviewed"
+    comment:
+      identifier: "review-outdated"
+      readd: true
+      message: |-
+        @{{commit.committer.login}} Thanks for your update.
+        
+        I labeled the Pull Request so reviewers will review it again.
+        
+        @{{review.user.login}} Please review the new changes.
+- filters:
+    open: true
+    commit: true
+    not:
+      review:
+        state: APPROVED|CHANGES_REQUESTED
+  actions:
+    label: "PR: unreviewed"
+- filters:
+    open: true
+    commit: true
+    not:
+      review:
+        state: APPROVED|CHANGES_REQUESTED
+    age:
+      maximum: 1w
+  actions:
+    comment: |-
+      Thanks for your Pull Request. I labeled the Pull Request, so maintainers will review it.

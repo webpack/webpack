@@ -21,7 +21,11 @@ function copyDiff(src, dest) {
 		if(directory) {
 			copyDiff(srcFile, destFile);
 		} else {
-			fs.writeFileSync(destFile, fs.readFileSync(srcFile));
+			var content = fs.readFileSync(srcFile);
+			if(/^DELETE\s*$/.test(content.toString("utf-8")))
+				fs.unlinkSync(destFile);
+			else
+				fs.writeFileSync(destFile, content);
 		}
 	});
 }
@@ -109,7 +113,9 @@ describe("WatchTestCases", () => {
 						copyDiff(path.join(testDirectory, run.name), tempDirectory);
 
 						const compiler = webpack(options);
-						const watching = compiler.watch({}, (err, stats) => {
+						const watching = compiler.watch({
+							aggregateTimeout: 1000
+						}, (err, stats) => {
 							if(stats.hash === lastHash)
 								return;
 							lastHash = stats.hash;
@@ -175,7 +181,7 @@ describe("WatchTestCases", () => {
 								run = runs[runIdx];
 								setTimeout(() => {
 									copyDiff(path.join(testDirectory, run.name), tempDirectory);
-								}, 50);
+								}, 1500);
 							} else {
 								watching.close();
 								process.nextTick(done);
