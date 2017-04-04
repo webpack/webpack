@@ -127,6 +127,11 @@ rules:
       review:
         state: APPROVED|CHANGES_REQUESTED
       commit: true
+    not:
+      label: "review-outdated"
+    ensure:
+      value: "{{commit.author.login}}"
+      notEquals: "{{review.user.login}}"
   actions:
     label:
       add: "PR: review-outdated"
