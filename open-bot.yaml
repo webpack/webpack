@@ -72,12 +72,20 @@ rules:
     ensure:
       value: "{{status.state}}"
       equals: "failure"
+  actions:
+    label:
+      add: "PR: tests-needed"
+- filters:
+    open: true
+    status:
+      context: "codecov/patch"
+    ensure:
+      value: "{{status.state}}"
+      equals: "failure"
     age:
       value: "{{status.created_at}}"
       minimum: 1h
   actions:
-    label:
-      add: "PR: tests-needed"
     comment:
       identifier: "tests-result"
       message: |-
