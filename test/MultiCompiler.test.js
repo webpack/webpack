@@ -300,12 +300,10 @@ describe("MultiCompiler", function() {
 				setupTwoCompilerEnvironment(env);
 				env.callback = sinon.spy();
 				env.options = [{
-						testWatchOptions: true
-					},
-					{
-						testWatchOptions2: true
-					}
-				];
+					testWatchOptions: true
+				}, {
+					testWatchOptions2: true
+				}];
 				env.result = env.myMultiCompiler.watch(env.options, env.callback);
 			});
 
@@ -404,12 +402,10 @@ describe("MultiCompiler", function() {
 				});
 				env.callback = sinon.spy();
 				env.options = [{
-						testWatchOptions: true
-					},
-					{
-						testWatchOptions2: true
-					}
-				];
+					testWatchOptions: true
+				}, {
+					testWatchOptions2: true
+				}];
 				env.result = env.myMultiCompiler.watch(env.options, env.callback);
 			});
 
