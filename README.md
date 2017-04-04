@@ -134,8 +134,8 @@ or are automatically applied via regex from your webpack configuration.
 |:--:|:----:|:----------|
 |<a href="https://github.com/webpack/script-loader">`<script>`</a>|![script-npm]|Executes a JavaScript file once in global context (like in script tag), requires are not parsed|
 |<a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a>|![babel-npm]|Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a>|
-|<a href="https://github.com/jupl/traceur-loader"><img width="48" height="48" src="https://google.github.com/traceur-compiler/logo/tc.svg"></a>|![traceur-npm]|Loads ES2015+ code and transpiles to ES5 using [Traceur](https://github.com/google/traceur)|
-|<a href="https://github.com/andreypopp/typescript-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>|![type-npm]|Loads TypeScript like JavaScript|
+|<a href="https://github.com/jupl/traceur-loader"><img width="48" height="48" src="https://google.github.com/traceur-compiler/logo/tc.svg"></a>|![traceur-npm]|Loads ES2015+ code and transpiles to ES5 using [Traceur](https://github.com/google/traceur-compiler)|
+|<a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>|![type-npm]|Loads TypeScript like JavaScript|
 |<a href="https://github.com/webpack/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>|![coffee-npm]|Loads CoffeeScript like JavaScript|
 
 
@@ -143,7 +143,7 @@ or are automatically applied via regex from your webpack configuration.
 [babel-npm]: https://img.shields.io/npm/v/babel-loader.svg
 [traceur-npm]: https://img.shields.io/npm/v/traceur-loader.svg
 [coffee-npm]: https://img.shields.io/npm/v/coffee-loader.svg
-[type-npm]: https://img.shields.io/npm/v/typescript-loader.svg
+[type-npm]: https://img.shields.io/npm/v/ts-loader.svg
 
 #### Templating
 
@@ -205,11 +205,14 @@ or are automatically applied via regex from your webpack configuration.
 |<a href="https://github.com/vuejs/vue-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/vue-9.svg"></a>|![vue-npm]|Loads and compiles Vue Components|
 |<a href="https://github.com/JonDum/polymer-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/polymer.svg"></a>|![polymer-npm]|Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules|
 |<a href="https://github.com/TheLarkInn/angular2-template-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/angular-icon-1.svg"></a>|![angular-npm]| Loads and compiles Angular 2 Components|
+|<a href="https://github.com/riot/tag-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/riot.svg"></a>|![riot-npm]| Riot official webpack loader|
+
 
 
 [vue-npm]: https://img.shields.io/npm/v/vue-loader.svg
 [polymer-npm]: https://img.shields.io/npm/v/polymer-loader.svg
 [angular-npm]: https://img.shields.io/npm/v/angular2-template-loader.svg
+[riot-npm]: https://img.shields.io/npm/v/riot-tag-loader.svg
 
 ### Performance
 
@@ -322,9 +325,21 @@ This is how we use the donations:
 * Infrastructure cost
 * Fees for money handling
 
-### Early Backers and Sponsors
 
-We had other sources of donations before starting to use OpenCollective. We want to acknowledge these early sponsors and backers, but donations were not public and we are not sure of donors want to stay anonymous. So if you want to be in this list, just drop @sokra a note via mail (`t____.k____@gmail.com`, insert fullname here).
+<h2 align="center">Premium Partners</h2>
+
+<a href="https://www.ag-grid.com/?utm_source=webpack&utm_medium=banner&utm_campaign=sponsorship" target="_blank"><img align="center" src="https://raw.githubusercontent.com/webpack/media/2b399d58/horiz-banner-ad-ag-grid.png">
+</a>
+
+<h2 align="center">Other Backers and Sponsors</h2>
+
+We had other sources of donations before starting to use OpenCollective (or people that can't donate via OpenCollective). We want to acknowledge these sponsors and backers, but donations were not public and we are not sure of donors want to stay anonymous. So if you want to be in this list, just send a PR.
+
+[Google Angular Team](https://angular.io/), [Architects.io](http://architects.io/),
+<a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img 
+src="https://static.moonmail.io/moonmail-logo.svg" height="30" alt="MoonMail"></a> 
+<a href="https://monei.net" target="_blank" title="Best payment gateway rates"><img 
+src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 <h2 align="center">Sponsors</h2>
 

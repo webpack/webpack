@@ -122,7 +122,7 @@ describe("UglifyJsPlugin", function() {
 						}], function() {
 							compilation.errors.length.should.be.exactly(1);
 							compilation.errors[0].should.be.an.Error;
-							compilation.errors[0].message.should.have.containEql("SyntaxError");
+							compilation.errors[0].message.should.have.containEql("Unexpected token");
 							compilation.errors[0].message.should.have.containEql("[test2.js:1,8]");
 						});
 					});

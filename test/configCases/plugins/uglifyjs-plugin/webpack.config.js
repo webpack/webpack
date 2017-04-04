@@ -8,7 +8,8 @@ module.exports = {
 		bundle0: ["./index.js"],
 		vendors: ["./vendors.js"],
 		ie8: ["./ie8.js"],
-		extract: ["./extract.js"]
+		extract: ["./extract.js"],
+		compress: ["./compress.js"]
 	},
 	output: {
 		filename: "[name].js"
@@ -26,6 +27,16 @@ module.exports = {
 			include: ["extract.js"],
 			mangle: {
 				screw_ie8: false
+			}
+		}),
+		new webpack.optimize.UglifyJsPlugin({
+			include: ["compress.js"],
+			compress: {
+				conditionals: true,
+				evaluate: true,
+				passes: 2,
+				reduce_vars: true,
+				unused: true
 			}
 		}),
 	]
