@@ -2,11 +2,10 @@
 "use strict";
 
 const should = require("should");
-
 const path = require("path");
-const webpack = require("../lib/webpack");
 
-const RecordIdsPlugin = require("../lib/RecordIdsPlugin");
+const webpack = require("../lib/webpack");
+const identifierUtils = require("../lib/util/identifier");
 
 describe("RecordIdsPlugin", () => {
 
@@ -34,7 +33,7 @@ describe("RecordIdsPlugin", () => {
 			for(let i = 0; i < compilation.modules.length; i++) {
 				try {
 					should.exist(compilation.modules[i].portableId);
-					compilation.modules[i].portableId.should.equal(RecordIdsPlugin.makeRelative(compiler.context, compilation.modules[i].identifier()));
+					compilation.modules[i].portableId.should.equal(identifierUtils.makePathsRelative(compiler.context, compilation.modules[i].identifier()));
 				} catch(e) {
 					done(e);
 					pass = false;
