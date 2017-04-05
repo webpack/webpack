@@ -51,7 +51,7 @@ describe("ContextDependencyTemplateAsId", () => {
 
 			it("replaces source with missing module error", () => {
 				env.source.replace.callCount.should.be.exactly(1);
-				sinon.assert.calledWith(env.source.replace, 1, 24, '!(function webpackMissingModule() { var e = new Error("Cannot find module \\"myModule\\""); e.code = \'MODULE_NOT_FOUND\';; throw e; }())');
+				sinon.assert.calledWith(env.source.replace, 1, 24, '!(function webpackMissingModule() { var e = new Error("Cannot find module \\"myModule\\""); e.code = \'MODULE_NOT_FOUND\'; throw e; }())');
 			});
 		});
 
