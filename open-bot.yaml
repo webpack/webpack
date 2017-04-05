@@ -18,7 +18,7 @@ rules:
     comment:
       identifier: "ci-result"
       message: |-
-        The most important CI builds succeeded. Great work so far.
+        Thank you for your pull request! The most important CI builds succeeded, we’ll review the pull request soon.
 - filters:
     open: true
     status:
