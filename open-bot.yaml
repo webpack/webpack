@@ -205,19 +205,6 @@ rules:
         state: APPROVED|CHANGES_REQUESTED
   actions:
     label: "PR: unreviewed"
-- filters:
-    open: true
-    commit: true
-    not:
-      review:
-        state: APPROVED|CHANGES_REQUESTED
-    age:
-      maximum: 1w
-  actions:
-    comment:
-      identifier: "pr-thanks"
-      message: |-
-        Thanks for your Pull Request. I labeled the Pull Request, so maintainers will review it.
 
 
 
