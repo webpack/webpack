@@ -64,18 +64,10 @@ rules:
     ensure:
       value: "{{status.state}}"
       equals: "success"
+    label: "PR: tests-needed"
   actions:
     label:
       remove: "PR: tests-needed"
-- filters:
-    open: true
-    status:
-      context: "codecov/patch"
-    ensure:
-      value: "{{status.state}}"
-      equals: "success"
-    label: "PR: tests-needed"
-  actions:
     comment:
       identifier: "tests-result"
       message: |-
