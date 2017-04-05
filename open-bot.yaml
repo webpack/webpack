@@ -75,6 +75,17 @@ rules:
   actions:
     label:
       add: "PR: tests-needed"
+- filters:
+    open: true
+    status:
+      context: "codecov/patch"
+    ensure:
+      value: "{{status.state}}"
+      equals: "failure"
+    age:
+      value: "{{status.created_at}}"
+      minimum: 1h
+  actions:
     comment:
       identifier: "tests-result"
       message: |-
@@ -127,6 +138,11 @@ rules:
       review:
         state: APPROVED|CHANGES_REQUESTED
       commit: true
+    not:
+      label: "review-outdated"
+    ensure:
+      value: "{{commit.author.login}}"
+      notEquals: "{{review.user.login}}"
   actions:
     label:
       add: "PR: review-outdated"
@@ -193,15 +209,6 @@ rules:
 
 
 
-# add hot label for many comments
-- filters:
-    open: true
-    number_of_comments: 10
-  actions:
-    label: hot
-
-
-
 # add non-master label to pull request to other branch
 - filters:
     pull_request:
@@ -213,6 +220,10 @@ rules:
 
 # add non-master label to pull request to other branch
 - filters:
+    open: true
+    age:
+      minimum: 1d
+      maximum: 1w
     pull_request:
       head_ref: "^master$"
   actions:
@@ -222,9 +233,7 @@ rules:
       message: |-
         Hi @{{pull_request.user.login}}.
 
-        First thanks for your pull request.
-
-        Just a little hint from a friendly bot about the best practice when submitting pull request:
+        Just a little hint from a friendly bot about the best practice when submitting pull requests:
 
         > Don't submit pull request from your own `master` branch. It's recommended to create a feature branch for the PR.
 
@@ -234,6 +243,7 @@ rules:
 
 # add small label to small pull requests
 - filters:
+    open: true
     pull_request:
       additions: "<= 10"
       deletions: "<= 10"
