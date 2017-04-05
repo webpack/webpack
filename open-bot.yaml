@@ -6,10 +6,17 @@ rules:
 # comment in case of success
 - filters:
     open: true
-    status:
+    pull_request:
+      mergeable: true
+    status_1:
       context: "continuous-integration/travis-ci/pr"
-    ensure:
-      value: "{{status.state}}"
+    status_2:
+      context: "continuous-integration/appveyor/pr"
+    ensure_1:
+      value: "{{status_1.state}}"
+      equals: "success"
+    ensure_2:
+      value: "{{status_2.state}}"
       equals: "success"
   actions:
     label:
@@ -21,11 +28,19 @@ rules:
         Thank you for your pull request! The most important CI builds succeeded, we’ll review the pull request soon.
 - filters:
     open: true
-    status:
+    pull_request:
+      mergeable: true
+    status_1:
       context: "continuous-integration/travis-ci/pr"
-    ensure:
-      value: "{{status.state}}"
-      equals: "failure"
+    status_2:
+      context: "continuous-integration/appveyor/pr"
+    any:
+      ensure_1:
+        value: "{{status_1.state}}"
+        equals: "failure"
+      ensure_2:
+        value: "{{status_2.state}}"
+        equals: "failure"
   actions:
     label:
       add: "PR: CI-not-ok"
@@ -35,7 +50,7 @@ rules:
       message: |-
         @{{issue.user.login}} The most important CI builds failed. This way your PR can't be merged.
 
-        Please take a look at the [CI results]({{status.target_url}}) and fix these issues.
+        Please take a look at the CI results from [travis]({{status_1.target_url}}) ({{status_1.state}}) and [appveyor]({{status_2.target_url}}) ({{status_2.state}}) and fix these issues.
 
 
 
