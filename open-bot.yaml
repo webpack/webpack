@@ -96,11 +96,13 @@ rules:
     comment:
       identifier: "tests-result"
       message: |-
-        It looks like this Pull Request doesn't include [enough test cases]({{status.target_url}}).
+        It looks like this Pull Request doesn't include [enough test cases]({{status.target_url}}) (based on Code Coverage analysis of the PR diff).
 
-        @{{issue.user.login}} Please add more test cases.
+        A PR need to be covered by tests if you add a new feature (we want to make sure that your feature is working) or if you fix a bug (we want to make sure that we don't run into a regression in future).
 
-        See [test readme](https://github.com/webpack/webpack/blob/master/test/README.md) for details how to write test cases.
+        @{{issue.user.login}} Please check if this is appliable to your PR and if you can add more test cases.
+
+        Read the [test readme](https://github.com/webpack/webpack/blob/master/test/README.md) for details how to write test cases.
 
 
 
