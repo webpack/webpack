@@ -1,0 +1,252 @@
+bot: "webpack-bot"
+rules:
+
+# Add ci-ok, ci-not-ok labels depending on travis status
+# comment to point the user to the results
+# comment in case of success
+- filters:
+    open: true
+    status:
+      context: "continuous-integration/travis-ci/pr"
+    ensure:
+      value: "{{status.state}}"
+      equals: "success"
+  actions:
+    label:
+      add: "PR: CI-ok"
+      remove: "PR: CI-not-ok"
+    comment:
+      identifier: "ci-result"
+      message: |-
+        The most important CI builds succeeded. Great work so far.
+- filters:
+    open: true
+    status:
+      context: "continuous-integration/travis-ci/pr"
+    ensure:
+      value: "{{status.state}}"
+      equals: "failure"
+  actions:
+    label:
+      add: "PR: CI-not-ok"
+      remove: "PR: CI-ok"
+    comment:
+      identifier: "ci-result"
+      message: |-
+        @{{issue.user.login}} The most important CI builds failed. This way your PR can't be merged.
+
+        Please take a look at the [CI results]({{status.target_url}}) and fix these issues.
+
+
+
+# Add tests-needed label depending on codedov status
+# comment to point the user writing test cases
+# comment in case of success
+- filters:
+    open: true
+    status:
+      context: "codecov/patch"
+    ensure:
+      value: "{{status.state}}"
+      equals: "success"
+  actions:
+    label:
+      remove: "PR: tests-needed"
+- filters:
+    open: true
+    status:
+      context: "codecov/patch"
+    ensure:
+      value: "{{status.state}}"
+      equals: "success"
+    label: "PR: tests-needed"
+  actions:
+    comment:
+      identifier: "tests-result"
+      message: |-
+        The minimum test ratio has been reached. Thanks!
+- filters:
+    open: true
+    status:
+      context: "codecov/patch"
+    ensure:
+      value: "{{status.state}}"
+      equals: "failure"
+  actions:
+    label:
+      add: "PR: tests-needed"
+- filters:
+    open: true
+    status:
+      context: "codecov/patch"
+    ensure:
+      value: "{{status.state}}"
+      equals: "failure"
+    age:
+      value: "{{status.created_at}}"
+      minimum: 1h
+  actions:
+    comment:
+      identifier: "tests-result"
+      message: |-
+        It looks like this Pull Request doesn't include [enough test cases]({{status.target_url}}).
+
+        @{{issue.user.login}} Please add more test cases.
+
+        See [test readme](https://github.com/webpack/webpack/blob/master/test/README.md) for details how to write test cases.
+
+
+
+# add unreviewed, reviewed, review-outdated labels
+# comment to ping reviewer
+# comment on new PR
+- filters:
+    open: true
+    in_order:
+      commit: true
+      review:
+        state: APPROVED|CHANGES_REQUESTED
+    ensure:
+      value: "{{review.state}}"
+      equals: APPROVED
+  actions:
+    label:
+      add: "PR: reviewed-approved"
+      remove:
+      - "PR: review-outdated"
+      - "PR: unreviewed"
+      - "PR: reviewed"
+- filters:
+    open: true
+    in_order:
+      commit: true
+      review:
+        state: APPROVED|CHANGES_REQUESTED
+    ensure:
+      value: "{{review.state}}"
+      equals: CHANGES_REQUESTED
+  actions:
+    label:
+      add: "PR: reviewed-changes-requested"
+      remove:
+      - "PR: review-outdated"
+      - "PR: unreviewed"
+      - "PR: reviewed"
+- filters:
+    open: true
+    in_order:
+      review:
+        state: APPROVED|CHANGES_REQUESTED
+      commit: true
+    not:
+      label: "review-outdated"
+    ensure:
+      value: "{{commit.author.login}}"
+      notEquals: "{{review.user.login}}"
+  actions:
+    label:
+      add: "PR: review-outdated"
+      remove:
+      - "PR: reviewed-approved"
+      - "PR: reviewed-changes-requested"
+      - "PR: unreviewed"
+      - "PR: reviewed"
+    comment:
+      identifier: "review-outdated"
+      message: |-
+        @{{commit.author.login}} Thanks for your update.
+
+        I labeled the Pull Request so reviewers will review it again.
+
+        @{{review.user.login}} Please review the new changes.
+- filters:
+    open: true
+    commit: true
+    not:
+      review:
+        state: APPROVED|CHANGES_REQUESTED
+  actions:
+    label: "PR: unreviewed"
+- filters:
+    open: true
+    commit: true
+    not:
+      review:
+        state: APPROVED|CHANGES_REQUESTED
+    age:
+      maximum: 1w
+  actions:
+    comment:
+      identifier: "pr-thanks"
+      message: |-
+        Thanks for your Pull Request. I labeled the Pull Request, so maintainers will review it.
+
+
+
+# add/remove mentioned-sokra label
+- filters:
+    open: true
+    any:
+      in_order:
+        comment_1:
+          author: "^sokra$"
+        comment_2: "@sokra"
+      all:
+        not:
+          comment_1:
+            author: "^sokra$"
+        comment_2: "@sokra"
+  actions:
+    label: "mentioned-sokra"
+- filters:
+    in_order:
+      comment_1: "@sokra"
+      comment_2:
+        author: "^sokra$"
+  actions:
+    label:
+      remove: "mentioned-sokra"
+
+
+
+# add non-master label to pull request to other branch
+- filters:
+    pull_request:
+      base_ref: "^(?!master)"
+  actions:
+    label: "PR: non-master"
+
+
+
+# add non-master label to pull request to other branch
+- filters:
+    open: true
+    age:
+      minimum: 1d
+      maximum: 1w
+    pull_request:
+      head_ref: "^master$"
+  actions:
+    comment:
+      identifier: "head-master"
+      edit: true
+      message: |-
+        Hi @{{pull_request.user.login}}.
+
+        Just a little hint from a friendly bot about the best practice when submitting pull requests:
+
+        > Don't submit pull request from your own `master` branch. It's recommended to create a feature branch for the PR.
+
+        *You don't have to change it for this PR, just make sure to follow this hint the next time you submit a PR.*
+
+
+
+# add small label to small pull requests
+- filters:
+    open: true
+    pull_request:
+      additions: "<= 10"
+      deletions: "<= 10"
+      changed_files: "<= 2"
+  actions:
+    label: "PR: small"

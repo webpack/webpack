@@ -23,7 +23,10 @@ With `minChunks = 3`:
   * chunk: c
   * chunk: c, d
 
-It's also possible to provide a function instead of a number for `minChunks`. The function is called for each module to decide if the module should be moved or not (see pageC and pageD).
+It's also possible to provide a function instead of a number for `minChunks`. The function is called for each module to decide if the module should be moved or not (see pageC and pageD):
+
+* pageC: a, c, d
+  * chunk: b
 
 # page.js
 

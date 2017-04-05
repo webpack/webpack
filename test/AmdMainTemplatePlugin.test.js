@@ -1,3 +1,4 @@
+/* global describe, beforeEach, it */
 "use strict";
 
 const should = require("should");
@@ -27,26 +28,22 @@ describe("AmdMainTemplatePlugin", () => {
 	beforeEach(() => {
 		env = {
 			modulesListWithExternals: [{
-					id: "module-1",
-					external: true,
-					request: {
-						amd: "external-amd-module"
-					}
-				},
-				{
-					id: "module-2",
-					external: true,
-					request: "external-non-amd-module"
-				},
-				{
-					id: "module-3",
-					external: true
-				},
-				{
-					id: "module-4",
-					external: false
+				id: "module-1",
+				external: true,
+				request: {
+					amd: "external-amd-module"
 				}
-			]
+			}, {
+				id: "module-2",
+				external: true,
+				request: "external-non-amd-module"
+			}, {
+				id: "module-3",
+				external: true
+			}, {
+				id: "module-4",
+				external: false
+			}]
 		};
 	});
 
@@ -78,7 +75,7 @@ describe("AmdMainTemplatePlugin", () => {
 					it("creates source wrapper with module name and external dependencies", () => {
 						const source = env.eventBinding.handler("moduleSource()", env.chunk, "bar");
 						source.should.be.instanceof(ConcatSource);
-						source.source().should.be.exactly('define("templateName", ["external-amd-module","external-non-amd-module",null], function(__WEBPACK_EXTERNAL_MODULE_module-1__, __WEBPACK_EXTERNAL_MODULE_module-2__, __WEBPACK_EXTERNAL_MODULE_module-3__) { return moduleSource()});');
+						source.source().should.be.exactly("define(\"templateName\", [\"external-amd-module\",\"external-non-amd-module\",null], function(__WEBPACK_EXTERNAL_MODULE_module_1__, __WEBPACK_EXTERNAL_MODULE_module_2__, __WEBPACK_EXTERNAL_MODULE_module_3__) { return moduleSource()});");
 					});
 				});
 
@@ -93,7 +90,7 @@ describe("AmdMainTemplatePlugin", () => {
 					it("creates source wrapper with external dependencies", () => {
 						const source = env.eventBinding.handler("moduleSource()", env.chunk, "bar");
 						source.should.be.instanceof(ConcatSource);
-						source.source().should.be.exactly('define(["external-amd-module","external-non-amd-module",null], function(__WEBPACK_EXTERNAL_MODULE_module-1__, __WEBPACK_EXTERNAL_MODULE_module-2__, __WEBPACK_EXTERNAL_MODULE_module-3__) { return moduleSource()});');
+						source.source().should.be.exactly("define([\"external-amd-module\",\"external-non-amd-module\",null], function(__WEBPACK_EXTERNAL_MODULE_module_1__, __WEBPACK_EXTERNAL_MODULE_module_2__, __WEBPACK_EXTERNAL_MODULE_module_3__) { return moduleSource()});");
 					});
 				});
 
@@ -112,7 +109,7 @@ describe("AmdMainTemplatePlugin", () => {
 					it("creates source wrapper with callback only", () => {
 						const source = env.eventBinding.handler("moduleSource()", env.chunk, "bar");
 						source.should.be.instanceof(ConcatSource);
-						source.source().should.be.exactly('define(function() { return moduleSource()});');
+						source.source().should.be.exactly("define(function() { return moduleSource()});");
 					});
 				});
 			});
@@ -150,6 +147,6 @@ describe("AmdMainTemplatePlugin", () => {
 					hash.update.secondCall.args[0].should.be.exactly("foo");
 				});
 			});
-		})
+		});
 	});
 });

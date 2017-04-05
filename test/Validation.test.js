@@ -1,10 +1,11 @@
+/* globals describe, it */
 "use strict";
 
-const should = require("should");
+require("should");
 const webpack = require("../lib/webpack");
 const WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
 
-describe("Validation", function() {
+describe("Validation", () => {
 	const testCases = [{
 		name: "undefined configuration",
 		config: undefined,
@@ -124,7 +125,7 @@ describe("Validation", function() {
 			module: {
 				rules: [{
 					oneOf: [{
-						test: "a",
+						test: "/a",
 						paser: {
 							amd: false
 						}
@@ -134,13 +135,13 @@ describe("Validation", function() {
 		},
 		message: [
 			" - configuration.module.rules[0].oneOf[0] has an unknown property 'paser'. These properties are valid:",
-			"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, query?, resource?, resourceQuery?, rules?, test?, use? }"
+			"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, query?, resource?, resourceQuery?, compiler?, rules?, test?, use? }"
 		]
 	}, {
 		name: "additional key on root",
 		config: {
 			entry: "a",
-			postcss: function() {}
+			postcss: () => {}
 		},
 		message: [
 			" - configuration has an unknown property 'postcss'. These properties are valid:",
@@ -174,9 +175,33 @@ describe("Validation", function() {
 			"    * configuration.devtool should be a string.",
 			"    * configuration.devtool should be false"
 		]
+	}, {
+		name: "relative path",
+		config: {
+			entry: "foo.js",
+			output: {
+				filename: "/bar"
+			}
+		},
+		message: [
+			" - configuration.output.filename: A relative path is expected. However the provided value \"/bar\" is an absolute path!",
+			"   Please use output.path to specify absolute path and output.filename for the file name."
+		]
+	}, {
+		name: "absolute path",
+		config: {
+			entry: "foo.js",
+			output: {
+				filename: "bar"
+			},
+			context: "baz"
+		},
+		message: [
+			" - configuration.context: The provided value \"baz\" is not an absolute path!",
+		]
 	}];
-	testCases.forEach(function(testCase) {
-		it("should fail validation for " + testCase.name, function() {
+	testCases.forEach((testCase) => {
+		it("should fail validation for " + testCase.name, () => {
 			try {
 				webpack(testCase.config);
 			} catch(e) {
@@ -187,6 +212,6 @@ describe("Validation", function() {
 				return;
 			}
 			throw new Error("Validation didn't fail");
-		})
+		});
 	});
 });

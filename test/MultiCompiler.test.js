@@ -270,22 +270,24 @@ describe("MultiCompiler", () => {
 			beforeEach(() => {
 				setupTwoCompilerEnvironment(env);
 				env.callback = sinon.spy();
-				env.options = {
+				env.options = [{
 					testWatchOptions: true
-				};
+				}, {
+					testWatchOptions2: true
+				}];
 				env.result = env.myMultiCompiler.watch(env.options, env.callback);
 			});
 
 			it("returns a multi-watching object", () => {
 				const result = JSON.stringify(env.result);
-				result.should.be.exactly('{"watchings":["compiler1","compiler2"]}');
+				result.should.be.exactly('{"watchings":["compiler1","compiler2"],"compiler":{"_plugins":{},"compilers":[{"name":"compiler1"},{"name":"compiler2"}]}}');
 			});
 
 			it("calls watch on each compiler with original options", () => {
 				env.compiler1WatchCallbacks.length.should.be.exactly(1);
-				env.compiler1WatchCallbacks[0].options.should.be.exactly(env.options);
+				env.compiler1WatchCallbacks[0].options.should.be.exactly(env.options[0]);
 				env.compiler2WatchCallbacks.length.should.be.exactly(1);
-				env.compiler2WatchCallbacks[0].options.should.be.exactly(env.options);
+				env.compiler2WatchCallbacks[0].options.should.be.exactly(env.options[1]);
 			});
 
 			it("calls the callback when all compilers watch", () => {
@@ -365,21 +367,23 @@ describe("MultiCompiler", () => {
 					name: "compiler2"
 				});
 				env.callback = sinon.spy();
-				env.options = {
+				env.options = [{
 					testWatchOptions: true
-				};
+				}, {
+					testWatchOptions2: true
+				}];
 				env.result = env.myMultiCompiler.watch(env.options, env.callback);
 			});
 
 			it("calls run on each compiler in dependency order", () => {
 				env.compiler1WatchCallbacks.length.should.be.exactly(0);
 				env.compiler2WatchCallbacks.length.should.be.exactly(1);
-				env.compiler2WatchCallbacks[0].options.should.be.exactly(env.options);
+				env.compiler2WatchCallbacks[0].options.should.be.exactly(env.options[1]);
 				env.compiler2WatchCallbacks[0].callback(null, {
 					hash: "bar"
 				});
 				env.compiler1WatchCallbacks.length.should.be.exactly(1);
-				env.compiler1WatchCallbacks[0].options.should.be.exactly(env.options);
+				env.compiler1WatchCallbacks[0].options.should.be.exactly(env.options[0]);
 			});
 
 			it("calls the callback when all compilers run in dependency order", () => {

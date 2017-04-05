@@ -1,94 +1,70 @@
-var should = require("should");
-var sinon = require("sinon");
-var TemplatePluginEnvironment = require("./helpers/TemplatePluginEnvironment");
-var ConcatSource = require("webpack-sources").ConcatSource;
-var JsonpExportMainTemplatePlugin = require("../lib/JsonpExportMainTemplatePlugin");
+"use strict";
 
-describe("JsonpExportMainTemplatePlugin", function() {
-	var env;
+const should = require("should");
+const sinon = require("sinon");
+const TemplatePluginEnvironment = require("./helpers/TemplatePluginEnvironment");
+const ConcatSource = require("webpack-sources").ConcatSource;
+const JsonpExportMainTemplatePlugin = require("../lib/JsonpExportMainTemplatePlugin");
 
-	var applyTemplatePluginWithOptions = function(Plugin, name) {
-		var plugin = new Plugin(name);
-		var templatePluginEnvironment = new TemplatePluginEnvironment();
-		var environment = templatePluginEnvironment.getEnvironmentStub();
+describe("JsonpExportMainTemplatePlugin", () => {
+	let env;
+
+	const applyTemplatePluginWithOptions = function(Plugin, name) {
+		const plugin = new Plugin(name);
+		const templatePluginEnvironment = new TemplatePluginEnvironment();
+		const environment = templatePluginEnvironment.getEnvironmentStub();
 		environment.mainTemplate.applyPluginsWaterfall = () => "templateName";
 		plugin.apply(environment);
-		return templatePluginEnvironment
+		return templatePluginEnvironment;
 	};
 
-	beforeEach(function() {
-		env = {}
-	});
+	beforeEach(() => env = {});
 
-	it("has apply function", function() {
-		(new JsonpExportMainTemplatePlugin()).apply.should.be.a.Function();
-	});
+	it("has apply function", () => (new JsonpExportMainTemplatePlugin()).apply.should.be.a.Function());
 
-	describe("when applied", function() {
-		beforeEach(function() {
-			env.templatePlugin = applyTemplatePluginWithOptions(JsonpExportMainTemplatePlugin, "foo");
-		});
+	describe("when applied", () => {
+		beforeEach(() =>
+			env.templatePlugin = applyTemplatePluginWithOptions(JsonpExportMainTemplatePlugin, "foo"));
 
-		describe("event handlers", function() {
-			beforeEach(function() {
-				env.eventBindings = env.templatePlugin.getEventBindings();
-			});
+		describe("event handlers", () => {
+			beforeEach(() => env.eventBindings = env.templatePlugin.getEventBindings());
 
-			it("binds one handlers", function() {
-				env.eventBindings.length.should.be.exactly(1);
-			});
+			it("binds one handlers", () => env.eventBindings.length.should.be.exactly(1));
 
-			describe("render-with-entry handler", function() {
-				beforeEach(function() {
-					env.eventBinding = env.eventBindings[0];
-				});
+			describe("render-with-entry handler", () => {
+				beforeEach(() => env.eventBinding = env.eventBindings[0]);
 
-				it("binds to render-with-entry event", function() {
-					env.eventBinding.name.should.be.exactly("render-with-entry");
-				});
+				it("binds to render-with-entry event", () =>
+					env.eventBinding.name.should.be.exactly("render-with-entry"));
 
-				it("creates source wrapper calling JSONP global callback", function() {
-					var source = env.eventBinding.handler("moduleSource()", env.chunk, "bar");
+				it("creates source wrapper calling JSONP global callback", () => {
+					const source = env.eventBinding.handler("moduleSource()", env.chunk, "bar");
 					source.should.be.instanceof(ConcatSource);
-					source.source().should.be.exactly('templateName(moduleSource());');
+					source.source().should.be.exactly("templateName(moduleSource());");
 				});
 			});
 		});
 
-		describe("main template event handlers", function() {
-			beforeEach(function() {
-				env.mainTemplateBindings = env.templatePlugin.getMainTemplateBindings();
+		describe("main template event handlers", () => {
+			beforeEach(() => env.mainTemplateBindings = env.templatePlugin.getMainTemplateBindings());
+
+			it("binds two handlers", () => env.mainTemplateBindings.length.should.be.exactly(2));
+
+			describe("global-hash-paths handler", () => {
+				beforeEach(() => env.mainTemplateBinding = env.mainTemplateBindings[0]);
+
+				it("binds to global-hash-paths event", () => env.mainTemplateBinding.name.should.be.exactly("global-hash-paths"));
+
+				it("adds name to path array", () => env.mainTemplateBinding.handler([]).should.deepEqual(["foo"]));
 			});
 
-			it("binds two handlers", function() {
-				env.mainTemplateBindings.length.should.be.exactly(2);
-			});
+			describe("hash handler", () => {
+				beforeEach(() => env.mainTemplateBinding = env.mainTemplateBindings[1]);
 
-			describe("global-hash-paths handler", function() {
-				beforeEach(function() {
-					env.mainTemplateBinding = env.mainTemplateBindings[0];
-				});
+				it("binds to hash event", () => env.mainTemplateBinding.name.should.be.exactly("hash"));
 
-				it("binds to global-hash-paths event", function() {
-					env.mainTemplateBinding.name.should.be.exactly("global-hash-paths");
-				});
-
-				it("adds name to path array", function() {
-					env.mainTemplateBinding.handler([]).should.deepEqual(["foo"]);
-				});
-			});
-
-			describe("hash handler", function() {
-				beforeEach(function() {
-					env.mainTemplateBinding = env.mainTemplateBindings[1];
-				});
-
-				it("binds to hash event", function() {
-					env.mainTemplateBinding.name.should.be.exactly("hash");
-				});
-
-				it("updates hash", function() {
-					var hash = {
+				it("updates hash", () => {
+					const hash = {
 						update: sinon.spy()
 					};
 					env.mainTemplateBinding.handler(hash);
@@ -98,6 +74,6 @@ describe("JsonpExportMainTemplatePlugin", function() {
 					hash.update.secondCall.args[0].should.be.exactly("foo");
 				});
 			});
-		})
+		});
 	});
 });

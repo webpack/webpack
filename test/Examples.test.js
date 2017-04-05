@@ -1,21 +1,21 @@
+"use strict";
+
 /* globals describe it */
 require("should");
-var path = require("path");
-var fs = require("fs");
-var webpack = require("../");
+const path = require("path");
+const fs = require("fs");
+const webpack = require("../");
 
-describe("Examples", function() {
-	var examples = fs.readdirSync(path.join(__dirname, "..", "examples")).map(function(name) {
-		return path.join(__dirname, "..", "examples", name);
-	}).filter(function(p) {
-		return fs.statSync(p).isDirectory() && fs.existsSync(path.join(p, "build.js"));
-	});
+describe("Examples", () => {
+	const examples = fs.readdirSync(path.join(__dirname, "..", "examples")).map((name) =>
+		path.join(__dirname, "..", "examples", name)).filter((p) =>
+		fs.statSync(p).isDirectory() && fs.existsSync(path.join(p, "build.js")));
 
-	examples.forEach(function(examplePath) {
+	examples.forEach((examplePath) => {
 		it("should compile " + path.basename(examplePath), function(done) {
 			this.timeout(20000);
-			var options = {};
-			var webpackConfigPath = path.join(examplePath, "webpack.config.js");
+			let options = {};
+			let webpackConfigPath = path.join(examplePath, "webpack.config.js");
 			webpackConfigPath = webpackConfigPath.substr(0, 1).toUpperCase() + webpackConfigPath.substr(1);
 			if(fs.existsSync(webpackConfigPath))
 				options = require(webpackConfigPath);
@@ -35,7 +35,7 @@ describe("Examples", function() {
 				if(!options.entry)
 					options.entry = "./example.js";
 			}
-			webpack(options, function(err, stats) {
+			webpack(options, (err, stats) => {
 				if(err) return done(err);
 				stats = stats.toJson({
 					errorDetails: true

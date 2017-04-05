@@ -44,28 +44,28 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: 7ad71766b9942185d15e
-Version: webpack 2.2.0-rc.2
+Hash: c9781c5521ffee4f5298
+Version: webpack 2.3.2
                   Asset     Size  Chunks             Chunk Names
-1b2ed3715f8def1b4704.js  52.7 kB       7  [emitted]  
-dae6ee0707d1d1e6587f.js  56.8 kB       0  [emitted]  
-17ba201195851405ec1e.js    56 kB       2  [emitted]  
-2609b2ee94d5c83866d0.js  34.2 kB       3  [emitted]  
-c1cf8f2da77a924ca1c4.js  54.1 kB       4  [emitted]  
-09fc44f2df4763ce700e.js  54.2 kB       5  [emitted]  
-7f5e7b9bd64aa5da7ca6.js  53.6 kB       6  [emitted]  
-3795db4b41b04f8b2a73.js  56.6 kB       1  [emitted]  
-86b9b5b4aebf58b3a65d.js  51.1 kB       8  [emitted]  
-821accd63b1dad6b51c9.js  51.5 kB       9  [emitted]  
-f5fdd34beba2e67aa671.js  50.3 kB      10  [emitted]  
-ec39b52c039ff21d71e0.js    32 kB      11  [emitted]  
-34c15eb3e78f0ccd8722.js  59.4 kB      12  [emitted]  
-c2c00dc4f8ea2d436202.js  33.5 kB      13  [emitted]  
-4346e9a755998ae776da.js  24.5 kB      14  [emitted]  
-Entrypoint main = 34c15eb3e78f0ccd8722.js 4346e9a755998ae776da.js c2c00dc4f8ea2d436202.js
-chunk    {0} dae6ee0707d1d1e6587f.js 49.7 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
-   [16] (webpack)/~/react-dom/index.js 59 bytes {0} [built]
+0fc9e56af19a2e1125e3.js  52.7 kB       7  [emitted]  
+7923f88ea316bb0caf20.js  56.9 kB       0  [emitted]  
+cf8eaf7e2283857b2514.js  35.3 kB       2  [emitted]  
+1aebcb77e36ad0ed5500.js    56 kB       3  [emitted]  
+e7e0f7bc43020d03cea9.js  54.8 kB       4  [emitted]  
+cd30a0e5b23181f08280.js  53.6 kB       5  [emitted]  
+1126d5a81e2264177124.js  52.9 kB       6  [emitted]  
+4b56298728377da64928.js  56.6 kB       1  [emitted]  
+6969094ac64482ef5415.js  51.1 kB       8  [emitted]  
+b98a4783892edb35b41b.js  51.7 kB       9  [emitted]  
+97bba8f30c076dad7452.js  50.6 kB      10  [emitted]  
+7b9a99048247c52e6473.js    32 kB      11  [emitted]  
+3c590ca94c1cd4573c73.js  59.9 kB      12  [emitted]  
+bea9c6f9afcb80f33121.js  33.6 kB      13  [emitted]  
+85fc6439c97999cbcda0.js  24.2 kB      14  [emitted]  
+Entrypoint main = 3c590ca94c1cd4573c73.js 85fc6439c97999cbcda0.js bea9c6f9afcb80f33121.js
+chunk    {0} 7923f88ea316bb0caf20.js 49.7 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
+   [17] (webpack)/~/react-dom/index.js 59 bytes {0} [built]
    [31] (webpack)/~/fbjs/lib/ExecutionEnvironment.js 1.06 kB {0} [built]
    [48] (webpack)/~/fbjs/lib/shallowEqual.js 1.74 kB {0} [built]
    [50] (webpack)/~/react-dom/lib/DOMNamespaces.js 505 bytes {0} [built]
@@ -89,8 +89,8 @@ chunk    {0} dae6ee0707d1d1e6587f.js 49.7 kB {12} {13} {14} [rendered] [recorded
   [102] (webpack)/~/react-dom/lib/ARIADOMPropertyConfig.js 1.82 kB {0} [built]
   [103] (webpack)/~/react-dom/lib/AutoFocusUtils.js 599 bytes {0} [built]
   [104] (webpack)/~/react-dom/lib/BeforeInputEventPlugin.js 13.3 kB {0} [built]
-chunk    {1} 3795db4b41b04f8b2a73.js 49.8 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
+chunk    {1} 4b56298728377da64928.js 49.8 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
    [34] (webpack)/~/react-dom/lib/SyntheticEvent.js 9.18 kB {1} [built]
    [42] (webpack)/~/react-dom/lib/SyntheticUIEvent.js 1.57 kB {1} [built]
    [44] (webpack)/~/react-dom/lib/SyntheticMouseEvent.js 2.14 kB {1} [built]
@@ -110,87 +110,87 @@ chunk    {1} 3795db4b41b04f8b2a73.js 49.8 kB {12} {13} {14} [rendered] [recorded
   [156] (webpack)/~/react-dom/lib/dangerousStyleValue.js 3.02 kB {1} [built]
   [157] (webpack)/~/react-dom/lib/findDOMNode.js 2.46 kB {1} [built]
   [158] (webpack)/~/react-dom/lib/flattenChildren.js 2.77 kB {1} [built]
-  [165] (webpack)/~/react-dom/lib/renderSubtreeIntoContainer.js 422 bytes {1} [built]
-chunk    {2} 17ba201195851405ec1e.js 49.9 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
-   [32] (webpack)/~/react-dom/lib/ReactInstrumentation.js 601 bytes {2} [built]
-   [41] (webpack)/~/react-dom/lib/ReactInstanceMap.js 1.22 kB {2} [built]
-   [56] (webpack)/~/react-dom/lib/ReactErrorUtils.js 2.25 kB {2} [built]
-   [76] (webpack)/~/react-dom/lib/ReactHostComponent.js 2.38 kB {2} [built]
-   [77] (webpack)/~/react-dom/lib/ReactInputSelection.js 4.27 kB {2} [built]
-   [79] (webpack)/~/react-dom/lib/ReactNodeTypes.js 1.02 kB {2} [built]
-  [123] (webpack)/~/react-dom/lib/ReactDOMSelection.js 6.78 kB {2} [built]
-  [124] (webpack)/~/react-dom/lib/ReactDOMTextComponent.js 5.82 kB {2} [built]
-  [125] (webpack)/~/react-dom/lib/ReactDOMTextarea.js 6.22 kB {2} [built]
-  [130] (webpack)/~/react-dom/lib/ReactEventEmitterMixin.js 959 bytes {2} [built]
-  [131] (webpack)/~/react-dom/lib/ReactEventListener.js 5.3 kB {2} [built]
-  [132] (webpack)/~/react-dom/lib/ReactInjection.js 1.2 kB {2} [built]
-  [133] (webpack)/~/react-dom/lib/ReactMarkupChecksum.js 1.47 kB {2} [built]
-  [135] (webpack)/~/react-dom/lib/ReactOwner.js 3.53 kB {2} [built]
-  [137] (webpack)/~/react-dom/lib/ReactReconcileTransaction.js 5.26 kB {2} [built]
-  [145] (webpack)/~/react-dom/lib/SyntheticAnimationEvent.js 1.21 kB {2} [built]
-  [161] (webpack)/~/react-dom/lib/getNextDebugID.js 437 bytes {2} [built]
-chunk    {3} 2609b2ee94d5c83866d0.js 28.8 kB {12} {13} {14} [rendered]
-    > aggressive-splitted [28] ./example.js 2:0-22
-   [29] (webpack)/~/react-dom/lib/reactProdInvariant.js 1.24 kB {3} [built]
-   [47] (webpack)/~/react-dom/lib/setInnerHTML.js 3.86 kB {3} [built]
-   [60] (webpack)/~/react-dom/lib/getEventModifierState.js 1.23 kB {3} [built]
-   [61] (webpack)/~/react-dom/lib/getEventTarget.js 1.01 kB {3} [built]
-   [62] (webpack)/~/react-dom/lib/isEventSupported.js 1.94 kB {3} [built]
-   [63] (webpack)/~/react-dom/lib/shouldUpdateReactComponent.js 1.4 kB {3} [built]
-   [83] (webpack)/~/react-dom/lib/getHostComponentFromComposite.js 740 bytes {3} [built]
-   [84] (webpack)/~/react-dom/lib/getTextContentAccessor.js 955 bytes {3} [built]
-   [85] (webpack)/~/react-dom/lib/instantiateReactComponent.js 4.79 kB {3} [built]
-   [86] (webpack)/~/react-dom/lib/isTextInputElement.js 1.04 kB {3} [built]
-   [87] (webpack)/~/react-dom/lib/setTextContent.js 1.45 kB {3} [built]
-  [159] (webpack)/~/react-dom/lib/getEventKey.js 2.87 kB {3} [built]
-  [160] (webpack)/~/react-dom/lib/getIteratorFn.js 1.12 kB {3} [built]
-  [162] (webpack)/~/react-dom/lib/getNodeForCharacterOffset.js 1.62 kB {3} [built]
-  [163] (webpack)/~/react-dom/lib/getVendorPrefixedEventName.js 2.87 kB {3} [built]
-  [164] (webpack)/~/react-dom/lib/quoteAttributeValueForBrowser.js 700 bytes {3} [built]
-chunk    {4} c1cf8f2da77a924ca1c4.js 50 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
-   [39] (webpack)/~/react-dom/lib/EventPluginHub.js 9.11 kB {4} [built]
-   [40] (webpack)/~/react-dom/lib/EventPropagators.js 5.09 kB {4} [built]
-   [51] (webpack)/~/react-dom/lib/EventPluginRegistry.js 9.75 kB {4} [built]
-   [52] (webpack)/~/react-dom/lib/EventPluginUtils.js 7.95 kB {4} [built]
-   [53] (webpack)/~/react-dom/lib/KeyEscapeUtils.js 1.29 kB {4} [built]
+  [161] (webpack)/~/react-dom/lib/getNextDebugID.js 437 bytes {1} [built]
+chunk    {2} cf8eaf7e2283857b2514.js 29.5 kB {12} {13} {14} [rendered]
+    > aggressive-splitted [16] ./example.js 2:0-22
+   [29] (webpack)/~/react-dom/lib/reactProdInvariant.js 1.24 kB {2} [built]
+   [47] (webpack)/~/react-dom/lib/setInnerHTML.js 3.86 kB {2} [built]
+   [60] (webpack)/~/react-dom/lib/getEventModifierState.js 1.23 kB {2} [built]
+   [61] (webpack)/~/react-dom/lib/getEventTarget.js 1.01 kB {2} [built]
+   [62] (webpack)/~/react-dom/lib/isEventSupported.js 1.94 kB {2} [built]
+   [63] (webpack)/~/react-dom/lib/shouldUpdateReactComponent.js 1.4 kB {2} [built]
+   [83] (webpack)/~/react-dom/lib/getHostComponentFromComposite.js 740 bytes {2} [built]
+   [84] (webpack)/~/react-dom/lib/getTextContentAccessor.js 955 bytes {2} [built]
+   [85] (webpack)/~/react-dom/lib/instantiateReactComponent.js 5.05 kB {2} [built]
+   [86] (webpack)/~/react-dom/lib/isTextInputElement.js 1.04 kB {2} [built]
+   [87] (webpack)/~/react-dom/lib/setTextContent.js 1.45 kB {2} [built]
+  [159] (webpack)/~/react-dom/lib/getEventKey.js 2.87 kB {2} [built]
+  [160] (webpack)/~/react-dom/lib/getIteratorFn.js 1.12 kB {2} [built]
+  [162] (webpack)/~/react-dom/lib/getNodeForCharacterOffset.js 1.62 kB {2} [built]
+  [163] (webpack)/~/react-dom/lib/getVendorPrefixedEventName.js 2.87 kB {2} [built]
+  [164] (webpack)/~/react-dom/lib/quoteAttributeValueForBrowser.js 700 bytes {2} [built]
+  [165] (webpack)/~/react-dom/lib/renderSubtreeIntoContainer.js 422 bytes {2} [built]
+chunk    {3} 1aebcb77e36ad0ed5500.js 49.9 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
+   [32] (webpack)/~/react-dom/lib/ReactInstrumentation.js 601 bytes {3} [built]
+   [41] (webpack)/~/react-dom/lib/ReactInstanceMap.js 1.22 kB {3} [built]
+   [56] (webpack)/~/react-dom/lib/ReactErrorUtils.js 2.25 kB {3} [built]
+   [75] (webpack)/~/react-dom/lib/ReactFeatureFlags.js 628 bytes {3} [built]
+   [76] (webpack)/~/react-dom/lib/ReactHostComponent.js 1.98 kB {3} [built]
+   [77] (webpack)/~/react-dom/lib/ReactInputSelection.js 4.27 kB {3} [built]
+   [79] (webpack)/~/react-dom/lib/ReactNodeTypes.js 1.02 kB {3} [built]
+  [123] (webpack)/~/react-dom/lib/ReactDOMSelection.js 6.78 kB {3} [built]
+  [124] (webpack)/~/react-dom/lib/ReactDOMTextComponent.js 5.82 kB {3} [built]
+  [125] (webpack)/~/react-dom/lib/ReactDOMTextarea.js 6.46 kB {3} [built]
+  [130] (webpack)/~/react-dom/lib/ReactEventEmitterMixin.js 959 bytes {3} [built]
+  [131] (webpack)/~/react-dom/lib/ReactEventListener.js 5.3 kB {3} [built]
+  [132] (webpack)/~/react-dom/lib/ReactInjection.js 1.2 kB {3} [built]
+  [133] (webpack)/~/react-dom/lib/ReactMarkupChecksum.js 1.47 kB {3} [built]
+  [135] (webpack)/~/react-dom/lib/ReactOwner.js 3.53 kB {3} [built]
+  [137] (webpack)/~/react-dom/lib/ReactReconcileTransaction.js 5.26 kB {3} [built]
+  [145] (webpack)/~/react-dom/lib/SyntheticAnimationEvent.js 1.21 kB {3} [built]
+chunk    {4} e7e0f7bc43020d03cea9.js 49.7 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
+   [30] (webpack)/~/react-dom/lib/ReactDOMComponentTree.js 6.27 kB {4} [built]
+   [43] (webpack)/~/react-dom/lib/ReactBrowserEventEmitter.js 12.6 kB {4} [built]
+   [54] (webpack)/~/react-dom/lib/LinkedValueUtils.js 5.15 kB {4} [built]
    [55] (webpack)/~/react-dom/lib/ReactComponentEnvironment.js 1.3 kB {4} [built]
-  [107] (webpack)/~/react-dom/lib/Danger.js 2.24 kB {4} [built]
-  [109] (webpack)/~/react-dom/lib/EnterLeaveEventPlugin.js 3.16 kB {4} [built]
-  [110] (webpack)/~/react-dom/lib/FallbackCompositionState.js 2.43 kB {4} [built]
-  [111] (webpack)/~/react-dom/lib/HTMLDOMPropertyConfig.js 5.44 kB {4} [built]
+  [112] (webpack)/~/react-dom/lib/ReactChildReconciler.js 6.11 kB {4} [built]
   [113] (webpack)/~/react-dom/lib/ReactComponentBrowserEnvironment.js 906 bytes {4} [built]
+  [115] (webpack)/~/react-dom/lib/ReactDOM.js 5.14 kB {4} [built]
   [117] (webpack)/~/react-dom/lib/ReactDOMContainerInfo.js 967 bytes {4} [built]
-  [141] (webpack)/~/react-dom/lib/ReactVersion.js 350 bytes {4} [built]
-chunk    {5} 09fc44f2df4763ce700e.js 49.9 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
-   [30] (webpack)/~/react-dom/lib/ReactDOMComponentTree.js 6.16 kB {5} [built]
-   [35] (webpack)/~/react-dom/lib/PooledClass.js 3.68 kB {5} [built]
-   [43] (webpack)/~/react-dom/lib/ReactBrowserEventEmitter.js 12.6 kB {5} [built]
-   [54] (webpack)/~/react-dom/lib/LinkedValueUtils.js 5.15 kB {5} [built]
-  [112] (webpack)/~/react-dom/lib/ReactChildReconciler.js 6.11 kB {5} [built]
-  [115] (webpack)/~/react-dom/lib/ReactDOM.js 5.14 kB {5} [built]
-  [118] (webpack)/~/react-dom/lib/ReactDOMEmptyComponent.js 1.9 kB {5} [built]
-  [119] (webpack)/~/react-dom/lib/ReactDOMFeatureFlags.js 439 bytes {5} [built]
-  [120] (webpack)/~/react-dom/lib/ReactDOMIDOperations.js 956 bytes {5} [built]
-  [122] (webpack)/~/react-dom/lib/ReactDOMOption.js 3.69 kB {5} [built]
-  [126] (webpack)/~/react-dom/lib/ReactDOMTreeTraversal.js 3.72 kB {5} [built]
-  [136] (webpack)/~/react-dom/lib/ReactPropTypesSecret.js 442 bytes {5} [built]
-chunk    {6} 7f5e7b9bd64aa5da7ca6.js 49.9 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
-   [33] (webpack)/~/react-dom/lib/ReactUpdates.js 9.53 kB {6} [built]
-   [57] (webpack)/~/react-dom/lib/ReactUpdateQueue.js 9.01 kB {6} [built]
-   [80] (webpack)/~/react-dom/lib/ViewportMetrics.js 606 bytes {6} [built]
-  [139] (webpack)/~/react-dom/lib/ReactServerRenderingTransaction.js 2.29 kB {6} [built]
-  [140] (webpack)/~/react-dom/lib/ReactServerUpdateQueue.js 4.83 kB {6} [built]
-  [142] (webpack)/~/react-dom/lib/SVGDOMPropertyConfig.js 7.32 kB {6} [built]
-  [143] (webpack)/~/react-dom/lib/SelectEventPlugin.js 6.06 kB {6} [built]
-  [144] (webpack)/~/react-dom/lib/SimpleEventPlugin.js 7.97 kB {6} [built]
-  [146] (webpack)/~/react-dom/lib/SyntheticClipboardEvent.js 1.17 kB {6} [built]
-  [148] (webpack)/~/react-dom/lib/SyntheticDragEvent.js 1.07 kB {6} [built]
-chunk    {7} 1b2ed3715f8def1b4704.js 49.8 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
+  [118] (webpack)/~/react-dom/lib/ReactDOMEmptyComponent.js 1.9 kB {4} [built]
+  [119] (webpack)/~/react-dom/lib/ReactDOMFeatureFlags.js 439 bytes {4} [built]
+  [120] (webpack)/~/react-dom/lib/ReactDOMIDOperations.js 956 bytes {4} [built]
+  [122] (webpack)/~/react-dom/lib/ReactDOMOption.js 3.69 kB {4} [built]
+  [126] (webpack)/~/react-dom/lib/ReactDOMTreeTraversal.js 3.72 kB {4} [built]
+  [129] (webpack)/~/react-dom/lib/ReactElementSymbol.js 622 bytes {4} [built]
+chunk    {5} cd30a0e5b23181f08280.js 49.9 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
+   [33] (webpack)/~/react-dom/lib/ReactUpdates.js 9.53 kB {5} [built]
+   [57] (webpack)/~/react-dom/lib/ReactUpdateQueue.js 9.01 kB {5} [built]
+   [80] (webpack)/~/react-dom/lib/ViewportMetrics.js 606 bytes {5} [built]
+  [139] (webpack)/~/react-dom/lib/ReactServerRenderingTransaction.js 2.29 kB {5} [built]
+  [140] (webpack)/~/react-dom/lib/ReactServerUpdateQueue.js 4.83 kB {5} [built]
+  [142] (webpack)/~/react-dom/lib/SVGDOMPropertyConfig.js 7.32 kB {5} [built]
+  [143] (webpack)/~/react-dom/lib/SelectEventPlugin.js 6.06 kB {5} [built]
+  [144] (webpack)/~/react-dom/lib/SimpleEventPlugin.js 7.97 kB {5} [built]
+  [146] (webpack)/~/react-dom/lib/SyntheticClipboardEvent.js 1.17 kB {5} [built]
+  [148] (webpack)/~/react-dom/lib/SyntheticDragEvent.js 1.07 kB {5} [built]
+chunk    {6} 1126d5a81e2264177124.js 49.8 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
+   [35] (webpack)/~/react-dom/lib/PooledClass.js 3.36 kB {6} [built]
+   [39] (webpack)/~/react-dom/lib/EventPluginHub.js 9.11 kB {6} [built]
+   [40] (webpack)/~/react-dom/lib/EventPropagators.js 5.09 kB {6} [built]
+   [51] (webpack)/~/react-dom/lib/EventPluginRegistry.js 9.75 kB {6} [built]
+   [52] (webpack)/~/react-dom/lib/EventPluginUtils.js 7.95 kB {6} [built]
+   [53] (webpack)/~/react-dom/lib/KeyEscapeUtils.js 1.29 kB {6} [built]
+  [107] (webpack)/~/react-dom/lib/Danger.js 2.24 kB {6} [built]
+  [109] (webpack)/~/react-dom/lib/EnterLeaveEventPlugin.js 3.16 kB {6} [built]
+  [110] (webpack)/~/react-dom/lib/FallbackCompositionState.js 2.43 kB {6} [built]
+  [111] (webpack)/~/react-dom/lib/HTMLDOMPropertyConfig.js 5.44 kB {6} [built]
+chunk    {7} 0fc9e56af19a2e1125e3.js 49.8 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
    [36] (webpack)/~/react-dom/lib/DOMLazyTree.js 3.71 kB {7} [built]
    [37] (webpack)/~/react-dom/lib/DOMProperty.js 8.24 kB {7} [built]
    [49] (webpack)/~/react-dom/lib/DOMChildrenOperations.js 7.67 kB {7} [built]
@@ -200,92 +200,92 @@ chunk    {7} 1b2ed3715f8def1b4704.js 49.8 kB {12} {13} {14} [rendered] [recorded
   [105] (webpack)/~/react-dom/lib/CSSPropertyOperations.js 6.87 kB {7} [built]
   [106] (webpack)/~/react-dom/lib/ChangeEventPlugin.js 11.1 kB {7} [built]
   [108] (webpack)/~/react-dom/lib/DefaultEventPluginOrder.js 1.08 kB {7} [built]
-chunk    {8} 86b9b5b4aebf58b3a65d.js 49.9 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
+chunk    {8} 6969094ac64482ef5415.js 49.9 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
    [38] (webpack)/~/react-dom/lib/ReactReconciler.js 6.21 kB {8} [built]
    [78] (webpack)/~/react-dom/lib/ReactMount.js 25.5 kB {8} [built]
   [134] (webpack)/~/react-dom/lib/ReactMultiChild.js 14.6 kB {8} [built]
   [138] (webpack)/~/react-dom/lib/ReactRef.js 2.56 kB {8} [built]
   [147] (webpack)/~/react-dom/lib/SyntheticCompositionEvent.js 1.1 kB {8} [built]
-chunk    {9} 821accd63b1dad6b51c9.js 49.8 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
+chunk    {9} b98a4783892edb35b41b.js 50 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
    [73] (webpack)/~/react-dom/lib/ReactDOMSelect.js 6.81 kB {9} [built]
    [74] (webpack)/~/react-dom/lib/ReactEmptyComponent.js 704 bytes {9} [built]
-   [75] (webpack)/~/react-dom/lib/ReactFeatureFlags.js 628 bytes {9} [built]
-  [116] (webpack)/~/react-dom/lib/ReactDOMComponent.js 38.2 kB {9} [built]
+  [116] (webpack)/~/react-dom/lib/ReactDOMComponent.js 38.5 kB {9} [built]
   [128] (webpack)/~/react-dom/lib/ReactDefaultInjection.js 3.5 kB {9} [built]
-chunk   {10} f5fdd34beba2e67aa671.js 49.7 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
+  [136] (webpack)/~/react-dom/lib/ReactPropTypesSecret.js 442 bytes {9} [built]
+chunk   {10} 97bba8f30c076dad7452.js 50 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
   [114] (webpack)/~/react-dom/lib/ReactCompositeComponent.js 35.2 kB {10} [built]
-  [121] (webpack)/~/react-dom/lib/ReactDOMInput.js 12 kB {10} [built]
+  [121] (webpack)/~/react-dom/lib/ReactDOMInput.js 12.6 kB {10} [built]
   [127] (webpack)/~/react-dom/lib/ReactDefaultBatchingStrategy.js 1.88 kB {10} [built]
-  [129] (webpack)/~/react-dom/lib/ReactElementSymbol.js 622 bytes {10} [built]
-chunk   {11} ec39b52c039ff21d71e0.js 31.1 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
+  [141] (webpack)/~/react-dom/lib/ReactVersion.js 350 bytes {10} [built]
+chunk   {11} 7b9a99048247c52e6473.js 31.1 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
    [64] (webpack)/~/react-dom/lib/validateDOMNesting.js 13.7 kB {11} [built]
    [88] (webpack)/~/react-dom/lib/traverseAllChildren.js 7.04 kB {11} [built]
    [89] (webpack)/~/react/lib/ReactComponentTreeHook.js 10.4 kB {11} [built]
-chunk   {12} 34c15eb3e78f0ccd8722.js 49.8 kB [entry] [rendered] [recorded]
-    > aggressive-splitted main [28] ./example.js 
+chunk   {12} 3c590ca94c1cd4573c73.js 50 kB [entry] [rendered] [recorded]
+    > aggressive-splitted main [16] ./example.js 
     [0] (webpack)/~/fbjs/lib/warning.js 2.1 kB {12} [built]
-    [2] (webpack)/~/fbjs/lib/invariant.js 1.49 kB {12} [built]
-    [4] (webpack)/~/object-assign/index.js 1.99 kB {12} [built]
+    [2] (webpack)/~/fbjs/lib/invariant.js 1.63 kB {12} [built]
+    [4] (webpack)/~/object-assign/index.js 2.11 kB {12} [built]
     [5] (webpack)/~/fbjs/lib/emptyFunction.js 1.08 kB {12} [built]
     [6] (webpack)/~/fbjs/lib/emptyObject.js 458 bytes {12} [built]
     [9] (webpack)/~/react/lib/ReactCurrentOwner.js 623 bytes {12} [built]
    [10] (webpack)/~/react/lib/ReactElementSymbol.js 622 bytes {12} [built]
    [11] (webpack)/~/react/lib/ReactPropTypeLocationNames.js 572 bytes {12} [built]
-   [14] (webpack)/~/react/react.js 56 bytes {12} [built]
    [15] (webpack)/~/react/lib/React.js 2.69 kB {12} [built]
-   [17] (webpack)/~/react/lib/KeyEscapeUtils.js 1.29 kB {12} [built]
-   [18] (webpack)/~/react/lib/PooledClass.js 3.68 kB {12} [built]
-   [19] (webpack)/~/react/lib/ReactChildren.js 6.19 kB {12} [built]
-   [20] (webpack)/~/react/lib/ReactClass.js 26.5 kB {12} [built]
-   [23] (webpack)/~/react/lib/ReactPropTypesSecret.js 442 bytes {12} [built]
-chunk   {13} c2c00dc4f8ea2d436202.js 30.6 kB [initial] [rendered]
-    > aggressive-splitted main [28] ./example.js 
+   [18] (webpack)/~/react/lib/KeyEscapeUtils.js 1.29 kB {12} [built]
+   [19] (webpack)/~/react/lib/PooledClass.js 3.36 kB {12} [built]
+   [20] (webpack)/~/react/lib/ReactChildren.js 6.19 kB {12} [built]
+   [21] (webpack)/~/react/lib/ReactClass.js 26.5 kB {12} [built]
+   [24] (webpack)/~/react/lib/ReactPropTypesSecret.js 442 bytes {12} [built]
+   [26] (webpack)/~/react/lib/ReactVersion.js 350 bytes {12} [built]
+chunk   {13} bea9c6f9afcb80f33121.js 30.6 kB [initial] [rendered]
+    > aggressive-splitted main [16] ./example.js 
     [3] (webpack)/~/react/lib/reactProdInvariant.js 1.24 kB {13} [built]
     [8] (webpack)/~/react/lib/ReactNoopUpdateQueue.js 3.36 kB {13} [built]
    [12] (webpack)/~/react/lib/canDefineProperty.js 661 bytes {13} [built]
    [13] (webpack)/~/react/lib/getIteratorFn.js 1.12 kB {13} [built]
-   [22] (webpack)/~/react/lib/ReactPropTypes.js 15.8 kB {13} [built]
-   [26] (webpack)/~/react/lib/onlyChild.js 1.34 kB {13} [built]
-   [27] (webpack)/~/react/lib/traverseAllChildren.js 7.03 kB {13} [built]
-   [28] ./example.js 44 bytes {13} [built]
-chunk   {14} 4346e9a755998ae776da.js 23 kB [initial] [rendered]
-    > aggressive-splitted main [28] ./example.js 
+   [16] ./example.js 44 bytes {13} [built]
+   [23] (webpack)/~/react/lib/ReactPropTypes.js 15.8 kB {13} [built]
+   [27] (webpack)/~/react/lib/onlyChild.js 1.34 kB {13} [built]
+   [28] (webpack)/~/react/lib/traverseAllChildren.js 7.03 kB {13} [built]
+chunk   {14} 85fc6439c97999cbcda0.js 22.7 kB [initial] [rendered]
+    > aggressive-splitted main [16] ./example.js 
     [1] (webpack)/~/react/lib/ReactElement.js 11.2 kB {14} [built]
     [7] (webpack)/~/react/lib/ReactComponent.js 4.61 kB {14} [built]
-   [21] (webpack)/~/react/lib/ReactDOMFactories.js 5.53 kB {14} [built]
-   [24] (webpack)/~/react/lib/ReactPureComponent.js 1.32 kB {14} [built]
-   [25] (webpack)/~/react/lib/ReactVersion.js 350 bytes {14} [built]
+   [14] (webpack)/~/react/react.js 56 bytes {14} [built]
+   [22] (webpack)/~/react/lib/ReactDOMFactories.js 5.53 kB {14} [built]
+   [25] (webpack)/~/react/lib/ReactPureComponent.js 1.32 kB {14} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 7ad71766b9942185d15e
-Version: webpack 2.2.0-rc.2
+Hash: c9781c5521ffee4f5298
+Version: webpack 2.3.2
                   Asset     Size  Chunks             Chunk Names
-1b2ed3715f8def1b4704.js  10.2 kB       7  [emitted]  
-dae6ee0707d1d1e6587f.js  12.3 kB       0  [emitted]  
-17ba201195851405ec1e.js  10.6 kB       2  [emitted]  
-2609b2ee94d5c83866d0.js  7.08 kB       3  [emitted]  
-c1cf8f2da77a924ca1c4.js  11.6 kB       4  [emitted]  
-09fc44f2df4763ce700e.js  12.2 kB       5  [emitted]  
-7f5e7b9bd64aa5da7ca6.js  15.3 kB       6  [emitted]  
-3795db4b41b04f8b2a73.js  7.96 kB       1  [emitted]  
-86b9b5b4aebf58b3a65d.js   8.1 kB       8  [emitted]  
-821accd63b1dad6b51c9.js  12.7 kB       9  [emitted]  
-f5fdd34beba2e67aa671.js  10.3 kB      10  [emitted]  
-ec39b52c039ff21d71e0.js  4.61 kB      11  [emitted]  
-34c15eb3e78f0ccd8722.js  10.5 kB      12  [emitted]  
-c2c00dc4f8ea2d436202.js  6.37 kB      13  [emitted]  
-4346e9a755998ae776da.js  4.63 kB      14  [emitted]  
-Entrypoint main = 34c15eb3e78f0ccd8722.js 4346e9a755998ae776da.js c2c00dc4f8ea2d436202.js
-chunk    {0} dae6ee0707d1d1e6587f.js 49.7 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
-   [16] (webpack)/~/react-dom/index.js 59 bytes {0} [built]
+0fc9e56af19a2e1125e3.js  10.2 kB       7  [emitted]  
+7923f88ea316bb0caf20.js  12.2 kB       0  [emitted]  
+cf8eaf7e2283857b2514.js  7.14 kB       2  [emitted]  
+1aebcb77e36ad0ed5500.js  10.5 kB       3  [emitted]  
+e7e0f7bc43020d03cea9.js  11.9 kB       4  [emitted]  
+cd30a0e5b23181f08280.js  15.3 kB       5  [emitted]  
+1126d5a81e2264177124.js  11.6 kB       6  [emitted]  
+4b56298728377da64928.js  7.86 kB       1  [emitted]  
+6969094ac64482ef5415.js  8.01 kB       8  [emitted]  
+b98a4783892edb35b41b.js  12.7 kB       9  [emitted]  
+97bba8f30c076dad7452.js  10.2 kB      10  [emitted]  
+7b9a99048247c52e6473.js   4.5 kB      11  [emitted]  
+3c590ca94c1cd4573c73.js  10.3 kB      12  [emitted]  
+bea9c6f9afcb80f33121.js  6.22 kB      13  [emitted]  
+85fc6439c97999cbcda0.js  4.61 kB      14  [emitted]  
+Entrypoint main = 3c590ca94c1cd4573c73.js 85fc6439c97999cbcda0.js bea9c6f9afcb80f33121.js
+chunk    {0} 7923f88ea316bb0caf20.js 49.7 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
+   [17] (webpack)/~/react-dom/index.js 59 bytes {0} [built]
    [31] (webpack)/~/fbjs/lib/ExecutionEnvironment.js 1.06 kB {0} [built]
    [48] (webpack)/~/fbjs/lib/shallowEqual.js 1.74 kB {0} [built]
    [50] (webpack)/~/react-dom/lib/DOMNamespaces.js 505 bytes {0} [built]
@@ -309,8 +309,8 @@ chunk    {0} dae6ee0707d1d1e6587f.js 49.7 kB {12} {13} {14} [rendered] [recorded
   [102] (webpack)/~/react-dom/lib/ARIADOMPropertyConfig.js 1.82 kB {0} [built]
   [103] (webpack)/~/react-dom/lib/AutoFocusUtils.js 599 bytes {0} [built]
   [104] (webpack)/~/react-dom/lib/BeforeInputEventPlugin.js 13.3 kB {0} [built]
-chunk    {1} 3795db4b41b04f8b2a73.js 49.8 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
+chunk    {1} 4b56298728377da64928.js 49.8 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
    [34] (webpack)/~/react-dom/lib/SyntheticEvent.js 9.18 kB {1} [built]
    [42] (webpack)/~/react-dom/lib/SyntheticUIEvent.js 1.57 kB {1} [built]
    [44] (webpack)/~/react-dom/lib/SyntheticMouseEvent.js 2.14 kB {1} [built]
@@ -330,87 +330,87 @@ chunk    {1} 3795db4b41b04f8b2a73.js 49.8 kB {12} {13} {14} [rendered] [recorded
   [156] (webpack)/~/react-dom/lib/dangerousStyleValue.js 3.02 kB {1} [built]
   [157] (webpack)/~/react-dom/lib/findDOMNode.js 2.46 kB {1} [built]
   [158] (webpack)/~/react-dom/lib/flattenChildren.js 2.77 kB {1} [built]
-  [165] (webpack)/~/react-dom/lib/renderSubtreeIntoContainer.js 422 bytes {1} [built]
-chunk    {2} 17ba201195851405ec1e.js 49.9 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
-   [32] (webpack)/~/react-dom/lib/ReactInstrumentation.js 601 bytes {2} [built]
-   [41] (webpack)/~/react-dom/lib/ReactInstanceMap.js 1.22 kB {2} [built]
-   [56] (webpack)/~/react-dom/lib/ReactErrorUtils.js 2.25 kB {2} [built]
-   [76] (webpack)/~/react-dom/lib/ReactHostComponent.js 2.38 kB {2} [built]
-   [77] (webpack)/~/react-dom/lib/ReactInputSelection.js 4.27 kB {2} [built]
-   [79] (webpack)/~/react-dom/lib/ReactNodeTypes.js 1.02 kB {2} [built]
-  [123] (webpack)/~/react-dom/lib/ReactDOMSelection.js 6.78 kB {2} [built]
-  [124] (webpack)/~/react-dom/lib/ReactDOMTextComponent.js 5.82 kB {2} [built]
-  [125] (webpack)/~/react-dom/lib/ReactDOMTextarea.js 6.22 kB {2} [built]
-  [130] (webpack)/~/react-dom/lib/ReactEventEmitterMixin.js 959 bytes {2} [built]
-  [131] (webpack)/~/react-dom/lib/ReactEventListener.js 5.3 kB {2} [built]
-  [132] (webpack)/~/react-dom/lib/ReactInjection.js 1.2 kB {2} [built]
-  [133] (webpack)/~/react-dom/lib/ReactMarkupChecksum.js 1.47 kB {2} [built]
-  [135] (webpack)/~/react-dom/lib/ReactOwner.js 3.53 kB {2} [built]
-  [137] (webpack)/~/react-dom/lib/ReactReconcileTransaction.js 5.26 kB {2} [built]
-  [145] (webpack)/~/react-dom/lib/SyntheticAnimationEvent.js 1.21 kB {2} [built]
-  [161] (webpack)/~/react-dom/lib/getNextDebugID.js 437 bytes {2} [built]
-chunk    {3} 2609b2ee94d5c83866d0.js 28.8 kB {12} {13} {14} [rendered]
-    > aggressive-splitted [28] ./example.js 2:0-22
-   [29] (webpack)/~/react-dom/lib/reactProdInvariant.js 1.24 kB {3} [built]
-   [47] (webpack)/~/react-dom/lib/setInnerHTML.js 3.86 kB {3} [built]
-   [60] (webpack)/~/react-dom/lib/getEventModifierState.js 1.23 kB {3} [built]
-   [61] (webpack)/~/react-dom/lib/getEventTarget.js 1.01 kB {3} [built]
-   [62] (webpack)/~/react-dom/lib/isEventSupported.js 1.94 kB {3} [built]
-   [63] (webpack)/~/react-dom/lib/shouldUpdateReactComponent.js 1.4 kB {3} [built]
-   [83] (webpack)/~/react-dom/lib/getHostComponentFromComposite.js 740 bytes {3} [built]
-   [84] (webpack)/~/react-dom/lib/getTextContentAccessor.js 955 bytes {3} [built]
-   [85] (webpack)/~/react-dom/lib/instantiateReactComponent.js 4.79 kB {3} [built]
-   [86] (webpack)/~/react-dom/lib/isTextInputElement.js 1.04 kB {3} [built]
-   [87] (webpack)/~/react-dom/lib/setTextContent.js 1.45 kB {3} [built]
-  [159] (webpack)/~/react-dom/lib/getEventKey.js 2.87 kB {3} [built]
-  [160] (webpack)/~/react-dom/lib/getIteratorFn.js 1.12 kB {3} [built]
-  [162] (webpack)/~/react-dom/lib/getNodeForCharacterOffset.js 1.62 kB {3} [built]
-  [163] (webpack)/~/react-dom/lib/getVendorPrefixedEventName.js 2.87 kB {3} [built]
-  [164] (webpack)/~/react-dom/lib/quoteAttributeValueForBrowser.js 700 bytes {3} [built]
-chunk    {4} c1cf8f2da77a924ca1c4.js 50 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
-   [39] (webpack)/~/react-dom/lib/EventPluginHub.js 9.11 kB {4} [built]
-   [40] (webpack)/~/react-dom/lib/EventPropagators.js 5.09 kB {4} [built]
-   [51] (webpack)/~/react-dom/lib/EventPluginRegistry.js 9.75 kB {4} [built]
-   [52] (webpack)/~/react-dom/lib/EventPluginUtils.js 7.95 kB {4} [built]
-   [53] (webpack)/~/react-dom/lib/KeyEscapeUtils.js 1.29 kB {4} [built]
+  [161] (webpack)/~/react-dom/lib/getNextDebugID.js 437 bytes {1} [built]
+chunk    {2} cf8eaf7e2283857b2514.js 29.5 kB {12} {13} {14} [rendered]
+    > aggressive-splitted [16] ./example.js 2:0-22
+   [29] (webpack)/~/react-dom/lib/reactProdInvariant.js 1.24 kB {2} [built]
+   [47] (webpack)/~/react-dom/lib/setInnerHTML.js 3.86 kB {2} [built]
+   [60] (webpack)/~/react-dom/lib/getEventModifierState.js 1.23 kB {2} [built]
+   [61] (webpack)/~/react-dom/lib/getEventTarget.js 1.01 kB {2} [built]
+   [62] (webpack)/~/react-dom/lib/isEventSupported.js 1.94 kB {2} [built]
+   [63] (webpack)/~/react-dom/lib/shouldUpdateReactComponent.js 1.4 kB {2} [built]
+   [83] (webpack)/~/react-dom/lib/getHostComponentFromComposite.js 740 bytes {2} [built]
+   [84] (webpack)/~/react-dom/lib/getTextContentAccessor.js 955 bytes {2} [built]
+   [85] (webpack)/~/react-dom/lib/instantiateReactComponent.js 5.05 kB {2} [built]
+   [86] (webpack)/~/react-dom/lib/isTextInputElement.js 1.04 kB {2} [built]
+   [87] (webpack)/~/react-dom/lib/setTextContent.js 1.45 kB {2} [built]
+  [159] (webpack)/~/react-dom/lib/getEventKey.js 2.87 kB {2} [built]
+  [160] (webpack)/~/react-dom/lib/getIteratorFn.js 1.12 kB {2} [built]
+  [162] (webpack)/~/react-dom/lib/getNodeForCharacterOffset.js 1.62 kB {2} [built]
+  [163] (webpack)/~/react-dom/lib/getVendorPrefixedEventName.js 2.87 kB {2} [built]
+  [164] (webpack)/~/react-dom/lib/quoteAttributeValueForBrowser.js 700 bytes {2} [built]
+  [165] (webpack)/~/react-dom/lib/renderSubtreeIntoContainer.js 422 bytes {2} [built]
+chunk    {3} 1aebcb77e36ad0ed5500.js 49.9 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
+   [32] (webpack)/~/react-dom/lib/ReactInstrumentation.js 601 bytes {3} [built]
+   [41] (webpack)/~/react-dom/lib/ReactInstanceMap.js 1.22 kB {3} [built]
+   [56] (webpack)/~/react-dom/lib/ReactErrorUtils.js 2.25 kB {3} [built]
+   [75] (webpack)/~/react-dom/lib/ReactFeatureFlags.js 628 bytes {3} [built]
+   [76] (webpack)/~/react-dom/lib/ReactHostComponent.js 1.98 kB {3} [built]
+   [77] (webpack)/~/react-dom/lib/ReactInputSelection.js 4.27 kB {3} [built]
+   [79] (webpack)/~/react-dom/lib/ReactNodeTypes.js 1.02 kB {3} [built]
+  [123] (webpack)/~/react-dom/lib/ReactDOMSelection.js 6.78 kB {3} [built]
+  [124] (webpack)/~/react-dom/lib/ReactDOMTextComponent.js 5.82 kB {3} [built]
+  [125] (webpack)/~/react-dom/lib/ReactDOMTextarea.js 6.46 kB {3} [built]
+  [130] (webpack)/~/react-dom/lib/ReactEventEmitterMixin.js 959 bytes {3} [built]
+  [131] (webpack)/~/react-dom/lib/ReactEventListener.js 5.3 kB {3} [built]
+  [132] (webpack)/~/react-dom/lib/ReactInjection.js 1.2 kB {3} [built]
+  [133] (webpack)/~/react-dom/lib/ReactMarkupChecksum.js 1.47 kB {3} [built]
+  [135] (webpack)/~/react-dom/lib/ReactOwner.js 3.53 kB {3} [built]
+  [137] (webpack)/~/react-dom/lib/ReactReconcileTransaction.js 5.26 kB {3} [built]
+  [145] (webpack)/~/react-dom/lib/SyntheticAnimationEvent.js 1.21 kB {3} [built]
+chunk    {4} e7e0f7bc43020d03cea9.js 49.7 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
+   [30] (webpack)/~/react-dom/lib/ReactDOMComponentTree.js 6.27 kB {4} [built]
+   [43] (webpack)/~/react-dom/lib/ReactBrowserEventEmitter.js 12.6 kB {4} [built]
+   [54] (webpack)/~/react-dom/lib/LinkedValueUtils.js 5.15 kB {4} [built]
    [55] (webpack)/~/react-dom/lib/ReactComponentEnvironment.js 1.3 kB {4} [built]
-  [107] (webpack)/~/react-dom/lib/Danger.js 2.24 kB {4} [built]
-  [109] (webpack)/~/react-dom/lib/EnterLeaveEventPlugin.js 3.16 kB {4} [built]
-  [110] (webpack)/~/react-dom/lib/FallbackCompositionState.js 2.43 kB {4} [built]
-  [111] (webpack)/~/react-dom/lib/HTMLDOMPropertyConfig.js 5.44 kB {4} [built]
+  [112] (webpack)/~/react-dom/lib/ReactChildReconciler.js 6.11 kB {4} [built]
   [113] (webpack)/~/react-dom/lib/ReactComponentBrowserEnvironment.js 906 bytes {4} [built]
+  [115] (webpack)/~/react-dom/lib/ReactDOM.js 5.14 kB {4} [built]
   [117] (webpack)/~/react-dom/lib/ReactDOMContainerInfo.js 967 bytes {4} [built]
-  [141] (webpack)/~/react-dom/lib/ReactVersion.js 350 bytes {4} [built]
-chunk    {5} 09fc44f2df4763ce700e.js 49.9 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
-   [30] (webpack)/~/react-dom/lib/ReactDOMComponentTree.js 6.16 kB {5} [built]
-   [35] (webpack)/~/react-dom/lib/PooledClass.js 3.68 kB {5} [built]
-   [43] (webpack)/~/react-dom/lib/ReactBrowserEventEmitter.js 12.6 kB {5} [built]
-   [54] (webpack)/~/react-dom/lib/LinkedValueUtils.js 5.15 kB {5} [built]
-  [112] (webpack)/~/react-dom/lib/ReactChildReconciler.js 6.11 kB {5} [built]
-  [115] (webpack)/~/react-dom/lib/ReactDOM.js 5.14 kB {5} [built]
-  [118] (webpack)/~/react-dom/lib/ReactDOMEmptyComponent.js 1.9 kB {5} [built]
-  [119] (webpack)/~/react-dom/lib/ReactDOMFeatureFlags.js 439 bytes {5} [built]
-  [120] (webpack)/~/react-dom/lib/ReactDOMIDOperations.js 956 bytes {5} [built]
-  [122] (webpack)/~/react-dom/lib/ReactDOMOption.js 3.69 kB {5} [built]
-  [126] (webpack)/~/react-dom/lib/ReactDOMTreeTraversal.js 3.72 kB {5} [built]
-  [136] (webpack)/~/react-dom/lib/ReactPropTypesSecret.js 442 bytes {5} [built]
-chunk    {6} 7f5e7b9bd64aa5da7ca6.js 49.9 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
-   [33] (webpack)/~/react-dom/lib/ReactUpdates.js 9.53 kB {6} [built]
-   [57] (webpack)/~/react-dom/lib/ReactUpdateQueue.js 9.01 kB {6} [built]
-   [80] (webpack)/~/react-dom/lib/ViewportMetrics.js 606 bytes {6} [built]
-  [139] (webpack)/~/react-dom/lib/ReactServerRenderingTransaction.js 2.29 kB {6} [built]
-  [140] (webpack)/~/react-dom/lib/ReactServerUpdateQueue.js 4.83 kB {6} [built]
-  [142] (webpack)/~/react-dom/lib/SVGDOMPropertyConfig.js 7.32 kB {6} [built]
-  [143] (webpack)/~/react-dom/lib/SelectEventPlugin.js 6.06 kB {6} [built]
-  [144] (webpack)/~/react-dom/lib/SimpleEventPlugin.js 7.97 kB {6} [built]
-  [146] (webpack)/~/react-dom/lib/SyntheticClipboardEvent.js 1.17 kB {6} [built]
-  [148] (webpack)/~/react-dom/lib/SyntheticDragEvent.js 1.07 kB {6} [built]
-chunk    {7} 1b2ed3715f8def1b4704.js 49.8 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
+  [118] (webpack)/~/react-dom/lib/ReactDOMEmptyComponent.js 1.9 kB {4} [built]
+  [119] (webpack)/~/react-dom/lib/ReactDOMFeatureFlags.js 439 bytes {4} [built]
+  [120] (webpack)/~/react-dom/lib/ReactDOMIDOperations.js 956 bytes {4} [built]
+  [122] (webpack)/~/react-dom/lib/ReactDOMOption.js 3.69 kB {4} [built]
+  [126] (webpack)/~/react-dom/lib/ReactDOMTreeTraversal.js 3.72 kB {4} [built]
+  [129] (webpack)/~/react-dom/lib/ReactElementSymbol.js 622 bytes {4} [built]
+chunk    {5} cd30a0e5b23181f08280.js 49.9 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
+   [33] (webpack)/~/react-dom/lib/ReactUpdates.js 9.53 kB {5} [built]
+   [57] (webpack)/~/react-dom/lib/ReactUpdateQueue.js 9.01 kB {5} [built]
+   [80] (webpack)/~/react-dom/lib/ViewportMetrics.js 606 bytes {5} [built]
+  [139] (webpack)/~/react-dom/lib/ReactServerRenderingTransaction.js 2.29 kB {5} [built]
+  [140] (webpack)/~/react-dom/lib/ReactServerUpdateQueue.js 4.83 kB {5} [built]
+  [142] (webpack)/~/react-dom/lib/SVGDOMPropertyConfig.js 7.32 kB {5} [built]
+  [143] (webpack)/~/react-dom/lib/SelectEventPlugin.js 6.06 kB {5} [built]
+  [144] (webpack)/~/react-dom/lib/SimpleEventPlugin.js 7.97 kB {5} [built]
+  [146] (webpack)/~/react-dom/lib/SyntheticClipboardEvent.js 1.17 kB {5} [built]
+  [148] (webpack)/~/react-dom/lib/SyntheticDragEvent.js 1.07 kB {5} [built]
+chunk    {6} 1126d5a81e2264177124.js 49.8 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
+   [35] (webpack)/~/react-dom/lib/PooledClass.js 3.36 kB {6} [built]
+   [39] (webpack)/~/react-dom/lib/EventPluginHub.js 9.11 kB {6} [built]
+   [40] (webpack)/~/react-dom/lib/EventPropagators.js 5.09 kB {6} [built]
+   [51] (webpack)/~/react-dom/lib/EventPluginRegistry.js 9.75 kB {6} [built]
+   [52] (webpack)/~/react-dom/lib/EventPluginUtils.js 7.95 kB {6} [built]
+   [53] (webpack)/~/react-dom/lib/KeyEscapeUtils.js 1.29 kB {6} [built]
+  [107] (webpack)/~/react-dom/lib/Danger.js 2.24 kB {6} [built]
+  [109] (webpack)/~/react-dom/lib/EnterLeaveEventPlugin.js 3.16 kB {6} [built]
+  [110] (webpack)/~/react-dom/lib/FallbackCompositionState.js 2.43 kB {6} [built]
+  [111] (webpack)/~/react-dom/lib/HTMLDOMPropertyConfig.js 5.44 kB {6} [built]
+chunk    {7} 0fc9e56af19a2e1125e3.js 49.8 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
    [36] (webpack)/~/react-dom/lib/DOMLazyTree.js 3.71 kB {7} [built]
    [37] (webpack)/~/react-dom/lib/DOMProperty.js 8.24 kB {7} [built]
    [49] (webpack)/~/react-dom/lib/DOMChildrenOperations.js 7.67 kB {7} [built]
@@ -420,65 +420,65 @@ chunk    {7} 1b2ed3715f8def1b4704.js 49.8 kB {12} {13} {14} [rendered] [recorded
   [105] (webpack)/~/react-dom/lib/CSSPropertyOperations.js 6.87 kB {7} [built]
   [106] (webpack)/~/react-dom/lib/ChangeEventPlugin.js 11.1 kB {7} [built]
   [108] (webpack)/~/react-dom/lib/DefaultEventPluginOrder.js 1.08 kB {7} [built]
-chunk    {8} 86b9b5b4aebf58b3a65d.js 49.9 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
+chunk    {8} 6969094ac64482ef5415.js 49.9 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
    [38] (webpack)/~/react-dom/lib/ReactReconciler.js 6.21 kB {8} [built]
    [78] (webpack)/~/react-dom/lib/ReactMount.js 25.5 kB {8} [built]
   [134] (webpack)/~/react-dom/lib/ReactMultiChild.js 14.6 kB {8} [built]
   [138] (webpack)/~/react-dom/lib/ReactRef.js 2.56 kB {8} [built]
   [147] (webpack)/~/react-dom/lib/SyntheticCompositionEvent.js 1.1 kB {8} [built]
-chunk    {9} 821accd63b1dad6b51c9.js 49.8 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
+chunk    {9} b98a4783892edb35b41b.js 50 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
    [73] (webpack)/~/react-dom/lib/ReactDOMSelect.js 6.81 kB {9} [built]
    [74] (webpack)/~/react-dom/lib/ReactEmptyComponent.js 704 bytes {9} [built]
-   [75] (webpack)/~/react-dom/lib/ReactFeatureFlags.js 628 bytes {9} [built]
-  [116] (webpack)/~/react-dom/lib/ReactDOMComponent.js 38.2 kB {9} [built]
+  [116] (webpack)/~/react-dom/lib/ReactDOMComponent.js 38.5 kB {9} [built]
   [128] (webpack)/~/react-dom/lib/ReactDefaultInjection.js 3.5 kB {9} [built]
-chunk   {10} f5fdd34beba2e67aa671.js 49.7 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
+  [136] (webpack)/~/react-dom/lib/ReactPropTypesSecret.js 442 bytes {9} [built]
+chunk   {10} 97bba8f30c076dad7452.js 50 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
   [114] (webpack)/~/react-dom/lib/ReactCompositeComponent.js 35.2 kB {10} [built]
-  [121] (webpack)/~/react-dom/lib/ReactDOMInput.js 12 kB {10} [built]
+  [121] (webpack)/~/react-dom/lib/ReactDOMInput.js 12.6 kB {10} [built]
   [127] (webpack)/~/react-dom/lib/ReactDefaultBatchingStrategy.js 1.88 kB {10} [built]
-  [129] (webpack)/~/react-dom/lib/ReactElementSymbol.js 622 bytes {10} [built]
-chunk   {11} ec39b52c039ff21d71e0.js 31.1 kB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [28] ./example.js 2:0-22
+  [141] (webpack)/~/react-dom/lib/ReactVersion.js 350 bytes {10} [built]
+chunk   {11} 7b9a99048247c52e6473.js 31.1 kB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [16] ./example.js 2:0-22
    [64] (webpack)/~/react-dom/lib/validateDOMNesting.js 13.7 kB {11} [built]
    [88] (webpack)/~/react-dom/lib/traverseAllChildren.js 7.04 kB {11} [built]
    [89] (webpack)/~/react/lib/ReactComponentTreeHook.js 10.4 kB {11} [built]
-chunk   {12} 34c15eb3e78f0ccd8722.js 49.8 kB [entry] [rendered] [recorded]
-    > aggressive-splitted main [28] ./example.js 
+chunk   {12} 3c590ca94c1cd4573c73.js 50 kB [entry] [rendered] [recorded]
+    > aggressive-splitted main [16] ./example.js 
     [0] (webpack)/~/fbjs/lib/warning.js 2.1 kB {12} [built]
-    [2] (webpack)/~/fbjs/lib/invariant.js 1.49 kB {12} [built]
-    [4] (webpack)/~/object-assign/index.js 1.99 kB {12} [built]
+    [2] (webpack)/~/fbjs/lib/invariant.js 1.63 kB {12} [built]
+    [4] (webpack)/~/object-assign/index.js 2.11 kB {12} [built]
     [5] (webpack)/~/fbjs/lib/emptyFunction.js 1.08 kB {12} [built]
     [6] (webpack)/~/fbjs/lib/emptyObject.js 458 bytes {12} [built]
     [9] (webpack)/~/react/lib/ReactCurrentOwner.js 623 bytes {12} [built]
    [10] (webpack)/~/react/lib/ReactElementSymbol.js 622 bytes {12} [built]
    [11] (webpack)/~/react/lib/ReactPropTypeLocationNames.js 572 bytes {12} [built]
-   [14] (webpack)/~/react/react.js 56 bytes {12} [built]
    [15] (webpack)/~/react/lib/React.js 2.69 kB {12} [built]
-   [17] (webpack)/~/react/lib/KeyEscapeUtils.js 1.29 kB {12} [built]
-   [18] (webpack)/~/react/lib/PooledClass.js 3.68 kB {12} [built]
-   [19] (webpack)/~/react/lib/ReactChildren.js 6.19 kB {12} [built]
-   [20] (webpack)/~/react/lib/ReactClass.js 26.5 kB {12} [built]
-   [23] (webpack)/~/react/lib/ReactPropTypesSecret.js 442 bytes {12} [built]
-chunk   {13} c2c00dc4f8ea2d436202.js 30.6 kB [initial] [rendered]
-    > aggressive-splitted main [28] ./example.js 
+   [18] (webpack)/~/react/lib/KeyEscapeUtils.js 1.29 kB {12} [built]
+   [19] (webpack)/~/react/lib/PooledClass.js 3.36 kB {12} [built]
+   [20] (webpack)/~/react/lib/ReactChildren.js 6.19 kB {12} [built]
+   [21] (webpack)/~/react/lib/ReactClass.js 26.5 kB {12} [built]
+   [24] (webpack)/~/react/lib/ReactPropTypesSecret.js 442 bytes {12} [built]
+   [26] (webpack)/~/react/lib/ReactVersion.js 350 bytes {12} [built]
+chunk   {13} bea9c6f9afcb80f33121.js 30.6 kB [initial] [rendered]
+    > aggressive-splitted main [16] ./example.js 
     [3] (webpack)/~/react/lib/reactProdInvariant.js 1.24 kB {13} [built]
     [8] (webpack)/~/react/lib/ReactNoopUpdateQueue.js 3.36 kB {13} [built]
    [12] (webpack)/~/react/lib/canDefineProperty.js 661 bytes {13} [built]
    [13] (webpack)/~/react/lib/getIteratorFn.js 1.12 kB {13} [built]
-   [22] (webpack)/~/react/lib/ReactPropTypes.js 15.8 kB {13} [built]
-   [26] (webpack)/~/react/lib/onlyChild.js 1.34 kB {13} [built]
-   [27] (webpack)/~/react/lib/traverseAllChildren.js 7.03 kB {13} [built]
-   [28] ./example.js 44 bytes {13} [built]
-chunk   {14} 4346e9a755998ae776da.js 23 kB [initial] [rendered]
-    > aggressive-splitted main [28] ./example.js 
+   [16] ./example.js 44 bytes {13} [built]
+   [23] (webpack)/~/react/lib/ReactPropTypes.js 15.8 kB {13} [built]
+   [27] (webpack)/~/react/lib/onlyChild.js 1.34 kB {13} [built]
+   [28] (webpack)/~/react/lib/traverseAllChildren.js 7.03 kB {13} [built]
+chunk   {14} 85fc6439c97999cbcda0.js 22.7 kB [initial] [rendered]
+    > aggressive-splitted main [16] ./example.js 
     [1] (webpack)/~/react/lib/ReactElement.js 11.2 kB {14} [built]
     [7] (webpack)/~/react/lib/ReactComponent.js 4.61 kB {14} [built]
-   [21] (webpack)/~/react/lib/ReactDOMFactories.js 5.53 kB {14} [built]
-   [24] (webpack)/~/react/lib/ReactPureComponent.js 1.32 kB {14} [built]
-   [25] (webpack)/~/react/lib/ReactVersion.js 350 bytes {14} [built]
+   [14] (webpack)/~/react/react.js 56 bytes {14} [built]
+   [22] (webpack)/~/react/lib/ReactDOMFactories.js 5.53 kB {14} [built]
+   [25] (webpack)/~/react/lib/ReactPureComponent.js 1.32 kB {14} [built]
 ```
 
 ## Records
@@ -503,19 +503,19 @@ chunk   {14} 4346e9a755998ae776da.js 23 kB [initial] [rendered]
       "..\\..\\node_modules\\react\\lib\\getIteratorFn.js": 13,
       "..\\..\\node_modules\\react\\react.js": 14,
       "..\\..\\node_modules\\react\\lib\\React.js": 15,
-      "..\\..\\node_modules\\react-dom\\index.js": 16,
-      "..\\..\\node_modules\\react\\lib\\KeyEscapeUtils.js": 17,
-      "..\\..\\node_modules\\react\\lib\\PooledClass.js": 18,
-      "..\\..\\node_modules\\react\\lib\\ReactChildren.js": 19,
-      "..\\..\\node_modules\\react\\lib\\ReactClass.js": 20,
-      "..\\..\\node_modules\\react\\lib\\ReactDOMFactories.js": 21,
-      "..\\..\\node_modules\\react\\lib\\ReactPropTypes.js": 22,
-      "..\\..\\node_modules\\react\\lib\\ReactPropTypesSecret.js": 23,
-      "..\\..\\node_modules\\react\\lib\\ReactPureComponent.js": 24,
-      "..\\..\\node_modules\\react\\lib\\ReactVersion.js": 25,
-      "..\\..\\node_modules\\react\\lib\\onlyChild.js": 26,
-      "..\\..\\node_modules\\react\\lib\\traverseAllChildren.js": 27,
-      "example.js": 28,
+      "example.js": 16,
+      "..\\..\\node_modules\\react-dom\\index.js": 17,
+      "..\\..\\node_modules\\react\\lib\\KeyEscapeUtils.js": 18,
+      "..\\..\\node_modules\\react\\lib\\PooledClass.js": 19,
+      "..\\..\\node_modules\\react\\lib\\ReactChildren.js": 20,
+      "..\\..\\node_modules\\react\\lib\\ReactClass.js": 21,
+      "..\\..\\node_modules\\react\\lib\\ReactDOMFactories.js": 22,
+      "..\\..\\node_modules\\react\\lib\\ReactPropTypes.js": 23,
+      "..\\..\\node_modules\\react\\lib\\ReactPropTypesSecret.js": 24,
+      "..\\..\\node_modules\\react\\lib\\ReactPureComponent.js": 25,
+      "..\\..\\node_modules\\react\\lib\\ReactVersion.js": 26,
+      "..\\..\\node_modules\\react\\lib\\onlyChild.js": 27,
+      "..\\..\\node_modules\\react\\lib\\traverseAllChildren.js": 28,
       "..\\..\\node_modules\\react-dom\\lib\\reactProdInvariant.js": 29,
       "..\\..\\node_modules\\react-dom\\lib\\ReactDOMComponentTree.js": 30,
       "..\\..\\node_modules\\fbjs\\lib\\ExecutionEnvironment.js": 31,
@@ -828,11 +828,11 @@ chunk   {14} 4346e9a755998ae776da.js 23 kB [initial] [rendered]
     "byBlocks": {
       "example.js:0/0:2": 0,
       "example.js:0/0:0": 1,
-      "example.js:0/0:9": 2,
-      "example.js:0/0:11": 3,
-      "example.js:0/0:6": 4,
-      "example.js:0/0:1": 5,
-      "example.js:0/0:10": 6,
+      "example.js:0/0:11": 2,
+      "example.js:0/0:9": 3,
+      "example.js:0/0:1": 4,
+      "example.js:0/0:10": 5,
+      "example.js:0/0:6": 6,
       "example.js:0/0:5": 7,
       "example.js:0/0:3": 8,
       "example.js:0/0:8": 9,
@@ -885,7 +885,7 @@ chunk   {14} 4346e9a755998ae776da.js 23 kB [initial] [rendered]
         "..\\..\\node_modules\\react-dom\\lib\\AutoFocusUtils.js",
         "..\\..\\node_modules\\react-dom\\lib\\BeforeInputEventPlugin.js"
       ],
-      "hash": "dae6ee0707d1d1e6587f7ebe542f70ec",
+      "hash": "7923f88ea316bb0caf20d0762dfcd0bb",
       "id": 0
     },
     {
@@ -909,9 +909,9 @@ chunk   {14} 4346e9a755998ae776da.js 23 kB [initial] [rendered]
         "..\\..\\node_modules\\react-dom\\lib\\dangerousStyleValue.js",
         "..\\..\\node_modules\\react-dom\\lib\\findDOMNode.js",
         "..\\..\\node_modules\\react-dom\\lib\\flattenChildren.js",
-        "..\\..\\node_modules\\react-dom\\lib\\renderSubtreeIntoContainer.js"
+        "..\\..\\node_modules\\react-dom\\lib\\getNextDebugID.js"
       ],
-      "hash": "3795db4b41b04f8b2a7313d247a98e86",
+      "hash": "4b56298728377da64928376134ae6f85",
       "id": 1
     },
     {
@@ -919,6 +919,7 @@ chunk   {14} 4346e9a755998ae776da.js 23 kB [initial] [rendered]
         "..\\..\\node_modules\\react-dom\\lib\\ReactInstrumentation.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactInstanceMap.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactErrorUtils.js",
+        "..\\..\\node_modules\\react-dom\\lib\\ReactFeatureFlags.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactHostComponent.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactInputSelection.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactNodeTypes.js",
@@ -931,48 +932,30 @@ chunk   {14} 4346e9a755998ae776da.js 23 kB [initial] [rendered]
         "..\\..\\node_modules\\react-dom\\lib\\ReactMarkupChecksum.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactOwner.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactReconcileTransaction.js",
-        "..\\..\\node_modules\\react-dom\\lib\\SyntheticAnimationEvent.js",
-        "..\\..\\node_modules\\react-dom\\lib\\getNextDebugID.js"
+        "..\\..\\node_modules\\react-dom\\lib\\SyntheticAnimationEvent.js"
       ],
-      "hash": "17ba201195851405ec1e36bce4de67c7",
-      "id": 2
-    },
-    {
-      "modules": [
-        "..\\..\\node_modules\\react-dom\\lib\\EventPluginHub.js",
-        "..\\..\\node_modules\\react-dom\\lib\\EventPropagators.js",
-        "..\\..\\node_modules\\react-dom\\lib\\EventPluginRegistry.js",
-        "..\\..\\node_modules\\react-dom\\lib\\EventPluginUtils.js",
-        "..\\..\\node_modules\\react-dom\\lib\\KeyEscapeUtils.js",
-        "..\\..\\node_modules\\react-dom\\lib\\ReactComponentEnvironment.js",
-        "..\\..\\node_modules\\react-dom\\lib\\Danger.js",
-        "..\\..\\node_modules\\react-dom\\lib\\EnterLeaveEventPlugin.js",
-        "..\\..\\node_modules\\react-dom\\lib\\FallbackCompositionState.js",
-        "..\\..\\node_modules\\react-dom\\lib\\HTMLDOMPropertyConfig.js",
-        "..\\..\\node_modules\\react-dom\\lib\\ReactComponentBrowserEnvironment.js",
-        "..\\..\\node_modules\\react-dom\\lib\\ReactDOMContainerInfo.js",
-        "..\\..\\node_modules\\react-dom\\lib\\ReactVersion.js"
-      ],
-      "hash": "c1cf8f2da77a924ca1c447d112e0d8ec",
-      "id": 4
+      "hash": "1aebcb77e36ad0ed5500e30100a262b2",
+      "id": 3
     },
     {
       "modules": [
         "..\\..\\node_modules\\react-dom\\lib\\ReactDOMComponentTree.js",
-        "..\\..\\node_modules\\react-dom\\lib\\PooledClass.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactBrowserEventEmitter.js",
         "..\\..\\node_modules\\react-dom\\lib\\LinkedValueUtils.js",
+        "..\\..\\node_modules\\react-dom\\lib\\ReactComponentEnvironment.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactChildReconciler.js",
+        "..\\..\\node_modules\\react-dom\\lib\\ReactComponentBrowserEnvironment.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactDOM.js",
+        "..\\..\\node_modules\\react-dom\\lib\\ReactDOMContainerInfo.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactDOMEmptyComponent.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactDOMFeatureFlags.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactDOMIDOperations.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactDOMOption.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactDOMTreeTraversal.js",
-        "..\\..\\node_modules\\react-dom\\lib\\ReactPropTypesSecret.js"
+        "..\\..\\node_modules\\react-dom\\lib\\ReactElementSymbol.js"
       ],
-      "hash": "09fc44f2df4763ce700ea2308caad193",
-      "id": 5
+      "hash": "e7e0f7bc43020d03cea98d16f6f5ae23",
+      "id": 4
     },
     {
       "modules": [
@@ -987,7 +970,23 @@ chunk   {14} 4346e9a755998ae776da.js 23 kB [initial] [rendered]
         "..\\..\\node_modules\\react-dom\\lib\\SyntheticClipboardEvent.js",
         "..\\..\\node_modules\\react-dom\\lib\\SyntheticDragEvent.js"
       ],
-      "hash": "7f5e7b9bd64aa5da7ca666bf753bfd7a",
+      "hash": "cd30a0e5b23181f08280ab3f19affcea",
+      "id": 5
+    },
+    {
+      "modules": [
+        "..\\..\\node_modules\\react-dom\\lib\\PooledClass.js",
+        "..\\..\\node_modules\\react-dom\\lib\\EventPluginHub.js",
+        "..\\..\\node_modules\\react-dom\\lib\\EventPropagators.js",
+        "..\\..\\node_modules\\react-dom\\lib\\EventPluginRegistry.js",
+        "..\\..\\node_modules\\react-dom\\lib\\EventPluginUtils.js",
+        "..\\..\\node_modules\\react-dom\\lib\\KeyEscapeUtils.js",
+        "..\\..\\node_modules\\react-dom\\lib\\Danger.js",
+        "..\\..\\node_modules\\react-dom\\lib\\EnterLeaveEventPlugin.js",
+        "..\\..\\node_modules\\react-dom\\lib\\FallbackCompositionState.js",
+        "..\\..\\node_modules\\react-dom\\lib\\HTMLDOMPropertyConfig.js"
+      ],
+      "hash": "1126d5a81e2264177124fd9fd67f21f8",
       "id": 6
     },
     {
@@ -1002,7 +1001,7 @@ chunk   {14} 4346e9a755998ae776da.js 23 kB [initial] [rendered]
         "..\\..\\node_modules\\react-dom\\lib\\ChangeEventPlugin.js",
         "..\\..\\node_modules\\react-dom\\lib\\DefaultEventPluginOrder.js"
       ],
-      "hash": "1b2ed3715f8def1b470463a7e79ec8df",
+      "hash": "0fc9e56af19a2e1125e351f6506ed162",
       "id": 7
     },
     {
@@ -1013,18 +1012,18 @@ chunk   {14} 4346e9a755998ae776da.js 23 kB [initial] [rendered]
         "..\\..\\node_modules\\react-dom\\lib\\ReactRef.js",
         "..\\..\\node_modules\\react-dom\\lib\\SyntheticCompositionEvent.js"
       ],
-      "hash": "86b9b5b4aebf58b3a65d66407905d500",
+      "hash": "6969094ac64482ef5415a16ccd2b5a43",
       "id": 8
     },
     {
       "modules": [
         "..\\..\\node_modules\\react-dom\\lib\\ReactDOMSelect.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactEmptyComponent.js",
-        "..\\..\\node_modules\\react-dom\\lib\\ReactFeatureFlags.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactDOMComponent.js",
-        "..\\..\\node_modules\\react-dom\\lib\\ReactDefaultInjection.js"
+        "..\\..\\node_modules\\react-dom\\lib\\ReactDefaultInjection.js",
+        "..\\..\\node_modules\\react-dom\\lib\\ReactPropTypesSecret.js"
       ],
-      "hash": "821accd63b1dad6b51c9813bec4fea55",
+      "hash": "b98a4783892edb35b41b2e367c0acbad",
       "id": 9
     },
     {
@@ -1032,9 +1031,9 @@ chunk   {14} 4346e9a755998ae776da.js 23 kB [initial] [rendered]
         "..\\..\\node_modules\\react-dom\\lib\\ReactCompositeComponent.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactDOMInput.js",
         "..\\..\\node_modules\\react-dom\\lib\\ReactDefaultBatchingStrategy.js",
-        "..\\..\\node_modules\\react-dom\\lib\\ReactElementSymbol.js"
+        "..\\..\\node_modules\\react-dom\\lib\\ReactVersion.js"
       ],
-      "hash": "f5fdd34beba2e67aa671f01386ee6e2c",
+      "hash": "97bba8f30c076dad74522fe4e914f4e2",
       "id": 10
     },
     {
@@ -1043,7 +1042,7 @@ chunk   {14} 4346e9a755998ae776da.js 23 kB [initial] [rendered]
         "..\\..\\node_modules\\react-dom\\lib\\traverseAllChildren.js",
         "..\\..\\node_modules\\react\\lib\\ReactComponentTreeHook.js"
       ],
-      "hash": "ec39b52c039ff21d71e05bbedfeee3f7",
+      "hash": "7b9a99048247c52e6473e15c23d527b1",
       "id": 11
     },
     {
@@ -1056,15 +1055,15 @@ chunk   {14} 4346e9a755998ae776da.js 23 kB [initial] [rendered]
         "..\\..\\node_modules\\react\\lib\\ReactCurrentOwner.js",
         "..\\..\\node_modules\\react\\lib\\ReactElementSymbol.js",
         "..\\..\\node_modules\\react\\lib\\ReactPropTypeLocationNames.js",
-        "..\\..\\node_modules\\react\\react.js",
         "..\\..\\node_modules\\react\\lib\\React.js",
         "..\\..\\node_modules\\react\\lib\\KeyEscapeUtils.js",
         "..\\..\\node_modules\\react\\lib\\PooledClass.js",
         "..\\..\\node_modules\\react\\lib\\ReactChildren.js",
         "..\\..\\node_modules\\react\\lib\\ReactClass.js",
-        "..\\..\\node_modules\\react\\lib\\ReactPropTypesSecret.js"
+        "..\\..\\node_modules\\react\\lib\\ReactPropTypesSecret.js",
+        "..\\..\\node_modules\\react\\lib\\ReactVersion.js"
       ],
-      "hash": "34c15eb3e78f0ccd872214581a5cb8b5",
+      "hash": "3c590ca94c1cd4573c73c51c32492e00",
       "id": 12
     }
   ]
