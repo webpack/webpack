@@ -6,10 +6,17 @@ rules:
 # comment in case of success
 - filters:
     open: true
-    status:
+    pull_request:
+      mergeable: true
+    status_1:
       context: "continuous-integration/travis-ci/pr"
-    ensure:
-      value: "{{status.state}}"
+    status_2:
+      context: "continuous-integration/appveyor/pr"
+    ensure_1:
+      value: "{{status_1.state}}"
+      equals: "success"
+    ensure_2:
+      value: "{{status_2.state}}"
       equals: "success"
   actions:
     label:
@@ -21,11 +28,19 @@ rules:
         Thank you for your pull request! The most important CI builds succeeded, we’ll review the pull request soon.
 - filters:
     open: true
-    status:
+    pull_request:
+      mergeable: true
+    status_1:
       context: "continuous-integration/travis-ci/pr"
-    ensure:
-      value: "{{status.state}}"
-      equals: "failure"
+    status_2:
+      context: "continuous-integration/appveyor/pr"
+    any:
+      ensure_1:
+        value: "{{status_1.state}}"
+        equals: "failure"
+      ensure_2:
+        value: "{{status_2.state}}"
+        equals: "failure"
   actions:
     label:
       add: "PR: CI-not-ok"
@@ -35,7 +50,7 @@ rules:
       message: |-
         @{{issue.user.login}} The most important CI builds failed. This way your PR can't be merged.
 
-        Please take a look at the [CI results]({{status.target_url}}) and fix these issues.
+        Please take a look at the CI results from [travis]({{status_1.target_url}}) ({{status_1.state}}) and [appveyor]({{status_2.target_url}}) ({{status_2.state}}) and fix these issues.
 
 
 
@@ -44,16 +59,8 @@ rules:
 # comment in case of success
 - filters:
     open: true
-    status:
-      context: "codecov/patch"
-    ensure:
-      value: "{{status.state}}"
-      equals: "success"
-  actions:
-    label:
-      remove: "PR: tests-needed"
-- filters:
-    open: true
+    pull_request:
+      mergeable: true
     status:
       context: "codecov/patch"
     ensure:
@@ -61,12 +68,16 @@ rules:
       equals: "success"
     label: "PR: tests-needed"
   actions:
+    label:
+      remove: "PR: tests-needed"
     comment:
       identifier: "tests-result"
       message: |-
         The minimum test ratio has been reached. Thanks!
 - filters:
     open: true
+    pull_request:
+      mergeable: true
     status:
       context: "codecov/patch"
     ensure:
@@ -77,6 +88,8 @@ rules:
       add: "PR: tests-needed"
 - filters:
     open: true
+    pull_request:
+      mergeable: true
     status:
       context: "codecov/patch"
     ensure:
@@ -89,15 +102,18 @@ rules:
     comment:
       identifier: "tests-result"
       message: |-
-        It looks like this Pull Request doesn't include [enough test cases]({{status.target_url}}).
+        It looks like this Pull Request doesn't include [enough test cases]({{status.target_url}}) (based on Code Coverage analysis of the PR diff).
 
-        @{{issue.user.login}} Please add more test cases.
+        A PR need to be covered by tests if you add a new feature (we want to make sure that your feature is working) or if you fix a bug (we want to make sure that we don't run into a regression in future).
 
-        See [test readme](https://github.com/webpack/webpack/blob/master/test/README.md) for details how to write test cases.
+        @{{issue.user.login}} Please check if this is appliable to your PR and if you can add more test cases.
+
+        Read the [test readme](https://github.com/webpack/webpack/blob/master/test/README.md) for details how to write test cases.
 
 
 
 # add conflict label to pull requests with conflict
+# on conflict all result labels are removed
 - filters:
     open: true
     pull_request:
@@ -105,6 +121,10 @@ rules:
   actions:
     label:
       add: "PR: conflict"
+      remove:
+        - "PR: tests-needed"
+        - "PR: CI-ok"
+        - "PR: CI-not-ok"
 - filters:
     open: true
     pull_request:
@@ -185,45 +205,6 @@ rules:
         state: APPROVED|CHANGES_REQUESTED
   actions:
     label: "PR: unreviewed"
-- filters:
-    open: true
-    commit: true
-    not:
-      review:
-        state: APPROVED|CHANGES_REQUESTED
-    age:
-      maximum: 1w
-  actions:
-    comment:
-      identifier: "pr-thanks"
-      message: |-
-        Thanks for your Pull Request. I labeled the Pull Request, so maintainers will review it.
-
-
-
-# add/remove mentioned-sokra label
-- filters:
-    open: true
-    any:
-      in_order:
-        comment_1:
-          author: "^sokra$"
-        comment_2: "@sokra"
-      all:
-        not:
-          comment_1:
-            author: "^sokra$"
-        comment_2: "@sokra"
-  actions:
-    label: "mentioned-sokra"
-- filters:
-    in_order:
-      comment_1: "@sokra"
-      comment_2:
-        author: "^sokra$"
-  actions:
-    label:
-      remove: "mentioned-sokra"
 
 
 
@@ -233,6 +214,18 @@ rules:
       base_ref: "^(?!master)"
   actions:
     label: "PR: non-master"
+
+
+
+# add small label to small pull requests
+- filters:
+    open: true
+    pull_request:
+      additions: "<= 10"
+      deletions: "<= 10"
+      changed_files: "<= 2"
+  actions:
+    label: "PR: small"
 
 
 
@@ -256,15 +249,3 @@ rules:
         > Don't submit pull request from your own `master` branch. It's recommended to create a feature branch for the PR.
 
         *You don't have to change it for this PR, just make sure to follow this hint the next time you submit a PR.*
-
-
-
-# add small label to small pull requests
-- filters:
-    open: true
-    pull_request:
-      additions: "<= 10"
-      deletions: "<= 10"
-      changed_files: "<= 2"
-  actions:
-    label: "PR: small"
