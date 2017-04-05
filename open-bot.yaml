@@ -59,6 +59,8 @@ rules:
 # comment in case of success
 - filters:
     open: true
+    pull_request:
+      mergeable: true
     status:
       context: "codecov/patch"
     ensure:
@@ -74,6 +76,8 @@ rules:
         The minimum test ratio has been reached. Thanks!
 - filters:
     open: true
+    pull_request:
+      mergeable: true
     status:
       context: "codecov/patch"
     ensure:
@@ -84,6 +88,8 @@ rules:
       add: "PR: tests-needed"
 - filters:
     open: true
+    pull_request:
+      mergeable: true
     status:
       context: "codecov/patch"
     ensure:
@@ -107,6 +113,7 @@ rules:
 
 
 # add conflict label to pull requests with conflict
+# on conflict all result labels are removed
 - filters:
     open: true
     pull_request:
@@ -114,6 +121,10 @@ rules:
   actions:
     label:
       add: "PR: conflict"
+      remove:
+        - "PR: tests-needed"
+        - "PR: CI-ok"
+        - "PR: CI-not-ok"
 - filters:
     open: true
     pull_request:
