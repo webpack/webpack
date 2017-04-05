@@ -97,6 +97,24 @@ rules:
 
 
 
+# add conflict label to pull requests with conflict
+- filters:
+    open: true
+    pull_request:
+      mergeable: false
+  actions:
+    label:
+      add: "PR: conflict"
+- filters:
+    open: true
+    pull_request:
+      mergeable: true
+  actions:
+    label:
+      remove: "PR: conflict"
+
+
+
 # add unreviewed, reviewed, review-outdated labels
 # comment to ping reviewer
 # comment on new PR
