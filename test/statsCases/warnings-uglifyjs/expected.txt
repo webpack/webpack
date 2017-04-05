@@ -1,0 +1,15 @@
+Hash: 4beee256fa6b8f69eae8
+Time: Xms
+    Asset     Size  Chunks             Chunk Names
+bundle.js  2.24 kB       0  [emitted]  main
+chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+   [0] (webpack)/buildin/module.js 495 bytes {0} [built]
+   [1] (webpack)/test/statsCases/warnings-uglifyjs/a.js 249 bytes {0} [built]
+   [2] (webpack)/test/statsCases/warnings-uglifyjs/index.js 299 bytes {0} [built]
+
+WARNING in bundle.js from UglifyJs
+Dropping unused function someUnRemoteUsedFunction1 [./a.js:3,0]
+Dropping unused function someUnRemoteUsedFunction2 [./a.js:4,0]
+Dropping unused function someUnRemoteUsedFunction3 [./a.js:5,0]
+Dropping unused function someUnRemoteUsedFunction4 [./a.js:6,0]
+Dropping unused function someUnRemoteUsedFunction5 [./a.js:7,0]

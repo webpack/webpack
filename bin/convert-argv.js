@@ -275,7 +275,11 @@ module.exports = function(yargs, argv, convertOptions) {
 		}
 
 		ifArgPair("entry", function(name, entry) {
-			options.entry[name] = entry;
+			if(typeof options.entry[name] !== "undefined" && options.entry[name] !== null) {
+				options.entry[name] = [].concat(options.entry[name]).concat(entry);
+			} else {
+				options.entry[name] = entry;
+			}
 		}, function() {
 			ensureObject(options, "entry");
 		});
@@ -316,7 +320,7 @@ module.exports = function(yargs, argv, convertOptions) {
 
 		ifArg("output-path", function(value) {
 			ensureObject(options, "output");
-			options.output.path = value;
+			options.output.path = path.resolve(value);
 		});
 
 		ifArg("output-filename", function(value) {
@@ -478,11 +482,11 @@ module.exports = function(yargs, argv, convertOptions) {
 		if(noOutputFilenameDefined) {
 			ensureObject(options, "output");
 			if(convertOptions && convertOptions.outputFilename) {
-				options.output.path = path.dirname(convertOptions.outputFilename);
+				options.output.path = path.resolve(path.dirname(convertOptions.outputFilename));
 				options.output.filename = path.basename(convertOptions.outputFilename);
 			} else if(argv._.length > 0) {
 				options.output.filename = argv._.pop();
-				options.output.path = path.dirname(options.output.filename);
+				options.output.path = path.resolve(path.dirname(options.output.filename));
 				options.output.filename = path.basename(options.output.filename);
 			} else if(configFileLoaded) {
 				throw new Error("'output.filename' is required, either in config file or as --output-filename");

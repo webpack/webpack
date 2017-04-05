@@ -11,11 +11,11 @@ it("should flag modules correctly", function() {
 	require("./hh").default.should.be.eql("hh" + WATCH_STEP);
 	require("./cc").should.be.eql("cc" + WATCH_STEP);
 	switch(WATCH_STEP) {
-		case 0:
+		case "0":
 			require("./hc").default.should.be.eql("hc0");
 			require("./ch").should.be.eql("ch0");
 			break;
-		case 1:
+		case "1":
 			require("./hc").should.be.eql("hc1");
 			require("./ch").default.should.be.eql("ch1");
 			break;

@@ -1,7 +1,13 @@
-var EnvironmentPlugin = require("../../../../lib/EnvironmentPlugin");
+const EnvironmentPlugin = require("../../../../lib/EnvironmentPlugin");
+
 process.env.AAA = "aaa";
 process.env.BBB = "bbb";
 process.env.CCC = "ccc";
+process.env.EEE = "eee";
+process.env.FFF = "fff";
+process.env.GGG = "ggg";
+process.env.III = "";
+
 module.exports = [{
 	name: "aaa",
 	module: { unknownContextRegExp: /$^/, unknownContextCritical: false },
@@ -19,5 +25,26 @@ module.exports = [{
 	module: { unknownContextRegExp: /$^/, unknownContextCritical: false },
 	plugins: [
 		new EnvironmentPlugin("DDD")
+	]
+}, {
+	name: "eeefff",
+	module: { unknownContextRegExp: /$^/, unknownContextCritical: false },
+	plugins: [
+		new EnvironmentPlugin(["EEE", "FFF"])
+	]
+}, {
+	name: "ggghhh",
+	module: { unknownContextRegExp: /$^/, unknownContextCritical: false },
+	plugins: [
+		new EnvironmentPlugin({
+			GGG: 'ggg-default',
+			HHH: 'hhh'
+		})
+	]
+}, {
+	name: "iii",
+	module: { unknownContextRegExp: /$^/, unknownContextCritical: false },
+	plugins: [
+		new EnvironmentPlugin("III")
 	]
 }];
