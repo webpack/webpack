@@ -208,38 +208,24 @@ rules:
 
 
 
-# add/remove mentioned-sokra label
-- filters:
-    open: true
-    any:
-      in_order:
-        comment_1:
-          author: "^sokra$"
-        comment_2: "@sokra"
-      all:
-        not:
-          comment_1:
-            author: "^sokra$"
-        comment_2: "@sokra"
-  actions:
-    label: "mentioned-sokra"
-- filters:
-    in_order:
-      comment_1: "@sokra"
-      comment_2:
-        author: "^sokra$"
-  actions:
-    label:
-      remove: "mentioned-sokra"
-
-
-
 # add non-master label to pull request to other branch
 - filters:
     pull_request:
       base_ref: "^(?!master)"
   actions:
     label: "PR: non-master"
+
+
+
+# add small label to small pull requests
+- filters:
+    open: true
+    pull_request:
+      additions: "<= 10"
+      deletions: "<= 10"
+      changed_files: "<= 2"
+  actions:
+    label: "PR: small"
 
 
 
@@ -263,15 +249,3 @@ rules:
         > Don't submit pull request from your own `master` branch. It's recommended to create a feature branch for the PR.
 
         *You don't have to change it for this PR, just make sure to follow this hint the next time you submit a PR.*
-
-
-
-# add small label to small pull requests
-- filters:
-    open: true
-    pull_request:
-      additions: "<= 10"
-      deletions: "<= 10"
-      changed_files: "<= 2"
-  actions:
-    label: "PR: small"
