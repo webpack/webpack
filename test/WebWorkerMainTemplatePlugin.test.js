@@ -9,7 +9,7 @@ describe("WebWorkerMainTemplatePlugin", function() {
 	let env;
 
 	beforeEach(() => {
-		env = {} 
+		env = {};
 	});
 
 	it("has apply function", function() {
