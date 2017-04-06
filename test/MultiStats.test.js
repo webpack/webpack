@@ -5,7 +5,7 @@ const sinon = require("sinon");
 const packageJSON = require("../package.json");
 const MultiStats = require("../lib/MultiStats");
 
-const createStat = function(overides) {
+const createStat = overides => {
 	return Object.assign({
 		hash: "foo",
 		compilation: {

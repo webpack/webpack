@@ -17,7 +17,7 @@ var displayReasons = global.NO_REASONS ? "" : " --display-reasons --display-used
 		if (error !== null && remainingTimes === 1)
 			console.log(error);
 		try {
-			var readme = tc(fs.readFileSync(require("path").join(process.cwd(), "template.md"), "utf-8"), process.cwd(), stdout.replace(/[\r\n]*$/, ""), "min");
+			var readme = tc.replaceResults(fs.readFileSync(require("path").join(process.cwd(), "template.md"), "utf-8"), process.cwd(), stdout.replace(/[\r\n]*$/, ""), "min");
 		} catch(e) {
 			console.log(stderr);
 			throw e;
@@ -29,8 +29,8 @@ var displayReasons = global.NO_REASONS ? "" : " --display-reasons --display-used
 				console.log(stderr);
 			if (error !== null && remainingTimes === 1)
 				console.log(error);
-			readme = tc(readme, process.cwd(), stdout.replace(/[\r\n]*$/, ""));
-			readme = readme.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+			readme = tc.replaceResults(readme, process.cwd(), stdout.replace(/[\r\n]*$/, ""));
+			readme = tc.replaceBase(readme);
 			fs.writeFile("README.md", readme, "utf-8", function() {});
 			if(remainingTimes > 1)
 				doIt(remainingTimes - 1);

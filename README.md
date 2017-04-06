@@ -205,11 +205,14 @@ or are automatically applied via regex from your webpack configuration.
 |<a href="https://github.com/vuejs/vue-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/vue-9.svg"></a>|![vue-npm]|Loads and compiles Vue Components|
 |<a href="https://github.com/JonDum/polymer-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/polymer.svg"></a>|![polymer-npm]|Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules|
 |<a href="https://github.com/TheLarkInn/angular2-template-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/angular-icon-1.svg"></a>|![angular-npm]| Loads and compiles Angular 2 Components|
+|<a href="https://github.com/riot/tag-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/riot.svg"></a>|![riot-npm]| Riot official webpack loader|
+
 
 
 [vue-npm]: https://img.shields.io/npm/v/vue-loader.svg
 [polymer-npm]: https://img.shields.io/npm/v/polymer-loader.svg
 [angular-npm]: https://img.shields.io/npm/v/angular2-template-loader.svg
+[riot-npm]: https://img.shields.io/npm/v/riot-tag-loader.svg
 
 ### Performance
 
@@ -332,7 +335,11 @@ This is how we use the donations:
 
 We had other sources of donations before starting to use OpenCollective (or people that can't donate via OpenCollective). We want to acknowledge these sponsors and backers, but donations were not public and we are not sure of donors want to stay anonymous. So if you want to be in this list, just send a PR.
 
-[Google Angular Team](https://angular.io/), [Architects.io](http://architects.io/), [Microapps](http://microapps.com/)
+[Google Angular Team](https://angular.io/), [Architects.io](http://architects.io/),
+<a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img 
+src="https://static.moonmail.io/moonmail-logo.svg" height="30" alt="MoonMail"></a> 
+<a href="https://monei.net" target="_blank" title="Best payment gateway rates"><img 
+src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 <h2 align="center">Sponsors</h2>
 
