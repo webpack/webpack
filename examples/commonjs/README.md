@@ -37,46 +37,47 @@ exports.add = function() {
 
 # js/output.js
 
-<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -87,7 +88,7 @@ exports.add = function() {
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -96,19 +97,21 @@ exports.add = function() {
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 ```
+
 </details>
+
 ``` javascript
 /******/ ([
 /* 0 */
@@ -117,21 +120,34 @@ exports.add = function() {
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-var add = __webpack_require__(/*! ./math */ 1).add;
+var add = __webpack_require__(/*! ./math */ 2).add;
 exports.increment = function(val) {
     return add(val, 1);
 };
 
-/***/ },
+/***/ }),
 /* 1 */
+/* unknown exports provided */
+/* all exports used */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/***/ (function(module, exports, __webpack_require__) {
+
+var inc = __webpack_require__(/*! ./increment */ 0).increment;
+var a = 1;
+inc(a); // 2
+
+/***/ }),
+/* 2 */
 /* unknown exports provided */
 /* all exports used */
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 exports.add = function() {
     var sum = 0, i = 0, args = arguments, l = args.length;
@@ -141,20 +157,7 @@ exports.add = function() {
     return sum;
 };
 
-/***/ },
-/* 2 */
-/* unknown exports provided */
-/* all exports used */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/***/ function(module, exports, __webpack_require__) {
-
-var inc = __webpack_require__(/*! ./increment */ 0).increment;
-var a = 1;
-inc(a); // 2
-
-/***/ }
+/***/ })
 /******/ ]);
 ```
 
@@ -163,33 +166,33 @@ inc(a); // 2
 ## Uncompressed
 
 ```
-Hash: e1255027e5264a895afa
-Version: webpack 2.2.0-rc.2
+Hash: 1318ed7f2e042a045e6d
+Version: webpack 2.3.2
     Asset     Size  Chunks             Chunk Names
-output.js  3.42 kB       0  [emitted]  main
+output.js  3.54 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 329 bytes [entry] [rendered]
-    > main [2] ./example.js 
+    > main [1] ./example.js 
     [0] ./increment.js 98 bytes {0} [built]
-        cjs require ./increment [2] ./example.js 1:10-32
-    [1] ./math.js 162 bytes {0} [built]
+        cjs require ./increment [1] ./example.js 1:10-32
+    [1] ./example.js 69 bytes {0} [built]
+    [2] ./math.js 162 bytes {0} [built]
         cjs require ./math [0] ./increment.js 1:10-27
-    [2] ./example.js 69 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: e1255027e5264a895afa
-Version: webpack 2.2.0-rc.2
+Hash: 1318ed7f2e042a045e6d
+Version: webpack 2.3.2
     Asset       Size  Chunks             Chunk Names
-output.js  713 bytes       0  [emitted]  main
+output.js  705 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 329 bytes [entry] [rendered]
-    > main [2] ./example.js 
+    > main [1] ./example.js 
     [0] ./increment.js 98 bytes {0} [built]
-        cjs require ./increment [2] ./example.js 1:10-32
-    [1] ./math.js 162 bytes {0} [built]
+        cjs require ./increment [1] ./example.js 1:10-32
+    [1] ./example.js 69 bytes {0} [built]
+    [2] ./math.js 162 bytes {0} [built]
         cjs require ./math [0] ./increment.js 1:10-27
-    [2] ./example.js 69 bytes {0} [built]
 ```

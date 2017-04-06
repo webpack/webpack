@@ -707,6 +707,19 @@
           "type": "object"
         }
       ]
+    },
+    "warning-filters-types": {
+      "anyOf": [
+        {
+          "instanceof": "RegExp"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "instanceof": "Function"
+        }
+      ]
     }
   },
   "properties": {
@@ -949,6 +962,20 @@
             "source": {
               "type": "boolean",
               "description": "add the source code of modules"
+            },
+            "warningsFilter": {
+              "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions",
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/warning-filters-types"
+                  }
+                },
+                {
+                  "$ref": "#/definitions/warning-filters-types"
+                }
+              ]
             },
             "errorDetails": {
               "type": "boolean",

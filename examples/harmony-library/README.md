@@ -27,46 +27,47 @@ module.exports = {
 		root["MyLibrary"] = factory();
 })(this, function() {
 ```
-<details><summary>`return /******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+<details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` js
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -77,7 +78,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -86,19 +87,21 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
+
 </details>
+
 ``` js
 /******/ ([
 /* 0 */
@@ -107,20 +110,20 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-/* harmony export (binding) */ __webpack_require__.d(exports, "value", function() { return value; });
-/* harmony export (immutable) */ exports["increment"] = increment;
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "value", function() { return value; });
+/* harmony export (immutable) */ __webpack_exports__["increment"] = increment;
 var value = 0;
 function increment() {
 	value++;
 }
-/* harmony default export */ exports["default"] = "MyLibrary";
+/* harmony default export */ __webpack_exports__["default"] = ("MyLibrary");
 
 
-/***/ }
+/***/ })
 /******/ ]);
 });
 ```
@@ -130,10 +133,10 @@ function increment() {
 ## Uncompressed
 
 ```
-Hash: 0f7e47813bc19e17e857
-Version: webpack 2.2.0-rc.2
-           Asset     Size  Chunks             Chunk Names
-MyLibrary.umd.js  3.42 kB       0  [emitted]  main
+Hash: 313bc0b3685e952e6c32
+Version: webpack 2.3.2
+           Asset    Size  Chunks             Chunk Names
+MyLibrary.umd.js  3.6 kB       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -144,8 +147,8 @@ chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 0f7e47813bc19e17e857
-Version: webpack 2.2.0-rc.2
+Hash: 313bc0b3685e952e6c32
+Version: webpack 2.3.2
            Asset       Size  Chunks             Chunk Names
 MyLibrary.umd.js  898 bytes       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
