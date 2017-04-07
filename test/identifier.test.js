@@ -13,7 +13,7 @@ describe("util/identifier", () => {
 			beforeEach(() => {
 				context = "/some/dir/";
 				pathConstruct = "/some/dir/to/somwhere|some/other/dir!../more/dir";
-				expected = `${path.relative("/some/dir/", "/some/dir/to/somwhere")}|some/other/dir!../more/dir`;
+				expected = "to/somwhere|some/other/dir!../more/dir";
 			});
 
 			it("computes the correct relative results for the path construct", () => {
