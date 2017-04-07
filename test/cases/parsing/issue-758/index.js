@@ -48,3 +48,15 @@ it("should not call error callback on exception thrown in require callback", fun
 		done();
 	});
 });
+
+it("should call error callback when there is an error loading the chunk", function(done) {
+	var temp = __webpack_require__.e;
+	__webpack_require__.e = function() { return Promise.reject('fake chunk load error'); };
+	require.ensure(['./file'], function(){
+		var file = require('./file');
+	}, function(error) {
+		error.should.be.eql('fake chunk load error');
+		done();
+	});
+	__webpack_require__.e = temp;
+});
