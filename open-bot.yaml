@@ -359,15 +359,15 @@ rules:
       user: "{{comment.actor.login}}"
   actions:
     new_issue:
-      target: "{{comment_match.[1]}}"
+      target: "{{{comment_match.[1]}}}"
       body: |-
-        {{issue.body}}
+        {{{issue.body}}}
 
         ---
 
         This issue was moved from {{owner}}/{{repo}}#{{issue.number}} by @{{comment.actor.login}}. Orginal issue was by @{{issue.user.login}}.
 
-        {{comment_match.[2]}}
+        {{{comment_match.[2]}}}
     comment:
       identifier: moved-by-bot
       message: |-
