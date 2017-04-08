@@ -353,7 +353,7 @@ rules:
     comment: "\\s*@webpack-bot\\s+move\\s+(?:to\\s+)?([a-z0-9_\\-]+/[a-z0-9_\\-]+)\\s*([\\s\\S]*)$"
     not:
       comment_1:
-        message: "moved\\-by\\-bot"
+        matching: "moved\\-by\\-bot"
         author: "."
     permission:
       user: "{{comment.actor.login}}"
@@ -362,6 +362,7 @@ rules:
       target: "{{comment_match.[1]}}"
       body: |-
         {{issue.body}}
+
         ---
 
         This issue was moved from {{owner}}/{{repo}}#{{issue.number}} by @{{comment.actor.login}}. Orginal issue was by @{{issue.user.login}}.
