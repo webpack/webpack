@@ -16,7 +16,8 @@ getTemplate("b", function(b) {
 
 # js/output.js
 
-<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
@@ -39,51 +40,58 @@ getTemplate("b", function(b) {
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
 /******/ 		while(resolves.length)
 /******/ 			resolves.shift()();
-
+/******/
 /******/ 	};
-
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// objects to store loaded and loading chunks
 /******/ 	var installedChunks = {
 /******/ 		1: 0
 /******/ 	};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
+/******/
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
 /******/ 		if(installedChunks[chunkId] === 0)
 /******/ 			return Promise.resolve();
-
-/******/ 		// an Promise means "currently loading".
+/******/
+/******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
 /******/ 			return installedChunks[chunkId][2];
 /******/ 		}
+/******/
+/******/ 		// setup Promise in chunk cache
+/******/ 		var promise = new Promise(function(resolve, reject) {
+/******/ 			installedChunks[chunkId] = [resolve, reject];
+/******/ 		});
+/******/ 		installedChunks[chunkId][2] = promise;
+/******/
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
@@ -91,7 +99,7 @@ getTemplate("b", function(b) {
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
-
+/******/
 /******/ 		if (__webpack_require__.nc) {
 /******/ 			script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 		}
@@ -108,25 +116,20 @@ getTemplate("b", function(b) {
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
-
-/******/ 		var promise = new Promise(function(resolve, reject) {
-/******/ 			installedChunks[chunkId] = [resolve, reject];
-/******/ 		});
-/******/ 		installedChunks[chunkId][2] = promise;
-
 /******/ 		head.appendChild(script);
+/******/
 /******/ 		return promise;
 /******/ 	};
-
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -137,7 +140,7 @@ getTemplate("b", function(b) {
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -146,36 +149,37 @@ getTemplate("b", function(b) {
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-
+/******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
-
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
+
 </details>
+
 ``` javascript
 /******/ ([
-/* 0 */,
-/* 1 */
+/* 0 */
 /* unknown exports provided */
 /* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 function getTemplate(templateName, callback) {
 	__webpack_require__.e/* require.ensure */(0).then((function(require) {
-		callback(__webpack_require__(/*! ../require.context/templates */ 0)("./"+templateName)());
+		callback(__webpack_require__(/*! ../require.context/templates */ 1)("./"+templateName)());
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }
 getTemplate("a", function(a) {
@@ -185,7 +189,7 @@ getTemplate("b", function(b) {
 	console.log(b);
 });
 
-/***/ }
+/***/ })
 /******/ ]);
 ```
 
@@ -193,13 +197,14 @@ getTemplate("b", function(b) {
 
 ``` javascript
 webpackJsonp([0],[
-/* 0 */
+/* 0 */,
+/* 1 */
 /* unknown exports provided */
 /* all exports used */
 /*!*********************************************!*\
   !*** ../require.context/templates ^\.\/.*$ ***!
   \*********************************************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 var map = {
 	"./a": 2,
@@ -214,7 +219,7 @@ function webpackContext(req) {
 };
 function webpackContextResolve(req) {
 	var id = map[req];
-	if(!(id + 1)) // check for number
+	if(!(id + 1)) // check for number or string
 		throw new Error("Cannot find module '" + req + "'.");
 	return id;
 };
@@ -223,50 +228,48 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 0;
+webpackContext.id = 1;
 
-
-/***/ },
-/* 1 */,
+/***/ }),
 /* 2 */
 /* unknown exports provided */
 /* all exports used */
 /*!*****************************************!*\
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 module.exports = function() {
 	return "This text was generated by template A";
 }
 
-/***/ },
+/***/ }),
 /* 3 */
 /* unknown exports provided */
 /* all exports used */
 /*!*****************************************!*\
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 module.exports = function() {
 	return "This text was generated by template B";
 }
 
-/***/ },
+/***/ }),
 /* 4 */
 /* unknown exports provided */
 /* all exports used */
 /*!*****************************************!*\
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 module.exports = function() {
 	return "This text was generated by template C";
 }
 
-/***/ }
+/***/ })
 ]);
 ```
 
@@ -275,53 +278,53 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: d11df36bfcb331710ba2
-Version: webpack 2.2.0-rc.2
+Hash: f67ab883501eec17d2fb
+Version: webpack 2.3.2
       Asset     Size  Chunks             Chunk Names
-0.output.js  1.83 kB       0  [emitted]  
-  output.js  6.07 kB       1  [emitted]  main
+0.output.js  1.85 kB       0  [emitted]  
+  output.js   6.3 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 463 bytes {1} [rendered]
-    > [1] ./example.js 2:1-4:3
-    [0] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
-        cjs require context ../require.context/templates [1] ./example.js 3:11-64
+    > [0] ./example.js 2:1-4:3
+    [1] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
+        cjs require context ../require.context/templates [0] ./example.js 3:11-64
     [2] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a [0] ../require.context/templates ^\.\/.*$
-        context element ./a.js [0] ../require.context/templates ^\.\/.*$
+        context element ./a [1] ../require.context/templates ^\.\/.*$ ./a
+        context element ./a.js [1] ../require.context/templates ^\.\/.*$ ./a.js
     [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b [0] ../require.context/templates ^\.\/.*$
-        context element ./b.js [0] ../require.context/templates ^\.\/.*$
+        context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
+        context element ./b.js [1] ../require.context/templates ^\.\/.*$ ./b.js
     [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c [0] ../require.context/templates ^\.\/.*$
-        context element ./c.js [0] ../require.context/templates ^\.\/.*$
+        context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
+        context element ./c.js [1] ../require.context/templates ^\.\/.*$ ./c.js
 chunk    {1} output.js (main) 276 bytes [entry] [rendered]
-    > main [1] ./example.js 
-    [1] ./example.js 276 bytes {1} [built]
+    > main [0] ./example.js 
+    [0] ./example.js 276 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: d11df36bfcb331710ba2
-Version: webpack 2.2.0-rc.2
+Hash: f67ab883501eec17d2fb
+Version: webpack 2.3.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  544 bytes       0  [emitted]  
   output.js    1.51 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 463 bytes {1} [rendered]
-    > [1] ./example.js 2:1-4:3
-    [0] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
-        cjs require context ../require.context/templates [1] ./example.js 3:11-64
+    > [0] ./example.js 2:1-4:3
+    [1] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
+        cjs require context ../require.context/templates [0] ./example.js 3:11-64
     [2] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a [0] ../require.context/templates ^\.\/.*$
-        context element ./a.js [0] ../require.context/templates ^\.\/.*$
+        context element ./a [1] ../require.context/templates ^\.\/.*$ ./a
+        context element ./a.js [1] ../require.context/templates ^\.\/.*$ ./a.js
     [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b [0] ../require.context/templates ^\.\/.*$
-        context element ./b.js [0] ../require.context/templates ^\.\/.*$
+        context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
+        context element ./b.js [1] ../require.context/templates ^\.\/.*$ ./b.js
     [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c [0] ../require.context/templates ^\.\/.*$
-        context element ./c.js [0] ../require.context/templates ^\.\/.*$
+        context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
+        context element ./c.js [1] ../require.context/templates ^\.\/.*$ ./c.js
 chunk    {1} output.js (main) 276 bytes [entry] [rendered]
-    > main [1] ./example.js 
-    [1] ./example.js 276 bytes {1} [built]
+    > main [0] ./example.js 
+    [0] ./example.js 276 bytes {1} [built]
 ```

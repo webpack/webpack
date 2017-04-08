@@ -1,24 +1,17 @@
-var should = require("should");
+/* globals describe, before, it */
+"use strict";
 
-var path = require("path");
-var webpack = require("../lib/webpack");
+const should = require("should");
+const path = require("path");
 
-var RecordIdsPlugin = require("../lib/RecordIdsPlugin");
+const webpack = require("../lib/webpack");
+const identifierUtils = require("../lib/util/identifier");
 
-function makeRelative(compiler, identifier) {
-	var context = compiler.context;
-	return identifier.split("|").map(function(str) {
-		return str.split("!").map(function(str) {
-			return path.relative(context, str);
-		}).join("!");
-	}).join("|");
-}
+describe("RecordIdsPlugin", () => {
 
-describe("RecordIdsPlugin", function() {
+	let compiler;
 
-	var compiler;
-
-	before(function() {
+	before(() => {
 		compiler = webpack({
 			entry: "./nodetest/entry",
 			context: path.join(__dirname, "fixtures"),
@@ -28,21 +21,19 @@ describe("RecordIdsPlugin", function() {
 			}
 		});
 
-		compiler.plugin("compilation", function(compilation, callback) {
-			compilation.plugin("should-record", function() {
-				return true;
-			});
+		compiler.plugin("compilation", (compilation, callback) => {
+			compilation.plugin("should-record", () => true);
 		});
 	});
 
-	it("should cache identifiers", function(done) {
-		compiler.compile(function(err, compilation) {
+	it("should cache identifiers", (done) => {
+		compiler.compile((err, compilation) => {
 			if(err) done(err);
-			var pass = true;
-			for(var i = 0; i < compilation.modules.length; i++) {
+			let pass = true;
+			for(let i = 0; i < compilation.modules.length; i++) {
 				try {
 					should.exist(compilation.modules[i].portableId);
-					compilation.modules[i].portableId.should.equal(makeRelative(compiler, compilation.modules[i].identifier()));
+					compilation.modules[i].portableId.should.equal(identifierUtils.makePathsRelative(compiler.context, compilation.modules[i].identifier()));
 				} catch(e) {
 					done(e);
 					pass = false;

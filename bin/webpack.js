@@ -5,6 +5,7 @@
 	Author Tobias Koppers @sokra
 */
 var path = require("path");
+
 // Local version replace global one
 try {
 	var localWebpack = require.resolve(path.join(process.cwd(), "node_modules", "webpack", "bin", "webpack.js"));
@@ -14,7 +15,7 @@ try {
 } catch(e) {}
 var yargs = require("yargs")
 	.usage("webpack " + require("../package.json").version + "\n" +
-		"Usage: https://webpack.github.io/docs/cli.html\n" +
+		"Usage: https://webpack.js.org/api/cli/\n" +
 		"Usage without config file: webpack <entry> [<entry>] <output>\n" +
 		"Usage with config file: webpack");
 
@@ -171,14 +172,19 @@ function processOptions(options) {
 		return;
 	}
 
-	var firstOptions = Array.isArray(options) ? (options[0] || {}) : options;
+	var firstOptions = [].concat(options)[0];
+	var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
 
-	if(typeof options.stats === "boolean" || typeof options.stats === "string") {
-		var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
-		options.stats = statsPresetToOptions(options.stats);
+	var outputOptions = options.stats;
+	if(typeof outputOptions === "boolean" || typeof outputOptions === "string") {
+		outputOptions = statsPresetToOptions(outputOptions);
+	} else if(!outputOptions) {
+		outputOptions = {};
 	}
-
-	var outputOptions = Object.create(options.stats || firstOptions.stats || {});
+	outputOptions = Object.create(outputOptions);
+	if(Array.isArray(options) && !outputOptions.children) {
+		outputOptions.children = options.map(o => o.stats);
+	}
 	if(typeof outputOptions.context === "undefined")
 		outputOptions.context = firstOptions.context;
 
@@ -260,7 +266,7 @@ function processOptions(options) {
 		});
 
 		if(!outputOptions.exclude)
-			outputOptions.exclude = ["node_modules", "bower_components", "jam", "components"];
+			outputOptions.exclude = ["node_modules", "bower_components", "components"];
 
 		if(argv["display-modules"]) {
 			outputOptions.maxModules = Infinity;
@@ -339,9 +345,8 @@ function processOptions(options) {
 			});
 		}
 	}
-	if(options.watch) {
-		var primaryOptions = !Array.isArray(options) ? options : options[0];
-		var watchOptions = primaryOptions.watchOptions || primaryOptions.watch || {};
+	if(firstOptions.watch || options.watch) {
+		var watchOptions = firstOptions.watchOptions || firstOptions.watch || options.watch || {};
 		if(watchOptions.stdin) {
 			process.stdin.on("end", function() {
 				process.exit(0); // eslint-disable-line

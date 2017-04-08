@@ -5,8 +5,8 @@ var moduleConfig = {
 	loaders: [
 		{
 			test: /\.css$/,
-			loader: ExtractTextPlugin.extract({
-				fallbackLoader: "style-loader",
+			use: ExtractTextPlugin.extract({
+				fallback: "style-loader",
 				loader: "css-loader"
 			})
 		}

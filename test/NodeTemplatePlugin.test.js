@@ -1,11 +1,13 @@
-var should = require("should");
+"use strict";
 
-var path = require("path");
-var webpack = require("../lib/webpack");
+const should = require("should");
 
-describe("NodeTemplatePlugin", function() {
+const path = require("path");
+const webpack = require("../lib/webpack");
 
-	it("should compile and run a simple module", function(done) {
+describe("NodeTemplatePlugin", () => {
+
+	it("should compile and run a simple module", (done) => {
 		webpack({
 			context: path.join(__dirname, "fixtures", "nodetest"),
 			target: "node",
@@ -20,16 +22,16 @@ describe("NodeTemplatePlugin", function() {
 			plugins: [
 				new webpack.optimize.UglifyJsPlugin()
 			]
-		}, function(err, stats) {
+		}, (err, stats) => {
 			if(err) return err;
 			stats.hasErrors().should.be.not.ok();
 			stats.hasWarnings().should.be.not.ok();
-			var result = require("./js/result").abc;
+			const result = require("./js/result").abc;
 			result.nextTick.should.be.equal(process.nextTick);
 			result.fs.should.be.equal(require("fs"));
-			result.loadChunk(456, function(chunk) {
+			result.loadChunk(456, (chunk) => {
 				chunk.should.be.eql(123);
-				result.loadChunk(567, function(chunk) {
+				result.loadChunk(567, (chunk) => {
 					chunk.should.be.eql({
 						a: 1
 					});
@@ -39,7 +41,7 @@ describe("NodeTemplatePlugin", function() {
 		});
 	});
 
-	it("should compile and run a simple module in single mode", function(done) {
+	it("should compile and run a simple module in single mode", (done) => {
 		webpack({
 			context: path.join(__dirname, "fixtures", "nodetest"),
 			target: "node",
@@ -58,17 +60,17 @@ describe("NodeTemplatePlugin", function() {
 				}),
 				new webpack.optimize.UglifyJsPlugin()
 			]
-		}, function(err, stats) {
+		}, (err, stats) => {
 			if(err) return err;
 			stats.hasErrors().should.be.not.ok();
-			var result = require("./js/result2");
+			const result = require("./js/result2");
 			result.nextTick.should.be.equal(process.nextTick);
 			result.fs.should.be.equal(require("fs"));
-			var sameTick = true;
-			result.loadChunk(456, function(chunk) {
+			const sameTick = true;
+			result.loadChunk(456, (chunk) => {
 				chunk.should.be.eql(123);
 				sameTick.should.be.eql(true);
-				result.loadChunk(567, function(chunk) {
+				result.loadChunk(567, (chunk) => {
 					chunk.should.be.eql({
 						a: 1
 					});

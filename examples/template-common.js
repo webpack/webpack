@@ -2,8 +2,8 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
-var fs = require("fs");
-var path = require("path");
+const fs = require("fs");
+const path = require("path");
 
 function lessStrict(regExpStr) {
 	regExpStr = regExpStr
@@ -12,15 +12,14 @@ function lessStrict(regExpStr) {
 	return regExpStr;
 }
 
-var runtimeRegexp = /(```\s*(?:js|javascript)\n)?(.*)(\/\*\*\*\*\*\*\/ \(function\(modules\) \{ \/\/ webpackBootstrap\n(?:.|\n)*?\n\/\*\*\*\*\*\*\/ \}\)\n\/\**\/\n)/;
-var timeRegexp = /\s*Time: \d+ms/g;
+const runtimeRegexp = /(```\s*(?:js|javascript)\n)?(.*)(\/\*\*\*\*\*\*\/ \(function\(modules\) \{ \/\/ webpackBootstrap\n(?:.|\n)*?\n\/\*\*\*\*\*\*\/ \}\)\n\/\**\/\n)/;
+const timeRegexp = /\s*Time: \d+ms/g;
 
-module.exports = function(template, baseDir, stdout, prefix) {
+exports.replaceBase = function replaceBase(template) {
 
-	var regexp = new RegExp("\\{\\{" + (prefix ? prefix+":" : "") + "([^:\\}]+)\\}\\}", "g")
-	var cwd = process.cwd();
-	var webpack = path.join(__dirname, "..");
-	var webpackParent = path.join(__dirname, "..", "..");
+	let cwd = process.cwd();
+	let webpack = path.join(__dirname, "..");
+	let webpackParent = path.join(__dirname, "..", "..");
 	cwd = lessStrict(cwd.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
 	cwd = new RegExp(cwd, "g");
 	webpack = lessStrict(webpack.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
@@ -28,22 +27,30 @@ module.exports = function(template, baseDir, stdout, prefix) {
 	webpackParent = lessStrict(webpackParent.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
 	webpackParent = new RegExp(webpackParent, "g");
 
+	return template
+		.replace(/\r\n/g, "\n")
+		.replace(/\r/g, "\n")
+		.replace(cwd, ".")
+		.replace(webpack, "(webpack)")
+		.replace(webpackParent, "(webpack)/~")
+		.replace(timeRegexp, "")
+		.replace(/\.chunkhash\./g, ".[chunkhash].")
+		.replace(runtimeRegexp, function(match) {
+			match = runtimeRegexp.exec(match);
+			const prefix = match[1] ? "" : "```\n";
+			const inner = match[1] ? match[1] : "``` js\n";
+			return prefix + "<details><summary><code>" + match[2] + "/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>\n\n" + inner + match[2] + match[3] + "```\n\n</details>\n\n" + inner;
+		});
+}
+
+exports.replaceResults = function replaceResults(template, baseDir, stdout, prefix) {
+	const regexp = new RegExp("\\{\\{" + (prefix ? prefix+":" : "") + "([^:\\}]+)\\}\\}", "g")
+
 	return template.replace(regexp, function(match) {
 		match = match.substr(2 + (prefix ? prefix.length+1 : 0), match.length - 4 - (prefix ? prefix.length+1 : 0));
 		if(match === "stdout")
 			return stdout;
 		return fs.readFileSync(path.join(baseDir, match), "utf-8").replace(/[\r\n]*$/, "");
-	})
-		.replace(/\r\n/g, "\n")
-		.replace(cwd, ".")
-		.replace(webpack, "(webpack)")
-		.replace(webpackParent, "(webpack)/~")
-		.replace(timeRegexp, "")
-		.replace(runtimeRegexp, function(match) {
-			match = runtimeRegexp.exec(match);
-			var prefix = match[1] ? "" : "```\n";
-			var inner = match[1] ? match[1] : "``` js\n";
-			return prefix + "<details><summary>`" + match[2] + "/******/ (function(modules) { /* webpackBootstrap */ })`</summary>\n" + inner + match[2] + match[3] + "```\n</details>\n" + inner;
-		});
+	});
 
 }

@@ -16,7 +16,9 @@ var useArray = createFunctionArrayFromUseArray([
 	{
 		loader: "./loader",
 		options: {
-			get: function() { return "second-3"; }
+			get: function() {
+				return "second-3";
+			}
 		}
 	}
 ]);
@@ -52,8 +54,8 @@ module.exports = {
 					loader: "./loader",
 					options: "third"
 				}
-			]}
+			] }
 		]
 	}
-}
+};
 

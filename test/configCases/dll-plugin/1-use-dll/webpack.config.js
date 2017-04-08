@@ -1,4 +1,3 @@
-var path = require("path");
 var webpack = require("../../../../");
 
 module.exports = {
@@ -8,7 +7,8 @@ module.exports = {
 			name: "../0-create-dll/dll.js",
 			scope: "dll",
 			sourceType: "commonjs2",
-			extensions: ['.js', '.jsx']
-		})
+			extensions: [".js", ".jsx"]
+		}),
+		new webpack.NamedModulesPlugin()
 	]
-}
+};

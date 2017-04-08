@@ -42,7 +42,7 @@ module.exports = {
 			}
 		}
 	]
-}
+};
 ```
 
 # js/output.js
@@ -59,46 +59,47 @@ module.exports = {
 	}
 })(this, function(__WEBPACK_EXTERNAL_MODULE_0__, __WEBPACK_EXTERNAL_MODULE_1__) {
 ```
-<details><summary>`return /******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+<details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` js
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -109,7 +110,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -118,19 +119,21 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 ```
+
 </details>
+
 ``` js
 /******/ ([
 /* 0 */
@@ -139,36 +142,36 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!**********************!*\
   !*** external "add" ***!
   \**********************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE_0__;
 
-/***/ },
+/***/ }),
 /* 1 */
 /* unknown exports provided */
 /* all exports used */
 /*!***************************************************************************************************************!*\
   !*** external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} ***!
   \***************************************************************************************************************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 
-/***/ },
+/***/ }),
 /* 2 */
 /* unknown exports provided */
 /* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 var add = __webpack_require__(/*! add */ 0);
 var subtract = __webpack_require__(/*! subtract */ 1);
 
 exports.exampleValue = subtract(add(42, 2), 2);
 
-/***/ }
+/***/ })
 /******/ ]);
 });
 ```
@@ -178,10 +181,10 @@ exports.exampleValue = subtract(add(42, 2), 2);
 ## Uncompressed
 
 ```
-Hash: db7da8a5fdfceab24e67
-Version: webpack 2.2.0-rc.2
+Hash: 0b46eba3c061e1157fa9
+Version: webpack 2.3.2
     Asset     Size  Chunks             Chunk Names
-output.js  4.16 kB       0  [emitted]  main
+output.js  4.28 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > main [2] ./example.js 
@@ -192,8 +195,8 @@ chunk    {0} output.js (main) 197 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: db7da8a5fdfceab24e67
-Version: webpack 2.2.0-rc.2
+Hash: 0b46eba3c061e1157fa9
+Version: webpack 2.3.2
     Asset  Size  Chunks             Chunk Names
 output.js  1 kB       0  [emitted]  main
 Entrypoint main = output.js

@@ -1,10 +1,12 @@
-var should = require("should");
+"use strict";
 
-var Parser = require("../lib/Parser");
-var BasicEvaluatedExpression = require("../lib/BasicEvaluatedExpression");
+const should = require("should");
 
-describe("Parser", function() {
-	var testCases = {
+const Parser = require("../lib/Parser");
+const BasicEvaluatedExpression = require("../lib/BasicEvaluatedExpression");
+
+describe("Parser", () => {
+	const testCases = {
 		"call ident": [
 			function() {
 				abc("test");
@@ -73,6 +75,16 @@ describe("Parser", function() {
 				})();
 			}, {}
 		],
+		"const definition": [
+			function() {
+				let abc, cde, fgh;
+				abc("test");
+				cde.abc("test");
+				cde.ddd.abc("test");
+				fgh;
+				fgh.sub;
+			}, {}
+		],
 		"var definition": [
 			function() {
 				var abc, cde, fgh;
@@ -116,6 +128,14 @@ describe("Parser", function() {
 				fgh: ["", "test ttt", "test e"]
 			}
 		],
+		"renaming with const": [
+			function() {
+				const xyz = abc;
+				xyz("test");
+			}, {
+				abc: ["test"]
+			}
+		],
 		"renaming with var": [
 			function() {
 				var xyz = abc;
@@ -126,8 +146,7 @@ describe("Parser", function() {
 		],
 		"renaming with assignment": [
 			function() {
-				var xyz;
-				xyz = abc;
+				const xyz = abc;
 				xyz("test");
 			}, {
 				abc: ["test"]
@@ -154,73 +173,71 @@ describe("Parser", function() {
 		],
 	};
 
-	Object.keys(testCases).forEach(function(name) {
-		it("should parse " + name, function() {
-			var source = testCases[name][0].toString();
+	Object.keys(testCases).forEach((name) => {
+		it("should parse " + name, () => {
+			let source = testCases[name][0].toString();
 			source = source.substr(13, source.length - 14).trim();
-			var state = testCases[name][1];
+			const state = testCases[name][1];
 
-			var testParser = new Parser({});
-			testParser.plugin("can-rename abc", function(expr) {
+			const testParser = new Parser({});
+			testParser.plugin("can-rename abc", (expr) => true);
+			testParser.plugin("call abc", (expr) => {
+				if(!testParser.state.abc) testParser.state.abc = [];
+				testParser.state.abc.push(testParser.parseString(expr.arguments[0]));
 				return true;
 			});
-			testParser.plugin("call abc", function(expr) {
-				if(!this.state.abc) this.state.abc = []
-				this.state.abc.push(this.parseString(expr.arguments[0]));
+			testParser.plugin("call cde.abc", (expr) => {
+				if(!testParser.state.cdeabc) testParser.state.cdeabc = [];
+				testParser.state.cdeabc.push(testParser.parseString(expr.arguments[0]));
 				return true;
 			});
-			testParser.plugin("call cde.abc", function(expr) {
-				if(!this.state.cdeabc) this.state.cdeabc = []
-				this.state.cdeabc.push(this.parseString(expr.arguments[0]));
+			testParser.plugin("call cde.ddd.abc", (expr) => {
+				if(!testParser.state.cdedddabc) testParser.state.cdedddabc = [];
+				testParser.state.cdedddabc.push(testParser.parseString(expr.arguments[0]));
 				return true;
 			});
-			testParser.plugin("call cde.ddd.abc", function(expr) {
-				if(!this.state.cdedddabc) this.state.cdedddabc = []
-				this.state.cdedddabc.push(this.parseString(expr.arguments[0]));
+			testParser.plugin("expression fgh", (expr) => {
+				if(!testParser.state.fgh) testParser.state.fgh = [];
+				testParser.state.fgh.push(testParser.scope.definitions.join(" "));
 				return true;
 			});
-			testParser.plugin("expression fgh", function(expr) {
-				if(!this.state.fgh) this.state.fgh = []
-				this.state.fgh.push(this.scope.definitions.join(" "));
+			testParser.plugin("expression fgh.sub", (expr) => {
+				if(!testParser.state.fghsub) testParser.state.fghsub = [];
+				testParser.state.fghsub.push(testParser.scope.inTry ? "try" : "notry");
 				return true;
 			});
-			testParser.plugin("expression fgh.sub", function(expr) {
-				if(!this.state.fghsub) this.state.fghsub = []
-				this.state.fghsub.push(this.scope.inTry ? "try" : "notry");
+			testParser.plugin("expression memberExpr", (expr) => {
+				if(!testParser.state.expressions) testParser.state.expressions = [];
+				testParser.state.expressions.push(expr.name);
 				return true;
 			});
-			testParser.plugin("expression memberExpr", function(expr) {
-				if(!this.state.expressions) this.state.expressions = []
-				this.state.expressions.push(expr.name);
-				return true;
-			});
-			var actual = testParser.parse(source);
+			const actual = testParser.parse(source);
 			should.strictEqual(typeof actual, "object");
 			actual.should.be.eql(state);
 		});
 	});
 
-	it("should parse comments", function() {
-		var source = "//comment1\n/*comment2*/";
-		var state = [{
-			type: 'Line',
-			value: 'comment1'
+	it("should parse comments", () => {
+		const source = "//comment1\n/*comment2*/";
+		const state = [{
+			type: "Line",
+			value: "comment1"
 		}, {
-			type: 'Block',
-			value: 'comment2'
+			type: "Block",
+			value: "comment2"
 		}];
 
-		var testParser = new Parser({});
+		const testParser = new Parser({});
 
-		testParser.plugin("program", function(ast, comments) {
-			if(!this.state.comments) this.state.comments = comments;
+		testParser.plugin("program", (ast, comments) => {
+			if(!testParser.state.comments) testParser.state.comments = comments;
 			return true;
 		});
 
-		var actual = testParser.parse(source);
+		const actual = testParser.parse(source);
 		should.strictEqual(typeof actual, "object");
 		should.strictEqual(typeof actual.comments, "object");
-		actual.comments.forEach(function(element, index) {
+		actual.comments.forEach((element, index) => {
 			should.strictEqual(typeof element.type, "string");
 			should.strictEqual(typeof element.value, "string");
 			element.type.should.be.eql(state[index].type);
@@ -228,22 +245,20 @@ describe("Parser", function() {
 		});
 	});
 
-	describe("expression evaluation", function() {
+	describe("expression evaluation", () => {
 		function evaluateInParser(source) {
-			var parser = new Parser();
-			parser.plugin("call test", function(expr) {
-				this.state.result = this.evaluateExpression(expr.arguments[0]);
+			const parser = new Parser();
+			parser.plugin("call test", (expr) => {
+				parser.state.result = parser.evaluateExpression(expr.arguments[0]);
 			});
-			parser.plugin("evaluate Identifier aString", function(expr) {
-				return new BasicEvaluatedExpression().setString("aString").setRange(expr.range);
-			});
-			parser.plugin("evaluate Identifier b.Number", function(expr) {
-				return new BasicEvaluatedExpression().setNumber(123).setRange(expr.range);
-			});
+			parser.plugin("evaluate Identifier aString", (expr) =>
+				new BasicEvaluatedExpression().setString("aString").setRange(expr.range));
+			parser.plugin("evaluate Identifier b.Number", (expr) =>
+				new BasicEvaluatedExpression().setNumber(123).setRange(expr.range));
 			return parser.parse("test(" + source + ");").result;
 		}
 
-		var testCases = {
+		const testCases = {
 			"\"strrring\"": "string=strrring",
 			"\"strr\" + \"ring\"": "string=strrring",
 			"\"s\" + (\"trr\" + \"rin\") + \"g\"": "string=strrring",
@@ -279,13 +294,13 @@ describe("Parser", function() {
 			"'abc'[substr](1)": "",
 		};
 
-		Object.keys(testCases).forEach(function(key) {
+		Object.keys(testCases).forEach((key) => {
 
 			function evalExprToString(evalExpr) {
 				if(!evalExpr) {
 					return "null";
 				} else {
-					var result = [];
+					const result = [];
 					if(evalExpr.isString()) result.push("string=" + evalExpr.string);
 					if(evalExpr.isNumber()) result.push("number=" + evalExpr.number);
 					if(evalExpr.isRegExp()) result.push("regExp=" + evalExpr.regExp);
@@ -293,67 +308,67 @@ describe("Parser", function() {
 					if(evalExpr.isArray()) result.push("items=[" + evalExpr.items.map(evalExprToString).join("],[") + "]");
 					if(evalExpr.isWrapped()) result.push("wrapped=[" + evalExprToString(evalExpr.prefix) + "]+[" + evalExprToString(evalExpr.postfix) + "]");
 					if(evalExpr.range) {
-						var start = evalExpr.range[0] - 5;
-						var end = evalExpr.range[1] - 5;
+						const start = evalExpr.range[0] - 5;
+						const end = evalExpr.range[1] - 5;
 						return key.substr(start, end - start) + (result.length > 0 ? " " + result.join(" ") : "");
 					}
 					return result.join(" ");
 				}
 			}
 
-			it("should eval " + key, function() {
-				var evalExpr = evaluateInParser(key);
+			it("should eval " + key, () => {
+				const evalExpr = evaluateInParser(key);
 				evalExprToString(evalExpr).should.be.eql(testCases[key] ? key + " " + testCases[key] : key);
 			});
 		});
 	});
 
-	describe("async/await support", function() {
-		describe("should accept", function() {
-			var cases = {
+	describe("async/await support", () => {
+		describe("should accept", () => {
+			const cases = {
 				"async function": "async function x() {}",
 				"async arrow function": "async () => {}",
 				"await expression": "async function x(y) { await y }"
 			};
-			var parser = new Parser();
-			Object.keys(cases).forEach(function(name) {
-				var expr = cases[name];
-				it(name, function() {
-					var actual = parser.parse(expr);
+			const parser = new Parser();
+			Object.keys(cases).forEach((name) => {
+				const expr = cases[name];
+				it(name, () => {
+					const actual = parser.parse(expr);
 					should.strictEqual(typeof actual, "object");
 				});
 			});
 		});
-		describe("should parse await", function() {
-			var cases = {
+		describe("should parse await", () => {
+			const cases = {
 				"require": [
 					"async function x() { await require('y'); }", {
 						param: "y"
 					}
 				],
 				"System.import": [
-					"async function x() { var y = await System.import('z'); }", {
+					"async function x() { const y = await System.import('z'); }", {
 						param: "z"
 					}
 				]
 			};
 
-			var parser = new Parser();
-			parser.plugin("call require", function(expr) {
-				var param = this.evaluateExpression(expr.arguments[0]);
-				this.state.param = param.string;
+			const parser = new Parser();
+			parser.plugin("call require", (expr) => {
+				const param = parser.evaluateExpression(expr.arguments[0]);
+				parser.state.param = param.string;
 			});
-			parser.plugin("call System.import", function(expr) {
-				var param = this.evaluateExpression(expr.arguments[0]);
-				this.state.param = param.string;
+			parser.plugin("call System.import", (expr) => {
+				const param = parser.evaluateExpression(expr.arguments[0]);
+				parser.state.param = param.string;
 			});
 
-			Object.keys(cases).forEach(function(name) {
-				it(name, function() {
-					var actual = parser.parse(cases[name][0]);
+			Object.keys(cases).forEach((name) => {
+				it(name, () => {
+					const actual = parser.parse(cases[name][0]);
 					actual.should.be.eql(cases[name][1]);
 				});
 			});
 		});
-	})
+	});
 });
