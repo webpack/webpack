@@ -362,6 +362,7 @@ rules:
       target: "{{comment_match.[1]}}"
       body: |-
         {{issue.body}}
+
         ---
 
         This issue was moved from {{owner}}/{{repo}}#{{issue.number}} by @{{comment.actor.login}}. Orginal issue was by @{{issue.user.login}}.
