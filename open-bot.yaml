@@ -353,7 +353,7 @@ rules:
     comment: "\\s*@webpack-bot\\s+move\\s+(?:to\\s+)?([a-z0-9_\\-]+/[a-z0-9_\\-]+)\\s*([\\s\\S]*)$"
     not:
       comment_1:
-        message: "moved\\-by\\-bot"
+        matching: "moved\\-by\\-bot"
         author: "."
     permission:
       user: "{{comment.actor.login}}"
