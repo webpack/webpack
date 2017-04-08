@@ -1,7 +1,7 @@
+/*globals describe it */
 "use strict";
 
-/*globals describe it */
-const should = require("should");
+require("should");
 const path = require("path");
 const fs = require("fs");
 
@@ -37,7 +37,7 @@ describe("Stats", () => {
 			compilers.forEach((c) => {
 				const ifs = c.inputFileSystem;
 				c.inputFileSystem = Object.create(ifs);
-				c.inputFileSystem.readFile = () => {
+				c.inputFileSystem.readFile = function() {
 					const args = Array.prototype.slice.call(arguments);
 					const callback = args.pop();
 					ifs.readFile.apply(ifs, args.concat([(err, result) => {
