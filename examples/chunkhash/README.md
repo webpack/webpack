@@ -36,7 +36,7 @@ module.exports = {
 	},
 	output: {
 		path: path.join(__dirname, "js"),
-		filename: "[name].chunkhash.js",
+		filename: "[name].[chunkhash].js",
 		chunkFilename: "[chunkhash].js"
 	},
 	plugins: [
@@ -144,15 +144,15 @@ __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! .
 
 ```
 Hash: ea635224271deb1b32d9
-Version: webpack 2.3.2
+Version: webpack 2.3.3
                   Asset       Size  Chunks             Chunk Names
 d1359b519c10df30787b.js  237 bytes       0  [emitted]  
 06459c375ec851b0e2ae.js  243 bytes       1  [emitted]  
-    common.chunkhash.js  747 bytes       2  [emitted]  common
-      main.chunkhash.js  654 bytes       3  [emitted]  main
-  manifest.chunkhash.js    5.88 kB       4  [emitted]  manifest
-Entrypoint main = manifest.chunkhash.js common.chunkhash.js main.chunkhash.js
-Entrypoint common = manifest.chunkhash.js common.chunkhash.js
+    common.[chunkhash].js  747 bytes       2  [emitted]  common
+      main.[chunkhash].js  654 bytes       3  [emitted]  main
+  manifest.[chunkhash].js    5.88 kB       4  [emitted]  manifest
+Entrypoint main = manifest.[chunkhash].js common.[chunkhash].js main.[chunkhash].js
+Entrypoint common = manifest.[chunkhash].js common.[chunkhash].js
 chunk    {0} d1359b519c10df30787b.js 29 bytes {3} [rendered]
     > [3] ./example.js 4:0-18
     [2] ./async2.js 29 bytes {0} [built]
@@ -161,32 +161,32 @@ chunk    {1} 06459c375ec851b0e2ae.js 29 bytes {3} [rendered]
     > [3] ./example.js 3:0-18
     [1] ./async1.js 29 bytes {1} [built]
         import() ./async1 [3] ./example.js 3:0-18
-chunk    {2} common.chunkhash.js (common) 97 bytes {4} [initial] [rendered]
+chunk    {2} common.[chunkhash].js (common) 97 bytes {4} [initial] [rendered]
     > common [4] multi ./vendor 
     [0] ./vendor.js 69 bytes {2} [built]
         [exports: default]
         harmony import ./vendor [3] ./example.js 1:0-30
         single entry ./vendor [4] multi ./vendor common:100000
     [4] multi ./vendor 28 bytes {2} [built]
-chunk    {3} main.chunkhash.js (main) 90 bytes {2} [initial] [rendered]
+chunk    {3} main.[chunkhash].js (main) 90 bytes {2} [initial] [rendered]
     > main [3] ./example.js 
     [3] ./example.js 90 bytes {3} [built]
-chunk    {4} manifest.chunkhash.js (manifest) 0 bytes [entry] [rendered]
+chunk    {4} manifest.[chunkhash].js (manifest) 0 bytes [entry] [rendered]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
 Hash: ea635224271deb1b32d9
-Version: webpack 2.3.2
+Version: webpack 2.3.3
                   Asset       Size  Chunks             Chunk Names
 d1359b519c10df30787b.js   38 bytes       0  [emitted]  
 06459c375ec851b0e2ae.js   37 bytes       1  [emitted]  
-    common.chunkhash.js  152 bytes       2  [emitted]  common
-      main.chunkhash.js  166 bytes       3  [emitted]  main
-  manifest.chunkhash.js    1.48 kB       4  [emitted]  manifest
-Entrypoint main = manifest.chunkhash.js common.chunkhash.js main.chunkhash.js
-Entrypoint common = manifest.chunkhash.js common.chunkhash.js
+    common.[chunkhash].js  152 bytes       2  [emitted]  common
+      main.[chunkhash].js  166 bytes       3  [emitted]  main
+  manifest.[chunkhash].js    1.48 kB       4  [emitted]  manifest
+Entrypoint main = manifest.[chunkhash].js common.[chunkhash].js main.[chunkhash].js
+Entrypoint common = manifest.[chunkhash].js common.[chunkhash].js
 chunk    {0} d1359b519c10df30787b.js 29 bytes {3} [rendered]
     > [3] ./example.js 4:0-18
     [2] ./async2.js 29 bytes {0} [built]
@@ -195,15 +195,15 @@ chunk    {1} 06459c375ec851b0e2ae.js 29 bytes {3} [rendered]
     > [3] ./example.js 3:0-18
     [1] ./async1.js 29 bytes {1} [built]
         import() ./async1 [3] ./example.js 3:0-18
-chunk    {2} common.chunkhash.js (common) 97 bytes {4} [initial] [rendered]
+chunk    {2} common.[chunkhash].js (common) 97 bytes {4} [initial] [rendered]
     > common [4] multi ./vendor 
     [0] ./vendor.js 69 bytes {2} [built]
         [exports: default]
         harmony import ./vendor [3] ./example.js 1:0-30
         single entry ./vendor [4] multi ./vendor common:100000
     [4] multi ./vendor 28 bytes {2} [built]
-chunk    {3} main.chunkhash.js (main) 90 bytes {2} [initial] [rendered]
+chunk    {3} main.[chunkhash].js (main) 90 bytes {2} [initial] [rendered]
     > main [3] ./example.js 
     [3] ./example.js 90 bytes {3} [built]
-chunk    {4} manifest.chunkhash.js (manifest) 0 bytes [entry] [rendered]
+chunk    {4} manifest.[chunkhash].js (manifest) 0 bytes [entry] [rendered]
 ```
