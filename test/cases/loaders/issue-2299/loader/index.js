@@ -1,8 +1,8 @@
-var async = require("async");
+var asyncLib = require("async");
 module.exports = function(content) {
 	var cb = this.async();
 	var json = JSON.parse(content);
-	async.mapSeries(
+	asyncLib.mapSeries(
 		json.imports,
 		function(url, callback) {
 			this.loadModule(url, function(err, source, map, module) {
