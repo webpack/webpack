@@ -1,6 +1,6 @@
+/* globals describe it before */
 "use strict";
 
-/* globals describe it */
 const should = require("should");
 const path = require("path");
 const fs = require("fs");
@@ -9,12 +9,12 @@ const spawn = require("child_process").spawn;
 function loadOptsFile(optsPath) {
 	// Options file parser from Mocha
 	// https://github.com/mochajs/mocha/blob/2bb2b9fa35818db7a02e5068364b0c417436b1af/bin/options.js#L25-L31
-	return fs.readFileSync(optsPath, 'utf8')
-		.replace(/\\\s/g, '%20')
+	return fs.readFileSync(optsPath, "utf8")
+		.replace(/\\\s/g, "%20")
 		.split(/\s/)
 		.filter(Boolean)
 		.map(function(value) {
-			return value.replace(/%20/g, ' ');
+			return value.replace(/%20/g, " ");
 		});
 }
 
@@ -28,7 +28,7 @@ function getTestSpecificArguments(testDirectory) {
 
 function convertToArrayOfLines(outputArray) {
 	if(outputArray.length === 0) return outputArray;
-	return outputArray.join('').split('\n');
+	return outputArray.join("").split("\n");
 }
 
 const casesPath = path.join(__dirname, "binCases");
@@ -36,7 +36,7 @@ const defaultArgs = loadOptsFile(path.join(casesPath, "test.opts"));
 
 describe("BinTestCases", function() {
 	const categoryDirectories = fs.readdirSync(casesPath).filter((folder) => {
-		return fs.statSync(path.join(casesPath, folder)).isDirectory()
+		return fs.statSync(path.join(casesPath, folder)).isDirectory();
 	});
 
 	const categories = categoryDirectories.map(function(categoryDirectory) {
@@ -61,7 +61,7 @@ describe("BinTestCases", function() {
 					cwd: path.resolve("./", testDirectory)
 				};
 
-				const async = fs.existsSync(path.join(testDirectory, "async"));
+				const asyncExists = fs.existsSync(path.join(testDirectory, "async"));
 
 				const env = {
 					stdout: [],
@@ -69,7 +69,7 @@ describe("BinTestCases", function() {
 					error: []
 				};
 
-				if(async) {
+				if(asyncExists) {
 					describe(testName, function() {
 						it("should run successfully", function(done) {
 							this.timeout(10000);
@@ -93,16 +93,16 @@ describe("BinTestCases", function() {
 
 							setTimeout(() => {
 								if(env.code) {
-									done(`Watch didn't run ${env.error}`)
+									done(`Watch didn't run ${env.error}`);
 								}
 
 								const stdout = convertToArrayOfLines(env.stdout);
 								const stderr = convertToArrayOfLines(env.stderr);
 								testAssertions(stdout, stderr, done);
-								child.kill()
+								child.kill();
 							}, 3000); // wait a little to get an output
 						});
-					})
+					});
 				} else {
 					describe(testName, function() {
 						before(function(done) {
