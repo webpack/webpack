@@ -67,7 +67,7 @@ it("should handle empty named chunks when there is an error callback", function(
 	sync = true;
 	setImmediate(function() {
 		sync = false;
-  });
+	});
 });
   
 it("should be able to use named chunks in import()", function(done) {
@@ -110,5 +110,5 @@ it("should be able to use named chunk in context import()", function(done) {
 		Promise.resolve().then(function(){}).then(function(){}).then(function(){
 			sync = false;
 		});
-  });
+	});
 });
