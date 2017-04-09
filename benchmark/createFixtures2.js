@@ -42,8 +42,8 @@ for(var i = 2; i < 14; i++) {
 	console.log("generated tree", i, count);
 }
 
-for(var i = 2; i < 14; i++) {
-	var count = genModule("async-tree-" + i, 6, 1, i, 0, []);
+for(i = 2; i < 14; i++) {
+	count = genModule("async-tree-" + i, 6, 1, i, 0, []);
 	console.log("generated async tree", i, count);
 }
 
