@@ -1,23 +1,24 @@
 /*globals describe it */
-var should = require("should");
-var path = require("path");
-var fs = require("fs");
-var mkdirp = require("mkdirp");
+"use strict";
 
-var webpack = require("../lib/webpack");
+require("should");
+const path = require("path");
+const fs = require("fs");
 
-var base = path.join(__dirname, "statsCases");
-var outputBase = path.join(__dirname, "js", "stats");
-var tests = fs.readdirSync(base).filter(function(testName) {
-	return fs.existsSync(path.join(base, testName, "index.js")) ||
-		fs.existsSync(path.join(base, testName, "webpack.config.js"))
-});
-var Stats = require("../lib/Stats");
+const webpack = require("../lib/webpack");
 
-describe("Stats", function() {
-	tests.forEach(function(testName) {
-		it("should print correct stats for " + testName, function(done) {
-			var options = {
+const base = path.join(__dirname, "statsCases");
+const outputBase = path.join(__dirname, "js", "stats");
+const tests = fs.readdirSync(base).filter(testName =>
+	fs.existsSync(path.join(base, testName, "index.js")) ||
+	fs.existsSync(path.join(base, testName, "webpack.config.js"))
+);
+const Stats = require("../lib/Stats");
+
+describe("Stats", () => {
+	tests.forEach(testName => {
+		it("should print correct stats for " + testName, (done) => {
+			let options = {
 				entry: "./index",
 				output: {
 					filename: "bundle.js"
@@ -26,27 +27,27 @@ describe("Stats", function() {
 			if(fs.existsSync(path.join(base, testName, "webpack.config.js"))) {
 				options = require(path.join(base, testName, "webpack.config.js"));
 			}
-			(Array.isArray(options) ? options : [options]).forEach(function(options) {
+			(Array.isArray(options) ? options : [options]).forEach((options) => {
 				if(!options.context) options.context = path.join(base, testName);
 				if(!options.output) options.output = options.output || {};
 				if(!options.output.path) options.output.path = path.join(outputBase, testName);
 			});
-			var c = webpack(options);
-			var compilers = c.compilers ? c.compilers : [c];
-			compilers.forEach(function(c) {
-				var ifs = c.inputFileSystem;
+			const c = webpack(options);
+			const compilers = c.compilers ? c.compilers : [c];
+			compilers.forEach((c) => {
+				const ifs = c.inputFileSystem;
 				c.inputFileSystem = Object.create(ifs);
 				c.inputFileSystem.readFile = function() {
-					var args = Array.prototype.slice.call(arguments);
-					var callback = args.pop();
-					ifs.readFile.apply(ifs, args.concat([function(err, result) {
+					const args = Array.prototype.slice.call(arguments);
+					const callback = args.pop();
+					ifs.readFile.apply(ifs, args.concat([(err, result) => {
 						if(err) return callback(err);
 						callback(null, result.toString("utf-8").replace(/\r/g, ""));
 					}]));
 				};
 				c.apply(new webpack.optimize.OccurrenceOrderPlugin());
 			});
-			c.run(function(err, stats) {
+			c.run((err, stats) => {
 				if(err) return done(err);
 
 				if(/error$/.test(testName)) {
@@ -55,10 +56,10 @@ describe("Stats", function() {
 					done(new Error(stats.toJson().errors.join("\n\n")));
 				}
 
-				var toStringOptions = {
+				let toStringOptions = {
 					colors: false
 				};
-				var hasColorSetting = false;
+				let hasColorSetting = false;
 				if(typeof options.stats !== "undefined") {
 					toStringOptions = options.stats;
 
@@ -68,7 +69,7 @@ describe("Stats", function() {
 					toStringOptions.children = options.map(o => o.stats);
 				}
 
-				var actual = stats.toString(toStringOptions);
+				let actual = stats.toString(toStringOptions);
 				(typeof actual).should.be.eql("string");
 				if(!hasColorSetting) {
 					actual = actual
@@ -88,7 +89,7 @@ describe("Stats", function() {
 					.replace(/[\t ]*Version:.+\n/g, "")
 					.replace(path.join(base, testName), "Xdir/" + testName)
 					.replace(/ dependencies:Xms/g, "");
-				var expected = fs.readFileSync(path.join(base, testName, "expected.txt"), "utf-8").replace(/\r/g, "");
+				const expected = fs.readFileSync(path.join(base, testName, "expected.txt"), "utf-8").replace(/\r/g, "");
 				if(actual !== expected) {
 					fs.writeFileSync(path.join(base, testName, "actual.txt"), actual, "utf-8");
 				} else if(fs.existsSync(path.join(base, testName, "actual.txt"))) {
@@ -99,62 +100,60 @@ describe("Stats", function() {
 			});
 		});
 	});
-	describe("Error Handling", function() {
-		describe("does have", function() {
-			it("hasErrors", function() {
-				var mockStats = new Stats({
-					errors: ['firstError'],
-					hash: '1234'
+	describe("Error Handling", () => {
+		describe("does have", () => {
+			it("hasErrors", () => {
+				const mockStats = new Stats({
+					errors: ["firstError"],
+					hash: "1234"
 				});
 				mockStats.hasErrors().should.be.ok();
 			});
-			it("hasWarnings", function() {
-				var mockStats = new Stats({
-					warnings: ['firstError'],
-					hash: '1234'
+			it("hasWarnings", () => {
+				const mockStats = new Stats({
+					warnings: ["firstError"],
+					hash: "1234"
 				});
 				mockStats.hasWarnings().should.be.ok();
 			});
 		});
-		describe("does not have", function() {
-			it("hasErrors", function() {
-				var mockStats = new Stats({
+		describe("does not have", () => {
+			it("hasErrors", () => {
+				const mockStats = new Stats({
 					errors: [],
-					hash: '1234'
+					hash: "1234"
 				});
 				mockStats.hasErrors().should.not.be.ok();
 			});
-			it("hasWarnings", function() {
-				var mockStats = new Stats({
+			it("hasWarnings", () => {
+				const mockStats = new Stats({
 					warnings: [],
-					hash: '1234'
+					hash: "1234"
 				});
 				mockStats.hasWarnings().should.not.be.ok();
 			});
 		});
-		it("formatError handles string errors", function() {
-			var mockStats = new Stats({
-				errors: ['firstError'],
+		it("formatError handles string errors", () => {
+			const mockStats = new Stats({
+				errors: ["firstError"],
 				warnings: [],
 				assets: [],
 				entrypoints: {},
 				chunks: [],
 				modules: [],
 				children: [],
-				hash: '1234',
+				hash: "1234",
 				mainTemplate: {
-					getPublicPath: function() {
-						return 'path';
-					}
+					getPublicPath: () => "path"
 				}
 			});
-			var obj = mockStats.toJson();
-			obj.errors[0].should.be.equal('firstError');
+			const obj = mockStats.toJson();
+			obj.errors[0].should.be.equal("firstError");
 		});
 	});
-	describe("Presets", function() {
-		describe("presetToOptions", function() {
-			it("returns correct object with 'Normal'", function() {
+	describe("Presets", () => {
+		describe("presetToOptions", () => {
+			it("returns correct object with 'Normal'", () => {
 				Stats.presetToOptions("Normal").should.eql({
 					assets: false,
 					version: false,
@@ -172,8 +171,8 @@ describe("Stats", function() {
 					performance: true
 				});
 			});
-			it("truthy values behave as 'normal'", function() {
-				var normalOpts = Stats.presetToOptions('normal');
+			it("truthy values behave as 'normal'", () => {
+				const normalOpts = Stats.presetToOptions("normal");
 				Stats.presetToOptions("pizza").should.eql(normalOpts);
 				Stats.presetToOptions(true).should.eql(normalOpts);
 				Stats.presetToOptions(1).should.eql(normalOpts);
@@ -181,7 +180,7 @@ describe("Stats", function() {
 				Stats.presetToOptions("verbose").should.not.eql(normalOpts);
 				Stats.presetToOptions(false).should.not.eql(normalOpts);
 			});
-			it("returns correct object with 'none'", function() {
+			it("returns correct object with 'none'", () => {
 				Stats.presetToOptions("none").should.eql({
 					hash: false,
 					version: false,
@@ -204,8 +203,8 @@ describe("Stats", function() {
 					performance: false
 				});
 			});
-			it("falsy values behave as 'none'", function() {
-				var noneOpts = Stats.presetToOptions('none');
+			it("falsy values behave as 'none'", () => {
+				const noneOpts = Stats.presetToOptions("none");
 				Stats.presetToOptions("").should.eql(noneOpts);
 				Stats.presetToOptions(null).should.eql(noneOpts);
 				Stats.presetToOptions().should.eql(noneOpts);

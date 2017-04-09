@@ -45,12 +45,105 @@ rules:
     label:
       add: "PR: CI-not-ok"
       remove: "PR: CI-ok"
+    set:
+      id: report_ci
+      value: yep
+
+
+
+# Report specific error message if mocha fails
+- filters:
+    ensure:
+      value: "{{report_ci}}"
+      equals: yep
+    commit: true
+    status:
+      context: "continuous-integration/travis-ci/pr"
+    travis_job:
+      state: "failed"
+      config:
+        env: JOB_PART=test
+    fetch: travis_job.log
+    string_cleanup:
+      id: logResult
+      value: "{{{fetch}}}"
+      remove:
+        - "^[\\s\\S]+?\\d+\\s+pending\n+"
+        - "npm ERR!.*\n"
+        - "\n*=============================================================================\n[\\s\\S]*"
+  actions:
     comment:
       identifier: "ci-result"
       message: |-
-        @{{issue.user.login}} The most important CI builds failed. This way your PR can't be merged.
+        @{{commit.author.login}} Please review the following output log for errors:
+
+        ``` text
+        {{{logResult}}}
+        ```
+
+        See [complete report here]({{status.target_url}}).
+    set:
+      id: report_ci
+      value: nope
+
+
+
+# Report specific error message if linting fails
+- filters:
+    ensure:
+      value: "{{report_ci}}"
+      equals: yep
+    commit: true
+    status:
+      context: "continuous-integration/travis-ci/pr"
+    travis_job:
+      state: "failed"
+      config:
+        env: JOB_PART=lint
+    fetch: travis_job.log
+    string_cleanup:
+      id: logResult
+      value: "{{{fetch}}}"
+      remove:
+        - "^[\\s\\S]+?npm run travis:\\$JOB_PART\n*"
+        - "npm ERR!.*\n"
+        - "\n*The command \"npm run travis:\\$JOB_PART\" exited [\\s\\S]*"
+  actions:
+    comment:
+      identifier: "ci-result"
+      message: |-
+        @{{commit.author.login}} The tests look fine, but there are code style issue in your Pull Request. Please review the following:
+
+        ``` text
+        {{{logResult}}}
+        ```
+
+        See [complete report here]({{status.target_url}}).
+    set:
+      id: report_ci
+      value: nope
+
+
+
+
+# Report a general error message
+- filters:
+    ensure:
+      value: "{{report_ci}}"
+      equals: yep
+    commit: true
+    status_1:
+      context: "continuous-integration/travis-ci/pr"
+    status_2:
+      context: "continuous-integration/appveyor/pr"
+  actions:
+    comment:
+      identifier: "ci-result"
+      message: |-
+        @{{commit.author.login}} The most important CI builds failed. This way your PR can't be merged.
 
         Please take a look at the CI results from [travis]({{status_1.target_url}}) ({{status_1.state}}) and [appveyor]({{status_2.target_url}}) ({{status_2.state}}) and fix these issues.
+
 
 
 
@@ -98,6 +191,7 @@ rules:
     age:
       value: "{{status.created_at}}"
       minimum: 1h
+    permission: "read|none"
   actions:
     comment:
       identifier: "tests-result"
@@ -237,6 +331,7 @@ rules:
       maximum: 1w
     pull_request:
       head_ref: "^master$"
+    permission: "read|none"
   actions:
     comment:
       identifier: "head-master"
@@ -249,3 +344,32 @@ rules:
         > Don't submit pull request from your own `master` branch. It's recommended to create a feature branch for the PR.
 
         *You don't have to change it for this PR, just make sure to follow this hint the next time you submit a PR.*
+
+
+
+# Move issue task
+- filters:
+    open: true
+    comment: "\\s*@webpack-bot\\s+move\\s+(?:to\\s+)?([a-z0-9_\\-\\.]+/[a-z0-9_\\-\\.]+)\\s*([\\s\\S]*)$"
+    not:
+      comment_1:
+        matching: "moved\\-by\\-bot"
+        author: "."
+    permission:
+      user: "{{comment.actor.login}}"
+  actions:
+    new_issue:
+      target: "{{{comment_match.[1]}}}"
+      body: |-
+        {{{issue.body}}}
+
+        ---
+
+        This issue was moved from {{owner}}/{{repo}}#{{issue.number}} by @{{comment.actor.login}}. Orginal issue was by @{{issue.user.login}}.
+
+        {{{comment_match.[2]}}}
+    comment:
+      identifier: moved-by-bot
+      message: |-
+        I've moved it to {{comment_match.[1]}}.
+    close: true
