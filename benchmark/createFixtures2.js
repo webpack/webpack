@@ -9,8 +9,8 @@ try {
 
 function genModule(prefix, depth, asyncDepth, multiplex, r, circular) {
 	var source = [];
-	var async = depth >= asyncDepth;
-	if(!async)
+	var isAsync = depth >= asyncDepth;
+	if(!isAsync)
 		circular.push(path.resolve(fixtures, prefix + "/index.js"));
 	source.push("(function() {");
 	var m = (r % multiplex) + 1;
@@ -23,7 +23,7 @@ function genModule(prefix, depth, asyncDepth, multiplex, r, circular) {
 			sum += genModule(prefix + "/" + i, depth - 1, asyncDepth, multiplex, (r + i + depth) * m + i + depth, circular);
 			source.push("require(" + JSON.stringify("./" + i) + ");");
 			if(i === 0) {
-				if(async)
+				if(isAsync)
 					source.push("}); require.ensure([], function() {");
 			}
 		}
