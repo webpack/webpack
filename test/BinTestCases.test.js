@@ -61,7 +61,7 @@ describe("BinTestCases", function() {
 					cwd: path.resolve("./", testDirectory)
 				};
 
-				const async = fs.existsSync(path.join(testDirectory, "async"));
+				const asyncExists = fs.existsSync(path.join(testDirectory, "async"));
 
 				const env = {
 					stdout: [],
@@ -69,7 +69,7 @@ describe("BinTestCases", function() {
 					error: []
 				};
 
-				if(async) {
+				if(asyncExists) {
 					describe(testName, function() {
 						it("should run successfully", function(done) {
 							this.timeout(10000);
