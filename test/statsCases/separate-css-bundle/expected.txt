@@ -3,7 +3,7 @@ Child
     Hash: 0be4035986816982617a
     Time: Xms
                                    Asset      Size  Chunks             Chunk Names
-                 c7ab11336573e45dc51e.js   2.77 kB       0  [emitted]  main
+                 c7ab11336573e45dc51e.js   2.78 kB       0  [emitted]  main
     c815cf440254d4f3bba4e7041db00a28.css  26 bytes       0  [emitted]  main
     chunk    {0} c7ab11336573e45dc51e.js, c815cf440254d4f3bba4e7041db00a28.css (main) 64 bytes [entry] [rendered]
         [0] (webpack)/test/statsCases/separate-css-bundle/a/file.css 41 bytes {0} [built]
@@ -16,7 +16,7 @@ Child
     Hash: 1139e89514abc13454ce
     Time: Xms
                                    Asset      Size  Chunks             Chunk Names
-                 c7ab11336573e45dc51e.js   2.77 kB       0  [emitted]  main
+                 c7ab11336573e45dc51e.js   2.78 kB       0  [emitted]  main
     a3f385680aef7a9bb2a517699532cc34.css  28 bytes       0  [emitted]  main
     chunk    {0} c7ab11336573e45dc51e.js, a3f385680aef7a9bb2a517699532cc34.css (main) 64 bytes [entry] [rendered]
         [0] (webpack)/test/statsCases/separate-css-bundle/b/file.css 41 bytes {0} [built]
