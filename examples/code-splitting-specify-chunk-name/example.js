@@ -1,4 +1,4 @@
-import("./templates/foo" /* webpackChunkName = "chunk-foo" */ ).then(function(foo) {
+import("./templates/foo" /* webpackChunkName: "chunk-foo" */ ).then(function(foo) {
 	console.log('foo:', foo);
 })
 
@@ -8,7 +8,7 @@ require.ensure([], function(require) {
 }, "chunk-foo1");
 
 var createContextVar = "r";
-import("./templates/ba" + createContextVar /* webpackChunkName = "chunk-bar-baz" */ ).then(function(bar) {
+import("./templates/ba" + createContextVar /* webpackChunkName: "chunk-bar-baz" */ ).then(function(bar) {
 	console.log('bar:', bar);
 })
 
