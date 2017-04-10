@@ -1,4 +1,6 @@
-var EnvironmentPlugin = require("../../../../lib/EnvironmentPlugin");
+"use strict";
+
+const EnvironmentPlugin = require("../../../../lib/EnvironmentPlugin");
 
 process.env.AAA = "aaa";
 process.env.BBB = "bbb";
