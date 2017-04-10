@@ -1,3 +1,5 @@
+"use strict";
+
 const EnvironmentPlugin = require("../../../../lib/EnvironmentPlugin");
 
 process.env.AAA = "aaa";
@@ -37,8 +39,8 @@ module.exports = [{
 	module: { unknownContextRegExp: /$^/, unknownContextCritical: false },
 	plugins: [
 		new EnvironmentPlugin({
-			GGG: 'ggg-default',
-			HHH: 'hhh'
+			GGG: "ggg-default",
+			HHH: "hhh"
 		})
 	]
 }, {
