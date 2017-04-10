@@ -1,4 +1,4 @@
-var webpack = require("../../../../")
+var webpack = require("../../../../");
 
 module.exports = {
 	plugins: [
@@ -6,4 +6,4 @@ module.exports = {
 			minChunkSize: 30
 		})
 	]
-}
+};
