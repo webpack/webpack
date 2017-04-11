@@ -5,7 +5,7 @@ module.exports = {
 		__filename: false
 	},
 	entry: {
-		bundle0: ["./index.js"],
+		banner: ["./index.js"],
 		vendors: ["./vendors.js"]
 	},
 	output: {
@@ -13,8 +13,7 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.BannerPlugin({
-			banner: "[hash]",
-			exclude: ["vendors.js"]
+			banner: "[hash]"
 		})
 	]
 };
