@@ -1,12 +1,12 @@
 const parseBanner = (banner) => {
 	return banner
-		.slice(4,-3) // remove comment syntax
-		.split(", ") // into key:val pairs
-		.map(n => n.split(":")) //[key, val]
+		.slice(4,-3)
+		.split(", ")
+		.map(n => n.split(":"))
 		.reduce((acc, val) => {
 			acc[val[0]] = val[1];
 			return acc;
-		}, {}); // { key: val }
+		}, {});
 };
 
 var source = require("fs")
@@ -16,12 +16,20 @@ var source = require("fs")
 
 const banner = parseBanner(source)
 
-it("should interpolate file hash in bundle0 chunk", function() {
-	banner["hash"].should.not.containEql("[hash]");
+it("should interpolate file hash in bundle0 chunk", () => {
+	banner["hash"].should.not.equal("[hash]");
 });
 
-it("should interpolate chunkHash in bundle0 chunk", function() {
-	banner["chunkhash"].should.not.containEql("[chunkhash]");
+it("should interpolate chunkHash in bundle0 chunk", () => {
+	banner["chunkhash"].should.not.equal("[chunkhash]");
+});
+
+it("should interpolate name in bundle0 chunk", () => {
+	banner["name"].should.not.equal("[name]");
+});
+
+it("should interpolate extension in bundle0 chunk", () => {
+	banner["ext"].should.not.equal("[ext]");
 });
 
 require.include("./test.js");
