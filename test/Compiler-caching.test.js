@@ -1,3 +1,4 @@
+/* globals describe, it, before, after */
 "use strict";
 
 const should = require("should");
@@ -14,7 +15,7 @@ describe("Compiler (caching)", function() {
 		new WebpackOptionsDefaulter().process(options);
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");
-		options.output.path = "";
+		options.output.path = "/";
 		options.output.filename = "bundle.js";
 		options.output.pathinfo = true;
 		const logs = {
@@ -25,7 +26,9 @@ describe("Compiler (caching)", function() {
 		const c = webpack(options);
 		const files = {};
 		c.outputFileSystem = {
-			join: path.join.bind(path),
+			join: function() {
+				return [].join.call(arguments, "/").replace(/\/+/g, "/");
+			},
 			mkdirp: function(path, callback) {
 				logs.mkdirp.push(path);
 				callback();
@@ -188,12 +191,11 @@ describe("Compiler (caching)", function() {
 			stats.assets[0].emitted.should.be.exactly(true);
 
 			helper.runAgain((stats, files, iteration) => {
-
 				// Cached the second run
 				stats.assets[0].name.should.be.exactly("bundle.js");
 				stats.assets[0].emitted.should.be.exactly(false);
 
-				files["bundle.js"].should.containEql("This is a");
+				files["/bundle.js"].should.containEql("This is a");
 
 				const aContent = fs.readFileSync(tempFixture.aFilepath).toString().replace("This is a", "This is a MODIFIED");
 
@@ -205,7 +207,7 @@ describe("Compiler (caching)", function() {
 					stats.assets[0].name.should.be.exactly("bundle.js");
 					stats.assets[0].emitted.should.be.exactly(true);
 
-					files["bundle.js"].should.containEql("This is a MODIFIED");
+					files["/bundle.js"].should.containEql("This is a MODIFIED");
 
 					done();
 				});

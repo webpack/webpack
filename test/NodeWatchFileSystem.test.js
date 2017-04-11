@@ -68,7 +68,7 @@ describe("NodeWatchFileSystem", function() {
 			if(err) throw err;
 			filesModified.should.be.eql([fileDirect]);
 			dirsModified.should.be.eql([]);
-			fileTimestamps.should.have.property(fileDirect).have.type("number");
+			Object.assign({}, fileTimestamps).should.have.property(fileDirect).have.type("number");
 			watcher.close();
 			done();
 		});
@@ -87,7 +87,7 @@ describe("NodeWatchFileSystem", function() {
 				if(err) throw err;
 				filesModified.should.be.eql([fileDirect]);
 				dirsModified.should.be.eql([]);
-				fileTimestamps.should.have.property(fileDirect).have.type("number");
+				Object.assign({}, fileTimestamps).should.have.property(fileDirect).have.type("number");
 				watcher.close();
 				done();
 			});
@@ -104,7 +104,7 @@ describe("NodeWatchFileSystem", function() {
 			if(err) throw err;
 			filesModified.should.be.eql([]);
 			dirsModified.should.be.eql([fixtures]);
-			dirTimestamps.should.have.property(fixtures).have.type("number");
+			Object.assign({}, dirTimestamps).should.have.property(fixtures).have.type("number");
 			watcher.close();
 			done();
 		});
@@ -123,7 +123,7 @@ describe("NodeWatchFileSystem", function() {
 				if(err) throw err;
 				filesModified.should.be.eql([]);
 				dirsModified.should.be.eql([fixtures]);
-				dirTimestamps.should.have.property(fixtures).have.type("number");
+				Object.assign({}, dirTimestamps).should.have.property(fixtures).have.type("number");
 				watcher.close();
 				done();
 			});
@@ -140,7 +140,7 @@ describe("NodeWatchFileSystem", function() {
 			if(err) throw err;
 			filesModified.should.be.eql([]);
 			dirsModified.should.be.eql([fixtures]);
-			dirTimestamps.should.have.property(fixtures).have.type("number");
+			Object.assign({}, dirTimestamps).should.have.property(fixtures).have.type("number");
 			watcher.close();
 			done();
 		});
@@ -159,7 +159,7 @@ describe("NodeWatchFileSystem", function() {
 				if(err) throw err;
 				filesModified.should.be.eql([]);
 				dirsModified.should.be.eql([fixtures]);
-				dirTimestamps.should.have.property(fixtures).have.type("number");
+				Object.assign({}, dirTimestamps).should.have.property(fixtures).have.type("number");
 				watcher.close();
 				done();
 			});
@@ -177,9 +177,9 @@ describe("NodeWatchFileSystem", function() {
 				if(err) throw err;
 				filesModified.should.be.eql([fileSubdir, fileDirect]);
 				dirsModified.should.be.eql([fixtures]);
-				fileTimestamps.should.have.property(fileDirect).have.type("number");
-				fileTimestamps.should.have.property(fileSubdir).have.type("number");
-				dirTimestamps.should.have.property(fixtures).have.type("number");
+				Object.assign({}, fileTimestamps).should.have.property(fileDirect).have.type("number");
+				Object.assign({}, fileTimestamps).should.have.property(fileSubdir).have.type("number");
+				Object.assign({}, dirTimestamps).should.have.property(fixtures).have.type("number");
 				watcher.close();
 				done();
 			});
@@ -197,9 +197,9 @@ describe("NodeWatchFileSystem", function() {
 			if(err) throw err;
 			filesModified.should.be.eql([fileSubdir, fileDirect]);
 			dirsModified.should.be.eql([fixtures]);
-			fileTimestamps.should.have.property(fileDirect).have.type("number");
-			fileTimestamps.should.have.property(fileSubdir).have.type("number");
-			dirTimestamps.should.have.property(fixtures).have.type("number");
+			Object.assign({}, fileTimestamps).should.have.property(fileDirect).have.type("number");
+			Object.assign({}, fileTimestamps).should.have.property(fileSubdir).have.type("number");
+			Object.assign({}, dirTimestamps).should.have.property(fixtures).have.type("number");
 			watcher.close();
 			done();
 		});

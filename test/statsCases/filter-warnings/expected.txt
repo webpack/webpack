@@ -1,0 +1,170 @@
+Hash: e4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1ee4d2b189bb205589ee1e
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  2.24 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+    Collapsing variable someRequiredUsedFunction [./index.js:5,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  2.24 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  2.24 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  2.24 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  2.24 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  2.24 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  2.24 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  2.24 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+    Collapsing variable someRequiredUsedFunction [./index.js:5,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  2.24 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+    Collapsing variable someRequiredUsedFunction [./index.js:5,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  2.24 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+    Collapsing variable someRequiredUsedFunction [./index.js:5,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  2.24 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+    Collapsing variable someRequiredUsedFunction [./index.js:5,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  2.24 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+    Collapsing variable someRequiredUsedFunction [./index.js:5,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
+Child
+    Hash: e4d2b189bb205589ee1e
+    Time: Xms
+        Asset     Size  Chunks             Chunk Names
+    bundle.js  2.24 kB       0  [emitted]  main
+    chunk    {0} bundle.js (main) 1.04 kB [entry] [rendered]
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+    Collapsing variable someRequiredUsedFunction [./index.js:5,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
