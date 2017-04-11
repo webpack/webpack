@@ -9,8 +9,8 @@ try {
 
 function genModule(prefix, depth, asyncDepth, multiplex, r, circular) {
 	var source = [];
-	var async = depth >= asyncDepth;
-	if(!async)
+	var isAsync = depth >= asyncDepth;
+	if(!isAsync)
 		circular.push(path.resolve(fixtures, prefix + "/index.js"));
 	source.push("(function() {");
 	var m = (r % multiplex) + 1;
@@ -23,7 +23,7 @@ function genModule(prefix, depth, asyncDepth, multiplex, r, circular) {
 			sum += genModule(prefix + "/" + i, depth - 1, asyncDepth, multiplex, (r + i + depth) * m + i + depth, circular);
 			source.push("require(" + JSON.stringify("./" + i) + ");");
 			if(i === 0) {
-				if(async)
+				if(isAsync)
 					source.push("}); require.ensure([], function() {");
 			}
 		}
@@ -42,8 +42,8 @@ for(var i = 2; i < 14; i++) {
 	console.log("generated tree", i, count);
 }
 
-for(var i = 2; i < 14; i++) {
-	var count = genModule("async-tree-" + i, 6, 1, i, 0, []);
+for(i = 2; i < 14; i++) {
+	count = genModule("async-tree-" + i, 6, 1, i, 0, []);
 	console.log("generated async tree", i, count);
 }
 

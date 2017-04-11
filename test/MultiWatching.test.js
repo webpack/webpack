@@ -1,50 +1,58 @@
-var should = require("should");
-var sinon = require("sinon");
-var MultiWatching = require("../lib/MultiWatching");
+"use strict";
 
-var createWatching = function() {
+const Tapable = require("tapable");
+const should = require("should");
+const sinon = require("sinon");
+const MultiWatching = require("../lib/MultiWatching");
+
+const createWatching = function() {
 	return {
 		invalidate: sinon.spy(),
 		close: sinon.spy()
 	};
 };
 
-describe("MultiWatching", function() {
-	var watchings, myMultiWatching;
+const createCompiler = () => {
+	const compiler = {
+		_plugins: {}
+	};
+	Tapable.mixin(compiler);
+	return compiler;
+};
 
-	beforeEach(function() {
+describe("MultiWatching", () => {
+	let watchings, compiler, myMultiWatching;
+
+	beforeEach(() => {
 		watchings = [createWatching(), createWatching()];
-		myMultiWatching = new MultiWatching(watchings);
+		compiler = createCompiler();
+		myMultiWatching = new MultiWatching(watchings, compiler);
 	});
 
-	describe('invalidate', function() {
-		beforeEach(function() {
-			myMultiWatching.invalidate();
-		});
+	describe("invalidate", () => {
+		beforeEach(() => myMultiWatching.invalidate());
 
-		it('invalidates each watching', function() {
+		it("invalidates each watching", () => {
 			watchings[0].invalidate.callCount.should.be.exactly(1);
 			watchings[1].invalidate.callCount.should.be.exactly(1);
 		});
 	});
 
-	describe('close', function() {
-		var callback;
-		var callClosedFinishedCallback = function(watching) {
-			watching.close.getCall(0).args[0]();
-		};
+	describe("close", () => {
+		let callback;
+		const callClosedFinishedCallback = (watching) => watching.close.getCall(0).args[0]();
 
-		beforeEach(function() {
+		beforeEach(() => {
 			callback = sinon.spy();
 			myMultiWatching.close(callback);
 		});
 
-		it('closes each watching', function() {
+		it("closes each watching", () => {
 			watchings[0].close.callCount.should.be.exactly(1);
 			watchings[1].close.callCount.should.be.exactly(1);
 		});
 
-		it('calls callback after each watching has closed', function() {
+		it("calls callback after each watching has closed", () => {
 			callClosedFinishedCallback(watchings[0]);
 			callClosedFinishedCallback(watchings[1]);
 			callback.callCount.should.be.exactly(1);

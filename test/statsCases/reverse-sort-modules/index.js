@@ -1,0 +1,10 @@
+require("./a?1");
+require("./a?2");
+require("./a?3");
+require("./a?4");
+require("./a?5");
+require("./a?6");
+require("./a?7");
+require("./a?8");
+require("./a?9");
+require("./a?10");

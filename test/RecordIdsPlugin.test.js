@@ -1,18 +1,11 @@
+/* globals describe, before, it */
 "use strict";
 
 const should = require("should");
-
 const path = require("path");
+
 const webpack = require("../lib/webpack");
-
-const RecordIdsPlugin = require("../lib/RecordIdsPlugin");
-
-function makeRelative(compiler, identifier) {
-	const context = compiler.context;
-	return identifier.split("|").map((str) =>
-		str.split("!")
-		.map((str) => path.relative(context, str)).join("!")).join("|");
-}
+const identifierUtils = require("../lib/util/identifier");
 
 describe("RecordIdsPlugin", () => {
 
@@ -40,7 +33,7 @@ describe("RecordIdsPlugin", () => {
 			for(let i = 0; i < compilation.modules.length; i++) {
 				try {
 					should.exist(compilation.modules[i].portableId);
-					compilation.modules[i].portableId.should.equal(makeRelative(compiler, compilation.modules[i].identifier()));
+					compilation.modules[i].portableId.should.equal(identifierUtils.makePathsRelative(compiler.context, compilation.modules[i].identifier()));
 				} catch(e) {
 					done(e);
 					pass = false;
