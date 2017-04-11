@@ -13,7 +13,7 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.BannerPlugin({
-			banner: "This is a value",
+			banner: "A test value",
 			exclude: ["vendors.js"]
 		})
 	]
