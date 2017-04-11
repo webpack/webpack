@@ -13,7 +13,7 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.BannerPlugin({
-			banner: "[hash]"
+			banner: "hash:[hash], chunkhash:[chunkhash], name:[name], ext:[ext]"
 		})
 	]
 };
