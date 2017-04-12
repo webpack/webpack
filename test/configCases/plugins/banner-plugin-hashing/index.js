@@ -20,16 +20,8 @@ it("should interpolate file hash in bundle0 chunk", () => {
 	banner["hash"].should.not.equal("[hash]");
 });
 
-it("should interpolate file hash in bundle0 chunk and respect size limit", () => {
-	banner["hash"].length.should.equal(10);
-});
-
 it("should interpolate chunkHash in bundle0 chunk", () => {
 	banner["chunkhash"].should.not.equal("[chunkhash]");
-});
-
-it("should interpolate chunkHash in bundle0 chunk and respect size limit", () => {
-	banner["chunkhash"].length.should.equal(10);
 });
 
 it("should interpolate name in bundle0 chunk", () => {
@@ -37,7 +29,7 @@ it("should interpolate name in bundle0 chunk", () => {
 });
 
 it("should interpolate extension in bundle0 chunk", () => {
-	banner["ext"].should.not.equal("[ext]");
+	banner["ext"].should.not.equal("[filebase]");
 });
 
 require.include("./test.js");
