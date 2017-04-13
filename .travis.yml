@@ -3,7 +3,7 @@ language: node_js
 
 branches:
   only:
-    - master
+    - webpack-1
 
 cache:
   directories:

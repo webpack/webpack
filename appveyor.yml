@@ -3,7 +3,7 @@
 
 branches:
   only:
-    - master
+    - webpack-1
 
 init:
   - git config --global core.autocrlf input
