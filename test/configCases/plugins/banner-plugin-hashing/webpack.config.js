@@ -14,7 +14,7 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.BannerPlugin({
-			banner: "hash:[hash], chunkhash:[chunkhash], name:[name], ext:[filebase], query:[query]"
+			banner: "hash:[hash], chunkhash:[chunkhash], name:[name], basename:[filebase], query:[query]"
 		})
 	]
 };
