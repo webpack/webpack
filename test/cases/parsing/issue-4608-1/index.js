@@ -71,6 +71,14 @@ it("should find var declaration in control statements", function() {
 
 		require("fail");
 	}());
+
+	(function() {
+		with({ a: 1 }) {
+			var require = f;
+		}
+
+		require("fail");
+	}());
 });
 
 it("should find var declaration in control statements after usage", function() {
@@ -123,6 +131,16 @@ it("should find var declaration in control statements after usage", function() {
 		var test = (function() { require("fail"); });
 
 		for(var i in {a:1}) {
+			var require = f;
+		}
+
+		test();
+	}());
+
+	(function() {
+		var test = (function() { require("fail"); });
+
+		with({ a: 1 }) {
 			var require = f;
 		}
 
