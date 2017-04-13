@@ -1,16 +1,40 @@
 sudo: false
 language: node_js
-node_js:
-  - "7"
-  - "6"
-  - "4.3"
-script: npm run travis
-env:
-  - NO_WATCH_TESTS=1
+
+branches:
+  only:
+    - master
+
+cache:
+  directories:
+    - $HOME/.npm
+
+matrix:
+  include:
+    - os: linux
+      node_js: "7"
+      env: NO_WATCH_TESTS=1 JOB_PART=lint
+    - os: linux
+      node_js: "7"
+      env: NO_WATCH_TESTS=1 JOB_PART=test
+    - os: linux
+      node_js: "6"
+      env: NO_WATCH_TESTS=1 JOB_PART=test
+    - os: linux
+      node_js: "4.3"
+      env: NO_WATCH_TESTS=1 JOB_PART=test
+    - os: osx
+      node_js: "7"
+      env: NO_WATCH_TESTS=1 JOB_PART=test
+  allow_failures:
+    - os: osx
+  fast_finish: true
 
 before_script:
   - npm link
   - npm link webpack
+
+script: npm run travis:$JOB_PART
 
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
