@@ -7,16 +7,14 @@ init:
 # what combinations to test
 environment:
   matrix:
-    - nodejs_version: 0.12
-
-# combinations having this can fail
-matrix:
-  allow_failures:
-    - nodejs_version: 0.13
+    - nodejs_version: "7"
+    - nodejs_version: "6"
 
 install:
-  - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version)
+  - ps: Install-Product node $env:nodejs_version x64
   - npm install --msvs_version=2013
+  - npm link
+  - npm link webpack
 
 build: off
 
