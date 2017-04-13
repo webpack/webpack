@@ -32,4 +32,8 @@ it("should interpolate extension in bundle0 chunk", () => {
 	banner["ext"].should.not.equal("[filebase]");
 });
 
+it("should interpolate extension in bundle0 chunk", () => {
+	banner["query"].should.equal("");
+});
+
 require.include("./test.js");

@@ -1,4 +1,5 @@
 var webpack = require("../../../../");
+
 module.exports = {
 	node: {
 		__dirname: false,
@@ -13,7 +14,7 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.BannerPlugin({
-			banner: "hash:[hash], chunkhash:[chunkhash], name:[name], ext:[filebase]"
+			banner: "hash:[hash], chunkhash:[chunkhash], name:[name], ext:[filebase], query:[query]"
 		})
 	]
 };
