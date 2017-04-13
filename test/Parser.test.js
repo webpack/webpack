@@ -125,7 +125,7 @@ describe("Parser", () => {
 				}
 			}, {
 				fghsub: ["try", "notry", "notry"],
-				fgh: ["", "test ttt", "test e"]
+				fgh: ["test", "test ttt", "test e"]
 			}
 		],
 		"renaming with const": [
