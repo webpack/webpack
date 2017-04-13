@@ -15,21 +15,22 @@ var source = require("fs")
 	.slice(0,1)[0];
 
 const banner = parseBanner(source)
+const REGEXP_HASH = /^[A-Za-z0-9]{20}$/
 
 it("should interpolate file hash in bundle0 chunk", () => {
-	banner["hash"].should.not.equal("[hash]");
+	REGEXP_HASH.test(banner["hash"]).should.be.true;
 });
 
 it("should interpolate chunkHash in bundle0 chunk", () => {
-	banner["chunkhash"].should.not.equal("[chunkhash]");
+	REGEXP_HASH.test(banner["chunkhash"]).should.be.true;
 });
 
 it("should interpolate name in bundle0 chunk", () => {
-	banner["name"].should.not.equal("[name]");
+	banner["name"].should.equal("banner");
 });
 
 it("should interpolate extension in bundle0 chunk", () => {
-	banner["ext"].should.not.equal("[filebase]");
+	banner["basename"].should.equal("banner.js");
 });
 
 it("should interpolate extension in bundle0 chunk", () => {
