@@ -9,7 +9,7 @@ function test(cond, message) {
 }
 
 // load tests from library1, with script loader
-require("script!../js/library1.js");
+require("script-loader!../js/library1.js");
 
 // Buildin 'style' loader adds css to document
 require("./stylesheet.css");
@@ -32,7 +32,7 @@ describe("main", function() {
 		should.exist(window.library2.ok);
 		window.library2.ok.should.be.eql(true);
 	});
-	
+
 	describe("web resolving", function() {
 		it("should load index.web.js instead of index.js", function() {
 			true.should.be.eql(true);
@@ -87,8 +87,8 @@ describe("main", function() {
 
 	describe("web loaders", function() {
 		it("should handle the file loader correctly", function() {
-			require("!file!../img/image.png").should.match(/js\/.+\.png$/);
-			document.getElementById("image").src = require("file?prefix=img/!../img/image.png");
+			require("!file-loader!../img/image.png").should.match(/js\/.+\.png$/);
+			document.getElementById("image").src = require("file-loader?prefix=img/!../img/image.png");
 		});
 	});
 

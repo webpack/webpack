@@ -25,6 +25,6 @@ module.exports = function(updatedModules, renewedModules) {
 			return typeof moduleId === "number";
 		});
 		if(numberIds)
-			console.log("[HMR] Consider using the NamedModulesPlugin for module names.")
+			console.log("[HMR] Consider using the NamedModulesPlugin for module names.");
 	}
 };

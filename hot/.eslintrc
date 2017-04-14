@@ -1,0 +1,9 @@
+{
+	"env": {
+		"node": true
+	},
+	"rules": {
+		"node/exports-style": ["off"]
+	}
+
+}

@@ -4,7 +4,7 @@
 */
 /*globals __resourceQuery */
 if(module.hot) {
-	function checkForUpdate(fromUpdate) {
+	var checkForUpdate = function checkForUpdate(fromUpdate) {
 		module.hot.check().then(function(updatedModules) {
 			if(!updatedModules) {
 				if(fromUpdate)
@@ -34,7 +34,7 @@ if(module.hot) {
 				console.warn("[HMR] Update failed: " + err.stack || err.message);
 			}
 		});
-	}
+	};
 
 	process.on(__resourceQuery.substr(1) || "SIGUSR2", function() {
 		if(module.hot.status() !== "idle") {

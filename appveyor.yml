@@ -1,19 +1,29 @@
 # appveyor file
 # http://www.appveyor.com/docs/appveyor-yml
 
+branches:
+  only:
+    - master
+
 init:
   - git config --global core.autocrlf input
+
+clone_depth: 50
 
 # what combinations to test
 environment:
   matrix:
+    - nodejs_version: 7
+      job_part: test
     - nodejs_version: 6
-    - nodejs_version: 5
+      job_part: test
 
 install:
-  - ps: Update-NodeJsInstallation (Get-NodeJsLatestBuild $env:nodejs_version)
-  - npm link ../webpack --force
-  - npm install --msvs_version=2013
+  - ps: Install-Product node $env:nodejs_version x64
+  - npm install yarn -g
+  - yarn install
+  - yarn link
+  - yarn link webpack
 
 build: off
 
@@ -23,4 +33,5 @@ matrix:
 test_script:
   - node --version
   - npm --version
-  - cmd: npm run appveyor
+  - yarn --version
+  - cmd: npm run appveyor:%job_part%

@@ -20,23 +20,24 @@ that include your webpack.config.js and relevant files are more likely to receiv
 If you have created your own loader/plugin please include it on the relevant
 documentation pages:
 
-[List of loaders](https://webpack.github.io/docs/list-of-loaders.html)  
-[List of plugins](https://webpack.github.io/docs/list-of-plugins.html)
+[List of loaders](https://webpack.js.org/loaders/) or [awesome-webpack](https://github.com/webpack-contrib/awesome-webpack#loaders)
+[List of plugins](https://webpack.js.org/plugins) or [awesome-webpack](https://github.com/webpack-contrib/awesome-webpack#webpack-plugins)
 
 ## Setup
 
 ```bash
 git clone https://github.com/webpack/webpack.git
 cd webpack
-npm install
-npm link
-npm link webpack
+npm install -g yarn
+yarn install
+yarn link
+yarn link webpack
 ```
 
 To run the entire test suite use:
 
 ```bash
-npm test
+yarn test
 ```
 
 ## Submitting Changes
@@ -47,7 +48,7 @@ your pull request should be accepted quickly.
 
 Some things that will increase the chance that your pull request is accepted:
 
-* Write tests
+* [Write tests](./test/README.md)
 * Follow the existing coding style
 * Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 

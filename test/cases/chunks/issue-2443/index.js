@@ -1,6 +1,6 @@
-it("should be able to use expressions in System.import (directory)", function(done) {
+it("should be able to use expressions in import (directory)", function(done) {
 	function load(name, expected, callback) {
-		System.import("./dir/" + name + "/file.js").then(function(result) {
+		import("./dir/" + name + "/file.js").then(function(result) {
 			result.should.be.eql(expected);
 			callback();
 		}).catch(function(err) {

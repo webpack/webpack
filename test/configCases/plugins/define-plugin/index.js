@@ -1,3 +1,4 @@
+/* globals it, should */
 it("should define FALSE", function() {
 	FALSE.should.be.eql(false);
 	(typeof TRUE).should.be.eql("boolean");
@@ -40,6 +41,17 @@ it("should define OBJECT.SUB.CODE", function() {
 		sub.CODE.should.be.eql(3);
 	}(OBJECT.SUB));
 });
+it("should define OBJECT.SUB.STRING", function() {
+	(typeof OBJECT.SUB.STRING).should.be.eql("string");
+	OBJECT.SUB.STRING.should.be.eql("string");
+	if(OBJECT.SUB.STRING !== "string") require("fail");
+	if(typeof OBJECT.SUB.STRING !== "string") require("fail");
+
+	(function(sub) {
+		// should not crash
+		sub.STRING.should.be.eql("string");
+	}(OBJECT.SUB));
+});
 it("should define process.env.DEFINED_NESTED_KEY", function() {
 	(process.env.DEFINED_NESTED_KEY).should.be.eql(5);
 	(typeof process.env.DEFINED_NESTED_KEY).should.be.eql("number");
@@ -61,4 +73,28 @@ it("should define process.env.DEFINED_NESTED_KEY", function() {
 		var x = env.DEFINED_NESTED_KEY;
 		x.should.be.eql(5);
 	}(process.env));
+});
+it("should define process.env.DEFINED_NESTED_KEY_STRING", function() {
+	if(process.env.DEFINED_NESTED_KEY_STRING !== "string") require("fail");
+});
+it("should assign to process.env", function() {
+	process.env.TEST = "test";
+	process.env.TEST.should.be.eql("test");
+});
+it("should not have brakets on start", function() {
+	function f() {
+		throw new Error("should not be called");
+	}
+	f // <- no semicolon here
+	OBJECT;
+});
+
+it("should not explode on recursive typeof calls", function() {
+	(typeof wurst).should.eql("undefined"); // <- is recursivly defined in config
+});
+
+it("should not explode on recursive statements", function() {
+	(function() {
+		wurst; // <- is recursivly defined in config
+	}).should.throw("suppe is not defined");
 });

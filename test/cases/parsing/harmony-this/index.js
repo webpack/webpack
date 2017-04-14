@@ -23,9 +23,9 @@ import * as New from "./new";
 
 it("should be possible to use new correctly", function() {
 	x
-	new C().should.be.eql({ok: true});
+	new C().should.match({ok: true});
 	x
-	new C2().should.be.eql({ok: true});
+	new C2().should.match({ok: true});
 	x
-	new New.C().should.be.eql({ok: true});
+	new New.C().should.match({ok: true});
 });

@@ -19,3 +19,9 @@ it("should provide a module for a nested var within a IIFE", function() {
 it("should not provide a module for a part of a var", function() {
 	(typeof bbb).should.be.eql("undefined");
 });
+
+it("should provide a module for a property request", function() {
+	(dddeeefff).should.be.eql("fff");
+	var x = dddeeefff;
+	x.should.be.eql("fff");
+});
