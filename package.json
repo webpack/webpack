@@ -17,7 +17,7 @@
     "supports-color": "^3.1.0",
     "tapable": "~0.1.8",
     "uglify-js": "~2.7.3",
-    "watchpack": "^0.2.1",
+    "watchpack": "^1.2.0",
     "webpack-core": "~0.6.9"
   },
   "license": "MIT",
