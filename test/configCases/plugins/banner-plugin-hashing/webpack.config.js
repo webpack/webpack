@@ -1,4 +1,5 @@
-var webpack = require("../../../../");
+const webpack = require("../../../../");
+const path = require("path");
 
 module.exports = {
 	node: {
@@ -6,15 +7,16 @@ module.exports = {
 		__filename: false
 	},
 	entry: {
-		banner: ["./index.js"],
+		'dist/banner': ["./index.js"],
 		vendors: ["./vendors.js"]
 	},
 	output: {
-		filename: "[name].js"
+		//path: path.join(__dirname, "dist"),
+		filename: "[name].js?value"
 	},
 	plugins: [
 		new webpack.BannerPlugin({
-			banner: "hash:[hash], chunkhash:[chunkhash], name:[name], basename:[filebase], query:[query]"
+			banner: "hash:[hash], chunkhash:[chunkhash], name:[name], filebase:[filebase], query:[query], basename:[basename]"
 		})
 	]
 };
