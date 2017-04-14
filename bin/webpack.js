@@ -5,6 +5,7 @@
 	Author Tobias Koppers @sokra
 */
 var path = require("path");
+
 // Local version replace global one
 try {
 	var localWebpack = require.resolve(path.join(process.cwd(), "node_modules", "webpack", "bin", "webpack.js"));
@@ -14,7 +15,7 @@ try {
 } catch(e) {}
 var yargs = require("yargs")
 	.usage("webpack " + require("../package.json").version + "\n" +
-		"Usage: https://webpack.github.io/docs/cli.html\n" +
+		"Usage: https://webpack.js.org/api/cli/\n" +
 		"Usage without config file: webpack <entry> [<entry>] <output>\n" +
 		"Usage with config file: webpack");
 
@@ -73,6 +74,11 @@ yargs.options({
 		group: DISPLAY_GROUP,
 		describe: "Display even excluded modules in the output"
 	},
+	"display-max-modules": {
+		type: "number",
+		group: DISPLAY_GROUP,
+		describe: "Sets the maximum number of visible modules in output"
+	},
 	"display-chunks": {
 		type: "boolean",
 		group: DISPLAY_GROUP,
@@ -103,6 +109,11 @@ yargs.options({
 		group: DISPLAY_GROUP,
 		describe: "Display reasons about module inclusion in the output"
 	},
+	"display-depth": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Display distance from entry point for each module"
+	},
 	"display-used-exports": {
 		type: "boolean",
 		group: DISPLAY_GROUP,
@@ -129,6 +140,7 @@ var argv = yargs.argv;
 
 if(argv.verbose) {
 	argv["display-reasons"] = true;
+	argv["display-depth"] = true;
 	argv["display-entrypoints"] = true;
 	argv["display-used-exports"] = true;
 	argv["display-provided-exports"] = true;
@@ -155,19 +167,24 @@ function processOptions(options) {
 	if(typeof options.then === "function") {
 		options.then(processOptions).catch(function(err) {
 			console.error(err.stack || err);
-			process.exit(); // eslint-disable-line
+			process.exit(1); // eslint-disable-line
 		});
 		return;
 	}
 
-	var firstOptions = Array.isArray(options) ? (options[0] || {}) : options;
+	var firstOptions = [].concat(options)[0];
+	var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
 
-	if(typeof options.stats === "boolean" || typeof options.stats === "string") {
-		var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
-		options.stats = statsPresetToOptions(options.stats);
+	var outputOptions = options.stats;
+	if(typeof outputOptions === "boolean" || typeof outputOptions === "string") {
+		outputOptions = statsPresetToOptions(outputOptions);
+	} else if(!outputOptions) {
+		outputOptions = {};
 	}
-
-	var outputOptions = Object.create(options.stats || firstOptions.stats || {});
+	outputOptions = Object.create(outputOptions);
+	if(Array.isArray(options) && !outputOptions.children) {
+		outputOptions.children = options.map(o => o.stats);
+	}
 	if(typeof outputOptions.context === "undefined")
 		outputOptions.context = firstOptions.context;
 
@@ -214,6 +231,10 @@ function processOptions(options) {
 			outputOptions.reasons = bool;
 		});
 
+		ifArg("display-depth", function(bool) {
+			outputOptions.depth = bool;
+		});
+
 		ifArg("display-used-exports", function(bool) {
 			outputOptions.usedExports = bool;
 		});
@@ -230,6 +251,10 @@ function processOptions(options) {
 			outputOptions.chunkOrigins = bool;
 		});
 
+		ifArg("display-max-modules", function(value) {
+			outputOptions.maxModules = value;
+		});
+
 		ifArg("display-cached", function(bool) {
 			if(bool)
 				outputOptions.cached = true;
@@ -240,8 +265,13 @@ function processOptions(options) {
 				outputOptions.cachedAssets = true;
 		});
 
-		if(!outputOptions.exclude && !argv["display-modules"])
-			outputOptions.exclude = ["node_modules", "bower_components", "jam", "components"];
+		if(!outputOptions.exclude)
+			outputOptions.exclude = ["node_modules", "bower_components", "components"];
+
+		if(argv["display-modules"]) {
+			outputOptions.maxModules = Infinity;
+			outputOptions.exclude = undefined;
+		}
 	} else {
 		if(typeof outputOptions.chunks === "undefined")
 			outputOptions.chunks = true;
@@ -280,7 +310,7 @@ function processOptions(options) {
 				console.error("\u001b[1m\u001b[31m" + e.message + "\u001b[39m\u001b[22m");
 			else
 				console.error(e.message);
-			process.exit(1);
+			process.exit(1); // eslint-disable-line no-process-exit
 		}
 		throw e;
 	}
@@ -293,7 +323,7 @@ function processOptions(options) {
 	}
 
 	function compilerCallback(err, stats) {
-		if(!options.watch) {
+		if(!options.watch || err) {
 			// Do not keep cache anymore
 			compiler.purgeInputFileSystem();
 		}
@@ -301,12 +331,7 @@ function processOptions(options) {
 			lastHash = null;
 			console.error(err.stack || err);
 			if(err.details) console.error(err.details);
-			if(!options.watch) {
-				process.on("exit", function() {
-					process.exit(1); // eslint-disable-line
-				});
-			}
-			return;
+			process.exit(1); // eslint-disable-line
 		}
 		if(outputOptions.json) {
 			process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
@@ -314,23 +339,22 @@ function processOptions(options) {
 			lastHash = stats.hash;
 			process.stdout.write(stats.toString(outputOptions) + "\n");
 		}
-		if(!options.doWatch && stats.hasErrors()) {
+		if(!options.watch && stats.hasErrors()) {
 			process.on("exit", function() {
 				process.exit(2); // eslint-disable-line
 			});
 		}
 	}
-	if(options.watch) {
-		var primaryOptions = !Array.isArray(options) ? options : options[0];
-		var watchOptions = primaryOptions.watchOptions || primaryOptions.watch || {};
+	if(firstOptions.watch || options.watch) {
+		var watchOptions = firstOptions.watchOptions || firstOptions.watch || options.watch || {};
 		if(watchOptions.stdin) {
-			process.stdin.on('end', function() {
+			process.stdin.on("end", function() {
 				process.exit(0); // eslint-disable-line
 			});
 			process.stdin.resume();
 		}
 		compiler.watch(watchOptions, compilerCallback);
-		console.log('\nWebpack is watching the files…\n');
+		console.log("\nWebpack is watching the files…\n");
 	} else
 		compiler.run(compilerCallback);
 

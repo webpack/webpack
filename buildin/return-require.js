@@ -1,1 +1,0 @@
-module.exports = function() { return __webpack_require__; };

@@ -1,9 +1,12 @@
-var should = require("should");
-var webpack = require("../lib/webpack");
-var WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
+/* globals describe, it */
+"use strict";
 
-describe("Validation", function() {
-	var testCases = [{
+require("should");
+const webpack = require("../lib/webpack");
+const WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
+
+describe("Validation", () => {
+	const testCases = [{
 		name: "undefined configuration",
 		config: undefined,
 		message: [
@@ -20,7 +23,7 @@ describe("Validation", function() {
 		config: {},
 		message: [
 			" - configuration misses the property 'entry'.",
-			"   object { <key>: string | [string] } | string | [string]",
+			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string] | function",
 			"   The entry point(s) of the compilation."
 		]
 	}, {
@@ -30,8 +33,48 @@ describe("Validation", function() {
 		},
 		message: [
 			" - configuration.entry should be one of these:",
-			"   object { <key>: string | [string] } | string | [string]",
-			"   The entry point(s) of the compilation."
+			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string] | function",
+			"   The entry point(s) of the compilation.",
+			"   Details:",
+			"    * configuration.entry should be an object.",
+			"    * configuration.entry should not be empty.",
+			"    * configuration.entry should be an array:",
+			"      [non-empty string]",
+			"    * configuration.entry should be an instance of function",
+			"      function returning an entry object or a promise.."
+		]
+	}, {
+		name: "empty entry bundle array",
+		config: {
+			entry: {
+				"bundle": []
+			}
+		},
+		message: [
+			" - configuration.entry should be one of these:",
+			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string] | function",
+			"   The entry point(s) of the compilation.",
+			"   Details:",
+			"    * configuration.entry['bundle'] should be a string.",
+			"    * configuration.entry['bundle'] should not be empty.",
+			"    * configuration.entry['bundle'] should be one of these:",
+			"      non-empty string | [non-empty string]",
+			"    * configuration.entry should be a string.",
+			"    * configuration.entry should be an array:",
+			"      [non-empty string]",
+			"    * configuration.entry should be an instance of function",
+			"      function returning an entry object or a promise.."
+		]
+	}, {
+		name: "invalid instanceof",
+		config: {
+			entry: "a",
+			module: {
+				wrappedContextRegExp: 1337
+			}
+		},
+		message: [
+			" - configuration.module.wrappedContextRegExp should be an instance of RegExp.",
 		]
 	}, {
 		name: "multiple errors",
@@ -42,10 +85,15 @@ describe("Validation", function() {
 			}
 		},
 		message: [
-			" - configuration.entry[0] should be a string.",
 			" - configuration.entry should be one of these:",
-			"   object { <key>: string | [string] } | string | [string]",
+			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string] | function",
 			"   The entry point(s) of the compilation.",
+			"   Details:",
+			"    * configuration.entry should be an object.",
+			"    * configuration.entry should be a string.",
+			"    * configuration.entry[0] should be a string.",
+			"    * configuration.entry should be an instance of function",
+			"      function returning an entry object or a promise..",
 			" - configuration.output.filename should be a string."
 		]
 	}, {
@@ -59,10 +107,15 @@ describe("Validation", function() {
 			}
 		}],
 		message: [
-			" - configuration[0].entry[0] should be a string.",
 			" - configuration[0].entry should be one of these:",
-			"   object { <key>: string | [string] } | string | [string]",
+			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string] | function",
 			"   The entry point(s) of the compilation.",
+			"   Details:",
+			"    * configuration[0].entry should be an object.",
+			"    * configuration[0].entry should be a string.",
+			"    * configuration[0].entry[0] should be a string.",
+			"    * configuration[0].entry should be an instance of function",
+			"      function returning an entry object or a promise..",
 			" - configuration[1].output.filename should be a string."
 		]
 	}, {
@@ -72,7 +125,7 @@ describe("Validation", function() {
 			module: {
 				rules: [{
 					oneOf: [{
-						test: "a",
+						test: "/a",
 						paser: {
 							amd: false
 						}
@@ -82,18 +135,18 @@ describe("Validation", function() {
 		},
 		message: [
 			" - configuration.module.rules[0].oneOf[0] has an unknown property 'paser'. These properties are valid:",
-			"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, query?, resource?, rules?, test?, use? }"
+			"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, query?, resource?, resourceQuery?, compiler?, rules?, test?, use? }"
 		]
 	}, {
 		name: "additional key on root",
 		config: {
 			entry: "a",
-			postcss: function() {}
+			postcss: () => {}
 		},
 		message: [
 			" - configuration has an unknown property 'postcss'. These properties are valid:",
 			"   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry, externals?, " +
-			"loader?, module?, name?, node?, output?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, " +
+			"loader?, module?, name?, node?, output?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, " +
 			"recordsPath?, resolve?, resolveLoader?, stats?, target?, watch?, watchOptions? }",
 			"   For typos: please correct them.",
 			"   For loader options: webpack 2 no longer allows custom properties in configuration.",
@@ -108,9 +161,47 @@ describe("Validation", function() {
 			"       })",
 			"     ]"
 		]
+	}, {
+		name: "enum",
+		config: {
+			entry: "a",
+			devtool: true
+		},
+		message: [
+			" - configuration.devtool should be one of these:",
+			"   string | false",
+			"   A developer tool to enhance debugging.",
+			"   Details:",
+			"    * configuration.devtool should be a string.",
+			"    * configuration.devtool should be false"
+		]
+	}, {
+		name: "relative path",
+		config: {
+			entry: "foo.js",
+			output: {
+				filename: "/bar"
+			}
+		},
+		message: [
+			" - configuration.output.filename: A relative path is expected. However the provided value \"/bar\" is an absolute path!",
+			"   Please use output.path to specify absolute path and output.filename for the file name."
+		]
+	}, {
+		name: "absolute path",
+		config: {
+			entry: "foo.js",
+			output: {
+				filename: "bar"
+			},
+			context: "baz"
+		},
+		message: [
+			" - configuration.context: The provided value \"baz\" is not an absolute path!",
+		]
 	}];
-	testCases.forEach(function(testCase) {
-		it("should fail validation for " + testCase.name, function() {
+	testCases.forEach((testCase) => {
+		it("should fail validation for " + testCase.name, () => {
 			try {
 				webpack(testCase.config);
 			} catch(e) {
@@ -121,6 +212,6 @@ describe("Validation", function() {
 				return;
 			}
 			throw new Error("Validation didn't fail");
-		})
+		});
 	});
 });

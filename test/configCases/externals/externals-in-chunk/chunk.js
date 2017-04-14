@@ -1,2 +1,2 @@
 exports.a = require("external");
-exports.b = System.import("./chunk2");
+exports.b = import("./chunk2");

@@ -1,26 +1,11 @@
 var path = require("path");
 var fs = require("fs");
 fs.existsSync = fs.existsSync || path.existsSync;
-var resolve = require("enhanced-resolve");
 var interpret = require("interpret");
-var WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
-var validateWebpackOptions = require("../lib/validateWebpackOptions");
 
-module.exports = function(optimist, argv, convertOptions) {
+module.exports = function(yargs, argv, convertOptions) {
 
 	var options = [];
-
-	// Help
-	if(argv.help) {
-		optimist.showHelp();
-		process.exit(0); // eslint-disable-line
-	}
-
-	// Version
-	if(argv.v || argv.version) {
-		console.log(require("../package.json").version);
-		process.exit(0); // eslint-disable-line
-	}
 
 	// Shortcuts
 	if(argv.d) {
@@ -38,7 +23,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	var configFileLoaded = false;
 	var configFiles = [];
 	var extensions = Object.keys(interpret.extensions).sort(function(a, b) {
-		return a === '.js' ? -1 : b === '.js' ? 1 : a.length - b.length;
+		return a === ".js" ? -1 : b === ".js" ? 1 : a.length - b.length;
 	});
 	var defaultConfigFiles = ["webpack.config", "webpackfile"].map(function(filename) {
 		return extensions.map(function(ext) {
@@ -53,7 +38,7 @@ module.exports = function(optimist, argv, convertOptions) {
 
 	var i;
 	if(argv.config) {
-		function getConfigExtension(configPath) {
+		var getConfigExtension = function getConfigExtension(configPath) {
 			for(i = extensions.length - 1; i >= 0; i--) {
 				var tmpExt = extensions[i];
 				if(configPath.indexOf(tmpExt, configPath.length - tmpExt.length) > -1) {
@@ -61,16 +46,16 @@ module.exports = function(optimist, argv, convertOptions) {
 				}
 			}
 			return path.extname(configPath);
-		}
+		};
 
-		function mapConfigArg(configArg) {
+		var mapConfigArg = function mapConfigArg(configArg) {
 			var resolvedPath = path.resolve(configArg);
 			var extension = getConfigExtension(resolvedPath);
 			return {
 				path: resolvedPath,
 				ext: extension
 			};
-		}
+		};
 
 		var configArgList = Array.isArray(argv.config) ? argv.config : [argv.config];
 		configFiles = configArgList.map(mapConfigArg);
@@ -88,7 +73,7 @@ module.exports = function(optimist, argv, convertOptions) {
 	}
 
 	if(configFiles.length > 0) {
-		function registerCompiler(moduleDescriptor) {
+		var registerCompiler = function registerCompiler(moduleDescriptor) {
 			if(moduleDescriptor) {
 				if(typeof moduleDescriptor === "string") {
 					require(moduleDescriptor);
@@ -105,9 +90,9 @@ module.exports = function(optimist, argv, convertOptions) {
 					}
 				}
 			}
-		}
+		};
 
-		function requireConfig(configPath) {
+		var requireConfig = function requireConfig(configPath) {
 			var options = require(configPath);
 			var isES6DefaultExportedFunc = (
 				typeof options === "object" && options !== null && typeof options.default === "function"
@@ -117,7 +102,7 @@ module.exports = function(optimist, argv, convertOptions) {
 				options = options(argv.env, argv);
 			}
 			return options;
-		}
+		};
 
 		configFiles.forEach(function(file) {
 			registerCompiler(interpret.extensions[file.ext]);
@@ -201,7 +186,7 @@ module.exports = function(optimist, argv, convertOptions) {
 				if(finalize) {
 					finalize();
 				}
-			} else if(typeof argv[name] !== "undefined") {
+			} else if(typeof argv[name] !== "undefined" && argv[name] !== null) {
 				if(init) {
 					init();
 				}
@@ -232,28 +217,17 @@ module.exports = function(optimist, argv, convertOptions) {
 		}
 
 		function mapArgToBoolean(name, optionName) {
-			ifBooleanArg(name, function() {
-				options[optionName || name] = true;
-			});
-		}
-
-		function mapArgToBooleanInverse(name, optionName) {
 			ifArg(name, function(bool) {
-				if(!bool) {
+				if(bool === true)
+					options[optionName || name] = true;
+				else if(bool === false)
 					options[optionName || name] = false;
-				}
-			});
-		}
-
-		function mapArgToPath(name, optionName) {
-			ifArg(name, function(str) {
-				options[optionName || name] = path.resolve(str);
 			});
 		}
 
 		function loadPlugin(name) {
 			var loadUtils = require("loader-utils");
-			var args = null;
+			var args;
 			try {
 				var p = name && name.indexOf("?");
 				if(p > -1) {
@@ -267,6 +241,7 @@ module.exports = function(optimist, argv, convertOptions) {
 
 			var path;
 			try {
+				var resolve = require("enhanced-resolve");
 				path = resolve.sync(process.cwd(), name);
 			} catch(e) {
 				console.log("Cannot resolve plugin " + name + ".");
@@ -300,7 +275,11 @@ module.exports = function(optimist, argv, convertOptions) {
 		}
 
 		ifArgPair("entry", function(name, entry) {
-			options.entry[name] = entry;
+			if(typeof options.entry[name] !== "undefined" && options.entry[name] !== null) {
+				options.entry[name] = [].concat(options.entry[name]).concat(entry);
+			} else {
+				options.entry[name] = entry;
+			}
 		}, function() {
 			ensureObject(options, "entry");
 		});
@@ -309,6 +288,7 @@ module.exports = function(optimist, argv, convertOptions) {
 			ifArgPair(arg, function(name, binding) {
 				if(name === null) {
 					name = binding;
+					binding += "-loader";
 				}
 				options.module[collection].push({
 					test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
@@ -340,7 +320,7 @@ module.exports = function(optimist, argv, convertOptions) {
 
 		ifArg("output-path", function(value) {
 			ensureObject(options, "output");
-			options.output.path = value;
+			options.output.path = path.resolve(value);
 		});
 
 		ifArg("output-filename", function(value) {
@@ -400,7 +380,7 @@ module.exports = function(optimist, argv, convertOptions) {
 			options.target = value;
 		});
 
-		mapArgToBooleanInverse("cache");
+		mapArgToBoolean("cache");
 
 		ifBooleanArg("hot", function() {
 			ensureArray(options, "plugins");
@@ -470,12 +450,6 @@ module.exports = function(optimist, argv, convertOptions) {
 			}));
 		});
 
-		ifBooleanArg("optimize-dedupe", function() {
-			ensureArray(options, "plugins");
-			var DedupePlugin = require("../lib/optimize/DedupePlugin");
-			options.plugins.push(new DedupePlugin());
-		});
-
 		ifArg("prefetch", function(request) {
 			ensureArray(options, "plugins");
 			var PrefetchPlugin = require("../lib/PrefetchPlugin");
@@ -496,12 +470,6 @@ module.exports = function(optimist, argv, convertOptions) {
 			options.plugins.push(new ProvidePlugin(name, value));
 		});
 
-		ifBooleanArg("labeled-modules", function() {
-			ensureArray(options, "plugins");
-			var LabeledModulesPlugin = require("../lib/dependencies/LabeledModulesPlugin");
-			options.plugins.push(new LabeledModulesPlugin());
-		});
-
 		ifArg("plugin", function(value) {
 			ensureArray(options, "plugins");
 			options.plugins.push(loadPlugin(value));
@@ -514,11 +482,11 @@ module.exports = function(optimist, argv, convertOptions) {
 		if(noOutputFilenameDefined) {
 			ensureObject(options, "output");
 			if(convertOptions && convertOptions.outputFilename) {
-				options.output.path = path.dirname(convertOptions.outputFilename);
+				options.output.path = path.resolve(path.dirname(convertOptions.outputFilename));
 				options.output.filename = path.basename(convertOptions.outputFilename);
 			} else if(argv._.length > 0) {
 				options.output.filename = argv._.pop();
-				options.output.path = path.dirname(options.output.filename);
+				options.output.path = path.resolve(path.dirname(options.output.filename));
 				options.output.filename = path.basename(options.output.filename);
 			} else if(configFileLoaded) {
 				throw new Error("'output.filename' is required, either in config file or as --output-filename");
@@ -538,7 +506,7 @@ module.exports = function(optimist, argv, convertOptions) {
 			}
 			ensureObject(options, "entry");
 
-			function addTo(name, entry) {
+			var addTo = function addTo(name, entry) {
 				if(options.entry[name]) {
 					if(!Array.isArray(options.entry[name])) {
 						options.entry[name] = [options.entry[name]];
@@ -547,7 +515,7 @@ module.exports = function(optimist, argv, convertOptions) {
 				} else {
 					options.entry[name] = entry;
 				}
-			}
+			};
 			argv._.forEach(function(content) {
 				var i = content.indexOf("=");
 				var j = content.indexOf("?");

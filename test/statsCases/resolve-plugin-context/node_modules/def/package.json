@@ -1,0 +1,8 @@
+{
+  "name": "def",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "xyz": "2.0.0"
+  }
+}

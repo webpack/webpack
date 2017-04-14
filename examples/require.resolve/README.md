@@ -25,55 +25,58 @@ module.exports = Math.random();
 
 # js/output.js
 
-<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-
+/******/
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
-
+/******/
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
-/******/ 	// identity function for calling harmory imports with the correct context
+/******/
+/******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
-/******/ 	// define getter function for harmory exports
+/******/
+/******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		Object.defineProperty(exports, name, {
-/******/ 			configurable: false,
-/******/ 			enumerable: true,
-/******/ 			get: getter
-/******/ 		});
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -82,19 +85,21 @@ module.exports = Math.random();
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 ```
+
 </details>
+
 ``` javascript
 /******/ ([
 /* 0 */
@@ -103,18 +108,18 @@ module.exports = Math.random();
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 module.exports = Math.random();
 
-/***/ },
+/***/ }),
 /* 1 */
 /* unknown exports provided */
 /* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 var a = __webpack_require__(/*! ./a */ 0);
 
@@ -130,7 +135,7 @@ var a2 = __webpack_require__(/*! ./a */ 0);
 // vertify it
 if(a == a2) throw new Error("Cache clear failed :(");
 
-/***/ }
+/***/ })
 /******/ ]);
 ```
 
@@ -139,35 +144,33 @@ if(a == a2) throw new Error("Cache clear failed :(");
 ## Uncompressed
 
 ```
-Hash: 61b465fe869dc6143477
-Version: webpack 2.1.0-beta.25
-Time: 108ms
+Hash: 4ed342adc60583d992ab
+Version: webpack 2.3.2
     Asset     Size  Chunks             Chunk Names
-output.js  3.13 kB       0  [emitted]  main
+output.js  3.34 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 314 bytes [entry] [rendered]
+chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] ./a.js 31 bytes {0} [built]
         cjs require ./a [1] ./example.js 1:8-22
         cjs require ./a [1] ./example.js 10:9-23
         require.resolve ./a.js [1] ./example.js 4:10-35
-    [1] ./example.js 283 bytes {0} [built]
+    [1] ./example.js 295 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 61b465fe869dc6143477
-Version: webpack 2.1.0-beta.25
-Time: 213ms
+Hash: 4ed342adc60583d992ab
+Version: webpack 2.3.2
     Asset       Size  Chunks             Chunk Names
-output.js  634 bytes       0  [emitted]  main
+output.js  632 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 314 bytes [entry] [rendered]
+chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] ./a.js 31 bytes {0} [built]
         cjs require ./a [1] ./example.js 1:8-22
         cjs require ./a [1] ./example.js 10:9-23
         require.resolve ./a.js [1] ./example.js 4:10-35
-    [1] ./example.js 283 bytes {0} [built]
+    [1] ./example.js 295 bytes {0} [built]
 ```

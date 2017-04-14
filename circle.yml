@@ -1,0 +1,27 @@
+general:
+  artifacts:
+    - "./coverage"
+
+machine:
+  node:
+    version: 4.7.0
+
+dependencies:
+  pre:
+    - npm install -g yarn
+  override:
+    - yarn install
+  post:
+    - yarn link || true && yarn link webpack
+
+test:
+  pre:
+    - npm run travis:lint
+  override:
+    - npm run travis:test:
+        parallel: true
+        files:
+          - test/ConfigTestCases.test.js
+          - test/TestCases.test.js
+          - test/Stats.test.js
+          - test/**/*.test.js
