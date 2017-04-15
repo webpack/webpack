@@ -333,6 +333,10 @@
           "minLength": 1,
           "type": "string"
         },
+        "hashSalt": {
+          "minLength": 1,
+          "type": "string"
+        },
         "hotUpdateChunkFilename": {
           "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
           "type": "string",
