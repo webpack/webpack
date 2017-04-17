@@ -34,7 +34,7 @@ it("should interpolate basename in chunk banner", () => {
 });
 
 it("should interpolate query in chunk banner", () => {
-		banner["query"].should.equal("value");
+		banner["query"].should.equal("?value");
 });
 
 it("should parse entry into basename", () => {
