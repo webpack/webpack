@@ -333,7 +333,7 @@ This is how we use the donations:
 
 <h2 align="center">Other Backers and Sponsors</h2>
 
-We had other sources of donations before starting to use OpenCollective (or people that can't donate via OpenCollective). We want to acknowledge these sponsors and backers, but donations were not public and we are not sure of donors want to stay anonymous. So if you want to be in this list, just send a PR.
+Before we started using OpenCollective, donations were made anonymously. Now that we have made the switch, we would like to acknowledge these sponsors (and the ones who continue to donate using OpenCollective). If we've missed someone, please send us a PR, and we'll add you to this list.
 
 [Google Angular Team](https://angular.io/), [Architects.io](http://architects.io/),
 <a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img 
