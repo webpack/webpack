@@ -1,5 +1,5 @@
 "use strict";
-const webpack = require("webpack");
+const webpack = require("../../../");
 
 const baseConfig = {
 	entry: "./index",
