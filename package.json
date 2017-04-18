@@ -43,6 +43,7 @@
     "express": "~4.13.1",
     "extract-text-webpack-plugin": "^2.0.0-beta",
     "file-loader": "~0.9.0",
+    "husky": "^0.13.3",
     "i18n-webpack-plugin": "^0.3.0",
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
@@ -50,6 +51,7 @@
     "js-beautify": "^1.5.10",
     "less": "^2.5.1",
     "less-loader": "^2.0.0",
+    "lint-staged": "^3.4.0",
     "lodash": "^4.17.4",
     "mocha": "^3.2.0",
     "mocha-lcov-reporter": "^1.0.0",
@@ -99,10 +101,18 @@
     "lint-files": "npm run lint && npm run beautify-lint",
     "lint": "eslint lib bin hot buildin test/**/webpack.config.js test/binCases/**/test.js examples/**/webpack.config.js",
     "beautify-lint": "beautify-lint 'lib/**/*.js' 'hot/**/*.js' 'bin/**/*.js' 'benchmark/*.js' 'test/*.js'",
+    "precommit": "lint-staged",
     "nsp": "nsp check --output summary",
     "benchmark": "mocha test/*.benchmark.js --harmony -R spec",
     "cover": "node --harmony ./node_modules/istanbul/lib/cli.js cover -x '**/*.runtime.js' node_modules/mocha/bin/_mocha -- test/*.test.js",
     "cover:min": "node --harmony ./node_modules/.bin/istanbul cover -x '**/*.runtime.js' --report lcovonly node_modules/mocha/bin/_mocha -- test/*.test.js",
     "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
+  },
+  "lint-staged": {
+    "*.js": [
+      "beautify-rewrite",
+      "eslint --fix",
+      "git add"
+    ]
   }
 }
