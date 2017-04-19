@@ -10,4 +10,3 @@
 *.log
 .idea
 .vscode
-test/configCases/plugins/banner-plugin-hashing/dist
