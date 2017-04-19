@@ -4,9 +4,7 @@
 
 [Based on this gist](https://gist.github.com/Eoksni/83d1f1559e0ec00d0e89c33a6d763049)
 
-For the sake of ease in the example, both `webpack.vendor.config` (dll plugin)  & `webpack.app.config` (dll reference plugin) are exported in `webpack.config` in an array.
-
-In the real world, one would likely not build vendor every time, but would build when needed (with a separate build command such as `webpack --config webpack.app.config`), which is why they are separate files.
+Vendor bundle is only built when needed (with a separate build command such as `webpack --config webpack.app.config`), which is why they are separate files.
 
 
 # Configs
