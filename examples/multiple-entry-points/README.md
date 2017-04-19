@@ -95,8 +95,9 @@ module.exports = {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
@@ -105,8 +106,9 @@ module.exports = {
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
+/******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
+/******/ 		}
 /******/ 		if(executeModules) {
 /******/ 			for(i=0; i < executeModules.length; i++) {
 /******/ 				result = __webpack_require__(__webpack_require__.s = executeModules[i]);
@@ -127,9 +129,9 @@ module.exports = {
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -150,8 +152,9 @@ module.exports = {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
+/******/ 		if(installedChunks[chunkId] === 0) {
 /******/ 			return Promise.resolve();
+/******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -184,7 +187,9 @@ module.exports = {
 /******/ 			clearTimeout(timeout);
 /******/ 			var chunk = installedChunks[chunkId];
 /******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
@@ -326,28 +331,28 @@ module.exports = function(msg) {
 ## Uncompressed
 
 ```
-Hash: 6f1a02fdead6a9246eeb
-Version: webpack 2.3.2
+Hash: 0d66fd2324ef88f9e257
+Version: webpack 2.4.1
           Asset       Size  Chunks             Chunk Names
-     0.chunk.js  336 bytes       0  [emitted]  
-pageB.bundle.js  520 bytes       1  [emitted]  pageB
-pageA.bundle.js  546 bytes       2  [emitted]  pageA
-     commons.js       6 kB       3  [emitted]  commons
+     0.chunk.js  333 bytes       0  [emitted]  
+pageB.bundle.js  516 bytes       1  [emitted]  pageB
+pageA.bundle.js  543 bytes       2  [emitted]  pageA
+     commons.js    6.09 kB       3  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
-chunk    {0} 0.chunk.js 91 bytes {1} {2} [rendered]
+chunk    {0} 0.chunk.js 88 bytes {1} {2} [rendered]
     > duplicate [2] ./pageA.js 2:0-4:2
     > duplicate [3] ./pageB.js 2:0-5:2
-    [0] ./shared.js 91 bytes {0} [built]
+    [0] ./shared.js 88 bytes {0} [built]
         amd require ./shared [2] ./pageA.js 2:0-4:2
         require.ensure item ./shared [3] ./pageB.js 2:0-5:2
         cjs require ./shared [3] ./pageB.js 3:14-33
-chunk    {1} pageB.bundle.js (pageB) 152 bytes {3} [initial] [rendered]
+chunk    {1} pageB.bundle.js (pageB) 148 bytes {3} [initial] [rendered]
     > pageB [3] ./pageB.js 
-    [3] ./pageB.js 152 bytes {1} [built]
-chunk    {2} pageA.bundle.js (pageA) 108 bytes {3} [initial] [rendered]
+    [3] ./pageB.js 148 bytes {1} [built]
+chunk    {2} pageA.bundle.js (pageA) 105 bytes {3} [initial] [rendered]
     > pageA [2] ./pageA.js 
-    [2] ./pageA.js 108 bytes {2} [built]
+    [2] ./pageA.js 105 bytes {2} [built]
 chunk    {3} commons.js (commons) 26 bytes [entry] [rendered]
     [1] ./common.js 26 bytes {3} [built]
         cjs require ./common [0] ./shared.js 1:13-32
@@ -358,8 +363,8 @@ chunk    {3} commons.js (commons) 26 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 6f1a02fdead6a9246eeb
-Version: webpack 2.3.2
+Hash: 0d66fd2324ef88f9e257
+Version: webpack 2.4.1
           Asset       Size  Chunks             Chunk Names
      0.chunk.js   80 bytes       0  [emitted]  
 pageB.bundle.js  122 bytes       1  [emitted]  pageB
@@ -367,19 +372,19 @@ pageA.bundle.js  147 bytes       2  [emitted]  pageA
      commons.js    1.41 kB       3  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
-chunk    {0} 0.chunk.js 91 bytes {1} {2} [rendered]
+chunk    {0} 0.chunk.js 88 bytes {1} {2} [rendered]
     > duplicate [2] ./pageA.js 2:0-4:2
     > duplicate [3] ./pageB.js 2:0-5:2
-    [0] ./shared.js 91 bytes {0} [built]
+    [0] ./shared.js 88 bytes {0} [built]
         amd require ./shared [2] ./pageA.js 2:0-4:2
         require.ensure item ./shared [3] ./pageB.js 2:0-5:2
         cjs require ./shared [3] ./pageB.js 3:14-33
-chunk    {1} pageB.bundle.js (pageB) 152 bytes {3} [initial] [rendered]
+chunk    {1} pageB.bundle.js (pageB) 148 bytes {3} [initial] [rendered]
     > pageB [3] ./pageB.js 
-    [3] ./pageB.js 152 bytes {1} [built]
-chunk    {2} pageA.bundle.js (pageA) 108 bytes {3} [initial] [rendered]
+    [3] ./pageB.js 148 bytes {1} [built]
+chunk    {2} pageA.bundle.js (pageA) 105 bytes {3} [initial] [rendered]
     > pageA [2] ./pageA.js 
-    [2] ./pageA.js 108 bytes {2} [built]
+    [2] ./pageA.js 105 bytes {2} [built]
 chunk    {3} commons.js (commons) 26 bytes [entry] [rendered]
     [1] ./common.js 26 bytes {3} [built]
         cjs require ./common [0] ./shared.js 1:13-32

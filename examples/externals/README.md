@@ -70,9 +70,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -181,27 +181,27 @@ exports.exampleValue = subtract(add(42, 2), 2);
 ## Uncompressed
 
 ```
-Hash: 0b46eba3c061e1157fa9
-Version: webpack 2.3.2
+Hash: b48b7e2830381b4297e4
+Version: webpack 2.4.1
     Asset     Size  Chunks             Chunk Names
-output.js  4.28 kB       0  [emitted]  main
+output.js  4.29 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 197 bytes [entry] [rendered]
+chunk    {0} output.js (main) 194 bytes [entry] [rendered]
     > main [2] ./example.js 
-    [2] ./example.js 113 bytes {0} [built]
+    [2] ./example.js 110 bytes {0} [built]
      + 2 hidden modules
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 0b46eba3c061e1157fa9
-Version: webpack 2.3.2
+Hash: b48b7e2830381b4297e4
+Version: webpack 2.4.1
     Asset  Size  Chunks             Chunk Names
 output.js  1 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 197 bytes [entry] [rendered]
+chunk    {0} output.js (main) 194 bytes [entry] [rendered]
     > main [2] ./example.js 
-    [2] ./example.js 113 bytes {0} [built]
+    [2] ./example.js 110 bytes {0} [built]
      + 2 hidden modules
 ```

@@ -68,8 +68,9 @@ require(
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
@@ -78,8 +79,9 @@ require(
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
+/******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
+/******/ 		}
 /******/
 /******/ 	};
 /******/
@@ -95,9 +97,9 @@ require(
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -118,8 +120,9 @@ require(
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
+/******/ 		if(installedChunks[chunkId] === 0) {
 /******/ 			return Promise.resolve();
+/******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -152,7 +155,9 @@ require(
 /******/ 			clearTimeout(timeout);
 /******/ 			var chunk = installedChunks[chunkId];
 /******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
@@ -379,89 +384,89 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 9de04164c6e05168d4d0
-Version: webpack 2.3.2
+Hash: 9437942f663d7c8c9b79
+Version: webpack 2.4.1
       Asset     Size  Chunks             Chunk Names
 0.output.js  1.85 kB       0  [emitted]  
-  output.js  9.04 kB       1  [emitted]  main
+  output.js  9.09 kB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 439 bytes {1} [rendered]
+chunk    {0} 0.output.js 433 bytes {1} [rendered]
     > [3] ./example.js 7:0-14:1
     [4] ../require.context/templates ^\.\/.*\.js$ 193 bytes {0} [built]
         amd require context ../require.context/templates [3] ./example.js 7:0-14:1
-    [5] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+    [5] ../require.context/templates/a.js 80 bytes {0} [optional] [built]
         context element ./a.js [4] ../require.context/templates ^\.\/.*\.js$ ./a.js
-    [6] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+    [6] ../require.context/templates/b.js 80 bytes {0} [optional] [built]
         context element ./b.js [4] ../require.context/templates ^\.\/.*\.js$ ./b.js
-    [7] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+    [7] ../require.context/templates/c.js 80 bytes {0} [optional] [built]
         context element ./c.js [4] ../require.context/templates ^\.\/.*\.js$ ./c.js
-chunk    {1} output.js (main) 1.05 kB [entry] [rendered]
+chunk    {1} output.js (main) 1.01 kB [entry] [rendered]
     > main [3] ./example.js 
-    [0] ./amd.js 309 bytes {1} [built]
+    [0] ./amd.js 298 bytes {1} [built]
         amd require ./amd [1] ./commonjs.js 5:0-11:1
         cjs require ./amd [1] ./commonjs.js 8:13-29
         harmony import ./amd [2] ./harmony.js 3:0-24
         cjs require ./amd [3] ./example.js 3:11-27
         amd require ./amd [3] ./example.js 7:0-14:1
         amd require ./amd [3] ./example.js 7:0-14:1
-    [1] ./commonjs.js 233 bytes {1} [built]
+    [1] ./commonjs.js 223 bytes {1} [built]
         amd require ./commonjs [0] ./amd.js 2:0-12:1
         cjs require ./commonjs [0] ./amd.js 7:18-39
         harmony import ./commonjs [2] ./harmony.js 2:0-34
         cjs require ./commonjs [3] ./example.js 2:16-37
         amd require ./commonjs [3] ./example.js 7:0-14:1
         amd require ./commonjs [3] ./example.js 7:0-14:1
-    [2] ./harmony.js 101 bytes {1} [built]
+    [2] ./harmony.js 96 bytes {1} [built]
         [exports: default]
         amd require ./harmony [0] ./amd.js 2:0-12:1
         cjs require ./harmony [0] ./amd.js 8:17-37
         amd require ./harmony [1] ./commonjs.js 5:0-11:1
         cjs require ./harmony [1] ./commonjs.js 9:17-37
         cjs require ./harmony [3] ./example.js 4:15-35
-    [3] ./example.js 410 bytes {1} [built]
+    [3] ./example.js 396 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9de04164c6e05168d4d0
-Version: webpack 2.3.2
+Hash: 9437942f663d7c8c9b79
+Version: webpack 2.4.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  523 bytes       0  [emitted]  
-  output.js     1.9 kB       1  [emitted]  main
+  output.js    1.89 kB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 439 bytes {1} [rendered]
+chunk    {0} 0.output.js 433 bytes {1} [rendered]
     > [3] ./example.js 7:0-14:1
     [4] ../require.context/templates ^\.\/.*\.js$ 193 bytes {0} [built]
         amd require context ../require.context/templates [3] ./example.js 7:0-14:1
-    [5] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+    [5] ../require.context/templates/a.js 80 bytes {0} [optional] [built]
         context element ./a.js [4] ../require.context/templates ^\.\/.*\.js$ ./a.js
-    [6] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+    [6] ../require.context/templates/b.js 80 bytes {0} [optional] [built]
         context element ./b.js [4] ../require.context/templates ^\.\/.*\.js$ ./b.js
-    [7] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+    [7] ../require.context/templates/c.js 80 bytes {0} [optional] [built]
         context element ./c.js [4] ../require.context/templates ^\.\/.*\.js$ ./c.js
-chunk    {1} output.js (main) 1.05 kB [entry] [rendered]
+chunk    {1} output.js (main) 1.01 kB [entry] [rendered]
     > main [3] ./example.js 
-    [0] ./amd.js 309 bytes {1} [built]
+    [0] ./amd.js 298 bytes {1} [built]
         amd require ./amd [1] ./commonjs.js 5:0-11:1
         cjs require ./amd [1] ./commonjs.js 8:13-29
         harmony import ./amd [2] ./harmony.js 3:0-24
         cjs require ./amd [3] ./example.js 3:11-27
         amd require ./amd [3] ./example.js 7:0-14:1
         amd require ./amd [3] ./example.js 7:0-14:1
-    [1] ./commonjs.js 233 bytes {1} [built]
+    [1] ./commonjs.js 223 bytes {1} [built]
         amd require ./commonjs [0] ./amd.js 2:0-12:1
         cjs require ./commonjs [0] ./amd.js 7:18-39
         harmony import ./commonjs [2] ./harmony.js 2:0-34
         cjs require ./commonjs [3] ./example.js 2:16-37
         amd require ./commonjs [3] ./example.js 7:0-14:1
         amd require ./commonjs [3] ./example.js 7:0-14:1
-    [2] ./harmony.js 101 bytes {1} [built]
+    [2] ./harmony.js 96 bytes {1} [built]
         [exports: default]
         amd require ./harmony [0] ./amd.js 2:0-12:1
         cjs require ./harmony [0] ./amd.js 8:17-37
         amd require ./harmony [1] ./commonjs.js 5:0-11:1
         cjs require ./harmony [1] ./commonjs.js 9:17-37
         cjs require ./harmony [3] ./example.js 4:15-35
-    [3] ./example.js 410 bytes {1} [built]
+    [3] ./example.js 396 bytes {1} [built]
 ```

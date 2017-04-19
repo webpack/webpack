@@ -35,9 +35,9 @@ module.exports = function() {
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -196,49 +196,49 @@ console.log(getTemplate("b"));
 ## Uncompressed
 
 ```
-Hash: 219dcd379f9f54c00e1f
-Version: webpack 2.3.2
+Hash: 1bb5b5a15a35d4d81609
+Version: webpack 2.4.1
     Asset     Size  Chunks             Chunk Names
 output.js  4.57 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 613 bytes [entry] [rendered]
+chunk    {0} output.js (main) 603 bytes [entry] [rendered]
     > main [4] ./example.js 
-    [0] ./templates/a.js 82 bytes {0} [optional] [built]
+    [0] ./templates/a.js 80 bytes {0} [optional] [built]
         context element ./a [3] ./templates ^\.\/.*$ ./a
         context element ./a.js [3] ./templates ^\.\/.*$ ./a.js
-    [1] ./templates/b.js 82 bytes {0} [optional] [built]
+    [1] ./templates/b.js 80 bytes {0} [optional] [built]
         context element ./b [3] ./templates ^\.\/.*$ ./b
         context element ./b.js [3] ./templates ^\.\/.*$ ./b.js
-    [2] ./templates/c.js 82 bytes {0} [optional] [built]
+    [2] ./templates/c.js 80 bytes {0} [optional] [built]
         context element ./c [3] ./templates ^\.\/.*$ ./c
         context element ./c.js [3] ./templates ^\.\/.*$ ./c.js
     [3] ./templates ^\.\/.*$ 217 bytes {0} [built]
         cjs require context ./templates [4] ./example.js 2:8-44
-    [4] ./example.js 150 bytes {0} [built]
+    [4] ./example.js 146 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 219dcd379f9f54c00e1f
-Version: webpack 2.3.2
+Hash: 1bb5b5a15a35d4d81609
+Version: webpack 2.4.1
     Asset     Size  Chunks             Chunk Names
 output.js  1.11 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 613 bytes [entry] [rendered]
+chunk    {0} output.js (main) 603 bytes [entry] [rendered]
     > main [4] ./example.js 
-    [0] ./templates/a.js 82 bytes {0} [optional] [built]
+    [0] ./templates/a.js 80 bytes {0} [optional] [built]
         context element ./a [3] ./templates ^\.\/.*$ ./a
         context element ./a.js [3] ./templates ^\.\/.*$ ./a.js
-    [1] ./templates/b.js 82 bytes {0} [optional] [built]
+    [1] ./templates/b.js 80 bytes {0} [optional] [built]
         context element ./b [3] ./templates ^\.\/.*$ ./b
         context element ./b.js [3] ./templates ^\.\/.*$ ./b.js
-    [2] ./templates/c.js 82 bytes {0} [optional] [built]
+    [2] ./templates/c.js 80 bytes {0} [optional] [built]
         context element ./c [3] ./templates ^\.\/.*$ ./c
         context element ./c.js [3] ./templates ^\.\/.*$ ./c.js
     [3] ./templates ^\.\/.*$ 217 bytes {0} [built]
         cjs require context ./templates [4] ./example.js 2:8-44
-    [4] ./example.js 150 bytes {0} [built]
+    [4] ./example.js 146 bytes {0} [built]
 ```
 
 # Code Splitting
