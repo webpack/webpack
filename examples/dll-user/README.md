@@ -13,11 +13,11 @@ module.exports = {
 	plugins: [
 		new webpack.DllReferencePlugin({
 			context: path.join(__dirname, "..", "dll"),
-			manifest: require("../dll/js/alpha-manifest.json")
+			manifest: require("../dll/js/alpha-manifest.json") // eslint-disable-line
 		}),
 		new webpack.DllReferencePlugin({
 			scope: "beta",
-			manifest: require("../dll/js/beta-manifest.json"),
+			manifest: require("../dll/js/beta-manifest.json"), // eslint-disable-line
 			extensions: [".js", ".jsx"]
 		})
 	]
@@ -235,7 +235,7 @@ Version: webpack 2.4.1
 output.js  6.16 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 541 bytes [entry] [rendered]
-    > main [8] ./example.js
+    > main [8] ./example.js 
     [2] delegated ./a.js from dll-reference alpha_282e8826843b2bb4eeb1 42 bytes {0} [not cacheable] [built]
         cjs require ../dll/a [8] ./example.js 2:12-31
     [3] delegated ./alpha.js from dll-reference alpha_282e8826843b2bb4eeb1 42 bytes {0} [not cacheable] [built]
@@ -261,7 +261,7 @@ Version: webpack 2.4.1
 output.js  930 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 541 bytes [entry] [rendered]
-    > main [8] ./example.js
+    > main [8] ./example.js 
     [2] delegated ./a.js from dll-reference alpha_282e8826843b2bb4eeb1 42 bytes {0} [not cacheable] [built]
         cjs require ../dll/a [8] ./example.js 2:12-31
     [3] delegated ./alpha.js from dll-reference alpha_282e8826843b2bb4eeb1 42 bytes {0} [not cacheable] [built]
