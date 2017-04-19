@@ -11,7 +11,6 @@ module.exports = {
 		vendors: ["./vendors.js"]
 	},
 	output: {
-		//path: path.join(__dirname, "dist"),
 		filename: "[name].js?value"
 	},
 	plugins: [
