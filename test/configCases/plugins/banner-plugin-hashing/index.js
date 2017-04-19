@@ -25,6 +25,10 @@ it("should interpolate chunkHash in chunk banner", () => {
 		REGEXP_HASH.test(banner["chunkhash"]).should.be.true;
 });
 
+it("should interpolate file into chunk banner", () => {
+	banner["file"].should.equal("dist/banner.js");
+});
+
 it("should interpolate name in chunk banner", () => {
 		banner["name"].should.equal("dist/banner");
 });
@@ -37,8 +41,12 @@ it("should interpolate query in chunk banner", () => {
 		banner["query"].should.equal("?value");
 });
 
-it("should parse entry into basename", () => {
-		banner["filebase"].should.not.equal("name");
+it("should parse entry into file in chunk banner", () => {
+	banner["file"].should.not.equal(banner["filebase"]);
+});
+
+it("should parse entry into name in chunk banner", () => {
+		banner["filebase"].should.not.equal(banner["name"]);
 });
 
 require.include("./test.js");
