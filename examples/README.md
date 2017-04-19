@@ -61,6 +61,7 @@ example demonstrating multiple entry points with Code Splitting.
 example demonstrating usage of the dll plugin
 
 - [dll-app-and-vendor](dll-app-and-vendor) (_latest_)
+- [dll-dependencies-and-vendor](dll-app-and-vendor) (_multiple dll references, single dll plugin_)
 - [dll-reference](dll) (_used by dll-user example_)
 - [dll-user](dll-user) (_uses dll-reference example_)
 

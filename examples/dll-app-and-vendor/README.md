@@ -63,7 +63,7 @@ module.exports = {
 
 # Source
 
-# example-vendor.js
+## example-vendor.js
 
 used by `example-app.js`
 
@@ -73,7 +73,7 @@ var square = require("./example-vendor");
 console.log(square(7));
 ```
 
-# example-app.js
+## example-app.js
 
 uses `example-vendor.js`
 
@@ -83,7 +83,7 @@ var square = require("./example-vendor");
 console.log(square(7));
 ```
 
-# html
+## html
 
 uses `example-vendor.js`, then `example-app.js`
 
@@ -98,7 +98,7 @@ uses `example-vendor.js`, then `example-app.js`
 ```
 
 
-# output
+# Output
 
 ## js/app.bundle.js
 
@@ -393,9 +393,3 @@ Child
         [3] multi ./example-app 28 bytes {0} [built]
          + 1 hidden modules
 ```
-
-<!-- @TODO:
-  - [ ] examples/dll-mode-and-context
-  - [ ] examples/dll-multiple
-  - [ ] examples/dll-dependencies
--->

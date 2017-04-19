@@ -26,7 +26,7 @@ In the real world, one would likely not build vendor every time, but would build
 
 # Source
 
-# example-vendor.js
+## example-vendor.js
 
 used by `example-app.js`
 
@@ -34,7 +34,7 @@ used by `example-app.js`
 {{example-app.js}}
 ```
 
-# example-app.js
+## example-app.js
 
 uses `example-vendor.js`
 
@@ -42,7 +42,7 @@ uses `example-vendor.js`
 {{example-app.js}}
 ```
 
-# html
+## html
 
 uses `example-vendor.js`, then `example-app.js`
 
@@ -51,7 +51,7 @@ uses `example-vendor.js`, then `example-app.js`
 ```
 
 
-# output
+# Output
 
 ## js/app.bundle.js
 
@@ -78,9 +78,3 @@ uses `example-vendor.js`, then `example-app.js`
 ```
 {{min:stdout}}
 ```
-
-<!-- @TODO:
-  - [ ] examples/dll-mode-and-context
-  - [ ] examples/dll-multiple
-  - [ ] examples/dll-dependencies
--->
