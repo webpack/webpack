@@ -1,5 +1,6 @@
+"use strict";
+
 const webpack = require("../../../../");
-const path = require("path");
 
 module.exports = {
 	node: {
@@ -7,7 +8,7 @@ module.exports = {
 		__filename: false
 	},
 	entry: {
-		'dist/banner': ["./index.js"],
+		"dist/banner": ["./index.js"],
 		vendors: ["./vendors.js"]
 	},
 	output: {
