@@ -46,8 +46,9 @@ export default foo;
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
@@ -56,8 +57,9 @@ export default foo;
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
+/******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
+/******/ 		}
 /******/
 /******/ 	};
 /******/
@@ -73,9 +75,9 @@ export default foo;
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -96,8 +98,9 @@ export default foo;
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
+/******/ 		if(installedChunks[chunkId] === 0) {
 /******/ 			return Promise.resolve();
+/******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -130,7 +133,9 @@ export default foo;
 /******/ 			clearTimeout(timeout);
 /******/ 			var chunk = installedChunks[chunkId];
 /******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
@@ -265,65 +270,65 @@ __webpack_require__(/*! ./templates */ 1)("./ba" + createContextVar).then(functi
 ## Uncompressed
 
 ```
-Hash: 6c765b06647a6b15d61a
-Version: webpack 2.3.3
+Hash: 7528dd90edf2b8588036
+Version: webpack 2.4.1
       Asset       Size  Chunks             Chunk Names
-0.output.js  875 bytes       0  [emitted]  chunk-bar-baz
-1.output.js  439 bytes       1  [emitted]  chunk-foo
-  output.js    7.29 kB       2  [emitted]  main
+0.output.js  869 bytes       0  [emitted]  chunk-bar-baz
+1.output.js  436 bytes       1  [emitted]  chunk-foo
+  output.js    7.36 kB       2  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js (chunk-bar-baz) 82 bytes {2} [rendered]
-    [2] ./templates/bar.js 41 bytes {0} [optional] [built]
+chunk    {0} 0.output.js (chunk-bar-baz) 76 bytes {2} [rendered]
+    [2] ./templates/bar.js 38 bytes {0} [optional] [built]
         [exports: default]
         context element ./bar [1] ./templates async ^\.\/ba.*$ ./bar
         context element ./bar.js [1] ./templates async ^\.\/ba.*$ ./bar.js
-    [3] ./templates/baz.js 41 bytes {0} [optional] [built]
+    [3] ./templates/baz.js 38 bytes {0} [optional] [built]
         [exports: default]
         context element ./baz [1] ./templates async ^\.\/ba.*$ ./baz
         context element ./baz.js [1] ./templates async ^\.\/ba.*$ ./baz.js
-chunk    {1} 1.output.js (chunk-foo) 41 bytes {2} [rendered]
+chunk    {1} 1.output.js (chunk-foo) 38 bytes {2} [rendered]
     > duplicate chunk-foo [4] ./example.js 1:0-62
     > duplicate chunk-foo1 [4] ./example.js 5:0-8:16
-    [0] ./templates/foo.js 41 bytes {1} [built]
+    [0] ./templates/foo.js 38 bytes {1} [built]
         [exports: default]
         import() ./templates/foo [4] ./example.js 1:0-62
         cjs require ./templates/foo [4] ./example.js 6:11-37
-chunk    {2} output.js (main) 580 bytes [entry] [rendered]
+chunk    {2} output.js (main) 565 bytes [entry] [rendered]
     > main [4] ./example.js 
     [1] ./templates async ^\.\/ba.*$ 160 bytes {2} [built]
         import() context ./templates [4] ./example.js 11:0-84
-    [4] ./example.js 420 bytes {2} [built]
+    [4] ./example.js 405 bytes {2} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 6c765b06647a6b15d61a
-Version: webpack 2.3.3
+Hash: 7528dd90edf2b8588036
+Version: webpack 2.4.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  212 bytes       0  [emitted]  chunk-bar-baz
 1.output.js  115 bytes       1  [emitted]  chunk-foo
-  output.js    1.85 kB       2  [emitted]  main
+  output.js    1.84 kB       2  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js (chunk-bar-baz) 82 bytes {2} [rendered]
-    [2] ./templates/bar.js 41 bytes {0} [optional] [built]
+chunk    {0} 0.output.js (chunk-bar-baz) 76 bytes {2} [rendered]
+    [2] ./templates/bar.js 38 bytes {0} [optional] [built]
         [exports: default]
         context element ./bar [1] ./templates async ^\.\/ba.*$ ./bar
         context element ./bar.js [1] ./templates async ^\.\/ba.*$ ./bar.js
-    [3] ./templates/baz.js 41 bytes {0} [optional] [built]
+    [3] ./templates/baz.js 38 bytes {0} [optional] [built]
         [exports: default]
         context element ./baz [1] ./templates async ^\.\/ba.*$ ./baz
         context element ./baz.js [1] ./templates async ^\.\/ba.*$ ./baz.js
-chunk    {1} 1.output.js (chunk-foo) 41 bytes {2} [rendered]
+chunk    {1} 1.output.js (chunk-foo) 38 bytes {2} [rendered]
     > duplicate chunk-foo [4] ./example.js 1:0-62
     > duplicate chunk-foo1 [4] ./example.js 5:0-8:16
-    [0] ./templates/foo.js 41 bytes {1} [built]
+    [0] ./templates/foo.js 38 bytes {1} [built]
         [exports: default]
         import() ./templates/foo [4] ./example.js 1:0-62
         cjs require ./templates/foo [4] ./example.js 6:11-37
-chunk    {2} output.js (main) 580 bytes [entry] [rendered]
+chunk    {2} output.js (main) 565 bytes [entry] [rendered]
     > main [4] ./example.js 
     [1] ./templates async ^\.\/ba.*$ 160 bytes {2} [built]
         import() context ./templates [4] ./example.js 11:0-84
-    [4] ./example.js 420 bytes {2} [built]
+    [4] ./example.js 405 bytes {2} [built]
 ```

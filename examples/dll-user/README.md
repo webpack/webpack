@@ -44,9 +44,9 @@ console.log(require("module"));
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -138,7 +138,7 @@ module.exports = beta_282e8826843b2bb4eeb1;
   \**********************************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(0))(0);
+module.exports = (__webpack_require__(0))(0)
 
 /***/ }),
 /* 3 */
@@ -149,7 +149,7 @@ module.exports = (__webpack_require__(0))(0);
   \**************************************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(0))(1);
+module.exports = (__webpack_require__(0))(1)
 
 /***/ }),
 /* 4 */
@@ -160,7 +160,7 @@ module.exports = (__webpack_require__(0))(1);
   \*********************************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(1))(2);
+module.exports = (__webpack_require__(1))(2)
 
 /***/ }),
 /* 5 */
@@ -171,7 +171,7 @@ module.exports = (__webpack_require__(1))(2);
   \************************************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(1))(3);
+module.exports = (__webpack_require__(1))(3)
 
 /***/ }),
 /* 6 */
@@ -182,7 +182,7 @@ module.exports = (__webpack_require__(1))(3);
   \**********************************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(1))(4);
+module.exports = (__webpack_require__(1))(4)
 
 /***/ }),
 /* 7 */
@@ -193,7 +193,7 @@ module.exports = (__webpack_require__(1))(4);
   \*****************************************************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(0))(5);
+module.exports = (__webpack_require__(0))(5)
 
 /***/ }),
 /* 8 */
@@ -223,12 +223,12 @@ console.log(__webpack_require__(/*! module */ 7));
 ## Uncompressed
 
 ```
-Hash: 164f3c4abb86bb4c4462
-Version: webpack 2.3.2
+Hash: 31b432da9b9102c24f82
+Version: webpack 2.4.1
     Asset     Size  Chunks             Chunk Names
 output.js  6.16 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 549 bytes [entry] [rendered]
+chunk    {0} output.js (main) 541 bytes [entry] [rendered]
     > main [8] ./example.js 
     [2] delegated ./a.js from dll-reference alpha_282e8826843b2bb4eeb1 42 bytes {0} [not cacheable] [built]
         cjs require ../dll/a [8] ./example.js 2:12-31
@@ -242,19 +242,19 @@ chunk    {0} output.js (main) 549 bytes [entry] [rendered]
         cjs require beta/c [8] ./example.js 6:12-29
     [7] delegated ../node_modules/module.js from dll-reference alpha_282e8826843b2bb4eeb1 42 bytes {0} [not cacheable] [built]
         cjs require module [8] ./example.js 8:12-29
-    [8] ./example.js 213 bytes {0} [built]
+    [8] ./example.js 205 bytes {0} [built]
      + 2 hidden modules
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 164f3c4abb86bb4c4462
-Version: webpack 2.3.2
+Hash: 31b432da9b9102c24f82
+Version: webpack 2.4.1
     Asset       Size  Chunks             Chunk Names
-output.js  937 bytes       0  [emitted]  main
+output.js  930 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 549 bytes [entry] [rendered]
+chunk    {0} output.js (main) 541 bytes [entry] [rendered]
     > main [8] ./example.js 
     [2] delegated ./a.js from dll-reference alpha_282e8826843b2bb4eeb1 42 bytes {0} [not cacheable] [built]
         cjs require ../dll/a [8] ./example.js 2:12-31
@@ -268,6 +268,6 @@ chunk    {0} output.js (main) 549 bytes [entry] [rendered]
         cjs require beta/c [8] ./example.js 6:12-29
     [7] delegated ../node_modules/module.js from dll-reference alpha_282e8826843b2bb4eeb1 42 bytes {0} [not cacheable] [built]
         cjs require module [8] ./example.js 8:12-29
-    [8] ./example.js 213 bytes {0} [built]
+    [8] ./example.js 205 bytes {0} [built]
      + 2 hidden modules
 ```

@@ -78,8 +78,9 @@ module.exports = {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
@@ -88,8 +89,9 @@ module.exports = {
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
+/******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
+/******/ 		}
 /******/
 /******/ 	};
 /******/
@@ -105,9 +107,9 @@ module.exports = {
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -128,8 +130,9 @@ module.exports = {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
+/******/ 		if(installedChunks[chunkId] === 0) {
 /******/ 			return Promise.resolve();
+/******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -162,7 +165,9 @@ module.exports = {
 /******/ 			clearTimeout(timeout);
 /******/ 			var chunk = installedChunks[chunkId];
 /******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
@@ -317,13 +322,13 @@ module.exports = "c";
 ## Uncompressed
 
 ```
-Hash: 87946ef95f806aa2da0f
-Version: webpack 2.3.2
+Hash: 17717faf3e890c146908
+Version: webpack 2.4.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  401 bytes       0  [emitted]  
 1.output.js  214 bytes       1  [emitted]  
 2.output.js  214 bytes       2  [emitted]  
-  output.js    6.55 kB       3  [emitted]  main
+  output.js    6.63 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes {3} [rendered]
     > async commons [4] ./example.js 2:0-52
@@ -342,21 +347,21 @@ chunk    {2} 2.output.js 21 bytes {3} [rendered]
     > [4] ./example.js 2:0-52
     [2] ./c.js 21 bytes {2} [built]
         amd require ./c [4] ./example.js 2:0-52
-chunk    {3} output.js (main) 194 bytes [entry] [rendered]
+chunk    {3} output.js (main) 186 bytes [entry] [rendered]
     > main [4] ./example.js 
-    [4] ./example.js 194 bytes {3} [built]
+    [4] ./example.js 186 bytes {3} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 87946ef95f806aa2da0f
-Version: webpack 2.3.2
+Hash: 17717faf3e890c146908
+Version: webpack 2.4.1
       Asset      Size  Chunks             Chunk Names
 0.output.js  78 bytes       0  [emitted]  
 1.output.js  51 bytes       1  [emitted]  
 2.output.js  51 bytes       2  [emitted]  
-  output.js   1.56 kB       3  [emitted]  main
+  output.js   1.55 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes {3} [rendered]
     > async commons [4] ./example.js 2:0-52
@@ -375,7 +380,7 @@ chunk    {2} 2.output.js 21 bytes {3} [rendered]
     > [4] ./example.js 2:0-52
     [2] ./c.js 21 bytes {2} [built]
         amd require ./c [4] ./example.js 2:0-52
-chunk    {3} output.js (main) 194 bytes [entry] [rendered]
+chunk    {3} output.js (main) 186 bytes [entry] [rendered]
     > main [4] ./example.js 
-    [4] ./example.js 194 bytes {3} [built]
+    [4] ./example.js 186 bytes {3} [built]
 ```
