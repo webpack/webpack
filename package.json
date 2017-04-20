@@ -112,7 +112,7 @@
     "travis:test": "npm run coverage",
     "travis:lint": "npm run lint-files && npm run nsp",
     "travis:benchmark": "npm run benchmark",
-    "appveyor:test": "node --max_old_space_size=4096 node_modules\\.bin\\jest --testPathPattern test\\.js",
+    "appveyor:test": "npm run unit",
     "appveyor:benchmark": "npm run benchmark",
     "build:examples": "cd examples && node buildAll.js",
     "lint-files": "npm run lint && npm run beautify-lint",
