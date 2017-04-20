@@ -2,7 +2,6 @@
 
 const util = require("util");
 
-const should = require("should");
 const WebpackError = require("../lib/WebpackError");
 
 describe("WebpackError", () => {
@@ -22,8 +21,8 @@ describe("WebpackError", () => {
 		const errorStr = util.inspect(new CustomError("Message"));
 		const errorArr = errorStr.split("\n");
 
-		errorArr[0].should.equal("CustomError: CustomMessage");
-		errorArr[1].should.containEql("WebpackError.test.js");
-		errorArr[errorArr.length - 1].should.equal("CustomDetails");
+		expect(errorArr[0]).toEqual("CustomError: CustomMessage");
+		expect(errorArr[1]).toContain("WebpackError.test.js");
+		expect(errorArr[errorArr.length - 1]).toEqual("CustomDetails");
 	});
 });

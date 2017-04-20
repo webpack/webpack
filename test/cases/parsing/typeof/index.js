@@ -1,36 +1,36 @@
 it("should not create a context for typeof require", function() {
-	require("./typeof").should.be.eql("function");
+	expect(require("./typeof")).toEqual("function");
 });
 
 it("should answer typeof require correctly", function() {
-	(typeof require).should.be.eql("function");
+	expect((typeof require)).toEqual("function");
 });
 it("should answer typeof define correctly", function() {
-	(typeof define).should.be.eql("function");
+	expect((typeof define)).toEqual("function");
 });
 it("should answer typeof require.amd correctly", function() {
-	(typeof require.amd).should.be.eql("object");
+	expect((typeof require.amd)).toEqual("object");
 });
 it("should answer typeof define.amd correctly", function() {
-	(typeof define.amd).should.be.eql("object");
+	expect((typeof define.amd)).toEqual("object");
 });
 it("should answer typeof module correctly", function() {
-	(typeof module).should.be.eql("object");
+	expect((typeof module)).toEqual("object");
 });
 it("should answer typeof exports correctly", function() {
-	(typeof exports).should.be.eql("object");
+	expect((typeof exports)).toEqual("object");
 });
 it("should answer typeof require.include correctly", function() {
-	(typeof require.include).should.be.eql("function");
+	expect((typeof require.include)).toEqual("function");
 });
 it("should answer typeof require.ensure correctly", function() {
-	(typeof require.ensure).should.be.eql("function");
+	expect((typeof require.ensure)).toEqual("function");
 });
 it("should answer typeof System correctly", function() {
-	(typeof System).should.be.eql("object");
+	expect((typeof System)).toEqual("object");
 });
 it("should answer typeof System.import correctly", function() {
-	(typeof System.import).should.be.eql("function");
+	expect((typeof System.import)).toEqual("function");
 });
 
 

@@ -1,13 +1,13 @@
 "use strict";
 
 module.exports = function testAssertions(code, stdout, stderr) {
-	code.should.be.exactly(0);
+	expect(code).toBe(0);
 
-	stdout.should.be.ok();
-	stdout[4].should.containEql("null.js");
-	stdout[5].should.match(/a\.js.*\{0\}/);
-	stdout[6].should.match(/index\.js.*\{0\}/);
-	stdout[7].should.match(/multi.*index\.js.*a\.js/); // should have multi-file entry
-	stderr.should.be.empty();
+	expect(stdout).toBeTruthy();
+	expect(stdout[4]).toContain("null.js");
+	expect(stdout[5]).toMatch(/a\.js.*\{0\}/);
+	expect(stdout[6]).toMatch(/index\.js.*\{0\}/);
+	expect(stdout[7]).toMatch(/multi.*index\.js.*a\.js/); // should have multi-file entry
+	expect(stderr).toHaveLength(0);
 };
 

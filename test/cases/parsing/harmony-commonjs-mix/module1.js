@@ -1,17 +1,17 @@
 import "./module";
 
-(function() {
+expect(function() {
 	module.exports = 1;
-}).should.throw();
+}).toThrow();
 
-(typeof module.exports).should.be.eql("undefined");
+expect((typeof module.exports)).toEqual("undefined");
 
-(typeof define).should.be.eql("undefined");
-(function() {
+expect((typeof define)).toEqual("undefined");
+expect(function() {
 	define(function() {})
-}).should.throw(/define is not defined/);
+}).toThrow(/define is not defined/);
 
 export default 1234;
 
-// exports is node.js exports and not webpacks
-Object.keys(exports).should.be.eql([]);
+// expect(exports is node.js exports and not webpacks
+Object.keys(exports)).toEqual([]);

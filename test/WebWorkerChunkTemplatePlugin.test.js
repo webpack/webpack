@@ -1,6 +1,5 @@
 "use strict";
 
-const should = require("should");
 const sinon = require("sinon");
 const ConcatSource = require("webpack-sources").ConcatSource;
 const WebWorkerChunkTemplatePlugin = require("../lib/webworker/WebWorkerChunkTemplatePlugin");
@@ -19,7 +18,7 @@ describe("WebWorkerChunkTemplatePlugin", () => {
 	});
 
 	it("has apply function", () => {
-		(new WebWorkerChunkTemplatePlugin()).apply.should.be.a.Function();
+		expect((new WebWorkerChunkTemplatePlugin()).apply).toBeInstanceOf(Function);
 	});
 
 	describe("when applied", () => {
@@ -30,7 +29,7 @@ describe("WebWorkerChunkTemplatePlugin", () => {
 		});
 
 		it("binds two event handlers", () => {
-			eventBindings.length.should.be.exactly(2);
+			expect(eventBindings.length).toBe(2);
 		});
 
 		describe("render handler", () => {
@@ -39,7 +38,7 @@ describe("WebWorkerChunkTemplatePlugin", () => {
 			});
 
 			it("binds to render event", () => {
-				eventBinding.name.should.be.exactly("render");
+				expect(eventBinding.name).toBe("render");
 			});
 
 			describe("with chunk call back name set", () => {
@@ -47,8 +46,8 @@ describe("WebWorkerChunkTemplatePlugin", () => {
 					const source = eventBinding.handler.call(handlerContext, "modules()", {
 						ids: 100,
 					});
-					source.should.be.instanceof(ConcatSource);
-					source.source().should.be.exactly("Foo(100,modules())");
+					expect(source).toBeInstanceOf(ConcatSource);
+					expect(source.source()).toBe("Foo(100,modules())");
 				});
 			});
 
@@ -58,8 +57,8 @@ describe("WebWorkerChunkTemplatePlugin", () => {
 					const source = eventBinding.handler.call(handlerContext, "modules()", {
 						ids: 100,
 					});
-					source.should.be.instanceof(ConcatSource);
-					source.source().should.be.exactly("webpackChunkBar(100,modules())");
+					expect(source).toBeInstanceOf(ConcatSource);
+					expect(source.source()).toBe("webpackChunkBar(100,modules())");
 				});
 			});
 		});
@@ -75,12 +74,12 @@ describe("WebWorkerChunkTemplatePlugin", () => {
 			});
 
 			it("binds to hash event", () => {
-				eventBinding.name.should.be.exactly("hash");
+				expect(eventBinding.name).toBe("hash");
 			});
 
 			it("updates hash object", () => {
 				eventBinding.handler.call(handlerContext, hashMock);
-				hashMock.update.callCount.should.be.exactly(4);
+				expect(hashMock.update.callCount).toBe(4);
 				sinon.assert.calledWith(hashMock.update, "webworker");
 				sinon.assert.calledWith(hashMock.update, "3");
 				sinon.assert.calledWith(hashMock.update, "Foo");

@@ -1,8 +1,6 @@
 "use strict";
 
-/*globals describe it before after  */
 const path = require("path");
-const should = require("should");
 const MemoryFs = require("memory-fs");
 const webpack = require("../");
 
@@ -33,7 +31,7 @@ describe("WatchEvents", () => {
 
 		const compiler = createSingleCompiler();
 		const watcher = compiler.watch({}, (err, stats) => {
-			called.should.be.exactly(true);
+			expect(called).toBe(true);
 			done(err);
 		});
 
@@ -52,7 +50,7 @@ describe("WatchEvents", () => {
 
 		const compiler = createMultiCompiler();
 		const watcher = compiler.watch({}, (err, stats) => {
-			called.should.be.exactly(true);
+			expect(called).toBe(true);
 			done(err);
 		});
 

@@ -1,7 +1,5 @@
-/*globals describe it */
 "use strict";
 
-require("should");
 const path = require("path");
 const fs = require("fs");
 
@@ -51,7 +49,7 @@ describe("Stats", () => {
 				if(err) return done(err);
 
 				if(/error$/.test(testName)) {
-					stats.hasErrors().should.be.equal(true);
+					expect(stats.hasErrors()).toEqual(true);
 				} else if(stats.hasErrors()) {
 					done(new Error(stats.toJson().errors.join("\n\n")));
 				}
@@ -70,7 +68,7 @@ describe("Stats", () => {
 				}
 
 				let actual = stats.toString(toStringOptions);
-				(typeof actual).should.be.eql("string");
+				expect((typeof actual)).toEqual("string");
 				if(!hasColorSetting) {
 					actual = actual
 						.replace(/\u001b\[[0-9;]*m/g, "")
@@ -95,11 +93,12 @@ describe("Stats", () => {
 				} else if(fs.existsSync(path.join(base, testName, "actual.txt"))) {
 					fs.unlinkSync(path.join(base, testName, "actual.txt"));
 				}
-				actual.should.be.eql(expected);
+				expect(actual).toEqual(expected);
 				done();
 			});
 		});
 	});
+
 	describe("Error Handling", () => {
 		describe("does have", () => {
 			it("hasErrors", () => {
@@ -107,32 +106,36 @@ describe("Stats", () => {
 					errors: ["firstError"],
 					hash: "1234"
 				});
-				mockStats.hasErrors().should.be.ok();
+				expect(mockStats.hasErrors()).toBeTruthy();
 			});
+
 			it("hasWarnings", () => {
 				const mockStats = new Stats({
 					warnings: ["firstError"],
 					hash: "1234"
 				});
-				mockStats.hasWarnings().should.be.ok();
+				expect(mockStats.hasWarnings()).toBeTruthy();
 			});
 		});
+
 		describe("does not have", () => {
 			it("hasErrors", () => {
 				const mockStats = new Stats({
 					errors: [],
 					hash: "1234"
 				});
-				mockStats.hasErrors().should.not.be.ok();
+				expect(mockStats.hasErrors()).not.toBeTruthy();
 			});
+
 			it("hasWarnings", () => {
 				const mockStats = new Stats({
 					warnings: [],
 					hash: "1234"
 				});
-				mockStats.hasWarnings().should.not.be.ok();
+				expect(mockStats.hasWarnings()).not.toBeTruthy();
 			});
 		});
+
 		it("formatError handles string errors", () => {
 			const mockStats = new Stats({
 				errors: ["firstError"],
@@ -148,13 +151,13 @@ describe("Stats", () => {
 				}
 			});
 			const obj = mockStats.toJson();
-			obj.errors[0].should.be.equal("firstError");
+			expect(obj.errors[0]).toEqual("firstError");
 		});
 	});
 	describe("Presets", () => {
 		describe("presetToOptions", () => {
 			it("returns correct object with 'Normal'", () => {
-				Stats.presetToOptions("Normal").should.eql({
+				expect(Stats.presetToOptions("Normal")).toEqual({
 					assets: false,
 					version: false,
 					timings: true,
@@ -171,17 +174,19 @@ describe("Stats", () => {
 					performance: true
 				});
 			});
+
 			it("truthy values behave as 'normal'", () => {
 				const normalOpts = Stats.presetToOptions("normal");
-				Stats.presetToOptions("pizza").should.eql(normalOpts);
-				Stats.presetToOptions(true).should.eql(normalOpts);
-				Stats.presetToOptions(1).should.eql(normalOpts);
+				expect(Stats.presetToOptions("pizza")).toEqual(normalOpts);
+				expect(Stats.presetToOptions(true)).toEqual(normalOpts);
+				expect(Stats.presetToOptions(1)).toEqual(normalOpts);
 
-				Stats.presetToOptions("verbose").should.not.eql(normalOpts);
-				Stats.presetToOptions(false).should.not.eql(normalOpts);
+				expect(Stats.presetToOptions("verbose")).not.toEqual(normalOpts);
+				expect(Stats.presetToOptions(false)).not.toEqual(normalOpts);
 			});
+
 			it("returns correct object with 'none'", () => {
-				Stats.presetToOptions("none").should.eql({
+				expect(Stats.presetToOptions("none")).toEqual({
 					hash: false,
 					version: false,
 					timings: false,
@@ -203,13 +208,14 @@ describe("Stats", () => {
 					performance: false
 				});
 			});
+
 			it("falsy values behave as 'none'", () => {
 				const noneOpts = Stats.presetToOptions("none");
-				Stats.presetToOptions("").should.eql(noneOpts);
-				Stats.presetToOptions(null).should.eql(noneOpts);
-				Stats.presetToOptions().should.eql(noneOpts);
-				Stats.presetToOptions(0).should.eql(noneOpts);
-				Stats.presetToOptions(false).should.eql(noneOpts);
+				expect(Stats.presetToOptions("")).toEqual(noneOpts);
+				expect(Stats.presetToOptions(null)).toEqual(noneOpts);
+				expect(Stats.presetToOptions()).toEqual(noneOpts);
+				expect(Stats.presetToOptions(0)).toEqual(noneOpts);
+				expect(Stats.presetToOptions(false)).toEqual(noneOpts);
 			});
 		});
 	});

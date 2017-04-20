@@ -9,7 +9,7 @@ it("should import into object shorthand", function() {
 		b,
 		c
 	};
-	o.should.be.eql({
+	expect(o).toEqual({
 		a: 123,
 		aa: 123,
 		b: 456,

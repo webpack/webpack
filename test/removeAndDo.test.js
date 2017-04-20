@@ -1,7 +1,6 @@
 /* globals describe, it, beforeEach */
 "use strict";
 
-const should = require("should");
 const sinon = require("sinon");
 const removeAndDo = require("../lib/removeAndDo");
 
@@ -25,12 +24,12 @@ describe("removeAndDo", () => {
 	});
 
 	it("should return true", () => {
-		should(removeAndDo.bind(contextMock)('context', thingsMock, 'action')).be.eql(true);
-		actionSpy.callCount.should.be.exactly(1);
+		expect(removeAndDo.bind(contextMock)('context', thingsMock, 'action')).toEqual(true);
+		expect(actionSpy.callCount).toBe(1);
 	});
 
 	it("should return false", () => {
-		should(removeAndDo.bind(contextMock)('context', anotherThingsMock, 'anotherAction')).be.eql(false);
-		actionSpy.callCount.should.be.exactly(0);
+		expect(removeAndDo.bind(contextMock)('context', anotherThingsMock, 'anotherAction')).toEqual(false);
+		expect(actionSpy.callCount).toBe(0);
 	});
 });

@@ -1,6 +1,5 @@
 "use strict";
 
-const should = require("should");
 const sinon = require("sinon");
 const HotUpdateChunkTemplate = require("../lib/HotUpdateChunkTemplate");
 
@@ -30,17 +29,17 @@ describe("HotUpdateChunkTemplate", () => {
 		});
 
 		it("renders chunk modules", () => {
-			env.renderContext.renderChunkModules.callCount.should.be.exactly(1);
+			expect(env.renderContext.renderChunkModules.callCount).toBe(1);
 		});
 
 		it("applies modules plugins", () => {
-			env.pluginsCall.callCount.should.be.exactly(2);
-			env.pluginsCall.firstCall.args[0].should.be.exactly("modules");
+			expect(env.pluginsCall.callCount).toBe(2);
+			expect(env.pluginsCall.firstCall.args[0]).toBe("modules");
 		});
 
 		it("applies render plugins", () => {
-			env.pluginsCall.callCount.should.be.exactly(2);
-			env.pluginsCall.secondCall.args[0].should.be.exactly("render");
+			expect(env.pluginsCall.callCount).toBe(2);
+			expect(env.pluginsCall.secondCall.args[0]).toBe("render");
 		});
 	});
 
@@ -56,15 +55,15 @@ describe("HotUpdateChunkTemplate", () => {
 		});
 
 		it("updates hash", () => {
-			env.hash.update.callCount.should.be.exactly(2);
-			env.hash.update.firstCall.args[0].should.be.exactly("HotUpdateChunkTemplate");
-			env.hash.update.secondCall.args[0].should.be.exactly("1");
+			expect(env.hash.update.callCount).toBe(2);
+			expect(env.hash.update.firstCall.args[0]).toBe("HotUpdateChunkTemplate");
+			expect(env.hash.update.secondCall.args[0]).toBe("1");
 		});
 
 		it("applies hash plugin", () => {
-			env.updateHashContext.applyPlugins.callCount.should.be.exactly(1);
-			env.updateHashContext.applyPlugins.firstCall.args[0].should.be.exactly("hash");
-			env.updateHashContext.applyPlugins.firstCall.args[1].should.be.exactly(env.hash);
+			expect(env.updateHashContext.applyPlugins.callCount).toBe(1);
+			expect(env.updateHashContext.applyPlugins.firstCall.args[0]).toBe("hash");
+			expect(env.updateHashContext.applyPlugins.firstCall.args[1]).toBe(env.hash);
 		});
 	});
 });

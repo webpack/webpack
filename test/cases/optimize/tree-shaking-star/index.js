@@ -2,7 +2,7 @@ import { test } from "./a";
 import { func1, func3 } from "./x";
 
 it("should correctly tree shake star exports", function() {
-	test.should.be.eql(123);
-	func1().should.be.eql("func1");
-	func3().should.be.eql("func3");
+	expect(test).toEqual(123);
+	expect(func1()).toEqual("func1");
+	expect(func3()).toEqual("func3");
 });

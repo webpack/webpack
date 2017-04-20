@@ -15,21 +15,21 @@ var y6 = require("./6?b").x;
 var y7 = require("./7?b").x;
 
 it("should not overwrite when using star export (known exports)", function() {
-	x1.should.be.eql("1");
-	x2.should.be.eql("1");
-	x3.should.be.eql("a");
-	x4.should.be.eql("b");
-	x5.should.be.eql("c");
-	x6.should.be.eql("a");
-	x7.should.be.eql("d");
+	expect(x1).toEqual("1");
+	expect(x2).toEqual("1");
+	expect(x3).toEqual("a");
+	expect(x4).toEqual("b");
+	expect(x5).toEqual("c");
+	expect(x6).toEqual("a");
+	expect(x7).toEqual("d");
 });
 
 it("should not overwrite when using star export (unknown exports)", function() {
-	y1.should.be.eql("1");
-	y2.should.be.eql("1");
-	y3.should.be.eql("a");
-	y4.should.be.eql("b");
-	y5.should.be.eql("c");
-	y6.should.be.eql("a");
-	y7.should.be.eql("d");
+	expect(y1).toEqual("1");
+	expect(y2).toEqual("1");
+	expect(y3).toEqual("a");
+	expect(y4).toEqual("b");
+	expect(y5).toEqual("c");
+	expect(y6).toEqual("a");
+	expect(y7).toEqual("d");
 });

@@ -1,6 +1,5 @@
 "use strict";
 
-const should = require("should");
 const sinon = require("sinon");
 const TemplatePluginEnvironment = require("./helpers/TemplatePluginEnvironment");
 const ConcatSource = require("webpack-sources").ConcatSource;
@@ -20,7 +19,7 @@ describe("JsonpExportMainTemplatePlugin", () => {
 
 	beforeEach(() => env = {});
 
-	it("has apply function", () => (new JsonpExportMainTemplatePlugin()).apply.should.be.a.Function());
+	it("has apply function", () => expect((new JsonpExportMainTemplatePlugin()).apply).toBeInstanceOf(Function));
 
 	describe("when applied", () => {
 		beforeEach(() =>
@@ -29,18 +28,18 @@ describe("JsonpExportMainTemplatePlugin", () => {
 		describe("event handlers", () => {
 			beforeEach(() => env.eventBindings = env.templatePlugin.getEventBindings());
 
-			it("binds one handlers", () => env.eventBindings.length.should.be.exactly(1));
+			it("binds one handlers", () => expect(env.eventBindings.length).toBe(1));
 
 			describe("render-with-entry handler", () => {
 				beforeEach(() => env.eventBinding = env.eventBindings[0]);
 
 				it("binds to render-with-entry event", () =>
-					env.eventBinding.name.should.be.exactly("render-with-entry"));
+					expect(env.eventBinding.name).toBe("render-with-entry"));
 
 				it("creates source wrapper calling JSONP global callback", () => {
 					const source = env.eventBinding.handler("moduleSource()", env.chunk, "bar");
-					source.should.be.instanceof(ConcatSource);
-					source.source().should.be.exactly("templateName(moduleSource());");
+					expect(source).toBeInstanceOf(ConcatSource);
+					expect(source.source()).toBe("templateName(moduleSource());");
 				});
 			});
 		});
@@ -48,20 +47,20 @@ describe("JsonpExportMainTemplatePlugin", () => {
 		describe("main template event handlers", () => {
 			beforeEach(() => env.mainTemplateBindings = env.templatePlugin.getMainTemplateBindings());
 
-			it("binds two handlers", () => env.mainTemplateBindings.length.should.be.exactly(2));
+			it("binds two handlers", () => expect(env.mainTemplateBindings.length).toBe(2));
 
 			describe("global-hash-paths handler", () => {
 				beforeEach(() => env.mainTemplateBinding = env.mainTemplateBindings[0]);
 
-				it("binds to global-hash-paths event", () => env.mainTemplateBinding.name.should.be.exactly("global-hash-paths"));
+				it("binds to global-hash-paths event", () => expect(env.mainTemplateBinding.name).toBe("global-hash-paths"));
 
-				it("adds name to path array", () => env.mainTemplateBinding.handler([]).should.deepEqual(["foo"]));
+				it("adds name to path array", () => expect(env.mainTemplateBinding.handler([])).toEqual(["foo"]));
 			});
 
 			describe("hash handler", () => {
 				beforeEach(() => env.mainTemplateBinding = env.mainTemplateBindings[1]);
 
-				it("binds to hash event", () => env.mainTemplateBinding.name.should.be.exactly("hash"));
+				it("binds to hash event", () => expect(env.mainTemplateBinding.name).toBe("hash"));
 
 				it("updates hash", () => {
 					const hash = {
@@ -69,9 +68,9 @@ describe("JsonpExportMainTemplatePlugin", () => {
 					};
 					env.mainTemplateBinding.handler(hash);
 
-					hash.update.callCount.should.be.exactly(2);
-					hash.update.firstCall.args[0].should.be.exactly("jsonp export");
-					hash.update.secondCall.args[0].should.be.exactly("foo");
+					expect(hash.update.callCount).toBe(2);
+					expect(hash.update.firstCall.args[0]).toBe("jsonp export");
+					expect(hash.update.secondCall.args[0]).toBe("foo");
 				});
 			});
 		});

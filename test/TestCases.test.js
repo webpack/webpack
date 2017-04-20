@@ -1,11 +1,8 @@
-/* global describe, it*/
 "use strict";
 
-require("should");
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
-const Test = require("mocha/lib/test");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
 const Stats = require("../lib/Stats");
@@ -100,7 +97,6 @@ describe("TestCases", () => {
 		describe(config.name, () => {
 			categories.forEach((category) => {
 				describe(category.name, function() {
-					this.timeout(30000);
 					category.tests.filter((test) => {
 						const testDirectory = path.join(casesPath, category.name, test);
 						const filterPath = path.join(testDirectory, "test.filter.js");
@@ -110,8 +106,7 @@ describe("TestCases", () => {
 						}
 						return true;
 					}).forEach((testName) => {
-						const suite = describe(testName, () => {});
-						it(testName + " should compile", (done) => {
+						it(`${testName} should compile`, (done) => {
 							const testDirectory = path.join(casesPath, category.name, testName);
 							const outputDirectory = path.join(__dirname, "js", config.name, category.name, testName);
 							const options = {
@@ -165,10 +160,8 @@ describe("TestCases", () => {
 								let exportedTest = 0;
 
 								function _it(title, fn) {
-									const test = new Test(title, fn);
-									suite.addTest(test);
+									it(title, fn);
 									exportedTest++;
-									return test;
 								}
 
 								function _require(module) {
@@ -188,7 +181,7 @@ describe("TestCases", () => {
 							});
 						});
 					});
-				});
+				}, 30000);
 			});
 		});
 	});

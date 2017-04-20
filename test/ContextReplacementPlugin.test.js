@@ -1,31 +1,30 @@
 "use strict";
 
-const should = require("should");
 const sinon = require("sinon");
 const ContextReplacementPlugin = require("../lib/ContextReplacementPlugin");
 const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
 const PluginEnvironment = require("./helpers/PluginEnvironment");
 
 describe("ContextReplacementPlugin", () => {
-	it("has apply function", () => (new ContextReplacementPlugin()).apply.should.be.a.Function());
+	it("has apply function", () => expect((new ContextReplacementPlugin()).apply).toBeInstanceOf(Function));
 
 	it("should consume resourceRegExp as regular expression", () => {
 		let instance = new ContextReplacementPlugin(/selector/, "mock", "mock", "mock");
-		should(instance.resourceRegExp instanceof RegExp).be.exactly(true);
+		expect(instance.resourceRegExp instanceof RegExp).toBe(true);
 	});
 
 	it("should consume newContentResource as function", () => {
 		let instance = new ContextReplacementPlugin(/selector/, () => {}, "mock", "mock");
-		should(instance.newContentCallback).be.a.Function();
+		expect(instance.newContentCallback).toBeInstanceOf(Function);
 	});
 
 	it("should consume newContentResource as not an string or function", () => {
 		let instance = new ContextReplacementPlugin(/selector/, 42, "newContentRecursive", "newContentRegExp");
 
-		should(instance.resourceRegExp instanceof RegExp).be.exactly(true);
-		should(instance.newContentResource).be.exactly(undefined);
-		should(instance.newContentRecursive).be.exactly(undefined);
-		should(instance.newContentRegExp).be.exactly(42);
+		expect(instance.resourceRegExp instanceof RegExp).toBe(true);
+		expect(instance.newContentResource).toBe(undefined);
+		expect(instance.newContentRecursive).toBe(undefined);
+		expect(instance.newContentRegExp).toBe(42);
 	});
 
 	it("should consume newContentResource as an object", () => {
@@ -33,32 +32,32 @@ describe("ContextReplacementPlugin", () => {
 			test: "obj"
 		}, /selector/);
 
-		should(instance.resourceRegExp instanceof RegExp).be.exactly(true);
-		should(instance.newContentResource).be.exactly("newResource");
-		should(instance.newContentRecursive).be.exactly(undefined);
-		should(instance.newContentRegExp).be.exactly(undefined);
-		should(instance.newContentCreateContextMap).be.a.Function();
+		expect(instance.resourceRegExp instanceof RegExp).toBe(true);
+		expect(instance.newContentResource).toBe("newResource");
+		expect(instance.newContentRecursive).toBe(undefined);
+		expect(instance.newContentRegExp).toBe(undefined);
+		expect(instance.newContentCreateContextMap).toBeInstanceOf(Function);
 
 		let x = (nothing, obj) => {
-			should(obj.test).be.exactly("obj")
+			expect(obj.test).toBe("obj")
 		};
 
 		let spy = sinon.spy(x);
 
 		instance.newContentCreateContextMap(undefined, spy);
 
-		should(spy.called).be.exactly(true)
+		expect(spy.called).toBe(true)
 
 	});
 
 	it("should consume newContentResource as an object", () => {
 		let instance = new ContextReplacementPlugin(/selector/, "newResource", () => {}, /selector/);
 
-		should(instance.resourceRegExp instanceof RegExp).be.exactly(true);
-		should(instance.newContentResource).be.exactly("newResource");
-		should(instance.newContentRecursive).be.exactly(undefined);
-		should(instance.newContentRegExp).be.exactly(undefined);
-		should(instance.newContentCreateContextMap).be.a.Function();
+		expect(instance.resourceRegExp instanceof RegExp).toBe(true);
+		expect(instance.newContentResource).toBe("newResource");
+		expect(instance.newContentRecursive).toBe(undefined);
+		expect(instance.newContentRegExp).toBe(undefined);
+		expect(instance.newContentCreateContextMap).toBeInstanceOf(Function);
 	});
 
 	describe("when applied", () => {
@@ -68,10 +67,10 @@ describe("ContextReplacementPlugin", () => {
 				let obj = buildPluginWithParams(/selector/, "./folder", true, /filter/);
 
 				let x = (nothing, result) => {
-					should(result.request).be.exactly('./folder')
-					should(result.dependencies[0].critical).be.exactly(false)
-					should(result.recursive).be.exactly(true)
-					should(result.regExp instanceof RegExp).be.exactly(true)
+					expect(result.request).toBe('./folder')
+					expect(result.dependencies[0].critical).toBe(false)
+					expect(result.recursive).toBe(true)
+					expect(result.regExp instanceof RegExp).toBe(true)
 				};
 
 				let spy = sinon.spy(x);
@@ -83,22 +82,22 @@ describe("ContextReplacementPlugin", () => {
 					}]
 				}, spy)
 
-				should(spy.called).be.exactly(true)
+				expect(spy.called).toBe(true)
 			});
 
 			it("default call with newContentCallback as a function", () => {
 				let obj = buildPluginWithParams(/selector/, (result) => {
-					should(result.request).be.exactly('selector')
-					should(result.dependencies[0].critical).be.exactly(false)
-					should(result.recursive).be.exactly(undefined)
-					should(result.regExp).be.exactly(undefined)
+					expect(result.request).toBe('selector')
+					expect(result.dependencies[0].critical).toBe(false)
+					expect(result.recursive).toBe(undefined)
+					expect(result.regExp).toBe(undefined)
 				}, true, /filter/);
 
 				let x = (nothing, result) => {
-					should(result.request).be.exactly('selector')
-					should(result.dependencies[0].critical).be.exactly(false)
-					should(result.recursive).be.exactly(undefined)
-					should(result.regExp).be.exactly(undefined)
+					expect(result.request).toBe('selector')
+					expect(result.dependencies[0].critical).toBe(false)
+					expect(result.recursive).toBe(undefined)
+					expect(result.regExp).toBe(undefined)
 				};
 
 				let spy = sinon.spy(x);
@@ -110,21 +109,21 @@ describe("ContextReplacementPlugin", () => {
 					}]
 				}, spy)
 
-				should(spy.called).be.exactly(true)
+				expect(spy.called).toBe(true)
 			});
 
 			it("call when result is false", () => {
 				let obj = buildPluginWithParams(/selector/, "./folder", true, /filter/);
 
 				let x = (nothing, result) => {
-					should(result).be.Undefined();
+					expect(result).toBeUndefined();
 				};
 
 				let spy = sinon.spy(x);
 
 				obj.beforeResolve.handler(false, spy);
 
-				should(spy.called).be.exactly(true)
+				expect(spy.called).toBe(true)
 			});
 		});
 
@@ -133,8 +132,8 @@ describe("ContextReplacementPlugin", () => {
 				let obj = buildPluginWithParams(/selector/, "./folder", true, /filter/);
 
 				let x = (nothing, result) => {
-					result.resource.should.containEql('selector')
-					result.resource.should.containEql('folder')
+					expect(result.resource).toContain('selector')
+					expect(result.resource).toContain('folder')
 				};
 
 				let spy = sinon.spy(x);
@@ -146,14 +145,14 @@ describe("ContextReplacementPlugin", () => {
 					}]
 				}, spy);
 
-				should(spy.called).be.exactly(true)
+				expect(spy.called).toBe(true)
 			});
 
 			it("default call where regex is incorrect", () => {
 				let obj = buildPluginWithParams(/selector/, "./folder", true, /filter/);
 
 				let x = (nothing, result) => {
-					result.resource.should.containEql('importwontwork')
+					expect(result.resource).toContain('importwontwork')
 				};
 
 				let spy = sinon.spy(x);
@@ -165,7 +164,7 @@ describe("ContextReplacementPlugin", () => {
 					}]
 				}, spy);
 
-				should(spy.called).be.exactly(true)
+				expect(spy.called).toBe(true)
 			});
 
 			it("default call where regex is correct", () => {
@@ -174,7 +173,7 @@ describe("ContextReplacementPlugin", () => {
 				}, true, /filter/);
 
 				let x = (nothing, result) => {
-					result.resource.should.equal('selector')
+					expect(result.resource).toEqual('selector')
 				};
 
 				let spy = sinon.spy(x);
@@ -186,7 +185,7 @@ describe("ContextReplacementPlugin", () => {
 					}]
 				}, spy);
 
-				should(spy.called).be.exactly(true)
+				expect(spy.called).toBe(true)
 			});
 
 			it("default call where regex is correct and using function as newContent Resource", () => {
@@ -195,8 +194,8 @@ describe("ContextReplacementPlugin", () => {
 				}, true, /filter/);
 
 				let x = (nothing, result) => {
-					result.resource.should.containEql('selector')
-					result.resource.should.containEql('imadifferentselector')
+					expect(result.resource).toContain('selector')
+					expect(result.resource).toContain('imadifferentselector')
 				};
 
 				let spy = sinon.spy(x);
@@ -208,7 +207,7 @@ describe("ContextReplacementPlugin", () => {
 					}]
 				}, spy);
 
-				should(spy.called).be.exactly(true)
+				expect(spy.called).toBe(true)
 			});
 
 		})
@@ -223,14 +222,14 @@ let buildPluginWithParams = (resourceRegExp, newContentResource, newContentRecur
 	instance.apply(pluginEnvironment.getEnvironmentStub());
 
 	let contextModuleFactory = pluginEnvironment.getEventBindings()[0];
-	pluginEnvironment.getEventBindings().length.should.be.exactly(1)
+	expect(pluginEnvironment.getEventBindings().length).toBe(1)
 
 	let contextModuleFactoryPluginEnv = new PluginEnvironment();
 
 	contextModuleFactory.handler(contextModuleFactoryPluginEnv.getEnvironmentStub());
 
 	let contextModuleFactoryEventBindings = contextModuleFactoryPluginEnv.getEventBindings();
-	contextModuleFactoryPluginEnv.getEventBindings().length.should.be.exactly(2);
+	expect(contextModuleFactoryPluginEnv.getEventBindings().length).toBe(2);
 
 	let beforeResolve = contextModuleFactoryEventBindings[0];
 	let afterResolve = contextModuleFactoryEventBindings[1];

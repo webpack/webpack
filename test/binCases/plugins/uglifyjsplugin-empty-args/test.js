@@ -1,10 +1,10 @@
 "use strict";
 
 module.exports = function testAssertions(code, stdout, stderr) {
-	code.should.be.exactly(0);
+	expect(code).toBe(0);
 
-	stdout.should.be.ok();
-	stdout[4].should.containEql("bytes"); // without uglifyjs it's multiple kBs
+	expect(stdout).toBeTruthy();
+	expect(stdout[4]).toContain("bytes"); // without uglifyjs it's multiple kBs
 
-	stderr.should.be.empty();
+	expect(stderr).toHaveLength(0);
 };

@@ -11,10 +11,11 @@ But don't give up hope!!! Although our tests may appear complex and overwhelming
 
 * To run an individual suite: (recommended during development for easier isolated diffs)
 
-Example: `$(npm bin)/mocha --grep ConfigTestCases`
+Example: `npm run unit -- ConfigTestCases`, or in watch mode (`npm run unit -- --watch`) you can hit the letter `"p"` to
+interrupt the tests and enter a fuzzy matched string to run a subset of tests.
 
 ## Test suite overview
-We use MochaJS for our tests. For more information on Mocha you can visit their [homepage](https://mochajs.org/)!
+We use Jest for our tests. For more information on Jest you can visit their [homepage](http://facebook.github.io/jest/)!
 
 ### Class Tests
 All test files can be found in *.test.js. There are many tests that simply test API's of a specific class/file (such as `Compiler`, `Errors`, Integration, `Parser`, `RuleSet`, Validation).

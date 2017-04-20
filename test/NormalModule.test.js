@@ -1,6 +1,5 @@
 /* globals describe, it, beforeEach, afterEach */
 "use strict";
-require("should");
 const sinon = require("sinon");
 const NormalModule = require("../lib/NormalModule");
 const NullDependency = require("../lib/dependencies/NullDependency");
@@ -36,13 +35,13 @@ describe("NormalModule", function() {
 	});
 	describe("#identifier", function() {
 		it("returns an identifier for this module", function() {
-			normalModule.identifier().should.eql(request);
+			expect(normalModule.identifier()).toEqual(request);
 		});
 		it("returns an identifier from toString", function() {
 			normalModule.debugId = 1000;
-			normalModule.toString().should.eql("Module[1000]");
+			expect(normalModule.toString()).toEqual("Module[1000]");
 			normalModule.id = 1;
-			normalModule.toString().should.eql("Module[1]");
+			expect(normalModule.toString()).toEqual("Module[1]");
 		});
 	});
 
@@ -52,16 +51,16 @@ describe("NormalModule", function() {
 			normalModule.readableIdentifier({
 				shorten: spy
 			});
-			spy.callCount.should.eql(1);
-			spy.args[0][0].should.eql(userRequest);
+			expect(spy.callCount).toEqual(1);
+			expect(spy.args[0][0]).toEqual(userRequest);
 		});
 	});
 
 	describe("#libIdent", function() {
 		it("contextifies the userRequest of the module", function() {
-			normalModule.libIdent({
+			expect(normalModule.libIdent({
 				context: "some/context"
-			}).should.eql("../userRequest");
+			})).toEqual("../userRequest");
 		});
 		describe("given a userRequest containing loaders", function() {
 			beforeEach(function() {
@@ -76,16 +75,16 @@ describe("NormalModule", function() {
 				);
 			});
 			it("contextifies every path in the userRequest", function() {
-				normalModule.libIdent({
+				expect(normalModule.libIdent({
 					context: "some/context"
-				}).should.eql("../userRequest!../other/userRequest!../thing/is/off/here");
+				})).toEqual("../userRequest!../other/userRequest!../thing/is/off/here");
 			});
 		});
 	});
 
 	describe("#nameForCondition", function() {
 		it("return the resource", function() {
-			normalModule.nameForCondition().should.eql(resource);
+			expect(normalModule.nameForCondition()).toEqual(resource);
 		});
 		describe("given a resource containing a ?-sign", function() {
 			const baseResource = "some/resource";
@@ -101,7 +100,7 @@ describe("NormalModule", function() {
 				);
 			});
 			it("return only the part before the ?-sign", function() {
-				normalModule.nameForCondition().should.eql(baseResource);
+				expect(normalModule.nameForCondition()).toEqual(baseResource);
 			});
 		});
 	});
@@ -117,12 +116,12 @@ describe("NormalModule", function() {
 		});
 		describe("given no sourcemap", function() {
 			it("returns a RawSource", function() {
-				normalModule.createSourceForAsset(name, content).should.be.instanceOf(RawSource);
+				expect(normalModule.createSourceForAsset(name, content)).toBeInstanceOf(RawSource);
 			});
 		});
 		describe("given a string as the sourcemap", function() {
 			it("returns a OriginalSource", function() {
-				normalModule.createSourceForAsset(name, content, sourceMap).should.be.instanceOf(OriginalSource);
+				expect(normalModule.createSourceForAsset(name, content, sourceMap)).toBeInstanceOf(OriginalSource);
 			});
 		});
 		describe("given a some other kind of sourcemap", function() {
@@ -130,7 +129,7 @@ describe("NormalModule", function() {
 				sourceMap = () => {};
 			});
 			it("returns a SourceMapSource", function() {
-				normalModule.createSourceForAsset(name, content, sourceMap).should.be.instanceOf(SourceMapSource);
+				expect(normalModule.createSourceForAsset(name, content, sourceMap)).toBeInstanceOf(SourceMapSource);
 			});
 		});
 	});
@@ -141,8 +140,8 @@ describe("NormalModule", function() {
 				normalModule._source = null;
 			});
 			it("returns a Source containing an Error", function() {
-				normalModule.source().should.be.instanceOf(RawSource);
-				normalModule.source().source().should.eql("throw new Error('No source available');");
+				expect(normalModule.source()).toBeInstanceOf(RawSource);
+				expect(normalModule.source().source()).toEqual("throw new Error('No source available');");
 			});
 		});
 	});
@@ -153,7 +152,7 @@ describe("NormalModule", function() {
 			normalModule._source = new RawSource(expectedSource);
 		});
 		it("returns an original Source", function() {
-			normalModule.originalSource().should.eql(normalModule._source);
+			expect(normalModule.originalSource()).toEqual(normalModule._source);
 		});
 	});
 
@@ -172,8 +171,8 @@ describe("NormalModule", function() {
 			});
 			it("calls hash function with \"null\"", function() {
 				normalModule.updateHashWithSource(hash);
-				hashSpy.callCount.should.eql(1);
-				hashSpy.args[0][0].should.eql("null");
+				expect(hashSpy.callCount).toEqual(1);
+				expect(hashSpy.args[0][0]).toEqual("null");
 			});
 		});
 		describe("without the module having source", function() {
@@ -183,19 +182,19 @@ describe("NormalModule", function() {
 			});
 			it("calls hash function with \"source\" and then the actual source of the module", function() {
 				normalModule.updateHashWithSource(hash);
-				hashSpy.callCount.should.eql(2);
-				hashSpy.args[0][0].should.eql("source");
-				hashSpy.args[1][0].should.eql(expectedSource);
+				expect(hashSpy.callCount).toEqual(2);
+				expect(hashSpy.args[0][0]).toEqual("source");
+				expect(hashSpy.args[1][0]).toEqual(expectedSource);
 			});
 		});
 	});
 	describe("#hasDependencies", function() {
 		it("returns true if has dependencies", function() {
 			normalModule.addDependency(new NullDependency());
-			normalModule.hasDependencies().should.eql(true);
+			expect(normalModule.hasDependencies()).toEqual(true);
 		});
 		it("returns false if has dependencies", function() {
-			normalModule.hasDependencies().should.eql(false);
+			expect(normalModule.hasDependencies()).toEqual(false);
 		});
 	});
 	describe("#needRebuild", function() {
@@ -231,7 +230,7 @@ describe("NormalModule", function() {
 		});
 		describe("given all timestamps are older than the buildTimestamp", function() {
 			it("returns false", function() {
-				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(false);
+				expect(normalModule.needRebuild(fileTimestamps, contextTimestamps)).toEqual(false);
 			});
 		});
 		describe("given a file timestamp is newer than the buildTimestamp", function() {
@@ -239,7 +238,7 @@ describe("NormalModule", function() {
 				fileTimestamps[fileA] = 3;
 			});
 			it("returns true", function() {
-				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(true);
+				expect(normalModule.needRebuild(fileTimestamps, contextTimestamps)).toEqual(true);
 			});
 		});
 		describe("given a no file timestamp exists", function() {
@@ -247,7 +246,7 @@ describe("NormalModule", function() {
 				fileTimestamps = {};
 			});
 			it("returns true", function() {
-				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(true);
+				expect(normalModule.needRebuild(fileTimestamps, contextTimestamps)).toEqual(true);
 			});
 		});
 		describe("given a context timestamp is newer than the buildTimestamp", function() {
@@ -255,7 +254,7 @@ describe("NormalModule", function() {
 				contextTimestamps[fileA] = 3;
 			});
 			it("returns true", function() {
-				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(true);
+				expect(normalModule.needRebuild(fileTimestamps, contextTimestamps)).toEqual(true);
 			});
 		});
 		describe("given a no context timestamp exists", function() {
@@ -263,7 +262,7 @@ describe("NormalModule", function() {
 				contextTimestamps = {};
 			});
 			it("returns true", function() {
-				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(true);
+				expect(normalModule.needRebuild(fileTimestamps, contextTimestamps)).toEqual(true);
 			});
 		});
 	});
@@ -284,23 +283,23 @@ describe("NormalModule", function() {
 		});
 		describe("given an empty array of vars", function() {
 			it("returns an empty array", function() {
-				normalModule.splitVariablesInUniqueNamedChunks([]).should.eql([
+				expect(normalModule.splitVariablesInUniqueNamedChunks([])).toEqual([
 					[]
 				]);
 			});
 		});
 		describe("given an array of distrinct variables", function() {
 			it("returns an array containing an array containing the variables", function() {
-				normalModule.splitVariablesInUniqueNamedChunks(variables).should.eql([variables]);
+				expect(normalModule.splitVariablesInUniqueNamedChunks(variables)).toEqual([variables]);
 			});
 		});
 		describe("given an array with duplicate variables", function() {
 			it("returns several arrays each containing only distinct variable names", function() {
-				normalModule.splitVariablesInUniqueNamedChunks(variables.concat(variables)).should.eql([variables, variables]);
+				expect(normalModule.splitVariablesInUniqueNamedChunks(variables.concat(variables))).toEqual([variables, variables]);
 			});
 			describe("and a duplicate as the last variable", function() {
 				it("returns correctly split distinct arrays", function() {
-					normalModule.splitVariablesInUniqueNamedChunks(variables.concat(variables).concat(variables[0])).should.eql([variables, variables, [variables[0]]]);
+					expect(normalModule.splitVariablesInUniqueNamedChunks(variables.concat(variables).concat(variables[0]))).toEqual([variables, variables, [variables[0]]]);
 				});
 			});
 		});
@@ -318,7 +317,7 @@ describe("NormalModule", function() {
 					content = rule + "some-content";
 				});
 				it("returns true", function() {
-					normalModule.shouldPreventParsing(rule, content).should.eql(true);
+					expect(normalModule.shouldPreventParsing(rule, content)).toEqual(true);
 				});
 			});
 			describe("and the content does not start with the string specified in rule", function() {
@@ -326,7 +325,7 @@ describe("NormalModule", function() {
 					content = "some-content";
 				});
 				it("returns false", function() {
-					normalModule.shouldPreventParsing(rule, content).should.eql(false);
+					expect(normalModule.shouldPreventParsing(rule, content)).toEqual(false);
 				});
 			});
 		});
@@ -339,7 +338,7 @@ describe("NormalModule", function() {
 					content = rule + "some-content";
 				});
 				it("returns true", function() {
-					normalModule.shouldPreventParsing(rule, content).should.eql(true);
+					expect(normalModule.shouldPreventParsing(rule, content)).toEqual(true);
 				});
 			});
 			describe("and the content does not match the rule", function() {
@@ -347,7 +346,7 @@ describe("NormalModule", function() {
 					content = "some-content";
 				});
 				it("returns false", function() {
-					normalModule.shouldPreventParsing(rule, content).should.eql(false);
+					expect(normalModule.shouldPreventParsing(rule, content)).toEqual(false);
 				});
 			});
 		});
@@ -361,8 +360,8 @@ describe("NormalModule", function() {
 		});
 		describe("given no noParseRule", function() {
 			it("returns false", function() {
-				normalModule.shouldPreventParsing().should.eql(false);
-				applyNoParseRuleSpy.callCount.should.eql(0);
+				expect(normalModule.shouldPreventParsing()).toEqual(false);
+				expect(applyNoParseRuleSpy.callCount).toEqual(0);
 			});
 		});
 		describe("given a noParseRule", function() {
@@ -373,14 +372,14 @@ describe("NormalModule", function() {
 			});
 			describe("that is a string", function() {
 				it("calls and returns whatever applyNoParseRule returns", function() {
-					normalModule.shouldPreventParsing("some rule").should.eql(returnValOfSpy);
-					applyNoParseRuleSpy.callCount.should.eql(1);
+					expect(normalModule.shouldPreventParsing("some rule")).toEqual(returnValOfSpy);
+					expect(applyNoParseRuleSpy.callCount).toEqual(1);
 				});
 			});
 			describe("that is a regex", function() {
 				it("calls and returns whatever applyNoParseRule returns", function() {
-					normalModule.shouldPreventParsing("some rule").should.eql(returnValOfSpy);
-					applyNoParseRuleSpy.callCount.should.eql(1);
+					expect(normalModule.shouldPreventParsing("some rule")).toEqual(returnValOfSpy);
+					expect(applyNoParseRuleSpy.callCount).toEqual(1);
 				});
 			});
 			describe("that is an array", function() {
@@ -399,8 +398,8 @@ describe("NormalModule", function() {
 							applyNoParseRuleSpy.returns(returnValOfSpy);
 						});
 						it("returns false", function() {
-							normalModule.shouldPreventParsing(someRules).should.eql(returnValOfSpy);
-							applyNoParseRuleSpy.callCount.should.eql(3);
+							expect(normalModule.shouldPreventParsing(someRules)).toEqual(returnValOfSpy);
+							expect(applyNoParseRuleSpy.callCount).toEqual(3);
 						});
 					});
 					describe("and the first of them matches", function() {
@@ -409,8 +408,8 @@ describe("NormalModule", function() {
 							applyNoParseRuleSpy.returns(returnValOfSpy);
 						});
 						it("returns true", function() {
-							normalModule.shouldPreventParsing(someRules).should.eql(returnValOfSpy);
-							applyNoParseRuleSpy.callCount.should.eql(1);
+							expect(normalModule.shouldPreventParsing(someRules)).toEqual(returnValOfSpy);
+							expect(applyNoParseRuleSpy.callCount).toEqual(1);
 						});
 					});
 					describe("and the last of them matches", function() {
@@ -421,8 +420,8 @@ describe("NormalModule", function() {
 							applyNoParseRuleSpy.onCall(2).returns(true);
 						});
 						it("returns true", function() {
-							normalModule.shouldPreventParsing(someRules).should.eql(returnValOfSpy);
-							applyNoParseRuleSpy.callCount.should.eql(3);
+							expect(normalModule.shouldPreventParsing(someRules)).toEqual(returnValOfSpy);
+							expect(applyNoParseRuleSpy.callCount).toEqual(3);
 						});
 					});
 				});

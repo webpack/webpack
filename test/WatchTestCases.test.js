@@ -1,43 +1,51 @@
 "use strict";
 
-const should = require("should");
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
-const Test = require("mocha/lib/test");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
 
 function copyDiff(src, dest) {
-	if(!fs.existsSync(dest))
+	if (!fs.existsSync(dest)) {
 		fs.mkdirSync(dest);
+	}
+
 	const files = fs.readdirSync(src);
+
 	files.forEach((filename) => {
 		const srcFile = path.join(src, filename);
 		const destFile = path.join(dest, filename);
 		const directory = fs.statSync(srcFile).isDirectory();
-		if(directory) {
+
+		if (directory) {
 			copyDiff(srcFile, destFile);
 		} else {
 			var content = fs.readFileSync(srcFile);
-			if(/^DELETE\s*$/.test(content.toString("utf-8")))
+
+			if (/^DELETE\s*$/.test(content.toString("utf-8"))) {
 				fs.unlinkSync(destFile);
-			else
+			} else {
 				fs.writeFileSync(destFile, content);
+			}
 		}
 	});
 }
 
 function remove(src) {
-	if(!fs.existsSync(src))
+	if (!fs.existsSync(src)) {
 		return;
+	}
+
 	const files = fs.readdirSync(src);
+
 	files.forEach((filename) => {
 		const srcFile = path.join(src, filename);
 		const directory = fs.statSync(srcFile).isDirectory();
-		if(directory) {
+
+		if (directory) {
 			remove(srcFile);
 		} else {
 			fs.unlinkSync(srcFile);
@@ -55,7 +63,8 @@ describe("WatchTestCases", () => {
 			tests: fs.readdirSync(path.join(casesPath, cat)).filter((folder) => folder.indexOf("_") < 0).sort()
 		};
 	});
-	before(() => {
+
+	beforeEach(() => {
 		let dest = path.join(__dirname, "js");
 		if(!fs.existsSync(dest))
 			fs.mkdirSync(dest);
@@ -63,12 +72,14 @@ describe("WatchTestCases", () => {
 		if(!fs.existsSync(dest))
 			fs.mkdirSync(dest);
 	});
+
 	categories.forEach((category) => {
-		before(() => {
+		beforeEach(() => {
 			const dest = path.join(__dirname, "js", "watch-src", category.name);
 			if(!fs.existsSync(dest))
 				fs.mkdirSync(dest);
 		})
+
 		describe(category.name, () => {
 			category.tests.forEach((testName) => {
 				describe(testName, () => {
@@ -82,15 +93,19 @@ describe("WatchTestCases", () => {
 							suite: describe(name, () => {})
 						};
 					});
-					before(() => remove(tempDirectory));
+
+					beforeEach(() => remove(tempDirectory));
+
 					it("should compile", function(done) {
-						this.timeout(45000);
 						const outputDirectory = path.join(__dirname, "js", "watch", category.name, testName);
 
 						let options = {};
 						const configPath = path.join(testDirectory, "webpack.config.js");
-						if(fs.existsSync(configPath))
+
+						if (fs.existsSync(configPath)) {
 							options = require(configPath);
+						}
+
 						const applyConfig = (options) => {
 							if(!options.context) options.context = tempDirectory;
 							if(!options.entry) options.entry = "./index.js";
@@ -100,7 +115,8 @@ describe("WatchTestCases", () => {
 							if(typeof options.output.pathinfo === "undefined") options.output.pathinfo = true;
 							if(!options.output.filename) options.output.filename = "bundle.js";
 						};
-						if(Array.isArray(options)) {
+
+						if (Array.isArray(options)) {
 							options.forEach(applyConfig);
 						} else {
 							applyConfig(options);
@@ -110,42 +126,58 @@ describe("WatchTestCases", () => {
 						let runIdx = 0;
 						let run = runs[runIdx];
 						let lastHash = "";
+
 						copyDiff(path.join(testDirectory, run.name), tempDirectory);
 
 						const compiler = webpack(options);
 						const watching = compiler.watch({
 							aggregateTimeout: 1000
 						}, (err, stats) => {
-							if(stats.hash === lastHash)
+							if (stats.hash === lastHash) {
 								return;
+							}
+
 							lastHash = stats.hash;
-							if(run.done)
+
+							if (run.done) {
 								return done(new Error("Compilation changed but no change was issued " + lastHash + " != " + stats.hash + " (run " + runIdx + ")"));
+							}
+
 							run.done = true;
-							if(err) return done(err);
+
+							if (err) {
+								return done(err);
+							}
+
 							const statOptions = Stats.presetToOptions("verbose");
 							statOptions.colors = false;
 							fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
 							const jsonStats = stats.toJson({
 								errorDetails: true
 							});
-							if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
-							if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
+
+							if (checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) {
+								return;
+							}
+
+							if (checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) {
+								return;
+							}
+
 							let exportedTests = 0;
 
 							function _it(title, fn) {
-								const test = new Test(title, fn);
-								run.suite.addTest(test);
+								it(title, fn);
 								exportedTests++;
-								return test;
 							}
 
 							function _require(currentDirectory, module) {
-								if(Array.isArray(module) || /^\.\.?\//.test(module)) {
+								if (Array.isArray(module) || /^\.\.?\//.test(module)) {
 									let fn;
 									let content;
 									let p;
-									if(Array.isArray(module)) {
+
+									if (Array.isArray(module)) {
 										p = path.join(currentDirectory, module[0]);
 										content = module.map((arg) => {
 											p = path.join(currentDirectory, arg);
@@ -155,15 +187,32 @@ describe("WatchTestCases", () => {
 										p = path.join(currentDirectory, module);
 										content = fs.readFileSync(p, "utf-8");
 									}
+
 									fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE) {" + content + "\n})", p);
+
 									const m = {
 										exports: {}
 									};
-									fn.call(m.exports, _require.bind(null, path.dirname(p)), m, m.exports, path.dirname(p), p, _it, run.name, jsonStats, state);
+
+									fn.call(
+										m.exports,
+										_require.bind(null, path.dirname(p)),
+										m,
+										m.exports,
+										path.dirname(p),
+										p,
+										_it,
+										run.name,
+										jsonStats,
+										state
+									);
+
 									return module.exports;
 								} else if(testConfig.modules && module in testConfig.modules) {
 									return testConfig.modules[module];
-								} else return require(module);
+								}
+
+								return require(module);
 							}
 
 							let testConfig = {};
@@ -172,22 +221,28 @@ describe("WatchTestCases", () => {
 								testConfig = require(path.join(testDirectory, "test.config.js"));
 							} catch(e) {}
 
-							if(testConfig.noTests) return process.nextTick(done);
+							if (testConfig.noTests) {
+								return done();
+							}
+
 							_require(outputDirectory, "./bundle.js");
 
-							if(exportedTests < 1) return done(new Error("No tests exported by test case"));
+							if (exportedTests < 1) {
+								return done(new Error("No tests exported by test case"));
+							}
+
 							runIdx++;
-							if(runIdx < runs.length) {
+							if (runIdx < runs.length) {
 								run = runs[runIdx];
 								setTimeout(() => {
 									copyDiff(path.join(testDirectory, run.name), tempDirectory);
-								}, 1500);
+								}, 1000);
 							} else {
 								watching.close();
-								process.nextTick(done);
+								done();
 							}
 						});
-					});
+					}, 40000);
 				});
 			});
 		});

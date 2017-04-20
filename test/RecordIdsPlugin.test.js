@@ -1,7 +1,6 @@
 /* globals describe, before, it */
 "use strict";
 
-const should = require("should");
 const path = require("path");
 
 const webpack = require("../lib/webpack");
@@ -11,7 +10,7 @@ describe("RecordIdsPlugin", () => {
 
 	let compiler;
 
-	before(() => {
+	beforeEach(() => {
 		compiler = webpack({
 			entry: "./nodetest/entry",
 			context: path.join(__dirname, "fixtures"),
@@ -32,8 +31,8 @@ describe("RecordIdsPlugin", () => {
 			let pass = true;
 			for(let i = 0; i < compilation.modules.length; i++) {
 				try {
-					should.exist(compilation.modules[i].portableId);
-					compilation.modules[i].portableId.should.equal(identifierUtils.makePathsRelative(compiler.context, compilation.modules[i].identifier()));
+					expect(compilation.modules[i].portableId).toBeDefined();
+					expect(compilation.modules[i].portableId).toEqual(identifierUtils.makePathsRelative(compiler.context, compilation.modules[i].identifier()));
 				} catch(e) {
 					done(e);
 					pass = false;

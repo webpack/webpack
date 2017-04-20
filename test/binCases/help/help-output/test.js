@@ -1,19 +1,23 @@
 "use strict";
 
 module.exports = function testAssertions(code, stdout, stderr) {
-	code.should.be.exactly(0);
+	expect(code).toBe(0);
 
-	stdout.should.be.ok();
-	stdout[0].should.startWith("webpack");
-	stdout.should.containEql("Config options:");
-	stdout.should.containEql("Basic options:");
-	stdout.should.containEql("Module options:");
-	stdout.should.containEql("Output options:");
-	stdout.should.containEql("Advanced options:");
-	stdout.should.containEql("Resolving options:");
-	stdout.should.containEql("Optimizing options:");
-	stdout.should.containEql("Stats options:");
-	stdout.should.containEql("Options:");
+	expect(stdout).toBeTruthy();
 
-	stderr.should.be.empty();
+	const msg = 'webpack';
+	expect(stdout[0]).toContain(msg);
+	expect(stdout[0].indexOf(msg)).toBe(0);
+
+	expect(stdout).toContain("Config options:");
+	expect(stdout).toContain("Basic options:");
+	expect(stdout).toContain("Module options:");
+	expect(stdout).toContain("Output options:");
+	expect(stdout).toContain("Advanced options:");
+	expect(stdout).toContain("Resolving options:");
+	expect(stdout).toContain("Optimizing options:");
+	expect(stdout).toContain("Stats options:");
+	expect(stdout).toContain("Options:");
+
+	expect(stderr).toHaveLength(0);
 };
