@@ -5,7 +5,7 @@ module.exports = function testAssertions(code, stdout, stderr) {
 
 	expect(stdout).toBeTruthy();
 
-	const msg = 'webpack';
+	const msg = "webpack";
 	expect(stdout[0]).toContain(msg);
 	expect(stdout[0].indexOf(msg)).toBe(0);
 

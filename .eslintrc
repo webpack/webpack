@@ -3,7 +3,8 @@
 	"plugins": ["node"],
 	"extends": ["eslint:recommended", "plugin:node/recommended"],
 	"env": {
-		"node": true
+		"node": true,
+		"jest": true
 	},
 	"rules": {
 		"quotes": ["error", "double"],
