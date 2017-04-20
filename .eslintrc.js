@@ -1,6 +1,6 @@
 module.exports = {
 	"root": true,
-	"plugins": ["node"],
+	"plugins": ["node", "prettier"],
 	"extends": ["eslint:recommended", "plugin:node/recommended"],
 	"env": {
 		"node": true,
@@ -51,7 +51,7 @@ module.exports = {
 		}],
 		"no-console": "off",
 		"valid-jsdoc": "error",
-		"node/no-unsupported-features": ["error", { version: 7 }],
+		"node/no-unsupported-features": ["error", { version: 4 }],
 		"node/no-deprecated-api": "error",
 		"node/no-missing-import": "error",
 		"node/no-missing-require": [
@@ -64,6 +64,10 @@ module.exports = {
 		],
 		"node/no-unpublished-bin": "error",
 		"node/no-unpublished-require": "error",
-		"node/process-exit-as-throw": "error"
+		"node/process-exit-as-throw": "error",
+		"space-in-parens": ["error", "never"],
+		"indent": ["error", "tab", { "SwitchCase": 1 }],
+		"eol-last": ["error", "always"],
+		"newline-per-chained-call": "off"
 	}
 };
