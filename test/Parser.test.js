@@ -1,6 +1,5 @@
 "use strict";
 
-
 const Parser = require("../lib/Parser");
 const BasicEvaluatedExpression = require("../lib/BasicEvaluatedExpression");
 

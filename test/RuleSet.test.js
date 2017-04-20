@@ -371,7 +371,7 @@ describe("RuleSet", () => {
 					],
 				}]);
 				expect((match(loader, "style.css"))).toEqual(["css"]);
-			} catch (err) {
+			} catch(err) {
 				expect(errorHasContext(err.message)).toBe(true);
 			}
 		});
@@ -391,7 +391,7 @@ describe("RuleSet", () => {
 					},
 				}]);
 				expect((match(loader, "style.css"))).toEqual(["css"]);
-			} catch (err) {
+			} catch(err) {
 				expect(errorHasContext(err.message)).toBe(true);
 			}
 		});
@@ -411,7 +411,7 @@ describe("RuleSet", () => {
 					},
 				}]);
 				expect((match(loader, "style.css"))).toEqual(["css"]);
-			} catch (err) {
+			} catch(err) {
 				expect(errorHasContext(err.message)).toBe(true);
 			}
 		});

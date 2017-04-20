@@ -1,6 +1,5 @@
 "use strict";
 
-
 const template = require("../lib/Template");
 
 describe("Template", () => {

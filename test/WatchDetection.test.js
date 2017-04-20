@@ -56,7 +56,7 @@ describe("WatchDetection", () => {
 				let onChange;
 
 				compiler.plugin("done", () => {
-					if (onChange) {
+					if(onChange) {
 						onChange();
 					}
 				});
@@ -67,7 +67,7 @@ describe("WatchDetection", () => {
 
 				function step1() {
 					onChange = () => {
-						if (memfs.readFileSync("/bundle.js") && memfs.readFileSync("/bundle.js").toString().indexOf("original") >= 0) {
+						if(memfs.readFileSync("/bundle.js") && memfs.readFileSync("/bundle.js").toString().indexOf("original") >= 0) {
 							step2();
 						}
 					};
@@ -95,7 +95,7 @@ describe("WatchDetection", () => {
 
 				function step4() {
 					onChange = () => {
-						if (memfs.readFileSync("/bundle.js").toString().indexOf("correct") >= 0) {
+						if(memfs.readFileSync("/bundle.js").toString().indexOf("correct") >= 0) {
 							cleanup();
 						}
 					};

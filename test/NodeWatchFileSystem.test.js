@@ -43,7 +43,7 @@ describe("NodeWatchFileSystem", function() {
 		}).toThrow("Invalid arguments: 'callbackUndelayed'");
 	});
 
-	if (process.env.NO_WATCH_TESTS) {
+	if(process.env.NO_WATCH_TESTS) {
 		console.log("NodeWatchFileSystem: long running tests excluded.");
 		return;
 	}
@@ -63,7 +63,7 @@ describe("NodeWatchFileSystem", function() {
 		var watcher = wfs.watch([fileDirect], [], [], startTime, {
 			aggregateTimeout: 1000
 		}, function(err, filesModified, dirsModified, missingCreated, fileTimestamps) {
-			if (err) {
+			if(err) {
 				done(err);
 			}
 
@@ -184,7 +184,6 @@ describe("NodeWatchFileSystem", function() {
 				expect(filesModified).toEqual([]);
 				expect(dirsModified).toEqual([fixtures]);
 
-
 				const clonedTimestamps = Object.assign({}, dirTimestamps);
 				expect(clonedTimestamps).toHaveProperty(fixtures);
 				expect(typeof clonedTimestamps[fixtures]).toBe('number');
@@ -207,7 +206,6 @@ describe("NodeWatchFileSystem", function() {
 				if(err) throw err;
 				expect(filesModified).toEqual([fileSubdir, fileDirect]);
 				expect(dirsModified).toEqual([fixtures]);
-
 
 				const clonedFileTimestamps = Object.assign({}, fileTimestamps);
 				expect(clonedFileTimestamps).toHaveProperty(fileDirect);
