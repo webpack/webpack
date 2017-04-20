@@ -94,6 +94,7 @@
       "lib/**/*.js",
       "!**/*.runtime.js"
     ],
+    "testEnvironment": "node",
     "testRegex": "test/.*?\\.(benchmark|test)\\.js$",
     "testPathIgnorePatterns": [
       "test/binCases",
