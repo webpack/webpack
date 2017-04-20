@@ -1,10 +1,12 @@
-{
+module.exports = {
 	"root": true,
 	"plugins": ["node"],
 	"extends": ["eslint:recommended", "plugin:node/recommended"],
 	"env": {
-		"node": true
+		"node": true,
+    "es6": true,
 	},
+  "parserOptions": {"ecmaVersion": 2017},
 	"rules": {
 		"quotes": ["error", "double"],
 		"no-undef": "error",
@@ -37,6 +39,7 @@
 		"keyword-spacing": ["error", {
 			"after": false,
 			"overrides": {
+				"const": {"after": true},
 				"try": {"after": true},
 				"else": {"after": true},
 				"throw": {"after": true},
@@ -47,7 +50,20 @@
 			}
 		}],
 		"no-console": "off",
-		"valid-jsdoc": "error"
+		"valid-jsdoc": "error",
+    "node/no-unsupported-features": ["error", {version: 7}],
+    "node/no-deprecated-api": "error",
+    "node/no-missing-import": "error",
+    "node/no-missing-require": [
+      "error",
+      {
+        "allowModules": [
+          "webpack"
+        ]
+      }
+    ],
+    "node/no-unpublished-bin": "error",
+    "node/no-unpublished-require": "error",
+    "node/process-exit-as-throw": "error"
 	}
 }
-
