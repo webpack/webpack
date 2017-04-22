@@ -50,8 +50,9 @@ require.ensure(["c"], function(require) {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
@@ -60,8 +61,9 @@ require.ensure(["c"], function(require) {
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
+/******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
+/******/ 		}
 /******/
 /******/ 	};
 /******/
@@ -77,9 +79,9 @@ require.ensure(["c"], function(require) {
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -100,8 +102,9 @@ require.ensure(["c"], function(require) {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
+/******/ 		if(installedChunks[chunkId] === 0) {
 /******/ 			return Promise.resolve();
+/******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -134,7 +137,9 @@ require.ensure(["c"], function(require) {
 /******/ 			clearTimeout(timeout);
 /******/ 			var chunk = installedChunks[chunkId];
 /******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
@@ -275,11 +280,11 @@ webpackJsonp([0],[,,,function(n,c){},function(n,c){}]);
 ## Uncompressed
 
 ```
-Hash: 2426d9b9f5a83189d95d
-Version: webpack 2.3.2
+Hash: 1df3128cc27b6bc63b7c
+Version: webpack 2.4.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  420 bytes       0  [emitted]  
-  output.js    6.58 kB       1  [emitted]  main
+  output.js    6.66 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes {1} [rendered]
     > [2] ./example.js 3:0-6:2
@@ -287,24 +292,24 @@ chunk    {0} 0.output.js 22 bytes {1} [rendered]
         require.ensure item c [2] ./example.js 3:0-6:2
     [4] ./~/d.js 11 bytes {0} [built]
         cjs require d [2] ./example.js 5:12-24
-chunk    {1} output.js (main) 166 bytes [entry] [rendered]
+chunk    {1} output.js (main) 161 bytes [entry] [rendered]
     > main [2] ./example.js 
     [0] ./~/b.js 11 bytes {1} [built]
         cjs require b [2] ./example.js 2:8-20
         cjs require b [2] ./example.js 4:4-16
     [1] ./~/a.js 11 bytes {1} [built]
         cjs require a [2] ./example.js 1:8-20
-    [2] ./example.js 144 bytes {1} [built]
+    [2] ./example.js 139 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 2426d9b9f5a83189d95d
-Version: webpack 2.3.2
+Hash: 1df3128cc27b6bc63b7c
+Version: webpack 2.4.1
       Asset      Size  Chunks             Chunk Names
 0.output.js  55 bytes       0  [emitted]  
-  output.js   1.47 kB       1  [emitted]  main
+  output.js   1.46 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes {1} [rendered]
     > [2] ./example.js 3:0-6:2
@@ -312,12 +317,12 @@ chunk    {0} 0.output.js 22 bytes {1} [rendered]
         require.ensure item c [2] ./example.js 3:0-6:2
     [4] ./~/d.js 11 bytes {0} [built]
         cjs require d [2] ./example.js 5:12-24
-chunk    {1} output.js (main) 166 bytes [entry] [rendered]
+chunk    {1} output.js (main) 161 bytes [entry] [rendered]
     > main [2] ./example.js 
     [0] ./~/b.js 11 bytes {1} [built]
         cjs require b [2] ./example.js 2:8-20
         cjs require b [2] ./example.js 4:4-16
     [1] ./~/a.js 11 bytes {1} [built]
         cjs require a [2] ./example.js 1:8-20
-    [2] ./example.js 144 bytes {1} [built]
+    [2] ./example.js 139 bytes {1} [built]
 ```

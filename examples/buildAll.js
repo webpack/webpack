@@ -1,4 +1,4 @@
-var cp = require('child_process');
+var cp = require("child_process");
 var path = require("path");
 var fs = require("fs");
 
@@ -11,7 +11,7 @@ var cmds = fs.readdirSync(__dirname).filter(function(dirname) {
 var stack = function() {
 	console.log("done");
 };
-for(var i = cmds.length-1; i >= 0; i--) {
+for(var i = cmds.length - 1; i >= 0; i--) {
 	var cmd = cmds[i];
 	stack = (function(next, cmd) {
 		return function() {
@@ -21,7 +21,7 @@ for(var i = cmds.length-1; i >= 0; i--) {
 				else if(stderr) console.error(stderr), next();
 				else next();
 			});
-		}
+		};
 	}(stack, cmd));
 }
 stack();

@@ -246,7 +246,7 @@ eval("var math, race,\n  slice = [].slice;\n\nmath = {\n  root: Math.sqrt,\n  sq
 
 ```
 Hash: e1eee77b6825ec38ac89465a726503b90d318f915f9e187528736f9dd586ad053259eb9ee4cf69b5354b67e68d715d903c312f2150aa82ec45caa3f79d388dea6bd43ac605cdd4e103e888cf20eaf6f75dc2d2924e3fdc22d6889086c1479edc2c87f028
-Version: webpack 2.3.3
+Version: webpack 2.4.1
 Child
     Hash: e1eee77b6825ec38ac89
                                   Asset     Size  Chunks             Chunk Names

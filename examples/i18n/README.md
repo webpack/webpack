@@ -59,9 +59,9 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -151,9 +151,9 @@ console.log("Missing Text");
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -232,24 +232,24 @@ console.log("Missing Text");
 ## Uncompressed
 
 ```
-Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 2.3.2
+Hash: 4194dfc38a1d790c828d2b4d6ee6122bc1cc36c8
+Version: webpack 2.4.1
 Child en:
-    Hash: b61d16621736c97f557e
+    Hash: 4194dfc38a1d790c828d
            Asset     Size  Chunks             Chunk Names
-    en.output.js  2.84 kB       0  [emitted]  main
+    en.output.js  2.85 kB       0  [emitted]  main
     Entrypoint main = en.output.js
-    chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
+    chunk    {0} en.output.js (main) 64 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 65 bytes {0} [built]
+        [0] ./example.js 64 bytes {0} [built]
 Child de:
-    Hash: 52b4d8e68140f1345ef8
+    Hash: 2b4d6ee6122bc1cc36c8
            Asset     Size  Chunks             Chunk Names
-    de.output.js  2.84 kB       0  [emitted]  main
+    de.output.js  2.85 kB       0  [emitted]  main
     Entrypoint main = de.output.js
-    chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
+    chunk    {0} de.output.js (main) 64 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 65 bytes {0} [built] [1 warning]
+        [0] ./example.js 64 bytes {0} [built] [1 warning]
     
     WARNING in ./example.js
     Missing localization: Missing Text
@@ -258,24 +258,24 @@ Child de:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 2.3.2
+Hash: 4194dfc38a1d790c828d2b4d6ee6122bc1cc36c8
+Version: webpack 2.4.1
 Child en:
-    Hash: b61d16621736c97f557e
+    Hash: 4194dfc38a1d790c828d
            Asset       Size  Chunks             Chunk Names
-    en.output.js  571 bytes       0  [emitted]  main
+    en.output.js  564 bytes       0  [emitted]  main
     Entrypoint main = en.output.js
-    chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
+    chunk    {0} en.output.js (main) 64 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 65 bytes {0} [built]
+        [0] ./example.js 64 bytes {0} [built]
 Child de:
-    Hash: 52b4d8e68140f1345ef8
+    Hash: 2b4d6ee6122bc1cc36c8
            Asset       Size  Chunks             Chunk Names
-    de.output.js  570 bytes       0  [emitted]  main
+    de.output.js  563 bytes       0  [emitted]  main
     Entrypoint main = de.output.js
-    chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
+    chunk    {0} de.output.js (main) 64 bytes [entry] [rendered]
         > main [0] ./example.js 
-        [0] ./example.js 65 bytes {0} [built] [1 warning]
+        [0] ./example.js 64 bytes {0} [built] [1 warning]
     
     WARNING in ./example.js
     Missing localization: Missing Text

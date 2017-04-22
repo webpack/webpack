@@ -38,8 +38,9 @@ module.exports = {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
@@ -48,8 +49,9 @@ module.exports = {
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
+/******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
+/******/ 		}
 /******/ 		if(executeModules) {
 /******/ 			for(i=0; i < executeModules.length; i++) {
 /******/ 				result = __webpack_require__(__webpack_require__.s = executeModules[i]);
@@ -70,9 +72,9 @@ module.exports = {
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -93,8 +95,9 @@ module.exports = {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
+/******/ 		if(installedChunks[chunkId] === 0) {
 /******/ 			return Promise.resolve();
+/******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -127,7 +130,9 @@ module.exports = {
 /******/ 			clearTimeout(timeout);
 /******/ 			var chunk = installedChunks[chunkId];
 /******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
@@ -276,22 +281,22 @@ __webpack_require__(/*! ./vendor2 */ 1);
 ## Uncompressed
 
 ```
-Hash: 62391146f04ad7bbf99c
-Version: webpack 2.3.2
+Hash: 894a30061af5d69cca5a
+Version: webpack 2.4.1
      Asset       Size  Chunks             Chunk Names
-vendor2.js  583 bytes       0  [emitted]  vendor2
+vendor2.js  581 bytes       0  [emitted]  vendor2
   pageC.js  234 bytes       1  [emitted]  pageC
   pageB.js  234 bytes       2  [emitted]  pageB
-  pageA.js  341 bytes       3  [emitted]  pageA
-vendor1.js     6.4 kB       4  [emitted]  vendor1
+  pageA.js  338 bytes       3  [emitted]  pageA
+vendor1.js    6.48 kB       4  [emitted]  vendor1
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor1.js vendor2.js
 Entrypoint pageA = vendor1.js vendor2.js pageA.js
 Entrypoint pageB = vendor1.js vendor2.js pageB.js
 Entrypoint pageC = vendor1.js vendor2.js pageC.js
-chunk    {0} vendor2.js (vendor2) 80 bytes {4} [initial] [rendered]
+chunk    {0} vendor2.js (vendor2) 78 bytes {4} [initial] [rendered]
     > vendor2 [6] multi ./vendor2 
-    [1] ./vendor2.js 52 bytes {0} [built]
+    [1] ./vendor2.js 50 bytes {0} [built]
         cjs require ./vendor2 [2] ./pageA.js 3:0-20
         single entry ./vendor2 [6] multi ./vendor2 vendor2:100000
     [6] multi ./vendor2 28 bytes {0} [built]
@@ -301,9 +306,9 @@ chunk    {1} pageC.js (pageC) 25 bytes {0} [initial] [rendered]
 chunk    {2} pageB.js (pageB) 25 bytes {0} [initial] [rendered]
     > pageB [3] ./pageB.js 
     [3] ./pageB.js 25 bytes {2} [built]
-chunk    {3} pageA.js (pageA) 73 bytes {0} [initial] [rendered]
+chunk    {3} pageA.js (pageA) 70 bytes {0} [initial] [rendered]
     > pageA [2] ./pageA.js 
-    [2] ./pageA.js 73 bytes {3} [built]
+    [2] ./pageA.js 70 bytes {3} [built]
 chunk    {4} vendor1.js (vendor1) 55 bytes [entry] [rendered]
     > vendor1 [5] multi ./vendor1 
     [0] ./vendor1.js 27 bytes {4} [built]
@@ -316,22 +321,22 @@ chunk    {4} vendor1.js (vendor1) 55 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 62391146f04ad7bbf99c
-Version: webpack 2.3.2
+Hash: 894a30061af5d69cca5a
+Version: webpack 2.4.1
      Asset       Size  Chunks             Chunk Names
 vendor2.js  102 bytes       0  [emitted]  vendor2
   pageC.js   59 bytes       1  [emitted]  pageC
   pageB.js   59 bytes       2  [emitted]  pageB
   pageA.js   71 bytes       3  [emitted]  pageA
-vendor1.js    1.46 kB       4  [emitted]  vendor1
+vendor1.js    1.45 kB       4  [emitted]  vendor1
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor1.js vendor2.js
 Entrypoint pageA = vendor1.js vendor2.js pageA.js
 Entrypoint pageB = vendor1.js vendor2.js pageB.js
 Entrypoint pageC = vendor1.js vendor2.js pageC.js
-chunk    {0} vendor2.js (vendor2) 80 bytes {4} [initial] [rendered]
+chunk    {0} vendor2.js (vendor2) 78 bytes {4} [initial] [rendered]
     > vendor2 [6] multi ./vendor2 
-    [1] ./vendor2.js 52 bytes {0} [built]
+    [1] ./vendor2.js 50 bytes {0} [built]
         cjs require ./vendor2 [2] ./pageA.js 3:0-20
         single entry ./vendor2 [6] multi ./vendor2 vendor2:100000
     [6] multi ./vendor2 28 bytes {0} [built]
@@ -341,9 +346,9 @@ chunk    {1} pageC.js (pageC) 25 bytes {0} [initial] [rendered]
 chunk    {2} pageB.js (pageB) 25 bytes {0} [initial] [rendered]
     > pageB [3] ./pageB.js 
     [3] ./pageB.js 25 bytes {2} [built]
-chunk    {3} pageA.js (pageA) 73 bytes {0} [initial] [rendered]
+chunk    {3} pageA.js (pageA) 70 bytes {0} [initial] [rendered]
     > pageA [2] ./pageA.js 
-    [2] ./pageA.js 73 bytes {3} [built]
+    [2] ./pageA.js 70 bytes {3} [built]
 chunk    {4} vendor1.js (vendor1) 55 bytes [entry] [rendered]
     > vendor1 [5] multi ./vendor1 
     [0] ./vendor1.js 27 bytes {4} [built]
