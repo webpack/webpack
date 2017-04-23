@@ -1,23 +1,23 @@
 it("should be able to load a file with the require.context method", function() {
-	require.context("./templates")("./tmpl").should.be.eql("test template");
-	(require.context("./././templates"))("./tmpl").should.be.eql("test template");
-	(require.context("././templates/.")("./tmpl")).should.be.eql("test template");
-	require . context ( "." + "/." + "/" + "templ" + "ates" ) ( "./subdir/tmpl.js" ).should.be.eql("subdir test template");
-	require.context("./templates", true, /./)("xyz").should.be.eql("xyz");
+	expect(require.context("./templates")("./tmpl")).toEqual("test template");
+	expect((require.context("./././templates"))("./tmpl")).toEqual("test template");
+	expect((require.context("././templates/.")("./tmpl"))).toEqual("test template");
+	require . context ( "." + "/." + "/" + "templ" + "ates" ) ( "./subdir/tmpl.js" expect()).toEqual("subdir test template");
+	expect(require.context("./templates", true, /./)("xyz")).toEqual("xyz");
 });
 
 it("should automatically create contexts", function() {
 	var template = "tmpl", templateFull = "./tmpl.js";
 	var mp = "mp", tmp = "tmp", mpl = "mpl";
-	require("./templates/" + template).should.be.eql("test template");
-	require("./templates/" + tmp + "l").should.be.eql("test template");
-	require("./templates/t" + mpl).should.be.eql("test template");
-	require("./templates/t" + mp + "l").should.be.eql("test template");
+	expect(require("./templates/" + template)).toEqual("test template");
+	expect(require("./templates/" + tmp + "l")).toEqual("test template");
+	expect(require("./templates/t" + mpl)).toEqual("test template");
+	expect(require("./templates/t" + mp + "l")).toEqual("test template");
 });
 
 it("should be able to require.resolve with automatical context", function() {
 	var template = "tmpl";
-	require.resolve("./templates/" + template).should.be.eql(require.resolve("./templates/tmpl"));
+	expect(require.resolve("./templates/" + template)).toEqual(require.resolve("./templates/tmpl"));
 });
 
 it("should be able to use renaming combined with a context", function() {
@@ -25,22 +25,22 @@ it("should be able to use renaming combined with a context", function() {
 	require = function () {};
 	require("fail");
 	var template = "tmpl";
-	renamedRequire("./templates/" + template).should.be.eql("test template");
+	expect(renamedRequire("./templates/" + template)).toEqual("test template");
 });
 
 it("should compile an empty context", function() {
 	var x = "";
-	(function() {
+	expect(function() {
 		require("./templates/notExisting" + x);
-	}).toString().should.not.match(/require/);
+	}).toString()).not.toMatch(/require/);
 });
 
 it("should execute an empty context", function() {
 	var context;
-	(function() {
+	expect(function() {
 		context = require.context("./templates/", true, /^\.\/notExisting/);
-	}).should.not.throw();
-	(function() {
+	}).not.toThrow();
+	expect(function() {
 		context("");
-	}).should.throw();
+	}).toThrow();
 });

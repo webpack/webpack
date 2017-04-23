@@ -1,7 +1,6 @@
 /* globals describe, it */
 "use strict";
 
-require("should");
 const webpack = require("../lib/webpack");
 const WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
 
@@ -207,8 +206,15 @@ describe("Validation", () => {
 			} catch(e) {
 				if(!(e instanceof WebpackOptionsValidationError))
 					throw e;
-				e.message.should.startWith("Invalid configuration object.");
-				e.message.split("\n").slice(1).should.be.eql(testCase.message);
+
+				const msg = "Invalid configuration object.";
+
+				// startsWith, the first assert makes it more obvious in the case that the message
+				// text is materially altered
+				expect(e.message).toContain(msg);
+				expect(e.message.indexOf(msg)).toBe(0);
+
+				expect(e.message.split("\n").slice(1)).toEqual(testCase.message);
 				return;
 			}
 			throw new Error("Validation didn't fail");

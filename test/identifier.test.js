@@ -1,7 +1,6 @@
 /* globals describe, beforeEach, it */
 "use strict";
 
-const should = require("should");
 const path = require("path");
 
 const identifierUtil = require("../lib/util/identifier");
@@ -17,7 +16,7 @@ describe("util/identifier", () => {
 			});
 
 			it("computes the correct relative results for the path construct", () => {
-				should(identifierUtil.makePathsRelative(context, pathConstruct)).be.exactly(expected);
+				expect(identifierUtil.makePathsRelative(context, pathConstruct)).toBe(expected);
 			});
 		});
 	});

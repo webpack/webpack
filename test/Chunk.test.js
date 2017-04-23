@@ -1,7 +1,6 @@
 /* globals describe, it, beforeEach */
 "use strict";
 
-const should = require("should");
 const sinon = require("sinon");
 const Chunk = require("../lib/Chunk");
 
@@ -10,64 +9,64 @@ describe("Chunk", () => {
 
 	beforeEach(() => ChunkInstance = new Chunk("chunk-test", "module-test", "loc-test"));
 
-	it("should have debugId more than 999", () => should(ChunkInstance.debugId).be.above(999));
+	it("should have debugId more than 999", () => expect(ChunkInstance.debugId).toBeGreaterThan(999));
 
-	it("returns a string with modules information", () => should(ChunkInstance.toString()).be.exactly("Chunk[]"));
+	it("returns a string with modules information", () => expect(ChunkInstance.toString()).toBe("Chunk[]"));
 
 	it("should have origins based in constructor information", () =>
-		should(ChunkInstance.origins[0]).be.eql({
+		expect(ChunkInstance.origins[0]).toEqual({
 			module: "module-test",
 			loc: "loc-test",
 			name: "chunk-test"
 		}));
 
-	it("should not be the initial instance", () => should(ChunkInstance.isInitial()).be.false());
+	it("should not be the initial instance", () => expect(ChunkInstance.isInitial()).toBeFalsy());
 
 	describe("entry", () => {
 		it("returns an error if get entry", () =>
-			should(() => {
+			expect(() => {
 				ChunkInstance.entry;
-			}).throw("Chunk.entry was removed. Use hasRuntime()"));
+			}).toThrow("Chunk.entry was removed. Use hasRuntime()"));
 
 		it("returns an error if set an entry", () =>
-			should(() => {
+			expect(() => {
 				ChunkInstance.entry = 10;
-			}).throw("Chunk.entry was removed. Use hasRuntime()"));
+			}).toThrow("Chunk.entry was removed. Use hasRuntime()"));
 	});
 
 	describe("initial", () => {
 		it("returns an error if get initial", () =>
-			should(() => {
+			expect(() => {
 				ChunkInstance.initial;
-			}).throw("Chunk.initial was removed. Use isInitial()"));
+			}).toThrow("Chunk.initial was removed. Use isInitial()"));
 
 		it("returns an error if set an initial", () =>
-			should(() => {
+			expect(() => {
 				ChunkInstance.initial = 10;
-			}).throw("Chunk.initial was removed. Use isInitial()"));
+			}).toThrow("Chunk.initial was removed. Use isInitial()"));
 	});
 
 	describe("hasRuntime", () => {
-		it("returns false", () => should(ChunkInstance.hasRuntime()).be.false());
+		it("returns false", () => expect(ChunkInstance.hasRuntime()).toBeFalsy());
 	});
 
 	describe("isEmpty", () => {
-		it("should NOT have any module by default", () => should(ChunkInstance.isEmpty()).be.true());
+		it("should NOT have any module by default", () => expect(ChunkInstance.isEmpty()).toBeTruthy());
 	});
 
 	describe("size", () => {
 		it("should NOT have any module by default", () =>
-			should(ChunkInstance.size({
+			expect(ChunkInstance.size({
 				chunkOverhead: 10,
 				entryChunkMultiplicator: 2
-			})).be.exactly(10));
+			})).toBe(10));
 	});
 
 	describe("checkConstraints", () => {
 		it("throws an error", () =>
-			should(() => {
+			expect(() => {
 				ChunkInstance.checkConstraints();
-			}).not.throw(/checkConstraints/));
+			}).not.toThrow(/checkConstraints/));
 	});
 
 	describe("canBeIntegrated", () => {
@@ -75,14 +74,14 @@ describe("Chunk", () => {
 			const other = {
 				isInitial: () => true
 			};
-			should(ChunkInstance.canBeIntegrated(other)).be.false();
+			expect(ChunkInstance.canBeIntegrated(other)).toBeFalsy();
 		});
 
 		it("returns `true` if other object and chunk instance are NOT initial", () => {
 			const other = {
 				isInitial: () => false
 			};
-			should(ChunkInstance.canBeIntegrated(other)).be.true();
+			expect(ChunkInstance.canBeIntegrated(other)).toBeTruthy();
 		});
 	});
 
@@ -97,7 +96,7 @@ describe("Chunk", () => {
 		});
 		describe("and the chunk does not contain this module", function() {
 			it("returns false", function() {
-				ChunkInstance.removeModule(module).should.eql(false);
+				expect(ChunkInstance.removeModule(module)).toEqual(false);
 			});
 		});
 		describe("and the chunk does contain this module", function() {
@@ -105,9 +104,9 @@ describe("Chunk", () => {
 				ChunkInstance.modules = [module];
 			});
 			it("calls module.removeChunk with itself and returns true", function() {
-				ChunkInstance.removeModule(module).should.eql(true);
-				removeChunkSpy.callCount.should.eql(1);
-				removeChunkSpy.args[0][0].should.eql(ChunkInstance);
+				expect(ChunkInstance.removeModule(module)).toEqual(true);
+				expect(removeChunkSpy.callCount).toEqual(1);
+				expect(removeChunkSpy.args[0][0]).toEqual(ChunkInstance);
 			});
 		});
 	});
@@ -123,7 +122,7 @@ describe("Chunk", () => {
 		});
 		describe("and the chunk does not contain this chunk", function() {
 			it("returns false", function() {
-				ChunkInstance.removeChunk(chunk).should.eql(false);
+				expect(ChunkInstance.removeChunk(chunk)).toEqual(false);
 			});
 		});
 		describe("and the chunk does contain this module", function() {
@@ -131,9 +130,9 @@ describe("Chunk", () => {
 				ChunkInstance.chunks = [chunk];
 			});
 			it("calls module.removeChunk with itself and returns true", function() {
-				ChunkInstance.removeChunk(chunk).should.eql(true);
-				removeParentSpy.callCount.should.eql(1);
-				removeParentSpy.args[0][0].should.eql(ChunkInstance);
+				expect(ChunkInstance.removeChunk(chunk)).toEqual(true);
+				expect(removeParentSpy.callCount).toEqual(1);
+				expect(removeParentSpy.args[0][0]).toEqual(ChunkInstance);
 			});
 		});
 	});
@@ -149,7 +148,7 @@ describe("Chunk", () => {
 		});
 		describe("and the chunk does not contain this chunk", function() {
 			it("returns false", function() {
-				ChunkInstance.removeParent(chunk).should.eql(false);
+				expect(ChunkInstance.removeParent(chunk)).toEqual(false);
 			});
 		});
 		describe("and the chunk does contain this module", function() {
@@ -157,9 +156,9 @@ describe("Chunk", () => {
 				ChunkInstance.parents = [chunk];
 			});
 			it("calls module.removeChunk with itself and returns true", function() {
-				ChunkInstance.removeParent(chunk).should.eql(true);
-				removeChunkSpy.callCount.should.eql(1);
-				removeChunkSpy.args[0][0].should.eql(ChunkInstance);
+				expect(ChunkInstance.removeParent(chunk)).toEqual(true);
+				expect(removeChunkSpy.callCount).toEqual(1);
+				expect(removeChunkSpy.args[0][0]).toEqual(ChunkInstance);
 			});
 		});
 	});

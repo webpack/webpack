@@ -1,10 +1,8 @@
 "use strict";
 
-const should = require("should");
 const path = require("path");
 const fs = require("fs");
 const asyncLib = require("async");
-var Test = require("mocha/lib/test");
 
 const webpack = require("../lib/webpack");
 const Benchmark = require("benchmark");
@@ -25,8 +23,7 @@ describe("BenchmarkTestCases", function() {
 		fs.mkdirSync(baselinesPath);
 	} catch(e) {}
 
-	before(function(done) {
-		this.timeout(270000);
+	beforeEach(function(done) {
 		const git = require("simple-git");
 		const rootPath = path.join(__dirname, "..");
 		getBaselineRevs(rootPath, (err, baselineRevisions) => {
@@ -170,17 +167,11 @@ describe("BenchmarkTestCases", function() {
 	tests.forEach(testName => {
 		const testDirectory = path.join(casesPath, testName);
 		let headStats = null;
-		const suite = describe(testName, function() {});
 		it(`${testName} create benchmarks`, function() {
 			baselines.forEach(baseline => {
 				let baselineStats = null;
 
-				function it(title, fn) {
-					const test = new Test(title, fn);
-					suite.addTest(test);
-				}
 				it(`should benchmark ${baseline.name} (${baseline.rev})`, function(done) {
-					this.timeout(180000);
 					const outputDirectory = path.join(__dirname, "js", "benchmark", `baseline-${baseline.name}`, testName);
 					const config = Object.create(require(path.join(testDirectory, "webpack.config.js")));
 					config.output = Object.create(config.output || {});
@@ -195,7 +186,7 @@ describe("BenchmarkTestCases", function() {
 							baselineStats = stats;
 						done();
 					});
-				});
+				}, 180000);
 
 				if(baseline.name !== "HEAD") {
 					it(`HEAD should not be slower than ${baseline.name} (${baseline.rev})`, function() {
@@ -209,4 +200,4 @@ describe("BenchmarkTestCases", function() {
 			});
 		});
 	});
-});
+}, 270000);

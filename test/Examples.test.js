@@ -1,7 +1,6 @@
 "use strict";
 
 /* globals describe it */
-require("should");
 const path = require("path");
 const fs = require("fs");
 const webpack = require("../");
@@ -13,7 +12,6 @@ describe("Examples", () => {
 
 	examples.forEach((examplePath) => {
 		it("should compile " + path.basename(examplePath), function(done) {
-			this.timeout(20000);
 			let options = {};
 			let webpackConfigPath = path.join(examplePath, "webpack.config.js");
 			webpackConfigPath = webpackConfigPath.substr(0, 1).toUpperCase() + webpackConfigPath.substr(1);
@@ -45,6 +43,6 @@ describe("Examples", () => {
 				}
 				done();
 			});
-		});
+		}, 20000);
 	});
 });

@@ -1,10 +1,10 @@
 "use strict";
 
 module.exports = function testAssertions(stdout, stderr, done) {
-	stdout.should.be.ok();
-	stdout[0].should.containEql("");
-	stdout[1].should.containEql("Webpack is watching the files…");
+	expect(stdout).toBeTruthy();
+	expect(stdout[0]).toBe("");
+	expect(stdout[1]).toBe("Webpack is watching the files…");
 
-	stderr.should.be.empty();
+	expect(stderr).toHaveLength(0);
 	done();
 };

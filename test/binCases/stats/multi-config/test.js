@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = function testAssertions(code, stdout, stderr) {
-	code.should.be.eql(0);
-	stdout.should.be.ok();
-	stderr.should.be.empty();
+	expect(code).toBe(0);
+	expect(stdout).toBeTruthy();
+	expect(stderr).toHaveLength(0);
 };

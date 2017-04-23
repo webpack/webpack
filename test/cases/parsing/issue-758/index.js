@@ -1,7 +1,7 @@
 it("should require existing module with supplied error callback", function(done) {
 	require.ensure(['./file'], function(){
 		var file = require('./file');
-		file.should.be.eql("file");
+		expect(file).toEqual("file");
 		done();
 	}, function(error) {});
 });
@@ -10,8 +10,8 @@ it("should call error callback on missing module", function(done) {
 	require.ensure(['./missingModule'], function(){
 		require('./missingModule');
 	}, function(error) {
-		error.should.be.instanceOf(Error);
-		error.message.should.be.eql('Cannot find module "./missingModule"');
+		expect(error).toBeInstanceOf(Error);
+		expect(error.message).toEqual('Cannot find module "./missingModule"');
 		done();
 	});
 });
@@ -21,8 +21,8 @@ it("should call error callback on missing module in context", function(done) {
 		require.ensure([], function(){
 			require('./' + module);
 		}, function(error) {
-			error.should.be.instanceOf(Error);
-			error.message.should.be.eql("Cannot find module './missingModule'.");
+			expect(error).toBeInstanceOf(Error);
+			expect(error.message).toEqual("Cannot find module './missingModule'.");
 			done();
 		});
 	})('missingModule');
@@ -32,8 +32,8 @@ it("should call error callback on exception thrown in loading module", function(
 	require.ensure(['./throwing'], function(){
 		require('./throwing');
 	}, function(error) {
-		error.should.be.instanceOf(Error);
-		error.message.should.be.eql('message');
+		expect(error).toBeInstanceOf(Error);
+		expect(error.message).toEqual('message');
 		done();
 	});
 });
@@ -43,8 +43,8 @@ it("should not call error callback on exception thrown in require callback", fun
     require('./throwing');
 		throw new Error('message');
 	}, function(error) {
-		error.should.be.instanceOf(Error);
-		error.message.should.be.eql('message');
+		expect(error).toBeInstanceOf(Error);
+		expect(error.message).toEqual('message');
 		done();
 	});
 });
@@ -55,7 +55,7 @@ it("should call error callback when there is an error loading the chunk", functi
 	require.ensure(['./file'], function(){
 		var file = require('./file');
 	}, function(error) {
-		error.should.be.eql('fake chunk load error');
+		expect(error).toEqual('fake chunk load error');
 		done();
 	});
 	__webpack_require__.e = temp;

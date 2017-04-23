@@ -1,6 +1,5 @@
 "use strict";
 
-const should = require("should");
 const sinon = require("sinon");
 const MultiCompiler = require("../lib/MultiCompiler");
 
@@ -77,26 +76,24 @@ describe("MultiCompiler", () => {
 				env.myMultiCompiler = new MultiCompiler(env.compilers);
 			});
 
-			it("sets the compilers property to the array", () => env.myMultiCompiler.compilers.should.be.exactly(env.compilers));
+			it("sets the compilers property to the array", () => expect(env.myMultiCompiler.compilers).toBe(env.compilers));
 		});
 
 		describe("when provided a compiler mapping", () => {
-			beforeEach(() => {
+			it("sets the compilers property to an array of compilers", () => {
 				const compilers = {
 					compiler1: createCompiler(),
 					compiler2: createCompiler()
 				};
 				env.myMultiCompiler = new MultiCompiler(compilers);
-			});
 
-			it("sets the compilers property to an array of compilers", () => {
-				env.myMultiCompiler.compilers.should.deepEqual([
+				expect(env.myMultiCompiler.compilers).toEqual([
 					Object.assign({
 						name: "compiler1"
-					}, createCompiler()),
+					}, compilers.compiler1),
 					Object.assign({
 						name: "compiler2"
-					}, createCompiler())
+					}, compilers.compiler2)
 				]);
 			});
 		});
@@ -109,15 +106,15 @@ describe("MultiCompiler", () => {
 				});
 
 				it("throws an error when reading the value", () => {
-					should(() => {
+					expect(() => {
 						env.myMultiCompiler.outputFileSystem;
-					}).throw("Cannot read outputFileSystem of a MultiCompiler");
+					}).toThrow("Cannot read outputFileSystem of a MultiCompiler");
 				});
 
 				it("updates all compilers when setting the value", () => {
 					env.myMultiCompiler.outputFileSystem = "foo";
-					env.compilers[0].outputFileSystem.should.be.exactly("foo");
-					env.compilers[1].outputFileSystem.should.be.exactly("foo");
+					expect(env.compilers[0].outputFileSystem).toBe("foo");
+					expect(env.compilers[1].outputFileSystem).toBe("foo");
 				});
 			});
 
@@ -128,15 +125,15 @@ describe("MultiCompiler", () => {
 				});
 
 				it("throws an error when reading the value", () => {
-					should(() => {
+					expect(() => {
 						env.myMultiCompiler.inputFileSystem;
-					}).throw("Cannot read inputFileSystem of a MultiCompiler");
+					}).toThrow("Cannot read inputFileSystem of a MultiCompiler");
 				});
 
 				it("updates all compilers when setting the value", () => {
 					env.myMultiCompiler.inputFileSystem = "foo";
-					env.compilers[0].inputFileSystem.should.be.exactly("foo");
-					env.compilers[1].inputFileSystem.should.be.exactly("foo");
+					expect(env.compilers[0].inputFileSystem).toBe("foo");
+					expect(env.compilers[1].inputFileSystem).toBe("foo");
 				});
 			});
 
@@ -154,7 +151,7 @@ describe("MultiCompiler", () => {
 						env.myMultiCompiler = new MultiCompiler(env.compilers);
 					});
 
-					it("returns the root path", () => env.myMultiCompiler.outputPath.should.be.exactly("/"));
+					it("returns the root path", () => expect(env.myMultiCompiler.outputPath).toBe("/"));
 				});
 
 				describe("when common path cannot be found and output path is relative", () => {
@@ -171,7 +168,7 @@ describe("MultiCompiler", () => {
 					});
 
 					it("returns the first segment of relative path", () =>
-						env.myMultiCompiler.outputPath.should.be.exactly("foo"));
+						expect(env.myMultiCompiler.outputPath).toBe("foo"));
 				});
 
 				describe("when common path can be found and output path is absolute", () => {
@@ -187,7 +184,7 @@ describe("MultiCompiler", () => {
 						env.myMultiCompiler = new MultiCompiler(env.compilers);
 					});
 
-					it("returns the shared path", () => env.myMultiCompiler.outputPath.should.be.exactly("/foo"));
+					it("returns the shared path", () => expect(env.myMultiCompiler.outputPath).toBe("/foo"));
 				});
 
 				describe("when common path can be found and output path is relative", () => {
@@ -203,7 +200,7 @@ describe("MultiCompiler", () => {
 						env.myMultiCompiler = new MultiCompiler(env.compilers);
 					});
 
-					it("returns the shared path", () => env.myMultiCompiler.outputPath.should.be.exactly("foo"));
+					it("returns the shared path", () => expect(env.myMultiCompiler.outputPath).toBe("foo"));
 				});
 			});
 		});
@@ -212,8 +209,8 @@ describe("MultiCompiler", () => {
 			beforeEach(() => setupTwoCompilerEnvironment(env));
 
 			it("binds two event handler", () => {
-				env.compiler1EventBindings.length.should.be.exactly(2);
-				env.compiler2EventBindings.length.should.be.exactly(2);
+				expect(env.compiler1EventBindings.length).toBe(2);
+				expect(env.compiler2EventBindings.length).toBe(2);
 			});
 
 			describe("done handler", () => {
@@ -222,7 +219,7 @@ describe("MultiCompiler", () => {
 					env.doneEventBinding2 = env.compiler2EventBindings[0];
 				});
 
-				it("binds to done event", () => env.doneEventBinding1.name.should.be.exactly("done"));
+				it("binds to done event", () => expect(env.doneEventBinding1.name).toBe("done"));
 
 				describe("when called for first compiler", () => {
 					beforeEach(() => {
@@ -234,7 +231,7 @@ describe("MultiCompiler", () => {
 					});
 
 					it("does not call the done plugin when not all compilers are finished", () =>
-						env.mockDonePlugin.callCount.should.be.exactly(0));
+						expect(env.mockDonePlugin.callCount).toBe(0));
 
 					describe("and called for second compiler", () => {
 						beforeEach(() =>
@@ -242,7 +239,7 @@ describe("MultiCompiler", () => {
 								hash: "bar"
 							}));
 
-						it("calls the done plugin", () => env.mockDonePlugin.callCount.should.be.exactly(1));
+						it("calls the done plugin", () => expect(env.mockDonePlugin.callCount).toBe(1));
 					});
 				});
 			});
@@ -250,7 +247,7 @@ describe("MultiCompiler", () => {
 			describe("invalid handler", () => {
 				beforeEach(() => env.invalidEventBinding = env.compiler1EventBindings[1]);
 
-				it("binds to invalid event", () => env.invalidEventBinding.name.should.be.exactly("invalid"));
+				it("binds to invalid event", () => expect(env.invalidEventBinding.name).toBe("invalid"));
 
 				describe("when called", () => {
 					beforeEach(() => {
@@ -259,7 +256,7 @@ describe("MultiCompiler", () => {
 						env.invalidEventBinding.handler();
 					});
 
-					it("calls the invalid plugin", () => env.mockInvalidPlugin.callCount.should.be.exactly(1));
+					it("calls the invalid plugin", () => expect(env.mockInvalidPlugin.callCount).toBe(1));
 				});
 			});
 		});
@@ -280,25 +277,25 @@ describe("MultiCompiler", () => {
 
 			it("returns a multi-watching object", () => {
 				const result = JSON.stringify(env.result);
-				result.should.be.exactly('{"watchings":["compiler1","compiler2"],"compiler":{"_plugins":{},"compilers":[{"name":"compiler1"},{"name":"compiler2"}]}}');
+				expect(result).toBe('{"watchings":["compiler1","compiler2"],"compiler":{"_plugins":{},"compilers":[{"name":"compiler1"},{"name":"compiler2"}]}}');
 			});
 
 			it("calls watch on each compiler with original options", () => {
-				env.compiler1WatchCallbacks.length.should.be.exactly(1);
-				env.compiler1WatchCallbacks[0].options.should.be.exactly(env.options[0]);
-				env.compiler2WatchCallbacks.length.should.be.exactly(1);
-				env.compiler2WatchCallbacks[0].options.should.be.exactly(env.options[1]);
+				expect(env.compiler1WatchCallbacks.length).toBe(1);
+				expect(env.compiler1WatchCallbacks[0].options).toBe(env.options[0]);
+				expect(env.compiler2WatchCallbacks.length).toBe(1);
+				expect(env.compiler2WatchCallbacks[0].options).toBe(env.options[1]);
 			});
 
 			it("calls the callback when all compilers watch", () => {
 				env.compiler1WatchCallbacks[0].callback(null, {
 					hash: "foo"
 				});
-				env.callback.callCount.should.be.exactly(0);
+				expect(env.callback.callCount).toBe(0);
 				env.compiler2WatchCallbacks[0].callback(null, {
 					hash: "bar"
 				});
-				env.callback.callCount.should.be.exactly(1);
+				expect(env.callback.callCount).toBe(1);
 			});
 
 			describe("on first run", () => {
@@ -306,9 +303,9 @@ describe("MultiCompiler", () => {
 					beforeEach(() => env.compiler1WatchCallbacks[0].callback(new Error("Test error")));
 
 					it("has failure parameters", () => {
-						env.callback.callCount.should.be.exactly(1);
-						env.callback.getCall(0).args[0].should.be.Error();
-						should(env.callback.getCall(0).args[1]).be.undefined();
+						expect(env.callback.callCount).toBe(1);
+						expect(env.callback.getCall(0).args[0]).toBeInstanceOf(Error);
+						expect(env.callback.getCall(0).args[1]).toBeUndefined();
 					});
 				});
 
@@ -318,7 +315,7 @@ describe("MultiCompiler", () => {
 							hash: "foo"
 						}));
 
-					it("does not call the callback", () => env.callback.callCount.should.be.exactly(0));
+					it("does not call the callback", () => expect(env.callback.callCount).toBe(0));
 				});
 			});
 
@@ -332,9 +329,9 @@ describe("MultiCompiler", () => {
 					});
 
 					it("has failure parameters", () => {
-						env.callback.callCount.should.be.exactly(1);
-						env.callback.getCall(0).args[0].should.be.Error();
-						should(env.callback.getCall(0).args[1]).be.undefined();
+						expect(env.callback.callCount).toBe(1);
+						expect(env.callback.getCall(0).args[0]).toBeInstanceOf(Error);
+						expect(env.callback.getCall(0).args[1]).toBeUndefined();
 					});
 				});
 
@@ -349,10 +346,10 @@ describe("MultiCompiler", () => {
 					});
 
 					it("has success parameters", () => {
-						env.callback.callCount.should.be.exactly(1);
-						should(env.callback.getCall(0).args[0]).be.Null();
+						expect(env.callback.callCount).toBe(1);
+						expect(env.callback.getCall(0).args[0]).toBeNull();
 						const stats = JSON.stringify(env.callback.getCall(0).args[1]);
-						stats.should.be.exactly('{"stats":[{"hash":"foo"},{"hash":"bar"}],"hash":"foobar"}');
+						expect(stats).toBe('{"stats":[{"hash":"foo"},{"hash":"bar"}],"hash":"foobar"}');
 					});
 				});
 			});
@@ -376,25 +373,25 @@ describe("MultiCompiler", () => {
 			});
 
 			it("calls run on each compiler in dependency order", () => {
-				env.compiler1WatchCallbacks.length.should.be.exactly(0);
-				env.compiler2WatchCallbacks.length.should.be.exactly(1);
-				env.compiler2WatchCallbacks[0].options.should.be.exactly(env.options[1]);
+				expect(env.compiler1WatchCallbacks.length).toBe(0);
+				expect(env.compiler2WatchCallbacks.length).toBe(1);
+				expect(env.compiler2WatchCallbacks[0].options).toBe(env.options[1]);
 				env.compiler2WatchCallbacks[0].callback(null, {
 					hash: "bar"
 				});
-				env.compiler1WatchCallbacks.length.should.be.exactly(1);
-				env.compiler1WatchCallbacks[0].options.should.be.exactly(env.options[0]);
+				expect(env.compiler1WatchCallbacks.length).toBe(1);
+				expect(env.compiler1WatchCallbacks[0].options).toBe(env.options[0]);
 			});
 
 			it("calls the callback when all compilers run in dependency order", () => {
 				env.compiler2WatchCallbacks[0].callback(null, {
 					hash: "bar"
 				});
-				env.callback.callCount.should.be.exactly(0);
+				expect(env.callback.callCount).toBe(0);
 				env.compiler1WatchCallbacks[0].callback(null, {
 					hash: "foo"
 				});
-				env.callback.callCount.should.be.exactly(1);
+				expect(env.callback.callCount).toBe(1);
 			});
 		});
 	});
@@ -408,19 +405,19 @@ describe("MultiCompiler", () => {
 			});
 
 			it("calls run on each compiler", () => {
-				env.compiler1RunCallbacks.length.should.be.exactly(1);
-				env.compiler2RunCallbacks.length.should.be.exactly(1);
+				expect(env.compiler1RunCallbacks.length).toBe(1);
+				expect(env.compiler2RunCallbacks.length).toBe(1);
 			});
 
 			it("calls the callback when all compilers run", () => {
 				env.compiler1RunCallbacks[0].callback(null, {
 					hash: "foo"
 				});
-				env.callback.callCount.should.be.exactly(0);
+				expect(env.callback.callCount).toBe(0);
 				env.compiler2RunCallbacks[0].callback(null, {
 					hash: "bar"
 				});
-				env.callback.callCount.should.be.exactly(1);
+				expect(env.callback.callCount).toBe(1);
 			});
 
 			describe("callback called with no compiler errors", () => {
@@ -434,10 +431,10 @@ describe("MultiCompiler", () => {
 				});
 
 				it("has success parameters", () => {
-					env.callback.callCount.should.be.exactly(1);
-					should(env.callback.getCall(0).args[0]).be.Null();
+					expect(env.callback.callCount).toBe(1);
+					expect(env.callback.getCall(0).args[0]).toBeNull();
 					const stats = JSON.stringify(env.callback.getCall(0).args[1]);
-					stats.should.be.exactly('{"stats":[{"hash":"foo"},{"hash":"bar"}],"hash":"foobar"}');
+					expect(stats).toBe('{"stats":[{"hash":"foo"},{"hash":"bar"}],"hash":"foobar"}');
 				});
 			});
 
@@ -450,9 +447,9 @@ describe("MultiCompiler", () => {
 				});
 
 				it("has failure parameters", () => {
-					env.callback.callCount.should.be.exactly(1);
-					env.callback.getCall(0).args[0].should.be.Error();
-					should(env.callback.getCall(0).args[1]).be.undefined();
+					expect(env.callback.callCount).toBe(1);
+					expect(env.callback.getCall(0).args[0]).toBeInstanceOf(Error);
+					expect(env.callback.getCall(0).args[1]).toBeUndefined();
 				});
 			});
 		});
@@ -470,23 +467,23 @@ describe("MultiCompiler", () => {
 			});
 
 			it("calls run on each compiler in dependency order", () => {
-				env.compiler1RunCallbacks.length.should.be.exactly(0);
-				env.compiler2RunCallbacks.length.should.be.exactly(1);
+				expect(env.compiler1RunCallbacks.length).toBe(0);
+				expect(env.compiler2RunCallbacks.length).toBe(1);
 				env.compiler2RunCallbacks[0].callback(null, {
 					hash: "bar"
 				});
-				env.compiler1RunCallbacks.length.should.be.exactly(1);
+				expect(env.compiler1RunCallbacks.length).toBe(1);
 			});
 
 			it("calls the callback when all compilers run in dependency order", () => {
 				env.compiler2RunCallbacks[0].callback(null, {
 					hash: "bar"
 				});
-				env.callback.callCount.should.be.exactly(0);
+				expect(env.callback.callCount).toBe(0);
 				env.compiler1RunCallbacks[0].callback(null, {
 					hash: "foo"
 				});
-				env.callback.callCount.should.be.exactly(1);
+				expect(env.callback.callCount).toBe(1);
 			});
 		});
 	});
@@ -507,7 +504,7 @@ describe("MultiCompiler", () => {
 
 		it("calls the compilers purge if available", () => {
 			const purgeSpy = env.compilers[0].inputFileSystem.purge;
-			purgeSpy.callCount.should.be.exactly(1);
+			expect(purgeSpy.callCount).toBe(1);
 		});
 	});
 });

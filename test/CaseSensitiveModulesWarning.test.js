@@ -1,6 +1,5 @@
 "use strict";
 
-const should = require("should");
 const CaseSensitiveModulesWarning = require("../lib/CaseSensitiveModulesWarning");
 
 const createModule = function(identifier, numberOfReasons) {
@@ -29,10 +28,10 @@ describe("CaseSensitiveModulesWarning", () => {
 		myCaseSensitiveModulesWarning = new CaseSensitiveModulesWarning(modules);
 	});
 
-	it("has the a name", () => myCaseSensitiveModulesWarning.name.should.be.exactly("CaseSensitiveModulesWarning"));
+	it("has the a name", () => expect(myCaseSensitiveModulesWarning.name).toBe("CaseSensitiveModulesWarning"));
 
 	it("has the a message", () => {
-		myCaseSensitiveModulesWarning.message.should.be.exactly(`
+		expect(myCaseSensitiveModulesWarning.message).toBe(`
 There are multiple modules with names that only differ in casing.
 This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
 Use equal casing. Compare these module identifiers:
@@ -47,8 +46,8 @@ Use equal casing. Compare these module identifiers:
 	});
 
 	it("has the an origin", () =>
-		myCaseSensitiveModulesWarning.origin.should.be.exactly(modules[0]));
+		expect(myCaseSensitiveModulesWarning.origin).toBe(modules[0]));
 
 	it('has the a module', () =>
-		myCaseSensitiveModulesWarning.module.should.be.exactly(modules[0]));
+		expect(myCaseSensitiveModulesWarning.module).toBe(modules[0]));
 });

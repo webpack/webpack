@@ -13,7 +13,7 @@ it("should parse template strings in require.ensure requires", function(done) {
 		];
 
 		for (var i = 0; i < imports.length; i++) {
-			imports[i].default.should.eql("ok");
+			expect(imports[i].default).toBe("ok");
 		}
 		done()
 	})
@@ -32,7 +32,7 @@ it("should parse template strings in sync requires", function() {
 	];
 
 	for (var i = 0; i < imports.length; i++) {
-		imports[i].default.should.eql("sync");
+		expect(imports[i].default).toBe("sync");
 	}
 })
 
@@ -41,5 +41,5 @@ it("should parse template strings in require.resolve", function() {
 
 	// Arbitrary assertion; can't use .ok() as it could be 0,
 	// can't use typeof as that depends on webpack config.
-	require.resolve(`./sync/${name}Test`).should.not.be.undefined();
+	expect(require.resolve(`./sync/${name}Test`)).toBeDefined();
 })

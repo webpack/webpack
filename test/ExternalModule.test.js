@@ -1,6 +1,5 @@
 /* globals describe, it, beforeEach */
 "use strict";
-require("should");
 const sinon = require("sinon");
 const ExternalModule = require("../lib/ExternalModule");
 const OriginalSource = require("webpack-sources").OriginalSource;
@@ -21,26 +20,26 @@ describe("ExternalModule", function() {
 	describe("#identifier", function() {
 		it("returns an identifier for this module", function() {
 			const expected = `external "${request}"`;
-			externalModule.identifier().should.eql(expected);
+			expect(externalModule.identifier()).toEqual(expected);
 		});
 	});
 
 	describe("#readableIdentifier", function() {
 		it("returns an identifier for this module", function() {
 			const expected = `external "${request}"`;
-			externalModule.identifier().should.eql(expected);
+			expect(externalModule.identifier()).toEqual(expected);
 		});
 	});
 
 	describe("#needRebuild", function() {
 		it("always returns false", function() {
-			externalModule.needRebuild().should.eql(false);
+			expect(externalModule.needRebuild()).toEqual(false);
 		});
 	});
 
 	describe("#size", function() {
 		it("always returns 42", function() {
-			externalModule.size().should.eql(42);
+			expect(externalModule.size()).toEqual(42);
 		});
 	});
 
@@ -56,10 +55,10 @@ describe("ExternalModule", function() {
 			const result = externalModule.source();
 
 			// check
-			externalModule.getSource.callCount.should.eql(1);
-			externalModule.getSourceString.callCount.should.eql(1);
-			externalModule.getSource.args[0][0].should.eql(expectedString);
-			result.should.eql(expectedSource);
+			expect(externalModule.getSource.callCount).toEqual(1);
+			expect(externalModule.getSourceString.callCount).toEqual(1);
+			expect(externalModule.getSource.args[0][0]).toEqual(expectedString);
+			expect(result).toEqual(expectedSource);
 		});
 	});
 
@@ -76,7 +75,7 @@ describe("ExternalModule", function() {
 				const result = externalModule.getSource(someSourceString);
 
 				// check
-				result.should.be.instanceOf(OriginalSource);
+				expect(result).toBeInstanceOf(OriginalSource);
 			});
 		});
 		describe("given it does not use source maps", function() {
@@ -91,7 +90,7 @@ describe("ExternalModule", function() {
 				const result = externalModule.getSource(someSourceString);
 
 				// check
-				result.should.be.instanceOf(RawSource);
+				expect(result).toBeInstanceOf(RawSource);
 			});
 		});
 	});
@@ -108,7 +107,7 @@ describe("ExternalModule", function() {
 				const result = externalModule.getSourceForGlobalVariableExternal(varName, type);
 
 				// check
-				result.should.eql(expected);
+				expect(result).toEqual(expected);
 			});
 		});
 		describe("given an single variable name", function() {
@@ -122,7 +121,7 @@ describe("ExternalModule", function() {
 				const result = externalModule.getSourceForGlobalVariableExternal(varName, type);
 
 				// check
-				result.should.eql(expected);
+				expect(result).toEqual(expected);
 			});
 		});
 	});
@@ -138,7 +137,7 @@ describe("ExternalModule", function() {
 				const result = externalModule.getSourceForCommonJsExternal(varName, type);
 
 				// check
-				result.should.eql(expected);
+				expect(result).toEqual(expected);
 			});
 		});
 		describe("given an single variable name", function() {
@@ -152,7 +151,7 @@ describe("ExternalModule", function() {
 				const result = externalModule.getSourceForCommonJsExternal(varName, type);
 
 				// check
-				result.should.eql(expected);
+				expect(result).toEqual(expected);
 			});
 		});
 	});
@@ -169,7 +168,7 @@ describe("ExternalModule", function() {
 			const result = externalModule.checkExternalVariable(variableToCheck, request);
 
 			// check
-			result.should.eql(expected);
+			expect(result).toEqual(expected);
 		});
 	});
 
@@ -184,7 +183,7 @@ describe("ExternalModule", function() {
 			const result = externalModule.getSourceForAmdOrUmdExternal(id, optional, request);
 
 			// check
-			result.should.eql(expected);
+			expect(result).toEqual(expected);
 		});
 		describe("given an optinal check is set", function() {
 			it("ads a check for the existance of the variable before looking it up", function() {
@@ -198,7 +197,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 				const result = externalModule.getSourceForAmdOrUmdExternal(id, optional, request);
 
 				// check
-				result.should.eql(expected);
+				expect(result).toEqual(expected);
 			});
 		});
 	});
@@ -213,7 +212,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 			const result = externalModule.getSourceForDefaultCase(optional, request);
 
 			// check
-			result.should.eql(expected);
+			expect(result).toEqual(expected);
 		});
 		describe("given an optinal check is requested", function() {
 			it("checks for the existance of the request setting it", function() {
@@ -226,7 +225,7 @@ module.exports = some/request;`;
 				const result = externalModule.getSourceForDefaultCase(optional, request);
 
 				// check
-				result.should.eql(expected);
+				expect(result).toEqual(expected);
 			});
 		});
 	});
@@ -252,10 +251,10 @@ module.exports = some/request;`;
 					externalModule.getSourceString();
 
 					// check
-					globalExternalStub.callCount.should.eql(i + 1);
-					globalCommonJsStub.callCount.should.eql(0);
-					globalAmdOrUmdStub.callCount.should.eql(0);
-					defaultExternalStub.callCount.should.eql(0);
+					expect(globalExternalStub.callCount).toEqual(i + 1);
+					expect(globalCommonJsStub.callCount).toEqual(0);
+					expect(globalAmdOrUmdStub.callCount).toEqual(0);
+					expect(defaultExternalStub.callCount).toEqual(0);
 				});
 			});
 		});
@@ -269,10 +268,10 @@ module.exports = some/request;`;
 					externalModule.getSourceString();
 
 					// check
-					globalExternalStub.callCount.should.eql(0);
-					globalCommonJsStub.callCount.should.eql(i + 1);
-					globalAmdOrUmdStub.callCount.should.eql(0);
-					defaultExternalStub.callCount.should.eql(0);
+					expect(globalExternalStub.callCount).toEqual(0);
+					expect(globalCommonJsStub.callCount).toEqual(i + 1);
+					expect(globalAmdOrUmdStub.callCount).toEqual(0);
+					expect(defaultExternalStub.callCount).toEqual(0);
 				});
 			});
 		});
@@ -286,10 +285,10 @@ module.exports = some/request;`;
 					externalModule.getSourceString();
 
 					// check
-					globalExternalStub.callCount.should.eql(0);
-					globalCommonJsStub.callCount.should.eql(0);
-					globalAmdOrUmdStub.callCount.should.eql(i + 1);
-					defaultExternalStub.callCount.should.eql(0);
+					expect(globalExternalStub.callCount).toEqual(0);
+					expect(globalCommonJsStub.callCount).toEqual(0);
+					expect(globalAmdOrUmdStub.callCount).toEqual(i + 1);
+					expect(defaultExternalStub.callCount).toEqual(0);
 				});
 			});
 		});
@@ -303,10 +302,10 @@ module.exports = some/request;`;
 					externalModule.getSourceString();
 
 					// check
-					globalExternalStub.callCount.should.eql(0);
-					globalCommonJsStub.callCount.should.eql(0);
-					globalAmdOrUmdStub.callCount.should.eql(0);
-					defaultExternalStub.callCount.should.eql(i + 1);
+					expect(globalExternalStub.callCount).toEqual(0);
+					expect(globalCommonJsStub.callCount).toEqual(0);
+					expect(globalAmdOrUmdStub.callCount).toEqual(0);
+					expect(defaultExternalStub.callCount).toEqual(i + 1);
 				});
 			});
 		});

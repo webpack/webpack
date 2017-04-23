@@ -1,7 +1,5 @@
 "use strict";
 
-const should = require("should");
-
 const path = require("path");
 const webpack = require("../lib/webpack");
 
@@ -24,15 +22,15 @@ describe("NodeTemplatePlugin", () => {
 			]
 		}, (err, stats) => {
 			if(err) return err;
-			stats.hasErrors().should.be.not.ok();
-			stats.hasWarnings().should.be.not.ok();
+			expect(stats.hasErrors()).not.toBeTruthy();
+			expect(stats.hasWarnings()).not.toBeTruthy();
 			const result = require("./js/result").abc;
-			result.nextTick.should.be.equal(process.nextTick);
-			result.fs.should.be.equal(require("fs"));
+			expect(result.nextTick).toEqual(process.nextTick);
+			expect(result.fs).toEqual(require("fs"));
 			result.loadChunk(456, (chunk) => {
-				chunk.should.be.eql(123);
+				expect(chunk).toEqual(123);
 				result.loadChunk(567, (chunk) => {
-					chunk.should.be.eql({
+					expect(chunk).toEqual({
 						a: 1
 					});
 					done();
@@ -62,16 +60,16 @@ describe("NodeTemplatePlugin", () => {
 			]
 		}, (err, stats) => {
 			if(err) return err;
-			stats.hasErrors().should.be.not.ok();
+			expect(stats.hasErrors()).not.toBeTruthy();
 			const result = require("./js/result2");
-			result.nextTick.should.be.equal(process.nextTick);
-			result.fs.should.be.equal(require("fs"));
+			expect(result.nextTick).toEqual(process.nextTick);
+			expect(result.fs).toEqual(require("fs"));
 			const sameTick = true;
 			result.loadChunk(456, (chunk) => {
-				chunk.should.be.eql(123);
-				sameTick.should.be.eql(true);
+				expect(chunk).toEqual(123);
+				expect(sameTick).toEqual(true);
 				result.loadChunk(567, (chunk) => {
-					chunk.should.be.eql({
+					expect(chunk).toEqual({
 						a: 1
 					});
 					done();

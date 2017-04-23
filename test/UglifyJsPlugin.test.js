@@ -1,6 +1,5 @@
-/* globals describe, it, beforeEach*/
 "use strict";
-require("should");
+
 const sinon = require("sinon");
 const UglifyJsPlugin = require("../lib/optimize/UglifyJsPlugin");
 const PluginEnvironment = require("./helpers/PluginEnvironment");
@@ -9,7 +8,7 @@ const RawSource = require("webpack-sources").RawSource;
 
 describe("UglifyJsPlugin", function() {
 	it("has apply function", function() {
-		(new UglifyJsPlugin()).apply.should.be.a.Function();
+		expect((new UglifyJsPlugin()).apply).toBeInstanceOf(Function);
 	});
 
 	describe("when applied with no options", function() {
@@ -27,7 +26,7 @@ describe("UglifyJsPlugin", function() {
 		});
 
 		it("binds one event handler", function() {
-			eventBindings.length.should.be.exactly(1);
+			expect(eventBindings.length).toBe(1);
 		});
 
 		describe("compilation handler", function() {
@@ -36,7 +35,7 @@ describe("UglifyJsPlugin", function() {
 			});
 
 			it("binds to compilation event", function() {
-				eventBinding.name.should.be.exactly("compilation");
+				expect(eventBinding.name).toBe("compilation");
 			});
 
 			describe("when called", function() {
@@ -72,7 +71,7 @@ describe("UglifyJsPlugin", function() {
 				});
 
 				it("binds one event handler", function() {
-					compilationEventBindings.length.should.be.exactly(1);
+					expect(compilationEventBindings.length).toBe(1);
 				});
 
 				describe("optimize-chunk-assets handler", function() {
@@ -81,20 +80,20 @@ describe("UglifyJsPlugin", function() {
 					});
 
 					it("binds to optimize-chunk-assets event", function() {
-						compilationEventBinding.name.should.be.exactly("optimize-chunk-assets");
+						expect(compilationEventBinding.name).toBe("optimize-chunk-assets");
 					});
 
 					it("only calls callback once", function() {
 						callback = sinon.spy();
 						compilationEventBinding.handler([""], callback);
-						callback.callCount.should.be.exactly(1);
+						expect(callback.callCount).toBe(1);
 					});
 
 					it("default only parses filenames ending with .js", function() {
 						compilationEventBinding.handler([{
 							files: ["test", "test.js"]
 						}], function() {
-							Object.keys(compilation.assets).length.should.be.exactly(4);
+							expect(Object.keys(compilation.assets).length).toBe(4);
 						});
 					});
 
@@ -102,7 +101,7 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test.js"]
 						}], function() {
-							compilation.assets["test.js"].should.deepEqual({});
+							expect(compilation.assets["test.js"]).toEqual({});
 						});
 					});
 
@@ -110,9 +109,9 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test1.js"]
 						}], function() {
-							compilation.errors.length.should.be.exactly(1);
-							compilation.errors[0].should.be.an.Error;
-							compilation.errors[0].message.should.have.containEql("TypeError");
+							expect(compilation.errors.length).toBe(1);
+							expect(compilation.errors[0]).toBeInstanceOf(Error);
+							expect(compilation.errors[0].message).toContain("TypeError");
 						});
 					});
 
@@ -120,10 +119,10 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test2.js"]
 						}], function() {
-							compilation.errors.length.should.be.exactly(1);
-							compilation.errors[0].should.be.an.Error;
-							compilation.errors[0].message.should.have.containEql("Unexpected token");
-							compilation.errors[0].message.should.have.containEql("[test2.js:1,8]");
+							expect(compilation.errors.length).toBe(1);
+							expect(compilation.errors[0]).toBeInstanceOf(Error);
+							expect(compilation.errors[0].message).toContain("Unexpected token");
+							expect(compilation.errors[0].message).toContain("[test2.js:1,8]");
 						});
 					});
 
@@ -131,7 +130,7 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test3.js"]
 						}], function() {
-							compilation.errors.length.should.be.exactly(0);
+							expect(compilation.errors.length).toBe(0);
 						});
 					});
 
@@ -139,7 +138,7 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test3.js"]
 						}], function() {
-							compilation.assets["test3.js"].should.be.instanceof(RawSource);
+							expect(compilation.assets["test3.js"]).toBeInstanceOf(RawSource);
 						});
 					});
 
@@ -147,7 +146,7 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test3.js"]
 						}], function() {
-							compilation.assets["test3.js"]._value.should.not.containEql("longVariableName");
+							expect(compilation.assets["test3.js"]._value).not.toContain("longVariableName");
 						});
 					});
 
@@ -155,7 +154,7 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test3.js"]
 						}], function() {
-							compilation.assets["test3.js"]._value.should.not.containEql("\n");
+							expect(compilation.assets["test3.js"]._value).not.toContain("\n");
 						});
 					});
 
@@ -163,7 +162,7 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test3.js"]
 						}], function() {
-							compilation.assets["test3.js"]._value.should.containEql("/**");
+							expect(compilation.assets["test3.js"]._value).toContain("/**");
 						});
 					});
 				});
@@ -202,8 +201,8 @@ describe("UglifyJsPlugin", function() {
 			compilationEventBinding.handler([{
 				files: ["test.js"]
 			}], function() {
-				compilation.errors.length.should.be.exactly(1);
-				compilation.errors[0].message.should.have.containEql("supported option");
+				expect(compilation.errors.length).toBe(1);
+				expect(compilation.errors[0].message).toContain("supported option");
 			});
 		});
 	});
@@ -240,7 +239,7 @@ describe("UglifyJsPlugin", function() {
 		});
 
 		it("binds one event handler", function() {
-			eventBindings.length.should.be.exactly(1);
+			expect(eventBindings.length).toBe(1);
 		});
 
 		describe("compilation handler", function() {
@@ -249,7 +248,7 @@ describe("UglifyJsPlugin", function() {
 			});
 
 			it("binds to compilation event", function() {
-				eventBinding.name.should.be.exactly("compilation");
+				expect(eventBinding.name).toBe("compilation");
 			});
 
 			describe("when called", function() {
@@ -336,7 +335,7 @@ describe("UglifyJsPlugin", function() {
 				});
 
 				it("binds two event handler", function() {
-					compilationEventBindings.length.should.be.exactly(2);
+					expect(compilationEventBindings.length).toBe(2);
 				});
 
 				describe("build-module handler", function() {
@@ -345,13 +344,13 @@ describe("UglifyJsPlugin", function() {
 					});
 
 					it("binds to build-module event", function() {
-						compilationEventBinding.name.should.be.exactly("build-module");
+						expect(compilationEventBinding.name).toBe("build-module");
 					});
 
 					it("sets the useSourceMap flag", function() {
 						const obj = {};
 						compilationEventBinding.handler(obj);
-						obj.useSourceMap.should.be.equal(true);
+						expect(obj.useSourceMap).toBe(true);
 					});
 				});
 
@@ -361,14 +360,14 @@ describe("UglifyJsPlugin", function() {
 					});
 
 					it("binds to optimize-chunk-assets event", function() {
-						compilationEventBinding.name.should.be.exactly("optimize-chunk-assets");
+						expect(compilationEventBinding.name).toBe("optimize-chunk-assets");
 					});
 
 					it("outputs no errors for valid javascript", function() {
 						compilationEventBinding.handler([{
 							files: ["test.js"]
 						}], function() {
-							compilation.errors.length.should.be.exactly(0);
+							expect(compilation.errors.length).toBe(0);
 						});
 					});
 
@@ -376,7 +375,7 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test.js"]
 						}], function() {
-							compilation.assets["test.js"].should.be.instanceof(SourceMapSource);
+							expect(compilation.assets["test.js"]).toBeInstanceOf(SourceMapSource);
 						});
 					});
 
@@ -384,7 +383,7 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test.js"]
 						}], function() {
-							compilation.assets["test.js"]._value.should.containEql("longVariableName");
+							expect(compilation.assets["test.js"]._value).toContain("longVariableName");
 						});
 					});
 
@@ -392,7 +391,7 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test.js"]
 						}], function() {
-							compilation.assets["test.js"]._value.should.containEql("\n");
+							expect(compilation.assets["test.js"]._value).toContain("\n");
 						});
 					});
 
@@ -400,7 +399,7 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test.js"]
 						}], function() {
-							compilation.assets["test.js"]._value.should.not.containEql("/**");
+							expect(compilation.assets["test.js"]._value).not.toContain("/**");
 						});
 					});
 
@@ -408,9 +407,9 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test1.js"]
 						}], function() {
-							compilation.errors.length.should.be.exactly(1);
-							compilation.errors[0].should.be.an.Error;
-							compilation.errors[0].message.should.containEql("[test1.js:1,0][test1.js:1,8]");
+							expect(compilation.errors.length).toBe(1);
+							expect(compilation.errors[0]).toBeInstanceOf(Error);
+							expect(compilation.errors[0].message).toContain("[test1.js:1,0][test1.js:1,8]");
 						});
 					});
 
@@ -418,9 +417,9 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test2.js"]
 						}], function() {
-							compilation.warnings.length.should.be.exactly(1);
-							compilation.warnings[0].should.be.an.Error;
-							compilation.warnings[0].message.should.containEql("Dropping unreachable code");
+							expect(compilation.warnings.length).toBe(1);
+							expect(compilation.warnings[0]).toBeInstanceOf(Error);
+							expect(compilation.warnings[0].message).toContain("Dropping unreachable code");
 						});
 					});
 
@@ -428,8 +427,8 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test3.js"]
 						}], function() {
-							compilation.errors.length.should.be.exactly(0);
-							compilation.assets["test3.js"].should.be.instanceof(SourceMapSource);
+							expect(compilation.errors.length).toBe(0);
+							expect(compilation.assets["test3.js"]).toBeInstanceOf(SourceMapSource);
 						});
 					});
 
@@ -485,9 +484,9 @@ describe("UglifyJsPlugin", function() {
 								compilationEventBindings[1].handler([{
 									files: ["test2.js"]
 								}], function() {
-									compilation.warnings.length.should.be.exactly(1);
-									compilation.warnings[0].should.be.an.Error;
-									compilation.warnings[0].message.should.containEql("Dropping unreachable code");
+									expect(compilation.warnings.length).toBe(1);
+									expect(compilation.warnings[0]).toBeInstanceOf(Error);
+									expect(compilation.warnings[0].message).toContain("Dropping unreachable code");
 								});
 							});
 						});
@@ -541,7 +540,7 @@ describe("UglifyJsPlugin", function() {
 								compilationEventBindings[1].handler([{
 									files: ["test2.js"]
 								}], function() {
-									compilation.warnings.length.should.be.exactly(0);
+									expect(compilation.warnings.length).toBe(0);
 								});
 							});
 						});
@@ -551,10 +550,10 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test4.js"]
 						}], function() {
-							compilation.errors.length.should.be.exactly(0);
-							compilation.assets["test4.license.js"]._value.should.containEql("/*! this comment should be extracted */");
-							compilation.assets["test4.license.js"]._value.should.containEql("// another comment that should be extracted to a separate file");
-							compilation.assets["test4.license.js"]._value.should.not.containEql("/* this will not be extracted */");
+							expect(compilation.errors.length).toBe(0);
+							expect(compilation.assets["test4.license.js"]._value).toContain("/*! this comment should be extracted */");
+							expect(compilation.assets["test4.license.js"]._value).toContain("// another comment that should be extracted to a separate file");
+							expect(compilation.assets["test4.license.js"]._value).not.toContain("/* this will not be extracted */");
 						});
 					});
 				});
@@ -583,7 +582,7 @@ describe("UglifyJsPlugin", function() {
 		});
 
 		it("binds one event handler", function() {
-			eventBindings.length.should.be.exactly(1);
+			expect(eventBindings.length).toBe(1);
 		});
 
 		describe("compilation handler", function() {
@@ -592,7 +591,7 @@ describe("UglifyJsPlugin", function() {
 			});
 
 			it("binds to compilation event", function() {
-				eventBinding.name.should.be.exactly("compilation");
+				expect(eventBinding.name).toBe("compilation");
 			});
 
 			describe("when called", function() {
@@ -629,7 +628,7 @@ describe("UglifyJsPlugin", function() {
 				});
 
 				it("binds one event handler", function() {
-					compilationEventBindings.length.should.be.exactly(1);
+					expect(compilationEventBindings.length).toBe(1);
 				});
 
 				describe("optimize-chunk-assets handler", function() {
@@ -641,10 +640,10 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test.js", "test2.js", "test3.js"]
 						}], function() {
-							compilation.assets["test.js"].source().should.containEql("/*");
-							compilation.assets["test2.js"].source().should.containEql("//");
-							compilation.assets["test3.js"].source().should.containEql("/*");
-							compilation.assets["test3.js"].source().should.containEql("//");
+							expect(compilation.assets["test.js"].source()).toContain("/*");
+							expect(compilation.assets["test2.js"].source()).toContain("//");
+							expect(compilation.assets["test3.js"].source()).toContain("/*");
+							expect(compilation.assets["test3.js"].source()).toContain("//");
 						});
 					});
 
@@ -652,12 +651,12 @@ describe("UglifyJsPlugin", function() {
 						compilationEventBinding.handler([{
 							files: ["test.js", "test2.js", "test3.js"]
 						}], function() {
-							compilation.errors.length.should.be.exactly(0);
-							compilation.assets["extracted-comments.js"].source().should.containEql("/* This is a comment from test.js */");
-							compilation.assets["extracted-comments.js"].source().should.containEql("// This is a comment from test2.js");
-							compilation.assets["extracted-comments.js"].source().should.containEql("/* This is a comment from test3.js */");
-							compilation.assets["extracted-comments.js"].source().should.containEql("// This is another comment from test3.js");
-							compilation.assets["extracted-comments.js"].source().should.not.containEql("function");
+							expect(compilation.errors.length).toBe(0);
+							expect(compilation.assets["extracted-comments.js"].source()).toContain("/* This is a comment from test.js */");
+							expect(compilation.assets["extracted-comments.js"].source()).toContain("// This is a comment from test2.js");
+							expect(compilation.assets["extracted-comments.js"].source()).toContain("/* This is a comment from test3.js */");
+							expect(compilation.assets["extracted-comments.js"].source()).toContain("// This is another comment from test3.js");
+							expect(compilation.assets["extracted-comments.js"].source()).not.toContain("function");
 						});
 					});
 				});

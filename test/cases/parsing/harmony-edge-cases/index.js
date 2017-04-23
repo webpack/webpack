@@ -3,9 +3,9 @@ import x, { b } from "./b";
 import { c, d } from "./fake-reexport";
 
 it("should be able to use exported function", function() {
-	a.should.be.eql("ok");
-	b.should.be.eql("ok");
-	x().should.be.eql("ok");
-	c.should.be.eql("ok");
-	d.should.be.eql("ok");
+	expect(a).toEqual("ok");
+	expect(b).toEqual("ok");
+	expect(x()).toEqual("ok");
+	expect(c).toEqual("ok");
+	expect(d).toEqual("ok");
 });

@@ -1,11 +1,8 @@
 "use strict";
 
-/* globals describe it */
-const should = require("should");
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
-const Test = require("mocha/lib/test");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
 const Stats = require("../lib/Stats");
@@ -31,16 +28,16 @@ describe("ConfigTestCases", () => {
 			})
 		};
 	});
+
 	categories.forEach((category) => {
 		describe(category.name, () => {
 			category.tests.forEach((testName) => {
-				const suite = describe(testName, () => {});
 				it(testName + " should compile", function(done) {
-					this.timeout(30000);
 					const testDirectory = path.join(casesPath, category.name, testName);
 					const outputDirectory = path.join(__dirname, "js", "config", category.name, testName);
 					const options = require(path.join(testDirectory, "webpack.config.js"));
 					const optionsArr = [].concat(options);
+
 					optionsArr.forEach((options, idx) => {
 						if(!options.context) options.context = testDirectory;
 						if(!options.entry) options.entry = "./index.js";
@@ -51,6 +48,7 @@ describe("ConfigTestCases", () => {
 						if(!options.output.filename) options.output.filename = "bundle" + idx + ".js";
 						if(!options.output.chunkFilename) options.output.chunkFilename = "[id].bundle" + idx + ".js";
 					});
+
 					webpack(options, (err, stats) => {
 						if(err) return done(err);
 						const statOptions = Stats.presetToOptions("verbose");
@@ -59,15 +57,16 @@ describe("ConfigTestCases", () => {
 						const jsonStats = stats.toJson({
 							errorDetails: true
 						});
+
 						if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
 						if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
+
 						let exportedTests = 0;
 
 						function _it(title, fn) {
-							const test = new Test(title, fn);
-							suite.addTest(test);
+							it(title, fn);
+
 							exportedTests++;
-							return test;
 						}
 
 						const globalContext = {
@@ -129,7 +128,7 @@ describe("ConfigTestCases", () => {
 						if(exportedTests < filesCount) return done(new Error("No tests exported by test case"));
 						process.nextTick(done);
 					});
-				});
+				}, 30000);
 			});
 		});
 	});

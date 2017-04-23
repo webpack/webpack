@@ -1,25 +1,26 @@
 it("should support an empty context", function() {
 	var c = require.context(".", true, /^nothing$/);
-	(typeof c.id).should.be.oneOf(["number", "string"]);
-	(function() {
+	expect(['number', 'string']).toContain(typeof c.id);
+
+	expect(function() {
 		c.resolve("");
-	}).should.throw();
-	(function() {
+	}).toThrow();
+	expect(function() {
 		c("");
-	}).should.throw();
-	c.keys().should.be.eql([]);
+	}).toThrow();
+	expect(c.keys()).toEqual([]);
 });
 
 // This would be a useful testcase, but it requires an (really) empty directory.
 // **but** you cannot commit empty directories into git
 /*it("should support an empty context (empty dir)", function() {
 	var c = require.context("./empty", true, /^nothing$/);
-	c.id.should.be.type("number");
-	(function() {
+	expect(typeof c.id).toBe("number");
+	expect(function() {
 		c.resolve("");
-	}).should.throw();
-	(function() {
+	}).toThrow();
+	expect(function() {
 		c("");
-	}).should.throw();
-	c.keys().should.be.eql([]);
+	}).toThrow();
+	expect(c.keys()).toEqual([]);
 });*/

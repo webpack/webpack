@@ -1,1 +1,1 @@
---plugin webpack/lib/optimize/UglifyJsPlugin
+--optimize-minimize

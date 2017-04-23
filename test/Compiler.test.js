@@ -1,7 +1,6 @@
 /* globals describe, it */
 "use strict";
 
-const should = require("should");
 const path = require("path");
 
 const webpack = require("../");
@@ -39,17 +38,17 @@ describe("Compiler", () => {
 		c.plugin("compilation", (compilation) => compilation.bail = true);
 		c.run((err, stats) => {
 			if(err) throw err;
-			should.strictEqual(typeof stats, "object");
+			expect(typeof stats).toBe("object");
 			const compilation = stats.compilation;
 			stats = stats.toJson({
 				modules: true,
 				reasons: true
 			});
-			should.strictEqual(typeof stats, "object");
-			stats.should.have.property("errors");
-			Array.isArray(stats.errors).should.be.ok();
+			expect(typeof stats).toBe("object");
+			expect(stats).toHaveProperty("errors");
+			expect(Array.isArray(stats.errors)).toBeTruthy();
 			if(stats.errors.length > 0) {
-				stats.errors[0].should.be.instanceOf(Error);
+				expect(stats.errors[0]).toBeInstanceOf(Error);
 				throw stats.errors[0];
 			}
 			stats.logs = logs;
@@ -64,7 +63,7 @@ describe("Compiler", () => {
 				filename: "the/hell.js",
 			}
 		}, (stats, files) => {
-			stats.logs.mkdirp.should.eql([
+			expect(stats.logs.mkdirp).toEqual([
 				"/what",
 				"/what/the",
 			]);
@@ -74,92 +73,92 @@ describe("Compiler", () => {
 
 	it("should compile a single file", (done) => {
 		compile("./c", {}, (stats, files) => {
-			files.should.have.property("/main.js").have.type("string");
-			Object.keys(files).should.be.eql(["/main.js"]);
+			expect(typeof files['/main.js']).toBe('string');
+			expect(Object.keys(files)).toEqual(["/main.js"]);
 			const bundle = files["/main.js"];
-			bundle.should.containEql("function __webpack_require__(");
-			bundle.should.containEql("__webpack_require__(/*! ./a */ 0);");
-			bundle.should.containEql("./c.js");
-			bundle.should.containEql("./a.js");
-			bundle.should.containEql("This is a");
-			bundle.should.containEql("This is c");
-			bundle.should.not.containEql("2: function(");
-			bundle.should.not.containEql("window");
-			bundle.should.not.containEql("jsonp");
-			bundle.should.not.containEql("fixtures");
+			expect(bundle).toContain("function __webpack_require__(");
+			expect(bundle).toContain("__webpack_require__(/*! ./a */ 0);");
+			expect(bundle).toContain("./c.js");
+			expect(bundle).toContain("./a.js");
+			expect(bundle).toContain("This is a");
+			expect(bundle).toContain("This is c");
+			expect(bundle).not.toContain("2: function(");
+			expect(bundle).not.toContain("window");
+			expect(bundle).not.toContain("jsonp");
+			expect(bundle).not.toContain("fixtures");
 			done();
 		});
 	});
 
 	it("should compile a complex file", (done) => {
 		compile("./main1", {}, (stats, files) => {
-			files.should.have.property("/main.js").have.type("string");
-			Object.keys(files).should.be.eql(["/main.js"]);
+			expect(typeof files['/main.js']).toBe('string');
+			expect(Object.keys(files)).toEqual(["/main.js"]);
 			const bundle = files["/main.js"];
-			bundle.should.containEql("function __webpack_require__(");
-			bundle.should.containEql("__webpack_require__(/*! ./a */");
-			bundle.should.containEql("./main1.js");
-			bundle.should.containEql("./a.js");
-			bundle.should.containEql("./b.js");
-			bundle.should.containEql("./~/m1/a.js");
-			bundle.should.containEql("This is a");
-			bundle.should.containEql("This is b");
-			bundle.should.containEql("This is m1/a");
-			bundle.should.not.containEql("4: function(");
-			bundle.should.not.containEql("window");
-			bundle.should.not.containEql("jsonp");
-			bundle.should.not.containEql("fixtures");
+			expect(bundle).toContain("function __webpack_require__(");
+			expect(bundle).toContain("__webpack_require__(/*! ./a */");
+			expect(bundle).toContain("./main1.js");
+			expect(bundle).toContain("./a.js");
+			expect(bundle).toContain("./b.js");
+			expect(bundle).toContain("./~/m1/a.js");
+			expect(bundle).toContain("This is a");
+			expect(bundle).toContain("This is b");
+			expect(bundle).toContain("This is m1/a");
+			expect(bundle).not.toContain("4: function(");
+			expect(bundle).not.toContain("window");
+			expect(bundle).not.toContain("jsonp");
+			expect(bundle).not.toContain("fixtures");
 			done();
 		});
 	});
 
 	it("should compile a file with transitive dependencies", (done) => {
 		compile("./abc", {}, (stats, files) => {
-			files.should.have.property("/main.js").have.type("string");
-			Object.keys(files).should.be.eql(["/main.js"]);
+			expect(typeof files['/main.js']).toBe('string');
+			expect(Object.keys(files)).toEqual(["/main.js"]);
 			const bundle = files["/main.js"];
-			bundle.should.containEql("function __webpack_require__(");
-			bundle.should.containEql("__webpack_require__(/*! ./a */");
-			bundle.should.containEql("__webpack_require__(/*! ./b */");
-			bundle.should.containEql("__webpack_require__(/*! ./c */");
-			bundle.should.containEql("./abc.js");
-			bundle.should.containEql("./a.js");
-			bundle.should.containEql("./b.js");
-			bundle.should.containEql("./c.js");
-			bundle.should.containEql("This is a");
-			bundle.should.containEql("This is b");
-			bundle.should.containEql("This is c");
-			bundle.should.not.containEql("4: function(");
-			bundle.should.not.containEql("window");
-			bundle.should.not.containEql("jsonp");
-			bundle.should.not.containEql("fixtures");
+			expect(bundle).toContain("function __webpack_require__(");
+			expect(bundle).toContain("__webpack_require__(/*! ./a */");
+			expect(bundle).toContain("__webpack_require__(/*! ./b */");
+			expect(bundle).toContain("__webpack_require__(/*! ./c */");
+			expect(bundle).toContain("./abc.js");
+			expect(bundle).toContain("./a.js");
+			expect(bundle).toContain("./b.js");
+			expect(bundle).toContain("./c.js");
+			expect(bundle).toContain("This is a");
+			expect(bundle).toContain("This is b");
+			expect(bundle).toContain("This is c");
+			expect(bundle).not.toContain("4: function(");
+			expect(bundle).not.toContain("window");
+			expect(bundle).not.toContain("jsonp");
+			expect(bundle).not.toContain("fixtures");
 			done();
 		});
 	});
 
 	it("should compile a file with multiple chunks", (done) => {
 		compile("./chunks", {}, (stats, files) => {
-			stats.chunks.length.should.be.eql(2);
-			files.should.have.property("/main.js").have.type("string");
-			files.should.have.property("/0.js").have.type("string");
-			Object.keys(files).should.be.eql(["/0.js", "/main.js"]);
+			expect(stats.chunks.length).toEqual(2);
+			expect(typeof files['/main.js']).toBe('string');
+			expect(typeof files['/0.js']).toBe('string');
+			expect(Object.keys(files)).toEqual(["/0.js", "/main.js"]);
 			const bundle = files["/main.js"];
 			const chunk = files["/0.js"];
-			bundle.should.containEql("function __webpack_require__(");
-			bundle.should.containEql("__webpack_require__(/*! ./b */");
-			chunk.should.not.containEql("__webpack_require__(/* ./b */");
-			bundle.should.containEql("./chunks.js");
-			chunk.should.containEql("./a.js");
-			chunk.should.containEql("./b.js");
-			chunk.should.containEql("This is a");
-			bundle.should.not.containEql("This is a");
-			chunk.should.containEql("This is b");
-			bundle.should.not.containEql("This is b");
-			bundle.should.not.containEql("4: function(");
-			bundle.should.not.containEql("fixtures");
-			chunk.should.not.containEql("fixtures");
-			bundle.should.containEql("webpackJsonp");
-			chunk.should.containEql("webpackJsonp(");
+			expect(bundle).toContain("function __webpack_require__(");
+			expect(bundle).toContain("__webpack_require__(/*! ./b */");
+			expect(chunk).not.toContain("__webpack_require__(/* ./b */");
+			expect(bundle).toContain("./chunks.js");
+			expect(chunk).toContain("./a.js");
+			expect(chunk).toContain("./b.js");
+			expect(chunk).toContain("This is a");
+			expect(bundle).not.toContain("This is a");
+			expect(chunk).toContain("This is b");
+			expect(bundle).not.toContain("This is b");
+			expect(bundle).not.toContain("4: function(");
+			expect(bundle).not.toContain("fixtures");
+			expect(chunk).not.toContain("fixtures");
+			expect(bundle).toContain("webpackJsonp");
+			expect(chunk).toContain("webpackJsonp(");
 			done();
 		});
 	});

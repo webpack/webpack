@@ -1,7 +1,6 @@
 /* globals describe it before */
 "use strict";
 
-const should = require("should");
 const path = require("path");
 const fs = require("fs");
 const spawn = require("child_process").spawn;
@@ -72,7 +71,6 @@ describe("BinTestCases", function() {
 				if(asyncExists) {
 					describe(testName, function() {
 						it("should run successfully", function(done) {
-							this.timeout(10000);
 							const child = spawn(process.execPath, [cmd].concat(args), opts);
 
 							child.on("close", function(code) {
@@ -101,13 +99,11 @@ describe("BinTestCases", function() {
 								testAssertions(stdout, stderr, done);
 								child.kill();
 							}, 3000); // wait a little to get an output
-						});
+						}, 10000);
 					});
 				} else {
 					describe(testName, function() {
-						before(function(done) {
-							this.timeout(20000);
-
+						beforeEach(function(done) {
 							const child = spawn(process.execPath, [cmd].concat(args), opts);
 
 							child.on("close", function(code) {
@@ -129,7 +125,7 @@ describe("BinTestCases", function() {
 						});
 
 						it("should not cause any errors", function() {
-							should(env.error).be.empty();
+							expect(env.error).toHaveLength(0);
 						});
 
 						it("should run successfully", function() {
@@ -137,7 +133,7 @@ describe("BinTestCases", function() {
 							const stderr = convertToArrayOfLines(env.stderr);
 							testAssertions(env.code, stdout, stderr);
 						});
-					});
+					}, 20000);
 				}
 			});
 		});

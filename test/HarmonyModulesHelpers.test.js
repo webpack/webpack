@@ -1,27 +1,26 @@
 /* globals describe, it, beforeEach */
 "use strict";
 
-const should = require("should");
 const HarmonyModulesHelpers = require("../lib/dependencies/HarmonyModulesHelpers");
 
 describe("HarmonyModulesHelpers", () => {
 
 	describe("getModuleVar", () => {
 		it("returns a module var without special characters", () => {
-			should(HarmonyModulesHelpers.getModuleVar({}, 'w*thspeci@lcharact#rs')).be.eql("__WEBPACK_IMPORTED_MODULE_0_w_thspeci_lcharact_rs__");
+			expect(HarmonyModulesHelpers.getModuleVar({}, 'w*thspeci@lcharact#rs')).toEqual("__WEBPACK_IMPORTED_MODULE_0_w_thspeci_lcharact_rs__");
 		});
 
 		it("returns a module var without double underscore", () => {
-			should(HarmonyModulesHelpers.getModuleVar({}, 'without__double__underscore')).be.eql("__WEBPACK_IMPORTED_MODULE_0_without_double_underscore__");
+			expect(HarmonyModulesHelpers.getModuleVar({}, 'without__double__underscore')).toEqual("__WEBPACK_IMPORTED_MODULE_0_without_double_underscore__");
 		});
 
 		it("returns a module var without spaces", () => {
-			should(HarmonyModulesHelpers.getModuleVar({}, '    without spaces')).be.eql("__WEBPACK_IMPORTED_MODULE_0__without_spaces__");
+			expect(HarmonyModulesHelpers.getModuleVar({}, '    without spaces')).toEqual("__WEBPACK_IMPORTED_MODULE_0__without_spaces__");
 		});
 
 		describe("when has harmonyModules information", () => {
 			let request, state, harmonyModuleVarInformation;
-			before(() => {
+			beforeEach(() => {
 				request = 'requested module';
 				state = {
 					harmonyModules: ['sample test', request]
@@ -30,11 +29,11 @@ describe("HarmonyModulesHelpers", () => {
 			});
 
 			it("returns a module based on request position in state harmonyModules array", () => {
-				should(harmonyModuleVarInformation).be.containEql(1);
+				expect(harmonyModuleVarInformation).toContain(1);
 			});
 
 			it("returns a module based on harmonyModules information", () => {
-				should(harmonyModuleVarInformation).be.eql("__WEBPACK_IMPORTED_MODULE_1_requested_module__");
+				expect(harmonyModuleVarInformation).toEqual("__WEBPACK_IMPORTED_MODULE_1_requested_module__");
 			});
 		});
 	});
@@ -45,7 +44,7 @@ describe("HarmonyModulesHelpers", () => {
 			const state = {
 				harmonyModules: []
 			};
-			should(HarmonyModulesHelpers.getNewModuleVar(state, request)).be.eql('__WEBPACK_IMPORTED_MODULE_0_sample_test__');
+			expect(HarmonyModulesHelpers.getNewModuleVar(state, request)).toEqual('__WEBPACK_IMPORTED_MODULE_0_sample_test__');
 		});
 
 		it("returns null if has request information inside state harmonyModules", () => {
@@ -53,21 +52,21 @@ describe("HarmonyModulesHelpers", () => {
 			const state = {
 				harmonyModules: [request]
 			};
-			should(HarmonyModulesHelpers.getNewModuleVar(state, request)).be.eql(null);
+			expect(HarmonyModulesHelpers.getNewModuleVar(state, request)).toEqual(null);
 		});
 	});
 
 	describe("checkModuleVar", () => {
 		it("returns null if has current dependency and module dependency are different", () => {
-			should(HarmonyModulesHelpers.checkModuleVar({
+			expect(HarmonyModulesHelpers.checkModuleVar({
 				harmonyModules: ['sample test']
-			}, 'other sample test')).be.eql(null);
+			}, 'other sample test')).toEqual(null);
 		});
 
 		it("returns null if has NOT request information inside state harmonyModules", () => {
-			should(HarmonyModulesHelpers.checkModuleVar({
+			expect(HarmonyModulesHelpers.checkModuleVar({
 				harmonyModules: []
-			}, 'sample test')).be.eql(null);
+			}, 'sample test')).toEqual(null);
 		});
 
 		it("returns module var based on `getModuleVar` method", () => {
@@ -75,7 +74,7 @@ describe("HarmonyModulesHelpers", () => {
 			const state = {
 				harmonyModules: []
 			};
-			should(HarmonyModulesHelpers.getNewModuleVar(state, request)).be.eql('__WEBPACK_IMPORTED_MODULE_0_sample_test__');
+			expect(HarmonyModulesHelpers.getNewModuleVar(state, request)).toEqual('__WEBPACK_IMPORTED_MODULE_0_sample_test__');
 		});
 	});
 
@@ -92,7 +91,7 @@ describe("HarmonyModulesHelpers", () => {
 			const module = {
 				dependencies: []
 			};
-			should(HarmonyModulesHelpers.isActive(module, currentDependency)).be.eql(true);
+			expect(HarmonyModulesHelpers.isActive(module, currentDependency)).toEqual(true);
 		});
 
 		it("returns `false` if module currentDependency has precedence greater than module dependency", () => {
@@ -114,7 +113,7 @@ describe("HarmonyModulesHelpers", () => {
 					}
 				}]
 			};
-			should(HarmonyModulesHelpers.isActive(module, currentDependency)).be.eql(false);
+			expect(HarmonyModulesHelpers.isActive(module, currentDependency)).toEqual(false);
 		});
 
 		describe("getActiveExports", () => {
@@ -125,7 +124,7 @@ describe("HarmonyModulesHelpers", () => {
 				const module = {
 					dependencies: []
 				};
-				should(HarmonyModulesHelpers.getActiveExports(module, currentDependency)).be.eql([]);
+				expect(HarmonyModulesHelpers.getActiveExports(module, currentDependency)).toEqual([]);
 			});
 
 			it("returns an empty array if the precedence of current dependency is less than module dependency", () => {
@@ -147,7 +146,7 @@ describe("HarmonyModulesHelpers", () => {
 						}
 					}]
 				};
-				should(HarmonyModulesHelpers.getActiveExports(module, currentDependency)).be.eql([]);
+				expect(HarmonyModulesHelpers.getActiveExports(module, currentDependency)).toEqual([]);
 			});
 
 			it("returns an array with modules if currentDependency has precedence greater than module dependency", () => {
@@ -169,7 +168,7 @@ describe("HarmonyModulesHelpers", () => {
 						}
 					}]
 				};
-				should(HarmonyModulesHelpers.getActiveExports(module, currentDependency)).be.eql(['first dependency']);
+				expect(HarmonyModulesHelpers.getActiveExports(module, currentDependency)).toEqual(['first dependency']);
 			});
 		});
 

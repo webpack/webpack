@@ -1,6 +1,5 @@
 "use strict";
 
-const should = require("should");
 const sinon = require("sinon");
 const WebWorkerMainTemplatePlugin = require("../lib/webworker/WebWorkerMainTemplatePlugin");
 const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
@@ -13,7 +12,7 @@ describe("WebWorkerMainTemplatePlugin", function() {
 	});
 
 	it("has apply function", function() {
-		(new WebWorkerMainTemplatePlugin()).apply.should.be.a.Function();
+		expect((new WebWorkerMainTemplatePlugin()).apply).toBeInstanceOf(Function);
 	});
 
 	describe("when applied", function() {
@@ -35,7 +34,7 @@ describe("WebWorkerMainTemplatePlugin", function() {
 		});
 
 		it("binds five event handlers", function() {
-			env.eventBindings.length.should.be.exactly(5);
+			expect(env.eventBindings.length).toBe(5);
 		});
 
 		describe("local-vars handler", function() {
@@ -44,7 +43,7 @@ describe("WebWorkerMainTemplatePlugin", function() {
 			});
 
 			it("binds to local-vars event", () => {
-				env.eventBinding.name.should.be.exactly("local-vars");
+				expect(env.eventBinding.name).toBe("local-vars");
 			});
 
 			describe("when no chunks are provided", () => {
@@ -57,7 +56,7 @@ describe("WebWorkerMainTemplatePlugin", function() {
 				});
 
 				it("returns the original source", () => {
-					env.source.should.be.exactly("moduleSource()")
+					expect(env.source).toBe("moduleSource()")
 				});
 			});
 
@@ -75,17 +74,7 @@ describe("WebWorkerMainTemplatePlugin", function() {
 				});
 
 				it("returns the original source with installed mapping", () => {
-					env.source.should.be.exactly(`
-moduleSource()
-
-// object to store loaded chunks
-// "1" means "already loaded"
-var installedChunks = {
-1: 1,
-2: 1,
-3: 1
-};
-`.trim())
+					expect(env.source).toMatchSnapshot();
 				});
 			});
 		});
@@ -96,7 +85,7 @@ var installedChunks = {
 			});
 
 			it("binds to require-ensure event", () => {
-				env.eventBinding.name.should.be.exactly("require-ensure");
+				expect(env.eventBinding.name).toBe("require-ensure");
 			});
 
 			describe("when called", () => {
@@ -106,13 +95,7 @@ var installedChunks = {
 				});
 
 				it("creates import scripts call and promise resolve", () => {
-					env.source.should.be.exactly(`
-// "1" is the signal for "already loaded"
-if(!installedChunks[chunkId]) {
-importScripts("asset-path" + abc123 + "" + abc123 + "" + chunkId + "");
-}
-return Promise.resolve();
-`.trim())
+					expect(env.source).toMatchSnapshot();
 				});
 			});
 		});
@@ -123,7 +106,7 @@ return Promise.resolve();
 			});
 
 			it("binds to bootstrap event", () => {
-				env.eventBinding.name.should.be.exactly("bootstrap");
+				expect(env.eventBinding.name).toBe("bootstrap");
 			});
 
 			describe("when no chunks are provided", () => {
@@ -136,7 +119,7 @@ return Promise.resolve();
 				});
 
 				it("returns the original source", () => {
-					env.source.should.be.exactly("moduleSource()")
+					expect(env.source).toBe("moduleSource()")
 				});
 			});
 
@@ -154,16 +137,7 @@ return Promise.resolve();
 				});
 
 				it("returns the original source with chunk callback", () => {
-					env.source.should.be.exactly(`
-moduleSource()
-this["webpackChunk"] = function webpackChunkCallback(chunkIds, moreModules) {
-for(var moduleId in moreModules) {
-renderAddModuleSource();
-}
-while(chunkIds.length)
-installedChunks[chunkIds.pop()] = 1;
-};
-`.trim())
+					expect(env.source).toMatchSnapshot();
 				});
 			});
 		});
@@ -174,7 +148,7 @@ installedChunks[chunkIds.pop()] = 1;
 			});
 
 			it("binds to hot-bootstrap event", () => {
-				env.eventBinding.name.should.be.exactly("hot-bootstrap");
+				expect(env.eventBinding.name).toBe("hot-bootstrap");
 			});
 
 			describe("when called", () => {
@@ -184,60 +158,7 @@ installedChunks[chunkIds.pop()] = 1;
 				});
 
 				it("returns the original source with hot update callback", () => {
-					env.source.should.be.exactly(`
-moduleSource()
-var parentHotUpdateCallback = this["webpackHotUpdate"];
-this["webpackHotUpdate"] = function webpackHotUpdateCallback(chunkId, moreModules) { // eslint-disable-line no-unused-vars
-	hotAddUpdateChunk(chunkId, moreModules);
-	if(parentHotUpdateCallback) parentHotUpdateCallback(chunkId, moreModules);
-} ;
-
-function hotDownloadUpdateChunk(chunkId) { // eslint-disable-line no-unused-vars
-	importScripts(requireFn.p + "asset-path" + abc123 + "" + abc123 + "" + chunkId + "");
-}
-
-function hotDownloadManifest(callback) { // eslint-disable-line no-unused-vars
-	return new Promise(function(resolve, reject) {
-		if(typeof XMLHttpRequest === "undefined")
-			return reject(new Error("No browser support"));
-		try {
-			var request = new XMLHttpRequest();
-			var requestPath = requireFn.p + "asset-path" + abc123 + "" + abc123 + "";
-			request.open("GET", requestPath, true);
-			request.timeout = 10000;
-			request.send(null);
-		} catch(err) {
-			return reject(err);
-		}
-		request.onreadystatechange = function() {
-			if(request.readyState !== 4) return;
-			if(request.status === 0) {
-				// timeout
-				reject(new Error("Manifest request to " + requestPath + " timed out."));
-			} else if(request.status === 404) {
-				// no update available
-				resolve();
-			} else if(request.status !== 200 && request.status !== 304) {
-				// other failure
-				reject(new Error("Manifest request to " + requestPath + " failed."));
-			} else {
-				// success
-				try {
-					var update = JSON.parse(request.responseText);
-				} catch(e) {
-					reject(e);
-					return;
-				}
-				resolve(update);
-			}
-		};
-	});
-}
-
-function hotDisposeChunk(chunkId) { //eslint-disable-line no-unused-vars
-	delete installedChunks[chunkId];
-}
-`.trim())
+					expect(env.source).toMatchSnapshot();
 				});
 			});
 		});
@@ -261,11 +182,11 @@ function hotDisposeChunk(chunkId) { //eslint-disable-line no-unused-vars
 			});
 
 			it("binds to hash event", () => {
-				env.eventBinding.name.should.be.exactly("hash");
+				expect(env.eventBinding.name).toBe("hash");
 			});
 
 			it("updates hash object", () => {
-				env.hashMock.update.callCount.should.be.exactly(7);
+				expect(env.hashMock.update.callCount).toBe(7);
 				sinon.assert.calledWith(env.hashMock.update, "webworker");
 				sinon.assert.calledWith(env.hashMock.update, "3");
 				sinon.assert.calledWith(env.hashMock.update, "Alpha");

@@ -10,7 +10,7 @@ it("should parse template strings in import", function(done) {
 	])
 	.then(function (imports) {
 		for (var i = 0; i < imports.length; i++) {
-			imports[i].default.should.eql("ok");
+			expect(imports[i].default).toBe("ok");
 		}
 	})
 	.then(function () { done(); }, done)

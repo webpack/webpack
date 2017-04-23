@@ -1,11 +1,11 @@
 function testCase(number) {
-	require(number === 1 ? "./folder/file1" : number === 2 ? "./folder/file2" : number === 3 ? "./folder/file3" : "./missingModule").should.be.eql("file" + number);
+	require(number === 1 ? "./folder/file1" : number === 2 ? "./folder/file2" : number === 3 ? "./folder/file3" : expect("./missingModule")).toEqual("file" + number);
 	require(
 		number === 1 ? "./folder/file1" :
 		number === 2 ? "./folder/file2" :
 		number === 3 ? "./folder/file3" :
 		"./missingModule"
-	).should.be.eql("file" + number);
+	expect()).toEqual("file" + number);
 }
 
 
@@ -16,7 +16,7 @@ it("should throw an error on missing module at runtime, but not at compile time 
 	} catch(e) {
 		error = e;
 	}
-	error.should.be.instanceOf(Error);
+	expect(error).toBeInstanceOf(Error);
 
 	error = null;
 	try {
@@ -24,5 +24,5 @@ it("should throw an error on missing module at runtime, but not at compile time 
 	} catch(e) {
 		error = e;
 	}
-	error.should.be.instanceOf(Error);
+	expect(error).toBeInstanceOf(Error);
 });

@@ -1,12 +1,10 @@
 "use strict";
 
-const should = require("should");
 const path = require("path");
 
 const webpack = require("../lib/webpack");
 
 describe("Integration", function() {
-	this.timeout(5000);
 	it("should compile library1", (done) => {
 		webpack({
 			entry: "library1",
@@ -20,8 +18,8 @@ describe("Integration", function() {
 			}
 		}, (err, stats) => {
 			if(err) throw err;
-			stats.hasErrors().should.be.not.ok();
-			stats.hasWarnings().should.be.not.ok();
+			expect(stats.hasErrors()).not.toBeTruthy;
+			expect(stats.hasWarnings()).not.toBeTruthy;
 			done();
 		});
 	});
@@ -46,13 +44,6 @@ describe("Integration", function() {
 			},
 			amd: {
 				fromOptions: true
-			},
-			resolve: {
-				// cannot resolve should outside the outermost node_modules
-				// so it is injected here
-				alias: {
-					should: require.resolve("should")
-				}
 			},
 			plugins: [
 				new webpack.optimize.LimitChunkCountPlugin({
@@ -86,9 +77,9 @@ describe("Integration", function() {
 			]
 		}, (err, stats) => {
 			if(err) throw err;
-			stats.hasErrors().should.be.not.ok();
-			stats.hasWarnings().should.be.not.ok();
+			expect(stats.hasErrors()).not.toBeTruthy;
+			expect(stats.hasWarnings()).not.toBeTruthy;
 			done();
 		});
 	});
-});
+}, 5000);

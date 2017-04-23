@@ -1,12 +1,10 @@
 "use strict";
 
-const should = require("should");
-
 const template = require("../lib/Template");
 
 describe("Template", () => {
 	it("should generate valid identifiers", () =>
-		template.toIdentifier("0abc-def9").should.equal("_abc_def9"));
+		expect(template.toIdentifier("0abc-def9")).toEqual("_abc_def9"));
 	it("should generate valid number identifiers", () => {
 		const items = [];
 		let item;

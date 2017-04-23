@@ -1,7 +1,5 @@
-/* global describe, beforeEach, it */
 "use strict";
 
-const should = require("should");
 const sinon = require("sinon");
 const TemplatePluginEnvironment = require("./helpers/TemplatePluginEnvironment");
 const ConcatSource = require("webpack-sources").ConcatSource;
@@ -47,7 +45,7 @@ describe("AmdMainTemplatePlugin", () => {
 		};
 	});
 
-	it("has apply function", () => new AmdMainTemplatePlugin().apply.should.be.a.Function());
+	it("has apply function", () => expect(new AmdMainTemplatePlugin().apply).toBeInstanceOf(Function));
 
 	describe("when applied", () => {
 		beforeEach(() =>
@@ -56,13 +54,13 @@ describe("AmdMainTemplatePlugin", () => {
 		describe("event handlers", () => {
 			beforeEach(() => env.eventBindings = env.templatePlugin.getEventBindings());
 
-			it("binds one handlers", () => env.eventBindings.length.should.be.exactly(1));
+			it("binds one handlers", () => expect(env.eventBindings).toHaveLength(1));
 
 			describe("render-with-entry handler", () => {
 				beforeEach(() => env.eventBinding = env.eventBindings[0]);
 
 				it("binds to render-with-entry event", () =>
-					env.eventBinding.name.should.be.exactly("render-with-entry"));
+					expect(env.eventBinding.name).toBe("render-with-entry"));
 
 				describe("with name", () => {
 					beforeEach(() => {
@@ -74,8 +72,8 @@ describe("AmdMainTemplatePlugin", () => {
 
 					it("creates source wrapper with module name and external dependencies", () => {
 						const source = env.eventBinding.handler("moduleSource()", env.chunk, "bar");
-						source.should.be.instanceof(ConcatSource);
-						source.source().should.be.exactly("define(\"templateName\", [\"external-amd-module\",\"external-non-amd-module\",null], function(__WEBPACK_EXTERNAL_MODULE_module_1__, __WEBPACK_EXTERNAL_MODULE_module_2__, __WEBPACK_EXTERNAL_MODULE_module_3__) { return moduleSource()});");
+						expect(source).toBeInstanceOf(ConcatSource);
+						expect(source.source()).toBe("define(\"templateName\", [\"external-amd-module\",\"external-non-amd-module\",null], function(__WEBPACK_EXTERNAL_MODULE_module_1__, __WEBPACK_EXTERNAL_MODULE_module_2__, __WEBPACK_EXTERNAL_MODULE_module_3__) { return moduleSource()});");
 					});
 				});
 
@@ -89,8 +87,8 @@ describe("AmdMainTemplatePlugin", () => {
 
 					it("creates source wrapper with external dependencies", () => {
 						const source = env.eventBinding.handler("moduleSource()", env.chunk, "bar");
-						source.should.be.instanceof(ConcatSource);
-						source.source().should.be.exactly("define([\"external-amd-module\",\"external-non-amd-module\",null], function(__WEBPACK_EXTERNAL_MODULE_module_1__, __WEBPACK_EXTERNAL_MODULE_module_2__, __WEBPACK_EXTERNAL_MODULE_module_3__) { return moduleSource()});");
+						expect(source).toBeInstanceOf(ConcatSource);
+						expect(source.source()).toBe("define([\"external-amd-module\",\"external-non-amd-module\",null], function(__WEBPACK_EXTERNAL_MODULE_module_1__, __WEBPACK_EXTERNAL_MODULE_module_2__, __WEBPACK_EXTERNAL_MODULE_module_3__) { return moduleSource()});");
 					});
 				});
 
@@ -108,8 +106,8 @@ describe("AmdMainTemplatePlugin", () => {
 
 					it("creates source wrapper with callback only", () => {
 						const source = env.eventBinding.handler("moduleSource()", env.chunk, "bar");
-						source.should.be.instanceof(ConcatSource);
-						source.source().should.be.exactly("define(function() { return moduleSource()});");
+						expect(source).toBeInstanceOf(ConcatSource);
+						expect(source.source()).toBe("define(function() { return moduleSource()});");
 					});
 				});
 			});
@@ -119,22 +117,22 @@ describe("AmdMainTemplatePlugin", () => {
 			beforeEach(() =>
 				env.mainTemplateBindings = env.templatePlugin.getMainTemplateBindings());
 
-			it("binds two handlers", () => env.mainTemplateBindings.length.should.be.exactly(2));
+			it("binds two handlers", () => expect(env.mainTemplateBindings).toHaveLength(2));
 
 			describe("global-hash-paths handler", () => {
 				beforeEach(() => env.mainTemplateBinding = env.mainTemplateBindings[0]);
 
 				it("binds to global-hash-paths event", () =>
-					env.mainTemplateBinding.name.should.be.exactly("global-hash-paths"));
+					expect(env.mainTemplateBinding.name).toBe("global-hash-paths"));
 
 				it("adds name to path array", () =>
-					env.mainTemplateBinding.handler([]).should.deepEqual(["foo"]));
+					expect(env.mainTemplateBinding.handler([])).toEqual(["foo"]));
 			});
 
 			describe("hash handler", () => {
 				beforeEach(() => env.mainTemplateBinding = env.mainTemplateBindings[1]);
 
-				it("binds to hash event", () => env.mainTemplateBinding.name.should.be.exactly("hash"));
+				it("binds to hash event", () => expect(env.mainTemplateBinding.name).toBe("hash"));
 
 				it("updates hash", () => {
 					const hash = {
@@ -142,9 +140,9 @@ describe("AmdMainTemplatePlugin", () => {
 					};
 					env.mainTemplateBinding.handler(hash);
 
-					hash.update.callCount.should.be.exactly(2);
-					hash.update.firstCall.args[0].should.be.exactly("exports amd");
-					hash.update.secondCall.args[0].should.be.exactly("foo");
+					expect(hash.update.callCount).toBe(2);
+					expect(hash.update.firstCall.args[0]).toBe("exports amd");
+					expect(hash.update.secondCall.args[0]).toBe("foo");
 				});
 			});
 		});

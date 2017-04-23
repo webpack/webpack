@@ -1,6 +1,5 @@
 "use strict";
 
-const should = require("should");
 const sinon = require("sinon");
 const CachePlugin = require("../lib/CachePlugin");
 const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
@@ -18,29 +17,29 @@ describe("CachePlugin", () => {
 	});
 
 	it("has apply ", () => {
-		(new CachePlugin()).apply.should.be.a.Function();
+		expect((new CachePlugin()).apply).toBeInstanceOf(Function);
 	});
 	describe("applyMtime", () => {
 		beforeEach(() => env.plugin = new CachePlugin());
 
 		it("sets file system accuracy to 1 for granular modification timestamp", () => {
 			env.plugin.applyMtime(1483819067001);
-			env.plugin.FS_ACCURENCY.should.be.exactly(1);
+			expect(env.plugin.FS_ACCURENCY).toBe(1);
 		});
 
 		it("sets file system accuracy to 10 for moderately granular modification timestamp", () => {
 			env.plugin.applyMtime(1483819067004);
-			env.plugin.FS_ACCURENCY.should.be.exactly(10);
+			expect(env.plugin.FS_ACCURENCY).toBe(10);
 		});
 
 		it("sets file system accuracy to 100 for moderately coarse modification timestamp", () => {
 			env.plugin.applyMtime(1483819067040);
-			env.plugin.FS_ACCURENCY.should.be.exactly(100);
+			expect(env.plugin.FS_ACCURENCY).toBe(100);
 		});
 
 		it("sets file system accuracy to 1000 for coarse modification timestamp", () => {
 			env.plugin.applyMtime(1483819067400);
-			env.plugin.FS_ACCURENCY.should.be.exactly(1000);
+			expect(env.plugin.FS_ACCURENCY).toBe(1000);
 		});
 	});
 
@@ -55,10 +54,10 @@ describe("CachePlugin", () => {
 			});
 
 			it("calls each compilers apply with the cache plugin context", () => {
-				env.compilers[0].callCount.should.be.exactly(1);
-				env.compilers[0].firstCall.thisValue.should.be.instanceOf(CachePlugin);
-				env.compilers[1].callCount.should.be.exactly(1);
-				env.compilers[1].firstCall.thisValue.should.be.instanceOf(CachePlugin);
+				expect(env.compilers[0].callCount).toBe(1);
+				expect(env.compilers[0].firstCall.thisValue).toBeInstanceOf(CachePlugin);
+				expect(env.compilers[1].callCount).toBe(1);
+				expect(env.compilers[1].firstCall.thisValue).toBeInstanceOf(CachePlugin);
 			});
 		});
 
@@ -72,14 +71,14 @@ describe("CachePlugin", () => {
 			});
 
 			it("binds four event handlers", () =>
-				env.eventBindings.length.should.be.exactly(4));
+				expect(env.eventBindings.length).toBe(4));
 
 			it("sets the initial cache", () =>
-				env.plugin.cache.test.should.be.true());
+				expect(env.plugin.cache.test).toBeTruthy());
 
 			describe("compilation handler", () => {
 				it("binds to compilation event", () =>
-					env.eventBindings[0].name.should.be.exactly("compilation"));
+					expect(env.eventBindings[0].name).toBe("compilation"));
 
 				describe("when cachable", () => {
 					describe("and not watching", () => {
@@ -87,7 +86,7 @@ describe("CachePlugin", () => {
 							env.eventBindings[0].handler(env.compilation));
 
 						it("sets the compilation cache", () =>
-							env.compilation.cache.should.deepEqual({
+							expect(env.compilation.cache).toEqual({
 								test: true
 							}));
 					});
@@ -99,7 +98,7 @@ describe("CachePlugin", () => {
 						});
 
 						it("does not add a compilation warning is added", () =>
-							env.compilation.warnings.should.be.empty());
+							expect(env.compilation.warnings).toHaveLength(0));
 					});
 				});
 
@@ -112,7 +111,7 @@ describe("CachePlugin", () => {
 							env.eventBindings[0].handler(env.compilation));
 
 						it("does not set the cache", () =>
-							should(env.compilation.cache).be.undefined());
+							expect(env.compilation.cache).toBeUndefined());
 					});
 
 					describe("and watching", () => {
@@ -122,8 +121,8 @@ describe("CachePlugin", () => {
 						});
 
 						it("adds a compilation warning", () => {
-							env.compilation.warnings.length.should.be.exactly(1);
-							env.compilation.warnings[0].should.be.Error("CachePlugin - Cache cannot be used because of: true");
+							expect(env.compilation.warnings.length).toBe(1);
+							expect(env.compilation.warnings[0].message).toBe("CachePlugin - Cache cannot be used because of: true");
 						});
 					});
 				});
@@ -136,13 +135,13 @@ describe("CachePlugin", () => {
 				});
 
 				it("binds to watch-run event", () =>
-					env.eventBindings[1].name.should.be.exactly("watch-run"));
+					expect(env.eventBindings[1].name).toBe("watch-run"));
 
 				it("sets watching flag", () =>
-					env.plugin.watching.should.be.true());
+					expect(env.plugin.watching).toBeTruthy());
 
 				it("calls callback", () =>
-					env.callback.callCount.should.be.exactly(1));
+					expect(env.callback.callCount).toBe(1));
 			});
 
 			describe("run handler", () => {
@@ -155,18 +154,18 @@ describe("CachePlugin", () => {
 				});
 
 				it("binds to run event", () =>
-					env.eventBindings[2].name.should.be.exactly("run"));
+					expect(env.eventBindings[2].name).toBe("run"));
 
 				describe("Has not previously compiled", () => {
 					beforeEach(() =>
 						env.eventBindings[2].handler(env.compilation.compiler, env.callback));
 
 					it("does not get any file stats", () =>
-						env.fsStat.callCount.should.be.exactly(0));
+						expect(env.fsStat.callCount).toBe(0));
 
 					it("calls the callback", () => {
-						env.callback.callCount.should.be.exactly(1);
-						should(env.callback.firstCall.args[0]).be.undefined();
+						expect(env.callback.callCount).toBe(1);
+						expect(env.callback.firstCall.args[0]).toBeUndefined();
 					});
 				});
 
@@ -179,8 +178,8 @@ describe("CachePlugin", () => {
 					});
 
 					it("calls for file stats for file dependencies", () => {
-						env.fsStat.callCount.should.be.exactly(1);
-						env.fsStat.firstCall.args[0].should.be.exactly("foo");
+						expect(env.fsStat.callCount).toBe(1);
+						expect(env.fsStat.firstCall.args[0]).toBe("foo");
 					});
 
 					describe("file stats callback", () => {
@@ -192,8 +191,8 @@ describe("CachePlugin", () => {
 								env.fsStatCallback(new Error("Test Error")));
 
 							it("calls handler callback with error", () => {
-								env.callback.callCount.should.be.exactly(1);
-								env.callback.firstCall.args[0].should.be.Error("Test Error");
+								expect(env.callback.callCount).toBe(1);
+								expect(env.callback.firstCall.args[0].message).toBe("Test Error");
 							});
 						});
 
@@ -204,8 +203,8 @@ describe("CachePlugin", () => {
 								}));
 
 							it("calls handler callback without error", () => {
-								env.callback.callCount.should.be.exactly(1);
-								should(env.callback.firstCall.args[0]).be.undefined();
+								expect(env.callback.callCount).toBe(1);
+								expect(env.callback.firstCall.args[0]).toBeUndefined();
 							});
 						});
 
@@ -218,16 +217,16 @@ describe("CachePlugin", () => {
 							afterEach(() => env.plugin.applyMtime.restore());
 
 							it("does not update file system accuracy", () =>
-								env.plugin.applyMtime.callCount.should.be.exactly(0));
+								expect(env.plugin.applyMtime.callCount).toBe(0));
 
 							it("updates file modified timestamp to infinity", () =>
-								env.compilation.compiler.fileTimestamps.should.deepEqual({
+								expect(env.compilation.compiler.fileTimestamps).toEqual({
 									foo: Infinity
 								}));
 
 							it("calls handler callback without error", () => {
-								env.callback.callCount.should.be.exactly(1);
-								should(env.callback.firstCall.args[0]).be.undefined();
+								expect(env.callback.callCount).toBe(1);
+								expect(env.callback.firstCall.args[0]).toBeUndefined();
 							});
 						});
 
@@ -242,16 +241,16 @@ describe("CachePlugin", () => {
 							afterEach(() => env.plugin.applyMtime.restore());
 
 							it("does not update file system accuracy", () =>
-								env.plugin.applyMtime.callCount.should.be.exactly(1));
+								expect(env.plugin.applyMtime.callCount).toBe(1));
 
 							it("updates file modified timestamp to modified time with accuracy value", () =>
-								env.compilation.compiler.fileTimestamps.should.deepEqual({
+								expect(env.compilation.compiler.fileTimestamps).toEqual({
 									foo: 1483819069001
 								}));
 
 							it("calls handler callback without error", () => {
-								env.callback.callCount.should.be.exactly(1);
-								should(env.callback.firstCall.args[0]).be.undefined();
+								expect(env.callback.callCount).toBe(1);
+								expect(env.callback.firstCall.args[0]).toBeUndefined();
 							});
 						});
 					});
@@ -267,17 +266,17 @@ describe("CachePlugin", () => {
 				});
 
 				it("binds to after-compile event", () =>
-					env.eventBindings[3].name.should.be.exactly("after-compile"));
+					expect(env.eventBindings[3].name).toBe("after-compile"));
 
 				it("saves copy of compilation file dependecies", () => {
-					env.compilation.compiler.should.deepEqual({
+					expect(env.compilation.compiler).toEqual({
 						_lastCompilationFileDependencies: ["foo"],
 						_lastCompilationContextDependencies: ["bar"]
 					});
 				});
 
 				it("calls callback", () =>
-					env.callback.callCount.should.be.exactly(1));
+					expect(env.callback.callCount).toBe(1));
 			});
 		});
 	});

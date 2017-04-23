@@ -1,10 +1,8 @@
 "use strict";
 
-const should = require("should");
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
-const Test = require("mocha/lib/test");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
@@ -23,9 +21,6 @@ describe("HotTestCases", () => {
 	categories.forEach((category) => {
 		describe(category.name, () => {
 			category.tests.forEach((testName) => {
-				const suite = describe(testName, function() {
-					this.timeout(10000);
-				});
 				it(testName + " should compile", (done) => {
 					const testDirectory = path.join(casesPath, category.name, testName);
 					const outputDirectory = path.join(__dirname, "js", "hot-cases", category.name, testName);
@@ -53,7 +48,7 @@ describe("HotTestCases", () => {
 								test: /\.css$/,
 								use: ExtractTextPlugin.extract({
 									fallback: "style-loader",
-									loader: "css-loader"
+									use: "css-loader"
 								})
 							}]
 						},
@@ -77,10 +72,8 @@ describe("HotTestCases", () => {
 						let exportedTests = 0;
 
 						function _it(title, fn) {
-							const test = new Test(title, fn);
-							suite.addTest(test);
+							it(title, fn);
 							exportedTests++;
-							return test;
 						}
 
 						function _next(callback) {
@@ -111,7 +104,7 @@ describe("HotTestCases", () => {
 						if(exportedTests < 1) return done(new Error("No tests exported by test case"));
 						process.nextTick(done);
 					});
-				});
+				}, 10000);
 			});
 		});
 	});

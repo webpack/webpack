@@ -38,7 +38,7 @@ script: npm run travis:$JOB_PART
 
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
-  - cat ./coverage/coverage.json | node_modules/codecov.io/bin/codecov.io.js
+  - cat ./coverage/coverage-final.json | node_modules/codecov.io/bin/codecov.io.js
   - rm -rf ./coverage
 
 notifications:

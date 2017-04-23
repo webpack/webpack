@@ -1,13 +1,13 @@
 "use strict";
 
 module.exports = function testAssertions(code, stdout, stderr) {
-	code.should.be.exactly(0);
+	expect(code).toBe(0);
 
-	stdout.should.be.ok();
-	stdout[4].should.containEql("null.js");
-	stdout[5].should.containEql("main.js"); // non-hyphenated arg ./a.js should create chunk "main"
-	stdout[6].should.match(/a\.js.*\{1\}/); // a.js should be in chunk 1
-	stdout[7].should.match(/index\.js.*\{0\}/); // index.js should be in chunk 0
-	stderr.should.be.empty();
+	expect(stdout).toBeTruthy();
+	expect(stdout[4]).toContain("null.js");
+	expect(stdout[5]).toContain("main.js"); // non-hyphenated arg ./a.js should create chunk "main"
+	expect(stdout[6]).toMatch(/a\.js.*\{1\}/); // a.js should be in chunk 1
+	expect(stdout[7]).toMatch(/index\.js.*\{0\}/); // index.js should be in chunk 0
+	expect(stderr).toHaveLength(0);
 };
 

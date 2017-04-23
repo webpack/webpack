@@ -14,7 +14,7 @@
     "json-loader": "^0.5.4",
     "json5": "^0.5.1",
     "loader-runner": "^2.3.0",
-    "loader-utils": "^0.2.16",
+    "loader-utils": "^1.1.0",
     "memory-fs": "~0.4.1",
     "mkdirp": "~0.5.0",
     "node-libs-browser": "^2.0.0",
@@ -28,6 +28,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "babel-jest": "^19.0.0",
     "beautify-lint": "^1.0.3",
     "benchmark": "^2.1.1",
     "bundle-loader": "~0.5.0",
@@ -39,20 +40,20 @@
     "css-loader": "~0.25.0",
     "es6-promise-polyfill": "^1.1.1",
     "eslint": "3.12.2",
+    "eslint-plugin-jest": "^19.0.1",
     "eslint-plugin-node": "^3.0.5",
     "express": "~4.13.1",
-    "extract-text-webpack-plugin": "^2.0.0-beta",
+    "extract-text-webpack-plugin": "^2.1.0",
     "file-loader": "~0.9.0",
     "i18n-webpack-plugin": "^0.3.0",
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
+    "jest": "^19.0.2",
     "js-beautify": "^1.5.10",
     "less": "^2.5.1",
     "less-loader": "^2.0.0",
     "lodash": "^4.17.4",
-    "mocha": "^3.2.0",
-    "mocha-lcov-reporter": "^1.0.0",
     "nsp": "^2.6.1",
     "raw-loader": "~0.5.0",
     "react": "^15.2.1",
@@ -87,22 +88,38 @@
     "web_modules/",
     "schemas/"
   ],
+  "jest": {
+    "cache": true,
+    "collectCoverageFrom": [
+      "lib/**/*.js",
+      "!**/*.runtime.js"
+    ],
+    "testEnvironment": "node",
+    "testRegex": "test/.*?\\.(benchmark|test)\\.js$",
+    "testPathIgnorePatterns": [
+      "test/binCases",
+      "test/configCases",
+      "test/watchCases",
+      "test/hotCases",
+      "test/js"
+    ]
+  },
   "scripts": {
-    "test": "mocha test/*.test.js --harmony --check-leaks",
-    "travis:test": "npm run cover:min",
+    "pretest": "npm run lint",
+    "test": "npm run unit",
+    "unit": "jest --testPathPattern test\\.js",
+    "benchmark": "jest --testPathPattern benchmark\\.js --verbose",
+    "coverage": "jest --coverage --testPathPattern test\\.js",
+    "travis:test": "npm run coverage",
     "travis:lint": "npm run lint-files && npm run nsp",
     "travis:benchmark": "npm run benchmark",
-    "appveyor:test": "node --max_old_space_size=4096 node_modules\\mocha\\bin\\mocha --harmony test/*.test.js",
+    "appveyor:test": "node --max_old_space_size=4096 $(which npm) run unit",
     "appveyor:benchmark": "npm run benchmark",
     "build:examples": "cd examples && node buildAll.js",
-    "pretest": "npm run lint-files",
     "lint-files": "npm run lint && npm run beautify-lint",
     "lint": "eslint lib bin hot buildin \"test/**/webpack.config.js\" \"test/binCases/**/test.js\" \"examples/**/webpack.config.js\"",
     "beautify-lint": "beautify-lint \"lib/**/*.js\" \"hot/**/*.js\" \"bin/**/*.js\" \"benchmark/*.js\" \"test/*.js\"",
     "nsp": "nsp check --output summary",
-    "benchmark": "mocha test/*.benchmark.js --harmony -R spec",
-    "cover": "node --harmony ./node_modules/istanbul/lib/cli.js cover -x '**/*.runtime.js' node_modules/mocha/bin/_mocha -- test/*.test.js",
-    "cover:min": "node --harmony ./node_modules/.bin/istanbul cover -x '**/*.runtime.js' --report lcovonly node_modules/mocha/bin/_mocha -- test/*.test.js",
-    "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
+    "publish-patch": "npm run beautify-lint && npm test && npm version patch && git push && git push --tags && npm publish"
   }
 }

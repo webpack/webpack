@@ -1,7 +1,5 @@
-/* globals describe, it */
 "use strict";
 
-const should = require("should");
 const LocalModulesHelpers = require("../lib/dependencies/LocalModulesHelpers");
 
 describe("LocalModulesHelpers", () => {
@@ -12,13 +10,17 @@ describe("LocalModulesHelpers", () => {
 				module: "module_sample",
 				localModules: ["first", "second"]
 			};
-			should(LocalModulesHelpers.addLocalModule(state, "local_module_sample")).be.an.instanceOf(Object).and.have.properties({
+
+			const modifiedState = LocalModulesHelpers.addLocalModule(state, "local_module_sample");
+
+			expect(modifiedState).toBeInstanceOf(Object);
+			expect(modifiedState).toEqual({
 				module: "module_sample",
 				name: "local_module_sample",
 				idx: 2,
 				used: false
 			});
-			should(state.localModules.length).be.eql(3);
+			expect(state.localModules.length).toEqual(3);
 		});
 	});
 
@@ -32,7 +34,7 @@ describe("LocalModulesHelpers", () => {
 					name: "second"
 				}]
 			};
-			should(LocalModulesHelpers.getLocalModule(state, "local_module_sample")).be.eql(null);
+			expect(LocalModulesHelpers.getLocalModule(state, "local_module_sample")).toEqual(null);
 		});
 
 		it("returns local module informtion", () => {
@@ -44,7 +46,7 @@ describe("LocalModulesHelpers", () => {
 					name: "second"
 				}]
 			};
-			should(LocalModulesHelpers.getLocalModule(state, "first")).be.eql({
+			expect(LocalModulesHelpers.getLocalModule(state, "first")).toEqual({
 				name: "first"
 			});
 		});

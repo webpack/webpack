@@ -1,4 +1,3 @@
-var should = require("should");
 var sinon = require("sinon");
 var LibraryTemplatePlugin = require("../lib/LibraryTemplatePlugin");
 var applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
@@ -13,7 +12,7 @@ describe("LibraryTemplatePlugin", function() {
 	});
 
 	it("has apply function", function() {
-		(new LibraryTemplatePlugin()).apply.should.be.a.Function();
+		expect((new LibraryTemplatePlugin()).apply).toBeInstanceOf(Function);
 	});
 
 	describe("when applied", function() {
@@ -22,7 +21,7 @@ describe("LibraryTemplatePlugin", function() {
 		});
 
 		it("binds two event handlers", function() {
-			env.eventBindings.length.should.be.exactly(1);
+			expect(env.eventBindings.length).toBe(1);
 		});
 
 		describe("this-compilation handler", function() {
@@ -32,7 +31,7 @@ describe("LibraryTemplatePlugin", function() {
 
 			describe("event handler", function() {
 				it("binds to this-compilation event", function() {
-					env.eventBinding.name.should.be.exactly("this-compilation");
+					expect(env.eventBinding.name).toBe("this-compilation");
 				});
 			});
 
@@ -44,9 +43,9 @@ describe("LibraryTemplatePlugin", function() {
 				});
 
 				it("throws an error", function() {
-					should(function() {
+					expect(function() {
 						env.eventBinding.handler(env.compilation);
-					}).throw("unknownTarget is not a valid Library target");
+					}).toThrow("unknownTarget is not a valid Library target");
 				});
 			});
 
@@ -54,87 +53,87 @@ describe("LibraryTemplatePlugin", function() {
 				[{
 						type: "var",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly("var foo");
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe("var foo");
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "assign",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly("foo");
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe("foo");
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "this",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('this["foo"]');
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe('this["foo"]');
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "window",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('window["foo"]');
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe('window["foo"]');
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "global",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('global["foo"]');
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe('global["foo"]');
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "commonjs",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('exports["foo"]');
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe('exports["foo"]');
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "commonjs2",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly("module.exports");
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe("module.exports");
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "commonjs-module",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly("module.exports");
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe("module.exports");
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "amd",
 						assertion: function(compilationContext) {
-							compilationContext.name.should.be.exactly("foo");
+							expect(compilationContext.name).toBe("foo");
 						}
 					},
 					{
 						type: "umd",
 						assertion: function(compilationContext) {
-							compilationContext.name.should.be.exactly("foo");
-							compilationContext.optionalAmdExternalAsGlobal.should.be.false();
-							compilationContext.namedDefine.should.be.exactly("bar");
-							compilationContext.auxiliaryComment.should.be.exactly("baz");
+							expect(compilationContext.name).toBe("foo");
+							expect(compilationContext.optionalAmdExternalAsGlobal).toBeFalsy();
+							expect(compilationContext.namedDefine).toBe("bar");
+							expect(compilationContext.auxiliaryComment).toBe("baz");
 						}
 					},
 					{
 						type: "umd2",
 						assertion: function(compilationContext) {
-							compilationContext.name.should.be.exactly("foo");
-							compilationContext.optionalAmdExternalAsGlobal.should.be.true();
-							compilationContext.namedDefine.should.be.exactly("bar");
-							compilationContext.auxiliaryComment.should.be.exactly("baz");
+							expect(compilationContext.name).toBe("foo");
+							expect(compilationContext.optionalAmdExternalAsGlobal).toBeTruthy();
+							expect(compilationContext.namedDefine).toBe("bar");
+							expect(compilationContext.auxiliaryComment).toBe("baz");
 						}
 					},
 					{
 						type: "jsonp",
 						assertion: function(compilationContext) {
-							compilationContext.name.should.be.exactly("foo");
+							expect(compilationContext.name).toBe("foo");
 						}
 					}
 				].forEach(function(targetTypeAndAssertion) {
@@ -148,7 +147,7 @@ describe("LibraryTemplatePlugin", function() {
 						});
 
 						it("compilation callback is called", function() {
-							env.compilation.callCount.should.be.exactly(1);
+							expect(env.compilation.callCount).toBe(1);
 						});
 
 						it("compilation callback context is set up", function() {
@@ -163,87 +162,87 @@ describe("LibraryTemplatePlugin", function() {
 				[{
 						type: "var",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('var foo = foo || {}; foo["bar"] = foo["bar"] || {}; foo["bar"]["baz"]');
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe('var foo = foo || {}; foo["bar"] = foo["bar"] || {}; foo["bar"]["baz"]');
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "assign",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('foo = typeof foo === "object" ? foo : {}; foo["bar"] = foo["bar"] || {}; foo["bar"]["baz"]');
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe('foo = typeof foo === "object" ? foo : {}; foo["bar"] = foo["bar"] || {}; foo["bar"]["baz"]');
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "this",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('this["foo"] = this["foo"] || {}; this["foo"]["bar"] = this["foo"]["bar"] || {}; this["foo"]["bar"]["baz"]');
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe('this["foo"] = this["foo"] || {}; this["foo"]["bar"] = this["foo"]["bar"] || {}; this["foo"]["bar"]["baz"]');
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "window",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('window["foo"] = window["foo"] || {}; window["foo"]["bar"] = window["foo"]["bar"] || {}; window["foo"]["bar"]["baz"]');
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe('window["foo"] = window["foo"] || {}; window["foo"]["bar"] = window["foo"]["bar"] || {}; window["foo"]["bar"]["baz"]');
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "global",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('global["foo"] = global["foo"] || {}; global["foo"]["bar"] = global["foo"]["bar"] || {}; global["foo"]["bar"]["baz"]');
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe('global["foo"] = global["foo"] || {}; global["foo"]["bar"] = global["foo"]["bar"] || {}; global["foo"]["bar"]["baz"]');
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "commonjs",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('exports["foo"] = exports["foo"] || {}; exports["foo"]["bar"] = exports["foo"]["bar"] || {}; exports["foo"]["bar"]["baz"]');
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe('exports["foo"] = exports["foo"] || {}; exports["foo"]["bar"] = exports["foo"]["bar"] || {}; exports["foo"]["bar"]["baz"]');
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "commonjs2",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly("module.exports");
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe("module.exports");
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "commonjs-module",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly("module.exports");
-							should(compilationContext.copyObject).be.undefined();
+							expect(compilationContext.varExpression).toBe("module.exports");
+							expect(compilationContext.copyObject).toBeUndefined();
 						}
 					},
 					{
 						type: "amd",
 						assertion: function(compilationContext) {
-							compilationContext.name.should.deepEqual(["foo", "bar", "baz"]);
+							expect(compilationContext.name).toEqual(["foo", "bar", "baz"]);
 						}
 					},
 					{
 						type: "umd",
 						assertion: function(compilationContext) {
-							compilationContext.name.should.deepEqual(["foo", "bar", "baz"]);
-							compilationContext.optionalAmdExternalAsGlobal.should.be.false();
-							compilationContext.namedDefine.should.be.exactly("bar");
-							compilationContext.auxiliaryComment.should.be.exactly("baz");
+							expect(compilationContext.name).toEqual(["foo", "bar", "baz"]);
+							expect(compilationContext.optionalAmdExternalAsGlobal).toBeFalsy();
+							expect(compilationContext.namedDefine).toBe("bar");
+							expect(compilationContext.auxiliaryComment).toBe("baz");
 						}
 					},
 					{
 						type: "umd2",
 						assertion: function(compilationContext) {
-							compilationContext.name.should.deepEqual(["foo", "bar", "baz"]);
-							compilationContext.optionalAmdExternalAsGlobal.should.be.true();
-							compilationContext.namedDefine.should.be.exactly("bar");
-							compilationContext.auxiliaryComment.should.be.exactly("baz");
+							expect(compilationContext.name).toEqual(["foo", "bar", "baz"]);
+							expect(compilationContext.optionalAmdExternalAsGlobal).toBeTruthy();
+							expect(compilationContext.namedDefine).toBe("bar");
+							expect(compilationContext.auxiliaryComment).toBe("baz");
 						}
 					},
 					{
 						type: "jsonp",
 						assertion: function(compilationContext) {
-							compilationContext.name.should.deepEqual(["foo", "bar", "baz"]);
+							expect(compilationContext.name).toEqual(["foo", "bar", "baz"]);
 						}
 					}
 				].forEach(function(targetTypeAndAssertion) {
@@ -257,7 +256,7 @@ describe("LibraryTemplatePlugin", function() {
 						});
 
 						it("compilation callback is called", function() {
-							env.compilation.callCount.should.be.exactly(1);
+							expect(env.compilation.callCount).toBe(1);
 						});
 
 						it("compilation callback context is set up", function() {
@@ -272,29 +271,29 @@ describe("LibraryTemplatePlugin", function() {
 				[{
 						type: "this",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly("this");
-							should(compilationContext.copyObject).be.true();
+							expect(compilationContext.varExpression).toBe("this");
+							expect(compilationContext.copyObject).toBeTruthy();
 						}
 					},
 					{
 						type: "window",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly("window");
-							should(compilationContext.copyObject).be.true();
+							expect(compilationContext.varExpression).toBe("window");
+							expect(compilationContext.copyObject).toBeTruthy();
 						}
 					},
 					{
 						type: "global",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly("global");
-							should(compilationContext.copyObject).be.true();
+							expect(compilationContext.varExpression).toBe("global");
+							expect(compilationContext.copyObject).toBeTruthy();
 						}
 					},
 					{
 						type: "commonjs",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly("exports");
-							should(compilationContext.copyObject).be.true();
+							expect(compilationContext.varExpression).toBe("exports");
+							expect(compilationContext.copyObject).toBeTruthy();
 						}
 					}
 				].forEach(function(targetTypeAndAssertion) {
@@ -308,7 +307,7 @@ describe("LibraryTemplatePlugin", function() {
 						});
 
 						it("compilation callback is called", function() {
-							env.compilation.callCount.should.be.exactly(1);
+							expect(env.compilation.callCount).toBe(1);
 						});
 
 						it("compilation callback context is set up", function() {
