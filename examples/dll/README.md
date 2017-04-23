@@ -1,3 +1,10 @@
+# DllReference
+
+[DllPlugin documentation](https://webpack.js.org/plugins/dll-plugin)
+
+This is the _reference_ bundle (with the manifests) for [dll user example](https://github.com/webpack/webpack/tree/master/examples/dll-user)
+
+
 # webpack.config.js
 
 ``` javascript
@@ -41,9 +48,9 @@ var alpha_282e8826843b2bb4eeb1 =
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -185,9 +192,9 @@ module.exports = __webpack_require__;
 
 ```
 Hash: 282e8826843b2bb4eeb1
-Version: webpack 2.3.2
+Version: webpack 2.4.1
          Asset     Size  Chunks             Chunk Names
- MyDll.beta.js  3.46 kB       0  [emitted]  beta
+ MyDll.beta.js  3.47 kB       0  [emitted]  beta
 MyDll.alpha.js  3.49 kB       1  [emitted]  alpha
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
@@ -215,7 +222,7 @@ chunk    {1} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
 
 ```
 Hash: 282e8826843b2bb4eeb1
-Version: webpack 2.3.2
+Version: webpack 2.4.1
          Asset       Size  Chunks             Chunk Names
  MyDll.beta.js  653 bytes       0  [emitted]  beta
 MyDll.alpha.js  657 bytes       1  [emitted]  alpha
