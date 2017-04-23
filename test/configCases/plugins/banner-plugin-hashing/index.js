@@ -18,11 +18,11 @@ const banner = parseBanner(source)
 const REGEXP_HASH = /^[A-Za-z0-9]{20}$/
 
 it("should interpolate file hash in chunk banner", () => {
-		REGEXP_HASH.test(banner["hash"]).should.be.true;
+	REGEXP_HASH.test(banner["hash"]).should.be.true;
 });
 
 it("should interpolate chunkHash in chunk banner", () => {
-		REGEXP_HASH.test(banner["chunkhash"]).should.be.true;
+	REGEXP_HASH.test(banner["chunkhash"]).should.be.true;
 });
 
 it("should interpolate file into chunk banner", () => {
@@ -30,15 +30,15 @@ it("should interpolate file into chunk banner", () => {
 });
 
 it("should interpolate name in chunk banner", () => {
-		banner["name"].should.equal("dist/banner");
+	banner["name"].should.equal("dist/banner");
 });
 
 it("should interpolate basename in chunk banner", () => {
-		banner["filebase"].should.equal("banner.js");
+	banner["filebase"].should.equal("banner.js");
 });
 
 it("should interpolate query in chunk banner", () => {
-		banner["query"].should.equal("?value");
+	banner["query"].should.equal("?value");
 });
 
 it("should parse entry into file in chunk banner", () => {
@@ -46,7 +46,7 @@ it("should parse entry into file in chunk banner", () => {
 });
 
 it("should parse entry into name in chunk banner", () => {
-		banner["filebase"].should.not.equal(banner["name"]);
+	banner["filebase"].should.not.equal(banner["name"]);
 });
 
 require.include("./test.js");
