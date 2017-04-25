@@ -73,6 +73,14 @@ example demonstrating usage of the dll plugin
 - [dll-reference](dll) (_used by dll-user example_)
 - [dll-user](dll-user) (_uses dll-reference example_)
 
+## [dll](dll-app-and-vendor)
+
+example demonstrating usage of the dll plugin
+
+- [dll-app-and-vendor](dll-app-and-vendor) (_latest_)
+- [dll-reference](dll) (_used by dll-user example_)
+- [dll-user](dll-user) (_uses dll-reference example_)
+
 # Requests
 
 If you think an example is missing, please report it as issue. :)
