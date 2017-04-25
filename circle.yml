@@ -1,27 +1,23 @@
-general:
-  artifacts:
-    - "./coverage"
+machine:
+  environment:
+    NO_WATCH_TESTS: 1
 
 machine:
-  node:
-    version: 4.7.0
+  environment:
+    PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
 
 dependencies:
   pre:
-    - npm install -g yarn
+    - case $CIRCLE_NODE_INDEX in 0) NODE_VERSION=4 ;; 1) NODE_VERSION=7 ;; esac; nvm install $NODE_VERSION && nvm alias default $NODE_VERSION
   override:
-    - yarn install
-  post:
+    - yarn
     - yarn link || true && yarn link webpack
+  cache_directories:
+    - ~/.cache/yarn
 
 test:
-  pre:
-    - npm run travis:lint
   override:
-    - npm run travis:test:
-        parallel: true
-        files:
-          - test/ConfigTestCases.test.js
-          - test/TestCases.test.js
-          - test/Stats.test.js
-          - test/**/*.test.js
+    - node -v
+    - yarn --version
+    - yarn run circleci:lint
+    - yarn run circleci:test

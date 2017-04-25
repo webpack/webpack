@@ -3,31 +3,31 @@ This example shows how to create an explicit vendor chunk as well as a common ch
 To better understand, here are the entry points and which utility modules they depend on:
 
 - `pageA`
- - `utility1`
- - `utility2`
+  - `utility1`
+  - `utility2`
 - `pageB`
- - `utility2`
- - `utility3`
+  - `utility2`
+  - `utility3`
 - `pageC`
- - `utility2`
- - `utility3`
+  - `utility2`
+  - `utility3`
 
 Given this configuration, webpack will produce the following bundles:
 
 - `vendor`
- - webpack runtime
- - `vendor1`
- - `vendor2`
+  - webpack runtime
+  - `vendor1`
+  - `vendor2`
 - `common`
- - `utility2`
- - `utility3`
+  - `utility2`
+  - `utility3`
 - `pageA`
- - `pageA`
- - `utility1`
+  - `pageA`
+  - `utility1`
 - `pageB`
- - `pageB`
+  - `pageB`
 - `pageC`
- - `pageC`
+  - `pageC`
 
 With this bundle configuration, you would load your third party libraries, then your common application code, then your page-specific application code.
 
