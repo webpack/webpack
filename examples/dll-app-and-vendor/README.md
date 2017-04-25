@@ -14,8 +14,8 @@ In the real world, one would likely not build vendor every time, but would build
 ### webpack.app.config.js
 
 ``` javascript
-var webpack = require("../../");
 var path = require("path");
+var webpack = require("../../");
 
 module.exports = {
 	entry: {
@@ -29,16 +29,16 @@ module.exports = {
 		new webpack.DllReferencePlugin({
 			context: ".",
 			manifest: require("./js/vendor-manifest.json"), // eslint-disable-line
-		})
-	]
+		}),
+	],
 };
 ```
 
 ### webpack.vendor.config.js
 
 ``` javascript
-var webpack = require("webpack");
 var path = require("path");
+var webpack = require("../../");
 
 module.exports = {
 	entry: {
@@ -55,8 +55,8 @@ module.exports = {
 		new webpack.DllPlugin({
 			name: "vendor_lib",
 			path: "js/vendor-manifest.json",
-		})
-	]
+		}),
+	],
 };
 ```
 
@@ -68,7 +68,7 @@ module.exports = {
 used by `example-app.js`
 
 ``` javascript
-var square = require("./example-vendor");
+var square = require("./example-vendor.js");
 
 console.log(square(7));
 ```
@@ -78,7 +78,7 @@ console.log(square(7));
 uses `example-vendor.js`
 
 ``` javascript
-var square = require("./example-vendor");
+var square = require("./example-vendor.js");
 
 console.log(square(7));
 ```
@@ -187,7 +187,7 @@ uses `example-vendor.js`, then `example-app.js`
   \************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-var square = __webpack_require__(/*! ./example-vendor */ 1);
+var square = __webpack_require__(/*! ./example-vendor.js */ 1);
 
 console.log(square(7));
 
@@ -337,7 +337,7 @@ module.exports = __webpack_require__;
 ## Uncompressed
 
 ```
-Hash: 88507ec9bb3c326dd599e387bea541a03d535cf7
+Hash: 88507ec9bb3c326dd599564618e3ec990bda91e4
 Version: webpack 2.4.1
 Child
     Hash: 88507ec9bb3c326dd599
@@ -350,16 +350,16 @@ Child
             single entry ./example-vendor [1] dll vendor vendor:0
         [1] dll vendor 12 bytes {0} [built]
 Child
-    Hash: e387bea541a03d535cf7
+    Hash: 564618e3ec990bda91e4
             Asset     Size  Chunks             Chunk Names
     app.bundle.js  3.79 kB       0  [emitted]  app
     Entrypoint app = app.bundle.js
-    chunk    {0} app.bundle.js (app) 179 bytes [entry] [rendered]
+    chunk    {0} app.bundle.js (app) 182 bytes [entry] [rendered]
         > app [3] multi ./example-app 
-        [0] ./example-app.js 67 bytes {0} [built]
+        [0] ./example-app.js 70 bytes {0} [built]
             single entry ./example-app [3] multi ./example-app app:100000
         [1] delegated ./example-vendor.js from dll-reference vendor_lib 42 bytes {0} [not cacheable] [built]
-            cjs require ./example-vendor [0] ./example-app.js 1:13-40
+            cjs require ./example-vendor.js [0] ./example-app.js 1:13-43
         [3] multi ./example-app 28 bytes {0} [built]
          + 1 hidden modules
 ```
@@ -367,7 +367,7 @@ Child
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 88507ec9bb3c326dd599e387bea541a03d535cf7
+Hash: 88507ec9bb3c326dd599564618e3ec990bda91e4
 Version: webpack 2.4.1
 Child
     Hash: 88507ec9bb3c326dd599
@@ -380,16 +380,16 @@ Child
             single entry ./example-vendor [1] dll vendor vendor:0
         [1] dll vendor 12 bytes {0} [built]
 Child
-    Hash: e387bea541a03d535cf7
+    Hash: 564618e3ec990bda91e4
             Asset       Size  Chunks             Chunk Names
     app.bundle.js  641 bytes       0  [emitted]  app
     Entrypoint app = app.bundle.js
-    chunk    {0} app.bundle.js (app) 179 bytes [entry] [rendered]
+    chunk    {0} app.bundle.js (app) 182 bytes [entry] [rendered]
         > app [3] multi ./example-app 
-        [0] ./example-app.js 67 bytes {0} [built]
+        [0] ./example-app.js 70 bytes {0} [built]
             single entry ./example-app [3] multi ./example-app app:100000
         [1] delegated ./example-vendor.js from dll-reference vendor_lib 42 bytes {0} [not cacheable] [built]
-            cjs require ./example-vendor [0] ./example-app.js 1:13-40
+            cjs require ./example-vendor.js [0] ./example-app.js 1:13-43
         [3] multi ./example-app 28 bytes {0} [built]
          + 1 hidden modules
 ```

@@ -1,3 +1,3 @@
-var square = require("./example-vendor");
+var square = require("./example-vendor.js");
 
 console.log(square(7));

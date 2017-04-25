@@ -1,7 +1,9 @@
-var webpack = require("webpack");
 var path = require("path");
+var webpack = require("../../");
 
 module.exports = {
+	context: __dirname,
+
 	entry: {
 		// these entries can also point to dependencies,
 		// which can significantly boost build time in the app bundle
@@ -16,6 +18,6 @@ module.exports = {
 		new webpack.DllPlugin({
 			name: "vendor_lib",
 			path: "js/vendor-manifest.json",
-		})
-	]
+		}),
+	],
 };
