@@ -248,7 +248,7 @@ module.exports = vendor_32199746b38d6e93b44b;
   \****************************************************************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(0))(0)
+module.exports = (__webpack_require__(0))(0);
 
 /***/ }),
 /* 2 */,

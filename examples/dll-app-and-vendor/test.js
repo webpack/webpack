@@ -35,7 +35,7 @@ function compilerForTest(webpack) {
  * @see webpack/test/Examples.test.js
  * @param  {Function} done test suite callback
  * @param  {Function} webpack compiler call fn
- * @return {void} could return Promise but no need
+ * @return {Promise} promisified
  */
 function test(done, webpack) {
 	var compile = compilerForTest(webpack);
@@ -44,7 +44,7 @@ function test(done, webpack) {
 
 	// run vendor config, if it passes, continue to build app config
 	// if either fail, send error to `done`
-	compile(vendorConfig)
+	return compile(vendorConfig)
 		.then(() => {
 			// only require here, since it requires the vendor output
 			var appConfig = require(appConfigPath);

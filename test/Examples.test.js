@@ -44,7 +44,8 @@ describe("Examples", () => {
 
 			if(fs.existsSync(testFilePath)) {
 				const test = require(testFilePath);
-				return test(done, webpack);
+				test(done, webpack);
+				return;
 			}
 
 			if(fs.existsSync(webpackConfigPath)) {

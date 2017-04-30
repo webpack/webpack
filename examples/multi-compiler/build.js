@@ -1,2 +1,1 @@
-global.NO_TARGET_ARGS = true;
-require("../build-common");
+require("../build-common").noTargetArgs();
