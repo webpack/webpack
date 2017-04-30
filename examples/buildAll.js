@@ -1,7 +1,7 @@
 /* eslint node/no-unsupported-features: "off" */
 const { join } = require("path");
 const { statSync, readdirSync } = require("fs");
-const { execa, log } = require("../../fluents/chain/fluent-cli");
+const { execa, log } = require("fluent-cli");
 
 log.registerCatch();
 const debug = false;
