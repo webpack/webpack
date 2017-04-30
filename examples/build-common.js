@@ -6,10 +6,10 @@
 /* eslint node/no-unsupported-features: "off" */
 /* eslint keyword-spacing: "off" */
 
-const { join } = require("path");
 const { replaceResults, replaceBase } = require("./template-common");
 const fluents = require("fluent-cli");
-const { log, File, Script, execa, ChainedMapExtendable, read } = fluents;
+
+const { log, File, Script, execa, ChainedMapExtendable } = fluents;
 log.registerCatch();
 
 /**
@@ -29,96 +29,6 @@ function flow(...funcs) {
 		}
 		return result;
 	};
-}
-
-class Replace {
-	constructor(dir) {
-		this.dir = dir;
-		this.lessStrict = this.lessStrict.bind(this);
-	}
-	lessStrict(regExpStr) {
-		regExpStr = regExpStr
-			.replace(/node_modules/g, "(node_modules|~)")
-			.replace(/(\\\/|\\\\)/g, "[\\/\\\\]");
-		return regExpStr;
-	}
-
-	/**
-	 * @desc prettify paths & runtime
-	 * @param  {string} template replace a readme that has been replaced once
-	 * @return {string} regex replaced template
-	 */
-	base(template) {
-		let { dir, lessStrict } = this;
-
-		// webpack comments
-		const runtimeRegexp = /(```\s*(?:js|javascript)\n)?(.*)(\/\*\*\*\*\*\*\/ \(function\(modules\) \{ \/\/ webpackBootstrap\n(?:.|\n)*?\n\/\*\*\*\*\*\*\/ \}\)\n\/\**\/\n)/;
-		const timeRegexp = /\s*Time: \d+ms/g;
-
-		// path to webpack
-		let webpack = join(__dirname, "..");
-		let webpackParent = join(__dirname, "..", "..");
-
-		// sanitize regex
-		dir = lessStrict(dir.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
-		dir = new RegExp(dir, "g");
-
-		// replace the directory path
-		webpack = lessStrict(webpack.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
-		webpack = new RegExp(webpack, "g");
-		webpackParent = lessStrict(
-			webpackParent.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
-		);
-		webpackParent = new RegExp(webpackParent, "g");
-
-		// simplify output
-		// simplify
-		return template
-			.replace(/[\r\n]/g, "\n")
-			.replace(dir, ".")
-			.replace(webpack, "(webpack)")
-			.replace(webpackParent, "(webpack)/~")
-			.replace(timeRegexp, "")
-			.replace(/\.chunkhash\./g, ".[chunkhash].")
-			.replace(runtimeRegexp, function(match) {
-				match = runtimeRegexp.exec(match);
-				const prefix = match[1] ? "" : "```\n";
-				const inner = match[1] ? match[1] : "``` js\n";
-				return (
-					prefix +
-					"<details><summary><code>" +
-					match[2] +
-					"/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>\n\n" +
-					inner +
-					match[2] +
-					match[3] +
-					"```\n\n</details>\n\n" +
-					inner
-				);
-			});
-	}
-
-	/**
-	 * @param  {string} template readme template
-	 * @param  {string} baseDir  [description]
-	 * @param  {string} stdout   [description]
-	 * @param  {string} prefix   [description]
-	 * @return {string}          [description]
-	 */
-	results(template, baseDir, stdout, prefix) {
-		const regexp = new RegExp(
-			"\\{\\{" + (prefix ? prefix + ":" : "") + "([^:\\}]+)\\}\\}",
-			"g"
-		);
-		const prefixIndex = prefix ? prefix.length + 1 : 0;
-
-		return template.replace(regexp, function(match) {
-			match = match.substr(2 + prefixIndex, match.length - 4 - prefixIndex);
-			if (match === "stdout") return stdout;
-			const matchPath = join(baseDir, match);
-			return read(matchPath).replace(/[\r\n]*$/, "");
-		});
-	}
 }
 
 /**
@@ -161,7 +71,6 @@ class CommonBuild extends ChainedMapExtendable {
 		this.dir = dir;
 		this.readme = File.dir(this.dir).src("README.md").load(true);
 		this.template = File.dir(this.dir).src("template.md").load(true);
-		this.replacer = new Replace(this.dir);
 
 		this.debug(true);
 		log.filter(() => this.debugInfo);
@@ -278,7 +187,7 @@ class CommonBuild extends ChainedMapExtendable {
 		const dir = this.dir;
 
 		try {
-			const replaced = this.replacer.results(contents, dir, output, "min");
+			const replaced = replaceResults(contents, dir, output, "min");
 			this.readme.setContent(replaced).write();
 		} catch (e) {
 			console.log(e);
