@@ -13,7 +13,7 @@ describe("Resolution", function() {
 		}, (err, stats) => {
 			if(err) done(err);
 		});
-		
+
 		compiler.compile((err, compilation) => {
 			if(err) return void done(err);
 			should(compilation).have.property("entries").with.lengthOf(1);
@@ -30,6 +30,7 @@ describe("Resolution", function() {
 		}, (err, stats) => {
 			if(err) done(err);
 		});
+
 		compiler.compile((err, compilation) => {
 			if(err) return void done(err);
 			should(compilation).have.property("entries").with.lengthOf(1);
