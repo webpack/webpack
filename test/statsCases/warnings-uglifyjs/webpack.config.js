@@ -1,4 +1,5 @@
-var webpack = require("webpack");
+"use strict";
+const webpack = require("../../../");
 
 module.exports = {
 	entry: "./index",

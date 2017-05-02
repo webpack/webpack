@@ -4,6 +4,7 @@
 [![tests][tests]][tests-url]
 [![builds][builds]][builds-url]
 [![coverage][cover]][cover-url]
+[![licenses][licenses]][licenses-url]
 
 <div align="center">
   <a href="https://github.com/webpack/webpack">
@@ -255,6 +256,10 @@ You are also welcome to correct any spelling mistakes or any language issues.
 
 If you want to discuss something or just need help, [here is our Gitter room](https://gitter.im/webpack/webpack).
 
+### License
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack.svg?type=large)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack?ref=badge_large)
+
 <h2 align="center">Core Team</h2>
 
 <table>
@@ -333,7 +338,7 @@ This is how we use the donations:
 
 <h2 align="center">Other Backers and Sponsors</h2>
 
-We had other sources of donations before starting to use OpenCollective (or people that can't donate via OpenCollective). We want to acknowledge these sponsors and backers, but donations were not public and we are not sure of donors want to stay anonymous. So if you want to be in this list, just send a PR.
+Before we started using OpenCollective, donations were made anonymously. Now that we have made the switch, we would like to acknowledge these sponsors (and the ones who continue to donate using OpenCollective). If we've missed someone, please send us a PR, and we'll add you to this list.
 
 [Google Angular Team](https://angular.io/), [Architects.io](http://architects.io/),
 <a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img 
@@ -510,6 +515,9 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 [builds-url]: https://ci.appveyor.com/project/sokra/webpack/branch/master
 [builds]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
+
+[licenses-url]: https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack?ref=badge_shield
+[licenses]: https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack.svg?type=shield
 
 [cover]: https://img.shields.io/coveralls/webpack/webpack.svg
 [cover-url]: https://coveralls.io/r/webpack/webpack/
