@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "dependencies": {
@@ -94,11 +94,13 @@
     "travis:benchmark": "npm run benchmark",
     "appveyor:test": "node --max_old_space_size=4096 node_modules\\mocha\\bin\\mocha --harmony test/*.test.js",
     "appveyor:benchmark": "npm run benchmark",
+    "circleci:test": "node --max_old_space_size=4096 node_modules/mocha/bin/mocha --harmony test/*.test.js",
+    "circleci:lint": "npm run lint-files && npm run nsp",
     "build:examples": "cd examples && node buildAll.js",
     "pretest": "npm run lint-files",
     "lint-files": "npm run lint && npm run beautify-lint",
-    "lint": "eslint lib bin hot buildin test/**/webpack.config.js test/binCases/**/test.js examples/**/webpack.config.js",
-    "beautify-lint": "beautify-lint 'lib/**/*.js' 'hot/**/*.js' 'bin/**/*.js' 'benchmark/*.js' 'test/*.js'",
+    "lint": "eslint lib bin hot buildin \"test/**/webpack.config.js\" \"test/binCases/**/test.js\" \"examples/**/webpack.config.js\"",
+    "beautify-lint": "beautify-lint \"lib/**/*.js\" \"hot/**/*.js\" \"bin/**/*.js\" \"benchmark/*.js\" \"test/*.js\"",
     "nsp": "nsp check --output summary",
     "benchmark": "mocha test/*.benchmark.js --harmony -R spec",
     "cover": "node --harmony ./node_modules/istanbul/lib/cli.js cover -x '**/*.runtime.js' node_modules/mocha/bin/_mocha -- test/*.test.js",

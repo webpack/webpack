@@ -333,6 +333,10 @@
           "minLength": 1,
           "type": "string"
         },
+        "hashSalt": {
+          "minLength": 1,
+          "type": "string"
+        },
         "hotUpdateChunkFilename": {
           "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
           "type": "string",
@@ -988,6 +992,10 @@
             "modulesSort": {
               "type": "string",
               "description": "sort the modules by that field"
+            },
+            "moduleTrace": {
+              "type": "boolean",
+              "description": "add dependencies and origin of warnings/errors"
             },
             "chunksSort": {
               "type": "string",

@@ -1,4 +1,4 @@
-const ResolvePackageFromRootPlugin = require("./ResolvePackageFromRootPlugin");
+var ResolvePackageFromRootPlugin = require("./ResolvePackageFromRootPlugin");
 
 module.exports = {
 	entry: "./index",
