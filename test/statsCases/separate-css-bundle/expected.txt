@@ -7,12 +7,12 @@ Child
     c815cf440254d4f3bba4e7041db00a28.css  26 bytes       0  [emitted]  main
        [0] (webpack)/test/statsCases/separate-css-bundle/a/file.css 41 bytes {0} [built]
        [1] (webpack)/test/statsCases/separate-css-bundle/a/index.js 23 bytes {0} [built]
-       [2] (webpack)/~/css-loader!(webpack)/test/statsCases/separate-css-bundle/a/file.css 190 bytes [built]
-       [3] (webpack)/~/css-loader/lib/css-base.js 1.46 kB [built]
-       [4] (webpack)/~/style-loader/addStyles.js 6.91 kB [built]
+       [2] (webpack)/node_modules/css-loader!(webpack)/test/statsCases/separate-css-bundle/a/file.css 190 bytes [built]
+       [3] (webpack)/node_modules/css-loader/lib/css-base.js 1.46 kB [built]
+       [4] (webpack)/node_modules/style-loader/addStyles.js 6.91 kB [built]
     Child extract-text-webpack-plugin:
-           [0] (webpack)/~/css-loader!(webpack)/test/statsCases/separate-css-bundle/a/file.css 190 bytes {0} [built]
-           [1] (webpack)/~/css-loader/lib/css-base.js 1.46 kB {0} [built]
+           [0] (webpack)/node_modules/css-loader!(webpack)/test/statsCases/separate-css-bundle/a/file.css 190 bytes {0} [built]
+           [1] (webpack)/node_modules/css-loader/lib/css-base.js 1.46 kB {0} [built]
 Child
     Hash: 1139e89514abc13454ce
     Time: Xms
@@ -21,9 +21,9 @@ Child
     a3f385680aef7a9bb2a517699532cc34.css  28 bytes       0  [emitted]  main
        [0] (webpack)/test/statsCases/separate-css-bundle/b/file.css 41 bytes {0} [built]
        [1] (webpack)/test/statsCases/separate-css-bundle/b/index.js 23 bytes {0} [built]
-       [2] (webpack)/~/css-loader!(webpack)/test/statsCases/separate-css-bundle/b/file.css 192 bytes [built]
-       [3] (webpack)/~/css-loader/lib/css-base.js 1.46 kB [built]
-       [4] (webpack)/~/style-loader/addStyles.js 6.91 kB [built]
+       [2] (webpack)/node_modules/css-loader!(webpack)/test/statsCases/separate-css-bundle/b/file.css 192 bytes [built]
+       [3] (webpack)/node_modules/css-loader/lib/css-base.js 1.46 kB [built]
+       [4] (webpack)/node_modules/style-loader/addStyles.js 6.91 kB [built]
     Child extract-text-webpack-plugin:
-           [0] (webpack)/~/css-loader!(webpack)/test/statsCases/separate-css-bundle/b/file.css 192 bytes {0} [built]
-           [1] (webpack)/~/css-loader/lib/css-base.js 1.46 kB {0} [built]
+           [0] (webpack)/node_modules/css-loader!(webpack)/test/statsCases/separate-css-bundle/b/file.css 192 bytes {0} [built]
+           [1] (webpack)/node_modules/css-loader/lib/css-base.js 1.46 kB {0} [built]
