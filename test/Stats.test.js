@@ -154,22 +154,7 @@ describe("Stats", () => {
 	describe("Presets", () => {
 		describe("presetToOptions", () => {
 			it("returns correct object with 'Normal'", () => {
-				Stats.presetToOptions("Normal").should.eql({
-					assets: false,
-					version: false,
-					timings: true,
-					hash: true,
-					entrypoints: false,
-					chunks: true,
-					chunkModules: false,
-					errorDetails: true,
-					reasons: false,
-					depth: false,
-					usedExports: false,
-					providedExports: false,
-					colors: true,
-					performance: true
-				});
+				Stats.presetToOptions("Normal").should.eql({});
 			});
 			it("truthy values behave as 'normal'", () => {
 				const normalOpts = Stats.presetToOptions("normal");
@@ -182,25 +167,7 @@ describe("Stats", () => {
 			});
 			it("returns correct object with 'none'", () => {
 				Stats.presetToOptions("none").should.eql({
-					hash: false,
-					version: false,
-					timings: false,
-					assets: false,
-					entrypoints: false,
-					chunks: false,
-					chunkModules: false,
-					modules: false,
-					reasons: false,
-					depth: false,
-					usedExports: false,
-					providedExports: false,
-					children: false,
-					source: false,
-					errors: false,
-					errorDetails: false,
-					warnings: false,
-					publicPath: false,
-					performance: false
+					all: false
 				});
 			});
 			it("falsy values behave as 'none'", () => {

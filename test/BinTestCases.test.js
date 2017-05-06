@@ -22,7 +22,7 @@ function getTestSpecificArguments(testDirectory) {
 	try {
 		return loadOptsFile(path.join(testDirectory, "test.opts"));
 	} catch(e) {
-		return [];
+		return null;
 	}
 }
 
@@ -51,7 +51,7 @@ describe("BinTestCases", function() {
 
 			category.tests.forEach(function(testName) {
 				const testDirectory = path.join(casesPath, category.name, testName);
-				const testArgs = defaultArgs.concat(getTestSpecificArguments(testDirectory));
+				const testArgs = getTestSpecificArguments(testDirectory) || defaultArgs;
 				const testAssertions = require(path.join(testDirectory, "test.js"));
 				const outputPath = path.join(path.resolve(casesPath, "../js/bin"), category.name, testName);
 
