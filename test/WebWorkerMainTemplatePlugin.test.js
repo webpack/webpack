@@ -85,6 +85,8 @@ var installedChunks = {
 2: 1,
 3: 1
 };
+
+var resolvedPromise = new Promise(function(resolve) { resolve(); });
 `.trim())
 				});
 			});
@@ -111,7 +113,7 @@ var installedChunks = {
 if(!installedChunks[chunkId]) {
 importScripts("asset-path" + abc123 + "" + abc123 + "" + chunkId + "");
 }
-return Promise.resolve();
+return resolvedPromise;
 `.trim())
 				});
 			});
