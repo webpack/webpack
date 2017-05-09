@@ -39,7 +39,7 @@ exports.replaceBase = function replaceBase(template) {
 			match = runtimeRegexp.exec(match);
 			const prefix = match[1] ? "" : "```\n";
 			const inner = match[1] ? match[1] : "``` js\n";
-			return prefix + "<details><summary><code>" + match[2] + "/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>\n\n" + inner + match[2] + match[3] + "```\n\n</details>\n\n" + inner;
+			return prefix + "<details><summary><code>" + match[2] + "/* 👻 */ (function(modules) { /* webpackBootstrap */ })</code></summary>\n\n" + inner + match[2] + match[3] + "```\n\n</details>\n\n" + inner;
 		});
 }
 
