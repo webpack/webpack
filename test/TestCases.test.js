@@ -23,6 +23,11 @@ describe("TestCases", () => {
 	[{
 		name: "normal"
 	}, {
+		name: "concat",
+		plugins: [
+			new webpack.optimize.ModuleConcatenationPlugin()
+		]
+	}, {
 		name: "hot",
 		plugins: [
 			new webpack.HotModuleReplacementPlugin()

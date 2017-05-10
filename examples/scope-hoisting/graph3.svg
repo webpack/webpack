@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="492px" preserveAspectRatio="none" style="width:395px;height:492px;" version="1.1" viewBox="0 0 395 492" width="395px" zoomAndPan="magnify"><defs><filter height="300%" id="f1cdtd7xfgeu5s" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--cluster Chunk A--><rect fill="#FFFFFF" filter="url(#f1cdtd7xfgeu5s)" height="460.5" style="stroke: #000000; stroke-width: 2.0;" width="171" x="22" y="24.5"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="66" x="74.5" y="39.4951">Chunk A</text><!--cluster Scope 1--><rect fill="#FFFFFF" filter="url(#f1cdtd7xfgeu5s)" height="200.5" style="stroke: #000000; stroke-width: 2.0;" width="123" x="46" y="67.5"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="64" x="75.5" y="82.4951">Scope 1</text><!--cluster Scope 2--><rect fill="#FFFFFF" filter="url(#f1cdtd7xfgeu5s)" height="169" style="stroke: #000000; stroke-width: 2.0;" width="120" x="47" y="292"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="64" x="75" y="306.9951">Scope 2</text><!--cluster Chunk B--><rect fill="#FFFFFF" filter="url(#f1cdtd7xfgeu5s)" height="313" style="stroke: #000000; stroke-width: 2.0;" width="171" x="217" y="147.5"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="65" x="270" y="162.4951">Chunk B</text><!--cluster Scope 3--><rect fill="#FFFFFF" filter="url(#f1cdtd7xfgeu5s)" height="179" style="stroke: #000000; stroke-width: 2.0;" width="123" x="241" y="190.5"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="64" x="270.5" y="205.4951">Scope 3</text><ellipse cx="109.0122" cy="117.0236" fill="#FEFECE" filter="url(#f1cdtd7xfgeu5s)" rx="44.0122" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="58" x="80.0122" y="121.6721">example</text><ellipse cx="75.9428" cy="239.7543" fill="#FEFECE" filter="url(#f1cdtd7xfgeu5s)" rx="13.9428" ry="11.7543" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="8" x="71.9428" y="244.4027">a</text><ellipse cx="139.1353" cy="239.9083" fill="#FEFECE" filter="url(#f1cdtd7xfgeu5s)" rx="14.1353" ry="11.9083" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="9" x="134.6353" y="244.5567">b</text><ellipse cx="106.9411" cy="341.5236" fill="#FEFECE" filter="url(#f1cdtd7xfgeu5s)" rx="36.9411" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="48" x="82.9411" y="346.1721">shared</text><ellipse cx="106.8051" cy="430.5236" fill="#FEFECE" filter="url(#f1cdtd7xfgeu5s)" rx="43.3051" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="57" x="78.3051" y="435.1721">shared2</text><ellipse cx="270.9282" cy="430.6426" fill="#FEFECE" filter="url(#f1cdtd7xfgeu5s)" rx="16.9282" ry="14.1426" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="19" x="261.4282" y="435.291">cjs</text><ellipse cx="278.8848" cy="240.0236" fill="#FEFECE" filter="url(#f1cdtd7xfgeu5s)" rx="21.3848" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="26" x="265.8848" y="244.6721">lazy</text><ellipse cx="270.9428" cy="341.2543" fill="#FEFECE" filter="url(#f1cdtd7xfgeu5s)" rx="13.9428" ry="11.7543" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="8" x="266.9428" y="345.9027">c</text><ellipse cx="334.1353" cy="341.4083" fill="#FEFECE" filter="url(#f1cdtd7xfgeu5s)" rx="14.1353" ry="11.9083" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="9" x="329.6353" y="346.0567">d</text><!--link example to a--><path d="M105.2145,131.88 C99.0446,154.503 86.8566,199.192 80.3438,223.073 " fill="none" id="example-a" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="78.9685,228.116,85.1958,220.4857,80.2842,223.2922,77.4777,218.3806,78.9685,228.116" style="stroke: #A80036; stroke-width: 1.0;"/><!--link example to b--><path d="M112.441,131.88 C118.05,154.503 129.13,199.192 135.051,223.073 " fill="none" id="example-b" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="136.301,228.116,138.0162,218.4176,135.0971,223.2631,130.2516,220.344,136.301,228.116" style="stroke: #A80036; stroke-width: 1.0;"/><!--link a to shared--><path d="M79.436,252.028 C84.6968,268.914 94.8098,301.374 101.2148,321.931 " fill="none" id="a-shared" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="102.7581,326.885,103.9002,317.1026,101.271,322.1113,96.2623,319.482,102.7581,326.885" style="stroke: #A80036; stroke-width: 1.0;"/><!--link shared to shared2--><path d="M107,356.094 C107,370.692 107,394.001 107,410.4293 " fill="none" id="shared-shared2" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="107,415.7146,111,406.7146,107,410.7146,103,406.7146,107,415.7146" style="stroke: #A80036; stroke-width: 1.0;"/><!--link example to lazy--><path d="M141.19,126.941 C150.505,130.206 160.457,134.382 169,139.5 C208.097,162.92 245.71,201.514 265.205,223.108 " fill="none" id="example-lazy" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="268.63,226.934,265.6088,217.56,265.2956,223.2082,259.6474,222.895,268.63,226.934" style="stroke: #A80036; stroke-width: 1.0;"/><!--link lazy to c--><path d="M277.888,254.835 C276.428,272.992 273.869,304.815 272.315,324.145 " fill="none" id="lazy-c" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="271.905,329.243,276.6146,320.5932,272.3064,324.2591,268.6404,319.9509,271.905,329.243" style="stroke: #A80036; stroke-width: 1.0;"/><!--link lazy to d--><path d="M286.165,253.781 C290.949,262.327 297.37,273.827 303,284 C310.774,298.048 319.573,314.1 325.806,325.495 " fill="none" id="lazy-d" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="328.309,330.074,327.5013,320.2583,325.9104,325.6869,320.4819,324.096,328.309,330.074" style="stroke: #A80036; stroke-width: 1.0;"/><!--link c to shared--><path d="M256.631,341.5 C220.897,341.5 185.163,341.5 149.429,341.5 " fill="none" id="c-shared" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="144.156,341.5,153.156,345.5,149.156,341.5,153.156,337.5,144.156,341.5" style="stroke: #A80036; stroke-width: 1.0;"/><!--link c to cjs--><path d="M271,353.519 C271,368.022 271,393.716 271,411.1694 " fill="none" id="c-cjs" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="271,416.2999,275,407.2999,271,411.2999,267,407.2999,271,416.2999" style="stroke: #A80036; stroke-width: 1.0;"/><!--
+@startuml
+rectangle "Chunk A" {
+rectangle "Scope 1" {
+ (example)
+ (a)
+ (b)
+}
+
+rectangle "Scope 2" {
+  (shared)
+  (shared2)
+}
+}
+
+
+rectangle "Chunk B" {
+rectangle "Scope 3" {
+  (lazy)
+  (c)
+  (d)
+}
+(cjs)
+}
+
+(example) - -> (a)
+(example) - -> (b)
+(a) - -> (shared)
+(shared) - -> (shared2)
+(example) ..right..> (lazy)
+(lazy) - -> (c)
+(lazy) - -> (d)
+(c) - -> (shared)
+(c) - -> (cjs)
+@enduml
+
+PlantUML version 1.2017.13(Wed May 10 16:52:33 UTC 2017)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Java Version: 1.7.0_25-b15
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>
