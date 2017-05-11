@@ -270,6 +270,10 @@
             "use-credentials"
           ]
         },
+        "chunkLoadTimeout": {
+          "description": "Number of milliseconds before chunk request expires",
+          "type": "number"
+        },
         "devtoolFallbackModuleFilenameTemplate": {
           "description": "Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.",
           "anyOf": [
