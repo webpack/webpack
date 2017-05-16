@@ -4,6 +4,7 @@ language: node_js
 branches:
   only:
     - master
+    - next
 
 cache:
   directories:
