@@ -25,3 +25,12 @@ it("should provide a module for a property request", function() {
 	var x = dddeeefff;
 	x.should.be.eql("fff");
 });
+
+it("should provide ES2015 modules", function() {
+	(es2015.default).should.be.eql("ECMAScript 2015");
+	(es2015.alias).should.be.eql("ECMAScript Harmony");
+	(es2015.year).should.be.eql(2015);
+	(es2015_name).should.be.eql("ECMAScript 2015");
+	(es2015_alias).should.be.eql("ECMAScript Harmony");
+	(es2015_year).should.be.eql(2015);
+});

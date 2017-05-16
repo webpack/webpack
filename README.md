@@ -4,6 +4,7 @@
 [![tests][tests]][tests-url]
 [![builds][builds]][builds-url]
 [![coverage][cover]][cover-url]
+[![licenses][licenses]][licenses-url]
 
 <div align="center">
   <a href="https://github.com/webpack/webpack">
@@ -254,6 +255,10 @@ on npm and following the `x-loader`, `x-webpack-plugin` convention.
 You are also welcome to correct any spelling mistakes or any language issues.
 
 If you want to discuss something or just need help, [here is our Gitter room](https://gitter.im/webpack/webpack).
+
+### License
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack.svg?type=large)](https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack?ref=badge_large)
 
 <h2 align="center">Core Team</h2>
 
@@ -510,6 +515,9 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 [builds-url]: https://ci.appveyor.com/project/sokra/webpack/branch/master
 [builds]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
+
+[licenses-url]: https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack?ref=badge_shield
+[licenses]: https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack.svg?type=shield
 
 [cover]: https://img.shields.io/coveralls/webpack/webpack.svg
 [cover-url]: https://coveralls.io/r/webpack/webpack/
