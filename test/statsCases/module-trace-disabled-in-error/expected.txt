@@ -1,0 +1,9 @@
+Hash: 6e950f2e83663cb6e9a6
+Time: Xms
+  Asset     Size  Chunks             Chunk Names
+main.js  2.81 kB       0  [emitted]  main
+chunk    {0} main.js (main) 25 bytes [entry] [rendered]
+    [0] (webpack)/test/statsCases/module-trace-disabled-in-error/index.js 25 bytes {0} [built]
+
+ERROR in (webpack)/test/statsCases/module-trace-disabled-in-error/index.js
+Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/module-trace-disabled-in-error'
