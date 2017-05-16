@@ -22,7 +22,7 @@ install:
   - ps: Install-Product node $env:nodejs_version x64
   - npm install yarn -g
   - yarn install
-  - yarn link
+  - yarn link || yarn link
   - yarn link webpack
 
 build: off
