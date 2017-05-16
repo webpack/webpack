@@ -12,13 +12,13 @@ module.exports = {
 			if(chunk.name) {
 				return chunk.name;
 			}
-			const modulesToName = (mods) => mods.map((mod) => {
+			const chunkModulesToName = (chunk) => chunk.mapModules((mod) => {
 				const rs = new RequestShortener(mod.context);
 				return rs.shorten(mod.request).replace(/[.\/\\]/g, "_");
 			}).join("-");
 
-			if(chunk.modules.length > 0) {
-				return `chunk-containing-${modulesToName(chunk.modules)}`;
+			if(chunk.getNumberOfModules() > 0) {
+				return `chunk-containing-${chunkModulesToName(chunk)}`;
 			}
 
 			return null;
