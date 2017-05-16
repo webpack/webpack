@@ -9,7 +9,7 @@ All modules except `cjs` are EcmaScript modules. `cjs` is a CommonJs module.
 The interesting thing here is that putting all modules in single scope won't work, because of multiple reasons:
 
 * Modules `lazy`, `c`, `d` and `cjs` need to be in a separate chunk
-* Module `shared` is accessed by two chunks (difference scopes)
+* Module `shared` is accessed by two chunks (different scopes)
 * Module `cjs` is a CommonJs module
 
 ![](graph2.png)
@@ -303,7 +303,7 @@ function b_js_a() {
 
 
 __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! ./lazy */ 2)).then(function(lazy) {
-	console.log(a, b_js_a(), __WEBPACK_IMPORTED_MODULE_0_shared__["x"], __WEBPACK_IMPORTED_MODULE_0_shared__["y"], lazy.c, lazy.d.a, lazy.x, lazy.y);
+	console.log(a, b_js_a(), __WEBPACK_IMPORTED_MODULE_0_shared__["a"], __WEBPACK_IMPORTED_MODULE_0_shared__["b"], lazy.c, lazy.d.a, lazy.x, lazy.y);
 });
 
 
@@ -325,7 +325,7 @@ var y = "y";
 
 // CONCATENAMED MODULE: ./node_modules/shared.js
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return x; });
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "y", function() { return y; });
+/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "b", function() { return y; });
 // shared module
 var x = "x";
 
@@ -371,8 +371,8 @@ var a = "d";
 
 // CONCATENAMED MODULE: ./lazy.js
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "c", function() { return c; });
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "x", function() { return __WEBPACK_IMPORTED_MODULE_1_shared__["x"]; });
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "y", function() { return __WEBPACK_IMPORTED_MODULE_1_shared__["y"]; });
+/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "x", function() { return __WEBPACK_IMPORTED_MODULE_1_shared__["a"]; });
+/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "y", function() { return __WEBPACK_IMPORTED_MODULE_1_shared__["b"]; });
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "d", function() { return d_js_namespaceObject; });
 
 
@@ -399,7 +399,7 @@ exports.c = "e";
 Minimized
 
 ``` javascript
-webpackJsonp([0],[,,function(n,r,t){"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=t(3),u=(t.n(e),t(1)),c=String.fromCharCode(e.c.charCodeAt(0)-2),o={};t.d(o,"a",function(){return d});var d="d";t.d(r,"c",function(){return c}),t.d(r,"x",function(){return u.x}),t.d(r,"y",function(){return u.y}),t.d(r,"d",function(){return o})},function(n,r){r.c="e"}]);
+webpackJsonp([0],[,,function(n,r,t){"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=t(3),u=(t.n(e),t(1)),c=String.fromCharCode(e.c.charCodeAt(0)-2),o={};t.d(o,"a",function(){return d});var d="d";t.d(r,"c",function(){return c}),t.d(r,"x",function(){return u.a}),t.d(r,"y",function(){return u.b}),t.d(r,"d",function(){return o})},function(n,r){r.c="e"}]);
 ```
 
 # Info
@@ -407,7 +407,7 @@ webpackJsonp([0],[,,function(n,r,t){"use strict";Object.defineProperty(exports,"
 ## Uncompressed
 
 ```
-Hash: 383b132e31f349cdb930
+Hash: 4091e96718e53f8b98fd
 Version: webpack 2.5.1
       Asset     Size  Chunks             Chunk Names
 0.output.js  1.85 kB       0  [emitted]  
@@ -417,7 +417,6 @@ chunk    {0} 0.output.js 276 bytes {1} [rendered]
     > [4] 4:0-16
     [2] ./lazy.js + 2 modules 232 bytes {0} [built]
         [exports: d, c, x, y]
-        [no exports used]
         import() ./lazy [4] ./example.js 4:0-16
     [3] ./node_modules/cjs.js 44 bytes {0} [built]
         [only some exports used: c]
@@ -425,10 +424,9 @@ chunk    {0} 0.output.js 276 bytes {1} [rendered]
 chunk    {1} output.js (main) 385 bytes [entry] [rendered]
     > main [4] 
     [0] ./example.js + 2 modules 280 bytes {1} [built]
-        [no exports used]
     [1] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
         [exports: x, y]
-        [no exports used]
+        [only some exports used: x, y]
         harmony import shared [6] ./node_modules/a.js 3:0-23
         harmony import shared [8] ./node_modules/c.js 6:0-30
 ```
@@ -436,7 +434,7 @@ chunk    {1} output.js (main) 385 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 383b132e31f349cdb930
+Hash: 4091e96718e53f8b98fd
 Version: webpack 2.5.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  379 bytes       0  [emitted]  
@@ -446,7 +444,6 @@ chunk    {0} 0.output.js 276 bytes {1} [rendered]
     > [4] 4:0-16
     [2] ./lazy.js + 2 modules 232 bytes {0} [built]
         [exports: d, c, x, y]
-        [no exports used]
         import() ./lazy [4] ./example.js 4:0-16
     [3] ./node_modules/cjs.js 44 bytes {0} [built]
         [only some exports used: c]
@@ -454,10 +451,9 @@ chunk    {0} 0.output.js 276 bytes {1} [rendered]
 chunk    {1} output.js (main) 385 bytes [entry] [rendered]
     > main [4] 
     [0] ./example.js + 2 modules 280 bytes {1} [built]
-        [no exports used]
     [1] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
         [exports: x, y]
-        [no exports used]
+        [only some exports used: x, y]
         harmony import shared [6] ./node_modules/a.js 3:0-23
         harmony import shared [8] ./node_modules/c.js 6:0-30
 ```
