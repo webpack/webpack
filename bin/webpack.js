@@ -150,6 +150,20 @@ if(argv.verbose) {
 	argv["display-cached-assets"] = true;
 }
 
+var requireRoot
+
+function requireRelativeToCwd(requested) {
+	if(!requireRoot) {
+		var Module = require("module");
+		requireRoot = new Module();
+		requireRoot.paths = Module._nodeModulePaths(process.cwd());
+	}
+	requireRoot.require(requested);
+}
+
+ifArg("require", requireRelativeToCwd)
+ifArg("r", requireRelativeToCwd)
+
 var options = require("./convert-argv")(yargs, argv);
 
 function ifArg(name, fn, init) {
@@ -170,7 +184,7 @@ function processOptions(options) {
 			process.exit(1); // eslint-disable-line
 		});
 		return;
-	}
+	}	
 
 	var firstOptions = [].concat(options)[0];
 	var statsPresetToOptions = require("../lib/Stats.js").presetToOptions;
