@@ -159,6 +159,7 @@ describe("Stats", () => {
 					version: false,
 					timings: true,
 					hash: true,
+					env: true,
 					entrypoints: false,
 					chunks: true,
 					chunkModules: false,
@@ -183,6 +184,7 @@ describe("Stats", () => {
 			it("returns correct object with 'none'", () => {
 				Stats.presetToOptions("none").should.eql({
 					hash: false,
+					env: false,
 					version: false,
 					timings: false,
 					assets: false,
