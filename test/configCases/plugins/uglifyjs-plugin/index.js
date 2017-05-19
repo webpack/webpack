@@ -20,7 +20,7 @@ it("should pass mangle options", function() {
 	var fs = require("fs"),
 		path = require("path");
 	var source = fs.readFileSync(path.join(__dirname, "ie8.js"), "utf-8");
-	source.should.containEql("function r(n){return function(n){try{t()}catch(t){n(t)}}}");
+	source.should.containEql("function r(n){return function(t){try{n()}catch(n){t(n)}}}");
 });
 
 it("should extract comments to separate file", function() {
