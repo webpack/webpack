@@ -1,4 +1,5 @@
 Hash: c5a6856b43905ae12f17
+Environment (--env): None
 Time: Xms
   Asset       Size  Chunks             Chunk Names
    0.js  238 bytes       0  [emitted]  
