@@ -31,8 +31,9 @@ module.exports = "It works";
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
@@ -41,8 +42,9 @@ module.exports = "It works";
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
+/******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
+/******/ 		}
 /******/
 /******/ 	};
 /******/
@@ -58,9 +60,9 @@ module.exports = "It works";
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -81,8 +83,9 @@ module.exports = "It works";
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
+/******/ 		if(installedChunks[chunkId] === 0) {
 /******/ 			return Promise.resolve();
+/******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -115,7 +118,9 @@ module.exports = "It works";
 /******/ 			clearTimeout(timeout);
 /******/ 			var chunk = installedChunks[chunkId];
 /******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
@@ -238,28 +243,28 @@ module.exports = "It works";
 ## Uncompressed
 
 ```
-Hash: b569890a1f87dd375a1a
-Version: webpack 2.3.2
+Hash: dd6981a76eaabcafb273
+Version: webpack 2.4.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  230 bytes       0  [emitted]  
-  output.js    6.69 kB       1  [emitted]  main
+  output.js    6.77 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 28 bytes {1} [rendered]
     > [0] (webpack)/~/bundle-loader!./file.js 7:0-14:2
     [2] ./file.js 28 bytes {0} [built]
         cjs require !!./file.js [0] (webpack)/~/bundle-loader!./file.js 8:8-30
-chunk    {1} output.js (main) 378 bytes [entry] [rendered]
+chunk    {1} output.js (main) 375 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] (webpack)/~/bundle-loader!./file.js 281 bytes {1} [built]
         cjs require bundle-loader!./file.js [1] ./example.js 1:0-34
-    [1] ./example.js 97 bytes {1} [built]
+    [1] ./example.js 94 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b569890a1f87dd375a1a
-Version: webpack 2.3.2
+Hash: dd6981a76eaabcafb273
+Version: webpack 2.4.1
       Asset      Size  Chunks             Chunk Names
 0.output.js  58 bytes       0  [emitted]  
   output.js   1.57 kB       1  [emitted]  main
@@ -268,9 +273,9 @@ chunk    {0} 0.output.js 28 bytes {1} [rendered]
     > [0] (webpack)/~/bundle-loader!./file.js 7:0-14:2
     [2] ./file.js 28 bytes {0} [built]
         cjs require !!./file.js [0] (webpack)/~/bundle-loader!./file.js 8:8-30
-chunk    {1} output.js (main) 378 bytes [entry] [rendered]
+chunk    {1} output.js (main) 375 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] (webpack)/~/bundle-loader!./file.js 281 bytes {1} [built]
         cjs require bundle-loader!./file.js [1] ./example.js 1:0-34
-    [1] ./example.js 97 bytes {1} [built]
+    [1] ./example.js 94 bytes {1} [built]
 ```

@@ -28,8 +28,9 @@ getTemplate("b", function(b) {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
@@ -38,8 +39,9 @@ getTemplate("b", function(b) {
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
+/******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
+/******/ 		}
 /******/
 /******/ 	};
 /******/
@@ -55,9 +57,9 @@ getTemplate("b", function(b) {
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -78,8 +80,9 @@ getTemplate("b", function(b) {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
+/******/ 		if(installedChunks[chunkId] === 0) {
 /******/ 			return Promise.resolve();
+/******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -112,7 +115,9 @@ getTemplate("b", function(b) {
 /******/ 			clearTimeout(timeout);
 /******/ 			var chunk = installedChunks[chunkId];
 /******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
@@ -278,53 +283,53 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: 1c46bbe47e8b8a0ee8e2
-Version: webpack 2.3.2
+Hash: 6c476b947000c740015d
+Version: webpack 2.4.1
       Asset     Size  Chunks             Chunk Names
-0.output.js  1.85 kB       0  [emitted]  
-  output.js  6.36 kB       1  [emitted]  main
+0.output.js  1.84 kB       0  [emitted]  
+  output.js  6.43 kB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 463 bytes {1} [rendered]
+chunk    {0} 0.output.js 457 bytes {1} [rendered]
     > [0] ./example.js 2:1-4:3
     [1] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
         amd require context ../require.context/templates [0] ./example.js 2:1-4:3
-    [2] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+    [2] ../require.context/templates/a.js 80 bytes {0} [optional] [built]
         context element ./a [1] ../require.context/templates ^\.\/.*$ ./a
         context element ./a.js [1] ../require.context/templates ^\.\/.*$ ./a.js
-    [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+    [3] ../require.context/templates/b.js 80 bytes {0} [optional] [built]
         context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
         context element ./b.js [1] ../require.context/templates ^\.\/.*$ ./b.js
-    [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+    [4] ../require.context/templates/c.js 80 bytes {0} [optional] [built]
         context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
         context element ./c.js [1] ../require.context/templates ^\.\/.*$ ./c.js
-chunk    {1} output.js (main) 261 bytes [entry] [rendered]
+chunk    {1} output.js (main) 251 bytes [entry] [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 261 bytes {1} [built]
+    [0] ./example.js 251 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 1c46bbe47e8b8a0ee8e2
-Version: webpack 2.3.2
+Hash: 6c476b947000c740015d
+Version: webpack 2.4.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  544 bytes       0  [emitted]  
-  output.js    1.54 kB       1  [emitted]  main
+  output.js    1.53 kB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 463 bytes {1} [rendered]
+chunk    {0} 0.output.js 457 bytes {1} [rendered]
     > [0] ./example.js 2:1-4:3
     [1] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
         amd require context ../require.context/templates [0] ./example.js 2:1-4:3
-    [2] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+    [2] ../require.context/templates/a.js 80 bytes {0} [optional] [built]
         context element ./a [1] ../require.context/templates ^\.\/.*$ ./a
         context element ./a.js [1] ../require.context/templates ^\.\/.*$ ./a.js
-    [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+    [3] ../require.context/templates/b.js 80 bytes {0} [optional] [built]
         context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
         context element ./b.js [1] ../require.context/templates ^\.\/.*$ ./b.js
-    [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+    [4] ../require.context/templates/c.js 80 bytes {0} [optional] [built]
         context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
         context element ./c.js [1] ../require.context/templates ^\.\/.*$ ./c.js
-chunk    {1} output.js (main) 261 bytes [entry] [rendered]
+chunk    {1} output.js (main) 251 bytes [entry] [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 261 bytes {1} [built]
+    [0] ./example.js 251 bytes {1} [built]
 ```

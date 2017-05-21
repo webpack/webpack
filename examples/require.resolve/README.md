@@ -36,9 +36,9 @@ module.exports = Math.random();
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -144,33 +144,33 @@ if(a == a2) throw new Error("Cache clear failed :(");
 ## Uncompressed
 
 ```
-Hash: 4ed342adc60583d992ab
-Version: webpack 2.3.2
+Hash: 5d6a3015eff8d79dcd14
+Version: webpack 2.4.1
     Asset     Size  Chunks             Chunk Names
-output.js  3.34 kB       0  [emitted]  main
+output.js  3.33 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 326 bytes [entry] [rendered]
+chunk    {0} output.js (main) 314 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] ./a.js 31 bytes {0} [built]
         cjs require ./a [1] ./example.js 1:8-22
         cjs require ./a [1] ./example.js 10:9-23
         require.resolve ./a.js [1] ./example.js 4:10-35
-    [1] ./example.js 295 bytes {0} [built]
+    [1] ./example.js 283 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 4ed342adc60583d992ab
-Version: webpack 2.3.2
+Hash: 5d6a3015eff8d79dcd14
+Version: webpack 2.4.1
     Asset       Size  Chunks             Chunk Names
-output.js  632 bytes       0  [emitted]  main
+output.js  625 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 326 bytes [entry] [rendered]
+chunk    {0} output.js (main) 314 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] ./a.js 31 bytes {0} [built]
         cjs require ./a [1] ./example.js 1:8-22
         cjs require ./a [1] ./example.js 10:9-23
         require.resolve ./a.js [1] ./example.js 4:10-35
-    [1] ./example.js 295 bytes {0} [built]
+    [1] ./example.js 283 bytes {0} [built]
 ```

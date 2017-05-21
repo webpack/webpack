@@ -56,9 +56,9 @@ var vendor_32199746b38d6e93b44b =
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -169,9 +169,9 @@ module.exports = __webpack_require__;
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -272,8 +272,8 @@ module.exports = "pageA";
 ## Uncompressed
 
 ```
-Hash: 32199746b38d6e93b44ba8c4dfdaf5a935b1ed38
-Version: webpack 2.3.2
+Hash: 32199746b38d6e93b44b195fbc5bb4c3e59806f2
+Version: webpack 2.4.1
 Child vendor:
     Hash: 32199746b38d6e93b44b
         Asset     Size  Chunks             Chunk Names
@@ -287,25 +287,25 @@ Child vendor:
             single entry ./vendor2 [2] dll main main:1
         [2] dll main 12 bytes {0} [built]
 Child app:
-    Hash: a8c4dfdaf5a935b1ed38
+    Hash: 195fbc5bb4c3e59806f2
        Asset     Size  Chunks             Chunk Names
     pageB.js  3.59 kB       0  [emitted]  pageB
-    pageA.js  3.57 kB       1  [emitted]  pageA
+    pageA.js  3.58 kB       1  [emitted]  pageA
     pageC.js  2.79 kB       2  [emitted]  pageC
     Entrypoint pageA = pageA.js
     Entrypoint pageB = pageB.js
     Entrypoint pageC = pageC.js
-    chunk    {0} pageB.js (pageB) 145 bytes [entry] [rendered]
+    chunk    {0} pageB.js (pageB) 144 bytes [entry] [rendered]
         > pageB [4] ./pageB.js 
         [2] delegated ./vendor2.js from dll-reference vendor_32199746b38d6e93b44b 42 bytes {0} [not cacheable] [built]
             cjs require ./vendor2 [4] ./pageB.js 1:12-32
-        [4] ./pageB.js 61 bytes {0} [built]
+        [4] ./pageB.js 60 bytes {0} [built]
          + 1 hidden modules
-    chunk    {1} pageA.js (pageA) 144 bytes [entry] [rendered]
+    chunk    {1} pageA.js (pageA) 143 bytes [entry] [rendered]
         > pageA [3] ./pageA.js 
         [1] delegated ./vendor.js from dll-reference vendor_32199746b38d6e93b44b 42 bytes {1} [not cacheable] [built]
             cjs require ./vendor [3] ./pageA.js 1:12-31
-        [3] ./pageA.js 60 bytes {1} [built]
+        [3] ./pageA.js 59 bytes {1} [built]
          + 1 hidden modules
     chunk    {2} pageC.js (pageC) 25 bytes [entry] [rendered]
         > pageC [5] ./pageC.js 
@@ -315,8 +315,8 @@ Child app:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 32199746b38d6e93b44ba8c4dfdaf5a935b1ed38
-Version: webpack 2.3.2
+Hash: 32199746b38d6e93b44b195fbc5bb4c3e59806f2
+Version: webpack 2.4.1
 Child vendor:
     Hash: 32199746b38d6e93b44b
         Asset       Size  Chunks             Chunk Names
@@ -330,25 +330,25 @@ Child vendor:
             single entry ./vendor2 [2] dll main main:1
         [2] dll main 12 bytes {0} [built]
 Child app:
-    Hash: a8c4dfdaf5a935b1ed38
+    Hash: 195fbc5bb4c3e59806f2
        Asset       Size  Chunks             Chunk Names
-    pageB.js  642 bytes       0  [emitted]  pageB
-    pageA.js  641 bytes       1  [emitted]  pageA
-    pageC.js  534 bytes       2  [emitted]  pageC
+    pageB.js  635 bytes       0  [emitted]  pageB
+    pageA.js  634 bytes       1  [emitted]  pageA
+    pageC.js  527 bytes       2  [emitted]  pageC
     Entrypoint pageA = pageA.js
     Entrypoint pageB = pageB.js
     Entrypoint pageC = pageC.js
-    chunk    {0} pageB.js (pageB) 145 bytes [entry] [rendered]
+    chunk    {0} pageB.js (pageB) 144 bytes [entry] [rendered]
         > pageB [4] ./pageB.js 
         [2] delegated ./vendor2.js from dll-reference vendor_32199746b38d6e93b44b 42 bytes {0} [not cacheable] [built]
             cjs require ./vendor2 [4] ./pageB.js 1:12-32
-        [4] ./pageB.js 61 bytes {0} [built]
+        [4] ./pageB.js 60 bytes {0} [built]
          + 1 hidden modules
-    chunk    {1} pageA.js (pageA) 144 bytes [entry] [rendered]
+    chunk    {1} pageA.js (pageA) 143 bytes [entry] [rendered]
         > pageA [3] ./pageA.js 
         [1] delegated ./vendor.js from dll-reference vendor_32199746b38d6e93b44b 42 bytes {1} [not cacheable] [built]
             cjs require ./vendor [3] ./pageA.js 1:12-31
-        [3] ./pageA.js 60 bytes {1} [built]
+        [3] ./pageA.js 59 bytes {1} [built]
          + 1 hidden modules
     chunk    {2} pageC.js (pageC) 25 bytes [entry] [rendered]
         > pageC [5] ./pageC.js 

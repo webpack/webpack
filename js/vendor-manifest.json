@@ -1,0 +1,9 @@
+{
+  "name": "vendor_lib",
+  "content": {
+    "./examples/dll-app-and-vendor/example-vendor.js": {
+      "id": 0,
+      "meta": {}
+    }
+  }
+}

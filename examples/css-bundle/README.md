@@ -51,9 +51,9 @@ module.exports = {
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -155,12 +155,12 @@ body {
 ## Uncompressed
 
 ```
-Hash: a7b9259b38bc83b8ca98
-Version: webpack 2.3.2
+Hash: f34a4d1736d3268a8b6c
+Version: webpack 2.4.1
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js    3.05 kB       0  [emitted]  main
-                           style.css   69 bytes       0  [emitted]  main
+                           output.js    3.06 kB       0  [emitted]  main
+                           style.css   67 bytes       0  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} output.js, style.css (main) 64 bytes [entry] [rendered]
     > main [1] ./example.js 
@@ -176,18 +176,18 @@ Child extract-text-webpack-plugin:
         [0] (webpack)/~/css-loader/lib/css-base.js 1.51 kB {0} [built]
             cjs require ../../node_modules/css-loader/lib/css-base.js [2] (webpack)/~/css-loader!./style.css 1:27-83
         [1] ./image.png 82 bytes {0} [built]
-            cjs require ./image.png [2] (webpack)/~/css-loader!./style.css 6:58-80
-        [2] (webpack)/~/css-loader!./style.css 222 bytes {0} [built]
+            cjs require ./image.png [2] (webpack)/~/css-loader!./style.css 6:56-78
+        [2] (webpack)/~/css-loader!./style.css 218 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
 Hash: a59e06b8e4c98e831cac
-Version: webpack 2.3.2
+Version: webpack 2.4.1
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js  537 bytes       0  [emitted]  main
+                           output.js  530 bytes       0  [emitted]  main
                            style.css   61 bytes       0  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} output.js, style.css (main) 64 bytes [entry] [rendered]
