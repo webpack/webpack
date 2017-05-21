@@ -221,6 +221,9 @@
         },
         "strictExportPresence": {
           "type": "boolean"
+        },
+        "strictThisContextOnImports": {
+          "type": "boolean"
         }
       },
       "type": "object"
