@@ -44,9 +44,9 @@ module.exports = function(content) {
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -123,7 +123,7 @@ exports = module.exports = __webpack_require__(/*! ../../~/css-loader/lib/css-ba
 
 
 // module
-exports.push([module.i, ".some-class {\r\n\tcolor: hotpink;\r\n}\r\n", ""]);
+exports.push([module.i, ".some-class {\n\tcolor: hotpink;\n}\n", ""]);
 
 // exports
 
@@ -237,19 +237,19 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: 122940bedb7c52974923
-Version: webpack 2.3.2
+Hash: 991d9d1ad579042df73a
+Version: webpack 2.4.1
     Asset     Size  Chunks             Chunk Names
 output.js  5.55 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 1.96 kB [entry] [rendered]
+chunk    {0} output.js (main) 1.95 kB [entry] [rendered]
     > main [2] ./example.js 
-    [0] (webpack)/~/css-loader!./test.css 200 bytes {0} [built]
+    [0] (webpack)/~/css-loader!./test.css 194 bytes {0} [built]
         cjs require !css-loader!./test.css [2] ./example.js 6:12-45
         cjs require ./test.css [2] ./example.js 5:12-33
     [1] ./loader.js!./file.js 41 bytes {0} [built]
         cjs require ./loader!./file [2] ./example.js 2:12-38
-    [2] ./example.js 210 bytes {0} [built]
+    [2] ./example.js 204 bytes {0} [built]
     [3] (webpack)/~/css-loader/lib/css-base.js 1.51 kB {0} [built]
         cjs require ../../node_modules/css-loader/lib/css-base.js [0] (webpack)/~/css-loader!./test.css 1:27-83
 ```
@@ -257,19 +257,19 @@ chunk    {0} output.js (main) 1.96 kB [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9605bb0c7b03c2e56bef
-Version: webpack 2.3.2
+Hash: 1db4fa299743b412249c
+Version: webpack 2.4.1
     Asset     Size  Chunks             Chunk Names
 output.js  1.16 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 1.94 kB [entry] [rendered]
+chunk    {0} output.js (main) 1.93 kB [entry] [rendered]
     > main [2] ./example.js 
     [0] (webpack)/~/css-loader!./test.css 183 bytes {0} [built]
         cjs require !css-loader!./test.css [2] ./example.js 6:12-45
         cjs require ./test.css [2] ./example.js 5:12-33
     [1] ./loader.js!./file.js 41 bytes {0} [built]
         cjs require ./loader!./file [2] ./example.js 2:12-38
-    [2] ./example.js 210 bytes {0} [built]
+    [2] ./example.js 204 bytes {0} [built]
     [3] (webpack)/~/css-loader/lib/css-base.js 1.51 kB {0} [built]
         cjs require ../../node_modules/css-loader/lib/css-base.js [0] (webpack)/~/css-loader!./test.css 1:27-83
 ```

@@ -60,9 +60,9 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -223,7 +223,7 @@ __WEBPACK_IMPORTED_MODULE_1__library__["a" /* reexportedMultiply */](1, 2);
 # js/output.js
 
 ``` javascript
-!function(t){function n(e){if(r[e])return r[e].exports;var u=r[e]={i:e,l:!1,exports:{}};return t[e].call(u.exports,u,u.exports,n),u.l=!0,u.exports}var r={};return n.m=t,n.c=r,n.i=function(t){return t},n.d=function(t,r,e){n.o(t,r)||Object.defineProperty(t,r,{configurable:!1,enumerable:!0,get:e})},n.n=function(t){var r=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(r,"a",r),r},n.o=function(t,n){return Object.prototype.hasOwnProperty.call(t,n)},n.p="js/",n(n.s=3)}([function(t,n,r){"use strict";function e(){for(var t=0,n=0,r=arguments,e=r.length;n<e;)t+=r[n++];return t}function u(){for(var t=1,n=0,r=arguments,e=r.length;n<e;)t*=r[n++];return t}n.a=e,n.b=u},function(t,n,r){"use strict";var e=(r(2),r(0));r.d(n,"a",function(){return e.b})},function(t,n,r){"use strict"},function(t,n,r){"use strict";Object.defineProperty(n,"__esModule",{value:!0});var e=r(0),u=r(1);r.i(e.a)(1,2),u.a(1,2)}]);
+!function(t){function n(e){if(r[e])return r[e].exports;var u=r[e]={i:e,l:!1,exports:{}};return t[e].call(u.exports,u,u.exports,n),u.l=!0,u.exports}var r={};n.m=t,n.c=r,n.i=function(t){return t},n.d=function(t,r,e){n.o(t,r)||Object.defineProperty(t,r,{configurable:!1,enumerable:!0,get:e})},n.n=function(t){var r=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(r,"a",r),r},n.o=function(t,n){return Object.prototype.hasOwnProperty.call(t,n)},n.p="js/",n(n.s=3)}([function(t,n,r){"use strict";function e(){for(var t=0,n=0,r=arguments,e=r.length;n<e;)t+=r[n++];return t}function u(){for(var t=1,n=0,r=arguments,e=r.length;n<e;)t*=r[n++];return t}n.a=e,n.b=u},function(t,n,r){"use strict";var e=(r(2),r(0));r.d(n,"a",function(){return e.b})},function(t,n,r){"use strict"},function(t,n,r){"use strict";Object.defineProperty(n,"__esModule",{value:!0});var e=r(0),u=r(1);r.i(e.a)(1,2),u.a(1,2)}]);
 ```
 
 # Info
@@ -231,51 +231,51 @@ __WEBPACK_IMPORTED_MODULE_1__library__["a" /* reexportedMultiply */](1, 2);
 ## Uncompressed
 
 ```
-Hash: 3b24f63cc56b55f0e254
-Version: webpack 2.3.2
+Hash: a48d566ce3cfa53131c4
+Version: webpack 2.4.1
     Asset     Size  Chunks             Chunk Names
-output.js  5.19 kB       0  [emitted]  main
+output.js  5.17 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 726 bytes [entry] [rendered]
+chunk    {0} output.js (main) 698 bytes [entry] [rendered]
     > main [3] ./example.js 
-    [0] ./math.js 366 bytes {0} [built]
+    [0] ./math.js 347 bytes {0} [built]
         [exports: add, multiply, list]
         [only some exports used: add, multiply]
         harmony import ./math [1] ./library.js 2:0-78
         harmony import ./math [3] ./example.js 1:0-29
-    [1] ./library.js 112 bytes {0} [built]
+    [1] ./library.js 111 bytes {0} [built]
         [exports: a, b, c, reexportedAdd, reexportedMultiply]
         [only some exports used: reexportedMultiply]
         harmony import ./library [3] ./example.js 2:0-37
-    [2] ./abc.js 129 bytes {0} [built]
+    [2] ./abc.js 126 bytes {0} [built]
         [exports: a, b, c]
         [no exports used]
         harmony import ./abc [1] ./library.js 1:0-32
-    [3] ./example.js 119 bytes {0} [built]
+    [3] ./example.js 114 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 3b24f63cc56b55f0e254
-Version: webpack 2.3.2
+Hash: a48d566ce3cfa53131c4
+Version: webpack 2.4.1
     Asset       Size  Chunks             Chunk Names
-output.js  925 bytes       0  [emitted]  main
+output.js  918 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 726 bytes [entry] [rendered]
+chunk    {0} output.js (main) 698 bytes [entry] [rendered]
     > main [3] ./example.js 
-    [0] ./math.js 366 bytes {0} [built]
+    [0] ./math.js 347 bytes {0} [built]
         [exports: add, multiply, list]
         [only some exports used: add, multiply]
         harmony import ./math [1] ./library.js 2:0-78
         harmony import ./math [3] ./example.js 1:0-29
-    [1] ./library.js 112 bytes {0} [built]
+    [1] ./library.js 111 bytes {0} [built]
         [exports: a, b, c, reexportedAdd, reexportedMultiply]
         [only some exports used: reexportedMultiply]
         harmony import ./library [3] ./example.js 2:0-37
-    [2] ./abc.js 129 bytes {0} [built]
+    [2] ./abc.js 126 bytes {0} [built]
         [exports: a, b, c]
         [no exports used]
         harmony import ./abc [1] ./library.js 1:0-32
-    [3] ./example.js 119 bytes {0} [built]
+    [3] ./example.js 114 bytes {0} [built]
 ```

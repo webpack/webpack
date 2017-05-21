@@ -74,8 +74,9 @@ module.exports = {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
@@ -84,8 +85,9 @@ module.exports = {
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
+/******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
+/******/ 		}
 /******/ 		if(executeModules) {
 /******/ 			for(i=0; i < executeModules.length; i++) {
 /******/ 				result = __webpack_require__(__webpack_require__.s = executeModules[i]);
@@ -106,9 +108,9 @@ module.exports = {
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -129,8 +131,9 @@ module.exports = {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
+/******/ 		if(installedChunks[chunkId] === 0) {
 /******/ 			return Promise.resolve();
+/******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -163,7 +166,9 @@ module.exports = {
 /******/ 			clearTimeout(timeout);
 /******/ 			var chunk = installedChunks[chunkId];
 /******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
@@ -377,14 +382,14 @@ module.exports = "pageC";
 ## Uncompressed
 
 ```
-Hash: 03a4f8b5f1f257f40a63
-Version: webpack 2.3.2
+Hash: 1cf65ca1e68fa1cc7b9d
+Version: webpack 2.4.1
     Asset       Size  Chunks             Chunk Names
 common.js  457 bytes       0  [emitted]  common
- pageA.js  593 bytes       1  [emitted]  pageA
- pageC.js  373 bytes       2  [emitted]  pageC
- pageB.js  373 bytes       3  [emitted]  pageB
-vendor.js    6.68 kB       4  [emitted]  vendor
+ pageA.js  590 bytes       1  [emitted]  pageA
+ pageC.js  370 bytes       2  [emitted]  pageC
+ pageB.js  370 bytes       3  [emitted]  pageB
+vendor.js    6.76 kB       4  [emitted]  vendor
 Entrypoint vendor = vendor.js
 Entrypoint pageA = vendor.js common.js pageA.js
 Entrypoint pageB = vendor.js common.js pageB.js
@@ -397,17 +402,17 @@ chunk    {0} common.js (common) 56 bytes {4} [initial] [rendered]
     [1] ./utility3.js 28 bytes {0} [built]
         cjs require ./utility3 [6] ./pageB.js 2:15-36
         cjs require ./utility3 [7] ./pageC.js 2:15-36
-chunk    {1} pageA.js (pageA) 133 bytes {0} [initial] [rendered]
+chunk    {1} pageA.js (pageA) 130 bytes {0} [initial] [rendered]
     > pageA [5] ./pageA.js 
     [2] ./utility1.js 28 bytes {1} [built]
         cjs require ./utility1 [5] ./pageA.js 1:15-36
-    [5] ./pageA.js 105 bytes {1} [built]
-chunk    {2} pageC.js (pageC) 105 bytes {0} [initial] [rendered]
+    [5] ./pageA.js 102 bytes {1} [built]
+chunk    {2} pageC.js (pageC) 102 bytes {0} [initial] [rendered]
     > pageC [7] ./pageC.js 
-    [7] ./pageC.js 105 bytes {2} [built]
-chunk    {3} pageB.js (pageB) 105 bytes {0} [initial] [rendered]
+    [7] ./pageC.js 102 bytes {2} [built]
+chunk    {3} pageB.js (pageB) 102 bytes {0} [initial] [rendered]
     > pageB [6] ./pageB.js 
-    [6] ./pageB.js 105 bytes {3} [built]
+    [6] ./pageB.js 102 bytes {3} [built]
 chunk    {4} vendor.js (vendor) 94 bytes [entry] [rendered]
     > vendor [8] multi ./vendor1 ./vendor2 
     [3] ./vendor1.js 27 bytes {4} [built]
@@ -420,14 +425,14 @@ chunk    {4} vendor.js (vendor) 94 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 03a4f8b5f1f257f40a63
-Version: webpack 2.3.2
+Hash: 1cf65ca1e68fa1cc7b9d
+Version: webpack 2.4.1
     Asset       Size  Chunks             Chunk Names
 common.js   92 bytes       0  [emitted]  common
  pageA.js  109 bytes       1  [emitted]  pageA
  pageC.js   71 bytes       2  [emitted]  pageC
  pageB.js   71 bytes       3  [emitted]  pageB
-vendor.js     1.5 kB       4  [emitted]  vendor
+vendor.js    1.49 kB       4  [emitted]  vendor
 Entrypoint vendor = vendor.js
 Entrypoint pageA = vendor.js common.js pageA.js
 Entrypoint pageB = vendor.js common.js pageB.js
@@ -440,17 +445,17 @@ chunk    {0} common.js (common) 56 bytes {4} [initial] [rendered]
     [1] ./utility3.js 28 bytes {0} [built]
         cjs require ./utility3 [6] ./pageB.js 2:15-36
         cjs require ./utility3 [7] ./pageC.js 2:15-36
-chunk    {1} pageA.js (pageA) 133 bytes {0} [initial] [rendered]
+chunk    {1} pageA.js (pageA) 130 bytes {0} [initial] [rendered]
     > pageA [5] ./pageA.js 
     [2] ./utility1.js 28 bytes {1} [built]
         cjs require ./utility1 [5] ./pageA.js 1:15-36
-    [5] ./pageA.js 105 bytes {1} [built]
-chunk    {2} pageC.js (pageC) 105 bytes {0} [initial] [rendered]
+    [5] ./pageA.js 102 bytes {1} [built]
+chunk    {2} pageC.js (pageC) 102 bytes {0} [initial] [rendered]
     > pageC [7] ./pageC.js 
-    [7] ./pageC.js 105 bytes {2} [built]
-chunk    {3} pageB.js (pageB) 105 bytes {0} [initial] [rendered]
+    [7] ./pageC.js 102 bytes {2} [built]
+chunk    {3} pageB.js (pageB) 102 bytes {0} [initial] [rendered]
     > pageB [6] ./pageB.js 
-    [6] ./pageB.js 105 bytes {3} [built]
+    [6] ./pageB.js 102 bytes {3} [built]
 chunk    {4} vendor.js (vendor) 94 bytes [entry] [rendered]
     > vendor [8] multi ./vendor1 ./vendor2 
     [3] ./vendor1.js 27 bytes {4} [built]

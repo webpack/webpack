@@ -38,9 +38,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -133,27 +133,27 @@ function increment() {
 ## Uncompressed
 
 ```
-Hash: 313bc0b3685e952e6c32
-Version: webpack 2.3.2
+Hash: 7685c8928f57aaaabf28
+Version: webpack 2.4.1
            Asset    Size  Chunks             Chunk Names
 MyLibrary.umd.js  3.6 kB       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
-chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
+chunk    {0} MyLibrary.umd.js (main) 92 bytes [entry] [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 97 bytes {0} [built]
+    [0] ./example.js 92 bytes {0} [built]
         [exports: value, increment, default]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 313bc0b3685e952e6c32
-Version: webpack 2.3.2
+Hash: 7685c8928f57aaaabf28
+Version: webpack 2.4.1
            Asset       Size  Chunks             Chunk Names
 MyLibrary.umd.js  898 bytes       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
-chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
+chunk    {0} MyLibrary.umd.js (main) 92 bytes [entry] [rendered]
     > main [0] ./example.js 
-    [0] ./example.js 97 bytes {0} [built]
+    [0] ./example.js 92 bytes {0} [built]
         [exports: value, increment, default]
 ```
