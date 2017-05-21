@@ -48,9 +48,9 @@ exports.add = function() {
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -166,33 +166,33 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: 1318ed7f2e042a045e6d
-Version: webpack 2.3.2
+Hash: 62ad92b89c95aab60efa
+Version: webpack 2.4.1
     Asset     Size  Chunks             Chunk Names
 output.js  3.54 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 329 bytes [entry] [rendered]
+chunk    {0} output.js (main) 318 bytes [entry] [rendered]
     > main [1] ./example.js 
-    [0] ./increment.js 98 bytes {0} [built]
+    [0] ./increment.js 95 bytes {0} [built]
         cjs require ./increment [1] ./example.js 1:10-32
-    [1] ./example.js 69 bytes {0} [built]
-    [2] ./math.js 162 bytes {0} [built]
+    [1] ./example.js 67 bytes {0} [built]
+    [2] ./math.js 156 bytes {0} [built]
         cjs require ./math [0] ./increment.js 1:10-27
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 1318ed7f2e042a045e6d
-Version: webpack 2.3.2
+Hash: 62ad92b89c95aab60efa
+Version: webpack 2.4.1
     Asset       Size  Chunks             Chunk Names
-output.js  705 bytes       0  [emitted]  main
+output.js  698 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 329 bytes [entry] [rendered]
+chunk    {0} output.js (main) 318 bytes [entry] [rendered]
     > main [1] ./example.js 
-    [0] ./increment.js 98 bytes {0} [built]
+    [0] ./increment.js 95 bytes {0} [built]
         cjs require ./increment [1] ./example.js 1:10-32
-    [1] ./example.js 69 bytes {0} [built]
-    [2] ./math.js 162 bytes {0} [built]
+    [1] ./example.js 67 bytes {0} [built]
+    [2] ./math.js 156 bytes {0} [built]
         cjs require ./math [0] ./increment.js 1:10-27
 ```

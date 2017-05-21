@@ -54,7 +54,32 @@ example demonstrating localization.
 
 ## [multiple-entry-points](multiple-entry-points)
 
-example demonstrating multiple entry points with Code Splitting.
+example demonstrating usage of the dll plugin
+
+## [dll](dll-app-and-vendors)
+- [dll-app-and-vendors](dll-app-and-vendors) (_latest_)
+- [dll-reference](dll) (_used by dll-user example_)
+- [dll-user](dll-user) (_uses dll-reference example_)
+
+
+
+
+
+## [dll](dll-app-and-vendor)
+
+example demonstrating usage of the dll plugin
+
+- [dll-app-and-vendor](dll-app-and-vendor) (_latest_)
+- [dll-reference](dll) (_used by dll-user example_)
+- [dll-user](dll-user) (_uses dll-reference example_)
+
+## [dll](dll-app-and-vendor)
+
+example demonstrating usage of the dll plugin
+
+- [dll-app-and-vendor](dll-app-and-vendor) (_latest_)
+- [dll-reference](dll) (_used by dll-user example_)
+- [dll-user](dll-user) (_uses dll-reference example_)
 
 # Requests
 

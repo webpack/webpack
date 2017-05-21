@@ -199,7 +199,7 @@ MyDll.alpha.js  3.49 kB       1  [emitted]  alpha
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
 chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
-    > beta [7] dll beta 
+    > beta [7] dll beta
     [2] ./b.js 21 bytes {0} [built]
         single entry ./b [7] dll beta beta:1
     [3] ./beta.js 24 bytes {0} [built]
@@ -208,7 +208,7 @@ chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
         single entry ./c [7] dll beta beta:2
     [7] dll beta 12 bytes {0} [built]
 chunk    {1} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
-    > alpha [6] dll alpha 
+    > alpha [6] dll alpha
     [0] ./a.js 21 bytes {1} [built]
         single entry ./a [6] dll alpha alpha:1
     [1] ./alpha.js 25 bytes {1} [built]
@@ -229,7 +229,7 @@ MyDll.alpha.js  657 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
 chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
-    > beta [7] dll beta 
+    > beta [7] dll beta
     [2] ./b.js 21 bytes {0} [built]
         single entry ./b [7] dll beta beta:1
     [3] ./beta.js 24 bytes {0} [built]
@@ -238,7 +238,7 @@ chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
         single entry ./c [7] dll beta beta:2
     [7] dll beta 12 bytes {0} [built]
 chunk    {1} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
-    > alpha [6] dll alpha 
+    > alpha [6] dll alpha
     [0] ./a.js 21 bytes {1} [built]
         single entry ./a [6] dll alpha alpha:1
     [1] ./alpha.js 25 bytes {1} [built]
