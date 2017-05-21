@@ -1,5 +1,4 @@
 Hash: c5a6856b43905ae12f17
-Environment (--env): None
 Time: Xms
 chunk    {0} 0.js 54 bytes {3} [rendered]
 chunk    {1} 1.js 22 bytes {3} [rendered]
