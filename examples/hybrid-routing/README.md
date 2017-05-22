@@ -105,8 +105,9 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
@@ -115,8 +116,9 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
+/******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
+/******/ 		}
 /******/ 		if(executeModules) {
 /******/ 			for(i=0; i < executeModules.length; i++) {
 /******/ 				result = __webpack_require__(__webpack_require__.s = executeModules[i]);
@@ -133,13 +135,15 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ 		4: 0
 /******/ 	};
 /******/
+/******/ 	var resolvedPromise = new Promise(function(resolve) { resolve(); });
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -160,8 +164,9 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve();
+/******/ 		if(installedChunks[chunkId] === 0) {
+/******/ 			return resolvedPromise;
+/******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -194,7 +199,9 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ 			clearTimeout(timeout);
 /******/ 			var chunk = installedChunks[chunkId];
 /******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
@@ -446,13 +453,13 @@ module.exports = function() {
 
 ```
 Hash: 4b84e80c971540cd022b
-Version: webpack 2.3.2
+Version: webpack 2.6.0
           Asset       Size  Chunks             Chunk Names
      0.chunk.js  266 bytes       0  [emitted]  
      1.chunk.js  272 bytes       1  [emitted]  
 pageB.bundle.js  606 bytes    2, 0  [emitted]  pageB
 pageA.bundle.js  628 bytes    3, 1  [emitted]  pageA
-     commons.js    9.48 kB       4  [emitted]  commons
+     commons.js    9.65 kB       4  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 Entrypoint commons = commons.js
@@ -497,13 +504,13 @@ chunk    {4} commons.js (commons) 1.71 kB [entry] [rendered]
 
 ```
 Hash: 4b84e80c971540cd022b
-Version: webpack 2.3.2
+Version: webpack 2.6.0
           Asset       Size  Chunks             Chunk Names
      0.chunk.js   83 bytes       0  [emitted]  
      1.chunk.js   82 bytes       1  [emitted]  
 pageB.bundle.js  119 bytes    2, 0  [emitted]  pageB
 pageA.bundle.js  118 bytes    3, 1  [emitted]  pageA
-     commons.js    2.15 kB       4  [emitted]  commons
+     commons.js    2.16 kB       4  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 Entrypoint commons = commons.js

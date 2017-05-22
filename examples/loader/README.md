@@ -44,9 +44,9 @@ module.exports = function(content) {
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -238,9 +238,9 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: 122940bedb7c52974923
-Version: webpack 2.3.2
+Version: webpack 2.6.0
     Asset     Size  Chunks             Chunk Names
-output.js  5.55 kB       0  [emitted]  main
+output.js  5.56 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 1.96 kB [entry] [rendered]
     > main [2] ./example.js 
@@ -258,7 +258,7 @@ chunk    {0} output.js (main) 1.96 kB [entry] [rendered]
 
 ```
 Hash: 9605bb0c7b03c2e56bef
-Version: webpack 2.3.2
+Version: webpack 2.6.0
     Asset     Size  Chunks             Chunk Names
 output.js  1.16 kB       0  [emitted]  main
 Entrypoint main = output.js
