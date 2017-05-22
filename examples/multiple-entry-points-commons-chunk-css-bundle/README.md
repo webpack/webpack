@@ -180,16 +180,16 @@ body{background:url(js/ce21cbdd9b894e6af794813eb3fdaf60.png)}.c{background:url(j
 
 ```
 Hash: 82bd95dca40b04e5c383
-Version: webpack 2.3.2
+Version: webpack 2.6.0
                                Asset       Size  Chunks             Chunk Names
-                                C.js    3.04 kB       2  [emitted]  C
+                                C.js    3.05 kB       2  [emitted]  C
 d090b6fba0f6d326d282a19146ff54a7.png  120 bytes          [emitted]  
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
 c2a2f62d69330b7d787782f5010f9d13.png  120 bytes          [emitted]  
                                 B.js  537 bytes       0  [emitted]  B
                                 A.js  559 bytes       1  [emitted]  A
 16155c689e517682064c99893cb832cc.png  120 bytes          [emitted]  
-                          commons.js       6 kB       3  [emitted]  commons
+                          commons.js    6.17 kB       3  [emitted]  commons
                                A.css   69 bytes       1  [emitted]  A
                                B.css   69 bytes       0  [emitted]  B
                                C.css  140 bytes       2  [emitted]  C
@@ -263,16 +263,16 @@ Child extract-text-webpack-plugin:
 
 ```
 Hash: 58c46b8115ae51be12b7
-Version: webpack 2.3.2
+Version: webpack 2.6.0
                                Asset       Size  Chunks             Chunk Names
-                                C.js  541 bytes       2  [emitted]  C
+                                C.js  534 bytes       2  [emitted]  C
 d090b6fba0f6d326d282a19146ff54a7.png  120 bytes          [emitted]  
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
 c2a2f62d69330b7d787782f5010f9d13.png  120 bytes          [emitted]  
                                 B.js   71 bytes       0  [emitted]  B
                                 A.js   70 bytes       1  [emitted]  A
 16155c689e517682064c99893cb832cc.png  120 bytes          [emitted]  
-                          commons.js    1.39 kB       3  [emitted]  commons
+                          commons.js     1.4 kB       3  [emitted]  commons
                                A.css   59 bytes       1  [emitted]  A
                                B.css   59 bytes       0  [emitted]  B
                                C.css  120 bytes       2  [emitted]  C

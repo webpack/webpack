@@ -55,9 +55,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -157,9 +157,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -240,9 +240,9 @@ module.exports = "beta";
 
 ```
 Hash: 082bbeea226fa367215b
-Version: webpack 2.3.2
+Version: webpack 2.6.0
              Asset     Size  Chunks             Chunk Names
- MyLibrary.beta.js  3.21 kB       0  [emitted]  beta
+ MyLibrary.beta.js  3.22 kB       0  [emitted]  beta
 MyLibrary.alpha.js  3.21 kB       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
@@ -258,7 +258,7 @@ chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
 
 ```
 Hash: 082bbeea226fa367215b
-Version: webpack 2.3.2
+Version: webpack 2.6.0
              Asset       Size  Chunks             Chunk Names
  MyLibrary.beta.js  785 bytes       0  [emitted]  beta
 MyLibrary.alpha.js  787 bytes       1  [emitted]  alpha

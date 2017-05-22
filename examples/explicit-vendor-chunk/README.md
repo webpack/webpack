@@ -56,9 +56,9 @@ var vendor_32199746b38d6e93b44b =
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -169,9 +169,9 @@ module.exports = __webpack_require__;
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -273,7 +273,7 @@ module.exports = "pageA";
 
 ```
 Hash: 32199746b38d6e93b44ba8c4dfdaf5a935b1ed38
-Version: webpack 2.3.2
+Version: webpack 2.6.0
 Child vendor:
     Hash: 32199746b38d6e93b44b
         Asset     Size  Chunks             Chunk Names
@@ -290,7 +290,7 @@ Child app:
     Hash: a8c4dfdaf5a935b1ed38
        Asset     Size  Chunks             Chunk Names
     pageB.js  3.59 kB       0  [emitted]  pageB
-    pageA.js  3.57 kB       1  [emitted]  pageA
+    pageA.js  3.58 kB       1  [emitted]  pageA
     pageC.js  2.79 kB       2  [emitted]  pageC
     Entrypoint pageA = pageA.js
     Entrypoint pageB = pageB.js
@@ -316,7 +316,7 @@ Child app:
 
 ```
 Hash: 32199746b38d6e93b44ba8c4dfdaf5a935b1ed38
-Version: webpack 2.3.2
+Version: webpack 2.6.0
 Child vendor:
     Hash: 32199746b38d6e93b44b
         Asset       Size  Chunks             Chunk Names
@@ -332,9 +332,9 @@ Child vendor:
 Child app:
     Hash: a8c4dfdaf5a935b1ed38
        Asset       Size  Chunks             Chunk Names
-    pageB.js  642 bytes       0  [emitted]  pageB
-    pageA.js  641 bytes       1  [emitted]  pageA
-    pageC.js  534 bytes       2  [emitted]  pageC
+    pageB.js  635 bytes       0  [emitted]  pageB
+    pageA.js  634 bytes       1  [emitted]  pageA
+    pageC.js  527 bytes       2  [emitted]  pageC
     Entrypoint pageA = pageA.js
     Entrypoint pageB = pageB.js
     Entrypoint pageC = pageC.js

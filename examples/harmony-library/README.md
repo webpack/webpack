@@ -38,9 +38,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -134,9 +134,9 @@ function increment() {
 
 ```
 Hash: 313bc0b3685e952e6c32
-Version: webpack 2.3.2
-           Asset    Size  Chunks             Chunk Names
-MyLibrary.umd.js  3.6 kB       0  [emitted]  main
+Version: webpack 2.6.0
+           Asset     Size  Chunks             Chunk Names
+MyLibrary.umd.js  3.61 kB       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -148,7 +148,7 @@ chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
 
 ```
 Hash: 313bc0b3685e952e6c32
-Version: webpack 2.3.2
+Version: webpack 2.6.0
            Asset       Size  Chunks             Chunk Names
 MyLibrary.umd.js  898 bytes       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
