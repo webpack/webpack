@@ -1,12 +1,14 @@
-var should = require("should");
-var sinon = require("sinon");
-var WebWorkerMainTemplatePlugin = require("../lib/webworker/WebWorkerMainTemplatePlugin");
-var applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
+"use strict";
+
+const should = require("should");
+const sinon = require("sinon");
+const WebWorkerMainTemplatePlugin = require("../lib/webworker/WebWorkerMainTemplatePlugin");
+const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
 
 describe("WebWorkerMainTemplatePlugin", function() {
-	var env;
+	let env;
 
-	beforeEach(function() {
+	beforeEach(() => {
 		env = {};
 	});
 
@@ -26,7 +28,7 @@ describe("WebWorkerMainTemplatePlugin", function() {
 					chunkFilename: 'chunkFilename'
 				},
 				applyPluginsWaterfall: (moduleName, fileName, data) => {
-					return '"' + moduleName + data.hash + data.hashWithLength() + (data.chunk && data.chunk.id || '') + '"';
+					return `"${moduleName}${data.hash}${data.hashWithLength()}${data.chunk && data.chunk.id || ''}"`;
 				},
 				renderAddModule: () => 'renderAddModuleSource();',
 			};
@@ -37,31 +39,31 @@ describe("WebWorkerMainTemplatePlugin", function() {
 		});
 
 		describe("local-vars handler", function() {
-			beforeEach(function() {
+			beforeEach(() => {
 				env.eventBinding = env.eventBindings[0];
 			});
 
-			it("binds to local-vars event", function() {
+			it("binds to local-vars event", () => {
 				env.eventBinding.name.should.be.exactly("local-vars");
 			});
 
-			describe("when no chunks are provided", function() {
-				beforeEach(function() {
-					var chunk = {
+			describe("when no chunks are provided", () => {
+				beforeEach(() => {
+					const chunk = {
 						ids: [],
 						chunks: []
 					};
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk);
 				});
 
-				it("returns the original source", function() {
+				it("returns the original source", () => {
 					env.source.should.be.exactly("moduleSource()")
 				});
 			});
 
-			describe("when chunks are provided", function() {
-				beforeEach(function() {
-					var chunk = {
+			describe("when chunks are provided", () => {
+				beforeEach(() => {
+					const chunk = {
 						ids: [1, 2, 3],
 						chunks: [
 							'foo',
@@ -72,7 +74,7 @@ describe("WebWorkerMainTemplatePlugin", function() {
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, 'abc123');
 				});
 
-				it("returns the original source with installed mapping", function() {
+				it("returns the original source with installed mapping", () => {
 					env.source.should.be.exactly(`
 moduleSource()
 
@@ -83,64 +85,66 @@ var installedChunks = {
 2: 1,
 3: 1
 };
+
+var resolvedPromise = new Promise(function(resolve) { resolve(); });
 `.trim())
 				});
 			});
 		});
 
-		describe("require-ensure handler", function() {
-			beforeEach(function() {
+		describe("require-ensure handler", () => {
+			beforeEach(() => {
 				env.eventBinding = env.eventBindings[1];
 			});
 
-			it("binds to require-ensure event", function() {
+			it("binds to require-ensure event", () => {
 				env.eventBinding.name.should.be.exactly("require-ensure");
 			});
 
-			describe("when called", function() {
-				beforeEach(function() {
-					var chunk = {};
+			describe("when called", () => {
+				beforeEach(() => {
+					const chunk = {};
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, 'abc123');
 				});
 
-				it("creates import scripts call and promise resolve", function() {
+				it("creates import scripts call and promise resolve", () => {
 					env.source.should.be.exactly(`
 // "1" is the signal for "already loaded"
 if(!installedChunks[chunkId]) {
 importScripts("asset-path" + abc123 + "" + abc123 + "" + chunkId + "");
 }
-return Promise.resolve();
+return resolvedPromise;
 `.trim())
 				});
 			});
 		});
 
-		describe("bootstrap handler", function() {
-			beforeEach(function() {
+		describe("bootstrap handler", () => {
+			beforeEach(() => {
 				env.eventBinding = env.eventBindings[2];
 			});
 
-			it("binds to bootstrap event", function() {
+			it("binds to bootstrap event", () => {
 				env.eventBinding.name.should.be.exactly("bootstrap");
 			});
 
-			describe("when no chunks are provided", function() {
-				beforeEach(function() {
-					var chunk = {
+			describe("when no chunks are provided", () => {
+				beforeEach(() => {
+					const chunk = {
 						ids: [],
 						chunks: []
 					};
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk);
 				});
 
-				it("returns the original source", function() {
+				it("returns the original source", () => {
 					env.source.should.be.exactly("moduleSource()")
 				});
 			});
 
-			describe("when chunks are provided", function() {
-				beforeEach(function() {
-					var chunk = {
+			describe("when chunks are provided", () => {
+				beforeEach(() => {
+					const chunk = {
 						ids: [1, 2, 3],
 						chunks: [
 							'foo',
@@ -151,7 +155,7 @@ return Promise.resolve();
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk);
 				});
 
-				it("returns the original source with chunk callback", function() {
+				it("returns the original source with chunk callback", () => {
 					env.source.should.be.exactly(`
 moduleSource()
 this["webpackChunk"] = function webpackChunkCallback(chunkIds, moreModules) {
@@ -166,22 +170,22 @@ installedChunks[chunkIds.pop()] = 1;
 			});
 		});
 
-		describe("hot-bootstrap handler", function() {
-			beforeEach(function() {
+		describe("hot-bootstrap handler", () => {
+			beforeEach(() => {
 				env.eventBinding = env.eventBindings[3];
 			});
 
-			it("binds to hot-bootstrap event", function() {
+			it("binds to hot-bootstrap event", () => {
 				env.eventBinding.name.should.be.exactly("hot-bootstrap");
 			});
 
-			describe("when called", function() {
-				beforeEach(function() {
-					var chunk = {};
+			describe("when called", () => {
+				beforeEach(() => {
+					const chunk = {};
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, 'abc123');
 				});
 
-				it("returns the original source with hot update callback", function() {
+				it("returns the original source with hot update callback", () => {
 					env.source.should.be.exactly(`
 moduleSource()
 var parentHotUpdateCallback = this["webpackHotUpdate"];
@@ -240,8 +244,8 @@ function hotDisposeChunk(chunkId) { //eslint-disable-line no-unused-vars
 			});
 		});
 
-		describe("hash handler", function() {
-			beforeEach(function() {
+		describe("hash handler", () => {
+			beforeEach(() => {
 				env.eventBinding = env.eventBindings[4];
 				env.handlerContext = {
 					outputOptions: {
@@ -258,11 +262,11 @@ function hotDisposeChunk(chunkId) { //eslint-disable-line no-unused-vars
 				env.eventBinding.handler.call(env.handlerContext, env.hashMock);
 			});
 
-			it("binds to hash event", function() {
+			it("binds to hash event", () => {
 				env.eventBinding.name.should.be.exactly("hash");
 			});
 
-			it("updates hash object", function() {
+			it("updates hash object", () => {
 				env.hashMock.update.callCount.should.be.exactly(7);
 				sinon.assert.calledWith(env.hashMock.update, "webworker");
 				sinon.assert.calledWith(env.hashMock.update, "3");

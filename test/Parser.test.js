@@ -125,7 +125,7 @@ describe("Parser", () => {
 				}
 			}, {
 				fghsub: ["try", "notry", "notry"],
-				fgh: ["", "test ttt", "test e"]
+				fgh: ["test", "test ttt", "test e"]
 			}
 		],
 		"renaming with const": [
@@ -263,8 +263,24 @@ describe("Parser", () => {
 			"\"strr\" + \"ring\"": "string=strrring",
 			"\"s\" + (\"trr\" + \"rin\") + \"g\"": "string=strrring",
 			"'S' + (\"strr\" + \"ring\") + 'y'": "string=Sstrrringy",
+			"/abc/": "regExp=/abc/",
 			"1": "number=1",
 			"1 + 3": "number=4",
+			"3 - 1": "number=2",
+			"1 == 1": "bool=true",
+			"1 === 1": "bool=true",
+			"3 != 1": "bool=true",
+			"3 !== 1": "bool=true",
+			"3 == 1": "bool=false",
+			"3 === 1": "bool=false",
+			"1 != 1": "bool=false",
+			"1 !== 1": "bool=false",
+			"true === false": "bool=false",
+			"false !== false": "bool=false",
+			"true == true": "bool=true",
+			"false != true": "bool=true",
+			"!'a'": "bool=false",
+			"!''": "bool=true",
 			"'pre' + a": "wrapped=['pre' string=pre]+[null]",
 			"a + 'post'": "wrapped=[null]+['post' string=post]",
 			"'pre' + a + 'post'": "wrapped=['pre' string=pre]+['post' string=post]",
@@ -290,8 +306,17 @@ describe("Parser", () => {
 			"b['Number']": "number=123",
 			"b[Number]": "",
 			"'abc'.substr(1)": "string=bc",
+			"'abcdef'.substr(2, 3)": "string=cde",
+			"'abcdef'.substring(2, 3)": "string=c",
+			"'abcdef'.substring(2, 3, 4)": "",
 			"'abc'[\"substr\"](1)": "string=bc",
 			"'abc'[substr](1)": "",
+			"'1,2+3'.split(/[,+]/)": "array=[1],[2],[3]",
+			"'1,2+3'.split(expr)": "",
+			"'a' + (expr + 'c')": "wrapped=['a' string=a]+['c' string=c]",
+			"1 + 'a'": "string=1a",
+			"'a' + 1": "string=a1",
+			"'a' + expr + 1": "wrapped=['a' string=a]+[1 string=1]",
 		};
 
 		Object.keys(testCases).forEach((key) => {
@@ -303,9 +328,11 @@ describe("Parser", () => {
 					const result = [];
 					if(evalExpr.isString()) result.push("string=" + evalExpr.string);
 					if(evalExpr.isNumber()) result.push("number=" + evalExpr.number);
+					if(evalExpr.isBoolean()) result.push("bool=" + evalExpr.bool);
 					if(evalExpr.isRegExp()) result.push("regExp=" + evalExpr.regExp);
 					if(evalExpr.isConditional()) result.push("options=[" + evalExpr.options.map(evalExprToString).join("],[") + "]");
 					if(evalExpr.isArray()) result.push("items=[" + evalExpr.items.map(evalExprToString).join("],[") + "]");
+					if(evalExpr.isConstArray()) result.push("array=[" + evalExpr.array.join("],[") + "]");
 					if(evalExpr.isWrapped()) result.push("wrapped=[" + evalExprToString(evalExpr.prefix) + "]+[" + evalExprToString(evalExpr.postfix) + "]");
 					if(evalExpr.range) {
 						const start = evalExpr.range[0] - 5;

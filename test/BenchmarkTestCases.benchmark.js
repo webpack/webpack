@@ -3,7 +3,7 @@
 const should = require("should");
 const path = require("path");
 const fs = require("fs");
-const async = require("async");
+const asyncLib = require("async");
 var Test = require("mocha/lib/test");
 
 const webpack = require("../lib/webpack");
@@ -31,7 +31,7 @@ describe("BenchmarkTestCases", function() {
 		const rootPath = path.join(__dirname, "..");
 		getBaselineRevs(rootPath, (err, baselineRevisions) => {
 			if(err) return done(err);
-			async.eachSeries(baselineRevisions, (baselineInfo, callback) => {
+			asyncLib.eachSeries(baselineRevisions, (baselineInfo, callback) => {
 				const baselineRevision = baselineInfo.rev;
 				const baselinePath = path.resolve(baselinesPath, baselineRevision);
 				if(fs.existsSync(path.resolve(baselinePath, ".git"))) {

@@ -27,7 +27,8 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 
 # js/output.js
 
-<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
@@ -38,8 +39,9 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
@@ -48,53 +50,64 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
+/******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
-
+/******/ 		}
+/******/
 /******/ 	};
-
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// objects to store loaded and loading chunks
 /******/ 	var installedChunks = {
 /******/ 		3: 0
 /******/ 	};
-
+/******/
+/******/ 	var resolvedPromise = new Promise(function(resolve) { resolve(); });
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
+/******/
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve();
-
+/******/ 		if(installedChunks[chunkId] === 0) {
+/******/ 			return resolvedPromise;
+/******/ 		}
+/******/
 /******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
 /******/ 			return installedChunks[chunkId][2];
 /******/ 		}
+/******/
+/******/ 		// setup Promise in chunk cache
+/******/ 		var promise = new Promise(function(resolve, reject) {
+/******/ 			installedChunks[chunkId] = [resolve, reject];
+/******/ 		});
+/******/ 		installedChunks[chunkId][2] = promise;
+/******/
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
@@ -102,7 +115,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
-
+/******/
 /******/ 		if (__webpack_require__.nc) {
 /******/ 			script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 		}
@@ -115,29 +128,26 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 			clearTimeout(timeout);
 /******/ 			var chunk = installedChunks[chunkId];
 /******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
-
-/******/ 		var promise = new Promise(function(resolve, reject) {
-/******/ 			installedChunks[chunkId] = [resolve, reject];
-/******/ 		});
-/******/ 		installedChunks[chunkId][2] = promise;
-
 /******/ 		head.appendChild(script);
+/******/
 /******/ 		return promise;
 /******/ 	};
-
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -148,7 +158,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -157,22 +167,24 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-
+/******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
-
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 ```
+
 </details>
+
 ``` javascript
 /******/ ([
 /* 0 */
@@ -188,9 +200,9 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /* 1 */
 /* unknown exports provided */
 /* all exports used */
-/*!****************************!*\
-  !*** ./~/c async ^\.\/.*$ ***!
-  \****************************/
+/*!***************************!*\
+  !*** ./~/c lazy ^\.\/.*$ ***!
+  \***************************/
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -212,7 +224,8 @@ var map = {
 	]
 };
 function webpackAsyncContext(req) {
-	var ids = map[req];	if(!ids)
+	var ids = map[req];
+	if(!ids)
 		return Promise.reject(new Error("Cannot find module '" + req + "'."));
 	return __webpack_require__.e(ids[1]).then(function() {
 		return __webpack_require__(ids[0]);
@@ -223,7 +236,6 @@ webpackAsyncContext.keys = function webpackAsyncContextKeys() {
 };
 module.exports = webpackAsyncContext;
 webpackAsyncContext.id = 1;
-
 
 /***/ }),
 /* 2 */,
@@ -265,65 +277,65 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 ## Uncompressed
 
 ```
-Hash: ba65a04e3475286b58c0
-Version: webpack 2.2.1
+Hash: d615402477252ba51b19
+Version: webpack 2.6.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  218 bytes       0  [emitted]  
 1.output.js  218 bytes       1  [emitted]  
 2.output.js  210 bytes       2  [emitted]  
-  output.js    7.23 kB       3  [emitted]  main
+  output.js    7.65 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
     [3] ./~/c/2.js 13 bytes {0} [optional] [built]
-        context element ./2 [1] ./~/c async ^\.\/.*$ ./2
-        context element ./2.js [1] ./~/c async ^\.\/.*$ ./2.js
+        context element ./2 [1] ./~/c lazy ^\.\/.*$ ./2
+        context element ./2.js [1] ./~/c lazy ^\.\/.*$ ./2.js
 chunk    {1} 1.output.js 13 bytes {3} [rendered]
     [2] ./~/c/1.js 13 bytes {1} [optional] [built]
-        context element ./1 [1] ./~/c async ^\.\/.*$ ./1
-        context element ./1.js [1] ./~/c async ^\.\/.*$ ./1.js
+        context element ./1 [1] ./~/c lazy ^\.\/.*$ ./1
+        context element ./1.js [1] ./~/c lazy ^\.\/.*$ ./1.js
 chunk    {2} 2.output.js 11 bytes {3} [rendered]
     > [4] ./example.js 3:0-11
     [5] ./~/b.js 11 bytes {2} [built]
         import() b [4] ./example.js 3:0-11
-chunk    {3} output.js (main) 414 bytes [entry] [rendered]
+chunk    {3} output.js (main) 427 bytes [entry] [rendered]
     > main [4] ./example.js 
     [0] ./~/a.js 11 bytes {3} [built]
         [no exports used]
         harmony import a [4] ./example.js 1:0-18
-    [1] ./~/c async ^\.\/.*$ 160 bytes {3} [built]
-        import() context c [4] ./example.js 8:8-27
-    [4] ./example.js 243 bytes {3} [built]
+    [1] ./~/c lazy ^\.\/.*$ 160 bytes {3} [built]
+        import() context lazy c [4] ./example.js 8:8-27
+    [4] ./example.js 256 bytes {3} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: ba65a04e3475286b58c0
-Version: webpack 2.2.1
+Hash: d615402477252ba51b19
+Version: webpack 2.6.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  38 bytes       0  [emitted]  
 1.output.js  38 bytes       1  [emitted]  
 2.output.js  38 bytes       2  [emitted]  
-  output.js   1.92 kB       3  [emitted]  main
+  output.js   1.93 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
     [3] ./~/c/2.js 13 bytes {0} [optional] [built]
-        context element ./2 [1] ./~/c async ^\.\/.*$ ./2
-        context element ./2.js [1] ./~/c async ^\.\/.*$ ./2.js
+        context element ./2 [1] ./~/c lazy ^\.\/.*$ ./2
+        context element ./2.js [1] ./~/c lazy ^\.\/.*$ ./2.js
 chunk    {1} 1.output.js 13 bytes {3} [rendered]
     [2] ./~/c/1.js 13 bytes {1} [optional] [built]
-        context element ./1 [1] ./~/c async ^\.\/.*$ ./1
-        context element ./1.js [1] ./~/c async ^\.\/.*$ ./1.js
+        context element ./1 [1] ./~/c lazy ^\.\/.*$ ./1
+        context element ./1.js [1] ./~/c lazy ^\.\/.*$ ./1.js
 chunk    {2} 2.output.js 11 bytes {3} [rendered]
     > [4] ./example.js 3:0-11
     [5] ./~/b.js 11 bytes {2} [built]
         import() b [4] ./example.js 3:0-11
-chunk    {3} output.js (main) 414 bytes [entry] [rendered]
+chunk    {3} output.js (main) 427 bytes [entry] [rendered]
     > main [4] ./example.js 
     [0] ./~/a.js 11 bytes {3} [built]
         [no exports used]
         harmony import a [4] ./example.js 1:0-18
-    [1] ./~/c async ^\.\/.*$ 160 bytes {3} [built]
-        import() context c [4] ./example.js 8:8-27
-    [4] ./example.js 243 bytes {3} [built]
+    [1] ./~/c lazy ^\.\/.*$ 160 bytes {3} [built]
+        import() context lazy c [4] ./example.js 8:8-27
+    [4] ./example.js 256 bytes {3} [built]
 ```

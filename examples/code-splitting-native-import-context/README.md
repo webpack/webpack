@@ -34,7 +34,8 @@ export default foo;
 
 # js/output.js
 
-<details><summary>`/******/ (function(modules) { /* webpackBootstrap */ })`</summary>
+<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
@@ -45,8 +46,9 @@ export default foo;
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
@@ -55,53 +57,64 @@ export default foo;
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
+/******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
-
+/******/ 		}
+/******/
 /******/ 	};
-
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-
+/******/
 /******/ 	// objects to store loaded and loading chunks
 /******/ 	var installedChunks = {
 /******/ 		3: 0
 /******/ 	};
-
+/******/
+/******/ 	var resolvedPromise = new Promise(function(resolve) { resolve(); });
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-
+/******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
 /******/ 		};
-
+/******/
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-
+/******/
 /******/ 		// Flag the module as loaded
 /******/ 		module.l = true;
-
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-
+/******/
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve();
-
+/******/ 		if(installedChunks[chunkId] === 0) {
+/******/ 			return resolvedPromise;
+/******/ 		}
+/******/
 /******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
 /******/ 			return installedChunks[chunkId][2];
 /******/ 		}
+/******/
+/******/ 		// setup Promise in chunk cache
+/******/ 		var promise = new Promise(function(resolve, reject) {
+/******/ 			installedChunks[chunkId] = [resolve, reject];
+/******/ 		});
+/******/ 		installedChunks[chunkId][2] = promise;
+/******/
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
@@ -109,7 +122,7 @@ export default foo;
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
-
+/******/
 /******/ 		if (__webpack_require__.nc) {
 /******/ 			script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 		}
@@ -122,29 +135,26 @@ export default foo;
 /******/ 			clearTimeout(timeout);
 /******/ 			var chunk = installedChunks[chunkId];
 /******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
-
-/******/ 		var promise = new Promise(function(resolve, reject) {
-/******/ 			installedChunks[chunkId] = [resolve, reject];
-/******/ 		});
-/******/ 		installedChunks[chunkId][2] = promise;
-
 /******/ 		head.appendChild(script);
+/******/
 /******/ 		return promise;
 /******/ 	};
-
+/******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-
+/******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-
+/******/
 /******/ 	// identity function for calling harmony imports with the correct context
 /******/ 	__webpack_require__.i = function(value) { return value; };
-
+/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -155,7 +165,7 @@ export default foo;
 /******/ 			});
 /******/ 		}
 /******/ 	};
-
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -164,30 +174,32 @@ export default foo;
 /******/ 		__webpack_require__.d(getter, 'a', getter);
 /******/ 		return getter;
 /******/ 	};
-
+/******/
 /******/ 	// Object.prototype.hasOwnProperty.call
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-
+/******/
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "js/";
-
+/******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
-
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 ```
+
 </details>
+
 ``` javascript
 /******/ ([
 /* 0 */
 /* unknown exports provided */
 /* all exports used */
-/*!**********************************!*\
-  !*** ./templates async ^\.\/.*$ ***!
-  \**********************************/
+/*!*********************************!*\
+  !*** ./templates lazy ^\.\/.*$ ***!
+  \*********************************/
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -217,7 +229,8 @@ var map = {
 	]
 };
 function webpackAsyncContext(req) {
-	var ids = map[req];	if(!ids)
+	var ids = map[req];
+	if(!ids)
 		return Promise.reject(new Error("Cannot find module '" + req + "'."));
 	return __webpack_require__.e(ids[1]).then(function() {
 		return __webpack_require__(ids[0]);
@@ -228,7 +241,6 @@ webpackAsyncContext.keys = function webpackAsyncContextKeys() {
 };
 module.exports = webpackAsyncContext;
 webpackAsyncContext.id = 0;
-
 
 /***/ }),
 /* 1 */,
@@ -268,68 +280,68 @@ getTemplate("baz");
 ## Uncompressed
 
 ```
-Hash: 6ff942ea6efa4b698d2f
-Version: webpack 2.2.1
+Hash: 0d608a65d597e766b156
+Version: webpack 2.6.0
       Asset       Size  Chunks             Chunk Names
-0.output.js  439 bytes       0  [emitted]  
-1.output.js  439 bytes       1  [emitted]  
-2.output.js  445 bytes       2  [emitted]  
-  output.js    6.82 kB       3  [emitted]  main
+0.output.js  442 bytes       0  [emitted]  
+1.output.js  442 bytes       1  [emitted]  
+2.output.js  448 bytes       2  [emitted]  
+  output.js    7.24 kB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 38 bytes {3} [rendered]
-    [3] ./templates/foo.js 38 bytes {0} [optional] [built]
+chunk    {0} 0.output.js 41 bytes {3} [rendered]
+    [3] ./templates/foo.js 41 bytes {0} [optional] [built]
         [exports: default]
-        context element ./foo [0] ./templates async ^\.\/.*$ ./foo
-        context element ./foo.js [0] ./templates async ^\.\/.*$ ./foo.js
-chunk    {1} 1.output.js 38 bytes {3} [rendered]
-    [2] ./templates/baz.js 38 bytes {1} [optional] [built]
+        context element ./foo [0] ./templates lazy ^\.\/.*$ ./foo
+        context element ./foo.js [0] ./templates lazy ^\.\/.*$ ./foo.js
+chunk    {1} 1.output.js 41 bytes {3} [rendered]
+    [2] ./templates/baz.js 41 bytes {1} [optional] [built]
         [exports: default]
-        context element ./baz [0] ./templates async ^\.\/.*$ ./baz
-        context element ./baz.js [0] ./templates async ^\.\/.*$ ./baz.js
-chunk    {2} 2.output.js 38 bytes {3} [rendered]
-    [1] ./templates/bar.js 38 bytes {2} [optional] [built]
+        context element ./baz [0] ./templates lazy ^\.\/.*$ ./baz
+        context element ./baz.js [0] ./templates lazy ^\.\/.*$ ./baz.js
+chunk    {2} 2.output.js 41 bytes {3} [rendered]
+    [1] ./templates/bar.js 41 bytes {2} [optional] [built]
         [exports: default]
-        context element ./bar [0] ./templates async ^\.\/.*$ ./bar
-        context element ./bar.js [0] ./templates async ^\.\/.*$ ./bar.js
-chunk    {3} output.js (main) 441 bytes [entry] [rendered]
+        context element ./bar [0] ./templates lazy ^\.\/.*$ ./bar
+        context element ./bar.js [0] ./templates lazy ^\.\/.*$ ./bar.js
+chunk    {3} output.js (main) 456 bytes [entry] [rendered]
     > main [4] ./example.js 
-    [0] ./templates async ^\.\/.*$ 160 bytes {3} [optional] [built]
-        import() context ./templates [4] ./example.js 3:23-60
-    [4] ./example.js 281 bytes {3} [built]
+    [0] ./templates lazy ^\.\/.*$ 160 bytes {3} [optional] [built]
+        import() context lazy ./templates [4] ./example.js 3:23-60
+    [4] ./example.js 296 bytes {3} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 6ff942ea6efa4b698d2f
-Version: webpack 2.2.1
+Hash: 0d608a65d597e766b156
+Version: webpack 2.6.0
       Asset       Size  Chunks             Chunk Names
-0.output.js  125 bytes       0  [emitted]  
-1.output.js  125 bytes       1  [emitted]  
-2.output.js  124 bytes       2  [emitted]  
-  output.js     6.5 kB       3  [emitted]  main
+0.output.js  117 bytes       0  [emitted]  
+1.output.js  117 bytes       1  [emitted]  
+2.output.js  116 bytes       2  [emitted]  
+  output.js    6.92 kB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 38 bytes {3} [rendered]
-    [3] ./templates/foo.js 38 bytes {0} [optional] [built]
+chunk    {0} 0.output.js 41 bytes {3} [rendered]
+    [3] ./templates/foo.js 41 bytes {0} [optional] [built]
         [exports: default]
-        context element ./foo [0] ./templates async ^\.\/.*$ ./foo
-        context element ./foo.js [0] ./templates async ^\.\/.*$ ./foo.js
-chunk    {1} 1.output.js 38 bytes {3} [rendered]
-    [2] ./templates/baz.js 38 bytes {1} [optional] [built]
+        context element ./foo [0] ./templates lazy ^\.\/.*$ ./foo
+        context element ./foo.js [0] ./templates lazy ^\.\/.*$ ./foo.js
+chunk    {1} 1.output.js 41 bytes {3} [rendered]
+    [2] ./templates/baz.js 41 bytes {1} [optional] [built]
         [exports: default]
-        context element ./baz [0] ./templates async ^\.\/.*$ ./baz
-        context element ./baz.js [0] ./templates async ^\.\/.*$ ./baz.js
-chunk    {2} 2.output.js 38 bytes {3} [rendered]
-    [1] ./templates/bar.js 38 bytes {2} [optional] [built]
+        context element ./baz [0] ./templates lazy ^\.\/.*$ ./baz
+        context element ./baz.js [0] ./templates lazy ^\.\/.*$ ./baz.js
+chunk    {2} 2.output.js 41 bytes {3} [rendered]
+    [1] ./templates/bar.js 41 bytes {2} [optional] [built]
         [exports: default]
-        context element ./bar [0] ./templates async ^\.\/.*$ ./bar
-        context element ./bar.js [0] ./templates async ^\.\/.*$ ./bar.js
-chunk    {3} output.js (main) 441 bytes [entry] [rendered]
+        context element ./bar [0] ./templates lazy ^\.\/.*$ ./bar
+        context element ./bar.js [0] ./templates lazy ^\.\/.*$ ./bar.js
+chunk    {3} output.js (main) 456 bytes [entry] [rendered]
     > main [4] ./example.js 
-    [0] ./templates async ^\.\/.*$ 160 bytes {3} [optional] [built]
-        import() context ./templates [4] ./example.js 3:23-60
-    [4] ./example.js 281 bytes {3} [built]
+    [0] ./templates lazy ^\.\/.*$ 160 bytes {3} [optional] [built]
+        import() context lazy ./templates [4] ./example.js 3:23-60
+    [4] ./example.js 296 bytes {3} [built]
 
 ERROR in output.js from UglifyJs
-SyntaxError: Unexpected token: keyword (function) [output.js:194,6]
+Unexpected token: keyword (function) [output.js:203,6]
 ```

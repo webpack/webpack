@@ -270,6 +270,10 @@
             "use-credentials"
           ]
         },
+        "chunkLoadTimeout": {
+          "description": "Number of milliseconds before chunk request expires",
+          "type": "number"
+        },
         "devtoolFallbackModuleFilenameTemplate": {
           "description": "Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.",
           "anyOf": [
@@ -330,6 +334,10 @@
           "type": "number"
         },
         "hashFunction": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "hashSalt": {
           "minLength": 1,
           "type": "string"
         },
@@ -707,6 +715,19 @@
           "type": "object"
         }
       ]
+    },
+    "warning-filters-types": {
+      "anyOf": [
+        {
+          "instanceof": "RegExp"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "instanceof": "Function"
+        }
+      ]
     }
   },
   "properties": {
@@ -950,6 +971,20 @@
               "type": "boolean",
               "description": "add the source code of modules"
             },
+            "warningsFilter": {
+              "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions",
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/warning-filters-types"
+                  }
+                },
+                {
+                  "$ref": "#/definitions/warning-filters-types"
+                }
+              ]
+            },
             "errorDetails": {
               "type": "boolean",
               "description": "add details to errors (like resolving log)"
@@ -961,6 +996,10 @@
             "modulesSort": {
               "type": "string",
               "description": "sort the modules by that field"
+            },
+            "moduleTrace": {
+              "type": "boolean",
+              "description": "add dependencies and origin of warnings/errors"
             },
             "chunksSort": {
               "type": "string",

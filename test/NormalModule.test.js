@@ -3,7 +3,7 @@
 require("should");
 const sinon = require("sinon");
 const NormalModule = require("../lib/NormalModule");
-const path = require("path");
+const NullDependency = require("../lib/dependencies/NullDependency");
 const SourceMapSource = require("webpack-sources").SourceMapSource;
 const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
@@ -37,6 +37,12 @@ describe("NormalModule", function() {
 	describe("#identifier", function() {
 		it("returns an identifier for this module", function() {
 			normalModule.identifier().should.eql(request);
+		});
+		it("returns an identifier from toString", function() {
+			normalModule.debugId = 1000;
+			normalModule.toString().should.eql("Module[1000]");
+			normalModule.id = 1;
+			normalModule.toString().should.eql("Module[1]");
 		});
 	});
 
@@ -141,6 +147,16 @@ describe("NormalModule", function() {
 		});
 	});
 
+	describe("#originalSource", function() {
+		let expectedSource = "some source";
+		beforeEach(function() {
+			normalModule._source = new RawSource(expectedSource);
+		});
+		it("returns an original Source", function() {
+			normalModule.originalSource().should.eql(normalModule._source);
+		});
+	});
+
 	describe("#updateHashWithSource", function() {
 		let hashSpy;
 		let hash;
@@ -171,6 +187,15 @@ describe("NormalModule", function() {
 				hashSpy.args[0][0].should.eql("source");
 				hashSpy.args[1][0].should.eql(expectedSource);
 			});
+		});
+	});
+	describe("#hasDependencies", function() {
+		it("returns true if has dependencies", function() {
+			normalModule.addDependency(new NullDependency());
+			normalModule.hasDependencies().should.eql(true);
+		});
+		it("returns false if has dependencies", function() {
+			normalModule.hasDependencies().should.eql(false);
 		});
 	});
 	describe("#needRebuild", function() {

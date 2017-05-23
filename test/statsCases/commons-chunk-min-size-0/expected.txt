@@ -1,8 +1,8 @@
-Hash: 9beb53e88067f8ed0026
+Hash: dc6038bec87a57d1a45e
 Time: Xms
       Asset      Size  Chunks             Chunk Names
  entry-1.js  25 bytes       0  [emitted]  entry-1
-vendor-1.js   6.72 kB    1, 0  [emitted]  vendor-1
+vendor-1.js   6.92 kB       1  [emitted]  vendor-1
 chunk    {0} entry-1.js (entry-1) 0 bytes {1} [initial] [rendered]
 chunk    {1} vendor-1.js (vendor-1) 329 bytes [entry] [rendered]
     [0] (webpack)/test/statsCases/commons-chunk-min-size-0/modules/a.js 22 bytes {1} [built]

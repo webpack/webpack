@@ -1,10 +1,12 @@
-{
+module.exports = {
 	"root": true,
 	"plugins": ["node"],
 	"extends": ["eslint:recommended", "plugin:node/recommended"],
 	"env": {
-		"node": true
+		"node": true,
+		"es6": true,
 	},
+	"parserOptions": { "ecmaVersion": 2017 },
 	"rules": {
 		"quotes": ["error", "double"],
 		"no-undef": "error",
@@ -26,7 +28,7 @@
 		"space-in-parens": "error",
 		"no-trailing-spaces": "error",
 		"no-use-before-define": "off",
-		"no-unused-vars": ["error", {"args": "none"}],
+		"no-unused-vars": ["error", { "args": "none" }],
 		"key-spacing": "error",
 		"space-infix-ops": "error",
 		"no-unsafe-negation": "error",
@@ -37,17 +39,31 @@
 		"keyword-spacing": ["error", {
 			"after": false,
 			"overrides": {
-				"try": {"after": true},
-				"else": {"after": true},
-				"throw": {"after": true},
-				"case": {"after": true},
-				"return": {"after": true},
-				"finally": {"after": true},
-				"do": {"after": true}
+				"const": { "after": true },
+				"try": { "after": true },
+				"else": { "after": true },
+				"throw": { "after": true },
+				"case": { "after": true },
+				"return": { "after": true },
+				"finally": { "after": true },
+				"do": { "after": true }
 			}
 		}],
 		"no-console": "off",
-		"valid-jsdoc": "error"
+		"valid-jsdoc": "error",
+		"node/no-unsupported-features": ["error", { version: 4 }],
+		"node/no-deprecated-api": "error",
+		"node/no-missing-import": "error",
+		"node/no-missing-require": [
+			"error",
+			{
+				"allowModules": [
+					"webpack"
+				]
+			}
+		],
+		"node/no-unpublished-bin": "error",
+		"node/no-unpublished-require": "error",
+		"node/process-exit-as-throw": "error"
 	}
-}
-
+};
