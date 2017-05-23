@@ -6,7 +6,6 @@ module.exports = {
 		assets: true,
 		colors: true,
 		chunks: true,
-		env: false,
 		maxModules: 0
 	}
 };
