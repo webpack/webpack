@@ -188,10 +188,6 @@ function processOptions(options) {
 	if(typeof outputOptions.context === "undefined")
 		outputOptions.context = firstOptions.context;
 
-	ifArg("env", function(environment) {
-		outputOptions.env = environment;
-	});
-
 	ifArg("json", function(bool) {
 		if(bool)
 			outputOptions.json = bool;
@@ -336,6 +332,9 @@ function processOptions(options) {
 			console.error(err.stack || err);
 			if(err.details) console.error(err.details);
 			process.exit(1); // eslint-disable-line
+		}
+		if(outputOptions.env) {
+			stats.env = argv.env;
 		}
 		if(outputOptions.json) {
 			process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");

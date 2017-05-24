@@ -1,1 +1,3 @@
---env.production --env.platform 'web' --env.version 2
+--env.production
+--env.platform 'web'
+--env.version 2
