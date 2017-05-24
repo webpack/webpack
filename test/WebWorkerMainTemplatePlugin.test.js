@@ -85,8 +85,6 @@ var installedChunks = {
 2: 1,
 3: 1
 };
-
-var resolvedPromise = new Promise(function(resolve) { resolve(); });
 `.trim())
 				});
 			});
@@ -109,11 +107,13 @@ var resolvedPromise = new Promise(function(resolve) { resolve(); });
 
 				it("creates import scripts call and promise resolve", () => {
 					env.source.should.be.exactly(`
+return new Promise(function(resolve) {
 // "1" is the signal for "already loaded"
 if(!installedChunks[chunkId]) {
 importScripts("asset-path" + abc123 + "" + abc123 + "" + chunkId + "");
 }
-return resolvedPromise;
+resolve();
+});
 `.trim())
 				});
 			});
