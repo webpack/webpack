@@ -31,7 +31,7 @@ Child
           Asset       Size  Chunks             Chunk Names
     0.bundle.js  445 bytes       0  [emitted]  
     1.bundle.js  204 bytes       1  [emitted]  
-      bundle.js    6.27 kB       2  [emitted]  main
+      bundle.js    6.28 kB       2  [emitted]  main
     chunk    {0} 0.bundle.js 74 bytes {2} [rendered]
         [0] (webpack)/test/statsCases/limit-chunk-count-plugin/a.js 22 bytes {0} [built]
         [2] (webpack)/test/statsCases/limit-chunk-count-plugin/c.js 30 bytes {0} [built]
