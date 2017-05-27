@@ -261,6 +261,15 @@ module.exports = function(yargs) {
 				type: "boolean",
 				describe: "shortcut for --optimize-minimize --define process.env.NODE_ENV=\"production\"",
 				group: BASIC_GROUP
+			},
+			"allow-custom-args": {
+				type: "boolean",
+				describe: "allow the passing of custom arguments to webpack",
+				group: ADVANCED_GROUP
 			}
-		}).strict();
+		});
+
+	if(!yargs.argv.allowCustomArgs) {
+		yargs.strict();
+	}
 };
