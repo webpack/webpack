@@ -88,8 +88,9 @@ module.exports = {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
@@ -98,8 +99,9 @@ module.exports = {
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
+/******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
+/******/ 		}
 /******/ 		if(executeModules) {
 /******/ 			for(i=0; i < executeModules.length; i++) {
 /******/ 				result = __webpack_require__(__webpack_require__.s = executeModules[i]);
@@ -117,13 +119,15 @@ module.exports = {
 /******/ 		8: 0
 /******/ 	};
 /******/
+/******/ 	var resolvedPromise = new Promise(function(resolve) { resolve(); });
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -144,8 +148,9 @@ module.exports = {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve();
+/******/ 		if(installedChunks[chunkId] === 0) {
+/******/ 			return resolvedPromise;
+/******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -178,7 +183,9 @@ module.exports = {
 /******/ 			clearTimeout(timeout);
 /******/ 			var chunk = installedChunks[chunkId];
 /******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
@@ -341,7 +348,7 @@ __webpack_require__(/*! ./modules/admin */ 1);
 
 ```
 Hash: 8813e8cc41a26866a673
-Version: webpack 2.3.2
+Version: webpack 2.6.0
            Asset       Size  Chunks             Chunk Names
         pageC.js  774 bytes       0  [emitted]  pageC
         pageB.js  571 bytes       1  [emitted]  pageB
@@ -350,8 +357,8 @@ Version: webpack 2.3.2
 admin-commons.js  235 bytes       4  [emitted]  admin-commons
    adminPageB.js  339 bytes       5  [emitted]  adminPageB
    adminPageA.js  339 bytes       6  [emitted]  adminPageA
-      commons.js    6.23 kB    7, 8  [emitted]  commons
-    c-commons.js    5.98 kB       8  [emitted]  c-commons
+      commons.js     6.4 kB    7, 8  [emitted]  commons
+    c-commons.js    6.15 kB       8  [emitted]  c-commons
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 Entrypoint pageC = c-commons.js pageC.js
@@ -422,7 +429,7 @@ chunk    {8} c-commons.js (c-commons) 0 bytes [entry] [rendered]
 
 ```
 Hash: 8813e8cc41a26866a673
-Version: webpack 2.3.2
+Version: webpack 2.6.0
            Asset      Size  Chunks             Chunk Names
         pageC.js  96 bytes       0  [emitted]  pageC
         pageB.js  76 bytes       1  [emitted]  pageB
@@ -431,8 +438,8 @@ Version: webpack 2.3.2
 admin-commons.js  37 bytes       4  [emitted]  admin-commons
    adminPageB.js  53 bytes       5  [emitted]  adminPageB
    adminPageA.js  53 bytes       6  [emitted]  adminPageA
-      commons.js   1.41 kB    7, 8  [emitted]  commons
-    c-commons.js   1.39 kB       8  [emitted]  c-commons
+      commons.js   1.43 kB    7, 8  [emitted]  commons
+    c-commons.js    1.4 kB       8  [emitted]  c-commons
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 Entrypoint pageC = c-commons.js pageC.js

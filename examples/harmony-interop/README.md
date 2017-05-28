@@ -77,9 +77,9 @@ export var named = "named";
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -260,9 +260,9 @@ var named = "named";
 
 ```
 Hash: b21ca1313d330370bf98
-Version: webpack 2.3.2
+Version: webpack 2.6.0
     Asset     Size  Chunks             Chunk Names
-output.js  6.31 kB       0  [emitted]  main
+output.js  6.32 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 1.2 kB [entry] [rendered]
     > main [3] ./example.js 
@@ -288,9 +288,9 @@ chunk    {0} output.js (main) 1.2 kB [entry] [rendered]
 
 ```
 Hash: b21ca1313d330370bf98
-Version: webpack 2.3.2
+Version: webpack 2.6.0
     Asset     Size  Chunks             Chunk Names
-output.js  1.06 kB       0  [emitted]  main
+output.js  1.05 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 1.2 kB [entry] [rendered]
     > main [3] ./example.js 

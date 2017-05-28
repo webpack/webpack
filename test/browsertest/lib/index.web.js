@@ -1,9 +1,3 @@
-// Should not break it...
-if(typeof require !== "function")
-	var require = require("amdrequire");
-if(typeof define != "function")
-	var define = require("amdefine");
-
 function test(cond, message) {
 	if(!cond) throw new Error(message);
 }

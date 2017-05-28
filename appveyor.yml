@@ -22,9 +22,9 @@ environment:
 install:
   - ps: Install-Product node $env:nodejs_version x64
   - npm install yarn -g
-  - yarn install
-  - yarn link || yarn link
-  - yarn link webpack
+  - yarn install --frozen-lockfile
+  - yarn link --frozen-lockfile || yarn link --frozen-lockfile
+  - yarn link webpack --frozen-lockfile
 
 build: off
 
