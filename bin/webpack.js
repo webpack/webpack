@@ -124,6 +124,11 @@ yargs.options({
 		group: DISPLAY_GROUP,
 		describe: "Display information about exports provided from modules"
 	},
+	"display-optimization-bailout": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Display information about why optimization bailed out for modules"
+	},
 	"display-error-details": {
 		type: "boolean",
 		group: DISPLAY_GROUP,
@@ -144,6 +149,7 @@ if(argv.verbose) {
 	argv["display-entrypoints"] = true;
 	argv["display-used-exports"] = true;
 	argv["display-provided-exports"] = true;
+	argv["display-optimization-bailout"] = true;
 	argv["display-error-details"] = true;
 	argv["display-modules"] = true;
 	argv["display-cached"] = true;
@@ -241,6 +247,10 @@ function processOptions(options) {
 
 		ifArg("display-provided-exports", function(bool) {
 			outputOptions.providedExports = bool;
+		});
+
+		ifArg("display-optimization-bailout", function(bool) {
+			outputOptions.optimizationBailout = bool;
 		});
 
 		ifArg("display-error-details", function(bool) {
