@@ -167,6 +167,7 @@ describe("Stats", () => {
 					depth: false,
 					usedExports: false,
 					providedExports: false,
+					optimizationBailout: false,
 					colors: true,
 					performance: true
 				});
@@ -194,6 +195,7 @@ describe("Stats", () => {
 					depth: false,
 					usedExports: false,
 					providedExports: false,
+					optimizationBailout: false,
 					children: false,
 					source: false,
 					errors: false,
