@@ -59,9 +59,9 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -151,9 +151,9 @@ console.log("Missing Text");
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -233,11 +233,11 @@ console.log("Missing Text");
 
 ```
 Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 2.3.2
+Version: webpack 2.6.0
 Child en:
     Hash: b61d16621736c97f557e
            Asset     Size  Chunks             Chunk Names
-    en.output.js  2.84 kB       0  [emitted]  main
+    en.output.js  2.85 kB       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
@@ -245,7 +245,7 @@ Child en:
 Child de:
     Hash: 52b4d8e68140f1345ef8
            Asset     Size  Chunks             Chunk Names
-    de.output.js  2.84 kB       0  [emitted]  main
+    de.output.js  2.85 kB       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
@@ -259,11 +259,11 @@ Child de:
 
 ```
 Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 2.3.2
+Version: webpack 2.6.0
 Child en:
     Hash: b61d16621736c97f557e
            Asset       Size  Chunks             Chunk Names
-    en.output.js  571 bytes       0  [emitted]  main
+    en.output.js  564 bytes       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
@@ -271,7 +271,7 @@ Child en:
 Child de:
     Hash: 52b4d8e68140f1345ef8
            Asset       Size  Chunks             Chunk Names
-    de.output.js  570 bytes       0  [emitted]  main
+    de.output.js  563 bytes       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
