@@ -13,5 +13,7 @@ import "./module";
 
 export default 1234;
 
-// exports is node.js exports and not webpacks
-Object.keys(exports).should.be.eql([]);
+if(eval("typeof exports !== \"undefined\"")) {
+	// exports is node.js exports and not webpacks
+	Object.keys(exports).should.be.eql([]);
+}
