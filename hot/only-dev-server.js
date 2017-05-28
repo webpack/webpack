@@ -27,6 +27,7 @@ if(module.hot) {
 					console.warn("Ignored an update to declined module " + data.chain.join(" -> "));
 				},
 				onErrored: function(data) {
+					console.error(data.error);
 					console.warn("Ignored an error while updating module " + data.moduleId + " (" + data.type + ")");
 				}
 			}).then(function(renewedModules) {
