@@ -70,9 +70,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -182,9 +182,9 @@ exports.exampleValue = subtract(add(42, 2), 2);
 
 ```
 Hash: 0b46eba3c061e1157fa9
-Version: webpack 2.3.2
+Version: webpack 2.6.0
     Asset     Size  Chunks             Chunk Names
-output.js  4.28 kB       0  [emitted]  main
+output.js  4.29 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > main [2] ./example.js 
@@ -196,7 +196,7 @@ chunk    {0} output.js (main) 197 bytes [entry] [rendered]
 
 ```
 Hash: 0b46eba3c061e1157fa9
-Version: webpack 2.3.2
+Version: webpack 2.6.0
     Asset  Size  Chunks             Chunk Names
 output.js  1 kB       0  [emitted]  main
 Entrypoint main = output.js

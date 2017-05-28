@@ -38,8 +38,9 @@ require.ensure(["b"], function(require) {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId])
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
+/******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
 /******/ 		}
 /******/ 		for(moduleId in moreModules) {
@@ -48,8 +49,9 @@ require.ensure(["b"], function(require) {
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
-/******/ 		while(resolves.length)
+/******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
+/******/ 		}
 /******/
 /******/ 	};
 /******/
@@ -61,13 +63,15 @@ require.ensure(["b"], function(require) {
 /******/ 		2: 0
 /******/ 	};
 /******/
+/******/ 	var resolvedPromise = new Promise(function(resolve) { resolve(); });
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -88,8 +92,9 @@ require.ensure(["b"], function(require) {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0)
-/******/ 			return Promise.resolve();
+/******/ 		if(installedChunks[chunkId] === 0) {
+/******/ 			return resolvedPromise;
+/******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
 /******/ 		if(installedChunks[chunkId]) {
@@ -122,7 +127,9 @@ require.ensure(["b"], function(require) {
 /******/ 			clearTimeout(timeout);
 /******/ 			var chunk = installedChunks[chunkId];
 /******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if(chunk) {
+/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				}
 /******/ 				installedChunks[chunkId] = undefined;
 /******/ 			}
 /******/ 		};
@@ -303,11 +310,11 @@ webpackJsonp([1],[
 
 ```
 Hash: 32e44c81729dc14e3f5a
-Version: webpack 2.3.2
+Version: webpack 2.6.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  599 bytes    0, 1  [emitted]  my own chunk
 1.output.js  393 bytes       1  [emitted]  
-  output.js       7 kB       2  [emitted]  main
+  output.js    7.17 kB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
     > my own chunk [3] ./example.js 3:0-6:18
@@ -342,11 +349,11 @@ chunk    {2} output.js (main) 452 bytes [entry] [rendered]
 
 ```
 Hash: 32e44c81729dc14e3f5a
-Version: webpack 2.3.2
+Version: webpack 2.6.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  72 bytes    0, 1  [emitted]  my own chunk
 1.output.js  52 bytes       1  [emitted]  
-  output.js    1.6 kB       2  [emitted]  main
+  output.js   1.61 kB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
     > my own chunk [3] ./example.js 3:0-6:18

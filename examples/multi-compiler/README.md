@@ -56,9 +56,9 @@ module.exports = [
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -150,9 +150,9 @@ console.log("Running " + "desktop" + " build");
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -245,7 +245,7 @@ console.log("Running " + "mobile" + " build");
 
 ```
 Hash: f70659afcc9f62694e35cceba4bc5163d755f291
-Version: webpack 2.3.2
+Version: webpack 2.6.0
 Child mobile:
     Hash: f70659afcc9f62694e35
         Asset     Size  Chunks             Chunk Names
@@ -270,11 +270,11 @@ Child desktop:
 
 ```
 Hash: f70659afcc9f62694e35cceba4bc5163d755f291
-Version: webpack 2.3.2
+Version: webpack 2.6.0
 Child mobile:
     Hash: f70659afcc9f62694e35
         Asset       Size  Chunks             Chunk Names
-    mobile.js  573 bytes       0  [emitted]  main
+    mobile.js  566 bytes       0  [emitted]  main
     Entrypoint main = mobile.js
     chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
         > main [1] ./example.js 
@@ -284,7 +284,7 @@ Child mobile:
 Child desktop:
     Hash: cceba4bc5163d755f291
          Asset       Size  Chunks             Chunk Names
-    desktop.js  553 bytes       0  [emitted]  main
+    desktop.js  546 bytes       0  [emitted]  main
     Entrypoint main = desktop.js
     chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
         > main [0] ./example.js 
