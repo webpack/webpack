@@ -62,7 +62,7 @@ module.exports = {
 
 <!-- inlined minimized file "manifest.[chunkhash].js" -->
 <script>
-!function(e){function r(n){if(t[n])return t[n].exports;var o=t[n]={i:n,l:!1,exports:{}};return e[n].call(o.exports,o,o.exports,r),o.l=!0,o.exports}var n=window.webpackJsonp;window.webpackJsonp=function(t,c,u){for(var a,i,f,s=0,l=[];s<t.length;s++)i=t[s],o[i]&&l.push(o[i][0]),o[i]=0;for(a in c)Object.prototype.hasOwnProperty.call(c,a)&&(e[a]=c[a]);for(n&&n(t,c,u);l.length;)l.shift()();if(u)for(s=0;s<u.length;s++)f=r(r.s=u[s]);return f};var t={},o={4:0};r.e=function(e){function n(){u.onerror=u.onload=null,clearTimeout(a);var r=o[e];0!==r&&(r&&r[1](new Error("Loading chunk "+e+" failed.")),o[e]=void 0)}if(0===o[e])return Promise.resolve();if(o[e])return o[e][2];var t=new Promise(function(r,n){o[e]=[r,n]});o[e][2]=t;var c=document.getElementsByTagName("head")[0],u=document.createElement("script");u.type="text/javascript",u.charset="utf-8",u.async=!0,u.timeout=12e4,r.nc&&u.setAttribute("nonce",r.nc),u.src=r.p+""+{0:"d1359b519c10df30787b",1:"06459c375ec851b0e2ae",2:"4d752abc2fcf569f13fc",3:"8d8564a703e7631bff4b"}[e]+".js";var a=setTimeout(n,12e4);return u.onerror=u.onload=n,c.appendChild(u),t},r.m=e,r.c=t,r.i=function(e){return e},r.d=function(e,n,t){r.o(e,n)||Object.defineProperty(e,n,{configurable:!1,enumerable:!0,get:t})},r.n=function(e){var n=e&&e.__esModule?function(){return e.default}:function(){return e};return r.d(n,"a",n),n},r.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},r.p="js/",r.oe=function(e){throw console.error(e),e}}([]);
+!function(e){function n(r){if(t[r])return t[r].exports;var o=t[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,n),o.l=!0,o.exports}var r=window.webpackJsonp;window.webpackJsonp=function(t,c,u){for(var i,a,f,s=0,l=[];s<t.length;s++)a=t[s],o[a]&&l.push(o[a][0]),o[a]=0;for(i in c)Object.prototype.hasOwnProperty.call(c,i)&&(e[i]=c[i]);for(r&&r(t,c,u);l.length;)l.shift()();if(u)for(s=0;s<u.length;s++)f=n(n.s=u[s]);return f};var t={},o={4:0},c=new Promise(function(e){e()});n.e=function(e){function r(){i.onerror=i.onload=null,clearTimeout(a);var n=o[e];0!==n&&(n&&n[1](new Error("Loading chunk "+e+" failed.")),o[e]=void 0)}if(0===o[e])return c;if(o[e])return o[e][2];var t=new Promise(function(n,r){o[e]=[n,r]});o[e][2]=t;var u=document.getElementsByTagName("head")[0],i=document.createElement("script");i.type="text/javascript",i.charset="utf-8",i.async=!0,i.timeout=12e4,n.nc&&i.setAttribute("nonce",n.nc),i.src=n.p+""+{0:"d1359b519c10df30787b",1:"06459c375ec851b0e2ae",2:"4d752abc2fcf569f13fc",3:"8d8564a703e7631bff4b"}[e]+".js";var a=setTimeout(r,12e4);return i.onerror=i.onload=r,u.appendChild(i),t},n.m=e,n.c=t,n.i=function(e){return e},n.d=function(e,r,t){n.o(e,r)||Object.defineProperty(e,r,{configurable:!1,enumerable:!0,get:t})},n.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(r,"a",r),r},n.o=function(e,n){return Object.prototype.hasOwnProperty.call(e,n)},n.p="js/",n.oe=function(e){throw console.error(e),e}}([]);
 </script>
 
 <!-- optional when using the CommonChunkPlugin for vendor modules -->
@@ -144,13 +144,13 @@ __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! .
 
 ```
 Hash: ea635224271deb1b32d9
-Version: webpack 2.3.3
+Version: webpack 2.6.0
                   Asset       Size  Chunks             Chunk Names
 d1359b519c10df30787b.js  237 bytes       0  [emitted]  
 06459c375ec851b0e2ae.js  243 bytes       1  [emitted]  
     common.[chunkhash].js  747 bytes       2  [emitted]  common
       main.[chunkhash].js  654 bytes       3  [emitted]  main
-  manifest.[chunkhash].js    5.88 kB       4  [emitted]  manifest
+  manifest.[chunkhash].js    6.05 kB       4  [emitted]  manifest
 Entrypoint main = manifest.[chunkhash].js common.[chunkhash].js main.[chunkhash].js
 Entrypoint common = manifest.[chunkhash].js common.[chunkhash].js
 chunk    {0} d1359b519c10df30787b.js 29 bytes {3} [rendered]
@@ -178,13 +178,13 @@ chunk    {4} manifest.[chunkhash].js (manifest) 0 bytes [entry] [rendered]
 
 ```
 Hash: ea635224271deb1b32d9
-Version: webpack 2.3.3
+Version: webpack 2.6.0
                   Asset       Size  Chunks             Chunk Names
 d1359b519c10df30787b.js   38 bytes       0  [emitted]  
 06459c375ec851b0e2ae.js   37 bytes       1  [emitted]  
     common.[chunkhash].js  152 bytes       2  [emitted]  common
       main.[chunkhash].js  166 bytes       3  [emitted]  main
-  manifest.[chunkhash].js    1.48 kB       4  [emitted]  manifest
+  manifest.[chunkhash].js    1.49 kB       4  [emitted]  manifest
 Entrypoint main = manifest.[chunkhash].js common.[chunkhash].js main.[chunkhash].js
 Entrypoint common = manifest.[chunkhash].js common.[chunkhash].js
 chunk    {0} d1359b519c10df30787b.js 29 bytes {3} [rendered]
