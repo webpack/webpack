@@ -26,7 +26,8 @@ const createMultiCompiler = () => {
 	}]);
 };
 
-describe("WatchEvents", () => {
+describe("WatcherEvents", function() {
+	this.timeout(10000);
 
 	it("should emit 'watch-close' when using single-compiler mode and the compiler is not running", function(done) {
 		let called = false;
@@ -37,11 +38,11 @@ describe("WatchEvents", () => {
 			done(err);
 		});
 
-		compiler.plugin('watch-close', () => {
-			called = true
+		compiler.plugin("watch-close", () => {
+			called = true;
 		});
 
-		compiler.plugin('done', () => {
+		compiler.plugin("done", () => {
 			watcher.close();
 		});
 
@@ -56,11 +57,11 @@ describe("WatchEvents", () => {
 			done(err);
 		});
 
-		compiler.plugin('watch-close', () => {
-			called = true
+		compiler.plugin("watch-close", () => {
+			called = true;
 		});
 
-		compiler.plugin('done', () => {
+		compiler.plugin("done", () => {
 			watcher.close();
 		});
 
