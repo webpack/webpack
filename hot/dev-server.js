@@ -3,13 +3,15 @@
 	Author Tobias Koppers @sokra
 */
 /*globals window __webpack_hash__ */
+"use strict";
+
 if(module.hot) {
-	var lastHash;
-	var upToDate = function upToDate() {
+	let lastHash;
+	const upToDate = function upToDate() {
 		return lastHash.indexOf(__webpack_hash__) >= 0;
 	};
-	var check = function check() {
-		module.hot.check(true).then(function(updatedModules) {
+	const check = function check() {
+		module.hot.check(true).then((updatedModules) => {
 			if(!updatedModules) {
 				console.warn("[HMR] Cannot find update. Need to do a full reload!");
 				console.warn("[HMR] (Probably because of restarting the webpack-dev-server)");
@@ -27,8 +29,8 @@ if(module.hot) {
 				console.log("[HMR] App is up to date.");
 			}
 
-		}).catch(function(err) {
-			var status = module.hot.status();
+		}).catch((err) => {
+			const status = module.hot.status();
 			if(["abort", "fail"].indexOf(status) >= 0) {
 				console.warn("[HMR] Cannot apply update. Need to do a full reload!");
 				console.warn("[HMR] " + err.stack || err.message);
@@ -38,8 +40,8 @@ if(module.hot) {
 			}
 		});
 	};
-	var hotEmitter = require("./emitter");
-	hotEmitter.on("webpackHotUpdate", function(currentHash) {
+	const hotEmitter = require("./emitter");
+	hotEmitter.on("webpackHotUpdate", (currentHash) => {
 		lastHash = currentHash;
 		if(!upToDate() && module.hot.status() === "idle") {
 			console.log("[HMR] Checking for updates on the server...");

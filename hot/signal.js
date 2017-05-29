@@ -3,9 +3,11 @@
 	Author Tobias Koppers @sokra
 */
 /*globals __resourceQuery */
+"use strict";
+
 if(module.hot) {
-	var checkForUpdate = function checkForUpdate(fromUpdate) {
-		module.hot.check().then(function(updatedModules) {
+	const checkForUpdate = function checkForUpdate(fromUpdate) {
+		module.hot.check().then((updatedModules) => {
 			if(!updatedModules) {
 				if(fromUpdate)
 					console.log("[HMR] Update applied.");
@@ -19,13 +21,13 @@ if(module.hot) {
 				onUnaccepted: function(data) {
 					console.warn("Ignored an update to unaccepted module " + data.chain.join(" -> "));
 				},
-			}).then(function(renewedModules) {
+			}).then((renewedModules) => {
 				require("./log-apply-result")(updatedModules, renewedModules);
 
 				checkForUpdate(true);
 			});
-		}).catch(function(err) {
-			var status = module.hot.status();
+		}).catch((err) => {
+			const status = module.hot.status();
 			if(["abort", "fail"].indexOf(status) >= 0) {
 				console.warn("[HMR] Cannot apply update.");
 				console.warn("[HMR] " + err.stack || err.message);
@@ -36,7 +38,7 @@ if(module.hot) {
 		});
 	};
 
-	process.on(__resourceQuery.substr(1) || "SIGUSR2", function() {
+	process.on(__resourceQuery.substr(1) || "SIGUSR2", () => {
 		if(module.hot.status() !== "idle") {
 			console.warn("[HMR] Got signal but currently in " + module.hot.status() + " state.");
 			console.warn("[HMR] Need to be in idle state to start hot update.");
