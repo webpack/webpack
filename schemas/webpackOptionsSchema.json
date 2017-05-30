@@ -1011,6 +1011,18 @@
             "assetsSort": {
               "type": "string",
               "description": "sort the assets by that field"
+            },
+            "providedExports": {
+              "type": "boolean",
+              "description": "show exports provided by modules"
+            },
+            "usedExports": {
+              "type": "boolean",
+              "description": "show exports used by modules"
+            },
+            "optimizationBailout": {
+              "type": "boolean",
+              "description": "show reasons why optimization bailed out for modules"
             }
           }
         },
