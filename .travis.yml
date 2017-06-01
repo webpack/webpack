@@ -14,10 +14,10 @@ cache:
 matrix:
   include:
     - os: linux
-      node_js: "7"
+      node_js: "8"
       env: NO_WATCH_TESTS=1 JOB_PART=lint
     - os: linux
-      node_js: "7"
+      node_js: "8"
       env: NO_WATCH_TESTS=1 JOB_PART=test
     - os: linux
       node_js: "6"
