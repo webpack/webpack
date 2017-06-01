@@ -88,6 +88,7 @@
     "schemas/"
   ],
   "scripts": {
+    "postinstall": "yarn link || true && yarn link webpack",
     "test": "mocha test/*.test.js --harmony --check-leaks",
     "travis:test": "npm run cover:min",
     "travis:lint": "npm run lint-files && npm run nsp",
