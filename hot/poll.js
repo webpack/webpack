@@ -5,12 +5,13 @@
 /*globals __resourceQuery */
 if(module.hot) {
 	var hotPollInterval = +(__resourceQuery.substr(1)) || (10 * 60 * 1000);
+	var log = require("./log");
 
 	var checkForUpdate = function checkForUpdate(fromUpdate) {
 		if(module.hot.status() === "idle") {
 			module.hot.check(true).then(function(updatedModules) {
 				if(!updatedModules) {
-					if(fromUpdate) console.log("[HMR] Update applied.");
+					if(fromUpdate) log("info", "[HMR] Update applied.");
 					return;
 				}
 				require("./log-apply-result")(updatedModules, updatedModules);
@@ -18,11 +19,11 @@ if(module.hot) {
 			}).catch(function(err) {
 				var status = module.hot.status();
 				if(["abort", "fail"].indexOf(status) >= 0) {
-					console.warn("[HMR] Cannot apply update.");
-					console.warn("[HMR] " + err.stack || err.message);
-					console.warn("[HMR] You need to restart the application!");
+					log("warning", "[HMR] Cannot apply update.");
+					log("warning", "[HMR] " + err.stack || err.message);
+					log("warning", "[HMR] You need to restart the application!");
 				} else {
-					console.warn("[HMR] Update failed: " + err.stack || err.message);
+					log("warning", "[HMR] Update failed: " + err.stack || err.message);
 				}
 			});
 		}
