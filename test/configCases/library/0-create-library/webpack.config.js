@@ -23,6 +23,18 @@ module.exports = [
 	},
 	{
 		output: {
+			filename: "umd-default.js",
+			libraryTarget: "umd",
+			libraryExport: "default"
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		}
+	},
+	{
+		output: {
 			filename: "this.js",
 			libraryTarget: "this"
 		},

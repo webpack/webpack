@@ -51,5 +51,18 @@ module.exports = [
 				TEST_EXTERNAL: true
 			})
 		]
+	},
+	{
+		entry: "./default-test.js",
+		resolve: {
+			alias: {
+				library: path.resolve(__dirname, "../../../js/config/library/0-create-library/umd-default.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("default")
+			})
+		]
 	}
 ];
