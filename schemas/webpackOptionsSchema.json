@@ -392,6 +392,16 @@
             "jsonp"
           ]
         },
+        "libraryExport": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/common.arrayOfStringValues"
+            }
+          ]
+        },
         "path": {
           "description": "The output directory as **absolute path** (required).",
           "type": "string",
