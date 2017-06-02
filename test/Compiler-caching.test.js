@@ -223,21 +223,21 @@ describe("Compiler (caching)", function() {
 		const helper = compile("./temp-cache-fixture/c", options, (stats, files) => {
 
 			// Built the first time
-			stats.modules[0].name.should.containEql("a.js");
-			stats.modules[0].built.should.be.exactly(true, "a.js should have been built");
+			stats.modules[0].name.should.containEql("c.js");
+			stats.modules[0].built.should.be.exactly(true, "c.js should have been built");
 
-			stats.modules[1].name.should.containEql("c.js");
-			stats.modules[1].built.should.be.exactly(true, "c.js should have been built");
+			stats.modules[1].name.should.containEql("a.js");
+			stats.modules[1].built.should.be.exactly(true, "a.js should have been built");
 
 			setTimeout(() => {
 				helper.runAgain((stats, files, iteration) => {
 
 					// Not built when cached the second run
-					stats.modules[0].name.should.containEql("a.js");
-					//stats.modules[0].built.should.be.exactly(false, "a.js should not have built");
+					stats.modules[0].name.should.containEql("c.js");
+					//stats.modules[0].built.should.be.exactly(false, "c.js should not have built");
 
-					stats.modules[1].name.should.containEql("c.js");
-					//stats.modules[1].built.should.be.exactly(false, "c.js should not have built");
+					stats.modules[1].name.should.containEql("a.js");
+					//stats.modules[1].built.should.be.exactly(false, "a.js should not have built");
 
 					const aContent = fs.readFileSync(tempFixture.aFilepath).toString().replace("This is a", "This is a MODIFIED");
 
@@ -247,11 +247,11 @@ describe("Compiler (caching)", function() {
 						helper.runAgain((stats, files, iteration) => {
 
 							// And only a.js built after it was modified
-							stats.modules[0].name.should.containEql("a.js");
-							stats.modules[0].built.should.be.exactly(true, "a.js should have been built");
+							stats.modules[0].name.should.containEql("c.js");
+							stats.modules[0].built.should.be.exactly(false, "c.js should not have built");
 
-							stats.modules[1].name.should.containEql("c.js");
-							stats.modules[1].built.should.be.exactly(false, "c.js should not have built");
+							stats.modules[1].name.should.containEql("a.js");
+							stats.modules[1].built.should.be.exactly(true, "a.js should have been built");
 
 							done();
 						});
@@ -269,20 +269,20 @@ describe("Compiler (caching)", function() {
 		const helper = compile("./temp-cache-fixture/c", options, (stats, files) => {
 
 			// Built the first time
-			stats.modules[0].name.should.containEql("a.js");
-			stats.modules[0].built.should.be.exactly(true, "a.js should have been built");
+			stats.modules[0].name.should.containEql("c.js");
+			stats.modules[0].built.should.be.exactly(true, "c.js should have been built");
 
-			stats.modules[1].name.should.containEql("c.js");
-			stats.modules[1].built.should.be.exactly(true, "c.js should have been built");
+			stats.modules[1].name.should.containEql("a.js");
+			stats.modules[1].built.should.be.exactly(true, "a.js should have been built");
 
 			helper.runAgain((stats, files, iteration) => {
 
 				// Not built when cached the second run
-				stats.modules[0].name.should.containEql("a.js");
-				//stats.modules[0].built.should.be.exactly(false, "a.js should not have built");
+				stats.modules[0].name.should.containEql("c.js");
+				//stats.modules[0].built.should.be.exactly(false, "c.js should not have built");
 
-				stats.modules[1].name.should.containEql("c.js");
-				//stats.modules[1].built.should.be.exactly(false, "c.js should not have built");
+				stats.modules[1].name.should.containEql("a.js");
+				//stats.modules[1].built.should.be.exactly(false, "a.js should not have built");
 
 				const aContent = fs.readFileSync(tempFixture.aFilepath).toString().replace("This is a", "This is a MODIFIED");
 
@@ -291,11 +291,11 @@ describe("Compiler (caching)", function() {
 				helper.runAgain((stats, files, iteration) => {
 
 					// And only a.js built after it was modified
-					stats.modules[0].name.should.containEql("a.js");
-					stats.modules[0].built.should.be.exactly(true, "a.js should have been built");
+					stats.modules[0].name.should.containEql("c.js");
+					//stats.modules[0].built.should.be.exactly(false, "c.js should not have built");
 
-					stats.modules[1].name.should.containEql("c.js");
-					//stats.modules[1].built.should.be.exactly(false, "c.js should not have built");
+					stats.modules[1].name.should.containEql("a.js");
+					stats.modules[1].built.should.be.exactly(true, "a.js should have been built");
 
 					done();
 				});
