@@ -3689,9 +3689,9 @@ source-list-map@^0.1.4, source-list-map@~0.1.7:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-0.1.8.tgz#c550b2ab5427f6b3f21f5afead88c4f5587b2106"
 
-source-list-map@^1.1.1:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-1.1.2.tgz#9889019d1024cce55cdc069498337ef6186a11a1"
+source-list-map@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/source-list-map/-/source-list-map-2.0.0.tgz#aaa47403f7b245a92fbc97ea08f250d6087ed085"
 
 source-map@0.4.x, source-map@^0.4.4:
   version "0.4.4"
@@ -4158,11 +4158,11 @@ webpack-sources@^0.1.0:
     source-list-map "~0.1.7"
     source-map "~0.5.3"
 
-webpack-sources@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-0.2.3.tgz#17c62bfaf13c707f9d02c479e0dcdde8380697fb"
+webpack-sources@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-1.0.1.tgz#c7356436a4d13123be2e2426a05d1dad9cbe65cf"
   dependencies:
-    source-list-map "^1.1.1"
+    source-list-map "^2.0.0"
     source-map "~0.5.3"
 
 whatwg-fetch@>=0.10.0:
