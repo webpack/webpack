@@ -1,5 +1,7 @@
 module.exports = {
 	module: {
-		noParse: /not-parsed/
+		noParse: function(content) {
+			return /not-parsed/.test(content);
+		}
 	}
 };

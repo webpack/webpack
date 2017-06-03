@@ -160,6 +160,9 @@
               "instanceof": "RegExp"
             },
             {
+              "instanceof": "Function"
+            },
+            {
               "items": {
                 "type": "string",
                 "absolutePath": true
