@@ -20,7 +20,7 @@ it("should pass mangle options", function() {
 	var fs = require("fs"),
 		path = require("path");
 	var source = fs.readFileSync(path.join(__dirname, "ie8.js"), "utf-8");
-	source.should.containEql("function r(n){return function(t){try{n()}catch(n){t(n)}}}");
+	source.should.containEql("function r(t){return function(e){try{t()}catch(t){e(t)}}}");
 });
 
 it("should extract comments to separate file", function() {
@@ -48,7 +48,7 @@ it("should pass compress options", function() {
 	var fs = require("fs"),
 		path = require("path");
 	var source = fs.readFileSync(path.join(__dirname, "compress.js"), "utf-8");
-	source.should.containEql("function e(){var n=2;n=3,console.log(1+n),console.log(n+3),console.log(4),console.log(1+n+3)}");
+	source.should.containEql("function o(){var e=2;e=3,console.log(1+e),console.log(e+3),console.log(4),console.log(1+e+3)}");
 });
 
 require.include("./test.js");

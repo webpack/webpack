@@ -1,7 +1,7 @@
 Time: <CLR=BOLD>X</CLR>ms
   <CLR=BOLD>Asset</CLR>     <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
- <CLR=32,BOLD>sec.js</CLR>  2.98 kB       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         sec
-<CLR=33,BOLD>main.js</CLR>   <CLR=33,BOLD>303 kB</CLR>       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+ <CLR=32,BOLD>sec.js</CLR>  3.85 kB       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         sec
+<CLR=33,BOLD>main.js</CLR>   <CLR=33,BOLD>304 kB</CLR>       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
 Entrypoint <CLR=BOLD>sec</CLR> = <CLR=32,BOLD>sec.js</CLR>
 chunk    {<CLR=33,BOLD>0</CLR>} <CLR=32,BOLD>sec.js</CLR> (sec) 114 bytes<CLR=33,BOLD> [entry]</CLR><CLR=32,BOLD> [rendered]</CLR>
@@ -17,11 +17,11 @@ chunk    {<CLR=33,BOLD>1</CLR>} <CLR=32,BOLD>main.js</CLR> (main) 300 kB<CLR=33,
 <CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (250 kB).
 This can impact web performance.
 Assets: 
-  main.js (303 kB)</CLR>
+  main.js (304 kB)</CLR>
 
 <CLR=33,BOLD>WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (250 kB). This can impact web performance.
 Entrypoints:
-  main (303 kB)
+  main (304 kB)
       main.js
 </CLR>
 
