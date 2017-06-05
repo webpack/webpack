@@ -104,8 +104,6 @@ module.exports = {
 /******/ 		4: 0
 /******/ 	};
 /******/
-/******/ 	var resolvedPromise = new Promise(function(resolve) { resolve(); });
-/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/
@@ -133,20 +131,21 @@ module.exports = {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0) {
-/******/ 			return resolvedPromise;
+/******/ 		var installedChunkData = installedChunks[chunkId];
+/******/ 		if(installedChunkData === 0) {
+/******/ 			return new Promise(function(resolve) { resolve(); });
 /******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
-/******/ 		if(installedChunks[chunkId]) {
-/******/ 			return installedChunks[chunkId][2];
+/******/ 		if(installedChunkData) {
+/******/ 			return installedChunkData[2];
 /******/ 		}
 /******/
 /******/ 		// setup Promise in chunk cache
 /******/ 		var promise = new Promise(function(resolve, reject) {
-/******/ 			installedChunks[chunkId] = [resolve, reject];
+/******/ 			installedChunkData = installedChunks[chunkId] = [resolve, reject];
 /******/ 		});
-/******/ 		installedChunks[chunkId][2] = promise;
+/******/ 		installedChunkData[2] = promise;
 /******/
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
@@ -185,9 +184,6 @@ module.exports = {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -218,7 +214,7 @@ module.exports = {
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 ```
@@ -226,47 +222,45 @@ module.exports = {
 </details>
 
 ``` javascript
-/******/ ({
-
-/***/ 3:
-/* unknown exports provided */
-/* all exports used */
-/*!********************!*\
-  !*** ./vendor1.js ***!
-  \********************/
-/***/ (function(module, exports) {
-
-module.exports = "vendor1";
-
-/***/ }),
-
-/***/ 4:
-/* unknown exports provided */
-/* all exports used */
-/*!********************!*\
-  !*** ./vendor2.js ***!
-  \********************/
-/***/ (function(module, exports) {
-
-module.exports = "vendor2";
-
-/***/ }),
-
-/***/ 8:
-/* unknown exports provided */
-/* all exports used */
+/******/ ([
+/* 0 */,
+/* 1 */,
+/* 2 */
 /*!*********************************!*\
   !*** multi ./vendor1 ./vendor2 ***!
   \*********************************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ./vendor1 */3);
 module.exports = __webpack_require__(/*! ./vendor2 */4);
 
 
-/***/ })
+/***/ }),
+/* 3 */
+/*!********************!*\
+  !*** ./vendor1.js ***!
+  \********************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports) {
 
-/******/ });
+module.exports = "vendor1";
+
+/***/ }),
+/* 4 */
+/*!********************!*\
+  !*** ./vendor2.js ***!
+  \********************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports) {
+
+module.exports = "vendor2";
+
+/***/ })
+/******/ ]);
 ```
 
 # js/common.js
@@ -274,22 +268,22 @@ module.exports = __webpack_require__(/*! ./vendor2 */4);
 ``` javascript
 webpackJsonp([0],[
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
 /*!*********************!*\
   !*** ./utility2.js ***!
   \*********************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports) {
 
 module.exports = "utility2";
 
 /***/ }),
 /* 1 */
-/* unknown exports provided */
-/* all exports used */
 /*!*********************!*\
   !*** ./utility3.js ***!
   \*********************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports) {
 
 module.exports = "utility3";
@@ -303,30 +297,30 @@ module.exports = "utility3";
 ``` javascript
 webpackJsonp([1],{
 
-/***/ 2:
-/* unknown exports provided */
-/* all exports used */
-/*!*********************!*\
-  !*** ./utility1.js ***!
-  \*********************/
-/***/ (function(module, exports) {
-
-module.exports = "utility1";
-
-/***/ }),
-
 /***/ 5:
-/* unknown exports provided */
-/* all exports used */
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-var utility1 = __webpack_require__(/*! ./utility1 */ 2);
+var utility1 = __webpack_require__(/*! ./utility1 */ 6);
 var utility2 = __webpack_require__(/*! ./utility2 */ 0);
 
 module.exports = "pageA";
+
+/***/ }),
+
+/***/ 6:
+/*!*********************!*\
+  !*** ./utility1.js ***!
+  \*********************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports) {
+
+module.exports = "utility1";
 
 /***/ })
 
@@ -338,12 +332,12 @@ module.exports = "pageA";
 ``` javascript
 webpackJsonp([3],{
 
-/***/ 6:
-/* unknown exports provided */
-/* all exports used */
+/***/ 7:
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 var utility2 = __webpack_require__(/*! ./utility2 */ 0);
@@ -353,7 +347,7 @@ module.exports = "pageB";
 
 /***/ })
 
-},[6]);
+},[7]);
 ```
 
 # js/pageC.js
@@ -361,12 +355,12 @@ module.exports = "pageB";
 ``` javascript
 webpackJsonp([2],{
 
-/***/ 7:
-/* unknown exports provided */
-/* all exports used */
+/***/ 8:
 /*!******************!*\
   !*** ./pageC.js ***!
   \******************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 var utility2 = __webpack_require__(/*! ./utility2 */ 0);
@@ -376,7 +370,7 @@ module.exports = "pageC";
 
 /***/ })
 
-},[7]);
+},[8]);
 ```
 
 # Info
@@ -384,14 +378,14 @@ module.exports = "pageC";
 ## Uncompressed
 
 ```
-Hash: 03a4f8b5f1f257f40a63
-Version: webpack 2.6.0
+Hash: 3b80b7c17398c31e4705
+Version: webpack 3.0.0-rc.0
     Asset       Size  Chunks             Chunk Names
-common.js  457 bytes       0  [emitted]  common
- pageA.js  593 bytes       1  [emitted]  pageA
- pageC.js  373 bytes       2  [emitted]  pageC
- pageB.js  373 bytes       3  [emitted]  pageB
-vendor.js    6.85 kB       4  [emitted]  vendor
+common.js  459 bytes       0  [emitted]  common
+ pageA.js  595 bytes       1  [emitted]  pageA
+ pageC.js  374 bytes       2  [emitted]  pageC
+ pageB.js  374 bytes       3  [emitted]  pageB
+vendor.js     6.7 kB       4  [emitted]  vendor
 Entrypoint vendor = vendor.js
 Entrypoint pageA = vendor.js common.js pageA.js
 Entrypoint pageB = vendor.js common.js pageB.js
@@ -399,42 +393,42 @@ Entrypoint pageC = vendor.js common.js pageC.js
 chunk    {0} common.js (common) 56 bytes {4} [initial] [rendered]
     [0] ./utility2.js 28 bytes {0} [built]
         cjs require ./utility2 [5] ./pageA.js 2:15-36
-        cjs require ./utility2 [6] ./pageB.js 1:15-36
-        cjs require ./utility2 [7] ./pageC.js 1:15-36
+        cjs require ./utility2 [7] ./pageB.js 1:15-36
+        cjs require ./utility2 [8] ./pageC.js 1:15-36
     [1] ./utility3.js 28 bytes {0} [built]
-        cjs require ./utility3 [6] ./pageB.js 2:15-36
-        cjs require ./utility3 [7] ./pageC.js 2:15-36
+        cjs require ./utility3 [7] ./pageB.js 2:15-36
+        cjs require ./utility3 [8] ./pageC.js 2:15-36
 chunk    {1} pageA.js (pageA) 133 bytes {0} [initial] [rendered]
     > pageA [5] ./pageA.js 
-    [2] ./utility1.js 28 bytes {1} [built]
-        cjs require ./utility1 [5] ./pageA.js 1:15-36
     [5] ./pageA.js 105 bytes {1} [built]
+    [6] ./utility1.js 28 bytes {1} [built]
+        cjs require ./utility1 [5] ./pageA.js 1:15-36
 chunk    {2} pageC.js (pageC) 105 bytes {0} [initial] [rendered]
-    > pageC [7] ./pageC.js 
-    [7] ./pageC.js 105 bytes {2} [built]
+    > pageC [8] ./pageC.js 
+    [8] ./pageC.js 105 bytes {2} [built]
 chunk    {3} pageB.js (pageB) 105 bytes {0} [initial] [rendered]
-    > pageB [6] ./pageB.js 
-    [6] ./pageB.js 105 bytes {3} [built]
+    > pageB [7] ./pageB.js 
+    [7] ./pageB.js 105 bytes {3} [built]
 chunk    {4} vendor.js (vendor) 94 bytes [entry] [rendered]
-    > vendor [8] multi ./vendor1 ./vendor2 
+    > vendor [2] multi ./vendor1 ./vendor2 
+    [2] multi ./vendor1 ./vendor2 40 bytes {4} [built]
     [3] ./vendor1.js 27 bytes {4} [built]
-        single entry ./vendor1 [8] multi ./vendor1 ./vendor2 vendor:100000
+        single entry ./vendor1 [2] multi ./vendor1 ./vendor2 vendor:100000
     [4] ./vendor2.js 27 bytes {4} [built]
-        single entry ./vendor2 [8] multi ./vendor1 ./vendor2 vendor:100001
-    [8] multi ./vendor1 ./vendor2 40 bytes {4} [built]
+        single entry ./vendor2 [2] multi ./vendor1 ./vendor2 vendor:100001
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 03a4f8b5f1f257f40a63
-Version: webpack 2.6.0
+Hash: 3b80b7c17398c31e4705
+Version: webpack 3.0.0-rc.0
     Asset       Size  Chunks             Chunk Names
 common.js   92 bytes       0  [emitted]  common
  pageA.js  109 bytes       1  [emitted]  pageA
  pageC.js   71 bytes       2  [emitted]  pageC
  pageB.js   71 bytes       3  [emitted]  pageB
-vendor.js    1.51 kB       4  [emitted]  vendor
+vendor.js    1.48 kB       4  [emitted]  vendor
 Entrypoint vendor = vendor.js
 Entrypoint pageA = vendor.js common.js pageA.js
 Entrypoint pageB = vendor.js common.js pageB.js
@@ -442,27 +436,27 @@ Entrypoint pageC = vendor.js common.js pageC.js
 chunk    {0} common.js (common) 56 bytes {4} [initial] [rendered]
     [0] ./utility2.js 28 bytes {0} [built]
         cjs require ./utility2 [5] ./pageA.js 2:15-36
-        cjs require ./utility2 [6] ./pageB.js 1:15-36
-        cjs require ./utility2 [7] ./pageC.js 1:15-36
+        cjs require ./utility2 [7] ./pageB.js 1:15-36
+        cjs require ./utility2 [8] ./pageC.js 1:15-36
     [1] ./utility3.js 28 bytes {0} [built]
-        cjs require ./utility3 [6] ./pageB.js 2:15-36
-        cjs require ./utility3 [7] ./pageC.js 2:15-36
+        cjs require ./utility3 [7] ./pageB.js 2:15-36
+        cjs require ./utility3 [8] ./pageC.js 2:15-36
 chunk    {1} pageA.js (pageA) 133 bytes {0} [initial] [rendered]
     > pageA [5] ./pageA.js 
-    [2] ./utility1.js 28 bytes {1} [built]
-        cjs require ./utility1 [5] ./pageA.js 1:15-36
     [5] ./pageA.js 105 bytes {1} [built]
+    [6] ./utility1.js 28 bytes {1} [built]
+        cjs require ./utility1 [5] ./pageA.js 1:15-36
 chunk    {2} pageC.js (pageC) 105 bytes {0} [initial] [rendered]
-    > pageC [7] ./pageC.js 
-    [7] ./pageC.js 105 bytes {2} [built]
+    > pageC [8] ./pageC.js 
+    [8] ./pageC.js 105 bytes {2} [built]
 chunk    {3} pageB.js (pageB) 105 bytes {0} [initial] [rendered]
-    > pageB [6] ./pageB.js 
-    [6] ./pageB.js 105 bytes {3} [built]
+    > pageB [7] ./pageB.js 
+    [7] ./pageB.js 105 bytes {3} [built]
 chunk    {4} vendor.js (vendor) 94 bytes [entry] [rendered]
-    > vendor [8] multi ./vendor1 ./vendor2 
+    > vendor [2] multi ./vendor1 ./vendor2 
+    [2] multi ./vendor1 ./vendor2 40 bytes {4} [built]
     [3] ./vendor1.js 27 bytes {4} [built]
-        single entry ./vendor1 [8] multi ./vendor1 ./vendor2 vendor:100000
+        single entry ./vendor1 [2] multi ./vendor1 ./vendor2 vendor:100000
     [4] ./vendor2.js 27 bytes {4} [built]
-        single entry ./vendor2 [8] multi ./vendor1 ./vendor2 vendor:100001
-    [8] multi ./vendor1 ./vendor2 40 bytes {4} [built]
+        single entry ./vendor2 [2] multi ./vendor1 ./vendor2 vendor:100001
 ```
