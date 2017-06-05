@@ -438,18 +438,6 @@ module.exports = function(yargs, argv, convertOptions) {
 			}));
 		});
 
-		ifBooleanArg("optimize-minimize", function() {
-			ensureArray(options, "plugins");
-			var UglifyJsPlugin = require("../lib/optimize/UglifyJsPlugin");
-			var LoaderOptionsPlugin = require("../lib/LoaderOptionsPlugin");
-			options.plugins.push(new UglifyJsPlugin({
-				sourceMap: options.devtool && (options.devtool.indexOf("sourcemap") >= 0 || options.devtool.indexOf("source-map") >= 0)
-			}));
-			options.plugins.push(new LoaderOptionsPlugin({
-				minimize: true
-			}));
-		});
-
 		ifArg("prefetch", function(request) {
 			ensureArray(options, "plugins");
 			var PrefetchPlugin = require("../lib/PrefetchPlugin");
