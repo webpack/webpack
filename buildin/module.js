@@ -4,7 +4,7 @@ module.exports = function(module) {
 		module.paths = [];
 		// module.parent = undefined by default
 		if(!module.children) module.children = [];
-		if(Object.prototype.hasOwnProperty('__defineGetter__')) {
+		try{
 			Object.defineProperty(module, "loaded", {
 				enumerable: true,
 				get: function () {
@@ -18,6 +18,7 @@ module.exports = function(module) {
 				}
 			});
 		}
+		catch(e){}
 		module.webpackPolyfill = 1;
 	}
 	return module;

@@ -3,7 +3,7 @@ module.exports = function(originalModule) {
 		var module = Object.create(originalModule);
 		// module.parent = undefined by default
 		if(!module.children) module.children = [];
-		if(Object.prototype.hasOwnProperty('__defineGetter__')) {
+		try {
 			Object.defineProperty(module, "loaded", {
 				enumerable: true,
 				get: function() {
@@ -17,6 +17,7 @@ module.exports = function(originalModule) {
 				}
 			});
 		}
+		catch(e){}
 
 		Object.defineProperty(module, "exports", {
 			enumerable: true,
