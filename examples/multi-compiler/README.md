@@ -83,9 +83,6 @@ module.exports = [
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -123,11 +120,11 @@ module.exports = [
 ``` javascript
 /******/ ([
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 if(false) {
@@ -177,9 +174,6 @@ console.log("Running " + "desktop" + " build");
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -207,33 +201,33 @@ console.log("Running " + "desktop" + " build");
 /******/ 	__webpack_require__.p = "js/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
-/*!*************************!*\
-  !*** ./mobile-stuff.js ***!
-  \*************************/
-/***/ (function(module, exports) {
-
-// mobile only stuff
-
-/***/ }),
-/* 1 */
-/* unknown exports provided */
-/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 if(true) {
-	__webpack_require__(/*! ./mobile-stuff */ 0);
+	__webpack_require__(/*! ./mobile-stuff */ 1);
 }
 console.log("Running " + "mobile" + " build");
+
+/***/ }),
+/* 1 */
+/*!*************************!*\
+  !*** ./mobile-stuff.js ***!
+  \*************************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports) {
+
+// mobile only stuff
 
 /***/ })
 /******/ ]);
@@ -244,22 +238,22 @@ console.log("Running " + "mobile" + " build");
 ## Uncompressed
 
 ```
-Hash: f70659afcc9f62694e35cceba4bc5163d755f291
-Version: webpack 2.6.0
+Hash: a201abd2de73265dd538cceba4bc5163d755f291
+Version: webpack 3.0.0-rc.0
 Child mobile:
-    Hash: f70659afcc9f62694e35
+    Hash: a201abd2de73265dd538
         Asset     Size  Chunks             Chunk Names
-    mobile.js  3.12 kB       0  [emitted]  main
+    mobile.js  2.96 kB       0  [emitted]  main
     Entrypoint main = mobile.js
     chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
-        > main [1] ./example.js 
-        [0] ./mobile-stuff.js 20 bytes {0} [built]
-            cjs require ./mobile-stuff [1] ./example.js 2:1-26
-        [1] ./example.js 97 bytes {0} [built]
+        > main [0] ./example.js 
+        [0] ./example.js 97 bytes {0} [built]
+        [1] ./mobile-stuff.js 20 bytes {0} [built]
+            cjs require ./mobile-stuff [0] ./example.js 2:1-26
 Child desktop:
     Hash: cceba4bc5163d755f291
          Asset     Size  Chunks             Chunk Names
-    desktop.js  2.88 kB       0  [emitted]  main
+    desktop.js  2.72 kB       0  [emitted]  main
     Entrypoint main = desktop.js
     chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
         > main [0] ./example.js 
@@ -269,22 +263,22 @@ Child desktop:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: f70659afcc9f62694e35cceba4bc5163d755f291
-Version: webpack 2.6.0
+Hash: a201abd2de73265dd538cceba4bc5163d755f291
+Version: webpack 3.0.0-rc.0
 Child mobile:
-    Hash: f70659afcc9f62694e35
+    Hash: a201abd2de73265dd538
         Asset       Size  Chunks             Chunk Names
-    mobile.js  566 bytes       0  [emitted]  main
+    mobile.js  540 bytes       0  [emitted]  main
     Entrypoint main = mobile.js
     chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
-        > main [1] ./example.js 
-        [0] ./mobile-stuff.js 20 bytes {0} [built]
-            cjs require ./mobile-stuff [1] ./example.js 2:1-26
-        [1] ./example.js 97 bytes {0} [built]
+        > main [0] ./example.js 
+        [0] ./example.js 97 bytes {0} [built]
+        [1] ./mobile-stuff.js 20 bytes {0} [built]
+            cjs require ./mobile-stuff [0] ./example.js 2:1-26
 Child desktop:
     Hash: cceba4bc5163d755f291
          Asset       Size  Chunks             Chunk Names
-    desktop.js  546 bytes       0  [emitted]  main
+    desktop.js  520 bytes       0  [emitted]  main
     Entrypoint main = desktop.js
     chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
         > main [0] ./example.js 

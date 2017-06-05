@@ -65,9 +65,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -105,11 +102,11 @@ return /******/ (function(modules) { // webpackBootstrap
 ``` js
 /******/ ([
 /* 0 */
-/* exports provided: value, increment, default */
-/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
+/*! exports provided: value, increment, default */
+/*! all exports used */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -134,9 +131,9 @@ function increment() {
 
 ```
 Hash: 313bc0b3685e952e6c32
-Version: webpack 2.6.0
+Version: webpack 3.0.0-rc.0
            Asset     Size  Chunks             Chunk Names
-MyLibrary.umd.js  3.61 kB       0  [emitted]  main
+MyLibrary.umd.js  3.45 kB       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -148,9 +145,9 @@ chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
 
 ```
 Hash: 313bc0b3685e952e6c32
-Version: webpack 2.6.0
+Version: webpack 3.0.0-rc.0
            Asset       Size  Chunks             Chunk Names
-MyLibrary.umd.js  898 bytes       0  [emitted]  main
+MyLibrary.umd.js  872 bytes       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
     > main [0] ./example.js 

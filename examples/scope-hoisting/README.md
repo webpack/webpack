@@ -152,8 +152,6 @@ module.exports = {
 /******/ 		1: 0
 /******/ 	};
 /******/
-/******/ 	var resolvedPromise = new Promise(function(resolve) { resolve(); });
-/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/
@@ -181,20 +179,21 @@ module.exports = {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0) {
-/******/ 			return resolvedPromise;
+/******/ 		var installedChunkData = installedChunks[chunkId];
+/******/ 		if(installedChunkData === 0) {
+/******/ 			return new Promise(function(resolve) { resolve(); });
 /******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
-/******/ 		if(installedChunks[chunkId]) {
-/******/ 			return installedChunks[chunkId][2];
+/******/ 		if(installedChunkData) {
+/******/ 			return installedChunkData[2];
 /******/ 		}
 /******/
 /******/ 		// setup Promise in chunk cache
 /******/ 		var promise = new Promise(function(resolve, reject) {
-/******/ 			installedChunks[chunkId] = [resolve, reject];
+/******/ 			installedChunkData = installedChunks[chunkId] = [resolve, reject];
 /******/ 		});
-/******/ 		installedChunks[chunkId][2] = promise;
+/******/ 		installedChunkData[2] = promise;
 /******/
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
@@ -233,9 +232,6 @@ module.exports = {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -266,7 +262,7 @@ module.exports = {
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 ```
@@ -276,59 +272,60 @@ module.exports = {
 ``` javascript
 /******/ ([
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
-/*!********************************!*\
-  !*** ./example.js + 2 modules ***!
-  \********************************/
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-
-// CONCATENAMED MODULE: ./node_modules/a.js
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_shared__ = __webpack_require__(/*! shared */ 1);
-// module a
-var a = "a";
-
-
-// CONCATENAMED MODULE: ./node_modules/b.js
-// module b
-function b_js_a() {
-	return "b";
-};
-
-// CONCATENAMED MODULE: ./example.js
-
-
-
-__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! ./lazy */ 2)).then(function(lazy) {
-	console.log(a, b_js_a(), __WEBPACK_IMPORTED_MODULE_0_shared__["a"], __WEBPACK_IMPORTED_MODULE_0_shared__["b"], lazy.c, lazy.d.a, lazy.x, lazy.y);
-});
-
-
-/***/ }),
-/* 1 */
-/* exports provided: x, y */
-/* exports used: x, y */
 /*!********************************************!*\
   !*** ./node_modules/shared.js + 1 modules ***!
   \********************************************/
+/*! exports provided: x, y */
+/*! exports used: x, y */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
-// CONCATENAMED MODULE: ./node_modules/shared2.js
+// CONCATENATED MODULE: ./node_modules/shared2.js
 // shared2 module
 var y = "y";
 
-// CONCATENAMED MODULE: ./node_modules/shared.js
+// CONCATENATED MODULE: ./node_modules/shared.js
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return x; });
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "b", function() { return y; });
 // shared module
 var x = "x";
 
+
+
+/***/ }),
+/* 1 */
+/*!********************************!*\
+  !*** ./example.js + 2 modules ***!
+  \********************************/
+/*! no static exports found */
+/*! all exports used */
+/*! ModuleConcatenation (inner): module is an entrypoint */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+
+// CONCATENATED MODULE: ./node_modules/a.js
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_shared__ = __webpack_require__(/*! shared */ 0);
+// module a
+var a = "a";
+
+
+// CONCATENATED MODULE: ./node_modules/b.js
+// module b
+function b_js_a() {
+	return "b";
+};
+
+// CONCATENATED MODULE: ./example.js
+
+
+
+__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! ./lazy */ 3)).then(function(lazy) {
+	console.log(a, b_js_a(), __WEBPACK_IMPORTED_MODULE_0_shared__["a"], __WEBPACK_IMPORTED_MODULE_0_shared__["b"], lazy.c, lazy.d.a, lazy.x, lazy.y);
+});
 
 
 /***/ })
@@ -342,20 +339,34 @@ webpackJsonp([0],[
 /* 0 */,
 /* 1 */,
 /* 2 */
-/* exports provided: d, c, x, y */
-/* all exports used */
+/*!*****************************!*\
+  !*** ./node_modules/cjs.js ***!
+  \*****************************/
+/*! no static exports found */
+/*! exports used: c */
+/***/ (function(module, exports) {
+
+// module cjs (commonjs)
+exports.c = "e";
+
+
+/***/ }),
+/* 3 */
 /*!*****************************!*\
   !*** ./lazy.js + 2 modules ***!
   \*****************************/
+/*! exports provided: d, c, x, y */
+/*! all exports used */
+/*! ModuleConcatenation (inner): module is used with non-harmony imports from ./example.js */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
-// CONCATENAMED MODULE: ./node_modules/c.js
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_cjs__ = __webpack_require__(/*! cjs */ 3);
+// CONCATENATED MODULE: ./node_modules/c.js
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_cjs__ = __webpack_require__(/*! cjs */ 2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_cjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_cjs__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_shared__ = __webpack_require__(/*! shared */ 1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_shared__ = __webpack_require__(/*! shared */ 0);
 // module c
 
 
@@ -363,13 +374,13 @@ var c = String.fromCharCode(__WEBPACK_IMPORTED_MODULE_0_cjs__["c"].charCodeAt(0)
 
 
 
-// CONCATENAMED MODULE: ./node_modules/d.js
+// CONCATENATED MODULE: ./node_modules/d.js
 var d_js_namespaceObject = {};
 __webpack_require__.d(d_js_namespaceObject, "a", function() { return a; });
 // module d
 var a = "d";
 
-// CONCATENAMED MODULE: ./lazy.js
+// CONCATENATED MODULE: ./lazy.js
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "c", function() { return c; });
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "x", function() { return __WEBPACK_IMPORTED_MODULE_1_shared__["a"]; });
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "y", function() { return __WEBPACK_IMPORTED_MODULE_1_shared__["b"]; });
@@ -379,19 +390,6 @@ var a = "d";
 
 
 
-/***/ }),
-/* 3 */
-/* unknown exports provided */
-/* exports used: c */
-/*!*****************************!*\
-  !*** ./node_modules/cjs.js ***!
-  \*****************************/
-/***/ (function(module, exports) {
-
-// module cjs (commonjs)
-exports.c = "e";
-
-
 /***/ })
 ]);
 ```
@@ -399,7 +397,7 @@ exports.c = "e";
 Minimized
 
 ``` javascript
-webpackJsonp([0],[,,function(n,r,t){"use strict";Object.defineProperty(exports,"__esModule",{value:!0});var e=t(3),u=(t.n(e),t(1)),c=String.fromCharCode(e.c.charCodeAt(0)-2),o={};t.d(o,"a",function(){return d});var d="d";t.d(r,"c",function(){return c}),t.d(r,"x",function(){return u.a}),t.d(r,"y",function(){return u.b}),t.d(r,"d",function(){return o})},function(n,r){r.c="e"}]);
+webpackJsonp([0],[,,function(n,r){r.c="e"},function(n,r,t){"use strict";Object.defineProperty(r,"__esModule",{value:!0});var e=t(2),u=(t.n(e),t(0)),c=String.fromCharCode(e.c.charCodeAt(0)-2),o={};t.d(o,"a",function(){return d});var d="d";t.d(r,"c",function(){return c}),t.d(r,"x",function(){return u.a}),t.d(r,"y",function(){return u.b}),t.d(r,"d",function(){return o})}]);
 ```
 
 # Info
@@ -407,53 +405,53 @@ webpackJsonp([0],[,,function(n,r,t){"use strict";Object.defineProperty(exports,"
 ## Uncompressed
 
 ```
-Hash: 4091e96718e53f8b98fd
-Version: webpack 2.5.1
+Hash: 26f89d6006fb6c5a1fa1
+Version: webpack 3.0.0-rc.0
       Asset     Size  Chunks             Chunk Names
-0.output.js  1.85 kB       0  [emitted]  
-  output.js  7.53 kB       1  [emitted]  main
+0.output.js  1.96 kB       0  [emitted]  
+  output.js  7.46 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 276 bytes {1} [rendered]
-    > [4] 4:0-16
-    [2] ./lazy.js + 2 modules 232 bytes {0} [built]
-        [exports: d, c, x, y]
-        import() ./lazy [4] ./example.js 4:0-16
-    [3] ./node_modules/cjs.js 44 bytes {0} [built]
+    > [] 4:0-16
+    [2] ./node_modules/cjs.js 44 bytes {0} [built]
         [only some exports used: c]
-        harmony import cjs [8] ./node_modules/c.js 2:0-29
+        harmony import cjs [3] ./lazy.js + 2 modules 2:0-29
+    [3] ./lazy.js + 2 modules 232 bytes {0} [built]
+        [exports: d, c, x, y]
+        import() ./lazy [] ./example.js 4:0-16
 chunk    {1} output.js (main) 385 bytes [entry] [rendered]
-    > main [4] 
-    [0] ./example.js + 2 modules 280 bytes {1} [built]
-    [1] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
+    > main [] 
+    [0] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
         [exports: x, y]
         [only some exports used: x, y]
-        harmony import shared [6] ./node_modules/a.js 3:0-23
-        harmony import shared [8] ./node_modules/c.js 6:0-30
+        harmony import shared [1] ./example.js + 2 modules 3:0-23
+        harmony import shared [3] ./lazy.js + 2 modules 6:0-30
+    [1] ./example.js + 2 modules 280 bytes {1} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 4091e96718e53f8b98fd
-Version: webpack 2.5.1
+Hash: 26f89d6006fb6c5a1fa1
+Version: webpack 3.0.0-rc.0
       Asset       Size  Chunks             Chunk Names
-0.output.js  379 bytes       0  [emitted]  
-  output.js    1.73 kB       1  [emitted]  main
+0.output.js  373 bytes       0  [emitted]  
+  output.js    1.66 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 276 bytes {1} [rendered]
-    > [4] 4:0-16
-    [2] ./lazy.js + 2 modules 232 bytes {0} [built]
-        [exports: d, c, x, y]
-        import() ./lazy [4] ./example.js 4:0-16
-    [3] ./node_modules/cjs.js 44 bytes {0} [built]
+    > [] 4:0-16
+    [2] ./node_modules/cjs.js 44 bytes {0} [built]
         [only some exports used: c]
-        harmony import cjs [8] ./node_modules/c.js 2:0-29
+        harmony import cjs [3] ./lazy.js + 2 modules 2:0-29
+    [3] ./lazy.js + 2 modules 232 bytes {0} [built]
+        [exports: d, c, x, y]
+        import() ./lazy [] ./example.js 4:0-16
 chunk    {1} output.js (main) 385 bytes [entry] [rendered]
-    > main [4] 
-    [0] ./example.js + 2 modules 280 bytes {1} [built]
-    [1] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
+    > main [] 
+    [0] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
         [exports: x, y]
         [only some exports used: x, y]
-        harmony import shared [6] ./node_modules/a.js 3:0-23
-        harmony import shared [8] ./node_modules/c.js 6:0-30
+        harmony import shared [1] ./example.js + 2 modules 3:0-23
+        harmony import shared [3] ./lazy.js + 2 modules 6:0-30
+    [1] ./example.js + 2 modules 280 bytes {1} [built]
 ```
