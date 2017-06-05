@@ -10,5 +10,6 @@ module.exports = {
 			chunks: ["a", "a+b"],
 			async: "a",
 		}),
+		new webpack.NamedChunksPlugin()
 	]
 };
