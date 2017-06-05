@@ -811,55 +811,64 @@
     },
     "node": {
       "description": "Include polyfills or mocks for various node stuff.",
-      "additionalProperties": {
-        "enum": [
-          false,
-          true,
-          "mock",
-          "empty"
-        ]
-      },
-      "properties": {
-        "Buffer": {
+      "anyOf": [
+        {
           "enum": [
-            false,
-            true,
-            "mock"
+            false
           ]
         },
-        "__dirname": {
-          "enum": [
-            false,
-            true,
-            "mock"
-          ]
-        },
-        "__filename": {
-          "enum": [
-            false,
-            true,
-            "mock"
-          ]
-        },
-        "console": {
-          "enum": [
-            false,
-            true,
-            "mock"
-          ]
-        },
-        "global": {
-          "type": "boolean"
-        },
-        "process": {
-          "enum": [
-            false,
-            true,
-            "mock"
-          ]
+        {
+          "additionalProperties": {
+            "enum": [
+              false,
+              true,
+              "mock",
+              "empty"
+            ]
+          },
+          "properties": {
+            "Buffer": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            },
+            "__dirname": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            },
+            "__filename": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            },
+            "console": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            },
+            "global": {
+              "type": "boolean"
+            },
+            "process": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            }
+          },
+          "type": "object"
         }
-      },
-      "type": "object"
+      ]
     },
     "output": {
       "$ref": "#/definitions/output"
