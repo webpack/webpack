@@ -210,7 +210,6 @@ describe("MultiStats", () => {
 					"(xyz890-compilation) xyz890-warning-1",
 					"(xyz890-compilation) xyz890-warning-2"
 				],
-				hash: "abc123xyz890",
 				children: [{
 						warnings: ["abc123-warning"],
 						errors: ["abc123-error"],
