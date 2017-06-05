@@ -102,7 +102,7 @@ describe("Chunk", () => {
 		});
 		describe("and the chunk does contain this module", function() {
 			beforeEach(function() {
-				ChunkInstance.modules = [module];
+				ChunkInstance._modules = new Set([module]);
 			});
 			it("calls module.removeChunk with itself and returns true", function() {
 				ChunkInstance.removeModule(module).should.eql(true);

@@ -13,8 +13,10 @@ it("should have this = undefined on imported non-strict functions", function() {
 	x
 	B().should.be.eql("undefined");
 	x
-	abc.a().should.be.eql(abc);
+	abc.a().should.be.type("object");
 	x
+	var thing = abc.a();
+	Object.keys(thing).should.be.eql(["a", "b", "default"]);
 });
 
 import C2, { C } from "./new";

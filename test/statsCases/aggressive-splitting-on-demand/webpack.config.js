@@ -16,18 +16,11 @@ module.exports = {
 	recordsInputPath: __dirname + "/input-records.json",
 	//recordsOutputPath: __dirname + "/records.json",
 	stats: {
-		reasons: false,
+		chunks: true,
 		chunkModules: true,
 		chunkOrigins: true,
 		entrypoints: true,
 		modules: false,
-		cached: true,
-		cachedAssets: true,
-		source: true,
-		errorDetails: true,
-		publicPath: true,
-		excludeModules: [
-			/e\.js/
-		]
+		publicPath: true
 	}
 };
