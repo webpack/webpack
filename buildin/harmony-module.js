@@ -16,8 +16,9 @@ module.exports = function(originalModule) {
 					return module.i;
 				}
 			});
+		} catch(e) {
+			// fail silently for IE8, "loaded" and "id" are set in MainTemplate.js if getter is not supported
 		}
-		catch(e){}
 
 		Object.defineProperty(module, "exports", {
 			enumerable: true,
