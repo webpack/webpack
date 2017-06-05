@@ -1,6 +1,6 @@
-Hash: 0be4035986816982617a1139e89514abc13454ce
+Hash: 3a94b16fac8bc7176bab0eec561d85889150f958
 Child
-    Hash: 0be4035986816982617a
+    Hash: 3a94b16fac8bc7176bab
     Time: Xms
                                    Asset      Size  Chunks             Chunk Names
                  c7ab11336573e45dc51e.js   2.78 kB       0  [emitted]  main
@@ -13,7 +13,7 @@ Child
             [0] (webpack)/~/css-loader!(webpack)/test/statsCases/separate-css-bundle/a/file.css 190 bytes {0} [built]
             [1] (webpack)/~/css-loader/lib/css-base.js 1.46 kB {0} [built]
 Child
-    Hash: 1139e89514abc13454ce
+    Hash: 0eec561d85889150f958
     Time: Xms
                                    Asset      Size  Chunks             Chunk Names
                  c7ab11336573e45dc51e.js   2.78 kB       0  [emitted]  main
