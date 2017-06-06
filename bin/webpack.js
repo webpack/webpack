@@ -259,7 +259,8 @@ function processOptions(options) {
 		});
 
 		ifArg("display-optimization-bailout", function(bool) {
-			outputOptions.optimizationBailout = bool;
+			if(bool)
+				outputOptions.optimizationBailout = bool;
 		});
 
 		ifArg("display-error-details", function(bool) {
@@ -292,6 +293,7 @@ function processOptions(options) {
 		if(argv["display-modules"]) {
 			outputOptions.maxModules = Infinity;
 			outputOptions.exclude = undefined;
+			outputOptions.modules = true;
 		}
 	}
 
