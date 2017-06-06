@@ -243,7 +243,7 @@ friendly** by using hashes.
 
 **We want contributing to webpack to be fun, enjoyable, and educational for anyone, and everyone.** We have a [vibrant ecosystem](https://medium.com/webpack/contributors-guide/home) that spans beyond this single repo. We welcome you to check out any of the repositories in [this](http://github.com/webpack) organization or [webpack-contrib](http://github.com/webpack-contrib) which houses all of our loaders and plugins.
 
-Contributions go far beyond pull requests and commits. Although we love giving you the opportunity to put your stamp on webpack, we also are thrilled to recieve a variety of other contributions including:
+Contributions go far beyond pull requests and commits. Although we love giving you the opportunity to put your stamp on webpack, we also are thrilled to receive a variety of other contributions including:
 
 * [Documentation](https://github.com/webpack/webpack.js.org) updates, enhancements, designs, or bugfixes
 
@@ -276,7 +276,7 @@ If you create a loader or plugin, we would <3 for you to open source it, and put
 
 We consider webpack to be a low-level tool that is used by not only individuals but also layered beneath lots of other awesome tools. Because of this, we know that sometimes webpack is not the _easiest_ to configure, and we constantly are working on finding ways to improve this!!!
 
-If your just getting started, take a look at [our new docs and concepts page](webpack.js.org/concepts). This has a high level overview that is great for beginners!! 
+If you're just getting started, take a look at [our new docs and concepts page](webpack.js.org/concepts). This has a high level overview that is great for beginners!! 
 
 If you want to discuss something or just need help, [here is our Gitter room](https://gitter.im/webpack/webpack) where there are always individuals looking to help out! 
 
