@@ -1,4 +1,7 @@
-var webpack = require("../../../../");
+"use strict";
+
+const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
+
 module.exports = {
 	node: {
 		__dirname: false,
@@ -9,7 +12,7 @@ module.exports = {
 		sourceMapFilename: "[file]-[contenthash].map?[contenthash]-[contenthash]",
 	},
 	plugins: [
-		new webpack.optimize.UglifyJsPlugin({
+		new UglifyJSPlugin({
 			sourceMap: true
 		})
 	]

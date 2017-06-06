@@ -2,7 +2,7 @@
 "use strict";
 require("should");
 const sinon = require("sinon");
-const UglifyJsPlugin = require("../lib/optimize/UglifyJsPlugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const PluginEnvironment = require("./helpers/PluginEnvironment");
 const SourceMapSource = require("webpack-sources").SourceMapSource;
 const RawSource = require("webpack-sources").RawSource;

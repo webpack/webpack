@@ -1,12 +1,13 @@
 "use strict";
-const webpack = require("../../../");
+
+const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports = {
 	entry: "./index",
 	output: {
 		filename: "bundle.js"
 	},
-	plugins: [new webpack.optimize.UglifyJsPlugin({
+	plugins: [new UglifyJSPlugin({
 		warningsFilter: function(filename) {
 			return /a\.js$/.test(filename);
 		},

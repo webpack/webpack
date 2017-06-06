@@ -62,6 +62,7 @@
     "simple-git": "^1.65.0",
     "sinon": "^2.3.2",
     "style-loader": "^0.18.1",
+    "uglifyjs-webpack-plugin": "^0.4.3",
     "url-loader": "~0.5.0",
     "val-loader": "^1.0.2",
     "vm-browserify": "~0.0.0",

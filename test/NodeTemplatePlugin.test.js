@@ -5,6 +5,8 @@ const should = require("should");
 const path = require("path");
 const webpack = require("../lib/webpack");
 
+const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
+
 describe("NodeTemplatePlugin", () => {
 
 	it("should compile and run a simple module", (done) => {
@@ -20,7 +22,7 @@ describe("NodeTemplatePlugin", () => {
 			},
 			entry: "./entry",
 			plugins: [
-				new webpack.optimize.UglifyJsPlugin()
+				new UglifyJSPlugin()
 			]
 		}, (err, stats) => {
 			if(err) return err;
@@ -58,7 +60,7 @@ describe("NodeTemplatePlugin", () => {
 				new webpack.optimize.LimitChunkCountPlugin({
 					maxChunks: 1
 				}),
-				new webpack.optimize.UglifyJsPlugin()
+				new UglifyJSPlugin()
 			]
 		}, (err, stats) => {
 			if(err) return err;
