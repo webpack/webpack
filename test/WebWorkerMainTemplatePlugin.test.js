@@ -85,8 +85,6 @@ var installedChunks = {
 2: 1,
 3: 1
 };
-
-var resolvedPromise = new Promise(function(resolve) { resolve(); });
 `.trim())
 				});
 			});
@@ -109,11 +107,13 @@ var resolvedPromise = new Promise(function(resolve) { resolve(); });
 
 				it("creates import scripts call and promise resolve", () => {
 					env.source.should.be.exactly(`
+return new Promise(function(resolve) {
 // "1" is the signal for "already loaded"
 if(!installedChunks[chunkId]) {
 importScripts("asset-path" + abc123 + "" + abc123 + "" + chunkId + "");
 }
-return resolvedPromise;
+resolve();
+});
 `.trim())
 				});
 			});
@@ -198,7 +198,8 @@ function hotDownloadUpdateChunk(chunkId) { // eslint-disable-line no-unused-vars
 	importScripts(requireFn.p + "asset-path" + abc123 + "" + abc123 + "" + chunkId + "");
 }
 
-function hotDownloadManifest(callback) { // eslint-disable-line no-unused-vars
+function hotDownloadManifest(requestTimeout) { // eslint-disable-line no-unused-vars
+	requestTimeout = requestTimeout || 10000;
 	return new Promise(function(resolve, reject) {
 		if(typeof XMLHttpRequest === "undefined")
 			return reject(new Error("No browser support"));
@@ -206,7 +207,7 @@ function hotDownloadManifest(callback) { // eslint-disable-line no-unused-vars
 			var request = new XMLHttpRequest();
 			var requestPath = requireFn.p + "asset-path" + abc123 + "" + abc123 + "";
 			request.open("GET", requestPath, true);
-			request.timeout = 10000;
+			request.timeout = requestTimeout;
 			request.send(null);
 		} catch(err) {
 			return reject(err);

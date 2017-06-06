@@ -160,6 +160,9 @@
               "instanceof": "RegExp"
             },
             {
+              "instanceof": "Function"
+            },
+            {
               "items": {
                 "type": "string",
                 "absolutePath": true
@@ -220,6 +223,9 @@
           "instanceof": "RegExp"
         },
         "strictExportPresence": {
+          "type": "boolean"
+        },
+        "strictThisContextOnImports": {
           "type": "boolean"
         }
       },
@@ -387,6 +393,16 @@
             "umd",
             "umd2",
             "jsonp"
+          ]
+        },
+        "libraryExport": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/common.arrayOfStringValues"
+            }
           ]
         },
         "path": {
@@ -798,55 +814,64 @@
     },
     "node": {
       "description": "Include polyfills or mocks for various node stuff.",
-      "additionalProperties": {
-        "enum": [
-          false,
-          true,
-          "mock",
-          "empty"
-        ]
-      },
-      "properties": {
-        "Buffer": {
+      "anyOf": [
+        {
           "enum": [
-            false,
-            true,
-            "mock"
+            false
           ]
         },
-        "__dirname": {
-          "enum": [
-            false,
-            true,
-            "mock"
-          ]
-        },
-        "__filename": {
-          "enum": [
-            false,
-            true,
-            "mock"
-          ]
-        },
-        "console": {
-          "enum": [
-            false,
-            true,
-            "mock"
-          ]
-        },
-        "global": {
-          "type": "boolean"
-        },
-        "process": {
-          "enum": [
-            false,
-            true,
-            "mock"
-          ]
+        {
+          "additionalProperties": {
+            "enum": [
+              false,
+              true,
+              "mock",
+              "empty"
+            ]
+          },
+          "properties": {
+            "Buffer": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            },
+            "__dirname": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            },
+            "__filename": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            },
+            "console": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            },
+            "global": {
+              "type": "boolean"
+            },
+            "process": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            }
+          },
+          "type": "object"
         }
-      },
-      "type": "object"
+      ]
     },
     "output": {
       "$ref": "#/definitions/output"
@@ -1008,6 +1033,18 @@
             "assetsSort": {
               "type": "string",
               "description": "sort the assets by that field"
+            },
+            "providedExports": {
+              "type": "boolean",
+              "description": "show exports provided by modules"
+            },
+            "usedExports": {
+              "type": "boolean",
+              "description": "show exports used by modules"
+            },
+            "optimizationBailout": {
+              "type": "boolean",
+              "description": "show reasons why optimization bailed out for modules"
             }
           }
         },
@@ -1020,6 +1057,7 @@
             "errors-only",
             "minimal",
             "normal",
+            "detailed",
             "verbose"
           ]
         }

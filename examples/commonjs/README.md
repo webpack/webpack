@@ -75,9 +75,6 @@ exports.add = function() {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -105,7 +102,7 @@ exports.add = function() {
 /******/ 	__webpack_require__.p = "js/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
@@ -115,11 +112,24 @@ exports.add = function() {
 ``` javascript
 /******/ ([
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+var inc = __webpack_require__(/*! ./increment */ 1).increment;
+var a = 1;
+inc(a); // 2
+
+/***/ }),
+/* 1 */
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 var add = __webpack_require__(/*! ./math */ 2).add;
@@ -128,25 +138,12 @@ exports.increment = function(val) {
 };
 
 /***/ }),
-/* 1 */
-/* unknown exports provided */
-/* all exports used */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/***/ (function(module, exports, __webpack_require__) {
-
-var inc = __webpack_require__(/*! ./increment */ 0).increment;
-var a = 1;
-inc(a); // 2
-
-/***/ }),
 /* 2 */
-/* unknown exports provided */
-/* all exports used */
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports) {
 
 exports.add = function() {
@@ -166,33 +163,33 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: 1318ed7f2e042a045e6d
-Version: webpack 2.6.0
+Hash: 9407d8cd068b1845b368
+Version: webpack 3.0.0-rc.0
     Asset     Size  Chunks             Chunk Names
-output.js  3.55 kB       0  [emitted]  main
+output.js  3.39 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 329 bytes [entry] [rendered]
-    > main [1] ./example.js 
-    [0] ./increment.js 98 bytes {0} [built]
-        cjs require ./increment [1] ./example.js 1:10-32
-    [1] ./example.js 69 bytes {0} [built]
+    > main [0] ./example.js 
+    [0] ./example.js 69 bytes {0} [built]
+    [1] ./increment.js 98 bytes {0} [built]
+        cjs require ./increment [0] ./example.js 1:10-32
     [2] ./math.js 162 bytes {0} [built]
-        cjs require ./math [0] ./increment.js 1:10-27
+        cjs require ./math [1] ./increment.js 1:10-27
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 1318ed7f2e042a045e6d
-Version: webpack 2.6.0
+Hash: 9407d8cd068b1845b368
+Version: webpack 3.0.0-rc.0
     Asset       Size  Chunks             Chunk Names
-output.js  698 bytes       0  [emitted]  main
+output.js  672 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 329 bytes [entry] [rendered]
-    > main [1] ./example.js 
-    [0] ./increment.js 98 bytes {0} [built]
-        cjs require ./increment [1] ./example.js 1:10-32
-    [1] ./example.js 69 bytes {0} [built]
+    > main [0] ./example.js 
+    [0] ./example.js 69 bytes {0} [built]
+    [1] ./increment.js 98 bytes {0} [built]
+        cjs require ./increment [0] ./example.js 1:10-32
     [2] ./math.js 162 bytes {0} [built]
-        cjs require ./math [0] ./increment.js 1:10-27
+        cjs require ./math [1] ./increment.js 1:10-27
 ```

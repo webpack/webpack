@@ -53,8 +53,6 @@ getTemplate("b", function(b) {
 /******/ 		1: 0
 /******/ 	};
 /******/
-/******/ 	var resolvedPromise = new Promise(function(resolve) { resolve(); });
-/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/
@@ -82,20 +80,21 @@ getTemplate("b", function(b) {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		if(installedChunks[chunkId] === 0) {
-/******/ 			return resolvedPromise;
+/******/ 		var installedChunkData = installedChunks[chunkId];
+/******/ 		if(installedChunkData === 0) {
+/******/ 			return new Promise(function(resolve) { resolve(); });
 /******/ 		}
 /******/
 /******/ 		// a Promise means "currently loading".
-/******/ 		if(installedChunks[chunkId]) {
-/******/ 			return installedChunks[chunkId][2];
+/******/ 		if(installedChunkData) {
+/******/ 			return installedChunkData[2];
 /******/ 		}
 /******/
 /******/ 		// setup Promise in chunk cache
 /******/ 		var promise = new Promise(function(resolve, reject) {
-/******/ 			installedChunks[chunkId] = [resolve, reject];
+/******/ 			installedChunkData = installedChunks[chunkId] = [resolve, reject];
 /******/ 		});
-/******/ 		installedChunks[chunkId][2] = promise;
+/******/ 		installedChunkData[2] = promise;
 /******/
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
@@ -133,9 +132,6 @@ getTemplate("b", function(b) {
 /******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
 /******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
@@ -177,11 +173,11 @@ getTemplate("b", function(b) {
 ``` javascript
 /******/ ([
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 function getTemplate(templateName, callback) {
@@ -206,11 +202,11 @@ getTemplate("b", function(b) {
 webpackJsonp([0],[
 /* 0 */,
 /* 1 */
-/* unknown exports provided */
-/* all exports used */
 /*!*********************************************!*\
   !*** ../require.context/templates ^\.\/.*$ ***!
   \*********************************************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -239,11 +235,11 @@ webpackContext.id = 1;
 
 /***/ }),
 /* 2 */
-/* unknown exports provided */
-/* all exports used */
 /*!*****************************************!*\
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -252,11 +248,11 @@ module.exports = function() {
 
 /***/ }),
 /* 3 */
-/* unknown exports provided */
-/* all exports used */
 /*!*****************************************!*\
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -265,11 +261,11 @@ module.exports = function() {
 
 /***/ }),
 /* 4 */
-/* unknown exports provided */
-/* all exports used */
 /*!*****************************************!*\
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -286,10 +282,10 @@ module.exports = function() {
 
 ```
 Hash: 1c46bbe47e8b8a0ee8e2
-Version: webpack 2.6.0
+Version: webpack 3.0.0-rc.0
       Asset     Size  Chunks             Chunk Names
 0.output.js  1.85 kB       0  [emitted]  
-  output.js  6.53 kB       1  [emitted]  main
+  output.js  6.37 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 463 bytes {1} [rendered]
     > [0] ./example.js 2:1-4:3
@@ -302,8 +298,8 @@ chunk    {0} 0.output.js 463 bytes {1} [rendered]
         context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
         context element ./b.js [1] ../require.context/templates ^\.\/.*$ ./b.js
     [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
         context element ./c.js [1] ../require.context/templates ^\.\/.*$ ./c.js
+        context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
 chunk    {1} output.js (main) 261 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 261 bytes {1} [built]
@@ -313,10 +309,10 @@ chunk    {1} output.js (main) 261 bytes [entry] [rendered]
 
 ```
 Hash: 1c46bbe47e8b8a0ee8e2
-Version: webpack 2.6.0
+Version: webpack 3.0.0-rc.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  544 bytes       0  [emitted]  
-  output.js    1.55 kB       1  [emitted]  main
+  output.js    1.52 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 463 bytes {1} [rendered]
     > [0] ./example.js 2:1-4:3
