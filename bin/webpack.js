@@ -341,6 +341,9 @@ function processOptions(options) {
 			if(err.details) console.error(err.details);
 			process.exit(1); // eslint-disable-line
 		}
+		if(outputOptions.env) {
+			stats.env = argv.env;
+		}
 		if(outputOptions.json) {
 			process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
 		} else if(stats.hash !== lastHash) {

@@ -1,0 +1,3 @@
+--env.production
+--env.platform 'web'
+--env.version 2
