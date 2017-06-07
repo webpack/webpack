@@ -315,7 +315,7 @@ var a = "a";
 
 // CONCATENATED MODULE: ./node_modules/b.js
 // module b
-function b_js_a() {
+function b_a() {
 	return "b";
 };
 
@@ -324,7 +324,7 @@ function b_js_a() {
 
 
 __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! ./lazy */ 3)).then(function(lazy) {
-	console.log(a, b_js_a(), __WEBPACK_IMPORTED_MODULE_0_shared__["a"], __WEBPACK_IMPORTED_MODULE_0_shared__["b"], lazy.c, lazy.d.a, lazy.x, lazy.y);
+	console.log(a, b_a(), __WEBPACK_IMPORTED_MODULE_0_shared__["a"], __WEBPACK_IMPORTED_MODULE_0_shared__["b"], lazy.c, lazy.d.a, lazy.x, lazy.y);
 });
 
 
@@ -375,8 +375,8 @@ var c = String.fromCharCode(__WEBPACK_IMPORTED_MODULE_0_cjs__["c"].charCodeAt(0)
 
 
 // CONCATENATED MODULE: ./node_modules/d.js
-var d_js_namespaceObject = {};
-__webpack_require__.d(d_js_namespaceObject, "a", function() { return a; });
+var d_namespaceObject = {};
+__webpack_require__.d(d_namespaceObject, "a", function() { return a; });
 // module d
 var a = "d";
 
@@ -384,7 +384,7 @@ var a = "d";
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "c", function() { return c; });
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "x", function() { return __WEBPACK_IMPORTED_MODULE_1_shared__["a"]; });
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "y", function() { return __WEBPACK_IMPORTED_MODULE_1_shared__["b"]; });
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "d", function() { return d_js_namespaceObject; });
+/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "d", function() { return d_namespaceObject; });
 
 
 
@@ -408,8 +408,8 @@ webpackJsonp([0],[,,function(n,r){r.c="e"},function(n,r,t){"use strict";Object.d
 Hash: 26f89d6006fb6c5a1fa1
 Version: webpack 3.0.0-rc.0
       Asset     Size  Chunks             Chunk Names
-0.output.js  1.96 kB       0  [emitted]  
-  output.js  7.46 kB       1  [emitted]  main
+0.output.js  1.95 kB       0  [emitted]  
+  output.js  7.45 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 276 bytes {1} [rendered]
     > [] 4:0-16
@@ -427,6 +427,18 @@ chunk    {1} output.js (main) 385 bytes [entry] [rendered]
         harmony import shared [1] ./example.js + 2 modules 3:0-23
         harmony import shared [3] ./lazy.js + 2 modules 6:0-30
     [1] ./example.js + 2 modules 280 bytes {1} [built]
+   [0] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
+       [exports: x, y]
+       [only some exports used: x, y]
+       harmony import shared [1] ./example.js + 2 modules 3:0-23
+       harmony import shared [3] ./lazy.js + 2 modules 6:0-30
+   [1] ./example.js + 2 modules 280 bytes {1} [built]
+   [2] ./node_modules/cjs.js 44 bytes {0} [built]
+       [only some exports used: c]
+       harmony import cjs [3] ./lazy.js + 2 modules 2:0-29
+   [3] ./lazy.js + 2 modules 232 bytes {0} [built]
+       [exports: d, c, x, y]
+       import() ./lazy [] ./example.js 4:0-16
 ```
 
 ## Minimized (uglify-js, no zip)
@@ -454,4 +466,16 @@ chunk    {1} output.js (main) 385 bytes [entry] [rendered]
         harmony import shared [1] ./example.js + 2 modules 3:0-23
         harmony import shared [3] ./lazy.js + 2 modules 6:0-30
     [1] ./example.js + 2 modules 280 bytes {1} [built]
+   [0] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
+       [exports: x, y]
+       [only some exports used: x, y]
+       harmony import shared [1] ./example.js + 2 modules 3:0-23
+       harmony import shared [3] ./lazy.js + 2 modules 6:0-30
+   [1] ./example.js + 2 modules 280 bytes {1} [built]
+   [2] ./node_modules/cjs.js 44 bytes {0} [built]
+       [only some exports used: c]
+       harmony import cjs [3] ./lazy.js + 2 modules 2:0-29
+   [3] ./lazy.js + 2 modules 232 bytes {0} [built]
+       [exports: d, c, x, y]
+       import() ./lazy [] ./example.js 4:0-16
 ```
