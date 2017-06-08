@@ -15,7 +15,8 @@ describe("ExternalModule", function() {
 		type = "some-type";
 		externalModule = new ExternalModule(
 			request,
-			type
+			type,
+			`${type} ${request}`
 		);
 	});
 	describe("#identifier", function() {
