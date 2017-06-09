@@ -274,7 +274,7 @@ function processOptions(options) {
 		});
 
 		ifArg("display-max-modules", function(value) {
-			outputOptions.maxModules = value;
+			outputOptions.maxModules = +value;
 		});
 
 		ifArg("display-cached", function(bool) {
