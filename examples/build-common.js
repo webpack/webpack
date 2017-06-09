@@ -10,7 +10,7 @@ var extraArgs = "";
 
 var targetArgs = global.NO_TARGET_ARGS ? "" : " ./example.js js/output.js";
 var displayReasons = global.NO_REASONS ? "" : " --display-reasons --display-used-exports --display-provided-exports";
-cp.exec("node ../../bin/webpack.js" + displayReasons + " --display-chunks --display-modules --display-origins --display-entrypoints --output-public-path \"js/\" -p " + extraArgs + targetArgs, function(error, stdout, stderr) {
+cp.exec("node ../../bin/webpack.js" + displayReasons + " --display-chunks --display-max-modules 99999 --display-origins --display-entrypoints --output-public-path \"js/\" -p " + extraArgs + targetArgs, function(error, stdout, stderr) {
 	if(stderr)
 		console.log(stderr);
 	if(error !== null)
@@ -21,7 +21,7 @@ cp.exec("node ../../bin/webpack.js" + displayReasons + " --display-chunks --disp
 		console.log(stderr);
 		throw e;
 	}
-	cp.exec("node ../../bin/webpack.js" + displayReasons + " --display-chunks --display-modules --display-origins --display-entrypoints --output-public-path \"js/\" --output-pathinfo " + extraArgs + targetArgs, function(error, stdout, stderr) {
+	cp.exec("node ../../bin/webpack.js" + displayReasons + " --display-chunks --display-max-modules 99999 --display-origins --display-entrypoints --output-public-path \"js/\" --output-pathinfo " + extraArgs + targetArgs, function(error, stdout, stderr) {
 		console.log(stdout);
 		if(stderr)
 			console.log(stderr);
