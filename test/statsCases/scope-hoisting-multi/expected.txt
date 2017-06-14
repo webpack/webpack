@@ -23,8 +23,8 @@ Child
        [3] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy.js 25 bytes {1} {2} [built]
        [4] (webpack)/test/statsCases/scope-hoisting-multi/first.js + 1 modules 238 bytes {4} [built]
            ModuleConcatenation (inner): module is an entrypoint
-           ModuleConcatenation: Cannot concat with (webpack)/test/statsCases/scope-hoisting-multi/vendor.js: module is an entrypoint
            ModuleConcatenation: Cannot concat with (webpack)/test/statsCases/scope-hoisting-multi/common.js
+           ModuleConcatenation: Cannot concat with (webpack)/test/statsCases/scope-hoisting-multi/vendor.js: module is an entrypoint
        [5] (webpack)/test/statsCases/scope-hoisting-multi/lazy_shared.js 31 bytes {0} [built]
            ModuleConcatenation (inner): module is used with non-harmony imports from (webpack)/test/statsCases/scope-hoisting-multi/first.js, (webpack)/test/statsCases/scope-hoisting-multi/second.js
        [6] (webpack)/test/statsCases/scope-hoisting-multi/second.js 177 bytes {3} [built]
