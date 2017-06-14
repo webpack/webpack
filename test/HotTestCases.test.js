@@ -45,7 +45,7 @@ describe("HotTestCases", () => {
 							filename: "bundle.js"
 						},
 						module: {
-							loaders: [{
+							rules: [{
 								test: /\.js$/,
 								loader: path.join(__dirname, "hotCases", "fake-update-loader.js"),
 								enforce: "pre"
