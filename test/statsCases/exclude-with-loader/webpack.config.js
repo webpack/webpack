@@ -10,7 +10,7 @@ module.exports = {
 		]
 	},
 	module: {
-		loaders: [{
+		rules: [{
 			test: /\.txt/,
 			loader: "raw-loader"
 		}]
