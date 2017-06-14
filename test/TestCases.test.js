@@ -141,7 +141,7 @@ describe("TestCases", () => {
 									extensions: [".webpack-loader.js", ".web-loader.js", ".loader.js", ".js"]
 								},
 								module: {
-									loaders: [{
+									rules: [{
 										test: /\.coffee$/,
 										loader: "coffee-loader"
 									}, {
