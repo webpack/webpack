@@ -241,31 +241,23 @@ friendly** by using hashes.
 
 <h2 align="center">Contributing</h2>
 
-**We want contributing to webpack to be fun, enjoyable, and educational for anyone, and everyone.** We have a [vibrant ecosystem](https://medium.com/webpack/contributors-guide/home) that spans beyond this single repo. We welcome you to check out any of the repositories in [our](http://github.com/webpack) organization or [webpack-contrib](http://github.com/webpack-contrib) which houses all of our loaders and plugins.
+**We want contributing to webpack to be fun, enjoyable, and educational for anyone, and everyone.** We have a [vibrant ecosystem](https://medium.com/webpack/contributors-guide/home) that spans beyond this single repo. We welcome you to check out any of the repositories in [our organization](http://github.com/webpack) or [webpack-contrib organization](http://github.com/webpack-contrib) which houses all of our loaders and plugins.
 
 Contributions go far beyond pull requests and commits. Although we love giving you the opportunity to put your stamp on webpack, we also are thrilled to receive a variety of other contributions including:
 
 * [Documentation](https://github.com/webpack/webpack.js.org) updates, enhancements, designs, or bugfixes
-
 * Spelling or grammar fixes
-
 * README.md corrections or redesigns
-
 * Adding unit, or functional tests
-
-* Triaging GitHub issues (especially helping find out if an issue still persists or is reproducible)
-
+* Triaging GitHub issues -- especially determining whether an issue still persists or is reproducible.
 * [Searching #webpack on twitter](https://twitter.com/search?q=webpack) and helping someone else who needs help
-
 * Teaching others how to contribute to one of the many webpack repo's!
-
 * [Blogging, speaking about, or creating tutorials](https://github.com/webpack-contrib/awesome-webpack) about one of webpack's many features. 
-
 * Helping others in our webpack [gitter channel](https://gitter.im/webpack/webpack).
 
 If you are worried or don't know where to start, you can **always** reach out to [Sean Larkin (@TheLarkInn) on Twitter](https://twitter.com/thelarkinn) or simply submit an issue and a maintainer can help give you guidance! 
 
-We have also started a series on our [Medium Publication](https://medium.com/webpack) called [The Contributors Guide to webpack](https://medium.com/webpack/contributors-guide/home). We welcome you to read it and post any questions or responses if you still need help. 
+We have also started a series on our [Medium Publication](https://medium.com/webpack) called [The Contributor's Guide to webpack](https://medium.com/webpack/contributors-guide/home). We welcome you to read it and post any questions or responses if you still need help. 
 
 _Looking to speak about webpack?_ We'd **love** to review your talk abstract/CFP! You can email it to webpack [at] opencollective [dot] com and we can give pointers or tips!!! 
 
@@ -274,7 +266,7 @@ If you create a loader or plugin, we would <3 for you to open source it, and put
 
 <h2 align="center">Support</h2>
 
-We consider webpack to be a low-level tool that is used by not only individuals but also layered beneath lots of other awesome tools. Because of this, we know that sometimes webpack is not the _easiest_ to configure, and we constantly are working on finding ways to improve this!!!
+We consider webpack to be a low-level tool used not only individuals but also layered beneath other awesome tools. Because of it's flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
 
 If you're just getting started, take a look at [our new docs and concepts page](https://webpack.js.org/concepts/). This has a high level overview that is great for beginners!! 
 
