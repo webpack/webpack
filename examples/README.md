@@ -56,6 +56,15 @@ example demonstrating localization.
 
 example demonstrating multiple entry points with Code Splitting.
 
+## [dll](dll-app-and-vendor)
+
+example demonstrating usage of the dll plugin
+
+- [dll-app-and-vendor](dll-app-and-vendor) (_latest_)
+- [dll-dependencies-and-vendor](dll-app-and-vendor) (_multiple dll references, single dll plugin_)
+- [dll-reference](dll) (_used by dll-user example_)
+- [dll-user](dll-user) (_uses dll-reference example_)
+
 # Requests
 
 If you think an example is missing, please report it as issue. :)
