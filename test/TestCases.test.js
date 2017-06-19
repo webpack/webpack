@@ -2,14 +2,18 @@
 "use strict";
 
 require("should");
+
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
+
 const Test = require("mocha/lib/test");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
+
+const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
 
 describe("TestCases", () => {
 	const casesPath = path.join(__dirname, "cases");
@@ -73,7 +77,7 @@ describe("TestCases", () => {
 		name: "minimized",
 		minimize: true,
 		plugins: [
-			new webpack.optimize.UglifyJsPlugin({
+			new UglifyJSPlugin({
 				sourceMap: false
 			})
 		]
@@ -82,13 +86,13 @@ describe("TestCases", () => {
 		devtool: "eval-cheap-module-source-map",
 		minimize: true,
 		plugins: [
-			new webpack.optimize.UglifyJsPlugin()
+			new UglifyJSPlugin()
 		]
 	}, {
 		name: "minimized-hashed-modules",
 		minimize: true,
 		plugins: [
-			new webpack.optimize.UglifyJsPlugin(),
+			new UglifyJSPlugin(),
 			new webpack.HashedModuleIdsPlugin()
 		]
 	}, {
@@ -97,7 +101,7 @@ describe("TestCases", () => {
 		minimize: true,
 		plugins: [
 			new webpack.HotModuleReplacementPlugin(),
-			new webpack.optimize.UglifyJsPlugin(),
+			new UglifyJSPlugin(),
 			new webpack.NamedModulesPlugin(),
 			new webpack.NamedChunksPlugin()
 		]

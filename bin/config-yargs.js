@@ -214,11 +214,6 @@ module.exports = function(yargs) {
 				group: OPTIMIZE_GROUP,
 				requiresArg: true
 			},
-			"optimize-minimize": {
-				type: "boolean",
-				describe: "Minimize javascript and switches loaders to minimizing",
-				group: OPTIMIZE_GROUP
-			},
 			"prefetch": {
 				type: "string",
 				describe: "Prefetch this request (Example: --prefetch ./file.js)",
@@ -259,7 +254,7 @@ module.exports = function(yargs) {
 			},
 			"p": {
 				type: "boolean",
-				describe: "shortcut for --optimize-minimize --define process.env.NODE_ENV=\"production\"",
+				describe: "shortcut for --define process.env.NODE_ENV=\"production\"",
 				group: BASIC_GROUP
 			}
 		}).strict();

@@ -16,7 +16,6 @@ module.exports = function(yargs, argv, convertOptions) {
 		}
 	}
 	if(argv.p) {
-		argv["optimize-minimize"] = true;
 		argv["define"] = [].concat(argv["define"] || []).concat("process.env.NODE_ENV=\"production\"");
 	}
 
@@ -435,18 +434,6 @@ module.exports = function(yargs, argv, convertOptions) {
 			var MinChunkSizePlugin = require("../lib/optimize/MinChunkSizePlugin");
 			options.plugins.push(new MinChunkSizePlugin({
 				minChunkSize: parseInt(value, 10)
-			}));
-		});
-
-		ifBooleanArg("optimize-minimize", function() {
-			ensureArray(options, "plugins");
-			var UglifyJsPlugin = require("../lib/optimize/UglifyJsPlugin");
-			var LoaderOptionsPlugin = require("../lib/LoaderOptionsPlugin");
-			options.plugins.push(new UglifyJsPlugin({
-				sourceMap: options.devtool && (options.devtool.indexOf("sourcemap") >= 0 || options.devtool.indexOf("source-map") >= 0)
-			}));
-			options.plugins.push(new LoaderOptionsPlugin({
-				minimize: true
 			}));
 		});
 

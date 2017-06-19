@@ -3,4 +3,4 @@
 --output-filename [name].js
 --output-chunk-filename [id].chunk.js
 --target async-node
---plugin webpack/lib/optimize/UglifyJsPlugin
+--plugin uglifyjs-webpack-plugin

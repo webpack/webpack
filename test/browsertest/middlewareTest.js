@@ -1,9 +1,15 @@
-var webpackMiddleware = require("webpack-dev-middleware");
-var webpack = require("webpack");
-var express = require("express");
-var path = require("path");
+"use strict";
 
-var app = express();
+const path = require("path");
+
+const webpack = require("webpack");
+const webpackMiddleware = require("webpack-dev-middleware");
+
+const express = require("express");
+
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+
+const app = express();
 
 app.configure(function() {
 	app.use(webpackMiddleware(webpack({
@@ -37,7 +43,7 @@ app.configure(function() {
 			chunkFilename: "[chunkhash].chunk.js"
 		},
 		plugins: [
-			new webpack.optimize.UglifyJsPlugin(),
+			new UglifyJSPlugin(),
 			new webpack.HotModuleReplacementPlugin()
 		]
 	}), {
