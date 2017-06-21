@@ -98,3 +98,11 @@ it("should not explode on recursive statements", function() {
 		wurst; // <- is recursivly defined in config
 	}).should.throw("suppe is not defined");
 });
+
+it("should evaluate composed expressions (issue 5100)", function() {
+	if(!module.hot && process.env.DEFINED_NESTED_KEY_STRING === "string") {
+		// ok
+	} else {
+		require("fail");
+	}
+})
