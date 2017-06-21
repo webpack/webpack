@@ -375,6 +375,14 @@
                 "type": "string"
               },
               "type": "array"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "root": { "type": "string" },
+                "amd": { "type": "string" },
+                "commonjs": { "type": "string" }
+              }
             }
           ],
           "description": "If set, export the bundle as library. `output.library` is the name."
