@@ -19,7 +19,7 @@ Child
        [0] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy_shared.js 25 bytes {0} {1} {2} [built]
        [1] (webpack)/test/statsCases/scope-hoisting-multi/vendor.js 25 bytes {5} [built]
            ModuleConcatenation (inner): module is an entrypoint
-       [2] (webpack)/test/statsCases/scope-hoisting-multi/common.js + 1 modules 62 bytes {4} {3} [built]
+       [2] (webpack)/test/statsCases/scope-hoisting-multi/common.js + 1 modules 62 bytes {3} {4} [built]
        [3] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy.js 25 bytes {1} {2} [built]
        [4] (webpack)/test/statsCases/scope-hoisting-multi/first.js + 1 modules 238 bytes {4} [built]
            ModuleConcatenation (inner): module is an entrypoint
