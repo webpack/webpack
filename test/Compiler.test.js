@@ -204,7 +204,9 @@ describe("Compiler", () => {
 				const response2 = compiler.isChild();
 				response2.should.be.exactly(true);
 
-				compiler.parentCompilation = { what: "I belong to an object" };
+				compiler.parentCompilation = {
+					what: "I belong to an object"
+				};
 				const response3 = compiler.isChild();
 				response3.should.be.exactly(true);
 
@@ -250,7 +252,9 @@ describe("Compiler", () => {
 		describe("constructor", () => {
 			it("constructs Watching.watchOptions correctly when passed a number, string, or object for watchOptions", (done) => {
 				const Watching1 = compiler.watch(1000, err => err);
-				const Watching2 = compiler.watch({ aggregateTimeout: 1000 }, err => err);
+				const Watching2 = compiler.watch({
+					aggregateTimeout: 1000
+				}, err => err);
 				const Watching3 = compiler.watch("I am a string", err => err);
 				Watching1.watchOptions.aggregateTimeout.should.equal(Watching2.watchOptions.aggregateTimeout);
 				Watching3.watchOptions.aggregateTimeout.should.equal(200);
@@ -278,7 +282,9 @@ describe("Compiler", () => {
 			it("pauses this.watcher and sets this.watcher to null if this.watcher is true", (done) => {
 				const mockPause = sinon.spy();
 				const Watching1 = compiler.watch(1000, err => err);
-				Watching1.watcher = { pause: mockPause };
+				Watching1.watcher = {
+					pause: mockPause
+				};
 				Watching1.invalidate();
 				mockPause.callCount.should.be.exactly(1);
 				should(Watching1.watcher).be.exactly(null);
