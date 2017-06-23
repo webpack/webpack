@@ -7,6 +7,7 @@ const sinon = require("sinon");
 
 const webpack = require("../");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
+const Compiler = require("../lib/Compiler");
 
 describe("Compiler", () => {
 	function compile(entry, options, callback) {
@@ -164,6 +165,29 @@ describe("Compiler", () => {
 			done();
 		});
 	});
+	describe("constructor", () => {
+		let compiler;
+		beforeEach(() => {
+			compiler = webpack({
+				entry: "./c",
+				context: path.join(__dirname, "fixtures"),
+				output: {
+					path: "/",
+					pathinfo: true,
+				}
+			});
+		});
+		describe("parser", () => {
+			describe("apply", () => {
+				it("invokes sets a 'compilation' plugin", (done) => {
+					compiler.plugin = sinon.spy();
+					compiler.parser.apply();
+					compiler.plugin.callCount.should.be.exactly(1);
+					done();
+				});
+			});
+		});
+	});
 	describe("methods", () => {
 		let compiler;
 		beforeEach(() => {
@@ -236,6 +260,31 @@ describe("Compiler", () => {
 				done();
 			});
 		});
+		describe("createChildCompiler", () => {
+			it("defaults cache.children if none exists yet", (done) => {
+				const mockPlugin = sinon.spy();
+				class fakePlugin {
+					apply() {
+						mockPlugin();
+					}
+				}
+				compiler.cache = {};
+				compiler.createChildCompiler({}, "compiler9000", 0, {}, [new fakePlugin()]);
+				mockPlugin.callCount.should.be.exactly(1);
+				compiler.cache.children.should.match({});
+				done();
+			});
+			it("defaults cache.children[compilerName] if none exists yet", (done) => {
+				compiler.cache = {
+					children: {},
+				};
+				compiler.createChildCompiler({}, "compiler9000", 0, {}, null);
+				compiler.cache.children.should.match({
+					compiler9000: [],
+				});
+				done();
+			});
+		});
 	});
 	describe("Watching", () => {
 		let compiler;
@@ -247,6 +296,14 @@ describe("Compiler", () => {
 					path: "/",
 					pathinfo: true,
 				}
+			});
+		});
+		describe("static method", () => {
+			it("should have an accessible static method, Watching", (done) => {
+				const actual = Compiler.Watching(compiler, 1000, err => err);
+				actual.running.should.be.exactly(true);
+				actual.constructor.name.should.be.exactly("Watching");
+				done();
 			});
 		});
 		describe("constructor", () => {
