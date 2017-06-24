@@ -1,6 +1,7 @@
+/* globals describe, beforeEach, it */
 "use strict";
 
-const should = require("should");
+require("should");
 const sinon = require("sinon");
 const WebWorkerMainTemplatePlugin = require("../lib/webworker/WebWorkerMainTemplatePlugin");
 const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
@@ -15,40 +16,40 @@ const createMockChunk = (ids, chunks) => {
 	};
 };
 
-describe("WebWorkerMainTemplatePlugin", function () {
+describe("WebWorkerMainTemplatePlugin", function() {
 	let env;
 
 	beforeEach(() => {
 		env = {};
 	});
 
-	it("has apply function", function () {
+	it("has apply function", function() {
 		(new WebWorkerMainTemplatePlugin()).apply.should.be.a.Function();
 	});
 
-	describe("when applied", function () {
-		beforeEach(function () {
+	describe("when applied", function() {
+		beforeEach(function() {
 			env.eventBindings = applyPluginWithOptions(WebWorkerMainTemplatePlugin);
 			env.handlerContext = {
-				requireFn: 'requireFn',
-				indent: (value) => typeof value === 'string' ? value : value.join("\n"),
+				requireFn: "requireFn",
+				indent: (value) => typeof value === "string" ? value : value.join("\n"),
 				asString: (values) => values.join("\n"),
 				renderCurrentHashCode: (value) => value,
 				outputOptions: {
-					chunkFilename: 'chunkFilename'
+					chunkFilename: "chunkFilename"
 				},
 				applyPluginsWaterfall: (moduleName, fileName, data) => {
-					return `"${moduleName}${data.hash}${data.hashWithLength()}${data.chunk && data.chunk.id || ''}"`;
+					return `"${moduleName}${data.hash}${data.hashWithLength()}${data.chunk && data.chunk.id || ""}"`;
 				},
-				renderAddModule: () => 'renderAddModuleSource();',
+				renderAddModule: () => "renderAddModuleSource();",
 			};
 		});
 
-		it("binds five event handlers", function () {
+		it("binds five event handlers", function() {
 			env.eventBindings.length.should.be.exactly(5);
 		});
 
-		describe("local-vars handler", function () {
+		describe("local-vars handler", function() {
 			beforeEach(() => {
 				env.eventBinding = env.eventBindings[0];
 			});
@@ -64,18 +65,18 @@ describe("WebWorkerMainTemplatePlugin", function () {
 				});
 
 				it("returns the original source", () => {
-					env.source.should.be.exactly("moduleSource()")
+					env.source.should.be.exactly("moduleSource()");
 				});
 			});
 
 			describe("when chunks are provided", () => {
 				beforeEach(() => {
 					const chunk = createMockChunk([1, 2, 3], [
-						'foo',
-						'bar',
-						'baz'
+						"foo",
+						"bar",
+						"baz"
 					]);
-					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, 'abc123');
+					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, "abc123");
 				});
 
 				it("returns the original source with installed mapping", () => {
@@ -89,7 +90,7 @@ var installedChunks = {
 2: 1,
 3: 1
 };
-`.trim())
+`.trim());
 				});
 			});
 		});
@@ -106,7 +107,7 @@ var installedChunks = {
 			describe("when called", () => {
 				beforeEach(() => {
 					const chunk = createMockChunk();
-					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, 'abc123');
+					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, "abc123");
 				});
 
 				it("creates import scripts call and promise resolve", () => {
@@ -118,7 +119,7 @@ importScripts("asset-path" + abc123 + "" + abc123 + "" + chunkId + "");
 }
 resolve();
 });
-`.trim())
+`.trim());
 				});
 			});
 		});
@@ -139,16 +140,16 @@ resolve();
 				});
 
 				it("returns the original source", () => {
-					env.source.should.be.exactly("moduleSource()")
+					env.source.should.be.exactly("moduleSource()");
 				});
 			});
 
 			describe("when chunks are provided", () => {
 				beforeEach(() => {
 					const chunk = createMockChunk([1, 2, 3], [
-						'foo',
-						'bar',
-						'baz'
+						"foo",
+						"bar",
+						"baz"
 					]);
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk);
 				});
@@ -163,7 +164,7 @@ renderAddModuleSource();
 while(chunkIds.length)
 installedChunks[chunkIds.pop()] = 1;
 };
-`.trim())
+`.trim());
 				});
 			});
 		});
@@ -180,7 +181,7 @@ installedChunks[chunkIds.pop()] = 1;
 			describe("when called", () => {
 				beforeEach(() => {
 					const chunk = createMockChunk();
-					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, 'abc123');
+					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, "abc123");
 				});
 
 				it("returns the original source with hot update callback", () => {
@@ -238,7 +239,7 @@ function hotDownloadManifest(requestTimeout) { // eslint-disable-line no-unused-
 function hotDisposeChunk(chunkId) { //eslint-disable-line no-unused-vars
 	delete installedChunks[chunkId];
 }
-`.trim())
+`.trim());
 				});
 			});
 		});
