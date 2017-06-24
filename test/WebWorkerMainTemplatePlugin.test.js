@@ -5,19 +5,29 @@ const sinon = require("sinon");
 const WebWorkerMainTemplatePlugin = require("../lib/webworker/WebWorkerMainTemplatePlugin");
 const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
 
-describe("WebWorkerMainTemplatePlugin", function() {
+const createMockChunk = (ids, chunks) => {
+	return {
+		ids: ids,
+		_chunks: new Set(chunks),
+		getChunks() {
+			return this._chunks;
+		}
+	};
+};
+
+describe("WebWorkerMainTemplatePlugin", function () {
 	let env;
 
 	beforeEach(() => {
 		env = {};
 	});
 
-	it("has apply function", function() {
+	it("has apply function", function () {
 		(new WebWorkerMainTemplatePlugin()).apply.should.be.a.Function();
 	});
 
-	describe("when applied", function() {
-		beforeEach(function() {
+	describe("when applied", function () {
+		beforeEach(function () {
 			env.eventBindings = applyPluginWithOptions(WebWorkerMainTemplatePlugin);
 			env.handlerContext = {
 				requireFn: 'requireFn',
@@ -34,11 +44,11 @@ describe("WebWorkerMainTemplatePlugin", function() {
 			};
 		});
 
-		it("binds five event handlers", function() {
+		it("binds five event handlers", function () {
 			env.eventBindings.length.should.be.exactly(5);
 		});
 
-		describe("local-vars handler", function() {
+		describe("local-vars handler", function () {
 			beforeEach(() => {
 				env.eventBinding = env.eventBindings[0];
 			});
@@ -49,10 +59,7 @@ describe("WebWorkerMainTemplatePlugin", function() {
 
 			describe("when no chunks are provided", () => {
 				beforeEach(() => {
-					const chunk = {
-						ids: [],
-						chunks: []
-					};
+					const chunk = createMockChunk();
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk);
 				});
 
@@ -63,14 +70,11 @@ describe("WebWorkerMainTemplatePlugin", function() {
 
 			describe("when chunks are provided", () => {
 				beforeEach(() => {
-					const chunk = {
-						ids: [1, 2, 3],
-						chunks: [
-							'foo',
-							'bar',
-							'baz'
-						]
-					};
+					const chunk = createMockChunk([1, 2, 3], [
+						'foo',
+						'bar',
+						'baz'
+					]);
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, 'abc123');
 				});
 
@@ -101,7 +105,7 @@ var installedChunks = {
 
 			describe("when called", () => {
 				beforeEach(() => {
-					const chunk = {};
+					const chunk = createMockChunk();
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, 'abc123');
 				});
 
@@ -130,10 +134,7 @@ resolve();
 
 			describe("when no chunks are provided", () => {
 				beforeEach(() => {
-					const chunk = {
-						ids: [],
-						chunks: []
-					};
+					const chunk = createMockChunk();
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk);
 				});
 
@@ -144,14 +145,11 @@ resolve();
 
 			describe("when chunks are provided", () => {
 				beforeEach(() => {
-					const chunk = {
-						ids: [1, 2, 3],
-						chunks: [
-							'foo',
-							'bar',
-							'baz'
-						]
-					};
+					const chunk = createMockChunk([1, 2, 3], [
+						'foo',
+						'bar',
+						'baz'
+					]);
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk);
 				});
 
@@ -181,7 +179,7 @@ installedChunks[chunkIds.pop()] = 1;
 
 			describe("when called", () => {
 				beforeEach(() => {
-					const chunk = {};
+					const chunk = createMockChunk();
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, 'abc123');
 				});
 
