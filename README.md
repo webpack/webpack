@@ -69,7 +69,6 @@ within webpack itself use this plugin interface. This makes webpack very
 |:--:|:----:|:----------|
 |[common-chunks-webpack-plugin][common]|![common-npm]|Generates chunks of common modules shared between entry points and splits them into separate  bundles (e.g vendor.bundle.js && app.bundle.js)|
 |[extract-text-webpack-plugin][extract]|![extract-npm]|Extracts Text (CSS) from your bundles into a separate file (app.bundle.css)|
-|[component-webpack-plugin][component]|![component-npm]|Use components with webpack|
 |[compression-webpack-plugin][compression]|![compression-npm]|Prepare compressed versions of assets to serve them with Content-Encoding|
 |[i18n-webpack-plugin][i18n]|![i18n-npm]|Adds i18n support to your bundles|
 |[html-webpack-plugin][html-plugin]|![html-plugin-npm]| Simplifies creation of HTML files (`index.html`) to serve your bundles|
