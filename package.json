@@ -9,7 +9,7 @@
     "ajv": "^5.1.5",
     "ajv-keywords": "^2.0.0",
     "async": "^2.1.2",
-    "enhanced-resolve": "^3.0.0",
+    "enhanced-resolve": "mikesherov/enhanced-resolve#b03799b6f06f82423e0a5c57fcc196b8eaeb8c07",
     "escope": "^3.6.0",
     "interpret": "^1.0.0",
     "json-loader": "^0.5.4",
