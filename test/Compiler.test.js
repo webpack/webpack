@@ -298,14 +298,14 @@ describe("Compiler", () => {
 				}
 			});
 		});
-		describe("static method", () => {
-			it("should have an accessible static method, Watching", (done) => {
-				const actual = Compiler.Watching(compiler, 1000, err => err);
-				actual.running.should.be.exactly(true);
-				actual.constructor.name.should.be.exactly("Watching");
-				done();
-			});
-		});
+		// describe("static method", () => {
+		// 	it("should have an accessible static method, Watching", (done) => {
+		// 		const actual = Compiler.Watching(compiler, 1000, err => err);
+		// 		actual.running.should.be.exactly(true);
+		// 		actual.constructor.name.should.be.exactly("Watching");
+		// 		done();
+		// 	});
+		// });
 		describe("constructor", () => {
 			it("constructs Watching.watchOptions correctly when passed a number, string, or object for watchOptions", (done) => {
 				const Watching1 = compiler.watch(1000, err => err);
