@@ -67,7 +67,7 @@ describe("AmdMainTemplatePlugin", () => {
 				describe("with name", () => {
 					beforeEach(() => {
 						env.chunk = {
-							modules: env.modulesListWithExternals
+							getModules: () => env.modulesListWithExternals
 						};
 						env.eventBinding = setupPluginAndGetEventBinding("foo");
 					});
@@ -82,7 +82,7 @@ describe("AmdMainTemplatePlugin", () => {
 				describe("with external dependencies", () => {
 					beforeEach(() => {
 						env.chunk = {
-							modules: env.modulesListWithExternals
+							getModules: () => env.modulesListWithExternals
 						};
 						env.eventBinding = setupPluginAndGetEventBinding();
 					});
@@ -101,7 +101,7 @@ describe("AmdMainTemplatePlugin", () => {
 						};
 						const noExternals = env.modulesListWithExternals.map((module) => Object.assign(module, externalFlag));
 						env.chunk = {
-							modules: noExternals
+							getModules: () => env.modulesListWithExternals
 						};
 						env.eventBinding = setupPluginAndGetEventBinding();
 					});
