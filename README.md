@@ -190,8 +190,6 @@ or are automatically applied via regex from your webpack configuration.
 |<a href="https://github.com/webpack/mocha-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/mocha.svg"></a>|![mocha-npm]|Tests with mocha (Browser/NodeJS)|
 |<a href="https://github.com/MoOx/eslint-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/eslint.svg"></a>|![eslint-npm]|PreLoader for linting code using ESLint|
 |<a href="https://github.com/webpack/jslint-loader"><img width="48" height="48" src="http://jshint.com/res/jshint-dark.png"></a>|![jshint-npm]|PreLoader for linting code using JSHint|
-|<a href="https://github.com/unindented/jscs-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/jscs.svg"></a>|![jscs-npm]|PreLoader for code style checking using JSCS|
-
 
 [mocha-npm]: https://img.shields.io/npm/v/mocha-loader.svg
 [eslint-npm]: https://img.shields.io/npm/v/eslint-loader.svg
