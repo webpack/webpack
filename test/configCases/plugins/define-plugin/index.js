@@ -105,4 +105,12 @@ it("should evaluate composed expressions (issue 5100)", function() {
 	} else {
 		require("fail");
 	}
-})
+});
+
+it("should follow renamings in var (issue 5215)", function() {
+	var _process$env = process.env,
+		TEST = _process$env.TEST,
+		DEFINED_NESTED_KEY = _process$env.DEFINED_NESTED_KEY;
+	TEST.should.be.eql("test");
+	DEFINED_NESTED_KEY.should.be.eql(5);
+});
