@@ -26,6 +26,9 @@ it("should answer typeof require.include correctly", function() {
 it("should answer typeof require.ensure correctly", function() {
 	(typeof require.ensure).should.be.eql("function");
 });
+it("should answer typeof require.resolve correctly", function() {
+	(typeof require.resolve).should.be.eql("function");
+});
 it("should answer typeof System correctly", function() {
 	(typeof System).should.be.eql("object");
 });
@@ -41,6 +44,7 @@ it("should not parse filtered stuff", function() {
 	if(!(typeof require === "function")) require("fail");
 	if(typeof require == "undefined") require = require("fail");
 	if(typeof require === "undefined") require = require("fail");
+	if(typeof require.resolve !== "function") require("fail");
 	if(typeof module == "undefined") module = require("fail");
 	if(typeof module === "undefined") module = require("fail");
 	if(typeof module != "object") module = require("fail");
