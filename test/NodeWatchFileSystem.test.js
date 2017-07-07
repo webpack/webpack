@@ -57,7 +57,7 @@ describe("NodeWatchFileSystem", function() {
 	var fileDirect = path.join(fixtures, "watched-file.txt");
 	var fileSubdir = path.join(fixtures, "subdir", "watched-file.txt");
 
-	this.timeout(20000);
+	this.timeout(10000);
 
 	it("should register a file change (change delayed)", function(done) {
 		var startTime = new Date().getTime();
