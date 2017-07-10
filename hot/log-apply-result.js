@@ -20,6 +20,9 @@ module.exports = function(updatedModules, renewedModules) {
 	} else {
 		log("info", "[HMR] Updated modules:");
 		renewedModules.forEach(function(moduleId) {
+			if(moduleId.lastIndexOf) {
+				moduleId = moduleId.substring(moduleId.lastIndexOf("!") + 1);
+			}
 			log("info", "[HMR]  - " + moduleId);
 		});
 		var numberIds = renewedModules.every(function(moduleId) {
