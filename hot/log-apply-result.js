@@ -20,10 +20,14 @@ module.exports = function(updatedModules, renewedModules) {
 	} else {
 		log("info", "[HMR] Updated modules:");
 		renewedModules.forEach(function(moduleId) {
-			if(moduleId.lastIndexOf) {
-				moduleId = moduleId.substring(moduleId.lastIndexOf("!") + 1);
+			if(typeof moduleId === "string") {
+				var parts = moduleId.split("!");
+				log.groupCollapsed("[HMR]  - " + parts.pop());
+				log("info", "[HMR]  - " + moduleId);
+				log.groupEnd();
+			} else {
+				log("info", "[HMR]  - " + moduleId);
 			}
-			log("info", "[HMR]  - " + moduleId);
 		});
 		var numberIds = renewedModules.every(function(moduleId) {
 			return typeof moduleId === "number";

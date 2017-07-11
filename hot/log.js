@@ -1,5 +1,7 @@
 var logLevel = "info";
 
+function dummy() { }
+
 module.exports = function(level, msg) {
 	if(logLevel === "info" && level === "info")
 		return console.log(msg);
@@ -8,6 +10,12 @@ module.exports = function(level, msg) {
 	if(["info", "warning", "error"].indexOf(logLevel) >= 0 && level === "error")
 		return console.error(msg);
 };
+
+module.exports.group = console.group || dummy;
+
+module.exports.groupCollapsed = console.groupCollapsed || dummy;
+
+module.exports.groupEnd = console.groupEnd || dummy;
 
 module.exports.setLogLevel = function(level) {
 	logLevel = level;
