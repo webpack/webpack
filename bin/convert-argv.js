@@ -440,7 +440,7 @@ module.exports = function(yargs, argv, convertOptions) {
 			var SourceMapDevToolPlugin = require("../lib/SourceMapDevToolPlugin");
 			options.plugins.push(new UglifyJsPlugin({
 				sourceMap: (options.devtool && (options.devtool.indexOf("sourcemap") >= 0 || options.devtool.indexOf("source-map") >= 0) || options.plugins.find((plugin) => {
-					return plugin instanceof SourceMapDevToolPlugin
+					return plugin instanceof SourceMapDevToolPlugin;
 				}))
 			}));
 			options.plugins.push(new LoaderOptionsPlugin({
