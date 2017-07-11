@@ -180,6 +180,17 @@ describe("Parser", () => {
 				ijksub: ["test"]
 			}
 		],
+		"renaming this's properties with nested IIFE (called)": [
+			function() {
+				! function() {
+					! function() {
+						this.sub;
+					}.call(this);
+				}.call(ijk);
+			}, {
+				ijksub: ["test"]
+			}
+		],
 	};
 
 	Object.keys(testCases).forEach((name) => {
