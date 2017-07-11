@@ -24,6 +24,16 @@ it("should provide a module for a nested var within a IIFE's this", function() {
 	}.call(process));
 });
 
+it("should provide a module for a nested var within a nested IIFE's this", function() {
+	(function() {
+		(function() {
+			(this.env.NODE_ENV).should.be.eql("development");
+			var x = this.env.NODE_ENV;
+			x.should.be.eql("development");
+		}.call(this));
+	}.call(process));
+});
+
 it("should not provide a module for a part of a var", function() {
 	(typeof bbb).should.be.eql("undefined");
 });
