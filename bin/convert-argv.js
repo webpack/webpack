@@ -2,6 +2,7 @@ var path = require("path");
 var fs = require("fs");
 fs.existsSync = fs.existsSync || path.existsSync;
 var interpret = require("interpret");
+var prepareOptions = require("../lib/prepareOptions");
 
 module.exports = function(yargs, argv, convertOptions) {
 
@@ -94,13 +95,7 @@ module.exports = function(yargs, argv, convertOptions) {
 
 		var requireConfig = function requireConfig(configPath) {
 			var options = require(configPath);
-			var isES6DefaultExportedFunc = (
-				typeof options === "object" && options !== null && typeof options.default === "function"
-			);
-			if(typeof options === "function" || isES6DefaultExportedFunc) {
-				options = isES6DefaultExportedFunc ? options.default : options;
-				options = options(argv.env, argv);
-			}
+			options = prepareOptions(options, argv);
 			return options;
 		};
 

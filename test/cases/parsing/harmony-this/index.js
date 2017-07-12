@@ -12,9 +12,6 @@ it("should have this = undefined on imported non-strict functions", function() {
 	a().should.be.eql("undefined");
 	x
 	B().should.be.eql("undefined");
-	x
-	abc.a().should.be.eql(abc);
-	x
 });
 
 import C2, { C } from "./new";

@@ -160,6 +160,9 @@
               "instanceof": "RegExp"
             },
             {
+              "instanceof": "Function"
+            },
+            {
               "items": {
                 "type": "string",
                 "absolutePath": true
@@ -221,6 +224,9 @@
         },
         "strictExportPresence": {
           "type": "boolean"
+        },
+        "strictThisContextOnImports": {
+          "type": "boolean"
         }
       },
       "type": "object"
@@ -269,6 +275,10 @@
             "anonymous",
             "use-credentials"
           ]
+        },
+        "chunkLoadTimeout": {
+          "description": "Number of milliseconds before chunk request expires",
+          "type": "number"
         },
         "devtoolFallbackModuleFilenameTemplate": {
           "description": "Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.",
@@ -365,6 +375,14 @@
                 "type": "string"
               },
               "type": "array"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "root": { "type": "string" },
+                "amd": { "type": "string" },
+                "commonjs": { "type": "string" }
+              }
             }
           ],
           "description": "If set, export the bundle as library. `output.library` is the name."
@@ -383,6 +401,16 @@
             "umd",
             "umd2",
             "jsonp"
+          ]
+        },
+        "libraryExport": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/common.arrayOfStringValues"
+            }
           ]
         },
         "path": {
@@ -454,6 +482,9 @@
         },
         "cachePredicate": {
           "instanceof": "Function"
+        },
+        "cacheWithContext": {
+          "type": "boolean"
         },
         "descriptionFiles": {
           "$ref": "#/definitions/common.arrayOfStringValues"
@@ -794,55 +825,64 @@
     },
     "node": {
       "description": "Include polyfills or mocks for various node stuff.",
-      "additionalProperties": {
-        "enum": [
-          false,
-          true,
-          "mock",
-          "empty"
-        ]
-      },
-      "properties": {
-        "Buffer": {
+      "anyOf": [
+        {
           "enum": [
-            false,
-            true,
-            "mock"
+            false
           ]
         },
-        "__dirname": {
-          "enum": [
-            false,
-            true,
-            "mock"
-          ]
-        },
-        "__filename": {
-          "enum": [
-            false,
-            true,
-            "mock"
-          ]
-        },
-        "console": {
-          "enum": [
-            false,
-            true,
-            "mock"
-          ]
-        },
-        "global": {
-          "type": "boolean"
-        },
-        "process": {
-          "enum": [
-            false,
-            true,
-            "mock"
-          ]
+        {
+          "additionalProperties": {
+            "enum": [
+              false,
+              true,
+              "mock",
+              "empty"
+            ]
+          },
+          "properties": {
+            "Buffer": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            },
+            "__dirname": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            },
+            "__filename": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            },
+            "console": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            },
+            "global": {
+              "type": "boolean"
+            },
+            "process": {
+              "enum": [
+                false,
+                true,
+                "mock"
+              ]
+            }
+          },
+          "type": "object"
         }
-      },
-      "type": "object"
+      ]
     },
     "output": {
       "$ref": "#/definitions/output"
@@ -1004,6 +1044,18 @@
             "assetsSort": {
               "type": "string",
               "description": "sort the assets by that field"
+            },
+            "providedExports": {
+              "type": "boolean",
+              "description": "show exports provided by modules"
+            },
+            "usedExports": {
+              "type": "boolean",
+              "description": "show exports used by modules"
+            },
+            "optimizationBailout": {
+              "type": "boolean",
+              "description": "show reasons why optimization bailed out for modules"
             }
           }
         },
@@ -1016,6 +1068,7 @@
             "errors-only",
             "minimal",
             "normal",
+            "detailed",
             "verbose"
           ]
         }

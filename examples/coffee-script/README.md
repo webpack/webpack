@@ -36,9 +36,9 @@ module.exports = 42
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -62,9 +62,6 @@ module.exports = 42
 /******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
 /******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
@@ -93,7 +90,7 @@ module.exports = 42
 /******/ 	__webpack_require__.p = "js/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 ```
@@ -103,11 +100,11 @@ module.exports = 42
 ``` javascript
 /******/ ([
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
 /*!*********************!*\
   !*** ./cup2.coffee ***!
   \*********************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports) {
 
 console.log("yeah coffee-script");
@@ -117,11 +114,22 @@ module.exports = 42;
 
 /***/ }),
 /* 1 */
-/* unknown exports provided */
-/* all exports used */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+console.log(__webpack_require__(/*! ./cup1 */ 2));
+
+/***/ }),
+/* 2 */
 /*!*********************!*\
   !*** ./cup1.coffee ***!
   \*********************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
@@ -132,17 +140,6 @@ module.exports = {
 };
 
 
-/***/ }),
-/* 2 */
-/* unknown exports provided */
-/* all exports used */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/***/ (function(module, exports, __webpack_require__) {
-
-console.log(__webpack_require__(/*! ./cup1 */ 1));
-
 /***/ })
 /******/ ]);
 ```
@@ -152,35 +149,35 @@ console.log(__webpack_require__(/*! ./cup1 */ 1));
 ## Uncompressed
 
 ```
-Hash: 0fb81f26f70778b1c84a
-Version: webpack 2.3.2
+Hash: 22e68923dcce75e38966
+Version: webpack 3.0.0-rc.0
     Asset     Size  Chunks             Chunk Names
-output.js  3.45 kB       0  [emitted]  main
+output.js  3.29 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 206 bytes [entry] [rendered]
-    > main [2] ./example.js 
+    > main [1] ./example.js 
     [0] ./cup2.coffee 57 bytes {0} [built]
-        cjs require ./cup2.coffee [1] ./cup1.coffee 4:12-36
-        cjs require ./cup2 [1] ./cup1.coffee 5:9-26
-    [1] ./cup1.coffee 118 bytes {0} [built]
-        cjs require ./cup1 [2] ./example.js 1:12-29
-    [2] ./example.js 31 bytes {0} [built]
+        cjs require ./cup2.coffee [2] ./cup1.coffee 4:12-36
+        cjs require ./cup2 [2] ./cup1.coffee 5:9-26
+    [1] ./example.js 31 bytes {0} [built]
+    [2] ./cup1.coffee 118 bytes {0} [built]
+        cjs require ./cup1 [1] ./example.js 1:12-29
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 0fb81f26f70778b1c84a
-Version: webpack 2.3.2
+Hash: 22e68923dcce75e38966
+Version: webpack 3.0.0-rc.0
     Asset       Size  Chunks             Chunk Names
-output.js  673 bytes       0  [emitted]  main
+output.js  640 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 206 bytes [entry] [rendered]
-    > main [2] ./example.js 
+    > main [1] ./example.js 
     [0] ./cup2.coffee 57 bytes {0} [built]
-        cjs require ./cup2.coffee [1] ./cup1.coffee 4:12-36
-        cjs require ./cup2 [1] ./cup1.coffee 5:9-26
-    [1] ./cup1.coffee 118 bytes {0} [built]
-        cjs require ./cup1 [2] ./example.js 1:12-29
-    [2] ./example.js 31 bytes {0} [built]
+        cjs require ./cup2.coffee [2] ./cup1.coffee 4:12-36
+        cjs require ./cup2 [2] ./cup1.coffee 5:9-26
+    [1] ./example.js 31 bytes {0} [built]
+    [2] ./cup1.coffee 118 bytes {0} [built]
+        cjs require ./cup1 [1] ./example.js 1:12-29
 ```

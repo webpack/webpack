@@ -26,8 +26,13 @@ it("should hide import by pattern in function", function() {
 	}({ test: "ok" }));
 });
 
-it("should allow import in default", function() {
+it("should allow import in default (incorrect)", function() {
 	var { other = test, test } = { test: "ok" };
 	test.should.be.eql("ok");
+	(typeof other).should.be.eql("undefined");
+});
+
+it("should allow import in default", function() {
+	var { other = test } = { test: "ok" };
 	other.should.be.eql("test");
 });
