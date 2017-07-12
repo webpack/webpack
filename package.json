@@ -9,7 +9,7 @@
     "ajv": "^4.7.0",
     "ajv-keywords": "^1.1.1",
     "async": "^2.1.2",
-    "enhanced-resolve": "^3.0.0",
+    "enhanced-resolve": "^3.3.0",
     "interpret": "^1.0.0",
     "json-loader": "^0.5.4",
     "json5": "^0.5.1",
@@ -23,7 +23,7 @@
     "tapable": "~0.2.5",
     "uglify-js": "^2.8.27",
     "watchpack": "^1.3.1",
-    "webpack-sources": "^0.2.3",
+    "webpack-sources": "^1.0.1",
     "yargs": "^6.0.0"
   },
   "license": "MIT",
@@ -88,13 +88,13 @@
     "schemas/"
   ],
   "scripts": {
-    "test": "mocha test/*.test.js --harmony --check-leaks",
+    "test": "mocha test/*.test.js --max_old_space_size=4096 --harmony --check-leaks",
     "travis:test": "npm run cover:min",
     "travis:lint": "npm run lint-files && npm run nsp",
     "travis:benchmark": "npm run benchmark",
-    "appveyor:test": "node --max_old_space_size=4096 node_modules\\mocha\\bin\\mocha --harmony test/*.test.js",
+    "appveyor:test": "node node_modules\\mocha\\bin\\mocha --max_old_space_size=4096 --harmony test/*.test.js",
     "appveyor:benchmark": "npm run benchmark",
-    "circleci:test": "node --max_old_space_size=4096 node_modules/mocha/bin/mocha --harmony test/*.test.js",
+    "circleci:test": "node node_modules/mocha/bin/mocha --max_old_space_size=4096 --harmony test/*.test.js",
     "circleci:lint": "npm run lint-files && npm run nsp",
     "build:examples": "cd examples && node buildAll.js",
     "pretest": "npm run lint-files",
@@ -102,9 +102,9 @@
     "lint": "eslint lib bin hot buildin \"test/**/webpack.config.js\" \"test/binCases/**/test.js\" \"examples/**/webpack.config.js\"",
     "beautify-lint": "beautify-lint \"lib/**/*.js\" \"hot/**/*.js\" \"bin/**/*.js\" \"benchmark/*.js\" \"test/*.js\"",
     "nsp": "nsp check --output summary",
-    "benchmark": "mocha test/*.benchmark.js --harmony -R spec",
-    "cover": "node --harmony ./node_modules/istanbul/lib/cli.js cover -x '**/*.runtime.js' node_modules/mocha/bin/_mocha -- test/*.test.js",
-    "cover:min": "node --harmony ./node_modules/.bin/istanbul cover -x '**/*.runtime.js' --report lcovonly node_modules/mocha/bin/_mocha -- test/*.test.js",
+    "benchmark": "mocha --max_old_space_size=4096 --harmony test/*.benchmark.js -R spec",
+    "cover": "node --max_old_space_size=4096 --harmony ./node_modules/istanbul/lib/cli.js cover -x '**/*.runtime.js' node_modules/mocha/bin/_mocha -- test/*.test.js",
+    "cover:min": "node --max_old_space_size=4096 --harmony ./node_modules/.bin/istanbul cover -x '**/*.runtime.js' --report lcovonly node_modules/mocha/bin/_mocha -- test/*.test.js",
     "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
   }
 }

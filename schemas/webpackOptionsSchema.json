@@ -459,6 +459,9 @@
         "cachePredicate": {
           "instanceof": "Function"
         },
+        "cacheWithContext": {
+          "type": "boolean"
+        },
         "descriptionFiles": {
           "$ref": "#/definitions/common.arrayOfStringValues"
         },
