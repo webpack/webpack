@@ -1,6 +1,6 @@
 var logLevel = "info";
 
-function dummy() { }
+function dummy() {}
 
 module.exports = function(level, msg) {
 	if(logLevel === "info" && level === "info")
