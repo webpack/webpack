@@ -35,7 +35,7 @@ module.exports = {
 # js/MyDll.alpha.js
 
 ``` javascript
-var alpha_282e8826843b2bb4eeb1 =
+var alpha_457b6718a3ff9f8c2d77 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -75,9 +75,6 @@ var alpha_282e8826843b2bb4eeb1 =
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -105,7 +102,7 @@ var alpha_282e8826843b2bb4eeb1 =
 /******/ 	__webpack_require__.p = "js/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 6);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
@@ -115,50 +112,47 @@ var alpha_282e8826843b2bb4eeb1 =
 ``` js
 /******/ ([
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
-/*!**************!*\
-  !*** ./a.js ***!
-  \**************/
-/***/ (function(module, exports) {
+/*!*****************!*\
+  !*** dll alpha ***!
+  \*****************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
 
-module.exports = "a";
+module.exports = __webpack_require__;
 
 /***/ }),
 /* 1 */
-/* unknown exports provided */
-/* all exports used */
 /*!******************!*\
   !*** ./alpha.js ***!
   \******************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports) {
 
 module.exports = "alpha";
 
 /***/ }),
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */
-/* unknown exports provided */
-/* all exports used */
-/*!**********************!*\
-  !*** ../~/module.js ***!
-  \**********************/
+/* 2 */
+/*!**************!*\
+  !*** ./a.js ***!
+  \**************/
+/*! no static exports found */
+/*! all exports used */
+/***/ (function(module, exports) {
+
+module.exports = "a";
+
+/***/ }),
+/* 3 */
+/*!*********************************!*\
+  !*** ../node_modules/module.js ***!
+  \*********************************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports) {
 
 module.exports = "module";
-
-/***/ }),
-/* 6 */
-/* unknown exports provided */
-/* all exports used */
-/*!*****************!*\
-  !*** dll alpha ***!
-  \*****************/
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__;
 
 /***/ })
 /******/ ]);
@@ -167,23 +161,7 @@ module.exports = __webpack_require__;
 # js/alpha-manifest.json
 
 ``` javascript
-{
-  "name": "alpha_282e8826843b2bb4eeb1",
-  "content": {
-    "./a.js": {
-      "id": 0,
-      "meta": {}
-    },
-    "./alpha.js": {
-      "id": 1,
-      "meta": {}
-    },
-    "../node_modules/module.js": {
-      "id": 5,
-      "meta": {}
-    }
-  }
-}
+{"name":"alpha_457b6718a3ff9f8c2d77","content":{"./alpha.js":{"id":1,"meta":{}},"./a.js":{"id":2,"meta":{}},"../node_modules/module.js":{"id":3,"meta":{}}}}
 ```
 
 # Info
@@ -191,59 +169,59 @@ module.exports = __webpack_require__;
 ## Uncompressed
 
 ```
-Hash: 282e8826843b2bb4eeb1
-Version: webpack 2.4.1
+Hash: 457b6718a3ff9f8c2d77
+Version: webpack 3.0.0-rc.0
          Asset     Size  Chunks             Chunk Names
- MyDll.beta.js  3.47 kB       0  [emitted]  beta
-MyDll.alpha.js  3.49 kB       1  [emitted]  alpha
+ MyDll.beta.js  3.31 kB       0  [emitted]  beta
+MyDll.alpha.js  3.34 kB       1  [emitted]  alpha
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
 chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
-    > beta [7] dll beta 
-    [2] ./b.js 21 bytes {0} [built]
-        single entry ./b [7] dll beta beta:1
-    [3] ./beta.js 24 bytes {0} [built]
-        single entry ./beta [7] dll beta beta:0
-    [4] ./c.jsx 23 bytes {0} [built]
-        single entry ./c [7] dll beta beta:2
-    [7] dll beta 12 bytes {0} [built]
+    > beta [4] dll beta 
+    [4] dll beta 12 bytes {0} [built]
+    [5] ./beta.js 24 bytes {0} [built]
+        single entry ./beta [4] dll beta beta:0
+    [6] ./b.js 21 bytes {0} [built]
+        single entry ./b [4] dll beta beta:1
+    [7] ./c.jsx 23 bytes {0} [built]
+        single entry ./c [4] dll beta beta:2
 chunk    {1} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
-    > alpha [6] dll alpha 
-    [0] ./a.js 21 bytes {1} [built]
-        single entry ./a [6] dll alpha alpha:1
+    > alpha [0] dll alpha 
+    [0] dll alpha 12 bytes {1} [built]
     [1] ./alpha.js 25 bytes {1} [built]
-        single entry ./alpha [6] dll alpha alpha:0
-    [5] ../~/module.js 26 bytes {1} [built]
-        single entry module [6] dll alpha alpha:2
-    [6] dll alpha 12 bytes {1} [built]
+        single entry ./alpha [0] dll alpha alpha:0
+    [2] ./a.js 21 bytes {1} [built]
+        single entry ./a [0] dll alpha alpha:1
+    [3] ../node_modules/module.js 26 bytes {1} [built]
+        single entry module [0] dll alpha alpha:2
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 282e8826843b2bb4eeb1
-Version: webpack 2.4.1
+Hash: 457b6718a3ff9f8c2d77
+Version: webpack 3.0.0-rc.0
          Asset       Size  Chunks             Chunk Names
- MyDll.beta.js  653 bytes       0  [emitted]  beta
-MyDll.alpha.js  657 bytes       1  [emitted]  alpha
+ MyDll.beta.js  627 bytes       0  [emitted]  beta
+MyDll.alpha.js  628 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
 chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
-    > beta [7] dll beta 
-    [2] ./b.js 21 bytes {0} [built]
-        single entry ./b [7] dll beta beta:1
-    [3] ./beta.js 24 bytes {0} [built]
-        single entry ./beta [7] dll beta beta:0
-    [4] ./c.jsx 23 bytes {0} [built]
-        single entry ./c [7] dll beta beta:2
-    [7] dll beta 12 bytes {0} [built]
+    > beta [4] dll beta 
+    [4] dll beta 12 bytes {0} [built]
+    [5] ./beta.js 24 bytes {0} [built]
+        single entry ./beta [4] dll beta beta:0
+    [6] ./b.js 21 bytes {0} [built]
+        single entry ./b [4] dll beta beta:1
+    [7] ./c.jsx 23 bytes {0} [built]
+        single entry ./c [4] dll beta beta:2
 chunk    {1} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
-    > alpha [6] dll alpha 
-    [0] ./a.js 21 bytes {1} [built]
-        single entry ./a [6] dll alpha alpha:1
+    > alpha [0] dll alpha 
+    [0] dll alpha 12 bytes {1} [built]
     [1] ./alpha.js 25 bytes {1} [built]
-        single entry ./alpha [6] dll alpha alpha:0
-    [5] ../~/module.js 26 bytes {1} [built]
-        single entry module [6] dll alpha alpha:2
-    [6] dll alpha 12 bytes {1} [built]
+        single entry ./alpha [0] dll alpha alpha:0
+    [2] ./a.js 21 bytes {1} [built]
+        single entry ./a [0] dll alpha alpha:1
+    [3] ../node_modules/module.js 26 bytes {1} [built]
+        single entry module [0] dll alpha alpha:2
 ```

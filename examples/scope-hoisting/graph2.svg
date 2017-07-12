@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="378px" preserveAspectRatio="none" style="width:299px;height:378px;" version="1.1" viewBox="0 0 299 378" width="299px" zoomAndPan="magnify"><defs><filter height="300%" id="f12zhj2lp9u4q1" width="300%" x="-1" y="-1"><feGaussianBlur result="blurOut" stdDeviation="2.0"/><feColorMatrix in="blurOut" result="blurOut2" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .4 0"/><feOffset dx="4.0" dy="4.0" in="blurOut2" result="blurOut3"/><feBlend in="SourceGraphic" in2="blurOut3" mode="normal"/></filter></defs><g><!--cluster Chunk A--><rect fill="#FFFFFF" filter="url(#f12zhj2lp9u4q1)" height="347" style="stroke: #000000; stroke-width: 2.0;" width="123" x="22" y="24"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="66" x="50.5" y="38.9951">Chunk A</text><!--cluster Chunk B--><rect fill="#FFFFFF" filter="url(#f12zhj2lp9u4q1)" height="257.5" style="stroke: #000000; stroke-width: 2.0;" width="123" x="169" y="113"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="65" x="198" y="127.9951">Chunk B</text><ellipse cx="85.0122" cy="73.5236" fill="#FEFECE" filter="url(#f12zhj2lp9u4q1)" rx="44.0122" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="58" x="56.0122" y="78.1721">example</text><ellipse cx="51.9428" cy="162.2543" fill="#FEFECE" filter="url(#f12zhj2lp9u4q1)" rx="13.9428" ry="11.7543" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="8" x="47.9428" y="166.9027">a</text><ellipse cx="115.1353" cy="162.4083" fill="#FEFECE" filter="url(#f12zhj2lp9u4q1)" rx="14.1353" ry="11.9083" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="9" x="110.6353" y="167.0567">b</text><ellipse cx="82.9411" cy="251.5236" fill="#FEFECE" filter="url(#f12zhj2lp9u4q1)" rx="36.9411" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="48" x="58.9411" y="256.1721">shared</text><ellipse cx="82.8051" cy="340.5236" fill="#FEFECE" filter="url(#f12zhj2lp9u4q1)" rx="43.3051" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="57" x="54.3051" y="345.1721">shared2</text><ellipse cx="206.8848" cy="162.5236" fill="#FEFECE" filter="url(#f12zhj2lp9u4q1)" rx="21.3848" ry="14.5236" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="26" x="193.8848" y="167.1721">lazy</text><ellipse cx="198.9428" cy="251.2543" fill="#FEFECE" filter="url(#f12zhj2lp9u4q1)" rx="13.9428" ry="11.7543" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="8" x="194.9428" y="255.9027">c</text><ellipse cx="262.1353" cy="251.4083" fill="#FEFECE" filter="url(#f12zhj2lp9u4q1)" rx="14.1353" ry="11.9083" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="9" x="257.6353" y="256.0567">d</text><ellipse cx="201.9282" cy="340.6426" fill="#FEFECE" filter="url(#f12zhj2lp9u4q1)" rx="16.9282" ry="14.1426" style="stroke: #A80036; stroke-width: 1.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacingAndGlyphs" textLength="19" x="192.4282" y="345.291">cjs</text><!--link example to a--><path d="M79.8438,88.094 C73.8968,103.772 64.1394,129.496 57.8962,145.956 " fill="none" id="example-a" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="56.0795,150.745,63.0127,143.7499,57.8537,146.0703,55.5333,140.9113,56.0795,150.745" style="stroke: #A80036; stroke-width: 1.0;"/><!--link example to b--><path d="M89.6875,88.094 C95.0938,103.772 103.9642,129.496 109.64,145.956 " fill="none" id="example-b" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="111.291,150.745,112.1387,140.9327,109.6611,146.0181,104.5757,143.5405,111.291,150.745" style="stroke: #A80036; stroke-width: 1.0;"/><!--link a to shared--><path d="M55.8012,174.168 C60.9441,188.601 70.195,214.563 76.4644,232.158 " fill="none" id="a-shared" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="78.1477,236.882,78.8942,227.0615,76.4692,232.1722,71.3585,229.7471,78.1477,236.882" style="stroke: #A80036; stroke-width: 1.0;"/><!--link shared to shared2--><path d="M83,266.094 C83,280.692 83,304.0005 83,320.4293 " fill="none" id="shared-shared2" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="83,325.7146,87,316.7146,83,320.7146,79,316.7146,83,325.7146" style="stroke: #A80036; stroke-width: 1.0;"/><!--link example to lazy--><path d="M110.375,85.532 C121.403,90.792 134.233,97.56 145,105 C162.589,117.154 180.395,133.95 192.384,146.066 " fill="none" id="example-lazy" style="stroke: #A80036; stroke-width: 1.0; stroke-dasharray: 7.0,7.0;"/><polygon fill="#A80036" points="195.912,149.666,192.4714,140.4377,192.4131,146.0942,186.7565,146.0359,195.912,149.666" style="stroke: #A80036; stroke-width: 1.0;"/><!--link lazy to c--><path d="M205.75,177.094 C204.329,192.551 202.009,217.773 200.494,234.254 " fill="none" id="lazy-c" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="200.013,239.481,204.8214,230.8857,200.4715,234.5021,196.8551,230.1521,200.013,239.481" style="stroke: #A80036; stroke-width: 1.0;"/><!--link lazy to d--><path d="M215.115,176.337 C225.221,192.323 242.433,219.549 252.954,236.191 " fill="none" id="lazy-d" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="255.733,240.586,254.3048,230.8412,253.0612,236.3597,247.5427,235.1161,255.733,240.586" style="stroke: #A80036; stroke-width: 1.0;"/><!--link c to shared--><path d="M184.833,251.5 C164.958,251.5 145.084,251.5 125.209,251.5 " fill="none" id="c-shared" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="120.156,251.5,129.156,255.5,125.156,251.5,129.156,247.5,120.156,251.5" style="stroke: #A80036; stroke-width: 1.0;"/><!--link c to cjs--><path d="M199.38,263.519 C199.88,278.022 200.766,303.716 201.368,321.1694 " fill="none" id="c-cjs" style="stroke: #A80036; stroke-width: 1.0;"/><polygon fill="#A80036" points="201.545,326.2999,205.2323,317.1673,201.3726,321.3029,197.237,317.4432,201.545,326.2999" style="stroke: #A80036; stroke-width: 1.0;"/><!--
+@startuml
+rectangle "Chunk A" {
+ (example)
+ (a)
+ (b)
+
+  (shared)
+  (shared2)
+}
+
+
+rectangle "Chunk B" {
+  (lazy)
+  (c)
+  (d)
+(cjs)
+}
+
+(example) - -> (a)
+(example) - -> (b)
+(a) - -> (shared)
+(shared) - -> (shared2)
+(example) ..right..> (lazy)
+(lazy) - -> (c)
+(lazy) - -> (d)
+(c) - -> (shared)
+(c) - -> (cjs)
+@enduml
+
+PlantUML version 1.2017.13(Wed May 10 16:52:33 UTC 2017)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Java Version: 1.7.0_25-b15
+Operating System: Linux
+Default Encoding: UTF-8
+Language: en
+Country: US
+--></g></svg>

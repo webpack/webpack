@@ -55,9 +55,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -81,9 +81,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
 /******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
@@ -122,11 +119,11 @@ return /******/ (function(modules) { // webpackBootstrap
 ``` js
 /******/ ([
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
 /*!******************!*\
   !*** ./alpha.js ***!
   \******************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports) {
 
 module.exports = "alpha";
@@ -157,9 +154,9 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -183,9 +180,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
 /******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
@@ -220,11 +214,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ([
 /* 0 */,
 /* 1 */
-/* unknown exports provided */
-/* all exports used */
 /*!*****************!*\
   !*** ./beta.js ***!
   \*****************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports) {
 
 module.exports = "beta";
@@ -240,10 +234,10 @@ module.exports = "beta";
 
 ```
 Hash: 082bbeea226fa367215b
-Version: webpack 2.3.2
+Version: webpack 3.0.0-rc.0
              Asset     Size  Chunks             Chunk Names
- MyLibrary.beta.js  3.21 kB       0  [emitted]  beta
-MyLibrary.alpha.js  3.21 kB       1  [emitted]  alpha
+ MyLibrary.beta.js  3.06 kB       0  [emitted]  beta
+MyLibrary.alpha.js  3.05 kB       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
@@ -258,10 +252,10 @@ chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
 
 ```
 Hash: 082bbeea226fa367215b
-Version: webpack 2.3.2
+Version: webpack 3.0.0-rc.0
              Asset       Size  Chunks             Chunk Names
- MyLibrary.beta.js  785 bytes       0  [emitted]  beta
-MyLibrary.alpha.js  787 bytes       1  [emitted]  alpha
+ MyLibrary.beta.js  759 bytes       0  [emitted]  beta
+MyLibrary.alpha.js  761 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]

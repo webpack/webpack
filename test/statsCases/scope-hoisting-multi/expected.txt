@@ -1,0 +1,35 @@
+Hash: 731069e082cf620521ce637b388d1abe7f9228e5
+Child
+    Hash: 731069e082cf620521ce
+    Time: Xms
+       [0] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy_shared.js 25 bytes {0} {1} {2} [built]
+       [1] (webpack)/test/statsCases/scope-hoisting-multi/vendor.js 25 bytes {5} [built]
+       [2] (webpack)/test/statsCases/scope-hoisting-multi/common.js 37 bytes {3} {4} [built]
+       [3] (webpack)/test/statsCases/scope-hoisting-multi/common2.js 25 bytes {3} {4} [built]
+       [4] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy.js 25 bytes {1} {2} [built]
+       [5] (webpack)/test/statsCases/scope-hoisting-multi/lazy_shared.js 31 bytes {0} [built]
+       [6] (webpack)/test/statsCases/scope-hoisting-multi/first.js 207 bytes {3} [built]
+       [7] (webpack)/test/statsCases/scope-hoisting-multi/module_first.js 31 bytes {3} [built]
+       [8] (webpack)/test/statsCases/scope-hoisting-multi/lazy_first.js 55 bytes {2} [built]
+       [9] (webpack)/test/statsCases/scope-hoisting-multi/second.js 177 bytes {4} [built]
+      [10] (webpack)/test/statsCases/scope-hoisting-multi/lazy_second.js 55 bytes {1} [built]
+Child
+    Hash: 637b388d1abe7f9228e5
+    Time: Xms
+       [0] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy_shared.js 25 bytes {0} {1} {2} [built]
+       [1] (webpack)/test/statsCases/scope-hoisting-multi/vendor.js 25 bytes {5} [built]
+           ModuleConcatenation (inner): module is an entrypoint
+       [2] (webpack)/test/statsCases/scope-hoisting-multi/common.js + 1 modules 62 bytes {3} {4} [built]
+       [3] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy.js 25 bytes {1} {2} [built]
+       [4] (webpack)/test/statsCases/scope-hoisting-multi/first.js + 1 modules 238 bytes {4} [built]
+           ModuleConcatenation (inner): module is an entrypoint
+           ModuleConcatenation: Cannot concat with (webpack)/test/statsCases/scope-hoisting-multi/common.js
+           ModuleConcatenation: Cannot concat with (webpack)/test/statsCases/scope-hoisting-multi/vendor.js: module is an entrypoint
+       [5] (webpack)/test/statsCases/scope-hoisting-multi/lazy_shared.js 31 bytes {0} [built]
+           ModuleConcatenation (inner): module is used with non-harmony imports from (webpack)/test/statsCases/scope-hoisting-multi/first.js, (webpack)/test/statsCases/scope-hoisting-multi/second.js
+       [6] (webpack)/test/statsCases/scope-hoisting-multi/second.js 177 bytes {3} [built]
+           ModuleConcatenation (inner): module is an entrypoint
+       [7] (webpack)/test/statsCases/scope-hoisting-multi/lazy_second.js 55 bytes {1} [built]
+           ModuleConcatenation (inner): module is used with non-harmony imports from (webpack)/test/statsCases/scope-hoisting-multi/second.js
+       [8] (webpack)/test/statsCases/scope-hoisting-multi/lazy_first.js 55 bytes {2} [built]
+           ModuleConcatenation (inner): module is used with non-harmony imports from (webpack)/test/statsCases/scope-hoisting-multi/first.js

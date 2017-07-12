@@ -6,6 +6,7 @@ const RawSource = require("webpack-sources").RawSource;
 const RequestShortener = require("../lib/RequestShortener");
 const should = require("should");
 const path = require("path");
+const crypto = require("crypto");
 
 describe("RawModule", () => {
 	let myRawModule;
@@ -61,5 +62,19 @@ describe("RawModule", () => {
 				myRawModule.source().should.match(rawSource);
 			}
 		);
+	});
+
+	describe("updateHash", () => {
+		it("should include sourceStr in its hash", () => {
+			const hashModule = (module) => {
+				const hash = crypto.createHash("sha256");
+				module.updateHash(hash);
+				return hash.digest("hex");
+			};
+
+			const hashFoo = hashModule(new RawModule("\"foo\""));
+			const hashBar = hashModule(new RawModule("\"bar\""));
+			hashFoo.should.not.equal(hashBar);
+		});
 	});
 });

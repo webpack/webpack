@@ -4,6 +4,7 @@
 branches:
   only:
     - master
+    - next
 
 init:
   - git config --global core.autocrlf input
@@ -13,7 +14,7 @@ clone_depth: 50
 # what combinations to test
 environment:
   matrix:
-    - nodejs_version: 7
+    - nodejs_version: 8
       job_part: test
     - nodejs_version: 6
       job_part: test
@@ -21,9 +22,9 @@ environment:
 install:
   - ps: Install-Product node $env:nodejs_version x64
   - npm install yarn -g
-  - yarn install
-  - yarn link
-  - yarn link webpack
+  - yarn install --frozen-lockfile
+  - yarn link --frozen-lockfile || yarn link --frozen-lockfile
+  - yarn link webpack --frozen-lockfile
 
 build: off
 

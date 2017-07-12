@@ -36,9 +36,9 @@ module.exports = Math.random();
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -62,9 +62,6 @@ module.exports = Math.random();
 /******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
 /******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
@@ -103,22 +100,22 @@ module.exports = Math.random();
 ``` javascript
 /******/ ([
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports) {
 
 module.exports = Math.random();
 
 /***/ }),
 /* 1 */
-/* unknown exports provided */
-/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 var a = __webpack_require__(/*! ./a */ 0);
@@ -145,9 +142,9 @@ if(a == a2) throw new Error("Cache clear failed :(");
 
 ```
 Hash: 4ed342adc60583d992ab
-Version: webpack 2.3.2
+Version: webpack 3.0.0-rc.0
     Asset     Size  Chunks             Chunk Names
-output.js  3.34 kB       0  [emitted]  main
+output.js  3.18 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > main [1] ./example.js 
@@ -162,9 +159,9 @@ chunk    {0} output.js (main) 326 bytes [entry] [rendered]
 
 ```
 Hash: 4ed342adc60583d992ab
-Version: webpack 2.3.2
+Version: webpack 3.0.0-rc.0
     Asset       Size  Chunks             Chunk Names
-output.js  632 bytes       0  [emitted]  main
+output.js  599 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > main [1] ./example.js 

@@ -318,6 +318,89 @@ describe("LibraryTemplatePlugin", function() {
 					});
 				});
 			});
+
+			describe("name is an object of names per target", function() {
+				[{
+						type: "umd",
+						namedDefine: true,
+						assertion: function(compilationContext) {
+							compilationContext.name.should.be.exactly("barRoot");
+							compilationContext.names.should.deepEqual({
+								root: "barRoot",
+								amd: "bar-amd"
+							});
+							compilationContext.optionalAmdExternalAsGlobal.should.be.false();
+							compilationContext.namedDefine.should.be.exactly(true);
+							compilationContext.auxiliaryComment.should.be.exactly("baz");
+						}
+					},
+					{
+						type: "umd",
+						namedDefine: false,
+						assertion: function(compilationContext) {
+							compilationContext.name.should.be.exactly("barRoot");
+							compilationContext.names.should.deepEqual({
+								root: "barRoot",
+								amd: "bar-amd"
+							});
+							compilationContext.optionalAmdExternalAsGlobal.should.be.false();
+							compilationContext.namedDefine.should.be.exactly(false);
+							compilationContext.auxiliaryComment.should.be.exactly("baz");
+						}
+					},
+					{
+						type: "umd2",
+						namedDefine: true,
+						assertion: function(compilationContext) {
+							compilationContext.name.should.be.exactly("barRoot");
+							compilationContext.names.should.deepEqual({
+								root: "barRoot",
+								amd: "bar-amd"
+							});
+							compilationContext.optionalAmdExternalAsGlobal.should.be.true();
+							compilationContext.namedDefine.should.be.exactly(true);
+							compilationContext.auxiliaryComment.should.be.exactly("baz");
+						}
+					},
+					{
+						type: "umd2",
+						namedDefine: false,
+						assertion: function(compilationContext) {
+							compilationContext.name.should.be.exactly("barRoot");
+							compilationContext.names.should.deepEqual({
+								root: "barRoot",
+								amd: "bar-amd"
+							});
+							compilationContext.optionalAmdExternalAsGlobal.should.be.true();
+							compilationContext.namedDefine.should.be.exactly(false);
+							compilationContext.auxiliaryComment.should.be.exactly("baz");
+						}
+					}
+				].forEach(function(targetTypeAndAssertion) {
+					var type = targetTypeAndAssertion.type;
+					var namedDefine = targetTypeAndAssertion.namedDefine;
+
+					describe("when target is " + type, function() {
+						beforeEach(function() {
+							env.eventBindings = applyPluginWithOptions(LibraryTemplatePlugin, {
+								root: "barRoot",
+								amd: "bar-amd"
+							}, type, namedDefine, "baz");
+							env.eventBinding = env.eventBindings[0];
+							env.eventBinding.handler(env.compilation);
+						});
+
+						it("compilation callback is called", function() {
+							env.compilation.callCount.should.be.exactly(1);
+						});
+
+						it("compilation callback context is set up", function() {
+							var compilationContext = env.compilation.firstCall.thisValue;
+							targetTypeAndAssertion.assertion(compilationContext);
+						});
+					});
+				});
+			});
 		});
 	});
 });

@@ -124,10 +124,20 @@ yargs.options({
 		group: DISPLAY_GROUP,
 		describe: "Display information about exports provided from modules"
 	},
+	"display-optimization-bailout": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Display information about why optimization bailed out for modules"
+	},
 	"display-error-details": {
 		type: "boolean",
 		group: DISPLAY_GROUP,
 		describe: "Display details about errors"
+	},
+	"display": {
+		type: "string",
+		group: DISPLAY_GROUP,
+		describe: "Select display preset (verbose, detailed, normal, minimal, errors-only, none)"
 	},
 	"verbose": {
 		type: "boolean",
@@ -139,15 +149,7 @@ yargs.options({
 var argv = yargs.argv;
 
 if(argv.verbose) {
-	argv["display-reasons"] = true;
-	argv["display-depth"] = true;
-	argv["display-entrypoints"] = true;
-	argv["display-used-exports"] = true;
-	argv["display-provided-exports"] = true;
-	argv["display-error-details"] = true;
-	argv["display-modules"] = true;
-	argv["display-cached"] = true;
-	argv["display-cached-assets"] = true;
+	argv["display"] = "verbose";
 }
 
 var options = require("./convert-argv")(yargs, argv);
@@ -181,6 +183,11 @@ function processOptions(options) {
 	} else if(!outputOptions) {
 		outputOptions = {};
 	}
+
+	ifArg("display", function(preset) {
+		outputOptions = statsPresetToOptions(preset);
+	});
+
 	outputOptions = Object.create(outputOptions);
 	if(Array.isArray(options) && !outputOptions.children) {
 		outputOptions.children = options.map(o => o.stats);
@@ -219,40 +226,55 @@ function processOptions(options) {
 			outputOptions.cachedAssets = false;
 
 		ifArg("display-chunks", function(bool) {
-			outputOptions.modules = !bool;
-			outputOptions.chunks = bool;
+			if(bool) {
+				outputOptions.modules = false;
+				outputOptions.chunks = true;
+				outputOptions.chunkModules = true;
+			}
 		});
 
 		ifArg("display-entrypoints", function(bool) {
-			outputOptions.entrypoints = bool;
+			if(bool)
+				outputOptions.entrypoints = true;
 		});
 
 		ifArg("display-reasons", function(bool) {
-			outputOptions.reasons = bool;
+			if(bool)
+				outputOptions.reasons = true;
 		});
 
 		ifArg("display-depth", function(bool) {
-			outputOptions.depth = bool;
+			if(bool)
+				outputOptions.depth = true;
 		});
 
 		ifArg("display-used-exports", function(bool) {
-			outputOptions.usedExports = bool;
+			if(bool)
+				outputOptions.usedExports = true;
 		});
 
 		ifArg("display-provided-exports", function(bool) {
-			outputOptions.providedExports = bool;
+			if(bool)
+				outputOptions.providedExports = true;
+		});
+
+		ifArg("display-optimization-bailout", function(bool) {
+			if(bool)
+				outputOptions.optimizationBailout = bool;
 		});
 
 		ifArg("display-error-details", function(bool) {
-			outputOptions.errorDetails = bool;
+			if(bool)
+				outputOptions.errorDetails = true;
 		});
 
 		ifArg("display-origins", function(bool) {
-			outputOptions.chunkOrigins = bool;
+			if(bool)
+				outputOptions.chunkOrigins = true;
 		});
 
 		ifArg("display-max-modules", function(value) {
-			outputOptions.maxModules = value;
+			outputOptions.maxModules = +value;
 		});
 
 		ifArg("display-cached", function(bool) {
@@ -271,22 +293,8 @@ function processOptions(options) {
 		if(argv["display-modules"]) {
 			outputOptions.maxModules = Infinity;
 			outputOptions.exclude = undefined;
-		}
-	} else {
-		if(typeof outputOptions.chunks === "undefined")
-			outputOptions.chunks = true;
-		if(typeof outputOptions.entrypoints === "undefined")
-			outputOptions.entrypoints = true;
-		if(typeof outputOptions.modules === "undefined")
 			outputOptions.modules = true;
-		if(typeof outputOptions.chunkModules === "undefined")
-			outputOptions.chunkModules = true;
-		if(typeof outputOptions.reasons === "undefined")
-			outputOptions.reasons = true;
-		if(typeof outputOptions.cached === "undefined")
-			outputOptions.cached = true;
-		if(typeof outputOptions.cachedAssets === "undefined")
-			outputOptions.cachedAssets = true;
+		}
 	}
 
 	ifArg("hide-modules", function(bool) {
@@ -337,7 +345,9 @@ function processOptions(options) {
 			process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
 		} else if(stats.hash !== lastHash) {
 			lastHash = stats.hash;
-			process.stdout.write(stats.toString(outputOptions) + "\n");
+			var statsString = stats.toString(outputOptions);
+			if(statsString)
+				process.stdout.write(statsString + "\n");
 		}
 		if(!options.watch && stats.hasErrors()) {
 			process.on("exit", function() {
