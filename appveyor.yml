@@ -4,6 +4,7 @@
 branches:
   only:
     - master
+    - webpack-2
 
 init:
   - git config --global core.autocrlf input
