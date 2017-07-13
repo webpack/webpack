@@ -22,9 +22,9 @@ module.exports = function(updatedModules, renewedModules) {
 		renewedModules.forEach(function(moduleId) {
 			if(typeof moduleId === "string") {
 				var parts = moduleId.split("!");
-				log.groupCollapsed("[HMR]  - " + parts.pop());
+				log.groupCollapsed("info", "[HMR]  - " + parts.pop());
 				log("info", "[HMR]  - " + moduleId);
-				log.groupEnd();
+				log.groupEnd("info");
 			} else {
 				log("info", "[HMR]  - " + moduleId);
 			}
