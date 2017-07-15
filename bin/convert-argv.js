@@ -173,7 +173,7 @@ module.exports = function(yargs, argv, convertOptions) {
 		var noOutputFilenameDefined = !options.output || !options.output.filename;
 
 		function ifArg(name, fn, init, finalize) {
-			if (typeof options[name] === "boolean") {
+			if(typeof options[name] === "boolean") {
 				argv[name] = options[name];
 			}
 			if(Array.isArray(argv[name])) {
