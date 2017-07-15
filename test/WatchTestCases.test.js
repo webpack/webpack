@@ -129,8 +129,8 @@ describe("WatchTestCases", () => {
 							const jsonStats = stats.toJson({
 								errorDetails: true
 							});
-							if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
-							if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
+							if(checkArrayExpectation(path.join(testDirectory, run.name), jsonStats, "error", "Error", done)) return;
+							if(checkArrayExpectation(path.join(testDirectory, run.name), jsonStats, "warning", "Warning", done)) return;
 							let exportedTests = 0;
 
 							function _it(title, fn) {
