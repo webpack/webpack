@@ -215,7 +215,7 @@ module.exports = function(yargs, argv, convertOptions) {
 			ifArg(name, function(bool) {
 				if(bool === true)
 					options[optionName || name] = true;
-				else if(bool === false) 
+				else if(bool === false)
 					options[optionName || name] = false;
 			});
 		}
