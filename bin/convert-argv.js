@@ -173,9 +173,6 @@ module.exports = function(yargs, argv, convertOptions) {
 		var noOutputFilenameDefined = !options.output || !options.output.filename;
 
 		function ifArg(name, fn, init, finalize) {
-			if(typeof options[name] === "boolean") {
-				argv[name] = options[name];
-			}
 			if(Array.isArray(argv[name])) {
 				if(init) {
 					init();
@@ -218,8 +215,11 @@ module.exports = function(yargs, argv, convertOptions) {
 			ifArg(name, function(bool) {
 				if(bool === true)
 					options[optionName || name] = true;
-				else if(bool === false)
-					options[optionName || name] = false;
+				else if(bool === false) {
+					if(!options[optionName || name]) {
+						options[optionName || name] = false;
+					}
+				}
 			});
 		}
 
