@@ -2,6 +2,7 @@ Hash: 0be4035986816982617a1139e89514abc13454ce
 Child
     Hash: 0be4035986816982617a
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
                                    Asset      Size  Chunks             Chunk Names
                  c7ab11336573e45dc51e.js   2.78 kB       0  [emitted]  main
     c815cf440254d4f3bba4e7041db00a28.css  26 bytes       0  [emitted]  main
@@ -15,6 +16,7 @@ Child
 Child
     Hash: 1139e89514abc13454ce
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
                                    Asset      Size  Chunks             Chunk Names
                  c7ab11336573e45dc51e.js   2.78 kB       0  [emitted]  main
     a3f385680aef7a9bb2a517699532cc34.css  28 bytes       0  [emitted]  main

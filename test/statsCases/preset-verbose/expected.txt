@@ -1,5 +1,6 @@
 Hash: c5a6856b43905ae12f17
 Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
    0.js  238 bytes       0  [emitted]  
    1.js  108 bytes       1  [emitted]  

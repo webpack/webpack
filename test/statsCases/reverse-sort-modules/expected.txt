@@ -1,5 +1,6 @@
 Hash: 8f4b66734cb63e0581be
 Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset     Size  Chunks             Chunk Names
 main.js  5.95 kB       0  [emitted]  main
 chunk    {0} main.js (main) 1.18 kB [entry] [rendered]

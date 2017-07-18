@@ -1,5 +1,6 @@
 Hash: 57bbddba5221b9ac4a33
 Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
                   Asset       Size  Chunks             Chunk Names
 fc930a2adf8206ea2dc5.js    1.94 kB       0  [emitted]  
 cd45585186d59208602b.js    1.96 kB       1  [emitted]  

@@ -1,5 +1,6 @@
 Hash: ac63e5be974bcdfea3a3
 Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size    Chunks             Chunk Names
    entry.js  345 bytes     entry  [emitted]  entry
 manifest.js    5.95 kB  manifest  [emitted]  manifest
