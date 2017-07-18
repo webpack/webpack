@@ -69,7 +69,6 @@ within webpack itself use this plugin interface. This makes webpack very
 |:--:|:----:|:----------|
 |[common-chunks-webpack-plugin][common]|![common-npm]|Generates chunks of common modules shared between entry points and splits them into separate  bundles (e.g vendor.bundle.js && app.bundle.js)|
 |[extract-text-webpack-plugin][extract]|![extract-npm]|Extracts Text (CSS) from your bundles into a separate file (app.bundle.css)|
-|[component-webpack-plugin][component]|![component-npm]|Use components with webpack|
 |[compression-webpack-plugin][compression]|![compression-npm]|Prepare compressed versions of assets to serve them with Content-Encoding|
 |[i18n-webpack-plugin][i18n]|![i18n-npm]|Adds i18n support to your bundles|
 |[html-webpack-plugin][html-plugin]|![html-plugin-npm]| Simplifies creation of HTML files (`index.html`) to serve your bundles|
@@ -191,8 +190,6 @@ or are automatically applied via regex from your webpack configuration.
 |<a href="https://github.com/webpack/mocha-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/mocha.svg"></a>|![mocha-npm]|Tests with mocha (Browser/NodeJS)|
 |<a href="https://github.com/MoOx/eslint-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/eslint.svg"></a>|![eslint-npm]|PreLoader for linting code using ESLint|
 |<a href="https://github.com/webpack/jslint-loader"><img width="48" height="48" src="http://jshint.com/res/jshint-dark.png"></a>|![jshint-npm]|PreLoader for linting code using JSHint|
-|<a href="https://github.com/unindented/jscs-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/jscs.svg"></a>|![jscs-npm]|PreLoader for code style checking using JSCS|
-
 
 [mocha-npm]: https://img.shields.io/npm/v/mocha-loader.svg
 [eslint-npm]: https://img.shields.io/npm/v/eslint-loader.svg
@@ -262,6 +259,7 @@ We have also started a series on our [Medium Publication](https://medium.com/web
 _Looking to speak about webpack?_ We'd **love** to review your talk abstract/CFP! You can email it to webpack [at] opencollective [dot] com and we can give pointers or tips!!! 
 
 <h3 align="center">Creating your own plugins and loaders</h3>
+
 If you create a loader or plugin, we would <3 for you to open source it, and put it on npm. We follow the `x-loader`, `x-webpack-plugin` naming convention.
 
 <h2 align="center">Support</h2>

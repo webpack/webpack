@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "3.0.0",
+  "version": "3.3.0",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "dependencies": {
@@ -9,7 +9,7 @@
     "ajv": "^5.1.5",
     "ajv-keywords": "^2.0.0",
     "async": "^2.1.2",
-    "enhanced-resolve": "^3.0.0",
+    "enhanced-resolve": "^3.3.0",
     "escope": "^3.6.0",
     "interpret": "^1.0.0",
     "json-loader": "^0.5.4",
@@ -23,7 +23,7 @@
     "supports-color": "^3.1.0",
     "tapable": "~0.2.5",
     "uglifyjs-webpack-plugin": "^0.4.6",
-    "watchpack": "^1.3.1",
+    "watchpack": "^1.4.0",
     "webpack-sources": "^1.0.1",
     "yargs": "^6.0.0"
   },
