@@ -86,9 +86,6 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -126,11 +123,11 @@ module.exports = Object.keys(languages).map(function(language) {
 ``` javascript
 /******/ ([
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 console.log("Hallo Welt");
@@ -178,9 +175,6 @@ console.log("Missing Text");
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
@@ -213,11 +207,11 @@ console.log("Missing Text");
 /************************************************************************/
 /******/ ([
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
+/*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 console.log("Hello World");
@@ -233,11 +227,11 @@ console.log("Missing Text");
 
 ```
 Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 2.6.0
+Version: webpack 3.0.0-rc.0
 Child en:
     Hash: b61d16621736c97f557e
            Asset     Size  Chunks             Chunk Names
-    en.output.js  2.85 kB       0  [emitted]  main
+    en.output.js  2.69 kB       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
@@ -245,7 +239,7 @@ Child en:
 Child de:
     Hash: 52b4d8e68140f1345ef8
            Asset     Size  Chunks             Chunk Names
-    de.output.js  2.85 kB       0  [emitted]  main
+    de.output.js  2.69 kB       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
@@ -259,11 +253,11 @@ Child de:
 
 ```
 Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 2.6.0
+Version: webpack 3.0.0-rc.0
 Child en:
     Hash: b61d16621736c97f557e
            Asset       Size  Chunks             Chunk Names
-    en.output.js  564 bytes       0  [emitted]  main
+    en.output.js  538 bytes       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
@@ -271,7 +265,7 @@ Child en:
 Child de:
     Hash: 52b4d8e68140f1345ef8
            Asset       Size  Chunks             Chunk Names
-    de.output.js  563 bytes       0  [emitted]  main
+    de.output.js  537 bytes       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 

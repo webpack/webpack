@@ -2,7 +2,6 @@ Hash: 86950abf8dcf924d9cc1
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset     Size  Chunks             Chunk Names
-main.js  2.77 kB       0  [emitted]  main
-chunk    {0} main.js (main) 59 bytes [entry] [rendered]
-    [0] (webpack)/test/statsCases/external/index.js 17 bytes {0} [built]
-    [1] external "test" 42 bytes {0} [not cacheable]
+main.js  2.61 kB       0  [emitted]  main
+   [0] (webpack)/test/statsCases/external/index.js 17 bytes {0} [built]
+   [1] external "test" 42 bytes {0} [not cacheable]

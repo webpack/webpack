@@ -12,6 +12,5 @@ module.exports = function testAssertions(code, stdout, stderr) {
 	stdout[6].should.not.containEql("./index.js");
 	stdout[6].should.not.containEql("[built]");
 	stdout[6].should.containEql("1 hidden module");
-
 	stderr.should.be.empty();
 };
