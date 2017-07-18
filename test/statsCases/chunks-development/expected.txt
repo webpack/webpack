@@ -1,5 +1,6 @@
 Hash: 5ce1f032cffdff8368b5
 Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
 0.bundle.js  530 bytes       0  [emitted]  
 1.bundle.js  394 bytes       1  [emitted]  

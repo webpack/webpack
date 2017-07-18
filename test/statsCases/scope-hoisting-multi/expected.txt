@@ -2,6 +2,7 @@ Hash: f987d10439866c1320274e05ad6ebdcc88f97d91
 Child
     Hash: f987d10439866c132027
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
     Entrypoint first = vendor.js first.js
     Entrypoint second = vendor.js second.js
        [0] ./common_lazy_shared.js 25 bytes {0} {1} {2} [built]
@@ -18,6 +19,7 @@ Child
 Child
     Hash: 4e05ad6ebdcc88f97d91
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
     Entrypoint first = vendor.js first.js
     Entrypoint second = vendor.js second.js
        [0] ./common_lazy_shared.js 25 bytes {0} {1} {2} [built]
