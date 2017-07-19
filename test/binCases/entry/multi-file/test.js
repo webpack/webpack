@@ -5,9 +5,9 @@ module.exports = function testAssertions(code, stdout, stderr) {
 
 	stdout.should.be.ok();
 	stdout[5].should.containEql("null.js");
-	stdout[6].should.match(/a\.js.*\{0\}/);
+	stdout[6].should.match(/multi.*index\.js.*a\.js/); // should have multi-file entry
 	stdout[7].should.match(/index\.js.*\{0\}/);
-	stdout[8].should.match(/multi.*index\.js.*a\.js/); // should have multi-file entry
+	stdout[8].should.match(/a\.js.*\{0\}/);
 	stderr.should.be.empty();
 };
 
