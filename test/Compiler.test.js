@@ -218,6 +218,18 @@ describe("Compiler", () => {
 				done();
 			});
 		});
+		describe("applyUnique", () => {
+			it("returns true if not unique, undefined if unique", (done) => {
+				class UniquePlugin {
+					apply(compiler) {
+						compiler.applyUnique(UniquePlugin);
+					}
+				}
+				should.strictEqual(compiler.applyUnique(UniquePlugin), undefined);
+				should.strictEqual(compiler.applyUnique(UniquePlugin), true);
+				done();
+			});
+		});
 		describe("isChild", () => {
 			it("returns booleanized this.parentCompilation", (done) => {
 				compiler.parentCompilation = "stringyStringString";
