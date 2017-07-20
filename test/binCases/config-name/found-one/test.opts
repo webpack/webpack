@@ -1,0 +1,5 @@
+--config ./webpack.config.js
+--config-name bar
+--output-filename [name].js
+--output-chunk-filename [id].chunk.js
+--target async-node
