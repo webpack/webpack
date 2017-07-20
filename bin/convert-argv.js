@@ -130,6 +130,20 @@ module.exports = function(yargs, argv, convertOptions) {
 			return processConfiguredOptions(options.default);
 		}
 
+		// filter multi-config by name
+		if(Array.isArray(options) && argv["config-name"]) {
+			var namedOptions = options.filter(function(opt) {
+				return opt.name === argv["config-name"];
+			});
+			if(namedOptions.length === 0) {
+				console.error("Configuration with name '" + argv["config-name"] + "' was not found.");
+				process.exit(-1); // eslint-disable-line
+			} else if(namedOptions.length === 1) {
+				return processConfiguredOptions(namedOptions[0]);
+			}
+			options = namedOptions;
+		}
+
 		if(Array.isArray(options)) {
 			options.forEach(processOptions);
 		} else {
