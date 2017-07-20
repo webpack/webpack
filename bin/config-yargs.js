@@ -20,6 +20,12 @@ module.exports = function(yargs) {
 				defaultDescription: "webpack.config.js or webpackfile.js",
 				requiresArg: true
 			},
+			"config-name": {
+				type: "string",
+				describe: "Name of the config to use",
+				group: CONFIG_GROUP,
+				requiresArg: true
+			},
 			"env": {
 				describe: "Environment passed to the config, when it is a function",
 				group: CONFIG_GROUP
