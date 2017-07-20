@@ -2,6 +2,7 @@ module.exports = function(optimist) {
 	optimist
 		.boolean("help").alias("help", "h").alias("help", "?").describe("help")
 		.string("config").describe("config", "Path to the config file")
+		.string("config-name").describe("config-name", "Name of the config to use")
 		.string("env").describe("env", "Environment passed to the config, when it is a function")
 		.string("context").describe("context", "The root directory for resolving entry point and stats")
 		.string("entry").describe("entry", "The entry point")
