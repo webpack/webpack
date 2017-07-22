@@ -89,7 +89,7 @@
     "schemas/"
   ],
   "scripts": {
-    "test": "mocha test/BinTestCases.test.js --max-old-space-size=4096 --harmony --check-leaks",
+    "test": "mocha test/*.test.js --max-old-space-size=4096 --harmony --check-leaks",
     "travis:test": "npm run cover:min",
     "travis:lint": "npm run lint-files && npm run nsp",
     "travis:benchmark": "npm run benchmark",
