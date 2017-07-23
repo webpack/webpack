@@ -251,12 +251,14 @@ module.exports = function(yargs) {
 			"bail": {
 				type: "boolean",
 				describe: "Abort the compilation on first error",
-				group: ADVANCED_GROUP
+				group: ADVANCED_GROUP,
+				default: null
 			},
 			"profile": {
 				type: "boolean",
 				describe: "Profile the compilation and include information in stats",
-				group: ADVANCED_GROUP
+				group: ADVANCED_GROUP,
+				default: null
 			},
 			"d": {
 				type: "boolean",
