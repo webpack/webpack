@@ -302,11 +302,11 @@ module.exports = function(yargs, argv, convertOptions) {
 				var rule = {
 					test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
 					loader: binding
-				}
-				if (arg === "module-bind-pre") {
-					rule.enforce = "pre"
-				} else if (arg === "module-bind-post") {
-					rule.enforce = "post"
+				};
+				if(arg === "module-bind-pre") {
+					rule.enforce = "pre";
+				} else if(arg === "module-bind-post") {
+					rule.enforce = "post";
 				}
 				options.module[collection].push(rule);
 			}, function() {
