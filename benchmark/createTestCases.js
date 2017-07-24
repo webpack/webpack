@@ -48,6 +48,7 @@ createTree(fs, 5000, `${root}/modules-5000`);
 function createTree(fs, count, folder) {
 	fs.mkdirSync(folder);
 	let remaining = count - 1;
+
 	function make(prefix, count, depth) {
 		if(count === 0) {
 			fs.writeFileSync(`${folder}/${prefix}.js`, `export default 1;\n${avgJs}`);
