@@ -42,7 +42,7 @@
     "eslint": "3.12.2",
     "eslint-plugin-node": "^3.0.5",
     "express": "~4.13.1",
-    "extract-text-webpack-plugin": "^2.0.0-beta",
+    "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^0.11.1",
     "i18n-webpack-plugin": "^0.3.0",
     "istanbul": "^0.4.5",
