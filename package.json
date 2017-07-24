@@ -44,7 +44,7 @@
     "express": "~4.13.1",
     "extract-text-webpack-plugin": "^2.0.0-beta",
     "file-loader": "^0.11.1",
-    "i18n-webpack-plugin": "^0.3.0",
+    "i18n-webpack-plugin": "^1.0.0",
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
