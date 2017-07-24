@@ -370,4 +370,12 @@ function processOptions(options) {
 
 }
 
-processOptions(options);
+// yargs will terminate the process early when the user uses help or version.
+// This causes large help outputs to be cut short (https://github.com/nodejs/node/wiki/API-changes-between-v0.10-and-v4#process).
+// To prevent this we configure yargs with .exitProcess(false).
+// However, we need to prevent processOptions and convert-argv from causing errorneous results,
+// so we only parse inputs if help or version was not called.
+if (!options.exitByHelpOrVersion) {
+	processOptions(options);
+}
+
