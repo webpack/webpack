@@ -293,24 +293,30 @@ module.exports = function(yargs, argv, convertOptions) {
 			ensureObject(options, "entry");
 		});
 
-		function bindLoaders(arg, collection) {
+		function bindRules(arg) {
 			ifArgPair(arg, function(name, binding) {
 				if(name === null) {
 					name = binding;
 					binding += "-loader";
 				}
-				options.module[collection].push({
+				var rule = {
 					test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
 					loader: binding
-				});
+				};
+				if(arg === "module-bind-pre") {
+					rule.enforce = "pre";
+				} else if(arg === "module-bind-post") {
+					rule.enforce = "post";
+				}
+				options.module.rules.push(rule);
 			}, function() {
 				ensureObject(options, "module");
-				ensureArray(options.module, collection);
+				ensureArray(options.module, "rules");
 			});
 		}
-		bindLoaders("module-bind", "loaders");
-		bindLoaders("module-bind-pre", "preLoaders");
-		bindLoaders("module-bind-post", "postLoaders");
+		bindRules("module-bind");
+		bindRules("module-bind-pre");
+		bindRules("module-bind-post");
 
 		var defineObject;
 		ifArgPair("define", function(name, value) {
