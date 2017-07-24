@@ -293,7 +293,7 @@ module.exports = function(yargs, argv, convertOptions) {
 			ensureObject(options, "entry");
 		});
 
-		function bindRules(arg, collection) {
+		function bindRules(arg) {
 			ifArgPair(arg, function(name, binding) {
 				if(name === null) {
 					name = binding;
@@ -308,15 +308,15 @@ module.exports = function(yargs, argv, convertOptions) {
 				} else if(arg === "module-bind-post") {
 					rule.enforce = "post";
 				}
-				options.module[collection].push(rule);
+				options.module.rules.push(rule);
 			}, function() {
 				ensureObject(options, "module");
-				ensureArray(options.module, collection);
+				ensureArray(options.module, "rules");
 			});
 		}
-		bindRules("module-bind", "rules");
-		bindRules("module-bind-pre", "rules");
-		bindRules("module-bind-post", "rules");
+		bindRules("module-bind");
+		bindRules("module-bind-pre");
+		bindRules("module-bind-post");
 
 		var defineObject;
 		ifArgPair("define", function(name, value) {
