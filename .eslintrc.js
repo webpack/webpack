@@ -36,6 +36,7 @@ module.exports = {
 		"space-before-function-paren": ["error", "never"],
 		"space-before-blocks": "error",
 		"object-curly-spacing": ["error", "always"],
+		"indent": "off",
 		"keyword-spacing": ["error", {
 			"after": false,
 			"overrides": {
