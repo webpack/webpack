@@ -20,7 +20,7 @@
     "mkdirp": "~0.5.0",
     "node-libs-browser": "^2.0.0",
     "source-map": "^0.5.3",
-    "supports-color": "^3.1.0",
+    "supports-color": "^4.2.1",
     "tapable": "^0.2.7",
     "uglifyjs-webpack-plugin": "^0.4.6",
     "watchpack": "^1.4.0",
