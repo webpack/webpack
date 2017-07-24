@@ -25,7 +25,7 @@
     "uglifyjs-webpack-plugin": "^0.4.6",
     "watchpack": "^1.4.0",
     "webpack-sources": "^1.0.1",
-    "yargs": "^6.0.0"
+    "yargs": "^8.0.2"
   },
   "license": "MIT",
   "devDependencies": {
@@ -39,11 +39,11 @@
     "coveralls": "^2.11.2",
     "css-loader": "^0.28.3",
     "es6-promise-polyfill": "^1.1.1",
-    "eslint": "3.12.2",
-    "eslint-plugin-node": "^3.0.5",
+    "eslint": "^4.3.0",
+    "eslint-plugin-node": "^5.1.1",
     "express": "~4.13.1",
     "extract-text-webpack-plugin": "^3.0.0",
-    "file-loader": "^0.11.1",
+    "file-loader": "^0.11.2",
     "i18n-webpack-plugin": "^0.3.0",
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
