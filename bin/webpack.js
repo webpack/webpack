@@ -146,13 +146,24 @@ yargs.options({
 	}
 });
 
-var argv = yargs.argv;
+var validationErrorOcurred = false;
+var options = {};
+try {
+	var argv = yargs.argv;
 
-if(argv.verbose) {
-	argv["display"] = "verbose";
+	if(argv.verbose) {
+		argv["display"] = "verbose";
+	}
+
+	options = require("./convert-argv")(yargs, argv);
+} catch(e) {
+	var YError = require("yargs/lib/yerror");
+	if(e instanceof YError) {
+		validationErrorOcurred = true;
+	} else {
+		throw e;
+	}
 }
-
-var options = require("./convert-argv")(yargs, argv);
 
 function ifArg(name, fn, init) {
 	if(Array.isArray(argv[name])) {
@@ -375,7 +386,7 @@ function processOptions(options) {
 // To prevent this we configure yargs with .exitProcess(false).
 // However, we need to prevent processOptions and convert-argv from causing errorneous results,
 // so we only parse inputs if help or version was not called.
-if (!options.exitByHelpOrVersion) {
+if(!options.exitByHelpOrVersion && !validationErrorOcurred) {
 	processOptions(options);
 }
 
