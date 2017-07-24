@@ -300,7 +300,7 @@ module.exports = function(yargs, argv, convertOptions) {
 					binding += "-loader";
 				}
 				var rule = {
-					test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
+					test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"), // eslint-disable-line no-useless-escape
 					loader: binding
 				};
 				if(arg === "module-bind-pre") {
