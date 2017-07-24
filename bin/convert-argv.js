@@ -5,6 +5,9 @@ var interpret = require("interpret");
 var prepareOptions = require("../lib/prepareOptions");
 
 module.exports = function(yargs, argv, convertOptions) {
+	if (argv["help"] === true || argv["version"] === true) {
+		return {exitByHelpOrVersion: true};
+	}
 
 	var options = [];
 
