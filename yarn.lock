@@ -1865,9 +1865,9 @@ https-proxy-agent@^1.0.0:
     debug "2"
     extend "3"
 
-i18n-webpack-plugin@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/i18n-webpack-plugin/-/i18n-webpack-plugin-0.3.0.tgz#6029d6063634a673c16e5f3347a53738996c9ae0"
+i18n-webpack-plugin@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/i18n-webpack-plugin/-/i18n-webpack-plugin-1.0.0.tgz#0ca12296ec937a4f94325cd0264d08f4e0549831"
 
 iconv-lite@^0.4.17:
   version "0.4.18"
@@ -4166,7 +4166,7 @@ ua-parser-js@^0.7.9:
   version "0.7.12"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.12.tgz#04c81a99bdd5dc52263ea29d24c6bf8d4818a4bb"
 
-uglify-js@^2.6, uglify-js@^2.8.29:
+uglify-js@^2.4.19, uglify-js@^2.6, uglify-js@^2.8.29:
   version "2.8.29"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.8.29.tgz#29c5733148057bb4e1f75df35b7a9cb72e6a59dd"
   dependencies:
