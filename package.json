@@ -25,7 +25,7 @@
     "uglifyjs-webpack-plugin": "^0.4.6",
     "watchpack": "^1.4.0",
     "webpack-sources": "^1.0.1",
-    "yargs": "^6.0.0"
+    "yargs": "^8.0.2"
   },
   "license": "MIT",
   "devDependencies": {
@@ -43,7 +43,7 @@
     "eslint-plugin-node": "^5.1.1",
     "express": "~4.13.1",
     "extract-text-webpack-plugin": "^2.0.0-beta",
-    "file-loader": "^0.11.1",
+    "file-loader": "^0.11.2",
     "i18n-webpack-plugin": "^1.0.0",
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
