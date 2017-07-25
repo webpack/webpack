@@ -14,15 +14,16 @@ const webpack = require("../lib/webpack");
 describe("TestCases", () => {
 	const casesPath = path.join(__dirname, "cases");
 	let categories = fs.readdirSync(casesPath);
-	categories = categories.map((cat) => {
+	categories = categories.filter(f => f.indexOf("chunks") > -1).map((cat) => {
 		return {
 			name: cat,
-			tests: fs.readdirSync(path.join(casesPath, cat)).filter((folder) => folder.indexOf("_") < 0)
+			tests: fs.readdirSync(path.join(casesPath, cat)).filter((folder) => folder.indexOf("_") < 0).filter(f => f.indexOf("inline-options") > -1)
 		};
 	});
 	[{
 		name: "normal"
-	}, {
+	},
+	{
 		name: "concat",
 		plugins: [
 			new webpack.optimize.ModuleConcatenationPlugin()
@@ -101,7 +102,8 @@ describe("TestCases", () => {
 			new webpack.NamedModulesPlugin(),
 			new webpack.NamedChunksPlugin()
 		]
-	}].forEach((config) => {
+	}
+].forEach((config) => {
 		describe(config.name, () => {
 			categories.forEach((category) => {
 				describe(category.name, function() {

@@ -1,0 +1,9 @@
+Hash: 2a00abf36773894e7317
+Time: Xms
+   Asset       Size  Chunks             Chunk Names
+    0.js   99 bytes       0  [emitted]  
+    1.js  218 bytes       1  [emitted]  
+entry.js    5.92 kB       2  [emitted]  entry
+   [0] (webpack)/test/statsCases/import-eager-weak/modules/b.js 22 bytes {0} [built]
+   [1] (webpack)/test/statsCases/import-eager-weak/entry.js 109 bytes {2} [built]
+   [2] (webpack)/test/statsCases/import-eager-weak/modules/a.js 37 bytes {1} [built]
