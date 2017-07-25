@@ -15,6 +15,9 @@ module.exports = {
 			] }
 		]
 	},
+	resolve: {
+		extensions: [".js", ".jsx"]
+	},
 	plugins: [
 		new webpack.DllReferencePlugin({
 			manifest: require("../../../js/config/dll-plugin/manifest0.json"), // eslint-disable-line node/no-missing-require
