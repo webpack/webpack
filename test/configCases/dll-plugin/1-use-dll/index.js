@@ -32,3 +32,19 @@ it("should load an harmony module from dll (star export)", function() {
 it("should load a module with loader applied", function() {
 	require("dll/g.abc.js").should.be.eql("number");
 });
+
+it("should give modules the correct ids", function() {
+	Object.keys(__webpack_modules__).filter(m => !m.startsWith("../..")).should.be.eql([
+		"./e.js",
+		"./index.js",
+		"dll-reference ../0-create-dll/dll.js",
+		"dll/a.js",
+		"dll/b.js",
+		"dll/d.js",
+		"dll/e.js",
+		"dll/e1.js",
+		"dll/e2.js",
+		"dll/f.jsx",
+		"dll/g.abc.js"
+    ]);
+});
