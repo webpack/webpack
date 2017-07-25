@@ -3,9 +3,11 @@
 
 const should = require("should");
 const path = require("path");
+const sinon = require("sinon");
 
 const webpack = require("../");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
+const Compiler = require("../lib/Compiler");
 
 describe("Compiler", () => {
 	function compile(entry, options, callback) {
@@ -161,6 +163,206 @@ describe("Compiler", () => {
 			bundle.should.containEql("webpackJsonp");
 			chunk.should.containEql("webpackJsonp(");
 			done();
+		});
+	});
+	describe("constructor", () => {
+		let compiler;
+		beforeEach(() => {
+			compiler = webpack({
+				entry: "./c",
+				context: path.join(__dirname, "fixtures"),
+				output: {
+					path: "/",
+					pathinfo: true,
+				}
+			});
+		});
+		describe("parser", () => {
+			describe("apply", () => {
+				it("invokes sets a 'compilation' plugin", (done) => {
+					compiler.plugin = sinon.spy();
+					compiler.parser.apply();
+					compiler.plugin.callCount.should.be.exactly(1);
+					done();
+				});
+			});
+		});
+	});
+	describe("methods", () => {
+		let compiler;
+		beforeEach(() => {
+			compiler = webpack({
+				entry: "./c",
+				context: path.join(__dirname, "fixtures"),
+				output: {
+					path: "/",
+					pathinfo: true,
+				}
+			});
+		});
+		describe("purgeInputFileSystem", () => {
+			it("invokes purge() if inputFileSystem.purge", (done) => {
+				const mockPurge = sinon.spy();
+				compiler.inputFileSystem = {
+					purge: mockPurge,
+				};
+				compiler.purgeInputFileSystem();
+				mockPurge.callCount.should.be.exactly(1);
+				done();
+			});
+			it("does NOT invoke purge() if !inputFileSystem.purge", (done) => {
+				const mockPurge = sinon.spy();
+				compiler.inputFileSystem = null;
+				compiler.purgeInputFileSystem();
+				mockPurge.callCount.should.be.exactly(0);
+				done();
+			});
+		});
+		describe("isChild", () => {
+			it("returns booleanized this.parentCompilation", (done) => {
+				compiler.parentCompilation = "stringyStringString";
+				const response1 = compiler.isChild();
+				response1.should.be.exactly(true);
+
+				compiler.parentCompilation = 123456789;
+				const response2 = compiler.isChild();
+				response2.should.be.exactly(true);
+
+				compiler.parentCompilation = {
+					what: "I belong to an object"
+				};
+				const response3 = compiler.isChild();
+				response3.should.be.exactly(true);
+
+				compiler.parentCompilation = ["Array", 123, true, null, [], () => {}];
+				const response4 = compiler.isChild();
+				response4.should.be.exactly(true);
+
+				compiler.parentCompilation = false;
+				const response5 = compiler.isChild();
+				response5.should.be.exactly(false);
+
+				compiler.parentCompilation = 0;
+				const response6 = compiler.isChild();
+				response6.should.be.exactly(false);
+
+				compiler.parentCompilation = null;
+				const response7 = compiler.isChild();
+				response7.should.be.exactly(false);
+
+				compiler.parentCompilation = "";
+				const response8 = compiler.isChild();
+				response8.should.be.exactly(false);
+
+				compiler.parentCompilation = NaN;
+				const response9 = compiler.isChild();
+				response9.should.be.exactly(false);
+				done();
+			});
+		});
+		describe("createChildCompiler", () => {
+			it("defaults cache.children if none exists yet", (done) => {
+				const mockPlugin = sinon.spy();
+				class fakePlugin {
+					apply() {
+						mockPlugin();
+					}
+				}
+				compiler.cache = {};
+				compiler.createChildCompiler({}, "compiler9000", 0, {}, [new fakePlugin()]);
+				mockPlugin.callCount.should.be.exactly(1);
+				compiler.cache.children.should.match({});
+				done();
+			});
+			it("defaults cache.children[compilerName] if none exists yet", (done) => {
+				compiler.cache = {
+					children: {},
+				};
+				compiler.createChildCompiler({}, "compiler9000", 0, {}, null);
+				compiler.cache.children.should.match({
+					compiler9000: [],
+				});
+				done();
+			});
+		});
+	});
+	describe("Watching", () => {
+		let compiler;
+		beforeEach(() => {
+			compiler = webpack({
+				entry: "./c",
+				context: path.join(__dirname, "fixtures"),
+				output: {
+					path: "/",
+					pathinfo: true,
+				}
+			});
+		});
+		describe("static method", () => {
+			it("should have an method, Watching", (done) => {
+				const actual = new Compiler.Watching(compiler, 1000, err => err);
+				actual.running.should.be.exactly(true);
+				actual.constructor.name.should.be.exactly("Watching");
+				done();
+			});
+		});
+		describe("constructor", () => {
+			it("constructs Watching.watchOptions correctly when passed a number, string, or object for watchOptions", (done) => {
+				const Watching1 = compiler.watch(1000, err => err);
+				const Watching2 = compiler.watch({
+					aggregateTimeout: 1000
+				}, err => err);
+				const Watching3 = compiler.watch("I am a string", err => err);
+				Watching1.watchOptions.aggregateTimeout.should.equal(Watching2.watchOptions.aggregateTimeout);
+				Watching3.watchOptions.aggregateTimeout.should.equal(200);
+				done();
+			});
+			it("invokes compiler.readRecords", (done) => {
+				compiler.readRecords = sinon.spy();
+				compiler.watch(1000, err => err);
+				compiler.readRecords.callCount.should.be.exactly(1);
+				done();
+			});
+		});
+		describe("_done", () => {
+			it("invokes this.handler and turns this.running boolean to false when passed an error", (done) => {
+				const mockHandler = sinon.spy();
+				const Watching1 = compiler.watch(1000, mockHandler);
+				Watching1.running.should.be.exactly(true);
+				Watching1._done(Watching1.handler, false);
+				mockHandler.callCount.should.be.exactly(1);
+				Watching1.running.should.be.exactly(false);
+				done();
+			});
+		});
+		describe("invalidate", () => {
+			it("pauses this.watcher and sets this.watcher to null if this.watcher is true", (done) => {
+				const mockPause = sinon.spy();
+				const Watching1 = compiler.watch(1000, err => err);
+				Watching1.watcher = {
+					pause: mockPause
+				};
+				Watching1.invalidate();
+				mockPause.callCount.should.be.exactly(1);
+				should(Watching1.watcher).be.exactly(null);
+				done();
+			});
+			it("sets this.invalid to true if this.running is true, else this.invalid = false", (done) => {
+				const Watching1 = compiler.watch(1000, err => err);
+				Watching1.invalid = false;
+				const response = Watching1.invalidate();
+				Watching1.invalid.should.be.exactly(true);
+				response.should.be.exactly(false);
+				done();
+			});
+			it("invokes this._go() if !this.running", (done) => {
+				const Watching1 = compiler.watch(1000, err => err);
+				Watching1.running = false;
+				Watching1._go = sinon.spy();
+				Watching1.invalidate();
+				Watching1._go.callCount.should.be.exactly(1);
+				done();
+			});
 		});
 	});
 });

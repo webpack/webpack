@@ -2,6 +2,7 @@ var path = require("path");
 var fs = require("fs");
 fs.existsSync = fs.existsSync || path.existsSync;
 var interpret = require("interpret");
+var prepareOptions = require("../lib/prepareOptions");
 
 module.exports = function(yargs, argv, convertOptions) {
 
@@ -94,13 +95,7 @@ module.exports = function(yargs, argv, convertOptions) {
 
 		var requireConfig = function requireConfig(configPath) {
 			var options = require(configPath);
-			var isES6DefaultExportedFunc = (
-				typeof options === "object" && options !== null && typeof options.default === "function"
-			);
-			if(typeof options === "function" || isES6DefaultExportedFunc) {
-				options = isES6DefaultExportedFunc ? options.default : options;
-				options = options(argv.env, argv);
-			}
+			options = prepareOptions(options, argv);
 			return options;
 		};
 
@@ -133,6 +128,20 @@ module.exports = function(yargs, argv, convertOptions) {
 		// process ES6 default
 		if(typeof options === "object" && typeof options.default === "object") {
 			return processConfiguredOptions(options.default);
+		}
+
+		// filter multi-config by name
+		if(Array.isArray(options) && argv["config-name"]) {
+			var namedOptions = options.filter(function(opt) {
+				return opt.name === argv["config-name"];
+			});
+			if(namedOptions.length === 0) {
+				console.error("Configuration with name '" + argv["config-name"] + "' was not found.");
+				process.exit(-1); // eslint-disable-line
+			} else if(namedOptions.length === 1) {
+				return processConfiguredOptions(namedOptions[0]);
+			}
+			options = namedOptions;
 		}
 
 		if(Array.isArray(options)) {
@@ -284,24 +293,30 @@ module.exports = function(yargs, argv, convertOptions) {
 			ensureObject(options, "entry");
 		});
 
-		function bindLoaders(arg, collection) {
+		function bindRules(arg) {
 			ifArgPair(arg, function(name, binding) {
 				if(name === null) {
 					name = binding;
 					binding += "-loader";
 				}
-				options.module[collection].push({
-					test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"),
+				var rule = {
+					test: new RegExp("\\." + name.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + "$"), // eslint-disable-line no-useless-escape
 					loader: binding
-				});
+				};
+				if(arg === "module-bind-pre") {
+					rule.enforce = "pre";
+				} else if(arg === "module-bind-post") {
+					rule.enforce = "post";
+				}
+				options.module.rules.push(rule);
 			}, function() {
 				ensureObject(options, "module");
-				ensureArray(options.module, collection);
+				ensureArray(options.module, "rules");
 			});
 		}
-		bindLoaders("module-bind", "loaders");
-		bindLoaders("module-bind-pre", "preLoaders");
-		bindLoaders("module-bind-post", "postLoaders");
+		bindRules("module-bind");
+		bindRules("module-bind-pre");
+		bindRules("module-bind-post");
 
 		var defineObject;
 		ifArgPair("define", function(name, value) {

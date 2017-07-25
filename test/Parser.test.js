@@ -161,7 +161,7 @@ describe("Parser", () => {
 				abc: ["test"]
 			}
 		],
-		"renaming with IIFE (called)": [
+		"renaming arguments with IIFE (called)": [
 			function() {
 				! function(xyz) {
 					xyz("test");
@@ -169,6 +169,26 @@ describe("Parser", () => {
 			}, {
 				abc: ["test"],
 				fgh: [""]
+			}
+		],
+		"renaming this's properties with IIFE (called)": [
+			function() {
+				! function() {
+					this.sub;
+				}.call(ijk);
+			}, {
+				ijksub: ["test"]
+			}
+		],
+		"renaming this's properties with nested IIFE (called)": [
+			function() {
+				! function() {
+					! function() {
+						this.sub;
+					}.call(this);
+				}.call(ijk);
+			}, {
+				ijksub: ["test"]
 			}
 		],
 	};
@@ -181,6 +201,7 @@ describe("Parser", () => {
 
 			const testParser = new Parser({});
 			testParser.plugin("can-rename abc", (expr) => true);
+			testParser.plugin("can-rename ijk", (expr) => true);
 			testParser.plugin("call abc", (expr) => {
 				if(!testParser.state.abc) testParser.state.abc = [];
 				testParser.state.abc.push(testParser.parseString(expr.arguments[0]));
@@ -204,6 +225,11 @@ describe("Parser", () => {
 			testParser.plugin("expression fgh.sub", (expr) => {
 				if(!testParser.state.fghsub) testParser.state.fghsub = [];
 				testParser.state.fghsub.push(testParser.scope.inTry ? "try" : "notry");
+				return true;
+			});
+			testParser.plugin("expression ijk.sub", (expr) => {
+				if(!testParser.state.ijksub) testParser.state.ijksub = [];
+				testParser.state.ijksub.push("test");
 				return true;
 			});
 			testParser.plugin("expression memberExpr", (expr) => {
