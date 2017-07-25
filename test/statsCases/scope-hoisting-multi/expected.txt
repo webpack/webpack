@@ -18,18 +18,18 @@ Child
     Time: Xms
        [0] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy_shared.js 25 bytes {0} {1} {2} [built]
        [1] (webpack)/test/statsCases/scope-hoisting-multi/vendor.js 25 bytes {5} [built]
-           ModuleConcatenation (inner): module is an entrypoint
+           ModuleConcatenation bailout: Module is an entry point
        [2] (webpack)/test/statsCases/scope-hoisting-multi/common.js + 1 modules 62 bytes {3} {4} [built]
        [3] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy.js 25 bytes {1} {2} [built]
        [4] (webpack)/test/statsCases/scope-hoisting-multi/first.js + 1 modules 238 bytes {4} [built]
-           ModuleConcatenation (inner): module is an entrypoint
-           ModuleConcatenation: Cannot concat with (webpack)/test/statsCases/scope-hoisting-multi/common.js
-           ModuleConcatenation: Cannot concat with (webpack)/test/statsCases/scope-hoisting-multi/vendor.js: module is an entrypoint
+           ModuleConcatenation bailout: Module is an entry point
+           ModuleConcatenation bailout: Cannot concat with (webpack)/test/statsCases/scope-hoisting-multi/common.js
+           ModuleConcatenation bailout: Cannot concat with (webpack)/test/statsCases/scope-hoisting-multi/vendor.js (<- Module is an entry point)
        [5] (webpack)/test/statsCases/scope-hoisting-multi/lazy_shared.js 31 bytes {0} [built]
-           ModuleConcatenation (inner): module is used with non-harmony imports from (webpack)/test/statsCases/scope-hoisting-multi/first.js, (webpack)/test/statsCases/scope-hoisting-multi/second.js
+           ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: (webpack)/test/statsCases/scope-hoisting-multi/first.js (referenced with import()), (webpack)/test/statsCases/scope-hoisting-multi/second.js (referenced with import())
        [6] (webpack)/test/statsCases/scope-hoisting-multi/second.js 177 bytes {3} [built]
-           ModuleConcatenation (inner): module is an entrypoint
+           ModuleConcatenation bailout: Module is an entry point
        [7] (webpack)/test/statsCases/scope-hoisting-multi/lazy_second.js 55 bytes {1} [built]
-           ModuleConcatenation (inner): module is used with non-harmony imports from (webpack)/test/statsCases/scope-hoisting-multi/second.js
+           ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: (webpack)/test/statsCases/scope-hoisting-multi/second.js (referenced with import())
        [8] (webpack)/test/statsCases/scope-hoisting-multi/lazy_first.js 55 bytes {2} [built]
-           ModuleConcatenation (inner): module is used with non-harmony imports from (webpack)/test/statsCases/scope-hoisting-multi/first.js
+           ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: (webpack)/test/statsCases/scope-hoisting-multi/first.js (referenced with import())
