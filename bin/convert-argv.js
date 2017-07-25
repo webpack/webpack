@@ -284,6 +284,7 @@ module.exports = function(yargs, argv, convertOptions) {
 		}
 
 		function addPlugin(options, plugin) {
+			ensureArray(options, "plugins");
 			options.plugins.unshift(plugin);
 		}
 
@@ -332,7 +333,6 @@ module.exports = function(yargs, argv, convertOptions) {
 		}, function() {
 			defineObject = {};
 		}, function() {
-			ensureArray(options, "plugins");
 			var DefinePlugin = require("../lib/DefinePlugin");
 			addPlugin(options, new DefinePlugin(defineObject));
 		});
@@ -402,13 +402,11 @@ module.exports = function(yargs, argv, convertOptions) {
 		mapArgToBoolean("cache");
 
 		ifBooleanArg("hot", function() {
-			ensureArray(options, "plugins");
 			var HotModuleReplacementPlugin = require("../lib/HotModuleReplacementPlugin");
 			addPlugin(options, new HotModuleReplacementPlugin());
 		});
 
 		ifBooleanArg("debug", function() {
-			ensureArray(options, "plugins");
 			var LoaderOptionsPlugin = require("../lib/LoaderOptionsPlugin");
 			addPlugin(options, new LoaderOptionsPlugin({
 				debug: true
@@ -442,7 +440,6 @@ module.exports = function(yargs, argv, convertOptions) {
 		});
 
 		ifArg("optimize-max-chunks", function(value) {
-			ensureArray(options, "plugins");
 			var LimitChunkCountPlugin = require("../lib/optimize/LimitChunkCountPlugin");
 			addPlugin(options, new LimitChunkCountPlugin({
 				maxChunks: parseInt(value, 10)
@@ -450,7 +447,6 @@ module.exports = function(yargs, argv, convertOptions) {
 		});
 
 		ifArg("optimize-min-chunk-size", function(value) {
-			ensureArray(options, "plugins");
 			var MinChunkSizePlugin = require("../lib/optimize/MinChunkSizePlugin");
 			addPlugin(options, new MinChunkSizePlugin({
 				minChunkSize: parseInt(value, 10)
@@ -458,7 +454,6 @@ module.exports = function(yargs, argv, convertOptions) {
 		});
 
 		ifBooleanArg("optimize-minimize", function() {
-			ensureArray(options, "plugins");
 			var UglifyJsPlugin = require("../lib/optimize/UglifyJsPlugin");
 			var LoaderOptionsPlugin = require("../lib/LoaderOptionsPlugin");
 			addPlugin(options, new UglifyJsPlugin({
@@ -470,13 +465,11 @@ module.exports = function(yargs, argv, convertOptions) {
 		});
 
 		ifArg("prefetch", function(request) {
-			ensureArray(options, "plugins");
 			var PrefetchPlugin = require("../lib/PrefetchPlugin");
 			addPlugin(options, new PrefetchPlugin(request));
 		});
 
 		ifArg("provide", function(value) {
-			ensureArray(options, "plugins");
 			var idx = value.indexOf("=");
 			var name;
 			if(idx >= 0) {
@@ -490,7 +483,6 @@ module.exports = function(yargs, argv, convertOptions) {
 		});
 
 		ifArg("plugin", function(value) {
-			ensureArray(options, "plugins");
 			addPlugin(options, loadPlugin(value));
 		});
 
