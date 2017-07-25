@@ -15,9 +15,6 @@ module.exports = {
 			] }
 		]
 	},
-	resolve: {
-		extensions: [".js", ".jsx"]
-	},
 	plugins: [
 		new webpack.DllReferencePlugin({
 			manifest: require("../../../js/config/dll-plugin/manifest0.json"), // eslint-disable-line node/no-missing-require
@@ -25,6 +22,6 @@ module.exports = {
 			context: path.resolve(__dirname, "../0-create-dll"),
 			sourceType: "commonjs2"
 		}),
-		new webpack.NamedModulesPlugin()
+		new webpack.HashedModuleIdsPlugin(),
 	]
 };
