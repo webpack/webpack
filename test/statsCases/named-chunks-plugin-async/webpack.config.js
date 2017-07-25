@@ -14,7 +14,7 @@ module.exports = {
 			}
 			const chunkModulesToName = (chunk) => chunk.mapModules((mod) => {
 				const rs = new RequestShortener(mod.context);
-				return rs.shorten(mod.request).replace(/[.\/\\]/g, "_");
+				return rs.shorten(mod.request).replace(/[./\\]/g, "_");
 			}).join("-");
 
 			if(chunk.getNumberOfModules() > 0) {

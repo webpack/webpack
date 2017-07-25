@@ -9,7 +9,7 @@ var OPTIMIZE_GROUP = "Optimizing options:";
 module.exports = function(yargs) {
 	yargs
 		.help("help")
-		.alias("help", "h", "?")
+		.alias("help", "h")
 		.version()
 		.alias("version", "v")
 		.options({
@@ -18,6 +18,12 @@ module.exports = function(yargs) {
 				describe: "Path to the config file",
 				group: CONFIG_GROUP,
 				defaultDescription: "webpack.config.js or webpackfile.js",
+				requiresArg: true
+			},
+			"config-name": {
+				type: "string",
+				describe: "Name of the config to use",
+				group: CONFIG_GROUP,
 				requiresArg: true
 			},
 			"env": {
@@ -245,12 +251,14 @@ module.exports = function(yargs) {
 			"bail": {
 				type: "boolean",
 				describe: "Abort the compilation on first error",
-				group: ADVANCED_GROUP
+				group: ADVANCED_GROUP,
+				default: null
 			},
 			"profile": {
 				type: "boolean",
 				describe: "Profile the compilation and include information in stats",
-				group: ADVANCED_GROUP
+				group: ADVANCED_GROUP,
+				default: null
 			},
 			"d": {
 				type: "boolean",

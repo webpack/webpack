@@ -170,7 +170,7 @@ describe("RequireJsStuffPlugin", () => {
 									const addDependencySpy = parserEventContext.state.current.addDependency;
 									const addedDependency = JSON.stringify(addDependencySpy.getCall(0).args[0]);
 									addDependencySpy.callCount.should.be.exactly(1);
-									addedDependency.should.be.exactly('{"module":null,"expression":"\\"__webpack_require__.oe\\"","range":10,"loc":5}');
+									addedDependency.should.be.exactly('{"module":null,"expression":"__webpack_require__.oe","range":10,"loc":5}');
 								});
 							});
 						});
