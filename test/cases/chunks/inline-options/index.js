@@ -1,41 +1,41 @@
 it("should be able to use eager mode", function(done) {
 	function load(name) {
-		return import(/* webpackMode: "eager" */"./dir1/" + name);
+		return import(/* webpackMode: "eager" */ "./dir1/" + name);
 	}
 	testChunkLoading(load, true, true, done);
 });
 
 it("should be able to use lazy-once mode", function(done) {
 	function load(name) {
-		return import(/* webpackMode: "lazy-once" */"./dir2/" + name);
+		return import(/* webpackMode: "lazy-once" */ "./dir2/" + name);
 	}
 	testChunkLoading(load, false, true, done);
 });
 
 it("should be able to use lazy-once mode with name", function(done) {
 	function load(name) {
-		return import(/* webpackMode: "lazy-once", webpackChunkName: "name-lazy-once" */"./dir3/" + name);
+		return import(/* webpackMode: "lazy-once", webpackChunkName: "name-lazy-once" */ "./dir3/" + name);
 	}
 	testChunkLoading(load, false, true, done);
 });
 
 it("should be able to use lazy mode", function(done) {
 	function load(name) {
-		return import(/* webpackMode: "lazy" */"./dir4/" + name);
+		return import(/* webpackMode: "lazy" */ "./dir4/" + name);
 	}
 	testChunkLoading(load, false, false, done);
 });
 
 it("should be able to use lazy mode with name", function(done) {
 	function load(name) {
-		return import(/* webpackMode: "lazy", webpackChunkName: "name-lazy" */"./dir5/" + name);
+		return import(/* webpackMode: "lazy", webpackChunkName: "name-lazy" */ "./dir5/" + name);
 	}
 	testChunkLoading(load, false, false, done);
 });
 
 it("should be able to use lazy mode with name and placeholder", function(done) {
 	function load(name) {
-		return import(/* webpackMode: "lazy", webpackChunkName: "name-lazy-[request]" */"./dir6/" + name);
+		return import(/* webpackMode: "lazy", webpackChunkName: "name-lazy-[request]" */ "./dir6/" + name);
 	}
 	testChunkLoading(load, false, false, done);
 });
