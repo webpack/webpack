@@ -58,9 +58,9 @@ it("should be able to combine chunks by name", function(done) {
 	testChunkLoading(load, false, true, done);
 });
 
-it("should be able to use eager-weak mode", function(done) {
+it("should be able to use weak mode", function(done) {
 	function load(name) {
-		return import(/* webpackMode: "eager-weak" */"./dir8/" + name);
+		return import(/* webpackMode: "weak" */ "./dir8/" + name);
 	}
 	require("./dir8/a") // chunks served manually by the user
 	require("./dir8/b")
@@ -68,15 +68,15 @@ it("should be able to use eager-weak mode", function(done) {
 	testChunkLoading(load, true, true, done);
 });
 
-it("should be able to use eager-weak mode (without context)", function(done) {
+it("should be able to use weak mode (without context)", function(done) {
 	function load(name) {
 		switch(name) {
 			case "a":
-				return import(/* webpackMode: "eager-weak" */ "./dir9/a");
+				return import(/* webpackMode: "weak" */ "./dir9/a");
 			case "b":
-				return import(/* webpackMode: "eager-weak" */ "./dir9/b");
+				return import(/* webpackMode: "weak" */ "./dir9/b");
 			case "c":
-				return import(/* webpackMode: "eager-weak" */ "./dir9/c");
+				return import(/* webpackMode: "weak" */ "./dir9/c");
 			default:
 				throw new Error("Unexcepted test data");
 		}
@@ -87,17 +87,17 @@ it("should be able to use eager-weak mode (without context)", function(done) {
 	testChunkLoading(load, true, true, done);
 });
 
-it("should not find module when mode is eager-weak and chunk not served elsewhere", function(done) {
+it("should not find module when mode is weak and chunk not served elsewhere", function(done) {
 	var name = "a";
-	import(/* webpackMode: "eager-weak" */"./dir10/" + name)
+	import(/* webpackMode: "weak" */ "./dir10/" + name)
 		.catch(function(e) {
 			e.should.match(/not available/);
 			done();
 		})
 });
 
-it("should not find module when mode is eager-weak and chunk not served elsewhere (without context)", function(done) {
-	import(/* webpackMode: "eager-weak" */"./dir11/a")
+it("should not find module when mode is weak and chunk not served elsewhere (without context)", function(done) {
+	import(/* webpackMode: "weak" */ "./dir11/a")
 		.catch(function(e) {
 			e.should.match(/not available/);
 			done();
