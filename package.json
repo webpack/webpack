@@ -9,7 +9,7 @@
     "ajv": "^4.7.0",
     "ajv-keywords": "^1.1.1",
     "async": "^2.1.2",
-    "enhanced-resolve": "^3.3.0",
+    "enhanced-resolve": "3.3.0",
     "interpret": "^1.0.0",
     "json-loader": "^0.5.4",
     "json5": "^0.5.1",
