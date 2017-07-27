@@ -350,16 +350,14 @@ function processOptions(options) {
 				process.stdout.write(statsString + "\n");
 		}
 		if(!options.watch && stats.hasErrors()) {
-			process.on("exit", function() {
-				process.exit(2); // eslint-disable-line
-			});
+			process.exitCode = 2;
 		}
 	}
 	if(firstOptions.watch || options.watch) {
 		var watchOptions = firstOptions.watchOptions || firstOptions.watch || options.watch || {};
 		if(watchOptions.stdin) {
 			process.stdin.on("end", function() {
-				process.exit(0); // eslint-disable-line
+				process.exit(); // eslint-disable-line
 			});
 			process.stdin.resume();
 		}
