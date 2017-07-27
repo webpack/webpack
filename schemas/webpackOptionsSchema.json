@@ -743,7 +743,7 @@
         }
       ]
     },
-    "warning-filters-types": {
+    "filter-item-types": {
       "anyOf": [
         {
           "instanceof": "RegExp"
@@ -753,6 +753,19 @@
         },
         {
           "instanceof": "Function"
+        }
+      ]
+    },
+    "filter-types": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/filter-item-types"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/filter-item-types"
+          }
         }
       ]
     }
@@ -1009,17 +1022,19 @@
             },
             "warningsFilter": {
               "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions",
-              "anyOf": [
-                {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/warning-filters-types"
-                  }
-                },
-                {
-                  "$ref": "#/definitions/warning-filters-types"
-                }
-              ]
+              "$ref": "#/definitions/filter-types"
+            },
+            "excludeAssets": {
+              "description": "Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions",
+              "$ref": "#/definitions/filter-types"
+            },
+            "excludeModules": {
+              "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps or Functions",
+              "$ref": "#/definitions/filter-types"
+            },
+            "exclude": {
+              "description": "Please use excludeModules instead.",
+              "$ref": "#/definitions/filter-types"
             },
             "errorDetails": {
               "type": "boolean",

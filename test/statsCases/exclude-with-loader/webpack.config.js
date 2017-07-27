@@ -4,7 +4,7 @@ module.exports = {
 		filename: "bundle.js"
 	},
 	stats: {
-		exclude: [
+		excludeModules: [
 			"node_modules",
 			"exclude"
 		],
