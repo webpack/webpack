@@ -2,6 +2,7 @@ Hash: 731069e082cf620521ce637b388d1abe7f9228e5
 Child
     Hash: 731069e082cf620521ce
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
        [0] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy_shared.js 25 bytes {0} {1} {2} [built]
        [1] (webpack)/test/statsCases/scope-hoisting-multi/vendor.js 25 bytes {5} [built]
        [2] (webpack)/test/statsCases/scope-hoisting-multi/common.js 37 bytes {3} {4} [built]
@@ -16,6 +17,7 @@ Child
 Child
     Hash: 637b388d1abe7f9228e5
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
        [0] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy_shared.js 25 bytes {0} {1} {2} [built]
        [1] (webpack)/test/statsCases/scope-hoisting-multi/vendor.js 25 bytes {5} [built]
            ModuleConcatenation (inner): module is an entrypoint
