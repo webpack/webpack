@@ -5,9 +5,10 @@ it("should inject the module object into a chunk (AMD1)", function(done) {
 	});
 });
 
-it("should inject the module object into a chunk (AMD2)"/*, function() {
+it("should inject the module object into a chunk (AMD2)", function() {
 	require([module.webpackPolyfill ? "./x1" : "./fail"]);
-}*/);
+	module.webpackPolyfill.should.be.eql(1);
+});
 
 it("should inject the module object into a chunk (ensure)", function(done) {
 	require.ensure([], function(require) {
