@@ -3,7 +3,6 @@
 module.exports = function testAssertions(code, stdout, stderr) {
 	code.should.be.eql(2);
 
-	console.log(stdout);
 	stdout[0].should.containEql("Hash: ");
 	stdout[1].should.containEql("Version: ");
 	stdout[2].should.containEql("Time: ");
