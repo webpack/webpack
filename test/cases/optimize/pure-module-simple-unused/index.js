@@ -6,5 +6,5 @@ it("should not evaluate a simple unused module", function() {
 	def.should.be.eql("def");
 	x.should.be.eql("x");
 	z.should.be.eql("z");
-	log.should.be.eql(["c.js", "b.js"]);
+	log.should.be.eql(["b.js", "c.js", "index.js"]);
 });
