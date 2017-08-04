@@ -389,4 +389,3 @@ function processOptions(options) {
 if(!options.exitByHelpOrVersion && !validationErrorOcurred) {
 	processOptions(options);
 }
-
