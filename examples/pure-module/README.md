@@ -1,14 +1,12 @@
-This example features the `pure-module` flag.
+This example shows how the `pure-module` flag for library authors works.
 
-The example contains a assumingly big library named `big-module`. This library is split into multiple child modules `a`, `b` and `c`. The exports from these modules are reexported in the entry (`index.js`) of the library. A consumer uses **some** of the exports by importing them from the library via `import { a, b } from "big-module"`. In this case according to the EcmaScript spec all child modules must be evaluated because they could contain side effects.
+The example contains a large library, `big-module`. `big-module` contains multiple child modules: `a`, `b` and `c`. The exports from the child modules are re-exported in the entry module (`index.js`) of the library. A consumer uses **some** of the exports, importing them from the library via `import { a, b } from "big-module"`. According to the EcmaScript spec, all child modules _must_ be evaluated because they could contain side effects.
 
-When using the `"pure-module": true` flag in `package.json` the package author promises that modules contain no side effects expect exposed exports. This allows to optimize reexports. In this case `import { a, b } from "big-module-pure"` is treated like `import { a } from "big-module-pure/a"; import { b } from "big-module-pure/b"`. This is done by following reexports.
+The `"pure-module": true` flag in `big-module`'s `package.json` indicates that the package's modules have no side effects (on evaluation) and only expose exports. This allows tools like webpack to optimize re-exports. In the case `import { a, b } from "big-module-pure"` is rewritten to `import { a } from "big-module-pure/a"; import { b } from "big-module-pure/b"`.
 
-The example shows `big-module` (without pure-module flag) and `big-module-pure` (with pure-module flag). From both packages the exports `a` and `b` are used.
+The example contains two variants of `big-module`. `big-module` has no pure-module flag and `big-module-pure` has the pure-module flag. The example client imports `a` and `b` from each of the variants.
 
-From `big-module` these files are included: `index.js` `a.js` `b.js` `c.js`.
-
-From `big-module-pure` these files are included: `a.js` `b.js`
+After being built by webpack, the output bundle contains `index.js` `a.js` `b.js` `c.js` from `big-module`, but only `a.js` and `b.js` from `big-module-pure`.
 
 Advantages:
 
