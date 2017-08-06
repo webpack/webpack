@@ -33,3 +33,17 @@ it("should import process.env var with empty value", () => {
 	if(process.env.III !== "")
 		require.include("iii");
 });
+
+it("should import process.env var by process.env", () => {
+	if(process.env.IIII !== "iiii") {
+		if (parseInt(process.version.match(/^v(\d+).*$/i)[1]) > 4) {
+			eval("let {IIII} = process.env;");
+		} else {
+			var env = process.env;
+			var IIII = env.IIII;
+		}
+		if(IIII !== "iiii") {
+			require.include("iiii");
+		}
+	}
+});
