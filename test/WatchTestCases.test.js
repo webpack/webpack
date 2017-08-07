@@ -116,6 +116,10 @@ describe("WatchTestCases", () => {
 						const watching = compiler.watch({
 							aggregateTimeout: 1000
 						}, (err, stats) => {
+							if(err)
+								return done(err);
+							if(!stats)
+								return done(new Error("No stats reported from Compiler"));
 							if(stats.hash === lastHash)
 								return;
 							lastHash = stats.hash;

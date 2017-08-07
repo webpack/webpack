@@ -7,12 +7,11 @@ const fs = require("fs");
 const webpack = require("../");
 
 describe("Examples", () => {
-	const examples = fs.readdirSync(path.join(__dirname, "..", "examples")).map((name) =>
-		path.join(__dirname, "..", "examples", name)).filter((p) =>
-		fs.statSync(p).isDirectory() && fs.existsSync(path.join(p, "build.js")));
+	const basePath = path.join(__dirname, "..", "examples");
+	const examples = require("../examples/examples.js");
 
 	examples.forEach((examplePath) => {
-		it("should compile " + path.basename(examplePath), function(done) {
+		it("should compile " + path.relative(basePath, examplePath), function(done) {
 			this.timeout(20000);
 			let options = {};
 			let webpackConfigPath = path.join(examplePath, "webpack.config.js");
