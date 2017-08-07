@@ -9,7 +9,6 @@ var OPTIMIZE_GROUP = "Optimizing options:";
 module.exports = function(yargs) {
 	yargs
 		.help("help")
-		.exitProcess(false)
 		.alias("help", "h")
 		.version()
 		.alias("version", "v")
