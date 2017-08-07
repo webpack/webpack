@@ -164,13 +164,11 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 		return;
 	}
 
-	var options = {};
-
 	if(argv.verbose) {
 		argv["display"] = "verbose";
 	}
 
-	options = require("./convert-argv")(yargs, argv);
+	var options = require("./convert-argv")(yargs, argv);
 
 	function ifArg(name, fn, init) {
 		if(Array.isArray(argv[name])) {

@@ -5,6 +5,7 @@ var interpret = require("interpret");
 var prepareOptions = require("../lib/prepareOptions");
 
 module.exports = function(yargs, argv, convertOptions) {
+
 	var options = [];
 
 	// Shortcuts
