@@ -1,4 +1,12 @@
+<div align="center">
+  <a href="https://github.com/webpack/webpack">
+    <img width="200" heigth="200" src="https://webpack.js.org/assets/icon-square-big.svg">
+  </a>
+  <br>
+  <br>
+
 [![npm][npm]][npm-url]
+
 [![node][node]][node-url]
 [![deps][deps]][deps-url]
 [![tests][tests]][tests-url]
@@ -6,11 +14,6 @@
 [![coverage][cover]][cover-url]
 [![licenses][licenses]][licenses-url]
 
-<div align="center">
-  <a href="https://github.com/webpack/webpack">
-    <img width="200" heigth="200" src="https://webpack.js.org/assets/icon-square-big.svg">
-  </a>
-  <br>
   <br>
 	<a href="https://npmjs.com/package/webpack">
 		<img src="https://img.shields.io/npm/dm/webpack.svg">
@@ -32,8 +35,16 @@
 
 <h2 align="center">Install</h2>
 
+Install with npm:
+
 ```bash
 npm install --save-dev webpack
+```
+
+Install with yarn:
+
+```bash
+yarn add webpack --dev
 ```
 
 <h2 align="center">Introduction</h2>
@@ -120,7 +131,7 @@ or are automatically applied via regex from your webpack configuration.
 |Name|Status|Description|
 |:--:|:----:|:----------|
 |<a href="https://github.com/webpack/json-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/json.svg"></a>|![json-npm]|Loads a JSON file (included by default)|
-|<a href="https://github.com/webpack/json5-loader"><img width="48" height="48" src="https://cdn.rawgit.com/json5/json5-logo/master/json5-logo.svg"></a>|![json5-npm]|Loads and transpiles a JSON 5 file|
+|<a href="https://github.com/webpack/json5-loader"><img width="48" height="10.656" src="https://cdn.rawgit.com/json5/json5-logo/master/json5-logo.svg"></a>|![json5-npm]|Loads and transpiles a JSON 5 file|
 |<a href="https://github.com/awnist/cson-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>|![cson-npm]|Loads and transpiles a CSON file|
 
 
@@ -183,17 +194,17 @@ or are automatically applied via regex from your webpack configuration.
 [stylus-npm]: https://img.shields.io/npm/v/stylus-loader.svg
 [postcss-npm]: https://img.shields.io/npm/v/postcss-loader.svg
 
-#### Linting && Testing
+#### Linting & Testing
 
 |Name|Status|Description|
 |:--:|:----:|:----------|
 |<a href="https://github.com/webpack/mocha-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/mocha.svg"></a>|![mocha-npm]|Tests with mocha (Browser/NodeJS)|
 |<a href="https://github.com/MoOx/eslint-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/eslint.svg"></a>|![eslint-npm]|PreLoader for linting code using ESLint|
-|<a href="https://github.com/webpack/jslint-loader"><img width="48" height="48" src="http://jshint.com/res/jshint-dark.png"></a>|![jshint-npm]|PreLoader for linting code using JSHint|
+|<a href="https://github.com/webpack-contrib/jshint-loader"><img width="48" height="20.64" src="http://jshint.com/res/jshint-dark.png"></a>|![jshint-npm]|PreLoader for linting code using JSHint|
 
 [mocha-npm]: https://img.shields.io/npm/v/mocha-loader.svg
 [eslint-npm]: https://img.shields.io/npm/v/eslint-loader.svg
-[jshint-npm]: https://img.shields.io/npm/v/jslint-loader.svg
+[jshint-npm]: https://img.shields.io/npm/v/jshint-loader.svg
 [jscs-npm]: https://img.shields.io/npm/v/jscs-loader.svg
 
 #### Frameworks
@@ -264,7 +275,7 @@ If you create a loader or plugin, we would <3 for you to open source it, and put
 
 <h2 align="center">Support</h2>
 
-We consider webpack to be a low-level tool used not only individuals but also layered beneath other awesome tools. Because of it's flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
+We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of it's flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
 
 If you're just getting started, take a look at [our new docs and concepts page](https://webpack.js.org/concepts/). This has a high level overview that is great for beginners!! 
 
@@ -314,7 +325,7 @@ If you have discovered a 🐜 or have a feature suggestion, feel free to create 
         <img width="150" height="150" src="https://github.com/bebraw.png?s=150">
         <br>
         <a href="https://github.com/bebraw">Juho Vepsäläinen</a>
-        <p>Documentation<p>
+        <p>Documentation</p>
         <br>
         <p>Author</p>
         <a href="https://leanpub.com/survivejs-webpack">
@@ -354,22 +365,32 @@ This is how we use the donations:
 
 <h2 align="center">Premium Partners</h2>
 
+<div align="center">
+	
 <a href="https://www.ag-grid.com/?utm_source=webpack&utm_medium=banner&utm_campaign=sponsorship" target="_blank"><img align="center" src="https://raw.githubusercontent.com/webpack/media/2b399d58/horiz-banner-ad-ag-grid.png">
 </a>
+
+</div>
 
 <h2 align="center">Other Backers and Sponsors</h2>
 
 Before we started using OpenCollective, donations were made anonymously. Now that we have made the switch, we would like to acknowledge these sponsors (and the ones who continue to donate using OpenCollective). If we've missed someone, please send us a PR, and we'll add you to this list.
 
+<div align="center">
+	
 [Google Angular Team](https://angular.io/), [Architects.io](http://architects.io/),
 <a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img 
 src="https://static.moonmail.io/moonmail-logo.svg" height="30" alt="MoonMail"></a> 
 <a href="https://monei.net" target="_blank" title="Best payment gateway rates"><img 
 src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
+</div>
+
 <h2 align="center">Sponsors</h2>
 
 [Become a sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
+
+<div align="center">
 
 <a href="https://opencollective.com/webpack/sponsor/0/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/0/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/sponsor/1/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/1/avatar.svg?requireActive=false"></a>
@@ -401,6 +422,8 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 <a href="https://opencollective.com/webpack/sponsor/27/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/27/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/sponsor/28/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/28/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/sponsor/29/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/29/avatar.svg?requireActive=false"></a>
+
+</div>
 
 <h2 align="center">Backers</h2>
 

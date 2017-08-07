@@ -7,7 +7,7 @@ bundle.js  7.33 kB       0  [emitted]  main
        [only some exports used: a]
    [1] (webpack)/test/statsCases/tree-shaking/b.js 13 bytes {0} [built]
        [exports: b]
-       [only some exports used: ]
+       [no exports used]
    [2] (webpack)/test/statsCases/tree-shaking/unknown.js 0 bytes {0} [built]
        [only some exports used: c]
    [3] (webpack)/test/statsCases/tree-shaking/index.js 276 bytes {0} [built]

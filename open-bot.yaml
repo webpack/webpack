@@ -61,6 +61,7 @@ rules:
       context: "continuous-integration/travis-ci/pr"
     travis_job:
       state: "failed"
+      allow_failure: false
       config:
         env: JOB_PART=test
     fetch: travis_job.log
