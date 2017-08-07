@@ -1,4 +1,4 @@
-Hash: 731069e082cf620521ce637b388d1abe7f9228e5
+Hash: 731069e082cf620521ce0fb5d80076a98557894b
 Child
     Hash: 731069e082cf620521ce
     Time: Xms
@@ -14,20 +14,20 @@ Child
        [9] (webpack)/test/statsCases/scope-hoisting-multi/second.js 177 bytes {4} [built]
       [10] (webpack)/test/statsCases/scope-hoisting-multi/lazy_second.js 55 bytes {1} [built]
 Child
-    Hash: 637b388d1abe7f9228e5
+    Hash: 0fb5d80076a98557894b
     Time: Xms
        [0] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy_shared.js 25 bytes {0} {1} {2} [built]
        [1] (webpack)/test/statsCases/scope-hoisting-multi/vendor.js 25 bytes {5} [built]
            ModuleConcatenation bailout: Module is an entry point
        [2] (webpack)/test/statsCases/scope-hoisting-multi/common.js + 1 modules 62 bytes {3} {4} [built]
        [3] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy.js 25 bytes {1} {2} [built]
-       [4] (webpack)/test/statsCases/scope-hoisting-multi/first.js + 1 modules 238 bytes {4} [built]
+       [4] (webpack)/test/statsCases/scope-hoisting-multi/first.js + 1 modules 248 bytes {3} [built]
            ModuleConcatenation bailout: Module is an entry point
            ModuleConcatenation bailout: Cannot concat with (webpack)/test/statsCases/scope-hoisting-multi/common.js
            ModuleConcatenation bailout: Cannot concat with (webpack)/test/statsCases/scope-hoisting-multi/vendor.js (<- Module is an entry point)
        [5] (webpack)/test/statsCases/scope-hoisting-multi/lazy_shared.js 31 bytes {0} [built]
            ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: (webpack)/test/statsCases/scope-hoisting-multi/first.js (referenced with import()), (webpack)/test/statsCases/scope-hoisting-multi/second.js (referenced with import())
-       [6] (webpack)/test/statsCases/scope-hoisting-multi/second.js 177 bytes {3} [built]
+       [6] (webpack)/test/statsCases/scope-hoisting-multi/second.js 177 bytes {4} [built]
            ModuleConcatenation bailout: Module is an entry point
        [7] (webpack)/test/statsCases/scope-hoisting-multi/lazy_second.js 55 bytes {1} [built]
            ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: (webpack)/test/statsCases/scope-hoisting-multi/second.js (referenced with import())
