@@ -8,7 +8,7 @@ const cmds = examples.map(function(dirname) {
 });
 
 let i = 0;
-for(const cmd of cmds.reverse()) {
+for(const cmd of cmds) {
 	console.log(`[${++i}/${cmds.length}] ${cmd}`);
 	cp.execSync(cmd, { encoding: "utf-8" });
 }
