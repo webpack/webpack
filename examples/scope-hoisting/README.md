@@ -299,16 +299,18 @@ var x = "x";
 /*!********************************!*\
   !*** ./example.js + 2 modules ***!
   \********************************/
-/*! no static exports found */
+/*! exports provided:  */
 /*! all exports used */
-/*! ModuleConcatenation (inner): module is an entrypoint */
+/*! ModuleConcatenation bailout: Module is an entry point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
+// EXTERNAL MODULE: ./node_modules/shared.js + 1 modules
+var shared = __webpack_require__(0);
+
 // CONCATENATED MODULE: ./node_modules/a.js
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_shared__ = __webpack_require__(/*! shared */ 0);
 // module a
 var a = "a";
 
@@ -324,7 +326,7 @@ function b_a() {
 
 
 __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! ./lazy */ 3)).then(function(lazy) {
-	console.log(a, b_a(), __WEBPACK_IMPORTED_MODULE_0_shared__["a"], __WEBPACK_IMPORTED_MODULE_0_shared__["b"], lazy.c, lazy.d.a, lazy.x, lazy.y);
+	console.log(a, b_a(), shared["a" /* x */], shared["b" /* y */], lazy.c, lazy.d.a, lazy.x, lazy.y);
 });
 
 
@@ -344,6 +346,7 @@ webpackJsonp([0],[
   \*****************************/
 /*! no static exports found */
 /*! exports used: c */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module cjs (commonjs)
@@ -357,33 +360,37 @@ exports.c = "e";
   \*****************************/
 /*! exports provided: d, c, x, y */
 /*! all exports used */
-/*! ModuleConcatenation (inner): module is used with non-harmony imports from ./example.js */
+/*! ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./example.js (referenced with import()) */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+var d_namespaceObject = {};
+__webpack_require__.d(d_namespaceObject, "a", function() { return a; });
+
+// EXTERNAL MODULE: ./node_modules/cjs.js
+var cjs = __webpack_require__(2);
+var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
+
+// EXTERNAL MODULE: ./node_modules/shared.js + 1 modules
+var shared = __webpack_require__(0);
 
 // CONCATENATED MODULE: ./node_modules/c.js
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_cjs__ = __webpack_require__(/*! cjs */ 2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_cjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_cjs__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_shared__ = __webpack_require__(/*! shared */ 0);
 // module c
 
 
-var c = String.fromCharCode(__WEBPACK_IMPORTED_MODULE_0_cjs__["c"].charCodeAt(0) - 2);
+var c = String.fromCharCode(cjs["c"].charCodeAt(0) - 2);
 
 
 
 // CONCATENATED MODULE: ./node_modules/d.js
-var d_namespaceObject = {};
-__webpack_require__.d(d_namespaceObject, "a", function() { return a; });
 // module d
 var a = "d";
 
 // CONCATENATED MODULE: ./lazy.js
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "c", function() { return c; });
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "x", function() { return __WEBPACK_IMPORTED_MODULE_1_shared__["a"]; });
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "y", function() { return __WEBPACK_IMPORTED_MODULE_1_shared__["b"]; });
+/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "x", function() { return shared["a" /* x */]; });
+/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "y", function() { return shared["b" /* y */]; });
 /* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "d", function() { return d_namespaceObject; });
 
 
@@ -397,7 +404,7 @@ var a = "d";
 Minimized
 
 ``` javascript
-webpackJsonp([0],[,,function(n,r){r.c="e"},function(n,r,t){"use strict";Object.defineProperty(r,"__esModule",{value:!0});var e=t(2),u=(t.n(e),t(0)),c=String.fromCharCode(e.c.charCodeAt(0)-2),o={};t.d(o,"a",function(){return d});var d="d";t.d(r,"c",function(){return c}),t.d(r,"x",function(){return u.a}),t.d(r,"y",function(){return u.b}),t.d(r,"d",function(){return o})}]);
+webpackJsonp([0],[,,function(n,r){r.c="e"},function(n,r,t){"use strict";Object.defineProperty(r,"__esModule",{value:!0});var e={};t.d(e,"a",function(){return d});var u=t(2),c=t(0),o=String.fromCharCode(u.c.charCodeAt(0)-2),d="d";t.d(r,"c",function(){return o}),t.d(r,"x",function(){return c.a}),t.d(r,"y",function(){return c.b}),t.d(r,"d",function(){return e})}]);
 ```
 
 # Info
@@ -405,77 +412,51 @@ webpackJsonp([0],[,,function(n,r){r.c="e"},function(n,r,t){"use strict";Object.d
 ## Uncompressed
 
 ```
-Hash: 26f89d6006fb6c5a1fa1
-Version: webpack 3.0.0-rc.0
+Hash: 6596ce0a50ccbbaa89c6
+Version: webpack 3.4.1
       Asset     Size  Chunks             Chunk Names
-0.output.js  1.95 kB       0  [emitted]  
-  output.js  7.45 kB       1  [emitted]  main
+0.output.js   1.9 kB       0  [emitted]  
+  output.js  7.39 kB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 276 bytes {1} [rendered]
+chunk    {0} 0.output.js 286 bytes {1} [rendered]
     > [] 4:0-16
-    [2] ./node_modules/cjs.js 44 bytes {0} [built]
-        [only some exports used: c]
-        harmony import cjs [3] ./lazy.js + 2 modules 2:0-29
-    [3] ./lazy.js + 2 modules 232 bytes {0} [built]
+    [3] ./lazy.js + 2 modules 242 bytes {0} [built]
         [exports: d, c, x, y]
         import() ./lazy [] ./example.js 4:0-16
-chunk    {1} output.js (main) 385 bytes [entry] [rendered]
+     + 1 hidden module
+chunk    {1} output.js (main) 390 bytes [entry] [rendered]
     > main [] 
     [0] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
         [exports: x, y]
         [only some exports used: x, y]
         harmony import shared [1] ./example.js + 2 modules 3:0-23
         harmony import shared [3] ./lazy.js + 2 modules 6:0-30
-    [1] ./example.js + 2 modules 280 bytes {1} [built]
-   [0] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
-       [exports: x, y]
-       [only some exports used: x, y]
-       harmony import shared [1] ./example.js + 2 modules 3:0-23
-       harmony import shared [3] ./lazy.js + 2 modules 6:0-30
-   [1] ./example.js + 2 modules 280 bytes {1} [built]
-   [2] ./node_modules/cjs.js 44 bytes {0} [built]
-       [only some exports used: c]
-       harmony import cjs [3] ./lazy.js + 2 modules 2:0-29
-   [3] ./lazy.js + 2 modules 232 bytes {0} [built]
-       [exports: d, c, x, y]
-       import() ./lazy [] ./example.js 4:0-16
+    [1] ./example.js + 2 modules 285 bytes {1} [built]
+        [no exports]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 26f89d6006fb6c5a1fa1
-Version: webpack 3.0.0-rc.0
+Hash: 6596ce0a50ccbbaa89c6
+Version: webpack 3.4.1
       Asset       Size  Chunks             Chunk Names
-0.output.js  373 bytes       0  [emitted]  
+0.output.js  364 bytes       0  [emitted]  
   output.js    1.66 kB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 276 bytes {1} [rendered]
+chunk    {0} 0.output.js 286 bytes {1} [rendered]
     > [] 4:0-16
-    [2] ./node_modules/cjs.js 44 bytes {0} [built]
-        [only some exports used: c]
-        harmony import cjs [3] ./lazy.js + 2 modules 2:0-29
-    [3] ./lazy.js + 2 modules 232 bytes {0} [built]
+    [3] ./lazy.js + 2 modules 242 bytes {0} [built]
         [exports: d, c, x, y]
         import() ./lazy [] ./example.js 4:0-16
-chunk    {1} output.js (main) 385 bytes [entry] [rendered]
+     + 1 hidden module
+chunk    {1} output.js (main) 390 bytes [entry] [rendered]
     > main [] 
     [0] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
         [exports: x, y]
         [only some exports used: x, y]
         harmony import shared [1] ./example.js + 2 modules 3:0-23
         harmony import shared [3] ./lazy.js + 2 modules 6:0-30
-    [1] ./example.js + 2 modules 280 bytes {1} [built]
-   [0] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
-       [exports: x, y]
-       [only some exports used: x, y]
-       harmony import shared [1] ./example.js + 2 modules 3:0-23
-       harmony import shared [3] ./lazy.js + 2 modules 6:0-30
-   [1] ./example.js + 2 modules 280 bytes {1} [built]
-   [2] ./node_modules/cjs.js 44 bytes {0} [built]
-       [only some exports used: c]
-       harmony import cjs [3] ./lazy.js + 2 modules 2:0-29
-   [3] ./lazy.js + 2 modules 232 bytes {0} [built]
-       [exports: d, c, x, y]
-       import() ./lazy [] ./example.js 4:0-16
+    [1] ./example.js + 2 modules 285 bytes {1} [built]
+        [no exports]
 ```
