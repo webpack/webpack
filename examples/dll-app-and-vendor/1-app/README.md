@@ -170,7 +170,7 @@ module.exports = vendor_lib_6b1edee0549eb5092709;
 
 ```
 Hash: 26778169dabaf1f3965d
-Version: webpack 3.4.1
+Version: webpack 3.5.1
  Asset     Size  Chunks             Chunk Names
 app.js  3.85 kB       0  [emitted]  main
 Entrypoint main = app.js
@@ -188,7 +188,7 @@ chunk    {0} app.js (main) 182 bytes [entry] [rendered]
 
 ```
 Hash: 26778169dabaf1f3965d
-Version: webpack 3.4.1
+Version: webpack 3.5.1
  Asset       Size  Chunks             Chunk Names
 app.js  710 bytes       0  [emitted]  main
 Entrypoint main = app.js
