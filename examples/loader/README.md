@@ -261,7 +261,7 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: c15a21a2e67111e1cd94
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
     Asset     Size  Chunks             Chunk Names
 output.js  6.24 kB       0  [emitted]  main
 Entrypoint main = output.js
@@ -273,15 +273,14 @@ chunk    {0} output.js (main) 2.72 kB [entry] [rendered]
     [1] ./example.js 210 bytes {0} [built]
     [2] ./loader.js!./file.js 41 bytes {0} [built]
         cjs require ./loader!./file [1] ./example.js 2:12-38
-    [3] (webpack)/node_modules/css-loader/lib/css-base.js 2.26 kB {0} [built]
-        cjs require ../../node_modules/css-loader/lib/css-base.js [0] (webpack)/node_modules/css-loader!./test.css 1:27-83
+     + 1 hidden module
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
 Hash: 1848e785d8b4fe1c67d0
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
     Asset     Size  Chunks             Chunk Names
 output.js  1.48 kB       0  [emitted]  main
 Entrypoint main = output.js
@@ -293,6 +292,5 @@ chunk    {0} output.js (main) 2.7 kB [entry] [rendered]
     [1] ./example.js 210 bytes {0} [built]
     [2] ./loader.js!./file.js 41 bytes {0} [built]
         cjs require ./loader!./file [1] ./example.js 2:12-38
-    [3] (webpack)/node_modules/css-loader/lib/css-base.js 2.26 kB {0} [built]
-        cjs require ../../node_modules/css-loader/lib/css-base.js [0] (webpack)/node_modules/css-loader!./test.css 1:27-83
+     + 1 hidden module
 ```

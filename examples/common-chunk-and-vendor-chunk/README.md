@@ -379,7 +379,7 @@ module.exports = "pageC";
 
 ```
 Hash: 3b80b7c17398c31e4705
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
     Asset       Size  Chunks             Chunk Names
 common.js  459 bytes       0  [emitted]  common
  pageA.js  595 bytes       1  [emitted]  pageA
@@ -422,7 +422,7 @@ chunk    {4} vendor.js (vendor) 94 bytes [entry] [rendered]
 
 ```
 Hash: 3b80b7c17398c31e4705
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
     Asset       Size  Chunks             Chunk Names
 common.js   92 bytes       0  [emitted]  common
  pageA.js  109 bytes       1  [emitted]  pageA

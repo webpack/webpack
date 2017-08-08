@@ -413,7 +413,7 @@ webpackJsonp([0],[,,function(n,r){r.c="e"},function(n,r,t){"use strict";Object.d
 
 ```
 Hash: 6596ce0a50ccbbaa89c6
-Version: webpack 3.4.1
+Version: webpack 3.5.1
       Asset     Size  Chunks             Chunk Names
 0.output.js   1.9 kB       0  [emitted]  
   output.js  7.39 kB       1  [emitted]  main
@@ -439,7 +439,7 @@ chunk    {1} output.js (main) 390 bytes [entry] [rendered]
 
 ```
 Hash: 6596ce0a50ccbbaa89c6
-Version: webpack 3.4.1
+Version: webpack 3.5.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  364 bytes       0  [emitted]  
   output.js    1.66 kB       1  [emitted]  main

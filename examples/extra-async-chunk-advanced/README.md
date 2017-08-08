@@ -240,7 +240,7 @@ Promise.all/* require.ensure */([__webpack_require__.e(2), __webpack_require__.e
 
 ```
 Hash: 37a3748d37b36bc162d0
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  221 bytes       0  [emitted]  async2
 1.output.js  212 bytes       1  [emitted]  async1
@@ -299,7 +299,7 @@ chunk    {7} output.js (main) 362 bytes [entry] [rendered]
 
 ```
 Hash: 37a3748d37b36bc162d0
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
       Asset      Size  Chunks             Chunk Names
 0.output.js  50 bytes       0  [emitted]  async2
 1.output.js  49 bytes       1  [emitted]  async1

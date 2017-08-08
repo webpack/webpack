@@ -183,7 +183,7 @@ export function increment(val) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! exports provided:  */
 /*! all exports used */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -192,7 +192,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__increment__ = __webpack_require__(/*! ./increment */ 1);
 
 var a = 1;
-__WEBPACK_IMPORTED_MODULE_0__increment__["a" /* increment */](a); // 2
+Object(__WEBPACK_IMPORTED_MODULE_0__increment__["a" /* increment */])(a); // 2
 
 // async loading
 __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! ./async-loaded */ 3)).then(function(asyncLoaded) {
@@ -214,7 +214,7 @@ __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! .
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__math__ = __webpack_require__(/*! ./math */ 2);
 
 function increment(val) {
-    return __WEBPACK_IMPORTED_MODULE_0__math__["a" /* add */](val, 1);
+    return Object(__WEBPACK_IMPORTED_MODULE_0__math__["a" /* add */])(val, 1);
 };
 
 
@@ -248,10 +248,10 @@ function add() {
 
 ```
 Hash: f5982ea38c08a86ed265
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  484 bytes       0  [emitted]  
-  output.js    7.35 kB       1  [emitted]  main
+  output.js    7.36 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 25 bytes {1} [rendered]
     > [0] ./example.js 6:0-24
@@ -261,6 +261,7 @@ chunk    {0} 0.output.js 25 bytes {1} [rendered]
 chunk    {1} output.js (main) 419 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 183 bytes {1} [built]
+        [no exports]
     [1] ./increment.js 94 bytes {1} [built]
         [exports: increment]
         [only some exports used: increment]
@@ -275,10 +276,10 @@ chunk    {1} output.js (main) 419 bytes [entry] [rendered]
 
 ```
 Hash: f5982ea38c08a86ed265
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  147 bytes       0  [emitted]  
-  output.js    1.66 kB       1  [emitted]  main
+  output.js    1.69 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 25 bytes {1} [rendered]
     > [0] ./example.js 6:0-24
@@ -288,6 +289,7 @@ chunk    {0} 0.output.js 25 bytes {1} [rendered]
 chunk    {1} output.js (main) 419 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 183 bytes {1} [built]
+        [no exports]
     [1] ./increment.js 94 bytes {1} [built]
         [exports: increment]
         [only some exports used: increment]

@@ -106,7 +106,7 @@ module.exports = [{
 
 ```
 Hash: 32754229c1b49aaf5dd3020f354a206f830a17560d92a3529fe0380101f3e2c85f80fcddae09adcf
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
 Child page:
     Hash: 32754229c1b49aaf5dd3
              Asset       Size      Chunks             Chunk Names
@@ -203,7 +203,7 @@ Child pageC:
 
 ```
 Hash: 32754229c1b49aaf5dd3020f354a206f830a17560d92a3529fe0380101f3e2c85f80fcddae09adcf
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
 Child page:
     Hash: 32754229c1b49aaf5dd3
              Asset       Size      Chunks             Chunk Names

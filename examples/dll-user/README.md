@@ -118,6 +118,7 @@ console.log(require("module"));
   !*** external "alpha_457b6718a3ff9f8c2d77" ***!
   \*********************************************/
 /*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports) {
 
 module.exports = alpha_457b6718a3ff9f8c2d77;
@@ -128,6 +129,7 @@ module.exports = alpha_457b6718a3ff9f8c2d77;
   !*** external "beta_457b6718a3ff9f8c2d77" ***!
   \********************************************/
 /*! no static exports found */
+/*! all exports used */
 /***/ (function(module, exports) {
 
 module.exports = beta_457b6718a3ff9f8c2d77;
@@ -226,25 +228,25 @@ module.exports = (__webpack_require__(0))(3);
 ## Uncompressed
 
 ```
-Hash: 1318b8d78d8bb76a968b
-Version: webpack 3.0.0-rc.0
+Hash: 60ca229a9df08630fded
+Version: webpack 3.5.1
     Asset     Size  Chunks             Chunk Names
-output.js  6.01 kB       0  [emitted]  main
+output.js  6.06 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 549 bytes [entry] [rendered]
     > main [2] ./example.js 
     [2] ./example.js 213 bytes {0} [built]
-    [3] delegated ./alpha.js from dll-reference alpha_457b6718a3ff9f8c2d77 42 bytes {0} [not cacheable] [built]
+    [3] delegated ./alpha.js from dll-reference alpha_457b6718a3ff9f8c2d77 42 bytes {0} [built]
         cjs require ../dll/alpha [2] ./example.js 1:12-35
-    [4] delegated ./a.js from dll-reference alpha_457b6718a3ff9f8c2d77 42 bytes {0} [not cacheable] [built]
+    [4] delegated ./a.js from dll-reference alpha_457b6718a3ff9f8c2d77 42 bytes {0} [built]
         cjs require ../dll/a [2] ./example.js 2:12-31
-    [5] delegated ./beta.js from dll-reference beta_457b6718a3ff9f8c2d77 42 bytes {0} [not cacheable] [built]
+    [5] delegated ./beta.js from dll-reference beta_457b6718a3ff9f8c2d77 42 bytes {0} [built]
         cjs require beta/beta [2] ./example.js 4:12-32
-    [6] delegated ./b.js from dll-reference beta_457b6718a3ff9f8c2d77 42 bytes {0} [not cacheable] [built]
+    [6] delegated ./b.js from dll-reference beta_457b6718a3ff9f8c2d77 42 bytes {0} [built]
         cjs require beta/b [2] ./example.js 5:12-29
-    [7] delegated ./c.jsx from dll-reference beta_457b6718a3ff9f8c2d77 42 bytes {0} [not cacheable] [built]
+    [7] delegated ./c.jsx from dll-reference beta_457b6718a3ff9f8c2d77 42 bytes {0} [built]
         cjs require beta/c [2] ./example.js 6:12-29
-    [8] delegated ../node_modules/module.js from dll-reference alpha_457b6718a3ff9f8c2d77 42 bytes {0} [not cacheable] [built]
+    [8] delegated ../node_modules/module.js from dll-reference alpha_457b6718a3ff9f8c2d77 42 bytes {0} [built]
         cjs require module [2] ./example.js 8:12-29
      + 2 hidden modules
 ```
@@ -252,25 +254,25 @@ chunk    {0} output.js (main) 549 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 1318b8d78d8bb76a968b
-Version: webpack 3.0.0-rc.0
+Hash: 60ca229a9df08630fded
+Version: webpack 3.5.1
     Asset       Size  Chunks             Chunk Names
 output.js  904 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 549 bytes [entry] [rendered]
     > main [2] ./example.js 
     [2] ./example.js 213 bytes {0} [built]
-    [3] delegated ./alpha.js from dll-reference alpha_457b6718a3ff9f8c2d77 42 bytes {0} [not cacheable] [built]
+    [3] delegated ./alpha.js from dll-reference alpha_457b6718a3ff9f8c2d77 42 bytes {0} [built]
         cjs require ../dll/alpha [2] ./example.js 1:12-35
-    [4] delegated ./a.js from dll-reference alpha_457b6718a3ff9f8c2d77 42 bytes {0} [not cacheable] [built]
+    [4] delegated ./a.js from dll-reference alpha_457b6718a3ff9f8c2d77 42 bytes {0} [built]
         cjs require ../dll/a [2] ./example.js 2:12-31
-    [5] delegated ./beta.js from dll-reference beta_457b6718a3ff9f8c2d77 42 bytes {0} [not cacheable] [built]
+    [5] delegated ./beta.js from dll-reference beta_457b6718a3ff9f8c2d77 42 bytes {0} [built]
         cjs require beta/beta [2] ./example.js 4:12-32
-    [6] delegated ./b.js from dll-reference beta_457b6718a3ff9f8c2d77 42 bytes {0} [not cacheable] [built]
+    [6] delegated ./b.js from dll-reference beta_457b6718a3ff9f8c2d77 42 bytes {0} [built]
         cjs require beta/b [2] ./example.js 5:12-29
-    [7] delegated ./c.jsx from dll-reference beta_457b6718a3ff9f8c2d77 42 bytes {0} [not cacheable] [built]
+    [7] delegated ./c.jsx from dll-reference beta_457b6718a3ff9f8c2d77 42 bytes {0} [built]
         cjs require beta/c [2] ./example.js 6:12-29
-    [8] delegated ../node_modules/module.js from dll-reference alpha_457b6718a3ff9f8c2d77 42 bytes {0} [not cacheable] [built]
+    [8] delegated ../node_modules/module.js from dll-reference alpha_457b6718a3ff9f8c2d77 42 bytes {0} [built]
         cjs require module [2] ./example.js 8:12-29
      + 2 hidden modules
 ```
