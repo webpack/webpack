@@ -86,10 +86,12 @@ module.exports = function(yargs, argv, convertOptions) {
 							registerCompiler(moduleDescriptor[i]);
 							break;
 						} catch(e) {
-							if(i === moduleDescriptor.length - 1 && e.message.match(/Cannot find module/)) {
-								throw new Error("Cannot resolve config file. Install appropriate compiler and try again.");
-							}
+							// do nothing
 						}
+					}
+					if(i === moduleDescriptor.length) {
+						var packages = moduleDescriptor.join(", ");
+						throw new Error("Cannot resolve config file. Install one of the following packages and try again: " + packages);
 					}
 				}
 			}
