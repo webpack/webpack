@@ -1,4 +1,5 @@
 sudo: false
+dist: precise
 language: node_js
 
 branches:
