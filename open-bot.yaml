@@ -41,6 +41,14 @@ rules:
       ensure_2:
         value: "{{status_2.state}}"
         equals: "failure"
+    not:
+      any:
+        ensure_3:
+          value: "{{status_1.state}}"
+          equals: "pending"
+        ensure_4:
+          value: "{{status_2.state}}"
+          equals: "pending"
   actions:
     label:
       add: "PR: CI-not-ok"
