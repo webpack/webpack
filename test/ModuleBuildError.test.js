@@ -12,7 +12,7 @@ describe("ModuleBuildError", () => {
 
 	it("is a function", () => ModuleBuildError.should.be.a.Function());
 
-	describe("when new error created", () => {
+	describe("a newly created error", () => {
 		beforeEach(() => {
 			env.error = new Error("Custom Error Message");
 			env.moduleBuildError = new ModuleBuildError("myModule", env.error, "Location");
@@ -24,13 +24,13 @@ describe("ModuleBuildError", () => {
 
 		it("has a message property", () => env.moduleBuildError.message.should.startWith("Module build failed: Custom Error Message"));
 
-		it("contains a stack trace", () => env.moduleBuildError.message.should.match(/Context\.beforeEach/));
+		it("contains a stack trace", () => env.moduleBuildError.message.should.match(/ModuleBuildError\.test\.js/));
 
 		it("has an error property", () => env.moduleBuildError.error.should.be.exactly(env.error));
 
 	});
 
-	describe("when the error wants to hide the stack trace", () => {
+	describe("a newly created error with a hidden stack trace", () => {
 		beforeEach(() => {
 			env.error = new Error("Custom Error Message");
 			env.error.hideStack = true;
@@ -43,7 +43,7 @@ describe("ModuleBuildError", () => {
 
 		it("has a message property without a stack trace", () => env.moduleBuildError.message.should.be.exactly("Module build failed: Custom Error Message"));
 
-		it("has a stack trace in details", () => env.moduleBuildError.details.should.be.match(/Context\.beforeEach/));
+		it("has a stack trace in details", () => env.moduleBuildError.details.should.be.match(/ModuleBuildError\.test\.js/));
 
 		it("has an error property", () => env.moduleBuildError.error.should.be.exactly(env.error));
 
