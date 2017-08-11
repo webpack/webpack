@@ -436,4 +436,4 @@ rules:
 - filters:
     open: true
   actions:
-    schedule: 1w
+    schedule: 1d
