@@ -900,6 +900,11 @@
     "output": {
       "$ref": "#/definitions/output"
     },
+    "parallelism": {
+      "description": "The number of parallel processed modules in the compilation.",
+      "minimum": 1,
+      "type": "number"
+    },
     "performance": {
       "description": "Configuration for web performance recommendations.",
       "anyOf": [

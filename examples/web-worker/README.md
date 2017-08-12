@@ -330,7 +330,7 @@ module.exports = function() {
 
 ```
 Hash: de5e6c34dad6f90c6640
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
            Asset     Size  Chunks             Chunk Names
 0.hash.worker.js  1.85 kB          [emitted]  
   hash.worker.js  3.91 kB          [emitted]  
@@ -351,14 +351,14 @@ Child worker:
         [1] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
             amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
         [2] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-            context element ./a [1] ../require.context/templates ^\.\/.*$ ./a
             context element ./a.js [1] ../require.context/templates ^\.\/.*$ ./a.js
+            context element ./a [1] ../require.context/templates ^\.\/.*$ ./a
         [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-            context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
             context element ./b.js [1] ../require.context/templates ^\.\/.*$ ./b.js
+            context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
         [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-            context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
             context element ./c.js [1] ../require.context/templates ^\.\/.*$ ./c.js
+            context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
     chunk    {1} hash.worker.js (main) 168 bytes [entry] [rendered]
         > main [0] ./worker.js 
         [0] ./worker.js 168 bytes {1} [built]
@@ -368,7 +368,7 @@ Child worker:
 
 ```
 Hash: de5e6c34dad6f90c6640
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
            Asset       Size  Chunks             Chunk Names
 0.hash.worker.js  544 bytes          [emitted]  
   hash.worker.js  811 bytes          [emitted]  
@@ -389,14 +389,14 @@ Child worker:
         [1] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
             amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
         [2] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-            context element ./a [1] ../require.context/templates ^\.\/.*$ ./a
             context element ./a.js [1] ../require.context/templates ^\.\/.*$ ./a.js
+            context element ./a [1] ../require.context/templates ^\.\/.*$ ./a
         [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-            context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
             context element ./b.js [1] ../require.context/templates ^\.\/.*$ ./b.js
+            context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
         [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-            context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
             context element ./c.js [1] ../require.context/templates ^\.\/.*$ ./c.js
+            context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
     chunk    {1} hash.worker.js (main) 168 bytes [entry] [rendered]
         > main [0] ./worker.js 
         [0] ./worker.js 168 bytes {1} [built]

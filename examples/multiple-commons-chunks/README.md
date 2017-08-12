@@ -344,7 +344,7 @@ __webpack_require__(/*! ./modules/admin */ 1);
 
 ```
 Hash: 3ef8f91b150be0e10937
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
            Asset       Size  Chunks             Chunk Names
         pageC.js  813 bytes       0  [emitted]  pageC
         pageB.js  573 bytes       1  [emitted]  pageB
@@ -425,7 +425,7 @@ chunk    {8} c-commons.js (c-commons) 0 bytes [entry] [rendered]
 
 ```
 Hash: 3ef8f91b150be0e10937
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
            Asset      Size  Chunks             Chunk Names
         pageC.js  93 bytes       0  [emitted]  pageC
         pageB.js  76 bytes       1  [emitted]  pageB

@@ -189,7 +189,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! exports provided:  */
 /*! all exports used */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -260,8 +260,8 @@ function webpackAsyncContext(req) {
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
 	return Object.keys(map);
 };
-module.exports = webpackAsyncContext;
 webpackAsyncContext.id = 4;
+module.exports = webpackAsyncContext;
 
 /***/ })
 /******/ ]);
@@ -274,7 +274,7 @@ webpackAsyncContext.id = 4;
 
 ```
 Hash: f2701c90a6d1597932b5
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  258 bytes       0  [emitted]  
 1.output.js  249 bytes       1  [emitted]  
@@ -282,32 +282,26 @@ Version: webpack 3.0.0-rc.0
   output.js    7.55 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
-    [1] ./node_modules/c/2.js 13 bytes {0} [optional] [built]
-        context element ./2 [4] ./node_modules/c lazy ^\.\/.*$ ./2
-        context element ./2.js [4] ./node_modules/c lazy ^\.\/.*$ ./2.js
+    1 module
 chunk    {1} 1.output.js 13 bytes {3} [rendered]
-    [0] ./node_modules/c/1.js 13 bytes {1} [optional] [built]
-        context element ./1 [4] ./node_modules/c lazy ^\.\/.*$ ./1
-        context element ./1.js [4] ./node_modules/c lazy ^\.\/.*$ ./1.js
+    1 module
 chunk    {2} 2.output.js 11 bytes {3} [rendered]
     > [2] ./example.js 3:0-11
-    [5] ./node_modules/b.js 11 bytes {2} [built]
-        import() b [2] ./example.js 3:0-11
+    1 module
 chunk    {3} output.js (main) 427 bytes [entry] [rendered]
     > main [2] ./example.js 
     [2] ./example.js 256 bytes {3} [built]
-    [3] ./node_modules/a.js 11 bytes {3} [built]
-        [no exports used]
-        harmony import a [2] ./example.js 1:0-18
+        [no exports]
     [4] ./node_modules/c lazy ^\.\/.*$ 160 bytes {3} [built]
         import() context lazy c [2] ./example.js 8:8-27
+     + 1 hidden module
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
 Hash: f2701c90a6d1597932b5
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
       Asset      Size  Chunks             Chunk Names
 0.output.js  37 bytes       0  [emitted]  
 1.output.js  36 bytes       1  [emitted]  
@@ -315,23 +309,17 @@ Version: webpack 3.0.0-rc.0
   output.js    1.9 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
-    [1] ./node_modules/c/2.js 13 bytes {0} [optional] [built]
-        context element ./2 [4] ./node_modules/c lazy ^\.\/.*$ ./2
-        context element ./2.js [4] ./node_modules/c lazy ^\.\/.*$ ./2.js
+    1 module
 chunk    {1} 1.output.js 13 bytes {3} [rendered]
-    [0] ./node_modules/c/1.js 13 bytes {1} [optional] [built]
-        context element ./1 [4] ./node_modules/c lazy ^\.\/.*$ ./1
-        context element ./1.js [4] ./node_modules/c lazy ^\.\/.*$ ./1.js
+    1 module
 chunk    {2} 2.output.js 11 bytes {3} [rendered]
     > [2] ./example.js 3:0-11
-    [5] ./node_modules/b.js 11 bytes {2} [built]
-        import() b [2] ./example.js 3:0-11
+    1 module
 chunk    {3} output.js (main) 427 bytes [entry] [rendered]
     > main [2] ./example.js 
     [2] ./example.js 256 bytes {3} [built]
-    [3] ./node_modules/a.js 11 bytes {3} [built]
-        [no exports used]
-        harmony import a [2] ./example.js 1:0-18
+        [no exports]
     [4] ./node_modules/c lazy ^\.\/.*$ 160 bytes {3} [built]
         import() context lazy c [2] ./example.js 8:8-27
+     + 1 hidden module
 ```

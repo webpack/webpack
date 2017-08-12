@@ -307,9 +307,9 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 
 /***/ }),
 /* 6 */
-/*!************************************************************!*\
-  !*** . (webpack)/node_modules/bundle-loader! ^\.\/.*Page$ ***!
-  \************************************************************/
+/*!***********************************************************!*\
+  !*** . (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ***!
+  \***********************************************************/
 /*! no static exports found */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
@@ -448,7 +448,7 @@ module.exports = function() {
 
 ```
 Hash: 4b00bdf84d7923f55b44
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
           Asset       Size  Chunks             Chunk Names
      0.chunk.js  267 bytes       0  [emitted]  
      1.chunk.js  273 bytes       1  [emitted]  
@@ -487,19 +487,19 @@ chunk    {4} commons.js (commons) 1.71 kB [entry] [rendered]
         cjs require ./render [4] ./bEntry.js 2:13-32
         cjs require ./render [5] ./router.js 1:13-32
     [5] ./router.js 903 bytes {4} [built]
-    [6] . (webpack)/node_modules/bundle-loader! ^\.\/.*Page$ 184 bytes {4} [built]
+    [6] . (webpack)/node_modules/bundle-loader ^\.\/.*Page$ 184 bytes {4} [built]
         cjs require context bundle-loader!. [5] ./router.js 18:18-61
     [7] (webpack)/node_modules/bundle-loader!./aPage.js 282 bytes {4} [optional] [built]
-        context element ./aPage [6] . (webpack)/node_modules/bundle-loader! ^\.\/.*Page$ ./aPage
+        context element ./aPage [6] . (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ./aPage
     [8] (webpack)/node_modules/bundle-loader!./bPage.js 282 bytes {4} [optional] [built]
-        context element ./bPage [6] . (webpack)/node_modules/bundle-loader! ^\.\/.*Page$ ./bPage
+        context element ./bPage [6] . (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ./bPage
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
 Hash: 4b00bdf84d7923f55b44
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
           Asset       Size  Chunks             Chunk Names
      0.chunk.js   83 bytes       0  [emitted]  
      1.chunk.js   82 bytes       1  [emitted]  
@@ -538,10 +538,10 @@ chunk    {4} commons.js (commons) 1.71 kB [entry] [rendered]
         cjs require ./render [4] ./bEntry.js 2:13-32
         cjs require ./render [5] ./router.js 1:13-32
     [5] ./router.js 903 bytes {4} [built]
-    [6] . (webpack)/node_modules/bundle-loader! ^\.\/.*Page$ 184 bytes {4} [built]
+    [6] . (webpack)/node_modules/bundle-loader ^\.\/.*Page$ 184 bytes {4} [built]
         cjs require context bundle-loader!. [5] ./router.js 18:18-61
     [7] (webpack)/node_modules/bundle-loader!./aPage.js 282 bytes {4} [optional] [built]
-        context element ./aPage [6] . (webpack)/node_modules/bundle-loader! ^\.\/.*Page$ ./aPage
+        context element ./aPage [6] . (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ./aPage
     [8] (webpack)/node_modules/bundle-loader!./bPage.js 282 bytes {4} [optional] [built]
-        context element ./bPage [6] . (webpack)/node_modules/bundle-loader! ^\.\/.*Page$ ./bPage
+        context element ./bPage [6] . (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ./bPage
 ```

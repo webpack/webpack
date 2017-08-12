@@ -118,7 +118,7 @@ webpackJsonp([3],[
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! exports provided:  */
 /*! all exports used */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -141,12 +141,12 @@ __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! .
 
 ```
 Hash: 49023fec553882c3285c
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
                   Asset       Size  Chunks             Chunk Names
 3db3fdaf96bbdadce99a.js  238 bytes       0  [emitted]  
 7c1138cf80dd374c367e.js  238 bytes       1  [emitted]  
     common.[chunkhash].js  732 bytes       2  [emitted]  common
-      main.[chunkhash].js  661 bytes       3  [emitted]  main
+      main.[chunkhash].js  656 bytes       3  [emitted]  main
   manifest.[chunkhash].js    5.89 kB       4  [emitted]  manifest
 Entrypoint main = manifest.[chunkhash].js common.[chunkhash].js main.[chunkhash].js
 Entrypoint common = manifest.[chunkhash].js common.[chunkhash].js
@@ -168,6 +168,7 @@ chunk    {2} common.[chunkhash].js (common) 97 bytes {4} [initial] [rendered]
 chunk    {3} main.[chunkhash].js (main) 90 bytes {2} [initial] [rendered]
     > main [1] ./example.js 
     [1] ./example.js 90 bytes {3} [built]
+        [no exports]
 chunk    {4} manifest.[chunkhash].js (manifest) 0 bytes [entry] [rendered]
 ```
 
@@ -175,7 +176,7 @@ chunk    {4} manifest.[chunkhash].js (manifest) 0 bytes [entry] [rendered]
 
 ```
 Hash: 49023fec553882c3285c
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
                   Asset       Size  Chunks             Chunk Names
 3db3fdaf96bbdadce99a.js   38 bytes       0  [emitted]  
 7c1138cf80dd374c367e.js   38 bytes       1  [emitted]  
@@ -202,5 +203,6 @@ chunk    {2} common.[chunkhash].js (common) 97 bytes {4} [initial] [rendered]
 chunk    {3} main.[chunkhash].js (main) 90 bytes {2} [initial] [rendered]
     > main [1] ./example.js 
     [1] ./example.js 90 bytes {3} [built]
+        [no exports]
 chunk    {4} manifest.[chunkhash].js (manifest) 0 bytes [entry] [rendered]
 ```

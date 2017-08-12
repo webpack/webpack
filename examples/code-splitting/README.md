@@ -279,48 +279,34 @@ webpackJsonp([0],[,,,function(n,c){},function(n,c){}]);
 
 ```
 Hash: 6a2e963878a958fd1aca
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  488 bytes       0  [emitted]  
   output.js    6.66 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes {1} [rendered]
     > [1] ./example.js 3:0-6:2
-    [3] ./node_modules/c.js 11 bytes {0} [built]
-        require.ensure item c [1] ./example.js 3:0-6:2
-    [4] ./node_modules/d.js 11 bytes {0} [built]
-        cjs require d [1] ./example.js 5:12-24
+    2 modules
 chunk    {1} output.js (main) 166 bytes [entry] [rendered]
     > main [1] ./example.js 
-    [0] ./node_modules/b.js 11 bytes {1} [built]
-        cjs require b [1] ./example.js 2:8-20
-        cjs require b [1] ./example.js 4:4-16
     [1] ./example.js 144 bytes {1} [built]
-    [2] ./node_modules/a.js 11 bytes {1} [built]
-        cjs require a [1] ./example.js 1:8-20
+     + 2 hidden modules
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
 Hash: 6a2e963878a958fd1aca
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
       Asset      Size  Chunks             Chunk Names
 0.output.js  55 bytes       0  [emitted]  
   output.js   1.45 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes {1} [rendered]
     > [1] ./example.js 3:0-6:2
-    [3] ./node_modules/c.js 11 bytes {0} [built]
-        require.ensure item c [1] ./example.js 3:0-6:2
-    [4] ./node_modules/d.js 11 bytes {0} [built]
-        cjs require d [1] ./example.js 5:12-24
+    2 modules
 chunk    {1} output.js (main) 166 bytes [entry] [rendered]
     > main [1] ./example.js 
-    [0] ./node_modules/b.js 11 bytes {1} [built]
-        cjs require b [1] ./example.js 2:8-20
-        cjs require b [1] ./example.js 4:4-16
     [1] ./example.js 144 bytes {1} [built]
-    [2] ./node_modules/a.js 11 bytes {1} [built]
-        cjs require a [1] ./example.js 1:8-20
+     + 2 hidden modules
 ```

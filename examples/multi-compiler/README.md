@@ -239,7 +239,7 @@ console.log("Running " + "mobile" + " build");
 
 ```
 Hash: a201abd2de73265dd538cceba4bc5163d755f291
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
 Child mobile:
     Hash: a201abd2de73265dd538
         Asset     Size  Chunks             Chunk Names
@@ -264,7 +264,7 @@ Child desktop:
 
 ```
 Hash: a201abd2de73265dd538cceba4bc5163d755f291
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
 Child mobile:
     Hash: a201abd2de73265dd538
         Asset       Size  Chunks             Chunk Names
