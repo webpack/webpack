@@ -166,12 +166,12 @@ module.exports = function(yargs, argv, convertOptions) {
 			options.watchOptions.aggregateTimeout = +argv["watch-aggregate-timeout"];
 		}
 
-		if(argv["watch-poll"]) {
+		if(typeof argv["watch-poll"] !== undefined) {
 			options.watchOptions = options.watchOptions || {};
-			if(typeof argv["watch-poll"] !== "boolean")
-				options.watchOptions.poll = +argv["watch-poll"];
-			else
+			if(argv["watch-poll"] === "true" || argv["watch-poll"] === "")
 				options.watchOptions.poll = true;
+			else if(!isNaN(argv["watch-poll"]))
+				options.watchOptions.poll = +argv["watch-poll"];
 		}
 
 		if(argv["watch-stdin"]) {
