@@ -15,8 +15,8 @@ Child
     Hash: b34fa5f72acbbc9cbd9a
     Time: Xms
           Asset       Size  Chunks             Chunk Names
-    0.bundle.js  831 bytes       0  [emitted]  
-      bundle.js    6.45 kB       1  [emitted]  main
+    0.bundle.js  619 bytes       0  [emitted]  
+      bundle.js    6.18 kB       1  [emitted]  main
     chunk    {0} 0.bundle.js 118 bytes {1} [rendered]
         [1] (webpack)/test/statsCases/limit-chunk-count-plugin/a.js 22 bytes {0} [built]
         [2] (webpack)/test/statsCases/limit-chunk-count-plugin/b.js 22 bytes {0} [built]
@@ -29,9 +29,9 @@ Child
     Hash: 404c277a8869b8a6a62e
     Time: Xms
           Asset       Size  Chunks             Chunk Names
-    0.bundle.js  684 bytes       0  [emitted]  
-    1.bundle.js  412 bytes       1  [emitted]  
-      bundle.js    6.44 kB       2  [emitted]  main
+    0.bundle.js  472 bytes       0  [emitted]  
+    1.bundle.js  200 bytes       1  [emitted]  
+      bundle.js    6.17 kB       2  [emitted]  main
     chunk    {0} 0.bundle.js 74 bytes {2} [rendered]
         [1] (webpack)/test/statsCases/limit-chunk-count-plugin/a.js 22 bytes {0} [built]
         [3] (webpack)/test/statsCases/limit-chunk-count-plugin/c.js 30 bytes {0} [built]
@@ -45,10 +45,10 @@ Child
     Hash: 5c32ec6fc2ff40a3b587
     Time: Xms
           Asset       Size  Chunks             Chunk Names
-    0.bundle.js  412 bytes       0  [emitted]  
-    1.bundle.js  434 bytes       1  [emitted]  
-    2.bundle.js  513 bytes       2  [emitted]  
-      bundle.js    6.43 kB       3  [emitted]  main
+    0.bundle.js  200 bytes       0  [emitted]  
+    1.bundle.js  222 bytes       1  [emitted]  
+    2.bundle.js  301 bytes       2  [emitted]  
+      bundle.js    6.16 kB       3  [emitted]  main
     chunk    {0} 0.bundle.js 44 bytes {2} {3} [rendered]
         [2] (webpack)/test/statsCases/limit-chunk-count-plugin/b.js 22 bytes {0} [built]
         [5] (webpack)/test/statsCases/limit-chunk-count-plugin/e.js 22 bytes {0} [built]
