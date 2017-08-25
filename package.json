@@ -29,7 +29,7 @@
   "license": "MIT",
   "optionalDependencies": {
     "node-libs-browser": "^2.0.0"
-  }
+  },
   "devDependencies": {
     "beautify-lint": "^1.0.3",
     "benchmark": "^2.1.1",
