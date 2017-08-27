@@ -10,19 +10,25 @@ const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 const Compiler = require("../lib/Compiler");
 
 describe("Compiler", () => {
-	function compile(entry, options, callback) {
+	function setupOptions(entry, options) {
 		const noOutputPath = !options.output || !options.output.path;
 		new WebpackOptionsDefaulter().process(options);
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");
 		if(noOutputPath) options.output.path = "/";
 		options.output.pathinfo = true;
+		return options;
+	}
+
+	function compile(entry, options, callback, env, argv) {
+		setupOptions(entry, options);
+
 		const logs = {
 			mkdirp: [],
 			writeFile: [],
 		};
 
-		const c = webpack(options);
+		const c = webpack(options, null, env, argv);
 		const files = {};
 		c.outputFileSystem = {
 			join: function() {
@@ -58,6 +64,27 @@ describe("Compiler", () => {
 			callback(stats, files, compilation);
 		});
 	}
+
+	it("should accept options as a function", (done) => {
+		const env = {};
+		const argv = {};
+		compile("./c", (_env, _argv) => {
+			should.strictEqual(env, _env);
+			should.strictEqual(argv, _argv);
+			return setupOptions("./c", {
+				output: {
+					path: "/what",
+					filename: "the/hell.js",
+				}
+			});
+		}, (stats, files) => {
+			stats.logs.mkdirp.should.eql([
+				"/what",
+				"/what/the",
+			]);
+			done();
+		}, env, argv);
+	});
 
 	it("should compile a single file to deep output", (done) => {
 		compile("./c", {
