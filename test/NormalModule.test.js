@@ -81,6 +81,22 @@ describe("NormalModule", function() {
 				}).should.eql("../userRequest!../other/userRequest!../thing/is/off/here");
 			});
 		});
+		describe("given a userRequest containing query parameters", function() {
+			it("ignores paths in query parameters", function() {
+				userRequest = "some/context/loader?query=foo\\bar&otherPath=testpath/other";
+				normalModule = new NormalModule(
+					request,
+					userRequest,
+					rawRequest,
+					loaders,
+					resource,
+					parser
+				);
+				normalModule.libIdent({
+					context: "some/context",
+				}).should.eql("./loader?query=foo\\bar&otherPath=testpath/other");
+			});
+		});
 	});
 
 	describe("#nameForCondition", function() {
