@@ -49,7 +49,7 @@ yarn add webpack --dev
 
 <h2 align="center">Introduction</h2>
 
-> The README reflects webpack v2.x, webpack v1.x [documentation can be found here](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top).
+> This README reflects Webpack v2.x and v3.x. The Webpack v1.x [documentation can be found here](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top).
 
 webpack is a bundler for modules. The main purpose is to bundle JavaScript
 files for usage in a browser, yet it is also capable of transforming, bundling,
@@ -534,7 +534,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 <h2 align="center">Thanks to</h2>
 <p align="center">(In chronological order)</p>
 
-* @google for [Google Web Toolkit (GWT)](https://code.google.com/archive/p/google-web-toolkit), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
+* @google for [Google Web Toolkit (GWT)](http://www.gwtproject.org/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
 * @medikoo for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webmake. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
 * @substack for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
 * @jrburke for [require.js](http://requirejs.org/), which is a similar project and source for many ideas.

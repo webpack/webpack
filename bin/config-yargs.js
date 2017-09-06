@@ -172,7 +172,7 @@ module.exports = function(yargs) {
 				requiresArg: true
 			},
 			"watch-poll": {
-				type: "boolean",
+				type: "string",
 				describe: "The polling interval for watching (also enable polling)",
 				group: ADVANCED_GROUP
 			},
