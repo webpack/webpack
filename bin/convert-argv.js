@@ -537,7 +537,7 @@ module.exports = function(yargs, argv, convertOptions) {
 				if(i < 0 || (j >= 0 && j < i)) {
 					var resolved = path.resolve(content);
 					if(fs.existsSync(resolved)) {
-						addTo("main", resolved);
+						addTo("main", `${resolved}${fs.statSync(resolved).isDirectory() ? path.sep : ""}`);
 					} else {
 						addTo("main", content);
 					}
