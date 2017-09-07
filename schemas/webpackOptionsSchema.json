@@ -78,22 +78,26 @@
     "external": {
       "anyOf": [
         {
+          "type": "string"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "array"
+        }
+      ],
+      "description": "Represents a replacement object for an external modules (configured by `externals`)"
+    },
+    "externals": {
+      "anyOf": [
+        {
           "description": "An exact matched dependency becomes external. The same string is used as external dependency.",
           "type": "string"
         },
         {
           "additionalProperties": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "object"
-              },
-              {
-                "type": "boolean"
-              }
-            ]
+            "$ref": "#/definitions/external"
           },
           "description": "If an dependency matches exactly a property of the object, the property value is used as dependency.",
           "type": "object"
@@ -108,7 +112,17 @@
         },
         {
           "items": {
-            "$ref": "#/definitions/external"
+            "anyOf": [
+              {
+                "$ref": "#/definitions/external"
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/definitions/external"
+                }
+              }
+            ]
           },
           "type": "array"
         }
@@ -823,8 +837,15 @@
       "$ref": "#/definitions/entry"
     },
     "externals": {
-      "type": "object",
-      "additionalProperties": {"$ref": "#/definitions/external"}
+      "anyOf": [
+        {
+          "$ref": "#/definitions/external"
+        },
+        {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/definitions/external"}
+        }
+      ]
     },
     "loader": {
       "description": "Custom values available in the loader context.",
