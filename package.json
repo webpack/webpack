@@ -91,13 +91,14 @@
     "schemas/"
   ],
   "scripts": {
-    "test": "jest",
+    "jest": "node --max-old-space-size=4096 --harmony node_modules/jest/bin/jest",
+    "test": "npm run jest",
     "travis:test": "npm run cover:min",
     "travis:lint": "npm run lint-files && npm run nsp",
     "travis:benchmark": "npm run benchmark",
-    "appveyor:test": "jest",
+    "appveyor:test": "node --max-old-space-size=4096 --harmony node_modules\\jest\\bin\\jest",
     "appveyor:benchmark": "npm run benchmark",
-    "circleci:test": "jest",
+    "circleci:test": "npm run jest",
     "circleci:lint": "npm run lint-files && npm run nsp",
     "build:examples": "cd examples && node buildAll.js",
     "pretest": "npm run lint-files",
@@ -106,9 +107,9 @@
     "fix": "npm run lint -- --fix",
     "beautify-lint": "beautify-lint \"lib/**/*.js\" \"hot/**/*.js\" \"bin/**/*.js\" \"benchmark/*.js\" \"test/*.js\"",
     "nsp": "nsp check --output summary",
-    "benchmark": "jest --testMatch \\<rootDir\\>/test/*.benchmark.js",
-    "cover": "jest --coverage",
-    "cover:min": "jest --coverage --coverageRepoters text-summary",
-    "publish-patch": "npm run lint && npm run beautify-lint && jest && npm version patch && git push && git push --tags && npm publish"
+    "benchmark": "npm run jest --  --testMatch \\<rootDir\\>/test/*.benchmark.js",
+    "cover": "npm run jest --  --coverage",
+    "cover:min": "npm run jest --  --coverage --coverageRepoters text-summary",
+    "publish-patch": "npm run lint && npm run beautify-lint && npm run jest && npm version patch && git push && git push --tags && npm publish"
   }
 }
