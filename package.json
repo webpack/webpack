@@ -13,7 +13,7 @@
     "escope": "^3.6.0",
     "interpret": "^1.0.0",
     "jest": "^21.0.1",
-    "jest-runner-mocha": "^0.1.1",
+    "jest-runner-mocha": "0.2.0",
     "json-loader": "^0.5.4",
     "json5": "^0.5.1",
     "loader-runner": "^2.3.0",
@@ -91,13 +91,13 @@
     "schemas/"
   ],
   "scripts": {
-    "test": "mocha test/*.test.js --max-old-space-size=4096 --harmony --check-leaks",
+    "test": "jest",
     "travis:test": "npm run cover:min",
     "travis:lint": "npm run lint-files && npm run nsp",
     "travis:benchmark": "npm run benchmark",
-    "appveyor:test": "node node_modules\\mocha\\bin\\mocha --max-old-space-size=4096 --harmony test/*.test.js",
+    "appveyor:test": "jest",
     "appveyor:benchmark": "npm run benchmark",
-    "circleci:test": "node node_modules/mocha/bin/mocha --max-old-space-size=4096 --harmony test/*.test.js",
+    "circleci:test": "jest",
     "circleci:lint": "npm run lint-files && npm run nsp",
     "build:examples": "cd examples && node buildAll.js",
     "pretest": "npm run lint-files",
@@ -106,9 +106,9 @@
     "fix": "npm run lint -- --fix",
     "beautify-lint": "beautify-lint \"lib/**/*.js\" \"hot/**/*.js\" \"bin/**/*.js\" \"benchmark/*.js\" \"test/*.js\"",
     "nsp": "nsp check --output summary",
-    "benchmark": "mocha --max-old-space-size=4096 --harmony test/*.benchmark.js -R spec",
-    "cover": "node --max-old-space-size=4096 --harmony ./node_modules/istanbul/lib/cli.js cover -x '**/*.runtime.js' node_modules/mocha/bin/_mocha -- test/*.test.js",
-    "cover:min": "node --max-old-space-size=4096 --harmony ./node_modules/.bin/istanbul cover -x '**/*.runtime.js' --report lcovonly node_modules/mocha/bin/_mocha -- test/*.test.js",
-    "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
+    "benchmark": "jest --testMatch \\<rootDir\\>/test/*.benchmark.js",
+    "cover": "jest --coverage",
+    "cover:min": "jest --coverage --coverageRepoters text-summary",
+    "publish-patch": "npm run lint && npm run beautify-lint && jest && npm version patch && git push && git push --tags && npm publish"
   }
 }

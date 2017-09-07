@@ -360,7 +360,7 @@ babel-messages@^6.23.0:
   dependencies:
     babel-runtime "^6.22.0"
 
-babel-plugin-istanbul@^4.0.0:
+babel-plugin-istanbul@4.1.4, babel-plugin-istanbul@^4.0.0:
   version "4.1.4"
   resolved "https://registry.yarnpkg.com/babel-plugin-istanbul/-/babel-plugin-istanbul-4.1.4.tgz#18dde84bf3ce329fddf3f4103fae921456d8e587"
   dependencies:
@@ -378,7 +378,7 @@ babel-preset-jest@^21.0.0:
   dependencies:
     babel-plugin-jest-hoist "^21.0.0"
 
-babel-register@^6.26.0:
+babel-register@6.26.0, babel-register@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-register/-/babel-register-6.26.0.tgz#6ed021173e2fcb486d7acb45c6009a856f647071"
   dependencies:
@@ -2710,11 +2710,14 @@ jest-resolve@^21.0.0:
     chalk "^2.0.1"
     is-builtin-module "^1.0.0"
 
-jest-runner-mocha@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/jest-runner-mocha/-/jest-runner-mocha-0.1.1.tgz#235635c31b92aeefd0c172b9f2abfd7173591e3d"
+jest-runner-mocha@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/jest-runner-mocha/-/jest-runner-mocha-0.2.0.tgz#f9f736c301a2c24f33d4f91968c54ab1d7cba5a5"
   dependencies:
+    babel-plugin-istanbul "4.1.4"
+    babel-register "6.26.0"
     lodash "4.17.4"
+    minimatch "3.0.4"
     mocha "3.5.0"
     pify "3.0.0"
     throat "4.1.0"
@@ -3252,7 +3255,7 @@ minimalistic-crypto-utils@^1.0.0, minimalistic-crypto-utils@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/minimalistic-crypto-utils/-/minimalistic-crypto-utils-1.0.1.tgz#f6c00c1c0b082246e5c4d99dfb8c7c083b2b582a"
 
-"minimatch@2 || 3", minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.3, minimatch@^3.0.4:
+"minimatch@2 || 3", minimatch@3.0.4, minimatch@^3.0.0, minimatch@^3.0.2, minimatch@^3.0.3, minimatch@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
   dependencies:
