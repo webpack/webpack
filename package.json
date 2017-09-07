@@ -12,6 +12,8 @@
     "enhanced-resolve": "^3.4.0",
     "escope": "^3.6.0",
     "interpret": "^1.0.0",
+    "jest": "^21.0.1",
+    "jest-runner-mocha": "^0.1.1",
     "json-loader": "^0.5.4",
     "json5": "^0.5.1",
     "loader-runner": "^2.3.0",
