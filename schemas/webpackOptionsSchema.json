@@ -75,7 +75,7 @@
         }
       ]
     },
-    "externals": {
+    "external": {
       "anyOf": [
         {
           "description": "An exact matched dependency becomes external. The same string is used as external dependency.",
@@ -108,7 +108,7 @@
         },
         {
           "items": {
-            "$ref": "#/definitions/externals"
+            "$ref": "#/definitions/external"
           },
           "type": "array"
         }
@@ -823,7 +823,8 @@
       "$ref": "#/definitions/entry"
     },
     "externals": {
-      "$ref": "#/definitions/externals"
+      "type": "object",
+      "additionalProperties": {"$ref": "#/definitions/external"}
     },
     "loader": {
       "description": "Custom values available in the loader context.",
