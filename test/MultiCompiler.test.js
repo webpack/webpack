@@ -397,6 +397,57 @@ describe("MultiCompiler", () => {
 				env.callback.callCount.should.be.exactly(1);
 			});
 		});
+
+		describe("with missing compiler dependencies", () => {
+			beforeEach(() => {
+				setupTwoCompilerEnvironment(env, {
+					name: "compiler1",
+					dependencies: ["compiler2"]
+				}, {
+					name: "compiler3"
+				});
+				env.callback = sinon.spy();
+				env.options = [{
+					testWatchOptions: true
+				}, {
+					testWatchOptions2: true
+				}];
+				env.result = env.myMultiCompiler.watch(env.options, env.callback);
+			});
+
+			it("should call the callback with an error message", () => {
+				env.compiler1WatchCallbacks.length.should.be.exactly(0);
+				env.compiler2WatchCallbacks.length.should.be.exactly(0);
+				env.callback.callCount.should.be.exactly(1);
+				env.callback.getCall(0).args[0].should.match(/`compiler2` not found/);
+			});
+		});
+
+		describe("with circular compiler dependencies", () => {
+			beforeEach(() => {
+				setupTwoCompilerEnvironment(env, {
+					name: "compiler1",
+					dependencies: ["compiler2"]
+				}, {
+					name: "compiler2",
+					dependencies: ["compiler1"]
+				});
+				env.callback = sinon.spy();
+				env.options = [{
+					testWatchOptions: true
+				}, {
+					testWatchOptions2: true
+				}];
+				env.result = env.myMultiCompiler.watch(env.options, env.callback);
+			});
+
+			it("should call the callback with an error message", () => {
+				env.compiler1WatchCallbacks.length.should.be.exactly(0);
+				env.compiler2WatchCallbacks.length.should.be.exactly(0);
+				env.callback.callCount.should.be.exactly(1);
+				env.callback.getCall(0).args[0].should.equal("Circular dependency found in compiler dependencies.");
+			});
+		});
 	});
 
 	describe("run", () => {
@@ -487,6 +538,47 @@ describe("MultiCompiler", () => {
 					hash: "foo"
 				});
 				env.callback.callCount.should.be.exactly(1);
+			});
+		});
+
+		describe("with missing compiler dependencies", () => {
+			beforeEach(() => {
+				setupTwoCompilerEnvironment(env, {
+					name: "compiler1",
+					dependencies: ["compiler2"]
+				}, {
+					name: "compiler3"
+				});
+				env.callback = sinon.spy();
+				env.myMultiCompiler.run(env.callback);
+			});
+
+			it("should call the callback with an error message", () => {
+				env.compiler1RunCallbacks.length.should.be.exactly(0);
+				env.compiler2RunCallbacks.length.should.be.exactly(0);
+				env.callback.callCount.should.be.exactly(1);
+				env.callback.getCall(0).args[0].should.match(/`compiler2` not found/);
+			});
+		});
+
+		describe("with circular compiler dependencies", () => {
+			beforeEach(() => {
+				setupTwoCompilerEnvironment(env, {
+					name: "compiler1",
+					dependencies: ["compiler2"]
+				}, {
+					name: "compiler2",
+					dependencies: ["compiler1"]
+				});
+				env.callback = sinon.spy();
+				env.myMultiCompiler.run(env.callback);
+			});
+
+			it("should call the callback with an error message", () => {
+				env.compiler1RunCallbacks.length.should.be.exactly(0);
+				env.compiler2RunCallbacks.length.should.be.exactly(0);
+				env.callback.callCount.should.be.exactly(1);
+				env.callback.getCall(0).args[0].should.equal("Circular dependency found in compiler dependencies.");
 			});
 		});
 	});
