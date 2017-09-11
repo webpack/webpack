@@ -38,13 +38,13 @@
 Install with npm:
 
 ```bash
-npm install --save-dev webpack
+>_ npm install --save-dev webpack
 ```
 
 Install with yarn:
 
 ```bash
-yarn add webpack --dev
+>_  yarn add webpack --dev
 ```
 
 <h2 align="center">Introduction</h2>
