@@ -419,7 +419,8 @@ describe("MultiCompiler", () => {
 				env.compiler1WatchCallbacks.length.should.be.exactly(0);
 				env.compiler2WatchCallbacks.length.should.be.exactly(0);
 				env.callback.callCount.should.be.exactly(1);
-				env.callback.getCall(0).args[0].should.match(/`compiler2` not found/);
+				env.callback.getCall(0).args[0].should.be.Error();
+				should(env.callback.getCall(0).args[1]).be.undefined();
 			});
 		});
 
@@ -445,7 +446,8 @@ describe("MultiCompiler", () => {
 				env.compiler1WatchCallbacks.length.should.be.exactly(0);
 				env.compiler2WatchCallbacks.length.should.be.exactly(0);
 				env.callback.callCount.should.be.exactly(1);
-				env.callback.getCall(0).args[0].should.equal("Circular dependency found in compiler dependencies.");
+				env.callback.getCall(0).args[0].should.be.Error();
+				should(env.callback.getCall(0).args[1]).be.undefined();
 			});
 		});
 	});
@@ -557,7 +559,8 @@ describe("MultiCompiler", () => {
 				env.compiler1RunCallbacks.length.should.be.exactly(0);
 				env.compiler2RunCallbacks.length.should.be.exactly(0);
 				env.callback.callCount.should.be.exactly(1);
-				env.callback.getCall(0).args[0].should.match(/`compiler2` not found/);
+				env.callback.getCall(0).args[0].should.be.Error();
+				should(env.callback.getCall(0).args[1]).be.undefined();
 			});
 		});
 
@@ -578,7 +581,8 @@ describe("MultiCompiler", () => {
 				env.compiler1RunCallbacks.length.should.be.exactly(0);
 				env.compiler2RunCallbacks.length.should.be.exactly(0);
 				env.callback.callCount.should.be.exactly(1);
-				env.callback.getCall(0).args[0].should.equal("Circular dependency found in compiler dependencies.");
+				env.callback.getCall(0).args[0].should.be.Error();
+				should(env.callback.getCall(0).args[1]).be.undefined();
 			});
 		});
 	});
