@@ -10,6 +10,7 @@ const checkArrayExpectation = require("./checkArrayExpectation");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
+const prepareOptions = require("../lib/prepareOptions");
 
 describe("ConfigTestCases", () => {
 	const casesPath = path.join(__dirname, "configCases");
@@ -39,7 +40,7 @@ describe("ConfigTestCases", () => {
 					this.timeout(30000);
 					const testDirectory = path.join(casesPath, category.name, testName);
 					const outputDirectory = path.join(__dirname, "js", "config", category.name, testName);
-					const options = require(path.join(testDirectory, "webpack.config.js"));
+					const options = prepareOptions(require(path.join(testDirectory, "webpack.config.js")));
 					const optionsArr = [].concat(options);
 					optionsArr.forEach((options, idx) => {
 						if(!options.context) options.context = testDirectory;

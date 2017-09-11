@@ -282,7 +282,7 @@ module.exports = function() {
 
 ```
 Hash: f67ab883501eec17d2fb
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
       Asset     Size  Chunks             Chunk Names
 0.output.js  1.85 kB       0  [emitted]  
   output.js   6.3 kB       1  [emitted]  main
@@ -292,14 +292,14 @@ chunk    {0} 0.output.js 463 bytes {1} [rendered]
     [1] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
         cjs require context ../require.context/templates [0] ./example.js 3:11-64
     [2] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a [1] ../require.context/templates ^\.\/.*$ ./a
         context element ./a.js [1] ../require.context/templates ^\.\/.*$ ./a.js
+        context element ./a [1] ../require.context/templates ^\.\/.*$ ./a
     [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
         context element ./b.js [1] ../require.context/templates ^\.\/.*$ ./b.js
+        context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
     [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
         context element ./c.js [1] ../require.context/templates ^\.\/.*$ ./c.js
+        context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
 chunk    {1} output.js (main) 276 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 276 bytes {1} [built]
@@ -309,7 +309,7 @@ chunk    {1} output.js (main) 276 bytes [entry] [rendered]
 
 ```
 Hash: f67ab883501eec17d2fb
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  544 bytes       0  [emitted]  
   output.js    1.49 kB       1  [emitted]  main
@@ -319,14 +319,14 @@ chunk    {0} 0.output.js 463 bytes {1} [rendered]
     [1] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
         cjs require context ../require.context/templates [0] ./example.js 3:11-64
     [2] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a [1] ../require.context/templates ^\.\/.*$ ./a
         context element ./a.js [1] ../require.context/templates ^\.\/.*$ ./a.js
+        context element ./a [1] ../require.context/templates ^\.\/.*$ ./a
     [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
         context element ./b.js [1] ../require.context/templates ^\.\/.*$ ./b.js
+        context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
     [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
         context element ./c.js [1] ../require.context/templates ^\.\/.*$ ./c.js
+        context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
 chunk    {1} output.js (main) 276 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 276 bytes {1} [built]

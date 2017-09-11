@@ -7,9 +7,9 @@ module.exports = {
 					return {
 						loader: "./loader",
 						options: {
-							resource: data.resource.replace(/^.*[\\\/]/g, ""),
+							resource: data.resource.replace(/^.*[\\/]/g, ""),
 							resourceQuery: data.resourceQuery,
-							issuer: data.issuer.replace(/^.*[\\\/]/g, ""),
+							issuer: data.issuer.replace(/^.*[\\/]/g, ""),
 						}
 					};
 				}

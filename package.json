@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "3.0.0-rc.1",
+  "version": "3.5.6",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "dependencies": {
@@ -9,7 +9,7 @@
     "ajv": "^5.1.5",
     "ajv-keywords": "^2.0.0",
     "async": "^2.1.2",
-    "enhanced-resolve": "^3.0.0",
+    "enhanced-resolve": "^3.4.0",
     "escope": "^3.6.0",
     "interpret": "^1.0.0",
     "json-loader": "^0.5.4",
@@ -20,12 +20,12 @@
     "mkdirp": "~0.5.0",
     "node-libs-browser": "^2.0.0",
     "source-map": "^0.5.3",
-    "supports-color": "^3.1.0",
-    "tapable": "~0.2.5",
-    "uglify-js": "^2.8.27",
-    "watchpack": "^1.3.1",
+    "supports-color": "^4.2.1",
+    "tapable": "^0.2.7",
+    "uglifyjs-webpack-plugin": "^0.4.6",
+    "watchpack": "^1.4.0",
     "webpack-sources": "^1.0.1",
-    "yargs": "^6.0.0"
+    "yargs": "^8.0.2"
   },
   "license": "MIT",
   "devDependencies": {
@@ -39,12 +39,12 @@
     "coveralls": "^2.11.2",
     "css-loader": "^0.28.3",
     "es6-promise-polyfill": "^1.1.1",
-    "eslint": "3.12.2",
-    "eslint-plugin-node": "^3.0.5",
+    "eslint": "^4.3.0",
+    "eslint-plugin-node": "^5.1.1",
     "express": "~4.13.1",
-    "extract-text-webpack-plugin": "^2.0.0-beta",
-    "file-loader": "^0.11.1",
-    "i18n-webpack-plugin": "^0.3.0",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "file-loader": "^0.11.2",
+    "i18n-webpack-plugin": "^1.0.0",
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
@@ -101,11 +101,12 @@
     "pretest": "npm run lint-files",
     "lint-files": "npm run lint && npm run beautify-lint",
     "lint": "eslint lib bin hot buildin \"test/**/webpack.config.js\" \"test/binCases/**/test.js\" \"examples/**/webpack.config.js\"",
+    "fix": "npm run lint -- --fix",
     "beautify-lint": "beautify-lint \"lib/**/*.js\" \"hot/**/*.js\" \"bin/**/*.js\" \"benchmark/*.js\" \"test/*.js\"",
     "nsp": "nsp check --output summary",
     "benchmark": "mocha --max-old-space-size=4096 --harmony test/*.benchmark.js -R spec",
     "cover": "node --max-old-space-size=4096 --harmony ./node_modules/istanbul/lib/cli.js cover -x '**/*.runtime.js' node_modules/mocha/bin/_mocha -- test/*.test.js",
-    "cover:min": "node --max-old-space-size=4096 --harmony ./node_modules/.bin/istanbul cover -x '**/*.runtime.js' --report lcovonly node_modules/mocha/bin/_mocha -- test/*.test.js",
+    "cover:min": "node --max-old-space-size=4096 --harmony ./node_modules/istanbul/lib/cli.js cover -x '**/*.runtime.js' --report lcovonly node_modules/mocha/bin/_mocha -- test/*.test.js",
     "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
   }
 }

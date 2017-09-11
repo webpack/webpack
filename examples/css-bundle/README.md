@@ -153,7 +153,7 @@ body {
 
 ```
 Hash: d3955970c7b0655c299a
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
                            output.js     2.9 kB       0  [emitted]  main
@@ -164,24 +164,23 @@ chunk    {0} output.js, style.css (main) 64 bytes [entry] [rendered]
     [0] ./example.js 23 bytes {0} [built]
     [1] ./style.css 41 bytes {0} [built]
         cjs require ./style.css [0] ./example.js 1:0-22
-Child extract-text-webpack-plugin:
+Child extract-text-webpack-plugin ../../node_modules/extract-text-webpack-plugin/dist ../../node_modules/css-loader/index.js!style.css:
                                    Asset       Size  Chunks             Chunk Names
     ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
     Entrypoint undefined = extract-text-webpack-plugin-output-filename
     chunk    {0} extract-text-webpack-plugin-output-filename 2.57 kB [entry] [rendered]
         > [0] (webpack)/node_modules/css-loader!./style.css 
         [0] (webpack)/node_modules/css-loader!./style.css 231 bytes {0} [built]
-        [1] (webpack)/node_modules/css-loader/lib/css-base.js 2.26 kB {0} [built]
-            cjs require ../../node_modules/css-loader/lib/css-base.js [0] (webpack)/node_modules/css-loader!./style.css 1:27-83
         [2] ./image.png 82 bytes {0} [built]
             cjs require ./image.png [0] (webpack)/node_modules/css-loader!./style.css 6:58-80
+         + 1 hidden module
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
 Hash: 7e35402b768b90e83df1
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
                            output.js  504 bytes       0  [emitted]  main
@@ -192,15 +191,14 @@ chunk    {0} output.js, style.css (main) 64 bytes [entry] [rendered]
     [0] ./example.js 23 bytes {0} [built]
     [1] ./style.css 41 bytes {0} [built]
         cjs require ./style.css [0] ./example.js 1:0-22
-Child extract-text-webpack-plugin:
+Child extract-text-webpack-plugin ../../node_modules/extract-text-webpack-plugin/dist ../../node_modules/css-loader/index.js!style.css:
                                    Asset       Size  Chunks             Chunk Names
     ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
     Entrypoint undefined = extract-text-webpack-plugin-output-filename
     chunk    {0} extract-text-webpack-plugin-output-filename 2.56 kB [entry] [rendered]
         > [0] (webpack)/node_modules/css-loader!./style.css 
         [0] (webpack)/node_modules/css-loader!./style.css 218 bytes {0} [built]
-        [1] (webpack)/node_modules/css-loader/lib/css-base.js 2.26 kB {0} [built]
-            cjs require ../../node_modules/css-loader/lib/css-base.js [0] (webpack)/node_modules/css-loader!./style.css 1:27-83
         [2] ./image.png 82 bytes {0} [built]
             cjs require ./image.png [0] (webpack)/node_modules/css-loader!./style.css 6:50-72
+         + 1 hidden module
 ```

@@ -116,6 +116,10 @@ describe("WatchTestCases", () => {
 						const watching = compiler.watch({
 							aggregateTimeout: 1000
 						}, (err, stats) => {
+							if(err)
+								return done(err);
+							if(!stats)
+								return done(new Error("No stats reported from Compiler"));
 							if(stats.hash === lastHash)
 								return;
 							lastHash = stats.hash;
@@ -129,8 +133,8 @@ describe("WatchTestCases", () => {
 							const jsonStats = stats.toJson({
 								errorDetails: true
 							});
-							if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
-							if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
+							if(checkArrayExpectation(path.join(testDirectory, run.name), jsonStats, "error", "Error", done)) return;
+							if(checkArrayExpectation(path.join(testDirectory, run.name), jsonStats, "warning", "Warning", done)) return;
 							let exportedTests = 0;
 
 							function _it(title, fn) {

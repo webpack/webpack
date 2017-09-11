@@ -1,4 +1,12 @@
+<div align="center">
+  <a href="https://github.com/webpack/webpack">
+    <img width="200" heigth="200" src="https://webpack.js.org/assets/icon-square-big.svg">
+  </a>
+  <br>
+  <br>
+
 [![npm][npm]][npm-url]
+
 [![node][node]][node-url]
 [![deps][deps]][deps-url]
 [![tests][tests]][tests-url]
@@ -6,11 +14,6 @@
 [![coverage][cover]][cover-url]
 [![licenses][licenses]][licenses-url]
 
-<div align="center">
-  <a href="https://github.com/webpack/webpack">
-    <img width="200" heigth="200" src="https://webpack.js.org/assets/icon-square-big.svg">
-  </a>
-  <br>
   <br>
 	<a href="https://npmjs.com/package/webpack">
 		<img src="https://img.shields.io/npm/dm/webpack.svg">
@@ -32,13 +35,21 @@
 
 <h2 align="center">Install</h2>
 
+Install with npm:
+
 ```bash
 npm install --save-dev webpack
 ```
 
+Install with yarn:
+
+```bash
+yarn add webpack --dev
+```
+
 <h2 align="center">Introduction</h2>
 
-> The README reflects webpack v2.x, webpack v1.x [documentation can be found here](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top).
+> This README reflects Webpack v2.x and v3.x. The Webpack v1.x [documentation can be found here](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top).
 
 webpack is a bundler for modules. The main purpose is to bundle JavaScript
 files for usage in a browser, yet it is also capable of transforming, bundling,
@@ -69,7 +80,6 @@ within webpack itself use this plugin interface. This makes webpack very
 |:--:|:----:|:----------|
 |[common-chunks-webpack-plugin][common]|![common-npm]|Generates chunks of common modules shared between entry points and splits them into separate  bundles (e.g vendor.bundle.js && app.bundle.js)|
 |[extract-text-webpack-plugin][extract]|![extract-npm]|Extracts Text (CSS) from your bundles into a separate file (app.bundle.css)|
-|[component-webpack-plugin][component]|![component-npm]|Use components with webpack|
 |[compression-webpack-plugin][compression]|![compression-npm]|Prepare compressed versions of assets to serve them with Content-Encoding|
 |[i18n-webpack-plugin][i18n]|![i18n-npm]|Adds i18n support to your bundles|
 |[html-webpack-plugin][html-plugin]|![html-plugin-npm]| Simplifies creation of HTML files (`index.html`) to serve your bundles|
@@ -121,7 +131,7 @@ or are automatically applied via regex from your webpack configuration.
 |Name|Status|Description|
 |:--:|:----:|:----------|
 |<a href="https://github.com/webpack/json-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/json.svg"></a>|![json-npm]|Loads a JSON file (included by default)|
-|<a href="https://github.com/webpack/json5-loader"><img width="48" height="48" src="https://cdn.rawgit.com/json5/json5-logo/master/json5-logo.svg"></a>|![json5-npm]|Loads and transpiles a JSON 5 file|
+|<a href="https://github.com/webpack/json5-loader"><img width="48" height="10.656" src="https://cdn.rawgit.com/json5/json5-logo/master/json5-logo.svg"></a>|![json5-npm]|Loads and transpiles a JSON 5 file|
 |<a href="https://github.com/awnist/cson-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>|![cson-npm]|Loads and transpiles a CSON file|
 
 
@@ -184,19 +194,17 @@ or are automatically applied via regex from your webpack configuration.
 [stylus-npm]: https://img.shields.io/npm/v/stylus-loader.svg
 [postcss-npm]: https://img.shields.io/npm/v/postcss-loader.svg
 
-#### Linting && Testing
+#### Linting & Testing
 
 |Name|Status|Description|
 |:--:|:----:|:----------|
 |<a href="https://github.com/webpack/mocha-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/mocha.svg"></a>|![mocha-npm]|Tests with mocha (Browser/NodeJS)|
 |<a href="https://github.com/MoOx/eslint-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/eslint.svg"></a>|![eslint-npm]|PreLoader for linting code using ESLint|
-|<a href="https://github.com/webpack/jslint-loader"><img width="48" height="48" src="http://jshint.com/res/jshint-dark.png"></a>|![jshint-npm]|PreLoader for linting code using JSHint|
-|<a href="https://github.com/unindented/jscs-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/jscs.svg"></a>|![jscs-npm]|PreLoader for code style checking using JSCS|
-
+|<a href="https://github.com/webpack-contrib/jshint-loader"><img width="48" height="20.64" src="http://jshint.com/res/jshint-dark.png"></a>|![jshint-npm]|PreLoader for linting code using JSHint|
 
 [mocha-npm]: https://img.shields.io/npm/v/mocha-loader.svg
 [eslint-npm]: https://img.shields.io/npm/v/eslint-loader.svg
-[jshint-npm]: https://img.shields.io/npm/v/jslint-loader.svg
+[jshint-npm]: https://img.shields.io/npm/v/jshint-loader.svg
 [jscs-npm]: https://img.shields.io/npm/v/jscs-loader.svg
 
 #### Frameworks
@@ -241,20 +249,44 @@ friendly** by using hashes.
 
 <h2 align="center">Contributing</h2>
 
-Most of the time, if webpack is not working correctly for you it is a simple configuration issue.
+**We want contributing to webpack to be fun, enjoyable, and educational for anyone, and everyone.** We have a [vibrant ecosystem](https://medium.com/webpack/contributors-guide/home) that spans beyond this single repo. We welcome you to check out any of the repositories in [our organization](http://github.com/webpack) or [webpack-contrib organization](http://github.com/webpack-contrib) which houses all of our loaders and plugins.
 
-If you are still having difficulty after looking over your configuration carefully, please post
-a question to [StackOverflow with the webpack tag](https://stackoverflow.com/tags/webpack). Questions
-that include your webpack.config.js and relevant files are more likely to receive responses.
+Contributions go far beyond pull requests and commits. Although we love giving you the opportunity to put your stamp on webpack, we also are thrilled to receive a variety of other contributions including:
 
-If you have discovered a bug or have a feature suggestion, feel free to create an issue on Github.
+* [Documentation](https://github.com/webpack/webpack.js.org) updates, enhancements, designs, or bugfixes
+* Spelling or grammar fixes
+* README.md corrections or redesigns
+* Adding unit, or functional tests
+* Triaging GitHub issues -- especially determining whether an issue still persists or is reproducible.
+* [Searching #webpack on twitter](https://twitter.com/search?q=webpack) and helping someone else who needs help
+* Teaching others how to contribute to one of the many webpack repo's!
+* [Blogging, speaking about, or creating tutorials](https://github.com/webpack-contrib/awesome-webpack) about one of webpack's many features. 
+* Helping others in our webpack [gitter channel](https://gitter.im/webpack/webpack).
 
-If you create a loader or plugin, please consider open sourcing it, putting it
-on npm and following the `x-loader`, `x-webpack-plugin` convention.
+If you are worried or don't know where to start, you can **always** reach out to [Sean Larkin (@TheLarkInn) on Twitter](https://twitter.com/thelarkinn) or simply submit an issue and a maintainer can help give you guidance! 
 
-You are also welcome to correct any spelling mistakes or any language issues.
+We have also started a series on our [Medium Publication](https://medium.com/webpack) called [The Contributor's Guide to webpack](https://medium.com/webpack/contributors-guide/home). We welcome you to read it and post any questions or responses if you still need help. 
 
-If you want to discuss something or just need help, [here is our Gitter room](https://gitter.im/webpack/webpack).
+_Looking to speak about webpack?_ We'd **love** to review your talk abstract/CFP! You can email it to webpack [at] opencollective [dot] com and we can give pointers or tips!!! 
+
+<h3 align="center">Creating your own plugins and loaders</h3>
+
+If you create a loader or plugin, we would <3 for you to open source it, and put it on npm. We follow the `x-loader`, `x-webpack-plugin` naming convention.
+
+<h2 align="center">Support</h2>
+
+We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of it's flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
+
+If you're just getting started, take a look at [our new docs and concepts page](https://webpack.js.org/concepts/). This has a high level overview that is great for beginners!! 
+
+If you want to discuss something or just need help, [here is our Gitter room](https://gitter.im/webpack/webpack) where there are always individuals looking to help out! 
+
+If you are still having difficulty, we would love for you to post
+a question to [StackOverflow with the webpack tag](https://stackoverflow.com/tags/webpack). It is much easier to answer questions that include your webpack.config.js and relevant files! So if you can provide them, we'd be extremely grateful (and more likely to help you find the answer!)
+
+If you are twitter savvy you can tweet #webpack with your question and someone should be able to reach out and help also.
+
+If you have discovered a 🐜 or have a feature suggestion, feel free to create an issue on Github.
 
 ### License
 
@@ -293,7 +325,7 @@ If you want to discuss something or just need help, [here is our Gitter room](ht
         <img width="150" height="150" src="https://github.com/bebraw.png?s=150">
         <br>
         <a href="https://github.com/bebraw">Juho Vepsäläinen</a>
-        <p>Documentation<p>
+        <p>Documentation</p>
         <br>
         <p>Author</p>
         <a href="https://leanpub.com/survivejs-webpack">
@@ -333,22 +365,32 @@ This is how we use the donations:
 
 <h2 align="center">Premium Partners</h2>
 
+<div align="center">
+	
 <a href="https://www.ag-grid.com/?utm_source=webpack&utm_medium=banner&utm_campaign=sponsorship" target="_blank"><img align="center" src="https://raw.githubusercontent.com/webpack/media/2b399d58/horiz-banner-ad-ag-grid.png">
 </a>
+
+</div>
 
 <h2 align="center">Other Backers and Sponsors</h2>
 
 Before we started using OpenCollective, donations were made anonymously. Now that we have made the switch, we would like to acknowledge these sponsors (and the ones who continue to donate using OpenCollective). If we've missed someone, please send us a PR, and we'll add you to this list.
 
+<div align="center">
+	
 [Google Angular Team](https://angular.io/), [Architects.io](http://architects.io/),
 <a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img 
 src="https://static.moonmail.io/moonmail-logo.svg" height="30" alt="MoonMail"></a> 
 <a href="https://monei.net" target="_blank" title="Best payment gateway rates"><img 
 src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
+</div>
+
 <h2 align="center">Sponsors</h2>
 
 [Become a sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
+
+<div align="center">
 
 <a href="https://opencollective.com/webpack/sponsor/0/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/0/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/sponsor/1/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/1/avatar.svg?requireActive=false"></a>
@@ -380,6 +422,8 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 <a href="https://opencollective.com/webpack/sponsor/27/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/27/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/sponsor/28/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/28/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/sponsor/29/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/29/avatar.svg?requireActive=false"></a>
+
+</div>
 
 <h2 align="center">Backers</h2>
 
@@ -490,7 +534,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 <h2 align="center">Thanks to</h2>
 <p align="center">(In chronological order)</p>
 
-* @google for [Google Web Toolkit (GWT)](https://code.google.com/archive/p/google-web-toolkit), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
+* @google for [Google Web Toolkit (GWT)](http://www.gwtproject.org/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
 * @medikoo for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webmake. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
 * @substack for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
 * @jrburke for [require.js](http://requirejs.org/), which is a similar project and source for many ideas.

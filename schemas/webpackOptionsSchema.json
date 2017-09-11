@@ -367,6 +367,14 @@
                 "type": "string"
               },
               "type": "array"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "root": { "type": "string" },
+                "amd": { "type": "string" },
+                "commonjs": { "type": "string" }
+              }
             }
           ],
           "description": "If set, export the bundle as library. `output.library` is the name."
@@ -466,6 +474,9 @@
         },
         "cachePredicate": {
           "instanceof": "Function"
+        },
+        "cacheWithContext": {
+          "type": "boolean"
         },
         "descriptionFiles": {
           "$ref": "#/definitions/common.arrayOfStringValues"
@@ -724,7 +735,7 @@
         }
       ]
     },
-    "warning-filters-types": {
+    "filter-item-types": {
       "anyOf": [
         {
           "instanceof": "RegExp"
@@ -734,6 +745,19 @@
         },
         {
           "instanceof": "Function"
+        }
+      ]
+    },
+    "filter-types": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/filter-item-types"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/filter-item-types"
+          }
         }
       ]
     }
@@ -868,6 +892,11 @@
     "output": {
       "$ref": "#/definitions/output"
     },
+    "parallelism": {
+      "description": "The number of parallel processed modules in the compilation.",
+      "minimum": 1,
+      "type": "number"
+    },
     "performance": {
       "description": "Configuration for web performance recommendations.",
       "anyOf": [
@@ -990,17 +1019,19 @@
             },
             "warningsFilter": {
               "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions",
-              "anyOf": [
-                {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/definitions/warning-filters-types"
-                  }
-                },
-                {
-                  "$ref": "#/definitions/warning-filters-types"
-                }
-              ]
+              "$ref": "#/definitions/filter-types"
+            },
+            "excludeAssets": {
+              "description": "Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions",
+              "$ref": "#/definitions/filter-types"
+            },
+            "excludeModules": {
+              "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps or Functions",
+              "$ref": "#/definitions/filter-types"
+            },
+            "exclude": {
+              "description": "Please use excludeModules instead.",
+              "$ref": "#/definitions/filter-types"
             },
             "errorDetails": {
               "type": "boolean",

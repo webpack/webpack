@@ -306,7 +306,7 @@ webpackJsonp([1],[
 
 ```
 Hash: 1e92144469a06ecc61e5
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  701 bytes    0, 1  [emitted]  my own chunk
 1.output.js  461 bytes       1  [emitted]  
@@ -316,36 +316,21 @@ chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
     > my own chunk [2] ./example.js 3:0-6:18
     > my own chunk [2] ./example.js 8:0-11:18
     > my own chunk [2] ./example.js 13:0-15:18
-    [0] ./node_modules/b.js 11 bytes {0} {1} [built]
-        require.ensure item b [2] ./example.js 3:0-6:18
-        require.ensure item b [2] ./example.js 8:0-11:18
-        require.ensure item b [2] ./example.js 17:0-20:2
-    [1] ./node_modules/d.js 11 bytes {0} {1} [built]
-        cjs require d [2] ./example.js 10:9-21
-        cjs require d [2] ./example.js 19:9-21
-    [4] ./node_modules/c.js 11 bytes {0} [built]
-        cjs require c [2] ./example.js 5:9-21
+    3 modules
 chunk    {1} 1.output.js 22 bytes {2} [rendered]
     > [2] ./example.js 17:0-20:2
-    [0] ./node_modules/b.js 11 bytes {0} {1} [built]
-        require.ensure item b [2] ./example.js 3:0-6:18
-        require.ensure item b [2] ./example.js 8:0-11:18
-        require.ensure item b [2] ./example.js 17:0-20:2
-    [1] ./node_modules/d.js 11 bytes {0} {1} [built]
-        cjs require d [2] ./example.js 10:9-21
-        cjs require d [2] ./example.js 19:9-21
+    2 modules
 chunk    {2} output.js (main) 452 bytes [entry] [rendered]
     > main [2] ./example.js 
     [2] ./example.js 441 bytes {2} [built]
-    [3] ./node_modules/a.js 11 bytes {2} [built]
-        cjs require a [2] ./example.js 1:8-20
+     + 1 hidden module
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
 Hash: 1e92144469a06ecc61e5
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
       Asset      Size  Chunks             Chunk Names
 0.output.js  72 bytes    0, 1  [emitted]  my own chunk
 1.output.js  52 bytes       1  [emitted]  
@@ -355,27 +340,12 @@ chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
     > my own chunk [2] ./example.js 3:0-6:18
     > my own chunk [2] ./example.js 8:0-11:18
     > my own chunk [2] ./example.js 13:0-15:18
-    [0] ./node_modules/b.js 11 bytes {0} {1} [built]
-        require.ensure item b [2] ./example.js 3:0-6:18
-        require.ensure item b [2] ./example.js 8:0-11:18
-        require.ensure item b [2] ./example.js 17:0-20:2
-    [1] ./node_modules/d.js 11 bytes {0} {1} [built]
-        cjs require d [2] ./example.js 10:9-21
-        cjs require d [2] ./example.js 19:9-21
-    [4] ./node_modules/c.js 11 bytes {0} [built]
-        cjs require c [2] ./example.js 5:9-21
+    3 modules
 chunk    {1} 1.output.js 22 bytes {2} [rendered]
     > [2] ./example.js 17:0-20:2
-    [0] ./node_modules/b.js 11 bytes {0} {1} [built]
-        require.ensure item b [2] ./example.js 3:0-6:18
-        require.ensure item b [2] ./example.js 8:0-11:18
-        require.ensure item b [2] ./example.js 17:0-20:2
-    [1] ./node_modules/d.js 11 bytes {0} {1} [built]
-        cjs require d [2] ./example.js 10:9-21
-        cjs require d [2] ./example.js 19:9-21
+    2 modules
 chunk    {2} output.js (main) 452 bytes [entry] [rendered]
     > main [2] ./example.js 
     [2] ./example.js 441 bytes {2} [built]
-    [3] ./node_modules/a.js 11 bytes {2} [built]
-        cjs require a [2] ./example.js 1:8-20
+     + 1 hidden module
 ```

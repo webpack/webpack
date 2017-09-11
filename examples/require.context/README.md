@@ -194,21 +194,21 @@ webpackContext.id = 4;
 
 ```
 Hash: acf02a400c4d02cc105a
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
     Asset     Size  Chunks             Chunk Names
 output.js  4.42 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 613 bytes [entry] [rendered]
     > main [3] ./example.js 
     [0] ./templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a [4] ./templates ^\.\/.*$ ./a
         context element ./a.js [4] ./templates ^\.\/.*$ ./a.js
+        context element ./a [4] ./templates ^\.\/.*$ ./a
     [1] ./templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b [4] ./templates ^\.\/.*$ ./b
         context element ./b.js [4] ./templates ^\.\/.*$ ./b.js
+        context element ./b [4] ./templates ^\.\/.*$ ./b
     [2] ./templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c [4] ./templates ^\.\/.*$ ./c
         context element ./c.js [4] ./templates ^\.\/.*$ ./c.js
+        context element ./c [4] ./templates ^\.\/.*$ ./c
     [3] ./example.js 150 bytes {0} [built]
     [4] ./templates ^\.\/.*$ 217 bytes {0} [built]
         cjs require context ./templates [3] ./example.js 2:8-44
@@ -218,21 +218,21 @@ chunk    {0} output.js (main) 613 bytes [entry] [rendered]
 
 ```
 Hash: acf02a400c4d02cc105a
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
     Asset     Size  Chunks             Chunk Names
 output.js  1.08 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 613 bytes [entry] [rendered]
     > main [3] ./example.js 
     [0] ./templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a [4] ./templates ^\.\/.*$ ./a
         context element ./a.js [4] ./templates ^\.\/.*$ ./a.js
+        context element ./a [4] ./templates ^\.\/.*$ ./a
     [1] ./templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b [4] ./templates ^\.\/.*$ ./b
         context element ./b.js [4] ./templates ^\.\/.*$ ./b.js
+        context element ./b [4] ./templates ^\.\/.*$ ./b
     [2] ./templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c [4] ./templates ^\.\/.*$ ./c
         context element ./c.js [4] ./templates ^\.\/.*$ ./c.js
+        context element ./c [4] ./templates ^\.\/.*$ ./c
     [3] ./example.js 150 bytes {0} [built]
     [4] ./templates ^\.\/.*$ 217 bytes {0} [built]
         cjs require context ./templates [3] ./example.js 2:8-44

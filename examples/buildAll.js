@@ -1,27 +1,15 @@
-var cp = require('child_process');
-var path = require("path");
-var fs = require("fs");
+"use strict";
 
-var cmds = fs.readdirSync(__dirname).filter(function(dirname) {
-	return fs.statSync(path.join(__dirname, dirname)).isDirectory() && dirname !== "node_modules";
-}).sort().map(function(dirname) {
+const cp = require("child_process");
+const examples = require("./examples");
+
+const cmds = examples.map(function(dirname) {
 	return "cd " + dirname + " && node build.js";
 });
 
-var stack = function() {
-	console.log("done");
-};
-for(var i = cmds.length-1; i >= 0; i--) {
-	var cmd = cmds[i];
-	stack = (function(next, cmd) {
-		return function() {
-			console.log(cmd);
-			cp.exec(cmd, function(error, stdout, stderr) {
-				if(error) console.error(error);
-				else if(stderr) console.error(stderr), next();
-				else next();
-			});
-		}
-	}(stack, cmd));
+let i = 0;
+for(const cmd of cmds) {
+	console.log(`[${++i}/${cmds.length}] ${cmd}`);
+	cp.execSync(cmd, { encoding: "utf-8" });
 }
-stack();
+console.log("done");
