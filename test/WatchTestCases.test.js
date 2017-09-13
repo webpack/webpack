@@ -108,89 +108,104 @@ describe("WatchTestCases", () => {
 
 						const state = {};
 						let runIdx = 0;
+						let waitMode = false;
 						let run = runs[runIdx];
+						let triggeringFilename;
 						let lastHash = "";
+						const currentWatchStepModule = require("./helpers/currentWatchStep");
+						currentWatchStepModule.step = run.name;
 						copyDiff(path.join(testDirectory, run.name), tempDirectory);
 
-						const compiler = webpack(options);
-						const watching = compiler.watch({
-							aggregateTimeout: 1000
-						}, (err, stats) => {
-							if(err)
-								return done(err);
-							if(!stats)
-								return done(new Error("No stats reported from Compiler"));
-							if(stats.hash === lastHash)
-								return;
-							lastHash = stats.hash;
-							if(run.done)
-								return done(new Error("Compilation changed but no change was issued " + lastHash + " != " + stats.hash + " (run " + runIdx + ")"));
-							run.done = true;
-							if(err) return done(err);
-							const statOptions = Stats.presetToOptions("verbose");
-							statOptions.colors = false;
-							fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
-							const jsonStats = stats.toJson({
-								errorDetails: true
+						setTimeout(() => {
+							const compiler = webpack(options);
+							compiler.plugin("invalid", (filename, mtime) => {
+								triggeringFilename = filename;
 							});
-							if(checkArrayExpectation(path.join(testDirectory, run.name), jsonStats, "error", "Error", done)) return;
-							if(checkArrayExpectation(path.join(testDirectory, run.name), jsonStats, "warning", "Warning", done)) return;
-							let exportedTests = 0;
+							const watching = compiler.watch({
+								aggregateTimeout: 1000
+							}, (err, stats) => {
+								if(err)
+									return done(err);
+								if(!stats)
+									return done(new Error("No stats reported from Compiler"));
+								if(stats.hash === lastHash)
+									return;
+								lastHash = stats.hash;
+								if(run.done && lastHash !== stats.hash) {
+									return done(new Error("Compilation changed but no change was issued " + lastHash + " != " + stats.hash + " (run " + runIdx + ")\n" +
+										"Triggering change: " + triggeringFilename));
+								}
+								if(waitMode) return;
+								run.done = true;
+								if(err) return done(err);
+								const statOptions = Stats.presetToOptions("verbose");
+								statOptions.colors = false;
+								fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
+								const jsonStats = stats.toJson({
+									errorDetails: true
+								});
+								if(checkArrayExpectation(path.join(testDirectory, run.name), jsonStats, "error", "Error", done)) return;
+								if(checkArrayExpectation(path.join(testDirectory, run.name), jsonStats, "warning", "Warning", done)) return;
+								let exportedTests = 0;
 
-							function _it(title, fn) {
-								const test = new Test(title, fn);
-								run.suite.addTest(test);
-								exportedTests++;
-								return test;
-							}
+								function _it(title, fn) {
+									const test = new Test(title, fn);
+									run.suite.addTest(test);
+									exportedTests++;
+									return test;
+								}
 
-							function _require(currentDirectory, module) {
-								if(Array.isArray(module) || /^\.\.?\//.test(module)) {
-									let fn;
-									let content;
-									let p;
-									if(Array.isArray(module)) {
-										p = path.join(currentDirectory, module[0]);
-										content = module.map((arg) => {
-											p = path.join(currentDirectory, arg);
-											return fs.readFileSync(p, "utf-8");
-										}).join("\n");
-									} else {
-										p = path.join(currentDirectory, module);
-										content = fs.readFileSync(p, "utf-8");
-									}
-									fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE) {" + content + "\n})", p);
-									const m = {
-										exports: {}
-									};
-									fn.call(m.exports, _require.bind(null, path.dirname(p)), m, m.exports, path.dirname(p), p, _it, run.name, jsonStats, state);
-									return module.exports;
-								} else if(testConfig.modules && module in testConfig.modules) {
-									return testConfig.modules[module];
-								} else return require(module);
-							}
+								function _require(currentDirectory, module) {
+									if(Array.isArray(module) || /^\.\.?\//.test(module)) {
+										let fn;
+										let content;
+										let p;
+										if(Array.isArray(module)) {
+											p = path.join(currentDirectory, module[0]);
+											content = module.map((arg) => {
+												p = path.join(currentDirectory, arg);
+												return fs.readFileSync(p, "utf-8");
+											}).join("\n");
+										} else {
+											p = path.join(currentDirectory, module);
+											content = fs.readFileSync(p, "utf-8");
+										}
+										fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE) {" + content + "\n})", p);
+										const m = {
+											exports: {}
+										};
+										fn.call(m.exports, _require.bind(null, path.dirname(p)), m, m.exports, path.dirname(p), p, _it, run.name, jsonStats, state);
+										return module.exports;
+									} else if(testConfig.modules && module in testConfig.modules) {
+										return testConfig.modules[module];
+									} else return require(module);
+								}
 
-							let testConfig = {};
-							try {
-								// try to load a test file
-								testConfig = require(path.join(testDirectory, "test.config.js"));
-							} catch(e) {}
+								let testConfig = {};
+								try {
+									// try to load a test file
+									testConfig = require(path.join(testDirectory, "test.config.js"));
+								} catch(e) {}
 
-							if(testConfig.noTests) return process.nextTick(done);
-							_require(outputDirectory, "./bundle.js");
+								if(testConfig.noTests) return process.nextTick(done);
+								_require(outputDirectory, "./bundle.js");
 
-							if(exportedTests < 1) return done(new Error("No tests exported by test case"));
-							runIdx++;
-							if(runIdx < runs.length) {
-								run = runs[runIdx];
-								setTimeout(() => {
-									copyDiff(path.join(testDirectory, run.name), tempDirectory);
-								}, 1500);
-							} else {
-								watching.close();
-								process.nextTick(done);
-							}
-						});
+								if(exportedTests < 1) return done(new Error("No tests exported by test case"));
+								runIdx++;
+								if(runIdx < runs.length) {
+									run = runs[runIdx];
+									waitMode = true;
+									setTimeout(() => {
+										waitMode = false;
+										currentWatchStepModule.step = run.name;
+										copyDiff(path.join(testDirectory, run.name), tempDirectory);
+									}, 1500);
+								} else {
+									watching.close();
+									process.nextTick(done);
+								}
+							});
+						}, 300);
 					});
 				});
 			});
