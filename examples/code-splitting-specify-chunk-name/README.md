@@ -256,8 +256,8 @@ function webpackAsyncContext(req) {
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
 	return Object.keys(map);
 };
-module.exports = webpackAsyncContext;
 webpackAsyncContext.id = 4;
+module.exports = webpackAsyncContext;
 
 /***/ })
 /******/ ]);
@@ -269,7 +269,7 @@ webpackAsyncContext.id = 4;
 
 ```
 Hash: 9d034b3ada38a1291aa9
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  444 bytes       0  [emitted]  chunk-foo
 1.output.js  450 bytes       1  [emitted]  chunk-bar-baz2
@@ -286,13 +286,13 @@ chunk    {0} 0.output.js (chunk-foo) 41 bytes {3} [rendered]
 chunk    {1} 1.output.js (chunk-bar-baz2) 41 bytes {3} [rendered]
     [1] ./templates/baz.js 41 bytes {1} [optional] [built]
         [exports: default]
-        context element ./baz [4] ./templates lazy ^\.\/ba.*$ ./baz
         context element ./baz.js [4] ./templates lazy ^\.\/ba.*$ ./baz.js
+        context element ./baz [4] ./templates lazy ^\.\/ba.*$ ./baz
 chunk    {2} 2.output.js (chunk-bar-baz0) 41 bytes {3} [rendered]
     [0] ./templates/bar.js 41 bytes {2} [optional] [built]
         [exports: default]
-        context element ./bar [4] ./templates lazy ^\.\/ba.*$ ./bar
         context element ./bar.js [4] ./templates lazy ^\.\/ba.*$ ./bar.js
+        context element ./bar [4] ./templates lazy ^\.\/ba.*$ ./bar
 chunk    {3} output.js (main) 580 bytes [entry] [rendered]
     > main [3] ./example.js 
     [3] ./example.js 420 bytes {3} [built]
@@ -304,7 +304,7 @@ chunk    {3} output.js (main) 580 bytes [entry] [rendered]
 
 ```
 Hash: 9d034b3ada38a1291aa9
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
       Asset       Size  Chunks             Chunk Names
 0.output.js  117 bytes       0  [emitted]  chunk-foo
 1.output.js  116 bytes       1  [emitted]  chunk-bar-baz2
@@ -321,13 +321,13 @@ chunk    {0} 0.output.js (chunk-foo) 41 bytes {3} [rendered]
 chunk    {1} 1.output.js (chunk-bar-baz2) 41 bytes {3} [rendered]
     [1] ./templates/baz.js 41 bytes {1} [optional] [built]
         [exports: default]
-        context element ./baz [4] ./templates lazy ^\.\/ba.*$ ./baz
         context element ./baz.js [4] ./templates lazy ^\.\/ba.*$ ./baz.js
+        context element ./baz [4] ./templates lazy ^\.\/ba.*$ ./baz
 chunk    {2} 2.output.js (chunk-bar-baz0) 41 bytes {3} [rendered]
     [0] ./templates/bar.js 41 bytes {2} [optional] [built]
         [exports: default]
-        context element ./bar [4] ./templates lazy ^\.\/ba.*$ ./bar
         context element ./bar.js [4] ./templates lazy ^\.\/ba.*$ ./bar.js
+        context element ./bar [4] ./templates lazy ^\.\/ba.*$ ./bar
 chunk    {3} output.js (main) 580 bytes [entry] [rendered]
     > main [3] ./example.js 
     [3] ./example.js 420 bytes {3} [built]

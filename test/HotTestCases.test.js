@@ -37,35 +37,38 @@ describe("HotTestCases", () => {
 							updateIndex: 0
 						}
 					};
-					const options = {
-						context: testDirectory,
-						entry: "./index.js",
-						output: {
-							path: outputDirectory,
-							filename: "bundle.js"
-						},
-						module: {
-							loaders: [{
-								test: /\.js$/,
-								loader: path.join(__dirname, "hotCases", "fake-update-loader.js"),
-								enforce: "pre"
-							}, {
-								test: /\.css$/,
-								use: ExtractTextPlugin.extract({
-									fallback: "style-loader",
-									loader: "css-loader"
-								})
-							}]
-						},
-						target: "async-node",
-						plugins: [
-							new webpack.HotModuleReplacementPlugin(),
-							new webpack.NamedModulesPlugin(),
-							new webpack.LoaderOptionsPlugin(fakeUpdateLoaderOptions),
-							new ExtractTextPlugin("bundle.css")
-						],
-						recordsPath: recordsPath
-					};
+					const configPath = path.join(testDirectory, "webpack.config.js");
+					let options = {};
+					if(fs.existsSync(configPath))
+						options = require(configPath);
+					if(!options.context) options.context = testDirectory;
+					if(!options.entry) options.entry = "./index.js";
+					if(!options.output) options.output = {};
+					if(!options.output.path) options.output.path = outputDirectory;
+					if(!options.output.filename) options.output.filename = "bundle.js";
+					if(options.output.pathinfo === undefined) options.output.pathinfo = true;
+					if(!options.module) options.module = {};
+					if(!options.module.rules) options.module.rules = [];
+					options.module.rules.push({
+						test: /\.js$/,
+						loader: path.join(__dirname, "hotCases", "fake-update-loader.js"),
+						enforce: "pre"
+					}, {
+						test: /\.css$/,
+						use: ExtractTextPlugin.extract({
+							fallback: "style-loader",
+							use: "css-loader"
+						})
+					});
+					if(!options.target) options.target = "async-node";
+					if(!options.plugins) options.plugins = [];
+					options.plugins.push(
+						new webpack.HotModuleReplacementPlugin(),
+						new webpack.NamedModulesPlugin(),
+						new webpack.LoaderOptionsPlugin(fakeUpdateLoaderOptions),
+						new ExtractTextPlugin("bundle.css")
+					);
+					if(!options.recordsPath) options.recordsPath = recordsPath;
 					const compiler = webpack(options);
 					compiler.run((err, stats) => {
 						if(err) return done(err);

@@ -142,16 +142,16 @@ if(a == a2) throw new Error("Cache clear failed :(");
 
 ```
 Hash: 4ed342adc60583d992ab
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
     Asset     Size  Chunks             Chunk Names
 output.js  3.18 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] ./a.js 31 bytes {0} [built]
+        require.resolve ./a.js [1] ./example.js 4:10-35
         cjs require ./a [1] ./example.js 1:8-22
         cjs require ./a [1] ./example.js 10:9-23
-        require.resolve ./a.js [1] ./example.js 4:10-35
     [1] ./example.js 295 bytes {0} [built]
 ```
 
@@ -159,15 +159,15 @@ chunk    {0} output.js (main) 326 bytes [entry] [rendered]
 
 ```
 Hash: 4ed342adc60583d992ab
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
     Asset       Size  Chunks             Chunk Names
 output.js  599 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > main [1] ./example.js 
     [0] ./a.js 31 bytes {0} [built]
+        require.resolve ./a.js [1] ./example.js 4:10-35
         cjs require ./a [1] ./example.js 1:8-22
         cjs require ./a [1] ./example.js 10:9-23
-        require.resolve ./a.js [1] ./example.js 4:10-35
     [1] ./example.js 295 bytes {0} [built]
 ```

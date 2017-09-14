@@ -1,4 +1,12 @@
+<div align="center">
+  <a href="https://github.com/webpack/webpack">
+    <img width="200" heigth="200" src="https://webpack.js.org/assets/icon-square-big.svg">
+  </a>
+  <br>
+  <br>
+
 [![npm][npm]][npm-url]
+
 [![node][node]][node-url]
 [![deps][deps]][deps-url]
 [![tests][tests]][tests-url]
@@ -6,11 +14,6 @@
 [![coverage][cover]][cover-url]
 [![licenses][licenses]][licenses-url]
 
-<div align="center">
-  <a href="https://github.com/webpack/webpack">
-    <img width="200" heigth="200" src="https://webpack.js.org/assets/icon-square-big.svg">
-  </a>
-  <br>
   <br>
 	<a href="https://npmjs.com/package/webpack">
 		<img src="https://img.shields.io/npm/dm/webpack.svg">
@@ -32,13 +35,21 @@
 
 <h2 align="center">Install</h2>
 
+Install with npm:
+
 ```bash
 npm install --save-dev webpack
 ```
 
+Install with yarn:
+
+```bash
+yarn add webpack --dev
+```
+
 <h2 align="center">Introduction</h2>
 
-> The README reflects webpack v2.x, webpack v1.x [documentation can be found here](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top).
+> This README reflects Webpack v2.x and v3.x. The Webpack v1.x [documentation can be found here](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top).
 
 webpack is a bundler for modules. The main purpose is to bundle JavaScript
 files for usage in a browser, yet it is also capable of transforming, bundling,
@@ -120,7 +131,7 @@ or are automatically applied via regex from your webpack configuration.
 |Name|Status|Description|
 |:--:|:----:|:----------|
 |<a href="https://github.com/webpack/json-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/json.svg"></a>|![json-npm]|Loads a JSON file (included by default)|
-|<a href="https://github.com/webpack/json5-loader"><img width="48" height="48" src="https://cdn.rawgit.com/json5/json5-logo/master/json5-logo.svg"></a>|![json5-npm]|Loads and transpiles a JSON 5 file|
+|<a href="https://github.com/webpack/json5-loader"><img width="48" height="10.656" src="https://cdn.rawgit.com/json5/json5-logo/master/json5-logo.svg"></a>|![json5-npm]|Loads and transpiles a JSON 5 file|
 |<a href="https://github.com/awnist/cson-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>|![cson-npm]|Loads and transpiles a CSON file|
 
 
@@ -183,17 +194,17 @@ or are automatically applied via regex from your webpack configuration.
 [stylus-npm]: https://img.shields.io/npm/v/stylus-loader.svg
 [postcss-npm]: https://img.shields.io/npm/v/postcss-loader.svg
 
-#### Linting && Testing
+#### Linting & Testing
 
 |Name|Status|Description|
 |:--:|:----:|:----------|
 |<a href="https://github.com/webpack/mocha-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/mocha.svg"></a>|![mocha-npm]|Tests with mocha (Browser/NodeJS)|
 |<a href="https://github.com/MoOx/eslint-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/eslint.svg"></a>|![eslint-npm]|PreLoader for linting code using ESLint|
-|<a href="https://github.com/webpack/jslint-loader"><img width="48" height="48" src="http://jshint.com/res/jshint-dark.png"></a>|![jshint-npm]|PreLoader for linting code using JSHint|
+|<a href="https://github.com/webpack-contrib/jshint-loader"><img width="48" height="20.64" src="http://jshint.com/res/jshint-dark.png"></a>|![jshint-npm]|PreLoader for linting code using JSHint|
 
 [mocha-npm]: https://img.shields.io/npm/v/mocha-loader.svg
 [eslint-npm]: https://img.shields.io/npm/v/eslint-loader.svg
-[jshint-npm]: https://img.shields.io/npm/v/jslint-loader.svg
+[jshint-npm]: https://img.shields.io/npm/v/jshint-loader.svg
 [jscs-npm]: https://img.shields.io/npm/v/jscs-loader.svg
 
 #### Frameworks
@@ -264,7 +275,7 @@ If you create a loader or plugin, we would <3 for you to open source it, and put
 
 <h2 align="center">Support</h2>
 
-We consider webpack to be a low-level tool used not only individuals but also layered beneath other awesome tools. Because of it's flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
+We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of it's flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
 
 If you're just getting started, take a look at [our new docs and concepts page](https://webpack.js.org/concepts/). This has a high level overview that is great for beginners!! 
 
@@ -314,7 +325,7 @@ If you have discovered a 🐜 or have a feature suggestion, feel free to create 
         <img width="150" height="150" src="https://github.com/bebraw.png?s=150">
         <br>
         <a href="https://github.com/bebraw">Juho Vepsäläinen</a>
-        <p>Documentation<p>
+        <p>Documentation</p>
         <br>
         <p>Author</p>
         <a href="https://leanpub.com/survivejs-webpack">
@@ -354,22 +365,110 @@ This is how we use the donations:
 
 <h2 align="center">Premium Partners</h2>
 
+<div align="center">
+	
 <a href="https://www.ag-grid.com/?utm_source=webpack&utm_medium=banner&utm_campaign=sponsorship" target="_blank"><img align="center" src="https://raw.githubusercontent.com/webpack/media/2b399d58/horiz-banner-ad-ag-grid.png">
 </a>
+
+</div>
 
 <h2 align="center">Other Backers and Sponsors</h2>
 
 Before we started using OpenCollective, donations were made anonymously. Now that we have made the switch, we would like to acknowledge these sponsors (and the ones who continue to donate using OpenCollective). If we've missed someone, please send us a PR, and we'll add you to this list.
 
+<div align="center">
+	
 [Google Angular Team](https://angular.io/), [Architects.io](http://architects.io/),
 <a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img 
 src="https://static.moonmail.io/moonmail-logo.svg" height="30" alt="MoonMail"></a> 
 <a href="https://monei.net" target="_blank" title="Best payment gateway rates"><img 
 src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
-<h2 align="center">Sponsors</h2>
+</div>
 
-[Become a sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
+<h2 align="center">Gold Sponsors</h2>
+
+[Become a gold sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
+
+<div align="center">
+
+<a href="https://opencollective.com/webpack/goldsponsor/0/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/0/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/1/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/1/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/2/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/2/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/3/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/3/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/4/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/4/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/5/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/5/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/6/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/6/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/7/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/7/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/8/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/8/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/9/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/9/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/10/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/10/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/11/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/11/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/12/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/12/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/13/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/13/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/14/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/14/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/15/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/15/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/16/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/16/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/17/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/17/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/18/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/18/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/19/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/19/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/20/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/20/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/21/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/21/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/22/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/22/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/23/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/23/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/24/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/24/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/25/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/25/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/26/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/26/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/27/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/27/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/28/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/28/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/goldsponsor/29/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/29/avatar.svg?requireActive=false"></a>
+
+</div>
+
+<h2 align="center">Silver Sponsors</h2>
+
+[Become a sliver sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
+
+<div align="center">
+
+<a href="https://opencollective.com/webpack/silversponsor/0/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/0/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/1/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/1/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/2/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/2/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/3/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/3/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/4/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/4/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/5/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/5/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/6/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/6/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/7/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/7/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/8/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/8/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/9/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/9/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/10/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/10/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/11/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/11/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/12/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/12/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/13/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/13/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/14/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/14/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/15/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/15/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/16/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/16/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/17/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/17/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/18/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/18/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/19/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/19/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/20/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/20/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/21/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/21/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/22/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/22/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/23/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/23/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/24/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/24/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/25/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/25/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/26/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/26/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/27/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/27/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/28/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/28/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/silversponsor/29/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/silversponsor/29/avatar.svg?requireActive=false"></a>
+
+</div>
+
+<h2 align="center">Bronze Sponsors</h2>
+
+[Become a bronze sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
+
+<div align="center">
 
 <a href="https://opencollective.com/webpack/sponsor/0/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/0/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/sponsor/1/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/1/avatar.svg?requireActive=false"></a>
@@ -401,6 +500,79 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 <a href="https://opencollective.com/webpack/sponsor/27/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/27/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/sponsor/28/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/28/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/sponsor/29/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/29/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/30/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/30/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/31/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/31/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/32/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/32/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/33/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/33/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/34/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/34/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/35/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/35/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/36/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/36/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/37/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/37/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/38/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/38/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/39/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/39/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/40/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/40/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/41/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/41/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/42/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/42/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/43/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/43/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/44/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/44/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/45/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/45/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/46/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/46/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/47/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/47/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/48/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/48/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/49/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/49/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/50/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/50/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/51/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/51/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/52/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/52/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/53/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/53/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/54/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/54/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/55/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/55/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/56/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/56/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/57/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/57/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/58/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/58/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/59/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/59/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/60/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/60/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/61/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/61/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/62/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/62/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/63/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/63/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/64/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/64/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/65/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/65/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/66/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/66/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/67/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/67/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/68/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/68/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/69/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/69/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/70/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/70/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/71/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/71/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/72/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/72/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/73/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/73/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/74/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/74/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/75/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/75/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/76/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/76/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/77/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/77/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/78/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/78/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/79/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/79/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/80/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/80/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/81/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/81/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/82/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/82/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/83/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/83/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/84/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/84/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/85/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/85/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/86/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/86/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/87/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/87/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/88/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/88/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/89/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/89/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/90/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/90/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/91/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/91/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/92/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/92/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/93/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/93/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/94/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/94/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/95/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/95/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/96/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/96/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/97/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/97/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/98/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/98/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/99/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/99/avatar.svg?requireActive=false"></a>
+<a href="https://opencollective.com/webpack/sponsor/100/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/sponsor/100/avatar.svg?requireActive=false"></a>
+
+</div>
 
 <h2 align="center">Backers</h2>
 
@@ -511,7 +683,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 <h2 align="center">Thanks to</h2>
 <p align="center">(In chronological order)</p>
 
-* @google for [Google Web Toolkit (GWT)](https://code.google.com/archive/p/google-web-toolkit), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
+* @google for [Google Web Toolkit (GWT)](http://www.gwtproject.org/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
 * @medikoo for [modules-webmake](https://github.com/medikoo/modules-webmake), which is a similar project. webpack was born because I wanted Code Splitting for modules-webmake. Interestingly the [Code Splitting issue is still open](https://github.com/medikoo/modules-webmake/issues/7) (thanks also to @Phoscur for the discussion).
 * @substack for [browserify](http://browserify.org/), which is a similar project and source for many ideas.
 * @jrburke for [require.js](http://requirejs.org/), which is a similar project and source for many ideas.

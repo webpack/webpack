@@ -162,7 +162,7 @@ exports.readFile = function() {};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! exports provided:  */
 /*! all exports used */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -180,12 +180,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 __WEBPACK_IMPORTED_MODULE_0__fs___default.a.readFile("file");
-__WEBPACK_IMPORTED_MODULE_0__fs__["readFile"]("file");
+Object(__WEBPACK_IMPORTED_MODULE_0__fs__["readFile"])("file");
 __WEBPACK_IMPORTED_MODULE_0__fs__["readFile"]("file");
 
 // import from harmony module
 
-__WEBPACK_IMPORTED_MODULE_1__reexport_commonjs__["readFile"]("file");
+Object(__WEBPACK_IMPORTED_MODULE_1__reexport_commonjs__["readFile"])("file");
 
 // import a CommonJs module for sideeffects
 
@@ -257,9 +257,9 @@ var named = "named";
 
 ```
 Hash: 756e5e3b676506d280a4
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
     Asset     Size  Chunks             Chunk Names
-output.js  6.11 kB       0  [emitted]  main
+output.js  6.13 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 1.2 kB [entry] [rendered]
     > main [1] ./example.js 
@@ -270,6 +270,7 @@ chunk    {0} output.js (main) 1.2 kB [entry] [rendered]
         harmony import ./fs [1] ./example.js 6:0-28
         harmony import ./fs [2] ./reexport-commonjs.js 2:0-21
     [1] ./example.js 389 bytes {0} [built]
+        [no exports]
     [2] ./reexport-commonjs.js 308 bytes {0} [built]
         [only some exports used: readFile]
         harmony import ./reexport-commonjs [1] ./example.js 12:0-60
@@ -285,9 +286,9 @@ chunk    {0} output.js (main) 1.2 kB [entry] [rendered]
 
 ```
 Hash: 756e5e3b676506d280a4
-Version: webpack 3.0.0-rc.0
+Version: webpack 3.5.1
     Asset     Size  Chunks             Chunk Names
-output.js  1.01 kB       0  [emitted]  main
+output.js  1.03 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 1.2 kB [entry] [rendered]
     > main [1] ./example.js 
@@ -298,6 +299,7 @@ chunk    {0} output.js (main) 1.2 kB [entry] [rendered]
         harmony import ./fs [1] ./example.js 6:0-28
         harmony import ./fs [2] ./reexport-commonjs.js 2:0-21
     [1] ./example.js 389 bytes {0} [built]
+        [no exports]
     [2] ./reexport-commonjs.js 308 bytes {0} [built]
         [only some exports used: readFile]
         harmony import ./reexport-commonjs [1] ./example.js 12:0-60

@@ -19,7 +19,6 @@ module.exports = {
 		"global-require": "off",
 		"brace-style": "error",
 		"eol-last": "error",
-		"indent": ["error", "tab", { "SwitchCase": 1 }],
 		"no-extra-bind": "warn",
 		"no-empty": "off",
 		"no-multiple-empty-lines": "error",
@@ -36,6 +35,7 @@ module.exports = {
 		"space-before-function-paren": ["error", "never"],
 		"space-before-blocks": "error",
 		"object-curly-spacing": ["error", "always"],
+		"indent": "off",
 		"keyword-spacing": ["error", {
 			"after": false,
 			"overrides": {
