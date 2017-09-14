@@ -331,6 +331,8 @@ describe("Parser", () => {
 			"b.Number": "number=123",
 			"b['Number']": "number=123",
 			"b[Number]": "",
+			"`start${obj}mid${obj2}end`": "template=[start string=start],[mid string=mid],[end string=end]", // eslint-disable-line no-template-curly-in-string
+			"`start${'str'}mid${obj2}end`": "template=[start${'str'}mid string=startstrmid],[end string=end]", // eslint-disable-line no-template-curly-in-string
 			"'abc'.substr(1)": "string=bc",
 			"'abcdef'.substr(2, 3)": "string=cde",
 			"'abcdef'.substring(2, 3)": "string=c",
@@ -359,6 +361,7 @@ describe("Parser", () => {
 					if(evalExpr.isConditional()) result.push("options=[" + evalExpr.options.map(evalExprToString).join("],[") + "]");
 					if(evalExpr.isArray()) result.push("items=[" + evalExpr.items.map(evalExprToString).join("],[") + "]");
 					if(evalExpr.isConstArray()) result.push("array=[" + evalExpr.array.join("],[") + "]");
+					if(evalExpr.isTemplateString()) result.push("template=[" + evalExpr.quasis.map(evalExprToString).join("],[") + "]");
 					if(evalExpr.isWrapped()) result.push("wrapped=[" + evalExprToString(evalExpr.prefix) + "]+[" + evalExprToString(evalExpr.postfix) + "]");
 					if(evalExpr.range) {
 						const start = evalExpr.range[0] - 5;
