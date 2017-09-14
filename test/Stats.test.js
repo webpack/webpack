@@ -98,7 +98,7 @@ describe("Stats", () => {
 				actual.should.be.eql(expected);
 				done();
 			});
-		});
+		}, 10000);
 	});
 	describe("Error Handling", () => {
 		describe("does have", () => {
