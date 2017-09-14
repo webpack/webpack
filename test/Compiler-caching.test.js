@@ -12,7 +12,7 @@ describe("Compiler (caching)", function() {
 	this.timeout(15000);
 
 	function compile(entry, options, callback) {
-		new WebpackOptionsDefaulter().process(options);
+		options = new WebpackOptionsDefaulter().process(options);
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");
 		options.output.path = "/";
