@@ -1,12 +1,12 @@
-This example shows how the `pure-module` flag for library authors works.
+This example shows how the `side-effects` flag for library authors works.
 
 The example contains a large library, `big-module`. `big-module` contains multiple child modules: `a`, `b` and `c`. The exports from the child modules are re-exported in the entry module (`index.js`) of the library. A consumer uses **some** of the exports, importing them from the library via `import { a, b } from "big-module"`. According to the EcmaScript spec, all child modules _must_ be evaluated because they could contain side effects.
 
-The `"pure-module": true` flag in `big-module`'s `package.json` indicates that the package's modules have no side effects (on evaluation) and only expose exports. This allows tools like webpack to optimize re-exports. In the case `import { a, b } from "big-module-pure"` is rewritten to `import { a } from "big-module-pure/a"; import { b } from "big-module-pure/b"`.
+The `"side-effects": false` flag in `big-module`'s `package.json` indicates that the package's modules have no side effects (on evaluation) and only expose exports. This allows tools like webpack to optimize re-exports. In the case `import { a, b } from "big-module-with-flag"` is rewritten to `import { a } from "big-module-with-flag/a"; import { b } from "big-module-with-flag/b"`.
 
-The example contains two variants of `big-module`. `big-module` has no pure-module flag and `big-module-pure` has the pure-module flag. The example client imports `a` and `b` from each of the variants.
+The example contains two variants of `big-module`. `big-module` has no side-effects flag and `big-module-with-flag` has the side-effects flag. The example client imports `a` and `b` from each of the variants.
 
-After being built by webpack, the output bundle contains `index.js` `a.js` `b.js` `c.js` from `big-module`, but only `a.js` and `b.js` from `big-module-pure`.
+After being built by webpack, the output bundle contains `index.js` `a.js` `b.js` `c.js` from `big-module`, but only `a.js` and `b.js` from `big-module-with-flag`.
 
 Advantages:
 
@@ -16,14 +16,14 @@ Advantages:
 # example.js
 
 ``` javascript
-import { a, b } from "big-module";
-import { a as pa, b as pb } from "big-module-pure";
+import { a as a1, b as b1 } from "big-module";
+import { a as a2, b as b2 } from "big-module-with-flag";
 
 console.log(
-	a,
-	b,
-	pa,
-	pb
+	a1,
+	b1,
+	a2,
+	b2
 );
 ```
 
@@ -35,16 +35,16 @@ console.log(
 }
 ```
 
-# node_modules/big-module-pure/package.json
+# node_modules/big-module-with-flag/package.json
 
 ``` javascript
 {
-  "name": "big-module-pure",
-  "pure-module": true
+  "name": "big-module-with-flag",
+  "side-effects": false
 }
 ```
 
-# node_modules/big-module(-pure)/index.js
+# node_modules/big-module(-with-flag)/index.js
 
 ``` javascript
 export { a } from "./a";
@@ -202,24 +202,24 @@ const c = "c";
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var big_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! big-module */0);
-/* harmony import */ var big_module_pure__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! big-module-pure */5);
-/* harmony import */ var big_module_pure__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! big-module-pure */6);
+/* harmony import */ var big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! big-module-with-flag */5);
+/* harmony import */ var big_module_with_flag__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! big-module-with-flag */6);
 
 
 
 console.log(
 	big_module__WEBPACK_IMPORTED_MODULE_0__["a"],
 	big_module__WEBPACK_IMPORTED_MODULE_0__["b"],
-	big_module_pure__WEBPACK_IMPORTED_MODULE_1__["a"],
-	big_module_pure__WEBPACK_IMPORTED_MODULE_2__["a" /* b */]
+	big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__["a"],
+	big_module_with_flag__WEBPACK_IMPORTED_MODULE_2__["a" /* b */]
 );
 
 
 /***/ }),
 /* 5 */
-/*!*******************************************!*\
-  !*** ./node_modules/big-module-pure/a.js ***!
-  \*******************************************/
+/*!************************************************!*\
+  !*** ./node_modules/big-module-with-flag/a.js ***!
+  \************************************************/
 /*! exports provided: a */
 /*! exports used: a */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -231,9 +231,9 @@ const a = "a";
 
 /***/ }),
 /* 6 */
-/*!*******************************************!*\
-  !*** ./node_modules/big-module-pure/b.js ***!
-  \*******************************************/
+/*!************************************************!*\
+  !*** ./node_modules/big-module-with-flag/b.js ***!
+  \************************************************/
 /*! exports provided: b */
 /*! exports used: b */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -252,14 +252,14 @@ const b = "b";
 ## Uncompressed
 
 ```
-Hash: 5102bad4505037b2ceee
-Version: webpack 3.4.1
-    Asset     Size  Chunks             Chunk Names
-output.js  6.13 kB       0  [emitted]  main
+Hash: 0f036598352d4d3caffa
+Version: webpack 3.5.6
+    Asset    Size  Chunks             Chunk Names
+output.js  6.2 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 323 bytes [entry] [rendered]
+chunk    {0} output.js (main) 342 bytes [entry] [rendered]
     > main [4] ./example.js 
-    [4] ./example.js 130 bytes {0} [built]
+    [4] ./example.js 149 bytes {0} [built]
         [no exports]
      + 6 hidden modules
 ```
@@ -267,14 +267,14 @@ chunk    {0} output.js (main) 323 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 5102bad4505037b2ceee
-Version: webpack 3.4.1
+Hash: 0f036598352d4d3caffa
+Version: webpack 3.5.6
     Asset     Size  Chunks             Chunk Names
 output.js  1.05 kB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 323 bytes [entry] [rendered]
+chunk    {0} output.js (main) 342 bytes [entry] [rendered]
     > main [4] ./example.js 
-    [4] ./example.js 130 bytes {0} [built]
+    [4] ./example.js 149 bytes {0} [built]
         [no exports]
      + 6 hidden modules
 ```
