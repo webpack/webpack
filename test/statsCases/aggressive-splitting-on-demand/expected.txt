@@ -8,7 +8,7 @@ a0bf69daa522fbf8540c.js  1.03 kB        0  [emitted]
 ffed75a7125f4bffaa65.js  1.99 kB        4  [emitted]  
 1eb486d42a31b58c16de.js  1.03 kB        5  [emitted]  
 c0be493fc1372241e789.js  1.03 kB        6  [emitted]  
-b377816b50b5f53bb16f.js  7.75 kB        7  [emitted]  main
+b377816b50b5f53bb16f.js  8.13 kB        7  [emitted]  main
 abfb187b6140d9d3505a.js  1.99 kB  8, 0, 5  [emitted]  
 Entrypoint main = b377816b50b5f53bb16f.js
 chunk    {0} c659704b2f31cae80013.js 1.8 kB {7} [rendered]
