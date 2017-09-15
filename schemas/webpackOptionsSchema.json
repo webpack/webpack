@@ -839,7 +839,7 @@
     "externals": {
       "anyOf": [
         {
-          "$ref": "#/definitions/external"
+          "$ref": "#/definitions/externals"
         },
         {
           "type": "object",
