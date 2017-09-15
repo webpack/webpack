@@ -1,5 +1,5 @@
 sudo: false
-dist: precise
+dist: trusty
 language: node_js
 
 branches:
@@ -8,9 +8,7 @@ branches:
     - next
 
 cache:
-  directories:
-    - $HOME/.npm
-    - $HOME/.yarn-cache
+  yarn: true
 
 matrix:
   include:
@@ -24,7 +22,7 @@ matrix:
       node_js: "6"
       env: NO_WATCH_TESTS=1 JOB_PART=test
     - os: linux
-      node_js: "4.3"
+      node_js: "4"
       env: NO_WATCH_TESTS=1 JOB_PART=test
     - os: osx
       node_js: "8"
@@ -33,7 +31,7 @@ matrix:
     - os: osx
   fast_finish: true
 
-before_script:
+install:
   - bash ./ci/travis-install.sh
 
 script: npm run travis:$JOB_PART

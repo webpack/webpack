@@ -161,7 +161,7 @@ describe("Compiler", () => {
 			bundle.should.not.containEql("fixtures");
 			chunk.should.not.containEql("fixtures");
 			bundle.should.containEql("webpackJsonp");
-			chunk.should.containEql("webpackJsonp(");
+			chunk.should.containEql("window[\"webpackJsonp\"] || []).push");
 			done();
 		});
 	});
@@ -257,31 +257,6 @@ describe("Compiler", () => {
 				compiler.parentCompilation = NaN;
 				const response9 = compiler.isChild();
 				response9.should.be.exactly(false);
-				done();
-			});
-		});
-		describe("createChildCompiler", () => {
-			it("defaults cache.children if none exists yet", (done) => {
-				const mockPlugin = sinon.spy();
-				class fakePlugin {
-					apply() {
-						mockPlugin();
-					}
-				}
-				compiler.cache = {};
-				compiler.createChildCompiler({}, "compiler9000", 0, {}, [new fakePlugin()]);
-				mockPlugin.callCount.should.be.exactly(1);
-				compiler.cache.children.should.match({});
-				done();
-			});
-			it("defaults cache.children[compilerName] if none exists yet", (done) => {
-				compiler.cache = {
-					children: {},
-				};
-				compiler.createChildCompiler({}, "compiler9000", 0, {}, null);
-				compiler.cache.children.should.match({
-					compiler9000: [],
-				});
 				done();
 			});
 		});

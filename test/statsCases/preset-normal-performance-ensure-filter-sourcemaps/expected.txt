@@ -1,8 +1,8 @@
 Time: <CLR=BOLD>X</CLR>ms
       <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-       <CLR=32,BOLD>0.js</CLR>  268 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-       <CLR=32,BOLD>1.js</CLR>  132 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-       <CLR=32,BOLD>2.js</CLR>  212 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+       <CLR=32,BOLD>0.js</CLR>  318 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+       <CLR=32,BOLD>1.js</CLR>  182 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+       <CLR=32,BOLD>2.js</CLR>  262 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
     <CLR=33,BOLD>main.js</CLR>     <CLR=33,BOLD>307 kB</CLR>       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
    <CLR=32,BOLD>0.js.map</CLR>  291 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
    <CLR=32,BOLD>1.js.map</CLR>  250 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         

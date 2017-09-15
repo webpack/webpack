@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "3.5.5",
+  "version": "3.5.6",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "dependencies": {
@@ -21,7 +21,7 @@
     "node-libs-browser": "^2.0.0",
     "source-map": "^0.5.3",
     "supports-color": "^4.2.1",
-    "tapable": "^0.2.7",
+    "tapable": "^0.2.8",
     "uglifyjs-webpack-plugin": "^0.4.6",
     "watchpack": "^1.4.0",
     "webpack-sources": "^1.0.1",
@@ -106,7 +106,7 @@
     "nsp": "nsp check --output summary",
     "benchmark": "mocha --max-old-space-size=4096 --harmony test/*.benchmark.js -R spec",
     "cover": "node --max-old-space-size=4096 --harmony ./node_modules/istanbul/lib/cli.js cover -x '**/*.runtime.js' node_modules/mocha/bin/_mocha -- test/*.test.js",
-    "cover:min": "node --max-old-space-size=4096 --harmony ./node_modules/.bin/istanbul cover -x '**/*.runtime.js' --report lcovonly node_modules/mocha/bin/_mocha -- test/*.test.js",
+    "cover:min": "node --max-old-space-size=4096 --harmony ./node_modules/istanbul/lib/cli.js cover -x '**/*.runtime.js' --report lcovonly node_modules/mocha/bin/_mocha -- test/*.test.js",
     "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
   }
 }

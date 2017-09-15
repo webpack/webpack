@@ -73,7 +73,7 @@
 
 [harmony-unused](harmony-unused)
 
-## HTT2 Aggressive Splitting
+## HTTP2 Aggressive Splitting
 [http2-aggressive-splitting](http2-aggressive-splitting)
 
 ## Hybrid Routing

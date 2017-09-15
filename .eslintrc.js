@@ -19,7 +19,6 @@ module.exports = {
 		"global-require": "off",
 		"brace-style": "error",
 		"eol-last": "error",
-		"indent": ["error", "tab", { "SwitchCase": 1 }],
 		"no-extra-bind": "warn",
 		"no-empty": "off",
 		"no-multiple-empty-lines": "error",
