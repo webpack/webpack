@@ -1,11 +1,11 @@
-Hash: 9a1ba44f60599afb5d545ba55a77112cca5f2a42
+Hash: 0758b2e4b34e9e2299b4cf1121d95bbe7721c1f3
 Child
-    Hash: 9a1ba44f60599afb5d54
+    Hash: 0758b2e4b34e9e2299b4
     Time: Xms
-       [0] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy_shared.js 25 bytes {0} {1} {2} [built]
-       [1] (webpack)/test/statsCases/scope-hoisting-multi/vendor.js 25 bytes {5} [built]
-       [2] (webpack)/test/statsCases/scope-hoisting-multi/common.js 37 bytes {3} {4} [built]
-       [3] (webpack)/test/statsCases/scope-hoisting-multi/common2.js 25 bytes {3} {4} [built]
+       [0] (webpack)/test/statsCases/scope-hoisting-multi/common2.js 25 bytes {3} {4} [built]
+       [1] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy_shared.js 25 bytes {0} {1} {2} [built]
+       [2] (webpack)/test/statsCases/scope-hoisting-multi/vendor.js 25 bytes {5} [built]
+       [3] (webpack)/test/statsCases/scope-hoisting-multi/common.js 37 bytes {3} {4} [built]
        [4] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy.js 25 bytes {1} {2} [built]
        [5] (webpack)/test/statsCases/scope-hoisting-multi/lazy_shared.js 31 bytes {0} [built]
        [6] (webpack)/test/statsCases/scope-hoisting-multi/first.js 207 bytes {3} [built]
@@ -14,7 +14,7 @@ Child
        [9] (webpack)/test/statsCases/scope-hoisting-multi/second.js 177 bytes {4} [built]
       [10] (webpack)/test/statsCases/scope-hoisting-multi/lazy_second.js 55 bytes {1} [built]
 Child
-    Hash: 5ba55a77112cca5f2a42
+    Hash: cf1121d95bbe7721c1f3
     Time: Xms
        [0] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy_shared.js 25 bytes {0} {1} {2} [built]
        [1] (webpack)/test/statsCases/scope-hoisting-multi/vendor.js 25 bytes {5} [built]
