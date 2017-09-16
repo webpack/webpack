@@ -1,0 +1,11 @@
+{
+  "name": "testPackage",
+  "version": "1.0.0",
+  "description": "for the purposes of this test",
+  "main": "dll.js",
+  "author": "Walker",
+  "license": "MIT",
+  "dependencies": {
+    "module-with-closure-state": "file:../../../fixtures/node_modules/module-with-closure-state/"
+  }
+}
