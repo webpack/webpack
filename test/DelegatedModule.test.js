@@ -23,8 +23,11 @@ describe("DelegatedModule", function() {
 			const delegatedModule = new DelegatedModule(sourceRequest, data, type, userRequest);
 			delegatedModule.updateHash(hash);
 		});
-		it("calls hash function with delegated module ID", function() {
+		it("updates hash with delegated module ID", function() {
 			hashedText.should.containEql("/xg9");
+		});
+		it("updates hash with delegation type", function() {
+			hashedText.should.containEql("require");
 		});
 	});
 });
