@@ -312,4 +312,24 @@ module.exports = some/request;`;
 			});
 		});
 	});
+
+	describe("#updateHash", function() {
+		let hashedText;
+		let hash;
+		beforeEach(function() {
+			hashedText = "";
+			hash = {
+				update: (text) => {
+					hashedText += text;
+				}
+			};
+			externalModule.updateHash(hash);
+		});
+		it("updates hash with request", function() {
+			hashedText.should.containEql("some/request");
+		});
+		it("updates hash with type", function() {
+			hashedText.should.containEql("some-type");
+		});
+	});
 });
