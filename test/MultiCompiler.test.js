@@ -47,23 +47,21 @@ const createCompiler = function(overrides) {
 };
 
 const setupTwoCompilerEnvironment = function(env, compiler1Values, compiler2Values) {
-	const compilerEnvironment1 = new CompilerEnvironment();
-	const compilerEnvironment2 = new CompilerEnvironment();
-	const compilers = [
-		Object.assign({
-			name: "compiler1"
-		}, (compiler1Values || {}), compilerEnvironment1.getCompilerStub()),
-		Object.assign({
-			name: "compiler2"
-		}, (compiler2Values || {}), compilerEnvironment2.getCompilerStub())
-	];
+	return setupMutliCompilerEnvironment(env, 2, [compiler1Values, compiler2Values]);
+};
+
+const setupMutliCompilerEnvironment = function(env, count, compilerValues) {
+	const values = Array.isArray(compilerValues) ? compilerValues : new Array(count);
+	const environments = values.map(() => new CompilerEnvironment());
+	const compilers = environments.map((e, i) => Object.assign({
+		name: `compiler${i + 1}`
+	}, (values[i] || {}), e.getCompilerStub()));
 	env.myMultiCompiler = new MultiCompiler(compilers);
-	env.compiler1EventBindings = compilerEnvironment1.getPluginEventBindings();
-	env.compiler2EventBindings = compilerEnvironment2.getPluginEventBindings();
-	env.compiler1WatchCallbacks = compilerEnvironment1.getWatchCallbacks();
-	env.compiler2WatchCallbacks = compilerEnvironment2.getWatchCallbacks();
-	env.compiler1RunCallbacks = compilerEnvironment1.getRunCallbacks();
-	env.compiler2RunCallbacks = compilerEnvironment2.getRunCallbacks();
+	environments.forEach((compilerEnvironment, i) => {
+		env[`compiler${i + 1}EventBindings`] = compilerEnvironment.getPluginEventBindings();
+		env[`compiler${i + 1}WatchCallbacks`] = compilerEnvironment.getWatchCallbacks();
+		env[`compiler${i + 1}RunCallbacks`] = compilerEnvironment.getRunCallbacks();
+	});
 };
 
 describe("MultiCompiler", () => {
@@ -450,6 +448,36 @@ describe("MultiCompiler", () => {
 				should(env.callback.getCall(0).args[1]).be.undefined();
 			});
 		});
+
+		describe("with no root compiler", () => {
+			beforeEach(() => {
+				setupMutliCompilerEnvironment(env, 3, [{
+					name: "a",
+				}, {
+					name: "b",
+					dependencies: ["a", "c"]
+				}, {
+					name: "c",
+					dependencies: ["b"]
+				}]);
+				env.callback = sinon.spy();
+				env.options = [{
+					testWatchOptions: true
+				}, {
+					testWatchOptions2: true
+				}];
+				env.result = env.myMultiCompiler.watch(env.options, env.callback);
+			});
+
+			it("should call the callback with an error message", () => {
+				env.compiler1RunCallbacks.length.should.be.exactly(0);
+				env.compiler2RunCallbacks.length.should.be.exactly(0);
+				env.compiler3RunCallbacks.length.should.be.exactly(0);
+				env.callback.callCount.should.be.exactly(1);
+				env.callback.getCall(0).args[0].should.be.Error();
+				should(env.callback.getCall(0).args[1]).be.undefined();
+			});
+		});
 	});
 
 	describe("run", () => {
@@ -580,6 +608,31 @@ describe("MultiCompiler", () => {
 			it("should call the callback with an error message", () => {
 				env.compiler1RunCallbacks.length.should.be.exactly(0);
 				env.compiler2RunCallbacks.length.should.be.exactly(0);
+				env.callback.callCount.should.be.exactly(1);
+				env.callback.getCall(0).args[0].should.be.Error();
+				should(env.callback.getCall(0).args[1]).be.undefined();
+			});
+		});
+
+		describe("with no root compiler", () => {
+			beforeEach(() => {
+				setupMutliCompilerEnvironment(env, 3, [{
+					name: "a",
+				}, {
+					name: "b",
+					dependencies: ["a", "c"]
+				}, {
+					name: "c",
+					dependencies: ["b"]
+				}]);
+				env.callback = sinon.spy();
+				env.myMultiCompiler.run(env.callback);
+			});
+
+			it("should call the callback with an error message", () => {
+				env.compiler1RunCallbacks.length.should.be.exactly(0);
+				env.compiler2RunCallbacks.length.should.be.exactly(0);
+				env.compiler3RunCallbacks.length.should.be.exactly(0);
 				env.callback.callCount.should.be.exactly(1);
 				env.callback.getCall(0).args[0].should.be.Error();
 				should(env.callback.getCall(0).args[1]).be.undefined();
