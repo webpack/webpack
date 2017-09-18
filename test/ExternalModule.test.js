@@ -323,6 +323,7 @@ module.exports = some/request;`;
 					hashedText += text;
 				}
 			};
+			externalModule.optional = true;
 			externalModule.updateHash(hash);
 		});
 		it("updates hash with request", function() {
@@ -330,6 +331,9 @@ module.exports = some/request;`;
 		});
 		it("updates hash with type", function() {
 			hashedText.should.containEql("some-type");
+		});
+		it("updates hash with optional flag", function() {
+			hashedText.should.containEql("true");
 		});
 	});
 });
