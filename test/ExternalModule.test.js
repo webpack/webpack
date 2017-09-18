@@ -324,6 +324,7 @@ module.exports = some/request;`;
 				}
 			};
 			externalModule.optional = true;
+			externalModule.id = 12345678;
 			externalModule.updateHash(hash);
 		});
 		it("updates hash with request", function() {
@@ -334,6 +335,9 @@ module.exports = some/request;`;
 		});
 		it("updates hash with optional flag", function() {
 			hashedText.should.containEql("true");
+		});
+		it("updates hash with module id", function() {
+			hashedText.should.containEql("12345678");
 		});
 	});
 });
