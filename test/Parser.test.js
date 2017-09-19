@@ -331,6 +331,39 @@ describe("Parser", () => {
 			"b.Number": "number=123",
 			"b['Number']": "number=123",
 			"b[Number]": "",
+			"'str'.concat()": "string=str",
+			"'str'.concat('one')": "string=strone",
+			"'str'.concat('one').concat('two')": "string=stronetwo",
+			"'str'.concat('one').concat('two', 'three')": "string=stronetwothree",
+			"'str'.concat('one', 'two')": "string=stronetwo",
+			"'str'.concat('one', 'two').concat('three')": "string=stronetwothree",
+			"'str'.concat('one', 'two').concat('three', 'four')": "string=stronetwothreefour",
+			"'str'.concat('one', obj)": "wrapped=['str' string=str]+[null]",
+			"'str'.concat('one', obj).concat()": "wrapped=['str' string=str]+[null]",
+			"'str'.concat('one', obj, 'two')": "wrapped=['str' string=str]+['two' string=two]",
+			"'str'.concat('one', obj, 'two').concat()": "wrapped=['str' string=str]+['two' string=two]",
+			"'str'.concat('one', obj, 'two').concat('three')": "wrapped=['str' string=str]+['three' string=three]",
+			"'str'.concat(obj)": "wrapped=['str' string=str]+[null]",
+			"'str'.concat(obj).concat()": "wrapped=['str' string=str]+[null]",
+			"'str'.concat(obj).concat('one', 'two')": "wrapped=['str' string=str]+['one', 'two' string=onetwo]",
+			"'str'.concat(obj).concat(obj, 'one')": "wrapped=['str' string=str]+['one' string=one]",
+			"'str'.concat(obj).concat(obj, 'one', 'two')": "wrapped=['str' string=str]+['one', 'two' string=onetwo]",
+			"'str'.concat(obj).concat('one', obj, 'one')": "wrapped=['str' string=str]+['one' string=one]",
+			"'str'.concat(obj).concat('one', obj, 'two', 'three')": "wrapped=['str' string=str]+['two', 'three' string=twothree]",
+			"'str'.concat(obj, 'one')": "wrapped=['str' string=str]+['one' string=one]",
+			"'str'.concat(obj, 'one').concat()": "wrapped=['str' string=str]+['one' string=one]",
+			"'str'.concat(obj, 'one').concat('two', 'three')": "wrapped=['str' string=str]+['two', 'three' string=twothree]",
+			"'str'.concat(obj, 'one').concat(obj, 'two', 'three')": "wrapped=['str' string=str]+['two', 'three' string=twothree]",
+			"'str'.concat(obj, 'one').concat('two', obj, 'three')": "wrapped=['str' string=str]+['three' string=three]",
+			"'str'.concat(obj, 'one').concat('two', obj, 'three', 'four')": "wrapped=['str' string=str]+['three', 'four' string=threefour]",
+			"'str'.concat(obj, 'one', 'two')": "wrapped=['str' string=str]+['one', 'two' string=onetwo]",
+			"'str'.concat(obj, 'one', 'two').concat()": "wrapped=['str' string=str]+['one', 'two' string=onetwo]",
+			"'str'.concat(obj, 'one', 'two').concat('three', 'four')": "wrapped=['str' string=str]+['three', 'four' string=threefour]",
+			"'str'.concat(obj, 'one', 'two').concat(obj, 'three', 'four')": "wrapped=['str' string=str]+['three', 'four' string=threefour]",
+			"'str'.concat(obj, 'one', 'two').concat('three', obj, 'four')": "wrapped=['str' string=str]+['four' string=four]",
+			"'str'.concat(obj, 'one', 'two').concat('three', obj, 'four', 'five')": "wrapped=['str' string=str]+['four', 'five' string=fourfive]",
+			"`start${obj}mid${obj2}end`": "template=[start string=start],[mid string=mid],[end string=end]", // eslint-disable-line no-template-curly-in-string
+			"`start${'str'}mid${obj2}end`": "template=[start${'str'}mid string=startstrmid],[end string=end]", // eslint-disable-line no-template-curly-in-string
 			"'abc'.substr(1)": "string=bc",
 			"'abcdef'.substr(2, 3)": "string=cde",
 			"'abcdef'.substring(2, 3)": "string=c",
@@ -359,6 +392,7 @@ describe("Parser", () => {
 					if(evalExpr.isConditional()) result.push("options=[" + evalExpr.options.map(evalExprToString).join("],[") + "]");
 					if(evalExpr.isArray()) result.push("items=[" + evalExpr.items.map(evalExprToString).join("],[") + "]");
 					if(evalExpr.isConstArray()) result.push("array=[" + evalExpr.array.join("],[") + "]");
+					if(evalExpr.isTemplateString()) result.push("template=[" + evalExpr.quasis.map(evalExprToString).join("],[") + "]");
 					if(evalExpr.isWrapped()) result.push("wrapped=[" + evalExprToString(evalExpr.prefix) + "]+[" + evalExprToString(evalExpr.postfix) + "]");
 					if(evalExpr.range) {
 						const start = evalExpr.range[0] - 5;
