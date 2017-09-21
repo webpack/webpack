@@ -311,12 +311,27 @@ rules:
 
 
 
-# add non-master label to pull request to other branch
+# add non-master and next label to pull request to other branch
 - filters:
     pull_request:
-      base_ref: "^(?!master)"
+      base_ref: "^master$"
   actions:
-    label: "PR: non-master"
+    label:
+      remove: "PR: non-master"
+- filters:
+    pull_request:
+      base_ref: "^next$"
+  actions:
+    label:
+      add: "PR: next"
+      remove: "PR: non-master"
+- filters:
+    pull_request:
+      base_ref: "^(?!master$)(?!next$)"
+  actions:
+    label:
+      add: "PR: non-master"
+      remove: "PR: next"
 
 
 

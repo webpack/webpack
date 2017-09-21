@@ -16,5 +16,15 @@ it("should parse template strings in import", function(done) {
 	.then(function () { done(); }, done)
 });
 
+it("should parse .concat strings in import", function(done) {
+	var name = "abc".split("");
+	var suffix = "Test";
+	import("./abc/".concat(name[0]).concat(name[1]).concat(name[2], "Test"))
+	.then(function (imported) {
+		imported.default.should.eql("ok");
+	})
+	.then(function () { done(); }, done)
+});
+
 require("./cjs")
 require("./amd")
