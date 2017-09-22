@@ -392,6 +392,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 <div align="center">
 
+<a href="https://segment.com/?utm_source=webpack&utm_medium=documentation&utm_campaign=sponsorship" target="_blank"><img src="https://static.segment.com/site-public/2.66.17-199-g249da5f/files/segment-7714a6a4af.svg" height="96"></a>
 <a href="https://opencollective.com/webpack/goldsponsor/0/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/0/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/goldsponsor/1/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/1/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/goldsponsor/2/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/goldsponsor/2/avatar.svg?requireActive=false"></a>
