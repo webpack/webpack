@@ -11,7 +11,10 @@ const createMockChunk = (ids, chunks) => {
 		ids: ids,
 		_chunks: new Set(chunks),
 		getChunks() {
-			return this._chunks;
+			return Array.from(this._chunks);
+		},
+		getNumberOfChunks() {
+			return this._chunks.size;
 		}
 	};
 };
