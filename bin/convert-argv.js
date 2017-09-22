@@ -166,7 +166,7 @@ module.exports = function(yargs, argv, convertOptions) {
 			options.watchOptions.aggregateTimeout = +argv["watch-aggregate-timeout"];
 		}
 
-		if(typeof argv["watch-poll"] !== undefined) {
+		if(typeof argv["watch-poll"] !== "undefined") {
 			options.watchOptions = options.watchOptions || {};
 			if(argv["watch-poll"] === "true" || argv["watch-poll"] === "")
 				options.watchOptions.poll = true;

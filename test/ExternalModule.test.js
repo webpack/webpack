@@ -312,4 +312,32 @@ module.exports = some/request;`;
 			});
 		});
 	});
+
+	describe("#updateHash", function() {
+		let hashedText;
+		let hash;
+		beforeEach(function() {
+			hashedText = "";
+			hash = {
+				update: (text) => {
+					hashedText += text;
+				}
+			};
+			externalModule.optional = true;
+			externalModule.id = 12345678;
+			externalModule.updateHash(hash);
+		});
+		it("updates hash with request", function() {
+			hashedText.should.containEql("some/request");
+		});
+		it("updates hash with type", function() {
+			hashedText.should.containEql("some-type");
+		});
+		it("updates hash with optional flag", function() {
+			hashedText.should.containEql("true");
+		});
+		it("updates hash with module id", function() {
+			hashedText.should.containEql("12345678");
+		});
+	});
 });
