@@ -1,9 +1,23 @@
+/* globals describe, beforeEach, it */
 "use strict";
 
-const should = require("should");
+require("should");
 const sinon = require("sinon");
 const WebWorkerMainTemplatePlugin = require("../lib/webworker/WebWorkerMainTemplatePlugin");
 const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
+
+const createMockChunk = (ids, chunks) => {
+	return {
+		ids: ids,
+		_chunks: new Set(chunks),
+		getChunks() {
+			return Array.from(this._chunks);
+		},
+		getNumberOfChunks() {
+			return this._chunks.size;
+		}
+	};
+};
 
 describe("WebWorkerMainTemplatePlugin", function() {
 	let env;
@@ -20,17 +34,17 @@ describe("WebWorkerMainTemplatePlugin", function() {
 		beforeEach(function() {
 			env.eventBindings = applyPluginWithOptions(WebWorkerMainTemplatePlugin);
 			env.handlerContext = {
-				requireFn: 'requireFn',
-				indent: (value) => typeof value === 'string' ? value : value.join("\n"),
+				requireFn: "requireFn",
+				indent: (value) => typeof value === "string" ? value : value.join("\n"),
 				asString: (values) => values.join("\n"),
 				renderCurrentHashCode: (value) => value,
 				outputOptions: {
-					chunkFilename: 'chunkFilename'
+					chunkFilename: "chunkFilename"
 				},
 				applyPluginsWaterfall: (moduleName, fileName, data) => {
-					return `"${moduleName}${data.hash}${data.hashWithLength()}${data.chunk && data.chunk.id || ''}"`;
+					return `"${moduleName}${data.hash}${data.hashWithLength()}${data.chunk && data.chunk.id || ""}"`;
 				},
-				renderAddModule: () => 'renderAddModuleSource();',
+				renderAddModule: () => "renderAddModuleSource();",
 			};
 		});
 
@@ -49,29 +63,23 @@ describe("WebWorkerMainTemplatePlugin", function() {
 
 			describe("when no chunks are provided", () => {
 				beforeEach(() => {
-					const chunk = {
-						ids: [],
-						chunks: []
-					};
+					const chunk = createMockChunk();
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk);
 				});
 
 				it("returns the original source", () => {
-					env.source.should.be.exactly("moduleSource()")
+					env.source.should.be.exactly("moduleSource()");
 				});
 			});
 
 			describe("when chunks are provided", () => {
 				beforeEach(() => {
-					const chunk = {
-						ids: [1, 2, 3],
-						chunks: [
-							'foo',
-							'bar',
-							'baz'
-						]
-					};
-					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, 'abc123');
+					const chunk = createMockChunk([1, 2, 3], [
+						"foo",
+						"bar",
+						"baz"
+					]);
+					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, "abc123");
 				});
 
 				it("returns the original source with installed mapping", () => {
@@ -85,7 +93,7 @@ var installedChunks = {
 2: 1,
 3: 1
 };
-`.trim())
+`.trim());
 				});
 			});
 		});
@@ -101,8 +109,8 @@ var installedChunks = {
 
 			describe("when called", () => {
 				beforeEach(() => {
-					const chunk = {};
-					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, 'abc123');
+					const chunk = createMockChunk();
+					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, "abc123");
 				});
 
 				it("creates import scripts call and promise resolve", () => {
@@ -114,7 +122,7 @@ importScripts("asset-path" + abc123 + "" + abc123 + "" + chunkId + "");
 }
 resolve();
 });
-`.trim())
+`.trim());
 				});
 			});
 		});
@@ -130,28 +138,22 @@ resolve();
 
 			describe("when no chunks are provided", () => {
 				beforeEach(() => {
-					const chunk = {
-						ids: [],
-						chunks: []
-					};
+					const chunk = createMockChunk();
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk);
 				});
 
 				it("returns the original source", () => {
-					env.source.should.be.exactly("moduleSource()")
+					env.source.should.be.exactly("moduleSource()");
 				});
 			});
 
 			describe("when chunks are provided", () => {
 				beforeEach(() => {
-					const chunk = {
-						ids: [1, 2, 3],
-						chunks: [
-							'foo',
-							'bar',
-							'baz'
-						]
-					};
+					const chunk = createMockChunk([1, 2, 3], [
+						"foo",
+						"bar",
+						"baz"
+					]);
 					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk);
 				});
 
@@ -165,7 +167,7 @@ renderAddModuleSource();
 while(chunkIds.length)
 installedChunks[chunkIds.pop()] = 1;
 };
-`.trim())
+`.trim());
 				});
 			});
 		});
@@ -181,8 +183,8 @@ installedChunks[chunkIds.pop()] = 1;
 
 			describe("when called", () => {
 				beforeEach(() => {
-					const chunk = {};
-					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, 'abc123');
+					const chunk = createMockChunk();
+					env.source = env.eventBinding.handler.call(env.handlerContext, "moduleSource()", chunk, "abc123");
 				});
 
 				it("returns the original source with hot update callback", () => {
@@ -240,7 +242,7 @@ function hotDownloadManifest(requestTimeout) { // eslint-disable-line no-unused-
 function hotDisposeChunk(chunkId) { //eslint-disable-line no-unused-vars
 	delete installedChunks[chunkId];
 }
-`.trim())
+`.trim());
 				});
 			});
 		});
