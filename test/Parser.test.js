@@ -219,7 +219,7 @@ describe("Parser", () => {
 			});
 			testParser.plugin("expression fgh", (expr) => {
 				if(!testParser.state.fgh) testParser.state.fgh = [];
-				testParser.state.fgh.push(testParser.scope.definitions.join(" "));
+				testParser.state.fgh.push(Array.from(testParser.scope.definitions.asSet()).join(" "));
 				return true;
 			});
 			testParser.plugin("expression fgh.sub", (expr) => {

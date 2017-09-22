@@ -283,6 +283,11 @@ module.exports = function(yargs, argv, convertOptions) {
 			}
 		}
 
+		function addPlugin(options, plugin) {
+			ensureArray(options, "plugins");
+			options.plugins.unshift(plugin);
+		}
+
 		ifArgPair("entry", function(name, entry) {
 			if(typeof options.entry[name] !== "undefined" && options.entry[name] !== null) {
 				options.entry[name] = [].concat(options.entry[name]).concat(entry);
@@ -328,9 +333,8 @@ module.exports = function(yargs, argv, convertOptions) {
 		}, function() {
 			defineObject = {};
 		}, function() {
-			ensureArray(options, "plugins");
 			var DefinePlugin = require("../lib/DefinePlugin");
-			options.plugins.push(new DefinePlugin(defineObject));
+			addPlugin(options, new DefinePlugin(defineObject));
 		});
 
 		ifArg("output-path", function(value) {
@@ -398,15 +402,13 @@ module.exports = function(yargs, argv, convertOptions) {
 		mapArgToBoolean("cache");
 
 		ifBooleanArg("hot", function() {
-			ensureArray(options, "plugins");
 			var HotModuleReplacementPlugin = require("../lib/HotModuleReplacementPlugin");
-			options.plugins.push(new HotModuleReplacementPlugin());
+			addPlugin(options, new HotModuleReplacementPlugin());
 		});
 
 		ifBooleanArg("debug", function() {
-			ensureArray(options, "plugins");
 			var LoaderOptionsPlugin = require("../lib/LoaderOptionsPlugin");
-			options.plugins.push(new LoaderOptionsPlugin({
+			addPlugin(options, new LoaderOptionsPlugin({
 				debug: true
 			}));
 		});
@@ -438,41 +440,36 @@ module.exports = function(yargs, argv, convertOptions) {
 		});
 
 		ifArg("optimize-max-chunks", function(value) {
-			ensureArray(options, "plugins");
 			var LimitChunkCountPlugin = require("../lib/optimize/LimitChunkCountPlugin");
-			options.plugins.push(new LimitChunkCountPlugin({
+			addPlugin(options, new LimitChunkCountPlugin({
 				maxChunks: parseInt(value, 10)
 			}));
 		});
 
 		ifArg("optimize-min-chunk-size", function(value) {
-			ensureArray(options, "plugins");
 			var MinChunkSizePlugin = require("../lib/optimize/MinChunkSizePlugin");
-			options.plugins.push(new MinChunkSizePlugin({
+			addPlugin(options, new MinChunkSizePlugin({
 				minChunkSize: parseInt(value, 10)
 			}));
 		});
 
 		ifBooleanArg("optimize-minimize", function() {
-			ensureArray(options, "plugins");
 			var UglifyJsPlugin = require("../lib/optimize/UglifyJsPlugin");
 			var LoaderOptionsPlugin = require("../lib/LoaderOptionsPlugin");
-			options.plugins.push(new UglifyJsPlugin({
+			addPlugin(options, new UglifyJsPlugin({
 				sourceMap: options.devtool && (options.devtool.indexOf("sourcemap") >= 0 || options.devtool.indexOf("source-map") >= 0)
 			}));
-			options.plugins.push(new LoaderOptionsPlugin({
+			addPlugin(options, new LoaderOptionsPlugin({
 				minimize: true
 			}));
 		});
 
 		ifArg("prefetch", function(request) {
-			ensureArray(options, "plugins");
 			var PrefetchPlugin = require("../lib/PrefetchPlugin");
-			options.plugins.push(new PrefetchPlugin(request));
+			addPlugin(options, new PrefetchPlugin(request));
 		});
 
 		ifArg("provide", function(value) {
-			ensureArray(options, "plugins");
 			var idx = value.indexOf("=");
 			var name;
 			if(idx >= 0) {
@@ -482,12 +479,11 @@ module.exports = function(yargs, argv, convertOptions) {
 				name = value;
 			}
 			var ProvidePlugin = require("../lib/ProvidePlugin");
-			options.plugins.push(new ProvidePlugin(name, value));
+			addPlugin(options, new ProvidePlugin(name, value));
 		});
 
 		ifArg("plugin", function(value) {
-			ensureArray(options, "plugins");
-			options.plugins.push(loadPlugin(value));
+			addPlugin(options, loadPlugin(value));
 		});
 
 		mapArgToBoolean("bail");

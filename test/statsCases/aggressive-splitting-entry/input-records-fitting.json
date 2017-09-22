@@ -5,14 +5,16 @@
       "c.js": 1,
       "d.js": 2,
       "e.js": 3,
-      "index.js": 4
+      "index.js": 4,
+      "a.js": 5
     },
     "usedIds": {
       "0": 0,
       "1": 1,
       "2": 2,
       "3": 3,
-      "4": 4
+      "4": 4,
+      "5": 5
     }
   },
   "chunks": {
@@ -20,7 +22,7 @@
     "byBlocks": {},
     "usedIds": {
       "0": 0,
-      "1": 1
+      "444": 444
     }
   },
   "aggressiveSplits": [
@@ -29,8 +31,8 @@
         "b.js",
         "c.js"
       ],
-      "hash": "48c8b1dae03a37363ec82be4f7b781bc",
-      "id": 1
+      "hash": "dd43a4ed55c20668ec9be140e41d560b",
+      "id": 444
     }
   ]
 }
