@@ -138,14 +138,6 @@
         "exprContextRequest": {
           "type": "string"
         },
-        "loaders": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/ruleSet-rules"
-            }
-          ],
-          "description": "An array of automatically applied loaders."
-        },
         "noParse": {
           "description": "Don't parse files matching. It's matched against the full resolved request.",
           "anyOf": [

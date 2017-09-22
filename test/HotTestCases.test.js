@@ -33,9 +33,7 @@ describe("HotTestCases", () => {
 					if(fs.existsSync(recordsPath))
 						fs.unlinkSync(recordsPath);
 					const fakeUpdateLoaderOptions = {
-						options: {
-							updateIndex: 0
-						}
+						updateIndex: 0
 					};
 					const configPath = path.join(testDirectory, "webpack.config.js");
 					let options = {};
@@ -87,14 +85,14 @@ describe("HotTestCases", () => {
 						}
 
 						function _next(callback) {
-							fakeUpdateLoaderOptions.options.updateIndex++;
+							fakeUpdateLoaderOptions.updateIndex++;
 							compiler.run((err, stats) => {
 								if(err) return done(err);
 								const jsonStats = stats.toJson({
 									errorDetails: true
 								});
-								if(checkArrayExpectation(testDirectory, jsonStats, "error", "errors" + fakeUpdateLoaderOptions.options.updateIndex, "Error", done)) return;
-								if(checkArrayExpectation(testDirectory, jsonStats, "warning", "warnings" + fakeUpdateLoaderOptions.options.updateIndex, "Warning", done)) return;
+								if(checkArrayExpectation(testDirectory, jsonStats, "error", "errors" + fakeUpdateLoaderOptions.updateIndex, "Error", done)) return;
+								if(checkArrayExpectation(testDirectory, jsonStats, "warning", "warnings" + fakeUpdateLoaderOptions.updateIndex, "Warning", done)) return;
 								if(callback) callback(jsonStats);
 							});
 						}
