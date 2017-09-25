@@ -93,7 +93,7 @@
   "scripts": {
     "jest": "node --max-old-space-size=4096 node_modules/jest/bin/jest",
     "test": "npm run jest",
-    "travis:test": "npm run cover:min -- --runInBand",
+    "travis:test": "npm run cover:min -- --runInBand && codecov",
     "travis:lint": "npm run lint-files && npm run nsp",
     "travis:benchmark": "npm run benchmark",
     "appveyor:test": "node --max-old-space-size=4096 node_modules\\jest\\bin\\jest --runInBand",
