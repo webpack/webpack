@@ -129,6 +129,7 @@ describe("Parser", () => {
 			}
 		],
 		"renaming with const": [
+			/* istanbul ignore next */
 			function() {
 				const xyz = abc;
 				xyz("test");
@@ -137,6 +138,7 @@ describe("Parser", () => {
 			}
 		],
 		"renaming with var": [
+			/* istanbul ignore next */
 			function() {
 				var xyz = abc;
 				xyz("test");
@@ -145,6 +147,7 @@ describe("Parser", () => {
 			}
 		],
 		"renaming with assignment": [
+			/* istanbul ignore next */
 			function() {
 				const xyz = abc;
 				xyz("test");
