@@ -98,7 +98,7 @@
     "travis:benchmark": "npm run benchmark",
     "appveyor:test": "node --max-old-space-size=4096 node_modules\\jest\\bin\\jest",
     "appveyor:benchmark": "npm run benchmark",
-    "circleci:test": "npm run jest",
+    "circleci:test": "npm run jest -- --runInBand",
     "circleci:lint": "npm run lint-files && npm run nsp",
     "build:examples": "cd examples && node buildAll.js",
     "pretest": "npm run lint-files",
