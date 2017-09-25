@@ -91,7 +91,8 @@
     "schemas/"
   ],
   "scripts": {
-    "test": "jest",
+    "jest": "jest",
+    "test": "npm run jest",
     "travis:test": "npm run cover:min",
     "travis:lint": "npm run lint-files && npm run nsp",
     "travis:benchmark": "npm run benchmark",
