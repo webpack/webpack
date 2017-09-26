@@ -3,7 +3,7 @@ Time: <CLR=BOLD>X</CLR>ms
        <CLR=32,BOLD>0.js</CLR>  268 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
        <CLR=32,BOLD>1.js</CLR>  132 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
        <CLR=32,BOLD>2.js</CLR>  212 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-    <CLR=33,BOLD>main.js</CLR>     <CLR=33,BOLD>306 kB</CLR>       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+    <CLR=33,BOLD>main.js</CLR>     <CLR=33,BOLD>307 kB</CLR>       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
    <CLR=32,BOLD>0.js.map</CLR>  291 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
    <CLR=32,BOLD>1.js.map</CLR>  250 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
    <CLR=32,BOLD>2.js.map</CLR>  404 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
@@ -18,10 +18,10 @@ Time: <CLR=BOLD>X</CLR>ms
 <CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (250 kB).
 This can impact web performance.
 Assets: 
-  main.js (306 kB)</CLR>
+  main.js (307 kB)</CLR>
 
 <CLR=33,BOLD>WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (250 kB). This can impact web performance.
 Entrypoints:
-  main (306 kB)
+  main (307 kB)
       main.js
 </CLR>
