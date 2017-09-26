@@ -188,6 +188,12 @@ function processOptions(options) {
 	if(typeof outputOptions.context === "undefined")
 		outputOptions.context = firstOptions.context;
 
+	ifArg("env", function(value) {
+		if(outputOptions.env) {
+			outputOptions._env = value;
+		}
+	});
+
 	ifArg("json", function(bool) {
 		if(bool)
 			outputOptions.json = bool;
