@@ -79,6 +79,36 @@ You can see that webpack outputs four files/chunks:
 {{js/2.output.js}}
 ```
 
+# js/asyncoutput.js
+
+``` javascript
+{{js/asyncoutput.js}}
+```
+
+# js/0.asyncoutput.js
+
+``` javascript
+{{js/0.asyncoutput.js}}
+```
+
+# js/1.asyncoutput.js
+
+``` javascript
+{{js/1.asyncoutput.js}}
+```
+
+# js/2.asyncoutput.js
+
+``` javascript
+{{js/2.asyncoutput.js}}
+```
+
+# js/3.asyncoutput.js
+
+``` javascript
+{{js/3.asyncoutput.js}}
+```
+
 # Info
 
 ## Uncompressed
