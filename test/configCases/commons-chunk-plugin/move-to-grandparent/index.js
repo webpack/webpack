@@ -7,6 +7,6 @@ it("should correctly include indirect children in common chunk", function(done) 
 		imports[1].default.should.be.eql("reuse");
 		done();
 	}).catch(e => {
-		done();
+		done(e);
 	})
 });
