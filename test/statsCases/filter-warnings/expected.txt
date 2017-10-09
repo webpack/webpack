@@ -2,8 +2,8 @@ Hash: 3cc7bf529a74b021bee53cc7bf529a74b021bee53cc7bf529a74b021bee53cc7bf529a74b0
 Child
     Hash: 3cc7bf529a74b021bee5
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.05 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -20,38 +20,38 @@ Child
 Child
     Hash: 3cc7bf529a74b021bee5
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.05 KiB       0  [emitted]  main
 Child
     Hash: 3cc7bf529a74b021bee5
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.05 KiB       0  [emitted]  main
 Child
     Hash: 3cc7bf529a74b021bee5
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.05 KiB       0  [emitted]  main
 Child
     Hash: 3cc7bf529a74b021bee5
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.05 KiB       0  [emitted]  main
 Child
     Hash: 3cc7bf529a74b021bee5
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.05 KiB       0  [emitted]  main
 Child
     Hash: 3cc7bf529a74b021bee5
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.05 KiB       0  [emitted]  main
 Child
     Hash: 3cc7bf529a74b021bee5
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.05 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -68,8 +68,8 @@ Child
 Child
     Hash: 3cc7bf529a74b021bee5
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.05 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -86,8 +86,8 @@ Child
 Child
     Hash: 3cc7bf529a74b021bee5
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.05 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -104,8 +104,8 @@ Child
 Child
     Hash: 3cc7bf529a74b021bee5
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.05 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -122,8 +122,8 @@ Child
 Child
     Hash: 3cc7bf529a74b021bee5
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.05 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -140,8 +140,8 @@ Child
 Child
     Hash: 3cc7bf529a74b021bee5
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.05 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
