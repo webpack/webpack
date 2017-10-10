@@ -9,7 +9,15 @@ const webpack = require("../");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 const Compiler = require("../lib/Compiler");
 
+const sandbox = sinon.sandbox.create();
+sandbox.spy(console, "warn");
+
 describe("Compiler", () => {
+
+	afterEach(() => {
+		sandbox.reset();
+	});
+
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
 		new WebpackOptionsDefaulter().process(options);
@@ -178,11 +186,76 @@ describe("Compiler", () => {
 			});
 		});
 		describe("parser", () => {
-			describe("apply", () => {
+			describe("plugin", () => {
+				let callback;
+				beforeEach(() => {
+					compiler.plugin = sandbox.stub();
+					callback = sandbox.stub();
+				});
+
+				it("should print deprecation report message", (done) => {
+					compiler.parser.plugin(null, callback);
+					console.warn.callCount.should.be.exactly(1);
+					done();
+				});
+
 				it("invokes sets a 'compilation' plugin", (done) => {
-					compiler.plugin = sinon.spy();
+					const data = {
+						normalModuleFactory: {
+							plugin: sandbox.stub()
+						}
+					};
+					const parserMock = {
+						plugin: sandbox.spy()
+					};
+					compiler.parser.plugin(null, callback);
+					compiler.plugin.callCount.should.be.exactly(1);
+					compiler.plugin.firstCall.args[0].should.be.equal("compilation");
+
+					const pluginCompilationCallback = compiler.plugin.firstCall.args[1];
+					pluginCompilationCallback(null, data);
+
+					data.normalModuleFactory.plugin.firstCall.args[0].should.be.equal("parser");
+
+					const normalModuleFactoryCallback = data.normalModuleFactory.plugin.firstCall.args[1];
+					normalModuleFactoryCallback(parserMock);
+					sinon.assert.calledWith(parserMock.plugin, null, sinon.match.func);
+					done();
+				});
+			});
+
+			describe("apply", () => {
+
+				it("should print deprecation report message", (done) => {
+					compiler.parser.apply();
+					console.warn.callCount.should.be.exactly(1);
+					done();
+				});
+
+				it("invokes sets a 'compilation' plugin", (done) => {
+					compiler.plugin = sandbox.stub();
+					const data = {
+						normalModuleFactory: {
+							plugin: sandbox.stub()
+						}
+					};
+					const parserMock = {
+						apply: {
+							apply: sandbox.spy()
+						}
+					};
 					compiler.parser.apply();
 					compiler.plugin.callCount.should.be.exactly(1);
+					compiler.plugin.firstCall.args[0].should.be.equal("compilation");
+
+					const pluginCompilationCallback = compiler.plugin.firstCall.args[1];
+					pluginCompilationCallback(null, data);
+
+					data.normalModuleFactory.plugin.firstCall.args[0].should.be.equal("parser");
+
+					const normalModuleFactoryCallback = data.normalModuleFactory.plugin.firstCall.args[1];
+					normalModuleFactoryCallback(parserMock);
+					parserMock.apply.apply.firstCall.args[0].should.be.equal(parserMock);
 					done();
 				});
 			});
@@ -202,7 +275,7 @@ describe("Compiler", () => {
 		});
 		describe("purgeInputFileSystem", () => {
 			it("invokes purge() if inputFileSystem.purge", (done) => {
-				const mockPurge = sinon.spy();
+				const mockPurge = sandbox.spy();
 				compiler.inputFileSystem = {
 					purge: mockPurge,
 				};
@@ -211,7 +284,7 @@ describe("Compiler", () => {
 				done();
 			});
 			it("does NOT invoke purge() if !inputFileSystem.purge", (done) => {
-				const mockPurge = sinon.spy();
+				const mockPurge = sandbox.spy();
 				compiler.inputFileSystem = null;
 				compiler.purgeInputFileSystem();
 				mockPurge.callCount.should.be.exactly(0);
@@ -293,7 +366,7 @@ describe("Compiler", () => {
 				done();
 			});
 			it("invokes compiler.readRecords", (done) => {
-				compiler.readRecords = sinon.spy();
+				compiler.readRecords = sandbox.spy();
 				compiler.watch(1000, err => err);
 				compiler.readRecords.callCount.should.be.exactly(1);
 				done();
@@ -301,7 +374,7 @@ describe("Compiler", () => {
 		});
 		describe("_done", () => {
 			it("invokes this.handler and turns this.running boolean to false when passed an error", (done) => {
-				const mockHandler = sinon.spy();
+				const mockHandler = sandbox.spy();
 				const Watching1 = compiler.watch(1000, mockHandler);
 				Watching1.running.should.be.exactly(true);
 				Watching1._done(Watching1.handler, false);
@@ -312,7 +385,7 @@ describe("Compiler", () => {
 		});
 		describe("invalidate", () => {
 			it("pauses this.watcher and sets this.watcher to null if this.watcher is true", (done) => {
-				const mockPause = sinon.spy();
+				const mockPause = sandbox.spy();
 				const Watching1 = compiler.watch(1000, err => err);
 				Watching1.watcher = {
 					pause: mockPause
@@ -333,7 +406,7 @@ describe("Compiler", () => {
 			it("invokes this._go() if !this.running", (done) => {
 				const Watching1 = compiler.watch(1000, err => err);
 				Watching1.running = false;
-				Watching1._go = sinon.spy();
+				Watching1._go = sandbox.spy();
 				Watching1.invalidate();
 				Watching1._go.callCount.should.be.exactly(1);
 				done();
