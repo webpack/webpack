@@ -1,0 +1,26 @@
+chunk    {0} 0.js (y) 0 bytes {4} {5} [rendered]
+    [1] (webpack)/test/statsCases/graph-correctness-modules/module-y.js 0 bytes {0} [built]
+        import() ./module-y [0] (webpack)/test/statsCases/graph-correctness-modules/module-x.js 1:0-47
+chunk    {1} 1.js (c) 49 bytes {3} {4} [rendered]
+    [3] (webpack)/test/statsCases/graph-correctness-modules/module-c.js 49 bytes {1} [built]
+        import() ./module-c [5] (webpack)/test/statsCases/graph-correctness-modules/module-b.js 1:0-47
+        import() ./module-c [6] (webpack)/test/statsCases/graph-correctness-modules/e2.js 2:0-47
+chunk    {2} 2.js (a) 49 bytes {1} {5} [rendered]
+    [2] (webpack)/test/statsCases/graph-correctness-modules/module-a.js 49 bytes {2} [built]
+        import() ./module-a [3] (webpack)/test/statsCases/graph-correctness-modules/module-c.js 1:0-47
+        import() ./module-a [4] (webpack)/test/statsCases/graph-correctness-modules/e1.js 2:0-47
+chunk    {3} 3.js (b) 179 bytes {2} [rendered]
+    [5] (webpack)/test/statsCases/graph-correctness-modules/module-b.js 179 bytes {3} [built]
+        import() ./module-b [2] (webpack)/test/statsCases/graph-correctness-modules/module-a.js 1:0-47
+chunk    {4} e2.js (e2) 119 bytes [entry] [rendered]
+    [0] (webpack)/test/statsCases/graph-correctness-modules/module-x.js 49 bytes {4} {5} [built]
+        harmony import ./module-x [4] (webpack)/test/statsCases/graph-correctness-modules/e1.js 1:0-20
+        import() ./module-x [5] (webpack)/test/statsCases/graph-correctness-modules/module-b.js 2:0-20
+        harmony import ./module-x [6] (webpack)/test/statsCases/graph-correctness-modules/e2.js 1:0-20
+    [6] (webpack)/test/statsCases/graph-correctness-modules/e2.js 70 bytes {4} [built]
+chunk    {5} e1.js (e1) 119 bytes [entry] [rendered]
+    [0] (webpack)/test/statsCases/graph-correctness-modules/module-x.js 49 bytes {4} {5} [built]
+        harmony import ./module-x [4] (webpack)/test/statsCases/graph-correctness-modules/e1.js 1:0-20
+        import() ./module-x [5] (webpack)/test/statsCases/graph-correctness-modules/module-b.js 2:0-20
+        harmony import ./module-x [6] (webpack)/test/statsCases/graph-correctness-modules/e2.js 1:0-20
+    [4] (webpack)/test/statsCases/graph-correctness-modules/e1.js 70 bytes {5} [built]
