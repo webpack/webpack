@@ -67,7 +67,14 @@ describe("ConfigTestCases", () => {
 					this.timeout(testConfig.timeout);
 
 					webpack(options, (err, stats) => {
-						if(err) return done(err);
+						if(err) {
+							const fakeStats = {
+								errors: [err]
+							};
+							if(checkArrayExpectation(testDirectory, fakeStats, "error", "Error", done)) return;
+							// Wait for uncatched errors to occur
+							return setTimeout(done, 200);
+						}
 						const statOptions = Stats.presetToOptions("verbose");
 						statOptions.colors = false;
 						fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
