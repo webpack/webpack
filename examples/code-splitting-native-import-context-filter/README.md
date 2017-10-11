@@ -294,70 +294,68 @@ module.exports = webpackAsyncContext;
 ## Uncompressed
 
 ```
-Hash: [1md7134f7aa757ec509958[39m[22m
-Version: webpack [1m3.6.0[39m[22m
-Time: [1m74[39m[22mms
-      [1mAsset[39m[22m       [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m           [1m[39m[22m[1mChunk Names[39m[22m
-[1m[32m0.output.js[39m[22m  444 bytes       [1m0[39m[22m  [1m[32m[emitted][39m[22m  
-[1m[32m1.output.js[39m[22m  450 bytes       [1m1[39m[22m  [1m[32m[emitted][39m[22m  
-[1m[32m2.output.js[39m[22m  441 bytes       [1m2[39m[22m  [1m[32m[emitted][39m[22m  
-  [1m[32moutput.js[39m[22m    7.25 kB       [1m3[39m[22m  [1m[32m[emitted][39m[22m  main
-Entrypoint [1mmain[39m[22m = [1m[32moutput.js[39m[22m
-chunk    {[1m[33m0[39m[22m} [1m[32m0.output.js[39m[22m 41 bytes {[1m[33m3[39m[22m}[1m[32m [rendered][39m[22m
-    [2] [1m./templates/foo.js[39m[22m 41 bytes {[1m[33m0[39m[22m}[1m[33m [optional][39m[22m[1m[32m [built][39m[22m
-        [1m[36m[exports: default][39m[22m
-        context element [1m[36m./foo.js[39m[22m [4] [1m[35m./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$[39m[22m ./foo.js
-        context element [1m[36m./foo[39m[22m [4] [1m[35m./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$[39m[22m ./foo
-chunk    {[1m[33m1[39m[22m} [1m[32m1.output.js[39m[22m 41 bytes {[1m[33m3[39m[22m}[1m[32m [rendered][39m[22m
-    [1] [1m./templates/baz.js[39m[22m 41 bytes {[1m[33m1[39m[22m}[1m[33m [optional][39m[22m[1m[32m [built][39m[22m
-        [1m[36m[exports: default][39m[22m
-        context element [1m[36m./baz.js[39m[22m [4] [1m[35m./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$[39m[22m ./baz.js
-        context element [1m[36m./baz[39m[22m [4] [1m[35m./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$[39m[22m ./baz
-chunk    {[1m[33m2[39m[22m} [1m[32m2.output.js[39m[22m 41 bytes {[1m[33m3[39m[22m}[1m[32m [rendered][39m[22m
-    [0] [1m./templates/bar.js[39m[22m 41 bytes {[1m[33m2[39m[22m}[1m[33m [optional][39m[22m[1m[32m [built][39m[22m
-        [1m[36m[exports: default][39m[22m
-        context element [1m[36m./bar.js[39m[22m [4] [1m[35m./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$[39m[22m ./bar.js
-        context element [1m[36m./bar[39m[22m [4] [1m[35m./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$[39m[22m ./bar
-chunk    {[1m[33m3[39m[22m} [1m[32moutput.js[39m[22m (main) 611 bytes[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-    > main [3] [1m./example.js[39m[22m 
-    [3] [1m./example.js[39m[22m 451 bytes {[1m[33m3[39m[22m}[1m[32m [built][39m[22m
-    [4] [1m./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$[39m[22m 160 bytes {[1m[33m3[39m[22m}[1m[33m [optional][39m[22m[1m[32m [built][39m[22m
-        import() context lazy [1m[36m./templates[39m[22m [3] [1m[35m./example.js[39m[22m 3:23-6:3
+Hash: d7134f7aa757ec509958
+Version: webpack 3.6.0
+      Asset       Size  Chunks             Chunk Names
+0.output.js  444 bytes       0  [emitted]  
+1.output.js  450 bytes       1  [emitted]  
+2.output.js  441 bytes       2  [emitted]  
+  output.js    7.25 kB       3  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} 0.output.js 41 bytes {3} [rendered]
+    [2] ./templates/foo.js 41 bytes {0} [optional] [built]
+        [exports: default]
+        context element ./foo.js [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./foo.js
+        context element ./foo [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./foo
+chunk    {1} 1.output.js 41 bytes {3} [rendered]
+    [1] ./templates/baz.js 41 bytes {1} [optional] [built]
+        [exports: default]
+        context element ./baz.js [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./baz.js
+        context element ./baz [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./baz
+chunk    {2} 2.output.js 41 bytes {3} [rendered]
+    [0] ./templates/bar.js 41 bytes {2} [optional] [built]
+        [exports: default]
+        context element ./bar.js [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./bar.js
+        context element ./bar [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./bar
+chunk    {3} output.js (main) 611 bytes [entry] [rendered]
+    > main [3] ./example.js 
+    [3] ./example.js 451 bytes {3} [built]
+    [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ 160 bytes {3} [optional] [built]
+        import() context lazy ./templates [3] ./example.js 3:23-6:3
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: [1md7134f7aa757ec509958[39m[22m
-Version: webpack [1m3.6.0[39m[22m
-Time: [1m115[39m[22mms
-      [1mAsset[39m[22m       [1mSize[39m[22m  [1mChunks[39m[22m  [1m[39m[22m           [1m[39m[22m[1mChunk Names[39m[22m
-[1m[32m0.output.js[39m[22m  117 bytes       [1m0[39m[22m  [1m[32m[emitted][39m[22m  
-[1m[32m1.output.js[39m[22m  116 bytes       [1m1[39m[22m  [1m[32m[emitted][39m[22m  
-[1m[32m2.output.js[39m[22m  115 bytes       [1m2[39m[22m  [1m[32m[emitted][39m[22m  
-  [1m[32moutput.js[39m[22m    6.83 kB       [1m3[39m[22m  [1m[32m[emitted][39m[22m  main
-Entrypoint [1mmain[39m[22m = [1m[32moutput.js[39m[22m
-chunk    {[1m[33m0[39m[22m} [1m[32m0.output.js[39m[22m 41 bytes {[1m[33m3[39m[22m}[1m[32m [rendered][39m[22m
-    [2] [1m./templates/foo.js[39m[22m 41 bytes {[1m[33m0[39m[22m}[1m[33m [optional][39m[22m[1m[32m [built][39m[22m
-        [1m[36m[exports: default][39m[22m
-        context element [1m[36m./foo.js[39m[22m [4] [1m[35m./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$[39m[22m ./foo.js
-        context element [1m[36m./foo[39m[22m [4] [1m[35m./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$[39m[22m ./foo
-chunk    {[1m[33m1[39m[22m} [1m[32m1.output.js[39m[22m 41 bytes {[1m[33m3[39m[22m}[1m[32m [rendered][39m[22m
-    [1] [1m./templates/baz.js[39m[22m 41 bytes {[1m[33m1[39m[22m}[1m[33m [optional][39m[22m[1m[32m [built][39m[22m
-        [1m[36m[exports: default][39m[22m
-        context element [1m[36m./baz.js[39m[22m [4] [1m[35m./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$[39m[22m ./baz.js
-        context element [1m[36m./baz[39m[22m [4] [1m[35m./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$[39m[22m ./baz
-chunk    {[1m[33m2[39m[22m} [1m[32m2.output.js[39m[22m 41 bytes {[1m[33m3[39m[22m}[1m[32m [rendered][39m[22m
-    [0] [1m./templates/bar.js[39m[22m 41 bytes {[1m[33m2[39m[22m}[1m[33m [optional][39m[22m[1m[32m [built][39m[22m
-        [1m[36m[exports: default][39m[22m
-        context element [1m[36m./bar.js[39m[22m [4] [1m[35m./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$[39m[22m ./bar.js
-        context element [1m[36m./bar[39m[22m [4] [1m[35m./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$[39m[22m ./bar
-chunk    {[1m[33m3[39m[22m} [1m[32moutput.js[39m[22m (main) 611 bytes[1m[33m [entry][39m[22m[1m[32m [rendered][39m[22m
-    > main [3] [1m./example.js[39m[22m 
-    [3] [1m./example.js[39m[22m 451 bytes {[1m[33m3[39m[22m}[1m[32m [built][39m[22m
-    [4] [1m./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$[39m[22m 160 bytes {[1m[33m3[39m[22m}[1m[33m [optional][39m[22m[1m[32m [built][39m[22m
-        import() context lazy [1m[36m./templates[39m[22m [3] [1m[35m./example.js[39m[22m 3:23-6:3
+Hash: d7134f7aa757ec509958
+Version: webpack 3.6.0
+      Asset       Size  Chunks             Chunk Names
+0.output.js  117 bytes       0  [emitted]  
+1.output.js  116 bytes       1  [emitted]  
+2.output.js  115 bytes       2  [emitted]  
+  output.js    6.83 kB       3  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} 0.output.js 41 bytes {3} [rendered]
+    [2] ./templates/foo.js 41 bytes {0} [optional] [built]
+        [exports: default]
+        context element ./foo.js [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./foo.js
+        context element ./foo [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./foo
+chunk    {1} 1.output.js 41 bytes {3} [rendered]
+    [1] ./templates/baz.js 41 bytes {1} [optional] [built]
+        [exports: default]
+        context element ./baz.js [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./baz.js
+        context element ./baz [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./baz
+chunk    {2} 2.output.js 41 bytes {3} [rendered]
+    [0] ./templates/bar.js 41 bytes {2} [optional] [built]
+        [exports: default]
+        context element ./bar.js [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./bar.js
+        context element ./bar [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./bar
+chunk    {3} output.js (main) 611 bytes [entry] [rendered]
+    > main [3] ./example.js 
+    [3] ./example.js 451 bytes {3} [built]
+    [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ 160 bytes {3} [optional] [built]
+        import() context lazy ./templates [3] ./example.js 3:23-6:3
 
-[1m[31mERROR in output.js from UglifyJs
-Unexpected token: keyword (function) [output.js:155,6][39m[22m
+ERROR in output.js from UglifyJs
+Unexpected token: keyword (function) [output.js:155,6]
 ```
