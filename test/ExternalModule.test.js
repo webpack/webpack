@@ -340,4 +340,32 @@ module.exports = some/request;`;
 			hashedText.should.containEql("12345678");
 		});
 	});
+
+	describe("#updateHash without optional", function() {
+		let hashedText;
+		let hash;
+		beforeEach(function() {
+			hashedText = "";
+			hash = {
+				update: (text) => {
+					hashedText += text;
+				}
+			};
+			// Note no set of `externalModule.optional`, which crashed externals in 3.7.0
+			externalModule.id = 12345678;
+			externalModule.updateHash(hash);
+		});
+		it("updates hash with request", function() {
+			hashedText.should.containEql("some/request");
+		});
+		it("updates hash with type", function() {
+			hashedText.should.containEql("some-type");
+		});
+		it("updates hash with optional flag", function() {
+			hashedText.should.containEql("false");
+		});
+		it("updates hash with module id", function() {
+			hashedText.should.containEql("12345678");
+		});
+	});
 });
