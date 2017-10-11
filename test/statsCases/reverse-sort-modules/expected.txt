@@ -1,5 +1,6 @@
 Hash: b70eb677e8a8b3694c25
 Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset     Size  Chunks             Chunk Names
 main.js  5.79 kB       0  [emitted]  main
   [29] (webpack)/test/statsCases/reverse-sort-modules/c.js?10 33 bytes {0} [built]

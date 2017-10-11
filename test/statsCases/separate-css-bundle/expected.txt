@@ -2,6 +2,7 @@ Hash: a3f5cb0c4f2d75d79214074bc8c917dae9eb215a
 Child
     Hash: a3f5cb0c4f2d75d79214
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
                                    Asset      Size  Chunks             Chunk Names
                  5a21b890f95ec575ba49.js   2.62 kB       0  [emitted]  main
     c815cf440254d4f3bba4e7041db00a28.css  26 bytes       0  [emitted]  main
@@ -17,6 +18,7 @@ Child
 Child
     Hash: 074bc8c917dae9eb215a
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
                                    Asset      Size  Chunks             Chunk Names
                  5a21b890f95ec575ba49.js   2.62 kB       0  [emitted]  main
     a3f385680aef7a9bb2a517699532cc34.css  28 bytes       0  [emitted]  main

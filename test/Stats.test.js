@@ -74,14 +74,20 @@ describe("Stats", () => {
 				if(!hasColorSetting) {
 					actual = actual
 						.replace(/\u001b\[[0-9;]*m/g, "")
-						.replace(/[0-9]+(\s?ms)/g, "X$1");
+						.replace(/[0-9]+(\s?ms)/g, "X$1")
+						.replace(
+							/[A-z]{3} [A-z]{3} \d\d \d{4} \d\d:\d\d:\d\d GMT[+-]\d{4}( \(\w{3,4}\))?/g,
+							"Thu Jan 01 1970 00:00:00 GMT");
 				} else {
 					actual = actual
 						.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
 						.replace(/\u001b\[1m/g, "<CLR=BOLD>")
 						.replace(/\u001b\[39m\u001b\[22m/g, "</CLR>")
 						.replace(/\u001b\[([0-9;]*)m/g, "<CLR=$1>")
-						.replace(/[0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2");
+						.replace(/[0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2")
+						.replace(
+							/[A-z]{3} [A-z]{3} \d\d \d{4} (<CLR=BOLD>)?\d\d:\d\d:\d\d(<\/CLR>)? GMT[+-]\d{4}( \(\w{3,4}\))?/g,
+							"Thu Jan 01 1970 $100:00:00$2 GMT");
 				}
 
 				actual = actual

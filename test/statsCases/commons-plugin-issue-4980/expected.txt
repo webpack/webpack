@@ -2,6 +2,7 @@ Hash: 7d3a56317b2e339b1d822897fe6052020598632c
 Child
     Hash: 7d3a56317b2e339b1d82
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
                              Asset       Size  Chunks             Chunk Names
                             app.js    1.27 kB       0  [emitted]  app
     vendor.bd2b4219dfda1a951495.js  443 bytes       1  [emitted]  vendor
@@ -13,6 +14,7 @@ Child
 Child
     Hash: 2897fe6052020598632c
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
                              Asset       Size  Chunks             Chunk Names
                             app.js    1.32 kB       0  [emitted]  app
     vendor.bd2b4219dfda1a951495.js  443 bytes       1  [emitted]  vendor
