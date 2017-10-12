@@ -1,7 +1,8 @@
 async function getTemplate(templateName) {
 	try {
 		let template = await import(
-			/* webpackFilter: "^(?:[^.]*(?:\\.(?!noimport(?:\\.js)?$))?)*$" */
+			/* webpackFilter: "\\.js$" */
+			/* webpackExclude: "\\.noimport\\.js$" */
 			`./templates/${templateName}`
 		);
 		console.log(template);

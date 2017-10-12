@@ -1,4 +1,4 @@
-Hash: 33a4de53934d1a739090
+Hash: 6cd77e5f0fec5bd9044b
 Time: Xms
    Asset       Size  Chunks             Chunk Names
     0.js  289 bytes       0  [emitted]  
@@ -8,5 +8,5 @@ entry.js    6.82 kB       3  [emitted]  entry
    [0] (webpack)/test/statsCases/import-context-filter/templates/bar.js 38 bytes {2} [optional] [built]
    [1] (webpack)/test/statsCases/import-context-filter/templates/baz.js 38 bytes {1} [optional] [built]
    [2] (webpack)/test/statsCases/import-context-filter/templates/foo.js 38 bytes {0} [optional] [built]
-   [3] (webpack)/test/statsCases/import-context-filter/entry.js 444 bytes {3} [built]
+   [3] (webpack)/test/statsCases/import-context-filter/entry.js 452 bytes {3} [built]
    [4] (webpack)/test/statsCases/import-context-filter/templates lazy ^\.\/.*$ 160 bytes {3} [optional] [built]
