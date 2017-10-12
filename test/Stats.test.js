@@ -17,7 +17,8 @@ const Stats = require("../lib/Stats");
 
 describe("Stats", () => {
 	tests.forEach(testName => {
-		it("should print correct stats for " + testName, (done) => {
+		it("should print correct stats for " + testName, function(done) {
+			this.timeout(10000);
 			let options = {
 				entry: "./index",
 				output: {
@@ -104,7 +105,7 @@ describe("Stats", () => {
 				actual.should.be.eql(expected);
 				done();
 			});
-		}, 10000);
+		});
 	});
 	describe("Error Handling", () => {
 		describe("does have", () => {
