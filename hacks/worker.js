@@ -1,37 +1,38 @@
 "use strict";
 
-const loaderRunner = require("loader-runner");
 const Parser = require("../lib/Parser");
+const NormalModule = require("../lib/NormalModule");
+const fs = require("graceful-fs");
+
+const parserMap = {};
 
 module.exports = {
-  runLoaders: function(input, callback) {
-    return loaderRunner.runLoaders(input, function(err, result) {
-      const source = result.result[0];
+  buildModule(input, callback) {
+    const parserLocation = input.parser.optionsLocation;
 
-      if(Buffer.isBuffer(source)) {
-        result.result[0] = source.toString();
-      }
-      callback(err, result);
-    });
-  },
-  doParse: function(input, callback) {
-    const parser = new Parser();
-    input.pluginCalls.forEach((pluginArgs) => {
-      const _args = [];
-      Object.keys(pluginArgs).forEach((index) => {
-        _args.push(pluginArgs[index]);
-      });
-      parser.plugin.apply(parser, _args);
-    });
+    if(!parserMap[parserLocation]) {
+      parserMap[parserLocation] = new Parser();
+      const parserOptions = JSON.parse(fs.readFileSync(parserLocation, "utf8"));
+      parserMap[parserLocation].hydrate(parserOptions);
+    }
 
-    parser.parse(input.source, input.parseOptions)
-      .then(
-        result => {
-          callback(null, result);
-        },
-        reason => {
-          callback(reason);
-        }
-      );
-  },
+    const loaderContext = input.loaderContext;
+    const module = new NormalModule(
+      input.moduleProps.request,
+      input.moduleProps.userRequest,
+      input.moduleProps.rawRequest,
+      input.moduleProps.loaders,
+      input.moduleProps.resource
+    );
+
+    module.hydrate(input.moduleProps);
+    module.parser = parserMap[parserLocation];
+
+    module.buildInWorker(loaderContext, require("fs"), input.options, input.compilation, (err) => {
+      if(err) callback(err);
+      module.parser = undefined;
+      const serializeResult = module.serialize();
+      callback(null, serializeResult);
+    });
+  }
 };
