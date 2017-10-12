@@ -9,4 +9,4 @@ entry.js    6.82 kB       3  [emitted]  entry
    [1] (webpack)/test/statsCases/import-context-filter/templates/baz.js 38 bytes {1} [optional] [built]
    [2] (webpack)/test/statsCases/import-context-filter/templates/foo.js 38 bytes {0} [optional] [built]
    [3] (webpack)/test/statsCases/import-context-filter/entry.js 444 bytes {3} [built]
-   [4] (webpack)/test/statsCases/import-context-filter/templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ 160 bytes {3} [optional] [built]
+   [4] (webpack)/test/statsCases/import-context-filter/templates lazy ^\.\/.*$ 160 bytes {3} [optional] [built]
