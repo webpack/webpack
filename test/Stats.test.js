@@ -157,6 +157,7 @@ describe("Stats", () => {
 				Stats.presetToOptions("Normal").should.eql({
 					assets: false,
 					version: false,
+					env: false,
 					timings: true,
 					hash: true,
 					entrypoints: false,
@@ -184,6 +185,7 @@ describe("Stats", () => {
 				Stats.presetToOptions("none").should.eql({
 					hash: false,
 					version: false,
+					env: false,
 					timings: false,
 					assets: false,
 					entrypoints: false,
