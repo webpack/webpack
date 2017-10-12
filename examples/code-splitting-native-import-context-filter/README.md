@@ -1,13 +1,14 @@
 # example.js
 
-This example illustrates how to filter the ContextModule results of `import()` statements. only the items that don't 
-have `.noimport` within the `templates` folder will be bundled.
+This example illustrates how to filter the ContextModule results of `import()` statements. only `.js` files that don't 
+end in `.noimport.js` within the `templates` folder will be bundled.
 
 ``` javascript
 async function getTemplate(templateName) {
 	try {
 		let template = await import(
-			/* webpackFilter: "^(?:[^.]*(?:\\.(?!noimport(?:\\.js)?$))?)*$" */
+			/* webpackFilter: "\\.js$" */
+			/* webpackExclude: "\\.noimport\\.js$" */
 			`./templates/${templateName}`
 		);
 		console.log(template);
@@ -23,12 +24,6 @@ getTemplate("baz");
 getTemplate("foo.noimport");
 getTemplate("bar.noimport");
 getTemplate("baz.noimport");
-```
-
-# the filter
-
-``` javascript
-/^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$/
 ```
 
 # templates/
@@ -238,9 +233,9 @@ getTemplate("baz.noimport");
 
 /***/ }),
 /* 4 */
-/*!******************************************************************!*\
-  !*** ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ***!
-  \******************************************************************/
+/*!*********************************!*\
+  !*** ./templates lazy ^\.\/.*$ ***!
+  \*********************************/
 /*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
@@ -294,68 +289,38 @@ module.exports = webpackAsyncContext;
 ## Uncompressed
 
 ```
-Hash: d7134f7aa757ec509958
+Hash: 82fef985d9d62b89692a
 Version: webpack 3.6.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  444 bytes       0  [emitted]  
 1.output.js  450 bytes       1  [emitted]  
 2.output.js  441 bytes       2  [emitted]  
-  output.js    7.25 kB       3  [emitted]  main
+  output.js    7.16 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 41 bytes {3} [rendered]
     [2] ./templates/foo.js 41 bytes {0} [optional] [built]
         [exports: default]
-        context element ./foo.js [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./foo.js
-        context element ./foo [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./foo
+        context element ./foo.js [4] ./templates lazy ^\.\/.*$ ./foo.js
+        context element ./foo [4] ./templates lazy ^\.\/.*$ ./foo
 chunk    {1} 1.output.js 41 bytes {3} [rendered]
     [1] ./templates/baz.js 41 bytes {1} [optional] [built]
         [exports: default]
-        context element ./baz.js [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./baz.js
-        context element ./baz [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./baz
+        context element ./baz.js [4] ./templates lazy ^\.\/.*$ ./baz.js
+        context element ./baz [4] ./templates lazy ^\.\/.*$ ./baz
 chunk    {2} 2.output.js 41 bytes {3} [rendered]
     [0] ./templates/bar.js 41 bytes {2} [optional] [built]
         [exports: default]
-        context element ./bar.js [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./bar.js
-        context element ./bar [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./bar
-chunk    {3} output.js (main) 611 bytes [entry] [rendered]
+        context element ./bar.js [4] ./templates lazy ^\.\/.*$ ./bar.js
+        context element ./bar [4] ./templates lazy ^\.\/.*$ ./bar
+chunk    {3} output.js (main) 620 bytes [entry] [rendered]
     > main [3] ./example.js 
-    [3] ./example.js 451 bytes {3} [built]
-    [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ 160 bytes {3} [optional] [built]
-        import() context lazy ./templates [3] ./example.js 3:23-6:3
+    [3] ./example.js 460 bytes {3} [built]
+    [4] ./templates lazy ^\.\/.*$ 160 bytes {3} [optional] [built]
+        import() context lazy ./templates [3] ./example.js 3:23-7:3
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: d7134f7aa757ec509958
-Version: webpack 3.6.0
-      Asset       Size  Chunks             Chunk Names
-0.output.js  117 bytes       0  [emitted]  
-1.output.js  116 bytes       1  [emitted]  
-2.output.js  115 bytes       2  [emitted]  
-  output.js    6.83 kB       3  [emitted]  main
-Entrypoint main = output.js
-chunk    {0} 0.output.js 41 bytes {3} [rendered]
-    [2] ./templates/foo.js 41 bytes {0} [optional] [built]
-        [exports: default]
-        context element ./foo.js [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./foo.js
-        context element ./foo [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./foo
-chunk    {1} 1.output.js 41 bytes {3} [rendered]
-    [1] ./templates/baz.js 41 bytes {1} [optional] [built]
-        [exports: default]
-        context element ./baz.js [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./baz.js
-        context element ./baz [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./baz
-chunk    {2} 2.output.js 41 bytes {3} [rendered]
-    [0] ./templates/bar.js 41 bytes {2} [optional] [built]
-        [exports: default]
-        context element ./bar.js [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./bar.js
-        context element ./bar [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ ./bar
-chunk    {3} output.js (main) 611 bytes [entry] [rendered]
-    > main [3] ./example.js 
-    [3] ./example.js 451 bytes {3} [built]
-    [4] ./templates lazy ^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$ 160 bytes {3} [optional] [built]
-        import() context lazy ./templates [3] ./example.js 3:23-6:3
 
-ERROR in output.js from UglifyJs
-Unexpected token: keyword (function) [output.js:155,6]
 ```

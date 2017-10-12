@@ -1,16 +1,10 @@
 # example.js
 
-This example illustrates how to filter the ContextModule results of `import()` statements. only the items that don't 
-have `.noimport` within the `templates` folder will be bundled.
+This example illustrates how to filter the ContextModule results of `import()` statements. only `.js` files that don't 
+end in `.noimport.js` within the `templates` folder will be bundled.
 
 ``` javascript
 {{example.js}}
-```
-
-# the filter
-
-``` javascript
-/^(?:[^.]*(?:\.(?!noimport(?:\.js)?$))?)*$/
 ```
 
 # templates/
