@@ -1,3 +1,3 @@
 module.exports = function(config) {
-	return !/^v4/.test(process.version);
+	return !/^v(4|6)/.test(process.version);
 };
