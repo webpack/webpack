@@ -975,6 +975,7 @@
       "anyOf": [
         {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "context": {
               "type": "string",
@@ -996,6 +997,18 @@
             "assets": {
               "type": "boolean",
               "description": "add assets information"
+            },
+            "env": {
+              "type": "boolean",
+              "description": "add --env information"
+            },
+            "colors": {
+              "type": "boolean",
+              "description": "`webpack --colors` equivalent"
+            },
+            "maxModules": {
+              "type": "number",
+              "description": "Set the maximum number of modules to be shown"
             },
             "chunks": {
               "type": "boolean",
