@@ -1003,8 +1003,36 @@
               "description": "add --env information"
             },
             "colors": {
-              "type": "boolean",
-              "description": "`webpack --colors` equivalent"
+              "oneOf": [
+                {
+                  "type": "boolean",
+                  "description": "`webpack --colors` equivalent"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "bold": {
+                      "type": "string"
+                    },
+                    "red": {
+                      "type": "string"
+                    },
+                    "green": {
+                      "type": "string"
+                    },
+                    "cyan": {
+                      "type": "string"
+                    },
+                    "magenta": {
+                      "type": "string"
+                    },
+                    "yellow": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
             },
             "maxModules": {
               "type": "number",
@@ -1030,6 +1058,10 @@
               "type": "boolean",
               "description": "add also information about cached (not built) modules"
             },
+            "cachedAssets": {
+              "type": "boolean",
+              "description": "Show cached assets (setting this to `false` only shows emitted files)"
+            },
             "reasons": {
               "type": "boolean",
               "description": "add information about the reasons why modules are included"
@@ -1054,6 +1086,10 @@
               "description": "Please use excludeModules instead.",
               "$ref": "#/definitions/filter-types"
             },
+            "entrypoints": {
+              "type": "boolean",
+              "description": "Display the entry points with the corresponding bundles"
+            },
             "errorDetails": {
               "type": "boolean",
               "description": "add details to errors (like resolving log)"
@@ -1077,6 +1113,10 @@
             "assetsSort": {
               "type": "string",
               "description": "sort the assets by that field"
+            },
+            "publicPath": {
+              "type": "boolean",
+              "description": "Add public path information"
             },
             "providedExports": {
               "type": "boolean",
