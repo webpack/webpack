@@ -3,7 +3,7 @@ Time: Xms
                      Asset       Size                   Chunks             Chunk Names
 chunk-containing-__a_js.js  316 bytes  chunk-containing-__a_js  [emitted]  
 chunk-containing-__b_js.js  173 bytes  chunk-containing-__b_js  [emitted]  
-                  entry.js    6.63 kB                    entry  [emitted]  entry
+                  entry.js    6.64 kB                    entry  [emitted]  entry
    [0] (webpack)/test/statsCases/named-chunks-plugin-async/modules/b.js 22 bytes {chunk-containing-__b_js} [built]
    [1] (webpack)/test/statsCases/named-chunks-plugin-async/entry.js 47 bytes {entry} [built]
    [2] (webpack)/test/statsCases/named-chunks-plugin-async/modules/a.js 37 bytes {chunk-containing-__a_js} [built]
