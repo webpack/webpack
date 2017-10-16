@@ -199,6 +199,20 @@ describe("Validation", () => {
 		message: [
 			" - configuration.context: The provided value \"baz\" is not an absolute path!",
 		]
+	}, {
+		name: "missing stats option",
+		config: {
+			entry: "foo.js",
+			stats: {
+				foobar: true
+			}
+		},
+		test(e) {
+			e.message.should.startWith("Invalid configuration object.");
+			e.message.split("\n").slice(1)[0].should.be.eql(
+				" - configuration.stats should be one of these:"
+			);
+		}
 	}];
 	testCases.forEach((testCase) => {
 		it("should fail validation for " + testCase.name, () => {
@@ -207,6 +221,12 @@ describe("Validation", () => {
 			} catch(e) {
 				if(!(e instanceof WebpackOptionsValidationError))
 					throw e;
+
+				if(testCase.test) {
+					testCase.test(e);
+					return;
+				}
+
 				e.message.should.startWith("Invalid configuration object.");
 				e.message.split("\n").slice(1).should.be.eql(testCase.message);
 				return;
