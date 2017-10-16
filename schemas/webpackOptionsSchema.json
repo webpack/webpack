@@ -975,6 +975,7 @@
       "anyOf": [
         {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "context": {
               "type": "string",
@@ -997,6 +998,46 @@
               "type": "boolean",
               "description": "add assets information"
             },
+            "env": {
+              "type": "boolean",
+              "description": "add --env information"
+            },
+            "colors": {
+              "oneOf": [
+                {
+                  "type": "boolean",
+                  "description": "`webpack --colors` equivalent"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "bold": {
+                      "type": "string"
+                    },
+                    "red": {
+                      "type": "string"
+                    },
+                    "green": {
+                      "type": "string"
+                    },
+                    "cyan": {
+                      "type": "string"
+                    },
+                    "magenta": {
+                      "type": "string"
+                    },
+                    "yellow": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "maxModules": {
+              "type": "number",
+              "description": "Set the maximum number of modules to be shown"
+            },
             "chunks": {
               "type": "boolean",
               "description": "add chunk information"
@@ -1016,6 +1057,10 @@
             "cached": {
               "type": "boolean",
               "description": "add also information about cached (not built) modules"
+            },
+            "cachedAssets": {
+              "type": "boolean",
+              "description": "Show cached assets (setting this to `false` only shows emitted files)"
             },
             "reasons": {
               "type": "boolean",
@@ -1041,6 +1086,10 @@
               "description": "Please use excludeModules instead.",
               "$ref": "#/definitions/filter-types"
             },
+            "entrypoints": {
+              "type": "boolean",
+              "description": "Display the entry points with the corresponding bundles"
+            },
             "errorDetails": {
               "type": "boolean",
               "description": "add details to errors (like resolving log)"
@@ -1064,6 +1113,10 @@
             "assetsSort": {
               "type": "string",
               "description": "sort the assets by that field"
+            },
+            "publicPath": {
+              "type": "boolean",
+              "description": "Add public path information"
             },
             "providedExports": {
               "type": "boolean",
