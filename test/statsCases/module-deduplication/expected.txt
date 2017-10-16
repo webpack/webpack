@@ -1,14 +1,14 @@
 Time: Xms
 Asset       Size  Chunks             Chunk Names
- 0.js  691 bytes    0, 3  [emitted]  
- 1.js  691 bytes    1, 4  [emitted]  
- 2.js  704 bytes    2, 5  [emitted]  
- 3.js  622 bytes       3  [emitted]  
- 4.js  622 bytes       4  [emitted]  
- 5.js  622 bytes       5  [emitted]  
-e3.js    7.33 kB       6  [emitted]  e3
-e2.js    7.31 kB       7  [emitted]  e2
-e1.js    7.28 kB       8  [emitted]  e1
+ 0.js  761 bytes    0, 3  [emitted]  
+ 1.js  761 bytes    1, 4  [emitted]  
+ 2.js  774 bytes    2, 5  [emitted]  
+ 3.js  692 bytes       3  [emitted]  
+ 4.js  692 bytes       4  [emitted]  
+ 5.js  692 bytes       5  [emitted]  
+e3.js       8 kB       6  [emitted]  e3
+e2.js    7.98 kB       7  [emitted]  e2
+e1.js    7.96 kB       8  [emitted]  e1
 chunk    {0} 0.js 37 bytes {7} {8} [rendered]
     [6] (webpack)/test/statsCases/module-deduplication/async3.js 28 bytes {0} {3} [built]
     [7] (webpack)/test/statsCases/module-deduplication/h.js 9 bytes {0} {6} [built]

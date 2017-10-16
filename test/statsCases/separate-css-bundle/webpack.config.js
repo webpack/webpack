@@ -2,7 +2,7 @@ var path = require("path");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var moduleConfig = {
-	loaders: [
+	rules: [
 		{
 			test: /\.css$/,
 			use: ExtractTextPlugin.extract({

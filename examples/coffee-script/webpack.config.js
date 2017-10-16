@@ -1,6 +1,6 @@
 module.exports = {
 	module: {
-		loaders: [
+		rules: [
 			{ test: /\.coffee$/, loader: "coffee-loader" }
 		]
 	},

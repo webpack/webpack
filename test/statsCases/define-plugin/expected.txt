@@ -1,12 +1,12 @@
-Hash: 052d0451a89cb963e4d3eb3ff8e5a88b9234d04f
+Hash: 6add27cebf4b26789967542792bed75071de6d48
 Child
-    Hash: 052d0451a89cb963e4d3
+    Hash: 6add27cebf4b26789967
     Time: Xms
       Asset     Size  Chunks             Chunk Names
     main.js  2.52 kB       0  [emitted]  main
        [0] (webpack)/test/statsCases/define-plugin/index.js 24 bytes {0} [built]
 Child
-    Hash: eb3ff8e5a88b9234d04f
+    Hash: 542792bed75071de6d48
     Time: Xms
       Asset     Size  Chunks             Chunk Names
     main.js  2.52 kB       0  [emitted]  main

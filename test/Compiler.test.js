@@ -12,7 +12,7 @@ const Compiler = require("../lib/Compiler");
 describe("Compiler", () => {
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
-		new WebpackOptionsDefaulter().process(options);
+		options = new WebpackOptionsDefaulter().process(options);
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");
 		if(noOutputPath) options.output.path = "/";
@@ -161,7 +161,7 @@ describe("Compiler", () => {
 			bundle.should.not.containEql("fixtures");
 			chunk.should.not.containEql("fixtures");
 			bundle.should.containEql("webpackJsonp");
-			chunk.should.containEql("webpackJsonp(");
+			chunk.should.containEql("window[\"webpackJsonp\"] || []).push");
 			done();
 		});
 	});
