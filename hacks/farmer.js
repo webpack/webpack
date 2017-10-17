@@ -19,6 +19,7 @@ var farm;
 var _buildModule;
 
 function startFarm() {
+  if(farm) return;
   if(farm) throw new Error("farm already started");
   farm = workerFarm({
     autoStart: true,
