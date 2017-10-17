@@ -458,4 +458,63 @@ describe("Parser", () => {
 			});
 		});
 	});
+
+	describe("strict mode support", () => {
+		describe("should be strict mode", () => {
+			const cases = {
+				"inside source type module": "var foo = 'foo'",
+				// Webpack will first try to parse the code as "module", if failed then "script"
+				// "await" is reserved only in sourceType === "module", this makes Webpack recongnizes this part of code as "scirpt"
+				// See: http://www.ecma-international.org/ecma-262/6.0/#sec-future-reserved-words
+				"inside source type script which have 'use strict' at first": "'use strict'; var await = 'await';",
+				"inside function within source type script which have 'use strict' at first": "function bar() { 'use strict'; var await = 'await'; }",
+				"inside IIFE within source type script which have 'use strict' at first": "(function() { 'use strict'; var await = 'await'; })()",
+			};
+			const parser = new Parser();
+			parser.plugin("var foo", () => {
+				parser.state.useStrict = parser.scope.useStrict;
+			});
+			parser.plugin("var await", () => {
+				parser.state.useStrict = parser.scope.useStrict;
+			});
+
+			Object.keys(cases).forEach((name) => {
+				const expr = cases[name];
+				it(name, () => {
+					const actual = parser.parse(expr);
+					actual.should.be.eql({
+						useStrict: true,
+					});
+				});
+			});
+		});
+
+		describe("should not be strict mode", () => {
+			const cases = {
+				// Webpack will first try to parse the code as "module", if failed then "script"
+				// "await" is reserved only in sourceType === "module", this makes Webpack recongnizes this part of code as "scirpt"
+				// See: http://www.ecma-international.org/ecma-262/6.0/#sec-future-reserved-words
+				"inside source type script which don't have 'use strict'": "var await = 'await';",
+				"inside source type script which have 'use strict' but not at first": "var foo = 'foo'; 'use strict'; var await = 'await';",
+				"inside function within source type script which don't have 'use strict'": "function bar() { var await = 'await'; }",
+				"inside function within source type script which have 'use strict' but not at first": "function bar() { var foo = 'foo'; 'use strict'; var await = 'await'; }",
+				"inside IIFE within source type script which don't have 'use strict'": "(function() { var await = 'await'; })()",
+				"inside IIFE within source type script which have 'use strict' but not at first": "(function() { var foo = 'foo'; 'use strict'; var await = 'await'; })()",
+			};
+			const parser = new Parser();
+			parser.plugin("var await", () => {
+				parser.state.useStrict = parser.scope.useStrict;
+			});
+
+			Object.keys(cases).forEach((name) => {
+				const expr = cases[name];
+				it(name, () => {
+					const actual = parser.parse(expr);
+					actual.should.be.eql({
+						useStrict: false,
+					});
+				});
+			});
+		});
+	});
 });
