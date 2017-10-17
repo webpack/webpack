@@ -994,6 +994,14 @@
               "type": "boolean",
               "description": "add timing information"
             },
+            "performance": {
+              "type": "boolean",
+              "description": "add performance hint flags"
+            },
+            "depth": {
+              "type": "boolean",
+              "description": "add module depth in module graph"
+            },
             "assets": {
               "type": "boolean",
               "description": "add assets information"
@@ -1069,6 +1077,14 @@
             "source": {
               "type": "boolean",
               "description": "add the source code of modules"
+            },
+            "warnings": {
+              "type": "boolean",
+              "description": "add warnings"
+            },
+            "errors": {
+              "type": "boolean",
+              "description": "add errors"
             },
             "warningsFilter": {
               "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions",
