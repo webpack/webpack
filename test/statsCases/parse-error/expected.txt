@@ -1,0 +1,16 @@
+  Asset     Size  Chunks             Chunk Names
+main.js  3.22 kB       0  [emitted]  main
+   [0] (webpack)/test/statsCases/parse-error/index.js 15 bytes {0} [built]
+   [1] (webpack)/test/statsCases/parse-error/a.js 15 bytes {0} [built]
+   [2] (webpack)/test/statsCases/parse-error/b.js 169 bytes {0} [built] [failed] [1 error]
+
+ERROR in (webpack)/test/statsCases/parse-error/b.js
+Module parse failed: Unexpected token (6:7)
+You may need an appropriate loader to handle this file type.
+| includes
+| a
+| parser )
+| error
+| in
+ @ (webpack)/test/statsCases/parse-error/a.js 2:0-13
+ @ (webpack)/test/statsCases/parse-error/index.js
