@@ -9,7 +9,11 @@ const UmdMainTemplatePlugin = require("../lib/UmdMainTemplatePlugin");
 describe("UmdMainTemplatePlugin", () => {
 
 	const setupBasicTemplatePlugin = name => {
-		const plugin = new UmdMainTemplatePlugin({ amd: name }, { auxiliaryComment: {} });
+		const plugin = new UmdMainTemplatePlugin({
+			amd: name
+		}, {
+			auxiliaryComment: {}
+		});
 		const templatePlugin = new TemplatePluginEnvironment();
 		const environment = templatePlugin.getEnvironmentStub();
 		environment.mainTemplate.applyPluginsWaterfall = () => [];
@@ -36,9 +40,9 @@ describe("UmdMainTemplatePlugin", () => {
 
 				beforeEach(() => {
 					eventHandler = eventBindings
-							.filter(eventBinding => eventBinding.name === 'render-with-entry')
-							.map(eventBinding => eventBinding.handler)
-							.pop();
+						.filter(eventBinding => eventBinding.name === 'render-with-entry')
+						.map(eventBinding => eventBinding.handler)
+						.pop();
 				});
 
 				it("creates source that safely detects the global object", () => {
