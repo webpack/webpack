@@ -24,7 +24,7 @@ describe("ModuleDependencyError", () => {
 
 		it("has a message property", () => env.moduleDependencyError.message.should.be.exactly("Location Error Message"));
 
-		it("has a details property", () => env.moduleDependencyError.details.should.containEql(path.join("test", "ModuleDependencyError.test.js:")));
+		it("has a details property", () => env.moduleDependencyError.details.should.containEql(path.join("test", "ModuleDependencyError.unittest.js:")));
 
 		it("has an origin property", () => env.moduleDependencyError.origin.should.be.exactly("myModule"));
 

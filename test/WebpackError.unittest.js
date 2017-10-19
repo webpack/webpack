@@ -23,7 +23,7 @@ describe("WebpackError", () => {
 		const errorArr = errorStr.split("\n");
 
 		errorArr[0].should.equal("CustomError: CustomMessage");
-		errorArr[1].should.containEql("WebpackError.test.js");
+		errorArr[1].should.containEql("WebpackError.unittest.js");
 		errorArr[errorArr.length - 1].should.equal("CustomDetails");
 	});
 });
