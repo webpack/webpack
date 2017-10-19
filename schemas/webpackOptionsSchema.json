@@ -969,6 +969,10 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
+            "all": {
+              "type": "boolean",
+              "description": "fallback value for stats options when an option is not defined (has precedence over local webpack defaults)"
+            },
             "context": {
               "type": "string",
               "description": "context directory for request shortening",
@@ -985,6 +989,14 @@
             "timings": {
               "type": "boolean",
               "description": "add timing information"
+            },
+            "performance": {
+              "type": "boolean",
+              "description": "add performance hint flags"
+            },
+            "depth": {
+              "type": "boolean",
+              "description": "add module depth in module graph"
             },
             "assets": {
               "type": "boolean",
@@ -1061,6 +1073,14 @@
             "source": {
               "type": "boolean",
               "description": "add the source code of modules"
+            },
+            "warnings": {
+              "type": "boolean",
+              "description": "add warnings"
+            },
+            "errors": {
+              "type": "boolean",
+              "description": "add errors"
             },
             "warningsFilter": {
               "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions",

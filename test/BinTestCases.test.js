@@ -4,7 +4,17 @@
 const should = require("should");
 const path = require("path");
 const fs = require("fs");
-const spawn = require("child_process").spawn;
+const child_process = require("child_process");
+
+function spawn(args, options) {
+	if(process.env.running_under_istanbul) {
+		args = [require.resolve("istanbul/lib/cli.js"), "cover", "--report", "none", "--print", "none", "--include-pid", "--dir", path.resolve("coverage"), "--", require.resolve("./helpers/exec-in-directory.js"), options.cwd].concat(args);
+		options = Object.assign({}, options, {
+			cwd: undefined
+		});
+	}
+	return child_process.spawn(process.execPath, args, options);
+}
 
 function loadOptsFile(optsPath) {
 	// Options file parser from Mocha
@@ -73,7 +83,7 @@ describe("BinTestCases", function() {
 					describe(testName, function() {
 						it("should run successfully", function(done) {
 							this.timeout(10000);
-							const child = spawn(process.execPath, [cmd].concat(args), opts);
+							const child = spawn([cmd].concat(args), opts);
 
 							child.on("close", function(code) {
 								env.code = code;
@@ -100,7 +110,7 @@ describe("BinTestCases", function() {
 								const stderr = convertToArrayOfLines(env.stderr);
 								testAssertions(stdout, stderr, done);
 								child.kill();
-							}, 3000); // wait a little to get an output
+							}, 8000); // wait a little to get an output
 						});
 					});
 				} else {
@@ -108,7 +118,7 @@ describe("BinTestCases", function() {
 						before(function(done) {
 							this.timeout(20000);
 
-							const child = spawn(process.execPath, [cmd].concat(args), opts);
+							const child = spawn([cmd].concat(args), opts);
 
 							child.on("close", function(code) {
 								env.code = code;
