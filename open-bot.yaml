@@ -164,7 +164,7 @@ rules:
     pull_request:
       mergeable: true
     status:
-      context: "codecov/patch"
+      context: "codecov/patch/integration"
     ensure:
       value: "{{status.state}}"
       equals: "success"
@@ -181,7 +181,7 @@ rules:
     pull_request:
       mergeable: true
     status:
-      context: "codecov/patch"
+      context: "codecov/patch/integration"
     ensure:
       value: "{{status.state}}"
       equals: "failure"
@@ -193,7 +193,7 @@ rules:
     pull_request:
       mergeable: true
     status:
-      context: "codecov/patch"
+      context: "codecov/patch/integration"
     ensure:
       value: "{{status.state}}"
       equals: "failure"

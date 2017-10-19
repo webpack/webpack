@@ -1,0 +1,3 @@
+instrumentation:
+  excludes:
+    - "**/*.runtime.js"
