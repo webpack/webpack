@@ -110,7 +110,7 @@ describe("BinTestCases", function() {
 								const stderr = convertToArrayOfLines(env.stderr);
 								testAssertions(stdout, stderr, done);
 								child.kill();
-							}, 3000); // wait a little to get an output
+							}, 8000); // wait a little to get an output
 						});
 					});
 				} else {
