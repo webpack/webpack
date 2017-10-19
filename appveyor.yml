@@ -9,15 +9,15 @@ branches:
 init:
   - git config --global core.autocrlf input
 
-clone_depth: 50
-
 # what combinations to test
 environment:
   matrix:
     - nodejs_version: 8
-      job_part: test
+      job_part: unit
+    - nodejs_version: 8
+      job_part: integration
     - nodejs_version: 6
-      job_part: test
+      job_part: integration
 
 install:
   - ps: Install-Product node $env:nodejs_version x64
@@ -36,3 +36,4 @@ test_script:
   - npm --version
   - yarn --version
   - cmd: npm run appveyor:%job_part%
+  - cmd: npm install -g codecov && codecov -F %job_part%
