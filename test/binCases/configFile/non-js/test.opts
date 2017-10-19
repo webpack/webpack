@@ -1,0 +1,3 @@
+--entry ./index.js
+--config ./webpack.config.ts
+--output-filename [name].js

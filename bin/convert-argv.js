@@ -89,6 +89,10 @@ module.exports = function(yargs, argv, convertOptions) {
 							// do nothing
 						}
 					}
+					if(i === moduleDescriptor.length) {
+						var packages = moduleDescriptor.join(", ");
+						throw new Error("Cannot resolve config file. Install one of the following packages and try again: " + packages);
+					}
 				}
 			}
 		};
