@@ -59,7 +59,7 @@ rules:
 
 
 
-# Report specific error message if mocha fails
+# Report specific error message if mocha for integration tests fails
 - filters:
     ensure:
       value: "{{report_ci}}"
@@ -71,7 +71,7 @@ rules:
       state: "failed"
       allow_failure: false
       config:
-        env: JOB_PART=test
+        env: JOB_PART=integration
     fetch: travis_job.log
     string_cleanup:
       id: logResult
@@ -89,6 +89,46 @@ rules:
         ``` text
         {{{logResult}}}
         ```
+
+        See [complete report here]({{status.target_url}}).
+    set:
+      id: report_ci
+      value: nope
+
+
+
+# Report specific error message if mocha for unit tests fails
+- filters:
+    ensure:
+      value: "{{report_ci}}"
+      equals: yep
+    commit: true
+    status:
+      context: "continuous-integration/travis-ci/pr"
+    travis_job:
+      state: "failed"
+      allow_failure: false
+      config:
+        env: JOB_PART=unit
+    fetch: travis_job.log
+    string_cleanup:
+      id: logResult
+      value: "{{{fetch}}}"
+      remove:
+        - "^[\\s\\S]+?\\d+\\s+pending\n+"
+        - "npm ERR!.*\n"
+        - "\n*=============================================================================\n[\\s\\S]*"
+  actions:
+    comment:
+      identifier: "ci-result"
+      message: |-
+        @{{commit.author.login}} Please review the following output log for errors:
+
+        ``` text
+        {{{logResult}}}
+        ```
+
+        Instead of updating these (outdated?) unit tests, you can choose to delete them and add integration tests instead. That would be great.
 
         See [complete report here]({{status.target_url}}).
     set:
