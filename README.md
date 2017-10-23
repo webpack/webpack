@@ -24,6 +24,9 @@
 	<a href="https://opencollective.com/webpack#sponsors">
 		<img src="https://opencollective.com/webpack/sponsors/badge.svg">
 	</a>
+	<a href="https://github.com/webpack/webpack/graphs/contributors">
+		<img src="https://img.shields.io/github/contributors/webpack/webpack.svg">
+	</a>
 	<a href="https://gitter.im/webpack/webpack">
 		<img src="https://badges.gitter.im/webpack/webpack.svg">
 	</a>
