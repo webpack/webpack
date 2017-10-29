@@ -19,6 +19,7 @@
     "memory-fs": "~0.4.1",
     "mkdirp": "~0.5.0",
     "node-libs-browser": "^2.0.0",
+    "schema-utils": "^0.3.0",
     "source-map": "^0.5.3",
     "supports-color": "^4.2.1",
     "tapable": "^0.2.7",
@@ -116,6 +117,7 @@
     "cover:unit": "node --max-old-space-size=4096 --harmony --trace-deprecation ./node_modules/istanbul/lib/cli.js cover --report none node_modules/mocha/bin/_mocha -- test/*.unittest.js",
     "cover:report": "istanbul report",
     "cover:report-min": "istanbul report --report lcovonly",
-    "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
+    "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish",
+    "webpack-defaults": "webpack-defaults"
   }
 }

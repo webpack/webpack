@@ -1,12 +1,16 @@
 {
   "id": "WatchIgnorePlugin",
   "description": "A list of RegExps or absolute paths to directories or files that should be ignored",
-  "oneOf": [
-    {
-      "type": "string"
-    },
-    {
-      "instanceof": "RegExp"
-    }
-  ]
+  "type": "array",
+  "items": {
+    "oneOf": [
+      {
+        "type": "string"
+      },
+      {
+        "instanceof": "RegExp"
+      }
+    ]
+  },
+  "minItems": 1
 }
