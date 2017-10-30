@@ -188,8 +188,8 @@ installedChunks[chunkIds.pop()] = 1;
 				it("returns the original source with hot update callback", () => {
 					env.source.should.be.exactly(`
 moduleSource()
-var parentHotUpdateCallback = window["webpackHotUpdate"];
-window["webpackHotUpdate"] = function webpackHotUpdateCallback(chunkId, moreModules) { // eslint-disable-line no-unused-vars
+var parentHotUpdateCallback = self["webpackHotUpdate"];
+self["webpackHotUpdate"] = function webpackHotUpdateCallback(chunkId, moreModules) { // eslint-disable-line no-unused-vars
 	hotAddUpdateChunk(chunkId, moreModules);
 	if(parentHotUpdateCallback) parentHotUpdateCallback(chunkId, moreModules);
 } ;
