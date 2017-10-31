@@ -1,75 +1,74 @@
 {
-  "id": "DllReferencePlugin",
-  "slug": "dll-plugin/#dllreferenceplugin",
-  "additionalProperties": false,
-  "properties": {
-    "context": {
-      "description": "(absolute path) context of requests in the manifest (or content property)",
-      "minLength": 1,
-      "type": "string"
-    },
-    "manifest": {
-      "description": "An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation",
-      "oneOf": [
-        {
-          "type": "object",
-          "properties": {
-            "content": {
-              "description": "The mappings from request to module id",
-              "minLength": 1,
-              "type": "object"
-            },
-            "name": {
-              "description": "The name where the dll is exposed",
-              "minLength": 1,
-              "type": "string"
-            }
-          }
-        },
-        {
-          "minLength": 1,
-          "type": "string"
-        }
-      ]
-    },
-    "content": {
-      "description": "The mappings from request to module id (defaults to manifest.content)",
-      "minLength": 1,
-      "type": "object"
-    },
-    "name": {
-      "description": "The name where the dll is exposed (defaults to manifest.name)",
-      "minLength": 1,
-      "type": "string"
-    },
-    "scope": {
-      "description": "Prefix which is used for accessing the content of the dll",
-      "minLength": 1,
-      "type": "string"
-    },
-    "sourceType": {
-      "description": "How the dll is exposed (libraryTarget)",
-      "enum": [
-        "var",
-        "assign",
-        "this",
-        "window",
-        "global",
-        "commonjs",
-        "commonjs2",
-        "commonjs-module",
-        "amd",
-        "umd",
-        "umd2",
-        "jsonp"
-      ]
-    },
-    "extensions": {
-      "description": "UNDOCUMENTED",
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    }
-  }
+	"id": "DllReferencePlugin",
+	"slug": "dll-plugin/#dllreferenceplugin",
+	"additionalProperties": false,
+	"properties": {
+		"context": {
+			"description": "(absolute path) context of requests in the manifest (or content property)",
+			"minLength": 1,
+			"type": "string"
+		},
+		"manifest": {
+			"description": "An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation",
+			"oneOf": [{
+					"type": "object",
+					"properties": {
+						"content": {
+							"description": "The mappings from request to module id",
+							"minLength": 1,
+							"type": "object"
+						},
+						"name": {
+							"description": "The name where the dll is exposed",
+							"minLength": 1,
+							"type": "string"
+						}
+					}
+				},
+				{
+					"minLength": 1,
+					"type": "string"
+				}
+			]
+		},
+		"content": {
+			"description": "The mappings from request to module id (defaults to manifest.content)",
+			"minLength": 1,
+			"type": "object"
+		},
+		"name": {
+			"description": "The name where the dll is exposed (defaults to manifest.name)",
+			"minLength": 1,
+			"type": "string"
+		},
+		"scope": {
+			"description": "Prefix which is used for accessing the content of the dll",
+			"minLength": 1,
+			"type": "string"
+		},
+		"sourceType": {
+			"description": "How the dll is exposed (libraryTarget)",
+			"enum": [
+				"var",
+				"assign",
+				"this",
+				"window",
+				"global",
+				"commonjs",
+				"commonjs2",
+				"commonjs-module",
+				"amd",
+				"umd",
+				"umd2",
+				"jsonp"
+			]
+		},
+		"extensions": {
+			"description": "UNDOCUMENTED",
+			"type": "array",
+			"items": {
+				"type": "string"
+			}
+		}
+	}
 }

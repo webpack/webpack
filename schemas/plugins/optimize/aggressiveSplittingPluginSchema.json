@@ -1,7 +1,7 @@
 {
 	"id": "AggressiveSplittingPlugin",
 	"type": "object",
-  "additionalProperties": false,
+	"additionalProperties": false,
 	"properties": {
 		"minSize": {
 			"description": "Byte, split point. Default: 30720",
