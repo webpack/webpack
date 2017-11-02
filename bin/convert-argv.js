@@ -465,6 +465,12 @@ module.exports = function(yargs, argv, convertOptions) {
 			}));
 		});
 
+		ifBooleanArg("concatenate-modules", function() {
+			ensureArray(options, "plugins");
+			var ModuleConcatenationPlugin = require("../lib/optimize/ModuleConcatenationPlugin");
+			options.plugins.push(new ModuleConcatenationPlugin());
+		});
+
 		ifArg("prefetch", function(request) {
 			ensureArray(options, "plugins");
 			var PrefetchPlugin = require("../lib/PrefetchPlugin");

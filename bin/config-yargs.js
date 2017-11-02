@@ -225,6 +225,11 @@ module.exports = function(yargs) {
 				describe: "Minimize javascript and switches loaders to minimizing",
 				group: OPTIMIZE_GROUP
 			},
+			"concatenate-modules": {
+				type: "boolean",
+				describe: "Concatenate ES modules to remove module wrappers where possible",
+				group: OPTIMIZE_GROUP
+			},
 			"prefetch": {
 				type: "string",
 				describe: "Prefetch this request (Example: --prefetch ./file.js)",
