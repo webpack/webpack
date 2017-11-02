@@ -7,7 +7,7 @@
 var path = require("path");
 var Insight = require("insight");
 var pkg = require("../package.json");
-var asyncLib = require("async");
+var insightEvents = require("../analytics/events.js");
 
 var insight = new Insight({
 	trackingCode: "UA-46921629-3",
@@ -334,17 +334,13 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 			}
 		});
 
-		asyncLib.forEach(Object.keys(options), function(optionKey, cb) {
-			insight.trackEvent("options", optionKey, JSON.stringify(options[optionKey]));
-			cb();
-		});
-
 		var webpack = require("../lib/webpack.js");
 
 		Error.stackTraceLimit = 30;
 		var lastHash = null;
 		var compiler;
 		try {
+			insightReporter.trackEvent(insightEvents.buildEvent({ action: "options-collected", label: JSON.stringify(options), value: 1 }));
 			compiler = webpack(options);
 		} catch(e) {
 			var WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
@@ -371,7 +367,7 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 				compiler.purgeInputFileSystem();
 			}
 
-			insightReporter.trackEvent("compiler", "build-end");
+			insightReporter.trackEvent(insightEvents.buildEvent({ action: "build-end", label: "compiler build end", value: 9999 }));
 			if(err) {
 				lastHash = null;
 				console.error(err.stack || err);
@@ -402,7 +398,7 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 			compiler.watch(watchOptions, compilerCallback);
 			console.log("\nWebpack is watching the files…\n");
 		} else
-			insightReporter.trackEvent("compiler", "build-start");
+			insightReporter.trackEvent(insightEvents.buildEvent({ action: "build-start", label: "compiler build start", value: 2 }));
 		compiler.run(compilerCallback);
 	}
 
@@ -413,5 +409,4 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 	} else {
 		processOptions(options, insight);
 	}
-
 });

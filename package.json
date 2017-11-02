@@ -87,7 +87,8 @@
     "buildin/",
     "hot/",
     "web_modules/",
-    "schemas/"
+    "schemas/",
+    "analytics/"
   ],
   "scripts": {
     "test": "mocha test/*.test.js test/*.unittest.js --max-old-space-size=4096 --harmony --trace-deprecation --check-leaks",
