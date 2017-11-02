@@ -19,6 +19,7 @@ module.exports = function(yargs, argv, convertOptions) {
 	if(argv.p) {
 		argv["optimize-minimize"] = true;
 		argv["define"] = [].concat(argv["define"] || []).concat("process.env.NODE_ENV=\"production\"");
+		argv["concatenate-modules"] = true;
 	}
 
 	var configFileLoaded = false;

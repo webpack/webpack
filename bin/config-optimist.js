@@ -45,5 +45,5 @@ module.exports = function(optimist) {
 		.boolean("bail").describe("bail", "Abort the compilation on first error")
 		.boolean("profile").describe("profile", "Profile the compilation and include information in stats")
 		.boolean("d").describe("d", "shortcut for --debug --devtool eval-check-module-source-map --output-pathinfo")
-		.boolean("p").describe("p", "shortcut for --optimize-minimize --define process.env.NODE_ENV=\"production\"");
+		.boolean("p").describe("p", "shortcut for --optimize-minimize --define process.env.NODE_ENV=\"production\" --concatenate-modules");
 };
