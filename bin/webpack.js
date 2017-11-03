@@ -20,12 +20,12 @@ try {
 	if(__filename !== localWebpack) {
 		return require(localWebpack);
 	}
-} catch(e) { }
+} catch(e) {}
 var yargs = require("yargs")
 	.usage("webpack " + require("../package.json").version + "\n" +
-	"Usage: https://webpack.js.org/api/cli/\n" +
-	"Usage without config file: webpack <entry> [<entry>] <output>\n" +
-	"Usage with config file: webpack");
+		"Usage: https://webpack.js.org/api/cli/\n" +
+		"Usage without config file: webpack <entry> [<entry>] <output>\n" +
+		"Usage with config file: webpack");
 
 require("./config-yargs")(yargs);
 
@@ -340,7 +340,13 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 		var lastHash = null;
 		var compiler;
 		try {
-			insightReporter.trackEvent(insightEvents.buildEvent({ action: "options-collected", label: JSON.stringify(options), value: 1 }));
+			insightReporter.trackEvent(
+				insightEvents.configEvent({
+					action: "options-collected",
+					label: JSON.stringify(options),
+					value: 1
+				})
+			);
 			compiler = webpack(options);
 		} catch(e) {
 			var WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
@@ -367,7 +373,13 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 				compiler.purgeInputFileSystem();
 			}
 
-			insightReporter.trackEvent(insightEvents.buildEvent({ action: "build-end", label: "compiler build end", value: 9999 }));
+			insightReporter.trackEvent(
+				insightEvents.buildEvent({
+					action: "build-end",
+					label: "compiler build end",
+					value: 9999
+				})
+			);
 			if(err) {
 				lastHash = null;
 				console.error(err.stack || err);
@@ -398,7 +410,13 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 			compiler.watch(watchOptions, compilerCallback);
 			console.log("\nWebpack is watching the files…\n");
 		} else
-			insightReporter.trackEvent(insightEvents.buildEvent({ action: "build-start", label: "compiler build start", value: 2 }));
+			insightReporter.trackEvent(
+				insightEvents.buildEvent({
+					action: "build-start",
+					label: "compiler build start",
+					value: 2
+				})
+			);
 		compiler.run(compilerCallback);
 	}
 
