@@ -1,15 +1,16 @@
 "use strict";
 
-const makeEvent = (category) => (eventDetails) => ({
+const event = (category) => (action, details) => ({
 	category: category,
-	action: eventDetails.action,
-	label: eventDetails.label || undefined,
-	value: eventDetails.value || undefined
+	action: action,
+	label: details.label,
+	value: details.value
 });
 
-const buildEvent = makeEvent("build");
-const configEvent = makeEvent("options");
+const onBuild = event("build");
+const onConfig = event("options");
 
-exports.makeEvent = makeEvent;
-exports.buildEvent = buildEvent;
-exports.configEvent = configEvent;
+exports.event = event;
+exports.onBuild = onBuild;
+exports.onConfig = onConfig;
+

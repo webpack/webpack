@@ -341,8 +341,7 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 		var compiler;
 		try {
 			insightReporter.trackEvent(
-				insightEvents.configEvent({
-					action: "options-collected",
+				insightEvents.onConfig("options-collected", {
 					label: JSON.stringify(options),
 					value: 1
 				})
@@ -374,8 +373,7 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 			}
 
 			insightReporter.trackEvent(
-				insightEvents.buildEvent({
-					action: "build-end",
+				insightEvents.onBuild("build-end", {
 					label: "compiler build end",
 					value: 9999
 				})
@@ -411,8 +409,7 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 			console.log("\nWebpack is watching the files…\n");
 		} else
 			insightReporter.trackEvent(
-				insightEvents.buildEvent({
-					action: "build-start",
+				insightEvents.onBuild("build-start", {
 					label: "compiler build start",
 					value: 2
 				})
