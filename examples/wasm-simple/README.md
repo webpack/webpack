@@ -186,15 +186,15 @@ export function fibonacciJavascript(i) {
 /******/ 			var installedWasmModuleData = installedWasmModules[wasmModuleId];
 /******/
 /******/ 			// a Promise means "currently loading" or "already loaded".
-/******/ 			if(installedWasmModuleData) {
-/******/ 				promises.push(installedWasmModuleData);
-/******/ 			} else {
-/******/ 				var promise = installedWasmModules[wasmModuleId] = fetch(__webpack_require__.p + "" + {"1":"80925f35a6f1cf550d38","3":"3d28950d91bc7246f5af","4":"1d2268b99656e9575a63"}[wasmModuleId] + ".wasm")
-/******/ 					.then(function(response) { return response.arrayBuffer(); })
-/******/ 					.then(function(bytes) { return WebAssembly.compile(bytes); })
-/******/ 					.then(function(module) { __webpack_require__.w[wasmModuleId] = module; })
-/******/ 				promises.push(promise);
-/******/ 			}
+/******/ 			promises.push(installedWasmModuleData ||
+/******/ 				promises.push(installedWasmModules[wasmModuleId] = fetch(__webpack_require__.p + "" + {"1":"80925f35a6f1cf550d38","3":"3d28950d91bc7246f5af","4":"1d2268b99656e9575a63"}[wasmModuleId] + ".wasm").then(function(response) {
+/******/ 					if(WebAssembly.compileStreaming) {
+/******/ 						return WebAssembly.compileStreaming(response);
+/******/ 					} else {
+/******/ 						return response.arrayBuffer().then(function(bytes) { return WebAssembly.compile(bytes); });
+/******/ 					}
+/******/ 				}).then(function(module) { __webpack_require__.w[wasmModuleId] = module; }))
+/******/ 			);
 /******/ 		});
 /******/ 		return Promise.all(promises);
 /******/ 	};
@@ -432,7 +432,7 @@ Version: webpack 3.8.1
 3d28950d91bc7246f5af.wasm   62 bytes     0, 1  [emitted]  
 1d2268b99656e9575a63.wasm   67 bytes     0, 1  [emitted]  
               1.output.js  486 bytes        1  [emitted]  
-                output.js     8.9 kB        2  [emitted]  main
+                output.js    8.94 kB        2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js, 80925f35a6f1cf550d38.wasm, 3d28950d91bc7246f5af.wasm, 1d2268b99656e9575a63.wasm 585 bytes {2} [rendered]
     > [0] ./example.js 3:1-17
@@ -460,6 +460,7 @@ chunk    {1} 1.output.js, 80925f35a6f1cf550d38.wasm 41 bytes {2} [rendered]
 chunk    {2} output.js (main) 788 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 788 bytes {2} [built]
+        single entry .\example.js  main
 ```
 
 ## Minimized (uglify-js, no zip)
@@ -473,7 +474,7 @@ Version: webpack 3.8.1
 3d28950d91bc7246f5af.wasm   62 bytes     0, 1  [emitted]  
 1d2268b99656e9575a63.wasm   67 bytes     0, 1  [emitted]  
               1.output.js  155 bytes        1  [emitted]  
-                output.js    8.74 kB        2  [emitted]  main
+                output.js    8.78 kB        2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js, 80925f35a6f1cf550d38.wasm, 3d28950d91bc7246f5af.wasm, 1d2268b99656e9575a63.wasm 585 bytes {2} [rendered]
     > [0] ./example.js 3:1-17
@@ -501,6 +502,7 @@ chunk    {1} 1.output.js, 80925f35a6f1cf550d38.wasm 41 bytes {2} [rendered]
 chunk    {2} output.js (main) 788 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 788 bytes {2} [built]
+        single entry .\example.js  main
 
 ERROR in output.js from UglifyJs
 Unexpected token: operator (>) [output.js:194,95]
