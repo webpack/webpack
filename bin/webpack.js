@@ -340,12 +340,6 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 		var lastHash = null;
 		var compiler;
 		try {
-			insightReporter.trackEvent(
-				insightEvents.onConfig("options-collected", {
-					label: JSON.stringify(options),
-					value: 1
-				})
-			);
 			compiler = webpack(options);
 		} catch(e) {
 			var WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
@@ -407,14 +401,15 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 			}
 			compiler.watch(watchOptions, compilerCallback);
 			console.log("\nWebpack is watching the files…\n");
-		} else
+		} else {
 			insightReporter.trackEvent(
 				insightEvents.onBuild("build-start", {
 					label: "compiler build start",
 					value: 2
 				})
 			);
-		compiler.run(compilerCallback);
+			compiler.run(compilerCallback);
+		}
 	}
 
 	if(insight.optOut === undefined) {
