@@ -5,6 +5,14 @@
 	Author Tobias Koppers @sokra
 */
 var path = require("path");
+var Insight = require("insight");
+var pkg = require("../package.json");
+var insightEvents = require("../analytics/events.js");
+
+var insight = new Insight({
+	trackingCode: "UA-46921629-3",
+	pkg: pkg
+});
 
 // Local version replace global one
 try {
@@ -180,7 +188,7 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 		}
 	}
 
-	function processOptions(options) {
+	function processOptions(options, insightReporter) {
 		// process Promise
 		if(typeof options.then === "function") {
 			options.then(processOptions).catch(function(err) {
@@ -357,6 +365,13 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 				// Do not keep cache anymore
 				compiler.purgeInputFileSystem();
 			}
+
+			insightReporter.trackEvent(
+				insightEvents.onBuild("build-end", {
+					label: "compiler build end",
+					value: 9999
+				})
+			);
 			if(err) {
 				lastHash = null;
 				console.error(err.stack || err);
@@ -373,6 +388,7 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 			}
 			if(!options.watch && stats.hasErrors()) {
 				process.exitCode = 2;
+
 			}
 		}
 		if(firstOptions.watch || options.watch) {
@@ -385,11 +401,22 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 			}
 			compiler.watch(watchOptions, compilerCallback);
 			console.log("\nWebpack is watching the files…\n");
-		} else
+		} else {
+			insightReporter.trackEvent(
+				insightEvents.onBuild("build-start", {
+					label: "compiler build start",
+					value: 2
+				})
+			);
 			compiler.run(compilerCallback);
-
+		}
 	}
 
-	processOptions(options);
-
+	if(insight.optOut === undefined) {
+		insight.askPermission(null, () => {
+			processOptions(options, insight);
+		});
+	} else {
+		processOptions(options, insight);
+	}
 });

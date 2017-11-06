@@ -11,6 +11,7 @@
     "async": "^2.1.2",
     "enhanced-resolve": "^3.4.0",
     "escope": "^3.6.0",
+    "insight": "^0.8.4",
     "interpret": "^1.0.0",
     "json-loader": "^0.5.4",
     "json5": "^0.5.1",
@@ -86,7 +87,8 @@
     "buildin/",
     "hot/",
     "web_modules/",
-    "schemas/"
+    "schemas/",
+    "analytics/"
   ],
   "scripts": {
     "test": "mocha test/*.test.js test/*.unittest.js --max-old-space-size=4096 --harmony --trace-deprecation --check-leaks",
