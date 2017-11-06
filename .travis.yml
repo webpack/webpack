@@ -24,9 +24,6 @@ matrix:
     - os: linux
       node_js: "6"
       env: NO_WATCH_TESTS=1 JOB_PART=integration
-    - os: linux
-      node_js: "4"
-      env: NO_WATCH_TESTS=1 JOB_PART=integration
     - os: osx
       node_js: "8"
       env: NO_WATCH_TESTS=1 JOB_PART=integration
