@@ -33,6 +33,7 @@ describe("NormalModule", function() {
 			resource,
 			parser
 		);
+		normalModule.cacheable = true;
 	});
 	describe("#identifier", function() {
 		it("returns an identifier for this module", function() {
