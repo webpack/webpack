@@ -1,4 +1,3 @@
-"use strict";
 const webpack = require("../../../");
 
 const baseConfig = {
@@ -6,15 +5,22 @@ const baseConfig = {
 	output: {
 		filename: "bundle.js"
 	},
-	plugins: [new webpack.optimize.UglifyJsPlugin({
-		sourceMap: true,
-		compress: {
-			warnings: true,
-		},
-		mangle: false,
-		beautify: true,
-		comments: false
-	})],
+	plugins: [
+		new webpack.optimize.UglifyJsPlugin({
+			sourceMap: true,
+			uglifyOptions: {
+				compress: {
+					warnings: true,
+				},
+				mangle: false,
+				output: {
+					beautify: true,
+					comments: false
+				},
+				warnings: true
+			}
+		})
+	],
 	stats: {
 		chunkModules: false,
 		modules: false,
