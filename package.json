@@ -21,7 +21,7 @@
     "source-map": "^0.5.3",
     "supports-color": "^4.2.1",
     "tapable": "^0.2.8",
-    "uglifyjs-webpack-plugin": "^0.4.6",
+    "uglifyjs-webpack-plugin": "^1.0.0",
     "watchpack": "^1.4.0",
     "webpack-sources": "^1.0.1",
     "yargs": "^8.0.2"
