@@ -1,13 +1,14 @@
-var webpack = require("../../../../");
+const webpack = require("../../../../");
+
 module.exports = {
 	node: {
 		__dirname: false,
 		__filename: false
 	},
 	entry: {
+		ie8: ["./ie8.js"],
 		bundle0: ["./index.js"],
 		vendors: ["./vendors.js"],
-		ie8: ["./ie8.js"],
 		extract: ["./extract.js"],
 		compress: ["./compress.js"]
 	},
@@ -16,28 +17,26 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.optimize.UglifyJsPlugin({
-			comments: false,
-			exclude: ["vendors.js", "extract.js"],
-			mangle: {
-				screw_ie8: false
-			}
+			exclude: [
+				"vendors.js",
+				"extract.js"
+			]
 		}),
 		new webpack.optimize.UglifyJsPlugin({
 			extractComments: true,
-			include: ["extract.js"],
-			mangle: {
-				screw_ie8: false
-			}
+			include: [
+				"extract.js"
+			]
 		}),
 		new webpack.optimize.UglifyJsPlugin({
-			include: ["compress.js"],
-			compress: {
-				conditionals: true,
-				evaluate: true,
-				passes: 2,
-				reduce_vars: true,
-				unused: true
-			}
-		}),
+			uglifyOptions: {
+				compress: {
+					passes: 2
+				}
+			},
+			include: [
+				"compress.js"
+			]
+		})
 	]
 };
