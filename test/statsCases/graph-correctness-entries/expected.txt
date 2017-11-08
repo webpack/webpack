@@ -11,5 +11,7 @@ chunk    {2} 2.js (b) 49 bytes {1} [rendered]
         import() ./module-b [0] (webpack)/test/statsCases/graph-correctness-entries/module-a.js 1:0-47
 chunk    {3} e2.js (e2) 49 bytes [entry] [rendered]
     [4] (webpack)/test/statsCases/graph-correctness-entries/e2.js 49 bytes {3} [built]
+        single entry ./e2  e2
 chunk    {4} e1.js (e1) 49 bytes [entry] [rendered]
     [2] (webpack)/test/statsCases/graph-correctness-entries/e1.js 49 bytes {4} [built]
+        single entry ./e1  e1
