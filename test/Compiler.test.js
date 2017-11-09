@@ -181,7 +181,11 @@ describe("Compiler", () => {
 			describe("apply", () => {
 				it("invokes sets a 'compilation' plugin", (done) => {
 					compiler.plugin = sinon.spy();
-					compiler.parser.apply();
+					compiler.plugin("compilation", (compilation, data) => {
+						data.normalModuleFactory.plugin("parser", (parser, options) => {
+							parser.apply();
+						});
+					});
 					compiler.plugin.callCount.should.be.exactly(1);
 					done();
 				});
