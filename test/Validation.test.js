@@ -2,8 +2,8 @@
 "use strict";
 
 require("should");
+
 const webpack = require("../lib/webpack");
-const WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
 
 describe("Validation", () => {
 	const testCases = [{
@@ -207,30 +207,33 @@ describe("Validation", () => {
 				foobar: true
 			}
 		},
-		test(e) {
-			e.message.should.startWith("Invalid configuration object.");
-			e.message.split("\n").slice(1)[0].should.be.eql(
+		test(err) {
+			err.message.should.startWith("Invalid configuration object.");
+			err.message.split("\n").slice(1)[0].should.be.eql(
 				" - configuration.stats should be one of these:"
 			);
 		}
 	}];
+
 	testCases.forEach((testCase) => {
 		it("should fail validation for " + testCase.name, () => {
 			try {
 				webpack(testCase.config);
-			} catch(e) {
-				if(!(e instanceof WebpackOptionsValidationError))
-					throw e;
+			} catch(err) {
+				if(err.name !== 'WebpackOptionsValidationError') throw err;
 
 				if(testCase.test) {
-					testCase.test(e);
+					testCase.test(err);
+
 					return;
 				}
 
-				e.message.should.startWith("Invalid configuration object.");
-				e.message.split("\n").slice(1).should.be.eql(testCase.message);
+				err.message.should.startWith("Invalid configuration object.");
+				err.message.split("\n").slice(1).should.be.eql(testCase.message);
+
 				return;
 			}
+
 			throw new Error("Validation didn't fail");
 		});
 	});
