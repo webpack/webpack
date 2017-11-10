@@ -1,6 +1,6 @@
-Hash: 0758b2e4b34e9e2299b4cf1121d95bbe7721c1f3
+Hash: 25da10e7d3d4121b1f85d6f6aa5f20b982e1aff9
 Child
-    Hash: 0758b2e4b34e9e2299b4
+    Hash: 25da10e7d3d4121b1f85
     Time: Xms
        [0] (webpack)/test/statsCases/scope-hoisting-multi/common2.js 25 bytes {3} {4} [built]
        [1] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy_shared.js 25 bytes {0} {1} {2} [built]
@@ -14,7 +14,7 @@ Child
        [9] (webpack)/test/statsCases/scope-hoisting-multi/second.js 177 bytes {4} [built]
       [10] (webpack)/test/statsCases/scope-hoisting-multi/lazy_second.js 55 bytes {1} [built]
 Child
-    Hash: cf1121d95bbe7721c1f3
+    Hash: d6f6aa5f20b982e1aff9
     Time: Xms
        [0] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy_shared.js 25 bytes {0} {1} {2} [built]
        [1] (webpack)/test/statsCases/scope-hoisting-multi/vendor.js 25 bytes {5} [built]

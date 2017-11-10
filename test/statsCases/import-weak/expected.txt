@@ -1,8 +1,8 @@
-Hash: 00bdc9e68dab6471776c
+Hash: 8ac1d37f7cee7ab1016d
 Time: Xms
    Asset       Size  Chunks             Chunk Names
     0.js  149 bytes       0  [emitted]  
-entry.js    6.86 kB       1  [emitted]  entry
+entry.js    7.28 kB       1  [emitted]  entry
    [0] (webpack)/test/statsCases/import-weak/modules/b.js 22 bytes {0} [built]
    [1] (webpack)/test/statsCases/import-weak/entry.js 120 bytes {1} [built]
    [2] (webpack)/test/statsCases/import-weak/modules/a.js 37 bytes [built]

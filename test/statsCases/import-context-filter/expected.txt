@@ -1,10 +1,10 @@
-Hash: 308701a2a24de7c80900
+Hash: 7e892e0fb490714c0a3a
 Time: Xms
    Asset       Size  Chunks             Chunk Names
     0.js  339 bytes       0  [emitted]  
     1.js  345 bytes       1  [emitted]  
     2.js  336 bytes       2  [emitted]  
-entry.js    7.45 kB       3  [emitted]  entry
+entry.js    7.88 kB       3  [emitted]  entry
    [0] (webpack)/test/statsCases/import-context-filter/templates/bar.js 38 bytes {2} [optional] [built]
    [1] (webpack)/test/statsCases/import-context-filter/templates/baz.js 38 bytes {1} [optional] [built]
    [2] (webpack)/test/statsCases/import-context-filter/templates/foo.js 38 bytes {0} [optional] [built]
