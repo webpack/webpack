@@ -237,9 +237,10 @@ describe("Parser", () => {
 				testParser.state.expressions.push(expr.name);
 				return true;
 			});
-			const actual = testParser.parse(source);
-			should.strictEqual(typeof actual, "object");
-			actual.should.be.eql(state);
+			return testParser.parse(source).then(actual => {
+				should.strictEqual(typeof actual, "object");
+				actual.should.be.eql(state);
+			});
 		});
 	});
 
@@ -260,14 +261,15 @@ describe("Parser", () => {
 			return true;
 		});
 
-		const actual = testParser.parse(source);
-		should.strictEqual(typeof actual, "object");
-		should.strictEqual(typeof actual.comments, "object");
-		actual.comments.forEach((element, index) => {
-			should.strictEqual(typeof element.type, "string");
-			should.strictEqual(typeof element.value, "string");
-			element.type.should.be.eql(state[index].type);
-			element.value.should.be.eql(state[index].value);
+		return testParser.parse(source).then(actual => {
+			should.strictEqual(typeof actual, "object");
+			should.strictEqual(typeof actual.comments, "object");
+			actual.comments.forEach((element, index) => {
+				should.strictEqual(typeof element.type, "string");
+				should.strictEqual(typeof element.value, "string");
+				element.type.should.be.eql(state[index].type);
+				element.value.should.be.eql(state[index].value);
+			});
 		});
 	});
 
@@ -281,7 +283,7 @@ describe("Parser", () => {
 				new BasicEvaluatedExpression().setString("aString").setRange(expr.range));
 			parser.plugin("evaluate Identifier b.Number", (expr) =>
 				new BasicEvaluatedExpression().setNumber(123).setRange(expr.range));
-			return parser.parse("test(" + source + ");").result;
+			return parser.parse("test(" + source + ");").then(actual => actual.result);
 		}
 
 		const testCases = {
@@ -404,8 +406,9 @@ describe("Parser", () => {
 			}
 
 			it("should eval " + key, () => {
-				const evalExpr = evaluateInParser(key);
-				evalExprToString(evalExpr).should.be.eql(testCases[key] ? key + " " + testCases[key] : key);
+				return evaluateInParser(key).then(evalExpr => {
+					evalExprToString(evalExpr).should.be.eql(testCases[key] ? key + " " + testCases[key] : key);
+				});
 			});
 		});
 	});
@@ -421,11 +424,13 @@ describe("Parser", () => {
 			Object.keys(cases).forEach((name) => {
 				const expr = cases[name];
 				it(name, () => {
-					const actual = parser.parse(expr);
-					should.strictEqual(typeof actual, "object");
+					return parser.parse(expr).then(actual => {
+						should.strictEqual(typeof actual, "object");
+					});
 				});
 			});
 		});
+
 		describe("should parse await", () => {
 			const cases = {
 				"require": [
@@ -452,8 +457,9 @@ describe("Parser", () => {
 
 			Object.keys(cases).forEach((name) => {
 				it(name, () => {
-					const actual = parser.parse(cases[name][0]);
-					actual.should.be.eql(cases[name][1]);
+					return parser.parse(cases[name][0]).then(actual => {
+						actual.should.be.eql(cases[name][1]);
+					});
 				});
 			});
 		});
