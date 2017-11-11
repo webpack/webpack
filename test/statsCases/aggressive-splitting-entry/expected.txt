@@ -1,6 +1,6 @@
-Hash: 33cef25044998703062e33cef25044998703062e
+Hash: 794ae6df9cb4748fbcd7794ae6df9cb4748fbcd7
 Child fitting:
-    Hash: 33cef25044998703062e
+    Hash: 794ae6df9cb4748fbcd7
     Time: Xms
                       Asset     Size  Chunks             Chunk Names
     3b0abf784cffee9cdb84.js  2.29 kB       0  [emitted]  
@@ -25,7 +25,7 @@ Child fitting:
         > aggressive-splitted main [4] (webpack)/test/statsCases/aggressive-splitting-entry/index.js 
         [3] (webpack)/test/statsCases/aggressive-splitting-entry/e.js 899 bytes {6} [built]
 Child content-change:
-    Hash: 33cef25044998703062e
+    Hash: 794ae6df9cb4748fbcd7
     Time: Xms
                       Asset     Size  Chunks             Chunk Names
     3b0abf784cffee9cdb84.js  2.29 kB       0  [emitted]  
