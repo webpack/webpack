@@ -5,7 +5,7 @@ module.exports = {
 		__filename: false
 	},
 	module: {
-		loaders: [
+		rules: [
 			{
 				test: /\.css$/,
 				loader: ETP.extract("css-loader")

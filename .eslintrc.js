@@ -51,7 +51,7 @@ module.exports = {
 		}],
 		"no-console": "off",
 		"valid-jsdoc": "error",
-		"node/no-unsupported-features": ["error", { version: 4 }],
+		"node/no-unsupported-features": "error",
 		"node/no-deprecated-api": "error",
 		"node/no-missing-import": "error",
 		"node/no-missing-require": [
