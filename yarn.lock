@@ -500,6 +500,14 @@ chalk@^2.0.0, chalk@^2.0.1:
     escape-string-regexp "^1.0.5"
     supports-color "^4.0.0"
 
+chalk@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.3.0.tgz#b5ea48efc9c1793dccc9b4767c93914d3f2d52ba"
+  dependencies:
+    ansi-styles "^3.1.0"
+    escape-string-regexp "^1.0.5"
+    supports-color "^4.0.0"
+
 character-parser@1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/character-parser/-/character-parser-1.2.1.tgz#c0dde4ab182713b919b970959a123ecc1a30fcd6"
@@ -3569,12 +3577,13 @@ schema-utils@^0.3.0:
   dependencies:
     ajv "^5.0.0"
 
-schema-utils@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-0.4.0.tgz#cf98d870a5f74e7526211f6d38caf0d250366688"
+schema-utils@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-0.4.2.tgz#86d92aedf4dfc51c9b321ef16bd33a9417b122d0"
   dependencies:
     ajv "^5.0.0"
     ajv-keywords "^2.1.0"
+    chalk "^2.3.0"
 
 script-loader@~0.7.0:
   version "0.7.0"
