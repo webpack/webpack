@@ -1,13 +1,13 @@
-Hash: 794ae6df9cb4748fbcd7794ae6df9cb4748fbcd7
+Hash: 0c4822f4b0f344d71ebc0c4822f4b0f344d71ebc
 Child fitting:
-    Hash: 794ae6df9cb4748fbcd7
+    Hash: 0c4822f4b0f344d71ebc
     Time: Xms
                       Asset     Size  Chunks             Chunk Names
     3b0abf784cffee9cdb84.js  2.29 kB       0  [emitted]  
     fd43aeccca69e5179cb6.js  1.98 kB       4  [emitted]  
-    37a2e572a7162ac860f9.js  5.94 kB       5  [emitted]  
+    0fb4d7363ffcca01b706.js  5.94 kB       5  [emitted]  
     e1f8db72211be4caf41d.js  1.03 kB       6  [emitted]  
-    Entrypoint main = 37a2e572a7162ac860f9.js e1f8db72211be4caf41d.js fd43aeccca69e5179cb6.js 3b0abf784cffee9cdb84.js
+    Entrypoint main = 0fb4d7363ffcca01b706.js e1f8db72211be4caf41d.js fd43aeccca69e5179cb6.js 3b0abf784cffee9cdb84.js
     chunk    {0} 3b0abf784cffee9cdb84.js 1.91 kB [initial] [rendered]
         > aggressive-splitted main [4] (webpack)/test/statsCases/aggressive-splitting-entry/index.js 
         [4] (webpack)/test/statsCases/aggressive-splitting-entry/index.js 112 bytes {0} [built]
@@ -17,7 +17,7 @@ Child fitting:
         > aggressive-splitted main [4] (webpack)/test/statsCases/aggressive-splitting-entry/index.js 
         [0] (webpack)/test/statsCases/aggressive-splitting-entry/b.js 899 bytes {4} [built]
         [1] (webpack)/test/statsCases/aggressive-splitting-entry/c.js 899 bytes {4} [built]
-    chunk    {5} 37a2e572a7162ac860f9.js 1.8 kB [entry] [rendered] [recorded]
+    chunk    {5} 0fb4d7363ffcca01b706.js 1.8 kB [entry] [rendered] [recorded]
         > aggressive-splitted main [4] (webpack)/test/statsCases/aggressive-splitting-entry/index.js 
         [2] (webpack)/test/statsCases/aggressive-splitting-entry/d.js 899 bytes {5} [built]
         [5] (webpack)/test/statsCases/aggressive-splitting-entry/a.js 899 bytes {5} [built]
@@ -25,14 +25,14 @@ Child fitting:
         > aggressive-splitted main [4] (webpack)/test/statsCases/aggressive-splitting-entry/index.js 
         [3] (webpack)/test/statsCases/aggressive-splitting-entry/e.js 899 bytes {6} [built]
 Child content-change:
-    Hash: 794ae6df9cb4748fbcd7
+    Hash: 0c4822f4b0f344d71ebc
     Time: Xms
                       Asset     Size  Chunks             Chunk Names
     3b0abf784cffee9cdb84.js  2.29 kB       0  [emitted]  
     fd43aeccca69e5179cb6.js  1.98 kB       4  [emitted]  
-    37a2e572a7162ac860f9.js  5.94 kB       5  [emitted]  
+    0fb4d7363ffcca01b706.js  5.94 kB       5  [emitted]  
     e1f8db72211be4caf41d.js  1.03 kB       6  [emitted]  
-    Entrypoint main = 37a2e572a7162ac860f9.js e1f8db72211be4caf41d.js fd43aeccca69e5179cb6.js 3b0abf784cffee9cdb84.js
+    Entrypoint main = 0fb4d7363ffcca01b706.js e1f8db72211be4caf41d.js fd43aeccca69e5179cb6.js 3b0abf784cffee9cdb84.js
     chunk    {0} 3b0abf784cffee9cdb84.js 1.91 kB [initial] [rendered]
         > aggressive-splitted main [4] (webpack)/test/statsCases/aggressive-splitting-entry/index.js 
         [4] (webpack)/test/statsCases/aggressive-splitting-entry/index.js 112 bytes {0} [built]
@@ -42,7 +42,7 @@ Child content-change:
         > aggressive-splitted main [4] (webpack)/test/statsCases/aggressive-splitting-entry/index.js 
         [0] (webpack)/test/statsCases/aggressive-splitting-entry/b.js 899 bytes {4} [built]
         [1] (webpack)/test/statsCases/aggressive-splitting-entry/c.js 899 bytes {4} [built]
-    chunk    {5} 37a2e572a7162ac860f9.js 1.8 kB [entry] [rendered] [recorded]
+    chunk    {5} 0fb4d7363ffcca01b706.js 1.8 kB [entry] [rendered] [recorded]
         > aggressive-splitted main [4] (webpack)/test/statsCases/aggressive-splitting-entry/index.js 
         [2] (webpack)/test/statsCases/aggressive-splitting-entry/d.js 899 bytes {5} [built]
         [5] (webpack)/test/statsCases/aggressive-splitting-entry/a.js 899 bytes {5} [built]

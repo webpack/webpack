@@ -5,9 +5,9 @@ Asset       Size  Chunks             Chunk Names
  3.js  692 bytes       3  [emitted]  
  4.js  692 bytes       4  [emitted]  
  5.js  692 bytes       5  [emitted]  
-e3.js    8.43 kB       6  [emitted]  e3
-e2.js     8.4 kB       7  [emitted]  e2
-e1.js    8.38 kB       8  [emitted]  e1
+e3.js     8.4 kB       6  [emitted]  e3
+e2.js    8.38 kB       7  [emitted]  e2
+e1.js    8.36 kB       8  [emitted]  e1
 chunk    {0} 0.js 37 bytes {7} {8} [rendered]
     [6] (webpack)/test/statsCases/module-deduplication/async3.js 28 bytes {0} {3} [built]
     [7] (webpack)/test/statsCases/module-deduplication/h.js 9 bytes {0} {6} [built]

@@ -247,7 +247,7 @@ module.exports = some/request;`;
 			it("deletgates to #getSourceForGlobalVariableExternal", function() {
 				["this", "window", "global"].forEach((type, i) => {
 					// set up
-					externalModule.type = type;
+					externalModule.externalType = type;
 
 					// invoke
 					externalModule.getSourceString();
@@ -264,7 +264,7 @@ module.exports = some/request;`;
 			it("deletgates to #getSourceForCommonJsExternal", function() {
 				["commonjs", "commonjs2"].forEach((type, i) => {
 					// set up
-					externalModule.type = type;
+					externalModule.externalType = type;
 
 					// invoke
 					externalModule.getSourceString();
@@ -281,7 +281,7 @@ module.exports = some/request;`;
 			it("deletgates to #getSourceForAmdOrUmdExternal", function() {
 				["amd", "umd", "umd2"].forEach((type, i) => {
 					// set up
-					externalModule.type = type;
+					externalModule.externalType = type;
 
 					// invoke
 					externalModule.getSourceString();
@@ -298,7 +298,7 @@ module.exports = some/request;`;
 			it("deletgates to #getSourceForGlobalVariableExternal", function() {
 				["foo", "bar", undefined].forEach((type, i) => {
 					// set up
-					externalModule.type = type;
+					externalModule.externalType = type;
 
 					// invoke
 					externalModule.getSourceString();

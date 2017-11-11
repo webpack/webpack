@@ -26,6 +26,7 @@ describe("NormalModule", function() {
 			parse() {}
 		};
 		normalModule = new NormalModule(
+			"javascript/auto",
 			request,
 			userRequest,
 			rawRequest,
@@ -68,6 +69,7 @@ describe("NormalModule", function() {
 			beforeEach(function() {
 				userRequest = "some/userRequest!some/other/userRequest!some/thing/is/off/here";
 				normalModule = new NormalModule(
+					"javascript/auto",
 					request,
 					userRequest,
 					rawRequest,
@@ -86,6 +88,7 @@ describe("NormalModule", function() {
 			it("ignores paths in query parameters", function() {
 				userRequest = "some/context/loader?query=foo\\bar&otherPath=testpath/other";
 				normalModule = new NormalModule(
+					"javascript/auto",
 					request,
 					userRequest,
 					rawRequest,
@@ -109,6 +112,7 @@ describe("NormalModule", function() {
 			beforeEach(function() {
 				resource = baseResource + "?some=query";
 				normalModule = new NormalModule(
+					"javascript/auto",
 					request,
 					userRequest,
 					rawRequest,
