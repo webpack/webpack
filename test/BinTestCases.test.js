@@ -23,9 +23,7 @@ function loadOptsFile(optsPath) {
 		.replace(/\\\s/g, "%20")
 		.split(/\s/)
 		.filter(Boolean)
-		.map(function(value) {
-			return value.replace(/%20/g, " ");
-		});
+		.map((value) => value.replace(/%20/g, " "));
 }
 
 function getTestSpecificArguments(testDirectory) {
@@ -86,11 +84,11 @@ describe("BinTestCases", function() {
 					this.timeout(10000);
 					const child = spawn([cmd].concat(args), opts);
 
-					child.on("close", function(code) {
+					child.on("close", (code) => {
 						env.code = code;
 					});
 
-					child.on("error", function(error) {
+					child.on("error", (error) => {
 						env.error.push(error);
 					});
 
@@ -121,12 +119,12 @@ describe("BinTestCases", function() {
 
 					const child = spawn([cmd].concat(args), opts);
 
-					child.on("close", function(code) {
+					child.on("close", (code) => {
 						env.code = code;
 						done();
 					});
 
-					child.on("error", function(error) {
+					child.on("error", (error) => {
 						env.error.push(error);
 					});
 

@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = function testAssertions(code, stdout, stderr) {
+module.exports = function(code, stdout, stderr) {
 	code.should.be.eql(1);
 	stdout.should.be.empty();
 
