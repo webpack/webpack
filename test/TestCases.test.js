@@ -133,7 +133,7 @@ describe("TestCases", () => {
 									modules: ["web_modules", "node_modules"],
 									mainFields: ["webpack", "browser", "web", "browserify", ["jam", "main"], "main"],
 									aliasFields: ["browser"],
-									extensions: [".webpack.js", ".web.js", ".js", ".json"]
+									extensions: [".mjs", ".webpack.js", ".web.js", ".js", ".json"]
 								},
 								resolveLoader: {
 									modules: ["web_loaders", "web_modules", "node_loaders", "node_modules"],
@@ -181,12 +181,14 @@ describe("TestCases", () => {
 										const p = path.join(outputDirectory, module);
 										const fn = vm.runInThisContext("(function(require, module, exports, __dirname, it) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
 										const m = {
-											exports: {}
+											exports: {},
+											webpackTestSuiteModule: true
 										};
 										fn.call(m.exports, _require, m, m.exports, outputDirectory, _it);
 										return m.exports;
 									} else return require(module);
 								}
+								_require.webpackTestSuiteRequire = true;
 								_require("./bundle.js");
 								if(exportedTest === 0) return done(new Error("No tests exported by test case"));
 								done();
