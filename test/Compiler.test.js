@@ -260,31 +260,6 @@ describe("Compiler", () => {
 				done();
 			});
 		});
-		describe("createChildCompiler", () => {
-			it("defaults cache.children if none exists yet", (done) => {
-				const mockPlugin = sinon.spy();
-				class fakePlugin {
-					apply() {
-						mockPlugin();
-					}
-				}
-				compiler.cache = {};
-				compiler.createChildCompiler({}, "compiler9000", 0, {}, [new fakePlugin()]);
-				mockPlugin.callCount.should.be.exactly(1);
-				compiler.cache.children.should.match({});
-				done();
-			});
-			it("defaults cache.children[compilerName] if none exists yet", (done) => {
-				compiler.cache = {
-					children: {},
-				};
-				compiler.createChildCompiler({}, "compiler9000", 0, {}, null);
-				compiler.cache.children.should.match({
-					compiler9000: [],
-				});
-				done();
-			});
-		});
 	});
 	describe("Watching", () => {
 		let compiler;

@@ -1,5 +1,5 @@
 sudo: false
-dist: precise
+dist: trusty
 language: node_js
 
 branches:
@@ -8,9 +8,7 @@ branches:
     - next
 
 cache:
-  directories:
-    - $HOME/.npm
-    - $HOME/.yarn-cache
+  yarn: true
 
 matrix:
   include:
@@ -19,28 +17,31 @@ matrix:
       env: NO_WATCH_TESTS=1 JOB_PART=lint
     - os: linux
       node_js: "8"
-      env: NO_WATCH_TESTS=1 JOB_PART=test
+      env: NO_WATCH_TESTS=1 JOB_PART=integration
+    - os: linux
+      node_js: "8"
+      env: NO_WATCH_TESTS=1 JOB_PART=unit
     - os: linux
       node_js: "6"
-      env: NO_WATCH_TESTS=1 JOB_PART=test
+      env: NO_WATCH_TESTS=1 JOB_PART=integration
     - os: linux
-      node_js: "4.3"
-      env: NO_WATCH_TESTS=1 JOB_PART=test
+      node_js: "4"
+      env: NO_WATCH_TESTS=1 JOB_PART=integration
     - os: osx
       node_js: "8"
-      env: NO_WATCH_TESTS=1 JOB_PART=test
+      env: NO_WATCH_TESTS=1 JOB_PART=integration
   allow_failures:
     - os: osx
   fast_finish: true
 
-before_script:
+install:
   - bash ./ci/travis-install.sh
 
 script: npm run travis:$JOB_PART
 
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
-  - cat ./coverage/coverage.json | node_modules/codecov.io/bin/codecov.io.js
+  - bash <(curl -s https://codecov.io/bash) -F $JOB_PART
   - rm -rf ./coverage
 
 notifications:

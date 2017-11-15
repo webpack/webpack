@@ -38,7 +38,6 @@ describe("ConfigTestCases", () => {
 			category.tests.forEach((testName) => {
 				const suite = describe(testName, () => {});
 				it(testName + " should compile", function(done) {
-					this.timeout(30000);
 					const testDirectory = path.join(casesPath, category.name, testName);
 					const outputDirectory = path.join(__dirname, "js", "config", category.name, testName);
 					const options = prepareOptions(require(path.join(testDirectory, "webpack.config.js")));
@@ -53,8 +52,30 @@ describe("ConfigTestCases", () => {
 						if(!options.output.filename) options.output.filename = "bundle" + idx + ".js";
 						if(!options.output.chunkFilename) options.output.chunkFilename = "[id].bundle" + idx + ".js";
 					});
+					let testConfig = {
+						findBundle: function(i, options) {
+							if(fs.existsSync(path.join(options.output.path, "bundle" + i + ".js"))) {
+								return "./bundle" + i + ".js";
+							}
+						},
+						timeout: 30000
+					};
+					try {
+						// try to load a test file
+						testConfig = Object.assign(testConfig, require(path.join(testDirectory, "test.config.js")));
+					} catch(e) {}
+
+					this.timeout(testConfig.timeout);
+
 					webpack(options, (err, stats) => {
-						if(err) return done(err);
+						if(err) {
+							const fakeStats = {
+								errors: [err]
+							};
+							if(checkArrayExpectation(testDirectory, fakeStats, "error", "Error", done)) return;
+							// Wait for uncatched errors to occur
+							return setTimeout(done, 200);
+						}
 						const statOptions = Stats.presetToOptions("verbose");
 						statOptions.colors = false;
 						fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
@@ -106,17 +127,6 @@ describe("ConfigTestCases", () => {
 							} else return require(module);
 						}
 						let filesCount = 0;
-						let testConfig = {
-							findBundle: function(i, options) {
-								if(fs.existsSync(path.join(options.output.path, "bundle" + i + ".js"))) {
-									return "./bundle" + i + ".js";
-								}
-							}
-						};
-						try {
-							// try to load a test file
-							testConfig = require(path.join(testDirectory, "test.config.js"));
-						} catch(e) {}
 
 						if(testConfig.noTests) return process.nextTick(done);
 						for(let i = 0; i < optionsArr.length; i++) {

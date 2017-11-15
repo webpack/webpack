@@ -1,4 +1,4 @@
-const should = require("should");
+var should = require("should");
 import d from "testPackage/d";
 import d2 from "./d";
 import { x1, y2 } from "./e";
@@ -23,7 +23,7 @@ it("should load an harmony module from dll (default export)", function() {
 
 it("should differentiate between local files and files from dependencies with the same name", function() {
     d2.should.be.eql("d-local");
-})
+});
 
 it("should load an harmony module from dll (star export)", function() {
     x1.should.be.eql(123);
