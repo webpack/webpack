@@ -96,8 +96,12 @@ describe("AmdMainTemplatePlugin", () => {
 
 				describe("with only local dependencies", () => {
 					beforeEach(() => {
+						const externalFlag = {
+							external: false
+						};
+						const noExternals = env.modulesListWithExternals.map((module) => Object.assign({}, module, externalFlag));
 						env.chunk = {
-							getModules: () => env.modulesListWithExternals
+							getModules: () => noExternals
 						};
 						env.eventBinding = setupPluginAndGetEventBinding();
 					});
