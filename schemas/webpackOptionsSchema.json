@@ -975,7 +975,12 @@
       "anyOf": [
         {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
+            "all": {
+              "type": "boolean",
+              "description": "fallback value for stats options when an option is not defined (has precedence over local webpack defaults)"
+            },
             "context": {
               "type": "string",
               "description": "context directory for request shortening",
@@ -993,9 +998,57 @@
               "type": "boolean",
               "description": "add timing information"
             },
+            "performance": {
+              "type": "boolean",
+              "description": "add performance hint flags"
+            },
+            "depth": {
+              "type": "boolean",
+              "description": "add module depth in module graph"
+            },
             "assets": {
               "type": "boolean",
               "description": "add assets information"
+            },
+            "env": {
+              "type": "boolean",
+              "description": "add --env information"
+            },
+            "colors": {
+              "oneOf": [
+                {
+                  "type": "boolean",
+                  "description": "`webpack --colors` equivalent"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "bold": {
+                      "type": "string"
+                    },
+                    "red": {
+                      "type": "string"
+                    },
+                    "green": {
+                      "type": "string"
+                    },
+                    "cyan": {
+                      "type": "string"
+                    },
+                    "magenta": {
+                      "type": "string"
+                    },
+                    "yellow": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "maxModules": {
+              "type": "number",
+              "description": "Set the maximum number of modules to be shown"
             },
             "chunks": {
               "type": "boolean",
@@ -1017,6 +1070,10 @@
               "type": "boolean",
               "description": "add also information about cached (not built) modules"
             },
+            "cachedAssets": {
+              "type": "boolean",
+              "description": "Show cached assets (setting this to `false` only shows emitted files)"
+            },
             "reasons": {
               "type": "boolean",
               "description": "add information about the reasons why modules are included"
@@ -1024,6 +1081,14 @@
             "source": {
               "type": "boolean",
               "description": "add the source code of modules"
+            },
+            "warnings": {
+              "type": "boolean",
+              "description": "add warnings"
+            },
+            "errors": {
+              "type": "boolean",
+              "description": "add errors"
             },
             "warningsFilter": {
               "description": "Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions",
@@ -1040,6 +1105,10 @@
             "exclude": {
               "description": "Please use excludeModules instead.",
               "$ref": "#/definitions/filter-types"
+            },
+            "entrypoints": {
+              "type": "boolean",
+              "description": "Display the entry points with the corresponding bundles"
             },
             "errorDetails": {
               "type": "boolean",
@@ -1064,6 +1133,10 @@
             "assetsSort": {
               "type": "string",
               "description": "sort the assets by that field"
+            },
+            "publicPath": {
+              "type": "boolean",
+              "description": "Add public path information"
             },
             "providedExports": {
               "type": "boolean",

@@ -2,8 +2,8 @@
 "use strict";
 
 require("should");
+
 const webpack = require("../lib/webpack");
-const WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
 
 describe("Validation", () => {
 	const testCases = [{
@@ -199,18 +199,41 @@ describe("Validation", () => {
 		message: [
 			" - configuration.context: The provided value \"baz\" is not an absolute path!",
 		]
+	}, {
+		name: "missing stats option",
+		config: {
+			entry: "foo.js",
+			stats: {
+				foobar: true
+			}
+		},
+		test(err) {
+			err.message.should.startWith("Invalid configuration object.");
+			err.message.split("\n").slice(1)[0].should.be.eql(
+				" - configuration.stats should be one of these:"
+			);
+		}
 	}];
+
 	testCases.forEach((testCase) => {
 		it("should fail validation for " + testCase.name, () => {
 			try {
 				webpack(testCase.config);
-			} catch(e) {
-				if(!(e instanceof WebpackOptionsValidationError))
-					throw e;
-				e.message.should.startWith("Invalid configuration object.");
-				e.message.split("\n").slice(1).should.be.eql(testCase.message);
+			} catch(err) {
+				if(err.name !== 'WebpackOptionsValidationError') throw err;
+
+				if(testCase.test) {
+					testCase.test(err);
+
+					return;
+				}
+
+				err.message.should.startWith("Invalid configuration object.");
+				err.message.split("\n").slice(1).should.be.eql(testCase.message);
+
 				return;
 			}
+
 			throw new Error("Validation didn't fail");
 		});
 	});
