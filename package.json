@@ -26,7 +26,6 @@
     "webpack-sources": "^1.0.1"
   },
   "devDependencies": {
-    "beautify-lint": "^1.0.3",
     "benchmark": "^2.1.1",
     "bundle-loader": "~0.5.0",
     "codacy-coverage": "^2.0.1",
@@ -37,6 +36,7 @@
     "es6-promise-polyfill": "^1.1.1",
     "eslint": "^4.3.0",
     "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-prettier": "^2.3.1",
     "express": "~4.13.1",
     "file-loader": "^1.1.6",
     "glob": "^7.1.2",
@@ -44,13 +44,13 @@
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
-    "js-beautify": "^1.5.10",
     "json-loader": "^0.5.7",
     "less": "^2.5.1",
     "less-loader": "^4.0.3",
     "lodash": "^4.17.4",
     "mocha": "^3.2.0",
     "mocha-lcov-reporter": "^1.0.0",
+    "prettier": "^1.8.2",
     "raw-loader": "~0.5.0",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
@@ -101,10 +101,10 @@
     "circleci:lint": "npm run lint-files",
     "build:examples": "cd examples && node buildAll.js",
     "pretest": "npm run lint-files",
-    "lint-files": "npm run lint && npm run beautify-lint && npm run schema-lint",
+    "lint-files": "npm run lint && npm run schema-lint",
     "lint": "eslint lib bin hot buildin \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
     "fix": "npm run lint -- --fix",
-    "beautify-lint": "beautify-lint \"lib/**/*.js\" \"hot/**/*.js\" \"bin/**/*.js\" \"benchmark/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
+    "pretty-files": "prettier \"lib/**.*\" \"bin/**.*\" \"hot/**.*\" \"buildin/**.*\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" --write",
     "schema-lint": "mocha test/*.lint.js --opts test/lint-mocha.opts",
     "benchmark": "mocha --max-old-space-size=4096 --harmony --trace-deprecation test/*.benchmark.js -R spec",
     "cover": "npm run cover:init && npm run cover:all && npm run cover:report",
@@ -114,6 +114,6 @@
     "cover:unit": "node --max-old-space-size=4096 --harmony --trace-deprecation ./node_modules/istanbul/lib/cli.js cover --report none node_modules/mocha/bin/_mocha -- test/*.unittest.js",
     "cover:report": "istanbul report",
     "cover:report-min": "istanbul report --report lcovonly",
-    "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
+    "publish-patch": "npm run lint && mocha && npm version patch && git push && git push --tags && npm publish"
   }
 }
