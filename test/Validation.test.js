@@ -220,7 +220,7 @@ describe("Validation", () => {
 			try {
 				webpack(testCase.config);
 			} catch(err) {
-				if(err.name !== 'WebpackOptionsValidationError') throw err;
+				if(err.name !== "WebpackOptionsValidationError") throw err;
 
 				if(testCase.test) {
 					testCase.test(err);

@@ -1,6 +1,6 @@
 "use strict";
 
-const should = require("should");
+require("should");
 const sinon = require("sinon");
 const NullDependency = require("../lib/dependencies/NullDependency");
 

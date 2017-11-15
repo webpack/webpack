@@ -1,7 +1,7 @@
 /* global describe, it */
 "use strict";
 
-const should = require("should");
+require("should");
 
 const path = require("path");
 const webpack = require("../lib/webpack");
