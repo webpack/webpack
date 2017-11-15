@@ -251,6 +251,8 @@ friendly** by using hashes.
 
 **We want contributing to webpack to be fun, enjoyable, and educational for anyone, and everyone.** We have a [vibrant ecosystem](https://medium.com/webpack/contributors-guide/home) that spans beyond this single repo. We welcome you to check out any of the repositories in [our organization](http://github.com/webpack) or [webpack-contrib organization](http://github.com/webpack-contrib) which houses all of our loaders and plugins.
 
+To get started, read [the contributing instructions](CONTRIBUTING.md).
+
 Contributions go far beyond pull requests and commits. Although we love giving you the opportunity to put your stamp on webpack, we also are thrilled to receive a variety of other contributions including:
 
 * [Documentation](https://github.com/webpack/webpack.js.org) updates, enhancements, designs, or bugfixes
