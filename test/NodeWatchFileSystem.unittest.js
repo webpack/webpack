@@ -64,7 +64,7 @@ describe("NodeWatchFileSystem", function() {
 		var wfs = new NodeWatchFileSystem();
 		var watcher = wfs.watch([fileDirect], [], [], startTime, {
 			aggregateTimeout: 1000
-		}, function(err, filesModified, dirsModified, missingCreated, fileTimestamps /*, dirTimestamps */) {
+		}, function(err, filesModified, dirsModified, missingCreated, fileTimestamps) {
 			if(err) throw err;
 			filesModified.should.be.eql([fileDirect]);
 			dirsModified.should.be.eql([]);
@@ -83,7 +83,7 @@ describe("NodeWatchFileSystem", function() {
 			var wfs = new NodeWatchFileSystem();
 			var watcher = wfs.watch([fileDirect], [], [], startTime, {
 				aggregateTimeout: 1000
-			}, function(err, filesModified, dirsModified, missingCreated, fileTimestamps /*, dirTimestamps */) {
+			}, function(err, filesModified, dirsModified, missingCreated, fileTimestamps) {
 				if(err) throw err;
 				filesModified.should.be.eql([fileDirect]);
 				dirsModified.should.be.eql([]);
