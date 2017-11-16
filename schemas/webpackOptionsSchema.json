@@ -323,6 +323,10 @@
             }
           ]
         },
+        "devtoolNamespace": {
+          "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
+          "type": "string"
+        },
         "filename": {
           "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
           "type": "string",
