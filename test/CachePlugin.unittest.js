@@ -1,9 +1,7 @@
 "use strict";
 
-const should = require("should");
-const sinon = require("sinon");
+require("should");
 const CachePlugin = require("../lib/CachePlugin");
-const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
 
 describe("CachePlugin", () => {
 	let env;

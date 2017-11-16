@@ -68,28 +68,28 @@ describe("LibraryTemplatePlugin", function() {
 					{
 						type: "this",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('this["foo"]');
+							compilationContext.varExpression.should.be.exactly("this[\"foo\"]");
 							should(compilationContext.copyObject).be.undefined();
 						}
 					},
 					{
 						type: "window",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('window["foo"]');
+							compilationContext.varExpression.should.be.exactly("window[\"foo\"]");
 							should(compilationContext.copyObject).be.undefined();
 						}
 					},
 					{
 						type: "global",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('global["foo"]');
+							compilationContext.varExpression.should.be.exactly("global[\"foo\"]");
 							should(compilationContext.copyObject).be.undefined();
 						}
 					},
 					{
 						type: "commonjs",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('exports["foo"]');
+							compilationContext.varExpression.should.be.exactly("exports[\"foo\"]");
 							should(compilationContext.copyObject).be.undefined();
 						}
 					},
@@ -163,42 +163,42 @@ describe("LibraryTemplatePlugin", function() {
 				[{
 						type: "var",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('var foo = foo || {}; foo["bar"] = foo["bar"] || {}; foo["bar"]["baz"]');
+							compilationContext.varExpression.should.be.exactly("var foo = foo || {}; foo[\"bar\"] = foo[\"bar\"] || {}; foo[\"bar\"][\"baz\"]");
 							should(compilationContext.copyObject).be.undefined();
 						}
 					},
 					{
 						type: "assign",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('foo = typeof foo === "object" ? foo : {}; foo["bar"] = foo["bar"] || {}; foo["bar"]["baz"]');
+							compilationContext.varExpression.should.be.exactly("foo = typeof foo === \"object\" ? foo : {}; foo[\"bar\"] = foo[\"bar\"] || {}; foo[\"bar\"][\"baz\"]");
 							should(compilationContext.copyObject).be.undefined();
 						}
 					},
 					{
 						type: "this",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('this["foo"] = this["foo"] || {}; this["foo"]["bar"] = this["foo"]["bar"] || {}; this["foo"]["bar"]["baz"]');
+							compilationContext.varExpression.should.be.exactly("this[\"foo\"] = this[\"foo\"] || {}; this[\"foo\"][\"bar\"] = this[\"foo\"][\"bar\"] || {}; this[\"foo\"][\"bar\"][\"baz\"]");
 							should(compilationContext.copyObject).be.undefined();
 						}
 					},
 					{
 						type: "window",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('window["foo"] = window["foo"] || {}; window["foo"]["bar"] = window["foo"]["bar"] || {}; window["foo"]["bar"]["baz"]');
+							compilationContext.varExpression.should.be.exactly("window[\"foo\"] = window[\"foo\"] || {}; window[\"foo\"][\"bar\"] = window[\"foo\"][\"bar\"] || {}; window[\"foo\"][\"bar\"][\"baz\"]");
 							should(compilationContext.copyObject).be.undefined();
 						}
 					},
 					{
 						type: "global",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('global["foo"] = global["foo"] || {}; global["foo"]["bar"] = global["foo"]["bar"] || {}; global["foo"]["bar"]["baz"]');
+							compilationContext.varExpression.should.be.exactly("global[\"foo\"] = global[\"foo\"] || {}; global[\"foo\"][\"bar\"] = global[\"foo\"][\"bar\"] || {}; global[\"foo\"][\"bar\"][\"baz\"]");
 							should(compilationContext.copyObject).be.undefined();
 						}
 					},
 					{
 						type: "commonjs",
 						assertion: function(compilationContext) {
-							compilationContext.varExpression.should.be.exactly('exports["foo"] = exports["foo"] || {}; exports["foo"]["bar"] = exports["foo"]["bar"] || {}; exports["foo"]["bar"]["baz"]');
+							compilationContext.varExpression.should.be.exactly("exports[\"foo\"] = exports[\"foo\"] || {}; exports[\"foo\"][\"bar\"] = exports[\"foo\"][\"bar\"] || {}; exports[\"foo\"][\"bar\"][\"baz\"]");
 							should(compilationContext.copyObject).be.undefined();
 						}
 					},
