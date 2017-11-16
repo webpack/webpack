@@ -2,7 +2,7 @@
 
 /*globals describe it before after  */
 const path = require("path");
-const should = require("should");
+require("should");
 const MemoryFs = require("memory-fs");
 const webpack = require("../");
 

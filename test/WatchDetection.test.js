@@ -1,7 +1,7 @@
 "use strict";
 
 /*globals describe it before after  */
-const should = require("should");
+require("should");
 const path = require("path");
 const fs = require("fs");
 const MemoryFs = require("memory-fs");
@@ -93,13 +93,13 @@ describe("WatchDetection", () => {
 				function step4() {
 					onChange = () => {
 						if(memfs.readFileSync("/bundle.js").toString().indexOf("correct") >= 0)
-							step4();
+							step5();
 					};
 
 					fs.writeFile(file2Path, "correct", "utf-8", handleError);
 				}
 
-				function step4() {
+				function step5() {
 					onChange = null;
 
 					watcher.close(() => {

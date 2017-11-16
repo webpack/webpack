@@ -1,7 +1,7 @@
 /* global describe, beforeEach, it */
 "use strict";
 
-const should = require("should");
+require("should");
 const sinon = require("sinon");
 const TemplatePluginEnvironment = require("./helpers/TemplatePluginEnvironment");
 const ConcatSource = require("webpack-sources").ConcatSource;
@@ -99,9 +99,9 @@ describe("AmdMainTemplatePlugin", () => {
 						const externalFlag = {
 							external: false
 						};
-						const noExternals = env.modulesListWithExternals.map((module) => Object.assign(module, externalFlag));
+						const noExternals = env.modulesListWithExternals.map((module) => Object.assign({}, module, externalFlag));
 						env.chunk = {
-							getModules: () => env.modulesListWithExternals
+							getModules: () => noExternals
 						};
 						env.eventBinding = setupPluginAndGetEventBinding();
 					});

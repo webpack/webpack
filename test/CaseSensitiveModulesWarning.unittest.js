@@ -1,6 +1,6 @@
 "use strict";
 
-const should = require("should");
+require("should");
 const CaseSensitiveModulesWarning = require("../lib/CaseSensitiveModulesWarning");
 
 const createModule = function(identifier, numberOfReasons) {
@@ -49,6 +49,6 @@ Use equal casing. Compare these module identifiers:
 	it("has the an origin", () =>
 		myCaseSensitiveModulesWarning.origin.should.be.exactly(modules[0]));
 
-	it('has the a module', () =>
+	it("has the a module", () =>
 		myCaseSensitiveModulesWarning.module.should.be.exactly(modules[0]));
 });
