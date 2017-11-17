@@ -194,6 +194,14 @@
           ],
           "description": "An array of rules applied for modules."
         },
+        "defaultRules": {
+          "description": "An array of rules applied by default for modules.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ruleSet-rules"
+            }
+          ]
+        },
         "unknownContextCritical": {
           "description": "Enable warnings when using the require function in a not statically analyse-able way",
           "type": "boolean"
@@ -807,6 +815,15 @@
           "description": "Options for parsing",
           "additionalProperties": true,
           "type": "object"
+        },
+        "resolve": {
+          "description": "Options for the resolver",
+          "type": "object",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/resolve"
+            }
+          ]
         },
         "query": {
           "description": "Shortcut for use.query",
