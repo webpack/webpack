@@ -168,20 +168,6 @@ it("should not fail #138", function(done) {
 	}(function () { done() }));
 });
 
-it("should parse a simplified commonjs wrapping", function(done) {
-	define(function(require) {
-		require("./a").should.be.eql("a");
-		done();
-	});
-});
-
-it("should parse a simplified commonjs wrapping arrow function", function(done) {
-	define((require) => {
-		require("./a").should.be.eql("a");
-		done();
-	});
-});
-
 it("should parse a bound function expression 1", function(done) {
 	define(function(a, require, exports, module) {
 		a.should.be.eql(123);
