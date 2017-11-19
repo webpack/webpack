@@ -12,6 +12,7 @@
       "oneOf": [
         {
           "type": "object",
+          "additionalProperties": false,
           "properties": {
             "content": {
               "description": "The mappings from request to module id",
@@ -67,6 +68,7 @@
       "description": "UNDOCUMENTED",
       "type": "array",
       "items": {
+        "description": "UNDOCUMENTED",
         "type": "string"
       }
     }

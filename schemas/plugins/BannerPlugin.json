@@ -4,7 +4,7 @@
     "rule": {
       "oneOf": [
         {
-          "instanceOf": "RegEx"
+          "instanceof": "RegExp"
         },
         {
           "minLength": 1,
@@ -16,7 +16,12 @@
       "oneOf": [
         {
           "items": {
-            "$ref": "#/definitions/rule"
+            "description": "A rule condition",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/rule"
+              }
+            ]
           },
           "type": "array"
         },
@@ -30,7 +35,9 @@
     {
       "type": "object",
       "additionalProperties": false,
-      "required": ["banner"],
+      "required": [
+        "banner"
+      ],
       "properties": {
         "banner": {
           "description": "The banner as string, it will be wrapped in a comment",
@@ -45,13 +52,28 @@
           "type": "boolean"
         },
         "test": {
-          "$ref": "#/definitions/rules"
+          "description": "Include all modules that pass test assertion",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/rules"
+            }
+          ]
         },
         "include": {
-          "$ref": "#/definitions/rules"
+          "description": "Include all modules matching any of these conditions",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/rules"
+            }
+          ]
         },
         "exclude": {
-          "$ref": "#/definitions/rules"
+          "description": "Exclude all modules matching any of these conditions",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/rules"
+            }
+          ]
         }
       }
     },

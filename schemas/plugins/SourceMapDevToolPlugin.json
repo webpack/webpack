@@ -6,7 +6,7 @@
     "rule": {
       "oneOf": [
         {
-          "instanceOf": "RegEx"
+          "instanceof": "RegExp"
         },
         {
           "minLength": 1,
@@ -18,7 +18,12 @@
       "oneOf": [
         {
           "items": {
-            "$ref": "#/definitions/rule"
+            "description": "A rule condition",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/rule"
+              }
+            ]
           },
           "type": "array"
         },
@@ -31,22 +36,36 @@
   "properties": {
     "test": {
       "description": "Include source maps for modules based on their extension (defaults to .js and .css)",
-      "$ref": "#/definitions/rules"
+      "anyOf": [
+        {
+          "$ref": "#/definitions/rules"
+        }
+      ]
     },
     "include": {
       "description": "Include source maps for module paths that match the given value",
-      "$ref": "#/definitions/rules"
+      "anyOf": [
+        {
+          "$ref": "#/definitions/rules"
+        }
+      ]
     },
     "exclude": {
       "description": "Exclude modules that match the given value from source map generation",
-      "$ref": "#/definitions/rules"
+      "anyOf": [
+        {
+          "$ref": "#/definitions/rules"
+        }
+      ]
     },
     "filename": {
       "description": "Defines the output filename of the SourceMap (will be inlined if no value is provided)",
       "oneOf": [
         {
           "description": "null is not documented, but appears in the codebase",
-          "enum": [null]
+          "enum": [
+            null
+          ]
         },
         {
           "minLength": 1,
@@ -58,9 +77,11 @@
       "description": "Appends the given value to the original asset. Usually the #sourceMappingURL comment. [url] is replaced with a URL to the source map file. false disables the appending",
       "oneOf": [
         {
-          "description":
-            "null is not documented, but appears in the codebase",
-          "enum": [false, null]
+          "description": "null is not documented, but appears in the codebase",
+          "enum": [
+            false,
+            null
+          ]
         },
         {
           "minLength": 1,
@@ -72,8 +93,7 @@
       "description": "See https://webpack.js.org/configuration/output/#output-devtoolmodulefilenametemplate",
       "oneOf": [
         {
-          "description":
-            "fn type undocumented (kinda) but appears in the codebase",
+          "description": "fn type undocumented (kinda) but appears in the codebase",
           "instanceof": "Function"
         },
         {
@@ -110,15 +130,27 @@
       "properties": {
         "test": {
           "description": "Include source maps for modules based on their extension (defaults to .js and .css)",
-          "$ref": "#/definitions/rules"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/rules"
+            }
+          ]
         },
         "include": {
           "description": "Include source maps for module paths that match the given value",
-          "$ref": "#/definitions/rules"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/rules"
+            }
+          ]
         },
         "exclude": {
           "description": "Exclude modules that match the given value from source map generation",
-          "$ref": "#/definitions/rules"
+          "anyOf": [
+            {
+              "$ref": "#/definitions/rules"
+            }
+          ]
         }
       }
     },

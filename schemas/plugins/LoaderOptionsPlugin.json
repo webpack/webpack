@@ -14,8 +14,10 @@
     "options": {
       "description": "A configuration object that can be used to configure older loaders",
       "type": "object",
+      "additionalProperties": true,
       "properties": {
         "context": {
+          "description": "The context that can be used to configure older loaders",
           "minLength": 1,
           "type": "string"
         }
