@@ -16,8 +16,6 @@ describe("NullDependency", () => {
 
 		it("has a null type", () => env.nullDependency.type.should.be.exactly("null"));
 
-		it("is not an equal resource", () => env.nullDependency.isEqualResource().should.be.False());
-
 		it("has update hash function", () => env.nullDependency.updateHash.should.be.Function());
 
 		it("does not update hash", () => {
