@@ -1,128 +1,138 @@
 {
-	"id": "SourceMapDevToolPlugin",
-	"type": "object",
-	"additionalProperties": false,
-	"definitions": {
-		"rule": {
-			"oneOf": [{
-					"instanceOf": "RegEx"
-				},
-				{
-					"minLength": 1,
-					"type": "string"
-				}
-			]
-		},
-		"rules": {
-			"oneOf": [{
-				"items": {
-					"$ref": "#/definitions/rule"
-				},
-				"type": "array"
-			}, {
-				"$ref": "#/definitions/rule"
-			}]
-		}
-	},
-	"properties": {
-		"test": {
-			"description": "Include source maps for modules based on their extension (defaults to .js and .css)",
-			"$ref": "#/definitions/rules"
-		},
-		"include": {
-			"description": "Include source maps for module paths that match the given value",
-			"$ref": "#/definitions/rules"
-		},
-		"exclude": {
-			"description": "Exclude modules that match the given value from source map generation",
-			"$ref": "#/definitions/rules"
-		},
-		"filename": {
-			"description": "Defines the output filename of the SourceMap (will be inlined if no value is provided)",
-			"oneOf": [{
-					"description": "null is not documented, but appears in the codebase",
-					"enum": [null]
-				},
-				{
-					"minLength": 1,
-					"type": "string"
-				}
-			]
-		},
-		"append": {
-			"description": "Appends the given value to the original asset. Usually the #sourceMappingURL comment. [url] is replaced with a URL to the source map file. false disables the appending",
-			"oneOf": [{
-					"description": "null is not documented, but appears in the codebase",
-					"enum": [false, null]
-				},
-				{
-					"minLength": 1,
-					"type": "string"
-				}
-			]
-		},
-		"moduleFilenameTemplate": {
-			"description": "See https://webpack.js.org/configuration/output/#output-devtoolmodulefilenametemplate",
-			"oneOf": [{
-					"description": "fn type undocumented (kinda) but appears in the codebase",
-					"instanceof": "Function"
-				},
-				{
-					"minLength": 1,
-					"type": "string"
-				}
-			]
-		},
-		"fallbackModuleFilenameTemplate": {
-			"description": "See https://webpack.js.org/configuration/output/#output-devtoolmodulefilenametemplate",
-			"oneOf": [{
-					"description": "fn type undocumented (kinda) but appears in the codebase",
-					"instanceof": "Function"
-				},
-				{
-					"minLength": 1,
-					"type": "string"
-				}
-			]
-		},
-		"module": {
-			"description": "Indicates whether loaders should generate source maps (defaults to true)",
-			"type": "boolean"
-		},
-		"columns": {
-			"description": "Indicates whether column mappings should be used (defaults to true)",
-			"type": "boolean"
-		},
-		"type": {
-			"description": "Simplify and speed up source mapping by using line to line source mappings for matched modules",
-			"type": "object",
-			"additionalProperties": false,
-			"properties": {
-				"test": {
-					"description": "Include source maps for modules based on their extension (defaults to .js and .css)",
-					"$ref": "#/definitions/rules"
-				},
-				"include": {
-					"description": "Include source maps for module paths that match the given value",
-					"$ref": "#/definitions/rules"
-				},
-				"exclude": {
-					"description": "Exclude modules that match the given value from source map generation",
-					"$ref": "#/definitions/rules"
-				}
-			}
-		},
-		"noSources": {
-			"description": "UNDOCUMENTED",
-			"type": "boolean"
-		},
-		"lineToLine": {
-			"description": "UNDOCUMENTED",
-			"type": "boolean"
-		},
-		"cheap": {
-			"description": "UNDOCUMENTED",
-			"type": "boolean"
-		}
-	}
+  "id": "SourceMapDevToolPlugin",
+  "type": "object",
+  "additionalProperties": false,
+  "definitions": {
+    "rule": {
+      "oneOf": [
+        {
+          "instanceOf": "RegEx"
+        },
+        {
+          "minLength": 1,
+          "type": "string"
+        }
+      ]
+    },
+    "rules": {
+      "oneOf": [
+        {
+          "items": {
+            "$ref": "#/definitions/rule"
+          },
+          "type": "array"
+        },
+        {
+          "$ref": "#/definitions/rule"
+        }
+      ]
+    }
+  },
+  "properties": {
+    "test": {
+      "description": "Include source maps for modules based on their extension (defaults to .js and .css)",
+      "$ref": "#/definitions/rules"
+    },
+    "include": {
+      "description": "Include source maps for module paths that match the given value",
+      "$ref": "#/definitions/rules"
+    },
+    "exclude": {
+      "description": "Exclude modules that match the given value from source map generation",
+      "$ref": "#/definitions/rules"
+    },
+    "filename": {
+      "description": "Defines the output filename of the SourceMap (will be inlined if no value is provided)",
+      "oneOf": [
+        {
+          "description": "null is not documented, but appears in the codebase",
+          "enum": [null]
+        },
+        {
+          "minLength": 1,
+          "type": "string"
+        }
+      ]
+    },
+    "append": {
+      "description": "Appends the given value to the original asset. Usually the #sourceMappingURL comment. [url] is replaced with a URL to the source map file. false disables the appending",
+      "oneOf": [
+        {
+          "description":
+            "null is not documented, but appears in the codebase",
+          "enum": [false, null]
+        },
+        {
+          "minLength": 1,
+          "type": "string"
+        }
+      ]
+    },
+    "moduleFilenameTemplate": {
+      "description": "See https://webpack.js.org/configuration/output/#output-devtoolmodulefilenametemplate",
+      "oneOf": [
+        {
+          "description":
+            "fn type undocumented (kinda) but appears in the codebase",
+          "instanceof": "Function"
+        },
+        {
+          "minLength": 1,
+          "type": "string"
+        }
+      ]
+    },
+    "fallbackModuleFilenameTemplate": {
+      "description": "See https://webpack.js.org/configuration/output/#output-devtoolmodulefilenametemplate",
+      "oneOf": [
+        {
+          "description": "fn type undocumented (kinda) but appears in the codebase",
+          "instanceof": "Function"
+        },
+        {
+          "minLength": 1,
+          "type": "string"
+        }
+      ]
+    },
+    "module": {
+      "description": "Indicates whether loaders should generate source maps (defaults to true)",
+      "type": "boolean"
+    },
+    "columns": {
+      "description": "Indicates whether column mappings should be used (defaults to true)",
+      "type": "boolean"
+    },
+    "type": {
+      "description": "Simplify and speed up source mapping by using line to line source mappings for matched modules",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "test": {
+          "description": "Include source maps for modules based on their extension (defaults to .js and .css)",
+          "$ref": "#/definitions/rules"
+        },
+        "include": {
+          "description": "Include source maps for module paths that match the given value",
+          "$ref": "#/definitions/rules"
+        },
+        "exclude": {
+          "description": "Exclude modules that match the given value from source map generation",
+          "$ref": "#/definitions/rules"
+        }
+      }
+    },
+    "noSources": {
+      "description": "UNDOCUMENTED",
+      "type": "boolean"
+    },
+    "lineToLine": {
+      "description": "UNDOCUMENTED",
+      "type": "boolean"
+    },
+    "cheap": {
+      "description": "UNDOCUMENTED",
+      "type": "boolean"
+    }
+  }
 }
