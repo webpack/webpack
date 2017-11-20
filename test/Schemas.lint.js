@@ -7,7 +7,7 @@ const glob = require("glob");
 const rootDir = path.resolve(__dirname, "..");
 
 describe("Schemas", () => {
-	const schemas = glob.sync("schemas/**.json", {
+	const schemas = glob.sync("schemas/**/*.json", {
 		cwd: rootDir
 	});
 
@@ -38,6 +38,7 @@ describe("Schemas", () => {
 				const allowedProperties = [
 					"definitions",
 					"$ref",
+					"id",
 					"items",
 					"properties",
 					"additionalProperties",
