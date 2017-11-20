@@ -1,7 +1,7 @@
-Hash: 94e1d97f3e1cf37e753f
+Hash: 2f10a36f9685efee695a
 Time: Xms
     Asset      Size  Chunks             Chunk Names
-bundle.js  2.81 KiB       0  [emitted]  main
+bundle.js  3.02 KiB       0  [emitted]  main
    [0] (webpack)/test/statsCases/resolve-plugin-context/node_modules/xyz/index.js 0 bytes {0} [built]
    [1] (webpack)/test/statsCases/resolve-plugin-context/index.js 48 bytes {0} [built]
    [2] (webpack)/test/statsCases/resolve-plugin-context/node_modules/abc/index.js 16 bytes {0} [built]
