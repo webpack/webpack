@@ -18,8 +18,8 @@
       "properties": {
         "context": {
           "description": "The context that can be used to configure older loaders",
-          "minLength": 1,
-          "type": "string"
+          "type": "string",
+          "absolutePath": true
         }
       }
     }

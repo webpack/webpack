@@ -62,14 +62,16 @@
       "description": "Defines the output filename of the SourceMap (will be inlined if no value is provided)",
       "oneOf": [
         {
-          "description": "null is not documented, but appears in the codebase",
+          "description": "Disable separate SourceMap file and inline SourceMap as DataUrl",
           "enum": [
+            false,
             null
           ]
         },
         {
+          "type": "string",
           "minLength": 1,
-          "type": "string"
+          "absolutePath": false
         }
       ]
     },
@@ -77,7 +79,7 @@
       "description": "Appends the given value to the original asset. Usually the #sourceMappingURL comment. [url] is replaced with a URL to the source map file. false disables the appending",
       "oneOf": [
         {
-          "description": "null is not documented, but appears in the codebase",
+          "description": "Append no SourceMap comment to the bundle, but still generate SourceMaps",
           "enum": [
             false,
             null
@@ -90,10 +92,10 @@
       ]
     },
     "moduleFilenameTemplate": {
-      "description": "See https://webpack.js.org/configuration/output/#output-devtoolmodulefilenametemplate",
+      "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap",
       "oneOf": [
         {
-          "description": "fn type undocumented (kinda) but appears in the codebase",
+          "description": "Custom function generating the identifer",
           "instanceof": "Function"
         },
         {
@@ -103,10 +105,10 @@
       ]
     },
     "fallbackModuleFilenameTemplate": {
-      "description": "See https://webpack.js.org/configuration/output/#output-devtoolmodulefilenametemplate",
+      "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict",
       "oneOf": [
         {
-          "description": "fn type undocumented (kinda) but appears in the codebase",
+          "description": "Custom function generating the identifer",
           "instanceof": "Function"
         },
         {
@@ -116,55 +118,59 @@
       ]
     },
     "module": {
-      "description": "Indicates whether loaders should generate source maps (defaults to true)",
+      "description": "Indicates whether SourceMaps from loaders should be used (defaults to true)",
       "type": "boolean"
     },
     "columns": {
       "description": "Indicates whether column mappings should be used (defaults to true)",
       "type": "boolean"
     },
-    "type": {
-      "description": "Simplify and speed up source mapping by using line to line source mappings for matched modules",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "test": {
-          "description": "Include source maps for modules based on their extension (defaults to .js and .css)",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/rules"
-            }
-          ]
-        },
-        "include": {
-          "description": "Include source maps for module paths that match the given value",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/rules"
-            }
-          ]
-        },
-        "exclude": {
-          "description": "Exclude modules that match the given value from source map generation",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/rules"
-            }
-          ]
-        }
-      }
-    },
     "noSources": {
-      "description": "UNDOCUMENTED",
+      "description": "Omit the 'sourceContents' array from the SourceMap",
       "type": "boolean"
+    },
+    "sourceRoot": {
+      "description": "Provide a custom value for the 'sourceRoot' property in the SourceMap",
+      "type": "string"
     },
     "lineToLine": {
-      "description": "UNDOCUMENTED",
-      "type": "boolean"
-    },
-    "cheap": {
-      "description": "UNDOCUMENTED",
-      "type": "boolean"
+      "description": "(deprecated) try to map original files line to line to generated files",
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "description": "Simplify and speed up source mapping by using line to line source mappings for matched modules",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "test": {
+              "description": "Include source maps for modules based on their extension (defaults to .js and .css)",
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/rules"
+                }
+              ]
+            },
+            "include": {
+              "description": "Include source maps for module paths that match the given value",
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/rules"
+                }
+              ]
+            },
+            "exclude": {
+              "description": "Exclude modules that match the given value from source map generation",
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/rules"
+                }
+              ]
+            }
+          }
+        }
+      ]
     }
   }
 }
