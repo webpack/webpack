@@ -94,23 +94,6 @@ describe("Errors", () => {
 			done();
 		});
 	});
-	it("should warn about NoErrorsPlugin being deprecated in favor of NoEmitOnErrorsPlugin", (done) => {
-		getErrors({
-			entry: "./no-errors-deprecate",
-			plugins: [
-				new webpack.NoErrorsPlugin()
-			]
-		}, (errors, warnings) => {
-			warnings.length.should.be.eql(1);
-			const lines = warnings[0].split("\n");
-			lines[0].should.match(/webpack/);
-			lines[0].should.match(/NoErrorsPlugin/);
-			lines[0].should.match(/deprecated/);
-			lines[1].should.match(/NoEmitOnErrorsPlugin/);
-			lines[1].should.match(/instead/);
-			done();
-		});
-	});
 	it("should not warn if the NoEmitOnErrorsPlugin is used over the NoErrorsPlugin", (done) => {
 		getErrors({
 			entry: "./no-errors-deprecate",
