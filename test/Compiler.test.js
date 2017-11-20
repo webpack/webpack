@@ -178,6 +178,14 @@ describe("Compiler", () => {
 			});
 		});
 		describe("parser", () => {
+			describe("plugin", () => {
+				it("invokes sets a 'compilation' plugin", (done) => {
+					compiler.plugin = sinon.spy();
+					compiler.parser.plugin();
+					compiler.plugin.callCount.should.be.exactly(1);
+					done();
+				});
+			});
 			describe("apply", () => {
 				it("invokes sets a 'compilation' plugin", (done) => {
 					compiler.plugin = sinon.spy();
