@@ -2,8 +2,7 @@
   "id": "DllPlugin",
   "additionalProperties": false,
   "required": [
-    "path",
-    "name"
+    "path"
   ],
   "properties": {
     "context": {

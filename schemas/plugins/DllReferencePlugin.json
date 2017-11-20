@@ -1,8 +1,17 @@
 {
   "id": "DllReferencePlugin",
   "additionalProperties": false,
-  "required": [
-    "manifest"
+  "anyOf": [
+    {
+      "required": [
+        "manifest"
+      ]
+    },
+    {
+      "require": [
+        "content"
+      ]
+    }
   ],
   "properties": {
     "context": {
