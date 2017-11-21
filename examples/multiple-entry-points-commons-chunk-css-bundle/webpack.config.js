@@ -1,7 +1,7 @@
-var path = require("path");
-const LoaderOptionsPlugin = require("webpack").LoaderOptionsPlugin;
-var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+const path = require("path");
+const LoaderOptionsPlugin = require("../../lib/LoaderOptionsPlugin");
+const CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
 	entry: {
 		A: "./a",
