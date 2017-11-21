@@ -1,6 +1,6 @@
 Hash: 7aea3de5f4fd504d5195
 Time: Xms
-  Asset     Size  Chunks             Chunk Names
-main.js  2.82 kB       0  [emitted]  main
+  Asset      Size  Chunks             Chunk Names
+main.js  2.76 KiB       0  [emitted]  main
    [0] (webpack)/test/statsCases/external/index.js 17 bytes {0} [built]
    [1] external "test" 42 bytes {0} [built]

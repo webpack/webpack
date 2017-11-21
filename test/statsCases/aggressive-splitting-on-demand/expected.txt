@@ -1,22 +1,22 @@
 Hash: 643982be9b8a84182a8b
 Time: Xms
-                  Asset     Size  Chunks             Chunk Names
-1744d4ad4296f5fa250c.js  2.01 kB       0  [emitted]  
-fcea9401f4f21cf79d39.js  1.99 kB       1  [emitted]  
-522bb8ca666406617ab6.js  1.03 kB       2  [emitted]  
-20b6ca975e28ea5b7a3d.js  1.99 kB       3  [emitted]  
-c1e3d74e221cc503e2e1.js  1.99 kB       4  [emitted]  
-3d41758100f56aac517e.js  1.03 kB       5  [emitted]  
-c64eeda8f0bfba682f9d.js  1.03 kB       6  [emitted]  
-520c994eaddf273485ec.js   8.5 kB       7  [emitted]  main
+                  Asset      Size  Chunks             Chunk Names
+1744d4ad4296f5fa250c.js  1.96 KiB       0  [emitted]  
+fcea9401f4f21cf79d39.js  1.94 KiB       1  [emitted]  
+522bb8ca666406617ab6.js     1 KiB       2  [emitted]  
+20b6ca975e28ea5b7a3d.js  1.94 KiB       3  [emitted]  
+c1e3d74e221cc503e2e1.js  1.94 KiB       4  [emitted]  
+3d41758100f56aac517e.js     1 KiB       5  [emitted]  
+c64eeda8f0bfba682f9d.js  1.01 KiB       6  [emitted]  
+520c994eaddf273485ec.js   8.3 KiB       7  [emitted]  main
 Entrypoint main = 520c994eaddf273485ec.js
-chunk    {0} 1744d4ad4296f5fa250c.js 1.8 kB {7} [recorded]
+chunk    {0} 1744d4ad4296f5fa250c.js 1.76 KiB {7} [recorded]
     > aggressive-splitted duplicate [11] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 4:0-51
     > aggressive-splitted duplicate [11] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 5:0-44
     > aggressive-splitted duplicate [11] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 6:0-72
     [3] (webpack)/test/statsCases/aggressive-splitting-on-demand/f.js 899 bytes {0} [built]
     [4] (webpack)/test/statsCases/aggressive-splitting-on-demand/g.js 901 bytes {0} [built]
-chunk    {1} fcea9401f4f21cf79d39.js 1.8 kB {7} [recorded]
+chunk    {1} fcea9401f4f21cf79d39.js 1.76 KiB {7} [recorded]
     > aggressive-splitted duplicate [11] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 3:0-30
     > aggressive-splitted duplicate [11] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 5:0-44
     > aggressive-splitted duplicate [11] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 6:0-72
@@ -26,12 +26,12 @@ chunk    {2} 522bb8ca666406617ab6.js 899 bytes {7}
     > aggressive-splitted duplicate [11] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 2:0-23
     > aggressive-splitted duplicate [11] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 3:0-30
     [5] (webpack)/test/statsCases/aggressive-splitting-on-demand/c.js 899 bytes {2} [built]
-chunk    {3} 20b6ca975e28ea5b7a3d.js 1.8 kB {7} [recorded]
+chunk    {3} 20b6ca975e28ea5b7a3d.js 1.76 KiB {7} [recorded]
     > aggressive-splitted duplicate [11] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 4:0-51
     > aggressive-splitted duplicate [11] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 6:0-72
     [8] (webpack)/test/statsCases/aggressive-splitting-on-demand/j.js 901 bytes {3} [built]
     [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/k.js 899 bytes {3} [built]
-chunk    {4} c1e3d74e221cc503e2e1.js 1.8 kB {7} [recorded]
+chunk    {4} c1e3d74e221cc503e2e1.js 1.76 KiB {7} [recorded]
     > aggressive-splitted duplicate [11] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 4:0-51
     > aggressive-splitted duplicate [11] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 6:0-72
     [6] (webpack)/test/statsCases/aggressive-splitting-on-demand/h.js 899 bytes {4} [built]
