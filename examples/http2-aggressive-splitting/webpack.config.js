@@ -1,6 +1,8 @@
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
+	mode: "production",
+	cache: true, // better performance for the AggressiveSplittingPlugin
 	entry: "./example",
 	output: {
 		path: path.join(__dirname, "js"),

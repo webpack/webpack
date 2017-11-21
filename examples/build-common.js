@@ -11,9 +11,11 @@ const fs = require("fs");
 
 const extraArgs = "";
 
-const targetArgs = global.NO_TARGET_ARGS ? "" : " ./example.js js/output.js";
+const hasConfiguration = fs.existsSync("webpack.config.js");
+const targetArgs = global.NO_TARGET_ARGS ? "" : " ./example.js js/output.js ";
 const displayReasons = global.NO_REASONS ? "" : " --display-reasons --display-used-exports --display-provided-exports";
-cp.exec(`node ${path.resolve(__dirname, "../bin/webpack.js")} ${displayReasons} --display-chunks --display-max-modules 99999 --display-origins --display-entrypoints --output-public-path "js/" -p ${extraArgs} ${targetArgs}`, function(error, stdout, stderr) {
+const modeArgs = hasConfiguration ? "" : "--mode production";
+cp.exec(`node ${path.resolve(__dirname, "../bin/webpack.js")} ${modeArgs} ${displayReasons} --display-chunks --display-max-modules 99999 --display-origins --display-entrypoints --output-public-path "js/" -p ${extraArgs} ${targetArgs}`, function(error, stdout, stderr) {
 	if(stderr)
 		console.log(stderr);
 	if(error !== null)
@@ -25,7 +27,7 @@ cp.exec(`node ${path.resolve(__dirname, "../bin/webpack.js")} ${displayReasons} 
 		console.log(stderr);
 		throw e;
 	}
-	cp.exec(`node ${path.resolve(__dirname, "../bin/webpack.js")} ${displayReasons} --display-chunks --display-max-modules 99999 --display-origins --display-entrypoints --output-public-path "js/" --output-pathinfo ${extraArgs} ${targetArgs}`, function(error, stdout, stderr) {
+	cp.exec(`node ${path.resolve(__dirname, "../bin/webpack.js")} ${modeArgs} ${displayReasons} --display-chunks --display-max-modules 99999 --display-origins --display-entrypoints --output-public-path "js/" --output-pathinfo ${extraArgs} ${targetArgs}`, function(error, stdout, stderr) {
 		console.log(stdout);
 		if(stderr)
 			console.log(stderr);
