@@ -1,4 +1,5 @@
 var path = require("path");
+const LoaderOptionsPlugin = require("webpack").LoaderOptionsPlugin;
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
@@ -32,5 +33,9 @@ module.exports = {
 		new ExtractTextPlugin({
 			filename: "[name].css"
 		}),
+		// Temporary workaround for the file-loader
+		new LoaderOptionsPlugin({
+			options: {}
+		})
 	]
 };
