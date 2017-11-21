@@ -15,10 +15,16 @@ module.exports = function(yargs, argv, convertOptions) {
 		if(!argv.devtool) {
 			argv.devtool = "eval-cheap-module-source-map";
 		}
+		if(!argv.mode) {
+			argv.mode = "development";
+		}
 	}
 	if(argv.p) {
 		argv["optimize-minimize"] = true;
 		argv["define"] = [].concat(argv["define"] || []).concat("process.env.NODE_ENV=\"production\"");
+		if(!argv.mode) {
+			argv.mode = "production";
+		}
 	}
 
 	var configFileLoaded = false;
@@ -287,6 +293,10 @@ module.exports = function(yargs, argv, convertOptions) {
 			ensureArray(options, "plugins");
 			options.plugins.unshift(plugin);
 		}
+
+		ifArg("mode", function(value) {
+			options.mode = value;
+		});
 
 		ifArgPair("entry", function(name, entry) {
 			if(typeof options.entry[name] !== "undefined" && options.entry[name] !== null) {

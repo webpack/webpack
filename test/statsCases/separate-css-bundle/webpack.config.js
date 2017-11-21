@@ -15,6 +15,7 @@ var moduleConfig = {
 
 module.exports = [
 	{
+		mode: "production",
 		context: path.join(__dirname, "a"),
 		entry: "./index",
 		output: {
@@ -26,6 +27,7 @@ module.exports = [
 		]
 	},
 	{
+		mode: "production",
 		context: path.join(__dirname, "b"),
 		entry: "./index",
 		output: {

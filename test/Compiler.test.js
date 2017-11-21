@@ -12,6 +12,7 @@ const Compiler = require("../lib/Compiler");
 describe("Compiler", () => {
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
+		if(!options.mode) options.mode = "production";
 		options = new WebpackOptionsDefaulter().process(options);
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");

@@ -10,6 +10,7 @@ describe("NodeTemplatePlugin", () => {
 
 	it("should compile and run a simple module", (done) => {
 		webpack({
+			mode: "production",
 			context: path.join(__dirname, "fixtures", "nodetest"),
 			target: "node",
 			output: {
@@ -45,6 +46,7 @@ describe("NodeTemplatePlugin", () => {
 
 	it("should compile and run a simple module in single mode", (done) => {
 		webpack({
+			mode: "production",
 			context: path.join(__dirname, "fixtures", "nodetest"),
 			target: "node",
 			output: {

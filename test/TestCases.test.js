@@ -5,11 +5,30 @@ require("should");
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
+const mkdirp = require("mkdirp");
 const Test = require("mocha/lib/test");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
+
+const DEFAULT_OPTIMIZATIONS = {
+	removeAvailableModules: true,
+	removeEmptyChunks: true,
+	mergedDuplicateChunks: true,
+	flagIncludedChunks: true,
+	occurrenceOrder: true,
+	sideEffects: true,
+	providedExports: true,
+	usedExports: true,
+	noEmitOnErrors: false,
+	concatenateModules: false,
+	namedModules: false,
+};
+
+const NO_EMIT_ON_ERRORS_OPTIMIZATIONS = {
+	noEmitOnErrors: false
+};
 
 describe("TestCases", () => {
 	const casesPath = path.join(__dirname, "cases");
@@ -21,12 +40,14 @@ describe("TestCases", () => {
 		};
 	});
 	[{
-		name: "normal"
+		name: "normal",
 	}, {
-		name: "concat",
-		plugins: [
-			new webpack.optimize.ModuleConcatenationPlugin()
-		]
+		name: "production",
+		mode: "production"
+	}, {
+		name: "development",
+		mode: "development",
+		devtool: "none"
 	}, {
 		name: "hot",
 		plugins: [
@@ -71,6 +92,7 @@ describe("TestCases", () => {
 		devtool: "cheap-source-map"
 	}, {
 		name: "minimized",
+		mode: "production",
 		minimize: true,
 		plugins: [
 			new webpack.optimize.UglifyJsPlugin({
@@ -79,6 +101,7 @@ describe("TestCases", () => {
 		]
 	}, {
 		name: "minimized-source-map",
+		mode: "production",
 		devtool: "eval-cheap-module-source-map",
 		minimize: true,
 		plugins: [
@@ -86,6 +109,7 @@ describe("TestCases", () => {
 		]
 	}, {
 		name: "minimized-hashed-modules",
+		mode: "production",
 		minimize: true,
 		plugins: [
 			new webpack.optimize.UglifyJsPlugin(),
@@ -93,6 +117,7 @@ describe("TestCases", () => {
 		]
 	}, {
 		name: "all-combined",
+		mode: "production",
 		devtool: "#@source-map",
 		minimize: true,
 		plugins: [
@@ -124,6 +149,11 @@ describe("TestCases", () => {
 								entry: "./" + category.name + "/" + testName + "/index",
 								target: "async-node",
 								devtool: config.devtool,
+								mode: config.mode || "none",
+								optimization: config.mode ? NO_EMIT_ON_ERRORS_OPTIMIZATIONS : Object.assign({}, config.optimization, DEFAULT_OPTIMIZATIONS),
+								performance: {
+									hints: false
+								},
 								output: {
 									pathinfo: true,
 									path: outputDirectory,
@@ -161,6 +191,7 @@ describe("TestCases", () => {
 								if(err) return done(err);
 								const statOptions = Stats.presetToOptions("verbose");
 								statOptions.colors = false;
+								mkdirp.sync(outputDirectory);
 								fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
 								const jsonStats = stats.toJson({
 									errorDetails: true

@@ -185,8 +185,8 @@ describe("Validation", () => {
 		},
 		message: [
 			" - configuration has an unknown property 'postcss'. These properties are valid:",
-			"   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry, externals?, " +
-			"loader?, module?, name?, node?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, " +
+			"   object { mode?, amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry, externals?, " +
+			"loader?, module?, name?, node?, output?, optimization?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, " +
 			"recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, stats?, target?, watch?, watchOptions? }",
 			"   For typos: please correct them.",
 			"   For loader options: webpack 2 no longer allows custom properties in configuration.",
