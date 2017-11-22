@@ -5,7 +5,7 @@ Child fitting:
                       Asset      Size  Chunks             Chunk Names
     3b0abf784cffee9cdb84.js  2.23 KiB       0  [emitted]  
     fd43aeccca69e5179cb6.js  1.93 KiB       4  [emitted]  
-    0fb4d7363ffcca01b706.js   5.8 KiB       5  [emitted]  
+    0fb4d7363ffcca01b706.js  5.59 KiB       5  [emitted]  
     e1f8db72211be4caf41d.js     1 KiB       6  [emitted]  
     Entrypoint main = 0fb4d7363ffcca01b706.js e1f8db72211be4caf41d.js fd43aeccca69e5179cb6.js 3b0abf784cffee9cdb84.js
     chunk    {0} 3b0abf784cffee9cdb84.js 1.87 KiB [initial] [rendered]
@@ -30,7 +30,7 @@ Child content-change:
                       Asset      Size  Chunks             Chunk Names
     3b0abf784cffee9cdb84.js  2.23 KiB       0  [emitted]  
     fd43aeccca69e5179cb6.js  1.93 KiB       4  [emitted]  
-    0fb4d7363ffcca01b706.js   5.8 KiB       5  [emitted]  
+    0fb4d7363ffcca01b706.js  5.59 KiB       5  [emitted]  
     e1f8db72211be4caf41d.js     1 KiB       6  [emitted]  
     Entrypoint main = 0fb4d7363ffcca01b706.js e1f8db72211be4caf41d.js fd43aeccca69e5179cb6.js 3b0abf784cffee9cdb84.js
     chunk    {0} 3b0abf784cffee9cdb84.js 1.87 KiB [initial] [rendered]

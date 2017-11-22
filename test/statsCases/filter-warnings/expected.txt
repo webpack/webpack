@@ -3,10 +3,9 @@ Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.08 KiB       0  [emitted]  main
+    bundle.js  2.05 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
-    Dropping unused variable installedWasmModules [webpack/bootstrap cd4abefb3963c61372a0:5,0]
     Dropping side-effect-free statement [./index.js:6,0]
     Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     Dropping unused function someUnUsedFunction2 [./index.js:9,0]
@@ -22,40 +21,39 @@ Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.08 KiB       0  [emitted]  main
+    bundle.js  2.05 KiB       0  [emitted]  main
 Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.08 KiB       0  [emitted]  main
+    bundle.js  2.05 KiB       0  [emitted]  main
 Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.08 KiB       0  [emitted]  main
+    bundle.js  2.05 KiB       0  [emitted]  main
 Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.08 KiB       0  [emitted]  main
+    bundle.js  2.05 KiB       0  [emitted]  main
 Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.08 KiB       0  [emitted]  main
+    bundle.js  2.05 KiB       0  [emitted]  main
 Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.08 KiB       0  [emitted]  main
+    bundle.js  2.05 KiB       0  [emitted]  main
 Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.08 KiB       0  [emitted]  main
+    bundle.js  2.05 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
-    Dropping unused variable installedWasmModules [webpack/bootstrap cd4abefb3963c61372a0:5,0]
     Dropping side-effect-free statement [./index.js:6,0]
     Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     Dropping unused function someUnUsedFunction2 [./index.js:9,0]
@@ -71,10 +69,9 @@ Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.08 KiB       0  [emitted]  main
+    bundle.js  2.05 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
-    Dropping unused variable installedWasmModules [webpack/bootstrap cd4abefb3963c61372a0:5,0]
     Dropping side-effect-free statement [./index.js:6,0]
     Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     Dropping unused function someUnUsedFunction2 [./index.js:9,0]
@@ -90,10 +87,9 @@ Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.08 KiB       0  [emitted]  main
+    bundle.js  2.05 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
-    Dropping unused variable installedWasmModules [webpack/bootstrap cd4abefb3963c61372a0:5,0]
     Dropping side-effect-free statement [./index.js:6,0]
     Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     Dropping unused function someUnUsedFunction2 [./index.js:9,0]
@@ -109,10 +105,9 @@ Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.08 KiB       0  [emitted]  main
+    bundle.js  2.05 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
-    Dropping unused variable installedWasmModules [webpack/bootstrap cd4abefb3963c61372a0:5,0]
     Dropping side-effect-free statement [./index.js:6,0]
     Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     Dropping unused function someUnUsedFunction2 [./index.js:9,0]
@@ -128,10 +123,9 @@ Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.08 KiB       0  [emitted]  main
+    bundle.js  2.05 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
-    Dropping unused variable installedWasmModules [webpack/bootstrap cd4abefb3963c61372a0:5,0]
     Dropping side-effect-free statement [./index.js:6,0]
     Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     Dropping unused function someUnUsedFunction2 [./index.js:9,0]
@@ -147,10 +141,9 @@ Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.08 KiB       0  [emitted]  main
+    bundle.js  2.05 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
-    Dropping unused variable installedWasmModules [webpack/bootstrap cd4abefb3963c61372a0:5,0]
     Dropping side-effect-free statement [./index.js:6,0]
     Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     Dropping unused function someUnUsedFunction2 [./index.js:9,0]

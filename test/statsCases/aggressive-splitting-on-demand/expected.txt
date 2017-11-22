@@ -8,7 +8,7 @@ fcea9401f4f21cf79d39.js  1.94 KiB       1  [emitted]
 c1e3d74e221cc503e2e1.js  1.94 KiB       4  [emitted]  
 3d41758100f56aac517e.js     1 KiB       5  [emitted]  
 c64eeda8f0bfba682f9d.js  1.01 KiB       6  [emitted]  
-520c994eaddf273485ec.js   8.3 KiB       7  [emitted]  main
+520c994eaddf273485ec.js  8.09 KiB       7  [emitted]  main
 Entrypoint main = 520c994eaddf273485ec.js
 chunk    {0} 1744d4ad4296f5fa250c.js 1.76 KiB {7} [recorded]
     > aggressive-splitted duplicate [11] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 4:0-51
