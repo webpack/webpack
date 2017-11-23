@@ -35,7 +35,7 @@ module.exports = {
 # js/MyDll.alpha.js
 
 ``` javascript
-var alpha_457b6718a3ff9f8c2d77 =
+var alpha_6d91db854aef9bf446d4 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -161,7 +161,7 @@ module.exports = "module";
 # js/alpha-manifest.json
 
 ``` javascript
-{"name":"alpha_457b6718a3ff9f8c2d77","content":{"./alpha.js":{"id":1,"meta":{}},"./a.js":{"id":2,"meta":{}},"../node_modules/module.js":{"id":3,"meta":{}}}}
+{"name":"alpha_6d91db854aef9bf446d4","content":{"./alpha.js":{"id":1,"meta":{}},"./a.js":{"id":2,"meta":{}},"../node_modules/module.js":{"id":3,"meta":{}}}}
 ```
 
 # Info
@@ -169,28 +169,37 @@ module.exports = "module";
 ## Uncompressed
 
 ```
-Hash: 457b6718a3ff9f8c2d77
-Version: webpack 3.5.1
-         Asset     Size  Chunks             Chunk Names
- MyDll.beta.js  3.31 kB       0  [emitted]  beta
-MyDll.alpha.js  3.34 kB       1  [emitted]  alpha
+Hash: 6d91db854aef9bf446d4
+Version: webpack next
+         Asset      Size  Chunks             Chunk Names
+ MyDll.beta.js  3.23 KiB       0  [emitted]  beta
+MyDll.alpha.js  3.26 KiB       1  [emitted]  alpha
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
 chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
     > beta [4] dll beta 
     [4] dll beta 12 bytes {0} [built]
+        dll entry 
+        
     [5] ./beta.js 24 bytes {0} [built]
+        
         single entry ./beta [4] dll beta beta:0
     [6] ./b.js 21 bytes {0} [built]
+        
         single entry ./b [4] dll beta beta:1
     [7] ./c.jsx 23 bytes {0} [built]
+        
         single entry ./c [4] dll beta beta:2
 chunk    {1} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
     > alpha [0] dll alpha 
     [0] dll alpha 12 bytes {1} [built]
+        dll entry 
+        
     [1] ./alpha.js 25 bytes {1} [built]
+        
         single entry ./alpha [0] dll alpha alpha:0
     [2] ./a.js 21 bytes {1} [built]
+        
         single entry ./a [0] dll alpha alpha:1
      + 1 hidden module
 ```
@@ -198,8 +207,8 @@ chunk    {1} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 457b6718a3ff9f8c2d77
-Version: webpack 3.5.1
+Hash: 6d91db854aef9bf446d4
+Version: webpack next
          Asset       Size  Chunks             Chunk Names
  MyDll.beta.js  627 bytes       0  [emitted]  beta
 MyDll.alpha.js  628 bytes       1  [emitted]  alpha
@@ -208,18 +217,27 @@ Entrypoint beta = MyDll.beta.js
 chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
     > beta [4] dll beta 
     [4] dll beta 12 bytes {0} [built]
+        dll entry 
+        
     [5] ./beta.js 24 bytes {0} [built]
+        
         single entry ./beta [4] dll beta beta:0
     [6] ./b.js 21 bytes {0} [built]
+        
         single entry ./b [4] dll beta beta:1
     [7] ./c.jsx 23 bytes {0} [built]
+        
         single entry ./c [4] dll beta beta:2
 chunk    {1} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
     > alpha [0] dll alpha 
     [0] dll alpha 12 bytes {1} [built]
+        dll entry 
+        
     [1] ./alpha.js 25 bytes {1} [built]
+        
         single entry ./alpha [0] dll alpha alpha:0
     [2] ./a.js 21 bytes {1} [built]
+        
         single entry ./a [0] dll alpha alpha:1
      + 1 hidden module
 ```

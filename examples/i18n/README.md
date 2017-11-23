@@ -226,24 +226,26 @@ console.log("Missing Text");
 ## Uncompressed
 
 ```
-Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 3.5.1
+Hash: 8a5f1b2749a468f6c191a24548b478fddc0ef618
+Version: webpack next
 Child en:
-    Hash: b61d16621736c97f557e
-           Asset     Size  Chunks             Chunk Names
-    en.output.js  2.69 kB       0  [emitted]  main
+    Hash: 8a5f1b2749a468f6c191
+           Asset      Size  Chunks             Chunk Names
+    en.output.js  2.62 KiB       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built]
+            single entry ./example  main
 Child de:
-    Hash: 52b4d8e68140f1345ef8
-           Asset     Size  Chunks             Chunk Names
-    de.output.js  2.69 kB       0  [emitted]  main
+    Hash: a24548b478fddc0ef618
+           Asset      Size  Chunks             Chunk Names
+    de.output.js  2.62 KiB       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built] [1 warning]
+            single entry ./example  main
     
     WARNING in ./example.js
     Missing localization: Missing Text
@@ -252,24 +254,26 @@ Child de:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 3.5.1
+Hash: 8a5f1b2749a468f6c191a24548b478fddc0ef618
+Version: webpack next
 Child en:
-    Hash: b61d16621736c97f557e
+    Hash: 8a5f1b2749a468f6c191
            Asset       Size  Chunks             Chunk Names
     en.output.js  538 bytes       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built]
+            single entry ./example  main
 Child de:
-    Hash: 52b4d8e68140f1345ef8
+    Hash: a24548b478fddc0ef618
            Asset       Size  Chunks             Chunk Names
     de.output.js  537 bytes       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built] [1 warning]
+            single entry ./example  main
     
     WARNING in ./example.js
     Missing localization: Missing Text

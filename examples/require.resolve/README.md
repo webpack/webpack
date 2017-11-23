@@ -141,10 +141,10 @@ if(a == a2) throw new Error("Cache clear failed :(");
 ## Uncompressed
 
 ```
-Hash: 4ed342adc60583d992ab
-Version: webpack 3.5.1
-    Asset     Size  Chunks             Chunk Names
-output.js  3.18 kB       0  [emitted]  main
+Hash: 778b337ad5fd5e1bd1bf
+Version: webpack next
+    Asset      Size  Chunks             Chunk Names
+output.js  3.11 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > main [1] ./example.js 
@@ -153,13 +153,14 @@ chunk    {0} output.js (main) 326 bytes [entry] [rendered]
         cjs require ./a [1] ./example.js 1:8-22
         cjs require ./a [1] ./example.js 10:9-23
     [1] ./example.js 295 bytes {0} [built]
+        single entry .\example.js  main
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 4ed342adc60583d992ab
-Version: webpack 3.5.1
+Hash: 778b337ad5fd5e1bd1bf
+Version: webpack next
     Asset       Size  Chunks             Chunk Names
 output.js  599 bytes       0  [emitted]  main
 Entrypoint main = output.js
@@ -170,4 +171,5 @@ chunk    {0} output.js (main) 326 bytes [entry] [rendered]
         cjs require ./a [1] ./example.js 1:8-22
         cjs require ./a [1] ./example.js 10:9-23
     [1] ./example.js 295 bytes {0} [built]
+        single entry .\example.js  main
 ```

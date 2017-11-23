@@ -233,26 +233,28 @@ module.exports = "beta";
 ## Uncompressed
 
 ```
-Hash: e5033b72cf0ec9da1ad7
-Version: webpack 3.5.1
-             Asset     Size  Chunks             Chunk Names
- MyLibrary.beta.js  3.06 kB       0  [emitted]  beta
-MyLibrary.alpha.js  3.05 kB       1  [emitted]  alpha
+Hash: 50ee6e3a1b476054872d
+Version: webpack next
+             Asset      Size  Chunks             Chunk Names
+ MyLibrary.beta.js  2.98 KiB       0  [emitted]  beta
+MyLibrary.alpha.js  2.98 KiB       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     > beta [1] ./beta.js 
     [1] ./beta.js 24 bytes {0} [built]
+        single entry ./beta  beta
 chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
     > alpha [0] ./alpha.js 
     [0] ./alpha.js 25 bytes {1} [built]
+        single entry ./alpha  alpha
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: e5033b72cf0ec9da1ad7
-Version: webpack 3.5.1
+Hash: 50ee6e3a1b476054872d
+Version: webpack next
              Asset       Size  Chunks             Chunk Names
  MyLibrary.beta.js  759 bytes       0  [emitted]  beta
 MyLibrary.alpha.js  761 bytes       1  [emitted]  alpha
@@ -261,7 +263,9 @@ Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     > beta [1] ./beta.js 
     [1] ./beta.js 24 bytes {0} [built]
+        single entry ./beta  beta
 chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
     > alpha [0] ./alpha.js 
     [0] ./alpha.js 25 bytes {1} [built]
+        single entry ./alpha  alpha
 ```

@@ -139,8 +139,8 @@ export function fibonacciJavascript(i) {
 /******/ 				// setup Promise in chunk cache
 /******/ 				var promise = new Promise(function(resolve, reject) {
 /******/ 					installedChunkData = installedChunks[chunkId] = [resolve, reject];
-/******/ 				installedChunkData[2] = promise;
 /******/ 				});
+/******/ 				promises.push(installedChunkData[2] = promise);
 /******/
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
@@ -174,7 +174,6 @@ export function fibonacciJavascript(i) {
 /******/ 					}
 /******/ 				};
 /******/ 				head.appendChild(script);
-/******/ 				promises.push(promise);
 /******/ 			}
 /******/ 		}
 /******/
@@ -187,7 +186,7 @@ export function fibonacciJavascript(i) {
 /******/
 /******/ 			// a Promise means "currently loading" or "already loaded".
 /******/ 			promises.push(installedWasmModuleData ||
-/******/ 				promises.push(installedWasmModules[wasmModuleId] = fetch(__webpack_require__.p + "" + {"1":"80925f35a6f1cf550d38","3":"3d28950d91bc7246f5af","4":"1d2268b99656e9575a63"}[wasmModuleId] + ".wasm").then(function(response) {
+/******/ 				(installedWasmModules[wasmModuleId] = fetch(__webpack_require__.p + "" + {"1":"80925f35a6f1cf550d38","3":"3d28950d91bc7246f5af","4":"1d2268b99656e9575a63"}[wasmModuleId] + ".wasm").then(function(response) {
 /******/ 					if(WebAssembly.compileStreaming) {
 /******/ 						return WebAssembly.compileStreaming(response);
 /******/ 					} else {
@@ -424,15 +423,15 @@ module.exports = instance.exports;
 ## Uncompressed
 
 ```
-Hash: efc3a9f7c544870296dd
-Version: webpack 3.8.1
+Hash: ab6e4a9175255d038490
+Version: webpack next
                     Asset       Size   Chunks             Chunk Names
-              0.output.js    3.55 kB     0, 1  [emitted]  
+              0.output.js   3.47 KiB     0, 1  [emitted]  
 80925f35a6f1cf550d38.wasm   41 bytes  0, 1, 1  [emitted]  
 3d28950d91bc7246f5af.wasm   62 bytes     0, 1  [emitted]  
 1d2268b99656e9575a63.wasm   67 bytes     0, 1  [emitted]  
               1.output.js  486 bytes        1  [emitted]  
-                output.js    8.94 kB        2  [emitted]  main
+                output.js    8.7 KiB        2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js, 80925f35a6f1cf550d38.wasm, 3d28950d91bc7246f5af.wasm, 1d2268b99656e9575a63.wasm 585 bytes {2} [rendered]
     > [0] ./example.js 3:1-17
@@ -466,15 +465,15 @@ chunk    {2} output.js (main) 788 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: efc3a9f7c544870296dd
-Version: webpack 3.8.1
+Hash: ab6e4a9175255d038490
+Version: webpack next
                     Asset       Size   Chunks             Chunk Names
               0.output.js  772 bytes     0, 1  [emitted]  
 80925f35a6f1cf550d38.wasm   41 bytes  0, 1, 1  [emitted]  
 3d28950d91bc7246f5af.wasm   62 bytes     0, 1  [emitted]  
 1d2268b99656e9575a63.wasm   67 bytes     0, 1  [emitted]  
               1.output.js  155 bytes        1  [emitted]  
-                output.js    8.78 kB        2  [emitted]  main
+                output.js   8.54 KiB        2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js, 80925f35a6f1cf550d38.wasm, 3d28950d91bc7246f5af.wasm, 1d2268b99656e9575a63.wasm 585 bytes {2} [rendered]
     > [0] ./example.js 3:1-17
@@ -505,5 +504,5 @@ chunk    {2} output.js (main) 788 bytes [entry] [rendered]
         single entry .\example.js  main
 
 ERROR in output.js from UglifyJs
-Unexpected token: operator (>) [output.js:194,95]
+Unexpected token: operator (>) [output.js:193,95]
 ```

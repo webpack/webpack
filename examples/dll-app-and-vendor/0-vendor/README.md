@@ -40,7 +40,7 @@ export function square(n) {
 # js/vendor.js
 
 ``` javascript
-var vendor_lib_6b1edee0549eb5092709 =
+var vendor_lib_668eb208c131c5341859 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -137,7 +137,7 @@ module.exports = __webpack_require__;
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["square"] = square;
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "square", function() { return square; });
 function square(n) {
 	return n * n;
 }
@@ -150,7 +150,7 @@ function square(n) {
 # js/vendor-manifest.json
 
 ``` javascript
-{"name":"vendor_lib_6b1edee0549eb5092709","content":{"../node_modules/example-vendor.js":{"id":1,"meta":{"harmonyModule":true},"exports":["square"]}}}
+{"name":"vendor_lib_668eb208c131c5341859","content":{"../node_modules/example-vendor.js":{"id":1,"meta":{"harmonyModule":true},"exports":["square"]}}}
 ```
 
 # Info
@@ -158,28 +158,32 @@ function square(n) {
 ## Uncompressed
 
 ```
-Hash: 6b1edee0549eb5092709
-Version: webpack 3.5.1
-    Asset     Size  Chunks             Chunk Names
-vendor.js  3.18 kB       0  [emitted]  main
+Hash: 668eb208c131c5341859
+Version: webpack next
+    Asset      Size  Chunks             Chunk Names
+vendor.js  3.15 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
     > main [0] dll main 
     [0] dll main 12 bytes {0} [built]
+        dll entry 
+        
      + 1 hidden module
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 6b1edee0549eb5092709
-Version: webpack 3.5.1
+Hash: 668eb208c131c5341859
+Version: webpack next
     Asset       Size  Chunks             Chunk Names
-vendor.js  652 bytes       0  [emitted]  main
+vendor.js  678 bytes       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
     > main [0] dll main 
     [0] dll main 12 bytes {0} [built]
+        dll entry 
+        
      + 1 hidden module
 ```
 

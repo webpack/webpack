@@ -195,7 +195,7 @@ const c = "c";
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports provided:  */
+/*! no exports provided */
 /*! all exports used */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -252,29 +252,31 @@ const b = "b";
 ## Uncompressed
 
 ```
-Hash: 0f036598352d4d3caffa
-Version: webpack 3.5.6
-    Asset    Size  Chunks             Chunk Names
-output.js  6.2 kB       0  [emitted]  main
+Hash: ffa5ab92959135f25dd4
+Version: webpack next
+    Asset      Size  Chunks             Chunk Names
+output.js  6.05 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 342 bytes [entry] [rendered]
     > main [4] ./example.js 
     [4] ./example.js 149 bytes {0} [built]
         [no exports]
+        single entry .\example.js  main
      + 6 hidden modules
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 0f036598352d4d3caffa
-Version: webpack 3.5.6
-    Asset     Size  Chunks             Chunk Names
-output.js  1.05 kB       0  [emitted]  main
+Hash: ffa5ab92959135f25dd4
+Version: webpack next
+    Asset      Size  Chunks             Chunk Names
+output.js  1.03 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 342 bytes [entry] [rendered]
     > main [4] ./example.js 
     [4] ./example.js 149 bytes {0} [built]
         [no exports]
+        single entry .\example.js  main
      + 6 hidden modules
 ```
