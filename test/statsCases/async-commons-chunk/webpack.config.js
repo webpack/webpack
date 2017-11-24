@@ -1,6 +1,7 @@
 var webpack = require("../../../");
 
 module.exports = {
+	mode: "production",
 	entry: "./",
 	plugins: [
 		new webpack.optimize.CommonsChunkPlugin({

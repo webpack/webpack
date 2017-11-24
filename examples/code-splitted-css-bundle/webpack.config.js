@@ -1,5 +1,7 @@
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
+const LoaderOptionsPlugin = require("../../lib/LoaderOptionsPlugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
+	mode: "production",
 	module: {
 		rules: [
 			{
@@ -15,6 +17,10 @@ module.exports = {
 	plugins: [
 		new ExtractTextPlugin({
 			filename: "style.css"
+		}),
+		// Temporary workaround for the file-loader
+		new LoaderOptionsPlugin({
+			options: {}
 		})
 	]
 };

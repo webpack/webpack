@@ -1,6 +1,6 @@
 "use strict";
 
-const should = require("should");
+require("should");
 
 const Template = require("../lib/Template");
 

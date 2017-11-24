@@ -278,7 +278,7 @@ describe("MultiCompiler", () => {
 
 			it("returns a multi-watching object", () => {
 				const result = JSON.stringify(env.result);
-				result.should.be.exactly('{"watchings":["compiler1","compiler2"],"compiler":{"_plugins":{},"compilers":[{"name":"compiler1"},{"name":"compiler2"}]}}');
+				result.should.be.exactly("{\"watchings\":[\"compiler1\",\"compiler2\"],\"compiler\":{\"_plugins\":{},\"compilers\":[{\"name\":\"compiler1\"},{\"name\":\"compiler2\"}]}}");
 			});
 
 			it("calls watch on each compiler with original options", () => {
@@ -350,7 +350,7 @@ describe("MultiCompiler", () => {
 						env.callback.callCount.should.be.exactly(1);
 						should(env.callback.getCall(0).args[0]).be.Null();
 						const stats = JSON.stringify(env.callback.getCall(0).args[1]);
-						stats.should.be.exactly('{"stats":[{"hash":"foo"},{"hash":"bar"}],"hash":"foobar"}');
+						stats.should.be.exactly("{\"stats\":[{\"hash\":\"foo\"},{\"hash\":\"bar\"}],\"hash\":\"foobar\"}");
 					});
 				});
 			});
@@ -518,7 +518,7 @@ describe("MultiCompiler", () => {
 					env.callback.callCount.should.be.exactly(1);
 					should(env.callback.getCall(0).args[0]).be.Null();
 					const stats = JSON.stringify(env.callback.getCall(0).args[1]);
-					stats.should.be.exactly('{"stats":[{"hash":"foo"},{"hash":"bar"}],"hash":"foobar"}');
+					stats.should.be.exactly("{\"stats\":[{\"hash\":\"foo\"},{\"hash\":\"bar\"}],\"hash\":\"foobar\"}");
 				});
 			});
 

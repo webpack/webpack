@@ -1,34 +1,40 @@
-Hash: 0556d5e48c7f2a7728b3
+Hash: c40b21f5fbec6559b344
 Time: Xms
   Asset       Size  Chunks             Chunk Names
    0.js  288 bytes       0  [emitted]  
    1.js  152 bytes       1  [emitted]  
    2.js  232 bytes       2  [emitted]  
-main.js    6.73 kB       3  [emitted]  main
+main.js   6.94 KiB       3  [emitted]  main
 Entrypoint main = main.js
 chunk    {0} 0.js 54 bytes {3} [rendered]
-    > [0] (webpack)/test/statsCases/preset-verbose/index.js 3:0-16
-    [3] (webpack)/test/statsCases/preset-verbose/c.js 54 bytes {0} [depth 1] [built]
-        amd require ./c [0] (webpack)/test/statsCases/preset-verbose/index.js 3:0-16
+    > [0] ./index.js 3:0-16
+    [3] ./c.js 54 bytes {0} [depth 1] [built]
+        ModuleConcatenation bailout: Module is not an ECMAScript module
+        amd require ./c [0] ./index.js 3:0-16
         [0] Xms -> factory:Xms building:Xms = Xms
 chunk    {1} 1.js 22 bytes {3} [rendered]
-    > [0] (webpack)/test/statsCases/preset-verbose/index.js 2:0-16
-    [2] (webpack)/test/statsCases/preset-verbose/b.js 22 bytes {1} [depth 1] [built]
-        amd require ./b [0] (webpack)/test/statsCases/preset-verbose/index.js 2:0-16
+    > [0] ./index.js 2:0-16
+    [2] ./b.js 22 bytes {1} [depth 1] [built]
+        ModuleConcatenation bailout: Module is not an ECMAScript module
+        amd require ./b [0] ./index.js 2:0-16
         [0] Xms -> factory:Xms building:Xms = Xms
 chunk    {2} 2.js 44 bytes {0} [rendered]
-    > [3] (webpack)/test/statsCases/preset-verbose/c.js 1:0-52
-    [4] (webpack)/test/statsCases/preset-verbose/d.js 22 bytes {2} [depth 2] [built]
-        require.ensure item ./d [3] (webpack)/test/statsCases/preset-verbose/c.js 1:0-52
+    > [3] ./c.js 1:0-52
+    [4] ./d.js 22 bytes {2} [depth 2] [built]
+        ModuleConcatenation bailout: Module is not an ECMAScript module
+        require.ensure item ./d [3] ./c.js 1:0-52
         [0] Xms -> [3] Xms -> factory:Xms building:Xms = Xms
-    [5] (webpack)/test/statsCases/preset-verbose/e.js 22 bytes {2} [depth 2] [built]
-        require.ensure item ./e [3] (webpack)/test/statsCases/preset-verbose/c.js 1:0-52
+    [5] ./e.js 22 bytes {2} [depth 2] [built]
+        ModuleConcatenation bailout: Module is not an ECMAScript module
+        require.ensure item ./e [3] ./c.js 1:0-52
         [0] Xms -> [3] Xms -> factory:Xms building:Xms = Xms
 chunk    {3} main.js (main) 73 bytes [entry] [rendered]
-    > main [0] (webpack)/test/statsCases/preset-verbose/index.js 
-    [0] (webpack)/test/statsCases/preset-verbose/index.js 51 bytes {3} [depth 0] [built]
+    > main [0] ./index.js 
+    [0] ./index.js 51 bytes {3} [depth 0] [built]
+        ModuleConcatenation bailout: Module is not an ECMAScript module
         single entry ./index  main
         factory:Xms building:Xms = Xms
-    [1] (webpack)/test/statsCases/preset-verbose/a.js 22 bytes {3} [depth 1] [built]
-        cjs require ./a [0] (webpack)/test/statsCases/preset-verbose/index.js 1:0-14
+    [1] ./a.js 22 bytes {3} [depth 1] [built]
+        ModuleConcatenation bailout: Module is not an ECMAScript module
+        cjs require ./a [0] ./index.js 1:0-14
         [0] Xms -> factory:Xms building:Xms = Xms

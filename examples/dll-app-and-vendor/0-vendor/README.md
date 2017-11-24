@@ -13,6 +13,7 @@ var path = require("path");
 var webpack = require("../../../");
 
 module.exports = {
+	mode: "production",
 	context: __dirname,
 	entry: ["example-vendor"],
 	output: {
@@ -40,7 +41,7 @@ export function square(n) {
 # js/vendor.js
 
 ``` javascript
-var vendor_lib_6b1edee0549eb5092709 =
+var vendor_lib_668eb208c131c5341859 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -91,6 +92,11 @@ var vendor_lib_6b1edee0549eb5092709 =
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -122,6 +128,7 @@ var vendor_lib_6b1edee0549eb5092709 =
   \****************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__;
@@ -133,11 +140,12 @@ module.exports = __webpack_require__;
   \*****************************************/
 /*! exports provided: square */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: dll main (referenced with single entry) and by: DllPlugin */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["square"] = square;
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "square", function() { return square; });
 function square(n) {
 	return n * n;
 }
@@ -150,7 +158,7 @@ function square(n) {
 # js/vendor-manifest.json
 
 ``` javascript
-{"name":"vendor_lib_6b1edee0549eb5092709","content":{"../node_modules/example-vendor.js":{"id":1,"meta":{"harmonyModule":true},"exports":["square"]}}}
+{"name":"vendor_lib_668eb208c131c5341859","content":{"../node_modules/example-vendor.js":{"id":1,"meta":{"harmonyModule":true},"exports":["square"]}}}
 ```
 
 # Info
@@ -158,28 +166,32 @@ function square(n) {
 ## Uncompressed
 
 ```
-Hash: 6b1edee0549eb5092709
-Version: webpack 3.5.1
-    Asset     Size  Chunks             Chunk Names
-vendor.js  3.18 kB       0  [emitted]  main
+Hash: 668eb208c131c5341859
+Version: webpack next
+    Asset      Size  Chunks             Chunk Names
+vendor.js  3.53 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
     > main [0] dll main 
     [0] dll main 12 bytes {0} [built]
+        dll entry 
+        
      + 1 hidden module
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 6b1edee0549eb5092709
-Version: webpack 3.5.1
+Hash: 668eb208c131c5341859
+Version: webpack next
     Asset       Size  Chunks             Chunk Names
-vendor.js  652 bytes       0  [emitted]  main
+vendor.js  702 bytes       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
     > main [0] dll main 
     [0] dll main 12 bytes {0} [built]
+        dll entry 
+        
      + 1 hidden module
 ```
 

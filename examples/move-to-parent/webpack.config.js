@@ -7,12 +7,14 @@ var outputOptions = {
 };
 module.exports = [{
 	name: "page",
+	mode: "production",
 	entry: {
 		page: "./page"
 	},
 	output: outputOptions
 }, {
 	name: "pageA",
+	mode: "production",
 	entry: {
 		pageA: "./page"
 	},
@@ -26,6 +28,7 @@ module.exports = [{
 	]
 }, {
 	name: "pageB",
+	mode: "production",
 	entry: {
 		pageB: "./page"
 	},
@@ -40,6 +43,7 @@ module.exports = [{
 	]
 }, {
 	name: "pageC",
+	mode: "production",
 	entry: {
 		pageC: "./page"
 	},

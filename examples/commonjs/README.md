@@ -86,6 +86,11 @@ exports.add = function() {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -117,6 +122,7 @@ exports.add = function() {
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var inc = __webpack_require__(/*! ./increment */ 1).increment;
@@ -130,6 +136,7 @@ inc(a); // 2
   \**********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var add = __webpack_require__(/*! ./math */ 2).add;
@@ -144,6 +151,7 @@ exports.increment = function(val) {
   \*****************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 exports.add = function() {
@@ -163,14 +171,15 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: 9407d8cd068b1845b368
-Version: webpack 3.5.1
-    Asset     Size  Chunks             Chunk Names
-output.js  3.39 kB       0  [emitted]  main
+Hash: ae7172392c4d0e31a2b7
+Version: webpack next
+    Asset      Size  Chunks             Chunk Names
+output.js  3.71 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 329 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 69 bytes {0} [built]
+        single entry .\example.js  main
     [1] ./increment.js 98 bytes {0} [built]
         cjs require ./increment [0] ./example.js 1:10-32
     [2] ./math.js 162 bytes {0} [built]
@@ -180,14 +189,15 @@ chunk    {0} output.js (main) 329 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9407d8cd068b1845b368
-Version: webpack 3.5.1
+Hash: ae7172392c4d0e31a2b7
+Version: webpack next
     Asset       Size  Chunks             Chunk Names
-output.js  672 bytes       0  [emitted]  main
+output.js  738 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 329 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 69 bytes {0} [built]
+        single entry .\example.js  main
     [1] ./increment.js 98 bytes {0} [built]
         cjs require ./increment [0] ./example.js 1:10-32
     [2] ./math.js 162 bytes {0} [built]

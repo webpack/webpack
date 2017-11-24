@@ -1,13 +1,13 @@
-Hash: ff75deffb3bf6cded619
+Hash: 6b34e4a15d90c981775e
 Time: Xms
-      Asset     Size  Chunks             Chunk Names
- entry-1.js  3.11 kB       0  [emitted]  entry-1
-vendor-1.js  2.85 kB       1  [emitted]  vendor-1
-   [0] (webpack)/test/statsCases/commons-chunk-min-size-Infinity/modules/a.js 22 bytes {0} {1} [built]
-   [1] (webpack)/test/statsCases/commons-chunk-min-size-Infinity/modules/b.js 22 bytes {0} {1} [built]
-   [2] (webpack)/test/statsCases/commons-chunk-min-size-Infinity/modules/c.js 22 bytes {0} {1} [built]
-   [3] (webpack)/test/statsCases/commons-chunk-min-size-Infinity/entry-1.js 145 bytes {0} [built]
-   [4] (webpack)/test/statsCases/commons-chunk-min-size-Infinity/modules/d.js 22 bytes {0} [built]
-   [5] (webpack)/test/statsCases/commons-chunk-min-size-Infinity/modules/e.js 22 bytes {0} [built]
-   [6] (webpack)/test/statsCases/commons-chunk-min-size-Infinity/modules/f.js 22 bytes {0} [built]
+      Asset      Size  Chunks             Chunk Names
+ entry-1.js  3.22 KiB       0  [emitted]  entry-1
+vendor-1.js  2.97 KiB       1  [emitted]  vendor-1
+   [0] ./modules/a.js 22 bytes {0} {1} [built]
+   [1] ./modules/b.js 22 bytes {0} {1} [built]
+   [2] ./modules/c.js 22 bytes {0} {1} [built]
+   [3] ./entry-1.js 145 bytes {0} [built]
+   [4] ./modules/d.js 22 bytes {0} [built]
+   [5] ./modules/e.js 22 bytes {0} [built]
+   [6] ./modules/f.js 22 bytes {0} [built]
    [7] multi ./modules/a ./modules/b ./modules/c 52 bytes {1} [built]

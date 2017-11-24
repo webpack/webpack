@@ -1,9 +1,9 @@
-Hash: cf63b6ddede66b99c822
+Hash: 7df1195d08327e14c776
 Time: Xms
-    Asset    Size  Chunks             Chunk Names
-bundle.js  2.1 kB       0  [emitted]  main
-   [0] (webpack)/test/statsCases/warnings-uglifyjs/index.js 299 bytes {0} [built]
-   [1] (webpack)/test/statsCases/warnings-uglifyjs/a.js 249 bytes {0} [built]
+    Asset      Size  Chunks             Chunk Names
+bundle.js  2.19 KiB       0  [emitted]  main
+   [0] ./index.js 299 bytes {0} [built]
+   [1] ./a.js 249 bytes {0} [built]
    [2] (webpack)/buildin/module.js 495 bytes {0} [built]
 
 WARNING in bundle.js from UglifyJs

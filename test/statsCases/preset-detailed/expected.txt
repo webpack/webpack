@@ -1,22 +1,28 @@
-Hash: 0556d5e48c7f2a7728b3
+Hash: c40b21f5fbec6559b344
 Time: Xms
   Asset       Size  Chunks             Chunk Names
    0.js  288 bytes       0  [emitted]  
    1.js  152 bytes       1  [emitted]  
    2.js  232 bytes       2  [emitted]  
-main.js    6.73 kB       3  [emitted]  main
+main.js   6.94 KiB       3  [emitted]  main
 Entrypoint main = main.js
 chunk    {0} 0.js 54 bytes {3} [rendered]
-    > [0] (webpack)/test/statsCases/preset-detailed/index.js 3:0-16
+    > [0] ./index.js 3:0-16
 chunk    {1} 1.js 22 bytes {3} [rendered]
-    > [0] (webpack)/test/statsCases/preset-detailed/index.js 2:0-16
+    > [0] ./index.js 2:0-16
 chunk    {2} 2.js 44 bytes {0} [rendered]
-    > [3] (webpack)/test/statsCases/preset-detailed/c.js 1:0-52
+    > [3] ./c.js 1:0-52
 chunk    {3} main.js (main) 73 bytes [entry] [rendered]
-    > main [0] (webpack)/test/statsCases/preset-detailed/index.js 
-   [0] (webpack)/test/statsCases/preset-detailed/index.js 51 bytes {3} [depth 0] [built]
-   [1] (webpack)/test/statsCases/preset-detailed/a.js 22 bytes {3} [depth 1] [built]
-   [2] (webpack)/test/statsCases/preset-detailed/b.js 22 bytes {1} [depth 1] [built]
-   [3] (webpack)/test/statsCases/preset-detailed/c.js 54 bytes {0} [depth 1] [built]
-   [4] (webpack)/test/statsCases/preset-detailed/d.js 22 bytes {2} [depth 2] [built]
-   [5] (webpack)/test/statsCases/preset-detailed/e.js 22 bytes {2} [depth 2] [built]
+    > main [0] ./index.js 
+   [0] ./index.js 51 bytes {3} [depth 0] [built]
+       ModuleConcatenation bailout: Module is not an ECMAScript module
+   [1] ./a.js 22 bytes {3} [depth 1] [built]
+       ModuleConcatenation bailout: Module is not an ECMAScript module
+   [2] ./b.js 22 bytes {1} [depth 1] [built]
+       ModuleConcatenation bailout: Module is not an ECMAScript module
+   [3] ./c.js 54 bytes {0} [depth 1] [built]
+       ModuleConcatenation bailout: Module is not an ECMAScript module
+   [4] ./d.js 22 bytes {2} [depth 2] [built]
+       ModuleConcatenation bailout: Module is not an ECMAScript module
+   [5] ./e.js 22 bytes {2} [depth 2] [built]
+       ModuleConcatenation bailout: Module is not an ECMAScript module

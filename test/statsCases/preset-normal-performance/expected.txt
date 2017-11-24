@@ -3,21 +3,21 @@ Time: <CLR=BOLD>X</CLR>ms
    <CLR=32,BOLD>0.js</CLR>  288 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
    <CLR=32,BOLD>1.js</CLR>  152 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
    <CLR=32,BOLD>2.js</CLR>  232 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-<CLR=33,BOLD>main.js</CLR>     <CLR=33,BOLD>307 kB</CLR>       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
-   [0] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance/index.js</CLR> 52 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-   [1] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance/a.js</CLR> 300 kB {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-   [2] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance/b.js</CLR> 22 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
-   [3] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance/c.js</CLR> 54 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
-   [4] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance/d.js</CLR> 22 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
-   [5] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance/e.js</CLR> 22 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
+<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>300 KiB</CLR>       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+   [0] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+   [1] <CLR=BOLD>./a.js</CLR> 293 KiB {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+   [2] <CLR=BOLD>./b.js</CLR> 22 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
+   [3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+   [4] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
+   [5] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
 
-<CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (250 kB).
+<CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
 Assets: 
-  main.js (307 kB)</CLR>
+  main.js (300 KiB)</CLR>
 
-<CLR=33,BOLD>WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (250 kB). This can impact web performance.
+<CLR=33,BOLD>WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:
-  main (307 kB)
+  main (300 KiB)
       main.js
 </CLR>

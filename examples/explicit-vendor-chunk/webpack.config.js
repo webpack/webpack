@@ -3,6 +3,7 @@ var webpack = require("../../");
 module.exports = [
 	{
 		name: "vendor",
+		mode: "production",
 		entry: ["./vendor", "./vendor2"],
 		output: {
 			path: path.resolve(__dirname, "js"),
@@ -18,6 +19,7 @@ module.exports = [
 	},
 	{
 		name: "app",
+		mode: "production",
 		dependencies: ["vendor"],
 		entry: {
 			pageA: "./pageA",

@@ -1,6 +1,8 @@
 var webpack = require("../../../");
 module.exports = ["fitting", "content-change"].map(type => ({
 	name: type,
+	mode: "production",
+	cache: true, // AggressiveSplittingPlugin rebuilds multiple times, we need to cache the assets
 	entry: "./index",
 	output: {
 		filename: "[chunkhash].js",

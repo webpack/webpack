@@ -24,6 +24,7 @@ var languages = {
 module.exports = Object.keys(languages).map(function(language) {
 	return {
 		name: language,
+		mode: "production",
 		entry: "./example",
 		output: {
 			path: path.join(__dirname, "js"),
@@ -97,6 +98,11 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -128,6 +134,7 @@ module.exports = Object.keys(languages).map(function(language) {
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 console.log("Hallo Welt");
@@ -186,6 +193,11 @@ console.log("Missing Text");
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -212,6 +224,7 @@ console.log("Missing Text");
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 console.log("Hello World");
@@ -226,24 +239,26 @@ console.log("Missing Text");
 ## Uncompressed
 
 ```
-Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 3.5.1
+Hash: 8a5f1b2749a468f6c191a24548b478fddc0ef618
+Version: webpack next
 Child en:
-    Hash: b61d16621736c97f557e
-           Asset     Size  Chunks             Chunk Names
-    en.output.js  2.69 kB       0  [emitted]  main
+    Hash: 8a5f1b2749a468f6c191
+           Asset      Size  Chunks             Chunk Names
+    en.output.js  2.88 KiB       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built]
+            single entry ./example  main
 Child de:
-    Hash: 52b4d8e68140f1345ef8
-           Asset     Size  Chunks             Chunk Names
-    de.output.js  2.69 kB       0  [emitted]  main
+    Hash: a24548b478fddc0ef618
+           Asset      Size  Chunks             Chunk Names
+    de.output.js  2.88 KiB       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built] [1 warning]
+            single entry ./example  main
     
     WARNING in ./example.js
     Missing localization: Missing Text
@@ -252,24 +267,26 @@ Child de:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 3.5.1
+Hash: 8a5f1b2749a468f6c191a24548b478fddc0ef618
+Version: webpack next
 Child en:
-    Hash: b61d16621736c97f557e
+    Hash: 8a5f1b2749a468f6c191
            Asset       Size  Chunks             Chunk Names
-    en.output.js  538 bytes       0  [emitted]  main
+    en.output.js  604 bytes       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built]
+            single entry ./example  main
 Child de:
-    Hash: 52b4d8e68140f1345ef8
+    Hash: a24548b478fddc0ef618
            Asset       Size  Chunks             Chunk Names
-    de.output.js  537 bytes       0  [emitted]  main
+    de.output.js  603 bytes       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built] [1 warning]
+            single entry ./example  main
     
     WARNING in ./example.js
     Missing localization: Missing Text

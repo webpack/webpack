@@ -103,6 +103,11 @@ export { c } from "./c";
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -119,7 +124,7 @@ export { c } from "./c";
 /******/ 	__webpack_require__.p = "js/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
@@ -129,118 +134,47 @@ export { c } from "./c";
 ``` javascript
 /******/ ([
 /* 0 */
-/*!******************************************!*\
-  !*** ./node_modules/big-module/index.js ***!
-  \******************************************/
-/*! exports provided: a, b, c */
-/*! exports used: a, b */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */1);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _a__WEBPACK_IMPORTED_MODULE_0__["a"]; });
-
-/* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */2);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _b__WEBPACK_IMPORTED_MODULE_1__["a"]; });
-
-/* harmony import */ var _c__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./c */3);
-
-
-
-
-
-/***/ }),
-/* 1 */
-/*!**************************************!*\
-  !*** ./node_modules/big-module/a.js ***!
-  \**************************************/
-/*! exports provided: a */
-/*! exports used: a */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return a; });
-const a = "a";
-
-
-/***/ }),
-/* 2 */
-/*!**************************************!*\
-  !*** ./node_modules/big-module/b.js ***!
-  \**************************************/
-/*! exports provided: b */
-/*! exports used: b */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return b; });
-const b = "b";
-
-
-/***/ }),
-/* 3 */
-/*!**************************************!*\
-  !*** ./node_modules/big-module/c.js ***!
-  \**************************************/
-/*! exports provided: c */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export c */
-const c = "c";
-
-
-/***/ }),
-/* 4 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! exports provided:  */
+/*!********************************!*\
+  !*** ./example.js + 6 modules ***!
+  \********************************/
+/*! no exports provided */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is an entry point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var big_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! big-module */0);
-/* harmony import */ var big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! big-module-with-flag */5);
-/* harmony import */ var big_module_with_flag__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! big-module-with-flag */6);
+
+// CONCATENATED MODULE: ./node_modules/big-module/a.js
+const a = "a";
+
+// CONCATENATED MODULE: ./node_modules/big-module/b.js
+const b = "b";
+
+// CONCATENATED MODULE: ./node_modules/big-module/c.js
+const c = "c";
+
+// CONCATENATED MODULE: ./node_modules/big-module/index.js
+
+
+
+
+// CONCATENATED MODULE: ./node_modules/big-module-with-flag/a.js
+const a_a = "a";
+
+// CONCATENATED MODULE: ./node_modules/big-module-with-flag/b.js
+const b_b = "b";
+
+// CONCATENATED MODULE: ./example.js
 
 
 
 console.log(
-	big_module__WEBPACK_IMPORTED_MODULE_0__["a"],
-	big_module__WEBPACK_IMPORTED_MODULE_0__["b"],
-	big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__["a"],
-	big_module_with_flag__WEBPACK_IMPORTED_MODULE_2__["a" /* b */]
+	a,
+	b,
+	a_a,
+	b_b
 );
-
-
-/***/ }),
-/* 5 */
-/*!************************************************!*\
-  !*** ./node_modules/big-module-with-flag/a.js ***!
-  \************************************************/
-/*! exports provided: a */
-/*! exports used: a */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return a; });
-const a = "a";
-
-
-/***/ }),
-/* 6 */
-/*!************************************************!*\
-  !*** ./node_modules/big-module-with-flag/b.js ***!
-  \************************************************/
-/*! exports provided: b */
-/*! exports used: b */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return b; });
-const b = "b";
 
 
 /***/ })
@@ -252,29 +186,29 @@ const b = "b";
 ## Uncompressed
 
 ```
-Hash: 0f036598352d4d3caffa
-Version: webpack 3.5.6
-    Asset    Size  Chunks             Chunk Names
-output.js  6.2 kB       0  [emitted]  main
+Hash: 1b6ad20ba7bd65d7f026
+Version: webpack next
+    Asset      Size  Chunks             Chunk Names
+output.js  3.47 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 342 bytes [entry] [rendered]
-    > main [4] ./example.js 
-    [4] ./example.js 149 bytes {0} [built]
+    > main [] 
+    [0] ./example.js + 6 modules 342 bytes {0} [built]
         [no exports]
-     + 6 hidden modules
+        single entry .\example.js  main
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 0f036598352d4d3caffa
-Version: webpack 3.5.6
-    Asset     Size  Chunks             Chunk Names
-output.js  1.05 kB       0  [emitted]  main
+Hash: 1b6ad20ba7bd65d7f026
+Version: webpack next
+    Asset       Size  Chunks             Chunk Names
+output.js  640 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 342 bytes [entry] [rendered]
-    > main [4] ./example.js 
-    [4] ./example.js 149 bytes {0} [built]
+    > main [] 
+    [0] ./example.js + 6 modules 342 bytes {0} [built]
         [no exports]
-     + 6 hidden modules
+        single entry .\example.js  main
 ```

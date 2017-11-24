@@ -333,16 +333,19 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 		var compiler;
 		try {
 			compiler = webpack(options);
-		} catch(e) {
-			var WebpackOptionsValidationError = require("../lib/WebpackOptionsValidationError");
-			if(e instanceof WebpackOptionsValidationError) {
+		} catch(err) {
+			if(err.name === "WebpackOptionsValidationError") {
 				if(argv.color)
-					console.error("\u001b[1m\u001b[31m" + e.message + "\u001b[39m\u001b[22m");
+					console.error(
+						`\u001b[1m\u001b[31m${err.message}\u001b[39m\u001b[22m`
+					);
 				else
-					console.error(e.message);
-				process.exit(1); // eslint-disable-line no-process-exit
+					console.error(err.message);
+				// eslint-disable-next-line no-process-exit
+				process.exit(1);
 			}
-			throw e;
+
+			throw err;
 		}
 
 		if(argv.progress) {

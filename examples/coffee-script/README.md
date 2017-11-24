@@ -74,6 +74,11 @@ module.exports = 42
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -105,6 +110,7 @@ module.exports = 42
   \*********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 console.log("yeah coffee-script");
@@ -119,6 +125,7 @@ module.exports = 42;
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 console.log(__webpack_require__(/*! ./cup1 */ 2));
@@ -130,6 +137,7 @@ console.log(__webpack_require__(/*! ./cup1 */ 2));
   \*********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = {
@@ -149,10 +157,10 @@ module.exports = {
 ## Uncompressed
 
 ```
-Hash: 22e68923dcce75e38966
-Version: webpack 3.5.1
-    Asset     Size  Chunks             Chunk Names
-output.js  3.29 kB       0  [emitted]  main
+Hash: 0a5ced711d4abc81fdd4
+Version: webpack next
+    Asset      Size  Chunks             Chunk Names
+output.js  3.61 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 206 bytes [entry] [rendered]
     > main [1] ./example.js 
@@ -160,6 +168,7 @@ chunk    {0} output.js (main) 206 bytes [entry] [rendered]
         cjs require ./cup2.coffee [2] ./cup1.coffee 4:12-36
         cjs require ./cup2 [2] ./cup1.coffee 5:9-26
     [1] ./example.js 31 bytes {0} [built]
+        single entry .\example.js  main
     [2] ./cup1.coffee 118 bytes {0} [built]
         cjs require ./cup1 [1] ./example.js 1:12-29
 ```
@@ -167,10 +176,10 @@ chunk    {0} output.js (main) 206 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 22e68923dcce75e38966
-Version: webpack 3.5.1
+Hash: 0a5ced711d4abc81fdd4
+Version: webpack next
     Asset       Size  Chunks             Chunk Names
-output.js  640 bytes       0  [emitted]  main
+output.js  706 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 206 bytes [entry] [rendered]
     > main [1] ./example.js 
@@ -178,6 +187,7 @@ chunk    {0} output.js (main) 206 bytes [entry] [rendered]
         cjs require ./cup2.coffee [2] ./cup1.coffee 4:12-36
         cjs require ./cup2 [2] ./cup1.coffee 5:9-26
     [1] ./example.js 31 bytes {0} [built]
+        single entry .\example.js  main
     [2] ./cup1.coffee 118 bytes {0} [built]
         cjs require ./cup1 [1] ./example.js 1:12-29
 ```

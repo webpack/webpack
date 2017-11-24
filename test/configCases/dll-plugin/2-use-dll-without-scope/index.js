@@ -43,8 +43,7 @@ it("should give modules the correct ids", function() {
 		"../0-create-dll/e2.js",
 		"../0-create-dll/f.jsx",
 		"../0-create-dll/g.abc.js",
-		"./e.js",
 		"./index.js",
 		"dll-reference ../0-create-dll/dll.js"
-    ]);
+	]);
 });

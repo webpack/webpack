@@ -4,3 +4,4 @@
 --output-filename [name].js
 --output-chunk-filename [id].chunk.js
 --target async-node
+--mode production

@@ -1,8 +1,8 @@
-Hash: e901212ba1092de427e5
+Hash: e2851c8d4cdd7e82ca78
 Time: Xms
-    Asset     Size  Chunks             Chunk Names
-bundle.js  2.92 kB       0  [emitted]  main
+    Asset      Size  Chunks             Chunk Names
+bundle.js  3.03 KiB       0  [emitted]  main
  + 1 hidden asset
-   [0] (webpack)/test/statsCases/exclude-with-loader/index.js 77 bytes {0} [built]
-   [1] (webpack)/test/statsCases/exclude-with-loader/a.txt 43 bytes {0} [built]
+   [0] ./index.js 77 bytes {0} [built]
+   [1] ./a.txt 43 bytes {0} [built]
     + 2 hidden modules

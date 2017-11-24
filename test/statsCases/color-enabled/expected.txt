@@ -1,5 +1,5 @@
-Hash: <CLR=BOLD>24aac88a5fb0e1ef1a69</CLR>
+Hash: <CLR=BOLD>9b62d877d26dd61e1fb9</CLR>
 Time: <CLR=BOLD>X</CLR>ms
   <CLR=BOLD>Asset</CLR>     <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22><CLR=BOLD>Chunk Names</CLR>
-<CLR=32,BOLD>main.js</CLR>  2.47 kB       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
-   [0] <CLR=BOLD>(webpack)/test/statsCases/color-enabled/index.js</CLR> 0 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+<CLR=32,BOLD>main.js</CLR>  2.6 KiB       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
+   [0] <CLR=BOLD>./index.js</CLR> 0 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
