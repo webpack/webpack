@@ -30,6 +30,12 @@ module.exports = function(yargs) {
 				describe: "Environment passed to the config, when it is a function",
 				group: CONFIG_GROUP
 			},
+			"mode": {
+				type: "string",
+				describe: "Mode to use (production or development)",
+				group: CONFIG_GROUP,
+				requiresArg: true
+			},
 			"context": {
 				type: "string",
 				describe: "The root directory for resolving entry point and stats",

@@ -39,6 +39,7 @@ describe("HotTestCases", () => {
 					let options = {};
 					if(fs.existsSync(configPath))
 						options = require(configPath);
+					if(!options.mode) options.mode = "development";
 					if(!options.context) options.context = testDirectory;
 					if(!options.entry) options.entry = "./index.js";
 					if(!options.output) options.output = {};

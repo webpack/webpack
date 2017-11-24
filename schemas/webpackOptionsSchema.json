@@ -1009,6 +1009,14 @@
     }
   },
   "properties": {
+    "mode": {
+      "description": "Set the value of `require.amd` and `define.amd`.",
+      "enum": [
+        "development",
+        "production",
+        "none"
+      ]
+    },
     "amd": {
       "description": "Set the value of `require.amd` and `define.amd`."
     },
@@ -1166,6 +1174,74 @@
           "$ref": "#/definitions/output"
         }
       ]
+    },
+    "optimization": {
+      "description": "Enables/Disables integrated optimizations",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "removeAvailableModules": {
+          "description": "Removes modules from chunks when these modules are already included in all parents",
+          "type": "boolean"
+        },
+        "removeEmptyChunks": {
+          "description": "Remove chunks which are empty",
+          "type": "boolean"
+        },
+        "mergedDuplicateChunks": {
+          "description": "Merge chunks which contain the same modules",
+          "type": "boolean"
+        },
+        "flagIncludedChunks": {
+          "description": "Also flag chunks as loaded which contain a subset of the modules",
+          "type": "boolean"
+        },
+        "occurrenceOrder": {
+          "description": "Figure out a order of modules which results in the smallest initial bundle",
+          "type": "boolean"
+        },
+        "sideEffects": {
+          "description": "Skip over modules which are flagged to contain no side effects when exports are not used",
+          "type": "boolean"
+        },
+        "providedExports": {
+          "description": "Figure out which exports are provided by modules to generate more efficient code",
+          "type": "boolean"
+        },
+        "usedExports": {
+          "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code",
+          "type": "boolean"
+        },
+        "concatenateModules": {
+          "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer",
+          "type": "boolean"
+        },
+        "noEmitOnErrors": {
+          "description": "Avoid emitting assets when errors occur",
+          "type": "boolean"
+        },
+        "namedModules": {
+          "description": "Use readable module identifiers for better debugging",
+          "type": "boolean"
+        },
+        "namedChunks": {
+          "description": "Use readable chunk identifiers for better debugging",
+          "type": "boolean"
+        },
+        "nodeEnv": {
+          "description": "Set process.env.NODE_ENV to a specific value",
+          "anyOf": [
+            {
+              "enum": [
+                false
+              ]
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      }
     },
     "parallelism": {
       "description": "The number of parallel processed modules in the compilation.",

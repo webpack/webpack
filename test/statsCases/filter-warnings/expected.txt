@@ -3,7 +3,7 @@ Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.05 KiB       0  [emitted]  main
+    bundle.js  2.19 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -21,37 +21,37 @@ Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.05 KiB       0  [emitted]  main
+    bundle.js  2.19 KiB       0  [emitted]  main
 Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.05 KiB       0  [emitted]  main
+    bundle.js  2.19 KiB       0  [emitted]  main
 Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.05 KiB       0  [emitted]  main
+    bundle.js  2.19 KiB       0  [emitted]  main
 Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.05 KiB       0  [emitted]  main
+    bundle.js  2.19 KiB       0  [emitted]  main
 Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.05 KiB       0  [emitted]  main
+    bundle.js  2.19 KiB       0  [emitted]  main
 Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.05 KiB       0  [emitted]  main
+    bundle.js  2.19 KiB       0  [emitted]  main
 Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.05 KiB       0  [emitted]  main
+    bundle.js  2.19 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -69,7 +69,7 @@ Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.05 KiB       0  [emitted]  main
+    bundle.js  2.19 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -87,7 +87,7 @@ Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.05 KiB       0  [emitted]  main
+    bundle.js  2.19 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -105,7 +105,7 @@ Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.05 KiB       0  [emitted]  main
+    bundle.js  2.19 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -123,7 +123,7 @@ Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.05 KiB       0  [emitted]  main
+    bundle.js  2.19 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -141,7 +141,7 @@ Child
     Hash: cd4abefb3963c61372a0
     Time: Xms
         Asset      Size  Chunks             Chunk Names
-    bundle.js  2.05 KiB       0  [emitted]  main
+    bundle.js  2.19 KiB       0  [emitted]  main
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]

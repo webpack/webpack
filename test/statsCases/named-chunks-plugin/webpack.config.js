@@ -3,6 +3,7 @@ var NamedChunksPlugin = require("../../../lib/NamedChunksPlugin");
 var NamedModulesPlugin = require("../../../lib/NamedModulesPlugin");
 
 module.exports = {
+	mode: "production",
 	entry: {
 		"entry": "./entry",
 		"vendor": ["./modules/a", "./modules/b"],

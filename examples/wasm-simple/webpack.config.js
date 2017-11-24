@@ -1,4 +1,5 @@
 module.exports = {
+	mode: "production",
 	output: {
 		webassemblyModuleFilename: "[modulehash].wasm",
 		publicPath: "js/"

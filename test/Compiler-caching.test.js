@@ -13,6 +13,7 @@ describe("Compiler (caching)", function() {
 
 	function compile(entry, options, callback) {
 		options = new WebpackOptionsDefaulter().process(options);
+		options.cache = true;
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");
 		options.output.path = "/";

@@ -2,6 +2,7 @@
 const webpack = require("../../../");
 
 const baseConfig = {
+	mode: "production",
 	entry: "./index",
 	output: {
 		filename: "bundle.js"

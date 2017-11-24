@@ -6,6 +6,7 @@ const path = require("path");
 const fs = require("fs");
 
 const webpack = require("../lib/webpack");
+const Stats = require("../lib/Stats");
 
 const base = path.join(__dirname, "statsCases");
 const outputBase = path.join(__dirname, "js", "stats");
@@ -19,6 +20,7 @@ describe("StatsTestCases", () => {
 		it("should print correct stats for " + testName, function(done) {
 			this.timeout(10000);
 			let options = {
+				mode: "development",
 				entry: "./index",
 				output: {
 					filename: "bundle.js"
@@ -63,13 +65,17 @@ describe("StatsTestCases", () => {
 				}
 
 				let toStringOptions = {
+					context: path.join(base, testName),
 					colors: false
 				};
 				let hasColorSetting = false;
 				if(typeof options.stats !== "undefined") {
 					toStringOptions = options.stats;
+					if(toStringOptions === null || typeof toStringOptions !== "object")
+						toStringOptions = Stats.presetToOptions(toStringOptions);
 
 					hasColorSetting = typeof options.stats.colors !== "undefined";
+					if(!toStringOptions.context) toStringOptions.context = path.join(base, testName);
 				}
 				if(Array.isArray(options) && !toStringOptions.children) {
 					toStringOptions.children = options.map(o => o.stats);

@@ -5,6 +5,7 @@ require("should");
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
+const mkdirp = require("mkdirp");
 const Test = require("mocha/lib/test");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
@@ -43,6 +44,7 @@ describe("ConfigTestCases", () => {
 					const optionsArr = [].concat(options);
 					optionsArr.forEach((options, idx) => {
 						if(!options.context) options.context = testDirectory;
+						if(!options.mode) options.mode = "production";
 						if(!options.entry) options.entry = "./index.js";
 						if(!options.target) options.target = "async-node";
 						if(!options.output) options.output = {};
@@ -77,6 +79,7 @@ describe("ConfigTestCases", () => {
 						}
 						const statOptions = Stats.presetToOptions("verbose");
 						statOptions.colors = false;
+						mkdirp.sync(outputDirectory);
 						fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
 						const jsonStats = stats.toJson({
 							errorDetails: true
