@@ -255,6 +255,74 @@ describe("Validation", () => {
 				" - configuration.stats should be one of these:"
 			);
 		}
+	}, {
+		name: "Invalid plugin provided: bool",
+		config: {
+			entry: "foo.js",
+			plugins: [
+				false
+			]
+		},
+		test(err) {
+			err.message.should.startWith("Invalid configuration object.");
+			err.message.split("\n").slice(1)[0].should.be.eql(
+				" - configuration.plugins[0] should be one of these:"
+			);
+		}
+	}, {
+		name: "Invalid plugin provided: array",
+		config: {
+			entry: "foo.js",
+			plugins: [
+				[]
+			]
+		},
+		test(err) {
+			err.message.should.startWith("Invalid configuration object.");
+			err.message.split("\n").slice(1)[0].should.be.eql(
+				" - configuration.plugins[0] should be one of these:"
+			);
+		}
+	}, {
+		name: "Invalid plugin provided: string",
+		config: {
+			entry: "foo.js",
+			plugins: ["abc123"]
+		},
+		test(err) {
+			err.message.should.startWith("Invalid configuration object.");
+			err.message.split("\n").slice(1)[0].should.be.eql(
+				" - configuration.plugins[0] should be one of these:"
+			);
+		}
+	}, {
+		name: "Invalid plugin provided: int",
+		config: {
+			entry: "foo.js",
+			plugins: [
+				12
+			]
+		},
+		test(err) {
+			err.message.should.startWith("Invalid configuration object.");
+			err.message.split("\n").slice(1)[0].should.be.eql(
+				" - configuration.plugins[0] should be one of these:"
+			);
+		}
+	}, {
+		name: "Invalid plugin provided: object without apply function",
+		config: {
+			entry: "foo.js",
+			plugins: [
+				new function() {}
+			]
+		},
+		test(err) {
+			err.message.should.startWith("Invalid configuration object.");
+			err.message.split("\n").slice(1)[0].should.be.eql(
+				" - configuration.plugins[0] should be one of these:"
+			);
+		}
 	}];
 
 	testCases.forEach((testCase) => {
