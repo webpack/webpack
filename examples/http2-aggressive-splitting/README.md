@@ -20,6 +20,8 @@ The backward compatibility (non HTTP2 client) improves with bigger `maxSize`, as
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
+	mode: "production",
+	cache: true, // better performance for the AggressiveSplittingPlugin
 	entry: "./example",
 	output: {
 		path: path.join(__dirname, "js"),
@@ -47,21 +49,21 @@ module.exports = {
 Hash: 855e92ac8cd05846cd47
 Version: webpack next
                   Asset      Size  Chunks             Chunk Names
-49eabe0be9b855a6ece3.js  51.9 KiB       7  [emitted]  
-c11db784679b537a5d1b.js  58.8 KiB       0  [emitted]  
-4ec863f864133b7db4c3.js  54.6 KiB       2  [emitted]  
-a52b878529cda333614e.js  53.2 KiB       3  [emitted]  
-2020cd642caa01ec1e86.js  52.7 KiB       4  [emitted]  
-23c4c0d48e8b38e2a9ea.js  52.1 KiB       5  [emitted]  
-acbadebce580eb634bb7.js  22.2 KiB       6  [emitted]  
-727a2eb4c7cff3f84596.js  56.6 KiB       1  [emitted]  
-fd3f47121db53fb3037b.js  51.3 KiB       8  [emitted]  
-1d590e6c5541be02dd36.js  51.1 KiB       9  [emitted]  
-e169ea4c146b4e5d51c0.js    50 KiB      10  [emitted]  
-0633f8f465e2cabc39b5.js  32.4 KiB      11  [emitted]  
-940defd566cc7edba267.js  60.1 KiB      12  [emitted]  
-e298620d755cc0f292cf.js  36.7 KiB      13  [emitted]  
-1d08b68310160ad06455.js  31.7 KiB      14  [emitted]  
+49eabe0be9b855a6ece3.js  52.5 KiB       7  [emitted]  
+c11db784679b537a5d1b.js  60.8 KiB       0  [emitted]  
+4ec863f864133b7db4c3.js  55.6 KiB       2  [emitted]  
+a52b878529cda333614e.js  53.9 KiB       3  [emitted]  
+2020cd642caa01ec1e86.js  53.5 KiB       4  [emitted]  
+23c4c0d48e8b38e2a9ea.js  52.8 KiB       5  [emitted]  
+acbadebce580eb634bb7.js  22.8 KiB       6  [emitted]  
+727a2eb4c7cff3f84596.js  58.3 KiB       1  [emitted]  
+fd3f47121db53fb3037b.js  51.8 KiB       8  [emitted]  
+1d590e6c5541be02dd36.js  51.5 KiB       9  [emitted]  
+e169ea4c146b4e5d51c0.js  50.4 KiB      10  [emitted]  
+0633f8f465e2cabc39b5.js  32.6 KiB      11  [emitted]  
+940defd566cc7edba267.js  61.4 KiB      12  [emitted]  
+e298620d755cc0f292cf.js  37.6 KiB      13  [emitted]  
+1d08b68310160ad06455.js  31.9 KiB      14  [emitted]  
 Entrypoint main = 940defd566cc7edba267.js 1d08b68310160ad06455.js e298620d755cc0f292cf.js
 chunk    {0} c11db784679b537a5d1b.js 48.5 KiB {12} {13} {14} [rendered] [recorded]
     > aggressive-splitted [14] ./example.js 2:0-22
@@ -129,7 +131,7 @@ fd3f47121db53fb3037b.js  15.3 KiB       8  [emitted]
 1d590e6c5541be02dd36.js  12.6 KiB       9  [emitted]  
 e169ea4c146b4e5d51c0.js  11.2 KiB      10  [emitted]  
 0633f8f465e2cabc39b5.js  5.02 KiB      11  [emitted]  
-940defd566cc7edba267.js  10.3 KiB      12  [emitted]  
+940defd566cc7edba267.js  10.4 KiB      12  [emitted]  
 e298620d755cc0f292cf.js  5.96 KiB      13  [emitted]  
 1d08b68310160ad06455.js  7.17 KiB      14  [emitted]  
 Entrypoint main = 940defd566cc7edba267.js 1d08b68310160ad06455.js e298620d755cc0f292cf.js

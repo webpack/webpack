@@ -10,6 +10,7 @@ This is the _user_ bundle, which uses the manifest from [dll-reference example](
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
+	mode: "production",
 	plugins: [
 		new webpack.DllReferencePlugin({
 			context: path.join(__dirname, "..", "dll"),
@@ -88,6 +89,11 @@ console.log(require("module"));
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -119,6 +125,7 @@ console.log(require("module"));
   \*********************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = alpha_6d91db854aef9bf446d4;
@@ -130,6 +137,7 @@ module.exports = alpha_6d91db854aef9bf446d4;
   \********************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = beta_6d91db854aef9bf446d4;
@@ -141,6 +149,7 @@ module.exports = beta_6d91db854aef9bf446d4;
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 console.log(__webpack_require__(/*! ../dll/alpha */ 3));
@@ -160,6 +169,7 @@ console.log(__webpack_require__(/*! module */ 8));
   \**************************************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(0))(1);
@@ -171,6 +181,7 @@ module.exports = (__webpack_require__(0))(1);
   \**********************************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(0))(2);
@@ -182,6 +193,7 @@ module.exports = (__webpack_require__(0))(2);
   \************************************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(1))(5);
@@ -193,6 +205,7 @@ module.exports = (__webpack_require__(1))(5);
   \*********************************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(1))(6);
@@ -204,6 +217,7 @@ module.exports = (__webpack_require__(1))(6);
   \**********************************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(1))(7);
@@ -215,6 +229,7 @@ module.exports = (__webpack_require__(1))(7);
   \*****************************************************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(0))(3);
@@ -231,7 +246,7 @@ module.exports = (__webpack_require__(0))(3);
 Hash: de10be9bbcb3d59901b3
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  5.92 KiB       0  [emitted]  main
+output.js  6.73 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 549 bytes [entry] [rendered]
     > main [2] ./example.js 
@@ -265,7 +280,7 @@ chunk    {0} output.js (main) 549 bytes [entry] [rendered]
 Hash: de10be9bbcb3d59901b3
 Version: webpack next
     Asset       Size  Chunks             Chunk Names
-output.js  904 bytes       0  [emitted]  main
+output.js  970 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 549 bytes [entry] [rendered]
     > main [2] ./example.js 

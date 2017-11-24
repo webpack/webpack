@@ -34,6 +34,7 @@ require("./style2.css");
 const LoaderOptionsPlugin = require("../../lib/LoaderOptionsPlugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
+	mode: "production",
 	module: {
 		rules: [
 			{
@@ -75,8 +76,8 @@ Hash: eb83e18f883b3782ac4e
 Version: webpack next
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                         0.output.js   2.42 KiB       0  [emitted]  
-                           output.js   21.5 KiB       1  [emitted]  main
+                         0.output.js    2.7 KiB       0  [emitted]  
+                           output.js   22.1 KiB       1  [emitted]  main
                            style.css   71 bytes       1  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} 0.output.js 1.33 KiB {1} [rendered]
@@ -116,7 +117,7 @@ Version: webpack next
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
                          0.output.js  383 bytes       0  [emitted]  
-                           output.js   6.63 KiB       1  [emitted]  main
+                           output.js    6.7 KiB       1  [emitted]  main
                            style.css   61 bytes       1  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} 0.output.js 1.31 KiB {1} [rendered]

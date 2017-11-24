@@ -16,6 +16,7 @@ var webpack = require("../../");
 module.exports = [
 	{
 		name: "mobile",
+		mode: "production",
 		entry: "./example",
 		output: {
 			path: path.join(__dirname, "js"),
@@ -29,6 +30,7 @@ module.exports = [
 	},
 	{
 		name: "desktop",
+		mode: "production",
 		entry: "./example",
 		output: {
 			path: path.join(__dirname, "js"),
@@ -94,6 +96,11 @@ module.exports = [
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -125,6 +132,7 @@ module.exports = [
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 if(false) {
@@ -185,6 +193,11 @@ console.log("Running " + "desktop" + " build");
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -211,6 +224,7 @@ console.log("Running " + "desktop" + " build");
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 if(true) {
@@ -225,6 +239,7 @@ console.log("Running " + "mobile" + " build");
   \*************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // mobile only stuff
@@ -243,7 +258,7 @@ Version: webpack next
 Child mobile:
     Hash: 38f1b6745f2b6ecb12f3
         Asset      Size  Chunks             Chunk Names
-    mobile.js  2.89 KiB       0  [emitted]  main
+    mobile.js  3.22 KiB       0  [emitted]  main
     Entrypoint main = mobile.js
     chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
         > main [0] ./example.js 
@@ -254,7 +269,7 @@ Child mobile:
 Child desktop:
     Hash: dc51c5defcd12cfd66b4
          Asset      Size  Chunks             Chunk Names
-    desktop.js  2.66 KiB       0  [emitted]  main
+    desktop.js  2.91 KiB       0  [emitted]  main
     Entrypoint main = desktop.js
     chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
         > main [0] ./example.js 
@@ -270,7 +285,7 @@ Version: webpack next
 Child mobile:
     Hash: 38f1b6745f2b6ecb12f3
         Asset       Size  Chunks             Chunk Names
-    mobile.js  540 bytes       0  [emitted]  main
+    mobile.js  606 bytes       0  [emitted]  main
     Entrypoint main = mobile.js
     chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
         > main [0] ./example.js 
@@ -281,7 +296,7 @@ Child mobile:
 Child desktop:
     Hash: dc51c5defcd12cfd66b4
          Asset       Size  Chunks             Chunk Names
-    desktop.js  520 bytes       0  [emitted]  main
+    desktop.js  586 bytes       0  [emitted]  main
     Entrypoint main = desktop.js
     chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
         > main [0] ./example.js 

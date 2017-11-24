@@ -17,6 +17,7 @@ Note: When your library has dependencies that should not be included in the comp
 ``` javascript
 var path = require("path");
 module.exports = {
+	mode: "production",
 	entry: {
 		alpha: "./alpha",
 		beta: "./beta"
@@ -93,6 +94,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -124,6 +130,7 @@ return /******/ (function(modules) { // webpackBootstrap
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "alpha";
@@ -192,6 +199,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -219,6 +231,7 @@ return /******/ (function(modules) { // webpackBootstrap
   \*****************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "beta";
@@ -233,11 +246,11 @@ module.exports = "beta";
 ## Uncompressed
 
 ```
-Hash: 50ee6e3a1b476054872d
+Hash: 17fa97a0dfa6b745377a
 Version: webpack next
              Asset      Size  Chunks             Chunk Names
- MyLibrary.beta.js  2.98 KiB       0  [emitted]  beta
-MyLibrary.alpha.js  2.98 KiB       1  [emitted]  alpha
+ MyLibrary.beta.js  3.24 KiB       0  [emitted]  beta
+MyLibrary.alpha.js  3.24 KiB       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
@@ -253,11 +266,11 @@ chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 50ee6e3a1b476054872d
+Hash: 17fa97a0dfa6b745377a
 Version: webpack next
              Asset       Size  Chunks             Chunk Names
- MyLibrary.beta.js  759 bytes       0  [emitted]  beta
-MyLibrary.alpha.js  761 bytes       1  [emitted]  alpha
+ MyLibrary.beta.js  825 bytes       0  [emitted]  beta
+MyLibrary.alpha.js  827 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]

@@ -154,6 +154,11 @@ getTemplate("b", function(b) {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -194,6 +199,7 @@ getTemplate("b", function(b) {
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 function getTemplate(templateName, callback) {
@@ -223,6 +229,7 @@ getTemplate("b", function(b) {
   \**************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -256,6 +263,7 @@ webpackContext.id = 1;
   \*****************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -269,6 +277,7 @@ module.exports = function() {
   \*****************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -282,6 +291,7 @@ module.exports = function() {
   \*****************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -300,8 +310,8 @@ module.exports = function() {
 Hash: 71a61aeef010cd2fd50d
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
-0.output.js  1.87 KiB       0  [emitted]  
-  output.js  6.93 KiB       1  [emitted]  main
+0.output.js  2.15 KiB       0  [emitted]  
+  output.js  7.18 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 463 bytes {1} [rendered]
     > [0] ./example.js 2:1-4:3
@@ -329,7 +339,7 @@ Hash: 71a61aeef010cd2fd50d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  584 bytes       0  [emitted]  
-  output.js   1.66 KiB       1  [emitted]  main
+  output.js   1.73 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 463 bytes {1} [rendered]
     > [0] ./example.js 2:1-4:3

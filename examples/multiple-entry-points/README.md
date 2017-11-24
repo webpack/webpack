@@ -51,6 +51,7 @@ require.ensure(["./shared"], function(require) {
 var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
+	mode: "production",
 	entry: {
 		pageA: "./pageA",
 		pageB: "./pageB"
@@ -235,6 +236,11 @@ module.exports = {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -272,6 +278,7 @@ module.exports = {
   \*******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "Common";
@@ -291,6 +298,7 @@ module.exports = "Common";
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 0);
@@ -314,6 +322,7 @@ __webpack_require__.e/* require */(0/* duplicate */).then(function() { var __WEB
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 0);
@@ -338,6 +347,7 @@ __webpack_require__.e/* require.ensure */(0/* duplicate */).then((function(requi
   \*******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 0);
@@ -357,10 +367,10 @@ module.exports = function(msg) {
 Hash: fff03ff0a6abf2637b15
 Version: webpack next
           Asset       Size  Chunks             Chunk Names
-     0.chunk.js  396 bytes       0  [emitted]  
-pageB.bundle.js  577 bytes       1  [emitted]  pageB
-pageA.bundle.js  620 bytes       2  [emitted]  pageA
-     commons.js   7.07 KiB       3  [emitted]  commons
+     0.chunk.js  467 bytes       0  [emitted]  
+pageB.bundle.js  648 bytes       1  [emitted]  pageB
+pageA.bundle.js  691 bytes       2  [emitted]  pageA
+     commons.js   7.33 KiB       3  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 chunk    {0} 0.chunk.js 91 bytes {1} {2} [rendered]
@@ -394,7 +404,7 @@ Version: webpack next
      0.chunk.js  121 bytes       0  [emitted]  
 pageB.bundle.js  168 bytes       1  [emitted]  pageB
 pageA.bundle.js  193 bytes       2  [emitted]  pageA
-     commons.js   1.68 KiB       3  [emitted]  commons
+     commons.js   1.74 KiB       3  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 chunk    {0} 0.chunk.js 91 bytes {1} {2} [rendered]

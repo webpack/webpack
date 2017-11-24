@@ -74,6 +74,11 @@ module.exports = Math.random();
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -105,6 +110,7 @@ module.exports = Math.random();
   \**************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = Math.random();
@@ -116,6 +122,7 @@ module.exports = Math.random();
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var a = __webpack_require__(/*! ./a */ 0);
@@ -144,7 +151,7 @@ if(a == a2) throw new Error("Cache clear failed :(");
 Hash: 778b337ad5fd5e1bd1bf
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  3.11 KiB       0  [emitted]  main
+output.js  3.43 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > main [1] ./example.js 
@@ -162,7 +169,7 @@ chunk    {0} output.js (main) 326 bytes [entry] [rendered]
 Hash: 778b337ad5fd5e1bd1bf
 Version: webpack next
     Asset       Size  Chunks             Chunk Names
-output.js  599 bytes       0  [emitted]  main
+output.js  665 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > main [1] ./example.js 

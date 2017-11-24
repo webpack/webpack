@@ -72,6 +72,11 @@ onmessage = function(event) {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -103,6 +108,7 @@ onmessage = function(event) {
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Worker = __webpack_require__(/*! worker-loader!./worker */ 1);
@@ -120,6 +126,7 @@ worker.onmessage = function(event) {
   \********************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
@@ -205,6 +212,11 @@ module.exports = function() {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -231,6 +243,7 @@ module.exports = function() {
   \*******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 onmessage = function(event) {
@@ -256,6 +269,7 @@ self["webpackChunk"]([0],[
   \**************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -289,6 +303,7 @@ webpackContext.id = 1;
   \*****************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -302,6 +317,7 @@ module.exports = function() {
   \*****************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -315,6 +331,7 @@ module.exports = function() {
   \*****************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -333,9 +350,9 @@ module.exports = function() {
 Hash: ea02849f7950e1efeb6f
 Version: webpack next
            Asset      Size  Chunks             Chunk Names
-0.hash.worker.js  1.83 KiB          [emitted]  
-  hash.worker.js  3.84 KiB          [emitted]  
-       output.js   3.2 KiB       0  [emitted]  main
+0.hash.worker.js  2.11 KiB          [emitted]  
+  hash.worker.js   4.1 KiB          [emitted]  
+       output.js  3.52 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 311 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -345,8 +362,8 @@ chunk    {0} output.js (main) 311 bytes [entry] [rendered]
         cjs require worker-loader!./worker [0] ./example.js 1:13-46
 Child worker:
                Asset      Size  Chunks             Chunk Names
-    0.hash.worker.js  1.83 KiB       0  [emitted]  
-      hash.worker.js  3.84 KiB       1  [emitted]  main
+    0.hash.worker.js  2.11 KiB       0  [emitted]  
+      hash.worker.js   4.1 KiB       1  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
         > [0] ./worker.js 3:1-5:3
@@ -374,8 +391,8 @@ Hash: ea02849f7950e1efeb6f
 Version: webpack next
            Asset       Size  Chunks             Chunk Names
 0.hash.worker.js  549 bytes          [emitted]  
-  hash.worker.js  849 bytes          [emitted]  
-       output.js  632 bytes       0  [emitted]  main
+  hash.worker.js  915 bytes          [emitted]  
+       output.js  698 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 311 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -386,7 +403,7 @@ chunk    {0} output.js (main) 311 bytes [entry] [rendered]
 Child worker:
                Asset       Size  Chunks             Chunk Names
     0.hash.worker.js  549 bytes       0  [emitted]  
-      hash.worker.js  849 bytes       1  [emitted]  main
+      hash.worker.js  915 bytes       1  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
         > [0] ./worker.js 3:1-5:3

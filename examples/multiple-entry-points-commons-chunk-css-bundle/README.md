@@ -60,6 +60,7 @@ const LoaderOptionsPlugin = require("../../lib/LoaderOptionsPlugin");
 const CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
+	mode: "production",
 	entry: {
 		A: "./a",
 		B: "./b",
@@ -109,6 +110,7 @@ module.exports = {
   \**************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ./style.css */ 0);
@@ -122,6 +124,7 @@ __webpack_require__(/*! ./styleA.css */ 2);
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -197,10 +200,10 @@ d090b6fba0f6d326d282a19146ff54a7.png  120 bytes          [emitted]
 16155c689e517682064c99893cb832cc.png  120 bytes          [emitted]  
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
 c2a2f62d69330b7d787782f5010f9d13.png  120 bytes          [emitted]  
-                                B.js  617 bytes       0  [emitted]  B
-                                A.js  599 bytes       1  [emitted]  A
-                                C.js   2.82 KiB       2  [emitted]  C
-                          commons.js   7.08 KiB       3  [emitted]  commons
+                                B.js  759 bytes       0  [emitted]  B
+                                A.js  741 bytes       1  [emitted]  A
+                                C.js   3.15 KiB       2  [emitted]  C
+                          commons.js   7.33 KiB       3  [emitted]  commons
                                C.css  140 bytes       2  [emitted]  C
                          commons.css  209 bytes       3  [emitted]  commons
 Entrypoint A = commons.js commons.css A.js
@@ -286,8 +289,8 @@ ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]
 c2a2f62d69330b7d787782f5010f9d13.png  120 bytes          [emitted]  
                                 B.js  116 bytes       0  [emitted]  B
                                 A.js  114 bytes       1  [emitted]  A
-                                C.js  508 bytes       2  [emitted]  C
-                          commons.js   1.66 KiB       3  [emitted]  commons
+                                C.js  574 bytes       2  [emitted]  C
+                          commons.js   1.72 KiB       3  [emitted]  commons
                                C.css  120 bytes       2  [emitted]  C
                          commons.css  179 bytes       3  [emitted]  commons
 Entrypoint A = commons.js commons.css A.js

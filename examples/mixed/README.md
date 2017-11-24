@@ -194,6 +194,11 @@ require(
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -234,6 +239,7 @@ require(
   \*********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CommonJs Module Format
@@ -252,6 +258,7 @@ new Promise(function(resolve) { resolve(); }).then(function() { var __WEBPACK_AM
   \****************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Format
@@ -271,10 +278,11 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Fo
   \********************/
 /*! exports provided: default */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./amd.js (referenced with amd require, cjs require), ./commonjs.js (referenced with amd require, cjs require), ./example.js (referenced with cjs require) */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+__webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _commonjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./commonjs */0);
 /* harmony import */ var _commonjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_commonjs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _amd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./amd */1);
@@ -293,6 +301,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CommonJs-style requires
@@ -327,6 +336,7 @@ __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIR
   \******************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -357,6 +367,7 @@ webpackContext.id = 4;
   \*****************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -370,6 +381,7 @@ module.exports = function() {
   \*****************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -383,6 +395,7 @@ module.exports = function() {
   \*****************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -401,8 +414,8 @@ module.exports = function() {
 Hash: c5e217711d33e344c3e3
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
-0.output.js  1.88 KiB       0  [emitted]  
-  output.js  9.66 KiB       1  [emitted]  main
+0.output.js  2.16 KiB       0  [emitted]  
+  output.js  10.3 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 439 bytes {1} [rendered]
     > [3] ./example.js 7:0-14:1
@@ -448,7 +461,7 @@ Hash: c5e217711d33e344c3e3
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  563 bytes       0  [emitted]  
-  output.js   2.02 KiB       1  [emitted]  main
+  output.js   2.05 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 439 bytes {1} [rendered]
     > [3] ./example.js 7:0-14:1

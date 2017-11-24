@@ -4,6 +4,7 @@
 var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
+	mode: "production",
 	entry: {
 		// The entry points for the pages
 		pageA: "./aEntry",
@@ -245,6 +246,11 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -285,6 +291,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
   \*******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function(page) {
@@ -302,6 +309,7 @@ module.exports = function(page) {
   \*******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = __webpack_require__(/*! ./render */ 0);
@@ -337,6 +345,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
   \****************************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -366,6 +375,7 @@ webpackContext.id = 6;
   \*******************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var cbs = [], 
@@ -390,6 +400,7 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   \*******************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var cbs = [], 
@@ -422,6 +433,7 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -436,6 +448,7 @@ module.exports = function() {
   \*******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Just show the page "a"
@@ -457,6 +470,7 @@ render(__webpack_require__(/*! ./aPage */ 1));
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -475,11 +489,11 @@ module.exports = function() {
 Hash: a9c98a6416be93f3fdf3
 Version: webpack next
           Asset       Size  Chunks             Chunk Names
-     0.chunk.js  317 bytes       0  [emitted]  
-     1.chunk.js  323 bytes       1  [emitted]  
-pageB.bundle.js  686 bytes    2, 0  [emitted]  pageB
-pageA.bundle.js  677 bytes    3, 1  [emitted]  pageA
-     commons.js   10.6 KiB       4  [emitted]  commons
+     0.chunk.js  388 bytes       0  [emitted]  
+     1.chunk.js  394 bytes       1  [emitted]  
+pageB.bundle.js  828 bytes    2, 0  [emitted]  pageB
+pageA.bundle.js  819 bytes    3, 1  [emitted]  pageA
+     commons.js   11.1 KiB       4  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 Entrypoint commons = commons.js
@@ -533,7 +547,7 @@ Version: webpack next
      1.chunk.js  122 bytes       1  [emitted]  
 pageB.bundle.js  164 bytes    2, 0  [emitted]  pageB
 pageA.bundle.js  163 bytes    3, 1  [emitted]  pageA
-     commons.js    2.4 KiB       4  [emitted]  commons
+     commons.js   2.46 KiB       4  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 Entrypoint commons = commons.js

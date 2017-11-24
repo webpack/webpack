@@ -51,6 +51,7 @@ require.ensure(["./a"], function(require) {
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 
 module.exports = {
+	mode: "production",
 	plugins: [
 		new CommonsChunkPlugin({
 			// process all children of the main chunk
@@ -204,6 +205,11 @@ module.exports = {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -245,6 +251,7 @@ module.exports = {
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 // a chunks with a, b, c
@@ -272,6 +279,7 @@ Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e
   \**************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "a";
@@ -283,6 +291,7 @@ module.exports = "a";
   \**************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "b";
@@ -302,6 +311,7 @@ module.exports = "b";
   \**************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "d";
@@ -322,6 +332,7 @@ module.exports = "d";
   \**************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "c";
@@ -339,10 +350,10 @@ module.exports = "c";
 Hash: 7fbb1fd30d6b2c043e7a
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  453 bytes       0  [emitted]  
-1.output.js  265 bytes       1  [emitted]  
-2.output.js  265 bytes       2  [emitted]  
-  output.js   7.21 KiB       3  [emitted]  main
+0.output.js  595 bytes       0  [emitted]  
+1.output.js  336 bytes       1  [emitted]  
+2.output.js  336 bytes       2  [emitted]  
+  output.js   7.47 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes {3} [rendered]
     > async commons [2] ./example.js 2:0-52
@@ -376,7 +387,7 @@ Version: webpack next
 0.output.js  118 bytes       0  [emitted]  
 1.output.js   91 bytes       1  [emitted]  
 2.output.js   91 bytes       2  [emitted]  
-  output.js   1.71 KiB       3  [emitted]  main
+  output.js   1.77 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes {3} [rendered]
     > async commons [2] ./example.js 2:0-52

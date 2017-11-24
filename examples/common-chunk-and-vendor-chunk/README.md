@@ -38,6 +38,7 @@ var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 
 module.exports = {
+	mode: "production",
 	entry: {
 		vendor: ["./vendor1", "./vendor2"],
 		pageA: "./pageA",
@@ -214,6 +215,11 @@ module.exports = {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -256,6 +262,7 @@ module.exports = {
   \*********************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ./vendor1 */3);
@@ -269,6 +276,7 @@ module.exports = __webpack_require__(/*! ./vendor2 */4);
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "vendor1";
@@ -280,6 +288,7 @@ module.exports = "vendor1";
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "vendor2";
@@ -298,6 +307,7 @@ module.exports = "vendor2";
   \*********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "utility2";
@@ -309,6 +319,7 @@ module.exports = "utility2";
   \*********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "utility3";
@@ -328,6 +339,7 @@ module.exports = "utility3";
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var utility1 = __webpack_require__(/*! ./utility1 */ 6);
@@ -343,6 +355,7 @@ module.exports = "pageA";
   \*********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "utility1";
@@ -363,6 +376,7 @@ module.exports = "utility1";
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var utility2 = __webpack_require__(/*! ./utility2 */ 0);
@@ -386,6 +400,7 @@ module.exports = "pageB";
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var utility2 = __webpack_require__(/*! ./utility2 */ 0);
@@ -406,11 +421,11 @@ module.exports = "pageC";
 Hash: 4b8ef245065d9c193fc3
 Version: webpack next
     Asset       Size  Chunks             Chunk Names
-common.js  509 bytes       0  [emitted]  common
- pageA.js  653 bytes       1  [emitted]  pageA
- pageC.js  432 bytes       2  [emitted]  pageC
- pageB.js  432 bytes       3  [emitted]  pageB
-vendor.js   7.75 KiB       4  [emitted]  vendor
+common.js  651 bytes       0  [emitted]  common
+ pageA.js  795 bytes       1  [emitted]  pageA
+ pageC.js  503 bytes       2  [emitted]  pageC
+ pageB.js  503 bytes       3  [emitted]  pageB
+vendor.js   8.15 KiB       4  [emitted]  vendor
 Entrypoint vendor = vendor.js
 Entrypoint pageA = vendor.js common.js pageA.js
 Entrypoint pageB = vendor.js common.js pageB.js
@@ -457,7 +472,7 @@ common.js  132 bytes       0  [emitted]  common
  pageA.js  157 bytes       1  [emitted]  pageA
  pageC.js  119 bytes       2  [emitted]  pageC
  pageB.js  119 bytes       3  [emitted]  pageB
-vendor.js   1.75 KiB       4  [emitted]  vendor
+vendor.js   1.82 KiB       4  [emitted]  vendor
 Entrypoint vendor = vendor.js
 Entrypoint pageA = vendor.js common.js pageA.js
 Entrypoint pageB = vendor.js common.js pageB.js

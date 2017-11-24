@@ -172,6 +172,11 @@ export default foo;
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -215,6 +220,7 @@ export default foo;
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 async function getTemplate(templateName) {
@@ -241,6 +247,7 @@ getTemplate("baz");
   \*********************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -295,10 +302,10 @@ module.exports = webpackAsyncContext;
 Hash: c0e9c43fa1cecd7aab21
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  494 bytes       0  [emitted]  
-1.output.js  500 bytes       1  [emitted]  
-2.output.js  491 bytes       2  [emitted]  
-  output.js    7.7 KiB       3  [emitted]  main
+0.output.js  624 bytes       0  [emitted]  
+1.output.js  630 bytes       1  [emitted]  
+2.output.js  621 bytes       2  [emitted]  
+  output.js   8.02 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 41 bytes {3} [rendered]
     [2] ./templates/foo.js 41 bytes {0} [optional] [built]
@@ -328,11 +335,7 @@ chunk    {3} output.js (main) 456 bytes [entry] [rendered]
 ```
 Hash: c0e9c43fa1cecd7aab21
 Version: webpack next
-      Asset       Size  Chunks             Chunk Names
-0.output.js  157 bytes       0  [emitted]  
-1.output.js  156 bytes       1  [emitted]  
-2.output.js  155 bytes       2  [emitted]  
-  output.js    7.4 KiB       3  [emitted]  main
+ 4 assets
 Entrypoint main = output.js
 chunk    {0} 0.output.js 41 bytes {3} [rendered]
     [2] ./templates/foo.js 41 bytes {0} [optional] [built]
@@ -357,5 +360,5 @@ chunk    {3} output.js (main) 456 bytes [entry] [rendered]
         import() context lazy ./templates [3] ./example.js 3:23-60
 
 ERROR in output.js from UglifyJs
-Unexpected token: keyword (function) [output.js:171,6]
+Unexpected token: keyword (function) [output.js:176,6]
 ```

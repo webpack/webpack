@@ -13,6 +13,7 @@ var path = require("path");
 var webpack = require("../../../");
 
 module.exports = {
+	mode: "production",
 	context: __dirname,
 	entry: ["example-vendor"],
 	output: {
@@ -91,6 +92,11 @@ var vendor_lib_668eb208c131c5341859 =
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -122,6 +128,7 @@ var vendor_lib_668eb208c131c5341859 =
   \****************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__;
@@ -133,10 +140,11 @@ module.exports = __webpack_require__;
   \*****************************************/
 /*! exports provided: square */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: dll main (referenced with single entry) and by: DllPlugin */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+__webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "square", function() { return square; });
 function square(n) {
 	return n * n;
@@ -161,7 +169,7 @@ function square(n) {
 Hash: 668eb208c131c5341859
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-vendor.js  3.15 KiB       0  [emitted]  main
+vendor.js  3.53 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
     > main [0] dll main 
@@ -177,7 +185,7 @@ chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
 Hash: 668eb208c131c5341859
 Version: webpack next
     Asset       Size  Chunks             Chunk Names
-vendor.js  678 bytes       0  [emitted]  main
+vendor.js  702 bytes       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
     > main [0] dll main 

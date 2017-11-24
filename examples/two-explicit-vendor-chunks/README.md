@@ -4,6 +4,7 @@
 var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
+	mode: "production",
 	entry: {
 		vendor1: ["./vendor1"],
 		vendor2: ["./vendor2"],
@@ -178,6 +179,11 @@ module.exports = {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -218,6 +224,7 @@ module.exports = {
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "Vendor1";
@@ -230,6 +237,7 @@ module.exports = "Vendor1";
   \***********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! ./vendor1 */0);
@@ -250,6 +258,7 @@ module.exports = __webpack_require__(/*! ./vendor1 */0);
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = "Vendor2";
@@ -264,6 +273,7 @@ __webpack_require__(/*! ./vendor1 */ 0);
   \***********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! ./vendor2 */1);
@@ -284,6 +294,7 @@ module.exports = __webpack_require__(/*! ./vendor2 */1);
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = "pageA";
@@ -304,11 +315,11 @@ __webpack_require__(/*! ./vendor2 */ 1);
 Hash: 6fe4b98832b1f1c2bd5b
 Version: webpack next
      Asset       Size  Chunks             Chunk Names
-vendor2.js  654 bytes       0  [emitted]  vendor2
-  pageC.js  293 bytes       1  [emitted]  pageC
-  pageB.js  293 bytes       2  [emitted]  pageB
-  pageA.js  400 bytes       3  [emitted]  pageA
-vendor1.js   7.47 KiB       4  [emitted]  vendor1
+vendor2.js  796 bytes       0  [emitted]  vendor2
+  pageC.js  364 bytes       1  [emitted]  pageC
+  pageB.js  364 bytes       2  [emitted]  pageB
+  pageA.js  471 bytes       3  [emitted]  pageA
+vendor1.js   7.79 KiB       4  [emitted]  vendor1
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor1.js vendor2.js
 Entrypoint pageA = vendor1.js vendor2.js pageA.js
@@ -353,7 +364,7 @@ vendor2.js  146 bytes       0  [emitted]  vendor2
   pageC.js  107 bytes       1  [emitted]  pageC
   pageB.js  107 bytes       2  [emitted]  pageB
   pageA.js  119 bytes       3  [emitted]  pageA
-vendor1.js   1.71 KiB       4  [emitted]  vendor1
+vendor1.js   1.78 KiB       4  [emitted]  vendor1
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor1.js vendor2.js
 Entrypoint pageA = vendor1.js vendor2.js pageA.js

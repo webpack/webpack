@@ -88,6 +88,7 @@ const path = require("path");
 
 module.exports = [
 	{
+		mode: "production",
 		entry: {
 			main: ["./example.js"]
 		},
@@ -105,6 +106,7 @@ module.exports = [
 		]
 	},
 	{
+		mode: "production",
 		entry: {
 			main: ["./example.js"]
 		},
@@ -265,6 +267,11 @@ module.exports = [
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -305,6 +312,7 @@ module.exports = [
   \**************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! ./example.js */1);
@@ -317,6 +325,7 @@ module.exports = __webpack_require__(/*! ./example.js */1);
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var main = function() {
@@ -341,6 +350,7 @@ main();
   \******************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -363,6 +373,7 @@ module.exports = function() {
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var reusableComponent = __webpack_require__(/*! ./reusableComponent */ 2);
@@ -389,6 +400,7 @@ module.exports = function() {
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
@@ -416,6 +428,7 @@ module.exports = function() {
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var reusableComponent = __webpack_require__(/*! ./reusableComponent */ 2);
@@ -569,6 +582,11 @@ module.exports = function() {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -604,6 +622,7 @@ module.exports = function() {
   \**************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! ./example.js */1);
@@ -616,6 +635,7 @@ module.exports = __webpack_require__(/*! ./example.js */1);
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var main = function() {
@@ -648,6 +668,7 @@ main();
   \******************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -671,6 +692,7 @@ module.exports = function() {
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
@@ -698,6 +720,7 @@ module.exports = function() {
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var reusableComponent = __webpack_require__(/*! ./reusableComponent */ 4);
@@ -724,6 +747,7 @@ module.exports = function() {
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var reusableComponent = __webpack_require__(/*! ./reusableComponent */ 4);
@@ -749,10 +773,10 @@ Version: webpack next
 Child
     Hash: 3d3c887e038c22d66243
           Asset       Size  Chunks             Chunk Names
-    0.output.js  438 bytes       0  [emitted]  
-    1.output.js  531 bytes       1  [emitted]  
-    2.output.js  438 bytes       2  [emitted]  
-      output.js   7.59 KiB       3  [emitted]  main
+    0.output.js  509 bytes       0  [emitted]  
+    1.output.js  602 bytes       1  [emitted]  
+    2.output.js  509 bytes       2  [emitted]  
+      output.js   7.98 KiB       3  [emitted]  main
     Entrypoint main = output.js
     chunk    {0} 0.output.js 142 bytes {3} [rendered]
         > [4] ./pageB.js 3:1-6:3
@@ -778,11 +802,11 @@ Child
 Child
     Hash: e918fbcaa3ff1f847528
                Asset       Size  Chunks             Chunk Names
-    0.asyncoutput.js  364 bytes       0  [emitted]  
-    1.asyncoutput.js  572 bytes       1  [emitted]  
-    2.asyncoutput.js  438 bytes       2  [emitted]  
-    3.asyncoutput.js  438 bytes       3  [emitted]  
-      asyncoutput.js   7.35 KiB       4  [emitted]  main
+    0.asyncoutput.js  435 bytes       0  [emitted]  
+    1.asyncoutput.js  643 bytes       1  [emitted]  
+    2.asyncoutput.js  509 bytes       2  [emitted]  
+    3.asyncoutput.js  509 bytes       3  [emitted]  
+      asyncoutput.js   7.68 KiB       4  [emitted]  main
     Entrypoint main = asyncoutput.js
     chunk    {0} 0.asyncoutput.js 72 bytes {4} [rendered]
         > async commons [1] ./example.js 3:1-6:3
@@ -817,11 +841,7 @@ Hash: 3d3c887e038c22d66243e918fbcaa3ff1f847528
 Version: webpack next
 Child
     Hash: 3d3c887e038c22d66243
-          Asset       Size  Chunks             Chunk Names
-    0.output.js  138 bytes       0  [emitted]  
-    1.output.js  390 bytes       1  [emitted]  
-    2.output.js  138 bytes       2  [emitted]  
-      output.js   7.11 KiB       3  [emitted]  main
+     4 assets
     Entrypoint main = output.js
     chunk    {0} 0.output.js 142 bytes {3} [rendered]
         > [4] ./pageB.js 3:1-6:3
@@ -849,15 +869,10 @@ Child
     Unexpected token: punc ()) [1.output.js:8,53]
     
     ERROR in output.js from UglifyJs
-    Unexpected token: punc ()) [output.js:177,53]
+    Unexpected token: punc ()) [output.js:182,53]
 Child
     Hash: e918fbcaa3ff1f847528
-               Asset       Size  Chunks             Chunk Names
-    0.asyncoutput.js  133 bytes       0  [emitted]  
-    1.asyncoutput.js  431 bytes       1  [emitted]  
-    2.asyncoutput.js  138 bytes       2  [emitted]  
-    3.asyncoutput.js  138 bytes       3  [emitted]  
-      asyncoutput.js   7.03 KiB       4  [emitted]  main
+     5 assets
     Entrypoint main = asyncoutput.js
     chunk    {0} 0.asyncoutput.js 72 bytes {4} [rendered]
         > async commons [1] ./example.js 3:1-6:3
@@ -888,5 +903,5 @@ Child
     Unexpected token: punc ()) [1.asyncoutput.js:8,94]
     
     ERROR in asyncoutput.js from UglifyJs
-    Unexpected token: punc ()) [asyncoutput.js:177,94]
+    Unexpected token: punc ()) [asyncoutput.js:182,94]
 ```

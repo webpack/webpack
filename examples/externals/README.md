@@ -28,6 +28,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 
 ``` javascript
 module.exports = {
+	mode: "production",
 	output: {
 		libraryTarget: "umd"
 	},
@@ -108,6 +109,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -139,6 +145,7 @@ return /******/ (function(modules) { // webpackBootstrap
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var add = __webpack_require__(/*! add */ 1);
@@ -153,6 +160,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
   \**********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
@@ -164,6 +172,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
   \***************************************************************************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
@@ -181,7 +190,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 Hash: ffa746601696f82316c5
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  4.04 KiB       0  [emitted]  main
+output.js  4.43 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -198,8 +207,8 @@ chunk    {0} output.js (main) 197 bytes [entry] [rendered]
 ```
 Hash: ffa746601696f82316c5
 Version: webpack next
-    Asset       Size  Chunks             Chunk Names
-output.js  978 bytes       0  [emitted]  main
+    Asset      Size  Chunks             Chunk Names
+output.js  1.02 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > main [0] ./example.js 

@@ -30,6 +30,7 @@ export default 123;
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
+	mode: "production",
 	entry: {
 		main: "./example",
 		common: ["./vendor"] // optional
@@ -62,7 +63,7 @@ module.exports = {
 
 <!-- inlined minimized file "manifest.[chunkhash].js" -->
 <script>
-!function(e){function r(r){for(var n,c,u,f=r[0],s=r[1],l=r[2],p=0,d=[];p<f.length;p++)c=f[p],o[c]&&d.push(o[c][0]),o[c]=0;for(n in s)Object.prototype.hasOwnProperty.call(s,n)&&(e[n]=s[n]);for(i&&i(r);d.length;)d.shift()();for(a.push.apply(a,l||[]),p=0;p<a.length;p++){for(var h=a[p],b=!0,v=1;v<h.length;v++){var g=h[v];0!==o[g]&&(b=!1)}b&&(a.splice(p--,1),u=t(t.s=h[0]))}return u}function t(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var n={},o={4:0},a=[];t.e=function(e){function r(r){u.onerror=u.onload=null,clearTimeout(f);var t=o[e];if(0!==t){if(t){var n=r&&("load"===r.type?"missing":r.type),a=r&&r.target&&r.target.src,c=new Error("Loading chunk "+e+" failed.\n("+n+": "+a+")");c.type=n,c.request=a,t[1](c)}o[e]=void 0}}var n=[],a=o[e];if(0!==a)if(a)n.push(a[2]);else{var c=new Promise(function(r,t){a=o[e]=[r,t]});n.push(a[2]=c);var i=document.getElementsByTagName("head")[0],u=document.createElement("script");u.charset="utf-8",u.timeout=12e4,t.nc&&u.setAttribute("nonce",t.nc),u.src=t.p+""+{0:"d384ba1bbf385fcafc99",1:"13604ac9ffd7d870f88b",2:"21bb96c534a4f1d84e54",3:"e5aa9efd1b127c0b8617"}[e]+".js";var f=setTimeout(function(){r({type:"timeout",target:u})},12e4);u.onerror=u.onload=r,i.appendChild(u)}return Promise.all(n)},t.m=e,t.c=n,t.d=function(e,r,n){t.o(e,r)||Object.defineProperty(e,r,{configurable:!1,enumerable:!0,get:n})},t.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(r,"a",r),r},t.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},t.p="js/",t.oe=function(e){throw console.error(e),e};var c=window.webpackJsonp=window.webpackJsonp||[],i=c.push.bind(c);c.push=r,c=c.slice();for(var u=0;u<c.length;u++)r(c[u])}([]);
+!function(e){function r(r){for(var n,c,i,f=r[0],s=r[1],l=r[2],p=0,d=[];p<f.length;p++)c=f[p],o[c]&&d.push(o[c][0]),o[c]=0;for(n in s)Object.prototype.hasOwnProperty.call(s,n)&&(e[n]=s[n]);for(u&&u(r);d.length;)d.shift()();for(a.push.apply(a,l||[]),p=0;p<a.length;p++){for(var h=a[p],b=!0,v=1;v<h.length;v++){var g=h[v];0!==o[g]&&(b=!1)}b&&(a.splice(p--,1),i=t(t.s=h[0]))}return i}function t(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var n={},o={4:0},a=[];t.e=function(e){function r(r){i.onerror=i.onload=null,clearTimeout(f);var t=o[e];if(0!==t){if(t){var n=r&&("load"===r.type?"missing":r.type),a=r&&r.target&&r.target.src,c=new Error("Loading chunk "+e+" failed.\n("+n+": "+a+")");c.type=n,c.request=a,t[1](c)}o[e]=void 0}}var n=[],a=o[e];if(0!==a)if(a)n.push(a[2]);else{var c=new Promise(function(r,t){a=o[e]=[r,t]});n.push(a[2]=c);var u=document.getElementsByTagName("head")[0],i=document.createElement("script");i.charset="utf-8",i.timeout=12e4,t.nc&&i.setAttribute("nonce",t.nc),i.src=t.p+""+{0:"d384ba1bbf385fcafc99",1:"13604ac9ffd7d870f88b",2:"21bb96c534a4f1d84e54",3:"e5aa9efd1b127c0b8617"}[e]+".js";var f=setTimeout(function(){r({type:"timeout",target:i})},12e4);i.onerror=i.onload=r,u.appendChild(i)}return Promise.all(n)},t.m=e,t.c=n,t.d=function(e,r,n){t.o(e,r)||Object.defineProperty(e,r,{configurable:!1,enumerable:!0,get:n})},t.r=function(e){Object.defineProperty(e,"__esModule",{value:!0})},t.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(r,"a",r),r},t.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},t.p="js/",t.oe=function(e){throw console.error(e),e};var c=window.webpackJsonp=window.webpackJsonp||[],u=c.push.bind(c);c.push=r,c=c.slice();for(var i=0;i<c.length;i++)r(c[i])}([]);
 </script>
 
 <!-- optional when using the CommonChunkPlugin for vendor modules -->
@@ -84,10 +85,11 @@ module.exports = {
   \*******************/
 /*! exports provided: default */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: multi ./vendor (referenced with single entry) */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+__webpack_require__.r(__webpack_exports__);
 // some vendor lib (should be in common chunk)
 /* harmony default export */ __webpack_exports__["default"] = (123);
 
@@ -100,6 +102,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
   \**********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! ./vendor */0);
@@ -120,10 +123,11 @@ module.exports = __webpack_require__(/*! ./vendor */0);
   \********************/
 /*! no exports provided */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is an entry point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+__webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _vendor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./vendor */0);
 
 // some module
@@ -143,11 +147,11 @@ __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! .
 Hash: 19d389fe665472aada46
 Version: webpack next
                   Asset       Size  Chunks             Chunk Names
-d384ba1bbf385fcafc99.js  288 bytes       0  [emitted]  
-13604ac9ffd7d870f88b.js  288 bytes       1  [emitted]  
-    common.[chunkhash].js  788 bytes       2  [emitted]  common
-      main.[chunkhash].js  711 bytes       3  [emitted]  main
-  manifest.[chunkhash].js   6.96 KiB       4  [emitted]  manifest
+d384ba1bbf385fcafc99.js  359 bytes       0  [emitted]  
+13604ac9ffd7d870f88b.js  359 bytes       1  [emitted]  
+    common.[chunkhash].js  975 bytes       2  [emitted]  common
+      main.[chunkhash].js  741 bytes       3  [emitted]  main
+  manifest.[chunkhash].js   7.14 KiB       4  [emitted]  manifest
 Entrypoint main = manifest.[chunkhash].js common.[chunkhash].js main.[chunkhash].js
 Entrypoint common = manifest.[chunkhash].js common.[chunkhash].js
 chunk    {0} d384ba1bbf385fcafc99.js 29 bytes {3} [rendered]
@@ -182,9 +186,9 @@ Version: webpack next
                   Asset       Size  Chunks             Chunk Names
 d384ba1bbf385fcafc99.js   78 bytes       0  [emitted]  
 13604ac9ffd7d870f88b.js   78 bytes       1  [emitted]  
-    common.[chunkhash].js  196 bytes       2  [emitted]  common
-      main.[chunkhash].js  213 bytes       3  [emitted]  main
-  manifest.[chunkhash].js   1.74 KiB       4  [emitted]  manifest
+    common.[chunkhash].js  154 bytes       2  [emitted]  common
+      main.[chunkhash].js  171 bytes       3  [emitted]  main
+  manifest.[chunkhash].js   1.81 KiB       4  [emitted]  manifest
 Entrypoint main = manifest.[chunkhash].js common.[chunkhash].js main.[chunkhash].js
 Entrypoint common = manifest.[chunkhash].js common.[chunkhash].js
 chunk    {0} d384ba1bbf385fcafc99.js 29 bytes {3} [rendered]

@@ -164,6 +164,11 @@ require.ensure(["b"], function(require) {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -206,6 +211,7 @@ require.ensure(["b"], function(require) {
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var a = __webpack_require__(/*! a */ 3);
@@ -237,6 +243,7 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   \***************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module a
@@ -255,6 +262,7 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   \***************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module b
@@ -266,6 +274,7 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   \***************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module d
@@ -279,6 +288,7 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   \***************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module c
@@ -297,6 +307,7 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   \***************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module b
@@ -308,6 +319,7 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   \***************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module d
@@ -324,9 +336,9 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
 Hash: a4fbcc7d664f6f0aeb32
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  751 bytes    0, 1  [emitted]  my own chunk
-1.output.js  511 bytes       1  [emitted]  
-  output.js   7.68 KiB       2  [emitted]  main
+0.output.js  964 bytes    0, 1  [emitted]  my own chunk
+1.output.js  653 bytes       1  [emitted]  
+  output.js   8.01 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
     > my own chunk [2] ./example.js 3:0-6:18
@@ -351,7 +363,7 @@ Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  112 bytes    0, 1  [emitted]  my own chunk
 1.output.js   92 bytes       1  [emitted]  
-  output.js   1.75 KiB       2  [emitted]  main
+  output.js   1.81 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
     > my own chunk [2] ./example.js 3:0-6:18

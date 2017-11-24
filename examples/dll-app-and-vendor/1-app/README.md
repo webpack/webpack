@@ -9,6 +9,7 @@ var path = require("path");
 var webpack = require("../../../");
 
 module.exports = {
+	mode: "production",
 	context: __dirname,
 	entry: "./example-app",
 	output: {
@@ -96,6 +97,11 @@ console.log(new square(7));
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -127,6 +133,7 @@ console.log(new square(7));
   \******************************************************************************************************/
 /*! exports provided: square */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(2))(1);
@@ -138,10 +145,11 @@ module.exports = (__webpack_require__(2))(1);
   \************************/
 /*! no exports provided */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is an entry point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+__webpack_require__.r(__webpack_exports__);
 /* harmony import */ var example_vendor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! example-vendor */0);
 
 
@@ -156,6 +164,7 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__["square"](7));
   \**************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = vendor_lib_668eb208c131c5341859;
@@ -172,7 +181,7 @@ module.exports = vendor_lib_668eb208c131c5341859;
 Hash: 04a51b52310382404203
 Version: webpack next
  Asset      Size  Chunks             Chunk Names
-app.js  3.75 KiB       0  [emitted]  main
+app.js  4.11 KiB       0  [emitted]  main
 Entrypoint main = app.js
 chunk    {0} app.js (main) 182 bytes [entry] [rendered]
     > main [1] ./example-app.js 
@@ -194,7 +203,7 @@ chunk    {0} app.js (main) 182 bytes [entry] [rendered]
 Hash: 04a51b52310382404203
 Version: webpack next
  Asset       Size  Chunks             Chunk Names
-app.js  710 bytes       0  [emitted]  main
+app.js  734 bytes       0  [emitted]  main
 Entrypoint main = app.js
 chunk    {0} app.js (main) 182 bytes [entry] [rendered]
     > main [1] ./example-app.js 

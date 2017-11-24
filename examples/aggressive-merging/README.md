@@ -32,6 +32,7 @@ a big file...
 var path = require("path");
 var AggressiveMergingPlugin = require("../../lib/optimize/AggressiveMergingPlugin");
 module.exports = {
+	mode: "production",
 	entry: {
 		pageA: "./pageA",
 		pageB: "./pageB",
@@ -59,11 +60,11 @@ module.exports = {
 Hash: 79ab12b0d491f1da79bf
 Version: webpack next
           Asset       Size  Chunks             Chunk Names
-     0.chunk.js   5.68 KiB       0  [emitted]  
-     1.chunk.js  453 bytes       1  [emitted]  
-pageB.bundle.js   7.08 KiB       2  [emitted]  pageB
-pageA.bundle.js   7.07 KiB       3  [emitted]  pageA
-pageC.bundle.js   6.84 KiB       4  [emitted]  pageC
+     0.chunk.js   5.75 KiB       0  [emitted]  
+     1.chunk.js  595 bytes       1  [emitted]  
+pageB.bundle.js    7.4 KiB       2  [emitted]  pageB
+pageA.bundle.js   7.39 KiB       3  [emitted]  pageA
+pageC.bundle.js    7.1 KiB       4  [emitted]  pageC
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js
@@ -109,9 +110,9 @@ Version: webpack next
           Asset       Size  Chunks             Chunk Names
      0.chunk.js  115 bytes       0  [emitted]  
      1.chunk.js  118 bytes       1  [emitted]  
-pageB.bundle.js   1.63 KiB       2  [emitted]  pageB
-pageA.bundle.js   1.63 KiB       3  [emitted]  pageA
-pageC.bundle.js   1.61 KiB       4  [emitted]  pageC
+pageB.bundle.js   1.69 KiB       2  [emitted]  pageB
+pageA.bundle.js   1.69 KiB       3  [emitted]  pageA
+pageC.bundle.js   1.67 KiB       4  [emitted]  pageC
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js

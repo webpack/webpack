@@ -215,6 +215,11 @@ export function fibonacciJavascript(i) {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -258,6 +263,7 @@ export function fibonacciJavascript(i) {
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, /*! ./add.wasm */1)).then(addModule => {
@@ -303,6 +309,7 @@ function timed(name, fn) {
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -320,10 +327,11 @@ module.exports = instance.exports;
   \*****************/
 /*! exports provided: add, factorial, fibonacci, factorialJavascript, fibonacciJavascript */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./example.js (referenced with import()) */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+__webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "factorialJavascript", function() { return factorialJavascript; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fibonacciJavascript", function() { return fibonacciJavascript; });
 /* harmony import */ var _add_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./add.wasm */1);
@@ -362,6 +370,7 @@ function fibonacciJavascript(i) {
   \************************/
 /*! no static exports found */
 /*! exports used: factorial */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -379,6 +388,7 @@ module.exports = instance.exports;
   \************************/
 /*! no static exports found */
 /*! exports used: fibonacci */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -404,6 +414,7 @@ module.exports = instance.exports;
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -426,12 +437,12 @@ module.exports = instance.exports;
 Hash: ab6e4a9175255d038490
 Version: webpack next
                     Asset       Size   Chunks             Chunk Names
-              0.output.js   3.47 KiB     0, 1  [emitted]  
+              0.output.js   3.78 KiB     0, 1  [emitted]  
 80925f35a6f1cf550d38.wasm   41 bytes  0, 1, 1  [emitted]  
 3d28950d91bc7246f5af.wasm   62 bytes     0, 1  [emitted]  
 1d2268b99656e9575a63.wasm   67 bytes     0, 1  [emitted]  
-              1.output.js  486 bytes        1  [emitted]  
-                output.js    8.7 KiB        2  [emitted]  main
+              1.output.js  557 bytes        1  [emitted]  
+                output.js   8.95 KiB        2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js, 80925f35a6f1cf550d38.wasm, 3d28950d91bc7246f5af.wasm, 1d2268b99656e9575a63.wasm 585 bytes {2} [rendered]
     > [0] ./example.js 3:1-17
@@ -467,13 +478,7 @@ chunk    {2} output.js (main) 788 bytes [entry] [rendered]
 ```
 Hash: ab6e4a9175255d038490
 Version: webpack next
-                    Asset       Size   Chunks             Chunk Names
-              0.output.js  772 bytes     0, 1  [emitted]  
-80925f35a6f1cf550d38.wasm   41 bytes  0, 1, 1  [emitted]  
-3d28950d91bc7246f5af.wasm   62 bytes     0, 1  [emitted]  
-1d2268b99656e9575a63.wasm   67 bytes     0, 1  [emitted]  
-              1.output.js  155 bytes        1  [emitted]  
-                output.js   8.54 KiB        2  [emitted]  main
+ 6 assets
 Entrypoint main = output.js
 chunk    {0} 0.output.js, 80925f35a6f1cf550d38.wasm, 3d28950d91bc7246f5af.wasm, 1d2268b99656e9575a63.wasm 585 bytes {2} [rendered]
     > [0] ./example.js 3:1-17
@@ -504,5 +509,5 @@ chunk    {2} output.js (main) 788 bytes [entry] [rendered]
         single entry .\example.js  main
 
 ERROR in output.js from UglifyJs
-Unexpected token: operator (>) [output.js:193,95]
+Unexpected token: operator (>) [output.js:198,95]
 ```

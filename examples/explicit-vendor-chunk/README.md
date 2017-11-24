@@ -6,6 +6,7 @@ var webpack = require("../../");
 module.exports = [
 	{
 		name: "vendor",
+		mode: "production",
 		entry: ["./vendor", "./vendor2"],
 		output: {
 			path: path.resolve(__dirname, "js"),
@@ -21,6 +22,7 @@ module.exports = [
 	},
 	{
 		name: "app",
+		mode: "production",
 		dependencies: ["vendor"],
 		entry: {
 			pageA: "./pageA",
@@ -94,6 +96,11 @@ var vendor_a1ad01d338e7658692f6 =
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -125,6 +132,7 @@ var vendor_a1ad01d338e7658692f6 =
   \****************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__;
@@ -136,6 +144,7 @@ module.exports = __webpack_require__;
   \*******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "Vendor";
@@ -147,6 +156,7 @@ module.exports = "Vendor";
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "Vendor2";
@@ -204,6 +214,11 @@ module.exports = "Vendor2";
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -230,6 +245,7 @@ module.exports = "Vendor2";
   \**********************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = vendor_a1ad01d338e7658692f6;
@@ -241,6 +257,7 @@ module.exports = vendor_a1ad01d338e7658692f6;
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 console.log(__webpack_require__(/*! ./vendor */ 2));
@@ -253,6 +270,7 @@ module.exports = "pageA";
   \****************************************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = (__webpack_require__(0))(1);
@@ -271,7 +289,7 @@ Version: webpack next
 Child vendor:
     Hash: a1ad01d338e7658692f6
         Asset      Size  Chunks             Chunk Names
-    vendor.js  3.04 KiB       0  [emitted]  main
+    vendor.js  3.44 KiB       0  [emitted]  main
     Entrypoint main = vendor.js
     chunk    {0} vendor.js (main) 65 bytes [entry] [rendered]
         > main [0] dll main 
@@ -287,9 +305,9 @@ Child vendor:
 Child app:
     Hash: d3ecdb631728091b943f
        Asset      Size  Chunks             Chunk Names
-    pageB.js  3.38 KiB       0  [emitted]  pageB
-    pageA.js  3.35 KiB       1  [emitted]  pageA
-    pageC.js  2.57 KiB       2  [emitted]  pageC
+    pageB.js  3.77 KiB       0  [emitted]  pageB
+    pageA.js  3.75 KiB       1  [emitted]  pageA
+    pageC.js  2.83 KiB       2  [emitted]  pageC
     Entrypoint pageA = pageA.js
     Entrypoint pageB = pageB.js
     Entrypoint pageC = pageC.js
@@ -325,7 +343,7 @@ Version: webpack next
 Child vendor:
     Hash: a1ad01d338e7658692f6
         Asset       Size  Chunks             Chunk Names
-    vendor.js  602 bytes       0  [emitted]  main
+    vendor.js  668 bytes       0  [emitted]  main
     Entrypoint main = vendor.js
     chunk    {0} vendor.js (main) 65 bytes [entry] [rendered]
         > main [0] dll main 
@@ -341,9 +359,9 @@ Child vendor:
 Child app:
     Hash: d3ecdb631728091b943f
        Asset       Size  Chunks             Chunk Names
-    pageB.js  609 bytes       0  [emitted]  pageB
-    pageA.js  607 bytes       1  [emitted]  pageA
-    pageC.js  501 bytes       2  [emitted]  pageC
+    pageB.js  675 bytes       0  [emitted]  pageB
+    pageA.js  673 bytes       1  [emitted]  pageA
+    pageC.js  567 bytes       2  [emitted]  pageC
     Entrypoint pageA = pageA.js
     Entrypoint pageB = pageB.js
     Entrypoint pageC = pageC.js

@@ -11,6 +11,7 @@ This is the _reference_ bundle (with the manifests) for [dll user example](https
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
+	mode: "production",
 	resolve: {
 		extensions: [".js", ".jsx"]
 	},
@@ -86,6 +87,11 @@ var alpha_6d91db854aef9bf446d4 =
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -117,6 +123,7 @@ var alpha_6d91db854aef9bf446d4 =
   \*****************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__;
@@ -128,6 +135,7 @@ module.exports = __webpack_require__;
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "alpha";
@@ -139,6 +147,7 @@ module.exports = "alpha";
   \**************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "a";
@@ -150,6 +159,7 @@ module.exports = "a";
   \*********************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "module";
@@ -172,8 +182,8 @@ module.exports = "module";
 Hash: 6d91db854aef9bf446d4
 Version: webpack next
          Asset      Size  Chunks             Chunk Names
- MyDll.beta.js  3.23 KiB       0  [emitted]  beta
-MyDll.alpha.js  3.26 KiB       1  [emitted]  alpha
+ MyDll.beta.js   3.7 KiB       0  [emitted]  beta
+MyDll.alpha.js  3.73 KiB       1  [emitted]  alpha
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
 chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
@@ -210,8 +220,8 @@ chunk    {1} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
 Hash: 6d91db854aef9bf446d4
 Version: webpack next
          Asset       Size  Chunks             Chunk Names
- MyDll.beta.js  627 bytes       0  [emitted]  beta
-MyDll.alpha.js  628 bytes       1  [emitted]  alpha
+ MyDll.beta.js  693 bytes       0  [emitted]  beta
+MyDll.alpha.js  694 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
 chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]

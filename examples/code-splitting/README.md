@@ -176,6 +176,11 @@ require.ensure(["c"], function(require) {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -216,6 +221,7 @@ require.ensure(["c"], function(require) {
   \***************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module b
@@ -227,6 +233,7 @@ require.ensure(["c"], function(require) {
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var a = __webpack_require__(/*! a */ 2);
@@ -243,6 +250,7 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
   \***************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module a
@@ -264,6 +272,7 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
   \***************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module c
@@ -275,6 +284,7 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
   \***************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module d
@@ -297,8 +307,8 @@ Minimized
 Hash: 23b9593edef76f47cb63
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  538 bytes       0  [emitted]  
-  output.js   7.31 KiB       1  [emitted]  main
+0.output.js  680 bytes       0  [emitted]  
+  output.js    7.7 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes {1} [rendered]
     > [1] ./example.js 3:0-6:2
@@ -317,7 +327,7 @@ Hash: 23b9593edef76f47cb63
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
 0.output.js  95 bytes       0  [emitted]  
-  output.js  1.62 KiB       1  [emitted]  main
+  output.js  1.68 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes {1} [rendered]
     > [1] ./example.js 3:0-6:2

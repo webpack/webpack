@@ -82,6 +82,11 @@ module.exports = function(content) {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -113,6 +118,7 @@ module.exports = function(content) {
   \****************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/lib/css-base.js */ 3)(undefined);
@@ -132,6 +138,7 @@ exports.push([module.i, ".some-class {\r\n\tcolor: hotpink;\r\n}\r\n", ""]);
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 // use our loader
@@ -149,6 +156,7 @@ console.dir(__webpack_require__(/*! css-loader!./test.css */ 0)); // manual
   \*****************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 exports.answer = 42;
@@ -161,6 +169,7 @@ exports.foo = "bar";
   \*********************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 /*
@@ -262,8 +271,8 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ```
 Hash: cb0ecece43c771e1f9e7
 Version: webpack next
-    Asset     Size  Chunks             Chunk Names
-output.js  6.1 KiB       0  [emitted]  main
+    Asset      Size  Chunks             Chunk Names
+output.js  6.56 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 2.66 KiB [entry] [rendered]
     > main [1] ./example.js 
@@ -283,7 +292,7 @@ chunk    {0} output.js (main) 2.66 KiB [entry] [rendered]
 Hash: 362753a4b9c9758ad0e2
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  1.45 KiB       0  [emitted]  main
+output.js  1.51 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 2.64 KiB [entry] [rendered]
     > main [1] ./example.js 

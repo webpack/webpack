@@ -165,6 +165,11 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -207,10 +212,11 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
   \********************/
 /*! no exports provided */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is an entry point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+__webpack_require__.r(__webpack_exports__);
 /* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! a */3);
 /* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(a__WEBPACK_IMPORTED_MODULE_0__);
 
@@ -234,6 +240,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
   !*** ./node_modules/a.js ***!
   \***************************/
 /*! no static exports found */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module a
@@ -245,6 +252,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
   \**************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -292,10 +300,10 @@ module.exports = webpackAsyncContext;
 Hash: 99774db1d98bb53fa195
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  308 bytes       0  [emitted]  
-1.output.js  299 bytes       1  [emitted]  
-2.output.js  294 bytes       2  [emitted]  
-  output.js   8.18 KiB       3  [emitted]  main
+0.output.js  379 bytes       0  [emitted]  
+1.output.js  370 bytes       1  [emitted]  
+2.output.js  365 bytes       2  [emitted]  
+  output.js   8.53 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
     1 module
@@ -323,7 +331,7 @@ Version: webpack next
 0.output.js  77 bytes       0  [emitted]  
 1.output.js  76 bytes       1  [emitted]  
 2.output.js  78 bytes       2  [emitted]  
-  output.js  2.05 KiB       3  [emitted]  main
+  output.js  2.07 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
     1 module

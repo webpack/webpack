@@ -49,12 +49,14 @@ var outputOptions = {
 };
 module.exports = [{
 	name: "page",
+	mode: "production",
 	entry: {
 		page: "./page"
 	},
 	output: outputOptions
 }, {
 	name: "pageA",
+	mode: "production",
 	entry: {
 		pageA: "./page"
 	},
@@ -68,6 +70,7 @@ module.exports = [{
 	]
 }, {
 	name: "pageB",
+	mode: "production",
 	entry: {
 		pageB: "./page"
 	},
@@ -82,6 +85,7 @@ module.exports = [{
 	]
 }, {
 	name: "pageC",
+	mode: "production",
 	entry: {
 		pageC: "./page"
 	},
@@ -110,11 +114,11 @@ Version: webpack next
 Child page:
     Hash: 177cb4f87a649dcf8f69
              Asset       Size      Chunks             Chunk Names
-        0.chunk.js  850 bytes  0, 1, 2, 3  [emitted]  
-        1.chunk.js  648 bytes     1, 2, 3  [emitted]  
-        2.chunk.js  455 bytes        2, 3  [emitted]  
-        3.chunk.js  262 bytes           3  [emitted]  
-    page.bundle.js   7.26 KiB           4  [emitted]  page
+        0.chunk.js   1.11 KiB  0, 1, 2, 3  [emitted]  
+        1.chunk.js  861 bytes     1, 2, 3  [emitted]  
+        2.chunk.js  597 bytes        2, 3  [emitted]  
+        3.chunk.js  333 bytes           3  [emitted]  
+    page.bundle.js   7.52 KiB           4  [emitted]  page
     Entrypoint page = page.bundle.js
     chunk    {0} 0.chunk.js 84 bytes {4} [rendered]
         > [3] ./page.js 4:0-37
@@ -140,10 +144,10 @@ Child page:
 Child pageA:
     Hash: 5390da5dc6be017898dd
               Asset       Size   Chunks             Chunk Names
-         0.chunk.js  666 bytes  0, 1, 2  [emitted]  
-         1.chunk.js  464 bytes     1, 2  [emitted]  
-         2.chunk.js  271 bytes        2  [emitted]  
-    pageA.bundle.js   7.47 KiB        3  [emitted]  pageA
+         0.chunk.js  879 bytes  0, 1, 2  [emitted]  
+         1.chunk.js  606 bytes     1, 2  [emitted]  
+         2.chunk.js  342 bytes        2  [emitted]  
+    pageA.bundle.js    7.8 KiB        3  [emitted]  pageA
     Entrypoint pageA = pageA.bundle.js
     chunk    {0} 0.chunk.js 63 bytes {3} [rendered]
         > [3] ./page.js 4:0-37
@@ -164,9 +168,9 @@ Child pageA:
 Child pageB:
     Hash: c8f0b2530347cda025f3
               Asset       Size  Chunks             Chunk Names
-         0.chunk.js  482 bytes    0, 1  [emitted]  
-         1.chunk.js  265 bytes       1  [emitted]  
-    pageB.bundle.js   7.66 KiB       2  [emitted]  pageB
+         0.chunk.js  624 bytes    0, 1  [emitted]  
+         1.chunk.js  336 bytes       1  [emitted]  
+    pageB.bundle.js   8.05 KiB       2  [emitted]  pageB
     Entrypoint pageB = pageB.bundle.js
     chunk    {0} 0.chunk.js 42 bytes {2} [rendered]
         > [3] ./page.js 4:0-37
@@ -183,8 +187,8 @@ Child pageB:
 Child pageC:
     Hash: 3bed15ba96ffc9d826c2
               Asset       Size  Chunks             Chunk Names
-         0.chunk.js  271 bytes       0  [emitted]  
-    pageC.bundle.js   7.88 KiB       1  [emitted]  pageC
+         0.chunk.js  342 bytes       0  [emitted]  
+    pageC.bundle.js   8.35 KiB       1  [emitted]  pageC
     Entrypoint pageC = pageC.bundle.js
     chunk    {0} 0.chunk.js 21 bytes {1} [rendered]
         > duplicate [3] ./page.js 2:0-23
@@ -211,7 +215,7 @@ Child page:
         1.chunk.js  151 bytes     1, 2, 3  [emitted]  
         2.chunk.js  120 bytes        2, 3  [emitted]  
         3.chunk.js   89 bytes           3  [emitted]  
-    page.bundle.js   1.71 KiB           4  [emitted]  page
+    page.bundle.js   1.77 KiB           4  [emitted]  page
     Entrypoint page = page.bundle.js
     chunk    {0} 0.chunk.js 84 bytes {4} [rendered]
         > [3] ./page.js 4:0-37
@@ -240,7 +244,7 @@ Child pageA:
          0.chunk.js  153 bytes  0, 1, 2  [emitted]  
          1.chunk.js  121 bytes     1, 2  [emitted]  
          2.chunk.js   90 bytes        2  [emitted]  
-    pageA.bundle.js   1.76 KiB        3  [emitted]  pageA
+    pageA.bundle.js   1.82 KiB        3  [emitted]  pageA
     Entrypoint pageA = pageA.bundle.js
     chunk    {0} 0.chunk.js 63 bytes {3} [rendered]
         > [3] ./page.js 4:0-37
@@ -263,7 +267,7 @@ Child pageB:
               Asset       Size  Chunks             Chunk Names
          0.chunk.js  123 bytes    0, 1  [emitted]  
          1.chunk.js   91 bytes       1  [emitted]  
-    pageB.bundle.js   1.81 KiB       2  [emitted]  pageB
+    pageB.bundle.js   1.87 KiB       2  [emitted]  pageB
     Entrypoint pageB = pageB.bundle.js
     chunk    {0} 0.chunk.js 42 bytes {2} [rendered]
         > [3] ./page.js 4:0-37
@@ -281,7 +285,7 @@ Child pageC:
     Hash: 3bed15ba96ffc9d826c2
               Asset      Size  Chunks             Chunk Names
          0.chunk.js  90 bytes       0  [emitted]  
-    pageC.bundle.js  1.81 KiB       1  [emitted]  pageC
+    pageC.bundle.js  1.88 KiB       1  [emitted]  pageC
     Entrypoint pageC = pageC.bundle.js
     chunk    {0} 0.chunk.js 21 bytes {1} [rendered]
         > duplicate [3] ./page.js 2:0-23

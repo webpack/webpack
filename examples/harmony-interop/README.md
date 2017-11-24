@@ -115,6 +115,11 @@ export var named = "named";
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -146,6 +151,7 @@ export var named = "named";
   \***************/
 /*! no static exports found */
 /*! exports used: default, readFile */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // an example CommonJs module
@@ -164,6 +170,7 @@ exports.readFile = function() {};
   \******************************/
 /*! no static exports found */
 /*! exports used: readFile */
+/*! ModuleConcatenation bailout: Module exports are unknown */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -187,10 +194,11 @@ exports.readFile = function() {};
   \********************/
 /*! no exports provided */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is an entry point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+__webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fs */0);
 /* harmony import */ var _fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_fs__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _reexport_commonjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./reexport-commonjs */1);
@@ -220,6 +228,7 @@ Object(_reexport_commonjs__WEBPACK_IMPORTED_MODULE_1__["readFile"])("file");
   !*** ./example2.js ***!
   \*********************/
 /*! no static exports found */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CommonJs module
@@ -238,10 +247,11 @@ var namedExport = module.named;
   \********************/
 /*! exports provided: default, named */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./example2.js (referenced with cjs require) */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+__webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "named", function() { return named; });
 // just some exports
 /* harmony default export */ __webpack_exports__["default"] = ("default");
@@ -260,7 +270,7 @@ var named = "named";
 Hash: c8a9aa827dcceedede06
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  5.99 KiB       0  [emitted]  main
+output.js  6.52 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 1.17 KiB [entry] [rendered]
     > main [2] ./example.js 
@@ -294,8 +304,8 @@ chunk    {0} output.js (main) 1.17 KiB [entry] [rendered]
 ```
 Hash: c8a9aa827dcceedede06
 Version: webpack next
-    Asset        Size  Chunks             Chunk Names
-output.js  1010 bytes       0  [emitted]  main
+    Asset       Size  Chunks             Chunk Names
+output.js  995 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 1.17 KiB [entry] [rendered]
     > main [2] ./example.js 

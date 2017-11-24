@@ -157,6 +157,11 @@ module.exports = "It works";
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -197,6 +202,7 @@ module.exports = "It works";
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! bundle-loader!./file.js */ 1)(function(fileJsExports) {
@@ -211,6 +217,7 @@ __webpack_require__(/*! bundle-loader!./file.js */ 1)(function(fileJsExports) {
   \******************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var cbs = [], 
@@ -243,6 +250,7 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
   \*****************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "It works";
@@ -260,8 +268,8 @@ module.exports = "It works";
 Hash: 18d3b0908ee42d7ec955
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  281 bytes       0  [emitted]  
-  output.js   7.38 KiB       1  [emitted]  main
+0.output.js  352 bytes       0  [emitted]  
+  output.js    7.7 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 28 bytes {1} [rendered]
     > [1] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
@@ -282,7 +290,7 @@ Hash: 18d3b0908ee42d7ec955
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
 0.output.js  98 bytes       0  [emitted]  
-  output.js  1.72 KiB       1  [emitted]  main
+  output.js  1.78 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 28 bytes {1} [rendered]
     > [1] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2

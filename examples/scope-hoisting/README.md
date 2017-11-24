@@ -101,12 +101,8 @@ export var y = "y";
 # webpack.config.js
 
 ``` javascript
-var webpack = require("../../");
-
 module.exports = {
-	plugins: [
-		new webpack.optimize.ModuleConcatenationPlugin()
-	]
+	mode: "production"
 };
 ```
 
@@ -251,6 +247,11 @@ module.exports = {
 /******/ 				get: getter
 /******/ 			});
 /******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -433,13 +434,13 @@ Hash: 728059a4c3ff363ecb4e
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
 0.output.js  2.01 KiB       0  [emitted]  
-  output.js  8.05 KiB       1  [emitted]  main
+  output.js  8.24 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 286 bytes {1} [rendered]
     > [] 4:0-16
     [3] ./lazy.js + 2 modules 242 bytes {0} [built]
         [exports: d, c, x, y]
-        import() ./lazy ./example.js 4:0-16
+        import() ./lazy  ./example.js 4:0-16
      + 1 hidden module
 chunk    {1} output.js (main) 390 bytes [entry] [rendered]
     > main [] 
@@ -463,13 +464,13 @@ Hash: 728059a4c3ff363ecb4e
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  404 bytes       0  [emitted]  
-  output.js   1.78 KiB       1  [emitted]  main
+  output.js   1.84 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 286 bytes {1} [rendered]
     > [] 4:0-16
     [3] ./lazy.js + 2 modules 242 bytes {0} [built]
         [exports: d, c, x, y]
-        import() ./lazy ./example.js 4:0-16
+        import() ./lazy  ./example.js 4:0-16
      + 1 hidden module
 chunk    {1} output.js (main) 390 bytes [entry] [rendered]
     > main [] 

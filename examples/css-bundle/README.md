@@ -19,6 +19,7 @@ body {
 const LoaderOptionsPlugin = require("../../lib/LoaderOptionsPlugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
+	mode: "production",
 	module: {
 		rules: [
 			{
@@ -94,6 +95,11 @@ module.exports = {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -125,6 +131,7 @@ module.exports = {
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ./style.css */ 1);
@@ -136,6 +143,7 @@ __webpack_require__(/*! ./style.css */ 1);
   \*******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -161,7 +169,7 @@ Hash: da73f4cbdaa662283746
 Version: webpack next
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js   2.83 KiB       0  [emitted]  main
+                           output.js   3.16 KiB       0  [emitted]  main
                            style.css   69 bytes       0  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} output.js, style.css (main) 64 bytes [entry] [rendered]
@@ -190,7 +198,7 @@ Hash: 9369d8f65a2a0dbd9c43
 Version: webpack next
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js  504 bytes       0  [emitted]  main
+                           output.js  570 bytes       0  [emitted]  main
                            style.css   61 bytes       0  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} output.js, style.css (main) 64 bytes [entry] [rendered]

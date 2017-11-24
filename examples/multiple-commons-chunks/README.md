@@ -19,6 +19,7 @@ require("./modules/admin");
 var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
+	mode: "production",
 	entry: {
 		pageA: "./pageA",
 		pageB: "./pageB",
@@ -229,6 +230,11 @@ module.exports = {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -266,6 +272,7 @@ module.exports = {
   \**************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 
@@ -280,6 +287,7 @@ module.exports = {
   \************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 
@@ -299,6 +307,7 @@ module.exports = {
   \************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 
@@ -311,6 +320,7 @@ module.exports = {
   \******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ./modules/a-b-c */ 0);
@@ -334,6 +344,7 @@ __webpack_require__(/*! ./modules/a-c */ 2);
   \**************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 
@@ -353,6 +364,7 @@ __webpack_require__(/*! ./modules/a-c */ 2);
   \***********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ./modules/a-b-c */ 0);
@@ -371,15 +383,15 @@ __webpack_require__(/*! ./modules/admin */ 1);
 Hash: aae3eb52e46997530381
 Version: webpack next
            Asset       Size  Chunks             Chunk Names
-        pageC.js  869 bytes       0  [emitted]  pageC
-        pageB.js  629 bytes       1  [emitted]  pageB
-        pageA.js  629 bytes       2  [emitted]  pageA
-   adminPageC.js  608 bytes    3, 4  [emitted]  adminPageC
-admin-commons.js  286 bytes       4  [emitted]  admin-commons
-   adminPageB.js  398 bytes       5  [emitted]  adminPageB
-   adminPageA.js  398 bytes       6  [emitted]  adminPageA
-      commons.js    7.3 KiB    7, 8  [emitted]  commons
-    c-commons.js   7.06 KiB       8  [emitted]  c-commons
+        pageC.js   1.06 KiB       0  [emitted]  pageC
+        pageB.js  771 bytes       1  [emitted]  pageB
+        pageA.js  771 bytes       2  [emitted]  pageA
+   adminPageC.js  750 bytes    3, 4  [emitted]  adminPageC
+admin-commons.js  357 bytes       4  [emitted]  admin-commons
+   adminPageB.js  469 bytes       5  [emitted]  adminPageB
+   adminPageA.js  469 bytes       6  [emitted]  adminPageA
+      commons.js   7.62 KiB    7, 8  [emitted]  commons
+    c-commons.js   7.32 KiB       8  [emitted]  c-commons
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 Entrypoint pageC = c-commons.js pageC.js
@@ -465,8 +477,8 @@ Version: webpack next
 admin-commons.js   77 bytes       4  [emitted]  admin-commons
    adminPageB.js  101 bytes       5  [emitted]  adminPageB
    adminPageA.js  101 bytes       6  [emitted]  adminPageA
-      commons.js   1.68 KiB    7, 8  [emitted]  commons
-    c-commons.js   1.66 KiB       8  [emitted]  c-commons
+      commons.js   1.74 KiB    7, 8  [emitted]  commons
+    c-commons.js   1.72 KiB       8  [emitted]  c-commons
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 Entrypoint pageC = c-commons.js pageC.js

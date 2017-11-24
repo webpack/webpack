@@ -3,6 +3,7 @@
 ``` javascript
 var path = require("path");
 module.exports = {
+	mode: "production",
 	entry: "./example",
 	output: {
 		path: path.join(__dirname, "js"),
@@ -76,6 +77,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -107,10 +113,11 @@ return /******/ (function(modules) { // webpackBootstrap
   \********************/
 /*! exports provided: value, increment, default */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is an entry point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+__webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "value", function() { return value; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "increment", function() { return increment; });
 var value = 0;
@@ -133,7 +140,7 @@ function increment() {
 Hash: 3644f1adc4c521a71110
 Version: webpack next
            Asset      Size  Chunks             Chunk Names
-MyLibrary.umd.js  3.41 KiB       0  [emitted]  main
+MyLibrary.umd.js  3.63 KiB       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -148,7 +155,7 @@ chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
 Hash: 3644f1adc4c521a71110
 Version: webpack next
            Asset       Size  Chunks             Chunk Names
-MyLibrary.umd.js  898 bytes       0  [emitted]  main
+MyLibrary.umd.js  922 bytes       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
     > main [0] ./example.js 

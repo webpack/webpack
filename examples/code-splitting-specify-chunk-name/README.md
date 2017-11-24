@@ -172,6 +172,11 @@ export default foo;
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -215,6 +220,7 @@ export default foo;
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__.e/* import() */(0/*! chunk-foo *//* duplicate */).then(__webpack_require__.bind(null, /*! ./templates/foo */2)).then(function(foo) {
@@ -241,6 +247,7 @@ __webpack_require__( 4)("./ba" + createContextVar).then(function(bar) {
   \***********************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -287,10 +294,10 @@ module.exports = webpackAsyncContext;
 Hash: b9593814353293fefda9
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  494 bytes       0  [emitted]  chunk-foo
-1.output.js  500 bytes       1  [emitted]  chunk-bar-baz2
-2.output.js  491 bytes       2  [emitted]  chunk-bar-baz0
-  output.js   7.93 KiB       3  [emitted]  main
+0.output.js  617 bytes       0  [emitted]  chunk-foo
+1.output.js  632 bytes       1  [emitted]  chunk-bar-baz2
+2.output.js  623 bytes       2  [emitted]  chunk-bar-baz0
+  output.js   8.26 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (chunk-foo) 41 bytes {3} [rendered]
     > duplicate chunk-foo [3] ./example.js 1:0-62
@@ -323,10 +330,10 @@ chunk    {3} output.js (main) 580 bytes [entry] [rendered]
 Hash: b9593814353293fefda9
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  157 bytes       0  [emitted]  chunk-foo
-1.output.js  156 bytes       1  [emitted]  chunk-bar-baz2
-2.output.js  155 bytes       2  [emitted]  chunk-bar-baz0
-  output.js   1.99 KiB       3  [emitted]  main
+0.output.js  115 bytes       0  [emitted]  chunk-foo
+1.output.js  114 bytes       1  [emitted]  chunk-bar-baz2
+2.output.js  113 bytes       2  [emitted]  chunk-bar-baz0
+  output.js   2.06 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (chunk-foo) 41 bytes {3} [rendered]
     > duplicate chunk-foo [3] ./example.js 1:0-62

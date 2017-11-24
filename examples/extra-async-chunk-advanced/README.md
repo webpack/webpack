@@ -27,6 +27,7 @@ require.ensure(["./a", "./e"], function(require) {
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 
 module.exports = {
+	mode: "production",
 	plugins: [
 		new CommonsChunkPlugin({
 			name: "main",
@@ -184,6 +185,11 @@ module.exports = {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -225,6 +231,7 @@ module.exports = {
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 Promise.all/* require */([__webpack_require__.e(4), __webpack_require__.e(0), __webpack_require__.e(1)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 3)]; ((function(a, b, c) {}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
@@ -258,14 +265,14 @@ Promise.all/* require.ensure */([__webpack_require__.e(2), __webpack_require__.e
 Hash: 6f9e0a4c7e6408844aaa
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  271 bytes       0  [emitted]  async2
-1.output.js  262 bytes       1  [emitted]  async1
-2.output.js  265 bytes       2  [emitted]  
-3.output.js  265 bytes       3  [emitted]  
-4.output.js  265 bytes       4  [emitted]  
-5.output.js  265 bytes       5  [emitted]  
-6.output.js  265 bytes       6  [emitted]  
-  output.js   7.86 KiB       7  [emitted]  main
+0.output.js  342 bytes       0  [emitted]  async2
+1.output.js  333 bytes       1  [emitted]  async1
+2.output.js  336 bytes       2  [emitted]  
+3.output.js  336 bytes       3  [emitted]  
+4.output.js  336 bytes       4  [emitted]  
+5.output.js  336 bytes       5  [emitted]  
+6.output.js  336 bytes       6  [emitted]  
+  output.js   8.12 KiB       7  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (async2) 21 bytes {2} {7} [rendered]
     > async commons duplicate [2] ./example.js 1:0-52
@@ -325,7 +332,7 @@ Version: webpack next
 4.output.js  91 bytes       4  [emitted]  
 5.output.js  91 bytes       5  [emitted]  
 6.output.js  91 bytes       6  [emitted]  
-  output.js  1.95 KiB       7  [emitted]  main
+  output.js  2.01 KiB       7  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (async2) 21 bytes {2} {7} [rendered]
     > async commons duplicate [2] ./example.js 1:0-52
