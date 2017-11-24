@@ -263,12 +263,16 @@ describe("Validation", () => {
 				false
 			]
 		},
-		test(err) {
-			err.message.should.startWith("Invalid configuration object.");
-			err.message.split("\n").slice(1)[0].should.be.eql(
-				" - configuration.plugins[0] should be one of these:"
-			);
-		}
+		message: [
+			" - configuration.plugins[0] should be one of these:",
+			"   object { apply, ... } | function",
+			"   -> Plugin of type object or instanceof Function",
+			"   Details:",
+			"    * configuration.plugins[0] should be an object.",
+			"      -> Compiler or Resolver Plugin instance of Function",
+			"    * configuration.plugins[0] should be an instance of function",
+			"      -> Compiler or Resolver Plugin instance of Function"
+		]
 	}, {
 		name: "Invalid plugin provided: array",
 		config: {
@@ -277,24 +281,32 @@ describe("Validation", () => {
 				[]
 			]
 		},
-		test(err) {
-			err.message.should.startWith("Invalid configuration object.");
-			err.message.split("\n").slice(1)[0].should.be.eql(
-				" - configuration.plugins[0] should be one of these:"
-			);
-		}
+		message: [
+			" - configuration.plugins[0] should be one of these:",
+			"   object { apply, ... } | function",
+			"   -> Plugin of type object or instanceof Function",
+			"   Details:",
+			"    * configuration.plugins[0] should be an object.",
+			"      -> Compiler or Resolver Plugin instance of Function",
+			"    * configuration.plugins[0] should be an instance of function",
+			"      -> Compiler or Resolver Plugin instance of Function"
+		]
 	}, {
 		name: "Invalid plugin provided: string",
 		config: {
 			entry: "foo.js",
 			plugins: ["abc123"]
 		},
-		test(err) {
-			err.message.should.startWith("Invalid configuration object.");
-			err.message.split("\n").slice(1)[0].should.be.eql(
-				" - configuration.plugins[0] should be one of these:"
-			);
-		}
+		message: [
+			" - configuration.plugins[0] should be one of these:",
+			"   object { apply, ... } | function",
+			"   -> Plugin of type object or instanceof Function",
+			"   Details:",
+			"    * configuration.plugins[0] should be an object.",
+			"      -> Compiler or Resolver Plugin instance of Function",
+			"    * configuration.plugins[0] should be an instance of function",
+			"      -> Compiler or Resolver Plugin instance of Function"
+		]
 	}, {
 		name: "Invalid plugin provided: int",
 		config: {
@@ -303,12 +315,16 @@ describe("Validation", () => {
 				12
 			]
 		},
-		test(err) {
-			err.message.should.startWith("Invalid configuration object.");
-			err.message.split("\n").slice(1)[0].should.be.eql(
-				" - configuration.plugins[0] should be one of these:"
-			);
-		}
+		message: [
+			" - configuration.plugins[0] should be one of these:",
+			"   object { apply, ... } | function",
+			"   -> Plugin of type object or instanceof Function",
+			"   Details:",
+			"    * configuration.plugins[0] should be an object.",
+			"      -> Compiler or Resolver Plugin instance of Function",
+			"    * configuration.plugins[0] should be an instance of function",
+			"      -> Compiler or Resolver Plugin instance of Function"
+		]
 	}, {
 		name: "Invalid plugin provided: object without apply function",
 		config: {
@@ -317,12 +333,20 @@ describe("Validation", () => {
 				new function() {}
 			]
 		},
-		test(err) {
-			err.message.should.startWith("Invalid configuration object.");
-			err.message.split("\n").slice(1)[0].should.be.eql(
-				" - configuration.plugins[0] should be one of these:"
-			);
-		}
+		message: [
+			" - configuration.plugins[0] should be one of these:",
+			"   object { apply, ... } | function",
+			"   -> Plugin of type object or instanceof Function",
+			"   Details:",
+			"    * configuration.plugins[0] misses the property 'apply'.",
+			"      function",
+			"      -> The run point of the plugin, required method.",
+			"    * configuration.plugins[0] misses the property 'apply'.",
+			"      function",
+			"      -> The run point of the plugin, required method.",
+			"    * configuration.plugins[0] should be an instance of function",
+			"      -> Compiler or Resolver Plugin instance of Function"
+		]
 	}];
 
 	testCases.forEach((testCase) => {
