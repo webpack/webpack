@@ -2,7 +2,7 @@ var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
 	module: {
-		loaders: [
+		rules: [
 			{
 				test: /\.css$/,
 				loader: ExtractTextPlugin.extract({

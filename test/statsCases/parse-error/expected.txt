@@ -1,5 +1,5 @@
-  Asset     Size  Chunks             Chunk Names
-main.js  3.22 kB       0  [emitted]  main
+  Asset      Size  Chunks             Chunk Names
+main.js  3.15 KiB       0  [emitted]  main
    [0] (webpack)/test/statsCases/parse-error/index.js 15 bytes {0} [built]
    [1] (webpack)/test/statsCases/parse-error/a.js 15 bytes {0} [built]
    [2] (webpack)/test/statsCases/parse-error/b.js 169 bytes {0} [built] [failed] [1 error]

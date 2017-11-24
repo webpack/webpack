@@ -4,7 +4,7 @@ module.exports = {
 		hints: false
 	},
 	module: {
-		loaders: [
+		rules: [
 			{ test: /\.json$/, loader: "json-loader" }
 		]
 	},

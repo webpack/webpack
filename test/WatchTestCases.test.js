@@ -1,6 +1,6 @@
 "use strict";
 
-const should = require("should");
+require("should");
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
@@ -68,7 +68,7 @@ describe("WatchTestCases", () => {
 			const dest = path.join(__dirname, "js", "watch-src", category.name);
 			if(!fs.existsSync(dest))
 				fs.mkdirSync(dest);
-		})
+		});
 		describe(category.name, () => {
 			category.tests.forEach((testName) => {
 				describe(testName, () => {

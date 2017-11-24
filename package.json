@@ -12,8 +12,6 @@
     "enhanced-resolve": "^3.4.0",
     "eslint-scope": "^3.7.1",
     "interpret": "^1.0.0",
-    "json-loader": "^0.5.4",
-    "json5": "^0.5.1",
     "loader-runner": "^2.3.0",
     "loader-utils": "^1.1.0",
     "memory-fs": "~0.4.1",
@@ -21,7 +19,7 @@
     "node-libs-browser": "^2.0.0",
     "source-map": "^0.5.3",
     "supports-color": "^4.2.1",
-    "tapable": "^0.2.7",
+    "tapable": "^0.2.8",
     "uglifyjs-webpack-plugin": "^0.4.6",
     "watchpack": "^1.4.0",
     "webpack-sources": "^1.0.1",
@@ -49,6 +47,7 @@
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
     "js-beautify": "^1.5.10",
+    "json-loader": "^0.5.7",
     "less": "^2.5.1",
     "less-loader": "^4.0.3",
     "lodash": "^4.17.4",
@@ -71,7 +70,7 @@
     "worker-loader": "^0.8.0"
   },
   "engines": {
-    "node": ">=4.3.0 <5.0.0 || >=5.10"
+    "node": ">=6.11.5"
   },
   "repository": {
     "type": "git",
@@ -105,7 +104,7 @@
     "build:examples": "cd examples && node buildAll.js",
     "pretest": "npm run lint-files",
     "lint-files": "npm run lint && npm run beautify-lint && npm run schema-lint",
-    "lint": "eslint lib bin hot buildin \"test/**/webpack.config.js\" \"test/binCases/**/test.js\" \"examples/**/webpack.config.js\"",
+    "lint": "eslint lib bin hot buildin \"test/*.js\" \"test/**/webpack.config.js\" \"test/binCases/**/test.js\" \"examples/**/webpack.config.js\"",
     "fix": "npm run lint -- --fix",
     "beautify-lint": "beautify-lint \"lib/**/*.js\" \"hot/**/*.js\" \"bin/**/*.js\" \"benchmark/*.js\" \"test/*.js\"",
     "schema-lint": "mocha test/*.lint.js --opts test/lint-mocha.opts",

@@ -163,14 +163,15 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: 9407d8cd068b1845b368
-Version: webpack 3.5.1
-    Asset     Size  Chunks             Chunk Names
-output.js  3.39 kB       0  [emitted]  main
+Hash: ae7172392c4d0e31a2b7
+Version: webpack next
+    Asset      Size  Chunks             Chunk Names
+output.js  3.31 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 329 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 69 bytes {0} [built]
+        single entry .\example.js  main
     [1] ./increment.js 98 bytes {0} [built]
         cjs require ./increment [0] ./example.js 1:10-32
     [2] ./math.js 162 bytes {0} [built]
@@ -180,14 +181,15 @@ chunk    {0} output.js (main) 329 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 9407d8cd068b1845b368
-Version: webpack 3.5.1
+Hash: ae7172392c4d0e31a2b7
+Version: webpack next
     Asset       Size  Chunks             Chunk Names
 output.js  672 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 329 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 69 bytes {0} [built]
+        single entry .\example.js  main
     [1] ./increment.js 98 bytes {0} [built]
         cjs require ./increment [0] ./example.js 1:10-32
     [2] ./math.js 162 bytes {0} [built]

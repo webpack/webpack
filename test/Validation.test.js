@@ -174,7 +174,7 @@ describe("Validation", () => {
 		},
 		message: [
 			" - configuration.module.rules[0].oneOf[0] has an unknown property 'paser'. These properties are valid:",
-			"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, query?, resource?, resourceQuery?, compiler?, rules?, test?, use? }",
+			"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, resolve?, query?, type?, resource?, resourceQuery?, compiler?, rules?, test?, use? }",
 			"   -> A rule"
 		]
 	}, {
@@ -262,7 +262,7 @@ describe("Validation", () => {
 			try {
 				webpack(testCase.config);
 			} catch(err) {
-				if(err.name !== 'WebpackOptionsValidationError') throw err;
+				if(err.name !== "WebpackOptionsValidationError") throw err;
 
 				if(testCase.test) {
 					testCase.test(err);

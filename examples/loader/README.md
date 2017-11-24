@@ -260,17 +260,18 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Uncompressed
 
 ```
-Hash: c15a21a2e67111e1cd94
-Version: webpack 3.5.1
+Hash: cb0ecece43c771e1f9e7
+Version: webpack next
     Asset     Size  Chunks             Chunk Names
-output.js  6.24 kB       0  [emitted]  main
+output.js  6.1 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 2.72 kB [entry] [rendered]
+chunk    {0} output.js (main) 2.66 KiB [entry] [rendered]
     > main [1] ./example.js 
     [0] (webpack)/node_modules/css-loader!./test.css 209 bytes {0} [built]
         cjs require !css-loader!./test.css [1] ./example.js 6:12-45
         cjs require ./test.css [1] ./example.js 5:12-33
     [1] ./example.js 210 bytes {0} [built]
+        single entry .\example.js  main
     [2] ./loader.js!./file.js 41 bytes {0} [built]
         cjs require ./loader!./file [1] ./example.js 2:12-38
      + 1 hidden module
@@ -279,17 +280,18 @@ chunk    {0} output.js (main) 2.72 kB [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 1848e785d8b4fe1c67d0
-Version: webpack 3.5.1
-    Asset     Size  Chunks             Chunk Names
-output.js  1.48 kB       0  [emitted]  main
+Hash: 362753a4b9c9758ad0e2
+Version: webpack next
+    Asset      Size  Chunks             Chunk Names
+output.js  1.45 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 2.7 kB [entry] [rendered]
+chunk    {0} output.js (main) 2.64 KiB [entry] [rendered]
     > main [1] ./example.js 
     [0] (webpack)/node_modules/css-loader!./test.css 192 bytes {0} [built]
         cjs require !css-loader!./test.css [1] ./example.js 6:12-45
         cjs require ./test.css [1] ./example.js 5:12-33
     [1] ./example.js 210 bytes {0} [built]
+        single entry .\example.js  main
     [2] ./loader.js!./file.js 41 bytes {0} [built]
         cjs require ./loader!./file [1] ./example.js 2:12-38
      + 1 hidden module

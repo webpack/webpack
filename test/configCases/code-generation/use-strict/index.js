@@ -16,8 +16,8 @@ it("should include only one use strict per module", function() {
 	}
 
 	matches.should.be.eql([
-		"it(\"should include only one use strict per module\", function() {",
 		"Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });",
+		"it(\"should include only one use strict per module\", function() {",
 		"Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });",
 		"Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });",
 		"Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });",

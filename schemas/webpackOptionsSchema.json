@@ -154,14 +154,6 @@
           "description": "Set the default request for full dynamic dependencies",
           "type": "string"
         },
-        "loaders": {
-          "description": "An array of automatically applied loaders.",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ruleSet-rules"
-            }
-          ]
-        },
         "noParse": {
           "description": "Don't parse files matching. It's matched against the full resolved request.",
           "anyOf": [
@@ -201,6 +193,14 @@
             }
           ],
           "description": "An array of rules applied for modules."
+        },
+        "defaultRules": {
+          "description": "An array of rules applied by default for modules.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ruleSet-rules"
+            }
+          ]
         },
         "unknownContextCritical": {
           "description": "Enable warnings when using the require function in a not statically analyse-able way",
@@ -299,6 +299,11 @@
           "type": "string",
           "absolutePath": false
         },
+        "webassemblyModuleFilename": {
+          "description": "The filename of WebAssembly modules as relative path inside the `output.path` directory.",
+          "type": "string",
+          "absolutePath": false
+        },
         "crossOriginLoading": {
           "description": "This option enables cross-origin loading of chunks.",
           "enum": [
@@ -346,6 +351,10 @@
             }
           ]
         },
+        "devtoolNamespace": {
+          "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
+          "type": "string"
+        },
         "filename": {
           "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
           "type": "string",
@@ -390,6 +399,10 @@
         },
         "jsonpFunction": {
           "description": "The JSONP function used by webpack for async loading of chunks.",
+          "type": "string"
+        },
+        "chunkCallbackName": {
+          "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
           "type": "string"
         },
         "library": {
@@ -807,12 +820,31 @@
           "additionalProperties": true,
           "type": "object"
         },
+        "resolve": {
+          "description": "Options for the resolver",
+          "type": "object",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/resolve"
+            }
+          ]
+        },
         "query": {
           "description": "Shortcut for use.query",
           "anyOf": [
             {
               "$ref": "#/definitions/ruleSet-query"
             }
+          ]
+        },
+        "type": {
+          "description": "Module type to use for the module",
+          "enum": [
+            "javascript/auto",
+            "javascript/dynamic",
+            "javascript/esm",
+            "json",
+            "webassembly/experimental"
           ]
         },
         "resource": {

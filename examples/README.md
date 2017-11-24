@@ -106,6 +106,9 @@
 ## Scope Hoisting
 [scope-hoisting](scope-hoisting)
 
+## Pure Module
+[pure-module](pure-module)
+
 ## Source Map
 [source-map](source-map)
 
