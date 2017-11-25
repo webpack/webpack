@@ -6,7 +6,7 @@ module.exports = {
 	},
 	entry: {
 		"bundle0": ["./index.js"],
-		"dist/public/test": ["./test.js"],
+		"public/test": ["./test.js"],
 	},
 	output: {
 		filename: "[name].js"
@@ -15,7 +15,7 @@ module.exports = {
 		new webpack.SourceMapDevToolPlugin({
 			filename: "sourcemaps/[file].map",
 			publicPath: "https://10.10.10.10/project/",
-			fileContext: "dist/public"
+			fileContext: "public"
 		})
 	]
 };
