@@ -6,6 +6,8 @@
 */
 var path = require("path");
 
+var errorHelpers = require("../lib/ErrorHelpers");
+
 // Local version replace global one
 try {
 	var localWebpack = require.resolve(path.join(process.cwd(), "node_modules", "webpack", "bin", "webpack.js"));
@@ -168,7 +170,23 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 		argv["display"] = "verbose";
 	}
 
-	var options = require("./convert-argv")(yargs, argv);
+	try {
+		Error.stackTraceLimit = 30;
+		var options = require("./convert-argv")(yargs, argv);
+	} catch(err) {
+		var stack = errorHelpers.cutOffAfterFlag(err.stack, "webpack.config");
+		var message = err.message + "\n" + errorHelpers.cutOffMultilineMessage(stack, err.message);
+
+		if(argv.color)
+			console.error(
+				`\u001b[1m\u001b[31m${message}\u001b[39m\u001b[22m`
+			);
+		else
+			console.error(message);
+
+		process.exitCode = 1;
+		return;
+	}
 
 	function ifArg(name, fn, init) {
 		if(Array.isArray(argv[name])) {
