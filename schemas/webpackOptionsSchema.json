@@ -2,7 +2,7 @@
   "additionalProperties": false,
   "definitions": {
     "common.pluginFunction": {
-      "description": "Compiler or Resolver Plugin instance of Function",
+      "description": "Function acting as plugin",
       "instanceof": "Function",
       "properties": {
         "apply": {
@@ -16,7 +16,7 @@
       ]
     },
     "common.pluginObject": {
-      "description": "Compiler or Resolver Plugin instance of Function",
+      "description": "Plugin instance",
       "type": "object",
       "properties": {
         "apply": {

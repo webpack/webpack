@@ -269,9 +269,9 @@ describe("Validation", () => {
 			"   -> Plugin of type object or instanceof Function",
 			"   Details:",
 			"    * configuration.plugins[0] should be an object.",
-			"      -> Compiler or Resolver Plugin instance of Function",
+			"      -> Plugin instance",
 			"    * configuration.plugins[0] should be an instance of function",
-			"      -> Compiler or Resolver Plugin instance of Function"
+			"      -> Function acting as plugin"
 		]
 	}, {
 		name: "Invalid plugin provided: array",
@@ -287,9 +287,9 @@ describe("Validation", () => {
 			"   -> Plugin of type object or instanceof Function",
 			"   Details:",
 			"    * configuration.plugins[0] should be an object.",
-			"      -> Compiler or Resolver Plugin instance of Function",
+			"      -> Plugin instance",
 			"    * configuration.plugins[0] should be an instance of function",
-			"      -> Compiler or Resolver Plugin instance of Function"
+			"      -> Function acting as plugin"
 		]
 	}, {
 		name: "Invalid plugin provided: string",
@@ -303,9 +303,9 @@ describe("Validation", () => {
 			"   -> Plugin of type object or instanceof Function",
 			"   Details:",
 			"    * configuration.plugins[0] should be an object.",
-			"      -> Compiler or Resolver Plugin instance of Function",
+			"      -> Plugin instance",
 			"    * configuration.plugins[0] should be an instance of function",
-			"      -> Compiler or Resolver Plugin instance of Function"
+			"      -> Function acting as plugin"
 		]
 	}, {
 		name: "Invalid plugin provided: int",
@@ -321,16 +321,16 @@ describe("Validation", () => {
 			"   -> Plugin of type object or instanceof Function",
 			"   Details:",
 			"    * configuration.plugins[0] should be an object.",
-			"      -> Compiler or Resolver Plugin instance of Function",
+			"      -> Plugin instance",
 			"    * configuration.plugins[0] should be an instance of function",
-			"      -> Compiler or Resolver Plugin instance of Function"
+			"      -> Function acting as plugin"
 		]
 	}, {
 		name: "Invalid plugin provided: object without apply function",
 		config: {
 			entry: "foo.js",
 			plugins: [
-				new function() {}
+				{}
 			]
 		},
 		message: [
@@ -345,7 +345,7 @@ describe("Validation", () => {
 			"      function",
 			"      -> The run point of the plugin, required method.",
 			"    * configuration.plugins[0] should be an instance of function",
-			"      -> Compiler or Resolver Plugin instance of Function"
+			"      -> Function acting as plugin"
 		]
 	}];
 
