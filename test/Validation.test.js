@@ -329,9 +329,7 @@ describe("Validation", () => {
 		name: "Invalid plugin provided: object without apply function",
 		config: {
 			entry: "foo.js",
-			plugins: [
-				{}
-			]
+			plugins: [{}]
 		},
 		message: [
 			" - configuration.plugins[0] should be one of these:",
