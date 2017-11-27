@@ -19,6 +19,7 @@ module.exports = function(yargs, argv, convertOptions) {
 	if(argv.p) {
 		argv["optimize-minimize"] = true;
 		argv["define"] = [].concat(argv["define"] || []).concat("process.env.NODE_ENV=\"production\"");
+		argv["concatenate-modules"] = true;
 	}
 
 	var configFileLoaded = false;
@@ -463,6 +464,12 @@ module.exports = function(yargs, argv, convertOptions) {
 			options.plugins.push(new LoaderOptionsPlugin({
 				minimize: true
 			}));
+		});
+
+		ifBooleanArg("concatenate-modules", function() {
+			ensureArray(options, "plugins");
+			var ModuleConcatenationPlugin = require("../lib/optimize/ModuleConcatenationPlugin");
+			options.plugins.push(new ModuleConcatenationPlugin());
 		});
 
 		ifArg("prefetch", function(request) {

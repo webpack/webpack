@@ -38,11 +38,12 @@ module.exports = function(optimist) {
 		.describe("optimize-max-chunks", "Try to keep the chunk count below a limit")
 		.describe("optimize-min-chunk-size", "Try to keep the chunk size above a limit")
 		.boolean("optimize-minimize").describe("optimize-minimize", "Minimize javascript and switches loaders to minimizing")
+		.boolean("concatenate-modules").describe("concatenate-modules", "Concatenate ES modules to remove module wrappers where possible")
 		.string("prefetch").describe("prefetch", "Prefetch this request")
 		.string("provide").describe("provide", "Provide these modules as free vars in all modules")
 		.string("plugin").describe("plugin", "Load this plugin")
 		.boolean("bail").describe("bail", "Abort the compilation on first error")
 		.boolean("profile").describe("profile", "Profile the compilation and include information in stats")
 		.boolean("d").describe("d", "shortcut for --debug --devtool eval-check-module-source-map --output-pathinfo")
-		.boolean("p").describe("p", "shortcut for --optimize-minimize --define process.env.NODE_ENV=\"production\"");
+		.boolean("p").describe("p", "shortcut for --optimize-minimize --define process.env.NODE_ENV=\"production\" --concatenate-modules");
 };
