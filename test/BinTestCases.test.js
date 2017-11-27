@@ -8,12 +8,12 @@ const child_process = require("child_process");
 
 function spawn(args, options) {
 	if(process.env.running_under_istanbul) {
-		args = [require.resolve("istanbul/lib/cli.js"), "cover", "--report", "none", "--print", "none", "--include-pid", "--dir", path.resolve("coverage"), "--", require.resolve("./helpers/exec-in-directory.js"), options.cwd].concat(args);
+		args = ["--no-deprecation", require.resolve("istanbul/lib/cli.js"), "cover", "--report", "none", "--print", "none", "--include-pid", "--dir", path.resolve("coverage"), "--", require.resolve("./helpers/exec-in-directory.js"), options.cwd].concat(args);
 		options = Object.assign({}, options, {
 			cwd: undefined
 		});
 	}
-	return child_process.spawn(process.execPath, args, options);
+	return child_process.spawn(process.execPath, ["--no-deprecation"].concat(args), options);
 }
 
 function loadOptsFile(optsPath) {
