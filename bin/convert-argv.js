@@ -94,7 +94,9 @@ module.exports = function(yargs, argv, convertOptions) {
 		};
 
 		var requireConfig = function requireConfig(configPath) {
-			var options = require(configPath);
+			var options = (function WEBPACK_OPTIONS() {
+				return require(configPath);
+			})();
 			options = prepareOptions(options, argv);
 			return options;
 		};

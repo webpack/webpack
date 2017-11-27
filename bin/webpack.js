@@ -6,7 +6,7 @@
 */
 var path = require("path");
 
-var errorHelpers = require("../lib/ErrorHelpers");
+var ErrorHelpers = require("../lib/ErrorHelpers");
 
 // Local version replace global one
 try {
@@ -152,6 +152,7 @@ yargs.options({
 // This causes large help outputs to be cut short (https://github.com/nodejs/node/wiki/API-changes-between-v0.10-and-v4#process).
 // To prevent this we use the yargs.parse API and exit the process normally
 yargs.parse(process.argv.slice(2), (err, argv, output) => {
+	Error.stackTraceLimit = 30;
 
 	// arguments validation failed
 	if(err && output) {
@@ -171,18 +172,22 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 	}
 
 	try {
-		Error.stackTraceLimit = 30;
 		var options = require("./convert-argv")(yargs, argv);
 	} catch(err) {
-		var stack = errorHelpers.cutOffAfterFlag(err.stack, "webpack.config");
-		var message = err.message + "\n" + errorHelpers.cutOffMultilineMessage(stack, err.message);
+		if(err.name !== "ValidationError") {
+			throw err;
+		}
 
-		if(argv.color)
+		var stack = ErrorHelpers.cleanUpWebpackOptions(err.stack, err.message);
+		var message = err.message + "\n" + stack;
+
+		if(argv.color) {
 			console.error(
 				`\u001b[1m\u001b[31m${message}\u001b[39m\u001b[22m`
 			);
-		else
+		} else {
 			console.error(message);
+		}
 
 		process.exitCode = 1;
 		return;
@@ -346,7 +351,6 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 
 		var webpack = require("../lib/webpack.js");
 
-		Error.stackTraceLimit = 30;
 		var lastHash = null;
 		var compiler;
 		try {
