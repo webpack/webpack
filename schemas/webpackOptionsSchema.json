@@ -1,6 +1,34 @@
 {
   "additionalProperties": false,
   "definitions": {
+    "common.pluginFunction": {
+      "description": "Function acting as plugin",
+      "instanceof": "Function",
+      "properties": {
+        "apply": {
+          "description": "The run point of the plugin, required method.",
+          "instanceof": "Function"
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "apply"
+      ]
+    },
+    "common.pluginObject": {
+      "description": "Plugin instance",
+      "type": "object",
+      "properties": {
+        "apply": {
+          "description": "The run point of the plugin, required method.",
+          "instanceof": "Function"
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "apply"
+      ]
+    },
     "common.arrayOfStringOrStringArrayValues": {
       "items": {
         "description": "string or array of strings",
@@ -613,7 +641,18 @@
         },
         "plugins": {
           "description": "Plugins for the resolver",
-          "type": "array"
+          "type": "array",
+          "items": {
+            "description": "Plugin of type object or instanceof Function",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/common.pluginObject"
+              },
+              {
+                "$ref": "#/definitions/common.pluginFunction"
+              }
+            ]
+          }
         },
         "resolver": {
           "description": "Custom resolver"
@@ -1286,7 +1325,18 @@
     },
     "plugins": {
       "description": "Add additional plugins to the compiler.",
-      "type": "array"
+      "type": "array",
+      "items": {
+        "description": "Plugin of type object or instanceof Function",
+        "anyOf": [
+          {
+            "$ref": "#/definitions/common.pluginObject"
+          },
+          {
+            "$ref": "#/definitions/common.pluginFunction"
+          }
+        ]
+      }
     },
     "profile": {
       "description": "Capture timing information for each module.",
