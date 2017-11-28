@@ -1,6 +1,7 @@
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 
 module.exports = {
+	mode: "production",
 	plugins: [
 		new CommonsChunkPlugin({
 			// process all children of the main chunk

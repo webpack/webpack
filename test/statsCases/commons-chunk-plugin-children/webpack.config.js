@@ -2,6 +2,7 @@
 
 const webpack = require("../../../");
 const basic = {
+	mode: "production",
 	entry: {
 		main: "./index"
 	},

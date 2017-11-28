@@ -1,6 +1,34 @@
 {
   "additionalProperties": false,
   "definitions": {
+    "common.pluginFunction": {
+      "description": "Function acting as plugin",
+      "instanceof": "Function",
+      "properties": {
+        "apply": {
+          "description": "The run point of the plugin, required method.",
+          "instanceof": "Function"
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "apply"
+      ]
+    },
+    "common.pluginObject": {
+      "description": "Plugin instance",
+      "type": "object",
+      "properties": {
+        "apply": {
+          "description": "The run point of the plugin, required method.",
+          "instanceof": "Function"
+        }
+      },
+      "additionalProperties": true,
+      "required": [
+        "apply"
+      ]
+    },
     "common.arrayOfStringOrStringArrayValues": {
       "items": {
         "description": "string or array of strings",
@@ -154,14 +182,6 @@
           "description": "Set the default request for full dynamic dependencies",
           "type": "string"
         },
-        "loaders": {
-          "description": "An array of automatically applied loaders.",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ruleSet-rules"
-            }
-          ]
-        },
         "noParse": {
           "description": "Don't parse files matching. It's matched against the full resolved request.",
           "anyOf": [
@@ -201,6 +221,14 @@
             }
           ],
           "description": "An array of rules applied for modules."
+        },
+        "defaultRules": {
+          "description": "An array of rules applied by default for modules.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ruleSet-rules"
+            }
+          ]
         },
         "unknownContextCritical": {
           "description": "Enable warnings when using the require function in a not statically analyse-able way",
@@ -299,6 +327,11 @@
           "type": "string",
           "absolutePath": false
         },
+        "webassemblyModuleFilename": {
+          "description": "The filename of WebAssembly modules as relative path inside the `output.path` directory.",
+          "type": "string",
+          "absolutePath": false
+        },
         "crossOriginLoading": {
           "description": "This option enables cross-origin loading of chunks.",
           "enum": [
@@ -346,6 +379,10 @@
             }
           ]
         },
+        "devtoolNamespace": {
+          "description": "Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.",
+          "type": "string"
+        },
         "filename": {
           "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
           "type": "string",
@@ -390,6 +427,10 @@
         },
         "jsonpFunction": {
           "description": "The JSONP function used by webpack for async loading of chunks.",
+          "type": "string"
+        },
+        "chunkCallbackName": {
+          "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
           "type": "string"
         },
         "library": {
@@ -600,7 +641,18 @@
         },
         "plugins": {
           "description": "Plugins for the resolver",
-          "type": "array"
+          "type": "array",
+          "items": {
+            "description": "Plugin of type object or instanceof Function",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/common.pluginObject"
+              },
+              {
+                "$ref": "#/definitions/common.pluginFunction"
+              }
+            ]
+          }
         },
         "resolver": {
           "description": "Custom resolver"
@@ -807,12 +859,31 @@
           "additionalProperties": true,
           "type": "object"
         },
+        "resolve": {
+          "description": "Options for the resolver",
+          "type": "object",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/resolve"
+            }
+          ]
+        },
         "query": {
           "description": "Shortcut for use.query",
           "anyOf": [
             {
               "$ref": "#/definitions/ruleSet-query"
             }
+          ]
+        },
+        "type": {
+          "description": "Module type to use for the module",
+          "enum": [
+            "javascript/auto",
+            "javascript/dynamic",
+            "javascript/esm",
+            "json",
+            "webassembly/experimental"
           ]
         },
         "resource": {
@@ -977,6 +1048,14 @@
     }
   },
   "properties": {
+    "mode": {
+      "description": "Set the value of `require.amd` and `define.amd`.",
+      "enum": [
+        "development",
+        "production",
+        "none"
+      ]
+    },
     "amd": {
       "description": "Set the value of `require.amd` and `define.amd`."
     },
@@ -1135,6 +1214,74 @@
         }
       ]
     },
+    "optimization": {
+      "description": "Enables/Disables integrated optimizations",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "removeAvailableModules": {
+          "description": "Removes modules from chunks when these modules are already included in all parents",
+          "type": "boolean"
+        },
+        "removeEmptyChunks": {
+          "description": "Remove chunks which are empty",
+          "type": "boolean"
+        },
+        "mergedDuplicateChunks": {
+          "description": "Merge chunks which contain the same modules",
+          "type": "boolean"
+        },
+        "flagIncludedChunks": {
+          "description": "Also flag chunks as loaded which contain a subset of the modules",
+          "type": "boolean"
+        },
+        "occurrenceOrder": {
+          "description": "Figure out a order of modules which results in the smallest initial bundle",
+          "type": "boolean"
+        },
+        "sideEffects": {
+          "description": "Skip over modules which are flagged to contain no side effects when exports are not used",
+          "type": "boolean"
+        },
+        "providedExports": {
+          "description": "Figure out which exports are provided by modules to generate more efficient code",
+          "type": "boolean"
+        },
+        "usedExports": {
+          "description": "Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code",
+          "type": "boolean"
+        },
+        "concatenateModules": {
+          "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer",
+          "type": "boolean"
+        },
+        "noEmitOnErrors": {
+          "description": "Avoid emitting assets when errors occur",
+          "type": "boolean"
+        },
+        "namedModules": {
+          "description": "Use readable module identifiers for better debugging",
+          "type": "boolean"
+        },
+        "namedChunks": {
+          "description": "Use readable chunk identifiers for better debugging",
+          "type": "boolean"
+        },
+        "nodeEnv": {
+          "description": "Set process.env.NODE_ENV to a specific value",
+          "anyOf": [
+            {
+              "enum": [
+                false
+              ]
+            },
+            {
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
     "parallelism": {
       "description": "The number of parallel processed modules in the compilation.",
       "minimum": 1,
@@ -1178,7 +1325,18 @@
     },
     "plugins": {
       "description": "Add additional plugins to the compiler.",
-      "type": "array"
+      "type": "array",
+      "items": {
+        "description": "Plugin of type object or instanceof Function",
+        "anyOf": [
+          {
+            "$ref": "#/definitions/common.pluginObject"
+          },
+          {
+            "$ref": "#/definitions/common.pluginFunction"
+          }
+        ]
+      }
     },
     "profile": {
       "description": "Capture timing information for each module.",

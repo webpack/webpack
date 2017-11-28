@@ -12,7 +12,8 @@ const Compiler = require("../lib/Compiler");
 describe("Compiler", () => {
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
-		new WebpackOptionsDefaulter().process(options);
+		if(!options.mode) options.mode = "production";
+		options = new WebpackOptionsDefaulter().process(options);
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");
 		if(noOutputPath) options.output.path = "/";
@@ -161,7 +162,7 @@ describe("Compiler", () => {
 			bundle.should.not.containEql("fixtures");
 			chunk.should.not.containEql("fixtures");
 			bundle.should.containEql("webpackJsonp");
-			chunk.should.containEql("webpackJsonp(");
+			chunk.should.containEql("window[\"webpackJsonp\"] || []).push");
 			done();
 		});
 	});
@@ -178,6 +179,14 @@ describe("Compiler", () => {
 			});
 		});
 		describe("parser", () => {
+			describe("plugin", () => {
+				it("invokes sets a 'compilation' plugin", (done) => {
+					compiler.plugin = sinon.spy();
+					compiler.parser.plugin();
+					compiler.plugin.callCount.should.be.exactly(1);
+					done();
+				});
+			});
 			describe("apply", () => {
 				it("invokes sets a 'compilation' plugin", (done) => {
 					compiler.plugin = sinon.spy();

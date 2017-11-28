@@ -47,7 +47,7 @@ function findTestsRecursive(readPath) {
 		.map(entry => path.join(readPath, entry))
 		.filter(entry => fs.statSync(entry).isDirectory());
 
-	const result = isAnyTests ? [readPath] : []
+	const result = isAnyTests ? [readPath] : [];
 
 	return result.concat(folders.map(findTestsRecursive).reduce((acc, list) => acc.concat(list), []));
 }

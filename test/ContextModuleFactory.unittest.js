@@ -20,7 +20,11 @@ describe("ContextModuleFactory", function() {
 				err.code = "ENOENT";
 				setTimeout(() => callback(err, null));
 			};
-			factory.resolveDependencies(memfs, "/", true, /.*/, (err, res) => {
+			factory.resolveDependencies(memfs, {
+				resource: "/",
+				recursive: true,
+				regExp: /.*/
+			}, (err, res) => {
 				(!!err).should.be.false();
 				res.should.be.an.Array();
 				res.length.should.be.exactly(0);
@@ -36,7 +40,11 @@ describe("ContextModuleFactory", function() {
 				err.code = "EACCES";
 				setTimeout(() => callback(err, null));
 			};
-			factory.resolveDependencies(memfs, "/", true, /.*/, (err, res) => {
+			factory.resolveDependencies(memfs, {
+				resource: "/",
+				recursive: true,
+				regExp: /.*/
+			}, (err, res) => {
 				err.should.be.an.Error();
 				(!!res).should.be.false();
 				done();

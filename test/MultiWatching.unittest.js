@@ -1,7 +1,7 @@
 "use strict";
 
 const Tapable = require("tapable");
-const should = require("should");
+require("should");
 const sinon = require("sinon");
 const MultiWatching = require("../lib/MultiWatching");
 

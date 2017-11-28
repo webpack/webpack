@@ -13,6 +13,7 @@ module.exports = [
 	"nosources-source-map",
 	"source-map",
 ].map(devtool => ({
+	mode: "development",
 	entry: {
 		bundle: "coffee-loader!./example.coffee",
 	},

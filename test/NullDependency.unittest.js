@@ -1,6 +1,6 @@
 "use strict";
 
-const should = require("should");
+require("should");
 const sinon = require("sinon");
 const NullDependency = require("../lib/dependencies/NullDependency");
 
@@ -15,8 +15,6 @@ describe("NullDependency", () => {
 		beforeEach(() => env.nullDependency = new NullDependency());
 
 		it("has a null type", () => env.nullDependency.type.should.be.exactly("null"));
-
-		it("is not an equal resource", () => env.nullDependency.isEqualResource().should.be.False());
 
 		it("has update hash function", () => env.nullDependency.updateHash.should.be.Function());
 

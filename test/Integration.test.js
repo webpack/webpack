@@ -1,6 +1,6 @@
 "use strict";
 
-const should = require("should");
+require("should");
 const path = require("path");
 
 const webpack = require("../lib/webpack");
@@ -9,6 +9,7 @@ describe("Integration", function() {
 	this.timeout(5000);
 	it("should compile library1", (done) => {
 		webpack({
+			mode: "production",
 			entry: "library1",
 			bail: true,
 			context: path.join(__dirname, "browsertest"),
@@ -27,6 +28,7 @@ describe("Integration", function() {
 	});
 	it("should compile library2", (done) => {
 		webpack({
+			mode: "production",
 			entry: "library2",
 			context: path.join(__dirname, "browsertest"),
 			output: {
