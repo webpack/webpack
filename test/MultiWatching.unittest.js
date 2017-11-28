@@ -1,6 +1,7 @@
 "use strict";
 
-const Tapable = require("tapable-old");
+const Tapable = require("tapable").Tapable;
+const SyncHook = require("tapable").SyncHook;
 require("should");
 const sinon = require("sinon");
 const MultiWatching = require("../lib/MultiWatching");
@@ -14,9 +15,11 @@ const createWatching = function() {
 
 const createCompiler = () => {
 	const compiler = {
-		_plugins: {}
+		hooks: {
+			watchClose: new SyncHook([])
+		}
 	};
-	Tapable.mixin(compiler);
+	Tapable.addCompatLayer(compiler);
 	return compiler;
 };
 
