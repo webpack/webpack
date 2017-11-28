@@ -277,8 +277,8 @@ describe("MultiCompiler", () => {
 			});
 
 			it("returns a multi-watching object", () => {
-				const result = JSON.stringify(env.result);
-				result.should.be.exactly("{\"watchings\":[\"compiler1\",\"compiler2\"],\"compiler\":{\"_plugins\":{},\"compilers\":[{\"name\":\"compiler1\"},{\"name\":\"compiler2\"}]}}");
+				const result = env.result;
+				result.constructor.name.should.be.exactly("MultiWatching");
 			});
 
 			it("calls watch on each compiler with original options", () => {
