@@ -117,6 +117,10 @@
         }
       ]
     },
+    "namespace": {
+      "description": "Namespace prefix to allow multiple webpack roots in the devtools",
+      "type": "string"
+    },
     "module": {
       "description": "Indicates whether SourceMaps from loaders should be used (defaults to true)",
       "type": "boolean"
