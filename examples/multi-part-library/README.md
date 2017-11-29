@@ -43,7 +43,7 @@ module.exports = {
 		exports["alpha"] = factory();
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["alpha"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 ```
 <details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -152,7 +152,7 @@ module.exports = "alpha";
 		exports["beta"] = factory();
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["beta"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -249,8 +249,8 @@ module.exports = "beta";
 Hash: 17fa97a0dfa6b745377a
 Version: webpack next
              Asset      Size  Chunks             Chunk Names
- MyLibrary.beta.js  3.24 KiB       0  [emitted]  beta
-MyLibrary.alpha.js  3.24 KiB       1  [emitted]  alpha
+ MyLibrary.beta.js  3.28 KiB       0  [emitted]  beta
+MyLibrary.alpha.js  3.27 KiB       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
@@ -269,8 +269,8 @@ chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
 Hash: 17fa97a0dfa6b745377a
 Version: webpack next
              Asset       Size  Chunks             Chunk Names
- MyLibrary.beta.js  825 bytes       0  [emitted]  beta
-MyLibrary.alpha.js  827 bytes       1  [emitted]  alpha
+ MyLibrary.beta.js  855 bytes       0  [emitted]  beta
+MyLibrary.alpha.js  857 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
