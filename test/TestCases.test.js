@@ -204,6 +204,10 @@ describe("TestCases", () => {
 									const test = new Test(title, fn);
 									suite.addTest(test);
 									exportedTest++;
+									// WORKAROUND for a v8 bug
+									// Error objects retrain all scopes in the stacktrace
+									test._trace = test._trace.message;
+
 									return test;
 								}
 
