@@ -163,7 +163,8 @@ describe("TestCases", () => {
 									modules: ["web_modules", "node_modules"],
 									mainFields: ["webpack", "browser", "web", "browserify", ["jam", "main"], "main"],
 									aliasFields: ["browser"],
-									extensions: [".mjs", ".webpack.js", ".web.js", ".js", ".json"]
+									extensions: [".mjs", ".webpack.js", ".web.js", ".js", ".json"],
+									concord: true
 								},
 								resolveLoader: {
 									modules: ["web_loaders", "web_modules", "node_loaders", "node_modules"],

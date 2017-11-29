@@ -661,6 +661,10 @@
           "description": "Enable resolving symlinks to the original location",
           "type": "boolean"
         },
+        "concord": {
+          "description": "Enable condord resolving extras",
+          "type": "boolean"
+        },
         "unsafeCache": {
           "description": "Enable caching of successfully resolved requests",
           "anyOf": [
