@@ -16,7 +16,7 @@ describe("UmdMainTemplatePlugin", () => {
 		});
 		const templatePlugin = new TemplatePluginEnvironment();
 		const environment = templatePlugin.getEnvironmentStub();
-		environment.mainTemplate.applyPluginsWaterfall = () => [];
+		environment.mainTemplate.getAssetPath = () => [];
 		plugin.apply(environment);
 		return templatePlugin;
 	};

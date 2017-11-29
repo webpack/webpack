@@ -20,7 +20,7 @@
     "schema-utils": "^0.4.2",
     "source-map": "^0.5.3",
     "supports-color": "^4.2.1",
-    "tapable": "^0.2.8",
+    "tapable": "1.0.0-beta.3",
     "uglifyjs-webpack-plugin": "^0.4.6",
     "watchpack": "^1.4.0",
     "webpack-sources": "^1.0.1",
