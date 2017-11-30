@@ -1100,9 +1100,9 @@ encoding@^0.1.11:
   dependencies:
     iconv-lite "~0.4.13"
 
-enhanced-resolve@4.0.0-beta.1:
-  version "4.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-4.0.0-beta.1.tgz#f8257df604491e83eed7a3d20568fcd4c849c251"
+enhanced-resolve@4.0.0-beta.2:
+  version "4.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-4.0.0-beta.2.tgz#a13a9da2340712c4f3dacf27e26717e2eae69c24"
   dependencies:
     graceful-fs "^4.1.2"
     memory-fs "^0.4.0"
