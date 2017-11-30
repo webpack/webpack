@@ -106,8 +106,8 @@
 ## Scope Hoisting
 [scope-hoisting](scope-hoisting)
 
-## Pure Module
-[pure-module](pure-module)
+## Side Effects
+[side-effects](side-effects)
 
 ## Source Map
 [source-map](source-map)
