@@ -1271,6 +1271,10 @@
           "description": "Use readable chunk identifiers for better debugging",
           "type": "boolean"
         },
+        "portableRecords": {
+          "description": "Generate records with relative paths to be able to move the context folder",
+          "type": "boolean"
+        },
         "nodeEnv": {
           "description": "Set process.env.NODE_ENV to a specific value",
           "anyOf": [
