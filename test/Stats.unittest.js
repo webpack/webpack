@@ -11,14 +11,20 @@ describe("Stats", () => {
 			it("hasErrors", () => {
 				const mockStats = new Stats({
 					errors: ["firstError"],
-					hash: "1234"
+					hash: "1234",
+					compiler: {
+						context: ""
+					}
 				});
 				mockStats.hasErrors().should.be.ok();
 			});
 			it("hasWarnings", () => {
 				const mockStats = new Stats({
 					warnings: ["firstError"],
-					hash: "1234"
+					hash: "1234",
+					compiler: {
+						context: ""
+					}
 				});
 				mockStats.hasWarnings().should.be.ok();
 			});
@@ -27,14 +33,20 @@ describe("Stats", () => {
 			it("hasErrors", () => {
 				const mockStats = new Stats({
 					errors: [],
-					hash: "1234"
+					hash: "1234",
+					compiler: {
+						context: ""
+					}
 				});
 				mockStats.hasErrors().should.not.be.ok();
 			});
 			it("hasWarnings", () => {
 				const mockStats = new Stats({
 					warnings: [],
-					hash: "1234"
+					hash: "1234",
+					compiler: {
+						context: ""
+					}
 				});
 				mockStats.hasWarnings().should.not.be.ok();
 			});
@@ -51,6 +63,9 @@ describe("Stats", () => {
 				hash: "1234",
 				mainTemplate: {
 					getPublicPath: () => "path"
+				},
+				compiler: {
+					context: ""
 				}
 			});
 			const obj = mockStats.toJson();
