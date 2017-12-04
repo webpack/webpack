@@ -266,7 +266,7 @@ export function fibonacciJavascript(i) {
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, /*! ./add.wasm */1)).then(addModule => {
+__webpack_require__.e/* import() */(1).then(function() { var m = __webpack_require__(/*! ./add.wasm */1); return m && typeof m === "object" && m.__esModule ? m : /* fake namespace object */ { "default": m }; }).then(addModule => {
 	console.log(addModule.add(22, 2200));
 	__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! ./math */2)).then(math => {
 		console.log(math.add(10, 101));
@@ -442,7 +442,7 @@ Version: webpack next
 3d28950d91bc7246f5af.wasm   62 bytes     0, 1  [emitted]  
 1d2268b99656e9575a63.wasm   67 bytes     0, 1  [emitted]  
               1.output.js  557 bytes        1  [emitted]  
-                output.js   8.95 KiB        2  [emitted]  main
+                output.js   9.06 KiB        2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js, 80925f35a6f1cf550d38.wasm, 3d28950d91bc7246f5af.wasm, 1d2268b99656e9575a63.wasm 585 bytes {2} [rendered]
     > [0] ./example.js 3:1-17
@@ -509,5 +509,5 @@ chunk    {2} output.js (main) 788 bytes [entry] [rendered]
         single entry .\example.js  main
 
 ERROR in output.js from UglifyJs
-Unexpected token: operator (>) [output.js:198,95]
+Unexpected token: operator (>) [output.js:198,210]
 ```

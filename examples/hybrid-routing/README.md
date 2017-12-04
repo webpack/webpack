@@ -329,7 +329,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 	//  -> Pages are only loaded on demand
 
 	// This line may throw a exception on runtime if the page wasn't found.
-	var pageBundle = __webpack_require__( 6)("./" + name + "Page");
+	var pageBundle = __webpack_require__(/*! bundle-loader!. */ 6)("./" + name + "Page");
 
 	// Wait until the chunk is loaded
 	pageBundle(function(page) {
@@ -352,15 +352,19 @@ var map = {
 	"./aPage": 7,
 	"./bPage": 8
 };
+
+
 function webpackContext(req) {
-	return __webpack_require__(webpackContextResolve(req));
-};
+	var id = webpackContextResolve(req);
+	var module = __webpack_require__(id);
+	return module;
+}
 function webpackContextResolve(req) {
 	var id = map[req];
 	if(!(id + 1)) // check for number or string
 		throw new Error("Cannot find module '" + req + "'.");
 	return id;
-};
+}
 webpackContext.keys = function webpackContextKeys() {
 	return Object.keys(map);
 };
@@ -493,7 +497,7 @@ Version: webpack next
      1.chunk.js  394 bytes       1  [emitted]  
 pageB.bundle.js  828 bytes    2, 0  [emitted]  pageB
 pageA.bundle.js  819 bytes    3, 1  [emitted]  pageA
-     commons.js   11.1 KiB       4  [emitted]  commons
+     commons.js   11.2 KiB       4  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 Entrypoint commons = commons.js
@@ -547,7 +551,7 @@ Version: webpack next
      1.chunk.js  122 bytes       1  [emitted]  
 pageB.bundle.js  164 bytes    2, 0  [emitted]  pageB
 pageA.bundle.js  163 bytes    3, 1  [emitted]  pageA
-     commons.js   2.46 KiB       4  [emitted]  commons
+     commons.js   2.47 KiB       4  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 Entrypoint commons = commons.js

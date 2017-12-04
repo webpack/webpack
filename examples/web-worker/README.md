@@ -248,7 +248,7 @@ module.exports = function() {
 
 onmessage = function(event) {
 	var template = event.data;
-	__webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__( 1)("./" + event.data)]; ((function(tmpl) {
+	__webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ../require.context/templates */ 1)("./" + event.data)]; ((function(tmpl) {
 		postMessage(tmpl());
 	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 }
@@ -280,15 +280,19 @@ var map = {
 	"./c": 4,
 	"./c.js": 4
 };
+
+
 function webpackContext(req) {
-	return __webpack_require__(webpackContextResolve(req));
-};
+	var id = webpackContextResolve(req);
+	var module = __webpack_require__(id);
+	return module;
+}
 function webpackContextResolve(req) {
 	var id = map[req];
 	if(!(id + 1)) // check for number or string
 		throw new Error("Cannot find module '" + req + "'.");
 	return id;
-};
+}
 webpackContext.keys = function webpackContextKeys() {
 	return Object.keys(map);
 };
@@ -350,8 +354,8 @@ module.exports = function() {
 Hash: ea02849f7950e1efeb6f
 Version: webpack next
            Asset      Size  Chunks             Chunk Names
-0.hash.worker.js  2.11 KiB          [emitted]  
-  hash.worker.js   4.1 KiB          [emitted]  
+0.hash.worker.js  2.14 KiB          [emitted]  
+  hash.worker.js  4.13 KiB          [emitted]  
        output.js  3.52 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 311 bytes [entry] [rendered]
@@ -362,8 +366,8 @@ chunk    {0} output.js (main) 311 bytes [entry] [rendered]
         cjs require worker-loader!./worker [0] ./example.js 1:13-46
 Child worker:
                Asset      Size  Chunks             Chunk Names
-    0.hash.worker.js  2.11 KiB       0  [emitted]  
-      hash.worker.js   4.1 KiB       1  [emitted]  main
+    0.hash.worker.js  2.14 KiB       0  [emitted]  
+      hash.worker.js  4.13 KiB       1  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
         > [0] ./worker.js 3:1-5:3
@@ -390,7 +394,7 @@ Child worker:
 Hash: ea02849f7950e1efeb6f
 Version: webpack next
            Asset       Size  Chunks             Chunk Names
-0.hash.worker.js  549 bytes          [emitted]  
+0.hash.worker.js  557 bytes          [emitted]  
   hash.worker.js  915 bytes          [emitted]  
        output.js  698 bytes       0  [emitted]  main
 Entrypoint main = output.js
@@ -402,7 +406,7 @@ chunk    {0} output.js (main) 311 bytes [entry] [rendered]
         cjs require worker-loader!./worker [0] ./example.js 1:13-46
 Child worker:
                Asset       Size  Chunks             Chunk Names
-    0.hash.worker.js  549 bytes       0  [emitted]  
+    0.hash.worker.js  557 bytes       0  [emitted]  
       hash.worker.js  915 bytes       1  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
