@@ -1,7 +1,7 @@
-Hash: 2500e9cab76400ff4f51
+Hash: 96b4fcc6d81c4d2d8435
 Time: Xms
     Asset      Size  Chunks             Chunk Names
-bundle.js  7.03 KiB       0  [emitted]  main
+bundle.js  7.26 KiB       0  [emitted]  main
    [0] ./a.js 13 bytes {0} [built]
        [exports: a]
        [only some exports used: a]
@@ -12,7 +12,7 @@ bundle.js  7.03 KiB       0  [emitted]  main
        [only some exports used: c]
    [3] ./unknown2.js 0 bytes {0} [built]
        [only some exports used: y]
-   [4] ./index.js 276 bytes {0} [built]
+   [4] ./index.js 315 bytes {0} [built]
        [no exports]
    [5] ./reexport-known.js 49 bytes {0} [built]
        [exports: a, b]
@@ -27,3 +27,6 @@ bundle.js  7.03 KiB       0  [emitted]  main
        [only some exports used: a, c]
    [9] ./edge.js 45 bytes {0} [built]
        [only some exports used: y]
+  [10] ./require.include.js 36 bytes {0} [built]
+       [exports: a, default]
+       [no exports used]
