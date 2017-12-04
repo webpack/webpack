@@ -1634,6 +1634,13 @@
           "description": "Delay the rebuilt after the first change. Value is a time in ms.",
           "type": "number"
         },
+        "ignored": {
+          "description": "Ignore some files from watching"
+        },
+        "stdin": {
+          "description": "Stop watching when stdin stream has ended",
+          "type": "boolean"
+        },
         "poll": {
           "description": "Enable polling mode for watching",
           "anyOf": [
