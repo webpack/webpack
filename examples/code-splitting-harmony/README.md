@@ -221,12 +221,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(a__WEBPACK_IMPORTED_MODULE_0__);
 
 
-__webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, /*! b */5)).then(function(b) {
+__webpack_require__.e/* import() */(2).then(function() { var m = __webpack_require__(/*! b */5); return m && typeof m === "object" && m.__esModule ? m : /* fake namespace object */ { "default": m }; }).then(function(b) {
 	console.log("b loaded", b);
 })
 
 function loadC(name) {
-	return __webpack_require__( 4)("./" + name);
+	return __webpack_require__(/*! c */ 4)("./" + name);
 }
 
 Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
@@ -247,9 +247,9 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 
 /***/ }),
 /* 4 */
-/*!**************************************!*\
-  !*** ./node_modules/c lazy ^\.\/.*$ ***!
-  \**************************************/
+/*!*******************************************************!*\
+  !*** ./node_modules/c lazy ^\.\/.*$ namespace object ***!
+  \*******************************************************/
 /*! no static exports found */
 /*! all exports used */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
@@ -276,11 +276,12 @@ var map = {
 function webpackAsyncContext(req) {
 	var ids = map[req];
 	if(!ids)
-		return Promise.reject(new Error("Cannot find module '" + req + "'."));
+		return Promise.resolve().then(function() { throw new Error("Cannot find module '" + req + "'."); });
 	return __webpack_require__.e(ids[1]).then(function() {
-		return __webpack_require__(ids[0]);
+		var module = __webpack_require__(ids[0]);
+		return typeof module !== "object" || !module.__esModule ? /* fake namespace object */ { "default": module } : module;;
 	});
-};
+}
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
 	return Object.keys(map);
 };
@@ -303,7 +304,7 @@ Version: webpack next
 0.output.js  379 bytes       0  [emitted]  
 1.output.js  370 bytes       1  [emitted]  
 2.output.js  365 bytes       2  [emitted]  
-  output.js   8.53 KiB       3  [emitted]  main
+  output.js   8.85 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
     1 module
@@ -317,7 +318,7 @@ chunk    {3} output.js (main) 427 bytes [entry] [rendered]
     [2] ./example.js 256 bytes {3} [built]
         [no exports]
         single entry .\example.js  main
-    [4] ./node_modules/c lazy ^\.\/.*$ 160 bytes {3} [built]
+    [4] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {3} [built]
         import() context lazy c [2] ./example.js 8:8-27
      + 1 hidden module
 ```
@@ -331,7 +332,7 @@ Version: webpack next
 0.output.js  77 bytes       0  [emitted]  
 1.output.js  76 bytes       1  [emitted]  
 2.output.js  78 bytes       2  [emitted]  
-  output.js  2.07 KiB       3  [emitted]  main
+  output.js  2.21 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
     1 module
@@ -345,7 +346,7 @@ chunk    {3} output.js (main) 427 bytes [entry] [rendered]
     [2] ./example.js 256 bytes {3} [built]
         [no exports]
         single entry .\example.js  main
-    [4] ./node_modules/c lazy ^\.\/.*$ 160 bytes {3} [built]
+    [4] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {3} [built]
         import() context lazy c [2] ./example.js 8:8-27
      + 1 hidden module
 ```

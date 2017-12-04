@@ -131,8 +131,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _vendor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./vendor */0);
 
 // some module
-__webpack_require__.e/* import() */(1).then(__webpack_require__.bind(null, /*! ./async1 */3));
-__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! ./async2 */4));
+__webpack_require__.e/* import() */(1).then(function() { var m = __webpack_require__(/*! ./async1 */3); return m && typeof m === "object" && m.__esModule ? m : /* fake namespace object */ { "default": m }; });
+__webpack_require__.e/* import() */(0).then(function() { var m = __webpack_require__(/*! ./async2 */4); return m && typeof m === "object" && m.__esModule ? m : /* fake namespace object */ { "default": m }; });
 
 
 /***/ })
@@ -150,7 +150,7 @@ Version: webpack next
 d384ba1bbf385fcafc99.js  359 bytes       0  [emitted]  
 13604ac9ffd7d870f88b.js  359 bytes       1  [emitted]  
     common.[chunkhash].js  975 bytes       2  [emitted]  common
-      main.[chunkhash].js  741 bytes       3  [emitted]  main
+      main.[chunkhash].js  971 bytes       3  [emitted]  main
   manifest.[chunkhash].js   7.14 KiB       4  [emitted]  manifest
 Entrypoint main = manifest.[chunkhash].js common.[chunkhash].js main.[chunkhash].js
 Entrypoint common = manifest.[chunkhash].js common.[chunkhash].js
@@ -187,7 +187,7 @@ Version: webpack next
 d384ba1bbf385fcafc99.js   78 bytes       0  [emitted]  
 13604ac9ffd7d870f88b.js   78 bytes       1  [emitted]  
     common.[chunkhash].js  154 bytes       2  [emitted]  common
-      main.[chunkhash].js  171 bytes       3  [emitted]  main
+      main.[chunkhash].js  301 bytes       3  [emitted]  main
   manifest.[chunkhash].js   1.81 KiB       4  [emitted]  manifest
 Entrypoint main = manifest.[chunkhash].js common.[chunkhash].js main.[chunkhash].js
 Entrypoint common = manifest.[chunkhash].js common.[chunkhash].js

@@ -71,7 +71,7 @@ describe("ConfigTestCases", () => {
 					webpack(options, (err, stats) => {
 						if(err) {
 							const fakeStats = {
-								errors: [err]
+								errors: [err.stack]
 							};
 							if(checkArrayExpectation(testDirectory, fakeStats, "error", "Error", done)) return;
 							// Wait for uncatched errors to occur

@@ -72,7 +72,7 @@ body {
 ## Uncompressed
 
 ```
-Hash: eb83e18f883b3782ac4e
+Hash: 07cd62e8204ce12e5e90
 Version: webpack next
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
@@ -112,7 +112,7 @@ Child extract-text-webpack-plugin ../../node_modules/extract-text-webpack-plugin
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 3d67c808fc684d446a10
+Hash: 875c8c7227c51a7a972d
 Version: webpack next
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  

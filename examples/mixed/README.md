@@ -246,7 +246,7 @@ require(
 module.exports = 123;
 
 // but you can use amd style requires
-new Promise(function(resolve) { resolve(); }).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./amd */ 1), __webpack_require__(/*! ./harmony */ 2)]; ((function(amd1, harmony) {
+Promise.resolve().then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./amd */ 1), __webpack_require__(/*! ./harmony */ 2)]; ((function(amd1, harmony) {
 		var amd2 = __webpack_require__(/*! ./amd */ 1);
 		var harmony2 = __webpack_require__(/*! ./harmony */ 2);
 	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
@@ -312,7 +312,7 @@ var harmony1 = __webpack_require__(/*! ./harmony */ 2);
 // AMD-style requires (with all webpack features)
 __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [
 	__webpack_require__(/*! ./commonjs */ 0), __webpack_require__(/*! ./amd */ 1),
-	__webpack_require__( 4)("./"+amd1+".js"),
+	__webpack_require__(/*! ../require.context/templates */ 4)("./"+amd1+".js"),
 	Math.random() < 0.5 ? __webpack_require__(/*! ./commonjs */ 0) : __webpack_require__(/*! ./amd */ 1)]; ((function(commonjs2, amd2, template, randModule) {
 		// Do something with it...
 	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
@@ -344,15 +344,19 @@ var map = {
 	"./b.js": 6,
 	"./c.js": 7
 };
+
+
 function webpackContext(req) {
-	return __webpack_require__(webpackContextResolve(req));
-};
+	var id = webpackContextResolve(req);
+	var module = __webpack_require__(id);
+	return module;
+}
 function webpackContextResolve(req) {
 	var id = map[req];
 	if(!(id + 1)) // check for number or string
 		throw new Error("Cannot find module '" + req + "'.");
 	return id;
-};
+}
 webpackContext.keys = function webpackContextKeys() {
 	return Object.keys(map);
 };
@@ -414,7 +418,7 @@ module.exports = function() {
 Hash: c5e217711d33e344c3e3
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
-0.output.js  2.16 KiB       0  [emitted]  
+0.output.js  2.19 KiB       0  [emitted]  
   output.js  10.3 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 439 bytes {1} [rendered]
@@ -460,8 +464,8 @@ chunk    {1} output.js (main) 1.03 KiB [entry] [rendered]
 Hash: c5e217711d33e344c3e3
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  563 bytes       0  [emitted]  
-  output.js   2.05 KiB       1  [emitted]  main
+0.output.js  571 bytes       0  [emitted]  
+  output.js   2.03 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 439 bytes {1} [rendered]
     > [3] ./example.js 7:0-14:1
