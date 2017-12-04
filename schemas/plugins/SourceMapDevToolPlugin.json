@@ -137,6 +137,14 @@
       "description": "Provide a custom value for the 'sourceRoot' property in the SourceMap",
       "type": "string"
     },
+    "publicPath": {
+      "description": "Provide a custom public path for the SourceMapping comment",
+      "type": "string"
+    },
+    "fileContext": {
+      "description": "Path prefix to which the [file] placeholder is relative to",
+      "type": "string"
+    },
     "lineToLine": {
       "description": "(deprecated) try to map original files line to line to generated files",
       "anyOf": [
