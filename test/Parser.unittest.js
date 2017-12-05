@@ -191,6 +191,13 @@ describe("Parser", () => {
 				ijksub: ["test"]
 			}
 		],
+		"new Foo(...)": [
+			function() {
+				new xyz("membertest");
+			}, {
+				xyz: ["membertest"]
+			}
+		],
 	};
 
 	Object.keys(testCases).forEach((name) => {
@@ -235,6 +242,11 @@ describe("Parser", () => {
 			testParser.plugin("expression memberExpr", (expr) => {
 				if(!testParser.state.expressions) testParser.state.expressions = [];
 				testParser.state.expressions.push(expr.name);
+				return true;
+			});
+			testParser.plugin("new xyz", (expr) => {
+				if(!testParser.state.xyz) testParser.state.xyz = [];
+				testParser.state.xyz.push(testParser.parseString(expr.arguments[0]));
 				return true;
 			});
 			const actual = testParser.parse(source);
