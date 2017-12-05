@@ -193,7 +193,7 @@ describe("Parser", () => {
 		],
 		"new Foo(...)": [
 			function() {
-				 new xyz("membertest");
+				new xyz("membertest");
 			}, {
 				xyz: ["membertest"]
 			}
