@@ -1,7 +1,6 @@
-it("should replace a async context with a manual map", function(done) {
+it("should replace a async context with a manual map", function() {
 	var a = "a";
-	import(a).then(function(a) {
-		a.should.be.eql("b");
-		done();
+	return import(a).then(function(a) {
+		a.should.be.eql({ default: "b" });
 	});
 });

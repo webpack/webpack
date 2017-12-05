@@ -1,10 +1,11 @@
 "use strict";
 
-const should = require("should");
+require("should");
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
 const Test = require("mocha/lib/test");
+const mkdirp = require("mkdirp");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
 const Stats = require("../lib/Stats");
@@ -68,7 +69,7 @@ describe("WatchTestCases", () => {
 			const dest = path.join(__dirname, "js", "watch-src", category.name);
 			if(!fs.existsSync(dest))
 				fs.mkdirSync(dest);
-		})
+		});
 		describe(category.name, () => {
 			category.tests.forEach((testName) => {
 				describe(testName, () => {
@@ -92,6 +93,7 @@ describe("WatchTestCases", () => {
 						if(fs.existsSync(configPath))
 							options = require(configPath);
 						const applyConfig = (options) => {
+							if(!options.mode) options.mode = "development";
 							if(!options.context) options.context = tempDirectory;
 							if(!options.entry) options.entry = "./index.js";
 							if(!options.target) options.target = "async-node";
@@ -140,6 +142,7 @@ describe("WatchTestCases", () => {
 								if(err) return done(err);
 								const statOptions = Stats.presetToOptions("verbose");
 								statOptions.colors = false;
+								mkdirp.sync(outputDirectory);
 								fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
 								const jsonStats = stats.toJson({
 									errorDetails: true

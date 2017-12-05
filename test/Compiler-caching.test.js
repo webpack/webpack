@@ -12,9 +12,10 @@ describe("Compiler (caching)", function() {
 	this.timeout(15000);
 
 	function compile(entry, options, callback) {
-		new WebpackOptionsDefaulter().process(options);
+		options = new WebpackOptionsDefaulter().process(options);
+		options.cache = true;
 		options.entry = entry;
-		options.context = path.join(__dirname, "fixtures");
+		options.context = path.join(__dirname, "js");
 		options.output.path = "/";
 		options.output.filename = "bundle.js";
 		options.output.pathinfo = true;
@@ -95,7 +96,7 @@ describe("Compiler (caching)", function() {
 		};
 	}
 
-	const tempFixturePath = path.join(__dirname, "fixtures", "temp-cache-fixture");
+	const tempFixturePath = path.join(__dirname, "js", "temp-cache-fixture");
 	const aFilepath = path.join(tempFixturePath, "a.js");
 	const cFilepath = path.join(tempFixturePath, "c.js");
 
@@ -129,6 +130,12 @@ describe("Compiler (caching)", function() {
 			if(e.code !== "ENOENT") {
 				throw e;
 			}
+		}
+
+		try {
+			fs.mkdirSync(path.join(__dirname, "js"));
+		} catch(e) {
+			// ignore
 		}
 
 		// Copy over file since we"ll be modifying some of them

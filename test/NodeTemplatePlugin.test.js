@@ -1,7 +1,7 @@
 /* global describe, it */
 "use strict";
 
-const should = require("should");
+require("should");
 
 const path = require("path");
 const webpack = require("../lib/webpack");
@@ -10,6 +10,7 @@ describe("NodeTemplatePlugin", () => {
 
 	it("should compile and run a simple module", (done) => {
 		webpack({
+			mode: "production",
 			context: path.join(__dirname, "fixtures", "nodetest"),
 			target: "node",
 			output: {
@@ -27,6 +28,7 @@ describe("NodeTemplatePlugin", () => {
 			if(err) return err;
 			stats.hasErrors().should.be.not.ok();
 			stats.hasWarnings().should.be.not.ok();
+			// eslint-disable-next-line node/no-missing-require
 			const result = require("./js/result").abc;
 			result.nextTick.should.be.equal(process.nextTick);
 			result.fs.should.be.equal(require("fs"));
@@ -44,6 +46,7 @@ describe("NodeTemplatePlugin", () => {
 
 	it("should compile and run a simple module in single mode", (done) => {
 		webpack({
+			mode: "production",
 			context: path.join(__dirname, "fixtures", "nodetest"),
 			target: "node",
 			output: {
@@ -64,6 +67,7 @@ describe("NodeTemplatePlugin", () => {
 		}, (err, stats) => {
 			if(err) return err;
 			stats.hasErrors().should.be.not.ok();
+			// eslint-disable-next-line node/no-missing-require
 			const result = require("./js/result2");
 			result.nextTick.should.be.equal(process.nextTick);
 			result.fs.should.be.equal(require("fs"));

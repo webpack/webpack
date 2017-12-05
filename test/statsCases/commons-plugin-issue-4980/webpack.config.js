@@ -3,6 +3,7 @@ var NamedModulesPlugin = require("../../../lib/NamedModulesPlugin");
 
 // should generate vendor chunk with the same chunkhash for both entries
 module.exports = [{
+	mode: "production",
 	entry: {
 		app: "./entry-1.js"
 	},
@@ -18,6 +19,7 @@ module.exports = [{
 		})
 	]
 },{
+	mode: "production",
 	entry: {
 		app: "./entry-2.js"
 	},

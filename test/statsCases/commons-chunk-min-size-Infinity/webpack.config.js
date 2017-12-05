@@ -1,5 +1,6 @@
 var CommonsChunkPlugin = require("../../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
+	mode: "production",
 	entry: {
 		"entry-1": "./entry-1",
 		"vendor-1": ["./modules/a", "./modules/b", "./modules/c"],

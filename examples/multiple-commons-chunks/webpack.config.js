@@ -1,6 +1,7 @@
 var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
+	mode: "production",
 	entry: {
 		pageA: "./pageA",
 		pageB: "./pageB",

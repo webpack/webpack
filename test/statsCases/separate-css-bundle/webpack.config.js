@@ -2,7 +2,7 @@ var path = require("path");
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var moduleConfig = {
-	loaders: [
+	rules: [
 		{
 			test: /\.css$/,
 			use: ExtractTextPlugin.extract({
@@ -15,6 +15,7 @@ var moduleConfig = {
 
 module.exports = [
 	{
+		mode: "production",
 		context: path.join(__dirname, "a"),
 		entry: "./index",
 		output: {
@@ -26,6 +27,7 @@ module.exports = [
 		]
 	},
 	{
+		mode: "production",
 		context: path.join(__dirname, "b"),
 		entry: "./index",
 		output: {

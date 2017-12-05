@@ -44,6 +44,7 @@ describe("Errors", () => {
 	}
 	it("should throw an error if file doesn't exist", (done) => {
 		getErrors({
+			mode: "development",
 			entry: "./missingFile"
 		}, (errors, warnings) => {
 			errors.length.should.be.eql(2);
@@ -64,6 +65,7 @@ describe("Errors", () => {
 	});
 	it("should report require.extensions as unsupported", (done) => {
 		getErrors({
+			mode: "development",
 			entry: "./require.extensions"
 		}, (errors, warnings) => {
 			errors.length.should.be.eql(0);
@@ -76,6 +78,7 @@ describe("Errors", () => {
 	});
 	it("should warn about case-sensitive module names", (done) => {
 		getErrors({
+			mode: "development",
 			entry: "./case-sensitive"
 		}, (errors, warnings) => {
 			if(errors.length === 0) {
@@ -94,29 +97,24 @@ describe("Errors", () => {
 			done();
 		});
 	});
-	it("should warn about NoErrorsPlugin being deprecated in favor of NoEmitOnErrorsPlugin", (done) => {
+	it("should warn when not using mode", (done) => {
 		getErrors({
-			entry: "./no-errors-deprecate",
-			plugins: [
-				new webpack.NoErrorsPlugin()
-			]
+			entry: "./entry-point",
 		}, (errors, warnings) => {
+			errors.length.should.be.eql(0);
 			warnings.length.should.be.eql(1);
-			const lines = warnings[0].split("\n");
-			lines[0].should.match(/webpack/);
-			lines[0].should.match(/NoErrorsPlugin/);
-			lines[0].should.match(/deprecated/);
-			lines[1].should.match(/NoEmitOnErrorsPlugin/);
-			lines[1].should.match(/instead/);
+			let lines = warnings[0].split("\n");
+			lines[0].should.match(/configuration/);
+			lines[1].should.match(/mode/);
+			lines[1].should.match(/development/);
+			lines[1].should.match(/production/);
 			done();
 		});
 	});
 	it("should not warn if the NoEmitOnErrorsPlugin is used over the NoErrorsPlugin", (done) => {
 		getErrors({
-			entry: "./no-errors-deprecate",
-			plugins: [
-				new webpack.NoEmitOnErrorsPlugin()
-			]
+			mode: "production",
+			entry: "./no-errors-deprecate"
 		}, (errors, warnings) => {
 			errors.length.should.be.eql(0);
 			warnings.length.should.be.eql(0);
@@ -125,10 +123,8 @@ describe("Errors", () => {
 	});
 	it("should not not emit if NoEmitOnErrorsPlugin is used and there is an error", (done) => {
 		getErrors({
-			entry: "./missingFile",
-			plugins: [
-				new webpack.NoEmitOnErrorsPlugin()
-			]
+			mode: "production",
+			entry: "./missingFile"
 		}, (errors, warnings) => {
 			errors.length.should.be.eql(2);
 			warnings.length.should.be.eql(0);
@@ -148,6 +144,7 @@ describe("Errors", () => {
 	});
 	it("should throw an error when using incorrect CommonsChunkPlugin configuration", (done) => {
 		getErrors({
+			mode: "development",
 			entry: {
 				a: "./entry-point",
 				b: "./entry-point",
@@ -179,6 +176,7 @@ describe("Errors", () => {
 	});
 	it("should throw an error when trying to use [chunkhash] when it's invalid", (done) => {
 		getErrors({
+			mode: "development",
 			entry: {
 				a: "./entry-point",
 				b: "./entry-point",

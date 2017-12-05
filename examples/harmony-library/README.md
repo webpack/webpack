@@ -3,6 +3,7 @@
 ``` javascript
 var path = require("path");
 module.exports = {
+	mode: "production",
 	entry: "./example",
 	output: {
 		path: path.join(__dirname, "js"),
@@ -25,7 +26,7 @@ module.exports = {
 		exports["MyLibrary"] = factory();
 	else
 		root["MyLibrary"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 ```
 <details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -76,6 +77,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -107,12 +113,13 @@ return /******/ (function(modules) { // webpackBootstrap
   \********************/
 /*! exports provided: value, increment, default */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is an entry point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+__webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "value", function() { return value; });
-/* harmony export (immutable) */ __webpack_exports__["increment"] = increment;
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "increment", function() { return increment; });
 var value = 0;
 function increment() {
 	value++;
@@ -130,27 +137,29 @@ function increment() {
 ## Uncompressed
 
 ```
-Hash: 0b2bf5443af50d14e1e0
-Version: webpack 3.5.1
-           Asset     Size  Chunks             Chunk Names
-MyLibrary.umd.js  3.45 kB       0  [emitted]  main
+Hash: 3644f1adc4c521a71110
+Version: webpack next
+           Asset      Size  Chunks             Chunk Names
+MyLibrary.umd.js  3.66 KiB       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 97 bytes {0} [built]
         [exports: value, increment, default]
+        single entry ./example  main
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 0b2bf5443af50d14e1e0
-Version: webpack 3.5.1
+Hash: 3644f1adc4c521a71110
+Version: webpack next
            Asset       Size  Chunks             Chunk Names
-MyLibrary.umd.js  872 bytes       0  [emitted]  main
+MyLibrary.umd.js  952 bytes       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 97 bytes {0} [built]
         [exports: value, increment, default]
+        single entry ./example  main
 ```
