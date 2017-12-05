@@ -3,7 +3,7 @@ const IGNORES = ["<rootDir>/node_modules(/|$)", "<rootDir>/test/js(/|$)", "<root
 module.exports = {
   runner: "jest-runner-mocha",
   testEnvironment: "node",
-  testMatch: ["<rootDir>/test/*.test.js", "<rootDir>\\test\\*.unittest.js"],
+  testMatch: ["<rootDir>/test/*.test.js", "<rootDir>/test/*.unittest.js"],
   coveragePathIgnorePatterns: IGNORES.concat(["**/*.runtime.js"]),
   modulePathIgnorePatterns: IGNORES,
   watchPathIgnorePatterns: IGNORES,
