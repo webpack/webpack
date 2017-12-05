@@ -111,7 +111,7 @@
     "lint": "eslint lib bin hot buildin \"test/*.js\" \"test/**/webpack.config.js\" \"test/binCases/**/test.js\" \"examples/**/webpack.config.js\"",
     "fix": "npm run lint -- --fix",
     "beautify-lint": "beautify-lint \"lib/**/*.js\" \"hot/**/*.js\" \"bin/**/*.js\" \"benchmark/*.js\" \"test/*.js\"",
-    "schema-lint": "mocha test/*.lint.js --opts test/lint-mocha.opts",
+    "schema-lint": "npm run jest -- --testMatch \"<rootDir>/test/*.lint.js\" --silent",
     "nsp": "nsp check --output summary",
     "benchmark": "npm run jest --  --testMatch \\<rootDir\\>/test/*.benchmark.js",
     "cover": "npm run cover:init && npm run cover:all && npm run cover:report",
