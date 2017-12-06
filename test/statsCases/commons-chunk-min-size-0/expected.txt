@@ -1,4 +1,4 @@
-Hash: 6e3e301d55085d22e738
+Hash: 00a1e5057df2f775fb76
 Time: Xms
       Asset      Size  Chunks             Chunk Names
  entry-1.js  81 bytes       0  [emitted]  entry-1

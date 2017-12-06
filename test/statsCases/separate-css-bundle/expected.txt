@@ -1,9 +1,9 @@
-Hash: 9794bb2862e29c6cc880af8dc7fc5719d74d8932
+Hash: 2bead03ec2be56f57e2cf527918ae398de4766d7
 Child
-    Hash: 9794bb2862e29c6cc880
+    Hash: 2bead03ec2be56f57e2c
     Time: Xms
                                    Asset      Size  Chunks             Chunk Names
-                 e0d5c6f0db8879a302d5.js  2.74 KiB       0  [emitted]  main
+                 58840bf0b6b4228a57a9.js  2.74 KiB       0  [emitted]  main
     c815cf440254d4f3bba4e7041db00a28.css  26 bytes       0  [emitted]  main
        [0] ./a/index.js 23 bytes {0} [built]
        [1] ./a/file.css 41 bytes {0} [built]
@@ -15,10 +15,10 @@ Child
            [0] (webpack)/node_modules/css-loader!./a/file.css 199 bytes {0} [built]
            [1] (webpack)/node_modules/css-loader/lib/css-base.js 2.21 KiB {0} [built]
 Child
-    Hash: af8dc7fc5719d74d8932
+    Hash: f527918ae398de4766d7
     Time: Xms
                                    Asset      Size  Chunks             Chunk Names
-                 e0d5c6f0db8879a302d5.js  2.74 KiB       0  [emitted]  main
+                 58840bf0b6b4228a57a9.js  2.74 KiB       0  [emitted]  main
     a3f385680aef7a9bb2a517699532cc34.css  28 bytes       0  [emitted]  main
        [0] ./b/index.js 23 bytes {0} [built]
        [1] ./b/file.css 41 bytes {0} [built]

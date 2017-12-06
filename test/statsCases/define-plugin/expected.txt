@@ -1,12 +1,12 @@
-Hash: 591f65b34ea2fed28590a2524f672c23ebaef569
+Hash: 3cc0d6b1ff5f64f9667a5b4570daab591bb1c99b
 Child
-    Hash: 591f65b34ea2fed28590
+    Hash: 3cc0d6b1ff5f64f9667a
     Time: Xms
       Asset      Size  Chunks             Chunk Names
     main.js  2.64 KiB       0  [emitted]  main
        [0] ./index.js 24 bytes {0} [built]
 Child
-    Hash: a2524f672c23ebaef569
+    Hash: 5b4570daab591bb1c99b
     Time: Xms
       Asset      Size  Chunks             Chunk Names
     main.js  2.64 KiB       0  [emitted]  main
