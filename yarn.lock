@@ -6097,9 +6097,9 @@ webpack-addons@1.1.2:
     babel-preset-stage-3 "^6.24.1"
     jscodeshift "^0.3.30"
 
-webpack-cli@^1.4.7:
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-1.4.7.tgz#945df8f7dc76dbf44371ef645edc3640f8595a9b"
+webpack-cli@^1.4.8:
+  version "1.4.8"
+  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-1.4.8.tgz#968864c7daad8c8e70e45e726855fa56be25f2b4"
   dependencies:
     babel-code-frame "^6.22.0"
     babel-core "^6.25.0"
