@@ -7,7 +7,7 @@ module.exports = {
 			content: {
 				"./module": {
 					id: 1,
-					meta: {
+					buildMeta: {
 						harmonyModule: true
 					},
 					exports: ["default"]
