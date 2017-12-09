@@ -3329,12 +3329,32 @@ jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
 
-jscodeshift@^0.3.30, jscodeshift@^0.3.32:
+jscodeshift@^0.3.30:
   version "0.3.32"
   resolved "https://registry.yarnpkg.com/jscodeshift/-/jscodeshift-0.3.32.tgz#dece5eb602f16340d8d954c7f96ac907c502eabb"
   dependencies:
     async "^1.5.0"
     babel-core "^5"
+    babel-plugin-transform-flow-strip-types "^6.8.0"
+    babel-preset-es2015 "^6.9.0"
+    babel-preset-stage-1 "^6.5.0"
+    babel-register "^6.9.0"
+    babylon "^6.17.3"
+    colors "^1.1.2"
+    flow-parser "^0.*"
+    lodash "^4.13.1"
+    micromatch "^2.3.7"
+    node-dir "0.1.8"
+    nomnom "^1.8.1"
+    recast "^0.12.5"
+    temp "^0.8.1"
+    write-file-atomic "^1.2.0"
+
+jscodeshift@^0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/jscodeshift/-/jscodeshift-0.4.0.tgz#a76afdbfc6f4e78c3fd0d1a60470dfa43c03190e"
+  dependencies:
+    async "^1.5.0"
     babel-plugin-transform-flow-strip-types "^6.8.0"
     babel-preset-es2015 "^6.9.0"
     babel-preset-stage-1 "^6.5.0"
@@ -6097,9 +6117,9 @@ webpack-addons@1.1.2:
     babel-preset-stage-3 "^6.24.1"
     jscodeshift "^0.3.30"
 
-webpack-cli@^1.4.8:
-  version "1.4.8"
-  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-1.4.8.tgz#968864c7daad8c8e70e45e726855fa56be25f2b4"
+webpack-cli@^1.5.0:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-1.5.0.tgz#970abf6d956ff3cc99872649c2709e40cf15ad6a"
   dependencies:
     babel-code-frame "^6.22.0"
     babel-core "^6.25.0"
@@ -6113,7 +6133,7 @@ webpack-cli@^1.4.8:
     got "^7.1.0"
     inquirer "^3.2.0"
     interpret "^1.0.4"
-    jscodeshift "^0.3.32"
+    jscodeshift "^0.4.0"
     listr "^0.12.0"
     loader-utils "^1.1.0"
     lodash "^4.17.4"
