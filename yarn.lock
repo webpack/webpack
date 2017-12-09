@@ -3329,7 +3329,7 @@ jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
 
-jscodeshift@^0.3.30:
+jscodeshift@^0.3.32:
   version "0.3.32"
   resolved "https://registry.yarnpkg.com/jscodeshift/-/jscodeshift-0.3.32.tgz#dece5eb602f16340d8d954c7f96ac907c502eabb"
   dependencies:
@@ -6108,18 +6108,18 @@ watchpack@^1.4.0:
     chokidar "^1.7.0"
     graceful-fs "^4.1.2"
 
-webpack-addons@1.1.2:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/webpack-addons/-/webpack-addons-1.1.2.tgz#8285b181f97a72820c1d684022588460e4f7c6b7"
+webpack-addons@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/webpack-addons/-/webpack-addons-1.1.3.tgz#11c93f36e690fe9a07d5de8a40a5c0d15d138297"
   dependencies:
     babel-code-frame "^6.22.0"
     babel-preset-es2015 "^6.24.1"
     babel-preset-stage-3 "^6.24.1"
-    jscodeshift "^0.3.30"
+    jscodeshift "^0.3.32"
 
-webpack-cli@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-1.5.0.tgz#970abf6d956ff3cc99872649c2709e40cf15ad6a"
+webpack-cli@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-1.5.1.tgz#7d4963e6f3098d5f5cac050e6c7019f4f1a04d93"
   dependencies:
     babel-code-frame "^6.22.0"
     babel-core "^6.25.0"
@@ -6146,7 +6146,7 @@ webpack-cli@^1.5.0:
     rx "^4.1.0"
     supports-color "^4.4.0"
     webpack "^4.0.0-alpha.0"
-    webpack-addons "1.1.2"
+    webpack-addons "^1.1.3"
     yargs "^9.0.1"
     yeoman-environment "^2.0.0"
     yeoman-generator "git://github.com/ev1stensberg/generator.git#Feature-getArgument"
