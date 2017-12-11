@@ -7,8 +7,8 @@ module.exports = {
 					"./loader1",
 					{
 						loader: "./loader2",
+						ident: "loader2",
 						options: {
-							ident: "loader2",
 							f: function() {
 								return "ok";
 							}
