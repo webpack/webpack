@@ -331,11 +331,11 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 			}
 		});
 
-    ifArg("hide-lifecycle", function(bool) {
-      if(bool) {
-        outputOptions.hideLifecycle = true;
-      }
-    });
+		ifArg("hide-lifecycle", function(bool) {
+			if(bool) {
+				outputOptions.hideLifecycle = true;
+			}
+		});
 
 		var webpack = require("../lib/webpack.js");
 
@@ -398,7 +398,7 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 				process.stdin.resume();
 			}
 			compiler.watch(watchOptions, compilerCallback);
-      if(!outputOptions.hideLifecycle)
+			if(!outputOptions.hideLifecycle)
 				console.log("\nWebpack is watching the files…\n");
 		} else
 			compiler.run(compilerCallback);
