@@ -143,6 +143,11 @@ yargs.options({
 		type: "boolean",
 		group: DISPLAY_GROUP,
 		describe: "Show more details"
+	},
+	"hide-lifecycle": {
+		type: "boolean",
+		group: DISPLAY_GROUP,
+		describe: "Don't show lifecycle messages (started watching, compilation started/ended)"
 	}
 });
 
@@ -326,6 +331,12 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 			}
 		});
 
+		ifArg("hide-lifecycle", function(bool) {
+			if(bool) {
+				outputOptions.hideLifecycle = true;
+			}
+		});
+
 		var webpack = require("../lib/webpack.js");
 
 		Error.stackTraceLimit = 30;
@@ -387,7 +398,8 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 				process.stdin.resume();
 			}
 			compiler.watch(watchOptions, compilerCallback);
-			console.log("\nWebpack is watching the files…\n");
+			if(!outputOptions.hideLifecycle)
+				console.log("\nWebpack is watching the files…\n");
 		} else
 			compiler.run(compilerCallback);
 
