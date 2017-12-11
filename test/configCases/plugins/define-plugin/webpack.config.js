@@ -1,4 +1,6 @@
 var DefinePlugin = require("../../../../lib/DefinePlugin");
+
+/* istanbul ignore next */
 module.exports = {
 	plugins: [
 		new DefinePlugin({
