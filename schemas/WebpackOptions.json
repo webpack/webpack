@@ -1006,6 +1006,10 @@
                 }
               ]
             },
+            "ident": {
+              "description": "Unique loader identifier",
+              "type": "string"
+            },
             "query": {
               "description": "Loader query",
               "anyOf": [
