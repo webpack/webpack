@@ -1,6 +1,6 @@
-Hash: cd4abefb3963c61372a0cd4abefb3963c61372a0cd4abefb3963c61372a0cd4abefb3963c61372a0cd4abefb3963c61372a0cd4abefb3963c61372a0cd4abefb3963c61372a0cd4abefb3963c61372a0cd4abefb3963c61372a0cd4abefb3963c61372a0cd4abefb3963c61372a0cd4abefb3963c61372a0cd4abefb3963c61372a0
+Hash: 1d6fab3f37874a94af1d1d6fab3f37874a94af1d1d6fab3f37874a94af1d1d6fab3f37874a94af1d1d6fab3f37874a94af1d1d6fab3f37874a94af1d1d6fab3f37874a94af1d1d6fab3f37874a94af1d1d6fab3f37874a94af1d1d6fab3f37874a94af1d1d6fab3f37874a94af1d1d6fab3f37874a94af1d1d6fab3f37874a94af1d
 Child
-    Hash: cd4abefb3963c61372a0
+    Hash: 1d6fab3f37874a94af1d
     Time: Xms
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
@@ -18,55 +18,37 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: cd4abefb3963c61372a0
+    Hash: 1d6fab3f37874a94af1d
     Time: Xms
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
 Child
-    Hash: cd4abefb3963c61372a0
+    Hash: 1d6fab3f37874a94af1d
     Time: Xms
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
 Child
-    Hash: cd4abefb3963c61372a0
+    Hash: 1d6fab3f37874a94af1d
     Time: Xms
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
 Child
-    Hash: cd4abefb3963c61372a0
+    Hash: 1d6fab3f37874a94af1d
     Time: Xms
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
 Child
-    Hash: cd4abefb3963c61372a0
+    Hash: 1d6fab3f37874a94af1d
     Time: Xms
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
 Child
-    Hash: cd4abefb3963c61372a0
+    Hash: 1d6fab3f37874a94af1d
     Time: Xms
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
 Child
-    Hash: cd4abefb3963c61372a0
-    Time: Xms
-        Asset      Size  Chunks             Chunk Names
-    bundle.js  2.19 KiB       0  [emitted]  main
-    
-    WARNING in bundle.js from UglifyJs
-    Dropping side-effect-free statement [./index.js:6,0]
-    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
-Child
-    Hash: cd4abefb3963c61372a0
+    Hash: 1d6fab3f37874a94af1d
     Time: Xms
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
@@ -84,7 +66,7 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: cd4abefb3963c61372a0
+    Hash: 1d6fab3f37874a94af1d
     Time: Xms
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
@@ -102,7 +84,7 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: cd4abefb3963c61372a0
+    Hash: 1d6fab3f37874a94af1d
     Time: Xms
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
@@ -120,7 +102,7 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: cd4abefb3963c61372a0
+    Hash: 1d6fab3f37874a94af1d
     Time: Xms
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
@@ -138,7 +120,25 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: cd4abefb3963c61372a0
+    Hash: 1d6fab3f37874a94af1d
+    Time: Xms
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping side-effect-free statement [./index.js:6,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+Child
+    Hash: 1d6fab3f37874a94af1d
     Time: Xms
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main

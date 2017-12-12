@@ -1,5 +1,5 @@
   Asset      Size  Chunks  Chunk Names
-main.js  3.07 KiB       0  main
+main.js  3.12 KiB       0  main
    [0] ./index.js + 1 modules 35 bytes {0} [built]
    [1] ./b.js 169 bytes {0} [built] [failed] [1 error]
 
