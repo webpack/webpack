@@ -11,7 +11,6 @@
     "async": "^2.1.2",
     "enhanced-resolve": "4.0.0-beta.2",
     "eslint-scope": "^3.7.1",
-    "interpret": "^1.0.0",
     "loader-runner": "^2.3.0",
     "loader-utils": "^1.1.0",
     "memory-fs": "~0.4.1",
@@ -19,13 +18,10 @@
     "node-libs-browser": "^2.0.0",
     "schema-utils": "^0.4.2",
     "source-map": "^0.5.3",
-    "supports-color": "^4.2.1",
     "tapable": "^1.0.0-beta.5",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "watchpack": "^1.4.0",
-    "webpack-cli": "^1.5.2",
-    "webpack-sources": "^1.0.1",
-    "yargs": "^8.0.2"
+    "webpack-sources": "^1.0.1"
   },
   "license": "MIT",
   "devDependencies": {
@@ -68,6 +64,7 @@
     "url-loader": "~0.5.0",
     "val-loader": "^1.0.2",
     "vm-browserify": "~0.0.0",
+    "webpack-cli": "^1.5.2",
     "webpack-dev-middleware": "^1.9.0",
     "worker-loader": "^0.8.0"
   },
