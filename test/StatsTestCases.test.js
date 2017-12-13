@@ -34,6 +34,8 @@ describe("StatsTestCases", () => {
 				if(!options.output) options.output = options.output || {};
 				if(!options.output.path) options.output.path = path.join(outputBase, testName);
 				if(!options.plugins) options.plugins = [];
+				if(!options.optimization) options.optimization = {};
+				if(options.optimization.minimize === undefined) options.optimization.minimize = false;
 				// To support deprecated loaders
 				// TODO remove in webpack 5
 				options.plugins.push(new webpack.LoaderOptionsPlugin({

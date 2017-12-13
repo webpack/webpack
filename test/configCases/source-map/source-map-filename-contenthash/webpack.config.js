@@ -1,5 +1,5 @@
-var webpack = require("../../../../");
 module.exports = {
+	mode: "development",
 	node: {
 		__dirname: false,
 		__filename: false
@@ -7,10 +7,5 @@ module.exports = {
 	devtool: "source-map",
 	output: {
 		sourceMapFilename: "[file]-[contenthash].map?[contenthash]-[contenthash]",
-	},
-	plugins: [
-		new webpack.optimize.UglifyJsPlugin({
-			sourceMap: true
-		})
-	]
+	}
 };
