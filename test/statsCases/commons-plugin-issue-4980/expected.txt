@@ -1,6 +1,6 @@
-Hash: e6af0e572727ae2b753cbb2d69615a180135bcde
+Hash: a6418d72fd6bad27d7e001bd4246a474bfd828f8
 Child
-    Hash: e6af0e572727ae2b753c
+    Hash: a6418d72fd6bad27d7e0
     Time: Xms
                              Asset       Size  Chunks             Chunk Names
                             app.js  656 bytes       0  [emitted]  app
@@ -9,7 +9,7 @@ Child
     [./constants.js] 87 bytes {1} [built]
     [./entry-1.js] ./entry-1.js + 2 modules 190 bytes {0} [built]
 Child
-    Hash: bb2d69615a180135bcde
+    Hash: 01bd4246a474bfd828f8
     Time: Xms
                              Asset       Size  Chunks             Chunk Names
                             app.js  673 bytes       0  [emitted]  app
