@@ -32,14 +32,14 @@ Note: When your library has dependencies that should not be included in the comp
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

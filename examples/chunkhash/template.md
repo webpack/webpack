@@ -36,7 +36,7 @@ The configuration required for this is:
 
 <!-- inlined minimized file "manifest.[chunkhash].js" -->
 <script>
-{{min:js/manifest.chunkhash.js}}
+{{production:js/manifest.chunkhash.js}}
 </script>
 
 <!-- optional when using the CommonChunkPlugin for vendor modules -->
@@ -62,14 +62,14 @@ The configuration required for this is:
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

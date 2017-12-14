@@ -1,7 +1,7 @@
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	plugins: [
 		new CommonsChunkPlugin({
 			name: "main",
@@ -15,5 +15,8 @@ module.exports = {
 		new CommonsChunkPlugin({
 			async: true
 		}),
-	]
+	],
+	optimization: {
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 };

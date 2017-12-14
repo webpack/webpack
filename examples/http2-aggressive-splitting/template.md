@@ -22,16 +22,16 @@ The backward compatibility (non HTTP2 client) improves with bigger `maxSize`, as
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```
 
 ## Records

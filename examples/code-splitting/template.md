@@ -46,19 +46,19 @@ You can see that chunks are loaded via JSONP. The additional chunks are pretty s
 Minimized
 
 ``` javascript
-{{min:js/0.output.js}}
+{{production:js/0.output.js}}
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

@@ -1,7 +1,7 @@
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	plugins: [
 		new CommonsChunkPlugin({
 			// process all children of the main chunk
@@ -11,5 +11,8 @@ module.exports = {
 			// which is loaded in parallel to the requested chunks
 			async: true
 		})
-	]
+	],
+	optimization: {
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 };

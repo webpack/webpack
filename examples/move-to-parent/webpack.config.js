@@ -7,14 +7,17 @@ var outputOptions = {
 };
 module.exports = [{
 	name: "page",
-	mode: "production",
+	// mode: "development || "production",
 	entry: {
 		page: "./page"
 	},
-	output: outputOptions
+	output: outputOptions,
+	optimization: {
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 }, {
 	name: "pageA",
-	mode: "production",
+	// mode: "development || "production",
 	entry: {
 		pageA: "./page"
 	},
@@ -25,10 +28,13 @@ module.exports = [{
 			name: "pageA",
 			children: true
 		}),
-	]
+	],
+	optimization: {
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 }, {
 	name: "pageB",
-	mode: "production",
+	// mode: "development || "production",
 	entry: {
 		pageB: "./page"
 	},
@@ -40,10 +46,13 @@ module.exports = [{
 			children: true,
 			minChunks: 3
 		}),
-	]
+	],
+	optimization: {
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 }, {
 	name: "pageC",
-	mode: "production",
+	// mode: "development || "production",
 	entry: {
 		pageC: "./page"
 	},
@@ -58,5 +67,8 @@ module.exports = [{
 				return !/b\.js/.test(module.identifier());
 			}
 		})
-	]
+	],
+	optimization: {
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 }];

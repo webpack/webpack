@@ -1,5 +1,5 @@
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	module: {
 		rules: [
 			{ test: /\.coffee$/, loader: "coffee-loader" }

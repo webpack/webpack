@@ -4,7 +4,7 @@ const path = require("path");
 
 module.exports = [
 	{
-		mode: "production",
+		// mode: "development || "production",
 		entry: {
 			main: ["./example.js"]
 		},
@@ -19,10 +19,13 @@ module.exports = [
 				children: true,
 				deepChildren: true,
 			})
-		]
+		],
+		optimization: {
+			occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+		}
 	},
 	{
-		mode: "production",
+		// mode: "development || "production",
 		entry: {
 			main: ["./example.js"]
 		},
@@ -38,6 +41,9 @@ module.exports = [
 				children: true,
 				deepChildren: true,
 			})
-		]
+		],
+		optimization: {
+			occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+		}
 	}
 ];
