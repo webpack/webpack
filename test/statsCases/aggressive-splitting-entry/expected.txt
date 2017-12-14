@@ -1,6 +1,6 @@
-Hash: 944f966a4eb0dca2f58a944f966a4eb0dca2f58a
+Hash: a1332ffdc8f016e06e2da1332ffdc8f016e06e2d
 Child fitting:
-    Hash: 944f966a4eb0dca2f58a
+    Hash: a1332ffdc8f016e06e2d
     Time: Xms
                       Asset      Size  Chunks             Chunk Names
     8687608dde0469fd3fba.js  2.23 KiB       0  [emitted]  
@@ -25,7 +25,7 @@ Child fitting:
         > aggressive-splitted main [4] ./index.js 
         [3] ./e.js 899 bytes {6} [built]
 Child content-change:
-    Hash: 944f966a4eb0dca2f58a
+    Hash: a1332ffdc8f016e06e2d
     Time: Xms
                       Asset      Size  Chunks             Chunk Names
     8687608dde0469fd3fba.js  2.23 KiB       0  [emitted]  
