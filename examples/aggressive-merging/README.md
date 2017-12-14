@@ -32,7 +32,7 @@ a big file...
 var path = require("path");
 var AggressiveMergingPlugin = require("../../lib/optimize/AggressiveMergingPlugin");
 module.exports = {
-	mode: "production",
+	// mode: "development" || "production",
 	entry: {
 		pageA: "./pageA",
 		pageB: "./pageB",
@@ -48,23 +48,26 @@ module.exports = {
 			minSizeReduce: 1.5,
 			moveToParents: true
 		})
-	]
+	],
+	optimization: {
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 };
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 79ab12b0d491f1da79bf
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
           Asset       Size  Chunks             Chunk Names
-     0.chunk.js   5.75 KiB       0  [emitted]  
-     1.chunk.js  595 bytes       1  [emitted]  
-pageB.bundle.js    7.4 KiB       2  [emitted]  pageB
-pageA.bundle.js   7.39 KiB       3  [emitted]  pageA
-pageC.bundle.js    7.1 KiB       4  [emitted]  pageC
+     0.chunk.js   5.65 KiB       0  [emitted]  
+     1.chunk.js  405 bytes       1  [emitted]  
+pageB.bundle.js   7.22 KiB       2  [emitted]  pageB
+pageA.bundle.js   7.21 KiB       3  [emitted]  pageA
+pageC.bundle.js   7.01 KiB       4  [emitted]  pageC
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js
@@ -102,10 +105,10 @@ chunk    {4} pageC.bundle.js (pageC) 70 bytes [entry] [rendered]
         single entry ./pageC  pageC
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 79ab12b0d491f1da79bf
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
           Asset       Size  Chunks             Chunk Names
      0.chunk.js  115 bytes       0  [emitted]  

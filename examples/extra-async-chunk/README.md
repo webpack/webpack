@@ -51,7 +51,7 @@ require.ensure(["./a"], function(require) {
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	plugins: [
 		new CommonsChunkPlugin({
 			// process all children of the main chunk
@@ -61,7 +61,10 @@ module.exports = {
 			// which is loaded in parallel to the requested chunks
 			async: true
 		})
-	]
+	],
+	optimization: {
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 };
 ```
 
@@ -250,8 +253,6 @@ module.exports = {
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 // a chunks with a, b, c
@@ -278,8 +279,6 @@ Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e
   !*** ./a.js ***!
   \**************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "a";
@@ -290,8 +289,6 @@ module.exports = "a";
   !*** ./b.js ***!
   \**************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "b";
@@ -310,8 +307,6 @@ module.exports = "b";
   !*** ./d.js ***!
   \**************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "d";
@@ -331,8 +326,6 @@ module.exports = "d";
   !*** ./c.js ***!
   \**************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "c";
@@ -344,16 +337,16 @@ module.exports = "c";
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 7fbb1fd30d6b2c043e7a
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  595 bytes       0  [emitted]  
-1.output.js  336 bytes       1  [emitted]  
-2.output.js  336 bytes       2  [emitted]  
-  output.js   7.47 KiB       3  [emitted]  main
+0.output.js  405 bytes       0  [emitted]  
+1.output.js  241 bytes       1  [emitted]  
+2.output.js  241 bytes       2  [emitted]  
+  output.js   7.38 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes {3} [rendered]
     > async commons [2] ./example.js 2:0-52
@@ -378,10 +371,10 @@ chunk    {3} output.js (main) 194 bytes [entry] [rendered]
         single entry .\example.js  main
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 7fbb1fd30d6b2c043e7a
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  118 bytes       0  [emitted]  

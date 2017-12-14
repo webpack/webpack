@@ -220,8 +220,6 @@ require.ensure(["c"], function(require) {
   !*** ./node_modules/b.js ***!
   \***************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module b
@@ -232,8 +230,6 @@ require.ensure(["c"], function(require) {
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var a = __webpack_require__(/*! a */ 2);
@@ -249,8 +245,6 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
   !*** ./node_modules/a.js ***!
   \***************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module a
@@ -271,8 +265,6 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
   !*** ./node_modules/c.js ***!
   \***************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module c
@@ -283,8 +275,6 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
   !*** ./node_modules/d.js ***!
   \***************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module d
@@ -301,14 +291,14 @@ Minimized
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 23b9593edef76f47cb63
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  680 bytes       0  [emitted]  
-  output.js    7.7 KiB       1  [emitted]  main
+0.output.js  490 bytes       0  [emitted]  
+  output.js   7.43 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes {1} [rendered]
     > [1] ./example.js 3:0-6:2
@@ -320,10 +310,10 @@ chunk    {1} output.js (main) 166 bytes [entry] [rendered]
      + 2 hidden modules
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 23b9593edef76f47cb63
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
 0.output.js  95 bytes       0  [emitted]  

@@ -95,7 +95,7 @@ module.exports = Math.random();
 /******/ 	__webpack_require__.p = "js/";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
@@ -105,39 +105,35 @@ module.exports = Math.random();
 ``` javascript
 /******/ ([
 /* 0 */
-/*!**************!*\
-  !*** ./a.js ***!
-  \**************/
-/*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports) {
-
-module.exports = Math.random();
-
-/***/ }),
-/* 1 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
-var a = __webpack_require__(/*! ./a */ 0);
+var a = __webpack_require__(/*! ./a */ 1);
 
 // get module id
-var aId = /*require.resolve*/(/*! ./a.js */ 0);
+var aId = /*require.resolve*/(/*! ./a.js */ 1);
 
 // clear module in require.cache
 delete __webpack_require__.c[aId];
 
 // require module again, it should be reexecuted
-var a2 = __webpack_require__(/*! ./a */ 0);
+var a2 = __webpack_require__(/*! ./a */ 1);
 
 // vertify it
 if(a == a2) throw new Error("Cache clear failed :(");
+
+/***/ }),
+/* 1 */
+/*!**************!*\
+  !*** ./a.js ***!
+  \**************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = Math.random();
 
 /***/ })
 /******/ ]);
@@ -145,28 +141,28 @@ if(a == a2) throw new Error("Cache clear failed :(");
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 778b337ad5fd5e1bd1bf
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  3.43 KiB       0  [emitted]  main
+output.js  3.25 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
-    > main [1] ./example.js 
-    [0] ./a.js 31 bytes {0} [built]
-        require.resolve ./a.js [1] ./example.js 4:10-35
-        cjs require ./a [1] ./example.js 1:8-22
-        cjs require ./a [1] ./example.js 10:9-23
-    [1] ./example.js 295 bytes {0} [built]
+    > main [0] ./example.js 
+    [0] ./example.js 295 bytes {0} [built]
         single entry .\example.js  main
+    [1] ./a.js 31 bytes {0} [built]
+        require.resolve ./a.js [0] ./example.js 4:10-35
+        cjs require ./a [0] ./example.js 1:8-22
+        cjs require ./a [0] ./example.js 10:9-23
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 778b337ad5fd5e1bd1bf
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset       Size  Chunks             Chunk Names
 output.js  665 bytes       0  [emitted]  main

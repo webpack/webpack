@@ -19,7 +19,7 @@ body {
 const LoaderOptionsPlugin = require("../../lib/LoaderOptionsPlugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
-	mode: "production",
+	// mode: "development" || "production",
 	module: {
 		rules: [
 			{
@@ -130,8 +130,6 @@ module.exports = {
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! ./style.css */ 1);
@@ -142,8 +140,6 @@ __webpack_require__(/*! ./style.css */ 1);
   !*** ./style.css ***!
   \*******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
@@ -162,14 +158,14 @@ body {
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: da73f4cbdaa662283746
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js   3.16 KiB       0  [emitted]  main
+                           output.js   2.97 KiB       0  [emitted]  main
                            style.css   69 bytes       0  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} output.js, style.css (main) 64 bytes [entry] [rendered]
@@ -191,15 +187,15 @@ Child extract-text-webpack-plugin ../../node_modules/extract-text-webpack-plugin
          + 1 hidden module
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 9369d8f65a2a0dbd9c43
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
                            output.js  570 bytes       0  [emitted]  main
-                           style.css   61 bytes       0  [emitted]  main
+                           style.css   69 bytes       0  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} output.js, style.css (main) 64 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -211,11 +207,11 @@ Child extract-text-webpack-plugin ../../node_modules/extract-text-webpack-plugin
                                    Asset       Size  Chunks             Chunk Names
     ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
     Entrypoint undefined = extract-text-webpack-plugin-output-filename
-    chunk    {0} extract-text-webpack-plugin-output-filename 2.5 KiB [entry] [rendered]
+    chunk    {0} extract-text-webpack-plugin-output-filename 2.51 KiB [entry] [rendered]
         > [0] (webpack)/node_modules/css-loader!./style.css 
-        [0] (webpack)/node_modules/css-loader!./style.css 218 bytes {0} [built]
+        [0] (webpack)/node_modules/css-loader!./style.css 231 bytes {0} [built]
             single entry !!(webpack)\node_modules\css-loader\index.js!.\style.css 
         [2] ./image.png 82 bytes {0} [built]
-            cjs require ./image.png [0] (webpack)/node_modules/css-loader!./style.css 6:50-72
+            cjs require ./image.png [0] (webpack)/node_modules/css-loader!./style.css 6:58-80
          + 1 hidden module
 ```

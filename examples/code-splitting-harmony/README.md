@@ -211,8 +211,6 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
   !*** ./example.js ***!
   \********************/
 /*! no exports provided */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is an entry point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -240,7 +238,6 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
   !*** ./node_modules/a.js ***!
   \***************************/
 /*! no static exports found */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module a
@@ -251,8 +248,6 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
   !*** ./node_modules/c lazy ^\.\/.*$ namespace object ***!
   \*******************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -295,16 +290,16 @@ module.exports = webpackAsyncContext;
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 99774db1d98bb53fa195
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  379 bytes       0  [emitted]  
-1.output.js  370 bytes       1  [emitted]  
-2.output.js  365 bytes       2  [emitted]  
-  output.js   8.89 KiB       3  [emitted]  main
+0.output.js  284 bytes       0  [emitted]  
+1.output.js  275 bytes       1  [emitted]  
+2.output.js  270 bytes       2  [emitted]  
+  output.js   8.65 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
     1 module
@@ -323,10 +318,10 @@ chunk    {3} output.js (main) 427 bytes [entry] [rendered]
      + 1 hidden module
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 99774db1d98bb53fa195
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
 0.output.js  77 bytes       0  [emitted]  

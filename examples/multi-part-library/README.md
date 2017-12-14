@@ -17,7 +17,7 @@ Note: When your library has dependencies that should not be included in the comp
 ``` javascript
 var path = require("path");
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	entry: {
 		alpha: "./alpha",
 		beta: "./beta"
@@ -129,8 +129,6 @@ return /******/ (function(modules) { // webpackBootstrap
   !*** ./alpha.js ***!
   \******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "alpha";
@@ -230,8 +228,6 @@ return /******/ (function(modules) { // webpackBootstrap
   !*** ./beta.js ***!
   \*****************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "beta";
@@ -243,30 +239,30 @@ module.exports = "beta";
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 17fa97a0dfa6b745377a
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
              Asset      Size  Chunks             Chunk Names
- MyLibrary.beta.js  3.28 KiB       0  [emitted]  beta
-MyLibrary.alpha.js  3.27 KiB       1  [emitted]  alpha
+MyLibrary.alpha.js  3.18 KiB       0  [emitted]  alpha
+ MyLibrary.beta.js  3.18 KiB       1  [emitted]  beta
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
-chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
-    > beta [1] ./beta.js 
-    [1] ./beta.js 24 bytes {0} [built]
-        single entry ./beta  beta
-chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
+chunk    {0} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
     > alpha [0] ./alpha.js 
-    [0] ./alpha.js 25 bytes {1} [built]
+    [0] ./alpha.js 25 bytes {0} [built]
         single entry ./alpha  alpha
+chunk    {1} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
+    > beta [1] ./beta.js 
+    [1] ./beta.js 24 bytes {1} [built]
+        single entry ./beta  beta
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 17fa97a0dfa6b745377a
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
              Asset       Size  Chunks             Chunk Names
  MyLibrary.beta.js  855 bytes       0  [emitted]  beta

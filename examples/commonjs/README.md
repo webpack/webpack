@@ -121,8 +121,6 @@ exports.add = function() {
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var inc = __webpack_require__(/*! ./increment */ 1).increment;
@@ -135,8 +133,6 @@ inc(a); // 2
   !*** ./increment.js ***!
   \**********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var add = __webpack_require__(/*! ./math */ 2).add;
@@ -150,8 +146,6 @@ exports.increment = function(val) {
   !*** ./math.js ***!
   \*****************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 exports.add = function() {
@@ -168,13 +162,13 @@ exports.add = function() {
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: ae7172392c4d0e31a2b7
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  3.71 KiB       0  [emitted]  main
+output.js  3.43 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 329 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -186,10 +180,10 @@ chunk    {0} output.js (main) 329 bytes [entry] [rendered]
         cjs require ./math [1] ./increment.js 1:10-27
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: ae7172392c4d0e31a2b7
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset       Size  Chunks             Chunk Names
 output.js  738 bytes       0  [emitted]  main

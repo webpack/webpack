@@ -4,7 +4,7 @@
 var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	entry: {
 		vendor1: ["./vendor1"],
 		vendor2: ["./vendor2"],
@@ -75,7 +75,7 @@ module.exports = {
 /******/
 /******/ 	// object to store loaded and loading chunks
 /******/ 	var installedChunks = {
-/******/ 		4: 0
+/******/ 		0: 0
 /******/ 	};
 /******/
 /******/ 	var scheduledModules = [];
@@ -209,7 +209,7 @@ module.exports = {
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
@@ -219,29 +219,24 @@ module.exports = {
 ``` javascript
 /******/ ([
 /* 0 */
-/*!********************!*\
-  !*** ./vendor1.js ***!
-  \********************/
-/*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports) {
-
-module.exports = "Vendor1";
-
-/***/ }),
-/* 1 */,
-/* 2 */
 /*!***********************!*\
   !*** multi ./vendor1 ***!
   \***********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! ./vendor1 */0);
+module.exports = __webpack_require__(/*! ./vendor1 */1);
 
+
+/***/ }),
+/* 1 */
+/*!********************!*\
+  !*** ./vendor1.js ***!
+  \********************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "Vendor1";
 
 /***/ })
 /******/ ]);
@@ -250,114 +245,108 @@ module.exports = __webpack_require__(/*! ./vendor1 */0);
 # js/vendor2.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */,
-/* 1 */
-/*!********************!*\
-  !*** ./vendor2.js ***!
-  \********************/
-/*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = "Vendor2";
-__webpack_require__(/*! ./vendor1 */ 0);
-
-
-/***/ }),
-/* 2 */,
-/* 3 */
+/* 1 */,
+/* 2 */
 /*!***********************!*\
   !*** multi ./vendor2 ***!
   \***********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! ./vendor2 */1);
+module.exports = __webpack_require__(/*! ./vendor2 */3);
+
+
+/***/ }),
+/* 3 */
+/*!********************!*\
+  !*** ./vendor2.js ***!
+  \********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = "Vendor2";
+__webpack_require__(/*! ./vendor1 */ 1);
 
 
 /***/ })
-],[[3,4,0]]]);
+],[[2,0,1]]]);
 ```
 
 # js/pageA.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
 
 /***/ 4:
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = "pageA";
-__webpack_require__(/*! ./vendor1 */ 0);
-__webpack_require__(/*! ./vendor2 */ 1);
+__webpack_require__(/*! ./vendor1 */ 1);
+__webpack_require__(/*! ./vendor2 */ 3);
 
 
 /***/ })
 
-},[[4,4,0,3]]]);
+},[[4,0,1,2]]]);
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 6fe4b98832b1f1c2bd5b
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
      Asset       Size  Chunks             Chunk Names
-vendor2.js  796 bytes       0  [emitted]  vendor2
-  pageC.js  364 bytes       1  [emitted]  pageC
-  pageB.js  364 bytes       2  [emitted]  pageB
-  pageA.js  471 bytes       3  [emitted]  pageA
-vendor1.js   7.79 KiB       4  [emitted]  vendor1
+vendor1.js    7.6 KiB       0  [emitted]  vendor1
+vendor2.js  606 bytes       1  [emitted]  vendor2
+  pageA.js  376 bytes       2  [emitted]  pageA
+  pageB.js  269 bytes       3  [emitted]  pageB
+  pageC.js  269 bytes       4  [emitted]  pageC
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor1.js vendor2.js
 Entrypoint pageA = vendor1.js vendor2.js pageA.js
 Entrypoint pageB = vendor1.js vendor2.js pageB.js
 Entrypoint pageC = vendor1.js vendor2.js pageC.js
-chunk    {0} vendor2.js (vendor2) 80 bytes {4} [initial] [rendered]
-    > vendor2 [3] multi ./vendor2 
-    [1] ./vendor2.js 52 bytes {0} [built]
-        single entry ./vendor2 [3] multi ./vendor2 vendor2:100000
-        cjs require ./vendor2 [4] ./pageA.js 3:0-20
-    [3] multi ./vendor2 28 bytes {0} [built]
+chunk    {0} vendor1.js (vendor1) 55 bytes [entry] [rendered]
+    > vendor1 [0] multi ./vendor1 
+    [0] multi ./vendor1 28 bytes {0} [built]
         multi entry 
-chunk    {1} pageC.js (pageC) 25 bytes {0} [initial] [rendered]
-    > pageC [6] ./pageC.js 
-    [6] ./pageC.js 25 bytes {1} [built]
-        single entry ./pageC  pageC
-chunk    {2} pageB.js (pageB) 25 bytes {0} [initial] [rendered]
-    > pageB [5] ./pageB.js 
-    [5] ./pageB.js 25 bytes {2} [built]
-        single entry ./pageB  pageB
-chunk    {3} pageA.js (pageA) 73 bytes {0} [initial] [rendered]
-    > pageA [4] ./pageA.js 
-    [4] ./pageA.js 73 bytes {3} [built]
-        single entry ./pageA  pageA
-chunk    {4} vendor1.js (vendor1) 55 bytes [entry] [rendered]
-    > vendor1 [2] multi ./vendor1 
-    [0] ./vendor1.js 27 bytes {4} [built]
-        cjs require ./vendor1 [1] ./vendor2.js 2:0-20
-        single entry ./vendor1 [2] multi ./vendor1 vendor1:100000
+    [1] ./vendor1.js 27 bytes {0} [built]
+        single entry ./vendor1 [0] multi ./vendor1 vendor1:100000
+        cjs require ./vendor1 [3] ./vendor2.js 2:0-20
         cjs require ./vendor1 [4] ./pageA.js 2:0-20
-    [2] multi ./vendor1 28 bytes {4} [built]
+chunk    {1} vendor2.js (vendor2) 80 bytes {0} [initial] [rendered]
+    > vendor2 [2] multi ./vendor2 
+    [2] multi ./vendor2 28 bytes {1} [built]
         multi entry 
+    [3] ./vendor2.js 52 bytes {1} [built]
+        single entry ./vendor2 [2] multi ./vendor2 vendor2:100000
+        cjs require ./vendor2 [4] ./pageA.js 3:0-20
+chunk    {2} pageA.js (pageA) 73 bytes {1} [initial] [rendered]
+    > pageA [4] ./pageA.js 
+    [4] ./pageA.js 73 bytes {2} [built]
+        single entry ./pageA  pageA
+chunk    {3} pageB.js (pageB) 25 bytes {1} [initial] [rendered]
+    > pageB [5] ./pageB.js 
+    [5] ./pageB.js 25 bytes {3} [built]
+        single entry ./pageB  pageB
+chunk    {4} pageC.js (pageC) 25 bytes {1} [initial] [rendered]
+    > pageC [6] ./pageC.js 
+    [6] ./pageC.js 25 bytes {4} [built]
+        single entry ./pageC  pageC
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 6fe4b98832b1f1c2bd5b
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
      Asset       Size  Chunks             Chunk Names
 vendor2.js  146 bytes       0  [emitted]  vendor2

@@ -210,8 +210,6 @@ require.ensure(["b"], function(require) {
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var a = __webpack_require__(/*! a */ 3);
@@ -242,8 +240,6 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   !*** ./node_modules/a.js ***!
   \***************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module a
@@ -255,14 +251,12 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
 # js/0.output.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0,1],[
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
 /* 0 */
 /*!***************************!*\
   !*** ./node_modules/b.js ***!
   \***************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module b
@@ -273,8 +267,6 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   !*** ./node_modules/d.js ***!
   \***************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module d
@@ -287,8 +279,6 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   !*** ./node_modules/c.js ***!
   \***************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module c
@@ -306,8 +296,6 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   !*** ./node_modules/b.js ***!
   \***************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module b
@@ -318,8 +306,6 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   !*** ./node_modules/d.js ***!
   \***************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module d
@@ -330,15 +316,15 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: a4fbcc7d664f6f0aeb32
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  964 bytes    0, 1  [emitted]  my own chunk
-1.output.js  653 bytes       1  [emitted]  
-  output.js   8.01 KiB       2  [emitted]  main
+0.output.js  677 bytes       0  [emitted]  my own chunk
+1.output.js  463 bytes       1  [emitted]  
+  output.js   7.82 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
     > my own chunk [2] ./example.js 3:0-6:18
@@ -355,10 +341,10 @@ chunk    {2} output.js (main) 452 bytes [entry] [rendered]
      + 1 hidden module
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: a4fbcc7d664f6f0aeb32
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  112 bytes    0, 1  [emitted]  my own chunk

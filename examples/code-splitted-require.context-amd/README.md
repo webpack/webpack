@@ -198,8 +198,6 @@ getTemplate("b", function(b) {
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 function getTemplate(templateName, callback) {
@@ -228,8 +226,6 @@ getTemplate("b", function(b) {
   !*** ../require.context/templates sync ^\.\/.*$ ***!
   \**************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -266,8 +262,6 @@ webpackContext.id = 1;
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -280,8 +274,6 @@ module.exports = function() {
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -294,8 +286,6 @@ module.exports = function() {
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -308,14 +298,14 @@ module.exports = function() {
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 3742c378c8642182b6b1
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
-0.output.js  2.19 KiB       0  [emitted]  
-  output.js  7.28 KiB       1  [emitted]  main
+0.output.js  1.81 KiB       0  [emitted]  
+  output.js  7.18 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 463 bytes {1} [rendered]
     > [0] ./example.js 2:1-4:3
@@ -336,10 +326,10 @@ chunk    {1} output.js (main) 261 bytes [entry] [rendered]
         single entry .\example.js  main
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 3742c378c8642182b6b1
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  592 bytes       0  [emitted]  

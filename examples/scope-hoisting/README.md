@@ -102,7 +102,12 @@ export var y = "y";
 
 ``` javascript
 module.exports = {
-	mode: "production"
+	// mode: "development" || "production",
+	optimization: {
+		usedExports: true,
+		concatenateModules: true,
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 };
 ```
 
@@ -322,7 +327,7 @@ var x = "x";
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+__webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./node_modules/shared.js + 1 modules
 var shared = __webpack_require__(0);
@@ -382,7 +387,7 @@ exports.c = "e";
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+__webpack_require__.r(__webpack_exports__);
 var d_namespaceObject = {};
 __webpack_require__.d(d_namespaceObject, "a", function() { return a; });
 
@@ -422,19 +427,19 @@ var a = "d";
 Minimized
 
 ``` javascript
-(window.webpackJsonp=window.webpackJsonp||[]).push([[0],[,,function(n,r){r.c="e"},function(n,r,e){"use strict";Object.defineProperty(r,"__esModule",{value:!0});var t={};e.d(t,"a",function(){return d});var o=e(2),u=e(0),c=String.fromCharCode(o.c.charCodeAt(0)-2),d="d";e.d(r,"c",function(){return c}),e.d(r,"x",function(){return u.a}),e.d(r,"y",function(){return u.b}),e.d(r,"d",function(){return t})}]]);
+(window.webpackJsonp=window.webpackJsonp||[]).push([[0],[,,function(n,r){r.c="e"},function(n,r,t){"use strict";t.r(r);var c={};t.d(c,"a",function(){return e});var o=t(2),u=t(0),d=String.fromCharCode(o.c.charCodeAt(0)-2),e="d";t.d(r,"c",function(){return d}),t.d(r,"x",function(){return u.a}),t.d(r,"y",function(){return u.b}),t.d(r,"d",function(){return c})}]]);
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 728059a4c3ff363ecb4e
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
-0.output.js  2.01 KiB       0  [emitted]  
-  output.js  8.24 KiB       1  [emitted]  main
+0.output.js  1.98 KiB       0  [emitted]  
+  output.js  8.21 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 286 bytes {1} [rendered]
     > [] 4:0-16
@@ -457,14 +462,14 @@ chunk    {1} output.js (main) 390 bytes [entry] [rendered]
         single entry .\example.js  main
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 728059a4c3ff363ecb4e
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  404 bytes       0  [emitted]  
-  output.js   1.84 KiB       1  [emitted]  main
+0.output.js  362 bytes       0  [emitted]  
+  output.js    1.8 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 286 bytes {1} [rendered]
     > [] 4:0-16

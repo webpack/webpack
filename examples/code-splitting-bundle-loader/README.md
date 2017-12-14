@@ -201,8 +201,6 @@ module.exports = "It works";
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(/*! bundle-loader!./file.js */ 1)(function(fileJsExports) {
@@ -216,8 +214,6 @@ __webpack_require__(/*! bundle-loader!./file.js */ 1)(function(fileJsExports) {
   !*** (webpack)/node_modules/bundle-loader!./file.js ***!
   \******************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var cbs = [], 
@@ -249,8 +245,6 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
   !*** ./file.js ***!
   \*****************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "It works";
@@ -262,14 +256,14 @@ module.exports = "It works";
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 18d3b0908ee42d7ec955
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  352 bytes       0  [emitted]  
-  output.js    7.7 KiB       1  [emitted]  main
+0.output.js  257 bytes       0  [emitted]  
+  output.js   7.52 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 28 bytes {1} [rendered]
     > [1] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
@@ -283,10 +277,10 @@ chunk    {1} output.js (main) 378 bytes [entry] [rendered]
         cjs require bundle-loader!./file.js [0] ./example.js 1:0-34
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 18d3b0908ee42d7ec955
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
 0.output.js  98 bytes       0  [emitted]  

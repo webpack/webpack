@@ -51,7 +51,7 @@ require.ensure(["./shared"], function(require) {
 var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	entry: {
 		pageA: "./pageA",
 		pageB: "./pageB"
@@ -66,7 +66,10 @@ module.exports = {
 			filename: "commons.js",
 			name: "commons"
 		})
-	]
+	],
+	optimization: {
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 };
 ```
 
@@ -277,8 +280,6 @@ module.exports = {
   !*** ./common.js ***!
   \*******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = "Common";
@@ -297,8 +298,6 @@ module.exports = "Common";
   !*** ./pageA.js ***!
   \******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 0);
@@ -321,8 +320,6 @@ __webpack_require__.e/* require */(0/* duplicate */).then(function() { var __WEB
   !*** ./pageB.js ***!
   \******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 0);
@@ -346,8 +343,6 @@ __webpack_require__.e/* require.ensure */(0/* duplicate */).then((function(requi
   !*** ./shared.js ***!
   \*******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 0);
@@ -361,16 +356,16 @@ module.exports = function(msg) {
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: fff03ff0a6abf2637b15
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
           Asset       Size  Chunks             Chunk Names
-     0.chunk.js  467 bytes       0  [emitted]  
-pageB.bundle.js  648 bytes       1  [emitted]  pageB
-pageA.bundle.js  691 bytes       2  [emitted]  pageA
-     commons.js   7.33 KiB       3  [emitted]  commons
+     0.chunk.js  372 bytes       0  [emitted]  
+pageB.bundle.js  553 bytes       1  [emitted]  pageB
+pageA.bundle.js  596 bytes       2  [emitted]  pageA
+     commons.js   7.23 KiB       3  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 chunk    {0} 0.chunk.js 91 bytes {1} {2} [rendered]
@@ -395,10 +390,10 @@ chunk    {3} commons.js (commons) 26 bytes [entry] [rendered]
         cjs require ./common [3] ./pageB.js 1:13-32
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: fff03ff0a6abf2637b15
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
           Asset       Size  Chunks             Chunk Names
      0.chunk.js  121 bytes       0  [emitted]  
