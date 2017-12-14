@@ -4,6 +4,7 @@ module.exports = {
 		__filename: false
 	},
 	optimization: {
-		concatenateModules: false
+		concatenateModules: false,
+		minimize: false
 	}
 };

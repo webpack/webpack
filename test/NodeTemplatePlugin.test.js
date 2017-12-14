@@ -20,10 +20,7 @@ describe("NodeTemplatePlugin", () => {
 				library: "abc",
 				libraryTarget: "commonjs",
 			},
-			entry: "./entry",
-			plugins: [
-				new webpack.optimize.UglifyJsPlugin()
-			]
+			entry: "./entry"
 		}, (err, stats) => {
 			if(err) return err;
 			stats.hasErrors().should.be.not.ok();
@@ -61,8 +58,7 @@ describe("NodeTemplatePlugin", () => {
 			plugins: [
 				new webpack.optimize.LimitChunkCountPlugin({
 					maxChunks: 1
-				}),
-				new webpack.optimize.UglifyJsPlugin()
+				})
 			]
 		}, (err, stats) => {
 			if(err) return err;

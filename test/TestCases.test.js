@@ -43,7 +43,7 @@ describe("TestCases", () => {
 		name: "normal",
 	}, {
 		name: "production",
-		mode: "production"
+		mode: "production",
 	}, {
 		name: "development",
 		mode: "development",
@@ -91,28 +91,15 @@ describe("TestCases", () => {
 		name: "devtool-cheap-source-map",
 		devtool: "cheap-source-map"
 	}, {
-		name: "minimized",
-		mode: "production",
-		minimize: true,
-		plugins: [
-			new webpack.optimize.UglifyJsPlugin({
-				sourceMap: false
-			})
-		]
-	}, {
 		name: "minimized-source-map",
 		mode: "production",
 		devtool: "eval-cheap-module-source-map",
-		minimize: true,
-		plugins: [
-			new webpack.optimize.UglifyJsPlugin()
-		]
+		minimize: true
 	}, {
 		name: "minimized-hashed-modules",
 		mode: "production",
 		minimize: true,
 		plugins: [
-			new webpack.optimize.UglifyJsPlugin(),
 			new webpack.HashedModuleIdsPlugin()
 		]
 	}, {
@@ -122,7 +109,6 @@ describe("TestCases", () => {
 		minimize: true,
 		plugins: [
 			new webpack.HotModuleReplacementPlugin(),
-			new webpack.optimize.UglifyJsPlugin(),
 			new webpack.NamedModulesPlugin(),
 			new webpack.NamedChunksPlugin()
 		]

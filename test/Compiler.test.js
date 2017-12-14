@@ -18,6 +18,9 @@ describe("Compiler", () => {
 		options.context = path.join(__dirname, "fixtures");
 		if(noOutputPath) options.output.path = "/";
 		options.output.pathinfo = true;
+		options.optimization = {
+			minimize: false
+		};
 		const logs = {
 			mkdirp: [],
 			writeFile: [],
