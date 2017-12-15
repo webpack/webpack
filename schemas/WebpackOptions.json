@@ -1061,7 +1061,7 @@
   },
   "properties": {
     "mode": {
-      "description": "Set the value of `require.amd` and `define.amd`.",
+      "description": "Enable production optimizations or development hints.",
       "enum": [
         "development",
         "production",
