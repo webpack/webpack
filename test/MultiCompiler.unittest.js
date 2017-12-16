@@ -9,8 +9,23 @@ function CompilerEnvironment() {
 	const runCallbacks = [];
 	const watchCallbacks = [];
 
+	function createFakeHook(name) {
+		return {
+			tap(_, handler) {
+				pluginEvents.push({
+					name,
+					handler
+				});
+			}
+		};
+	}
+
 	this.getCompilerStub = function() {
 		return {
+			hooks: {
+				done: createFakeHook("done"),
+				invalid: createFakeHook("invalid")
+			},
 			plugin: function(name, handler) {
 				pluginEvents.push({
 					name,

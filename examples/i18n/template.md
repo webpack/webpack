@@ -37,14 +37,14 @@ The I18nPlugin replaces every occurrence of the i18n function `__(...)` with a c
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

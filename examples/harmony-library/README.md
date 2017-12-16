@@ -3,7 +3,7 @@
 ``` javascript
 var path = require("path");
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	entry: "./example",
 	output: {
 		path: path.join(__dirname, "js"),
@@ -112,8 +112,6 @@ return /******/ (function(modules) { // webpackBootstrap
   !*** ./example.js ***!
   \********************/
 /*! exports provided: value, increment, default */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is an entry point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -134,13 +132,13 @@ function increment() {
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 3644f1adc4c521a71110
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
            Asset      Size  Chunks             Chunk Names
-MyLibrary.umd.js  3.66 KiB       0  [emitted]  main
+MyLibrary.umd.js  3.58 KiB       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -149,10 +147,10 @@ chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
         single entry ./example  main
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 3644f1adc4c521a71110
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
            Asset       Size  Chunks             Chunk Names
 MyLibrary.umd.js  952 bytes       0  [emitted]  main

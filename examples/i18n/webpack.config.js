@@ -7,7 +7,7 @@ var languages = {
 module.exports = Object.keys(languages).map(function(language) {
 	return {
 		name: language,
-		mode: "production",
+		// mode: "development || "production",
 		entry: "./example",
 		output: {
 			path: path.join(__dirname, "js"),

@@ -107,8 +107,6 @@ onmessage = function(event) {
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Worker = __webpack_require__(/*! worker-loader!./worker */ 1);
@@ -125,8 +123,6 @@ worker.onmessage = function(event) {
   !*** (webpack)/node_modules/worker-loader!./worker.js ***!
   \********************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
@@ -242,8 +238,6 @@ module.exports = function() {
   !*** ./worker.js ***!
   \*******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 onmessage = function(event) {
@@ -268,8 +262,6 @@ self["webpackChunk"]([0],[
   !*** ../require.context/templates sync ^\.\/.*$ ***!
   \**************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -306,8 +298,6 @@ webpackContext.id = 1;
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -320,8 +310,6 @@ module.exports = function() {
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -334,8 +322,6 @@ module.exports = function() {
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -348,15 +334,15 @@ module.exports = function() {
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: ea02849f7950e1efeb6f
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
            Asset      Size  Chunks             Chunk Names
-0.hash.worker.js  2.14 KiB          [emitted]  
-  hash.worker.js  4.13 KiB          [emitted]  
-       output.js  3.52 KiB       0  [emitted]  main
+0.hash.worker.js  1.77 KiB          [emitted]  
+  hash.worker.js  4.04 KiB          [emitted]  
+       output.js  3.34 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 311 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -366,8 +352,8 @@ chunk    {0} output.js (main) 311 bytes [entry] [rendered]
         cjs require worker-loader!./worker [0] ./example.js 1:13-46
 Child worker:
                Asset      Size  Chunks             Chunk Names
-    0.hash.worker.js  2.14 KiB       0  [emitted]  
-      hash.worker.js  4.13 KiB       1  [emitted]  main
+    0.hash.worker.js  1.77 KiB       0  [emitted]  
+      hash.worker.js  4.04 KiB       1  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
         > [0] ./worker.js 3:1-5:3
@@ -388,15 +374,15 @@ Child worker:
             single entry !!.\worker.js  main
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: ea02849f7950e1efeb6f
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
            Asset       Size  Chunks             Chunk Names
 0.hash.worker.js  557 bytes          [emitted]  
   hash.worker.js  915 bytes          [emitted]  
-       output.js  698 bytes       0  [emitted]  main
+       output.js  695 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 311 bytes [entry] [rendered]
     > main [0] ./example.js 

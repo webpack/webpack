@@ -13,7 +13,7 @@ var path = require("path");
 var webpack = require("../../../");
 
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	context: __dirname,
 	entry: ["example-vendor"],
 	output: {
@@ -41,7 +41,7 @@ export function square(n) {
 # js/vendor.js
 
 ``` javascript
-var vendor_lib_668eb208c131c5341859 =
+var vendor_lib_ac3d059b8762ae5acfd8 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -128,7 +128,6 @@ var vendor_lib_668eb208c131c5341859 =
   \****************/
 /*! no static exports found */
 /*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__;
@@ -140,7 +139,6 @@ module.exports = __webpack_require__;
   \*****************************************/
 /*! exports provided: square */
 /*! all exports used */
-/*! ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: dll main (referenced with single entry) and by: DllPlugin */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -158,18 +156,18 @@ function square(n) {
 # js/vendor-manifest.json
 
 ``` javascript
-{"name":"vendor_lib_668eb208c131c5341859","content":{"../node_modules/example-vendor.js":{"id":1,"meta":{"harmonyModule":true},"exports":["square"]}}}
+{"name":"vendor_lib_ac3d059b8762ae5acfd8","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"harmonyModule":true,"providedExports":["square"]}}}}
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 668eb208c131c5341859
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
-    Asset      Size  Chunks             Chunk Names
-vendor.js  3.53 KiB       0  [emitted]  main
+    Asset     Size  Chunks             Chunk Names
+vendor.js  3.3 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
     > main [0] dll main 
@@ -179,10 +177,10 @@ chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
      + 1 hidden module
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 668eb208c131c5341859
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset       Size  Chunks             Chunk Names
 vendor.js  702 bytes       0  [emitted]  main

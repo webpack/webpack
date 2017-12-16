@@ -100,19 +100,19 @@ While module concatentation identifiers in modules are renamed to avoid conflict
 Minimized
 
 ``` javascript
-{{min:js/0.output.js}}
+{{production:js/0.output.js}}
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

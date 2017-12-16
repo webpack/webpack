@@ -219,8 +219,6 @@ export default foo;
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__.e/* import() */(0/*! chunk-foo *//* duplicate */).then(__webpack_require__.bind(null, /*! ./templates/foo */2)).then(function(foo) {
@@ -246,8 +244,6 @@ __webpack_require__(/*! ./templates */ 4)("./ba" + createContextVar).then(functi
   !*** ./templates lazy ^\.\/ba.*$ namespace object ***!
   \****************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -289,16 +285,16 @@ module.exports = webpackAsyncContext;
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: b9593814353293fefda9
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  617 bytes       0  [emitted]  chunk-foo
-1.output.js  649 bytes       1  [emitted]  chunk-bar-baz2
-2.output.js  640 bytes       2  [emitted]  chunk-bar-baz0
-  output.js   8.37 KiB       3  [emitted]  main
+0.output.js  439 bytes       0  [emitted]  chunk-foo
+1.output.js  445 bytes       1  [emitted]  chunk-bar-baz2
+2.output.js  436 bytes       2  [emitted]  chunk-bar-baz0
+  output.js   8.19 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (chunk-foo) 41 bytes {3} [rendered]
     > duplicate chunk-foo [3] ./example.js 1:0-62
@@ -325,10 +321,10 @@ chunk    {3} output.js (main) 580 bytes [entry] [rendered]
         import() context lazy ./templates [3] ./example.js 11:0-84
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: b9593814353293fefda9
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  115 bytes       0  [emitted]  chunk-foo

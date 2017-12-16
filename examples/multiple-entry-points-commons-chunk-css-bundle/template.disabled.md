@@ -74,7 +74,7 @@
 # js/B.css (Minimized)
 
 ``` css
-{{min:js/B.css}}
+{{production:js/B.css}}
 ```
 
 # js/C.css
@@ -86,19 +86,19 @@
 # js/C.css (Minimized)
 
 ``` css
-{{min:js/C.css}}
+{{production:js/C.css}}
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

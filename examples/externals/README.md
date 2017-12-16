@@ -28,7 +28,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 
 ``` javascript
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	output: {
 		libraryTarget: "umd"
 	},
@@ -144,8 +144,6 @@ return /******/ (function(modules) { // webpackBootstrap
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var add = __webpack_require__(/*! add */ 1);
@@ -159,8 +157,6 @@ exports.exampleValue = subtract(add(42, 2), 2);
   !*** external "add" ***!
   \**********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
@@ -171,8 +167,6 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
   !*** external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} ***!
   \***************************************************************************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
@@ -184,13 +178,13 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: ffa746601696f82316c5
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  4.47 KiB       0  [emitted]  main
+output.js  4.19 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -202,10 +196,10 @@ chunk    {0} output.js (main) 197 bytes [entry] [rendered]
         cjs require subtract [0] ./example.js 2:15-34
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: ffa746601696f82316c5
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
 output.js  1.05 KiB       0  [emitted]  main

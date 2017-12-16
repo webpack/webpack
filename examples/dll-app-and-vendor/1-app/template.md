@@ -28,16 +28,16 @@ The previously built vendor dll is used. The DllReferencePlugin reads the conten
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```
 
 <!-- @TODO:

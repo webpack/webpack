@@ -238,8 +238,6 @@ require(
   !*** ./commonjs.js ***!
   \*********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CommonJs Module Format
@@ -257,8 +255,6 @@ Promise.resolve().then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpa
   !*** ./amd.js ***!
   \****************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Format
@@ -277,8 +273,6 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Fo
   !*** ./harmony.js ***!
   \********************/
 /*! exports provided: default */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./amd.js (referenced with amd require, cjs require), ./commonjs.js (referenced with amd require, cjs require), ./example.js (referenced with cjs require) */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -300,8 +294,6 @@ __webpack_require__.r(__webpack_exports__);
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CommonJs-style requires
@@ -335,8 +327,6 @@ __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIR
   !*** ../require.context/templates sync ^\.\/.*\.js$ ***!
   \******************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -370,8 +360,6 @@ webpackContext.id = 4;
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -384,8 +372,6 @@ module.exports = function() {
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -398,8 +384,6 @@ module.exports = function() {
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -412,14 +396,14 @@ module.exports = function() {
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: c5e217711d33e344c3e3
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
-0.output.js  2.19 KiB       0  [emitted]  
-  output.js  10.3 KiB       1  [emitted]  main
+0.output.js  1.82 KiB       0  [emitted]  
+  output.js  9.73 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 439 bytes {1} [rendered]
     > [3] ./example.js 7:0-14:1
@@ -458,10 +442,10 @@ chunk    {1} output.js (main) 1.03 KiB [entry] [rendered]
         single entry .\example.js  main
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: c5e217711d33e344c3e3
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  571 bytes       0  [emitted]  

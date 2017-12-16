@@ -24,7 +24,7 @@ var languages = {
 module.exports = Object.keys(languages).map(function(language) {
 	return {
 		name: language,
-		mode: "production",
+		// mode: "development || "production",
 		entry: "./example",
 		output: {
 			path: path.join(__dirname, "js"),
@@ -133,8 +133,6 @@ module.exports = Object.keys(languages).map(function(language) {
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 console.log("Hallo Welt");
@@ -223,8 +221,6 @@ console.log("Missing Text");
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 console.log("Hello World");
@@ -236,24 +232,24 @@ console.log("Missing Text");
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 8a5f1b2749a468f6c191a24548b478fddc0ef618
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
 Child en:
-    Hash: 8a5f1b2749a468f6c191
+    Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset      Size  Chunks             Chunk Names
-    en.output.js  2.88 KiB       0  [emitted]  main
+    en.output.js  2.79 KiB       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built]
             single entry ./example  main
 Child de:
-    Hash: a24548b478fddc0ef618
+    Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset      Size  Chunks             Chunk Names
-    de.output.js  2.88 KiB       0  [emitted]  main
+    de.output.js  2.79 KiB       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
@@ -264,13 +260,13 @@ Child de:
     Missing localization: Missing Text
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 8a5f1b2749a468f6c191a24548b478fddc0ef618
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
 Child en:
-    Hash: 8a5f1b2749a468f6c191
+    Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset       Size  Chunks             Chunk Names
     en.output.js  604 bytes       0  [emitted]  main
     Entrypoint main = en.output.js
@@ -279,7 +275,7 @@ Child en:
         [0] ./example.js 65 bytes {0} [built]
             single entry ./example  main
 Child de:
-    Hash: a24548b478fddc0ef618
+    Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset       Size  Chunks             Chunk Names
     de.output.js  603 bytes       0  [emitted]  main
     Entrypoint main = de.output.js

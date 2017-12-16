@@ -83,7 +83,7 @@ within webpack itself use this plugin interface. This makes webpack very
 |:--:|:----:|:----------|
 |[common-chunks-webpack-plugin][common]|![common-npm]|Generates chunks of common modules shared between entry points and splits them into separate  bundles (e.g vendor.bundle.js && app.bundle.js)|
 |[extract-text-webpack-plugin][extract]|![extract-npm]|Extracts Text (CSS) from your bundles into a separate file (app.bundle.css)|
-|[compression-webpack-plugin][compression]|![compression-npm]|Prepare compressed versions of assets to serve them with Content-Encoding|
+|[compression-webpack-plugin][compression]|![compression-npm]|Prepares compressed versions of assets to serve them with Content-Encoding|
 |[i18n-webpack-plugin][i18n]|![i18n-npm]|Adds i18n support to your bundles|
 |[html-webpack-plugin][html-plugin]|![html-plugin-npm]| Simplifies creation of HTML files (`index.html`) to serve your bundles|
 
@@ -115,7 +115,7 @@ or are automatically applied via regex from your webpack configuration.
 |Name|Status|Description|
 |:--:|:----:|:----------|
 |[raw-loader][raw]|![raw-npm]|Loads raw content of a file (utf-8)|
-|[val-loader][val]|![val-npm]|Executes code as module and consider exports as JS code|
+|[val-loader][val]|![val-npm]|Executes code as module and considers exports as JS code|
 |[url-loader][url]|![url-npm]|Works like the file loader, but can return a Data Url if the file is smaller than a limit|
 |[file-loader][file]|![file-npm]|Emits the file into the output folder and returns the (relative) url|
 
@@ -146,7 +146,7 @@ or are automatically applied via regex from your webpack configuration.
 
 |Name|Status|Description|
 |:--:|:----:|:----------|
-|<a href="https://github.com/webpack/script-loader">`<script>`</a>|![script-npm]|Executes a JavaScript file once in global context (like in script tag), requires are not parsed|
+|<a href="https://github.com/webpack/script-loader">`<script>`</a>|![script-npm]|Executes a JavaScript file once in global context (like in script tag), `require()`s are not parsed|
 |<a href="https://github.com/babel/babel-loader"><img width="48" height="48" title="babel-loader" src="https://worldvectorlogo.com/logos/babel-10.svg"></a>|![babel-npm]|Loads ES2015+ code and transpiles to ES5 using <a href="https://github.com/babel/babel">Babel</a>|
 |<a href="https://github.com/jupl/traceur-loader"><img width="48" height="48" src="https://google.github.com/traceur-compiler/logo/tc.svg"></a>|![traceur-npm]|Loads ES2015+ code and transpiles to ES5 using [Traceur](https://github.com/google/traceur-compiler)|
 |<a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>|![type-npm]|Loads TypeScript like JavaScript|
@@ -163,7 +163,7 @@ or are automatically applied via regex from your webpack configuration.
 
 |Name|Status|Description|
 |:--:|:----:|:----------|
-|<a href="https://github.com/webpack/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5.svg"></a>|![html-npm]|Exports HTML as string, require references to static resources|
+|<a href="https://github.com/webpack/html-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/html5.svg"></a>|![html-npm]|Exports HTML as string, requires references to static resources|
 |<a href="https://github.com/pugjs/pug-loader"><img width="48" height="48" src="https://cdn.rawgit.com/pugjs/pug-logo/master/SVG/pug-final-logo-_-colour-128.svg"></a>|![pug-npm]|Loads Pug templates and returns a function|
 |<a href="https://github.com/webpack/jade-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/jade-3.svg"></a>|![jade-npm]|Loads Jade templates and returns a function|
 |<a href="https://github.com/peerigon/markdown-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/markdown.svg"></a>|![md-npm]|Compiles Markdown to HTML|
@@ -262,7 +262,7 @@ Contributions go far beyond pull requests and commits. Although we love giving y
 * Adding unit, or functional tests
 * Triaging GitHub issues -- especially determining whether an issue still persists or is reproducible.
 * [Searching #webpack on twitter](https://twitter.com/search?q=webpack) and helping someone else who needs help
-* Teaching others how to contribute to one of the many webpack repo's!
+* Teaching others how to contribute to one of the many webpack's repos!
 * [Blogging, speaking about, or creating tutorials](https://github.com/webpack-contrib/awesome-webpack) about one of webpack's many features. 
 * Helping others in our webpack [gitter channel](https://gitter.im/webpack/webpack).
 

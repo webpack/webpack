@@ -1,6 +1,6 @@
 var path = require("path");
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	entry: {
 		alpha: "./alpha",
 		beta: "./beta"

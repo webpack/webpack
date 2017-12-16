@@ -1,4 +1,5 @@
 module.exports = {
+	mode: "development",
 	output: {
 		chunkFilename: "js/chunks/c.js"
 	},

@@ -88,7 +88,7 @@ const path = require("path");
 
 module.exports = [
 	{
-		mode: "production",
+		// mode: "development || "production",
 		entry: {
 			main: ["./example.js"]
 		},
@@ -103,10 +103,13 @@ module.exports = [
 				children: true,
 				deepChildren: true,
 			})
-		]
+		],
+		optimization: {
+			occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+		}
 	},
 	{
-		mode: "production",
+		// mode: "development || "production",
 		entry: {
 			main: ["./example.js"]
 		},
@@ -122,7 +125,10 @@ module.exports = [
 				children: true,
 				deepChildren: true,
 			})
-		]
+		],
+		optimization: {
+			occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+		}
 	}
 ];
 ```
@@ -311,8 +317,6 @@ module.exports = [
   !*** multi ./example.js ***!
   \**************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! ./example.js */1);
@@ -324,8 +328,6 @@ module.exports = __webpack_require__(/*! ./example.js */1);
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var main = function() {
@@ -349,8 +351,6 @@ main();
   !*** ./reusableComponent.js ***!
   \******************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -372,8 +372,6 @@ module.exports = function() {
   !*** ./pageC.js ***!
   \******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var reusableComponent = __webpack_require__(/*! ./reusableComponent */ 2);
@@ -399,8 +397,6 @@ module.exports = function() {
   !*** ./pageB.js ***!
   \******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
@@ -427,8 +423,6 @@ module.exports = function() {
   !*** ./pageA.js ***!
   \******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var reusableComponent = __webpack_require__(/*! ./reusableComponent */ 2);
@@ -621,8 +615,6 @@ module.exports = function() {
   !*** multi ./example.js ***!
   \**************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(/*! ./example.js */1);
@@ -634,8 +626,6 @@ module.exports = __webpack_require__(/*! ./example.js */1);
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var main = function() {
@@ -667,8 +657,6 @@ main();
   !*** ./reusableComponent.js ***!
   \******************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -691,8 +679,6 @@ module.exports = function() {
   !*** ./pageB.js ***!
   \******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
@@ -719,8 +705,6 @@ module.exports = function() {
   !*** ./pageA.js ***!
   \******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var reusableComponent = __webpack_require__(/*! ./reusableComponent */ 4);
@@ -746,8 +730,6 @@ module.exports = function() {
   !*** ./pageC.js ***!
   \******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var reusableComponent = __webpack_require__(/*! ./reusableComponent */ 4);
@@ -765,18 +747,18 @@ module.exports = function() {
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 3d3c887e038c22d66243e918fbcaa3ff1f847528
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
 Child
-    Hash: 3d3c887e038c22d66243
+    Hash: 0a1b2c3d4e5f6a7b8c9d
           Asset       Size  Chunks             Chunk Names
-    0.output.js  509 bytes       0  [emitted]  
-    1.output.js  602 bytes       1  [emitted]  
-    2.output.js  509 bytes       2  [emitted]  
-      output.js   7.98 KiB       3  [emitted]  main
+    0.output.js  414 bytes       0  [emitted]  
+    1.output.js  507 bytes       1  [emitted]  
+    2.output.js  414 bytes       2  [emitted]  
+      output.js   7.71 KiB       3  [emitted]  main
     Entrypoint main = output.js
     chunk    {0} 0.output.js 142 bytes {3} [rendered]
         > [4] ./pageB.js 3:1-6:3
@@ -800,13 +782,13 @@ Child
             cjs require ./reusableComponent [3] ./pageA.js 1:24-54
             cjs require ./reusableComponent [5] ./pageC.js 1:24-54
 Child
-    Hash: e918fbcaa3ff1f847528
+    Hash: 0a1b2c3d4e5f6a7b8c9d
                Asset       Size  Chunks             Chunk Names
-    0.asyncoutput.js  435 bytes       0  [emitted]  
-    1.asyncoutput.js  643 bytes       1  [emitted]  
-    2.asyncoutput.js  509 bytes       2  [emitted]  
-    3.asyncoutput.js  509 bytes       3  [emitted]  
-      asyncoutput.js   7.68 KiB       4  [emitted]  main
+    0.asyncoutput.js  340 bytes       0  [emitted]  
+    1.asyncoutput.js  548 bytes       1  [emitted]  
+    2.asyncoutput.js  414 bytes       2  [emitted]  
+    3.asyncoutput.js  414 bytes       3  [emitted]  
+      asyncoutput.js   7.49 KiB       4  [emitted]  main
     Entrypoint main = asyncoutput.js
     chunk    {0} 0.asyncoutput.js 72 bytes {4} [rendered]
         > async commons [1] ./example.js 3:1-6:3
@@ -834,14 +816,18 @@ Child
             single entry ./example.js [0] multi ./example.js main:100000
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 3d3c887e038c22d66243e918fbcaa3ff1f847528
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
 Child
-    Hash: 3d3c887e038c22d66243
-     4 assets
+    Hash: 0a1b2c3d4e5f6a7b8c9d
+          Asset       Size  Chunks             Chunk Names
+    0.output.js  138 bytes       0  [emitted]  
+    1.output.js  176 bytes       1  [emitted]  
+    2.output.js  138 bytes       2  [emitted]  
+      output.js    1.8 KiB       3  [emitted]  main
     Entrypoint main = output.js
     chunk    {0} 0.output.js 142 bytes {3} [rendered]
         > [4] ./pageB.js 3:1-6:3
@@ -864,15 +850,14 @@ Child
         [2] ./reusableComponent.js 72 bytes {3} [built]
             cjs require ./reusableComponent [3] ./pageA.js 1:24-54
             cjs require ./reusableComponent [5] ./pageC.js 1:24-54
-    
-    ERROR in 1.output.js from UglifyJs
-    Unexpected token: punc ()) [1.output.js:8,53]
-    
-    ERROR in output.js from UglifyJs
-    Unexpected token: punc ()) [output.js:182,53]
 Child
-    Hash: e918fbcaa3ff1f847528
-     5 assets
+    Hash: 0a1b2c3d4e5f6a7b8c9d
+               Asset       Size  Chunks             Chunk Names
+    0.asyncoutput.js  133 bytes       0  [emitted]  
+    1.asyncoutput.js  198 bytes       1  [emitted]  
+    2.asyncoutput.js  138 bytes       2  [emitted]  
+    3.asyncoutput.js  138 bytes       3  [emitted]  
+      asyncoutput.js   1.76 KiB       4  [emitted]  main
     Entrypoint main = asyncoutput.js
     chunk    {0} 0.asyncoutput.js 72 bytes {4} [rendered]
         > async commons [1] ./example.js 3:1-6:3
@@ -898,10 +883,4 @@ Child
             multi entry 
         [1] ./example.js 233 bytes {4} [built]
             single entry ./example.js [0] multi ./example.js main:100000
-    
-    ERROR in 1.asyncoutput.js from UglifyJs
-    Unexpected token: punc ()) [1.asyncoutput.js:8,94]
-    
-    ERROR in asyncoutput.js from UglifyJs
-    Unexpected token: punc ()) [asyncoutput.js:182,94]
 ```

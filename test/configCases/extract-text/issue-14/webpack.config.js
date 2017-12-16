@@ -12,6 +12,9 @@ module.exports = {
 			}
 		]
 	},
+	optimization: {
+		minimize: false
+	},
 	plugins: [
 		new ETP("style.css")
 	]

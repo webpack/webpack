@@ -34,7 +34,9 @@ describe("NormalModule", function() {
 			resource,
 			parser
 		);
-		normalModule.cacheable = true;
+		normalModule.buildInfo = {
+			cacheable: true
+		};
 	});
 	describe("#identifier", function() {
 		it("returns an identifier for this module", function() {
@@ -230,8 +232,8 @@ describe("NormalModule", function() {
 		function setDeps(
 			fileDependencies,
 			contextDependencies) {
-			normalModule.fileDependencies = fileDependencies;
-			normalModule.contextDependencies = contextDependencies;
+			normalModule.buildInfo.fileDependencies = fileDependencies;
+			normalModule.buildInfo.contextDependencies = contextDependencies;
 		}
 
 		beforeEach(function() {

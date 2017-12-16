@@ -5,26 +5,21 @@ require("should");
 const sinon = require("sinon");
 const ContextDependencyTemplateAsId = require("../lib/dependencies/ContextDependencyTemplateAsId");
 
-const requestShortenerMock = {
-	shorten: (request) => `shortened ${request}`
-};
-
 describe("ContextDependencyTemplateAsId", () => {
 	let env;
-
-	const applyContextDependencyTemplateAsId = function() {
-		const contextDependencyTemplateAsId = new ContextDependencyTemplateAsId();
-		const args = [].slice.call(arguments).concat(requestShortenerMock);
-		contextDependencyTemplateAsId.apply.apply(contextDependencyTemplateAsId, args);
-	};
 
 	beforeEach(() => {
 		env = {
 			source: {
 				replace: sinon.stub()
 			},
-			outputOptions: {
-				pathinfo: true
+			runtimeTemplate: {
+				outputOptions: {
+					pathinfo: true
+				},
+				requestShortener: {
+					shorten: (request) => `shortened ${request}`
+				}
 			},
 			module: {
 				id: "123",
@@ -46,7 +41,7 @@ describe("ContextDependencyTemplateAsId", () => {
 	describe("when applied", () => {
 		describe("with module missing depedencies", () => {
 			beforeEach(() => {
-				applyContextDependencyTemplateAsId(env.baseDependency, env.source, env.outputOptions);
+				new ContextDependencyTemplateAsId().apply(env.baseDependency, env.source, env.runtimeTemplate);
 			});
 
 			it("replaces source with missing module error", () => {
@@ -65,8 +60,8 @@ describe("ContextDependencyTemplateAsId", () => {
 
 			describe("and path info true", function() {
 				beforeEach(function() {
-					env.outputOptions.pathinfo = true;
-					applyContextDependencyTemplateAsId(env.dependency, env.source, env.outputOptions);
+					env.runtimeTemplate.outputOptions.pathinfo = true;
+					new ContextDependencyTemplateAsId().apply(env.dependency, env.source, env.runtimeTemplate);
 				});
 
 				it("replaces source with webpack require with comment", () => {
@@ -77,8 +72,8 @@ describe("ContextDependencyTemplateAsId", () => {
 
 			describe("and path info false", function() {
 				beforeEach(function() {
-					env.outputOptions.pathinfo = false;
-					applyContextDependencyTemplateAsId(env.dependency, env.source, env.outputOptions);
+					env.runtimeTemplate.outputOptions.pathinfo = false;
+					new ContextDependencyTemplateAsId().apply(env.dependency, env.source, env.runtimeTemplate);
 				});
 
 				it("replaces source with webpack require without comment", () => {
@@ -97,7 +92,7 @@ describe("ContextDependencyTemplateAsId", () => {
 						module: env.module
 					});
 
-					applyContextDependencyTemplateAsId(dependency, env.source, env.outputOptions);
+					new ContextDependencyTemplateAsId().apply(dependency, env.source, env.runtimeTemplate);
 				});
 
 				it("replaces source with webpack require and wraps value", () => {
@@ -124,7 +119,7 @@ describe("ContextDependencyTemplateAsId", () => {
 						module: env.module
 					});
 
-					applyContextDependencyTemplateAsId(dependency, env.source, env.outputOptions);
+					new ContextDependencyTemplateAsId().apply(dependency, env.source, env.runtimeTemplate);
 				});
 
 				it("replaces source with webpack require, wraps value and make replacements", () => {

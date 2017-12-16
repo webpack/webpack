@@ -1,7 +1,7 @@
 const LoaderOptionsPlugin = require("../../lib/LoaderOptionsPlugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	module: {
 		rules: [
 			{
@@ -22,5 +22,8 @@ module.exports = {
 		new LoaderOptionsPlugin({
 			options: {}
 		})
-	]
+	],
+	optimization: {
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 };

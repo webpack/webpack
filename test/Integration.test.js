@@ -49,6 +49,9 @@ describe("Integration", function() {
 			amd: {
 				fromOptions: true
 			},
+			optimization: {
+				minimize: false
+			},
 			resolve: {
 				// cannot resolve should outside the outermost node_modules
 				// so it is injected here

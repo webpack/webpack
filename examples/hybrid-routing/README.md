@@ -4,7 +4,7 @@
 var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	entry: {
 		// The entry points for the pages
 		pageA: "./aEntry",
@@ -27,7 +27,10 @@ module.exports = {
 			filename: "commons.js"
 		})
 		// The pages cannot run without the commons.js file now.
-	]
+	],
+	optimization: {
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 };
 ```
 
@@ -290,8 +293,6 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
   !*** ./render.js ***!
   \*******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function(page) {
@@ -308,8 +309,6 @@ module.exports = function(page) {
   !*** ./router.js ***!
   \*******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = __webpack_require__(/*! ./render */ 0);
@@ -344,8 +343,6 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
   !*** . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ***!
   \****************************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -378,8 +375,6 @@ webpackContext.id = 6;
   !*** (webpack)/node_modules/bundle-loader!./aPage.js ***!
   \*******************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var cbs = [], 
@@ -403,8 +398,6 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   !*** (webpack)/node_modules/bundle-loader!./bPage.js ***!
   \*******************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var cbs = [], 
@@ -429,15 +422,13 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
 # js/pageA.bundle.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3,1],[
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],[
 /* 0 */,
 /* 1 */
 /*!******************!*\
   !*** ./aPage.js ***!
   \******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -451,8 +442,6 @@ module.exports = function() {
   !*** ./aEntry.js ***!
   \*******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Just show the page "a"
@@ -473,8 +462,6 @@ render(__webpack_require__(/*! ./aPage */ 1));
   !*** ./aPage.js ***!
   \******************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -487,17 +474,17 @@ module.exports = function() {
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: a9c98a6416be93f3fdf3
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
           Asset       Size  Chunks             Chunk Names
-     0.chunk.js  388 bytes       0  [emitted]  
-     1.chunk.js  394 bytes       1  [emitted]  
-pageB.bundle.js  828 bytes    2, 0  [emitted]  pageB
-pageA.bundle.js  819 bytes    3, 1  [emitted]  pageA
-     commons.js   11.2 KiB       4  [emitted]  commons
+     0.chunk.js  293 bytes       0  [emitted]  
+     1.chunk.js  299 bytes       1  [emitted]  
+pageB.bundle.js  636 bytes       2  [emitted]  pageB
+pageA.bundle.js  627 bytes       3  [emitted]  pageA
+     commons.js   10.7 KiB       4  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 Entrypoint commons = commons.js
@@ -541,10 +528,10 @@ chunk    {4} commons.js (commons) 1.67 KiB [entry] [rendered]
         context element ./bPage [6] . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ./bPage
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: a9c98a6416be93f3fdf3
+Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
           Asset       Size  Chunks             Chunk Names
      0.chunk.js  123 bytes       0  [emitted]  

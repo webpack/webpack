@@ -872,6 +872,10 @@
             }
           ]
         },
+        "sideEffects": {
+          "description": "Flags a module as with or without side effects",
+          "type": "boolean"
+        },
         "query": {
           "description": "Shortcut for use.query",
           "anyOf": [
@@ -1006,6 +1010,10 @@
                 }
               ]
             },
+            "ident": {
+              "description": "Unique loader identifier",
+              "type": "string"
+            },
             "query": {
               "description": "Loader query",
               "anyOf": [
@@ -1053,7 +1061,7 @@
   },
   "properties": {
     "mode": {
-      "description": "Set the value of `require.amd` and `define.amd`.",
+      "description": "Enable production optimizations or development hints.",
       "enum": [
         "development",
         "production",
@@ -1274,6 +1282,25 @@
         "portableRecords": {
           "description": "Generate records with relative paths to be able to move the context folder",
           "type": "boolean"
+        },
+        "minimize": {
+          "description": "Enable minimizing the output. Uses optimization.minimizer.",
+          "type": "boolean"
+        },
+        "minimizer": {
+          "description": "Minimizer(s) to use for minimizing the output",
+          "type": "array",
+          "items": {
+            "description": "Plugin of type object or instanceof Function",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/common.pluginObject"
+              },
+              {
+                "$ref": "#/definitions/common.pluginFunction"
+              }
+            ]
+          }
         },
         "nodeEnv": {
           "description": "Set process.env.NODE_ENV to a specific value",

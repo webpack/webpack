@@ -1,7 +1,7 @@
 var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	entry: {
 		// The entry points for the pages
 		pageA: "./aEntry",
@@ -24,5 +24,8 @@ module.exports = {
 			filename: "commons.js"
 		})
 		// The pages cannot run without the commons.js file now.
-	]
+	],
+	optimization: {
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 };
