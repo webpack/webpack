@@ -73,6 +73,11 @@ module.exports = function() {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -104,6 +109,7 @@ module.exports = function() {
   \************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -117,6 +123,7 @@ module.exports = function() {
   \************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -130,6 +137,7 @@ module.exports = function() {
   \************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -143,6 +151,7 @@ module.exports = function() {
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 function getTemplate(templateName) {
@@ -153,11 +162,12 @@ console.log(getTemplate("b"));
 
 /***/ }),
 /* 4 */
-/*!****************************!*\
-  !*** ./templates ^\.\/.*$ ***!
-  \****************************/
+/*!*********************************!*\
+  !*** ./templates sync ^\.\/.*$ ***!
+  \*********************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -168,15 +178,19 @@ var map = {
 	"./c": 2,
 	"./c.js": 2
 };
+
+
 function webpackContext(req) {
-	return __webpack_require__(webpackContextResolve(req));
-};
+	var id = webpackContextResolve(req);
+	var module = __webpack_require__(id);
+	return module;
+}
 function webpackContextResolve(req) {
 	var id = map[req];
 	if(!(id + 1)) // check for number or string
 		throw new Error("Cannot find module '" + req + "'.");
 	return id;
-};
+}
 webpackContext.keys = function webpackContextKeys() {
 	return Object.keys(map);
 };
@@ -193,48 +207,50 @@ webpackContext.id = 4;
 ## Uncompressed
 
 ```
-Hash: acf02a400c4d02cc105a
-Version: webpack 3.5.1
+Hash: baa2ff0af1a7df4a1c89
+Version: webpack next
     Asset     Size  Chunks             Chunk Names
-output.js  4.42 kB       0  [emitted]  main
+output.js  4.9 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 613 bytes [entry] [rendered]
     > main [3] ./example.js 
     [0] ./templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a.js [4] ./templates ^\.\/.*$ ./a.js
-        context element ./a [4] ./templates ^\.\/.*$ ./a
+        context element ./a.js [4] ./templates sync ^\.\/.*$ ./a.js
+        context element ./a [4] ./templates sync ^\.\/.*$ ./a
     [1] ./templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b.js [4] ./templates ^\.\/.*$ ./b.js
-        context element ./b [4] ./templates ^\.\/.*$ ./b
+        context element ./b.js [4] ./templates sync ^\.\/.*$ ./b.js
+        context element ./b [4] ./templates sync ^\.\/.*$ ./b
     [2] ./templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c.js [4] ./templates ^\.\/.*$ ./c.js
-        context element ./c [4] ./templates ^\.\/.*$ ./c
+        context element ./c.js [4] ./templates sync ^\.\/.*$ ./c.js
+        context element ./c [4] ./templates sync ^\.\/.*$ ./c
     [3] ./example.js 150 bytes {0} [built]
-    [4] ./templates ^\.\/.*$ 217 bytes {0} [built]
+        single entry .\example.js  main
+    [4] ./templates sync ^\.\/.*$ 217 bytes {0} [built]
         cjs require context ./templates [3] ./example.js 2:8-44
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: acf02a400c4d02cc105a
-Version: webpack 3.5.1
-    Asset     Size  Chunks             Chunk Names
-output.js  1.08 kB       0  [emitted]  main
+Hash: baa2ff0af1a7df4a1c89
+Version: webpack next
+    Asset      Size  Chunks             Chunk Names
+output.js  1.13 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 613 bytes [entry] [rendered]
     > main [3] ./example.js 
     [0] ./templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a.js [4] ./templates ^\.\/.*$ ./a.js
-        context element ./a [4] ./templates ^\.\/.*$ ./a
+        context element ./a.js [4] ./templates sync ^\.\/.*$ ./a.js
+        context element ./a [4] ./templates sync ^\.\/.*$ ./a
     [1] ./templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b.js [4] ./templates ^\.\/.*$ ./b.js
-        context element ./b [4] ./templates ^\.\/.*$ ./b
+        context element ./b.js [4] ./templates sync ^\.\/.*$ ./b.js
+        context element ./b [4] ./templates sync ^\.\/.*$ ./b
     [2] ./templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c.js [4] ./templates ^\.\/.*$ ./c.js
-        context element ./c [4] ./templates ^\.\/.*$ ./c
+        context element ./c.js [4] ./templates sync ^\.\/.*$ ./c.js
+        context element ./c [4] ./templates sync ^\.\/.*$ ./c
     [3] ./example.js 150 bytes {0} [built]
-    [4] ./templates ^\.\/.*$ 217 bytes {0} [built]
+        single entry .\example.js  main
+    [4] ./templates sync ^\.\/.*$ 217 bytes {0} [built]
         cjs require context ./templates [3] ./example.js 2:8-44
 ```
 

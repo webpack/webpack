@@ -1,4 +1,4 @@
-var should = require("should");
+require("should");
 var path = require("path");
 var fs = require("fs");
 

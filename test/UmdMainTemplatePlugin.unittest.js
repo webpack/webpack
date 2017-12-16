@@ -1,7 +1,7 @@
 /* global describe, beforeEach, it */
 "use strict";
 
-const should = require("should");
+require("should");
 const TemplatePluginEnvironment = require("./helpers/TemplatePluginEnvironment");
 const ConcatSource = require("webpack-sources").ConcatSource;
 const UmdMainTemplatePlugin = require("../lib/UmdMainTemplatePlugin");
@@ -16,7 +16,7 @@ describe("UmdMainTemplatePlugin", () => {
 		});
 		const templatePlugin = new TemplatePluginEnvironment();
 		const environment = templatePlugin.getEnvironmentStub();
-		environment.mainTemplate.applyPluginsWaterfall = () => [];
+		environment.mainTemplate.getAssetPath = () => [];
 		plugin.apply(environment);
 		return templatePlugin;
 	};
@@ -40,7 +40,7 @@ describe("UmdMainTemplatePlugin", () => {
 
 				beforeEach(() => {
 					eventHandler = eventBindings
-						.filter(eventBinding => eventBinding.name === 'render-with-entry')
+						.filter(eventBinding => eventBinding.name === "render-with-entry")
 						.map(eventBinding => eventBinding.handler)
 						.pop();
 				});

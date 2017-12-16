@@ -1,6 +1,7 @@
 var webpack = require("../../../");
 
 module.exports = {
+	mode: "production",
 	entry: {
 		entry: "./"
 	},

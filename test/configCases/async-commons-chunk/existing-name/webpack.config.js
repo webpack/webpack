@@ -1,6 +1,9 @@
 var webpack = require("../../../../");
 
 module.exports = {
+	performance: {
+		hints: false
+	},
 	plugins: [
 		new webpack.optimize.CommonsChunkPlugin({
 			chunks: ["a+b", "a+b+c"],

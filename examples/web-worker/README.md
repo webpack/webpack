@@ -72,6 +72,11 @@ onmessage = function(event) {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -103,6 +108,7 @@ onmessage = function(event) {
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Worker = __webpack_require__(/*! worker-loader!./worker */ 1);
@@ -120,6 +126,7 @@ worker.onmessage = function(event) {
   \********************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = function() {
@@ -134,7 +141,7 @@ module.exports = function() {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	this["webpackChunk"] = function webpackChunkCallback(chunkIds, moreModules) {
+/******/ 	self["webpackChunk"] = function webpackChunkCallback(chunkIds, moreModules) {
 /******/ 		for(var moduleId in moreModules) {
 /******/ 			modules[moduleId] = moreModules[moduleId];
 /******/ 		}
@@ -178,13 +185,14 @@ module.exports = function() {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		return new Promise(function(resolve) {
+/******/ 		var promises = [];
+/******/ 		promises.push(Promise.resolve().then(function() {
 /******/ 			// "1" is the signal for "already loaded"
 /******/ 			if(!installedChunks[chunkId]) {
 /******/ 				importScripts("" + chunkId + ".hash.worker.js");
 /******/ 			}
-/******/ 			resolve();
-/******/ 		});
+/******/ 		}));
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -202,6 +210,11 @@ module.exports = function() {
 /******/ 				get: getter
 /******/ 			});
 /******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -230,13 +243,14 @@ module.exports = function() {
   \*******************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 onmessage = function(event) {
 	var template = event.data;
-	__webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ../require.context/templates */ 1)("./" + event.data)]; (function(tmpl) {
+	__webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ../require.context/templates */ 1)("./" + event.data)]; ((function(tmpl) {
 		postMessage(tmpl());
-	}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 }
 
 
@@ -247,14 +261,15 @@ onmessage = function(event) {
 # js/0.[hash].worker.js
 
 ``` javascript
-webpackChunk([0],[
+self["webpackChunk"]([0],[
 /* 0 */,
 /* 1 */
-/*!*********************************************!*\
-  !*** ../require.context/templates ^\.\/.*$ ***!
-  \*********************************************/
+/*!**************************************************!*\
+  !*** ../require.context/templates sync ^\.\/.*$ ***!
+  \**************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -265,15 +280,19 @@ var map = {
 	"./c": 4,
 	"./c.js": 4
 };
+
+
 function webpackContext(req) {
-	return __webpack_require__(webpackContextResolve(req));
-};
+	var id = webpackContextResolve(req);
+	var module = __webpack_require__(id);
+	return module;
+}
 function webpackContextResolve(req) {
 	var id = map[req];
 	if(!(id + 1)) // check for number or string
 		throw new Error("Cannot find module '" + req + "'.");
 	return id;
-};
+}
 webpackContext.keys = function webpackContextKeys() {
 	return Object.keys(map);
 };
@@ -288,6 +307,7 @@ webpackContext.id = 1;
   \*****************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -301,6 +321,7 @@ module.exports = function() {
   \*****************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -314,6 +335,7 @@ module.exports = function() {
   \*****************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -329,75 +351,79 @@ module.exports = function() {
 ## Uncompressed
 
 ```
-Hash: de5e6c34dad6f90c6640
-Version: webpack 3.5.1
-           Asset     Size  Chunks             Chunk Names
-0.hash.worker.js  1.85 kB          [emitted]  
-  hash.worker.js  3.91 kB          [emitted]  
-       output.js  3.27 kB       0  [emitted]  main
+Hash: ea02849f7950e1efeb6f
+Version: webpack next
+           Asset      Size  Chunks             Chunk Names
+0.hash.worker.js  2.14 KiB          [emitted]  
+  hash.worker.js  4.13 KiB          [emitted]  
+       output.js  3.52 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 311 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 215 bytes {0} [built]
+        single entry .\example.js  main
     [1] (webpack)/node_modules/worker-loader!./worker.js 96 bytes {0} [not cacheable] [built]
         cjs require worker-loader!./worker [0] ./example.js 1:13-46
 Child worker:
-               Asset     Size  Chunks             Chunk Names
-    0.hash.worker.js  1.85 kB       0  [emitted]  
-      hash.worker.js  3.91 kB       1  [emitted]  main
+               Asset      Size  Chunks             Chunk Names
+    0.hash.worker.js  2.14 KiB       0  [emitted]  
+      hash.worker.js  4.13 KiB       1  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
         > [0] ./worker.js 3:1-5:3
-        [1] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
+        [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {0} [built]
             amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
         [2] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-            context element ./a.js [1] ../require.context/templates ^\.\/.*$ ./a.js
-            context element ./a [1] ../require.context/templates ^\.\/.*$ ./a
+            context element ./a.js [1] ../require.context/templates sync ^\.\/.*$ ./a.js
+            context element ./a [1] ../require.context/templates sync ^\.\/.*$ ./a
         [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-            context element ./b.js [1] ../require.context/templates ^\.\/.*$ ./b.js
-            context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
+            context element ./b.js [1] ../require.context/templates sync ^\.\/.*$ ./b.js
+            context element ./b [1] ../require.context/templates sync ^\.\/.*$ ./b
         [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-            context element ./c.js [1] ../require.context/templates ^\.\/.*$ ./c.js
-            context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
+            context element ./c.js [1] ../require.context/templates sync ^\.\/.*$ ./c.js
+            context element ./c [1] ../require.context/templates sync ^\.\/.*$ ./c
     chunk    {1} hash.worker.js (main) 168 bytes [entry] [rendered]
         > main [0] ./worker.js 
         [0] ./worker.js 168 bytes {1} [built]
+            single entry !!.\worker.js  main
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: de5e6c34dad6f90c6640
-Version: webpack 3.5.1
+Hash: ea02849f7950e1efeb6f
+Version: webpack next
            Asset       Size  Chunks             Chunk Names
-0.hash.worker.js  544 bytes          [emitted]  
-  hash.worker.js  811 bytes          [emitted]  
-       output.js  632 bytes       0  [emitted]  main
+0.hash.worker.js  557 bytes          [emitted]  
+  hash.worker.js  915 bytes          [emitted]  
+       output.js  698 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 311 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 215 bytes {0} [built]
+        single entry .\example.js  main
     [1] (webpack)/node_modules/worker-loader!./worker.js 96 bytes {0} [not cacheable] [built]
         cjs require worker-loader!./worker [0] ./example.js 1:13-46
 Child worker:
                Asset       Size  Chunks             Chunk Names
-    0.hash.worker.js  544 bytes       0  [emitted]  
-      hash.worker.js  811 bytes       1  [emitted]  main
+    0.hash.worker.js  557 bytes       0  [emitted]  
+      hash.worker.js  915 bytes       1  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
         > [0] ./worker.js 3:1-5:3
-        [1] ../require.context/templates ^\.\/.*$ 217 bytes {0} [built]
+        [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {0} [built]
             amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
         [2] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-            context element ./a.js [1] ../require.context/templates ^\.\/.*$ ./a.js
-            context element ./a [1] ../require.context/templates ^\.\/.*$ ./a
+            context element ./a.js [1] ../require.context/templates sync ^\.\/.*$ ./a.js
+            context element ./a [1] ../require.context/templates sync ^\.\/.*$ ./a
         [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-            context element ./b.js [1] ../require.context/templates ^\.\/.*$ ./b.js
-            context element ./b [1] ../require.context/templates ^\.\/.*$ ./b
+            context element ./b.js [1] ../require.context/templates sync ^\.\/.*$ ./b.js
+            context element ./b [1] ../require.context/templates sync ^\.\/.*$ ./b
         [4] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-            context element ./c.js [1] ../require.context/templates ^\.\/.*$ ./c.js
-            context element ./c [1] ../require.context/templates ^\.\/.*$ ./c
+            context element ./c.js [1] ../require.context/templates sync ^\.\/.*$ ./c.js
+            context element ./c [1] ../require.context/templates sync ^\.\/.*$ ./c
     chunk    {1} hash.worker.js (main) 168 bytes [entry] [rendered]
         > main [0] ./worker.js 
         [0] ./worker.js 168 bytes {1} [built]
+            single entry !!.\worker.js  main
 ```

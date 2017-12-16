@@ -1,23 +1,30 @@
-"use strict";
 const webpack = require("../../../");
 
 module.exports = {
+	mode: "production",
 	entry: "./index",
 	output: {
 		filename: "bundle.js"
 	},
-	plugins: [new webpack.optimize.UglifyJsPlugin({
-		warningsFilter: function(filename) {
-			return /a\.js$/.test(filename);
-		},
-		sourceMap: true,
-		compress: {
-			warnings: true,
-		},
-		mangle: false,
-		beautify: true,
-		comments: false
-	})],
+	plugins: [
+		new webpack.optimize.UglifyJsPlugin({
+			sourceMap: true,
+			uglifyOptions: {
+				compress: {
+					warnings: true,
+				},
+				mangle: false,
+				output: {
+					beautify: true,
+					comments: false
+				},
+				warnings: true
+			},
+			warningsFilter(filename) {
+				return /a\.js$/.test(filename);
+			}
+		})
+	],
 	stats: {
 		chunkModules: false,
 		modules: true,

@@ -1,30 +1,25 @@
 "use strict";
 
 const _ = require("lodash");
-const should = require("should");
+require("should");
 const sinon = require("sinon");
 const ContextDependencyTemplateAsId = require("../lib/dependencies/ContextDependencyTemplateAsId");
 
-const requestShortenerMock = {
-	shorten: (request) => `shortened ${request}`
-};
-
 describe("ContextDependencyTemplateAsId", () => {
 	let env;
-
-	const applyContextDependencyTemplateAsId = function() {
-		const contextDependencyTemplateAsId = new ContextDependencyTemplateAsId();
-		const args = [].slice.call(arguments).concat(requestShortenerMock);
-		contextDependencyTemplateAsId.apply.apply(contextDependencyTemplateAsId, args);
-	};
 
 	beforeEach(() => {
 		env = {
 			source: {
 				replace: sinon.stub()
 			},
-			outputOptions: {
-				pathinfo: true
+			runtimeTemplate: {
+				outputOptions: {
+					pathinfo: true
+				},
+				requestShortener: {
+					shorten: (request) => `shortened ${request}`
+				}
 			},
 			module: {
 				id: "123",
@@ -46,12 +41,12 @@ describe("ContextDependencyTemplateAsId", () => {
 	describe("when applied", () => {
 		describe("with module missing depedencies", () => {
 			beforeEach(() => {
-				applyContextDependencyTemplateAsId(env.baseDependency, env.source, env.outputOptions);
+				new ContextDependencyTemplateAsId().apply(env.baseDependency, env.source, env.runtimeTemplate);
 			});
 
 			it("replaces source with missing module error", () => {
 				env.source.replace.callCount.should.be.exactly(1);
-				sinon.assert.calledWith(env.source.replace, 1, 24, '!(function webpackMissingModule() { var e = new Error("Cannot find module \\"myModule\\""); e.code = \'MODULE_NOT_FOUND\'; throw e; }())');
+				sinon.assert.calledWith(env.source.replace, 1, 24, "!(function webpackMissingModule() { var e = new Error(\"Cannot find module \\\"myModule\\\"\"); e.code = 'MODULE_NOT_FOUND'; throw e; }())");
 			});
 		});
 
@@ -65,25 +60,25 @@ describe("ContextDependencyTemplateAsId", () => {
 
 			describe("and path info true", function() {
 				beforeEach(function() {
-					env.outputOptions.pathinfo = true;
-					applyContextDependencyTemplateAsId(env.dependency, env.source, env.outputOptions);
+					env.runtimeTemplate.outputOptions.pathinfo = true;
+					new ContextDependencyTemplateAsId().apply(env.dependency, env.source, env.runtimeTemplate);
 				});
 
 				it("replaces source with webpack require with comment", () => {
 					env.source.replace.callCount.should.be.exactly(1);
-					sinon.assert.calledWith(env.source.replace, 1, 24, '__webpack_require__(/*! shortened myModule */ "123").resolve');
+					sinon.assert.calledWith(env.source.replace, 1, 24, "__webpack_require__(/*! shortened myModule */ \"123\").resolve");
 				});
 			});
 
 			describe("and path info false", function() {
 				beforeEach(function() {
-					env.outputOptions.pathinfo = false;
-					applyContextDependencyTemplateAsId(env.dependency, env.source, env.outputOptions);
+					env.runtimeTemplate.outputOptions.pathinfo = false;
+					new ContextDependencyTemplateAsId().apply(env.dependency, env.source, env.runtimeTemplate);
 				});
 
 				it("replaces source with webpack require without comment", () => {
 					env.source.replace.callCount.should.be.exactly(1);
-					sinon.assert.calledWith(env.source.replace, 1, 24, '__webpack_require__("123").resolve');
+					sinon.assert.calledWith(env.source.replace, 1, 24, "__webpack_require__(\"123\").resolve");
 				});
 			});
 		});
@@ -97,13 +92,13 @@ describe("ContextDependencyTemplateAsId", () => {
 						module: env.module
 					});
 
-					applyContextDependencyTemplateAsId(dependency, env.source, env.outputOptions);
+					new ContextDependencyTemplateAsId().apply(dependency, env.source, env.runtimeTemplate);
 				});
 
 				it("replaces source with webpack require and wraps value", () => {
 					env.source.replace.callCount.should.be.exactly(2);
 					sinon.assert.calledWith(env.source.replace, 18, 24, ")");
-					sinon.assert.calledWith(env.source.replace, 1, 7, '__webpack_require__(/*! shortened myModule */ "123").resolve("prepend value"');
+					sinon.assert.calledWith(env.source.replace, 1, 7, "__webpack_require__(/*! shortened myModule */ \"123\").resolve(\"prepend value\"");
 				});
 			});
 
@@ -124,7 +119,7 @@ describe("ContextDependencyTemplateAsId", () => {
 						module: env.module
 					});
 
-					applyContextDependencyTemplateAsId(dependency, env.source, env.outputOptions);
+					new ContextDependencyTemplateAsId().apply(dependency, env.source, env.runtimeTemplate);
 				});
 
 				it("replaces source with webpack require, wraps value and make replacements", () => {
@@ -132,7 +127,7 @@ describe("ContextDependencyTemplateAsId", () => {
 					sinon.assert.calledWith(env.source.replace, 9, 10, "foo");
 					sinon.assert.calledWith(env.source.replace, 13, 14, "bar");
 					sinon.assert.calledWith(env.source.replace, 18, 24, ")");
-					sinon.assert.calledWith(env.source.replace, 1, 7, '__webpack_require__(/*! shortened myModule */ "123").resolve("prepend value"');
+					sinon.assert.calledWith(env.source.replace, 1, 7, "__webpack_require__(/*! shortened myModule */ \"123\").resolve(\"prepend value\"");
 				});
 			});
 		});

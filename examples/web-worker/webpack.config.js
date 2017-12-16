@@ -1,5 +1,6 @@
 var webpack = require("../../");
 module.exports = {
+	mode: "production",
 	plugins: [
 		new webpack.LoaderOptionsPlugin({
 			options: {

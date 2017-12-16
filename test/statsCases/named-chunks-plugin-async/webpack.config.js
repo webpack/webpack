@@ -4,6 +4,7 @@ const NamedChunksPlugin = require("../../../lib/NamedChunksPlugin");
 const RequestShortener = require("../../../lib/RequestShortener");
 
 module.exports = {
+	mode: "production",
 	entry: {
 		"entry": "./entry",
 	},

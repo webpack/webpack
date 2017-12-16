@@ -28,6 +28,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 
 ``` javascript
 module.exports = {
+	mode: "production",
 	output: {
 		libraryTarget: "umd"
 	},
@@ -57,7 +58,7 @@ module.exports = {
 		var a = typeof exports === 'object' ? factory(require("add"), require("./math")["subtract"]) : factory(root["add"], root["subtract"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__) {
+})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__) {
 ```
 <details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -108,6 +109,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -139,6 +145,7 @@ return /******/ (function(modules) { // webpackBootstrap
   \********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var add = __webpack_require__(/*! add */ 1);
@@ -153,9 +160,10 @@ exports.exampleValue = subtract(add(42, 2), 2);
   \**********************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
+module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 
 /***/ }),
 /* 2 */
@@ -164,9 +172,10 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
   \***************************************************************************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
-module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
+module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 /***/ })
 /******/ ]);
@@ -178,27 +187,35 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 ## Uncompressed
 
 ```
-Hash: b21d422ed5d9ade3ed36
-Version: webpack 3.5.1
-    Asset     Size  Chunks             Chunk Names
-output.js  4.13 kB       0  [emitted]  main
+Hash: ffa746601696f82316c5
+Version: webpack next
+    Asset      Size  Chunks             Chunk Names
+output.js  4.47 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 113 bytes {0} [built]
-     + 2 hidden modules
+        single entry .\example.js  main
+    [1] external "add" 42 bytes {0} [built]
+        cjs require add [0] ./example.js 1:10-24
+    [2] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
+        cjs require subtract [0] ./example.js 2:15-34
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b21d422ed5d9ade3ed36
-Version: webpack 3.5.1
-    Asset       Size  Chunks             Chunk Names
-output.js  978 bytes       0  [emitted]  main
+Hash: ffa746601696f82316c5
+Version: webpack next
+    Asset      Size  Chunks             Chunk Names
+output.js  1.05 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > main [0] ./example.js 
     [0] ./example.js 113 bytes {0} [built]
-     + 2 hidden modules
+        single entry .\example.js  main
+    [1] external "add" 42 bytes {0} [built]
+        cjs require add [0] ./example.js 1:10-24
+    [2] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
+        cjs require subtract [0] ./example.js 2:15-34
 ```

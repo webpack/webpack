@@ -32,8 +32,8 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
-/******/ 	var parentJsonpFunction = window["webpackJsonp"];
-/******/ 	window["webpackJsonp"] = function webpackJsonpCallback(chunkIds, moreModules, executeModules) {
+/******/ 	function webpackJsonpCallback(data) {
+/******/ 		var chunkIds = data[0], moreModules = data[1], executeModules = data[2];
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
@@ -49,7 +49,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 				modules[moduleId] = moreModules[moduleId];
 /******/ 			}
 /******/ 		}
-/******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules, executeModules);
+/******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
 /******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
 /******/ 		}
@@ -59,10 +59,12 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
-/******/ 	// objects to store loaded and loading chunks
+/******/ 	// object to store loaded and loading chunks
 /******/ 	var installedChunks = {
 /******/ 		3: 0
 /******/ 	};
+/******/
+/******/ 	var scheduledModules = [];
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -91,51 +93,59 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
+/******/ 		var promises = [];
+/******/
+/******/
+/******/ 		// JSONP chunk loading for javascript
+/******/
 /******/ 		var installedChunkData = installedChunks[chunkId];
-/******/ 		if(installedChunkData === 0) {
-/******/ 			return new Promise(function(resolve) { resolve(); });
-/******/ 		}
+/******/ 		if(installedChunkData !== 0) { // 0 means "already installed".
 /******/
-/******/ 		// a Promise means "currently loading".
-/******/ 		if(installedChunkData) {
-/******/ 			return installedChunkData[2];
-/******/ 		}
+/******/ 			// a Promise means "currently loading".
+/******/ 			if(installedChunkData) {
+/******/ 				promises.push(installedChunkData[2]);
+/******/ 			} else {
+/******/ 				// setup Promise in chunk cache
+/******/ 				var promise = new Promise(function(resolve, reject) {
+/******/ 					installedChunkData = installedChunks[chunkId] = [resolve, reject];
+/******/ 				});
+/******/ 				promises.push(installedChunkData[2] = promise);
 /******/
-/******/ 		// setup Promise in chunk cache
-/******/ 		var promise = new Promise(function(resolve, reject) {
-/******/ 			installedChunkData = installedChunks[chunkId] = [resolve, reject];
-/******/ 		});
-/******/ 		installedChunkData[2] = promise;
+/******/ 				// start chunk loading
+/******/ 				var head = document.getElementsByTagName('head')[0];
+/******/ 				var script = document.createElement('script');
+/******/ 				script.charset = 'utf-8';
+/******/ 				script.timeout = 120000;
 /******/
-/******/ 		// start chunk loading
-/******/ 		var head = document.getElementsByTagName('head')[0];
-/******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
-/******/ 		script.charset = 'utf-8';
-/******/ 		script.async = true;
-/******/ 		script.timeout = 120000;
-/******/
-/******/ 		if (__webpack_require__.nc) {
-/******/ 			script.setAttribute("nonce", __webpack_require__.nc);
-/******/ 		}
-/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".output.js";
-/******/ 		var timeout = setTimeout(onScriptComplete, 120000);
-/******/ 		script.onerror = script.onload = onScriptComplete;
-/******/ 		function onScriptComplete() {
-/******/ 			// avoid mem leaks in IE.
-/******/ 			script.onerror = script.onload = null;
-/******/ 			clearTimeout(timeout);
-/******/ 			var chunk = installedChunks[chunkId];
-/******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) {
-/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
+/******/ 				if (__webpack_require__.nc) {
+/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
-/******/ 				installedChunks[chunkId] = undefined;
+/******/ 				script.src = __webpack_require__.p + "" + chunkId + ".output.js";
+/******/ 				var timeout = setTimeout(function(){
+/******/ 					onScriptComplete({ type: 'timeout', target: script });
+/******/ 				}, 120000);
+/******/ 				script.onerror = script.onload = onScriptComplete;
+/******/ 				function onScriptComplete(event) {
+/******/ 					// avoid mem leaks in IE.
+/******/ 					script.onerror = script.onload = null;
+/******/ 					clearTimeout(timeout);
+/******/ 					var chunk = installedChunks[chunkId];
+/******/ 					if(chunk !== 0) {
+/******/ 						if(chunk) {
+/******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 							var realSrc = event && event.target && event.target.src;
+/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.type = errorType;
+/******/ 							error.request = realSrc;
+/******/ 							chunk[1](error);
+/******/ 						}
+/******/ 						installedChunks[chunkId] = undefined;
+/******/ 					}
+/******/ 				};
+/******/ 				head.appendChild(script);
 /******/ 			}
-/******/ 		};
-/******/ 		head.appendChild(script);
-/******/
-/******/ 		return promise;
+/******/ 		}
+/******/ 		return Promise.all(promises);
 /******/ 	};
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
@@ -153,6 +163,11 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 				get: getter
 /******/ 			});
 /******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -173,6 +188,12 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
+/******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
+/******/ 	var parentJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	jsonpArray.push = webpackJsonpCallback;
+/******/ 	jsonpArray = jsonpArray.slice();
+/******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
@@ -189,17 +210,18 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports provided:  */
+/*! no exports provided */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is an entry point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_a__ = __webpack_require__(/*! a */ 3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_a___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_a__);
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! a */3);
+/* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(a__WEBPACK_IMPORTED_MODULE_0__);
 
 
-__webpack_require__.e/* import() */(2).then(__webpack_require__.bind(null, /*! b */ 5)).then(function(b) {
+__webpack_require__.e/* import() */(2).then(function() { var module = __webpack_require__(/*! b */5); return typeof module === "object" && module && module.__esModule ? module : /* fake namespace object */ { "default": module }; }).then(function(b) {
 	console.log("b loaded", b);
 })
 
@@ -218,17 +240,19 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
   !*** ./node_modules/a.js ***!
   \***************************/
 /*! no static exports found */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module a
 
 /***/ }),
 /* 4 */
-/*!**************************************!*\
-  !*** ./node_modules/c lazy ^\.\/.*$ ***!
-  \**************************************/
+/*!*******************************************************!*\
+  !*** ./node_modules/c lazy ^\.\/.*$ namespace object ***!
+  \*******************************************************/
 /*! no static exports found */
 /*! all exports used */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -252,11 +276,12 @@ var map = {
 function webpackAsyncContext(req) {
 	var ids = map[req];
 	if(!ids)
-		return Promise.reject(new Error("Cannot find module '" + req + "'."));
+		return Promise.resolve().then(function() { throw new Error("Cannot find module '" + req + "'."); });
 	return __webpack_require__.e(ids[1]).then(function() {
-		return __webpack_require__(ids[0]);
+		var module = __webpack_require__(ids[0]);
+		return typeof module === "object" && module && module.__esModule ? module : /* fake namespace object */ { "default": module };;
 	});
-};
+}
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
 	return Object.keys(map);
 };
@@ -273,13 +298,13 @@ module.exports = webpackAsyncContext;
 ## Uncompressed
 
 ```
-Hash: f2701c90a6d1597932b5
-Version: webpack 3.5.1
+Hash: 99774db1d98bb53fa195
+Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  258 bytes       0  [emitted]  
-1.output.js  249 bytes       1  [emitted]  
-2.output.js  244 bytes       2  [emitted]  
-  output.js    7.55 kB       3  [emitted]  main
+0.output.js  379 bytes       0  [emitted]  
+1.output.js  370 bytes       1  [emitted]  
+2.output.js  365 bytes       2  [emitted]  
+  output.js   8.89 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
     1 module
@@ -292,7 +317,8 @@ chunk    {3} output.js (main) 427 bytes [entry] [rendered]
     > main [2] ./example.js 
     [2] ./example.js 256 bytes {3} [built]
         [no exports]
-    [4] ./node_modules/c lazy ^\.\/.*$ 160 bytes {3} [built]
+        single entry .\example.js  main
+    [4] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {3} [built]
         import() context lazy c [2] ./example.js 8:8-27
      + 1 hidden module
 ```
@@ -300,13 +326,13 @@ chunk    {3} output.js (main) 427 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: f2701c90a6d1597932b5
-Version: webpack 3.5.1
+Hash: 99774db1d98bb53fa195
+Version: webpack next
       Asset      Size  Chunks             Chunk Names
-0.output.js  37 bytes       0  [emitted]  
-1.output.js  36 bytes       1  [emitted]  
-2.output.js  38 bytes       2  [emitted]  
-  output.js    1.9 kB       3  [emitted]  main
+0.output.js  77 bytes       0  [emitted]  
+1.output.js  76 bytes       1  [emitted]  
+2.output.js  78 bytes       2  [emitted]  
+  output.js  2.21 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
     1 module
@@ -319,7 +345,8 @@ chunk    {3} output.js (main) 427 bytes [entry] [rendered]
     > main [2] ./example.js 
     [2] ./example.js 256 bytes {3} [built]
         [no exports]
-    [4] ./node_modules/c lazy ^\.\/.*$ 160 bytes {3} [built]
+        single entry .\example.js  main
+    [4] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {3} [built]
         import() context lazy c [2] ./example.js 8:8-27
      + 1 hidden module
 ```

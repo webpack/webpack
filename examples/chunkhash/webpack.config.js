@@ -1,6 +1,7 @@
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
+	mode: "production",
 	entry: {
 		main: "./example",
 		common: ["./vendor"] // optional

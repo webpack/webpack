@@ -6,6 +6,9 @@ const Parser = require("../lib/Parser");
 const BasicEvaluatedExpression = require("../lib/BasicEvaluatedExpression");
 
 describe("Parser", () => {
+	/* eslint-disable no-undef */
+	/* eslint-disable no-unused-vars */
+	/* eslint-disable no-inner-declarations */
 	const testCases = {
 		"call ident": [
 			function() {
@@ -58,8 +61,8 @@ describe("Parser", () => {
 		],
 		"member expression": [
 			function() {
-				test[memberExpr]
-				test[+memberExpr]
+				test[memberExpr];
+				test[+memberExpr];
 			}, {
 				expressions: ["memberExpr", "memberExpr"]
 			}
@@ -199,6 +202,9 @@ describe("Parser", () => {
 			}
 		],
 	};
+	/* eslint-enable no-undef */
+	/* eslint-enable no-unused-vars */
+	/* eslint-enable no-inner-declarations */
 
 	Object.keys(testCases).forEach((name) => {
 		it("should parse " + name, () => {
@@ -226,7 +232,7 @@ describe("Parser", () => {
 			});
 			testParser.plugin("expression fgh", (expr) => {
 				if(!testParser.state.fgh) testParser.state.fgh = [];
-				testParser.state.fgh.push(testParser.scope.definitions.join(" "));
+				testParser.state.fgh.push(Array.from(testParser.scope.definitions.asSet()).join(" "));
 				return true;
 			});
 			testParser.plugin("expression fgh.sub", (expr) => {

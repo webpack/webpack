@@ -29,4 +29,4 @@ module.exports = function checkArrayExpectation(testDirectory, object, kind, fil
 	} else if(array.length > 0) {
 		return done(new Error(`${upperCaseKind}s while compiling:\n\n${array.join("\n\n")}`)), true;
 	}
-}
+};
