@@ -47,7 +47,8 @@ module.exports = {
 				"case": { "after": true },
 				"return": { "after": true },
 				"finally": { "after": true },
-				"do": { "after": true }
+				"do": { "after": true },
+				"of": { "after": true }
 			}
 		}],
 		"no-console": "off",
