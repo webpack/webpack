@@ -49,6 +49,7 @@
     "less": "^2.5.1",
     "less-loader": "^4.0.3",
     "lodash": "^4.17.4",
+    "metrohash": "^2.3.0",
     "mocha": "^3.2.0",
     "mocha-lcov-reporter": "^1.0.0",
     "nsp": "^2.6.1",
