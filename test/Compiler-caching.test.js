@@ -15,6 +15,7 @@ describe("Compiler (caching)", function() {
 		options = new WebpackOptionsDefaulter().process(options);
 		options.cache = true;
 		options.entry = entry;
+		options.optimization.minimize = false;
 		options.context = path.join(__dirname, "fixtures");
 		options.output.path = "/";
 		options.output.filename = "bundle.js";

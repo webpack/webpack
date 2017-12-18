@@ -97,20 +97,6 @@ describe("Errors", () => {
 			done();
 		});
 	});
-	it("should warn when not using mode", (done) => {
-		getErrors({
-			entry: "./entry-point",
-		}, (errors, warnings) => {
-			errors.length.should.be.eql(0);
-			warnings.length.should.be.eql(1);
-			let lines = warnings[0].split("\n");
-			lines[0].should.match(/configuration/);
-			lines[1].should.match(/mode/);
-			lines[1].should.match(/development/);
-			lines[1].should.match(/production/);
-			done();
-		});
-	});
 	it("should not warn if the NoEmitOnErrorsPlugin is used over the NoErrorsPlugin", (done) => {
 		getErrors({
 			mode: "production",
