@@ -20,11 +20,15 @@ Child
        [1] ./vendor.js 25 bytes {5} [built]
            ModuleConcatenation bailout: Module is an entry point
        [2] ./common.js + 1 modules 62 bytes {3} {4} [built]
+           | ./common.js 37 bytes [built]
+           | ./common2.js 25 bytes [built]
        [3] ./common_lazy.js 25 bytes {1} {2} [built]
        [4] ./first.js + 1 modules 248 bytes {4} [built]
-           ModuleConcatenation bailout: Module is an entry point
            ModuleConcatenation bailout: Cannot concat with ./common.js
            ModuleConcatenation bailout: Cannot concat with ./vendor.js (<- Module is an entry point)
+           | ./first.js 207 bytes [built]
+           |    ModuleConcatenation bailout: Module is an entry point
+           | ./module_first.js 31 bytes [built]
        [5] ./lazy_shared.js 31 bytes {0} [built]
            ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./first.js (referenced with import()), ./second.js (referenced with import())
        [6] ./second.js 177 bytes {3} [built]

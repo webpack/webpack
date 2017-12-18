@@ -8,6 +8,9 @@ Child
                         runtime.js   7.03 KiB       2  [emitted]  runtime
     [./constants.js] 87 bytes {1} [built]
     [./entry-1.js] ./entry-1.js + 2 modules 190 bytes {0} [built]
+           | ./entry-1.js 67 bytes [built]
+           | ./submodule-a.js 59 bytes [built]
+           | ./submodule-b.js 59 bytes [built]
 Child
     Hash: 01bd4246a474bfd828f8
     Time: Xms
@@ -17,3 +20,6 @@ Child
                         runtime.js   7.03 KiB       2  [emitted]  runtime
     [./constants.js] 87 bytes {1} [built]
     [./entry-2.js] ./entry-2.js + 2 modules 197 bytes {0} [built]
+           | ./entry-2.js 67 bytes [built]
+           | ./submodule-a.js 59 bytes [built]
+           | ./submodule-c.js 66 bytes [built]
