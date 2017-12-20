@@ -9,10 +9,10 @@ it("should write relative paths to records", function() {
 	content.should.eql(`{
   "modules": {
     "byIdentifier": {
-      "test.js": 0,
-      "ignored  pkgs/somepackage/foo": 1,
-      "external \\"fs\\"": 2,
-      "external \\"path\\"": 3
+      "external \\"path\\"": 0,
+      "external \\"fs\\"": 1,
+      "ignored  pkgs/somepackage/foo": 2,
+      "test.js": 3
     },
     "usedIds": {
       "0": 0,

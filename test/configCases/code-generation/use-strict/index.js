@@ -17,10 +17,10 @@ it("should include only one use strict per module", function() {
 
 	matches.should.be.eql([
 		"__webpack_require__.r(__webpack_exports__);",
-		"it(\"should include only one use strict per module\", function() {",
-		"__webpack_require__.r(__webpack_exports__);",
-		"__webpack_require__.r(__webpack_exports__);",
-		"__webpack_require__.r(__webpack_exports__);",
 		"/* unused harmony default export */ var _unused_webpack_default_export = (\"a\");",
+		"__webpack_require__.r(__webpack_exports__);",
+		"__webpack_require__.r(__webpack_exports__);",
+		"__webpack_require__.r(__webpack_exports__);",
+		"it(\"should include only one use strict per module\", function() {",
 	]);
 });
