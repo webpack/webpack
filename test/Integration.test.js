@@ -81,8 +81,8 @@ describe("Integration", function() {
 					}
 				}),
 				function() {
-					this.plugin("normal-module-factory", (nmf) => {
-						nmf.plugin("after-resolve", (data, callback) => {
+					this.hooks.normalModuleFactory.tap("IntegrationTest", (nmf) => {
+						nmf.hooks.afterResolve.tapAsync("IntegrationTest", (data, callback) => {
 							data.resource = data.resource.replace(/extra\.js/, "extra2.js");
 							setTimeout(() => callback(null, data), 50);
 						});

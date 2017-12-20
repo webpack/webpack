@@ -38,11 +38,11 @@ describe("WatcherEvents", function() {
 			done(err);
 		});
 
-		compiler.plugin("watch-close", () => {
+		compiler.hooks.watchClose.tap("WatcherEventsTest", () => {
 			called = true;
 		});
 
-		compiler.plugin("done", () => {
+		compiler.hooks.done.tap("WatcherEventsTest", () => {
 			watcher.close();
 		});
 
@@ -57,11 +57,11 @@ describe("WatcherEvents", function() {
 			done(err);
 		});
 
-		compiler.plugin("watch-close", () => {
+		compiler.hooks.watchClose.tap("WatcherEventsTest", () => {
 			called = true;
 		});
 
-		compiler.plugin("done", () => {
+		compiler.hooks.done.tap("WatcherEventsTest", () => {
 			watcher.close();
 		});
 
