@@ -9,5 +9,8 @@ module.exports = {
   },
   plugins: [
     new IgnorePlugin(new RegExp(/intentionally-missing-module/))
-  ]
+  ],
+  node: {
+    __dirname: false
+  }
 };
