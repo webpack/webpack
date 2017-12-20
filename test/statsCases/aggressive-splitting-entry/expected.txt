@@ -1,51 +1,51 @@
-Hash: a1332ffdc8f016e06e2da1332ffdc8f016e06e2d
+Hash: 0a5db84405553d6f7edc0a5db84405553d6f7edc
 Child fitting:
-    Hash: a1332ffdc8f016e06e2d
+    Hash: 0a5db84405553d6f7edc
     Time: Xms
                       Asset      Size  Chunks             Chunk Names
     8687608dde0469fd3fba.js  2.23 KiB       0  [emitted]  
-    76eb20f234cf58f9823b.js  1.93 KiB       4  [emitted]  
-    a1f333026966f9f4cd86.js  5.78 KiB       5  [emitted]  
-    3dad677280e44d774e7d.js     1 KiB       6  [emitted]  
-    Entrypoint main = a1f333026966f9f4cd86.js 3dad677280e44d774e7d.js 76eb20f234cf58f9823b.js 8687608dde0469fd3fba.js
+    47e0fac01fc36a2064e8.js  5.78 KiB       4  [emitted]  
+    f1e5018e4333f2466ecc.js     1 KiB       5  [emitted]  
+    ddccfa0cc7de77007a74.js  1.93 KiB       6  [emitted]  
+    Entrypoint main = 47e0fac01fc36a2064e8.js f1e5018e4333f2466ecc.js ddccfa0cc7de77007a74.js 8687608dde0469fd3fba.js
     chunk    {0} 8687608dde0469fd3fba.js 1.87 KiB [initial] [rendered]
         > aggressive-splitted main [4] ./index.js 
         [4] ./index.js 112 bytes {0} [built]
         [6] ./f.js 899 bytes {0} [built]
         [7] ./g.js 899 bytes {0} [built]
-    chunk    {4} 76eb20f234cf58f9823b.js 1.76 KiB [initial] [rendered] [recorded]
+    chunk    {4} 47e0fac01fc36a2064e8.js 1.76 KiB [entry] [rendered] [recorded]
         > aggressive-splitted main [4] ./index.js 
-        [0] ./b.js 899 bytes {4} [built]
-        [1] ./c.js 899 bytes {4} [built]
-    chunk    {5} a1f333026966f9f4cd86.js 1.76 KiB [entry] [rendered] [recorded]
+        [2] ./d.js 899 bytes {4} [built]
+        [5] ./a.js 899 bytes {4} [built]
+    chunk    {5} f1e5018e4333f2466ecc.js 899 bytes [initial] [rendered]
         > aggressive-splitted main [4] ./index.js 
-        [2] ./d.js 899 bytes {5} [built]
-        [5] ./a.js 899 bytes {5} [built]
-    chunk    {6} 3dad677280e44d774e7d.js 899 bytes [initial] [rendered]
+        [3] ./e.js 899 bytes {5} [built]
+    chunk    {6} ddccfa0cc7de77007a74.js 1.76 KiB [initial] [rendered] [recorded]
         > aggressive-splitted main [4] ./index.js 
-        [3] ./e.js 899 bytes {6} [built]
+        [0] ./b.js 899 bytes {6} [built]
+        [1] ./c.js 899 bytes {6} [built]
 Child content-change:
-    Hash: a1332ffdc8f016e06e2d
+    Hash: 0a5db84405553d6f7edc
     Time: Xms
                       Asset      Size  Chunks             Chunk Names
     8687608dde0469fd3fba.js  2.23 KiB       0  [emitted]  
-    76eb20f234cf58f9823b.js  1.93 KiB       4  [emitted]  
-    a1f333026966f9f4cd86.js  5.78 KiB       5  [emitted]  
-    3dad677280e44d774e7d.js     1 KiB       6  [emitted]  
-    Entrypoint main = a1f333026966f9f4cd86.js 3dad677280e44d774e7d.js 76eb20f234cf58f9823b.js 8687608dde0469fd3fba.js
+    47e0fac01fc36a2064e8.js  5.78 KiB       4  [emitted]  
+    f1e5018e4333f2466ecc.js     1 KiB       5  [emitted]  
+    ddccfa0cc7de77007a74.js  1.93 KiB       6  [emitted]  
+    Entrypoint main = 47e0fac01fc36a2064e8.js f1e5018e4333f2466ecc.js ddccfa0cc7de77007a74.js 8687608dde0469fd3fba.js
     chunk    {0} 8687608dde0469fd3fba.js 1.87 KiB [initial] [rendered]
         > aggressive-splitted main [4] ./index.js 
         [4] ./index.js 112 bytes {0} [built]
         [6] ./f.js 899 bytes {0} [built]
         [7] ./g.js 899 bytes {0} [built]
-    chunk    {4} 76eb20f234cf58f9823b.js 1.76 KiB [initial] [rendered] [recorded]
+    chunk    {4} 47e0fac01fc36a2064e8.js 1.76 KiB [entry] [rendered] [recorded]
         > aggressive-splitted main [4] ./index.js 
-        [0] ./b.js 899 bytes {4} [built]
-        [1] ./c.js 899 bytes {4} [built]
-    chunk    {5} a1f333026966f9f4cd86.js 1.76 KiB [entry] [rendered] [recorded]
+        [2] ./d.js 899 bytes {4} [built]
+        [5] ./a.js 899 bytes {4} [built]
+    chunk    {5} f1e5018e4333f2466ecc.js 899 bytes [initial] [rendered]
         > aggressive-splitted main [4] ./index.js 
-        [2] ./d.js 899 bytes {5} [built]
-        [5] ./a.js 899 bytes {5} [built]
-    chunk    {6} 3dad677280e44d774e7d.js 899 bytes [initial] [rendered]
+        [3] ./e.js 899 bytes {5} [built]
+    chunk    {6} ddccfa0cc7de77007a74.js 1.76 KiB [initial] [rendered] [recorded]
         > aggressive-splitted main [4] ./index.js 
-        [3] ./e.js 899 bytes {6} [built]
+        [0] ./b.js 899 bytes {6} [built]
+        [1] ./c.js 899 bytes {6} [built]
