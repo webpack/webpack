@@ -128,8 +128,12 @@ describe("Validation", () => {
 			"      -> A non-empty string",
 			"    * configuration.entry should be an instance of function",
 			"      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.",
-			" - configuration.output.filename should be a string.",
-			"   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files."
+			" - configuration.output.filename should be one of these:",
+			"   string | function",
+			"   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
+			"   Details:",
+			"    * configuration.output.filename should be a string.",
+			"    * configuration.output.filename should be an instance of function"
 		]
 	}, {
 		name: "multiple configurations",
@@ -154,8 +158,12 @@ describe("Validation", () => {
 			"      -> A non-empty string",
 			"    * configuration[0].entry should be an instance of function",
 			"      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.",
-			" - configuration[1].output.filename should be a string.",
-			"   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files."
+			" - configuration[1].output.filename should be one of these:",
+			"   string | function",
+			"   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
+			"   Details:",
+			"    * configuration[1].output.filename should be a string.",
+			"    * configuration[1].output.filename should be an instance of function",
 		]
 	}, {
 		name: "deep error",
