@@ -287,13 +287,13 @@ Version: webpack next
 output.js  1.53 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 2.66 KiB [entry] [rendered]
-    > main [1] ./example.js 
+    > main [3] ./example.js 
     [0] (webpack)/node_modules/css-loader!./test.css 209 bytes {0} [built]
-        cjs require !css-loader!./test.css [1] ./example.js 6:12-45
-        cjs require ./test.css [1] ./example.js 5:12-33
-    [1] ./example.js 210 bytes {0} [built]
-        single entry .\example.js  main
+        cjs require !css-loader!./test.css [3] ./example.js 6:12-45
+        cjs require ./test.css [3] ./example.js 5:12-33
     [2] ./loader.js!./file.js 41 bytes {0} [built]
-        cjs require ./loader!./file [1] ./example.js 2:12-38
+        cjs require ./loader!./file [3] ./example.js 2:12-38
+    [3] ./example.js 210 bytes {0} [built]
+        single entry .\example.js  main
      + 1 hidden module
 ```

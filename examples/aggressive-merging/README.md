@@ -65,44 +65,44 @@ Version: webpack next
           Asset       Size  Chunks             Chunk Names
      0.chunk.js   5.65 KiB       0  [emitted]  
      1.chunk.js  405 bytes       1  [emitted]  
-pageB.bundle.js   7.22 KiB       2  [emitted]  pageB
-pageA.bundle.js   7.21 KiB       3  [emitted]  pageA
-pageC.bundle.js   7.01 KiB       4  [emitted]  pageC
+pageC.bundle.js   7.01 KiB       2  [emitted]  pageC
+pageB.bundle.js   7.22 KiB       3  [emitted]  pageB
+pageA.bundle.js    7.2 KiB       4  [emitted]  pageA
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js
-chunk    {0} 0.chunk.js 5.42 KiB {2} {3} [rendered]
-    > aggressive-merge [3] ./pageA.js 1:0-3:2
+chunk    {0} 0.chunk.js 5.42 KiB {3} {4} [rendered]
+    > aggressive-merge [5] ./pageA.js 1:0-3:2
     > aggressive-merge [4] ./pageB.js 1:0-3:2
     [2] ./common.js 5.42 KiB {0} [built]
-        amd require ./common [3] ./pageA.js 1:0-3:2
         amd require ./common [4] ./pageB.js 1:0-3:2
-chunk    {1} 1.chunk.js 42 bytes {4} [rendered]
-    > [5] ./pageC.js 1:0-3:2
-    [0] ./a.js 21 bytes {1} {3} [built]
-        cjs require ./a [3] ./pageA.js 2:8-22
-        amd require ./a [5] ./pageC.js 1:0-3:2
-    [1] ./b.js 21 bytes {1} {2} [built]
+        amd require ./common [5] ./pageA.js 1:0-3:2
+chunk    {1} 1.chunk.js 42 bytes {2} [rendered]
+    > [3] ./pageC.js 1:0-3:2
+    [0] ./b.js 21 bytes {1} {3} [built]
+        cjs require ./b [3] ./pageC.js 2:17-31
         cjs require ./b [4] ./pageB.js 2:8-22
-        cjs require ./b [5] ./pageC.js 2:17-31
-chunk    {2} pageB.bundle.js (pageB) 92 bytes [entry] [rendered]
-    > pageB [4] ./pageB.js 
-    [1] ./b.js 21 bytes {1} {2} [built]
-        cjs require ./b [4] ./pageB.js 2:8-22
-        cjs require ./b [5] ./pageC.js 2:17-31
-    [4] ./pageB.js 71 bytes {2} [built]
-        single entry ./pageB  pageB
-chunk    {3} pageA.bundle.js (pageA) 92 bytes [entry] [rendered]
-    > pageA [3] ./pageA.js 
-    [0] ./a.js 21 bytes {1} {3} [built]
-        cjs require ./a [3] ./pageA.js 2:8-22
-        amd require ./a [5] ./pageC.js 1:0-3:2
-    [3] ./pageA.js 71 bytes {3} [built]
-        single entry ./pageA  pageA
-chunk    {4} pageC.bundle.js (pageC) 70 bytes [entry] [rendered]
-    > pageC [5] ./pageC.js 
-    [5] ./pageC.js 70 bytes {4} [built]
+    [1] ./a.js 21 bytes {1} {4} [built]
+        amd require ./a [3] ./pageC.js 1:0-3:2
+        cjs require ./a [5] ./pageA.js 2:8-22
+chunk    {2} pageC.bundle.js (pageC) 70 bytes [entry] [rendered]
+    > pageC [3] ./pageC.js 
+    [3] ./pageC.js 70 bytes {2} [built]
         single entry ./pageC  pageC
+chunk    {3} pageB.bundle.js (pageB) 92 bytes [entry] [rendered]
+    > pageB [4] ./pageB.js 
+    [0] ./b.js 21 bytes {1} {3} [built]
+        cjs require ./b [3] ./pageC.js 2:17-31
+        cjs require ./b [4] ./pageB.js 2:8-22
+    [4] ./pageB.js 71 bytes {3} [built]
+        single entry ./pageB  pageB
+chunk    {4} pageA.bundle.js (pageA) 92 bytes [entry] [rendered]
+    > pageA [5] ./pageA.js 
+    [1] ./a.js 21 bytes {1} {4} [built]
+        amd require ./a [3] ./pageC.js 1:0-3:2
+        cjs require ./a [5] ./pageA.js 2:8-22
+    [5] ./pageA.js 71 bytes {4} [built]
+        single entry ./pageA  pageA
 ```
 
 ## Production mode
@@ -113,42 +113,42 @@ Version: webpack next
           Asset       Size  Chunks             Chunk Names
      0.chunk.js  115 bytes       0  [emitted]  
      1.chunk.js  118 bytes       1  [emitted]  
-pageB.bundle.js   1.69 KiB       2  [emitted]  pageB
-pageA.bundle.js   1.69 KiB       3  [emitted]  pageA
-pageC.bundle.js   1.67 KiB       4  [emitted]  pageC
+pageC.bundle.js   1.67 KiB       2  [emitted]  pageC
+pageB.bundle.js   1.69 KiB       3  [emitted]  pageB
+pageA.bundle.js   1.69 KiB       4  [emitted]  pageA
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js
-chunk    {0} 0.chunk.js 5.42 KiB {2} {3} [rendered]
-    > aggressive-merge [3] ./pageA.js 1:0-3:2
+chunk    {0} 0.chunk.js 5.42 KiB {3} {4} [rendered]
+    > aggressive-merge [5] ./pageA.js 1:0-3:2
     > aggressive-merge [4] ./pageB.js 1:0-3:2
     [2] ./common.js 5.42 KiB {0} [built]
-        amd require ./common [3] ./pageA.js 1:0-3:2
         amd require ./common [4] ./pageB.js 1:0-3:2
-chunk    {1} 1.chunk.js 42 bytes {4} [rendered]
-    > [5] ./pageC.js 1:0-3:2
-    [0] ./a.js 21 bytes {1} {3} [built]
-        cjs require ./a [3] ./pageA.js 2:8-22
-        amd require ./a [5] ./pageC.js 1:0-3:2
-    [1] ./b.js 21 bytes {1} {2} [built]
+        amd require ./common [5] ./pageA.js 1:0-3:2
+chunk    {1} 1.chunk.js 42 bytes {2} [rendered]
+    > [3] ./pageC.js 1:0-3:2
+    [0] ./b.js 21 bytes {1} {3} [built]
+        cjs require ./b [3] ./pageC.js 2:17-31
         cjs require ./b [4] ./pageB.js 2:8-22
-        cjs require ./b [5] ./pageC.js 2:17-31
-chunk    {2} pageB.bundle.js (pageB) 92 bytes [entry] [rendered]
-    > pageB [4] ./pageB.js 
-    [1] ./b.js 21 bytes {1} {2} [built]
-        cjs require ./b [4] ./pageB.js 2:8-22
-        cjs require ./b [5] ./pageC.js 2:17-31
-    [4] ./pageB.js 71 bytes {2} [built]
-        single entry ./pageB  pageB
-chunk    {3} pageA.bundle.js (pageA) 92 bytes [entry] [rendered]
-    > pageA [3] ./pageA.js 
-    [0] ./a.js 21 bytes {1} {3} [built]
-        cjs require ./a [3] ./pageA.js 2:8-22
-        amd require ./a [5] ./pageC.js 1:0-3:2
-    [3] ./pageA.js 71 bytes {3} [built]
-        single entry ./pageA  pageA
-chunk    {4} pageC.bundle.js (pageC) 70 bytes [entry] [rendered]
-    > pageC [5] ./pageC.js 
-    [5] ./pageC.js 70 bytes {4} [built]
+    [1] ./a.js 21 bytes {1} {4} [built]
+        amd require ./a [3] ./pageC.js 1:0-3:2
+        cjs require ./a [5] ./pageA.js 2:8-22
+chunk    {2} pageC.bundle.js (pageC) 70 bytes [entry] [rendered]
+    > pageC [3] ./pageC.js 
+    [3] ./pageC.js 70 bytes {2} [built]
         single entry ./pageC  pageC
+chunk    {3} pageB.bundle.js (pageB) 92 bytes [entry] [rendered]
+    > pageB [4] ./pageB.js 
+    [0] ./b.js 21 bytes {1} {3} [built]
+        cjs require ./b [3] ./pageC.js 2:17-31
+        cjs require ./b [4] ./pageB.js 2:8-22
+    [4] ./pageB.js 71 bytes {3} [built]
+        single entry ./pageB  pageB
+chunk    {4} pageA.bundle.js (pageA) 92 bytes [entry] [rendered]
+    > pageA [5] ./pageA.js 
+    [1] ./a.js 21 bytes {1} {4} [built]
+        amd require ./a [3] ./pageC.js 1:0-3:2
+        cjs require ./a [5] ./pageA.js 2:8-22
+    [5] ./pageA.js 71 bytes {4} [built]
+        single entry ./pageA  pageA
 ```

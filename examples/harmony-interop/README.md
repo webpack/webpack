@@ -296,28 +296,28 @@ Version: webpack next
 output.js  991 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 1.17 KiB [entry] [rendered]
-    > main [2] ./example.js 
+    > main [4] ./example.js 
     [0] ./fs.js 265 bytes {0} [built]
         [only some exports used: default, readFile]
         harmony side effect evaluation ./fs [1] ./reexport-commonjs.js 2:0-21
         harmony export imported specifier ./fs [1] ./reexport-commonjs.js 2:0-21
-        harmony side effect evaluation ./fs [2] ./example.js 4:0-22
-        harmony side effect evaluation ./fs [2] ./example.js 5:0-32
-        harmony side effect evaluation ./fs [2] ./example.js 6:0-28
-        harmony import specifier ./fs [2] ./example.js 7:0-2
-        harmony import specifier ./fs [2] ./example.js 8:0-8
-        harmony import specifier ./fs [2] ./example.js 9:0-12
+        harmony side effect evaluation ./fs [4] ./example.js 4:0-22
+        harmony side effect evaluation ./fs [4] ./example.js 5:0-32
+        harmony side effect evaluation ./fs [4] ./example.js 6:0-28
+        harmony import specifier ./fs [4] ./example.js 7:0-2
+        harmony import specifier ./fs [4] ./example.js 8:0-8
+        harmony import specifier ./fs [4] ./example.js 9:0-12
     [1] ./reexport-commonjs.js 308 bytes {0} [built]
         [only some exports used: readFile]
-        harmony side effect evaluation ./reexport-commonjs [2] ./example.js 12:0-60
-        harmony import specifier ./reexport-commonjs [2] ./example.js 13:0-9
-    [2] ./example.js 389 bytes {0} [built]
-        [no exports]
-        single entry .\example.js  main
-    [3] ./example2.js 159 bytes {0} [built]
-        [no exports used]
-        harmony side effect evaluation ./example2 [2] ./example.js 16:0-20
-    [4] ./harmony.js 78 bytes {0} [built]
+        harmony side effect evaluation ./reexport-commonjs [4] ./example.js 12:0-60
+        harmony import specifier ./reexport-commonjs [4] ./example.js 13:0-9
+    [2] ./harmony.js 78 bytes {0} [built]
         [exports: default, named]
         cjs require ./harmony [3] ./example2.js 4:13-33
+    [3] ./example2.js 159 bytes {0} [built]
+        [no exports used]
+        harmony side effect evaluation ./example2 [4] ./example.js 16:0-20
+    [4] ./example.js 389 bytes {0} [built]
+        [no exports]
+        single entry .\example.js  main
 ```

@@ -228,20 +228,20 @@ Version: webpack next
 output.js  1.13 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 613 bytes [entry] [rendered]
-    > main [3] ./example.js 
-    [0] ./templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a.js [4] ./templates sync ^\.\/.*$ ./a.js
-        context element ./a [4] ./templates sync ^\.\/.*$ ./a
+    > main [4] ./example.js 
+    [0] ./templates/c.js 82 bytes {0} [optional] [built]
+        context element ./c.js [3] ./templates sync ^\.\/.*$ ./c.js
+        context element ./c [3] ./templates sync ^\.\/.*$ ./c
     [1] ./templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b.js [4] ./templates sync ^\.\/.*$ ./b.js
-        context element ./b [4] ./templates sync ^\.\/.*$ ./b
-    [2] ./templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c.js [4] ./templates sync ^\.\/.*$ ./c.js
-        context element ./c [4] ./templates sync ^\.\/.*$ ./c
-    [3] ./example.js 150 bytes {0} [built]
+        context element ./b.js [3] ./templates sync ^\.\/.*$ ./b.js
+        context element ./b [3] ./templates sync ^\.\/.*$ ./b
+    [2] ./templates/a.js 82 bytes {0} [optional] [built]
+        context element ./a.js [3] ./templates sync ^\.\/.*$ ./a.js
+        context element ./a [3] ./templates sync ^\.\/.*$ ./a
+    [3] ./templates sync ^\.\/.*$ 217 bytes {0} [built]
+        cjs require context ./templates [4] ./example.js 2:8-44
+    [4] ./example.js 150 bytes {0} [built]
         single entry .\example.js  main
-    [4] ./templates sync ^\.\/.*$ 217 bytes {0} [built]
-        cjs require context ./templates [3] ./example.js 2:8-44
 ```
 
 # Code Splitting

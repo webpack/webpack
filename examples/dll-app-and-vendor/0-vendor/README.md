@@ -41,7 +41,7 @@ export function square(n) {
 # js/vendor.js
 
 ``` javascript
-var vendor_lib_ac3d059b8762ae5acfd8 =
+var vendor_lib_574249e400278f8a7ebb =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -156,7 +156,7 @@ function square(n) {
 # js/vendor-manifest.json
 
 ``` javascript
-{"name":"vendor_lib_ac3d059b8762ae5acfd8","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"harmonyModule":true,"providedExports":["square"]}}}}
+{"name":"vendor_lib_574249e400278f8a7ebb","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"harmonyModule":true,"providedExports":["square"]}}}}
 ```
 
 # Info
@@ -186,8 +186,8 @@ Version: webpack next
 vendor.js  702 bytes       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
-    > main [0] dll main 
-    [0] dll main 12 bytes {0} [built]
+    > main [1] dll main 
+    [1] dll main 12 bytes {0} [built]
         dll entry 
         
      + 1 hidden module

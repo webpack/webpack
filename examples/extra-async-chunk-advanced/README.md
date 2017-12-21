@@ -235,20 +235,20 @@ module.exports = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-Promise.all/* require */([__webpack_require__.e(4), __webpack_require__.e(0), __webpack_require__.e(1)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 3)]; ((function(a, b, c) {}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+Promise.all/* require */([__webpack_require__.e(4), __webpack_require__.e(0), __webpack_require__.e(1)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 0), __webpack_require__(/*! ./c */ 7)]; ((function(a, b, c) {}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 
 Promise.all/* require.ensure */([__webpack_require__.e(3), __webpack_require__.e(0), __webpack_require__.e(1)]).then((function(require) {
-	__webpack_require__(/*! ./b */ 1);
-	__webpack_require__(/*! ./d */ 4);
+	__webpack_require__(/*! ./b */ 0);
+	__webpack_require__(/*! ./d */ 6);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
 Promise.all/* require.ensure */([__webpack_require__.e(2), __webpack_require__.e(1)]).then((function(require) {
-	__webpack_require__(/*! ./a */ 0);
+	__webpack_require__(/*! ./a */ 1);
 	Promise.all/* require.ensure */([__webpack_require__.e(6), __webpack_require__.e(0)]).then((function(require) {
-		__webpack_require__(/*! ./f */ 6);
+		__webpack_require__(/*! ./f */ 4);
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 	Promise.all/* require.ensure */([__webpack_require__.e(5), __webpack_require__.e(0)]).then((function(require) {
-		__webpack_require__(/*! ./g */ 7);
+		__webpack_require__(/*! ./g */ 3);
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
@@ -266,8 +266,8 @@ Promise.all/* require.ensure */([__webpack_require__.e(2), __webpack_require__.e
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  247 bytes       0  [emitted]  async2
-1.output.js  238 bytes       1  [emitted]  async1
+0.output.js  238 bytes       0  [emitted]  async2
+1.output.js  247 bytes       1  [emitted]  async1
 2.output.js  241 bytes       2  [emitted]  
 3.output.js  241 bytes       3  [emitted]  
 4.output.js  241 bytes       4  [emitted]  
@@ -280,7 +280,7 @@ chunk    {0} 0.output.js (async2) 21 bytes {2} {7} [rendered]
     > async commons duplicate [2] ./example.js 3:0-6:2
     > async commons duplicate [2] ./example.js 10:1-12:3
     > async commons duplicate [2] ./example.js 13:1-15:3
-    [1] ./b.js 21 bytes {0} [built]
+    [0] ./b.js 21 bytes {0} [built]
         amd require ./b [2] ./example.js 1:0-52
         cjs require ./b [2] ./example.js 4:1-15
         require.ensure item ./b [2] ./example.js 10:1-12:3
@@ -289,7 +289,7 @@ chunk    {1} 1.output.js (async1) 21 bytes {7} [rendered]
     > async commons [2] ./example.js 1:0-52
     > async commons [2] ./example.js 3:0-6:2
     > async commons [2] ./example.js 8:0-16:2
-    [0] ./a.js 21 bytes {1} [built]
+    [1] ./a.js 21 bytes {1} [built]
         amd require ./a [2] ./example.js 1:0-52
         require.ensure item ./a [2] ./example.js 3:0-6:2
         require.ensure item ./a [2] ./example.js 8:0-16:2
@@ -300,19 +300,19 @@ chunk    {2} 2.output.js 21 bytes {7} [rendered]
         require.ensure item ./e [2] ./example.js 8:0-16:2
 chunk    {3} 3.output.js 21 bytes {7} [rendered]
     > [2] ./example.js 3:0-6:2
-    [4] ./d.js 21 bytes {3} [built]
+    [6] ./d.js 21 bytes {3} [built]
         cjs require ./d [2] ./example.js 5:1-15
 chunk    {4} 4.output.js 21 bytes {7} [rendered]
     > [2] ./example.js 1:0-52
-    [3] ./c.js 21 bytes {4} [built]
+    [7] ./c.js 21 bytes {4} [built]
         amd require ./c [2] ./example.js 1:0-52
 chunk    {5} 5.output.js 21 bytes {2} [rendered]
     > [2] ./example.js 13:1-15:3
-    [7] ./g.js 21 bytes {5} [built]
+    [3] ./g.js 21 bytes {5} [built]
         cjs require ./g [2] ./example.js 14:2-16
 chunk    {6} 6.output.js 21 bytes {2} [rendered]
     > [2] ./example.js 10:1-12:3
-    [6] ./f.js 21 bytes {6} [built]
+    [4] ./f.js 21 bytes {6} [built]
         cjs require ./f [2] ./example.js 11:2-16
 chunk    {7} output.js (main) 362 bytes [entry] [rendered]
     > main [2] ./example.js 
@@ -326,8 +326,8 @@ chunk    {7} output.js (main) 362 bytes [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
-0.output.js  90 bytes       0  [emitted]  async2
-1.output.js  89 bytes       1  [emitted]  async1
+0.output.js  89 bytes       0  [emitted]  async2
+1.output.js  90 bytes       1  [emitted]  async1
 2.output.js  91 bytes       2  [emitted]  
 3.output.js  91 bytes       3  [emitted]  
 4.output.js  91 bytes       4  [emitted]  
@@ -340,7 +340,7 @@ chunk    {0} 0.output.js (async2) 21 bytes {2} {7} [rendered]
     > async commons duplicate [2] ./example.js 3:0-6:2
     > async commons duplicate [2] ./example.js 10:1-12:3
     > async commons duplicate [2] ./example.js 13:1-15:3
-    [1] ./b.js 21 bytes {0} [built]
+    [0] ./b.js 21 bytes {0} [built]
         amd require ./b [2] ./example.js 1:0-52
         cjs require ./b [2] ./example.js 4:1-15
         require.ensure item ./b [2] ./example.js 10:1-12:3
@@ -349,7 +349,7 @@ chunk    {1} 1.output.js (async1) 21 bytes {7} [rendered]
     > async commons [2] ./example.js 1:0-52
     > async commons [2] ./example.js 3:0-6:2
     > async commons [2] ./example.js 8:0-16:2
-    [0] ./a.js 21 bytes {1} [built]
+    [1] ./a.js 21 bytes {1} [built]
         amd require ./a [2] ./example.js 1:0-52
         require.ensure item ./a [2] ./example.js 3:0-6:2
         require.ensure item ./a [2] ./example.js 8:0-16:2
@@ -360,19 +360,19 @@ chunk    {2} 2.output.js 21 bytes {7} [rendered]
         require.ensure item ./e [2] ./example.js 8:0-16:2
 chunk    {3} 3.output.js 21 bytes {7} [rendered]
     > [2] ./example.js 3:0-6:2
-    [4] ./d.js 21 bytes {3} [built]
+    [6] ./d.js 21 bytes {3} [built]
         cjs require ./d [2] ./example.js 5:1-15
 chunk    {4} 4.output.js 21 bytes {7} [rendered]
     > [2] ./example.js 1:0-52
-    [3] ./c.js 21 bytes {4} [built]
+    [7] ./c.js 21 bytes {4} [built]
         amd require ./c [2] ./example.js 1:0-52
 chunk    {5} 5.output.js 21 bytes {2} [rendered]
     > [2] ./example.js 13:1-15:3
-    [7] ./g.js 21 bytes {5} [built]
+    [3] ./g.js 21 bytes {5} [built]
         cjs require ./g [2] ./example.js 14:2-16
 chunk    {6} 6.output.js 21 bytes {2} [rendered]
     > [2] ./example.js 10:1-12:3
-    [6] ./f.js 21 bytes {6} [built]
+    [4] ./f.js 21 bytes {6} [built]
         cjs require ./f [2] ./example.js 11:2-16
 chunk    {7} output.js (main) 362 bytes [entry] [rendered]
     > main [2] ./example.js 

@@ -206,7 +206,7 @@ require.ensure(["c"], function(require) {
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 ```
@@ -226,21 +226,6 @@ require.ensure(["c"], function(require) {
 
 /***/ }),
 /* 1 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var a = __webpack_require__(/*! a */ 2);
-var b = __webpack_require__(/*! b */ 0);
-__webpack_require__.e/* require.ensure */(0).then((function(require) {
-    __webpack_require__(/*! b */ 0).xyz();
-    var d = __webpack_require__(/*! d */ 4);
-}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
-
-/***/ }),
-/* 2 */
 /*!***************************!*\
   !*** ./node_modules/a.js ***!
   \***************************/
@@ -248,6 +233,21 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
 /***/ (function(module, exports) {
 
 // module a
+
+/***/ }),
+/* 2 */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var a = __webpack_require__(/*! a */ 1);
+var b = __webpack_require__(/*! b */ 0);
+__webpack_require__.e/* require.ensure */(0).then((function(require) {
+    __webpack_require__(/*! b */ 0).xyz();
+    var d = __webpack_require__(/*! d */ 3);
+}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
 /***/ })
 /******/ ]);
@@ -262,22 +262,22 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
 /* 2 */,
 /* 3 */
 /*!***************************!*\
-  !*** ./node_modules/c.js ***!
-  \***************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// module c
-
-/***/ }),
-/* 4 */
-/*!***************************!*\
   !*** ./node_modules/d.js ***!
   \***************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 // module d
+
+/***/ }),
+/* 4 */
+/*!***************************!*\
+  !*** ./node_modules/c.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// module c
 
 /***/ })
 ]]);
@@ -301,11 +301,11 @@ Version: webpack next
   output.js   7.43 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes {1} [rendered]
-    > [1] ./example.js 3:0-6:2
+    > [2] ./example.js 3:0-6:2
     2 modules
 chunk    {1} output.js (main) 166 bytes [entry] [rendered]
-    > main [1] ./example.js 
-    [1] ./example.js 144 bytes {1} [built]
+    > main [2] ./example.js 
+    [2] ./example.js 144 bytes {1} [built]
         single entry .\example.js  main
      + 2 hidden modules
 ```
@@ -320,11 +320,11 @@ Version: webpack next
   output.js  1.68 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes {1} [rendered]
-    > [1] ./example.js 3:0-6:2
+    > [2] ./example.js 3:0-6:2
     2 modules
 chunk    {1} output.js (main) 166 bytes [entry] [rendered]
-    > main [1] ./example.js 
-    [1] ./example.js 144 bytes {1} [built]
+    > main [2] ./example.js 
+    [2] ./example.js 144 bytes {1} [built]
         single entry .\example.js  main
      + 2 hidden modules
 ```

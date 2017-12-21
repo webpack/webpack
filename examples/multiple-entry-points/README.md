@@ -275,7 +275,8 @@ module.exports = {
 
 ``` javascript
 /******/ ([
-/* 0 */
+/* 0 */,
+/* 1 */
 /*!*******************!*\
   !*** ./common.js ***!
   \*******************/
@@ -293,21 +294,21 @@ module.exports = "Common";
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
 
-/***/ 2:
+/***/ 3:
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var common = __webpack_require__(/*! ./common */ 0);
-__webpack_require__.e/* require */(0/* duplicate */).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 1)]; ((function(shared) {
+var common = __webpack_require__(/*! ./common */ 1);
+__webpack_require__.e/* require */(0/* duplicate */).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 0)]; ((function(shared) {
 	shared("This is page A");
 }).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 
 /***/ })
 
-},[[2,3,2]]]);
+},[[3,3,2]]]);
 ```
 
 # js/pageB.bundle.js
@@ -315,37 +316,36 @@ __webpack_require__.e/* require */(0/* duplicate */).then(function() { var __WEB
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
 
-/***/ 3:
+/***/ 2:
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var common = __webpack_require__(/*! ./common */ 0);
+var common = __webpack_require__(/*! ./common */ 1);
 __webpack_require__.e/* require.ensure */(0/* duplicate */).then((function(require) {
-	var shared = __webpack_require__(/*! ./shared */ 1);
+	var shared = __webpack_require__(/*! ./shared */ 0);
 	shared("This is page B");
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
 /***/ })
 
-},[[3,3,1]]]);
+},[[2,3,1]]]);
 ```
 
 # js/0.chunk.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
-/* 0 */,
-/* 1 */
+/* 0 */
 /*!*******************!*\
   !*** ./shared.js ***!
   \*******************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var common = __webpack_require__(/*! ./common */ 0);
+var common = __webpack_require__(/*! ./common */ 1);
 module.exports = function(msg) {
 	console.log(msg);
 };
@@ -362,32 +362,32 @@ module.exports = function(msg) {
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
           Asset       Size  Chunks             Chunk Names
-     0.chunk.js  372 bytes       0  [emitted]  
+     0.chunk.js  363 bytes       0  [emitted]  
 pageB.bundle.js  553 bytes       1  [emitted]  pageB
 pageA.bundle.js  596 bytes       2  [emitted]  pageA
-     commons.js   7.23 KiB       3  [emitted]  commons
+     commons.js   7.24 KiB       3  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 chunk    {0} 0.chunk.js 91 bytes {1} {2} [rendered]
-    > duplicate [2] ./pageA.js 2:0-4:2
-    > duplicate [3] ./pageB.js 2:0-5:2
-    [1] ./shared.js 91 bytes {0} [built]
-        amd require ./shared [2] ./pageA.js 2:0-4:2
-        require.ensure item ./shared [3] ./pageB.js 2:0-5:2
-        cjs require ./shared [3] ./pageB.js 3:14-33
+    > duplicate [3] ./pageA.js 2:0-4:2
+    > duplicate [2] ./pageB.js 2:0-5:2
+    [0] ./shared.js 91 bytes {0} [built]
+        require.ensure item ./shared [2] ./pageB.js 2:0-5:2
+        cjs require ./shared [2] ./pageB.js 3:14-33
+        amd require ./shared [3] ./pageA.js 2:0-4:2
 chunk    {1} pageB.bundle.js (pageB) 152 bytes {3} [initial] [rendered]
-    > pageB [3] ./pageB.js 
-    [3] ./pageB.js 152 bytes {1} [built]
+    > pageB [2] ./pageB.js 
+    [2] ./pageB.js 152 bytes {1} [built]
         single entry ./pageB  pageB
 chunk    {2} pageA.bundle.js (pageA) 108 bytes {3} [initial] [rendered]
-    > pageA [2] ./pageA.js 
-    [2] ./pageA.js 108 bytes {2} [built]
+    > pageA [3] ./pageA.js 
+    [3] ./pageA.js 108 bytes {2} [built]
         single entry ./pageA  pageA
 chunk    {3} commons.js (commons) 26 bytes [entry] [rendered]
-    [0] ./common.js 26 bytes {3} [built]
-        cjs require ./common [1] ./shared.js 1:13-32
-        cjs require ./common [2] ./pageA.js 1:13-32
-        cjs require ./common [3] ./pageB.js 1:13-32
+    [1] ./common.js 26 bytes {3} [built]
+        cjs require ./common [0] ./shared.js 1:13-32
+        cjs require ./common [2] ./pageB.js 1:13-32
+        cjs require ./common [3] ./pageA.js 1:13-32
 ```
 
 ## Production mode
@@ -396,30 +396,30 @@ chunk    {3} commons.js (commons) 26 bytes [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
           Asset       Size  Chunks             Chunk Names
-     0.chunk.js  121 bytes       0  [emitted]  
+     0.chunk.js  120 bytes       0  [emitted]  
 pageB.bundle.js  168 bytes       1  [emitted]  pageB
 pageA.bundle.js  193 bytes       2  [emitted]  pageA
      commons.js   1.74 KiB       3  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 chunk    {0} 0.chunk.js 91 bytes {1} {2} [rendered]
-    > duplicate [2] ./pageA.js 2:0-4:2
-    > duplicate [3] ./pageB.js 2:0-5:2
-    [1] ./shared.js 91 bytes {0} [built]
-        amd require ./shared [2] ./pageA.js 2:0-4:2
-        require.ensure item ./shared [3] ./pageB.js 2:0-5:2
-        cjs require ./shared [3] ./pageB.js 3:14-33
+    > duplicate [3] ./pageA.js 2:0-4:2
+    > duplicate [2] ./pageB.js 2:0-5:2
+    [0] ./shared.js 91 bytes {0} [built]
+        require.ensure item ./shared [2] ./pageB.js 2:0-5:2
+        cjs require ./shared [2] ./pageB.js 3:14-33
+        amd require ./shared [3] ./pageA.js 2:0-4:2
 chunk    {1} pageB.bundle.js (pageB) 152 bytes {3} [initial] [rendered]
-    > pageB [3] ./pageB.js 
-    [3] ./pageB.js 152 bytes {1} [built]
+    > pageB [2] ./pageB.js 
+    [2] ./pageB.js 152 bytes {1} [built]
         single entry ./pageB  pageB
 chunk    {2} pageA.bundle.js (pageA) 108 bytes {3} [initial] [rendered]
-    > pageA [2] ./pageA.js 
-    [2] ./pageA.js 108 bytes {2} [built]
+    > pageA [3] ./pageA.js 
+    [3] ./pageA.js 108 bytes {2} [built]
         single entry ./pageA  pageA
 chunk    {3} commons.js (commons) 26 bytes [entry] [rendered]
-    [0] ./common.js 26 bytes {3} [built]
-        cjs require ./common [1] ./shared.js 1:13-32
-        cjs require ./common [2] ./pageA.js 1:13-32
-        cjs require ./common [3] ./pageB.js 1:13-32
+    [1] ./common.js 26 bytes {3} [built]
+        cjs require ./common [0] ./shared.js 1:13-32
+        cjs require ./common [2] ./pageB.js 1:13-32
+        cjs require ./common [3] ./pageA.js 1:13-32
 ```

@@ -279,7 +279,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 ```
@@ -302,9 +302,85 @@ module.exports = function(page) {
 /***/ }),
 /* 1 */,
 /* 2 */,
-/* 3 */,
-/* 4 */,
+/* 3 */
+/*!*******************************************************!*\
+  !*** (webpack)/node_modules/bundle-loader!./bPage.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var cbs = [], 
+	data;
+module.exports = function(cb) {
+	if(cbs) cbs.push(cb);
+	else cb(data);
+}
+__webpack_require__.e/* require.ensure */(1).then((function(require) {
+	data = __webpack_require__(/*! !./bPage.js */ 1);
+	var callbacks = cbs;
+	cbs = null;
+	for(var i = 0, l = callbacks.length; i < l; i++) {
+		callbacks[i](data);
+	}
+}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+
+/***/ }),
+/* 4 */
+/*!*******************************************************!*\
+  !*** (webpack)/node_modules/bundle-loader!./aPage.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var cbs = [], 
+	data;
+module.exports = function(cb) {
+	if(cbs) cbs.push(cb);
+	else cb(data);
+}
+__webpack_require__.e/* require.ensure */(0).then((function(require) {
+	data = __webpack_require__(/*! !./aPage.js */ 2);
+	var callbacks = cbs;
+	cbs = null;
+	for(var i = 0, l = callbacks.length; i < l; i++) {
+		callbacks[i](data);
+	}
+}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+
+/***/ }),
 /* 5 */
+/*!****************************************************************!*\
+  !*** . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var map = {
+	"./aPage": 4,
+	"./bPage": 3
+};
+
+
+function webpackContext(req) {
+	var id = webpackContextResolve(req);
+	var module = __webpack_require__(id);
+	return module;
+}
+function webpackContextResolve(req) {
+	var id = map[req];
+	if(!(id + 1)) // check for number or string
+		throw new Error("Cannot find module '" + req + "'.");
+	return id;
+}
+webpackContext.keys = function webpackContextKeys() {
+	return Object.keys(map);
+};
+webpackContext.resolve = webpackContextResolve;
+module.exports = webpackContext;
+webpackContext.id = 5;
+
+/***/ }),
+/* 6 */
 /*!*******************!*\
   !*** ./router.js ***!
   \*******************/
@@ -328,7 +404,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 	//  -> Pages are only loaded on demand
 
 	// This line may throw a exception on runtime if the page wasn't found.
-	var pageBundle = __webpack_require__(/*! bundle-loader!. */ 6)("./" + name + "Page");
+	var pageBundle = __webpack_require__(/*! bundle-loader!. */ 5)("./" + name + "Page");
 
 	// Wait until the chunk is loaded
 	pageBundle(function(page) {
@@ -337,84 +413,6 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 }
 
 
-/***/ }),
-/* 6 */
-/*!****************************************************************!*\
-  !*** . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ***!
-  \****************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var map = {
-	"./aPage": 7,
-	"./bPage": 8
-};
-
-
-function webpackContext(req) {
-	var id = webpackContextResolve(req);
-	var module = __webpack_require__(id);
-	return module;
-}
-function webpackContextResolve(req) {
-	var id = map[req];
-	if(!(id + 1)) // check for number or string
-		throw new Error("Cannot find module '" + req + "'.");
-	return id;
-}
-webpackContext.keys = function webpackContextKeys() {
-	return Object.keys(map);
-};
-webpackContext.resolve = webpackContextResolve;
-module.exports = webpackContext;
-webpackContext.id = 6;
-
-/***/ }),
-/* 7 */
-/*!*******************************************************!*\
-  !*** (webpack)/node_modules/bundle-loader!./aPage.js ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var cbs = [], 
-	data;
-module.exports = function(cb) {
-	if(cbs) cbs.push(cb);
-	else cb(data);
-}
-__webpack_require__.e/* require.ensure */(1).then((function(require) {
-	data = __webpack_require__(/*! !./aPage.js */ 1);
-	var callbacks = cbs;
-	cbs = null;
-	for(var i = 0, l = callbacks.length; i < l; i++) {
-		callbacks[i](data);
-	}
-}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
-
-/***/ }),
-/* 8 */
-/*!*******************************************************!*\
-  !*** (webpack)/node_modules/bundle-loader!./bPage.js ***!
-  \*******************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-var cbs = [], 
-	data;
-module.exports = function(cb) {
-	if(cbs) cbs.push(cb);
-	else cb(data);
-}
-__webpack_require__.e/* require.ensure */(0).then((function(require) {
-	data = __webpack_require__(/*! !./bPage.js */ 2);
-	var callbacks = cbs;
-	cbs = null;
-	for(var i = 0, l = callbacks.length; i < l; i++) {
-		callbacks[i](data);
-	}
-}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
-
 /***/ })
 /******/ ]);
 ```
@@ -422,9 +420,9 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
 # js/pageA.bundle.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],[
-/* 0 */,
-/* 1 */
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
+
+/***/ 2:
 /*!******************!*\
   !*** ./aPage.js ***!
   \******************/
@@ -436,8 +434,8 @@ module.exports = function() {
 };
 
 /***/ }),
-/* 2 */,
-/* 3 */
+
+/***/ 8:
 /*!*******************!*\
   !*** ./aEntry.js ***!
   \*******************/
@@ -446,10 +444,11 @@ module.exports = function() {
 
 // Just show the page "a"
 var render = __webpack_require__(/*! ./render */ 0);
-render(__webpack_require__(/*! ./aPage */ 1));
+render(__webpack_require__(/*! ./aPage */ 2));
 
 /***/ })
-],[[3,4,3]]]);
+
+},[[8,4,3]]]);
 ```
 
 # js/1.chunk.js
@@ -459,13 +458,13 @@ render(__webpack_require__(/*! ./aPage */ 1));
 /* 0 */,
 /* 1 */
 /*!******************!*\
-  !*** ./aPage.js ***!
+  !*** ./bPage.js ***!
   \******************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 module.exports = function() {
-	return "This is page A.";
+	return "This is page B.";
 };
 
 /***/ })
@@ -482,50 +481,50 @@ Version: webpack next
           Asset       Size  Chunks             Chunk Names
      0.chunk.js  293 bytes       0  [emitted]  
      1.chunk.js  299 bytes       1  [emitted]  
-pageB.bundle.js  636 bytes       2  [emitted]  pageB
-pageA.bundle.js  627 bytes       3  [emitted]  pageA
+pageB.bundle.js  614 bytes       2  [emitted]  pageB
+pageA.bundle.js  614 bytes       3  [emitted]  pageA
      commons.js   10.7 KiB       4  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 Entrypoint commons = commons.js
 chunk    {0} 0.chunk.js 61 bytes {4} [rendered]
-    > [8] (webpack)/node_modules/bundle-loader!./bPage.js 7:0-14:2
-    [2] ./bPage.js 61 bytes {0} {2} [built]
-        cjs require ./bPage [4] ./bEntry.js 3:7-25
-        cjs require !!./bPage.js [8] (webpack)/node_modules/bundle-loader!./bPage.js 8:8-31
+    > [4] (webpack)/node_modules/bundle-loader!./aPage.js 7:0-14:2
+    [2] ./aPage.js 61 bytes {0} {3} [built]
+        cjs require !!./aPage.js [4] (webpack)/node_modules/bundle-loader!./aPage.js 8:8-31
+        cjs require ./aPage [8] ./aEntry.js 3:7-25
 chunk    {1} 1.chunk.js 61 bytes {4} [rendered]
-    > [7] (webpack)/node_modules/bundle-loader!./aPage.js 7:0-14:2
-    [1] ./aPage.js 61 bytes {1} {3} [built]
-        cjs require ./aPage [3] ./aEntry.js 3:7-25
-        cjs require !!./aPage.js [7] (webpack)/node_modules/bundle-loader!./aPage.js 8:8-31
+    > [3] (webpack)/node_modules/bundle-loader!./bPage.js 7:0-14:2
+    [1] ./bPage.js 61 bytes {1} {2} [built]
+        cjs require !!./bPage.js [3] (webpack)/node_modules/bundle-loader!./bPage.js 8:8-31
+        cjs require ./bPage [7] ./bEntry.js 3:7-25
 chunk    {2} pageB.bundle.js (pageB) 150 bytes {4} [initial] [rendered]
-    > pageB [4] ./bEntry.js 
-    [2] ./bPage.js 61 bytes {0} {2} [built]
-        cjs require ./bPage [4] ./bEntry.js 3:7-25
-        cjs require !!./bPage.js [8] (webpack)/node_modules/bundle-loader!./bPage.js 8:8-31
-    [4] ./bEntry.js 89 bytes {2} [built]
+    > pageB [7] ./bEntry.js 
+    [1] ./bPage.js 61 bytes {1} {2} [built]
+        cjs require !!./bPage.js [3] (webpack)/node_modules/bundle-loader!./bPage.js 8:8-31
+        cjs require ./bPage [7] ./bEntry.js 3:7-25
+    [7] ./bEntry.js 89 bytes {2} [built]
         single entry ./bEntry  pageB
 chunk    {3} pageA.bundle.js (pageA) 150 bytes {4} [initial] [rendered]
-    > pageA [3] ./aEntry.js 
-    [1] ./aPage.js 61 bytes {1} {3} [built]
-        cjs require ./aPage [3] ./aEntry.js 3:7-25
-        cjs require !!./aPage.js [7] (webpack)/node_modules/bundle-loader!./aPage.js 8:8-31
-    [3] ./aEntry.js 89 bytes {3} [built]
+    > pageA [8] ./aEntry.js 
+    [2] ./aPage.js 61 bytes {0} {3} [built]
+        cjs require !!./aPage.js [4] (webpack)/node_modules/bundle-loader!./aPage.js 8:8-31
+        cjs require ./aPage [8] ./aEntry.js 3:7-25
+    [8] ./aEntry.js 89 bytes {3} [built]
         single entry ./aEntry  pageA
 chunk    {4} commons.js (commons) 1.67 KiB [entry] [rendered]
-    > commons [5] ./router.js 
+    > commons [6] ./router.js 
     [0] ./render.js 60 bytes {4} [built]
-        cjs require ./render [3] ./aEntry.js 2:13-32
-        cjs require ./render [4] ./bEntry.js 2:13-32
-        cjs require ./render [5] ./router.js 1:13-32
-    [5] ./router.js 903 bytes {4} [built]
+        cjs require ./render [6] ./router.js 1:13-32
+        cjs require ./render [7] ./bEntry.js 2:13-32
+        cjs require ./render [8] ./aEntry.js 2:13-32
+    [3] (webpack)/node_modules/bundle-loader!./bPage.js 282 bytes {4} [optional] [built]
+        context element ./bPage [5] . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ./bPage
+    [4] (webpack)/node_modules/bundle-loader!./aPage.js 282 bytes {4} [optional] [built]
+        context element ./aPage [5] . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ./aPage
+    [5] . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ 184 bytes {4} [built]
+        cjs require context bundle-loader!. [6] ./router.js 18:18-61
+    [6] ./router.js 903 bytes {4} [built]
         single entry ./router  commons
-    [6] . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ 184 bytes {4} [built]
-        cjs require context bundle-loader!. [5] ./router.js 18:18-61
-    [7] (webpack)/node_modules/bundle-loader!./aPage.js 282 bytes {4} [optional] [built]
-        context element ./aPage [6] . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ./aPage
-    [8] (webpack)/node_modules/bundle-loader!./bPage.js 282 bytes {4} [optional] [built]
-        context element ./bPage [6] . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ./bPage
 ```
 
 ## Production mode
@@ -536,48 +535,48 @@ Version: webpack next
           Asset       Size  Chunks             Chunk Names
      0.chunk.js  123 bytes       0  [emitted]  
      1.chunk.js  122 bytes       1  [emitted]  
-pageB.bundle.js  164 bytes    2, 0  [emitted]  pageB
-pageA.bundle.js  163 bytes    3, 1  [emitted]  pageA
+pageB.bundle.js  165 bytes    2, 1  [emitted]  pageB
+pageA.bundle.js  165 bytes    3, 0  [emitted]  pageA
      commons.js   2.47 KiB       4  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 Entrypoint commons = commons.js
 chunk    {0} 0.chunk.js 61 bytes {4} [rendered]
-    > [8] (webpack)/node_modules/bundle-loader!./bPage.js 7:0-14:2
-    [2] ./bPage.js 61 bytes {0} {2} [built]
-        cjs require ./bPage [4] ./bEntry.js 3:7-25
-        cjs require !!./bPage.js [8] (webpack)/node_modules/bundle-loader!./bPage.js 8:8-31
+    > [4] (webpack)/node_modules/bundle-loader!./aPage.js 7:0-14:2
+    [2] ./aPage.js 61 bytes {0} {3} [built]
+        cjs require !!./aPage.js [4] (webpack)/node_modules/bundle-loader!./aPage.js 8:8-31
+        cjs require ./aPage [8] ./aEntry.js 3:7-25
 chunk    {1} 1.chunk.js 61 bytes {4} [rendered]
-    > [7] (webpack)/node_modules/bundle-loader!./aPage.js 7:0-14:2
-    [1] ./aPage.js 61 bytes {1} {3} [built]
-        cjs require ./aPage [3] ./aEntry.js 3:7-25
-        cjs require !!./aPage.js [7] (webpack)/node_modules/bundle-loader!./aPage.js 8:8-31
+    > [3] (webpack)/node_modules/bundle-loader!./bPage.js 7:0-14:2
+    [1] ./bPage.js 61 bytes {1} {2} [built]
+        cjs require !!./bPage.js [3] (webpack)/node_modules/bundle-loader!./bPage.js 8:8-31
+        cjs require ./bPage [7] ./bEntry.js 3:7-25
 chunk    {2} pageB.bundle.js (pageB) 150 bytes {4} [initial] [rendered]
-    > pageB [4] ./bEntry.js 
-    [2] ./bPage.js 61 bytes {0} {2} [built]
-        cjs require ./bPage [4] ./bEntry.js 3:7-25
-        cjs require !!./bPage.js [8] (webpack)/node_modules/bundle-loader!./bPage.js 8:8-31
-    [4] ./bEntry.js 89 bytes {2} [built]
+    > pageB [7] ./bEntry.js 
+    [1] ./bPage.js 61 bytes {1} {2} [built]
+        cjs require !!./bPage.js [3] (webpack)/node_modules/bundle-loader!./bPage.js 8:8-31
+        cjs require ./bPage [7] ./bEntry.js 3:7-25
+    [7] ./bEntry.js 89 bytes {2} [built]
         single entry ./bEntry  pageB
 chunk    {3} pageA.bundle.js (pageA) 150 bytes {4} [initial] [rendered]
-    > pageA [3] ./aEntry.js 
-    [1] ./aPage.js 61 bytes {1} {3} [built]
-        cjs require ./aPage [3] ./aEntry.js 3:7-25
-        cjs require !!./aPage.js [7] (webpack)/node_modules/bundle-loader!./aPage.js 8:8-31
-    [3] ./aEntry.js 89 bytes {3} [built]
+    > pageA [8] ./aEntry.js 
+    [2] ./aPage.js 61 bytes {0} {3} [built]
+        cjs require !!./aPage.js [4] (webpack)/node_modules/bundle-loader!./aPage.js 8:8-31
+        cjs require ./aPage [8] ./aEntry.js 3:7-25
+    [8] ./aEntry.js 89 bytes {3} [built]
         single entry ./aEntry  pageA
 chunk    {4} commons.js (commons) 1.67 KiB [entry] [rendered]
-    > commons [5] ./router.js 
+    > commons [6] ./router.js 
     [0] ./render.js 60 bytes {4} [built]
-        cjs require ./render [3] ./aEntry.js 2:13-32
-        cjs require ./render [4] ./bEntry.js 2:13-32
-        cjs require ./render [5] ./router.js 1:13-32
-    [5] ./router.js 903 bytes {4} [built]
+        cjs require ./render [6] ./router.js 1:13-32
+        cjs require ./render [7] ./bEntry.js 2:13-32
+        cjs require ./render [8] ./aEntry.js 2:13-32
+    [3] (webpack)/node_modules/bundle-loader!./bPage.js 282 bytes {4} [optional] [built]
+        context element ./bPage [5] . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ./bPage
+    [4] (webpack)/node_modules/bundle-loader!./aPage.js 282 bytes {4} [optional] [built]
+        context element ./aPage [5] . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ./aPage
+    [5] . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ 184 bytes {4} [built]
+        cjs require context bundle-loader!. [6] ./router.js 18:18-61
+    [6] ./router.js 903 bytes {4} [built]
         single entry ./router  commons
-    [6] . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ 184 bytes {4} [built]
-        cjs require context bundle-loader!. [5] ./router.js 18:18-61
-    [7] (webpack)/node_modules/bundle-loader!./aPage.js 282 bytes {4} [optional] [built]
-        context element ./aPage [6] . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ./aPage
-    [8] (webpack)/node_modules/bundle-loader!./bPage.js 282 bytes {4} [optional] [built]
-        context element ./bPage [6] . sync (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ./bPage
 ```

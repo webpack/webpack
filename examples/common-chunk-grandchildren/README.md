@@ -303,7 +303,7 @@ module.exports = [
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 ```
@@ -313,17 +313,6 @@ module.exports = [
 ``` javascript
 /******/ ([
 /* 0 */
-/*!**************************!*\
-  !*** multi ./example.js ***!
-  \**************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(/*! ./example.js */1);
-
-
-/***/ }),
-/* 1 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -333,16 +322,27 @@ module.exports = __webpack_require__(/*! ./example.js */1);
 var main = function() {
 	console.log("Main class");
 	__webpack_require__.e/* require.ensure */(2).then((() => {
-		const page = __webpack_require__(/*! ./pageA */ 3);
+		const page = __webpack_require__(/*! ./pageA */ 4);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 	__webpack_require__.e/* require.ensure */(1).then((() => {
-		const page = __webpack_require__(/*! ./pageB */ 4);
+		const page = __webpack_require__(/*! ./pageB */ 3);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 main();
+
+
+/***/ }),
+/* 1 */
+/*!**************************!*\
+  !*** multi ./example.js ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./example.js */0);
 
 
 /***/ }),
@@ -392,7 +392,7 @@ module.exports = function() {
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
 
-/***/ 4:
+/***/ 3:
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
@@ -418,7 +418,7 @@ module.exports = function() {
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
 
-/***/ 3:
+/***/ 4:
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
@@ -606,22 +606,11 @@ module.exports = function() {
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/*!**************************!*\
-  !*** multi ./example.js ***!
-  \**************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(/*! ./example.js */1);
-
-
-/***/ }),
-/* 1 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -631,16 +620,27 @@ module.exports = __webpack_require__(/*! ./example.js */1);
 var main = function() {
 	console.log("Main class");
 	Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e(2)]).then((() => {
-		const page = __webpack_require__(/*! ./pageA */ 2);
+		const page = __webpack_require__(/*! ./pageA */ 3);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 	__webpack_require__.e/* require.ensure */(1).then((() => {
-		const page = __webpack_require__(/*! ./pageB */ 3);
+		const page = __webpack_require__(/*! ./pageB */ 2);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 };
 
 main();
+
+
+/***/ }),
+/* 1 */
+/*!**************************!*\
+  !*** multi ./example.js ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./example.js */0);
 
 
 /***/ })
@@ -674,7 +674,7 @@ module.exports = function() {
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
 
-/***/ 3:
+/***/ 2:
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
@@ -700,7 +700,7 @@ module.exports = function() {
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
 
-/***/ 2:
+/***/ 3:
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
@@ -761,25 +761,25 @@ Child
       output.js   7.71 KiB       3  [emitted]  main
     Entrypoint main = output.js
     chunk    {0} 0.output.js 142 bytes {3} [rendered]
-        > [4] ./pageB.js 3:1-6:3
+        > [3] ./pageB.js 3:1-6:3
         [5] ./pageC.js 142 bytes {0} [built]
-            cjs require ./pageC [4] ./pageB.js 4:15-33
+            cjs require ./pageC [3] ./pageB.js 4:15-33
     chunk    {1} 1.output.js 140 bytes {3} [rendered]
-        > [1] ./example.js 7:1-10:3
-        [4] ./pageB.js 140 bytes {1} [built]
-            cjs require ./pageB [1] ./example.js 8:15-33
+        > [0] ./example.js 7:1-10:3
+        [3] ./pageB.js 140 bytes {1} [built]
+            cjs require ./pageB [0] ./example.js 8:15-33
     chunk    {2} 2.output.js 142 bytes {3} [rendered]
-        > [1] ./example.js 3:1-6:3
-        [3] ./pageA.js 142 bytes {2} [built]
-            cjs require ./pageA [1] ./example.js 4:15-33
+        > [0] ./example.js 3:1-6:3
+        [4] ./pageA.js 142 bytes {2} [built]
+            cjs require ./pageA [0] ./example.js 4:15-33
     chunk    {3} output.js (main) 333 bytes [entry] [rendered]
-        > main [0] multi ./example.js 
-        [0] multi ./example.js 28 bytes {3} [built]
+        > main [1] multi ./example.js 
+        [0] ./example.js 233 bytes {3} [built]
+            single entry ./example.js [1] multi ./example.js main:100000
+        [1] multi ./example.js 28 bytes {3} [built]
             multi entry 
-        [1] ./example.js 233 bytes {3} [built]
-            single entry ./example.js [0] multi ./example.js main:100000
         [2] ./reusableComponent.js 72 bytes {3} [built]
-            cjs require ./reusableComponent [3] ./pageA.js 1:24-54
+            cjs require ./reusableComponent [4] ./pageA.js 1:24-54
             cjs require ./reusableComponent [5] ./pageC.js 1:24-54
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
@@ -791,29 +791,29 @@ Child
       asyncoutput.js   7.49 KiB       4  [emitted]  main
     Entrypoint main = asyncoutput.js
     chunk    {0} 0.asyncoutput.js 72 bytes {4} [rendered]
-        > async commons [1] ./example.js 3:1-6:3
-        > async commons [3] ./pageB.js 3:1-6:3
+        > async commons [0] ./example.js 3:1-6:3
+        > async commons [2] ./pageB.js 3:1-6:3
         [4] ./reusableComponent.js 72 bytes {0} [built]
-            cjs require ./reusableComponent [2] ./pageA.js 1:24-54
+            cjs require ./reusableComponent [3] ./pageA.js 1:24-54
             cjs require ./reusableComponent [5] ./pageC.js 1:24-54
     chunk    {1} 1.asyncoutput.js 140 bytes {4} [rendered]
-        > [1] ./example.js 7:1-10:3
-        [3] ./pageB.js 140 bytes {1} [built]
-            cjs require ./pageB [1] ./example.js 8:15-33
+        > [0] ./example.js 7:1-10:3
+        [2] ./pageB.js 140 bytes {1} [built]
+            cjs require ./pageB [0] ./example.js 8:15-33
     chunk    {2} 2.asyncoutput.js 142 bytes {4} [rendered]
-        > [1] ./example.js 3:1-6:3
-        [2] ./pageA.js 142 bytes {2} [built]
-            cjs require ./pageA [1] ./example.js 4:15-33
+        > [0] ./example.js 3:1-6:3
+        [3] ./pageA.js 142 bytes {2} [built]
+            cjs require ./pageA [0] ./example.js 4:15-33
     chunk    {3} 3.asyncoutput.js 142 bytes {1} [rendered]
-        > [3] ./pageB.js 3:1-6:3
+        > [2] ./pageB.js 3:1-6:3
         [5] ./pageC.js 142 bytes {3} [built]
-            cjs require ./pageC [3] ./pageB.js 4:15-33
+            cjs require ./pageC [2] ./pageB.js 4:15-33
     chunk    {4} asyncoutput.js (main) 261 bytes [entry] [rendered]
-        > main [0] multi ./example.js 
-        [0] multi ./example.js 28 bytes {4} [built]
+        > main [1] multi ./example.js 
+        [0] ./example.js 233 bytes {4} [built]
+            single entry ./example.js [1] multi ./example.js main:100000
+        [1] multi ./example.js 28 bytes {4} [built]
             multi entry 
-        [1] ./example.js 233 bytes {4} [built]
-            single entry ./example.js [0] multi ./example.js main:100000
 ```
 
 ## Production mode
@@ -830,25 +830,25 @@ Child
       output.js    1.8 KiB       3  [emitted]  main
     Entrypoint main = output.js
     chunk    {0} 0.output.js 142 bytes {3} [rendered]
-        > [4] ./pageB.js 3:1-6:3
+        > [3] ./pageB.js 3:1-6:3
         [5] ./pageC.js 142 bytes {0} [built]
-            cjs require ./pageC [4] ./pageB.js 4:15-33
+            cjs require ./pageC [3] ./pageB.js 4:15-33
     chunk    {1} 1.output.js 140 bytes {3} [rendered]
-        > [1] ./example.js 7:1-10:3
-        [4] ./pageB.js 140 bytes {1} [built]
-            cjs require ./pageB [1] ./example.js 8:15-33
+        > [0] ./example.js 7:1-10:3
+        [3] ./pageB.js 140 bytes {1} [built]
+            cjs require ./pageB [0] ./example.js 8:15-33
     chunk    {2} 2.output.js 142 bytes {3} [rendered]
-        > [1] ./example.js 3:1-6:3
-        [3] ./pageA.js 142 bytes {2} [built]
-            cjs require ./pageA [1] ./example.js 4:15-33
+        > [0] ./example.js 3:1-6:3
+        [4] ./pageA.js 142 bytes {2} [built]
+            cjs require ./pageA [0] ./example.js 4:15-33
     chunk    {3} output.js (main) 333 bytes [entry] [rendered]
-        > main [0] multi ./example.js 
-        [0] multi ./example.js 28 bytes {3} [built]
+        > main [1] multi ./example.js 
+        [0] ./example.js 233 bytes {3} [built]
+            single entry ./example.js [1] multi ./example.js main:100000
+        [1] multi ./example.js 28 bytes {3} [built]
             multi entry 
-        [1] ./example.js 233 bytes {3} [built]
-            single entry ./example.js [0] multi ./example.js main:100000
         [2] ./reusableComponent.js 72 bytes {3} [built]
-            cjs require ./reusableComponent [3] ./pageA.js 1:24-54
+            cjs require ./reusableComponent [4] ./pageA.js 1:24-54
             cjs require ./reusableComponent [5] ./pageC.js 1:24-54
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
@@ -860,27 +860,27 @@ Child
       asyncoutput.js   1.76 KiB       4  [emitted]  main
     Entrypoint main = asyncoutput.js
     chunk    {0} 0.asyncoutput.js 72 bytes {4} [rendered]
-        > async commons [1] ./example.js 3:1-6:3
-        > async commons [3] ./pageB.js 3:1-6:3
+        > async commons [0] ./example.js 3:1-6:3
+        > async commons [2] ./pageB.js 3:1-6:3
         [4] ./reusableComponent.js 72 bytes {0} [built]
-            cjs require ./reusableComponent [2] ./pageA.js 1:24-54
+            cjs require ./reusableComponent [3] ./pageA.js 1:24-54
             cjs require ./reusableComponent [5] ./pageC.js 1:24-54
     chunk    {1} 1.asyncoutput.js 140 bytes {4} [rendered]
-        > [1] ./example.js 7:1-10:3
-        [3] ./pageB.js 140 bytes {1} [built]
-            cjs require ./pageB [1] ./example.js 8:15-33
+        > [0] ./example.js 7:1-10:3
+        [2] ./pageB.js 140 bytes {1} [built]
+            cjs require ./pageB [0] ./example.js 8:15-33
     chunk    {2} 2.asyncoutput.js 142 bytes {4} [rendered]
-        > [1] ./example.js 3:1-6:3
-        [2] ./pageA.js 142 bytes {2} [built]
-            cjs require ./pageA [1] ./example.js 4:15-33
+        > [0] ./example.js 3:1-6:3
+        [3] ./pageA.js 142 bytes {2} [built]
+            cjs require ./pageA [0] ./example.js 4:15-33
     chunk    {3} 3.asyncoutput.js 142 bytes {1} [rendered]
-        > [3] ./pageB.js 3:1-6:3
+        > [2] ./pageB.js 3:1-6:3
         [5] ./pageC.js 142 bytes {3} [built]
-            cjs require ./pageC [3] ./pageB.js 4:15-33
+            cjs require ./pageC [2] ./pageB.js 4:15-33
     chunk    {4} asyncoutput.js (main) 261 bytes [entry] [rendered]
-        > main [0] multi ./example.js 
-        [0] multi ./example.js 28 bytes {4} [built]
+        > main [1] multi ./example.js 
+        [0] ./example.js 233 bytes {4} [built]
+            single entry ./example.js [1] multi ./example.js main:100000
+        [1] multi ./example.js 28 bytes {4} [built]
             multi entry 
-        [1] ./example.js 233 bytes {4} [built]
-            single entry ./example.js [0] multi ./example.js main:100000
 ```

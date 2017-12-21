@@ -322,4 +322,8 @@ chunk    {0} output.js (main) 342 bytes [entry] [rendered]
     [0] ./example.js + 6 modules 342 bytes {0} [built]
         [no exports]
         single entry .\example.js  main
+        | ./example.js 149 bytes [built]
+        |    [no exports]
+        |    single entry .\example.js  main
+        |     + 6 hidden modules
 ```
