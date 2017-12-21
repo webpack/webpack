@@ -120,7 +120,7 @@ describe("WatchTestCases", () => {
 
 						setTimeout(() => {
 							const compiler = webpack(options);
-							compiler.plugin("invalid", (filename, mtime) => {
+							compiler.hooks.invalid.tap("WatchTestCasesTest", (filename, mtime) => {
 								triggeringFilename = filename;
 							});
 							const watching = compiler.watch({

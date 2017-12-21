@@ -240,7 +240,7 @@ describe("MultiCompiler", () => {
 				describe("when called for first compiler", () => {
 					beforeEach(() => {
 						env.mockDonePlugin = sinon.spy();
-						env.myMultiCompiler.plugin("done", env.mockDonePlugin);
+						env.myMultiCompiler.hooks.done.tap("MultiCompilerTest", env.mockDonePlugin);
 						env.doneEventBinding1.handler({
 							hash: "foo"
 						});
@@ -268,7 +268,7 @@ describe("MultiCompiler", () => {
 				describe("when called", () => {
 					beforeEach(() => {
 						env.mockInvalidPlugin = sinon.spy();
-						env.myMultiCompiler.plugin("invalid", env.mockInvalidPlugin);
+						env.myMultiCompiler.hooks.invalid.tap("MultiCompilerTest", env.mockInvalidPlugin);
 						env.invalidEventBinding.handler();
 					});
 

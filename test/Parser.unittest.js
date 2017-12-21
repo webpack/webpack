@@ -213,44 +213,44 @@ describe("Parser", () => {
 			const state = testCases[name][1];
 
 			const testParser = new Parser({});
-			testParser.plugin("can-rename abc", (expr) => true);
-			testParser.plugin("can-rename ijk", (expr) => true);
-			testParser.plugin("call abc", (expr) => {
+			testParser.hooks.canRename.tap("abc", "ParserTest", (expr) => true);
+			testParser.hooks.canRename.tap("ijk", "ParserTest", (expr) => true);
+			testParser.hooks.call.tap("abc", "ParserTest", (expr) => {
 				if(!testParser.state.abc) testParser.state.abc = [];
 				testParser.state.abc.push(testParser.parseString(expr.arguments[0]));
 				return true;
 			});
-			testParser.plugin("call cde.abc", (expr) => {
+			testParser.hooks.call.tap("cde.abc", "ParserTest", (expr) => {
 				if(!testParser.state.cdeabc) testParser.state.cdeabc = [];
 				testParser.state.cdeabc.push(testParser.parseString(expr.arguments[0]));
 				return true;
 			});
-			testParser.plugin("call cde.ddd.abc", (expr) => {
+			testParser.hooks.call.tap("cde.ddd.abc", "ParserTest", (expr) => {
 				if(!testParser.state.cdedddabc) testParser.state.cdedddabc = [];
 				testParser.state.cdedddabc.push(testParser.parseString(expr.arguments[0]));
 				return true;
 			});
-			testParser.plugin("expression fgh", (expr) => {
+			testParser.hooks.expression.tap("fgh", "ParserTest", (expr) => {
 				if(!testParser.state.fgh) testParser.state.fgh = [];
 				testParser.state.fgh.push(Array.from(testParser.scope.definitions.asSet()).join(" "));
 				return true;
 			});
-			testParser.plugin("expression fgh.sub", (expr) => {
+			testParser.hooks.expression.tap("fgh.sub", "ParserTest", (expr) => {
 				if(!testParser.state.fghsub) testParser.state.fghsub = [];
 				testParser.state.fghsub.push(testParser.scope.inTry ? "try" : "notry");
 				return true;
 			});
-			testParser.plugin("expression ijk.sub", (expr) => {
+			testParser.hooks.expression.tap("ijk.sub", "ParserTest", (expr) => {
 				if(!testParser.state.ijksub) testParser.state.ijksub = [];
 				testParser.state.ijksub.push("test");
 				return true;
 			});
-			testParser.plugin("expression memberExpr", (expr) => {
+			testParser.hooks.expression.tap("memberExpr", "ParserTest", (expr) => {
 				if(!testParser.state.expressions) testParser.state.expressions = [];
 				testParser.state.expressions.push(expr.name);
 				return true;
 			});
-			testParser.plugin("new xyz", (expr) => {
+			testParser.hooks.new.tap("xyz", "ParserTest", (expr) => {
 				if(!testParser.state.xyz) testParser.state.xyz = [];
 				testParser.state.xyz.push(testParser.parseString(expr.arguments[0]));
 				return true;
@@ -273,7 +273,7 @@ describe("Parser", () => {
 
 		const testParser = new Parser({});
 
-		testParser.plugin("program", (ast, comments) => {
+		testParser.hooks.program.tap("ParserTest", (ast, comments) => {
 			if(!testParser.state.comments) testParser.state.comments = comments;
 			return true;
 		});
@@ -292,12 +292,12 @@ describe("Parser", () => {
 	describe("expression evaluation", () => {
 		function evaluateInParser(source) {
 			const parser = new Parser();
-			parser.plugin("call test", (expr) => {
+			parser.hooks.call.tap("test", "ParserTest", (expr) => {
 				parser.state.result = parser.evaluateExpression(expr.arguments[0]);
 			});
-			parser.plugin("evaluate Identifier aString", (expr) =>
+			parser.hooks.evaluateIdentifier.tap("aString", "ParserTest", (expr) =>
 				new BasicEvaluatedExpression().setString("aString").setRange(expr.range));
-			parser.plugin("evaluate Identifier b.Number", (expr) =>
+			parser.hooks.evaluateIdentifier.tap("b.Number", "ParserTest", (expr) =>
 				new BasicEvaluatedExpression().setNumber(123).setRange(expr.range));
 			return parser.parse("test(" + source + ");").result;
 		}
@@ -469,11 +469,11 @@ describe("Parser", () => {
 			};
 
 			const parser = new Parser();
-			parser.plugin("call require", (expr) => {
+			parser.hooks.call.tap("require", "ParserTest", (expr) => {
 				const param = parser.evaluateExpression(expr.arguments[0]);
 				parser.state.param = param.string;
 			});
-			parser.plugin("call System.import", (expr) => {
+			parser.hooks.call.tap("System.import", "ParserTest", (expr) => {
 				const param = parser.evaluateExpression(expr.arguments[0]);
 				parser.state.param = param.string;
 			});

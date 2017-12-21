@@ -54,7 +54,7 @@ describe("WatchDetection", () => {
 				});
 				const memfs = compiler.outputFileSystem = new MemoryFs();
 				let onChange;
-				compiler.plugin("done", () => {
+				compiler.hooks.done.tap("WatchDetectionTest", () => {
 					if(onChange)
 						onChange();
 				});
