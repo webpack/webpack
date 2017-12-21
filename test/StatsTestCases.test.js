@@ -55,7 +55,7 @@ describe("StatsTestCases", () => {
 						callback(null, result.toString("utf-8").replace(/\r/g, ""));
 					}]));
 				};
-				c.apply(new webpack.optimize.OccurrenceOrderPlugin());
+				new webpack.optimize.OccurrenceOrderPlugin().apply(c);
 			});
 			c.run((err, stats) => {
 				if(err) return done(err);
