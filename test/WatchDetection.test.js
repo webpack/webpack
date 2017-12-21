@@ -9,6 +9,11 @@ const MemoryFs = require("memory-fs");
 const webpack = require("../");
 
 describe("WatchDetection", () => {
+	if(process.env.NO_WATCH_TESTS) {
+		it("long running tests excluded");
+		return;
+	}
+
 	for(let changeTimeout = 0; changeTimeout < 100; changeTimeout += 10) {
 		createTestCase(changeTimeout);
 	}

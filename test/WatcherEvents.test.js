@@ -27,6 +27,11 @@ const createMultiCompiler = () => {
 };
 
 describe("WatcherEvents", function() {
+	if(process.env.NO_WATCH_TESTS) {
+		it("long running tests excluded");
+		return;
+	}
+
 	this.timeout(10000);
 
 	it("should emit 'watch-close' when using single-compiler mode and the compiler is not running", function(done) {
