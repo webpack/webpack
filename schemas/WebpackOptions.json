@@ -1507,6 +1507,10 @@
               "type": "boolean",
               "description": "add built modules information"
             },
+            "nestedModules": {
+              "type": "boolean",
+              "description": "add information about modules nested in other modules (like with module concatenation)"
+            },
             "children": {
               "type": "boolean",
               "description": "add children information"
