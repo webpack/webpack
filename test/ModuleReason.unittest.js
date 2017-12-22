@@ -56,22 +56,4 @@ describe("ModuleReason", () => {
 			should(myModuleReason.hasChunk(myChunk2)).be.false();
 		});
 	});
-
-	describe(".chunks", () => {
-		it("is null if no rewrites happen first", () => {
-			should(myModuleReason.chunks).be.Null();
-		});
-
-		it("is null if only invalid rewrites happen first", () => {
-			myModuleReason.rewriteChunks(myChunk, [myChunk2]);
-			should(myModuleReason.chunks).be.Null();
-		});
-
-		it("is an array of chunks if a valid rewrite happens", () => {
-			myModuleReason.module.addChunk(myChunk);
-			myModuleReason.rewriteChunks(myChunk, [myChunk2]);
-
-			should(myModuleReason.chunks).be.eql([myChunk2]);
-		});
-	});
 });
