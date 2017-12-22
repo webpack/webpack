@@ -189,11 +189,11 @@ Version: webpack next
 output.js  738 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 329 bytes [entry] [rendered]
-    > main [0] ./example.js 
-    [0] ./example.js 69 bytes {0} [built]
-        single entry .\example.js  main
-    [1] ./increment.js 98 bytes {0} [built]
-        cjs require ./increment [0] ./example.js 1:10-32
-    [2] ./math.js 162 bytes {0} [built]
+    > main [2] ./example.js 
+    [0] ./math.js 162 bytes {0} [built]
         cjs require ./math [1] ./increment.js 1:10-27
+    [1] ./increment.js 98 bytes {0} [built]
+        cjs require ./increment [2] ./example.js 1:10-32
+    [2] ./example.js 69 bytes {0} [built]
+        single entry .\example.js  main
 ```

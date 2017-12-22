@@ -265,16 +265,16 @@ chunk    {1} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
              Asset       Size  Chunks             Chunk Names
- MyLibrary.beta.js  855 bytes       0  [emitted]  beta
-MyLibrary.alpha.js  857 bytes       1  [emitted]  alpha
+ MyLibrary.beta.js  854 bytes       0  [emitted]  beta
+MyLibrary.alpha.js  858 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
-    > beta [1] ./beta.js 
-    [1] ./beta.js 24 bytes {0} [built]
+    > beta [0] ./beta.js 
+    [0] ./beta.js 24 bytes {0} [built]
         single entry ./beta  beta
 chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
-    > alpha [0] ./alpha.js 
-    [0] ./alpha.js 25 bytes {1} [built]
+    > alpha [1] ./alpha.js 
+    [1] ./alpha.js 25 bytes {1} [built]
         single entry ./alpha  alpha
 ```

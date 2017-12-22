@@ -403,8 +403,15 @@
         },
         "hashFunction": {
           "description": "Algorithm used for generation the hash (see node.js crypto package)",
-          "minLength": 1,
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "instanceof": "Function"
+            }
+          ]
         },
         "hashSalt": {
           "description": "Any string which is added to the hash to salt it",
@@ -1506,6 +1513,10 @@
             "modules": {
               "type": "boolean",
               "description": "add built modules information"
+            },
+            "nestedModules": {
+              "type": "boolean",
+              "description": "add information about modules nested in other modules (like with module concatenation)"
             },
             "children": {
               "type": "boolean",

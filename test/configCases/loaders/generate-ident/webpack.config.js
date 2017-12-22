@@ -42,6 +42,22 @@ module.exports = {
 						}
 					}
 				}
+			},
+			{
+				test: /d\.js$/,
+				use: [
+					"./loader1",
+					"./loader1",
+					"./loader1",
+					{
+						loader: "./loader2",
+						options: {
+							f: function() {
+								return "ok";
+							}
+						}
+					}
+				]
 			}
 		]
 	}

@@ -42,7 +42,7 @@ describe("Compiler", () => {
 				callback();
 			}
 		};
-		c.plugin("compilation", (compilation) => compilation.bail = true);
+		c.hooks.compilation.tap("CompilerTest", (compilation) => compilation.bail = true);
 		c.run((err, stats) => {
 			if(err) throw err;
 			should.strictEqual(typeof stats, "object");
@@ -84,7 +84,7 @@ describe("Compiler", () => {
 			Object.keys(files).should.be.eql(["/main.js"]);
 			const bundle = files["/main.js"];
 			bundle.should.containEql("function __webpack_require__(");
-			bundle.should.containEql("__webpack_require__(/*! ./a */ 1);");
+			bundle.should.containEql("__webpack_require__(/*! ./a */ 0);");
 			bundle.should.containEql("./c.js");
 			bundle.should.containEql("./a.js");
 			bundle.should.containEql("This is a");
@@ -167,37 +167,6 @@ describe("Compiler", () => {
 			bundle.should.containEql("webpackJsonp");
 			chunk.should.containEql("window[\"webpackJsonp\"] || []).push");
 			done();
-		});
-	});
-	describe("constructor", () => {
-		let compiler;
-		beforeEach(() => {
-			compiler = webpack({
-				entry: "./c",
-				context: path.join(__dirname, "fixtures"),
-				output: {
-					path: "/",
-					pathinfo: true,
-				}
-			});
-		});
-		describe("parser", () => {
-			describe("plugin", () => {
-				it("invokes sets a 'compilation' plugin", (done) => {
-					compiler.plugin = sinon.spy();
-					compiler.parser.plugin();
-					compiler.plugin.callCount.should.be.exactly(1);
-					done();
-				});
-			});
-			describe("apply", () => {
-				it("invokes sets a 'compilation' plugin", (done) => {
-					compiler.plugin = sinon.spy();
-					compiler.parser.apply();
-					compiler.plugin.callCount.should.be.exactly(1);
-					done();
-				});
-			});
 		});
 	});
 	describe("methods", () => {

@@ -201,24 +201,6 @@ export function increment(val) {
 ``` javascript
 /******/ ([
 /* 0 */
-/*!**********************!*\
-  !*** ./increment.js ***!
-  \**********************/
-/*! exports provided: increment */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "increment", function() { return increment; });
-/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math */1);
-
-function increment(val) {
-    return Object(_math__WEBPACK_IMPORTED_MODULE_0__["add"])(val, 1);
-};
-
-
-/***/ }),
-/* 1 */
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
@@ -238,6 +220,24 @@ function add() {
 
 
 /***/ }),
+/* 1 */
+/*!**********************!*\
+  !*** ./increment.js ***!
+  \**********************/
+/*! exports provided: increment */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "increment", function() { return increment; });
+/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math */0);
+
+function increment(val) {
+    return Object(_math__WEBPACK_IMPORTED_MODULE_0__["add"])(val, 1);
+};
+
+
+/***/ }),
 /* 2 */
 /*!********************!*\
   !*** ./example.js ***!
@@ -247,7 +247,7 @@ function add() {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _increment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./increment */0);
+/* harmony import */ var _increment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./increment */1);
 
 var a = 1;
 Object(_increment__WEBPACK_IMPORTED_MODULE_0__["increment"])(a); // 2
@@ -280,14 +280,14 @@ chunk    {0} 0.output.js 25 bytes {1} [rendered]
         import() ./async-loaded [2] ./example.js 6:0-24
 chunk    {1} output.js (main) 419 bytes [entry] [rendered]
     > main [2] ./example.js 
-    [0] ./increment.js 94 bytes {1} [built]
+    [0] ./math.js 142 bytes {1} [built]
+        [exports: add]
+        harmony side effect evaluation ./math [1] ./increment.js 1:0-29
+        harmony import specifier ./math [1] ./increment.js 3:11-14
+    [1] ./increment.js 94 bytes {1} [built]
         [exports: increment]
         harmony side effect evaluation ./increment [2] ./example.js 1:0-47
         harmony import specifier ./increment [2] ./example.js 3:0-3
-    [1] ./math.js 142 bytes {1} [built]
-        [exports: add]
-        harmony side effect evaluation ./math [0] ./increment.js 1:0-29
-        harmony import specifier ./math [0] ./increment.js 3:11-14
     [2] ./example.js 183 bytes {1} [built]
         [no exports]
         single entry .\example.js  main
@@ -312,4 +312,17 @@ chunk    {1} output.js (main) 419 bytes [entry] [rendered]
     [0] ./example.js + 2 modules 419 bytes {1} [built]
         [no exports]
         single entry .\example.js  main
+        | ./example.js 183 bytes [built]
+        |    [no exports]
+        |    single entry .\example.js  main
+        | ./increment.js 94 bytes [built]
+        |    [exports: increment]
+        |    [only some exports used: increment]
+        |    harmony side effect evaluation ./increment  ./example.js 1:0-47
+        |    harmony import specifier ./increment  ./example.js 3:0-3
+        | ./math.js 142 bytes [built]
+        |    [exports: add]
+        |    [only some exports used: add]
+        |    harmony side effect evaluation ./math  ./increment.js 1:0-29
+        |    harmony import specifier ./math  ./increment.js 3:11-14
 ```

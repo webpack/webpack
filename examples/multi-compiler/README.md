@@ -282,11 +282,11 @@ Child mobile:
     mobile.js  606 bytes       0  [emitted]  main
     Entrypoint main = mobile.js
     chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
-        > main [0] ./example.js 
-        [0] ./example.js 97 bytes {0} [built]
+        > main [1] ./example.js 
+        [0] ./mobile-stuff.js 20 bytes {0} [built]
+            cjs require ./mobile-stuff [1] ./example.js 2:1-26
+        [1] ./example.js 97 bytes {0} [built]
             single entry ./example  main
-        [1] ./mobile-stuff.js 20 bytes {0} [built]
-            cjs require ./mobile-stuff [0] ./example.js 2:1-26
 Child desktop:
     Hash: 0a1b2c3d4e5f6a7b8c9d
          Asset       Size  Chunks             Chunk Names

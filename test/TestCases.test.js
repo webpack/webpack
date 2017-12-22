@@ -167,9 +167,9 @@ describe("TestCases", () => {
 									}]
 								},
 								plugins: (config.plugins || []).concat(function() {
-									this.plugin("compilation", (compilation) => {
-										["optimize", "optimize-modules-basic", "optimize-chunks-basic", "after-optimize-tree", "after-optimize-assets"].forEach((hook) => {
-											compilation.plugin(hook, () => compilation.checkConstraints());
+									this.hooks.compilation.tap("TestCasesTest", (compilation) => {
+										["optimize", "optimizeModulesBasic", "optimizeChunksBasic", "afterOptimizeTree", "afterOptimizeAssets"].forEach((hook) => {
+											compilation.hooks[hook].tap("TestCasesTest", () => compilation.checkConstraints());
 										});
 									});
 								})

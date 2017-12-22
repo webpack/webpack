@@ -176,12 +176,12 @@ Version: webpack next
 output.js  706 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 206 bytes [entry] [rendered]
-    > main [1] ./example.js 
+    > main [2] ./example.js 
     [0] ./cup2.coffee 57 bytes {0} [built]
-        cjs require ./cup2.coffee [2] ./cup1.coffee 4:12-36
-        cjs require ./cup2 [2] ./cup1.coffee 5:9-26
-    [1] ./example.js 31 bytes {0} [built]
+        cjs require ./cup2.coffee [1] ./cup1.coffee 4:12-36
+        cjs require ./cup2 [1] ./cup1.coffee 5:9-26
+    [1] ./cup1.coffee 118 bytes {0} [built]
+        cjs require ./cup1 [2] ./example.js 1:12-29
+    [2] ./example.js 31 bytes {0} [built]
         single entry .\example.js  main
-    [2] ./cup1.coffee 118 bytes {0} [built]
-        cjs require ./cup1 [1] ./example.js 1:12-29
 ```

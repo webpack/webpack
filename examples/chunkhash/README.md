@@ -63,7 +63,7 @@ module.exports = {
 
 <!-- inlined minimized file "manifest.[chunkhash].js" -->
 <script>
-!function(e){function r(r){for(var n,u,i,s=r[0],l=r[1],p=r[2],f=0,d=[];f<s.length;f++)u=s[f],o[u]&&d.push(o[u][0]),o[u]=0;for(n in l)Object.prototype.hasOwnProperty.call(l,n)&&(e[n]=l[n]);for(c&&c(r);d.length;)d.shift()();for(a.push.apply(a,p||[]),f=0;f<a.length;f++){for(var b=a[f],h=!0,v=1;v<b.length;v++){var g=b[v];0!==o[g]&&(h=!1)}h&&(a.splice(f--,1),i=t(t.s=b[0]))}return i}function t(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var n={},o={4:0},a=[];t.e=function(e){var r=[],n=o[e];if(0!==n)if(n)r.push(n[2]);else{var a=new Promise(function(r,t){n=o[e]=[r,t]});r.push(n[2]=a);var u=document.getElementsByTagName("head")[0],c=document.createElement("script");c.charset="utf-8",c.timeout=12e4,t.nc&&c.setAttribute("nonce",t.nc),c.src=t.p+""+{0:"5bb7dd73af69328b52b2",1:"b8ec80633785d373ba39",2:"4940b8b48ba3c90e30eb",3:"7809203ce12a49ce1b59"}[e]+".js";var i=setTimeout(function(){s({type:"timeout",target:c})},12e4);c.onerror=c.onload=s;function s(r){c.onerror=c.onload=null,clearTimeout(i);var t=o[e];if(0!==t){if(t){var n=r&&("load"===r.type?"missing":r.type),a=r&&r.target&&r.target.src,u=new Error("Loading chunk "+e+" failed.\n("+n+": "+a+")");u.type=n,u.request=a,t[1](u)}o[e]=void 0}}u.appendChild(c)}return Promise.all(r)},t.m=e,t.c=n,t.d=function(e,r,n){t.o(e,r)||Object.defineProperty(e,r,{configurable:!1,enumerable:!0,get:n})},t.r=function(e){Object.defineProperty(e,"__esModule",{value:!0})},t.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(r,"a",r),r},t.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},t.p="js/",t.oe=function(e){throw console.error(e),e};var u=window.webpackJsonp=window.webpackJsonp||[],c=u.push.bind(u);u.push=r,u=u.slice();for(var i=0;i<u.length;i++)r(u[i])}([]);
+!function(e){function r(r){for(var n,c,i,f=r[0],s=r[1],l=r[2],p=0,d=[];p<f.length;p++)c=f[p],o[c]&&d.push(o[c][0]),o[c]=0;for(n in s)Object.prototype.hasOwnProperty.call(s,n)&&(e[n]=s[n]);for(u&&u(r);d.length;)d.shift()();for(a.push.apply(a,l||[]),p=0;p<a.length;p++){for(var h=a[p],v=!0,b=1;b<h.length;b++){var g=h[b];0!==o[g]&&(v=!1)}v&&(a.splice(p--,1),i=t(t.s=h[0]))}return i}function t(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var n={},o={4:0},a=[];t.e=function(e){var r=[],n=o[e];if(0!==n)if(n)r.push(n[2]);else{var a=new Promise(function(r,t){n=o[e]=[r,t]});r.push(n[2]=a);var c=document.getElementsByTagName("head")[0],u=document.createElement("script");u.charset="utf-8",u.timeout=12e4,t.nc&&u.setAttribute("nonce",t.nc),u.src=t.p+""+{0:"8185f8fedd51fbf04bc0",1:"14705c2a71d10962ed38",2:"1519242a9cfe108cce80",3:"c44f731467b80dab588d"}[e]+".js";var i=setTimeout(function(){f({type:"timeout",target:u})},12e4);u.onerror=u.onload=f;function f(r){u.onerror=u.onload=null,clearTimeout(i);var t=o[e];if(0!==t){if(t){var n=r&&("load"===r.type?"missing":r.type),a=r&&r.target&&r.target.src,c=new Error("Loading chunk "+e+" failed.\n("+n+": "+a+")");c.type=n,c.request=a,t[1](c)}o[e]=void 0}}c.appendChild(u)}return Promise.all(r)},t.m=e,t.c=n,t.d=function(e,r,n){t.o(e,r)||Object.defineProperty(e,r,{configurable:!1,enumerable:!0,get:n})},t.r=function(e){Object.defineProperty(e,"__esModule",{value:!0})},t.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(r,"a",r),r},t.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},t.p="js/",t.oe=function(e){throw console.error(e),e};var c=window.webpackJsonp=window.webpackJsonp||[],u=c.push.bind(c);c.push=r,c=c.slice();for(var i=0;i<c.length;i++)r(c[i])}([]);
 </script>
 
 <!-- optional when using the CommonChunkPlugin for vendor modules -->
@@ -179,32 +179,32 @@ chunk    {4} manifest.[chunkhash].js (manifest) 0 bytes [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
                   Asset       Size  Chunks             Chunk Names
-5bb7dd73af69328b52b2.js   78 bytes       0  [emitted]  
-b8ec80633785d373ba39.js   78 bytes       1  [emitted]  
-    common.[chunkhash].js  154 bytes       2  [emitted]  common
-      main.[chunkhash].js  299 bytes       3  [emitted]  main
+8185f8fedd51fbf04bc0.js   78 bytes       0  [emitted]  
+14705c2a71d10962ed38.js   78 bytes       1  [emitted]  
+    common.[chunkhash].js  153 bytes       2  [emitted]  common
+      main.[chunkhash].js  300 bytes       3  [emitted]  main
   manifest.[chunkhash].js   1.81 KiB       4  [emitted]  manifest
 Entrypoint main = manifest.[chunkhash].js common.[chunkhash].js main.[chunkhash].js
 Entrypoint common = manifest.[chunkhash].js common.[chunkhash].js
-chunk    {0} 5bb7dd73af69328b52b2.js 29 bytes {3} [rendered]
-    > [1] ./example.js 4:0-18
-    [4] ./async2.js 29 bytes {0} [built]
-        import() ./async2 [1] ./example.js 4:0-18
-chunk    {1} b8ec80633785d373ba39.js 29 bytes {3} [rendered]
-    > [1] ./example.js 3:0-18
-    [3] ./async1.js 29 bytes {1} [built]
-        import() ./async1 [1] ./example.js 3:0-18
+chunk    {0} 8185f8fedd51fbf04bc0.js 29 bytes {3} [rendered]
+    > [2] ./example.js 4:0-18
+    [3] ./async2.js 29 bytes {0} [built]
+        import() ./async2 [2] ./example.js 4:0-18
+chunk    {1} 14705c2a71d10962ed38.js 29 bytes {3} [rendered]
+    > [2] ./example.js 3:0-18
+    [4] ./async1.js 29 bytes {1} [built]
+        import() ./async1 [2] ./example.js 3:0-18
 chunk    {2} common.[chunkhash].js (common) 97 bytes {4} [initial] [rendered]
-    > common [2] multi ./vendor 
+    > common [1] multi ./vendor 
     [0] ./vendor.js 69 bytes {2} [built]
         [exports: default]
-        harmony side effect evaluation ./vendor [1] ./example.js 1:0-30
-        single entry ./vendor [2] multi ./vendor common:100000
-    [2] multi ./vendor 28 bytes {2} [built]
+        single entry ./vendor [1] multi ./vendor common:100000
+        harmony side effect evaluation ./vendor [2] ./example.js 1:0-30
+    [1] multi ./vendor 28 bytes {2} [built]
         multi entry 
 chunk    {3} main.[chunkhash].js (main) 90 bytes {2} [initial] [rendered]
-    > main [1] ./example.js 
-    [1] ./example.js 90 bytes {3} [built]
+    > main [2] ./example.js 
+    [2] ./example.js 90 bytes {3} [built]
         [no exports]
         single entry ./example  main
 chunk    {4} manifest.[chunkhash].js (manifest) 0 bytes [entry] [rendered]

@@ -205,11 +205,11 @@ Version: webpack next
 output.js  1.05 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
-    > main [0] ./example.js 
-    [0] ./example.js 113 bytes {0} [built]
-        single entry .\example.js  main
+    > main [2] ./example.js 
+    [0] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
+        cjs require subtract [2] ./example.js 2:15-34
     [1] external "add" 42 bytes {0} [built]
-        cjs require add [0] ./example.js 1:10-24
-    [2] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
-        cjs require subtract [0] ./example.js 2:15-34
+        cjs require add [2] ./example.js 1:10-24
+    [2] ./example.js 113 bytes {0} [built]
+        single entry .\example.js  main
 ```

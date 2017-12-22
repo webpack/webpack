@@ -8,9 +8,8 @@ module.exports = {
 	},
 	plugins: [
 		function() {
-			this.plugin("emit", function(compilation, callback) {
+			this.hooks.emit.tap("TestPlugin", function(compilation) {
 				delete compilation.assets["b.js"];
-				callback();
 			});
 		}
 	]

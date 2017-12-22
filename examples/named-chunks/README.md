@@ -194,7 +194,7 @@ require.ensure(["b"], function(require) {
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 ```
@@ -206,13 +206,23 @@ require.ensure(["b"], function(require) {
 /* 0 */,
 /* 1 */,
 /* 2 */
+/*!***************************!*\
+  !*** ./node_modules/a.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// module a
+
+/***/ }),
+/* 3 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var a = __webpack_require__(/*! a */ 3);
+var a = __webpack_require__(/*! a */ 2);
 
 __webpack_require__.e/* require.ensure */(0/*! my own chunk */).then((function(require) {
 	// a named chunk
@@ -233,16 +243,6 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
 	var d = __webpack_require__(/*! d */ 1);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-
-/***/ }),
-/* 3 */
-/*!***************************!*\
-  !*** ./node_modules/a.js ***!
-  \***************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// module a
 
 /***/ })
 /******/ ]);
@@ -327,16 +327,16 @@ Version: webpack next
   output.js   7.82 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
-    > my own chunk [2] ./example.js 3:0-6:18
-    > my own chunk [2] ./example.js 8:0-11:18
-    > my own chunk [2] ./example.js 13:0-15:18
+    > my own chunk [3] ./example.js 3:0-6:18
+    > my own chunk [3] ./example.js 8:0-11:18
+    > my own chunk [3] ./example.js 13:0-15:18
     3 modules
 chunk    {1} 1.output.js 22 bytes {2} [rendered]
-    > [2] ./example.js 17:0-20:2
+    > [3] ./example.js 17:0-20:2
     2 modules
 chunk    {2} output.js (main) 452 bytes [entry] [rendered]
-    > main [2] ./example.js 
-    [2] ./example.js 441 bytes {2} [built]
+    > main [3] ./example.js 
+    [3] ./example.js 441 bytes {2} [built]
         single entry .\example.js  main
      + 1 hidden module
 ```
@@ -352,16 +352,16 @@ Version: webpack next
   output.js   1.81 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
-    > my own chunk [2] ./example.js 3:0-6:18
-    > my own chunk [2] ./example.js 8:0-11:18
-    > my own chunk [2] ./example.js 13:0-15:18
+    > my own chunk [3] ./example.js 3:0-6:18
+    > my own chunk [3] ./example.js 8:0-11:18
+    > my own chunk [3] ./example.js 13:0-15:18
     3 modules
 chunk    {1} 1.output.js 22 bytes {2} [rendered]
-    > [2] ./example.js 17:0-20:2
+    > [3] ./example.js 17:0-20:2
     2 modules
 chunk    {2} output.js (main) 452 bytes [entry] [rendered]
-    > main [2] ./example.js 
-    [2] ./example.js 441 bytes {2} [built]
+    > main [3] ./example.js 
+    [3] ./example.js 441 bytes {2} [built]
         single entry .\example.js  main
      + 1 hidden module
 ```

@@ -45,7 +45,7 @@ module.exports = [
 # js/vendor.js
 
 ``` javascript
-var vendor_bc36e0cf64566447266b =
+var vendor_537f449cf1b26b3943e5 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -249,7 +249,7 @@ module.exports = "pageA";
 /***/ }),
 /* 1 */
 /*!****************************************************************************!*\
-  !*** delegated ./vendor.js from dll-reference vendor_bc36e0cf64566447266b ***!
+  !*** delegated ./vendor.js from dll-reference vendor_537f449cf1b26b3943e5 ***!
   \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -259,12 +259,12 @@ module.exports = (__webpack_require__(2))(1);
 /***/ }),
 /* 2 */
 /*!**********************************************!*\
-  !*** external "vendor_bc36e0cf64566447266b" ***!
+  !*** external "vendor_537f449cf1b26b3943e5" ***!
   \**********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = vendor_bc36e0cf64566447266b;
+module.exports = vendor_537f449cf1b26b3943e5;
 
 /***/ })
 /******/ ]);
@@ -306,19 +306,19 @@ Child app:
         > pageA [0] ./pageA.js 
         [0] ./pageA.js 60 bytes {0} [built]
             single entry ./pageA  pageA
-        [1] delegated ./vendor.js from dll-reference vendor_bc36e0cf64566447266b 42 bytes {0} [built]
+        [1] delegated ./vendor.js from dll-reference vendor_537f449cf1b26b3943e5 42 bytes {0} [built]
             cjs require ./vendor [0] ./pageA.js 1:12-31
-        [2] external "vendor_bc36e0cf64566447266b" 42 bytes {0} {1} [built]
-            delegated source dll-reference vendor_bc36e0cf64566447266b [1] delegated ./vendor.js from dll-reference vendor_bc36e0cf64566447266b
-            delegated source dll-reference vendor_bc36e0cf64566447266b [4] delegated ./vendor2.js from dll-reference vendor_bc36e0cf64566447266b
+        [2] external "vendor_537f449cf1b26b3943e5" 42 bytes {0} {1} [built]
+            delegated source dll-reference vendor_537f449cf1b26b3943e5 [1] delegated ./vendor.js from dll-reference vendor_537f449cf1b26b3943e5
+            delegated source dll-reference vendor_537f449cf1b26b3943e5 [4] delegated ./vendor2.js from dll-reference vendor_537f449cf1b26b3943e5
     chunk    {1} pageB.js (pageB) 145 bytes [entry] [rendered]
         > pageB [3] ./pageB.js 
-        [2] external "vendor_bc36e0cf64566447266b" 42 bytes {0} {1} [built]
-            delegated source dll-reference vendor_bc36e0cf64566447266b [1] delegated ./vendor.js from dll-reference vendor_bc36e0cf64566447266b
-            delegated source dll-reference vendor_bc36e0cf64566447266b [4] delegated ./vendor2.js from dll-reference vendor_bc36e0cf64566447266b
+        [2] external "vendor_537f449cf1b26b3943e5" 42 bytes {0} {1} [built]
+            delegated source dll-reference vendor_537f449cf1b26b3943e5 [1] delegated ./vendor.js from dll-reference vendor_537f449cf1b26b3943e5
+            delegated source dll-reference vendor_537f449cf1b26b3943e5 [4] delegated ./vendor2.js from dll-reference vendor_537f449cf1b26b3943e5
         [3] ./pageB.js 61 bytes {1} [built]
             single entry ./pageB  pageB
-        [4] delegated ./vendor2.js from dll-reference vendor_bc36e0cf64566447266b 42 bytes {1} [built]
+        [4] delegated ./vendor2.js from dll-reference vendor_537f449cf1b26b3943e5 42 bytes {1} [built]
             cjs require ./vendor2 [3] ./pageB.js 1:12-32
     chunk    {2} pageC.js (pageC) 25 bytes [entry] [rendered]
         > pageC [5] ./pageC.js 
@@ -337,45 +337,45 @@ Child vendor:
     vendor.js  668 bytes       0  [emitted]  main
     Entrypoint main = vendor.js
     chunk    {0} vendor.js (main) 65 bytes [entry] [rendered]
-        > main [0] dll main 
-        [0] dll main 12 bytes {0} [built]
-            dll entry 
+        > main [2] dll main 
+        [0] ./vendor2.js 27 bytes {0} [built]
             
+            single entry ./vendor2 [2] dll main main:1
         [1] ./vendor.js 26 bytes {0} [built]
             
-            single entry ./vendor [0] dll main main:0
-        [2] ./vendor2.js 27 bytes {0} [built]
+            single entry ./vendor [2] dll main main:0
+        [2] dll main 12 bytes {0} [built]
+            dll entry 
             
-            single entry ./vendor2 [0] dll main main:1
 Child app:
     Hash: 0a1b2c3d4e5f6a7b8c9d
        Asset       Size  Chunks             Chunk Names
-    pageB.js  675 bytes       0  [emitted]  pageB
-    pageA.js  673 bytes       1  [emitted]  pageA
-    pageC.js  567 bytes       2  [emitted]  pageC
+    pageC.js  566 bytes       0  [emitted]  pageC
+    pageB.js  674 bytes       1  [emitted]  pageB
+    pageA.js  676 bytes       2  [emitted]  pageA
     Entrypoint pageA = pageA.js
     Entrypoint pageB = pageB.js
     Entrypoint pageC = pageC.js
-    chunk    {0} pageB.js (pageB) 145 bytes [entry] [rendered]
-        > pageB [3] ./pageB.js 
-        [0] external "vendor_bc36e0cf64566447266b" 42 bytes {0} {1} [built]
-            delegated source dll-reference vendor_bc36e0cf64566447266b [2] delegated ./vendor.js from dll-reference vendor_bc36e0cf64566447266b
-            delegated source dll-reference vendor_bc36e0cf64566447266b [4] delegated ./vendor2.js from dll-reference vendor_bc36e0cf64566447266b
-        [3] ./pageB.js 61 bytes {0} [built]
-            single entry ./pageB  pageB
-        [4] delegated ./vendor2.js from dll-reference vendor_bc36e0cf64566447266b 42 bytes {0} [built]
-            cjs require ./vendor2 [3] ./pageB.js 1:12-32
-    chunk    {1} pageA.js (pageA) 144 bytes [entry] [rendered]
-        > pageA [1] ./pageA.js 
-        [0] external "vendor_bc36e0cf64566447266b" 42 bytes {0} {1} [built]
-            delegated source dll-reference vendor_bc36e0cf64566447266b [2] delegated ./vendor.js from dll-reference vendor_bc36e0cf64566447266b
-            delegated source dll-reference vendor_bc36e0cf64566447266b [4] delegated ./vendor2.js from dll-reference vendor_bc36e0cf64566447266b
-        [1] ./pageA.js 60 bytes {1} [built]
-            single entry ./pageA  pageA
-        [2] delegated ./vendor.js from dll-reference vendor_bc36e0cf64566447266b 42 bytes {1} [built]
-            cjs require ./vendor [1] ./pageA.js 1:12-31
-    chunk    {2} pageC.js (pageC) 25 bytes [entry] [rendered]
-        > pageC [5] ./pageC.js 
-        [5] ./pageC.js 25 bytes {2} [built]
+    chunk    {0} pageC.js (pageC) 25 bytes [entry] [rendered]
+        > pageC [1] ./pageC.js 
+        [1] ./pageC.js 25 bytes {0} [built]
             single entry ./pageC  pageC
+    chunk    {1} pageB.js (pageB) 145 bytes [entry] [rendered]
+        > pageB [3] ./pageB.js 
+        [0] external "vendor_f8addfebee50734f233d" 42 bytes {1} {2} [built]
+            delegated source dll-reference vendor_f8addfebee50734f233d [2] delegated ./vendor2.js from dll-reference vendor_f8addfebee50734f233d
+            delegated source dll-reference vendor_f8addfebee50734f233d [4] delegated ./vendor.js from dll-reference vendor_f8addfebee50734f233d
+        [2] delegated ./vendor2.js from dll-reference vendor_f8addfebee50734f233d 42 bytes {1} [built]
+            cjs require ./vendor2 [3] ./pageB.js 1:12-32
+        [3] ./pageB.js 61 bytes {1} [built]
+            single entry ./pageB  pageB
+    chunk    {2} pageA.js (pageA) 144 bytes [entry] [rendered]
+        > pageA [5] ./pageA.js 
+        [0] external "vendor_f8addfebee50734f233d" 42 bytes {1} {2} [built]
+            delegated source dll-reference vendor_f8addfebee50734f233d [2] delegated ./vendor2.js from dll-reference vendor_f8addfebee50734f233d
+            delegated source dll-reference vendor_f8addfebee50734f233d [4] delegated ./vendor.js from dll-reference vendor_f8addfebee50734f233d
+        [4] delegated ./vendor.js from dll-reference vendor_f8addfebee50734f233d 42 bytes {2} [built]
+            cjs require ./vendor [5] ./pageA.js 1:12-31
+        [5] ./pageA.js 60 bytes {2} [built]
+            single entry ./pageA  pageA
 ```

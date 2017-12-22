@@ -187,7 +187,7 @@ module.exports = "It works";
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 ```
@@ -197,19 +197,6 @@ module.exports = "It works";
 ``` javascript
 /******/ ([
 /* 0 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! bundle-loader!./file.js */ 1)(function(fileJsExports) {
-	console.log(fileJsExports);
-});
-
-
-/***/ }),
-/* 1 */
 /*!******************************************************!*\
   !*** (webpack)/node_modules/bundle-loader!./file.js ***!
   \******************************************************/
@@ -230,6 +217,19 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
 		callbacks[i](data);
 	}
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
+
+/***/ }),
+/* 1 */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! bundle-loader!./file.js */ 0)(function(fileJsExports) {
+	console.log(fileJsExports);
+});
+
 
 /***/ })
 /******/ ]);
@@ -266,15 +266,15 @@ Version: webpack next
   output.js   7.52 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 28 bytes {1} [rendered]
-    > [1] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
+    > [0] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
     [2] ./file.js 28 bytes {0} [built]
-        cjs require !!./file.js [1] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
+        cjs require !!./file.js [0] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
 chunk    {1} output.js (main) 378 bytes [entry] [rendered]
-    > main [0] ./example.js 
-    [0] ./example.js 97 bytes {1} [built]
+    > main [1] ./example.js 
+    [0] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {1} [built]
+        cjs require bundle-loader!./file.js [1] ./example.js 1:0-34
+    [1] ./example.js 97 bytes {1} [built]
         single entry .\example.js  main
-    [1] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {1} [built]
-        cjs require bundle-loader!./file.js [0] ./example.js 1:0-34
 ```
 
 ## Production mode
@@ -287,13 +287,13 @@ Version: webpack next
   output.js  1.78 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 28 bytes {1} [rendered]
-    > [1] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
+    > [0] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
     [2] ./file.js 28 bytes {0} [built]
-        cjs require !!./file.js [1] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
+        cjs require !!./file.js [0] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
 chunk    {1} output.js (main) 378 bytes [entry] [rendered]
-    > main [0] ./example.js 
-    [0] ./example.js 97 bytes {1} [built]
+    > main [1] ./example.js 
+    [0] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {1} [built]
+        cjs require bundle-loader!./file.js [1] ./example.js 1:0-34
+    [1] ./example.js 97 bytes {1} [built]
         single entry .\example.js  main
-    [1] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {1} [built]
-        cjs require bundle-loader!./file.js [0] ./example.js 1:0-34
 ```

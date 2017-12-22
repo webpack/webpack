@@ -256,12 +256,12 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 // a chunks with a, b, c
-Promise.all/* require */([__webpack_require__.e(0), __webpack_require__.e(2)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 3)]; ((function(a, b, c) {}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+Promise.all/* require */([__webpack_require__.e(0), __webpack_require__.e(2)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 0), __webpack_require__(/*! ./c */ 4)]; ((function(a, b, c) {}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 
 // a chunk with a, b, d
 Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e(1)]).then((function(require) {
-	__webpack_require__(/*! ./b */ 1);
-	__webpack_require__(/*! ./d */ 4);
+	__webpack_require__(/*! ./b */ 0);
+	__webpack_require__(/*! ./d */ 3);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
 
@@ -276,22 +276,22 @@ Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
 /* 0 */
 /*!**************!*\
-  !*** ./a.js ***!
-  \**************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "a";
-
-/***/ }),
-/* 1 */
-/*!**************!*\
   !*** ./b.js ***!
   \**************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 module.exports = "b";
+
+/***/ }),
+/* 1 */
+/*!**************!*\
+  !*** ./a.js ***!
+  \**************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "a";
 
 /***/ })
 ]]);
@@ -302,7 +302,7 @@ module.exports = "b";
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
 
-/***/ 4:
+/***/ 3:
 /*!**************!*\
   !*** ./d.js ***!
   \**************/
@@ -321,7 +321,7 @@ module.exports = "d";
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
 
-/***/ 3:
+/***/ 4:
 /*!**************!*\
   !*** ./c.js ***!
   \**************/
@@ -351,19 +351,19 @@ Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes {3} [rendered]
     > async commons [2] ./example.js 2:0-52
     > async commons [2] ./example.js 5:0-8:2
-    [0] ./a.js 21 bytes {0} [built]
-        amd require ./a [2] ./example.js 2:0-52
-        require.ensure item ./a [2] ./example.js 5:0-8:2
-    [1] ./b.js 21 bytes {0} [built]
+    [0] ./b.js 21 bytes {0} [built]
         amd require ./b [2] ./example.js 2:0-52
         cjs require ./b [2] ./example.js 6:1-15
+    [1] ./a.js 21 bytes {0} [built]
+        amd require ./a [2] ./example.js 2:0-52
+        require.ensure item ./a [2] ./example.js 5:0-8:2
 chunk    {1} 1.output.js 21 bytes {3} [rendered]
     > [2] ./example.js 5:0-8:2
-    [4] ./d.js 21 bytes {1} [built]
+    [3] ./d.js 21 bytes {1} [built]
         cjs require ./d [2] ./example.js 7:1-15
 chunk    {2} 2.output.js 21 bytes {3} [rendered]
     > [2] ./example.js 2:0-52
-    [3] ./c.js 21 bytes {2} [built]
+    [4] ./c.js 21 bytes {2} [built]
         amd require ./c [2] ./example.js 2:0-52
 chunk    {3} output.js (main) 194 bytes [entry] [rendered]
     > main [2] ./example.js 
@@ -385,19 +385,19 @@ Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes {3} [rendered]
     > async commons [2] ./example.js 2:0-52
     > async commons [2] ./example.js 5:0-8:2
-    [0] ./a.js 21 bytes {0} [built]
-        amd require ./a [2] ./example.js 2:0-52
-        require.ensure item ./a [2] ./example.js 5:0-8:2
-    [1] ./b.js 21 bytes {0} [built]
+    [0] ./b.js 21 bytes {0} [built]
         amd require ./b [2] ./example.js 2:0-52
         cjs require ./b [2] ./example.js 6:1-15
+    [1] ./a.js 21 bytes {0} [built]
+        amd require ./a [2] ./example.js 2:0-52
+        require.ensure item ./a [2] ./example.js 5:0-8:2
 chunk    {1} 1.output.js 21 bytes {3} [rendered]
     > [2] ./example.js 5:0-8:2
-    [4] ./d.js 21 bytes {1} [built]
+    [3] ./d.js 21 bytes {1} [built]
         cjs require ./d [2] ./example.js 7:1-15
 chunk    {2} 2.output.js 21 bytes {3} [rendered]
     > [2] ./example.js 2:0-52
-    [3] ./c.js 21 bytes {2} [built]
+    [4] ./c.js 21 bytes {2} [built]
         amd require ./c [2] ./example.js 2:0-52
 chunk    {3} output.js (main) 194 bytes [entry] [rendered]
     > main [2] ./example.js 

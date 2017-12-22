@@ -119,68 +119,68 @@ chunk   {14} 1ebfa89095075cd49ed2.js 18.9 KiB {0} {2} {3} [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
                   Asset      Size  Chunks             Chunk Names
-120c574c6bca50a20cb5.js  7.52 KiB       7  [emitted]  
-42bce7db51fefe2763b3.js  8.75 KiB       0  [emitted]  
-0958a340b40f4cde2ef3.js  10.8 KiB       2  [emitted]  
-ccea4dd2eb5186d28107.js  10.6 KiB       3  [emitted]  
-2591bbc6a04f0d14001b.js  9.93 KiB       4  [emitted]  
-4b2992acab2fc51ff854.js  12.1 KiB       5  [emitted]  
-28bc65b5b04a576914ac.js  4.88 KiB       6  [emitted]  
-1fcff0384986083f0410.js    13 KiB       1  [emitted]  
-c6c0d9f3d6b73324ed88.js  15.1 KiB       8  [emitted]  
-72eb2eec55e414b00bb0.js  12.5 KiB       9  [emitted]  
-ae7cc4af34d177c74cb3.js  11.1 KiB      10  [emitted]  
-2ade2c5c953695c4cfe6.js  4.99 KiB      11  [emitted]  
-31911b06979eecc13ee0.js  10.2 KiB      12  [emitted]  
-129a0db9652d200a6bd1.js  5.94 KiB      13  [emitted]  
-73e6522794eb2523164a.js  7.01 KiB      14  [emitted]  
-Entrypoint main = 31911b06979eecc13ee0.js 73e6522794eb2523164a.js 129a0db9652d200a6bd1.js
-chunk    {0} 42bce7db51fefe2763b3.js 48.5 KiB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [14] ./example.js 2:0-22
+af741e13c4c621499dd3.js  10.6 KiB       7  [emitted]  
+25e8dc4b493c95c92544.js  4.88 KiB       0  [emitted]  
+a59e3b5e1cdf8ebd4e0e.js  15.1 KiB       2  [emitted]  
+35a6d6316f3be0f41389.js  7.49 KiB       3  [emitted]  
+c49286736402aaeb0066.js  10.8 KiB       4  [emitted]  
+5369ef079d20011a622e.js  12.5 KiB       5  [emitted]  
+26303e97c227d61db7aa.js  11.1 KiB       6  [emitted]  
+b25811003a7d4b5cba6e.js  8.75 KiB       1  [emitted]  
+92b243c21f8e6c40905a.js  12.1 KiB       8  [emitted]  
+a3c0c8a8a40367371001.js  9.93 KiB       9  [emitted]  
+abb691f3d6dccb56d0db.js    13 KiB      10  [emitted]  
+3979cfd0863b094d874b.js  4.99 KiB      11  [emitted]  
+7a5b97b8590a4dfb2451.js  7.02 KiB      12  [emitted]  
+b707bf605695570bbc9b.js  10.2 KiB      13  [emitted]  
+9126f24a11f6cf4fb5f8.js  5.91 KiB      14  [emitted]  
+Entrypoint main = b707bf605695570bbc9b.js 7a5b97b8590a4dfb2451.js 9126f24a11f6cf4fb5f8.js
+chunk    {0} 25e8dc4b493c95c92544.js 18.9 KiB {12} {13} {14} [rendered]
+    > aggressive-splitted [30] ./example.js 2:0-22
+    9 modules
+chunk    {1} b25811003a7d4b5cba6e.js 48.5 KiB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [30] ./example.js 2:0-22
     28 modules
-chunk    {1} 1fcff0384986083f0410.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [14] ./example.js 2:0-22
-    24 modules
-chunk    {2} 0958a340b40f4cde2ef3.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [14] ./example.js 2:0-22
-    15 modules
-chunk    {3} ccea4dd2eb5186d28107.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [14] ./example.js 2:0-22
-    11 modules
-chunk    {4} 2591bbc6a04f0d14001b.js 48.8 KiB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [14] ./example.js 2:0-22
-    11 modules
-chunk    {5} 4b2992acab2fc51ff854.js 48.6 KiB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [14] ./example.js 2:0-22
-    10 modules
-chunk    {6} 28bc65b5b04a576914ac.js 18.9 KiB {12} {13} {14} [rendered]
-    > aggressive-splitted [14] ./example.js 2:0-22
-    9 modules
-chunk    {7} 120c574c6bca50a20cb5.js 48.8 KiB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [14] ./example.js 2:0-22
-    9 modules
-chunk    {8} c6c0d9f3d6b73324ed88.js 48.6 KiB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [14] ./example.js 2:0-22
+chunk    {2} a59e3b5e1cdf8ebd4e0e.js 48.6 KiB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [30] ./example.js 2:0-22
     7 modules
-chunk    {9} 72eb2eec55e414b00bb0.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [14] ./example.js 2:0-22
+chunk    {3} 35a6d6316f3be0f41389.js 48.8 KiB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [30] ./example.js 2:0-22
+    9 modules
+chunk    {4} c49286736402aaeb0066.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [30] ./example.js 2:0-22
+    15 modules
+chunk    {5} 5369ef079d20011a622e.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [30] ./example.js 2:0-22
     6 modules
-chunk   {10} ae7cc4af34d177c74cb3.js 48.8 KiB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [14] ./example.js 2:0-22
+chunk    {6} 26303e97c227d61db7aa.js 48.8 KiB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [30] ./example.js 2:0-22
     6 modules
-chunk   {11} 2ade2c5c953695c4cfe6.js 31.4 KiB {12} {13} {14} [rendered] [recorded]
-    > aggressive-splitted [14] ./example.js 2:0-22
+chunk    {7} af741e13c4c621499dd3.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [30] ./example.js 2:0-22
+    11 modules
+chunk    {8} 92b243c21f8e6c40905a.js 48.6 KiB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [30] ./example.js 2:0-22
+    10 modules
+chunk    {9} a3c0c8a8a40367371001.js 48.8 KiB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [30] ./example.js 2:0-22
+    11 modules
+chunk   {10} abb691f3d6dccb56d0db.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [30] ./example.js 2:0-22
+    24 modules
+chunk   {11} 3979cfd0863b094d874b.js 31.4 KiB {12} {13} {14} [rendered] [recorded]
+    > aggressive-splitted [30] ./example.js 2:0-22
     3 modules
-chunk   {12} 31911b06979eecc13ee0.js 48.8 KiB [entry] [rendered] [recorded]
-    > aggressive-splitted main [14] ./example.js 
+chunk   {12} 7a5b97b8590a4dfb2451.js 30.5 KiB [initial] [rendered] [recorded]
+    > aggressive-splitted main [30] ./example.js 
+    3 modules
+chunk   {13} b707bf605695570bbc9b.js 48.8 KiB [entry] [rendered] [recorded]
+    > aggressive-splitted main [30] ./example.js 
     16 modules
-chunk   {13} 129a0db9652d200a6bd1.js 32.4 KiB [initial] [rendered]
-    > aggressive-splitted main [14] ./example.js 
-   [14] ./example.js 44 bytes {13} [built]
+chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
+    > aggressive-splitted main [30] ./example.js 
+   [30] ./example.js 44 bytes {14} [built]
      + 11 hidden modules
-chunk   {14} 73e6522794eb2523164a.js 30.5 KiB [initial] [rendered] [recorded]
-    > aggressive-splitted main [14] ./example.js 
-    3 modules
 ```
 
 ## Records

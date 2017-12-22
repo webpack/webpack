@@ -47,6 +47,11 @@ function remove(src) {
 }
 
 describe("WatchTestCases", () => {
+	if(process.env.NO_WATCH_TESTS) {
+		it("long running tests excluded");
+		return;
+	}
+
 	const casesPath = path.join(__dirname, "watchCases");
 	let categories = fs.readdirSync(casesPath);
 
@@ -120,7 +125,7 @@ describe("WatchTestCases", () => {
 
 						setTimeout(() => {
 							const compiler = webpack(options);
-							compiler.plugin("invalid", (filename, mtime) => {
+							compiler.hooks.invalid.tap("WatchTestCasesTest", (filename, mtime) => {
 								triggeringFilename = filename;
 							});
 							const watching = compiler.watch({

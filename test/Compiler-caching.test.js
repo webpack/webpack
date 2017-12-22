@@ -41,7 +41,7 @@ describe("Compiler (caching)", function() {
 				callback();
 			}
 		};
-		c.plugin("compilation", (compilation) => compilation.bail = true);
+		c.hooks.compilation.tap("CompilerCachingTest", (compilation) => compilation.bail = true);
 
 		let compilerIteration = 1;
 
@@ -73,27 +73,11 @@ describe("Compiler (caching)", function() {
 			});
 		}
 
-		const postCompileCallbackStack = [];
-
-		function addAfterCompileCallback(callback) {
-			postCompileCallbackStack.push(callback);
-		}
-
-		c.plugin("after-compile", (stats, callback) => {
-
-			if(postCompileCallbackStack.length > 0) {
-				postCompileCallbackStack.shift(arguments);
-			}
-
-			callback();
-		});
-
 		runCompiler(callback);
 
 		return {
 			compilerInstance: c,
-			runAgain: runCompiler,
-			addAfterCompileCallback: addAfterCompileCallback
+			runAgain: runCompiler
 		};
 	}
 

@@ -19,7 +19,7 @@ module.exports = class ResolvePackageFromRootPlugin {
 	}
 
 	apply(resolver) {
-		resolver.plugin("resolved", (originalResolved, callback) => {
+		resolver.hooks.resolved.tapAsync("ResolvePackageFromRootPlugin", (originalResolved, _, callback) => {
 
 			if (!nestedNodeModuleRegex.test(originalResolved.path) || !originalResolved.context || !originalResolved.context.issuer) {
 				return callback(null, originalResolved)

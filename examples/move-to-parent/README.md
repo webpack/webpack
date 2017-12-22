@@ -203,16 +203,16 @@ Child pageC:
     pageC.bundle.js   7.95 KiB       1  [emitted]  pageC
     Entrypoint pageC = pageC.bundle.js
     chunk    {0} 0.chunk.js 21 bytes {1} [rendered]
-        > duplicate [3] ./page.js 2:0-23
-        > duplicate [3] ./page.js 3:0-30
-        > duplicate [3] ./page.js 4:0-37
+        > duplicate [4] ./page.js 2:0-23
+        > duplicate [4] ./page.js 3:0-30
+        > duplicate [4] ./page.js 4:0-37
         [1] ./b.js 21 bytes {0} [built]
     chunk    {1} pageC.bundle.js (pageC) 181 bytes [entry] [rendered]
-        > pageC [3] ./page.js 
+        > pageC [4] ./page.js 
         [0] ./a.js 21 bytes {1} [built]
         [2] ./c.js 21 bytes {1} [built]
-        [3] ./page.js 118 bytes {1} [built]
-        [4] ./d.js 21 bytes {1} [built]
+        [3] ./d.js 21 bytes {1} [built]
+        [4] ./page.js 118 bytes {1} [built]
 ```
 
 ## Production mode
@@ -300,14 +300,14 @@ Child pageC:
     pageC.bundle.js  1.86 KiB       1  [emitted]  pageC
     Entrypoint pageC = pageC.bundle.js
     chunk    {0} 0.chunk.js 21 bytes {1} [rendered]
-        > duplicate [3] ./page.js 2:0-23
-        > duplicate [3] ./page.js 3:0-30
-        > duplicate [3] ./page.js 4:0-37
+        > duplicate [4] ./page.js 2:0-23
+        > duplicate [4] ./page.js 3:0-30
+        > duplicate [4] ./page.js 4:0-37
         [1] ./b.js 21 bytes {0} [built]
     chunk    {1} pageC.bundle.js (pageC) 181 bytes [entry] [rendered]
-        > pageC [3] ./page.js 
+        > pageC [4] ./page.js 
         [0] ./a.js 21 bytes {1} [built]
         [2] ./c.js 21 bytes {1} [built]
-        [3] ./page.js 118 bytes {1} [built]
-        [4] ./d.js 21 bytes {1} [built]
+        [3] ./d.js 21 bytes {1} [built]
+        [4] ./page.js 118 bytes {1} [built]
 ```
