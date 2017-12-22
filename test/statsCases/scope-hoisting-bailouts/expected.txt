@@ -1,4 +1,4 @@
-Hash: 841dd2f7e2da346f7bf1
+Hash: e205648cbd984b752d24
 Time: Xms
    [0] ./entry.js 32 bytes {0} {1} [built]
        ModuleConcatenation bailout: Module is an entry point
