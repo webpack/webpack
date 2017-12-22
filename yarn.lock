@@ -5353,7 +5353,7 @@ supports-color@^3.1.0, supports-color@^3.2.3:
   dependencies:
     has-flag "^1.0.0"
 
-supports-color@^4.0.0, supports-color@^4.2.1, supports-color@^4.4.0:
+supports-color@^4.0.0, supports-color@^4.4.0:
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-4.5.0.tgz#be7a0de484dec5c5cddf8b3d59125044912f635b"
   dependencies:
@@ -5385,10 +5385,6 @@ table@^4.0.1:
     lodash "^4.17.4"
     slice-ansi "1.0.0"
     string-width "^2.1.1"
-
-tapable@1.0.0-beta.3:
-  version "1.0.0-beta.3"
-  resolved "https://registry.yarnpkg.com/tapable/-/tapable-1.0.0-beta.3.tgz#1f56bb6fec924ac9570cd8f6ff788e5bcf4808f1"
 
 tapable@^0.2.7:
   version "0.2.8"
@@ -5565,7 +5561,7 @@ uglify-es@^3.2.0:
     commander "~2.12.1"
     source-map "~0.6.1"
 
-uglify-js@^2.4.19, uglify-js@^2.6, uglify-js@^2.8.29:
+uglify-js@^2.4.19, uglify-js@^2.6:
   version "2.8.29"
   resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.8.29.tgz#29c5733148057bb4e1f75df35b7a9cb72e6a59dd"
   dependencies:
@@ -5584,14 +5580,6 @@ uglify-js@~2.2.5:
 uglify-to-browserify@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/uglify-to-browserify/-/uglify-to-browserify-1.0.2.tgz#6e0924d6bda6b5afe349e39a6d632850a0f882b7"
-
-uglifyjs-webpack-plugin@^0.4.6:
-  version "0.4.6"
-  resolved "https://registry.yarnpkg.com/uglifyjs-webpack-plugin/-/uglifyjs-webpack-plugin-0.4.6.tgz#b951f4abb6bd617e66f63eb891498e391763e309"
-  dependencies:
-    source-map "^0.5.6"
-    uglify-js "^2.8.29"
-    webpack-sources "^1.0.1"
 
 uglifyjs-webpack-plugin@^1.1.1:
   version "1.1.2"
@@ -5782,8 +5770,8 @@ webpack-addons@^1.1.4:
     jscodeshift "^0.4.0"
 
 webpack-cli@^1.5.2:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-1.5.2.tgz#37de75cfaa3be40043bfd73117b4b13143a92d54"
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-1.5.3.tgz#e49883b40249571ff79415196b3d76cab1f7272f"
   dependencies:
     babel-code-frame "^6.22.0"
     babel-core "^6.25.0"
@@ -5809,7 +5797,6 @@ webpack-cli@^1.5.2:
     resolve-cwd "^2.0.0"
     rx "^4.1.0"
     supports-color "^4.4.0"
-    webpack "^4.0.0-alpha.0"
     webpack-addons "^1.1.4"
     yargs "^9.0.1"
     yeoman-environment "^2.0.0"
@@ -5831,32 +5818,6 @@ webpack-sources@^1.0.1:
   dependencies:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
-
-webpack@^4.0.0-alpha.0:
-  version "4.0.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.0.0-alpha.0.tgz#97949f332b9189182d22c6b302ee3dbe03faf96c"
-  dependencies:
-    acorn "^5.0.0"
-    acorn-dynamic-import "^2.0.0"
-    ajv "^5.1.5"
-    ajv-keywords "^2.0.0"
-    async "^2.1.2"
-    enhanced-resolve "4.0.0-beta.2"
-    eslint-scope "^3.7.1"
-    interpret "^1.0.0"
-    loader-runner "^2.3.0"
-    loader-utils "^1.1.0"
-    memory-fs "~0.4.1"
-    mkdirp "~0.5.0"
-    node-libs-browser "^2.0.0"
-    schema-utils "^0.4.2"
-    source-map "^0.5.3"
-    supports-color "^4.2.1"
-    tapable "1.0.0-beta.3"
-    uglifyjs-webpack-plugin "^0.4.6"
-    watchpack "^1.4.0"
-    webpack-sources "^1.0.1"
-    yargs "^8.0.2"
 
 whatwg-fetch@>=0.10.0:
   version "2.0.3"
@@ -5964,24 +5925,6 @@ yargs-parser@^7.0.0:
   resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-7.0.0.tgz#8d0ac42f16ea55debd332caf4c4038b3e3f5dfd9"
   dependencies:
     camelcase "^4.1.0"
-
-yargs@^8.0.2:
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/yargs/-/yargs-8.0.2.tgz#6299a9055b1cefc969ff7e79c1d918dceb22c360"
-  dependencies:
-    camelcase "^4.1.0"
-    cliui "^3.2.0"
-    decamelize "^1.1.1"
-    get-caller-file "^1.0.1"
-    os-locale "^2.0.0"
-    read-pkg-up "^2.0.0"
-    require-directory "^2.1.1"
-    require-main-filename "^1.0.1"
-    set-blocking "^2.0.0"
-    string-width "^2.0.0"
-    which-module "^2.0.0"
-    y18n "^3.2.1"
-    yargs-parser "^7.0.0"
 
 yargs@^9.0.1:
   version "9.0.1"
