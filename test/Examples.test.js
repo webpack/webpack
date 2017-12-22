@@ -11,6 +11,11 @@ describe("Examples", () => {
 	const examples = require("../examples/examples.js");
 
 	examples.forEach((examplePath) => {
+		const filterPath = path.join(examplePath, "test.filter.js");
+		if(fs.existsSync(filterPath) && !require(filterPath)()) {
+			describe.skip(path.relative(basePath, examplePath), () => it("filtered"));
+			return;
+		}
 		it("should compile " + path.relative(basePath, examplePath), function(done) {
 			this.timeout(20000);
 			let options = {};
