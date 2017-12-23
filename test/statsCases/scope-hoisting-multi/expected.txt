@@ -1,6 +1,6 @@
-Hash: 49ce8879437678b6eb8d95fdba0ecbcbce122b34
+Hash: 8dd3a18cdbd62ff5464bcdfae2364f6eee940fc9
 Child
-    Hash: 49ce8879437678b6eb8d
+    Hash: 8dd3a18cdbd62ff5464b
     Time: Xms
        [0] ./common_lazy_shared.js 25 bytes {0} {1} {2} [built]
        [1] ./common2.js 25 bytes {3} {4} [built]
@@ -14,7 +14,7 @@ Child
        [9] ./module_first.js 31 bytes {3} [built]
       [10] ./second.js 177 bytes {4} [built]
 Child
-    Hash: 95fdba0ecbcbce122b34
+    Hash: cdfae2364f6eee940fc9
     Time: Xms
        [0] ./common_lazy_shared.js 25 bytes {0} {1} {2} [built]
        [1] ./common_lazy.js 25 bytes {1} {2} [built]

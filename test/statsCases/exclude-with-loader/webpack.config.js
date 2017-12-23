@@ -19,7 +19,8 @@ module.exports = {
 			loader: "raw-loader"
 		}, {
 			test: /\.json/,
-			loader: "file-loader"
+			loader: "file-loader",
+			type: "javascript/auto"
 		}]
 	}
 };
