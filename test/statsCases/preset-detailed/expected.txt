@@ -2,7 +2,7 @@ Hash: 775d1eb92a5362121009
 Time: Xms
   Asset       Size  Chunks             Chunk Names
    0.js  152 bytes       0  [emitted]  
-   1.js  288 bytes       1  [emitted]  
+   1.js  289 bytes       1  [emitted]  
    2.js  227 bytes       2  [emitted]  
 main.js   6.96 KiB       3  [emitted]  main
 Entrypoint main = main.js
