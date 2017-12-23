@@ -140,7 +140,7 @@ var tests = {
 		}
 	],
 	"incremental cheap sourcemap": [
-		[1, 2, 3, 4, 5, 6],
+		[1, 2, 3, 4, 5, 6, 7],
 		function(size, deferred) {
 			var compiler = webpack({
 				cache: true,
