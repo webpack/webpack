@@ -25,22 +25,22 @@ module.exports = class ResolvePackageFromRootPlugin {
 				return callback(null, originalResolved)
 			}
 
-			resolver.doResolve("resolve", {
+			resolver.doResolve(resolver.hooks.resolve, {
 				context: {},
 				path: originalResolved.context.issuer,
 				request: originalResolved.context.issuer
-			}, `resolve issuer of ${originalResolved.path}`, (err, issuer) => {
+			}, `resolve issuer of ${originalResolved.path}`, {}, (err, issuer) => {
 				if (err) {
 					return callback(null, originalResolved);
 				}
 
 				const moduleRequestPath = originalResolved.path.replace(replaceNodeModuleRegex, "");
 
-				resolver.doResolve("resolve", {
+				resolver.doResolve(resolver.hooks.resolve, {
 					context: {},
 					path: this.rootPath,
 					request: moduleRequestPath
-				}, `resolve ${moduleRequestPath} in ${this.rootPath}`, (err, resolvedInParentContext) => {
+				}, `resolve ${moduleRequestPath} in ${this.rootPath}`, {}, (err, resolvedInParentContext) => {
 					if (err) {
 						return callback(null, originalResolved);
 					}
