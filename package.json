@@ -9,6 +9,7 @@
     "ajv": "^5.1.5",
     "ajv-keywords": "^2.0.0",
     "async": "^2.1.2",
+    "chrome-trace-event": "^0.1.1",
     "enhanced-resolve": "^4.0.0-beta.2",
     "eslint-scope": "^3.7.1",
     "loader-runner": "^2.3.0",
