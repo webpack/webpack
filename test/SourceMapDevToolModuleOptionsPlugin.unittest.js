@@ -5,8 +5,6 @@ const SourceMapDevToolModuleOptionsPlugin = require("../lib/SourceMapDevToolModu
 const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
 
 describe("SourceMapDevToolModuleOptionsPlugin", () => {
-	it("has apply function", () => (new SourceMapDevToolModuleOptionsPlugin()).apply.should.be.a.Function());
-
 	describe("when applied", () => {
 		let eventBindings;
 
