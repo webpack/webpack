@@ -364,7 +364,8 @@ yargs.parse(process.argv.slice(2), (err, argv, output) => {
 				lastHash = null;
 				console.error(err.stack || err);
 				if(err.details) console.error(err.details);
-				process.exit(1); // eslint-disable-line
+				process.exitCode = 1;
+				return;
 			}
 			if(outputOptions.json) {
 				process.stdout.write(JSON.stringify(stats.toJson(outputOptions), null, 2) + "\n");
