@@ -480,6 +480,7 @@
             "assign",
             "this",
             "window",
+            "self",
             "global",
             "commonjs",
             "commonjs2",
@@ -1649,8 +1650,6 @@
             "node",
             "async-node",
             "node-webkit",
-            "atom",
-            "electron",
             "electron-main",
             "electron-renderer"
           ]
