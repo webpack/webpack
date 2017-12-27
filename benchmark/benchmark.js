@@ -1,11 +1,11 @@
-var path = require("path");
-var fs = require("fs");
-var Benchmark = require("benchmark");
-var webpack = require("../");
-var fixtures = path.join(__dirname, "fixtures");
-var outputPath = path.join(__dirname, "js");
+const path = require("path");
+const fs = require("fs");
+const Benchmark = require("benchmark");
+const webpack = require("../");
+const fixtures = path.join(__dirname, "fixtures");
+const outputPath = path.join(__dirname, "js");
 
-var benchmarkOptions = {
+const benchmarkOptions = {
 	defer: true,
 	onCycle: function() {
 		process.stderr.write(".");
@@ -15,7 +15,7 @@ var benchmarkOptions = {
 
 function runTimes(compiler, times, deferred) {
 	fs.writeFileSync(path.join(fixtures, "0.js"), "module.exports = " + Math.random(), "utf-8");
-	compiler.run(function(err, stats) {
+	compiler.run((err, stats) => {
 		if(err) throw err;
 		if(times === 1)
 			deferred.resolve();
@@ -24,10 +24,10 @@ function runTimes(compiler, times, deferred) {
 	});
 }
 
-var tests = {
+const tests = {
 	"normal build": [
 		[0, 1, 5, 10, 50, 100, 200],
-		function(size, deferred) {
+		(size, deferred) => {
 			webpack({
 				context: fixtures,
 				entry: "./" + size + ".js",
@@ -35,7 +35,7 @@ var tests = {
 					path: outputPath,
 					filename: "bundle.js"
 				}
-			}, function(err, stats) {
+			}, (err, stats) => {
 				if(err) throw err;
 				deferred.resolve();
 			});
@@ -43,7 +43,7 @@ var tests = {
 	],
 	"eval dev build": [
 		[0, 1, 2, 5, 10, 15],
-		function(size, deferred) {
+		(size, deferred) => {
 			webpack({
 				context: fixtures,
 				entry: "./" + size + ".big.js",
@@ -52,7 +52,7 @@ var tests = {
 					filename: "bundle.js"
 				},
 				devtool: "eval"
-			}, function(err, stats) {
+			}, (err, stats) => {
 				if(err) throw err;
 				deferred.resolve();
 			})
@@ -60,7 +60,7 @@ var tests = {
 	],
 	"sourcemap build": [
 		[0, 1, 2, 5, 10, 15],
-		function(size, deferred) {
+		(size, deferred) => {
 			webpack({
 				context: fixtures,
 				entry: "./" + size + ".big.js",
@@ -69,7 +69,7 @@ var tests = {
 					filename: "bundle.js"
 				},
 				devtool: "source-map"
-			}, function(err, stats) {
+			}, (err, stats) => {
 				if(err) throw err;
 				deferred.resolve();
 			})
@@ -77,7 +77,7 @@ var tests = {
 	],
 	"cheap sourcemap build": [
 		[0, 1, 2, 5, 10, 15],
-		function(size, deferred) {
+		(size, deferred) => {
 			webpack({
 				context: fixtures,
 				entry: "./" + size + ".big.js",
@@ -94,7 +94,7 @@ var tests = {
 	],
 	"build w/ chunks": [
 		[0, 1, 5, 10, 50, 100, 200],
-		function(size, deferred) {
+		(size, deferred) => {
 			webpack({
 				context: fixtures,
 				entry: "./" + size + ".async.js",
@@ -110,7 +110,7 @@ var tests = {
 	],
 	"build w/ chunks": [
 		[0, 1, 5, 10, 50, 100, 200],
-		function(size, deferred) {
+		(size, deferred) => {
 			webpack({
 				context: fixtures,
 				entry: "./" + size + ".async.js",
@@ -126,7 +126,7 @@ var tests = {
 	],
 	"incremental": [
 		[0, 1, 5, 10, 50, 100, 200],
-		function(size, deferred) {
+		(size, deferred) => {
 			var compiler = webpack({
 				cache: true,
 				context: fixtures,
@@ -141,7 +141,7 @@ var tests = {
 	],
 	"incremental cheap sourcemap": [
 		[1, 2, 3, 4, 5, 6],
-		function(size, deferred) {
+		(size, deferred) => {
 			var compiler = webpack({
 				cache: true,
 				context: fixtures,
@@ -157,7 +157,7 @@ var tests = {
 	],
 	"incremental2": [
 		[0, 1, 5, 10, 50, 100, 200],
-		function(size, deferred) {
+		(size, deferred) => {
 			var compiler = webpack({
 				cache: true,
 				context: fixtures,
@@ -172,7 +172,7 @@ var tests = {
 	],
 	"incremental4": [
 		[0, 1, 5, 10, 50, 100, 200],
-		function(size, deferred) {
+		(size, deferred) => {
 			var compiler = webpack({
 				cache: true,
 				context: fixtures,
@@ -187,7 +187,7 @@ var tests = {
 	],
 	"incremental16": [
 		[0, 1, 5, 10, 50, 100, 200],
-		function(size, deferred) {
+		(size, deferred) => {
 			var compiler = webpack({
 				cache: true,
 				context: fixtures,
@@ -202,24 +202,21 @@ var tests = {
 	],
 };
 
-var suite = new Benchmark.Suite;
+const suite = new Benchmark.Suite;
 
-Object.keys(tests).filter(function(name) {
-	if(process.argv.length > 2)
-		return name.indexOf(process.argv[2]) >= 0;
-	return true;
-}).forEach(function(name) {
-	var test = tests[name];
-	test[0].forEach(function(size) {
-		suite.add(name + " " + size, function(deferred) {
-			test[1](size, deferred);
-		}, benchmarkOptions);
+Object.keys(tests).filter((name) => (process.argv.length > 2) ? name.indexOf(process.argv[2]) >= 0 : true)
+	.forEach((name) => {
+		const test = tests[name];
+		test[0].forEach((size) => {
+			suite.add(name + " " + size, (deferred) => {
+				test[1](size, deferred);
+			}, benchmarkOptions);
+		});
 	});
-});
 
-suite.on("cycle", function(event) {
+suite.on("cycle", (event) => {
 	process.stderr.write("\n");
-	var b = event.target;
+	const b = event.target;
 	console.log(b.name + "\t" + Math.floor(1000 * (b.stats.mean - b.stats.moe)) + "\t" + Math.floor(1000 * (b.stats.mean + b.stats.moe)));
 });
 
