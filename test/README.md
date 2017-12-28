@@ -35,7 +35,7 @@ If you are trying to solve a bug which is reproducible when x and y properties a
 
 In addition to an `index.js`, these configCases require a `webpack.config.js` is located inside of your test suite. This will run this specific config through `webpack` just as you were building individually. They will use the same loading/bundling technique of your `it()` tests, however you now have a more specific config use cases that you can write even before you start coding.
 
-#### statsCases (`Stats.test.js`)
+#### statsCases (`StatsTestCases.test.js`)
 Stats cases are similar to configCases except specifically focusing on the `expected` output of your stats. Instead of writing to the console, however the output of stats will be written to disk.
 
 By default, the "expected" outcome is a pain to write by hand so instead when statsCases are run the following happens:
