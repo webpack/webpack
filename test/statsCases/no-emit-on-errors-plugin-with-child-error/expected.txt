@@ -1,0 +1,12 @@
+Hash: fb0670ebd6884ae658dc
+Time: Xms
+    Asset     Size  Chunks  Chunk Names
+ child.js  2.47 kB          
+bundle.js  2.47 kB       0  main
+   [0] (webpack)/test/statsCases/no-emit-on-errors-plugin-with-child-error/index.js 0 bytes {0} [built]
+Child child:
+       Asset     Size  Chunks  Chunk Names
+    child.js  2.47 kB       0  child
+       [0] (webpack)/test/statsCases/no-emit-on-errors-plugin-with-child-error/index.js 0 bytes {0} [built]
+    
+    ERROR in forced error
