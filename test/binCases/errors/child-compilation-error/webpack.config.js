@@ -1,11 +1,11 @@
 "use strict";
 
 module.exports = {
-	entry: "./index",
-	output: {
-		filename: "bundle.js"
-	},
-	plugins: [{
+    entry: "./index",
+    output: {
+        filename: "bundle.js"
+    },
+    plugins: [{
         apply(compiler) {
             compiler.plugin("make", (compilation, cb) => {
                 const child = compilation.createChildCompiler("child", {});
