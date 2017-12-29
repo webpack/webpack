@@ -18,6 +18,7 @@
     "node-libs-browser": "^2.0.0",
     "schema-utils": "^0.4.2",
     "tapable": "^1.0.0-beta.5",
+    "trace-event": "samccone/node-trace-event",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "watchpack": "^1.4.0",
     "webpack-sources": "^1.0.1"
