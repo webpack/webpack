@@ -112,6 +112,22 @@ describe("Parser", () => {
 				fgh.sub;
 			}, {}
 		],
+		"class definition": [
+			function() {
+				class memberExpr {
+					cde() {
+						abc("cde");
+					}
+					static fgh() {
+						abc("fgh");
+						fgh();
+					}
+				}
+			}, {
+				abc: ["cde", "fgh"],
+				fgh: ["memberExpr"]
+			}
+		],
 		"in try": [
 			function() {
 				try {
@@ -201,6 +217,15 @@ describe("Parser", () => {
 				xyz: ["membertest"]
 			}
 		],
+		"spread calls/literals": [
+			function() {
+				var xyz = [...abc("xyz"), cde];
+				Math.max(...fgh);
+			}, {
+				abc: ["xyz"],
+				fgh: ["xyz"]
+			}
+		]
 	};
 	/* eslint-enable no-undef */
 	/* eslint-enable no-unused-vars */
