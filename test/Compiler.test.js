@@ -8,6 +8,7 @@ const sinon = require("sinon");
 const webpack = require("../");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 const Compiler = require("../lib/Compiler");
+const MemoryFs = require("memory-fs");
 
 describe("Compiler", () => {
 	function compile(entry, options, callback) {
@@ -240,6 +241,24 @@ describe("Compiler", () => {
 				response9.should.be.exactly(false);
 				done();
 			});
+		});
+	});
+	it("should not emit on errors", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./missing",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		compiler.run((err, stats) => {
+			if(err) return done(err);
+			if(compiler.outputFileSystem.existsSync("/bundle.js"))
+				return done(new Error("Bundle should not be created on error"));
+			done();
 		});
 	});
 	describe("Watching", () => {
