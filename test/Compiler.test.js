@@ -7,7 +7,6 @@ const sinon = require("sinon");
 
 const webpack = require("../");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
-const Compiler = require("../lib/Compiler");
 const MemoryFs = require("memory-fs");
 
 describe("Compiler", () => {
@@ -271,14 +270,6 @@ describe("Compiler", () => {
 					path: "/",
 					pathinfo: true,
 				}
-			});
-		});
-		describe("static method", () => {
-			it("should have an method, Watching", (done) => {
-				const actual = new Compiler.Watching(compiler, 1000, err => err);
-				actual.running.should.be.exactly(true);
-				actual.constructor.name.should.be.exactly("Watching");
-				done();
 			});
 		});
 		describe("constructor", () => {
