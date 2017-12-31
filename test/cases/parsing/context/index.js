@@ -34,10 +34,10 @@ it("should be able to use renaming combined with a context", function() {
 });
 
 it("should compile an empty context", function() {
-	var x = "";
+	var x = "xxx";
 	(function() {
 		require("./templates/notExisting" + x);
-	}).toString().should.not.match(/require/);
+	}).should.throw(/xxx/);
 });
 
 it("should execute an empty context", function() {

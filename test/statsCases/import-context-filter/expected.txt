@@ -1,10 +1,10 @@
-Hash: d93ce02dc3d831c9f9d8
+Hash: f44ab9a84588885bef81
 Time: Xms
    Asset       Size  Chunks             Chunk Names
     0.js  305 bytes       0  [emitted]  
     1.js  314 bytes       1  [emitted]  
     2.js  308 bytes       2  [emitted]  
-entry.js    7.7 KiB       3  [emitted]  entry
+entry.js   7.75 KiB       3  [emitted]  entry
    [0] ./templates/bar.js 38 bytes {0} [optional] [built]
    [1] ./templates/baz.js 38 bytes {1} [optional] [built]
    [2] ./templates/foo.js 38 bytes {2} [optional] [built]

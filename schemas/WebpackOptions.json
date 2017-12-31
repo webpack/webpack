@@ -324,7 +324,14 @@
         },
         "chunkFilename": {
           "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
-          "type": "string",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ],
           "absolutePath": false
         },
         "webassemblyModuleFilename": {
@@ -385,7 +392,14 @@
         },
         "filename": {
           "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
-          "type": "string",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ],
           "absolutePath": false
         },
         "hashDigest": {
@@ -420,7 +434,14 @@
         },
         "hotUpdateChunkFilename": {
           "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
-          "type": "string",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ],
           "absolutePath": false
         },
         "hotUpdateFunction": {
@@ -429,7 +450,14 @@
         },
         "hotUpdateMainFilename": {
           "description": "The filename of the Hot Update Main File. It is inside the `output.path` directory.",
-          "type": "string",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ],
           "absolutePath": false
         },
         "jsonpFunction": {
@@ -512,7 +540,14 @@
         },
         "publicPath": {
           "description": "The `publicPath` specifies the public URL address of the output files when referenced in a browser.",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ]
         },
         "sourceMapFilename": {
           "description": "The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.",

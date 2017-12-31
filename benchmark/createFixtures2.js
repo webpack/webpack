@@ -1,25 +1,26 @@
-var path = require("path");
-var fs = require("fs");
+const path = require("path");
+const fs = require("fs");
 
-var fixtures = path.join(__dirname, "fixtures");
+const fixtures = path.join(__dirname, "fixtures");
 
 try {
 	fs.mkdirSync(fixtures);
 } catch(e) {}
 
 function genModule(prefix, depth, asyncDepth, multiplex, r, circular) {
-	var source = [];
-	var isAsync = depth >= asyncDepth;
+	const source = [];
+	const isAsync = depth >= asyncDepth;
 	if(!isAsync)
 		circular.push(path.resolve(fixtures, prefix + "/index.js"));
 	source.push("(function() {");
-	var m = (r % multiplex) + 1;
-	var sum = 1;
+	const m = (r % multiplex) + 1;
+	let sum = 1;
+	let item;
 	try {
 		fs.mkdirSync(path.resolve(fixtures, prefix));
 	} catch(e) {}
 	if(depth > 0) {
-		for(var i = 0; i < m; i++) {
+		for(let i = 0; i < m; i++) {
 			sum += genModule(prefix + "/" + i, depth - 1, asyncDepth, multiplex, (r + i + depth) * m + i + depth, circular);
 			source.push("require(" + JSON.stringify("./" + i) + ");");
 			if(i === 0) {
@@ -27,7 +28,7 @@ function genModule(prefix, depth, asyncDepth, multiplex, r, circular) {
 					source.push("}); require.ensure([], function() {");
 			}
 		}
-		var item = circular[r % circular.length];
+		item = circular[r % circular.length];
 	}
 	source.push("}, " + JSON.stringify(prefix) + ");");
 	if(item)
@@ -37,20 +38,20 @@ function genModule(prefix, depth, asyncDepth, multiplex, r, circular) {
 	return sum;
 }
 
-for(var i = 2; i < 14; i++) {
-	var count = genModule("tree-" + i, 6, 100, i, 0, []);
+for(let i = 2; i < 14; i++) {
+	const count = genModule("tree-" + i, 6, 100, i, 0, []);
 	console.log("generated tree", i, count);
 }
 
-for(i = 2; i < 14; i++) {
-	count = genModule("async-tree-" + i, 6, 1, i, 0, []);
+for(let i = 2; i < 14; i++) {
+	const count = genModule("async-tree-" + i, 6, 1, i, 0, []);
 	console.log("generated async tree", i, count);
 }
 
-var a = genModule("module-async", 7, 1, 3, 2, []);
+const a = genModule("module-async", 7, 1, 3, 2, []);
 
-var b = genModule("module-big-async", 5, 2, 9, 2, []);
+const b = genModule("module-big-async", 5, 2, 9, 2, []);
 
-var c = genModule("module-broad-async", 3, 3, 20, 10, []);
+const c = genModule("module-broad-async", 3, 3, 20, 10, []);
 
 console.log("generated modules", a, b, c);
