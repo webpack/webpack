@@ -1,9 +1,9 @@
-var logLevel = "info";
+let logLevel = "info";
 
 function dummy() {}
 
 function shouldLog(level) {
-	var shouldLog = (logLevel === "info" && level === "info") ||
+	const shouldLog = (logLevel === "info" && level === "info") ||
 		(["info", "warning"].indexOf(logLevel) >= 0 && level === "warning") ||
 		(["info", "warning", "error"].indexOf(logLevel) >= 0 && level === "error");
 	return shouldLog;
@@ -29,9 +29,9 @@ module.exports = function(level, msg) {
 	}
 };
 
-var group = console.group || dummy;
-var groupCollapsed = console.groupCollapsed || dummy;
-var groupEnd = console.groupEnd || dummy;
+const group = console.group || dummy;
+const groupCollapsed = console.groupCollapsed || dummy;
+const groupEnd = console.groupEnd || dummy;
 
 module.exports.group = logGroup(group);
 

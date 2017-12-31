@@ -4,9 +4,9 @@
 */
 /*globals __resourceQuery */
 if(module.hot) {
-	var log = require("./log");
-	var checkForUpdate = function checkForUpdate(fromUpdate) {
-		module.hot.check().then(function(updatedModules) {
+	const log = require("./log");
+	const checkForUpdate = function checkForUpdate(fromUpdate) {
+		module.hot.check().then((updatedModules) => {
 			if(!updatedModules) {
 				if(fromUpdate)
 					log("info", "[HMR] Update applied.");
@@ -20,13 +20,12 @@ if(module.hot) {
 				onUnaccepted: function(data) {
 					log("warning", "Ignored an update to unaccepted module " + data.chain.join(" -> "));
 				},
-			}).then(function(renewedModules) {
+			}).then((renewedModules) => {
 				require("./log-apply-result")(updatedModules, renewedModules);
-
 				checkForUpdate(true);
 			});
-		}).catch(function(err) {
-			var status = module.hot.status();
+		}).catch((err) => {
+			const status = module.hot.status();
 			if(["abort", "fail"].indexOf(status) >= 0) {
 				log("warning", "[HMR] Cannot apply update.");
 				log("warning", "[HMR] " + err.stack || err.message);
@@ -37,7 +36,7 @@ if(module.hot) {
 		});
 	};
 
-	process.on(__resourceQuery.substr(1) || "SIGUSR2", function() {
+	process.on(__resourceQuery.substr(1) || "SIGUSR2", () => {
 		if(module.hot.status() !== "idle") {
 			log("warning", "[HMR] Got signal but currently in " + module.hot.status() + " state.");
 			log("warning", "[HMR] Need to be in idle state to start hot update.");
