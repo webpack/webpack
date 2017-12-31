@@ -1,2 +1,2 @@
-var EventEmitter = require("events");
+const EventEmitter = require("events");
 module.exports = new EventEmitter();

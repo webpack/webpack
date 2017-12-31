@@ -4,13 +4,13 @@
 */
 /*globals __webpack_hash__ */
 if(module.hot) {
-	var lastHash;
-	var upToDate = function upToDate() {
+	let lastHash;
+	const upToDate = function upToDate() {
 		return lastHash.indexOf(__webpack_hash__) >= 0;
 	};
-	var log = require("./log");
-	var check = function check() {
-		module.hot.check().then(function(updatedModules) {
+	const log = require("./log");
+	const check = function check() {
+		module.hot.check().then((updatedModules) => {
 			if(!updatedModules) {
 				log("warning", "[HMR] Cannot find update. Need to do a full reload!");
 				log("warning", "[HMR] (Probably because of restarting the webpack-dev-server)");
@@ -31,7 +31,7 @@ if(module.hot) {
 					log("error", data.error);
 					log("warning", "Ignored an error while updating module " + data.moduleId + " (" + data.type + ")");
 				}
-			}).then(function(renewedModules) {
+			}).then((renewedModules) => {
 				if(!upToDate()) {
 					check();
 				}
@@ -42,8 +42,8 @@ if(module.hot) {
 					log("info", "[HMR] App is up to date.");
 				}
 			});
-		}).catch(function(err) {
-			var status = module.hot.status();
+		}).catch((err) => {
+			const status = module.hot.status();
 			if(["abort", "fail"].indexOf(status) >= 0) {
 				log("warning", "[HMR] Cannot check for update. Need to do a full reload!");
 				log("warning", "[HMR] " + err.stack || err.message);
@@ -52,11 +52,11 @@ if(module.hot) {
 			}
 		});
 	};
-	var hotEmitter = require("./emitter");
-	hotEmitter.on("webpackHotUpdate", function(currentHash) {
+	const hotEmitter = require("./emitter");
+	hotEmitter.on("webpackHotUpdate", (currentHash) => {
 		lastHash = currentHash;
 		if(!upToDate()) {
-			var status = module.hot.status();
+			const status = module.hot.status();
 			if(status === "idle") {
 				log("info", "[HMR] Checking for updates on the server...");
 				check();
