@@ -29,9 +29,7 @@ module.exports = function(updatedModules, renewedModules) {
 				log("info", "[HMR]  - " + moduleId);
 			}
 		});
-		const numberIds = renewedModules.every(function(moduleId) {
-			return typeof moduleId === "number";
-		});
+		const numberIds = renewedModules.every((moduleId) => typeof moduleId === "number");
 		if(numberIds)
 			log("info", "[HMR] Consider using the NamedModulesPlugin for module names.");
 	}
