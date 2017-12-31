@@ -261,6 +261,25 @@ describe("Compiler", () => {
 			done();
 		});
 	});
+	it("should not emit on errors (watch)", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./missing",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		const watching = compiler.watch({}, (err, stats) => {
+			watching.close();
+			if(err) return done(err);
+			if(compiler.outputFileSystem.existsSync("/bundle.js"))
+				return done(new Error("Bundle should not be created on error"));
+			done();
+		});
+	});
 	describe("Watching", () => {
 		let compiler;
 		beforeEach(() => {
