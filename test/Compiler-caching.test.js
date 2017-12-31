@@ -13,6 +13,7 @@ describe("Compiler (caching)", function() {
 
 	function compile(entry, options, callback) {
 		options = new WebpackOptionsDefaulter().process(options);
+		options.mode = "production";
 		options.cache = true;
 		options.entry = entry;
 		options.optimization.minimize = false;
