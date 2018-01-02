@@ -14,11 +14,11 @@ try {
 	require.resolve("webpack-cli") &&
 	require("webpack-cli");
 } catch(err) {
+	webpackCliInstalled = true;
 	process.stdout.write("Sorry, 'webpack-cli' was not found inside this project. ");
 
 	io.question("Do you want to install 'webpack-cli' automatically? [ Y/N ] \n", answer => {
 		if(/(y|yes)|(Y|Yes)/.test(answer)) {
-			webpackCliInstalled = true;
 			process.stdout.write("Start downloading 'webpack-cli' package...\n");
 
 			exec("npm i webpack-cli -D ; npm link webpack", (err, data) => {
@@ -39,5 +39,5 @@ try {
 }
 
 if(!webpackCliInstalled) {
-	throw new Error();
+	process.exit(1);
 }
