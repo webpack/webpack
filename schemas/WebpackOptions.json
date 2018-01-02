@@ -332,6 +332,11 @@
           "type": "string",
           "absolutePath": false
         },
+        "globalObject": {
+          "description": "An expression which is used to address the global object/scope in runtime code",
+          "type": "string",
+          "minLength": 1
+        },
         "crossOriginLoading": {
           "description": "This option enables cross-origin loading of chunks.",
           "enum": [
