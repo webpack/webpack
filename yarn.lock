@@ -5825,7 +5825,7 @@ webpack-addons@^1.1.4:
   dependencies:
     jscodeshift "^0.4.0"
 
-webpack-cli@^1.5.2:
+webpack-cli@^1.5.3:
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/webpack-cli/-/webpack-cli-1.5.3.tgz#e49883b40249571ff79415196b3d76cab1f7272f"
   dependencies:

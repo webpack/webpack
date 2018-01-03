@@ -1735,8 +1735,5 @@
       "type": "object"
     }
   },
-  "required": [
-    "entry"
-  ],
   "type": "object"
 }
