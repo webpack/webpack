@@ -12,8 +12,8 @@ describe("Compiler (caching)", function() {
 	this.timeout(15000);
 
 	function compile(entry, options, callback) {
+		options.mode = "none";
 		options = new WebpackOptionsDefaulter().process(options);
-		options.mode = "production";
 		options.cache = true;
 		options.entry = entry;
 		options.optimization.minimize = false;
