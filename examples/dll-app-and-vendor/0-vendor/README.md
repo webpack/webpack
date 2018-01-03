@@ -41,7 +41,7 @@ export function square(n) {
 # js/vendor.js
 
 ``` javascript
-var vendor_lib_574249e400278f8a7ebb =
+var vendor_lib_05435546db8fb3868aaf =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -156,7 +156,7 @@ function square(n) {
 # js/vendor-manifest.json
 
 ``` javascript
-{"name":"vendor_lib_574249e400278f8a7ebb","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"harmonyModule":true,"providedExports":["square"]}}}}
+{"name":"vendor_lib_05435546db8fb3868aaf","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
 ```
 
 # Info

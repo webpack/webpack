@@ -321,11 +321,11 @@ module.exports = [
 
 var main = function() {
 	console.log("Main class");
-	__webpack_require__.e/* require.ensure */(2).then((() => {
+	__webpack_require__.e(/*! require.ensure */ 2).then((() => {
 		const page = __webpack_require__(/*! ./pageA */ 4);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
-	__webpack_require__.e/* require.ensure */(1).then((() => {
+	__webpack_require__.e(/*! require.ensure */ 1).then((() => {
 		const page = __webpack_require__(/*! ./pageB */ 3);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -401,7 +401,7 @@ module.exports = function() {
 
 module.exports = function() {
 	console.log("Page B");
-	__webpack_require__.e/* require.ensure */(0).then((()=>{
+	__webpack_require__.e(/*! require.ensure */ 0).then((()=>{
 		const page = __webpack_require__(/*! ./pageC */ 5);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -619,11 +619,11 @@ module.exports = function() {
 
 var main = function() {
 	console.log("Main class");
-	Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e(2)]).then((() => {
+	Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2)]).then((() => {
 		const page = __webpack_require__(/*! ./pageA */ 3);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
-	__webpack_require__.e/* require.ensure */(1).then((() => {
+	__webpack_require__.e(/*! require.ensure */ 1).then((() => {
 		const page = __webpack_require__(/*! ./pageB */ 2);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -683,7 +683,7 @@ module.exports = function() {
 
 module.exports = function() {
 	console.log("Page B");
-	Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e(3)]).then((()=>{
+	Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(3)]).then((()=>{
 		const page = __webpack_require__(/*! ./pageC */ 5);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -756,7 +756,7 @@ Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
           Asset       Size  Chunks             Chunk Names
     0.output.js  414 bytes       0  [emitted]  
-    1.output.js  507 bytes       1  [emitted]  
+    1.output.js  509 bytes       1  [emitted]  
     2.output.js  414 bytes       2  [emitted]  
       output.js   7.71 KiB       3  [emitted]  main
     Entrypoint main = output.js
@@ -785,7 +785,7 @@ Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                Asset       Size  Chunks             Chunk Names
     0.asyncoutput.js  340 bytes       0  [emitted]  
-    1.asyncoutput.js  548 bytes       1  [emitted]  
+    1.asyncoutput.js  549 bytes       1  [emitted]  
     2.asyncoutput.js  414 bytes       2  [emitted]  
     3.asyncoutput.js  414 bytes       3  [emitted]  
       asyncoutput.js   7.49 KiB       4  [emitted]  main

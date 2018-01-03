@@ -7,7 +7,6 @@ const sinon = require("sinon");
 
 const webpack = require("../");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
-const Compiler = require("../lib/Compiler");
 const MemoryFs = require("memory-fs");
 
 describe("Compiler", () => {
@@ -261,6 +260,25 @@ describe("Compiler", () => {
 			done();
 		});
 	});
+	it("should not emit on errors (watch)", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./missing",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		const watching = compiler.watch({}, (err, stats) => {
+			watching.close();
+			if(err) return done(err);
+			if(compiler.outputFileSystem.existsSync("/bundle.js"))
+				return done(new Error("Bundle should not be created on error"));
+			done();
+		});
+	});
 	describe("Watching", () => {
 		let compiler;
 		beforeEach(() => {
@@ -271,14 +289,6 @@ describe("Compiler", () => {
 					path: "/",
 					pathinfo: true,
 				}
-			});
-		});
-		describe("static method", () => {
-			it("should have an method, Watching", (done) => {
-				const actual = new Compiler.Watching(compiler, 1000, err => err);
-				actual.running.should.be.exactly(true);
-				actual.constructor.name.should.be.exactly("Watching");
-				done();
 			});
 		});
 		describe("constructor", () => {
