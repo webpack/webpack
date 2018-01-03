@@ -1,19 +1,43 @@
 #!/usr/bin/env node
 
+const { exec } = require("child_process");
+const readline = require("readline");
+
+let io = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
 let webpackCliInstalled = false;
+
 try {
-	require.resolve("webpack-cli");
+	require.resolve("webpack-cli") &&
+	require("webpack-cli");
+} catch(err) {
 	webpackCliInstalled = true;
-} catch(e) {
-	webpackCliInstalled = false;
+	process.stdout.write("Sorry, 'webpack-cli' was not found inside this project.");
+
+	io.question("Do you want to install 'webpack-cli' automatically? [ Y/N ] \n", answer => {
+		if(/(y|yes)|(Y|Yes)/.test(answer)) {
+			process.stdout.write("Start downloading 'webpack-cli' package...\n");
+
+			exec("npm i webpack-cli -D ; npm link webpack", (err, data) => {
+				if(data) {
+					process.stdout.write(data);
+				} else {
+					webpackCliInstalled = false;
+				}
+			});
+		}
+
+		if(/(n|no)|(N|No)/.test(answer)) {
+			webpackCliInstalled = false;
+		}
+
+		io.close();
+	});
 }
 
-if(webpackCliInstalled) {
-	require("webpack-cli"); // eslint-disable-line node/no-unpublished-require
-} else {
-	console.error("The CLI moved into a separate package: webpack-cli.");
-	console.error("Please install 'webpack-cli' in addition to webpack itself to use the CLI.");
-	console.error("-> When using npm: npm install webpack-cli -D");
-	console.error("-> When using yarn: yarn add webpack-cli -D");
-	process.exitCode = 1;
+if(!webpackCliInstalled) {
+	process.exit(1);
 }
