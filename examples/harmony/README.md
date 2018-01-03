@@ -230,7 +230,7 @@ function add() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "increment", function() { return increment; });
-/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math */0);
+/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math */ 0);
 
 function increment(val) {
     return Object(_math__WEBPACK_IMPORTED_MODULE_0__["add"])(val, 1);
@@ -247,13 +247,13 @@ function increment(val) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _increment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./increment */1);
+/* harmony import */ var _increment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./increment */ 1);
 
 var a = 1;
 Object(_increment__WEBPACK_IMPORTED_MODULE_0__["increment"])(a); // 2
 
 // async loading
-__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! ./async-loaded */3)).then(function(asyncLoaded) {
+__webpack_require__.e(/*! import() */ 0).then(__webpack_require__.bind(null, /*! ./async-loaded */ 3)).then(function(asyncLoaded) {
 	console.log(asyncLoaded);
 });
 
@@ -271,7 +271,7 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  479 bytes       0  [emitted]  
-  output.js   8.22 KiB       1  [emitted]  main
+  output.js   8.23 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 25 bytes {1} [rendered]
     > [2] ./example.js 6:0-24

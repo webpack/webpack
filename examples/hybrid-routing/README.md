@@ -315,7 +315,7 @@ module.exports = function(cb) {
 	if(cbs) cbs.push(cb);
 	else cb(data);
 }
-__webpack_require__.e/* require.ensure */(1).then((function(require) {
+__webpack_require__.e(/*! require.ensure */ 1).then((function(require) {
 	data = __webpack_require__(/*! !./bPage.js */ 1);
 	var callbacks = cbs;
 	cbs = null;
@@ -338,7 +338,7 @@ module.exports = function(cb) {
 	if(cbs) cbs.push(cb);
 	else cb(data);
 }
-__webpack_require__.e/* require.ensure */(0).then((function(require) {
+__webpack_require__.e(/*! require.ensure */ 0).then((function(require) {
 	data = __webpack_require__(/*! !./aPage.js */ 2);
 	var callbacks = cbs;
 	cbs = null;
@@ -364,12 +364,15 @@ var map = {
 function webpackContext(req) {
 	var id = webpackContextResolve(req);
 	var module = __webpack_require__(id);
-	return module;
+	return module;;
 }
 function webpackContextResolve(req) {
 	var id = map[req];
-	if(!(id + 1)) // check for number or string
-		throw new Error("Cannot find module '" + req + "'.");
+	if(!(id + 1)) { // check for number or string
+		var e = new Error('Cannot find module "' + req + '".');
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
 	return id;
 }
 webpackContext.keys = function webpackContextKeys() {
@@ -404,7 +407,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 	//  -> Pages are only loaded on demand
 
 	// This line may throw a exception on runtime if the page wasn't found.
-	var pageBundle = __webpack_require__(/*! bundle-loader!. */ 5)("./" + name + "Page");
+	var pageBundle = __webpack_require__(5)("./" + name + "Page");
 
 	// Wait until the chunk is loaded
 	pageBundle(function(page) {
@@ -537,7 +540,7 @@ Version: webpack next
      1.chunk.js  122 bytes       1  [emitted]  
 pageB.bundle.js  165 bytes    2, 1  [emitted]  pageB
 pageA.bundle.js  165 bytes    3, 0  [emitted]  pageA
-     commons.js   2.47 KiB       4  [emitted]  commons
+     commons.js    2.5 KiB       4  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 Entrypoint commons = commons.js

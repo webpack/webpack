@@ -302,9 +302,9 @@ module.exports = "Common";
 /***/ (function(module, exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 1);
-__webpack_require__.e/* require */(0/* duplicate */).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 0)]; ((function(shared) {
+__webpack_require__.e(/*! AMD require | duplicate */ 0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 0)]; (function(shared) {
 	shared("This is page A");
-}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
 
 /***/ })
 
@@ -324,7 +324,7 @@ __webpack_require__.e/* require */(0/* duplicate */).then(function() { var __WEB
 /***/ (function(module, exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 1);
-__webpack_require__.e/* require.ensure */(0/* duplicate */).then((function(require) {
+__webpack_require__.e(/*! require.ensure | duplicate */ 0).then((function(require) {
 	var shared = __webpack_require__(/*! ./shared */ 0);
 	shared("This is page B");
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -363,8 +363,8 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
           Asset       Size  Chunks             Chunk Names
      0.chunk.js  363 bytes       0  [emitted]  
-pageB.bundle.js  553 bytes       1  [emitted]  pageB
-pageA.bundle.js  596 bytes       2  [emitted]  pageA
+pageB.bundle.js  552 bytes       1  [emitted]  pageB
+pageA.bundle.js  597 bytes       2  [emitted]  pageA
      commons.js   7.24 KiB       3  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js

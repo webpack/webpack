@@ -191,7 +191,7 @@ body {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-alpha.2
+Version: webpack next
                                Asset       Size  Chunks             Chunk Names
                                 C.js   2.97 KiB       2  [emitted]  C
 d090b6fba0f6d326d282a19146ff54a7.png  120 bytes          [emitted]  
@@ -275,7 +275,7 @@ Child extract-text-webpack-plugin ../../node_modules/extract-text-webpack-plugin
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-alpha.2
+Version: webpack next
                                Asset       Size  Chunks             Chunk Names
                           commons.js   1.72 KiB       2  [emitted]  commons
 d090b6fba0f6d326d282a19146ff54a7.png  120 bytes          [emitted]  

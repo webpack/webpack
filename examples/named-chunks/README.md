@@ -224,21 +224,21 @@ require.ensure(["b"], function(require) {
 
 var a = __webpack_require__(/*! a */ 2);
 
-__webpack_require__.e/* require.ensure */(0/*! my own chunk */).then((function(require) {
+__webpack_require__.e(/*! require.ensure | my own chunk */ 0).then((function(require) {
 	// a named chunk
 	var c = __webpack_require__(/*! c */ 4);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-__webpack_require__.e/* require.ensure */(0/*! my own chunk */).then((function(require) {
+__webpack_require__.e(/*! require.ensure | my own chunk */ 0).then((function(require) {
 	// another chunk with the same name
 	var d = __webpack_require__(/*! d */ 1);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-__webpack_require__.e/* require.ensure */(0/*! my own chunk */).then((function(require) {
+__webpack_require__.e(/*! require.ensure | my own chunk */ 0).then((function(require) {
 	// the same again
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-__webpack_require__.e/* require.ensure */(1).then((function(require) {
+__webpack_require__.e(/*! require.ensure */ 1).then((function(require) {
 	// chunk without name
 	var d = __webpack_require__(/*! d */ 1);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);

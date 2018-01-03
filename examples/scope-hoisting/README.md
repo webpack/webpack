@@ -346,7 +346,7 @@ function b_a() {
 
 
 
-__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! ./lazy */3)).then(function(lazy) {
+__webpack_require__.e(/*! import() */ 0).then(__webpack_require__.bind(null, /*! ./lazy */ 3)).then(function(lazy) {
 	console.log(a, b_a(), shared["a" /* x */], shared["b" /* y */], lazy.c, lazy.d.a, lazy.x, lazy.y);
 });
 
@@ -437,7 +437,7 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
 0.output.js  1.84 KiB       0  [emitted]  
-  output.js  8.15 KiB       1  [emitted]  main
+  output.js  8.16 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 286 bytes {1} [rendered]
     > [] 4:0-16

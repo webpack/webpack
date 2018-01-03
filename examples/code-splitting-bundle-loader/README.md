@@ -209,7 +209,7 @@ module.exports = function(cb) {
 	if(cbs) cbs.push(cb);
 	else cb(data);
 }
-__webpack_require__.e/* require.ensure */(0).then((function(require) {
+__webpack_require__.e(/*! require.ensure */ 0).then((function(require) {
 	data = __webpack_require__(/*! !./file.js */ 2);
 	var callbacks = cbs;
 	cbs = null;

@@ -111,7 +111,7 @@ module.exports = function() {
 /***/ (function(module, exports, __webpack_require__) {
 
 function getTemplate(templateName) {
-	return __webpack_require__(/*! ./templates */ 1)("./"+templateName);
+	return __webpack_require__(1)("./"+templateName);
 }
 console.log(getTemplate("a"));
 console.log(getTemplate("b"));
@@ -137,12 +137,15 @@ var map = {
 function webpackContext(req) {
 	var id = webpackContextResolve(req);
 	var module = __webpack_require__(id);
-	return module;
+	return module;;
 }
 function webpackContextResolve(req) {
 	var id = map[req];
-	if(!(id + 1)) // check for number or string
-		throw new Error("Cannot find module '" + req + "'.");
+	if(!(id + 1)) { // check for number or string
+		var e = new Error('Cannot find module "' + req + '".');
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
 	return id;
 }
 webpackContext.keys = function webpackContextKeys() {
@@ -200,7 +203,7 @@ module.exports = function() {
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  4.44 KiB       0  [emitted]  main
+output.js  4.47 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 613 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -225,7 +228,7 @@ chunk    {0} output.js (main) 613 bytes [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  1.13 KiB       0  [emitted]  main
+output.js  1.16 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 613 bytes [entry] [rendered]
     > main [4] ./example.js 

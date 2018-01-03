@@ -137,7 +137,7 @@ worker.onmessage = function(event) {
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
-/******/ 	self["webpackChunk"] = function webpackChunkCallback(chunkIds, moreModules) {
+/******/ 	window["webpackChunk"] = function webpackChunkCallback(chunkIds, moreModules) {
 /******/ 		for(var moduleId in moreModules) {
 /******/ 			modules[moduleId] = moreModules[moduleId];
 /******/ 		}
@@ -242,9 +242,9 @@ worker.onmessage = function(event) {
 
 onmessage = function(event) {
 	var template = event.data;
-	__webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ../require.context/templates */ 1)("./" + event.data)]; ((function(tmpl) {
+	__webpack_require__.e(/*! AMD require */ 0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(1)("./" + event.data)]; (function(tmpl) {
 		postMessage(tmpl());
-	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
 }
 
 
@@ -255,7 +255,7 @@ onmessage = function(event) {
 # js/0.[hash].worker.js
 
 ``` javascript
-self["webpackChunk"]([0],[
+window["webpackChunk"]([0],[
 /* 0 */,
 /* 1 */
 /*!**************************************************!*\
@@ -277,12 +277,15 @@ var map = {
 function webpackContext(req) {
 	var id = webpackContextResolve(req);
 	var module = __webpack_require__(id);
-	return module;
+	return module;;
 }
 function webpackContextResolve(req) {
 	var id = map[req];
-	if(!(id + 1)) // check for number or string
-		throw new Error("Cannot find module '" + req + "'.");
+	if(!(id + 1)) { // check for number or string
+		var e = new Error('Cannot find module "' + req + '".');
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
 	return id;
 }
 webpackContext.keys = function webpackContextKeys() {
@@ -340,8 +343,8 @@ module.exports = function() {
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
            Asset      Size  Chunks             Chunk Names
-0.hash.worker.js  1.77 KiB          [emitted]  
-  hash.worker.js  4.04 KiB          [emitted]  
+0.hash.worker.js  1.82 KiB          [emitted]  
+  hash.worker.js  4.01 KiB          [emitted]  
        output.js  3.34 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 311 bytes [entry] [rendered]
@@ -352,8 +355,8 @@ chunk    {0} output.js (main) 311 bytes [entry] [rendered]
         single entry .\example.js  main
 Child worker:
                Asset      Size  Chunks             Chunk Names
-    0.hash.worker.js  1.77 KiB       0  [emitted]  
-      hash.worker.js  4.04 KiB       1  [emitted]  main
+    0.hash.worker.js  1.82 KiB       0  [emitted]  
+      hash.worker.js  4.01 KiB       1  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
         > [0] ./worker.js 3:1-5:3
@@ -380,8 +383,8 @@ Child worker:
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
            Asset       Size  Chunks             Chunk Names
-0.hash.worker.js  557 bytes          [emitted]  
-  hash.worker.js  915 bytes          [emitted]  
+0.hash.worker.js  594 bytes          [emitted]  
+  hash.worker.js  917 bytes          [emitted]  
        output.js  695 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 311 bytes [entry] [rendered]
@@ -392,8 +395,8 @@ chunk    {0} output.js (main) 311 bytes [entry] [rendered]
         single entry .\example.js  main
 Child worker:
                Asset       Size  Chunks             Chunk Names
-    0.hash.worker.js  557 bytes       0  [emitted]  
-      hash.worker.js  915 bytes       1  [emitted]  main
+    0.hash.worker.js  594 bytes       0  [emitted]  
+      hash.worker.js  917 bytes       1  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
         > [0] ./worker.js 3:1-5:3
