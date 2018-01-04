@@ -178,6 +178,7 @@ module.exports = {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -375,8 +376,8 @@ Version: webpack next
    adminPageB.js  374 bytes       4  [emitted]  adminPageB
    adminPageC.js  558 bytes       5  [emitted]  adminPageC
 admin-commons.js  256 bytes       6  [emitted]  admin-commons
-      commons.js    7.4 KiB       7  [emitted]  commons
-    c-commons.js   7.23 KiB       8  [emitted]  c-commons
+      commons.js   7.41 KiB       7  [emitted]  commons
+    c-commons.js   7.24 KiB       8  [emitted]  c-commons
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 Entrypoint pageC = c-commons.js pageC.js

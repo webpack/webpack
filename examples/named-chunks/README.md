@@ -113,6 +113,7 @@ require.ensure(["b"], function(require) {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -324,7 +325,7 @@ Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  677 bytes       0  [emitted]  my own chunk
 1.output.js  463 bytes       1  [emitted]  
-  output.js   7.82 KiB       2  [emitted]  main
+  output.js   7.83 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
     > my own chunk [3] ./example.js 3:0-6:18

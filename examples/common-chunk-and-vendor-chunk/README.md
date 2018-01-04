@@ -164,6 +164,7 @@ module.exports = {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -404,7 +405,7 @@ module.exports = "pageC";
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset       Size  Chunks             Chunk Names
-vendor.js   7.85 KiB       0  [emitted]  vendor
+vendor.js   7.86 KiB       0  [emitted]  vendor
  pageA.js  627 bytes       1  [emitted]  pageA
  pageB.js  408 bytes       2  [emitted]  pageB
  pageC.js  408 bytes       3  [emitted]  pageC

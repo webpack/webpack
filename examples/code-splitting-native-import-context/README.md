@@ -121,6 +121,7 @@ export default foo;
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -307,7 +308,7 @@ Version: webpack next
 0.output.js  436 bytes       0  [emitted]  
 1.output.js  445 bytes       1  [emitted]  
 2.output.js  439 bytes       2  [emitted]  
-  output.js   7.99 KiB       3  [emitted]  main
+  output.js      8 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 41 bytes {3} [rendered]
     [0] ./templates/foo.js 41 bytes {0} [optional] [built]

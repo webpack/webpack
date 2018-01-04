@@ -51,7 +51,7 @@ Version: webpack next
                   Asset      Size  Chunks             Chunk Names
 1d1f50c6f480a313a283.js  52.9 KiB       7  [emitted]  
 650a1f5b6bbd5e2a0bcb.js  36.5 KiB       0  [emitted]  
-85f47c3abb26198f77a8.js  59.9 KiB       2  [emitted]  
+85f47c3abb26198f77a8.js    60 KiB       2  [emitted]  
 de45e35c6080cc33435c.js  31.6 KiB       3  [emitted]  
 b9d30d332886e3897e04.js  56.1 KiB       4  [emitted]  
 091d7e57346e564d3d09.js  52.4 KiB       5  [emitted]  

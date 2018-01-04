@@ -106,6 +106,7 @@ module.exports = "It works";
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -263,7 +264,7 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  257 bytes       0  [emitted]  
-  output.js   7.52 KiB       1  [emitted]  main
+  output.js   7.53 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 28 bytes {1} [rendered]
     > [0] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2

@@ -128,6 +128,7 @@ module.exports = {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -304,7 +305,7 @@ __webpack_require__(/*! ./vendor2 */ 3);
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
      Asset       Size  Chunks             Chunk Names
-vendor1.js    7.6 KiB       0  [emitted]  vendor1
+vendor1.js   7.61 KiB       0  [emitted]  vendor1
 vendor2.js  606 bytes       1  [emitted]  vendor2
   pageA.js  376 bytes       2  [emitted]  pageA
   pageB.js  269 bytes       3  [emitted]  pageB

@@ -79,11 +79,11 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                         0.output.js   2.32 KiB       0  [emitted]  
-                           output.js   21.7 KiB       1  [emitted]  main
+                         0.output.js   2.33 KiB       0  [emitted]  
+                           output.js   22.4 KiB       1  [emitted]  main
                            style.css   71 bytes       1  [emitted]  main
 Entrypoint main = output.js style.css
-chunk    {0} 0.output.js 1.33 KiB {1} [rendered]
+chunk    {0} 0.output.js 1.34 KiB {1} [rendered]
     > [1] ./example.js 2:0-20
     [2] ./chunk.js 26 bytes {0} [built]
         amd require ./chunk [1] ./example.js 2:0-20
@@ -91,9 +91,9 @@ chunk    {0} 0.output.js 1.33 KiB {1} [rendered]
         cjs require ./image2.png [6] (webpack)/node_modules/css-loader!./style2.css 6:58-81
     [6] (webpack)/node_modules/css-loader!./style2.css 236 bytes {0} [built]
         cjs require !!../../node_modules/css-loader/index.js!./style2.css [7] ./style2.css 4:14-78
-    [7] ./style2.css 1020 bytes {0} [built]
+    [7] ./style2.css 1 KiB {0} [built]
         cjs require ./style2.css [2] ./chunk.js 1:0-23
-chunk    {1} output.js, style.css (main) 13.7 KiB [entry] [rendered]
+chunk    {1} output.js, style.css (main) 14.5 KiB [entry] [rendered]
     > main [1] ./example.js 
     [1] ./example.js 48 bytes {1} [built]
         single entry .\example.js  main
@@ -118,11 +118,11 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                         0.output.js  397 bytes       0  [emitted]  
-                           output.js   6.68 KiB       1  [emitted]  main
+                         0.output.js  403 bytes       0  [emitted]  
+                           output.js   7.04 KiB       1  [emitted]  main
                            style.css   71 bytes       1  [emitted]  main
 Entrypoint main = output.js style.css
-chunk    {0} 0.output.js 1.33 KiB {1} [rendered]
+chunk    {0} 0.output.js 1.34 KiB {1} [rendered]
     > [1] ./example.js 2:0-20
     [2] ./chunk.js 26 bytes {0} [built]
         amd require ./chunk [1] ./example.js 2:0-20
@@ -130,9 +130,9 @@ chunk    {0} 0.output.js 1.33 KiB {1} [rendered]
         cjs require ./image2.png [6] (webpack)/node_modules/css-loader!./style2.css 6:58-81
     [6] (webpack)/node_modules/css-loader!./style2.css 236 bytes {0} [built]
         cjs require !!../../node_modules/css-loader/index.js!./style2.css [7] ./style2.css 4:14-78
-    [7] ./style2.css 1020 bytes {0} [built]
+    [7] ./style2.css 1 KiB {0} [built]
         cjs require ./style2.css [2] ./chunk.js 1:0-23
-chunk    {1} output.js, style.css (main) 13.7 KiB [entry] [rendered]
+chunk    {1} output.js, style.css (main) 14.5 KiB [entry] [rendered]
     > main [1] ./example.js 
     [1] ./example.js 48 bytes {1} [built]
         single entry .\example.js  main

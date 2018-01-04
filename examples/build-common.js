@@ -12,7 +12,7 @@ const async = require("async");
 
 const extraArgs = "";
 
-const targetArgs = global.NO_TARGET_ARGS ? "" : " ./example.js js/output.js ";
+const targetArgs = global.NO_TARGET_ARGS ? "" : " ./example.js -o js/output.js ";
 const displayReasons = global.NO_REASONS ? "" : " --display-reasons --display-used-exports --display-provided-exports";
 const commonArgs = `--display-chunks --display-max-modules 99999 --display-origins --display-entrypoints --output-public-path "js/" ${extraArgs} ${targetArgs}`;
 

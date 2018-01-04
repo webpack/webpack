@@ -188,6 +188,7 @@ module.exports = {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -365,7 +366,7 @@ Version: webpack next
      0.chunk.js  363 bytes       0  [emitted]  
 pageB.bundle.js  552 bytes       1  [emitted]  pageB
 pageA.bundle.js  597 bytes       2  [emitted]  pageA
-     commons.js   7.24 KiB       3  [emitted]  commons
+     commons.js   7.25 KiB       3  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 chunk    {0} 0.chunk.js 91 bytes {1} {2} [rendered]

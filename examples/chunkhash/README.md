@@ -146,7 +146,7 @@ Version: webpack next
     common.[chunkhash].js  727 bytes       1  [emitted]  common
 b71c088662b7b530c545.js  264 bytes       2  [emitted]  
 f6eb6a4d15b19e593a54.js  264 bytes       3  [emitted]  
-  manifest.[chunkhash].js   7.14 KiB       4  [emitted]  manifest
+  manifest.[chunkhash].js   7.15 KiB       4  [emitted]  manifest
 Entrypoint main = manifest.[chunkhash].js common.[chunkhash].js main.[chunkhash].js
 Entrypoint common = manifest.[chunkhash].js common.[chunkhash].js
 chunk    {0} main.[chunkhash].js (main) 90 bytes {1} [initial] [rendered]

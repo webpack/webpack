@@ -200,7 +200,7 @@ c2a2f62d69330b7d787782f5010f9d13.png  120 bytes          [emitted]
                                 A.js  547 bytes       0  [emitted]  A
                                 B.js  551 bytes       1  [emitted]  B
 16155c689e517682064c99893cb832cc.png  120 bytes          [emitted]  
-                          commons.js   7.25 KiB       3  [emitted]  commons
+                          commons.js   7.26 KiB       3  [emitted]  commons
                                A.css   69 bytes       0  [emitted]  A
                                B.css   69 bytes       1  [emitted]  B
                                C.css  140 bytes       2  [emitted]  C

@@ -222,6 +222,7 @@ module.exports = [
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -525,6 +526,7 @@ module.exports = function() {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -758,7 +760,7 @@ Child
     0.output.js  414 bytes       0  [emitted]  
     1.output.js  509 bytes       1  [emitted]  
     2.output.js  414 bytes       2  [emitted]  
-      output.js   7.71 KiB       3  [emitted]  main
+      output.js   7.72 KiB       3  [emitted]  main
     Entrypoint main = output.js
     chunk    {0} 0.output.js 142 bytes {3} [rendered]
         > [3] ./pageB.js 3:1-6:3
@@ -788,7 +790,7 @@ Child
     1.asyncoutput.js  549 bytes       1  [emitted]  
     2.asyncoutput.js  414 bytes       2  [emitted]  
     3.asyncoutput.js  414 bytes       3  [emitted]  
-      asyncoutput.js   7.49 KiB       4  [emitted]  main
+      asyncoutput.js    7.5 KiB       4  [emitted]  main
     Entrypoint main = asyncoutput.js
     chunk    {0} 0.asyncoutput.js 72 bytes {4} [rendered]
         > async commons [0] ./example.js 3:1-6:3

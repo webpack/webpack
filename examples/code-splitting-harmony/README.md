@@ -114,6 +114,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -304,7 +305,7 @@ Version: webpack next
 0.output.js  275 bytes       0  [emitted]  
 1.output.js  284 bytes       1  [emitted]  
 2.output.js  270 bytes       2  [emitted]  
-  output.js    8.7 KiB       3  [emitted]  main
+  output.js   8.71 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
     1 module

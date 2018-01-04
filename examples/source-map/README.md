@@ -245,7 +245,7 @@ Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                   Asset      Size  Chunks             Chunk Names
       ./bundle-cheap-eval-source-map.js  1.68 KiB       0  [emitted]  bundle
-    ./manifest-cheap-eval-source-map.js  7.06 KiB       1  [emitted]  manifest
+    ./manifest-cheap-eval-source-map.js  7.07 KiB       1  [emitted]  manifest
     Entrypoint bundle = ./manifest-cheap-eval-source-map.js ./bundle-cheap-eval-source-map.js
     chunk    {0} ./bundle-cheap-eval-source-map.js (bundle) 308 bytes {1} [initial] [rendered]
         > bundle [0] (webpack)/node_modules/coffee-loader!./example.coffee 
@@ -256,7 +256,7 @@ Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                          Asset      Size  Chunks             Chunk Names
       ./bundle-cheap-module-eval-source-map.js  1.42 KiB       0  [emitted]  bundle
-    ./manifest-cheap-module-eval-source-map.js  7.07 KiB       1  [emitted]  manifest
+    ./manifest-cheap-module-eval-source-map.js  7.08 KiB       1  [emitted]  manifest
     Entrypoint bundle = ./manifest-cheap-module-eval-source-map.js ./bundle-cheap-module-eval-source-map.js
     chunk    {0} ./bundle-cheap-module-eval-source-map.js (bundle) 308 bytes {1} [initial] [rendered]
         > bundle [0] (webpack)/node_modules/coffee-loader!./example.coffee 
@@ -267,7 +267,7 @@ Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                         Asset       Size  Chunks             Chunk Names
           ./bundle-cheap-module-source-map.js  735 bytes       0  [emitted]  bundle
-        ./manifest-cheap-module-source-map.js   7.12 KiB       1  [emitted]  manifest
+        ./manifest-cheap-module-source-map.js   7.13 KiB       1  [emitted]  manifest
       ./bundle-cheap-module-source-map.js.map  506 bytes       0  [emitted]  bundle
     ./manifest-cheap-module-source-map.js.map    7.2 KiB       1  [emitted]  manifest
     Entrypoint bundle = ./manifest-cheap-module-source-map.js ./manifest-cheap-module-source-map.js.map ./bundle-cheap-module-source-map.js ./bundle-cheap-module-source-map.js.map
@@ -280,9 +280,9 @@ Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                  Asset       Size  Chunks             Chunk Names
           ./bundle-cheap-source-map.js  728 bytes       0  [emitted]  bundle
-        ./manifest-cheap-source-map.js   7.11 KiB       1  [emitted]  manifest
+        ./manifest-cheap-source-map.js   7.12 KiB       1  [emitted]  manifest
       ./bundle-cheap-source-map.js.map  702 bytes       0  [emitted]  bundle
-    ./manifest-cheap-source-map.js.map   7.18 KiB       1  [emitted]  manifest
+    ./manifest-cheap-source-map.js.map   7.19 KiB       1  [emitted]  manifest
     Entrypoint bundle = ./manifest-cheap-source-map.js ./manifest-cheap-source-map.js.map ./bundle-cheap-source-map.js ./bundle-cheap-source-map.js.map
     chunk    {0} ./bundle-cheap-source-map.js, ./bundle-cheap-source-map.js.map (bundle) 308 bytes {1} [initial] [rendered]
         > bundle [0] (webpack)/node_modules/coffee-loader!./example.coffee 
@@ -293,7 +293,7 @@ Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                  Asset       Size  Chunks             Chunk Names
       ./bundle-eval.js  922 bytes       0  [emitted]  bundle
-    ./manifest-eval.js   7.04 KiB       1  [emitted]  manifest
+    ./manifest-eval.js   7.05 KiB       1  [emitted]  manifest
     Entrypoint bundle = ./manifest-eval.js ./bundle-eval.js
     chunk    {0} ./bundle-eval.js (bundle) 308 bytes {1} [initial] [rendered]
         > bundle [0] (webpack)/node_modules/coffee-loader!./example.coffee 
@@ -304,7 +304,7 @@ Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                             Asset      Size  Chunks             Chunk Names
       ./bundle-eval-source-map.js  1.56 KiB       0  [emitted]  bundle
-    ./manifest-eval-source-map.js  7.05 KiB       1  [emitted]  manifest
+    ./manifest-eval-source-map.js  7.06 KiB       1  [emitted]  manifest
     Entrypoint bundle = ./manifest-eval-source-map.js ./bundle-eval-source-map.js
     chunk    {0} ./bundle-eval-source-map.js (bundle) 308 bytes {1} [initial] [rendered]
         > bundle [0] (webpack)/node_modules/coffee-loader!./example.coffee 
