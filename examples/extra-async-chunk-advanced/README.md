@@ -48,7 +48,7 @@ module.exports = {
 };
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -207,7 +207,7 @@ module.exports = {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -334,7 +334,7 @@ Version: webpack next
 4.output.js  91 bytes       4  [emitted]  
 5.output.js  91 bytes       5  [emitted]  
 6.output.js  91 bytes       6  [emitted]  
-  output.js  2.01 KiB       7  [emitted]  main
+  output.js  2.02 KiB       7  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (async2) 21 bytes {2} {7} [rendered]
     > async commons duplicate [2] ./example.js 1:0-52

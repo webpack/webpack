@@ -93,7 +93,7 @@ module.exports = [
 			main: ["./example.js"]
 		},
 		output: {
-			path: path.resolve(__dirname, "js"),
+			path: path.resolve(__dirname, "dist"),
 			filename: "output.js"
 		},
 		plugins: [
@@ -114,7 +114,7 @@ module.exports = [
 			main: ["./example.js"]
 		},
 		output: {
-			path: path.resolve(__dirname, "js"),
+			path: path.resolve(__dirname, "dist"),
 			filename: "asyncoutput.js"
 		},
 		plugins: [
@@ -133,7 +133,7 @@ module.exports = [
 ];
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -292,7 +292,7 @@ module.exports = [
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -363,7 +363,7 @@ module.exports = function() {
 /******/ ]);
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],{
@@ -388,7 +388,7 @@ module.exports = function() {
 }]);
 ```
 
-# js/1.output.js
+# dist/1.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
@@ -414,7 +414,7 @@ module.exports = function() {
 }]);
 ```
 
-# js/2.output.js
+# dist/2.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
@@ -439,7 +439,7 @@ module.exports = function() {
 }]);
 ```
 
-# js/asyncoutput.js
+# dist/asyncoutput.js
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
@@ -596,7 +596,7 @@ module.exports = function() {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -649,7 +649,7 @@ module.exports = __webpack_require__(/*! ./example.js */0);
 /******/ ]);
 ```
 
-# js/0.asyncoutput.js
+# dist/0.asyncoutput.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],{
@@ -671,7 +671,7 @@ module.exports = function() {
 }]);
 ```
 
-# js/1.asyncoutput.js
+# dist/1.asyncoutput.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
@@ -697,7 +697,7 @@ module.exports = function() {
 }]);
 ```
 
-# js/2.asyncoutput.js
+# dist/2.asyncoutput.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
@@ -722,7 +722,7 @@ module.exports = function() {
 }]);
 ```
 
-# js/3.asyncoutput.js
+# dist/3.asyncoutput.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
@@ -829,7 +829,7 @@ Child
     0.output.js  138 bytes       0  [emitted]  
     1.output.js  176 bytes       1  [emitted]  
     2.output.js  138 bytes       2  [emitted]  
-      output.js    1.8 KiB       3  [emitted]  main
+      output.js   1.81 KiB       3  [emitted]  main
     Entrypoint main = output.js
     chunk    {0} 0.output.js 142 bytes {3} [rendered]
         > [3] ./pageB.js 3:1-6:3

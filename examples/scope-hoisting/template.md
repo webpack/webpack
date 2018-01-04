@@ -85,22 +85,22 @@ While module concatentation identifiers in modules are renamed to avoid conflict
 
 
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
-{{js/0.output.js}}
+{{dist/0.output.js}}
 ```
 
 Minimized
 
 ``` javascript
-{{production:js/0.output.js}}
+{{production:dist/0.output.js}}
 ```
 
 # Info

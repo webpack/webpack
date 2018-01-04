@@ -62,11 +62,11 @@ module.exports = {
 };
 ```
 
-# js/style.css
+# dist/style.css
 
 ``` javascript
 body {
-	background: url(js/ce21cbdd9b894e6af794813eb3fdaf60.png);
+	background: url(dist/ce21cbdd9b894e6af794813eb3fdaf60.png);
 }
 ```
 
@@ -81,7 +81,7 @@ Version: webpack next
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
                          0.output.js   2.33 KiB       0  [emitted]  
                            output.js   22.4 KiB       1  [emitted]  main
-                           style.css   71 bytes       1  [emitted]  main
+                           style.css   73 bytes       1  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} 0.output.js 1.34 KiB {1} [rendered]
     > [1] ./example.js 2:0-20
@@ -120,7 +120,7 @@ Version: webpack next
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
                          0.output.js  403 bytes       0  [emitted]  
                            output.js   7.04 KiB       1  [emitted]  main
-                           style.css   71 bytes       1  [emitted]  main
+                           style.css   73 bytes       1  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} 0.output.js 1.34 KiB {1} [rendered]
     > [1] ./example.js 2:0-20

@@ -18,10 +18,10 @@ module.exports = function() {
 }
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
 # Info

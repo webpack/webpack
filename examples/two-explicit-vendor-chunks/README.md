@@ -13,7 +13,7 @@ module.exports = {
 		pageC: "./pageC"
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "[name].js"
 	},
 	plugins: [
@@ -25,7 +25,7 @@ module.exports = {
 };
 ```
 
-# js/vendor1.js
+# dist/vendor1.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -198,7 +198,7 @@ module.exports = {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -243,7 +243,7 @@ module.exports = "Vendor1";
 /******/ ]);
 ```
 
-# js/vendor2.js
+# dist/vendor2.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
@@ -275,7 +275,7 @@ __webpack_require__(/*! ./vendor1 */ 1);
 ],[[2,0,1]]]);
 ```
 
-# js/pageA.js
+# dist/pageA.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{

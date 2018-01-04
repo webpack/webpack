@@ -24,7 +24,7 @@ module.exports = {
 	cache: true, // better performance for the AggressiveSplittingPlugin
 	entry: "./example",
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "[chunkhash].js",
 		chunkFilename: "[chunkhash].js"
 	},
@@ -37,7 +37,7 @@ module.exports = {
 			"process.env.NODE_ENV": JSON.stringify("production")
 		})
 	],
-	recordsOutputPath: path.join(__dirname, "js", "records.json")
+	recordsOutputPath: path.join(__dirname, "dist", "records.json")
 };
 ```
 
@@ -51,7 +51,7 @@ Version: webpack next
                   Asset      Size  Chunks             Chunk Names
 1d1f50c6f480a313a283.js  52.9 KiB       7  [emitted]  
 650a1f5b6bbd5e2a0bcb.js  36.5 KiB       0  [emitted]  
-85f47c3abb26198f77a8.js    60 KiB       2  [emitted]  
+4a984680da6e56d39889.js    60 KiB       2  [emitted]  
 de45e35c6080cc33435c.js  31.6 KiB       3  [emitted]  
 b9d30d332886e3897e04.js  56.1 KiB       4  [emitted]  
 091d7e57346e564d3d09.js  52.4 KiB       5  [emitted]  
@@ -64,7 +64,7 @@ d12e724ddfa623596d6a.js  54.2 KiB      10  [emitted]
 0bb84ee671fc256e158e.js  51.2 KiB      12  [emitted]  
 c8536008639de2173e51.js  58.2 KiB      13  [emitted]  
 763fbc691b4fe33d506e.js    22 KiB      14  [emitted]  
-Entrypoint main = 85f47c3abb26198f77a8.js de45e35c6080cc33435c.js 650a1f5b6bbd5e2a0bcb.js
+Entrypoint main = 4a984680da6e56d39889.js de45e35c6080cc33435c.js 650a1f5b6bbd5e2a0bcb.js
 chunk    {0} 650a1f5b6bbd5e2a0bcb.js 32.4 KiB [initial] [rendered]
     > aggressive-splitted main [0] ./example.js 
     [0] ./example.js 44 bytes {0} [built]
@@ -72,7 +72,7 @@ chunk    {0} 650a1f5b6bbd5e2a0bcb.js 32.4 KiB [initial] [rendered]
 chunk    {1} ad733bf1033fc5a7a830.js 31.4 KiB {0} {2} {3} [rendered] [recorded]
     > aggressive-splitted [0] ./example.js 2:0-22
     3 modules
-chunk    {2} 85f47c3abb26198f77a8.js 48.8 KiB [entry] [rendered] [recorded]
+chunk    {2} 4a984680da6e56d39889.js 48.8 KiB [entry] [rendered] [recorded]
     > aggressive-splitted main [0] ./example.js 
     16 modules
 chunk    {3} de45e35c6080cc33435c.js 30.5 KiB [initial] [rendered] [recorded]
@@ -132,9 +132,9 @@ cb73f4cb70c06c65b248.js  12.1 KiB       8  [emitted]
 53cef345d9ccd6bb3876.js    13 KiB      10  [emitted]  
 c5b86ebb82485218af01.js  4.99 KiB      11  [emitted]  
 0309b4e1ec5aa2f66403.js  7.02 KiB      12  [emitted]  
-4e1c37d40514df5cc50e.js  10.2 KiB      13  [emitted]  
+48e2dcb305baa66eaaff.js  10.2 KiB      13  [emitted]  
 0b3c96677d32cb9cb074.js  5.91 KiB      14  [emitted]  
-Entrypoint main = 4e1c37d40514df5cc50e.js 0309b4e1ec5aa2f66403.js 0b3c96677d32cb9cb074.js
+Entrypoint main = 48e2dcb305baa66eaaff.js 0309b4e1ec5aa2f66403.js 0b3c96677d32cb9cb074.js
 chunk    {0} ae85856cebfcdd8c297c.js 18.9 KiB {12} {13} {14} [rendered]
     > aggressive-splitted [30] ./example.js 2:0-22
     9 modules
@@ -174,7 +174,7 @@ chunk   {11} c5b86ebb82485218af01.js 31.4 KiB {12} {13} {14} [rendered] [recorde
 chunk   {12} 0309b4e1ec5aa2f66403.js 30.5 KiB [initial] [rendered] [recorded]
     > aggressive-splitted main [30] ./example.js 
     3 modules
-chunk   {13} 4e1c37d40514df5cc50e.js 48.8 KiB [entry] [rendered] [recorded]
+chunk   {13} 48e2dcb305baa66eaaff.js 48.8 KiB [entry] [rendered] [recorded]
     > aggressive-splitted main [30] ./example.js 
     16 modules
 chunk   {14} 0b3c96677d32cb9cb074.js 32.4 KiB [initial] [rendered]
@@ -596,7 +596,7 @@ chunk   {14} 0b3c96677d32cb9cb074.js 32.4 KiB [initial] [rendered]
         "../../node_modules/react/lib/ReactVersion.js",
         "../../node_modules/create-react-class/factory.js"
       ],
-      "hash": "85f47c3abb26198f77a84b0d186d3d6f",
+      "hash": "4a984680da6e56d398893f0087df99fd",
       "id": 2
     },
     {

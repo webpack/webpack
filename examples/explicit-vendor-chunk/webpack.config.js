@@ -6,7 +6,7 @@ module.exports = [
 		// mode: "development || "production",
 		entry: ["./vendor", "./vendor2"],
 		output: {
-			path: path.resolve(__dirname, "js"),
+			path: path.resolve(__dirname, "dist"),
 			filename: "vendor.js",
 			library: "vendor_[hash]"
 		},
@@ -27,7 +27,7 @@ module.exports = [
 			pageC: "./pageC"
 		},
 		output: {
-			path: path.join(__dirname, "js"),
+			path: path.join(__dirname, "dist"),
 			filename: "[name].js"
 		},
 		plugins: [

@@ -4,7 +4,7 @@
 /test/fixtures/temp-cache-fixture
 /benchmark/js
 /benchmark/fixtures
-/examples/**/js
+/examples/**/dist
 /coverage
 .DS_Store
 *.log

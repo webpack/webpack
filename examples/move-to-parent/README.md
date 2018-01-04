@@ -43,7 +43,7 @@ require(["./a", "./b", "./c", "./d"]);
 var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 var outputOptions = {
-	path: path.join(__dirname, "js"),
+	path: path.join(__dirname, "dist"),
 	filename: "[name].bundle.js",
 	chunkFilename: "[id].chunk.js"
 };
@@ -200,7 +200,7 @@ Child pageC:
     Hash: 0a1b2c3d4e5f6a7b8c9d
               Asset       Size  Chunks             Chunk Names
          0.chunk.js  247 bytes       0  [emitted]  
-    pageC.bundle.js   7.98 KiB       1  [emitted]  pageC
+    pageC.bundle.js   7.99 KiB       1  [emitted]  pageC
     Entrypoint pageC = pageC.bundle.js
     chunk    {0} 0.chunk.js 21 bytes {1} [rendered]
         > duplicate [4] ./page.js 2:0-23
@@ -297,7 +297,7 @@ Child pageC:
     Hash: 0a1b2c3d4e5f6a7b8c9d
               Asset      Size  Chunks             Chunk Names
          0.chunk.js  90 bytes       0  [emitted]  
-    pageC.bundle.js  1.86 KiB       1  [emitted]  pageC
+    pageC.bundle.js  1.87 KiB       1  [emitted]  pageC
     Entrypoint pageC = pageC.bundle.js
     chunk    {0} 0.chunk.js 21 bytes {1} [rendered]
         > duplicate [4] ./page.js 2:0-23

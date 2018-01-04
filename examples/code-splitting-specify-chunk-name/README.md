@@ -32,7 +32,7 @@ var foo = "foo";
 export default foo;
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -191,7 +191,7 @@ export default foo;
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -336,7 +336,7 @@ Version: webpack next
 0.output.js  114 bytes       0  [emitted]  chunk-bar-baz2
 1.output.js  115 bytes       1  [emitted]  chunk-bar-baz0
 2.output.js  113 bytes       2  [emitted]  chunk-foo
-  output.js   2.11 KiB       3  [emitted]  main
+  output.js   2.12 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (chunk-bar-baz2) 41 bytes {3} [rendered]
     [1] ./templates/baz.js 41 bytes {0} [optional] [built]

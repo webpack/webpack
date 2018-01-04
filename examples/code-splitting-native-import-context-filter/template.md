@@ -22,10 +22,10 @@ All templates are of this pattern:
 {{templates/foo.js}}
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
 # Info

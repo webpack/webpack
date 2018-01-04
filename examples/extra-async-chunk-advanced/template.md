@@ -12,10 +12,10 @@
 {{webpack.config.js}}
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
 # Info

@@ -18,16 +18,16 @@ A manifest is creates which includes mappings from module names to internal ids.
 {{../node_modules/example-vendor.js}}
 ```
 
-# js/vendor.js
+# dist/vendor.js
 
 ``` javascript
-{{js/vendor.js}}
+{{dist/vendor.js}}
 ```
 
-# js/vendor-manifest.json
+# dist/vendor-manifest.json
 
 ``` javascript
-{{js/vendor-manifest.json}}
+{{dist/vendor-manifest.json}}
 ```
 
 # Info

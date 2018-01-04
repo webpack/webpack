@@ -9,7 +9,7 @@ module.exports = [
 			main: ["./example.js"]
 		},
 		output: {
-			path: path.resolve(__dirname, "js"),
+			path: path.resolve(__dirname, "dist"),
 			filename: "output.js"
 		},
 		plugins: [
@@ -30,7 +30,7 @@ module.exports = [
 			main: ["./example.js"]
 		},
 		output: {
-			path: path.resolve(__dirname, "js"),
+			path: path.resolve(__dirname, "dist"),
 			filename: "asyncoutput.js"
 		},
 		plugins: [

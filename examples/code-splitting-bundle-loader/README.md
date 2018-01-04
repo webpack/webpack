@@ -17,7 +17,7 @@ module.exports = "It works";
 ```
 
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -176,7 +176,7 @@ module.exports = "It works";
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -236,7 +236,7 @@ __webpack_require__(/*! bundle-loader!./file.js */ 0)(function(fileJsExports) {
 /******/ ]);
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],{
@@ -285,7 +285,7 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
 0.output.js  98 bytes       0  [emitted]  
-  output.js  1.78 KiB       1  [emitted]  main
+  output.js  1.79 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 28 bytes {1} [rendered]
     > [0] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2

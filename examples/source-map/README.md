@@ -39,7 +39,7 @@ module.exports = [
 		bundle: "coffee-loader!./example.coffee",
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: `./[name]-${devtool}.js`,
 	},
 	devtool,
@@ -315,7 +315,7 @@ Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                   Asset       Size  Chunks             Chunk Names
           ./bundle-hidden-source-map.js  676 bytes       0  [emitted]  bundle
-        ./manifest-hidden-source-map.js   7.06 KiB       1  [emitted]  manifest
+        ./manifest-hidden-source-map.js   7.07 KiB       1  [emitted]  manifest
       ./bundle-hidden-source-map.js.map  603 bytes       0  [emitted]  bundle
     ./manifest-hidden-source-map.js.map   7.27 KiB       1  [emitted]  manifest
     Entrypoint bundle = ./manifest-hidden-source-map.js ./manifest-hidden-source-map.js.map ./bundle-hidden-source-map.js ./bundle-hidden-source-map.js.map
@@ -339,7 +339,7 @@ Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                      Asset       Size  Chunks             Chunk Names
           ./bundle-nosources-source-map.js  732 bytes       0  [emitted]  bundle
-        ./manifest-nosources-source-map.js   7.12 KiB       1  [emitted]  manifest
+        ./manifest-nosources-source-map.js   7.13 KiB       1  [emitted]  manifest
       ./bundle-nosources-source-map.js.map  314 bytes       0  [emitted]  bundle
     ./manifest-nosources-source-map.js.map   1.08 KiB       1  [emitted]  manifest
     Entrypoint bundle = ./manifest-nosources-source-map.js ./manifest-nosources-source-map.js.map ./bundle-nosources-source-map.js ./bundle-nosources-source-map.js.map
@@ -352,7 +352,7 @@ Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                            Asset       Size  Chunks             Chunk Names
           ./bundle-source-map.js  722 bytes       0  [emitted]  bundle
-        ./manifest-source-map.js    7.1 KiB       1  [emitted]  manifest
+        ./manifest-source-map.js   7.11 KiB       1  [emitted]  manifest
       ./bundle-source-map.js.map  596 bytes       0  [emitted]  bundle
     ./manifest-source-map.js.map   7.26 KiB       1  [emitted]  manifest
     Entrypoint bundle = ./manifest-source-map.js ./manifest-source-map.js.map ./bundle-source-map.js ./bundle-source-map.js.map

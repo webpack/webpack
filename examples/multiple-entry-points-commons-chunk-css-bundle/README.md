@@ -67,7 +67,7 @@ module.exports = {
 		C: "./c",
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "[name].js"
 	},
 	module: {
@@ -99,7 +99,7 @@ module.exports = {
 };
 ```
 
-# js/A.js
+# dist/A.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],{
@@ -131,57 +131,57 @@ __webpack_require__(/*! ./styleA.css */ 7);
 },[[0,3,0]]]);
 ```
 
-# js/commons.css
+# dist/commons.css
 
 ``` css
 body {
-	background: url(js/ce21cbdd9b894e6af794813eb3fdaf60.png);
+	background: url(dist/ce21cbdd9b894e6af794813eb3fdaf60.png);
 }
 ```
 
-# js/A.css
+# dist/A.css
 
 ``` css
 .a {
-	background: url(js/d090b6fba0f6d326d282a19146ff54a7.png);
+	background: url(dist/d090b6fba0f6d326d282a19146ff54a7.png);
 }
 ```
 
-# js/B.css
+# dist/B.css
 
 ``` css
 .b {
-	background: url(js/16155c689e517682064c99893cb832cc.png);
+	background: url(dist/16155c689e517682064c99893cb832cc.png);
 }
 ```
 
-# js/B.css (Minimized)
+# dist/B.css (Minimized)
 
 ``` css
 .b {
-	background: url(js/16155c689e517682064c99893cb832cc.png);
+	background: url(dist/16155c689e517682064c99893cb832cc.png);
 }
 ```
 
-# js/C.css
+# dist/C.css
 
 ``` css
 body {
-	background: url(js/ce21cbdd9b894e6af794813eb3fdaf60.png);
+	background: url(dist/ce21cbdd9b894e6af794813eb3fdaf60.png);
 }
 .c {
-	background: url(js/c2a2f62d69330b7d787782f5010f9d13.png);
+	background: url(dist/c2a2f62d69330b7d787782f5010f9d13.png);
 }
 ```
 
-# js/C.css (Minimized)
+# dist/C.css (Minimized)
 
 ``` css
 body {
-	background: url(js/ce21cbdd9b894e6af794813eb3fdaf60.png);
+	background: url(dist/ce21cbdd9b894e6af794813eb3fdaf60.png);
 }
 .c {
-	background: url(js/c2a2f62d69330b7d787782f5010f9d13.png);
+	background: url(dist/c2a2f62d69330b7d787782f5010f9d13.png);
 }
 ```
 
@@ -201,10 +201,10 @@ c2a2f62d69330b7d787782f5010f9d13.png  120 bytes          [emitted]
                                 B.js  551 bytes       1  [emitted]  B
 16155c689e517682064c99893cb832cc.png  120 bytes          [emitted]  
                           commons.js   7.26 KiB       3  [emitted]  commons
-                               A.css   69 bytes       0  [emitted]  A
-                               B.css   69 bytes       1  [emitted]  B
-                               C.css  140 bytes       2  [emitted]  C
-                         commons.css   71 bytes       3  [emitted]  commons
+                               A.css   71 bytes       0  [emitted]  A
+                               B.css   71 bytes       1  [emitted]  B
+                               C.css  144 bytes       2  [emitted]  C
+                         commons.css   73 bytes       3  [emitted]  commons
 Entrypoint A = commons.js commons.css A.js A.css
 Entrypoint B = commons.js commons.css B.js B.css
 Entrypoint C = C.js C.css
@@ -284,11 +284,11 @@ c2a2f62d69330b7d787782f5010f9d13.png  120 bytes          [emitted]
                                 B.js  118 bytes       0  [emitted]  B
                                 A.js  120 bytes       1  [emitted]  A
 16155c689e517682064c99893cb832cc.png  120 bytes          [emitted]  
-                                C.js  574 bytes       3  [emitted]  C
-                               A.css   69 bytes       1  [emitted]  A
-                               B.css   69 bytes       0  [emitted]  B
-                               C.css  140 bytes       3  [emitted]  C
-                         commons.css   71 bytes       2  [emitted]  commons
+                                C.js  576 bytes       3  [emitted]  C
+                               A.css   71 bytes       1  [emitted]  A
+                               B.css   71 bytes       0  [emitted]  B
+                               C.css  144 bytes       3  [emitted]  C
+                         commons.css   73 bytes       2  [emitted]  commons
 Entrypoint A = commons.js commons.css A.js A.css
 Entrypoint B = commons.js commons.css B.js B.css
 Entrypoint C = C.js C.css

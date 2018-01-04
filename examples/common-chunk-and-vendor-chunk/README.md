@@ -48,7 +48,7 @@ module.exports = {
 		// common: []
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "[name].js"
 	},
 	plugins: [
@@ -61,7 +61,7 @@ module.exports = {
 };
 ```
 
-# js/vendor.js
+# dist/vendor.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -234,7 +234,7 @@ module.exports = {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -290,7 +290,7 @@ module.exports = "vendor2";
 /******/ ]);
 ```
 
-# js/common.js
+# dist/common.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[4],{
@@ -320,7 +320,7 @@ module.exports = "utility3";
 }]);
 ```
 
-# js/pageA.js
+# dist/pageA.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
@@ -353,7 +353,7 @@ module.exports = "utility1";
 ],[[3,0,4,1]]]);
 ```
 
-# js/pageB.js
+# dist/pageB.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
@@ -375,7 +375,7 @@ module.exports = "pageB";
 },[[6,0,4,2]]]);
 ```
 
-# js/pageC.js
+# dist/pageC.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
@@ -456,7 +456,7 @@ common.js  132 bytes       0  [emitted]  common
  pageC.js  119 bytes       1  [emitted]  pageC
  pageB.js  119 bytes       2  [emitted]  pageB
  pageA.js  157 bytes       3  [emitted]  pageA
-vendor.js   1.82 KiB       4  [emitted]  vendor
+vendor.js   1.83 KiB       4  [emitted]  vendor
 Entrypoint vendor = vendor.js
 Entrypoint pageA = vendor.js common.js pageA.js
 Entrypoint pageB = vendor.js common.js pageB.js

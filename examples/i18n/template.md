@@ -23,16 +23,16 @@ The I18nPlugin replaces every occurrence of the i18n function `__(...)` with a c
 {{de.json}}
 ```
 
-# js/de.output.js
+# dist/de.output.js
 
 ``` javascript
-{{js/de.output.js}}
+{{dist/de.output.js}}
 ```
 
-# js/en.output.js
+# dist/en.output.js
 
 ``` javascript
-{{js/en.output.js}}
+{{dist/en.output.js}}
 ```
 
 # Info

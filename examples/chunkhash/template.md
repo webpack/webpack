@@ -36,28 +36,28 @@ The configuration required for this is:
 
 <!-- inlined minimized file "manifest.[chunkhash].js" -->
 <script>
-{{production:js/manifest.chunkhash.js}}
+{{production:dist/manifest.chunkhash.js}}
 </script>
 
 <!-- optional when using the CommonChunkPlugin for vendor modules -->
-<script src="js/common.[chunkhash].js"></script>
+<script src="dist/common.[chunkhash].js"></script>
 
-<script src="js/main.[chunkhash].js"></script>
+<script src="dist/main.[chunkhash].js"></script>
 
 </body>
 </html>
 ```
 
-# js/common.[chunkhash].js
+# dist/common.[chunkhash].js
 
 ``` javascript
-{{js/common.chunkhash.js}}
+{{dist/common.chunkhash.js}}
 ```
 
-# js/main.[chunkhash].js
+# dist/main.[chunkhash].js
 
 ``` javascript
-{{js/main.chunkhash.js}}
+{{dist/main.chunkhash.js}}
 ```
 
 # Info

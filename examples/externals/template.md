@@ -27,10 +27,10 @@ In the complex case we specify different values for each environment:
 {{webpack.config.js}}
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
 # Info

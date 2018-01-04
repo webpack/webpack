@@ -18,7 +18,7 @@ module.exports = [
 		bundle: "coffee-loader!./example.coffee",
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: `./[name]-${devtool}.js`,
 	},
 	devtool,

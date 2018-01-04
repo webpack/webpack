@@ -64,7 +64,7 @@ export default "default";
 export var named = "named";
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -133,7 +133,7 @@ export var named = "named";
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -293,7 +293,7 @@ chunk    {0} output.js (main) 1.17 KiB [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset       Size  Chunks             Chunk Names
-output.js  991 bytes       0  [emitted]  main
+output.js  993 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 1.17 KiB [entry] [rendered]
     > main [4] ./example.js 

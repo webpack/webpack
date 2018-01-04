@@ -21,7 +21,7 @@ onmessage = function(event) {
 }
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -90,7 +90,7 @@ onmessage = function(event) {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
@@ -133,7 +133,7 @@ worker.onmessage = function(event) {
 /******/ ]);
 ```
 
-# js/[hash].worker.js
+# dist/[hash].worker.js
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
@@ -226,7 +226,7 @@ worker.onmessage = function(event) {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -252,7 +252,7 @@ onmessage = function(event) {
 /******/ ]);
 ```
 
-# js/0.[hash].worker.js
+# dist/0.[hash].worker.js
 
 ``` javascript
 window["webpackChunk"]([0],[
@@ -384,8 +384,8 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
            Asset       Size  Chunks             Chunk Names
 0.hash.worker.js  594 bytes          [emitted]  
-  hash.worker.js  917 bytes          [emitted]  
-       output.js  695 bytes       0  [emitted]  main
+  hash.worker.js  919 bytes          [emitted]  
+       output.js  697 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 332 bytes [entry] [rendered]
     > main [1] ./example.js 
@@ -396,7 +396,7 @@ chunk    {0} output.js (main) 332 bytes [entry] [rendered]
 Child worker:
                Asset       Size  Chunks             Chunk Names
     0.hash.worker.js  594 bytes       0  [emitted]  
-      hash.worker.js  917 bytes       1  [emitted]  main
+      hash.worker.js  919 bytes       1  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
         > [0] ./worker.js 3:1-5:3

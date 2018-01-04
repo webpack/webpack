@@ -47,46 +47,46 @@
 {{webpack.config.js}}
 ```
 
-# js/A.js
+# dist/A.js
 
 ``` javascript
-{{js/A.js}}
+{{dist/A.js}}
 ```
 
-# js/commons.css
+# dist/commons.css
 
 ``` css
-{{js/commons.css}}
+{{dist/commons.css}}
 ```
 
-# js/A.css
+# dist/A.css
 
 ``` css
-{{js/A.css}}
+{{dist/A.css}}
 ```
 
-# js/B.css
+# dist/B.css
 
 ``` css
-{{js/B.css}}
+{{dist/B.css}}
 ```
 
-# js/B.css (Minimized)
+# dist/B.css (Minimized)
 
 ``` css
-{{production:js/B.css}}
+{{production:dist/B.css}}
 ```
 
-# js/C.css
+# dist/C.css
 
 ``` css
-{{js/C.css}}
+{{dist/C.css}}
 ```
 
-# js/C.css (Minimized)
+# dist/C.css (Minimized)
 
 ``` css
-{{production:js/C.css}}
+{{production:dist/C.css}}
 ```
 
 # Info

@@ -36,7 +36,7 @@ module.exports = {
 		common: ["./vendor"] // optional
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "[name].[chunkhash].js",
 		chunkFilename: "[chunkhash].js"
 	},
@@ -63,19 +63,19 @@ module.exports = {
 
 <!-- inlined minimized file "manifest.[chunkhash].js" -->
 <script>
-!function(e){function r(r){for(var n,u,i,s=r[0],l=r[1],p=r[2],f=0,d=[];f<s.length;f++)u=s[f],o[u]&&d.push(o[u][0]),o[u]=0;for(n in l)Object.prototype.hasOwnProperty.call(l,n)&&(e[n]=l[n]);for(c&&c(r);d.length;)d.shift()();for(a.push.apply(a,p||[]),f=0;f<a.length;f++){for(var h=a[f],v=!0,g=1;g<h.length;g++){var m=h[g];0!==o[m]&&(v=!1)}v&&(a.splice(f--,1),i=t(t.s=h[0]))}return i}function t(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var n={},o={4:0},a=[];t.e=function(e){var r=[],n=o[e];if(0!==n)if(n)r.push(n[2]);else{var a=new Promise(function(r,t){n=o[e]=[r,t]});r.push(n[2]=a);var u=document.getElementsByTagName("head")[0],c=document.createElement("script");c.charset="utf-8",c.timeout=12e4,t.nc&&c.setAttribute("nonce",t.nc),c.src=t.p+""+{0:"19a84e789378731c8460",1:"4f0e85908244254bb448",2:"b94c93d31c5a9a6a8fe7",3:"59214344cd83683ae9d1"}[e]+".js";var i=setTimeout(function(){s({type:"timeout",target:c})},12e4);c.onerror=c.onload=s;function s(r){c.onerror=c.onload=null,clearTimeout(i);var t=o[e];if(0!==t){if(t){var n=r&&("load"===r.type?"missing":r.type),a=r&&r.target&&r.target.src,u=new Error("Loading chunk "+e+" failed.\n("+n+": "+a+")");u.type=n,u.request=a,t[1](u)}o[e]=void 0}}u.appendChild(c)}return Promise.all(r)},t.m=e,t.c=n,t.d=function(e,r,n){t.o(e,r)||Object.defineProperty(e,r,{configurable:!1,enumerable:!0,get:n})},t.r=function(e){Object.defineProperty(e,"__esModule",{value:!0})},t.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(r,"a",r),r},t.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},t.p="js/",t.oe=function(e){throw console.error(e),e};var u=window.webpackJsonp=window.webpackJsonp||[],c=u.push.bind(u);u.push=r,u=u.slice();for(var i=0;i<u.length;i++)r(u[i])}([]);
+!function(e){function r(r){for(var n,i,c,s=r[0],l=r[1],p=r[2],f=0,d=[];f<s.length;f++)i=s[f],o[i]&&d.push(o[i][0]),o[i]=0;for(n in l)Object.prototype.hasOwnProperty.call(l,n)&&(e[n]=l[n]);for(u&&u(r);d.length;)d.shift()();for(a.push.apply(a,p||[]),f=0;f<a.length;f++){for(var h=a[f],v=!0,g=1;g<h.length;g++){var m=h[g];0!==o[m]&&(v=!1)}v&&(a.splice(f--,1),c=t(t.s=h[0]))}return c}function t(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,t),o.l=!0,o.exports}var n={},o={4:0},a=[];t.e=function(e){var r=[],n=o[e];if(0!==n)if(n)r.push(n[2]);else{var a=new Promise(function(r,t){n=o[e]=[r,t]});r.push(n[2]=a);var i=document.getElementsByTagName("head")[0],u=document.createElement("script");u.charset="utf-8",u.timeout=12e4,t.nc&&u.setAttribute("nonce",t.nc),u.src=t.p+""+{0:"19a84e789378731c8460",1:"4f0e85908244254bb448",2:"b94c93d31c5a9a6a8fe7",3:"59214344cd83683ae9d1"}[e]+".js";var c=setTimeout(function(){s({type:"timeout",target:u})},12e4);u.onerror=u.onload=s;function s(r){u.onerror=u.onload=null,clearTimeout(c);var t=o[e];if(0!==t){if(t){var n=r&&("load"===r.type?"missing":r.type),a=r&&r.target&&r.target.src,i=new Error("Loading chunk "+e+" failed.\n("+n+": "+a+")");i.type=n,i.request=a,t[1](i)}o[e]=void 0}}i.appendChild(u)}return Promise.all(r)},t.m=e,t.c=n,t.d=function(e,r,n){t.o(e,r)||Object.defineProperty(e,r,{configurable:!1,enumerable:!0,get:n})},t.r=function(e){Object.defineProperty(e,"__esModule",{value:!0})},t.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return t.d(r,"a",r),r},t.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},t.p="dist/",t.oe=function(e){throw console.error(e),e};var i=window.webpackJsonp=window.webpackJsonp||[],u=i.push.bind(i);i.push=r,i=i.slice();for(var c=0;c<i.length;c++)r(i[c])}([]);
 </script>
 
 <!-- optional when using the CommonChunkPlugin for vendor modules -->
-<script src="js/common.[chunkhash].js"></script>
+<script src="dist/common.[chunkhash].js"></script>
 
-<script src="js/main.[chunkhash].js"></script>
+<script src="dist/main.[chunkhash].js"></script>
 
 </body>
 </html>
 ```
 
-# js/common.[chunkhash].js
+# dist/common.[chunkhash].js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
@@ -110,7 +110,7 @@ module.exports = __webpack_require__(/*! ./vendor */1);
 ],[[4,4,1]]]);
 ```
 
-# js/main.[chunkhash].js
+# dist/main.[chunkhash].js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
@@ -146,7 +146,7 @@ Version: webpack next
     common.[chunkhash].js  727 bytes       1  [emitted]  common
 b71c088662b7b530c545.js  264 bytes       2  [emitted]  
 f6eb6a4d15b19e593a54.js  264 bytes       3  [emitted]  
-  manifest.[chunkhash].js   7.15 KiB       4  [emitted]  manifest
+  manifest.[chunkhash].js   7.16 KiB       4  [emitted]  manifest
 Entrypoint main = manifest.[chunkhash].js common.[chunkhash].js main.[chunkhash].js
 Entrypoint common = manifest.[chunkhash].js common.[chunkhash].js
 chunk    {0} main.[chunkhash].js (main) 90 bytes {1} [initial] [rendered]

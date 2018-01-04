@@ -20,23 +20,23 @@ module.exports = {
 		beta: ["./beta", "./b", "./c"]
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "MyDll.[name].js",
 		library: "[name]_[hash]"
 	},
 	plugins: [
 		new webpack.DllPlugin({
-			path: path.join(__dirname, "js", "[name]-manifest.json"),
+			path: path.join(__dirname, "dist", "[name]-manifest.json"),
 			name: "[name]_[hash]"
 		})
 	]
 };
 ```
 
-# js/MyDll.alpha.js
+# dist/MyDll.alpha.js
 
 ``` javascript
-var alpha_a716524c34bed97b283e =
+var alpha_100e8e712194d1301cec =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -105,7 +105,7 @@ var alpha_a716524c34bed97b283e =
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -164,10 +164,10 @@ module.exports = "module";
 /******/ ]);
 ```
 
-# js/alpha-manifest.json
+# dist/alpha-manifest.json
 
 ``` javascript
-{"name":"alpha_a716524c34bed97b283e","content":{"./alpha.js":{"id":1,"buildMeta":{"providedExports":true}},"./a.js":{"id":2,"buildMeta":{"providedExports":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"providedExports":true}}}}
+{"name":"alpha_100e8e712194d1301cec","content":{"./alpha.js":{"id":1,"buildMeta":{"providedExports":true}},"./a.js":{"id":2,"buildMeta":{"providedExports":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"providedExports":true}}}}
 ```
 
 # Info
@@ -216,8 +216,8 @@ chunk    {1} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
          Asset       Size  Chunks             Chunk Names
- MyDll.beta.js  689 bytes       0  [emitted]  beta
-MyDll.alpha.js  698 bytes       1  [emitted]  alpha
+ MyDll.beta.js  691 bytes       0  [emitted]  beta
+MyDll.alpha.js  700 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
 chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]

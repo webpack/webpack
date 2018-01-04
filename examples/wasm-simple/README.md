@@ -53,7 +53,7 @@ export function fibonacciJavascript(i) {
 }
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -234,7 +234,7 @@ export function fibonacciJavascript(i) {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -297,7 +297,7 @@ function timed(name, fn) {
 /******/ ]);
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
@@ -394,7 +394,7 @@ module.exports = instance.exports;
 ]]);
 ```
 
-# js/1.output.js
+# dist/1.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
@@ -432,7 +432,7 @@ f0e32231f1b550e31977.wasm   41 bytes    0, 1  [emitted]
 9838c03e7003e6f2ef03.wasm   67 bytes       0  [emitted]  
 c1d1c6ab574f5b4f065d.wasm   62 bytes       0  [emitted]  
               1.output.js  461 bytes       1  [emitted]  
-                output.js   8.87 KiB       2  [emitted]  main
+                output.js   8.88 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js, f0e32231f1b550e31977.wasm, 9838c03e7003e6f2ef03.wasm, c1d1c6ab574f5b4f065d.wasm 585 bytes {2} [rendered]
     > [0] ./example.js 3:1-17

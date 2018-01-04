@@ -29,7 +29,7 @@ module.exports = {
 		adminPageC: "./adminPageC",
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "[name].js"
 	},
 	plugins: [
@@ -75,7 +75,7 @@ module.exports = {
 </html>
 ```
 
-# js/commons.js
+# dist/commons.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -248,7 +248,7 @@ module.exports = {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -290,7 +290,7 @@ module.exports = {
 /******/ ]);
 ```
 
-# js/pageA.js
+# dist/pageA.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
@@ -322,7 +322,7 @@ __webpack_require__(/*! ./modules/a-c */ 3);
 ],[[0,7,0]]]);
 ```
 
-# js/admin-commons.js
+# dist/admin-commons.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[6],{
@@ -341,7 +341,7 @@ __webpack_require__(/*! ./modules/a-c */ 3);
 }]);
 ```
 
-# js/adminPageA.js
+# dist/adminPageA.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{

@@ -1,7 +1,7 @@
 var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 var outputOptions = {
-	path: path.join(__dirname, "js"),
+	path: path.join(__dirname, "dist"),
 	filename: "[name].bundle.js",
 	chunkFilename: "[id].chunk.js"
 };

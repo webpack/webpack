@@ -14,7 +14,7 @@ module.exports = {
 		"commons": "./router"
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		publicPath: "js/",
 		filename: "[name].bundle.js",
 		chunkFilename: "[id].chunk.js"
@@ -95,7 +95,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 </html>
 ```
 
-# js/commons.js
+# dist/commons.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -268,7 +268,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -421,7 +421,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ ]);
 ```
 
-# js/pageA.bundle.js
+# dist/pageA.bundle.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
@@ -455,7 +455,7 @@ render(__webpack_require__(/*! ./aPage */ 2));
 },[[8,4,3]]]);
 ```
 
-# js/1.chunk.js
+# dist/1.chunk.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
