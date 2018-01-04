@@ -9,7 +9,7 @@ Child
        [1] ./a/file.css 41 bytes [built]
        [2] (webpack)/node_modules/css-loader!./a/file.css 199 bytes [built]
        [3] (webpack)/node_modules/css-loader/lib/css-base.js 2.21 KiB [built]
-       [4] (webpack)/node_modules/style-loader/lib/addStyles.js 8.5 KiB [built]
+       [4] (webpack)/node_modules/style-loader/lib/addStyles.js 9.24 KiB [built]
        [5] (webpack)/node_modules/style-loader/lib/urls.js 2.94 KiB [built]
     Child extract-text-webpack-plugin ../../../node_modules/extract-text-webpack-plugin/dist ../../../node_modules/css-loader/index.js!a/file.css:
            [0] (webpack)/node_modules/css-loader!./a/file.css 199 bytes {0} [built]
@@ -24,7 +24,7 @@ Child
        [1] ./b/file.css 41 bytes [built]
        [2] (webpack)/node_modules/css-loader!./b/file.css 201 bytes [built]
        [3] (webpack)/node_modules/css-loader/lib/css-base.js 2.21 KiB [built]
-       [4] (webpack)/node_modules/style-loader/lib/addStyles.js 8.5 KiB [built]
+       [4] (webpack)/node_modules/style-loader/lib/addStyles.js 9.24 KiB [built]
        [5] (webpack)/node_modules/style-loader/lib/urls.js 2.94 KiB [built]
     Child extract-text-webpack-plugin ../../../node_modules/extract-text-webpack-plugin/dist ../../../node_modules/css-loader/index.js!b/file.css:
            [0] (webpack)/node_modules/css-loader!./b/file.css 201 bytes {0} [built]
