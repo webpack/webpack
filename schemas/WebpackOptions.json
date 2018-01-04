@@ -352,6 +352,14 @@
             "use-credentials"
           ]
         },
+        "jsonpScriptType": {
+          "description": "This option enables loading async chunks via a custom script type, such as script type=\"module\"",
+          "enum": [
+            false,
+            "text/javascript",
+            "module"
+          ]
+        },
         "chunkLoadTimeout": {
           "description": "Number of milliseconds before chunk request expires",
           "type": "number"

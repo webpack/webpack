@@ -8,7 +8,7 @@ eed136bb9b1f0de139a9.js  1.94 KiB       1  [emitted]
 e013686b7b1ce4bd99ba.js  1.94 KiB       4  [emitted]  
 5ac554478945d88843c9.js     1 KiB       5  [emitted]  
 2eb796a695b728235608.js  1.01 KiB       6  [emitted]  
-8d11ec270922149a5452.js  8.36 KiB       7  [emitted]  main
+8d11ec270922149a5452.js  8.37 KiB       7  [emitted]  main
 Entrypoint main = 8d11ec270922149a5452.js
 chunk    {0} 8111929f6761a49abd03.js 1.76 KiB {7} [recorded]
     > aggressive-splitted duplicate [11] ./index.js 4:0-51
