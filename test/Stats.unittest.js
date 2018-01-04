@@ -10,6 +10,7 @@ describe("Stats", () => {
 		describe("does have", () => {
 			it("hasErrors", () => {
 				const mockStats = new Stats({
+					children: [],
 					errors: ["firstError"],
 					hash: "1234"
 				});
@@ -17,6 +18,7 @@ describe("Stats", () => {
 			});
 			it("hasWarnings", () => {
 				const mockStats = new Stats({
+					children: [],
 					warnings: ["firstError"],
 					hash: "1234"
 				});
@@ -26,6 +28,7 @@ describe("Stats", () => {
 		describe("does not have", () => {
 			it("hasErrors", () => {
 				const mockStats = new Stats({
+					children: [],
 					errors: [],
 					hash: "1234"
 				});
@@ -33,10 +36,39 @@ describe("Stats", () => {
 			});
 			it("hasWarnings", () => {
 				const mockStats = new Stats({
+					children: [],
 					warnings: [],
 					hash: "1234"
 				});
 				mockStats.hasWarnings().should.not.be.ok();
+			});
+		});
+		describe("children have", () => {
+			it("hasErrors", () => {
+				const mockStats = new Stats({
+					children: [{
+						getStats: () => new Stats({
+							errors: ["firstError"],
+							hash: "5678"
+						}),
+					}],
+					errors: [],
+					hash: "1234"
+				});
+				mockStats.hasErrors().should.be.ok();
+			});
+			it("hasWarnings", () => {
+				const mockStats = new Stats({
+					children: [{
+						getStats: () => new Stats({
+							warnings: ["firstError"],
+							hash: "5678"
+						}),
+					}],
+					warnings: [],
+					hash: "1234"
+				});
+				mockStats.hasWarnings().should.be.ok();
 			});
 		});
 		it("formatError handles string errors", () => {
