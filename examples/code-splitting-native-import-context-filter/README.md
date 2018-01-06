@@ -270,7 +270,7 @@ function webpackAsyncContext(req) {
 	}
 	return __webpack_require__.e(ids[1]).then(function() {
 		var module = __webpack_require__(ids[0]);
-		return module;;
+		return module;
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
@@ -321,7 +321,7 @@ Version: webpack next
 0.output.js  436 bytes       0  [emitted]  
 1.output.js  445 bytes       1  [emitted]  
 2.output.js  439 bytes       2  [emitted]  
-  output.js    8.2 KiB       3  [emitted]  main
+  output.js   8.19 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 41 bytes {3} [rendered]
     [0] ./templates/foo.js 41 bytes {0} [optional] [built]

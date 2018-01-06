@@ -259,7 +259,7 @@ function webpackAsyncContext(req) {
 	}
 	return __webpack_require__.e(ids[1]).then(function() {
 		var module = __webpack_require__(ids[0]);
-		return module;;
+		return module;
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {

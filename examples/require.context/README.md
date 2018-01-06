@@ -137,7 +137,7 @@ var map = {
 function webpackContext(req) {
 	var id = webpackContextResolve(req);
 	var module = __webpack_require__(id);
-	return module;;
+	return module;
 }
 function webpackContextResolve(req) {
 	var id = map[req];

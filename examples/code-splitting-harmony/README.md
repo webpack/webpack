@@ -243,7 +243,7 @@ function webpackAsyncContext(req) {
 	}
 	return __webpack_require__.e(ids[1]).then(function() {
 		var module = __webpack_require__(ids[0]);
-		return (typeof module === "object" && module && module.__esModule ? module : /* fake namespace object */ { "default": module });;
+		return (typeof module === "object" && module && module.__esModule ? module : /* fake namespace object */ { "default": module });
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {

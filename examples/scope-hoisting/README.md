@@ -392,7 +392,6 @@ __webpack_require__.d(d_namespaceObject, "a", function() { return a; });
 
 // EXTERNAL MODULE: ./node_modules/cjs.js
 var cjs = __webpack_require__(2);
-var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 
 // EXTERNAL MODULE: ./node_modules/shared.js + 1 modules
 var shared = __webpack_require__(0);
@@ -437,7 +436,7 @@ Minimized
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
-0.output.js  1.84 KiB       0  [emitted]  
+0.output.js  1.78 KiB       0  [emitted]  
   output.js  8.17 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 286 bytes {1} [rendered]
