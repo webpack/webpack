@@ -200,7 +200,7 @@ c2a2f62d69330b7d787782f5010f9d13.png  120 bytes          [emitted]
                                 A.js  547 bytes       0  [emitted]  A
                                 B.js  551 bytes       1  [emitted]  B
 16155c689e517682064c99893cb832cc.png  120 bytes          [emitted]  
-                          commons.js   7.26 KiB       3  [emitted]  commons
+                          commons.js   4.87 KiB       3  [emitted]  commons
                                A.css   71 bytes       0  [emitted]  A
                                B.css   71 bytes       1  [emitted]  B
                                C.css  144 bytes       2  [emitted]  C
@@ -277,7 +277,7 @@ Child extract-text-webpack-plugin ../../node_modules/extract-text-webpack-plugin
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
                                Asset       Size  Chunks             Chunk Names
-                          commons.js   1.72 KiB       2  [emitted]  commons
+                          commons.js   1.06 KiB       2  [emitted]  commons
 d090b6fba0f6d326d282a19146ff54a7.png  120 bytes          [emitted]  
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
 c2a2f62d69330b7d787782f5010f9d13.png  120 bytes          [emitted]  

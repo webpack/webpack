@@ -104,64 +104,6 @@ module.exports = {
 /******/ 		return module.exports;
 /******/ 	}
 /******/
-/******/ 	// This file contains only the entry chunk.
-/******/ 	// The chunk loading function for additional chunks
-/******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		var promises = [];
-/******/
-/******/
-/******/ 		// JSONP chunk loading for javascript
-/******/
-/******/ 		var installedChunkData = installedChunks[chunkId];
-/******/ 		if(installedChunkData !== 0) { // 0 means "already installed".
-/******/
-/******/ 			// a Promise means "currently loading".
-/******/ 			if(installedChunkData) {
-/******/ 				promises.push(installedChunkData[2]);
-/******/ 			} else {
-/******/ 				// setup Promise in chunk cache
-/******/ 				var promise = new Promise(function(resolve, reject) {
-/******/ 					installedChunkData = installedChunks[chunkId] = [resolve, reject];
-/******/ 				});
-/******/ 				promises.push(installedChunkData[2] = promise);
-/******/
-/******/ 				// start chunk loading
-/******/ 				var head = document.getElementsByTagName('head')[0];
-/******/ 				var script = document.createElement('script');
-/******/
-/******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120000;
-/******/
-/******/ 				if (__webpack_require__.nc) {
-/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
-/******/ 				}
-/******/ 				script.src = __webpack_require__.p + "" + chunkId + ".js";
-/******/ 				var timeout = setTimeout(function(){
-/******/ 					onScriptComplete({ type: 'timeout', target: script });
-/******/ 				}, 120000);
-/******/ 				script.onerror = script.onload = onScriptComplete;
-/******/ 				function onScriptComplete(event) {
-/******/ 					// avoid mem leaks in IE.
-/******/ 					script.onerror = script.onload = null;
-/******/ 					clearTimeout(timeout);
-/******/ 					var chunk = installedChunks[chunkId];
-/******/ 					if(chunk !== 0) {
-/******/ 						if(chunk) {
-/******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
-/******/ 							error.type = errorType;
-/******/ 							error.request = realSrc;
-/******/ 							chunk[1](error);
-/******/ 						}
-/******/ 						installedChunks[chunkId] = undefined;
-/******/ 					}
-/******/ 				};
-/******/ 				head.appendChild(script);
-/******/ 			}
-/******/ 		}
-/******/ 		return Promise.all(promises);
-/******/ 	};
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
@@ -305,7 +247,7 @@ __webpack_require__(/*! ./vendor2 */ 3);
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
      Asset       Size  Chunks             Chunk Names
-vendor1.js   7.61 KiB       0  [emitted]  vendor1
+vendor1.js   5.22 KiB       0  [emitted]  vendor1
 vendor2.js  606 bytes       1  [emitted]  vendor2
   pageA.js  376 bytes       2  [emitted]  pageA
   pageB.js  269 bytes       3  [emitted]  pageB
@@ -354,7 +296,7 @@ Version: webpack next
   pageB.js  107 bytes       1  [emitted]  pageB
   pageA.js  119 bytes       2  [emitted]  pageA
 vendor2.js  148 bytes       3  [emitted]  vendor2
-vendor1.js   1.78 KiB       4  [emitted]  vendor1
+vendor1.js   1.12 KiB       4  [emitted]  vendor1
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor1.js vendor2.js
 Entrypoint pageA = vendor1.js vendor2.js pageA.js
