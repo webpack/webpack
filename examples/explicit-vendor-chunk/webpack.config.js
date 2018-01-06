@@ -13,7 +13,7 @@ module.exports = [
 		plugins: [
 			new webpack.DllPlugin({
 				name: "vendor_[hash]",
-				path: path.resolve(__dirname, "js/manifest.json")
+				path: path.resolve(__dirname, "dist/manifest.json")
 			})
 		]
 	},
@@ -32,7 +32,7 @@ module.exports = [
 		},
 		plugins: [
 			new webpack.DllReferencePlugin({
-				manifest: path.resolve(__dirname, "js/manifest.json")
+				manifest: path.resolve(__dirname, "dist/manifest.json")
 			})
 		]
 	}
