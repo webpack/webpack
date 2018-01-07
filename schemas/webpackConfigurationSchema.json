@@ -1,0 +1,20 @@
+{
+  "oneOf": [
+    {
+      "type": "object",
+      "description": "A webpack configuration object."
+    },
+    {
+      "type": "array",
+      "description": "An array of webpack configuration objects.",
+      "items": {
+        "description": "A webpack configuration object.",
+        "type": "object"
+      }
+    },
+    {
+      "instanceof": "Function",
+      "description": "A function returning a configuration object, or an array of configuration objects."
+    }
+  ]
+}
