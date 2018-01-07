@@ -1323,6 +1323,35 @@
           "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer",
           "type": "boolean"
         },
+        "asyncCommonsChunks": {
+          "description": "Automatically deduplicate modules in on-demand chunks by creating additional async-loaded shared chunks",
+          "type": "boolean"
+        },
+        "initialCommonsChunks": {
+          "description": "Automatically deduplicate modules in initial chunks by creating additional initial-loaded shared chunks (These chunks need to be added to the HTML)",
+          "type": "boolean"
+        },
+        "initialVendorsChunk": {
+          "description": "Automatically extract vendor modules (inside of node_modules) into separate chunk assuming they change less often ",
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": {
+                "instanceof": "RegExp"
+              }
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "instanceof": "Function"
+            }
+          ]
+        },
         "noEmitOnErrors": {
           "description": "Avoid emitting assets when errors occur",
           "type": "boolean"

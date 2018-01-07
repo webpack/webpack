@@ -1,0 +1,43 @@
+Entrypoint main = main.js
+Entrypoint a = 2.js 3.js a.js
+Entrypoint b = 2.js 3.js 0.js b.js
+Entrypoint c = 2.js 0.js c.js
+chunk    {0} 0.js 20 bytes {2} {3} {4} {7} {8} [initial] [rendered]
+    [2] ./f.js 20 bytes {0} [built]
+chunk    {1} 1.chunk.js 34 bytes {2} {3} {4} {8} [rendered]
+    > [] 6:0-13
+    [8] ./g.js 34 bytes {1} [built]
+chunk    {2} 2.js 40 bytes {7} [entry] [rendered]
+    [0] ./d.js 20 bytes {2} [built]
+    [1] ./node_modules/x.js 20 bytes {2} [built]
+chunk    {3} 3.js 20 bytes {7} [initial] [rendered]
+    [3] ./node_modules/y.js 20 bytes {3} [built]
+chunk    {4} 4.chunk.js 122 bytes {7} [rendered]
+    > [7] ./index.js 1:0-13
+    [5] ./a.js + 1 modules 122 bytes {4} {8} [built]
+        | ./a.js 87 bytes [built]
+        | ./e.js 20 bytes [built]
+chunk    {5} 5.chunk.js 72 bytes {7} [rendered]
+    > [7] ./index.js 2:0-13
+    [4] ./b.js 72 bytes {5} {9} [built]
+chunk    {6} 6.chunk.js 107 bytes {7} [rendered]
+    > [7] ./index.js 3:0-13
+    [6] ./c.js + 1 modules 107 bytes {6} {10} [built]
+        | ./c.js 72 bytes [built]
+        | ./node_modules/z.js 20 bytes [built]
+chunk    {7} main.js (main) 45 bytes [entry] [rendered]
+    > main [7] ./index.js 
+    [7] ./index.js 45 bytes {7} [built]
+chunk    {8} a.js (a) 122 bytes [initial] [rendered]
+    > a [] 
+    [5] ./a.js + 1 modules 122 bytes {4} {8} [built]
+        | ./a.js 87 bytes [built]
+        | ./e.js 20 bytes [built]
+chunk    {9} b.js (b) 72 bytes [initial] [rendered]
+    > b [4] ./b.js 
+    [4] ./b.js 72 bytes {5} {9} [built]
+chunk   {10} c.js (c) 107 bytes [initial] [rendered]
+    > c [] 
+    [6] ./c.js + 1 modules 107 bytes {6} {10} [built]
+        | ./c.js 72 bytes [built]
+        | ./node_modules/z.js 20 bytes [built]
