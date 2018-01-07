@@ -20,6 +20,7 @@
     "tapable": "^1.0.0-beta.5",
     "trace-event": "samccone/node-trace-event",
     "uglifyjs-webpack-plugin": "^1.1.1",
+    "v8-profiler": "samccone/v8-profiler#sjs/highres-timestamps",
     "watchpack": "^1.4.0",
     "webpack-sources": "^1.0.1"
   },
