@@ -5631,9 +5631,7 @@ tough-cookie@~2.3.0, tough-cookie@~2.3.3:
 
 trace-event@samccone/node-trace-event:
   version "1.3.1"
-  resolved "https://codeload.github.com/samccone/node-trace-event/tar.gz/e352243a7b20c2a78c330e5b6747c9ba28cb5e7d"
-  dependencies:
-    assert-plus "0.1.x"
+  resolved "https://codeload.github.com/samccone/node-trace-event/tar.gz/004e5c14cba9cb3665fb2cb37c4a57cc4db9db67"
 
 transformers@2.1.0:
   version "2.1.0"
