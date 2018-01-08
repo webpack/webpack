@@ -20,6 +20,7 @@
     "tapable": "^1.0.0-beta.5",
     "trace-event": "samccone/node-trace-event",
     "uglifyjs-webpack-plugin": "^1.1.1",
+    "v8-profiler": "samccone/v8-profiler#sjs/highres-timestamps",
     "watchpack": "^1.4.0",
     "webpack-sources": "^1.0.1"
   },
@@ -28,7 +29,6 @@
     "beautify-lint": "^1.0.3",
     "benchmark": "^2.1.1",
     "bundle-loader": "~0.5.0",
-    "chalk": "^2.3.0",
     "codacy-coverage": "^2.0.1",
     "coffee-loader": "~0.7.1",
     "coffee-script": "^1.10.0",
