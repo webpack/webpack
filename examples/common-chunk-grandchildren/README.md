@@ -93,7 +93,7 @@ module.exports = [
 			main: ["./example.js"]
 		},
 		output: {
-			path: path.resolve(__dirname, "js"),
+			path: path.resolve(__dirname, "dist"),
 			filename: "output.js"
 		},
 		plugins: [
@@ -114,7 +114,7 @@ module.exports = [
 			main: ["./example.js"]
 		},
 		output: {
-			path: path.resolve(__dirname, "js"),
+			path: path.resolve(__dirname, "dist"),
 			filename: "asyncoutput.js"
 		},
 		plugins: [
@@ -133,7 +133,7 @@ module.exports = [
 ];
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -222,6 +222,7 @@ module.exports = [
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -291,7 +292,7 @@ module.exports = [
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -321,11 +322,11 @@ module.exports = [
 
 var main = function() {
 	console.log("Main class");
-	__webpack_require__.e/* require.ensure */(2).then((() => {
+	__webpack_require__.e(/*! require.ensure */ 2).then((() => {
 		const page = __webpack_require__(/*! ./pageA */ 4);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
-	__webpack_require__.e/* require.ensure */(1).then((() => {
+	__webpack_require__.e(/*! require.ensure */ 1).then((() => {
 		const page = __webpack_require__(/*! ./pageB */ 3);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -362,7 +363,7 @@ module.exports = function() {
 /******/ ]);
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],{
@@ -387,7 +388,7 @@ module.exports = function() {
 }]);
 ```
 
-# js/1.output.js
+# dist/1.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
@@ -401,7 +402,7 @@ module.exports = function() {
 
 module.exports = function() {
 	console.log("Page B");
-	__webpack_require__.e/* require.ensure */(0).then((()=>{
+	__webpack_require__.e(/*! require.ensure */ 0).then((()=>{
 		const page = __webpack_require__(/*! ./pageC */ 5);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -413,7 +414,7 @@ module.exports = function() {
 }]);
 ```
 
-# js/2.output.js
+# dist/2.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
@@ -438,7 +439,7 @@ module.exports = function() {
 }]);
 ```
 
-# js/asyncoutput.js
+# dist/asyncoutput.js
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
@@ -525,6 +526,7 @@ module.exports = function() {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -594,7 +596,7 @@ module.exports = function() {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -619,11 +621,11 @@ module.exports = function() {
 
 var main = function() {
 	console.log("Main class");
-	Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e(2)]).then((() => {
+	Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(2)]).then((() => {
 		const page = __webpack_require__(/*! ./pageA */ 3);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
-	__webpack_require__.e/* require.ensure */(1).then((() => {
+	__webpack_require__.e(/*! require.ensure */ 1).then((() => {
 		const page = __webpack_require__(/*! ./pageB */ 2);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -647,7 +649,7 @@ module.exports = __webpack_require__(/*! ./example.js */0);
 /******/ ]);
 ```
 
-# js/0.asyncoutput.js
+# dist/0.asyncoutput.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],{
@@ -669,7 +671,7 @@ module.exports = function() {
 }]);
 ```
 
-# js/1.asyncoutput.js
+# dist/1.asyncoutput.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
@@ -683,7 +685,7 @@ module.exports = function() {
 
 module.exports = function() {
 	console.log("Page B");
-	Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e(3)]).then((()=>{
+	Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(3)]).then((()=>{
 		const page = __webpack_require__(/*! ./pageC */ 5);
 		page();
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -695,7 +697,7 @@ module.exports = function() {
 }]);
 ```
 
-# js/2.asyncoutput.js
+# dist/2.asyncoutput.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
@@ -720,7 +722,7 @@ module.exports = function() {
 }]);
 ```
 
-# js/3.asyncoutput.js
+# dist/3.asyncoutput.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
@@ -756,9 +758,9 @@ Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
           Asset       Size  Chunks             Chunk Names
     0.output.js  414 bytes       0  [emitted]  
-    1.output.js  507 bytes       1  [emitted]  
+    1.output.js  509 bytes       1  [emitted]  
     2.output.js  414 bytes       2  [emitted]  
-      output.js   7.71 KiB       3  [emitted]  main
+      output.js   7.72 KiB       3  [emitted]  main
     Entrypoint main = output.js
     chunk    {0} 0.output.js 142 bytes {3} [rendered]
         > [3] ./pageB.js 3:1-6:3
@@ -785,10 +787,10 @@ Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                Asset       Size  Chunks             Chunk Names
     0.asyncoutput.js  340 bytes       0  [emitted]  
-    1.asyncoutput.js  548 bytes       1  [emitted]  
+    1.asyncoutput.js  549 bytes       1  [emitted]  
     2.asyncoutput.js  414 bytes       2  [emitted]  
     3.asyncoutput.js  414 bytes       3  [emitted]  
-      asyncoutput.js   7.49 KiB       4  [emitted]  main
+      asyncoutput.js    7.5 KiB       4  [emitted]  main
     Entrypoint main = asyncoutput.js
     chunk    {0} 0.asyncoutput.js 72 bytes {4} [rendered]
         > async commons [0] ./example.js 3:1-6:3
@@ -827,7 +829,7 @@ Child
     0.output.js  138 bytes       0  [emitted]  
     1.output.js  176 bytes       1  [emitted]  
     2.output.js  138 bytes       2  [emitted]  
-      output.js    1.8 KiB       3  [emitted]  main
+      output.js   1.81 KiB       3  [emitted]  main
     Entrypoint main = output.js
     chunk    {0} 0.output.js 142 bytes {3} [rendered]
         > [3] ./pageB.js 3:1-6:3

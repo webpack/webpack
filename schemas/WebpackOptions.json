@@ -324,7 +324,14 @@
         },
         "chunkFilename": {
           "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
-          "type": "string",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ],
           "absolutePath": false
         },
         "webassemblyModuleFilename": {
@@ -332,12 +339,25 @@
           "type": "string",
           "absolutePath": false
         },
+        "globalObject": {
+          "description": "An expression which is used to address the global object/scope in runtime code",
+          "type": "string",
+          "minLength": 1
+        },
         "crossOriginLoading": {
           "description": "This option enables cross-origin loading of chunks.",
           "enum": [
             false,
             "anonymous",
             "use-credentials"
+          ]
+        },
+        "jsonpScriptType": {
+          "description": "This option enables loading async chunks via a custom script type, such as script type=\"module\"",
+          "enum": [
+            false,
+            "text/javascript",
+            "module"
           ]
         },
         "chunkLoadTimeout": {
@@ -385,7 +405,14 @@
         },
         "filename": {
           "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
-          "type": "string",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ],
           "absolutePath": false
         },
         "hashDigest": {
@@ -420,7 +447,14 @@
         },
         "hotUpdateChunkFilename": {
           "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
-          "type": "string",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ],
           "absolutePath": false
         },
         "hotUpdateFunction": {
@@ -429,7 +463,14 @@
         },
         "hotUpdateMainFilename": {
           "description": "The filename of the Hot Update Main File. It is inside the `output.path` directory.",
-          "type": "string",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ],
           "absolutePath": false
         },
         "jsonpFunction": {
@@ -480,6 +521,7 @@
             "assign",
             "this",
             "window",
+            "self",
             "global",
             "commonjs",
             "commonjs2",
@@ -512,7 +554,14 @@
         },
         "publicPath": {
           "description": "The `publicPath` specifies the public URL address of the output files when referenced in a browser.",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ]
         },
         "sourceMapFilename": {
           "description": "The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.",
@@ -1649,8 +1698,6 @@
             "node",
             "async-node",
             "node-webkit",
-            "atom",
-            "electron",
             "electron-main",
             "electron-renderer"
           ]
@@ -1696,8 +1743,5 @@
       "type": "object"
     }
   },
-  "required": [
-    "entry"
-  ],
   "type": "object"
 }

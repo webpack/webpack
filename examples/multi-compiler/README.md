@@ -19,7 +19,7 @@ module.exports = [
 		// mode: "development || "production",
 		entry: "./example",
 		output: {
-			path: path.join(__dirname, "js"),
+			path: path.join(__dirname, "dist"),
 			filename: "mobile.js"
 		},
 		plugins: [
@@ -33,7 +33,7 @@ module.exports = [
 		// mode: "development || "production",
 		entry: "./example",
 		output: {
-			path: path.join(__dirname, "js"),
+			path: path.join(__dirname, "dist"),
 			filename: "desktop.js"
 		},
 		plugins: [
@@ -45,7 +45,7 @@ module.exports = [
 ];
 ```
 
-# js/desktop.js
+# dist/desktop.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -114,7 +114,7 @@ module.exports = [
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -142,7 +142,7 @@ console.log("Running " + "desktop" + " build");
 /******/ ]);
 ```
 
-# js/mobile.js
+# dist/mobile.js
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
@@ -209,7 +209,7 @@ console.log("Running " + "desktop" + " build");
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -279,7 +279,7 @@ Version: webpack next
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset       Size  Chunks             Chunk Names
-    mobile.js  606 bytes       0  [emitted]  main
+    mobile.js  608 bytes       0  [emitted]  main
     Entrypoint main = mobile.js
     chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
         > main [1] ./example.js 
@@ -290,7 +290,7 @@ Child mobile:
 Child desktop:
     Hash: 0a1b2c3d4e5f6a7b8c9d
          Asset       Size  Chunks             Chunk Names
-    desktop.js  586 bytes       0  [emitted]  main
+    desktop.js  588 bytes       0  [emitted]  main
     Entrypoint main = desktop.js
     chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
         > main [0] ./example.js 

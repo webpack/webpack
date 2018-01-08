@@ -14,7 +14,7 @@ getTemplate("b", function(b) {
 });
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -103,6 +103,7 @@ getTemplate("b", function(b) {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -172,7 +173,7 @@ getTemplate("b", function(b) {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -201,8 +202,8 @@ getTemplate("b", function(b) {
 /***/ (function(module, exports, __webpack_require__) {
 
 function getTemplate(templateName, callback) {
-	__webpack_require__.e/* require.ensure */(0).then((function(require) {
-		callback(__webpack_require__(/*! ../require.context/templates */ 1)("./"+templateName)());
+	__webpack_require__.e(/*! require.ensure */ 0).then((function(require) {
+		callback(__webpack_require__(1)("./"+templateName)());
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }
 getTemplate("a", function(a) {
@@ -216,7 +217,7 @@ getTemplate("b", function(b) {
 /******/ ]);
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
@@ -245,8 +246,11 @@ function webpackContext(req) {
 }
 function webpackContextResolve(req) {
 	var id = map[req];
-	if(!(id + 1)) // check for number or string
-		throw new Error("Cannot find module '" + req + "'.");
+	if(!(id + 1)) { // check for number or string
+		var e = new Error('Cannot find module "' + req + '".');
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
 	return id;
 }
 webpackContext.keys = function webpackContextKeys() {
@@ -304,8 +308,8 @@ module.exports = function() {
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
-0.output.js  1.81 KiB       0  [emitted]  
-  output.js  7.12 KiB       1  [emitted]  main
+0.output.js  1.86 KiB       0  [emitted]  
+  output.js   7.1 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 463 bytes {1} [rendered]
     > [0] ./example.js 2:1-4:3
@@ -332,7 +336,7 @@ chunk    {1} output.js (main) 276 bytes [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  592 bytes       0  [emitted]  
+0.output.js  627 bytes       0  [emitted]  
   output.js   1.73 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 463 bytes {1} [rendered]

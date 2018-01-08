@@ -19,14 +19,6 @@ describe("Validation", () => {
 			" - configuration should be an object."
 		]
 	}, {
-		name: "empty configuration",
-		config: {},
-		message: [
-			" - configuration misses the property 'entry'.",
-			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string] | function",
-			"   -> The entry point(s) of the compilation."
-		]
-	}, {
 		name: "empty entry string",
 		config: {
 			entry: ""
@@ -128,8 +120,12 @@ describe("Validation", () => {
 			"      -> A non-empty string",
 			"    * configuration.entry should be an instance of function",
 			"      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.",
-			" - configuration.output.filename should be a string.",
-			"   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files."
+			" - configuration.output.filename should be one of these:",
+			"   string | function",
+			"   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
+			"   Details:",
+			"    * configuration.output.filename should be a string.",
+			"    * configuration.output.filename should be an instance of function"
 		]
 	}, {
 		name: "multiple configurations",
@@ -154,8 +150,12 @@ describe("Validation", () => {
 			"      -> A non-empty string",
 			"    * configuration[0].entry should be an instance of function",
 			"      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.",
-			" - configuration[1].output.filename should be a string.",
-			"   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files."
+			" - configuration[1].output.filename should be one of these:",
+			"   string | function",
+			"   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
+			"   Details:",
+			"    * configuration[1].output.filename should be a string.",
+			"    * configuration[1].output.filename should be an instance of function",
 		]
 	}, {
 		name: "deep error",
@@ -185,7 +185,7 @@ describe("Validation", () => {
 		},
 		message: [
 			" - configuration has an unknown property 'postcss'. These properties are valid:",
-			"   object { mode?, amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry, externals?, " +
+			"   object { mode?, amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry?, externals?, " +
 			"loader?, module?, name?, node?, output?, optimization?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, " +
 			"recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, stats?, target?, watch?, watchOptions? }",
 			"   For typos: please correct them.",

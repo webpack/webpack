@@ -52,7 +52,7 @@ export { b } from "./b";
 export { c } from "./c";
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -121,7 +121,7 @@ export { c } from "./c";
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -142,8 +142,8 @@ export { c } from "./c";
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var big_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! big-module */1);
-/* harmony import */ var big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! big-module-with-flag */5);
+/* harmony import */ var big_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! big-module */ 1);
+/* harmony import */ var big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! big-module-with-flag */ 5);
 
 
 
@@ -165,13 +165,13 @@ console.log(
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */2);
+/* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */ 2);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _a__WEBPACK_IMPORTED_MODULE_0__["a"]; });
 
-/* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */3);
+/* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */ 3);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _b__WEBPACK_IMPORTED_MODULE_1__["b"]; });
 
-/* harmony import */ var _c__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./c */4);
+/* harmony import */ var _c__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./c */ 4);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "c", function() { return _c__WEBPACK_IMPORTED_MODULE_2__["c"]; });
 
 
@@ -231,13 +231,13 @@ const c = "c";
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */6);
+/* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */ 6);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _a__WEBPACK_IMPORTED_MODULE_0__["a"]; });
 
-/* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */7);
+/* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */ 7);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _b__WEBPACK_IMPORTED_MODULE_1__["b"]; });
 
-/* harmony import */ var _c__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./c */8);
+/* harmony import */ var _c__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./c */ 8);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "c", function() { return _c__WEBPACK_IMPORTED_MODULE_2__["c"]; });
 
 
@@ -298,8 +298,8 @@ const c = "c";
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
-    Asset      Size  Chunks             Chunk Names
-output.js  7.89 KiB       0  [emitted]  main
+    Asset     Size  Chunks             Chunk Names
+output.js  7.9 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 443 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -315,7 +315,7 @@ chunk    {0} output.js (main) 443 bytes [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset       Size  Chunks             Chunk Names
-output.js  598 bytes       0  [emitted]  main
+output.js  600 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 342 bytes [entry] [rendered]
     > main [] 

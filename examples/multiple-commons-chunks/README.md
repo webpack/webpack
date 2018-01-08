@@ -29,7 +29,7 @@ module.exports = {
 		adminPageC: "./adminPageC",
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "[name].js"
 	},
 	plugins: [
@@ -75,7 +75,7 @@ module.exports = {
 </html>
 ```
 
-# js/commons.js
+# dist/commons.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -154,63 +154,6 @@ module.exports = {
 /******/ 		return module.exports;
 /******/ 	}
 /******/
-/******/ 	// This file contains only the entry chunk.
-/******/ 	// The chunk loading function for additional chunks
-/******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		var promises = [];
-/******/
-/******/
-/******/ 		// JSONP chunk loading for javascript
-/******/
-/******/ 		var installedChunkData = installedChunks[chunkId];
-/******/ 		if(installedChunkData !== 0) { // 0 means "already installed".
-/******/
-/******/ 			// a Promise means "currently loading".
-/******/ 			if(installedChunkData) {
-/******/ 				promises.push(installedChunkData[2]);
-/******/ 			} else {
-/******/ 				// setup Promise in chunk cache
-/******/ 				var promise = new Promise(function(resolve, reject) {
-/******/ 					installedChunkData = installedChunks[chunkId] = [resolve, reject];
-/******/ 				});
-/******/ 				promises.push(installedChunkData[2] = promise);
-/******/
-/******/ 				// start chunk loading
-/******/ 				var head = document.getElementsByTagName('head')[0];
-/******/ 				var script = document.createElement('script');
-/******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120000;
-/******/
-/******/ 				if (__webpack_require__.nc) {
-/******/ 					script.setAttribute("nonce", __webpack_require__.nc);
-/******/ 				}
-/******/ 				script.src = __webpack_require__.p + "" + chunkId + ".js";
-/******/ 				var timeout = setTimeout(function(){
-/******/ 					onScriptComplete({ type: 'timeout', target: script });
-/******/ 				}, 120000);
-/******/ 				script.onerror = script.onload = onScriptComplete;
-/******/ 				function onScriptComplete(event) {
-/******/ 					// avoid mem leaks in IE.
-/******/ 					script.onerror = script.onload = null;
-/******/ 					clearTimeout(timeout);
-/******/ 					var chunk = installedChunks[chunkId];
-/******/ 					if(chunk !== 0) {
-/******/ 						if(chunk) {
-/******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
-/******/ 							error.type = errorType;
-/******/ 							error.request = realSrc;
-/******/ 							chunk[1](error);
-/******/ 						}
-/******/ 						installedChunks[chunkId] = undefined;
-/******/ 					}
-/******/ 				};
-/******/ 				head.appendChild(script);
-/******/ 			}
-/******/ 		}
-/******/ 		return Promise.all(promises);
-/******/ 	};
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
@@ -247,7 +190,7 @@ module.exports = {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -289,7 +232,7 @@ module.exports = {
 /******/ ]);
 ```
 
-# js/pageA.js
+# dist/pageA.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
@@ -321,7 +264,7 @@ __webpack_require__(/*! ./modules/a-c */ 3);
 ],[[0,7,0]]]);
 ```
 
-# js/admin-commons.js
+# dist/admin-commons.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[6],{
@@ -340,7 +283,7 @@ __webpack_require__(/*! ./modules/a-c */ 3);
 }]);
 ```
 
-# js/adminPageA.js
+# dist/adminPageA.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
@@ -375,8 +318,8 @@ Version: webpack next
    adminPageB.js  374 bytes       4  [emitted]  adminPageB
    adminPageC.js  558 bytes       5  [emitted]  adminPageC
 admin-commons.js  256 bytes       6  [emitted]  admin-commons
-      commons.js    7.4 KiB       7  [emitted]  commons
-    c-commons.js   7.23 KiB       8  [emitted]  c-commons
+      commons.js   5.03 KiB       7  [emitted]  commons
+    c-commons.js   4.85 KiB       8  [emitted]  c-commons
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 Entrypoint pageC = c-commons.js pageC.js
@@ -462,8 +405,8 @@ admin-commons.js   77 bytes       0  [emitted]  admin-commons
         pageC.js  140 bytes       4  [emitted]  pageC
         pageB.js  122 bytes       5  [emitted]  pageB
         pageA.js  124 bytes       6  [emitted]  pageA
-    c-commons.js   1.72 KiB       7  [emitted]  c-commons
-      commons.js   1.74 KiB    8, 7  [emitted]  commons
+    c-commons.js   1.06 KiB       7  [emitted]  c-commons
+      commons.js   1.08 KiB    8, 7  [emitted]  commons
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 Entrypoint pageC = c-commons.js pageC.js

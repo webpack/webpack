@@ -47,7 +47,7 @@ export { a, b, c } from "./abc";
 export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -116,7 +116,7 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -137,8 +137,8 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math */1);
-/* harmony import */ var _library__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./library */2);
+/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math */ 1);
+/* harmony import */ var _library__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./library */ 2);
 
 
 
@@ -190,14 +190,14 @@ function list() {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _abc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./abc */3);
+/* harmony import */ var _abc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./abc */ 3);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _abc__WEBPACK_IMPORTED_MODULE_0__["a"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _abc__WEBPACK_IMPORTED_MODULE_0__["b"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "c", function() { return _abc__WEBPACK_IMPORTED_MODULE_0__["c"]; });
 
-/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */1);
+/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 1);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "reexportedAdd", function() { return _math__WEBPACK_IMPORTED_MODULE_1__["add"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "reexportedMultiply", function() { return _math__WEBPACK_IMPORTED_MODULE_1__["multiply"]; });
@@ -227,10 +227,10 @@ function c() { console.log("c"); }
 /******/ ]);
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-!function(t){function n(e){if(r[e])return r[e].exports;var u=r[e]={i:e,l:!1,exports:{}};return t[e].call(u.exports,u,u.exports,n),u.l=!0,u.exports}var r={};n.m=t,n.c=r,n.d=function(t,r,e){n.o(t,r)||Object.defineProperty(t,r,{configurable:!1,enumerable:!0,get:e})},n.r=function(t){Object.defineProperty(t,"__esModule",{value:!0})},n.n=function(t){var r=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(r,"a",r),r},n.o=function(t,n){return Object.prototype.hasOwnProperty.call(t,n)},n.p="js/",n(n.s=3)}([function(t,n,r){"use strict";function e(){for(var t=0,n=0,r=arguments,e=r.length;n<e;)t+=r[n++];return t}function u(){for(var t=1,n=0,r=arguments,e=r.length;n<e;)t*=r[n++];return t}r.d(n,"a",function(){return e}),r.d(n,"b",function(){return u})},function(t,n,r){"use strict"},function(t,n,r){"use strict";r(1);var e=r(0);r.d(n,"a",function(){return e.b})},function(t,n,r){"use strict";r.r(n);var e=r(0),u=r(2);Object(e.a)(1,2),u.a(1,2)}]);
+!function(t){function n(e){if(r[e])return r[e].exports;var u=r[e]={i:e,l:!1,exports:{}};return t[e].call(u.exports,u,u.exports,n),u.l=!0,u.exports}var r={};n.m=t,n.c=r,n.d=function(t,r,e){n.o(t,r)||Object.defineProperty(t,r,{configurable:!1,enumerable:!0,get:e})},n.r=function(t){Object.defineProperty(t,"__esModule",{value:!0})},n.n=function(t){var r=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(r,"a",r),r},n.o=function(t,n){return Object.prototype.hasOwnProperty.call(t,n)},n.p="dist/",n(n.s=3)}([function(t,n,r){"use strict";function e(){for(var t=0,n=0,r=arguments,e=r.length;n<e;)t+=r[n++];return t}function u(){for(var t=1,n=0,r=arguments,e=r.length;n<e;)t*=r[n++];return t}r.d(n,"a",function(){return e}),r.d(n,"b",function(){return u})},function(t,n,r){"use strict"},function(t,n,r){"use strict";r(1);var e=r(0);r.d(n,"a",function(){return e.b})},function(t,n,r){"use strict";r.r(n);var e=r(0),u=r(2);Object(e.a)(1,2),u.a(1,2)}]);
 ```
 
 # Info
@@ -241,7 +241,7 @@ function c() { console.log("c"); }
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  5.92 KiB       0  [emitted]  main
+output.js  5.93 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 726 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -273,7 +273,7 @@ chunk    {0} output.js (main) 726 bytes [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset       Size  Chunks             Chunk Names
-output.js  969 bytes       0  [emitted]  main
+output.js  971 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 726 bytes [entry] [rendered]
     > main [3] ./example.js 

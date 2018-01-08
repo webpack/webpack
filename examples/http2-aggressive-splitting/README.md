@@ -24,7 +24,7 @@ module.exports = {
 	cache: true, // better performance for the AggressiveSplittingPlugin
 	entry: "./example",
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "[chunkhash].js",
 		chunkFilename: "[chunkhash].js"
 	},
@@ -37,7 +37,7 @@ module.exports = {
 			"process.env.NODE_ENV": JSON.stringify("production")
 		})
 	],
-	recordsOutputPath: path.join(__dirname, "js", "records.json")
+	recordsOutputPath: path.join(__dirname, "dist", "records.json")
 };
 ```
 
@@ -49,66 +49,66 @@ module.exports = {
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
                   Asset      Size  Chunks             Chunk Names
-08ecd23ddf3176db3a88.js  52.9 KiB       7  [emitted]  
-1dae9b5bc322bc72e102.js  36.5 KiB       0  [emitted]  
-43325f23025e7ada68c8.js  59.9 KiB       2  [emitted]  
-8831a28d8ef2edc602b6.js  31.6 KiB       3  [emitted]  
-d9ea753b7a8aad984dbe.js  56.1 KiB       4  [emitted]  
-cb5ec0761322c333e8ac.js  52.4 KiB       5  [emitted]  
-19ca687279727fd3fc3f.js  51.8 KiB       6  [emitted]  
-9b2a697938139189aefd.js  32.3 KiB       1  [emitted]  
-df9efbd12020674c5807.js  49.8 KiB       8  [emitted]  
-18c04360088afd74737e.js  50.9 KiB       9  [emitted]  
-8cc5180ec8a325f22c62.js  54.2 KiB      10  [emitted]  
-5f91c2732cf4f173e204.js  51.7 KiB      11  [emitted]  
-1f69c524b51fe91bffc5.js  51.2 KiB      12  [emitted]  
-01b620bad2ba9ee86fce.js  58.2 KiB      13  [emitted]  
-1ebfa89095075cd49ed2.js    22 KiB      14  [emitted]  
-Entrypoint main = 43325f23025e7ada68c8.js 8831a28d8ef2edc602b6.js 1dae9b5bc322bc72e102.js
-chunk    {0} 1dae9b5bc322bc72e102.js 32.4 KiB [initial] [rendered]
+1d1f50c6f480a313a283.js  52.9 KiB       7  [emitted]  
+650a1f5b6bbd5e2a0bcb.js  36.5 KiB       0  [emitted]  
+4a984680da6e56d39889.js    60 KiB       2  [emitted]  
+de45e35c6080cc33435c.js  31.6 KiB       3  [emitted]  
+b9d30d332886e3897e04.js  56.1 KiB       4  [emitted]  
+091d7e57346e564d3d09.js  52.4 KiB       5  [emitted]  
+525a050e7b27998ce47b.js  51.8 KiB       6  [emitted]  
+ad733bf1033fc5a7a830.js  32.3 KiB       1  [emitted]  
+46af055d8fc77c1333fd.js  49.8 KiB       8  [emitted]  
+d5f1ea3a0710998c9d82.js  50.9 KiB       9  [emitted]  
+d12e724ddfa623596d6a.js  54.2 KiB      10  [emitted]  
+6cbad41d6996fe8e07a5.js  51.7 KiB      11  [emitted]  
+0bb84ee671fc256e158e.js  51.2 KiB      12  [emitted]  
+c8536008639de2173e51.js  58.2 KiB      13  [emitted]  
+763fbc691b4fe33d506e.js    22 KiB      14  [emitted]  
+Entrypoint main = 4a984680da6e56d39889.js de45e35c6080cc33435c.js 650a1f5b6bbd5e2a0bcb.js
+chunk    {0} 650a1f5b6bbd5e2a0bcb.js 32.4 KiB [initial] [rendered]
     > aggressive-splitted main [0] ./example.js 
     [0] ./example.js 44 bytes {0} [built]
      + 11 hidden modules
-chunk    {1} 9b2a697938139189aefd.js 31.4 KiB {0} {2} {3} [rendered] [recorded]
+chunk    {1} ad733bf1033fc5a7a830.js 31.4 KiB {0} {2} {3} [rendered] [recorded]
     > aggressive-splitted [0] ./example.js 2:0-22
     3 modules
-chunk    {2} 43325f23025e7ada68c8.js 48.8 KiB [entry] [rendered] [recorded]
+chunk    {2} 4a984680da6e56d39889.js 48.8 KiB [entry] [rendered] [recorded]
     > aggressive-splitted main [0] ./example.js 
     16 modules
-chunk    {3} 8831a28d8ef2edc602b6.js 30.5 KiB [initial] [rendered] [recorded]
+chunk    {3} de45e35c6080cc33435c.js 30.5 KiB [initial] [rendered] [recorded]
     > aggressive-splitted main [0] ./example.js 
     3 modules
-chunk    {4} d9ea753b7a8aad984dbe.js 48.7 KiB {0} {2} {3} [rendered] [recorded]
+chunk    {4} b9d30d332886e3897e04.js 48.7 KiB {0} {2} {3} [rendered] [recorded]
     > aggressive-splitted [0] ./example.js 2:0-22
     24 modules
-chunk    {5} cb5ec0761322c333e8ac.js 48.8 KiB {0} {2} {3} [rendered] [recorded]
+chunk    {5} 091d7e57346e564d3d09.js 48.8 KiB {0} {2} {3} [rendered] [recorded]
     > aggressive-splitted [0] ./example.js 2:0-22
     11 modules
-chunk    {6} 19ca687279727fd3fc3f.js 48.6 KiB {0} {2} {3} [rendered] [recorded]
+chunk    {6} 525a050e7b27998ce47b.js 48.6 KiB {0} {2} {3} [rendered] [recorded]
     > aggressive-splitted [0] ./example.js 2:0-22
     10 modules
-chunk    {7} 08ecd23ddf3176db3a88.js 48.7 KiB {0} {2} {3} [rendered] [recorded]
+chunk    {7} 1d1f50c6f480a313a283.js 48.7 KiB {0} {2} {3} [rendered] [recorded]
     > aggressive-splitted [0] ./example.js 2:0-22
     11 modules
-chunk    {8} df9efbd12020674c5807.js 48.8 KiB {0} {2} {3} [rendered] [recorded]
+chunk    {8} 46af055d8fc77c1333fd.js 48.8 KiB {0} {2} {3} [rendered] [recorded]
     > aggressive-splitted [0] ./example.js 2:0-22
     6 modules
-chunk    {9} 18c04360088afd74737e.js 48.7 KiB {0} {2} {3} [rendered] [recorded]
+chunk    {9} d5f1ea3a0710998c9d82.js 48.7 KiB {0} {2} {3} [rendered] [recorded]
     > aggressive-splitted [0] ./example.js 2:0-22
     6 modules
-chunk   {10} 8cc5180ec8a325f22c62.js 48.7 KiB {0} {2} {3} [rendered] [recorded]
+chunk   {10} d12e724ddfa623596d6a.js 48.7 KiB {0} {2} {3} [rendered] [recorded]
     > aggressive-splitted [0] ./example.js 2:0-22
     15 modules
-chunk   {11} 5f91c2732cf4f173e204.js 48.8 KiB {0} {2} {3} [rendered] [recorded]
+chunk   {11} 6cbad41d6996fe8e07a5.js 48.8 KiB {0} {2} {3} [rendered] [recorded]
     > aggressive-splitted [0] ./example.js 2:0-22
     9 modules
-chunk   {12} 1f69c524b51fe91bffc5.js 48.6 KiB {0} {2} {3} [rendered] [recorded]
+chunk   {12} 0bb84ee671fc256e158e.js 48.6 KiB {0} {2} {3} [rendered] [recorded]
     > aggressive-splitted [0] ./example.js 2:0-22
     7 modules
-chunk   {13} 01b620bad2ba9ee86fce.js 48.5 KiB {0} {2} {3} [rendered] [recorded]
+chunk   {13} c8536008639de2173e51.js 48.5 KiB {0} {2} {3} [rendered] [recorded]
     > aggressive-splitted [0] ./example.js 2:0-22
     28 modules
-chunk   {14} 1ebfa89095075cd49ed2.js 18.9 KiB {0} {2} {3} [rendered]
+chunk   {14} 763fbc691b4fe33d506e.js 18.9 KiB {0} {2} {3} [rendered]
     > aggressive-splitted [0] ./example.js 2:0-22
     9 modules
 ```
@@ -119,65 +119,65 @@ chunk   {14} 1ebfa89095075cd49ed2.js 18.9 KiB {0} {2} {3} [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
                   Asset      Size  Chunks             Chunk Names
-af741e13c4c621499dd3.js  10.6 KiB       7  [emitted]  
-25e8dc4b493c95c92544.js  4.88 KiB       0  [emitted]  
-a59e3b5e1cdf8ebd4e0e.js  15.1 KiB       2  [emitted]  
-35a6d6316f3be0f41389.js  7.49 KiB       3  [emitted]  
-c49286736402aaeb0066.js  10.8 KiB       4  [emitted]  
-5369ef079d20011a622e.js  12.5 KiB       5  [emitted]  
-26303e97c227d61db7aa.js  11.1 KiB       6  [emitted]  
-b25811003a7d4b5cba6e.js  8.75 KiB       1  [emitted]  
-92b243c21f8e6c40905a.js  12.1 KiB       8  [emitted]  
-a3c0c8a8a40367371001.js  9.93 KiB       9  [emitted]  
-abb691f3d6dccb56d0db.js    13 KiB      10  [emitted]  
-3979cfd0863b094d874b.js  4.99 KiB      11  [emitted]  
-7a5b97b8590a4dfb2451.js  7.02 KiB      12  [emitted]  
-b707bf605695570bbc9b.js  10.2 KiB      13  [emitted]  
-9126f24a11f6cf4fb5f8.js  5.91 KiB      14  [emitted]  
-Entrypoint main = b707bf605695570bbc9b.js 7a5b97b8590a4dfb2451.js 9126f24a11f6cf4fb5f8.js
-chunk    {0} 25e8dc4b493c95c92544.js 18.9 KiB {12} {13} {14} [rendered]
+39f63970b3a505be3348.js  10.6 KiB       7  [emitted]  
+ae85856cebfcdd8c297c.js  4.88 KiB       0  [emitted]  
+39b30b6e92b9a23bbe4d.js  15.1 KiB       2  [emitted]  
+1eaba1ccd9861309a585.js  7.49 KiB       3  [emitted]  
+46dbd7b5ea65ed2c7493.js  10.8 KiB       4  [emitted]  
+1b86f4a2bde4e55b9437.js  12.5 KiB       5  [emitted]  
+12df97cbb03e8f3fbf12.js  11.1 KiB       6  [emitted]  
+b4ceaf41eafb58de0ffb.js  8.75 KiB       1  [emitted]  
+cb73f4cb70c06c65b248.js  12.1 KiB       8  [emitted]  
+4ec9445e60b5516c0459.js  9.93 KiB       9  [emitted]  
+53cef345d9ccd6bb3876.js    13 KiB      10  [emitted]  
+c5b86ebb82485218af01.js  4.99 KiB      11  [emitted]  
+0309b4e1ec5aa2f66403.js  7.02 KiB      12  [emitted]  
+48e2dcb305baa66eaaff.js  10.2 KiB      13  [emitted]  
+0b3c96677d32cb9cb074.js  5.91 KiB      14  [emitted]  
+Entrypoint main = 48e2dcb305baa66eaaff.js 0309b4e1ec5aa2f66403.js 0b3c96677d32cb9cb074.js
+chunk    {0} ae85856cebfcdd8c297c.js 18.9 KiB {12} {13} {14} [rendered]
     > aggressive-splitted [30] ./example.js 2:0-22
     9 modules
-chunk    {1} b25811003a7d4b5cba6e.js 48.5 KiB {12} {13} {14} [rendered] [recorded]
+chunk    {1} b4ceaf41eafb58de0ffb.js 48.5 KiB {12} {13} {14} [rendered] [recorded]
     > aggressive-splitted [30] ./example.js 2:0-22
     28 modules
-chunk    {2} a59e3b5e1cdf8ebd4e0e.js 48.6 KiB {12} {13} {14} [rendered] [recorded]
+chunk    {2} 39b30b6e92b9a23bbe4d.js 48.6 KiB {12} {13} {14} [rendered] [recorded]
     > aggressive-splitted [30] ./example.js 2:0-22
     7 modules
-chunk    {3} 35a6d6316f3be0f41389.js 48.8 KiB {12} {13} {14} [rendered] [recorded]
+chunk    {3} 1eaba1ccd9861309a585.js 48.8 KiB {12} {13} {14} [rendered] [recorded]
     > aggressive-splitted [30] ./example.js 2:0-22
     9 modules
-chunk    {4} c49286736402aaeb0066.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
+chunk    {4} 46dbd7b5ea65ed2c7493.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
     > aggressive-splitted [30] ./example.js 2:0-22
     15 modules
-chunk    {5} 5369ef079d20011a622e.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
+chunk    {5} 1b86f4a2bde4e55b9437.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
     > aggressive-splitted [30] ./example.js 2:0-22
     6 modules
-chunk    {6} 26303e97c227d61db7aa.js 48.8 KiB {12} {13} {14} [rendered] [recorded]
+chunk    {6} 12df97cbb03e8f3fbf12.js 48.8 KiB {12} {13} {14} [rendered] [recorded]
     > aggressive-splitted [30] ./example.js 2:0-22
     6 modules
-chunk    {7} af741e13c4c621499dd3.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
+chunk    {7} 39f63970b3a505be3348.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
     > aggressive-splitted [30] ./example.js 2:0-22
     11 modules
-chunk    {8} 92b243c21f8e6c40905a.js 48.6 KiB {12} {13} {14} [rendered] [recorded]
+chunk    {8} cb73f4cb70c06c65b248.js 48.6 KiB {12} {13} {14} [rendered] [recorded]
     > aggressive-splitted [30] ./example.js 2:0-22
     10 modules
-chunk    {9} a3c0c8a8a40367371001.js 48.8 KiB {12} {13} {14} [rendered] [recorded]
+chunk    {9} 4ec9445e60b5516c0459.js 48.8 KiB {12} {13} {14} [rendered] [recorded]
     > aggressive-splitted [30] ./example.js 2:0-22
     11 modules
-chunk   {10} abb691f3d6dccb56d0db.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
+chunk   {10} 53cef345d9ccd6bb3876.js 48.7 KiB {12} {13} {14} [rendered] [recorded]
     > aggressive-splitted [30] ./example.js 2:0-22
     24 modules
-chunk   {11} 3979cfd0863b094d874b.js 31.4 KiB {12} {13} {14} [rendered] [recorded]
+chunk   {11} c5b86ebb82485218af01.js 31.4 KiB {12} {13} {14} [rendered] [recorded]
     > aggressive-splitted [30] ./example.js 2:0-22
     3 modules
-chunk   {12} 7a5b97b8590a4dfb2451.js 30.5 KiB [initial] [rendered] [recorded]
+chunk   {12} 0309b4e1ec5aa2f66403.js 30.5 KiB [initial] [rendered] [recorded]
     > aggressive-splitted main [30] ./example.js 
     3 modules
-chunk   {13} b707bf605695570bbc9b.js 48.8 KiB [entry] [rendered] [recorded]
+chunk   {13} 48e2dcb305baa66eaaff.js 48.8 KiB [entry] [rendered] [recorded]
     > aggressive-splitted main [30] ./example.js 
     16 modules
-chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
+chunk   {14} 0b3c96677d32cb9cb074.js 32.4 KiB [initial] [rendered]
     > aggressive-splitted main [30] ./example.js 
    [30] ./example.js 44 bytes {14} [built]
      + 11 hidden modules
@@ -574,7 +574,7 @@ chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
         "../../node_modules/react/lib/ReactComponentTreeHook.js",
         "../../node_modules/react-dom/lib/validateDOMNesting.js"
       ],
-      "hash": "9b2a697938139189aefdb0d1652d4e1c",
+      "hash": "ad733bf1033fc5a7a830729967f1aa3d",
       "id": 1
     },
     {
@@ -596,7 +596,7 @@ chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
         "../../node_modules/react/lib/ReactVersion.js",
         "../../node_modules/create-react-class/factory.js"
       ],
-      "hash": "43325f23025e7ada68c8687aed600203",
+      "hash": "4a984680da6e56d398893f0087df99fd",
       "id": 2
     },
     {
@@ -605,7 +605,7 @@ chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
         "../../node_modules/react/lib/ReactChildren.js",
         "../../node_modules/prop-types/factoryWithTypeCheckers.js"
       ],
-      "hash": "8831a28d8ef2edc602b69a01de1e713f",
+      "hash": "de45e35c6080cc33435c495b06d97616",
       "id": 3
     },
     {
@@ -635,7 +635,7 @@ chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
         "../../node_modules/fbjs/lib/isNode.js",
         "../../node_modules/fbjs/lib/getActiveElement.js"
       ],
-      "hash": "d9ea753b7a8aad984dbed4a32f145326",
+      "hash": "b9d30d332886e3897e04ddeadec79c0c",
       "id": 4
     },
     {
@@ -652,7 +652,7 @@ chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
         "../../node_modules/react-dom/lib/DOMPropertyOperations.js",
         "../../node_modules/react-dom/lib/KeyEscapeUtils.js"
       ],
-      "hash": "cb5ec0761322c333e8acb7e8f8be5c9a",
+      "hash": "091d7e57346e564d3d09367243e71f29",
       "id": 5
     },
     {
@@ -668,7 +668,7 @@ chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
         "../../node_modules/react-dom/lib/LinkedValueUtils.js",
         "../../node_modules/react-dom/lib/ReactComponentEnvironment.js"
       ],
-      "hash": "19ca687279727fd3fc3f35dee753033b",
+      "hash": "525a050e7b27998ce47bd47dc8a70b3d",
       "id": 6
     },
     {
@@ -685,7 +685,7 @@ chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
         "../../node_modules/react-dom/lib/ReactDOMContainerInfo.js",
         "../../node_modules/react-dom/lib/ReactDOMFeatureFlags.js"
       ],
-      "hash": "08ecd23ddf3176db3a888250a46c1386",
+      "hash": "1d1f50c6f480a313a28328a53aef55ca",
       "id": 7
     },
     {
@@ -697,7 +697,7 @@ chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
         "../../node_modules/react-dom/lib/ReactElementSymbol.js",
         "../../node_modules/react-dom/lib/ReactDOMTreeTraversal.js"
       ],
-      "hash": "df9efbd12020674c580712ed1705ec11",
+      "hash": "46af055d8fc77c1333fd0dc173e0e0d8",
       "id": 8
     },
     {
@@ -709,7 +709,7 @@ chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
         "../../node_modules/react-dom/lib/ReactInjection.js",
         "../../node_modules/react-dom/lib/ReactDOMSelection.js"
       ],
-      "hash": "18c04360088afd74737ec021f44ebe45",
+      "hash": "d5f1ea3a0710998c9d82be964c021396",
       "id": 9
     },
     {
@@ -730,7 +730,7 @@ chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
         "../../node_modules/react-dom/lib/ReactVersion.js",
         "../../node_modules/react-dom/lib/renderSubtreeIntoContainer.js"
       ],
-      "hash": "8cc5180ec8a325f22c628da0b005e753",
+      "hash": "d12e724ddfa623596d6a24f7035e30be",
       "id": 10
     },
     {
@@ -745,7 +745,7 @@ chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
         "../../node_modules/react-dom/lib/SyntheticClipboardEvent.js",
         "../../node_modules/react-dom/lib/ReactMount.js"
       ],
-      "hash": "5f91c2732cf4f173e20464b258b657d1",
+      "hash": "6cbad41d6996fe8e07a5537ce7e33865",
       "id": 11
     },
     {
@@ -758,7 +758,7 @@ chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
         "../../node_modules/react-dom/lib/SimpleEventPlugin.js",
         "../../node_modules/react-dom/lib/SyntheticDragEvent.js"
       ],
-      "hash": "1f69c524b51fe91bffc5862a98cc2fd5",
+      "hash": "0bb84ee671fc256e158ebb155797950a",
       "id": 12
     },
     {
@@ -792,7 +792,7 @@ chunk   {14} 9126f24a11f6cf4fb5f8.js 32.4 KiB [initial] [rendered]
         "../../node_modules/react-dom/lib/findDOMNode.js",
         "../../node_modules/react-dom/lib/getHostComponentFromComposite.js"
       ],
-      "hash": "01b620bad2ba9ee86fce5a1669cd7b3e",
+      "hash": "c8536008639de2173e512fbe0763df49",
       "id": 13
     }
   ]

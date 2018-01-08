@@ -20,10 +20,10 @@ The previously built vendor dll is used. The DllReferencePlugin reads the conten
 {{example.html}}
 ```
 
-# js/app.js
+# dist/app.js
 
 ``` javascript
-{{js/app.js}}
+{{dist/app.js}}
 ```
 
 # Info

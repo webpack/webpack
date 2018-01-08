@@ -21,7 +21,7 @@ export function increment(val) {
 };
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -110,6 +110,7 @@ export function increment(val) {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -179,7 +180,7 @@ export function increment(val) {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -230,7 +231,7 @@ function add() {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "increment", function() { return increment; });
-/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math */0);
+/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math */ 0);
 
 function increment(val) {
     return Object(_math__WEBPACK_IMPORTED_MODULE_0__["add"])(val, 1);
@@ -247,13 +248,13 @@ function increment(val) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _increment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./increment */1);
+/* harmony import */ var _increment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./increment */ 1);
 
 var a = 1;
 Object(_increment__WEBPACK_IMPORTED_MODULE_0__["increment"])(a); // 2
 
 // async loading
-__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! ./async-loaded */3)).then(function(asyncLoaded) {
+__webpack_require__.e(/*! import() */ 0).then(__webpack_require__.bind(null, /*! ./async-loaded */ 3)).then(function(asyncLoaded) {
 	console.log(asyncLoaded);
 });
 
@@ -271,7 +272,7 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  479 bytes       0  [emitted]  
-  output.js   8.22 KiB       1  [emitted]  main
+  output.js   8.24 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 25 bytes {1} [rendered]
     > [2] ./example.js 6:0-24
@@ -300,7 +301,7 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  144 bytes       0  [emitted]  
-  output.js   1.74 KiB       1  [emitted]  main
+  output.js   1.75 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 25 bytes {1} [rendered]
     > [] 6:0-24

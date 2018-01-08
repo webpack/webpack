@@ -29,10 +29,10 @@
 {{webpack.config.js}}
 ```
 
-# js/style.css
+# dist/style.css
 
 ``` javascript
-{{js/style.css}}
+{{dist/style.css}}
 ```
 
 # Info

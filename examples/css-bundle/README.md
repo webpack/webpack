@@ -44,7 +44,7 @@ module.exports = {
 };
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -113,7 +113,7 @@ module.exports = {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -148,11 +148,11 @@ __webpack_require__(/*! ./style.css */ 1);
 /******/ ]);
 ```
 
-# js/style.css
+# dist/style.css
 
 ``` css
 body {
-	background: url(js/ce21cbdd9b894e6af794813eb3fdaf60.png);
+	background: url(dist/ce21cbdd9b894e6af794813eb3fdaf60.png);
 }
 ```
 
@@ -166,7 +166,7 @@ Version: webpack next
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
                            output.js   2.97 KiB       0  [emitted]  main
-                           style.css   69 bytes       0  [emitted]  main
+                           style.css   71 bytes       0  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} output.js, style.css (main) 64 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -194,8 +194,8 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                           output.js  570 bytes       0  [emitted]  main
-                           style.css   69 bytes       0  [emitted]  main
+                           output.js  572 bytes       0  [emitted]  main
+                           style.css   71 bytes       0  [emitted]  main
 Entrypoint main = output.js style.css
 chunk    {0} output.js, style.css (main) 64 bytes [entry] [rendered]
     > main [1] ./example.js 

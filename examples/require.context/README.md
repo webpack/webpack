@@ -22,7 +22,7 @@ module.exports = function() {
 }
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -91,7 +91,7 @@ module.exports = function() {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -111,7 +111,7 @@ module.exports = function() {
 /***/ (function(module, exports, __webpack_require__) {
 
 function getTemplate(templateName) {
-	return __webpack_require__(/*! ./templates */ 1)("./"+templateName);
+	return __webpack_require__(1)("./"+templateName);
 }
 console.log(getTemplate("a"));
 console.log(getTemplate("b"));
@@ -141,8 +141,11 @@ function webpackContext(req) {
 }
 function webpackContextResolve(req) {
 	var id = map[req];
-	if(!(id + 1)) // check for number or string
-		throw new Error("Cannot find module '" + req + "'.");
+	if(!(id + 1)) { // check for number or string
+		var e = new Error('Cannot find module "' + req + '".');
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
 	return id;
 }
 webpackContext.keys = function webpackContextKeys() {
@@ -200,7 +203,7 @@ module.exports = function() {
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  4.44 KiB       0  [emitted]  main
+output.js  4.47 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 613 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -225,7 +228,7 @@ chunk    {0} output.js (main) 613 bytes [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  1.13 KiB       0  [emitted]  main
+output.js  1.16 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 613 bytes [entry] [rendered]
     > main [4] ./example.js 

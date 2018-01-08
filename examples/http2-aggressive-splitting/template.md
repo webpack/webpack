@@ -37,5 +37,5 @@ The backward compatibility (non HTTP2 client) improves with bigger `maxSize`, as
 ## Records
 
 ```
-{{js/records.json}}
+{{dist/records.json}}
 ```

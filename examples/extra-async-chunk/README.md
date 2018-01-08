@@ -68,7 +68,7 @@ module.exports = {
 };
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -157,6 +157,7 @@ module.exports = {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -226,7 +227,7 @@ module.exports = {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -256,10 +257,10 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 // a chunks with a, b, c
-Promise.all/* require */([__webpack_require__.e(0), __webpack_require__.e(2)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 0), __webpack_require__(/*! ./c */ 4)]; ((function(a, b, c) {}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+Promise.all(/*! AMD require */[__webpack_require__.e(0), __webpack_require__.e(2)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 0), __webpack_require__(/*! ./c */ 4)]; (function(a, b, c) {}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
 
 // a chunk with a, b, d
-Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e(1)]).then((function(require) {
+Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1)]).then((function(require) {
 	__webpack_require__(/*! ./b */ 0);
 	__webpack_require__(/*! ./d */ 3);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -270,7 +271,7 @@ Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e
 /******/ });
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
@@ -297,7 +298,7 @@ module.exports = "a";
 ]]);
 ```
 
-# js/1.output.js
+# dist/1.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
@@ -316,7 +317,7 @@ module.exports = "d";
 }]);
 ```
 
-# js/2.output.js
+# dist/2.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
@@ -346,7 +347,7 @@ Version: webpack next
 0.output.js  405 bytes       0  [emitted]  
 1.output.js  241 bytes       1  [emitted]  
 2.output.js  241 bytes       2  [emitted]  
-  output.js   7.38 KiB       3  [emitted]  main
+  output.js   7.39 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes {3} [rendered]
     > async commons [2] ./example.js 2:0-52

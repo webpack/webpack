@@ -24,7 +24,7 @@ require.ensure(["b"], function(require) {
 ```
 
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -113,6 +113,7 @@ require.ensure(["b"], function(require) {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -182,7 +183,7 @@ require.ensure(["b"], function(require) {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -224,21 +225,21 @@ require.ensure(["b"], function(require) {
 
 var a = __webpack_require__(/*! a */ 2);
 
-__webpack_require__.e/* require.ensure */(0/*! my own chunk */).then((function(require) {
+__webpack_require__.e(/*! require.ensure | my own chunk */ 0).then((function(require) {
 	// a named chunk
 	var c = __webpack_require__(/*! c */ 4);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-__webpack_require__.e/* require.ensure */(0/*! my own chunk */).then((function(require) {
+__webpack_require__.e(/*! require.ensure | my own chunk */ 0).then((function(require) {
 	// another chunk with the same name
 	var d = __webpack_require__(/*! d */ 1);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-__webpack_require__.e/* require.ensure */(0/*! my own chunk */).then((function(require) {
+__webpack_require__.e(/*! require.ensure | my own chunk */ 0).then((function(require) {
 	// the same again
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-__webpack_require__.e/* require.ensure */(1).then((function(require) {
+__webpack_require__.e(/*! require.ensure */ 1).then((function(require) {
 	// chunk without name
 	var d = __webpack_require__(/*! d */ 1);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -248,7 +249,7 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
 /******/ ]);
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
@@ -287,7 +288,7 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
 ]]);
 ```
 
-# js/1.output.js
+# dist/1.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
@@ -324,7 +325,7 @@ Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  677 bytes       0  [emitted]  my own chunk
 1.output.js  463 bytes       1  [emitted]  
-  output.js   7.82 KiB       2  [emitted]  main
+  output.js   7.83 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
     > my own chunk [3] ./example.js 3:0-6:18

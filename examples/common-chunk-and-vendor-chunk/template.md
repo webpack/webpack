@@ -37,34 +37,34 @@ With this bundle configuration, you would load your third party libraries, then 
 {{webpack.config.js}}
 ```
 
-# js/vendor.js
+# dist/vendor.js
 
 ``` javascript
-{{js/vendor.js}}
+{{dist/vendor.js}}
 ```
 
-# js/common.js
+# dist/common.js
 
 ``` javascript
-{{js/common.js}}
+{{dist/common.js}}
 ```
 
-# js/pageA.js
+# dist/pageA.js
 
 ``` javascript
-{{js/pageA.js}}
+{{dist/pageA.js}}
 ```
 
-# js/pageB.js
+# dist/pageB.js
 
 ``` javascript
-{{js/pageB.js}}
+{{dist/pageB.js}}
 ```
 
-# js/pageC.js
+# dist/pageC.js
 
 ``` javascript
-{{js/pageC.js}}
+{{dist/pageC.js}}
 ```
 
 # Info

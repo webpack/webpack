@@ -17,16 +17,16 @@
 {{webpack.config.js}}
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
-# js/style.css
+# dist/style.css
 
 ``` css
-{{js/style.css}}
+{{dist/style.css}}
 ```
 
 # Info

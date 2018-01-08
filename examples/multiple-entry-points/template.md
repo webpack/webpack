@@ -50,28 +50,28 @@ You can also see the info that is printed to console. It shows among others:
 {{pageA.html}}
 ```
 
-# js/commons.js
+# dist/commons.js
 
 ``` javascript
-{{js/commons.js}}
+{{dist/commons.js}}
 ```
 
-# js/pageA.bundle.js
+# dist/pageA.bundle.js
 
 ``` javascript
-{{js/pageA.bundle.js}}
+{{dist/pageA.bundle.js}}
 ```
 
-# js/pageB.bundle.js
+# dist/pageB.bundle.js
 
 ``` javascript
-{{js/pageB.bundle.js}}
+{{dist/pageB.bundle.js}}
 ```
 
-# js/0.chunk.js
+# dist/0.chunk.js
 
 ``` javascript
-{{js/0.chunk.js}}
+{{dist/0.chunk.js}}
 ```
 
 # Info

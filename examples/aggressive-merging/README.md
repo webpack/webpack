@@ -39,7 +39,7 @@ module.exports = {
 		pageC: "./pageC"
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "[name].bundle.js",
 		chunkFilename: "[id].chunk.js"
 	},
@@ -65,9 +65,9 @@ Version: webpack next
           Asset       Size  Chunks             Chunk Names
      0.chunk.js   5.65 KiB       0  [emitted]  
      1.chunk.js  405 bytes       1  [emitted]  
-pageC.bundle.js   7.01 KiB       2  [emitted]  pageC
-pageB.bundle.js   7.22 KiB       3  [emitted]  pageB
-pageA.bundle.js    7.2 KiB       4  [emitted]  pageA
+pageC.bundle.js   7.02 KiB       2  [emitted]  pageC
+pageB.bundle.js   7.23 KiB       3  [emitted]  pageB
+pageA.bundle.js   7.21 KiB       4  [emitted]  pageA
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js

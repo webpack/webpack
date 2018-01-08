@@ -63,7 +63,7 @@ describe("StatsTestCases", () => {
 				if(/error$/.test(testName)) {
 					stats.hasErrors().should.be.equal(true);
 				} else if(stats.hasErrors()) {
-					done(new Error(stats.toJson().errors.join("\n\n")));
+					return done(new Error(stats.toJson().errors.join("\n\n")));
 				}
 
 				let toStringOptions = {

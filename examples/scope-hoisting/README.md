@@ -114,7 +114,7 @@ module.exports = {
 
 
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -203,6 +203,7 @@ module.exports = {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -272,7 +273,7 @@ module.exports = {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -346,7 +347,7 @@ function b_a() {
 
 
 
-__webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! ./lazy */3)).then(function(lazy) {
+__webpack_require__.e(/*! import() */ 0).then(__webpack_require__.bind(null, /*! ./lazy */ 3)).then(function(lazy) {
 	console.log(a, b_a(), shared["a" /* x */], shared["b" /* y */], lazy.c, lazy.d.a, lazy.x, lazy.y);
 });
 
@@ -355,7 +356,7 @@ __webpack_require__.e/* import() */(0).then(__webpack_require__.bind(null, /*! .
 /******/ ]);
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
@@ -391,7 +392,6 @@ __webpack_require__.d(d_namespaceObject, "a", function() { return a; });
 
 // EXTERNAL MODULE: ./node_modules/cjs.js
 var cjs = __webpack_require__(2);
-var cjs_default = /*#__PURE__*/__webpack_require__.n(cjs);
 
 // EXTERNAL MODULE: ./node_modules/shared.js + 1 modules
 var shared = __webpack_require__(0);
@@ -436,8 +436,8 @@ Minimized
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
-0.output.js  1.84 KiB       0  [emitted]  
-  output.js  8.15 KiB       1  [emitted]  main
+0.output.js  1.78 KiB       0  [emitted]  
+  output.js  8.17 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 286 bytes {1} [rendered]
     > [] 4:0-16

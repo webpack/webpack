@@ -44,28 +44,28 @@ Pretty useful for a router in a SPA.
 {{webpack.config.js}}
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
-{{js/0.output.js}}
+{{dist/0.output.js}}
 ```
 
-# js/1.output.js
+# dist/1.output.js
 
 ``` javascript
-{{js/1.output.js}}
+{{dist/1.output.js}}
 ```
 
-# js/2.output.js
+# dist/2.output.js
 
 ``` javascript
-{{js/2.output.js}}
+{{dist/2.output.js}}
 ```
 
 # Info

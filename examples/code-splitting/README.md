@@ -36,7 +36,7 @@ require.ensure(["c"], function(require) {
 ```
 
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -125,6 +125,7 @@ require.ensure(["c"], function(require) {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -194,7 +195,7 @@ require.ensure(["c"], function(require) {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -244,7 +245,7 @@ require.ensure(["c"], function(require) {
 
 var a = __webpack_require__(/*! a */ 1);
 var b = __webpack_require__(/*! b */ 0);
-__webpack_require__.e/* require.ensure */(0).then((function(require) {
+__webpack_require__.e(/*! require.ensure */ 0).then((function(require) {
     __webpack_require__(/*! b */ 0).xyz();
     var d = __webpack_require__(/*! d */ 3);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -253,7 +254,7 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
 /******/ ]);
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
@@ -298,7 +299,7 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  490 bytes       0  [emitted]  
-  output.js   7.43 KiB       1  [emitted]  main
+  output.js   7.44 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes {1} [rendered]
     > [2] ./example.js 3:0-6:2

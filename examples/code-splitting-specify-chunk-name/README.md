@@ -32,7 +32,7 @@ var foo = "foo";
 export default foo;
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -121,6 +121,7 @@ export default foo;
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -190,7 +191,7 @@ export default foo;
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -241,8 +242,13 @@ var map = {
 };
 function webpackAsyncContext(req) {
 	var ids = map[req];
-	if(!ids)
-		return Promise.resolve().then(function() { throw new Error("Cannot find module '" + req + "'."); });
+	if(!ids) {
+		return Promise.resolve().then(function() {
+			var e = new Error('Cannot find module "' + req + '".');
+			e.code = 'MODULE_NOT_FOUND';
+			throw e;
+		});
+	}
 	return __webpack_require__.e(ids[1]).then(function() {
 		var module = __webpack_require__(ids[0]);
 		return module;
@@ -262,17 +268,17 @@ module.exports = webpackAsyncContext;
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__.e/* import() */(2/*! chunk-foo *//* duplicate */).then(__webpack_require__.bind(null, /*! ./templates/foo */0)).then(function(foo) {
+__webpack_require__.e(/*! import() | chunk-foo | duplicate */ 2).then(__webpack_require__.bind(null, /*! ./templates/foo */ 0)).then(function(foo) {
 	console.log('foo:', foo);
 })
 
-__webpack_require__.e/* require.ensure */(2/*! chunk-foo1 *//* duplicate */).then((function(require) {
+__webpack_require__.e(/*! require.ensure | chunk-foo1 | duplicate */ 2).then((function(require) {
 	var foo = __webpack_require__(/*! ./templates/foo */ 0);
 	console.log('foo:', foo);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
 var createContextVar = "r";
-__webpack_require__(/*! ./templates */ 3)("./ba" + createContextVar).then(function(bar) {
+__webpack_require__(3)("./ba" + createContextVar).then(function(bar) {
 	console.log('bar:', bar);
 })
 
@@ -294,7 +300,7 @@ Version: webpack next
 0.output.js  445 bytes       0  [emitted]  chunk-bar-baz2
 1.output.js  439 bytes       1  [emitted]  chunk-bar-baz0
 2.output.js  436 bytes       2  [emitted]  chunk-foo
-  output.js   8.19 KiB       3  [emitted]  main
+  output.js   8.23 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (chunk-bar-baz2) 41 bytes {3} [rendered]
     [1] ./templates/baz.js 41 bytes {0} [optional] [built]
@@ -330,7 +336,7 @@ Version: webpack next
 0.output.js  114 bytes       0  [emitted]  chunk-bar-baz2
 1.output.js  115 bytes       1  [emitted]  chunk-bar-baz0
 2.output.js  113 bytes       2  [emitted]  chunk-foo
-  output.js   2.08 KiB       3  [emitted]  main
+  output.js   2.12 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (chunk-bar-baz2) 41 bytes {3} [rendered]
     [1] ./templates/baz.js 41 bytes {0} [optional] [built]

@@ -57,7 +57,7 @@ module.exports = {
 		pageB: "./pageB"
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "[name].bundle.js",
 		chunkFilename: "[id].chunk.js"
 	},
@@ -85,7 +85,7 @@ module.exports = {
 </html>
 ```
 
-# js/commons.js
+# dist/commons.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -188,6 +188,7 @@ module.exports = {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -257,7 +258,7 @@ module.exports = {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -289,7 +290,7 @@ module.exports = "Common";
 /******/ ]);
 ```
 
-# js/pageA.bundle.js
+# dist/pageA.bundle.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
@@ -302,16 +303,16 @@ module.exports = "Common";
 /***/ (function(module, exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 1);
-__webpack_require__.e/* require */(0/* duplicate */).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 0)]; ((function(shared) {
+__webpack_require__.e(/*! AMD require | duplicate */ 0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 0)]; (function(shared) {
 	shared("This is page A");
-}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
 
 /***/ })
 
 },[[3,3,2]]]);
 ```
 
-# js/pageB.bundle.js
+# dist/pageB.bundle.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
@@ -324,7 +325,7 @@ __webpack_require__.e/* require */(0/* duplicate */).then(function() { var __WEB
 /***/ (function(module, exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 1);
-__webpack_require__.e/* require.ensure */(0/* duplicate */).then((function(require) {
+__webpack_require__.e(/*! require.ensure | duplicate */ 0).then((function(require) {
 	var shared = __webpack_require__(/*! ./shared */ 0);
 	shared("This is page B");
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -334,7 +335,7 @@ __webpack_require__.e/* require.ensure */(0/* duplicate */).then((function(requi
 },[[2,3,1]]]);
 ```
 
-# js/0.chunk.js
+# dist/0.chunk.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
@@ -363,9 +364,9 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
           Asset       Size  Chunks             Chunk Names
      0.chunk.js  363 bytes       0  [emitted]  
-pageB.bundle.js  553 bytes       1  [emitted]  pageB
-pageA.bundle.js  596 bytes       2  [emitted]  pageA
-     commons.js   7.24 KiB       3  [emitted]  commons
+pageB.bundle.js  552 bytes       1  [emitted]  pageB
+pageA.bundle.js  597 bytes       2  [emitted]  pageA
+     commons.js   7.25 KiB       3  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 chunk    {0} 0.chunk.js 91 bytes {1} {2} [rendered]
@@ -399,7 +400,7 @@ Version: webpack next
      0.chunk.js  120 bytes       0  [emitted]  
 pageB.bundle.js  168 bytes       1  [emitted]  pageB
 pageA.bundle.js  193 bytes       2  [emitted]  pageA
-     commons.js   1.74 KiB       3  [emitted]  commons
+     commons.js   1.75 KiB       3  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
 chunk    {0} 0.chunk.js 91 bytes {1} {2} [rendered]

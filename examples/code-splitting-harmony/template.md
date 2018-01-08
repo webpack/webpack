@@ -13,10 +13,10 @@ Providing dynamic expressions to `import` is possible. The same limits as with d
 ```
 
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
 
