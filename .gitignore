@@ -5,6 +5,7 @@
 /benchmark/js
 /benchmark/fixtures
 /examples/**/dist
+/examples/**/js
 /coverage
 .DS_Store
 *.log
