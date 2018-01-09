@@ -1,3 +1,4 @@
+const path = require("path");
 module.exports = {
 	mode: "production",
 	entry: {
@@ -10,7 +11,10 @@ module.exports = {
 		chunkFilename: "[name].chunk.js"
 	},
 	optimization: {
-		initialVendorChunk: "libs"
+		initialVendorsChunk: {
+			"libs": /[\\/](xyz|x)/,
+			vendors: path.resolve(__dirname, "node_modules")
+		}
 	},
 	stats: {
 		hash: false,

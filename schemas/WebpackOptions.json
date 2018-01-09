@@ -1340,7 +1340,17 @@
             {
               "type": "object",
               "additionalProperties": {
-                "instanceof": "RegExp"
+                "oneOf": [
+                  {
+                    "instanceof": "RegExp"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "instanceof": "Function"
+                  }
+                ]
               }
             },
             {
