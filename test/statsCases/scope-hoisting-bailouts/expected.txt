@@ -1,5 +1,7 @@
 Hash: 600b6cad440f475caa85
 Time: Xms
+Entrypoint index = index.js
+Entrypoint entry = entry.js
    [0] ./entry.js 32 bytes {0} {1} [built]
        ModuleConcatenation bailout: Module is an entry point
    [1] ./ref-from-cjs.js 45 bytes {0} [built]
