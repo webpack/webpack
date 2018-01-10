@@ -1380,6 +1380,7 @@
             {
               "type": "object",
               "additionalProperties": {
+                "description": "An object of multiple vendors chunks, each keys specifies the name and the value is a absolute path prefix, regular expression or matcher function",
                 "oneOf": [
                   {
                     "instanceof": "RegExp"
