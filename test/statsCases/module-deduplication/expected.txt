@@ -5,9 +5,9 @@ Asset       Size  Chunks             Chunk Names
  3.js  661 bytes       3  [emitted]  
  4.js  661 bytes       4  [emitted]  
  5.js  661 bytes       5  [emitted]  
-e1.js   8.11 KiB       6  [emitted]  e1
-e2.js   8.13 KiB       7  [emitted]  e2
-e3.js   8.15 KiB       8  [emitted]  e3
+e1.js   8.12 KiB       6  [emitted]  e1
+e2.js   8.14 KiB       7  [emitted]  e2
+e3.js   8.16 KiB       8  [emitted]  e3
 chunk    {0} 0.js 37 bytes {7} {8} [rendered]
     [2] ./d.js 9 bytes {0} {6} [built]
     [5] ./async1.js 28 bytes {0} {5} [built]

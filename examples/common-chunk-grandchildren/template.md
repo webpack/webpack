@@ -55,58 +55,58 @@ You can see that webpack outputs four files/chunks:
 {{webpack.config.js}}
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
-{{js/0.output.js}}
+{{dist/0.output.js}}
 ```
 
-# js/1.output.js
+# dist/1.output.js
 
 ``` javascript
-{{js/1.output.js}}
+{{dist/1.output.js}}
 ```
 
-# js/2.output.js
+# dist/2.output.js
 
 ``` javascript
-{{js/2.output.js}}
+{{dist/2.output.js}}
 ```
 
-# js/asyncoutput.js
+# dist/asyncoutput.js
 
 ``` javascript
-{{js/asyncoutput.js}}
+{{dist/asyncoutput.js}}
 ```
 
-# js/0.asyncoutput.js
+# dist/0.asyncoutput.js
 
 ``` javascript
-{{js/0.asyncoutput.js}}
+{{dist/0.asyncoutput.js}}
 ```
 
-# js/1.asyncoutput.js
+# dist/1.asyncoutput.js
 
 ``` javascript
-{{js/1.asyncoutput.js}}
+{{dist/1.asyncoutput.js}}
 ```
 
-# js/2.asyncoutput.js
+# dist/2.asyncoutput.js
 
 ``` javascript
-{{js/2.asyncoutput.js}}
+{{dist/2.asyncoutput.js}}
 ```
 
-# js/3.asyncoutput.js
+# dist/3.asyncoutput.js
 
 ``` javascript
-{{js/3.asyncoutput.js}}
+{{dist/3.asyncoutput.js}}
 ```
 
 # Info

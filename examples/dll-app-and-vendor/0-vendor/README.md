@@ -18,13 +18,13 @@ module.exports = {
 	entry: ["example-vendor"],
 	output: {
 		filename: "vendor.js", // best use [hash] here too
-		path: path.resolve(__dirname, "js"),
+		path: path.resolve(__dirname, "dist"),
 		library: "vendor_lib_[hash]",
 	},
 	plugins: [
 		new webpack.DllPlugin({
 			name: "vendor_lib_[hash]",
-			path: path.resolve(__dirname, "js/vendor-manifest.json"),
+			path: path.resolve(__dirname, "dist/vendor-manifest.json"),
 		}),
 	],
 };
@@ -38,10 +38,10 @@ export function square(n) {
 }
 ```
 
-# js/vendor.js
+# dist/vendor.js
 
 ``` javascript
-var vendor_lib_574249e400278f8a7ebb =
+var vendor_lib_3312d7a9aacfa149e455 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -110,7 +110,7 @@ var vendor_lib_574249e400278f8a7ebb =
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -153,10 +153,10 @@ function square(n) {
 /******/ ]);
 ```
 
-# js/vendor-manifest.json
+# dist/vendor-manifest.json
 
 ``` javascript
-{"name":"vendor_lib_574249e400278f8a7ebb","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"harmonyModule":true,"providedExports":["square"]}}}}
+{"name":"vendor_lib_3312d7a9aacfa149e455","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
 ```
 
 # Info
@@ -166,8 +166,8 @@ function square(n) {
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
-    Asset     Size  Chunks             Chunk Names
-vendor.js  3.3 KiB       0  [emitted]  main
+    Asset      Size  Chunks             Chunk Names
+vendor.js  3.31 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
     > main [0] dll main 
@@ -183,7 +183,7 @@ chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset       Size  Chunks             Chunk Names
-vendor.js  702 bytes       0  [emitted]  main
+vendor.js  704 bytes       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
     > main [1] dll main 

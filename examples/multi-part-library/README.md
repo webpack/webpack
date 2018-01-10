@@ -23,7 +23,7 @@ module.exports = {
 		beta: "./beta"
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "MyLibrary.[name].js",
 		library: ["MyLibrary", "[name]"],
 		libraryTarget: "umd"
@@ -31,7 +31,7 @@ module.exports = {
 };
 ```
 
-# js/MyLibrary.alpha.js
+# dist/MyLibrary.alpha.js
 
 ``` javascript
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -43,7 +43,7 @@ module.exports = {
 		exports["alpha"] = factory();
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["alpha"] = factory();
-})(typeof self !== 'undefined' ? self : this, function() {
+})(window, function() {
 ```
 <details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -112,7 +112,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -138,7 +138,7 @@ module.exports = "alpha";
 });
 ```
 
-# js/MyLibrary.beta.js
+# dist/MyLibrary.beta.js
 
 ``` javascript
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -150,7 +150,7 @@ module.exports = "alpha";
 		exports["beta"] = factory();
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["beta"] = factory();
-})(typeof self !== 'undefined' ? self : this, function() {
+})(window, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -215,7 +215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
@@ -245,8 +245,8 @@ module.exports = "beta";
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
              Asset      Size  Chunks             Chunk Names
-MyLibrary.alpha.js  3.18 KiB       0  [emitted]  alpha
- MyLibrary.beta.js  3.18 KiB       1  [emitted]  beta
+MyLibrary.alpha.js  3.15 KiB       0  [emitted]  alpha
+ MyLibrary.beta.js  3.15 KiB       1  [emitted]  beta
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
@@ -265,8 +265,8 @@ chunk    {1} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
              Asset       Size  Chunks             Chunk Names
- MyLibrary.beta.js  854 bytes       0  [emitted]  beta
-MyLibrary.alpha.js  858 bytes       1  [emitted]  alpha
+ MyLibrary.beta.js  828 bytes       0  [emitted]  beta
+MyLibrary.alpha.js  832 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]

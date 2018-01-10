@@ -11,16 +11,16 @@ This is the _reference_ bundle (with the manifests) for [dll user example](https
 {{webpack.config.js}}
 ```
 
-# js/MyDll.alpha.js
+# dist/MyDll.alpha.js
 
 ``` javascript
-{{js/MyDll.alpha.js}}
+{{dist/MyDll.alpha.js}}
 ```
 
-# js/alpha-manifest.json
+# dist/alpha-manifest.json
 
 ``` javascript
-{{js/alpha-manifest.json}}
+{{dist/alpha-manifest.json}}
 ```
 
 # Info

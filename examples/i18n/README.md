@@ -27,7 +27,7 @@ module.exports = Object.keys(languages).map(function(language) {
 		// mode: "development || "production",
 		entry: "./example",
 		output: {
-			path: path.join(__dirname, "js"),
+			path: path.join(__dirname, "dist"),
 			filename: language + ".output.js"
 		},
 		plugins: [
@@ -47,7 +47,7 @@ module.exports = Object.keys(languages).map(function(language) {
 }
 ```
 
-# js/de.output.js
+# dist/de.output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -116,7 +116,7 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -142,7 +142,7 @@ console.log("Missing Text");
 /******/ ]);
 ```
 
-# js/en.output.js
+# dist/en.output.js
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
@@ -209,7 +209,7 @@ console.log("Missing Text");
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -268,7 +268,7 @@ Version: webpack next
 Child en:
     Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset       Size  Chunks             Chunk Names
-    en.output.js  604 bytes       0  [emitted]  main
+    en.output.js  606 bytes       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 
@@ -277,7 +277,7 @@ Child en:
 Child de:
     Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset       Size  Chunks             Chunk Names
-    de.output.js  603 bytes       0  [emitted]  main
+    de.output.js  605 bytes       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > main [0] ./example.js 

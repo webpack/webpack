@@ -48,7 +48,7 @@ module.exports = {
 };
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -137,6 +137,7 @@ module.exports = {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -206,7 +207,7 @@ module.exports = {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -235,19 +236,19 @@ module.exports = {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-Promise.all/* require */([__webpack_require__.e(4), __webpack_require__.e(0), __webpack_require__.e(1)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 0), __webpack_require__(/*! ./c */ 7)]; ((function(a, b, c) {}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+Promise.all(/*! AMD require | duplicate */[__webpack_require__.e(4), __webpack_require__.e(0), __webpack_require__.e(1)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 0), __webpack_require__(/*! ./c */ 7)]; (function(a, b, c) {}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
 
-Promise.all/* require.ensure */([__webpack_require__.e(3), __webpack_require__.e(0), __webpack_require__.e(1)]).then((function(require) {
+Promise.all(/*! require.ensure | duplicate */[__webpack_require__.e(3), __webpack_require__.e(0), __webpack_require__.e(1)]).then((function(require) {
 	__webpack_require__(/*! ./b */ 0);
 	__webpack_require__(/*! ./d */ 6);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-Promise.all/* require.ensure */([__webpack_require__.e(2), __webpack_require__.e(1)]).then((function(require) {
+Promise.all(/*! require.ensure */[__webpack_require__.e(2), __webpack_require__.e(1)]).then((function(require) {
 	__webpack_require__(/*! ./a */ 1);
-	Promise.all/* require.ensure */([__webpack_require__.e(6), __webpack_require__.e(0)]).then((function(require) {
+	Promise.all(/*! require.ensure | duplicate */[__webpack_require__.e(6), __webpack_require__.e(0)]).then((function(require) {
 		__webpack_require__(/*! ./f */ 4);
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
-	Promise.all/* require.ensure */([__webpack_require__.e(5), __webpack_require__.e(0)]).then((function(require) {
+	Promise.all(/*! require.ensure | duplicate */[__webpack_require__.e(5), __webpack_require__.e(0)]).then((function(require) {
 		__webpack_require__(/*! ./g */ 3);
 	}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -273,7 +274,7 @@ Version: webpack next
 4.output.js  241 bytes       4  [emitted]  
 5.output.js  241 bytes       5  [emitted]  
 6.output.js  241 bytes       6  [emitted]  
-  output.js   8.02 KiB       7  [emitted]  main
+  output.js   8.09 KiB       7  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (async2) 21 bytes {2} {7} [rendered]
     > async commons duplicate [2] ./example.js 1:0-52
@@ -333,7 +334,7 @@ Version: webpack next
 4.output.js  91 bytes       4  [emitted]  
 5.output.js  91 bytes       5  [emitted]  
 6.output.js  91 bytes       6  [emitted]  
-  output.js  2.01 KiB       7  [emitted]  main
+  output.js  2.02 KiB       7  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (async2) 21 bytes {2} {7} [rendered]
     > async commons duplicate [2] ./example.js 1:0-52

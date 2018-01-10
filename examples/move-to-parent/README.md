@@ -43,7 +43,7 @@ require(["./a", "./b", "./c", "./d"]);
 var path = require("path");
 var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 var outputOptions = {
-	path: path.join(__dirname, "js"),
+	path: path.join(__dirname, "dist"),
 	filename: "[name].bundle.js",
 	chunkFilename: "[id].chunk.js"
 };
@@ -130,7 +130,7 @@ Child page:
         1.chunk.js  572 bytes       1  [emitted]  
         2.chunk.js  405 bytes       2  [emitted]  
         3.chunk.js  238 bytes       3  [emitted]  
-    page.bundle.js   7.43 KiB       4  [emitted]  page
+    page.bundle.js   7.46 KiB       4  [emitted]  page
     Entrypoint page = page.bundle.js
     chunk    {0} 0.chunk.js 84 bytes {4} [rendered]
         > [3] ./page.js 4:0-37
@@ -159,7 +159,7 @@ Child pageA:
          0.chunk.js  590 bytes       0  [emitted]  
          1.chunk.js  414 bytes       1  [emitted]  
          2.chunk.js  247 bytes       2  [emitted]  
-    pageA.bundle.js   7.59 KiB       3  [emitted]  pageA
+    pageA.bundle.js   7.63 KiB       3  [emitted]  pageA
     Entrypoint pageA = pageA.bundle.js
     chunk    {0} 0.chunk.js 63 bytes {3} [rendered]
         > [3] ./page.js 4:0-37
@@ -182,7 +182,7 @@ Child pageB:
               Asset       Size  Chunks             Chunk Names
          0.chunk.js  432 bytes       0  [emitted]  
          1.chunk.js  241 bytes       1  [emitted]  
-    pageB.bundle.js   7.72 KiB       2  [emitted]  pageB
+    pageB.bundle.js   7.78 KiB       2  [emitted]  pageB
     Entrypoint pageB = pageB.bundle.js
     chunk    {0} 0.chunk.js 42 bytes {2} [rendered]
         > [3] ./page.js 4:0-37
@@ -200,7 +200,7 @@ Child pageC:
     Hash: 0a1b2c3d4e5f6a7b8c9d
               Asset       Size  Chunks             Chunk Names
          0.chunk.js  247 bytes       0  [emitted]  
-    pageC.bundle.js   7.95 KiB       1  [emitted]  pageC
+    pageC.bundle.js   7.99 KiB       1  [emitted]  pageC
     Entrypoint pageC = pageC.bundle.js
     chunk    {0} 0.chunk.js 21 bytes {1} [rendered]
         > duplicate [4] ./page.js 2:0-23
@@ -297,7 +297,7 @@ Child pageC:
     Hash: 0a1b2c3d4e5f6a7b8c9d
               Asset      Size  Chunks             Chunk Names
          0.chunk.js  90 bytes       0  [emitted]  
-    pageC.bundle.js  1.86 KiB       1  [emitted]  pageC
+    pageC.bundle.js  1.87 KiB       1  [emitted]  pageC
     Entrypoint pageC = pageC.bundle.js
     chunk    {0} 0.chunk.js 21 bytes {1} [rendered]
         > duplicate [4] ./page.js 2:0-23

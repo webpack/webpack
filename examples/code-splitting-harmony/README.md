@@ -25,7 +25,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 ```
 
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -114,6 +114,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -183,7 +184,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -233,11 +234,16 @@ var map = {
 };
 function webpackAsyncContext(req) {
 	var ids = map[req];
-	if(!ids)
-		return Promise.resolve().then(function() { throw new Error("Cannot find module '" + req + "'."); });
+	if(!ids) {
+		return Promise.resolve().then(function() {
+			var e = new Error('Cannot find module "' + req + '".');
+			e.code = 'MODULE_NOT_FOUND';
+			throw e;
+		});
+	}
 	return __webpack_require__.e(ids[1]).then(function() {
 		var module = __webpack_require__(ids[0]);
-		return typeof module === "object" && module && module.__esModule ? module : /* fake namespace object */ { "default": module };;
+		return (typeof module === "object" && module && module.__esModule ? module : /* fake namespace object */ { "default": module });
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
@@ -266,16 +272,16 @@ module.exports = webpackAsyncContext;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! a */3);
+/* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! a */ 3);
 /* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(a__WEBPACK_IMPORTED_MODULE_0__);
 
 
-__webpack_require__.e/* import() */(2).then(function() { var module = __webpack_require__(/*! b */5); return typeof module === "object" && module && module.__esModule ? module : /* fake namespace object */ { "default": module }; }).then(function(b) {
+__webpack_require__.e(/*! import() */ 2).then(function() { var module = __webpack_require__(/*! b */ 5); return typeof module === "object" && module && module.__esModule ? module : { /* fake namespace object */ "default": module }; }).then(function(b) {
 	console.log("b loaded", b);
 })
 
 function loadC(name) {
-	return __webpack_require__(/*! c */ 2)("./" + name);
+	return __webpack_require__(2)("./" + name);
 }
 
 Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
@@ -299,7 +305,7 @@ Version: webpack next
 0.output.js  275 bytes       0  [emitted]  
 1.output.js  284 bytes       1  [emitted]  
 2.output.js  270 bytes       2  [emitted]  
-  output.js   8.65 KiB       3  [emitted]  main
+  output.js   8.71 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
     1 module
@@ -327,7 +333,7 @@ Version: webpack next
 0.output.js  76 bytes       0  [emitted]  
 1.output.js  77 bytes       1  [emitted]  
 2.output.js  78 bytes       2  [emitted]  
-  output.js  2.21 KiB       3  [emitted]  main
+  output.js  2.25 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
     1 module

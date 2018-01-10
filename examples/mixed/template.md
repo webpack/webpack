@@ -20,16 +20,16 @@ You see that everything is working nicely together.
 {{commonjs.js}}
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
-{{js/0.output.js}}
+{{dist/0.output.js}}
 ```
 
 # Info

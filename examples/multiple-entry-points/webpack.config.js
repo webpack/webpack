@@ -7,7 +7,7 @@ module.exports = {
 		pageB: "./pageB"
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "[name].bundle.js",
 		chunkFilename: "[id].chunk.js"
 	},

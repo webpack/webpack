@@ -28,28 +28,28 @@
 {{adminPageA.html}}
 ```
 
-# js/commons.js
+# dist/commons.js
 
 ``` javascript
-{{js/commons.js}}
+{{dist/commons.js}}
 ```
 
-# js/pageA.js
+# dist/pageA.js
 
 ``` javascript
-{{js/pageA.js}}
+{{dist/pageA.js}}
 ```
 
-# js/admin-commons.js
+# dist/admin-commons.js
 
 ``` javascript
-{{js/admin-commons.js}}
+{{dist/admin-commons.js}}
 ```
 
-# js/adminPageA.js
+# dist/adminPageA.js
 
 ``` javascript
-{{js/adminPageA.js}}
+{{dist/adminPageA.js}}
 ```
 
 # Info

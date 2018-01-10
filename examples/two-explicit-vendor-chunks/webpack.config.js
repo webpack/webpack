@@ -10,7 +10,7 @@ module.exports = {
 		pageC: "./pageC"
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "[name].js"
 	},
 	plugins: [

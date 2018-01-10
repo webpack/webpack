@@ -23,7 +23,7 @@ console.log "yeah coffee-script"
 module.exports = 42
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -92,7 +92,7 @@ module.exports = 42
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -154,7 +154,7 @@ module.exports = 42;
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  3.33 KiB       0  [emitted]  main
+output.js  3.34 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 206 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -173,7 +173,7 @@ chunk    {0} output.js (main) 206 bytes [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset       Size  Chunks             Chunk Names
-output.js  706 bytes       0  [emitted]  main
+output.js  708 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 206 bytes [entry] [rendered]
     > main [2] ./example.js 

@@ -57,3 +57,7 @@ Some things that will increase the chance that your pull request is accepted:
 webpack is insanely feature rich and documentation is a huge time sink. We
 greatly appreciate any time spent fixing typos or clarifying sections in the
 documentation.
+
+## Discussions
+
+Gitters is only for small questions. To discuss in long a subject, please send on gitters a link to your forum or blog.

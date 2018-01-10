@@ -14,22 +14,22 @@ WebAssembly modules can be imported like other modules. Their download and compi
 {{math.js}}
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
-{{js/0.output.js}}
+{{dist/0.output.js}}
 ```
 
-# js/1.output.js
+# dist/1.output.js
 
 ``` javascript
-{{js/1.output.js}}
+{{dist/1.output.js}}
 ```
 
 # Info

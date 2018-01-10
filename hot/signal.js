@@ -24,6 +24,7 @@ if(module.hot) {
 				require("./log-apply-result")(updatedModules, renewedModules);
 
 				checkForUpdate(true);
+				return null;
 			});
 		}).catch(function(err) {
 			var status = module.hot.status();

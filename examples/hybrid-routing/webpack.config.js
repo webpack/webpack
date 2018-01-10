@@ -11,7 +11,7 @@ module.exports = {
 		"commons": "./router"
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		publicPath: "js/",
 		filename: "[name].bundle.js",
 		chunkFilename: "[id].chunk.js"

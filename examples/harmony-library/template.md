@@ -4,10 +4,10 @@
 {{webpack.config.js}}
 ```
 
-# js/MyLibrary.umd.js
+# dist/MyLibrary.umd.js
 
 ``` javascript
-{{js/MyLibrary.umd.js}}
+{{dist/MyLibrary.umd.js}}
 ```
 
 # Info

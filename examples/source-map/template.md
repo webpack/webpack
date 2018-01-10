@@ -16,60 +16,60 @@ This example demonstrates various types of source-maps.
 
 ## source-map.js and source-map.js.map
 ``` javascript
-{{js/bundle-source-map.js}}
+{{dist/bundle-source-map.js}}
 ```
 
 ``` javascript
-{{js/bundle-source-map.js.map}}
+{{dist/bundle-source-map.js.map}}
 ```
 
 ## hidden-source-map.js and hidden-source-map.js.map
 ``` javascript
-{{js/bundle-hidden-source-map.js}}
+{{dist/bundle-hidden-source-map.js}}
 ```
 
 ``` javascript
-{{js/bundle-hidden-source-map.js.map}}
+{{dist/bundle-hidden-source-map.js.map}}
 ```
 
 ## inline-source-map.js
 ``` javascript
-{{js/bundle-inline-source-map.js}}
+{{dist/bundle-inline-source-map.js}}
 ```
 
 ## nosources-source-map.js.map
 ``` javascript
-{{js/bundle-nosources-source-map.js.map}}
+{{dist/bundle-nosources-source-map.js.map}}
 ```
 
 ## eval-source-map.js
 ``` javascript
-{{js/bundle-eval-source-map.js}}
+{{dist/bundle-eval-source-map.js}}
 ```
 
 ## eval.js
 ``` javascript
-{{js/bundle-eval.js}}
+{{dist/bundle-eval.js}}
 ```
 
 ## cheap-eval-source-map.js
 ``` javascript
-{{js/bundle-cheap-eval-source-map.js}}
+{{dist/bundle-cheap-eval-source-map.js}}
 ```
 
 ## cheap-module-eval-source-map.js
 ``` javascript
-{{js/bundle-cheap-module-eval-source-map.js}}
+{{dist/bundle-cheap-module-eval-source-map.js}}
 ```
 
 ## cheap-module-source-map.js.map
 ``` javascript
-{{js/bundle-cheap-module-source-map.js.map}}
+{{dist/bundle-cheap-module-source-map.js.map}}
 ```
 
 ## cheap-source-map.js.map
 ``` javascript
-{{js/bundle-cheap-source-map.js.map}}
+{{dist/bundle-cheap-source-map.js.map}}
 ```
 
 # webpack output

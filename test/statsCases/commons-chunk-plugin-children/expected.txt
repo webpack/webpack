@@ -51,7 +51,7 @@ Child children:
     3.bundle.js   1.19 KiB       3  [emitted]  x4
     4.bundle.js  749 bytes       4  [emitted]  x5
     5.bundle.js   1.04 KiB       5  [emitted]  xx5
-      bundle.js   7.17 KiB       6  [emitted]  main
+      bundle.js   7.18 KiB       6  [emitted]  main
     chunk    {0} 0.bundle.js (x1) 14 bytes {6} [rendered]
         > x1 [11] ./index.js 1:0-42
         [6] ./x1.js 14 bytes {0} [built]
@@ -90,7 +90,7 @@ Child async:
     4.bundle.js   1.19 KiB       4  [emitted]  x4
     5.bundle.js  749 bytes       5  [emitted]  x5
     6.bundle.js   1.04 KiB       6  [emitted]  xx5
-      bundle.js   7.25 KiB       7  [emitted]  main
+      bundle.js   7.26 KiB       7  [emitted]  main
     chunk    {0} 0.bundle.js 0 bytes {7} [rendered]
         > async commons x1 [11] ./index.js 1:0-42
         > async commons x2 [11] ./index.js 2:0-42
@@ -134,7 +134,7 @@ Child deep-children:
     3.bundle.js    1.13 KiB       3  [emitted]  x4
     4.bundle.js   749 bytes       4  [emitted]  x5
     5.bundle.js  1020 bytes       5  [emitted]  xx5
-      bundle.js    7.29 KiB       6  [emitted]  main
+      bundle.js     7.3 KiB       6  [emitted]  main
     chunk    {0} 0.bundle.js (x1) 14 bytes {6} [rendered]
         > x1 [11] ./index.js 1:0-42
         [6] ./x1.js 14 bytes {0} [built]
@@ -171,7 +171,7 @@ Child deep-async:
     4.bundle.js    1.13 KiB       4  [emitted]  x4
     5.bundle.js   789 bytes       5  [emitted]  x5
     6.bundle.js  1020 bytes       6  [emitted]  xx5
-      bundle.js    7.25 KiB       7  [emitted]  main
+      bundle.js    7.26 KiB       7  [emitted]  main
     chunk    {0} 0.bundle.js 0 bytes {7} [rendered]
         > async commons x1 [11] ./index.js 1:0-42
         > async commons x2 [11] ./index.js 2:0-42

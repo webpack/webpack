@@ -32,7 +32,7 @@ var foo = "foo";
 export default foo;
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -121,6 +121,7 @@ export default foo;
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120000;
 /******/
@@ -190,7 +191,7 @@ export default foo;
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
@@ -249,8 +250,13 @@ var map = {
 };
 function webpackAsyncContext(req) {
 	var ids = map[req];
-	if(!ids)
-		return Promise.resolve().then(function() { throw new Error("Cannot find module '" + req + "'."); });
+	if(!ids) {
+		return Promise.resolve().then(function() {
+			var e = new Error('Cannot find module "' + req + '".');
+			e.code = 'MODULE_NOT_FOUND';
+			throw e;
+		});
+	}
 	return __webpack_require__.e(ids[1]).then(function() {
 		var module = __webpack_require__(ids[0]);
 		return module;
@@ -272,7 +278,7 @@ module.exports = webpackAsyncContext;
 
 async function getTemplate(templateName) {
 	try {
-		let template = await __webpack_require__(/*! ./templates */ 3)(`./${templateName}`);
+		let template = await __webpack_require__(3)(`./${templateName}`);
 		console.log(template);
 	} catch(err) {
 		console.error("template error");
@@ -302,7 +308,7 @@ Version: webpack next
 0.output.js  436 bytes       0  [emitted]  
 1.output.js  445 bytes       1  [emitted]  
 2.output.js  439 bytes       2  [emitted]  
-  output.js   7.96 KiB       3  [emitted]  main
+  output.js      8 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 41 bytes {3} [rendered]
     [0] ./templates/foo.js 41 bytes {0} [optional] [built]
@@ -336,7 +342,7 @@ Version: webpack next
 0.output.js  113 bytes       0  [emitted]  
 1.output.js  114 bytes       1  [emitted]  
 2.output.js  115 bytes       2  [emitted]  
-  output.js   2.06 KiB       3  [emitted]  main
+  output.js   2.09 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 41 bytes {3} [rendered]
     [0] ./templates/foo.js 41 bytes {0} [optional] [built]

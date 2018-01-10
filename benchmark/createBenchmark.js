@@ -17,6 +17,6 @@ webpack({
 		new webpack.IgnorePlugin(/^(fsevents|uglify-js)$/),
 		new webpack.NormalModuleReplacementPlugin(/^.\/loadLoader$/, path.resolve(__dirname, "./createBenchmark/loadLoader"))
 	]
-}, function(err, stats) {
+}, (err, stats) => {
 	console.log(stats.toString());
 });
