@@ -106,8 +106,9 @@ describe("Errors", () => {
 			let lines = warnings[0].split("\n");
 			lines[0].should.match(/configuration/);
 			lines[1].should.match(/mode/);
-			lines[1].should.match(/development/);
-			lines[1].should.match(/production/);
+			lines[2].should.match(/development/);
+			lines[3].should.match(/production/);
+			lines[4].should.match(/production-expert/);
 			done();
 		});
 	});

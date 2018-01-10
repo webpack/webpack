@@ -1121,6 +1121,7 @@
       "enum": [
         "development",
         "production",
+        "production-expert",
         "none"
       ]
     },
