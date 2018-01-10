@@ -45,6 +45,9 @@ describe("ConfigTestCases", () => {
 					optionsArr.forEach((options, idx) => {
 						if(!options.context) options.context = testDirectory;
 						if(!options.mode) options.mode = "production";
+						if(!options.optimization) options.optimization = {
+							minimize: false
+						};
 						if(!options.entry) options.entry = "./index.js";
 						if(!options.target) options.target = "async-node";
 						if(!options.output) options.output = {};
