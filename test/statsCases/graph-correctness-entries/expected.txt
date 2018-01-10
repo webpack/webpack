@@ -1,3 +1,5 @@
+Entrypoint e1 = e1.js
+Entrypoint e2 = e2.js
 chunk    {0} 0.js (c) 49 bytes {2} {4} [rendered]
     [1] ./module-c.js 49 bytes {0} [built]
         import() ./module-c [2] ./module-b.js 1:0-47

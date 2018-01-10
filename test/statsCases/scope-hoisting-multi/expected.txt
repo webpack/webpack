@@ -2,6 +2,9 @@ Hash: 618d094d926d88426c4d89db4754cf89b4c9fcd6
 Child
     Hash: 618d094d926d88426c4d
     Time: Xms
+    Entrypoint vendor = vendor.js
+    Entrypoint first = vendor.js first.js
+    Entrypoint second = vendor.js second.js
        [0] ./common_lazy_shared.js 25 bytes {0} {1} {2} [built]
        [1] ./common2.js 25 bytes {3} {4} [built]
        [2] ./common_lazy.js 25 bytes {1} {2} [built]
@@ -16,6 +19,9 @@ Child
 Child
     Hash: 89db4754cf89b4c9fcd6
     Time: Xms
+    Entrypoint vendor = vendor.js
+    Entrypoint first = vendor.js first.js
+    Entrypoint second = vendor.js second.js
        [0] ./common_lazy_shared.js 25 bytes {0} {1} {2} [built]
        [1] ./common_lazy.js 25 bytes {1} {2} [built]
        [2] ./vendor.js 25 bytes {5} [built]

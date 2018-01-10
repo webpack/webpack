@@ -2,6 +2,7 @@ Hash: a253f2841b4eac6fbb2e
 Time: Xms
     Asset      Size  Chunks             Chunk Names
 bundle.js  2.19 KiB       0  [emitted]  main
+Entrypoint main = bundle.js
    [0] ./index.js 299 bytes {0} [built]
    [1] ./a.js 249 bytes {0} [built]
    [2] (webpack)/buildin/module.js 495 bytes {0} [built]

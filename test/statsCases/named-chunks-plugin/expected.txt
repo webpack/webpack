@@ -4,6 +4,8 @@ Time: Xms
    entry.js  425 bytes     entry  [emitted]  entry
 manifest.js   4.66 KiB  manifest  [emitted]  manifest
   vendor.js  469 bytes    vendor  [emitted]  vendor
+Entrypoint entry = manifest.js vendor.js entry.js
+Entrypoint vendor = manifest.js vendor.js
    [0] multi ./modules/a ./modules/b 40 bytes {vendor} [built]
 [./entry.js] 72 bytes {entry} [built]
 [./modules/a.js] 22 bytes {vendor} [built]
