@@ -11,6 +11,9 @@ module.exports = {
 		chunkFilename: "[name].chunk.js"
 	},
 	optimization: {
+		asyncCommonsChunks: {
+			minSize: 1 // enforce all
+		},
 		initialVendorsChunk: {
 			"libs": /[\\/](xyz|x)/,
 			vendors: path.resolve(__dirname, "node_modules")

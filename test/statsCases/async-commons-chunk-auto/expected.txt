@@ -2,53 +2,49 @@ Entrypoint main = main.js
 Entrypoint a = libs.js vendors.js a.js
 Entrypoint b = libs.js vendors.js b.js
 Entrypoint c = libs.js vendors.js c.js
-chunk    {0} 0.chunk.js 182 bytes {4} [rendered]
+chunk    {0} 0.chunk.js 40 bytes {7} [rendered] commons chunk
+    [0] ./d.js 20 bytes {0} {8} {9} {10} [built]
+    [1] ./node_modules/x.js 20 bytes {0} {11} [built]
+chunk    {1} 1.chunk.js 20 bytes {0+2+3} {7} {8+11+12} [rendered] commons chunk
+    [2] ./f.js 20 bytes {1} {9} {10} [built]
+chunk    {2} 2.chunk.js 20 bytes {7} [rendered] commons chunk
+    [3] ./node_modules/y.js 20 bytes {2} {12} [built]
+chunk    {3} 3.chunk.js 122 bytes {7} [rendered]
     > [8] ./index.js 1:0-13
-    [0] ./d.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-    [1] ./node_modules/x.js 20 bytes {0} {1} {2} {8} [built]
-    [3] ./node_modules/y.js 20 bytes {0} {1} {9} [built]
-    [7] ./a.js + 1 modules 122 bytes {0} {5} [built]
+    [7] ./a.js + 1 modules 122 bytes {3} {8} [built]
         | ./a.js 87 bytes [built]
         | ./e.js 20 bytes [built]
-chunk    {1} 1.chunk.js 152 bytes {4} [rendered]
+chunk    {4} 4.chunk.js 72 bytes {7} [rendered]
     > [8] ./index.js 2:0-13
-    [0] ./d.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-    [1] ./node_modules/x.js 20 bytes {0} {1} {2} {8} [built]
-    [2] ./f.js 20 bytes {1} {2} {3} {6} {7} [built]
-    [3] ./node_modules/y.js 20 bytes {0} {1} {9} [built]
-    [5] ./b.js 72 bytes {1} {6} [built]
-chunk    {2} 2.chunk.js 152 bytes {4} [rendered]
+    [5] ./b.js 72 bytes {4} {9} [built]
+chunk    {5} 5.chunk.js 92 bytes {7} [rendered]
     > [8] ./index.js 3:0-13
-    [0] ./d.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-    [1] ./node_modules/x.js 20 bytes {0} {1} {2} {8} [built]
-    [2] ./f.js 20 bytes {1} {2} {3} {6} {7} [built]
-    [4] ./node_modules/z.js 20 bytes {2} {9} [built]
-    [6] ./c.js 72 bytes {2} {7} [built]
-chunk    {3} 3.chunk.js 54 bytes {0} {5+8+9} [rendered]
+    [4] ./node_modules/z.js 20 bytes {5} {12} [built]
+    [6] ./c.js 72 bytes {5} {10} [built]
+chunk    {6} 6.chunk.js 34 bytes {0+2+3} {8+11+12} [rendered]
     > [] 6:0-13
-    [2] ./f.js 20 bytes {1} {2} {3} {6} {7} [built]
-    [9] ./g.js 34 bytes {3} [built]
-chunk    {4} main.js (main) 45 bytes [entry] [rendered]
+    [9] ./g.js 34 bytes {6} [built]
+chunk    {7} main.js (main) 45 bytes [entry] [rendered]
     > main [8] ./index.js 
-    [8] ./index.js 45 bytes {4} [built]
-chunk    {5} a.js (a) 142 bytes [entry] [rendered]
+    [8] ./index.js 45 bytes {7} [built]
+chunk    {8} a.js (a) 142 bytes [entry] [rendered]
     > a [] 
-    [0] ./d.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-    [7] ./a.js + 1 modules 122 bytes {0} {5} [built]
+    [0] ./d.js 20 bytes {0} {8} {9} {10} [built]
+    [7] ./a.js + 1 modules 122 bytes {3} {8} [built]
         | ./a.js 87 bytes [built]
         | ./e.js 20 bytes [built]
-chunk    {6} b.js (b) 112 bytes [entry] [rendered]
+chunk    {9} b.js (b) 112 bytes [entry] [rendered]
     > b [5] ./b.js 
-    [0] ./d.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-    [2] ./f.js 20 bytes {1} {2} {3} {6} {7} [built]
-    [5] ./b.js 72 bytes {1} {6} [built]
-chunk    {7} c.js (c) 112 bytes [entry] [rendered]
+    [0] ./d.js 20 bytes {0} {8} {9} {10} [built]
+    [2] ./f.js 20 bytes {1} {9} {10} [built]
+    [5] ./b.js 72 bytes {4} {9} [built]
+chunk   {10} c.js (c) 112 bytes [entry] [rendered]
     > c [6] ./c.js 
-    [0] ./d.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-    [2] ./f.js 20 bytes {1} {2} {3} {6} {7} [built]
-    [6] ./c.js 72 bytes {2} {7} [built]
-chunk    {8} libs.js (libs) 20 bytes [initial] [rendered] vendors chunk
-    [1] ./node_modules/x.js 20 bytes {0} {1} {2} {8} [built]
-chunk    {9} vendors.js (vendors) 40 bytes [initial] [rendered] vendors chunk
-    [3] ./node_modules/y.js 20 bytes {0} {1} {9} [built]
-    [4] ./node_modules/z.js 20 bytes {2} {9} [built]
+    [0] ./d.js 20 bytes {0} {8} {9} {10} [built]
+    [2] ./f.js 20 bytes {1} {9} {10} [built]
+    [6] ./c.js 72 bytes {5} {10} [built]
+chunk   {11} libs.js (libs) 20 bytes [initial] [rendered] vendors chunk
+    [1] ./node_modules/x.js 20 bytes {0} {11} [built]
+chunk   {12} vendors.js (vendors) 40 bytes [initial] [rendered] vendors chunk
+    [3] ./node_modules/y.js 20 bytes {2} {12} [built]
+    [4] ./node_modules/z.js 20 bytes {5} {12} [built]
