@@ -1323,6 +1323,86 @@
           "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer",
           "type": "boolean"
         },
+        "asyncCommonsChunks": {
+          "description": "Automatically deduplicate modules in on-demand chunks by creating additional async-loaded shared chunks",
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "minSize": {
+                  "description": "Specify the minimum size of commons chunks at which they are created",
+                  "type": "number",
+                  "minimum": 0
+                },
+                "maxRequests": {
+                  "description": "Specify the maximum number of requests that should occur at a split points (when on the limit bigger chunks are preferred)",
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            }
+          ]
+        },
+        "initialCommonsChunks": {
+          "description": "Automatically deduplicate modules in initial chunks by creating additional initial-loaded shared chunks (These chunks need to be added to the HTML)",
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "minSize": {
+                  "description": "Specify the minimum size of commons chunks at which they are created (when on the limit bigger chunks are preferred)",
+                  "type": "number",
+                  "minimum": 0
+                },
+                "maxRequests": {
+                  "description": "Specify the maximum number of requests that should occur at startup",
+                  "type": "number",
+                  "minimum": 0
+                }
+              }
+            }
+          ]
+        },
+        "initialVendorsChunk": {
+          "description": "Automatically extract vendor modules (inside of node_modules) into separate chunk assuming they change less often ",
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object",
+              "additionalProperties": {
+                "description": "An object of multiple vendors chunks, each keys specifies the name and the value is a absolute path prefix, regular expression or matcher function",
+                "oneOf": [
+                  {
+                    "instanceof": "RegExp"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "instanceof": "Function"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "instanceof": "Function"
+            }
+          ]
+        },
         "noEmitOnErrors": {
           "description": "Avoid emitting assets when errors occur",
           "type": "boolean"
