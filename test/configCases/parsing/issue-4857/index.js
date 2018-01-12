@@ -28,8 +28,32 @@ it("should transpile unreachable branches", () => {
 
 it("should not remove hoisted variable declarations", () => {
 	if(false) {
-		var a, [,,b,] = [], {c, D: d, ["E"]: e} = {};
+		var a, [,,b,] = [], {c, D: d, ["E"]: e = 2} = {};
 		var [{["_"]: f}, ...g] = [];
+		do {
+			switch(g) {
+				default:
+					var h;
+					break;
+			}
+			loop: for(var i;;)
+				for(var j in {})
+					for(var k of {})
+						break;
+			try {
+				var l;
+			} catch(e) {
+				var m;
+			} finally {
+				var n;
+			}
+			{
+				var o;
+			}
+		} while(true);
+		with (o) {
+			var withVar;
+		}
 	}
 	(() => {
 		a;
@@ -39,7 +63,18 @@ it("should not remove hoisted variable declarations", () => {
 		e;
 		f;
 		g;
+		h;
+		i;
+		j;
+		k;
+		l;
+		m;
+		n;
+		o;
 	}).should.not.throw();
+	(() => {
+		withVar;
+	}).should.throw();
 });
 
 it("should not remove hoisted function declarations in loose mode", () => {
