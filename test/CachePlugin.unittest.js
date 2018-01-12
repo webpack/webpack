@@ -15,9 +15,6 @@ describe("CachePlugin", () => {
 		};
 	});
 
-	it("has apply ", () => {
-		(new CachePlugin()).apply.should.be.a.Function();
-	});
 	describe("applyMtime", () => {
 		beforeEach(() => env.plugin = new CachePlugin());
 
