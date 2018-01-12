@@ -1,33 +1,52 @@
 #!/usr/bin/env node
 
 const { exec } = require("child_process");
-const readline = require("readline");
+const { readdirSync } = require("fs");
+const { createInterface } = require("readline");
 
-let io = readline.createInterface({
+let io = createInterface({
   input: process.stdin,
   output: process.stdout
 });
 
 let webpackCliInstalled = false;
+let hasYarn = false;
+
+let yarnLockFile = readdirSync(process.cwd()).find(val => val === "yarn.lock");
+
+if(yarnLockFile) {
+	hasYarn = true;
+} else {
+	hasYarn = false;
+}
+
+function runCommand(command) {
+	exec(command, (err, data) => {
+		if(data) {
+			process.stdout.write(data);
+			webpackCliInstalled = true;
+		} else {
+			webpackCliInstalled = false;
+		}
+	});
+}
 
 try {
-	require.resolve("webpack-cli") &&
-	require("webpack-cli");
-} catch(err) {
+	require.resolve("webpack-cli");
 	webpackCliInstalled = true;
+} catch(err) {
 	process.stdout.write("Sorry, 'webpack-cli' was not found inside this project.");
 
 	io.question("Do you want to install 'webpack-cli' automatically? [ Y/N ] \n", answer => {
 		if(/(y|yes)|(Y|Yes)/.test(answer)) {
 			process.stdout.write("Start downloading 'webpack-cli' package...\n");
 
-			exec("npm i webpack-cli -D ; npm link webpack", (err, data) => {
-				if(data) {
-					process.stdout.write(data);
-				} else {
-					webpackCliInstalled = false;
-				}
-			});
+			if(hasYarn) {
+				runCommand("yarn add webpack-cli -D");
+			} else {
+				runCommand("npm i webpack-cli -D");
+			}
+
 		}
 
 		if(/(n|no)|(N|No)/.test(answer)) {
@@ -39,5 +58,7 @@ try {
 }
 
 if(!webpackCliInstalled) {
-	process.exit(1);
+	process.exitCode = 1;
+} else {
+	require("webpack-cli") && io.close();
 }
