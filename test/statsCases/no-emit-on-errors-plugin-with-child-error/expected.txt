@@ -3,6 +3,7 @@ Time: Xms
     Asset     Size  Chunks  Chunk Names
  child.js  2.6 KiB          
 bundle.js  2.6 KiB       0  main
+Entrypoint main = bundle.js
    [0] ./index.js 0 bytes {0} [built]
 
 WARNING in configuration
@@ -10,6 +11,7 @@ The 'mode' option has not been set. Set 'mode' option to 'development' or 'produ
 Child child:
        Asset     Size  Chunks  Chunk Names
     child.js  2.6 KiB       0  child
+    Entrypoint child = child.js
        [0] ./index.js 0 bytes {0} [built]
     
     ERROR in forced error

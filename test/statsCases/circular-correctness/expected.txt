@@ -1,3 +1,4 @@
+Entrypoint main = bundle.js
 chunk    {0} 0.bundle.js (a) 49 bytes {2} {3} [rendered]
     [1] ./module-a.js 49 bytes {0} [built]
 chunk    {1} 1.bundle.js (b) 49 bytes {2} {3} [rendered]

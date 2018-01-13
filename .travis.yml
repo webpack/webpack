@@ -32,7 +32,9 @@ matrix:
   fast_finish: true
 
 install:
-  - bash ./ci/travis-install.sh
+  - yarn --frozen-lockfile
+  - yarn link --frozen-lockfile || true
+  - yarn link webpack --frozen-lockfile
 
 script: npm run travis:$JOB_PART
 

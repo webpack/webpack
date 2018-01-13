@@ -8,6 +8,9 @@ Asset       Size  Chunks             Chunk Names
 e1.js   8.12 KiB       6  [emitted]  e1
 e2.js   8.14 KiB       7  [emitted]  e2
 e3.js   8.16 KiB       8  [emitted]  e3
+Entrypoint e1 = e1.js
+Entrypoint e2 = e2.js
+Entrypoint e3 = e3.js
 chunk    {0} 0.js 37 bytes {7} {8} [rendered]
     [2] ./d.js 9 bytes {0} {6} [built]
     [5] ./async1.js 28 bytes {0} {5} [built]
