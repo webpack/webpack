@@ -2,7 +2,7 @@ This is the vendor build part.
 
 It's built separatly from the app part. The vendors dll is only built when vendors has changed and not while the normal development cycle.
 
-The DllPlugin in combination with the `output.library` option exposes the internal require function as global variable in the target enviroment.
+The DllPlugin in combination with the `output.library` option exposes the internal require function as global variable in the target environment.
 
 A manifest is creates which includes mappings from module names to internal ids.
 
