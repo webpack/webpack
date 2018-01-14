@@ -943,7 +943,6 @@
               "type": "array"
             }
           ]
-
         },
         "query": {
           "description": "Shortcut for use.query",
