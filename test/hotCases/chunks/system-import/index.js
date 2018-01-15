@@ -1,5 +1,5 @@
 it("should import a changed chunk", function(done) {
-	System.import("./chunk").then(function(chunk) {
+	import("./chunk").then(function(chunk) {
 		chunk.value.should.be.eql(1);
 		chunk.value2.should.be.eql(3);
 		chunk.counter.should.be.eql(0);
@@ -7,7 +7,7 @@ it("should import a changed chunk", function(done) {
 			chunk.value.should.be.eql(2);
 			chunk.value2.should.be.eql(4);
 			chunk.counter.should.be.eql(1);
-			System.import("./chunk2").then(function(chunk2) {
+			import("./chunk2").then(function(chunk2) {
 				chunk2.value.should.be.eql(2);
 				chunk2.value2.should.be.eql(4);
 				chunk2.counter.should.be.eql(0);
