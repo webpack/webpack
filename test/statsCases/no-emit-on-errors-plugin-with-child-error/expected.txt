@@ -1,4 +1,4 @@
-Hash: 2e82f0bf277419f24e02
+Hash: 20df5b67d3d2e479d4ec
 Time: Xms
     Asset     Size  Chunks  Chunk Names
  child.js  2.6 KiB          
@@ -7,7 +7,7 @@ Entrypoint main = bundle.js
    [0] ./index.js 0 bytes {0} [built]
 
 WARNING in configuration
-The 'mode' option has not been set. Set 'mode' option to 'development' or 'production' to enable defaults for this enviroment. 
+The 'mode' option has not been set. Set 'mode' option to 'development' or 'production' to enable defaults for this environment. 
 Child child:
        Asset     Size  Chunks  Chunk Names
     child.js  2.6 KiB       0  child
