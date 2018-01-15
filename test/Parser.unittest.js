@@ -486,8 +486,8 @@ describe("Parser", () => {
 						param: "y"
 					}
 				],
-				"System.import": [
-					"async function x() { const y = await System.import('z'); }", {
+				"import": [
+					"async function x() { const y = await import('z'); }", {
 						param: "z"
 					}
 				]
@@ -498,7 +498,7 @@ describe("Parser", () => {
 				const param = parser.evaluateExpression(expr.arguments[0]);
 				parser.state.param = param.string;
 			});
-			parser.hooks.call.tap("System.import", "ParserTest", (expr) => {
+			parser.hooks.importCall.tap("ParserTest", (expr) => {
 				const param = parser.evaluateExpression(expr.arguments[0]);
 				parser.state.param = param.string;
 			});

@@ -31,15 +31,3 @@ it("should be able to use expressions in import", function(done) {
 	}
 	testCase(load, done);
 });
-
-it("should be able to use expressions in System.import", function(done) {
-	function load(name, expected, callback) {
-		System.import("./dir2/" + name).then(function(result) {
-			result.should.be.eql({ default: expected });
-			callback();
-		}).catch(function(err) {
-			done(err);
-		});
-	}
-	testCase(load, done);
-});

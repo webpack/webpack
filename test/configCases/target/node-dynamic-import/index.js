@@ -38,9 +38,9 @@ it("should be able to use expressions in lazy-once import", function(done) {
 	testCase(load, done);
 });
 
-it("should be able to use expressions in System.import", function(done) {
+it("should be able to use expressions in import", function(done) {
 	function load(name, expected, callback) {
-		System.import("./dir2/" + name).then((result) => {
+		import("./dir2/" + name).then((result) => {
 			result.should.be.eql({ default: expected });
 			callback();
 		}).catch((err) => {
@@ -62,13 +62,3 @@ it("should be able to use import", function(done) {
 		done(err);
 	});
 });
-
-it("should be able to use System.import", function(done) {
-	System.import("./two").then((two) => {
-		two.should.be.eql({ default: 2 });
-		done();
-	}).catch(function(err) {
-		done(err);
-	});
-});
-
