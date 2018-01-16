@@ -930,19 +930,7 @@
         },
         "sideEffects": {
           "description": "Flags a module as with or without side effects",
-          "anyOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "items": {
-                "description": "Globs for child modules with side effects",
-                "minLength": 1,
-                "type": "string"
-              },
-              "type": "array"
-            }
-          ]
+          "type": "boolean"
         },
         "query": {
           "description": "Shortcut for use.query",
