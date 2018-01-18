@@ -103,7 +103,7 @@
     "lint-files": "npm run lint && npm run beautify-lint && npm run schema-lint",
     "lint": "eslint lib bin hot buildin \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
     "fix": "npm run lint -- --fix",
-    "beautify-lint": "beautify-lint \"lib/**/*.js\" \"hot/**/*.js\" \"bin/**/*.js\" \"benchmark/*.js\" \"test/*.js\"",
+    "beautify-lint": "beautify-lint \"lib/**/*.js\" \"hot/**/*.js\" \"bin/**/*.js\" \"benchmark/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
     "schema-lint": "mocha test/*.lint.js --opts test/lint-mocha.opts",
     "benchmark": "mocha --max-old-space-size=4096 --harmony --trace-deprecation test/*.benchmark.js -R spec",
     "cover": "npm run cover:init && npm run cover:all && npm run cover:report",
