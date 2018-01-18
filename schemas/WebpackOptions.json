@@ -1821,6 +1821,14 @@
         }
       },
       "type": "object"
+    },
+    "info-verbosity": {
+      "description": "Controls the output of lifecycle messaging e.g. Started watching files... (verbose, info, none)",
+      "enum": [
+        "none",
+        "info",
+        "verbose"
+      ]
     }
   },
   "type": "object"
