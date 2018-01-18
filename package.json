@@ -3,9 +3,10 @@
   "version": "4.0.0-alpha.4",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
+  "license": "MIT",
   "dependencies": {
     "acorn": "^5.0.0",
-    "acorn-dynamic-import": "^2.0.0",
+    "acorn-dynamic-import": "^3.0.0",
     "ajv": "^5.1.5",
     "ajv-keywords": "^2.0.0",
     "async": "^2.1.2",
@@ -22,7 +23,6 @@
     "watchpack": "^1.4.0",
     "webpack-sources": "^1.0.1"
   },
-  "license": "MIT",
   "devDependencies": {
     "beautify-lint": "^1.0.3",
     "benchmark": "^2.1.1",
