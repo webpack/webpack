@@ -1608,6 +1608,10 @@ glob-parent@^2.0.0:
   dependencies:
     is-glob "^2.0.0"
 
+glob-regex@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/glob-regex/-/glob-regex-0.2.2.tgz#43dc4b0d986a394c7770a99802367d8300370977"
+
 glob@7.1.1:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.1.tgz#805211df04faaf1c63a3600306cdf5ade50b2ec8"
