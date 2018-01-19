@@ -1,25 +1,28 @@
 var path = require("path");
-var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 
 module.exports = {
 	// mode: "development" || "production",
 	entry: {
-		vendor: ["./vendor1", "./vendor2"],
 		pageA: "./pageA",
 		pageB: "./pageB",
 		pageC: "./pageC"
-		// older versions of webpack may require an empty entry point declaration here
-		// common: []
+	},
+	optimization: {
+		splitChunks: {
+			chunks: "initial",
+			minSize: 0, // This is example is too small to create commons chunks
+			name: "common",
+			cacheGroups: {
+				vendor: {
+					test: /node_modules/,
+					name: "vendor",
+					enforce: true
+				}
+			}
+		}
 	},
 	output: {
 		path: path.join(__dirname, "dist"),
 		filename: "[name].js"
-	},
-	plugins: [
-		new CommonsChunkPlugin({
-			// The order of this array matters
-			names: ["common", "vendor"],
-			minChunks: 2
-		})
-	]
+	}
 };

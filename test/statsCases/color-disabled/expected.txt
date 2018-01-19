@@ -1,6 +1,6 @@
-Hash: 4449339aa773e1bdb62b
+Hash: 8a0ebb916aaf99067211
 Time: Xms
-  Asset     Size  Chunks             Chunk Names
-main.js  2.6 KiB       0  [emitted]  main
+  Asset      Size  Chunks             Chunk Names
+main.js  2.61 KiB       0  [emitted]  main
 Entrypoint main = main.js
    [0] ./index.js 0 bytes {0} [built]

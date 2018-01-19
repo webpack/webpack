@@ -1,12 +1,11 @@
 A common challenge with combining `[chunkhash]` and Code Splitting is that the entry chunk includes the webpack runtime and with it the chunkhash mappings. This means it's always updated and the `[chunkhash]` is pretty useless, because this chunk won't be cached.
 
-A very simple solution to this problem is to create another chunk which contains only the webpack runtime (including chunkhash map). This can be achieved by the CommonsChunkPlugin (or if the CommonsChunkPlugin is already used by passing multiple names to the CommonChunkPlugin). To avoid the additional request for another chunk, this pretty small chunk can be inlined into the HTML page.
+A very simple solution to this problem is to create another chunk which contains only the webpack runtime (including chunkhash map). This can be achieved with the `optimization.runtimeChunk` options. To avoid the additional request for another chunk, this pretty small chunk can be inlined into the HTML page.
 
 The configuration required for this is:
 
 * use `[chunkhash]` in `output.filename` (Note that this example doesn't do this because of the example generator infrastructure, but you should)
-* use `[chunkhash]` in `output.chunkFilename`
-* `CommonsChunkPlugin`
+* use `[chunkhash]` in `output.chunkFilename` (Note that this example doesn't do this because of the example generator infrastructure, but you should)
 
 # example.js
 
@@ -36,11 +35,11 @@ The configuration required for this is:
 
 <!-- inlined minimized file "manifest.[chunkhash].js" -->
 <script>
-{{production:dist/manifest.chunkhash.js}}
+{{production:dist/main-runtime.chunkhash.js}}
 </script>
 
 <!-- optional when using the CommonChunkPlugin for vendor modules -->
-<script src="dist/common.[chunkhash].js"></script>
+<script src="dist/main-runtime.[chunkhash].js"></script>
 
 <script src="dist/main.[chunkhash].js"></script>
 
@@ -48,10 +47,10 @@ The configuration required for this is:
 </html>
 ```
 
-# dist/common.[chunkhash].js
+# dist/main-runtime.[chunkhash].js
 
 ``` javascript
-{{dist/common.chunkhash.js}}
+{{dist/main-runtime.chunkhash.js}}
 ```
 
 # dist/main.[chunkhash].js

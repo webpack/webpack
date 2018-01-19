@@ -29,10 +29,12 @@ export function increment(val) {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
-/******/ 		var chunkIds = data[0], moreModules = data[1], executeModules = data[2];
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1]
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId]) {
@@ -52,6 +54,7 @@ export function increment(val) {
 /******/
 /******/ 	};
 /******/
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -60,7 +63,7 @@ export function increment(val) {
 /******/ 		1: 0
 /******/ 	};
 /******/
-/******/ 	var scheduledModules = [];
+/******/
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -186,10 +189,12 @@ export function increment(val) {
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 	var parentJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 	jsonpArray.push = webpackJsonpCallback;
 /******/ 	jsonpArray = jsonpArray.slice();
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 2);
@@ -272,15 +277,15 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  479 bytes       0  [emitted]  
-  output.js   8.24 KiB       1  [emitted]  main
+  output.js   8.27 KiB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 25 bytes {1} [rendered]
-    > [2] ./example.js 6:0-24
+chunk    {0} 0.output.js 25 bytes <{1}> [rendered]
+    > ./async-loaded [2] ./example.js 6:0-24
     [3] ./async-loaded.js 25 bytes {0} [built]
         [exports: answer]
         import() ./async-loaded [2] ./example.js 6:0-24
-chunk    {1} output.js (main) 419 bytes [entry] [rendered]
-    > main [2] ./example.js 
+chunk    {1} output.js (main) 419 bytes >{0}< [entry] [rendered]
+    > .\example.js main
     [0] ./math.js 142 bytes {1} [built]
         [exports: add]
         harmony side effect evaluation ./math [1] ./increment.js 1:0-29
@@ -303,13 +308,13 @@ Version: webpack next
 0.output.js  144 bytes       0  [emitted]  
   output.js   1.75 KiB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 25 bytes {1} [rendered]
-    > [] 6:0-24
+chunk    {0} 0.output.js 25 bytes <{1}> [rendered]
+    > ./async-loaded [] 6:0-24
     [1] ./async-loaded.js 25 bytes {0} [built]
         [exports: answer]
         import() ./async-loaded  ./example.js 6:0-24
-chunk    {1} output.js (main) 419 bytes [entry] [rendered]
-    > main [] 
+chunk    {1} output.js (main) 419 bytes >{0}< [entry] [rendered]
+    > .\example.js main
     [0] ./example.js + 2 modules 419 bytes {1} [built]
         [no exports]
         single entry .\example.js  main

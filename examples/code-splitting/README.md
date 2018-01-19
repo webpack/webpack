@@ -44,10 +44,12 @@ require.ensure(["c"], function(require) {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
-/******/ 		var chunkIds = data[0], moreModules = data[1], executeModules = data[2];
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1]
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId]) {
@@ -67,6 +69,7 @@ require.ensure(["c"], function(require) {
 /******/
 /******/ 	};
 /******/
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -75,7 +78,7 @@ require.ensure(["c"], function(require) {
 /******/ 		1: 0
 /******/ 	};
 /******/
-/******/ 	var scheduledModules = [];
+/******/
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -201,10 +204,12 @@ require.ensure(["c"], function(require) {
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 	var parentJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 	jsonpArray.push = webpackJsonpCallback;
 /******/ 	jsonpArray = jsonpArray.slice();
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 2);
@@ -299,13 +304,13 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
 0.output.js  490 bytes       0  [emitted]  
-  output.js   7.44 KiB       1  [emitted]  main
+  output.js   7.47 KiB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 22 bytes {1} [rendered]
+chunk    {0} 0.output.js 22 bytes <{1}> [rendered]
     > [2] ./example.js 3:0-6:2
     2 modules
-chunk    {1} output.js (main) 166 bytes [entry] [rendered]
-    > main [2] ./example.js 
+chunk    {1} output.js (main) 166 bytes >{0}< [entry] [rendered]
+    > .\example.js main
     [2] ./example.js 144 bytes {1} [built]
         single entry .\example.js  main
      + 2 hidden modules
@@ -320,11 +325,11 @@ Version: webpack next
 0.output.js  95 bytes       0  [emitted]  
   output.js  1.68 KiB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 22 bytes {1} [rendered]
+chunk    {0} 0.output.js 22 bytes <{1}> [rendered]
     > [2] ./example.js 3:0-6:2
     2 modules
-chunk    {1} output.js (main) 166 bytes [entry] [rendered]
-    > main [2] ./example.js 
+chunk    {1} output.js (main) 166 bytes >{0}< [entry] [rendered]
+    > .\example.js main
     [2] ./example.js 144 bytes {1} [built]
         single entry .\example.js  main
      + 2 hidden modules

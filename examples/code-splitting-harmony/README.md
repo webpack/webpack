@@ -33,10 +33,12 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
-/******/ 		var chunkIds = data[0], moreModules = data[1], executeModules = data[2];
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1]
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId]) {
@@ -56,6 +58,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/
 /******/ 	};
 /******/
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -64,7 +67,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 		3: 0
 /******/ 	};
 /******/
-/******/ 	var scheduledModules = [];
+/******/
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -190,10 +193,12 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 	var parentJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 	jsonpArray.push = webpackJsonpCallback;
 /******/ 	jsonpArray = jsonpArray.slice();
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 4);
@@ -305,17 +310,21 @@ Version: webpack next
 0.output.js  275 bytes       0  [emitted]  
 1.output.js  284 bytes       1  [emitted]  
 2.output.js  270 bytes       2  [emitted]  
-  output.js   8.71 KiB       3  [emitted]  main
+  output.js   8.74 KiB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 13 bytes {3} [rendered]
+chunk    {0} 0.output.js 13 bytes <{3}> [rendered]
+    > ./2 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2
+    > ./2.js [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2.js
     1 module
-chunk    {1} 1.output.js 13 bytes {3} [rendered]
+chunk    {1} 1.output.js 13 bytes <{3}> [rendered]
+    > ./1 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./1
+    > ./1.js [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./1.js
     1 module
-chunk    {2} 2.output.js 11 bytes {3} [rendered]
-    > [4] ./example.js 3:0-11
+chunk    {2} 2.output.js 11 bytes <{3}> [rendered]
+    > b [4] ./example.js 3:0-11
     1 module
-chunk    {3} output.js (main) 427 bytes [entry] [rendered]
-    > main [4] ./example.js 
+chunk    {3} output.js (main) 427 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+    > .\example.js main
     [2] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {3} [built]
         import() context lazy c [4] ./example.js 8:8-27
     [4] ./example.js 256 bytes {3} [built]
@@ -335,15 +344,19 @@ Version: webpack next
 2.output.js  78 bytes       2  [emitted]  
   output.js  2.25 KiB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 13 bytes {3} [rendered]
+chunk    {0} 0.output.js 13 bytes <{3}> [rendered]
+    > ./2 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2
+    > ./2.js [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2.js
     1 module
-chunk    {1} 1.output.js 13 bytes {3} [rendered]
+chunk    {1} 1.output.js 13 bytes <{3}> [rendered]
+    > ./1 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./1
+    > ./1.js [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./1.js
     1 module
-chunk    {2} 2.output.js 11 bytes {3} [rendered]
-    > [4] ./example.js 3:0-11
+chunk    {2} 2.output.js 11 bytes <{3}> [rendered]
+    > b [4] ./example.js 3:0-11
     1 module
-chunk    {3} output.js (main) 427 bytes [entry] [rendered]
-    > main [4] ./example.js 
+chunk    {3} output.js (main) 427 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+    > .\example.js main
     [2] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {3} [built]
         import() context lazy c [4] ./example.js 8:8-27
     [4] ./example.js 256 bytes {3} [built]

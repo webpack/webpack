@@ -45,16 +45,14 @@ describe("ConfigTestCases", () => {
 					optionsArr.forEach((options, idx) => {
 						if(!options.context) options.context = testDirectory;
 						if(!options.mode) options.mode = "production";
-						if(!options.optimization) options.optimization = {
-							minimize: false
-						};
+						if(!options.optimization) options.optimization = {};
+						if(options.optimization.minimize === undefined) options.optimization.minimize = false;
 						if(!options.entry) options.entry = "./index.js";
 						if(!options.target) options.target = "async-node";
 						if(!options.output) options.output = {};
 						if(!options.output.path) options.output.path = outputDirectory;
 						if(typeof options.output.pathinfo === "undefined") options.output.pathinfo = true;
 						if(!options.output.filename) options.output.filename = "bundle" + idx + ".js";
-						if(!options.output.chunkFilename) options.output.chunkFilename = "[id].bundle" + idx + ".js";
 					});
 					let testConfig = {
 						findBundle: function(i, options) {

@@ -3,4 +3,4 @@ import "./e";
 import "x";
 import "y";
 export default "a";
-import("./g");
+import(/* webpackChunkName: "async-g" */ "./g");

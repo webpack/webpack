@@ -129,6 +129,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "dist/";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -184,10 +185,10 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
     Asset      Size  Chunks             Chunk Names
-output.js  4.16 KiB       0  [emitted]  main
+output.js  4.17 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
-    > main [0] ./example.js 
+    > .\example.js main
     [0] ./example.js 113 bytes {0} [built]
         single entry .\example.js  main
     [1] external "add" 42 bytes {0} [built]
@@ -205,7 +206,7 @@ Version: webpack next
 output.js  1.02 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
-    > main [2] ./example.js 
+    > .\example.js main
     [0] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
         cjs require subtract [2] ./example.js 2:15-34
     [1] external "add" 42 bytes {0} [built]

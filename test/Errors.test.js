@@ -142,38 +142,6 @@ describe("Errors", () => {
 			done();
 		});
 	});
-	it("should throw an error when using incorrect CommonsChunkPlugin configuration", (done) => {
-		getErrors({
-			mode: "development",
-			entry: {
-				a: "./entry-point",
-				b: "./entry-point",
-				c: "./entry-point"
-			},
-			output: {
-				filename: "[name].js"
-			},
-			plugins: [
-				new webpack.optimize.CommonsChunkPlugin({
-					name: "a",
-					filename: "a.js",
-					minChunks: Infinity
-				}),
-				new webpack.optimize.CommonsChunkPlugin({
-					name: "b",
-					filename: "b.js",
-					minChunks: Infinity
-				})
-			]
-		}, (errors, warnings) => {
-			errors.length.should.be.eql(1);
-			warnings.length.should.be.eql(0);
-			const lines = errors[0].split("\n");
-			lines[0].should.match(/CommonsChunkPlugin/);
-			lines[0].should.match(/non-entry/);
-			done();
-		});
-	});
 	it("should throw an error when trying to use [chunkhash] when it's invalid", (done) => {
 		getErrors({
 			mode: "development",

@@ -36,7 +36,6 @@
     "eslint": "^4.3.0",
     "eslint-plugin-node": "^5.1.1",
     "express": "~4.13.1",
-    "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.6",
     "glob": "^7.1.2",
     "i18n-webpack-plugin": "^1.0.0",

@@ -1,12 +1,9 @@
-Hash: f4f2142b60f3f055cbd9
+Hash: 3f8973e2d9fcd47f4c6e
 Time: Xms
-      Asset       Size    Chunks             Chunk Names
-   entry.js  425 bytes     entry  [emitted]  entry
-manifest.js   4.66 KiB  manifest  [emitted]  manifest
-  vendor.js  469 bytes    vendor  [emitted]  vendor
-Entrypoint entry = manifest.js vendor.js entry.js
-Entrypoint vendor = manifest.js vendor.js
-   [0] multi ./modules/a ./modules/b 40 bytes {vendor} [built]
+    Asset       Size  Chunks             Chunk Names
+ entry.js   5.34 KiB   entry  [emitted]  entry
+vendor.js  269 bytes  vendor  [emitted]  vendor
+Entrypoint entry = vendor.js entry.js
 [./entry.js] 72 bytes {entry} [built]
 [./modules/a.js] 22 bytes {vendor} [built]
 [./modules/b.js] 22 bytes {vendor} [built]

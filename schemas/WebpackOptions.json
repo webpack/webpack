@@ -1323,85 +1323,172 @@
           "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer",
           "type": "boolean"
         },
-        "asyncCommonsChunks": {
-          "description": "Automatically deduplicate modules in on-demand chunks by creating additional async-loaded shared chunks",
+        "splitChunks": {
+          "description": "Optimize duplication and caching by splitting chunks by shared modules and cache group",
           "oneOf": [
             {
-              "type": "boolean"
+              "enum": [
+                false
+              ]
             },
             {
               "type": "object",
               "additionalProperties": false,
               "properties": {
+                "chunks": {
+                  "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
+                  "enum": [
+                    "initial",
+                    "async",
+                    "all"
+                  ]
+                },
                 "minSize": {
-                  "description": "Specify the minimum size of commons chunks at which they are created",
+                  "description": "Minimal size for created chunk",
                   "type": "number",
                   "minimum": 0
                 },
-                "maxRequests": {
-                  "description": "Specify the maximum number of requests that should occur at a split points (when on the limit bigger chunks are preferred)",
+                "minChunks": {
+                  "description": "Minimum number of times a module has to be duplicated until it's considered for splitting",
                   "type": "number",
-                  "minimum": 0
+                  "minimum": 1
+                },
+                "maxAsyncRequests": {
+                  "description": "Maximum number of requests which are accepted for on-demand loading",
+                  "type": "number",
+                  "minimum": 1
+                },
+                "maxInitialRequests": {
+                  "description": "Maximum number of initial chunks which are accepted for an entry point",
+                  "type": "number",
+                  "minimum": 1
+                },
+                "name": {
+                  "description": "Give chunks created a name (chunks with equal name are merged)",
+                  "oneOf": [
+                    {
+                      "enum": [
+                        true
+                      ]
+                    },
+                    {
+                      "instanceof": "Function"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "cacheGroups": {
+                  "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)",
+                  "oneOf": [
+                    {
+                      "instanceof": "Function"
+                    },
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "instanceof": "RegExp"
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": {
+                        "description": "Configuration for a cache group",
+                        "anyOf": [
+                          {
+                            "instanceof": "Function"
+                          },
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "instanceof": "RegExp"
+                          },
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "properties": {
+                              "test": {
+                                "description": "Assign modules to a cache group",
+                                "oneOf": [
+                                  {
+                                    "instanceof": "Function"
+                                  },
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "instanceof": "RegExp"
+                                  }
+                                ]
+                              },
+                              "chunks": {
+                                "description": "Select chunks for determining cache group content (defaults to \"initial\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
+                                "enum": [
+                                  "initial",
+                                  "async",
+                                  "all"
+                                ]
+                              },
+                              "enforce": {
+                                "description": "Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group",
+                                "type": "boolean"
+                              },
+                              "minSize": {
+                                "description": "Minimal size for created chunk",
+                                "type": "number",
+                                "minimum": 0
+                              },
+                              "minChunks": {
+                                "description": "Minimum number of times a module has to be duplicated until it's considered for splitting",
+                                "type": "number",
+                                "minimum": 1
+                              },
+                              "maxAsyncRequests": {
+                                "description": "Maximum number of requests which are accepted for on-demand loading",
+                                "type": "number",
+                                "minimum": 1
+                              },
+                              "maxInitialRequests": {
+                                "description": "Maximum number of initial chunks which are accepted for an entry point",
+                                "type": "number",
+                                "minimum": 1
+                              },
+                              "reuseExistingChunk": {
+                                "description": "Try to reuse existing chunk (with name) when it has matching modules",
+                                "type": "boolean"
+                              },
+                              "name": {
+                                "description": "Give chunks for this cache group a name (chunks with equal name are merged)",
+                                "oneOf": [
+                                  {
+                                    "enum": [
+                                      true
+                                    ]
+                                  },
+                                  {
+                                    "instanceof": "Function"
+                                  },
+                                  {
+                                    "type": "string"
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
                 }
               }
             }
           ]
         },
-        "initialCommonsChunks": {
-          "description": "Automatically deduplicate modules in initial chunks by creating additional initial-loaded shared chunks (These chunks need to be added to the HTML)",
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "minSize": {
-                  "description": "Specify the minimum size of commons chunks at which they are created (when on the limit bigger chunks are preferred)",
-                  "type": "number",
-                  "minimum": 0
-                },
-                "maxRequests": {
-                  "description": "Specify the maximum number of requests that should occur at startup",
-                  "type": "number",
-                  "minimum": 0
-                }
-              }
-            }
-          ]
-        },
-        "initialVendorsChunk": {
-          "description": "Automatically extract vendor modules (inside of node_modules) into separate chunk assuming they change less often ",
-          "oneOf": [
-            {
-              "type": "boolean"
-            },
-            {
-              "type": "object",
-              "additionalProperties": {
-                "description": "An object of multiple vendors chunks, each keys specifies the name and the value is a absolute path prefix, regular expression or matcher function",
-                "oneOf": [
-                  {
-                    "instanceof": "RegExp"
-                  },
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "instanceof": "Function"
-                  }
-                ]
-              }
-            },
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "instanceof": "Function"
-            }
-          ]
+        "runtimeChunk": {
+          "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps",
+          "type": "boolean"
         },
         "noEmitOnErrors": {
           "description": "Avoid emitting assets when errors occur",

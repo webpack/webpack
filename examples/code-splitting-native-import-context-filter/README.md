@@ -51,10 +51,12 @@ export default foo;
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
-/******/ 		var chunkIds = data[0], moreModules = data[1], executeModules = data[2];
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1]
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId]) {
@@ -74,6 +76,7 @@ export default foo;
 /******/
 /******/ 	};
 /******/
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -82,7 +85,7 @@ export default foo;
 /******/ 		3: 0
 /******/ 	};
 /******/
-/******/ 	var scheduledModules = [];
+/******/
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -208,10 +211,12 @@ export default foo;
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 	var parentJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 	jsonpArray.push = webpackJsonpCallback;
 /******/ 	jsonpArray = jsonpArray.slice();
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 4);
@@ -321,25 +326,31 @@ Version: webpack next
 0.output.js  436 bytes       0  [emitted]  
 1.output.js  445 bytes       1  [emitted]  
 2.output.js  439 bytes       2  [emitted]  
-  output.js   8.19 KiB       3  [emitted]  main
+  output.js   8.22 KiB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 41 bytes {3} [rendered]
+chunk    {0} 0.output.js 41 bytes <{3}> [rendered]
+    > ./foo [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo
+    > ./foo.js [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo.js
     [0] ./templates/foo.js 41 bytes {0} [optional] [built]
         [exports: default]
         context element ./foo.js [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo.js
         context element ./foo [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo
-chunk    {1} 1.output.js 41 bytes {3} [rendered]
+chunk    {1} 1.output.js 41 bytes <{3}> [rendered]
+    > ./baz [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz
+    > ./baz.js [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz.js
     [1] ./templates/baz.js 41 bytes {1} [optional] [built]
         [exports: default]
         context element ./baz.js [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz.js
         context element ./baz [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz
-chunk    {2} 2.output.js 41 bytes {3} [rendered]
+chunk    {2} 2.output.js 41 bytes <{3}> [rendered]
+    > ./bar [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar
+    > ./bar.js [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar.js
     [2] ./templates/bar.js 41 bytes {2} [optional] [built]
         [exports: default]
         context element ./bar.js [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar.js
         context element ./bar [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar
-chunk    {3} output.js (main) 618 bytes [entry] [rendered]
-    > main [4] ./example.js 
+chunk    {3} output.js (main) 618 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+    > .\example.js main
     [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object 160 bytes {3} [optional] [built]
         import() context lazy ./templates [4] ./example.js 3:23-7:3
     [4] ./example.js 458 bytes {3} [built]
@@ -357,23 +368,29 @@ Version: webpack next
 2.output.js  115 bytes       2  [emitted]  
   output.js   2.13 KiB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 41 bytes {3} [rendered]
+chunk    {0} 0.output.js 41 bytes <{3}> [rendered]
+    > ./foo [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo
+    > ./foo.js [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo.js
     [0] ./templates/foo.js 41 bytes {0} [optional] [built]
         [exports: default]
         context element ./foo.js [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo.js
         context element ./foo [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./foo
-chunk    {1} 1.output.js 41 bytes {3} [rendered]
+chunk    {1} 1.output.js 41 bytes <{3}> [rendered]
+    > ./baz [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz
+    > ./baz.js [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz.js
     [1] ./templates/baz.js 41 bytes {1} [optional] [built]
         [exports: default]
         context element ./baz.js [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz.js
         context element ./baz [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./baz
-chunk    {2} 2.output.js 41 bytes {3} [rendered]
+chunk    {2} 2.output.js 41 bytes <{3}> [rendered]
+    > ./bar [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar
+    > ./bar.js [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar.js
     [2] ./templates/bar.js 41 bytes {2} [optional] [built]
         [exports: default]
         context element ./bar.js [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar.js
         context element ./bar [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object ./bar
-chunk    {3} output.js (main) 618 bytes [entry] [rendered]
-    > main [4] ./example.js 
+chunk    {3} output.js (main) 618 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+    > .\example.js main
     [3] ./templates lazy ^\.\/.*$ include: \.js$ exclude: \.noimport\.js$ namespace object 160 bytes {3} [optional] [built]
         import() context lazy ./templates [4] ./example.js 3:23-7:3
     [4] ./example.js 458 bytes {3} [built]

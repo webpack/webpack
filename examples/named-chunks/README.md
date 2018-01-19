@@ -32,10 +32,12 @@ require.ensure(["b"], function(require) {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
-/******/ 		var chunkIds = data[0], moreModules = data[1], executeModules = data[2];
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1]
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId]) {
@@ -55,6 +57,7 @@ require.ensure(["b"], function(require) {
 /******/
 /******/ 	};
 /******/
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -63,7 +66,7 @@ require.ensure(["b"], function(require) {
 /******/ 		2: 0
 /******/ 	};
 /******/
-/******/ 	var scheduledModules = [];
+/******/
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -189,10 +192,12 @@ require.ensure(["b"], function(require) {
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 	var parentJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 	jsonpArray.push = webpackJsonpCallback;
 /******/ 	jsonpArray = jsonpArray.slice();
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 3);
@@ -225,21 +230,21 @@ require.ensure(["b"], function(require) {
 
 var a = __webpack_require__(/*! a */ 2);
 
-__webpack_require__.e(/*! require.ensure | my own chunk */ 0).then((function(require) {
+__webpack_require__.e(/*! require.ensure | my own chunk */ 1).then((function(require) {
 	// a named chunk
 	var c = __webpack_require__(/*! c */ 4);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-__webpack_require__.e(/*! require.ensure | my own chunk */ 0).then((function(require) {
+__webpack_require__.e(/*! require.ensure | my own chunk */ 1).then((function(require) {
 	// another chunk with the same name
 	var d = __webpack_require__(/*! d */ 1);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-__webpack_require__.e(/*! require.ensure | my own chunk */ 0).then((function(require) {
+__webpack_require__.e(/*! require.ensure | my own chunk */ 1).then((function(require) {
 	// the same again
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-__webpack_require__.e(/*! require.ensure */ 1).then((function(require) {
+__webpack_require__.e(/*! require.ensure */ 0).then((function(require) {
 	// chunk without name
 	var d = __webpack_require__(/*! d */ 1);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -253,6 +258,33 @@ __webpack_require__.e(/*! require.ensure */ 1).then((function(require) {
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
+/* 0 */
+/*!***************************!*\
+  !*** ./node_modules/b.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// module b
+
+/***/ }),
+/* 1 */
+/*!***************************!*\
+  !*** ./node_modules/d.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// module d
+
+/***/ })
+]]);
+```
+
+# dist/1.output.js
+
+``` javascript
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */
 /*!***************************!*\
   !*** ./node_modules/b.js ***!
@@ -288,33 +320,6 @@ __webpack_require__.e(/*! require.ensure */ 1).then((function(require) {
 ]]);
 ```
 
-# dist/1.output.js
-
-``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
-/* 0 */
-/*!***************************!*\
-  !*** ./node_modules/b.js ***!
-  \***************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// module b
-
-/***/ }),
-/* 1 */
-/*!***************************!*\
-  !*** ./node_modules/d.js ***!
-  \***************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// module d
-
-/***/ })
-]]);
-```
-
 # Info
 
 ## Unoptimized
@@ -323,20 +328,20 @@ __webpack_require__.e(/*! require.ensure */ 1).then((function(require) {
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  677 bytes       0  [emitted]  my own chunk
-1.output.js  463 bytes       1  [emitted]  
-  output.js   7.83 KiB       2  [emitted]  main
+0.output.js  463 bytes       0  [emitted]  
+1.output.js  677 bytes       1  [emitted]  my own chunk
+  output.js   7.86 KiB       2  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
-    > my own chunk [3] ./example.js 3:0-6:18
-    > my own chunk [3] ./example.js 8:0-11:18
-    > my own chunk [3] ./example.js 13:0-15:18
-    3 modules
-chunk    {1} 1.output.js 22 bytes {2} [rendered]
+chunk    {0} 0.output.js 22 bytes <{2}> [rendered]
     > [3] ./example.js 17:0-20:2
     2 modules
-chunk    {2} output.js (main) 452 bytes [entry] [rendered]
-    > main [3] ./example.js 
+chunk    {1} 1.output.js (my own chunk) 33 bytes <{2}> [rendered]
+    > [3] ./example.js 3:0-6:18
+    > [3] ./example.js 8:0-11:18
+    > [3] ./example.js 13:0-15:18
+    3 modules
+chunk    {2} output.js (main) 452 bytes >{0}< >{1}< [entry] [rendered]
+    > .\example.js main
     [3] ./example.js 441 bytes {2} [built]
         single entry .\example.js  main
      + 1 hidden module
@@ -348,20 +353,20 @@ chunk    {2} output.js (main) 452 bytes [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  112 bytes    0, 1  [emitted]  my own chunk
-1.output.js   92 bytes       1  [emitted]  
-  output.js   1.81 KiB       2  [emitted]  main
+0.output.js   92 bytes       0  [emitted]  
+1.output.js  112 bytes    1, 0  [emitted]  my own chunk
+  output.js   1.82 KiB       2  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
-    > my own chunk [3] ./example.js 3:0-6:18
-    > my own chunk [3] ./example.js 8:0-11:18
-    > my own chunk [3] ./example.js 13:0-15:18
-    3 modules
-chunk    {1} 1.output.js 22 bytes {2} [rendered]
+chunk    {0} 0.output.js 22 bytes <{2}> [rendered]
     > [3] ./example.js 17:0-20:2
     2 modules
-chunk    {2} output.js (main) 452 bytes [entry] [rendered]
-    > main [3] ./example.js 
+chunk    {1} 1.output.js (my own chunk) 33 bytes <{2}> [rendered]
+    > [3] ./example.js 3:0-6:18
+    > [3] ./example.js 8:0-11:18
+    > [3] ./example.js 13:0-15:18
+    3 modules
+chunk    {2} output.js (main) 452 bytes >{0}< >{1}< [entry] [rendered]
+    > .\example.js main
     [3] ./example.js 441 bytes {2} [built]
         single entry .\example.js  main
      + 1 hidden module

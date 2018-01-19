@@ -20,9 +20,6 @@ exports.default = new Promise (resolve, reject) ->
 			plugins: [
 				new webpack.optimize.LimitChunkCountPlugin
 					maxChunks: 3
-				new webpack.optimize.CommonsChunkPlugin
-					name: "common"
-					filename: "library2.commons.js"
 				new webpack.DefinePlugin
 					"typeof CONST_TYPEOF": JSON.stringify("typeof"),
 					CONST_UNDEFINED: undefined,

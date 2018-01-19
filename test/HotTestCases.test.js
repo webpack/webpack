@@ -5,7 +5,6 @@ const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
 const Test = require("mocha/lib/test");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
 const webpack = require("../lib/webpack");
@@ -52,20 +51,13 @@ describe("HotTestCases", () => {
 						test: /\.js$/,
 						loader: path.join(__dirname, "hotCases", "fake-update-loader.js"),
 						enforce: "pre"
-					}, {
-						test: /\.css$/,
-						use: ExtractTextPlugin.extract({
-							fallback: "style-loader",
-							use: "css-loader"
-						})
 					});
 					if(!options.target) options.target = "async-node";
 					if(!options.plugins) options.plugins = [];
 					options.plugins.push(
 						new webpack.HotModuleReplacementPlugin(),
 						new webpack.NamedModulesPlugin(),
-						new webpack.LoaderOptionsPlugin(fakeUpdateLoaderOptions),
-						new ExtractTextPlugin("bundle.css")
+						new webpack.LoaderOptionsPlugin(fakeUpdateLoaderOptions)
 					);
 					if(!options.recordsPath) options.recordsPath = recordsPath;
 					const compiler = webpack(options);
