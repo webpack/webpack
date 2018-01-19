@@ -9,6 +9,7 @@ const stats = {
 	modules: false
 };
 module.exports = [
+
 	{
 		name: "disabled",
 		mode: "production",
@@ -45,6 +46,7 @@ module.exports = [
 		},
 		stats
 	},
+
 	{
 		name: "vendors",
 		mode: "production",
@@ -71,6 +73,7 @@ module.exports = [
 		},
 		stats
 	},
+
 	{
 		name: "multiple-vendors",
 		mode: "production",
@@ -126,4 +129,5 @@ module.exports = [
 		},
 		stats
 	}
+
 ];

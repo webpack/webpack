@@ -8,6 +8,7 @@ const stats = {
 	modules: false
 };
 module.exports = [
+
 	{
 		name: "default",
 		mode: "production",
@@ -27,6 +28,7 @@ module.exports = [
 		},
 		stats
 	},
+
 	{
 		name: "all-chunks",
 		mode: "production",
@@ -47,6 +49,7 @@ module.exports = [
 		},
 		stats
 	},
+
 	{
 		name: "manual",
 		mode: "production",
@@ -76,4 +79,5 @@ module.exports = [
 		},
 		stats
 	}
+
 ];

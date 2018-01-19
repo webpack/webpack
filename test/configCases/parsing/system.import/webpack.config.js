@@ -5,14 +5,12 @@ function createConfig(system) {
 	return {
 		name: `system_${systemString}`,
 		module: {
-			rules: [
-				{
-					test: /\.js$/,
-					parser: {
-						system
-					}
+			rules: [{
+				test: /\.js$/,
+				parser: {
+					system
 				}
-			]
+			}]
 		},
 		plugins: [
 			new webpack.DefinePlugin({
