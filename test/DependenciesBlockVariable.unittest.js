@@ -25,9 +25,36 @@ describe("DependenciesBlockVariable", () => {
 
 	afterEach(() => sandbox.restore());
 
-	describe("hasDependencies", () =>
+	describe("hasDependencies", () => {
 		it("returns `true` if has dependencies", () =>
-			should(DependenciesBlockVariableInstance.hasDependencies()).be.true()));
+			should(DependenciesBlockVariableInstance.hasDependencies()).be.true()
+		);
+
+		it("returns `true` if has dependencies and passed filter", () =>
+			should(DependenciesBlockVariableInstance.hasDependencies(() => true)).be.true()
+		);
+
+		it("returns `false` if has dependencies, but not passed filter", () =>
+			should(DependenciesBlockVariableInstance.hasDependencies(() => false)).be.false()
+		);
+
+		it("returns `false` if has 0 dependencies", () =>
+			should(new DependenciesBlockVariable("dependencies-name", "expression", []).hasDependencies()).be.false()
+		);
+
+		it("returns `false` if has 0 dependencies and truthy filter", () =>
+			should(new DependenciesBlockVariable("dependencies-name", "expression", []).hasDependencies(() => true)).be.false()
+		);
+
+		it("returns `true` if has several dependencies and only 1 filter passed", () =>
+			should(
+				new DependenciesBlockVariable(
+					"dependencies-name", "expression", [dependencyMock, Object.assign({}, dependencyMock), Object.assign({}, dependencyMock)]
+				)
+				.hasDependencies((item, i) => i === 2)
+			).be.true()
+		);
+	});
 
 	describe("disconnect", () =>
 		it("trigger dependencies disconnection", () => {
