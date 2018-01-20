@@ -1,4 +1,3 @@
-const path = require("path");
 const stats = {
 	hash: false,
 	timings: false,
