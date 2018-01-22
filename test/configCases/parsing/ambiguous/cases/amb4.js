@@ -1,0 +1,2 @@
+import "./empty";
+require("./empty");
