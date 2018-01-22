@@ -45,12 +45,15 @@ module.exports = {
 	},
 	optimization: {
 		splitChunks: {
-			chunks: "initial",
-			minSize: 0, // This is example is too small to create commons chunks
-			name: "common",
 			cacheGroups: {
+				commons: {
+					chunks: "initial",
+					minChunks: 2,
+					minSize: 0 // This is example is too small to create commons chunks
+				},
 				vendor: {
 					test: /node_modules/,
+					chunks: "initial",
 					name: "vendor",
 					enforce: true
 				}
@@ -67,7 +70,7 @@ module.exports = {
 # dist/vendor.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[5],{
 
 /***/ 1:
 /*!*********************************!*\
@@ -94,10 +97,10 @@ module.exports = "vendor2";
 }]);
 ```
 
-# dist/common.js
+# dist/commons~pageA~pageB~pageC.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[4],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
 
 /***/ 3:
 /*!*********************!*\
@@ -108,7 +111,15 @@ module.exports = "vendor2";
 
 module.exports = "utility2";
 
-/***/ }),
+/***/ })
+
+}]);
+```
+
+# dist/commons~pageB~pageC.js
+
+``` javascript
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[4],{
 
 /***/ 6:
 /*!*********************!*\
@@ -259,7 +270,7 @@ module.exports = "utility3";
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([0,3,4]);
+/******/ 	deferredModules.push([0,3,5]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
@@ -432,7 +443,7 @@ module.exports = "utility1";
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([4,3,4]);
+/******/ 	deferredModules.push([4,3,4,5]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
@@ -591,7 +602,7 @@ module.exports = "pageB";
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([7,4]);
+/******/ 	deferredModules.push([7,3,4]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
@@ -622,44 +633,48 @@ module.exports = "pageC";
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
-    Asset       Size  Chunks             Chunk Names
- pageA.js    5.6 KiB       0  [emitted]  pageA
- pageB.js    5.4 KiB       1  [emitted]  pageB
- pageC.js   5.34 KiB       2  [emitted]  pageC
-vendor.js  536 bytes       3  [emitted]  vendor
-common.js  466 bytes       4  [emitted]  common
-Entrypoint pageA = vendor.js common.js pageA.js
-Entrypoint pageB = vendor.js common.js pageB.js
-Entrypoint pageC = common.js pageC.js
-chunk    {0} pageA.js (pageA) 170 bytes ={3}= ={4}= [entry] [rendered]
+                       Asset       Size  Chunks             Chunk Names
+                    pageA.js    5.6 KiB       0  [emitted]  pageA
+                    pageB.js    5.4 KiB       1  [emitted]  pageB
+                    pageC.js   5.34 KiB       2  [emitted]  pageC
+commons~pageA~pageB~pageC.js  269 bytes       3  [emitted]  commons~pageA~pageB~pageC
+      commons~pageB~pageC.js  269 bytes       4  [emitted]  commons~pageB~pageC
+                   vendor.js  536 bytes       5  [emitted]  vendor
+Entrypoint pageA = commons~pageA~pageB~pageC.js vendor.js pageA.js
+Entrypoint pageB = commons~pageA~pageB~pageC.js commons~pageB~pageC.js vendor.js pageB.js
+Entrypoint pageC = commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageC.js
+chunk    {0} pageA.js (pageA) 170 bytes ={3}= ={5}= [entry] [rendered]
     > ./pageA pageA
     [0] ./pageA.js 142 bytes {0} [built]
         single entry ./pageA  pageA
     [2] ./utility1.js 28 bytes {0} [built]
         cjs require ./utility1 [0] ./pageA.js 2:15-36
-chunk    {1} pageB.js (pageB) 142 bytes ={3}= ={4}= [entry] [rendered]
+chunk    {1} pageB.js (pageB) 142 bytes ={3}= ={4}= ={5}= [entry] [rendered]
     > ./pageB pageB
     [4] ./pageB.js 142 bytes {1} [built]
         single entry ./pageB  pageB
-chunk    {2} pageC.js (pageC) 105 bytes ={4}= [entry] [rendered]
+chunk    {2} pageC.js (pageC) 105 bytes ={3}= ={4}= [entry] [rendered]
     > ./pageC pageC
     [7] ./pageC.js 105 bytes {2} [built]
         single entry ./pageC  pageC
-chunk    {3} vendor.js (vendor) 54 bytes ={4}= ={0}= ={1}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
-    > ./pageA pageA
-    > ./pageB pageB
-    2 modules
-chunk    {4} common.js (common) 56 bytes ={2}= ={3}= ={1}= ={0}= [initial] [rendered] split chunk (name: common)
+chunk    {3} commons~pageA~pageB~pageC.js (commons~pageA~pageB~pageC) 28 bytes ={4}= ={2}= ={5}= ={1}= ={0}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageA~pageB~pageC)
     > ./pageC pageC
     > ./pageB pageB
     > ./pageA pageA
-    [3] ./utility2.js 28 bytes {4} [built]
+    [3] ./utility2.js 28 bytes {3} [built]
         cjs require ./utility2 [0] ./pageA.js 3:15-36
         cjs require ./utility2 [4] ./pageB.js 2:15-36
         cjs require ./utility2 [7] ./pageC.js 1:15-36
+chunk    {4} commons~pageB~pageC.js (commons~pageB~pageC) 28 bytes ={3}= ={2}= ={5}= ={1}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageB~pageC)
+    > ./pageC pageC
+    > ./pageB pageB
     [6] ./utility3.js 28 bytes {4} [built]
         cjs require ./utility3 [4] ./pageB.js 3:15-36
         cjs require ./utility3 [7] ./pageC.js 2:15-36
+chunk    {5} vendor.js (vendor) 54 bytes ={3}= ={0}= ={4}= ={1}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
+    > ./pageA pageA
+    > ./pageB pageB
+    2 modules
 ```
 
 ## Production mode
@@ -667,42 +682,46 @@ chunk    {4} common.js (common) 56 bytes ={2}= ={3}= ={1}= ={0}= [initial] [rend
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
-    Asset       Size  Chunks             Chunk Names
-common.js  132 bytes       0  [emitted]  common
-vendor.js  134 bytes       1  [emitted]  vendor
- pageC.js    1.1 KiB       2  [emitted]  pageC
- pageB.js   1.11 KiB       3  [emitted]  pageB
- pageA.js   1.15 KiB       4  [emitted]  pageA
-Entrypoint pageA = vendor.js common.js pageA.js
-Entrypoint pageB = vendor.js common.js pageB.js
-Entrypoint pageC = common.js pageC.js
-chunk    {0} common.js (common) 56 bytes ={2}= ={1}= ={3}= ={4}= [initial] [rendered] split chunk (name: common)
-    > ./pageC pageC
-    > ./pageB pageB
-    > ./pageA pageA
-    [0] ./utility2.js 28 bytes {0} [built]
-        cjs require ./utility2 [2] ./pageC.js 1:15-36
-        cjs require ./utility2 [4] ./pageB.js 2:15-36
-        cjs require ./utility2 [7] ./pageA.js 3:15-36
-    [1] ./utility3.js 28 bytes {0} [built]
-        cjs require ./utility3 [2] ./pageC.js 2:15-36
-        cjs require ./utility3 [4] ./pageB.js 3:15-36
-chunk    {1} vendor.js (vendor) 54 bytes ={0}= ={4}= ={3}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
+                       Asset       Size  Chunks             Chunk Names
+                   vendor.js  134 bytes       0  [emitted]  vendor
+      commons~pageB~pageC.js   97 bytes       1  [emitted]  commons~pageB~pageC
+commons~pageA~pageB~pageC.js   96 bytes       2  [emitted]  commons~pageA~pageB~pageC
+                    pageC.js    1.1 KiB       3  [emitted]  pageC
+                    pageB.js   1.11 KiB       4  [emitted]  pageB
+                    pageA.js   1.15 KiB       5  [emitted]  pageA
+Entrypoint pageA = commons~pageA~pageB~pageC.js vendor.js pageA.js
+Entrypoint pageB = commons~pageA~pageB~pageC.js commons~pageB~pageC.js vendor.js pageB.js
+Entrypoint pageC = commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageC.js
+chunk    {0} vendor.js (vendor) 54 bytes ={2}= ={5}= ={1}= ={4}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
     > ./pageA pageA
     > ./pageB pageB
     2 modules
-chunk    {2} pageC.js (pageC) 105 bytes ={0}= [entry] [rendered]
+chunk    {1} commons~pageB~pageC.js (commons~pageB~pageC) 28 bytes ={2}= ={3}= ={0}= ={4}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageB~pageC)
     > ./pageC pageC
-    [2] ./pageC.js 105 bytes {2} [built]
-        single entry ./pageC  pageC
-chunk    {3} pageB.js (pageB) 142 bytes ={1}= ={0}= [entry] [rendered]
     > ./pageB pageB
-    [4] ./pageB.js 142 bytes {3} [built]
-        single entry ./pageB  pageB
-chunk    {4} pageA.js (pageA) 170 bytes ={1}= ={0}= [entry] [rendered]
+    [1] ./utility3.js 28 bytes {1} [built]
+        cjs require ./utility3 [2] ./pageC.js 2:15-36
+        cjs require ./utility3 [4] ./pageB.js 3:15-36
+chunk    {2} commons~pageA~pageB~pageC.js (commons~pageA~pageB~pageC) 28 bytes ={1}= ={3}= ={0}= ={4}= ={5}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageA~pageB~pageC)
+    > ./pageC pageC
+    > ./pageB pageB
     > ./pageA pageA
-    [5] ./utility1.js 28 bytes {4} [built]
+    [0] ./utility2.js 28 bytes {2} [built]
+        cjs require ./utility2 [2] ./pageC.js 1:15-36
+        cjs require ./utility2 [4] ./pageB.js 2:15-36
+        cjs require ./utility2 [7] ./pageA.js 3:15-36
+chunk    {3} pageC.js (pageC) 105 bytes ={2}= ={1}= [entry] [rendered]
+    > ./pageC pageC
+    [2] ./pageC.js 105 bytes {3} [built]
+        single entry ./pageC  pageC
+chunk    {4} pageB.js (pageB) 142 bytes ={2}= ={1}= ={0}= [entry] [rendered]
+    > ./pageB pageB
+    [4] ./pageB.js 142 bytes {4} [built]
+        single entry ./pageB  pageB
+chunk    {5} pageA.js (pageA) 170 bytes ={2}= ={0}= [entry] [rendered]
+    > ./pageA pageA
+    [5] ./utility1.js 28 bytes {5} [built]
         cjs require ./utility1 [7] ./pageA.js 2:15-36
-    [7] ./pageA.js 142 bytes {4} [built]
+    [7] ./pageA.js 142 bytes {5} [built]
         single entry ./pageA  pageA
 ```

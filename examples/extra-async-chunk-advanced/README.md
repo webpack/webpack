@@ -268,7 +268,7 @@ Version: webpack next
 6.output.js  241 bytes       6  [emitted]  
   output.js   8.07 KiB       7  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 21 bytes <{7}> ={2}= ={1}= ={3}= ={4}= >{1}< >{5}< >{6}< [rendered] split chunk
+chunk    {0} 0.output.js 21 bytes <{7}> ={2}= ={1}= ={3}= ={4}= >{1}< >{5}< >{6}< [rendered] split chunk (cache group: default)
     > [2] ./example.js 8:0-16:2
     > [2] ./example.js 3:0-6:2
     > ./a ./b ./c [2] ./example.js 1:0-52
@@ -277,7 +277,7 @@ chunk    {0} 0.output.js 21 bytes <{7}> ={2}= ={1}= ={3}= ={4}= >{1}< >{5}< >{6}
         require.ensure item ./a [2] ./example.js 3:0-6:2
         require.ensure item ./a [2] ./example.js 8:0-16:2
         cjs require ./a [2] ./example.js 9:1-15
-chunk    {1} 1.output.js 21 bytes <{0}> <{2}> <{7}> ={5}= ={6}= ={0}= ={3}= ={4}= [rendered] split chunk
+chunk    {1} 1.output.js 21 bytes <{0}> <{2}> <{7}> ={5}= ={6}= ={0}= ={3}= ={4}= [rendered] split chunk (cache group: default)
     > [2] ./example.js 13:1-15:3
     > [2] ./example.js 10:1-12:3
     > [2] ./example.js 3:0-6:2
@@ -328,7 +328,7 @@ Version: webpack next
 6.output.js  91 bytes       6  [emitted]  
   output.js  2.02 KiB       7  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 21 bytes <{7}> ={2}= ={1}= ={3}= ={4}= >{1}< >{5}< >{6}< [rendered] split chunk
+chunk    {0} 0.output.js 21 bytes <{7}> ={2}= ={1}= ={3}= ={4}= >{1}< >{5}< >{6}< [rendered] split chunk (cache group: default)
     > [2] ./example.js 8:0-16:2
     > [2] ./example.js 3:0-6:2
     > ./a ./b ./c [2] ./example.js 1:0-52
@@ -337,7 +337,7 @@ chunk    {0} 0.output.js 21 bytes <{7}> ={2}= ={1}= ={3}= ={4}= >{1}< >{5}< >{6}
         require.ensure item ./a [2] ./example.js 3:0-6:2
         require.ensure item ./a [2] ./example.js 8:0-16:2
         cjs require ./a [2] ./example.js 9:1-15
-chunk    {1} 1.output.js 21 bytes <{0}> <{2}> <{7}> ={5}= ={6}= ={0}= ={3}= ={4}= [rendered] split chunk
+chunk    {1} 1.output.js 21 bytes <{0}> <{2}> <{7}> ={5}= ={6}= ={0}= ={3}= ={4}= [rendered] split chunk (cache group: default)
     > [2] ./example.js 13:1-15:3
     > [2] ./example.js 10:1-12:3
     > [2] ./example.js 3:0-6:2
