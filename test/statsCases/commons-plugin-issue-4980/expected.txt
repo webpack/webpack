@@ -1,25 +1,23 @@
-Hash: 0a7af1bf41c44dc4f3d62339087294aa36ac8856
+Hash: aa788836a27320e9e2c82a1426a570619ab0713a
 Child
-    Hash: 0a7af1bf41c44dc4f3d6
+    Hash: aa788836a27320e9e2c8
     Time: Xms
                              Asset       Size  Chunks             Chunk Names
-                            app.js  656 bytes       0  [emitted]  app
-    vendor.1c0346d33a16fbee0579.js  619 bytes       1  [emitted]  vendor
-                        runtime.js   4.65 KiB       2  [emitted]  runtime
-    Entrypoint app = runtime.js vendor.1c0346d33a16fbee0579.js app.js
+                            app.js   5.58 KiB       0  [emitted]  app
+    vendor.a86979cc789cd5f9d78f.js  619 bytes       1  [emitted]  vendor
+    Entrypoint app = vendor.a86979cc789cd5f9d78f.js app.js
     [./constants.js] 87 bytes {1} [built]
     [./entry-1.js] ./entry-1.js + 2 modules 190 bytes {0} [built]
            | ./entry-1.js 67 bytes [built]
            | ./submodule-a.js 59 bytes [built]
            | ./submodule-b.js 59 bytes [built]
 Child
-    Hash: 2339087294aa36ac8856
+    Hash: 2a1426a570619ab0713a
     Time: Xms
                              Asset       Size  Chunks             Chunk Names
-                            app.js  673 bytes       0  [emitted]  app
-    vendor.1c0346d33a16fbee0579.js  619 bytes       1  [emitted]  vendor
-                        runtime.js   4.65 KiB       2  [emitted]  runtime
-    Entrypoint app = runtime.js vendor.1c0346d33a16fbee0579.js app.js
+                            app.js    5.6 KiB       0  [emitted]  app
+    vendor.a86979cc789cd5f9d78f.js  619 bytes       1  [emitted]  vendor
+    Entrypoint app = vendor.a86979cc789cd5f9d78f.js app.js
     [./constants.js] 87 bytes {1} [built]
     [./entry-2.js] ./entry-2.js + 2 modules 197 bytes {0} [built]
            | ./entry-2.js 67 bytes [built]

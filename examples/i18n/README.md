@@ -118,6 +118,7 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "dist/";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -211,6 +212,7 @@ console.log("Missing Text");
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "dist/";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -239,20 +241,20 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
 Child en:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-           Asset      Size  Chunks             Chunk Names
-    en.output.js  2.79 KiB       0  [emitted]  main
+           Asset     Size  Chunks             Chunk Names
+    en.output.js  2.8 KiB       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
-        > main [0] ./example.js 
+        > ./example main
         [0] ./example.js 65 bytes {0} [built]
             single entry ./example  main
 Child de:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-           Asset      Size  Chunks             Chunk Names
-    de.output.js  2.79 KiB       0  [emitted]  main
+           Asset     Size  Chunks             Chunk Names
+    de.output.js  2.8 KiB       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
-        > main [0] ./example.js 
+        > ./example main
         [0] ./example.js 65 bytes {0} [built] [1 warning]
             single entry ./example  main
     
@@ -271,7 +273,7 @@ Child en:
     en.output.js  606 bytes       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
-        > main [0] ./example.js 
+        > ./example main
         [0] ./example.js 65 bytes {0} [built]
             single entry ./example  main
 Child de:
@@ -280,7 +282,7 @@ Child de:
     de.output.js  605 bytes       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
-        > main [0] ./example.js 
+        > ./example main
         [0] ./example.js 65 bytes {0} [built] [1 warning]
             single entry ./example  main
     

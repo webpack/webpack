@@ -14,4 +14,5 @@ it("should not move externals into the commons chunk", function() {
 
 	require("external");
 	require("external2");
+	require("./module");
 });

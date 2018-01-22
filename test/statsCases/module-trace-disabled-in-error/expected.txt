@@ -1,6 +1,6 @@
 Time: Xms
   Asset      Size  Chunks  Chunk Names
-main.js  2.78 KiB       0  main
+main.js  2.79 KiB       0  main
 Entrypoint main = main.js
    [0] ./index.js 25 bytes {0} [built]
 

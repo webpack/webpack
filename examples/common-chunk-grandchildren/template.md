@@ -4,19 +4,20 @@ This example illustrates how common modules from deep ancestors of an entry poin
 * `pageC` and `pageA` both require the `reusableComponent`
 * `pageB` dynamically requires `PageC`
 
-You can see that webpack outputs four files/chunks:
+You can see that webpack outputs five files/chunks:
 
 * `output.js` is the entry chunk and contains
   * the module system
   * chunk loading logic
   * the entry point `example.js`
-  * module `reusableComponent`
 * `0.output.js` is an additional chunk
-  * module `pageC`
+  * module `reusableComponent`
 * `1.output.js` is an additional chunk
   * module `pageB`
 * `2.output.js` is an additional chunk
   * module `pageA`
+* `3.output.js` is an additional chunk
+  * module `pageC`
 
 
 # example.js
@@ -79,34 +80,10 @@ You can see that webpack outputs four files/chunks:
 {{dist/2.output.js}}
 ```
 
-# dist/asyncoutput.js
+# dist/3.output.js
 
 ``` javascript
-{{dist/asyncoutput.js}}
-```
-
-# dist/0.asyncoutput.js
-
-``` javascript
-{{dist/0.asyncoutput.js}}
-```
-
-# dist/1.asyncoutput.js
-
-``` javascript
-{{dist/1.asyncoutput.js}}
-```
-
-# dist/2.asyncoutput.js
-
-``` javascript
-{{dist/2.asyncoutput.js}}
-```
-
-# dist/3.asyncoutput.js
-
-``` javascript
-{{dist/3.asyncoutput.js}}
+{{dist/3.output.js}}
 ```
 
 # Info

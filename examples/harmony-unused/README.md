@@ -118,6 +118,7 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "dist/";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -244,7 +245,7 @@ Version: webpack next
 output.js  5.93 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 726 bytes [entry] [rendered]
-    > main [0] ./example.js 
+    > .\example.js main
     [0] ./example.js 119 bytes {0} [built]
         [no exports]
         single entry .\example.js  main
@@ -276,7 +277,7 @@ Version: webpack next
 output.js  971 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 726 bytes [entry] [rendered]
-    > main [3] ./example.js 
+    > .\example.js main
     [0] ./math.js 366 bytes {0} [built]
         [exports: add, multiply, list]
         [only some exports used: add, multiply]

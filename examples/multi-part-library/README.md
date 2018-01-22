@@ -114,6 +114,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "dist/";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -217,6 +218,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "dist/";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
@@ -245,16 +247,16 @@ module.exports = "beta";
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
              Asset      Size  Chunks             Chunk Names
-MyLibrary.alpha.js  3.15 KiB       0  [emitted]  alpha
- MyLibrary.beta.js  3.15 KiB       1  [emitted]  beta
+MyLibrary.alpha.js  3.16 KiB       0  [emitted]  alpha
+ MyLibrary.beta.js  3.16 KiB       1  [emitted]  beta
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
-    > alpha [0] ./alpha.js 
+    > ./alpha alpha
     [0] ./alpha.js 25 bytes {0} [built]
         single entry ./alpha  alpha
 chunk    {1} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
-    > beta [1] ./beta.js 
+    > ./beta beta
     [1] ./beta.js 24 bytes {1} [built]
         single entry ./beta  beta
 ```
@@ -270,11 +272,11 @@ MyLibrary.alpha.js  832 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
-    > beta [0] ./beta.js 
+    > ./beta beta
     [0] ./beta.js 24 bytes {0} [built]
         single entry ./beta  beta
 chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
-    > alpha [1] ./alpha.js 
+    > ./alpha alpha
     [1] ./alpha.js 25 bytes {1} [built]
         single entry ./alpha  alpha
 ```

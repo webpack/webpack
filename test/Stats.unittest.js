@@ -88,7 +88,7 @@ describe("Stats", () => {
 				errors: ["firstError"],
 				warnings: [],
 				assets: [],
-				entrypoints: {},
+				entrypoints: new Map(),
 				chunks: [],
 				modules: [],
 				children: [],

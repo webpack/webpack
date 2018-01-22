@@ -62,10 +62,12 @@ require(
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
-/******/ 		var chunkIds = data[0], moreModules = data[1], executeModules = data[2];
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1]
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId]) {
@@ -85,6 +87,7 @@ require(
 /******/
 /******/ 	};
 /******/
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -93,7 +96,7 @@ require(
 /******/ 		1: 0
 /******/ 	};
 /******/
-/******/ 	var scheduledModules = [];
+/******/
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -219,10 +222,12 @@ require(
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 	var parentJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 	jsonpArray.push = webpackJsonpCallback;
 /******/ 	jsonpArray = jsonpArray.slice();
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 3);
@@ -407,9 +412,9 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset      Size  Chunks             Chunk Names
 0.output.js  1.87 KiB       0  [emitted]  
-  output.js  9.73 KiB       1  [emitted]  main
+  output.js  9.76 KiB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 439 bytes {1} [rendered]
+chunk    {0} 0.output.js 439 bytes <{1}> [rendered]
     > [3] ./example.js 7:0-14:1
     [4] ../require.context/templates sync ^\.\/.*\.js$ 193 bytes {0} [built]
         amd require context ../require.context/templates [3] ./example.js 7:0-14:1
@@ -419,8 +424,8 @@ chunk    {0} 0.output.js 439 bytes {1} [rendered]
         context element ./b.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./b.js
     [7] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
         context element ./a.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./a.js
-chunk    {1} output.js (main) 1.03 KiB [entry] [rendered]
-    > main [3] ./example.js 
+chunk    {1} output.js (main) 1.03 KiB >{0}< [entry] [rendered]
+    > .\example.js main
     [0] ./amd.js 309 bytes {1} [built]
         amd require ./amd [1] ./commonjs.js 5:0-11:1
         cjs require ./amd [1] ./commonjs.js 8:13-29
@@ -455,7 +460,7 @@ Version: webpack next
 0.output.js  606 bytes       0  [emitted]  
   output.js   2.04 KiB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 439 bytes {1} [rendered]
+chunk    {0} 0.output.js 439 bytes <{1}> [rendered]
     > [3] ./example.js 7:0-14:1
     [4] ../require.context/templates sync ^\.\/.*\.js$ 193 bytes {0} [built]
         amd require context ../require.context/templates [3] ./example.js 7:0-14:1
@@ -465,8 +470,8 @@ chunk    {0} 0.output.js 439 bytes {1} [rendered]
         context element ./b.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./b.js
     [7] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
         context element ./a.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./a.js
-chunk    {1} output.js (main) 1.03 KiB [entry] [rendered]
-    > main [3] ./example.js 
+chunk    {1} output.js (main) 1.03 KiB >{0}< [entry] [rendered]
+    > .\example.js main
     [0] ./amd.js 309 bytes {1} [built]
         amd require ./amd [1] ./commonjs.js 5:0-11:1
         cjs require ./amd [1] ./commonjs.js 8:13-29
