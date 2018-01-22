@@ -18,7 +18,7 @@ module.exports = class TestChildCompilationFailurePlugin {
 			child.hooks.compilation.tap("TestChildCompilationFailurePlugin", childCompilation => {
 				childCompilation.errors.push(new Error("forced error"));
 			});
-			child.apply(new SingleEntryPlugin(compiler.options.context, compiler.options.entry, "child"));
+			new SingleEntryPlugin(compiler.options.context, compiler.options.entry, "child").apply(child);
 			child.runAsChild(cb);
 		});
 	}
