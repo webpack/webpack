@@ -9,12 +9,15 @@ module.exports = {
 	},
 	optimization: {
 		splitChunks: {
-			chunks: "initial",
-			minSize: 0, // This is example is too small to create commons chunks
-			name: "common",
 			cacheGroups: {
+				commons: {
+					chunks: "initial",
+					minChunks: 2,
+					minSize: 0 // This is example is too small to create commons chunks
+				},
 				vendor: {
 					test: /node_modules/,
+					chunks: "initial",
 					name: "vendor",
 					enforce: true
 				}
