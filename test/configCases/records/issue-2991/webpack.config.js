@@ -8,7 +8,7 @@ module.exports = {
 		__dirname: false
 	},
 	resolve: {
-		aliasFields: [ "browser" ],
+		aliasFields: ["browser"],
 		alias: {
 			pkgs: path.resolve(__dirname, "pkgs")
 		}

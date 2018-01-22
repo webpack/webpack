@@ -1,5 +1,6 @@
 var webpack = require("../../../");
 module.exports = [
+
 	{
 		mode: "production",
 		entry: "./index",
@@ -9,6 +10,7 @@ module.exports = [
 			})
 		]
 	},
+
 	{
 		mode: "production",
 		entry: "./index",
@@ -18,4 +20,5 @@ module.exports = [
 			})
 		]
 	}
+
 ];

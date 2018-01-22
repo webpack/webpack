@@ -1,8 +1,7 @@
 module.exports = {
 	module: {
-		rules: [
-			{ oneOf: [
-				{
+		rules: [{
+			oneOf: [{
 					test: {
 						and: [
 							/a.\.js$/,
@@ -43,8 +42,7 @@ module.exports = {
 					loader: "./loader",
 					options: "third"
 				}
-			] }
-		]
+			]
+		}]
 	}
 };
-

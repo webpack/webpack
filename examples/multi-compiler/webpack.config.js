@@ -1,6 +1,7 @@
 var path = require("path");
 var webpack = require("../../");
 module.exports = [
+
 	{
 		name: "mobile",
 		// mode: "development || "production",
@@ -15,6 +16,7 @@ module.exports = [
 			})
 		]
 	},
+
 	{
 		name: "desktop",
 		// mode: "development || "production",
@@ -29,4 +31,5 @@ module.exports = [
 			})
 		]
 	}
+
 ];

@@ -20,7 +20,7 @@ module.exports = [{
 		},
 		namedModules: true
 	}
-},{
+}, {
 	mode: "production",
 	output: {
 		chunkFilename: "[name].[chunkhash].js"
