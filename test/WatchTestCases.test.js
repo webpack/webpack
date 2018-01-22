@@ -163,6 +163,10 @@ describe("WatchTestCases", () => {
 									return test;
 								}
 
+								const globalContext = {
+									console: console
+								};
+
 								function _require(currentDirectory, module) {
 									if(Array.isArray(module) || /^\.\.?\//.test(module)) {
 										let fn;
@@ -178,11 +182,15 @@ describe("WatchTestCases", () => {
 											p = path.join(currentDirectory, module);
 											content = fs.readFileSync(p, "utf-8");
 										}
-										fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE) {" + content + "\n})", p);
+										if(options.target === "web" || options.target === "webworker") {
+											fn = vm.runInNewContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, window) {" + content + "\n})", globalContext, p);
+										} else {
+											fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE) {" + content + "\n})", p);
+										}
 										const m = {
 											exports: {}
 										};
-										fn.call(m.exports, _require.bind(null, path.dirname(p)), m, m.exports, path.dirname(p), p, _it, run.name, jsonStats, state);
+										fn.call(m.exports, _require.bind(null, path.dirname(p)), m, m.exports, path.dirname(p), p, _it, run.name, jsonStats, state, globalContext);
 										return module.exports;
 									} else if(testConfig.modules && module in testConfig.modules) {
 										return testConfig.modules[module];
@@ -196,7 +204,7 @@ describe("WatchTestCases", () => {
 								} catch(e) {}
 
 								if(testConfig.noTests) return process.nextTick(done);
-								_require(outputDirectory, "./bundle.js");
+								_require(outputDirectory, testConfig.bundlePath || "./bundle.js");
 
 								if(exportedTests < 1) return done(new Error("No tests exported by test case"));
 								runIdx++;

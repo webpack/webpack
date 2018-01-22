@@ -1,6 +1,6 @@
-Hash: aa788836a27320e9e2c82a1426a570619ab0713a
+Hash: cdd753ac70c5ff3b74bedd7e476c27a1777b4d27
 Child
-    Hash: aa788836a27320e9e2c8
+    Hash: cdd753ac70c5ff3b74be
     Time: Xms
                              Asset       Size  Chunks             Chunk Names
                             app.js   5.58 KiB       0  [emitted]  app
@@ -12,7 +12,7 @@ Child
            | ./submodule-a.js 59 bytes [built]
            | ./submodule-b.js 59 bytes [built]
 Child
-    Hash: 2a1426a570619ab0713a
+    Hash: dd7e476c27a1777b4d27
     Time: Xms
                              Asset       Size  Chunks             Chunk Names
                             app.js    5.6 KiB       0  [emitted]  app

@@ -1,13 +1,13 @@
-Hash: 6a7976d5377cff9d866c9995f1ffe455bd977f4e
+Hash: 40b9288c7b06181fe56c92fc98986ee18223c384
 Child
-    Hash: 6a7976d5377cff9d866c
+    Hash: 40b9288c7b06181fe56c
     Time: Xms
       Asset      Size  Chunks             Chunk Names
     main.js  2.63 KiB       0  [emitted]  main
     Entrypoint main = main.js
        [0] ./index.js 24 bytes {0} [built]
 Child
-    Hash: 9995f1ffe455bd977f4e
+    Hash: 92fc98986ee18223c384
     Time: Xms
       Asset      Size  Chunks             Chunk Names
     main.js  2.63 KiB       0  [emitted]  main

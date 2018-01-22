@@ -1,6 +1,6 @@
-Hash: 1a2cfe7c8d1ff8e83986dfabd9ea8c23ee98ae0d
+Hash: 5374f3d607ef77b77b87b191764cf9a5b21374f0
 Child
-    Hash: 1a2cfe7c8d1ff8e83986
+    Hash: 5374f3d607ef77b77b87
     Time: Xms
     Entrypoint first = vendor.js first.js
     Entrypoint second = vendor.js second.js
@@ -16,7 +16,7 @@ Child
        [9] ./module_first.js 31 bytes {3} [built]
       [10] ./second.js 177 bytes {4} [built]
 Child
-    Hash: dfabd9ea8c23ee98ae0d
+    Hash: b191764cf9a5b21374f0
     Time: Xms
     Entrypoint first = vendor.js first.js
     Entrypoint second = vendor.js second.js
