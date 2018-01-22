@@ -14,7 +14,7 @@ describe("Chunk", () => {
 
 	it("returns a string with modules information", () => should(ChunkInstance.toString()).be.exactly("Chunk[]"));
 
-	it("should not be the initial instance", () => should(ChunkInstance.isInitial()).be.false());
+	it("should not be the initial instance", () => should(ChunkInstance.canBeInitial()).be.false());
 
 	describe("entry", () => {
 		it("returns an error if get entry", () =>
@@ -32,12 +32,12 @@ describe("Chunk", () => {
 		it("returns an error if get initial", () =>
 			should(() => {
 				ChunkInstance.initial;
-			}).throw("Chunk.initial was removed. Use isInitial()"));
+			}).throw("Chunk.initial was removed. Use canBeInitial/isOnlyInitial()"));
 
 		it("returns an error if set an initial", () =>
 			should(() => {
 				ChunkInstance.initial = 10;
-			}).throw("Chunk.initial was removed. Use isInitial()"));
+			}).throw("Chunk.initial was removed. Use canBeInitial/isOnlyInitial()"));
 	});
 
 	describe("hasRuntime", () => {
