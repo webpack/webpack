@@ -59,25 +59,41 @@ describe("Chunk", () => {
 	describe("removeModule", function() {
 		let module;
 		let removeChunkSpy;
+
 		beforeEach(function() {
 			removeChunkSpy = sinon.spy();
+
 			module = {
 				removeChunk: removeChunkSpy
 			};
 		});
+
 		describe("and the chunk does not contain this module", function() {
 			it("returns false", function() {
 				ChunkInstance.removeModule(module).should.eql(false);
 			});
 		});
+
 		describe("and the chunk does contain this module", function() {
 			beforeEach(function() {
 				ChunkInstance._modules = new Set([module]);
 			});
+
 			it("calls module.removeChunk with itself and returns true", function() {
 				ChunkInstance.removeModule(module).should.eql(true);
+
 				removeChunkSpy.callCount.should.eql(1);
 				removeChunkSpy.args[0][0].should.eql(ChunkInstance);
+			});
+		});
+
+		describe("getNumberOfGroups", function() {
+			beforeEach(function() {
+				ChunkInstance._groups = new Set();
+			});
+
+			it("should return the number of chunk groups contained by the chunk", function() {
+				ChunkInstance.getNumberOfGroups().should.eql(0);
 			});
 		});
 	});
