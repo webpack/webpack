@@ -1,7 +1,3 @@
-branches:
-  only:
-    - local
-
 machine:
   environment:
     NO_WATCH_TESTS: 1
