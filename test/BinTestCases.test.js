@@ -81,7 +81,7 @@ describe("BinTestCases", function() {
 		if(asyncExists) {
 			describe(testName, function() {
 				it("should run successfully", function(done) {
-					this.timeout(10000);
+					//this.timeout(10000);
 					const child = spawn([cmd].concat(args), opts);
 
 					child.on("close", (code) => {
@@ -115,8 +115,7 @@ describe("BinTestCases", function() {
 		} else {
 			describe(testName, function() {
 				before(function(done) {
-					this.timeout(20000);
-
+					//this.timeout(20000);
 					const child = spawn([cmd].concat(args), opts);
 
 					child.on("close", (code) => {

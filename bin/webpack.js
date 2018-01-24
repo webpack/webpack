@@ -5,8 +5,8 @@ const { readdirSync } = require("fs");
 const { createInterface } = require("readline");
 
 let io = createInterface({
-  input: process.stdin,
-  output: process.stdout
+	input: process.stdin,
+	output: process.stdout
 });
 
 let webpackCliInstalled = false;
@@ -26,6 +26,7 @@ function runCommand(command) {
 			process.stdout.write(data);
 			webpackCliInstalled = true;
 		} else {
+			process.stdout.write(err);
 			webpackCliInstalled = false;
 		}
 	});
@@ -38,8 +39,8 @@ try {
 	process.stdout.write("The CLI moved into a separate package: webpack-cli.");
 
 	io.question("Do you want to install 'webpack-cli' automatically? [ Y/N ] \n", answer => {
-		if(/(y|yes)|(Y|Yes)/.test(answer)) {
-			process.stdout.write("Start downloading 'webpack-cli' package...\n");
+		if(/^\s*y/i.test(answer)) {
+			process.stdout.write("Start downloading 'webpack-cli'...\n");
 
 			if(hasYarn) {
 				runCommand("yarn add webpack-cli -D");
@@ -49,7 +50,7 @@ try {
 
 		}
 
-		if(/(n|no)|(N|No)/.test(answer)) {
+		if(/^\s*n/i.test(answer)) {
 			webpackCliInstalled = false;
 		}
 
@@ -60,5 +61,6 @@ try {
 if(!webpackCliInstalled) {
 	process.exitCode = 1;
 } else {
-	require("webpack-cli") && io.close();
+	io.close();
+	require("webpack-cli");
 }

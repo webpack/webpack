@@ -65,7 +65,7 @@ module.exports = {
 			}
 		],
 		"node/no-unpublished-bin": "error",
-		"node/no-unpublished-require": "warn",
+		"node/no-unpublished-require": "error",
 		"node/process-exit-as-throw": "error"
 	}
 };
