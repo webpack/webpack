@@ -50,7 +50,7 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
                   Asset      Size  Chunks             Chunk Names
 aae9c6dac629dd3f112e.js  54.5 KiB       7  [emitted]  
-c943782a49da9f00f591.js  34.8 KiB       0  [emitted]  
+07ed7b2dfa6fe5502719.js  34.8 KiB       0  [emitted]  
 987f929f287f8a6c88ac.js  52.1 KiB       2  [emitted]  
 bc5ed8b126130fde4f42.js  31.1 KiB       3  [emitted]  
 511009f3a8f06b7c54cb.js    43 KiB       4  [emitted]  
@@ -64,8 +64,8 @@ ee6461bbec846ab2c762.js  37.6 KiB      10  [emitted]
 0a6d10836900825087ce.js  44.7 KiB      12  [emitted]  
 5ec04d5529f6b78241e2.js  51.9 KiB      13  [emitted]  
 38a6975540caa0156886.js  51.3 KiB      14  [emitted]  
-Entrypoint main = bc5ed8b126130fde4f42.js 2a784b823ab0da1e0293.js c943782a49da9f00f591.js
-chunk    {0} c943782a49da9f00f591.js 28.3 KiB ={3}= ={5}= >{2}< >{4}< >{6}< >{7}< >{8}< >{9}< >{10}< >{11}< >{12}< >{13}< >{14}< >{1}< [entry] [rendered]
+Entrypoint main = bc5ed8b126130fde4f42.js 2a784b823ab0da1e0293.js 07ed7b2dfa6fe5502719.js
+chunk    {0} 07ed7b2dfa6fe5502719.js 28.3 KiB ={3}= ={5}= >{2}< >{4}< >{6}< >{7}< >{8}< >{9}< >{10}< >{11}< >{12}< >{13}< >{14}< >{1}< [entry] [rendered]
     > ./example main
     [0] ./example.js 44 bytes {0} [built]
      + 13 hidden modules
@@ -133,8 +133,8 @@ cf3beff30352265c3fae.js  13.1 KiB       2  [emitted]
 27d8a7d99dbd33243169.js   4.2 KiB      11  [emitted]  
 f9403b4474b02c436f23.js  10.9 KiB      12  [emitted]  
 97ad3a6439b7ef8470ec.js  6.41 KiB      13  [emitted]  
-50362e240b6b01a16dd2.js  5.97 KiB      14  [emitted]  
-Entrypoint main = 97ad3a6439b7ef8470ec.js f9403b4474b02c436f23.js 50362e240b6b01a16dd2.js
+ed199e2ef66607136e6a.js  5.97 KiB      14  [emitted]  
+Entrypoint main = 97ad3a6439b7ef8470ec.js f9403b4474b02c436f23.js ed199e2ef66607136e6a.js
 chunk    {0} 9baaf7bc0364c2600ef8.js 46.6 KiB <{13}> <{12}> <{14}> ={10}= ={9}= ={8}= ={7}= ={6}= ={5}= ={4}= ={3}= ={2}= ={1}= ={11}= [rendered] [recorded] aggressive splitted
     > react-dom [30] ./example.js 2:0-22
     24 modules
@@ -177,7 +177,7 @@ chunk   {12} f9403b4474b02c436f23.js 45.7 KiB ={13}= ={14}= >{10}< >{9}< >{8}< >
 chunk   {13} 97ad3a6439b7ef8470ec.js 37.8 KiB ={12}= ={14}= >{10}< >{9}< >{8}< >{7}< >{6}< >{5}< >{4}< >{3}< >{2}< >{1}< >{0}< >{11}< [initial] [rendered] [recorded] aggressive splitted
     > ./example main
     8 modules
-chunk   {14} 50362e240b6b01a16dd2.js 28.3 KiB ={13}= ={12}= >{10}< >{9}< >{8}< >{7}< >{6}< >{5}< >{4}< >{3}< >{2}< >{1}< >{0}< >{11}< [entry] [rendered]
+chunk   {14} ed199e2ef66607136e6a.js 28.3 KiB ={13}= ={12}= >{10}< >{9}< >{8}< >{7}< >{6}< >{5}< >{4}< >{3}< >{2}< >{1}< >{0}< >{11}< [entry] [rendered]
     > ./example main
    [30] ./example.js 44 bytes {14} [built]
      + 13 hidden modules

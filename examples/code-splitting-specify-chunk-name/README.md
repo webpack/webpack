@@ -302,19 +302,19 @@ __webpack_require__(3)("./ba" + createContextVar).then(function(bar) {
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  445 bytes       0  [emitted]  chunk-bar-baz3
-1.output.js  439 bytes       1  [emitted]  chunk-bar-baz1
+0.output.js  445 bytes       0  [emitted]  chunk-bar-baz2
+1.output.js  439 bytes       1  [emitted]  chunk-bar-baz0
 2.output.js  436 bytes       2  [emitted]  chunk-foo
   output.js   8.23 KiB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js (chunk-bar-baz3) 41 bytes <{3}> [rendered]
+chunk    {0} 0.output.js (chunk-bar-baz2) 41 bytes <{3}> [rendered]
     > ./baz [3] ./templates lazy ^\.\/ba.*$ namespace object ./baz
     > ./baz.js [3] ./templates lazy ^\.\/ba.*$ namespace object ./baz.js
     [1] ./templates/baz.js 41 bytes {0} [optional] [built]
         [exports: default]
         context element ./baz.js [3] ./templates lazy ^\.\/ba.*$ namespace object ./baz.js
         context element ./baz [3] ./templates lazy ^\.\/ba.*$ namespace object ./baz
-chunk    {1} 1.output.js (chunk-bar-baz1) 41 bytes <{3}> [rendered]
+chunk    {1} 1.output.js (chunk-bar-baz0) 41 bytes <{3}> [rendered]
     > ./bar [3] ./templates lazy ^\.\/ba.*$ namespace object ./bar
     > ./bar.js [3] ./templates lazy ^\.\/ba.*$ namespace object ./bar.js
     [2] ./templates/bar.js 41 bytes {1} [optional] [built]
@@ -342,19 +342,19 @@ chunk    {3} output.js (main) 580 bytes >{0}< >{1}< >{2}< [entry] [rendered]
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
       Asset       Size  Chunks             Chunk Names
-0.output.js  114 bytes       0  [emitted]  chunk-bar-baz3
-1.output.js  115 bytes       1  [emitted]  chunk-bar-baz1
+0.output.js  114 bytes       0  [emitted]  chunk-bar-baz2
+1.output.js  115 bytes       1  [emitted]  chunk-bar-baz0
 2.output.js  113 bytes       2  [emitted]  chunk-foo
   output.js   2.12 KiB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js (chunk-bar-baz3) 41 bytes <{3}> [rendered]
+chunk    {0} 0.output.js (chunk-bar-baz2) 41 bytes <{3}> [rendered]
     > ./baz [3] ./templates lazy ^\.\/ba.*$ namespace object ./baz
     > ./baz.js [3] ./templates lazy ^\.\/ba.*$ namespace object ./baz.js
     [1] ./templates/baz.js 41 bytes {0} [optional] [built]
         [exports: default]
         context element ./baz.js [3] ./templates lazy ^\.\/ba.*$ namespace object ./baz.js
         context element ./baz [3] ./templates lazy ^\.\/ba.*$ namespace object ./baz
-chunk    {1} 1.output.js (chunk-bar-baz1) 41 bytes <{3}> [rendered]
+chunk    {1} 1.output.js (chunk-bar-baz0) 41 bytes <{3}> [rendered]
     > ./bar [3] ./templates lazy ^\.\/ba.*$ namespace object ./bar
     > ./bar.js [3] ./templates lazy ^\.\/ba.*$ namespace object ./bar.js
     [2] ./templates/bar.js 41 bytes {1} [optional] [built]

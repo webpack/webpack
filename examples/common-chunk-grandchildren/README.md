@@ -438,7 +438,7 @@ Version: webpack next
 3.output.js  414 bytes       3  [emitted]  
   output.js   7.53 KiB       4  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 72 bytes <{1}> <{4}> ={3}= ={2}= [rendered] split chunk
+chunk    {0} 0.output.js 72 bytes <{1}> <{4}> ={3}= ={2}= [rendered] split chunk (cache group: default)
     > [2] ./pageB.js 3:1-6:3
     > [0] ./example.js 3:1-6:3
     [4] ./reusableComponent.js 72 bytes {0} [built]
@@ -476,7 +476,7 @@ Version: webpack next
 3.output.js  138 bytes       3  [emitted]  
   output.js   1.76 KiB       4  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 72 bytes <{1}> <{4}> ={3}= ={2}= [rendered] split chunk
+chunk    {0} 0.output.js 72 bytes <{1}> <{4}> ={3}= ={2}= [rendered] split chunk (cache group: default)
     > [2] ./pageB.js 3:1-6:3
     > [0] ./example.js 3:1-6:3
     [4] ./reusableComponent.js 72 bytes {0} [built]

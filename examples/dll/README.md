@@ -36,7 +36,7 @@ module.exports = {
 # dist/MyDll.alpha.js
 
 ``` javascript
-var alpha_e92bad326fecff628fb8 =
+var alpha_ae937b5d3e880b635a69 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -168,7 +168,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ``` javascript
-{"name":"alpha_e92bad326fecff628fb8","content":{"./alpha.js":{"id":1,"buildMeta":{"providedExports":true}},"./a.js":{"id":2,"buildMeta":{"providedExports":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"providedExports":true}}}}
+{"name":"alpha_ae937b5d3e880b635a69","content":{"./alpha.js":{"id":1,"buildMeta":{"providedExports":true}},"./a.js":{"id":2,"buildMeta":{"providedExports":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"providedExports":true}}}}
 ```
 
 # Info
