@@ -544,9 +544,8 @@
           ]
         },
         "path": {
-          "description": "The output directory as **absolute path** (required).",
-          "type": "string",
-          "absolutePath": true
+          "description": "The output directory as path (required).",
+          "type": "string"
         },
         "pathinfo": {
           "description": "Include comments with information about the modules.",
