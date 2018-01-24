@@ -120,7 +120,7 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack next
                   Asset      Size  Chunks             Chunk Names
 7a1ec67d9e4e1019836a.js  14.8 KiB       7  [emitted]  
-9baaf7bc0364c2600ef8.js  9.69 KiB       0  [emitted]  
+9baaf7bc0364c2600ef8.js   9.7 KiB       0  [emitted]  
 cf3beff30352265c3fae.js  13.1 KiB       2  [emitted]  
 0bc9e49d2884c20a78ae.js  7.89 KiB       3  [emitted]  
 408e20e95f946dedfdd3.js  8.14 KiB       4  [emitted]  
