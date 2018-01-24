@@ -68,7 +68,7 @@ describe("NodeWatchFileSystem", function() {
 			if(err) throw err;
 			filesModified.should.be.eql([fileDirect]);
 			dirsModified.should.be.eql([]);
-			fileTimestamps.get(fileDirect).should.have.type("number");
+			(typeof fileTimestamps.get(fileDirect)).should.be.eql("number");
 			watcher.close();
 			done();
 		});
@@ -87,7 +87,7 @@ describe("NodeWatchFileSystem", function() {
 				if(err) throw err;
 				filesModified.should.be.eql([fileDirect]);
 				dirsModified.should.be.eql([]);
-				fileTimestamps.get(fileDirect).should.have.type("number");
+				(typeof fileTimestamps.get(fileDirect)).should.be.eql("number");
 				watcher.close();
 				done();
 			});
@@ -104,7 +104,7 @@ describe("NodeWatchFileSystem", function() {
 			if(err) throw err;
 			filesModified.should.be.eql([]);
 			dirsModified.should.be.eql([fixtures]);
-			dirTimestamps.get(fixtures).should.have.type("number");
+			(typeof dirTimestamps.get(fixtures)).should.be.eql("number");
 			watcher.close();
 			done();
 		});
@@ -123,7 +123,7 @@ describe("NodeWatchFileSystem", function() {
 				if(err) throw err;
 				filesModified.should.be.eql([]);
 				dirsModified.should.be.eql([fixtures]);
-				dirTimestamps.get(fixtures).should.have.type("number");
+				(typeof dirTimestamps.get(fixtures)).should.be.eql("number");
 				watcher.close();
 				done();
 			});
@@ -140,7 +140,7 @@ describe("NodeWatchFileSystem", function() {
 			if(err) throw err;
 			filesModified.should.be.eql([]);
 			dirsModified.should.be.eql([fixtures]);
-			dirTimestamps.get(fixtures).should.have.type("number");
+			(typeof dirTimestamps.get(fixtures)).should.be.eql("number");
 			watcher.close();
 			done();
 		});
@@ -159,7 +159,7 @@ describe("NodeWatchFileSystem", function() {
 				if(err) throw err;
 				filesModified.should.be.eql([]);
 				dirsModified.should.be.eql([fixtures]);
-				dirTimestamps.get(fixtures).should.have.type("number");
+				(typeof dirTimestamps.get(fixtures)).should.be.eql("number");
 				watcher.close();
 				done();
 			});
@@ -177,9 +177,9 @@ describe("NodeWatchFileSystem", function() {
 				if(err) throw err;
 				filesModified.should.be.eql([fileSubdir, fileDirect]);
 				dirsModified.should.be.eql([fixtures]);
-				fileTimestamps.get(fileDirect).should.have.type("number");
-				fileTimestamps.get(fileSubdir).should.have.type("number");
-				dirTimestamps.get(fixtures).should.have.type("number");
+				(typeof fileTimestamps.get(fileDirect)).should.be.eql("number");
+				(typeof fileTimestamps.get(fileSubdir)).should.be.eql("number");
+				(typeof dirTimestamps.get(fixtures)).should.be.eql("number");
 				watcher.close();
 				done();
 			});
@@ -197,9 +197,9 @@ describe("NodeWatchFileSystem", function() {
 			if(err) throw err;
 			filesModified.should.be.eql([fileSubdir, fileDirect]);
 			dirsModified.should.be.eql([fixtures]);
-			fileTimestamps.get(fileDirect).should.have.type("number");
-			fileTimestamps.get(fileSubdir).should.have.type("number");
-			dirTimestamps.get(fixtures).should.have.type("number");
+			(typeof fileTimestamps.get(fileDirect)).should.be.eql("number");
+			(typeof fileTimestamps.get(fileSubdir)).should.be.eql("number");
+			(typeof dirTimestamps.get(fixtures)).should.be.eql("number");
 			watcher.close();
 			done();
 		});
