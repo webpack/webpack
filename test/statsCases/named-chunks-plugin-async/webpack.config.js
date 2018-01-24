@@ -13,7 +13,7 @@ module.exports = {
 			if(chunk.name) {
 				return chunk.name;
 			}
-			const chunkModulesToName = (chunk) => chunk.mapModules((mod) => {
+			const chunkModulesToName = (chunk) => Array.from(chunk.modulesIterable, (mod) => {
 				const rs = new RequestShortener(mod.context);
 				return rs.shorten(mod.request).replace(/[./\\]/g, "_");
 			}).join("-");
