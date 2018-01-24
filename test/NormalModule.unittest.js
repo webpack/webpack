@@ -241,14 +241,14 @@ describe("NormalModule", function() {
 			fileB = "fileB";
 			fileDependencies = [fileA, fileB];
 			contextDependencies = [fileA, fileB];
-			fileTimestamps = {
-				[fileA]: 1,
-				[fileB]: 1,
-			};
-			contextTimestamps = {
-				[fileA]: 1,
-				[fileB]: 1,
-			};
+			fileTimestamps = new Map([
+				[fileA, 1],
+				[fileB, 1]
+			]);
+			contextTimestamps = new Map([
+				[fileA, 1],
+				[fileB, 1],
+			]);
 			normalModule.buildTimestamp = 2;
 			setDeps(fileDependencies, contextDependencies);
 		});
@@ -259,7 +259,7 @@ describe("NormalModule", function() {
 		});
 		describe("given a file timestamp is newer than the buildTimestamp", function() {
 			beforeEach(function() {
-				fileTimestamps[fileA] = 3;
+				fileTimestamps.set(fileA, 3);
 			});
 			it("returns true", function() {
 				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(true);
@@ -267,7 +267,7 @@ describe("NormalModule", function() {
 		});
 		describe("given a no file timestamp exists", function() {
 			beforeEach(function() {
-				fileTimestamps = {};
+				fileTimestamps = new Map();
 			});
 			it("returns true", function() {
 				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(true);
@@ -275,7 +275,7 @@ describe("NormalModule", function() {
 		});
 		describe("given a context timestamp is newer than the buildTimestamp", function() {
 			beforeEach(function() {
-				contextTimestamps[fileA] = 3;
+				contextTimestamps.set(fileA, 3);
 			});
 			it("returns true", function() {
 				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(true);
@@ -283,7 +283,7 @@ describe("NormalModule", function() {
 		});
 		describe("given a no context timestamp exists", function() {
 			beforeEach(function() {
-				contextTimestamps = {};
+				contextTimestamps = new Map();
 			});
 			it("returns true", function() {
 				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(true);
