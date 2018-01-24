@@ -43,6 +43,7 @@
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
+    "jest": "^22.1.4",
     "js-beautify": "^1.5.10",
     "json-loader": "^0.5.7",
     "less": "^2.5.1",
@@ -86,9 +87,9 @@
     "schemas/"
   ],
   "scripts": {
-    "test": "mocha test/*.test.js test/*.unittest.js --max-old-space-size=4096 --harmony --trace-deprecation",
-    "test:integration": "mocha test/*.test.js --max-old-space-size=4096 --harmony --trace-deprecation",
-    "test:unit": "mocha test/*.unittest.js --max-old-space-size=4096 --harmony --trace-deprecation",
+    "test": "jest",
+    "test:integration": "jest --testMatch '<rootDir>/test/*.test.js'",
+    "test:unit": "jest --testMatch '<rootDir>/test/*.unittest.js'",
     "travis:integration": "npm run cover:init && npm run cover:integration && npm run cover:report-min",
     "travis:unit": "npm run cover:init && npm run cover:unit && npm run cover:report-min",
     "travis:lint": "npm run lint-files",
@@ -114,5 +115,8 @@
     "cover:report": "istanbul report",
     "cover:report-min": "istanbul report --report lcovonly",
     "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }

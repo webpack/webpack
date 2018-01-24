@@ -1,8 +1,6 @@
 /*globals describe it */
 "use strict";
 
-require("should");
-
 const Stats = require("../lib/Stats");
 
 describe("Stats", () => {
@@ -17,7 +15,7 @@ describe("Stats", () => {
 						context: ""
 					}
 				});
-				mockStats.hasErrors().should.be.ok();
+				expect(mockStats.hasErrors()).toBe(true);
 			});
 			it("hasWarnings", () => {
 				const mockStats = new Stats({
@@ -28,7 +26,7 @@ describe("Stats", () => {
 						context: ""
 					}
 				});
-				mockStats.hasWarnings().should.be.ok();
+				expect(mockStats.hasWarnings()).toBe(true);
 			});
 		});
 		describe("does not have", () => {
@@ -41,7 +39,7 @@ describe("Stats", () => {
 						context: ""
 					}
 				});
-				mockStats.hasErrors().should.not.be.ok();
+				expect(mockStats.hasErrors()).toBe(false);
 			});
 			it("hasWarnings", () => {
 				const mockStats = new Stats({
@@ -52,7 +50,7 @@ describe("Stats", () => {
 						context: ""
 					}
 				});
-				mockStats.hasWarnings().should.not.be.ok();
+				expect(mockStats.hasWarnings()).toBe(false);
 			});
 		});
 		describe("children have", () => {
@@ -67,7 +65,7 @@ describe("Stats", () => {
 					errors: [],
 					hash: "1234"
 				});
-				mockStats.hasErrors().should.be.ok();
+				expect(mockStats.hasErrors()).toBe(true);
 			});
 			it("hasWarnings", () => {
 				const mockStats = new Stats({
@@ -80,7 +78,7 @@ describe("Stats", () => {
 					warnings: [],
 					hash: "1234"
 				});
-				mockStats.hasWarnings().should.be.ok();
+				expect(mockStats.hasWarnings()).toBe(true);
 			});
 		});
 		it("formatError handles string errors", () => {
@@ -101,35 +99,35 @@ describe("Stats", () => {
 				}
 			});
 			const obj = mockStats.toJson();
-			obj.errors[0].should.be.equal("firstError");
+			expect(obj.errors[0]).toEqual("firstError");
 		});
 	});
 	describe("Presets", () => {
 		describe("presetToOptions", () => {
 			it("returns correct object with 'Normal'", () => {
-				Stats.presetToOptions("Normal").should.eql({});
+				expect(Stats.presetToOptions("Normal")).toEqual({});
 			});
 			it("truthy values behave as 'normal'", () => {
 				const normalOpts = Stats.presetToOptions("normal");
-				Stats.presetToOptions("pizza").should.eql(normalOpts);
-				Stats.presetToOptions(true).should.eql(normalOpts);
-				Stats.presetToOptions(1).should.eql(normalOpts);
+				expect(Stats.presetToOptions("pizza")).toEqual(normalOpts);
+				expect(Stats.presetToOptions(true)).toEqual(normalOpts);
+				expect(Stats.presetToOptions(1)).toEqual(normalOpts);
 
-				Stats.presetToOptions("verbose").should.not.eql(normalOpts);
-				Stats.presetToOptions(false).should.not.eql(normalOpts);
+				expect(Stats.presetToOptions("verbose")).not.toEqual(normalOpts);
+				expect(Stats.presetToOptions(false)).not.toEqual(normalOpts);
 			});
 			it("returns correct object with 'none'", () => {
-				Stats.presetToOptions("none").should.eql({
+				expect(Stats.presetToOptions("none")).toEqual({
 					all: false
 				});
 			});
 			it("falsy values behave as 'none'", () => {
 				const noneOpts = Stats.presetToOptions("none");
-				Stats.presetToOptions("").should.eql(noneOpts);
-				Stats.presetToOptions(null).should.eql(noneOpts);
-				Stats.presetToOptions().should.eql(noneOpts);
-				Stats.presetToOptions(0).should.eql(noneOpts);
-				Stats.presetToOptions(false).should.eql(noneOpts);
+				expect(Stats.presetToOptions("")).toEqual(noneOpts);
+				expect(Stats.presetToOptions(null)).toEqual(noneOpts);
+				expect(Stats.presetToOptions()).toEqual(noneOpts);
+				expect(Stats.presetToOptions(0)).toEqual(noneOpts);
+				expect(Stats.presetToOptions(false)).toEqual(noneOpts);
 			});
 		});
 	});

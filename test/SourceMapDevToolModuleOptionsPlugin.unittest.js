@@ -1,6 +1,5 @@
 "use strict";
 
-require("should");
 const SourceMapDevToolModuleOptionsPlugin = require("../lib/SourceMapDevToolModuleOptionsPlugin");
 const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
 
@@ -8,35 +7,44 @@ describe("SourceMapDevToolModuleOptionsPlugin", () => {
 	describe("when applied", () => {
 		let eventBindings;
 
-		beforeEach(() => eventBindings = undefined);
+		beforeEach(() => {
+			eventBindings = undefined;
+		});
 
 		describe("with module false and line-to-line false", () => {
-			beforeEach(() =>
+			beforeEach(() => {
 				eventBindings = applyPluginWithOptions(SourceMapDevToolModuleOptionsPlugin, {
 					module: false,
 					lineToLine: false
-				}));
+				});
+			});
 
-			it("does not bind any event handlers", () => eventBindings.length.should.be.exactly(0));
+			it("does not bind any event handlers", () => {
+				expect(eventBindings.length).toBe(0);
+			});
 		});
 
 		describe("with module true", () => {
-			beforeEach(() =>
+			beforeEach(() => {
 				eventBindings = applyPluginWithOptions(SourceMapDevToolModuleOptionsPlugin, {
 					module: true,
 					lineToLine: false
-				}));
+				});
+			});
 
-			it("binds one event handler", () => eventBindings.length.should.be.exactly(1));
+			it("binds one event handler", () => {
+				expect(eventBindings.length).toBe(1);
+			});
 
 			describe("event handler", () => {
-				it("binds to build-module event", () =>
-					eventBindings[0].name.should.be.exactly("build-module"));
+				it("binds to build-module event", () => {
+					expect(eventBindings[0].name).toBe("build-module");
+				});
 
 				it("sets source map flag", () => {
 					const module = {};
 					eventBindings[0].handler(module);
-					module.should.deepEqual({
+					expect(module).toEqual({
 						useSourceMap: true
 					});
 				});
@@ -50,15 +58,19 @@ describe("SourceMapDevToolModuleOptionsPlugin", () => {
 					lineToLine: true
 				}));
 
-			it("binds one event handler", () => eventBindings.length.should.be.exactly(1));
+			it("binds one event handler", () => {
+				expect(eventBindings.length).toBe(1);
+			});
 
 			describe("event handler", () => {
-				it("binds to build-module event", () => eventBindings[0].name.should.be.exactly("build-module"));
+				it("binds to build-module event", () => {
+					expect(eventBindings[0].name).toBe("build-module");
+				});
 
 				it("sets line-to-line flag", () => {
 					const module = {};
 					eventBindings[0].handler(module);
-					module.should.deepEqual({
+					expect(module).toEqual({
 						lineToLine: true
 					});
 				});
@@ -66,22 +78,27 @@ describe("SourceMapDevToolModuleOptionsPlugin", () => {
 		});
 
 		describe("with line-to-line object", () => {
-			beforeEach(() =>
+			beforeEach(() => {
 				eventBindings = applyPluginWithOptions(SourceMapDevToolModuleOptionsPlugin, {
 					module: false,
 					lineToLine: {}
-				}));
+				});
+			});
 
-			it("binds one event handler", () => eventBindings.length.should.be.exactly(1));
+			it("binds one event handler", () => {
+				expect(eventBindings.length).toBe(1);
+			});
 
 			describe("event handler", () => {
-				it("binds to build-module event", () => eventBindings[0].name.should.be.exactly("build-module"));
+				it("binds to build-module event", () => {
+					expect(eventBindings[0].name).toBe("build-module");
+				});
 
 				describe("when module has no resource", () => {
 					it("makes no changes", () => {
 						const module = {};
 						eventBindings[0].handler(module);
-						module.should.deepEqual({});
+						expect(module).toEqual({});
 					});
 				});
 
@@ -91,7 +108,7 @@ describe("SourceMapDevToolModuleOptionsPlugin", () => {
 							resource: "foo"
 						};
 						eventBindings[0].handler(module);
-						module.should.deepEqual({
+						expect(module).toEqual({
 							lineToLine: true,
 							resource: "foo"
 						});
@@ -104,7 +121,7 @@ describe("SourceMapDevToolModuleOptionsPlugin", () => {
 							resource: "foo?bar"
 						};
 						eventBindings[0].handler(module);
-						module.should.deepEqual({
+						expect(module).toEqual({
 							lineToLine: true,
 							resource: "foo?bar"
 						});

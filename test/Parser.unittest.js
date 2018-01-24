@@ -1,7 +1,5 @@
 "use strict";
 
-const should = require("should");
-
 const Parser = require("../lib/Parser");
 const BasicEvaluatedExpression = require("../lib/BasicEvaluatedExpression");
 
@@ -281,8 +279,8 @@ describe("Parser", () => {
 				return true;
 			});
 			const actual = testParser.parse(source);
-			should.strictEqual(typeof actual, "object");
-			actual.should.be.eql(state);
+			expect(typeof actual).toBe("object");
+			expect(actual).toEqual(state);
 		});
 	});
 
@@ -304,13 +302,13 @@ describe("Parser", () => {
 		});
 
 		const actual = testParser.parse(source);
-		should.strictEqual(typeof actual, "object");
-		should.strictEqual(typeof actual.comments, "object");
+		expect(typeof actual).toBe("object");
+		expect(typeof actual.comments).toBe("object");
 		actual.comments.forEach((element, index) => {
-			should.strictEqual(typeof element.type, "string");
-			should.strictEqual(typeof element.value, "string");
-			element.type.should.be.eql(state[index].type);
-			element.value.should.be.eql(state[index].value);
+			expect(typeof element.type).toBe("string");
+			expect(typeof element.value).toBe("string");
+			expect(element.type).toBe(state[index].type);
+			expect(element.value).toBe(state[index].value);
 		});
 	});
 
@@ -458,7 +456,7 @@ describe("Parser", () => {
 
 			it("should eval " + key, () => {
 				const evalExpr = evaluateInParser(key);
-				evalExprToString(evalExpr).should.be.eql(testCases[key] ? key + " " + testCases[key] : key);
+				expect(evalExprToString(evalExpr)).toBe(testCases[key] ? key + " " + testCases[key] : key);
 			});
 		});
 	});
@@ -475,7 +473,7 @@ describe("Parser", () => {
 				const expr = cases[name];
 				it(name, () => {
 					const actual = parser.parse(expr);
-					should.strictEqual(typeof actual, "object");
+					expect(typeof actual).toBe("object");
 				});
 			});
 		});
@@ -506,7 +504,7 @@ describe("Parser", () => {
 			Object.keys(cases).forEach((name) => {
 				it(name, () => {
 					const actual = parser.parse(cases[name][0]);
-					actual.should.be.eql(cases[name][1]);
+					expect(actual).toEqual(cases[name][1]);
 				});
 			});
 		});

@@ -1,68 +1,62 @@
 "use strict";
 
-const should = require("should");
 const sinon = require("sinon");
 const DependenciesBlockVariable = require("../lib/DependenciesBlockVariable");
 
 describe("DependenciesBlockVariable", () => {
-	let DependenciesBlockVariableInstance,
-		dependencyMock,
-		sandbox;
+	const sandbox = sinon.sandbox.create();
+	const dependencyMock = {
+		constructor: {
+			name: "DependencyMock"
+		},
+		disconnect: sandbox.spy(),
+		updateHash: sandbox.spy()
+	};
+	const DependenciesBlockVariableInstance = new DependenciesBlockVariable("dependencies-name", "expression", [dependencyMock]);
 
-	before(() => {
-		sandbox = sinon.sandbox.create();
-		dependencyMock = {
-			constructor: {
-				name: "DependencyMock"
-			},
-			disconnect: sandbox.spy(),
-			updateHash: sandbox.spy()
-		};
-		DependenciesBlockVariableInstance = new DependenciesBlockVariable(
-			"dependencies-name",
-			"expression", [dependencyMock]);
+	afterEach(() => {
+		sandbox.restore();
 	});
 
-	afterEach(() => sandbox.restore());
+	describe("hasDependencies", () => {
+		it("returns `true` if has dependencies", () => {
+			expect(DependenciesBlockVariableInstance.hasDependencies()).toBe(true);
+		});
+	});
 
-	describe("hasDependencies", () =>
-		it("returns `true` if has dependencies", () =>
-			should(DependenciesBlockVariableInstance.hasDependencies()).be.true()));
-
-	describe("disconnect", () =>
+	describe("disconnect", () => {
 		it("trigger dependencies disconnection", () => {
 			DependenciesBlockVariableInstance.disconnect();
-			should(dependencyMock.disconnect.calledOnce).be.true();
-		}));
+			expect(dependencyMock.disconnect.calledOnce).toBe(true);
+		});
+	});
 
 	describe("updateHash", () => {
-		let hash;
-		before(() => {
-			hash = {
-				update: sandbox.spy()
-			};
-			DependenciesBlockVariableInstance.updateHash(hash);
+		const hash = {
+			update: sandbox.spy()
+		};
+
+		DependenciesBlockVariableInstance.updateHash(hash);
+
+		it("should update hash dependencies with name", () => {
+			expect(hash.update.calledWith("dependencies-name")).toBe(true);
 		});
 
-		it("should update hash dependencies with name", () =>
-			should(hash.update.calledWith("dependencies-name")).be.true());
+		it("should update hash dependencies with expression", () => {
+			expect(hash.update.calledWith("expression")).toBe(true);
+		});
 
-		it("should update hash dependencies with expression", () =>
-			should(hash.update.calledWith("expression")).be.true());
-
-		it("should update hash inside dependencies", () =>
-			should(dependencyMock.updateHash.calledOnce).be.true());
+		it("should update hash inside dependencies", () => {
+			expect(dependencyMock.updateHash.calledOnce).toBe(true);
+		});
 	});
 
 	describe("expressionSource", () => {
-		let dependencyTemplates,
-			applyMock;
-
-		before(() => applyMock = sandbox.spy());
+		const applyMock = sandbox.spy();
 
 		it("aplies information inside dependency templates", () => {
-			dependencyTemplates = {
-				get: function() {
+			const dependencyTemplates = {
+				get() {
 					return {
 						apply: applyMock
 					};
@@ -71,20 +65,20 @@ describe("DependenciesBlockVariable", () => {
 			DependenciesBlockVariableInstance.expressionSource(
 				dependencyTemplates, {}, {}
 			);
-			should(applyMock.calledOnce).be.true();
+			expect(applyMock.calledOnce).toBe(true);
 		});
 
 		it("aplies information inside dependency templates", () => {
-			dependencyTemplates = {
-				get: function() {
+			const dependencyTemplates = {
+				get() {
 					return false;
 				}
 			};
-			should(() => {
+			expect(() => {
 				DependenciesBlockVariableInstance.expressionSource(
 					dependencyTemplates, {}, {}
 				);
-			}).throw("No template for dependency: DependencyMock");
+			}).toThrow("No template for dependency: DependencyMock");
 		});
 	});
 });
