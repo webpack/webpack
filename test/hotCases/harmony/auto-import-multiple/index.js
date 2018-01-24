@@ -1,12 +1,12 @@
 import { value } from "./file";
 import value2 from "./commonjs";
 
-it("should auto-import multiple ES6 imported values on accept", function(done) {
-	value.should.be.eql(1);
-	value2.should.be.eql(10);
-	module.hot.accept(["./file", "./commonjs"], function() {
-		value.should.be.eql(2);
-		value2.should.be.eql(20);
+it("should auto-import multiple ES6 imported values on accept", (done) => {
+	expect(value).toBe(1);
+	expect(value2).toBe(10);
+	module.hot.accept(["./file", "./commonjs"], () => {
+		expect(value).toBe(2);
+		expect(value2).toBe(20);
 		outside();
 		done();
 	});
@@ -14,6 +14,6 @@ it("should auto-import multiple ES6 imported values on accept", function(done) {
 });
 
 function outside() {
-	value.should.be.eql(2);
-	value2.should.be.eql(20);
+	expect(value).toBe(2);
+	expect(value2).toBe(20);
 }

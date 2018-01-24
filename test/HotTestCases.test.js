@@ -9,6 +9,28 @@ const checkArrayExpectation = require("./checkArrayExpectation");
 
 const webpack = require("../lib/webpack");
 
+function createNestableIt(done) {
+	let counter = 0;
+	let aborted = false;
+	return (title, fn) => {
+		counter++;
+		fn((err) => {
+			if(aborted) {
+				return;
+			}
+			if(err) {
+				aborted = true;
+				done(err);
+			} else {
+				counter--;
+				if(counter === 0) {
+					done();
+				}
+			}
+		});
+	}
+}
+
 describe("HotTestCases", () => {
 	const casesPath = path.join(__dirname, "hotCases");
 	let categories = fs.readdirSync(casesPath).filter((dir) =>
@@ -22,9 +44,6 @@ describe("HotTestCases", () => {
 	categories.forEach((category) => {
 		describe(category.name, () => {
 			category.tests.forEach((testName) => {
-				const suite = describe(testName, function() {
-					this.timeout(10000);
-				});
 				it(testName + " should compile", (done) => {
 					const testDirectory = path.join(casesPath, category.name, testName);
 					const outputDirectory = path.join(__dirname, "js", "hot-cases", category.name, testName);
@@ -70,11 +89,10 @@ describe("HotTestCases", () => {
 						if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
 						let exportedTests = 0;
 
+						const __it = createNestableIt(done);
 						function _it(title, fn) {
-							const test = new Test(title, fn);
-							suite.addTest(test);
+							__it(title, fn);
 							exportedTests++;
-							return test;
 						}
 
 						function _next(callback) {
@@ -93,17 +111,16 @@ describe("HotTestCases", () => {
 						function _require(module) {
 							if(module.substr(0, 2) === "./") {
 								const p = path.join(outputDirectory, module);
-								const fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, NEXT, STATS) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
+								const fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, expect, NEXT, STATS) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
 								const m = {
 									exports: {}
 								};
-								fn.call(m.exports, _require, m, m.exports, outputDirectory, p, _it, _next, jsonStats);
+								fn.call(m.exports, _require, m, m.exports, outputDirectory, p, _it, expect, _next, jsonStats);
 								return m.exports;
 							} else return require(module);
 						}
 						_require("./bundle.js");
 						if(exportedTests < 1) return done(new Error("No tests exported by test case"));
-						process.nextTick(done);
 					});
 				});
 			});
