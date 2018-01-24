@@ -25,15 +25,17 @@ describe("NormalModule", function() {
 		parser = {
 			parse() {}
 		};
-		normalModule = new NormalModule(
-			"javascript/auto",
+		normalModule = new NormalModule({
+			type: "javascript/auto",
 			request,
 			userRequest,
 			rawRequest,
 			loaders,
 			resource,
-			parser
-		);
+			parser,
+			generator: null,
+			resolveOptions: {}
+		});
 		normalModule.buildInfo = {
 			cacheable: true
 		};
@@ -70,15 +72,15 @@ describe("NormalModule", function() {
 		describe("given a userRequest containing loaders", function() {
 			beforeEach(function() {
 				userRequest = "some/userRequest!some/other/userRequest!some/thing/is/off/here";
-				normalModule = new NormalModule(
-					"javascript/auto",
+				normalModule = new NormalModule({
+					type: "javascript/auto",
 					request,
 					userRequest,
 					rawRequest,
 					loaders,
 					resource,
 					parser
-				);
+				});
 			});
 			it("contextifies every path in the userRequest", function() {
 				normalModule.libIdent({
@@ -89,15 +91,15 @@ describe("NormalModule", function() {
 		describe("given a userRequest containing query parameters", function() {
 			it("ignores paths in query parameters", function() {
 				userRequest = "some/context/loader?query=foo\\bar&otherPath=testpath/other";
-				normalModule = new NormalModule(
-					"javascript/auto",
+				normalModule = new NormalModule({
+					type: "javascript/auto",
 					request,
 					userRequest,
 					rawRequest,
 					loaders,
 					resource,
 					parser
-				);
+				});
 				normalModule.libIdent({
 					context: "some/context",
 				}).should.eql("./loader?query=foo\\bar&otherPath=testpath/other");
@@ -113,15 +115,15 @@ describe("NormalModule", function() {
 			const baseResource = "some/resource";
 			beforeEach(function() {
 				resource = baseResource + "?some=query";
-				normalModule = new NormalModule(
-					"javascript/auto",
+				normalModule = new NormalModule({
+					type: "javascript/auto",
 					request,
 					userRequest,
 					rawRequest,
 					loaders,
 					resource,
 					parser
-				);
+				});
 			});
 			it("return only the part before the ?-sign", function() {
 				normalModule.nameForCondition().should.eql(baseResource);
@@ -154,18 +156,6 @@ describe("NormalModule", function() {
 			});
 			it("returns a SourceMapSource", function() {
 				normalModule.createSourceForAsset(name, content, sourceMap).should.be.instanceOf(SourceMapSource);
-			});
-		});
-	});
-
-	describe("#source", function() {
-		describe("without the module having any source", function() {
-			beforeEach(function() {
-				normalModule._source = null;
-			});
-			it("returns a Source containing an Error", function() {
-				normalModule.source().should.be.instanceOf(RawSource);
-				normalModule.source().source().should.eql("throw new Error('No source available');");
 			});
 		});
 	});
@@ -287,44 +277,6 @@ describe("NormalModule", function() {
 			});
 			it("returns true", function() {
 				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(true);
-			});
-		});
-	});
-	describe("#splitVariablesInUniqueNamedChunks", function() {
-		let variables;
-		beforeEach(function() {
-			variables = [{
-				name: "foo"
-			}, {
-				name: "bar"
-			}, {
-				name: "baz"
-			}, {
-				name: "some"
-			}, {
-				name: "more"
-			}];
-		});
-		describe("given an empty array of vars", function() {
-			it("returns an empty array", function() {
-				normalModule.splitVariablesInUniqueNamedChunks([]).should.eql([
-					[]
-				]);
-			});
-		});
-		describe("given an array of distrinct variables", function() {
-			it("returns an array containing an array containing the variables", function() {
-				normalModule.splitVariablesInUniqueNamedChunks(variables).should.eql([variables]);
-			});
-		});
-		describe("given an array with duplicate variables", function() {
-			it("returns several arrays each containing only distinct variable names", function() {
-				normalModule.splitVariablesInUniqueNamedChunks(variables.concat(variables)).should.eql([variables, variables]);
-			});
-			describe("and a duplicate as the last variable", function() {
-				it("returns correctly split distinct arrays", function() {
-					normalModule.splitVariablesInUniqueNamedChunks(variables.concat(variables).concat(variables[0])).should.eql([variables, variables, [variables[0]]]);
-				});
 			});
 		});
 	});
