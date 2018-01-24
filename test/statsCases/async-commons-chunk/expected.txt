@@ -10,6 +10,6 @@ chunk    {1} 1.js 21 bytes <{3}> ={0}= [rendered]
 chunk    {2} 2.js 21 bytes <{3}> ={0}= [rendered]
     > [3] ./index.js 17:1-21:3
     [2] ./c.js 21 bytes {2} [built]
-chunk    {3} main.js (main) 550 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+chunk    {3} main.js (main) 515 bytes >{0}< >{1}< >{2}< [entry] [rendered]
     > ./ main
-    [3] ./index.js 550 bytes {3} [built]
+    [3] ./index.js 515 bytes {3} [built]

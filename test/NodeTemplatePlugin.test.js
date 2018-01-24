@@ -1,8 +1,6 @@
 /* global describe, it */
 "use strict";
 
-require("should");
-
 const path = require("path");
 const webpack = require("../lib/webpack");
 
@@ -23,16 +21,16 @@ describe("NodeTemplatePlugin", () => {
 			entry: "./entry"
 		}, (err, stats) => {
 			if(err) return err;
-			stats.hasErrors().should.be.not.ok();
-			stats.hasWarnings().should.be.not.ok();
+			expect(stats.hasErrors()).toBe(false);
+			expect(stats.hasWarnings()).toBe(false);
 			// eslint-disable-next-line node/no-missing-require
 			const result = require("./js/result").abc;
-			result.nextTick.should.be.equal(process.nextTick);
-			result.fs.should.be.equal(require("fs"));
+			expect(result.nextTick).toBe(process.nextTick);
+			expect(result.fs).toBe(require("fs"));
 			result.loadChunk(456, (chunk) => {
-				chunk.should.be.eql(123);
+				expect(chunk).toBe(123);
 				result.loadChunk(567, (chunk) => {
-					chunk.should.be.eql({
+					expect(chunk).toEqual({
 						a: 1
 					});
 					done();
@@ -62,17 +60,17 @@ describe("NodeTemplatePlugin", () => {
 			]
 		}, (err, stats) => {
 			if(err) return err;
-			stats.hasErrors().should.be.not.ok();
+			expect(stats.hasErrors()).toBe(false);
 			// eslint-disable-next-line node/no-missing-require
 			const result = require("./js/result2");
-			result.nextTick.should.be.equal(process.nextTick);
-			result.fs.should.be.equal(require("fs"));
+			expect(result.nextTick).toBe(process.nextTick);
+			expect(result.fs).toBe(require("fs"));
 			const sameTick = true;
 			result.loadChunk(456, (chunk) => {
-				chunk.should.be.eql(123);
-				sameTick.should.be.eql(true);
+				expect(chunk).toBe(123);
+				expect(sameTick).toBe(true);
 				result.loadChunk(567, (chunk) => {
-					chunk.should.be.eql({
+					expect(chunk).toEqual({
 						a: 1
 					});
 					done();

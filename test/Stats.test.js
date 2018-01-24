@@ -1,13 +1,11 @@
 /*globals describe it */
 "use strict";
 
-require("should");
-
 const webpack = require("../lib/webpack");
 const MemoryFs = require("memory-fs");
 
 describe("Stats", () => {
-	it("should print env string in stats", function(done) {
+	it("should print env string in stats", (done) => {
 		const compiler = webpack({
 			context: __dirname,
 			entry: "./fixtures/a"
@@ -16,21 +14,21 @@ describe("Stats", () => {
 		compiler.run((err, stats) => {
 			if(err) return done(err);
 			try {
-				stats.toString({
+				expect(stats.toString({
 					all: false,
 					env: true,
 					_env: "production"
-				}).should.be.eql(
+				})).toBe(
 					"Environment (--env): \"production\""
 				);
-				stats.toString({
+				expect(stats.toString({
 					all: false,
 					env: true,
 					_env: {
 						prod: ["foo", "bar"],
 						baz: true
 					}
-				}).should.be.eql(
+				})).toBe(
 					"Environment (--env): {\n" +
 					"  \"prod\": [\n" +
 					"    \"foo\",\n" +

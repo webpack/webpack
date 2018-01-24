@@ -1,7 +1,6 @@
 /*globals describe it */
 "use strict";
 
-require("should");
 const path = require("path");
 const fs = require("fs");
 
@@ -17,8 +16,8 @@ const tests = fs.readdirSync(base).filter(testName =>
 
 describe("StatsTestCases", () => {
 	tests.forEach(testName => {
-		it("should print correct stats for " + testName, function(done) {
-			this.timeout(10000);
+		it("should print correct stats for " + testName, (done) => {
+			jest.setTimeout(10000);
 			let options = {
 				mode: "development",
 				entry: "./index",
@@ -61,7 +60,7 @@ describe("StatsTestCases", () => {
 				if(err) return done(err);
 
 				if(/error$/.test(testName)) {
-					stats.hasErrors().should.be.equal(true);
+					expect(stats.hasErrors()).toBe(true);
 				} else if(stats.hasErrors()) {
 					return done(new Error(stats.toJson().errors.join("\n\n")));
 				}
@@ -84,7 +83,7 @@ describe("StatsTestCases", () => {
 				}
 
 				let actual = stats.toString(toStringOptions);
-				(typeof actual).should.be.eql("string");
+				expect(typeof actual).toBe("string");
 				if(!hasColorSetting) {
 					actual = actual
 						.replace(/\u001b\[[0-9;]*m/g, "")
@@ -109,7 +108,7 @@ describe("StatsTestCases", () => {
 				} else if(fs.existsSync(path.join(base, testName, "actual.txt"))) {
 					fs.unlinkSync(path.join(base, testName, "actual.txt"));
 				}
-				actual.should.be.eql(expected);
+				expect(actual).toBe(expected);
 				done();
 			});
 		});

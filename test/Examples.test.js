@@ -1,7 +1,6 @@
 "use strict";
 
 /* globals describe it */
-require("should");
 const path = require("path");
 const fs = require("fs");
 const webpack = require("../");
@@ -17,7 +16,7 @@ describe("Examples", () => {
 			return;
 		}
 		it("should compile " + path.relative(basePath, examplePath), function(done) {
-			this.timeout(20000);
+			jest.setTimeout(20000);
 			let options = {};
 			let webpackConfigPath = path.join(examplePath, "webpack.config.js");
 			webpackConfigPath = webpackConfigPath.substr(0, 1).toUpperCase() + webpackConfigPath.substr(1);

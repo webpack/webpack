@@ -2,7 +2,6 @@
 
 /* globals describe it */
 const path = require("path");
-const should = require("should");
 const MemoryFs = require("memory-fs");
 const webpack = require("../");
 
@@ -28,7 +27,7 @@ describe("MultiCompiler", function() {
 			if(err) {
 				throw err;
 			} else {
-				should(called).be.equal(2);
+				expect(called).toBe(2);
 				done();
 			}
 		});
@@ -44,7 +43,7 @@ describe("MultiCompiler", function() {
 				throw err;
 			} else {
 				watcher.close();
-				should(called).be.equal(2);
+				expect(called).toBe(2);
 				done();
 			}
 		});

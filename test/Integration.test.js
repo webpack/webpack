@@ -6,7 +6,7 @@ const path = require("path");
 const webpack = require("../lib/webpack");
 
 describe("Integration", function() {
-	this.timeout(5000);
+	jest.setTimeout(5000);
 	it("should compile library1", (done) => {
 		webpack({
 			mode: "production",
@@ -21,8 +21,8 @@ describe("Integration", function() {
 			}
 		}, (err, stats) => {
 			if(err) throw err;
-			stats.hasErrors().should.be.not.ok();
-			stats.hasWarnings().should.be.not.ok();
+			expect(stats.hasErrors()).toBe(false);
+			expect(stats.hasWarnings()).toBe(false);
 			done();
 		});
 	});
@@ -91,8 +91,8 @@ describe("Integration", function() {
 			]
 		}, (err, stats) => {
 			if(err) throw err;
-			stats.hasErrors().should.be.not.ok();
-			stats.hasWarnings().should.be.not.ok();
+			expect(stats.hasErrors()).toBe(false);
+			expect(stats.hasWarnings()).toBe(false);
 			done();
 		});
 	});
