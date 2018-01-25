@@ -477,6 +477,10 @@
           "description": "The JSONP function used by webpack for async loading of chunks.",
           "type": "string"
         },
+        "promiseGlobal": {
+          "description": "The Promise global used for async loading of chunks.",
+          "type": "string"
+        },
         "chunkCallbackName": {
           "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
           "type": "string"
