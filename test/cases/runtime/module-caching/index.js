@@ -1,5 +1,3 @@
-var should = require("should");
-
 it("should cache modules correctly", function(done) {
 	delete require.cache[require.resolve("./singluar.js")];
 	expect(require("./singluar.js").value).toBe(1);
@@ -19,8 +17,8 @@ it("should be able the remove modules from cache with require.cache and require.
 	if(typeof singlarId !== "number" && typeof singlarId !== "string")
 		throw new Error("require.resolve should return a number or string");
 	expect(singlarIdInConditional).toBe(singlarId);
-	(require.cache).should.have.type("object");
-	(require.cache[singlarId]).should.have.type("object");
+	expect(require.cache).toBeTypeOf("object");
+	expect(require.cache[singlarId]).toBeTypeOf("object");
 	delete require.cache[singlarId];
-	require("./singluar2").should.be.not.equal(singlarObj);
+	expect(require("./singluar2")).not.toBe(singlarObj);
 });

@@ -35,17 +35,17 @@ it("should be able to use renaming combined with a context", function() {
 
 it("should compile an empty context", function() {
 	var x = "xxx";
-	(function() {
+	expect(function() {
 		require("./templates/notExisting" + x);
-	}).should.throw(/xxx/);
+	}).toThrowError(/xxx/);
 });
 
 it("should execute an empty context", function() {
 	var context;
-	(function() {
+	expect(function() {
 		context = require.context("./templates/", true, /^\.\/notExisting/);
-	}).should.not.throw();
-	(function() {
+	}).not.toThrowError();
+	expect(function() {
 		context("");
-	}).should.throw();
+	}).toThrowError();
 });

@@ -14,9 +14,9 @@ it("should not include a module with a weak dependency using context", function(
 	require(["./b"]);
 	require("./c");
 
-	resolveWeakA.should.exist;
-	resolveWeakB.should.exist;
-	resolveWeakC.should.exist;
+	expect(resolveWeakA).toBeDefined();
+	expect(resolveWeakB).toBeDefined();
+	expect(resolveWeakC).toBeDefined();
 
 	expect(a).toBe(false);
 	expect(b).toBe(false);

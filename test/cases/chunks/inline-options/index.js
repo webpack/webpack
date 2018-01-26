@@ -91,15 +91,15 @@ it("should not find module when mode is weak and chunk not served elsewhere", fu
 	var name = "a";
 	return import(/* webpackMode: "weak" */ "./dir10/" + name)
 		.catch(function(e) {
-			e.should.match({ message: /not available/, code: /MODULE_NOT_FOUND/ });
-		})
+			expect(e).toMatchObject({ message: /not available/, code: /MODULE_NOT_FOUND/ });
+		});
 });
 
 it("should not find module when mode is weak and chunk not served elsewhere (without context)", function() {
 	return import(/* webpackMode: "weak" */ "./dir11/a")
 		.catch(function(e) {
-			e.should.match({ message: /not available/, code: /MODULE_NOT_FOUND/ });
-		})
+			expect(e).toMatchObject({ message: /not available/, code: /MODULE_NOT_FOUND/ });
+		});
 });
 
 function testChunkLoading(load, expectedSyncInitial, expectedSyncRequested) {

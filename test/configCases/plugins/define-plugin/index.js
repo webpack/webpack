@@ -90,13 +90,13 @@ it("should not have brakets on start", function() {
 });
 
 it("should not explode on recursive typeof calls", function() {
-	(typeof wurst).should.eql("undefined"); // <- is recursivly defined in config
+	expect(typeof wurst).toEqual("undefined"); // <- is recursivly defined in config
 });
 
 it("should not explode on recursive statements", function() {
-	(function() {
+	expect(function() {
 		wurst; // <- is recursivly defined in config
-	}).should.throw("suppe is not defined");
+	}).toThrowError("suppe is not defined");
 });
 
 it("should evaluate composed expressions (issue 5100)", function() {

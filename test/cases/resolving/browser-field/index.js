@@ -31,7 +31,7 @@ it("should ignore recursive module mappings", function() {
 it("should use empty modules for ignored modules", function() {
 	expect(require("ignoring-module").module).toEqual({});
 	expect(require("ignoring-module").file).toEqual({});
-	require("ignoring-module").module.should.not.be.equal(require("ignoring-module").file);
+	expect(require("ignoring-module").module).not.toBe(require("ignoring-module").file);
 });
 
 // Errors

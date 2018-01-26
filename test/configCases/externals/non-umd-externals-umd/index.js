@@ -1,4 +1,3 @@
-require("should");
 var fs = require("fs");
 var path = require("path");
 
@@ -9,7 +8,7 @@ it("should correctly import a UMD external", function() {
 
 it("should contain `require()` statements for the UMD external", function() {
 	var source = fs.readFileSync(path.join(__dirname, "bundle0.js"), "utf-8");
-	source.should.containEql("require(\"external0\")");
+	expect(source).toMatch("require(\"external0\")");
 });
 
 it("should correctly import a non-UMD external", function() {
@@ -19,5 +18,5 @@ it("should correctly import a non-UMD external", function() {
 
 it("should not contain `require()` statements for the non-UMD external", function() {
 	var source = fs.readFileSync(path.join(__dirname, "bundle0.js"), "utf-8");
-	source.should.not.containEql("require(\"'abc'\")");
+	expect(source).not.toMatch("require(\"'abc'\")");
 });

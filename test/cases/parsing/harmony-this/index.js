@@ -20,9 +20,9 @@ import * as New from "./new";
 
 it("should be possible to use new correctly", function() {
 	x
-	new C().should.match({ok: true});
+	expect(new C()).toMatch({ok: true});
 	x
-	new C2().should.match({ok: true});
+	expect(new C2()).toMatch({ok: true});
 	x
-	new New.C().should.match({ok: true});
+	expect(new New.C()).toMatch({ok: true});
 });

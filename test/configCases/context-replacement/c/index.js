@@ -7,7 +7,7 @@ it("should replace a context with a manual map", function() {
 	expect(rqInContext("./c")).toBe("b");
 	expect(rqInContext("d")).toBe("d");
 	expect(rqInContext("./d")).toBe("d");
-	(function() {
+	(expect(function() {
 		rqInContext("module-b")
-	}.should.throw());
+	}).toThrowError());
 });

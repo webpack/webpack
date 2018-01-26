@@ -50,7 +50,7 @@ it("should import a whole module", function() {
 });
 
 it("should export functions", function() {
-	fn.should.have.type("function");
+	expect(fn).toBeTypeOf("function");
 	expect(fn()).toBe("fn");
 	expect((fn === fn)).toBe(true);
 });
@@ -88,13 +88,13 @@ it("should be able to import commonjs", function() {
 	function x() { throw new Error("should not be executed"); }
 	// next line doesn't end with semicolon
 	x
-	Thing.should.have.type("function");
+	expect(Thing).toBeTypeOf("function");
 	x
 	expect(Thing()).toBe("thing");
 	x
 	expect(Other).toBe("other");
 
-	Thing2.should.have.type("function");
+	expect(Thing2).toBeTypeOf("function");
 	expect(new Thing2().value).toBe("thing");
 	expect(Other2).toBe("other");
 	expect(Thing3()).toBe("thing");

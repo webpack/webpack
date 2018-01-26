@@ -8,9 +8,9 @@ it("should answer typeof System correctly", () => {
 
 it("should answer typeof System.import correctly", () => {
 	if(__SYSTEM__ === false) {
-		(() => {
+		expect(() => {
 			typeof System.import;
-		}).should.throw();
+		}).toThrowError();
 	} else {
 		expect((typeof System.import)).toBe("function");
 	}

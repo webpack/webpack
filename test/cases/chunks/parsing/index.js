@@ -1,10 +1,8 @@
-var should = require("should");
-
 it("should handle bound function expressions", function(done) {
 	require.ensure([], function(require) {
 		expect(this).toEqual({ test: true });
 		require("./empty?test");
-		process.nextTick.should.have.type("function"); // check if injection still works
+		expect(process.nextTick).toBeTypeOf("function"); // check if injection still works
 		require.ensure([], function(require) {
 			expect(this).toEqual({ test: true });
 			done();
@@ -35,7 +33,7 @@ it("should accept a require.include call", function(done) {
 		value = require("./require.include");
 	});
 	setImmediate(function() {
-		should.strictEqual(value, "require.include");
+		expect(value).toBe("require.include");
 		expect(value).toBe("require.include");
 		done();
 	});

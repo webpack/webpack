@@ -1,5 +1,3 @@
-var should = require("should");
-
 it("should parse fancy function calls", function() {
 	("function"==typeof define && define.amd ?
 		define :
@@ -7,14 +5,14 @@ it("should parse fancy function calls", function() {
 	)(["./constructor"], function(c) {
 		return new c(1324);
 	});
-	module.exports.should.have.property("value").be.eql(1324);
+	expect(module.exports).to.have.property("value").toEqual(1324);
 	(("function"==typeof define && define.amd ?
 		define :
 		function(e,t){return t()}
 	)(["./constructor"], function(c) {
 		return new c(4231);
 	}));
-	module.exports.should.have.property("value").be.eql(4231);
+	expect(module.exports).to.have.property("value").toEqual(4231);
 });
 
 it("should parse fancy AMD calls", function() {
@@ -56,7 +54,7 @@ it("should be able to use require.js-style define", function(done) {
 
 it("should be able to use require.js-style define, optional dependancies, not exist", function(done) {
 	define("name", ["./optional"], function(optional) {
-		should(optional.b).not.exist;
+		expect(optional.b).toBeFalsy();
 		done();
 	});
 });
@@ -107,12 +105,12 @@ it("should be able to use require.js-style define, with an object", function() {
 
 	true && define("blaaa", obj);
 
-	module.exports.should.be.equal(obj);
+	expect(module.exports).toBe(obj);
 	module.exports = null;
 
 	define("blaaa", obj);
 
-	module.exports.should.be.equal(obj);
+	expect(module.exports).toBe(obj);
 	module.exports = null;
 });
 
@@ -121,8 +119,8 @@ it("should offer AMD-style define for CommonJs", function(done) {
 	var _test_module = module;
 	define(function(require, exports, module) {
 		expect((typeof require)).toBe("function");
-		exports.should.be.equal(_test_exports);
-		module.should.be.equal(_test_module);
+		expect(exports).toBe(_test_exports);
+		expect(module).toBe(_test_module);
 		expect(require("./circular")).toBe(1);
 		done();
 	});

@@ -16,7 +16,7 @@ it("should throw an error on missing module at runtime, but not at compile time 
 	} catch(e) {
 		error = e;
 	}
-	error.should.be.instanceOf(Error);
+	expect(error).toBeInstanceOf(Error);
 
 	error = null;
 	try {
@@ -24,5 +24,5 @@ it("should throw an error on missing module at runtime, but not at compile time 
 	} catch(e) {
 		error = e;
 	}
-	error.should.be.instanceOf(Error);
+	expect(error).toBeInstanceOf(Error);
 });

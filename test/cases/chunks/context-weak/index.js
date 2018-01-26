@@ -1,8 +1,8 @@
 it("should not bundle context requires with asyncMode === 'weak'", function() {
 	var contextRequire = require.context(".", false, /two/, "weak");
-	(function() {
+	expect(function() {
 		contextRequire("./two")
-	}).should.throw(/not available/);
+	}).toThrowError(/not available/);
 });
 
 it("should find module with asyncMode === 'weak' when required elsewhere", function() {

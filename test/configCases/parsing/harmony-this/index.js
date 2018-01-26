@@ -9,12 +9,12 @@ it("should have this = undefined on harmony modules", function() {
 	expect((typeof abc.that)).toBe("undefined");
 	expect((typeof returnThisArrow())).toBe("undefined");
 	expect((typeof abc.returnThisArrow())).toBe("undefined");
-	(function() {
+	expect(function() {
 		returnThisMember();
-	}).should.throw();
-	(function() {
+	}).toThrowError();
+	expect(function() {
 		abc.returnThisMember();
-	}).should.throw();
+	}).toThrowError();
 });
 
 it("should not break classes and functions", function() {
@@ -31,7 +31,7 @@ it("should have this = undefined on imported non-strict functions", function() {
 	x
 	expect(B()).toBe("undefined");
 	x
-	abc.a().should.be.type("object");
+	expect(abc.a()).toMatchObject({});
 	x
 	var thing = abc.a();
 	expect(Object.keys(thing)).toBe(Object.keys(abc));
@@ -43,9 +43,9 @@ import * as New from "./new";
 
 it("should be possible to use new correctly", function() {
 	x
-	new C().should.match({ok: true});
+	expect(new C()).toMatch({ok: true});
 	x
-	new C2().should.match({ok: true});
+	expect(new C2()).toMatch({ok: true});
 	x
-	new New.C().should.match({ok: true});
+	expect(new New.C()).toMatch({ok: true});
 });

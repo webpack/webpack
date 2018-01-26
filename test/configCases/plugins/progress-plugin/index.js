@@ -1,6 +1,6 @@
 it("should contain the custom progres messages", function() {
 	var data = require(__dirname + "/data");
-	data.should.containEql("optimizing");
-	data.should.containEql("optimizing|CustomPlugin");
-	data.should.containEql("optimizing|CustomPlugin|custom category|custom message");
+	expect(data).toMatch("optimizing");
+	expect(data).toMatch("optimizing|CustomPlugin");
+	expect(data).toMatch("optimizing|CustomPlugin|custom category|custom message");
 });

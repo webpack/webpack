@@ -10,7 +10,7 @@ it("should require existing module with supplied error callback", function(done)
 it("should call error callback on missing module", function(done) {
 	require(['./file', './missingModule'], function(file){}, function(error) {
 		try {
-			error.should.be.instanceOf(Error);
+			expect(error).toBeInstanceOf(Error);
 			expect(error.message).toBe('Cannot find module "./missingModule"');
 			done();
 		} catch(e) {
@@ -23,7 +23,7 @@ it("should call error callback on missing module in context", function(done) {
 	(function(module) {
 		require(['./' + module], function(file){}, function(error) {
 			try {
-				error.should.be.instanceOf(Error);
+				expect(error).toBeInstanceOf(Error);
 				expect(error.message).toBe("Cannot find module \"./missingModule\".");
 				done();
 			} catch(e) { done(e); }
@@ -34,7 +34,7 @@ it("should call error callback on missing module in context", function(done) {
 it("should call error callback on exception thrown in loading module", function(done) {
 	require(['./throwing'], function(){}, function(error) {
 		try {
-			error.should.be.instanceOf(Error);
+			expect(error).toBeInstanceOf(Error);
 			expect(error.message).toBe('message');
 			done();
 		} catch(e) { done(e); }
@@ -46,7 +46,7 @@ it("should not call error callback on exception thrown in require callback", fun
 		throw new Error('message');
 	}, function(error) {
 		try {
-			error.should.be.instanceOf(Error);
+			expect(error).toBeInstanceOf(Error);
 			expect(error.message).toBe('message');
 			done();
 		} catch(e) { done(e); }

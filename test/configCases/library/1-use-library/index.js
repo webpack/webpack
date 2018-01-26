@@ -7,7 +7,7 @@ it("should be able to import hamorny exports from library (" + NAME + ")", funct
 	expect(b).toBe("b");
 	if(typeof TEST_EXTERNAL !== "undefined" && TEST_EXTERNAL) {
 		expect(external).toEqual(["external"]);
-		external.should.be.equal(require("external"));
+		expect(external).toBe(require("external"));
 	} else {
 		expect(external).toBe("non-external");
 	}

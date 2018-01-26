@@ -10,12 +10,12 @@ it("should be possible to import json data", function() {
 	expect(aa).toBe(1);
 	expect(bb).toBe(2);
 	expect(named).toBe("named");
-	({ f }expect()).toEqual({
+	(expect({ f })).toEqual({
 		f: {
 			__esModule: true,
 			default: "default",
 			named: "named"
 		}
 	});
-	g.named.should.be.equal(gnamed);
+	expect(g.named).toBe(gnamed);
 });

@@ -117,6 +117,7 @@
     "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
   },
   "jest": {
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "setupTestFrameworkScriptFile": "<rootDir>/test/setupTestFramework.js"
   }
 }

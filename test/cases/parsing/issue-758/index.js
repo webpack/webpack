@@ -12,7 +12,7 @@ it("should call error callback on missing module", function(done) {
 	require.ensure(['./missingModule'], function(){
 		require('./missingModule');
 	}, function(error) {
-		error.should.be.instanceOf(Error);
+		expect(error).toBeInstanceOf(Error);
 		expect(error.message).toBe('Cannot find module "./missingModule"');
 		done();
 	});
@@ -23,7 +23,7 @@ it("should call error callback on missing module in context", function(done) {
 		require.ensure([], function(){
 			require('./' + module);
 		}, function(error) {
-			error.should.be.instanceOf(Error);
+			expect(error).toBeInstanceOf(Error);
 			expect(error.message).toBe("Cannot find module \"./missingModule\".");
 			done();
 		});
@@ -34,7 +34,7 @@ it("should call error callback on exception thrown in loading module", function(
 	require.ensure(['./throwing'], function(){
 		require('./throwing');
 	}, function(error) {
-		error.should.be.instanceOf(Error);
+		expect(error).toBeInstanceOf(Error);
 		expect(error.message).toBe('message');
 		done();
 	});
@@ -44,7 +44,7 @@ it("should not call error callback on exception thrown in require callback", fun
 	require.ensure(['./throwing'], function() {
 		throw new Error('message');
 	}, function(error) {
-		error.should.be.instanceOf(Error);
+		expect(error).toBeInstanceOf(Error);
 		expect(error.message).toBe('message');
 		done();
 	});

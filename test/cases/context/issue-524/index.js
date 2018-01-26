@@ -1,12 +1,12 @@
 it("should support an empty context", function() {
 	var c = require.context(".", true, /^nothing$/);
-	(typeof c.id).should.be.oneOf(["number", "string"]);
-	(function() {
+	expect(typeof c.id).to.be.oneOf(["number", "string"]);
+	expect(function() {
 		c.resolve("");
-	}).should.throw();
-	(function() {
+	}).toThrowError();
+	expect(function() {
 		c("");
-	}).should.throw();
+	}).toThrowError();
 	expect(c.keys()).toEqual([]);
 });
 

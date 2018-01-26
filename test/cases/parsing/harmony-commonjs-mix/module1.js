@@ -1,15 +1,15 @@
 import "./module";
 
-(function() {
+expect(function() {
 	module.exports = 1;
-}).should.throw();
+}).toThrowError();
 
 expect((typeof module.exports)).toBe("undefined");
 
 expect((typeof define)).toBe("undefined");
-(function() {
+expect(function() {
 	define(function() {})
-}).should.throw(/define is not defined/);
+}).toThrowError(/define is not defined/);
 
 export default 1234;
 
