@@ -94,5 +94,5 @@ it("should provide a zlib shim", function () {
 });
 
 it("should provide a shim for a path in a build-in module", function () {
-	require("process/in.js").should.be.eql("in process");
+	expect(require("process/in.js")).toBe("in process");
 });

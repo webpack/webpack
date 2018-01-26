@@ -60,7 +60,7 @@ describe("ExternalModule", () => {
 			expect(externalModule.getSource.callCount).toBe(1);
 			expect(externalModule.getSourceString.callCount).toBe(1);
 			expect(externalModule.getSource.args[0][0]).toBe(expectedString);
-			expect(result).toBe(expectedSource);
+			expect(result).toEqual(expectedSource);
 		});
 	});
 
@@ -77,7 +77,7 @@ describe("ExternalModule", () => {
 				const result = externalModule.getSource(someSourceString);
 
 				// check
-				expect(result).toBeInstanceOf(OriginalSource);
+				expect(result).toEqualInstanceOf(OriginalSource);
 			});
 		});
 		describe("given it does not use source maps", () => {
@@ -92,7 +92,7 @@ describe("ExternalModule", () => {
 				const result = externalModule.getSource(someSourceString);
 
 				// check
-				expect(result).toBeInstanceOf(RawSource);
+				expect(result).toEqualInstanceOf(RawSource);
 			});
 		});
 	});
@@ -109,7 +109,7 @@ describe("ExternalModule", () => {
 				const result = externalModule.getSourceForGlobalVariableExternal(varName, type);
 
 				// check
-				expect(result).toBe(expected);
+				expect(result).toEqual(expected);
 			});
 		});
 		describe("given an single variable name", () => {
@@ -123,7 +123,7 @@ describe("ExternalModule", () => {
 				const result = externalModule.getSourceForGlobalVariableExternal(varName, type);
 
 				// check
-				expect(result).toBe(expected);
+				expect(result).toEqual(expected);
 			});
 		});
 	});
@@ -139,7 +139,7 @@ describe("ExternalModule", () => {
 				const result = externalModule.getSourceForCommonJsExternal(varName, type);
 
 				// check
-				expect(result).toBe(expected);
+				expect(result).toEqual(expected);
 			});
 		});
 		describe("given an single variable name", () => {
@@ -153,7 +153,7 @@ describe("ExternalModule", () => {
 				const result = externalModule.getSourceForCommonJsExternal(varName, type);
 
 				// check
-				expect(result).toBe(expected);
+				expect(result).toEqual(expected);
 			});
 		});
 	});
@@ -170,7 +170,7 @@ describe("ExternalModule", () => {
 			const result = externalModule.checkExternalVariable(variableToCheck, request);
 
 			// check
-			expect(result).toBe(expected);
+			expect(result).toEqual(expected);
 		});
 	});
 
@@ -185,7 +185,7 @@ describe("ExternalModule", () => {
 			const result = externalModule.getSourceForAmdOrUmdExternal(id, optional, request);
 
 			// check
-			expect(result).toBe(expected);
+			expect(result).toEqual(expected);
 		});
 		describe("given an optinal check is set", () => {
 			it("ads a check for the existance of the variable before looking it up", () => {
@@ -199,7 +199,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 				const result = externalModule.getSourceForAmdOrUmdExternal(id, optional, request);
 
 				// check
-				expect(result).toBe(expected);
+				expect(result).toEqual(expected);
 			});
 		});
 	});
@@ -214,7 +214,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 			const result = externalModule.getSourceForDefaultCase(optional, request);
 
 			// check
-			expect(result).toBe(expected);
+			expect(result).toEqual(expected);
 		});
 		describe("given an optinal check is requested", () => {
 			it("checks for the existance of the request setting it", () => {
@@ -227,7 +227,7 @@ module.exports = some/request;`;
 				const result = externalModule.getSourceForDefaultCase(optional, request);
 
 				// check
-				expect(result).toBe(expected);
+				expect(result).toEqual(expected);
 			});
 		});
 	});

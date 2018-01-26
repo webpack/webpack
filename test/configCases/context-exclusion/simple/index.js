@@ -3,9 +3,9 @@ function requireInContext(someVariable) {
 }
 
 it("should not exclude paths not matching the exclusion pattern", function() {
-	requireInContext("file").should.be.eql("thats good");
-	requireInContext("check-here/file").should.be.eql("thats good");
-	requireInContext("check-here/check-here/file").should.be.eql("thats good");
+	expect(requireInContext("file")).toBe("thats good");
+	expect(requireInContext("check-here/file")).toBe("thats good");
+	expect(requireInContext("check-here/check-here/file")).toBe("thats good");
 });
 
 it("should exclude paths/files matching the exclusion pattern", function() {

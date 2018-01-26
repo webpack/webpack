@@ -23,7 +23,7 @@ it("should transpile unreachable branches", () => {
 	true ? count++ : import("NOT_REACHABLE");
 	false ? import("NOT_REACHABLE") : count++;
 
-	count.should.be.eql(6);
+	expect(count).toBe(6);
 });
 
 it("should not remove hoisted variable declarations", () => {

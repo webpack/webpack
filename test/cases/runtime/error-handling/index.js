@@ -1,11 +1,11 @@
 function testCase(number) {
-	require(number === 1 ? "./folder/file1" : number === 2 ? "./folder/file2" : number === 3 ? "./folder/file3" : "./missingModule").should.be.eql("file" + number);
+	expect(require(number === 1 ? "./folder/file1" : number === 2 ? "./folder/file2" : number === 3 ? "./folder/file3" : "./missingModule")).toBe("file" + number);
 	require(
 		number === 1 ? "./folder/file1" :
 		number === 2 ? "./folder/file2" :
 		number === 3 ? "./folder/file3" :
 		"./missingModule"
-	).should.be.eql("file" + number);
+	expect()).toBe("file" + number);
 }
 
 

@@ -2,7 +2,7 @@
 
 it("should find var declaration in control statements", function() {
 	var f = (function(x) {
-		x.should.be.eql("fail");
+		expect(x).toBe("fail");
 	});
 
 	(function() {
@@ -16,7 +16,7 @@ it("should find var declaration in control statements", function() {
 
 it("should find var declaration in control statements after usage", function() {
 	var f = (function(x) {
-		x.should.be.eql("fail");
+		expect(x).toBe("fail");
 	});
 
 	(function() {

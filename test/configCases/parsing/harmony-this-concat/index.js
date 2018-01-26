@@ -7,16 +7,16 @@ import * as abc from "./abc";
 function x() { throw new Error("should not be executed"); }
 it("should have this = undefined on imported non-strict functions", function() {
 	x
-	d().should.be.eql("undefined");
+	expect(d()).toBe("undefined");
 	x
-	a().should.be.eql("undefined");
+	expect(a()).toBe("undefined");
 	x
-	B().should.be.eql("undefined");
+	expect(B()).toBe("undefined");
 	x
 	abc.a().should.be.type("object");
 	x
 	var thing = abc.a();
-	Object.keys(thing).should.be.eql(["a", "b", "default"]);
+	expect(Object.keys(thing)).toEqual(["a", "b", "default"]);
 });
 
 import C2, { C } from "./new";

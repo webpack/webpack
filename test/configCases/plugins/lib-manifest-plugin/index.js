@@ -3,7 +3,7 @@ var path = require("path");
 
 it("should complete", function(done) {
 	require.ensure(["./a"], function(require) {
-		require("./a").should.be.eql("a");
+		expect(require("./a")).toBe("a");
 		done();
 	});
 });

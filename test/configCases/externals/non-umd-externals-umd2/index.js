@@ -4,7 +4,7 @@ var path = require("path");
 
 it("should correctly import a UMD2 external", function() {
 	var external = require("external0");
-	external.should.be.eql("module 0");
+	expect(external).toBe("module 0");
 });
 
 it("should contain `require()` statements for the UMD2 external", function() {
@@ -14,7 +14,7 @@ it("should contain `require()` statements for the UMD2 external", function() {
 
 it("should correctly import a non-UMD2 external", function() {
 	var external = require("external1");
-	external.should.be.eql("abc");
+	expect(external).toBe("abc");
 });
 
 it("should not contain `require()` statements for the non-UMD2 external", function() {

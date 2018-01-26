@@ -4,5 +4,5 @@ it("should have __webpack_hash__", function() {
 });
 it("should have __webpack_chunkname__", function() {
 	(typeof __webpack_chunkname__).should.be.type("string");
-	__webpack_chunkname__.should.be.eql('other');
+	expect(__webpack_chunkname__).toBe('other');
 });

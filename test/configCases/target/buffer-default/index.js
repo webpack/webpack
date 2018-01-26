@@ -6,5 +6,5 @@ it("should provide a global Buffer shim", function () {
 
 it("should provide the buffer module", function () {
 	var buffer = require("buffer");
-	(typeof buffer).should.be.eql("object");
+	expect((typeof buffer)).toBe("object");
 });

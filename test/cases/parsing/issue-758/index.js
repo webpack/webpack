@@ -2,7 +2,7 @@ it("should require existing module with supplied error callback", function(done)
 	require.ensure(['./file'], function(){
 		try {
 			var file = require('./file');
-			file.should.be.eql("file");
+			expect(file).toBe("file");
 			done();
 		} catch(e) { done(e); }
 	}, function(error) {});
@@ -13,7 +13,7 @@ it("should call error callback on missing module", function(done) {
 		require('./missingModule');
 	}, function(error) {
 		error.should.be.instanceOf(Error);
-		error.message.should.be.eql('Cannot find module "./missingModule"');
+		expect(error.message).toBe('Cannot find module "./missingModule"');
 		done();
 	});
 });
@@ -24,7 +24,7 @@ it("should call error callback on missing module in context", function(done) {
 			require('./' + module);
 		}, function(error) {
 			error.should.be.instanceOf(Error);
-			error.message.should.be.eql("Cannot find module \"./missingModule\".");
+			expect(error.message).toBe("Cannot find module \"./missingModule\".");
 			done();
 		});
 	})('missingModule');
@@ -35,7 +35,7 @@ it("should call error callback on exception thrown in loading module", function(
 		require('./throwing');
 	}, function(error) {
 		error.should.be.instanceOf(Error);
-		error.message.should.be.eql('message');
+		expect(error.message).toBe('message');
 		done();
 	});
 });
@@ -45,7 +45,7 @@ it("should not call error callback on exception thrown in require callback", fun
 		throw new Error('message');
 	}, function(error) {
 		error.should.be.instanceOf(Error);
-		error.message.should.be.eql('message');
+		expect(error.message).toBe('message');
 		done();
 	});
 });
@@ -58,7 +58,7 @@ it("should call error callback when there is an error loading the chunk", functi
 			var file = require('./file');
 		} catch(e) { done(e); }
 	}, function(error) {
-		error.should.be.eql('fake chunk load error');
+		expect(error).toBe('fake chunk load error');
 		done();
 	});
 	__webpack_require__.e = temp;

@@ -14,7 +14,7 @@ it("should have a requirejs.onError function", function() {
 	requirejs.onError.should.be.type("function"); // has default handler
 	var org = requirejs.onError;
 	requirejs.onError = f;
-	requirejs.onError.should.be.eql(f);
+	expect(requirejs.onError).toBe(f);
 	requirejs.onError = org;
 	require(["./file.js"], function() {});
 });

@@ -8,7 +8,7 @@ it("should not find a free exports", function() {
 	if(typeof exports !== "undefined")
 		(x.default).should.be.equal(exports);
 	else
-		(x.default).should.be.eql(false);
+		expect((x.default)).toBe(false);
 });
 
 export {}

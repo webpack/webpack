@@ -18,7 +18,7 @@ it("should not include a module with a weak dependency using context", function(
 	resolveWeakB.should.exist;
 	resolveWeakC.should.exist;
 
-	a.should.be.eql(false);
-	b.should.be.eql(false);
-	c.should.be.eql(true);
+	expect(a).toBe(false);
+	expect(b).toBe(false);
+	expect(c).toBe(true);
 });

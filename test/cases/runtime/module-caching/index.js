@@ -2,12 +2,12 @@ var should = require("should");
 
 it("should cache modules correctly", function(done) {
 	delete require.cache[require.resolve("./singluar.js")];
-	require("./singluar.js").value.should.be.eql(1);
-	(require("./singluar.js")).value.should.be.eql(1);
+	expect(require("./singluar.js").value).toBe(1);
+	expect((require("./singluar.js")).value).toBe(1);
 	require("./sing" + "luar.js").value = 2;
-	require("./singluar.js").value.should.be.eql(2);
+	expect(require("./singluar.js").value).toBe(2);
 	require.ensure(["./two.js"], function(require) {
-		require("./singluar.js").value.should.be.eql(2);
+		expect(require("./singluar.js").value).toBe(2);
 		done();
 	});
 });
@@ -18,7 +18,7 @@ it("should be able the remove modules from cache with require.cache and require.
 	var singlarIdInConditional = require.resolve(true ? "./singluar2" : "./singluar");
 	if(typeof singlarId !== "number" && typeof singlarId !== "string")
 		throw new Error("require.resolve should return a number or string");
-	singlarIdInConditional.should.be.eql(singlarId);
+	expect(singlarIdInConditional).toBe(singlarId);
 	(require.cache).should.have.type("object");
 	(require.cache[singlarId]).should.have.type("object");
 	delete require.cache[singlarId];

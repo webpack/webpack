@@ -1,8 +1,8 @@
 it("should answer typeof System correctly", () => {
 	if(__SYSTEM__ === false) {
-		(typeof System).should.be.eql("undefined");
+		expect((typeof System)).toBe("undefined");
 	} else {
-		(typeof System).should.be.eql("object");
+		expect((typeof System)).toBe("object");
 	}
 });
 
@@ -12,7 +12,7 @@ it("should answer typeof System.import correctly", () => {
 			typeof System.import;
 		}).should.throw();
 	} else {
-		(typeof System.import).should.be.eql("function");
+		expect((typeof System.import)).toBe("function");
 	}
 });
 
@@ -22,7 +22,7 @@ it("should be able to use System.import()", done => {
 			if(__SYSTEM__ === false) {
 				done(new Error("System.import should not be parsed"));
 			} else {
-				mod.should.be.eql({ default: "ok" });
+				expect(mod).toEqual({ default: "ok" });
 				done();
 			}
 		});

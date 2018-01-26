@@ -263,7 +263,7 @@ describe("MultiStats", () => {
 		});
 
 		it("returns string representation", () => {
-			expect(result).toBe(
+			expect(result).toEqual(
 				"Hash: abc123xyz890\n" +
 				"Version: webpack 1.2.3\n" +
 				"Child abc123-compilation:\n" +

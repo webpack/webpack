@@ -7,7 +7,7 @@ it("should support an empty context", function() {
 	(function() {
 		c("");
 	}).should.throw();
-	c.keys().should.be.eql([]);
+	expect(c.keys()).toEqual([]);
 });
 
 // This would be a useful testcase, but it requires an (really) empty directory.
@@ -21,5 +21,5 @@ it("should support an empty context", function() {
 	(function() {
 		c("");
 	}).should.throw();
-	c.keys().should.be.eql([]);
+	expect(c.keys()).toEqual([]);
 });*/

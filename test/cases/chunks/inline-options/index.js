@@ -106,16 +106,16 @@ function testChunkLoading(load, expectedSyncInitial, expectedSyncRequested) {
 	var sync = false;
 	var syncInitial = true;
 	var p = Promise.all([load("a"), load("b")]).then(function() {
-		syncInitial.should.be.eql(expectedSyncInitial);
+		expect(syncInitial).toBe(expectedSyncInitial);
 		sync = true;
 		var p = Promise.all([
 			load("a").then(function(a) {
-				a.should.be.eql({ default: "a" });
-				sync.should.be.eql(true);
+				expect(a).toEqual({ default: "a" });
+				expect(sync).toBe(true);
 			}),
 			load("c").then(function(c) {
-				c.should.be.eql({ default: "c" });
-				sync.should.be.eql(expectedSyncRequested);
+				expect(c).toEqual({ default: "c" });
+				expect(sync).toBe(expectedSyncRequested);
 			})
 		]);
 		Promise.resolve().then(function(){}).then(function(){}).then(function(){}).then(function(){
