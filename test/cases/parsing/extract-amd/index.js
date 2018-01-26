@@ -5,14 +5,14 @@ it("should parse fancy function calls", function() {
 	)(["./constructor"], function(c) {
 		return new c(1324);
 	});
-	expect(module.exports).to.have.property("value").toEqual(1324);
+	expect(module.exports).toHaveProperty("value", 1324);
 	(("function"==typeof define && define.amd ?
 		define :
 		function(e,t){return t()}
 	)(["./constructor"], function(c) {
 		return new c(4231);
 	}));
-	expect(module.exports).to.have.property("value").toEqual(4231);
+	expect(module.exports).toHaveProperty("value", 4231);
 });
 
 it("should parse fancy AMD calls", function() {

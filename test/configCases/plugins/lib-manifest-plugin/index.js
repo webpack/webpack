@@ -13,5 +13,5 @@ it("should write the correct manifest", function() {
 	expect(manifest).to.have.key("content", "name");
 	expect(manifest.content).not.toHaveProperty("./a.js");
 	expect(manifest.content).toHaveProperty("./index.js");
-	expect(manifest.content["./index.js"]).to.have.property("id").toEqual(module.id);
+	expect(manifest.content["./index.js"]).toHaveProperty("id", module.id);
 });

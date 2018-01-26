@@ -27,9 +27,9 @@ it("should pass query to loader without resource", function() {
 it("should pass query to multiple loaders", function() {
 	var result = require("./loaders/queryloader?query1!./loaders/queryloader?query2!./a?resourcequery");
 	expect(result).toBeTypeOf("object");
-	expect(result).to.have.property("resourceQuery").toEqual("?resourcequery");
-	expect(result).to.have.property("query").toEqual("?query1");
-	expect(result).to.have.property("prev").toEqual("module.exports = " + JSON.stringify({
+	expect(result).toHaveProperty("resourceQuery", "?resourcequery");
+	expect(result).toHaveProperty("query", "?query1");
+	expect(result).toHaveProperty("prev", "module.exports = " + JSON.stringify({
 		resourceQuery: "?resourcequery",
 		query: "?query2",
 		prev: "module.exports = \"a\";"
