@@ -66,8 +66,6 @@ describe("ConfigTestCases", () => {
 							testConfig = Object.assign(testConfig, require(path.join(testDirectory, "test.config.js")));
 						} catch(e) {}
 
-						// this.timeout(testConfig.timeout);
-
 						webpack(options, (err, stats) => {
 							if(err) {
 								const fakeStats = {
@@ -89,7 +87,7 @@ describe("ConfigTestCases", () => {
 							let exportedTests = [];
 
 							function _it(title, fn) {
-								exportedTests.push(fit(title, fn));
+								exportedTests.push(fit(title, fn, testConfig.timeout));
 							}
 
 							const globalContext = {
