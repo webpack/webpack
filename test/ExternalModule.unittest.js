@@ -77,7 +77,7 @@ describe("ExternalModule", () => {
 				const result = externalModule.getSource(someSourceString);
 
 				// check
-				expect(result).toEqualInstanceOf(OriginalSource);
+				expect(result).toBeInstanceOf(OriginalSource);
 			});
 		});
 		describe("given it does not use source maps", () => {
@@ -92,7 +92,7 @@ describe("ExternalModule", () => {
 				const result = externalModule.getSource(someSourceString);
 
 				// check
-				expect(result).toEqualInstanceOf(RawSource);
+				expect(result).toBeInstanceOf(RawSource);
 			});
 		});
 	});
