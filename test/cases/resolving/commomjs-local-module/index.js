@@ -16,6 +16,6 @@ it("should make different modules for query", function() {
 	expect(require("return-module")).toBe("module is returned");
 
 	const overrideExports = require("override-exports");
-	expect(overrideExports).to.be.a.Object();
-	expect(Object.keys(overrideExports).length).to.be.exactly(0);
+	expect(overrideExports).toBeOfType("object");
+	expect(Object.keys(overrideExports)).toHaveLength(0);
 });
