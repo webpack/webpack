@@ -93,7 +93,8 @@ describe("ConfigTestCases", () => {
 							}
 
 							const globalContext = {
-								console: console
+								console: console,
+								expect: expect
 							};
 
 							function _require(currentDirectory, module) {
