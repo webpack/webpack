@@ -174,6 +174,7 @@ describe("TestCases", () => {
 								};
 								webpack(options, (err, stats) => {
 									if(err) return done(err);
+									console.log("compiled case:", category.name, "/", config.name, "/", testName);
 									const statOptions = Stats.presetToOptions("verbose");
 									statOptions.colors = false;
 									mkdirp.sync(outputDirectory);
