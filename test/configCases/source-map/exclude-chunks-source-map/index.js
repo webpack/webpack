@@ -2,7 +2,7 @@ it("should include test.js in SourceMap for bundle0 chunk", function() {
 	var fs = require("fs");
 	var source = fs.readFileSync(__filename + ".map", "utf-8");
 	var map = JSON.parse(source);
-	expect(map.sources).toMatch("webpack:///./test.js");
+	expect(map.sources).toContain("webpack:///./test.js");
 });
 
 it("should not produce a SourceMap for vendors chunk", function() {

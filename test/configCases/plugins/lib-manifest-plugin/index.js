@@ -10,8 +10,9 @@ it("should complete", function(done) {
 
 it("should write the correct manifest", function() {
 	var manifest = JSON.parse(fs.readFileSync(path.join(__dirname, 'bundle0-manifest.json'), "utf-8"));
-	expect(manifest).to.have.key("content", "name");
-	expect(manifest.content).not.toHaveProperty("./a.js");
-	expect(manifest.content).toHaveProperty("./index.js");
+	expect(manifest).toHaveProperty("content");
+	expect(manifest).toHaveProperty("name");
+	expect(manifest.content).not.toHaveProperty(["./a.js"]);
+	expect(manifest.content).toHaveProperty(["./index.js"]);
 	expect(manifest.content["./index.js"]).toHaveProperty("id", module.id);
 });

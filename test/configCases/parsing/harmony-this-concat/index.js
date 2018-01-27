@@ -25,9 +25,9 @@ import * as New from "./new";
 
 it("should be possible to use new correctly", function() {
 	x
-	expect(new C()).toMatch({ok: true});
+	expect(new C()).toEqual({ok: true});
 	x
-	expect(new C2()).toMatch({ok: true});
+	expect(new C2()).toEqual({ok: true});
 	x
-	expect(new New.C()).toMatch({ok: true});
+	expect(new New.C()).toEqual({ok: true});
 });

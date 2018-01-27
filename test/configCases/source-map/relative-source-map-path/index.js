@@ -7,6 +7,7 @@ it("should have a relative url to the source-map", function() {
 
 it("should have a relative url to the source-map with prefix", function(done) {
 	require.ensure([], function(require) {
+		global.expect = expect;
 		require("./test.js");
 		done();
 	});

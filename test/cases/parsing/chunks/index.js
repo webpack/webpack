@@ -30,7 +30,7 @@ it("should parse a string in require.ensure with arrow function expression", fun
 
 
 it("should parse a string in require.ensure with arrow function array expression", function(done) {
-	require.ensure("./file", require =>expect( (require("./file")).toBe("ok"), done()));
+	require.ensure("./file", require => (expect(require("./file")).toBe("ok"), done()));
 });
 
 

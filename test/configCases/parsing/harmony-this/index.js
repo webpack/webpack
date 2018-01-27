@@ -34,7 +34,7 @@ it("should have this = undefined on imported non-strict functions", function() {
 	expect(abc.a()).toMatchObject({});
 	x
 	var thing = abc.a();
-	expect(Object.keys(thing)).toBe(Object.keys(abc));
+	expect(Object.keys(thing)).toEqual(Object.keys(abc));
 });
 
 import C2, { C } from "./new";
@@ -43,9 +43,9 @@ import * as New from "./new";
 
 it("should be possible to use new correctly", function() {
 	x
-	expect(new C()).toMatch({ok: true});
+	expect(new C()).toEqual({ok: true});
 	x
-	expect(new C2()).toMatch({ok: true});
+	expect(new C2()).toEqual({ok: true});
 	x
-	expect(new New.C()).toMatch({ok: true});
+	expect(new New.C()).toEqual({ok: true});
 });

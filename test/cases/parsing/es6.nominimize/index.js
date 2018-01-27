@@ -26,14 +26,14 @@ it("should parse classes", function() {
 
 it("should parse spread operator"/*, function() {
 	expect([0, ...require("./array")]).toEqual([0, 1, 2, 3]);
-	({z: 0, ...require("./object")}expect()).toEqual({z: 0, a: 1, b: 2, c: 3});
+	expect(({z: 0, ...require("./object")})).toEqual({z: 0, a: 1, b: 2, c: 3});
 }*/);
 
 it("should parse arrow function", function() {
-	(() =>expect( require("./a"))()).toBe("a");
-	(() => {
+	expect((() => require("./a"))()).toBe("a");
+	(expect(() => {
 		return require("./a");
-	}expect()()).toBe("a");
+	})()).toBe("a");
 	require.ensure([], () => {
 		require("./a");
 	});

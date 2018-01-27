@@ -6,8 +6,8 @@ it("should provide a global Buffer constructor", function() {
 });
 
 it("should provide a global console shim", function () {
-	expect(console).toBeInstanceOf(Object);
-	expect(console.time).toBeInstanceOf(Function);
+	expect(console).toBeTypeOf("object");
+	expect(console.time).toBeTypeOf("function");
 });
 
 it("should provide a global process shim", function () {
