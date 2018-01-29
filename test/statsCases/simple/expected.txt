@@ -1,6 +1,6 @@
 Hash: f0bbd0723c33cf044c2f
 Time: Xms
     Asset      Size  Chunks             Chunk Names
-bundle.js  2.89 KiB    main  [emitted]  main
+bundle.js  2.78 KiB    main  [emitted]  main
 Entrypoint main = bundle.js
 [./index.js] 0 bytes {main} [built]
