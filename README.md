@@ -217,14 +217,14 @@ or are automatically applied via regex from your webpack configuration.
 |Name|Status|Description|
 |:--:|:----:|:----------|
 |<a href="https://github.com/vuejs/vue-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/vue-9.svg"></a>|![vue-npm]|Loads and compiles Vue Components|
-|<a href="https://github.com/JonDum/polymer-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/polymer.svg"></a>|![polymer-npm]|Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules|
+|<a href="https://github.com/webpack-contrib/polymer-webpack-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/polymer.svg"></a>|![polymer-npm]|Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules|
 |<a href="https://github.com/TheLarkInn/angular2-template-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/angular-icon-1.svg"></a>|![angular-npm]| Loads and compiles Angular 2 Components|
 |<a href="https://github.com/riot/tag-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/riot.svg"></a>|![riot-npm]| Riot official webpack loader|
 
 
 
 [vue-npm]: https://img.shields.io/npm/v/vue-loader.svg
-[polymer-npm]: https://img.shields.io/npm/v/polymer-loader.svg
+[polymer-npm]: https://img.shields.io/npm/v/polymer-webpack-loader.svg
 [angular-npm]: https://img.shields.io/npm/v/angular2-template-loader.svg
 [riot-npm]: https://img.shields.io/npm/v/riot-tag-loader.svg
 
