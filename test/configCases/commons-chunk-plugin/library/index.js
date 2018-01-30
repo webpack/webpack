@@ -1,4 +1,3 @@
-require("should");
 require.include("external1");
 require.ensure([], function() {
 	require.include("external2");
@@ -6,7 +5,7 @@ require.ensure([], function() {
 
 it("should have externals in main file", function() {
 	var a = require("./a");
-	a.vendor.should.containEql("require(\"external0\")");
-	a.main.should.containEql("require(\"external1\")");
-	a.main.should.containEql("require(\"external2\")");
+	expect(a.vendor).toMatch("require(\"external0\")");
+	expect(a.main).toMatch("require(\"external1\")");
+	expect(a.main).toMatch("require(\"external2\")");
 });

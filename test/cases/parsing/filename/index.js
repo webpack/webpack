@@ -1,11 +1,11 @@
 it("should be a string (__filename)", function() {
-	__filename.should.be.type("string");
+	expect(__filename).toBeTypeOf("string");
 	var f = __filename;
-	f.should.be.type("string");
+	expect(f).toBeTypeOf("string");
 });
 
 it("should be a string (__dirname)", function() {
-	__dirname.should.be.type("string");
+	expect(__dirname).toBeTypeOf("string");
 	var d = __dirname;
-	d.should.be.type("string");
+	expect(d).toBeTypeOf("string");
 });

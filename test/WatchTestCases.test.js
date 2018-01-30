@@ -1,12 +1,12 @@
+/* global beforeAll expect fit */
 "use strict";
 
-require("should");
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
-const Test = require("mocha/lib/test");
 const mkdirp = require("mkdirp");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const async = require("async");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
@@ -61,7 +61,7 @@ describe("WatchTestCases", () => {
 			tests: fs.readdirSync(path.join(casesPath, cat)).filter((folder) => folder.indexOf("_") < 0).sort()
 		};
 	});
-	before(() => {
+	beforeAll(() => {
 		let dest = path.join(__dirname, "js");
 		if(!fs.existsSync(dest))
 			fs.mkdirSync(dest);
@@ -90,7 +90,6 @@ describe("WatchTestCases", () => {
 					});
 					before(() => remove(tempDirectory));
 					it("should compile", function(done) {
-						this.timeout(45000);
 						const outputDirectory = path.join(__dirname, "js", "watch", category.name, testName);
 
 						let options = {};
@@ -154,17 +153,15 @@ describe("WatchTestCases", () => {
 								});
 								if(checkArrayExpectation(path.join(testDirectory, run.name), jsonStats, "error", "Error", done)) return;
 								if(checkArrayExpectation(path.join(testDirectory, run.name), jsonStats, "warning", "Warning", done)) return;
-								let exportedTests = 0;
+								let exportedTests = [];
 
 								function _it(title, fn) {
-									const test = new Test(title, fn);
-									run.suite.addTest(test);
-									exportedTests++;
-									return test;
+									exportedTests.push(fit(title, fn, 45000));
 								}
 
 								const globalContext = {
-									console: console
+									console: console,
+									expect: expect
 								};
 
 								function _require(currentDirectory, module) {
@@ -183,14 +180,14 @@ describe("WatchTestCases", () => {
 											content = fs.readFileSync(p, "utf-8");
 										}
 										if(options.target === "web" || options.target === "webworker") {
-											fn = vm.runInNewContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, window) {" + content + "\n})", globalContext, p);
+											fn = vm.runInNewContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect, window) {" + content + "\n})", globalContext, p);
 										} else {
-											fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE) {" + content + "\n})", p);
+											fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect) {" + content + "\n})", p);
 										}
 										const m = {
 											exports: {}
 										};
-										fn.call(m.exports, _require.bind(null, path.dirname(p)), m, m.exports, path.dirname(p), p, _it, run.name, jsonStats, state, globalContext);
+										fn.call(m.exports, _require.bind(null, path.dirname(p)), m, m.exports, path.dirname(p), p, _it, run.name, jsonStats, state, expect, globalContext);
 										return module.exports;
 									} else if(testConfig.modules && module in testConfig.modules) {
 										return testConfig.modules[module];
@@ -206,7 +203,7 @@ describe("WatchTestCases", () => {
 								if(testConfig.noTests) return process.nextTick(done);
 								_require(outputDirectory, testConfig.bundlePath || "./bundle.js");
 
-								if(exportedTests < 1) return done(new Error("No tests exported by test case"));
+								if(exportedTests.length < 1) return done(new Error("No tests exported by test case"));
 								runIdx++;
 								if(runIdx < runs.length) {
 									run = runs[runIdx];
@@ -220,9 +217,13 @@ describe("WatchTestCases", () => {
 									watching.close();
 									process.nextTick(done);
 								}
+								async.waterfall(
+									exportedTests.map(test => (callback) => test.execute(callback, true)),
+									done
+								);
 							});
 						}, 300);
-					});
+					}, 45000);
 				});
 			});
 		});

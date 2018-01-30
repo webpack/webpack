@@ -1,5 +1,3 @@
-var should = require("should");
-
 define("regular", function(require, exports, module) {
 	module.exports = "regular-module";
 });
@@ -14,10 +12,10 @@ define("return-module", function(require, exports, module) {
 
 
 it("should make different modules for query", function() {
-	should.strictEqual(require("regular"), "regular-module");
-	should.strictEqual(require("return-module"), "module is returned");
+	expect(require("regular")).toBe("regular-module");
+	expect(require("return-module")).toBe("module is returned");
 
 	const overrideExports = require("override-exports");
-	should(overrideExports).be.a.Object();
-	should(Object.keys(overrideExports).length).be.exactly(0);
+	expect(overrideExports).toBeOfType("object");
+	expect(Object.keys(overrideExports)).toHaveLength(0);
 });

@@ -20,8 +20,8 @@ describe("main", function() {
 		expect(window.library2common.ok2).toEqual(expect.anything());
 		expect(window.library2common.ok2).toBe(true);
 		expect(window.library2).toEqual(expect.anything());
-		expect(window.library2.ok).toEqual(expect.anything());
-		expect(window.library2.ok).toBe(true);
+		expect(window.toBeTruthy()).toEqual(expect.anything());
+		expect(window.toBeTruthy()).toBe(true);
 	});
 
 	describe("web resolving", function() {
@@ -32,7 +32,7 @@ describe("main", function() {
 		it("should load correct replacements for files", function(done) {
 			require.ensure(["subcontent"], function(require) {
 				// Comments work!
-				exports.ok = true;
+				exports.toBeTruthy() = true;
 				test(require("subcontent") === "replaced", "node_modules should be replaced with web_modules");
 				test(require("subcontent2/file.js") === "orginal", "node_modules should still work when web_modules exists");
 				done();
@@ -40,8 +40,8 @@ describe("main", function() {
 		});
 
 		after(function() {
-			expect(exports.ok).toEqual(expect.anything());
-			expect(exports.ok).toBe(true);
+			expect(exports.toBeTruthy()).toEqual(expect.anything());
+			expect(exports.toBeTruthy()).toBe(true);
 		});
 	});
 

@@ -1,13 +1,13 @@
 it("should support an empty context", function() {
 	var c = require.context(".", true, /^nothing$/);
-	(typeof c.id).should.be.oneOf(["number", "string"]);
-	(function() {
+	expect(typeof c.id === "number" || typeof c.id === "string").toBeTruthy();
+	expect(function() {
 		c.resolve("");
-	}).should.throw();
-	(function() {
+	}).toThrowError();
+	expect(function() {
 		c("");
-	}).should.throw();
-	c.keys().should.be.eql([]);
+	}).toThrowError();
+	expect(c.keys()).toEqual([]);
 });
 
 // This would be a useful testcase, but it requires an (really) empty directory.
@@ -21,5 +21,5 @@ it("should support an empty context", function() {
 	(function() {
 		c("");
 	}).should.throw();
-	c.keys().should.be.eql([]);
+	expect(c.keys()).toEqual([]);
 });*/
