@@ -1,11 +1,9 @@
 "use strict";
 
-require("should");
 const path = require("path");
-
 const webpack = require("../lib/webpack");
 
-describe("Integration", function() {
+describe("Integration", () => {
 	jest.setTimeout(5000);
 	it("should compile library1", (done) => {
 		webpack({
@@ -51,13 +49,6 @@ describe("Integration", function() {
 			},
 			optimization: {
 				minimize: false
-			},
-			resolve: {
-				// cannot resolve should outside the outermost node_modules
-				// so it is injected here
-				alias: {
-					should: require.resolve("should")
-				}
 			},
 			plugins: [
 				new webpack.optimize.LimitChunkCountPlugin({

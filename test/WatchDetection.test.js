@@ -13,7 +13,9 @@ describe("WatchDetection", () => {
 		return;
 	}
 
-	for(let changeTimeout = 0; changeTimeout < 100; changeTimeout += 10) {
+	jest.setTimeout(10000);
+
+	for(let changeTimeout = 10; changeTimeout < 100; changeTimeout += 10) {
 		createTestCase(changeTimeout);
 	}
 	for(let changeTimeout = 200; changeTimeout <= 2000; changeTimeout += 200) {
@@ -21,9 +23,7 @@ describe("WatchDetection", () => {
 	}
 
 	function createTestCase(changeTimeout) {
-		describe("time between changes " + changeTimeout + "ms", function() {
-			jest.setTimeout(10000);
-
+		describe(`time between changes ${changeTimeout}ms`, () => {
 			const fixturePath = path.join(__dirname, "fixtures", "temp-" + changeTimeout);
 			const filePath = path.join(fixturePath, "file.js");
 			const file2Path = path.join(fixturePath, "file2.js");

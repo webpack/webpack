@@ -1,5 +1,3 @@
-require("should");
-
 require("./common");
 
 it("should have the correct main flag for multi second module", function() {

@@ -12,16 +12,13 @@ expect.extend({
 			`  ${this.utils.printExpected(expected)}\n` +
 			"Received:\n" +
 			`  ${this.utils.printReceived(objType)}`
-		: () => {
-			return (
-				this.utils.matcherHint(".toBeTypeOf") +
-				"\n\n" +
-				"Expected value to be (using typeof):\n" +
-				`  ${this.utils.printExpected(expected)}\n` +
-				"Received:\n" +
-				`  ${this.utils.printReceived(objType)}`
-			);
-		};
+		: () =>
+			this.utils.matcherHint(".toBeTypeOf") +
+			"\n\n" +
+			"Expected value to be (using typeof):\n" +
+			`  ${this.utils.printExpected(expected)}\n` +
+			"Received:\n" +
+			`  ${this.utils.printReceived(objType)}`;
 
 		return { message, pass };
 	}

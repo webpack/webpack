@@ -70,7 +70,7 @@ describe("WatchTestCases", () => {
 			fs.mkdirSync(dest);
 	});
 	categories.forEach((category) => {
-		before(() => {
+		beforeAll(() => {
 			const dest = path.join(__dirname, "js", "watch-src", category.name);
 			if(!fs.existsSync(dest))
 				fs.mkdirSync(dest);
@@ -88,7 +88,9 @@ describe("WatchTestCases", () => {
 							suite: describe(name, () => {})
 						};
 					});
-					before(() => remove(tempDirectory));
+					beforeAll(() => {
+						remove(tempDirectory);
+					});
 					it("should compile", function(done) {
 						const outputDirectory = path.join(__dirname, "js", "watch", category.name, testName);
 

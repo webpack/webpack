@@ -5,14 +5,6 @@ it("should provide a global Buffer constructor", function() {
 	expect(Buffer).toBeInstanceOf(Function);
 });
 
-// Webpack is not providing a console shim by default
-// @see lib/WebpackOptionsDefaulter.js
-// Uncomment this when defaults are changed
-//it("should provide a global console shim", function () {
-//	console.should.be.an.Object();
-//	console.time.should.be.a.Function();
-//});
-
 it("should provide a global process shim", function () {
 	expect(process).toBeInstanceOf(Object);
 });

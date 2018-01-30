@@ -1,4 +1,3 @@
-require("should");
 const sinon = require("sinon");
 const chunkLoadingSpy = sinon.spy(__webpack_require__, "e");
 

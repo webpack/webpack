@@ -1,7 +1,5 @@
 "use strict";
 
-const should = require("should");
-
 const RuleSet = require("../lib/RuleSet");
 
 function match(ruleSet, resource) {

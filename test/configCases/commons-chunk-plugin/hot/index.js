@@ -1,5 +1,3 @@
-require("should");
-
 it("should have the correct main flag", function() {
 	var a = require("./vendor");
 	expect(a._main).toBe(false);

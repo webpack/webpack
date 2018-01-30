@@ -1,4 +1,3 @@
-var should = require("should");
 import d from "dll/d";
 import { x1, y2 } from "./e";
 import { x2, y1 } from "dll/e";

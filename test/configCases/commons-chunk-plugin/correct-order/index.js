@@ -1,5 +1,3 @@
-require("should");
-
 var a = require("./a");
 
 it("should run", function() {

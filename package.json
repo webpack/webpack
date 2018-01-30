@@ -56,7 +56,6 @@
     "react-dom": "^15.2.1",
     "rimraf": "^2.6.2",
     "script-loader": "~0.7.0",
-    "should": "^11.1.1",
     "simple-git": "^1.65.0",
     "sinon": "^2.3.2",
     "style-loader": "^0.19.1",

@@ -1,4 +1,3 @@
-var should = require("should");
 import d from "../0-create-dll/d";
 import { x1, y2 } from "./e";
 import { x2, y1 } from "../0-create-dll/e";
@@ -28,5 +27,3 @@ it("should load an harmony module from dll (star export)", function() {
 it("should load a module with loader applied", function() {
 	expect(require("../0-create-dll/g.abc.js")).toBe("number");
 });
-
-
