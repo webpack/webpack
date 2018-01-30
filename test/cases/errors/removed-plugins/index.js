@@ -13,4 +13,4 @@ it("should error when accessing removed plugins", () => {
 			RemovedPluginError,
 			/webpack.optimize.CommonsChunkPlugin has been removed, please use config.optimization.splitChunks instead./
 		);
-})
+});
