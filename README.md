@@ -152,6 +152,7 @@ or are automatically applied via regex from your webpack configuration.
 |<a href="https://github.com/TypeStrong/ts-loader"><img width="48" height="48" src="https://cdn.rawgit.com/Microsoft/TypeScript/master/doc/logo.svg"></a>|![type-npm]|Loads TypeScript like JavaScript|
 |[`awesome-typescript-loader`](https://github.com/s-panferov/awesome-typescript-loader)|![awesome-typescript-npm]|Awesome TypeScript loader for webpack|
 |<a href="https://github.com/webpack/coffee-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/coffeescript.svg"></a>|![coffee-npm]|Loads CoffeeScript like JavaScript|
+|<a href="https://github.com/jasononeil/webpack-haxe-loader"><img width="16" height="16" src="https://haxe.org/img/haxe-logo.svg"> Haxe</a>|![haxe-npm]|Compile and split Haxe for JavaScript|
 
 
 [script-npm]: https://img.shields.io/npm/v/script-loader.svg
@@ -160,6 +161,7 @@ or are automatically applied via regex from your webpack configuration.
 [coffee-npm]: https://img.shields.io/npm/v/coffee-loader.svg
 [type-npm]: https://img.shields.io/npm/v/ts-loader.svg
 [awesome-typescript-npm]: https://img.shields.io/npm/v/awesome-typescript-loader.svg
+[haxe-npm]: https://img.shields.io/npm/v/haxe-loader.svg
 
 #### Templating
 
