@@ -1655,6 +1655,10 @@
               "type": "boolean",
               "description": "add timing information"
             },
+            "builtAt": {
+              "type": "boolean",
+              "description": "add built at time information"
+            },
             "performance": {
               "type": "boolean",
               "description": "add performance hint flags"

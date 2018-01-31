@@ -9,6 +9,7 @@ module.exports = {
 	stats: {
 		hash: false,
 		timings: false,
+		builtAt: false,
 		assets: false,
 		chunks: true,
 		chunkOrigins: true,

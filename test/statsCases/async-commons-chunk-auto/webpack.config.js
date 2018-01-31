@@ -2,6 +2,7 @@ const path = require("path");
 const stats = {
 	hash: false,
 	timings: false,
+	builtAt: false,
 	assets: false,
 	chunks: true,
 	chunkOrigins: true,
