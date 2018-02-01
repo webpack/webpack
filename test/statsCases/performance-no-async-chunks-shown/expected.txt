@@ -1,4 +1,5 @@
 Time: <CLR=BOLD>X</CLR>ms
+Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
   <CLR=BOLD>Asset</CLR>      <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
 <CLR=33,BOLD>main.js</CLR>   <CLR=33,BOLD>296 KiB</CLR>       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
  <CLR=32,BOLD>sec.js</CLR>  2.95 KiB       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         sec

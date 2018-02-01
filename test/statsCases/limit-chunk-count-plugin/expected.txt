@@ -2,6 +2,7 @@ Hash: 1c28a2310b8d6ad1d2eae9e095881f37f449e557b0dba9af2a29d62e7d950cfed055ea39ea
 Child 1 chunks:
     Hash: 1c28a2310b8d6ad1d2ea
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  5.52 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
@@ -15,6 +16,7 @@ Child 1 chunks:
 Child 2 chunks:
     Hash: e9e095881f37f449e557
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
     0.bundle.js  912 bytes       0  [emitted]  
       bundle.js   7.14 KiB       1  [emitted]  main
@@ -30,6 +32,7 @@ Child 2 chunks:
 Child 3 chunks:
     Hash: b0dba9af2a29d62e7d95
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
     0.bundle.js  774 bytes       0  [emitted]  
     1.bundle.js  245 bytes       1  [emitted]  
@@ -47,6 +50,7 @@ Child 3 chunks:
 Child 4 chunks:
     Hash: 0cfed055ea39eaf47f56
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
     0.bundle.js  236 bytes       0  [emitted]  
     1.bundle.js  245 bytes       1  [emitted]  

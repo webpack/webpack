@@ -2,6 +2,7 @@ Hash: 1d3bfcee111df03fa6251d3bfcee111df03fa625
 Child fitting:
     Hash: 1d3bfcee111df03fa625
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
                       Asset      Size  Chunks             Chunk Names
     706f97eb6a2b8fb1a17e.js  1.05 KiB       0  [emitted]  
     a65f8652fd07c12d0049.js  9.92 KiB       1  [emitted]  
@@ -27,6 +28,7 @@ Child fitting:
 Child content-change:
     Hash: 1d3bfcee111df03fa625
     Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
                       Asset      Size  Chunks             Chunk Names
     706f97eb6a2b8fb1a17e.js  1.05 KiB       0  [emitted]  
     a65f8652fd07c12d0049.js  9.92 KiB       1  [emitted]  

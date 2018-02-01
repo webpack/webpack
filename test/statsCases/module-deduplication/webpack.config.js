@@ -11,6 +11,7 @@ module.exports = {
 	stats: {
 		hash: false,
 		timings: false,
+		builtAt: false,
 		chunks: true,
 		chunkModules: true,
 		modules: false

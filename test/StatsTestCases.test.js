@@ -88,14 +88,16 @@ describe("StatsTestCases", () => {
 				if(!hasColorSetting) {
 					actual = actual
 						.replace(/\u001b\[[0-9;]*m/g, "")
-						.replace(/[0-9]+(\s?ms)/g, "X$1");
+						.replace(/[0-9]+(\s?ms)/g, "X$1")
+						.replace(/^(\s*Built at:) (.*)$/gm, "$1 Thu Jan 01 1970 00:00:00 GMT");
 				} else {
 					actual = actual
 						.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
 						.replace(/\u001b\[1m/g, "<CLR=BOLD>")
 						.replace(/\u001b\[39m\u001b\[22m/g, "</CLR>")
 						.replace(/\u001b\[([0-9;]*)m/g, "<CLR=$1>")
-						.replace(/[0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2");
+						.replace(/[0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2")
+						.replace(/^(\s*Built at:) (.*)$/gm, "$1 Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT");
 				}
 
 				actual = actual

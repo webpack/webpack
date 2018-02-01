@@ -22,6 +22,7 @@ module.exports = [
 			entrypoints: true,
 			hash: false,
 			timings: false,
+			builtAt: false,
 			chunks: false,
 			assets: false
 		}

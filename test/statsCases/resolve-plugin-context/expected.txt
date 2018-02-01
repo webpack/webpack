@@ -1,5 +1,6 @@
 Hash: 20d34a938ae78cffd3f2
 Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks             Chunk Names
 bundle.js  3.01 KiB       0  [emitted]  main
 Entrypoint main = bundle.js
