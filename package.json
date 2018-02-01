@@ -6,8 +6,8 @@
   "dependencies": {
     "acorn": "^5.0.0",
     "acorn-dynamic-import": "^2.0.0",
-    "ajv": "^5.1.5",
-    "ajv-keywords": "^2.0.0",
+    "ajv": "^6.1.0",
+    "ajv-keywords": "^3.1.0",
     "async": "^2.1.2",
     "enhanced-resolve": "^3.4.0",
     "escope": "^3.6.0",
