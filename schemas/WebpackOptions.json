@@ -1822,6 +1822,10 @@
               "type": "boolean",
               "description": "Add public path information"
             },
+            "outputPath": {
+              "type": "boolean",
+              "description": "Add output path information"
+            },
             "providedExports": {
               "type": "boolean",
               "description": "show exports provided by modules"

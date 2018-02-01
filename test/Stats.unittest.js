@@ -4,6 +4,7 @@
 require("should");
 
 const Stats = require("../lib/Stats");
+const packageJson = require("../package.json");
 
 describe("Stats", () => {
 	describe("Error Handling", () => {
@@ -94,6 +95,9 @@ describe("Stats", () => {
 				children: [],
 				hash: "1234",
 				mainTemplate: {
+					outputOptions: {
+						path: ""
+					},
 					getPublicPath: () => "path"
 				},
 				compiler: {
@@ -102,6 +106,46 @@ describe("Stats", () => {
 			});
 			const obj = mockStats.toJson();
 			obj.errors[0].should.be.equal("firstError");
+		});
+	});
+	describe("toJson", () => {
+		it("returns plain object representation", () => {
+			const mockStats = new Stats({
+				errors: [],
+				warnings: [],
+				assets: [],
+				entrypoints: new Map(),
+				chunks: [],
+				modules: [],
+				children: [],
+				hash: "1234",
+				mainTemplate: {
+					outputOptions: {
+						path: "/"
+					},
+					getPublicPath: () => "path"
+				},
+				compiler: {
+					context: ""
+				}
+			});
+			const result = mockStats.toJson();
+			result.should.deepEqual({
+				assets: [],
+				assetsByChunkName: {},
+				children: [],
+				chunks: [],
+				entrypoints: {},
+				filteredAssets: 0,
+				filteredModules: 0,
+				errors: [],
+				hash: "1234",
+				modules: [],
+				outputPath: "/",
+				publicPath: "path",
+				version: packageJson.version,
+				warnings: []
+			});
 		});
 	});
 	describe("Presets", () => {
