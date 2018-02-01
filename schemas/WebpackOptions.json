@@ -1490,7 +1490,8 @@
             },
             {
               "enum": [
-                "single"
+                "single",
+                "multiple"
               ]
             },
             {

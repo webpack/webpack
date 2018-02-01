@@ -15,6 +15,6 @@ module.exports = {
 		reasons: false
 	},
 	optimization: {
-		runtimeChunk: true
+		runtimeChunk: "multiple"
 	}
 };
