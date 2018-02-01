@@ -2,6 +2,7 @@
 "use strict";
 
 require("should");
+
 const Stats = require("../lib/Stats");
 const packageJson = require("../package.json");
 
