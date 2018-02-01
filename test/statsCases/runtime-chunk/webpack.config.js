@@ -10,6 +10,7 @@ module.exports = {
 	stats: {
 		hash: false,
 		timings: false,
+		builtAt: false,
 		assets: false,
 		modules: false,
 		reasons: false
