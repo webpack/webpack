@@ -3,7 +3,7 @@
 
 require("should");
 const Stats = require("../lib/Stats");
-const packageJson = require("../package.json")
+const packageJson = require("../package.json");
 
 describe("Stats", () => {
 	describe("Error Handling", () => {
@@ -113,7 +113,7 @@ describe("Stats", () => {
 				errors: [],
 				warnings: [],
 				assets: [],
-				entrypoints: {},
+				entrypoints: new Map(),
 				chunks: [],
 				modules: [],
 				children: [],
@@ -123,6 +123,9 @@ describe("Stats", () => {
 						path: "/"
 					},
 					getPublicPath: () => "path"
+				},
+				compiler: {
+					context: ""
 				}
 			});
 			const result = mockStats.toJson();
@@ -132,9 +135,9 @@ describe("Stats", () => {
 				children: [],
 				chunks: [],
 				entrypoints: {},
-				errors: [],
 				filteredAssets: 0,
 				filteredModules: 0,
+				errors: [],
 				hash: "1234",
 				modules: [],
 				outputPath: "/",
