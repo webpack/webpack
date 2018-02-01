@@ -1492,6 +1492,23 @@
               "enum": [
                 "single"
               ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "description": "The name or name factory for the runtime chunks",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "instanceof": "Function"
+                    }
+                  ]
+                }
+              }
             }
           ]
         },
