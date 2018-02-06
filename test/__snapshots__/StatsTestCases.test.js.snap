@@ -1290,18 +1290,18 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for module-assets 1`] = `
-"Hash: db7cfbdd82be5e125ed1
+"Hash: b2dfd607c0fb28ccc4b7
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint main = main.js
 chunk    {0} main.js (main) 12 bytes >{1}< [entry] [rendered]
  [0] ./index.js 12 bytes {0} [built]
-chunk    {1} 1.js 68 bytes <{0}> [rendered]
+chunk    {1} 1.js 204 bytes <{0}> [rendered]
  [1] ./node_modules/a/index.js 17 bytes {1} [built]
- [2] ./node_modules/a/1.png 51 bytes {1} [built] [1 asset]
+ [2] ./node_modules/a/1.png 187 bytes {1} [built] [1 asset]
 [0] ./index.js 12 bytes {0} [built]
 [1] ./node_modules/a/index.js 17 bytes {1} [built]
-[2] ./node_modules/a/1.png 51 bytes {1} [built] [1 asset]"
+[2] ./node_modules/a/1.png 187 bytes {1} [built] [1 asset]"
 `;
 
 exports[`StatsTestCases should print correct stats for module-deduplication 1`] = `
