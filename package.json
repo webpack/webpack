@@ -29,7 +29,9 @@
     "tapable": "^1.1.0",
     "terser-webpack-plugin": "^1.1.0",
     "watchpack": "^1.5.0",
-    "webpack-sources": "^1.2.0"
+    "webpack-sources": "^1.2.0",
+    "postcss": "^7.0.0",
+    "postcss-value-parser": "^3.3.0"
   },
   "devDependencies": {
     "@types/node": "^9.6.4",
