@@ -947,6 +947,7 @@
             "javascript/dynamic",
             "javascript/esm",
             "json",
+            "css/experimental",
             "webassembly/experimental"
           ]
         },
