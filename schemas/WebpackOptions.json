@@ -1367,9 +1367,7 @@
                   "description": "Give chunks created a name (chunks with equal name are merged)",
                   "oneOf": [
                     {
-                      "enum": [
-                        true
-                      ]
+                      "type": "boolean"
                     },
                     {
                       "instanceof": "Function"
@@ -1461,9 +1459,7 @@
                             "description": "Give chunks for this cache group a name (chunks with equal name are merged)",
                             "oneOf": [
                               {
-                                "enum": [
-                                  true
-                                ]
+                                "type": "boolean"
                               },
                               {
                                 "instanceof": "Function"
