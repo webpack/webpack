@@ -72,6 +72,7 @@ describe("HotTestCases", () => {
 
 						function _it(title, fn) {
 							const test = new Test(title, fn);
+							test.timeout(5000);
 							suite.addTest(test);
 							exportedTests++;
 							return test;
