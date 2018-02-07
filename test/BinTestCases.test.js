@@ -116,6 +116,7 @@ describe("BinTestCases", function() {
 			describe(testName, function() {
 				before(function(done) {
 					this.timeout(20000);
+					
 					const child = spawn([cmd].concat(args), opts);
 
 					child.on("close", (code) => {
