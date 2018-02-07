@@ -13,7 +13,7 @@ module.exports = function testAssertions(code, stdout, stderr) {
 	stdout.should.containEql("Resolving options:");
 	stdout.should.containEql("Optimizing options:");
 	stdout.should.containEql("Stats options:");
-	stdout.should.containEql("Опции:");
+	stdout.should.containEql("Options:");
 
 	stderr.should.be.empty();
 };
