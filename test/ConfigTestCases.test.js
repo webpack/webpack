@@ -50,13 +50,14 @@ describe("ConfigTestCases", () => {
 						if(!options.entry) options.entry = "./index.js";
 						if(!options.target) options.target = "async-node";
 						if(!options.output) options.output = {};
-						if(!options.output.path) options.output.path = outputDirectory;
+						// converting to relative to cover relative output paths
+						if(!options.output.path) options.output.path = path.relative(testDirectory, outputDirectory);
 						if(typeof options.output.pathinfo === "undefined") options.output.pathinfo = true;
 						if(!options.output.filename) options.output.filename = "bundle" + idx + ".js";
 					});
 					let testConfig = {
 						findBundle: function(i, options) {
-							if(fs.existsSync(path.join(options.output.path, "bundle" + i + ".js"))) {
+							if(fs.existsSync(path.join(options.context, options.output.path, "bundle" + i + ".js"))) {
 								return "./bundle" + i + ".js";
 							}
 						},

@@ -1,4 +1,5 @@
 var fs = require("fs");
+var path = require("path");
 require("should");
 
 var findFile = function(files, regex) {
@@ -15,7 +16,7 @@ var verifyFilenameLength = function(filename, expectedNameLength) {
 
 module.exports = {
 	findBundle: function(i, options) {
-		var files = fs.readdirSync(options.output.path);
+		var files = fs.readdirSync(path.join(options.context, options.output.path));
 
 		var bundleDetects = [{
 			regex: new RegExp("^0.bundle" + i, "i"),
