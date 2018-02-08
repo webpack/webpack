@@ -41,6 +41,7 @@
     "file-loader": "^1.1.6",
     "glob": "^7.1.2",
     "i18n-webpack-plugin": "^1.0.0",
+    "inquire": "^0.4.8",
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
