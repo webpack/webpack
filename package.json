@@ -7,8 +7,8 @@
   "dependencies": {
     "acorn": "^5.0.0",
     "acorn-dynamic-import": "^3.0.0",
-    "ajv": "^5.1.5",
-    "ajv-keywords": "^2.0.0",
+    "ajv": "^6.1.0",
+    "ajv-keywords": "^3.1.0",
     "async": "^2.1.2",
     "chrome-trace-event": "^0.1.1",
     "enhanced-resolve": "^4.0.0-beta.2",
