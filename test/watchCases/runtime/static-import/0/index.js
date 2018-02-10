@@ -4,7 +4,7 @@ import * as both from './dynamic-and-static'
 import * as staticModule from './static'
 
 it("should not change chunkhash of manifest chunk", function () {
-	const manifestChunk = STATS_JSON.chunks.find((chunk) => chunk.names.indexOf("main-runtime") !== -1);
+	const manifestChunk = STATS_JSON.chunks.find((chunk) => chunk.names.indexOf("runtime~main") !== -1);
 	(!manifestChunk).should.be.false("Main chunk not found");
 	switch (WATCH_STEP) {
 		case "0":
