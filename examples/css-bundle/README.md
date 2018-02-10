@@ -118,7 +118,7 @@ module.exports = {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -129,7 +129,7 @@ __webpack_require__(/*! ./style.css */ 1);
 /*!*******************!*\
   !*** ./style.css ***!
   \*******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -153,7 +153,7 @@ body {
 
 ```
 Hash: d3955970c7b0655c299a
-Version: webpack 3.5.1
+Version: webpack 3.11.0
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
                            output.js     2.9 kB       0  [emitted]  main
@@ -180,7 +180,7 @@ Child extract-text-webpack-plugin ../../node_modules/extract-text-webpack-plugin
 
 ```
 Hash: 7e35402b768b90e83df1
-Version: webpack 3.5.1
+Version: webpack 3.11.0
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
                            output.js  504 bytes       0  [emitted]  main

@@ -102,7 +102,7 @@ webpackJsonp([1],[
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -115,7 +115,7 @@ __webpack_require__(/*! ./styleA.css */ 2);
 /*!********************!*\
   !*** ./styleA.css ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -178,16 +178,16 @@ body{background:url(js/ce21cbdd9b894e6af794813eb3fdaf60.png)}.c{background:url(j
 
 ```
 Hash: b6d05f310264e74bb969
-Version: webpack 3.5.1
+Version: webpack 3.11.0
                                Asset       Size  Chunks             Chunk Names
                                 C.js    2.89 kB       2  [emitted]  C
 d090b6fba0f6d326d282a19146ff54a7.png  120 bytes          [emitted]  
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
 c2a2f62d69330b7d787782f5010f9d13.png  120 bytes          [emitted]  
-                                B.js  561 bytes       0  [emitted]  B
-                                A.js  543 bytes       1  [emitted]  A
+                                B.js  563 bytes       0  [emitted]  B
+                                A.js  545 bytes       1  [emitted]  A
 16155c689e517682064c99893cb832cc.png  120 bytes          [emitted]  
-                          commons.js    6.01 kB       3  [emitted]  commons
+                          commons.js    4.08 kB       3  [emitted]  commons
                                A.css   69 bytes       1  [emitted]  A
                                B.css   69 bytes       0  [emitted]  B
                                C.css  140 bytes       2  [emitted]  C
@@ -260,7 +260,7 @@ Child extract-text-webpack-plugin ../../node_modules/extract-text-webpack-plugin
 
 ```
 Hash: 71684330ef0116733460
-Version: webpack 3.5.1
+Version: webpack 3.11.0
                                Asset       Size  Chunks             Chunk Names
                                 C.js  508 bytes       2  [emitted]  C
 d090b6fba0f6d326d282a19146ff54a7.png  120 bytes          [emitted]  
@@ -269,7 +269,7 @@ c2a2f62d69330b7d787782f5010f9d13.png  120 bytes          [emitted]
                                 B.js   70 bytes       0  [emitted]  B
                                 A.js   68 bytes       1  [emitted]  A
 16155c689e517682064c99893cb832cc.png  120 bytes          [emitted]  
-                          commons.js    1.38 kB       3  [emitted]  commons
+                          commons.js  816 bytes       3  [emitted]  commons
                                A.css   59 bytes       1  [emitted]  A
                                B.css   59 bytes       0  [emitted]  B
                                C.css  120 bytes       2  [emitted]  C

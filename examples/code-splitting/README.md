@@ -121,7 +121,7 @@ require.ensure(["c"], function(require) {
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
+/******/ 		script.type = "text/javascript";
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
@@ -198,7 +198,7 @@ require.ensure(["c"], function(require) {
 /*!***************************!*\
   !*** ./node_modules/b.js ***!
   \***************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -209,7 +209,7 @@ require.ensure(["c"], function(require) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -225,7 +225,7 @@ __webpack_require__.e/* require.ensure */(0).then((function(require) {
 /*!***************************!*\
   !*** ./node_modules/a.js ***!
   \***************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -246,7 +246,7 @@ webpackJsonp([0],[
 /*!***************************!*\
   !*** ./node_modules/c.js ***!
   \***************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -257,7 +257,7 @@ webpackJsonp([0],[
 /*!***************************!*\
   !*** ./node_modules/d.js ***!
   \***************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -279,10 +279,10 @@ webpackJsonp([0],[,,,function(n,c){},function(n,c){}]);
 
 ```
 Hash: 6a2e963878a958fd1aca
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset       Size  Chunks             Chunk Names
-0.output.js  488 bytes       0  [emitted]  
-  output.js    6.66 kB       1  [emitted]  main
+0.output.js  490 bytes       0  [emitted]  
+  output.js    6.67 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes {1} [rendered]
     > [1] ./example.js 3:0-6:2
@@ -297,7 +297,7 @@ chunk    {1} output.js (main) 166 bytes [entry] [rendered]
 
 ```
 Hash: 6a2e963878a958fd1aca
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  55 bytes       0  [emitted]  
   output.js   1.45 kB       1  [emitted]  main

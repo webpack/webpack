@@ -92,55 +92,6 @@ module.exports = {
 /******/ 		return module.exports;
 /******/ 	}
 /******/
-/******/ 	// This file contains only the entry chunk.
-/******/ 	// The chunk loading function for additional chunks
-/******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		var installedChunkData = installedChunks[chunkId];
-/******/ 		if(installedChunkData === 0) {
-/******/ 			return new Promise(function(resolve) { resolve(); });
-/******/ 		}
-/******/
-/******/ 		// a Promise means "currently loading".
-/******/ 		if(installedChunkData) {
-/******/ 			return installedChunkData[2];
-/******/ 		}
-/******/
-/******/ 		// setup Promise in chunk cache
-/******/ 		var promise = new Promise(function(resolve, reject) {
-/******/ 			installedChunkData = installedChunks[chunkId] = [resolve, reject];
-/******/ 		});
-/******/ 		installedChunkData[2] = promise;
-/******/
-/******/ 		// start chunk loading
-/******/ 		var head = document.getElementsByTagName('head')[0];
-/******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
-/******/ 		script.charset = 'utf-8';
-/******/ 		script.async = true;
-/******/ 		script.timeout = 120000;
-/******/
-/******/ 		if (__webpack_require__.nc) {
-/******/ 			script.setAttribute("nonce", __webpack_require__.nc);
-/******/ 		}
-/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".js";
-/******/ 		var timeout = setTimeout(onScriptComplete, 120000);
-/******/ 		script.onerror = script.onload = onScriptComplete;
-/******/ 		function onScriptComplete() {
-/******/ 			// avoid mem leaks in IE.
-/******/ 			script.onerror = script.onload = null;
-/******/ 			clearTimeout(timeout);
-/******/ 			var chunk = installedChunks[chunkId];
-/******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) {
-/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
-/******/ 				}
-/******/ 				installedChunks[chunkId] = undefined;
-/******/ 			}
-/******/ 		};
-/******/ 		head.appendChild(script);
-/******/
-/******/ 		return promise;
-/******/ 	};
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
@@ -191,7 +142,7 @@ module.exports = {
 /*!********************!*\
   !*** ./vendor1.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -203,7 +154,7 @@ module.exports = "Vendor1";
 /*!***********************!*\
   !*** multi ./vendor1 ***!
   \***********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -223,7 +174,7 @@ webpackJsonp([0],[
 /*!********************!*\
   !*** ./vendor2.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -237,7 +188,7 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /*!***********************!*\
   !*** multi ./vendor2 ***!
   \***********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -257,7 +208,7 @@ webpackJsonp([3],{
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -277,13 +228,13 @@ __webpack_require__(/*! ./vendor2 */ 1);
 
 ```
 Hash: 87020004ae57cbfa3361
-Version: webpack 3.5.1
+Version: webpack 3.11.0
      Asset       Size  Chunks             Chunk Names
-vendor2.js  598 bytes       0  [emitted]  vendor2
-  pageC.js  235 bytes       1  [emitted]  pageC
-  pageB.js  235 bytes       2  [emitted]  pageB
-  pageA.js  342 bytes       3  [emitted]  pageA
-vendor1.js    6.41 kB       4  [emitted]  vendor1
+vendor2.js  600 bytes       0  [emitted]  vendor2
+  pageC.js  236 bytes       1  [emitted]  pageC
+  pageB.js  236 bytes       2  [emitted]  pageB
+  pageA.js  343 bytes       3  [emitted]  pageA
+vendor1.js    4.47 kB       4  [emitted]  vendor1
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor1.js vendor2.js
 Entrypoint pageA = vendor1.js vendor2.js pageA.js
@@ -317,13 +268,13 @@ chunk    {4} vendor1.js (vendor1) 55 bytes [entry] [rendered]
 
 ```
 Hash: 87020004ae57cbfa3361
-Version: webpack 3.5.1
+Version: webpack 3.11.0
      Asset       Size  Chunks             Chunk Names
 vendor2.js  100 bytes       0  [emitted]  vendor2
   pageC.js   59 bytes       1  [emitted]  pageC
   pageB.js   59 bytes       2  [emitted]  pageB
   pageA.js   71 bytes       3  [emitted]  pageA
-vendor1.js    1.44 kB       4  [emitted]  vendor1
+vendor1.js  877 bytes       4  [emitted]  vendor1
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor1.js vendor2.js
 Entrypoint pageA = vendor1.js vendor2.js pageA.js

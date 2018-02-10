@@ -123,7 +123,7 @@ module.exports = [
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -209,7 +209,7 @@ console.log("Running " + "desktop" + " build");
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -223,7 +223,7 @@ console.log("Running " + "mobile" + " build");
 /*!*************************!*\
   !*** ./mobile-stuff.js ***!
   \*************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -239,7 +239,7 @@ console.log("Running " + "mobile" + " build");
 
 ```
 Hash: a201abd2de73265dd538cceba4bc5163d755f291
-Version: webpack 3.5.1
+Version: webpack 3.11.0
 Child mobile:
     Hash: a201abd2de73265dd538
         Asset     Size  Chunks             Chunk Names
@@ -264,7 +264,7 @@ Child desktop:
 
 ```
 Hash: a201abd2de73265dd538cceba4bc5163d755f291
-Version: webpack 3.5.1
+Version: webpack 3.11.0
 Child mobile:
     Hash: a201abd2de73265dd538
         Asset       Size  Chunks             Chunk Names

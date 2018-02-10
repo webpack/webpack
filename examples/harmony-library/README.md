@@ -25,7 +25,7 @@ module.exports = {
 		exports["MyLibrary"] = factory();
 	else
 		root["MyLibrary"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 ```
 <details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -131,9 +131,9 @@ function increment() {
 
 ```
 Hash: 0b2bf5443af50d14e1e0
-Version: webpack 3.5.1
+Version: webpack 3.11.0
            Asset     Size  Chunks             Chunk Names
-MyLibrary.umd.js  3.45 kB       0  [emitted]  main
+MyLibrary.umd.js  3.49 kB       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -145,9 +145,9 @@ chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
 
 ```
 Hash: 0b2bf5443af50d14e1e0
-Version: webpack 3.5.1
+Version: webpack 3.11.0
            Asset       Size  Chunks             Chunk Names
-MyLibrary.umd.js  872 bytes       0  [emitted]  main
+MyLibrary.umd.js  902 bytes       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
     > main [0] ./example.js 

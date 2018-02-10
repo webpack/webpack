@@ -149,7 +149,7 @@ module.exports = {
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
+/******/ 		script.type = "text/javascript";
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
@@ -227,12 +227,12 @@ module.exports = {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 // a chunks with a, b, c
-Promise.all/* require */([__webpack_require__.e(0), __webpack_require__.e(2)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 3)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+Promise.all/* require */([__webpack_require__.e(0), __webpack_require__.e(2)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 3)]; ((function(a, b, c) {}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 
 // a chunk with a, b, d
 Promise.all/* require.ensure */([__webpack_require__.e(0), __webpack_require__.e(1)]).then((function(require) {
@@ -254,7 +254,7 @@ webpackJsonp([0],[
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -265,7 +265,7 @@ module.exports = "a";
 /*!**************!*\
   !*** ./b.js ***!
   \**************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -284,7 +284,7 @@ webpackJsonp([1],{
 /*!**************!*\
   !*** ./d.js ***!
   \**************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -304,7 +304,7 @@ webpackJsonp([2],{
 /*!**************!*\
   !*** ./c.js ***!
   \**************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -321,12 +321,12 @@ module.exports = "c";
 
 ```
 Hash: ca87dc9e54fc3309c0fd
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset       Size  Chunks             Chunk Names
-0.output.js  403 bytes       0  [emitted]  
-1.output.js  215 bytes       1  [emitted]  
-2.output.js  215 bytes       2  [emitted]  
-  output.js    6.56 kB       3  [emitted]  main
+0.output.js  405 bytes       0  [emitted]  
+1.output.js  216 bytes       1  [emitted]  
+2.output.js  216 bytes       2  [emitted]  
+  output.js    6.57 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes {3} [rendered]
     > async commons [2] ./example.js 2:0-52
@@ -354,7 +354,7 @@ chunk    {3} output.js (main) 194 bytes [entry] [rendered]
 
 ```
 Hash: ca87dc9e54fc3309c0fd
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  78 bytes       0  [emitted]  
 1.output.js  51 bytes       1  [emitted]  

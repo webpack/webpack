@@ -110,7 +110,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
+/******/ 		script.type = "text/javascript";
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
@@ -189,7 +189,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports provided:  */
+/*! no exports provided */
 /*! all exports used */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -217,7 +217,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /*!***************************!*\
   !*** ./node_modules/a.js ***!
   \***************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /***/ (function(module, exports) {
 
 // module a
@@ -227,7 +227,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /*!**************************************!*\
   !*** ./node_modules/c lazy ^\.\/.*$ ***!
   \**************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -274,11 +274,11 @@ module.exports = webpackAsyncContext;
 
 ```
 Hash: f2701c90a6d1597932b5
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset       Size  Chunks             Chunk Names
-0.output.js  258 bytes       0  [emitted]  
-1.output.js  249 bytes       1  [emitted]  
-2.output.js  244 bytes       2  [emitted]  
+0.output.js  259 bytes       0  [emitted]  
+1.output.js  250 bytes       1  [emitted]  
+2.output.js  245 bytes       2  [emitted]  
   output.js    7.55 kB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes {3} [rendered]
@@ -301,7 +301,7 @@ chunk    {3} output.js (main) 427 bytes [entry] [rendered]
 
 ```
 Hash: f2701c90a6d1597932b5
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  37 bytes       0  [emitted]  
 1.output.js  36 bytes       1  [emitted]  

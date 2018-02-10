@@ -161,7 +161,7 @@ function list() {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports provided:  */
+/*! no exports provided */
 /*! all exports used */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -229,7 +229,7 @@ function c() { console.log("c"); }
 
 ```
 Hash: 4cac4181f66e42d03af9
-Version: webpack 3.5.1
+Version: webpack 3.11.0
     Asset     Size  Chunks             Chunk Names
 output.js  5.02 kB       0  [emitted]  main
 Entrypoint main = output.js
@@ -256,7 +256,7 @@ chunk    {0} output.js (main) 726 bytes [entry] [rendered]
 
 ```
 Hash: 4cac4181f66e42d03af9
-Version: webpack 3.5.1
+Version: webpack 3.11.0
     Asset       Size  Chunks             Chunk Names
 output.js  895 bytes       0  [emitted]  main
 Entrypoint main = output.js

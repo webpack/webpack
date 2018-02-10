@@ -181,7 +181,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
+/******/ 		script.type = "text/javascript";
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
@@ -258,7 +258,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /*!*******************!*\
   !*** ./render.js ***!
   \*******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -275,7 +275,7 @@ module.exports = function(page) {
 /*!*******************!*\
   !*** ./router.js ***!
   \*******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -310,7 +310,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 /*!***********************************************************!*\
   !*** . (webpack)/node_modules/bundle-loader ^\.\/.*Page$ ***!
   \***********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -339,7 +339,7 @@ webpackContext.id = 6;
 /*!*******************************************************!*\
   !*** (webpack)/node_modules/bundle-loader!./aPage.js ***!
   \*******************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -363,7 +363,7 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
 /*!*******************************************************!*\
   !*** (webpack)/node_modules/bundle-loader!./bPage.js ***!
   \*******************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -395,7 +395,7 @@ webpackJsonp([3,1],[
 /*!******************!*\
   !*** ./aPage.js ***!
   \******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -409,7 +409,7 @@ module.exports = function() {
 /*!*******************!*\
   !*** ./aEntry.js ***!
   \*******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -430,7 +430,7 @@ webpackJsonp([1],[
 /*!******************!*\
   !*** ./aPage.js ***!
   \******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -448,12 +448,12 @@ module.exports = function() {
 
 ```
 Hash: 4b00bdf84d7923f55b44
-Version: webpack 3.5.1
+Version: webpack 3.11.0
           Asset       Size  Chunks             Chunk Names
-     0.chunk.js  267 bytes       0  [emitted]  
-     1.chunk.js  273 bytes       1  [emitted]  
-pageB.bundle.js  630 bytes    2, 0  [emitted]  pageB
-pageA.bundle.js  621 bytes    3, 1  [emitted]  pageA
+     0.chunk.js  268 bytes       0  [emitted]  
+     1.chunk.js  274 bytes       1  [emitted]  
+pageB.bundle.js  632 bytes    2, 0  [emitted]  pageB
+pageA.bundle.js  623 bytes    3, 1  [emitted]  pageA
      commons.js    9.59 kB       4  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
@@ -499,7 +499,7 @@ chunk    {4} commons.js (commons) 1.71 kB [entry] [rendered]
 
 ```
 Hash: 4b00bdf84d7923f55b44
-Version: webpack 3.5.1
+Version: webpack 3.11.0
           Asset       Size  Chunks             Chunk Names
      0.chunk.js   83 bytes       0  [emitted]  
      1.chunk.js   82 bytes       1  [emitted]  

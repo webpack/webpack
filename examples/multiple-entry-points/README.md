@@ -171,7 +171,7 @@ module.exports = {
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
+/******/ 		script.type = "text/javascript";
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
@@ -245,7 +245,7 @@ module.exports = {
 /*!*******************!*\
   !*** ./common.js ***!
   \*******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -264,14 +264,14 @@ webpackJsonp([2],{
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 0);
-__webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 1)]; (function(shared) {
+__webpack_require__.e/* require */(0/* duplicate */).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 1)]; ((function(shared) {
 	shared("This is page A");
-}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 
 /***/ })
 
@@ -287,7 +287,7 @@ webpackJsonp([1],{
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -311,7 +311,7 @@ webpackJsonp([0],[
 /*!*******************!*\
   !*** ./shared.js ***!
   \*******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -330,11 +330,11 @@ module.exports = function(msg) {
 
 ```
 Hash: 4f8af9066e2b5dda0f23
-Version: webpack 3.5.1
+Version: webpack 3.11.0
           Asset       Size  Chunks             Chunk Names
-     0.chunk.js  346 bytes       0  [emitted]  
-pageB.bundle.js  521 bytes       1  [emitted]  pageB
-pageA.bundle.js  547 bytes       2  [emitted]  pageA
+     0.chunk.js  347 bytes       0  [emitted]  
+pageB.bundle.js  522 bytes       1  [emitted]  pageB
+pageA.bundle.js  565 bytes       2  [emitted]  pageA
      commons.js       6 kB       3  [emitted]  commons
 Entrypoint pageA = commons.js pageA.bundle.js
 Entrypoint pageB = commons.js pageB.bundle.js
@@ -362,7 +362,7 @@ chunk    {3} commons.js (commons) 26 bytes [entry] [rendered]
 
 ```
 Hash: 4f8af9066e2b5dda0f23
-Version: webpack 3.5.1
+Version: webpack 3.11.0
           Asset       Size  Chunks             Chunk Names
      0.chunk.js   81 bytes       0  [emitted]  
 pageB.bundle.js  122 bytes       1  [emitted]  pageB

@@ -102,7 +102,7 @@ module.exports = "It works";
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
+/******/ 		script.type = "text/javascript";
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
@@ -179,7 +179,7 @@ module.exports = "It works";
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -193,7 +193,7 @@ __webpack_require__(/*! bundle-loader!./file.js */ 1)(function(fileJsExports) {
 /*!******************************************************!*\
   !*** (webpack)/node_modules/bundle-loader!./file.js ***!
   \******************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -225,7 +225,7 @@ webpackJsonp([0],{
 /*!*****************!*\
   !*** ./file.js ***!
   \*****************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -242,9 +242,9 @@ module.exports = "It works";
 
 ```
 Hash: 0f292e2adbe6929efd48
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset       Size  Chunks             Chunk Names
-0.output.js  231 bytes       0  [emitted]  
+0.output.js  232 bytes       0  [emitted]  
   output.js    6.73 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 28 bytes {1} [rendered]
@@ -262,7 +262,7 @@ chunk    {1} output.js (main) 378 bytes [entry] [rendered]
 
 ```
 Hash: 0f292e2adbe6929efd48
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  58 bytes       0  [emitted]  
   output.js   1.55 kB       1  [emitted]  main

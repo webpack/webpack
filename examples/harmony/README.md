@@ -106,7 +106,7 @@ export function increment(val) {
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
+/******/ 		script.type = "text/javascript";
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
@@ -183,7 +183,7 @@ export function increment(val) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports provided:  */
+/*! no exports provided */
 /*! all exports used */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -248,7 +248,7 @@ function add() {
 
 ```
 Hash: f5982ea38c08a86ed265
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  484 bytes       0  [emitted]  
   output.js    7.36 kB       1  [emitted]  main
@@ -276,7 +276,7 @@ chunk    {1} output.js (main) 419 bytes [entry] [rendered]
 
 ```
 Hash: f5982ea38c08a86ed265
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  147 bytes       0  [emitted]  
   output.js    1.69 kB       1  [emitted]  main

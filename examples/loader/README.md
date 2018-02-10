@@ -111,7 +111,7 @@ module.exports = function(content) {
 /*!****************************************************!*\
   !*** (webpack)/node_modules/css-loader!./test.css ***!
   \****************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -130,7 +130,7 @@ exports.push([module.i, ".some-class {\r\n\tcolor: hotpink;\r\n}\r\n", ""]);
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -147,7 +147,7 @@ console.dir(__webpack_require__(/*! css-loader!./test.css */ 0)); // manual
 /*!*****************************!*\
   !*** ./loader.js!./file.js ***!
   \*****************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -159,7 +159,7 @@ exports.foo = "bar";
 /*!*********************************************************!*\
   !*** (webpack)/node_modules/css-loader/lib/css-base.js ***!
   \*********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -261,9 +261,9 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: c15a21a2e67111e1cd94
-Version: webpack 3.5.1
+Version: webpack 3.11.0
     Asset     Size  Chunks             Chunk Names
-output.js  6.24 kB       0  [emitted]  main
+output.js  6.25 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 2.72 kB [entry] [rendered]
     > main [1] ./example.js 
@@ -280,7 +280,7 @@ chunk    {0} output.js (main) 2.72 kB [entry] [rendered]
 
 ```
 Hash: 1848e785d8b4fe1c67d0
-Version: webpack 3.5.1
+Version: webpack 3.11.0
     Asset     Size  Chunks             Chunk Names
 output.js  1.48 kB       0  [emitted]  main
 Entrypoint main = output.js

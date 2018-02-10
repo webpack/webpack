@@ -198,7 +198,7 @@ module.exports = {
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
+/******/ 		script.type = "text/javascript";
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
@@ -280,7 +280,6 @@ module.exports = {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 // CONCATENATED MODULE: ./node_modules/shared2.js
 // shared2 module
@@ -299,7 +298,7 @@ var x = "x";
 /*!********************************!*\
   !*** ./example.js + 2 modules ***!
   \********************************/
-/*! exports provided:  */
+/*! no exports provided */
 /*! all exports used */
 /*! ModuleConcatenation bailout: Module is an entry point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -344,7 +343,7 @@ webpackJsonp([0],[
 /*!*****************************!*\
   !*** ./node_modules/cjs.js ***!
   \*****************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! exports used: c */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
@@ -413,10 +412,10 @@ webpackJsonp([0],[,,function(n,r){r.c="e"},function(n,r,t){"use strict";Object.d
 
 ```
 Hash: 6596ce0a50ccbbaa89c6
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset     Size  Chunks             Chunk Names
 0.output.js   1.9 kB       0  [emitted]  
-  output.js  7.39 kB       1  [emitted]  main
+  output.js  7.32 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 286 bytes {1} [rendered]
     > [] 4:0-16
@@ -439,10 +438,10 @@ chunk    {1} output.js (main) 390 bytes [entry] [rendered]
 
 ```
 Hash: 6596ce0a50ccbbaa89c6
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  364 bytes       0  [emitted]  
-  output.js    1.66 kB       1  [emitted]  main
+  output.js    1.61 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 286 bytes {1} [rendered]
     > [] 4:0-16

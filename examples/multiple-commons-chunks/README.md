@@ -143,55 +143,6 @@ module.exports = {
 /******/ 		return module.exports;
 /******/ 	}
 /******/
-/******/ 	// This file contains only the entry chunk.
-/******/ 	// The chunk loading function for additional chunks
-/******/ 	__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 		var installedChunkData = installedChunks[chunkId];
-/******/ 		if(installedChunkData === 0) {
-/******/ 			return new Promise(function(resolve) { resolve(); });
-/******/ 		}
-/******/
-/******/ 		// a Promise means "currently loading".
-/******/ 		if(installedChunkData) {
-/******/ 			return installedChunkData[2];
-/******/ 		}
-/******/
-/******/ 		// setup Promise in chunk cache
-/******/ 		var promise = new Promise(function(resolve, reject) {
-/******/ 			installedChunkData = installedChunks[chunkId] = [resolve, reject];
-/******/ 		});
-/******/ 		installedChunkData[2] = promise;
-/******/
-/******/ 		// start chunk loading
-/******/ 		var head = document.getElementsByTagName('head')[0];
-/******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
-/******/ 		script.charset = 'utf-8';
-/******/ 		script.async = true;
-/******/ 		script.timeout = 120000;
-/******/
-/******/ 		if (__webpack_require__.nc) {
-/******/ 			script.setAttribute("nonce", __webpack_require__.nc);
-/******/ 		}
-/******/ 		script.src = __webpack_require__.p + "" + chunkId + ".js";
-/******/ 		var timeout = setTimeout(onScriptComplete, 120000);
-/******/ 		script.onerror = script.onload = onScriptComplete;
-/******/ 		function onScriptComplete() {
-/******/ 			// avoid mem leaks in IE.
-/******/ 			script.onerror = script.onload = null;
-/******/ 			clearTimeout(timeout);
-/******/ 			var chunk = installedChunks[chunkId];
-/******/ 			if(chunk !== 0) {
-/******/ 				if(chunk) {
-/******/ 					chunk[1](new Error('Loading chunk ' + chunkId + ' failed.'));
-/******/ 				}
-/******/ 				installedChunks[chunkId] = undefined;
-/******/ 			}
-/******/ 		};
-/******/ 		head.appendChild(script);
-/******/
-/******/ 		return promise;
-/******/ 	};
 /******/
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
@@ -239,7 +190,7 @@ module.exports = {
 /*!**************************!*\
   !*** ./modules/a-b-c.js ***!
   \**************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -253,7 +204,7 @@ module.exports = {
 /*!************************!*\
   !*** ./modules/a-b.js ***!
   \************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -272,7 +223,7 @@ webpackJsonp([2],{
 /*!************************!*\
   !*** ./modules/a-c.js ***!
   \************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -284,7 +235,7 @@ webpackJsonp([2],{
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -307,7 +258,7 @@ webpackJsonp([4],[
 /*!**************************!*\
   !*** ./modules/admin.js ***!
   \**************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -326,7 +277,7 @@ webpackJsonp([6],{
 /*!***********************!*\
   !*** ./adminPageA.js ***!
   \***********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -344,17 +295,17 @@ __webpack_require__(/*! ./modules/admin */ 1);
 
 ```
 Hash: 3ef8f91b150be0e10937
-Version: webpack 3.5.1
+Version: webpack 3.11.0
            Asset       Size  Chunks             Chunk Names
-        pageC.js  813 bytes       0  [emitted]  pageC
-        pageB.js  573 bytes       1  [emitted]  pageB
-        pageA.js  573 bytes       2  [emitted]  pageA
-   adminPageC.js  552 bytes    3, 4  [emitted]  adminPageC
-admin-commons.js  236 bytes       4  [emitted]  admin-commons
-   adminPageB.js  340 bytes       5  [emitted]  adminPageB
-   adminPageA.js  340 bytes       6  [emitted]  adminPageA
-      commons.js    6.24 kB    7, 8  [emitted]  commons
-    c-commons.js    5.99 kB       8  [emitted]  c-commons
+        pageC.js  816 bytes       0  [emitted]  pageC
+        pageB.js  575 bytes       1  [emitted]  pageB
+        pageA.js  575 bytes       2  [emitted]  pageA
+   adminPageC.js  554 bytes    3, 4  [emitted]  adminPageC
+admin-commons.js  237 bytes       4  [emitted]  admin-commons
+   adminPageB.js  341 bytes       5  [emitted]  adminPageB
+   adminPageA.js  341 bytes       6  [emitted]  adminPageA
+      commons.js     4.3 kB    7, 8  [emitted]  commons
+    c-commons.js    4.06 kB       8  [emitted]  c-commons
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 Entrypoint pageC = c-commons.js pageC.js
@@ -425,17 +376,17 @@ chunk    {8} c-commons.js (c-commons) 0 bytes [entry] [rendered]
 
 ```
 Hash: 3ef8f91b150be0e10937
-Version: webpack 3.5.1
-           Asset      Size  Chunks             Chunk Names
-        pageC.js  93 bytes       0  [emitted]  pageC
-        pageB.js  76 bytes       1  [emitted]  pageB
-        pageA.js  76 bytes       2  [emitted]  pageA
-   adminPageC.js  75 bytes    3, 4  [emitted]  adminPageC
-admin-commons.js  37 bytes       4  [emitted]  admin-commons
-   adminPageB.js  53 bytes       5  [emitted]  adminPageB
-   adminPageA.js  53 bytes       6  [emitted]  adminPageA
-      commons.js    1.4 kB    7, 8  [emitted]  commons
-    c-commons.js   1.38 kB       8  [emitted]  c-commons
+Version: webpack 3.11.0
+           Asset       Size  Chunks             Chunk Names
+        pageC.js   93 bytes       0  [emitted]  pageC
+        pageB.js   76 bytes       1  [emitted]  pageB
+        pageA.js   76 bytes       2  [emitted]  pageA
+   adminPageC.js   75 bytes    3, 4  [emitted]  adminPageC
+admin-commons.js   37 bytes       4  [emitted]  admin-commons
+   adminPageB.js   53 bytes       5  [emitted]  adminPageB
+   adminPageA.js   53 bytes       6  [emitted]  adminPageA
+      commons.js  839 bytes    7, 8  [emitted]  commons
+    c-commons.js  816 bytes       8  [emitted]  c-commons
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 Entrypoint pageC = c-commons.js pageC.js

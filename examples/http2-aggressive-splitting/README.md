@@ -45,23 +45,23 @@ module.exports = {
 
 ```
 Hash: 35256bb30300e8777ddd
-Version: webpack 3.5.1
+Version: webpack 3.11.0
                   Asset     Size  Chunks             Chunk Names
 04e95786881a7db62441.js  53.1 kB       7  [emitted]  
-af5b936f620d7c2cf46e.js  57.4 kB       0  [emitted]  
+af5b936f620d7c2cf46e.js  57.5 kB       0  [emitted]  
 d8035b04d59361a42a17.js  56.6 kB       2  [emitted]  
 92951e4964e84e709103.js  55.9 kB       3  [emitted]  
 d323f006c00a41b194cb.js  55.9 kB       4  [emitted]  
 567bf6b0afa4e4baa4fb.js  53.7 kB       5  [emitted]  
-435514b5a5822c639a06.js  53.7 kB       6  [emitted]  
-fbb0bfdcf201839059f9.js  38.9 kB       1  [emitted]  
+435514b5a5822c639a06.js  53.8 kB       6  [emitted]  
+fbb0bfdcf201839059f9.js    39 kB       1  [emitted]  
 ebe11885009391a25f13.js  37.9 kB       8  [emitted]  
 1aa11917196d1d3b05c1.js  52.1 kB       9  [emitted]  
 8556f2285fd844cf9fdd.js    51 kB      10  [emitted]  
 c6598918ddb96aa65fc4.js  50.7 kB      11  [emitted]  
-17613f7c75a33459b935.js  41.8 kB      12  [emitted]  
+17613f7c75a33459b935.js  41.9 kB      12  [emitted]  
 8cc7b4a18437614b45e4.js  59.6 kB      13  [emitted]  
-11202a345a2ce63a2fb7.js  31.3 kB      14  [emitted]  
+11202a345a2ce63a2fb7.js  31.4 kB      14  [emitted]  
 Entrypoint main = 8cc7b4a18437614b45e4.js 11202a345a2ce63a2fb7.js 17613f7c75a33459b935.js
 chunk    {0} af5b936f620d7c2cf46e.js 49.8 kB {12} {13} {14} [rendered] [recorded]
     > aggressive-splitted [14] ./example.js 2:0-22
@@ -115,7 +115,7 @@ chunk   {14} 11202a345a2ce63a2fb7.js 30.2 kB [initial] [rendered] [recorded]
 
 ```
 Hash: 35256bb30300e8777ddd
-Version: webpack 3.5.1
+Version: webpack 3.11.0
                   Asset     Size  Chunks             Chunk Names
 04e95786881a7db62441.js  10.3 kB       7  [emitted]  
 af5b936f620d7c2cf46e.js  12.3 kB       0  [emitted]  

@@ -129,7 +129,7 @@ module.exports = {
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
+/******/ 		script.type = "text/javascript";
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
@@ -207,11 +207,11 @@ module.exports = {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-Promise.all/* require */([__webpack_require__.e(4), __webpack_require__.e(0), __webpack_require__.e(1)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 3)]; (function(a, b, c) {}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+Promise.all/* require */([__webpack_require__.e(4), __webpack_require__.e(0), __webpack_require__.e(1)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 0), __webpack_require__(/*! ./b */ 1), __webpack_require__(/*! ./c */ 3)]; ((function(a, b, c) {}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 
 Promise.all/* require.ensure */([__webpack_require__.e(3), __webpack_require__.e(0), __webpack_require__.e(1)]).then((function(require) {
 	__webpack_require__(/*! ./b */ 1);
@@ -240,16 +240,16 @@ Promise.all/* require.ensure */([__webpack_require__.e(2), __webpack_require__.e
 
 ```
 Hash: 37a3748d37b36bc162d0
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset       Size  Chunks             Chunk Names
-0.output.js  221 bytes       0  [emitted]  async2
-1.output.js  212 bytes       1  [emitted]  async1
-2.output.js  215 bytes       2  [emitted]  
-3.output.js  215 bytes       3  [emitted]  
-4.output.js  215 bytes       4  [emitted]  
-5.output.js  215 bytes       5  [emitted]  
-6.output.js  215 bytes       6  [emitted]  
-  output.js    7.22 kB       7  [emitted]  main
+0.output.js  222 bytes       0  [emitted]  async2
+1.output.js  213 bytes       1  [emitted]  async1
+2.output.js  216 bytes       2  [emitted]  
+3.output.js  216 bytes       3  [emitted]  
+4.output.js  216 bytes       4  [emitted]  
+5.output.js  216 bytes       5  [emitted]  
+6.output.js  216 bytes       6  [emitted]  
+  output.js    7.23 kB       7  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (async2) 21 bytes {2} {7} [rendered]
     > async commons duplicate [2] ./example.js 1:0-52
@@ -299,7 +299,7 @@ chunk    {7} output.js (main) 362 bytes [entry] [rendered]
 
 ```
 Hash: 37a3748d37b36bc162d0
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  50 bytes       0  [emitted]  async2
 1.output.js  49 bytes       1  [emitted]  async1

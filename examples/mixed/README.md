@@ -139,7 +139,7 @@ require(
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
+/******/ 		script.type = "text/javascript";
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
@@ -216,7 +216,7 @@ require(
 /*!*********************!*\
   !*** ./commonjs.js ***!
   \*********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -224,28 +224,28 @@ require(
 module.exports = 123;
 
 // but you can use amd style requires
-new Promise(function(resolve) { resolve(); }).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./amd */ 1), __webpack_require__(/*! ./harmony */ 2)]; (function(amd1, harmony) {
+new Promise(function(resolve) { resolve(); }).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./amd */ 1), __webpack_require__(/*! ./harmony */ 2)]; ((function(amd1, harmony) {
 		var amd2 = __webpack_require__(/*! ./amd */ 1);
 		var harmony2 = __webpack_require__(/*! ./harmony */ 2);
-	}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 
 /***/ }),
 /* 1 */
 /*!****************!*\
   !*** ./amd.js ***!
   \****************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Format
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./commonjs */ 0), __webpack_require__(/*! ./harmony */ 2)], __WEBPACK_AMD_DEFINE_RESULT__ = function(commonjs1, harmony1) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./commonjs */ 0), __webpack_require__(/*! ./harmony */ 2)], __WEBPACK_AMD_DEFINE_RESULT__ = (function(commonjs1, harmony1) {
 		// but you can use CommonJs-style requires:
 		var commonjs2 = __webpack_require__(/*! ./commonjs */ 0);
 		var harmony2 = __webpack_require__(/*! ./harmony */ 2);
 		// Do something...
 		return 456;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+	}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
@@ -275,7 +275,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -288,9 +288,9 @@ var harmony1 = __webpack_require__(/*! ./harmony */ 2);
 __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [
 	__webpack_require__(/*! ./commonjs */ 0), __webpack_require__(/*! ./amd */ 1),
 	__webpack_require__(/*! ../require.context/templates */ 4)("./"+amd1+".js"),
-	Math.random() < 0.5 ? __webpack_require__(/*! ./commonjs */ 0) : __webpack_require__(/*! ./amd */ 1)]; (function(commonjs2, amd2, template, randModule) {
+	Math.random() < 0.5 ? __webpack_require__(/*! ./commonjs */ 0) : __webpack_require__(/*! ./amd */ 1)]; ((function(commonjs2, amd2, template, randModule) {
 		// Do something with it...
-	}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 
 
 /***/ })
@@ -309,7 +309,7 @@ webpackJsonp([0],[
 /*!*************************************************!*\
   !*** ../require.context/templates ^\.\/.*\.js$ ***!
   \*************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -339,7 +339,7 @@ webpackContext.id = 4;
 /*!*****************************************!*\
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -352,7 +352,7 @@ module.exports = function() {
 /*!*****************************************!*\
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -365,7 +365,7 @@ module.exports = function() {
 /*!*****************************************!*\
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -383,10 +383,10 @@ module.exports = function() {
 
 ```
 Hash: ec4ce5e31af3a13d93fa
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset     Size  Chunks             Chunk Names
 0.output.js  1.86 kB       0  [emitted]  
-  output.js  9.08 kB       1  [emitted]  main
+  output.js  9.09 kB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 439 bytes {1} [rendered]
     > [3] ./example.js 7:0-14:1
@@ -428,7 +428,7 @@ chunk    {1} output.js (main) 1.05 kB [entry] [rendered]
 
 ```
 Hash: ec4ce5e31af3a13d93fa
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  523 bytes       0  [emitted]  
   output.js    1.89 kB       1  [emitted]  main

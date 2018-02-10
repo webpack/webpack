@@ -101,7 +101,7 @@ onmessage = function(event) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -118,7 +118,7 @@ worker.onmessage = function(event) {
 /*!********************************************************!*\
   !*** (webpack)/node_modules/worker-loader!./worker.js ***!
   \********************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -228,15 +228,15 @@ module.exports = function() {
 /*!*******************!*\
   !*** ./worker.js ***!
   \*******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 onmessage = function(event) {
 	var template = event.data;
-	__webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ../require.context/templates */ 1)("./" + event.data)]; (function(tmpl) {
+	__webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ../require.context/templates */ 1)("./" + event.data)]; ((function(tmpl) {
 		postMessage(tmpl());
-	}.apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
 }
 
 
@@ -253,7 +253,7 @@ webpackChunk([0],[
 /*!*********************************************!*\
   !*** ../require.context/templates ^\.\/.*$ ***!
   \*********************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -286,7 +286,7 @@ webpackContext.id = 1;
 /*!*****************************************!*\
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -299,7 +299,7 @@ module.exports = function() {
 /*!*****************************************!*\
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -312,7 +312,7 @@ module.exports = function() {
 /*!*****************************************!*\
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -330,11 +330,11 @@ module.exports = function() {
 
 ```
 Hash: de5e6c34dad6f90c6640
-Version: webpack 3.5.1
+Version: webpack 3.11.0
            Asset     Size  Chunks             Chunk Names
-0.hash.worker.js  1.85 kB          [emitted]  
+0.hash.worker.js  1.86 kB          [emitted]  
   hash.worker.js  3.91 kB          [emitted]  
-       output.js  3.27 kB       0  [emitted]  main
+       output.js  3.28 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 311 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -343,7 +343,7 @@ chunk    {0} output.js (main) 311 bytes [entry] [rendered]
         cjs require worker-loader!./worker [0] ./example.js 1:13-46
 Child worker:
                Asset     Size  Chunks             Chunk Names
-    0.hash.worker.js  1.85 kB       0  [emitted]  
+    0.hash.worker.js  1.86 kB       0  [emitted]  
       hash.worker.js  3.91 kB       1  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} 0.hash.worker.js 463 bytes {1} [rendered]
@@ -368,7 +368,7 @@ Child worker:
 
 ```
 Hash: de5e6c34dad6f90c6640
-Version: webpack 3.5.1
+Version: webpack 3.11.0
            Asset       Size  Chunks             Chunk Names
 0.hash.worker.js  544 bytes          [emitted]  
   hash.worker.js  811 bytes          [emitted]  

@@ -125,7 +125,7 @@ console.log(new square(7));
 /*!************************!*\
   !*** ./example-app.js ***!
   \************************/
-/*! exports provided:  */
+/*! no exports provided */
 /*! all exports used */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -154,7 +154,7 @@ module.exports = (__webpack_require__(2))(1);
 /*!**************************************************!*\
   !*** external "vendor_lib_6b1edee0549eb5092709" ***!
   \**************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -169,8 +169,8 @@ module.exports = vendor_lib_6b1edee0549eb5092709;
 ## Uncompressed
 
 ```
-Hash: 26778169dabaf1f3965d
-Version: webpack 3.5.1
+Hash: 7067963043e156e8b20c
+Version: webpack 3.11.0
  Asset     Size  Chunks             Chunk Names
 app.js  3.85 kB       0  [emitted]  main
 Entrypoint main = app.js
@@ -187,8 +187,8 @@ chunk    {0} app.js (main) 182 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 26778169dabaf1f3965d
-Version: webpack 3.5.1
+Hash: 7067963043e156e8b20c
+Version: webpack 3.11.0
  Asset       Size  Chunks             Chunk Names
 app.js  710 bytes       0  [emitted]  main
 Entrypoint main = app.js

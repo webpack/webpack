@@ -144,7 +144,7 @@ export var named = "named";
 /*!***************!*\
   !*** ./fs.js ***!
   \***************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! exports used: default, readFile */
 /***/ (function(module, exports) {
 
@@ -162,7 +162,7 @@ exports.readFile = function() {};
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports provided:  */
+/*! no exports provided */
 /*! all exports used */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -196,7 +196,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__reexport_commonjs__["readFile"])("file");
 /*!******************************!*\
   !*** ./reexport-commonjs.js ***!
   \******************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! exports used: readFile */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -218,7 +218,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1__reexport_commonjs__["readFile"])("file");
 /*!*********************!*\
   !*** ./example2.js ***!
   \*********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CommonJs module
@@ -257,7 +257,7 @@ var named = "named";
 
 ```
 Hash: 756e5e3b676506d280a4
-Version: webpack 3.5.1
+Version: webpack 3.11.0
     Asset     Size  Chunks             Chunk Names
 output.js  6.13 kB       0  [emitted]  main
 Entrypoint main = output.js
@@ -286,7 +286,7 @@ chunk    {0} output.js (main) 1.2 kB [entry] [rendered]
 
 ```
 Hash: 756e5e3b676506d280a4
-Version: webpack 3.5.1
+Version: webpack 3.11.0
     Asset     Size  Chunks             Chunk Names
 output.js  1.03 kB       0  [emitted]  main
 Entrypoint main = output.js

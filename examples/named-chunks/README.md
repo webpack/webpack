@@ -109,7 +109,7 @@ require.ensure(["b"], function(require) {
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
+/******/ 		script.type = "text/javascript";
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
@@ -188,7 +188,7 @@ require.ensure(["b"], function(require) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -219,7 +219,7 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
 /*!***************************!*\
   !*** ./node_modules/a.js ***!
   \***************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -237,7 +237,7 @@ webpackJsonp([0,1],[
 /*!***************************!*\
   !*** ./node_modules/b.js ***!
   \***************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -248,7 +248,7 @@ webpackJsonp([0,1],[
 /*!***************************!*\
   !*** ./node_modules/d.js ***!
   \***************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -261,7 +261,7 @@ webpackJsonp([0,1],[
 /*!***************************!*\
   !*** ./node_modules/c.js ***!
   \***************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -279,7 +279,7 @@ webpackJsonp([1],[
 /*!***************************!*\
   !*** ./node_modules/b.js ***!
   \***************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -290,7 +290,7 @@ webpackJsonp([1],[
 /*!***************************!*\
   !*** ./node_modules/d.js ***!
   \***************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -306,11 +306,11 @@ webpackJsonp([1],[
 
 ```
 Hash: 1e92144469a06ecc61e5
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset       Size  Chunks             Chunk Names
-0.output.js  701 bytes    0, 1  [emitted]  my own chunk
-1.output.js  461 bytes       1  [emitted]  
-  output.js    7.04 kB       2  [emitted]  main
+0.output.js  704 bytes    0, 1  [emitted]  my own chunk
+1.output.js  463 bytes       1  [emitted]  
+  output.js    7.05 kB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
     > my own chunk [2] ./example.js 3:0-6:18
@@ -330,7 +330,7 @@ chunk    {2} output.js (main) 452 bytes [entry] [rendered]
 
 ```
 Hash: 1e92144469a06ecc61e5
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  72 bytes    0, 1  [emitted]  my own chunk
 1.output.js  52 bytes       1  [emitted]  

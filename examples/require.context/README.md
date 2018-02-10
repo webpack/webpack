@@ -102,7 +102,7 @@ module.exports = function() {
 /*!************************!*\
   !*** ./templates/a.js ***!
   \************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -115,7 +115,7 @@ module.exports = function() {
 /*!************************!*\
   !*** ./templates/b.js ***!
   \************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -128,7 +128,7 @@ module.exports = function() {
 /*!************************!*\
   !*** ./templates/c.js ***!
   \************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -141,7 +141,7 @@ module.exports = function() {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -156,7 +156,7 @@ console.log(getTemplate("b"));
 /*!****************************!*\
   !*** ./templates ^\.\/.*$ ***!
   \****************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -194,9 +194,9 @@ webpackContext.id = 4;
 
 ```
 Hash: acf02a400c4d02cc105a
-Version: webpack 3.5.1
+Version: webpack 3.11.0
     Asset     Size  Chunks             Chunk Names
-output.js  4.42 kB       0  [emitted]  main
+output.js  4.43 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 613 bytes [entry] [rendered]
     > main [3] ./example.js 
@@ -218,7 +218,7 @@ chunk    {0} output.js (main) 613 bytes [entry] [rendered]
 
 ```
 Hash: acf02a400c4d02cc105a
-Version: webpack 3.5.1
+Version: webpack 3.11.0
     Asset     Size  Chunks             Chunk Names
 output.js  1.08 kB       0  [emitted]  main
 Entrypoint main = output.js

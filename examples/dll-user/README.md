@@ -117,7 +117,7 @@ console.log(require("module"));
 /*!*********************************************!*\
   !*** external "alpha_457b6718a3ff9f8c2d77" ***!
   \*********************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -128,7 +128,7 @@ module.exports = alpha_457b6718a3ff9f8c2d77;
 /*!********************************************!*\
   !*** external "beta_457b6718a3ff9f8c2d77" ***!
   \********************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -139,7 +139,7 @@ module.exports = beta_457b6718a3ff9f8c2d77;
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -158,7 +158,7 @@ console.log(__webpack_require__(/*! module */ 8));
 /*!**************************************************************************!*\
   !*** delegated ./alpha.js from dll-reference alpha_457b6718a3ff9f8c2d77 ***!
   \**************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -169,7 +169,7 @@ module.exports = (__webpack_require__(0))(1);
 /*!**********************************************************************!*\
   !*** delegated ./a.js from dll-reference alpha_457b6718a3ff9f8c2d77 ***!
   \**********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -180,7 +180,7 @@ module.exports = (__webpack_require__(0))(2);
 /*!************************************************************************!*\
   !*** delegated ./beta.js from dll-reference beta_457b6718a3ff9f8c2d77 ***!
   \************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -191,7 +191,7 @@ module.exports = (__webpack_require__(1))(5);
 /*!*********************************************************************!*\
   !*** delegated ./b.js from dll-reference beta_457b6718a3ff9f8c2d77 ***!
   \*********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -202,7 +202,7 @@ module.exports = (__webpack_require__(1))(6);
 /*!**********************************************************************!*\
   !*** delegated ./c.jsx from dll-reference beta_457b6718a3ff9f8c2d77 ***!
   \**********************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -213,7 +213,7 @@ module.exports = (__webpack_require__(1))(7);
 /*!*****************************************************************************************!*\
   !*** delegated ../node_modules/module.js from dll-reference alpha_457b6718a3ff9f8c2d77 ***!
   \*****************************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -228,10 +228,10 @@ module.exports = (__webpack_require__(0))(3);
 ## Uncompressed
 
 ```
-Hash: 60ca229a9df08630fded
-Version: webpack 3.5.1
+Hash: 9465b8f83bfdde21e34b
+Version: webpack 3.11.0
     Asset     Size  Chunks             Chunk Names
-output.js  6.06 kB       0  [emitted]  main
+output.js  6.07 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 549 bytes [entry] [rendered]
     > main [2] ./example.js 
@@ -254,8 +254,8 @@ chunk    {0} output.js (main) 549 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 60ca229a9df08630fded
-Version: webpack 3.5.1
+Hash: 9465b8f83bfdde21e34b
+Version: webpack 3.11.0
     Asset       Size  Chunks             Chunk Names
 output.js  904 bytes       0  [emitted]  main
 Entrypoint main = output.js

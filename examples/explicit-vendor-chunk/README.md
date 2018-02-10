@@ -123,7 +123,7 @@ var vendor_3e23dee019354f6a37c0 =
 /*!****************!*\
   !*** dll main ***!
   \****************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -134,7 +134,7 @@ module.exports = __webpack_require__;
 /*!*******************!*\
   !*** ./vendor.js ***!
   \*******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -145,7 +145,7 @@ module.exports = "Vendor";
 /*!********************!*\
   !*** ./vendor2.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -228,7 +228,7 @@ module.exports = "Vendor2";
 /*!**********************************************!*\
   !*** external "vendor_3e23dee019354f6a37c0" ***!
   \**********************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -239,7 +239,7 @@ module.exports = vendor_3e23dee019354f6a37c0;
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -251,7 +251,7 @@ module.exports = "pageA";
 /*!****************************************************************************!*\
   !*** delegated ./vendor.js from dll-reference vendor_3e23dee019354f6a37c0 ***!
   \****************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -266,12 +266,12 @@ module.exports = (__webpack_require__(0))(1);
 ## Uncompressed
 
 ```
-Hash: 3e23dee019354f6a37c0873a025592bd40b1b4d6
-Version: webpack 3.5.1
+Hash: 3e23dee019354f6a37c024ad466aeda02c32e5a7
+Version: webpack 3.11.0
 Child vendor:
     Hash: 3e23dee019354f6a37c0
         Asset     Size  Chunks             Chunk Names
-    vendor.js  3.11 kB       0  [emitted]  main
+    vendor.js  3.12 kB       0  [emitted]  main
     Entrypoint main = vendor.js
     chunk    {0} vendor.js (main) 65 bytes [entry] [rendered]
         > main [0] dll main 
@@ -281,7 +281,7 @@ Child vendor:
         [2] ./vendor2.js 27 bytes {0} [built]
             single entry ./vendor2 [0] dll main main:1
 Child app:
-    Hash: 873a025592bd40b1b4d6
+    Hash: 24ad466aeda02c32e5a7
        Asset     Size  Chunks             Chunk Names
     pageB.js  3.46 kB       0  [emitted]  pageB
     pageA.js  3.44 kB       1  [emitted]  pageA
@@ -309,8 +309,8 @@ Child app:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 3e23dee019354f6a37c0873a025592bd40b1b4d6
-Version: webpack 3.5.1
+Hash: 3e23dee019354f6a37c024ad466aeda02c32e5a7
+Version: webpack 3.11.0
 Child vendor:
     Hash: 3e23dee019354f6a37c0
         Asset       Size  Chunks             Chunk Names
@@ -324,7 +324,7 @@ Child vendor:
         [2] ./vendor2.js 27 bytes {0} [built]
             single entry ./vendor2 [0] dll main main:1
 Child app:
-    Hash: 873a025592bd40b1b4d6
+    Hash: 24ad466aeda02c32e5a7
        Asset       Size  Chunks             Chunk Names
     pageB.js  609 bytes       0  [emitted]  pageB
     pageA.js  607 bytes       1  [emitted]  pageA

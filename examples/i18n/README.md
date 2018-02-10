@@ -126,7 +126,7 @@ module.exports = Object.keys(languages).map(function(language) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -210,7 +210,7 @@ console.log("Missing Text");
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -226,8 +226,8 @@ console.log("Missing Text");
 ## Uncompressed
 
 ```
-Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 3.5.1
+Hash: b61d16621736c97f557ecfc55ada03fb1fa10004
+Version: webpack 3.11.0
 Child en:
     Hash: b61d16621736c97f557e
            Asset     Size  Chunks             Chunk Names
@@ -237,7 +237,7 @@ Child en:
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built]
 Child de:
-    Hash: 52b4d8e68140f1345ef8
+    Hash: cfc55ada03fb1fa10004
            Asset     Size  Chunks             Chunk Names
     de.output.js  2.69 kB       0  [emitted]  main
     Entrypoint main = de.output.js
@@ -252,8 +252,8 @@ Child de:
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b61d16621736c97f557e52b4d8e68140f1345ef8
-Version: webpack 3.5.1
+Hash: b61d16621736c97f557ecfc55ada03fb1fa10004
+Version: webpack 3.11.0
 Child en:
     Hash: b61d16621736c97f557e
            Asset       Size  Chunks             Chunk Names
@@ -263,7 +263,7 @@ Child en:
         > main [0] ./example.js 
         [0] ./example.js 65 bytes {0} [built]
 Child de:
-    Hash: 52b4d8e68140f1345ef8
+    Hash: cfc55ada03fb1fa10004
            Asset       Size  Chunks             Chunk Names
     de.output.js  537 bytes       0  [emitted]  main
     Entrypoint main = de.output.js

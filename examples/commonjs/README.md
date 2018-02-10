@@ -115,7 +115,7 @@ exports.add = function() {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -128,7 +128,7 @@ inc(a); // 2
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -142,7 +142,7 @@ exports.increment = function(val) {
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -164,7 +164,7 @@ exports.add = function() {
 
 ```
 Hash: 9407d8cd068b1845b368
-Version: webpack 3.5.1
+Version: webpack 3.11.0
     Asset     Size  Chunks             Chunk Names
 output.js  3.39 kB       0  [emitted]  main
 Entrypoint main = output.js
@@ -181,7 +181,7 @@ chunk    {0} output.js (main) 329 bytes [entry] [rendered]
 
 ```
 Hash: 9407d8cd068b1845b368
-Version: webpack 3.5.1
+Version: webpack 3.11.0
     Asset       Size  Chunks             Chunk Names
 output.js  672 bytes       0  [emitted]  main
 Entrypoint main = output.js

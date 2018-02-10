@@ -115,7 +115,7 @@ var alpha_457b6718a3ff9f8c2d77 =
 /*!*****************!*\
   !*** dll alpha ***!
   \*****************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -126,7 +126,7 @@ module.exports = __webpack_require__;
 /*!******************!*\
   !*** ./alpha.js ***!
   \******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -137,7 +137,7 @@ module.exports = "alpha";
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -148,7 +148,7 @@ module.exports = "a";
 /*!*********************************!*\
   !*** ../node_modules/module.js ***!
   \*********************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -170,10 +170,10 @@ module.exports = "module";
 
 ```
 Hash: 457b6718a3ff9f8c2d77
-Version: webpack 3.5.1
+Version: webpack 3.11.0
          Asset     Size  Chunks             Chunk Names
- MyDll.beta.js  3.31 kB       0  [emitted]  beta
-MyDll.alpha.js  3.34 kB       1  [emitted]  alpha
+ MyDll.beta.js  3.32 kB       0  [emitted]  beta
+MyDll.alpha.js  3.35 kB       1  [emitted]  alpha
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
 chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
@@ -199,7 +199,7 @@ chunk    {1} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
 
 ```
 Hash: 457b6718a3ff9f8c2d77
-Version: webpack 3.5.1
+Version: webpack 3.11.0
          Asset       Size  Chunks             Chunk Names
  MyDll.beta.js  627 bytes       0  [emitted]  beta
 MyDll.alpha.js  628 bytes       1  [emitted]  alpha

@@ -117,7 +117,7 @@ export default foo;
 /******/ 		// start chunk loading
 /******/ 		var head = document.getElementsByTagName('head')[0];
 /******/ 		var script = document.createElement('script');
-/******/ 		script.type = 'text/javascript';
+/******/ 		script.type = "text/javascript";
 /******/ 		script.charset = 'utf-8';
 /******/ 		script.async = true;
 /******/ 		script.timeout = 120000;
@@ -197,7 +197,7 @@ export default foo;
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -223,7 +223,7 @@ getTemplate("baz");
 /*!*********************************!*\
   !*** ./templates lazy ^\.\/.*$ ***!
   \*********************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -277,7 +277,7 @@ module.exports = webpackAsyncContext;
 
 ```
 Hash: 6f07710827408f86ab81
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  444 bytes       0  [emitted]  
 1.output.js  450 bytes       1  [emitted]  
@@ -310,7 +310,7 @@ chunk    {3} output.js (main) 456 bytes [entry] [rendered]
 
 ```
 Hash: 6f07710827408f86ab81
-Version: webpack 3.5.1
+Version: webpack 3.11.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  117 bytes       0  [emitted]  
 1.output.js  116 bytes       1  [emitted]  

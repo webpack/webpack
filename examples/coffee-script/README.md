@@ -103,7 +103,7 @@ module.exports = 42
 /*!*********************!*\
   !*** ./cup2.coffee ***!
   \*********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -117,7 +117,7 @@ module.exports = 42;
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -128,7 +128,7 @@ console.log(__webpack_require__(/*! ./cup1 */ 2));
 /*!*********************!*\
   !*** ./cup1.coffee ***!
   \*********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -150,9 +150,9 @@ module.exports = {
 
 ```
 Hash: 22e68923dcce75e38966
-Version: webpack 3.5.1
-    Asset     Size  Chunks             Chunk Names
-output.js  3.29 kB       0  [emitted]  main
+Version: webpack 3.11.0
+    Asset    Size  Chunks             Chunk Names
+output.js  3.3 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 206 bytes [entry] [rendered]
     > main [1] ./example.js 
@@ -168,7 +168,7 @@ chunk    {0} output.js (main) 206 bytes [entry] [rendered]
 
 ```
 Hash: 22e68923dcce75e38966
-Version: webpack 3.5.1
+Version: webpack 3.11.0
     Asset       Size  Chunks             Chunk Names
 output.js  640 bytes       0  [emitted]  main
 Entrypoint main = output.js

@@ -42,7 +42,7 @@ module.exports = {
 		exports["alpha"] = factory();
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["alpha"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 ```
 <details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -122,7 +122,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!******************!*\
   !*** ./alpha.js ***!
   \******************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -145,7 +145,7 @@ module.exports = "alpha";
 		exports["beta"] = factory();
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["beta"] = factory();
-})(this, function() {
+})(typeof self !== 'undefined' ? self : this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -217,7 +217,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!*****************!*\
   !*** ./beta.js ***!
   \*****************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -234,10 +234,10 @@ module.exports = "beta";
 
 ```
 Hash: e5033b72cf0ec9da1ad7
-Version: webpack 3.5.1
+Version: webpack 3.11.0
              Asset     Size  Chunks             Chunk Names
- MyLibrary.beta.js  3.06 kB       0  [emitted]  beta
-MyLibrary.alpha.js  3.05 kB       1  [emitted]  alpha
+ MyLibrary.beta.js  3.09 kB       0  [emitted]  beta
+MyLibrary.alpha.js  3.09 kB       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
@@ -252,10 +252,10 @@ chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
 
 ```
 Hash: e5033b72cf0ec9da1ad7
-Version: webpack 3.5.1
+Version: webpack 3.11.0
              Asset       Size  Chunks             Chunk Names
- MyLibrary.beta.js  759 bytes       0  [emitted]  beta
-MyLibrary.alpha.js  761 bytes       1  [emitted]  alpha
+ MyLibrary.beta.js  789 bytes       0  [emitted]  beta
+MyLibrary.alpha.js  791 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]

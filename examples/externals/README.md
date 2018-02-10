@@ -57,7 +57,7 @@ module.exports = {
 		var a = typeof exports === 'object' ? factory(require("add"), require("./math")["subtract"]) : factory(root["add"], root["subtract"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__) {
+})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__) {
 ```
 <details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -137,7 +137,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -151,7 +151,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 /*!**********************!*\
   !*** external "add" ***!
   \**********************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -162,7 +162,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
 /*!***************************************************************************************************************!*\
   !*** external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} ***!
   \***************************************************************************************************************/
-/*! no static exports found */
+/*! dynamic exports provided */
 /*! all exports used */
 /***/ (function(module, exports) {
 
@@ -178,10 +178,10 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
 ## Uncompressed
 
 ```
-Hash: b21d422ed5d9ade3ed36
-Version: webpack 3.5.1
+Hash: 32fda911d1e8acb2b888
+Version: webpack 3.11.0
     Asset     Size  Chunks             Chunk Names
-output.js  4.13 kB       0  [emitted]  main
+output.js  4.17 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > main [0] ./example.js 
@@ -192,10 +192,10 @@ chunk    {0} output.js (main) 197 bytes [entry] [rendered]
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: b21d422ed5d9ade3ed36
-Version: webpack 3.5.1
-    Asset       Size  Chunks             Chunk Names
-output.js  978 bytes       0  [emitted]  main
+Hash: 32fda911d1e8acb2b888
+Version: webpack 3.11.0
+    Asset     Size  Chunks             Chunk Names
+output.js  1.01 kB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > main [0] ./example.js 
