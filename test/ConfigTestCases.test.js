@@ -15,8 +15,9 @@ const prepareOptions = require("../lib/prepareOptions");
 describe("ConfigTestCases", () => {
 	const casesPath = path.join(__dirname, "configCases");
 	let categories = fs.readdirSync(casesPath);
-
-	categories = categories.map((cat) => {
+	categories = categories.filter((dirname) => {
+		return !dirname.includes("node_modules");
+	}).map((cat) => {
 		return {
 			name: cat,
 			tests: fs.readdirSync(path.join(casesPath, cat)).filter((folder) => {
