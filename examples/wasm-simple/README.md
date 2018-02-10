@@ -316,11 +316,11 @@ function timed(name, fn) {
 
 "use strict";
 
-// Instanciate WebAssembly module
+// Instantiate WebAssembly module
 var instance = new WebAssembly.Instance(__webpack_require__.w[module.i], {
 });
 
-// export exports from WebAssmbly module
+// export exports from WebAssembly module
 module.exports = instance.exports;
 
 /***/ }),
@@ -371,11 +371,11 @@ function fibonacciJavascript(i) {
 
 "use strict";
 
-// Instanciate WebAssembly module
+// Instantiate WebAssembly module
 var instance = new WebAssembly.Instance(__webpack_require__.w[module.i], {
 });
 
-// export exports from WebAssmbly module
+// export exports from WebAssembly module
 module.exports = instance.exports;
 
 /***/ }),
@@ -388,11 +388,11 @@ module.exports = instance.exports;
 
 "use strict";
 
-// Instanciate WebAssembly module
+// Instantiate WebAssembly module
 var instance = new WebAssembly.Instance(__webpack_require__.w[module.i], {
 });
 
-// export exports from WebAssmbly module
+// export exports from WebAssembly module
 module.exports = instance.exports;
 
 /***/ })
@@ -413,11 +413,11 @@ module.exports = instance.exports;
 
 "use strict";
 
-// Instanciate WebAssembly module
+// Instantiate WebAssembly module
 var instance = new WebAssembly.Instance(__webpack_require__.w[module.i], {
 });
 
-// export exports from WebAssmbly module
+// export exports from WebAssembly module
 module.exports = instance.exports;
 
 /***/ })
@@ -436,7 +436,7 @@ Version: webpack next
 9c8c5b45b5c12888e105.wasm   41 bytes    0, 1  [emitted]  
 62df68d96f4aa17e7b77.wasm   67 bytes       0  [emitted]  
 e5003c8310987c008228.wasm   62 bytes       0  [emitted]  
-              1.output.js  461 bytes       1  [emitted]  
+              1.output.js  462 bytes       1  [emitted]  
                 output.js   8.91 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js, 9c8c5b45b5c12888e105.wasm, 62df68d96f4aa17e7b77.wasm, e5003c8310987c008228.wasm 585 bytes <{2}> [rendered]
