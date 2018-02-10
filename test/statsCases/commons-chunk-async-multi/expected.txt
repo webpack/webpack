@@ -1,0 +1,29 @@
+Hash: fe17b5d7f9afa85765de
+Time: Xms
+                   Asset       Size  Chunks             Chunk Names
+        chunk.commons.js  104 bytes       0  [emitted]  commons
+chunk.entry-2-a-async.js  239 bytes       1  [emitted]  entry-2-a-async
+chunk.entry-2-b-async.js  103 bytes       2  [emitted]  entry-2-b-async
+               main-2.js    6.44 kB       3  [emitted]  main-2
+               main-1.js    6.44 kB       4  [emitted]  main-1
+chunk    {0} chunk.commons.js (commons) 27 bytes {3} {4} [rendered]
+    [0] ./commons.js 27 bytes {0} [built]
+chunk    {1} chunk.entry-2-a-async.js (entry-2-a-async) 74 bytes {3} {4} [rendered]
+    [1] ./a.js 23 bytes {1} [built]
+    [2] ./vendor.js 51 bytes {1} [built]
+chunk    {2} chunk.entry-2-b-async.js (entry-2-b-async) 23 bytes {3} {4} [rendered]
+    [3] ./b.js 23 bytes {2} [built]
+chunk    {3} main-2.js (main-2) 246 bytes [entry] [rendered]
+    [6] multi ./entry-2 28 bytes {3} [built]
+    [7] ./entry-2.js 218 bytes {3} [built]
+chunk    {4} main-1.js (main-1) 246 bytes [entry] [rendered]
+    [4] multi ./entry-1 28 bytes {4} [built]
+    [5] ./entry-1.js 218 bytes {4} [built]
+   [0] ./commons.js 27 bytes {0} [built]
+   [1] ./a.js 23 bytes {1} [built]
+   [2] ./vendor.js 51 bytes {1} [built]
+   [3] ./b.js 23 bytes {2} [built]
+   [4] multi ./entry-1 28 bytes {4} [built]
+   [5] ./entry-1.js 218 bytes {4} [built]
+   [6] multi ./entry-2 28 bytes {3} [built]
+   [7] ./entry-2.js 218 bytes {3} [built]
