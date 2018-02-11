@@ -3,7 +3,7 @@
 require("should");
 const path = require("path");
 const fs = require("fs");
-const asyncLib = require("async");
+const asyncLib = require("neo-async");
 var Test = require("mocha/lib/test");
 
 const Benchmark = require("benchmark");
