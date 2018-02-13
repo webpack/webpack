@@ -1,0 +1,13 @@
+{
+  "id": "ProfilingPlugin",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "outPath": {
+      "description": "Path to the output file e.g. `profiling/events.json`. Defaults to `events.json`.",
+      "type": "string",
+      "absolutePath": true,
+      "minLength": 4
+    }
+  }
+}
