@@ -1295,7 +1295,7 @@
           "description": "Remove chunks which are empty",
           "type": "boolean"
         },
-        "mergedDuplicateChunks": {
+        "mergeDuplicateChunks": {
           "description": "Merge chunks which contain the same modules",
           "type": "boolean"
         },
