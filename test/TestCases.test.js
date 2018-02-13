@@ -15,7 +15,7 @@ const webpack = require("../lib/webpack");
 const DEFAULT_OPTIMIZATIONS = {
 	removeAvailableModules: true,
 	removeEmptyChunks: true,
-	mergedDuplicateChunks: true,
+	mergeDuplicateChunks: true,
 	flagIncludedChunks: true,
 	occurrenceOrder: true,
 	sideEffects: true,
