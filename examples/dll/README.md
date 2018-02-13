@@ -177,7 +177,7 @@ module.exports = "module";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.1
          Asset      Size  Chunks             Chunk Names
 MyDll.alpha.js  3.46 KiB       0  [emitted]  alpha
  MyDll.beta.js  3.43 KiB       1  [emitted]  beta
@@ -215,7 +215,7 @@ chunk    {1} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.1
          Asset       Size  Chunks             Chunk Names
  MyDll.beta.js  691 bytes       0  [emitted]  beta
 MyDll.alpha.js  700 bytes       1  [emitted]  alpha

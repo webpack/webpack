@@ -287,16 +287,16 @@ __webpack_require__.e(/*! import() */ 2).then(function() { var module = __webpac
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.1
                     Asset       Size  Chunks             Chunk Names
-        main.[chunkhash].js  768 bytes       0  [emitted]  main
+        main.[chunkhash].js  765 bytes       0  [emitted]  main
            1.[chunkhash].js  270 bytes       1  [emitted]  
            2.[chunkhash].js  264 bytes       2  [emitted]  
 runtime~main.[chunkhash].js   7.49 KiB       3  [emitted]  runtime~main
 Entrypoint main = runtime~main.[chunkhash].js main.[chunkhash].js
-chunk    {0} main.[chunkhash].js (main) 58 bytes ={3}= >{1}< >{2}< [initial] [rendered]
+chunk    {0} main.[chunkhash].js (main) 55 bytes ={3}= >{1}< >{2}< [initial] [rendered]
     > ./example main
-    [0] ./example.js 58 bytes {0} [built]
+    [0] ./example.js 55 bytes {0} [built]
         single entry ./example  main
 chunk    {1} 1.[chunkhash].js 29 bytes <{3}> <{0}> [rendered]
     > ./async1 [0] ./example.js 2:0-18
@@ -314,7 +314,7 @@ chunk    {3} runtime~main.[chunkhash].js (runtime~main) 0 bytes ={0}= >{1}< >{2}
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.1
                     Asset       Size  Chunks             Chunk Names
            0.[chunkhash].js   77 bytes       0  [emitted]  
            1.[chunkhash].js   78 bytes       1  [emitted]  
@@ -331,8 +331,8 @@ chunk    {1} 1.[chunkhash].js 29 bytes <{2}> <{3}> [rendered]
         import() ./async1 [0] ./example.js 2:0-18
 chunk    {2} runtime~main.[chunkhash].js (runtime~main) 0 bytes ={3}= >{0}< >{1}< [entry] [rendered]
     > ./example main
-chunk    {3} main.[chunkhash].js (main) 58 bytes ={2}= >{0}< >{1}< [initial] [rendered]
+chunk    {3} main.[chunkhash].js (main) 55 bytes ={2}= >{0}< >{1}< [initial] [rendered]
     > ./example main
-    [0] ./example.js 58 bytes {3} [built]
+    [0] ./example.js 55 bytes {3} [built]
         single entry ./example  main
 ```

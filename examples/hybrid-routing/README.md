@@ -437,11 +437,11 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.1
                Asset       Size  Chunks             Chunk Names
       bPage.chunk.js  299 bytes       0  [emitted]  bPage
       aPage.chunk.js  293 bytes       1  [emitted]  aPage
-pageA~pageB.chunk.js   2.16 KiB       2  [emitted]  pageA~pageB
+pageA~pageB.chunk.js   2.14 KiB       2  [emitted]  pageA~pageB
      pageB.bundle.js    8.2 KiB       3  [emitted]  pageB
      pageA.bundle.js    8.2 KiB       4  [emitted]  pageA
 Entrypoint pageA = aPage.chunk.js pageA~pageB.chunk.js pageA.bundle.js
@@ -460,14 +460,14 @@ chunk    {1} aPage.chunk.js (aPage) 61 bytes <{0}> <{2}> <{3}> ={2}= ={4}= >{0}<
     [3] ./aPage.js 61 bytes {1} [built]
         context element ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
         cjs require ./aPage [7] ./aEntry.js 3:7-25
-chunk    {2} pageA~pageB.chunk.js (pageA~pageB) 970 bytes ={0}= ={3}= ={1}= ={4}= >{1}< >{0}< [initial] [rendered] split chunk (cache group: default) (name: pageA~pageB)
+chunk    {2} pageA~pageB.chunk.js (pageA~pageB) 952 bytes ={0}= ={3}= ={1}= ={4}= >{1}< >{0}< [initial] [rendered] split chunk (cache group: default) (name: pageA~pageB)
     > pageB
     > pageA
     [0] ./render.js 60 bytes {2} [built]
         cjs require ./render [2] ./router.js 1:13-32
         cjs require ./render [4] ./bEntry.js 2:13-32
         cjs require ./render [7] ./aEntry.js 2:13-32
-    [2] ./router.js 750 bytes {2} [built]
+    [2] ./router.js 732 bytes {2} [built]
         single entry ./router [5] multi ./bEntry ./router pageB:100001
         single entry ./router [8] multi ./aEntry ./router pageA:100001
     [6] . lazy ^\.\/.*Page$ namespace object 160 bytes {2} [built]
@@ -490,7 +490,7 @@ chunk    {4} pageA.bundle.js (pageA) 129 bytes ={1}= ={2}= >{0}< [entry] [render
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.1
                Asset       Size  Chunks             Chunk Names
       bPage.chunk.js  122 bytes       0  [emitted]  bPage
       aPage.chunk.js  123 bytes       1  [emitted]  aPage
@@ -513,14 +513,14 @@ chunk    {1} aPage.chunk.js (aPage) 61 bytes <{0}> <{2}> <{3}> ={2}= ={4}= >{0}<
     [3] ./aPage.js 61 bytes {1} [built]
         context element ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
         cjs require ./aPage [7] ./aEntry.js 3:7-25
-chunk    {2} pageA~pageB.chunk.js (pageA~pageB) 970 bytes ={0}= ={3}= ={1}= ={4}= >{1}< >{0}< [initial] [rendered] split chunk (cache group: default) (name: pageA~pageB)
+chunk    {2} pageA~pageB.chunk.js (pageA~pageB) 952 bytes ={0}= ={3}= ={1}= ={4}= >{1}< >{0}< [initial] [rendered] split chunk (cache group: default) (name: pageA~pageB)
     > pageB
     > pageA
     [0] ./render.js 60 bytes {2} [built]
         cjs require ./render [2] ./router.js 1:13-32
         cjs require ./render [4] ./bEntry.js 2:13-32
         cjs require ./render [7] ./aEntry.js 2:13-32
-    [2] ./router.js 750 bytes {2} [built]
+    [2] ./router.js 732 bytes {2} [built]
         single entry ./router [5] multi ./bEntry ./router pageB:100001
         single entry ./router [8] multi ./aEntry ./router pageA:100001
     [6] . lazy ^\.\/.*Page$ namespace object 160 bytes {2} [built]

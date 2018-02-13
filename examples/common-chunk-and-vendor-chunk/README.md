@@ -632,9 +632,9 @@ module.exports = "pageC";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.1
                        Asset       Size  Chunks             Chunk Names
-                    pageA.js    5.6 KiB       0  [emitted]  pageA
+                    pageA.js   5.59 KiB       0  [emitted]  pageA
                     pageB.js    5.4 KiB       1  [emitted]  pageB
                     pageC.js   5.34 KiB       2  [emitted]  pageC
 commons~pageA~pageB~pageC.js  269 bytes       3  [emitted]  commons~pageA~pageB~pageC
@@ -643,15 +643,15 @@ commons~pageA~pageB~pageC.js  269 bytes       3  [emitted]  commons~pageA~pageB~
 Entrypoint pageA = commons~pageA~pageB~pageC.js vendor.js pageA.js
 Entrypoint pageB = commons~pageA~pageB~pageC.js commons~pageB~pageC.js vendor.js pageB.js
 Entrypoint pageC = commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageC.js
-chunk    {0} pageA.js (pageA) 170 bytes ={3}= ={5}= [entry] [rendered]
+chunk    {0} pageA.js (pageA) 165 bytes ={3}= ={5}= [entry] [rendered]
     > ./pageA pageA
-    [0] ./pageA.js 142 bytes {0} [built]
+    [0] ./pageA.js 137 bytes {0} [built]
         single entry ./pageA  pageA
     [2] ./utility1.js 28 bytes {0} [built]
         cjs require ./utility1 [0] ./pageA.js 2:15-36
-chunk    {1} pageB.js (pageB) 142 bytes ={3}= ={4}= ={5}= [entry] [rendered]
+chunk    {1} pageB.js (pageB) 137 bytes ={3}= ={4}= ={5}= [entry] [rendered]
     > ./pageB pageB
-    [4] ./pageB.js 142 bytes {1} [built]
+    [4] ./pageB.js 137 bytes {1} [built]
         single entry ./pageB  pageB
 chunk    {2} pageC.js (pageC) 105 bytes ={3}= ={4}= [entry] [rendered]
     > ./pageC pageC
@@ -681,7 +681,7 @@ chunk    {5} vendor.js (vendor) 54 bytes ={3}= ={0}= ={4}= ={1}= [initial] [rend
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.1
                        Asset       Size  Chunks             Chunk Names
 commons~pageA~pageB~pageC.js   96 bytes       0  [emitted]  commons~pageA~pageB~pageC
                    vendor.js  134 bytes       1  [emitted]  vendor
@@ -714,14 +714,14 @@ chunk    {3} pageC.js (pageC) 105 bytes ={0}= ={2}= [entry] [rendered]
     > ./pageC pageC
     [2] ./pageC.js 105 bytes {3} [built]
         single entry ./pageC  pageC
-chunk    {4} pageB.js (pageB) 142 bytes ={0}= ={2}= ={1}= [entry] [rendered]
+chunk    {4} pageB.js (pageB) 137 bytes ={0}= ={2}= ={1}= [entry] [rendered]
     > ./pageB pageB
-    [4] ./pageB.js 142 bytes {4} [built]
+    [4] ./pageB.js 137 bytes {4} [built]
         single entry ./pageB  pageB
-chunk    {5} pageA.js (pageA) 170 bytes ={0}= ={1}= [entry] [rendered]
+chunk    {5} pageA.js (pageA) 165 bytes ={0}= ={1}= [entry] [rendered]
     > ./pageA pageA
     [5] ./utility1.js 28 bytes {5} [built]
         cjs require ./utility1 [7] ./pageA.js 2:15-36
-    [7] ./pageA.js 142 bytes {5} [built]
+    [7] ./pageA.js 137 bytes {5} [built]
         single entry ./pageA  pageA
 ```

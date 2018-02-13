@@ -174,7 +174,7 @@ module.exports = vendor_lib_9ee2f174307b7ef21301;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.1
  Asset     Size  Chunks             Chunk Names
 app.js  3.9 KiB       0  [emitted]  main
 Entrypoint main = app.js
@@ -196,7 +196,7 @@ chunk    {0} app.js (main) 182 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.1
  Asset       Size  Chunks             Chunk Names
 app.js  736 bytes       0  [emitted]  main
 Entrypoint main = app.js

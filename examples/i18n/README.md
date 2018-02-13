@@ -238,7 +238,7 @@ console.log("Missing Text");
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.1
 Child en:
     Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset     Size  Chunks             Chunk Names
@@ -266,7 +266,7 @@ Child de:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.1
 Child en:
     Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset       Size  Chunks             Chunk Names

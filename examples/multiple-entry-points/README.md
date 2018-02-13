@@ -572,7 +572,7 @@ module.exports = function(msg) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.1
      Asset       Size  Chunks             Chunk Names
       0.js  363 bytes       0  [emitted]  
 commons.js  267 bytes       1  [emitted]  commons
@@ -608,7 +608,7 @@ chunk    {3} pageA.js (pageA) 108 bytes ={1}= >{0}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.1
      Asset       Size  Chunks             Chunk Names
       0.js  120 bytes       0  [emitted]  
 commons.js   95 bytes       1  [emitted]  commons
