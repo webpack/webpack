@@ -1,12 +1,11 @@
 "use strict";
 
-const should = require("should");
+require("should");
 const path = require("path");
 const fs = require("fs");
 const asyncLib = require("async");
 var Test = require("mocha/lib/test");
 
-const webpack = require("../lib/webpack");
 const Benchmark = require("benchmark");
 
 describe("BenchmarkTestCases", function() {
@@ -35,7 +34,7 @@ describe("BenchmarkTestCases", function() {
 				const baselineRevision = baselineInfo.rev;
 				const baselinePath = path.resolve(baselinesPath, baselineRevision);
 				if(fs.existsSync(path.resolve(baselinePath, ".git"))) {
-					doLoadWebpack()
+					doLoadWebpack();
 				} else {
 					try {
 						fs.mkdirSync(baselinePath);
@@ -64,7 +63,7 @@ describe("BenchmarkTestCases", function() {
 					});
 					callback();
 				}
-			}, done)
+			}, done);
 		});
 	});
 
@@ -80,7 +79,7 @@ describe("BenchmarkTestCases", function() {
 				if(err) return callback(err);
 				const match = /^([a-f0-9]+)\s*([a-f0-9]+)\s*([a-f0-9]+)?\s*$/.exec(resultParents);
 				if(!match) return callback(new Error("Invalid result from git rev-list"));
-				const head = match[1]
+				const head = match[1];
 				const parent1 = match[2];
 				const parent2 = match[3];
 				if(parent2 && parent1) {

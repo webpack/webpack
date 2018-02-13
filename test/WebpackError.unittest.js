@@ -2,7 +2,7 @@
 
 const util = require("util");
 
-const should = require("should");
+require("should");
 const WebpackError = require("../lib/WebpackError");
 
 describe("WebpackError", () => {

@@ -1,8 +1,10 @@
 Time: Xms
-  Asset     Size  Chunks             Chunk Names
-main.js  2.65 kB       0  [emitted]  main
-   [0] (webpack)/test/statsCases/module-trace-enabled-in-error/index.js 25 bytes {0} [built]
+Built at: Thu Jan 01 1970 00:00:00 GMT
+  Asset      Size  Chunks  Chunk Names
+main.js  2.79 KiB       0  main
+Entrypoint main = main.js
+   [0] ./index.js 25 bytes {0} [built]
 
-ERROR in (webpack)/test/statsCases/module-trace-enabled-in-error/index.js
+ERROR in ./index.js
 Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/module-trace-enabled-in-error'
- @ (webpack)/test/statsCases/module-trace-enabled-in-error/index.js 1:0-25
+ @ ./index.js 1:0-25

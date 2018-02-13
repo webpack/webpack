@@ -7,16 +7,20 @@ const sinon = require("sinon");
 
 const webpack = require("../");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
-const Compiler = require("../lib/Compiler");
+const MemoryFs = require("memory-fs");
 
 describe("Compiler", () => {
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
-		new WebpackOptionsDefaulter().process(options);
+		if(!options.mode) options.mode = "production";
+		options = new WebpackOptionsDefaulter().process(options);
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");
 		if(noOutputPath) options.output.path = "/";
 		options.output.pathinfo = true;
+		options.optimization = {
+			minimize: false
+		};
 		const logs = {
 			mkdirp: [],
 			writeFile: [],
@@ -38,7 +42,7 @@ describe("Compiler", () => {
 				callback();
 			}
 		};
-		c.plugin("compilation", (compilation) => compilation.bail = true);
+		c.hooks.compilation.tap("CompilerTest", (compilation) => compilation.bail = true);
 		c.run((err, stats) => {
 			if(err) throw err;
 			should.strictEqual(typeof stats, "object");
@@ -80,7 +84,7 @@ describe("Compiler", () => {
 			Object.keys(files).should.be.eql(["/main.js"]);
 			const bundle = files["/main.js"];
 			bundle.should.containEql("function __webpack_require__(");
-			bundle.should.containEql("__webpack_require__(/*! ./a */ 1);");
+			bundle.should.containEql("__webpack_require__(/*! ./a */ 0);");
 			bundle.should.containEql("./c.js");
 			bundle.should.containEql("./a.js");
 			bundle.should.containEql("This is a");
@@ -161,39 +165,8 @@ describe("Compiler", () => {
 			bundle.should.not.containEql("fixtures");
 			chunk.should.not.containEql("fixtures");
 			bundle.should.containEql("webpackJsonp");
-			chunk.should.containEql("webpackJsonp(");
+			chunk.should.containEql("window[\"webpackJsonp\"] || []).push");
 			done();
-		});
-	});
-	describe("constructor", () => {
-		let compiler;
-		beforeEach(() => {
-			compiler = webpack({
-				entry: "./c",
-				context: path.join(__dirname, "fixtures"),
-				output: {
-					path: "/",
-					pathinfo: true,
-				}
-			});
-		});
-		describe("parser", () => {
-			describe("plugin", () => {
-				it("invokes sets a 'compilation' plugin", (done) => {
-					compiler.plugin = sinon.spy();
-					compiler.parser.plugin();
-					compiler.plugin.callCount.should.be.exactly(1);
-					done();
-				});
-			});
-			describe("apply", () => {
-				it("invokes sets a 'compilation' plugin", (done) => {
-					compiler.plugin = sinon.spy();
-					compiler.parser.apply();
-					compiler.plugin.callCount.should.be.exactly(1);
-					done();
-				});
-			});
 		});
 	});
 	describe("methods", () => {
@@ -269,83 +242,41 @@ describe("Compiler", () => {
 			});
 		});
 	});
-	describe("Watching", () => {
-		let compiler;
-		beforeEach(() => {
-			compiler = webpack({
-				entry: "./c",
-				context: path.join(__dirname, "fixtures"),
-				output: {
-					path: "/",
-					pathinfo: true,
-				}
-			});
+	it("should not emit on errors", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./missing",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
 		});
-		describe("static method", () => {
-			it("should have an method, Watching", (done) => {
-				const actual = new Compiler.Watching(compiler, 1000, err => err);
-				actual.running.should.be.exactly(true);
-				actual.constructor.name.should.be.exactly("Watching");
-				done();
-			});
+		compiler.outputFileSystem = new MemoryFs();
+		compiler.run((err, stats) => {
+			if(err) return done(err);
+			if(compiler.outputFileSystem.existsSync("/bundle.js"))
+				return done(new Error("Bundle should not be created on error"));
+			done();
 		});
-		describe("constructor", () => {
-			it("constructs Watching.watchOptions correctly when passed a number, string, or object for watchOptions", (done) => {
-				const Watching1 = compiler.watch(1000, err => err);
-				const Watching2 = compiler.watch({
-					aggregateTimeout: 1000
-				}, err => err);
-				const Watching3 = compiler.watch("I am a string", err => err);
-				Watching1.watchOptions.aggregateTimeout.should.equal(Watching2.watchOptions.aggregateTimeout);
-				Watching3.watchOptions.aggregateTimeout.should.equal(200);
-				done();
-			});
-			it("invokes compiler.readRecords", (done) => {
-				compiler.readRecords = sinon.spy();
-				compiler.watch(1000, err => err);
-				compiler.readRecords.callCount.should.be.exactly(1);
-				done();
-			});
+	});
+	it("should not emit on errors (watch)", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./missing",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
 		});
-		describe("_done", () => {
-			it("invokes this.handler and turns this.running boolean to false when passed an error", (done) => {
-				const mockHandler = sinon.spy();
-				const Watching1 = compiler.watch(1000, mockHandler);
-				Watching1.running.should.be.exactly(true);
-				Watching1._done(Watching1.handler, false);
-				mockHandler.callCount.should.be.exactly(1);
-				Watching1.running.should.be.exactly(false);
-				done();
-			});
-		});
-		describe("invalidate", () => {
-			it("pauses this.watcher and sets this.watcher to null if this.watcher is true", (done) => {
-				const mockPause = sinon.spy();
-				const Watching1 = compiler.watch(1000, err => err);
-				Watching1.watcher = {
-					pause: mockPause
-				};
-				Watching1.invalidate();
-				mockPause.callCount.should.be.exactly(1);
-				should(Watching1.watcher).be.exactly(null);
-				done();
-			});
-			it("sets this.invalid to true if this.running is true, else this.invalid = false", (done) => {
-				const Watching1 = compiler.watch(1000, err => err);
-				Watching1.invalid = false;
-				const response = Watching1.invalidate();
-				Watching1.invalid.should.be.exactly(true);
-				response.should.be.exactly(false);
-				done();
-			});
-			it("invokes this._go() if !this.running", (done) => {
-				const Watching1 = compiler.watch(1000, err => err);
-				Watching1.running = false;
-				Watching1._go = sinon.spy();
-				Watching1.invalidate();
-				Watching1._go.callCount.should.be.exactly(1);
-				done();
-			});
+		compiler.outputFileSystem = new MemoryFs();
+		const watching = compiler.watch({}, (err, stats) => {
+			watching.close();
+			if(err) return done(err);
+			if(compiler.outputFileSystem.existsSync("/bundle.js"))
+				return done(new Error("Bundle should not be created on error"));
+			done();
 		});
 	});
 });

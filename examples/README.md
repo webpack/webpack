@@ -106,6 +106,9 @@
 ## Scope Hoisting
 [scope-hoisting](scope-hoisting)
 
+## Side Effects
+[side-effects](side-effects)
+
 ## Source Map
 [source-map](source-map)
 

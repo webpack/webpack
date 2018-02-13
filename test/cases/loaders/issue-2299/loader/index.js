@@ -9,8 +9,8 @@ module.exports = function(content) {
 				if(err) {
 					return callback(err);
 				}
-				callback(null, this.exec(source, url));
-			}.bind(this));
+				callback(null, JSON.parse(source));
+			});
 		}.bind(this),
 		function(err, results) {
 			if(err) {

@@ -4,6 +4,7 @@ const NamedChunksPlugin = require("../../../lib/NamedChunksPlugin");
 const RequestShortener = require("../../../lib/RequestShortener");
 
 module.exports = {
+	mode: "production",
 	entry: {
 		"entry": "./entry",
 	},
@@ -12,7 +13,7 @@ module.exports = {
 			if(chunk.name) {
 				return chunk.name;
 			}
-			const chunkModulesToName = (chunk) => chunk.mapModules((mod) => {
+			const chunkModulesToName = (chunk) => Array.from(chunk.modulesIterable, (mod) => {
 				const rs = new RequestShortener(mod.context);
 				return rs.shorten(mod.request).replace(/[./\\]/g, "_");
 			}).join("-");

@@ -1,8 +1,8 @@
-var webpack = require("../../../");
 module.exports = [
+
 	{
+		mode: "production",
 		entry: {
-			vendor: "./vendor",
 			first: "./first",
 			second: "./second"
 		},
@@ -10,19 +10,27 @@ module.exports = [
 		output: {
 			filename: "[name].js"
 		},
-		plugins: [
-			new webpack.optimize.CommonsChunkPlugin({
-				name: "vendor",
-				minChunks: Infinity
-			})
-		],
+		optimization: {
+			concatenateModules: false,
+			splitChunks: {
+				cacheGroups: {
+					vendor: {
+						test: /vendor/,
+						chunks: "initial",
+						name: "vendor",
+						enforce: true
+					}
+				}
+			}
+		},
 		stats: {
 			assets: false
 		}
 	},
+
 	{
+		mode: "production",
 		entry: {
-			vendor: "./vendor",
 			first: "./first",
 			second: "./second"
 		},
@@ -30,16 +38,22 @@ module.exports = [
 		output: {
 			filename: "[name].js"
 		},
-		plugins: [
-			new webpack.optimize.CommonsChunkPlugin({
-				name: "vendor",
-				minChunks: Infinity
-			}),
-			new webpack.optimize.ModuleConcatenationPlugin()
-		],
+		optimization: {
+			splitChunks: {
+				cacheGroups: {
+					vendor: {
+						test: /vendor/,
+						chunks: "initial",
+						name: "vendor",
+						enforce: true
+					}
+				}
+			}
+		},
 		stats: {
 			assets: false,
 			optimizationBailout: true
 		}
 	}
+
 ];

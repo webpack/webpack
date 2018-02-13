@@ -1,0 +1,15 @@
+   [0] ./index.js + 2 modules 119 bytes {0} [built]
+       | ./index.js 46 bytes [built]
+       |    ModuleConcatenation bailout: Module is an entry point
+       | ./node_modules/pmodule/a.js 49 bytes [built]
+       | ./node_modules/pmodule/aa.js 24 bytes [built]
+   [1] ./node_modules/pmodule/b.js 49 bytes [built]
+       ModuleConcatenation bailout: Module is not in any chunk
+   [2] ./node_modules/pmodule/bb.js 24 bytes [built]
+       ModuleConcatenation bailout: Module is not in any chunk
+   [3] ./node_modules/pmodule/c.js 49 bytes [built]
+       ModuleConcatenation bailout: Module is not in any chunk
+   [4] ./node_modules/pmodule/cc.js 24 bytes [built]
+       ModuleConcatenation bailout: Module is not in any chunk
+   [5] ./node_modules/pmodule/index.js 63 bytes [built]
+       ModuleConcatenation bailout: Module is not in any chunk

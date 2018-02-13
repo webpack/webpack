@@ -8,7 +8,7 @@ machine:
 
 dependencies:
   pre:
-    - case $CIRCLE_NODE_INDEX in 0) NODE_VERSION=4 ;; 1) NODE_VERSION=8 ;; esac; nvm install $NODE_VERSION && nvm alias default $NODE_VERSION
+    - case $CIRCLE_NODE_INDEX in 0) NODE_VERSION=6 ;; 1) NODE_VERSION=8 ;; esac; nvm install $NODE_VERSION && nvm alias default $NODE_VERSION
   override:
     - yarn
     - yarn link || true && yarn link webpack

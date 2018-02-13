@@ -11,18 +11,17 @@ it("should change chunkhash of main chunk", function () {
 	}
 });
 
-it("should load additional chunk", function (done) {
+it("should load additional chunk", function() {
 	const step = WATCH_STEP;
-	import(/* webpackChunkName: "dynamic" */ './dynamic')
+	return import(/* webpackChunkName: "dynamic" */ './dynamic')
 		.then((dynamic) => {
 			switch (step) {
 				case "0":
-					dynamic.should.be.eql("Normal");
+					dynamic.default.should.be.eql("Normal");
 					break;
 				case "1":
-					dynamic.should.be.eql("Changed");
+					dynamic.default.should.be.eql("Changed");
 					break;
 			}
-			done();
 		});
 });

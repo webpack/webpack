@@ -24,9 +24,10 @@ var languages = {
 module.exports = Object.keys(languages).map(function(language) {
 	return {
 		name: language,
+		// mode: "development || "production",
 		entry: "./example",
 		output: {
-			path: path.join(__dirname, "js"),
+			path: path.join(__dirname, "dist"),
 			filename: language + ".output.js"
 		},
 		plugins: [
@@ -46,7 +47,7 @@ module.exports = Object.keys(languages).map(function(language) {
 }
 ```
 
-# js/de.output.js
+# dist/de.output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -97,6 +98,11 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -110,7 +116,8 @@ module.exports = Object.keys(languages).map(function(language) {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -126,8 +133,7 @@ module.exports = Object.keys(languages).map(function(language) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! dynamic exports provided */
-/*! all exports used */
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 console.log("Hallo Welt");
@@ -137,7 +143,7 @@ console.log("Missing Text");
 /******/ ]);
 ```
 
-# js/en.output.js
+# dist/en.output.js
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
@@ -186,6 +192,11 @@ console.log("Missing Text");
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -199,7 +210,8 @@ console.log("Missing Text");
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -210,8 +222,7 @@ console.log("Missing Text");
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! dynamic exports provided */
-/*! all exports used */
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 console.log("Hello World");
@@ -223,53 +234,57 @@ console.log("Missing Text");
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: b61d16621736c97f557ecfc55ada03fb1fa10004
-Version: webpack 3.11.0
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.0.0-beta.1
 Child en:
-    Hash: b61d16621736c97f557e
+    Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset     Size  Chunks             Chunk Names
-    en.output.js  2.69 kB       0  [emitted]  main
+    en.output.js  2.8 KiB       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
-        > main [0] ./example.js 
+        > ./example main
         [0] ./example.js 65 bytes {0} [built]
+            single entry ./example  main
 Child de:
-    Hash: cfc55ada03fb1fa10004
+    Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset     Size  Chunks             Chunk Names
-    de.output.js  2.69 kB       0  [emitted]  main
+    de.output.js  2.8 KiB       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
-        > main [0] ./example.js 
+        > ./example main
         [0] ./example.js 65 bytes {0} [built] [1 warning]
+            single entry ./example  main
     
     WARNING in ./example.js
     Missing localization: Missing Text
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: b61d16621736c97f557ecfc55ada03fb1fa10004
-Version: webpack 3.11.0
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.0.0-beta.1
 Child en:
-    Hash: b61d16621736c97f557e
+    Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset       Size  Chunks             Chunk Names
-    en.output.js  538 bytes       0  [emitted]  main
+    en.output.js  606 bytes       0  [emitted]  main
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
-        > main [0] ./example.js 
+        > ./example main
         [0] ./example.js 65 bytes {0} [built]
+            single entry ./example  main
 Child de:
-    Hash: cfc55ada03fb1fa10004
+    Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset       Size  Chunks             Chunk Names
-    de.output.js  537 bytes       0  [emitted]  main
+    de.output.js  605 bytes       0  [emitted]  main
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
-        > main [0] ./example.js 
+        > ./example main
         [0] ./example.js 65 bytes {0} [built] [1 warning]
+            single entry ./example  main
     
     WARNING in ./example.js
     Missing localization: Missing Text

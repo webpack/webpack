@@ -1,5 +1,7 @@
 var webpack = require("../../../../");
 module.exports = {
+	mode: "development",
+	devtool: false,
 	node: {
 		__dirname: false,
 		__filename: false

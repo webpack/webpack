@@ -2,7 +2,6 @@
 "use strict";
 
 const should = require("should");
-const path = require("path");
 
 const identifierUtil = require("../lib/util/identifier");
 

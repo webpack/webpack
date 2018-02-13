@@ -1,0 +1,4 @@
+{
+  "name": "big-module-with-flag",
+  "sideEffects": false
+}

@@ -1,6 +1,6 @@
 module.exports = {
-    bundlePath: [
-        "./manifest.bundle.js",
-        "./main.bundle.js"
-    ]
-}
+	bundlePath: [
+		"./runtime~main.js",
+		"./main.js"
+	]
+};

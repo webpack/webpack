@@ -1,0 +1,88 @@
+{
+  "id": "CommonsChunkPlugin",
+  "oneOf": [
+    {
+      "description": "The chunk name of the commons chunk",
+      "minLength": 1,
+      "type": "string"
+    },
+    {
+      "description": "The chunk names of the commons chunk",
+      "type": "array",
+      "items": {
+        "description": "Chunk name",
+        "minLength": 1,
+        "type": "string"
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "description": "The chunk name of the commons chunk",
+          "minLength": 1,
+          "type": "string"
+        },
+        "names": {
+          "description": "The chunk names of the commons chunk",
+          "type": "array",
+          "items": {
+            "description": "Chunk name",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "filename": {
+          "description": "The filename template for the commons chunk",
+          "minLength": 1,
+          "type": "string"
+        },
+        "minChunks": {
+          "description": "The minimum number of chunks which need to contain a module before it's moved into the commons chunk",
+          "oneOf": [
+            {
+              "type": "number"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ]
+        },
+        "chunks": {
+          "description": "Select the source chunks by chunk names",
+          "type": "array",
+          "items": {
+            "description": "Chunk name",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "children": {
+          "description": "If `true` all children of the commons chunk are selected",
+          "type": "boolean"
+        },
+        "deepChildren": {
+          "description": "If `true` all descendants of the commons chunk are selected",
+          "type": "boolean"
+        },
+        "async": {
+          "description": "If `true` a new async commons chunk is created as child of `options.name` and sibling of `options.chunks`. Instead of using `option.filename`, it is possible to change the name of the output file by providing the desired string here instead of `true`",
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "minLength": 1,
+              "type": "string"
+            }
+          ]
+        },
+        "minSize": {
+          "description": "Minimum size of all common module before a commons chunk is created",
+          "type": "number"
+        }
+      }
+    }
+  ]
+}

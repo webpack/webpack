@@ -1,85 +1,60 @@
 {
   "modules": {
     "byIdentifier": {
-      "a.js": 0,
-      "b.js": 1,
-      "c.js": 2,
-      "d.js": 3,
-      "e.js": 4,
-      "f.js": 5,
-      "g.js": 6,
-      "h.js": 7,
-      "i.js": 8,
-      "index.js": 9,
-      "j.js": 10,
-      "k.js": 11
+      "b.js": 0,
+      "d.js": 1,
+      "e.js": 2,
+      "f.js": 3,
+      "g.js": 4,
+      "c.js": 5,
+      "h.js": 6,
+      "i.js": 7,
+      "j.js": 8,
+      "k.js": 9,
+      "a.js": 10,
+      "index.js": 11
     },
-    "usedIds": {
-      "0": 0,
-      "1": 1,
-      "2": 2,
-      "3": 3,
-      "4": 4,
-      "5": 5,
-      "6": 6,
-      "7": 7,
-      "8": 8,
-      "9": 9,
-      "10": 10,
-      "11": 11
-    }
-  },
-  "chunks": {
-    "byName": {
-      "main": 6
-    },
-    "byBlocks": {
-      "index.js:4/4:2": 0,
-      "index.js:3/4:0": 0,
-      "index.js:2/4:1": 1,
-      "index.js:4/4:1": 1,
-      "index.js:3/4:2": 2,
-      "index.js:3/4:1": 3,
-      "index.js:1/4": 4,
-      "index.js:4/4:0": 5,
-      "index.js:2/4:0": 7,
-      "index.js:0/4": 8
-    },
-    "usedIds": {
-      "0": 0,
-      "1": 1,
-      "2": 2,
-      "3": 3,
-      "4": 4,
-      "5": 5,
-      "6": 6,
-      "7": 7,
-      "8": 8
-    }
+    "usedIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
   },
   "aggressiveSplits": [
+    {
+      "modules": [
+        "x.js",
+        "y.js"
+      ],
+      "size": 1798,
+      "hash": "xxx",
+      "id": 0
+    },
+    {
+      "modules": [
+        "b.js",
+        "d.js"
+      ],
+      "size": 1798,
+      "hash": "ba1a8dd27d611254d4950a3f52eb4b10",
+      "id": 0
+    },
     {
       "modules": [
         "f.js",
         "g.js"
       ],
-      "hash": "7305696cca6d0d86929132c69380763f",
-      "id": 0
-    },
-    {
-      "modules": [
-        "d.js",
-        "e.js"
-      ],
-      "hash": "11324f155de813ceb6584bbb3820bce4",
-      "id": 1
-    },
-    {
-      "modules": [
-        "j.js",
-        "k.js"
-      ],
-      "hash": "f829c6691cc38a359481f2a5ca94a222",
+      "size": 1800,
+      "hash": "81950df8ced1664c8037f845fc519717",
       "id": 2
     },
     {
@@ -87,24 +62,18 @@
         "h.js",
         "i.js"
       ],
-      "hash": "e91ec4902ca3057b42bb3d87c855733c",
+      "size": 1798,
+      "hash": "2a7cf3b38962fac54bb997c2ccbd71d6",
       "id": 3
     },
     {
       "modules": [
-        "b.js",
-        "c.js"
+        "c.js",
+        "d.js"
       ],
-      "hash": "678b5386af25333c26261e48622f4864",
-      "id": 4
-    },
-    {
-      "modules": [
-        "a.js",
-        "b.js"
-      ],
-      "hash": "2a1056b05b68590f7fad418ec0619c8d",
-      "id": 5
+      "size": 1798,
+      "hash": "xxx",
+      "id": 8
     }
   ]
 }

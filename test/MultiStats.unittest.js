@@ -1,7 +1,6 @@
 "use strict";
 
-const should = require("should");
-const sinon = require("sinon");
+require("should");
 const packageJSON = require("../package.json");
 const MultiStats = require("../lib/MultiStats");
 

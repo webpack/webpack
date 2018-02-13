@@ -163,7 +163,7 @@ describe("ExternalModule", function() {
 			// set up
 			const variableToCheck = "foo";
 			const request = "bar";
-			const expected = `if(typeof foo === 'undefined') {var e = new Error(\"Cannot find module \\\"bar\\\"\"); e.code = 'MODULE_NOT_FOUND'; throw e;}
+			const expected = `if(typeof foo === 'undefined') {var e = new Error("Cannot find module \\"bar\\""); e.code = 'MODULE_NOT_FOUND'; throw e;}
 `;
 
 			// invoke
@@ -232,87 +232,6 @@ module.exports = some/request;`;
 		});
 	});
 
-	describe("#getSourceString", function() {
-		let globalExternalStub;
-		let globalCommonJsStub;
-		let globalAmdOrUmdStub;
-		let defaultExternalStub;
-		beforeEach(function() {
-			globalExternalStub = externalModule.getSourceForGlobalVariableExternal = sinon.stub();
-			globalCommonJsStub = externalModule.getSourceForCommonJsExternal = sinon.stub();
-			globalAmdOrUmdStub = externalModule.getSourceForAmdOrUmdExternal = sinon.stub();
-			defaultExternalStub = externalModule.getSourceForDefaultCase = sinon.stub();
-		});
-		describe("with type being 'this', 'window' or 'global'", function() {
-			it("deletgates to #getSourceForGlobalVariableExternal", function() {
-				["this", "window", "global"].forEach((type, i) => {
-					// set up
-					externalModule.type = type;
-
-					// invoke
-					externalModule.getSourceString();
-
-					// check
-					globalExternalStub.callCount.should.eql(i + 1);
-					globalCommonJsStub.callCount.should.eql(0);
-					globalAmdOrUmdStub.callCount.should.eql(0);
-					defaultExternalStub.callCount.should.eql(0);
-				});
-			});
-		});
-		describe("with type being 'commonjs' or 'commonjs2'", function() {
-			it("deletgates to #getSourceForCommonJsExternal", function() {
-				["commonjs", "commonjs2"].forEach((type, i) => {
-					// set up
-					externalModule.type = type;
-
-					// invoke
-					externalModule.getSourceString();
-
-					// check
-					globalExternalStub.callCount.should.eql(0);
-					globalCommonJsStub.callCount.should.eql(i + 1);
-					globalAmdOrUmdStub.callCount.should.eql(0);
-					defaultExternalStub.callCount.should.eql(0);
-				});
-			});
-		});
-		describe("with type being 'amd', 'umd' or 'umd2'", function() {
-			it("deletgates to #getSourceForAmdOrUmdExternal", function() {
-				["amd", "umd", "umd2"].forEach((type, i) => {
-					// set up
-					externalModule.type = type;
-
-					// invoke
-					externalModule.getSourceString();
-
-					// check
-					globalExternalStub.callCount.should.eql(0);
-					globalCommonJsStub.callCount.should.eql(0);
-					globalAmdOrUmdStub.callCount.should.eql(i + 1);
-					defaultExternalStub.callCount.should.eql(0);
-				});
-			});
-		});
-		describe("with type being non of the above", function() {
-			it("deletgates to #getSourceForGlobalVariableExternal", function() {
-				["foo", "bar", undefined].forEach((type, i) => {
-					// set up
-					externalModule.type = type;
-
-					// invoke
-					externalModule.getSourceString();
-
-					// check
-					globalExternalStub.callCount.should.eql(0);
-					globalCommonJsStub.callCount.should.eql(0);
-					globalAmdOrUmdStub.callCount.should.eql(0);
-					defaultExternalStub.callCount.should.eql(i + 1);
-				});
-			});
-		});
-	});
-
 	describe("#updateHash", function() {
 		let hashedText;
 		let hash;
@@ -323,7 +242,6 @@ module.exports = some/request;`;
 					hashedText += text;
 				}
 			};
-			externalModule.optional = true;
 			externalModule.id = 12345678;
 			externalModule.updateHash(hash);
 		});
@@ -332,9 +250,6 @@ module.exports = some/request;`;
 		});
 		it("updates hash with type", function() {
 			hashedText.should.containEql("some-type");
-		});
-		it("updates hash with optional flag", function() {
-			hashedText.should.containEql("true");
 		});
 		it("updates hash with module id", function() {
 			hashedText.should.containEql("12345678");

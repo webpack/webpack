@@ -5,11 +5,30 @@ require("should");
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
+const mkdirp = require("mkdirp");
 const Test = require("mocha/lib/test");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
+
+const DEFAULT_OPTIMIZATIONS = {
+	removeAvailableModules: true,
+	removeEmptyChunks: true,
+	mergedDuplicateChunks: true,
+	flagIncludedChunks: true,
+	occurrenceOrder: true,
+	sideEffects: true,
+	providedExports: true,
+	usedExports: true,
+	noEmitOnErrors: false,
+	concatenateModules: false,
+	namedModules: false,
+};
+
+const NO_EMIT_ON_ERRORS_OPTIMIZATIONS = {
+	noEmitOnErrors: false
+};
 
 describe("TestCases", () => {
 	const casesPath = path.join(__dirname, "cases");
@@ -21,12 +40,14 @@ describe("TestCases", () => {
 		};
 	});
 	[{
-		name: "normal"
+		name: "normal",
 	}, {
-		name: "concat",
-		plugins: [
-			new webpack.optimize.ModuleConcatenationPlugin()
-		]
+		name: "production",
+		mode: "production",
+	}, {
+		name: "development",
+		mode: "development",
+		devtool: "none"
 	}, {
 		name: "hot",
 		plugins: [
@@ -70,34 +91,24 @@ describe("TestCases", () => {
 		name: "devtool-cheap-source-map",
 		devtool: "cheap-source-map"
 	}, {
-		name: "minimized",
-		minimize: true,
-		plugins: [
-			new webpack.optimize.UglifyJsPlugin({
-				sourceMap: false
-			})
-		]
-	}, {
 		name: "minimized-source-map",
+		mode: "production",
 		devtool: "eval-cheap-module-source-map",
-		minimize: true,
-		plugins: [
-			new webpack.optimize.UglifyJsPlugin()
-		]
+		minimize: true
 	}, {
 		name: "minimized-hashed-modules",
+		mode: "production",
 		minimize: true,
 		plugins: [
-			new webpack.optimize.UglifyJsPlugin(),
 			new webpack.HashedModuleIdsPlugin()
 		]
 	}, {
 		name: "all-combined",
+		mode: "production",
 		devtool: "#@source-map",
 		minimize: true,
 		plugins: [
 			new webpack.HotModuleReplacementPlugin(),
-			new webpack.optimize.UglifyJsPlugin(),
 			new webpack.NamedModulesPlugin(),
 			new webpack.NamedChunksPlugin()
 		]
@@ -124,6 +135,11 @@ describe("TestCases", () => {
 								entry: "./" + category.name + "/" + testName + "/index",
 								target: "async-node",
 								devtool: config.devtool,
+								mode: config.mode || "none",
+								optimization: config.mode ? NO_EMIT_ON_ERRORS_OPTIMIZATIONS : Object.assign({}, config.optimization, DEFAULT_OPTIMIZATIONS),
+								performance: {
+									hints: false
+								},
 								output: {
 									pathinfo: true,
 									path: outputDirectory,
@@ -133,7 +149,8 @@ describe("TestCases", () => {
 									modules: ["web_modules", "node_modules"],
 									mainFields: ["webpack", "browser", "web", "browserify", ["jam", "main"], "main"],
 									aliasFields: ["browser"],
-									extensions: [".webpack.js", ".web.js", ".js", ".json"]
+									extensions: [".mjs", ".webpack.js", ".web.js", ".js", ".json"],
+									concord: true
 								},
 								resolveLoader: {
 									modules: ["web_loaders", "web_modules", "node_loaders", "node_modules"],
@@ -141,7 +158,7 @@ describe("TestCases", () => {
 									extensions: [".webpack-loader.js", ".web-loader.js", ".loader.js", ".js"]
 								},
 								module: {
-									loaders: [{
+									rules: [{
 										test: /\.coffee$/,
 										loader: "coffee-loader"
 									}, {
@@ -150,9 +167,9 @@ describe("TestCases", () => {
 									}]
 								},
 								plugins: (config.plugins || []).concat(function() {
-									this.plugin("compilation", (compilation) => {
-										["optimize", "optimize-modules-basic", "optimize-chunks-basic", "after-optimize-tree", "after-optimize-assets"].forEach((hook) => {
-											compilation.plugin(hook, () => compilation.checkConstraints());
+									this.hooks.compilation.tap("TestCasesTest", (compilation) => {
+										["optimize", "optimizeModulesBasic", "optimizeChunksBasic", "afterOptimizeTree", "afterOptimizeAssets"].forEach((hook) => {
+											compilation.hooks[hook].tap("TestCasesTest", () => compilation.checkConstraints());
 										});
 									});
 								})
@@ -161,6 +178,7 @@ describe("TestCases", () => {
 								if(err) return done(err);
 								const statOptions = Stats.presetToOptions("verbose");
 								statOptions.colors = false;
+								mkdirp.sync(outputDirectory);
 								fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
 								const jsonStats = stats.toJson({
 									errorDetails: true
@@ -173,6 +191,10 @@ describe("TestCases", () => {
 									const test = new Test(title, fn);
 									suite.addTest(test);
 									exportedTest++;
+									// WORKAROUND for a v8 bug
+									// Error objects retrain all scopes in the stacktrace
+									test._trace = test._trace.message;
+
 									return test;
 								}
 
@@ -181,12 +203,14 @@ describe("TestCases", () => {
 										const p = path.join(outputDirectory, module);
 										const fn = vm.runInThisContext("(function(require, module, exports, __dirname, it) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
 										const m = {
-											exports: {}
+											exports: {},
+											webpackTestSuiteModule: true
 										};
 										fn.call(m.exports, _require, m, m.exports, outputDirectory, _it);
 										return m.exports;
 									} else return require(module);
 								}
+								_require.webpackTestSuiteRequire = true;
 								_require("./bundle.js");
 								if(exportedTest === 0) return done(new Error("No tests exported by test case"));
 								done();

@@ -6,6 +6,7 @@ const path = require("path");
 const fs = require("fs");
 
 const webpack = require("../lib/webpack");
+const Stats = require("../lib/Stats");
 
 const base = path.join(__dirname, "statsCases");
 const outputBase = path.join(__dirname, "js", "stats");
@@ -16,8 +17,10 @@ const tests = fs.readdirSync(base).filter(testName =>
 
 describe("StatsTestCases", () => {
 	tests.forEach(testName => {
-		it("should print correct stats for " + testName, (done) => {
+		it("should print correct stats for " + testName, function(done) {
+			this.timeout(10000);
 			let options = {
+				mode: "development",
 				entry: "./index",
 				output: {
 					filename: "bundle.js"
@@ -30,6 +33,14 @@ describe("StatsTestCases", () => {
 				if(!options.context) options.context = path.join(base, testName);
 				if(!options.output) options.output = options.output || {};
 				if(!options.output.path) options.output.path = path.join(outputBase, testName);
+				if(!options.plugins) options.plugins = [];
+				if(!options.optimization) options.optimization = {};
+				if(options.optimization.minimize === undefined) options.optimization.minimize = false;
+				// To support deprecated loaders
+				// TODO remove in webpack 5
+				options.plugins.push(new webpack.LoaderOptionsPlugin({
+					options: {}
+				}));
 			});
 			const c = webpack(options);
 			const compilers = c.compilers ? c.compilers : [c];
@@ -44,7 +55,7 @@ describe("StatsTestCases", () => {
 						callback(null, result.toString("utf-8").replace(/\r/g, ""));
 					}]));
 				};
-				c.apply(new webpack.optimize.OccurrenceOrderPlugin());
+				new webpack.optimize.OccurrenceOrderPlugin().apply(c);
 			});
 			c.run((err, stats) => {
 				if(err) return done(err);
@@ -56,13 +67,17 @@ describe("StatsTestCases", () => {
 				}
 
 				let toStringOptions = {
+					context: path.join(base, testName),
 					colors: false
 				};
 				let hasColorSetting = false;
 				if(typeof options.stats !== "undefined") {
 					toStringOptions = options.stats;
+					if(toStringOptions === null || typeof toStringOptions !== "object")
+						toStringOptions = Stats.presetToOptions(toStringOptions);
 
 					hasColorSetting = typeof options.stats.colors !== "undefined";
+					if(!toStringOptions.context) toStringOptions.context = path.join(base, testName);
 				}
 				if(Array.isArray(options) && !toStringOptions.children) {
 					toStringOptions.children = options.map(o => o.stats);
@@ -73,14 +88,16 @@ describe("StatsTestCases", () => {
 				if(!hasColorSetting) {
 					actual = actual
 						.replace(/\u001b\[[0-9;]*m/g, "")
-						.replace(/[0-9]+(\s?ms)/g, "X$1");
+						.replace(/[0-9]+(\s?ms)/g, "X$1")
+						.replace(/^(\s*Built at:) (.*)$/gm, "$1 Thu Jan 01 1970 00:00:00 GMT");
 				} else {
 					actual = actual
 						.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
 						.replace(/\u001b\[1m/g, "<CLR=BOLD>")
 						.replace(/\u001b\[39m\u001b\[22m/g, "</CLR>")
 						.replace(/\u001b\[([0-9;]*)m/g, "<CLR=$1>")
-						.replace(/[0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2");
+						.replace(/[0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2")
+						.replace(/^(\s*Built at:) (.*)$/gm, "$1 Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT");
 				}
 
 				actual = actual

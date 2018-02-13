@@ -11,6 +11,11 @@ describe("Examples", () => {
 	const examples = require("../examples/examples.js");
 
 	examples.forEach((examplePath) => {
+		const filterPath = path.join(examplePath, "test.filter.js");
+		if(fs.existsSync(filterPath) && !require(filterPath)()) {
+			describe.skip(path.relative(basePath, examplePath), () => it("filtered"));
+			return;
+		}
 		it("should compile " + path.relative(basePath, examplePath), function(done) {
 			this.timeout(20000);
 			let options = {};
@@ -27,12 +32,17 @@ describe("Examples", () => {
 				options.context = examplePath;
 				options.output = options.output || {};
 				options.output.pathinfo = true;
-				options.output.path = path.join(examplePath, "js");
-				options.output.publicPath = "js/";
-				if(!options.output.filename)
-					options.output.filename = "output.js";
+				options.output.path = path.join(examplePath, "dist");
+				options.output.publicPath = "dist/";
 				if(!options.entry)
 					options.entry = "./example.js";
+				if(!options.plugins)
+					options.plugins = [];
+				// To support deprecated loaders
+				// TODO remove in webpack 5
+				options.plugins.push(new webpack.LoaderOptionsPlugin({
+					options: {}
+				}));
 			}
 			webpack(options, (err, stats) => {
 				if(err) return done(err);

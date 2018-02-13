@@ -1,7 +1,7 @@
 "use strict";
 
 /*globals describe it before after  */
-const should = require("should");
+require("should");
 const path = require("path");
 const fs = require("fs");
 const MemoryFs = require("memory-fs");
@@ -9,6 +9,11 @@ const MemoryFs = require("memory-fs");
 const webpack = require("../");
 
 describe("WatchDetection", () => {
+	if(process.env.NO_WATCH_TESTS) {
+		it("long running tests excluded");
+		return;
+	}
+
 	for(let changeTimeout = 0; changeTimeout < 100; changeTimeout += 10) {
 		createTestCase(changeTimeout);
 	}
@@ -54,7 +59,7 @@ describe("WatchDetection", () => {
 				});
 				const memfs = compiler.outputFileSystem = new MemoryFs();
 				let onChange;
-				compiler.plugin("done", () => {
+				compiler.hooks.done.tap("WatchDetectionTest", () => {
 					if(onChange)
 						onChange();
 				});
@@ -93,13 +98,13 @@ describe("WatchDetection", () => {
 				function step4() {
 					onChange = () => {
 						if(memfs.readFileSync("/bundle.js").toString().indexOf("correct") >= 0)
-							step4();
+							step5();
 					};
 
 					fs.writeFile(file2Path, "correct", "utf-8", handleError);
 				}
 
-				function step4() {
+				function step5() {
 					onChange = null;
 
 					watcher.close(() => {

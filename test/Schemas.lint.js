@@ -128,5 +128,5 @@ describe("Schemas", () => {
 				walker(content);
 			}
 		});
-	})
+	});
 });

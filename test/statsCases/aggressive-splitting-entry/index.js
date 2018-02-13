@@ -4,4 +4,4 @@ require("./c");
 require("./d");
 require("./e");
 require("./f");
-require("./g");
+import("./g");

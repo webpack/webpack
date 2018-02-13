@@ -1,5 +1,0 @@
---entry ./index.js
---output-filename [name].js
---output-chunk-filename [id].chunk.js
---target async-node
---display none

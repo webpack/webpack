@@ -4,7 +4,7 @@ import * as both from './dynamic-and-static'
 import * as staticModule from './static'
 
 it("should not change chunkhash of manifest chunk", function () {
-	const manifestChunk = STATS_JSON.chunks.find((chunk) => chunk.names.indexOf("manifest") !== -1);
+	const manifestChunk = STATS_JSON.chunks.find((chunk) => chunk.names.indexOf("runtime~main") !== -1);
 	(!manifestChunk).should.be.false("Main chunk not found");
 	switch (WATCH_STEP) {
 		case "0":
@@ -25,20 +25,18 @@ it("should not change chunkhash of manifest chunk", function () {
 	}
 });
 
-it("should load additional chunk", function (done) {
+it("should load additional chunk", function() {
 	const step = WATCH_STEP;
-	import(/* webpackChunkName: "dynamic-and-static" */ './dynamic-and-static')
+	return import(/* webpackChunkName: "dynamic-and-static" */ './dynamic-and-static')
 		.then((dynamic) => {
 			switch (step) {
 				case "0":
 				case "1":
-					dynamic.should.be.eql("Normal");
+					dynamic.default.should.be.eql("Normal");
 					break;
 				case "2":
-					dynamic.should.be.eql("Changed");
+					dynamic.default.should.be.eql("Changed");
 					break;
 			}
-			done();
-		})
-		.catch(done);;
+		});
 });
