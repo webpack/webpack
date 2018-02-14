@@ -1,3 +1,5 @@
 instrumentation:
   excludes:
+    - "*"
     - "**/*.runtime.js"
+    - ".github/*"
