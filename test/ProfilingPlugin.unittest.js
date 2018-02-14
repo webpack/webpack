@@ -6,14 +6,14 @@ const ProfilingPlugin = require("../lib/debug/ProfilingPlugin");
 describe("Profiling Plugin", () => {
 	it("should persist the passed outpath", () => {
 		const plugin = new ProfilingPlugin({
-			outPath: "invest_in_doge_coin"
+			outputPath: "invest_in_doge_coin"
 		});
-		plugin.outPath.should.equal("invest_in_doge_coin");
+		plugin.outputPath.should.equal("invest_in_doge_coin");
 	});
 
 	it("should handle no options", () => {
 		const plugin = new ProfilingPlugin();
-		plugin.outPath.should.equal("events.json");
+		plugin.outputPath.should.equal("events.json");
 	});
 
 	it("should handle when unable to require the inspector", (done) => {
