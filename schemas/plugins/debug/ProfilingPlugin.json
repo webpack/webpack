@@ -3,7 +3,7 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "outPath": {
+    "outputPath": {
       "description": "Path to the output file e.g. `profiling/events.json`. Defaults to `events.json`.",
       "type": "string",
       "absolutePath": false,
