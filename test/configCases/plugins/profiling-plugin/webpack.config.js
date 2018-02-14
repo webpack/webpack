@@ -6,7 +6,7 @@ var os = require("os");
 module.exports = {
 	plugins: [
 		new webpack.debug.ProfilingPlugin({
-			outPath: path.join(os.tmpdir(), "events.json")
+			outputPath: path.join(os.tmpdir(), "events.json")
 		})
 	],
 	node: {
