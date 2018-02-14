@@ -6,7 +6,7 @@
     "outPath": {
       "description": "Path to the output file e.g. `profiling/events.json`. Defaults to `events.json`.",
       "type": "string",
-      "absolutePath": true,
+      "absolutePath": false,
       "minLength": 4
     }
   }
