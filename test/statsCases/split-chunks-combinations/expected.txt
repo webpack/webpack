@@ -1,0 +1,19 @@
+Entrypoint main = main.js
+chunk    {0} async-a~async-b.js (async-a~async-b) 134 bytes <{4}> ={2}= ={1}= [rendered] split chunk (cache group: default) (name: async-a~async-b)
+    > ./b [5] ./index.js 2:0-47
+    > ./a [5] ./index.js 1:0-47
+    [0] ./d.js 67 bytes {0} {3} [built]
+    [1] ./e.js 67 bytes {0} [built]
+chunk    {1} async-a.js (async-a) 48 bytes <{4}> ={0}= [rendered]
+    > ./a [5] ./index.js 1:0-47
+    [2] ./a.js 48 bytes {1} [built]
+chunk    {2} async-b.js (async-b) 48 bytes <{4}> ={0}= [rendered]
+    > ./b [5] ./index.js 2:0-47
+    [3] ./b.js 48 bytes {2} [built]
+chunk    {3} async-c.js (async-c) 101 bytes <{4}> [rendered]
+    > ./c [5] ./index.js 3:0-47
+    [0] ./d.js 67 bytes {0} {3} [built]
+    [4] ./c.js 34 bytes {3} [built]
+chunk    {4} main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< [entry] [rendered]
+    > ./ main
+    [5] ./index.js 147 bytes {4} [built]
