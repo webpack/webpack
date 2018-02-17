@@ -1,1 +1,2 @@
-// content content content content content
+import "./x";
+export default "f";

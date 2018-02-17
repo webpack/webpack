@@ -18,6 +18,7 @@ module.exports = {
 	},
 	optimization: {
 		splitChunks: {
+			maxComplexity: 100,
 			minSize: 100
 		}
 	},
