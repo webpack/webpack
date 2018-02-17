@@ -62,45 +62,45 @@ Child default:
     Entrypoint a = default/a.js
     Entrypoint b = default/b.js
     Entrypoint c = default/c.js
-    chunk    {0} default/vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{9}> ={8}= ={1}= ={2}= ={7}= ={3}= ={6}= ={5}= >{2}< >{4}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~async-c)
-        > ./c [8] ./index.js 3:0-47
-        > ./b [8] ./index.js 2:0-47
+    chunk    {0} default/vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{9}> ={1}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= >{2}< >{4}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~async-c)
         > ./a [8] ./index.js 1:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
         [1] ./node_modules/x.js 20 bytes {0} {10} {11} {12} [built]
-    chunk    {1} default/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{9}> ={0}= ={8}= ={2}= ={7}= ={3}= ={6}= ={5}= >{2}< >{4}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
-        > ./c [8] ./index.js 3:0-47
-        > ./b [8] ./index.js 2:0-47
+    chunk    {1} default/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{9}> ={0}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= >{2}< >{4}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
         > ./a [8] ./index.js 1:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
         [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-    chunk    {2} default/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{3}> <{1}> <{5}> <{10}> <{9}> ={4}= ={0}= ={8}= ={1}= ={7}= ={3}= ={6}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
+    chunk    {2} default/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{10}> <{3}> <{5}> <{9}> ={0}= ={1}= ={3}= ={4}= ={6}= ={7}= ={8}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
         > ./g [] 6:0-47
         > ./g [] 6:0-47
+        > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
-        > ./b [8] ./index.js 2:0-47
         [2] ./f.js 20 bytes {2} {11} {12} [built]
-    chunk    {3} default/vendors~async-a~async-b.js (vendors~async-a~async-b) 20 bytes <{9}> ={0}= ={1}= ={2}= ={6}= ={5}= >{2}< >{4}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b)
-        > ./b [8] ./index.js 2:0-47
+    chunk    {3} default/vendors~async-a~async-b.js (vendors~async-a~async-b) 20 bytes <{9}> ={0}= ={1}= ={2}= ={5}= ={6}= >{2}< >{4}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b)
         > ./a [8] ./index.js 1:0-47
+        > ./b [8] ./index.js 2:0-47
         [3] ./node_modules/y.js 20 bytes {3} {10} {11} [built]
-    chunk    {4} default/async-g.js (async-g) 34 bytes <{0}> <{3}> <{1}> <{5}> <{10}> ={2}= [rendered]
+    chunk    {4} default/async-g.js (async-g) 34 bytes <{0}> <{1}> <{10}> <{3}> <{5}> ={2}= [rendered]
         > ./g [] 6:0-47
         > ./g [] 6:0-47
         [9] ./g.js 34 bytes {4} [built]
-    chunk    {5} default/async-a.js (async-a) 156 bytes <{9}> ={0}= ={3}= ={1}= >{2}< >{4}< [rendered]
+    chunk    {5} default/async-a.js (async-a) 156 bytes <{9}> ={0}= ={1}= ={3}= >{2}< >{4}< [rendered]
         > ./a [8] ./index.js 1:0-47
         [7] ./a.js + 1 modules 156 bytes {5} {10} [built]
             | ./a.js 121 bytes [built]
             | ./e.js 20 bytes [built]
-    chunk    {6} default/async-b.js (async-b) 72 bytes <{9}> ={0}= ={3}= ={1}= ={2}= [rendered]
+    chunk    {6} default/async-b.js (async-b) 72 bytes <{9}> ={0}= ={1}= ={2}= ={3}= [rendered]
         > ./b [8] ./index.js 2:0-47
         [5] ./b.js 72 bytes {6} {11} [built]
-    chunk    {7} default/async-c.js (async-c) 72 bytes <{9}> ={0}= ={8}= ={1}= ={2}= [rendered]
+    chunk    {7} default/async-c.js (async-c) 72 bytes <{9}> ={0}= ={1}= ={2}= ={8}= [rendered]
         > ./c [8] ./index.js 3:0-47
         [6] ./c.js 72 bytes {7} {12} [built]
     chunk    {8} default/vendors~async-c.js (vendors~async-c) 20 bytes <{9}> ={0}= ={1}= ={2}= ={7}= [rendered] split chunk (cache group: vendors) (name: vendors~async-c)
         > ./c [8] ./index.js 3:0-47
         [4] ./node_modules/z.js 20 bytes {8} {12} [built]
-    chunk    {9} default/main.js (main) 147 bytes >{0}< >{3}< >{1}< >{2}< >{6}< >{5}< >{8}< >{7}< [entry] [rendered]
+    chunk    {9} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{5}< >{6}< >{7}< >{8}< [entry] [rendered]
         > ./ main
         [8] ./index.js 147 bytes {9} [built]
     chunk   {10} default/a.js (a) 216 bytes >{2}< >{4}< [entry] [rendered]
@@ -157,10 +157,10 @@ Child vendors:
         [2] ./f.js 20 bytes {0} {2} {3} {7} {8} [built]
         [4] ./node_modules/z.js 20 bytes {3} {4} [built]
         [6] ./c.js 72 bytes {3} {8} [built]
-    chunk    {4} vendors/vendors.js (vendors) 60 bytes ={8}= ={7}= ={6}= >{0}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
-        > ./c c
-        > ./b b
+    chunk    {4} vendors/vendors.js (vendors) 60 bytes ={6}= ={7}= ={8}= >{0}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./a a
+        > ./b b
+        > ./c c
         [1] ./node_modules/x.js 20 bytes {1} {2} {3} {4} [built]
         [3] ./node_modules/y.js 20 bytes {1} {2} {4} [built]
         [4] ./node_modules/z.js 20 bytes {3} {4} [built]
@@ -188,51 +188,51 @@ Child multiple-vendors:
     Entrypoint a = multiple-vendors/libs-x.js multiple-vendors/vendors~a~async-a~async-b~b.js multiple-vendors/a.js
     Entrypoint b = multiple-vendors/libs-x.js multiple-vendors/vendors~a~async-a~async-b~b.js multiple-vendors/b.js
     Entrypoint c = multiple-vendors/libs-x.js multiple-vendors/vendors~async-c~c.js multiple-vendors/c.js
-    chunk    {0} multiple-vendors/libs-x.js (libs-x) 20 bytes <{9}> ={4}= ={12}= ={3}= ={11}= ={10}= ={1}= ={2}= ={7}= ={6}= ={8}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: libs) (name: libs-x)
+    chunk    {0} multiple-vendors/libs-x.js (libs-x) 20 bytes <{9}> ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: libs) (name: libs-x)
+        > ./a a
+        > ./b b
         > ./c c
-        > ./b b
-        > ./a a
-        > ./c [8] ./index.js 3:0-47
-        > ./b [8] ./index.js 2:0-47
         > ./a [8] ./index.js 1:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
         [2] ./node_modules/x.js 20 bytes {0} [built]
-    chunk    {1} multiple-vendors/a~async-a~async-b~async-c~b~c.js (a~async-a~async-b~async-c~b~c) 20 bytes <{9}> ={0}= ={4}= ={2}= ={7}= ={3}= ={6}= ={8}= >{2}< >{5}< [rendered] split chunk (cache group: default) (name: a~async-a~async-b~async-c~b~c)
-        > ./c [8] ./index.js 3:0-47
-        > ./b [8] ./index.js 2:0-47
+    chunk    {1} multiple-vendors/a~async-a~async-b~async-c~b~c.js (a~async-a~async-b~async-c~b~c) 20 bytes <{9}> ={0}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= >{2}< >{5}< [rendered] split chunk (cache group: default) (name: a~async-a~async-b~async-c~b~c)
         > ./a [8] ./index.js 1:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
         [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-    chunk    {2} multiple-vendors/async-b~async-c~async-g~b~c.js (async-b~async-c~async-g~b~c) 20 bytes <{0}> <{3}> <{1}> <{8}> <{10}> <{9}> ={5}= ={0}= ={4}= ={1}= ={7}= ={3}= ={6}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g~b~c)
+    chunk    {2} multiple-vendors/async-b~async-c~async-g~b~c.js (async-b~async-c~async-g~b~c) 20 bytes <{0}> <{1}> <{10}> <{3}> <{8}> <{9}> ={0}= ={1}= ={3}= ={4}= ={5}= ={6}= ={7}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g~b~c)
         > ./g [] 6:0-47
         > ./g [] 6:0-47
+        > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
-        > ./b [8] ./index.js 2:0-47
         [1] ./f.js 20 bytes {2} {11} {12} [built]
-    chunk    {3} multiple-vendors/vendors~a~async-a~async-b~b.js (vendors~a~async-a~async-b~b) 20 bytes <{9}> ={0}= ={11}= ={10}= ={1}= ={2}= ={6}= ={8}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~b)
-        > ./b b
+    chunk    {3} multiple-vendors/vendors~a~async-a~async-b~b.js (vendors~a~async-a~async-b~b) 20 bytes <{9}> ={0}= ={1}= ={10}= ={11}= ={2}= ={6}= ={8}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~b)
         > ./a a
-        > ./b [8] ./index.js 2:0-47
+        > ./b b
         > ./a [8] ./index.js 1:0-47
+        > ./b [8] ./index.js 2:0-47
         [3] ./node_modules/y.js 20 bytes {3} [built]
-    chunk    {4} multiple-vendors/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{9}> ={0}= ={12}= ={1}= ={2}= ={7}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~c)
+    chunk    {4} multiple-vendors/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{9}> ={0}= ={1}= ={12}= ={2}= ={7}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~c)
         > ./c c
         > ./c [8] ./index.js 3:0-47
         [7] ./node_modules/z.js 20 bytes {4} [built]
-    chunk    {5} multiple-vendors/async-g.js (async-g) 34 bytes <{0}> <{3}> <{1}> <{8}> <{10}> ={2}= [rendered]
+    chunk    {5} multiple-vendors/async-g.js (async-g) 34 bytes <{0}> <{1}> <{10}> <{3}> <{8}> ={2}= [rendered]
         > ./g [] 6:0-47
         > ./g [] 6:0-47
         [9] ./g.js 34 bytes {5} [built]
-    chunk    {6} multiple-vendors/async-b.js (async-b) 72 bytes <{9}> ={0}= ={3}= ={1}= ={2}= [rendered]
+    chunk    {6} multiple-vendors/async-b.js (async-b) 72 bytes <{9}> ={0}= ={1}= ={2}= ={3}= [rendered]
         > ./b [8] ./index.js 2:0-47
         [4] ./b.js 72 bytes {6} {11} [built]
-    chunk    {7} multiple-vendors/async-c.js (async-c) 72 bytes <{9}> ={0}= ={4}= ={1}= ={2}= [rendered]
+    chunk    {7} multiple-vendors/async-c.js (async-c) 72 bytes <{9}> ={0}= ={1}= ={2}= ={4}= [rendered]
         > ./c [8] ./index.js 3:0-47
         [5] ./c.js 72 bytes {7} {12} [built]
-    chunk    {8} multiple-vendors/a~async-a.js (a~async-a) 156 bytes <{9}> ={0}= ={3}= ={1}= >{2}< >{5}< [rendered] split chunk (cache group: default) (name: a~async-a)
+    chunk    {8} multiple-vendors/a~async-a.js (a~async-a) 156 bytes <{9}> ={0}= ={1}= ={3}= >{2}< >{5}< [rendered] split chunk (cache group: default) (name: a~async-a)
         > ./a [8] ./index.js 1:0-47
         [6] ./a.js + 1 modules 156 bytes {8} {10} [built]
             | ./a.js 121 bytes [built]
             | ./e.js 20 bytes [built]
-    chunk    {9} multiple-vendors/main.js (main) 147 bytes >{0}< >{3}< >{1}< >{2}< >{6}< >{8}< >{4}< >{7}< [entry] [rendered]
+    chunk    {9} multiple-vendors/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{6}< >{7}< >{8}< [entry] [rendered]
         > ./ main
         [8] ./index.js 147 bytes {9} [built]
     chunk   {10} multiple-vendors/a.js (a) 176 bytes ={0}= ={3}= >{2}< >{5}< [entry] [rendered]
@@ -256,51 +256,51 @@ Child all:
     Entrypoint a = all/vendors~a~async-a~async-b~async-c~b~c.js all/vendors~a~async-a~async-b~b.js all/a.js
     Entrypoint b = all/vendors~a~async-a~async-b~async-c~b~c.js all/vendors~a~async-a~async-b~b.js all/b.js
     Entrypoint c = all/vendors~a~async-a~async-b~async-c~b~c.js all/vendors~async-c~c.js all/c.js
-    chunk    {0} all/vendors~a~async-a~async-b~async-c~b~c.js (vendors~a~async-a~async-b~async-c~b~c) 20 bytes <{9}> ={4}= ={12}= ={3}= ={11}= ={10}= ={1}= ={2}= ={7}= ={6}= ={8}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~async-c~b~c)
+    chunk    {0} all/vendors~a~async-a~async-b~async-c~b~c.js (vendors~a~async-a~async-b~async-c~b~c) 20 bytes <{9}> ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~async-c~b~c)
+        > ./a a
+        > ./b b
         > ./c c
-        > ./b b
-        > ./a a
-        > ./c [8] ./index.js 3:0-47
-        > ./b [8] ./index.js 2:0-47
         > ./a [8] ./index.js 1:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
         [2] ./node_modules/x.js 20 bytes {0} [built]
-    chunk    {1} all/a~async-a~async-b~async-c~b~c.js (a~async-a~async-b~async-c~b~c) 20 bytes <{9}> ={0}= ={4}= ={2}= ={7}= ={3}= ={6}= ={8}= >{2}< >{5}< [rendered] split chunk (cache group: default) (name: a~async-a~async-b~async-c~b~c)
-        > ./c [8] ./index.js 3:0-47
-        > ./b [8] ./index.js 2:0-47
+    chunk    {1} all/a~async-a~async-b~async-c~b~c.js (a~async-a~async-b~async-c~b~c) 20 bytes <{9}> ={0}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= >{2}< >{5}< [rendered] split chunk (cache group: default) (name: a~async-a~async-b~async-c~b~c)
         > ./a [8] ./index.js 1:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
         [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-    chunk    {2} all/async-b~async-c~async-g~b~c.js (async-b~async-c~async-g~b~c) 20 bytes <{0}> <{3}> <{1}> <{8}> <{10}> <{9}> ={5}= ={0}= ={4}= ={1}= ={7}= ={3}= ={6}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g~b~c)
+    chunk    {2} all/async-b~async-c~async-g~b~c.js (async-b~async-c~async-g~b~c) 20 bytes <{0}> <{1}> <{10}> <{3}> <{8}> <{9}> ={0}= ={1}= ={3}= ={4}= ={5}= ={6}= ={7}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g~b~c)
         > ./g [] 6:0-47
         > ./g [] 6:0-47
+        > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
-        > ./b [8] ./index.js 2:0-47
         [1] ./f.js 20 bytes {2} {11} {12} [built]
-    chunk    {3} all/vendors~a~async-a~async-b~b.js (vendors~a~async-a~async-b~b) 20 bytes <{9}> ={0}= ={11}= ={10}= ={1}= ={2}= ={6}= ={8}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~b)
-        > ./b b
+    chunk    {3} all/vendors~a~async-a~async-b~b.js (vendors~a~async-a~async-b~b) 20 bytes <{9}> ={0}= ={1}= ={10}= ={11}= ={2}= ={6}= ={8}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~b)
         > ./a a
-        > ./b [8] ./index.js 2:0-47
+        > ./b b
         > ./a [8] ./index.js 1:0-47
+        > ./b [8] ./index.js 2:0-47
         [3] ./node_modules/y.js 20 bytes {3} [built]
-    chunk    {4} all/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{9}> ={0}= ={12}= ={1}= ={2}= ={7}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~c)
+    chunk    {4} all/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{9}> ={0}= ={1}= ={12}= ={2}= ={7}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~c)
         > ./c c
         > ./c [8] ./index.js 3:0-47
         [7] ./node_modules/z.js 20 bytes {4} [built]
-    chunk    {5} all/async-g.js (async-g) 34 bytes <{0}> <{3}> <{1}> <{8}> <{10}> ={2}= [rendered]
+    chunk    {5} all/async-g.js (async-g) 34 bytes <{0}> <{1}> <{10}> <{3}> <{8}> ={2}= [rendered]
         > ./g [] 6:0-47
         > ./g [] 6:0-47
         [9] ./g.js 34 bytes {5} [built]
-    chunk    {6} all/async-b.js (async-b) 72 bytes <{9}> ={0}= ={3}= ={1}= ={2}= [rendered]
+    chunk    {6} all/async-b.js (async-b) 72 bytes <{9}> ={0}= ={1}= ={2}= ={3}= [rendered]
         > ./b [8] ./index.js 2:0-47
         [4] ./b.js 72 bytes {6} {11} [built]
-    chunk    {7} all/async-c.js (async-c) 72 bytes <{9}> ={0}= ={4}= ={1}= ={2}= [rendered]
+    chunk    {7} all/async-c.js (async-c) 72 bytes <{9}> ={0}= ={1}= ={2}= ={4}= [rendered]
         > ./c [8] ./index.js 3:0-47
         [5] ./c.js 72 bytes {7} {12} [built]
-    chunk    {8} all/a~async-a.js (a~async-a) 156 bytes <{9}> ={0}= ={3}= ={1}= >{2}< >{5}< [rendered] split chunk (cache group: default) (name: a~async-a)
+    chunk    {8} all/a~async-a.js (a~async-a) 156 bytes <{9}> ={0}= ={1}= ={3}= >{2}< >{5}< [rendered] split chunk (cache group: default) (name: a~async-a)
         > ./a [8] ./index.js 1:0-47
         [6] ./a.js + 1 modules 156 bytes {8} {10} [built]
             | ./a.js 121 bytes [built]
             | ./e.js 20 bytes [built]
-    chunk    {9} all/main.js (main) 147 bytes >{0}< >{3}< >{1}< >{2}< >{6}< >{8}< >{4}< >{7}< [entry] [rendered]
+    chunk    {9} all/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{6}< >{7}< >{8}< [entry] [rendered]
         > ./ main
         [8] ./index.js 147 bytes {9} [built]
     chunk   {10} all/a.js (a) 176 bytes ={0}= ={3}= >{2}< >{5}< [entry] [rendered]

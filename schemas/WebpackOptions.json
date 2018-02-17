@@ -1335,11 +1335,6 @@
               "type": "object",
               "additionalProperties": false,
               "properties": {
-                "maxComplexity": {
-                  "description": "Limits the algorithmic complexity",
-                  "type": "number",
-                  "minimum": 0
-                },
                 "chunks": {
                   "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
                   "enum": [

@@ -9,7 +9,7 @@ Child fitting:
     4c485a9e1dc58eedfbd1.js  1.94 KiB       2  [emitted]  
     337c857e3e34cc5ef72d.js  1.94 KiB       3  [emitted]  
     Entrypoint main = 4c485a9e1dc58eedfbd1.js 337c857e3e34cc5ef72d.js a65f8652fd07c12d0049.js
-    chunk    {0} 706f97eb6a2b8fb1a17e.js 916 bytes <{2}> <{3}> <{1}>
+    chunk    {0} 706f97eb6a2b8fb1a17e.js 916 bytes <{1}> <{2}> <{3}>
         > ./g [4] ./index.js 7:0-13
         [7] ./g.js 916 bytes {0} [built]
     chunk    {1} a65f8652fd07c12d0049.js 1.87 KiB ={2}= ={3}= >{0}< [entry] [rendered]
@@ -17,11 +17,11 @@ Child fitting:
         [3] ./e.js 899 bytes {1} [built]
         [4] ./index.js 111 bytes {1} [built]
         [6] ./f.js 900 bytes {1} [built]
-    chunk    {2} 4c485a9e1dc58eedfbd1.js 1.76 KiB ={3}= ={1}= >{0}< [initial] [rendered] [recorded] aggressive splitted
+    chunk    {2} 4c485a9e1dc58eedfbd1.js 1.76 KiB ={1}= ={3}= >{0}< [initial] [rendered] [recorded] aggressive splitted
         > ./index main
         [0] ./b.js 899 bytes {2} [built]
         [5] ./a.js 899 bytes {2} [built]
-    chunk    {3} 337c857e3e34cc5ef72d.js 1.76 KiB ={2}= ={1}= >{0}< [initial] [rendered] [recorded] aggressive splitted
+    chunk    {3} 337c857e3e34cc5ef72d.js 1.76 KiB ={1}= ={2}= >{0}< [initial] [rendered] [recorded] aggressive splitted
         > ./index main
         [1] ./c.js 899 bytes {3} [built]
         [2] ./d.js 899 bytes {3} [built]
@@ -35,7 +35,7 @@ Child content-change:
     4c485a9e1dc58eedfbd1.js  1.94 KiB       2  [emitted]  
     337c857e3e34cc5ef72d.js  1.94 KiB       3  [emitted]  
     Entrypoint main = 4c485a9e1dc58eedfbd1.js 337c857e3e34cc5ef72d.js a65f8652fd07c12d0049.js
-    chunk    {0} 706f97eb6a2b8fb1a17e.js 916 bytes <{2}> <{3}> <{1}>
+    chunk    {0} 706f97eb6a2b8fb1a17e.js 916 bytes <{1}> <{2}> <{3}>
         > ./g [4] ./index.js 7:0-13
         [7] ./g.js 916 bytes {0} [built]
     chunk    {1} a65f8652fd07c12d0049.js 1.87 KiB ={2}= ={3}= >{0}< [entry] [rendered]
@@ -43,11 +43,11 @@ Child content-change:
         [3] ./e.js 899 bytes {1} [built]
         [4] ./index.js 111 bytes {1} [built]
         [6] ./f.js 900 bytes {1} [built]
-    chunk    {2} 4c485a9e1dc58eedfbd1.js 1.76 KiB ={3}= ={1}= >{0}< [initial] [rendered] [recorded] aggressive splitted
+    chunk    {2} 4c485a9e1dc58eedfbd1.js 1.76 KiB ={1}= ={3}= >{0}< [initial] [rendered] [recorded] aggressive splitted
         > ./index main
         [0] ./b.js 899 bytes {2} [built]
         [5] ./a.js 899 bytes {2} [built]
-    chunk    {3} 337c857e3e34cc5ef72d.js 1.76 KiB ={2}= ={1}= >{0}< [initial] [rendered] [recorded] aggressive splitted
+    chunk    {3} 337c857e3e34cc5ef72d.js 1.76 KiB ={1}= ={2}= >{0}< [initial] [rendered] [recorded] aggressive splitted
         > ./index main
         [1] ./c.js 899 bytes {3} [built]
         [2] ./d.js 899 bytes {3} [built]
