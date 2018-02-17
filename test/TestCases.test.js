@@ -7,10 +7,17 @@ const fs = require("fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
 const Test = require("mocha/lib/test");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
+
+const uglifyJsForTesting = new UglifyJsPlugin({
+	cache: false,
+	parallel: false,
+	sourceMap: true
+});
 
 const DEFAULT_OPTIMIZATIONS = {
 	removeAvailableModules: true,
@@ -24,10 +31,16 @@ const DEFAULT_OPTIMIZATIONS = {
 	noEmitOnErrors: false,
 	concatenateModules: false,
 	namedModules: false,
+	minimizer: [
+		uglifyJsForTesting
+	]
 };
 
 const NO_EMIT_ON_ERRORS_OPTIMIZATIONS = {
-	noEmitOnErrors: false
+	noEmitOnErrors: false,
+	minimizer: [
+		uglifyJsForTesting
+	]
 };
 
 describe("TestCases", () => {
