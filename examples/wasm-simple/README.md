@@ -430,23 +430,23 @@ module.exports = instance.exports;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.1
+Version: webpack 4.0.0-beta.2
                     Asset       Size  Chunks             Chunk Names
-              0.output.js   2.86 KiB       0  [emitted]  
+              0.output.js   2.88 KiB       0  [emitted]  
 9c8c5b45b5c12888e105.wasm   41 bytes    0, 1  [emitted]  
 62df68d96f4aa17e7b77.wasm   67 bytes       0  [emitted]  
 e5003c8310987c008228.wasm   62 bytes       0  [emitted]  
               1.output.js  462 bytes       1  [emitted]  
-                output.js   8.88 KiB       2  [emitted]  main
+                output.js   8.91 KiB       2  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js, 9c8c5b45b5c12888e105.wasm, 62df68d96f4aa17e7b77.wasm, e5003c8310987c008228.wasm 570 bytes <{2}> [rendered]
+chunk    {0} 0.output.js, 9c8c5b45b5c12888e105.wasm, 62df68d96f4aa17e7b77.wasm, e5003c8310987c008228.wasm 585 bytes <{2}> [rendered]
     > ./math [0] ./example.js 3:1-17
     [1] ./add.wasm 41 bytes {0} {1} [built]
         [exports: add]
         import() ./add.wasm [0] ./example.js 1:0-20
         harmony side effect evaluation ./add.wasm [2] ./math.js 1:0-33
         harmony export imported specifier ./add.wasm [2] ./math.js 5:0-37
-    [2] ./math.js 400 bytes {0} [built]
+    [2] ./math.js 415 bytes {0} [built]
         [exports: add, factorial, fibonacci, factorialJavascript, fibonacciJavascript]
         import() ./math [0] ./example.js 3:1-17
     [3] ./fibonacci.wasm 67 bytes {0} [built]
@@ -464,9 +464,9 @@ chunk    {1} 1.output.js, 9c8c5b45b5c12888e105.wasm 41 bytes <{2}> [rendered]
         import() ./add.wasm [0] ./example.js 1:0-20
         harmony side effect evaluation ./add.wasm [2] ./math.js 1:0-33
         harmony export imported specifier ./add.wasm [2] ./math.js 5:0-37
-chunk    {2} output.js (main) 762 bytes >{0}< >{1}< [entry] [rendered]
+chunk    {2} output.js (main) 788 bytes >{0}< >{1}< [entry] [rendered]
     > .\example.js main
-    [0] ./example.js 762 bytes {2} [built]
+    [0] ./example.js 788 bytes {2} [built]
         single entry .\example.js  main
 ```
 
@@ -474,7 +474,7 @@ chunk    {2} output.js (main) 762 bytes >{0}< >{1}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.1
+Version: webpack 4.0.0-beta.2
                     Asset       Size   Chunks             Chunk Names
               0.output.js  722 bytes     0, 1  [emitted]  
 fb3978ee17c3b5162f77.wasm   41 bytes  0, 1, 1  [emitted]  
@@ -483,14 +483,14 @@ e231a41fda9732bd5556.wasm   62 bytes     0, 1  [emitted]
               1.output.js  155 bytes        1  [emitted]  
                 output.js   2.52 KiB        2  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js, fb3978ee17c3b5162f77.wasm, 11be07941949e929b309.wasm, e231a41fda9732bd5556.wasm 570 bytes <{2}> [rendered]
+chunk    {0} 0.output.js, fb3978ee17c3b5162f77.wasm, 11be07941949e929b309.wasm, e231a41fda9732bd5556.wasm 585 bytes <{2}> [rendered]
     > ./math [0] ./example.js 3:1-17
     [1] ./add.wasm 41 bytes {0} {1} [built]
         [exports: add]
         import() ./add.wasm [0] ./example.js 1:0-20
         harmony side effect evaluation ./add.wasm [2] ./math.js 1:0-33
         harmony export imported specifier ./add.wasm [2] ./math.js 5:0-37
-    [2] ./math.js 400 bytes {0} [built]
+    [2] ./math.js 415 bytes {0} [built]
         [exports: add, factorial, fibonacci, factorialJavascript, fibonacciJavascript]
         import() ./math [0] ./example.js 3:1-17
     [3] ./fibonacci.wasm 67 bytes {0} [built]
@@ -510,8 +510,8 @@ chunk    {1} 1.output.js, fb3978ee17c3b5162f77.wasm 41 bytes <{2}> [rendered]
         import() ./add.wasm [0] ./example.js 1:0-20
         harmony side effect evaluation ./add.wasm [2] ./math.js 1:0-33
         harmony export imported specifier ./add.wasm [2] ./math.js 5:0-37
-chunk    {2} output.js (main) 762 bytes >{0}< >{1}< [entry] [rendered]
+chunk    {2} output.js (main) 788 bytes >{0}< >{1}< [entry] [rendered]
     > .\example.js main
-    [0] ./example.js 762 bytes {2} [built]
+    [0] ./example.js 788 bytes {2} [built]
         single entry .\example.js  main
 ```

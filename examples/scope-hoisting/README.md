@@ -439,7 +439,7 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.1
+Version: webpack 4.0.0-beta.2
       Asset      Size  Chunks             Chunk Names
 0.output.js  1.78 KiB       0  [emitted]  
   output.js   8.2 KiB       1  [emitted]  main
@@ -478,7 +478,7 @@ chunk    {1} output.js (main) 390 bytes >{0}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.1
+Version: webpack 4.0.0-beta.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  362 bytes       0  [emitted]  
   output.js    1.8 KiB       1  [emitted]  main

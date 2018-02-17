@@ -240,7 +240,7 @@ function c() { console.log("c"); }
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.1
+Version: webpack 4.0.0-beta.2
     Asset      Size  Chunks             Chunk Names
 output.js  5.93 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -272,7 +272,7 @@ chunk    {0} output.js (main) 726 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.1
+Version: webpack 4.0.0-beta.2
     Asset       Size  Chunks             Chunk Names
 output.js  971 bytes       0  [emitted]  main
 Entrypoint main = output.js

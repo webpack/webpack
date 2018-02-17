@@ -274,7 +274,7 @@ __webpack_require__.e(/*! import() */ 0).then(__webpack_require__.bind(null, /*!
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.1
+Version: webpack 4.0.0-beta.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  479 bytes       0  [emitted]  
   output.js   8.27 KiB       1  [emitted]  main
@@ -303,7 +303,7 @@ chunk    {1} output.js (main) 419 bytes >{0}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.1
+Version: webpack 4.0.0-beta.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  144 bytes       0  [emitted]  
   output.js   1.75 KiB       1  [emitted]  main
