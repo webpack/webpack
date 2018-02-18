@@ -60,4 +60,4 @@ documentation.
 
 ## Discussions
 
-Gitters is only for small questions. To discuss in long a subject, please send on gitters a link to your forum or blog.
+Gitter is only for small questions. To discuss in long a subject, please send on Gitter a link to your forum or blog.
