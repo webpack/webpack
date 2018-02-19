@@ -411,6 +411,17 @@ rules:
 
 
 
+# add "Send a PR" label when somebody with write permission say it
+- filters:
+    open: true
+    comment: "[Ss]end a [Pp][Rr]"
+    permission:
+      user: "{{comment.actor.login}}"
+  actions:
+    label: "Send a PR"
+
+
+
 # Move issue task
 - filters:
     open: true
