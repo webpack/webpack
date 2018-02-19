@@ -12,6 +12,7 @@
     "chrome-trace-event": "^0.1.1",
     "enhanced-resolve": "^4.0.0-beta.2",
     "eslint-scope": "^3.7.1",
+    "glob-regex": "^0.2.2",
     "loader-runner": "^2.3.0",
     "loader-utils": "^1.1.0",
     "memory-fs": "~0.4.1",
