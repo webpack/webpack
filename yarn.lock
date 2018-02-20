@@ -4402,15 +4402,15 @@ void-elements@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
 
-wasm-dce@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/wasm-dce/-/wasm-dce-1.0.1.tgz#992e372f378e14a528f161e46e2daec847ad8d84"
+wasm-dce@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/wasm-dce/-/wasm-dce-1.0.2.tgz#7e21e566fa17c61e8e257742a377a5bdb8f2e4f5"
   dependencies:
     "@babel/core" "^7.0.0-beta.39"
     "@babel/traverse" "^7.0.0-beta.39"
     "@babel/types" "^7.0.0-beta.39"
     babylon "^7.0.0-beta.39"
-    webassembly-interpreter "0.0.29"
+    webassembly-interpreter "0.0.30"
 
 watchpack@^1.4.0:
   version "1.4.0"
@@ -4424,9 +4424,9 @@ webassembly-floating-point-hex-parser@0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/webassembly-floating-point-hex-parser/-/webassembly-floating-point-hex-parser-0.1.2.tgz#85bb01f54e68690c2645ea0cfad26c1110fdf988"
 
-webassembly-interpreter@0.0.29:
-  version "0.0.29"
-  resolved "https://registry.yarnpkg.com/webassembly-interpreter/-/webassembly-interpreter-0.0.29.tgz#0cd3eb56c375f1441cbf04a30442798a79da18b3"
+webassembly-interpreter@0.0.30:
+  version "0.0.30"
+  resolved "https://registry.yarnpkg.com/webassembly-interpreter/-/webassembly-interpreter-0.0.30.tgz#f35aaec0fff2e6fd9ca7277eb1a9059dccedcb7f"
   dependencies:
     "@babel/code-frame" "^7.0.0-beta.36"
     long "^3.2.0"
