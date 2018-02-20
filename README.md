@@ -432,7 +432,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 <h2 align="center">Silver Sponsors</h2>
 
-[Become a sliver sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
+[Become a silver sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
 
 <div align="center">
 
