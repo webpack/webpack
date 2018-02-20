@@ -1,7 +1,6 @@
 module.exports = {
 	mode: "production",
 	module: {
-		rules: [
-		]
+		rules: []
 	}
 };
