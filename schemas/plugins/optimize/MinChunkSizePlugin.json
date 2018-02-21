@@ -1,5 +1,4 @@
 {
-  "id": "MinChunkSizePlugin",
   "additionalProperties": false,
   "type": "object",
   "required": [

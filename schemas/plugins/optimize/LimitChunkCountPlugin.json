@@ -1,5 +1,4 @@
 {
-  "id": "LimitChunkCountPlugin",
   "type": "object",
   "additionalProperties": false,
   "properties": {
