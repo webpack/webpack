@@ -49,7 +49,7 @@ describe("Errors", () => {
 				resolve();
 			});
 		});
-	};
+	}
 	it("should throw an error if file doesn't exist", (done) => {
 		getErrors({
 			mode: "development",
