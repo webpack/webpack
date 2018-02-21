@@ -168,4 +168,23 @@ describe("Errors", () => {
 			done();
 		});
 	});
+	it("should show loader name when emit an error from a loader", (done) => {
+		getErrors({
+			mode: "development",
+			entry: "./entry-point",
+			module: {
+				rules: [{
+					test: /entry-point\.js$/,
+					use: path.resolve(base, "./emit-error-loader")
+				}]
+			}
+
+		}, (errors, warnings) => {
+			errors.length.should.be.eql(1);
+			warnings.length.should.be.eql(1);
+			errors[0].split("\n")[1].should.match(/^Module build failed\(from emit-error-loader\.js\)/);
+			warnings[0].split("\n")[1].should.match(/^Module warning\(from emit-error-loader\.js\)/);
+			done();
+		});
+	});
 });
