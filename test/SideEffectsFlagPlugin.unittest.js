@@ -27,6 +27,7 @@ describe("SideEffectsFlagPlugin", () => {
 		SideEffectsFlagPlugin.moduleHasSideEffects("./src/x/y/z.js", "src/**/{x,y,z}.js").should.eql(true);
 		SideEffectsFlagPlugin.moduleHasSideEffects("./src/x/y/z.js", "src/**/[x-z].js").should.eql(true);
 		SideEffectsFlagPlugin.moduleHasSideEffects("./src/x/y/z.js", "src/**/[[:lower:]].js").should.eql(true);
+		SideEffectsFlagPlugin.moduleHasSideEffects("./src/x/y/z.js", "!*.js").should.eql(false);
 		SideEffectsFlagPlugin.moduleHasSideEffects("./src/x/y/z.js", "!**/*.js").should.eql(false);
 	});
 
