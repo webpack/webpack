@@ -290,6 +290,8 @@ rules:
     ensure:
       value: "{{review.state}}"
       equals: APPROVED
+    permission:
+      user: "{{review.user.login}}"
   actions:
     label:
       add: "PR: reviewed-approved"
@@ -303,6 +305,8 @@ rules:
       commit: true
       review:
         state: APPROVED|CHANGES_REQUESTED
+    permission:
+      user: "{{review.user.login}}"
     ensure:
       value: "{{review.state}}"
       equals: CHANGES_REQUESTED
@@ -319,6 +323,8 @@ rules:
       review:
         state: APPROVED|CHANGES_REQUESTED
       commit: true
+    permission:
+      user: "{{review.user.login}}"
     not:
       label: "review-outdated"
     ensure:
