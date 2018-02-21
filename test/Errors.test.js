@@ -17,7 +17,7 @@ describe("Errors", () => {
 				callback();
 			},
 			writeFile: function(name, content, callback) {
-				files[name] = content.toString("utf-8");
+				files[name] = content.toString("utf8");
 				callback();
 			}
 		};
@@ -42,6 +42,14 @@ describe("Errors", () => {
 			callback(stats.errors, stats.warnings);
 		});
 	}
+	function getErrorsPromise(options, callback) {
+		return new Promise((resolve, reject) => {
+			getErrors(options, (errors, warnings) => {
+				callback(errors, warnings);
+				resolve();
+			});
+		});
+	};
 	it("should throw an error if file doesn't exist", (done) => {
 		getErrors({
 			mode: "development",
@@ -168,23 +176,59 @@ describe("Errors", () => {
 			done();
 		});
 	});
-	it("should show loader name when emit an error from a loader", (done) => {
-		getErrors({
-			mode: "development",
-			entry: "./entry-point",
-			module: {
-				rules: [{
-					test: /entry-point\.js$/,
-					use: path.resolve(base, "./emit-error-loader")
-				}]
-			}
+	it.only("should show loader name when emit/throw an error or warning from a loader", () => {
+		return Promise.all([
+			getErrorsPromise({
+				mode: "development",
+				entry: "./not-a-json.js",
+				module: {
+					rules: [{
+						test: /not-a-json\.js$/,
+						use: [
+							"json-loader",
+							{
+								loader: path.resolve(base, "./emit-error-loader")
+							}
+						]
+					}]
+				}
 
-		}, (errors, warnings) => {
-			errors.length.should.be.eql(1);
-			warnings.length.should.be.eql(1);
-			errors[0].split("\n")[1].should.match(/^Module build failed\(from emit-error-loader\.js\)/);
-			warnings[0].split("\n")[1].should.match(/^Module warning\(from emit-error-loader\.js\)/);
-			done();
-		});
+			}, (errors, warnings) => {
+				warnings.length.should.be.eql(1);
+				warnings[0].split("\n")[1].should.match(/^Module Warning \(from emit-error-loader\)/);
+				errors.length.should.be.eql(2);
+				errors[0].split("\n")[1].should.match(/^Module Error \(from emit-error-loader\)/);
+				errors[1].split("\n")[1].should.match(/^Module build failed \(from json-loader\)/);
+			}),
+			getErrorsPromise({
+				mode: "development",
+				entry: "./entry-point.js",
+				module: {
+					rules: [{
+						test: /entry-point\.js$/,
+						use: path.resolve(base, "./async-error-loader")
+					}]
+				}
+
+			}, (errors, warnings) => {
+				errors.length.should.be.eql(1);
+				errors[0].split("\n")[1].should.match(/^Module build failed \(from async-error-loader\)/);
+			}),
+			getErrorsPromise({
+				mode: "development",
+				entry: "./entry-point.js",
+				module: {
+					rules: [{
+						test: /entry-point\.js$/,
+						use: path.resolve(base, "./throw-error-loader")
+					}]
+				}
+
+			}, (errors, warnings) => {
+				errors.length.should.be.eql(1);
+				errors[0].split("\n")[1].should.match(/^Module build failed \(from throw-error-loader\)/);
+			}),
+
+		]);
 	});
 });
