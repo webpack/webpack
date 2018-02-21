@@ -42,6 +42,7 @@ describe("Errors", () => {
 			callback(stats.errors, stats.warnings);
 		});
 	}
+
 	function getErrorsPromise(options, callback) {
 		return new Promise((resolve, reject) => {
 			getErrors(options, (errors, warnings) => {
