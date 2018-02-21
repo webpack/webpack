@@ -1,5 +1,4 @@
 {
-  "id": "AggressiveSplittingPlugin",
   "type": "object",
   "additionalProperties": false,
   "properties": {
