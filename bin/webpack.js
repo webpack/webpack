@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 
-const {
-	exec
-} = require("child_process");
+const cp = require("child_process");
 const inquirer = require("inquirer");
 
 function runCommand(command) {
-	exec(command, (error, stdout, stderr) => {
+	cp.exec(command, (error, stdout, stderr) => {
 		if(!error) {
 			console.log("webpack-cli installed successfully");
 			return true;
@@ -30,14 +28,6 @@ if(!webpackCliInstalled) {
 	const fs = require("fs");
 	const isYarn = fs.existsSync(path.resolve(process.cwd(), "yarn.lock"));
 
-	let command;
-
-	if(isYarn) {
-		command = "yarn add -D webpack-cli";
-	} else {
-		command = "npm install --save-dev webpack-cli";
-	}
-
 	const question = {
 		type: "confirm",
 		name: "shouldInstall",
@@ -49,6 +39,14 @@ if(!webpackCliInstalled) {
 	inquirer.prompt(question).then((answer) => {
 		if(answer) {
 			console.error("Installing webpack-cli");
+
+			let command;
+			if(isYarn) {
+				command = "yarn add -D webpack-cli";
+			} else {
+				command = "npm install --save-dev webpack-cli";
+			}
+
 			if(runCommand(command)) {
 				require("webpack-cli"); // eslint-disable-line node/no-missing-require, node/no-extraneous-require, node/no-unpublished-require
 			}
