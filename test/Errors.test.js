@@ -196,10 +196,10 @@ describe("Errors", () => {
 
 			}, (errors, warnings) => {
 				warnings.length.should.be.eql(1);
-				warnings[0].split("\n")[1].should.match(/^Module Warning \(@ emit-error-loader\)/);
+				warnings[0].split("\n")[1].should.match(/^Module Warning \(@ emit-error-loader\): [^\s]+/);
 				errors.length.should.be.eql(2);
-				errors[0].split("\n")[1].should.match(/^Module Error \(@ emit-error-loader\)/);
-				errors[1].split("\n")[1].should.match(/^Module build failed \(@ json-loader\)/);
+				errors[0].split("\n")[1].should.match(/^Module Error \(@ emit-error-loader\): [^\s]+/);
+				errors[1].split("\n")[1].should.match(/^Module build failed \(@ json-loader\): [^\s]+/);
 			}),
 			getErrorsPromise({
 				mode: "development",
@@ -213,7 +213,7 @@ describe("Errors", () => {
 
 			}, (errors, warnings) => {
 				errors.length.should.be.eql(1);
-				errors[0].split("\n")[1].should.match(/^Module build failed \(@ async-error-loader\)/);
+				errors[0].split("\n")[1].should.match(/^Module build failed \(@ async-error-loader\): [^\s]+/);
 			}),
 			getErrorsPromise({
 				mode: "development",
@@ -227,7 +227,27 @@ describe("Errors", () => {
 
 			}, (errors, warnings) => {
 				errors.length.should.be.eql(1);
-				errors[0].split("\n")[1].should.match(/^Module build failed \(@ throw-error-loader\)/);
+				errors[0].split("\n")[1].should.match(/^Module build failed \(@ throw-error-loader\): [^\s]+/);
+			}),
+			getErrorsPromise({
+				mode: "development",
+				entry: "./entry-point.js",
+				module: {
+					rules: [{
+						test: /entry-point\.js$/,
+						use: path.resolve(base, "./irregular-error-loader")
+					}]
+				}
+
+			}, (errors, warnings) => {
+				warnings.length.should.be.eql(2);
+				warnings[0].split("\n")[1].should.match(/^Module Warning \(@ irregular-error-loader\): [^\s]+/);
+				warnings[1].split("\n")[1].should.match(/^Module Warning \(@ irregular-error-loader\): [^\s]+/);
+
+				errors.length.should.be.eql(3);
+				errors[0].split("\n")[1].should.match(/^Module Error \(@ irregular-error-loader\): [^\s]+/);
+				errors[1].split("\n")[1].should.match(/^Module Error \(@ irregular-error-loader\): [^\s]+/);
+				errors[2].split("\n")[1].should.match(/^Module build failed \(@ irregular-error-loader\): [^\s]+/);
 			}),
 
 		]);
