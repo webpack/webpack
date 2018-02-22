@@ -177,7 +177,7 @@ describe("Errors", () => {
 			done();
 		});
 	});
-	it.only("should show loader name when emit/throw an error or warning from a loader", () => {
+	it("should show loader name when emit/throw an error or warning from a loader", () => {
 		return Promise.all([
 			getErrorsPromise({
 				mode: "development",
@@ -196,10 +196,10 @@ describe("Errors", () => {
 
 			}, (errors, warnings) => {
 				warnings.length.should.be.eql(1);
-				warnings[0].split("\n")[1].should.match(/^Module Warning \(from emit-error-loader\)/);
+				warnings[0].split("\n")[1].should.match(/^Module Warning \(@ emit-error-loader\)/);
 				errors.length.should.be.eql(2);
-				errors[0].split("\n")[1].should.match(/^Module Error \(from emit-error-loader\)/);
-				errors[1].split("\n")[1].should.match(/^Module build failed \(from json-loader\)/);
+				errors[0].split("\n")[1].should.match(/^Module Error \(@ emit-error-loader\)/);
+				errors[1].split("\n")[1].should.match(/^Module build failed \(@ json-loader\)/);
 			}),
 			getErrorsPromise({
 				mode: "development",
@@ -213,7 +213,7 @@ describe("Errors", () => {
 
 			}, (errors, warnings) => {
 				errors.length.should.be.eql(1);
-				errors[0].split("\n")[1].should.match(/^Module build failed \(from async-error-loader\)/);
+				errors[0].split("\n")[1].should.match(/^Module build failed \(@ async-error-loader\)/);
 			}),
 			getErrorsPromise({
 				mode: "development",
@@ -227,7 +227,7 @@ describe("Errors", () => {
 
 			}, (errors, warnings) => {
 				errors.length.should.be.eql(1);
-				errors[0].split("\n")[1].should.match(/^Module build failed \(from throw-error-loader\)/);
+				errors[0].split("\n")[1].should.match(/^Module build failed \(@ throw-error-loader\)/);
 			}),
 
 		]);
