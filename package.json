@@ -10,7 +10,7 @@
     "ajv": "^6.1.0",
     "ajv-keywords": "^3.1.0",
     "chrome-trace-event": "^0.1.1",
-    "enhanced-resolve": "^4.0.0-beta.2",
+    "enhanced-resolve": "^4.0.0",
     "eslint-scope": "^3.7.1",
     "loader-runner": "^2.3.0",
     "loader-utils": "^1.1.0",
@@ -19,7 +19,7 @@
     "neo-async": "^2.5.0",
     "node-libs-browser": "^2.0.0",
     "schema-utils": "^0.4.2",
-    "tapable": "^1.0.0-beta.5",
+    "tapable": "^1.0.0",
     "uglifyjs-webpack-plugin": "^1.1.1",
     "watchpack": "^1.4.0",
     "webpack-sources": "^1.0.1"
