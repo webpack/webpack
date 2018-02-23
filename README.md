@@ -283,6 +283,8 @@ If you create a loader or plugin, we would <3 for you to open source it, and put
 We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of it's flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
 
 If you're just getting started, take a look at [our new docs and concepts page](https://webpack.js.org/concepts/). This has a high level overview that is great for beginners!!
+                                                 OR
+If you're  interested in old documentation of webpack1 [This is the link](https://github.com/webpack/docs/wiki).
 
 If you want to discuss something or just need help, [here is our Gitter room](https://gitter.im/webpack/webpack) where there are always individuals looking to help out!
 
