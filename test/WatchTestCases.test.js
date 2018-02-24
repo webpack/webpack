@@ -1,10 +1,11 @@
 "use strict";
 
-const should = require("should");
+require("should");
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
 const Test = require("mocha/lib/test");
+const mkdirp = require("mkdirp");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
 const Stats = require("../lib/Stats");
@@ -46,6 +47,11 @@ function remove(src) {
 }
 
 describe("WatchTestCases", () => {
+	if(process.env.NO_WATCH_TESTS) {
+		it("long running tests excluded");
+		return;
+	}
+
 	const casesPath = path.join(__dirname, "watchCases");
 	let categories = fs.readdirSync(casesPath);
 
@@ -68,7 +74,7 @@ describe("WatchTestCases", () => {
 			const dest = path.join(__dirname, "js", "watch-src", category.name);
 			if(!fs.existsSync(dest))
 				fs.mkdirSync(dest);
-		})
+		});
 		describe(category.name, () => {
 			category.tests.forEach((testName) => {
 				describe(testName, () => {
@@ -92,6 +98,7 @@ describe("WatchTestCases", () => {
 						if(fs.existsSync(configPath))
 							options = require(configPath);
 						const applyConfig = (options) => {
+							if(!options.mode) options.mode = "development";
 							if(!options.context) options.context = tempDirectory;
 							if(!options.entry) options.entry = "./index.js";
 							if(!options.target) options.target = "async-node";
@@ -118,7 +125,7 @@ describe("WatchTestCases", () => {
 
 						setTimeout(() => {
 							const compiler = webpack(options);
-							compiler.plugin("invalid", (filename, mtime) => {
+							compiler.hooks.invalid.tap("WatchTestCasesTest", (filename, mtime) => {
 								triggeringFilename = filename;
 							});
 							const watching = compiler.watch({
@@ -140,6 +147,7 @@ describe("WatchTestCases", () => {
 								if(err) return done(err);
 								const statOptions = Stats.presetToOptions("verbose");
 								statOptions.colors = false;
+								mkdirp.sync(outputDirectory);
 								fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
 								const jsonStats = stats.toJson({
 									errorDetails: true
@@ -154,6 +162,10 @@ describe("WatchTestCases", () => {
 									exportedTests++;
 									return test;
 								}
+
+								const globalContext = {
+									console: console
+								};
 
 								function _require(currentDirectory, module) {
 									if(Array.isArray(module) || /^\.\.?\//.test(module)) {
@@ -170,11 +182,15 @@ describe("WatchTestCases", () => {
 											p = path.join(currentDirectory, module);
 											content = fs.readFileSync(p, "utf-8");
 										}
-										fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE) {" + content + "\n})", p);
+										if(options.target === "web" || options.target === "webworker") {
+											fn = vm.runInNewContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, window) {" + content + "\n})", globalContext, p);
+										} else {
+											fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE) {" + content + "\n})", p);
+										}
 										const m = {
 											exports: {}
 										};
-										fn.call(m.exports, _require.bind(null, path.dirname(p)), m, m.exports, path.dirname(p), p, _it, run.name, jsonStats, state);
+										fn.call(m.exports, _require.bind(null, path.dirname(p)), m, m.exports, path.dirname(p), p, _it, run.name, jsonStats, state, globalContext);
 										return module.exports;
 									} else if(testConfig.modules && module in testConfig.modules) {
 										return testConfig.modules[module];
@@ -188,7 +204,7 @@ describe("WatchTestCases", () => {
 								} catch(e) {}
 
 								if(testConfig.noTests) return process.nextTick(done);
-								_require(outputDirectory, "./bundle.js");
+								_require(outputDirectory, testConfig.bundlePath || "./bundle.js");
 
 								if(exportedTests < 1) return done(new Error("No tests exported by test case"));
 								runIdx++;

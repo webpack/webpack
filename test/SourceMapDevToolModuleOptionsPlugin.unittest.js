@@ -1,12 +1,10 @@
 "use strict";
 
-const should = require("should");
+require("should");
 const SourceMapDevToolModuleOptionsPlugin = require("../lib/SourceMapDevToolModuleOptionsPlugin");
-const applyPluginWithOptions = require('./helpers/applyPluginWithOptions');
+const applyPluginWithOptions = require("./helpers/applyPluginWithOptions");
 
 describe("SourceMapDevToolModuleOptionsPlugin", () => {
-	it("has apply function", () => (new SourceMapDevToolModuleOptionsPlugin()).apply.should.be.a.Function());
-
 	describe("when applied", () => {
 		let eventBindings;
 

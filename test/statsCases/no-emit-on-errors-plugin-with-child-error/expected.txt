@@ -1,12 +1,18 @@
-Hash: fb0670ebd6884ae658dc
+Hash: 885948e5541fff6e85ac
 Time: Xms
-    Asset     Size  Chunks  Chunk Names
- child.js  2.47 kB          
-bundle.js  2.47 kB       0  main
-   [0] (webpack)/test/statsCases/no-emit-on-errors-plugin-with-child-error/index.js 0 bytes {0} [built]
+Built at: Thu Jan 01 1970 00:00:00 GMT
+    Asset      Size  Chunks  Chunk Names
+ child.js  2.61 KiB          
+bundle.js  2.61 KiB       0  main
+Entrypoint main = bundle.js
+   [0] ./index.js 0 bytes {0} [built]
+
+WARNING in configuration
+The 'mode' option has not been set. Set 'mode' option to 'development' or 'production' to enable defaults for this environment. 
 Child child:
-       Asset     Size  Chunks  Chunk Names
-    child.js  2.47 kB       0  child
-       [0] (webpack)/test/statsCases/no-emit-on-errors-plugin-with-child-error/index.js 0 bytes {0} [built]
+       Asset      Size  Chunks  Chunk Names
+    child.js  2.61 KiB       0  child
+    Entrypoint child = child.js
+       [0] ./index.js 0 bytes {0} [built]
     
     ERROR in forced error

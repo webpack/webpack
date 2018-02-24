@@ -1,10 +1,11 @@
 "use strict";
 
 /* globals describe it */
-const should = require("should");
+require("should");
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
+const mkdirp = require("mkdirp");
 const Test = require("mocha/lib/test");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
@@ -43,13 +44,15 @@ describe("ConfigTestCases", () => {
 					const optionsArr = [].concat(options);
 					optionsArr.forEach((options, idx) => {
 						if(!options.context) options.context = testDirectory;
+						if(!options.mode) options.mode = "production";
+						if(!options.optimization) options.optimization = {};
+						if(options.optimization.minimize === undefined) options.optimization.minimize = false;
 						if(!options.entry) options.entry = "./index.js";
 						if(!options.target) options.target = "async-node";
 						if(!options.output) options.output = {};
 						if(!options.output.path) options.output.path = outputDirectory;
 						if(typeof options.output.pathinfo === "undefined") options.output.pathinfo = true;
 						if(!options.output.filename) options.output.filename = "bundle" + idx + ".js";
-						if(!options.output.chunkFilename) options.output.chunkFilename = "[id].bundle" + idx + ".js";
 					});
 					let testConfig = {
 						findBundle: function(i, options) {
@@ -69,7 +72,7 @@ describe("ConfigTestCases", () => {
 					webpack(options, (err, stats) => {
 						if(err) {
 							const fakeStats = {
-								errors: [err]
+								errors: [err.stack]
 							};
 							if(checkArrayExpectation(testDirectory, fakeStats, "error", "Error", done)) return;
 							// Wait for uncatched errors to occur
@@ -77,6 +80,7 @@ describe("ConfigTestCases", () => {
 						}
 						const statOptions = Stats.presetToOptions("verbose");
 						statOptions.colors = false;
+						mkdirp.sync(outputDirectory);
 						fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
 						const jsonStats = stats.toJson({
 							errorDetails: true

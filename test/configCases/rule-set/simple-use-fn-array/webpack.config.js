@@ -1,4 +1,3 @@
-
 function createFunctionArrayFromUseArray(useArray) {
 	return useArray.map(function(useItem) {
 		return function(data) {
@@ -25,9 +24,8 @@ var useArray = createFunctionArrayFromUseArray([
 
 module.exports = {
 	module: {
-		rules: [
-			{ oneOf: [
-				{
+		rules: [{
+			oneOf: [{
 					test: {
 						and: [
 							/a.\.js$/,
@@ -54,8 +52,7 @@ module.exports = {
 					loader: "./loader",
 					options: "third"
 				}
-			] }
-		]
+			]
+		}]
 	}
 };
-

@@ -2,6 +2,11 @@ it("should be able to load a file with the require.context method", function() {
 	require.context("./templates")("./tmpl").should.be.eql("test template");
 	(require.context("./././templates"))("./tmpl").should.be.eql("test template");
 	(require.context("././templates/.")("./tmpl")).should.be.eql("test template");
+	require.context("./loaders/queryloader?dog=bark!./templates?cat=meow")("./tmpl").should.be.eql({
+		resourceQuery: "?cat=meow",
+		query: "?dog=bark",
+		prev: "module.exports = \"test template\";"
+	});
 	require . context ( "." + "/." + "/" + "templ" + "ates" ) ( "./subdir/tmpl.js" ).should.be.eql("subdir test template");
 	require.context("./templates", true, /./)("xyz").should.be.eql("xyz");
 });
@@ -29,10 +34,10 @@ it("should be able to use renaming combined with a context", function() {
 });
 
 it("should compile an empty context", function() {
-	var x = "";
+	var x = "xxx";
 	(function() {
 		require("./templates/notExisting" + x);
-	}).toString().should.not.match(/require/);
+	}).should.throw(/xxx/);
 });
 
 it("should execute an empty context", function() {

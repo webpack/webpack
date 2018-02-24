@@ -22,10 +22,10 @@
 {{test.css}}
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
 # Console output
@@ -40,14 +40,14 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

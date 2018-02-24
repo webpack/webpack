@@ -1,6 +1,9 @@
-Hash: 0bd4f09244f0e8c60354
+Hash: ee367da3e170c28a39bf
 Time: Xms
-    Asset     Size  Chunks             Chunk Names
-bundle.js  2.47 kB       0  [emitted]  main
-   [0] (webpack)/test/statsCases/simple-more-info/index.js 0 bytes {0} [built]
-        factory:Xms building:Xms = Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
+    Asset      Size  Chunks             Chunk Names
+bundle.js  2.61 KiB       0  [emitted]  main
+Entrypoint main = bundle.js
+   [0] ./index.js 0 bytes {0} [built]
+       single entry ./index  main
+       factory:Xms building:Xms = Xms

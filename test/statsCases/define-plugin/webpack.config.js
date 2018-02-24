@@ -1,6 +1,8 @@
 var webpack = require("../../../");
 module.exports = [
+
 	{
+		mode: "production",
 		entry: "./index",
 		plugins: [
 			new webpack.DefinePlugin({
@@ -8,7 +10,9 @@ module.exports = [
 			})
 		]
 	},
+
 	{
+		mode: "production",
 		entry: "./index",
 		plugins: [
 			new webpack.DefinePlugin({
@@ -16,4 +20,5 @@ module.exports = [
 			})
 		]
 	}
+
 ];

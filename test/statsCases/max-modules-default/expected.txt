@@ -1,20 +1,22 @@
-Hash: b70eb677e8a8b3694c25
+Hash: c5cf5ab0cc0a404f1acf
 Time: Xms
-  Asset     Size  Chunks             Chunk Names
-main.js  5.79 kB       0  [emitted]  main
-   [0] (webpack)/test/statsCases/max-modules-default/a.js?1 33 bytes {0} [built]
-   [1] (webpack)/test/statsCases/max-modules-default/a.js?2 33 bytes {0} [built]
-   [2] (webpack)/test/statsCases/max-modules-default/a.js?3 33 bytes {0} [built]
-   [3] (webpack)/test/statsCases/max-modules-default/a.js?4 33 bytes {0} [built]
-   [4] (webpack)/test/statsCases/max-modules-default/a.js?5 33 bytes {0} [built]
-   [5] (webpack)/test/statsCases/max-modules-default/a.js?6 33 bytes {0} [built]
-   [6] (webpack)/test/statsCases/max-modules-default/a.js?7 33 bytes {0} [built]
-   [7] (webpack)/test/statsCases/max-modules-default/a.js?8 33 bytes {0} [built]
-   [8] (webpack)/test/statsCases/max-modules-default/a.js?9 33 bytes {0} [built]
-   [9] (webpack)/test/statsCases/max-modules-default/a.js?10 33 bytes {0} [built]
-  [10] (webpack)/test/statsCases/max-modules-default/index.js 181 bytes {0} [built]
-  [11] (webpack)/test/statsCases/max-modules-default/c.js?1 33 bytes {0} [built]
-  [13] (webpack)/test/statsCases/max-modules-default/c.js?2 33 bytes {0} [built]
-  [27] (webpack)/test/statsCases/max-modules-default/c.js?9 33 bytes {0} [built]
-  [29] (webpack)/test/statsCases/max-modules-default/c.js?10 33 bytes {0} [built]
+Built at: Thu Jan 01 1970 00:00:00 GMT
+  Asset      Size  Chunks             Chunk Names
+main.js  5.85 KiB       0  [emitted]  main
+Entrypoint main = main.js
+   [0] ./a.js?1 33 bytes {0} [built]
+   [1] ./a.js?2 33 bytes {0} [built]
+   [2] ./a.js?3 33 bytes {0} [built]
+   [3] ./a.js?4 33 bytes {0} [built]
+   [4] ./a.js?5 33 bytes {0} [built]
+   [5] ./a.js?6 33 bytes {0} [built]
+   [6] ./a.js?7 33 bytes {0} [built]
+   [7] ./a.js?8 33 bytes {0} [built]
+   [8] ./a.js?9 33 bytes {0} [built]
+   [9] ./a.js?10 33 bytes {0} [built]
+  [10] ./index.js 181 bytes {0} [built]
+  [11] ./c.js?1 33 bytes {0} [built]
+  [13] ./c.js?2 33 bytes {0} [built]
+  [27] ./c.js?9 33 bytes {0} [built]
+  [29] ./c.js?10 33 bytes {0} [built]
     + 16 hidden modules

@@ -3,9 +3,10 @@
 ``` javascript
 var path = require("path");
 module.exports = {
+	// mode: "development || "production",
 	entry: "./example",
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "MyLibrary.umd.js",
 		library: "MyLibrary",
 		libraryTarget: "umd"
@@ -13,7 +14,7 @@ module.exports = {
 };
 ```
 
-# js/MyLibrary.umd.js
+# dist/MyLibrary.umd.js
 
 ``` javascript
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -25,7 +26,7 @@ module.exports = {
 		exports["MyLibrary"] = factory();
 	else
 		root["MyLibrary"] = factory();
-})(this, function() {
+})(window, function() {
 ```
 <details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -76,6 +77,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -89,7 +95,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -106,13 +113,12 @@ return /******/ (function(modules) { // webpackBootstrap
   !*** ./example.js ***!
   \********************/
 /*! exports provided: value, increment, default */
-/*! all exports used */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+__webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "value", function() { return value; });
-/* harmony export (immutable) */ __webpack_exports__["increment"] = increment;
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "increment", function() { return increment; });
 var value = 0;
 function increment() {
 	value++;
@@ -127,30 +133,32 @@ function increment() {
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 0b2bf5443af50d14e1e0
-Version: webpack 3.5.1
-           Asset     Size  Chunks             Chunk Names
-MyLibrary.umd.js  3.45 kB       0  [emitted]  main
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.0.0-beta.2
+           Asset      Size  Chunks             Chunk Names
+MyLibrary.umd.js  3.56 KiB       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
-    > main [0] ./example.js 
+    > ./example main
     [0] ./example.js 97 bytes {0} [built]
         [exports: value, increment, default]
+        single entry ./example  main
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 0b2bf5443af50d14e1e0
-Version: webpack 3.5.1
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.0.0-beta.2
            Asset       Size  Chunks             Chunk Names
-MyLibrary.umd.js  872 bytes       0  [emitted]  main
+MyLibrary.umd.js  926 bytes       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
-    > main [0] ./example.js 
+    > ./example main
     [0] ./example.js 97 bytes {0} [built]
         [exports: value, increment, default]
+        single entry ./example  main
 ```

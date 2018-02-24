@@ -2,6 +2,7 @@ module.exports = {
 	name: "compiler-name",
 	module: {
 		rules: [
+
 			{
 				test: /a\.js$/,
 				compiler: "compiler",

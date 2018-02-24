@@ -1,6 +1,6 @@
 "use strict";
 
-const should = require("should");
+require("should");
 const path = require("path");
 
 const webpack = require("../lib/webpack");
@@ -9,6 +9,7 @@ describe("Integration", function() {
 	this.timeout(5000);
 	it("should compile library1", (done) => {
 		webpack({
+			mode: "production",
 			entry: "library1",
 			bail: true,
 			context: path.join(__dirname, "browsertest"),
@@ -27,6 +28,7 @@ describe("Integration", function() {
 	});
 	it("should compile library2", (done) => {
 		webpack({
+			mode: "production",
 			entry: "library2",
 			context: path.join(__dirname, "browsertest"),
 			output: {
@@ -46,6 +48,9 @@ describe("Integration", function() {
 			},
 			amd: {
 				fromOptions: true
+			},
+			optimization: {
+				minimize: false
 			},
 			resolve: {
 				// cannot resolve should outside the outermost node_modules
@@ -76,8 +81,8 @@ describe("Integration", function() {
 					}
 				}),
 				function() {
-					this.plugin("normal-module-factory", (nmf) => {
-						nmf.plugin("after-resolve", (data, callback) => {
+					this.hooks.normalModuleFactory.tap("IntegrationTest", (nmf) => {
+						nmf.hooks.afterResolve.tapAsync("IntegrationTest", (data, callback) => {
 							data.resource = data.resource.replace(/extra\.js/, "extra2.js");
 							setTimeout(() => callback(null, data), 50);
 						});

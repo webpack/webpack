@@ -24,9 +24,6 @@ matrix:
     - os: linux
       node_js: "6"
       env: NO_WATCH_TESTS=1 JOB_PART=integration
-    - os: linux
-      node_js: "4"
-      env: NO_WATCH_TESTS=1 JOB_PART=integration
     - os: osx
       node_js: "8"
       env: NO_WATCH_TESTS=1 JOB_PART=integration
@@ -35,7 +32,9 @@ matrix:
   fast_finish: true
 
 install:
-  - bash ./ci/travis-install.sh
+  - yarn --frozen-lockfile
+  - yarn link --frozen-lockfile || true
+  - yarn link webpack --frozen-lockfile
 
 script: npm run travis:$JOB_PART
 

@@ -23,16 +23,25 @@ function testCase(load, done) {
 it("should be able to use expressions in import", function(done) {
 	function load(name, expected, callback) {
 		import("./dir/" + name + '.js')
-			.then((result) => {result.should.be.eql(expected); callback()})
+			.then((result) => {result.should.be.eql({ default: expected }); callback()})
 			.catch((err) => {done(err)});
 	}
 	testCase(load, done);
 });
 
-it("should be able to use expressions in System.import", function(done) {
+it("should be able to use expressions in lazy-once import", function(done) {
 	function load(name, expected, callback) {
-		System.import("./dir2/" + name).then((result) => {
-			result.should.be.eql(expected);
+		import(/* webpackMode: "lazy-once" */ "./dir/" + name + '.js')
+			.then((result) => {result.should.be.eql({ default: expected }); callback()})
+			.catch((err) => {done(err)});
+	}
+	testCase(load, done);
+});
+
+it("should be able to use expressions in import", function(done) {
+	function load(name, expected, callback) {
+		import("./dir2/" + name).then((result) => {
+			result.should.be.eql({ default: expected });
 			callback();
 		}).catch((err) => {
 			done(err);
@@ -47,19 +56,9 @@ it("should convert to function in node", function() {
 
 it("should be able to use import", function(done) {
 	import("./two").then((two) => {
-		two.should.be.eql(2);
+		two.should.be.eql({ default: 2 });
 		done();
 	}).catch(function(err) {
 		done(err);
 	});
 });
-
-it("should be able to use System.import", function(done) {
-	System.import("./two").then((two) => {
-		two.should.be.eql(2);
-		done();
-	}).catch(function(err) {
-		done(err);
-	});
-});
-

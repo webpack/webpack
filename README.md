@@ -52,7 +52,7 @@ yarn add webpack --dev
 
 <h2 align="center">Introduction</h2>
 
-> This README reflects Webpack v2.x and v3.x. The Webpack v1.x [documentation can be found here](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top).
+> This README reflects Webpack v2.x and v3.x. The Webpack v1.x documentation has been deprecated and deleted.
 
 webpack is a bundler for modules. The main purpose is to bundle JavaScript
 files for usage in a browser, yet it is also capable of transforming, bundling,
@@ -217,14 +217,14 @@ or are automatically applied via regex from your webpack configuration.
 |Name|Status|Description|
 |:--:|:----:|:----------|
 |<a href="https://github.com/vuejs/vue-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/vue-9.svg"></a>|![vue-npm]|Loads and compiles Vue Components|
-|<a href="https://github.com/JonDum/polymer-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/polymer.svg"></a>|![polymer-npm]|Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules|
+|<a href="https://github.com/webpack-contrib/polymer-webpack-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/polymer.svg"></a>|![polymer-npm]|Process HTML & CSS with preprocessor of choice and `require()` Web Components like first-class modules|
 |<a href="https://github.com/TheLarkInn/angular2-template-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/angular-icon-1.svg"></a>|![angular-npm]| Loads and compiles Angular 2 Components|
 |<a href="https://github.com/riot/tag-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/riot.svg"></a>|![riot-npm]| Riot official webpack loader|
 
 
 
 [vue-npm]: https://img.shields.io/npm/v/vue-loader.svg
-[polymer-npm]: https://img.shields.io/npm/v/polymer-loader.svg
+[polymer-npm]: https://img.shields.io/npm/v/polymer-webpack-loader.svg
 [angular-npm]: https://img.shields.io/npm/v/angular2-template-loader.svg
 [riot-npm]: https://img.shields.io/npm/v/riot-tag-loader.svg
 
@@ -432,7 +432,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 <h2 align="center">Silver Sponsors</h2>
 
-[Become a sliver sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
+[Become a silver sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
 
 <div align="center">
 

@@ -14,11 +14,13 @@ console.log("Running " + ENV + " build");
 var path = require("path");
 var webpack = require("../../");
 module.exports = [
+
 	{
 		name: "mobile",
+		// mode: "development || "production",
 		entry: "./example",
 		output: {
-			path: path.join(__dirname, "js"),
+			path: path.join(__dirname, "dist"),
 			filename: "mobile.js"
 		},
 		plugins: [
@@ -27,11 +29,13 @@ module.exports = [
 			})
 		]
 	},
+
 	{
 		name: "desktop",
+		// mode: "development || "production",
 		entry: "./example",
 		output: {
-			path: path.join(__dirname, "js"),
+			path: path.join(__dirname, "dist"),
 			filename: "desktop.js"
 		},
 		plugins: [
@@ -40,10 +44,11 @@ module.exports = [
 			})
 		]
 	}
+
 ];
 ```
 
-# js/desktop.js
+# dist/desktop.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -94,6 +99,11 @@ module.exports = [
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -107,7 +117,8 @@ module.exports = [
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -124,19 +135,16 @@ module.exports = [
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
-if(false) {
-	require("./mobile-stuff");
-}
+if(false) {}
 console.log("Running " + "desktop" + " build");
 
 /***/ })
 /******/ ]);
 ```
 
-# js/mobile.js
+# dist/mobile.js
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
@@ -185,6 +193,11 @@ console.log("Running " + "desktop" + " build");
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -198,7 +211,8 @@ console.log("Running " + "desktop" + " build");
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -210,7 +224,6 @@ console.log("Running " + "desktop" + " build");
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
 /***/ (function(module, exports, __webpack_require__) {
 
 if(true) {
@@ -224,7 +237,6 @@ console.log("Running " + "mobile" + " build");
   !*** ./mobile-stuff.js ***!
   \*************************/
 /*! no static exports found */
-/*! all exports used */
 /***/ (function(module, exports) {
 
 // mobile only stuff
@@ -235,52 +247,56 @@ console.log("Running " + "mobile" + " build");
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: a201abd2de73265dd538cceba4bc5163d755f291
-Version: webpack 3.5.1
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.0.0-beta.2
 Child mobile:
-    Hash: a201abd2de73265dd538
-        Asset     Size  Chunks             Chunk Names
-    mobile.js  2.96 kB       0  [emitted]  main
+    Hash: 0a1b2c3d4e5f6a7b8c9d
+        Asset      Size  Chunks             Chunk Names
+    mobile.js  3.04 KiB       0  [emitted]  main
     Entrypoint main = mobile.js
     chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
-        > main [0] ./example.js 
+        > ./example main
         [0] ./example.js 97 bytes {0} [built]
+            single entry ./example  main
         [1] ./mobile-stuff.js 20 bytes {0} [built]
             cjs require ./mobile-stuff [0] ./example.js 2:1-26
 Child desktop:
-    Hash: cceba4bc5163d755f291
+    Hash: 0a1b2c3d4e5f6a7b8c9d
          Asset     Size  Chunks             Chunk Names
-    desktop.js  2.72 kB       0  [emitted]  main
+    desktop.js  2.8 KiB       0  [emitted]  main
     Entrypoint main = desktop.js
     chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
-        > main [0] ./example.js 
+        > ./example main
         [0] ./example.js 97 bytes {0} [built]
+            single entry ./example  main
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: a201abd2de73265dd538cceba4bc5163d755f291
-Version: webpack 3.5.1
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.0.0-beta.2
 Child mobile:
-    Hash: a201abd2de73265dd538
+    Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset       Size  Chunks             Chunk Names
-    mobile.js  540 bytes       0  [emitted]  main
+    mobile.js  608 bytes       0  [emitted]  main
     Entrypoint main = mobile.js
     chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
-        > main [0] ./example.js 
-        [0] ./example.js 97 bytes {0} [built]
-        [1] ./mobile-stuff.js 20 bytes {0} [built]
-            cjs require ./mobile-stuff [0] ./example.js 2:1-26
+        > ./example main
+        [0] ./mobile-stuff.js 20 bytes {0} [built]
+            cjs require ./mobile-stuff [1] ./example.js 2:1-26
+        [1] ./example.js 97 bytes {0} [built]
+            single entry ./example  main
 Child desktop:
-    Hash: cceba4bc5163d755f291
+    Hash: 0a1b2c3d4e5f6a7b8c9d
          Asset       Size  Chunks             Chunk Names
-    desktop.js  520 bytes       0  [emitted]  main
+    desktop.js  588 bytes       0  [emitted]  main
     Entrypoint main = desktop.js
     chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
-        > main [0] ./example.js 
+        > ./example main
         [0] ./example.js 97 bytes {0} [built]
+            single entry ./example  main
 ```

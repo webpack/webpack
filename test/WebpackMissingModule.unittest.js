@@ -8,14 +8,14 @@ describe("WebpackMissingModule", () => {
 	describe("#moduleCode", () => {
 		it("returns an error message based on given error message", () => {
 			const errorMessage = WebpackMissingModule.moduleCode("mock message");
-			should(errorMessage).be.eql("var e = new Error(\"Cannot find module \\\"mock message\\\"\"); e.code = \'MODULE_NOT_FOUND\'; throw e;");
+			should(errorMessage).be.eql("var e = new Error(\"Cannot find module \\\"mock message\\\"\"); e.code = 'MODULE_NOT_FOUND'; throw e;");
 		});
 	});
 
 	describe("#promise", () => {
 		it("returns an error message based on given error message", () => {
 			const errorMessage = WebpackMissingModule.promise("mock message");
-			should(errorMessage).be.eql("Promise.reject(function webpackMissingModule() { var e = new Error(\"Cannot find module \\\"mock message\\\"\"); e.code = 'MODULE_NOT_FOUND';; return e; }())");
+			should(errorMessage).be.eql("Promise.reject(function webpackMissingModule() { var e = new Error(\"Cannot find module \\\"mock message\\\"\"); e.code = 'MODULE_NOT_FOUND'; return e; }())");
 		});
 	});
 

@@ -15,28 +15,28 @@ The bundle loader is used to create a wrapper module for `file.js` that loads th
 ```
 
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
-{{js/0.output.js}}
+{{dist/0.output.js}}
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

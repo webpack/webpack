@@ -1,4 +1,5 @@
 var webpack = require("../../../../");
+var UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 module.exports = {
 	node: {
 		__dirname: false,
@@ -10,6 +11,13 @@ module.exports = {
 	},
 	output: {
 		filename: "[name].js"
+	},
+	optimization: {
+		minimizer: [
+			new UglifyJsPlugin({
+				sourceMap: true
+			})
+		]
 	},
 	plugins: [
 		new webpack.SourceMapDevToolPlugin({

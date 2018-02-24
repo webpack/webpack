@@ -1,27 +1,29 @@
 Time: <CLR=BOLD>X</CLR>ms
+Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
       <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-       <CLR=32,BOLD>0.js</CLR>  268 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-       <CLR=32,BOLD>1.js</CLR>  132 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-       <CLR=32,BOLD>2.js</CLR>  212 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-    <CLR=33,BOLD>main.js</CLR>     <CLR=33,BOLD>306 kB</CLR>       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
-   <CLR=32,BOLD>0.js.map</CLR>  291 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>1.js.map</CLR>  250 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>2.js.map</CLR>  404 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-<CLR=32,BOLD>main.js.map</CLR>    1.81 MB       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         main
-   [0] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance-ensure-filter-sourcemaps/index.js</CLR> 52 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-   [1] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance-ensure-filter-sourcemaps/a.js</CLR> 300 kB {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-   [2] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance-ensure-filter-sourcemaps/b.js</CLR> 22 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
-   [3] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance-ensure-filter-sourcemaps/c.js</CLR> 54 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
-   [4] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance-ensure-filter-sourcemaps/d.js</CLR> 22 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
-   [5] <CLR=BOLD>(webpack)/test/statsCases/preset-normal-performance-ensure-filter-sourcemaps/e.js</CLR> 22 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
+       <CLR=32,BOLD>0.js</CLR>  182 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+       <CLR=32,BOLD>1.js</CLR>  319 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+    <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>300 KiB</CLR>       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+       <CLR=32,BOLD>3.js</CLR>  257 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>0.js.map</CLR>  156 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>1.js.map</CLR>  197 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+<CLR=32,BOLD>main.js.map</CLR>   1.72 MiB       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         main
+   <CLR=32,BOLD>3.js.map</CLR>  214 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR> <CLR=32,BOLD>main.js.map</CLR>
+   [0] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+   [1] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+   [2] <CLR=BOLD>./b.js</CLR> 22 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+   [3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
+   [4] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
+   [5] <CLR=BOLD>./a.js</CLR> 293 KiB {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
 
-<CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (250 kB).
+<CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
 Assets: 
-  main.js (306 kB)</CLR>
+  main.js (300 KiB)</CLR>
 
-<CLR=33,BOLD>WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (250 kB). This can impact web performance.
+<CLR=33,BOLD>WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:
-  main (306 kB)
+  main (300 KiB)
       main.js
 </CLR>

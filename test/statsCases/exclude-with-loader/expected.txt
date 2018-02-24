@@ -1,8 +1,10 @@
-Hash: 14e131b4e5c91ed5ce4a
+Hash: 8b3d74c47fe62d34ee43
 Time: Xms
-    Asset     Size  Chunks             Chunk Names
-bundle.js  2.92 kB       0  [emitted]  main
+Built at: Thu Jan 01 1970 00:00:00 GMT
+    Asset      Size  Chunks             Chunk Names
+bundle.js  3.05 KiB       0  [emitted]  main
  + 1 hidden asset
-   [0] (webpack)/test/statsCases/exclude-with-loader/index.js 77 bytes {0} [built]
-   [1] (webpack)/test/statsCases/exclude-with-loader/a.txt 43 bytes {0} [built]
+Entrypoint main = bundle.js
+   [0] ./index.js 77 bytes {0} [built]
+   [1] ./a.txt 43 bytes {0} [built]
     + 2 hidden modules

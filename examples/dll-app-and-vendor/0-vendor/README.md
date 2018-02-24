@@ -2,7 +2,7 @@ This is the vendor build part.
 
 It's built separatly from the app part. The vendors dll is only built when vendors has changed and not while the normal development cycle.
 
-The DllPlugin in combination with the `output.library` option exposes the internal require function as global variable in the target enviroment.
+The DllPlugin in combination with the `output.library` option exposes the internal require function as global variable in the target environment.
 
 A manifest is creates which includes mappings from module names to internal ids.
 
@@ -13,17 +13,18 @@ var path = require("path");
 var webpack = require("../../../");
 
 module.exports = {
+	// mode: "development || "production",
 	context: __dirname,
 	entry: ["example-vendor"],
 	output: {
 		filename: "vendor.js", // best use [hash] here too
-		path: path.resolve(__dirname, "js"),
+		path: path.resolve(__dirname, "dist"),
 		library: "vendor_lib_[hash]",
 	},
 	plugins: [
 		new webpack.DllPlugin({
 			name: "vendor_lib_[hash]",
-			path: path.resolve(__dirname, "js/vendor-manifest.json"),
+			path: path.resolve(__dirname, "dist/vendor-manifest.json"),
 		}),
 	],
 };
@@ -37,10 +38,10 @@ export function square(n) {
 }
 ```
 
-# js/vendor.js
+# dist/vendor.js
 
 ``` javascript
-var vendor_lib_6b1edee0549eb5092709 =
+var vendor_lib_9ee2f174307b7ef21301 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -91,6 +92,11 @@ var vendor_lib_6b1edee0549eb5092709 =
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -104,7 +110,8 @@ var vendor_lib_6b1edee0549eb5092709 =
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -136,8 +143,8 @@ module.exports = __webpack_require__;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony export (immutable) */ __webpack_exports__["square"] = square;
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "square", function() { return square; });
 function square(n) {
 	return n * n;
 }
@@ -147,39 +154,43 @@ function square(n) {
 /******/ ]);
 ```
 
-# js/vendor-manifest.json
+# dist/vendor-manifest.json
 
 ``` javascript
-{"name":"vendor_lib_6b1edee0549eb5092709","content":{"../node_modules/example-vendor.js":{"id":1,"meta":{"harmonyModule":true},"exports":["square"]}}}
+{"name":"vendor_lib_9ee2f174307b7ef21301","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 6b1edee0549eb5092709
-Version: webpack 3.5.1
-    Asset     Size  Chunks             Chunk Names
-vendor.js  3.18 kB       0  [emitted]  main
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.0.0-beta.2
+    Asset      Size  Chunks             Chunk Names
+vendor.js  3.32 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
-    > main [0] dll main 
+    > main
     [0] dll main 12 bytes {0} [built]
+        dll entry 
+        
      + 1 hidden module
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 6b1edee0549eb5092709
-Version: webpack 3.5.1
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.0.0-beta.2
     Asset       Size  Chunks             Chunk Names
-vendor.js  652 bytes       0  [emitted]  main
+vendor.js  704 bytes       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
-    > main [0] dll main 
-    [0] dll main 12 bytes {0} [built]
+    > main
+    [1] dll main 12 bytes {0} [built]
+        dll entry 
+        
      + 1 hidden module
 ```
 

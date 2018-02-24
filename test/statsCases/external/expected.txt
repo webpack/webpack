@@ -1,6 +1,8 @@
-Hash: e500321cbaac14df7284
+Hash: 3386bd94ba1fc3ae7f29
 Time: Xms
-  Asset     Size  Chunks             Chunk Names
-main.js  2.61 kB       0  [emitted]  main
-   [0] (webpack)/test/statsCases/external/index.js 17 bytes {0} [built]
-   [1] external "test" 42 bytes {0} [not cacheable]
+Built at: Thu Jan 01 1970 00:00:00 GMT
+  Asset      Size  Chunks             Chunk Names
+main.js  2.74 KiB       0  [emitted]  main
+Entrypoint main = main.js
+   [0] ./index.js 17 bytes {0} [built]
+   [1] external "test" 42 bytes {0} [built]

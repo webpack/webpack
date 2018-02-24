@@ -12,8 +12,11 @@ describe("Compiler (caching)", function() {
 	this.timeout(15000);
 
 	function compile(entry, options, callback) {
-		new WebpackOptionsDefaulter().process(options);
+		options.mode = "none";
+		options = new WebpackOptionsDefaulter().process(options);
+		options.cache = true;
 		options.entry = entry;
+		options.optimization.minimize = false;
 		options.context = path.join(__dirname, "fixtures");
 		options.output.path = "/";
 		options.output.filename = "bundle.js";
@@ -39,7 +42,7 @@ describe("Compiler (caching)", function() {
 				callback();
 			}
 		};
-		c.plugin("compilation", (compilation) => compilation.bail = true);
+		c.hooks.compilation.tap("CompilerCachingTest", (compilation) => compilation.bail = true);
 
 		let compilerIteration = 1;
 
@@ -71,27 +74,11 @@ describe("Compiler (caching)", function() {
 			});
 		}
 
-		const postCompileCallbackStack = [];
-
-		function addAfterCompileCallback(callback) {
-			postCompileCallbackStack.push(callback);
-		}
-
-		c.plugin("after-compile", (stats, callback) => {
-
-			if(postCompileCallbackStack.length > 0) {
-				postCompileCallbackStack.shift(arguments);
-			}
-
-			callback();
-		});
-
 		runCompiler(callback);
 
 		return {
 			compilerInstance: c,
-			runAgain: runCompiler,
-			addAfterCompileCallback: addAfterCompileCallback
+			runAgain: runCompiler
 		};
 	}
 

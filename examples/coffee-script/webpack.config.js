@@ -1,8 +1,10 @@
 module.exports = {
+	// mode: "development || "production",
 	module: {
-		loaders: [
-			{ test: /\.coffee$/, loader: "coffee-loader" }
-		]
+		rules: [{
+			test: /\.coffee$/,
+			loader: "coffee-loader"
+		}]
 	},
 	resolve: {
 		extensions: [".web.coffee", ".web.js", ".coffee", ".js"]

@@ -19,14 +19,6 @@ describe("Validation", () => {
 			" - configuration should be an object."
 		]
 	}, {
-		name: "empty configuration",
-		config: {},
-		message: [
-			" - configuration misses the property 'entry'.",
-			"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string] | function",
-			"   -> The entry point(s) of the compilation."
-		]
-	}, {
 		name: "empty entry string",
 		config: {
 			entry: ""
@@ -182,7 +174,7 @@ describe("Validation", () => {
 		},
 		message: [
 			" - configuration.module.rules[0].oneOf[0] has an unknown property 'paser'. These properties are valid:",
-			"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, query?, resource?, resourceQuery?, compiler?, rules?, test?, use? }",
+			"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, resolve?, sideEffects?, query?, type?, resource?, resourceQuery?, compiler?, rules?, test?, use? }",
 			"   -> A rule"
 		]
 	}, {
@@ -193,8 +185,8 @@ describe("Validation", () => {
 		},
 		message: [
 			" - configuration has an unknown property 'postcss'. These properties are valid:",
-			"   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry, externals?, " +
-			"loader?, module?, name?, node?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, " +
+			"   object { mode?, amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry?, externals?, " +
+			"loader?, module?, name?, node?, output?, optimization?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, " +
 			"recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, stats?, target?, watch?, watchOptions? }",
 			"   For typos: please correct them.",
 			"   For loader options: webpack 2 no longer allows custom properties in configuration.",
@@ -263,6 +255,96 @@ describe("Validation", () => {
 				" - configuration.stats should be one of these:"
 			);
 		}
+	}, {
+		name: "Invalid plugin provided: bool",
+		config: {
+			entry: "foo.js",
+			plugins: [
+				false
+			]
+		},
+		message: [
+			" - configuration.plugins[0] should be one of these:",
+			"   object { apply, ... } | function",
+			"   -> Plugin of type object or instanceof Function",
+			"   Details:",
+			"    * configuration.plugins[0] should be an object.",
+			"      -> Plugin instance",
+			"    * configuration.plugins[0] should be an instance of function",
+			"      -> Function acting as plugin"
+		]
+	}, {
+		name: "Invalid plugin provided: array",
+		config: {
+			entry: "foo.js",
+			plugins: [
+				[]
+			]
+		},
+		message: [
+			" - configuration.plugins[0] should be one of these:",
+			"   object { apply, ... } | function",
+			"   -> Plugin of type object or instanceof Function",
+			"   Details:",
+			"    * configuration.plugins[0] should be an object.",
+			"      -> Plugin instance",
+			"    * configuration.plugins[0] should be an instance of function",
+			"      -> Function acting as plugin"
+		]
+	}, {
+		name: "Invalid plugin provided: string",
+		config: {
+			entry: "foo.js",
+			plugins: ["abc123"]
+		},
+		message: [
+			" - configuration.plugins[0] should be one of these:",
+			"   object { apply, ... } | function",
+			"   -> Plugin of type object or instanceof Function",
+			"   Details:",
+			"    * configuration.plugins[0] should be an object.",
+			"      -> Plugin instance",
+			"    * configuration.plugins[0] should be an instance of function",
+			"      -> Function acting as plugin"
+		]
+	}, {
+		name: "Invalid plugin provided: int",
+		config: {
+			entry: "foo.js",
+			plugins: [
+				12
+			]
+		},
+		message: [
+			" - configuration.plugins[0] should be one of these:",
+			"   object { apply, ... } | function",
+			"   -> Plugin of type object or instanceof Function",
+			"   Details:",
+			"    * configuration.plugins[0] should be an object.",
+			"      -> Plugin instance",
+			"    * configuration.plugins[0] should be an instance of function",
+			"      -> Function acting as plugin"
+		]
+	}, {
+		name: "Invalid plugin provided: object without apply function",
+		config: {
+			entry: "foo.js",
+			plugins: [{}]
+		},
+		message: [
+			" - configuration.plugins[0] should be one of these:",
+			"   object { apply, ... } | function",
+			"   -> Plugin of type object or instanceof Function",
+			"   Details:",
+			"    * configuration.plugins[0] misses the property 'apply'.",
+			"      function",
+			"      -> The run point of the plugin, required method.",
+			"    * configuration.plugins[0] misses the property 'apply'.",
+			"      function",
+			"      -> The run point of the plugin, required method.",
+			"    * configuration.plugins[0] should be an instance of function",
+			"      -> Function acting as plugin"
+		]
 	}];
 
 	testCases.forEach((testCase) => {
@@ -270,7 +352,7 @@ describe("Validation", () => {
 			try {
 				webpack(testCase.config);
 			} catch(err) {
-				if(err.name !== 'WebpackOptionsValidationError') throw err;
+				if(err.name !== "WebpackOptionsValidationError") throw err;
 
 				if(testCase.test) {
 					testCase.test(err);

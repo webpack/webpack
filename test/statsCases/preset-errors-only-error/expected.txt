@@ -1,4 +1,4 @@
 
-ERROR in (webpack)/test/statsCases/preset-errors-only-error/index.js
+ERROR in ./index.js
 Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/preset-errors-only-error'
- @ (webpack)/test/statsCases/preset-errors-only-error/index.js 1:0-25
+ @ ./index.js 1:0-25

@@ -1,4 +1,5 @@
 module.exports = {
+	mode: "production",
 	entry: "./index",
 	output: {
 		filename: "bundle.js"
@@ -13,12 +14,13 @@ module.exports = {
 		]
 	},
 	module: {
-		loaders: [{
+		rules: [{
 			test: /\.txt/,
 			loader: "raw-loader"
 		}, {
 			test: /\.json/,
-			loader: "file-loader"
+			loader: "file-loader",
+			type: "javascript/auto"
 		}]
 	}
 };

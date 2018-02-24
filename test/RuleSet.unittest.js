@@ -325,7 +325,7 @@ describe("RuleSet", () => {
 			test: /\.css$/,
 			use: [
 				function(data) {
-					return "style-loader"
+					return "style-loader";
 				},
 				function(data) {
 					return {

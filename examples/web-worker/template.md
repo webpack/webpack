@@ -11,34 +11,34 @@
 {{worker.js}}
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
-# js/[hash].worker.js
+# dist/[hash].worker.js
 
 ``` javascript
-{{js/hash.worker.js}}
+{{dist/hash.worker.js}}
 ```
 
-# js/0.[hash].worker.js
+# dist/0.[hash].worker.js
 
 ``` javascript
-{{js/0.hash.worker.js}}
+{{dist/0.hash.worker.js}}
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

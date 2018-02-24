@@ -67,10 +67,10 @@ body {
 
 ```
 Hash: 5be34b0d3c624e61c616
-Version: webpack 3.5.1
+Version: webpack 3.11.0
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
-                         0.output.js    2.43 kB       0  [emitted]  
+                         0.output.js    2.44 kB       0  [emitted]  
                            output.js    21.2 kB       1  [emitted]  main
                            style.css   71 bytes       1  [emitted]  main
 Entrypoint main = output.js style.css
@@ -105,7 +105,7 @@ Child extract-text-webpack-plugin ../../node_modules/extract-text-webpack-plugin
 
 ```
 Hash: edbe0e91ba86d814d855
-Version: webpack 3.5.1
+Version: webpack 3.11.0
                                Asset       Size  Chunks             Chunk Names
 ce21cbdd9b894e6af794813eb3fdaf60.png  119 bytes          [emitted]  
                          0.output.js  343 bytes       0  [emitted]  

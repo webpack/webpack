@@ -1,11 +1,10 @@
 "use strict";
 
-const should = require("should");
+require("should");
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
 const Test = require("mocha/lib/test");
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
 const webpack = require("../lib/webpack");
@@ -33,14 +32,13 @@ describe("HotTestCases", () => {
 					if(fs.existsSync(recordsPath))
 						fs.unlinkSync(recordsPath);
 					const fakeUpdateLoaderOptions = {
-						options: {
-							updateIndex: 0
-						}
+						updateIndex: 0
 					};
 					const configPath = path.join(testDirectory, "webpack.config.js");
 					let options = {};
 					if(fs.existsSync(configPath))
 						options = require(configPath);
+					if(!options.mode) options.mode = "development";
 					if(!options.context) options.context = testDirectory;
 					if(!options.entry) options.entry = "./index.js";
 					if(!options.output) options.output = {};
@@ -53,20 +51,13 @@ describe("HotTestCases", () => {
 						test: /\.js$/,
 						loader: path.join(__dirname, "hotCases", "fake-update-loader.js"),
 						enforce: "pre"
-					}, {
-						test: /\.css$/,
-						use: ExtractTextPlugin.extract({
-							fallback: "style-loader",
-							use: "css-loader"
-						})
 					});
 					if(!options.target) options.target = "async-node";
 					if(!options.plugins) options.plugins = [];
 					options.plugins.push(
 						new webpack.HotModuleReplacementPlugin(),
 						new webpack.NamedModulesPlugin(),
-						new webpack.LoaderOptionsPlugin(fakeUpdateLoaderOptions),
-						new ExtractTextPlugin("bundle.css")
+						new webpack.LoaderOptionsPlugin(fakeUpdateLoaderOptions)
 					);
 					if(!options.recordsPath) options.recordsPath = recordsPath;
 					const compiler = webpack(options);
@@ -81,20 +72,21 @@ describe("HotTestCases", () => {
 
 						function _it(title, fn) {
 							const test = new Test(title, fn);
+							test.timeout(5000);
 							suite.addTest(test);
 							exportedTests++;
 							return test;
 						}
 
 						function _next(callback) {
-							fakeUpdateLoaderOptions.options.updateIndex++;
+							fakeUpdateLoaderOptions.updateIndex++;
 							compiler.run((err, stats) => {
 								if(err) return done(err);
 								const jsonStats = stats.toJson({
 									errorDetails: true
 								});
-								if(checkArrayExpectation(testDirectory, jsonStats, "error", "errors" + fakeUpdateLoaderOptions.options.updateIndex, "Error", done)) return;
-								if(checkArrayExpectation(testDirectory, jsonStats, "warning", "warnings" + fakeUpdateLoaderOptions.options.updateIndex, "Warning", done)) return;
+								if(checkArrayExpectation(testDirectory, jsonStats, "error", "errors" + fakeUpdateLoaderOptions.updateIndex, "Error", done)) return;
+								if(checkArrayExpectation(testDirectory, jsonStats, "warning", "warnings" + fakeUpdateLoaderOptions.updateIndex, "Warning", done)) return;
 								if(callback) callback(jsonStats);
 							});
 						}

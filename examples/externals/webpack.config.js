@@ -1,4 +1,5 @@
 module.exports = {
+	// mode: "development || "production",
 	output: {
 		libraryTarget: "umd"
 	},

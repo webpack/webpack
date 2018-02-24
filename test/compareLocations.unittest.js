@@ -43,7 +43,7 @@ describe("compareLocations", () => {
 			});
 
 			it("returns -1 when the first location line number comes before the second location line number", () => {
-				return compareLocations(a, b).should.be.exactly(-1)
+				return compareLocations(a, b).should.be.exactly(-1);
 			});
 
 			it("returns 1 when the first location line number comes after the second location line number", () =>

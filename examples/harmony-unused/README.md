@@ -47,7 +47,7 @@ export { a, b, c } from "./abc";
 export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -98,6 +98,11 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -111,10 +116,11 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
@@ -124,17 +130,36 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 ``` javascript
 /******/ ([
 /* 0 */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./math */ 1);
+/* harmony import */ var _library__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./library */ 2);
+
+
+
+Object(_math__WEBPACK_IMPORTED_MODULE_0__["add"])(1, 2);
+_library__WEBPACK_IMPORTED_MODULE_1__["reexportedMultiply"](1, 2);
+
+
+/***/ }),
+/* 1 */
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
 /*! exports provided: add, multiply, list */
-/*! exports used: add, multiply */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = add;
-/* harmony export (immutable) */ __webpack_exports__["b"] = multiply;
-/* unused harmony export list */
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "add", function() { return add; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "multiply", function() { return multiply; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "list", function() { return list; });
 function add() {
 	var sum = 0, i = 0, args = arguments, l = args.length;
 	while (i < l) {
@@ -157,42 +182,27 @@ function list() {
 
 
 /***/ }),
-/* 1 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! exports provided:  */
-/*! all exports used */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__math__ = __webpack_require__(/*! ./math */ 0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__library__ = __webpack_require__(/*! ./library */ 2);
-
-
-
-Object(__WEBPACK_IMPORTED_MODULE_0__math__["a" /* add */])(1, 2);
-__WEBPACK_IMPORTED_MODULE_1__library__["a" /* reexportedMultiply */](1, 2);
-
-
-/***/ }),
 /* 2 */
 /*!********************!*\
   !*** ./library.js ***!
   \********************/
 /*! exports provided: a, b, c, reexportedAdd, reexportedMultiply */
-/*! exports used: reexportedMultiply */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__abc__ = __webpack_require__(/*! ./abc */ 3);
-/* unused harmony reexport a */
-/* unused harmony reexport b */
-/* unused harmony reexport c */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__math__ = __webpack_require__(/*! ./math */ 0);
-/* unused harmony reexport reexportedAdd */
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__math__["b"]; });
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _abc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./abc */ 3);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _abc__WEBPACK_IMPORTED_MODULE_0__["a"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _abc__WEBPACK_IMPORTED_MODULE_0__["b"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "c", function() { return _abc__WEBPACK_IMPORTED_MODULE_0__["c"]; });
+
+/* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 1);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "reexportedAdd", function() { return _math__WEBPACK_IMPORTED_MODULE_1__["add"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "reexportedMultiply", function() { return _math__WEBPACK_IMPORTED_MODULE_1__["multiply"]; });
+
 
 
 
@@ -205,9 +215,10 @@ __WEBPACK_IMPORTED_MODULE_1__library__["a" /* reexportedMultiply */](1, 2);
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* unused harmony export a */
-/* unused harmony export b */
-/* unused harmony export c */
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return a; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return b; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return c; });
 function a() { console.log("a"); }
 function b() { console.log("b"); }
 function c() { console.log("c"); }
@@ -217,64 +228,77 @@ function c() { console.log("c"); }
 /******/ ]);
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-!function(t){function n(e){if(r[e])return r[e].exports;var u=r[e]={i:e,l:!1,exports:{}};return t[e].call(u.exports,u,u.exports,n),u.l=!0,u.exports}var r={};n.m=t,n.c=r,n.d=function(t,r,e){n.o(t,r)||Object.defineProperty(t,r,{configurable:!1,enumerable:!0,get:e})},n.n=function(t){var r=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(r,"a",r),r},n.o=function(t,n){return Object.prototype.hasOwnProperty.call(t,n)},n.p="js/",n(n.s=1)}([function(t,n,r){"use strict";function e(){for(var t=0,n=0,r=arguments,e=r.length;n<e;)t+=r[n++];return t}function u(){for(var t=1,n=0,r=arguments,e=r.length;n<e;)t*=r[n++];return t}n.a=e,n.b=u},function(t,n,r){"use strict";Object.defineProperty(n,"__esModule",{value:!0});var e=r(0),u=r(2);Object(e.a)(1,2),u.a(1,2)},function(t,n,r){"use strict";var e=(r(3),r(0));r.d(n,"a",function(){return e.b})},function(t,n,r){"use strict"}]);
+!function(t){function n(e){if(r[e])return r[e].exports;var u=r[e]={i:e,l:!1,exports:{}};return t[e].call(u.exports,u,u.exports,n),u.l=!0,u.exports}var r={};n.m=t,n.c=r,n.d=function(t,r,e){n.o(t,r)||Object.defineProperty(t,r,{configurable:!1,enumerable:!0,get:e})},n.r=function(t){Object.defineProperty(t,"__esModule",{value:!0})},n.n=function(t){var r=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(r,"a",r),r},n.o=function(t,n){return Object.prototype.hasOwnProperty.call(t,n)},n.p="dist/",n(n.s=3)}([function(t,n,r){"use strict";function e(){for(var t=0,n=0,r=arguments,e=r.length;n<e;)t+=r[n++];return t}function u(){for(var t=1,n=0,r=arguments,e=r.length;n<e;)t*=r[n++];return t}r.d(n,"a",function(){return e}),r.d(n,"b",function(){return u})},function(t,n,r){"use strict"},function(t,n,r){"use strict";r(1);var e=r(0);r.d(n,"a",function(){return e.b})},function(t,n,r){"use strict";r.r(n);var e=r(0),u=r(2);Object(e.a)(1,2),u.a(1,2)}]);
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 4cac4181f66e42d03af9
-Version: webpack 3.5.1
-    Asset     Size  Chunks             Chunk Names
-output.js  5.02 kB       0  [emitted]  main
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.0.0-beta.2
+    Asset      Size  Chunks             Chunk Names
+output.js  5.93 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 726 bytes [entry] [rendered]
-    > main [1] ./example.js 
-    [0] ./math.js 366 bytes {0} [built]
-        [exports: add, multiply, list]
-        [only some exports used: add, multiply]
-        harmony import ./math [1] ./example.js 1:0-29
-        harmony import ./math [2] ./library.js 2:0-78
-    [1] ./example.js 119 bytes {0} [built]
+    > .\example.js main
+    [0] ./example.js 119 bytes {0} [built]
         [no exports]
+        single entry .\example.js  main
+    [1] ./math.js 366 bytes {0} [built]
+        [exports: add, multiply, list]
+        harmony side effect evaluation ./math [0] ./example.js 1:0-29
+        harmony import specifier ./math [0] ./example.js 4:0-3
+        harmony side effect evaluation ./math [2] ./library.js 2:0-78
+        harmony export imported specifier ./math [2] ./library.js 2:0-78
+        harmony export imported specifier ./math [2] ./library.js 2:0-78
     [2] ./library.js 112 bytes {0} [built]
         [exports: a, b, c, reexportedAdd, reexportedMultiply]
-        [only some exports used: reexportedMultiply]
-        harmony import ./library [1] ./example.js 2:0-37
+        harmony side effect evaluation ./library [0] ./example.js 2:0-37
+        harmony import specifier ./library [0] ./example.js 5:0-26
     [3] ./abc.js 129 bytes {0} [built]
         [exports: a, b, c]
-        [no exports used]
-        harmony import ./abc [2] ./library.js 1:0-32
+        harmony side effect evaluation ./abc [2] ./library.js 1:0-32
+        harmony export imported specifier ./abc [2] ./library.js 1:0-32
+        harmony export imported specifier ./abc [2] ./library.js 1:0-32
+        harmony export imported specifier ./abc [2] ./library.js 1:0-32
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 4cac4181f66e42d03af9
-Version: webpack 3.5.1
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.0.0-beta.2
     Asset       Size  Chunks             Chunk Names
-output.js  895 bytes       0  [emitted]  main
+output.js  971 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 726 bytes [entry] [rendered]
-    > main [1] ./example.js 
+    > .\example.js main
     [0] ./math.js 366 bytes {0} [built]
         [exports: add, multiply, list]
         [only some exports used: add, multiply]
-        harmony import ./math [1] ./example.js 1:0-29
-        harmony import ./math [2] ./library.js 2:0-78
-    [1] ./example.js 119 bytes {0} [built]
-        [no exports]
+        harmony side effect evaluation ./math [2] ./library.js 2:0-78
+        harmony export imported specifier ./math [2] ./library.js 2:0-78
+        harmony export imported specifier ./math [2] ./library.js 2:0-78
+        harmony side effect evaluation ./math [3] ./example.js 1:0-29
+        harmony import specifier ./math [3] ./example.js 4:0-3
+    [1] ./abc.js 129 bytes {0} [built]
+        [exports: a, b, c]
+        [no exports used]
+        harmony side effect evaluation ./abc [2] ./library.js 1:0-32
+        harmony export imported specifier ./abc [2] ./library.js 1:0-32
+        harmony export imported specifier ./abc [2] ./library.js 1:0-32
+        harmony export imported specifier ./abc [2] ./library.js 1:0-32
     [2] ./library.js 112 bytes {0} [built]
         [exports: a, b, c, reexportedAdd, reexportedMultiply]
         [only some exports used: reexportedMultiply]
-        harmony import ./library [1] ./example.js 2:0-37
-    [3] ./abc.js 129 bytes {0} [built]
-        [exports: a, b, c]
-        [no exports used]
-        harmony import ./abc [2] ./library.js 1:0-32
+        harmony side effect evaluation ./library [3] ./example.js 2:0-37
+        harmony import specifier ./library [3] ./example.js 5:0-26
+    [3] ./example.js 119 bytes {0} [built]
+        [no exports]
+        single entry .\example.js  main
 ```

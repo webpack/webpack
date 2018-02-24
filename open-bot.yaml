@@ -290,6 +290,8 @@ rules:
     ensure:
       value: "{{review.state}}"
       equals: APPROVED
+    permission:
+      user: "{{review.user.login}}"
   actions:
     label:
       add: "PR: reviewed-approved"
@@ -303,6 +305,8 @@ rules:
       commit: true
       review:
         state: APPROVED|CHANGES_REQUESTED
+    permission:
+      user: "{{review.user.login}}"
     ensure:
       value: "{{review.state}}"
       equals: CHANGES_REQUESTED
@@ -319,6 +323,8 @@ rules:
       review:
         state: APPROVED|CHANGES_REQUESTED
       commit: true
+    permission:
+      user: "{{review.user.login}}"
     not:
       label: "review-outdated"
     ensure:
@@ -408,6 +414,17 @@ rules:
         > Don't submit pull request from your own `master` branch. It's recommended to create a feature branch for the PR.
 
         *You don't have to change it for this PR, just make sure to follow this hint the next time you submit a PR.*
+
+
+
+# add "Send a PR" label when somebody with write permission say it
+- filters:
+    open: true
+    comment: "[Ss]end a [Pp][Rr]"
+    permission:
+      user: "{{comment.actor.login}}"
+  actions:
+    label: "Send a PR"
 
 
 

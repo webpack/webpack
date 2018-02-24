@@ -1,6 +1,6 @@
 it("should import a changed chunk (dynamic import)", function(done) {
 	function load(name) {
-		return System.import("./chunk" + name);
+		return import("./chunk" + name);
 	}
 	load(1).then(function(chunk) {
 		chunk.value.should.be.eql(1);
