@@ -24,8 +24,8 @@ it("should replace a file in a directory with another file", function() {
 	require("replacing-file4").should.be.eql("new-file");
 });
 
-it("should ignore recursive module mappings", function() {
-	require("recursive-module").should.be.eql("new-module");
+it("should not ignore recursive module mappings", function() {
+	require("recursive-module").should.not.be.eql("new-module");
 });
 
 it("should use empty modules for ignored modules", function() {
