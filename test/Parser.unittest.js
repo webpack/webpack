@@ -471,10 +471,11 @@ describe("Parser", () => {
 				"await expression": "async function x(y) { await y }",
 				"await iteration": "async function f() { for await (x of xs); }"
 			};
+			const parser = new Parser();
 			Object.keys(cases).forEach((name) => {
 				const expr = cases[name];
 				it(name, () => {
-					const actual = Parser.parse(expr);
+					const actual = parser.parse(expr);
 					should.strictEqual(typeof actual, "object");
 				});
 			});
