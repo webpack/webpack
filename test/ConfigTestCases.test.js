@@ -1,12 +1,12 @@
 "use strict";
 
-/* globals describe expect it fit */
+/* globals describe expect it beforeAll */
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
 const checkArrayExpectation = require("./checkArrayExpectation");
-const async = require("async");
+// const async = require("async");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
@@ -36,10 +36,15 @@ describe("ConfigTestCases", () => {
 		describe(category.name, () => {
 			category.tests.forEach((testName) => {
 				describe(testName, () => {
-					it(testName + " should compile", (done) => {
-						const testDirectory = path.join(casesPath, category.name, testName);
-						const outputDirectory = path.join(__dirname, "js", "config", category.name, testName);
-						const options = prepareOptions(require(path.join(testDirectory, "webpack.config.js")));
+					const testDirectory = path.join(casesPath, category.name, testName);
+					const outputDirectory = path.join(__dirname, "js", "config", category.name, testName);
+					const exportedTests = [];
+					beforeAll(() => new Promise((resolve, reject) => {
+						const done = (err) => {
+							if(err) return reject(err);
+							resolve();
+						};
+						const options = prepareOptions(require(path.join(testDirectory, "webpack.config.js")), { testPath: outputDirectory });
 						const optionsArr = [].concat(options);
 						optionsArr.forEach((options, idx) => {
 							if(!options.context) options.context = testDirectory;
@@ -72,7 +77,7 @@ describe("ConfigTestCases", () => {
 									errors: [err.stack]
 								};
 								if(checkArrayExpectation(testDirectory, fakeStats, "error", "Error", done)) return;
-								// Wait for uncatched errors to occur
+								// Wait for uncaught errors to occur
 								return setTimeout(done, 200);
 							}
 							const statOptions = Stats.presetToOptions("verbose");
@@ -84,10 +89,9 @@ describe("ConfigTestCases", () => {
 							});
 							if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
 							if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
-							let exportedTests = [];
 
 							function _it(title, fn) {
-								exportedTests.push(fit(title, fn, testConfig.timeout));
+								exportedTests.push({ title, fn, timeout: testConfig.timeout });
 							}
 
 							const globalContext = {
@@ -137,12 +141,11 @@ describe("ConfigTestCases", () => {
 							// give a free pass to compilation that generated an error
 							if(!jsonStats.errors.length && filesCount !== optionsArr.length) return done(new Error("Should have found at least one bundle file per webpack config"));
 							if(exportedTests.length < filesCount) return done(new Error("No tests exported by test case"));
-							async.waterfall(
-								exportedTests.map(test => (callback) => test.execute(callback, true)),
-								done
-							);
+							done();
 						});
-					});
+					}));
+					it(testName + " should compile", () => {});
+					exportedTests.forEach(({ title, fn, timeout }) => it(title, fn, timeout));
 				});
 			});
 		});
