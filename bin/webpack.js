@@ -3,15 +3,23 @@
 const cp = require("child_process");
 const inquirer = require("inquirer");
 
-function runCommand(command) {
-	cp.exec(command, (error, stdout, stderr) => {
-		if(!error) {
-			console.log("webpack-cli installed successfully");
-			return true;
-		}
-		console.log("failed to install webpack-cli");
-		console.error(stderr);
-		return false;
+function runCommand(command, options) {
+	return new Promise((resolve, reject) => {
+		const executedCommand = cp.spawn(command, options, {
+			stdio: "inherit"
+		});
+
+		executedCommand.on("error", error => {
+			reject(error);
+		});
+
+		executedCommand.on("exit", code => {
+			if (code === 0) {
+				resolve(true);
+			} else {
+				reject();
+			}
+		});
 	});
 }
 
@@ -19,39 +27,45 @@ let webpackCliInstalled = false;
 try {
 	require.resolve("webpack-cli");
 	webpackCliInstalled = true;
-} catch(err) {
+} catch (err) {
 	webpackCliInstalled = false;
 }
 
-if(!webpackCliInstalled) {
+if (!webpackCliInstalled) {
 	const path = require("path");
 	const fs = require("fs");
 	const isYarn = fs.existsSync(path.resolve(process.cwd(), "yarn.lock"));
 
+	let packageManager;
+	let options = [];
+	if (isYarn) {
+		packageManager = "yarn";
+		options = ["add", "-D", "webpack-cli"];
+	} else {
+		packageManager = "npm";
+		options = ["install", "--save-dev", "webpack-cli"];
+	}
+
+	const commandToBeRun = `${packageManager} ${options.join(" ")}`;
+
 	const question = {
 		type: "confirm",
 		name: "shouldInstall",
-		message: "Would you like to install webpack-cli?",
+		message: `Would you like to install webpack-cli? (That will run ${commandToBeRun})`,
 		default: true
 	};
 
 	console.error("The CLI moved into a separate package: webpack-cli");
-	inquirer.prompt(question).then((answer) => {
-		if(answer) {
+	inquirer.prompt(question).then(answer => {
+		if (answer) {
 			console.error("Installing webpack-cli");
-
-			let command;
-			if(isYarn) {
-				command = "yarn add -D webpack-cli";
-			} else {
-				command = "npm install --save-dev webpack-cli";
-			}
-
-			if(runCommand(command)) {
-				require("webpack-cli"); // eslint-disable-line node/no-missing-require, node/no-extraneous-require, node/no-unpublished-require
-			}
+			runCommand(packageManager, options)
+				.then(result => require("webpack-cli")) // eslint-disable-line
+				.catch(error => console.error(error));
+		} else {
+			process.exitCode(1);
 		}
 	});
 } else {
-	require("webpack-cli"); // eslint-disable-line node/no-missing-require, node/no-extraneous-require, node/no-unpublished-require
+	require("webpack-cli"); // eslint-disable-line
 }
