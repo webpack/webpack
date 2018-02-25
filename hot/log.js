@@ -3,7 +3,8 @@ var logLevel = "info";
 function dummy() {}
 
 function shouldLog(level) {
-	var shouldLog = (logLevel === "info" && level === "info") ||
+	var shouldLog =
+		(logLevel === "info" && level === "info") ||
 		(["info", "warning"].indexOf(logLevel) >= 0 && level === "warning") ||
 		(["info", "warning", "error"].indexOf(logLevel) >= 0 && level === "error");
 	return shouldLog;
@@ -11,19 +12,19 @@ function shouldLog(level) {
 
 function logGroup(logFn) {
 	return function(level, msg) {
-		if(shouldLog(level)) {
+		if (shouldLog(level)) {
 			logFn(msg);
 		}
 	};
 }
 
 module.exports = function(level, msg) {
-	if(shouldLog(level)) {
-		if(level === "info") {
+	if (shouldLog(level)) {
+		if (level === "info") {
 			console.log(msg);
-		} else if(level === "warning") {
+		} else if (level === "warning") {
 			console.warn(msg);
-		} else if(level === "error") {
+		} else if (level === "error") {
 			console.error(msg);
 		}
 	}

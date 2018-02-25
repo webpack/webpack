@@ -15,6 +15,6 @@ module.exports = {
 		source: true,
 		errorDetails: true,
 		publicPath: true,
-		outputPath: true,
+		outputPath: true
 	}
 };

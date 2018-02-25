@@ -1,6 +1,5 @@
 var webpack = require("../../../../");
 module.exports = [
-
 	{
 		name: "hash with length in publicPath",
 		output: {
@@ -12,7 +11,8 @@ module.exports = [
 			expectedFilenameLength: 17,
 			expectedChunkFilenameLength: 19
 		}
-	}, {
+	},
+	{
 		name: "hash in publicPath",
 		output: {
 			publicPath: "/[hash]/",
@@ -23,7 +23,8 @@ module.exports = [
 			expectedFilenameLength: 31,
 			expectedChunkFilenameLength: 33
 		}
-	}, {
+	},
+	{
 		name: "chunkhash with length",
 		output: {
 			filename: "bundle2.[chunkhash:8].js",
@@ -33,7 +34,8 @@ module.exports = [
 			expectedFilenameLength: 19,
 			expectedChunkFilenameLength: 21
 		}
-	}, {
+	},
+	{
 		name: "chunkhash",
 		output: {
 			filename: "bundle3.[chunkhash].js",
@@ -43,7 +45,8 @@ module.exports = [
 			expectedFilenameLength: 31,
 			expectedChunkFilenameLength: 33
 		}
-	}, {
+	},
+	{
 		name: "hash with and without length",
 		output: {
 			filename: "bundle4.[hash].js",
@@ -53,7 +56,8 @@ module.exports = [
 			expectedFilenameLength: 31,
 			expectedChunkFilenameLength: 21
 		}
-	}, {
+	},
+	{
 		name: "hash with length",
 		output: {
 			filename: "bundle5.[hash:6].js",
@@ -63,7 +67,8 @@ module.exports = [
 			expectedFilenameLength: 17,
 			expectedChunkFilenameLength: 21
 		}
-	}, {
+	},
+	{
 		name: "chunkhash in chunkFilename ",
 		output: {
 			filename: "bundle6.[hash].js",
@@ -73,10 +78,9 @@ module.exports = [
 			expectedFilenameLength: 31,
 			expectedChunkFilenameLength: 20
 		},
-		plugins: [
-			new webpack.HotModuleReplacementPlugin()
-		]
-	}, {
+		plugins: [new webpack.HotModuleReplacementPlugin()]
+	},
+	{
 		name: "hash with length and chunkhash with length",
 		output: {
 			filename: "bundle7.[hash:7].js",
@@ -87,12 +91,12 @@ module.exports = [
 			expectedFilenameLength: 18,
 			expectedChunkFilenameLength: 20
 		}
-	}, {
+	},
+	{
 		name: "hash with length in chunkFilename",
 		output: {
 			filename: "bundle8.[hash].js",
 			chunkFilename: "[id].bundle8.[hash:7].js"
-
 		},
 		target: "node",
 		amd: {
@@ -105,7 +109,6 @@ module.exports = [
 		output: {
 			filename: "bundle9.[hash].js",
 			chunkFilename: "[id].bundle9.[chunkhash:7].js"
-
 		},
 		target: "node",
 		amd: {
@@ -117,7 +120,9 @@ module.exports = [
 
 module.exports.forEach(function(options) {
 	options.plugins = options.plugins || [];
-	options.plugins.push(new webpack.DefinePlugin({
-		NAME: JSON.stringify(options.name)
-	}));
+	options.plugins.push(
+		new webpack.DefinePlugin({
+			NAME: JSON.stringify(options.name)
+		})
+	);
 });

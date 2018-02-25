@@ -14,33 +14,35 @@ describe("Stats", () => {
 		});
 		compiler.outputFileSystem = new MemoryFs();
 		compiler.run((err, stats) => {
-			if(err) return done(err);
+			if (err) return done(err);
 			try {
-				stats.toString({
-					all: false,
-					env: true,
-					_env: "production"
-				}).should.be.eql(
-					"Environment (--env): \"production\""
-				);
-				stats.toString({
-					all: false,
-					env: true,
-					_env: {
-						prod: ["foo", "bar"],
-						baz: true
-					}
-				}).should.be.eql(
-					"Environment (--env): {\n" +
-					"  \"prod\": [\n" +
-					"    \"foo\",\n" +
-					"    \"bar\"\n" +
-					"  ],\n" +
-					"  \"baz\": true\n" +
-					"}"
-				);
+				stats
+					.toString({
+						all: false,
+						env: true,
+						_env: "production"
+					})
+					.should.be.eql('Environment (--env): "production"');
+				stats
+					.toString({
+						all: false,
+						env: true,
+						_env: {
+							prod: ["foo", "bar"],
+							baz: true
+						}
+					})
+					.should.be.eql(
+						"Environment (--env): {\n" +
+							'  "prod": [\n' +
+							'    "foo",\n' +
+							'    "bar"\n' +
+							"  ],\n" +
+							'  "baz": true\n' +
+							"}"
+					);
 				done();
-			} catch(e) {
+			} catch (e) {
 				done(e);
 			}
 		});

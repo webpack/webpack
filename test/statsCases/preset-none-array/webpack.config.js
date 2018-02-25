@@ -1,5 +1,4 @@
 module.exports = [
-
 	{
 		mode: "production",
 		entry: "./index",
@@ -11,5 +10,4 @@ module.exports = [
 		entry: "./index",
 		stats: "none"
 	}
-
 ];
