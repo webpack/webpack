@@ -15,9 +15,7 @@ describe("CachePlugin", () => {
 	});
 
 	describe("applyMtime", () => {
-		beforeEach(() => {
-			env.plugin = new CachePlugin();
-		});
+		beforeEach(() => (env.plugin = new CachePlugin()));
 
 		it("sets file system accuracy to 1 for granular modification timestamp", () => {
 			env.plugin.applyMtime(1483819067001);

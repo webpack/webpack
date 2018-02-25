@@ -2,7 +2,7 @@
 
 const CaseSensitiveModulesWarning = require("../lib/CaseSensitiveModulesWarning");
 
-const createModule = (identifier, numberOfReasons) => {
+const createModule = function(identifier, numberOfReasons) {
 	const reasons = new Array(numberOfReasons || 0)
 		.fill(null)
 		.map((value, index) => {

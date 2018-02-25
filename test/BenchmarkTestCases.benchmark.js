@@ -20,10 +20,10 @@ describe("BenchmarkTestCases", function() {
 
 	try {
 		fs.mkdirSync(path.join(__dirname, "js"));
-	} catch (e) {}
+	} catch (e) {} // eslint-disable-line no-empty
 	try {
 		fs.mkdirSync(baselinesPath);
-	} catch (e) {}
+	} catch (e) {} // eslint-disable-line no-empty
 
 	beforeAll(function(done) {
 		const git = require("simple-git");
@@ -40,7 +40,7 @@ describe("BenchmarkTestCases", function() {
 					} else {
 						try {
 							fs.mkdirSync(baselinePath);
-						} catch (e) {}
+						} catch (e) {} // eslint-disable-line no-empty
 						const gitIndex = path.resolve(rootPath, ".git/index");
 						const index = fs.readFileSync(gitIndex);
 						git(rootPath).raw(
@@ -267,6 +267,33 @@ describe("BenchmarkTestCases", function() {
 				it(
 					`should benchmark ${baseline.name} (${baseline.rev})`,
 					function(done) {
+						const outputDirectory = path.join(
+							__dirname,
+							"js",
+							"benchmark",
+							`baseline-${baseline.name}`,
+							testName
+						);
+						const config = Object.create(
+							require(path.join(testDirectory, "webpack.config.js"))
+						);
+						config.output = Object.create(config.output || {});
+						if (!config.context) config.context = testDirectory;
+						if (!config.output.path) config.output.path = outputDirectory;
+						runBenchmark(baseline.webpack, config, (err, stats) => {
+							if (err) return done(err);
+							console.log(`        ${baseline.name} ${stats.text}`);
+							if (baseline.name === "HEAD") headStats = stats;
+							else baselineStats = stats;
+							done();
+						});
+					},
+					180000
+				);
+
+				it(
+					`should benchmark ${baseline.name} (${baseline.rev})`,
+					done => {
 						const outputDirectory = path.join(
 							__dirname,
 							"js",
