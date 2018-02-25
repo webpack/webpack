@@ -43,7 +43,7 @@
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
-    "jest": "^22.1.4",
+    "jest": "^22.4.2",
     "js-beautify": "^1.5.10",
     "json-loader": "^0.5.7",
     "less": "^2.5.1",
@@ -86,9 +86,9 @@
     "schemas/"
   ],
   "scripts": {
-    "test": "jest",
-    "test:integration": "jest --testMatch '<rootDir>/test/*.test.js'",
-    "test:unit": "jest --testMatch '<rootDir>/test/*.unittest.js'",
+    "test": "node --no-deprecation node_modules/.bin/jest",
+    "test:integration": "node --no-deprecation node_modules/.bin/jest --testMatch '<rootDir>/test/*.test.js'",
+    "test:unit": "node --no-deprecation node_modules/.bin/jest --testMatch '<rootDir>/test/*.unittest.js'",
     "travis:integration": "npm run cover:init && npm run cover:integration && npm run cover:report-min",
     "travis:unit": "npm run cover:init && npm run cover:unit && npm run cover:report-min",
     "travis:lint": "npm run lint-files",
@@ -116,11 +116,22 @@
     "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
   },
   "jest": {
-    "testEnvironment": "node",
     "setupTestFrameworkScriptFile": "<rootDir>/test/setupTestFramework.js",
     "testMatch": [
       "<rootDir>/test/*.test.js",
       "<rootDir>/test/*.unittest.js"
+    ],
+    "watchPathIgnorePatterns": [
+      "<rootDir>/test/js/",
+      "<rootDir>/test/browsertest/js/",
+      "<rootDir>/test/fixtures/temp-cache-fixture/",
+      "<rootDir>/benchmark/js/",
+      "<rootDir>/benchmark/fixtures/",
+      "<rootDir>/examples/",
+      "<rootDir>/coverage/"
+    ],
+    "transformIgnorePatterns": [
+      "<rootDir>/"
     ]
   }
 }
