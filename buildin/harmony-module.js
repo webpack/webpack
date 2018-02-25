@@ -1,8 +1,8 @@
 module.exports = function(originalModule) {
-	if(!originalModule.webpackPolyfill) {
+	if (!originalModule.webpackPolyfill) {
 		var module = Object.create(originalModule);
 		// module.parent = undefined by default
-		if(!module.children) module.children = [];
+		if (!module.children) module.children = [];
 		Object.defineProperty(module, "loaded", {
 			enumerable: true,
 			get: function() {
@@ -16,7 +16,7 @@ module.exports = function(originalModule) {
 			}
 		});
 		Object.defineProperty(module, "exports", {
-			enumerable: true,
+			enumerable: true
 		});
 		module.webpackPolyfill = 1;
 	}

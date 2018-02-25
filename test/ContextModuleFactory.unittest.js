@@ -11,7 +11,7 @@ describe("ContextModuleFactory", () => {
 			factory = new ContextModuleFactory([]);
 			memfs = new MemoryFs();
 		});
-		it("should not report an error when ENOENT errors happen", (done) => {
+		it("should not report an error when ENOENT errors happen", done => {
 			memfs.readdir = (dir, callback) => {
 				setTimeout(() => callback(null, ["/file"]));
 			};
@@ -20,18 +20,22 @@ describe("ContextModuleFactory", () => {
 				err.code = "ENOENT";
 				setTimeout(() => callback(err, null));
 			};
-			factory.resolveDependencies(memfs, {
-				resource: "/",
-				recursive: true,
-				regExp: /.*/
-			}, (err, res) => {
-				expect(err).toBeFalsy();
-				expect(Array.isArray(res)).toBe(true);
-				expect(res.length).toBe(0);
-				done();
-			});
+			factory.resolveDependencies(
+				memfs,
+				{
+					resource: "/",
+					recursive: true,
+					regExp: /.*/
+				},
+				(err, res) => {
+					expect(err).toBeFalsy();
+					expect(Array.isArray(res)).toBe(true);
+					expect(res.length).toBe(0);
+					done();
+				}
+			);
 		});
-		it("should report an error when non-ENOENT errors happen", (done) => {
+		it("should report an error when non-ENOENT errors happen", done => {
 			memfs.readdir = (dir, callback) => {
 				setTimeout(() => callback(null, ["/file"]));
 			};
@@ -40,15 +44,19 @@ describe("ContextModuleFactory", () => {
 				err.code = "EACCES";
 				setTimeout(() => callback(err, null));
 			};
-			factory.resolveDependencies(memfs, {
-				resource: "/",
-				recursive: true,
-				regExp: /.*/
-			}, (err, res) => {
-				expect(err).toBeInstanceOf(Error);
-				expect(res).toBeFalsy();
-				done();
-			});
+			factory.resolveDependencies(
+				memfs,
+				{
+					resource: "/",
+					recursive: true,
+					regExp: /.*/
+				},
+				(err, res) => {
+					expect(err).toBeInstanceOf(Error);
+					expect(res).toBeFalsy();
+					done();
+				}
+			);
 		});
 	});
 });

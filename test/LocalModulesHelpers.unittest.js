@@ -10,7 +10,10 @@ describe("LocalModulesHelpers", () => {
 				module: "module_sample",
 				localModules: ["first", "second"]
 			};
-			const localModule = LocalModulesHelpers.addLocalModule(state, "local_module_sample");
+			const localModule = LocalModulesHelpers.addLocalModule(
+				state,
+				"local_module_sample"
+			);
 			expect(localModule).toBeInstanceOf(Object);
 			expect(localModule).toMatchObject({
 				module: "module_sample",
@@ -26,28 +29,35 @@ describe("LocalModulesHelpers", () => {
 		it("returns `null` if names information doesn't match", () => {
 			const state = {
 				module: "module_sample",
-				localModules: [{
-					name: "first"
-				}, {
-					name: "second"
-				}]
+				localModules: [
+					{
+						name: "first"
+					},
+					{
+						name: "second"
+					}
+				]
 			};
-			expect(LocalModulesHelpers.getLocalModule(state, "local_module_sample")).toBe(null);
+			expect(
+				LocalModulesHelpers.getLocalModule(state, "local_module_sample")
+			).toBe(null);
 		});
 
 		it("returns local module informtion", () => {
 			const state = {
 				module: "module_sample",
-				localModules: [{
-					name: "first"
-				}, {
-					name: "second"
-				}]
+				localModules: [
+					{
+						name: "first"
+					},
+					{
+						name: "second"
+					}
+				]
 			};
 			expect(LocalModulesHelpers.getLocalModule(state, "first")).toEqual({
 				name: "first"
 			});
 		});
 	});
-
 });

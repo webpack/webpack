@@ -8,23 +8,27 @@ const MemoryFs = require("memory-fs");
 const webpack = require("../");
 
 describe("WatchDetection", () => {
-	if(process.env.NO_WATCH_TESTS) {
+	if (process.env.NO_WATCH_TESTS) {
 		it("long running tests excluded");
 		return;
 	}
 
 	jest.setTimeout(10000);
 
-	for(let changeTimeout = 10; changeTimeout < 100; changeTimeout += 10) {
+	for (let changeTimeout = 10; changeTimeout < 100; changeTimeout += 10) {
 		createTestCase(changeTimeout);
 	}
-	for(let changeTimeout = 200; changeTimeout <= 2000; changeTimeout += 200) {
+	for (let changeTimeout = 200; changeTimeout <= 2000; changeTimeout += 200) {
 		createTestCase(changeTimeout);
 	}
 
 	function createTestCase(changeTimeout) {
 		describe(`time between changes ${changeTimeout}ms`, () => {
-			const fixturePath = path.join(__dirname, "fixtures", "temp-" + changeTimeout);
+			const fixturePath = path.join(
+				__dirname,
+				"fixtures",
+				"temp-" + changeTimeout
+			);
 			const filePath = path.join(fixturePath, "file.js");
 			const file2Path = path.join(fixturePath, "file2.js");
 			const loaderPath = path.join(__dirname, "fixtures", "delay-loader.js");
@@ -32,27 +36,27 @@ describe("WatchDetection", () => {
 			beforeAll(() => {
 				try {
 					fs.mkdirSync(fixturePath);
-				} catch(e) {}
+				} catch (e) {}
 				fs.writeFileSync(filePath, "require('./file2')", "utf-8");
 				fs.writeFileSync(file2Path, "original", "utf-8");
 			});
 
-			afterAll((done) => {
+			afterAll(done => {
 				setTimeout(() => {
 					try {
 						fs.unlinkSync(filePath);
-					} catch(e) {}
+					} catch (e) {}
 					try {
 						fs.unlinkSync(file2Path);
-					} catch(e) {}
+					} catch (e) {}
 					try {
 						fs.rmdirSync(fixturePath);
-					} catch(e) {}
+					} catch (e) {}
 					done();
 				}, 100); // cool down a bit
 			});
 
-			it("should build the bundle correctly", (done) => {
+			it("should build the bundle correctly", done => {
 				const compiler = webpack({
 					mode: "development",
 					entry: loaderPath + "!" + filePath,
@@ -61,11 +65,10 @@ describe("WatchDetection", () => {
 						filename: "bundle.js"
 					}
 				});
-				const memfs = compiler.outputFileSystem = new MemoryFs();
+				const memfs = (compiler.outputFileSystem = new MemoryFs());
 				let onChange;
 				compiler.hooks.done.tap("WatchDetectionTest", () => {
-					if(onChange)
-						onChange();
+					if (onChange) onChange();
 				});
 
 				let watcher;
@@ -74,19 +77,33 @@ describe("WatchDetection", () => {
 
 				function step1() {
 					onChange = () => {
-						if(memfs.readFileSync("/bundle.js") && memfs.readFileSync("/bundle.js").toString().indexOf("original") >= 0)
+						if (
+							memfs.readFileSync("/bundle.js") &&
+							memfs
+								.readFileSync("/bundle.js")
+								.toString()
+								.indexOf("original") >= 0
+						)
 							step2();
 					};
 
-					watcher = compiler.watch({
-						aggregateTimeout: 50
-					}, () => {});
+					watcher = compiler.watch(
+						{
+							aggregateTimeout: 50
+						},
+						() => {}
+					);
 				}
 
 				function step2() {
 					onChange = null;
 
-					fs.writeFile(filePath, "require('./file2'); again", "utf-8", handleError);
+					fs.writeFile(
+						filePath,
+						"require('./file2'); again",
+						"utf-8",
+						handleError
+					);
 
 					setTimeout(step3, changeTimeout);
 				}
@@ -101,7 +118,12 @@ describe("WatchDetection", () => {
 
 				function step4() {
 					onChange = () => {
-						if(memfs.readFileSync("/bundle.js").toString().indexOf("correct") >= 0)
+						if (
+							memfs
+								.readFileSync("/bundle.js")
+								.toString()
+								.indexOf("correct") >= 0
+						)
 							step5();
 					};
 
@@ -117,7 +139,7 @@ describe("WatchDetection", () => {
 				}
 
 				function handleError(err) {
-					if(err) done(err);
+					if (err) done(err);
 				}
 			});
 		});

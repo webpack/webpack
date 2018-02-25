@@ -4,20 +4,27 @@ const packageJSON = require("../package.json");
 const MultiStats = require("../lib/MultiStats");
 
 const createStat = overides => {
-	return Object.assign({
-		hash: "foo",
-		compilation: {
-			name: "bar"
-		},
-		hasErrors: () => false,
-		hasWarnings: () => false,
-		toJson: () => Object.assign({
+	return Object.assign(
+		{
 			hash: "foo",
-			version: "version",
-			warnings: [],
-			errors: []
-		}, overides)
-	}, overides);
+			compilation: {
+				name: "bar"
+			},
+			hasErrors: () => false,
+			hasWarnings: () => false,
+			toJson: () =>
+				Object.assign(
+					{
+						hash: "foo",
+						version: "version",
+						warnings: [],
+						errors: []
+					},
+					overides
+				)
+		},
+		overides
+	);
 };
 
 describe("MultiStats", () => {
@@ -87,10 +94,7 @@ describe("MultiStats", () => {
 
 		describe("when none have errors", () => {
 			beforeEach(() => {
-				stats = [
-					createStat(),
-					createStat()
-				];
+				stats = [createStat(), createStat()];
 				myMultiStats = new MultiStats(stats);
 			});
 
@@ -137,10 +141,7 @@ describe("MultiStats", () => {
 
 		describe("when none have warnings", () => {
 			beforeEach(() => {
-				stats = [
-					createStat(),
-					createStat()
-				];
+				stats = [createStat(), createStat()];
 				myMultiStats = new MultiStats(stats);
 			});
 
@@ -183,30 +184,22 @@ describe("MultiStats", () => {
 				hash: false
 			});
 			expect(result).toEqual({
-				errors: [
-					"(abc123-compilation) abc123-error"
-				],
+				errors: ["(abc123-compilation) abc123-error"],
 				warnings: [
 					"(abc123-compilation) abc123-warning",
 					"(xyz890-compilation) xyz890-warning-1",
 					"(xyz890-compilation) xyz890-warning-2"
 				],
-				children: [{
-						errors: [
-							"abc123-error"
-						],
+				children: [
+					{
+						errors: ["abc123-error"],
 						name: "abc123-compilation",
-						warnings: [
-							"abc123-warning"
-						]
+						warnings: ["abc123-warning"]
 					},
 					{
 						errors: [],
 						name: "xyz890-compilation",
-						warnings: [
-							"xyz890-warning-1",
-							"xyz890-warning-2"
-						]
+						warnings: ["xyz890-warning-1", "xyz890-warning-2"]
 					}
 				]
 			});
@@ -216,24 +209,20 @@ describe("MultiStats", () => {
 			myMultiStats = new MultiStats(stats);
 			result = myMultiStats.toJson(true);
 			expect(result).toEqual({
-				errors: [
-					"(abc123-compilation) abc123-error"
-				],
+				errors: ["(abc123-compilation) abc123-error"],
 				warnings: [
 					"(abc123-compilation) abc123-warning",
 					"(xyz890-compilation) xyz890-warning-1",
 					"(xyz890-compilation) xyz890-warning-2"
 				],
-				children: [{
+				children: [
+					{
 						warnings: ["abc123-warning"],
 						errors: ["abc123-error"],
 						name: "abc123-compilation"
 					},
 					{
-						warnings: [
-							"xyz890-warning-1",
-							"xyz890-warning-2"
-						],
+						warnings: ["xyz890-warning-1", "xyz890-warning-2"],
 						errors: [],
 						name: "xyz890-compilation"
 					}
@@ -265,11 +254,11 @@ describe("MultiStats", () => {
 		it("returns string representation", () => {
 			expect(result).toEqual(
 				"Hash: abc123xyz890\n" +
-				"Version: webpack 1.2.3\n" +
-				"Child abc123-compilation:\n" +
-				"    Hash: abc123\n" +
-				"Child xyz890-compilation:\n" +
-				"    Hash: xyz890"
+					"Version: webpack 1.2.3\n" +
+					"Child abc123-compilation:\n" +
+					"    Hash: abc123\n" +
+					"Child xyz890-compilation:\n" +
+					"    Hash: xyz890"
 			);
 		});
 	});

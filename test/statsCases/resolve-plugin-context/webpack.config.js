@@ -7,12 +7,10 @@ module.exports = {
 		filename: "bundle.js"
 	},
 	resolve: {
-		plugins: [
-			new ResolvePackageFromRootPlugin(__dirname)
-		]
+		plugins: [new ResolvePackageFromRootPlugin(__dirname)]
 	},
 	stats: {
 		chunkModules: false,
-		modules: true,
+		modules: true
 	}
 };

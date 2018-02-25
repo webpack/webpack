@@ -11,18 +11,18 @@ const MemoryFs = require("memory-fs");
 describe("Compiler", () => {
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
-		if(!options.mode) options.mode = "production";
+		if (!options.mode) options.mode = "production";
 		options = new WebpackOptionsDefaulter().process(options);
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");
-		if(noOutputPath) options.output.path = "/";
+		if (noOutputPath) options.output.path = "/";
 		options.output.pathinfo = true;
 		options.optimization = {
 			minimize: false
 		};
 		const logs = {
 			mkdirp: [],
-			writeFile: [],
+			writeFile: []
 		};
 
 		const c = webpack(options);
@@ -41,9 +41,12 @@ describe("Compiler", () => {
 				callback();
 			}
 		};
-		c.hooks.compilation.tap("CompilerTest", (compilation) => compilation.bail = true);
+		c.hooks.compilation.tap(
+			"CompilerTest",
+			compilation => (compilation.bail = true)
+		);
 		c.run((err, stats) => {
-			if(err) throw err;
+			if (err) throw err;
 			expect(typeof stats).toBe("object");
 			const compilation = stats.compilation;
 			stats = stats.toJson({
@@ -53,7 +56,7 @@ describe("Compiler", () => {
 			expect(typeof stats).toBe("object");
 			expect(stats).toHaveProperty("errors");
 			expect(Array.isArray(stats.errors)).toBe(true);
-			if(stats.errors.length > 0) {
+			if (stats.errors.length > 0) {
 				expect(stats.errors[0]).toBeInstanceOf(Error);
 				throw stats.errors[0];
 			}
@@ -62,22 +65,23 @@ describe("Compiler", () => {
 		});
 	}
 
-	it("should compile a single file to deep output", (done) => {
-		compile("./c", {
-			output: {
-				path: "/what",
-				filename: "the/hell.js",
+	it("should compile a single file to deep output", done => {
+		compile(
+			"./c",
+			{
+				output: {
+					path: "/what",
+					filename: "the/hell.js"
+				}
+			},
+			(stats, files) => {
+				expect(stats.logs.mkdirp).toEqual(["/what", "/what/the"]);
+				done();
 			}
-		}, (stats, files) => {
-			expect(stats.logs.mkdirp).toEqual([
-				"/what",
-				"/what/the",
-			]);
-			done();
-		});
+		);
 	});
 
-	it("should compile a single file", (done) => {
+	it("should compile a single file", done => {
 		compile("./c", {}, (stats, files) => {
 			expect(Object.keys(files)).toEqual(["/main.js"]);
 			const bundle = files["/main.js"];
@@ -95,7 +99,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should compile a complex file", (done) => {
+	it("should compile a complex file", done => {
 		compile("./main1", {}, (stats, files) => {
 			expect(Object.keys(files)).toEqual(["/main.js"]);
 			const bundle = files["/main.js"];
@@ -116,7 +120,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should compile a file with transitive dependencies", (done) => {
+	it("should compile a file with transitive dependencies", done => {
 		compile("./abc", {}, (stats, files) => {
 			expect(Object.keys(files)).toEqual(["/main.js"]);
 			const bundle = files["/main.js"];
@@ -139,7 +143,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should compile a file with multiple chunks", (done) => {
+	it("should compile a file with multiple chunks", done => {
 		compile("./chunks", {}, (stats, files) => {
 			expect(stats.chunks).toHaveLength(2);
 			expect(Object.keys(files)).toEqual(["/0.js", "/main.js"]);
@@ -159,7 +163,7 @@ describe("Compiler", () => {
 			expect(bundle).not.toMatch("fixtures");
 			expect(chunk).not.toMatch("fixtures");
 			expect(bundle).toMatch("webpackJsonp");
-			expect(chunk).toMatch("window[\"webpackJsonp\"] || []).push");
+			expect(chunk).toMatch('window["webpackJsonp"] || []).push');
 			done();
 		});
 	});
@@ -171,21 +175,21 @@ describe("Compiler", () => {
 				context: path.join(__dirname, "fixtures"),
 				output: {
 					path: "/",
-					pathinfo: true,
+					pathinfo: true
 				}
 			});
 		});
 		describe("purgeInputFileSystem", () => {
-			it("invokes purge() if inputFileSystem.purge", (done) => {
+			it("invokes purge() if inputFileSystem.purge", done => {
 				const mockPurge = sinon.spy();
 				compiler.inputFileSystem = {
-					purge: mockPurge,
+					purge: mockPurge
 				};
 				compiler.purgeInputFileSystem();
 				expect(mockPurge.callCount).toBe(1);
 				done();
 			});
-			it("does NOT invoke purge() if !inputFileSystem.purge", (done) => {
+			it("does NOT invoke purge() if !inputFileSystem.purge", done => {
 				const mockPurge = sinon.spy();
 				compiler.inputFileSystem = null;
 				compiler.purgeInputFileSystem();
@@ -194,7 +198,7 @@ describe("Compiler", () => {
 			});
 		});
 		describe("isChild", () => {
-			it("returns booleanized this.parentCompilation", (done) => {
+			it("returns booleanized this.parentCompilation", done => {
 				compiler.parentCompilation = "stringyStringString";
 				const response1 = compiler.isChild();
 				expect(response1).toBe(true);
@@ -236,7 +240,7 @@ describe("Compiler", () => {
 			});
 		});
 	});
-	it("should not emit on errors", (done) => {
+	it("should not emit on errors", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -248,13 +252,13 @@ describe("Compiler", () => {
 		});
 		compiler.outputFileSystem = new MemoryFs();
 		compiler.run((err, stats) => {
-			if(err) return done(err);
-			if(compiler.outputFileSystem.existsSync("/bundle.js"))
+			if (err) return done(err);
+			if (compiler.outputFileSystem.existsSync("/bundle.js"))
 				return done(new Error("Bundle should not be created on error"));
 			done();
 		});
 	});
-	it("should not emit on errors (watch)", (done) => {
+	it("should not emit on errors (watch)", done => {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -267,8 +271,8 @@ describe("Compiler", () => {
 		compiler.outputFileSystem = new MemoryFs();
 		const watching = compiler.watch({}, (err, stats) => {
 			watching.close();
-			if(err) return done(err);
-			if(compiler.outputFileSystem.existsSync("/bundle.js"))
+			if (err) return done(err);
+			if (compiler.outputFileSystem.existsSync("/bundle.js"))
 				return done(new Error("Bundle should not be created on error"));
 			done();
 		});

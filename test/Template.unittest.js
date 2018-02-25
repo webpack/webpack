@@ -9,7 +9,7 @@ describe("Template", () => {
 	it("should generate valid number identifiers", () => {
 		const items = [];
 		let item;
-		for(let i = 0; i < 80; i += 1) {
+		for (let i = 0; i < 80; i += 1) {
 			item = Template.numberToIdentifer(i);
 			expect(item).not.toBe("");
 			expect(items).not.toContain(item);
@@ -17,6 +17,8 @@ describe("Template", () => {
 		}
 	});
 	it("should generate sanitized path identifiers", () => {
-		expect(Template.toPath("path/to-sdfas/sadfome$$.js")).toBe("path-to-sdfas-sadfome$$-js");
+		expect(Template.toPath("path/to-sdfas/sadfome$$.js")).toBe(
+			"path-to-sdfas-sadfome$$-js"
+		);
 	});
 });

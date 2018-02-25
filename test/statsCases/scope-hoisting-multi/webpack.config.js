@@ -1,5 +1,4 @@
 module.exports = [
-
 	{
 		mode: "production",
 		entry: {
@@ -55,5 +54,4 @@ module.exports = [
 			optimizationBailout: true
 		}
 	}
-
 ];

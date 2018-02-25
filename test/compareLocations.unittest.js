@@ -1,11 +1,14 @@
 "use strict";
 
 const compareLocations = require("../lib/compareLocations");
-const createPosition = (overides) => {
-	return Object.assign({
-		line: 10,
-		column: 5
-	}, overides);
+const createPosition = overides => {
+	return Object.assign(
+		{
+			line: 10,
+			column: 5
+		},
+		overides
+	);
 };
 
 const createLocation = (start, end, index) => {

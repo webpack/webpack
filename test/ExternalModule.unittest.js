@@ -13,11 +13,7 @@ describe("ExternalModule", () => {
 	beforeEach(() => {
 		request = "some/request";
 		type = "some-type";
-		externalModule = new ExternalModule(
-			request,
-			type,
-			`${type} ${request}`
-		);
+		externalModule = new ExternalModule(request, type, `${type} ${request}`);
 	});
 	describe("#identifier", () => {
 		it("returns an identifier for this module", () => {
@@ -103,10 +99,14 @@ describe("ExternalModule", () => {
 				// set up
 				const type = "window";
 				const varName = ["foo", "bar"];
-				const expected = "(function() { module.exports = window[\"foo\"][\"bar\"]; }());";
+				const expected =
+					'(function() { module.exports = window["foo"]["bar"]; }());';
 
 				// invoke
-				const result = externalModule.getSourceForGlobalVariableExternal(varName, type);
+				const result = externalModule.getSourceForGlobalVariableExternal(
+					varName,
+					type
+				);
 
 				// check
 				expect(result).toEqual(expected);
@@ -117,10 +117,13 @@ describe("ExternalModule", () => {
 				// set up
 				const type = "window";
 				const varName = "foo";
-				const expected = "(function() { module.exports = window[\"foo\"]; }());";
+				const expected = '(function() { module.exports = window["foo"]; }());';
 
 				// invoke
-				const result = externalModule.getSourceForGlobalVariableExternal(varName, type);
+				const result = externalModule.getSourceForGlobalVariableExternal(
+					varName,
+					type
+				);
 
 				// check
 				expect(result).toEqual(expected);
@@ -133,10 +136,13 @@ describe("ExternalModule", () => {
 			it("use the first to require a module and the rest as lookup on the required module", () => {
 				// set up
 				const varName = ["module", "look", "up"];
-				const expected = "module.exports = require(module)[\"look\"][\"up\"];";
+				const expected = 'module.exports = require(module)["look"]["up"];';
 
 				// invoke
-				const result = externalModule.getSourceForCommonJsExternal(varName, type);
+				const result = externalModule.getSourceForCommonJsExternal(
+					varName,
+					type
+				);
 
 				// check
 				expect(result).toEqual(expected);
@@ -147,10 +153,13 @@ describe("ExternalModule", () => {
 				// set up
 				const type = "window";
 				const varName = "foo";
-				const expected = "module.exports = require(\"foo\");";
+				const expected = 'module.exports = require("foo");';
 
 				// invoke
-				const result = externalModule.getSourceForCommonJsExternal(varName, type);
+				const result = externalModule.getSourceForCommonJsExternal(
+					varName,
+					type
+				);
 
 				// check
 				expect(result).toEqual(expected);
@@ -167,7 +176,10 @@ describe("ExternalModule", () => {
 `;
 
 			// invoke
-			const result = externalModule.checkExternalVariable(variableToCheck, request);
+			const result = externalModule.checkExternalVariable(
+				variableToCheck,
+				request
+			);
 
 			// check
 			expect(result).toEqual(expected);
@@ -182,7 +194,11 @@ describe("ExternalModule", () => {
 			const expected = "module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;";
 
 			// invoke
-			const result = externalModule.getSourceForAmdOrUmdExternal(id, optional, request);
+			const result = externalModule.getSourceForAmdOrUmdExternal(
+				id,
+				optional,
+				request
+			);
 
 			// check
 			expect(result).toEqual(expected);
@@ -196,7 +212,11 @@ describe("ExternalModule", () => {
 module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 
 				// invoke
-				const result = externalModule.getSourceForAmdOrUmdExternal(id, optional, request);
+				const result = externalModule.getSourceForAmdOrUmdExternal(
+					id,
+					optional,
+					request
+				);
 
 				// check
 				expect(result).toEqual(expected);
@@ -224,7 +244,10 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 module.exports = some/request;`;
 
 				// invoke
-				const result = externalModule.getSourceForDefaultCase(optional, request);
+				const result = externalModule.getSourceForDefaultCase(
+					optional,
+					request
+				);
 
 				// check
 				expect(result).toEqual(expected);
@@ -238,7 +261,7 @@ module.exports = some/request;`;
 		beforeEach(() => {
 			hashedText = "";
 			hash = {
-				update: (text) => {
+				update: text => {
 					hashedText += text;
 				}
 			};
@@ -262,7 +285,7 @@ module.exports = some/request;`;
 		beforeEach(() => {
 			hashedText = "";
 			hash = {
-				update: (text) => {
+				update: text => {
 					hashedText += text;
 				}
 			};

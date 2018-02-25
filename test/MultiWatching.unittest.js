@@ -44,7 +44,8 @@ describe("MultiWatching", () => {
 
 	describe("close", () => {
 		let callback;
-		const callClosedFinishedCallback = (watching) => watching.close.getCall(0).args[0]();
+		const callClosedFinishedCallback = watching =>
+			watching.close.getCall(0).args[0]();
 
 		beforeEach(() => {
 			callback = sinon.spy();

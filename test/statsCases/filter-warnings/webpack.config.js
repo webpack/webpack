@@ -12,7 +12,7 @@ const baseConfig = {
 				sourceMap: true,
 				uglifyOptions: {
 					compress: {
-						warnings: true,
+						warnings: true
 					},
 					mangle: false,
 					output: {
@@ -28,7 +28,7 @@ const baseConfig = {
 		chunkModules: false,
 		modules: false,
 		providedExports: false,
-		usedExports: false,
+		usedExports: false
 	}
 };
 
@@ -36,20 +36,20 @@ module.exports = [
 	undefined,
 	"UglifyJs",
 	/UglifyJs/,
-	warnings => true, ["UglifyJs"],
+	warnings => true,
+	["UglifyJs"],
 	[/UglifyJs/],
-	[
-		warnings => true
-	],
+	[warnings => true],
 	"should not filter",
 	/should not filter/,
-	warnings => false, ["should not filter"],
+	warnings => false,
+	["should not filter"],
 	[/should not filter/],
-	[
-		warnings => false
-	]
-].map(filter => Object.assign({}, baseConfig, {
-	stats: Object.assign({}, baseConfig.stats, {
-		warningsFilter: filter
+	[warnings => false]
+].map(filter =>
+	Object.assign({}, baseConfig, {
+		stats: Object.assign({}, baseConfig.stats, {
+			warningsFilter: filter
+		})
 	})
-}));
+);

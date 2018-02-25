@@ -5,8 +5,6 @@ const webpack = require("../lib/webpack");
 describe("TestCases", () => {
 	describeCases({
 		name: "hot",
-		plugins: [
-			new webpack.HotModuleReplacementPlugin()
-		]
+		plugins: [new webpack.HotModuleReplacementPlugin()]
 	});
 });

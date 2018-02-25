@@ -65,13 +65,16 @@ describe("NormalModule", () => {
 
 	describe("#libIdent", () => {
 		it("contextifies the userRequest of the module", () => {
-			expect(normalModule.libIdent({
-				context: "some/context"
-			})).toBe("../userRequest");
+			expect(
+				normalModule.libIdent({
+					context: "some/context"
+				})
+			).toBe("../userRequest");
 		});
 		describe("given a userRequest containing loaders", () => {
 			beforeEach(() => {
-				userRequest = "some/userRequest!some/other/userRequest!some/thing/is/off/here";
+				userRequest =
+					"some/userRequest!some/other/userRequest!some/thing/is/off/here";
 				normalModule = new NormalModule({
 					type: "javascript/auto",
 					request,
@@ -83,14 +86,17 @@ describe("NormalModule", () => {
 				});
 			});
 			it("contextifies every path in the userRequest", () => {
-				expect(normalModule.libIdent({
-					context: "some/context"
-				})).toBe("../userRequest!../other/userRequest!../thing/is/off/here");
+				expect(
+					normalModule.libIdent({
+						context: "some/context"
+					})
+				).toBe("../userRequest!../other/userRequest!../thing/is/off/here");
 			});
 		});
 		describe("given a userRequest containing query parameters", () => {
 			it("ignores paths in query parameters", () => {
-				userRequest = "some/context/loader?query=foo\\bar&otherPath=testpath/other";
+				userRequest =
+					"some/context/loader?query=foo\\bar&otherPath=testpath/other";
 				normalModule = new NormalModule({
 					type: "javascript/auto",
 					request,
@@ -100,9 +106,11 @@ describe("NormalModule", () => {
 					resource,
 					parser
 				});
-				expect(normalModule.libIdent({
-					context: "some/context",
-				})).toBe("./loader?query=foo\\bar&otherPath=testpath/other");
+				expect(
+					normalModule.libIdent({
+						context: "some/context"
+					})
+				).toBe("./loader?query=foo\\bar&otherPath=testpath/other");
 			});
 		});
 	});
@@ -142,12 +150,16 @@ describe("NormalModule", () => {
 		});
 		describe("given no sourcemap", () => {
 			it("returns a RawSource", () => {
-				expect(normalModule.createSourceForAsset(name, content)).toBeInstanceOf(RawSource);
+				expect(normalModule.createSourceForAsset(name, content)).toBeInstanceOf(
+					RawSource
+				);
 			});
 		});
 		describe("given a string as the sourcemap", () => {
 			it("returns a OriginalSource", () => {
-				expect(normalModule.createSourceForAsset(name, content, sourceMap)).toBeInstanceOf(OriginalSource);
+				expect(
+					normalModule.createSourceForAsset(name, content, sourceMap)
+				).toBeInstanceOf(OriginalSource);
 			});
 		});
 		describe("given a some other kind of sourcemap", () => {
@@ -155,7 +167,9 @@ describe("NormalModule", () => {
 				sourceMap = () => {};
 			});
 			it("returns a SourceMapSource", () => {
-				expect(normalModule.createSourceForAsset(name, content, sourceMap)).toBeInstanceOf(SourceMapSource);
+				expect(
+					normalModule.createSourceForAsset(name, content, sourceMap)
+				).toBeInstanceOf(SourceMapSource);
 			});
 		});
 	});
@@ -183,7 +197,7 @@ describe("NormalModule", () => {
 			beforeEach(() => {
 				normalModule._source = null;
 			});
-			it("calls hash function with \"null\"", () => {
+			it('calls hash function with "null"', () => {
 				normalModule.updateHashWithSource(hash);
 				expect(hashSpy.callCount).toBe(1);
 				expect(hashSpy.args[0][0]).toBe("null");
@@ -194,7 +208,7 @@ describe("NormalModule", () => {
 			beforeEach(() => {
 				normalModule._source = new RawSource(expectedSource);
 			});
-			it("calls hash function with \"source\" and then the actual source of the module", function() {
+			it('calls hash function with "source" and then the actual source of the module', function() {
 				normalModule.updateHashWithSource(hash);
 				expect(hashSpy.callCount).toBe(2);
 				expect(hashSpy.args[0][0]).toBe("source");
@@ -229,20 +243,16 @@ describe("NormalModule", () => {
 			fileB = "fileB";
 			fileDependencies = [fileA, fileB];
 			contextDependencies = [fileA, fileB];
-			fileTimestamps = new Map([
-				[fileA, 1],
-				[fileB, 1]
-			]);
-			contextTimestamps = new Map([
-				[fileA, 1],
-				[fileB, 1],
-			]);
+			fileTimestamps = new Map([[fileA, 1], [fileB, 1]]);
+			contextTimestamps = new Map([[fileA, 1], [fileB, 1]]);
 			normalModule.buildTimestamp = 2;
 			setDeps(fileDependencies, contextDependencies);
 		});
 		describe("given all timestamps are older than the buildTimestamp", () => {
 			it("returns false", () => {
-				expect(normalModule.needRebuild(fileTimestamps, contextTimestamps)).toBe(false);
+				expect(
+					normalModule.needRebuild(fileTimestamps, contextTimestamps)
+				).toBe(false);
 			});
 		});
 		describe("given a file timestamp is newer than the buildTimestamp", () => {
@@ -250,7 +260,9 @@ describe("NormalModule", () => {
 				fileTimestamps.set(fileA, 3);
 			});
 			it("returns true", () => {
-				expect(normalModule.needRebuild(fileTimestamps, contextTimestamps)).toBe(true);
+				expect(
+					normalModule.needRebuild(fileTimestamps, contextTimestamps)
+				).toBe(true);
 			});
 		});
 		describe("given a no file timestamp exists", () => {
@@ -258,7 +270,9 @@ describe("NormalModule", () => {
 				fileTimestamps = new Map();
 			});
 			it("returns true", () => {
-				expect(normalModule.needRebuild(fileTimestamps, contextTimestamps)).toBe(true);
+				expect(
+					normalModule.needRebuild(fileTimestamps, contextTimestamps)
+				).toBe(true);
 			});
 		});
 		describe("given a context timestamp is newer than the buildTimestamp", () => {
@@ -266,7 +280,9 @@ describe("NormalModule", () => {
 				contextTimestamps.set(fileA, 3);
 			});
 			it("returns true", () => {
-				expect(normalModule.needRebuild(fileTimestamps, contextTimestamps)).toBe(true);
+				expect(
+					normalModule.needRebuild(fileTimestamps, contextTimestamps)
+				).toBe(true);
 			});
 		});
 		describe("given a no context timestamp exists", () => {
@@ -274,7 +290,9 @@ describe("NormalModule", () => {
 				contextTimestamps = new Map();
 			});
 			it("returns true", () => {
-				expect(normalModule.needRebuild(fileTimestamps, contextTimestamps)).toBe(true);
+				expect(
+					normalModule.needRebuild(fileTimestamps, contextTimestamps)
+				).toBe(true);
 			});
 		});
 	});
@@ -346,13 +364,17 @@ describe("NormalModule", () => {
 			});
 			describe("that is a string", () => {
 				it("calls and returns whatever applyNoParseRule returns", () => {
-					expect(normalModule.shouldPreventParsing("some rule")).toBe(returnValOfSpy);
+					expect(normalModule.shouldPreventParsing("some rule")).toBe(
+						returnValOfSpy
+					);
 					expect(applyNoParseRuleSpy.callCount).toBe(1);
 				});
 			});
 			describe("that is a regex", () => {
 				it("calls and returns whatever applyNoParseRule returns", () => {
-					expect(normalModule.shouldPreventParsing("some rule")).toBe(returnValOfSpy);
+					expect(normalModule.shouldPreventParsing("some rule")).toBe(
+						returnValOfSpy
+					);
 					expect(applyNoParseRuleSpy.callCount).toBe(1);
 				});
 			});
@@ -360,11 +382,7 @@ describe("NormalModule", () => {
 				describe("of strings and or regexs", () => {
 					let someRules;
 					beforeEach(() => {
-						someRules = [
-							"some rule",
-							/some rule1/,
-							"some rule2",
-						];
+						someRules = ["some rule", /some rule1/, "some rule2"];
 					});
 					describe("and none of them match", () => {
 						beforeEach(() => {
@@ -372,7 +390,9 @@ describe("NormalModule", () => {
 							applyNoParseRuleSpy.returns(returnValOfSpy);
 						});
 						it("returns false", () => {
-							expect(normalModule.shouldPreventParsing(someRules)).toBe(returnValOfSpy);
+							expect(normalModule.shouldPreventParsing(someRules)).toBe(
+								returnValOfSpy
+							);
 							expect(applyNoParseRuleSpy.callCount).toBe(3);
 						});
 					});
@@ -382,7 +402,9 @@ describe("NormalModule", () => {
 							applyNoParseRuleSpy.returns(returnValOfSpy);
 						});
 						it("returns true", () => {
-							expect(normalModule.shouldPreventParsing(someRules)).toBe(returnValOfSpy);
+							expect(normalModule.shouldPreventParsing(someRules)).toBe(
+								returnValOfSpy
+							);
 							expect(applyNoParseRuleSpy.callCount).toBe(1);
 						});
 					});
@@ -394,7 +416,9 @@ describe("NormalModule", () => {
 							applyNoParseRuleSpy.onCall(2).returns(true);
 						});
 						it("returns true", () => {
-							expect(normalModule.shouldPreventParsing(someRules)).toBe(returnValOfSpy);
+							expect(normalModule.shouldPreventParsing(someRules)).toBe(
+								returnValOfSpy
+							);
 							expect(applyNoParseRuleSpy.callCount).toBe(3);
 						});
 					});

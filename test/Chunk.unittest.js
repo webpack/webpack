@@ -65,10 +65,12 @@ describe("Chunk", () => {
 
 	describe("size", () => {
 		it("should NOT have any module by default", () => {
-			expect(ChunkInstance.size({
-				chunkOverhead: 10,
-				entryChunkMultiplicator: 2
-			})).toBe(10);
+			expect(
+				ChunkInstance.size({
+					chunkOverhead: 10,
+					entryChunkMultiplicator: 2
+				})
+			).toBe(10);
 		});
 	});
 

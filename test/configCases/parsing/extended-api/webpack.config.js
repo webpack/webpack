@@ -5,7 +5,5 @@ module.exports = {
 	entry: {
 		other: "./index"
 	},
-	plugins: [
-		new webpack.ExtendedAPIPlugin()
-	]
+	plugins: [new webpack.ExtendedAPIPlugin()]
 };

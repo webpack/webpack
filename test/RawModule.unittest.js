@@ -20,15 +20,16 @@ describe("RawModule", () => {
 	});
 
 	describe("size", () => {
-		it("returns value for sourceStr attribute\"s length property", () => {
+		it('returns value for sourceStr attribute"s length property', () => {
 			const sourceStrLength = myRawModule.sourceStr.length;
 			expect(myRawModule.size()).toBe(sourceStrLength);
 		});
 	});
 
 	describe("readableIdentifier", () => {
-		it("returns result of calling provided requestShortener\"s shorten method " +
-			"on readableIdentifierStr attribute",
+		it(
+			'returns result of calling provided requestShortener"s shorten method ' +
+				"on readableIdentifierStr attribute",
 			() => {
 				const requestShortener = new RequestShortener(path.resolve());
 				expect(myRawModule.readableIdentifier(requestShortener)).toBeDefined();
@@ -43,17 +44,22 @@ describe("RawModule", () => {
 	});
 
 	describe("source", () => {
-		it("returns a new OriginalSource instance with sourceStr attribute and " +
-			"return value of identifier() function provided as constructor arguments",
+		it(
+			"returns a new OriginalSource instance with sourceStr attribute and " +
+				"return value of identifier() function provided as constructor arguments",
 			() => {
-				const originalSource = new OriginalSource(myRawModule.sourceStr, myRawModule.identifier());
+				const originalSource = new OriginalSource(
+					myRawModule.sourceStr,
+					myRawModule.identifier()
+				);
 				myRawModule.useSourceMap = true;
 				expect(myRawModule.source()).toEqual(originalSource);
 			}
 		);
 
-		it("returns a new RawSource instance with sourceStr attribute provided " +
-			"as constructor argument if useSourceMap is falsey",
+		it(
+			"returns a new RawSource instance with sourceStr attribute provided " +
+				"as constructor argument if useSourceMap is falsey",
 			() => {
 				const rawSource = new RawSource(myRawModule.sourceStr);
 				myRawModule.useSourceMap = false;
@@ -64,14 +70,14 @@ describe("RawModule", () => {
 
 	describe("updateHash", () => {
 		it("should include sourceStr in its hash", () => {
-			const hashModule = (module) => {
+			const hashModule = module => {
 				const hash = crypto.createHash("sha256");
 				module.updateHash(hash);
 				return hash.digest("hex");
 			};
 
-			const hashFoo = hashModule(new RawModule("\"foo\""));
-			const hashBar = hashModule(new RawModule("\"bar\""));
+			const hashFoo = hashModule(new RawModule('"foo"'));
+			const hashBar = hashModule(new RawModule('"bar"'));
 			expect(hashFoo).not.toBe(hashBar);
 		});
 	});

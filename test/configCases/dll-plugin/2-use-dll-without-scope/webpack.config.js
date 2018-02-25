@@ -3,15 +3,19 @@ var webpack = require("../../../../");
 
 module.exports = {
 	module: {
-		rules: [{
-			oneOf: [{
-				test: /\.abc\.js$/,
-				loader: "../0-create-dll/g-loader.js",
-				options: {
-					test: 1
-				}
-			}]
-		}]
+		rules: [
+			{
+				oneOf: [
+					{
+						test: /\.abc\.js$/,
+						loader: "../0-create-dll/g-loader.js",
+						options: {
+							test: 1
+						}
+					}
+				]
+			}
+		]
 	},
 	resolve: {
 		extensions: [".js", ".jsx"]

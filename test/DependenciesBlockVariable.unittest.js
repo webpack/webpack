@@ -12,7 +12,11 @@ describe("DependenciesBlockVariable", () => {
 		disconnect: sandbox.spy(),
 		updateHash: sandbox.spy()
 	};
-	const DependenciesBlockVariableInstance = new DependenciesBlockVariable("dependencies-name", "expression", [dependencyMock]);
+	const DependenciesBlockVariableInstance = new DependenciesBlockVariable(
+		"dependencies-name",
+		"expression",
+		[dependencyMock]
+	);
 
 	afterEach(() => {
 		sandbox.restore();
@@ -63,7 +67,9 @@ describe("DependenciesBlockVariable", () => {
 				}
 			};
 			DependenciesBlockVariableInstance.expressionSource(
-				dependencyTemplates, {}, {}
+				dependencyTemplates,
+				{},
+				{}
 			);
 			expect(applyMock.calledOnce).toBe(true);
 		});
@@ -76,7 +82,9 @@ describe("DependenciesBlockVariable", () => {
 			};
 			expect(() => {
 				DependenciesBlockVariableInstance.expressionSource(
-					dependencyTemplates, {}, {}
+					dependencyTemplates,
+					{},
+					{}
 				);
 			}).toThrow("No template for dependency: DependencyMock");
 		});

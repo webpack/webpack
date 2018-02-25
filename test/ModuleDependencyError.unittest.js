@@ -13,7 +13,11 @@ describe("ModuleDependencyError", () => {
 	describe("when new error created", () => {
 		beforeEach(() => {
 			env.error = new Error("Error Message");
-			env.moduleDependencyError = new ModuleDependencyError("myModule", env.error, "Location");
+			env.moduleDependencyError = new ModuleDependencyError(
+				"myModule",
+				env.error,
+				"Location"
+			);
 		});
 
 		it("is an error", () => {
@@ -29,7 +33,9 @@ describe("ModuleDependencyError", () => {
 		});
 
 		it("has a details property", () => {
-			expect(env.moduleDependencyError.details).toMatch(path.join("test", "ModuleDependencyError.unittest.js:"));
+			expect(env.moduleDependencyError.details).toMatch(
+				path.join("test", "ModuleDependencyError.unittest.js:")
+			);
 		});
 
 		it("has an origin property", () => {

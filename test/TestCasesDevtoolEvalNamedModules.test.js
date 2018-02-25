@@ -6,8 +6,6 @@ describe("TestCases", () => {
 	describeCases({
 		name: "devtool-eval-named-modules",
 		devtool: "eval",
-		plugins: [
-			new webpack.NamedModulesPlugin()
-		]
+		plugins: [new webpack.NamedModulesPlugin()]
 	});
 });

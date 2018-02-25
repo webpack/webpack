@@ -30,11 +30,15 @@ describe("SizeFormatHelpers", () => {
 		});
 
 		it("should handle integer gibibytes", () => {
-			expect(SizeFormatHelpers.formatSize(3 * 1024 * 1024 * 1024)).toBe("3 GiB");
+			expect(SizeFormatHelpers.formatSize(3 * 1024 * 1024 * 1024)).toBe(
+				"3 GiB"
+			);
 		});
 
 		it("should handle float gibibytes", () => {
-			expect(SizeFormatHelpers.formatSize(1.2 * 1024 * 1024 * 1024)).toBe("1.2 GiB");
+			expect(SizeFormatHelpers.formatSize(1.2 * 1024 * 1024 * 1024)).toBe(
+				"1.2 GiB"
+			);
 		});
 	});
 });
