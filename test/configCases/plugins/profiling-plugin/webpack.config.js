@@ -1,16 +1,15 @@
 var rootPath = "../../../../";
 var webpack = require(rootPath);
 var path = require("path");
-var os = require("os");
 
-module.exports = {
+module.exports = (env, { testPath }) => ({
 	plugins: [
 		new webpack.debug.ProfilingPlugin({
-			outPath: path.join(os.tmpdir(), "events.json")
+			outPath: path.join(testPath, "events.json")
 		})
 	],
 	node: {
 		__dirname: false,
 		__filename: false
 	}
-};
+});

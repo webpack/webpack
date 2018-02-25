@@ -12,7 +12,7 @@ describe("NodeTemplatePlugin", () => {
 			context: path.join(__dirname, "fixtures", "nodetest"),
 			target: "node",
 			output: {
-				path: path.join(__dirname, "js"),
+				path: path.join(__dirname, "js", "NodeTemplatePlugin"),
 				filename: "result.js",
 				chunkFilename: "[hash].result.[id].js",
 				library: "abc",
@@ -24,7 +24,7 @@ describe("NodeTemplatePlugin", () => {
 			expect(stats.hasErrors()).toBe(false);
 			expect(stats.hasWarnings()).toBe(false);
 			// eslint-disable-next-line node/no-missing-require
-			const result = require("./js/result").abc;
+			const result = require("./js/NodeTemplatePlugin/result").abc;
 			expect(result.nextTick).toBe(process.nextTick);
 			expect(result.fs).toBe(require("fs"));
 			result.loadChunk(456, (chunk) => {
@@ -45,7 +45,7 @@ describe("NodeTemplatePlugin", () => {
 			context: path.join(__dirname, "fixtures", "nodetest"),
 			target: "node",
 			output: {
-				path: path.join(__dirname, "js"),
+				path: path.join(__dirname, "js", "NodeTemplatePluginSingle"),
 				filename: "result2.js",
 				chunkFilename: "[hash].result2.[id].js",
 				library: "def",
@@ -62,7 +62,7 @@ describe("NodeTemplatePlugin", () => {
 			if(err) return err;
 			expect(stats.hasErrors()).toBe(false);
 			// eslint-disable-next-line node/no-missing-require
-			const result = require("./js/result2");
+			const result = require("./js/NodeTemplatePluginSingle/result2");
 			expect(result.nextTick).toBe(process.nextTick);
 			expect(result.fs).toBe(require("fs"));
 			const sameTick = true;

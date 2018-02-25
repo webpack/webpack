@@ -5,13 +5,13 @@ import { ns, default as def1, def as def2, data as data2 } from "./reexport.mjs"
 import * as reexport from "./reexport.mjs";
 
 it("should get correct values when importing named exports from a CommonJs module from mjs", function() {
-	expect((typeof data)).toBe("undefined");
-	({ data }expect()).toEqual({ data: undefined });
+	expect(typeof data).toBe("undefined");
+	expect({ data }).toEqual({ data: undefined });
 	expect(def).toEqual({
 		data: "ok",
 		default: "default"
 	});
-	({ def }expect()).toEqual({
+	expect({ def }).toEqual({
 		def: {
 			data: "ok",
 			default: "default"
@@ -24,7 +24,7 @@ it("should get correct values when importing named exports from a CommonJs modul
 			default: "default"
 		}
 	});
-	({ star }expect()).toEqual({
+	expect({ star }).toEqual({
 		star: {
 			default: {
 				data: "ok",

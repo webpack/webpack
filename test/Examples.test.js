@@ -11,12 +11,12 @@ describe("Examples", () => {
 
 	examples.forEach((examplePath) => {
 		const filterPath = path.join(examplePath, "test.filter.js");
+		const relativePath = path.relative(basePath, examplePath);
 		if(fs.existsSync(filterPath) && !require(filterPath)()) {
-			describe.skip(path.relative(basePath, examplePath), () => it("filtered"));
+			describe.skip(relativePath, () => it("filtered"));
 			return;
 		}
-		it("should compile " + path.relative(basePath, examplePath), function(done) {
-			jest.setTimeout(20000);
+		it("should compile " + relativePath, function(done) {
 			let options = {};
 			let webpackConfigPath = path.join(examplePath, "webpack.config.js");
 			webpackConfigPath = webpackConfigPath.substr(0, 1).toUpperCase() + webpackConfigPath.substr(1);
@@ -53,6 +53,6 @@ describe("Examples", () => {
 				}
 				done();
 			});
-		});
+		}, 20000);
 	});
 });

@@ -2,18 +2,19 @@
 
 const path = require("path");
 const fs = require("fs");
+const mkdirp = require("mkdirp");
 
 const webpack = require("../");
 
 describe("HotModuleReplacementPlugin", () => {
 	jest.setTimeout(10000);
 	it("should not have circular hashes but equal if unmodified", (done) => {
-		const entryFile = path.join(__dirname, "js", "entry.js");
-		const statsFile1 = path.join(__dirname, "js", "HotModuleReplacementPlugin.test.stats1.txt");
-		const statsFile2 = path.join(__dirname, "js", "HotModuleReplacementPlugin.test.stats2.txt");
-		const recordsFile = path.join(__dirname, "js", "records.json");
+		const entryFile = path.join(__dirname, "js", "HotModuleReplacementPlugin", "entry.js");
+		const statsFile1 = path.join(__dirname, "js", "HotModuleReplacementPlugin", "HotModuleReplacementPlugin.test.stats1.txt");
+		const statsFile2 = path.join(__dirname, "js", "HotModuleReplacementPlugin", "HotModuleReplacementPlugin.test.stats2.txt");
+		const recordsFile = path.join(__dirname, "js", "HotModuleReplacementPlugin", "records.json");
 		try {
-			fs.mkdirSync(path.join(__dirname, "js"));
+			mkdirp.sync(path.join(__dirname, "js", "HotModuleReplacementPlugin"));
 		} catch(e) {}
 		try {
 			fs.unlinkSync(recordsFile);
@@ -23,7 +24,7 @@ describe("HotModuleReplacementPlugin", () => {
 			entry: entryFile,
 			recordsPath: recordsFile,
 			output: {
-				path: path.join(__dirname, "js")
+				path: path.join(__dirname, "js", "HotModuleReplacementPlugin")
 			},
 			plugins: [
 				new webpack.HotModuleReplacementPlugin(),
