@@ -5,7 +5,7 @@ var path = require("path");
 module.exports = (env, { testPath }) => ({
 	plugins: [
 		new webpack.debug.ProfilingPlugin({
-			outPath: path.join(testPath, "events.json")
+			outputPath: path.join(testPath, "events.json")
 		})
 	],
 	node: {

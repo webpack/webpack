@@ -5,7 +5,6 @@ const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
 const checkArrayExpectation = require("./checkArrayExpectation");
-const async = require("async");
 
 const webpack = require("../lib/webpack");
 

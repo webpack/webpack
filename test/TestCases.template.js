@@ -5,16 +5,22 @@ const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
-// const async = require("async");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
 
+const uglifyJsForTesting = new UglifyJsPlugin({
+	cache: false,
+	parallel: false,
+	sourceMap: true
+});
+
 const DEFAULT_OPTIMIZATIONS = {
 	removeAvailableModules: true,
 	removeEmptyChunks: true,
-	mergedDuplicateChunks: true,
+	mergeDuplicateChunks: true,
 	flagIncludedChunks: true,
 	occurrenceOrder: true,
 	sideEffects: true,
@@ -23,10 +29,16 @@ const DEFAULT_OPTIMIZATIONS = {
 	noEmitOnErrors: false,
 	concatenateModules: false,
 	namedModules: false,
+	minimizer: [
+		uglifyJsForTesting
+	]
 };
 
 const NO_EMIT_ON_ERRORS_OPTIMIZATIONS = {
-	noEmitOnErrors: false
+	noEmitOnErrors: false,
+	minimizer: [
+		uglifyJsForTesting
+	]
 };
 
 const casesPath = path.join(__dirname, "cases");

@@ -2,9 +2,7 @@ const path = require("path");
 module.exports = {
 	mode: "production",
 	module: {
-		rules: [
-
-			{
+		rules: [{
 				test: path.resolve(__dirname, "node_modules/pmodule"),
 				sideEffects: true
 			},

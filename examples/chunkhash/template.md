@@ -13,12 +13,6 @@ The configuration required for this is:
 {{example.js}}
 ```
 
-# vendor.js
-
-``` javascript
-{{vendor.js}}
-```
-
 # webpack.config.js
 
 ``` javascript
@@ -33,13 +27,10 @@ The configuration required for this is:
 </head>
 <body>
 
-<!-- inlined minimized file "manifest.[chunkhash].js" -->
+<!-- inlined minimized file "runtime~main.[chunkhash].js" -->
 <script>
-{{production:dist/main-runtime.chunkhash.js}}
+{{production:dist/runtime~main.chunkhash.js}}
 </script>
-
-<!-- optional when using the CommonChunkPlugin for vendor modules -->
-<script src="dist/main-runtime.[chunkhash].js"></script>
 
 <script src="dist/main.[chunkhash].js"></script>
 
@@ -47,10 +38,10 @@ The configuration required for this is:
 </html>
 ```
 
-# dist/main-runtime.[chunkhash].js
+# dist/runtime~main.[chunkhash].js
 
 ``` javascript
-{{dist/main-runtime.chunkhash.js}}
+{{dist/runtime~main.chunkhash.js}}
 ```
 
 # dist/main.[chunkhash].js

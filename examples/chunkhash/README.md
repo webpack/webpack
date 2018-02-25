@@ -10,17 +10,9 @@ The configuration required for this is:
 # example.js
 
 ``` javascript
-import vendor from "./vendor";
 // some module
 import("./async1");
 import("./async2");
-```
-
-# vendor.js
-
-``` javascript
-// some vendor lib (should be in common chunk)
-export default 123;
 ```
 
 # webpack.config.js
@@ -51,13 +43,10 @@ module.exports = {
 </head>
 <body>
 
-<!-- inlined minimized file "manifest.[chunkhash].js" -->
+<!-- inlined minimized file "runtime~main.[chunkhash].js" -->
 <script>
 !function(e){function r(r){for(var n,o,i=r[0],c=r[1],s=r[2],p=0,f=[];p<i.length;p++)o=i[p],u[o]&&f.push(u[o][0]),u[o]=0;for(n in c)Object.prototype.hasOwnProperty.call(c,n)&&(e[n]=c[n]);for(l&&l(r);f.length;)f.shift()();return a.push.apply(a,s||[]),t()}function t(){for(var e,r=0;r<a.length;r++){for(var t=a[r],o=!0,i=1;i<t.length;i++){var c=t[i];0!==u[c]&&(o=!1)}o&&(a.splice(r--,1),e=n(n.s=t[0]))}return e}function n(r){if(o[r])return o[r].exports;var t=o[r]={i:r,l:!1,exports:{}};return e[r].call(t.exports,t,t.exports,n),t.l=!0,t.exports}var o={},u={2:0},a=[];n.e=function(e){var r=[],t=u[e];if(0!==t)if(t)r.push(t[2]);else{var o=new Promise(function(r,n){t=u[e]=[r,n]});r.push(t[2]=o);var a=document.getElementsByTagName("head")[0],i=document.createElement("script");i.charset="utf-8",i.timeout=12e4,n.nc&&i.setAttribute("nonce",n.nc),i.src=n.p+""+({}[e]||e)+".[chunkhash].js";var c=setTimeout(function(){s({type:"timeout",target:i})},12e4);i.onerror=i.onload=s;function s(r){i.onerror=i.onload=null,clearTimeout(c);var t=u[e];if(0!==t){if(t){var n=r&&("load"===r.type?"missing":r.type),o=r&&r.target&&r.target.src,a=new Error("Loading chunk "+e+" failed.\n("+n+": "+o+")");a.type=n,a.request=o,t[1](a)}u[e]=void 0}}a.appendChild(i)}return Promise.all(r)},n.m=e,n.c=o,n.d=function(e,r,t){n.o(e,r)||Object.defineProperty(e,r,{configurable:!1,enumerable:!0,get:t})},n.r=function(e){Object.defineProperty(e,"__esModule",{value:!0})},n.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(r,"a",r),r},n.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},n.p="dist/",n.oe=function(e){throw console.error(e),e};var i=window.webpackJsonp=window.webpackJsonp||[],c=i.push.bind(i);i.push=r,i=i.slice();for(var s=0;s<i.length;s++)r(i[s]);var l=c;t()}([]);
 </script>
-
-<!-- optional when using the CommonChunkPlugin for vendor modules -->
-<script src="dist/main-runtime.[chunkhash].js"></script>
 
 <script src="dist/main.[chunkhash].js"></script>
 
@@ -65,7 +54,7 @@ module.exports = {
 </html>
 ```
 
-# dist/main-runtime.[chunkhash].js
+# dist/runtime~main.[chunkhash].js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -280,30 +269,12 @@ module.exports = {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no exports provided */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _vendor__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./vendor */ 1);
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
 // some module
-__webpack_require__.e(/*! import() */ 1).then(function() { var module = __webpack_require__(/*! ./async1 */ 2); return typeof module === "object" && module && module.__esModule ? module : { /* fake namespace object */ "default": module }; });
-__webpack_require__.e(/*! import() */ 2).then(function() { var module = __webpack_require__(/*! ./async2 */ 3); return typeof module === "object" && module && module.__esModule ? module : { /* fake namespace object */ "default": module }; });
-
-
-/***/ }),
-/* 1 */
-/*!*******************!*\
-  !*** ./vendor.js ***!
-  \*******************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-// some vendor lib (should be in common chunk)
-/* harmony default export */ __webpack_exports__["default"] = (123);
+__webpack_require__.e(/*! import() */ 1).then(function() { var module = __webpack_require__(/*! ./async1 */ 1); return typeof module === "object" && module && module.__esModule ? module : { /* fake namespace object */ "default": module }; });
+__webpack_require__.e(/*! import() */ 2).then(function() { var module = __webpack_require__(/*! ./async2 */ 2); return typeof module === "object" && module && module.__esModule ? module : { /* fake namespace object */ "default": module }; });
 
 
 /***/ })
@@ -316,30 +287,26 @@ __webpack_require__.r(__webpack_exports__);
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
                     Asset       Size  Chunks             Chunk Names
-        main.[chunkhash].js   1.28 KiB       0  [emitted]  main
-           1.[chunkhash].js  264 bytes       1  [emitted]  
+        main.[chunkhash].js  768 bytes       0  [emitted]  main
+           1.[chunkhash].js  270 bytes       1  [emitted]  
            2.[chunkhash].js  264 bytes       2  [emitted]  
-main-runtime.[chunkhash].js   7.49 KiB       3  [emitted]  main-runtime
-Entrypoint main = main-runtime.[chunkhash].js main.[chunkhash].js
-chunk    {0} main.[chunkhash].js (main) 159 bytes ={3}= >{1}< >{2}< [initial] [rendered]
+runtime~main.[chunkhash].js   7.49 KiB       3  [emitted]  runtime~main
+Entrypoint main = runtime~main.[chunkhash].js main.[chunkhash].js
+chunk    {0} main.[chunkhash].js (main) 58 bytes ={3}= >{1}< >{2}< [initial] [rendered]
     > ./example main
-    [0] ./example.js 90 bytes {0} [built]
-        [no exports]
+    [0] ./example.js 58 bytes {0} [built]
         single entry ./example  main
-    [1] ./vendor.js 69 bytes {0} [built]
-        [exports: default]
-        harmony side effect evaluation ./vendor [0] ./example.js 1:0-30
-chunk    {1} 1.[chunkhash].js 29 bytes <{3}> <{0}> [rendered]
-    > ./async1 [0] ./example.js 3:0-18
-    [2] ./async1.js 29 bytes {1} [built]
-        import() ./async1 [0] ./example.js 3:0-18
-chunk    {2} 2.[chunkhash].js 29 bytes <{3}> <{0}> [rendered]
-    > ./async2 [0] ./example.js 4:0-18
-    [3] ./async2.js 29 bytes {2} [built]
-        import() ./async2 [0] ./example.js 4:0-18
-chunk    {3} main-runtime.[chunkhash].js (main-runtime) 0 bytes ={0}= >{1}< >{2}< [entry] [rendered]
+chunk    {1} 1.[chunkhash].js 29 bytes <{0}> <{3}> [rendered]
+    > ./async1 [0] ./example.js 2:0-18
+    [1] ./async1.js 29 bytes {1} [built]
+        import() ./async1 [0] ./example.js 2:0-18
+chunk    {2} 2.[chunkhash].js 29 bytes <{0}> <{3}> [rendered]
+    > ./async2 [0] ./example.js 3:0-18
+    [2] ./async2.js 29 bytes {2} [built]
+        import() ./async2 [0] ./example.js 3:0-18
+chunk    {3} runtime~main.[chunkhash].js (runtime~main) 0 bytes ={0}= >{1}< >{2}< [entry] [rendered]
     > ./example main
 ```
 
@@ -347,33 +314,25 @@ chunk    {3} main-runtime.[chunkhash].js (main-runtime) 0 bytes ={0}= >{1}< >{2}
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
                     Asset       Size  Chunks             Chunk Names
            0.[chunkhash].js   77 bytes       0  [emitted]  
            1.[chunkhash].js   78 bytes       1  [emitted]  
-main-runtime.[chunkhash].js   1.76 KiB       2  [emitted]  main-runtime
-        main.[chunkhash].js  289 bytes       3  [emitted]  main
-Entrypoint main = main-runtime.[chunkhash].js main.[chunkhash].js
+runtime~main.[chunkhash].js   1.76 KiB       2  [emitted]  runtime~main
+        main.[chunkhash].js  269 bytes       3  [emitted]  main
+Entrypoint main = runtime~main.[chunkhash].js main.[chunkhash].js
 chunk    {0} 0.[chunkhash].js 29 bytes <{2}> <{3}> [rendered]
-    > ./async2 [] 4:0-18
+    > ./async2 [0] ./example.js 3:0-18
     [1] ./async2.js 29 bytes {0} [built]
-        import() ./async2  ./example.js 4:0-18
+        import() ./async2 [0] ./example.js 3:0-18
 chunk    {1} 1.[chunkhash].js 29 bytes <{2}> <{3}> [rendered]
-    > ./async1 [] 3:0-18
+    > ./async1 [0] ./example.js 2:0-18
     [2] ./async1.js 29 bytes {1} [built]
-        import() ./async1  ./example.js 3:0-18
-chunk    {2} main-runtime.[chunkhash].js (main-runtime) 0 bytes ={3}= >{0}< >{1}< [entry] [rendered]
+        import() ./async1 [0] ./example.js 2:0-18
+chunk    {2} runtime~main.[chunkhash].js (runtime~main) 0 bytes ={3}= >{0}< >{1}< [entry] [rendered]
     > ./example main
-chunk    {3} main.[chunkhash].js (main) 159 bytes ={2}= >{0}< >{1}< [initial] [rendered]
+chunk    {3} main.[chunkhash].js (main) 58 bytes ={2}= >{0}< >{1}< [initial] [rendered]
     > ./example main
-    [0] ./example.js + 1 modules 159 bytes {3} [built]
-        [no exports]
+    [0] ./example.js 58 bytes {3} [built]
         single entry ./example  main
-        | ./example.js 90 bytes [built]
-        |    [no exports]
-        |    single entry ./example  main
-        | ./vendor.js 69 bytes [built]
-        |    [exports: default]
-        |    [no exports used]
-        |    harmony side effect evaluation ./vendor  ./example.js 1:0-30
 ```

@@ -2,7 +2,7 @@
 
 const path = require("path");
 const fs = require("fs");
-const asyncLib = require("async");
+const asyncLib = require("neo-async");
 
 const Benchmark = require("benchmark");
 

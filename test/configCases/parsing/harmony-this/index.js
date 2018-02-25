@@ -1,6 +1,6 @@
 "use strict";
 
-import d, {a, b as B, C as _C, D as _D, returnThisArrow, returnThisMember, that} from "./abc";
+import d, {a, b as B, C as _C, D as _D, extendThisClass, returnThisArrow, returnThisMember, that} from "./abc";
 
 import * as abc from "./abc";
 
@@ -15,10 +15,14 @@ it("should have this = undefined on harmony modules", function() {
 	expect(function() {
 		abc.returnThisMember();
 	}).toThrowError();
+	expect(function() {
+		extendThisClass();
+	}).toThrowError();
 });
 
 it("should not break classes and functions", function() {
 	expect((new _C).foo()).toBe("bar");
+	expect((new _C).bar()).toBe("bar");
 	expect((new _D).prop()).toBe("ok");
 });
 
@@ -31,7 +35,7 @@ it("should have this = undefined on imported non-strict functions", function() {
 	x
 	expect(B()).toBe("undefined");
 	x
-	expect(abc.a()).toMatchObject({});
+	expect(abc.a()).toBeTypeOf("object");
 	x
 	var thing = abc.a();
 	expect(Object.keys(thing)).toEqual(Object.keys(abc));

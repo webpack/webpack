@@ -1,5 +1,4 @@
 {
-  "id": "BannerPlugin",
   "definitions": {
     "rule": {
       "oneOf": [

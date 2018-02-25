@@ -1,5 +1,4 @@
 {
-  "id": "DllReferencePlugin",
   "additionalProperties": false,
   "anyOf": [
     {

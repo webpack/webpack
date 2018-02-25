@@ -11,13 +11,13 @@ e3.js   8.18 KiB       8  [emitted]  e3
 Entrypoint e1 = e1.js
 Entrypoint e2 = e2.js
 Entrypoint e3 = e3.js
-chunk    {0} 0.js 37 bytes <{8}> <{7}> [rendered]
+chunk    {0} 0.js 37 bytes <{7}> <{8}> [rendered]
     [2] ./d.js 9 bytes {0} {6} [built]
     [5] ./async1.js 28 bytes {0} {5} [built]
-chunk    {1} 1.js 37 bytes <{8}> <{6}> [rendered]
+chunk    {1} 1.js 37 bytes <{6}> <{8}> [rendered]
     [3] ./f.js 9 bytes {1} {7} [built]
     [6] ./async2.js 28 bytes {1} {4} [built]
-chunk    {2} 2.js 37 bytes <{7}> <{6}> [rendered]
+chunk    {2} 2.js 37 bytes <{6}> <{7}> [rendered]
     [4] ./h.js 9 bytes {2} {8} [built]
     [7] ./async3.js 28 bytes {2} {3} [built]
 chunk    {3} 3.js 28 bytes <{8}> [rendered]

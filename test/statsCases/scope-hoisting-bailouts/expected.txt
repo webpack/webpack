@@ -1,5 +1,6 @@
-Hash: 8ea520d39e2a8caaf145
+Hash: 2f9dacd48c09c3072b04
 Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint index = index.js
 Entrypoint entry = entry.js
    [0] ./entry.js 32 bytes {0} {1} [built]

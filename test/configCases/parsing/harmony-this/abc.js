@@ -22,6 +22,13 @@ export class C {
 	foo() {
 		return this.x;
 	}
+	bar(x = this.x) {
+		return x;
+	}
+}
+
+export const extendThisClass = () => {
+	return class extends this.Buffer {};
 }
 
 export function D() {

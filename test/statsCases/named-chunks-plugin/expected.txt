@@ -1,5 +1,6 @@
-Hash: 8b9265d1f4b67c8201f5
+Hash: 5df55d54223f36cc303b
 Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset       Size  Chunks             Chunk Names
  entry.js   5.34 KiB   entry  [emitted]  entry
 vendor.js  269 bytes  vendor  [emitted]  vendor

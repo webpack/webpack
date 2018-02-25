@@ -321,7 +321,7 @@ getTemplate("baz.noimport");
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  436 bytes       0  [emitted]  
 1.output.js  445 bytes       1  [emitted]  
@@ -361,7 +361,7 @@ chunk    {3} output.js (main) 618 bytes >{0}< >{1}< >{2}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  113 bytes       0  [emitted]  
 1.output.js  114 bytes       1  [emitted]  

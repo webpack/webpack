@@ -1295,7 +1295,7 @@
           "description": "Remove chunks which are empty",
           "type": "boolean"
         },
-        "mergedDuplicateChunks": {
+        "mergeDuplicateChunks": {
           "description": "Merge chunks which contain the same modules",
           "type": "boolean"
         },
@@ -1367,9 +1367,7 @@
                   "description": "Give chunks created a name (chunks with equal name are merged)",
                   "oneOf": [
                     {
-                      "enum": [
-                        true
-                      ]
+                      "type": "boolean"
                     },
                     {
                       "instanceof": "Function"
@@ -1461,9 +1459,7 @@
                             "description": "Give chunks for this cache group a name (chunks with equal name are merged)",
                             "oneOf": [
                               {
-                                "enum": [
-                                  true
-                                ]
+                                "type": "boolean"
                               },
                               {
                                 "instanceof": "Function"
@@ -1484,7 +1480,34 @@
         },
         "runtimeChunk": {
           "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps",
-          "type": "boolean"
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "enum": [
+                "single",
+                "multiple"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "description": "The name or name factory for the runtime chunks",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "instanceof": "Function"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
         },
         "noEmitOnErrors": {
           "description": "Avoid emitting assets when errors occur",
@@ -1655,6 +1678,10 @@
               "type": "boolean",
               "description": "add timing information"
             },
+            "builtAt": {
+              "type": "boolean",
+              "description": "add built at time information"
+            },
             "performance": {
               "type": "boolean",
               "description": "add performance hint flags"
@@ -1821,6 +1848,10 @@
             "publicPath": {
               "type": "boolean",
               "description": "Add public path information"
+            },
+            "outputPath": {
+              "type": "boolean",
+              "description": "Add output path information"
             },
             "providedExports": {
               "type": "boolean",

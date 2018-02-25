@@ -1,3 +1,5 @@
+import "./test.json";
+
 it("should generate a events.json file", () => {
     var fs = require("fs"),
         path = require("path"),

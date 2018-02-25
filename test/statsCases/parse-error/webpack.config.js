@@ -5,6 +5,7 @@ module.exports = {
 	entry: "./index",
 	stats: {
 		timings: false,
+		builtAt: false,
 		hash: false,
 		modules: true,
 		chunks: false

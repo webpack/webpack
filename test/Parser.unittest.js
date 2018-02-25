@@ -466,7 +466,8 @@ describe("Parser", () => {
 			const cases = {
 				"async function": "async function x() {}",
 				"async arrow function": "async () => {}",
-				"await expression": "async function x(y) { await y }"
+				"await expression": "async function x(y) { await y }",
+				"await iteration": "async function f() { for await (x of xs); }"
 			};
 			const parser = new Parser();
 			Object.keys(cases).forEach((name) => {
@@ -505,6 +506,22 @@ describe("Parser", () => {
 				it(name, () => {
 					const actual = parser.parse(cases[name][0]);
 					expect(actual).toEqual(cases[name][1]);
+				});
+			});
+		});
+	});
+
+	describe("object rest/spread support", () => {
+		describe("should accept", () => {
+			const cases = {
+				"object spread": "({...obj})",
+				"object rest": "({...obj} = foo)"
+			};
+			Object.keys(cases).forEach((name) => {
+				const expr = cases[name];
+				it(name, () => {
+					const actual = Parser.parse(expr);
+					expect(typeof actual).toBe("object");
 				});
 			});
 		});

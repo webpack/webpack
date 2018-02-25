@@ -25,15 +25,17 @@ describe("NormalModule", () => {
 		parser = {
 			parse() {}
 		};
-		normalModule = new NormalModule(
-			"javascript/auto",
+		normalModule = new NormalModule({
+			type: "javascript/auto",
 			request,
 			userRequest,
 			rawRequest,
 			loaders,
 			resource,
-			parser
-		);
+			parser,
+			generator: null,
+			resolveOptions: {}
+		});
 		normalModule.buildInfo = {
 			cacheable: true
 		};
@@ -70,15 +72,15 @@ describe("NormalModule", () => {
 		describe("given a userRequest containing loaders", () => {
 			beforeEach(() => {
 				userRequest = "some/userRequest!some/other/userRequest!some/thing/is/off/here";
-				normalModule = new NormalModule(
-					"javascript/auto",
+				normalModule = new NormalModule({
+					type: "javascript/auto",
 					request,
 					userRequest,
 					rawRequest,
 					loaders,
 					resource,
 					parser
-				);
+				});
 			});
 			it("contextifies every path in the userRequest", () => {
 				expect(normalModule.libIdent({
@@ -89,15 +91,15 @@ describe("NormalModule", () => {
 		describe("given a userRequest containing query parameters", () => {
 			it("ignores paths in query parameters", () => {
 				userRequest = "some/context/loader?query=foo\\bar&otherPath=testpath/other";
-				normalModule = new NormalModule(
-					"javascript/auto",
+				normalModule = new NormalModule({
+					type: "javascript/auto",
 					request,
 					userRequest,
 					rawRequest,
 					loaders,
 					resource,
 					parser
-				);
+				});
 				expect(normalModule.libIdent({
 					context: "some/context",
 				})).toBe("./loader?query=foo\\bar&otherPath=testpath/other");
@@ -113,15 +115,15 @@ describe("NormalModule", () => {
 			const baseResource = "some/resource";
 			beforeEach(() => {
 				resource = baseResource + "?some=query";
-				normalModule = new NormalModule(
-					"javascript/auto",
+				normalModule = new NormalModule({
+					type: "javascript/auto",
 					request,
 					userRequest,
 					rawRequest,
 					loaders,
 					resource,
 					parser
-				);
+				});
 			});
 			it("return only the part before the ?-sign", () => {
 				expect(normalModule.nameForCondition()).toBe(baseResource);
@@ -154,18 +156,6 @@ describe("NormalModule", () => {
 			});
 			it("returns a SourceMapSource", () => {
 				expect(normalModule.createSourceForAsset(name, content, sourceMap)).toBeInstanceOf(SourceMapSource);
-			});
-		});
-	});
-
-	describe("#source", () => {
-		describe("without the module having any source", () => {
-			beforeEach(() => {
-				normalModule._source = null;
-			});
-			it("returns a Source containing an Error", () => {
-				expect(normalModule.source()).toBeInstanceOf(RawSource);
-				expect(normalModule.source().source()).toBe("throw new Error('No source available');");
 			});
 		});
 	});
@@ -285,44 +275,6 @@ describe("NormalModule", () => {
 			});
 			it("returns true", () => {
 				expect(normalModule.needRebuild(fileTimestamps, contextTimestamps)).toBe(true);
-			});
-		});
-	});
-	describe("#splitVariablesInUniqueNamedChunks", () => {
-		let variables;
-		beforeEach(() => {
-			variables = [{
-				name: "foo"
-			}, {
-				name: "bar"
-			}, {
-				name: "baz"
-			}, {
-				name: "some"
-			}, {
-				name: "more"
-			}];
-		});
-		describe("given an empty array of vars", () => {
-			it("returns an empty array", () => {
-				expect(normalModule.splitVariablesInUniqueNamedChunks([])).toEqual([
-					[]
-				]);
-			});
-		});
-		describe("given an array of distrinct variables", () => {
-			it("returns an array containing an array containing the variables", () => {
-				expect(normalModule.splitVariablesInUniqueNamedChunks(variables)).toEqual([variables]);
-			});
-		});
-		describe("given an array with duplicate variables", () => {
-			it("returns several arrays each containing only distinct variable names", () => {
-				expect(normalModule.splitVariablesInUniqueNamedChunks(variables.concat(variables))).toEqual([variables, variables]);
-			});
-			describe("and a duplicate as the last variable", () => {
-				it("returns correctly split distinct arrays", () => {
-					expect(normalModule.splitVariablesInUniqueNamedChunks(variables.concat(variables).concat(variables[0]))).toEqual([variables, variables, [variables[0]]]);
-				});
 			});
 		});
 	});

@@ -316,11 +316,11 @@ function timed(name, fn) {
 
 "use strict";
 
-// Instanciate WebAssembly module
+// Instantiate WebAssembly module
 var instance = new WebAssembly.Instance(__webpack_require__.w[module.i], {
 });
 
-// export exports from WebAssmbly module
+// export exports from WebAssembly module
 module.exports = instance.exports;
 
 /***/ }),
@@ -371,11 +371,11 @@ function fibonacciJavascript(i) {
 
 "use strict";
 
-// Instanciate WebAssembly module
+// Instantiate WebAssembly module
 var instance = new WebAssembly.Instance(__webpack_require__.w[module.i], {
 });
 
-// export exports from WebAssmbly module
+// export exports from WebAssembly module
 module.exports = instance.exports;
 
 /***/ }),
@@ -388,11 +388,11 @@ module.exports = instance.exports;
 
 "use strict";
 
-// Instanciate WebAssembly module
+// Instantiate WebAssembly module
 var instance = new WebAssembly.Instance(__webpack_require__.w[module.i], {
 });
 
-// export exports from WebAssmbly module
+// export exports from WebAssembly module
 module.exports = instance.exports;
 
 /***/ })
@@ -413,11 +413,11 @@ module.exports = instance.exports;
 
 "use strict";
 
-// Instanciate WebAssembly module
+// Instantiate WebAssembly module
 var instance = new WebAssembly.Instance(__webpack_require__.w[module.i], {
 });
 
-// export exports from WebAssmbly module
+// export exports from WebAssembly module
 module.exports = instance.exports;
 
 /***/ })
@@ -430,13 +430,13 @@ module.exports = instance.exports;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
                     Asset       Size  Chunks             Chunk Names
               0.output.js   2.88 KiB       0  [emitted]  
 9c8c5b45b5c12888e105.wasm   41 bytes    0, 1  [emitted]  
 62df68d96f4aa17e7b77.wasm   67 bytes       0  [emitted]  
 e5003c8310987c008228.wasm   62 bytes       0  [emitted]  
-              1.output.js  461 bytes       1  [emitted]  
+              1.output.js  462 bytes       1  [emitted]  
                 output.js   8.91 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js, 9c8c5b45b5c12888e105.wasm, 62df68d96f4aa17e7b77.wasm, e5003c8310987c008228.wasm 585 bytes <{2}> [rendered]
@@ -474,7 +474,7 @@ chunk    {2} output.js (main) 788 bytes >{0}< >{1}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
                     Asset       Size   Chunks             Chunk Names
               0.output.js  722 bytes     0, 1  [emitted]  
 fb3978ee17c3b5162f77.wasm   41 bytes  0, 1, 1  [emitted]  
