@@ -86,9 +86,9 @@
     "schemas/"
   ],
   "scripts": {
-    "test": "node --no-deprecation node_modules/.bin/jest",
-    "test:integration": "node --no-deprecation node_modules/.bin/jest --testMatch '<rootDir>/test/*.test.js'",
-    "test:unit": "node --no-deprecation node_modules/.bin/jest --testMatch '<rootDir>/test/*.unittest.js'",
+    "test": "node --no-deprecation --max-old-space-size=4096 --harmony node_modules/.bin/jest",
+    "test:integration": "node --no-deprecation --max-old-space-size=4096 --harmony node_modules/.bin/jest --testMatch '<rootDir>/test/*.test.js'",
+    "test:unit": "node --no-deprecation --max-old-space-size=4096 --harmony node_modules/.bin/jest --testMatch '<rootDir>/test/*.unittest.js'",
     "travis:integration": "npm run cover:init && npm run cover:integration && npm run cover:report-min",
     "travis:unit": "npm run cover:init && npm run cover:unit && npm run cover:report-min",
     "travis:lint": "npm run lint-files",
@@ -96,7 +96,7 @@
     "appveyor:integration": "npm run cover:init && npm run cover:integration && npm run cover:report-min",
     "appveyor:unit": "npm run cover:init && npm run cover:unit && npm run cover:report-min",
     "appveyor:benchmark": "npm run benchmark",
-    "circleci:test": "node node_modules/mocha/bin/mocha --max-old-space-size=4096 --harmony --trace-deprecation test/*.test.js test/*.unittest.js",
+    "circleci:test": "node --no-deprecation --max-old-space-size=4096 --harmony node_modules/.bin/jest",
     "circleci:lint": "npm run lint-files",
     "build:examples": "cd examples && node buildAll.js",
     "pretest": "npm run lint-files",
@@ -104,15 +104,15 @@
     "lint": "eslint lib bin hot buildin \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
     "fix": "npm run lint -- --fix",
     "beautify-lint": "beautify-lint \"lib/**/*.js\" \"hot/**/*.js\" \"bin/**/*.js\" \"benchmark/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
-    "schema-lint": "mocha test/*.lint.js --opts test/lint-mocha.opts",
-    "benchmark": "mocha --max-old-space-size=4096 --harmony --trace-deprecation test/*.benchmark.js -R spec",
+    "schema-lint": "node --no-deprecation --max-old-space-size=4096 --harmony node_modules/.bin/jest --testMatch '<rootDir>/test/*.lint.js'",
+    "benchmark": "node --no-deprecation --max-old-space-size=4096 --harmony node_modules/.bin/jest --testMatch '<roorDir>/test/*.benchmark.js'",
     "cover": "npm run cover:init && npm run cover:all && npm run cover:report",
     "cover:init": "rimraf coverage",
-    "cover:all": "node --max-old-space-size=4096 --harmony --trace-deprecation ./node_modules/istanbul/lib/cli.js cover --report none node_modules/mocha/bin/_mocha -- test/*.test.js test/*.unittest.js",
-    "cover:integration": "node --max-old-space-size=4096 --harmony --trace-deprecation ./node_modules/istanbul/lib/cli.js cover --report none node_modules/mocha/bin/_mocha -- test/*.test.js",
-    "cover:unit": "node --max-old-space-size=4096 --harmony --trace-deprecation ./node_modules/istanbul/lib/cli.js cover --report none node_modules/mocha/bin/_mocha -- test/*.unittest.js",
-    "cover:report": "istanbul report",
-    "cover:report-min": "istanbul report --report lcovonly",
+    "cover:all": "node --no-deprecation --max-old-space-size=4096 --harmony node_modules/.bin/jest --coverage",
+    "cover:integration": "node --no-deprecation --max-old-space-size=4096 --harmony node_modules/.bin/jest --testMatch '<rootDir>/test/*.test.js' --coverage",
+    "cover:unit": "node --no-deprecation --max-old-space-size=4096 --harmony node_modules/.bin/jest --testMatch '<rootDir>/test/*.unittest.js' --coverage",
+    "cover:report": "echo report",
+    "cover:report-min": "echo report --report lcovonly",
     "publish-patch": "npm run lint && npm run beautify-lint && mocha && npm version patch && git push && git push --tags && npm publish"
   },
   "jest": {
@@ -132,6 +132,8 @@
     ],
     "transformIgnorePatterns": [
       "<rootDir>/"
-    ]
+    ],
+    "coverageDirectory": "<rootDir>/coverage",
+    "coveragePathIgnorePatterns": ["\\.runtime\\.js$"]
   }
 }
