@@ -4,7 +4,7 @@ var NamedModulesPlugin = require("../../../lib/NamedModulesPlugin");
 module.exports = {
 	mode: "production",
 	entry: {
-		"entry": "./entry"
+		entry: "./entry"
 	},
 	optimization: {
 		splitChunks: {
@@ -18,8 +18,5 @@ module.exports = {
 			}
 		}
 	},
-	plugins: [
-		new NamedChunksPlugin(),
-		new NamedModulesPlugin(),
-	]
+	plugins: [new NamedChunksPlugin(), new NamedModulesPlugin()]
 };

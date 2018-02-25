@@ -5,5 +5,4 @@
 	"rules": {
 		"node/exports-style": ["off"]
 	}
-
 }

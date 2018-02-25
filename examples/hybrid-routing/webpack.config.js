@@ -5,7 +5,7 @@ module.exports = {
 		// The entry points for the pages
 		// They also contains router
 		pageA: ["./aEntry", "./router"],
-		pageB: ["./bEntry", "./router"],
+		pageB: ["./bEntry", "./router"]
 	},
 	output: {
 		path: path.join(__dirname, "dist"),

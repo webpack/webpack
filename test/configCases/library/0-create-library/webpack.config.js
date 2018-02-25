@@ -1,5 +1,4 @@
 module.exports = [
-
 	{
 		output: {
 			filename: "commonjs.js",

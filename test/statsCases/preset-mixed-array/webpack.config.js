@@ -1,5 +1,4 @@
 module.exports = [
-
 	{
 		name: "minimal",
 		mode: "production",
@@ -27,5 +26,4 @@ module.exports = [
 			assets: false
 		}
 	}
-
 ];

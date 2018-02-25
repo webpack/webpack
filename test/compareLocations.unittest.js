@@ -3,10 +3,13 @@
 const should = require("should");
 const compareLocations = require("../lib/compareLocations");
 const createPosition = function(overides) {
-	return Object.assign({
-		line: 10,
-		column: 5
-	}, overides);
+	return Object.assign(
+		{
+			line: 10,
+			column: 5
+		},
+		overides
+	);
 };
 
 const createLocation = function(start, end, index) {
@@ -115,6 +118,5 @@ describe("compareLocations", () => {
 
 		it("returns undefined when both the first parameter and the second parameter is a number", () =>
 			should(compareLocations(123, 456)).be.undefined());
-
 	});
 });
