@@ -35,7 +35,7 @@ describe("WatchDetection", () => {
 			before(() => {
 				try {
 					fs.mkdirSync(fixturePath);
-				} catch (e) {}
+				} catch (e) {} // eslint-disable-line no-empty
 				fs.writeFileSync(filePath, "require('./file2')", "utf-8");
 				fs.writeFileSync(file2Path, "original", "utf-8");
 			});
@@ -43,13 +43,13 @@ describe("WatchDetection", () => {
 				setTimeout(() => {
 					try {
 						fs.unlinkSync(filePath);
-					} catch (e) {}
+					} catch (e) {} // eslint-disable-line no-empty
 					try {
 						fs.unlinkSync(file2Path);
-					} catch (e) {}
+					} catch (e) {} // eslint-disable-line no-empty
 					try {
 						fs.rmdirSync(fixturePath);
-					} catch (e) {}
+					} catch (e) {} // eslint-disable-line no-empty
 					done();
 				}, 100); // cool down a bit
 			});

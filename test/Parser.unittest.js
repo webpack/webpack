@@ -475,8 +475,10 @@ describe("Parser", () => {
 				"wrapped=['str' string=str]+['four' string=four]",
 			"'str'.concat(obj, 'one', 'two').concat('three', obj, 'four', 'five')":
 				"wrapped=['str' string=str]+['four', 'five' string=fourfive]",
+			// eslint-disable-next-line no-template-curly-in-string
 			"`start${obj}mid${obj2}end`":
-				"template=[start string=start],[mid string=mid],[end string=end]", // eslint-disable-line no-template-curly-in-string
+				"template=[start string=start],[mid string=mid],[end string=end]",
+			// eslint-disable-next-line no-template-curly-in-string
 			"`start${'str'}mid${obj2}end`":
 				"template=[start${'str'}mid string=startstrmid],[end string=end]", // eslint-disable-line no-template-curly-in-string
 			"'abc'.substr(1)": "string=bc",

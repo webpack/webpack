@@ -22,10 +22,10 @@ describe("BenchmarkTestCases", function() {
 
 	try {
 		fs.mkdirSync(path.join(__dirname, "js"));
-	} catch (e) {}
+	} catch (e) {} // eslint-disable-line no-empty
 	try {
 		fs.mkdirSync(baselinesPath);
-	} catch (e) {}
+	} catch (e) {} // eslint-disable-line no-empty
 
 	before(function(done) {
 		this.timeout(270000);
@@ -43,7 +43,7 @@ describe("BenchmarkTestCases", function() {
 					} else {
 						try {
 							fs.mkdirSync(baselinePath);
-						} catch (e) {}
+						} catch (e) {} // eslint-disable-line no-empty
 						const gitIndex = path.resolve(rootPath, ".git/index");
 						const index = fs.readFileSync(gitIndex);
 						git(rootPath).raw(

@@ -285,7 +285,7 @@ describe("WatchTestCases", () => {
 											testDirectory,
 											"test.config.js"
 										));
-									} catch (e) {}
+									} catch (e) {} // eslint-disable-line no-empty
 
 									if (testConfig.noTests) return process.nextTick(done);
 									_require(

@@ -87,7 +87,7 @@ describe("ConfigTestCases", () => {
 							testConfig,
 							require(path.join(testDirectory, "test.config.js"))
 						);
-					} catch (e) {}
+					} catch (e) {} // eslint-disable-line no-empty
 
 					this.timeout(testConfig.timeout);
 

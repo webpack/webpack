@@ -23,10 +23,10 @@ describe("HotModuleReplacementPlugin", function() {
 		const recordsFile = path.join(__dirname, "js", "records.json");
 		try {
 			fs.mkdirSync(path.join(__dirname, "js"));
-		} catch (e) {}
+		} catch (e) {} // eslint-disable-line no-empty
 		try {
 			fs.unlinkSync(recordsFile);
-		} catch (e) {}
+		} catch (e) {} // eslint-disable-line no-empty
 		const compiler = webpack({
 			cache: false,
 			entry: entryFile,
