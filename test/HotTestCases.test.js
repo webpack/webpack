@@ -23,7 +23,12 @@ describe("HotTestCases", () => {
 		describe(category.name, () => {
 			category.tests.forEach((testName) => {
 				describe(testName, () => {
-					it(testName + " should compile", (done) => {
+					let exportedTests = [];
+					beforeAll(() => new Promise((resolve, reject) => {
+						const done = (err) => {
+							if(err) return reject(err);
+							resolve();
+						};
 						const testDirectory = path.join(casesPath, category.name, testName);
 						const outputDirectory = path.join(__dirname, "js", "hot-cases", category.name, testName);
 						const recordsPath = path.join(outputDirectory, "records.json");
@@ -66,10 +71,9 @@ describe("HotTestCases", () => {
 							});
 							if(checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
 							if(checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
-							let exportedTests = [];
 
 							function _it(title, fn) {
-								exportedTests.push(fit(title, fn));
+								exportedTests.push({ title, fn, timeout: 5000 });
 							}
 
 							function _next(callback) {
@@ -98,12 +102,12 @@ describe("HotTestCases", () => {
 							}
 							_require("./bundle.js");
 							if(exportedTests.length < 1) return done(new Error("No tests exported by test case"));
-							async.waterfall(
-								exportedTests.map(test => (callback) => test.execute(callback, true)),
-								done
-							);
+							done();
 						});
-					});
+					}));
+
+					it(testName + " should compile", () => {});
+					exportedTests.forEach(({ title, fn, timeout }) => it(title, fn, timeout));
 				});
 			});
 		});

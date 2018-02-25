@@ -78,20 +78,19 @@ describe("WatchTestCases", () => {
 		describe(category.name, () => {
 			category.tests.forEach((testName) => {
 				describe(testName, () => {
-					const tempDirectory = path.join(__dirname, "js", "watch-src", category.name, testName);
+					const tempDirectory = path.join(__dirname, "js", "watch-src", category.name, `${testName}-${Math.random().toPrecision(21).slice(2)}`);
 					const testDirectory = path.join(casesPath, category.name, testName);
 					const runs = fs.readdirSync(testDirectory).sort().filter((name) => {
 						return fs.statSync(path.join(testDirectory, name)).isDirectory();
-					}).map((name) => {
-						return {
-							name: name,
-							suite: describe(name, () => {})
+					}).map((name) => ({ name }));
+
+					let exportedTests = [];
+
+					beforeAll(() => new Promise((resolve, reject) => {
+						const done = (err) => {
+							if(err) return reject(err);
+							resolve();
 						};
-					});
-					beforeAll(() => {
-						remove(tempDirectory);
-					});
-					it("should compile", function(done) {
 						const outputDirectory = path.join(__dirname, "js", "watch", category.name, testName);
 
 						let options = {};
@@ -155,10 +154,9 @@ describe("WatchTestCases", () => {
 								});
 								if(checkArrayExpectation(path.join(testDirectory, run.name), jsonStats, "error", "Error", done)) return;
 								if(checkArrayExpectation(path.join(testDirectory, run.name), jsonStats, "warning", "Warning", done)) return;
-								let exportedTests = [];
 
 								function _it(title, fn) {
-									exportedTests.push(fit(title, fn, 45000));
+									exportedTests.push({ title, fn, timeout: 45000 });
 								}
 
 								const globalContext = {
@@ -193,7 +191,7 @@ describe("WatchTestCases", () => {
 										return module.exports;
 									} else if(testConfig.modules && module in testConfig.modules) {
 										return testConfig.modules[module];
-									} else return require(module);
+									} else return require.requireActual(module);
 								}
 
 								let testConfig = {};
@@ -219,13 +217,16 @@ describe("WatchTestCases", () => {
 									watching.close();
 									process.nextTick(done);
 								}
-								async.waterfall(
-									exportedTests.map(test => (callback) => test.execute(callback, true)),
-									done
-								);
 							});
 						}, 300);
-					}, 45000);
+					}), 45000);
+
+					it(testName + " should compile", () => {});
+					exportedTests.forEach(({ title, fn, timeout }) => it(title, fn, timeout));
+
+					afterAll(() => {
+						remove(tempDirectory);
+					});
 				});
 			});
 		});
