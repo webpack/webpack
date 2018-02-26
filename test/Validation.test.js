@@ -176,7 +176,7 @@ describe("Validation", () => {
 							oneOf: [
 								{
 									test: "/a",
-									paser: {
+									passer: {
 										amd: false
 									}
 								}
@@ -186,7 +186,7 @@ describe("Validation", () => {
 				}
 			},
 			message: [
-				" - configuration.module.rules[0].oneOf[0] has an unknown property 'paser'. These properties are valid:",
+				" - configuration.module.rules[0].oneOf[0] has an unknown property 'passer'. These properties are valid:",
 				"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, resolve?, sideEffects?, query?, type?, resource?, resourceQuery?, compiler?, rules?, test?, use? }",
 				"   -> A rule"
 			]
