@@ -61,7 +61,7 @@ describe("RawModule", () => {
 
 		it(
 			"returns a new RawSource instance with sourceStr attribute provided " +
-				"as constructor argument if useSourceMap is falsey",
+				"as constructor argument if useSourceMap is falsy",
 			() => {
 				const rawSource = new RawSource(myRawModule.sourceStr);
 				myRawModule.useSourceMap = false;
