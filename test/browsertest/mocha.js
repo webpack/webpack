@@ -1441,7 +1441,7 @@ exports.cursor = {
 };
 
 /**
- * Outut the given `failures` as a list.
+ * Output the given `failures` as a list.
  *
  * @param {Array} failures
  * @api public
