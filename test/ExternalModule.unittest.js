@@ -204,7 +204,7 @@ describe("ExternalModule", function() {
 			result.should.eql(expected);
 		});
 		describe("given an optinal check is set", function() {
-			it("ads a check for the existance of the variable before looking it up", function() {
+			it("ads a check for the existence of the variable before looking it up", function() {
 				// set up
 				const id = "someId";
 				const optional = true;
@@ -237,7 +237,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 			result.should.eql(expected);
 		});
 		describe("given an optinal check is requested", function() {
-			it("checks for the existance of the request setting it", function() {
+			it("checks for the existence of the request setting it", function() {
 				// set up
 				const optional = true;
 				const expected = `if(typeof some/request === 'undefined') {var e = new Error("Cannot find module \\"some/request\\""); e.code = 'MODULE_NOT_FOUND'; throw e;}
