@@ -5,7 +5,7 @@ Child fitting:
     Built at: Thu Jan 01 1970 00:00:00 GMT
                       Asset      Size  Chunks             Chunk Names
     fb95acf7c457672e70d0.js  1.05 KiB       0  [emitted]  
-    a1e683753eca705a0882.js  9.92 KiB       1  [emitted]  
+    a1e683753eca705a0882.js  9.97 KiB       1  [emitted]  
     d43339a3d0f86c6b8d90.js  1.94 KiB       2  [emitted]  
     6c7fb52c5514dbfbf094.js  1.94 KiB       3  [emitted]  
     Entrypoint main = d43339a3d0f86c6b8d90.js 6c7fb52c5514dbfbf094.js a1e683753eca705a0882.js
@@ -31,7 +31,7 @@ Child content-change:
     Built at: Thu Jan 01 1970 00:00:00 GMT
                       Asset      Size  Chunks             Chunk Names
     fb95acf7c457672e70d0.js  1.05 KiB       0  [emitted]  
-    a1e683753eca705a0882.js  9.92 KiB       1  [emitted]  
+    a1e683753eca705a0882.js  9.97 KiB       1  [emitted]  
     d43339a3d0f86c6b8d90.js  1.94 KiB       2  [emitted]  
     6c7fb52c5514dbfbf094.js  1.94 KiB       3  [emitted]  
     Entrypoint main = d43339a3d0f86c6b8d90.js 6c7fb52c5514dbfbf094.js a1e683753eca705a0882.js
