@@ -81,7 +81,7 @@ it("should assign to process.env", function() {
 	process.env.TEST = "test";
 	process.env.TEST.should.be.eql("test");
 });
-it("should not have brakets on start", function() {
+it("should not have brackets on start", function() {
 	function f() {
 		throw new Error("should not be called");
 	}
