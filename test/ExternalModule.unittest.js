@@ -203,7 +203,7 @@ describe("ExternalModule", function() {
 			// check
 			result.should.eql(expected);
 		});
-		describe("given an optinal check is set", function() {
+		describe("given an optional check is set", function() {
 			it("ads a check for the existence of the variable before looking it up", function() {
 				// set up
 				const id = "someId";
@@ -236,7 +236,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 			// check
 			result.should.eql(expected);
 		});
-		describe("given an optinal check is requested", function() {
+		describe("given an optional check is requested", function() {
 			it("checks for the existence of the request setting it", function() {
 				// set up
 				const optional = true;
