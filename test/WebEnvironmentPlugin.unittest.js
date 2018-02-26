@@ -23,7 +23,7 @@ describe("WebEnvironmentPlugin", () => {
 			WebEnvironmentPluginInstance.apply(compileSpy);
 		});
 
-		it("should set compiler.outputFileSystem information with the same as setted in WebEnvironmentPlugin", () =>
+		it("should set compiler.outputFileSystem information with the same as set in WebEnvironmentPlugin", () =>
 			should(compileSpy.outputFileSystem).be.eql(
 				WebEnvironmentPluginInstance.outputFileSystem
 			));
