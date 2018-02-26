@@ -45,7 +45,7 @@ describe("ExternalModule", function() {
 		it("calls getSource with the result of getSourceString", function() {
 			// set up
 			const expectedString = "something expected stringy";
-			const expectedSource = "something expected sourcy";
+			const expectedSource = "something expected source";
 			externalModule.getSource = sinon.stub().returns(expectedSource);
 			externalModule.getSourceString = sinon.stub().returns(expectedString);
 
