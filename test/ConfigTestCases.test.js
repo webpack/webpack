@@ -106,7 +106,7 @@ describe("ConfigTestCases", () => {
 								)
 							)
 								return;
-							// Wait for uncatched errors to occur
+							// Wait for uncaught errors to occur
 							return setTimeout(done, 200);
 						}
 						const statOptions = Stats.presetToOptions("verbose");

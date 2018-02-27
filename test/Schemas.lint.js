@@ -119,7 +119,7 @@ describe("Schemas", () => {
 						});
 					}
 					if ("properties" in item) {
-						it("should have additionalProperties set to some value when descriping properties", () => {
+						it("should have additionalProperties set to some value when describing properties", () => {
 							item.should.be.property("additionalProperties");
 						});
 						Object.keys(item.properties).forEach(name => {

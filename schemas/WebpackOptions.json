@@ -680,7 +680,7 @@
           ]
         },
         "moduleExtensions": {
-          "description": "Extenstions added to the module request when trying to find the module",
+          "description": "Extensions added to the module request when trying to find the module",
           "anyOf": [
             {
               "$ref": "#/definitions/common.arrayOfStringValues"
@@ -718,7 +718,7 @@
           "type": "boolean"
         },
         "concord": {
-          "description": "Enable condord resolving extras",
+          "description": "Enable concord resolving extras",
           "type": "boolean"
         },
         "unsafeCache": {

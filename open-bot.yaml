@@ -196,7 +196,7 @@ rules:
 
 
 
-# Add tests-needed label depending on codedov status
+# Add tests-needed label depending on codecov status
 # comment to point the user writing test cases
 # comment in case of success
 - filters:
@@ -446,7 +446,7 @@ rules:
 
         ---
 
-        This issue was moved from {{owner}}/{{repo}}#{{issue.number}} by @{{comment.actor.login}}. Orginal issue was by @{{issue.user.login}}.
+        This issue was moved from {{owner}}/{{repo}}#{{issue.number}} by @{{comment.actor.login}}. Original issue was by @{{issue.user.login}}.
 
         {{{comment_match.[2]}}}
     comment:

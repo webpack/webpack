@@ -1,4 +1,4 @@
-This example illustrates how common modules from deep ancestors of an entry point can be split into a seperate common chunk
+This example illustrates how common modules from deep ancestors of an entry point can be split into a separate common chunk
 
 * `pageA` and `pageB` are dynamically required
 * `pageC` and `pageA` both require the `reusableComponent`
@@ -93,7 +93,7 @@ module.exports = {
 	},
 	optimization: {
 		splitChunks: {
-			minSize: 0 // This example is too small, in pratice you can use the defaults
+			minSize: 0 // This example is too small, in practice you can use the defaults
 		},
 		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
 	},

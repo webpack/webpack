@@ -37,7 +37,7 @@ describe("main", function() {
 				// Comments work!
 				exports.ok = true;
 				test(require("subcontent") === "replaced", "node_modules should be replaced with web_modules");
-				test(require("subcontent2/file.js") === "orginal", "node_modules should still work when web_modules exists");
+				test(require("subcontent2/file.js") === "original", "node_modules should still work when web_modules exists");
 				done();
 			});
 		});

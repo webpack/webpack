@@ -33,7 +33,7 @@ it("should parse cujojs UMD modules with deps", function() {
 	module.exports.should.be.eql(1234);
 });
 
-it("should parse cujojs UMD modules with inlinded deps", function() {
+it("should parse cujojs UMD modules with inlined deps", function() {
 	(function (define) {
 
 		// using the define signature that triggers AMD-wrapped CommonJS
