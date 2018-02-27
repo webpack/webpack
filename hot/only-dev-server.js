@@ -72,12 +72,14 @@ if (module.hot) {
 						"warning",
 						"[HMR] Cannot check for update. Need to do a full reload!"
 					);
-					log("warning", "[HMR] " + err.stack || err.message);
+					if (status === "abort") {
+						log("warning", "[HMR] " + err.message);
+					} else {
+						log("warning", err);
+					}
 				} else {
-					log(
-						"warning",
-						"[HMR] Update check failed: " + err.stack || err.message
-					);
+					log("warning", "[HMR] Update check failed");
+					log("warning", err);
 				}
 			});
 	};

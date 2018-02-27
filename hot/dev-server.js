@@ -40,10 +40,15 @@ if (module.hot) {
 						"warning",
 						"[HMR] Cannot apply update. Need to do a full reload!"
 					);
-					log("warning", "[HMR] " + err.stack || err.message);
+					if (status === "abort") {
+						log("warning", "[HMR] " + err.message);
+					} else {
+						log("warning", err);
+					}
 					window.location.reload();
 				} else {
-					log("warning", "[HMR] Update failed: " + err.stack || err.message);
+					log("warning", "[HMR] Update failed");
+					log("warning", err);
 				}
 			});
 	};
