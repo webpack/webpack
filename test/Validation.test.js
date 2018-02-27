@@ -203,7 +203,7 @@ describe("Validation", () => {
 					"loader?, module?, name?, node?, output?, optimization?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, " +
 					"recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, stats?, target?, watch?, watchOptions? }",
 				"   For typos: please correct them.",
-				"   For loader options: webpack since version 2 no longer allows custom properties in configuration.",
+				"   For loader options: webpack >= v2.0.0 no longer allows custom properties in configuration.",
 				"     Loaders should be updated to allow passing options via loader options in module.rules.",
 				"     Until loaders are updated one can use the LoaderOptionsPlugin to pass these options to the loader:",
 				"     plugins: [",
