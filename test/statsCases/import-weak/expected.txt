@@ -1,8 +1,10 @@
-Hash: d34cc0bd2faeb65c3282
+Hash: 1f9db3ad053a3687e3bb
 Time: Xms
-   Asset      Size  Chunks             Chunk Names
-    0.js  99 bytes       0  [emitted]  
-entry.js   6.22 kB       1  [emitted]  entry
-   [0] (webpack)/test/statsCases/import-weak/modules/b.js 22 bytes {0} [built]
-   [1] (webpack)/test/statsCases/import-weak/entry.js 120 bytes {1} [built]
-   [2] (webpack)/test/statsCases/import-weak/modules/a.js 37 bytes [built]
+Built at: Thu Jan 01 1970 00:00:00 GMT
+   Asset       Size  Chunks             Chunk Names
+    0.js  149 bytes       0  [emitted]  
+entry.js   7.79 KiB       1  [emitted]  entry
+Entrypoint entry = entry.js
+   [0] ./modules/b.js 22 bytes {0} [built]
+   [1] ./entry.js 120 bytes {1} [built]
+   [2] ./modules/a.js 37 bytes [built]

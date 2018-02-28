@@ -12,15 +12,18 @@ describe("Compiler (caching)", function() {
 	this.timeout(15000);
 
 	function compile(entry, options, callback) {
-		new WebpackOptionsDefaulter().process(options);
+		options.mode = "none";
+		options = new WebpackOptionsDefaulter().process(options);
+		options.cache = true;
 		options.entry = entry;
+		options.optimization.minimize = false;
 		options.context = path.join(__dirname, "fixtures");
 		options.output.path = "/";
 		options.output.filename = "bundle.js";
 		options.output.pathinfo = true;
 		const logs = {
 			mkdirp: [],
-			writeFile: [],
+			writeFile: []
 		};
 
 		const c = webpack(options);
@@ -39,17 +42,20 @@ describe("Compiler (caching)", function() {
 				callback();
 			}
 		};
-		c.plugin("compilation", (compilation) => compilation.bail = true);
+		c.hooks.compilation.tap(
+			"CompilerCachingTest",
+			compilation => (compilation.bail = true)
+		);
 
 		let compilerIteration = 1;
 
 		function runCompiler(options, callback) {
-			if(typeof options === "function") {
+			if (typeof options === "function") {
 				callback = options;
 				options = {};
 			}
 			c.run((err, stats) => {
-				if(err) throw err;
+				if (err) throw err;
 				should.strictEqual(typeof stats, "object");
 				stats = stats.toJson({
 					modules: true,
@@ -58,10 +64,10 @@ describe("Compiler (caching)", function() {
 				should.strictEqual(typeof stats, "object");
 				stats.should.have.property("errors");
 				Array.isArray(stats.errors).should.be.ok();
-				if(options.expectErrors) {
+				if (options.expectErrors) {
 					stats.errors.length.should.be.eql(options.expectErrors);
 				} else {
-					if(stats.errors.length > 0) {
+					if (stats.errors.length > 0) {
 						stats.errors[0].should.be.type("string");
 						throw new Error(stats.errors[0]);
 					}
@@ -71,31 +77,19 @@ describe("Compiler (caching)", function() {
 			});
 		}
 
-		const postCompileCallbackStack = [];
-
-		function addAfterCompileCallback(callback) {
-			postCompileCallbackStack.push(callback);
-		}
-
-		c.plugin("after-compile", (stats, callback) => {
-
-			if(postCompileCallbackStack.length > 0) {
-				postCompileCallbackStack.shift(arguments);
-			}
-
-			callback();
-		});
-
 		runCompiler(callback);
 
 		return {
 			compilerInstance: c,
-			runAgain: runCompiler,
-			addAfterCompileCallback: addAfterCompileCallback
+			runAgain: runCompiler
 		};
 	}
 
-	const tempFixturePath = path.join(__dirname, "fixtures", "temp-cache-fixture");
+	const tempFixturePath = path.join(
+		__dirname,
+		"fixtures",
+		"temp-cache-fixture"
+	);
 	const aFilepath = path.join(tempFixturePath, "a.js");
 	const cFilepath = path.join(tempFixturePath, "c.js");
 
@@ -103,8 +97,8 @@ describe("Compiler (caching)", function() {
 		function ignoreENOENT(fn) {
 			try {
 				return fn();
-			} catch(e) {
-				if(e.code !== "ENOENT") {
+			} catch (e) {
+				if (e.code !== "ENOENT") {
 					throw e;
 				}
 			}
@@ -117,24 +111,27 @@ describe("Compiler (caching)", function() {
 	after(cleanup);
 
 	function createTempFixture() {
-
 		// Remove previous copy if present
 		try {
-			if(fs.statSync(tempFixturePath)) {
+			if (fs.statSync(tempFixturePath)) {
 				fs.unlinkSync(aFilepath);
 				fs.unlinkSync(cFilepath);
 				fs.rmdirSync(tempFixturePath);
 			}
-		} catch(e) {
-			if(e.code !== "ENOENT") {
+		} catch (e) {
+			if (e.code !== "ENOENT") {
 				throw e;
 			}
 		}
 
 		// Copy over file since we"ll be modifying some of them
 		fs.mkdirSync(tempFixturePath);
-		fs.createReadStream(path.join(__dirname, "fixtures", "a.js")).pipe(fs.createWriteStream(aFilepath));
-		fs.createReadStream(path.join(__dirname, "fixtures", "c.js")).pipe(fs.createWriteStream(cFilepath));
+		fs
+			.createReadStream(path.join(__dirname, "fixtures", "a.js"))
+			.pipe(fs.createWriteStream(aFilepath));
+		fs
+			.createReadStream(path.join(__dirname, "fixtures", "c.js"))
+			.pipe(fs.createWriteStream(cFilepath));
 
 		return {
 			rootPath: tempFixturePath,
@@ -143,95 +140,167 @@ describe("Compiler (caching)", function() {
 		};
 	}
 
-	it("should cache single file (with manual 1s wait) ", (done) => {
-
+	it("should cache single file (with manual 1s wait) ", done => {
 		const options = {};
 		const tempFixture = createTempFixture();
 
-		const helper = compile("./temp-cache-fixture/c", options, (stats, files) => {
-
-			// Not cached the first time
-			stats.assets[0].name.should.be.exactly("bundle.js");
-			stats.assets[0].emitted.should.be.exactly(true);
-
-			helper.runAgain((stats, files, iteration) => {
-
-				// Cached the second run
+		const helper = compile(
+			"./temp-cache-fixture/c",
+			options,
+			(stats, files) => {
+				// Not cached the first time
 				stats.assets[0].name.should.be.exactly("bundle.js");
-				stats.assets[0].emitted.should.be.exactly(false);
+				stats.assets[0].emitted.should.be.exactly(true);
 
-				const aContent = fs.readFileSync(tempFixture.aFilepath).toString().replace("This is a", "This is a MODIFIED");
+				helper.runAgain((stats, files, iteration) => {
+					// Cached the second run
+					stats.assets[0].name.should.be.exactly("bundle.js");
+					stats.assets[0].emitted.should.be.exactly(false);
 
-				setTimeout(() => {
+					const aContent = fs
+						.readFileSync(tempFixture.aFilepath)
+						.toString()
+						.replace("This is a", "This is a MODIFIED");
+
+					setTimeout(() => {
+						fs.writeFileSync(tempFixture.aFilepath, aContent);
+
+						helper.runAgain((stats, files, iteration) => {
+							// Cached the third run
+							stats.assets[0].name.should.be.exactly("bundle.js");
+							stats.assets[0].emitted.should.be.exactly(true);
+
+							done();
+						});
+					}, 1100);
+				});
+			}
+		);
+	});
+
+	it("should cache single file (even with no timeout) ", done => {
+		const options = {};
+		const tempFixture = createTempFixture();
+
+		const helper = compile(
+			"./temp-cache-fixture/c",
+			options,
+			(stats, files) => {
+				// Not cached the first time
+				stats.assets[0].name.should.be.exactly("bundle.js");
+				stats.assets[0].emitted.should.be.exactly(true);
+
+				helper.runAgain((stats, files, iteration) => {
+					// Cached the second run
+					stats.assets[0].name.should.be.exactly("bundle.js");
+					stats.assets[0].emitted.should.be.exactly(false);
+
+					files["/bundle.js"].should.containEql("This is a");
+
+					const aContent = fs
+						.readFileSync(tempFixture.aFilepath)
+						.toString()
+						.replace("This is a", "This is a MODIFIED");
+
 					fs.writeFileSync(tempFixture.aFilepath, aContent);
 
 					helper.runAgain((stats, files, iteration) => {
-
 						// Cached the third run
 						stats.assets[0].name.should.be.exactly("bundle.js");
 						stats.assets[0].emitted.should.be.exactly(true);
 
+						files["/bundle.js"].should.containEql("This is a MODIFIED");
+
 						done();
 					});
-
-				}, 1100);
-			});
-		});
-	});
-
-	it("should cache single file (even with no timeout) ", (done) => {
-
-		const options = {};
-		const tempFixture = createTempFixture();
-
-		const helper = compile("./temp-cache-fixture/c", options, (stats, files) => {
-
-			// Not cached the first time
-			stats.assets[0].name.should.be.exactly("bundle.js");
-			stats.assets[0].emitted.should.be.exactly(true);
-
-			helper.runAgain((stats, files, iteration) => {
-				// Cached the second run
-				stats.assets[0].name.should.be.exactly("bundle.js");
-				stats.assets[0].emitted.should.be.exactly(false);
-
-				files["/bundle.js"].should.containEql("This is a");
-
-				const aContent = fs.readFileSync(tempFixture.aFilepath).toString().replace("This is a", "This is a MODIFIED");
-
-				fs.writeFileSync(tempFixture.aFilepath, aContent);
-
-				helper.runAgain((stats, files, iteration) => {
-
-					// Cached the third run
-					stats.assets[0].name.should.be.exactly("bundle.js");
-					stats.assets[0].emitted.should.be.exactly(true);
-
-					files["/bundle.js"].should.containEql("This is a MODIFIED");
-
-					done();
 				});
-			});
-		});
+			}
+		);
 	});
 
-	it("should only build when modified (with manual 2s wait)", (done) => {
-
+	it("should only build when modified (with manual 2s wait)", done => {
 		const options = {};
 		const tempFixture = createTempFixture();
 
-		const helper = compile("./temp-cache-fixture/c", options, (stats, files) => {
+		const helper = compile(
+			"./temp-cache-fixture/c",
+			options,
+			(stats, files) => {
+				// Built the first time
+				stats.modules[0].name.should.containEql("c.js");
+				stats.modules[0].built.should.be.exactly(
+					true,
+					"c.js should have been built"
+				);
 
-			// Built the first time
-			stats.modules[0].name.should.containEql("c.js");
-			stats.modules[0].built.should.be.exactly(true, "c.js should have been built");
+				stats.modules[1].name.should.containEql("a.js");
+				stats.modules[1].built.should.be.exactly(
+					true,
+					"a.js should have been built"
+				);
 
-			stats.modules[1].name.should.containEql("a.js");
-			stats.modules[1].built.should.be.exactly(true, "a.js should have been built");
+				setTimeout(() => {
+					helper.runAgain((stats, files, iteration) => {
+						// Not built when cached the second run
+						stats.modules[0].name.should.containEql("c.js");
+						//stats.modules[0].built.should.be.exactly(false, "c.js should not have built");
 
-			setTimeout(() => {
+						stats.modules[1].name.should.containEql("a.js");
+						//stats.modules[1].built.should.be.exactly(false, "a.js should not have built");
+
+						const aContent = fs
+							.readFileSync(tempFixture.aFilepath)
+							.toString()
+							.replace("This is a", "This is a MODIFIED");
+
+						setTimeout(() => {
+							fs.writeFileSync(tempFixture.aFilepath, aContent);
+
+							helper.runAgain((stats, files, iteration) => {
+								// And only a.js built after it was modified
+								stats.modules[0].name.should.containEql("c.js");
+								stats.modules[0].built.should.be.exactly(
+									false,
+									"c.js should not have built"
+								);
+
+								stats.modules[1].name.should.containEql("a.js");
+								stats.modules[1].built.should.be.exactly(
+									true,
+									"a.js should have been built"
+								);
+
+								done();
+							});
+						}, 2100);
+					});
+				}, 4100);
+			}
+		);
+	});
+
+	it("should build when modified (even with no timeout)", done => {
+		const options = {};
+		const tempFixture = createTempFixture();
+
+		const helper = compile(
+			"./temp-cache-fixture/c",
+			options,
+			(stats, files) => {
+				// Built the first time
+				stats.modules[0].name.should.containEql("c.js");
+				stats.modules[0].built.should.be.exactly(
+					true,
+					"c.js should have been built"
+				);
+
+				stats.modules[1].name.should.containEql("a.js");
+				stats.modules[1].built.should.be.exactly(
+					true,
+					"a.js should have been built"
+				);
+
 				helper.runAgain((stats, files, iteration) => {
-
 					// Not built when cached the second run
 					stats.modules[0].name.should.containEql("c.js");
 					//stats.modules[0].built.should.be.exactly(false, "c.js should not have built");
@@ -239,67 +308,28 @@ describe("Compiler (caching)", function() {
 					stats.modules[1].name.should.containEql("a.js");
 					//stats.modules[1].built.should.be.exactly(false, "a.js should not have built");
 
-					const aContent = fs.readFileSync(tempFixture.aFilepath).toString().replace("This is a", "This is a MODIFIED");
+					const aContent = fs
+						.readFileSync(tempFixture.aFilepath)
+						.toString()
+						.replace("This is a", "This is a MODIFIED");
 
-					setTimeout(() => {
-						fs.writeFileSync(tempFixture.aFilepath, aContent);
+					fs.writeFileSync(tempFixture.aFilepath, aContent);
 
-						helper.runAgain((stats, files, iteration) => {
+					helper.runAgain((stats, files, iteration) => {
+						// And only a.js built after it was modified
+						stats.modules[0].name.should.containEql("c.js");
+						//stats.modules[0].built.should.be.exactly(false, "c.js should not have built");
 
-							// And only a.js built after it was modified
-							stats.modules[0].name.should.containEql("c.js");
-							stats.modules[0].built.should.be.exactly(false, "c.js should not have built");
+						stats.modules[1].name.should.containEql("a.js");
+						stats.modules[1].built.should.be.exactly(
+							true,
+							"a.js should have been built"
+						);
 
-							stats.modules[1].name.should.containEql("a.js");
-							stats.modules[1].built.should.be.exactly(true, "a.js should have been built");
-
-							done();
-						});
-					}, 2100);
+						done();
+					});
 				});
-			}, 4100);
-		});
-	});
-
-	it("should build when modified (even with no timeout)", (done) => {
-
-		const options = {};
-		const tempFixture = createTempFixture();
-
-		const helper = compile("./temp-cache-fixture/c", options, (stats, files) => {
-
-			// Built the first time
-			stats.modules[0].name.should.containEql("c.js");
-			stats.modules[0].built.should.be.exactly(true, "c.js should have been built");
-
-			stats.modules[1].name.should.containEql("a.js");
-			stats.modules[1].built.should.be.exactly(true, "a.js should have been built");
-
-			helper.runAgain((stats, files, iteration) => {
-
-				// Not built when cached the second run
-				stats.modules[0].name.should.containEql("c.js");
-				//stats.modules[0].built.should.be.exactly(false, "c.js should not have built");
-
-				stats.modules[1].name.should.containEql("a.js");
-				//stats.modules[1].built.should.be.exactly(false, "a.js should not have built");
-
-				const aContent = fs.readFileSync(tempFixture.aFilepath).toString().replace("This is a", "This is a MODIFIED");
-
-				fs.writeFileSync(tempFixture.aFilepath, aContent);
-
-				helper.runAgain((stats, files, iteration) => {
-
-					// And only a.js built after it was modified
-					stats.modules[0].name.should.containEql("c.js");
-					//stats.modules[0].built.should.be.exactly(false, "c.js should not have built");
-
-					stats.modules[1].name.should.containEql("a.js");
-					stats.modules[1].built.should.be.exactly(true, "a.js should have been built");
-
-					done();
-				});
-			});
-		});
+			}
+		);
 	});
 });

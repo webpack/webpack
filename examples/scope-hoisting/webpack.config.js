@@ -1,7 +1,8 @@
-var webpack = require("../../");
-
 module.exports = {
-	plugins: [
-		new webpack.optimize.ModuleConcatenationPlugin()
-	]
+	// mode: "development" || "production",
+	optimization: {
+		usedExports: true,
+		concatenateModules: true,
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 };

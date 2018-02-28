@@ -11,14 +11,8 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 	//  overwriting the RegExp with the ContextReplacementPlugin, or
 	//  using the require.context method.
 
-	// The bundle-loader is used to create a chunk from the page
-	//  -> Pages are only loaded on demand
-
 	// This line may throw a exception on runtime if the page wasn't found.
-	var pageBundle = require("bundle-loader!./" + name + "Page");
-
-	// Wait until the chunk is loaded
-	pageBundle(function(page) {
-		render(page);
+	import(/* webpackChunkName: "[request]" */`./${name}Page`).then(page => {;
+		render(page.default);
 	});
 }

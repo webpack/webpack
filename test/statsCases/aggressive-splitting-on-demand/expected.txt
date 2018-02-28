@@ -1,49 +1,65 @@
-Hash: 3605a628ea012f7d12ca
+Hash: ca712e9bc95207b9082e
 Time: Xms
-                  Asset       Size  Chunks             Chunk Names
-fc930a2adf8206ea2dc5.js    1.94 kB       0  [emitted]  
-cd45585186d59208602b.js    1.96 kB       1  [emitted]  
-6b94c231e016c5aaccdb.js    1.94 kB       2  [emitted]  
-fd0985cee894c4f3f1a6.js    1.94 kB       3  [emitted]  
-d9fc46873c8ea924b895.js  979 bytes       4  [emitted]  
-a773fee259e5a284dea9.js    7.47 kB       6  [emitted]  main
-b08c507d4e1e05cbab45.js  985 bytes       9  [emitted]  
-5d50e858fe6e559aa47c.js  977 bytes      11  [emitted]  
-Entrypoint main = a773fee259e5a284dea9.js
-chunk    {0} fc930a2adf8206ea2dc5.js 1.8 kB {6}
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 4:0-51
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 5:0-44
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 6:0-72
-    [5] (webpack)/test/statsCases/aggressive-splitting-on-demand/f.js 899 bytes {0} [built]
-    [6] (webpack)/test/statsCases/aggressive-splitting-on-demand/g.js 901 bytes {0} [built]
-chunk    {1} cd45585186d59208602b.js 1.8 kB {6} [recorded]
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 3:0-30
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 5:0-44
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 6:0-72
-    [3] (webpack)/test/statsCases/aggressive-splitting-on-demand/d.js 899 bytes {1} [built]
-    [4] (webpack)/test/statsCases/aggressive-splitting-on-demand/e.js 899 bytes {1} [built]
-chunk    {2} 6b94c231e016c5aaccdb.js 1.8 kB {6}
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 4:0-51
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 6:0-72
-   [10] (webpack)/test/statsCases/aggressive-splitting-on-demand/j.js 901 bytes {2} [built]
-   [11] (webpack)/test/statsCases/aggressive-splitting-on-demand/k.js 899 bytes {2} [built]
-chunk    {3} fd0985cee894c4f3f1a6.js 1.8 kB {6} [recorded]
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 4:0-51
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 6:0-72
-    [7] (webpack)/test/statsCases/aggressive-splitting-on-demand/h.js 899 bytes {3} [built]
-    [8] (webpack)/test/statsCases/aggressive-splitting-on-demand/i.js 899 bytes {3} [built]
-chunk    {4} d9fc46873c8ea924b895.js 899 bytes {6}
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 2:0-23
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 3:0-30
-    [2] (webpack)/test/statsCases/aggressive-splitting-on-demand/c.js 899 bytes {4} [built]
-chunk    {6} a773fee259e5a284dea9.js (main) 248 bytes [entry]
-    > main [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 
-    [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 248 bytes {6} [built]
-chunk    {9} b08c507d4e1e05cbab45.js 899 bytes {6}
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 2:0-23
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 5:0-44
-    > aggressive-splitted duplicate [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 6:0-72
-    [1] (webpack)/test/statsCases/aggressive-splitting-on-demand/b.js 899 bytes {9} [built]
-chunk   {11} 5d50e858fe6e559aa47c.js 899 bytes {6}
-    > [9] (webpack)/test/statsCases/aggressive-splitting-on-demand/index.js 1:0-16
-    [0] (webpack)/test/statsCases/aggressive-splitting-on-demand/a.js 899 bytes {11} [built]
+Built at: Thu Jan 01 1970 00:00:00 GMT
+                  Asset      Size  Chunks             Chunk Names
+620d3f8d9bdb989cde07.js  1.94 KiB    6, 7  [emitted]  
+4467a9f70ef8365bcb32.js  1.93 KiB       0  [emitted]  
+8debdc7e72b763a13e35.js  1.96 KiB       2  [emitted]  
+6a2c2702ac98f9f90db9.js  1.94 KiB    3, 1  [emitted]  
+258ba4b441feff644266.js  1.01 KiB       4  [emitted]  
+8ae4998ca98adb2a08ea.js  1.94 KiB       5  [emitted]  
+aafb9d82e452def4c3bb.js     1 KiB       1  [emitted]  
+344e13508b62e833aacf.js     1 KiB       7  [emitted]  
+2aaed192bbfbc2302c53.js  1.94 KiB       8  [emitted]  
+72e04d4eaed46d9aac4c.js  1.94 KiB       9  [emitted]  
+d20b83dfd7d0fd0c8793.js  8.41 KiB      10  [emitted]  main
+1165c0cca1ba14a506ff.js  1.94 KiB      11  [emitted]  
+Entrypoint main = d20b83dfd7d0fd0c8793.js
+chunk    {0} 4467a9f70ef8365bcb32.js 1.76 KiB <{10}> ={1}= ={2}= ={3}= ={7}= ={9}= [recorded] aggressive splitted
+    > ./b ./d ./e ./f ./g [11] ./index.js 5:0-44
+    > ./b ./d ./e ./f ./g ./h ./i ./j ./k [11] ./index.js 6:0-72
+    [0] ./b.js 899 bytes {0} {5} [built]
+    [1] ./d.js 899 bytes {0} {8} [built]
+chunk    {1} aafb9d82e452def4c3bb.js 899 bytes <{10}> ={0}= ={2}= ={8}=
+    > ./c ./d ./e [11] ./index.js 3:0-30
+    > ./b ./d ./e ./f ./g [11] ./index.js 5:0-44
+    [2] ./e.js 899 bytes {1} {3} [built]
+chunk    {2} 8debdc7e72b763a13e35.js 1.76 KiB <{10}> ={0}= ={1}= ={11}= ={3}= ={6}= ={7}= ={9}= [recorded] aggressive splitted
+    > ./f ./g ./h ./i ./j ./k [11] ./index.js 4:0-51
+    > ./b ./d ./e ./f ./g [11] ./index.js 5:0-44
+    > ./b ./d ./e ./f ./g ./h ./i ./j ./k [11] ./index.js 6:0-72
+    [3] ./f.js 899 bytes {2} [built]
+    [4] ./g.js 901 bytes {2} [built]
+chunk    {3} 6a2c2702ac98f9f90db9.js 1.76 KiB <{10}> ={0}= ={2}= ={7}= ={9}= [rendered] [recorded] aggressive splitted
+    > ./b ./d ./e ./f ./g ./h ./i ./j ./k [11] ./index.js 6:0-72
+    [2] ./e.js 899 bytes {1} {3} [built]
+    [6] ./h.js 899 bytes {3} {11} [built]
+chunk    {4} 258ba4b441feff644266.js 899 bytes <{10}>
+    > ./a [11] ./index.js 1:0-16
+   [10] ./a.js 899 bytes {4} [built]
+chunk    {5} 8ae4998ca98adb2a08ea.js 1.76 KiB <{10}>
+    > ./b ./c [11] ./index.js 2:0-23
+    [0] ./b.js 899 bytes {0} {5} [built]
+    [5] ./c.js 899 bytes {5} {8} [built]
+chunk    {6} 620d3f8d9bdb989cde07.js 1.76 KiB <{10}> ={11}= ={2}=
+    > ./f ./g ./h ./i ./j ./k [11] ./index.js 4:0-51
+    [8] ./j.js 901 bytes {6} {9} [built]
+    [9] ./k.js 899 bytes {6} {7} [built]
+chunk    {7} 344e13508b62e833aacf.js 899 bytes <{10}> ={0}= ={2}= ={3}= ={9}=
+    > ./b ./d ./e ./f ./g ./h ./i ./j ./k [11] ./index.js 6:0-72
+    [9] ./k.js 899 bytes {6} {7} [built]
+chunk    {8} 2aaed192bbfbc2302c53.js 1.76 KiB <{10}> ={1}= [recorded] aggressive splitted
+    > ./c ./d ./e [11] ./index.js 3:0-30
+    [1] ./d.js 899 bytes {0} {8} [built]
+    [5] ./c.js 899 bytes {5} {8} [built]
+chunk    {9} 72e04d4eaed46d9aac4c.js 1.76 KiB <{10}> ={0}= ={2}= ={3}= ={7}= [rendered] [recorded] aggressive splitted
+    > ./b ./d ./e ./f ./g ./h ./i ./j ./k [11] ./index.js 6:0-72
+    [7] ./i.js 899 bytes {9} {11} [built]
+    [8] ./j.js 901 bytes {6} {9} [built]
+chunk   {10} d20b83dfd7d0fd0c8793.js (main) 248 bytes >{0}< >{1}< >{11}< >{2}< >{3}< >{4}< >{5}< >{6}< >{7}< >{8}< >{9}< [entry] [rendered]
+    > ./index main
+   [11] ./index.js 248 bytes {10} [built]
+chunk   {11} 1165c0cca1ba14a506ff.js 1.76 KiB <{10}> ={2}= ={6}= [rendered] [recorded] aggressive splitted
+    > ./f ./g ./h ./i ./j ./k [11] ./index.js 4:0-51
+    [6] ./h.js 899 bytes {3} {11} [built]
+    [7] ./i.js 899 bytes {9} {11} [built]

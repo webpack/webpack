@@ -1,0 +1,85 @@
+{
+  "definitions": {
+    "rule": {
+      "oneOf": [
+        {
+          "instanceof": "RegExp"
+        },
+        {
+          "minLength": 1,
+          "type": "string"
+        }
+      ]
+    },
+    "rules": {
+      "oneOf": [
+        {
+          "items": {
+            "description": "A rule condition",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/rule"
+              }
+            ]
+          },
+          "type": "array"
+        },
+        {
+          "$ref": "#/definitions/rule"
+        }
+      ]
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "banner"
+      ],
+      "properties": {
+        "banner": {
+          "description": "The banner as string, it will be wrapped in a comment",
+          "type": "string"
+        },
+        "raw": {
+          "description": "If true, banner will not be wrapped in a comment",
+          "type": "boolean"
+        },
+        "entryOnly": {
+          "description": "If true, the banner will only be added to the entry chunks",
+          "type": "boolean"
+        },
+        "test": {
+          "description": "Include all modules that pass test assertion",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/rules"
+            }
+          ]
+        },
+        "include": {
+          "description": "Include all modules matching any of these conditions",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/rules"
+            }
+          ]
+        },
+        "exclude": {
+          "description": "Exclude all modules matching any of these conditions",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/rules"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "description": "The banner as string, it will be wrapped in a comment",
+      "minLength": 1,
+      "type": "string"
+    }
+  ]
+}

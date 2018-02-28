@@ -1,0 +1,99 @@
+{
+  "additionalProperties": false,
+  "anyOf": [
+    {
+      "required": [
+        "manifest"
+      ]
+    },
+    {
+      "required": [
+        "content"
+      ]
+    }
+  ],
+  "properties": {
+    "context": {
+      "description": "(absolute path) context of requests in the manifest (or content property)",
+      "type": "string",
+      "absolutePath": true
+    },
+    "manifest": {
+      "description": "An object containing content and name or a string to the absolute path of the JSON manifest to be loaded upon compilation",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "content": {
+              "description": "The mappings from request to module id",
+              "minLength": 1,
+              "type": "object"
+            },
+            "name": {
+              "description": "The name where the dll is exposed (external name)",
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": {
+              "description": "The type how the dll is exposed (external type)",
+              "minLength": 1,
+              "type": "string"
+            }
+          }
+        },
+        {
+          "type": "string",
+          "absolutePath": true
+        }
+      ]
+    },
+    "content": {
+      "description": "The mappings from request to module id (defaults to manifest.content)",
+      "minLength": 1,
+      "type": "object"
+    },
+    "name": {
+      "description": "The name where the dll is exposed (external name, defaults to manifest.name)",
+      "minLength": 1,
+      "type": "string"
+    },
+    "type": {
+      "description": "The way how the export of the dll bundle is used",
+      "enum": [
+        "require",
+        "object"
+      ]
+    },
+    "scope": {
+      "description": "Prefix which is used for accessing the content of the dll",
+      "minLength": 1,
+      "type": "string"
+    },
+    "sourceType": {
+      "description": "How the dll is exposed (libraryTarget, defaults to manifest.type)",
+      "enum": [
+        "var",
+        "assign",
+        "this",
+        "window",
+        "global",
+        "commonjs",
+        "commonjs2",
+        "commonjs-module",
+        "amd",
+        "umd",
+        "umd2",
+        "jsonp"
+      ]
+    },
+    "extensions": {
+      "description": "Extensions used to resolve modules in the dll bundle (only used when using 'scope')",
+      "type": "array",
+      "items": {
+        "description": "An extension",
+        "type": "string"
+      }
+    }
+  }
+}

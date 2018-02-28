@@ -1,0 +1,44 @@
+{
+  "modules": {
+    "byIdentifier": {
+      "b.js": 0,
+      "c.js": 1,
+      "d.js": 2,
+      "e.js": 3,
+      "index.js": 4,
+      "a.js": 5
+    },
+    "usedIds": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": 3,
+      "4": 4,
+      "5": 5
+    }
+  },
+  "chunks": {
+    "byName": {},
+    "byBlocks": {},
+    "usedIds": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "bySource": {
+      "0 index.js ./g": 0
+    }
+  },
+  "aggressiveSplits": [
+    {
+      "modules": [
+        "b.js",
+        "c.js"
+      ],
+      "hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "size": 1798,
+      "id": 444
+    }
+  ]
+}

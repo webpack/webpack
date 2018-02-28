@@ -1,13 +1,14 @@
-Hash: 9c0d5be5c7febb314e7a
+Hash: c176225f44e51c7a39a4
 Time: Xms
-      Asset     Size  Chunks             Chunk Names
- entry-1.js  3.11 kB       0  [emitted]  entry-1
-vendor-1.js  2.85 kB       1  [emitted]  vendor-1
-   [0] (webpack)/test/statsCases/commons-chunk-min-size-Infinity/modules/a.js 22 bytes {0} {1} [built]
-   [1] (webpack)/test/statsCases/commons-chunk-min-size-Infinity/modules/b.js 22 bytes {0} {1} [built]
-   [2] (webpack)/test/statsCases/commons-chunk-min-size-Infinity/modules/c.js 22 bytes {0} {1} [built]
-   [3] (webpack)/test/statsCases/commons-chunk-min-size-Infinity/entry-1.js 145 bytes {0} [built]
-   [4] (webpack)/test/statsCases/commons-chunk-min-size-Infinity/modules/d.js 22 bytes {0} [built]
-   [5] (webpack)/test/statsCases/commons-chunk-min-size-Infinity/modules/e.js 22 bytes {0} [built]
-   [6] (webpack)/test/statsCases/commons-chunk-min-size-Infinity/modules/f.js 22 bytes {0} [built]
-   [7] multi ./modules/a ./modules/b ./modules/c 52 bytes {1} [built]
+Built at: Thu Jan 01 1970 00:00:00 GMT
+      Asset       Size  Chunks             Chunk Names
+ entry-1.js   5.49 KiB       0  [emitted]  entry-1
+vendor-1.js  314 bytes       1  [emitted]  vendor-1
+Entrypoint entry-1 = vendor-1.js entry-1.js
+   [0] ./entry-1.js 145 bytes {0} [built]
+   [1] ./modules/a.js 22 bytes {1} [built]
+   [2] ./modules/b.js 22 bytes {1} [built]
+   [3] ./modules/c.js 22 bytes {1} [built]
+   [4] ./modules/d.js 22 bytes {0} [built]
+   [5] ./modules/e.js 22 bytes {0} [built]
+   [6] ./modules/f.js 22 bytes {0} [built]

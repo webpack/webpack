@@ -1,22 +1,29 @@
-Hash: fd034b07589b0d56afb3
+Hash: a181afd92c30187a0eba
 Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
-   0.js  238 bytes       0  [emitted]  
-   1.js  102 bytes       1  [emitted]  
-   2.js  182 bytes       2  [emitted]  
-main.js     6.1 kB       3  [emitted]  main
+   0.js  152 bytes       0  [emitted]  
+   1.js  289 bytes       1  [emitted]  
+main.js   7.01 KiB       2  [emitted]  main
+   3.js  227 bytes       3  [emitted]  
 Entrypoint main = main.js
-chunk    {0} 0.js 54 bytes {3} [rendered]
-    > [0] (webpack)/test/statsCases/preset-detailed/index.js 3:0-16
-chunk    {1} 1.js 22 bytes {3} [rendered]
-    > [0] (webpack)/test/statsCases/preset-detailed/index.js 2:0-16
-chunk    {2} 2.js 44 bytes {0} [rendered]
-    > [3] (webpack)/test/statsCases/preset-detailed/c.js 1:0-52
-chunk    {3} main.js (main) 73 bytes [entry] [rendered]
-    > main [0] (webpack)/test/statsCases/preset-detailed/index.js 
-   [0] (webpack)/test/statsCases/preset-detailed/index.js 51 bytes {3} [depth 0] [built]
-   [1] (webpack)/test/statsCases/preset-detailed/a.js 22 bytes {3} [depth 1] [built]
-   [2] (webpack)/test/statsCases/preset-detailed/b.js 22 bytes {1} [depth 1] [built]
-   [3] (webpack)/test/statsCases/preset-detailed/c.js 54 bytes {0} [depth 1] [built]
-   [4] (webpack)/test/statsCases/preset-detailed/d.js 22 bytes {2} [depth 2] [built]
-   [5] (webpack)/test/statsCases/preset-detailed/e.js 22 bytes {2} [depth 2] [built]
+chunk    {0} 0.js 22 bytes <{2}> [rendered]
+    > ./b [4] ./index.js 2:0-16
+chunk    {1} 1.js 54 bytes <{2}> >{3}< [rendered]
+    > ./c [4] ./index.js 3:0-16
+chunk    {2} main.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
+    > ./index main
+chunk    {3} 3.js 44 bytes <{1}> [rendered]
+    > [3] ./c.js 1:0-52
+   [0] ./d.js 22 bytes {3} [depth 2] [built]
+       ModuleConcatenation bailout: Module is not an ECMAScript module
+   [1] ./e.js 22 bytes {3} [depth 2] [built]
+       ModuleConcatenation bailout: Module is not an ECMAScript module
+   [2] ./b.js 22 bytes {0} [depth 1] [built]
+       ModuleConcatenation bailout: Module is not an ECMAScript module
+   [3] ./c.js 54 bytes {1} [depth 1] [built]
+       ModuleConcatenation bailout: Module is not an ECMAScript module
+   [4] ./index.js 51 bytes {2} [depth 0] [built]
+       ModuleConcatenation bailout: Module is not an ECMAScript module
+   [5] ./a.js 22 bytes {2} [depth 1] [built]
+       ModuleConcatenation bailout: Module is not an ECMAScript module

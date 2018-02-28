@@ -1,0 +1,36 @@
+Hash: e81afb52ad447e8765ab
+Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
+      Asset       Size  Chunks             Chunk Names
+0.bundle.js  433 bytes       0  [emitted]  
+1.bundle.js  297 bytes       1  [emitted]  
+2.bundle.js  588 bytes       2  [emitted]  
+  bundle.js   7.38 KiB    main  [emitted]  main
+Entrypoint main = bundle.js
+chunk {main} bundle.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
+    > ./index main
+ [./a.js] 22 bytes {main} [built]
+        cjs require ./a [./index.js] 1:0-14
+        cjs require ./a [./e.js] 1:0-14
+        [./index.js] Xms -> factory:Xms building:Xms = Xms
+ [./index.js] 51 bytes {main} [built]
+        single entry ./index  main
+        factory:Xms building:Xms = Xms
+chunk    {0} 0.bundle.js 54 bytes <{main}> >{2}< [rendered]
+    > ./c [./index.js] ./index.js 3:0-16
+ [./c.js] 54 bytes {0} [built]
+        amd require ./c [./index.js] 3:0-16
+        [./index.js] Xms -> factory:Xms building:Xms = Xms
+chunk    {1} 1.bundle.js 22 bytes <{main}> [rendered]
+    > ./b [./index.js] ./index.js 2:0-16
+ [./b.js] 22 bytes {1} [built]
+        amd require ./b [./index.js] 2:0-16
+        [./index.js] Xms -> factory:Xms building:Xms = Xms
+chunk    {2} 2.bundle.js 60 bytes <{0}> [rendered]
+    > [./c.js] ./c.js 1:0-52
+ [./d.js] 22 bytes {2} [built]
+        require.ensure item ./d [./c.js] 1:0-52
+        [./index.js] Xms -> [./c.js] Xms -> factory:Xms building:Xms = Xms
+ [./e.js] 38 bytes {2} [built]
+        require.ensure item ./e [./c.js] 1:0-52
+        [./index.js] Xms -> [./c.js] Xms -> factory:Xms building:Xms = Xms

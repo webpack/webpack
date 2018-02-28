@@ -1,4 +1,5 @@
 module.exports = {
+	mode: "development",
 	output: {
 		devtoolLineToLine: true,
 		devtoolModuleFilenameTemplate: function(info) {
@@ -10,5 +11,4 @@ module.exports = {
 		__filename: false
 	},
 	devtool: "cheap-source-map"
-
 };

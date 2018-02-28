@@ -37,7 +37,7 @@ describe("main", function() {
 				// Comments work!
 				exports.ok = true;
 				test(require("subcontent") === "replaced", "node_modules should be replaced with web_modules");
-				test(require("subcontent2/file.js") === "orginal", "node_modules should still work when web_modules exists");
+				test(require("subcontent2/file.js") === "original", "node_modules should still work when web_modules exists");
 				done();
 			});
 		});
@@ -90,12 +90,12 @@ describe("main", function() {
 		it("should be able to handle chunk loading errors and try again", function(done) {
 			var old = __webpack_public_path__;
 			__webpack_public_path__ += "wrong/";
-			System.import("./three").then(function() {
+			import("./three").then(function() {
 				done(new Error("Chunk shouldn't be loaded"));
 			}).catch(function(err) {
 				err.should.be.instanceOf(Error);
 				__webpack_public_path__ = old;
-				System.import("./three").then(function(three) {
+				import("./three").then(function(three) {
 					three.should.be.eql(3);
 					done();
 				}).catch(function(err) {

@@ -1,24 +1,24 @@
 module.exports = {
+	mode: "production",
 	entry: "./index",
 	output: {
 		filename: "bundle.js"
 	},
 	stats: {
-		excludeModules: [
-			"node_modules",
-			"exclude"
-		],
-		excludeAssets: [
-			/\.json/
-		]
+		excludeModules: ["node_modules", "exclude"],
+		excludeAssets: [/\.json/]
 	},
 	module: {
-		loaders: [{
-			test: /\.txt/,
-			loader: "raw-loader"
-		}, {
-			test: /\.json/,
-			loader: "file-loader"
-		}]
+		rules: [
+			{
+				test: /\.txt/,
+				loader: "raw-loader"
+			},
+			{
+				test: /\.json/,
+				loader: "file-loader",
+				type: "javascript/auto"
+			}
+		]
 	}
 };

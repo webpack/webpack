@@ -1,4 +1,5 @@
 module.exports = {
+	mode: "development",
 	output: {
 		chunkFilename: "[name].js",
 		devtoolModuleFilenameTemplate: "module",

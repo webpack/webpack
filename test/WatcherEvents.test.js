@@ -2,7 +2,7 @@
 
 /*globals describe it before after  */
 const path = require("path");
-const should = require("should");
+require("should");
 const MemoryFs = require("memory-fs");
 const webpack = require("../");
 
@@ -20,16 +20,25 @@ const createSingleCompiler = () => {
 };
 
 const createMultiCompiler = () => {
-	return createCompiler([{
-		context: path.join(__dirname, "fixtures"),
-		entry: "./a.js"
-	}]);
+	return createCompiler([
+		{
+			context: path.join(__dirname, "fixtures"),
+			entry: "./a.js"
+		}
+	]);
 };
 
 describe("WatcherEvents", function() {
+	if (process.env.NO_WATCH_TESTS) {
+		it("long running tests excluded");
+		return;
+	}
+
 	this.timeout(10000);
 
-	it("should emit 'watch-close' when using single-compiler mode and the compiler is not running", function(done) {
+	it("should emit 'watch-close' when using single-compiler mode and the compiler is not running", function(
+		done
+	) {
 		let called = false;
 
 		const compiler = createSingleCompiler();
@@ -38,17 +47,18 @@ describe("WatcherEvents", function() {
 			done(err);
 		});
 
-		compiler.plugin("watch-close", () => {
+		compiler.hooks.watchClose.tap("WatcherEventsTest", () => {
 			called = true;
 		});
 
-		compiler.plugin("done", () => {
+		compiler.hooks.done.tap("WatcherEventsTest", () => {
 			watcher.close();
 		});
-
 	});
 
-	it("should emit 'watch-close' when using multi-compiler mode and the compiler is not running", function(done) {
+	it("should emit 'watch-close' when using multi-compiler mode and the compiler is not running", function(
+		done
+	) {
 		let called = false;
 
 		const compiler = createMultiCompiler();
@@ -57,14 +67,12 @@ describe("WatcherEvents", function() {
 			done(err);
 		});
 
-		compiler.plugin("watch-close", () => {
+		compiler.hooks.watchClose.tap("WatcherEventsTest", () => {
 			called = true;
 		});
 
-		compiler.plugin("done", () => {
+		compiler.hooks.done.tap("WatcherEventsTest", () => {
 			watcher.close();
 		});
-
 	});
-
 });

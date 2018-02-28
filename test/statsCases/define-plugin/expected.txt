@@ -1,13 +1,17 @@
-Hash: 052d0451a89cb963e4d3eb3ff8e5a88b9234d04f
+Hash: 189d0d15eb46be80d1f9eaead63561588b554cc6
 Child
-    Hash: 052d0451a89cb963e4d3
+    Hash: 189d0d15eb46be80d1f9
     Time: Xms
-      Asset     Size  Chunks             Chunk Names
-    main.js  2.52 kB       0  [emitted]  main
-       [0] (webpack)/test/statsCases/define-plugin/index.js 24 bytes {0} [built]
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+      Asset      Size  Chunks             Chunk Names
+    main.js  2.63 KiB       0  [emitted]  main
+    Entrypoint main = main.js
+       [0] ./index.js 24 bytes {0} [built]
 Child
-    Hash: eb3ff8e5a88b9234d04f
+    Hash: eaead63561588b554cc6
     Time: Xms
-      Asset     Size  Chunks             Chunk Names
-    main.js  2.52 kB       0  [emitted]  main
-       [0] (webpack)/test/statsCases/define-plugin/index.js 24 bytes {0} [built]
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+      Asset      Size  Chunks             Chunk Names
+    main.js  2.63 KiB       0  [emitted]  main
+    Entrypoint main = main.js
+       [0] ./index.js 24 bytes {0} [built]

@@ -1,6 +1,4 @@
-This example shows how to create a async loaded commons chunk.
-
-When a chunk has many child chunks which share common modules the `CommonsChunkPlugin` can extract these common modules into a commons chunk which is loaded in parallel to the requested child chunk.
+This example shows automatically created async commons chunks.
 
 The example entry references two chunks:
 
@@ -16,7 +14,9 @@ The example entry references two chunks:
   * module `b`
   * module `d`
 
-These chunks share modules `a` and `b`. The `CommonsChunkPlugin` extract these into chunk Z:
+These chunks share modules `a` and `b`. The optimization extract these into chunk Z:
+
+Note: Actually the optimization compare size of chunk Z to some minimum value, but this is disabled from this example. In practice there is no configuration needed for this.
 
 * entry chunk
   * async require -> chunk X & Z
@@ -38,46 +38,40 @@ Pretty useful for a router in a SPA.
 {{example.js}}
 ```
 
-# webpack.config.js
+# dist/output.js
 
 ``` javascript
-{{webpack.config.js}}
+{{dist/output.js}}
 ```
 
-# js/output.js
+# dist/0.output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/0.output.js}}
 ```
 
-# js/0.output.js
+# dist/1.output.js
 
 ``` javascript
-{{js/0.output.js}}
+{{dist/1.output.js}}
 ```
 
-# js/1.output.js
+# dist/2.output.js
 
 ``` javascript
-{{js/1.output.js}}
-```
-
-# js/2.output.js
-
-``` javascript
-{{js/2.output.js}}
+{{dist/2.output.js}}
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

@@ -1,9 +1,11 @@
-Hash: 3cc7bf529a74b021bee53cc7bf529a74b021bee53cc7bf529a74b021bee53cc7bf529a74b021bee53cc7bf529a74b021bee53cc7bf529a74b021bee53cc7bf529a74b021bee53cc7bf529a74b021bee53cc7bf529a74b021bee53cc7bf529a74b021bee53cc7bf529a74b021bee53cc7bf529a74b021bee53cc7bf529a74b021bee5
+Hash: abbea59d067e262318adabbea59d067e262318adabbea59d067e262318adabbea59d067e262318adabbea59d067e262318adabbea59d067e262318adabbea59d067e262318adabbea59d067e262318adabbea59d067e262318adabbea59d067e262318adabbea59d067e262318adabbea59d067e262318adabbea59d067e262318ad
 Child
-    Hash: 3cc7bf529a74b021bee5
+    Hash: abbea59d067e262318ad
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    Entrypoint main = bundle.js
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -18,40 +20,54 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: 3cc7bf529a74b021bee5
+    Hash: abbea59d067e262318ad
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    Entrypoint main = bundle.js
 Child
-    Hash: 3cc7bf529a74b021bee5
+    Hash: abbea59d067e262318ad
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    Entrypoint main = bundle.js
 Child
-    Hash: 3cc7bf529a74b021bee5
+    Hash: abbea59d067e262318ad
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    Entrypoint main = bundle.js
 Child
-    Hash: 3cc7bf529a74b021bee5
+    Hash: abbea59d067e262318ad
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    Entrypoint main = bundle.js
 Child
-    Hash: 3cc7bf529a74b021bee5
+    Hash: abbea59d067e262318ad
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    Entrypoint main = bundle.js
 Child
-    Hash: 3cc7bf529a74b021bee5
+    Hash: abbea59d067e262318ad
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    Entrypoint main = bundle.js
 Child
-    Hash: 3cc7bf529a74b021bee5
+    Hash: abbea59d067e262318ad
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    Entrypoint main = bundle.js
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -66,10 +82,12 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: 3cc7bf529a74b021bee5
+    Hash: abbea59d067e262318ad
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    Entrypoint main = bundle.js
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -84,10 +102,12 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: 3cc7bf529a74b021bee5
+    Hash: abbea59d067e262318ad
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    Entrypoint main = bundle.js
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -102,10 +122,12 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: 3cc7bf529a74b021bee5
+    Hash: abbea59d067e262318ad
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    Entrypoint main = bundle.js
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -120,10 +142,12 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: 3cc7bf529a74b021bee5
+    Hash: abbea59d067e262318ad
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    Entrypoint main = bundle.js
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]
@@ -138,10 +162,12 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: 3cc7bf529a74b021bee5
+    Hash: abbea59d067e262318ad
     Time: Xms
-        Asset    Size  Chunks             Chunk Names
-    bundle.js  2.1 kB       0  [emitted]  main
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    Entrypoint main = bundle.js
     
     WARNING in bundle.js from UglifyJs
     Dropping side-effect-free statement [./index.js:6,0]

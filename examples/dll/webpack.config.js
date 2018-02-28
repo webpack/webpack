@@ -1,6 +1,7 @@
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
+	// mode: "development || "production",
 	resolve: {
 		extensions: [".js", ".jsx"]
 	},
@@ -9,13 +10,13 @@ module.exports = {
 		beta: ["./beta", "./b", "./c"]
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "MyDll.[name].js",
 		library: "[name]_[hash]"
 	},
 	plugins: [
 		new webpack.DllPlugin({
-			path: path.join(__dirname, "js", "[name]-manifest.json"),
+			path: path.join(__dirname, "dist", "[name]-manifest.json"),
 			name: "[name]_[hash]"
 		})
 	]

@@ -4,34 +4,34 @@
 {{webpack.config.js}}
 ```
 
-# js/vendor1.js
+# dist/vendor1.js
 
 ``` javascript
-{{js/vendor1.js}}
+{{dist/vendor1.js}}
 ```
 
-# js/vendor2.js
+# dist/vendor2.js
 
 ``` javascript
-{{js/vendor2.js}}
+{{dist/vendor2.js}}
 ```
 
-# js/pageA.js
+# dist/pageA.js
 
 ``` javascript
-{{js/pageA.js}}
+{{dist/pageA.js}}
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

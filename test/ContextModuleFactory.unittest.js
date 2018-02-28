@@ -20,12 +20,20 @@ describe("ContextModuleFactory", function() {
 				err.code = "ENOENT";
 				setTimeout(() => callback(err, null));
 			};
-			factory.resolveDependencies(memfs, "/", true, /.*/, (err, res) => {
-				(!!err).should.be.false();
-				res.should.be.an.Array();
-				res.length.should.be.exactly(0);
-				done();
-			});
+			factory.resolveDependencies(
+				memfs,
+				{
+					resource: "/",
+					recursive: true,
+					regExp: /.*/
+				},
+				(err, res) => {
+					(!!err).should.be.false();
+					res.should.be.an.Array();
+					res.length.should.be.exactly(0);
+					done();
+				}
+			);
 		});
 		it("should report an error when non-ENOENT errors happen", function(done) {
 			memfs.readdir = (dir, callback) => {
@@ -36,11 +44,19 @@ describe("ContextModuleFactory", function() {
 				err.code = "EACCES";
 				setTimeout(() => callback(err, null));
 			};
-			factory.resolveDependencies(memfs, "/", true, /.*/, (err, res) => {
-				err.should.be.an.Error();
-				(!!res).should.be.false();
-				done();
-			});
+			factory.resolveDependencies(
+				memfs,
+				{
+					resource: "/",
+					recursive: true,
+					regExp: /.*/
+				},
+				(err, res) => {
+					err.should.be.an.Error();
+					(!!res).should.be.false();
+					done();
+				}
+			);
 		});
 	});
 });

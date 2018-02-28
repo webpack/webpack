@@ -1,2 +1,0 @@
---config ./webpack.config.js
---config-name foo

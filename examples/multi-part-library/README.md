@@ -17,12 +17,13 @@ Note: When your library has dependencies that should not be included in the comp
 ``` javascript
 var path = require("path");
 module.exports = {
+	// mode: "development || "production",
 	entry: {
 		alpha: "./alpha",
 		beta: "./beta"
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "MyLibrary.[name].js",
 		library: ["MyLibrary", "[name]"],
 		libraryTarget: "umd"
@@ -30,7 +31,7 @@ module.exports = {
 };
 ```
 
-# js/MyLibrary.alpha.js
+# dist/MyLibrary.alpha.js
 
 ``` javascript
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -42,7 +43,7 @@ module.exports = {
 		exports["alpha"] = factory();
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["alpha"] = factory();
-})(typeof self !== 'undefined' ? self : this, function() {
+})(window, function() {
 ```
 <details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -93,6 +94,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -106,7 +112,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -122,8 +129,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!******************!*\
   !*** ./alpha.js ***!
   \******************/
-/*! dynamic exports provided */
-/*! all exports used */
+/*! no static exports found */
 /***/ (function(module, exports) {
 
 module.exports = "alpha";
@@ -133,7 +139,7 @@ module.exports = "alpha";
 });
 ```
 
-# js/MyLibrary.beta.js
+# dist/MyLibrary.beta.js
 
 ``` javascript
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -145,7 +151,7 @@ module.exports = "alpha";
 		exports["beta"] = factory();
 	else
 		root["MyLibrary"] = root["MyLibrary"] || {}, root["MyLibrary"]["beta"] = factory();
-})(typeof self !== 'undefined' ? self : this, function() {
+})(window, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -192,6 +198,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -205,7 +216,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 1);
@@ -217,8 +229,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!*****************!*\
   !*** ./beta.js ***!
   \*****************/
-/*! dynamic exports provided */
-/*! all exports used */
+/*! no static exports found */
 /***/ (function(module, exports) {
 
 module.exports = "beta";
@@ -230,38 +241,42 @@ module.exports = "beta";
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: e5033b72cf0ec9da1ad7
-Version: webpack 3.11.0
-             Asset     Size  Chunks             Chunk Names
- MyLibrary.beta.js  3.09 kB       0  [emitted]  beta
-MyLibrary.alpha.js  3.09 kB       1  [emitted]  alpha
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.0.0-beta.2
+             Asset      Size  Chunks             Chunk Names
+MyLibrary.alpha.js  3.16 KiB       0  [emitted]  alpha
+ MyLibrary.beta.js  3.16 KiB       1  [emitted]  beta
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
-chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
-    > beta [1] ./beta.js 
-    [1] ./beta.js 24 bytes {0} [built]
-chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
-    > alpha [0] ./alpha.js 
-    [0] ./alpha.js 25 bytes {1} [built]
+chunk    {0} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
+    > ./alpha alpha
+    [0] ./alpha.js 25 bytes {0} [built]
+        single entry ./alpha  alpha
+chunk    {1} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
+    > ./beta beta
+    [1] ./beta.js 24 bytes {1} [built]
+        single entry ./beta  beta
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: e5033b72cf0ec9da1ad7
-Version: webpack 3.11.0
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.0.0-beta.2
              Asset       Size  Chunks             Chunk Names
- MyLibrary.beta.js  789 bytes       0  [emitted]  beta
-MyLibrary.alpha.js  791 bytes       1  [emitted]  alpha
+ MyLibrary.beta.js  828 bytes       0  [emitted]  beta
+MyLibrary.alpha.js  832 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
-    > beta [1] ./beta.js 
-    [1] ./beta.js 24 bytes {0} [built]
+    > ./beta beta
+    [0] ./beta.js 24 bytes {0} [built]
+        single entry ./beta  beta
 chunk    {1} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
-    > alpha [0] ./alpha.js 
-    [0] ./alpha.js 25 bytes {1} [built]
+    > ./alpha alpha
+    [1] ./alpha.js 25 bytes {1} [built]
+        single entry ./alpha  alpha
 ```

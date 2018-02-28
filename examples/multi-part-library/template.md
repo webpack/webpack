@@ -18,28 +18,28 @@ Note: When your library has dependencies that should not be included in the comp
 {{webpack.config.js}}
 ```
 
-# js/MyLibrary.alpha.js
+# dist/MyLibrary.alpha.js
 
 ``` javascript
-{{js/MyLibrary.alpha.js}}
+{{dist/MyLibrary.alpha.js}}
 ```
 
-# js/MyLibrary.beta.js
+# dist/MyLibrary.beta.js
 
 ``` javascript
-{{js/MyLibrary.beta.js}}
+{{dist/MyLibrary.beta.js}}
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

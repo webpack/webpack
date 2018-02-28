@@ -1,0 +1,13 @@
+{
+  "additionalProperties": false,
+  "type": "object",
+  "required": [
+    "minChunkSize"
+  ],
+  "properties": {
+    "minChunkSize": {
+      "description": "Minimum number of characters",
+      "type": "number"
+    }
+  }
+}

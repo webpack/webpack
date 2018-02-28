@@ -2,11 +2,14 @@
 
 const should = require("should");
 const compareLocations = require("../lib/compareLocations");
-const createPosition = function(overides) {
-	return Object.assign({
-		line: 10,
-		column: 5
-	}, overides);
+const createPosition = function(overrides) {
+	return Object.assign(
+		{
+			line: 10,
+			column: 5
+		},
+		overrides
+	);
 };
 
 const createLocation = function(start, end, index) {
@@ -43,7 +46,7 @@ describe("compareLocations", () => {
 			});
 
 			it("returns -1 when the first location line number comes before the second location line number", () => {
-				return compareLocations(a, b).should.be.exactly(-1)
+				return compareLocations(a, b).should.be.exactly(-1);
 			});
 
 			it("returns 1 when the first location line number comes after the second location line number", () =>
@@ -115,6 +118,5 @@ describe("compareLocations", () => {
 
 		it("returns undefined when both the first parameter and the second parameter is a number", () =>
 			should(compareLocations(123, 456)).be.undefined());
-
 	});
 });

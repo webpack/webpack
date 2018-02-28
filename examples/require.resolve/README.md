@@ -12,7 +12,7 @@ delete require.cache[aId];
 // require module again, it should be reexecuted
 var a2 = require("./a");
 
-// vertify it
+// verify it
 if(a == a2) throw new Error("Cache clear failed :(");
 ```
 
@@ -23,7 +23,7 @@ if(a == a2) throw new Error("Cache clear failed :(");
 module.exports = Math.random();
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -74,6 +74,11 @@ module.exports = Math.random();
 /******/ 		}
 /******/ 	};
 /******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
 /******/ 		var getter = module && module.__esModule ?
@@ -87,10 +92,11 @@ module.exports = Math.random();
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
@@ -100,37 +106,35 @@ module.exports = Math.random();
 ``` javascript
 /******/ ([
 /* 0 */
-/*!**************!*\
-  !*** ./a.js ***!
-  \**************/
-/*! dynamic exports provided */
-/*! all exports used */
-/***/ (function(module, exports) {
-
-module.exports = Math.random();
-
-/***/ }),
-/* 1 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! dynamic exports provided */
-/*! all exports used */
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var a = __webpack_require__(/*! ./a */ 0);
+var a = __webpack_require__(/*! ./a */ 1);
 
 // get module id
-var aId = /*require.resolve*/(/*! ./a.js */ 0);
+var aId = /*require.resolve*/(/*! ./a.js */ 1);
 
 // clear module in require.cache
 delete __webpack_require__.c[aId];
 
 // require module again, it should be reexecuted
-var a2 = __webpack_require__(/*! ./a */ 0);
+var a2 = __webpack_require__(/*! ./a */ 1);
 
-// vertify it
+// verify it
 if(a == a2) throw new Error("Cache clear failed :(");
+
+/***/ }),
+/* 1 */
+/*!**************!*\
+  !*** ./a.js ***!
+  \**************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = Math.random();
 
 /***/ })
 /******/ ]);
@@ -138,36 +142,38 @@ if(a == a2) throw new Error("Cache clear failed :(");
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 4ed342adc60583d992ab
-Version: webpack 3.11.0
-    Asset     Size  Chunks             Chunk Names
-output.js  3.18 kB       0  [emitted]  main
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.0.0-beta.2
+    Asset      Size  Chunks             Chunk Names
+output.js  3.26 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
-    > main [1] ./example.js 
-    [0] ./a.js 31 bytes {0} [built]
-        require.resolve ./a.js [1] ./example.js 4:10-35
-        cjs require ./a [1] ./example.js 1:8-22
-        cjs require ./a [1] ./example.js 10:9-23
-    [1] ./example.js 295 bytes {0} [built]
+    > .\example.js main
+    [0] ./example.js 295 bytes {0} [built]
+        single entry .\example.js  main
+    [1] ./a.js 31 bytes {0} [built]
+        require.resolve ./a.js [0] ./example.js 4:10-35
+        cjs require ./a [0] ./example.js 1:8-22
+        cjs require ./a [0] ./example.js 10:9-23
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 4ed342adc60583d992ab
-Version: webpack 3.11.0
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.0.0-beta.2
     Asset       Size  Chunks             Chunk Names
-output.js  599 bytes       0  [emitted]  main
+output.js  667 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
-    > main [1] ./example.js 
+    > .\example.js main
     [0] ./a.js 31 bytes {0} [built]
         require.resolve ./a.js [1] ./example.js 4:10-35
         cjs require ./a [1] ./example.js 1:8-22
         cjs require ./a [1] ./example.js 10:9-23
     [1] ./example.js 295 bytes {0} [built]
+        single entry .\example.js  main
 ```

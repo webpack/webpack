@@ -1,35 +1,44 @@
-Hash: 731069e082cf620521cea66588099dc6439215ab
+Hash: 1e05cb63c83229a31d7fe3bbe6aa8fb8e8ec3bd9
 Child
-    Hash: 731069e082cf620521ce
+    Hash: 1e05cb63c83229a31d7f
     Time: Xms
-       [0] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy_shared.js 25 bytes {0} {1} {2} [built]
-       [1] (webpack)/test/statsCases/scope-hoisting-multi/vendor.js 25 bytes {5} [built]
-       [2] (webpack)/test/statsCases/scope-hoisting-multi/common.js 37 bytes {3} {4} [built]
-       [3] (webpack)/test/statsCases/scope-hoisting-multi/common2.js 25 bytes {3} {4} [built]
-       [4] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy.js 25 bytes {1} {2} [built]
-       [5] (webpack)/test/statsCases/scope-hoisting-multi/lazy_shared.js 31 bytes {0} [built]
-       [6] (webpack)/test/statsCases/scope-hoisting-multi/first.js 207 bytes {3} [built]
-       [7] (webpack)/test/statsCases/scope-hoisting-multi/module_first.js 31 bytes {3} [built]
-       [8] (webpack)/test/statsCases/scope-hoisting-multi/lazy_first.js 55 bytes {2} [built]
-       [9] (webpack)/test/statsCases/scope-hoisting-multi/second.js 177 bytes {4} [built]
-      [10] (webpack)/test/statsCases/scope-hoisting-multi/lazy_second.js 55 bytes {1} [built]
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+    Entrypoint first = vendor.js first.js
+    Entrypoint second = vendor.js second.js
+       [0] ./common_lazy_shared.js 25 bytes {0} {1} {2} [built]
+       [1] ./common2.js 25 bytes {4} {5} [built]
+       [2] ./common_lazy.js 25 bytes {1} {2} [built]
+       [3] ./common.js 37 bytes {4} {5} [built]
+       [4] ./lazy_shared.js 31 bytes {0} [built]
+       [5] ./vendor.js 25 bytes {3} [built]
+       [6] ./lazy_first.js 55 bytes {2} [built]
+       [7] ./lazy_second.js 55 bytes {1} [built]
+       [8] ./first.js 207 bytes {4} [built]
+       [9] ./module_first.js 31 bytes {4} [built]
+      [10] ./second.js 177 bytes {5} [built]
 Child
-    Hash: a66588099dc6439215ab
+    Hash: e3bbe6aa8fb8e8ec3bd9
     Time: Xms
-       [0] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy_shared.js 25 bytes {0} {1} {2} [built]
-       [1] (webpack)/test/statsCases/scope-hoisting-multi/vendor.js 25 bytes {5} [built]
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+    Entrypoint first = vendor.js first.js
+    Entrypoint second = vendor.js second.js
+       [0] ./common_lazy_shared.js 25 bytes {0} {1} {2} [built]
+       [1] ./common_lazy.js 25 bytes {1} {2} [built]
+       [2] ./common.js + 1 modules 62 bytes {4} {5} [built]
+           | ./common.js 37 bytes [built]
+           | ./common2.js 25 bytes [built]
+       [3] ./vendor.js 25 bytes {3} [built]
+       [4] ./lazy_shared.js 31 bytes {0} [built]
+           ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./first.js (referenced with import()), ./second.js (referenced with import())
+       [5] ./lazy_second.js 55 bytes {1} [built]
+           ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./second.js (referenced with import())
+       [6] ./second.js 177 bytes {5} [built]
            ModuleConcatenation bailout: Module is an entry point
-       [2] (webpack)/test/statsCases/scope-hoisting-multi/common.js + 1 modules 62 bytes {3} {4} [built]
-       [3] (webpack)/test/statsCases/scope-hoisting-multi/common_lazy.js 25 bytes {1} {2} [built]
-       [4] (webpack)/test/statsCases/scope-hoisting-multi/first.js + 1 modules 248 bytes {4} [built]
-           ModuleConcatenation bailout: Module is an entry point
-           ModuleConcatenation bailout: Cannot concat with (webpack)/test/statsCases/scope-hoisting-multi/common.js
-           ModuleConcatenation bailout: Cannot concat with (webpack)/test/statsCases/scope-hoisting-multi/vendor.js (<- Module is an entry point)
-       [5] (webpack)/test/statsCases/scope-hoisting-multi/lazy_shared.js 31 bytes {0} [built]
-           ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: (webpack)/test/statsCases/scope-hoisting-multi/first.js (referenced with import()), (webpack)/test/statsCases/scope-hoisting-multi/second.js (referenced with import())
-       [6] (webpack)/test/statsCases/scope-hoisting-multi/second.js 177 bytes {3} [built]
-           ModuleConcatenation bailout: Module is an entry point
-       [7] (webpack)/test/statsCases/scope-hoisting-multi/lazy_second.js 55 bytes {1} [built]
-           ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: (webpack)/test/statsCases/scope-hoisting-multi/second.js (referenced with import())
-       [8] (webpack)/test/statsCases/scope-hoisting-multi/lazy_first.js 55 bytes {2} [built]
-           ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: (webpack)/test/statsCases/scope-hoisting-multi/first.js (referenced with import())
+       [7] ./first.js + 1 modules 248 bytes {4} [built]
+           ModuleConcatenation bailout: Cannot concat with ./common.js
+           ModuleConcatenation bailout: Cannot concat with ./vendor.js
+           | ./first.js 207 bytes [built]
+           |    ModuleConcatenation bailout: Module is an entry point
+           | ./module_first.js 31 bytes [built]
+       [8] ./lazy_first.js 55 bytes {2} [built]
+           ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./first.js (referenced with import())
