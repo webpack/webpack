@@ -12,6 +12,10 @@ max_line_length = 233
 indent_style = space
 indent_size = 2
 
+[.prettierrc]
+indent_style = space
+indent_size = 2
+
 [*.yml]
 indent_style = space
 indent_size = 2

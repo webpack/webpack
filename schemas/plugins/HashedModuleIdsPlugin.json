@@ -1,5 +1,4 @@
 {
-  "id": "HashedModuleIdsPlugin",
   "type": "object",
   "additionalProperties": false,
   "properties": {

@@ -4,4 +4,4 @@ exports.readFile = function() {};
 // using module.exports would be equivalent,
 // webpack doesn't care which syntax is used
 
-// AMD modules are also possible and equvivalent to CommonJs modules
+// AMD modules are also possible and equivalent to CommonJs modules

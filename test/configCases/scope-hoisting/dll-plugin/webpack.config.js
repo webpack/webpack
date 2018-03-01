@@ -10,7 +10,7 @@ module.exports = {
 					buildMeta: {
 						exportsType: "namespace",
 						providedExports: ["default"]
-					},
+					}
 				}
 			}
 		}),

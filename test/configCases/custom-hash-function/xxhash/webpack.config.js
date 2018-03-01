@@ -1,5 +1,7 @@
-module.exports = [{
-	output: {
-		hashFunction: require("xxhashjs").h32
+module.exports = [
+	{
+		output: {
+			hashFunction: require("xxhashjs").h32
+		}
 	}
-}];
+];

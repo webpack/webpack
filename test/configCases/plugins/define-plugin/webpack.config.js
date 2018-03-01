@@ -22,11 +22,11 @@ module.exports = {
 				}
 			},
 			"process.env.DEFINED_NESTED_KEY": 5,
-			"process.env.DEFINED_NESTED_KEY_STRING": "\"string\"",
+			"process.env.DEFINED_NESTED_KEY_STRING": '"string"',
 			"typeof wurst": "typeof suppe",
 			"typeof suppe": "typeof wurst",
-			"wurst": "suppe",
-			"suppe": "wurst",
+			wurst: "suppe",
+			suppe: "wurst"
 		})
 	]
 };

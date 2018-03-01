@@ -9,7 +9,6 @@ const stats = {
 	modules: false
 };
 module.exports = [
-
 	{
 		name: "default",
 		mode: "production",
@@ -100,5 +99,4 @@ module.exports = [
 		},
 		stats
 	}
-
 ];

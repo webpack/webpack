@@ -10,7 +10,5 @@ module.exports = {
 			name: true
 		}
 	},
-	plugins: [
-		new webpack.NamedChunksPlugin()
-	]
+	plugins: [new webpack.NamedChunksPlugin()]
 };

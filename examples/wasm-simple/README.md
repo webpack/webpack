@@ -242,7 +242,7 @@ export function fibonacciJavascript(i) {
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
-/******/ 	// object with all compiled WebAssmbly.Modules
+/******/ 	// object with all compiled WebAssembly.Modules
 /******/ 	__webpack_require__.w = {};
 /******/
 /******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
