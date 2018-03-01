@@ -16,6 +16,32 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
+"@webassemblyjs/ast@1.0.0", "@webassemblyjs/ast@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.0.0.tgz#e6953dd785b6827ac5ce2fab479b1358f35f7df4"
+  dependencies:
+    "@webassemblyjs/wast-parser" "1.0.0"
+    webassembly-floating-point-hex-parser "0.1.2"
+    webassemblyjs "1.0.0"
+
+"@webassemblyjs/wasm-parser@1.0.0", "@webassemblyjs/wasm-parser@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-parser/-/wasm-parser-1.0.0.tgz#79e3e45f907a57c7a8bb74e746ee7bab7b77041a"
+  dependencies:
+    "@webassemblyjs/ast" "1.0.0"
+    "@webassemblyjs/wasm-parser" "1.0.0"
+    webassemblyjs "1.0.0"
+
+"@webassemblyjs/wast-parser@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-parser/-/wast-parser-1.0.0.tgz#d874e2dcb1726d31868518be7807f8f2ff358425"
+  dependencies:
+    "@babel/code-frame" "^7.0.0-beta.36"
+    "@webassemblyjs/ast" "1.0.0"
+    long "^3.2.0"
+    webassembly-floating-point-hex-parser "0.1.2"
+    webassemblyjs "1.0.0"
+
 abbrev@1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.1.1.tgz#f8f2c887ad10bf67f634f005b6987fed3179aac8"
@@ -4298,11 +4324,13 @@ webassembly-floating-point-hex-parser@0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/webassembly-floating-point-hex-parser/-/webassembly-floating-point-hex-parser-0.1.2.tgz#85bb01f54e68690c2645ea0cfad26c1110fdf988"
 
-webassembly-interpreter@^0.0.31:
-  version "0.0.31"
-  resolved "https://registry.yarnpkg.com/webassembly-interpreter/-/webassembly-interpreter-0.0.31.tgz#535ee84523dd664c5c96f032ebf1c23dbe7f5f89"
+webassemblyjs@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/webassemblyjs/-/webassemblyjs-1.0.0.tgz#8d26a6a205e4418b236611030e83bb375827c9ef"
   dependencies:
-    "@babel/code-frame" "^7.0.0-beta.36"
+    "@webassemblyjs/ast" "1.0.0"
+    "@webassemblyjs/wasm-parser" "1.0.0"
+    "@webassemblyjs/wast-parser" "1.0.0"
     long "^3.2.0"
     webassembly-floating-point-hex-parser "0.1.2"
 
