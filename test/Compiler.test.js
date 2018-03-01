@@ -12,18 +12,18 @@ const MemoryFs = require("memory-fs");
 describe("Compiler", () => {
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
-		if(!options.mode) options.mode = "production";
+		if (!options.mode) options.mode = "production";
 		options = new WebpackOptionsDefaulter().process(options);
 		options.entry = entry;
 		options.context = path.join(__dirname, "fixtures");
-		if(noOutputPath) options.output.path = "/";
+		if (noOutputPath) options.output.path = "/";
 		options.output.pathinfo = true;
 		options.optimization = {
 			minimize: false
 		};
 		const logs = {
 			mkdirp: [],
-			writeFile: [],
+			writeFile: []
 		};
 
 		const c = webpack(options);
@@ -42,9 +42,12 @@ describe("Compiler", () => {
 				callback();
 			}
 		};
-		c.hooks.compilation.tap("CompilerTest", (compilation) => compilation.bail = true);
+		c.hooks.compilation.tap(
+			"CompilerTest",
+			compilation => (compilation.bail = true)
+		);
 		c.run((err, stats) => {
-			if(err) throw err;
+			if (err) throw err;
 			should.strictEqual(typeof stats, "object");
 			const compilation = stats.compilation;
 			stats = stats.toJson({
@@ -54,7 +57,7 @@ describe("Compiler", () => {
 			should.strictEqual(typeof stats, "object");
 			stats.should.have.property("errors");
 			Array.isArray(stats.errors).should.be.ok();
-			if(stats.errors.length > 0) {
+			if (stats.errors.length > 0) {
 				stats.errors[0].should.be.instanceOf(Error);
 				throw stats.errors[0];
 			}
@@ -63,22 +66,23 @@ describe("Compiler", () => {
 		});
 	}
 
-	it("should compile a single file to deep output", (done) => {
-		compile("./c", {
-			output: {
-				path: "/what",
-				filename: "the/hell.js",
+	it("should compile a single file to deep output", done => {
+		compile(
+			"./c",
+			{
+				output: {
+					path: "/what",
+					filename: "the/hell.js"
+				}
+			},
+			(stats, files) => {
+				stats.logs.mkdirp.should.eql(["/what", "/what/the"]);
+				done();
 			}
-		}, (stats, files) => {
-			stats.logs.mkdirp.should.eql([
-				"/what",
-				"/what/the",
-			]);
-			done();
-		});
+		);
 	});
 
-	it("should compile a single file", (done) => {
+	it("should compile a single file", done => {
 		compile("./c", {}, (stats, files) => {
 			files.should.have.property("/main.js").have.type("string");
 			Object.keys(files).should.be.eql(["/main.js"]);
@@ -97,7 +101,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should compile a complex file", (done) => {
+	it("should compile a complex file", done => {
 		compile("./main1", {}, (stats, files) => {
 			files.should.have.property("/main.js").have.type("string");
 			Object.keys(files).should.be.eql(["/main.js"]);
@@ -119,7 +123,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should compile a file with transitive dependencies", (done) => {
+	it("should compile a file with transitive dependencies", done => {
 		compile("./abc", {}, (stats, files) => {
 			files.should.have.property("/main.js").have.type("string");
 			Object.keys(files).should.be.eql(["/main.js"]);
@@ -143,7 +147,7 @@ describe("Compiler", () => {
 		});
 	});
 
-	it("should compile a file with multiple chunks", (done) => {
+	it("should compile a file with multiple chunks", done => {
 		compile("./chunks", {}, (stats, files) => {
 			stats.chunks.length.should.be.eql(2);
 			files.should.have.property("/main.js").have.type("string");
@@ -165,7 +169,7 @@ describe("Compiler", () => {
 			bundle.should.not.containEql("fixtures");
 			chunk.should.not.containEql("fixtures");
 			bundle.should.containEql("webpackJsonp");
-			chunk.should.containEql("window[\"webpackJsonp\"] || []).push");
+			chunk.should.containEql('window["webpackJsonp"] || []).push');
 			done();
 		});
 	});
@@ -177,21 +181,21 @@ describe("Compiler", () => {
 				context: path.join(__dirname, "fixtures"),
 				output: {
 					path: "/",
-					pathinfo: true,
+					pathinfo: true
 				}
 			});
 		});
 		describe("purgeInputFileSystem", () => {
-			it("invokes purge() if inputFileSystem.purge", (done) => {
+			it("invokes purge() if inputFileSystem.purge", done => {
 				const mockPurge = sinon.spy();
 				compiler.inputFileSystem = {
-					purge: mockPurge,
+					purge: mockPurge
 				};
 				compiler.purgeInputFileSystem();
 				mockPurge.callCount.should.be.exactly(1);
 				done();
 			});
-			it("does NOT invoke purge() if !inputFileSystem.purge", (done) => {
+			it("does NOT invoke purge() if !inputFileSystem.purge", done => {
 				const mockPurge = sinon.spy();
 				compiler.inputFileSystem = null;
 				compiler.purgeInputFileSystem();
@@ -200,7 +204,7 @@ describe("Compiler", () => {
 			});
 		});
 		describe("isChild", () => {
-			it("returns booleanized this.parentCompilation", (done) => {
+			it("returns booleanized this.parentCompilation", done => {
 				compiler.parentCompilation = "stringyStringString";
 				const response1 = compiler.isChild();
 				response1.should.be.exactly(true);
@@ -254,8 +258,8 @@ describe("Compiler", () => {
 		});
 		compiler.outputFileSystem = new MemoryFs();
 		compiler.run((err, stats) => {
-			if(err) return done(err);
-			if(compiler.outputFileSystem.existsSync("/bundle.js"))
+			if (err) return done(err);
+			if (compiler.outputFileSystem.existsSync("/bundle.js"))
 				return done(new Error("Bundle should not be created on error"));
 			done();
 		});
@@ -273,8 +277,8 @@ describe("Compiler", () => {
 		compiler.outputFileSystem = new MemoryFs();
 		const watching = compiler.watch({}, (err, stats) => {
 			watching.close();
-			if(err) return done(err);
-			if(compiler.outputFileSystem.existsSync("/bundle.js"))
+			if (err) return done(err);
+			if (compiler.outputFileSystem.existsSync("/bundle.js"))
 				return done(new Error("Bundle should not be created on error"));
 			done();
 		});

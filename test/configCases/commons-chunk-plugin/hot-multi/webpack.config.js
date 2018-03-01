@@ -15,7 +15,5 @@ module.exports = {
 			name: "vendor"
 		}
 	},
-	plugins: [
-		new HotModuleReplacementPlugin()
-	]
+	plugins: [new HotModuleReplacementPlugin()]
 };

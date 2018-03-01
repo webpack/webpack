@@ -10,61 +10,58 @@ process.env.FFF = "fff";
 process.env.GGG = "ggg";
 process.env.III = "";
 
-module.exports = [{
-	name: "aaa",
-	module: {
-		unknownContextRegExp: /$^/,
-		unknownContextCritical: false
+module.exports = [
+	{
+		name: "aaa",
+		module: {
+			unknownContextRegExp: /$^/,
+			unknownContextCritical: false
+		},
+		plugins: [new EnvironmentPlugin("AAA")]
 	},
-	plugins: [
-		new EnvironmentPlugin("AAA")
-	]
-}, {
-	name: "bbbccc",
-	module: {
-		unknownContextRegExp: /$^/,
-		unknownContextCritical: false
+	{
+		name: "bbbccc",
+		module: {
+			unknownContextRegExp: /$^/,
+			unknownContextCritical: false
+		},
+		plugins: [new EnvironmentPlugin("BBB", "CCC")]
 	},
-	plugins: [
-		new EnvironmentPlugin("BBB", "CCC")
-	]
-}, {
-	name: "ddd",
-	module: {
-		unknownContextRegExp: /$^/,
-		unknownContextCritical: false
+	{
+		name: "ddd",
+		module: {
+			unknownContextRegExp: /$^/,
+			unknownContextCritical: false
+		},
+		plugins: [new EnvironmentPlugin("DDD")]
 	},
-	plugins: [
-		new EnvironmentPlugin("DDD")
-	]
-}, {
-	name: "eeefff",
-	module: {
-		unknownContextRegExp: /$^/,
-		unknownContextCritical: false
+	{
+		name: "eeefff",
+		module: {
+			unknownContextRegExp: /$^/,
+			unknownContextCritical: false
+		},
+		plugins: [new EnvironmentPlugin(["EEE", "FFF"])]
 	},
-	plugins: [
-		new EnvironmentPlugin(["EEE", "FFF"])
-	]
-}, {
-	name: "ggghhh",
-	module: {
-		unknownContextRegExp: /$^/,
-		unknownContextCritical: false
+	{
+		name: "ggghhh",
+		module: {
+			unknownContextRegExp: /$^/,
+			unknownContextCritical: false
+		},
+		plugins: [
+			new EnvironmentPlugin({
+				GGG: "ggg-default",
+				HHH: "hhh"
+			})
+		]
 	},
-	plugins: [
-		new EnvironmentPlugin({
-			GGG: "ggg-default",
-			HHH: "hhh"
-		})
-	]
-}, {
-	name: "iii",
-	module: {
-		unknownContextRegExp: /$^/,
-		unknownContextCritical: false
-	},
-	plugins: [
-		new EnvironmentPlugin("III")
-	]
-}];
+	{
+		name: "iii",
+		module: {
+			unknownContextRegExp: /$^/,
+			unknownContextCritical: false
+		},
+		plugins: [new EnvironmentPlugin("III")]
+	}
+];

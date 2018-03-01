@@ -6,7 +6,13 @@ const WebEnvironmentPlugin = require("../lib/web/WebEnvironmentPlugin");
 describe("WebEnvironmentPlugin", () => {
 	let WebEnvironmentPluginInstance;
 
-	before(() => WebEnvironmentPluginInstance = new WebEnvironmentPlugin("inputFileSystem", "outputFileSystem"));
+	before(
+		() =>
+			(WebEnvironmentPluginInstance = new WebEnvironmentPlugin(
+				"inputFileSystem",
+				"outputFileSystem"
+			))
+	);
 
 	describe("apply", () => {
 		let compileSpy;
@@ -17,7 +23,9 @@ describe("WebEnvironmentPlugin", () => {
 			WebEnvironmentPluginInstance.apply(compileSpy);
 		});
 
-		it("should set compiler.outputFileSystem information with the same as setted in WebEnvironmentPlugin", () =>
-			should(compileSpy.outputFileSystem).be.eql(WebEnvironmentPluginInstance.outputFileSystem));
+		it("should set compiler.outputFileSystem information with the same as set in WebEnvironmentPlugin", () =>
+			should(compileSpy.outputFileSystem).be.eql(
+				WebEnvironmentPluginInstance.outputFileSystem
+			));
 	});
 });

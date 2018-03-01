@@ -18,7 +18,7 @@ webpack therefore uses a approach called **"Partial Scope Hoisting"** or "Module
 
 ![](graph3.png)
 
-While module concatentation identifiers in modules are renamed to avoid conflicts and internal imports are simplified. External imports and exports from the root module use the existing ESM constructs.
+While module concatenation identifiers in modules are renamed to avoid conflicts and internal imports are simplified. External imports and exports from the root module use the existing ESM constructs.
 
 # example.js
 

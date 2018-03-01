@@ -4,15 +4,15 @@ In this example you have two (HTML) pages `pageA` and `pageB`. You want to creat
 
 You can see how to define multiple entry points via the `entry` option.
 
-You can use 
+You can use
 
 You can see the output files:
 
 * `commons.js` contains:
-  * the module system
-  * chunk loading logic
   * module `common.js` which is used in both pages
 * `pageA.js` contains: (`pageB.js` is similar)
+  * the module system
+  * chunk loading logic
   * the entry point `pageA.js`
   * it would contain any other module that is only used by `pageA`
 * `0.chunk.js` is an additional chunk which is used by both pages. It contains:
@@ -572,7 +572,7 @@ module.exports = function(msg) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.0.0-beta.1
      Asset       Size  Chunks             Chunk Names
       0.js  363 bytes       0  [emitted]  
 commons.js  267 bytes       1  [emitted]  commons
@@ -588,8 +588,8 @@ chunk    {0} 0.js 91 bytes <{1}> <{2}> <{3}> [rendered]
         cjs require ./shared [2] ./pageB.js 3:14-33
         amd require ./shared [3] ./pageA.js 2:0-4:2
 chunk    {1} commons.js (commons) 26 bytes ={2}= ={3}= >{0}< [initial] [rendered] split chunk (cache group: commons) (name: commons)
-    > ./pageA pageA
     > ./pageB pageB
+    > ./pageA pageA
     [1] ./common.js 26 bytes {1} [built]
         cjs require ./common [0] ./shared.js 1:13-32
         cjs require ./common [2] ./pageB.js 1:13-32
@@ -608,7 +608,7 @@ chunk    {3} pageA.js (pageA) 108 bytes ={1}= >{0}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.0.0-beta.1
      Asset       Size  Chunks             Chunk Names
       0.js  120 bytes       0  [emitted]  
 commons.js   95 bytes       1  [emitted]  commons
@@ -624,8 +624,8 @@ chunk    {0} 0.js 91 bytes <{1}> <{2}> <{3}> [rendered]
         cjs require ./shared [2] ./pageB.js 3:14-33
         amd require ./shared [3] ./pageA.js 2:0-4:2
 chunk    {1} commons.js (commons) 26 bytes ={2}= ={3}= >{0}< [initial] [rendered] split chunk (cache group: commons) (name: commons)
-    > ./pageA pageA
     > ./pageB pageB
+    > ./pageA pageA
     [1] ./common.js 26 bytes {1} [built]
         cjs require ./common [0] ./shared.js 1:13-32
         cjs require ./common [2] ./pageB.js 1:13-32

@@ -12,7 +12,7 @@ module.exports = {
 				sourceMap: true,
 				uglifyOptions: {
 					compress: {
-						warnings: true,
+						warnings: true
 					},
 					mangle: false,
 					output: {

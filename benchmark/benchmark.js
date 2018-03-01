@@ -15,7 +15,7 @@ const benchmarkOptions = {
 
 function runTimes(compiler, times, deferred) {
 	fs.writeFileSync(path.join(fixtures, "0.js"), "module.exports = " + Math.random(), "utf-8");
-	compiler.run((err, stats) => {
+	compiler.run(err => {
 		if(err) throw err;
 		if(times === 1)
 			deferred.resolve();
@@ -30,12 +30,12 @@ const tests = {
 		(size, deferred) => {
 			webpack({
 				context: fixtures,
-				entry: "./" + size + ".js",
+				entry: `./${size}.js`,
 				output: {
 					path: outputPath,
 					filename: "bundle.js"
 				}
-			}, (err, stats) => {
+			}, err => {
 				if(err) throw err;
 				deferred.resolve();
 			});
@@ -46,16 +46,16 @@ const tests = {
 		(size, deferred) => {
 			webpack({
 				context: fixtures,
-				entry: "./" + size + ".big.js",
+				entry: `./${size}.big.js`,
 				output: {
 					path: outputPath,
 					filename: "bundle.js"
 				},
 				devtool: "eval"
-			}, (err, stats) => {
+			}, err => {
 				if(err) throw err;
 				deferred.resolve();
-			})
+			});
 		}
 	],
 	"sourcemap build": [
@@ -63,16 +63,16 @@ const tests = {
 		(size, deferred) => {
 			webpack({
 				context: fixtures,
-				entry: "./" + size + ".big.js",
+				entry: `./${size}.big.js`,
 				output: {
 					path: outputPath,
 					filename: "bundle.js"
 				},
 				devtool: "source-map"
-			}, (err, stats) => {
+			}, err => {
 				if(err) throw err;
 				deferred.resolve();
-			})
+			});
 		}
 	],
 	"cheap sourcemap build": [
@@ -80,16 +80,32 @@ const tests = {
 		(size, deferred) => {
 			webpack({
 				context: fixtures,
-				entry: "./" + size + ".big.js",
+				entry: `./${size}.big.js`,
 				output: {
 					path: outputPath,
 					filename: "bundle.js"
 				},
 				devtool: "cheap-source-map"
-			}, function(err, stats) {
+			}, err => {
 				if(err) throw err;
 				deferred.resolve();
-			})
+			});
+		}
+	],
+	"build w/ chunks": [
+		[0, 1, 5, 10, 50, 100, 200],
+		(size, deferred) => {
+			webpack({
+				context: fixtures,
+				entry: `./${size}.async.js`,
+				output: {
+					path: outputPath,
+					filename: "bundle.js"
+				}
+			}, err => {
+				if(err) throw err;
+				deferred.resolve();
+			});
 		}
 	],
 	"build w/ chunks": [
@@ -102,26 +118,10 @@ const tests = {
 					path: outputPath,
 					filename: "bundle.js"
 				}
-			}, function(err, stats) {
+			}, err => {
 				if(err) throw err;
 				deferred.resolve();
-			})
-		}
-	],
-	"build w/ chunks": [
-		[0, 1, 5, 10, 50, 100, 200],
-		(size, deferred) => {
-			webpack({
-				context: fixtures,
-				entry: "./" + size + ".async.js",
-				output: {
-					path: outputPath,
-					filename: "bundle.js"
-				}
-			}, function(err, stats) {
-				if(err) throw err;
-				deferred.resolve();
-			})
+			});
 		}
 	],
 	"incremental": [
@@ -161,7 +161,7 @@ const tests = {
 			var compiler = webpack({
 				cache: true,
 				context: fixtures,
-				entry: "./" + size + ".js",
+				entry: `./${size}.js`,
 				output: {
 					path: outputPath,
 					filename: "bundle.js"
@@ -176,7 +176,7 @@ const tests = {
 			var compiler = webpack({
 				cache: true,
 				context: fixtures,
-				entry: "./" + size + ".js",
+				entry: `./${size}.js`,
 				output: {
 					path: outputPath,
 					filename: "bundle.js"
@@ -191,7 +191,7 @@ const tests = {
 			var compiler = webpack({
 				cache: true,
 				context: fixtures,
-				entry: "./" + size + ".js",
+				entry: `./${size}.js`,
 				output: {
 					path: outputPath,
 					filename: "bundle.js"
@@ -204,17 +204,17 @@ const tests = {
 
 const suite = new Benchmark.Suite;
 
-Object.keys(tests).filter((name) => (process.argv.length > 2) ? name.indexOf(process.argv[2]) >= 0 : true)
-	.forEach((name) => {
+Object.keys(tests).filter(name => process.argv.length > 2 ? name.includes(process.argv[2]) : true)
+	.forEach(name => {
 		const test = tests[name];
-		test[0].forEach((size) => {
-			suite.add(name + " " + size, (deferred) => {
+		test[0].forEach(size => {
+			suite.add(`${name} ${size}`, deferred => {
 				test[1](size, deferred);
 			}, benchmarkOptions);
 		});
 	});
 
-suite.on("cycle", (event) => {
+suite.on("cycle", event => {
 	process.stderr.write("\n");
 	const b = event.target;
 	console.log(b.name + "\t" + Math.floor(1000 * (b.stats.mean - b.stats.moe)) + "\t" + Math.floor(1000 * (b.stats.mean + b.stats.moe)));
