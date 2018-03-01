@@ -22,16 +22,19 @@ const createMultiCompiler = () => {
 };
 
 describe("MultiCompiler", function() {
-	it("should trigger 'run' for each child compiler", done => {
+	it("should trigger 'run' and 'compile' for each child compiler", done => {
 		const compiler = createMultiCompiler();
-		let called = 0;
+		let runCalled = 0;
+		let compileCalled = 0;
 
-		compiler.hooks.run.tap("MultiCompiler test", () => called++);
+		compiler.hooks.run.tap("MultiCompiler test", () => runCalled++);
+		compiler.hooks.compile.tap("MultiCompiler test", () => compileCalled++);
 		compiler.run(err => {
 			if (err) {
 				throw err;
 			} else {
-				should(called).be.equal(2);
+				should(runCalled).be.equal(2);
+				should(compileCalled).be.equal(2);
 				done();
 			}
 		});
