@@ -1377,6 +1377,11 @@
                     }
                   ]
                 },
+                "filename": {
+                  "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
+                  "type": "string",
+                  "minLength": 1
+                },
                 "cacheGroups": {
                   "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)",
                   "type": "object",
@@ -1468,6 +1473,11 @@
                                 "type": "string"
                               }
                             ]
+                          },
+                          "filename": {
+                            "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
+                            "type": "string",
+                            "minLength": 1
                           }
                         }
                       }
