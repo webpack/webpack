@@ -9,5 +9,8 @@ module.exports = {
 	output: {
 		filename: "[name].js"
 	},
+	optimization: {
+		splitChunks: false
+	},
 	plugins: [new SplitChunksPlugin()]
 };
