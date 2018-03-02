@@ -1,6 +1,7 @@
 /* globals describe, it, beforeEach, afterEach */
 "use strict";
 require("should");
+const path = require("path");
 const sinon = require("sinon");
 const NormalModule = require("../lib/NormalModule");
 const NullDependency = require("../lib/dependencies/NullDependency");
@@ -65,13 +66,16 @@ describe("NormalModule", function() {
 
 	describe("#libIdent", function() {
 		it("contextifies the userRequest of the module", function() {
-			normalModule.libIdent({
-				context: "some/context"
-			}).should.eql("../userRequest");
+			normalModule
+				.libIdent({
+					context: "some/context"
+				})
+				.should.eql("../userRequest");
 		});
 		describe("given a userRequest containing loaders", function() {
 			beforeEach(function() {
-				userRequest = "some/userRequest!some/other/userRequest!some/thing/is/off/here";
+				userRequest =
+					"some/userRequest!some/other/userRequest!some/thing/is/off/here";
 				normalModule = new NormalModule({
 					type: "javascript/auto",
 					request,
@@ -83,14 +87,19 @@ describe("NormalModule", function() {
 				});
 			});
 			it("contextifies every path in the userRequest", function() {
-				normalModule.libIdent({
-					context: "some/context"
-				}).should.eql("../userRequest!../other/userRequest!../thing/is/off/here");
+				normalModule
+					.libIdent({
+						context: "some/context"
+					})
+					.should.eql(
+						"../userRequest!../other/userRequest!../thing/is/off/here"
+					);
 			});
 		});
 		describe("given a userRequest containing query parameters", function() {
 			it("ignores paths in query parameters", function() {
-				userRequest = "some/context/loader?query=foo\\bar&otherPath=testpath/other";
+				userRequest =
+					"some/context/loader?query=foo\\bar&otherPath=testpath/other";
 				normalModule = new NormalModule({
 					type: "javascript/auto",
 					request,
@@ -100,9 +109,11 @@ describe("NormalModule", function() {
 					resource,
 					parser
 				});
-				normalModule.libIdent({
-					context: "some/context",
-				}).should.eql("./loader?query=foo\\bar&otherPath=testpath/other");
+				normalModule
+					.libIdent({
+						context: "some/context"
+					})
+					.should.eql("./loader?query=foo\\bar&otherPath=testpath/other");
 			});
 		});
 	});
@@ -142,12 +153,16 @@ describe("NormalModule", function() {
 		});
 		describe("given no sourcemap", function() {
 			it("returns a RawSource", function() {
-				normalModule.createSourceForAsset(name, content).should.be.instanceOf(RawSource);
+				normalModule
+					.createSourceForAsset(name, content)
+					.should.be.instanceOf(RawSource);
 			});
 		});
 		describe("given a string as the sourcemap", function() {
 			it("returns a OriginalSource", function() {
-				normalModule.createSourceForAsset(name, content, sourceMap).should.be.instanceOf(OriginalSource);
+				normalModule
+					.createSourceForAsset(name, content, sourceMap)
+					.should.be.instanceOf(OriginalSource);
 			});
 		});
 		describe("given a some other kind of sourcemap", function() {
@@ -155,7 +170,9 @@ describe("NormalModule", function() {
 				sourceMap = () => {};
 			});
 			it("returns a SourceMapSource", function() {
-				normalModule.createSourceForAsset(name, content, sourceMap).should.be.instanceOf(SourceMapSource);
+				normalModule
+					.createSourceForAsset(name, content, sourceMap)
+					.should.be.instanceOf(SourceMapSource);
 			});
 		});
 	});
@@ -183,7 +200,7 @@ describe("NormalModule", function() {
 			beforeEach(function() {
 				normalModule._source = null;
 			});
-			it("calls hash function with \"null\"", function() {
+			it('calls hash function with "null"', function() {
 				normalModule.updateHashWithSource(hash);
 				hashSpy.callCount.should.eql(1);
 				hashSpy.args[0][0].should.eql("null");
@@ -194,7 +211,7 @@ describe("NormalModule", function() {
 			beforeEach(function() {
 				normalModule._source = new RawSource(expectedSource);
 			});
-			it("calls hash function with \"source\" and then the actual source of the module", function() {
+			it('calls hash function with "source" and then the actual source of the module', function() {
 				normalModule.updateHashWithSource(hash);
 				hashSpy.callCount.should.eql(2);
 				hashSpy.args[0][0].should.eql("source");
@@ -219,9 +236,7 @@ describe("NormalModule", function() {
 		let fileA;
 		let fileB;
 
-		function setDeps(
-			fileDependencies,
-			contextDependencies) {
+		function setDeps(fileDependencies, contextDependencies) {
 			normalModule.buildInfo.fileDependencies = fileDependencies;
 			normalModule.buildInfo.contextDependencies = contextDependencies;
 		}
@@ -231,20 +246,16 @@ describe("NormalModule", function() {
 			fileB = "fileB";
 			fileDependencies = [fileA, fileB];
 			contextDependencies = [fileA, fileB];
-			fileTimestamps = new Map([
-				[fileA, 1],
-				[fileB, 1]
-			]);
-			contextTimestamps = new Map([
-				[fileA, 1],
-				[fileB, 1],
-			]);
+			fileTimestamps = new Map([[fileA, 1], [fileB, 1]]);
+			contextTimestamps = new Map([[fileA, 1], [fileB, 1]]);
 			normalModule.buildTimestamp = 2;
 			setDeps(fileDependencies, contextDependencies);
 		});
 		describe("given all timestamps are older than the buildTimestamp", function() {
 			it("returns false", function() {
-				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(false);
+				normalModule
+					.needRebuild(fileTimestamps, contextTimestamps)
+					.should.eql(false);
 			});
 		});
 		describe("given a file timestamp is newer than the buildTimestamp", function() {
@@ -252,7 +263,9 @@ describe("NormalModule", function() {
 				fileTimestamps.set(fileA, 3);
 			});
 			it("returns true", function() {
-				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(true);
+				normalModule
+					.needRebuild(fileTimestamps, contextTimestamps)
+					.should.eql(true);
 			});
 		});
 		describe("given a no file timestamp exists", function() {
@@ -260,7 +273,9 @@ describe("NormalModule", function() {
 				fileTimestamps = new Map();
 			});
 			it("returns true", function() {
-				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(true);
+				normalModule
+					.needRebuild(fileTimestamps, contextTimestamps)
+					.should.eql(true);
 			});
 		});
 		describe("given a context timestamp is newer than the buildTimestamp", function() {
@@ -268,7 +283,9 @@ describe("NormalModule", function() {
 				contextTimestamps.set(fileA, 3);
 			});
 			it("returns true", function() {
-				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(true);
+				normalModule
+					.needRebuild(fileTimestamps, contextTimestamps)
+					.should.eql(true);
 			});
 		});
 		describe("given a no context timestamp exists", function() {
@@ -276,7 +293,9 @@ describe("NormalModule", function() {
 				contextTimestamps = new Map();
 			});
 			it("returns true", function() {
-				normalModule.needRebuild(fileTimestamps, contextTimestamps).should.eql(true);
+				normalModule
+					.needRebuild(fileTimestamps, contextTimestamps)
+					.should.eql(true);
 			});
 		});
 	});
@@ -348,13 +367,17 @@ describe("NormalModule", function() {
 			});
 			describe("that is a string", function() {
 				it("calls and returns whatever applyNoParseRule returns", function() {
-					normalModule.shouldPreventParsing("some rule").should.eql(returnValOfSpy);
+					normalModule
+						.shouldPreventParsing("some rule")
+						.should.eql(returnValOfSpy);
 					applyNoParseRuleSpy.callCount.should.eql(1);
 				});
 			});
 			describe("that is a regex", function() {
 				it("calls and returns whatever applyNoParseRule returns", function() {
-					normalModule.shouldPreventParsing("some rule").should.eql(returnValOfSpy);
+					normalModule
+						.shouldPreventParsing("some rule")
+						.should.eql(returnValOfSpy);
 					applyNoParseRuleSpy.callCount.should.eql(1);
 				});
 			});
@@ -362,11 +385,7 @@ describe("NormalModule", function() {
 				describe("of strings and or regexs", function() {
 					let someRules;
 					beforeEach(function() {
-						someRules = [
-							"some rule",
-							/some rule1/,
-							"some rule2",
-						];
+						someRules = ["some rule", /some rule1/, "some rule2"];
 					});
 					describe("and none of them match", function() {
 						beforeEach(function() {
@@ -374,7 +393,9 @@ describe("NormalModule", function() {
 							applyNoParseRuleSpy.returns(returnValOfSpy);
 						});
 						it("returns false", function() {
-							normalModule.shouldPreventParsing(someRules).should.eql(returnValOfSpy);
+							normalModule
+								.shouldPreventParsing(someRules)
+								.should.eql(returnValOfSpy);
 							applyNoParseRuleSpy.callCount.should.eql(3);
 						});
 					});
@@ -384,7 +405,9 @@ describe("NormalModule", function() {
 							applyNoParseRuleSpy.returns(returnValOfSpy);
 						});
 						it("returns true", function() {
-							normalModule.shouldPreventParsing(someRules).should.eql(returnValOfSpy);
+							normalModule
+								.shouldPreventParsing(someRules)
+								.should.eql(returnValOfSpy);
 							applyNoParseRuleSpy.callCount.should.eql(1);
 						});
 					});
@@ -396,12 +419,92 @@ describe("NormalModule", function() {
 							applyNoParseRuleSpy.onCall(2).returns(true);
 						});
 						it("returns true", function() {
-							normalModule.shouldPreventParsing(someRules).should.eql(returnValOfSpy);
+							normalModule
+								.shouldPreventParsing(someRules)
+								.should.eql(returnValOfSpy);
 							applyNoParseRuleSpy.callCount.should.eql(3);
 						});
 					});
 				});
 			});
+		});
+	});
+
+	describe("#purifyCurrentLoaderName", function() {
+		beforeEach(function() {
+			loaders = [
+				{
+					origin: "configured-loader",
+					loader: "/some/loaders/configured-loader/index.js"
+				},
+				{
+					origin: path.resolve(__dirname, "some/loaders/a-loader"),
+					loader: path.resolve(__dirname, "some/loaders/a-loader")
+				},
+				{
+					loader: path.resolve(__dirname, "some/loaders/another-loader.js")
+				},
+				{
+					origin: "./some/loaders/another-loader-with-relative-path.js",
+					loader: path.resolve(
+						__dirname,
+						"some/loaders/another-loader-with-relative-path.js"
+					)
+				}
+			];
+			normalModule = new NormalModule({
+				type: "javascript/auto",
+				request,
+				userRequest,
+				rawRequest,
+				loaders,
+				resource,
+				parser
+			});
+		});
+		it("should get origin configured loader name", function() {
+			normalModule
+				.purifyCurrentLoaderName({
+					loaderIndex: 0
+				})
+				.should.eql("configured-loader");
+		});
+		it("should be relating when it's an absolute path", function() {
+			normalModule
+				.purifyCurrentLoaderName({
+					loaderIndex: 1,
+					rootContext: path.resolve(__dirname, "some/loaders")
+				})
+				.should.eql("a-loader");
+			normalModule
+				.purifyCurrentLoaderName({
+					loaderIndex: 2,
+					rootContext: path.resolve(__dirname, "some/loaders")
+				})
+				.should.eql("another-loader.js");
+		});
+		it("should be using directly when it's a relative path", function() {
+			normalModule
+				.purifyCurrentLoaderName({
+					loaderIndex: 3
+				})
+				.should.eql("./some/loaders/another-loader-with-relative-path.js");
+		});
+		it("should return null if it had no loaders", function() {
+			normalModule = new NormalModule({
+				type: "javascript/auto",
+				request,
+				userRequest,
+				rawRequest,
+				loaders: [],
+				resource,
+				parser
+			});
+			(
+				normalModule.purifyCurrentLoaderName({
+					loaderIndex: 0
+				}) === null
+			).should.eql(true);
 		});
 	});
 });

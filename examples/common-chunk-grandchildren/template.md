@@ -1,4 +1,4 @@
-This example illustrates how common modules from deep ancestors of an entry point can be split into a seperate common chunk
+This example illustrates how common modules from deep ancestors of an entry point can be split into a separate common chunk
 
 * `pageA` and `pageB` are dynamically required
 * `pageC` and `pageA` both require the `reusableComponent`

@@ -1,4 +1,4 @@
-This example illustrates how common modules from deep ancestors of an entry point can be split into a seperate common chunk
+This example illustrates how common modules from deep ancestors of an entry point can be split into a separate common chunk
 
 * `pageA` and `pageB` are dynamically required
 * `pageC` and `pageA` both require the `reusableComponent`
@@ -93,7 +93,7 @@ module.exports = {
 	},
 	optimization: {
 		splitChunks: {
-			minSize: 0 // This example is too small, in pratice you can use the defaults
+			minSize: 0 // This example is too small, in practice you can use the defaults
 		},
 		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
 	},
@@ -430,7 +430,7 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.1
+Version: webpack 4.0.0-beta.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  340 bytes       0  [emitted]  
 1.output.js  549 bytes       1  [emitted]  
@@ -438,9 +438,9 @@ Version: webpack 4.0.0-beta.1
 3.output.js  414 bytes       3  [emitted]  
   output.js   7.53 KiB       4  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 72 bytes <{1}> <{4}> ={3}= ={2}= [rendered] split chunk (cache group: default)
-    > [2] ./pageB.js 3:1-6:3
+chunk    {0} 0.output.js 72 bytes <{1}> <{4}> ={2}= ={3}= [rendered] split chunk (cache group: default)
     > [0] ./example.js 3:1-6:3
+    > [2] ./pageB.js 3:1-6:3
     [4] ./reusableComponent.js 72 bytes {0} [built]
         cjs require ./reusableComponent [3] ./pageA.js 1:24-54
         cjs require ./reusableComponent [5] ./pageC.js 1:24-54
@@ -456,7 +456,7 @@ chunk    {3} 3.output.js 142 bytes <{1}> ={0}= [rendered]
     > [2] ./pageB.js 3:1-6:3
     [5] ./pageC.js 142 bytes {3} [built]
         cjs require ./pageC [2] ./pageB.js 4:15-33
-chunk    {4} output.js (main) 261 bytes >{0}< >{2}< >{1}< [entry] [rendered]
+chunk    {4} output.js (main) 261 bytes >{0}< >{1}< >{2}< [entry] [rendered]
     > main
     [0] ./example.js 233 bytes {4} [built]
         single entry ./example.js [1] multi ./example.js main:100000
@@ -468,7 +468,7 @@ chunk    {4} output.js (main) 261 bytes >{0}< >{2}< >{1}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.1
+Version: webpack 4.0.0-beta.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  133 bytes       0  [emitted]  
 1.output.js  198 bytes       1  [emitted]  
@@ -476,9 +476,9 @@ Version: webpack 4.0.0-beta.1
 3.output.js  138 bytes       3  [emitted]  
   output.js   1.76 KiB       4  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 72 bytes <{1}> <{4}> ={3}= ={2}= [rendered] split chunk (cache group: default)
-    > [2] ./pageB.js 3:1-6:3
+chunk    {0} 0.output.js 72 bytes <{1}> <{4}> ={2}= ={3}= [rendered] split chunk (cache group: default)
     > [0] ./example.js 3:1-6:3
+    > [2] ./pageB.js 3:1-6:3
     [4] ./reusableComponent.js 72 bytes {0} [built]
         cjs require ./reusableComponent [3] ./pageA.js 1:24-54
         cjs require ./reusableComponent [5] ./pageC.js 1:24-54
@@ -494,7 +494,7 @@ chunk    {3} 3.output.js 142 bytes <{1}> ={0}= [rendered]
     > [2] ./pageB.js 3:1-6:3
     [5] ./pageC.js 142 bytes {3} [built]
         cjs require ./pageC [2] ./pageB.js 4:15-33
-chunk    {4} output.js (main) 261 bytes >{0}< >{2}< >{1}< [entry] [rendered]
+chunk    {4} output.js (main) 261 bytes >{0}< >{1}< >{2}< [entry] [rendered]
     > main
     [0] ./example.js 233 bytes {4} [built]
         single entry ./example.js [1] multi ./example.js main:100000

@@ -4,11 +4,13 @@ require("should");
 const CaseSensitiveModulesWarning = require("../lib/CaseSensitiveModulesWarning");
 
 const createModule = function(identifier, numberOfReasons) {
-	const reasons = new Array(numberOfReasons || 0).fill(null).map((value, index) => {
-		return {
-			module: createModule(`${identifier}-reason-${index}`)
-		};
-	});
+	const reasons = new Array(numberOfReasons || 0)
+		.fill(null)
+		.map((value, index) => {
+			return {
+				module: createModule(`${identifier}-reason-${index}`)
+			};
+		});
 
 	return {
 		identifier: () => identifier,
@@ -29,10 +31,14 @@ describe("CaseSensitiveModulesWarning", () => {
 		myCaseSensitiveModulesWarning = new CaseSensitiveModulesWarning(modules);
 	});
 
-	it("has the a name", () => myCaseSensitiveModulesWarning.name.should.be.exactly("CaseSensitiveModulesWarning"));
+	it("has the a name", () =>
+		myCaseSensitiveModulesWarning.name.should.be.exactly(
+			"CaseSensitiveModulesWarning"
+		));
 
 	it("has the a message", () => {
-		myCaseSensitiveModulesWarning.message.should.be.exactly(`
+		myCaseSensitiveModulesWarning.message.should.be.exactly(
+			`
 There are multiple modules with names that only differ in casing.
 This can lead to unexpected behavior when compiling on a filesystem with other case-semantic.
 Use equal casing. Compare these module identifiers:
@@ -43,7 +49,8 @@ Use equal casing. Compare these module identifiers:
 * foobar
     Used by 2 module(s), i. e.
     foobar-reason-0
-`.trim());
+`.trim()
+		);
 	});
 
 	it("has the an origin", () =>

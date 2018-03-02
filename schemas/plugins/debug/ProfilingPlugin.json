@@ -1,5 +1,4 @@
 {
-  "id": "ProfilingPlugin",
   "type": "object",
   "additionalProperties": false,
   "properties": {

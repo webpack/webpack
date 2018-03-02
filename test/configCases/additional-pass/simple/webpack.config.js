@@ -3,14 +3,11 @@ var testPlugin = function() {
 	this.hooks.compilation.tap("TestPlugin", compilation => {
 		var nr = counter++;
 		compilation.hooks.needAdditionalPass.tap("TestPlugin", function() {
-			if(nr < 5)
-				return true;
+			if (nr < 5) return true;
 		});
 	});
 };
 
 module.exports = {
-	plugins: [
-		testPlugin
-	]
+	plugins: [testPlugin]
 };

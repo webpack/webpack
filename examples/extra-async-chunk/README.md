@@ -16,7 +16,7 @@ The example entry references two chunks:
 
 These chunks share modules `a` and `b`. The optimization extract these into chunk Z:
 
-Note: Actually the optimization compare size of chunk Z to some minimum value, but this is disabled from this example. In pratice there is no configuration needed for this.
+Note: Actually the optimization compare size of chunk Z to some minimum value, but this is disabled from this example. In practice there is no configuration needed for this.
 
 * entry chunk
   * async require -> chunk X & Z
@@ -324,16 +324,16 @@ module.exports = "c";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.1
+Version: webpack 4.0.0-beta.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  405 bytes       0  [emitted]  
 1.output.js  241 bytes       1  [emitted]  
 2.output.js  241 bytes       2  [emitted]  
-  output.js   7.31 KiB       3  [emitted]  main
+  output.js   7.32 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes <{3}> ={1}= ={2}= [rendered] split chunk (cache group: default)
-    > [2] ./example.js 5:0-8:2
     > ./a ./b ./c [2] ./example.js 2:0-30
+    > [2] ./example.js 5:0-8:2
     [0] ./b.js 21 bytes {0} [built]
         amd require ./b [2] ./example.js 2:0-30
         cjs require ./b [2] ./example.js 6:1-15
@@ -348,9 +348,9 @@ chunk    {2} 2.output.js 21 bytes <{3}> ={0}= [rendered]
     > ./a ./b ./c [2] ./example.js 2:0-30
     [4] ./c.js 21 bytes {2} [built]
         amd require ./c [2] ./example.js 2:0-30
-chunk    {3} output.js (main) 164 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+chunk    {3} output.js (main) 172 bytes >{0}< >{1}< >{2}< [entry] [rendered]
     > .\example.js main
-    [2] ./example.js 164 bytes {3} [built]
+    [2] ./example.js 172 bytes {3} [built]
         single entry .\example.js  main
 ```
 
@@ -358,7 +358,7 @@ chunk    {3} output.js (main) 164 bytes >{0}< >{1}< >{2}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.1
+Version: webpack 4.0.0-beta.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  118 bytes       0  [emitted]  
 1.output.js   91 bytes       1  [emitted]  
@@ -366,8 +366,8 @@ Version: webpack 4.0.0-beta.1
   output.js   1.73 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes <{3}> ={1}= ={2}= [rendered] split chunk (cache group: default)
-    > [2] ./example.js 5:0-8:2
     > ./a ./b ./c [2] ./example.js 2:0-30
+    > [2] ./example.js 5:0-8:2
     [0] ./b.js 21 bytes {0} [built]
         amd require ./b [2] ./example.js 2:0-30
         cjs require ./b [2] ./example.js 6:1-15
@@ -382,8 +382,8 @@ chunk    {2} 2.output.js 21 bytes <{3}> ={0}= [rendered]
     > ./a ./b ./c [2] ./example.js 2:0-30
     [4] ./c.js 21 bytes {2} [built]
         amd require ./c [2] ./example.js 2:0-30
-chunk    {3} output.js (main) 164 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+chunk    {3} output.js (main) 172 bytes >{0}< >{1}< >{2}< [entry] [rendered]
     > .\example.js main
-    [2] ./example.js 164 bytes {3} [built]
+    [2] ./example.js 172 bytes {3} [built]
         single entry .\example.js  main
 ```

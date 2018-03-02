@@ -680,7 +680,7 @@
           ]
         },
         "moduleExtensions": {
-          "description": "Extenstions added to the module request when trying to find the module",
+          "description": "Extensions added to the module request when trying to find the module",
           "anyOf": [
             {
               "$ref": "#/definitions/common.arrayOfStringValues"
@@ -718,7 +718,7 @@
           "type": "boolean"
         },
         "concord": {
-          "description": "Enable condord resolving extras",
+          "description": "Enable concord resolving extras",
           "type": "boolean"
         },
         "unsafeCache": {
@@ -1295,7 +1295,7 @@
           "description": "Remove chunks which are empty",
           "type": "boolean"
         },
-        "mergedDuplicateChunks": {
+        "mergeDuplicateChunks": {
           "description": "Merge chunks which contain the same modules",
           "type": "boolean"
         },
@@ -1367,9 +1367,7 @@
                   "description": "Give chunks created a name (chunks with equal name are merged)",
                   "oneOf": [
                     {
-                      "enum": [
-                        true
-                      ]
+                      "type": "boolean"
                     },
                     {
                       "instanceof": "Function"
@@ -1461,9 +1459,7 @@
                             "description": "Give chunks for this cache group a name (chunks with equal name are merged)",
                             "oneOf": [
                               {
-                                "enum": [
-                                  true
-                                ]
+                                "type": "boolean"
                               },
                               {
                                 "instanceof": "Function"
