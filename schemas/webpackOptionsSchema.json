@@ -524,6 +524,17 @@
         "umdNamedDefine": {
           "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
           "type": "boolean"
+        },
+        "jsonpBeforeCallback": {
+          "description": "Function (or name of global function) to be called before a chunk is loaded. Function gets the script node as argument.",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ]
         }
       },
       "type": "object"
