@@ -1,7 +1,6 @@
 /* globals describe, it, beforeEach, afterEach */
 "use strict";
 require("should");
-const path = require("path");
 const sinon = require("sinon");
 const NormalModule = require("../lib/NormalModule");
 const NullDependency = require("../lib/dependencies/NullDependency");
@@ -427,84 +426,6 @@ describe("NormalModule", function() {
 					});
 				});
 			});
-		});
-	});
-
-	describe("#purifyCurrentLoaderName", function() {
-		beforeEach(function() {
-			loaders = [
-				{
-					origin: "configured-loader",
-					loader: "/some/loaders/configured-loader/index.js"
-				},
-				{
-					origin: path.resolve(__dirname, "some/loaders/a-loader"),
-					loader: path.resolve(__dirname, "some/loaders/a-loader")
-				},
-				{
-					loader: path.resolve(__dirname, "some/loaders/another-loader.js")
-				},
-				{
-					origin: "./some/loaders/another-loader-with-relative-path.js",
-					loader: path.resolve(
-						__dirname,
-						"some/loaders/another-loader-with-relative-path.js"
-					)
-				}
-			];
-			normalModule = new NormalModule({
-				type: "javascript/auto",
-				request,
-				userRequest,
-				rawRequest,
-				loaders,
-				resource,
-				parser
-			});
-		});
-		it("should get origin configured loader name", function() {
-			normalModule
-				.purifyCurrentLoaderName({
-					loaderIndex: 0
-				})
-				.should.eql("configured-loader");
-		});
-		it("should be relating when it's an absolute path", function() {
-			normalModule
-				.purifyCurrentLoaderName({
-					loaderIndex: 1,
-					rootContext: path.resolve(__dirname, "some/loaders")
-				})
-				.should.eql("a-loader");
-			normalModule
-				.purifyCurrentLoaderName({
-					loaderIndex: 2,
-					rootContext: path.resolve(__dirname, "some/loaders")
-				})
-				.should.eql("another-loader.js");
-		});
-		it("should be using directly when it's a relative path", function() {
-			normalModule
-				.purifyCurrentLoaderName({
-					loaderIndex: 3
-				})
-				.should.eql("./some/loaders/another-loader-with-relative-path.js");
-		});
-		it("should return null if it had no loaders", function() {
-			normalModule = new NormalModule({
-				type: "javascript/auto",
-				request,
-				userRequest,
-				rawRequest,
-				loaders: [],
-				resource,
-				parser
-			});
-			(
-				normalModule.purifyCurrentLoaderName({
-					loaderIndex: 0
-				}) === null
-			).should.eql(true);
 		});
 	});
 });
