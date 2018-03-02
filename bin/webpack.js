@@ -1,9 +1,6 @@
 #!/usr/bin/env node
-
-const cp = require("child_process");
-const inquirer = require("inquirer");
-
 function runCommand(command, options) {
+	const cp = require("child_process");
 	return new Promise((resolve, reject) => {
 		const executedCommand = cp.spawn(command, options, {
 			stdio: "inherit"
@@ -34,6 +31,7 @@ try {
 if (!webpackCliInstalled) {
 	const path = require("path");
 	const fs = require("fs");
+	const inquirer = require("inquirer");
 	const isYarn = fs.existsSync(path.resolve(process.cwd(), "yarn.lock"));
 
 	let packageManager;
@@ -51,7 +49,9 @@ if (!webpackCliInstalled) {
 	const question = {
 		type: "confirm",
 		name: "shouldInstall",
-		message: `Would you like to install webpack-cli? (That will run ${commandToBeRun})`,
+		message: `Would you like to install webpack-cli? (That will run ${
+			commandToBeRun
+		})`,
 		default: true
 	};
 
