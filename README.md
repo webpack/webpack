@@ -15,7 +15,7 @@
 [![licenses][licenses]][licenses-url]
 
   <br>
-	<a href="https://npmjs.com/package/webpack">
+	<a href="https://npmcharts.com/compare/webpack?minimal=true">
 		<img src="https://img.shields.io/npm/dm/webpack.svg">
 	</a>
 	<a href="https://opencollective.com/webpack#backer">
