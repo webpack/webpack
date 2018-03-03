@@ -65,7 +65,10 @@ describe("ConfigTestCases", () => {
 						if (!options.output) options.output = {};
 						// converting to relative to cover relative output paths
 						if (!options.output.path)
-							options.output.path = path.relative(testDirectory, outputDirectory);
+							options.output.path = path.relative(
+								testDirectory,
+								outputDirectory
+							);
 						if (typeof options.output.pathinfo === "undefined")
 							options.output.pathinfo = true;
 						if (!options.output.filename)
@@ -75,7 +78,11 @@ describe("ConfigTestCases", () => {
 						findBundle: function(i, options) {
 							if (
 								fs.existsSync(
-									path.join(options.context, options.output.path, "bundle" + i + ".js")
+									path.join(
+										options.context,
+										options.output.path,
+										"bundle" + i + ".js"
+									)
 								)
 							) {
 								return "./bundle" + i + ".js";
