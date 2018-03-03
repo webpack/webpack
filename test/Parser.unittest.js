@@ -28,7 +28,7 @@ describe("Parser", () => {
 		],
 		"call member using bracket notation": [
 			function() {
-				cde["abc"]("membertest");
+				cde.abc("membertest");
 			},
 			{
 				cdeabc: ["membertest"]
@@ -44,7 +44,7 @@ describe("Parser", () => {
 		],
 		"call inner member using bracket notation": [
 			function() {
-				cde.ddd["abc"]("inner");
+				cde.ddd.abc("inner");
 			},
 			{
 				cdedddabc: ["inner"]
