@@ -4,13 +4,7 @@ module.exports = {
 		extensions: [".json", ".web.js", ".js"]
 	},
 	resolveLoader: {
-		extensions: [
-			".json",
-			".webpack-loader.js",
-			".web-loader.js",
-			".loader.js",
-			".js"
-		],
+		extensions: [".json", ".webpack-loader.js", ".web-loader.js", ".loader.js", ".js"],
 		mainFields: ["webpackLoader", "loader", "main"]
 	}
 };

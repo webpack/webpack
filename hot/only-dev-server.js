@@ -15,10 +15,7 @@ if (module.hot) {
 			.then(function(updatedModules) {
 				if (!updatedModules) {
 					log("warning", "[HMR] Cannot find update. Need to do a full reload!");
-					log(
-						"warning",
-						"[HMR] (Probably because of restarting the webpack-dev-server)"
-					);
+					log("warning", "[HMR] (Probably because of restarting the webpack-dev-server)");
 					return;
 				}
 
@@ -28,29 +25,14 @@ if (module.hot) {
 						ignoreDeclined: true,
 						ignoreErrored: true,
 						onUnaccepted: function(data) {
-							log(
-								"warning",
-								"Ignored an update to unaccepted module " +
-									data.chain.join(" -> ")
-							);
+							log("warning", "Ignored an update to unaccepted module " + data.chain.join(" -> "));
 						},
 						onDeclined: function(data) {
-							log(
-								"warning",
-								"Ignored an update to declined module " +
-									data.chain.join(" -> ")
-							);
+							log("warning", "Ignored an update to declined module " + data.chain.join(" -> "));
 						},
 						onErrored: function(data) {
 							log("error", data.error);
-							log(
-								"warning",
-								"Ignored an error while updating module " +
-									data.moduleId +
-									" (" +
-									data.type +
-									")"
-							);
+							log("warning", "Ignored an error while updating module " + data.moduleId + " (" + data.type + ")");
 						}
 					})
 					.then(function(renewedModules) {
@@ -68,16 +50,10 @@ if (module.hot) {
 			.catch(function(err) {
 				var status = module.hot.status();
 				if (["abort", "fail"].indexOf(status) >= 0) {
-					log(
-						"warning",
-						"[HMR] Cannot check for update. Need to do a full reload!"
-					);
+					log("warning", "[HMR] Cannot check for update. Need to do a full reload!");
 					log("warning", "[HMR] " + err.stack || err.message);
 				} else {
-					log(
-						"warning",
-						"[HMR] Update check failed: " + err.stack || err.message
-					);
+					log("warning", "[HMR] Update check failed: " + err.stack || err.message);
 				}
 			});
 	};
@@ -90,12 +66,7 @@ if (module.hot) {
 				log("info", "[HMR] Checking for updates on the server...");
 				check();
 			} else if (["abort", "fail"].indexOf(status) >= 0) {
-				log(
-					"warning",
-					"[HMR] Cannot apply update as a previous update " +
-						status +
-						"ed. Need to do a full reload!"
-				);
+				log("warning", "[HMR] Cannot apply update as a previous update " + status + "ed. Need to do a full reload!");
 			}
 		}
 	});

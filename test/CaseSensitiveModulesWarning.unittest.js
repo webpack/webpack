@@ -4,13 +4,11 @@ require("should");
 const CaseSensitiveModulesWarning = require("../lib/CaseSensitiveModulesWarning");
 
 const createModule = function(identifier, numberOfReasons) {
-	const reasons = new Array(numberOfReasons || 0)
-		.fill(null)
-		.map((value, index) => {
-			return {
-				module: createModule(`${identifier}-reason-${index}`)
-			};
-		});
+	const reasons = new Array(numberOfReasons || 0).fill(null).map((value, index) => {
+		return {
+			module: createModule(`${identifier}-reason-${index}`)
+		};
+	});
 
 	return {
 		identifier: () => identifier,
@@ -23,18 +21,11 @@ describe("CaseSensitiveModulesWarning", () => {
 	let modules;
 
 	beforeEach(() => {
-		modules = [
-			createModule("FOOBAR"),
-			createModule("FooBar", 1),
-			createModule("foobar", 2)
-		];
+		modules = [createModule("FOOBAR"), createModule("FooBar", 1), createModule("foobar", 2)];
 		myCaseSensitiveModulesWarning = new CaseSensitiveModulesWarning(modules);
 	});
 
-	it("has the a name", () =>
-		myCaseSensitiveModulesWarning.name.should.be.exactly(
-			"CaseSensitiveModulesWarning"
-		));
+	it("has the a name", () => myCaseSensitiveModulesWarning.name.should.be.exactly("CaseSensitiveModulesWarning"));
 
 	it("has the a message", () => {
 		myCaseSensitiveModulesWarning.message.should.be.exactly(
@@ -53,9 +44,7 @@ Use equal casing. Compare these module identifiers:
 		);
 	});
 
-	it("has the an origin", () =>
-		myCaseSensitiveModulesWarning.origin.should.be.exactly(modules[0]));
+	it("has the an origin", () => myCaseSensitiveModulesWarning.origin.should.be.exactly(modules[0]));
 
-	it("has the a module", () =>
-		myCaseSensitiveModulesWarning.module.should.be.exactly(modules[0]));
+	it("has the a module", () => myCaseSensitiveModulesWarning.module.should.be.exactly(modules[0]));
 });

@@ -14,34 +14,19 @@ describe("ModuleDependencyError", () => {
 	describe("when new error created", () => {
 		beforeEach(() => {
 			env.error = new Error("Error Message");
-			env.moduleDependencyError = new ModuleDependencyError(
-				"myModule",
-				env.error,
-				"Location"
-			);
+			env.moduleDependencyError = new ModuleDependencyError("myModule", env.error, "Location");
 		});
 
 		it("is an error", () => env.moduleDependencyError.should.be.an.Error());
 
-		it("has a name property", () =>
-			env.moduleDependencyError.name.should.be.exactly(
-				"ModuleDependencyError"
-			));
+		it("has a name property", () => env.moduleDependencyError.name.should.be.exactly("ModuleDependencyError"));
 
-		it("has a message property", () =>
-			env.moduleDependencyError.message.should.be.exactly(
-				"Location Error Message"
-			));
+		it("has a message property", () => env.moduleDependencyError.message.should.be.exactly("Location Error Message"));
 
-		it("has a details property", () =>
-			env.moduleDependencyError.details.should.containEql(
-				path.join("test", "ModuleDependencyError.unittest.js:")
-			));
+		it("has a details property", () => env.moduleDependencyError.details.should.containEql(path.join("test", "ModuleDependencyError.unittest.js:")));
 
-		it("has an origin property", () =>
-			env.moduleDependencyError.origin.should.be.exactly("myModule"));
+		it("has an origin property", () => env.moduleDependencyError.origin.should.be.exactly("myModule"));
 
-		it("has an error property", () =>
-			env.moduleDependencyError.error.should.be.exactly(env.error));
+		it("has an error property", () => env.moduleDependencyError.error.should.be.exactly(env.error));
 	});
 });

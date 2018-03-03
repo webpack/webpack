@@ -9,10 +9,7 @@ module.exports = function(updatedModules, renewedModules) {
 	var log = require("./log");
 
 	if (unacceptedModules.length > 0) {
-		log(
-			"warning",
-			"[HMR] The following modules couldn't be hot updated: (They would need a full reload!)"
-		);
+		log("warning", "[HMR] The following modules couldn't be hot updated: (They would need a full reload!)");
 		unacceptedModules.forEach(function(moduleId) {
 			log("warning", "[HMR]  - " + moduleId);
 		});
@@ -35,10 +32,6 @@ module.exports = function(updatedModules, renewedModules) {
 		var numberIds = renewedModules.every(function(moduleId) {
 			return typeof moduleId === "number";
 		});
-		if (numberIds)
-			log(
-				"info",
-				"[HMR] Consider using the NamedModulesPlugin for module names."
-			);
+		if (numberIds) log("info", "[HMR] Consider using the NamedModulesPlugin for module names.");
 	}
 };

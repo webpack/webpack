@@ -24,11 +24,7 @@ describe("WatchDetection", () => {
 	function createTestCase(changeTimeout) {
 		describe("time between changes " + changeTimeout + "ms", function() {
 			this.timeout(10000);
-			const fixturePath = path.join(
-				__dirname,
-				"fixtures",
-				"temp-" + changeTimeout
-			);
+			const fixturePath = path.join(__dirname, "fixtures", "temp-" + changeTimeout);
 			const filePath = path.join(fixturePath, "file.js");
 			const file2Path = path.join(fixturePath, "file2.js");
 			const loaderPath = path.join(__dirname, "fixtures", "delay-loader.js");
@@ -94,12 +90,7 @@ describe("WatchDetection", () => {
 				function step2() {
 					onChange = null;
 
-					fs.writeFile(
-						filePath,
-						"require('./file2'); again",
-						"utf-8",
-						handleError
-					);
+					fs.writeFile(filePath, "require('./file2'); again", "utf-8", handleError);
 
 					setTimeout(step3, changeTimeout);
 				}

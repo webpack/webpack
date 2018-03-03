@@ -99,14 +99,10 @@ describe("ExternalModule", function() {
 				// set up
 				const type = "window";
 				const varName = ["foo", "bar"];
-				const expected =
-					'(function() { module.exports = window["foo"]["bar"]; }());';
+				const expected = '(function() { module.exports = window["foo"]["bar"]; }());';
 
 				// invoke
-				const result = externalModule.getSourceForGlobalVariableExternal(
-					varName,
-					type
-				);
+				const result = externalModule.getSourceForGlobalVariableExternal(varName, type);
 
 				// check
 				result.should.eql(expected);
@@ -120,10 +116,7 @@ describe("ExternalModule", function() {
 				const expected = '(function() { module.exports = window["foo"]; }());';
 
 				// invoke
-				const result = externalModule.getSourceForGlobalVariableExternal(
-					varName,
-					type
-				);
+				const result = externalModule.getSourceForGlobalVariableExternal(varName, type);
 
 				// check
 				result.should.eql(expected);
@@ -139,10 +132,7 @@ describe("ExternalModule", function() {
 				const expected = 'module.exports = require(module)["look"]["up"];';
 
 				// invoke
-				const result = externalModule.getSourceForCommonJsExternal(
-					varName,
-					type
-				);
+				const result = externalModule.getSourceForCommonJsExternal(varName, type);
 
 				// check
 				result.should.eql(expected);
@@ -156,10 +146,7 @@ describe("ExternalModule", function() {
 				const expected = 'module.exports = require("foo");';
 
 				// invoke
-				const result = externalModule.getSourceForCommonJsExternal(
-					varName,
-					type
-				);
+				const result = externalModule.getSourceForCommonJsExternal(varName, type);
 
 				// check
 				result.should.eql(expected);
@@ -176,10 +163,7 @@ describe("ExternalModule", function() {
 `;
 
 			// invoke
-			const result = externalModule.checkExternalVariable(
-				variableToCheck,
-				request
-			);
+			const result = externalModule.checkExternalVariable(variableToCheck, request);
 
 			// check
 			result.should.eql(expected);
@@ -194,11 +178,7 @@ describe("ExternalModule", function() {
 			const expected = "module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;";
 
 			// invoke
-			const result = externalModule.getSourceForAmdOrUmdExternal(
-				id,
-				optional,
-				request
-			);
+			const result = externalModule.getSourceForAmdOrUmdExternal(id, optional, request);
 
 			// check
 			result.should.eql(expected);
@@ -212,11 +192,7 @@ describe("ExternalModule", function() {
 module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 
 				// invoke
-				const result = externalModule.getSourceForAmdOrUmdExternal(
-					id,
-					optional,
-					request
-				);
+				const result = externalModule.getSourceForAmdOrUmdExternal(id, optional, request);
 
 				// check
 				result.should.eql(expected);
@@ -244,10 +220,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 module.exports = some/request;`;
 
 				// invoke
-				const result = externalModule.getSourceForDefaultCase(
-					optional,
-					request
-				);
+				const result = externalModule.getSourceForDefaultCase(optional, request);
 
 				// check
 				result.should.eql(expected);

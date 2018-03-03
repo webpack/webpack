@@ -36,9 +36,7 @@ describe("LocalModulesHelpers", () => {
 					}
 				]
 			};
-			should(
-				LocalModulesHelpers.getLocalModule(state, "local_module_sample")
-			).be.eql(null);
+			should(LocalModulesHelpers.getLocalModule(state, "local_module_sample")).be.eql(null);
 		});
 
 		it("returns local module information", () => {

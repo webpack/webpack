@@ -22,8 +22,7 @@ function copyDiff(src, dest) {
 			copyDiff(srcFile, destFile);
 		} else {
 			var content = fs.readFileSync(srcFile);
-			if (/^DELETE\s*$/.test(content.toString("utf-8")))
-				fs.unlinkSync(destFile);
+			if (/^DELETE\s*$/.test(content.toString("utf-8"))) fs.unlinkSync(destFile);
 			else fs.writeFileSync(destFile, content);
 		}
 	});
@@ -75,13 +74,7 @@ describe("WatchTestCases", () => {
 		describe(category.name, () => {
 			category.tests.forEach(testName => {
 				describe(testName, () => {
-					const tempDirectory = path.join(
-						__dirname,
-						"js",
-						"watch-src",
-						category.name,
-						testName
-					);
+					const tempDirectory = path.join(__dirname, "js", "watch-src", category.name, testName);
 					const testDirectory = path.join(casesPath, category.name, testName);
 					const runs = fs
 						.readdirSync(testDirectory)
@@ -98,13 +91,7 @@ describe("WatchTestCases", () => {
 					before(() => remove(tempDirectory));
 					it("should compile", function(done) {
 						this.timeout(45000);
-						const outputDirectory = path.join(
-							__dirname,
-							"js",
-							"watch",
-							category.name,
-							testName
-						);
+						const outputDirectory = path.join(__dirname, "js", "watch", category.name, testName);
 
 						let options = {};
 						const configPath = path.join(testDirectory, "webpack.config.js");
@@ -116,10 +103,8 @@ describe("WatchTestCases", () => {
 							if (!options.target) options.target = "async-node";
 							if (!options.output) options.output = {};
 							if (!options.output.path) options.output.path = outputDirectory;
-							if (typeof options.output.pathinfo === "undefined")
-								options.output.pathinfo = true;
-							if (!options.output.filename)
-								options.output.filename = "bundle.js";
+							if (typeof options.output.pathinfo === "undefined") options.output.pathinfo = true;
+							if (!options.output.filename) options.output.filename = "bundle.js";
 						};
 						if (Array.isArray(options)) {
 							options.forEach(applyConfig);
@@ -139,36 +124,20 @@ describe("WatchTestCases", () => {
 
 						setTimeout(() => {
 							const compiler = webpack(options);
-							compiler.hooks.invalid.tap(
-								"WatchTestCasesTest",
-								(filename, mtime) => {
-									triggeringFilename = filename;
-								}
-							);
+							compiler.hooks.invalid.tap("WatchTestCasesTest", (filename, mtime) => {
+								triggeringFilename = filename;
+							});
 							const watching = compiler.watch(
 								{
 									aggregateTimeout: 1000
 								},
 								(err, stats) => {
 									if (err) return done(err);
-									if (!stats)
-										return done(new Error("No stats reported from Compiler"));
+									if (!stats) return done(new Error("No stats reported from Compiler"));
 									if (stats.hash === lastHash) return;
 									lastHash = stats.hash;
 									if (run.done && lastHash !== stats.hash) {
-										return done(
-											new Error(
-												"Compilation changed but no change was issued " +
-													lastHash +
-													" != " +
-													stats.hash +
-													" (run " +
-													runIdx +
-													")\n" +
-													"Triggering change: " +
-													triggeringFilename
-											)
-										);
+										return done(new Error("Compilation changed but no change was issued " + lastHash + " != " + stats.hash + " (run " + runIdx + ")\n" + "Triggering change: " + triggeringFilename));
 									}
 									if (waitMode) return;
 									run.done = true;
@@ -176,34 +145,12 @@ describe("WatchTestCases", () => {
 									const statOptions = Stats.presetToOptions("verbose");
 									statOptions.colors = false;
 									mkdirp.sync(outputDirectory);
-									fs.writeFileSync(
-										path.join(outputDirectory, "stats.txt"),
-										stats.toString(statOptions),
-										"utf-8"
-									);
+									fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
 									const jsonStats = stats.toJson({
 										errorDetails: true
 									});
-									if (
-										checkArrayExpectation(
-											path.join(testDirectory, run.name),
-											jsonStats,
-											"error",
-											"Error",
-											done
-										)
-									)
-										return;
-									if (
-										checkArrayExpectation(
-											path.join(testDirectory, run.name),
-											jsonStats,
-											"warning",
-											"Warning",
-											done
-										)
-									)
-										return;
+									if (checkArrayExpectation(path.join(testDirectory, run.name), jsonStats, "error", "Error", done)) return;
+									if (checkArrayExpectation(path.join(testDirectory, run.name), jsonStats, "warning", "Warning", done)) return;
 									let exportedTests = 0;
 
 									function _it(title, fn) {
@@ -234,46 +181,17 @@ describe("WatchTestCases", () => {
 												p = path.join(currentDirectory, module);
 												content = fs.readFileSync(p, "utf-8");
 											}
-											if (
-												options.target === "web" ||
-												options.target === "webworker"
-											) {
-												fn = vm.runInNewContext(
-													"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, window) {" +
-														content +
-														"\n})",
-													globalContext,
-													p
-												);
+											if (options.target === "web" || options.target === "webworker") {
+												fn = vm.runInNewContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, window) {" + content + "\n})", globalContext, p);
 											} else {
-												fn = vm.runInThisContext(
-													"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE) {" +
-														content +
-														"\n})",
-													p
-												);
+												fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE) {" + content + "\n})", p);
 											}
 											const m = {
 												exports: {}
 											};
-											fn.call(
-												m.exports,
-												_require.bind(null, path.dirname(p)),
-												m,
-												m.exports,
-												path.dirname(p),
-												p,
-												_it,
-												run.name,
-												jsonStats,
-												state,
-												globalContext
-											);
+											fn.call(m.exports, _require.bind(null, path.dirname(p)), m, m.exports, path.dirname(p), p, _it, run.name, jsonStats, state, globalContext);
 											return module.exports;
-										} else if (
-											testConfig.modules &&
-											module in testConfig.modules
-										) {
+										} else if (testConfig.modules && module in testConfig.modules) {
 											return testConfig.modules[module];
 										} else return require(module);
 									}
@@ -281,20 +199,13 @@ describe("WatchTestCases", () => {
 									let testConfig = {};
 									try {
 										// try to load a test file
-										testConfig = require(path.join(
-											testDirectory,
-											"test.config.js"
-										));
+										testConfig = require(path.join(testDirectory, "test.config.js"));
 									} catch (e) {} // eslint-disable-line no-empty
 
 									if (testConfig.noTests) return process.nextTick(done);
-									_require(
-										outputDirectory,
-										testConfig.bundlePath || "./bundle.js"
-									);
+									_require(outputDirectory, testConfig.bundlePath || "./bundle.js");
 
-									if (exportedTests < 1)
-										return done(new Error("No tests exported by test case"));
+									if (exportedTests < 1) return done(new Error("No tests exported by test case"));
 									runIdx++;
 									if (runIdx < runs.length) {
 										run = runs[runIdx];
@@ -302,10 +213,7 @@ describe("WatchTestCases", () => {
 										setTimeout(() => {
 											waitMode = false;
 											currentWatchStepModule.step = run.name;
-											copyDiff(
-												path.join(testDirectory, run.name),
-												tempDirectory
-											);
+											copyDiff(path.join(testDirectory, run.name), tempDirectory);
 										}, 1500);
 									} else {
 										watching.close();

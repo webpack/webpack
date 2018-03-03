@@ -4,10 +4,7 @@ module.exports = [
 	{
 		resolve: {
 			alias: {
-				library: path.resolve(
-					__dirname,
-					"../../../js/config/library/0-create-library/commonjs.js"
-				)
+				library: path.resolve(__dirname, "../../../js/config/library/0-create-library/commonjs.js")
 			}
 		},
 		plugins: [
@@ -19,10 +16,7 @@ module.exports = [
 	{
 		resolve: {
 			alias: {
-				library: path.resolve(
-					__dirname,
-					"../../../js/config/library/0-create-library/umd.js"
-				)
+				library: path.resolve(__dirname, "../../../js/config/library/0-create-library/umd.js")
 			}
 		},
 		plugins: [
@@ -35,10 +29,7 @@ module.exports = [
 		entry: "./global-test.js",
 		resolve: {
 			alias: {
-				library: path.resolve(
-					__dirname,
-					"../../../js/config/library/0-create-library/this.js"
-				)
+				library: path.resolve(__dirname, "../../../js/config/library/0-create-library/this.js")
 			}
 		},
 		plugins: [
@@ -50,10 +41,7 @@ module.exports = [
 	{
 		resolve: {
 			alias: {
-				library: path.resolve(
-					__dirname,
-					"../../../js/config/library/0-create-library/commonjs2-external.js"
-				),
+				library: path.resolve(__dirname, "../../../js/config/library/0-create-library/commonjs2-external.js"),
 				external: path.resolve(__dirname, "node_modules/external.js")
 			}
 		},
@@ -68,10 +56,7 @@ module.exports = [
 		entry: "./default-test.js",
 		resolve: {
 			alias: {
-				library: path.resolve(
-					__dirname,
-					"../../../js/config/library/0-create-library/umd-default.js"
-				)
+				library: path.resolve(__dirname, "../../../js/config/library/0-create-library/umd-default.js")
 			}
 		},
 		plugins: [

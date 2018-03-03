@@ -30,9 +30,7 @@ describe("Schemas", () => {
 
 			if (content) {
 				it("should be formated correctly", () => {
-					fileContent
-						.replace(/\r\n?/g, "\n")
-						.should.be.eql(JSON.stringify(content, 0, 2) + "\n");
+					fileContent.replace(/\r\n?/g, "\n").should.be.eql(JSON.stringify(content, 0, 2) + "\n");
 				});
 
 				const arrayProperties = ["oneOf", "anyOf", "allOf"];
@@ -68,30 +66,18 @@ describe("Schemas", () => {
 
 				const walker = item => {
 					it("should only use allowed schema properties", () => {
-						const otherProperties = Object.keys(item).filter(
-							p => allowedProperties.indexOf(p) < 0
-						);
+						const otherProperties = Object.keys(item).filter(p => allowedProperties.indexOf(p) < 0);
 						if (otherProperties.length > 0) {
-							throw new Error(
-								`The properties ${otherProperties.join(
-									", "
-								)} are not allowed to use`
-							);
+							throw new Error(`The properties ${otherProperties.join(", ")} are not allowed to use`);
 							// When allowing more properties make sure to add nice error messages for them in WebpackOptionsValidationError
 						}
 					});
 
 					if (Object.keys(item).indexOf("$ref") >= 0) {
 						it("should not have other properties next to $ref", () => {
-							const otherProperties = Object.keys(item).filter(
-								p => p !== "$ref"
-							);
+							const otherProperties = Object.keys(item).filter(p => p !== "$ref");
 							if (otherProperties.length > 0) {
-								throw new Error(
-									`When using $ref not other properties are possible (${otherProperties.join(
-										", "
-									)})`
-								);
+								throw new Error(`When using $ref not other properties are possible (${otherProperties.join(", ")})`);
 							}
 						});
 					}

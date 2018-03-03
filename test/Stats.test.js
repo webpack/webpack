@@ -32,15 +32,7 @@ describe("Stats", () => {
 							baz: true
 						}
 					})
-					.should.be.eql(
-						"Environment (--env): {\n" +
-							'  "prod": [\n' +
-							'    "foo",\n' +
-							'    "bar"\n' +
-							"  ],\n" +
-							'  "baz": true\n' +
-							"}"
-					);
+					.should.be.eql("Environment (--env): {\n" + '  "prod": [\n' + '    "foo",\n' + '    "bar"\n' + "  ],\n" + '  "baz": true\n' + "}");
 				done();
 			} catch (e) {
 				done(e);

@@ -42,10 +42,7 @@ describe("Compiler", () => {
 				callback();
 			}
 		};
-		c.hooks.compilation.tap(
-			"CompilerTest",
-			compilation => (compilation.bail = true)
-		);
+		c.hooks.compilation.tap("CompilerTest", compilation => (compilation.bail = true));
 		c.run((err, stats) => {
 			if (err) throw err;
 			should.strictEqual(typeof stats, "object");
@@ -259,8 +256,7 @@ describe("Compiler", () => {
 		compiler.outputFileSystem = new MemoryFs();
 		compiler.run((err, stats) => {
 			if (err) return done(err);
-			if (compiler.outputFileSystem.existsSync("/bundle.js"))
-				return done(new Error("Bundle should not be created on error"));
+			if (compiler.outputFileSystem.existsSync("/bundle.js")) return done(new Error("Bundle should not be created on error"));
 			done();
 		});
 	});
@@ -278,8 +274,7 @@ describe("Compiler", () => {
 		const watching = compiler.watch({}, (err, stats) => {
 			watching.close();
 			if (err) return done(err);
-			if (compiler.outputFileSystem.existsSync("/bundle.js"))
-				return done(new Error("Bundle should not be created on error"));
+			if (compiler.outputFileSystem.existsSync("/bundle.js")) return done(new Error("Bundle should not be created on error"));
 			done();
 		});
 	});

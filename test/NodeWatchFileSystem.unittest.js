@@ -42,15 +42,7 @@ describe("NodeWatchFileSystem", function() {
 
 	it("should throw if 'callbackUndelayed' argument is invalid", function() {
 		should(function() {
-			new NodeWatchFileSystem().watch(
-				[],
-				[],
-				[],
-				42,
-				{},
-				function() {},
-				"undefined"
-			);
+			new NodeWatchFileSystem().watch([], [], [], 42, {}, function() {}, "undefined");
 		}).throw("Invalid arguments: 'callbackUndelayed'");
 	});
 
@@ -78,13 +70,7 @@ describe("NodeWatchFileSystem", function() {
 			{
 				aggregateTimeout: 1000
 			},
-			function(
-				err,
-				filesModified,
-				dirsModified,
-				missingCreated,
-				fileTimestamps
-			) {
+			function(err, filesModified, dirsModified, missingCreated, fileTimestamps) {
 				if (err) throw err;
 				filesModified.should.be.eql([fileDirect]);
 				dirsModified.should.be.eql([]);
@@ -110,13 +96,7 @@ describe("NodeWatchFileSystem", function() {
 				{
 					aggregateTimeout: 1000
 				},
-				function(
-					err,
-					filesModified,
-					dirsModified,
-					missingCreated,
-					fileTimestamps
-				) {
+				function(err, filesModified, dirsModified, missingCreated, fileTimestamps) {
 					if (err) throw err;
 					filesModified.should.be.eql([fileDirect]);
 					dirsModified.should.be.eql([]);
@@ -140,14 +120,7 @@ describe("NodeWatchFileSystem", function() {
 			{
 				aggregateTimeout: 1000
 			},
-			function(
-				err,
-				filesModified,
-				dirsModified,
-				missingCreated,
-				fileTimestamps,
-				dirTimestamps
-			) {
+			function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
 				if (err) throw err;
 				filesModified.should.be.eql([]);
 				dirsModified.should.be.eql([fixtures]);
@@ -173,14 +146,7 @@ describe("NodeWatchFileSystem", function() {
 				{
 					aggregateTimeout: 1000
 				},
-				function(
-					err,
-					filesModified,
-					dirsModified,
-					missingCreated,
-					fileTimestamps,
-					dirTimestamps
-				) {
+				function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
 					if (err) throw err;
 					filesModified.should.be.eql([]);
 					dirsModified.should.be.eql([fixtures]);
@@ -193,9 +159,7 @@ describe("NodeWatchFileSystem", function() {
 
 		fs.writeFile(fileDirect, "", function() {});
 	});
-	it("should register a context change (change delayed, subdirectory)", function(
-		done
-	) {
+	it("should register a context change (change delayed, subdirectory)", function(done) {
 		var startTime = new Date().getTime();
 		var wfs = new NodeWatchFileSystem();
 		var watcher = wfs.watch(
@@ -206,14 +170,7 @@ describe("NodeWatchFileSystem", function() {
 			{
 				aggregateTimeout: 1000
 			},
-			function(
-				err,
-				filesModified,
-				dirsModified,
-				missingCreated,
-				fileTimestamps,
-				dirTimestamps
-			) {
+			function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
 				if (err) throw err;
 				filesModified.should.be.eql([]);
 				dirsModified.should.be.eql([fixtures]);
@@ -227,9 +184,7 @@ describe("NodeWatchFileSystem", function() {
 			fs.writeFile(fileSubdir, "", function() {});
 		}, 500);
 	});
-	it("should register a context change (watch delayed, subdirectory)", function(
-		done
-	) {
+	it("should register a context change (watch delayed, subdirectory)", function(done) {
 		var startTime = new Date().getTime();
 		setTimeout(function() {
 			var wfs = new NodeWatchFileSystem();
@@ -241,14 +196,7 @@ describe("NodeWatchFileSystem", function() {
 				{
 					aggregateTimeout: 1000
 				},
-				function(
-					err,
-					filesModified,
-					dirsModified,
-					missingCreated,
-					fileTimestamps,
-					dirTimestamps
-				) {
+				function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
 					if (err) throw err;
 					filesModified.should.be.eql([]);
 					dirsModified.should.be.eql([fixtures]);
@@ -273,14 +221,7 @@ describe("NodeWatchFileSystem", function() {
 				{
 					aggregateTimeout: 1000
 				},
-				function(
-					err,
-					filesModified,
-					dirsModified,
-					missingCreated,
-					fileTimestamps,
-					dirTimestamps
-				) {
+				function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
 					if (err) throw err;
 					filesModified.should.be.eql([fileSubdir, fileDirect]);
 					dirsModified.should.be.eql([fixtures]);
@@ -307,14 +248,7 @@ describe("NodeWatchFileSystem", function() {
 			{
 				aggregateTimeout: 1000
 			},
-			function(
-				err,
-				filesModified,
-				dirsModified,
-				missingCreated,
-				fileTimestamps,
-				dirTimestamps
-			) {
+			function(err, filesModified, dirsModified, missingCreated, fileTimestamps, dirTimestamps) {
 				if (err) throw err;
 				filesModified.should.be.eql([fileSubdir, fileDirect]);
 				dirsModified.should.be.eql([fixtures]);

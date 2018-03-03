@@ -22,8 +22,4 @@ function createConfig(system) {
 	};
 }
 
-module.exports = [
-	createConfig(undefined),
-	createConfig(true),
-	createConfig(false)
-];
+module.exports = [createConfig(undefined), createConfig(true), createConfig(false)];

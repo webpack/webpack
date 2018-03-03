@@ -88,16 +88,10 @@ describe("Integration", function() {
 					}),
 					function() {
 						this.hooks.normalModuleFactory.tap("IntegrationTest", nmf => {
-							nmf.hooks.afterResolve.tapAsync(
-								"IntegrationTest",
-								(data, callback) => {
-									data.resource = data.resource.replace(
-										/extra\.js/,
-										"extra2.js"
-									);
-									setTimeout(() => callback(null, data), 50);
-								}
-							);
+							nmf.hooks.afterResolve.tapAsync("IntegrationTest", (data, callback) => {
+								data.resource = data.resource.replace(/extra\.js/, "extra2.js");
+								setTimeout(() => callback(null, data), 50);
+							});
 						});
 					}
 				]

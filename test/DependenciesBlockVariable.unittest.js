@@ -16,18 +16,12 @@ describe("DependenciesBlockVariable", () => {
 			disconnect: sandbox.spy(),
 			updateHash: sandbox.spy()
 		};
-		DependenciesBlockVariableInstance = new DependenciesBlockVariable(
-			"dependencies-name",
-			"expression",
-			[dependencyMock]
-		);
+		DependenciesBlockVariableInstance = new DependenciesBlockVariable("dependencies-name", "expression", [dependencyMock]);
 	});
 
 	afterEach(() => sandbox.restore());
 
-	describe("hasDependencies", () =>
-		it("returns `true` if has dependencies", () =>
-			should(DependenciesBlockVariableInstance.hasDependencies()).be.true()));
+	describe("hasDependencies", () => it("returns `true` if has dependencies", () => should(DependenciesBlockVariableInstance.hasDependencies()).be.true()));
 
 	describe("disconnect", () =>
 		it("trigger dependencies disconnection", () => {
@@ -44,14 +38,11 @@ describe("DependenciesBlockVariable", () => {
 			DependenciesBlockVariableInstance.updateHash(hash);
 		});
 
-		it("should update hash dependencies with name", () =>
-			should(hash.update.calledWith("dependencies-name")).be.true());
+		it("should update hash dependencies with name", () => should(hash.update.calledWith("dependencies-name")).be.true());
 
-		it("should update hash dependencies with expression", () =>
-			should(hash.update.calledWith("expression")).be.true());
+		it("should update hash dependencies with expression", () => should(hash.update.calledWith("expression")).be.true());
 
-		it("should update hash inside dependencies", () =>
-			should(dependencyMock.updateHash.calledOnce).be.true());
+		it("should update hash inside dependencies", () => should(dependencyMock.updateHash.calledOnce).be.true());
 	});
 
 	describe("expressionSource", () => {
@@ -67,11 +58,7 @@ describe("DependenciesBlockVariable", () => {
 					};
 				}
 			};
-			DependenciesBlockVariableInstance.expressionSource(
-				dependencyTemplates,
-				{},
-				{}
-			);
+			DependenciesBlockVariableInstance.expressionSource(dependencyTemplates, {}, {});
 			should(applyMock.calledOnce).be.true();
 		});
 
@@ -82,11 +69,7 @@ describe("DependenciesBlockVariable", () => {
 				}
 			};
 			should(() => {
-				DependenciesBlockVariableInstance.expressionSource(
-					dependencyTemplates,
-					{},
-					{}
-				);
+				DependenciesBlockVariableInstance.expressionSource(dependencyTemplates, {}, {});
 			}).throw("No template for dependency: DependencyMock");
 		});
 	});
