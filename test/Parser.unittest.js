@@ -275,16 +275,12 @@ describe("Parser", () => {
 			});
 			testParser.hooks.call.tap("cde.ddd.abc", "ParserTest", expr => {
 				if (!testParser.state.cdedddabc) testParser.state.cdedddabc = [];
-				testParser.state.cdedddabc.push(
-					testParser.parseString(expr.arguments[0])
-				);
+				testParser.state.cdedddabc.push(testParser.parseString(expr.arguments[0]));
 				return true;
 			});
 			testParser.hooks.expression.tap("fgh", "ParserTest", expr => {
 				if (!testParser.state.fgh) testParser.state.fgh = [];
-				testParser.state.fgh.push(
-					Array.from(testParser.scope.definitions.asSet()).join(" ")
-				);
+				testParser.state.fgh.push(Array.from(testParser.scope.definitions.asSet()).join(" "));
 				return true;
 			});
 			testParser.hooks.expression.tap("fgh.sub", "ParserTest", expr => {
@@ -350,12 +346,8 @@ describe("Parser", () => {
 			parser.hooks.call.tap("test", "ParserTest", expr => {
 				parser.state.result = parser.evaluateExpression(expr.arguments[0]);
 			});
-			parser.hooks.evaluateIdentifier.tap("aString", "ParserTest", expr =>
-				new BasicEvaluatedExpression().setString("aString").setRange(expr.range)
-			);
-			parser.hooks.evaluateIdentifier.tap("b.Number", "ParserTest", expr =>
-				new BasicEvaluatedExpression().setNumber(123).setRange(expr.range)
-			);
+			parser.hooks.evaluateIdentifier.tap("aString", "ParserTest", expr => new BasicEvaluatedExpression().setString("aString").setRange(expr.range));
+			parser.hooks.evaluateIdentifier.tap("b.Number", "ParserTest", expr => new BasicEvaluatedExpression().setNumber(123).setRange(expr.range));
 			return parser.parse("test(" + source + ");").result;
 		}
 
@@ -400,21 +392,14 @@ describe("Parser", () => {
 			"'' + 1 + a + 2": "wrapped=['' + 1 string=1]+[2 string=2]",
 			"'' + 1 + a + 2 + 3": "wrapped=['' + 1 string=1]+[2 + 3 string=23]",
 			"'' + 1 + a + (2 + 3)": "wrapped=['' + 1 string=1]+[2 + 3 string=5]",
-			"'pre' + (1 + a) + (2 + 3)":
-				"wrapped=['pre' string=pre]+[2 + 3 string=5]",
+			"'pre' + (1 + a) + (2 + 3)": "wrapped=['pre' string=pre]+[2 + 3 string=5]",
 			"a ? 'o1' : 'o2'": "options=['o1' string=o1],['o2' string=o2]",
-			"a ? 'o1' : b ? 'o2' : 'o3'":
-				"options=['o1' string=o1],['o2' string=o2],['o3' string=o3]",
-			"a ? (b ? 'o1' : 'o2') : 'o3'":
-				"options=['o1' string=o1],['o2' string=o2],['o3' string=o3]",
-			"a ? (b ? 'o1' : 'o2') : c ? 'o3' : 'o4'":
-				"options=['o1' string=o1],['o2' string=o2],['o3' string=o3],['o4' string=o4]",
-			"a ? 'o1' : b ? 'o2' : c ? 'o3' : 'o4'":
-				"options=['o1' string=o1],['o2' string=o2],['o3' string=o3],['o4' string=o4]",
-			"a ? 'o1' : b ? b : c ? 'o3' : c":
-				"options=['o1' string=o1],[b],['o3' string=o3],[c]",
-			"['i1', 'i2', 3, a, b ? 4 : 5]":
-				"items=['i1' string=i1],['i2' string=i2],[3 number=3],[a],[b ? 4 : 5 options=[4 number=4],[5 number=5]]",
+			"a ? 'o1' : b ? 'o2' : 'o3'": "options=['o1' string=o1],['o2' string=o2],['o3' string=o3]",
+			"a ? (b ? 'o1' : 'o2') : 'o3'": "options=['o1' string=o1],['o2' string=o2],['o3' string=o3]",
+			"a ? (b ? 'o1' : 'o2') : c ? 'o3' : 'o4'": "options=['o1' string=o1],['o2' string=o2],['o3' string=o3],['o4' string=o4]",
+			"a ? 'o1' : b ? 'o2' : c ? 'o3' : 'o4'": "options=['o1' string=o1],['o2' string=o2],['o3' string=o3],['o4' string=o4]",
+			"a ? 'o1' : b ? b : c ? 'o3' : c": "options=['o1' string=o1],[b],['o3' string=o3],[c]",
+			"['i1', 'i2', 3, a, b ? 4 : 5]": "items=['i1' string=i1],['i2' string=i2],[3 number=3],[a],[b ? 4 : 5 options=[4 number=4],[5 number=5]]",
 			"typeof 'str'": "string=string",
 			"typeof aString": "string=string",
 			"typeof b.Number": "string=number",
@@ -429,58 +414,35 @@ describe("Parser", () => {
 			"'str'.concat('one').concat('two', 'three')": "string=stronetwothree",
 			"'str'.concat('one', 'two')": "string=stronetwo",
 			"'str'.concat('one', 'two').concat('three')": "string=stronetwothree",
-			"'str'.concat('one', 'two').concat('three', 'four')":
-				"string=stronetwothreefour",
+			"'str'.concat('one', 'two').concat('three', 'four')": "string=stronetwothreefour",
 			"'str'.concat('one', obj)": "wrapped=['str' string=str]+[null]",
 			"'str'.concat('one', obj).concat()": "wrapped=['str' string=str]+[null]",
-			"'str'.concat('one', obj, 'two')":
-				"wrapped=['str' string=str]+['two' string=two]",
-			"'str'.concat('one', obj, 'two').concat()":
-				"wrapped=['str' string=str]+['two' string=two]",
-			"'str'.concat('one', obj, 'two').concat('three')":
-				"wrapped=['str' string=str]+['three' string=three]",
+			"'str'.concat('one', obj, 'two')": "wrapped=['str' string=str]+['two' string=two]",
+			"'str'.concat('one', obj, 'two').concat()": "wrapped=['str' string=str]+['two' string=two]",
+			"'str'.concat('one', obj, 'two').concat('three')": "wrapped=['str' string=str]+['three' string=three]",
 			"'str'.concat(obj)": "wrapped=['str' string=str]+[null]",
 			"'str'.concat(obj).concat()": "wrapped=['str' string=str]+[null]",
-			"'str'.concat(obj).concat('one', 'two')":
-				"wrapped=['str' string=str]+['one', 'two' string=onetwo]",
-			"'str'.concat(obj).concat(obj, 'one')":
-				"wrapped=['str' string=str]+['one' string=one]",
-			"'str'.concat(obj).concat(obj, 'one', 'two')":
-				"wrapped=['str' string=str]+['one', 'two' string=onetwo]",
-			"'str'.concat(obj).concat('one', obj, 'one')":
-				"wrapped=['str' string=str]+['one' string=one]",
-			"'str'.concat(obj).concat('one', obj, 'two', 'three')":
-				"wrapped=['str' string=str]+['two', 'three' string=twothree]",
-			"'str'.concat(obj, 'one')":
-				"wrapped=['str' string=str]+['one' string=one]",
-			"'str'.concat(obj, 'one').concat()":
-				"wrapped=['str' string=str]+['one' string=one]",
-			"'str'.concat(obj, 'one').concat('two', 'three')":
-				"wrapped=['str' string=str]+['two', 'three' string=twothree]",
-			"'str'.concat(obj, 'one').concat(obj, 'two', 'three')":
-				"wrapped=['str' string=str]+['two', 'three' string=twothree]",
-			"'str'.concat(obj, 'one').concat('two', obj, 'three')":
-				"wrapped=['str' string=str]+['three' string=three]",
-			"'str'.concat(obj, 'one').concat('two', obj, 'three', 'four')":
-				"wrapped=['str' string=str]+['three', 'four' string=threefour]",
-			"'str'.concat(obj, 'one', 'two')":
-				"wrapped=['str' string=str]+['one', 'two' string=onetwo]",
-			"'str'.concat(obj, 'one', 'two').concat()":
-				"wrapped=['str' string=str]+['one', 'two' string=onetwo]",
-			"'str'.concat(obj, 'one', 'two').concat('three', 'four')":
-				"wrapped=['str' string=str]+['three', 'four' string=threefour]",
-			"'str'.concat(obj, 'one', 'two').concat(obj, 'three', 'four')":
-				"wrapped=['str' string=str]+['three', 'four' string=threefour]",
-			"'str'.concat(obj, 'one', 'two').concat('three', obj, 'four')":
-				"wrapped=['str' string=str]+['four' string=four]",
-			"'str'.concat(obj, 'one', 'two').concat('three', obj, 'four', 'five')":
-				"wrapped=['str' string=str]+['four', 'five' string=fourfive]",
+			"'str'.concat(obj).concat('one', 'two')": "wrapped=['str' string=str]+['one', 'two' string=onetwo]",
+			"'str'.concat(obj).concat(obj, 'one')": "wrapped=['str' string=str]+['one' string=one]",
+			"'str'.concat(obj).concat(obj, 'one', 'two')": "wrapped=['str' string=str]+['one', 'two' string=onetwo]",
+			"'str'.concat(obj).concat('one', obj, 'one')": "wrapped=['str' string=str]+['one' string=one]",
+			"'str'.concat(obj).concat('one', obj, 'two', 'three')": "wrapped=['str' string=str]+['two', 'three' string=twothree]",
+			"'str'.concat(obj, 'one')": "wrapped=['str' string=str]+['one' string=one]",
+			"'str'.concat(obj, 'one').concat()": "wrapped=['str' string=str]+['one' string=one]",
+			"'str'.concat(obj, 'one').concat('two', 'three')": "wrapped=['str' string=str]+['two', 'three' string=twothree]",
+			"'str'.concat(obj, 'one').concat(obj, 'two', 'three')": "wrapped=['str' string=str]+['two', 'three' string=twothree]",
+			"'str'.concat(obj, 'one').concat('two', obj, 'three')": "wrapped=['str' string=str]+['three' string=three]",
+			"'str'.concat(obj, 'one').concat('two', obj, 'three', 'four')": "wrapped=['str' string=str]+['three', 'four' string=threefour]",
+			"'str'.concat(obj, 'one', 'two')": "wrapped=['str' string=str]+['one', 'two' string=onetwo]",
+			"'str'.concat(obj, 'one', 'two').concat()": "wrapped=['str' string=str]+['one', 'two' string=onetwo]",
+			"'str'.concat(obj, 'one', 'two').concat('three', 'four')": "wrapped=['str' string=str]+['three', 'four' string=threefour]",
+			"'str'.concat(obj, 'one', 'two').concat(obj, 'three', 'four')": "wrapped=['str' string=str]+['three', 'four' string=threefour]",
+			"'str'.concat(obj, 'one', 'two').concat('three', obj, 'four')": "wrapped=['str' string=str]+['four' string=four]",
+			"'str'.concat(obj, 'one', 'two').concat('three', obj, 'four', 'five')": "wrapped=['str' string=str]+['four', 'five' string=fourfive]",
 			// eslint-disable-next-line no-template-curly-in-string
-			"`start${obj}mid${obj2}end`":
-				"template=[start string=start],[mid string=mid],[end string=end]",
+			"`start${obj}mid${obj2}end`": "template=[start string=start],[mid string=mid],[end string=end]",
 			// eslint-disable-next-line no-template-curly-in-string
-			"`start${'str'}mid${obj2}end`":
-				"template=[start${'str'}mid string=startstrmid],[end string=end]", // eslint-disable-line no-template-curly-in-string
+			"`start${'str'}mid${obj2}end`": "template=[start${'str'}mid string=startstrmid],[end string=end]", // eslint-disable-line no-template-curly-in-string
 			"'abc'.substr(1)": "string=bc",
 			"'abcdef'.substr(2, 3)": "string=cde",
 			"'abcdef'.substring(2, 3)": "string=c",
@@ -505,39 +467,15 @@ describe("Parser", () => {
 					if (evalExpr.isNumber()) result.push("number=" + evalExpr.number);
 					if (evalExpr.isBoolean()) result.push("bool=" + evalExpr.bool);
 					if (evalExpr.isRegExp()) result.push("regExp=" + evalExpr.regExp);
-					if (evalExpr.isConditional())
-						result.push(
-							"options=[" +
-								evalExpr.options.map(evalExprToString).join("],[") +
-								"]"
-						);
-					if (evalExpr.isArray())
-						result.push(
-							"items=[" + evalExpr.items.map(evalExprToString).join("],[") + "]"
-						);
-					if (evalExpr.isConstArray())
-						result.push("array=[" + evalExpr.array.join("],[") + "]");
-					if (evalExpr.isTemplateString())
-						result.push(
-							"template=[" +
-								evalExpr.quasis.map(evalExprToString).join("],[") +
-								"]"
-						);
-					if (evalExpr.isWrapped())
-						result.push(
-							"wrapped=[" +
-								evalExprToString(evalExpr.prefix) +
-								"]+[" +
-								evalExprToString(evalExpr.postfix) +
-								"]"
-						);
+					if (evalExpr.isConditional()) result.push("options=[" + evalExpr.options.map(evalExprToString).join("],[") + "]");
+					if (evalExpr.isArray()) result.push("items=[" + evalExpr.items.map(evalExprToString).join("],[") + "]");
+					if (evalExpr.isConstArray()) result.push("array=[" + evalExpr.array.join("],[") + "]");
+					if (evalExpr.isTemplateString()) result.push("template=[" + evalExpr.quasis.map(evalExprToString).join("],[") + "]");
+					if (evalExpr.isWrapped()) result.push("wrapped=[" + evalExprToString(evalExpr.prefix) + "]+[" + evalExprToString(evalExpr.postfix) + "]");
 					if (evalExpr.range) {
 						const start = evalExpr.range[0] - 5;
 						const end = evalExpr.range[1] - 5;
-						return (
-							key.substr(start, end - start) +
-							(result.length > 0 ? " " + result.join(" ") : "")
-						);
+						return key.substr(start, end - start) + (result.length > 0 ? " " + result.join(" ") : "");
 					}
 					return result.join(" ");
 				}
@@ -545,9 +483,7 @@ describe("Parser", () => {
 
 			it("should eval " + key, () => {
 				const evalExpr = evaluateInParser(key);
-				evalExprToString(evalExpr).should.be.eql(
-					testCases[key] ? key + " " + testCases[key] : key
-				);
+				evalExprToString(evalExpr).should.be.eql(testCases[key] ? key + " " + testCases[key] : key);
 			});
 		});
 	});

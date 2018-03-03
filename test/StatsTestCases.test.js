@@ -10,13 +10,7 @@ const Stats = require("../lib/Stats");
 
 const base = path.join(__dirname, "statsCases");
 const outputBase = path.join(__dirname, "js", "stats");
-const tests = fs
-	.readdirSync(base)
-	.filter(
-		testName =>
-			fs.existsSync(path.join(base, testName, "index.js")) ||
-			fs.existsSync(path.join(base, testName, "webpack.config.js"))
-	);
+const tests = fs.readdirSync(base).filter(testName => fs.existsSync(path.join(base, testName, "index.js")) || fs.existsSync(path.join(base, testName, "webpack.config.js")));
 
 describe("StatsTestCases", () => {
 	tests.forEach(testName => {
@@ -35,12 +29,10 @@ describe("StatsTestCases", () => {
 			(Array.isArray(options) ? options : [options]).forEach(options => {
 				if (!options.context) options.context = path.join(base, testName);
 				if (!options.output) options.output = options.output || {};
-				if (!options.output.path)
-					options.output.path = path.join(outputBase, testName);
+				if (!options.output.path) options.output.path = path.join(outputBase, testName);
 				if (!options.plugins) options.plugins = [];
 				if (!options.optimization) options.optimization = {};
-				if (options.optimization.minimize === undefined)
-					options.optimization.minimize = false;
+				if (options.optimization.minimize === undefined) options.optimization.minimize = false;
 				// To support deprecated loaders
 				// TODO remove in webpack 5
 				options.plugins.push(
@@ -85,12 +77,10 @@ describe("StatsTestCases", () => {
 				let hasColorSetting = false;
 				if (typeof options.stats !== "undefined") {
 					toStringOptions = options.stats;
-					if (toStringOptions === null || typeof toStringOptions !== "object")
-						toStringOptions = Stats.presetToOptions(toStringOptions);
+					if (toStringOptions === null || typeof toStringOptions !== "object") toStringOptions = Stats.presetToOptions(toStringOptions);
 
 					hasColorSetting = typeof options.stats.colors !== "undefined";
-					if (!toStringOptions.context)
-						toStringOptions.context = path.join(base, testName);
+					if (!toStringOptions.context) toStringOptions.context = path.join(base, testName);
 				}
 				if (Array.isArray(options) && !toStringOptions.children) {
 					toStringOptions.children = options.map(o => o.stats);
@@ -102,10 +92,7 @@ describe("StatsTestCases", () => {
 					actual = actual
 						.replace(/\u001b\[[0-9;]*m/g, "")
 						.replace(/[0-9]+(\s?ms)/g, "X$1")
-						.replace(
-							/^(\s*Built at:) (.*)$/gm,
-							"$1 Thu Jan 01 1970 00:00:00 GMT"
-						);
+						.replace(/^(\s*Built at:) (.*)$/gm, "$1 Thu Jan 01 1970 00:00:00 GMT");
 				} else {
 					actual = actual
 						.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
@@ -113,10 +100,7 @@ describe("StatsTestCases", () => {
 						.replace(/\u001b\[39m\u001b\[22m/g, "</CLR>")
 						.replace(/\u001b\[([0-9;]*)m/g, "<CLR=$1>")
 						.replace(/[0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2")
-						.replace(
-							/^(\s*Built at:) (.*)$/gm,
-							"$1 Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT"
-						);
+						.replace(/^(\s*Built at:) (.*)$/gm, "$1 Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT");
 				}
 
 				actual = actual
@@ -124,15 +108,9 @@ describe("StatsTestCases", () => {
 					.replace(/[\t ]*Version:.+\n/g, "")
 					.replace(path.join(base, testName), "Xdir/" + testName)
 					.replace(/ dependencies:Xms/g, "");
-				const expected = fs
-					.readFileSync(path.join(base, testName, "expected.txt"), "utf-8")
-					.replace(/\r/g, "");
+				const expected = fs.readFileSync(path.join(base, testName, "expected.txt"), "utf-8").replace(/\r/g, "");
 				if (actual !== expected) {
-					fs.writeFileSync(
-						path.join(base, testName, "actual.txt"),
-						actual,
-						"utf-8"
-					);
+					fs.writeFileSync(path.join(base, testName, "actual.txt"), actual, "utf-8");
 				} else if (fs.existsSync(path.join(base, testName, "actual.txt"))) {
 					fs.unlinkSync(path.join(base, testName, "actual.txt"));
 				}

@@ -5,8 +5,7 @@ require("should");
 const Template = require("../lib/Template");
 
 describe("Template", () => {
-	it("should generate valid identifiers", () =>
-		Template.toIdentifier("0abc-def9").should.equal("_0abc_def9"));
+	it("should generate valid identifiers", () => Template.toIdentifier("0abc-def9").should.equal("_0abc_def9"));
 	it("should generate valid number identifiers", () => {
 		const items = [];
 		let item;
@@ -22,8 +21,6 @@ describe("Template", () => {
 		}
 	});
 	it("should generate sanitized path identifiers", () => {
-		Template.toPath("path/to-sdfas/sadfome$$.js").should.equal(
-			"path-to-sdfas-sadfome$$-js"
-		);
+		Template.toPath("path/to-sdfas/sadfome$$.js").should.equal("path-to-sdfas-sadfome$$-js");
 	});
 });

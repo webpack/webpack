@@ -19,8 +19,7 @@ describe("RawModule", () => {
 	});
 
 	describe("identifier", () => {
-		it("returns value for identifierStr attribute", () =>
-			should(myRawModule.identifier()).be.exactly("identifierStr attribute"));
+		it("returns value for identifierStr attribute", () => should(myRawModule.identifier()).be.exactly("identifierStr attribute"));
 	});
 
 	describe("size", () => {
@@ -31,14 +30,10 @@ describe("RawModule", () => {
 	});
 
 	describe("readableIdentifier", () => {
-		it(
-			'returns result of calling provided requestShortener"s shorten method ' +
-				"on readableIdentifierStr attribute",
-			() => {
-				const requestShortener = new RequestShortener(path.resolve());
-				should.exist(myRawModule.readableIdentifier(requestShortener));
-			}
-		);
+		it('returns result of calling provided requestShortener"s shorten method ' + "on readableIdentifierStr attribute", () => {
+			const requestShortener = new RequestShortener(path.resolve());
+			should.exist(myRawModule.readableIdentifier(requestShortener));
+		});
 	});
 
 	describe("needRebuild", () => {
@@ -46,28 +41,17 @@ describe("RawModule", () => {
 	});
 
 	describe("source", () => {
-		it(
-			"returns a new OriginalSource instance with sourceStr attribute and " +
-				"return value of identifier() function provided as constructor arguments",
-			() => {
-				const originalSource = new OriginalSource(
-					myRawModule.sourceStr,
-					myRawModule.identifier()
-				);
-				myRawModule.useSourceMap = true;
-				myRawModule.source().should.match(originalSource);
-			}
-		);
+		it("returns a new OriginalSource instance with sourceStr attribute and " + "return value of identifier() function provided as constructor arguments", () => {
+			const originalSource = new OriginalSource(myRawModule.sourceStr, myRawModule.identifier());
+			myRawModule.useSourceMap = true;
+			myRawModule.source().should.match(originalSource);
+		});
 
-		it(
-			"returns a new RawSource instance with sourceStr attribute provided " +
-				"as constructor argument if useSourceMap is falsy",
-			() => {
-				const rawSource = new RawSource(myRawModule.sourceStr);
-				myRawModule.useSourceMap = false;
-				myRawModule.source().should.match(rawSource);
-			}
-		);
+		it("returns a new RawSource instance with sourceStr attribute provided " + "as constructor argument if useSourceMap is falsy", () => {
+			const rawSource = new RawSource(myRawModule.sourceStr);
+			myRawModule.useSourceMap = false;
+			myRawModule.source().should.match(rawSource);
+		});
 	});
 
 	describe("updateHash", () => {

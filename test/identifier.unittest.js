@@ -16,9 +16,7 @@ describe("util/identifier", () => {
 			});
 
 			it("computes the correct relative results for the path construct", () => {
-				should(
-					identifierUtil.makePathsRelative(context, pathConstruct)
-				).be.exactly(expected);
+				should(identifierUtil.makePathsRelative(context, pathConstruct)).be.exactly(expected);
 			});
 		});
 	});

@@ -27,21 +27,15 @@ describe("SizeFormatHelpers", () => {
 		});
 
 		it("should handle float mebibytes", () => {
-			should(SizeFormatHelpers.formatSize(12.5 * 1024 * 1024)).be.eql(
-				"12.5 MiB"
-			);
+			should(SizeFormatHelpers.formatSize(12.5 * 1024 * 1024)).be.eql("12.5 MiB");
 		});
 
 		it("should handle integer gibibytes", () => {
-			should(SizeFormatHelpers.formatSize(3 * 1024 * 1024 * 1024)).be.eql(
-				"3 GiB"
-			);
+			should(SizeFormatHelpers.formatSize(3 * 1024 * 1024 * 1024)).be.eql("3 GiB");
 		});
 
 		it("should handle float gibibytes", () => {
-			should(SizeFormatHelpers.formatSize(1.2 * 1024 * 1024 * 1024)).be.eql(
-				"1.2 GiB"
-			);
+			should(SizeFormatHelpers.formatSize(1.2 * 1024 * 1024 * 1024)).be.eql("1.2 GiB");
 		});
 	});
 });

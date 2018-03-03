@@ -308,10 +308,7 @@ describe("RuleSet", () => {
 				]
 			}
 		]);
-		match(loader, "style.css").should.eql([
-			"style?filesize=1000",
-			"css?modules=1"
-		]);
+		match(loader, "style.css").should.eql(["style?filesize=1000", "css?modules=1"]);
 	});
 
 	it("should work with using string multiple loaders", () => {
@@ -321,10 +318,7 @@ describe("RuleSet", () => {
 				loaders: "style?filesize=1000!css?modules=1"
 			}
 		]);
-		match(loader, "style.css").should.eql([
-			"style?filesize=1000",
-			"css?modules=1"
-		]);
+		match(loader, "style.css").should.eql(["style?filesize=1000", "css?modules=1"]);
 	});
 
 	it("should throw if using array loaders with a single legacy", () => {
@@ -421,14 +415,7 @@ describe("RuleSet", () => {
 
 	describe("when exclude array holds an undefined item", () => {
 		function errorHasContext(err) {
-			if (
-				/Expected condition but got falsy value/.test(err) &&
-				/test/.test(err) &&
-				/include/.test(err) &&
-				/exclude/.test(err) &&
-				/node_modules/.test(err) &&
-				/undefined/.test(err)
-			) {
+			if (/Expected condition but got falsy value/.test(err) && /test/.test(err) && /include/.test(err) && /exclude/.test(err) && /node_modules/.test(err) && /undefined/.test(err)) {
 				return true;
 			}
 		}

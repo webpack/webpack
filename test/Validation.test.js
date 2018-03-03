@@ -68,10 +68,7 @@ describe("Validation", () => {
 					wrappedContextRegExp: 1337
 				}
 			},
-			message: [
-				" - configuration.module.wrappedContextRegExp should be an instance of RegExp",
-				"   -> Set the inner regular expression for partial dynamic dependencies"
-			]
+			message: [" - configuration.module.wrappedContextRegExp should be an instance of RegExp", "   -> Set the inner regular expression for partial dynamic dependencies"]
 		},
 		{
 			name: "invalid minimum",
@@ -79,10 +76,7 @@ describe("Validation", () => {
 				entry: "a",
 				parallelism: 0
 			},
-			message: [
-				" - configuration.parallelism should be >= 1.",
-				"   -> The number of parallel processed modules in the compilation."
-			]
+			message: [" - configuration.parallelism should be >= 1.", "   -> The number of parallel processed modules in the compilation."]
 		},
 		{
 			name: "repeated value",

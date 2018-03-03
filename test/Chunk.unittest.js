@@ -8,18 +8,13 @@ const Chunk = require("../lib/Chunk");
 describe("Chunk", () => {
 	let ChunkInstance;
 
-	beforeEach(
-		() => (ChunkInstance = new Chunk("chunk-test", "module-test", "loc-test"))
-	);
+	beforeEach(() => (ChunkInstance = new Chunk("chunk-test", "module-test", "loc-test")));
 
-	it("should have debugId more than 999", () =>
-		should(ChunkInstance.debugId).be.above(999));
+	it("should have debugId more than 999", () => should(ChunkInstance.debugId).be.above(999));
 
-	it("returns a string with modules information", () =>
-		should(ChunkInstance.toString()).be.exactly("Chunk[]"));
+	it("returns a string with modules information", () => should(ChunkInstance.toString()).be.exactly("Chunk[]"));
 
-	it("should not be the initial instance", () =>
-		should(ChunkInstance.canBeInitial()).be.false());
+	it("should not be the initial instance", () => should(ChunkInstance.canBeInitial()).be.false());
 
 	describe("entry", () => {
 		it("returns an error if get entry", () =>
@@ -50,8 +45,7 @@ describe("Chunk", () => {
 	});
 
 	describe("isEmpty", () => {
-		it("should NOT have any module by default", () =>
-			should(ChunkInstance.isEmpty()).be.true());
+		it("should NOT have any module by default", () => should(ChunkInstance.isEmpty()).be.true());
 	});
 
 	describe("size", () => {

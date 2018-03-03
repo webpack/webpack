@@ -16,17 +16,12 @@ describe("Examples", () => {
 			describe.skip(path.relative(basePath, examplePath), () => it("filtered"));
 			return;
 		}
-		it("should compile " + path.relative(basePath, examplePath), function(
-			done
-		) {
+		it("should compile " + path.relative(basePath, examplePath), function(done) {
 			this.timeout(20000);
 			let options = {};
 			let webpackConfigPath = path.join(examplePath, "webpack.config.js");
-			webpackConfigPath =
-				webpackConfigPath.substr(0, 1).toUpperCase() +
-				webpackConfigPath.substr(1);
-			if (fs.existsSync(webpackConfigPath))
-				options = require(webpackConfigPath);
+			webpackConfigPath = webpackConfigPath.substr(0, 1).toUpperCase() + webpackConfigPath.substr(1);
+			if (fs.existsSync(webpackConfigPath)) options = require(webpackConfigPath);
 			if (Array.isArray(options)) options.forEach(processOptions);
 			else processOptions(options);
 

@@ -3,10 +3,7 @@ var logLevel = "info";
 function dummy() {}
 
 function shouldLog(level) {
-	var shouldLog =
-		(logLevel === "info" && level === "info") ||
-		(["info", "warning"].indexOf(logLevel) >= 0 && level === "warning") ||
-		(["info", "warning", "error"].indexOf(logLevel) >= 0 && level === "error");
+	var shouldLog = (logLevel === "info" && level === "info") || (["info", "warning"].indexOf(logLevel) >= 0 && level === "warning") || (["info", "warning", "error"].indexOf(logLevel) >= 0 && level === "error");
 	return shouldLog;
 }
 

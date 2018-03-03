@@ -23,8 +23,7 @@ describe("ModuleReason", () => {
 	});
 
 	describe("hasChunk", () => {
-		it("returns false when chunk is not present", () =>
-			should(myModuleReason.hasChunk(myChunk)).be.false());
+		it("returns false when chunk is not present", () => should(myModuleReason.hasChunk(myChunk)).be.false());
 
 		it("returns true when chunk is present", () => {
 			myModuleReason.module.addChunk(myChunk);

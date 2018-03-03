@@ -45,9 +45,7 @@ describe("TestCases", () => {
 	categories = categories.map(cat => {
 		return {
 			name: cat,
-			tests: fs
-				.readdirSync(path.join(casesPath, cat))
-				.filter(folder => folder.indexOf("_") < 0)
+			tests: fs.readdirSync(path.join(casesPath, cat)).filter(folder => folder.indexOf("_") < 0)
 		};
 	});
 	[
@@ -129,11 +127,7 @@ describe("TestCases", () => {
 			mode: "production",
 			devtool: "#@source-map",
 			minimize: true,
-			plugins: [
-				new webpack.HotModuleReplacementPlugin(),
-				new webpack.NamedModulesPlugin(),
-				new webpack.NamedChunksPlugin()
-			]
+			plugins: [new webpack.HotModuleReplacementPlugin(), new webpack.NamedModulesPlugin(), new webpack.NamedChunksPlugin()]
 		}
 	].forEach(config => {
 		describe(config.name, () => {
@@ -153,31 +147,15 @@ describe("TestCases", () => {
 						.forEach(testName => {
 							const suite = describe(testName, () => {});
 							it(testName + " should compile", done => {
-								const testDirectory = path.join(
-									casesPath,
-									category.name,
-									testName
-								);
-								const outputDirectory = path.join(
-									__dirname,
-									"js",
-									config.name,
-									category.name,
-									testName
-								);
+								const testDirectory = path.join(casesPath, category.name, testName);
+								const outputDirectory = path.join(__dirname, "js", config.name, category.name, testName);
 								const options = {
 									context: casesPath,
 									entry: "./" + category.name + "/" + testName + "/index",
 									target: "async-node",
 									devtool: config.devtool,
 									mode: config.mode || "none",
-									optimization: config.mode
-										? NO_EMIT_ON_ERRORS_OPTIMIZATIONS
-										: Object.assign(
-												{},
-												config.optimization,
-												DEFAULT_OPTIMIZATIONS
-											),
+									optimization: config.mode ? NO_EMIT_ON_ERRORS_OPTIMIZATIONS : Object.assign({}, config.optimization, DEFAULT_OPTIMIZATIONS),
 									performance: {
 										hints: false
 									},
@@ -188,43 +166,15 @@ describe("TestCases", () => {
 									},
 									resolve: {
 										modules: ["web_modules", "node_modules"],
-										mainFields: [
-											"webpack",
-											"browser",
-											"web",
-											"browserify",
-											["jam", "main"],
-											"main"
-										],
+										mainFields: ["webpack", "browser", "web", "browserify", ["jam", "main"], "main"],
 										aliasFields: ["browser"],
-										extensions: [
-											".mjs",
-											".webpack.js",
-											".web.js",
-											".js",
-											".json"
-										],
+										extensions: [".mjs", ".webpack.js", ".web.js", ".js", ".json"],
 										concord: true
 									},
 									resolveLoader: {
-										modules: [
-											"web_loaders",
-											"web_modules",
-											"node_loaders",
-											"node_modules"
-										],
-										mainFields: [
-											"webpackLoader",
-											"webLoader",
-											"loader",
-											"main"
-										],
-										extensions: [
-											".webpack-loader.js",
-											".web-loader.js",
-											".loader.js",
-											".js"
-										]
+										modules: ["web_loaders", "web_modules", "node_loaders", "node_modules"],
+										mainFields: ["webpackLoader", "webLoader", "loader", "main"],
+										extensions: [".webpack-loader.js", ".web-loader.js", ".loader.js", ".js"]
 									},
 									module: {
 										rules: [
@@ -240,16 +190,8 @@ describe("TestCases", () => {
 									},
 									plugins: (config.plugins || []).concat(function() {
 										this.hooks.compilation.tap("TestCasesTest", compilation => {
-											[
-												"optimize",
-												"optimizeModulesBasic",
-												"optimizeChunksBasic",
-												"afterOptimizeTree",
-												"afterOptimizeAssets"
-											].forEach(hook => {
-												compilation.hooks[hook].tap("TestCasesTest", () =>
-													compilation.checkConstraints()
-												);
+											["optimize", "optimizeModulesBasic", "optimizeChunksBasic", "afterOptimizeTree", "afterOptimizeAssets"].forEach(hook => {
+												compilation.hooks[hook].tap("TestCasesTest", () => compilation.checkConstraints());
 											});
 										});
 									})
@@ -259,34 +201,12 @@ describe("TestCases", () => {
 									const statOptions = Stats.presetToOptions("verbose");
 									statOptions.colors = false;
 									mkdirp.sync(outputDirectory);
-									fs.writeFileSync(
-										path.join(outputDirectory, "stats.txt"),
-										stats.toString(statOptions),
-										"utf-8"
-									);
+									fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
 									const jsonStats = stats.toJson({
 										errorDetails: true
 									});
-									if (
-										checkArrayExpectation(
-											testDirectory,
-											jsonStats,
-											"error",
-											"Error",
-											done
-										)
-									)
-										return;
-									if (
-										checkArrayExpectation(
-											testDirectory,
-											jsonStats,
-											"warning",
-											"Warning",
-											done
-										)
-									)
-										return;
+									if (checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
+									if (checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
 									let exportedTest = 0;
 
 									function _it(title, fn) {
@@ -303,31 +223,18 @@ describe("TestCases", () => {
 									function _require(module) {
 										if (module.substr(0, 2) === "./") {
 											const p = path.join(outputDirectory, module);
-											const fn = vm.runInThisContext(
-												"(function(require, module, exports, __dirname, it) {" +
-													fs.readFileSync(p, "utf-8") +
-													"\n})",
-												p
-											);
+											const fn = vm.runInThisContext("(function(require, module, exports, __dirname, it) {" + fs.readFileSync(p, "utf-8") + "\n})", p);
 											const m = {
 												exports: {},
 												webpackTestSuiteModule: true
 											};
-											fn.call(
-												m.exports,
-												_require,
-												m,
-												m.exports,
-												outputDirectory,
-												_it
-											);
+											fn.call(m.exports, _require, m, m.exports, outputDirectory, _it);
 											return m.exports;
 										} else return require(module);
 									}
 									_require.webpackTestSuiteRequire = true;
 									_require("./bundle.js");
-									if (exportedTest === 0)
-										return done(new Error("No tests exported by test case"));
+									if (exportedTest === 0) return done(new Error("No tests exported by test case"));
 									done();
 								});
 							});

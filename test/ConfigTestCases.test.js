@@ -43,39 +43,24 @@ describe("ConfigTestCases", () => {
 				const suite = describe(testName, () => {});
 				it(testName + " should compile", function(done) {
 					const testDirectory = path.join(casesPath, category.name, testName);
-					const outputDirectory = path.join(
-						__dirname,
-						"js",
-						"config",
-						category.name,
-						testName
-					);
-					const options = prepareOptions(
-						require(path.join(testDirectory, "webpack.config.js"))
-					);
+					const outputDirectory = path.join(__dirname, "js", "config", category.name, testName);
+					const options = prepareOptions(require(path.join(testDirectory, "webpack.config.js")));
 					const optionsArr = [].concat(options);
 					optionsArr.forEach((options, idx) => {
 						if (!options.context) options.context = testDirectory;
 						if (!options.mode) options.mode = "production";
 						if (!options.optimization) options.optimization = {};
-						if (options.optimization.minimize === undefined)
-							options.optimization.minimize = false;
+						if (options.optimization.minimize === undefined) options.optimization.minimize = false;
 						if (!options.entry) options.entry = "./index.js";
 						if (!options.target) options.target = "async-node";
 						if (!options.output) options.output = {};
 						if (!options.output.path) options.output.path = outputDirectory;
-						if (typeof options.output.pathinfo === "undefined")
-							options.output.pathinfo = true;
-						if (!options.output.filename)
-							options.output.filename = "bundle" + idx + ".js";
+						if (typeof options.output.pathinfo === "undefined") options.output.pathinfo = true;
+						if (!options.output.filename) options.output.filename = "bundle" + idx + ".js";
 					});
 					let testConfig = {
 						findBundle: function(i, options) {
-							if (
-								fs.existsSync(
-									path.join(options.output.path, "bundle" + i + ".js")
-								)
-							) {
+							if (fs.existsSync(path.join(options.output.path, "bundle" + i + ".js"))) {
 								return "./bundle" + i + ".js";
 							}
 						},
@@ -83,10 +68,7 @@ describe("ConfigTestCases", () => {
 					};
 					try {
 						// try to load a test file
-						testConfig = Object.assign(
-							testConfig,
-							require(path.join(testDirectory, "test.config.js"))
-						);
+						testConfig = Object.assign(testConfig, require(path.join(testDirectory, "test.config.js")));
 					} catch (e) {} // eslint-disable-line no-empty
 
 					this.timeout(testConfig.timeout);
@@ -96,50 +78,19 @@ describe("ConfigTestCases", () => {
 							const fakeStats = {
 								errors: [err.stack]
 							};
-							if (
-								checkArrayExpectation(
-									testDirectory,
-									fakeStats,
-									"error",
-									"Error",
-									done
-								)
-							)
-								return;
+							if (checkArrayExpectation(testDirectory, fakeStats, "error", "Error", done)) return;
 							// Wait for uncaught errors to occur
 							return setTimeout(done, 200);
 						}
 						const statOptions = Stats.presetToOptions("verbose");
 						statOptions.colors = false;
 						mkdirp.sync(outputDirectory);
-						fs.writeFileSync(
-							path.join(outputDirectory, "stats.txt"),
-							stats.toString(statOptions),
-							"utf-8"
-						);
+						fs.writeFileSync(path.join(outputDirectory, "stats.txt"), stats.toString(statOptions), "utf-8");
 						const jsonStats = stats.toJson({
 							errorDetails: true
 						});
-						if (
-							checkArrayExpectation(
-								testDirectory,
-								jsonStats,
-								"error",
-								"Error",
-								done
-							)
-						)
-							return;
-						if (
-							checkArrayExpectation(
-								testDirectory,
-								jsonStats,
-								"warning",
-								"Warning",
-								done
-							)
-						)
-							return;
+						if (checkArrayExpectation(testDirectory, jsonStats, "error", "Error", done)) return;
+						if (checkArrayExpectation(testDirectory, jsonStats, "warning", "Warning", done)) return;
 						let exportedTests = 0;
 
 						function _it(title, fn) {
@@ -170,38 +121,15 @@ describe("ConfigTestCases", () => {
 									p = path.join(currentDirectory, module);
 									content = fs.readFileSync(p, "utf-8");
 								}
-								if (
-									options.target === "web" ||
-									options.target === "webworker"
-								) {
-									fn = vm.runInNewContext(
-										"(function(require, module, exports, __dirname, __filename, it, window) {" +
-											content +
-											"\n})",
-										globalContext,
-										p
-									);
+								if (options.target === "web" || options.target === "webworker") {
+									fn = vm.runInNewContext("(function(require, module, exports, __dirname, __filename, it, window) {" + content + "\n})", globalContext, p);
 								} else {
-									fn = vm.runInThisContext(
-										"(function(require, module, exports, __dirname, __filename, it) {" +
-											content +
-											"\n})",
-										p
-									);
+									fn = vm.runInThisContext("(function(require, module, exports, __dirname, __filename, it) {" + content + "\n})", p);
 								}
 								const m = {
 									exports: {}
 								};
-								fn.call(
-									m.exports,
-									_require.bind(null, path.dirname(p)),
-									m,
-									m.exports,
-									path.dirname(p),
-									p,
-									_it,
-									globalContext
-								);
+								fn.call(m.exports, _require.bind(null, path.dirname(p)), m, m.exports, path.dirname(p), p, _it, globalContext);
 								return m.exports;
 							} else if (testConfig.modules && module in testConfig.modules) {
 								return testConfig.modules[module];
@@ -218,14 +146,8 @@ describe("ConfigTestCases", () => {
 							}
 						}
 						// give a free pass to compilation that generated an error
-						if (!jsonStats.errors.length && filesCount !== optionsArr.length)
-							return done(
-								new Error(
-									"Should have found at least one bundle file per webpack config"
-								)
-							);
-						if (exportedTests < filesCount)
-							return done(new Error("No tests exported by test case"));
+						if (!jsonStats.errors.length && filesCount !== optionsArr.length) return done(new Error("Should have found at least one bundle file per webpack config"));
+						if (exportedTests < filesCount) return done(new Error("No tests exported by test case"));
 						process.nextTick(done);
 					});
 				});

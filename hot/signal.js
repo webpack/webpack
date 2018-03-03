@@ -19,11 +19,7 @@ if (module.hot) {
 					.apply({
 						ignoreUnaccepted: true,
 						onUnaccepted: function(data) {
-							log(
-								"warning",
-								"Ignored an update to unaccepted module " +
-									data.chain.join(" -> ")
-							);
+							log("warning", "Ignored an update to unaccepted module " + data.chain.join(" -> "));
 						}
 					})
 					.then(function(renewedModules) {
@@ -47,10 +43,7 @@ if (module.hot) {
 
 	process.on(__resourceQuery.substr(1) || "SIGUSR2", function() {
 		if (module.hot.status() !== "idle") {
-			log(
-				"warning",
-				"[HMR] Got signal but currently in " + module.hot.status() + " state."
-			);
+			log("warning", "[HMR] Got signal but currently in " + module.hot.status() + " state.");
 			log("warning", "[HMR] Need to be in idle state to start hot update.");
 			return;
 		}
