@@ -34,14 +34,11 @@ if (!webpackCliInstalled) {
 	const inquirer = require("inquirer");
 	const isYarn = fs.existsSync(path.resolve(process.cwd(), "yarn.lock"));
 
-	let packageManager;
-	let options = [];
+	const packageManager = isYarn ? "yarn" : "npm";
+	const options = ["install", "-D", "webpack-cli"];
+
 	if (isYarn) {
-		packageManager = "yarn";
-		options = ["add", "-D", "webpack-cli"];
-	} else {
-		packageManager = "npm";
-		options = ["install", "--save-dev", "webpack-cli"];
+		options[0] = "add";
 	}
 
 	const commandToBeRun = `${packageManager} ${options.join(" ")}`;
