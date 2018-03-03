@@ -1,7 +1,7 @@
 module.exports = {
 	entry: {
 		main: "./index",
-		misc: "./second",
+		misc: "./second"
 	},
 	output: {
 		filename: "[name].js"

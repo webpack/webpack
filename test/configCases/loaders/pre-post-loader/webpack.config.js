@@ -1,10 +1,9 @@
 module.exports = {
 	module: {
 		rules: [
-
 			{
 				test: /a\.js$/,
-				use: "./loader1",
+				use: "./loader1"
 			},
 			{
 				test: /a\.js$/,

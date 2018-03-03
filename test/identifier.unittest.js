@@ -11,12 +11,14 @@ describe("util/identifier", () => {
 			let context, pathConstruct, expected;
 			beforeEach(() => {
 				context = "/some/dir/";
-				pathConstruct = "/some/dir/to/somwhere|some/other/dir!../more/dir";
-				expected = "to/somwhere|some/other/dir!../more/dir";
+				pathConstruct = "/some/dir/to/somewhere|some/other/dir!../more/dir";
+				expected = "to/somewhere|some/other/dir!../more/dir";
 			});
 
 			it("computes the correct relative results for the path construct", () => {
-				should(identifierUtil.makePathsRelative(context, pathConstruct)).be.exactly(expected);
+				should(
+					identifierUtil.makePathsRelative(context, pathConstruct)
+				).be.exactly(expected);
 			});
 		});
 	});

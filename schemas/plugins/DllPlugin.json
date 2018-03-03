@@ -1,5 +1,4 @@
 {
-  "id": "DllPlugin",
   "additionalProperties": false,
   "required": [
     "path"

@@ -1,6 +1,6 @@
 This is the vendor build part.
 
-It's built separatly from the app part. The vendors dll is only built when vendors has changed and not while the normal development cycle.
+It's built separately from the app part. The vendors dll is only built when vendors has changed and not while the normal development cycle.
 
 The DllPlugin in combination with the `output.library` option exposes the internal require function as global variable in the target environment.
 
@@ -166,7 +166,7 @@ function square(n) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
     Asset      Size  Chunks             Chunk Names
 vendor.js  3.32 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
@@ -182,7 +182,7 @@ chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
     Asset       Size  Chunks             Chunk Names
 vendor.js  704 bytes       0  [emitted]  main
 Entrypoint main = vendor.js

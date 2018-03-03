@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/webpack/webpack">
-    <img width="200" heigth="200" src="https://webpack.js.org/assets/icon-square-big.svg">
+    <img width="200" height="200" src="https://webpack.js.org/assets/icon-square-big.svg">
   </a>
   <br>
   <br>
@@ -15,7 +15,7 @@
 [![licenses][licenses]][licenses-url]
 
   <br>
-	<a href="https://npmjs.com/package/webpack">
+	<a href="https://npmcharts.com/compare/webpack?minimal=true">
 		<img src="https://img.shields.io/npm/dm/webpack.svg">
 	</a>
 	<a href="https://opencollective.com/webpack#backer">
@@ -52,7 +52,7 @@ yarn add webpack --dev
 
 <h2 align="center">Introduction</h2>
 
-> This README reflects Webpack v2.x and v3.x. The Webpack v1.x [documentation can be found here](https://webpack.github.io/docs/?utm_source=github&utm_medium=readme&utm_campaign=top).
+> This README reflects Webpack v2.x and v3.x. The Webpack v1.x documentation has been deprecated and deleted.
 
 webpack is a bundler for modules. The main purpose is to bundle JavaScript
 files for usage in a browser, yet it is also capable of transforming, bundling,
@@ -432,7 +432,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 <h2 align="center">Silver Sponsors</h2>
 
-[Become a sliver sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
+[Become a silver sponsor](https://opencollective.com/webpack#sponsor) and get your logo on our README on Github with a link to your site.
 
 <div align="center">
 

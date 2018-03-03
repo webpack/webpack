@@ -8,7 +8,7 @@ it("should pass when required by CommonJS module", function () {
 it("should pass when use babeljs transpiler", function() {
 	//the following are generated code by use babeljs.
 	// use it this way will save trouble to setup babel-loader
-	// the babeljs transpiled code depends on the __esMoudule to be set
+	// the babeljs transpiled code depends on the __esModule to be set
 	var _test = require('./a');
 	var _test2 = _interopRequireDefault(_test);
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }

@@ -679,7 +679,7 @@
           ]
         },
         "moduleExtensions": {
-          "description": "Extenstions added to the module request when trying to find the module",
+          "description": "Extensions added to the module request when trying to find the module",
           "anyOf": [
             {
               "$ref": "#/definitions/common.arrayOfStringValues"
@@ -717,7 +717,7 @@
           "type": "boolean"
         },
         "concord": {
-          "description": "Enable condord resolving extras",
+          "description": "Enable concord resolving extras",
           "type": "boolean"
         },
         "unsafeCache": {
@@ -1294,7 +1294,7 @@
           "description": "Remove chunks which are empty",
           "type": "boolean"
         },
-        "mergedDuplicateChunks": {
+        "mergeDuplicateChunks": {
           "description": "Merge chunks which contain the same modules",
           "type": "boolean"
         },
@@ -1366,9 +1366,7 @@
                   "description": "Give chunks created a name (chunks with equal name are merged)",
                   "oneOf": [
                     {
-                      "enum": [
-                        true
-                      ]
+                      "type": "boolean"
                     },
                     {
                       "instanceof": "Function"
@@ -1377,6 +1375,11 @@
                       "type": "string"
                     }
                   ]
+                },
+                "filename": {
+                  "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
+                  "type": "string",
+                  "minLength": 1
                 },
                 "cacheGroups": {
                   "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)",
@@ -1460,9 +1463,7 @@
                             "description": "Give chunks for this cache group a name (chunks with equal name are merged)",
                             "oneOf": [
                               {
-                                "enum": [
-                                  true
-                                ]
+                                "type": "boolean"
                               },
                               {
                                 "instanceof": "Function"
@@ -1471,6 +1472,11 @@
                                 "type": "string"
                               }
                             ]
+                          },
+                          "filename": {
+                            "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
+                            "type": "string",
+                            "minLength": 1
                           }
                         }
                       }

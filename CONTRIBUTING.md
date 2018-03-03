@@ -13,7 +13,7 @@ If you are still having difficulty after looking over your configuration careful
 a question to [StackOverflow with the webpack tag](http://stackoverflow.com/tags/webpack). Questions
 that include your webpack.config.js and relevant files are more likely to receive responses.
 
-**If you have discovered a bug or have a feature suggestion, feel free to create an issue on Github.**
+**If you have discovered a bug or have a feature suggestion, please [create an issue on GitHub](https://github.com/webpack/webpack/issues/new).**
 
 ## Contributing to the webpack ecosystem
 
@@ -60,4 +60,4 @@ documentation.
 
 ## Discussions
 
-Gitters is only for small questions. To discuss in long a subject, please send on gitters a link to your forum or blog.
+Gitter is only for small questions. To discuss a subject in detail, please send a link to your forum or blog in the Gitter chat.

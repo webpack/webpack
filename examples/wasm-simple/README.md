@@ -242,7 +242,7 @@ export function fibonacciJavascript(i) {
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
-/******/ 	// object with all compiled WebAssmbly.Modules
+/******/ 	// object with all compiled WebAssembly.Modules
 /******/ 	__webpack_require__.w = {};
 /******/
 /******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
@@ -430,7 +430,7 @@ module.exports = instance.exports;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
                     Asset       Size  Chunks             Chunk Names
               0.output.js   2.88 KiB       0  [emitted]  
 9c8c5b45b5c12888e105.wasm   41 bytes    0, 1  [emitted]  
@@ -474,7 +474,7 @@ chunk    {2} output.js (main) 788 bytes >{0}< >{1}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
                     Asset       Size   Chunks             Chunk Names
               0.output.js  722 bytes     0, 1  [emitted]  
 fb3978ee17c3b5162f77.wasm   41 bytes  0, 1, 1  [emitted]  

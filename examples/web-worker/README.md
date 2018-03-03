@@ -343,7 +343,7 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
            Asset      Size  Chunks             Chunk Names
 0.hash.worker.js  1.82 KiB          [emitted]  
   hash.worker.js  4.02 KiB          [emitted]  
@@ -383,7 +383,7 @@ Child worker:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
            Asset       Size  Chunks             Chunk Names
 0.hash.worker.js  594 bytes          [emitted]  
   hash.worker.js  919 bytes          [emitted]  

@@ -287,7 +287,7 @@ __webpack_require__.e(/*! import() */ 2).then(function() { var module = __webpac
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
                     Asset       Size  Chunks             Chunk Names
         main.[chunkhash].js  768 bytes       0  [emitted]  main
            1.[chunkhash].js  270 bytes       1  [emitted]  
@@ -298,11 +298,11 @@ chunk    {0} main.[chunkhash].js (main) 58 bytes ={3}= >{1}< >{2}< [initial] [re
     > ./example main
     [0] ./example.js 58 bytes {0} [built]
         single entry ./example  main
-chunk    {1} 1.[chunkhash].js 29 bytes <{3}> <{0}> [rendered]
+chunk    {1} 1.[chunkhash].js 29 bytes <{0}> <{3}> [rendered]
     > ./async1 [0] ./example.js 2:0-18
     [1] ./async1.js 29 bytes {1} [built]
         import() ./async1 [0] ./example.js 2:0-18
-chunk    {2} 2.[chunkhash].js 29 bytes <{3}> <{0}> [rendered]
+chunk    {2} 2.[chunkhash].js 29 bytes <{0}> <{3}> [rendered]
     > ./async2 [0] ./example.js 3:0-18
     [2] ./async2.js 29 bytes {2} [built]
         import() ./async2 [0] ./example.js 3:0-18
@@ -314,7 +314,7 @@ chunk    {3} runtime~main.[chunkhash].js (runtime~main) 0 bytes ={0}= >{1}< >{2}
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
                     Asset       Size  Chunks             Chunk Names
            0.[chunkhash].js   77 bytes       0  [emitted]  
            1.[chunkhash].js   78 bytes       1  [emitted]  

@@ -1441,7 +1441,7 @@ exports.cursor = {
 };
 
 /**
- * Outut the given `failures` as a list.
+ * Output the given `failures` as a list.
  *
  * @param {Array} failures
  * @api public
@@ -2777,7 +2777,7 @@ function NyanCat(runner) {
     , width = Base.window.width * .75 | 0
     , rainbowColors = this.rainbowColors = self.generateColors()
     , colorIndex = this.colorIndex = 0
-    , numerOfLines = this.numberOfLines = 4
+    , numberOfLines = this.numberOfLines = 4
     , trajectories = this.trajectories = [[], [], [], []]
     , nyanCatWidth = this.nyanCatWidth = 11
     , trajectoryWidthMax = this.trajectoryWidthMax = (width - nyanCatWidth)
