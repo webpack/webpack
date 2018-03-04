@@ -22,7 +22,7 @@
     "schema-utils": "^0.4.2",
     "tapable": "^1.0.0",
     "uglifyjs-webpack-plugin": "^1.1.1",
-    "watchpack": "^1.4.0",
+    "watchpack": "^1.5.0",
     "webpack-sources": "^1.0.1"
   },
   "devDependencies": {
