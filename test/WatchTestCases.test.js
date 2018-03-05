@@ -95,242 +95,235 @@ describe("WatchTestCases", () => {
 
 					let exportedTests = [];
 
-					beforeAll(
-						() =>
-							new Promise((resolve, reject) => {
-								const done = err => {
-									if (err) return reject(err);
-									resolve();
-								};
-								const outputDirectory = path.join(
-									__dirname,
-									"js",
-									"watch",
-									category.name,
-									testName
+					it(
+						testName + " should compile",
+						done => {
+							const outputDirectory = path.join(
+								__dirname,
+								"js",
+								"watch",
+								category.name,
+								testName
+							);
+
+							let options = {};
+							const configPath = path.join(testDirectory, "webpack.config.js");
+							if (fs.existsSync(configPath)) options = require(configPath);
+							const applyConfig = options => {
+								if (!options.mode) options.mode = "development";
+								if (!options.context) options.context = tempDirectory;
+								if (!options.entry) options.entry = "./index.js";
+								if (!options.target) options.target = "async-node";
+								if (!options.output) options.output = {};
+								if (!options.output.path) options.output.path = outputDirectory;
+								if (typeof options.output.pathinfo === "undefined")
+									options.output.pathinfo = true;
+								if (!options.output.filename)
+									options.output.filename = "bundle.js";
+							};
+							if (Array.isArray(options)) {
+								options.forEach(applyConfig);
+							} else {
+								applyConfig(options);
+							}
+
+							const state = {};
+							let runIdx = 0;
+							let waitMode = false;
+							let run = runs[runIdx];
+							let triggeringFilename;
+							let lastHash = "";
+							const currentWatchStepModule = require("./helpers/currentWatchStep");
+							currentWatchStepModule.step = run.name;
+							copyDiff(path.join(testDirectory, run.name), tempDirectory);
+
+							setTimeout(() => {
+								const compiler = webpack(options);
+								compiler.hooks.invalid.tap(
+									"WatchTestCasesTest",
+									(filename, mtime) => {
+										triggeringFilename = filename;
+									}
 								);
-
-								let options = {};
-								const configPath = path.join(
-									testDirectory,
-									"webpack.config.js"
-								);
-								if (fs.existsSync(configPath)) options = require(configPath);
-								const applyConfig = options => {
-									if (!options.mode) options.mode = "development";
-									if (!options.context) options.context = tempDirectory;
-									if (!options.entry) options.entry = "./index.js";
-									if (!options.target) options.target = "async-node";
-									if (!options.output) options.output = {};
-									if (!options.output.path)
-										options.output.path = outputDirectory;
-									if (typeof options.output.pathinfo === "undefined")
-										options.output.pathinfo = true;
-									if (!options.output.filename)
-										options.output.filename = "bundle.js";
-								};
-								if (Array.isArray(options)) {
-									options.forEach(applyConfig);
-								} else {
-									applyConfig(options);
-								}
-
-								const state = {};
-								let runIdx = 0;
-								let waitMode = false;
-								let run = runs[runIdx];
-								let triggeringFilename;
-								let lastHash = "";
-								const currentWatchStepModule = require("./helpers/currentWatchStep");
-								currentWatchStepModule.step = run.name;
-								copyDiff(path.join(testDirectory, run.name), tempDirectory);
-
-								setTimeout(() => {
-									const compiler = webpack(options);
-									compiler.hooks.invalid.tap(
-										"WatchTestCasesTest",
-										(filename, mtime) => {
-											triggeringFilename = filename;
-										}
-									);
-									const watching = compiler.watch(
-										{
-											aggregateTimeout: 1000
-										},
-										(err, stats) => {
-											if (err) return done(err);
-											if (!stats)
-												return done(
-													new Error("No stats reported from Compiler")
-												);
-											if (stats.hash === lastHash) return;
-											lastHash = stats.hash;
-											if (run.done && lastHash !== stats.hash) {
-												return done(
-													new Error(
-														"Compilation changed but no change was issued " +
-															lastHash +
-															" != " +
-															stats.hash +
-															" (run " +
-															runIdx +
-															")\n" +
-															"Triggering change: " +
-															triggeringFilename
-													)
-												);
-											}
-											if (waitMode) return;
-											run.done = true;
-											if (err) return done(err);
-											const statOptions = Stats.presetToOptions("verbose");
-											statOptions.colors = false;
-											mkdirp.sync(outputDirectory);
-											fs.writeFileSync(
-												path.join(outputDirectory, "stats.txt"),
-												stats.toString(statOptions),
-												"utf-8"
+								const watching = compiler.watch(
+									{
+										aggregateTimeout: 1000
+									},
+									(err, stats) => {
+										if (err) return done(err);
+										if (!stats)
+											return done(new Error("No stats reported from Compiler"));
+										if (stats.hash === lastHash) return;
+										lastHash = stats.hash;
+										if (run.done && lastHash !== stats.hash) {
+											return done(
+												new Error(
+													"Compilation changed but no change was issued " +
+														lastHash +
+														" != " +
+														stats.hash +
+														" (run " +
+														runIdx +
+														")\n" +
+														"Triggering change: " +
+														triggeringFilename
+												)
 											);
-											const jsonStats = stats.toJson({
-												errorDetails: true
-											});
-											if (
-												checkArrayExpectation(
-													path.join(testDirectory, run.name),
-													jsonStats,
-													"error",
-													"Error",
-													done
-												)
+										}
+										if (waitMode) return;
+										run.done = true;
+										if (err) return done(err);
+										const statOptions = Stats.presetToOptions("verbose");
+										statOptions.colors = false;
+										mkdirp.sync(outputDirectory);
+										fs.writeFileSync(
+											path.join(outputDirectory, "stats.txt"),
+											stats.toString(statOptions),
+											"utf-8"
+										);
+										const jsonStats = stats.toJson({
+											errorDetails: true
+										});
+										if (
+											checkArrayExpectation(
+												path.join(testDirectory, run.name),
+												jsonStats,
+												"error",
+												"Error",
+												done
 											)
-												return;
-											if (
-												checkArrayExpectation(
-													path.join(testDirectory, run.name),
-													jsonStats,
-													"warning",
-													"Warning",
-													done
-												)
+										)
+											return;
+										if (
+											checkArrayExpectation(
+												path.join(testDirectory, run.name),
+												jsonStats,
+												"warning",
+												"Warning",
+												done
 											)
-												return;
+										)
+											return;
 
-											function _it(title, fn) {
-												exportedTests.push({ title, fn, timeout: 45000 });
-											}
+										function _it(title, fn) {
+											exportedTests.push({ title, fn, timeout: 45000 });
+										}
 
-											const globalContext = {
-												console: console,
-												expect: expect
-											};
+										const globalContext = {
+											console: console,
+											expect: expect
+										};
 
-											function _require(currentDirectory, module) {
-												if (Array.isArray(module) || /^\.\.?\//.test(module)) {
-													let fn;
-													let content;
-													let p;
-													if (Array.isArray(module)) {
-														p = path.join(currentDirectory, module[0]);
-														content = module
-															.map(arg => {
-																p = path.join(currentDirectory, arg);
-																return fs.readFileSync(p, "utf-8");
-															})
-															.join("\n");
-													} else {
-														p = path.join(currentDirectory, module);
-														content = fs.readFileSync(p, "utf-8");
-													}
-													if (
-														options.target === "web" ||
-														options.target === "webworker"
-													) {
-														fn = vm.runInNewContext(
-															"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect, window) {" +
-																content +
-																"\n})",
-															globalContext,
-															p
-														);
-													} else {
-														fn = vm.runInThisContext(
-															"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect) {" +
-																content +
-																"\n})",
-															p
-														);
-													}
-													const m = {
-														exports: {}
-													};
-													fn.call(
-														m.exports,
-														_require.bind(null, path.dirname(p)),
-														m,
-														m.exports,
-														path.dirname(p),
-														p,
-														_it,
-														run.name,
-														jsonStats,
-														state,
-														expect,
-														globalContext
-													);
-													return module.exports;
-												} else if (
-													testConfig.modules &&
-													module in testConfig.modules
+										function _require(currentDirectory, module) {
+											if (Array.isArray(module) || /^\.\.?\//.test(module)) {
+												let fn;
+												let content;
+												let p;
+												if (Array.isArray(module)) {
+													p = path.join(currentDirectory, module[0]);
+													content = module
+														.map(arg => {
+															p = path.join(currentDirectory, arg);
+															return fs.readFileSync(p, "utf-8");
+														})
+														.join("\n");
+												} else {
+													p = path.join(currentDirectory, module);
+													content = fs.readFileSync(p, "utf-8");
+												}
+												if (
+													options.target === "web" ||
+													options.target === "webworker"
 												) {
-													return testConfig.modules[module];
-												} else return require.requireActual(module);
-											}
-
-											let testConfig = {};
-											try {
-												// try to load a test file
-												testConfig = require(path.join(
-													testDirectory,
-													"test.config.js"
-												));
-											} catch (e) {}
-
-											if (testConfig.noTests) return process.nextTick(done);
-											_require(
-												outputDirectory,
-												testConfig.bundlePath || "./bundle.js"
-											);
-
-											if (exportedTests.length < 1)
-												return done(
-													new Error("No tests exported by test case")
-												);
-											runIdx++;
-											if (runIdx < runs.length) {
-												run = runs[runIdx];
-												waitMode = true;
-												setTimeout(() => {
-													waitMode = false;
-													currentWatchStepModule.step = run.name;
-													copyDiff(
-														path.join(testDirectory, run.name),
-														tempDirectory
+													fn = vm.runInNewContext(
+														"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect, window) {" +
+															content +
+															"\n})",
+														globalContext,
+														p
 													);
-												}, 1500);
-											} else {
-												watching.close();
-												process.nextTick(done);
-											}
+												} else {
+													fn = vm.runInThisContext(
+														"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect) {" +
+															content +
+															"\n})",
+														p
+													);
+												}
+												const m = {
+													exports: {}
+												};
+												fn.call(
+													m.exports,
+													_require.bind(null, path.dirname(p)),
+													m,
+													m.exports,
+													path.dirname(p),
+													p,
+													_it,
+													run.name,
+													jsonStats,
+													state,
+													expect,
+													globalContext
+												);
+												return module.exports;
+											} else if (
+												testConfig.modules &&
+												module in testConfig.modules
+											) {
+												return testConfig.modules[module];
+											} else return require.requireActual(module);
 										}
-									);
-								}, 300);
-							}),
-						45000
-					);
 
-					it(testName + " should compile", () => {});
-					exportedTests.forEach(({ title, fn, timeout }) =>
-						it(title, fn, timeout)
+										let testConfig = {};
+										try {
+											// try to load a test file
+											testConfig = require(path.join(
+												testDirectory,
+												"test.config.js"
+											));
+										} catch (e) {
+											// empty
+										}
+
+										if (testConfig.noTests) return process.nextTick(done);
+										_require(
+											outputDirectory,
+											testConfig.bundlePath || "./bundle.js"
+										);
+
+										if (exportedTests.length < 1)
+											return done(new Error("No tests exported by test case"));
+
+										describe("exported tests", () => {
+											exportedTests.forEach(({ title, fn, timeout }) =>
+												it(title, fn, timeout)
+											);
+											done();
+										});
+
+										runIdx++;
+										if (runIdx < runs.length) {
+											run = runs[runIdx];
+											waitMode = true;
+											setTimeout(() => {
+												waitMode = false;
+												currentWatchStepModule.step = run.name;
+												copyDiff(
+													path.join(testDirectory, run.name),
+													tempDirectory
+												);
+											}, 1500);
+										} else {
+											watching.close();
+											process.nextTick(done);
+										}
+									}
+								);
+							}, 300);
+						},
+						45000
 					);
 
 					afterAll(() => {

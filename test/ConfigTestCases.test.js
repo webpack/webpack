@@ -6,7 +6,6 @@ const fs = require("fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
 const checkArrayExpectation = require("./checkArrayExpectation");
-// const async = require("async");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
@@ -39,7 +38,7 @@ describe("ConfigTestCases", () => {
 	categories.forEach(category => {
 		describe(category.name, () => {
 			category.tests.forEach(testName => {
-				describe(testName, () => {
+				describe(testName, function() {
 					const testDirectory = path.join(casesPath, category.name, testName);
 					const outputDirectory = path.join(
 						__dirname,
@@ -49,7 +48,8 @@ describe("ConfigTestCases", () => {
 						testName
 					);
 					const exportedTests = [];
-					beforeAll(
+					it(
+						testName + " should compile",
 						() =>
 							new Promise((resolve, reject) => {
 								const done = err => {
@@ -95,7 +95,9 @@ describe("ConfigTestCases", () => {
 										testConfig,
 										require(path.join(testDirectory, "test.config.js"))
 									);
-								} catch (e) {}
+								} catch (e) {
+									// ignored
+								}
 
 								webpack(options, (err, stats) => {
 									if (err) {
@@ -240,13 +242,15 @@ describe("ConfigTestCases", () => {
 										);
 									if (exportedTests.length < filesCount)
 										return done(new Error("No tests exported by test case"));
-									done();
+
+									describe("exported tests", () => {
+										exportedTests.forEach(({ title, fn, timeout }) =>
+											it(title, fn, timeout)
+										);
+										done();
+									});
 								});
 							})
-					);
-					it(testName + " should compile", () => {});
-					exportedTests.forEach(({ title, fn, timeout }) =>
-						it(title, fn, timeout)
 					);
 				});
 			});

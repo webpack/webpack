@@ -160,105 +160,91 @@ const describeCases = config => {
 									});
 								})
 							};
-							// it(testName + " should compile",
 							let exportedTests = [];
-							beforeAll(
-								() =>
-									new Promise((resolve, reject) => {
-										const done = err => {
-											if (err) return reject(err);
-											resolve();
-										};
-										// console.log("starting compiling", category.name, "/", config.name, "/", testName);
-										webpack(options, (err, stats) => {
-											if (err) throw err;
-											// console.log("compiled case:", category.name, "/", config.name, "/", testName);
-											const statOptions = Stats.presetToOptions("verbose");
-											statOptions.colors = false;
-											mkdirp.sync(outputDirectory);
-											fs.writeFileSync(
-												path.join(outputDirectory, "stats.txt"),
-												stats.toString(statOptions),
-												"utf-8"
-											);
-											const jsonStats = stats.toJson({
-												errorDetails: true
-											});
-											if (
-												checkArrayExpectation(
-													testDirectory,
-													jsonStats,
-													"error",
-													"Error",
-													done
-												)
-											)
-												return;
-											if (
-												checkArrayExpectation(
-													testDirectory,
-													jsonStats,
-													"warning",
-													"Warning",
-													done
-												)
-											)
-												return;
-
-											function _it(title, fn) {
-												exportedTests.push({ title, fn, timeout: 5000 });
-												// TODO: is this necessary in 'jest'?
-												// WORKAROUND for a v8 bug
-												// Error objects retrain all scopes in the stacktrace
-												// test._trace = test._trace.message;
-											}
-
-											function _require(module) {
-												if (module.substr(0, 2) === "./") {
-													const p = path.join(outputDirectory, module);
-													const fn = vm.runInThisContext(
-														"(function(require, module, exports, __dirname, it, expect) {" +
-															fs.readFileSync(p, "utf-8") +
-															"\n})",
-														p
-													);
-													const m = {
-														exports: {},
-														webpackTestSuiteModule: true
-													};
-													fn.call(
-														m.exports,
-														_require,
-														m,
-														m.exports,
-														outputDirectory,
-														_it,
-														expect
-													);
-													return m.exports;
-												} else return require(module);
-											}
-											_require.webpackTestSuiteRequire = true;
-											_require("./bundle.js");
-											if (exportedTests.length === 0)
-												throw new Error("No tests exported by test case");
-											done();
-											// async.waterfall(
-											// 	exportedTests.map(({ title, name, fn }) => (callback) => {
-											// 		console.log("Starting:", name);
-											// 		console.log(fn.toString());
-											// 		// test.execute(callback, true);
-											// 	}),
-											// 	done
-											// );
+							it(
+								testName + " should compile",
+								done => {
+									webpack(options, (err, stats) => {
+										if (err) throw err;
+										const statOptions = Stats.presetToOptions("verbose");
+										statOptions.colors = false;
+										mkdirp.sync(outputDirectory);
+										fs.writeFileSync(
+											path.join(outputDirectory, "stats.txt"),
+											stats.toString(statOptions),
+											"utf-8"
+										);
+										const jsonStats = stats.toJson({
+											errorDetails: true
 										});
-									}),
-								30000
-							);
+										if (
+											checkArrayExpectation(
+												testDirectory,
+												jsonStats,
+												"error",
+												"Error",
+												done
+											)
+										)
+											return;
+										if (
+											checkArrayExpectation(
+												testDirectory,
+												jsonStats,
+												"warning",
+												"Warning",
+												done
+											)
+										)
+											return;
 
-							it(testName + " should compile", () => {});
-							exportedTests.forEach(({ title, fn, timeout }) =>
-								it(title, fn, timeout)
+										function _it(title, fn) {
+											exportedTests.push({ title, fn, timeout: 5000 });
+											// TODO: is this necessary in 'jest'?
+											// WORKAROUND for a v8 bug
+											// Error objects retrain all scopes in the stacktrace
+											// test._trace = test._trace.message;
+										}
+
+										function _require(module) {
+											if (module.substr(0, 2) === "./") {
+												const p = path.join(outputDirectory, module);
+												const fn = vm.runInThisContext(
+													"(function(require, module, exports, __dirname, it, expect) {" +
+														fs.readFileSync(p, "utf-8") +
+														"\n})",
+													p
+												);
+												const m = {
+													exports: {},
+													webpackTestSuiteModule: true
+												};
+												fn.call(
+													m.exports,
+													_require,
+													m,
+													m.exports,
+													outputDirectory,
+													_it,
+													expect
+												);
+												return m.exports;
+											} else return require(module);
+										}
+										_require.webpackTestSuiteRequire = true;
+										_require("./bundle.js");
+										if (exportedTests.length === 0)
+											throw new Error("No tests exported by test case");
+
+										describe("exported tests", () => {
+											exportedTests.forEach(({ title, fn, timeout }) =>
+												it(title, fn, timeout)
+											);
+											done();
+										});
+									});
+								},
+								30000
 							);
 						});
 					});

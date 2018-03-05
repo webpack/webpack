@@ -135,6 +135,8 @@
       "<rootDir>/"
     ],
     "coverageDirectory": "<rootDir>/coverage",
-    "coveragePathIgnorePatterns": ["\\.runtime\\.js$"]
+    "coveragePathIgnorePatterns": [
+      "\\.runtime\\.js$"
+    ]
   }
 }
