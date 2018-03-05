@@ -2,20 +2,20 @@ module.exports = {
 	"root": true,
 	"plugins": [
 		"prettier",
-		"node"
+		"node",
+		"jest"
 	],
 	"extends": ["eslint:recommended", "plugin:node/recommended"],
 	"env": {
 		"node": true,
 		"es6": true,
-		"mocha": true,
+		"jest/globals": true
 	},
 	"parserOptions": { "ecmaVersion": 2017 },
 	"rules": {
 		"prettier/prettier": "error",
 		"no-undef": "error",
 		"no-extra-semi": "error",
-		"semi": "error",
 		"no-template-curly-in-string": "error",
 		"no-caller": "error",
 		"yoda": "error",
