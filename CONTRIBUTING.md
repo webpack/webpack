@@ -17,10 +17,10 @@ that include your webpack.config.js, relevant files, and the full error message 
 
 Do you want to fix an issue?  Look at the issues with a tag of [X5: work required (PR / Help Wanted)](https://github.com/webpack/webpack/labels/X5%3A%20work%20required%20%28PR%20%2F%20Help%20Wanted%29).  Each issue should be tagged with a difficulty tag -
 
-- D0: My First Commit (Contrib. Difficulty)
-- D1: Easy (Contrib. Difficulty)
-- D2: Medium (Contrib. Difficulty)
-- D3: Hard (Contrib. Difficulty)
+- D0: My First Commit (Contribution Difficulty)
+- D1: Easy (Contribution Difficulty)
+- D2: Medium (Contribution Difficulty)
+- D3: Hard (Contribution Difficulty)
 
 ## Contributing to the webpack ecosystem
 
