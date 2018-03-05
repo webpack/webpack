@@ -28,7 +28,7 @@ describe("HotTestCases", () => {
 				const suite = describe(testName, function() {
 					this.timeout(10000);
 				});
-				it(testName + " should compile", done => {
+				it(testName + " should compile", function(done) {
 					this.timeout(10000);
 					const testDirectory = path.join(casesPath, category.name, testName);
 					const outputDirectory = path.join(
