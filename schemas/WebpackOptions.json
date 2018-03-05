@@ -1767,6 +1767,10 @@
               "type": "boolean",
               "description": "add information about modules nested in other modules (like with module concatenation)"
             },
+            "moduleAssets": {
+              "type": "boolean",
+              "description": "add information about assets inside modules"
+            },
             "children": {
               "type": "boolean",
               "description": "add children information"
