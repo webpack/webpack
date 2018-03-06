@@ -246,7 +246,7 @@ describe("Compiler", () => {
 			});
 		});
 	});
-	it("should not emit on errors", function(done) {
+  it("should not emit on errors", function(done) {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -282,5 +282,154 @@ describe("Compiler", () => {
 				return done(new Error("Bundle should not be created on error"));
 			done();
 		});
+  });
+  it("should not be run twice at a time (run)", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+		});
+		compiler.run((err, stats) => {
+			if (err) return done();
+		});
+	});
+  it("should not be run twice at a time (watch)", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		compiler.watch({}, (err, stats) => {
+			if (err) return done(err);
+		});
+		compiler.watch({}, (err, stats) => {
+			if (err) return done();
+		});
+  });
+  it("should not be run twice at a time (run - watch)", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+		});
+    compiler.watch({}, (err, stats) => {
+			if (err) return done();
+		});
+	});
+  it("should not be run twice at a time (watch - run)", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+    compiler.watch({}, (err, stats) => {
+			if (err) return done(err);
+		});
+    compiler.run((err, stats) => {
+			if (err) return done();
+		});
+	});
+  it("should not be run twice at a time (instance cb)", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		}, () => {});
+		compiler.outputFileSystem = new MemoryFs();
+    compiler.run((err, stats) => {
+			if (err) return done();
+		});
+	});
+  it("should run again correctly after first compilation", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+    compiler.run((err, stats) => {
+      if (err) return done(err);
+
+      compiler.run((err, stats) => {
+        if (err) return done(err);
+        done()
+      });
+		});
+	});
+  it("should watch again correctly after first compilation", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+    compiler.run((err, stats) => {
+      if (err) return done(err);
+
+      compiler.watch({}, (err, stats) => {
+        if (err) return done(err);
+        done()
+      });
+		});
+	});
+  it("should run again correctly after first closed watch", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+    const watching = compiler.watch({}, (err, stats) => {
+      if (err) return done(err);
+      done()
+    });
+    watching.close(() => {
+      compiler.run((err, stats) => {
+        if (err) return done(err);
+        done()
+      });
+    })
 	});
 });
