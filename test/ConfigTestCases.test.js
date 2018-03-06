@@ -193,6 +193,7 @@ describe("ConfigTestCases", () => {
 											} else {
 												fn = vm.runInThisContext(
 													"(function(require, module, exports, __dirname, __filename, it, expect) {" +
+														"global.expect = expect;" +
 														content +
 														"\n})",
 													p
@@ -244,8 +245,9 @@ describe("ConfigTestCases", () => {
 										return done(new Error("No tests exported by test case"));
 
 									describe("exported tests", () => {
-										exportedTests.forEach(({ title, fn, timeout }) =>
-											it(title, fn, timeout)
+										exportedTests.forEach(
+											({ title, fn, timeout }) =>
+												fn ? it(title, fn, timeout) : it.skip(title, () => {})
 										);
 										done();
 									});

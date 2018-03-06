@@ -107,7 +107,7 @@
     "fix": "npm run lint -- --fix",
     "pretty-files": "prettier \"lib/**.*\" \"bin/**.*\" \"hot/**.*\" \"buildin/**.*\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" --write",
     "schema-lint": "node --no-deprecation --max-old-space-size=4096 --harmony node_modules/.bin/jest --testMatch '<rootDir>/test/*.lint.js'",
-    "benchmark": "node --no-deprecation --max-old-space-size=4096 --harmony node_modules/.bin/jest --testMatch '<roorDir>/test/*.benchmark.js'",
+    "benchmark": "node --no-deprecation --max-old-space-size=4096 --harmony node_modules/.bin/jest --testMatch '<rootDir>/test/*.benchmark.js'",
     "cover": "npm run cover:init && npm run cover:all && npm run cover:report",
     "cover:init": "rimraf coverage",
     "cover:all": "node --no-deprecation --max-old-space-size=4096 --harmony node_modules/.bin/jest --coverage",

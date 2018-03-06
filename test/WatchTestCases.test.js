@@ -245,6 +245,7 @@ describe("WatchTestCases", () => {
 												} else {
 													fn = vm.runInThisContext(
 														"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect) {" +
+															"global.expect = expect;" +
 															content +
 															"\n})",
 														p
@@ -296,13 +297,6 @@ describe("WatchTestCases", () => {
 										if (exportedTests.length < 1)
 											return done(new Error("No tests exported by test case"));
 
-										describe("exported tests", () => {
-											exportedTests.forEach(({ title, fn, timeout }) =>
-												it(title, fn, timeout)
-											);
-											done();
-										});
-
 										runIdx++;
 										if (runIdx < runs.length) {
 											run = runs[runIdx];
@@ -317,6 +311,16 @@ describe("WatchTestCases", () => {
 											}, 1500);
 										} else {
 											watching.close();
+
+											describe("exported tests", () => {
+												exportedTests.forEach(
+													({ title, fn, timeout }) =>
+														fn
+															? it(title, fn, timeout)
+															: it.skip(title, () => {})
+												);
+											});
+
 											process.nextTick(done);
 										}
 									}

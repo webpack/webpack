@@ -200,10 +200,6 @@ const describeCases = config => {
 
 										function _it(title, fn) {
 											exportedTests.push({ title, fn, timeout: 5000 });
-											// TODO: is this necessary in 'jest'?
-											// WORKAROUND for a v8 bug
-											// Error objects retrain all scopes in the stacktrace
-											// test._trace = test._trace.message;
 										}
 
 										function _require(module) {
@@ -211,6 +207,7 @@ const describeCases = config => {
 												const p = path.join(outputDirectory, module);
 												const fn = vm.runInThisContext(
 													"(function(require, module, exports, __dirname, it, expect) {" +
+														"global.expect = expect;" +
 														fs.readFileSync(p, "utf-8") +
 														"\n})",
 													p
@@ -237,14 +234,15 @@ const describeCases = config => {
 											throw new Error("No tests exported by test case");
 
 										describe("exported tests", () => {
-											exportedTests.forEach(({ title, fn, timeout }) =>
-												it(title, fn, timeout)
+											exportedTests.forEach(
+												({ title, fn, timeout }) =>
+													fn ? it(title, fn, timeout) : it.skip(title, () => {})
 											);
 											done();
 										});
 									});
 								},
-								30000
+								40000
 							);
 						});
 					});

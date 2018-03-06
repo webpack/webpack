@@ -29,7 +29,9 @@ describe("StatsTestCases", () => {
 				}
 			};
 			if (fs.existsSync(path.join(base, testName, "webpack.config.js"))) {
-				options = require(path.join(base, testName, "webpack.config.js"));
+				options = require(
+					path.join(base, testName, "webpack.config.js")
+				);
 			}
 			(Array.isArray(options) ? options : [options]).forEach(options => {
 				if (!options.context) options.context = path.join(base, testName);
@@ -70,13 +72,11 @@ describe("StatsTestCases", () => {
 			});
 			c.run((err, stats) => {
 				if (err) return done(err);
-
 				if (/error$/.test(testName)) {
 					expect(stats.hasErrors()).toBe(true);
 				} else if (stats.hasErrors()) {
 					return done(new Error(stats.toJson().errors.join("\n\n")));
 				}
-
 				let toStringOptions = {
 					context: path.join(base, testName),
 					colors: false
@@ -86,7 +86,6 @@ describe("StatsTestCases", () => {
 					toStringOptions = options.stats;
 					if (toStringOptions === null || typeof toStringOptions !== "object")
 						toStringOptions = Stats.presetToOptions(toStringOptions);
-
 					hasColorSetting = typeof options.stats.colors !== "undefined";
 					if (!toStringOptions.context)
 						toStringOptions.context = path.join(base, testName);
@@ -94,7 +93,6 @@ describe("StatsTestCases", () => {
 				if (Array.isArray(options) && !toStringOptions.children) {
 					toStringOptions.children = options.map(o => o.stats);
 				}
-
 				let actual = stats.toString(toStringOptions);
 				expect(typeof actual).toBe("string");
 				if (!hasColorSetting) {
@@ -117,7 +115,6 @@ describe("StatsTestCases", () => {
 							"$1 Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT"
 						);
 				}
-
 				actual = actual
 					.replace(/\r\n?/g, "\n")
 					.replace(/[\t ]*Version:.+\n/g, "")

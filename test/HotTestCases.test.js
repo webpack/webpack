@@ -135,6 +135,7 @@ describe("HotTestCases", () => {
 									const p = path.join(outputDirectory, module);
 									const fn = vm.runInThisContext(
 										"(function(require, module, exports, __dirname, __filename, it, expect, NEXT, STATS) {" +
+											"global.expect = expect;" +
 											fs.readFileSync(p, "utf-8") +
 											"\n})",
 										p
@@ -162,8 +163,9 @@ describe("HotTestCases", () => {
 								return done(new Error("No tests exported by test case"));
 
 							describe("exported tests", () => {
-								exportedTests.forEach(({ title, fn, timeout }) =>
-									it(title, fn, timeout)
+								exportedTests.forEach(
+									({ title, fn, timeout }) =>
+										fn ? it(title, fn, timeout) : it.skip(title, () => {})
 								);
 								done();
 							});
