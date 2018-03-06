@@ -31,7 +31,7 @@ it("should parse spread operator"/*, function() {
 
 it("should parse arrow function", function() {
 	expect((() => require("./a"))()).toBe("a");
-	(expect(() => {
+	expect((() => {
 		return require("./a");
 	})()).toBe("a");
 	require.ensure([], () => {

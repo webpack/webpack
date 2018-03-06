@@ -10,12 +10,11 @@ define("return-module", function(require, exports, module) {
 	return "module is returned";
 });
 
-
 it("should make different modules for query", function() {
 	expect(require("regular")).toBe("regular-module");
 	expect(require("return-module")).toBe("module is returned");
 
 	const overrideExports = require("override-exports");
-	expect(overrideExports).toBeOfType("object");
+	expect(typeof overrideExports).toBe("object");
 	expect(Object.keys(overrideExports)).toHaveLength(0);
 });
