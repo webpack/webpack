@@ -6,7 +6,7 @@ const fs = require("fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
 const checkArrayExpectation = require("./checkArrayExpectation");
-const async = require("async");
+const {remove} = require("./helpers/remove");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
@@ -25,20 +25,6 @@ function copyDiff(src, dest) {
 			if (/^DELETE\s*$/.test(content.toString("utf-8")))
 				fs.unlinkSync(destFile);
 			else fs.writeFileSync(destFile, content);
-		}
-	});
-}
-
-function remove(src) {
-	if (!fs.existsSync(src)) return;
-	const files = fs.readdirSync(src);
-	files.forEach(filename => {
-		const srcFile = path.join(src, filename);
-		const directory = fs.statSync(srcFile).isDirectory();
-		if (directory) {
-			remove(srcFile);
-		} else {
-			fs.unlinkSync(srcFile);
 		}
 	});
 }
