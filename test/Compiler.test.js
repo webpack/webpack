@@ -426,10 +426,30 @@ describe("Compiler", () => {
 		compiler.outputFileSystem = new MemoryFs();
 		const watching = compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
-			done();
 		});
 		watching.close(() => {
 			compiler.run((err, stats) => {
+				if (err) return done(err);
+				done();
+			});
+		});
+	});
+	it("should watch again correctly after first closed watch", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		const watching = compiler.watch({}, (err, stats) => {
+			if (err) return done(err);
+		});
+		watching.close(() => {
+			compiler.watch({}, (err, stats) => {
 				if (err) return done(err);
 				done();
 			});
