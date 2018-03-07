@@ -2,7 +2,7 @@ it("should cache modules correctly", function(done) {
 	delete require.cache[require.resolve("./singular.js")];
 	expect(require("./singular.js").value).toBe(1);
 	expect((require("./singular.js")).value).toBe(1);
-	require("./sing" + "luar.js").value = 2;
+	require("./sing" + "ular.js").value = 2;
 	expect(require("./singular.js").value).toBe(2);
 	require.ensure(["./two.js"], function(require) {
 		expect(require("./singular.js").value).toBe(2);

@@ -6,7 +6,7 @@ const DependenciesBlockVariable = require("../lib/DependenciesBlockVariable");
 describe("DependenciesBlockVariable", () => {
 	let DependenciesBlockVariableInstance, dependencyMock, sandbox;
 
-	before(() => {
+	beforeEach(() => {
 		sandbox = sinon.sandbox.create();
 		dependencyMock = {
 			constructor: {
@@ -26,7 +26,7 @@ describe("DependenciesBlockVariable", () => {
 
 	describe("hasDependencies", () =>
 		it("returns `true` if has dependencies", () =>
-			expect(DependenciesBlockVariableInstance.hasDependencies()).toBe(true);
+			expect(DependenciesBlockVariableInstance.hasDependencies()).toBe(true)));
 
 	describe("disconnect", () =>
 		it("trigger dependencies disconnection", () => {
@@ -36,7 +36,7 @@ describe("DependenciesBlockVariable", () => {
 
 	describe("updateHash", () => {
 		let hash;
-		before(() => {
+		beforeEach(() => {
 			hash = {
 				update: sandbox.spy()
 			};
@@ -44,19 +44,19 @@ describe("DependenciesBlockVariable", () => {
 		});
 
 		it("should update hash dependencies with name", () =>
-			expect(hash.update.calledWith("dependencies-name")).toBe(true);
+			expect(hash.update.calledWith("dependencies-name")).toBe(true));
 
 		it("should update hash dependencies with expression", () =>
-			expect(hash.update.calledWith("expression")).toBe(true);
+			expect(hash.update.calledWith("expression")).toBe(true));
 
 		it("should update hash inside dependencies", () =>
-			expect(dependencyMock.updateHash.calledOnce).toBe(true);
+			expect(dependencyMock.updateHash.calledOnce).toBe(true));
 	});
 
 	describe("expressionSource", () => {
 		let dependencyTemplates, applyMock;
 
-		before(() => (applyMock = sandbox.spy()));
+		beforeEach(() => (applyMock = sandbox.spy()));
 
 		it("applies information inside dependency templates", () => {
 			dependencyTemplates = {
