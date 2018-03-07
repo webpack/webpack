@@ -45,7 +45,7 @@ describe("ExternalModule", () => {
 		it("calls getSource with the result of getSourceString", () => {
 			// set up
 			const expectedString = "something expected stringy";
-			const expectedSource = "something expected sourcy";
+			const expectedSource = "something expected source";
 			externalModule.getSource = sinon.stub().returns(expectedSource);
 			externalModule.getSourceString = sinon.stub().returns(expectedString);
 
@@ -203,8 +203,8 @@ describe("ExternalModule", () => {
 			// check
 			expect(result).toEqual(expected);
 		});
-		describe("given an optinal check is set", () => {
-			it("ads a check for the existance of the variable before looking it up", () => {
+		describe("given an optional check is set", function() {
+			it("ads a check for the existence of the variable before looking it up", () => {
 				// set up
 				const id = "someId";
 				const optional = true;
@@ -236,8 +236,8 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 			// check
 			expect(result).toEqual(expected);
 		});
-		describe("given an optinal check is requested", () => {
-			it("checks for the existance of the request setting it", () => {
+		describe("given an optional check is requested", function() {
+			it("checks for the existence of the request setting it", () => {
 				// set up
 				const optional = true;
 				const expected = `if(typeof some/request === 'undefined') {var e = new Error("Cannot find module \\"some/request\\""); e.code = 'MODULE_NOT_FOUND'; throw e;}

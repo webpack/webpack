@@ -52,7 +52,7 @@ it("should be able to use require.js-style define with arrow functions", functio
 	});
 });
 
-it("should be able to use require.js-style define, optional dependancies, not exist, with arrow function", function(done) {
+it("should be able to use require.js-style define, optional dependencies, not exist, with arrow function", function(done) {
 	define("name", ["./optional"], (optional) => {
 		expect(optional.b).toBeFalsy();
 		done();

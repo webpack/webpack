@@ -26,7 +26,7 @@ describe("HotTestCases", () => {
 			category.tests.forEach(testName => {
 				describe(testName, () => {
 					let exportedTests = [];
-					it(testName + " should compile", done => {
+				it(testName + " should compile", done => {
 						const testDirectory = path.join(casesPath, category.name, testName);
 						const outputDirectory = path.join(
 							__dirname,
@@ -171,7 +171,7 @@ describe("HotTestCases", () => {
 							});
 						});
 					});
-				});
+				}, 10000);
 			});
 		});
 	});

@@ -1,6 +1,6 @@
 it("should receive a namespace object when importing commonjs", function(done) {
 	import("./cjs").then(function(result) {
-		expect(result).toEqual({ default: { named: "named", default: "default" } });
+		expect(result).toEqual({ named: "named", default: { named: "named", default: "default" } });
 		done();
 	}).catch(done);
 });
@@ -60,9 +60,9 @@ function promiseTest(promise, equalsTo) {
 
 it("should receive a namespace object when importing commonjs via context", function() {
 	return Promise.all([
-		promiseTest(contextCJS("one"), { default: { named: "named", default: "default" } }),
+		promiseTest(contextCJS("one"), { named: "named", default: { named: "named", default: "default" } }),
 		promiseTest(contextCJS("two"), { __esModule: true, named: "named", default: "default" }),
-		promiseTest(contextCJS("three"), { default: { named: "named", default: "default" } }),
+		promiseTest(contextCJS("three"), { named: "named", default: { named: "named", default: "default" } }),
 		promiseTest(contextCJS("null"), { default: null })
 	]);
 });
@@ -77,7 +77,7 @@ it("should receive a namespace object when importing harmony via context", funct
 
 it("should receive a namespace object when importing mixed content via context", function() {
 	return Promise.all([
-		promiseTest(contextMixed("one"), { default: { named: "named", default: "default" } }),
+		promiseTest(contextMixed("one"), { named: "named", default: { named: "named", default: "default" } }),
 		promiseTest(contextMixed("two"), { __esModule: true, named: "named", default: "default" }),
 		promiseTest(contextMixed("three"), { named: "named", default: "default" }),
 		promiseTest(contextMixed("null"), { default: null })

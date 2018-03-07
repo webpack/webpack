@@ -680,7 +680,7 @@
           ]
         },
         "moduleExtensions": {
-          "description": "Extenstions added to the module request when trying to find the module",
+          "description": "Extensions added to the module request when trying to find the module",
           "anyOf": [
             {
               "$ref": "#/definitions/common.arrayOfStringValues"
@@ -718,7 +718,7 @@
           "type": "boolean"
         },
         "concord": {
-          "description": "Enable condord resolving extras",
+          "description": "Enable concord resolving extras",
           "type": "boolean"
         },
         "unsafeCache": {
@@ -1377,6 +1377,11 @@
                     }
                   ]
                 },
+                "filename": {
+                  "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
+                  "type": "string",
+                  "minLength": 1
+                },
                 "cacheGroups": {
                   "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)",
                   "type": "object",
@@ -1468,6 +1473,11 @@
                                 "type": "string"
                               }
                             ]
+                          },
+                          "filename": {
+                            "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
+                            "type": "string",
+                            "minLength": 1
                           }
                         }
                       }
@@ -1756,6 +1766,10 @@
             "nestedModules": {
               "type": "boolean",
               "description": "add information about modules nested in other modules (like with module concatenation)"
+            },
+            "moduleAssets": {
+              "type": "boolean",
+              "description": "add information about assets inside modules"
             },
             "children": {
               "type": "boolean",

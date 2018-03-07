@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/webpack/webpack">
-    <img width="200" heigth="200" src="https://webpack.js.org/assets/icon-square-big.svg">
+    <img width="200" height="200" src="https://webpack.js.org/assets/icon-square-big.svg">
   </a>
   <br>
   <br>
@@ -15,7 +15,7 @@
 [![licenses][licenses]][licenses-url]
 
   <br>
-	<a href="https://npmjs.com/package/webpack">
+	<a href="https://npmcharts.com/compare/webpack?minimal=true">
 		<img src="https://img.shields.io/npm/dm/webpack.svg">
 	</a>
 	<a href="https://opencollective.com/webpack#backer">

@@ -3,7 +3,7 @@
 const packageJSON = require("../package.json");
 const MultiStats = require("../lib/MultiStats");
 
-const createStat = overides => {
+const createStat = overrides => {
 	return Object.assign(
 		{
 			hash: "foo",
@@ -20,10 +20,10 @@ const createStat = overides => {
 						warnings: [],
 						errors: []
 					},
-					overides
+					overrides
 				)
 		},
-		overides
+		overrides
 	);
 };
 

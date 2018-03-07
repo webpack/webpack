@@ -43,7 +43,7 @@ describe("LocalModulesHelpers", () => {
 			).toBe(null);
 		});
 
-		it("returns local module informtion", () => {
+		it("returns local module information", () => {
 			const state = {
 				module: "module_sample",
 				localModules: [

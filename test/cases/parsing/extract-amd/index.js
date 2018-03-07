@@ -52,7 +52,7 @@ it("should be able to use require.js-style define", function(done) {
 	});
 });
 
-it("should be able to use require.js-style define, optional dependancies, not exist", function(done) {
+it("should be able to use require.js-style define, optional dependencies, not exist", function(done) {
 	define("name", ["./optional"], function(optional) {
 		expect(optional.b).toBeFalsy();
 		done();

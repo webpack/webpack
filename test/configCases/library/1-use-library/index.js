@@ -1,7 +1,7 @@
 import d from "library";
 import { a, b, external } from "library";
 
-it("should be able to import hamorny exports from library (" + NAME + ")", function() {
+it("should be able to import harmony exports from library (" + NAME + ")", function() {
 	expect(d).toBe("default-value");
 	expect(a).toBe("a");
 	expect(b).toBe("b");
