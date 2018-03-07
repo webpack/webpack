@@ -3,8 +3,8 @@
 const path = require("path");
 const fs = require("fs");
 const asyncLib = require("neo-async");
-
 const Benchmark = require("benchmark");
+const {remove} = require("./helpers/remove");
 
 describe("BenchmarkTestCases", function() {
 	const casesPath = path.join(__dirname, "benchmarkCases");
@@ -62,7 +62,11 @@ describe("BenchmarkTestCases", function() {
 											err => {
 												if (err) return callback(err);
 												fs.writeFileSync(gitIndex, index);
-												doLoadWebpack();
+												try {
+													doLoadWebpack();
+												} catch (err) {
+													callback(err);
+												}
 											}
 										);
 									}
@@ -72,7 +76,7 @@ describe("BenchmarkTestCases", function() {
 					}
 
 					function doLoadWebpack() {
-						const baselineWebpack = require(path.resolve(
+						const baselineWebpack = require.requireActual(path.resolve(
 							baselinePath,
 							"lib/webpack.js"
 						));
@@ -84,14 +88,24 @@ describe("BenchmarkTestCases", function() {
 						callback();
 					}
 				},
-				done
+				(err) => {
+					if (err) {
+						done(err);
+					}
+					createTests();
+					done();
+				}
 			);
 		});
 	}, 270000);
 
+	afterAll(() => {
+		remove(baselinesPath);
+	})
+
 	function getBaselineRevs(rootPath, callback) {
 		const git = require("simple-git")(rootPath);
-		const lastVersionTag = "v" + require("../package.json").version;
+		const lastVersionTag = "v" + require.requireActual("../package.json").version;
 		git.raw(["rev-list", "-n", "1", lastVersionTag], (err, resultVersion) => {
 			if (err) return callback(err);
 			const matchVersion = /^([a-f0-9]+)\s*$/.exec(resultVersion);
@@ -258,86 +272,84 @@ describe("BenchmarkTestCases", function() {
 		});
 	}
 
-	tests.forEach(testName => {
-		const testDirectory = path.join(casesPath, testName);
-		let headStats = null;
-		describe(`${testName} create benchmarks`, function() {
-			baselines.forEach(baseline => {
-				let baselineStats = null;
-				it(
-					`should benchmark ${baseline.name} (${baseline.rev})`,
-					function(done) {
-						const outputDirectory = path.join(
-							__dirname,
-							"js",
-							"benchmark",
-							`baseline-${baseline.name}`,
-							testName
-						);
-						const config = Object.create(
-							require(path.join(testDirectory, "webpack.config.js"))
-						);
-						config.output = Object.create(config.output || {});
-						if (!config.context) config.context = testDirectory;
-						if (!config.output.path) config.output.path = outputDirectory;
-						runBenchmark(baseline.webpack, config, (err, stats) => {
-							if (err) return done(err);
-							console.log(`        ${baseline.name} ${stats.text}`);
-							if (baseline.name === "HEAD") headStats = stats;
-							else baselineStats = stats;
-							done();
-						});
-					},
-					180000
-				);
-
-				it(
-					`should benchmark ${baseline.name} (${baseline.rev})`,
-					done => {
-						const outputDirectory = path.join(
-							__dirname,
-							"js",
-							"benchmark",
-							`baseline-${baseline.name}`,
-							testName
-						);
-						const config = Object.create(
-							require(path.join(testDirectory, "webpack.config.js"))
-						);
-						config.output = Object.create(config.output || {});
-						if (!config.context) config.context = testDirectory;
-						if (!config.output.path) config.output.path = outputDirectory;
-						runBenchmark(baseline.webpack, config, (err, stats) => {
-							if (err) return done(err);
-							console.log(`        ${baseline.name} ${stats.text}`);
-							if (baseline.name === "HEAD") headStats = stats;
-							else baselineStats = stats;
-							done();
-						});
-					},
-					180000
-				);
-
-				if (baseline.name !== "HEAD") {
-					it(`HEAD should not be slower than ${baseline.name} (${
-						baseline.rev
-					})`, function() {
-						if (baselineStats.maxConfidence < headStats.minConfidence) {
-							throw new Error(
-								`HEAD (${headStats.text}) is slower than ${baseline.name} (${
-									baselineStats.text
-								}) (90% confidence)`
+	function createTests() {
+		tests.forEach(testName => {
+			const testDirectory = path.join(casesPath, testName);
+			let headStats = null;
+			describe(`${testName} create benchmarks`, function() {
+				baselines.forEach(baseline => {
+					let baselineStats = null;
+					it(
+						`should benchmark ${baseline.name} (${baseline.rev})`,
+						function(done) {
+							const outputDirectory = path.join(
+								__dirname,
+								"js",
+								"benchmark",
+								`baseline-${baseline.name}`,
+								testName
 							);
-						} else if (baselineStats.minConfidence > headStats.maxConfidence) {
-							console.log(
-								`======> HEAD is ${Math.round(
-									baselineStats.mean / headStats.mean * 100 - 100
-								)}% faster than ${baseline.name} (90% confidence)!`
+							const config = require.requireActual(path.join(testDirectory, "webpack.config.js")) || {}
+							config.output = config.output || {};
+							if (!config.context) config.context = testDirectory;
+							if (!config.output.path) config.output.path = outputDirectory;
+							runBenchmark(baseline.webpack, config, (err, stats) => {
+								if (err) return done(err);
+								console.log(`        ${baseline.name} ${stats.text}`);
+								if (baseline.name === "HEAD") headStats = stats;
+								else baselineStats = stats;
+								done();
+							});
+						},
+						180000
+					);
+
+					it(
+						`should benchmark ${baseline.name} (${baseline.rev})`,
+						done => {
+							const outputDirectory = path.join(
+								__dirname,
+								"js",
+								"benchmark",
+								`baseline-${baseline.name}`,
+								testName
 							);
-						}
-					});
-				}
+							const config = require.requireActual(path.join(testDirectory, "webpack.config.js")) || {};
+							config.output = config.output || {};
+							if (!config.context) config.context = testDirectory;
+							if (!config.output.path) config.output.path = outputDirectory;
+							runBenchmark(baseline.webpack, config, (err, stats) => {
+								if (err) return done(err);
+								console.log(`        ${baseline.name} ${stats.text}`);
+								if (baseline.name === "HEAD") headStats = stats;
+								else baselineStats = stats;
+								done();
+							});
+						},
+						180000
+					);
+
+					if (baseline.name !== "HEAD") {
+						it(`HEAD should not be slower than ${baseline.name} (${
+							baseline.rev
+						})`, function() {
+							if (baselineStats.maxConfidence < headStats.minConfidence) {
+								throw new Error(
+									`HEAD (${headStats.text}) is slower than ${baseline.name} (${
+										baselineStats.text
+									}) (90% confidence)`
+								);
+							} else if (baselineStats.minConfidence > headStats.maxConfidence) {
+								console.log(
+									`======> HEAD is ${Math.round(
+										baselineStats.mean / headStats.mean * 100 - 100
+									)}% faster than ${baseline.name} (90% confidence)!`
+								);
+							}
+						});
+					}
+				});
 			});
 		});
-	});
+	}
 });
