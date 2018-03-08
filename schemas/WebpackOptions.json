@@ -499,7 +499,17 @@
               "properties": {
                 "root": {
                   "description": "Name of the property exposed globally by a UMD library",
-                  "type": "string"
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  ]
                 },
                 "amd": {
                   "description": "Name of the exposed AMD library in the UMD",
