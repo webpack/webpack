@@ -501,13 +501,15 @@
                   "description": "Name of the property exposed globally by a UMD library",
                   "anyOf": [
                     {
+                      "description": "Property name",
                       "type": "string"
                     },
                     {
-                      "type": "array",
                       "items": {
+                        "description": "A part of the property name",
                         "type": "string"
-                      }
+                      },
+                      "type": "array"
                     }
                   ]
                 },
