@@ -43,7 +43,9 @@ if (!webpackCliInstalled) {
 
 	const commandToBeRun = `${packageManager} ${options.join(" ")}`;
 
-	const question = `Would you like to install webpack-cli? (That will run ${commandToBeRun}) `;
+	const question = `Would you like to install webpack-cli? (That will run ${
+		commandToBeRun
+	}) `;
 
 	console.error("The CLI moved into a separate package: webpack-cli");
 	const questionInterface = readLine.createInterface({
@@ -68,7 +70,9 @@ if (!webpackCliInstalled) {
 			}
 			default: {
 				console.error("The CLI moved into a separate package: webpack-cli");
-				console.error("It needs to be installed alongside webpack to use the CLI");
+				console.error(
+					"It needs to be installed alongside webpack to use the CLI"
+				);
 				process.exitCode = 1;
 				questionInterface.close();
 				break;
