@@ -1382,6 +1382,11 @@
                   "type": "string",
                   "minLength": 1
                 },
+                "chunkFilenameDelimiter": {
+                  "description": "Sets the filename delimiter for created chunks",
+                  "type": "string",
+                  "minLength": 1
+                },
                 "cacheGroups": {
                   "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)",
                   "type": "object",
