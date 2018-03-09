@@ -85,10 +85,11 @@ rules:
       identifier: "ci-result"
       message: |-
         @{{commit.author.login}} Please review the following output log for errors:
-
+        <details>
         ``` text
         {{{logResult}}}
         ```
+        </details>
 
         See [complete report here]({{status.target_url}}).
     set:
