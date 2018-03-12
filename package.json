@@ -5,9 +5,9 @@
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
   "dependencies": {
-    "@webassemblyjs/ast": "1.1.2-y.7",
-    "@webassemblyjs/wasm-edit": "1.1.2-y.7",
-    "@webassemblyjs/wasm-parser": "1.1.2-y.7",
+    "@webassemblyjs/ast": "1.1.2-y.8",
+    "@webassemblyjs/wasm-edit": "1.1.2-y.8",
+    "@webassemblyjs/wasm-parser": "1.1.2-y.8",
     "@webassemblyjs/wast-printer": "^1.1.2-y.0",
     "acorn": "^5.0.0",
     "acorn-dynamic-import": "^3.0.0",

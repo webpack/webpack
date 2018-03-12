@@ -24,17 +24,17 @@
     webassembly-floating-point-hex-parser "0.1.2"
     webassemblyjs "1.1.2-y.0"
 
-"@webassemblyjs/ast@1.1.2-y.7":
-  version "1.1.2-y.7"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.1.2-y.7.tgz#bf651c9f94a1c11385b4e4cba9a1b3585412db14"
+"@webassemblyjs/ast@1.1.2-y.8":
+  version "1.1.2-y.8"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.1.2-y.8.tgz#941b8b74e8cfe2a755fbfa73f34f5e870f50f4b0"
   dependencies:
-    "@webassemblyjs/wast-parser" "1.1.2-y.7"
+    "@webassemblyjs/wast-parser" "1.1.2-y.8"
     webassembly-floating-point-hex-parser "0.1.2"
-    webassemblyjs "1.1.2-y.7"
+    webassemblyjs "1.1.2-y.8"
 
-"@webassemblyjs/helper-buffer@1.1.2-y.7":
-  version "1.1.2-y.7"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-buffer/-/helper-buffer-1.1.2-y.7.tgz#d6f4208c8336b8e094f51bd8c0cfb91c093dd0a5"
+"@webassemblyjs/helper-buffer@1.1.2-y.8":
+  version "1.1.2-y.8"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-buffer/-/helper-buffer-1.1.2-y.8.tgz#bb38240cead74e7b47b20aa6cc36c00a9a881049"
 
 "@webassemblyjs/helper-leb128@1.1.2-y.0":
   version "1.1.2-y.0"
@@ -42,9 +42,9 @@
   dependencies:
     leb "^0.3.0"
 
-"@webassemblyjs/helper-leb128@1.1.2-y.7":
-  version "1.1.2-y.7"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-leb128/-/helper-leb128-1.1.2-y.7.tgz#e72d92f8455c9cf94ee01ee5f618f34a9cfeaba4"
+"@webassemblyjs/helper-leb128@1.1.2-y.8":
+  version "1.1.2-y.8"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-leb128/-/helper-leb128-1.1.2-y.8.tgz#5be6fdc0f7c6a23a76de9880a090a22ae15df44a"
   dependencies:
     leb "^0.3.0"
 
@@ -52,38 +52,38 @@
   version "1.1.2-y.0"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-bytecode/-/helper-wasm-bytecode-1.1.2-y.0.tgz#d50c40200fc5ab6a4ab0c080f9ff4c815c2f0302"
 
-"@webassemblyjs/helper-wasm-bytecode@1.1.2-y.7":
-  version "1.1.2-y.7"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-bytecode/-/helper-wasm-bytecode-1.1.2-y.7.tgz#a45b08a73bcc88072255a8a7b036757ef900f6e6"
+"@webassemblyjs/helper-wasm-bytecode@1.1.2-y.8":
+  version "1.1.2-y.8"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-bytecode/-/helper-wasm-bytecode-1.1.2-y.8.tgz#3f9f9defa17055f90f726b5747f333859409fcfc"
 
-"@webassemblyjs/helper-wasm-section@1.1.2-y.7":
-  version "1.1.2-y.7"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-section/-/helper-wasm-section-1.1.2-y.7.tgz#1015d50cc699a9f6ef354b6a62906e4c098296aa"
+"@webassemblyjs/helper-wasm-section@1.1.2-y.8":
+  version "1.1.2-y.8"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-section/-/helper-wasm-section-1.1.2-y.8.tgz#dd231c5863c14b5f4cda61262f09e394bff59d7c"
   dependencies:
-    "@webassemblyjs/ast" "1.1.2-y.7"
-    "@webassemblyjs/helper-buffer" "1.1.2-y.7"
-    "@webassemblyjs/helper-wasm-bytecode" "1.1.2-y.7"
-    "@webassemblyjs/wasm-gen" "1.1.2-y.7"
+    "@webassemblyjs/ast" "1.1.2-y.8"
+    "@webassemblyjs/helper-buffer" "1.1.2-y.8"
+    "@webassemblyjs/helper-wasm-bytecode" "1.1.2-y.8"
+    "@webassemblyjs/wasm-gen" "1.1.2-y.8"
 
-"@webassemblyjs/wasm-edit@1.1.2-y.7":
-  version "1.1.2-y.7"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-edit/-/wasm-edit-1.1.2-y.7.tgz#3b857f92c7477911067fca79fc759512812041dd"
+"@webassemblyjs/wasm-edit@1.1.2-y.8":
+  version "1.1.2-y.8"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-edit/-/wasm-edit-1.1.2-y.8.tgz#70763781d40daab7451526f2795e24136fdf16e2"
   dependencies:
-    "@webassemblyjs/ast" "1.1.2-y.7"
-    "@webassemblyjs/helper-buffer" "1.1.2-y.7"
-    "@webassemblyjs/helper-wasm-bytecode" "1.1.2-y.7"
-    "@webassemblyjs/helper-wasm-section" "1.1.2-y.7"
-    "@webassemblyjs/wasm-gen" "1.1.2-y.7"
-    "@webassemblyjs/wasm-parser" "1.1.2-y.7"
-    "@webassemblyjs/wast-printer" "1.1.2-y.7"
+    "@webassemblyjs/ast" "1.1.2-y.8"
+    "@webassemblyjs/helper-buffer" "1.1.2-y.8"
+    "@webassemblyjs/helper-wasm-bytecode" "1.1.2-y.8"
+    "@webassemblyjs/helper-wasm-section" "1.1.2-y.8"
+    "@webassemblyjs/wasm-gen" "1.1.2-y.8"
+    "@webassemblyjs/wasm-parser" "1.1.2-y.8"
+    "@webassemblyjs/wast-printer" "1.1.2-y.8"
 
-"@webassemblyjs/wasm-gen@1.1.2-y.7":
-  version "1.1.2-y.7"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-gen/-/wasm-gen-1.1.2-y.7.tgz#06da828790137215399972840f0bcff33354a592"
+"@webassemblyjs/wasm-gen@1.1.2-y.8":
+  version "1.1.2-y.8"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-gen/-/wasm-gen-1.1.2-y.8.tgz#a686df3877c7de9e5f602c8767f23f7362cda325"
   dependencies:
-    "@webassemblyjs/ast" "1.1.2-y.7"
-    "@webassemblyjs/helper-leb128" "1.1.2-y.7"
-    "@webassemblyjs/helper-wasm-bytecode" "1.1.2-y.7"
+    "@webassemblyjs/ast" "1.1.2-y.8"
+    "@webassemblyjs/helper-leb128" "1.1.2-y.8"
+    "@webassemblyjs/helper-wasm-bytecode" "1.1.2-y.8"
 
 "@webassemblyjs/wasm-parser@1.1.2-y.0":
   version "1.1.2-y.0"
@@ -95,15 +95,15 @@
     "@webassemblyjs/wasm-parser" "1.1.2-y.0"
     webassemblyjs "1.1.2-y.0"
 
-"@webassemblyjs/wasm-parser@1.1.2-y.7":
-  version "1.1.2-y.7"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-parser/-/wasm-parser-1.1.2-y.7.tgz#10d5f04ab2418a4ce12c93a2993ce89917fec0e7"
+"@webassemblyjs/wasm-parser@1.1.2-y.8":
+  version "1.1.2-y.8"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-parser/-/wasm-parser-1.1.2-y.8.tgz#234b7cc2cd6f82eb8d88e788fe3abb3d9f63a73f"
   dependencies:
-    "@webassemblyjs/ast" "1.1.2-y.7"
-    "@webassemblyjs/helper-leb128" "1.1.2-y.7"
-    "@webassemblyjs/helper-wasm-bytecode" "1.1.2-y.7"
-    "@webassemblyjs/wasm-parser" "1.1.2-y.7"
-    webassemblyjs "1.1.2-y.7"
+    "@webassemblyjs/ast" "1.1.2-y.8"
+    "@webassemblyjs/helper-leb128" "1.1.2-y.8"
+    "@webassemblyjs/helper-wasm-bytecode" "1.1.2-y.8"
+    "@webassemblyjs/wasm-parser" "1.1.2-y.8"
+    webassemblyjs "1.1.2-y.8"
 
 "@webassemblyjs/wast-parser@1.1.2-y.0":
   version "1.1.2-y.0"
@@ -115,21 +115,21 @@
     webassembly-floating-point-hex-parser "0.1.2"
     webassemblyjs "1.1.2-y.0"
 
-"@webassemblyjs/wast-parser@1.1.2-y.7":
-  version "1.1.2-y.7"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-parser/-/wast-parser-1.1.2-y.7.tgz#49f605891084e1c56ada690fbce178bd53826d15"
+"@webassemblyjs/wast-parser@1.1.2-y.8":
+  version "1.1.2-y.8"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-parser/-/wast-parser-1.1.2-y.8.tgz#643efd1319d484ec380b067ace7aa2b919333dcf"
   dependencies:
     "@babel/code-frame" "^7.0.0-beta.36"
-    "@webassemblyjs/ast" "1.1.2-y.7"
+    "@webassemblyjs/ast" "1.1.2-y.8"
     long "^3.2.0"
     webassembly-floating-point-hex-parser "0.1.2"
-    webassemblyjs "1.1.2-y.7"
+    webassemblyjs "1.1.2-y.8"
 
-"@webassemblyjs/wast-printer@1.1.2-y.7":
-  version "1.1.2-y.7"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-printer/-/wast-printer-1.1.2-y.7.tgz#c6ca3338d82d62b6ce001c5b32bc87524823c7e7"
+"@webassemblyjs/wast-printer@1.1.2-y.8":
+  version "1.1.2-y.8"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-printer/-/wast-printer-1.1.2-y.8.tgz#ecde284ee0ffc0f0d924ea0e808939c3a35c37ee"
   dependencies:
-    "@webassemblyjs/wast-parser" "1.1.2-y.7"
+    "@webassemblyjs/wast-parser" "1.1.2-y.8"
     long "^3.2.0"
 
 "@webassemblyjs/wast-printer@^1.1.2-y.0":
@@ -4793,13 +4793,13 @@ webassemblyjs@1.1.2-y.0:
     long "^3.2.0"
     webassembly-floating-point-hex-parser "0.1.2"
 
-webassemblyjs@1.1.2-y.7:
-  version "1.1.2-y.7"
-  resolved "https://registry.yarnpkg.com/webassemblyjs/-/webassemblyjs-1.1.2-y.7.tgz#b872abbbed81bf9bcf0a02b6c1faef2ac46ee98d"
+webassemblyjs@1.1.2-y.8:
+  version "1.1.2-y.8"
+  resolved "https://registry.yarnpkg.com/webassemblyjs/-/webassemblyjs-1.1.2-y.8.tgz#94bdd22751f67b5d7722df0827ff468c9120886b"
   dependencies:
-    "@webassemblyjs/ast" "1.1.2-y.7"
-    "@webassemblyjs/wasm-parser" "1.1.2-y.7"
-    "@webassemblyjs/wast-parser" "1.1.2-y.7"
+    "@webassemblyjs/ast" "1.1.2-y.8"
+    "@webassemblyjs/wasm-parser" "1.1.2-y.8"
+    "@webassemblyjs/wast-parser" "1.1.2-y.8"
     long "^3.2.0"
     webassembly-floating-point-hex-parser "0.1.2"
 
