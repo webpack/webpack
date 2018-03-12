@@ -1,5 +1,3 @@
-const SplitChunksPlugin = require("../../../../lib/optimize/SplitChunksPlugin");
-
 module.exports = {
 	entry: {
 		main: "./index"
@@ -13,5 +11,9 @@ module.exports = {
 		chunkFilename: "[name].bundle.js",
 		jsonpFunction: "_load_chunk"
 	},
-	plugins: [new SplitChunksPlugin()]
+	optimization: {
+		splitChunks: {
+			minSize: 1
+		}
+	}
 };

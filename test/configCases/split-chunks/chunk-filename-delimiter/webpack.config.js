@@ -1,5 +1,3 @@
-const SplitChunksPlugin = require("../../../../lib/optimize/SplitChunksPlugin");
-
 module.exports = {
 	entry: {
 		main: "./index"
@@ -15,8 +13,8 @@ module.exports = {
 	},
 	optimization: {
 		splitChunks: {
-			chunkFilenameDelimiter: "-"
+			automaticNameDelimiter: "-",
+			minSize: 1
 		}
-	},
-	plugins: [new SplitChunksPlugin()]
+	}
 };

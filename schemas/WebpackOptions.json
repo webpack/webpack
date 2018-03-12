@@ -1382,8 +1382,8 @@
                   "type": "string",
                   "minLength": 1
                 },
-                "chunkFilenameDelimiter": {
-                  "description": "Sets the filename delimiter for created chunks",
+                "automaticNameDelimiter": {
+                  "description": "Sets the name delimiter for created chunks",
                   "type": "string",
                   "minLength": 1
                 },
