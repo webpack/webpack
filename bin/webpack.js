@@ -65,6 +65,7 @@ if (!webpackCliInstalled) {
 					.catch(error => {
 						questionInterface.close();
 						console.error(error);
+						process.exitCode = 1;
 					});
 				break;
 			}
