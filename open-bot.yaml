@@ -1,6 +1,7 @@
 bot: "webpack-bot"
 rules:
 
+
 # Add ci-ok, ci-not-ok labels depending on travis status
 # comment to point the user to the results
 # comment in case of success
