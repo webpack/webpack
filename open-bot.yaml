@@ -84,12 +84,12 @@ rules:
       id: firstError
       value: "{{{logResult}}}"
       remove:
-        - "^[\\s\\S]+?(?=\\s2\\)\\s)"
+        - "\\s2\\)\\s[\\s\\S]*"
     string_cleanup:
       id: remainingErrors
       value: "{{{logResult}}}"
       remove:
-        - "\\s2\\)\\s[\\s\\S]*"
+        - "^[\\s\\S]+?(?=\\s2\\)\\s)"
   actions:
     comment:
       identifier: "ci-result"
