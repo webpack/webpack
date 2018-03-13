@@ -80,15 +80,30 @@ rules:
         - "^[\\s\\S]+?\\d+\\s+pending\n+"
         - "npm ERR!.*\n"
         - "\n*=============================================================================\n[\\s\\S]*"
+    string_cleanup:
+      id: firstError
+      value: "{{{logResult}}}"
+      remove:
+        - "\\s2\\)\\s[\\s\\S]*"
+    string_cleanup:
+      id: remainingErrors
+      value: "{{{logResult}}}"
+      remove:
+        - "^[\\s\\S]+?(?=\\s2\\)\\s)"
   actions:
     comment:
       identifier: "ci-result"
       message: |-
         @{{commit.author.login}} Please review the following output log for errors:
-
-        ``` text
-        {{{logResult}}}
+        ```text
+        {{{firstError}}}
         ```
+        <details>
+          <summary>Show remaining errors</summary>
+        ``` text
+        {{{remainingErrors}}}
+        ```
+        </details>
 
         See [complete report here]({{status.target_url}}).
     set:
