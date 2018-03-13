@@ -53,29 +53,26 @@ if (!webpackCliInstalled) {
 		output: process.stdout
 	});
 	questionInterface.question(question, answer => {
+		questionInterface.close();
 		switch (answer.toLowerCase()) {
 			case "y":
 			case "yes":
 			case "1": {
 				runCommand(packageManager, options)
 					.then(result => {
-						questionInterface.close();
 						return require("webpack-cli"); //eslint-disable-line
 					})
 					.catch(error => {
-						questionInterface.close();
 						console.error(error);
 						process.exitCode = 1;
 					});
 				break;
 			}
 			default: {
-				console.error("The CLI moved into a separate package: webpack-cli");
 				console.error(
 					"It needs to be installed alongside webpack to use the CLI"
 				);
 				process.exitCode = 1;
-				questionInterface.close();
 				break;
 			}
 		}
