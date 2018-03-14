@@ -1821,10 +1821,13 @@
               ]
             },
             "excludeModules": {
-              "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps or Functions",
+              "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions",
               "anyOf": [
                 {
                   "$ref": "#/definitions/filter-types"
+                },
+                {
+                  "type": "boolean"
                 }
               ]
             },
@@ -1833,6 +1836,9 @@
               "anyOf": [
                 {
                   "$ref": "#/definitions/filter-types"
+                },
+                {
+                  "type": "boolean"
                 }
               ]
             },
