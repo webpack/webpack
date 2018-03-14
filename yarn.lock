@@ -16,14 +16,6 @@
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@webassemblyjs/ast@1.1.2-y.0":
-  version "1.1.2-y.0"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.1.2-y.0.tgz#138d5ba9f554542b0222da1b6a969bbfab525f1c"
-  dependencies:
-    "@webassemblyjs/wast-parser" "1.1.2-y.0"
-    webassembly-floating-point-hex-parser "0.1.2"
-    webassemblyjs "1.1.2-y.0"
-
 "@webassemblyjs/ast@1.1.2-y.10":
   version "1.1.2-y.10"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.1.2-y.10.tgz#a7fa537cbbaadee92d4b6348eff1349bb0a192fa"
@@ -36,21 +28,11 @@
   version "1.1.2-y.10"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-buffer/-/helper-buffer-1.1.2-y.10.tgz#ca133f6536f43f67c4d8df54a713d5901ac2e359"
 
-"@webassemblyjs/helper-leb128@1.1.2-y.0":
-  version "1.1.2-y.0"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-leb128/-/helper-leb128-1.1.2-y.0.tgz#ba158e90f936a5caadafb83dfd362600046cd6a9"
-  dependencies:
-    leb "^0.3.0"
-
 "@webassemblyjs/helper-leb128@1.1.2-y.10":
   version "1.1.2-y.10"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-leb128/-/helper-leb128-1.1.2-y.10.tgz#12bd5c9cf1eb230a9fec420235248a591a86473a"
   dependencies:
     leb "^0.3.0"
-
-"@webassemblyjs/helper-wasm-bytecode@1.1.2-y.0":
-  version "1.1.2-y.0"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-bytecode/-/helper-wasm-bytecode-1.1.2-y.0.tgz#d50c40200fc5ab6a4ab0c080f9ff4c815c2f0302"
 
 "@webassemblyjs/helper-wasm-bytecode@1.1.2-y.10":
   version "1.1.2-y.10"
@@ -85,16 +67,6 @@
     "@webassemblyjs/helper-leb128" "1.1.2-y.10"
     "@webassemblyjs/helper-wasm-bytecode" "1.1.2-y.10"
 
-"@webassemblyjs/wasm-parser@1.1.2-y.0":
-  version "1.1.2-y.0"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-parser/-/wasm-parser-1.1.2-y.0.tgz#9c90f9e7ce1f54b922b8b76de5355f13e0d8c6f2"
-  dependencies:
-    "@webassemblyjs/ast" "1.1.2-y.0"
-    "@webassemblyjs/helper-leb128" "1.1.2-y.0"
-    "@webassemblyjs/helper-wasm-bytecode" "1.1.2-y.0"
-    "@webassemblyjs/wasm-parser" "1.1.2-y.0"
-    webassemblyjs "1.1.2-y.0"
-
 "@webassemblyjs/wasm-parser@1.1.2-y.10":
   version "1.1.2-y.10"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-parser/-/wasm-parser-1.1.2-y.10.tgz#f1188834dd1ec17f0e6f1d4052cdf117d5344f29"
@@ -104,16 +76,6 @@
     "@webassemblyjs/helper-wasm-bytecode" "1.1.2-y.10"
     "@webassemblyjs/wasm-parser" "1.1.2-y.10"
     webassemblyjs "1.1.2-y.10"
-
-"@webassemblyjs/wast-parser@1.1.2-y.0":
-  version "1.1.2-y.0"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-parser/-/wast-parser-1.1.2-y.0.tgz#f9cd5abb9f5f06687b49f8e6582ed5b4c233b099"
-  dependencies:
-    "@babel/code-frame" "^7.0.0-beta.36"
-    "@webassemblyjs/ast" "1.1.2-y.0"
-    long "^3.2.0"
-    webassembly-floating-point-hex-parser "0.1.2"
-    webassemblyjs "1.1.2-y.0"
 
 "@webassemblyjs/wast-parser@1.1.2-y.10":
   version "1.1.2-y.10"
@@ -130,13 +92,6 @@
   resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-printer/-/wast-printer-1.1.2-y.10.tgz#6c7a41d40c5ecf8a13f963cf2144fc2f64fcaf0c"
   dependencies:
     "@webassemblyjs/wast-parser" "1.1.2-y.10"
-    long "^3.2.0"
-
-"@webassemblyjs/wast-printer@^1.1.2-y.0":
-  version "1.1.2-y.0"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-printer/-/wast-printer-1.1.2-y.0.tgz#9212f81e9e8b25a7d35f51d97f43b64c1e7eb655"
-  dependencies:
-    "@webassemblyjs/wast-parser" "1.1.2-y.0"
     long "^3.2.0"
 
 abbrev@1:
@@ -4782,16 +4737,6 @@ watchpack@^1.5.0:
 webassembly-floating-point-hex-parser@0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/webassembly-floating-point-hex-parser/-/webassembly-floating-point-hex-parser-0.1.2.tgz#85bb01f54e68690c2645ea0cfad26c1110fdf988"
-
-webassemblyjs@1.1.2-y.0:
-  version "1.1.2-y.0"
-  resolved "https://registry.yarnpkg.com/webassemblyjs/-/webassemblyjs-1.1.2-y.0.tgz#22ee9599176f59d9ef2a0793c0c274402fe23047"
-  dependencies:
-    "@webassemblyjs/ast" "1.1.2-y.0"
-    "@webassemblyjs/wasm-parser" "1.1.2-y.0"
-    "@webassemblyjs/wast-parser" "1.1.2-y.0"
-    long "^3.2.0"
-    webassembly-floating-point-hex-parser "0.1.2"
 
 webassemblyjs@1.1.2-y.10:
   version "1.1.2-y.10"
