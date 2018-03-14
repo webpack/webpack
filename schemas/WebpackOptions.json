@@ -1382,6 +1382,11 @@
                   "type": "string",
                   "minLength": 1
                 },
+                "automaticNameDelimiter": {
+                  "description": "Sets the name delimiter for created chunks",
+                  "type": "string",
+                  "minLength": 1
+                },
                 "cacheGroups": {
                   "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)",
                   "type": "object",
@@ -1767,6 +1772,10 @@
               "type": "boolean",
               "description": "add information about modules nested in other modules (like with module concatenation)"
             },
+            "moduleAssets": {
+              "type": "boolean",
+              "description": "add information about assets inside modules"
+            },
             "children": {
               "type": "boolean",
               "description": "add children information"
@@ -1812,10 +1821,13 @@
               ]
             },
             "excludeModules": {
-              "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps or Functions",
+              "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions",
               "anyOf": [
                 {
                   "$ref": "#/definitions/filter-types"
+                },
+                {
+                  "type": "boolean"
                 }
               ]
             },
@@ -1824,6 +1836,9 @@
               "anyOf": [
                 {
                   "$ref": "#/definitions/filter-types"
+                },
+                {
+                  "type": "boolean"
                 }
               ]
             },
