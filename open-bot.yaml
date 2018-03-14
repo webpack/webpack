@@ -80,12 +80,12 @@ rules:
         - "^[\\s\\S]+?\\d+\\s+pending\n+"
         - "npm ERR!.*\n"
         - "\n*=============================================================================\n[\\s\\S]*"
-    string_cleanup:
+    string_cleanup_1:
       id: firstError
       value: "{{{logResult}}}"
       remove:
         - "\\s2\\)\\s[\\s\\S]*"
-    string_cleanup:
+    string_cleanup_2:
       id: remainingErrors
       value: "{{{logResult}}}"
       remove:
