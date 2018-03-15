@@ -176,7 +176,7 @@ describe("Validation", () => {
 							oneOf: [
 								{
 									test: "/a",
-									paser: {
+									passer: {
 										amd: false
 									}
 								}
@@ -186,7 +186,7 @@ describe("Validation", () => {
 				}
 			},
 			message: [
-				" - configuration.module.rules[0].oneOf[0] has an unknown property 'paser'. These properties are valid:",
+				" - configuration.module.rules[0].oneOf[0] has an unknown property 'passer'. These properties are valid:",
 				"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, resolve?, sideEffects?, query?, type?, resource?, resourceQuery?, compiler?, rules?, test?, use? }",
 				"   -> A rule"
 			]
@@ -203,7 +203,7 @@ describe("Validation", () => {
 					"loader?, module?, name?, node?, output?, optimization?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, " +
 					"recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, stats?, target?, watch?, watchOptions? }",
 				"   For typos: please correct them.",
-				"   For loader options: webpack 2 no longer allows custom properties in configuration.",
+				"   For loader options: webpack >= v2.0.0 no longer allows custom properties in configuration.",
 				"     Loaders should be updated to allow passing options via loader options in module.rules.",
 				"     Until loaders are updated one can use the LoaderOptionsPlugin to pass these options to the loader:",
 				"     plugins: [",

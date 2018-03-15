@@ -388,7 +388,7 @@ describe("RuleSet", () => {
 		match(loader, "style.css").should.eql(["style-loader", "css-loader"]);
 	});
 
-	it("should work when using an array of functions returning either a loader obejct or loader name string", () => {
+	it("should work when using an array of functions returning either a loader object or loader name string", () => {
 		const loader = new RuleSet([
 			{
 				test: /\.css$/,
