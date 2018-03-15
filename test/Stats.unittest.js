@@ -4,8 +4,7 @@
 require("should");
 
 const Stats = require("../lib/Stats");
-const packageJson = require("../package.json");
-
+const SyncHook = require("tapable").SyncHook;
 describe(
 	"Stats",
 	() => {
@@ -18,6 +17,9 @@ describe(
 						hash: "1234",
 						compiler: {
 							context: ""
+						},
+						hooks: {
+							stats: new SyncHook(["stats"])
 						}
 					});
 					mockStats.hasErrors().should.be.ok();
@@ -29,6 +31,9 @@ describe(
 						hash: "1234",
 						compiler: {
 							context: ""
+						},
+						hooks: {
+							stats: new SyncHook(["stats"])
 						}
 					});
 					mockStats.hasWarnings().should.be.ok();
@@ -42,6 +47,9 @@ describe(
 						hash: "1234",
 						compiler: {
 							context: ""
+						},
+						hooks: {
+							stats: new SyncHook(["stats"])
 						}
 					});
 					mockStats.hasErrors().should.not.be.ok();
@@ -53,6 +61,9 @@ describe(
 						hash: "1234",
 						compiler: {
 							context: ""
+						},
+						hooks: {
+							stats: new SyncHook(["stats"])
 						}
 					});
 					mockStats.hasWarnings().should.not.be.ok();
@@ -66,12 +77,18 @@ describe(
 								getStats: () =>
 									new Stats({
 										errors: ["firstError"],
-										hash: "5678"
+										hash: "5678",
+										hooks: {
+											stats: new SyncHook(["stats"])
+										}
 									})
 							}
 						],
 						errors: [],
-						hash: "1234"
+						hash: "1234",
+						hooks: {
+							stats: new SyncHook(["stats"])
+						}
 					});
 					mockStats.hasErrors().should.be.ok();
 				});
@@ -82,12 +99,18 @@ describe(
 								getStats: () =>
 									new Stats({
 										warnings: ["firstError"],
-										hash: "5678"
+										hash: "5678",
+										hooks: {
+											stats: new SyncHook(["stats"])
+										}
 									})
 							}
 						],
 						warnings: [],
-						hash: "1234"
+						hash: "1234",
+						hooks: {
+							stats: new SyncHook(["stats"])
+						}
 					});
 					mockStats.hasWarnings().should.be.ok();
 				});
@@ -110,12 +133,21 @@ describe(
 					},
 					compiler: {
 						context: ""
+					},
+					hooks: {
+						stats: new SyncHook(["stats"])
 					}
 				});
 				const obj = mockStats.toJson();
 				obj.errors[0].should.be.equal("firstError");
 			});
 		});
+		// ?????????????????????????????????????????????????????????????????????????????????? //
+		// Is this test really needed???????????????????????????????????????????????????????? //
+		// We require defaults to be set by compiler or by user through plugin from now on    //
+		// mocking won't work, we need actual compilation object to use toJson method atleast //
+		// mocking won't work, we need actual compilation object to use toJson method atleast //
+		// ?????????????????????????????????????????????????????????????????????????????????? //
 		describe("toJson", () => {
 			it("returns plain object representation", () => {
 				const mockStats = new Stats({
@@ -135,24 +167,18 @@ describe(
 					},
 					compiler: {
 						context: ""
+					},
+					hooks: {
+						stats: new SyncHook(["stats"])
 					}
 				});
 				const result = mockStats.toJson();
 				result.should.deepEqual({
-					assets: [],
-					assetsByChunkName: {},
-					children: [],
 					chunks: [],
-					entrypoints: {},
-					filteredAssets: 0,
-					filteredModules: 0,
 					errors: [],
-					hash: "1234",
-					modules: [],
+					warnings: [],
 					outputPath: "/",
-					publicPath: "path",
-					version: packageJson.version,
-					warnings: []
+					publicPath: "path"
 				});
 			});
 		});
