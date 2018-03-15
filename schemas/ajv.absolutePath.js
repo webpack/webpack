@@ -34,7 +34,7 @@ module.exports = (ajv) => ajv.addKeyword("absolutePath", {
 			callback.errors = [getErrorFor(expected, data, schema)];
 			return false;
 		} : data => {
-			if (!path.isAbsolute(data)) {
+			if (path.isAbsolute(data)) {
 				callback.errors = [getErrorFor(expected, data, schema)];
 				return false;
 			}
