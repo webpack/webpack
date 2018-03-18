@@ -207,13 +207,11 @@ describe("Errors", () => {
 					warnings.length.should.be.eql(1);
 					warnings[0]
 						.split("\n")[1]
-						.should.match(
-							/^Module Warning \(@.\/emit-error-loader.js\): [^\s]+/
-						);
+						.should.match(/^Module Warning \(from .\/emit-error-loader.js\):$/);
 					errors.length.should.be.eql(1);
 					errors[0]
 						.split("\n")[1]
-						.should.match(/^Module Error \(@.\/emit-error-loader.js\): [^\s]+/);
+						.should.match(/^Module Error \(from .\/emit-error-loader.js\):$/);
 				}
 			),
 			getErrorsPromise(
@@ -225,13 +223,11 @@ describe("Errors", () => {
 					warnings.length.should.be.eql(1);
 					warnings[0]
 						.split("\n")[1]
-						.should.match(
-							/^Module Warning \(@.\/emit-error-loader.js\): [^\s]+/
-						);
+						.should.match(/^Module Warning \(from .\/emit-error-loader.js\):$/);
 					errors.length.should.be.eql(1);
 					errors[0]
 						.split("\n")[1]
-						.should.match(/^Module Error \(@.\/emit-error-loader.js\): [^\s]+/);
+						.should.match(/^Module Error \(from .\/emit-error-loader.js\):$/);
 				}
 			),
 			getErrorsPromise(
@@ -256,17 +252,15 @@ describe("Errors", () => {
 					warnings.length.should.be.eql(1);
 					warnings[0]
 						.split("\n")[1]
-						.should.match(
-							/^Module Warning \(@.\/emit-error-loader.js\): [^\s]+/
-						);
+						.should.match(/^Module Warning \(from .\/emit-error-loader.js\):$/);
 					errors.length.should.be.eql(2);
 					errors[0]
 						.split("\n")[1]
-						.should.match(/^Module Error \(@.\/emit-error-loader.js\): [^\s]+/);
+						.should.match(/^Module Error \(from .\/emit-error-loader.js\):$/);
 					errors[1]
 						.split("\n")[1]
 						.should.match(
-							/^Module build failed \(@\(webpack\)\/node_modules\/json-loader\/index.js\): [^\s]+/
+							/^Module build failed \(from \(webpack\)\/node_modules\/json-loader\/index.js\):$/
 						);
 				}
 			),
@@ -288,7 +282,7 @@ describe("Errors", () => {
 					errors[0]
 						.split("\n")[1]
 						.should.match(
-							/^Module build failed \(@.\/async-error-loader.js\): [^\s]+/
+							/^Module build failed \(from .\/async-error-loader.js\):$/
 						);
 				}
 			),
@@ -310,7 +304,7 @@ describe("Errors", () => {
 					errors[0]
 						.split("\n")[1]
 						.should.match(
-							/^Module build failed \(@.\/throw-error-loader.js\): [^\s]+/
+							/^Module build failed \(from .\/throw-error-loader.js\):$/
 						);
 				}
 			),
@@ -332,32 +326,46 @@ describe("Errors", () => {
 					warnings[0]
 						.split("\n")[1]
 						.should.match(
-							/^Module Warning \(@.\/irregular-error-loader.js\): [^\s]+/
+							/^Module Warning \(from .\/irregular-error-loader.js\):$/
 						);
 					warnings[1]
 						.split("\n")[1]
 						.should.match(
-							/^Module Warning \(@.\/irregular-error-loader.js\): [^\s]+/
+							/^Module Warning \(from .\/irregular-error-loader.js\):$/
 						);
 
 					errors.length.should.be.eql(3);
 					errors[0]
 						.split("\n")[1]
 						.should.match(
-							/^Module Error \(@.\/irregular-error-loader.js\): [^\s]+/
+							/^Module Error \(from .\/irregular-error-loader.js\):$/
 						);
 					errors[1]
 						.split("\n")[1]
 						.should.match(
-							/^Module Error \(@.\/irregular-error-loader.js\): [^\s]+/
+							/^Module Error \(from .\/irregular-error-loader.js\):$/
 						);
 					errors[2]
 						.split("\n")[1]
 						.should.match(
-							/^Module build failed \(@.\/irregular-error-loader.js\): [^\s]+/
+							/^Module build failed \(from .\/irregular-error-loader.js\):$/
 						);
 				}
 			)
 		]);
+	});
+	it("should throw a build error if no source be returned after run loaders", () => {
+		getErrors(
+			{
+				mode: "development",
+				entry: path.resolve(base, "./no-return-loader") + "!./entry-point.js"
+			},
+			(errors, warnings) => {
+				errors.length.should.be.eql(1);
+				const messages = errors[0].split("\n");
+				messages[1].should.match(/^Module build failed:$/);
+				messages[2].should.match(/didn't return/);
+			}
+		);
 	});
 });
