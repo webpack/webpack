@@ -10,7 +10,6 @@ const errorMessage = (schema, data, message) => ({
 const getErrorFor = (shouldBeAbsolute, data, schema) => {
 	const message = shouldBeAbsolute
 		? `The provided value ${JSON.stringify(data)} is not an absolute path!`
-
 		: `A relative path is expected. However, the provided value ${JSON.stringify(
 				data
 			)} is an absolute path!`;
