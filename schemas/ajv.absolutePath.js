@@ -24,8 +24,9 @@ module.exports = ajv =>
 		compile(expected, schema) {
 			function callback(data) {
 				let passes = true;
-				const isExclamationMarkPresent = data.indexOf("!") !== -1;
-				const isAbsolutePath = expected === /^(?:[A-Za-z]:\\|\/)/.test(data);
+				const isExclamationMarkPresent = data.includes("!");
+				const isCorrectAbsoluteOrRelativePath =
+					expected === /^(?:[A-Za-z]:\\|\/)/.test(data);
 
 				if (isExclamationMarkPresent) {
 					callback.errors = [
@@ -40,7 +41,7 @@ module.exports = ajv =>
 					passes = false;
 				}
 
-				if (!isAbsolutePath) {
+				if (!isCorrectAbsoluteOrRelativePath) {
 					callback.errors = [getErrorFor(expected, data, schema)];
 					passes = false;
 				}
