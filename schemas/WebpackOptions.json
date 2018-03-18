@@ -1337,10 +1337,17 @@
               "properties": {
                 "chunks": {
                   "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
-                  "enum": [
-                    "initial",
-                    "async",
-                    "all"
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "initial",
+                        "async",
+                        "all"
+                      ]
+                    },
+                    {
+                      "instanceof": "Function"
+                    }
                   ]
                 },
                 "minSize": {

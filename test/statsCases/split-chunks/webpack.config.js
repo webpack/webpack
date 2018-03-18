@@ -98,5 +98,26 @@ module.exports = [
 			}
 		},
 		stats
+	},
+
+	{
+		name: "default",
+		mode: "production",
+		entry: {
+			main: "./",
+			a: "./a",
+			b: "./b",
+			c: "./c"
+		},
+		output: {
+			filename: "default/[name].js"
+		},
+		optimization: {
+			splitChunks: {
+				minSize: 0,
+				chunks: chunks => chunks.filter(chunk => chunk.name !== "a")
+			}
+		},
+		stats
 	}
 ];
