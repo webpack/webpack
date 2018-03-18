@@ -101,7 +101,7 @@ module.exports = [
 	},
 
 	{
-		name: "default",
+		name: "chunks-selector",
 		mode: "production",
 		entry: {
 			main: "./",
