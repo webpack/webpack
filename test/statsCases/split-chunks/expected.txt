@@ -258,7 +258,7 @@ Child name-too-long:
         [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
         [1] ./f.js 20 bytes {2} {11} {12} [built]
         [5] ./c.js 72 bytes {7} {12} [built]
-Child chunks-selector:
+Child custom-chunks-filter:
     Entrypoint main = default/main.js
     Entrypoint a = default/a.js
     Entrypoint b = default/vendors~async-a~async-b~async-c~b~c.js default/vendors~async-a~async-b~b.js default/b.js

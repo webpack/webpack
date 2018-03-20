@@ -101,7 +101,7 @@ module.exports = [
 	},
 
 	{
-		name: "chunks-selector",
+		name: "custom-chunks-filter",
 		mode: "production",
 		entry: {
 			main: "./",
@@ -115,7 +115,7 @@ module.exports = [
 		optimization: {
 			splitChunks: {
 				minSize: 0,
-				chunks: chunks => chunks.filter(chunk => chunk.name !== "a")
+				chunks: chunk => chunk.name !== "a"
 			}
 		},
 		stats
