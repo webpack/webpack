@@ -4,6 +4,7 @@
 require("should");
 
 const Stats = require("../lib/Stats");
+
 describe(
 	"Stats",
 	() => {
@@ -159,44 +160,7 @@ describe(
 				obj.errors[0].should.be.equal("firstError");
 			});
 		});
-		// We require defaults to be set by compiler or by user through plugin from now on    //
-		// mocking won't work, we need actual compilation object to use toJson method atleast //
-		describe("toJson", () => {
-			it("returns plain object representation", () => {
-				const mockStats = new Stats({
-					errors: [],
-					warnings: [],
-					assets: [],
-					entrypoints: new Map(),
-					chunks: [],
-					modules: [],
-					children: [],
-					hash: "1234",
-					mainTemplate: {
-						outputOptions: {
-							path: "/"
-						},
-						getPublicPath: () => "path"
-					},
-					compiler: {
-						context: ""
-					},
-					hooks: {
-						stats: {
-							call: function() {}
-						}
-					}
-				});
-				const result = mockStats.toJson();
-				result.should.deepEqual({
-					chunks: [],
-					errors: [],
-					warnings: [],
-					outputPath: "/",
-					publicPath: "path"
-				});
-			});
-		});
+
 		describe("Presets", () => {
 			describe("presetToOptions", () => {
 				it("returns correct object with 'Normal'", () => {
@@ -227,7 +191,7 @@ describe(
 			});
 		});
 		describe("Hooks", () => {
-			it("calls comilation stats hooks", () => {
+			it("calls compilation stats hooks", () => {
 				let called = false;
 				const mockStats = new Stats({ //eslint-disable-line
 					hooks: {
