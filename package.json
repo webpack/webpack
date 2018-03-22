@@ -21,7 +21,7 @@
     "node-libs-browser": "^2.0.0",
     "schema-utils": "^0.4.2",
     "tapable": "^1.0.0",
-    "uglifyjs-webpack-plugin": "^1.1.1",
+    "uglifyjs-webpack-plugin": "^1.2.4",
     "watchpack": "^1.5.0",
     "webpack-sources": "^1.0.1"
   },
