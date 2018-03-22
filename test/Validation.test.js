@@ -210,7 +210,7 @@ describe("Validation", () => {
 				"       new webpack.LoaderOptionsPlugin({",
 				"         // test: /\\.xxx$/, // may apply this only for some modules",
 				"         options: {",
-				"           postcss: ...",
+				"           postcss: …",
 				"         }",
 				"       })",
 				"     ]"
@@ -297,7 +297,7 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.plugins[0] should be one of these:",
-				"   object { apply, ... } | function",
+				"   object { apply, … } | function",
 				"   -> Plugin of type object or instanceof Function",
 				"   Details:",
 				"    * configuration.plugins[0] should be an object.",
@@ -314,7 +314,7 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.plugins[0] should be one of these:",
-				"   object { apply, ... } | function",
+				"   object { apply, … } | function",
 				"   -> Plugin of type object or instanceof Function",
 				"   Details:",
 				"    * configuration.plugins[0] should be an object.",
@@ -331,7 +331,7 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.plugins[0] should be one of these:",
-				"   object { apply, ... } | function",
+				"   object { apply, … } | function",
 				"   -> Plugin of type object or instanceof Function",
 				"   Details:",
 				"    * configuration.plugins[0] should be an object.",
@@ -348,7 +348,7 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.plugins[0] should be one of these:",
-				"   object { apply, ... } | function",
+				"   object { apply, … } | function",
 				"   -> Plugin of type object or instanceof Function",
 				"   Details:",
 				"    * configuration.plugins[0] should be an object.",
@@ -365,7 +365,7 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.plugins[0] should be one of these:",
-				"   object { apply, ... } | function",
+				"   object { apply, … } | function",
 				"   -> Plugin of type object or instanceof Function",
 				"   Details:",
 				"    * configuration.plugins[0] misses the property 'apply'.",
