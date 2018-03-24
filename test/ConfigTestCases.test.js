@@ -226,6 +226,7 @@ describe("ConfigTestCases", () => {
 							);
 						if (exportedTests < filesCount)
 							return done(new Error("No tests exported by test case"));
+						if (testConfig.afterExecute) testConfig.afterExecute();
 						process.nextTick(done);
 					});
 				});

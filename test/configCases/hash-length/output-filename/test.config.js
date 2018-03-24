@@ -44,5 +44,8 @@ module.exports = {
 		}
 
 		return "./" + filename;
+	},
+	afterExecute: () => {
+		delete global.webpackJsonp;
 	}
 };
