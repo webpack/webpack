@@ -1,6 +1,6 @@
 # Setup
 
- Setup your webpack repository
+ Setup your local webpack repository
 
 ```bash
 git clone https://github.com/webpack/webpack.git
