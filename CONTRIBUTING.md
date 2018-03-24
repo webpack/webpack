@@ -25,7 +25,7 @@ documentation pages:
 
 ## Setup
 
-[Setup your local webpack repository](_Setup.md)
+[Setup your local webpack repository](_SETUP.md)
 
 ## Submitting Changes
 
