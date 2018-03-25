@@ -26,6 +26,8 @@
     "webpack-sources": "^1.0.1"
   },
   "devDependencies": {
+    "@types/tapable": "^1.0.0",
+    "@types/node": "^9.6.0",
     "benchmark": "^2.1.1",
     "bundle-loader": "~0.5.0",
     "codacy-coverage": "^2.0.1",
@@ -95,7 +97,7 @@
     "test:unit": "mocha test/*.unittest.js --max-old-space-size=4096 --harmony --trace-deprecation",
     "travis:integration": "yarn cover:init && yarn cover:integration && yarn cover:report-min",
     "travis:unit": "yarn cover:init && yarn cover:unit && yarn cover:report-min",
-    "travis:lint": "yarn lint",
+    "travis:lint": "yarn lint && yarn tsc",
     "travis:benchmark": "yarn benchmark",
     "appveyor:integration": "yarn cover:init && yarn cover:integration && yarn cover:report-min",
     "appveyor:unit": "yarn cover:init && yarn cover:unit && yarn cover:report-min",
@@ -107,6 +109,7 @@
     "prelint": "yarn setup",
     "lint": "yarn code-lint && yarn schema-lint",
     "code-lint": "eslint setup lib bin hot buildin \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\"",
+    "tsc": "tsc --pretty",
     "fix": "yarn code-lint --fix",
     "pretty": "prettier \"setup/**/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" --write",
     "schema-lint": "mocha test/*.lint.js --opts test/lint-mocha.opts",
