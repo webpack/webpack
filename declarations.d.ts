@@ -10,10 +10,12 @@ declare module 'tapable' {
 	// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 	// TypeScript Version: 2.3
 
-	export abstract class Tapable {
+	export class Tapable {
 		private _plugins: {
 			[propName: string]: Tapable.Handler[]
 		}
+
+		public _pluginCompat: Hook;
 
 		/**
 		 * @deprecated Tapable.plugin is deprecated. Use new API on `.hooks` instead
@@ -46,7 +48,7 @@ declare module 'tapable' {
 		 * @param name - plugin group name
 		 * @param args
 		 */
-		applyPlugins(name: string, ...args: any[]): void;
+		applyPlugins: (name: string, ...args: any[]) => void;
 
 		applyPlugins0(name: string): void;
 
@@ -313,3 +315,4 @@ declare const $hotChunkFilename$
 declare const $hotMainFilename$
 declare const $WebAssembly
 declare const WebAssembly
+declare const chunkId;
