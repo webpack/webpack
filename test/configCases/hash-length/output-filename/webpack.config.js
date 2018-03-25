@@ -191,6 +191,34 @@ module.exports = [
 			expectedFilenameLength: 9 + 7 + 3,
 			expectedChunkFilenameLength: 2 + 9 + 7 + 3
 		}
+	},
+	{
+		name: "contenthash in webpack",
+		entry: "./no-async",
+		output: {
+			filename: "bundle16.[contenthash].js",
+			chunkFilename: "[id].bundle16.[contenthash].js",
+			globalObject: "this"
+		},
+		target: "webworker",
+		amd: {
+			expectedFilenameLength: 32,
+			expectedChunkFilenameLength: 34
+		}
+	},
+	{
+		name: "contenthash in async-node with length",
+		entry: "./no-async",
+		output: {
+			filename: "bundle17.[contenthash:7].js",
+			chunkFilename: "[id].bundle17.[contenthash:7].js",
+			globalObject: "this"
+		},
+		target: "webworker",
+		amd: {
+			expectedFilenameLength: 9 + 7 + 3,
+			expectedChunkFilenameLength: 2 + 9 + 7 + 3
+		}
 	}
 ];
 

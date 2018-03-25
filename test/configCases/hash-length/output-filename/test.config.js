@@ -47,5 +47,6 @@ module.exports = {
 	},
 	afterExecute: () => {
 		delete global.webpackJsonp;
+		delete global.webpackChunk;
 	}
 };
