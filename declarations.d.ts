@@ -1,8 +1,5 @@
 declare module '*.json';
 declare module 'webpack-cli';
-
-// Copying @types/tapable here to fix issues.
-// TODO: publish those changes in DT
 declare module 'tapable' {
 	// Type definitions for tapable v1.0.0
 	// Project: https://github.com/webpack/tapable.git
@@ -10,12 +7,12 @@ declare module 'tapable' {
 	// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 	// TypeScript Version: 2.3
 
-	export class Tapable {
+	export abstract class Tapable {
 		private _plugins: {
 			[propName: string]: Tapable.Handler[]
 		}
 
-		public _pluginCompat: Hook;
+		_pluginCompat: Hook;
 
 		/**
 		 * @deprecated Tapable.plugin is deprecated. Use new API on `.hooks` instead
@@ -275,6 +272,10 @@ declare module 'tapable' {
 	export class AsyncSeriesBailHook<T1 = any, T2 = any, T3 = any> extends Hook<T1, T2, T3> { }
 	export class AsyncSeriesWaterfallHook<T1 = any, T2 = any, T3 = any> extends Hook<T1, T2, T3> { }
 
+	export class MultiHook {
+		constructor(hooks: Hook[])
+	}
+
 	export class HookInterceptor {
 		call: (...args: any[]) => void;
 		loop: (...args: any[]) => void;
@@ -284,6 +285,7 @@ declare module 'tapable' {
 	}
 
 	export class HookMap<T1 = any, T2 = any, T3 = any> {
+		constructor(fn: () => SyncHook);
 		get: (key: any) => Hook<T1, T2, T3> | undefined;
 		for: (key: any) => Hook<T1, T2, T3>;
 		tap: (key: any, name: string | Tap, fn: (arg1: T1, arg2: T2, arg3: T3, ...args: any[]) => any) => void;
@@ -295,9 +297,7 @@ declare module 'tapable' {
 	export class HookMapInterceptor<T1 = any, T2 = any, T3 = any> {
 		factory: (key: any, hook: Hook<T1, T2, T3>) => Hook<T1, T2, T3>;
 	}
-
 }
-
 // Globals
 declare const $hash$;
 declare const $requestTimeout$;
@@ -310,9 +310,10 @@ declare const modules;
 declare const installedChunks
 declare const hotAddUpdateChunk
 declare const parentHotUpdateCallback
-// declare const XMLHttpRequest
 declare const $hotChunkFilename$
 declare const $hotMainFilename$
 declare const $WebAssembly
 declare const WebAssembly
+declare const importScripts
+declare const $crossOriginLoading$;
 declare const chunkId;
