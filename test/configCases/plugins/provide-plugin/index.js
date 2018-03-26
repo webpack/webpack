@@ -16,6 +16,10 @@ it("should provide a module for a nested var within a IIFE's argument", function
 	}(process));
 });
 
+it("should provide a module for thisExpression", () => {
+	(this.aaa).should.be.eql("aaa");
+});
+
 it("should provide a module for a nested var within a IIFE's this", function() {
 	(function() {
 		(this.env.NODE_ENV).should.be.eql("development");

@@ -11,7 +11,7 @@ const stats = {
 module.exports = {
 	mode: "production",
 	entry: {
-		main: "./",
+		main: "./"
 	},
 	output: {
 		filename: "default/[name].js"

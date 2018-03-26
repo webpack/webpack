@@ -4,6 +4,6 @@ module.exports = {
 	performance: false,
 	stats: {
 		maxModules: 20,
-		modulesSort: "!id",
+		modulesSort: "!id"
 	}
 };

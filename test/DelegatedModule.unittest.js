@@ -16,11 +16,16 @@ describe("DelegatedModule", function() {
 		beforeEach(function() {
 			hashedText = "";
 			hash = {
-				update: (text) => {
+				update: text => {
 					hashedText += text;
 				}
 			};
-			const delegatedModule = new DelegatedModule(sourceRequest, data, type, userRequest);
+			const delegatedModule = new DelegatedModule(
+				sourceRequest,
+				data,
+				type,
+				userRequest
+			);
 			delegatedModule.updateHash(hash);
 		});
 		it("updates hash with delegated module ID", function() {
