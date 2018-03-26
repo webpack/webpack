@@ -326,3 +326,60 @@ Child custom-chunks-filter:
         [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
         [1] ./f.js 20 bytes {2} {11} {12} [built]
         [5] ./c.js 72 bytes {8} {12} [built]
+Child custom-chunks-filter-in-cache-groups:
+    Entrypoint main = default/main.js
+    Entrypoint a = default/a.js
+    Entrypoint b = default/vendors.js default/b.js
+    Entrypoint c = default/vendors.js default/c.js
+    chunk    {0} default/vendors.js (vendors) 112 bytes <{5}> ={2}= ={3}= ={4}= ={7}= ={8}= >{1}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
+        > ./b b
+        > ./c c
+        > ./a [8] ./index.js 1:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
+        [2] ./node_modules/x.js 20 bytes {0} {6} [built]
+        [3] ./node_modules/y.js 20 bytes {0} {6} [built]
+        [6] ./node_modules/z.js 20 bytes {0} [built]
+       [10] multi x y z 52 bytes {0} [built]
+    chunk    {1} default/async-g.js (async-g) 54 bytes <{0}> <{2}> <{6}> [rendered]
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+        [1] ./f.js 20 bytes {1} {3} {4} {7} {8} [built]
+        [9] ./g.js 34 bytes {1} [built]
+    chunk    {2} default/async-a.js (async-a) 176 bytes <{5}> ={0}= >{1}< [rendered]
+        > ./a [8] ./index.js 1:0-47
+        [0] ./d.js 20 bytes {2} {3} {4} {6} {7} {8} [built]
+        [7] ./a.js + 1 modules 156 bytes {2} {6} [built]
+            | ./a.js 121 bytes [built]
+            | ./e.js 20 bytes [built]
+    chunk    {3} default/async-b.js (async-b) 112 bytes <{5}> ={0}= [rendered]
+        > ./b [8] ./index.js 2:0-47
+        [0] ./d.js 20 bytes {2} {3} {4} {6} {7} {8} [built]
+        [1] ./f.js 20 bytes {1} {3} {4} {7} {8} [built]
+        [4] ./b.js 72 bytes {3} {7} [built]
+    chunk    {4} default/async-c.js (async-c) 112 bytes <{5}> ={0}= [rendered]
+        > ./c [8] ./index.js 3:0-47
+        [0] ./d.js 20 bytes {2} {3} {4} {6} {7} {8} [built]
+        [1] ./f.js 20 bytes {1} {3} {4} {7} {8} [built]
+        [5] ./c.js 72 bytes {4} {8} [built]
+    chunk    {5} default/main.js (main) 147 bytes >{0}< >{2}< >{3}< >{4}< [entry] [rendered]
+        > ./ main
+        [8] ./index.js 147 bytes {5} [built]
+    chunk    {6} default/a.js (a) 216 bytes >{1}< [entry] [rendered]
+        > ./a a
+        [0] ./d.js 20 bytes {2} {3} {4} {6} {7} {8} [built]
+        [2] ./node_modules/x.js 20 bytes {0} {6} [built]
+        [3] ./node_modules/y.js 20 bytes {0} {6} [built]
+        [7] ./a.js + 1 modules 156 bytes {2} {6} [built]
+            | ./a.js 121 bytes [built]
+            | ./e.js 20 bytes [built]
+    chunk    {7} default/b.js (b) 112 bytes ={0}= [entry] [rendered]
+        > ./b b
+        [0] ./d.js 20 bytes {2} {3} {4} {6} {7} {8} [built]
+        [1] ./f.js 20 bytes {1} {3} {4} {7} {8} [built]
+        [4] ./b.js 72 bytes {3} {7} [built]
+    chunk    {8} default/c.js (c) 112 bytes ={0}= [entry] [rendered]
+        > ./c c
+        [0] ./d.js 20 bytes {2} {3} {4} {6} {7} {8} [built]
+        [1] ./f.js 20 bytes {1} {3} {4} {7} {8} [built]
+        [5] ./c.js 72 bytes {4} {8} [built]
