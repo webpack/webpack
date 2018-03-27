@@ -26,6 +26,7 @@
     "webpack-sources": "^1.0.1"
   },
   "devDependencies": {
+    "@types/node": "^9.6.0",
     "benchmark": "^2.1.1",
     "bundle-loader": "~0.5.0",
     "codacy-coverage": "^2.0.1",
@@ -60,6 +61,7 @@
     "simple-git": "^1.65.0",
     "sinon": "^2.3.2",
     "style-loader": "^0.19.1",
+    "typescript": "^2.9.0-dev.20180325",
     "url-loader": "^0.6.2",
     "val-loader": "^1.0.2",
     "vm-browserify": "~0.0.0",
@@ -92,7 +94,7 @@
     "test:unit": "mocha test/*.unittest.js --max-old-space-size=4096 --harmony --trace-deprecation",
     "travis:integration": "npm run cover:init && npm run cover:integration && npm run cover:report-min",
     "travis:unit": "npm run cover:init && npm run cover:unit && npm run cover:report-min",
-    "travis:lint": "npm run lint-files",
+    "travis:lint": "npm run lint-files && npm run tsc",
     "travis:benchmark": "npm run benchmark",
     "appveyor:integration": "npm run cover:init && npm run cover:integration && npm run cover:report-min",
     "appveyor:unit": "npm run cover:init && npm run cover:unit && npm run cover:report-min",
@@ -103,6 +105,7 @@
     "pretest": "npm run lint-files",
     "lint-files": "npm run lint && npm run schema-lint",
     "lint": "eslint lib bin hot buildin \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\"",
+    "tsc": "tsc --pretty",
     "fix": "npm run lint -- --fix",
     "pretty-files": "prettier \"lib/**.*\" \"bin/**.*\" \"hot/**.*\" \"buildin/**.*\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" --write",
     "schema-lint": "mocha test/*.lint.js --opts test/lint-mocha.opts",
