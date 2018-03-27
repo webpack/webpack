@@ -193,7 +193,8 @@ describe(
 		describe("Hooks", () => {
 			it("calls compilation stats hooks", () => {
 				let called = false;
-				const mockStats = new Stats({ //eslint-disable-line
+				/* eslint-disable no-unused-vars*/
+				const mockStats = new Stats({
 					hooks: {
 						stats: {
 							call: function() {
@@ -203,6 +204,7 @@ describe(
 					}
 				});
 				called.should.be.eql(true);
+				/* eslint-enable no-unused-vars*/
 			});
 		});
 	},
