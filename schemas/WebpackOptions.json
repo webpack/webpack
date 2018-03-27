@@ -526,6 +526,7 @@
             "commonjs",
             "commonjs2",
             "commonjs-module",
+            "return",
             "amd",
             "umd",
             "umd2",
