@@ -1,2 +1,2 @@
-let Setup = require("./setup.js");
-new Setup().run();
+let setup = require("./setup.js");
+setup();

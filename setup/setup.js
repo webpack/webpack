@@ -1,101 +1,114 @@
-/* eslint-disable */
 "use strict";
 
-class Setup {
-	constructor() {
-		this.fs = require("fs");
-		this.path = require("path");
-		this.root = process.cwd();
-		this.wpfolder = this.path.resolve(this.root, "node_modules/webpack/");
-		this.hasYarn = false;
-		this.msg = {
-			setupStart: "Setup start",
-			setupSuccess: "Setup complete",
-			setupNoSymlink: "Setup failed to establish symlink for webpack",
-			setupFail: "Setup failed",
-			setupSkip: "Skip setup"
-		};
-	}
+const fs = require("fs");
+const path = require("path");
+const root = process.cwd();
+const wpfolder = path.resolve(root, "node_modules/webpack/");
+const msg = {
+	setupStart: "\nSetup: start\n\r",
+	setupComplete: "Setup: complete\n\r",
+	setupNoSymlink: "\nSetup: no symlink\n\r",
+	setupSymlink: "\nSetup: symlink established\n\r",
+	setupFail: "\nSetup: failed\n\r",
+	setupSkip: "\nSetup: skip\n\r",
+	setupInstallYarn: "\nSetup: Installing Yarn\n\r",
+	setupInstallDependencies: "\nSetup: Installing dependencies\n\r"
+};
 
-	run() {
-		let p = new Promise((resolve, reject) => {
-			if (!this.checkSymlinkExists()) {
-				console.log(this.msg.setupStart);
-				this.checkYarnInstalledAsync().then(() => {
-					return this.runSetupAsync();
-				}).catch((e) => {
-					console.error(e);
-					reject();
-				}).then((stdout) => {
-					if (!this.checkSymlinkExists()) {
-						console.error(this.msg.setupNoSymlink);
-						reject();
-					} else {
-						console.log(stdout);
-						console.log(this.msg.setupSuccess);
-						resolve();
-					}
-				}).catch((e) => {
-					console.error(e);
-					console.log(this.msg.setupFail);
-					reject(e);
-				});
-			} else {
-				console.log(this.msg.setupSkip);
-				resolve();
-			}
+function setup() {
+	return new Promise((resolve, reject) => {
+		checkSymlinkExistsAsync()
+			.then(() => {
+				resolve(msg.setupSkip);
+			})
+			.catch(() => {
+				resolve(
+					ensureYarnInstalledAsync().then(() => {
+						return runSetupAsync().then(() => {
+							return checkSymlinkExistsAsync();
+						});
+					})
+				);
+			});
+	})
+		.then(message => {
+			console.log(message);
+			message !== msg.setupSkip && console.log(msg.setupComplete);
+			process.exitCode = 0;
+		})
+		.catch(e => {
+			console.log(e);
+			process.exitCode = 1;
 		});
-
-		p.then(() => {
-			process.exit(0);
-		}).catch((e) => {
-			process.exit(1);
-		});
-		return p;
-	}
-
-	runSetupAsync() {
-		return new Promise((resolve, reject) => {
-			try {		
-				const pm = this.hasYarn ? "yarn" : "npm";
-				const exec = require("child_process").exec;
-				exec(`${pm} install && ${pm} link && ${pm} link webpack`,
-					(error, stdout, stderr) => {
-						if (error) {
-							reject(error);
-						} else {
-							resolve(stdout);
-						}
-					});
-			} catch (e) {
-				reject(e);
-			}
-		});
-	}
-
-	checkYarnInstalledAsync() {
-		return new Promise((resolve, reject) => {
-			try {
-				var isSemver = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$/;
-
-				const exec = require("child_process").exec;
-				exec("yarn -v", (error, stdout, stderr) => {
-					if (error) {
-						reject(error);
-					} else {
-						this.hasYarn = isSemver.test(stdout.trim());
-						resolve(this.hasYarn);
-					}
-				});
-			} catch (error) {
-				reject(error);
-			}
-		});
-	}
-
-	checkSymlinkExists() {
-		return this.fs.existsSync(this.wpfolder) && this.fs.lstatSync(this.wpfolder).isSymbolicLink();
-	}
 }
 
-module.exports = Setup
+function runSetupAsync() {
+	console.log(msg.setupInstallDependencies);
+	return new Promise((resolve, reject) => {
+		let cp = require("child_process").exec(
+			`yarn install && yarn link && yarn link webpack`,
+			(error, stdout, stderr) => {
+				if (error) {
+					reject(msg.setupFail);
+				} else {
+					resolve();
+				}
+			}
+		);
+		cp.stderr.pipe(process.stderr);
+		cp.stdout.pipe(process.stdout);
+	});
+}
+
+function checkSymlinkExistsAsync() {
+	return new Promise((resolve, reject) => {
+		if (fs.existsSync(wpfolder) && fs.lstatSync(wpfolder).isSymbolicLink()) {
+			resolve(msg.setupSymlink);
+		} else {
+			reject(msg.setupNoSymlink);
+		}
+	});
+}
+
+function ensureYarnInstalledAsync() {
+	console.log(msg.setupStart);
+	return new Promise((resolve, reject) => {
+		var semverPattern = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$/;
+
+		var cp = require("child_process").exec(
+			"yarn -v",
+			(error, stdout, stderr) => {
+				if (stdout && semverPattern.test(stdout.trim())) {
+					resolve();
+				} else {
+					resolve(installYarnAsync());
+				}
+			}
+		);
+		cp.stderr.pipe(process.stderr);
+		cp.stdout.pipe(process.stdout);
+	});
+}
+
+function installYarnAsync() {
+	console.log(msg.setupInstallYarn);
+	return new Promise((resolve, reject) => {
+		let cp = require("child_process").exec(
+			`npm install -g yarn`,
+			{
+				cwd: root
+			},
+			(error, stdout, stderr) => {
+				if (error) {
+					reject(error);
+				} else {
+					resolve();
+				}
+			}
+		);
+		cp.stderr.pipe(process.stderr);
+		cp.stdout.pipe(process.stdout);
+	});
+}
+
+module.exports = setup;

@@ -87,7 +87,7 @@
     "schemas/"
   ],
   "scripts": {
-    "setup":"node ./setup/index.js",
+    "setup": "node ./setup/index.js",
     "test": "mocha test/*.test.js test/*.unittest.js --max-old-space-size=4096 --harmony --trace-deprecation",
     "test:integration": "mocha test/*.test.js --max-old-space-size=4096 --harmony --trace-deprecation",
     "test:unit": "mocha test/*.unittest.js --max-old-space-size=4096 --harmony --trace-deprecation",
