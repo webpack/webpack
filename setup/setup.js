@@ -1,6 +1,7 @@
 "use strict";
 
 const fs = require("fs");
+const { exec } = require("child_process");
 const path = require("path");
 const root = process.cwd();
 const wpfolder = path.resolve(root, "node_modules/webpack/");
@@ -45,7 +46,7 @@ function setup() {
 function runSetupAsync() {
 	console.log(msg.setupInstallDependencies);
 	return new Promise((resolve, reject) => {
-		let cp = require("child_process").exec(
+		let cp = exec(
 			`yarn install && yarn link && yarn link webpack`,
 			(error, stdout, stderr) => {
 				if (error) {
@@ -75,16 +76,13 @@ function ensureYarnInstalledAsync() {
 	return new Promise((resolve, reject) => {
 		var semverPattern = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$/;
 
-		var cp = require("child_process").exec(
-			"yarn -v",
-			(error, stdout, stderr) => {
-				if (stdout && semverPattern.test(stdout.trim())) {
-					resolve();
-				} else {
-					resolve(installYarnAsync());
-				}
+		var cp = exec("yarn -v", (error, stdout, stderr) => {
+			if (stdout && semverPattern.test(stdout.trim())) {
+				resolve();
+			} else {
+				resolve(installYarnAsync());
 			}
-		);
+		});
 		cp.stderr.pipe(process.stderr);
 		cp.stdout.pipe(process.stdout);
 	});
@@ -93,7 +91,7 @@ function ensureYarnInstalledAsync() {
 function installYarnAsync() {
 	console.log(msg.setupInstallYarn);
 	return new Promise((resolve, reject) => {
-		let cp = require("child_process").exec(
+		let cp = exec(
 			`npm install -g yarn`,
 			{
 				cwd: root
