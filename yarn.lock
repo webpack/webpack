@@ -6,9 +6,9 @@
   version "9.6.0"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.0.tgz#d3480ee666df9784b1001a1872a2f6ccefb6c2d7"
 
-"@types/tapable@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.0.tgz#b76254453021be05681f6213416766bac9afb99c"
+"@types/tapable@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.1.tgz#938bfcc018eda2f386c34e37f084e6e961c08ca6"
 
 abbrev@1:
   version "1.1.1"
@@ -4498,9 +4498,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^2.7.2:
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.7.2.tgz#2d615a1ef4aee4f574425cdff7026edf81919836"
+typescript@^2.9.0-dev.20180327:
+  version "2.9.0-dev.20180327"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.0-dev.20180327.tgz#f27ca1d6761c7de5e530ead9c9321b9f66c13d1e"
 
 ua-parser-js@^0.7.9:
   version "0.7.17"
