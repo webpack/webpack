@@ -74,9 +74,9 @@ function checkSymlinkExistsAsync() {
 function ensureYarnInstalledAsync() {
 	console.log(msg.setupStart);
 	return new Promise((resolve, reject) => {
-		var semverPattern = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$/;
+		let semverPattern = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$/;
 
-		var cp = exec("yarn -v", (error, stdout, stderr) => {
+		let cp = exec("yarn -v", (error, stdout, stderr) => {
 			if (stdout && semverPattern.test(stdout.trim())) {
 				resolve();
 			} else {
