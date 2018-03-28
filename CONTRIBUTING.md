@@ -25,7 +25,28 @@ documentation pages:
 
 ## Setup
 
-[Setup your local webpack repository](_SETUP.md)
+At webpack we use `yarn` to execute commands.
+
+If you already have `yarn` installed, do: `yarn setup`.
+If not, do: `npm run setup`, the setup will also install `yarn` for you.
+
+That's all.
+
+If you want to do the setup manually:
+```bash
+// git clone https://github.com/webpack/webpack.git
+cd webpack
+npm install -g yarn
+yarn install
+yarn link
+yarn link webpack
+```
+
+To run the entire test suite use:
+
+```bash
+yarn test
+```
 
 ## Submitting Changes
 
