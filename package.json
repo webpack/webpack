@@ -106,7 +106,7 @@
     "lint-files": "npm run lint && npm run schema-lint",
     "lint": "eslint setup lib bin hot buildin \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\"",
     "fix": "npm run lint -- --fix",
-    "pretty-files": "prettier \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" --write",
+    "pretty-files": "prettier \"setup/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" --write",
     "schema-lint": "mocha test/*.lint.js --opts test/lint-mocha.opts",
     "benchmark": "mocha --max-old-space-size=4096 --harmony --trace-deprecation test/*.benchmark.js -R spec",
     "cover": "npm run cover:init && npm run cover:all && npm run cover:report",
