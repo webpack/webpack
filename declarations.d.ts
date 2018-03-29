@@ -1,5 +1,5 @@
-declare module '*.json';
-declare module 'webpack-cli';
+declare module "*.json";
+declare module "webpack-cli";
 
 // Globals
 declare const $hash$;
@@ -10,11 +10,13 @@ declare const hotDownloadManifest;
 declare const hotDownloadUpdateChunk;
 declare const hotDisposeChunk;
 declare const modules;
-declare const installedChunks
-declare const hotAddUpdateChunk
-declare const parentHotUpdateCallback
+declare const installedChunks;
+declare const hotAddUpdateChunk;
+declare const parentHotUpdateCallback;
 // declare const XMLHttpRequest
-declare const $hotChunkFilename$
-declare const $hotMainFilename$
-declare const $WebAssembly
-declare const WebAssembly
+declare const $hotChunkFilename$;
+declare const $hotMainFilename$;
+declare const $WebAssembly;
+declare const WebAssembly;
+declare const importScripts;
+declare const $crossOriginLoading$;

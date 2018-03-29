@@ -112,7 +112,7 @@
     "code-lint": "eslint setup lib bin hot buildin \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\"",
     "tsc": "tsc --pretty",
     "fix": "yarn code-lint --fix",
-    "pretty": "prettier \"setup/**/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" --write",
+    "pretty": "prettier \"setup/**/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" \"declarations.d.ts\" --write",
     "schema-lint": "mocha test/*.lint.js --opts test/lint-mocha.opts",
     "benchmark": "mocha --max-old-space-size=4096 --harmony --trace-deprecation test/*.benchmark.js -R spec",
     "cover": "yarn cover:init && yarn cover:all && yarn cover:report",
