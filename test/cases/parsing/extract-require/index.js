@@ -11,8 +11,8 @@ function testCase(number) {
 }
 
 it("should parse complex require calls", function() {
-	should.strictEqual(new(require("./constructor"))(1234).value, 1234, "Parse require in new(...) should work");
-	should.strictEqual(new ( require ( "./constructor" ) ) ( 1234 ) .value, 1234, "Parse require in new(...) should work, with spaces");
+	should.strictEqual(new(require("./constructor"))(1234).value, 1234, "Parse require in new(…) should work");
+	should.strictEqual(new ( require ( "./constructor" ) ) ( 1234 ) .value, 1234, "Parse require in new(…) should work, with spaces");
 });
 
 it("should let the user hide the require function", function() {

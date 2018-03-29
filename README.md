@@ -52,7 +52,7 @@ yarn add webpack --dev
 
 <h2 align="center">Introduction</h2>
 
-> This README reflects Webpack v2.x and v3.x. The Webpack v1.x documentation has been deprecated and deleted.
+> This README reflects webpack v2.x and v3.x. The webpack v1.x documentation has been deprecated and deleted.
 
 webpack is a bundler for modules. The main purpose is to bundle JavaScript
 files for usage in a browser, yet it is also capable of transforming, bundling,
