@@ -34,7 +34,7 @@ That's all.
 
 If you want to do the setup manually:
 ```bash
-// git clone https://github.com/webpack/webpack.git
+git clone https://github.com/webpack/webpack.git
 cd webpack
 npm install -g yarn
 yarn install
