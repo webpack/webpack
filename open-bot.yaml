@@ -80,15 +80,31 @@ rules:
         - "^[\\s\\S]+?\\d+\\s+pending\n+"
         - "npm ERR!.*\n"
         - "\n*=============================================================================\n[\\s\\S]*"
+    string_cleanup_1:
+      id: firstError
+      value: "{{{logResult}}}"
+      remove:
+        - "\\s2\\)\\s[\\s\\S]*"
+    string_cleanup_2:
+      id: remainingErrors
+      value: "{{{logResult}}}"
+      remove:
+        - "^[\\s\\S]+?(?=\\s2\\)\\s)"
   actions:
     comment:
       identifier: "ci-result"
       message: |-
         @{{commit.author.login}} Please review the following output log for errors:
-
-        ``` text
-        {{{logResult}}}
+        ```text
+        {{{firstError}}}
         ```
+        <details>
+          <summary>Show remaining errors</summary>
+
+        ```text
+        {{{remainingErrors}}}
+        ```
+        </details>
 
         See [complete report here]({{status.target_url}}).
     set:
@@ -196,7 +212,7 @@ rules:
 
 
 
-# Add tests-needed label depending on codedov status
+# Add tests-needed label depending on codecov status
 # comment to point the user writing test cases
 # comment in case of success
 - filters:
@@ -290,6 +306,8 @@ rules:
     ensure:
       value: "{{review.state}}"
       equals: APPROVED
+    permission:
+      user: "{{review.user.login}}"
   actions:
     label:
       add: "PR: reviewed-approved"
@@ -303,6 +321,8 @@ rules:
       commit: true
       review:
         state: APPROVED|CHANGES_REQUESTED
+    permission:
+      user: "{{review.user.login}}"
     ensure:
       value: "{{review.state}}"
       equals: CHANGES_REQUESTED
@@ -319,6 +339,8 @@ rules:
       review:
         state: APPROVED|CHANGES_REQUESTED
       commit: true
+    permission:
+      user: "{{review.user.login}}"
     not:
       label: "review-outdated"
     ensure:
@@ -411,6 +433,17 @@ rules:
 
 
 
+# add "Send a PR" label when somebody with write permission say it
+- filters:
+    open: true
+    comment: "[Ss]end a [Pp][Rr]"
+    permission:
+      user: "{{comment.actor.login}}"
+  actions:
+    label: "Send a PR"
+
+
+
 # Move issue task
 - filters:
     open: true
@@ -429,7 +462,7 @@ rules:
 
         ---
 
-        This issue was moved from {{owner}}/{{repo}}#{{issue.number}} by @{{comment.actor.login}}. Orginal issue was by @{{issue.user.login}}.
+        This issue was moved from {{owner}}/{{repo}}#{{issue.number}} by @{{comment.actor.login}}. Original issue was by @{{issue.user.login}}.
 
         {{{comment_match.[2]}}}
     comment:

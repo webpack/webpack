@@ -117,6 +117,7 @@ console.log(new square(7));
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "dist/";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -146,22 +147,22 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__["square"](7));
 /***/ }),
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_3312d7a9aacfa149e455 ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_9ee2f174307b7ef21301 ***!
   \******************************************************************************************************/
 /*! exports provided: square */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_3312d7a9aacfa149e455 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_9ee2f174307b7ef21301 */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_3312d7a9aacfa149e455" ***!
+  !*** external "vendor_lib_9ee2f174307b7ef21301" ***!
   \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = vendor_lib_3312d7a9aacfa149e455;
+module.exports = vendor_lib_9ee2f174307b7ef21301;
 
 /***/ })
 /******/ ]);
@@ -173,41 +174,41 @@ module.exports = vendor_lib_3312d7a9aacfa149e455;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
- Asset      Size  Chunks             Chunk Names
-app.js  3.89 KiB       0  [emitted]  main
+Version: webpack 4.0.0-beta.2
+ Asset     Size  Chunks             Chunk Names
+app.js  3.9 KiB       0  [emitted]  main
 Entrypoint main = app.js
 chunk    {0} app.js (main) 182 bytes [entry] [rendered]
-    > main [0] ./example-app.js 
+    > ./example-app main
     [0] ./example-app.js 98 bytes {0} [built]
         [no exports]
         single entry ./example-app  main
-    [1] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_3312d7a9aacfa149e455 42 bytes {0} [built]
+    [1] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_9ee2f174307b7ef21301 42 bytes {0} [built]
         [exports: square]
         harmony side effect evaluation example-vendor [0] ./example-app.js 1:0-40
         harmony import specifier example-vendor [0] ./example-app.js 3:12-18
         harmony import specifier example-vendor [0] ./example-app.js 4:16-22
-    [2] external "vendor_lib_3312d7a9aacfa149e455" 42 bytes {0} [built]
-        delegated source dll-reference vendor_lib_3312d7a9aacfa149e455 [1] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_3312d7a9aacfa149e455
+    [2] external "vendor_lib_9ee2f174307b7ef21301" 42 bytes {0} [built]
+        delegated source dll-reference vendor_lib_9ee2f174307b7ef21301 [1] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_9ee2f174307b7ef21301
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
  Asset       Size  Chunks             Chunk Names
 app.js  736 bytes       0  [emitted]  main
 Entrypoint main = app.js
 chunk    {0} app.js (main) 182 bytes [entry] [rendered]
-    > main [2] ./example-app.js 
-    [0] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_3312d7a9aacfa149e455 42 bytes {0} [built]
+    > ./example-app main
+    [0] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_9ee2f174307b7ef21301 42 bytes {0} [built]
         [exports: square]
         harmony side effect evaluation example-vendor [2] ./example-app.js 1:0-40
         harmony import specifier example-vendor [2] ./example-app.js 3:12-18
         harmony import specifier example-vendor [2] ./example-app.js 4:16-22
-    [1] external "vendor_lib_3312d7a9aacfa149e455" 42 bytes {0} [built]
-        delegated source dll-reference vendor_lib_3312d7a9aacfa149e455 [0] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_3312d7a9aacfa149e455
+    [1] external "vendor_lib_9ee2f174307b7ef21301" 42 bytes {0} [built]
+        delegated source dll-reference vendor_lib_9ee2f174307b7ef21301 [0] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_9ee2f174307b7ef21301
     [2] ./example-app.js 98 bytes {0} [built]
         [no exports]
         single entry ./example-app  main

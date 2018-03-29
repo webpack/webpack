@@ -1,6 +1,4 @@
-This example shows how to create a async loaded commons chunk.
-
-When a chunk has many child chunks which share common modules the `CommonsChunkPlugin` can extract these common modules into a commons chunk which is loaded in parallel to the requested child chunk.
+This example shows automatically created async commons chunks.
 
 The example entry references two chunks:
 
@@ -16,7 +14,9 @@ The example entry references two chunks:
   * module `b`
   * module `d`
 
-These chunks share modules `a` and `b`. The `CommonsChunkPlugin` extract these into chunk Z:
+These chunks share modules `a` and `b`. The optimization extract these into chunk Z:
+
+Note: Actually the optimization compare size of chunk Z to some minimum value, but this is disabled from this example. In practice there is no configuration needed for this.
 
 * entry chunk
   * async require -> chunk X & Z
@@ -36,36 +36,13 @@ Pretty useful for a router in a SPA.
 
 ``` javascript
 // a chunks with a, b, c
-require(["./a", "./b", "./c"], function(a, b, c) {});
+require(["./a", "./b", "./c"]);
 
 // a chunk with a, b, d
 require.ensure(["./a"], function(require) {
 	require("./b");
 	require("./d");
 });
-```
-
-# webpack.config.js
-
-``` javascript
-var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
-
-module.exports = {
-	// mode: "development || "production",
-	plugins: [
-		new CommonsChunkPlugin({
-			// process all children of the main chunk
-			// if omitted it would process all chunks
-			name: "main",
-			// create a additional async chunk for the common modules
-			// which is loaded in parallel to the requested chunks
-			async: true
-		})
-	],
-	optimization: {
-		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
-	}
-};
 ```
 
 # dist/output.js
@@ -76,10 +53,12 @@ module.exports = {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
-/******/ 		var chunkIds = data[0], moreModules = data[1], executeModules = data[2];
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1]
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId]) {
@@ -99,6 +78,7 @@ module.exports = {
 /******/
 /******/ 	};
 /******/
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -107,7 +87,7 @@ module.exports = {
 /******/ 		3: 0
 /******/ 	};
 /******/
-/******/ 	var scheduledModules = [];
+/******/
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -233,10 +213,12 @@ module.exports = {
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 	var parentJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 	jsonpArray.push = webpackJsonpCallback;
 /******/ 	jsonpArray = jsonpArray.slice();
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 2);
@@ -257,7 +239,7 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 // a chunks with a, b, c
-Promise.all(/*! AMD require */[__webpack_require__.e(0), __webpack_require__.e(2)]).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 0), __webpack_require__(/*! ./c */ 4)]; (function(a, b, c) {}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
+Promise.all(/*! AMD require */[__webpack_require__.e(0), __webpack_require__.e(2)]).then(function() {[__webpack_require__(/*! ./a */ 1), __webpack_require__(/*! ./b */ 0), __webpack_require__(/*! ./c */ 4)];}).catch(__webpack_require__.oe);
 
 // a chunk with a, b, d
 Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.e(1)]).then((function(require) {
@@ -342,33 +324,33 @@ module.exports = "c";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  405 bytes       0  [emitted]  
 1.output.js  241 bytes       1  [emitted]  
 2.output.js  241 bytes       2  [emitted]  
-  output.js   7.39 KiB       3  [emitted]  main
+  output.js   7.32 KiB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 42 bytes {3} [rendered]
-    > async commons [2] ./example.js 2:0-52
-    > async commons [2] ./example.js 5:0-8:2
+chunk    {0} 0.output.js 42 bytes <{3}> ={1}= ={2}= [rendered] split chunk (cache group: default)
+    > ./a ./b ./c [2] ./example.js 2:0-30
+    > [2] ./example.js 5:0-8:2
     [0] ./b.js 21 bytes {0} [built]
-        amd require ./b [2] ./example.js 2:0-52
+        amd require ./b [2] ./example.js 2:0-30
         cjs require ./b [2] ./example.js 6:1-15
     [1] ./a.js 21 bytes {0} [built]
-        amd require ./a [2] ./example.js 2:0-52
+        amd require ./a [2] ./example.js 2:0-30
         require.ensure item ./a [2] ./example.js 5:0-8:2
-chunk    {1} 1.output.js 21 bytes {3} [rendered]
+chunk    {1} 1.output.js 21 bytes <{3}> ={0}= [rendered]
     > [2] ./example.js 5:0-8:2
     [3] ./d.js 21 bytes {1} [built]
         cjs require ./d [2] ./example.js 7:1-15
-chunk    {2} 2.output.js 21 bytes {3} [rendered]
-    > [2] ./example.js 2:0-52
+chunk    {2} 2.output.js 21 bytes <{3}> ={0}= [rendered]
+    > ./a ./b ./c [2] ./example.js 2:0-30
     [4] ./c.js 21 bytes {2} [built]
-        amd require ./c [2] ./example.js 2:0-52
-chunk    {3} output.js (main) 194 bytes [entry] [rendered]
-    > main [2] ./example.js 
-    [2] ./example.js 194 bytes {3} [built]
+        amd require ./c [2] ./example.js 2:0-30
+chunk    {3} output.js (main) 172 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+    > .\example.js main
+    [2] ./example.js 172 bytes {3} [built]
         single entry .\example.js  main
 ```
 
@@ -376,32 +358,32 @@ chunk    {3} output.js (main) 194 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  118 bytes       0  [emitted]  
 1.output.js   91 bytes       1  [emitted]  
 2.output.js   91 bytes       2  [emitted]  
-  output.js   1.77 KiB       3  [emitted]  main
+  output.js   1.73 KiB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 42 bytes {3} [rendered]
-    > async commons [2] ./example.js 2:0-52
-    > async commons [2] ./example.js 5:0-8:2
+chunk    {0} 0.output.js 42 bytes <{3}> ={1}= ={2}= [rendered] split chunk (cache group: default)
+    > ./a ./b ./c [2] ./example.js 2:0-30
+    > [2] ./example.js 5:0-8:2
     [0] ./b.js 21 bytes {0} [built]
-        amd require ./b [2] ./example.js 2:0-52
+        amd require ./b [2] ./example.js 2:0-30
         cjs require ./b [2] ./example.js 6:1-15
     [1] ./a.js 21 bytes {0} [built]
-        amd require ./a [2] ./example.js 2:0-52
+        amd require ./a [2] ./example.js 2:0-30
         require.ensure item ./a [2] ./example.js 5:0-8:2
-chunk    {1} 1.output.js 21 bytes {3} [rendered]
+chunk    {1} 1.output.js 21 bytes <{3}> ={0}= [rendered]
     > [2] ./example.js 5:0-8:2
     [3] ./d.js 21 bytes {1} [built]
         cjs require ./d [2] ./example.js 7:1-15
-chunk    {2} 2.output.js 21 bytes {3} [rendered]
-    > [2] ./example.js 2:0-52
+chunk    {2} 2.output.js 21 bytes <{3}> ={0}= [rendered]
+    > ./a ./b ./c [2] ./example.js 2:0-30
     [4] ./c.js 21 bytes {2} [built]
-        amd require ./c [2] ./example.js 2:0-52
-chunk    {3} output.js (main) 194 bytes [entry] [rendered]
-    > main [2] ./example.js 
-    [2] ./example.js 194 bytes {3} [built]
+        amd require ./c [2] ./example.js 2:0-30
+chunk    {3} output.js (main) 172 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+    > .\example.js main
+    [2] ./example.js 172 bytes {3} [built]
         single entry .\example.js  main
 ```

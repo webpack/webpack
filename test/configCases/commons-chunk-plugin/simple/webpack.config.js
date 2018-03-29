@@ -1,4 +1,3 @@
-var CommonsChunkPlugin = require("../../../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
 	entry: {
 		vendor: ["./a"],
@@ -8,9 +7,10 @@ module.exports = {
 	output: {
 		filename: "[name].js"
 	},
-	plugins: [
-		new CommonsChunkPlugin({
+	optimization: {
+		splitChunks: {
+			minSize: 1,
 			name: "vendor"
-		})
-	]
+		}
+	}
 };

@@ -1,6 +1,6 @@
 This is the vendor build part.
 
-It's built separatly from the app part. The vendors dll is only built when vendors has changed and not while the normal development cycle.
+It's built separately from the app part. The vendors dll is only built when vendors has changed and not while the normal development cycle.
 
 The DllPlugin in combination with the `output.library` option exposes the internal require function as global variable in the target environment.
 
@@ -41,7 +41,7 @@ export function square(n) {
 # dist/vendor.js
 
 ``` javascript
-var vendor_lib_3312d7a9aacfa149e455 =
+var vendor_lib_9ee2f174307b7ef21301 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -112,6 +112,7 @@ var vendor_lib_3312d7a9aacfa149e455 =
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "dist/";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -156,7 +157,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ``` javascript
-{"name":"vendor_lib_3312d7a9aacfa149e455","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
+{"name":"vendor_lib_9ee2f174307b7ef21301","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
 ```
 
 # Info
@@ -165,12 +166,12 @@ function square(n) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
     Asset      Size  Chunks             Chunk Names
-vendor.js  3.31 KiB       0  [emitted]  main
+vendor.js  3.32 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
-    > main [0] dll main 
+    > main
     [0] dll main 12 bytes {0} [built]
         dll entry 
         
@@ -181,12 +182,12 @@ chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
     Asset       Size  Chunks             Chunk Names
 vendor.js  704 bytes       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
-    > main [1] dll main 
+    > main
     [1] dll main 12 bytes {0} [built]
         dll entry 
         

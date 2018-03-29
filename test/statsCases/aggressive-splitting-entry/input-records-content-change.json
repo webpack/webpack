@@ -20,9 +20,14 @@
   "chunks": {
     "byName": {},
     "byBlocks": {},
-    "usedIds": {
-      "0": 0,
-      "444": 444
+    "usedIds": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "bySource": {
+      "0 index.js ./g": 0
     }
   },
   "aggressiveSplits": [
@@ -32,6 +37,7 @@
         "c.js"
       ],
       "hash": "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "size": 1798,
       "id": 444
     }
   ]

@@ -102,6 +102,7 @@ module.exports = function(content) {
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "dist/";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -262,12 +263,12 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
-    Asset      Size  Chunks             Chunk Names
-output.js  6.19 KiB       0  [emitted]  main
+Version: webpack 4.0.0-beta.2
+    Asset     Size  Chunks             Chunk Names
+output.js  6.2 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 2.66 KiB [entry] [rendered]
-    > main [0] ./example.js 
+    > .\example.js main
     [0] ./example.js 210 bytes {0} [built]
         single entry .\example.js  main
     [1] ./loader.js!./file.js 41 bytes {0} [built]
@@ -282,12 +283,12 @@ chunk    {0} output.js (main) 2.66 KiB [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
     Asset      Size  Chunks             Chunk Names
 output.js  1.53 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 2.66 KiB [entry] [rendered]
-    > main [3] ./example.js 
+    > .\example.js main
     [0] (webpack)/node_modules/css-loader!./test.css 209 bytes {0} [built]
         cjs require !css-loader!./test.css [3] ./example.js 6:12-45
         cjs require ./test.css [3] ./example.js 5:12-33

@@ -4,6 +4,7 @@ module.exports = [
 		entry: "./index",
 		stats: "none"
 	},
+
 	{
 		mode: "production",
 		entry: "./index",

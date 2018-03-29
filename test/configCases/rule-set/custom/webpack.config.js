@@ -9,7 +9,7 @@ module.exports = {
 						options: {
 							resource: data.resource.replace(/^.*[\\/]/g, ""),
 							resourceQuery: data.resourceQuery,
-							issuer: data.issuer.replace(/^.*[\\/]/g, ""),
+							issuer: data.issuer.replace(/^.*[\\/]/g, "")
 						}
 					};
 				}

@@ -43,10 +43,16 @@ With this bundle configuration, you would load your third party libraries, then 
 {{dist/vendor.js}}
 ```
 
-# dist/common.js
+# dist/commons~pageA~pageB~pageC.js
 
 ``` javascript
-{{dist/common.js}}
+{{dist/commons~pageA~pageB~pageC.js}}
+```
+
+# dist/commons~pageB~pageC.js
+
+``` javascript
+{{dist/commons~pageB~pageC.js}}
 ```
 
 # dist/pageA.js

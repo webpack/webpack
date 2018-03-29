@@ -1,5 +1,4 @@
 {
-  "id": "SourceMapDevToolPlugin",
   "type": "object",
   "additionalProperties": false,
   "definitions": {

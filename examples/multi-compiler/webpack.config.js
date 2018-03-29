@@ -15,6 +15,7 @@ module.exports = [
 			})
 		]
 	},
+
 	{
 		name: "desktop",
 		// mode: "development || "production",

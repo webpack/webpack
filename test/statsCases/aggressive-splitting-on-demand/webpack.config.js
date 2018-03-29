@@ -9,8 +9,6 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.optimize.AggressiveSplittingPlugin({
-			chunkOverhead: 0,
-			entryChunkMultiplicator: 1,
 			minSize: 1500,
 			maxSize: 2500
 		})

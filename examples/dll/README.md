@@ -36,7 +36,7 @@ module.exports = {
 # dist/MyDll.alpha.js
 
 ``` javascript
-var alpha_100e8e712194d1301cec =
+var alpha_ae937b5d3e880b635a69 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -107,6 +107,7 @@ var alpha_100e8e712194d1301cec =
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "dist/";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -167,7 +168,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ``` javascript
-{"name":"alpha_100e8e712194d1301cec","content":{"./alpha.js":{"id":1,"buildMeta":{"providedExports":true}},"./a.js":{"id":2,"buildMeta":{"providedExports":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"providedExports":true}}}}
+{"name":"alpha_ae937b5d3e880b635a69","content":{"./alpha.js":{"id":1,"buildMeta":{"providedExports":true}},"./a.js":{"id":2,"buildMeta":{"providedExports":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"providedExports":true}}}}
 ```
 
 # Info
@@ -176,14 +177,14 @@ module.exports = "module";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
          Asset      Size  Chunks             Chunk Names
-MyDll.alpha.js  3.45 KiB       0  [emitted]  alpha
- MyDll.beta.js  3.42 KiB       1  [emitted]  beta
+MyDll.alpha.js  3.46 KiB       0  [emitted]  alpha
+ MyDll.beta.js  3.43 KiB       1  [emitted]  beta
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
 chunk    {0} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
-    > alpha [0] dll alpha 
+    > alpha
     [0] dll alpha 12 bytes {0} [built]
         dll entry 
         
@@ -195,7 +196,7 @@ chunk    {0} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
         single entry ./a [0] dll alpha alpha:1
      + 1 hidden module
 chunk    {1} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
-    > beta [4] dll beta 
+    > beta
     [4] dll beta 12 bytes {1} [built]
         dll entry 
         
@@ -214,14 +215,14 @@ chunk    {1} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
          Asset       Size  Chunks             Chunk Names
  MyDll.beta.js  691 bytes       0  [emitted]  beta
 MyDll.alpha.js  700 bytes       1  [emitted]  alpha
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
 chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
-    > beta [3] dll beta 
+    > beta
     [0] ./c.jsx 23 bytes {0} [built]
         
         single entry ./c [3] dll beta beta:2
@@ -235,7 +236,7 @@ chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
         dll entry 
         
 chunk    {1} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
-    > alpha [7] dll alpha 
+    > alpha
     [5] ./a.js 21 bytes {1} [built]
         
         single entry ./a [7] dll alpha alpha:1

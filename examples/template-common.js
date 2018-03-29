@@ -15,6 +15,7 @@ function lessStrict(regExpStr) {
 
 const runtimeRegexp = /(```\s*(?:js|javascript)\n)?(.*)(\/\*\*\*\*\*\*\/ \(function\(modules\) \{ \/\/ webpackBootstrap\n(?:.|\n)*?\n\/\*\*\*\*\*\*\/ \}\)\n\/\**\/\n)/;
 const timeRegexp = /\s*Time: \d+ms/g;
+const buildAtRegexp = /\s*Built at: .+/mg;
 const hashRegexp = /Hash: [a-f0-9]+/g;
 
 exports.replaceBase = (template) => {
@@ -36,6 +37,7 @@ exports.replaceBase = (template) => {
 		.replace(webpack, "(webpack)")
 		.replace(webpackParent, "(webpack)/~")
 		.replace(timeRegexp, "")
+		.replace(buildAtRegexp, "")
 		.replace(hashRegexp, "Hash: 0a1b2c3d4e5f6a7b8c9d")
 		.replace(/\.chunkhash\./g, ".[chunkhash].")
 		.replace(runtimeRegexp, function(match) {

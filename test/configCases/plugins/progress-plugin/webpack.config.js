@@ -9,14 +9,17 @@ module.exports = {
 			data.push(messages.join("|"));
 		}),
 		{
-			apply: (compiler) => {
+			apply: compiler => {
 				compiler.hooks.compilation.tap("CustomPlugin", compilation => {
-					compilation.hooks.optimize.tap({
-						name: "CustomPlugin",
-						context: true
-					}, (context) => {
-						context.reportProgress(0, "custom category", "custom message");
-					});
+					compilation.hooks.optimize.tap(
+						{
+							name: "CustomPlugin",
+							context: true
+						},
+						context => {
+							context.reportProgress(0, "custom category", "custom message");
+						}
+					);
 				});
 			}
 		}

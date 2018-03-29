@@ -23,7 +23,7 @@ function join(a, b) {
 	return a;
 }
 
-console.log("compile scripts...");
+console.log("compile scripts…");
 
 var extraArgsNoWatch = extraArgs.slice(0);
 var watchIndex = extraArgsNoWatch.indexOf("--watch");

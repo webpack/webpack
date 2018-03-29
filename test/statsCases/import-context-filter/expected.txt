@@ -1,10 +1,11 @@
-Hash: f15cc625c7945f90f6cc
+Hash: 20afe8e9eb9a69aecddb
 Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
    Asset       Size  Chunks             Chunk Names
     0.js  305 bytes       0  [emitted]  
     1.js  314 bytes       1  [emitted]  
     2.js  308 bytes       2  [emitted]  
-entry.js   7.76 KiB       3  [emitted]  entry
+entry.js    7.8 KiB       3  [emitted]  entry
 Entrypoint entry = entry.js
    [0] ./templates/bar.js 38 bytes {0} [optional] [built]
    [1] ./templates/baz.js 38 bytes {1} [optional] [built]

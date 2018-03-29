@@ -123,6 +123,7 @@ export { c } from "./c";
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "dist/";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -297,12 +298,12 @@ const c = "c";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
-    Asset     Size  Chunks             Chunk Names
-output.js  7.9 KiB       0  [emitted]  main
+Version: webpack 4.0.0-beta.2
+    Asset      Size  Chunks             Chunk Names
+output.js  7.91 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 443 bytes [entry] [rendered]
-    > main [0] ./example.js 
+    > .\example.js main
     [0] ./example.js 149 bytes {0} [built]
         [no exports]
         single entry .\example.js  main
@@ -313,12 +314,12 @@ chunk    {0} output.js (main) 443 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
     Asset       Size  Chunks             Chunk Names
 output.js  600 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 342 bytes [entry] [rendered]
-    > main [] 
+    > .\example.js main
     [0] ./example.js + 6 modules 342 bytes {0} [built]
         [no exports]
         single entry .\example.js  main

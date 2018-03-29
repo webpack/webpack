@@ -8,7 +8,7 @@ const cp = require("child_process");
 const path = require("path");
 const tc = require("./template-common");
 const fs = require("fs");
-const async = require("async");
+const async = require("neo-async");
 
 const extraArgs = "";
 

@@ -14,8 +14,7 @@ module.exports = {
 	},
 	plugins: [
 		new AggressiveMergingPlugin({
-			minSizeReduce: 1.5,
-			moveToParents: true
+			minSizeReduce: 1.5
 		})
 	],
 	optimization: {

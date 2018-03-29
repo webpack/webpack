@@ -3,7 +3,5 @@ module.exports = {
 	module: {
 		strictThisContextOnImports: true
 	},
-	plugins: [
-		new webpack.optimize.ModuleConcatenationPlugin()
-	]
+	plugins: [new webpack.optimize.ModuleConcatenationPlugin()]
 };

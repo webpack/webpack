@@ -17,9 +17,7 @@ module.exports = {
 			},
 			{
 				test: /(b|c)\.js$/,
-				use: [
-					"./loader1"
-				]
+				use: ["./loader1"]
 			},
 			{
 				test: /b\.js$/,

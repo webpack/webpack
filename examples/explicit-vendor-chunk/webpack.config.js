@@ -17,6 +17,7 @@ module.exports = [
 			})
 		]
 	},
+
 	{
 		name: "app",
 		// mode: "development || "production",

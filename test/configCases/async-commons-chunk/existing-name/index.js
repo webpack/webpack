@@ -28,6 +28,6 @@ it("should not have duplicate chunks in blocks", function(done) {
     // - a, a+b
     // - a, a+b, a+b+c
 	chunkLoadingSpy.callCount.should.be.eql(6);
-	chunkLoadingSpy.args.should.be.eql([["a"], ["a+b"], ["a"], ["a+b+c"], ["a+b"], ["a"]]);
+	chunkLoadingSpy.args.should.be.eql([["a"], ["a"], ["a+b~a+b+c" /* == b */], ["a"], ["a+b~a+b+c" /* == b */], ["a+b+c"]]);
 	done();
 });

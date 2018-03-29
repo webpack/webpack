@@ -25,10 +25,10 @@ it("should write relative paths to records", function() {
     "byName": {
       "main": 0
     },
-    "byBlocks": {},
-    "usedIds": {
-      "0": 0
-    }
+    "bySource": {},
+    "usedIds": [
+      0
+    ]
   }
 }`);
 });

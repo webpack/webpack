@@ -5,9 +5,7 @@ const sinon = require("sinon");
 const DependenciesBlockVariable = require("../lib/DependenciesBlockVariable");
 
 describe("DependenciesBlockVariable", () => {
-	let DependenciesBlockVariableInstance,
-		dependencyMock,
-		sandbox;
+	let DependenciesBlockVariableInstance, dependencyMock, sandbox;
 
 	before(() => {
 		sandbox = sinon.sandbox.create();
@@ -20,7 +18,9 @@ describe("DependenciesBlockVariable", () => {
 		};
 		DependenciesBlockVariableInstance = new DependenciesBlockVariable(
 			"dependencies-name",
-			"expression", [dependencyMock]);
+			"expression",
+			[dependencyMock]
+		);
 	});
 
 	afterEach(() => sandbox.restore());
@@ -82,12 +82,11 @@ describe("DependenciesBlockVariable", () => {
 	});
 
 	describe("expressionSource", () => {
-		let dependencyTemplates,
-			applyMock;
+		let dependencyTemplates, applyMock;
 
-		before(() => applyMock = sandbox.spy());
+		before(() => (applyMock = sandbox.spy()));
 
-		it("aplies information inside dependency templates", () => {
+		it("applies information inside dependency templates", () => {
 			dependencyTemplates = {
 				get: function() {
 					return {
@@ -96,12 +95,14 @@ describe("DependenciesBlockVariable", () => {
 				}
 			};
 			DependenciesBlockVariableInstance.expressionSource(
-				dependencyTemplates, {}, {}
+				dependencyTemplates,
+				{},
+				{}
 			);
 			should(applyMock.calledOnce).be.true();
 		});
 
-		it("aplies information inside dependency templates", () => {
+		it("applies information inside dependency templates", () => {
 			dependencyTemplates = {
 				get: function() {
 					return false;
@@ -109,7 +110,9 @@ describe("DependenciesBlockVariable", () => {
 			};
 			should(() => {
 				DependenciesBlockVariableInstance.expressionSource(
-					dependencyTemplates, {}, {}
+					dependencyTemplates,
+					{},
+					{}
 				);
 			}).throw("No template for dependency: DependencyMock");
 		});

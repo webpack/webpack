@@ -1,7 +1,8 @@
-Hash: 4c0b1d281b1f34a2c9a9
+Hash: 3386bd94ba1fc3ae7f29
 Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset      Size  Chunks             Chunk Names
-main.js  2.73 KiB       0  [emitted]  main
+main.js  2.74 KiB       0  [emitted]  main
 Entrypoint main = main.js
    [0] ./index.js 17 bytes {0} [built]
    [1] external "test" 42 bytes {0} [built]

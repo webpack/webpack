@@ -1,4 +1,4 @@
-var asyncLib = require("async");
+var asyncLib = require("neo-async");
 module.exports = function(content) {
 	var cb = this.async();
 	var json = JSON.parse(content);

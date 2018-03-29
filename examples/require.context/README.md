@@ -93,6 +93,7 @@ module.exports = function() {
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "dist/";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
@@ -201,12 +202,12 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
     Asset      Size  Chunks             Chunk Names
-output.js  4.47 KiB       0  [emitted]  main
+output.js  4.48 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 613 bytes [entry] [rendered]
-    > main [0] ./example.js 
+    > .\example.js main
     [0] ./example.js 150 bytes {0} [built]
         single entry .\example.js  main
     [1] ./templates sync ^\.\/.*$ 217 bytes {0} [built]
@@ -226,12 +227,12 @@ chunk    {0} output.js (main) 613 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack next
+Version: webpack 4.0.0-beta.2
     Asset      Size  Chunks             Chunk Names
 output.js  1.16 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 613 bytes [entry] [rendered]
-    > main [4] ./example.js 
+    > .\example.js main
     [0] ./templates/c.js 82 bytes {0} [optional] [built]
         context element ./c.js [3] ./templates sync ^\.\/.*$ ./c.js
         context element ./c [3] ./templates sync ^\.\/.*$ ./c

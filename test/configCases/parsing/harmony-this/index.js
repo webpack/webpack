@@ -1,6 +1,6 @@
 "use strict";
 
-import d, {a, b as B, C as _C, D as _D, returnThisArrow, returnThisMember, that} from "./abc";
+import d, {a, b as B, C as _C, D as _D, extendThisClass, returnThisArrow, returnThisMember, that} from "./abc";
 
 import * as abc from "./abc";
 
@@ -15,10 +15,14 @@ it("should have this = undefined on harmony modules", function() {
 	(function() {
 		abc.returnThisMember();
 	}).should.throw();
+	(function() {
+		extendThisClass();
+	}).should.throw();
 });
 
 it("should not break classes and functions", function() {
 	(new _C).foo().should.be.eql("bar");
+	(new _C).bar().should.be.eql("bar");
 	(new _D).prop().should.be.eql("ok");
 });
 
