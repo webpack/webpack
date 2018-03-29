@@ -3,7 +3,8 @@ function runCommand(command, options) {
 	const cp = require("child_process");
 	return new Promise((resolve, reject) => {
 		const executedCommand = cp.spawn(command, options, {
-			stdio: "inherit"
+			stdio: "inherit",
+			shell: true
 		});
 
 		executedCommand.on("error", error => {
@@ -43,7 +44,7 @@ if (!webpackCliInstalled) {
 
 	const commandToBeRun = `${packageManager} ${options.join(" ")}`;
 
-	const question = `Would you like to install webpack-cli? (That will run ${commandToBeRun}) `;
+	const question = `Would you like to install webpack-cli? (That will run ${commandToBeRun}) (yes/NO)`;
 
 	console.error("The CLI moved into a separate package: webpack-cli");
 	const questionInterface = readLine.createInterface({
