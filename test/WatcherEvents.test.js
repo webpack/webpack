@@ -36,9 +36,7 @@ describe("WatcherEvents", function() {
 
 	this.timeout(10000);
 
-	it("should emit 'watch-close' when using single-compiler mode and the compiler is not running", function(
-		done
-	) {
+	it("should emit 'watch-close' when using single-compiler mode and the compiler is not running", function(done) {
 		let called = false;
 
 		const compiler = createSingleCompiler();
@@ -56,9 +54,7 @@ describe("WatcherEvents", function() {
 		});
 	});
 
-	it("should emit 'watch-close' when using multi-compiler mode and the compiler is not running", function(
-		done
-	) {
+	it("should emit 'watch-close' when using multi-compiler mode and the compiler is not running", function(done) {
 		let called = false;
 
 		const compiler = createMultiCompiler();

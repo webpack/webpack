@@ -193,9 +193,7 @@ describe("NodeWatchFileSystem", function() {
 
 		fs.writeFile(fileDirect, "", function() {});
 	});
-	it("should register a context change (change delayed, subdirectory)", function(
-		done
-	) {
+	it("should register a context change (change delayed, subdirectory)", function(done) {
 		var startTime = new Date().getTime();
 		var wfs = new NodeWatchFileSystem();
 		var watcher = wfs.watch(
@@ -227,9 +225,7 @@ describe("NodeWatchFileSystem", function() {
 			fs.writeFile(fileSubdir, "", function() {});
 		}, 500);
 	});
-	it("should register a context change (watch delayed, subdirectory)", function(
-		done
-	) {
+	it("should register a context change (watch delayed, subdirectory)", function(done) {
 		var startTime = new Date().getTime();
 		setTimeout(function() {
 			var wfs = new NodeWatchFileSystem();
