@@ -43,9 +43,7 @@ if (!webpackCliInstalled) {
 
 	const commandToBeRun = `${packageManager} ${options.join(" ")}`;
 
-	const question = `Would you like to install webpack-cli? (That will run ${
-		commandToBeRun
-	}) `;
+	const question = `Would you like to install webpack-cli? (That will run ${commandToBeRun}) `;
 
 	console.error("The CLI moved into a separate package: webpack-cli");
 	const questionInterface = readLine.createInterface({

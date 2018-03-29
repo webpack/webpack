@@ -1,7 +1,7 @@
 module.exports = {
 	root: true,
 	plugins: ["prettier", "node"],
-	extends: ["eslint:recommended", "plugin:node/recommended"],
+	extends: ["eslint:recommended", "plugin:node/recommended", "plugin:prettier/recommended"],
 	env: {
 		node: true,
 		es6: true
@@ -16,6 +16,7 @@ module.exports = {
 		"semi": "error",
 		"no-template-curly-in-string": "error",
 		"no-caller": "error",
+		"no-control-regex": "off",
 		"yoda": "error",
 		"eqeqeq": "error",
 		"global-require": "off",
