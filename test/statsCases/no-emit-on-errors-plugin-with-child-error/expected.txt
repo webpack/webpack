@@ -8,7 +8,8 @@ Entrypoint main = bundle.js
    [0] ./index.js 0 bytes {0} [built]
 
 WARNING in configuration
-The 'mode' option has not been set. Set 'mode' option to 'development' or 'production' to enable defaults for this environment. 
+The 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
+You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/concepts/mode/
 Child child:
        Asset      Size  Chunks  Chunk Names
     child.js  2.61 KiB       0  child

@@ -324,14 +324,7 @@
         },
         "chunkFilename": {
           "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "instanceof": "Function"
-            }
-          ],
+          "type": "string",
           "absolutePath": false
         },
         "webassemblyModuleFilename": {
@@ -1337,10 +1330,17 @@
               "properties": {
                 "chunks": {
                   "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
-                  "enum": [
-                    "initial",
-                    "async",
-                    "all"
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "initial",
+                        "async",
+                        "all"
+                      ]
+                    },
+                    {
+                      "instanceof": "Function"
+                    }
                   ]
                 },
                 "minSize": {
@@ -1427,10 +1427,17 @@
                           },
                           "chunks": {
                             "description": "Select chunks for determining cache group content (defaults to \"initial\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
-                            "enum": [
-                              "initial",
-                              "async",
-                              "all"
+                            "oneOf": [
+                              {
+                                "enum": [
+                                  "initial",
+                                  "async",
+                                  "all"
+                                ]
+                              },
+                              {
+                                "instanceof": "Function"
+                              }
                             ]
                           },
                           "enforce": {
