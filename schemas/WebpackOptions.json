@@ -324,14 +324,7 @@
         },
         "chunkFilename": {
           "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "instanceof": "Function"
-            }
-          ],
+          "type": "string",
           "absolutePath": false
         },
         "webassemblyModuleFilename": {
