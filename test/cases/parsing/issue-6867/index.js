@@ -27,7 +27,7 @@ it("should compile default export named function expression", function() {
 		});
 });
 
-it("should compile default export unnamed function declaration", function() {
+it("should compile default export unnamed class declaration", function() {
 	return import(/* webpackChunkName: "e" */ "./e")
 		.then(({ default: E }) => {
 			new E()
@@ -35,21 +35,21 @@ it("should compile default export unnamed function declaration", function() {
 });
 
 
-it("should compile default export unnamed function expression", function() {
+it("should compile default export unnamed class expression", function() {
 	return import(/* webpackChunkName: "f" */ "./f")
 		.then(({ default: F }) => {
 			new F()
 		});
 });
 
-it("should compile default export named function declaration", function() {
+it("should compile default export named class declaration", function() {
 	return import(/* webpackChunkName: "g" */ "./g")
 		.then(({ default: G }) => {
 			new G()
 		});
 });
 
-it("should compile default export named function expression", function() {
+it("should compile default export named class expression", function() {
 	return import(/* webpackChunkName: "h" */ "./h")
 		.then(({ default: H }) => {
 			new H()
