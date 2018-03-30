@@ -3,7 +3,7 @@ require("should");
 
 var findFile = function(files, regex) {
 	return files.find(function(file) {
-		if(regex.test(file)) {
+		if (regex.test(file)) {
 			return true;
 		}
 	});
@@ -17,25 +17,36 @@ module.exports = {
 	findBundle: function(i, options) {
 		var files = fs.readdirSync(options.output.path);
 
-		var bundleDetects = [{
-			regex: new RegExp("^0.bundle" + i, "i"),
-			expectedNameLength: options.amd.expectedChunkFilenameLength
-		}, {
-			regex: new RegExp("^bundle" + i, "i"),
-			expectedNameLength: options.amd.expectedFilenameLength
-		}];
+		var bundleDetects = [
+			options.amd.expectedChunkFilenameLength && {
+				regex: new RegExp("^0.bundle" + i, "i"),
+				expectedNameLength: options.amd.expectedChunkFilenameLength
+			},
+			{
+				regex: new RegExp("^bundle" + i, "i"),
+				expectedNameLength: options.amd.expectedFilenameLength
+			}
+		].filter(Boolean);
 
 		var bundleDetect;
 		var filename;
 
-		for(bundleDetect of bundleDetects) {
+		for (bundleDetect of bundleDetects) {
 			filename = findFile(files, bundleDetect.regex);
-			verifyFilenameLength(
-				filename,
-				bundleDetect.expectedNameLength
-			);
+			if (!filename) {
+				throw new Error(
+					`No file found with correct name (regex: ${
+						bundleDetect.regex.source
+					}, files: ${files.join(", ")})`
+				);
+			}
+			verifyFilenameLength(filename, bundleDetect.expectedNameLength);
 		}
 
 		return "./" + filename;
+	},
+	afterExecute: () => {
+		delete global.webpackJsonp;
+		delete global.webpackChunk;
 	}
 };
