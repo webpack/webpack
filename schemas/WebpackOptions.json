@@ -1889,6 +1889,20 @@
             "optimizationBailout": {
               "type": "boolean",
               "description": "show reasons why optimization bailed out for modules"
+            },
+            "preset": {
+              "description": "Use default presets of webpack",
+              "enum": [
+                "none",
+                "errors-only",
+                "minimal",
+                "normal",
+                "detailed",
+                "verbose",
+                0,
+                false,
+                ""
+              ]
             }
           }
         },

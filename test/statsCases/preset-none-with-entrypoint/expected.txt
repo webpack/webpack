@@ -1,0 +1,1 @@
+Entrypoint main = main.js

@@ -5,11 +5,11 @@ dirs.forEach(function(dir) {
 	var actual = path.join(__dirname, dir, "actual.txt");
 	var expected = path.join(__dirname, dir, "expected.txt");
 	try {
-		if(fs.existsSync(actual)) {
+		if (fs.existsSync(actual)) {
 			fs.unlinkSync(expected);
 			fs.renameSync(actual, expected);
 		}
-	} catch(e) {
+	} catch (e) {
 		console.log(e);
 	}
 });
