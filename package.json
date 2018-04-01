@@ -88,7 +88,8 @@
     "schemas/"
   ],
   "scripts": {
-    "test": "mocha test/*.test.js test/*.unittest.js --max-old-space-size=4096 --harmony --trace-deprecation",
+    "test": "npm run mocha",
+    "mocha": "mocha test/*.test.js test/*.unittest.js --max-old-space-size=4096 --harmony --trace-deprecation",
     "test:integration": "mocha test/*.test.js --max-old-space-size=4096 --harmony --trace-deprecation",
     "test:unit": "mocha test/*.unittest.js --max-old-space-size=4096 --harmony --trace-deprecation",
     "travis:integration": "npm run cover:init && npm run cover:integration && npm run cover:report-min",
