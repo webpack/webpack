@@ -8,7 +8,11 @@ declare namespace NodeJS {
 	}
   }
 
-// Globals
+/**
+ * Global variable declarations
+ * @todo Once this issue is resolved, remove these globals and add JSDoc onsite instead
+ * https://github.com/Microsoft/TypeScript/issues/15626
+ */
 declare const $hash$;
 declare const $requestTimeout$;
 declare const installedModules;
@@ -26,3 +30,4 @@ declare const $WebAssembly;
 declare const WebAssembly;
 declare const importScripts;
 declare const $crossOriginLoading$;
+declare const chunkId;
