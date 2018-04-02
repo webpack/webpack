@@ -51,6 +51,25 @@ module.exports = {
 			parserOptions: {
 				ecmaVersion: 5
 			}
+		},
+		{
+			files: ["test/**/*.js"],
+			env: {
+				mocha: true,
+			}
+		}, {
+			files: ["buildin/**/*.js"],
+			env: {
+				browser: true
+			}
+		}, {
+			files: ["hot/**/*.js"],
+			env: {
+				node: true
+			},
+			rules: {
+				"node/exports-style": ["off"]
+			}
 		}
 	]
 };
