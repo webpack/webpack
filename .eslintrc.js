@@ -43,7 +43,8 @@ module.exports = {
 		{
 			files: ["lib/**/*.runtime.js", "buildin/*.js", "hot/*.js"],
 			env: {
-				es6: false
+				es6: false,
+				browser: true
 			},
 			globals: {
 				Promise: false,
@@ -56,11 +57,6 @@ module.exports = {
 			files: ["test/**/*.js"],
 			env: {
 				mocha: true,
-			}
-		}, {
-			files: ["buildin/**/*.js"],
-			env: {
-				browser: true
 			}
 		}
 	]
