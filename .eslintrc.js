@@ -62,14 +62,6 @@ module.exports = {
 			env: {
 				browser: true
 			}
-		}, {
-			files: ["hot/**/*.js"],
-			env: {
-				node: true
-			},
-			rules: {
-				"node/exports-style": ["off"]
-			}
 		}
 	]
 };
