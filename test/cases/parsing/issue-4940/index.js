@@ -6,5 +6,6 @@ it("should create dependency when require is called with 'new' (object export)",
 it("should create dependency when require is called with 'new' (non-object export)", function() {
 	const sideEffect = require("./sideEffect");
 	const result = new require("./non-object-export");
+	result.should.instanceof(__webpack_require__);
 	sideEffect.foo.should.equal("bar");
 });
