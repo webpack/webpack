@@ -5,9 +5,9 @@ Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
  <CLR=33,BOLD>sec.js</CLR>  <CLR=33,BOLD>296 KiB</CLR>       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  sec
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
 Entrypoint <CLR=BOLD>sec</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>sec.js</CLR>
-   [0] <CLR=BOLD>./a.js</CLR> 293 KiB {<CLR=33,BOLD>0</CLR>} {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
-   [1] <CLR=BOLD>./index.js</CLR> 16 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
-   [2] <CLR=BOLD>./index2.js</CLR> 16 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
+[0] <CLR=BOLD>./a.js</CLR> 293 KiB {<CLR=33,BOLD>0</CLR>} {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
+[1] <CLR=BOLD>./index.js</CLR> 16 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+[2] <CLR=BOLD>./index2.js</CLR> 16 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
 
 <CLR=31,BOLD>ERROR in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.

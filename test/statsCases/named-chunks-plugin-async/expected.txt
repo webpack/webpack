@@ -6,6 +6,6 @@ chunk-containing-__a_js.js  509 bytes  chunk-containing-__a_js  [emitted]
 chunk-containing-__b_js.js  173 bytes  chunk-containing-__b_js  [emitted]  
                   entry.js   7.28 KiB                    entry  [emitted]  entry
 Entrypoint entry = entry.js
-   [0] ./modules/b.js 22 bytes {chunk-containing-__b_js} [built]
-   [1] ./modules/a.js 37 bytes {chunk-containing-__a_js} [built]
-   [2] ./entry.js 47 bytes {entry} [built]
+[0] ./modules/b.js 22 bytes {chunk-containing-__b_js} [built]
+[1] ./modules/a.js 37 bytes {chunk-containing-__a_js} [built]
+[2] ./entry.js 47 bytes {entry} [built]
