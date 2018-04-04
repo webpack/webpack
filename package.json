@@ -63,7 +63,7 @@
     "simple-git": "^1.65.0",
     "sinon": "^2.3.2",
     "style-loader": "^0.19.1",
-    "typescript": "^2.9.0-dev.20180331",
+    "typescript": "^2.9.0-dev.20180403",
     "url-loader": "^0.6.2",
     "val-loader": "^1.0.2",
     "vm-browserify": "~0.0.0",
