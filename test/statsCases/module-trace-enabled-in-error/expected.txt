@@ -3,7 +3,7 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset      Size  Chunks  Chunk Names
 main.js  2.79 KiB       0  main
 Entrypoint main = main.js
-   [0] ./index.js 25 bytes {0} [built]
+[0] ./index.js 25 bytes {0} [built]
 
 ERROR in ./index.js
 Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/module-trace-enabled-in-error'

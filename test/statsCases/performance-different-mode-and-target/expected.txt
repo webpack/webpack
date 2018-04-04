@@ -6,7 +6,7 @@ Child
                  Asset     Size  Chunks                    Chunk Names
     warning.pro-web.js  296 KiB       0  [emitted]  [big]  main
     Entrypoint main [big] = warning.pro-web.js
-       [0] ./index.js 293 KiB {0} [built]
+    [0] ./index.js 293 KiB {0} [built]
     
     WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
     This can impact web performance.
@@ -29,7 +29,7 @@ Child
                        Asset     Size  Chunks                    Chunk Names
     warning.pro-webworker.js  296 KiB       0  [emitted]  [big]  main
     Entrypoint main [big] = warning.pro-webworker.js
-       [0] ./index.js 293 KiB {0} [built]
+    [0] ./index.js 293 KiB {0} [built]
     
     WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
     This can impact web performance.
@@ -52,7 +52,7 @@ Child
                      Asset     Size  Chunks             Chunk Names
     no-warning.pro-node.js  296 KiB       0  [emitted]  main
     Entrypoint main = no-warning.pro-node.js
-       [0] ./index.js 293 KiB {0} [built]
+    [0] ./index.js 293 KiB {0} [built]
 Child
     Hash: 23ef01d5f7db6f7b0912
     Time: Xms
@@ -84,7 +84,7 @@ Child
                                  Asset     Size  Chunks                    Chunk Names
     warning.pro-node-with-hints-set.js  296 KiB       0  [emitted]  [big]  main
     Entrypoint main [big] = warning.pro-node-with-hints-set.js
-       [0] ./index.js 293 KiB {0} [built]
+    [0] ./index.js 293 KiB {0} [built]
     
     WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
     This can impact web performance.
