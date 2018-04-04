@@ -1,3 +1,15 @@
+define("local-module-object", function () {
+	return {
+		foo: "bar"
+	};
+});
+
+define("local-side-effect", function () {
+	return {
+		foo: null
+	};
+});
+
 it("should create dependency when require is called with 'new' (object export)", function() {
 	const result = new require("./object-export");
 	result.foo.should.equal("bar");
@@ -8,4 +20,19 @@ it("should create dependency when require is called with 'new' (non-object expor
 	const result = new require("./non-object-export");
 	result.should.instanceof(__webpack_require__);
 	sideEffect.foo.should.equal("bar");
+});
+
+it("should create dependency when with a local dependency (object export)", function() {
+	const result = new require("local-module-object");
+	result.foo.should.equal("bar");
+});
+
+it("should work within parentheses", function () {
+	const result = new (require)("./object-export");
+	result.foo.should.equal("bar");
+});
+
+it("should work with local module in parentheses", function () {
+	const result = new (require)("local-module-object");
+	result.foo.should.equal("bar");
 });
