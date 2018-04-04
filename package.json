@@ -88,6 +88,7 @@
     "schemas/"
   ],
   "scripts": {
+    "setup": "node ./setup/index.js",
     "test": "mocha test/*.test.js test/*.unittest.js --max-old-space-size=4096 --harmony --trace-deprecation",
     "test:integration": "mocha test/*.test.js --max-old-space-size=4096 --harmony --trace-deprecation",
     "test:unit": "mocha test/*.unittest.js --max-old-space-size=4096 --harmony --trace-deprecation",
@@ -101,11 +102,11 @@
     "circleci:test": "node node_modules/mocha/bin/mocha --max-old-space-size=4096 --harmony --trace-deprecation test/*.test.js test/*.unittest.js",
     "circleci:lint": "npm run lint-files",
     "build:examples": "cd examples && node buildAll.js",
-    "pretest": "npm run lint-files",
+    "pretest": "npm run setup && npm run lint-files",
     "lint-files": "npm run lint && npm run schema-lint",
-    "lint": "eslint lib bin hot buildin \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\"",
+    "lint": "eslint setup lib bin hot buildin \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\"",
     "fix": "npm run lint -- --fix",
-    "pretty-files": "prettier \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" --write",
+    "pretty-files": "prettier \"setup/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" --write",
     "schema-lint": "mocha test/*.lint.js --opts test/lint-mocha.opts",
     "benchmark": "mocha --max-old-space-size=4096 --harmony --trace-deprecation test/*.benchmark.js -R spec",
     "cover": "npm run cover:init && npm run cover:all && npm run cover:report",
