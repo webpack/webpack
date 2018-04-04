@@ -343,17 +343,17 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
            Asset      Size  Chunks             Chunk Names
 0.hash.worker.js  1.82 KiB          [emitted]  
   hash.worker.js  4.02 KiB          [emitted]  
        output.js  3.46 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 332 bytes [entry] [rendered]
+chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > .\example.js main
     [0] (webpack)/node_modules/worker-loader/dist/cjs.js?name=hash.worker.js!./worker.js 97 bytes {0} [not cacheable] [built]
         cjs require worker-loader?name=hash.worker.js!./worker [1] ./example.js 1:13-66
-    [1] ./example.js 235 bytes {0} [built]
+    [1] ./example.js 229 bytes {0} [built]
         single entry .\example.js  main
 Child worker:
                Asset      Size  Chunks             Chunk Names
@@ -383,17 +383,17 @@ Child worker:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
            Asset       Size  Chunks             Chunk Names
 0.hash.worker.js  594 bytes          [emitted]  
   hash.worker.js  919 bytes          [emitted]  
        output.js  697 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 332 bytes [entry] [rendered]
+chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > .\example.js main
     [0] (webpack)/node_modules/worker-loader/dist/cjs.js?name=hash.worker.js!./worker.js 97 bytes {0} [not cacheable] [built]
         cjs require worker-loader?name=hash.worker.js!./worker [1] ./example.js 1:13-66
-    [1] ./example.js 235 bytes {0} [built]
+    [1] ./example.js 229 bytes {0} [built]
         single entry .\example.js  main
 Child worker:
                Asset       Size  Chunks             Chunk Names

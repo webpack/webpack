@@ -54,7 +54,7 @@ require.ensure(["./a"], function(require) {
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
 /******/ 		var chunkIds = data[0];
-/******/ 		var moreModules = data[1]
+/******/ 		var moreModules = data[1];
 /******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
@@ -139,7 +139,7 @@ require.ensure(["./a"], function(require) {
 /******/ 				var script = document.createElement('script');
 /******/
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120000;
+/******/ 				script.timeout = 120;
 /******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
@@ -324,12 +324,12 @@ module.exports = "c";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  405 bytes       0  [emitted]  
 1.output.js  241 bytes       1  [emitted]  
 2.output.js  241 bytes       2  [emitted]  
-  output.js   7.32 KiB       3  [emitted]  main
+  output.js   7.31 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes <{3}> ={1}= ={2}= [rendered] split chunk (cache group: default)
     > ./a ./b ./c [2] ./example.js 2:0-30
@@ -348,9 +348,9 @@ chunk    {2} 2.output.js 21 bytes <{3}> ={0}= [rendered]
     > ./a ./b ./c [2] ./example.js 2:0-30
     [4] ./c.js 21 bytes {2} [built]
         amd require ./c [2] ./example.js 2:0-30
-chunk    {3} output.js (main) 172 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+chunk    {3} output.js (main) 164 bytes >{0}< >{1}< >{2}< [entry] [rendered]
     > .\example.js main
-    [2] ./example.js 172 bytes {3} [built]
+    [2] ./example.js 164 bytes {3} [built]
         single entry .\example.js  main
 ```
 
@@ -358,7 +358,7 @@ chunk    {3} output.js (main) 172 bytes >{0}< >{1}< >{2}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  118 bytes       0  [emitted]  
 1.output.js   91 bytes       1  [emitted]  
@@ -382,8 +382,8 @@ chunk    {2} 2.output.js 21 bytes <{3}> ={0}= [rendered]
     > ./a ./b ./c [2] ./example.js 2:0-30
     [4] ./c.js 21 bytes {2} [built]
         amd require ./c [2] ./example.js 2:0-30
-chunk    {3} output.js (main) 172 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+chunk    {3} output.js (main) 164 bytes >{0}< >{1}< >{2}< [entry] [rendered]
     > .\example.js main
-    [2] ./example.js 172 bytes {3} [built]
+    [2] ./example.js 164 bytes {3} [built]
         single entry .\example.js  main
 ```
