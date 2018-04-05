@@ -167,7 +167,7 @@ exports.add = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
     Asset      Size  Chunks             Chunk Names
 output.js  3.44 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -185,7 +185,7 @@ chunk    {0} output.js (main) 329 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
     Asset       Size  Chunks             Chunk Names
 output.js  740 bytes       0  [emitted]  main
 Entrypoint main = output.js
