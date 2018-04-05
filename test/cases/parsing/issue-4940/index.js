@@ -18,6 +18,7 @@ define("local-module-non-object", ["local-side-effect"], function (sideEffect) {
 it("should create dependency when require is called with 'new' (object export)", function() {
 	const result = new require("./object-export");
 	result.foo.should.equal("bar");
+	result.should.equal(require("./object-export"));
 });
 
 it("should create dependency when require is called with 'new' (non-object export)", function() {
@@ -25,11 +26,13 @@ it("should create dependency when require is called with 'new' (non-object expor
 	const result = new require("./non-object-export");
 	result.should.instanceof(__webpack_require__);
 	sideEffect.foo.should.equal("bar");
+	result.should.not.equal(require("./non-object-export"));
 });
 
 it("should create dependency with 'new' on a local dependency (object export)", function() {
 	const result = new require("local-module-object");
 	result.foo.should.equal("bar");
+	result.should.equal(require("local-module-object"));
 });
 
 it("shouldn't fail with a local dependency (non-object export)", function() {
