@@ -4,9 +4,9 @@ declare module "webpack-cli";
 // Deprecated NodeJS API usages in Webpack
 declare namespace NodeJS {
 	interface Process {
-	  binding(internalModule: string): any;
+		binding(internalModule: string): any;
 	}
-  }
+}
 
 /**
  * Global variable declarations
