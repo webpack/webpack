@@ -10,6 +10,11 @@ define("local-side-effect", function () {
 	};
 });
 
+define("local-module-non-object", ["local-side-effect"], function (sideEffect) {
+	sideEffect.foo = "bar"
+	return 1;
+});
+
 it("should create dependency when require is called with 'new' (object export)", function() {
 	const result = new require("./object-export");
 	result.foo.should.equal("bar");
@@ -22,17 +27,27 @@ it("should create dependency when require is called with 'new' (non-object expor
 	sideEffect.foo.should.equal("bar");
 });
 
-it("should create dependency when with a local dependency (object export)", function() {
+it("should create dependency with 'new' on a local dependency (object export)", function() {
 	const result = new require("local-module-object");
 	result.foo.should.equal("bar");
 });
 
-it("should work within parentheses", function () {
+it("shouldn't fail with a local dependency (non-object export)", function() {
+	const sideEffect = require("local-side-effect");
+	new require("local-module-non-object");
+	sideEffect.foo.should.equal("bar");
+});
+
+it("should work with 'require' in parentheses", function () {
 	const result = new (require)("./object-export");
 	result.foo.should.equal("bar");
 });
 
-it("should work with local module in parentheses", function () {
+it("should work with local module 'require' in parentheses", function () {
 	const result = new (require)("local-module-object");
 	result.foo.should.equal("bar");
+});
+
+it("shouldn't fail with non-object local module 'require' in parentheses", function () {
+	new (require)("local-module-non-object");
 });
