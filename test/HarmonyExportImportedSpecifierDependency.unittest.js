@@ -13,4 +13,24 @@ describe("HarmonyExportImportedSpecifierDependency", () => {
 			should(instance.getHashValue(null)).be.eql("");
 		});
 	});
+	describe("getContent", () => {
+		describe("dynamic-reexport mode", () => {
+			it("should generate proper content", () => {
+				const instance = new HarmonyExportImportedSpecifierDependency();
+				const dep = {
+					activeExports: ["module.exports = 1 //?"],
+					originModule: {
+						exportsArgument: "ClassName"
+					},
+					_discoverActiveExportsFromOtherStartExports() {
+						return [];
+					},
+					getMode() {
+						return "dynamic-reexport";
+					}
+				};
+				should(instance.getContent(dep)).to.eql("???");
+			});
+		});
+	});
 });
