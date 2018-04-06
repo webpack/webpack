@@ -5,8 +5,7 @@ But don't give up hope!!! Although our tests may appear complex and overwhelming
 
 ## tl;dr
 * Clone repo
-* install and link deps
-	* `yarn install && yarn link && yarn link webpack`
+* Run tests (this automatically runs the setup)
 	* `yarn test`
 
 * To run an individual suite: (recommended during development for easier isolated diffs)

@@ -5,10 +5,10 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
  entry-1.js   5.49 KiB       0  [emitted]  entry-1
 vendor-1.js  314 bytes       1  [emitted]  vendor-1
 Entrypoint entry-1 = vendor-1.js entry-1.js
-   [0] ./entry-1.js 145 bytes {0} [built]
-   [1] ./modules/a.js 22 bytes {1} [built]
-   [2] ./modules/b.js 22 bytes {1} [built]
-   [3] ./modules/c.js 22 bytes {1} [built]
-   [4] ./modules/d.js 22 bytes {0} [built]
-   [5] ./modules/e.js 22 bytes {0} [built]
-   [6] ./modules/f.js 22 bytes {0} [built]
+[0] ./entry-1.js 145 bytes {0} [built]
+[1] ./modules/a.js 22 bytes {1} [built]
+[2] ./modules/b.js 22 bytes {1} [built]
+[3] ./modules/c.js 22 bytes {1} [built]
+[4] ./modules/d.js 22 bytes {0} [built]
+[5] ./modules/e.js 22 bytes {0} [built]
+[6] ./modules/f.js 22 bytes {0} [built]

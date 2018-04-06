@@ -298,13 +298,13 @@ const c = "c";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
     Asset      Size  Chunks             Chunk Names
-output.js  7.91 KiB       0  [emitted]  main
+output.js  7.89 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 443 bytes [entry] [rendered]
+chunk    {0} output.js (main) 422 bytes [entry] [rendered]
     > .\example.js main
-    [0] ./example.js 149 bytes {0} [built]
+    [0] ./example.js 140 bytes {0} [built]
         [no exports]
         single entry .\example.js  main
      + 8 hidden modules
@@ -314,16 +314,16 @@ chunk    {0} output.js (main) 443 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
     Asset       Size  Chunks             Chunk Names
 output.js  600 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 342 bytes [entry] [rendered]
+chunk    {0} output.js (main) 325 bytes [entry] [rendered]
     > .\example.js main
-    [0] ./example.js + 6 modules 342 bytes {0} [built]
+    [0] ./example.js + 6 modules 325 bytes {0} [built]
         [no exports]
         single entry .\example.js  main
-        | ./example.js 149 bytes [built]
+        | ./example.js 140 bytes [built]
         |    [no exports]
         |    single entry .\example.js  main
         |     + 6 hidden modules

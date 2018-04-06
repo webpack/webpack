@@ -35,7 +35,7 @@ module.exports = {
 	externals: [
 		"add",
 		{
-			"subtract": {
+			subtract: {
 				root: "subtract",
 				commonjs2: "./subtract",
 				commonjs: ["./math", "subtract"],
@@ -183,7 +183,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
     Asset      Size  Chunks             Chunk Names
 output.js  4.17 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -201,7 +201,7 @@ chunk    {0} output.js (main) 197 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
     Asset      Size  Chunks             Chunk Names
 output.js  1.02 KiB       0  [emitted]  main
 Entrypoint main = output.js

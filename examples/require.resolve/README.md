@@ -146,13 +146,13 @@ module.exports = Math.random();
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
     Asset      Size  Chunks             Chunk Names
 output.js  3.26 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 326 bytes [entry] [rendered]
+chunk    {0} output.js (main) 325 bytes [entry] [rendered]
     > .\example.js main
-    [0] ./example.js 295 bytes {0} [built]
+    [0] ./example.js 294 bytes {0} [built]
         single entry .\example.js  main
     [1] ./a.js 31 bytes {0} [built]
         require.resolve ./a.js [0] ./example.js 4:10-35
@@ -164,16 +164,16 @@ chunk    {0} output.js (main) 326 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
     Asset       Size  Chunks             Chunk Names
 output.js  667 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 326 bytes [entry] [rendered]
+chunk    {0} output.js (main) 325 bytes [entry] [rendered]
     > .\example.js main
     [0] ./a.js 31 bytes {0} [built]
         require.resolve ./a.js [1] ./example.js 4:10-35
         cjs require ./a [1] ./example.js 1:8-22
         cjs require ./a [1] ./example.js 10:9-23
-    [1] ./example.js 295 bytes {0} [built]
+    [1] ./example.js 294 bytes {0} [built]
         single entry .\example.js  main
 ```
