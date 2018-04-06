@@ -37,8 +37,10 @@ it("should create dependency with 'new' on a local dependency (object export)", 
 
 it("shouldn't fail with a local dependency (non-object export)", function() {
 	const sideEffect = require("local-side-effect");
-	new require("local-module-non-object");
+	const result = new require("local-module-non-object");
+	result.should.not.equal(1);
 	sideEffect.foo.should.equal("bar");
+	result.should.not.equal(require("local-module-non-object"));
 });
 
 it("should work with 'require' in parentheses", function () {
