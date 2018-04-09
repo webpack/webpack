@@ -73,6 +73,7 @@ Check out webpack's quick [**Get Started**](https://webpack.js.org/get-started/)
 ### Browser Compatibility
 
 Webpack supports all browsers that are [ES5-compliant](http://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
+webpack also needs `Promise` for `import()` and `require.ensure()`. If you want to support older browsers, you will need to load a polyfill before using these expressions.
 
 <h2 align="center">Concepts</h2>
 
