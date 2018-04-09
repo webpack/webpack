@@ -325,18 +325,6 @@ If you have discovered a 🐜 or have a feature suggestion, feel free to create 
         <p>Founder of the core team</p>
       </td>
       <td align="center" valign="top">
-        <img width="150" height="150" src="https://github.com/bebraw.png?s=150">
-        <br>
-        <a href="https://github.com/bebraw">Juho Vepsäläinen</a>
-        <p>Documentation</p>
-        <br>
-        <p>Author</p>
-        <a href="https://leanpub.com/survivejs-webpack">
-          <img height="15" src="https://cloud.githubusercontent.com/assets/1365881/20286923/93e325c0-aac9-11e6-964d-cabe218c584c.png">
-        </a>
-		<br>
-      </td>
-      <td align="center" valign="top">
         <img width="150" height="150" src="https://github.com/spacek33z.png?s=150">
         <br>
         <a href="https://github.com/spacek33z">Kees Kluskens</a>
