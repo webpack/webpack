@@ -70,6 +70,10 @@ or packaging just about any resource or asset.
 
 Check out webpack's quick [**Get Started**](https://webpack.js.org/get-started/) guide and the [other guides](https://webpack.js.org/guides/).
 
+### Browser Compatibility
+
+Webpack supports all browsers that are [ES5-compliant](http://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
+
 <h2 align="center">Concepts</h2>
 
 ### [Plugins](https://webpack.js.org/plugins/)
