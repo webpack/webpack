@@ -9,19 +9,19 @@ Child
     Entrypoint app = vendor.c0e73bece4137a7015c2.js app.js
     [./constants.js] 87 bytes {1} [built]
     [./entry-1.js] ./entry-1.js + 2 modules 190 bytes {0} [built]
-           | ./entry-1.js 67 bytes [built]
-           | ./submodule-a.js 59 bytes [built]
-           | ./submodule-b.js 59 bytes [built]
+        | ./entry-1.js 67 bytes [built]
+        | ./submodule-a.js 59 bytes [built]
+        | ./submodule-b.js 59 bytes [built]
 Child
     Hash: 2425703c4fe7d61799b3
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                              Asset       Size  Chunks             Chunk Names
-                            app.js    5.6 KiB       0  [emitted]  app
+                            app.js   5.59 KiB       0  [emitted]  app
     vendor.c0e73bece4137a7015c2.js  619 bytes       1  [emitted]  vendor
     Entrypoint app = vendor.c0e73bece4137a7015c2.js app.js
     [./constants.js] 87 bytes {1} [built]
     [./entry-2.js] ./entry-2.js + 2 modules 197 bytes {0} [built]
-           | ./entry-2.js 67 bytes [built]
-           | ./submodule-a.js 59 bytes [built]
-           | ./submodule-c.js 66 bytes [built]
+        | ./entry-2.js 67 bytes [built]
+        | ./submodule-a.js 59 bytes [built]
+        | ./submodule-c.js 66 bytes [built]

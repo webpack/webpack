@@ -289,11 +289,10 @@ describe("BenchmarkTestCases", function() {
 								`baseline-${baseline.name}`,
 								testName
 							);
-							const config =
-								require.requireActual(
-									path.join(testDirectory, "webpack.config.js")
-								) || {};
-							config.output = config.output || {};
+							const config = Object.create(require.requireActual(
+								path.join(testDirectory, "webpack.config.js")
+							)) || {};
+							config.output = Object.create(config.output || {});
 							if (!config.context) config.context = testDirectory;
 							if (!config.output.path) config.output.path = outputDirectory;
 							runBenchmark(baseline.webpack, config, (err, stats) => {

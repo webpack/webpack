@@ -53,9 +53,7 @@ describe("WatcherEvents", () => {
 		});
 	});
 
-	it("should emit 'watch-close' when using multi-compiler mode and the compiler is not running", function(
-		done
-	) {
+	it("should emit 'watch-close' when using multi-compiler mode and the compiler is not running", done => {
 		let called = false;
 
 		const compiler = createMultiCompiler();

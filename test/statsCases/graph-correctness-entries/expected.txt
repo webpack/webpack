@@ -1,19 +1,19 @@
 Entrypoint e1 = e1.js
 Entrypoint e2 = e2.js
 chunk    {0} c.js (c) 49 bytes <{3}> <{4}> >{1}< [rendered]
-    [1] ./module-c.js 49 bytes {0} [built]
-        import() ./module-c [2] ./module-b.js 1:0-47
-        import() ./module-c [4] ./e2.js 1:0-47
+ [1] ./module-c.js 49 bytes {0} [built]
+     import() ./module-c [2] ./module-b.js 1:0-47
+     import() ./module-c [4] ./e2.js 1:0-47
 chunk    {1} a.js (a) 49 bytes <{0}> <{2}> >{4}< [rendered]
-    [0] ./module-a.js 49 bytes {1} [built]
-        import() ./module-a [1] ./module-c.js 1:0-47
-        import() ./module-a [3] ./e1.js 1:0-47
+ [0] ./module-a.js 49 bytes {1} [built]
+     import() ./module-a [1] ./module-c.js 1:0-47
+     import() ./module-a [3] ./e1.js 1:0-47
 chunk    {2} e1.js (e1) 49 bytes >{1}< [entry] [rendered]
-    [3] ./e1.js 49 bytes {2} [built]
-        single entry ./e1  e1
+ [3] ./e1.js 49 bytes {2} [built]
+     single entry ./e1  e1
 chunk    {3} e2.js (e2) 49 bytes >{0}< [entry] [rendered]
-    [4] ./e2.js 49 bytes {3} [built]
-        single entry ./e2  e2
+ [4] ./e2.js 49 bytes {3} [built]
+     single entry ./e2  e2
 chunk    {4} b.js (b) 49 bytes <{1}> >{0}< [rendered]
-    [2] ./module-b.js 49 bytes {4} [built]
-        import() ./module-b [0] ./module-a.js 1:0-47
+ [2] ./module-b.js 49 bytes {4} [built]
+     import() ./module-b [0] ./module-a.js 1:0-47

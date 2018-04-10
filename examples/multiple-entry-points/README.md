@@ -111,7 +111,7 @@ module.exports = "Common";
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
 /******/ 		var chunkIds = data[0];
-/******/ 		var moreModules = data[1]
+/******/ 		var moreModules = data[1];
 /******/ 		var executeModules = data[2];
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
@@ -143,12 +143,12 @@ module.exports = "Common";
 /******/ 		var result;
 /******/ 		for(var i = 0; i < deferredModules.length; i++) {
 /******/ 			var deferredModule = deferredModules[i];
-/******/ 			var fullfilled = true;
+/******/ 			var fulfilled = true;
 /******/ 			for(var j = 1; j < deferredModule.length; j++) {
 /******/ 				var depId = deferredModule[j];
-/******/ 				if(installedChunks[depId] !== 0) fullfilled = false;
+/******/ 				if(installedChunks[depId] !== 0) fulfilled = false;
 /******/ 			}
-/******/ 			if(fullfilled) {
+/******/ 			if(fulfilled) {
 /******/ 				deferredModules.splice(i--, 1);
 /******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
 /******/ 			}
@@ -216,7 +216,7 @@ module.exports = "Common";
 /******/ 				var script = document.createElement('script');
 /******/
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120000;
+/******/ 				script.timeout = 120;
 /******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
@@ -334,7 +334,7 @@ __webpack_require__.e(/*! AMD require */ 0).then(function() { var __WEBPACK_AMD_
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
 /******/ 		var chunkIds = data[0];
-/******/ 		var moreModules = data[1]
+/******/ 		var moreModules = data[1];
 /******/ 		var executeModules = data[2];
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
@@ -366,12 +366,12 @@ __webpack_require__.e(/*! AMD require */ 0).then(function() { var __WEBPACK_AMD_
 /******/ 		var result;
 /******/ 		for(var i = 0; i < deferredModules.length; i++) {
 /******/ 			var deferredModule = deferredModules[i];
-/******/ 			var fullfilled = true;
+/******/ 			var fulfilled = true;
 /******/ 			for(var j = 1; j < deferredModule.length; j++) {
 /******/ 				var depId = deferredModule[j];
-/******/ 				if(installedChunks[depId] !== 0) fullfilled = false;
+/******/ 				if(installedChunks[depId] !== 0) fulfilled = false;
 /******/ 			}
-/******/ 			if(fullfilled) {
+/******/ 			if(fulfilled) {
 /******/ 				deferredModules.splice(i--, 1);
 /******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
 /******/ 			}
@@ -439,7 +439,7 @@ __webpack_require__.e(/*! AMD require */ 0).then(function() { var __WEBPACK_AMD_
 /******/ 				var script = document.createElement('script');
 /******/
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120000;
+/******/ 				script.timeout = 120;
 /******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
@@ -572,11 +572,11 @@ module.exports = function(msg) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.1
+Version: webpack 4.5.0
      Asset       Size  Chunks             Chunk Names
       0.js  363 bytes       0  [emitted]  
 commons.js  267 bytes       1  [emitted]  commons
-  pageB.js   8.02 KiB       2  [emitted]  pageB
+  pageB.js   8.01 KiB       2  [emitted]  pageB
   pageA.js   8.06 KiB       3  [emitted]  pageA
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
@@ -588,8 +588,8 @@ chunk    {0} 0.js 91 bytes <{1}> <{2}> <{3}> [rendered]
         cjs require ./shared [2] ./pageB.js 3:14-33
         amd require ./shared [3] ./pageA.js 2:0-4:2
 chunk    {1} commons.js (commons) 26 bytes ={2}= ={3}= >{0}< [initial] [rendered] split chunk (cache group: commons) (name: commons)
-    > ./pageB pageB
     > ./pageA pageA
+    > ./pageB pageB
     [1] ./common.js 26 bytes {1} [built]
         cjs require ./common [0] ./shared.js 1:13-32
         cjs require ./common [2] ./pageB.js 1:13-32
@@ -608,7 +608,7 @@ chunk    {3} pageA.js (pageA) 108 bytes ={1}= >{0}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.1
+Version: webpack 4.5.0
      Asset       Size  Chunks             Chunk Names
       0.js  120 bytes       0  [emitted]  
 commons.js   95 bytes       1  [emitted]  commons
@@ -624,8 +624,8 @@ chunk    {0} 0.js 91 bytes <{1}> <{2}> <{3}> [rendered]
         cjs require ./shared [2] ./pageB.js 3:14-33
         amd require ./shared [3] ./pageA.js 2:0-4:2
 chunk    {1} commons.js (commons) 26 bytes ={2}= ={3}= >{0}< [initial] [rendered] split chunk (cache group: commons) (name: commons)
-    > ./pageB pageB
     > ./pageA pageA
+    > ./pageB pageB
     [1] ./common.js 26 bytes {1} [built]
         cjs require ./common [0] ./shared.js 1:13-32
         cjs require ./common [2] ./pageB.js 1:13-32

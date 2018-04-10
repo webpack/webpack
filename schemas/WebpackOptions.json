@@ -324,14 +324,7 @@
         },
         "chunkFilename": {
           "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "instanceof": "Function"
-            }
-          ],
+          "type": "string",
           "absolutePath": false
         },
         "webassemblyModuleFilename": {
@@ -1337,10 +1330,17 @@
               "properties": {
                 "chunks": {
                   "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
-                  "enum": [
-                    "initial",
-                    "async",
-                    "all"
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "initial",
+                        "async",
+                        "all"
+                      ]
+                    },
+                    {
+                      "instanceof": "Function"
+                    }
                   ]
                 },
                 "minSize": {
@@ -1379,6 +1379,11 @@
                 },
                 "filename": {
                   "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "automaticNameDelimiter": {
+                  "description": "Sets the name delimiter for created chunks",
                   "type": "string",
                   "minLength": 1
                 },
@@ -1422,10 +1427,17 @@
                           },
                           "chunks": {
                             "description": "Select chunks for determining cache group content (defaults to \"initial\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
-                            "enum": [
-                              "initial",
-                              "async",
-                              "all"
+                            "oneOf": [
+                              {
+                                "enum": [
+                                  "initial",
+                                  "async",
+                                  "all"
+                                ]
+                              },
+                              {
+                                "instanceof": "Function"
+                              }
                             ]
                           },
                           "enforce": {
@@ -1816,10 +1828,13 @@
               ]
             },
             "excludeModules": {
-              "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps or Functions",
+              "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions",
               "anyOf": [
                 {
                   "$ref": "#/definitions/filter-types"
+                },
+                {
+                  "type": "boolean"
                 }
               ]
             },
@@ -1828,6 +1843,9 @@
               "anyOf": [
                 {
                   "$ref": "#/definitions/filter-types"
+                },
+                {
+                  "type": "boolean"
                 }
               ]
             },

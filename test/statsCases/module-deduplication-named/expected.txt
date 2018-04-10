@@ -2,36 +2,36 @@
 async3.js  818 bytes       0  [emitted]  async3
 async1.js  818 bytes       1  [emitted]  async1
 async2.js  818 bytes       2  [emitted]  async2
-    e1.js   8.03 KiB       3  [emitted]  e1
+    e1.js   8.02 KiB       3  [emitted]  e1
     e2.js   8.05 KiB       4  [emitted]  e2
     e3.js   8.07 KiB       5  [emitted]  e3
 Entrypoint e1 = e1.js
 Entrypoint e2 = e2.js
 Entrypoint e3 = e3.js
 chunk    {0} async3.js (async3) 89 bytes <{2}> <{5}> >{1}< [rendered]
-    [4] ./h.js 9 bytes {0} {5} [built]
-    [7] ./async3.js 80 bytes {0} [built]
+ [4] ./h.js 9 bytes {0} {5} [built]
+ [7] ./async3.js 80 bytes {0} [built]
 chunk    {1} async1.js (async1) 89 bytes <{0}> <{3}> >{2}< [rendered]
-    [2] ./d.js 9 bytes {1} {3} [built]
-    [5] ./async1.js 80 bytes {1} [built]
+ [2] ./d.js 9 bytes {1} {3} [built]
+ [5] ./async1.js 80 bytes {1} [built]
 chunk    {2} async2.js (async2) 89 bytes <{1}> <{4}> >{0}< [rendered]
-    [3] ./f.js 9 bytes {2} {4} [built]
-    [6] ./async2.js 80 bytes {2} [built]
+ [3] ./f.js 9 bytes {2} {4} [built]
+ [6] ./async2.js 80 bytes {2} [built]
 chunk    {3} e1.js (e1) 144 bytes >{1}< [entry] [rendered]
-    [0] ./b.js 9 bytes {3} {4} {5} [built]
-    [1] ./a.js 9 bytes {3} {4} {5} [built]
-    [2] ./d.js 9 bytes {1} {3} [built]
-    [8] ./e1.js 108 bytes {3} [built]
-    [9] ./c.js 9 bytes {3} [built]
+ [0] ./b.js 9 bytes {3} {4} {5} [built]
+ [1] ./a.js 9 bytes {3} {4} {5} [built]
+ [2] ./d.js 9 bytes {1} {3} [built]
+ [8] ./e1.js 108 bytes {3} [built]
+ [9] ./c.js 9 bytes {3} [built]
 chunk    {4} e2.js (e2) 144 bytes >{2}< [entry] [rendered]
-    [0] ./b.js 9 bytes {3} {4} {5} [built]
-    [1] ./a.js 9 bytes {3} {4} {5} [built]
-    [3] ./f.js 9 bytes {2} {4} [built]
-   [10] ./e2.js 108 bytes {4} [built]
-   [11] ./e.js 9 bytes {4} [built]
+  [0] ./b.js 9 bytes {3} {4} {5} [built]
+  [1] ./a.js 9 bytes {3} {4} {5} [built]
+  [3] ./f.js 9 bytes {2} {4} [built]
+ [10] ./e2.js 108 bytes {4} [built]
+ [11] ./e.js 9 bytes {4} [built]
 chunk    {5} e3.js (e3) 144 bytes >{0}< [entry] [rendered]
-    [0] ./b.js 9 bytes {3} {4} {5} [built]
-    [1] ./a.js 9 bytes {3} {4} {5} [built]
-    [4] ./h.js 9 bytes {0} {5} [built]
-   [12] ./e3.js 108 bytes {5} [built]
-   [13] ./g.js 9 bytes {5} [built]
+  [0] ./b.js 9 bytes {3} {4} {5} [built]
+  [1] ./a.js 9 bytes {3} {4} {5} [built]
+  [4] ./h.js 9 bytes {0} {5} [built]
+ [12] ./e3.js 108 bytes {5} [built]
+ [13] ./g.js 9 bytes {5} [built]

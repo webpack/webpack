@@ -243,7 +243,7 @@ describe("ConfigTestCases", () => {
 										);
 									if (exportedTests.length < filesCount)
 										return done(new Error("No tests exported by test case"));
-
+									if (testConfig.afterExecute) testConfig.afterExecute();
 									const asyncSuite = describe("exported tests", () => {
 										exportedTests.forEach(
 											({ title, fn, timeout }) =>

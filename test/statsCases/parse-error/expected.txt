@@ -1,10 +1,10 @@
   Asset      Size  Chunks  Chunk Names
 main.js  3.05 KiB       0  main
 Entrypoint main = main.js
-   [0] ./b.js 169 bytes {0} [built] [failed] [1 error]
-   [1] ./index.js + 1 modules 35 bytes {0} [built]
-       | ./index.js 15 bytes [built]
-       | ./a.js 15 bytes [built]
+[0] ./b.js 169 bytes {0} [built] [failed] [1 error]
+[1] ./index.js + 1 modules 35 bytes {0} [built]
+    | ./index.js 15 bytes [built]
+    | ./a.js 15 bytes [built]
 
 ERROR in ./b.js
 Module parse failed: Unexpected token (6:7)

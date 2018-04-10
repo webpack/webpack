@@ -10,7 +10,7 @@ if("shouldn't evaluate expression", function() {
 	expect(x).toBe("ok");
 });
 
-it("should short-circut evaluating", function() {
+it("should short-circuit evaluating", function() {
 	var expr;
 	var a = false && expr ? require("fail") : require("./a");
 	var b = true || expr ? require("./a") : require("fail");

@@ -123,7 +123,7 @@ module.exports = {
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
 /******/ 		var chunkIds = data[0];
-/******/ 		var moreModules = data[1]
+/******/ 		var moreModules = data[1];
 /******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
@@ -208,7 +208,7 @@ module.exports = {
 /******/ 				var script = document.createElement('script');
 /******/
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120000;
+/******/ 				script.timeout = 120;
 /******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
@@ -328,7 +328,7 @@ var x = "x";
   \********************************/
 /*! no exports provided */
 /*! all exports used */
-/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/a.js because of ./node_modules/c.js */
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js because of ./node_modules/c.js */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -387,7 +387,8 @@ exports.c = "e";
   \*****************************/
 /*! exports provided: d, c, x, y */
 /*! all exports used */
-/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/c.js because of ./node_modules/shared.js */
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/cjs.js (<- Module is not an ECMAScript module) */
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -439,9 +440,9 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
       Asset      Size  Chunks             Chunk Names
-0.output.js  1.78 KiB       0  [emitted]  
+0.output.js  1.87 KiB       0  [emitted]  
   output.js   8.2 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 286 bytes <{1}> [rendered]
@@ -478,7 +479,7 @@ chunk    {1} output.js (main) 390 bytes >{0}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  362 bytes       0  [emitted]  
   output.js    1.8 KiB       1  [emitted]  main

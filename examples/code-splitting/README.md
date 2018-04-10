@@ -45,7 +45,7 @@ require.ensure(["c"], function(require) {
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
 /******/ 		var chunkIds = data[0];
-/******/ 		var moreModules = data[1]
+/******/ 		var moreModules = data[1];
 /******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
@@ -130,7 +130,7 @@ require.ensure(["c"], function(require) {
 /******/ 				var script = document.createElement('script');
 /******/
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120000;
+/******/ 				script.timeout = 120;
 /******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
@@ -301,7 +301,7 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  490 bytes       0  [emitted]  
   output.js   7.47 KiB       1  [emitted]  main
@@ -320,7 +320,7 @@ chunk    {1} output.js (main) 166 bytes >{0}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  95 bytes       0  [emitted]  
   output.js  1.68 KiB       1  [emitted]  main

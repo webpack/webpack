@@ -1,6 +1,7 @@
 "use strict";
 
-import d, {a, b as B, C as _C, D as _D, extendThisClass, returnThisArrow, returnThisMember, that} from "./abc";
+import {extendThisClass, returnThisArrow, returnThisMember, that} from "./abc";
+import d, {a, b as B, C as _C, D as _D, E, F, f1, f2, f3, G} from "./abc";
 
 import * as abc from "./abc";
 
@@ -24,6 +25,13 @@ it("should not break classes and functions", function() {
 	expect((new _C).foo()).toBe("bar");
 	expect((new _C).bar()).toBe("bar");
 	expect((new _D).prop()).toBe("ok");
+	expect(E.foo()).toBe("bar");
+	expect(F).toBe("ok");
+	expect(f1.call({x: "f1"})).toBe("f1");
+	expect(f2.call({x: "f2"})).toBe("f2");
+	expect(f3.call("f3")).toBe(undefined);
+	expect(f3()).toBe(undefined);
+	expect((new G("ok")).getX()).toBe("ok");
 });
 
 function x() { throw new Error("should not be executed"); }
