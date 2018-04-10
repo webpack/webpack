@@ -6,7 +6,7 @@ const fs = require("fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
 const checkArrayExpectation = require("./checkArrayExpectation");
-const {remove} = require("./helpers/remove");
+const { remove } = require("./helpers/remove");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
@@ -298,16 +298,19 @@ describe("WatchTestCases", () => {
 										} else {
 											watching.close();
 
-											describe("exported tests", () => {
+											const asyncSuite = describe("exported tests", () => {
 												exportedTests.forEach(
 													({ title, fn, timeout }) =>
 														fn
-															? it(title, fn, timeout)
-															: it.skip(title, () => {})
+															? fit(title, fn, timeout)
+															: fit(title, () => {}).pend("Skipped")
 												);
 											});
 
-											process.nextTick(done);
+											jasmine
+												.getEnv()
+												.execute([asyncSuite.id], asyncSuite)
+												.then(done, done);
 										}
 									}
 								);

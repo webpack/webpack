@@ -29,9 +29,7 @@ describe("StatsTestCases", () => {
 				}
 			};
 			if (fs.existsSync(path.join(base, testName, "webpack.config.js"))) {
-				options = require(
-					path.join(base, testName, "webpack.config.js")
-				);
+				options = require(path.join(base, testName, "webpack.config.js"));
 			}
 			(Array.isArray(options) ? options : [options]).forEach(options => {
 				if (!options.context) options.context = path.join(base, testName);

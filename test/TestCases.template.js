@@ -233,13 +233,19 @@ const describeCases = config => {
 										if (exportedTests.length === 0)
 											throw new Error("No tests exported by test case");
 
-										describe("exported tests", () => {
+										const asyncSuite = describe("exported tests", () => {
 											exportedTests.forEach(
 												({ title, fn, timeout }) =>
-													fn ? it(title, fn, timeout) : it.skip(title, () => {})
+													fn
+														? fit(title, fn, timeout)
+														: fit(title, () => {}).pend("Skipped")
 											);
-											done();
 										});
+
+										jasmine
+											.getEnv()
+											.execute([asyncSuite.id], asyncSuite)
+											.then(done, done);
 									});
 								},
 								40000

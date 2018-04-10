@@ -119,7 +119,7 @@ describe("Schemas", () => {
 					}
 					if ("properties" in item) {
 						it("should have additionalProperties set to some value when describing properties", () => {
-							expect(item. additionalProperties).toBeDefined();
+							expect(item.additionalProperties).toBeDefined();
 						});
 						Object.keys(item.properties).forEach(name => {
 							describe(`> '${name}'`, () => {
