@@ -6,7 +6,7 @@ bundle.js  7.27 KiB       0  [emitted]  main
 Entrypoint main = bundle.js
  [0] ./a.js 13 bytes {0} [built]
      [exports: a]
-     [only some exports used: a]
+     [all exports used]
  [1] ./b.js 13 bytes {0} [built]
      [exports: b]
      [no exports used]
