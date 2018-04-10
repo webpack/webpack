@@ -45,7 +45,7 @@
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
-    "jest": "^22.4.2",
+    "jest": "23.0.0-alpha.5",
     "json-loader": "^0.5.7",
     "less": "^2.5.1",
     "less-loader": "^4.0.3",
