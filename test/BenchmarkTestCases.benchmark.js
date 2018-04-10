@@ -4,7 +4,7 @@ const path = require("path");
 const fs = require("fs");
 const asyncLib = require("neo-async");
 const Benchmark = require("benchmark");
-const {remove} = require("./helpers/remove");
+const { remove } = require("./helpers/remove");
 
 describe("BenchmarkTestCases", function() {
 	const casesPath = path.join(__dirname, "benchmarkCases");
@@ -76,10 +76,9 @@ describe("BenchmarkTestCases", function() {
 					}
 
 					function doLoadWebpack() {
-						const baselineWebpack = require.requireActual(path.resolve(
-							baselinePath,
-							"lib/webpack.js"
-						));
+						const baselineWebpack = require.requireActual(
+							path.resolve(baselinePath, "lib/webpack.js")
+						);
 						baselines.push({
 							name: baselineInfo.name,
 							rev: baselineRevision,
@@ -88,9 +87,10 @@ describe("BenchmarkTestCases", function() {
 						callback();
 					}
 				},
-				(err) => {
+				err => {
 					if (err) {
 						done(err);
+						return;
 					}
 					createTests();
 					done();
@@ -101,11 +101,11 @@ describe("BenchmarkTestCases", function() {
 
 	afterAll(() => {
 		remove(baselinesPath);
-	})
+	});
 
 	function getBaselineRevs(rootPath, callback) {
 		const git = require("simple-git")(rootPath);
-		const lastVersionTag = "v" + require.requireActual("../package.json").version;
+		const lastVersionTag = "v" + require("../package.json").version;
 		git.raw(["rev-list", "-n", "1", lastVersionTag], (err, resultVersion) => {
 			if (err) return callback(err);
 			const matchVersion = /^([a-f0-9]+)\s*$/.exec(resultVersion);
@@ -289,7 +289,10 @@ describe("BenchmarkTestCases", function() {
 								`baseline-${baseline.name}`,
 								testName
 							);
-							const config = require.requireActual(path.join(testDirectory, "webpack.config.js")) || {}
+							const config =
+								require.requireActual(
+									path.join(testDirectory, "webpack.config.js")
+								) || {};
 							config.output = config.output || {};
 							if (!config.context) config.context = testDirectory;
 							if (!config.output.path) config.output.path = outputDirectory;
@@ -314,7 +317,10 @@ describe("BenchmarkTestCases", function() {
 								`baseline-${baseline.name}`,
 								testName
 							);
-							const config = require.requireActual(path.join(testDirectory, "webpack.config.js")) || {};
+							const config =
+								require.requireActual(
+									path.join(testDirectory, "webpack.config.js")
+								) || {};
 							config.output = config.output || {};
 							if (!config.context) config.context = testDirectory;
 							if (!config.output.path) config.output.path = outputDirectory;
@@ -339,7 +345,9 @@ describe("BenchmarkTestCases", function() {
 										baselineStats.text
 									}) (90% confidence)`
 								);
-							} else if (baselineStats.minConfidence > headStats.maxConfidence) {
+							} else if (
+								baselineStats.minConfidence > headStats.maxConfidence
+							) {
 								console.log(
 									`======> HEAD is ${Math.round(
 										baselineStats.mean / headStats.mean * 100 - 100
