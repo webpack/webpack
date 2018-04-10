@@ -70,6 +70,11 @@ or packaging just about any resource or asset.
 
 Check out webpack's quick [**Get Started**](https://webpack.js.org/get-started/) guide and the [other guides](https://webpack.js.org/guides/).
 
+### Browser Compatibility
+
+webpack supports all browsers that are [ES5-compliant](http://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
+webpack also needs `Promise` for `import()` and `require.ensure()`. If you want to support older browsers, you will need to [load a polyfill](https://webpack.js.org/guides/shimming/) before using these expressions.
+
 <h2 align="center">Concepts</h2>
 
 ### [Plugins](https://webpack.js.org/plugins/)
