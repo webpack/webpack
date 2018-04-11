@@ -248,7 +248,7 @@ const describeCases = config => {
 											.then(done, done);
 									});
 								},
-								40000
+								60000
 							);
 						});
 					});
