@@ -31,7 +31,7 @@ function copyDiff(src, dest) {
 
 describe("WatchTestCases", () => {
 	if (process.env.NO_WATCH_TESTS) {
-		it("long running tests excluded");
+		it.skip("long running tests excluded", () => {});
 		return;
 	}
 

@@ -9,7 +9,7 @@ const webpack = require("../");
 
 describe("WatchDetection", () => {
 	if (process.env.NO_WATCH_TESTS) {
-		it("long running tests excluded");
+		it.skip("long running tests excluded", () => {});
 		return;
 	}
 
