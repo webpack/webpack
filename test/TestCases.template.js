@@ -88,7 +88,7 @@ const describeCases = config => {
 											{},
 											config.optimization,
 											DEFAULT_OPTIMIZATIONS
-										),
+									  ),
 								performance: {
 									hints: false
 								},

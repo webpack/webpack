@@ -21,7 +21,7 @@ describe(
 					"./node_modules/ts-loader!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./src/app.vue";
 				const expectPath = `./src/app.vue (${inputPath})\n`;
 
-				mockStats.formatFilePath(inputPath).should.be.exactly(expectPath);
+				expect(mockStats.formatFilePath(inputPath)).toBe(expectPath);
 			});
 		});
 

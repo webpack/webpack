@@ -35,10 +35,14 @@ describe("HotModuleReplacementPlugin", () => {
 		);
 		try {
 			mkdirp.sync(path.join(__dirname, "js", "HotModuleReplacementPlugin"));
-		} catch (e) {}
+		} catch (e) {
+			// empty
+		}
 		try {
 			fs.unlinkSync(recordsFile);
-		} catch (e) {}
+		} catch (e) {
+			// empty
+		}
 		const compiler = webpack({
 			cache: false,
 			entry: entryFile,

@@ -36,7 +36,9 @@ describe("WatchDetection", () => {
 			beforeAll(() => {
 				try {
 					fs.mkdirSync(fixturePath);
-				} catch (e) {}
+				} catch (e) {
+					// empty
+				}
 				fs.writeFileSync(filePath, "require('./file2')", "utf-8");
 				fs.writeFileSync(file2Path, "original", "utf-8");
 			});
@@ -45,13 +47,19 @@ describe("WatchDetection", () => {
 				setTimeout(() => {
 					try {
 						fs.unlinkSync(filePath);
-					} catch (e) {}
+					} catch (e) {
+						// empty
+					}
 					try {
 						fs.unlinkSync(file2Path);
-					} catch (e) {}
+					} catch (e) {
+						// empty
+					}
 					try {
 						fs.rmdirSync(fixturePath);
-					} catch (e) {}
+					} catch (e) {
+						// empty
+					}
 					done();
 				}, 100); // cool down a bit
 			});
