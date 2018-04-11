@@ -7,7 +7,7 @@ const mkdirp = require("mkdirp");
 const webpack = require("../");
 
 describe("HotModuleReplacementPlugin", () => {
-	jest.setTimeout(10000);
+	jest.setTimeout(20000);
 	it("should not have circular hashes but equal if unmodified", done => {
 		const entryFile = path.join(
 			__dirname,
