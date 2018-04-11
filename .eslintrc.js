@@ -4,8 +4,7 @@ module.exports = {
 	extends: ["eslint:recommended", "plugin:node/recommended", "plugin:prettier/recommended"],
 	env: {
 		node: true,
-		es6: true,
-		"jest/globals": true
+		es6: true
 	},
 	parserOptions: {
 		ecmaVersion: 2017
@@ -56,8 +55,8 @@ module.exports = {
 		{
 			files: ["test/**/*.js"],
 			env: {
-				mocha: true,
+				"jest/globals": true
+			}
 		}
-	}
 	]
 };
