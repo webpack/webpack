@@ -1,4 +1,4 @@
-/* globals describe, it, before, after */
+/* globals describe, it */
 "use strict";
 
 const path = require("path");

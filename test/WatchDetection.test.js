@@ -1,6 +1,6 @@
 "use strict";
 
-/*globals describe it before after  */
+/*globals describe it */
 const path = require("path");
 const fs = require("fs");
 const MemoryFs = require("memory-fs");
