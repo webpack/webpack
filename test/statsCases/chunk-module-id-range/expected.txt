@@ -1,0 +1,22 @@
+Hash: 27b68d27e07b42624dae
+Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
+   Asset      Size  Chunks             Chunk Names
+main2.js  3.89 KiB       0  [emitted]  main2
+main1.js  3.89 KiB       1  [emitted]  main1
+Entrypoint main1 = main1.js
+Entrypoint main2 = main2.js
+chunk    {0} main2.js (main2) 136 bytes [entry] [rendered]
+    > ./main2 main2
+   [0] ./e.js 20 bytes {0} [built]
+   [1] ./f.js 20 bytes {0} [built]
+   [2] ./main2.js 56 bytes {0} [built]
+ [100] ./d.js 20 bytes {0} {1} [built]
+ [101] ./a.js 20 bytes {0} {1} [built]
+chunk    {1} main1.js (main1) 136 bytes [entry] [rendered]
+    > ./main1 main1
+   [3] ./b.js 20 bytes {1} [built]
+   [4] ./main1.js 56 bytes {1} [built]
+ [100] ./d.js 20 bytes {0} {1} [built]
+ [101] ./a.js 20 bytes {0} {1} [built]
+ [102] ./c.js 20 bytes {1} [built]
