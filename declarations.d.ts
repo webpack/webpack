@@ -49,7 +49,6 @@ declare const hotAddUpdateChunk;
 declare const parentHotUpdateCallback;
 declare const $hotChunkFilename$;
 declare const $hotMainFilename$;
-declare const $WebAssembly;
 declare const WebAssembly;
 declare const importScripts;
 declare const $crossOriginLoading$;
