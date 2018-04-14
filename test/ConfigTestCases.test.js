@@ -11,7 +11,7 @@ const checkArrayExpectation = require("./checkArrayExpectation");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
-const prepareOptions = require("../lib/prepareOptions");
+const prepareOptions = require("./helpers/prepareOptions");
 
 describe("ConfigTestCases", () => {
 	const casesPath = path.join(__dirname, "configCases");
