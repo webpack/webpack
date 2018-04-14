@@ -31,6 +31,17 @@ declare module 'chrome-trace-event' {
 	}
 }
 
+interface LocationPosition {
+	line: number;
+	column: number;
+}
+
+interface Location {
+	start: LocationPosition,
+	end: LocationPosition,
+	index: number
+}
+
 /**
  * Global variable declarations
  * @todo Once this issue is resolved, remove these globals and add JSDoc onsite instead
