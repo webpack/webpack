@@ -324,14 +324,7 @@
         },
         "chunkFilename": {
           "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {
-              "instanceof": "Function"
-            }
-          ],
+          "type": "string",
           "absolutePath": false
         },
         "webassemblyModuleFilename": {
@@ -680,7 +673,7 @@
           ]
         },
         "moduleExtensions": {
-          "description": "Extenstions added to the module request when trying to find the module",
+          "description": "Extensions added to the module request when trying to find the module",
           "anyOf": [
             {
               "$ref": "#/definitions/common.arrayOfStringValues"
@@ -718,7 +711,7 @@
           "type": "boolean"
         },
         "concord": {
-          "description": "Enable condord resolving extras",
+          "description": "Enable concord resolving extras",
           "type": "boolean"
         },
         "unsafeCache": {
@@ -1337,10 +1330,17 @@
               "properties": {
                 "chunks": {
                   "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
-                  "enum": [
-                    "initial",
-                    "async",
-                    "all"
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "initial",
+                        "async",
+                        "all"
+                      ]
+                    },
+                    {
+                      "instanceof": "Function"
+                    }
                   ]
                 },
                 "minSize": {
@@ -1376,6 +1376,16 @@
                       "type": "string"
                     }
                   ]
+                },
+                "filename": {
+                  "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "automaticNameDelimiter": {
+                  "description": "Sets the name delimiter for created chunks",
+                  "type": "string",
+                  "minLength": 1
                 },
                 "cacheGroups": {
                   "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)",
@@ -1417,10 +1427,17 @@
                           },
                           "chunks": {
                             "description": "Select chunks for determining cache group content (defaults to \"initial\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
-                            "enum": [
-                              "initial",
-                              "async",
-                              "all"
+                            "oneOf": [
+                              {
+                                "enum": [
+                                  "initial",
+                                  "async",
+                                  "all"
+                                ]
+                              },
+                              {
+                                "instanceof": "Function"
+                              }
                             ]
                           },
                           "enforce": {
@@ -1468,6 +1485,11 @@
                                 "type": "string"
                               }
                             ]
+                          },
+                          "filename": {
+                            "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
+                            "type": "string",
+                            "minLength": 1
                           }
                         }
                       }
@@ -1757,6 +1779,10 @@
               "type": "boolean",
               "description": "add information about modules nested in other modules (like with module concatenation)"
             },
+            "moduleAssets": {
+              "type": "boolean",
+              "description": "add information about assets inside modules"
+            },
             "children": {
               "type": "boolean",
               "description": "add children information"
@@ -1802,10 +1828,13 @@
               ]
             },
             "excludeModules": {
-              "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps or Functions",
+              "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions",
               "anyOf": [
                 {
                   "$ref": "#/definitions/filter-types"
+                },
+                {
+                  "type": "boolean"
                 }
               ]
             },
@@ -1814,6 +1843,9 @@
               "anyOf": [
                 {
                   "$ref": "#/definitions/filter-types"
+                },
+                {
+                  "type": "boolean"
                 }
               ]
             },

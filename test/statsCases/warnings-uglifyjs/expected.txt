@@ -4,9 +4,9 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks             Chunk Names
 bundle.js  2.19 KiB       0  [emitted]  main
 Entrypoint main = bundle.js
-   [0] ./index.js 299 bytes {0} [built]
-   [1] ./a.js 249 bytes {0} [built]
-   [2] (webpack)/buildin/module.js 497 bytes {0} [built]
+[0] ./index.js 299 bytes {0} [built]
+[1] ./a.js 249 bytes {0} [built]
+[2] (webpack)/buildin/module.js 497 bytes {0} [built]
 
 WARNING in bundle.js from UglifyJs
 Dropping unused function someUnRemoteUsedFunction1 [./a.js:3,0]

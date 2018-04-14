@@ -81,7 +81,7 @@ it("should assign to process.env", function() {
 	process.env.TEST = "test";
 	process.env.TEST.should.be.eql("test");
 });
-it("should not have brakets on start", function() {
+it("should not have brackets on start", function() {
 	function f() {
 		throw new Error("should not be called");
 	}
@@ -90,12 +90,12 @@ it("should not have brakets on start", function() {
 });
 
 it("should not explode on recursive typeof calls", function() {
-	(typeof wurst).should.eql("undefined"); // <- is recursivly defined in config
+	(typeof wurst).should.eql("undefined"); // <- is recursively defined in config
 });
 
 it("should not explode on recursive statements", function() {
 	(function() {
-		wurst; // <- is recursivly defined in config
+		wurst; // <- is recursively defined in config
 	}).should.throw("suppe is not defined");
 });
 

@@ -1,0 +1,15 @@
+Entrypoint main = vendors.js main.js
+chunk    {0} async-a.js (async-a) 32 bytes <{2}> <{3}> [rendered]
+    > ./a [3] ./index.js 2:0-47
+ [0] ./node_modules/x.js 20 bytes {0} {1} [built]
+ [1] ./a.js 12 bytes {0} [built]
+chunk    {1} async-b.js (async-b) 32 bytes <{2}> <{3}> [rendered]
+    > ./b [3] ./index.js 3:0-47
+ [0] ./node_modules/x.js 20 bytes {0} {1} [built]
+ [2] ./b.js 12 bytes {1} [built]
+chunk    {2} main.js (main) 110 bytes ={3}= >{0}< >{1}< [entry] [rendered]
+    > ./ main
+ [3] ./index.js 110 bytes {2} [built]
+chunk    {3} vendors.js (vendors) 20 bytes ={2}= >{0}< >{1}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
+    > ./ main
+ [4] ./node_modules/y.js 20 bytes {3} [built]

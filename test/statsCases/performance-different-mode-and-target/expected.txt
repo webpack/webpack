@@ -1,0 +1,102 @@
+Hash: df3a0090d24670ebd17d7094466a296a7ae4ae823f59070ac8deb95011d223ef01d5f7db6f7b0912f47482563c8b6b9dc4955fdf2e3a0c7c308a998f9bab5b59aa119495c443
+Child
+    Hash: df3a0090d24670ebd17d
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+                 Asset     Size  Chunks                    Chunk Names
+    warning.pro-web.js  296 KiB       0  [emitted]  [big]  main
+    Entrypoint main [big] = warning.pro-web.js
+    [0] ./index.js 293 KiB {0} [built]
+    
+    WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+    This can impact web performance.
+    Assets: 
+      warning.pro-web.js (296 KiB)
+    
+    WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+    Entrypoints:
+      main (296 KiB)
+          warning.pro-web.js
+    
+    
+    WARNING in webpack performance recommendations: 
+    You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+    For more info visit https://webpack.js.org/guides/code-splitting/
+Child
+    Hash: 7094466a296a7ae4ae82
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+                       Asset     Size  Chunks                    Chunk Names
+    warning.pro-webworker.js  296 KiB       0  [emitted]  [big]  main
+    Entrypoint main [big] = warning.pro-webworker.js
+    [0] ./index.js 293 KiB {0} [built]
+    
+    WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+    This can impact web performance.
+    Assets: 
+      warning.pro-webworker.js (296 KiB)
+    
+    WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+    Entrypoints:
+      main (296 KiB)
+          warning.pro-webworker.js
+    
+    
+    WARNING in webpack performance recommendations: 
+    You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+    For more info visit https://webpack.js.org/guides/code-splitting/
+Child
+    Hash: 3f59070ac8deb95011d2
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+                     Asset     Size  Chunks             Chunk Names
+    no-warning.pro-node.js  296 KiB       0  [emitted]  main
+    Entrypoint main = no-warning.pro-node.js
+    [0] ./index.js 293 KiB {0} [built]
+Child
+    Hash: 23ef01d5f7db6f7b0912
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+                    Asset      Size  Chunks             Chunk Names
+    no-warning.dev-web.js  1.72 MiB    main  [emitted]  main
+    Entrypoint main = no-warning.dev-web.js
+    [./index.js] 293 KiB {main} [built]
+Child
+    Hash: f47482563c8b6b9dc495
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+                     Asset      Size  Chunks             Chunk Names
+    no-warning.dev-node.js  1.72 MiB    main  [emitted]  main
+    Entrypoint main = no-warning.dev-node.js
+    [./index.js] 293 KiB {main} [built]
+Child
+    Hash: 5fdf2e3a0c7c308a998f
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+                                   Asset      Size  Chunks                    Chunk Names
+    no-warning.dev-web-with-limit-set.js  1.72 MiB    main  [emitted]  [big]  main
+    Entrypoint main [big] = no-warning.dev-web-with-limit-set.js
+    [./index.js] 293 KiB {main} [built]
+Child
+    Hash: 9bab5b59aa119495c443
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+                                 Asset     Size  Chunks                    Chunk Names
+    warning.pro-node-with-hints-set.js  296 KiB       0  [emitted]  [big]  main
+    Entrypoint main [big] = warning.pro-node-with-hints-set.js
+    [0] ./index.js 293 KiB {0} [built]
+    
+    WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
+    This can impact web performance.
+    Assets: 
+      warning.pro-node-with-hints-set.js (296 KiB)
+    
+    WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
+    Entrypoints:
+      main (296 KiB)
+          warning.pro-node-with-hints-set.js
+    
+    
+    WARNING in webpack performance recommendations: 
+    You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
+    For more info visit https://webpack.js.org/guides/code-splitting/

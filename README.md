@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/webpack/webpack">
-    <img width="200" heigth="200" src="https://webpack.js.org/assets/icon-square-big.svg">
+    <img width="200" height="200" src="https://webpack.js.org/assets/icon-square-big.svg">
   </a>
   <br>
   <br>
@@ -15,7 +15,7 @@
 [![licenses][licenses]][licenses-url]
 
   <br>
-	<a href="https://npmjs.com/package/webpack">
+	<a href="https://npmcharts.com/compare/webpack?minimal=true">
 		<img src="https://img.shields.io/npm/dm/webpack.svg">
 	</a>
 	<a href="https://opencollective.com/webpack#backer">
@@ -33,7 +33,7 @@
   <h1>webpack</h1>
   <p>
     webpack is a module bundler. Its main purpose is to bundle JavaScript files for usage in a browser, yet it is also capable of transforming, bundling, or packaging just about any resource or asset.
-  <p>
+  </p>
 </div>
 
 <h2 align="center">Install</h2>
@@ -52,7 +52,7 @@ yarn add webpack --dev
 
 <h2 align="center">Introduction</h2>
 
-> This README reflects Webpack v2.x and v3.x. The Webpack v1.x documentation has been deprecated and deleted.
+> This README reflects webpack v2.x and v3.x. The webpack v1.x documentation has been deprecated and deleted.
 
 webpack is a bundler for modules. The main purpose is to bundle JavaScript
 files for usage in a browser, yet it is also capable of transforming, bundling,
@@ -60,7 +60,7 @@ or packaging just about any resource or asset.
 
 **TL;DR**
 
-* Bundles [ES Modules](http://www.2ality.com/2014/09/es6-modules-final.html), [CommonJS](http://wiki.commonjs.org/) and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
+* Bundles [ES Modules](http://www.2ality.com/2014/09/es6-modules-final.html), [CommonJS](http://wiki.commonjs.org/), and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
 * Can create a single bundle or multiple chunks that are asynchronously loaded at runtime (to reduce initial loading time).
 * Dependencies are resolved during compilation, reducing the runtime size.
 * Loaders can preprocess files while compiling, e.g. TypeScript to JavaScript, Handlebars strings to compiled functions, images to Base64, etc.
@@ -69,6 +69,11 @@ or packaging just about any resource or asset.
 ### Get Started
 
 Check out webpack's quick [**Get Started**](https://webpack.js.org/get-started/) guide and the [other guides](https://webpack.js.org/guides/).
+
+### Browser Compatibility
+
+webpack supports all browsers that are [ES5-compliant](http://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
+webpack also needs `Promise` for `import()` and `require.ensure()`. If you want to support older browsers, you will need to [load a polyfill](https://webpack.js.org/guides/shimming/) before using these expressions.
 
 <h2 align="center">Concepts</h2>
 
@@ -81,14 +86,12 @@ within webpack itself use this plugin interface. This makes webpack very
 
 |Name|Status|Description|
 |:--:|:----:|:----------|
-|[common-chunks-webpack-plugin][common]|![common-npm]|Generates chunks of common modules shared between entry points and splits them into separate  bundles (e.g vendor.bundle.js && app.bundle.js)|
 |[extract-text-webpack-plugin][extract]|![extract-npm]|Extracts Text (CSS) from your bundles into a separate file (app.bundle.css)|
 |[compression-webpack-plugin][compression]|![compression-npm]|Prepares compressed versions of assets to serve them with Content-Encoding|
 |[i18n-webpack-plugin][i18n]|![i18n-npm]|Adds i18n support to your bundles|
 |[html-webpack-plugin][html-plugin]|![html-plugin-npm]| Simplifies creation of HTML files (`index.html`) to serve your bundles|
 
 
-[common]: https://github.com/webpack/webpack/blob/master/lib/optimize/CommonsChunkPlugin.js
 [common-npm]: https://img.shields.io/npm/v/webpack.svg
 [extract]: https://github.com/webpack/extract-text-webpack-plugin
 [extract-npm]: https://img.shields.io/npm/v/extract-text-webpack-plugin.svg
@@ -184,7 +187,7 @@ or are automatically applied via regex from your webpack configuration.
 
 |Name|Status|Description|
 |:--:|:----:|:----------|
-|<a href="https://github.com/webpack/style-loader">`<style>`|![style-npm]|Add exports of a module as style to DOM|
+|<a href="https://github.com/webpack/style-loader">`<style>`</a>|![style-npm]|Add exports of a module as style to DOM|
 |<a href="https://github.com/webpack/css-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/css-3.svg"></a>|![css-npm]|Loads CSS file with resolved imports and returns CSS code|
 |<a href="https://github.com/webpack/less-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/less-63.svg"></a>|![less-npm]|Loads and compiles a LESS file|
 |<a href="https://github.com/jtangelder/sass-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/sass-1.svg"></a>|![sass-npm]|Loads and compiles a SASS/SCSS file|
@@ -327,24 +330,12 @@ If you have discovered a 🐜 or have a feature suggestion, feel free to create 
         <p>Founder of the core team</p>
       </td>
       <td align="center" valign="top">
-        <img width="150" height="150" src="https://github.com/bebraw.png?s=150">
-        <br>
-        <a href="https://github.com/bebraw">Juho Vepsäläinen</a>
-        <p>Documentation</p>
-        <br>
-        <p>Author</p>
-        <a href="https://leanpub.com/survivejs-webpack">
-          <img height="15" src="https://cloud.githubusercontent.com/assets/1365881/20286923/93e325c0-aac9-11e6-964d-cabe218c584c.png">
-        </a>
-		<br>
-      </td>
-      <td align="center" valign="top">
         <img width="150" height="150" src="https://github.com/spacek33z.png?s=150">
         <br>
         <a href="https://github.com/spacek33z">Kees Kluskens</a>
         <p>Development</p>
         <br>
-        <p>Sponsor<p>
+        <p>Sponsor</p>
         <a href="https://codeyellow.nl/">
           <img height="15px" src="https://cloud.githubusercontent.com/assets/1365881/20286583/ad62eb04-aac7-11e6-9c14-a0fef35b9b56.png">
         </a>
@@ -371,7 +362,7 @@ This is how we use the donations:
 <h2 align="center">Premium Partners</h2>
 
 <div align="center">
-	
+
 <a href="https://www.ag-grid.com/?utm_source=webpack&utm_medium=banner&utm_campaign=sponsorship" target="_blank"><img align="center" src="https://raw.githubusercontent.com/webpack/media/2b399d58/horiz-banner-ad-ag-grid.png">
 </a>
 
@@ -382,11 +373,11 @@ This is how we use the donations:
 Before we started using OpenCollective, donations were made anonymously. Now that we have made the switch, we would like to acknowledge these sponsors (and the ones who continue to donate using OpenCollective). If we've missed someone, please send us a PR, and we'll add you to this list.
 
 <div align="center">
-	
+
 [Google Angular Team](https://angular.io/), [Architects.io](http://architects.io/),
-<a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img 
-src="https://static.moonmail.io/moonmail-logo.svg" height="30" alt="MoonMail"></a> 
-<a href="https://monei.net" target="_blank" title="Best payment gateway rates"><img 
+<a href="https://moonmail.io" target="_blank" title="Email Marketing Software"><img
+src="https://static.moonmail.io/moonmail-logo.svg" height="30" alt="MoonMail"></a>
+<a href="https://monei.net" target="_blank" title="Best payment gateway rates"><img
 src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 </div>

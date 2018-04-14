@@ -4,5 +4,5 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset      Size  Chunks             Chunk Names
 main.js  2.74 KiB       0  [emitted]  main
 Entrypoint main = main.js
-   [0] ./index.js 17 bytes {0} [built]
-   [1] external "test" 42 bytes {0} [built]
+[0] ./index.js 17 bytes {0} [built]
+[1] external "test" 42 bytes {0} [built]

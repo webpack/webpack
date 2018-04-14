@@ -59,7 +59,7 @@ describe("DependenciesBlockVariable", () => {
 
 		before(() => (applyMock = sandbox.spy()));
 
-		it("aplies information inside dependency templates", () => {
+		it("applies information inside dependency templates", () => {
 			dependencyTemplates = {
 				get: function() {
 					return {
@@ -75,7 +75,7 @@ describe("DependenciesBlockVariable", () => {
 			should(applyMock.calledOnce).be.true();
 		});
 
-		it("aplies information inside dependency templates", () => {
+		it("applies information inside dependency templates", () => {
 			dependencyTemplates = {
 				get: function() {
 					return false;

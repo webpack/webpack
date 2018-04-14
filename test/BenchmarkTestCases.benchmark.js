@@ -273,9 +273,9 @@ describe("BenchmarkTestCases", function() {
 					const test = new Test(title, fn);
 					suite.addTest(test);
 				}
-				it(`should benchmark ${baseline.name} (${baseline.rev})`, function(
-					done
-				) {
+				it(`should benchmark ${baseline.name} (${
+					baseline.rev
+				})`, function(done) {
 					this.timeout(180000);
 					const outputDirectory = path.join(
 						__dirname,

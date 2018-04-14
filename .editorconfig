@@ -8,19 +8,11 @@ trim_trailing_whitespace = true
 insert_final_newline = true
 max_line_length = 233
 
-[*.json]
-indent_style = space
-indent_size = 2
-
 [.prettierrc]
 indent_style = space
 indent_size = 2
 
-[*.yml]
-indent_style = space
-indent_size = 2
-
-[*.yaml]
+[*.{yml,yaml,json}]
 indent_style = space
 indent_size = 2
 

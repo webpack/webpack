@@ -16,7 +16,7 @@ The example entry references two chunks:
 
 These chunks share modules `a` and `b`. The optimization extract these into chunk Z:
 
-Note: Actually the optimization compare size of chunk Z to some minimum value, but this is disabled from this example. In pratice there is no configuration needed for this.
+Note: Actually the optimization compare size of chunk Z to some minimum value, but this is disabled from this example. In practice there is no configuration needed for this.
 
 * entry chunk
   * async require -> chunk X & Z

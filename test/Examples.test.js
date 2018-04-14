@@ -19,7 +19,7 @@ describe("Examples", () => {
 		it("should compile " + path.relative(basePath, examplePath), function(
 			done
 		) {
-			this.timeout(20000);
+			this.timeout(30000);
 			let options = {};
 			let webpackConfigPath = path.join(examplePath, "webpack.config.js");
 			webpackConfigPath =

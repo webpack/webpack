@@ -106,7 +106,7 @@ describe("ConfigTestCases", () => {
 								)
 							)
 								return;
-							// Wait for uncatched errors to occur
+							// Wait for uncaught errors to occur
 							return setTimeout(done, 200);
 						}
 						const statOptions = Stats.presetToOptions("verbose");
@@ -226,6 +226,7 @@ describe("ConfigTestCases", () => {
 							);
 						if (exportedTests < filesCount)
 							return done(new Error("No tests exported by test case"));
+						if (testConfig.afterExecute) testConfig.afterExecute();
 						process.nextTick(done);
 					});
 				});

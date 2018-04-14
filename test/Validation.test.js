@@ -176,7 +176,7 @@ describe("Validation", () => {
 							oneOf: [
 								{
 									test: "/a",
-									paser: {
+									passer: {
 										amd: false
 									}
 								}
@@ -186,7 +186,7 @@ describe("Validation", () => {
 				}
 			},
 			message: [
-				" - configuration.module.rules[0].oneOf[0] has an unknown property 'paser'. These properties are valid:",
+				" - configuration.module.rules[0].oneOf[0] has an unknown property 'passer'. These properties are valid:",
 				"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, resolve?, sideEffects?, query?, type?, resource?, resourceQuery?, compiler?, rules?, test?, use? }",
 				"   -> A rule"
 			]
@@ -203,14 +203,14 @@ describe("Validation", () => {
 					"loader?, module?, name?, node?, output?, optimization?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, " +
 					"recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, stats?, target?, watch?, watchOptions? }",
 				"   For typos: please correct them.",
-				"   For loader options: webpack 2 no longer allows custom properties in configuration.",
+				"   For loader options: webpack >= v2.0.0 no longer allows custom properties in configuration.",
 				"     Loaders should be updated to allow passing options via loader options in module.rules.",
 				"     Until loaders are updated one can use the LoaderOptionsPlugin to pass these options to the loader:",
 				"     plugins: [",
 				"       new webpack.LoaderOptionsPlugin({",
 				"         // test: /\\.xxx$/, // may apply this only for some modules",
 				"         options: {",
-				"           postcss: ...",
+				"           postcss: …",
 				"         }",
 				"       })",
 				"     ]"
@@ -232,6 +232,20 @@ describe("Validation", () => {
 			]
 		},
 		{
+			name: "! in path",
+			config: {
+				entry: "foo.js",
+				output: {
+					path: "/somepath/!test",
+					filename: "bar"
+				}
+			},
+			message: [
+				' - configuration.output.path: The provided value "/somepath/!test" contans exclamation mark (!) which is not allowed because it\'s reserved for loader syntax.',
+				"   -> The output directory as **absolute path** (required)."
+			]
+		},
+		{
 			name: "relative path",
 			config: {
 				entry: "foo.js",
@@ -240,7 +254,7 @@ describe("Validation", () => {
 				}
 			},
 			message: [
-				' - configuration.output.filename: A relative path is expected. However the provided value "/bar" is an absolute path!',
+				' - configuration.output.filename: A relative path is expected. However, the provided value "/bar" is an absolute path!',
 				"   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
 				"   Please use output.path to specify absolute path and output.filename for the file name."
 			]
@@ -283,7 +297,7 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.plugins[0] should be one of these:",
-				"   object { apply, ... } | function",
+				"   object { apply, … } | function",
 				"   -> Plugin of type object or instanceof Function",
 				"   Details:",
 				"    * configuration.plugins[0] should be an object.",
@@ -300,7 +314,7 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.plugins[0] should be one of these:",
-				"   object { apply, ... } | function",
+				"   object { apply, … } | function",
 				"   -> Plugin of type object or instanceof Function",
 				"   Details:",
 				"    * configuration.plugins[0] should be an object.",
@@ -317,7 +331,7 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.plugins[0] should be one of these:",
-				"   object { apply, ... } | function",
+				"   object { apply, … } | function",
 				"   -> Plugin of type object or instanceof Function",
 				"   Details:",
 				"    * configuration.plugins[0] should be an object.",
@@ -334,7 +348,7 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.plugins[0] should be one of these:",
-				"   object { apply, ... } | function",
+				"   object { apply, … } | function",
 				"   -> Plugin of type object or instanceof Function",
 				"   Details:",
 				"    * configuration.plugins[0] should be an object.",
@@ -351,7 +365,7 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.plugins[0] should be one of these:",
-				"   object { apply, ... } | function",
+				"   object { apply, … } | function",
 				"   -> Plugin of type object or instanceof Function",
 				"   Details:",
 				"    * configuration.plugins[0] misses the property 'apply'.",

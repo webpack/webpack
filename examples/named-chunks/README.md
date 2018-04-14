@@ -33,7 +33,7 @@ require.ensure(["b"], function(require) {
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
 /******/ 		var chunkIds = data[0];
-/******/ 		var moreModules = data[1]
+/******/ 		var moreModules = data[1];
 /******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
@@ -118,7 +118,7 @@ require.ensure(["b"], function(require) {
 /******/ 				var script = document.createElement('script');
 /******/
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120000;
+/******/ 				script.timeout = 120;
 /******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
@@ -326,7 +326,7 @@ __webpack_require__.e(/*! require.ensure */ 0).then((function(require) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  463 bytes       0  [emitted]  
 1.output.js  677 bytes       1  [emitted]  my own chunk
@@ -351,11 +351,11 @@ chunk    {2} output.js (main) 452 bytes >{0}< >{1}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
       Asset       Size  Chunks             Chunk Names
 0.output.js   92 bytes       0  [emitted]  
 1.output.js  112 bytes    1, 0  [emitted]  my own chunk
-  output.js   1.82 KiB       2  [emitted]  main
+  output.js   1.81 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes <{2}> [rendered]
     > [3] ./example.js 17:0-20:2

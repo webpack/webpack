@@ -2,13 +2,13 @@
 
 const should = require("should");
 const compareLocations = require("../lib/compareLocations");
-const createPosition = function(overides) {
+const createPosition = function(overrides) {
 	return Object.assign(
 		{
 			line: 10,
 			column: 5
 		},
-		overides
+		overrides
 	);
 };
 
