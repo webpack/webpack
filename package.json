@@ -19,7 +19,7 @@
     "mkdirp": "~0.5.0",
     "neo-async": "^2.5.0",
     "node-libs-browser": "^2.0.0",
-    "schema-utils": "^0.4.2",
+    "schema-utils": "^0.4.4",
     "tapable": "^1.0.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "watchpack": "^1.5.0",
@@ -68,7 +68,7 @@
     "val-loader": "^1.0.2",
     "vm-browserify": "~0.0.0",
     "webpack-dev-middleware": "^1.9.0",
-    "worker-loader": "^1.1.0",
+    "worker-loader": "^1.1.1",
     "xxhashjs": "^0.2.1"
   },
   "engines": {
