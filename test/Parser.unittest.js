@@ -344,6 +344,86 @@ describe("Parser", () => {
 		});
 	});
 
+	it("should get correct options from comments", () => {
+		const source = `/* foo:"foo", bar: true, */
+		/* baz:1, webpackChunkName: "chunkName" */`;
+
+		const testParser = new Parser({});
+		let options;
+		testParser.hooks.program.tap("ParserTest", (ast, comments) => {
+			options = testParser.getCommentOptions(ast.range);
+			return true;
+		});
+		testParser.parse(source);
+
+		should.strictEqual(typeof options, "object");
+		should.strictEqual(options.foo, "foo");
+		should.strictEqual(options.bar, true);
+		should.strictEqual(options.baz, 1);
+		should.strictEqual(options.webpackChunkName, "chunkName");
+	});
+
+	it("should support context modified while getting options from comments", () => {
+		const source = `
+		/* foo: aBoolean ? "foo" : "bar", bar:typeof aObject !== "object" ? false : true, */
+		/*
+			baz: anotherObject.propA.c,
+		    callFuncRst: myFunc(),
+			webpackChunkName: process.env.MY_VAR === "myVar" ? "chunkName" : null
+		*/
+		`;
+
+		const testParser = new Parser({});
+		testParser.hooks.commentOptions.tap("ParserTest", (comments, context) => {
+			Object.assign(context, {
+				aBoolean: true,
+				aObject: {},
+				anotherObject: {
+					propA: {
+						c: 1
+					}
+				},
+				myFunc: () => "myFuncRst",
+				process: {
+					env: {
+						MY_VAR: "myVar"
+					}
+				}
+			});
+		});
+		let options;
+		testParser.hooks.program.tap("ParserTest", (ast, comments) => {
+			options = testParser.getCommentOptions(ast.range);
+			return true;
+		});
+		testParser.parse(source);
+
+		should.strictEqual(typeof options, "object");
+		should.strictEqual(options.foo, "foo");
+		should.strictEqual(options.bar, true);
+		should.strictEqual(options.baz, 1);
+		should.strictEqual(options.callFuncRst, "myFuncRst");
+		should.strictEqual(options.webpackChunkName, "chunkName");
+	});
+
+	it("should emit warning while getting options from comments failed", () => {
+		const source = `/* ); */`;
+		const testParser = new Parser({});
+		const warnings = [];
+		testParser.hooks.program.tap("ParserTest", (ast, comments) => {
+			testParser.getCommentOptions(ast.range);
+			return true;
+		});
+		testParser.parse(source, {
+			current: {
+				warnings: warnings
+			}
+		});
+		should.strictEqual(warnings.length, 1);
+		should.strictEqual(warnings[0].constructor.name, "ModuleWarning");
+		warnings[0].should.match({ message: /Unexpected token/ });
+	});
+
 	describe("expression evaluation", () => {
 		function evaluateInParser(source) {
 			const parser = new Parser();
