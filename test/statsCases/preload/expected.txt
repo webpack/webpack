@@ -1,0 +1,9 @@
+        Asset       Size  Chunks             Chunk Names
+ preloaded.js   1.03 KiB       0  [emitted]  preloaded
+    normal.js  130 bytes       1  [emitted]  normal
+preloaded2.js  127 bytes       2  [emitted]  preloaded2
+preloaded3.js  130 bytes       3  [emitted]  preloaded3
+      main.js   9.89 KiB       4  [emitted]  main
+     inner.js  136 bytes       5  [emitted]  inner
+    inner2.js  201 bytes       6  [emitted]  inner2
+Entrypoint main = main.js (preload: preloaded2.js preloaded.js preloaded3.js)

@@ -1,14 +1,14 @@
 Entrypoint main = main.js
-chunk    {0} 0.js 21 bytes <{3}> ={1}= ={2}= [rendered] reused as split chunk (cache group: default)
-    > [3] ./index.js 17:1-21:3
+chunk    {0} 0.js 21 bytes <{3}> [rendered] reused as split chunk (cache group: default)
     > [3] ./index.js 2:1-5:3
+ [0] ./a.js 21 bytes {0} {1} {2} [built]
+chunk    {1} 1.js 42 bytes <{3}> [rendered]
     > ./a ./b [3] ./index.js 9:1-13:3
- [0] ./a.js 21 bytes {0} [built]
-chunk    {1} 1.js 21 bytes <{3}> ={0}= [rendered]
-    > ./a ./b [3] ./index.js 9:1-13:3
+ [0] ./a.js 21 bytes {0} {1} {2} [built]
  [1] ./b.js 21 bytes {1} [built]
-chunk    {2} 2.js 21 bytes <{3}> ={0}= [rendered]
+chunk    {2} 2.js 42 bytes <{3}> [rendered]
     > [3] ./index.js 17:1-21:3
+ [0] ./a.js 21 bytes {0} {1} {2} [built]
  [2] ./c.js 21 bytes {2} [built]
 chunk    {3} main.js (main) 550 bytes >{0}< >{1}< >{2}< [entry] [rendered]
     > ./ main

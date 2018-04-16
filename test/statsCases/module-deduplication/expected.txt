@@ -5,9 +5,9 @@ Asset       Size  Chunks             Chunk Names
  3.js  661 bytes       3  [emitted]  
  4.js  661 bytes       4  [emitted]  
  5.js  661 bytes       5  [emitted]  
-e1.js   8.14 KiB       6  [emitted]  e1
-e2.js   8.16 KiB       7  [emitted]  e2
-e3.js   8.18 KiB       8  [emitted]  e3
+e1.js    8.4 KiB       6  [emitted]  e1
+e2.js   8.43 KiB       7  [emitted]  e2
+e3.js   8.45 KiB       8  [emitted]  e3
 Entrypoint e1 = e1.js
 Entrypoint e2 = e2.js
 Entrypoint e3 = e3.js
