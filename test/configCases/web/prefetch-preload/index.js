@@ -21,7 +21,7 @@ it("should prefetch and preload child chunks on chunk load", () => {
 	__webpack_public_path__ = "/public/path/";
 
 	const promise = import(/* webpackChunkName: "chunk1" */ "./chunk1");
-	document.head._children.length.should.be.eql(1);
+	document.head._children.length.should.be.eql(2);
 	const script = document.head._children[0];
 	script._type.should.be.eql("script");
 	should(script.src).be.eql("/public/path/chunk1.js")
@@ -29,22 +29,22 @@ it("should prefetch and preload child chunks on chunk load", () => {
 	should(script.crossOrigin).be.eql("anonymous");
 	should(script.onload).be.type("function");
 
+	let link = document.head._children[1];
+	link._type.should.be.eql("link");
+	should(link.rel).be.eql("preload");
+	should(link.as).be.eql("script");
+	should(link.href).be.eql("/public/path/chunk1-b.js");
+	should(link.charset).be.eql("utf-8");
+	should(link.getAttribute("nonce")).be.eql("nonce");
+	should(link.crossOrigin).be.eql("anonymous");
+
 	__non_webpack_require__("./chunk1.js");
 	script.onload();
 
 	return promise.then((ex) => {
 		document.head._children.length.should.be.eql(4);
 
-		let link = document.head._children[1];
-		link._type.should.be.eql("link");
-		should(link.rel).be.eql("preload");
-		should(link.as).be.eql("script");
-		should(link.href).be.eql("/public/path/chunk1-b.js");
-		should(link.charset).be.eql("utf-8");
-		should(link.getAttribute("nonce")).be.eql("nonce");
-		should(link.crossOrigin).be.eql("anonymous");
-
-		link = document.head._children[2];
+		let link = document.head._children[2];
 		link._type.should.be.eql("link");
 		should(link.rel).be.eql("prefetch");
 		should(link.href).be.eql("/public/path/chunk1-c.js");
