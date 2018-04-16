@@ -149,8 +149,18 @@ describe("ConfigTestCases", () => {
 							return test;
 						}
 
+						function _beforeEach(title, fn) {
+							return suite.beforeEach(title, fn);
+						}
+
+						function _afterEach(title, fn) {
+							return suite.afterEach(title, fn);
+						}
+
 						const globalContext = {
-							console: console
+							console: console,
+							setTimeout: setTimeout,
+							clearTimeout: clearTimeout
 						};
 
 						function _require(currentDirectory, module) {
@@ -175,7 +185,7 @@ describe("ConfigTestCases", () => {
 									options.target === "webworker"
 								) {
 									fn = vm.runInNewContext(
-										"(function(require, module, exports, __dirname, __filename, it, window) {" +
+										"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, window) {" +
 											content +
 											"\n})",
 										globalContext,
@@ -183,7 +193,7 @@ describe("ConfigTestCases", () => {
 									);
 								} else {
 									fn = vm.runInThisContext(
-										"(function(require, module, exports, __dirname, __filename, it) {" +
+										"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach) {" +
 											content +
 											"\n})",
 										p
@@ -200,6 +210,8 @@ describe("ConfigTestCases", () => {
 									path.dirname(p),
 									p,
 									_it,
+									_beforeEach,
+									_afterEach,
 									globalContext
 								);
 								return m.exports;
