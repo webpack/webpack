@@ -4,6 +4,7 @@ module.exports = {
 	stats: {
 		all: false,
 		assets: true,
-		entrypoints: true
+		entrypoints: true,
+		chunks: true
 	}
 };

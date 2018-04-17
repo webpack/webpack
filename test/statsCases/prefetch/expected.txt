@@ -7,3 +7,10 @@ prefetched3.js  130 bytes       3  [emitted]  prefetched3
       inner.js  136 bytes       5  [emitted]  inner
      inner2.js  201 bytes       6  [emitted]  inner2
 Entrypoint main = main.js (prefetch: prefetched2.js prefetched.js prefetched3.js)
+chunk    {0} prefetched.js (prefetched) 228 bytes <{4}> >{5}< >{6}< (prefetch: {6} {5}) [rendered]
+chunk    {1} normal.js (normal) 0 bytes <{4}> [rendered]
+chunk    {2} prefetched2.js (prefetched2) 0 bytes <{4}> [rendered]
+chunk    {3} prefetched3.js (prefetched3) 0 bytes <{4}> [rendered]
+chunk    {4} main.js (main) 436 bytes >{0}< >{1}< >{2}< >{3}< (prefetch: {2} {0} {3}) [entry] [rendered]
+chunk    {5} inner.js (inner) 0 bytes <{0}> [rendered]
+chunk    {6} inner2.js (inner2) 0 bytes <{0}> [rendered]
