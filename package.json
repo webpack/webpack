@@ -96,13 +96,13 @@
     "test:integration": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\"",
     "test:unit": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\"",
     "travis:integration": "yarn cover:init && yarn cover:integration --ci --runInBand && yarn cover:report-min",
-    "travis:unit": "yarn cover:init && yarn cover:unit --ci --reporters jest-silent-reporter",
+    "travis:unit": "yarn cover:init && yarn cover:unit --ci",
     "travis:lint": "yarn lint",
     "travis:benchmark": "yarn benchmark --ci",
-    "appveyor:integration": "yarn cover:init && yarn cover:integration --ci --reporters jest-silent-reporter --runInBand && yarn cover:report-min",
-    "appveyor:unit": "yarn cover:init && yarn cover:unit --ci --reporters jest-silent-reporter && yarn cover:report-min",
+    "appveyor:integration": "yarn cover:init && yarn cover:integration --ci --runInBand && yarn cover:report-min",
+    "appveyor:unit": "yarn cover:init && yarn cover:unit --ci && yarn cover:report-min",
     "appveyor:benchmark": "yarn benchmark --ci",
-    "circleci:test": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --ci --reporters jest-silent-reporter",
+    "circleci:test": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --ci",
     "circleci:lint": "yarn lint",
     "build:examples": "cd examples && node buildAll.js",
     "pretest": "yarn lint",
@@ -112,8 +112,8 @@
     "type-lint": "tsc --pretty",
     "fix": "yarn code-lint --fix",
     "pretty": "prettier \"setup/**/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" \"declarations.d.ts\" --write",
-    "schema-lint": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --reporters jest-silent-reporter --testMatch \"<rootDir>/test/*.lint.js\"",
-    "benchmark": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --reporters jest-silent-reporter --testMatch \"<rootDir>/test/*.benchmark.js\" --runInBand",
+    "schema-lint": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.lint.js\"",
+    "benchmark": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.benchmark.js\" --runInBand",
     "cover": "yarn cover:init && yarn cover:all && yarn cover:report",
     "cover:init": "rimraf coverage",
     "cover:all": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --coverage",
@@ -143,7 +143,8 @@
     "coverageDirectory": "<rootDir>/coverage",
     "coveragePathIgnorePatterns": [
       "\\.runtime\\.js$",
-      "<rootDir>/test/"
+      "<rootDir>/test/",
+      "<rootDir>/schemas/"
     ],
     "testEnvironment": "node",
     "coverageReporters": [
