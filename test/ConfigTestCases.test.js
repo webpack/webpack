@@ -9,7 +9,7 @@ const checkArrayExpectation = require("./checkArrayExpectation");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
-const prepareOptions = require("../lib/prepareOptions");
+const prepareOptions = require("./helpers/prepareOptions");
 
 describe("ConfigTestCases", () => {
 	const casesPath = path.join(__dirname, "configCases");
@@ -48,6 +48,8 @@ describe("ConfigTestCases", () => {
 						testName
 					);
 					const exportedTests = [];
+					const exportedBeforeEach = [];
+					const exportedAfterEach = [];
 					it(
 						testName + " should compile",
 						() =>
@@ -157,9 +159,19 @@ describe("ConfigTestCases", () => {
 										});
 									}
 
+									function _beforeEach(fn) {
+										return exportedBeforeEach.push(fn);
+									}
+
+									function _afterEach(fn) {
+										return exportedAfterEach.push(fn);
+									}
+
 									const globalContext = {
 										console: console,
-										expect: expect
+										expect: expect,
+										setTimeout: setTimeout,
+										clearTimeout: clearTimeout
 									};
 
 									function _require(currentDirectory, module) {
@@ -184,7 +196,7 @@ describe("ConfigTestCases", () => {
 												options.target === "webworker"
 											) {
 												fn = vm.runInNewContext(
-													"(function(require, module, exports, __dirname, __filename, it, expect, window) {" +
+													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, window) {" +
 														content +
 														"\n})",
 													globalContext,
@@ -192,8 +204,8 @@ describe("ConfigTestCases", () => {
 												);
 											} else {
 												fn = vm.runInThisContext(
-													"(function(require, module, exports, __dirname, __filename, it, expect) {" +
-														"global.expect = expect;" +
+													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect) {" +
+														"global.expect = expect; " +
 														content +
 														"\n})",
 													p
@@ -210,6 +222,8 @@ describe("ConfigTestCases", () => {
 												path.dirname(p),
 												p,
 												_it,
+												_beforeEach,
+												_afterEach,
 												expect,
 												globalContext
 											);
@@ -245,6 +259,8 @@ describe("ConfigTestCases", () => {
 										return done(new Error("No tests exported by test case"));
 									if (testConfig.afterExecute) testConfig.afterExecute();
 									const asyncSuite = describe("exported tests", () => {
+										exportedBeforeEach.forEach(beforeEach);
+										exportedAfterEach.forEach(afterEach);
 										exportedTests.forEach(
 											({ title, fn, timeout }) =>
 												fn

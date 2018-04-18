@@ -40,5 +40,10 @@ describe("SizeFormatHelpers", () => {
 				"1.2 GiB"
 			);
 		});
+
+		it("should handle undefined/NaN", () => {
+			expect(SizeFormatHelpers.formatSize(undefined)).toBe("unknown size");
+			expect(SizeFormatHelpers.formatSize(NaN)).toBe("unknown size");
+		});
 	});
 });
