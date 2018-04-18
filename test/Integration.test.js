@@ -4,7 +4,7 @@ const path = require("path");
 const webpack = require("../lib/webpack");
 
 describe("Integration", () => {
-	jest.setTimeout(5000);
+	jest.setTimeout(10000);
 	it("should compile library1", done => {
 		webpack(
 			{

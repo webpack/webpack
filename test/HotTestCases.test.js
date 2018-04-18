@@ -107,7 +107,7 @@ describe("HotTestCases", () => {
 								}
 
 								function _it(title, fn) {
-									exportedTests.push({ title, fn, timeout: 5000 });
+									exportedTests.push({ title, fn, timeout: 10000 });
 								}
 
 								function _next(callback) {
