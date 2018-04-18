@@ -2,10 +2,12 @@ const FakeDocument = require("../../../helpers/FakeDocument");
 
 beforeEach(() => {
 	global.document = new FakeDocument();
+	global.window = {};
 });
 
 afterEach(() => {
 	delete global.document;
+	delete global.window;
 });
 
 it("should be able to load the split chunk on demand", () => {

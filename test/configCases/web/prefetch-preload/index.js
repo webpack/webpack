@@ -7,10 +7,12 @@ beforeEach(() => {
 	oldNonce = __webpack_nonce__;
 	oldPublicPath = __webpack_public_path__;
 	global.document = new FakeDocument();
+	global.window = {};
 });
 
 afterEach(() => {
 	delete global.document;
+	delete global.window;
 	__webpack_nonce__ = oldNonce;
 	__webpack_public_path__ = oldPublicPath;
 })
@@ -26,7 +28,7 @@ it("should prefetch and preload child chunks on chunk load", () => {
 	expect(script.src).toBe("/public/path/chunk1.js")
 	expect(script.getAttribute("nonce")).toBe("nonce")
 	expect(script.crossOrigin).toBe("anonymous");
-	expect(script.onload).toBe("function");
+	expect(script.onload).toBeTypeOf("function");
 
 	let link = document.head._children[1];
 	expect(link._type).toBe("link");

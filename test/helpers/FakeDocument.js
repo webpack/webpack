@@ -33,4 +33,33 @@ class FakeElement {
 	getAttribute(name) {
 		return this._attributes[name];
 	}
+
+	get onload() {
+		return this._onload;
+	}
+
+	set onload(script) {
+		if (typeof script === "function") {
+			script();
+		}
+		this._onload = script;
+	}
+
+	get src() {
+		return this._src;
+	}
+
+	set src(src) {
+		// eslint-disable-next-line no-undef
+		const publicPath = __webpack_public_path__;
+		eval(`
+			const path = require('path');
+			const fs = require('fs');
+			const content = fs.readFileSync(
+				path.join(__dirname, '${src}'.replace('${publicPath}', '')), "utf-8"
+			)
+			eval(content);
+		`);
+		this._src = src;
+	}
 }
