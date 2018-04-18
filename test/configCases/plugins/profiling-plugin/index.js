@@ -24,5 +24,6 @@ it("should have proper setup record inside of the json stream", (done) => {
 		// convert json stream to valid
 		var source = JSON.parse(fs.readFileSync(path.join(__dirname, "events.json"), "utf-8").toString() + "{}]");
 		expect(source[0].id).toEqual(1);
+		done();
 	}, 500)
 });
