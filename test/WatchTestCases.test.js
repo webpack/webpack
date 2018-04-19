@@ -7,6 +7,7 @@ const vm = require("vm");
 const mkdirp = require("mkdirp");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const { remove } = require("./helpers/remove");
+const isCi = require("is-ci");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
@@ -123,6 +124,11 @@ describe("WatchTestCases", () => {
 							currentWatchStepModule.step = run.name;
 							copyDiff(path.join(testDirectory, run.name), tempDirectory);
 
+							const compilationName = `watch/${category.name}/${testName}`;
+							if (isCi) {
+								process.stdout.write(`[COMPILING] ${compilationName}\n`);
+							}
+
 							setTimeout(() => {
 								const compiler = webpack(options);
 								compiler.hooks.invalid.tap(
@@ -159,6 +165,9 @@ describe("WatchTestCases", () => {
 										if (waitMode) return;
 										run.done = true;
 										if (err) return done(err);
+										if (isCi) {
+											process.stdout.write(`[COMPILED] ${compilationName}\n`);
+										}
 										const statOptions = Stats.presetToOptions("verbose");
 										statOptions.colors = false;
 										mkdirp.sync(outputDirectory);

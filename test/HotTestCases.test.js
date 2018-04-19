@@ -5,6 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const isCi = require("is-ci");
 
 const webpack = require("../lib/webpack");
 
@@ -78,8 +79,17 @@ describe("HotTestCases", () => {
 							);
 							if (!options.recordsPath) options.recordsPath = recordsPath;
 							const compiler = webpack(options);
+							const compilationName = `HotTestCases/${
+								category.name
+							}/${testName}`;
+							if (isCi) {
+								process.stdout.write(`[COMPILING] ${compilationName}\n`);
+							}
 							compiler.run((err, stats) => {
 								if (err) return done(err);
+								if (isCi) {
+									process.stdout.write(`[COMPILED] ${compilationName}\n`);
+								}
 								const jsonStats = stats.toJson({
 									errorDetails: true
 								});
