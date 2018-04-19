@@ -231,7 +231,7 @@ const describeCases = config => {
 										_require.webpackTestSuiteRequire = true;
 										_require("./bundle.js");
 										if (exportedTests.length === 0)
-											throw new Error("No tests exported by test case");
+											return done(new Error("No tests exported by test case"));
 
 										const asyncSuite = describe("exported tests", () => {
 											exportedTests.forEach(
