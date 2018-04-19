@@ -48,6 +48,7 @@ describe("ConfigTestCases", () => {
 						category.name,
 						testName
 					);
+					mkdirp.sync(outputDirectory);
 					const exportedTests = [];
 					const exportedBeforeEach = [];
 					const exportedAfterEach = [];
@@ -276,7 +277,6 @@ describe("ConfigTestCases", () => {
 													: fit(title, () => {}).pend("Skipped")
 										);
 									});
-
 									jasmine
 										.getEnv()
 										.execute([asyncSuite.id], asyncSuite)
