@@ -1,6 +1,6 @@
 import "./test.json";
 
-it("should generate a events.json file", (done) => {
+it("should generate a events.json file", () => {
     var fs = require("fs"),
         path = require("path"),
 		os = require("os");
@@ -8,7 +8,7 @@ it("should generate a events.json file", (done) => {
 	expect(fs.existsSync(path.join(__dirname, "events.json"))).toBe(true);
 });
 
-it("should have proper setup record inside of the json stream", (done) => {
+it("should have proper setup record inside of the json stream", () => {
     var fs = require("fs"),
         path = require("path"),
         os = require("os");
