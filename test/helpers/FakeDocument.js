@@ -16,8 +16,9 @@ module.exports = class FakeDocument {
 };
 
 class FakeElement {
-	constructor(type) {
+	constructor(type, autoload = true) {
 		this._type = type;
+		this._autoload = autoload;
 		this._children = [];
 		this._attributes = Object.create(null);
 	}
@@ -39,7 +40,7 @@ class FakeElement {
 	}
 
 	set onload(script) {
-		if (typeof script === "function") {
+		if (this._autoload === true && typeof script === "function") {
 			script();
 		}
 		this._onload = script;

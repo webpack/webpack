@@ -6,7 +6,7 @@ let oldPublicPath;
 beforeEach(() => {
 	oldNonce = __webpack_nonce__;
 	oldPublicPath = __webpack_public_path__;
-	global.document = new FakeDocument();
+	global.document = new FakeDocument(undefined, false);
 	global.window = {};
 });
 
@@ -17,7 +17,7 @@ afterEach(() => {
 	__webpack_public_path__ = oldPublicPath;
 })
 
-it("should prefetch and preload child chunks on chunk load", () => {
+it("should prefetch and preload child chunks on chunk load", (done) => {
 	__webpack_nonce__ = "nonce";
 	__webpack_public_path__ = "/public/path/";
 
@@ -54,5 +54,6 @@ it("should prefetch and preload child chunks on chunk load", () => {
 		expect(link._type).toBe("link");
 		expect(link.rel).toBe("prefetch");
 		expect(link.href).toBe("/public/path/chunk1-a.js");
-	});
+		done();
+	}, done);
 })
