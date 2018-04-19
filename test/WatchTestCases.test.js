@@ -315,6 +315,8 @@ describe("WatchTestCases", () => {
 															: fit(title, () => {}).pend("Skipped")
 												);
 											});
+											// workaround for jest running clearSpies on the wrong suite (invoked by clearResourcesForRunnable)
+											asyncSuite.disabled = true;
 
 											jasmine
 												.getEnv()
