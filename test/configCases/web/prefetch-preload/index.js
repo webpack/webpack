@@ -8,10 +8,12 @@ beforeEach(() => {
 	oldNonce = __webpack_nonce__;
 	oldPublicPath = __webpack_public_path__;
 	global.document = new FakeDocument();
+	global.location = {origin: "https://example.com"};
 });
 
 afterEach(() => {
 	delete global.document;
+	delete global.location;
 	__webpack_nonce__ = oldNonce;
 	__webpack_public_path__ = oldPublicPath;
 })
