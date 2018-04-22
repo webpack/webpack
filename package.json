@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "4.5.0",
+  "version": "4.6.0",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -19,7 +19,7 @@
     "mkdirp": "~0.5.0",
     "neo-async": "^2.5.0",
     "node-libs-browser": "^2.0.0",
-    "schema-utils": "^0.4.2",
+    "schema-utils": "^0.4.4",
     "tapable": "^1.0.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "watchpack": "^1.5.0",
@@ -63,12 +63,12 @@
     "simple-git": "^1.65.0",
     "sinon": "^2.3.2",
     "style-loader": "^0.19.1",
-    "typescript": "^2.9.0-dev.20180412",
+    "typescript": "^2.9.0-dev.20180421",
     "url-loader": "^0.6.2",
     "val-loader": "^1.0.2",
     "vm-browserify": "~0.0.0",
     "webpack-dev-middleware": "^1.9.0",
-    "worker-loader": "^1.1.0",
+    "worker-loader": "^1.1.1",
     "xxhashjs": "^0.2.1"
   },
   "engines": {

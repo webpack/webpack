@@ -3895,14 +3895,7 @@ schema-utils@^0.3.0:
   dependencies:
     ajv "^5.0.0"
 
-schema-utils@^0.4.2:
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-0.4.3.tgz#e2a594d3395834d5e15da22b48be13517859458e"
-  dependencies:
-    ajv "^5.0.0"
-    ajv-keywords "^2.1.0"
-
-schema-utils@^0.4.5:
+schema-utils@^0.4.0, schema-utils@^0.4.4, schema-utils@^0.4.5:
   version "0.4.5"
   resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-0.4.5.tgz#21836f0608aac17b78f9e3e24daff14a5ca13a3e"
   dependencies:
@@ -4498,9 +4491,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^2.9.0-dev.20180412:
-  version "2.9.0-dev.20180412"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.0-dev.20180412.tgz#5380b2afb44b720b0d8164f844b90ebd81948a7e"
+typescript@^2.9.0-dev.20180421:
+  version "2.9.0-dev.20180421"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.0-dev.20180421.tgz#b937b164ce73f833f2ed5c36571e238898b264ce"
 
 ua-parser-js@^0.7.9:
   version "0.7.17"
@@ -4751,12 +4744,12 @@ worker-farm@^1.5.2:
   dependencies:
     errno "~0.1.7"
 
-worker-loader@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/worker-loader/-/worker-loader-1.1.0.tgz#8cf21869a07add84d66f821d948d23c1eb98e809"
+worker-loader@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/worker-loader/-/worker-loader-1.1.1.tgz#920d74ddac6816fc635392653ed8b4af1929fd92"
   dependencies:
     loader-utils "^1.0.0"
-    schema-utils "^0.3.0"
+    schema-utils "^0.4.0"
 
 wrappy@1:
   version "1.0.2"
