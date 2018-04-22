@@ -164,7 +164,7 @@ describe(
 					children: [],
 					chunks: [],
 					entrypoints: {},
-					chunkGroups: {},
+					namedChunkGroups: {},
 					filteredAssets: 0,
 					filteredModules: 0,
 					errors: [],
