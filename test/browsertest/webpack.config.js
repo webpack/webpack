@@ -1,4 +1,5 @@
 module.exports = {
+	mode: "production",
 	resolve: {
 		modules: ["web_modules", "node_modules"],
 		extensions: [".json", ".web.js", ".js"]
@@ -12,5 +13,9 @@ module.exports = {
 			".js"
 		],
 		mainFields: ["webpackLoader", "loader", "main"]
+	},
+	optimization: {
+		noEmitOnErrors: false,
+		minimize: false
 	}
 };

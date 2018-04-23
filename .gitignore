@@ -1,6 +1,7 @@
 /node_modules
 /test/js
 /test/browsertest/js
+/test/browsertest/node_modules/.cache
 /test/fixtures/temp-cache-fixture
 /benchmark/js
 /benchmark/fixtures
