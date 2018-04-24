@@ -1,20 +1,14 @@
 "use strict";
 
-const acorn = require("acorn-dynamic-import").default;
+const parseModule = require("cherow").parseModule;
 
 module.exports = function(source) {
 	const comments = [];
-	const ast = acorn.parse(source, {
+	const ast = parseModule(source, {
 		ranges: true,
-		locations: true,
-		ecmaVersion: 2017,
-		sourceType: "module",
-		plugins: {
-			dynamicImport: true
-		},
-		onComment: comments
+		loc: true,
+		next: true
 	});
-
 	// change something to test if it's really used
 	ast.body[0].expression.right.arguments[0].value = "./ok";
 	ast.body[0].expression.right.arguments[0].raw = "\"./ok\"";
