@@ -579,6 +579,10 @@ chardet@^0.4.0:
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/chardet/-/chardet-0.4.2.tgz#b5473b33dc97c424e5d98dc87d55d4d8a29c8bf2"
 
+cherow@^1.4.10:
+  version "1.4.10"
+  resolved "https://registry.yarnpkg.com/cherow/-/cherow-1.4.10.tgz#f045b1542670f27cdd8d5ae2c16735280dedf1da"
+
 chokidar@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-2.0.2.tgz#4dc65139eeb2714977735b6a35d06e97b494dfd7"
