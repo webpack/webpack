@@ -5,11 +5,10 @@ const stats = {
 	assets: false,
 	chunks: true,
 	chunkOrigins: true,
-	entrypoints: false,
-	chunkGroups: true,
 	modules: false
 };
-module.exports = {
+
+const config = {
 	mode: "production",
 	entry: {
 		main: "./"
@@ -29,6 +28,20 @@ module.exports = {
 				}
 			}
 		}
-	},
-	stats
+	}
 };
+
+module.exports = [
+	Object.assign(
+		{
+			stats: Object.assign({ entrypoints: false, chunkGroups: true }, stats)
+		},
+		config
+	),
+	Object.assign(
+		{
+			stats: Object.assign({ entrypoints: true, chunkGroups: true }, stats)
+		},
+		config
+	)
+];
