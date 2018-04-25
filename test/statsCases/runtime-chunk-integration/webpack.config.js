@@ -22,7 +22,7 @@ module.exports = {
 	},
 	plugins: [
 		new MinChunkSizePlugin({
-			minChunkSize: 30
+			minChunkSize: 1000
 		})
 	]
 };

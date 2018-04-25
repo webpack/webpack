@@ -1,7 +1,9 @@
       Asset       Size  Chunks             Chunk Names
-       0.js  287 bytes       0  [emitted]  
-   main1.js  386 bytes       1  [emitted]  main1
+       0.js  719 bytes       0  [emitted]  
+   main1.js  542 bytes       1  [emitted]  main1
 manifest.js   7.73 KiB       2  [emitted]  manifest
 Entrypoint main1 = manifest.js main1.js
 [0] ./b.js 20 bytes {0} [built]
-[1] ./main1.js 36 bytes {1} [built]
+[1] ./c.js 20 bytes {0} [built]
+[2] ./d.js 20 bytes {0} [built]
+[3] ./main1.js 66 bytes {1} [built]
