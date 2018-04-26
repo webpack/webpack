@@ -6,7 +6,6 @@ const fs = require("fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
 const checkArrayExpectation = require("./checkArrayExpectation");
-const isCi = require("is-ci");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
@@ -104,8 +103,8 @@ describe("ConfigTestCases", () => {
 								}
 
 								const compilationName = `config/${category.name}/${testName}`;
-								if (isCi) {
-									process.stdout.write(`[COMPILING] ${compilationName}\n`);
+								if (process.env.CI) {
+									process.stderr.write(`[COMPILING] ${compilationName}\n`);
 								}
 								webpack(options, (err, stats) => {
 									if (err) {
@@ -125,8 +124,8 @@ describe("ConfigTestCases", () => {
 										// Wait for uncaught errors to occur
 										return setTimeout(done, 200);
 									}
-									if (isCi) {
-										process.stdout.write(`[COMPILED] ${compilationName}\n`);
+									if (process.env.CI) {
+										process.stderr.write(`[COMPILED] ${compilationName}\n`);
 									}
 									const statOptions = Stats.presetToOptions("verbose");
 									statOptions.colors = false;

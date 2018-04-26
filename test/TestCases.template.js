@@ -7,7 +7,6 @@ const vm = require("vm");
 const mkdirp = require("mkdirp");
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
-const isCi = require("is-ci");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
@@ -168,13 +167,13 @@ const describeCases = config => {
 									const compilationName = `${config.name}/${
 										category.name
 									}/${testName}`;
-									if (isCi) {
-										process.stdout.write(`[COMPILING] ${compilationName}\n`);
+									if (process.env.CI) {
+										process.stderr.write(`[COMPILING] ${compilationName}\n`);
 									}
 									webpack(options, (err, stats) => {
 										if (err) done(err);
-										if (isCi) {
-											process.stdout.write(`[COMPILED] ${compilationName}\n`);
+										if (process.env.CI) {
+											process.stderr.write(`[COMPILED] ${compilationName}\n`);
 										}
 										const statOptions = Stats.presetToOptions("verbose");
 										statOptions.colors = false;

@@ -300,7 +300,7 @@ describe("BenchmarkTestCases", function() {
 							if (!config.output.path) config.output.path = outputDirectory;
 							runBenchmark(baseline.webpack, config, (err, stats) => {
 								if (err) return done(err);
-								console.log(`        ${baseline.name} ${stats.text}`);
+								process.stderr.write(`        ${baseline.name} ${stats.text}`);
 								if (baseline.name === "HEAD") headStats = stats;
 								else baselineStats = stats;
 								done();
@@ -328,7 +328,7 @@ describe("BenchmarkTestCases", function() {
 							if (!config.output.path) config.output.path = outputDirectory;
 							runBenchmark(baseline.webpack, config, (err, stats) => {
 								if (err) return done(err);
-								console.log(`        ${baseline.name} ${stats.text}`);
+								process.stderr.write(`        ${baseline.name} ${stats.text}`);
 								if (baseline.name === "HEAD") headStats = stats;
 								else baselineStats = stats;
 								done();
