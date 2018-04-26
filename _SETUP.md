@@ -16,7 +16,7 @@ Setup your local webpack repository
 git clone https://github.com/webpack/webpack.git
 cd webpack
 npm install -g yarn
-yarn install
+yarn
 yarn link
 yarn link webpack
 ```
