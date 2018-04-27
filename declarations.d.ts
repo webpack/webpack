@@ -29,6 +29,66 @@ declare module "chrome-trace-event" {
 	}
 }
 
+// There are no typings for @webassemblyjs/ast
+declare module "@webassemblyjs/ast" {
+	export function traverse(
+		ast: any,
+		visitor: { [name: string]: (context: { node: Node }) => void }
+	);
+	export class Node {
+		index: number;
+	}
+	export class Identifier extends Node {
+		value: string;
+	}
+	export class ModuleImport extends Node {
+		module: string;
+		descr: {
+			type: string;
+			valtype: string;
+		};
+		name: string;
+	}
+	export class ModuleExport extends Node {
+		name: string;
+	}
+	export class IndexLiteral extends Node {}
+	export class NumberLiteral extends Node {}
+	export class Global extends Node {}
+	export class FuncParam extends Node {}
+	export class Instruction extends Node {}
+	export class CallInstruction extends Instruction {}
+	export class ObjectInstruction extends Instruction {}
+	export class Func extends Node {
+		params: any;
+		result: any;
+	}
+	export class TypeInstructionFunc extends Node {}
+	export class IndexInFuncSection extends Node {}
+	export function indexLiteral(index: number): IndexLiteral;
+	export function numberLiteral(num: number): NumberLiteral;
+	export function global(globalType: string, nodes: Node[]): Global;
+	export function identifier(indentifier: string): Identifier;
+	export function funcParam(valType: string, id: Identifier): FuncParam;
+	export function instruction(inst: string, args: Node[]): Instruction;
+	export function callInstruction(funcIndex: IndexLiteral): CallInstruction;
+	export function objectInstruction(
+		kind: string,
+		type: string,
+		init: Node[]
+	): ObjectInstruction;
+	export function func(initFuncId, funcParams, funcResults, funcBody): Func;
+	export function typeInstructionFunc(params, result): TypeInstructionFunc;
+	export function indexInFuncSection(index: IndexLiteral): IndexInFuncSection;
+	export function moduleExport(
+		identifier: string,
+		type: string,
+		index: IndexLiteral
+	): ModuleExport;
+
+	export function getSectionMetadata(ast: any, section: string);
+}
+
 /**
  * Global variable declarations
  * @todo Once this issue is resolved, remove these globals and add JSDoc onsite instead
