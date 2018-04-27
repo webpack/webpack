@@ -8,9 +8,8 @@ const Chunk = require("../lib/Chunk");
 describe("Chunk", () => {
 	let ChunkInstance;
 
-	beforeEach(
-		() => (ChunkInstance = new Chunk("chunk-test", "module-test", "loc-test"))
-	);
+	beforeEach(() =>
+		(ChunkInstance = new Chunk("chunk-test", "module-test", "loc-test")));
 
 	it("should have debugId more than 999", () =>
 		should(ChunkInstance.debugId).be.above(999));

@@ -33,9 +33,8 @@ describe("NullDependency", () => {
 		it("is a function", () => NullDependency.Template.should.be.a.Function());
 
 		describe("when created", () => {
-			beforeEach(
-				() => (env.nullDependencyTemplate = new NullDependency.Template())
-			);
+			beforeEach(() =>
+				(env.nullDependencyTemplate = new NullDependency.Template()));
 
 			it("has apply function", () =>
 				env.nullDependencyTemplate.apply.should.be.Function());
