@@ -536,6 +536,10 @@
             }
           ]
         },
+        "moduleExportsConfigurable": {
+          "description": "Defines getter properties on the export object as configurable so it can be mocked. Only works when `mode='development'`.",
+          "type": "boolean"
+        },
         "path": {
           "description": "The output directory as **absolute path** (required).",
           "type": "string",
