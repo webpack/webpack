@@ -2,20 +2,20 @@ Entrypoint main = default/main.js
 chunk    {0} default/async-b~async-c.js (async-b~async-c) 110 bytes <{4}> ={2}= ={3}= [rendered] split chunk (cache group: default) (name: async-b~async-c)
     > ./b [6] ./index.js 2:0-47
     > ./c [6] ./index.js 3:0-47
-    [0] ./d.js 43 bytes {0} {1} [built]
-    [2] ./f.js 67 bytes {0} [built]
+ [0] ./d.js 43 bytes {0} {1} [built]
+ [2] ./f.js 67 bytes {0} [built]
 chunk    {1} default/async-a.js (async-a) 134 bytes <{4}> [rendered]
     > ./a [6] ./index.js 1:0-47
-    [0] ./d.js 43 bytes {0} {1} [built]
-    [1] ./e.js 43 bytes {1} {2} [built]
-    [3] ./a.js 48 bytes {1} [built]
+ [0] ./d.js 43 bytes {0} {1} [built]
+ [1] ./e.js 43 bytes {1} {2} [built]
+ [3] ./a.js 48 bytes {1} [built]
 chunk    {2} default/async-b.js (async-b) 105 bytes <{4}> ={0}= [rendered]
     > ./b [6] ./index.js 2:0-47
-    [1] ./e.js 43 bytes {1} {2} [built]
-    [4] ./b.js 62 bytes {2} [built]
+ [1] ./e.js 43 bytes {1} {2} [built]
+ [4] ./b.js 62 bytes {2} [built]
 chunk    {3} default/async-c.js (async-c) 48 bytes <{4}> ={0}= [rendered]
     > ./c [6] ./index.js 3:0-47
-    [5] ./c.js 48 bytes {3} [built]
+ [5] ./c.js 48 bytes {3} [built]
 chunk    {4} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< [entry] [rendered]
     > ./ main
-    [6] ./index.js 147 bytes {4} [built]
+ [6] ./index.js 147 bytes {4} [built]

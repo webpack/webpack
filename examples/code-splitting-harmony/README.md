@@ -34,7 +34,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
 /******/ 		var chunkIds = data[0];
-/******/ 		var moreModules = data[1]
+/******/ 		var moreModules = data[1];
 /******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
@@ -119,7 +119,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 				var script = document.createElement('script');
 /******/
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120000;
+/******/ 				script.timeout = 120;
 /******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
@@ -248,7 +248,7 @@ function webpackAsyncContext(req) {
 	}
 	return __webpack_require__.e(ids[1]).then(function() {
 		var module = __webpack_require__(ids[0]);
-		return (typeof module === "object" && module && module.__esModule ? module : /* fake namespace object */ { "default": module });
+		return (typeof module === "object" && module && module.__esModule ? module : Object.assign({/* fake namespace object */}, typeof module === "object" && module, { "default": module }));
 	});
 }
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
@@ -281,7 +281,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(a__WEBPACK_IMPORTED_MODULE_0__);
 
 
-__webpack_require__.e(/*! import() */ 2).then(function() { var module = __webpack_require__(/*! b */ 5); return typeof module === "object" && module && module.__esModule ? module : { /* fake namespace object */ "default": module }; }).then(function(b) {
+__webpack_require__.e(/*! import() */ 2).then(function() { var module = __webpack_require__(/*! b */ 5); return typeof module === "object" && module && module.__esModule ? module : Object.assign({/* fake namespace object */}, typeof module === "object" && module, { "default": module }); }).then(function(b) {
 	console.log("b loaded", b);
 })
 
@@ -305,12 +305,12 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  275 bytes       0  [emitted]  
 1.output.js  284 bytes       1  [emitted]  
 2.output.js  270 bytes       2  [emitted]  
-  output.js   8.74 KiB       3  [emitted]  main
+  output.js   8.84 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes <{3}> [rendered]
     > ./2 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2
@@ -337,12 +337,12 @@ chunk    {3} output.js (main) 427 bytes >{0}< >{1}< >{2}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  76 bytes       0  [emitted]  
 1.output.js  77 bytes       1  [emitted]  
 2.output.js  78 bytes       2  [emitted]  
-  output.js  2.25 KiB       3  [emitted]  main
+  output.js  2.33 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes <{3}> [rendered]
     > ./2 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2

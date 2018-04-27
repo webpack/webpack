@@ -4,8 +4,8 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks             Chunk Names
 bundle.js  3.01 KiB       0  [emitted]  main
 Entrypoint main = bundle.js
-   [0] ./node_modules/xyz/index.js 0 bytes {0} [built]
-   [1] ./index.js 48 bytes {0} [built]
-   [2] ./node_modules/abc/index.js 16 bytes {0} [built]
-   [3] ./node_modules/def/index.js 16 bytes {0} [built]
-   [4] ./node_modules/def/node_modules/xyz/index.js 0 bytes {0} [built]
+[0] ./node_modules/xyz/index.js 0 bytes {0} [built]
+[1] ./index.js 48 bytes {0} [built]
+[2] ./node_modules/abc/index.js 16 bytes {0} [built]
+[3] ./node_modules/def/index.js 16 bytes {0} [built]
+[4] ./node_modules/def/node_modules/xyz/index.js 0 bytes {0} [built]
