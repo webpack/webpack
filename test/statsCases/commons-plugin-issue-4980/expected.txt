@@ -1,6 +1,6 @@
-Hash: cf98aa60ee4b8973b761efb14741fc1090b63715
+Hash: 7787abdd0bfaf0c7961885f1d0f31f6f086db6b0
 Child
-    Hash: cf98aa60ee4b8973b761
+    Hash: 7787abdd0bfaf0c79618
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                              Asset       Size  Chunks             Chunk Names
@@ -13,7 +13,7 @@ Child
         | ./submodule-a.js 59 bytes [built]
         | ./submodule-b.js 59 bytes [built]
 Child
-    Hash: efb14741fc1090b63715
+    Hash: 85f1d0f31f6f086db6b0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                              Asset       Size  Chunks             Chunk Names

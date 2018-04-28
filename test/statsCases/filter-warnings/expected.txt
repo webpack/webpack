@@ -1,6 +1,6 @@
-Hash: 754917b866290eb4118a754917b866290eb4118a754917b866290eb4118a754917b866290eb4118a754917b866290eb4118a754917b866290eb4118a754917b866290eb4118a754917b866290eb4118a754917b866290eb4118a754917b866290eb4118a754917b866290eb4118a754917b866290eb4118a754917b866290eb4118a
+Hash: cc19df0cb3fd6325c36dcc19df0cb3fd6325c36dcc19df0cb3fd6325c36dcc19df0cb3fd6325c36dcc19df0cb3fd6325c36dcc19df0cb3fd6325c36dcc19df0cb3fd6325c36dcc19df0cb3fd6325c36dcc19df0cb3fd6325c36dcc19df0cb3fd6325c36dcc19df0cb3fd6325c36dcc19df0cb3fd6325c36dcc19df0cb3fd6325c36d
 Child
-    Hash: 754917b866290eb4118a
+    Hash: cc19df0cb3fd6325c36d
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -20,69 +20,49 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: 754917b866290eb4118a
+    Hash: cc19df0cb3fd6325c36d
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child
-    Hash: 754917b866290eb4118a
+    Hash: cc19df0cb3fd6325c36d
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child
-    Hash: 754917b866290eb4118a
+    Hash: cc19df0cb3fd6325c36d
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child
-    Hash: 754917b866290eb4118a
+    Hash: cc19df0cb3fd6325c36d
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child
-    Hash: 754917b866290eb4118a
+    Hash: cc19df0cb3fd6325c36d
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child
-    Hash: 754917b866290eb4118a
+    Hash: cc19df0cb3fd6325c36d
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.19 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child
-    Hash: 754917b866290eb4118a
-    Time: Xms
-    Built at: Thu Jan 01 1970 00:00:00 GMT
-        Asset      Size  Chunks             Chunk Names
-    bundle.js  2.19 KiB       0  [emitted]  main
-    Entrypoint main = bundle.js
-    
-    WARNING in bundle.js from UglifyJs
-    Dropping side-effect-free statement [./index.js:6,0]
-    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
-Child
-    Hash: 754917b866290eb4118a
+    Hash: cc19df0cb3fd6325c36d
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -102,7 +82,7 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: 754917b866290eb4118a
+    Hash: cc19df0cb3fd6325c36d
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -122,7 +102,7 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: 754917b866290eb4118a
+    Hash: cc19df0cb3fd6325c36d
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -142,7 +122,7 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: 754917b866290eb4118a
+    Hash: cc19df0cb3fd6325c36d
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -162,7 +142,27 @@ Child
     Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child
-    Hash: 754917b866290eb4118a
+    Hash: cc19df0cb3fd6325c36d
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+        Asset      Size  Chunks             Chunk Names
+    bundle.js  2.19 KiB       0  [emitted]  main
+    Entrypoint main = bundle.js
+    
+    WARNING in bundle.js from UglifyJs
+    Dropping side-effect-free statement [./index.js:6,0]
+    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
+    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
+    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
+    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
+    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
+    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
+    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
+    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
+    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
+    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+Child
+    Hash: cc19df0cb3fd6325c36d
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
