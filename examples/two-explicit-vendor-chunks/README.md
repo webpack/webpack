@@ -373,7 +373,7 @@ __webpack_require__(/*! ./vendor2 */ 3);
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
      Asset      Size  Chunks             Chunk Names
 vendor1.js  2.99 KiB       0  [emitted]  vendor1
 vendor2.js  3.25 KiB       1  [emitted]  vendor2
@@ -429,7 +429,7 @@ chunk    {4} pageC.js (pageC) 25 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
      Asset       Size  Chunks             Chunk Names
   pageC.js  569 bytes       0  [emitted]  pageC
   pageB.js  569 bytes       1  [emitted]  pageB

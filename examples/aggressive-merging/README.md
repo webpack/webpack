@@ -60,7 +60,7 @@ module.exports = {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
           Asset       Size  Chunks             Chunk Names
      0.chunk.js   5.98 KiB       0  [emitted]  
      1.chunk.js  405 bytes       1  [emitted]  
@@ -108,11 +108,11 @@ chunk    {4} pageA.bundle.js (pageA) 71 bytes >{0}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
           Asset       Size  Chunks             Chunk Names
      0.chunk.js  173 bytes    0, 1  [emitted]  
      1.chunk.js  118 bytes       1  [emitted]  
-pageC.bundle.js   1.68 KiB       2  [emitted]  pageC
+pageC.bundle.js   1.67 KiB       2  [emitted]  pageC
 pageB.bundle.js   1.66 KiB       3  [emitted]  pageB
 pageA.bundle.js   1.66 KiB       4  [emitted]  pageA
 Entrypoint pageA = pageA.bundle.js
