@@ -406,24 +406,6 @@ describe("Parser", () => {
 		should.strictEqual(options.webpackChunkName, "chunkName");
 	});
 
-	it("should emit warning while getting options from comments failed", () => {
-		const source = `/* ); */`;
-		const testParser = new Parser({});
-		const warnings = [];
-		testParser.hooks.program.tap("ParserTest", (ast, comments) => {
-			testParser.getCommentOptions(ast.range);
-			return true;
-		});
-		testParser.parse(source, {
-			current: {
-				warnings: warnings
-			}
-		});
-		should.strictEqual(warnings.length, 1);
-		should.strictEqual(warnings[0].constructor.name, "ModuleWarning");
-		warnings[0].should.match({ message: /Unexpected token/ });
-	});
-
 	describe("expression evaluation", () => {
 		function evaluateInParser(source) {
 			const parser = new Parser();
