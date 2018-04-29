@@ -1,4 +1,4 @@
-Hash: c4c4476c6d07e1bf7404
+Hash: b643225c9d2e70212495
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
             Asset       Size  Chunks             Chunk Names
@@ -6,7 +6,7 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
             ab.js  183 bytes       1  [emitted]  ab
            abd.js  277 bytes    2, 1  [emitted]  abd
           cir2.js  299 bytes       3  [emitted]  cir2
-          main.js    7.8 KiB       4  [emitted]  main
+          main.js   8.07 KiB       4  [emitted]  main
 cir2 from cir1.js  359 bytes    5, 3  [emitted]  cir2 from cir1
          chunk.js  190 bytes    6, 7  [emitted]  chunk
       ac in ab.js  130 bytes       7  [emitted]  ac in ab

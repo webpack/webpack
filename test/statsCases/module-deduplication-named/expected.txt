@@ -2,9 +2,9 @@
 async3.js  818 bytes       0  [emitted]  async3
 async1.js  818 bytes       1  [emitted]  async1
 async2.js  818 bytes       2  [emitted]  async2
-    e1.js   8.02 KiB       3  [emitted]  e1
-    e2.js   8.05 KiB       4  [emitted]  e2
-    e3.js   8.07 KiB       5  [emitted]  e3
+    e1.js   8.29 KiB       3  [emitted]  e1
+    e2.js   8.31 KiB       4  [emitted]  e2
+    e3.js   8.33 KiB       5  [emitted]  e3
 Entrypoint e1 = e1.js
 Entrypoint e2 = e2.js
 Entrypoint e3 = e3.js
