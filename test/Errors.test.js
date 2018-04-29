@@ -354,7 +354,7 @@ describe("Errors", () => {
 			)
 		]);
 	});
-	it("should throw a build error if no source be returned after run loaders", () => {
+	it("should throw a build error if no source be returned after run loaders", done => {
 		getErrors(
 			{
 				mode: "development",
@@ -365,6 +365,7 @@ describe("Errors", () => {
 				const messages = errors[0].split("\n");
 				messages[1].should.match(/^Module build failed:$/);
 				messages[2].should.match(/didn't return/);
+				done();
 			}
 		);
 	});
