@@ -60,6 +60,9 @@ declare module "@webassemblyjs/ast" {
 	export class CallInstruction extends Instruction {}
 	export class ObjectInstruction extends Instruction {}
 	export class Func extends Node {
+		signature: Signature;
+	}
+	export class Signature {
 		params: any;
 		result: any;
 	}
