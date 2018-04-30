@@ -2,6 +2,7 @@ it("should assign different names to the same module with different issuers ", f
 	var fs = require("fs");
 	var path = require("path");
 	var bundle = fs.readFileSync(path.join(__dirname, "bundle0.js"), "utf-8");
-	bundle.should.containEql("./a.js~./c.js");
-	bundle.should.containEql("./a.js~./c.js");
+	bundle.should.match(/\.\/c\.js\?\w{4}/g);
+	require("./a").should.be.equal("loader-a");
+	require("./b").should.be.equal("loader-b");
 });
