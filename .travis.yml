@@ -4,6 +4,7 @@ language: node_js
 
 branches:
   only:
+    - webpack-3
     - master
     - next
 

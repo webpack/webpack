@@ -3,6 +3,7 @@
 
 branches:
   only:
+    - webpack-3
     - master
     - next
 
