@@ -1,11 +1,9 @@
-require("should");
-
 it("should have the correct main flag", function() {
 	var a = require("./vendor");
-	a._main.should.be.eql(false);
-	module.hot._main.should.be.eql(true);
+	expect(a._main).toBe(false);
+	expect(module.hot._main).toBe(true);
 });
 
 it("should be main", function() {
-	require.main.should.be.eql(module);
+	expect(require.main).toBe(module);
 });

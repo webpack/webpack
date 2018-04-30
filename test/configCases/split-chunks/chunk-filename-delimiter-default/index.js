@@ -1,5 +1,3 @@
-require("should");
-
 it("should run", function() {
 	Promise.all(
 		[
@@ -12,5 +10,5 @@ it("should run", function() {
 	const files = require("fs").readdirSync(__dirname);
 	const hasFile = files.indexOf('a~b~c.bundle.js') !== -1;
 
-	hasFile.should.be.eql(true);
+	expect(hasFile).toBe(true);
 });

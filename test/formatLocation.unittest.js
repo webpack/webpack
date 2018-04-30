@@ -1,6 +1,5 @@
 "use strict";
 
-require("should");
 const formatLocation = require("../lib/formatLocation");
 
 describe("formatLocation", () => {
@@ -102,7 +101,7 @@ describe("formatLocation", () => {
 	];
 	testCases.forEach(testCase => {
 		it(`should format location correctly for ${testCase.name}`, () => {
-			formatLocation(testCase.loc).should.be.eql(testCase.result);
+			expect(formatLocation(testCase.loc)).toEqual(testCase.result);
 		});
 	});
 });

@@ -1,5 +1,5 @@
 it("should find var declaration later in code", function() {
-	(typeof require).should.be.eql("undefined");
+	expect((typeof require)).toBe("undefined");
 
 	var require;
 });
@@ -10,7 +10,7 @@ it("should find var declaration in same statement", function() {
 	}), require;
 
 	require = (function(x) {
-		x.should.be.eql("fail");
+		expect(x).toBe("fail");
 	});
 	fn();
 });
@@ -18,7 +18,7 @@ it("should find var declaration in same statement", function() {
 it("should find a catch block declaration", function() {
 	try {
 		var f = (function(x) {
-			x.should.be.eql("fail");
+			expect(x).toBe("fail");
 		});
 		throw f;
 	} catch(require) {
@@ -28,7 +28,7 @@ it("should find a catch block declaration", function() {
 
 it("should find var declaration in control statements", function() {
 	var f = (function(x) {
-		x.should.be.eql("fail");
+		expect(x).toBe("fail");
 	});
 
 	(function() {
@@ -83,7 +83,7 @@ it("should find var declaration in control statements", function() {
 
 it("should find var declaration in control statements after usage", function() {
 	var f = (function(x) {
-		x.should.be.eql("fail");
+		expect(x).toBe("fail");
 	});
 
 	(function() {

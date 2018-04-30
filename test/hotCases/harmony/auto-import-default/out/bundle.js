@@ -765,9 +765,9 @@ throw new Error("Module parse failed: Unexpected token (3:0)\nYou may need an ap
 
 
 it("should auto-import a ES6 imported value on accept", function(done) {
-	_file__WEBPACK_IMPORTED_MODULE_0__["value"].should.be.eql(1);
+	expect(_file__WEBPACK_IMPORTED_MODULE_0__["value"]).toEqual(1);
 	module.hot.accept(/*! ./file */ "./file.js", function(__WEBPACK_OUTDATED_DEPENDENCIES__) { /* harmony import */ _file__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./file */"./file.js"); /* harmony import */ _file__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_file__WEBPACK_IMPORTED_MODULE_0__); (function() {
-		_file__WEBPACK_IMPORTED_MODULE_0__["value"].should.be.eql(2);
+		expect(_file__WEBPACK_IMPORTED_MODULE_0__["value"]).toEqual(2);
 		outside();
 		done();
 	})(__WEBPACK_OUTDATED_DEPENDENCIES__); });
@@ -775,7 +775,7 @@ it("should auto-import a ES6 imported value on accept", function(done) {
 });
 
 function outside() {
-	_file__WEBPACK_IMPORTED_MODULE_0__["value"].should.be.eql(2);
+	expect(_file__WEBPACK_IMPORTED_MODULE_0__["value"]).toEqual(2);
 }
 
 

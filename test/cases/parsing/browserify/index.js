@@ -10,5 +10,5 @@ it("should be able to parse browserified modules (UMD)", function() {
 	},{}]},{},[1])
 	(1)
 	});
-	module.exports.should.be.eql(1234);
+	expect(module.exports).toBe(1234);
 });

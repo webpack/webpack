@@ -1853,6 +1853,10 @@
               "type": "boolean",
               "description": "Display the entry points with the corresponding bundles"
             },
+            "chunkGroups": {
+              "type": "boolean",
+              "description": "Display all chunk groups with the corresponding bundles"
+            },
             "errorDetails": {
               "type": "boolean",
               "description": "add details to errors (like resolving log)"
