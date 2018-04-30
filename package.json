@@ -134,6 +134,7 @@
       "<rootDir>/test/js/",
       "<rootDir>/test/browsertest/js/",
       "<rootDir>/test/fixtures/temp-cache-fixture/",
+      "<rootDir>/test/fixtures/temp-",
       "<rootDir>/benchmark/",
       "<rootDir>/examples/*/dist",
       "<rootDir>/coverage/"
@@ -143,6 +144,7 @@
       "<rootDir>/test/js/",
       "<rootDir>/test/browsertest/js/",
       "<rootDir>/test/fixtures/temp-cache-fixture/",
+      "<rootDir>/test/fixtures/temp-",
       "<rootDir>/benchmark/",
       "<rootDir>/examples/*/dist",
       "<rootDir>/coverage/"
