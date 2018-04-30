@@ -30,7 +30,7 @@ export function increment(val) {
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
 /******/ 		var chunkIds = data[0];
-/******/ 		var moreModules = data[1]
+/******/ 		var moreModules = data[1];
 /******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
@@ -115,7 +115,7 @@ export function increment(val) {
 /******/ 				var script = document.createElement('script');
 /******/
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120000;
+/******/ 				script.timeout = 120;
 /******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
@@ -274,7 +274,7 @@ __webpack_require__.e(/*! import() */ 0).then(__webpack_require__.bind(null, /*!
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  479 bytes       0  [emitted]  
   output.js   8.27 KiB       1  [emitted]  main
@@ -303,10 +303,10 @@ chunk    {1} output.js (main) 419 bytes >{0}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  144 bytes       0  [emitted]  
-  output.js   1.75 KiB       1  [emitted]  main
+  output.js   1.73 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 25 bytes <{1}> [rendered]
     > ./async-loaded [] 6:0-24

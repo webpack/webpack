@@ -100,7 +100,8 @@ rules:
         ```
         <details>
           <summary>Show remaining errors</summary>
-        ``` text
+
+        ```text
         {{{remainingErrors}}}
         ```
         </details>

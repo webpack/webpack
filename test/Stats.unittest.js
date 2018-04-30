@@ -9,6 +9,24 @@ const packageJson = require("../package.json");
 describe(
 	"Stats",
 	() => {
+		describe("formatFilePath", () => {
+			it("emit the file path and request", () => {
+				const mockStats = new Stats({
+					children: [],
+					errors: ["firstError"],
+					hash: "1234",
+					compiler: {
+						context: ""
+					}
+				});
+				const inputPath =
+					"./node_modules/ts-loader!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./src/app.vue";
+				const expectPath = `./src/app.vue (${inputPath})\n`;
+
+				mockStats.formatFilePath(inputPath).should.be.exactly(expectPath);
+			});
+		});
+
 		describe("Error Handling", () => {
 			describe("does have", () => {
 				it("hasErrors", () => {
@@ -98,6 +116,7 @@ describe(
 					warnings: [],
 					assets: [],
 					entrypoints: new Map(),
+					namedChunkGroups: new Map(),
 					chunks: [],
 					modules: [],
 					children: [],
@@ -124,6 +143,7 @@ describe(
 					assets: [],
 					entrypoints: new Map(),
 					chunks: [],
+					namedChunkGroups: new Map(),
 					modules: [],
 					children: [],
 					hash: "1234",
@@ -144,6 +164,7 @@ describe(
 					children: [],
 					chunks: [],
 					entrypoints: {},
+					namedChunkGroups: {},
 					filteredAssets: 0,
 					filteredModules: 0,
 					errors: [],

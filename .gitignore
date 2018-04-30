@@ -10,3 +10,4 @@
 *.log
 .idea
 .vscode
+package-lock.json

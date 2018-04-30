@@ -177,7 +177,7 @@ describe("TestCases", () => {
 												{},
 												config.optimization,
 												DEFAULT_OPTIMIZATIONS
-											),
+										  ),
 									performance: {
 										hints: false
 									},

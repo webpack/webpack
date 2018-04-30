@@ -260,7 +260,7 @@ var named = "named";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
     Asset      Size  Chunks             Chunk Names
 output.js  6.13 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -269,7 +269,7 @@ chunk    {0} output.js (main) 1.17 KiB [entry] [rendered]
     [0] ./example.js 389 bytes {0} [built]
         [no exports]
         single entry .\example.js  main
-    [1] ./fs.js 265 bytes {0} [built]
+    [1] ./fs.js 264 bytes {0} [built]
         harmony side effect evaluation ./fs [0] ./example.js 4:0-22
         harmony side effect evaluation ./fs [0] ./example.js 5:0-32
         harmony side effect evaluation ./fs [0] ./example.js 6:0-28
@@ -292,13 +292,13 @@ chunk    {0} output.js (main) 1.17 KiB [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
     Asset       Size  Chunks             Chunk Names
 output.js  993 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 1.17 KiB [entry] [rendered]
     > .\example.js main
-    [0] ./fs.js 265 bytes {0} [built]
+    [0] ./fs.js 264 bytes {0} [built]
         [only some exports used: default, readFile]
         harmony side effect evaluation ./fs [1] ./reexport-commonjs.js 2:0-21
         harmony export imported specifier ./fs [1] ./reexport-commonjs.js 2:0-21

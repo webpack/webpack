@@ -19,14 +19,14 @@ module.exports = {
 	output: {
 		filename: "vendor.js", // best use [hash] here too
 		path: path.resolve(__dirname, "dist"),
-		library: "vendor_lib_[hash]",
+		library: "vendor_lib_[hash]"
 	},
 	plugins: [
 		new webpack.DllPlugin({
 			name: "vendor_lib_[hash]",
-			path: path.resolve(__dirname, "dist/vendor-manifest.json"),
-		}),
-	],
+			path: path.resolve(__dirname, "dist/vendor-manifest.json")
+		})
+	]
 };
 ```
 
@@ -41,7 +41,7 @@ export function square(n) {
 # dist/vendor.js
 
 ``` javascript
-var vendor_lib_9ee2f174307b7ef21301 =
+var vendor_lib_bc3751dcff9f91451e0e =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -157,7 +157,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ``` javascript
-{"name":"vendor_lib_9ee2f174307b7ef21301","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
+{"name":"vendor_lib_bc3751dcff9f91451e0e","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
 ```
 
 # Info
@@ -166,7 +166,7 @@ function square(n) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
     Asset      Size  Chunks             Chunk Names
 vendor.js  3.32 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
@@ -182,7 +182,7 @@ chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.5.0
     Asset       Size  Chunks             Chunk Names
 vendor.js  704 bytes       0  [emitted]  main
 Entrypoint main = vendor.js
