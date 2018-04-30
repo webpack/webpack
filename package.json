@@ -130,12 +130,21 @@
       "<rootDir>/test/*.unittest.js"
     ],
     "watchPathIgnorePatterns": [
+      "<rootDir>/node_modules/webpack/node_modules/",
       "<rootDir>/test/js/",
       "<rootDir>/test/browsertest/js/",
       "<rootDir>/test/fixtures/temp-cache-fixture/",
-      "<rootDir>/benchmark/js/",
-      "<rootDir>/benchmark/fixtures/",
-      "<rootDir>/examples/",
+      "<rootDir>/benchmark/",
+      "<rootDir>/examples/*/dist",
+      "<rootDir>/coverage/"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/node_modules/webpack/node_modules/",
+      "<rootDir>/test/js/",
+      "<rootDir>/test/browsertest/js/",
+      "<rootDir>/test/fixtures/temp-cache-fixture/",
+      "<rootDir>/benchmark/",
+      "<rootDir>/examples/*/dist",
       "<rootDir>/coverage/"
     ],
     "transformIgnorePatterns": [
