@@ -17,16 +17,16 @@ matrix:
       env: NO_WATCH_TESTS=1 JOB_PART=lint
     - os: linux
       node_js: "8"
-      env: NO_WATCH_TESTS=1 JOB_PART=integration
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=integration
     - os: linux
       node_js: "8"
       env: NO_WATCH_TESTS=1 JOB_PART=unit
     - os: linux
       node_js: "6"
-      env: NO_WATCH_TESTS=1 JOB_PART=integration
+      env: NO_WATCH_TESTS=1 JEST=--runInBand JOB_PART=integration
     - os: osx
       node_js: "8"
-      env: NO_WATCH_TESTS=1 JOB_PART=integration
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=integration
   allow_failures:
     - os: osx
   fast_finish: true

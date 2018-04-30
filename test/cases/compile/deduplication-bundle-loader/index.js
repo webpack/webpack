@@ -1,12 +1,12 @@
 it("should load a duplicate module with different dependencies correctly", function(done) {
 	var a = require("bundle-loader!./a/file");
 	var b = require("bundle-loader!./b/file");
-	(typeof a).should.be.eql("function");
-	(typeof b).should.be.eql("function");
+	expect((typeof a)).toBe("function");
+	expect((typeof b)).toBe("function");
 	a(function(ra) {
-		ra.should.be.eql("a");
+		expect(ra).toBe("a");
 		b(function(rb) {
-			rb.should.be.eql("b");
+			expect(rb).toBe("b");
 			done();
 		})
 	});

@@ -2,12 +2,12 @@
 "use strict";
 
 it("should ignore ignored resources", function() {
-	(function() {
+	expect(function() {
 		require("./ignored-module");
-	}).should.throw();
+	}).toThrowError();
 });
 it("should not ignore resources that do not match", function() {
-	(function() {
+	expect(function() {
 		require("./normal-module");
-	}).should.not.throw();
+	}).not.toThrowError();
 });

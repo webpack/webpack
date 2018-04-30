@@ -3,7 +3,7 @@ import { B } from "./module";
 import { c } from "./module";
 
 it("should allow to export a class", function() {
-	(typeof A).should.be.eql("function");
-	(typeof B).should.be.eql("function");
-	c.should.be.eql("c");
+	expect((typeof A)).toBe("function");
+	expect((typeof B)).toBe("function");
+	expect(c).toBe("c");
 })
