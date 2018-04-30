@@ -36,4 +36,4 @@ test_script:
   - npm --version
   - yarn --version
   - cmd: npm run appveyor:%job_part%
-  - cmd: npm install -g codecov && codecov -F %job_part%
+  - cmd: npm install -g codecov && codecov -F %job_part% --disable=gcov

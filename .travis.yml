@@ -40,7 +40,7 @@ script: npm run travis:$JOB_PART
 
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
-  - bash <(curl -s https://codecov.io/bash) -F $JOB_PART
+  - bash <(curl -s https://codecov.io/bash) -F $JOB_PART --disable=gcov
   - rm -rf ./coverage
 
 notifications:
