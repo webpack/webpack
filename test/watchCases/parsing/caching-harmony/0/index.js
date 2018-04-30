@@ -2,13 +2,13 @@ import m from "./module";
 import cm from "./changing-module";
 
 it("should flag harmony modules correctly", function() {
-	expect(m).toBe("module" + WATCH_STEP);
+	m.should.be.eql("module" + WATCH_STEP);
 	switch(WATCH_STEP) {
 		case "0":
-			expect(cm).toBe("original");
+			cm.should.be.eql("original");
 			break;
 		case "1":
-			expect(cm).toBe("change");
+			cm.should.be.eql("change");
 			break;
 	}
 });

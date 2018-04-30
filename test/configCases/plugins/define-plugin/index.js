@@ -1,77 +1,77 @@
 /* globals it, should */
 it("should define FALSE", function() {
-	expect(FALSE).toBe(false);
-	expect((typeof TRUE)).toBe("boolean");
+	FALSE.should.be.eql(false);
+	(typeof TRUE).should.be.eql("boolean");
 	var x = require(FALSE ? "fail" : "./a");
 	var y = FALSE ? require("fail") : require("./a");
 });
 
 it("should define CODE", function() {
-	expect(CODE).toBe(3);
-	expect((typeof CODE)).toBe("number");
+	CODE.should.be.eql(3);
+	(typeof CODE).should.be.eql("number");
 	if(CODE !== 3) require("fail");
 	if(typeof CODE !== "number") require("fail");
 });
 it("should define FUNCTION", function() {
-	expect((FUNCTION(5))).toBe(6);
-	expect((typeof FUNCTION)).toBe("function");
+	(FUNCTION(5)).should.be.eql(6);
+	(typeof FUNCTION).should.be.eql("function");
 	if(typeof FUNCTION !== "function") require("fail");
 });
 it("should define UNDEFINED", function() {
-	expect((typeof UNDEFINED)).toBe("undefined");
+	(typeof UNDEFINED).should.be.eql("undefined");
 	if(typeof UNDEFINED !== "undefined") require("fail");
 });
 it("should define REGEXP", function() {
-	expect(REGEXP.toString()).toBe("/abc/i");
-	expect((typeof REGEXP)).toBe("object");
+	REGEXP.toString().should.be.eql("/abc/i");
+	(typeof REGEXP).should.be.eql("object");
 	if(typeof REGEXP !== "object") require("fail");
 });
 it("should define OBJECT", function() {
 	var o = OBJECT;
-	expect(o.SUB.FUNCTION(10)).toBe(11);
+	o.SUB.FUNCTION(10).should.be.eql(11);
 });
 it("should define OBJECT.SUB.CODE", function() {
-	expect((typeof OBJECT.SUB.CODE)).toBe("number");
-	expect(OBJECT.SUB.CODE).toBe(3);
+	(typeof OBJECT.SUB.CODE).should.be.eql("number");
+	OBJECT.SUB.CODE.should.be.eql(3);
 	if(OBJECT.SUB.CODE !== 3) require("fail");
 	if(typeof OBJECT.SUB.CODE !== "number") require("fail");
 
 	(function(sub) {
 		// should not crash
-		expect(sub.CODE).toBe(3);
+		sub.CODE.should.be.eql(3);
 	}(OBJECT.SUB));
 });
 it("should define OBJECT.SUB.STRING", function() {
-	expect((typeof OBJECT.SUB.STRING)).toBe("string");
-	expect(OBJECT.SUB.STRING).toBe("string");
+	(typeof OBJECT.SUB.STRING).should.be.eql("string");
+	OBJECT.SUB.STRING.should.be.eql("string");
 	if(OBJECT.SUB.STRING !== "string") require("fail");
 	if(typeof OBJECT.SUB.STRING !== "string") require("fail");
 
 	(function(sub) {
 		// should not crash
-		expect(sub.STRING).toBe("string");
+		sub.STRING.should.be.eql("string");
 	}(OBJECT.SUB));
 });
 it("should define process.env.DEFINED_NESTED_KEY", function() {
-	expect((process.env.DEFINED_NESTED_KEY)).toBe(5);
-	expect((typeof process.env.DEFINED_NESTED_KEY)).toBe("number");
+	(process.env.DEFINED_NESTED_KEY).should.be.eql(5);
+	(typeof process.env.DEFINED_NESTED_KEY).should.be.eql("number");
 	if(process.env.DEFINED_NESTED_KEY !== 5) require("fail");
 	if(typeof process.env.DEFINED_NESTED_KEY !== "number") require("fail");
 
 	var x = process.env.DEFINED_NESTED_KEY;
-	expect(x).toBe(5);
+	x.should.be.eql(5);
 
 	var indirect = process.env;
-	expect((indirect.DEFINED_NESTED_KEY)).toBe(5);
+	(indirect.DEFINED_NESTED_KEY).should.be.eql(5);
 
 	(function(env) {
-		expect((env.DEFINED_NESTED_KEY)).toBe(5);
-		expect((typeof env.DEFINED_NESTED_KEY)).toBe("number");
+		(env.DEFINED_NESTED_KEY).should.be.eql(5);
+		(typeof env.DEFINED_NESTED_KEY).should.be.eql("number");
 		if(env.DEFINED_NESTED_KEY !== 5) require("fail");
 		if(typeof env.DEFINED_NESTED_KEY !== "number") require("fail");
 
 		var x = env.DEFINED_NESTED_KEY;
-		expect(x).toBe(5);
+		x.should.be.eql(5);
 	}(process.env));
 });
 it("should define process.env.DEFINED_NESTED_KEY_STRING", function() {
@@ -79,7 +79,7 @@ it("should define process.env.DEFINED_NESTED_KEY_STRING", function() {
 });
 it("should assign to process.env", function() {
 	process.env.TEST = "test";
-	expect(process.env.TEST).toBe("test");
+	process.env.TEST.should.be.eql("test");
 });
 it("should not have brackets on start", function() {
 	function f() {
@@ -90,13 +90,13 @@ it("should not have brackets on start", function() {
 });
 
 it("should not explode on recursive typeof calls", function() {
-	expect(typeof wurst).toEqual("undefined"); // <- is recursively defined in config
+	(typeof wurst).should.eql("undefined"); // <- is recursively defined in config
 });
 
 it("should not explode on recursive statements", function() {
-	expect(function() {
+	(function() {
 		wurst; // <- is recursively defined in config
-	}).toThrowError("suppe is not defined");
+	}).should.throw("suppe is not defined");
 });
 
 it("should evaluate composed expressions (issue 5100)", function() {
@@ -111,6 +111,6 @@ it("should follow renamings in var (issue 5215)", function() {
 	var _process$env = process.env,
 		TEST = _process$env.TEST,
 		DEFINED_NESTED_KEY = _process$env.DEFINED_NESTED_KEY;
-	expect(TEST).toBe("test");
-	expect(DEFINED_NESTED_KEY).toBe(5);
+	TEST.should.be.eql("test");
+	DEFINED_NESTED_KEY.should.be.eql(5);
 });

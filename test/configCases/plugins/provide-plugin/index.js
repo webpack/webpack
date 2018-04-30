@@ -1,58 +1,58 @@
 it("should provide a module for a simple free var", function() {
-	expect(aaa).toBe("aaa");
+	aaa.should.be.eql("aaa");
 });
 
 it("should provide a module for a nested var", function() {
-	expect((bbb.ccc)).toBe("bbbccc");
+	(bbb.ccc).should.be.eql("bbbccc");
 	var x = bbb.ccc;
-	expect(x).toBe("bbbccc");
+	x.should.be.eql("bbbccc");
 });
 
 it("should provide a module for a nested var within a IIFE's argument", function() {
 	(function(process) {
-		expect((process.env.NODE_ENV)).toBe("development");
+		(process.env.NODE_ENV).should.be.eql("development");
 		var x = process.env.NODE_ENV;
-		expect(x).toBe("development");
+		x.should.be.eql("development");
 	}(process));
 });
 
 it("should provide a module for thisExpression", () => {
-	expect(this.aaa).toBe("aaa");
+	(this.aaa).should.be.eql("aaa");
 });
 
 it("should provide a module for a nested var within a IIFE's this", function() {
 	(function() {
-		expect((this.env.NODE_ENV)).toBe("development");
+		(this.env.NODE_ENV).should.be.eql("development");
 		var x = this.env.NODE_ENV;
-		expect(x).toBe("development");
+		x.should.be.eql("development");
 	}.call(process));
 });
 
 it("should provide a module for a nested var within a nested IIFE's this", function() {
 	(function() {
 		(function() {
-			expect((this.env.NODE_ENV)).toBe("development");
+			(this.env.NODE_ENV).should.be.eql("development");
 			var x = this.env.NODE_ENV;
-			expect(x).toBe("development");
+			x.should.be.eql("development");
 		}.call(this));
 	}.call(process));
 });
 
 it("should not provide a module for a part of a var", function() {
-	expect((typeof bbb)).toBe("undefined");
+	(typeof bbb).should.be.eql("undefined");
 });
 
 it("should provide a module for a property request", function() {
-	expect((dddeeefff)).toBe("fff");
+	(dddeeefff).should.be.eql("fff");
 	var x = dddeeefff;
-	expect(x).toBe("fff");
+	x.should.be.eql("fff");
 });
 
 it("should provide ES2015 modules", function() {
-	expect((es2015.default)).toBe("ECMAScript 2015");
-	expect((es2015.alias)).toBe("ECMAScript Harmony");
-	expect((es2015.year)).toBe(2015);
-	expect((es2015_name)).toBe("ECMAScript 2015");
-	expect((es2015_alias)).toBe("ECMAScript Harmony");
-	expect((es2015_year)).toBe(2015);
+	(es2015.default).should.be.eql("ECMAScript 2015");
+	(es2015.alias).should.be.eql("ECMAScript Harmony");
+	(es2015.year).should.be.eql(2015);
+	(es2015_name).should.be.eql("ECMAScript 2015");
+	(es2015_alias).should.be.eql("ECMAScript Harmony");
+	(es2015_year).should.be.eql(2015);
 });

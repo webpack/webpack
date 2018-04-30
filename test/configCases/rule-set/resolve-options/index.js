@@ -1,6 +1,6 @@
 it("should allow to set custom resolving rules", function() {
 	var a = require("./a");
-	expect(a).toBe("ok");
+	a.should.be.eql("ok");
 	var b = require("./b");
-	expect(b).toBe("wrong");
+	b.should.be.eql("wrong");
 });

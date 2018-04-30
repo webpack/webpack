@@ -1,29 +1,32 @@
+var should = require("should");
 import d from "../0-create-dll/d";
 import { x1, y2 } from "./e";
 import { x2, y1 } from "../0-create-dll/e";
 
 it("should load a module from dll", function() {
-	expect(require("../0-create-dll/a")).toBe("a");
+	require("../0-create-dll/a").should.be.eql("a");
 });
 
 it("should load an async module from dll", function(done) {
 	require("../0-create-dll/b")().then(function(c) {
-		expect(c).toEqual({ default: "c" });
+		c.should.be.eql({ default: "c" });
 		done();
 	}).catch(done);
 });
 
 it("should load an harmony module from dll (default export)", function() {
-	expect(d).toBe("d");
+	d.should.be.eql("d");
 });
 
 it("should load an harmony module from dll (star export)", function() {
-	expect(x1).toBe(123);
-	expect(x2).toBe(123);
-	expect(y1).toBe(456);
-	expect(y2).toBe(456);
+	x1.should.be.eql(123);
+	x2.should.be.eql(123);
+	y1.should.be.eql(456);
+	y2.should.be.eql(456);
 });
 
 it("should load a module with loader applied", function() {
-	expect(require("../0-create-dll/g.abc.js")).toBe("number");
+	require("../0-create-dll/g.abc.js").should.be.eql("number");
 });
+
+

@@ -1,9 +1,9 @@
 import { value } from "./file";
 
 it("should auto-import a ES6 imported value on accept", function(done) {
-	expect(value).toBe(1);
+	value.should.be.eql(1);
 	module.hot.accept("./file", function() {
-		expect(value).toBe(2);
+		value.should.be.eql(2);
 		outside();
 		done();
 	});
@@ -11,5 +11,5 @@ it("should auto-import a ES6 imported value on accept", function(done) {
 });
 
 function outside() {
-	expect(value).toBe(2);
+	value.should.be.eql(2);
 }

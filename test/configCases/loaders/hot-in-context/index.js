@@ -1,3 +1,3 @@
 it("should have hmr flag in loader context", function() {
-	expect(require("./loader!")).toBe(!!module.hot);
+	require("./loader!").should.be.eql(!!module.hot);
 });

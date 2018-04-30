@@ -12,7 +12,7 @@ it("should parse template strings in require.ensure requires", function(done) {
 		];
 
 		for (var i = 0; i < imports.length; i++) {
-			expect(imports[i].default).toEqual("ok");
+			imports[i].default.should.eql("ok");
 		}
 		done()
 	})
@@ -31,7 +31,7 @@ it("should parse template strings in sync requires", function() {
 	];
 
 	for (var i = 0; i < imports.length; i++) {
-		expect(imports[i].default).toEqual("sync");
+		imports[i].default.should.eql("sync");
 	}
 })
 
@@ -40,7 +40,7 @@ it("should parse template strings in require.resolve", function() {
 
 	// Arbitrary assertion; can't use .ok() as it could be 0,
 	// can't use typeof as that depends on webpack config.
-	expect(require.resolve(`./sync/${name}Test`)).toBeDefined();
+	require.resolve(`./sync/${name}Test`).should.not.be.undefined();
 })
 
 it("should parse .concat strings in require.ensure requires", function(done) {
@@ -55,7 +55,7 @@ it("should parse .concat strings in require.ensure requires", function(done) {
 		];
 
 		for (var i = 0; i < imports.length; i++) {
-			expect(imports[i].default).toEqual("ok");
+			imports[i].default.should.eql("ok");
 		}
 		done()
 	})
@@ -72,7 +72,7 @@ it("should parse .concat strings in sync requires", function() {
 	];
 
 	for (var i = 0; i < imports.length; i++) {
-		expect(imports[i].default).toEqual("sync");
+		imports[i].default.should.eql("sync");
 	}
 })
 
@@ -81,5 +81,5 @@ it("should parse .concat strings in require.resolve", function() {
 
 	// Arbitrary assertion; can't use .ok() as it could be 0,
 	// can't use typeof as that depends on webpack config.
-	expect(require.resolve("./sync/".concat(name, "Test"))).toBeDefined();
+	require.resolve("./sync/".concat(name, "Test")).should.not.be.undefined();
 })

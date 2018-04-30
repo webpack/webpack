@@ -23,7 +23,7 @@ it("should transpile unreachable branches", () => {
 	true ? count++ : import("NOT_REACHABLE");
 	false ? import("NOT_REACHABLE") : count++;
 
-	expect(count).toBe(6);
+	count.should.be.eql(6);
 });
 
 it("should not remove hoisted variable declarations", () => {
@@ -55,7 +55,7 @@ it("should not remove hoisted variable declarations", () => {
 			var withVar;
 		}
 	}
-	expect(() => {
+	(() => {
 		a;
 		b;
 		c;
@@ -71,19 +71,19 @@ it("should not remove hoisted variable declarations", () => {
 		m;
 		n;
 		o;
-	}).not.toThrowError();
-	expect(() => {
+	}).should.not.throw();
+	(() => {
 		withVar;
-	}).toThrowError();
+	}).should.throw();
 });
 
 it("should not remove hoisted function declarations in loose mode", () => {
 	if(false) {
 		function funcDecl() {}
 	}
-	expect(() => {
+	(() => {
 		funcDecl;
-	}).not.toThrowError();
+	}).should.not.throw();
 });
 
 it("should remove hoisted function declarations in strict mode", () => {
@@ -91,7 +91,7 @@ it("should remove hoisted function declarations in strict mode", () => {
 	if(false) {
 		function funcDecl() {}
 	}
-	expect(() => {
+	(() => {
 		funcDecl;
-	}).toThrowError();
+	}).should.throw();
 });

@@ -1,8 +1,8 @@
 it("should throw exception on every try to load a module", function() {
-	expect(function() {
+	(function() {
 		require("./exception");
-	}).toThrowError();
-	expect(function() {
+	}).should.throw();
+	(function() {
 		require("./exception");
-	}).toThrowError();
+	}).should.throw();
 });

@@ -1,4 +1,5 @@
 var fs = require("fs");
+require("should");
 
 var findFile = function(files, regex) {
 	return files.find(function(file) {
@@ -9,7 +10,7 @@ var findFile = function(files, regex) {
 };
 
 var verifyFilenameLength = function(filename, expectedNameLength) {
-	expect(filename).toMatch(new RegExp("^.{" + expectedNameLength + "}$"));
+	filename.should.match(new RegExp("^.{" + expectedNameLength + "}$"));
 };
 
 module.exports = {

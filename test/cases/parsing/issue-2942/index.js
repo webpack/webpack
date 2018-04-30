@@ -2,11 +2,11 @@ it("should polyfill System", function() {
 	if (typeof System === "object" && typeof System.register === "function") {
 		require("fail");
 	}
-	expect((typeof System)).toBe("object");
-	expect((typeof System.register)).toBe("undefined");
-	expect((typeof System.get)).toBe("undefined");
-	expect((typeof System.set)).toBe("undefined");
-	expect((typeof System.anyNewItem)).toBe("undefined");
+	(typeof System).should.be.eql("object");
+	(typeof System.register).should.be.eql("undefined");
+	(typeof System.get).should.be.eql("undefined");
+	(typeof System.set).should.be.eql("undefined");
+	(typeof System.anyNewItem).should.be.eql("undefined");
 	var x = System.anyNewItem;
-	expect((typeof x)).toBe("undefined");
+	(typeof x).should.be.eql("undefined");
 })

@@ -3,7 +3,7 @@ it("should be able the catch a incorrect import", function(done) {
 	import("./folder/" + expr).then(function() {
 		done(new Error("should not be called"));
 	}).catch(function(err) {
-		expect(err).toBeInstanceOf(Error);
+		err.should.be.instanceof(Error);
 		done();
 	});
 });

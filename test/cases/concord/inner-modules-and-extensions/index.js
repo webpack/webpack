@@ -1,12 +1,12 @@
 it("should resolve the alias in package.json", function() {
-	expect(require("app/file").default).toBe("file");
+	require("app/file").default.should.be.eql("file");
 });
 
 it("should resolve the alias and extensions in package.json", function() {
-	expect(require("app/file2").default).toBe("correct file2");
+	require("app/file2").default.should.be.eql("correct file2");
 });
 
 it("should resolve the alias in package.json", function() {
-	expect(require("thing").default).toBe("the thing");
+	require("thing").default.should.be.eql("the thing");
 });
 

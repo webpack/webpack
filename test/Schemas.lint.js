@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
+require("should");
 const glob = require("glob");
 const rootDir = path.resolve(__dirname, "..");
 
@@ -29,9 +30,9 @@ describe("Schemas", () => {
 
 			if (content) {
 				it("should be formated correctly", () => {
-					expect(fileContent.replace(/\r\n?/g, "\n")).toBe(
-						JSON.stringify(content, 0, 2) + "\n"
-					);
+					fileContent
+						.replace(/\r\n?/g, "\n")
+						.should.be.eql(JSON.stringify(content, 0, 2) + "\n");
 				});
 
 				const arrayProperties = ["oneOf", "anyOf", "allOf"];
@@ -60,8 +61,8 @@ describe("Schemas", () => {
 
 				const validateProperty = property => {
 					it("should have description set", () => {
-						expect(typeof property.description).toBe("string");
-						expect(property.description.length).toBeGreaterThan(1);
+						property.should.be.property("description").be.type("string");
+						property.description.length.should.be.above(1);
 					});
 				};
 
@@ -119,7 +120,7 @@ describe("Schemas", () => {
 					}
 					if ("properties" in item) {
 						it("should have additionalProperties set to some value when describing properties", () => {
-							expect(item.additionalProperties).toBeDefined();
+							item.should.be.property("additionalProperties");
 						});
 						Object.keys(item.properties).forEach(name => {
 							describe(`> '${name}'`, () => {

@@ -1,12 +1,12 @@
 it("should recover from missing module", function() {
 	switch(WATCH_STEP) {
 		case "0":
-			expect(function() {
+			(function() {
 				require("some-module");
-			}).toThrow();
+			}).should.throw();
 			break;
 		case "1":
-			expect(require("some-module")).toBe("ok");
+			require("some-module").should.be.eql("ok");
 			break;
 	}
 });

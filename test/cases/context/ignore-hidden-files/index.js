@@ -1,6 +1,6 @@
 it("should ignore hidden files", function() {
-	expect(function() {
+	(function() {
 		var name = "./file.js";
 		require("./folder/" + name);
-	}).toThrowError();
+	}).should.throw();
 });

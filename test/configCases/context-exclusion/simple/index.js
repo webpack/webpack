@@ -3,15 +3,18 @@ function requireInContext(someVariable) {
 }
 
 it("should not exclude paths not matching the exclusion pattern", function() {
-	expect(requireInContext("file")).toBe("thats good");
-	expect(requireInContext("check-here/file")).toBe("thats good");
-	expect(requireInContext("check-here/check-here/file")).toBe("thats good");
+	requireInContext("file").should.be.eql("thats good");
+	requireInContext("check-here/file").should.be.eql("thats good");
+	requireInContext("check-here/check-here/file").should.be.eql("thats good");
 });
 
 it("should exclude paths/files matching the exclusion pattern", function() {
-		expect(() => requireInContext("dont")).toThrowError(/Cannot find module ".\/dont"/);
+		(() => requireInContext("dont")).
+			should.throw(/Cannot find module ".\/dont"/);
 
-		expect(() => requireInContext("dont-check-here/file")).toThrowError(/Cannot find module ".\/dont-check-here\/file"/);
+		(() => requireInContext("dont-check-here/file")).
+			should.throw(/Cannot find module ".\/dont-check-here\/file"/);
 
-		expect(() => requireInContext("check-here/dont-check-here/file")).toThrowError(/Cannot find module ".\/check-here\/dont-check-here\/file"/);
+		(() => requireInContext("check-here/dont-check-here/file")).
+			should.throw(/Cannot find module ".\/check-here\/dont-check-here\/file"/);
 });

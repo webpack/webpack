@@ -1,6 +1,6 @@
 it("should match only one rule in a oneOf block", function() {
 	var ab = require("./ab");
-	expect(ab).toEqual([
+	ab.should.be.eql([
 		"ab",
 		"?first"
 	]);
@@ -8,11 +8,11 @@ it("should match only one rule in a oneOf block", function() {
 it("should match with issuer and any option value", function() {
 	var a = require("./a");
 	var b = require("./b");
-	expect(a).toEqual([
+	a.should.be.eql([
 		"a",
 		"?third",
 	]);
-	expect(b).toEqual([[
+	b.should.be.eql([[
 		"a",
 		"second-3",
 		"?second-2",

@@ -1,8 +1,10 @@
+require("should");
+
 it("should run", function() {
 	var a = require("./a");
-	expect(a).toBe("a");
+	a.should.be.eql("a");
 });
 
 it("should be main", function() {
-	expect(require.main).toBe(module);
+	require.main.should.be.eql(module);
 });

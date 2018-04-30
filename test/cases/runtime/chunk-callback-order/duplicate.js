@@ -1,3 +1,3 @@
 require.ensure(["./a"], function(require) {
-	expect(require("./a")).toBe("a");
+	require("./a").should.be.eql("a");
 })

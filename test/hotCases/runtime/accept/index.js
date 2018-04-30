@@ -1,10 +1,10 @@
 var value = require("./file");
 
-it("should accept a dependencies and require a new value", (done) => {
-	expect(value).toBe(1);
-	module.hot.accept("./file", () => {
+it("should accept a dependencies and require a new value", function(done) {
+	value.should.be.eql(1);
+	module.hot.accept("./file", function() {
 		value = require("./file");
-		expect(value).toBe(2);
+		value.should.be.eql(2);
 		outside();
 		done();
 	});
@@ -12,5 +12,5 @@ it("should accept a dependencies and require a new value", (done) => {
 });
 
 function outside() {
-	expect(value).toBe(2);
+	value.should.be.eql(2);
 }

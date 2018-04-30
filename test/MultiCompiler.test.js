@@ -2,6 +2,7 @@
 
 /* globals describe it */
 const path = require("path");
+const should = require("should");
 const MemoryFs = require("memory-fs");
 const webpack = require("../");
 
@@ -30,7 +31,7 @@ describe("MultiCompiler", function() {
 			if (err) {
 				throw err;
 			} else {
-				expect(called).toBe(2);
+				should(called).be.equal(2);
 				done();
 			}
 		});
@@ -46,7 +47,7 @@ describe("MultiCompiler", function() {
 				throw err;
 			} else {
 				watcher.close();
-				expect(called).toBe(2);
+				should(called).be.equal(2);
 				done();
 			}
 		});
@@ -63,11 +64,11 @@ describe("MultiCompiler", function() {
 	});
 	it("should not be run twice at a time (watch)", function(done) {
 		const compiler = createMultiCompiler();
-		const watcher = compiler.watch({}, (err, stats) => {
+		compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
 		});
 		compiler.watch({}, (err, stats) => {
-			if (err) return watcher.close(done);
+			if (err) return done();
 		});
 	});
 	it("should not be run twice at a time (run - watch)", function(done) {
@@ -81,12 +82,11 @@ describe("MultiCompiler", function() {
 	});
 	it("should not be run twice at a time (watch - run)", function(done) {
 		const compiler = createMultiCompiler();
-		let watcher;
-		watcher = compiler.watch({}, (err, stats) => {
+		compiler.watch({}, (err, stats) => {
 			if (err) return done(err);
 		});
 		compiler.run((err, stats) => {
-			if (err) return watcher.close(done);
+			if (err) return done();
 		});
 	});
 	it("should not be run twice at a time (instance cb)", function(done) {
@@ -123,10 +123,9 @@ describe("MultiCompiler", function() {
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 
-			let watcher;
-			watcher = compiler.watch({}, (err, stats) => {
+			compiler.watch({}, (err, stats) => {
 				if (err) return done(err);
-				watcher.close(done);
+				done();
 			});
 		});
 	});
@@ -148,10 +147,9 @@ describe("MultiCompiler", function() {
 			if (err) return done(err);
 		});
 		watching.close(() => {
-			let watcher;
-			watcher = compiler.watch({}, (err, stats) => {
+			compiler.watch({}, (err, stats) => {
 				if (err) return done(err);
-				watcher.close(done);
+				done();
 			});
 		});
 	});

@@ -1,48 +1,48 @@
 /* globals describe, it, beforeEach */
 "use strict";
-
+require("should");
 const sinon = require("sinon");
 const ExternalModule = require("../lib/ExternalModule");
 const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
 
-describe("ExternalModule", () => {
+describe("ExternalModule", function() {
 	let externalModule;
 	let request;
 	let type;
-	beforeEach(() => {
+	beforeEach(function() {
 		request = "some/request";
 		type = "some-type";
 		externalModule = new ExternalModule(request, type, `${type} ${request}`);
 	});
-	describe("#identifier", () => {
-		it("returns an identifier for this module", () => {
+	describe("#identifier", function() {
+		it("returns an identifier for this module", function() {
 			const expected = `external "${request}"`;
-			expect(externalModule.identifier()).toBe(expected);
+			externalModule.identifier().should.eql(expected);
 		});
 	});
 
-	describe("#readableIdentifier", () => {
-		it("returns an identifier for this module", () => {
+	describe("#readableIdentifier", function() {
+		it("returns an identifier for this module", function() {
 			const expected = `external "${request}"`;
-			expect(externalModule.identifier()).toBe(expected);
+			externalModule.identifier().should.eql(expected);
 		});
 	});
 
-	describe("#needRebuild", () => {
-		it("always returns false", () => {
-			expect(externalModule.needRebuild()).toBe(false);
+	describe("#needRebuild", function() {
+		it("always returns false", function() {
+			externalModule.needRebuild().should.eql(false);
 		});
 	});
 
-	describe("#size", () => {
-		it("always returns 42", () => {
-			expect(externalModule.size()).toBe(42);
+	describe("#size", function() {
+		it("always returns 42", function() {
+			externalModule.size().should.eql(42);
 		});
 	});
 
-	describe("#source", () => {
-		it("calls getSource with the result of getSourceString", () => {
+	describe("#source", function() {
+		it("calls getSource with the result of getSourceString", function() {
 			// set up
 			const expectedString = "something expected stringy";
 			const expectedSource = "something expected source";
@@ -53,19 +53,19 @@ describe("ExternalModule", () => {
 			const result = externalModule.source();
 
 			// check
-			expect(externalModule.getSource.callCount).toBe(1);
-			expect(externalModule.getSourceString.callCount).toBe(1);
-			expect(externalModule.getSource.args[0][0]).toBe(expectedString);
-			expect(result).toEqual(expectedSource);
+			externalModule.getSource.callCount.should.eql(1);
+			externalModule.getSourceString.callCount.should.eql(1);
+			externalModule.getSource.args[0][0].should.eql(expectedString);
+			result.should.eql(expectedSource);
 		});
 	});
 
-	describe("#getSource", () => {
-		describe("given it should use source maps", () => {
-			beforeEach(() => {
+	describe("#getSource", function() {
+		describe("given it should use source maps", function() {
+			beforeEach(function() {
 				externalModule.useSourceMap = true;
 			});
-			it("returns an instance of OriginalSource", () => {
+			it("returns an instance of OriginalSource", function() {
 				// set up
 				const someSourceString = "some source string";
 
@@ -73,14 +73,14 @@ describe("ExternalModule", () => {
 				const result = externalModule.getSource(someSourceString);
 
 				// check
-				expect(result).toBeInstanceOf(OriginalSource);
+				result.should.be.instanceOf(OriginalSource);
 			});
 		});
-		describe("given it does not use source maps", () => {
-			beforeEach(() => {
+		describe("given it does not use source maps", function() {
+			beforeEach(function() {
 				externalModule.useSourceMap = false;
 			});
-			it("returns an instance of RawSource", () => {
+			it("returns an instance of RawSource", function() {
 				// set up
 				const someSourceString = "some source string";
 
@@ -88,14 +88,14 @@ describe("ExternalModule", () => {
 				const result = externalModule.getSource(someSourceString);
 
 				// check
-				expect(result).toBeInstanceOf(RawSource);
+				result.should.be.instanceOf(RawSource);
 			});
 		});
 	});
 
-	describe("#getSourceForGlobalVariableExternal", () => {
-		describe("given an array as variable name in the global namespace", () => {
-			it("use the array as lookup in the global object", () => {
+	describe("#getSourceForGlobalVariableExternal", function() {
+		describe("given an array as variable name in the global namespace", function() {
+			it("use the array as lookup in the global object", function() {
 				// set up
 				const type = "window";
 				const varName = ["foo", "bar"];
@@ -109,11 +109,11 @@ describe("ExternalModule", () => {
 				);
 
 				// check
-				expect(result).toEqual(expected);
+				result.should.eql(expected);
 			});
 		});
-		describe("given an single variable name", () => {
-			it("look it up in the global namespace", () => {
+		describe("given an single variable name", function() {
+			it("look it up in the global namespace", function() {
 				// set up
 				const type = "window";
 				const varName = "foo";
@@ -126,14 +126,14 @@ describe("ExternalModule", () => {
 				);
 
 				// check
-				expect(result).toEqual(expected);
+				result.should.eql(expected);
 			});
 		});
 	});
 
-	describe("#getSourceForCommonJsExternal", () => {
-		describe("given an array as names in the global namespace", () => {
-			it("use the first to require a module and the rest as lookup on the required module", () => {
+	describe("#getSourceForCommonJsExternal", function() {
+		describe("given an array as names in the global namespace", function() {
+			it("use the first to require a module and the rest as lookup on the required module", function() {
 				// set up
 				const varName = ["module", "look", "up"];
 				const expected = 'module.exports = require(module)["look"]["up"];';
@@ -145,11 +145,11 @@ describe("ExternalModule", () => {
 				);
 
 				// check
-				expect(result).toEqual(expected);
+				result.should.eql(expected);
 			});
 		});
-		describe("given an single variable name", () => {
-			it("require a module with that name", () => {
+		describe("given an single variable name", function() {
+			it("require a module with that name", function() {
 				// set up
 				const type = "window";
 				const varName = "foo";
@@ -162,13 +162,13 @@ describe("ExternalModule", () => {
 				);
 
 				// check
-				expect(result).toEqual(expected);
+				result.should.eql(expected);
 			});
 		});
 	});
 
-	describe("#checkExternalVariable", () => {
-		it("creates a check that fails if a variable does not exist", () => {
+	describe("#checkExternalVariable", function() {
+		it("creates a check that fails if a variable does not exist", function() {
 			// set up
 			const variableToCheck = "foo";
 			const request = "bar";
@@ -182,12 +182,12 @@ describe("ExternalModule", () => {
 			);
 
 			// check
-			expect(result).toEqual(expected);
+			result.should.eql(expected);
 		});
 	});
 
-	describe("#getSourceForAmdOrUmdExternal", () => {
-		it("looks up a global variable as specified by the id", () => {
+	describe("#getSourceForAmdOrUmdExternal", function() {
+		it("looks up a global variable as specified by the id", function() {
 			// set up
 			const id = "someId";
 			const optional = false;
@@ -201,10 +201,10 @@ describe("ExternalModule", () => {
 			);
 
 			// check
-			expect(result).toEqual(expected);
+			result.should.eql(expected);
 		});
 		describe("given an optional check is set", function() {
-			it("ads a check for the existence of the variable before looking it up", () => {
+			it("ads a check for the existence of the variable before looking it up", function() {
 				// set up
 				const id = "someId";
 				const optional = true;
@@ -219,13 +219,13 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 				);
 
 				// check
-				expect(result).toEqual(expected);
+				result.should.eql(expected);
 			});
 		});
 	});
 
-	describe("#getSourceForDefaultCase", () => {
-		it("returns the given request as lookup", () => {
+	describe("#getSourceForDefaultCase", function() {
+		it("returns the given request as lookup", function() {
 			// set up
 			const optional = false;
 			const expected = "module.exports = some/request;";
@@ -234,10 +234,10 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 			const result = externalModule.getSourceForDefaultCase(optional, request);
 
 			// check
-			expect(result).toEqual(expected);
+			result.should.eql(expected);
 		});
 		describe("given an optional check is requested", function() {
-			it("checks for the existence of the request setting it", () => {
+			it("checks for the existence of the request setting it", function() {
 				// set up
 				const optional = true;
 				const expected = `if(typeof some/request === 'undefined') {var e = new Error("Cannot find module \\"some/request\\""); e.code = 'MODULE_NOT_FOUND'; throw e;}
@@ -250,15 +250,15 @@ module.exports = some/request;`;
 				);
 
 				// check
-				expect(result).toEqual(expected);
+				result.should.eql(expected);
 			});
 		});
 	});
 
-	describe("#updateHash", () => {
+	describe("#updateHash", function() {
 		let hashedText;
 		let hash;
-		beforeEach(() => {
+		beforeEach(function() {
 			hashedText = "";
 			hash = {
 				update: text => {
@@ -268,21 +268,21 @@ module.exports = some/request;`;
 			externalModule.id = 12345678;
 			externalModule.updateHash(hash);
 		});
-		it("updates hash with request", () => {
-			expect(hashedText).toMatch("some/request");
+		it("updates hash with request", function() {
+			hashedText.should.containEql("some/request");
 		});
-		it("updates hash with type", () => {
-			expect(hashedText).toMatch("some-type");
+		it("updates hash with type", function() {
+			hashedText.should.containEql("some-type");
 		});
-		it("updates hash with module id", () => {
-			expect(hashedText).toMatch("12345678");
+		it("updates hash with module id", function() {
+			hashedText.should.containEql("12345678");
 		});
 	});
 
-	describe("#updateHash without optional", () => {
+	describe("#updateHash without optional", function() {
 		let hashedText;
 		let hash;
-		beforeEach(() => {
+		beforeEach(function() {
 			hashedText = "";
 			hash = {
 				update: text => {
@@ -293,17 +293,17 @@ module.exports = some/request;`;
 			externalModule.id = 12345678;
 			externalModule.updateHash(hash);
 		});
-		it("updates hash with request", () => {
-			expect(hashedText).toMatch("some/request");
+		it("updates hash with request", function() {
+			hashedText.should.containEql("some/request");
 		});
-		it("updates hash with type", () => {
-			expect(hashedText).toMatch("some-type");
+		it("updates hash with type", function() {
+			hashedText.should.containEql("some-type");
 		});
-		it("updates hash with optional flag", () => {
-			expect(hashedText).toMatch("false");
+		it("updates hash with optional flag", function() {
+			hashedText.should.containEql("false");
 		});
-		it("updates hash with module id", () => {
-			expect(hashedText).toMatch("12345678");
+		it("updates hash with module id", function() {
+			hashedText.should.containEql("12345678");
 		});
 	});
 });
