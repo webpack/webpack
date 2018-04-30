@@ -11,32 +11,28 @@ describe("SourceMapDevToolModuleOptionsPlugin", () => {
 		beforeEach(() => (eventBindings = undefined));
 
 		describe("with module false and line-to-line false", () => {
-			beforeEach(
-				() =>
-					(eventBindings = applyPluginWithOptions(
-						SourceMapDevToolModuleOptionsPlugin,
-						{
-							module: false,
-							lineToLine: false
-						}
-					))
-			);
+			beforeEach(() =>
+				(eventBindings = applyPluginWithOptions(
+					SourceMapDevToolModuleOptionsPlugin,
+					{
+						module: false,
+						lineToLine: false
+					}
+				)));
 
 			it("does not bind any event handlers", () =>
 				eventBindings.length.should.be.exactly(0));
 		});
 
 		describe("with module true", () => {
-			beforeEach(
-				() =>
-					(eventBindings = applyPluginWithOptions(
-						SourceMapDevToolModuleOptionsPlugin,
-						{
-							module: true,
-							lineToLine: false
-						}
-					))
-			);
+			beforeEach(() =>
+				(eventBindings = applyPluginWithOptions(
+					SourceMapDevToolModuleOptionsPlugin,
+					{
+						module: true,
+						lineToLine: false
+					}
+				)));
 
 			it("binds one event handler", () =>
 				eventBindings.length.should.be.exactly(1));
@@ -56,16 +52,14 @@ describe("SourceMapDevToolModuleOptionsPlugin", () => {
 		});
 
 		describe("with line-to-line true", () => {
-			beforeEach(
-				() =>
-					(eventBindings = applyPluginWithOptions(
-						SourceMapDevToolModuleOptionsPlugin,
-						{
-							module: false,
-							lineToLine: true
-						}
-					))
-			);
+			beforeEach(() =>
+				(eventBindings = applyPluginWithOptions(
+					SourceMapDevToolModuleOptionsPlugin,
+					{
+						module: false,
+						lineToLine: true
+					}
+				)));
 
 			it("binds one event handler", () =>
 				eventBindings.length.should.be.exactly(1));
@@ -85,16 +79,14 @@ describe("SourceMapDevToolModuleOptionsPlugin", () => {
 		});
 
 		describe("with line-to-line object", () => {
-			beforeEach(
-				() =>
-					(eventBindings = applyPluginWithOptions(
-						SourceMapDevToolModuleOptionsPlugin,
-						{
-							module: false,
-							lineToLine: {}
-						}
-					))
-			);
+			beforeEach(() =>
+				(eventBindings = applyPluginWithOptions(
+					SourceMapDevToolModuleOptionsPlugin,
+					{
+						module: false,
+						lineToLine: {}
+					}
+				)));
 
 			it("binds one event handler", () =>
 				eventBindings.length.should.be.exactly(1));
