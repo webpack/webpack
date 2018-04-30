@@ -164,17 +164,8 @@ const describeCases = config => {
 							it(
 								testName + " should compile",
 								done => {
-									const compilationName = `${config.name}/${
-										category.name
-									}/${testName}`;
-									if (process.env.CI) {
-										process.stderr.write(`[COMPILING] ${compilationName}\n`);
-									}
 									webpack(options, (err, stats) => {
 										if (err) done(err);
-										if (process.env.CI) {
-											process.stderr.write(`[COMPILED] ${compilationName}\n`);
-										}
 										const statOptions = Stats.presetToOptions("verbose");
 										statOptions.colors = false;
 										mkdirp.sync(outputDirectory);

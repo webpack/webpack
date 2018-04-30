@@ -123,11 +123,6 @@ describe("WatchTestCases", () => {
 							currentWatchStepModule.step = run.name;
 							copyDiff(path.join(testDirectory, run.name), tempDirectory);
 
-							const compilationName = `watch/${category.name}/${testName}`;
-							if (process.env.CI) {
-								process.stderr.write(`[COMPILING] ${compilationName}\n`);
-							}
-
 							setTimeout(() => {
 								const compiler = webpack(options);
 								compiler.hooks.invalid.tap(
@@ -164,9 +159,6 @@ describe("WatchTestCases", () => {
 										if (waitMode) return;
 										run.done = true;
 										if (err) return done(err);
-										if (process.env.CI) {
-											process.stderr.write(`[COMPILED] ${compilationName}\n`);
-										}
 										const statOptions = Stats.presetToOptions("verbose");
 										statOptions.colors = false;
 										mkdirp.sync(outputDirectory);

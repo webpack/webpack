@@ -78,17 +78,8 @@ describe("HotTestCases", () => {
 							);
 							if (!options.recordsPath) options.recordsPath = recordsPath;
 							const compiler = webpack(options);
-							const compilationName = `HotTestCases/${
-								category.name
-							}/${testName}`;
-							if (process.env.CI) {
-								process.stderr.write(`[COMPILING] ${compilationName}\n`);
-							}
 							compiler.run((err, stats) => {
 								if (err) return done(err);
-								if (process.env.CI) {
-									process.stderr.write(`[COMPILED] ${compilationName}\n`);
-								}
 								const jsonStats = stats.toJson({
 									errorDetails: true
 								});

@@ -102,10 +102,6 @@ describe("ConfigTestCases", () => {
 									// ignored
 								}
 
-								const compilationName = `config/${category.name}/${testName}`;
-								if (process.env.CI) {
-									process.stderr.write(`[COMPILING] ${compilationName}\n`);
-								}
 								webpack(options, (err, stats) => {
 									if (err) {
 										const fakeStats = {
@@ -123,9 +119,6 @@ describe("ConfigTestCases", () => {
 											return;
 										// Wait for uncaught errors to occur
 										return setTimeout(done, 200);
-									}
-									if (process.env.CI) {
-										process.stderr.write(`[COMPILED] ${compilationName}\n`);
 									}
 									const statOptions = Stats.presetToOptions("verbose");
 									statOptions.colors = false;
