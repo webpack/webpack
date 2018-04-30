@@ -1,53 +1,52 @@
 "use strict";
 
-import should from "should";
 import {extendThisClass, returnThisArrow, returnThisMember, that} from "./abc";
 import d, {a, b as B, C as _C, D as _D, E, F, f1, f2, f3, G} from "./abc";
 
 import * as abc from "./abc";
 
 it("should have this = undefined on harmony modules", function() {
-	(typeof that).should.be.eql("undefined");
-	(typeof abc.that).should.be.eql("undefined");
-	(typeof returnThisArrow()).should.be.eql("undefined");
-	(typeof abc.returnThisArrow()).should.be.eql("undefined");
-	(function() {
+	expect((typeof that)).toBe("undefined");
+	expect((typeof abc.that)).toBe("undefined");
+	expect((typeof returnThisArrow())).toBe("undefined");
+	expect((typeof abc.returnThisArrow())).toBe("undefined");
+	expect(function() {
 		returnThisMember();
-	}).should.throw();
-	(function() {
+	}).toThrowError();
+	expect(function() {
 		abc.returnThisMember();
-	}).should.throw();
-	(function() {
+	}).toThrowError();
+	expect(function() {
 		extendThisClass();
-	}).should.throw();
+	}).toThrowError();
 });
 
 it("should not break classes and functions", function() {
-	(new _C).foo().should.be.eql("bar");
-	(new _C).bar().should.be.eql("bar");
-	(new _D).prop().should.be.eql("ok");
-	E.foo().should.be.eql("bar");
-	F.should.be.eql("ok");
-	f1.call({x: "f1"}).should.be.eql("f1");
-	f2.call({x: "f2"}).should.be.eql("f2");
-	should(f3.call("f3")).be.eql(undefined);
-	should(f3()).be.eql(undefined);
-	(new G("ok")).getX().should.be.eql("ok");
+	expect((new _C).foo()).toBe("bar");
+	expect((new _C).bar()).toBe("bar");
+	expect((new _D).prop()).toBe("ok");
+	expect(E.foo()).toBe("bar");
+	expect(F).toBe("ok");
+	expect(f1.call({x: "f1"})).toBe("f1");
+	expect(f2.call({x: "f2"})).toBe("f2");
+	expect(f3.call("f3")).toBe(undefined);
+	expect(f3()).toBe(undefined);
+	expect((new G("ok")).getX()).toBe("ok");
 });
 
 function x() { throw new Error("should not be executed"); }
 it("should have this = undefined on imported non-strict functions", function() {
 	x
-	d().should.be.eql("undefined");
+	expect(d()).toBe("undefined");
 	x
-	a().should.be.eql("undefined");
+	expect(a()).toBe("undefined");
 	x
-	B().should.be.eql("undefined");
+	expect(B()).toBe("undefined");
 	x
-	abc.a().should.be.type("object");
+	expect(abc.a()).toBeTypeOf("object");
 	x
 	var thing = abc.a();
-	Object.keys(thing).should.be.eql(Object.keys(abc));
+	expect(Object.keys(thing)).toEqual(Object.keys(abc));
 });
 
 import C2, { C } from "./new";
@@ -56,9 +55,9 @@ import * as New from "./new";
 
 it("should be possible to use new correctly", function() {
 	x
-	new C().should.match({ok: true});
+	expect(new C()).toEqual({ok: true});
 	x
-	new C2().should.match({ok: true});
+	expect(new C2()).toEqual({ok: true});
 	x
-	new New.C().should.match({ok: true});
+	expect(new New.C()).toEqual({ok: true});
 });
