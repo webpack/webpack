@@ -1,28 +1,28 @@
 it("should be able to load a file with the require.context method", function() {
-	expect(require.context("./templates")("./tmpl")).toBe("test template");
-	expect((require.context("./././templates"))("./tmpl")).toBe("test template");
-	expect((require.context("././templates/.")("./tmpl"))).toBe("test template");
-	expect(require.context("./loaders/queryloader?dog=bark!./templates?cat=meow")("./tmpl")).toEqual({
+	require.context("./templates")("./tmpl").should.be.eql("test template");
+	(require.context("./././templates"))("./tmpl").should.be.eql("test template");
+	(require.context("././templates/.")("./tmpl")).should.be.eql("test template");
+	require.context("./loaders/queryloader?dog=bark!./templates?cat=meow")("./tmpl").should.be.eql({
 		resourceQuery: "?cat=meow",
 		query: "?dog=bark",
 		prev: "module.exports = \"test template\";"
 	});
-	expect(require . context ( "." + "/." + "/" + "templ" + "ates" ) ( "./subdir/tmpl.js" )).toBe("subdir test template");
-	expect(require.context("./templates", true, /./)("xyz")).toBe("xyz");
+	require . context ( "." + "/." + "/" + "templ" + "ates" ) ( "./subdir/tmpl.js" ).should.be.eql("subdir test template");
+	require.context("./templates", true, /./)("xyz").should.be.eql("xyz");
 });
 
 it("should automatically create contexts", function() {
 	var template = "tmpl", templateFull = "./tmpl.js";
 	var mp = "mp", tmp = "tmp", mpl = "mpl";
-	expect(require("./templates/" + template)).toBe("test template");
-	expect(require("./templates/" + tmp + "l")).toBe("test template");
-	expect(require("./templates/t" + mpl)).toBe("test template");
-	expect(require("./templates/t" + mp + "l")).toBe("test template");
+	require("./templates/" + template).should.be.eql("test template");
+	require("./templates/" + tmp + "l").should.be.eql("test template");
+	require("./templates/t" + mpl).should.be.eql("test template");
+	require("./templates/t" + mp + "l").should.be.eql("test template");
 });
 
 it("should be able to require.resolve with automatical context", function() {
 	var template = "tmpl";
-	expect(require.resolve("./templates/" + template)).toBe(require.resolve("./templates/tmpl"));
+	require.resolve("./templates/" + template).should.be.eql(require.resolve("./templates/tmpl"));
 });
 
 it("should be able to use renaming combined with a context", function() {
@@ -30,22 +30,22 @@ it("should be able to use renaming combined with a context", function() {
 	require = function () {};
 	require("fail");
 	var template = "tmpl";
-	expect(renamedRequire("./templates/" + template)).toBe("test template");
+	renamedRequire("./templates/" + template).should.be.eql("test template");
 });
 
 it("should compile an empty context", function() {
 	var x = "xxx";
-	expect(function() {
+	(function() {
 		require("./templates/notExisting" + x);
-	}).toThrowError(/xxx/);
+	}).should.throw(/xxx/);
 });
 
 it("should execute an empty context", function() {
 	var context;
-	expect(function() {
+	(function() {
 		context = require.context("./templates/", true, /^\.\/notExisting/);
-	}).not.toThrowError();
-	expect(function() {
+	}).should.not.throw();
+	(function() {
 		context("");
-	}).toThrowError();
+	}).should.throw();
 });

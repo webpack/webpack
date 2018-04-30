@@ -1,5 +1,5 @@
 it("should hide stack in details", function() {
-	expect(function f() {
+	(function f() {
 		require("./loader!");
-	}).toThrowError();
+	}).should.throw();
 });

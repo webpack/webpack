@@ -3,11 +3,11 @@ it("should evaluate require.resolve as truthy value", function() {
 	if(require.resolve)
 		id = require.resolve("./module.js");
 
-	expect(typeof id === "number" || typeof id === "string").toBeTruthy();
+	(typeof id).should.be.oneOf("number", "string");
 });
 
 it("should evaluate require.resolve in ?: expression", function() {
 	var id = require.resolve ? require.resolve("./module.js") : null;
 
-	expect(typeof id === "number" || typeof id === "string").toBeTruthy();
+	(typeof id).should.be.oneOf("number", "string");
 });

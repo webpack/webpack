@@ -51,7 +51,7 @@ import { count } from "./module";
 it("should run async functions", function() {
 	var org = count;
 	notExportedAsync();
-	expect(count).toBe(org + 1);
+	count.should.be.eql(org + 1);
 	exportedAsync();
-	expect(count).toBe(org + 2);
+	count.should.be.eql(org + 2);
 });

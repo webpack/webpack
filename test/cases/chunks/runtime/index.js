@@ -21,7 +21,7 @@ it("should not load a chunk which is included in a already loaded one", function
 	var asyncFlag = false;
 	require.ensure(["./empty?x", "./empty?y", "./empty?z"], function(require) {
 		try {
-			expect(asyncFlag).toBe(true);
+			asyncFlag.should.be.eql(true);
 			loadChunk();
 		} catch(e) {
 			done(e);
@@ -34,7 +34,7 @@ it("should not load a chunk which is included in a already loaded one", function
 		var sync = true;
 		require.ensure(["./empty?x", "./empty?y"], function(require) {
 			try {
-				expect(sync).toBe(true);
+				sync.should.be.eql(true);
 				done();
 			} catch(e) {
 				done(e);

@@ -1,24 +1,26 @@
+require("should");
+
 import * as both from './dynamic-and-static'
 import * as staticModule from './static'
 
 it("should not change chunkhash of manifest chunk", function () {
 	const manifestChunk = STATS_JSON.chunks.find((chunk) => chunk.names.indexOf("runtime~main") !== -1);
-	expect(!manifestChunk).toBe(false);
+	(!manifestChunk).should.be.false("Main chunk not found");
 	switch (WATCH_STEP) {
 		case "0":
 			STATE.hash = manifestChunk.hash;
-			expect(staticModule).toBe("Normal");
-			expect(both).toBe("Normal");
+			staticModule.should.be.eql("Normal");
+			both.should.be.eql("Normal");
 			break;
 		case "1":
-			expect(manifestChunk.hash).toBe(STATE.hash);
-			expect(staticModule).toBe("Changed");
-			expect(both).toBe("Normal");
+			manifestChunk.hash.should.be.eql(STATE.hash);
+			staticModule.should.be.eql("Changed");
+			both.should.be.eql("Normal");
 			break;
 		case "2":
-			expect(manifestChunk.hash).toBe(STATE.hash);
-			expect(staticModule).toBe("Changed");
-			expect(both).toBe("Changed");
+			manifestChunk.hash.should.be.eql(STATE.hash);
+			staticModule.should.be.eql("Changed");
+			both.should.be.eql("Changed");
 			break;
 	}
 });
@@ -30,10 +32,10 @@ it("should load additional chunk", function() {
 			switch (step) {
 				case "0":
 				case "1":
-					expect(dynamic.default).toBe("Normal");
+					dynamic.default.should.be.eql("Normal");
 					break;
 				case "2":
-					expect(dynamic.default).toBe("Changed");
+					dynamic.default.should.be.eql("Changed");
 					break;
 			}
 		});

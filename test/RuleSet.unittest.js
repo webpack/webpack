@@ -1,5 +1,7 @@
 "use strict";
 
+const should = require("should");
+
 const RuleSet = require("../lib/RuleSet");
 
 function match(ruleSet, resource) {
@@ -21,11 +23,11 @@ function match(ruleSet, resource) {
 describe("RuleSet", () => {
 	it("should create RuleSet with a blank array", () => {
 		const loader = new RuleSet([]);
-		expect(loader.rules).toEqual([]);
+		loader.rules.should.eql([]);
 	});
 	it("should create RuleSet and match with empty array", () => {
 		const loader = new RuleSet([]);
-		expect(match(loader, "something")).toEqual([]);
+		match(loader, "something").should.eql([]);
 	});
 	it("should not match with loaders array", () => {
 		const loader = new RuleSet([
@@ -34,7 +36,7 @@ describe("RuleSet", () => {
 				loader: "css"
 			}
 		]);
-		expect(match(loader, "something")).toEqual([]);
+		match(loader, "something").should.eql([]);
 	});
 
 	it("should match with regex", () => {
@@ -44,7 +46,7 @@ describe("RuleSet", () => {
 				loader: "css"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css"]);
+		match(loader, "style.css").should.eql(["css"]);
 	});
 
 	it("should match with string", () => {
@@ -54,7 +56,7 @@ describe("RuleSet", () => {
 				loader: "css"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css"]);
+		match(loader, "style.css").should.eql(["css"]);
 	});
 
 	it("should match with function", () => {
@@ -66,11 +68,11 @@ describe("RuleSet", () => {
 				loader: "css"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css"]);
+		match(loader, "style.css").should.eql(["css"]);
 	});
 
 	it("should throw if invalid test", () => {
-		expect(() => {
+		should.throws(() => {
 			const loader = new RuleSet([
 				{
 					test: {
@@ -79,8 +81,8 @@ describe("RuleSet", () => {
 					loader: "css"
 				}
 			]);
-			match(loader, "style.css");
-		}).toThrow(/Unexcepted property invalid in condition/);
+			match(loader, "style.css").should.eql(["css"]);
+		}, /Unexcepted property invalid in condition/);
 	});
 
 	it("should accept multiple test array that all match", () => {
@@ -90,7 +92,7 @@ describe("RuleSet", () => {
 				loader: "css"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css"]);
+		match(loader, "style.css").should.eql(["css"]);
 	});
 
 	it("should accept multiple test array that not all match", () => {
@@ -100,7 +102,7 @@ describe("RuleSet", () => {
 				loader: "css"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css"]);
+		match(loader, "style.css").should.eql(["css"]);
 	});
 
 	it("should not match if include does not match", () => {
@@ -111,7 +113,7 @@ describe("RuleSet", () => {
 				loader: "css"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual([]);
+		match(loader, "style.css").should.eql([]);
 	});
 
 	it("should match if include matches", () => {
@@ -122,7 +124,7 @@ describe("RuleSet", () => {
 				loader: "css"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css"]);
+		match(loader, "style.css").should.eql(["css"]);
 	});
 
 	it("should not match if exclude matches", () => {
@@ -133,7 +135,7 @@ describe("RuleSet", () => {
 				loader: "css"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual([]);
+		match(loader, "style.css").should.eql([]);
 	});
 
 	it("should match if exclude does not match", () => {
@@ -144,7 +146,7 @@ describe("RuleSet", () => {
 				loader: "css"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css"]);
+		match(loader, "style.css").should.eql(["css"]);
 	});
 
 	it("should work if a loader is applied to all files", () => {
@@ -153,8 +155,8 @@ describe("RuleSet", () => {
 				loader: "css"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css"]);
-		expect(match(loader, "scripts.js")).toEqual(["css"]);
+		match(loader, "style.css").should.eql(["css"]);
+		match(loader, "scripts.js").should.eql(["css"]);
 	});
 
 	it("should work with using loader as string", () => {
@@ -164,7 +166,7 @@ describe("RuleSet", () => {
 				loader: "css"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css"]);
+		match(loader, "style.css").should.eql(["css"]);
 	});
 
 	it("should work with using loader as array", () => {
@@ -174,7 +176,7 @@ describe("RuleSet", () => {
 				loader: ["css"]
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css"]);
+		match(loader, "style.css").should.eql(["css"]);
 	});
 
 	it("should work with using loaders as string", () => {
@@ -184,7 +186,7 @@ describe("RuleSet", () => {
 				loaders: "css"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css"]);
+		match(loader, "style.css").should.eql(["css"]);
 	});
 
 	it("should work with using loaders as array", () => {
@@ -194,11 +196,11 @@ describe("RuleSet", () => {
 				loaders: ["css"]
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css"]);
+		match(loader, "style.css").should.eql(["css"]);
 	});
 
 	it("should throw if using loaders with non-string or array", () => {
-		expect(() => {
+		should.throws(function() {
 			const loader = new RuleSet([
 				{
 					test: /\.css$/,
@@ -207,8 +209,8 @@ describe("RuleSet", () => {
 					}
 				}
 			]);
-			match(loader, "style.css");
-		}).toThrow(/No loader specified/);
+			match(loader, "style.css").should.eql(["css"]);
+		}, /No loader specified/);
 	});
 
 	it("should work with using loader with inline query", () => {
@@ -218,7 +220,7 @@ describe("RuleSet", () => {
 				loader: "css?modules=1"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css?modules=1"]);
+		match(loader, "style.css").should.eql(["css?modules=1"]);
 	});
 
 	it("should work with using loader with string query", () => {
@@ -229,7 +231,7 @@ describe("RuleSet", () => {
 				query: "modules=1"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css?modules=1"]);
+		match(loader, "style.css").should.eql(["css?modules=1"]);
 	});
 
 	it("should work with using loader with object query", () => {
@@ -242,7 +244,7 @@ describe("RuleSet", () => {
 				}
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(['css?{"modules":1}']);
+		match(loader, "style.css").should.eql(['css?{"modules":1}']);
 	});
 
 	it("should work with using array loaders with basic object notation", () => {
@@ -256,11 +258,11 @@ describe("RuleSet", () => {
 				]
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css"]);
+		match(loader, "style.css").should.eql(["css"]);
 	});
 
 	it("should throw if using array loaders with object notation without specifying a loader", () => {
-		expect(() => {
+		should.throws(() => {
 			const loader = new RuleSet([
 				{
 					test: /\.css$/,
@@ -272,7 +274,7 @@ describe("RuleSet", () => {
 				}
 			]);
 			match(loader, "style.css");
-		}).toThrow(/No loader specified/);
+		}, /No loader specified/);
 	});
 
 	it("should work with using array loaders with object notation", () => {
@@ -287,7 +289,7 @@ describe("RuleSet", () => {
 				]
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["css?modules=1"]);
+		match(loader, "style.css").should.eql(["css?modules=1"]);
 	});
 
 	it("should work with using multiple array loaders with object notation", () => {
@@ -306,7 +308,7 @@ describe("RuleSet", () => {
 				]
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual([
+		match(loader, "style.css").should.eql([
 			"style?filesize=1000",
 			"css?modules=1"
 		]);
@@ -319,14 +321,14 @@ describe("RuleSet", () => {
 				loaders: "style?filesize=1000!css?modules=1"
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual([
+		match(loader, "style.css").should.eql([
 			"style?filesize=1000",
 			"css?modules=1"
 		]);
 	});
 
 	it("should throw if using array loaders with a single legacy", () => {
-		expect(() => {
+		should.throws(() => {
 			const loader = new RuleSet([
 				{
 					test: /\.css$/,
@@ -334,8 +336,8 @@ describe("RuleSet", () => {
 					query: "modules=1"
 				}
 			]);
-			match(loader, "style.css");
-		}).toThrow(/options\/query cannot be used with loaders/);
+			match(loader, "style.css").should.eql(["css"]);
+		}, /options\/query cannot be used with loaders/);
 	});
 
 	it("should work when using array loaders", () => {
@@ -345,7 +347,7 @@ describe("RuleSet", () => {
 				loaders: ["style-loader", "css-loader"]
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["style-loader", "css-loader"]);
+		match(loader, "style.css").should.eql(["style-loader", "css-loader"]);
 	});
 
 	it("should work when using an array of functions returning a loader", () => {
@@ -366,7 +368,7 @@ describe("RuleSet", () => {
 				]
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["style-loader", "css-loader"]);
+		match(loader, "style.css").should.eql(["style-loader", "css-loader"]);
 	});
 
 	it("should work when using an array of either functions or strings returning a loader", () => {
@@ -383,7 +385,7 @@ describe("RuleSet", () => {
 				]
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["style-loader", "css-loader"]);
+		match(loader, "style.css").should.eql(["style-loader", "css-loader"]);
 	});
 
 	it("should work when using an array of functions returning either a loader object or loader name string", () => {
@@ -402,35 +404,37 @@ describe("RuleSet", () => {
 				]
 			}
 		]);
-		expect(match(loader, "style.css")).toEqual(["style-loader", "css-loader"]);
+		match(loader, "style.css").should.eql(["style-loader", "css-loader"]);
 	});
 
 	it("should throw if using array loaders with invalid type", () => {
-		expect(() => {
+		should.throws(() => {
 			const loader = new RuleSet([
 				{
 					test: /\.css$/,
 					loaders: ["style-loader", "css-loader", 5]
 				}
 			]);
-			match(loader, "style.css");
-		}).toThrow(/No loader specified/);
+			match(loader, "style.css").should.eql(["css"]);
+		}, /No loader specified/);
 	});
 
 	describe("when exclude array holds an undefined item", () => {
 		function errorHasContext(err) {
-			return (
+			if (
 				/Expected condition but got falsy value/.test(err) &&
 				/test/.test(err) &&
 				/include/.test(err) &&
 				/exclude/.test(err) &&
 				/node_modules/.test(err) &&
 				/undefined/.test(err)
-			);
+			) {
+				return true;
+			}
 		}
 
 		it("should throw with context", () => {
-			try {
+			should.throws(() => {
 				const loader = new RuleSet([
 					{
 						test: /\.css$/,
@@ -439,14 +443,11 @@ describe("RuleSet", () => {
 						exclude: ["node_modules", undefined]
 					}
 				]);
-				match(loader, "style.css");
-				throw new Error("unreachable");
-			} catch (e) {
-				expect(errorHasContext(e.message)).toBe(true);
-			}
+				match(loader, "style.css").should.eql(["css"]);
+			}, errorHasContext);
 		});
 		it("in resource should throw with context", () => {
-			try {
+			should.throws(() => {
 				const loader = new RuleSet([
 					{
 						resource: {
@@ -456,14 +457,12 @@ describe("RuleSet", () => {
 						}
 					}
 				]);
-				match(loader, "style.css");
-				throw new Error("unreachable");
-			} catch (e) {
-				expect(errorHasContext(e.message)).toBe(true);
-			}
+				match(loader, "style.css").should.eql(["css"]);
+			}, errorHasContext);
 		});
+
 		it("in issuer should throw with context", () => {
-			try {
+			should.throws(() => {
 				const loader = new RuleSet([
 					{
 						issuer: {
@@ -473,11 +472,8 @@ describe("RuleSet", () => {
 						}
 					}
 				]);
-				match(loader, "style.css");
-				throw new Error("unreachable");
-			} catch (e) {
-				expect(errorHasContext(e.message)).toBe(true);
-			}
+				match(loader, "style.css").should.eql(["css"]);
+			}, errorHasContext);
 		});
 	});
 });

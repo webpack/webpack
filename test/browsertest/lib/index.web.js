@@ -9,24 +9,27 @@ require("script-loader!../js/library1.js");
 require("./stylesheet.css");
 require("./stylesheet.less");
 
+var should = require("should");
+if(!should.exist) should.exist = function(x) { should.strictEqual(x === undefined, false); should.strictEqual(x === null, false); }
+
 describe("main", function() {
 	it("should load library1 with script-loader", function() {
-		expect(window.library1).toEqual(expect.anything());
-		expect(window.library1).toBe(true);
+		should.exist(window.library1);
+		window.library1.should.be.eql(true);
 	});
 
 	it("should load library2 exported as global", function() {
-		expect(window.library2common).toEqual(expect.anything());
-		expect(window.library2common.ok2).toEqual(expect.anything());
-		expect(window.library2common.ok2).toBe(true);
-		expect(window.library2).toEqual(expect.anything());
-		expect(window.library2.ok).toEqual(expect.anything());
-		expect(window.library2.ok).toBe(true);
+		should.exist(window.library2common);
+		should.exist(window.library2common.ok2);
+		window.library2common.ok2.should.be.eql(true);
+		should.exist(window.library2);
+		should.exist(window.library2.ok);
+		window.library2.ok.should.be.eql(true);
 	});
 
 	describe("web resolving", function() {
 		it("should load index.web.js instead of index.js", function() {
-			expect(true).toBe(true);
+			true.should.be.eql(true);
 		});
 
 		it("should load correct replacements for files", function(done) {
@@ -40,8 +43,8 @@ describe("main", function() {
 		});
 
 		after(function() {
-			expect(exports.ok).toEqual(expect.anything());
-			expect(exports.ok).toBe(true);
+			should.exist(exports.ok);
+			exports.ok.should.be.eql(true);
 		});
 	});
 
@@ -49,8 +52,8 @@ describe("main", function() {
 		it("should have support for require.main", function() {
 			var value = require.main === module;
 			var otherModuleValue = require("./testRequireMain");
-			expect(value).toBe(true);
-			expect(otherModuleValue).toBe(false);
+			value.should.be.eql(true);
+			otherModuleValue.should.be.eql(false);
 		});
 	});
 
@@ -62,12 +65,12 @@ describe("main", function() {
 		});
 
 		it("should polyfill process and module", function(done) {
-			expect(typeof module.id).toBe("number");
+			module.id.should.have.type("number");
 			require.ensure([], function(require) {
 				test(Array.isArray(process.argv), "process.argv should be an array");
 				process.nextTick(function() {
 					sum2++;
-					expect(sum2).toBe(2);
+					sum2.should.be.eql(2);
 					done();
 				});
 				sum2++;
@@ -78,7 +81,7 @@ describe("main", function() {
 
 	describe("web loaders", function() {
 		it("should handle the file loader correctly", function() {
-			expect(require("!file-loader!../img/image.png")).toMatch(/js\/.+\.png$/);
+			require("!file-loader!../img/image.png").should.match(/js\/.+\.png$/);
 			document.getElementById("image").src = require("file-loader?prefix=img/!../img/image.png");
 		});
 	});
@@ -90,10 +93,10 @@ describe("main", function() {
 			import("./three").then(function() {
 				done(new Error("Chunk shouldn't be loaded"));
 			}).catch(function(err) {
-				expect(err).toBeInstanceOf(Error);
+				err.should.be.instanceOf(Error);
 				__webpack_public_path__ = old;
 				import("./three").then(function(three) {
-					expect(three).toBe(3);
+					three.should.be.eql(3);
 					done();
 				}).catch(function(err) {
 					done(new Error("Shouldn't result in an chunk loading error"));

@@ -3,5 +3,5 @@ export default 'a-default';
 export { btest } from "./b";
 
 export function atest() {
-	expect(b).toBe("b-default");
+	b.should.be.eql("b-default");
 }

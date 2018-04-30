@@ -1,19 +1,19 @@
 it("should load nested commons chunk", function(done) {
 	require.ensure(["./a"], function(require) {
-		expect(require("./a")).toBe("a");
+		require("./a").should.be.eql("a");
 		var counter = 0;
 		require.ensure(["./b", "./c"], function(require) {
-			expect(require("./b")).toBe("b");
-			expect(require("./c")).toBe("c");
+			require("./b").should.be.eql("b");
+			require("./c").should.be.eql("c");
 			if(++counter == 3) done();
 		});
 		require.ensure(["./b", "./d"], function(require) {
-			expect(require("./b")).toBe("b");
-			expect(require("./d")).toBe("d");
+			require("./b").should.be.eql("b");
+			require("./d").should.be.eql("d");
 			if(++counter == 3) done();
 		});
 		require.ensure(["./b"], function(require) {
-			expect(require("./b")).toBe("b");
+			require("./b").should.be.eql("b");
 			if(++counter == 3) done();
 		});
 	});

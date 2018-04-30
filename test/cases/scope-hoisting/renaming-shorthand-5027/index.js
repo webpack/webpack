@@ -1,7 +1,7 @@
 import m from "./module";
 
 it("should apply shorthand properties correctly when renaming", function() {
-	expect(m).toEqual({
+	m.should.be.eql({
 		obj: {
 			test: "test1",
 			test2: "test2",

@@ -16,10 +16,8 @@ environment:
       job_part: unit
     - nodejs_version: 8
       job_part: integration
-      jest: --maxWorkers=2
     - nodejs_version: 6
       job_part: integration
-      jest: --runInBand
 
 install:
   - ps: Install-Product node $env:nodejs_version x64
@@ -37,6 +35,5 @@ test_script:
   - node --version
   - npm --version
   - yarn --version
-  - cmd: set JEST=%jest%
   - cmd: npm run appveyor:%job_part%
   - cmd: npm install -g codecov && codecov -F %job_part%

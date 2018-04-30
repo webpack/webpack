@@ -6,5 +6,5 @@ function fooBar({some, bar = E.V6Engine}) {
 }
 
 it("supports default argument assignment in import", function () {
-	expect(fooBar({some:"test"})).toEqual('V6');
+	fooBar({some:"test"}).should.eql('V6');
 });

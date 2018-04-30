@@ -1,28 +1,28 @@
 it("should load nested commons chunk", function(done) {
 	var counter = 0;
 	require.ensure(["./a"], function(require) {
-		expect(require("./a")).toBe("a");
+		require("./a").should.be.eql("a");
 		require.ensure(["./c", "./d"], function(require) {
-			expect(require("./c")).toBe("c");
-			expect(require("./d")).toBe("d");
+			require("./c").should.be.eql("c");
+			require("./d").should.be.eql("d");
 			if(++counter == 4) done();
 		});
 		require.ensure(["./c", "./e"], function(require) {
-			expect(require("./c")).toBe("c");
-			expect(require("./e")).toBe("e");
+			require("./c").should.be.eql("c");
+			require("./e").should.be.eql("e");
 			if(++counter == 4) done();
 		});
 	});
 	require.ensure(["./b"], function(require) {
-		expect(require("./b")).toBe("b");
+		require("./b").should.be.eql("b");
 		require.ensure(["./c", "./d"], function(require) {
-			expect(require("./c")).toBe("c");
-			expect(require("./d")).toBe("d");
+			require("./c").should.be.eql("c");
+			require("./d").should.be.eql("d");
 			if(++counter == 4) done();
 		});
 		require.ensure(["./c", "./e"], function(require) {
-			expect(require("./c")).toBe("c");
-			expect(require("./e")).toBe("e");
+			require("./c").should.be.eql("c");
+			require("./e").should.be.eql("e");
 			if(++counter == 4) done();
 		});
 	});

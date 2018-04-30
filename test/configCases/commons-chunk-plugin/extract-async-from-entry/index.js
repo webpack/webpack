@@ -1,1 +1,4 @@
-it("should run successful", function() {});
+require("should");
+
+it("should run successful", function() {
+});

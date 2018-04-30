@@ -1,3 +1,5 @@
+require("should");
+
 it("should not be moved", function() {
-	expect(new Error().stack).not.toMatch(/webpackBootstrap/);
+	new Error().stack.should.not.match(/webpackBootstrap/);
 });

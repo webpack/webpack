@@ -1,9 +1,9 @@
 it("should also work in a chunk", function(done) {
 	require.ensure([], function(require) {
 		var contextRequire = require.context(".", false, /two/);
-		expect(contextRequire("./two")).toBe(2);
+		contextRequire("./two").should.be.eql(2);
 		var tw = "tw";
-		expect(require("." + "/" + tw + "o")).toBe(2);
+		require("." + "/" + tw + "o").should.be.eql(2);
 		done();
 	});
 });

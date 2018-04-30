@@ -1,6 +1,7 @@
 "use strict";
 
-/*globals describe it */
+/*globals describe it before after  */
+require("should");
 const path = require("path");
 const fs = require("fs");
 const MemoryFs = require("memory-fs");
@@ -9,21 +10,20 @@ const webpack = require("../");
 
 describe("WatchDetection", () => {
 	if (process.env.NO_WATCH_TESTS) {
-		it.skip("long running tests excluded", () => {});
+		it("long running tests excluded");
 		return;
 	}
 
-	jest.setTimeout(10000);
-
-	for (let changeTimeout = 10; changeTimeout < 100; changeTimeout += 10) {
+	for (let changeTimeout = 0; changeTimeout < 100; changeTimeout += 10) {
 		createTestCase(changeTimeout);
 	}
-	for (let changeTimeout = 200; changeTimeout <= 2000; changeTimeout += 200) {
+	for (let changeTimeout = 100; changeTimeout <= 2000; changeTimeout += 100) {
 		createTestCase(changeTimeout);
 	}
 
 	function createTestCase(changeTimeout) {
-		describe(`time between changes ${changeTimeout}ms`, () => {
+		describe("time between changes " + changeTimeout + "ms", function() {
+			this.timeout(10000);
 			const fixturePath = path.join(
 				__dirname,
 				"fixtures",
@@ -32,41 +32,29 @@ describe("WatchDetection", () => {
 			const filePath = path.join(fixturePath, "file.js");
 			const file2Path = path.join(fixturePath, "file2.js");
 			const loaderPath = path.join(__dirname, "fixtures", "delay-loader.js");
-
-			beforeAll(() => {
+			before(() => {
 				try {
 					fs.mkdirSync(fixturePath);
-				} catch (e) {
-					// empty
-				}
+				} catch (e) {} // eslint-disable-line no-empty
 				fs.writeFileSync(filePath, "require('./file2')", "utf-8");
 				fs.writeFileSync(file2Path, "original", "utf-8");
 			});
-
-			afterAll(done => {
+			after(done => {
 				setTimeout(() => {
 					try {
 						fs.unlinkSync(filePath);
-					} catch (e) {
-						// empty
-					}
+					} catch (e) {} // eslint-disable-line no-empty
 					try {
 						fs.unlinkSync(file2Path);
-					} catch (e) {
-						// empty
-					}
+					} catch (e) {} // eslint-disable-line no-empty
 					try {
 						fs.rmdirSync(fixturePath);
-					} catch (e) {
-						// empty
-					}
+					} catch (e) {} // eslint-disable-line no-empty
 					done();
 				}, 100); // cool down a bit
 			});
-
 			it("should build the bundle correctly", done => {
 				const compiler = webpack({
-					mode: "development",
 					entry: loaderPath + "!" + filePath,
 					output: {
 						path: "/",
@@ -142,7 +130,7 @@ describe("WatchDetection", () => {
 					onChange = null;
 
 					watcher.close(() => {
-						setTimeout(done, 500);
+						setTimeout(done, 1000);
 					});
 				}
 

@@ -1,14 +1,14 @@
 it("should be able to compile a module with UMD", function() {
 	var x = require("./module");
-	expect(x.default).toBe(global);
+	x.default.should.be.equal(global);
 });
 
 it("should not find a free exports", function() {
 	var x = require("./module2");
 	if(typeof exports !== "undefined")
-		expect(x.default).toBe(exports);
+		(x.default).should.be.equal(exports);
 	else
-		expect((x.default)).toBe(false);
+		(x.default).should.be.eql(false);
 });
 
 export {}

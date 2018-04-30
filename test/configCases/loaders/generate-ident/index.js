@@ -1,6 +1,6 @@
 it("should correctly pass complex query object with remaining request", function() {
-	expect(require("./a")).toBe("ok");
-	expect(require("./b")).toBe("maybe");
-	expect(require("./c")).toBe("yes");
-	expect(require("./d")).toBe("ok");
+	require("./a").should.be.eql("ok");
+	require("./b").should.be.eql("maybe");
+	require("./c").should.be.eql("yes");
+	require("./d").should.be.eql("ok");
 });

@@ -1,13 +1,13 @@
 it("should receive a namespace object when importing commonjs", function(done) {
 	import("./cjs.js").then(function(result) {
-		expect(result).toEqual({ default: { named: "named", default: "default" } });
+		result.should.be.eql({ default: { named: "named", default: "default" } });
 		done();
 	}).catch(done);
 });
 
 it("should receive a namespace object when importing commonjs with __esModule", function(done) {
 	import("./cjs-esmodule.js").then(function(result) {
-		expect(result).toEqual({ default: { __esModule: true, named: "named", default: "default" } });
+		result.should.be.eql({ default: { __esModule: true, named: "named", default: "default" } });
 		done();
 	}).catch(done);
 });
@@ -54,7 +54,7 @@ function contextMixed(name) {
 function promiseTest(promise, equalsTo) {
 	return promise.then(function(results) {
 		for(const result of results)
-			expect(result).toEqual(equalsTo);
+			result.should.be.eql(equalsTo);
 	});
 }
 

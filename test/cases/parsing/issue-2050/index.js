@@ -1,5 +1,5 @@
 it("should support multiple reexports", function() {
-	expect(require("./x")).toEqual({
+	require("./x").should.be.eql({
 		xa: "a",
 		xb: "b",
 		xc: "c",

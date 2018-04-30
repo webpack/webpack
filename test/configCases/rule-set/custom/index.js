@@ -1,6 +1,6 @@
 it("should match a custom loader", function() {
 	var a = require("./a");
-	expect(a).toEqual([
+	a.should.be.eql([
 		"a",
 		{
 			issuer: "index.js",
@@ -9,7 +9,7 @@ it("should match a custom loader", function() {
 		}
 	]);
 	var b = require("./b?hello");
-	expect(b).toEqual([
+	b.should.be.eql([
 		"b",
 		{
 			issuer: "index.js",
@@ -18,7 +18,7 @@ it("should match a custom loader", function() {
 		}
 	]);
 	var ca = require("./call-a?hello");
-	expect(ca).toEqual([
+	ca.should.be.eql([
 		"a",
 		{
 			issuer: "call-a.js",

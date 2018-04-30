@@ -1,3 +1,3 @@
 it("should watch for changes", function() {
-	expect(require("./changing-file")).toBe(WATCH_STEP);
+	require("./changing-file").should.be.eql(WATCH_STEP);
 })

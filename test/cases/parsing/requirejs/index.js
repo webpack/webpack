@@ -7,14 +7,14 @@ it("should ignore require.config", function() {
 	});
 });
 it("should have a require.version", function() {
-	expect(require.version).toBeTypeOf("string");
+	require.version.should.be.type("string");
 });
 it("should have a requirejs.onError function", function() {
 	function f(){}
-	expect(requirejs.onError).toBeTypeOf("function"); // has default handler
+	requirejs.onError.should.be.type("function"); // has default handler
 	var org = requirejs.onError;
 	requirejs.onError = f;
-	expect(requirejs.onError).toBe(f);
+	requirejs.onError.should.be.eql(f);
 	requirejs.onError = org;
 	require(["./file.js"], function() {});
 });

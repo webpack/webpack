@@ -12,7 +12,7 @@ it("should parse template strings in amd requires", function(done) {
 	].length;
 
 	function test (result) {
-		expect(result.default).toEqual("ok")
+		result.default.should.eql("ok")
 		if (--pending <= 0) {
 			done()
 		}
@@ -31,7 +31,7 @@ it("should parse .concat strings in amd requires", function(done) {
 	].length;
 
 	function test (result) {
-		expect(result.default).toEqual("ok")
+		result.default.should.eql("ok")
 		if (--pending <= 0) {
 			done()
 		}

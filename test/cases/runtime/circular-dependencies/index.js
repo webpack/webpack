@@ -1,3 +1,3 @@
 it("should load circular dependencies correctly", function() {
-	expect(require("./circular")).toBe(1);
+	require("./circular").should.be.eql(1);
 });

@@ -1,95 +1,98 @@
+var should = require("should");
+// shimming global window object so the http-module is happy.
+// window is assigned without var on purpose.
 global.XMLHttpRequest = function() {};
 global.XMLHttpRequest.prototype.open = function() {};
 
 it("should provide a global Buffer constructor", function() {
-	expect(Buffer).toBeInstanceOf(Function);
+	Buffer.should.be.a.Function();
 });
 
 it("should provide a global console shim", function () {
-	expect(console).toBeTypeOf("object");
-	expect(console.time).toBeTypeOf("function");
+	console.should.be.an.Object();
+	console.time.should.be.a.Function();
 });
 
 it("should provide a global process shim", function () {
-	expect(process).toBeInstanceOf(Object);
+	process.should.be.an.Object();
 });
 
 it("should provide a global setImmediate shim", function () {
-	expect(setImmediate).toBeInstanceOf(Function);
+	setImmediate.should.be.a.Function();
 });
 
 it("should provide a global clearImmediate shim", function () {
-	expect(clearImmediate).toBeInstanceOf(Function);
+	clearImmediate.should.be.a.Function();
 });
 
 it("should provide an assert shim", function () {
-	expect(require("assert")).toBeInstanceOf(Function);
+	require("assert").should.be.a.Function();
 });
 
 it("should provide a util shim", function () {
-	expect(require("util")).toBeInstanceOf(Object);
+	require("util").should.be.an.Object();
 });
 
 it("should provide a buffer shim", function () {
-	expect(require("buffer")).toBeInstanceOf(Object);
+	require("buffer").should.be.an.Object();
 });
 
 it("should provide a crypto shim", function () {
-	expect(require("crypto")).toBeInstanceOf(Object);
+	require("crypto").should.be.an.Object();
 });
 
 it("should provide a domain shim", function () {
-	expect(require("domain")).toBeInstanceOf(Object);
+	require("domain").should.be.an.Object();
 });
 
 it("should provide an events shim", function () {
-	expect(require("events")).toBeInstanceOf(Function);
+	require("events").should.be.a.Function();
 });
 
 it("should provide an http shim", function () {
-	expect(require("http")).toBeInstanceOf(Object);
+	require("http").should.be.an.Object();
 });
 
 it("should provide an https shim", function () {
-	expect(require("https")).toBeInstanceOf(Object);
+	require("https").should.be.an.Object();
 });
 
 it("should provide an os shim", function () {
-	expect(require("os")).toBeInstanceOf(Object);
+	require("os").should.be.an.Object();
 });
 
 it("should provide a path shim", function () {
-	expect(require("path")).toBeInstanceOf(Object);
+	require("path").should.be.an.Object();
 });
 
 it("should provide a punycode shim", function () {
-	expect(require("punycode")).toBeInstanceOf(Object);
+	require("punycode").should.be.an.Object();
 });
 
 it("should provide a stream shim", function () {
-	expect(require("stream")).toBeInstanceOf(Function);
+	require("stream").should.be.a.Function();
 });
 
 it("should provide a tty shim", function () {
-	expect(require("tty")).toBeInstanceOf(Object);
+	require("tty").should.be.an.Object();
 });
 
 it("should provide a url shim", function () {
-	expect(require("url")).toBeInstanceOf(Object);
+	require("url").should.be.an.Object();
 });
 
 it("should provide a util shim", function () {
-	expect(require("util")).toBeInstanceOf(Object);
+	require("util").should.be.an.Object();
 });
 
 it("should provide a vm shim", function () {
-	expect(require("vm")).toBeInstanceOf(Object);
+	require("vm").should.be.an.Object();
 });
 
 it("should provide a zlib shim", function () {
-	expect(require("zlib")).toBeInstanceOf(Object);
+	require("zlib").should.be.an.Object();
 });
 
 it("should provide a shim for a path in a build-in module", function () {
-	expect(require("process/in.js")).toBe("in process");
+	require("process/in.js").should.be.eql("in process");
 });

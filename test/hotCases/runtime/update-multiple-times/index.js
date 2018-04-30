@@ -1,11 +1,11 @@
 var value = require("./file");
 
-it("should accept a dependencies multiple times", (done) => {
-	expect(value).toBe(1);
-	module.hot.accept("./file", () => {
+it("should accept a dependencies multiple times", function(done) {
+	value.should.be.eql(1);
+	module.hot.accept("./file", function() {
 		var oldValue = value;
 		value = require("./file");
-		expect(value).toBe(oldValue + 1);
+		value.should.be.eql(oldValue + 1);
 		if(value < 4)
 			NEXT(require("../../update")(done));
 		else

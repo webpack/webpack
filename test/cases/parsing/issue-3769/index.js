@@ -1,3 +1,3 @@
 it("should generate valid code", function() {
-	expect(require("./module").myTest).toBe("test");
+	require("./module").myTest.should.be.eql("test");
 });

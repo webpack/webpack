@@ -1,6 +1,6 @@
 module.exports = {
 	root: true,
-	plugins: ["prettier", "node", "jest"],
+	plugins: ["prettier", "node"],
 	extends: ["eslint:recommended", "plugin:node/recommended", "plugin:prettier/recommended"],
 	env: {
 		node: true,
@@ -13,6 +13,7 @@ module.exports = {
 		"prettier/prettier": "error",
 		"no-undef": "error",
 		"no-extra-semi": "error",
+		"semi": "error",
 		"no-template-curly-in-string": "error",
 		"no-caller": "error",
 		"no-control-regex": "off",
@@ -55,7 +56,7 @@ module.exports = {
 		{
 			files: ["test/**/*.js"],
 			env: {
-				"jest/globals": true
+				mocha: true,
 			}
 		}
 	]
