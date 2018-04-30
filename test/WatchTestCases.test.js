@@ -11,7 +11,7 @@ const checkArrayExpectation = require("./checkArrayExpectation");
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
 
-function copyDiff(src, dest) {
+function copyDiff(src, dest, initial) {
 	if (!fs.existsSync(dest)) fs.mkdirSync(dest);
 	const files = fs.readdirSync(src);
 	files.forEach(filename => {
@@ -19,12 +19,22 @@ function copyDiff(src, dest) {
 		const destFile = path.join(dest, filename);
 		const directory = fs.statSync(srcFile).isDirectory();
 		if (directory) {
-			copyDiff(srcFile, destFile);
+			copyDiff(srcFile, destFile, initial);
 		} else {
 			var content = fs.readFileSync(srcFile);
-			if (/^DELETE\s*$/.test(content.toString("utf-8")))
+			if (/^DELETE\s*$/.test(content.toString("utf-8"))) {
 				fs.unlinkSync(destFile);
-			else fs.writeFileSync(destFile, content);
+			} else {
+				fs.writeFileSync(destFile, content);
+				if (initial) {
+					const longTimeAgo = Date.now() - 1000 * 60 * 60 * 24;
+					fs.utimesSync(
+						destFile,
+						Date.now() - longTimeAgo,
+						Date.now() - longTimeAgo
+					);
+				}
+			}
 		}
 	});
 }
@@ -135,7 +145,7 @@ describe("WatchTestCases", () => {
 						let lastHash = "";
 						const currentWatchStepModule = require("./helpers/currentWatchStep");
 						currentWatchStepModule.step = run.name;
-						copyDiff(path.join(testDirectory, run.name), tempDirectory);
+						copyDiff(path.join(testDirectory, run.name), tempDirectory, true);
 
 						setTimeout(() => {
 							const compiler = webpack(options);
@@ -304,7 +314,8 @@ describe("WatchTestCases", () => {
 											currentWatchStepModule.step = run.name;
 											copyDiff(
 												path.join(testDirectory, run.name),
-												tempDirectory
+												tempDirectory,
+												false
 											);
 										}, 1500);
 									} else {
