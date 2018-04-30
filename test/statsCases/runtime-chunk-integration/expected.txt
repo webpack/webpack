@@ -1,0 +1,22 @@
+Child base:
+         Asset       Size  Chunks             Chunk Names
+          0.js  719 bytes       0  [emitted]  
+      main1.js  542 bytes       1  [emitted]  main1
+    runtime.js   7.73 KiB       2  [emitted]  runtime
+    Entrypoint main1 = runtime.js main1.js
+    [0] ./b.js 20 bytes {0} [built]
+    [1] ./c.js 20 bytes {0} [built]
+    [2] ./d.js 20 bytes {0} [built]
+    [3] ./main1.js 66 bytes {1} [built]
+Child manifest is named entry:
+          Asset       Size  Chunks             Chunk Names
+           0.js  719 bytes       0  [emitted]  
+    manifest.js   8.04 KiB       1  [emitted]  manifest
+       main1.js  542 bytes       2  [emitted]  main1
+    Entrypoint main1 = manifest.js main1.js
+    Entrypoint manifest = manifest.js
+    [0] ./b.js 20 bytes {0} [built]
+    [1] ./c.js 20 bytes {0} [built]
+    [2] ./d.js 20 bytes {0} [built]
+    [3] ./main1.js 66 bytes {2} [built]
+    [4] ./f.js 20 bytes {1} [built]
