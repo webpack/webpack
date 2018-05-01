@@ -1,7 +1,0 @@
-Hash: 0b32ee714cee3c8b25d4
-Time: Xms
-Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
-  Asset      Size  Chunks             Chunk Names
-main.js  2.61 KiB       0  [emitted]  main
-Entrypoint main = main.js
-[0] ./index.js 0 bytes {0} [built]

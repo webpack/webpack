@@ -4,29 +4,25 @@ const RawModule = require("../lib/RawModule");
 const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
 const RequestShortener = require("../lib/RequestShortener");
-const should = require("should");
 const path = require("path");
 const crypto = require("crypto");
 
 describe("RawModule", () => {
-	let myRawModule;
-
-	before(() => {
-		const source = "sourceStr attribute";
-		const identifier = "identifierStr attribute";
-		const readableIdentifier = "readableIdentifierStr attribute";
-		myRawModule = new RawModule(source, identifier, readableIdentifier);
-	});
+	const source = "sourceStr attribute";
+	const identifier = "identifierStr attribute";
+	const readableIdentifier = "readableIdentifierStr attribute";
+	const myRawModule = new RawModule(source, identifier, readableIdentifier);
 
 	describe("identifier", () => {
-		it("returns value for identifierStr attribute", () =>
-			should(myRawModule.identifier()).be.exactly("identifierStr attribute"));
+		it("returns value for identifierStr attribute", () => {
+			expect(myRawModule.identifier()).toBe("identifierStr attribute");
+		});
 	});
 
 	describe("size", () => {
 		it('returns value for sourceStr attribute"s length property', () => {
 			const sourceStrLength = myRawModule.sourceStr.length;
-			should(myRawModule.size()).be.exactly(sourceStrLength);
+			expect(myRawModule.size()).toBe(sourceStrLength);
 		});
 	});
 
@@ -36,13 +32,15 @@ describe("RawModule", () => {
 				"on readableIdentifierStr attribute",
 			() => {
 				const requestShortener = new RequestShortener(path.resolve());
-				should.exist(myRawModule.readableIdentifier(requestShortener));
+				expect(myRawModule.readableIdentifier(requestShortener)).toBeDefined();
 			}
 		);
 	});
 
 	describe("needRebuild", () => {
-		it("returns false", () => should(myRawModule.needRebuild()).be.false());
+		it("returns false", () => {
+			expect(myRawModule.needRebuild()).toBe(false);
+		});
 	});
 
 	describe("source", () => {
@@ -55,7 +53,7 @@ describe("RawModule", () => {
 					myRawModule.identifier()
 				);
 				myRawModule.useSourceMap = true;
-				myRawModule.source().should.match(originalSource);
+				expect(myRawModule.source()).toEqual(originalSource);
 			}
 		);
 
@@ -65,7 +63,7 @@ describe("RawModule", () => {
 			() => {
 				const rawSource = new RawSource(myRawModule.sourceStr);
 				myRawModule.useSourceMap = false;
-				myRawModule.source().should.match(rawSource);
+				expect(myRawModule.source()).toEqual(rawSource);
 			}
 		);
 	});
@@ -80,7 +78,7 @@ describe("RawModule", () => {
 
 			const hashFoo = hashModule(new RawModule('"foo"'));
 			const hashBar = hashModule(new RawModule('"bar"'));
-			hashFoo.should.not.equal(hashBar);
+			expect(hashFoo).not.toBe(hashBar);
 		});
 	});
 });

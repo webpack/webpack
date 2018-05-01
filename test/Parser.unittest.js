@@ -1,7 +1,5 @@
 "use strict";
 
-const should = require("should");
-
 const Parser = require("../lib/Parser");
 const BasicEvaluatedExpression = require("../lib/BasicEvaluatedExpression");
 
@@ -308,8 +306,8 @@ describe("Parser", () => {
 				return true;
 			});
 			const actual = testParser.parse(source);
-			should.strictEqual(typeof actual, "object");
-			actual.should.be.eql(state);
+			expect(typeof actual).toBe("object");
+			expect(actual).toEqual(state);
 		});
 	});
 
@@ -334,13 +332,13 @@ describe("Parser", () => {
 		});
 
 		const actual = testParser.parse(source);
-		should.strictEqual(typeof actual, "object");
-		should.strictEqual(typeof actual.comments, "object");
+		expect(typeof actual).toBe("object");
+		expect(typeof actual.comments).toBe("object");
 		actual.comments.forEach((element, index) => {
-			should.strictEqual(typeof element.type, "string");
-			should.strictEqual(typeof element.value, "string");
-			element.type.should.be.eql(state[index].type);
-			element.value.should.be.eql(state[index].value);
+			expect(typeof element.type).toBe("string");
+			expect(typeof element.value).toBe("string");
+			expect(element.type).toBe(state[index].type);
+			expect(element.value).toBe(state[index].value);
 		});
 	});
 
@@ -356,11 +354,11 @@ describe("Parser", () => {
 		});
 		testParser.parse(source);
 
-		should.strictEqual(typeof options, "object");
-		should.strictEqual(options.foo, "foo");
-		should.strictEqual(options.bar, true);
-		should.strictEqual(options.baz, 1);
-		should.strictEqual(options.webpackChunkName, "chunkName");
+		expect(typeof options).toBe("object");
+		expect(options.foo).toBe("foo");
+		expect(options.bar).toBe(true);
+		expect(options.baz).toBe(1);
+		expect(options.webpackChunkName).toBe("chunkName");
 	});
 
 	it("should support context modified while getting options from comments", () => {
@@ -398,12 +396,12 @@ describe("Parser", () => {
 		});
 		testParser.parse(source);
 
-		should.strictEqual(typeof options, "object");
-		should.strictEqual(options.foo, "foo");
-		should.strictEqual(options.bar, true);
-		should.strictEqual(options.baz, 1);
-		should.strictEqual(options.callFuncRst, "myFuncRst");
-		should.strictEqual(options.webpackChunkName, "chunkName");
+		expect(typeof options).toBe("object");
+		expect(options.foo).toBe("foo");
+		expect(options.bar).toBe(true);
+		expect(options.baz).toBe(1);
+		expect(options.callFuncRst).toBe("myFuncRst");
+		expect(options.webpackChunkName).toBe("chunkName");
 	});
 
 	describe("expression evaluation", () => {
@@ -542,7 +540,8 @@ describe("Parser", () => {
 				"template=[start string=start],[mid string=mid],[end string=end]",
 			// eslint-disable-next-line no-template-curly-in-string
 			"`start${'str'}mid${obj2}end`":
-				"template=[start${'str'}mid string=startstrmid],[end string=end]", // eslint-disable-line no-template-curly-in-string
+				// eslint-disable-next-line no-template-curly-in-string
+				"template=[start${'str'}mid string=startstrmid],[end string=end]",
 			"'abc'.substr(1)": "string=bc",
 			"'abcdef'.substr(2, 3)": "string=cde",
 			"'abcdef'.substring(2, 3)": "string=c",
@@ -607,7 +606,7 @@ describe("Parser", () => {
 
 			it("should eval " + key, () => {
 				const evalExpr = evaluateInParser(key);
-				evalExprToString(evalExpr).should.be.eql(
+				expect(evalExprToString(evalExpr)).toBe(
 					testCases[key] ? key + " " + testCases[key] : key
 				);
 			});
@@ -627,7 +626,7 @@ describe("Parser", () => {
 				const expr = cases[name];
 				it(name, () => {
 					const actual = parser.parse(expr);
-					should.strictEqual(typeof actual, "object");
+					expect(typeof actual).toBe("object");
 				});
 			});
 		});
@@ -660,7 +659,7 @@ describe("Parser", () => {
 			Object.keys(cases).forEach(name => {
 				it(name, () => {
 					const actual = parser.parse(cases[name][0]);
-					actual.should.be.eql(cases[name][1]);
+					expect(actual).toEqual(cases[name][1]);
 				});
 			});
 		});
@@ -676,7 +675,7 @@ describe("Parser", () => {
 				const expr = cases[name];
 				it(name, () => {
 					const actual = Parser.parse(expr);
-					should.strictEqual(typeof actual, "object");
+					expect(typeof actual).toBe("object");
 				});
 			});
 		});

@@ -5,7 +5,7 @@ module.exports = {
 			TRUE: true,
 			FALSE: false,
 			UNDEFINED: undefined,
-			FUNCTION: function(a) {
+			FUNCTION: /* istanbul ignore next */ function(a) {
 				return a + 1;
 			},
 			CODE: "(1+2)",
@@ -13,7 +13,7 @@ module.exports = {
 			OBJECT: {
 				SUB: {
 					UNDEFINED: undefined,
-					FUNCTION: function(a) {
+					FUNCTION: /* istanbul ignore next */ function(a) {
 						return a + 1;
 					},
 					CODE: "(1+2)",

@@ -1,13 +1,12 @@
 "use strict";
 
-const should = require("should");
 const sinon = require("sinon");
 const DependenciesBlockVariable = require("../lib/DependenciesBlockVariable");
 
 describe("DependenciesBlockVariable", () => {
 	let DependenciesBlockVariableInstance, dependencyMock, sandbox;
 
-	before(() => {
+	beforeEach(() => {
 		sandbox = sinon.sandbox.create();
 		dependencyMock = {
 			constructor: {
@@ -27,17 +26,17 @@ describe("DependenciesBlockVariable", () => {
 
 	describe("hasDependencies", () =>
 		it("returns `true` if has dependencies", () =>
-			should(DependenciesBlockVariableInstance.hasDependencies()).be.true()));
+			expect(DependenciesBlockVariableInstance.hasDependencies()).toBe(true)));
 
 	describe("disconnect", () =>
 		it("trigger dependencies disconnection", () => {
 			DependenciesBlockVariableInstance.disconnect();
-			should(dependencyMock.disconnect.calledOnce).be.true();
+			expect(dependencyMock.disconnect.calledOnce).toBe(true);
 		}));
 
 	describe("updateHash", () => {
 		let hash;
-		before(() => {
+		beforeEach(() => {
 			hash = {
 				update: sandbox.spy()
 			};
@@ -45,19 +44,19 @@ describe("DependenciesBlockVariable", () => {
 		});
 
 		it("should update hash dependencies with name", () =>
-			should(hash.update.calledWith("dependencies-name")).be.true());
+			expect(hash.update.calledWith("dependencies-name")).toBe(true));
 
 		it("should update hash dependencies with expression", () =>
-			should(hash.update.calledWith("expression")).be.true());
+			expect(hash.update.calledWith("expression")).toBe(true));
 
 		it("should update hash inside dependencies", () =>
-			should(dependencyMock.updateHash.calledOnce).be.true());
+			expect(dependencyMock.updateHash.calledOnce).toBe(true));
 	});
 
 	describe("expressionSource", () => {
 		let dependencyTemplates, applyMock;
 
-		before(() => (applyMock = sandbox.spy()));
+		beforeEach(() => (applyMock = sandbox.spy()));
 
 		it("applies information inside dependency templates", () => {
 			dependencyTemplates = {
@@ -72,7 +71,7 @@ describe("DependenciesBlockVariable", () => {
 				{},
 				{}
 			);
-			should(applyMock.calledOnce).be.true();
+			expect(applyMock.calledOnce).toBe(true);
 		});
 
 		it("applies information inside dependency templates", () => {
@@ -81,13 +80,13 @@ describe("DependenciesBlockVariable", () => {
 					return false;
 				}
 			};
-			should(() => {
+			expect(() => {
 				DependenciesBlockVariableInstance.expressionSource(
 					dependencyTemplates,
 					{},
 					{}
 				);
-			}).throw("No template for dependency: DependencyMock");
+			}).toThrow("No template for dependency: DependencyMock");
 		});
 	});
 });
