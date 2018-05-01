@@ -118,19 +118,7 @@ describe("StatsTestCases", () => {
 					.replace(/[\t ]*Version:.+\n/g, "")
 					.replace(path.join(base, testName), "Xdir/" + testName)
 					.replace(/ dependencies:Xms/g, "");
-				const expected = fs
-					.readFileSync(path.join(base, testName, "expected.txt"), "utf-8")
-					.replace(/\r/g, "");
-				if (actual !== expected) {
-					fs.writeFileSync(
-						path.join(base, testName, "actual.txt"),
-						actual,
-						"utf-8"
-					);
-				} else if (fs.existsSync(path.join(base, testName, "actual.txt"))) {
-					fs.unlinkSync(path.join(base, testName, "actual.txt"));
-				}
-				expect(actual).toBe(expected);
+				expect(actual).toMatchSnapshot();
 				done();
 			});
 		});
