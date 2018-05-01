@@ -4,7 +4,6 @@ const Module = require("../lib/Module");
 const Chunk = require("../lib/Chunk");
 const Dependency = require("../lib/Dependency");
 const ModuleReason = require("../lib/ModuleReason");
-const should = require("should");
 
 describe("ModuleReason", () => {
 	let myModule;
@@ -23,12 +22,13 @@ describe("ModuleReason", () => {
 	});
 
 	describe("hasChunk", () => {
-		it("returns false when chunk is not present", () =>
-			should(myModuleReason.hasChunk(myChunk)).be.false());
+		it("returns false when chunk is not present", () => {
+			expect(myModuleReason.hasChunk(myChunk)).toBe(false);
+		});
 
 		it("returns true when chunk is present", () => {
 			myModuleReason.module.addChunk(myChunk);
-			should(myModuleReason.hasChunk(myChunk)).be.true();
+			expect(myModuleReason.hasChunk(myChunk)).toBe(true);
 		});
 	});
 
@@ -37,15 +37,15 @@ describe("ModuleReason", () => {
 			myModuleReason.module.addChunk(myChunk);
 			myModuleReason.rewriteChunks(myChunk, [myChunk2]);
 
-			should(myModuleReason.hasChunk(myChunk)).be.false();
-			should(myModuleReason.hasChunk(myChunk2)).be.true();
+			expect(myModuleReason.hasChunk(myChunk)).toBe(false);
+			expect(myModuleReason.hasChunk(myChunk2)).toBe(true);
 		});
 
 		it("if old chunk is not present, new chunks are not added", () => {
 			myModuleReason.rewriteChunks(myChunk, [myChunk2]);
 
-			should(myModuleReason.hasChunk(myChunk)).be.false();
-			should(myModuleReason.hasChunk(myChunk2)).be.false();
+			expect(myModuleReason.hasChunk(myChunk)).toBe(false);
+			expect(myModuleReason.hasChunk(myChunk2)).toBe(false);
 		});
 
 		it("if already rewritten chunk is present, it is replaced with new chunks", () => {
@@ -53,8 +53,8 @@ describe("ModuleReason", () => {
 			myModuleReason.rewriteChunks(myChunk, [myChunk2]);
 			myModuleReason.rewriteChunks(myChunk2, [myChunk]);
 
-			should(myModuleReason.hasChunk(myChunk)).be.true();
-			should(myModuleReason.hasChunk(myChunk2)).be.false();
+			expect(myModuleReason.hasChunk(myChunk)).toBe(true);
+			expect(myModuleReason.hasChunk(myChunk2)).toBe(false);
 		});
 	});
 });

@@ -1,7 +1,6 @@
 /*globals describe it */
 "use strict";
 
-require("should");
 const path = require("path");
 const fs = require("fs");
 
@@ -20,8 +19,8 @@ const tests = fs
 
 describe("StatsTestCases", () => {
 	tests.forEach(testName => {
-		it("should print correct stats for " + testName, function(done) {
-			this.timeout(10000);
+		it("should print correct stats for " + testName, done => {
+			jest.setTimeout(10000);
 			let options = {
 				mode: "development",
 				entry: "./index",
@@ -71,13 +70,11 @@ describe("StatsTestCases", () => {
 			});
 			c.run((err, stats) => {
 				if (err) return done(err);
-
 				if (/error$/.test(testName)) {
-					stats.hasErrors().should.be.equal(true);
+					expect(stats.hasErrors()).toBe(true);
 				} else if (stats.hasErrors()) {
 					return done(new Error(stats.toJson().errors.join("\n\n")));
 				}
-
 				let toStringOptions = {
 					context: path.join(base, testName),
 					colors: false
@@ -87,7 +84,6 @@ describe("StatsTestCases", () => {
 					toStringOptions = options.stats;
 					if (toStringOptions === null || typeof toStringOptions !== "object")
 						toStringOptions = Stats.presetToOptions(toStringOptions);
-
 					hasColorSetting = typeof options.stats.colors !== "undefined";
 					if (!toStringOptions.context)
 						toStringOptions.context = path.join(base, testName);
@@ -95,9 +91,8 @@ describe("StatsTestCases", () => {
 				if (Array.isArray(options) && !toStringOptions.children) {
 					toStringOptions.children = options.map(o => o.stats);
 				}
-
 				let actual = stats.toString(toStringOptions);
-				(typeof actual).should.be.eql("string");
+				expect(typeof actual).toBe("string");
 				if (!hasColorSetting) {
 					actual = actual
 						.replace(/\u001b\[[0-9;]*m/g, "")
@@ -118,7 +113,6 @@ describe("StatsTestCases", () => {
 							"$1 Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT"
 						);
 				}
-
 				actual = actual
 					.replace(/\r\n?/g, "\n")
 					.replace(/[\t ]*Version:.+\n/g, "")
@@ -136,7 +130,7 @@ describe("StatsTestCases", () => {
 				} else if (fs.existsSync(path.join(base, testName, "actual.txt"))) {
 					fs.unlinkSync(path.join(base, testName, "actual.txt"));
 				}
-				actual.should.be.eql(expected);
+				expect(actual).toBe(expected);
 				done();
 			});
 		});
