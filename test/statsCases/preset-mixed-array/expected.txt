@@ -1,5 +1,0 @@
-Child minimal:
-       1 module
-Child verbose:
-    Entrypoint main = main.js
-    [0] ./index.js 8 bytes {0} [built]
