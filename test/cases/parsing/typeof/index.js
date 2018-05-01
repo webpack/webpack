@@ -1,33 +1,33 @@
 it("should not create a context for typeof require", function() {
-	require("./typeof").should.be.eql("function");
+	expect(require("./typeof")).toBe("function");
 });
 
 it("should answer typeof require correctly", function() {
-	(typeof require).should.be.eql("function");
+	expect((typeof require)).toBe("function");
 });
 it("should answer typeof define correctly", function() {
-	(typeof define).should.be.eql("function");
+	expect((typeof define)).toBe("function");
 });
 it("should answer typeof require.amd correctly", function() {
-	(typeof require.amd).should.be.eql("object");
+	expect((typeof require.amd)).toBe("object");
 });
 it("should answer typeof define.amd correctly", function() {
-	(typeof define.amd).should.be.eql("object");
+	expect((typeof define.amd)).toBe("object");
 });
 it("should answer typeof module correctly", function() {
-	(typeof module).should.be.eql("object");
+	expect((typeof module)).toBe("object");
 });
 it("should answer typeof exports correctly", function() {
-	(typeof exports).should.be.eql("object");
+	expect((typeof exports)).toBe("object");
 });
 it("should answer typeof require.include correctly", function() {
-	(typeof require.include).should.be.eql("function");
+	expect((typeof require.include)).toBe("function");
 });
 it("should answer typeof require.ensure correctly", function() {
-	(typeof require.ensure).should.be.eql("function");
+	expect((typeof require.ensure)).toBe("function");
 });
 it("should answer typeof require.resolve correctly", function() {
-	(typeof require.resolve).should.be.eql("function");
+	expect((typeof require.resolve)).toBe("function");
 });
 
 it("should not parse filtered stuff", function() {

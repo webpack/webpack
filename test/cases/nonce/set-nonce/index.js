@@ -7,7 +7,7 @@ it("should load script with nonce 'nonce1234'", function(done) {
 	// if in browser context, test that nonce was added.
 	if (typeof document !== 'undefined') {
 		var script = document.querySelector('script[src="js/chunk-with-nonce.web.js"]');
-		script.getAttribute('nonce').should.be.eql('nonce1234');
+		expect(script.getAttribute('nonce')).toBe('nonce1234');
 	}
 	__webpack_nonce__ = undefined;
 	done();
@@ -21,7 +21,7 @@ it("should load script without nonce", function(done) {
 	// if in browser context, test that nonce was added.
 	if (typeof document !== 'undefined') {
 		var script = document.querySelector('script[src="js/chunk-without-nonce.web.js"]');
-		script.hasAttribute('nonce').should.be.eql(false);
+		expect(script.hasAttribute('nonce')).toBe(false);
 	}
 	__webpack_nonce__ = undefined;
 	done();

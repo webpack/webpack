@@ -1,8 +1,6 @@
 /* globals describe, it */
 "use strict";
 
-require("should");
-
 const webpack = require("../lib/webpack");
 
 describe("Validation", () => {
@@ -282,11 +280,10 @@ describe("Validation", () => {
 				}
 			},
 			test(err) {
-				err.message.should.startWith("Invalid configuration object.");
-				err.message
-					.split("\n")
-					.slice(1)[0]
-					.should.be.eql(" - configuration.stats should be one of these:");
+				expect(err.message).toMatch(/^Invalid configuration object./);
+				expect(err.message.split("\n").slice(1)[0]).toBe(
+					" - configuration.stats should be one of these:"
+				);
 			}
 		},
 		{
@@ -393,11 +390,8 @@ describe("Validation", () => {
 					return;
 				}
 
-				err.message.should.startWith("Invalid configuration object.");
-				err.message
-					.split("\n")
-					.slice(1)
-					.should.be.eql(testCase.message);
+				expect(err.message).toMatch(/^Invalid configuration object./);
+				expect(err.message.split("\n").slice(1)).toEqual(testCase.message);
 
 				return;
 			}

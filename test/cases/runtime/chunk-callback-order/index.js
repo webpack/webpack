@@ -9,7 +9,7 @@ it("should fire multiple code load callbacks in the correct order", function(don
 		require("./duplicate");
 		require("./duplicate2");
 		calls.push(2);
-		calls.should.be.eql([1,2]);
+		expect(calls).toEqual([1,2]);
 		done();
 	});
 });

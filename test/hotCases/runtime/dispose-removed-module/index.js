@@ -1,15 +1,15 @@
 var m = require("./module");
 
-it("should dispose a module which is removed from bundle", function(done) {
+it("should dispose a module which is removed from bundle", (done) => {
 	var disposed = [];
-	m.setHandler(function(id) {
+	m.setHandler((id) => {
 		disposed.push(id);
 	});
-	NEXT(require("../../update")(done, true, function() {
+	NEXT(require("../../update")(done, true, () => {
 		require("./module");
-		NEXT(require("../../update")(done, true, function() {
+		NEXT(require("../../update")(done, true, () => {
 			var newModule = require("./module");
-			disposed.should.be.eql([newModule.default]);
+			expect(disposed).toEqual([newModule.default]);
 			done();
 		}));
 	}));
