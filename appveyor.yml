@@ -39,4 +39,4 @@ test_script:
   - yarn --version
   - cmd: set JEST=%jest%
   - cmd: npm run appveyor:%job_part%
-  - cmd: npm install -g codecov && codecov -F %job_part%
+  - cmd: npm install -g codecov && codecov -F %job_part% --disable=gcov
