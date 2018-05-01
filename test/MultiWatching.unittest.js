@@ -2,11 +2,10 @@
 
 const Tapable = require("tapable").Tapable;
 const SyncHook = require("tapable").SyncHook;
-require("should");
 const sinon = require("sinon");
 const MultiWatching = require("../lib/MultiWatching");
 
-const createWatching = function() {
+const createWatching = () => {
 	return {
 		invalidate: sinon.spy(),
 		close: sinon.spy()
@@ -33,11 +32,13 @@ describe("MultiWatching", () => {
 	});
 
 	describe("invalidate", () => {
-		beforeEach(() => myMultiWatching.invalidate());
+		beforeEach(() => {
+			myMultiWatching.invalidate();
+		});
 
 		it("invalidates each watching", () => {
-			watchings[0].invalidate.callCount.should.be.exactly(1);
-			watchings[1].invalidate.callCount.should.be.exactly(1);
+			expect(watchings[0].invalidate.callCount).toBe(1);
+			expect(watchings[1].invalidate.callCount).toBe(1);
 		});
 	});
 
@@ -52,14 +53,14 @@ describe("MultiWatching", () => {
 		});
 
 		it("closes each watching", () => {
-			watchings[0].close.callCount.should.be.exactly(1);
-			watchings[1].close.callCount.should.be.exactly(1);
+			expect(watchings[0].close.callCount).toBe(1);
+			expect(watchings[1].close.callCount).toBe(1);
 		});
 
 		it("calls callback after each watching has closed", () => {
 			callClosedFinishedCallback(watchings[0]);
 			callClosedFinishedCallback(watchings[1]);
-			callback.callCount.should.be.exactly(1);
+			expect(callback.callCount).toBe(1);
 		});
 	});
 });

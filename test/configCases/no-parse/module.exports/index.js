@@ -1,4 +1,4 @@
 it("should correctly export stuff from not parsed modules", function() {
-	require("./not-parsed-a").should.be.eql("ok");
-	require("./not-parsed-b").should.be.eql("ok");
+	expect(require("./not-parsed-a")).toBe("ok");
+	expect(require("./not-parsed-b")).toBe("ok");
 });

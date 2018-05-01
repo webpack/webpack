@@ -5,7 +5,7 @@ it("should parse dynamic property names", function() {
 		[require("./a")]: "a",
 		[b]: "b"
 	};
-	o.should.be.eql({
+	expect(o).toEqual({
 		a: "a",
 		b: "b"
 	});
@@ -21,7 +21,7 @@ it("should match dynamic property names", function() {
 			[b]: cc
 		}
 	}]] = [0, 1, {b: {b: "c"}}];
-	aa.should.be.eql("a");
-	bb.should.be.eql("b");
-	cc.should.be.eql("c");
+	expect(aa).toBe("a");
+	expect(bb).toBe("b");
+	expect(cc).toBe("c");
 });
