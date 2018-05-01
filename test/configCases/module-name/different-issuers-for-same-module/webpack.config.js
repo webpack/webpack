@@ -1,11 +1,6 @@
 module.exports = {
 	mode: "development",
-	output: {
-		filename: "main.js"
-	},
-	entry: {
-		main: ["./a", "./b", "./test"]
-	},
+	entry: ["./a", "./b", "./test"],
 	module: {
 		rules: [
 			{
@@ -19,8 +14,5 @@ module.exports = {
 				loader: "./loader-b"
 			}
 		]
-	},
-	node: {
-		__dirname: false
 	}
 };

@@ -1,3 +1,3 @@
 module.exports = function(src) {
-	return `module.exports = "loader-a"`;
+	return `module.exports = "loader-a" + module.id`;
 };

@@ -1,1 +1,1 @@
-module.exports = "c";
+module.exports = module.id;
