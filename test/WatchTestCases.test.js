@@ -55,6 +55,15 @@ describe("WatchTestCases", () => {
 			tests: fs
 				.readdirSync(path.join(casesPath, cat))
 				.filter(folder => folder.indexOf("_") < 0)
+				.filter(testName => {
+					const testDirectory = path.join(casesPath, cat, testName);
+					const filterPath = path.join(testDirectory, "test.filter.js");
+					if (fs.existsSync(filterPath) && !require(filterPath)()) {
+						describe.skip(testName, () => it("filtered"));
+						return false;
+					}
+					return true;
+				})
 				.sort()
 		};
 	});
