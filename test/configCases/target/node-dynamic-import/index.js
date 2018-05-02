@@ -23,7 +23,10 @@ function testCase(load, done) {
 it("should be able to use expressions in import", function(done) {
 	function load(name, expected, callback) {
 		import("./dir/" + name + '.js')
-			.then((result) => {expect(result).toEqual({ default: expected }); callback()})
+			.then((result) => {expect(result).toEqual({
+				default: expected,
+				[Symbol.toStringTag]: "Module"
+			}); callback()})
 			.catch((err) => {done(err)});
 	}
 	testCase(load, done);
@@ -32,7 +35,10 @@ it("should be able to use expressions in import", function(done) {
 it("should be able to use expressions in lazy-once import", function(done) {
 	function load(name, expected, callback) {
 		import(/* webpackMode: "lazy-once" */ "./dir/" + name + '.js')
-			.then((result) => {expect(result).toEqual({ default: expected }); callback()})
+			.then((result) => {expect(result).toEqual({
+				default: expected,
+				[Symbol.toStringTag]: "Module"
+			}); callback()})
 			.catch((err) => {done(err)});
 	}
 	testCase(load, done);
@@ -41,7 +47,10 @@ it("should be able to use expressions in lazy-once import", function(done) {
 it("should be able to use expressions in import", function(done) {
 	function load(name, expected, callback) {
 		import("./dir2/" + name).then((result) => {
-			expect(result).toEqual({ default: expected });
+			expect(result).toEqual({
+				default: expected,
+				[Symbol.toStringTag]: "Module"
+			});
 			callback();
 		}).catch((err) => {
 			done(err);
@@ -56,7 +65,10 @@ it("should convert to function in node", function() {
 
 it("should be able to use import", function(done) {
 	import("./two").then((two) => {
-		expect(two).toEqual({ default: 2 });
+		expect(two).toEqual({
+			default: 2,
+			[Symbol.toStringTag]: "Module"
+		});
 		done();
 	}).catch(function(err) {
 		done(err);
