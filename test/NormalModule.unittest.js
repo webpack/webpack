@@ -184,38 +184,6 @@ describe("NormalModule", () => {
 		});
 	});
 
-	describe("#updateHashWithSource", () => {
-		let hashSpy;
-		let hash;
-		beforeEach(() => {
-			hashSpy = sinon.spy();
-			hash = {
-				update: hashSpy
-			};
-		});
-		describe("without the module having any source", () => {
-			beforeEach(() => {
-				normalModule._source = null;
-			});
-			it('calls hash function with "null"', () => {
-				normalModule.updateHashWithSource(hash);
-				expect(hashSpy.callCount).toBe(1);
-				expect(hashSpy.args[0][0]).toBe("null");
-			});
-		});
-		describe("without the module having source", () => {
-			let expectedSource = "some source";
-			beforeEach(() => {
-				normalModule._source = new RawSource(expectedSource);
-			});
-			it('calls hash function with "source" and then the actual source of the module', function() {
-				normalModule.updateHashWithSource(hash);
-				expect(hashSpy.callCount).toBe(2);
-				expect(hashSpy.args[0][0]).toBe("source");
-				expect(hashSpy.args[1][0]).toBe(expectedSource);
-			});
-		});
-	});
 	describe("#hasDependencies", () => {
 		it("returns true if has dependencies", () => {
 			normalModule.addDependency(new NullDependency());
