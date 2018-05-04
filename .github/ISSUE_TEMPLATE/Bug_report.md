@@ -7,7 +7,7 @@ about: Create a report to help us improve
 <!-- Please don't delete this template or we'll close your issue -->
 <!-- Before creating an issue please make sure you are using the latest version of webpack. -->
 
-*Bug report*
+# Bug report
 
 <!-- Please ask questions on StackOverflow or the webpack Gitter. -->
 <!-- https://stackoverflow.com/questions/ask?tags=webpack -->
