@@ -2,7 +2,7 @@ module.exports = {
 	output: {
 		libraryTarget: "umd",
 		library: {
-			root: "testLibrary",
+			root: ["test", "library"],
 			amd: "test-library",
 			commonjs: "test-library"
 		}
