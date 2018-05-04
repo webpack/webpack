@@ -2,7 +2,7 @@ it("should support tables", function() {
 	return import("./wasm-table.wasm").then(function(wasm) {
 		expect(wasm.callByIndex(0)).toEqual(42);
 		expect(wasm.callByIndex(1)).toEqual(13);
-		expect(() => wasm.callByIndex(2)).toThrow("fefef");
+		expect(() => wasm.callByIndex(2)).toThrow("invalid function");
 	});
 });
 
