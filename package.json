@@ -124,6 +124,7 @@
     "cover:report-min": "istanbul report --report lcovonly"
   },
   "jest": {
+    "forceExit": true,
     "setupTestFrameworkScriptFile": "<rootDir>/test/setupTestFramework.js",
     "testMatch": [
       "<rootDir>/test/*.test.js",
