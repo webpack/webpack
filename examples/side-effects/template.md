@@ -6,7 +6,7 @@ The `"sideEffects": false` flag in `big-module`'s `package.json` indicates that 
 
 The example contains two variants of `big-module`. `big-module` has no `sideEffects` flag and `big-module-with-flag` has the `sideEffects` flag. The example client imports `a` and `b` from each of the variants.
 
-After being built by webpack, the output bundle contains `index.js` `a.js` `b.js` `c.js` from `big-module`, but only `a.js` and `b.js` from `big-module-with-flag`.
+After being built by webpack with `mode: "production"`, the output bundle contains `index.js` `a.js` `b.js` `c.js` from `big-module`, but only `a.js` and `b.js` from `big-module-with-flag`.
 
 Advantages:
 
