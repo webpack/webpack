@@ -8,6 +8,11 @@ declare namespace NodeJS {
 	}
 }
 
+declare interface HarmonyDependencySourceLocation extends acorn.SourceLocation {
+	index: number;
+	offset?: (n: number) => acorn.Position;
+}
+
 // There are no typings for chrome-trace-event
 declare module "chrome-trace-event" {
 	interface Event {
