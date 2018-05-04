@@ -615,7 +615,7 @@ exports[`StatsTestCases should print correct stats for commons-chunk-min-size-0 
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
               Asset       Size  Chunks             Chunk Names
-         entry-1.js   5.79 KiB       0  [emitted]  entry-1
+         entry-1.js   5.62 KiB       0  [emitted]  entry-1
 vendor-1~entry-1.js  314 bytes       1  [emitted]  vendor-1~entry-1
 Entrypoint entry-1 = vendor-1~entry-1.js entry-1.js
 [0] ./entry-1.js 145 bytes {0} [built]
@@ -632,7 +632,7 @@ exports[`StatsTestCases should print correct stats for commons-chunk-min-size-In
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
- entry-1.js   5.79 KiB       0  [emitted]  entry-1
+ entry-1.js   5.62 KiB       0  [emitted]  entry-1
 vendor-1.js  314 bytes       1  [emitted]  vendor-1
 Entrypoint entry-1 = vendor-1.js entry-1.js
 [0] ./entry-1.js 145 bytes {0} [built]
@@ -651,7 +651,7 @@ Child
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                              Asset       Size  Chunks             Chunk Names
-                            app.js    5.9 KiB       0  [emitted]  app
+                            app.js   5.71 KiB       0  [emitted]  app
     vendor.6a3bdffda9f0de672978.js  619 bytes       1  [emitted]  vendor
     Entrypoint app = vendor.6a3bdffda9f0de672978.js app.js
     [./constants.js] 87 bytes {1} [built]
@@ -664,7 +664,7 @@ Child
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                              Asset       Size  Chunks             Chunk Names
-                            app.js   5.92 KiB       0  [emitted]  app
+                            app.js   5.72 KiB       0  [emitted]  app
     vendor.6a3bdffda9f0de672978.js  619 bytes       1  [emitted]  vendor
     Entrypoint app = vendor.6a3bdffda9f0de672978.js app.js
     [./constants.js] 87 bytes {1} [built]
@@ -1321,7 +1321,7 @@ exports[`StatsTestCases should print correct stats for named-chunks-plugin 1`] =
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset       Size  Chunks             Chunk Names
- entry.js   5.64 KiB   entry  [emitted]  entry
+ entry.js   5.47 KiB   entry  [emitted]  entry
 vendor.js  269 bytes  vendor  [emitted]  vendor
 Entrypoint entry = vendor.js entry.js
 [./entry.js] 72 bytes {entry} [built]
