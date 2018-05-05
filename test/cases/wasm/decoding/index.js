@@ -10,6 +10,6 @@ it("should raw memory export without data", function() {
 	return import("./memory2.wasm").then(function(wasm) {
 		expect(wasm.memory).toBeInstanceOf(WebAssembly.Memory);
 		expect(wasm.memory.buffer).toBeInstanceOf(ArrayBuffer);
-		expect(wasm.memory.buffer.byLength).toBe(1 << 16);
+		expect(wasm.memory.buffer.byteLength).toBe(1 << 16);
 	});
 });
