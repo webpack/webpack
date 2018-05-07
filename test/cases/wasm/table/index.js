@@ -1,8 +1,11 @@
+// the message is inconsistency between some nodejs versions
+const UNKNOWN_FUNCTION_TABLE = /invalid index into function table|invalid function/;
+
 it("should support tables", function() {
 	return import("./wasm-table.wasm").then(function(wasm) {
 		expect(wasm.callByIndex(0)).toEqual(42);
 		expect(wasm.callByIndex(1)).toEqual(13);
-		expect(() => wasm.callByIndex(2)).toThrow("invalid function");
+		expect(() => wasm.callByIndex(2)).toThrow(UNKNOWN_FUNCTION_TABLE);
 	});
 });
 
@@ -23,6 +26,6 @@ it("should support imported tables", function() {
 	return import("./wasm-table-imported.wasm").then(function(wasm) {
 		expect(wasm.callByIndex(0)).toEqual(42);
 		expect(wasm.callByIndex(1)).toEqual(13);
-		expect(() => wasm.callByIndex(2)).toThrow("invalid function");
+		expect(() => wasm.callByIndex(2)).toThrow(UNKNOWN_FUNCTION_TABLE);
 	});
 });
