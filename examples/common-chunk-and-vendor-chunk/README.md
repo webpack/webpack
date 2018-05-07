@@ -195,6 +195,8 @@ module.exports = "utility3";
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
 /******/ 		0: 0
 /******/ 	};
@@ -368,6 +370,8 @@ module.exports = "utility1";
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
 /******/ 		1: 0
 /******/ 	};
@@ -527,6 +531,8 @@ module.exports = "pageB";
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
 /******/ 		2: 0
 /******/ 	};
@@ -634,11 +640,11 @@ module.exports = "pageC";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
                        Asset       Size  Chunks             Chunk Names
-                    pageA.js   5.59 KiB       0  [emitted]  pageA
-                    pageB.js   5.39 KiB       1  [emitted]  pageB
-                    pageC.js   5.34 KiB       2  [emitted]  pageC
+                    pageA.js   5.72 KiB       0  [emitted]  pageA
+                    pageB.js   5.52 KiB       1  [emitted]  pageB
+                    pageC.js   5.47 KiB       2  [emitted]  pageC
                    vendor.js  536 bytes       3  [emitted]  vendor
 commons~pageA~pageB~pageC.js  269 bytes       4  [emitted]  commons~pageA~pageB~pageC
       commons~pageB~pageC.js  269 bytes       5  [emitted]  commons~pageB~pageC
@@ -647,18 +653,18 @@ Entrypoint pageB = vendor.js commons~pageA~pageB~pageC.js commons~pageB~pageC.js
 Entrypoint pageC = commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageC.js
 chunk    {0} pageA.js (pageA) 165 bytes ={3}= ={4}= [entry] [rendered]
     > ./pageA pageA
-    [0] ./pageA.js 137 bytes {0} [built]
-        single entry ./pageA  pageA
-    [2] ./utility1.js 28 bytes {0} [built]
-        cjs require ./utility1 [0] ./pageA.js 2:15-36
+ [0] ./pageA.js 137 bytes {0} [built]
+     single entry ./pageA  pageA
+ [2] ./utility1.js 28 bytes {0} [built]
+     cjs require ./utility1 [0] ./pageA.js 2:15-36
 chunk    {1} pageB.js (pageB) 137 bytes ={3}= ={4}= ={5}= [entry] [rendered]
     > ./pageB pageB
-    [4] ./pageB.js 137 bytes {1} [built]
-        single entry ./pageB  pageB
+ [4] ./pageB.js 137 bytes {1} [built]
+     single entry ./pageB  pageB
 chunk    {2} pageC.js (pageC) 105 bytes ={4}= ={5}= [entry] [rendered]
     > ./pageC pageC
-    [7] ./pageC.js 105 bytes {2} [built]
-        single entry ./pageC  pageC
+ [7] ./pageC.js 105 bytes {2} [built]
+     single entry ./pageC  pageC
 chunk    {3} vendor.js (vendor) 54 bytes ={0}= ={1}= ={4}= ={5}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
     > ./pageA pageA
     > ./pageB pageB
@@ -667,23 +673,23 @@ chunk    {4} commons~pageA~pageB~pageC.js (commons~pageA~pageB~pageC) 28 bytes =
     > ./pageA pageA
     > ./pageB pageB
     > ./pageC pageC
-    [3] ./utility2.js 28 bytes {4} [built]
-        cjs require ./utility2 [0] ./pageA.js 3:15-36
-        cjs require ./utility2 [4] ./pageB.js 2:15-36
-        cjs require ./utility2 [7] ./pageC.js 1:15-36
+ [3] ./utility2.js 28 bytes {4} [built]
+     cjs require ./utility2 [0] ./pageA.js 3:15-36
+     cjs require ./utility2 [4] ./pageB.js 2:15-36
+     cjs require ./utility2 [7] ./pageC.js 1:15-36
 chunk    {5} commons~pageB~pageC.js (commons~pageB~pageC) 28 bytes ={1}= ={2}= ={3}= ={4}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageB~pageC)
     > ./pageB pageB
     > ./pageC pageC
-    [6] ./utility3.js 28 bytes {5} [built]
-        cjs require ./utility3 [4] ./pageB.js 3:15-36
-        cjs require ./utility3 [7] ./pageC.js 2:15-36
+ [6] ./utility3.js 28 bytes {5} [built]
+     cjs require ./utility3 [4] ./pageB.js 3:15-36
+     cjs require ./utility3 [7] ./pageC.js 2:15-36
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
                        Asset       Size  Chunks             Chunk Names
 commons~pageA~pageB~pageC.js   96 bytes       0  [emitted]  commons~pageA~pageB~pageC
       commons~pageB~pageC.js   97 bytes       1  [emitted]  commons~pageB~pageC
@@ -698,32 +704,32 @@ chunk    {0} commons~pageA~pageB~pageC.js (commons~pageA~pageB~pageC) 28 bytes =
     > ./pageA pageA
     > ./pageB pageB
     > ./pageC pageC
-    [0] ./utility2.js 28 bytes {0} [built]
-        cjs require ./utility2 [2] ./pageC.js 1:15-36
-        cjs require ./utility2 [4] ./pageB.js 2:15-36
-        cjs require ./utility2 [7] ./pageA.js 3:15-36
+ [0] ./utility2.js 28 bytes {0} [built]
+     cjs require ./utility2 [2] ./pageC.js 1:15-36
+     cjs require ./utility2 [4] ./pageB.js 2:15-36
+     cjs require ./utility2 [7] ./pageA.js 3:15-36
 chunk    {1} commons~pageB~pageC.js (commons~pageB~pageC) 28 bytes ={0}= ={2}= ={3}= ={4}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageB~pageC)
     > ./pageB pageB
     > ./pageC pageC
-    [1] ./utility3.js 28 bytes {1} [built]
-        cjs require ./utility3 [2] ./pageC.js 2:15-36
-        cjs require ./utility3 [4] ./pageB.js 3:15-36
+ [1] ./utility3.js 28 bytes {1} [built]
+     cjs require ./utility3 [2] ./pageC.js 2:15-36
+     cjs require ./utility3 [4] ./pageB.js 3:15-36
 chunk    {2} vendor.js (vendor) 54 bytes ={0}= ={1}= ={4}= ={5}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
     > ./pageA pageA
     > ./pageB pageB
     2 modules
 chunk    {3} pageC.js (pageC) 105 bytes ={0}= ={1}= [entry] [rendered]
     > ./pageC pageC
-    [2] ./pageC.js 105 bytes {3} [built]
-        single entry ./pageC  pageC
+ [2] ./pageC.js 105 bytes {3} [built]
+     single entry ./pageC  pageC
 chunk    {4} pageB.js (pageB) 137 bytes ={0}= ={1}= ={2}= [entry] [rendered]
     > ./pageB pageB
-    [4] ./pageB.js 137 bytes {4} [built]
-        single entry ./pageB  pageB
+ [4] ./pageB.js 137 bytes {4} [built]
+     single entry ./pageB  pageB
 chunk    {5} pageA.js (pageA) 165 bytes ={0}= ={2}= [entry] [rendered]
     > ./pageA pageA
-    [5] ./utility1.js 28 bytes {5} [built]
-        cjs require ./utility1 [7] ./pageA.js 2:15-36
-    [7] ./pageA.js 137 bytes {5} [built]
-        single entry ./pageA  pageA
+ [5] ./utility1.js 28 bytes {5} [built]
+     cjs require ./utility1 [7] ./pageA.js 2:15-36
+ [7] ./pageA.js 137 bytes {5} [built]
+     single entry ./pageA  pageA
 ```
