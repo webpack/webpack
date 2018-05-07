@@ -218,3 +218,15 @@ declare const $crossOriginLoading$;
 declare const chunkId;
 
 type TODO = any;
+
+declare interface SourcePosition {
+	line: number;
+	column: number;
+}
+
+declare interface DependencyLocation {
+	name: string;
+	index: number;
+	start: SourcePosition;
+	end: SourcePosition;
+}
