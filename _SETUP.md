@@ -10,7 +10,7 @@ That's all.
 
 ## Setup manually
 
-Setup your local webpack repository
+### Setup your local webpack repository
 
 ```bash
 git clone https://github.com/webpack/webpack.git
@@ -21,8 +21,20 @@ yarn link
 yarn link webpack
 ```
 
-To run the entire test suite use:
+### To run the entire test suite use:
 
 ```bash
 yarn test
+```
+
+### To run the typechecker use:
+
+```bash
+yarn type-lint
+```
+
+or incremental as you add JSDoc Annotations or make changes
+
+```bash
+yarn type-lint --watch
 ```
