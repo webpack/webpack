@@ -101,6 +101,7 @@ describe("ConfigTestCases", () => {
 								} catch (e) {
 									// ignored
 								}
+								if (testConfig.beforeExecute) testConfig.beforeExecute(options);
 
 								webpack(options, (err, stats) => {
 									if (err) {
@@ -258,7 +259,7 @@ describe("ConfigTestCases", () => {
 										);
 									if (exportedTests.length < filesCount)
 										return done(new Error("No tests exported by test case"));
-									if (testConfig.afterExecute) testConfig.afterExecute();
+									if (testConfig.afterExecute) testConfig.afterExecute(options);
 									const asyncSuite = describe("exported tests", () => {
 										exportedBeforeEach.forEach(beforeEach);
 										exportedAfterEach.forEach(afterEach);

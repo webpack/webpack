@@ -327,6 +327,41 @@
           "type": "string",
           "absolutePath": false
         },
+        "clean": {
+          "description": "Enable auto deletion of files from `output.path` directory.",
+          "anyOf": [
+            {
+              "description": "`true` enables auto deletion of files from `output.path`.",
+              "type": "boolean"
+            },
+            {
+              "description": "Pattern by which files will be deleted (see `del` package).",
+              "type": "string"
+            },
+            {
+              "description": "Array pattern by which files will be deleted (see `del` package).",
+              "type": "array"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "patterns": {
+                  "description": "Array pattern by which files will be deleted (see `del` package).",
+                  "items": {
+                    "description": "Pattern by which files will be deleted (see `del` package).",
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "options": {
+                  "description": "Cleaner options (see `del` package).",
+                  "type": "object"
+                }
+              }
+            }
+          ]
+        },
         "webassemblyModuleFilename": {
           "description": "The filename of WebAssembly modules as relative path inside the `output.path` directory.",
           "type": "string",

@@ -10,6 +10,7 @@
     "ajv": "^6.1.0",
     "ajv-keywords": "^3.1.0",
     "chrome-trace-event": "^0.1.1",
+    "del": "^3.0.0",
     "enhanced-resolve": "^4.0.0",
     "eslint-scope": "^3.7.1",
     "loader-runner": "^2.3.0",
