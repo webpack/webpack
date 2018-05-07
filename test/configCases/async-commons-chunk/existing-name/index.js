@@ -1,5 +1,4 @@
-const sinon = require("sinon");
-const chunkLoadingSpy = sinon.spy(__webpack_require__, "e");
+const chunkLoadingSpy = jest.spyOn(__webpack_require__, "e");
 
 it("should not have duplicate chunks in blocks", function(done) {
     // This split point should contain: a
@@ -26,7 +25,7 @@ it("should not have duplicate chunks in blocks", function(done) {
     // - a
     // - a, a+b
     // - a, a+b, a+b+c
-	expect(chunkLoadingSpy.callCount).toBe(6);
-	expect(chunkLoadingSpy.args).toEqual([["a"], ["a"], ["a+b~a+b+c" /* == b */], ["a"], ["a+b~a+b+c" /* == b */], ["a+b+c"]]);
+	expect(chunkLoadingSpy.mock.calls.length).toBe(6);
+	expect(chunkLoadingSpy.mock.calls).toEqual([["a"], ["a"], ["a+b~a+b+c" /* == b */], ["a"], ["a+b~a+b+c" /* == b */], ["a+b+c"]]);
 	done();
 });
