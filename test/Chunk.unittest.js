@@ -1,7 +1,6 @@
 /* globals describe, it, beforeEach */
 "use strict";
 
-const sinon = require("sinon");
 const Chunk = require("../lib/Chunk");
 
 describe("Chunk", () => {
@@ -79,7 +78,7 @@ describe("Chunk", () => {
 		let removeChunkSpy;
 
 		beforeEach(() => {
-			removeChunkSpy = sinon.spy();
+			removeChunkSpy = jest.fn();
 			module = {
 				removeChunk: removeChunkSpy
 			};
@@ -99,8 +98,8 @@ describe("Chunk", () => {
 			it("calls module.removeChunk with itself and returns true", () => {
 				expect(ChunkInstance.removeModule(module)).toBe(true);
 
-				expect(removeChunkSpy.callCount).toBe(1);
-				expect(removeChunkSpy.args[0][0]).toBe(ChunkInstance);
+				expect(removeChunkSpy.mock.calls.length).toBe(1);
+				expect(removeChunkSpy.mock.calls[0][0]).toBe(ChunkInstance);
 			});
 		});
 

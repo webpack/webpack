@@ -1,7 +1,6 @@
 /* globals describe, it, beforeEach, afterEach */
 "use strict";
 
-const sinon = require("sinon");
 const NormalModule = require("../lib/NormalModule");
 const NullDependency = require("../lib/dependencies/NullDependency");
 const SourceMapSource = require("webpack-sources").SourceMapSource;
@@ -54,12 +53,12 @@ describe("NormalModule", () => {
 
 	describe("#readableIdentifier", () => {
 		it("calls the given requestShortener with the user request", () => {
-			const spy = sinon.spy();
+			const spy = jest.fn();
 			normalModule.readableIdentifier({
 				shorten: spy
 			});
-			expect(spy.callCount).toBe(1);
-			expect(spy.args[0][0]).toBe(userRequest);
+			expect(spy.mock.calls.length).toBe(1);
+			expect(spy.mock.calls[0][0]).toBe(userRequest);
 		});
 	});
 
@@ -315,27 +314,27 @@ describe("NormalModule", () => {
 	describe("#shouldPreventParsing", () => {
 		let applyNoParseRuleSpy;
 		beforeEach(() => {
-			applyNoParseRuleSpy = sinon.stub();
+			applyNoParseRuleSpy = jest.fn();
 			normalModule.applyNoParseRule = applyNoParseRuleSpy;
 		});
 		describe("given no noParseRule", () => {
 			it("returns false", () => {
 				expect(normalModule.shouldPreventParsing()).toBe(false);
-				expect(applyNoParseRuleSpy.callCount).toBe(0);
+				expect(applyNoParseRuleSpy.mock.calls.length).toBe(0);
 			});
 		});
 		describe("given a noParseRule", () => {
 			let returnValOfSpy;
 			beforeEach(() => {
 				returnValOfSpy = true;
-				applyNoParseRuleSpy.returns(returnValOfSpy);
+				applyNoParseRuleSpy.mockReturnValue(returnValOfSpy);
 			});
 			describe("that is a string", () => {
 				it("calls and returns whatever applyNoParseRule returns", () => {
 					expect(normalModule.shouldPreventParsing("some rule")).toBe(
 						returnValOfSpy
 					);
-					expect(applyNoParseRuleSpy.callCount).toBe(1);
+					expect(applyNoParseRuleSpy.mock.calls.length).toBe(1);
 				});
 			});
 			describe("that is a regex", () => {
@@ -343,7 +342,7 @@ describe("NormalModule", () => {
 					expect(normalModule.shouldPreventParsing("some rule")).toBe(
 						returnValOfSpy
 					);
-					expect(applyNoParseRuleSpy.callCount).toBe(1);
+					expect(applyNoParseRuleSpy.mock.calls.length).toBe(1);
 				});
 			});
 			describe("that is an array", () => {
@@ -355,39 +354,39 @@ describe("NormalModule", () => {
 					describe("and none of them match", () => {
 						beforeEach(() => {
 							returnValOfSpy = false;
-							applyNoParseRuleSpy.returns(returnValOfSpy);
+							applyNoParseRuleSpy.mockReturnValue(returnValOfSpy);
 						});
 						it("returns false", () => {
 							expect(normalModule.shouldPreventParsing(someRules)).toBe(
 								returnValOfSpy
 							);
-							expect(applyNoParseRuleSpy.callCount).toBe(3);
+							expect(applyNoParseRuleSpy.mock.calls.length).toBe(3);
 						});
 					});
 					describe("and the first of them matches", () => {
 						beforeEach(() => {
 							returnValOfSpy = true;
-							applyNoParseRuleSpy.returns(returnValOfSpy);
+							applyNoParseRuleSpy.mockReturnValue(returnValOfSpy);
 						});
 						it("returns true", () => {
 							expect(normalModule.shouldPreventParsing(someRules)).toBe(
 								returnValOfSpy
 							);
-							expect(applyNoParseRuleSpy.callCount).toBe(1);
+							expect(applyNoParseRuleSpy.mock.calls.length).toBe(1);
 						});
 					});
 					describe("and the last of them matches", () => {
 						beforeEach(() => {
 							returnValOfSpy = true;
-							applyNoParseRuleSpy.onCall(0).returns(false);
-							applyNoParseRuleSpy.onCall(1).returns(false);
-							applyNoParseRuleSpy.onCall(2).returns(true);
+							applyNoParseRuleSpy.mockReturnValueOnce(false);
+							applyNoParseRuleSpy.mockReturnValueOnce(false);
+							applyNoParseRuleSpy.mockReturnValue(true);
 						});
 						it("returns true", () => {
 							expect(normalModule.shouldPreventParsing(someRules)).toBe(
 								returnValOfSpy
 							);
-							expect(applyNoParseRuleSpy.callCount).toBe(3);
+							expect(applyNoParseRuleSpy.mock.calls.length).toBe(3);
 						});
 					});
 				});
