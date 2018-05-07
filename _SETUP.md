@@ -21,19 +21,61 @@ yarn link
 yarn link webpack
 ```
 
-### To run the entire test suite use:
+### To run the entire test suite use
 
 ```bash
 yarn test
 ```
 
-### To run the typechecker use:
+### To run only intergration tests use
+
+```bash
+yarn test:integration
+```
+
+or in watch mode
+
+```bash
+yarn test:integration --watch
+```
+
+### To run only unit tests use
+
+```bash
+yarn test:unit
+```
+
+or in watch mode
+
+```bash
+yarn test:unit --watch
+```
+
+### To run code formatter (prettier) run
+
+```bash
+yarn pretty
+```
+
+### To run all linters use
+
+This performs linting on:
+
+* eslint (code-lint script)
+* schema (schema-lint script)
+* types (type-lint script)
+
+```bash
+yarn lint
+```
+
+### To run only the typechecker use
 
 ```bash
 yarn type-lint
 ```
 
-or incremental as you add JSDoc Annotations or make changes
+or incremental (in watch mode)
 
 ```bash
 yarn type-lint --watch
