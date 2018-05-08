@@ -1,7 +1,6 @@
 /* globals describe, it, beforeEach */
 "use strict";
 
-const sinon = require("sinon");
 const ExternalModule = require("../lib/ExternalModule");
 const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
@@ -46,16 +45,16 @@ describe("ExternalModule", () => {
 			// set up
 			const expectedString = "something expected stringy";
 			const expectedSource = "something expected source";
-			externalModule.getSource = sinon.stub().returns(expectedSource);
-			externalModule.getSourceString = sinon.stub().returns(expectedString);
+			externalModule.getSource = jest.fn(() => expectedSource);
+			externalModule.getSourceString = jest.fn(() => expectedString);
 
 			// invoke
 			const result = externalModule.source();
 
 			// check
-			expect(externalModule.getSource.callCount).toBe(1);
-			expect(externalModule.getSourceString.callCount).toBe(1);
-			expect(externalModule.getSource.args[0][0]).toBe(expectedString);
+			expect(externalModule.getSource.mock.calls.length).toBe(1);
+			expect(externalModule.getSourceString.mock.calls.length).toBe(1);
+			expect(externalModule.getSource.mock.calls[0][0]).toBe(expectedString);
 			expect(result).toEqual(expectedSource);
 		});
 	});

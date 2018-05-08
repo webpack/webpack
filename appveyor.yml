@@ -19,7 +19,7 @@ environment:
       jest: --maxWorkers=2
     - nodejs_version: 6
       job_part: integration
-      jest: --runInBand
+      jest: --maxWorkers=2
 
 install:
   - ps: Install-Product node $env:nodejs_version x64
@@ -35,8 +35,8 @@ matrix:
 
 test_script:
   - node --version
-  - npm --version
   - yarn --version
   - cmd: set JEST=%jest%
-  - cmd: npm run appveyor:%job_part%
-  - cmd: npm install -g codecov && codecov -F %job_part%
+  - cmd: yarn appveyor:%job_part%
+  - cmd: yarn unlink webpack
+  - cmd: yarn global add codecov && codecov -F %job_part% --disable=gcov

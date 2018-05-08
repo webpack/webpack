@@ -1,4 +1,0 @@
-
-ERROR in ./index.js
-Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/preset-errors-only-error'
- @ ./index.js 1:0-25

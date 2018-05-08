@@ -197,7 +197,7 @@ describe("ConfigTestCases", () => {
 												options.target === "webworker"
 											) {
 												fn = vm.runInNewContext(
-													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, window) {" +
+													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest, window) {" +
 														content +
 														"\n})",
 													globalContext,
@@ -205,7 +205,7 @@ describe("ConfigTestCases", () => {
 												);
 											} else {
 												fn = vm.runInThisContext(
-													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect) {" +
+													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest) {" +
 														"global.expect = expect; " +
 														content +
 														"\n})",
@@ -226,6 +226,7 @@ describe("ConfigTestCases", () => {
 												_beforeEach,
 												_afterEach,
 												expect,
+												jest,
 												globalContext
 											);
 											return m.exports;
