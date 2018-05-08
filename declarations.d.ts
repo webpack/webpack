@@ -114,3 +114,5 @@ declare const WebAssembly;
 declare const importScripts;
 declare const $crossOriginLoading$;
 declare const chunkId;
+
+type TODO = any;
