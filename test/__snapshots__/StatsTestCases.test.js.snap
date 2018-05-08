@@ -2549,6 +2549,14 @@ chunk    {3} vendors.js (vendors) 20 bytes ={2}= >{0}< >{1}< [initial] [rendered
  [4] ./node_modules/y.js 20 bytes {3} [built]"
 `;
 
+exports[`StatsTestCases should print correct stats for split-chunks-issue-7230 1`] = `
+"         Asset      Size  Chunks             Chunk Names
+core.bundle.js  5.61 KiB       0  [emitted]  core
+main.bundle.js  5.85 KiB       1  [emitted]  main
+Entrypoint core = core.bundle.js
+Entrypoint main = core.bundle.js main.bundle.js"
+`;
+
 exports[`StatsTestCases should print correct stats for split-chunks-prefer-bigger-splits 1`] = `
 "Entrypoint main = default/main.js
 chunk    {0} default/async-b~async-c.js (async-b~async-c) 110 bytes <{4}> ={2}= ={3}= [rendered] split chunk (cache group: default) (name: async-b~async-c)

@@ -1472,6 +1472,10 @@
                             "description": "Try to reuse existing chunk (with name) when it has matching modules",
                             "type": "boolean"
                           },
+                          "preserveEntrypoint": {
+                            "description": "Preserve existing chunk as an entrypoint when it has matching modules",
+                            "type": "boolean"
+                          },
                           "name": {
                             "description": "Give chunks for this cache group a name (chunks with equal name are merged)",
                             "oneOf": [
