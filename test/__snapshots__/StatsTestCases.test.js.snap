@@ -3685,6 +3685,15 @@ Child enforce-min-size:
      ./node_modules/small.js?2 67 bytes [built]"
 `;
 
+exports[`StatsTestCases should print correct stats for split-chunks-issue-7230 1`] = `
+"            Asset       Size  Chunks             Chunk Names
+   core.bundle.js  556 bytes       0  [emitted]  core
+   main.bundle.js  796 bytes       2  [emitted]  main
+runtime.bundle.js   6.04 KiB       1  [emitted]  runtime
+Entrypoint core = runtime.bundle.js core.bundle.js
+Entrypoint main = runtime.bundle.js core.bundle.js main.bundle.js"
+`;
+
 exports[`StatsTestCases should print correct stats for split-chunks-prefer-bigger-splits 1`] = `
 "Entrypoint main = default/main.js
 chunk default/118.js 110 bytes <{179}> ={334}= ={383}= [rendered] split chunk (cache group: default)

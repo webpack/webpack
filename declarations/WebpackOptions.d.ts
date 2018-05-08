@@ -1156,6 +1156,10 @@ export interface OptimizationSplitChunksCacheGroup {
 	 */
 	name?: false | Function | string;
 	/**
+	 * Preserve existing entrypoint when chunk has equal name
+	 */
+	preserveEntrypoint?: boolean;
+	/**
 	 * Priority of this cache group
 	 */
 	priority?: number;

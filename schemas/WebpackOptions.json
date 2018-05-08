@@ -813,6 +813,10 @@
             }
           ]
         },
+        "preserveEntrypoint": {
+          "description": "Preserve existing entrypoint when chunk has equal name",
+          "type": "boolean"
+        },
         "priority": {
           "description": "Priority of this cache group",
           "type": "number"
