@@ -5873,9 +5873,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^2.9.0-dev.20180503:
-  version "2.9.0-dev.20180503"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.0-dev.20180503.tgz#26feac2d2120c558fac25b5fe8108a85d0405c4b"
+typescript@^2.9.0-dev.20180506:
+  version "2.9.0-dev.20180506"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.0-dev.20180506.tgz#e20070caa88fca90227cf040459402611a74e13f"
 
 ua-parser-js@^0.7.9:
   version "0.7.17"
