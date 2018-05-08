@@ -5,17 +5,17 @@ import f, { named } from "../data/f.json";
 import g, { named as gnamed } from "../data/g.json";
 
 it("should be possible to import json data", function() {
-	c[2].should.be.eql(3);
-	Object.keys(d).should.be.eql(["default"]);
-	aa.should.be.eql(1);
-	bb.should.be.eql(2);
-	named.should.be.eql("named");
-	({ f }).should.be.eql({
+	expect(c[2]).toBe(3);
+	expect(Object.keys(d)).toEqual(["default"]);
+	expect(aa).toBe(1);
+	expect(bb).toBe(2);
+	expect(named).toBe("named");
+	(expect({ f })).toEqual({
 		f: {
 			__esModule: true,
 			default: "default",
 			named: "named"
 		}
 	});
-	g.named.should.be.equal(gnamed);
+	expect(g.named).toBe(gnamed);
 });

@@ -1,8 +1,6 @@
 /* global describe, it */
 "use strict";
 
-require("should");
-
 const path = require("path");
 const webpack = require("../lib/webpack");
 
@@ -14,7 +12,7 @@ describe("NodeTemplatePlugin", () => {
 				context: path.join(__dirname, "fixtures", "nodetest"),
 				target: "node",
 				output: {
-					path: path.join(__dirname, "js"),
+					path: path.join(__dirname, "js", "NodeTemplatePlugin"),
 					filename: "result.js",
 					chunkFilename: "[hash].result.[id].js",
 					library: "abc",
@@ -24,16 +22,16 @@ describe("NodeTemplatePlugin", () => {
 			},
 			(err, stats) => {
 				if (err) return err;
-				stats.hasErrors().should.be.not.ok();
-				stats.hasWarnings().should.be.not.ok();
+				expect(stats.hasErrors()).toBe(false);
+				expect(stats.hasWarnings()).toBe(false);
 				// eslint-disable-next-line node/no-missing-require
-				const result = require("./js/result").abc;
-				result.nextTick.should.be.equal(process.nextTick);
-				result.fs.should.be.equal(require("fs"));
+				const result = require("./js/NodeTemplatePlugin/result").abc;
+				expect(result.nextTick).toBe(process.nextTick);
+				expect(result.fs).toBe(require("fs"));
 				result.loadChunk(456, chunk => {
-					chunk.should.be.eql(123);
+					expect(chunk).toBe(123);
 					result.loadChunk(567, chunk => {
-						chunk.should.be.eql({
+						expect(chunk).toEqual({
 							a: 1
 						});
 						done();
@@ -50,7 +48,7 @@ describe("NodeTemplatePlugin", () => {
 				context: path.join(__dirname, "fixtures", "nodetest"),
 				target: "node",
 				output: {
-					path: path.join(__dirname, "js"),
+					path: path.join(__dirname, "js", "NodeTemplatePluginSingle"),
 					filename: "result2.js",
 					chunkFilename: "[hash].result2.[id].js",
 					library: "def",
@@ -66,17 +64,17 @@ describe("NodeTemplatePlugin", () => {
 			},
 			(err, stats) => {
 				if (err) return err;
-				stats.hasErrors().should.be.not.ok();
+				expect(stats.hasErrors()).toBe(false);
 				// eslint-disable-next-line node/no-missing-require
-				const result = require("./js/result2");
-				result.nextTick.should.be.equal(process.nextTick);
-				result.fs.should.be.equal(require("fs"));
+				const result = require("./js/NodeTemplatePluginSingle/result2");
+				expect(result.nextTick).toBe(process.nextTick);
+				expect(result.fs).toBe(require("fs"));
 				const sameTick = true;
 				result.loadChunk(456, chunk => {
-					chunk.should.be.eql(123);
-					sameTick.should.be.eql(true);
+					expect(chunk).toBe(123);
+					expect(sameTick).toBe(true);
 					result.loadChunk(567, chunk => {
-						chunk.should.be.eql({
+						expect(chunk).toEqual({
 							a: 1
 						});
 						done();

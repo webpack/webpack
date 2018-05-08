@@ -6,8 +6,8 @@ it("should generate valid code when calling a harmony import function with brack
 	var c = fn((3), (4));
 	var d = fn(5, (6));
 
-	a.should.be.eql([1]);
-	b.should.be.eql([2]);
-	c.should.be.eql([3, 4]);
-	d.should.be.eql([5, 6]);
+	expect(a).toEqual([1]);
+	expect(b).toEqual([2]);
+	expect(c).toEqual([3, 4]);
+	expect(d).toEqual([5, 6]);
 });

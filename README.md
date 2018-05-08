@@ -60,7 +60,7 @@ or packaging just about any resource or asset.
 
 **TL;DR**
 
-* Bundles [ES Modules](http://www.2ality.com/2014/09/es6-modules-final.html), [CommonJS](http://wiki.commonjs.org/) and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
+* Bundles [ES Modules](http://www.2ality.com/2014/09/es6-modules-final.html), [CommonJS](http://wiki.commonjs.org/), and [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) modules (even combined).
 * Can create a single bundle or multiple chunks that are asynchronously loaded at runtime (to reduce initial loading time).
 * Dependencies are resolved during compilation, reducing the runtime size.
 * Loaders can preprocess files while compiling, e.g. TypeScript to JavaScript, Handlebars strings to compiled functions, images to Base64, etc.
@@ -69,6 +69,11 @@ or packaging just about any resource or asset.
 ### Get Started
 
 Check out webpack's quick [**Get Started**](https://webpack.js.org/get-started/) guide and the [other guides](https://webpack.js.org/guides/).
+
+### Browser Compatibility
+
+webpack supports all browsers that are [ES5-compliant](http://kangax.github.io/compat-table/es5/) (IE8 and below are not supported).
+webpack also needs `Promise` for `import()` and `require.ensure()`. If you want to support older browsers, you will need to [load a polyfill](https://webpack.js.org/guides/shimming/) before using these expressions.
 
 <h2 align="center">Concepts</h2>
 
@@ -323,18 +328,6 @@ If you have discovered a 🐜 or have a feature suggestion, feel free to create 
         <p>Public Relations</p>
         <br>
         <p>Founder of the core team</p>
-      </td>
-      <td align="center" valign="top">
-        <img width="150" height="150" src="https://github.com/bebraw.png?s=150">
-        <br>
-        <a href="https://github.com/bebraw">Juho Vepsäläinen</a>
-        <p>Documentation</p>
-        <br>
-        <p>Author</p>
-        <a href="https://leanpub.com/survivejs-webpack">
-          <img height="15" src="https://cloud.githubusercontent.com/assets/1365881/20286923/93e325c0-aac9-11e6-964d-cabe218c584c.png">
-        </a>
-		<br>
       </td>
       <td align="center" valign="top">
         <img width="150" height="150" src="https://github.com/spacek33z.png?s=150">

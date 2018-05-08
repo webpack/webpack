@@ -19,21 +19,21 @@ it("should parse classes", function() {
 
 	var x = new MyClass();
 
-	x.a.should.be.eql("a");
-	x.func().should.be.eql("b");
-	x.c().should.be.eql("c");
+	expect(x.a).toBe("a");
+	expect(x.func()).toBe("b");
+	expect(x.c()).toBe("c");
 });
 
 it("should parse spread operator"/*, function() {
-	[0, ...require("./array")].should.be.eql([0, 1, 2, 3]);
-	({z: 0, ...require("./object")}).should.be.eql({z: 0, a: 1, b: 2, c: 3});
+	expect([0, ...require("./array")]).toEqual([0, 1, 2, 3]);
+	expect(({z: 0, ...require("./object")})).toEqual({z: 0, a: 1, b: 2, c: 3});
 }*/);
 
 it("should parse arrow function", function() {
-	(() => require("./a"))().should.be.eql("a");
-	(() => {
+	expect((() => require("./a"))()).toBe("a");
+	expect((() => {
 		return require("./a");
-	})().should.be.eql("a");
+	})()).toBe("a");
 	require.ensure([], () => {
 		require("./a");
 	});
@@ -53,8 +53,8 @@ it("should parse template literals", function() {
 	}
 	var x = `a${require("./b")}c`;
 	var y = tag`a${require("./b")}c`;
-	x.should.be.eql("abc");
-	y.should.be.eql("b");
+	expect(x).toBe("abc");
+	expect(y).toBe("b");
 })
 
 it("should parse generators and yield", function() {
@@ -63,7 +63,7 @@ it("should parse generators and yield", function() {
 		yield require("./b");
 	}
 	var x = gen();
-	x.next().value.should.be.eql("a");
-	x.next().value.should.be.eql("b");
-	x.next().done.should.be.eql(true);
+	expect(x.next().value).toBe("a");
+	expect(x.next().value).toBe("b");
+	expect(x.next().done).toBe(true);
 })

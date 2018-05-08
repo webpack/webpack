@@ -1,6 +1,6 @@
 module.exports = {
 	root: true,
-	plugins: ["prettier", "node"],
+	plugins: ["prettier", "node", "jest"],
 	extends: ["eslint:recommended", "plugin:node/recommended", "plugin:prettier/recommended"],
 	env: {
 		node: true,
@@ -13,7 +13,6 @@ module.exports = {
 		"prettier/prettier": "error",
 		"no-undef": "error",
 		"no-extra-semi": "error",
-		"semi": "error",
 		"no-template-curly-in-string": "error",
 		"no-caller": "error",
 		"no-control-regex": "off",
@@ -43,13 +42,20 @@ module.exports = {
 		{
 			files: ["lib/**/*.runtime.js", "buildin/*.js", "hot/*.js"],
 			env: {
-				es6: false
+				es6: false,
+				browser: true
 			},
 			globals: {
 				Promise: false,
 			},
 			parserOptions: {
 				ecmaVersion: 5
+			}
+		},
+		{
+			files: ["test/**/*.js"],
+			env: {
+				"jest/globals": true
 			}
 		}
 	]

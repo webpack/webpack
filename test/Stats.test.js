@@ -1,15 +1,13 @@
 /*globals describe it */
 "use strict";
 
-require("should");
-
 const webpack = require("../lib/webpack");
 const MemoryFs = require("memory-fs");
 const Stats = require("../lib/Stats");
 const packageJson = require("../package.json");
 const path = require("path");
 describe("Stats", () => {
-	it("should print env string in stats", function(done) {
+	it("should print env string in stats", done => {
 		const compiler = webpack({
 			context: __dirname,
 			entry: "./fixtures/a"
@@ -18,15 +16,15 @@ describe("Stats", () => {
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 			try {
-				stats
-					.toString({
+				expect(
+					stats.toString({
 						all: false,
 						env: true,
 						_env: "production"
 					})
-					.should.be.eql('Environment (--env): "production"');
-				stats
-					.toString({
+				).toBe('Environment (--env): "production"');
+				expect(
+					stats.toString({
 						all: false,
 						env: true,
 						_env: {
@@ -34,15 +32,15 @@ describe("Stats", () => {
 							baz: true
 						}
 					})
-					.should.be.eql(
-						"Environment (--env): {\n" +
-							'  "prod": [\n' +
-							'    "foo",\n' +
-							'    "bar"\n' +
-							"  ],\n" +
-							'  "baz": true\n' +
-							"}"
-					);
+				).toBe(
+					"Environment (--env): {\n" +
+						'  "prod": [\n' +
+						'    "foo",\n' +
+						'    "bar"\n' +
+						"  ],\n" +
+						'  "baz": true\n' +
+						"}"
+				);
 				done();
 			} catch (e) {
 				done(e);
@@ -60,7 +58,7 @@ describe("Stats", () => {
 			try {
 				const stats = new Stats(compilation);
 				const result = stats.toJson();
-				result.should.deepEqual({
+				expect(result).toEqual({
 					assets: [],
 					assetsByChunkName: {},
 					children: [],
@@ -70,6 +68,7 @@ describe("Stats", () => {
 					filteredModules: 0,
 					errors: [],
 					modules: [],
+					namedChunkGroups: {},
 					hash: undefined,
 					outputPath: path.resolve("./", "dist"),
 					publicPath: "",
