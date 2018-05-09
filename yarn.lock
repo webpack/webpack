@@ -18,6 +18,117 @@
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.2.tgz#e13182e1b69871a422d7863e11a4a6f5b814a4bd"
 
+"@webassemblyjs/ast@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.3.2.tgz#3312d6f81aaaa1fe74d2e1a42264899fe802828e"
+  dependencies:
+    "@webassemblyjs/helper-wasm-bytecode" "1.3.2"
+    "@webassemblyjs/wast-parser" "1.3.2"
+    webassemblyjs "1.3.2"
+
+"@webassemblyjs/floating-point-hex-parser@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/floating-point-hex-parser/-/floating-point-hex-parser-1.3.2.tgz#a749e630e6b78fab70dbeac5710038fba241548d"
+
+"@webassemblyjs/helper-buffer@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-buffer/-/helper-buffer-1.3.2.tgz#c5c36f8f158145403beb9e9f7ccf70fb6dc003fa"
+
+"@webassemblyjs/helper-code-frame@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-code-frame/-/helper-code-frame-1.3.2.tgz#a54b59bf586f91368c8675d20750a05df95c8f3a"
+  dependencies:
+    "@webassemblyjs/wast-printer" "1.3.2"
+
+"@webassemblyjs/helper-fsm@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-fsm/-/helper-fsm-1.3.2.tgz#05e31f4ca23634a8232b4295889b38df9360bb5b"
+
+"@webassemblyjs/helper-wasm-bytecode@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-bytecode/-/helper-wasm-bytecode-1.3.2.tgz#487c2f0165f1b25dde622bd5fe832307cadc4e45"
+
+"@webassemblyjs/helper-wasm-section@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-section/-/helper-wasm-section-1.3.2.tgz#b05ad3b21e2d94847242813ea2df6931413ddd70"
+  dependencies:
+    "@webassemblyjs/ast" "1.3.2"
+    "@webassemblyjs/helper-buffer" "1.3.2"
+    "@webassemblyjs/helper-wasm-bytecode" "1.3.2"
+    "@webassemblyjs/wasm-gen" "1.3.2"
+
+"@webassemblyjs/leb128@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/leb128/-/leb128-1.3.2.tgz#f0b0d7e3b711e17a8140e3475ac26292ac6f4245"
+  dependencies:
+    leb "^0.3.0"
+
+"@webassemblyjs/validation@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/validation/-/validation-1.3.2.tgz#1a05dd9d7d7414d7a36d39649abf0981cead68f2"
+  dependencies:
+    "@webassemblyjs/ast" "1.3.2"
+
+"@webassemblyjs/wasm-edit@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-edit/-/wasm-edit-1.3.2.tgz#eaf8df33b4003f88426a34cd4981c60127db0a0d"
+  dependencies:
+    "@webassemblyjs/ast" "1.3.2"
+    "@webassemblyjs/helper-buffer" "1.3.2"
+    "@webassemblyjs/helper-wasm-bytecode" "1.3.2"
+    "@webassemblyjs/helper-wasm-section" "1.3.2"
+    "@webassemblyjs/wasm-gen" "1.3.2"
+    "@webassemblyjs/wasm-opt" "1.3.2"
+    "@webassemblyjs/wasm-parser" "1.3.2"
+    "@webassemblyjs/wast-printer" "1.3.2"
+    debug "^3.1.0"
+
+"@webassemblyjs/wasm-gen@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-gen/-/wasm-gen-1.3.2.tgz#1f7baef9dc6c162b290639ea60f4cec9a971701d"
+  dependencies:
+    "@webassemblyjs/ast" "1.3.2"
+    "@webassemblyjs/helper-wasm-bytecode" "1.3.2"
+    "@webassemblyjs/leb128" "1.3.2"
+
+"@webassemblyjs/wasm-opt@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-opt/-/wasm-opt-1.3.2.tgz#3f72c0c59422fdc7511d77e97e5ec462dafe378f"
+  dependencies:
+    "@webassemblyjs/ast" "1.3.2"
+    "@webassemblyjs/helper-buffer" "1.3.2"
+    "@webassemblyjs/wasm-gen" "1.3.2"
+    "@webassemblyjs/wasm-parser" "1.3.2"
+
+"@webassemblyjs/wasm-parser@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-parser/-/wasm-parser-1.3.2.tgz#351d368f4a0407afd8ac4454235bdeb2fb8a0913"
+  dependencies:
+    "@webassemblyjs/ast" "1.3.2"
+    "@webassemblyjs/helper-wasm-bytecode" "1.3.2"
+    "@webassemblyjs/leb128" "1.3.2"
+    "@webassemblyjs/wasm-parser" "1.3.2"
+    webassemblyjs "1.3.2"
+
+"@webassemblyjs/wast-parser@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-parser/-/wast-parser-1.3.2.tgz#5b78bfaace0b13d38be36719931a8b22fd563a22"
+  dependencies:
+    "@webassemblyjs/ast" "1.3.2"
+    "@webassemblyjs/floating-point-hex-parser" "1.3.2"
+    "@webassemblyjs/helper-code-frame" "1.3.2"
+    "@webassemblyjs/helper-fsm" "1.3.2"
+    long "^3.2.0"
+    webassemblyjs "1.3.2"
+
+"@webassemblyjs/wast-printer@1.3.2":
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-printer/-/wast-printer-1.3.2.tgz#6f3392bb9582bf7537e77704e7a2a84176305d20"
+  dependencies:
+    "@webassemblyjs/ast" "1.3.2"
+    "@webassemblyjs/wast-parser" "1.3.2"
+    long "^3.2.0"
+
 abab@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/abab/-/abab-1.0.4.tgz#5faad9c2c07f60dd76770f71cf025b62a63cfd4e"
@@ -795,7 +906,7 @@ chalk@^1.1.1, chalk@^1.1.3:
     strip-ansi "^3.0.0"
     supports-color "^2.0.0"
 
-chalk@^2.0.0, chalk@^2.1.0, chalk@^2.3.2:
+chalk@^2.0.0, chalk@^2.3.2:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.4.1.tgz#18c49ab16a037b6eb0152cc83e3471338215b66e"
   dependencies:
@@ -803,7 +914,7 @@ chalk@^2.0.0, chalk@^2.1.0, chalk@^2.3.2:
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
-chalk@^2.0.1:
+chalk@^2.0.1, chalk@^2.1.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-2.3.0.tgz#b5ea48efc9c1793dccc9b4767c93914d3f2d52ba"
   dependencies:
@@ -1447,10 +1558,6 @@ detect-newline@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-2.1.0.tgz#f41f1c10be4b00e87b5f13da680759f2c5bfd3e2"
 
-diff@^3.1.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/diff/-/diff-3.5.0.tgz#800c0dd1e0a8bfbc95835c202ad220fe317e5a12"
-
 diff@^3.2.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-3.4.0.tgz#b1d85507daf3964828de54b37d0d73ba67dda56c"
@@ -2050,12 +2157,6 @@ form-data@~2.3.1:
     asynckit "^0.4.0"
     combined-stream "1.0.6"
     mime-types "^2.1.12"
-
-formatio@1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/formatio/-/formatio-1.2.0.tgz#f3b2167d9068c4698a8d51f4f760a39a54d818eb"
-  dependencies:
-    samsam "1.x"
 
 forwarded@~0.1.0:
   version "0.1.2"
@@ -2824,10 +2925,6 @@ is-windows@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/is-windows/-/is-windows-1.0.2.tgz#d1850eb9791ecd18e6182ce12a30f396634bb19d"
 
-isarray@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/isarray/-/isarray-0.0.1.tgz#8a18acfca9a8f4177e09abfc6038939b05d1eedf"
-
 isarray@1.0.0, isarray@^1.0.0, isarray@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/isarray/-/isarray-1.0.0.tgz#bb935d48582cba168c06834957a54a3e07124f11"
@@ -3468,6 +3565,10 @@ lcov-parse@^1.x:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/lcov-parse/-/lcov-parse-1.0.0.tgz#eb0d46b54111ebc561acb4c408ef9363bdc8f7e0"
 
+leb@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/leb/-/leb-0.3.0.tgz#32bee9fad168328d6aea8522d833f4180eed1da3"
+
 left-pad@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/left-pad/-/left-pad-1.2.0.tgz#d30a73c6b8201d8f7d8e7956ba9616087a68e0ee"
@@ -3574,9 +3675,9 @@ log-driver@^1.x:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/log-driver/-/log-driver-1.2.7.tgz#63b95021f0702fedfa2c9bb0a24e7797d71871d8"
 
-lolex@^1.6.0:
-  version "1.6.0"
-  resolved "https://registry.yarnpkg.com/lolex/-/lolex-1.6.0.tgz#3a9a0283452a47d7439e72731b9e07d7386e49f6"
+long@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/long/-/long-3.2.0.tgz#d821b7138ca1cb581c172990ef14db200b5c474b"
 
 longest@^1.0.1:
   version "1.0.1"
@@ -3842,10 +3943,6 @@ nanomatch@^1.2.9:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
-
-native-promise-only@^0.8.1:
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/native-promise-only/-/native-promise-only-0.8.1.tgz#20a318c30cb45f71fe7adfbf7b21c99c1472ef11"
 
 natural-compare@^1.4.0:
   version "1.4.0"
@@ -4246,12 +4343,6 @@ path-parse@^1.0.5:
 path-to-regexp@0.1.7:
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-0.1.7.tgz#df604178005f522f15eb4490e7247a1bfaa67f8c"
-
-path-to-regexp@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/path-to-regexp/-/path-to-regexp-1.7.0.tgz#59fde0f435badacba103a84e9d3bc64e96b9937d"
-  dependencies:
-    isarray "0.0.1"
 
 path-type@^1.0.0:
   version "1.1.0"
@@ -5109,10 +5200,6 @@ safer-buffer@^2.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/safer-buffer/-/safer-buffer-2.1.2.tgz#44fa161b0187b9549dd84bb91802f9bd8385cd6a"
 
-samsam@1.x, samsam@^1.1.3:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/samsam/-/samsam-1.3.0.tgz#8d1d9350e25622da30de3e44ba692b5221ab7c50"
-
 sane@^2.0.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/sane/-/sane-2.3.0.tgz#3f3df584abf69e63d4bb74f0f8c42468e4d7d46b"
@@ -5260,19 +5347,6 @@ simple-git@^1.65.0:
   resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-1.92.0.tgz#6061468eb7d19f0141078fc742e62457e910f547"
   dependencies:
     debug "^3.1.0"
-
-sinon@^2.3.2:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/sinon/-/sinon-2.4.1.tgz#021fd64b54cb77d9d2fb0d43cdedfae7629c3a36"
-  dependencies:
-    diff "^3.1.0"
-    formatio "1.2.0"
-    lolex "^1.6.0"
-    native-promise-only "^0.8.1"
-    path-to-regexp "^1.7.0"
-    samsam "^1.1.3"
-    text-encoding "0.6.4"
-    type-detect "^4.0.0"
 
 slash@^1.0.0:
   version "1.0.0"
@@ -5659,10 +5733,6 @@ test-exclude@^4.2.1:
     read-pkg-up "^1.0.1"
     require-main-filename "^1.0.1"
 
-text-encoding@0.6.4:
-  version "0.6.4"
-  resolved "https://registry.yarnpkg.com/text-encoding/-/text-encoding-0.6.4.tgz#e399a982257a276dae428bb92845cb71bdc26d19"
-
 text-table@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
@@ -5792,10 +5862,6 @@ type-check@~0.3.2:
   dependencies:
     prelude-ls "~1.1.2"
 
-type-detect@^4.0.0:
-  version "4.0.8"
-  resolved "https://registry.yarnpkg.com/type-detect/-/type-detect-4.0.8.tgz#7646fb5f18871cfbb7749e69bd39a6388eb7450c"
-
 type-is@~1.6.6:
   version "1.6.16"
   resolved "https://registry.yarnpkg.com/type-is/-/type-is-1.6.16.tgz#f89ce341541c672b25ee7ae3c73dee3b2be50194"
@@ -5807,9 +5873,9 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typescript@^2.9.0-dev.20180424:
-  version "2.9.0-dev.20180426"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.0-dev.20180426.tgz#d6b8d31c6b874ccd66d4165fd0e692d2a9e0e972"
+typescript@^2.9.0-dev.20180506:
+  version "2.9.0-dev.20180506"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-2.9.0-dev.20180506.tgz#e20070caa88fca90227cf040459402611a74e13f"
 
 ua-parser-js@^0.7.9:
   version "0.7.17"
@@ -6034,6 +6100,16 @@ watchpack@^1.5.0:
     chokidar "^2.0.2"
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
+
+webassemblyjs@1.3.2:
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/webassemblyjs/-/webassemblyjs-1.3.2.tgz#bba52db7b56fa0cc7882cb1176e8099ab4dd3e3c"
+  dependencies:
+    "@webassemblyjs/ast" "1.3.2"
+    "@webassemblyjs/validation" "1.3.2"
+    "@webassemblyjs/wasm-parser" "1.3.2"
+    "@webassemblyjs/wast-parser" "1.3.2"
+    long "^3.2.0"
 
 webidl-conversions@^4.0.1, webidl-conversions@^4.0.2:
   version "4.0.2"
