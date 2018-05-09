@@ -33,19 +33,28 @@ declare module "chrome-trace-event" {
 declare module "@webassemblyjs/ast" {
 	export function traverse(
 		ast: any,
-		visitor: { [name: string]: (context: { node: Node }) => void }
+		visitor: {
+			ModuleImport?: (p: NodePath<ModuleImport>) => void;
+			ModuleExport?: (p: NodePath<ModuleExport>) => void;
+			Start?: (p: NodePath<Start>) => void;
+		}
 	);
-	export class Node {
-		index: number;
+	export class NodePath<T> {
+		node: T;
 	}
+	export class Node {}
 	export class Identifier extends Node {
 		value: string;
+	}
+	export class Start extends Node {
+		index: Identifier;
 	}
 	export class ModuleImport extends Node {
 		module: string;
 		descr: {
 			type: string;
 			valtype: string;
+			id: string;
 		};
 		name: string;
 	}
