@@ -1,2 +1,0 @@
-Entrypoint e1 = runtime~e1.js e1.js
-Entrypoint e2 = runtime~e2.js e2.js

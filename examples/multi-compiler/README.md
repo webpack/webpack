@@ -249,7 +249,7 @@ console.log("Running " + "mobile" + " build");
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset      Size  Chunks             Chunk Names
@@ -257,10 +257,10 @@ Child mobile:
     Entrypoint main = mobile.js
     chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
         > ./example main
-        [0] ./example.js 97 bytes {0} [built]
-            single entry ./example  main
-        [1] ./mobile-stuff.js 20 bytes {0} [built]
-            cjs require ./mobile-stuff [0] ./example.js 2:1-26
+     [0] ./example.js 97 bytes {0} [built]
+         single entry ./example  main
+     [1] ./mobile-stuff.js 20 bytes {0} [built]
+         cjs require ./mobile-stuff [0] ./example.js 2:1-26
 Child desktop:
     Hash: 0a1b2c3d4e5f6a7b8c9d
          Asset     Size  Chunks             Chunk Names
@@ -268,15 +268,15 @@ Child desktop:
     Entrypoint main = desktop.js
     chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
         > ./example main
-        [0] ./example.js 97 bytes {0} [built]
-            single entry ./example  main
+     [0] ./example.js 97 bytes {0} [built]
+         single entry ./example  main
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset       Size  Chunks             Chunk Names
@@ -284,10 +284,10 @@ Child mobile:
     Entrypoint main = mobile.js
     chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
         > ./example main
-        [0] ./mobile-stuff.js 20 bytes {0} [built]
-            cjs require ./mobile-stuff [1] ./example.js 2:1-26
-        [1] ./example.js 97 bytes {0} [built]
-            single entry ./example  main
+     [0] ./mobile-stuff.js 20 bytes {0} [built]
+         cjs require ./mobile-stuff [1] ./example.js 2:1-26
+     [1] ./example.js 97 bytes {0} [built]
+         single entry ./example  main
 Child desktop:
     Hash: 0a1b2c3d4e5f6a7b8c9d
          Asset       Size  Chunks             Chunk Names
@@ -295,6 +295,6 @@ Child desktop:
     Entrypoint main = desktop.js
     chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
         > ./example main
-        [0] ./example.js 97 bytes {0} [built]
-            single entry ./example  main
+     [0] ./example.js 97 bytes {0} [built]
+         single entry ./example  main
 ```

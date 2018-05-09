@@ -1,7 +1,6 @@
 "use strict";
 
 /*globals describe it */
-const should = require("should");
 const path = require("path");
 
 const webpack = require("../lib/webpack");
@@ -13,10 +12,10 @@ describe("Errors", () => {
 		const files = {};
 		c.outputFileSystem = {
 			join: path.join.bind(path),
-			mkdirp: function(path, callback) {
+			mkdirp(path, callback) {
 				callback();
 			},
-			writeFile: function(name, content, callback) {
+			writeFile(name, content, callback) {
 				files[name] = content.toString("utf-8");
 				callback();
 			}
@@ -30,15 +29,15 @@ describe("Errors", () => {
 		customOutputFilesystem(c);
 		c.run((err, stats) => {
 			if (err) throw err;
-			should.strictEqual(typeof stats, "object");
+			expect(typeof stats).toBe("object");
 			stats = stats.toJson({
 				errorDetails: false
 			});
-			should.strictEqual(typeof stats, "object");
-			stats.should.have.property("errors");
-			stats.should.have.property("warnings");
-			Array.isArray(stats.errors).should.be.ok(); // eslint-disable-line no-unused-expressions
-			Array.isArray(stats.warnings).should.be.ok(); // eslint-disable-line no-unused-expressions
+			expect(typeof stats).toBe("object");
+			expect(stats).toHaveProperty("errors");
+			expect(stats).toHaveProperty("warnings");
+			expect(Array.isArray(stats.errors)).toBe(true);
+			expect(Array.isArray(stats.warnings)).toBe(true);
 			callback(stats.errors, stats.warnings);
 		});
 	}
@@ -49,19 +48,19 @@ describe("Errors", () => {
 				entry: "./missingFile"
 			},
 			(errors, warnings) => {
-				errors.length.should.be.eql(2);
-				warnings.length.should.be.eql(0);
+				expect(errors).toHaveLength(2);
+				expect(warnings).toHaveLength(0);
 				errors.sort();
 				let lines = errors[0].split("\n");
-				lines[0].should.match(/missingFile.js/);
-				lines[1].should.match(/^Module not found/);
-				lines[1].should.match(/\.\/dir\/missing2/);
-				lines[2].should.match(/missingFile.js 12:9/);
+				expect(lines[0]).toMatch(/missingFile.js/);
+				expect(lines[1]).toMatch(/^Module not found/);
+				expect(lines[1]).toMatch(/\.\/dir\/missing2/);
+				expect(lines[2]).toMatch(/missingFile.js 12:9/);
 				lines = errors[1].split("\n");
-				lines[0].should.match(/missingFile.js/);
-				lines[1].should.match(/^Module not found/);
-				lines[1].should.match(/\.\/missing/);
-				lines[2].should.match(/missingFile.js 4:0/);
+				expect(lines[0]).toMatch(/missingFile.js/);
+				expect(lines[1]).toMatch(/^Module not found/);
+				expect(lines[1]).toMatch(/\.\/missing/);
+				expect(lines[2]).toMatch(/missingFile.js 4:0/);
 				done();
 			}
 		);
@@ -73,11 +72,13 @@ describe("Errors", () => {
 				entry: "./require.extensions"
 			},
 			(errors, warnings) => {
-				errors.length.should.be.eql(0);
-				warnings.length.should.be.eql(1);
+				expect(errors).toHaveLength(0);
+				expect(warnings).toHaveLength(1);
 				const lines = warnings[0].split("\n");
-				lines[0].should.match(/require.extensions\.js/);
-				lines[1].should.match(/require.extensions is not supported by webpack/);
+				expect(lines[0]).toMatch(/require.extensions\.js/);
+				expect(lines[1]).toMatch(
+					/require.extensions is not supported by webpack/
+				);
 				done();
 			}
 		);
@@ -90,17 +91,17 @@ describe("Errors", () => {
 			},
 			(errors, warnings) => {
 				if (errors.length === 0) {
-					warnings.length.should.be.eql(1);
+					expect(warnings).toHaveLength(1);
 					const lines = warnings[0].split("\n");
-					lines[4].should.match(/FILE\.js/);
-					lines[5].should.match(/Used by/);
-					lines[6].should.match(/case-sensitive/);
-					lines[7].should.match(/file\.js/);
-					lines[8].should.match(/Used by/);
-					lines[9].should.match(/case-sensitive/);
+					expect(lines[4]).toMatch(/FILE\.js/);
+					expect(lines[5]).toMatch(/Used by/);
+					expect(lines[6]).toMatch(/case-sensitive/);
+					expect(lines[7]).toMatch(/file\.js/);
+					expect(lines[8]).toMatch(/Used by/);
+					expect(lines[9]).toMatch(/case-sensitive/);
 				} else {
-					errors.length.should.be.eql(1);
-					warnings.length.should.be.eql(0);
+					expect(errors).toHaveLength(1);
+					expect(warnings).toHaveLength(0);
 				}
 				done();
 			}
@@ -112,13 +113,13 @@ describe("Errors", () => {
 				entry: "./entry-point"
 			},
 			(errors, warnings) => {
-				errors.length.should.be.eql(0);
-				warnings.length.should.be.eql(1);
+				expect(errors).toHaveLength(0);
+				expect(warnings).toHaveLength(1);
 				let lines = warnings[0].split("\n");
-				lines[0].should.match(/configuration/);
-				lines[1].should.match(/mode/);
-				lines[1].should.match(/development/);
-				lines[1].should.match(/production/);
+				expect(lines[0]).toMatch(/configuration/);
+				expect(lines[1]).toMatch(/mode/);
+				expect(lines[1]).toMatch(/development/);
+				expect(lines[1]).toMatch(/production/);
 				done();
 			}
 		);
@@ -130,8 +131,8 @@ describe("Errors", () => {
 				entry: "./no-errors-deprecate"
 			},
 			(errors, warnings) => {
-				errors.length.should.be.eql(0);
-				warnings.length.should.be.eql(0);
+				expect(errors).toHaveLength(0);
+				expect(warnings).toHaveLength(0);
 				done();
 			}
 		);
@@ -143,19 +144,19 @@ describe("Errors", () => {
 				entry: "./missingFile"
 			},
 			(errors, warnings) => {
-				errors.length.should.be.eql(2);
-				warnings.length.should.be.eql(0);
+				expect(errors).toHaveLength(2);
+				expect(warnings).toHaveLength(0);
 				errors.sort();
 				let lines = errors[0].split("\n");
-				lines[0].should.match(/missingFile.js/);
-				lines[1].should.match(/^Module not found/);
-				lines[1].should.match(/\.\/dir\/missing2/);
-				lines[2].should.match(/missingFile.js 12:9/);
+				expect(lines[0]).toMatch(/missingFile.js/);
+				expect(lines[1]).toMatch(/^Module not found/);
+				expect(lines[1]).toMatch(/\.\/dir\/missing2/);
+				expect(lines[2]).toMatch(/missingFile.js 12:9/);
 				lines = errors[1].split("\n");
-				lines[0].should.match(/missingFile.js/);
-				lines[1].should.match(/^Module not found/);
-				lines[1].should.match(/\.\/missing/);
-				lines[2].should.match(/missingFile.js 4:0/);
+				expect(lines[0]).toMatch(/missingFile.js/);
+				expect(lines[1]).toMatch(/^Module not found/);
+				expect(lines[1]).toMatch(/\.\/missing/);
+				expect(lines[2]).toMatch(/missingFile.js 4:0/);
 				done();
 			}
 		);
@@ -175,13 +176,13 @@ describe("Errors", () => {
 				plugins: [new webpack.HotModuleReplacementPlugin()]
 			},
 			(errors, warnings) => {
-				errors.length.should.be.eql(3);
-				warnings.length.should.be.eql(0);
+				expect(errors).toHaveLength(3);
+				expect(warnings).toHaveLength(0);
 				errors.forEach(error => {
 					const lines = error.split("\n");
-					lines[0].should.match(/chunk (a|b|c)/);
-					lines[2].should.match(/\[chunkhash\].js/);
-					lines[2].should.match(/use \[hash\] instead/);
+					expect(lines[0]).toMatch(/chunk (a|b|c)/);
+					expect(lines[2]).toMatch(/\[chunkhash\].js/);
+					expect(lines[2]).toMatch(/use \[hash\] instead/);
 				});
 				done();
 			}

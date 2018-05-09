@@ -59,11 +59,18 @@ export function increment(val) {
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
 /******/ 		1: 0
 /******/ 	};
 /******/
 /******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + chunkId + ".output.js"
+/******/ 	}
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -120,7 +127,7 @@ export function increment(val) {
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
-/******/ 				script.src = __webpack_require__.p + "" + chunkId + ".output.js";
+/******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/ 				var timeout = setTimeout(function(){
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
@@ -274,61 +281,61 @@ __webpack_require__.e(/*! import() */ 0).then(__webpack_require__.bind(null, /*!
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  479 bytes       0  [emitted]  
-  output.js   8.27 KiB       1  [emitted]  main
+  output.js   8.54 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 25 bytes <{1}> [rendered]
     > ./async-loaded [2] ./example.js 6:0-24
-    [3] ./async-loaded.js 25 bytes {0} [built]
-        [exports: answer]
-        import() ./async-loaded [2] ./example.js 6:0-24
+ [3] ./async-loaded.js 25 bytes {0} [built]
+     [exports: answer]
+     import() ./async-loaded [2] ./example.js 6:0-24
 chunk    {1} output.js (main) 419 bytes >{0}< [entry] [rendered]
     > .\example.js main
-    [0] ./math.js 142 bytes {1} [built]
-        [exports: add]
-        harmony side effect evaluation ./math [1] ./increment.js 1:0-29
-        harmony import specifier ./math [1] ./increment.js 3:11-14
-    [1] ./increment.js 94 bytes {1} [built]
-        [exports: increment]
-        harmony side effect evaluation ./increment [2] ./example.js 1:0-47
-        harmony import specifier ./increment [2] ./example.js 3:0-3
-    [2] ./example.js 183 bytes {1} [built]
-        [no exports]
-        single entry .\example.js  main
+ [0] ./math.js 142 bytes {1} [built]
+     [exports: add]
+     harmony side effect evaluation ./math [1] ./increment.js 1:0-29
+     harmony import specifier ./math [1] ./increment.js 3:11-14
+ [1] ./increment.js 94 bytes {1} [built]
+     [exports: increment]
+     harmony side effect evaluation ./increment [2] ./example.js 1:0-47
+     harmony import specifier ./increment [2] ./example.js 3:0-3
+ [2] ./example.js 183 bytes {1} [built]
+     [no exports]
+     single entry .\example.js  main
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  144 bytes       0  [emitted]  
-  output.js   1.73 KiB       1  [emitted]  main
+  output.js   1.75 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 25 bytes <{1}> [rendered]
     > ./async-loaded [] 6:0-24
-    [1] ./async-loaded.js 25 bytes {0} [built]
-        [exports: answer]
-        import() ./async-loaded  ./example.js 6:0-24
+ [1] ./async-loaded.js 25 bytes {0} [built]
+     [exports: answer]
+     import() ./async-loaded  ./example.js 6:0-24
 chunk    {1} output.js (main) 419 bytes >{0}< [entry] [rendered]
     > .\example.js main
-    [0] ./example.js + 2 modules 419 bytes {1} [built]
-        [no exports]
-        single entry .\example.js  main
-        | ./example.js 183 bytes [built]
-        |    [no exports]
-        |    single entry .\example.js  main
-        | ./increment.js 94 bytes [built]
-        |    [exports: increment]
-        |    [only some exports used: increment]
-        |    harmony side effect evaluation ./increment  ./example.js 1:0-47
-        |    harmony import specifier ./increment  ./example.js 3:0-3
-        | ./math.js 142 bytes [built]
-        |    [exports: add]
-        |    [only some exports used: add]
-        |    harmony side effect evaluation ./math  ./increment.js 1:0-29
-        |    harmony import specifier ./math  ./increment.js 3:11-14
+ [0] ./example.js + 2 modules 419 bytes {1} [built]
+     [no exports]
+     single entry .\example.js  main
+     | ./example.js 183 bytes [built]
+     |     [no exports]
+     |     single entry .\example.js  main
+     | ./increment.js 94 bytes [built]
+     |     [exports: increment]
+     |     [all exports used]
+     |     harmony side effect evaluation ./increment  ./example.js 1:0-47
+     |     harmony import specifier ./increment  ./example.js 3:0-3
+     | ./math.js 142 bytes [built]
+     |     [exports: add]
+     |     [all exports used]
+     |     harmony side effect evaluation ./math  ./increment.js 1:0-29
+     |     harmony import specifier ./math  ./increment.js 3:11-14
 ```
