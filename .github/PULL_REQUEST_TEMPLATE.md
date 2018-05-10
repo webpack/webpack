@@ -11,7 +11,7 @@
 **If relevant, link to documentation update or issue:**
 
 <!-- Link PR from webpack/webpack.js.org here, or N/A -->
-<!-- Note: If you are implementing a feature or functionality change make sure you have updated the documentation or submit an issue linking to this PR under webpack/webpack.js.org requesting documentation upodate -->
+<!-- Note: If you are implementing a feature or functionality change make sure that you have updated the documentation or submited an issue linking to this PR under webpack/webpack.js.org repository requesting documentation update -->
 
 **Summary**
 
@@ -27,4 +27,4 @@
 <!-- Leave this untouched, for reviewers of your PR. -->
 **Checklist for reviewers**
 
-- [ ] I confirm that authors had documented their feature or submitted an issue to webpack/webpack.js.org linking to this PR with a feature documentation request if applicable.
+- [ ] I confirm that authors had documented their feature or submitted an issue to [webpack.js.org](https://github.com/webpack/webpack.js.org) linking to this PR with a feature documentation request if applicable.
