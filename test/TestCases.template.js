@@ -139,8 +139,8 @@ const describeCases = config => {
 											loader: "coffee-loader"
 										},
 										{
-											test: /\.jade$/,
-											loader: "jade-loader"
+											test: /\.pug/,
+											loader: "pug-loader"
 										}
 									]
 								},
