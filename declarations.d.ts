@@ -53,8 +53,9 @@ declare module "@webassemblyjs/ast" {
 		module: string;
 		descr: {
 			type: string;
-			valtype: string;
-			id: string;
+			valtype?: string;
+			id?: Identifier;
+			signature?: Signature;
 		};
 		name: string;
 	}
@@ -64,7 +65,9 @@ declare module "@webassemblyjs/ast" {
 	export class IndexLiteral extends Node {}
 	export class NumberLiteral extends Node {}
 	export class Global extends Node {}
-	export class FuncParam extends Node {}
+	export class FuncParam extends Node {
+		valtype: string;
+	}
 	export class Instruction extends Node {}
 	export class CallInstruction extends Instruction {}
 	export class ObjectInstruction extends Instruction {}
@@ -72,8 +75,8 @@ declare module "@webassemblyjs/ast" {
 		signature: Signature;
 	}
 	export class Signature {
-		params: any;
-		result: any;
+		params: FuncParam[];
+		results: string[];
 	}
 	export class TypeInstructionFunc extends Node {}
 	export class IndexInFuncSection extends Node {}
@@ -90,7 +93,7 @@ declare module "@webassemblyjs/ast" {
 		init: Node[]
 	): ObjectInstruction;
 	export function func(initFuncId, funcParams, funcResults, funcBody): Func;
-	export function typeInstructionFunc(params, result): TypeInstructionFunc;
+	export function typeInstructionFunc(params: FuncParam[], results: string[]): TypeInstructionFunc;
 	export function indexInFuncSection(index: IndexLiteral): IndexInFuncSection;
 	export function moduleExport(
 		identifier: string,
