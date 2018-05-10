@@ -11,7 +11,7 @@
 **If relevant, link to documentation update or issue:**
 
 <!-- Link PR from webpack/webpack.js.org here, or N/A -->
-<!-- Note: If you are implementing a feature or functionality change make sure that you have updated the documentation or submited an issue linking to this PR under webpack/webpack.js.org repository requesting documentation update -->
+<!-- Note: If you are implementing a feature or functionality change make sure that you have updated the documentation or submited an issue linking to this PR under https://github.com/webpack/webpack.js.org repository requesting documentation update -->
 
 **Summary**
 
