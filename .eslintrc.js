@@ -29,7 +29,20 @@ module.exports = {
 		"no-loop-func": "warn",
 		"indent": "off",
 		"no-console": "off",
-		"valid-jsdoc": "error",
+		"valid-jsdoc": ["error", {
+			"prefer": {
+				"return": "returns",
+				"memberof": "DONTUSE",
+				"class": "DONTUSE",
+				"inheritdoc": "DONTUSE",
+				"description": "DONTUSE",
+				"readonly": "DONTUSE"
+			},
+			"preferType": {
+				"*": "any"
+			},
+			"requireReturnType": true
+		}],
 		"node/no-unsupported-features": "error",
 		"node/no-deprecated-api": "error",
 		"node/no-missing-import": "error",
