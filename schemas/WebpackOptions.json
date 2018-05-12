@@ -492,7 +492,14 @@
               "properties": {
                 "root": {
                   "description": "Name of the property exposed globally by a UMD library",
-                  "type": "string"
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/definitions/common.arrayOfStringValues"
+                    }
+                  ]
                 },
                 "amd": {
                   "description": "Name of the exposed AMD library in the UMD",
