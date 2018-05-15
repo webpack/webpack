@@ -17,7 +17,7 @@
 
 <!-- If this PR introduces a breaking change, please describe the impact and a migration path for existing applications. -->
 
-**What need to be documented once your changes are merged?**
+**What needs to be documented once your changes are merged?**
 
-<!-- List all the information that need to be added to the documentation after merge -->
+<!-- List all the information that needs to be added to the documentation after merge -->
 <!-- When your changes are merged you will be asked to contribute this to the documentation -->
