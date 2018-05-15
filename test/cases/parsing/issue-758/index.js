@@ -13,7 +13,7 @@ it("should call error callback on missing module", function(done) {
 		require('./missingModule');
 	}, function(error) {
 		expect(error).toBeInstanceOf(Error);
-		expect(error.message).toBe('Cannot find module "./missingModule"');
+		expect(error.message).toBe("Cannot find module './missingModule'");
 		done();
 	});
 });
@@ -24,7 +24,7 @@ it("should call error callback on missing module in context", function(done) {
 			require('./' + module);
 		}, function(error) {
 			expect(error).toBeInstanceOf(Error);
-			expect(error.message).toBe("Cannot find module \"./missingModule\".");
+			expect(error.message).toBe("Cannot find module './missingModule'");
 			done();
 		});
 	})('missingModule');
