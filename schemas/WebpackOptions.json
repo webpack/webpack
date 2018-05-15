@@ -1679,6 +1679,10 @@
         }
       ]
     },
+    "serve": {
+      "description": "Options for webpack-serve",
+      "type": "object"
+    },
     "stats": {
       "description": "Used by the webpack CLI program to pass stats options.",
       "anyOf": [
