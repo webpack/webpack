@@ -1,8 +1,16 @@
 #!/usr/bin/env node
-function runCommand(command, options) {
+
+process.exitCode = 0;
+
+/**
+ * @param {string} command process to run
+ * @param {string[]} args commandline arguments
+ * @returns {Promise<void>} promise
+ */
+const runCommand = (command, args) => {
 	const cp = require("child_process");
 	return new Promise((resolve, reject) => {
-		const executedCommand = cp.spawn(command, options, {
+		const executedCommand = cp.spawn(command, args, {
 			stdio: "inherit",
 			shell: true
 		});
@@ -13,15 +21,19 @@ function runCommand(command, options) {
 
 		executedCommand.on("exit", code => {
 			if (code === 0) {
-				resolve(true);
+				resolve();
 			} else {
 				reject();
 			}
 		});
 	});
-}
+};
 
-function isInstalled(packageName) {
+/**
+ * @param {string} packageName name of the package
+ * @returns {boolean} is the package installed?
+ */
+const isInstalled = packageName => {
 	try {
 		require.resolve(packageName);
 
@@ -29,98 +41,126 @@ function isInstalled(packageName) {
 	} catch (err) {
 		return false;
 	}
-}
+};
 
-const CLI = [
+/**
+ * @typedef {Object} CliOption
+ * @property {string} name display name
+ * @property {string} package npm package name
+ * @property {string} alias shortcut for choice
+ * @property {boolean} installed currently installed?
+ * @property {string} url homepage
+ * @property {string} description description
+ */
+
+/** @type {CliOption[]} */
+const CLIs = [
 	{
 		name: "webpack-cli",
+		package: "webpack-cli",
+		alias: "cli",
 		installed: isInstalled("webpack-cli"),
-		URL: "https://github.com/webpack/webpack-cli",
-		description: "The original webpack full-featured CLI from webpack@3."
+		url: "https://github.com/webpack/webpack-cli",
+		description: "The original webpack full-featured CLI."
 	},
 	{
 		name: "webpack-command",
+		package: "webpack-command",
+		alias: "command",
 		installed: isInstalled("webpack-command"),
-		URL: "https://github.com/webpack-contrib/webpack-command",
+		url: "https://github.com/webpack-contrib/webpack-command",
 		description: "A lightweight, opinionated webpack CLI."
 	}
 ];
 
-if (CLI.every(item => !item.installed)) {
+const installedClis = CLIs.filter(cli => cli.installed);
+
+if (installedClis.length === 0) {
 	const path = require("path");
 	const fs = require("fs");
 	const readLine = require("readline");
 
 	let notify =
-		"The CLI for webpack must be installed as a separate package, for which there are choices:\n";
+		"One CLI for webpack must be installed. These are recommended choices, delivered as separate packages:";
 
-	CLI.forEach(item => {
-		notify += `    ${item.name} (${item.URL}): ${item.description}\n`;
-	});
+	for (const item of CLIs) {
+		notify += `\n - ${item.name} (${item.url})\n   ${item.description}`;
+	}
 
 	console.error(notify);
 
 	const isYarn = fs.existsSync(path.resolve(process.cwd(), "yarn.lock"));
 
 	const packageManager = isYarn ? "yarn" : "npm";
-	const installOptions = ["install", "-D"];
+	const installOptions = [isYarn ? "add" : "install", "-D"];
 
-	if (isYarn) {
-		installOptions[0] = "add";
-	}
+	console.error(
+		`We will use "${packageManager}" to install the CLI via "${packageManager} ${installOptions.join(
+			" "
+		)}".`
+	);
 
-	let question = `Would you like to install (${CLI.map(item => item.name).join(
-		"/"
-	)}):\n`;
+	let question = `Which one do you like to install (${CLIs.map(
+		item => item.name
+	).join("/")}):\n`;
 
 	const questionInterface = readLine.createInterface({
 		input: process.stdin,
-		output: process.stdout
+		output: process.stderr
 	});
 	questionInterface.question(question, answer => {
 		questionInterface.close();
 
 		const normalizedAnswer = answer.toLowerCase();
-		const selectedPackage = CLI.find(item => item.name === normalizedAnswer);
+		const selectedPackage = CLIs.find(item => {
+			return item.name === normalizedAnswer || item.alias === normalizedAnswer;
+		});
 
-		if (!selectedPackage) {
+		if (!normalizedAnswer) {
 			console.error(
-				"It needs to be installed alongside webpack to use the CLI"
+				"One CLI needs to be installed alongside webpack to use the CLI."
+			);
+			process.exitCode = 1;
+
+			return;
+		} else if (!selectedPackage) {
+			console.error(
+				"No matching choice.\n" +
+					"One CLI needs to be installed alongside webpack to use the CLI.\n" +
+					"Try to installing your CLI of choice manually."
 			);
 			process.exitCode = 1;
 
 			return;
 		}
 
-		installOptions.push(normalizedAnswer);
+		const packageName = selectedPackage.package;
 
 		console.log(
-			`Installing '${normalizedAnswer}' (running '${packageManager} ${installOptions.join(
+			`Installing '${
+				selectedPackage.name
+			}' (running '${packageManager} ${installOptions.join(
 				" "
-			)}')...`
+			)} ${packageName}')...`
 		);
 
-		runCommand(packageManager, installOptions)
-			.then(result => {
-				return require(normalizedAnswer); //eslint-disable-line
+		runCommand(packageManager, installOptions.concat(packageName))
+			.then(() => {
+				require(packageName); //eslint-disable-line
 			})
 			.catch(error => {
 				console.error(error);
 				process.exitCode = 1;
 			});
 	});
+} else if (installedClis.length === 1) {
+	require(installedClis[0].package); // eslint-disable-line
 } else {
-	const installedPackage = CLI.map(
-		item => (item.installed ? item.name : "")
-	).filter(v => v);
-
-	if (installedPackage.length > 1) {
-		console.warn(
-			`You have installed ${installedPackage.join(
+	console.warn(
+		`You have installed ${installedClis
+			.map(item => item.name)
+			.join(
 				" and "
-			)} together. To work with the webpack you need only one CLI package, please remove one of them`
-		);
-	}
-
-	require(installedPackage[0]); // eslint-disable-line
+			)} together. To work with the "webpack" command you need only one CLI package, please remove one of them or use them directly via their binary.`
+	);
 }
