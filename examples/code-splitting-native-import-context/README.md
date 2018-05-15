@@ -264,7 +264,7 @@ function webpackAsyncContext(req) {
 	var ids = map[req];
 	if(!ids) {
 		return Promise.resolve().then(function() {
-			var e = new Error('Cannot find module "' + req + '".');
+			var e = new Error("Cannot find module '" + req + "'");
 			e.code = 'MODULE_NOT_FOUND';
 			throw e;
 		});
