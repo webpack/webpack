@@ -62,6 +62,7 @@ declare module "@webassemblyjs/ast" {
 	export class ModuleExport extends Node {
 		name: string;
 	}
+	export class ModuleExportDescr extends Node {}
 	export class IndexLiteral extends Node {}
 	export class NumberLiteral extends Node {}
 	export class Global extends Node {}
@@ -78,7 +79,7 @@ declare module "@webassemblyjs/ast" {
 		params: FuncParam[];
 		results: string[];
 	}
-	export class TypeInstructionFunc extends Node {}
+	export class TypeInstruction extends Node {}
 	export class IndexInFuncSection extends Node {}
 	export function indexLiteral(index: number): IndexLiteral;
 	export function numberLiteral(num: number): NumberLiteral;
@@ -92,13 +93,17 @@ declare module "@webassemblyjs/ast" {
 		type: string,
 		init: Node[]
 	): ObjectInstruction;
-	export function func(initFuncId, funcParams, funcResults, funcBody): Func;
-	export function typeInstructionFunc(params: FuncParam[], results: string[]): TypeInstructionFunc;
+	export function signature(params: FuncParam[], results: string[]): Signature;
+	export function func(initFuncId, Signature, funcBody): Func;
+	export function typeInstruction(id: Identifier, functype: Signature): TypeInstruction;
 	export function indexInFuncSection(index: IndexLiteral): IndexInFuncSection;
 	export function moduleExport(
 		identifier: string,
+		descr: ModuleExportDescr
+	): ModuleExport;
+	export function moduleExportDescr(
 		type: string,
-		index: IndexLiteral
+		index: ModuleExportDescr
 	): ModuleExport;
 
 	export function getSectionMetadata(ast: any, section: string);
