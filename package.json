@@ -72,6 +72,7 @@
     "val-loader": "^1.0.2",
     "vm-browserify": "~0.0.0",
     "webpack-dev-middleware": "^1.9.0",
+    "why-is-node-running": "^2.0.2",
     "worker-loader": "^1.1.1",
     "xxhashjs": "^0.2.1"
   },
@@ -122,7 +123,7 @@
     "cover": "yarn cover:init && yarn cover:all && yarn cover:report",
     "cover:init": "rimraf coverage",
     "cover:all": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --coverage",
-    "cover:integration": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage",
+    "cover:integration": "node -r ./setup/why-is-it-running.js --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage",
     "cover:unit": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:report": "istanbul report",
     "cover:report-min": "istanbul report --report lcovonly"
