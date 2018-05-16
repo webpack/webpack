@@ -1,5 +1,9 @@
-const log = require("why-is-node-running");
+try {
+	const log = require("./why-is-node-running");
 
-setInterval(function() {
-	log();
-}, 13 * 1000 * 60).unref();
+	setInterval(function() {
+		log();
+	}, 13 * 1000 * 60).unref();
+} catch (e) {
+	// ignore
+}

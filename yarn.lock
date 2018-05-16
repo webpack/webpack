@@ -5632,7 +5632,7 @@ stack-utils@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/stack-utils/-/stack-utils-1.0.1.tgz#d4f33ab54e8e38778b0ca5cfd3b3afb12db68620"
 
-stackback@0.0.2:
+stackback@^0.0.2:
   version "0.0.2"
   resolved "https://registry.yarnpkg.com/stackback/-/stackback-0.0.2.tgz#1ac8a0d9483848d1695e418b6d031a3c3ce68e3b"
 
@@ -6255,12 +6255,6 @@ which@^1.1.1, which@^1.2.12, which@^1.2.9, which@^1.3.0:
   resolved "https://registry.yarnpkg.com/which/-/which-1.3.0.tgz#ff04bdfc010ee547d780bec38e1ac1c2777d253a"
   dependencies:
     isexe "^2.0.0"
-
-why-is-node-running@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/why-is-node-running/-/why-is-node-running-2.0.2.tgz#faf352f095356c8c37a28bf645f874e5648c8d02"
-  dependencies:
-    stackback "0.0.2"
 
 wide-align@^1.1.0:
   version "1.1.2"
