@@ -5,6 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
+const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
 const Stats = require("../lib/Stats");
@@ -47,7 +48,6 @@ describe("ConfigTestCases", () => {
 						category.name,
 						testName
 					);
-					mkdirp.sync(outputDirectory);
 					const exportedTests = [];
 					const exportedBeforeEach = [];
 					const exportedAfterEach = [];
@@ -59,6 +59,8 @@ describe("ConfigTestCases", () => {
 									if (err) return reject(err);
 									resolve();
 								};
+								rimraf.sync(outputDirectory);
+								mkdirp.sync(outputDirectory);
 								const options = prepareOptions(
 									require(path.join(testDirectory, "webpack.config.js")),
 									{ testPath: outputDirectory }
