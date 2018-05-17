@@ -14,22 +14,49 @@ matrix:
   include:
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JOB_PART=lint
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=Compiler-caching.test.js Compiler.test.js
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=integration
-    - os: linux
-      node_js: "8"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=integration
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=ConfigTestCases.test.js Errors.test.js
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JOB_PART=unit
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=Examples.test.js HotModuleReplacementPlugin.test.js
     - os: linux
-      node_js: "6"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=integration
-    - os: osx
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=integration
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=HotTestCases.test.js Integration.test.js
+    - os: linux
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=MultiCompiler.test.js NodeTemplatePlugin.test.js
+    - os: linux
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=Stats.test.js StatsTestCases.test.js
+    - os: linux
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=TestCasesAllCombined.test.js TestCasesDevelopment.test.js
+    - os: linux
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=TestCasesDevtoolCheapEvalModuleSourceMap.test.js TestCasesDevtoolCheapEvalSourceMap.test.js
+    - os: linux
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=TestCasesDevtoolCheapInlineSourceMap.test.js TestCasesDevtoolCheapSourceMap.test.js
+    - os: linux
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=TestCasesDevtoolEval.test.js TestCasesDevtoolEvalNamedModules.test.js
+    - os: linux
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=TestCasesDevtoolEvalSourceMap.test.js TestCasesDevtoolInlineSourceMap.test.js
+    - os: linux
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=TestCasesDevtoolSourceMap.test.js TestCasesHot.test.js
+    - os: linux
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=TestCasesHotMultiStep.test.js TestCasesMinimizedHashedModules.test.js
+    - os: linux
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=TestCasesMinimizedSourceMap.test.js TestCasesNormal.test.js
+    - os: linux
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART=TestCasesProduction.test.js Validation.test.js
   allow_failures:
     - os: osx
   fast_finish: true
@@ -39,7 +66,10 @@ install:
   - yarn link --frozen-lockfile || true
   - yarn link webpack --frozen-lockfile
 
-script: npm run travis:$JOB_PART
+script:
+  - yarn cover:init
+  - yarn cover:single --ci $JEST $JOB_PART
+  - yarn cover:report-min
 
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose

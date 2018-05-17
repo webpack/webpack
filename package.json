@@ -123,6 +123,7 @@
     "cover": "yarn cover:init && yarn cover:all && yarn cover:report",
     "cover:init": "rimraf coverage",
     "cover:all": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --coverage",
+    "cover:single": "node -r ./setup/why-is-it-running.js --max-old-space-size=4096 node_modules/jest-cli/bin/jest --coverage",
     "cover:integration": "node -r ./setup/why-is-it-running.js --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage",
     "cover:unit": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:report": "istanbul report",
