@@ -1,5 +1,4 @@
 declare module "*.json";
-declare module "webpack-cli";
 
 // Deprecated NodeJS API usages in Webpack
 declare namespace NodeJS {
