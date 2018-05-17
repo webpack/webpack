@@ -52,6 +52,9 @@ matrix:
     - os: osx
   fast_finish: true
 
+before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash
+  - export PATH="$HOME/.yarn/bin:$PATH"
 install:
   - yarn --frozen-lockfile
   - yarn link --frozen-lockfile || true
