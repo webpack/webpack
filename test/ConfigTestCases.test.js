@@ -15,8 +15,6 @@ describe("ConfigTestCases", () => {
 	const casesPath = path.join(__dirname, "configCases");
 	let categories = fs.readdirSync(casesPath);
 
-	jest.setTimeout(10000);
-
 	categories = categories.map(cat => {
 		return {
 			name: cat,
