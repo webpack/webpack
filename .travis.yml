@@ -17,34 +17,34 @@ matrix:
       env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t additional-pass|async-commons-chunk|code-generation|commons-chunk-plugin|exported tests"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t additional-pass|async-commons-chunk|code-generation|commons-chunk-plugin"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t compiletime|context-exclusion|context-replacement|custom-hash-function|exported tests"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t compiletime|context-exclusion|context-replacement|custom-hash-function"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t defaulter|delegated|delegated-hash|devtools|exported tests"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t defaulter|delegated|delegated-hash|devtools"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t dll-plugin|entry|errors|externals|exported tests"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t dll-plugin|entry|errors|externals"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t filename-template|hash-length|ignore|issues|exported tests"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t filename-template|hash-length|ignore|issues"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t library|loaders|module-name|no-parse|exported tests"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t library|loaders|module-name|no-parse"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t output|parsing|performance|plugins|exported tests"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t output|parsing|performance|plugins"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t race-conditions|records|rule-set|runtime|exported tests"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t race-conditions|records|rule-set|runtime"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t scope-hoisting|side-effects|simple|source-map|exported tests"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t scope-hoisting|side-effects|simple|source-map"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t split-chunks|target|web|exported tests"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t split-chunks|target|web"
   allow_failures:
     - os: osx
   fast_finish: true
