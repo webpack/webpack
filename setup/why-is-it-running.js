@@ -3,7 +3,7 @@ try {
 
 	setInterval(function() {
 		log();
-	}, 13 * 1000 * 60).unref();
+	}, 5 * 1000 * 60).unref();
 } catch (e) {
 	// ignore
 }
