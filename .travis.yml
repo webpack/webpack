@@ -14,40 +14,40 @@ matrix:
   include:
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t uglifyjs-plugin"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t plugins"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t uglifyjs-plugin"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t plugins"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t uglifyjs-plugin"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t plugins"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t uglifyjs-plugin"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t plugins"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t uglifyjs-plugin"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t plugins"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t uglifyjs-plugin"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t plugins"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t profiling-plugin"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t plugins|output"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t profiling-plugin"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t plugins|output"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t profiling-plugin"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t plugins|output"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t profiling-plugin"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t plugins|output"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t profiling-plugin"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t plugins|output"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t profiling-plugin"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="ConfigTestCases.test.js|Stats.test.js -t plugins|output"
   allow_failures:
     - os: osx
   fast_finish: true
