@@ -67,7 +67,7 @@
     "script-loader": "~0.7.0",
     "simple-git": "^1.65.0",
     "style-loader": "^0.19.1",
-    "typescript": "^2.9.0-dev.20180511",
+    "typescript": "^2.9.0-dev.20180518",
     "url-loader": "^0.6.2",
     "val-loader": "^1.0.2",
     "vm-browserify": "~0.0.0",
