@@ -18,13 +18,16 @@ module.exports = {
 		minimize: true,
 		minimizer: [
 			new UglifyJsPlugin({
+				parallel: false,
 				exclude: ["vendors.js", "extract.js"]
 			}),
 			new UglifyJsPlugin({
+				parallel: false,
 				extractComments: true,
 				include: ["extract.js"]
 			}),
 			new UglifyJsPlugin({
+				parallel: false,
 				uglifyOptions: {
 					compress: {
 						passes: 2
