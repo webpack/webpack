@@ -52,6 +52,8 @@ const describeCases = config => {
 	describe(config.name, () => {
 		categories.forEach(category => {
 			describe(category.name, function() {
+				jest.setTimeout(20000);
+
 				category.tests
 					.filter(test => {
 						const testDirectory = path.join(casesPath, category.name, test);
