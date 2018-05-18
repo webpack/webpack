@@ -517,6 +517,53 @@ rules:
         If you think this is still a valid issue, please file a new issue with additional information.
 
 
+# Add action actions box to each pull request
+- filters:
+    pull_request: true
+    open: true
+    not:
+      comment:
+        matching: admin-actions
+        author: webpack-bot
+  actions:
+    comment:
+      identifier: admin-actions
+      message: |-
+        *For maintainers only:*
+
+        * [x] <!-- document --> This need to be documented (issue in webpack/webpack.js.org will be filed when merged)
+
+
+# When a pull request need to be documented, create an issue in webpack/webpack.js.org when merged
+- filters:
+    pull_request:
+      merged: true
+    comment:
+      author: webpack-bot
+      matching: "\\* \\[x\\] <!-- document -->"
+    not:
+      comment_1:
+        author: webpack-bot
+        matching: admin-action-document-executed
+  actions:
+    new_issue:
+      target: webpack/webpack.js.org
+      title: "Document webpack change: {{{pull_request.title}}}"
+      body: |-
+        <!-- documentation request from webpack/webpack -->
+
+        *A pull request by @{{pull_request.user.login}} was merged and maintainers requested a documentation change.*
+
+        See pull request: {{{pull_request.html_url}}}
+
+        ---
+
+        {{{pull_request.body}}}
+    comment:
+      identifier: admin-action-document-executed
+      message: |-
+        I've created an issue to document this in webpack/webpack.js.org.
+
 
 
 

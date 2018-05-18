@@ -63,11 +63,18 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
 /******/ 		3: 0
 /******/ 	};
 /******/
 /******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + chunkId + ".output.js"
+/******/ 	}
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -124,7 +131,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
-/******/ 				script.src = __webpack_require__.p + "" + chunkId + ".output.js";
+/******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/ 				var timeout = setTimeout(function(){
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
@@ -241,7 +248,7 @@ function webpackAsyncContext(req) {
 	var ids = map[req];
 	if(!ids) {
 		return Promise.resolve().then(function() {
-			var e = new Error('Cannot find module "' + req + '".');
+			var e = new Error("Cannot find module '" + req + "'");
 			e.code = 'MODULE_NOT_FOUND';
 			throw e;
 		});
@@ -305,12 +312,12 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  275 bytes       0  [emitted]  
 1.output.js  284 bytes       1  [emitted]  
 2.output.js  270 bytes       2  [emitted]  
-  output.js   8.84 KiB       3  [emitted]  main
+  output.js   9.11 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes <{3}> [rendered]
     > ./2 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2
@@ -325,11 +332,11 @@ chunk    {2} 2.output.js 11 bytes <{3}> [rendered]
     1 module
 chunk    {3} output.js (main) 427 bytes >{0}< >{1}< >{2}< [entry] [rendered]
     > .\example.js main
-    [2] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {3} [built]
-        import() context lazy c [4] ./example.js 8:8-27
-    [4] ./example.js 256 bytes {3} [built]
-        [no exports]
-        single entry .\example.js  main
+ [2] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {3} [built]
+     import() context lazy c [4] ./example.js 8:8-27
+ [4] ./example.js 256 bytes {3} [built]
+     [no exports]
+     single entry .\example.js  main
      + 1 hidden module
 ```
 
@@ -337,12 +344,12 @@ chunk    {3} output.js (main) 427 bytes >{0}< >{1}< >{2}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  76 bytes       0  [emitted]  
 1.output.js  77 bytes       1  [emitted]  
 2.output.js  78 bytes       2  [emitted]  
-  output.js  2.33 KiB       3  [emitted]  main
+  output.js  2.35 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes <{3}> [rendered]
     > ./2 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2
@@ -357,10 +364,10 @@ chunk    {2} 2.output.js 11 bytes <{3}> [rendered]
     1 module
 chunk    {3} output.js (main) 427 bytes >{0}< >{1}< >{2}< [entry] [rendered]
     > .\example.js main
-    [2] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {3} [built]
-        import() context lazy c [4] ./example.js 8:8-27
-    [4] ./example.js 256 bytes {3} [built]
-        [no exports]
-        single entry .\example.js  main
+ [2] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {3} [built]
+     import() context lazy c [4] ./example.js 8:8-27
+ [4] ./example.js 256 bytes {3} [built]
+     [no exports]
+     single entry .\example.js  main
      + 1 hidden module
 ```

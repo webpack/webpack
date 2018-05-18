@@ -284,7 +284,7 @@ function webpackContext(req) {
 function webpackContextResolve(req) {
 	var id = map[req];
 	if(!(id + 1)) { // check for number or string
-		var e = new Error('Cannot find module "' + req + '".');
+		var e = new Error("Cannot find module '" + req + "'");
 		e.code = 'MODULE_NOT_FOUND';
 		throw e;
 	}
@@ -343,7 +343,7 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
            Asset      Size  Chunks             Chunk Names
 0.hash.worker.js  1.82 KiB          [emitted]  
   hash.worker.js  4.02 KiB          [emitted]  
@@ -351,10 +351,10 @@ Version: webpack 4.5.0
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > .\example.js main
-    [0] (webpack)/node_modules/worker-loader/dist/cjs.js?name=hash.worker.js!./worker.js 97 bytes {0} [not cacheable] [built]
-        cjs require worker-loader?name=hash.worker.js!./worker [1] ./example.js 1:13-66
-    [1] ./example.js 229 bytes {0} [built]
-        single entry .\example.js  main
+ [0] (webpack)/node_modules/worker-loader/dist/cjs.js?name=hash.worker.js!./worker.js 97 bytes {0} [not cacheable] [built]
+     cjs require worker-loader?name=hash.worker.js!./worker [1] ./example.js 1:13-66
+ [1] ./example.js 229 bytes {0} [built]
+     single entry .\example.js  main
 Child worker:
                Asset      Size  Chunks             Chunk Names
     0.hash.worker.js  1.82 KiB       0  [emitted]  
@@ -362,28 +362,28 @@ Child worker:
     Entrypoint main = hash.worker.js
     chunk    {0} 0.hash.worker.js 463 bytes <{1}> [rendered]
         > [0] ./worker.js 3:1-5:3
-        [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {0} [built]
-            amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
-        [2] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-            context element ./c.js [1] ../require.context/templates sync ^\.\/.*$ ./c.js
-            context element ./c [1] ../require.context/templates sync ^\.\/.*$ ./c
-        [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-            context element ./b.js [1] ../require.context/templates sync ^\.\/.*$ ./b.js
-            context element ./b [1] ../require.context/templates sync ^\.\/.*$ ./b
-        [4] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-            context element ./a.js [1] ../require.context/templates sync ^\.\/.*$ ./a.js
-            context element ./a [1] ../require.context/templates sync ^\.\/.*$ ./a
+     [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {0} [built]
+         amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
+     [2] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+         context element ./c.js [1] ../require.context/templates sync ^\.\/.*$ ./c.js
+         context element ./c [1] ../require.context/templates sync ^\.\/.*$ ./c
+     [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+         context element ./b.js [1] ../require.context/templates sync ^\.\/.*$ ./b.js
+         context element ./b [1] ../require.context/templates sync ^\.\/.*$ ./b
+     [4] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+         context element ./a.js [1] ../require.context/templates sync ^\.\/.*$ ./a.js
+         context element ./a [1] ../require.context/templates sync ^\.\/.*$ ./a
     chunk    {1} hash.worker.js (main) 168 bytes >{0}< [entry] [rendered]
         > !!.\worker.js main
-        [0] ./worker.js 168 bytes {1} [built]
-            single entry !!.\worker.js  main
+     [0] ./worker.js 168 bytes {1} [built]
+         single entry !!.\worker.js  main
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
            Asset       Size  Chunks             Chunk Names
 0.hash.worker.js  594 bytes          [emitted]  
   hash.worker.js  919 bytes          [emitted]  
@@ -391,10 +391,10 @@ Version: webpack 4.5.0
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > .\example.js main
-    [0] (webpack)/node_modules/worker-loader/dist/cjs.js?name=hash.worker.js!./worker.js 97 bytes {0} [not cacheable] [built]
-        cjs require worker-loader?name=hash.worker.js!./worker [1] ./example.js 1:13-66
-    [1] ./example.js 229 bytes {0} [built]
-        single entry .\example.js  main
+ [0] (webpack)/node_modules/worker-loader/dist/cjs.js?name=hash.worker.js!./worker.js 97 bytes {0} [not cacheable] [built]
+     cjs require worker-loader?name=hash.worker.js!./worker [1] ./example.js 1:13-66
+ [1] ./example.js 229 bytes {0} [built]
+     single entry .\example.js  main
 Child worker:
                Asset       Size  Chunks             Chunk Names
     0.hash.worker.js  594 bytes       0  [emitted]  
@@ -402,19 +402,19 @@ Child worker:
     Entrypoint main = hash.worker.js
     chunk    {0} 0.hash.worker.js 463 bytes <{1}> [rendered]
         > [0] ./worker.js 3:1-5:3
-        [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {0} [built]
-            amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
-        [2] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-            context element ./c.js [1] ../require.context/templates sync ^\.\/.*$ ./c.js
-            context element ./c [1] ../require.context/templates sync ^\.\/.*$ ./c
-        [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-            context element ./b.js [1] ../require.context/templates sync ^\.\/.*$ ./b.js
-            context element ./b [1] ../require.context/templates sync ^\.\/.*$ ./b
-        [4] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-            context element ./a.js [1] ../require.context/templates sync ^\.\/.*$ ./a.js
-            context element ./a [1] ../require.context/templates sync ^\.\/.*$ ./a
+     [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {0} [built]
+         amd require context ../require.context/templates [0] ./worker.js 3:1-5:3
+     [2] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+         context element ./c.js [1] ../require.context/templates sync ^\.\/.*$ ./c.js
+         context element ./c [1] ../require.context/templates sync ^\.\/.*$ ./c
+     [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+         context element ./b.js [1] ../require.context/templates sync ^\.\/.*$ ./b.js
+         context element ./b [1] ../require.context/templates sync ^\.\/.*$ ./b
+     [4] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+         context element ./a.js [1] ../require.context/templates sync ^\.\/.*$ ./a.js
+         context element ./a [1] ../require.context/templates sync ^\.\/.*$ ./a
     chunk    {1} hash.worker.js (main) 168 bytes >{0}< [entry] [rendered]
         > !!.\worker.js main
-        [0] ./worker.js 168 bytes {1} [built]
-            single entry !!.\worker.js  main
+     [0] ./worker.js 168 bytes {1} [built]
+         single entry !!.\worker.js  main
 ```

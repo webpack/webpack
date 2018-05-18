@@ -492,7 +492,14 @@
               "properties": {
                 "root": {
                   "description": "Name of the property exposed globally by a UMD library",
-                  "type": "string"
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/definitions/common.arrayOfStringValues"
+                    }
+                  ]
                 },
                 "amd": {
                   "description": "Name of the exposed AMD library in the UMD",
@@ -1672,6 +1679,10 @@
         }
       ]
     },
+    "serve": {
+      "description": "Options for webpack-serve",
+      "type": "object"
+    },
     "stats": {
       "description": "Used by the webpack CLI program to pass stats options.",
       "anyOf": [
@@ -1852,6 +1863,10 @@
             "entrypoints": {
               "type": "boolean",
               "description": "Display the entry points with the corresponding bundles"
+            },
+            "chunkGroups": {
+              "type": "boolean",
+              "description": "Display all chunk groups with the corresponding bundles"
             },
             "errorDetails": {
               "type": "boolean",

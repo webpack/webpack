@@ -240,65 +240,65 @@ function c() { console.log("c"); }
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
     Asset      Size  Chunks             Chunk Names
 output.js  5.93 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 726 bytes [entry] [rendered]
     > .\example.js main
-    [0] ./example.js 119 bytes {0} [built]
-        [no exports]
-        single entry .\example.js  main
-    [1] ./math.js 366 bytes {0} [built]
-        [exports: add, multiply, list]
-        harmony side effect evaluation ./math [0] ./example.js 1:0-29
-        harmony import specifier ./math [0] ./example.js 4:0-3
-        harmony side effect evaluation ./math [2] ./library.js 2:0-78
-        harmony export imported specifier ./math [2] ./library.js 2:0-78
-        harmony export imported specifier ./math [2] ./library.js 2:0-78
-    [2] ./library.js 112 bytes {0} [built]
-        [exports: a, b, c, reexportedAdd, reexportedMultiply]
-        harmony side effect evaluation ./library [0] ./example.js 2:0-37
-        harmony import specifier ./library [0] ./example.js 5:0-26
-    [3] ./abc.js 129 bytes {0} [built]
-        [exports: a, b, c]
-        harmony side effect evaluation ./abc [2] ./library.js 1:0-32
-        harmony export imported specifier ./abc [2] ./library.js 1:0-32
-        harmony export imported specifier ./abc [2] ./library.js 1:0-32
-        harmony export imported specifier ./abc [2] ./library.js 1:0-32
+ [0] ./example.js 119 bytes {0} [built]
+     [no exports]
+     single entry .\example.js  main
+ [1] ./math.js 366 bytes {0} [built]
+     [exports: add, multiply, list]
+     harmony side effect evaluation ./math [0] ./example.js 1:0-29
+     harmony import specifier ./math [0] ./example.js 4:0-3
+     harmony side effect evaluation ./math [2] ./library.js 2:0-78
+     harmony export imported specifier ./math [2] ./library.js 2:0-78
+     harmony export imported specifier ./math [2] ./library.js 2:0-78
+ [2] ./library.js 112 bytes {0} [built]
+     [exports: a, b, c, reexportedAdd, reexportedMultiply]
+     harmony side effect evaluation ./library [0] ./example.js 2:0-37
+     harmony import specifier ./library [0] ./example.js 5:0-26
+ [3] ./abc.js 129 bytes {0} [built]
+     [exports: a, b, c]
+     harmony side effect evaluation ./abc [2] ./library.js 1:0-32
+     harmony export imported specifier ./abc [2] ./library.js 1:0-32
+     harmony export imported specifier ./abc [2] ./library.js 1:0-32
+     harmony export imported specifier ./abc [2] ./library.js 1:0-32
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
     Asset       Size  Chunks             Chunk Names
 output.js  971 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 726 bytes [entry] [rendered]
     > .\example.js main
-    [0] ./math.js 366 bytes {0} [built]
-        [exports: add, multiply, list]
-        [only some exports used: add, multiply]
-        harmony side effect evaluation ./math [2] ./library.js 2:0-78
-        harmony export imported specifier ./math [2] ./library.js 2:0-78
-        harmony export imported specifier ./math [2] ./library.js 2:0-78
-        harmony side effect evaluation ./math [3] ./example.js 1:0-29
-        harmony import specifier ./math [3] ./example.js 4:0-3
-    [1] ./abc.js 129 bytes {0} [built]
-        [exports: a, b, c]
-        [no exports used]
-        harmony side effect evaluation ./abc [2] ./library.js 1:0-32
-        harmony export imported specifier ./abc [2] ./library.js 1:0-32
-        harmony export imported specifier ./abc [2] ./library.js 1:0-32
-        harmony export imported specifier ./abc [2] ./library.js 1:0-32
-    [2] ./library.js 112 bytes {0} [built]
-        [exports: a, b, c, reexportedAdd, reexportedMultiply]
-        [only some exports used: reexportedMultiply]
-        harmony side effect evaluation ./library [3] ./example.js 2:0-37
-        harmony import specifier ./library [3] ./example.js 5:0-26
-    [3] ./example.js 119 bytes {0} [built]
-        [no exports]
-        single entry .\example.js  main
+ [0] ./math.js 366 bytes {0} [built]
+     [exports: add, multiply, list]
+     [only some exports used: add, multiply]
+     harmony side effect evaluation ./math [2] ./library.js 2:0-78
+     harmony export imported specifier ./math [2] ./library.js 2:0-78
+     harmony export imported specifier ./math [2] ./library.js 2:0-78
+     harmony side effect evaluation ./math [3] ./example.js 1:0-29
+     harmony import specifier ./math [3] ./example.js 4:0-3
+ [1] ./abc.js 129 bytes {0} [built]
+     [exports: a, b, c]
+     [no exports used]
+     harmony side effect evaluation ./abc [2] ./library.js 1:0-32
+     harmony export imported specifier ./abc [2] ./library.js 1:0-32
+     harmony export imported specifier ./abc [2] ./library.js 1:0-32
+     harmony export imported specifier ./abc [2] ./library.js 1:0-32
+ [2] ./library.js 112 bytes {0} [built]
+     [exports: a, b, c, reexportedAdd, reexportedMultiply]
+     [only some exports used: reexportedMultiply]
+     harmony side effect evaluation ./library [3] ./example.js 2:0-37
+     harmony import specifier ./library [3] ./example.js 5:0-26
+ [3] ./example.js 119 bytes {0} [built]
+     [no exports]
+     single entry .\example.js  main
 ```

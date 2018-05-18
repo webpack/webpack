@@ -1,8 +1,7 @@
 "use strict";
 
-/*globals describe it before after  */
+/* globals describe it */
 const path = require("path");
-require("should");
 const MemoryFs = require("memory-fs");
 const webpack = require("../");
 
@@ -28,20 +27,20 @@ const createMultiCompiler = () => {
 	]);
 };
 
-describe("WatcherEvents", function() {
+describe("WatcherEvents", () => {
 	if (process.env.NO_WATCH_TESTS) {
-		it("long running tests excluded");
+		it.skip("long running tests excluded", () => {});
 		return;
 	}
 
-	this.timeout(10000);
+	jest.setTimeout(10000);
 
-	it("should emit 'watch-close' when using single-compiler mode and the compiler is not running", function(done) {
+	it("should emit 'watch-close' when using single-compiler mode and the compiler is not running", done => {
 		let called = false;
 
 		const compiler = createSingleCompiler();
 		const watcher = compiler.watch({}, (err, stats) => {
-			called.should.be.exactly(true);
+			expect(called).toBe(true);
 			done(err);
 		});
 
@@ -54,12 +53,12 @@ describe("WatcherEvents", function() {
 		});
 	});
 
-	it("should emit 'watch-close' when using multi-compiler mode and the compiler is not running", function(done) {
+	it("should emit 'watch-close' when using multi-compiler mode and the compiler is not running", done => {
 		let called = false;
 
 		const compiler = createMultiCompiler();
 		const watcher = compiler.watch({}, (err, stats) => {
-			called.should.be.exactly(true);
+			expect(called).toBe(true);
 			done(err);
 		});
 

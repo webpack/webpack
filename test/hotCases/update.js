@@ -1,9 +1,9 @@
 module.exports = function(done, options, callback) {
 	return function(stats) {
-		module.hot.check(options || true).then(function() {
+		module.hot.check(options || true).then(() => {
 			if(callback)
 				callback(stats);
-		}).catch(function(err) {
+		}).catch((err) => {
 			done(err);
 		});
 	}
