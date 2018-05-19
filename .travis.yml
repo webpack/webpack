@@ -14,34 +14,34 @@ matrix:
   include:
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose" JOB_PART="--testMatch <rootDir>/test/*.test.js"
+      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose --debug" JOB_PART="ConfigTestCases.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose" JOB_PART="--testMatch <rootDir>/test/*.test.js"
+      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose --debug" JOB_PART="ConfigTestCases.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose" JOB_PART="--testMatch <rootDir>/test/*.test.js"
+      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose --debug" JOB_PART="ConfigTestCases.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose --debug" JOB_PART="ConfigTestCases.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose --debug" JOB_PART="ConfigTestCases.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose --debug" JOB_PART="ConfigTestCases.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose --debug" JOB_PART="ConfigTestCases.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose --debug" JOB_PART="ConfigTestCases.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose --debug" JOB_PART="ConfigTestCases.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST="--runInBand --verbose --debug" JOB_PART="ConfigTestCases.test.js"
   allow_failures:
     - os: osx
   fast_finish: true
