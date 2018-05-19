@@ -15,6 +15,7 @@
     "chrome-trace-event": "^0.1.1",
     "enhanced-resolve": "^4.0.0",
     "eslint-scope": "^3.7.1",
+    "json-parse-better-errors": "^1.0.2",
     "loader-runner": "^2.3.0",
     "loader-utils": "^1.1.0",
     "memory-fs": "~0.4.1",
