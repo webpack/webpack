@@ -7,3 +7,8 @@ it("should load a css file with BOM", function() {
 	var css = require("!css-loader!./bomfile.css") + "";
 	expect(css).toBe("body{color:#abc}");
 });
+
+it("should load a json file with BOM", function() {
+	var result = require("./bomfile.json");
+	expect(result.message).toEqual("ok");
+});
