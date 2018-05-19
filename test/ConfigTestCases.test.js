@@ -111,6 +111,9 @@ describe("ConfigTestCases", () => {
 								}
 
 								webpack(options, (err, stats) => {
+									process.stdout.write(
+										`COMPILED ${category.name} > ${testName}\n`
+									);
 									if (err) {
 										const fakeStats = {
 											errors: [err.stack]
@@ -281,6 +284,9 @@ describe("ConfigTestCases", () => {
 									// workaround for jest running clearSpies on the wrong suite (invoked by clearResourcesForRunnable)
 									asyncSuite.disabled = true;
 
+									process.stdout.write(
+										`INNER ${category.name} > ${testName}\n`
+									);
 									jasmine
 										.getEnv()
 										.execute([asyncSuite.id], asyncSuite)
