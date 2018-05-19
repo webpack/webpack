@@ -57,7 +57,11 @@ describe("ConfigTestCases", () => {
 						testName + " should compile",
 						() =>
 							new Promise((resolve, reject) => {
+								process.stdout.write(`TEST ${category.name} > ${testName}\n`);
 								const done = err => {
+									process.stdout.write(
+										`DONE ${category.name} > ${testName}: ${err}\n`
+									);
 									if (err) return reject(err);
 									resolve();
 								};
