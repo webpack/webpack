@@ -3101,7 +3101,7 @@ jest-changed-files@^22.2.0:
   dependencies:
     throat "^4.0.0"
 
-jest-cli@^23.0.0-alpha.5:
+jest-cli@^23.0.0-charlie.2:
   version "23.0.0-charlie.2"
   resolved "https://registry.yarnpkg.com/jest-cli/-/jest-cli-23.0.0-charlie.2.tgz#388691ede8e1c5e3a015dea66304e7d31ca40ede"
   dependencies:
@@ -3385,12 +3385,12 @@ jest-worker@^23.0.0-charlie.2:
   dependencies:
     merge-stream "^1.0.1"
 
-jest@23.0.0-alpha.5:
-  version "23.0.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/jest/-/jest-23.0.0-alpha.5.tgz#f3c1a5add21f22a10e1159650ccf6312d2bdde58"
+jest@23.0.0-charlie.2:
+  version "23.0.0-charlie.2"
+  resolved "https://registry.yarnpkg.com/jest/-/jest-23.0.0-charlie.2.tgz#453a6197f0301fc534e0f315114382006b43286d"
   dependencies:
     import-local "^1.0.0"
-    jest-cli "^23.0.0-alpha.5"
+    jest-cli "^23.0.0-charlie.2"
 
 joi@^12.x:
   version "12.0.0"
@@ -3479,6 +3479,10 @@ jsesc@~0.5.0:
 json-loader@^0.5.7:
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/json-loader/-/json-loader-0.5.7.tgz#dca14a70235ff82f0ac9a3abeb60d337a365185d"
+
+json-parse-better-errors@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#bb867cfb3450e69107c131d1c514bab3dc8bcaa9"
 
 json-schema-traverse@^0.3.0:
   version "0.3.1"
