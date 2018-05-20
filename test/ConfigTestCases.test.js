@@ -60,10 +60,12 @@ describe("ConfigTestCases", () => {
 								process.stdout.write(`TEST ${category.name} > ${testName}\n`);
 								const done = err => {
 									process.stdout.write(
-										`DONE ${category.name} > ${testName}: ${err}\n`
+										`DONE ${category.name} > ${testName}: ${err}\n\n\n\n\n`
 									);
-									if (err) return reject(err);
-									resolve();
+									setTimeout(() => {
+										if (err) return reject(err);
+										resolve();
+									}, 100);
 								};
 								rimraf.sync(outputDirectory);
 								mkdirp.sync(outputDirectory);
