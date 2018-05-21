@@ -83,7 +83,7 @@ install:
 
 script:
   - yarn cover:init
-  - yarn cover:intergation --ci $JEST
+  - yarn cover:integration --ci $JEST
   - yarn cover:report-min
 
 notifications:
