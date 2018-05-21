@@ -14,64 +14,40 @@ matrix:
   include:
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="Compiler-caching.test.js|Compiler.test.js|ConfigTestCases.test.js|Errors.test.js|Examples.test.js|HotModuleReplacementPlugin.test.js|HotTestCases.test.js|Integration.test.js|MultiCompiler.test.js|NodeTemplatePlugin.test.js|Stats.test.js|StatsTestCases.test.js|TestCasesAllCombined.test.js|TestCasesDevelopment.test.js|TestCasesDevtoolCheapEvalModuleSourceMap.test.js|TestCasesDevtoolCheapEvalSourceMap.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="Compiler-caching.test.js|Compiler.test.js|ConfigTestCases.test.js|Errors.test.js|Examples.test.js|HotModuleReplacementPlugin.test.js|HotTestCases.test.js|Integration.test.js|MultiCompiler.test.js|NodeTemplatePlugin.test.js|Stats.test.js|StatsTestCases.test.js|TestCasesAllCombined.test.js|TestCasesDevelopment.test.js|TestCasesDevtoolCheapEvalModuleSourceMap.test.js|TestCasesDevtoolCheapEvalSourceMap.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="Compiler-caching.test.js|Compiler.test.js|ConfigTestCases.test.js|Errors.test.js|Examples.test.js|HotModuleReplacementPlugin.test.js|HotTestCases.test.js|Integration.test.js|MultiCompiler.test.js|NodeTemplatePlugin.test.js|Stats.test.js|StatsTestCases.test.js|TestCasesAllCombined.test.js|TestCasesDevelopment.test.js|TestCasesDevtoolCheapEvalModuleSourceMap.test.js|TestCasesDevtoolCheapEvalSourceMap.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="Compiler-caching.test.js|Compiler.test.js|ConfigTestCases.test.js|Errors.test.js|Examples.test.js|HotModuleReplacementPlugin.test.js|HotTestCases.test.js|Integration.test.js|MultiCompiler.test.js|NodeTemplatePlugin.test.js|Stats.test.js|StatsTestCases.test.js|TestCasesAllCombined.test.js|TestCasesDevelopment.test.js|TestCasesDevtoolCheapEvalModuleSourceMap.test.js|TestCasesDevtoolCheapEvalSourceMap.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="Compiler-caching.test.js|Compiler.test.js|ConfigTestCases.test.js|Errors.test.js|Examples.test.js|HotModuleReplacementPlugin.test.js|HotTestCases.test.js|Integration.test.js|MultiCompiler.test.js|NodeTemplatePlugin.test.js|Stats.test.js|StatsTestCases.test.js|TestCasesAllCombined.test.js|TestCasesDevelopment.test.js|TestCasesDevtoolCheapEvalModuleSourceMap.test.js|TestCasesDevtoolCheapEvalSourceMap.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="Compiler-caching.test.js|Compiler.test.js|ConfigTestCases.test.js|Errors.test.js|Examples.test.js|HotModuleReplacementPlugin.test.js|HotTestCases.test.js|Integration.test.js|MultiCompiler.test.js|NodeTemplatePlugin.test.js|Stats.test.js|StatsTestCases.test.js|TestCasesAllCombined.test.js|TestCasesDevelopment.test.js|TestCasesDevtoolCheapEvalModuleSourceMap.test.js|TestCasesDevtoolCheapEvalSourceMap.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesDevtoolCheapInlineSourceMap.test.js|TestCasesDevtoolCheapSourceMap.test.js|TestCasesDevtoolEval.test.js|TestCasesDevtoolEvalNamedModules.test.js|TestCasesDevtoolEvalSourceMap.test.js|TestCasesDevtoolInlineSourceMap.test.js|TestCasesDevtoolSourceMap.test.js|TestCasesHot.test.js|TestCasesHotMultiStep.test.js|TestCasesMinimizedHashedModules.test.js|TestCasesMinimizedSourceMap.test.js|TestCasesNormal.test.js|TestCasesProduction.test.js|Validation.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesDevtoolCheapInlineSourceMap.test.js|TestCasesDevtoolCheapSourceMap.test.js|TestCasesDevtoolEval.test.js|TestCasesDevtoolEvalNamedModules.test.js|TestCasesDevtoolEvalSourceMap.test.js|TestCasesDevtoolInlineSourceMap.test.js|TestCasesDevtoolSourceMap.test.js|TestCasesHot.test.js|TestCasesHotMultiStep.test.js|TestCasesMinimizedHashedModules.test.js|TestCasesMinimizedSourceMap.test.js|TestCasesNormal.test.js|TestCasesProduction.test.js|Validation.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesDevtoolCheapInlineSourceMap.test.js|TestCasesDevtoolCheapSourceMap.test.js|TestCasesDevtoolEval.test.js|TestCasesDevtoolEvalNamedModules.test.js|TestCasesDevtoolEvalSourceMap.test.js|TestCasesDevtoolInlineSourceMap.test.js|TestCasesDevtoolSourceMap.test.js|TestCasesHot.test.js|TestCasesHotMultiStep.test.js|TestCasesMinimizedHashedModules.test.js|TestCasesMinimizedSourceMap.test.js|TestCasesNormal.test.js|TestCasesProduction.test.js|Validation.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesDevtoolCheapInlineSourceMap.test.js|TestCasesDevtoolCheapSourceMap.test.js|TestCasesDevtoolEval.test.js|TestCasesDevtoolEvalNamedModules.test.js|TestCasesDevtoolEvalSourceMap.test.js|TestCasesDevtoolInlineSourceMap.test.js|TestCasesDevtoolSourceMap.test.js|TestCasesHot.test.js|TestCasesHotMultiStep.test.js|TestCasesMinimizedHashedModules.test.js|TestCasesMinimizedSourceMap.test.js|TestCasesNormal.test.js|TestCasesProduction.test.js|Validation.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesDevtoolCheapInlineSourceMap.test.js|TestCasesDevtoolCheapSourceMap.test.js|TestCasesDevtoolEval.test.js|TestCasesDevtoolEvalNamedModules.test.js|TestCasesDevtoolEvalSourceMap.test.js|TestCasesDevtoolInlineSourceMap.test.js|TestCasesDevtoolSourceMap.test.js|TestCasesHot.test.js|TestCasesHotMultiStep.test.js|TestCasesMinimizedHashedModules.test.js|TestCasesMinimizedSourceMap.test.js|TestCasesNormal.test.js|TestCasesProduction.test.js|Validation.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesDevtoolCheapInlineSourceMap.test.js|TestCasesDevtoolCheapSourceMap.test.js|TestCasesDevtoolEval.test.js|TestCasesDevtoolEvalNamedModules.test.js|TestCasesDevtoolEvalSourceMap.test.js|TestCasesDevtoolInlineSourceMap.test.js|TestCasesDevtoolSourceMap.test.js|TestCasesHot.test.js|TestCasesHotMultiStep.test.js|TestCasesMinimizedHashedModules.test.js|TestCasesMinimizedSourceMap.test.js|TestCasesNormal.test.js|TestCasesProduction.test.js|Validation.test.js"
   allow_failures:
     - os: osx
   fast_finish: true
