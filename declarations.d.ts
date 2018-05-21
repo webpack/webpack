@@ -81,7 +81,7 @@ declare module "@webassemblyjs/ast" {
 	export class TypeInstruction extends Node {}
 	export class IndexInFuncSection extends Node {}
 	export function indexLiteral(index: number): IndexLiteral;
-	export function numberLiteral(num: number): NumberLiteral;
+	export function numberLiteralFromRaw(num: number): NumberLiteral;
 	export function global(globalType: string, nodes: Node[]): Global;
 	export function identifier(indentifier: string): Identifier;
 	export function funcParam(valType: string, id: Identifier): FuncParam;

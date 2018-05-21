@@ -28,121 +28,121 @@
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.2.tgz#e13182e1b69871a422d7863e11a4a6f5b814a4bd"
 
-"@webassemblyjs/ast@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.5.1.tgz#b77382eed0c334418508fb08b73f1eae198c6960"
+"@webassemblyjs/ast@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.5.4.tgz#b459d032edd00c98dd3de46d6850845d5d588ad4"
   dependencies:
-    "@webassemblyjs/helper-wasm-bytecode" "1.5.1"
-    "@webassemblyjs/wast-parser" "1.5.1"
+    "@webassemblyjs/helper-wasm-bytecode" "1.5.4"
+    "@webassemblyjs/wast-parser" "1.5.4"
     debug "^3.1.0"
-    webassemblyjs "1.5.1"
+    webassemblyjs "1.5.4"
 
-"@webassemblyjs/floating-point-hex-parser@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/floating-point-hex-parser/-/floating-point-hex-parser-1.5.1.tgz#0af82482faea3d86e37a020643475571197e8b3f"
+"@webassemblyjs/floating-point-hex-parser@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/floating-point-hex-parser/-/floating-point-hex-parser-1.5.4.tgz#b51b380a86914ae87ec075965eee24ac393c967e"
 
-"@webassemblyjs/helper-buffer@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-buffer/-/helper-buffer-1.5.1.tgz#659046a5af671cd7b1d67a021d8dccef043508e3"
+"@webassemblyjs/helper-buffer@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-buffer/-/helper-buffer-1.5.4.tgz#2280e11dfd3109cdff5de6651f6d019a2d4346f9"
   dependencies:
-    debug "^3.1.0"
-
-"@webassemblyjs/helper-code-frame@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-code-frame/-/helper-code-frame-1.5.1.tgz#9170e9e5c0af7ac8154a7a2d0cb85d6f7e318207"
-  dependencies:
-    "@webassemblyjs/wast-printer" "1.5.1"
-
-"@webassemblyjs/helper-fsm@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-fsm/-/helper-fsm-1.5.1.tgz#68f9e4a432b9e825f334db790dc037209c393a07"
-
-"@webassemblyjs/helper-wasm-bytecode@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-bytecode/-/helper-wasm-bytecode-1.5.1.tgz#363459069ef44173dcd9d5392fa6074eab7b711d"
-
-"@webassemblyjs/helper-wasm-section@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-section/-/helper-wasm-section-1.5.1.tgz#c45b3cc233c5067ef44cd35599b07aff279c531a"
-  dependencies:
-    "@webassemblyjs/ast" "1.5.1"
-    "@webassemblyjs/helper-buffer" "1.5.1"
-    "@webassemblyjs/helper-wasm-bytecode" "1.5.1"
-    "@webassemblyjs/wasm-gen" "1.5.1"
     debug "^3.1.0"
 
-"@webassemblyjs/leb128@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/leb128/-/leb128-1.5.1.tgz#a0069a66560547cf1e4228845e760ac035449e0d"
+"@webassemblyjs/helper-code-frame@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-code-frame/-/helper-code-frame-1.5.4.tgz#78daa37c08f6c4853d67608e389606c980e9d59e"
+  dependencies:
+    "@webassemblyjs/wast-printer" "1.5.4"
+
+"@webassemblyjs/helper-fsm@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-fsm/-/helper-fsm-1.5.4.tgz#94c2ebf7f08d19e5083e9f33278c516c4bde98fe"
+
+"@webassemblyjs/helper-wasm-bytecode@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-bytecode/-/helper-wasm-bytecode-1.5.4.tgz#70eca87631f61458562ed462e72db4abe789dc5d"
+
+"@webassemblyjs/helper-wasm-section@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-section/-/helper-wasm-section-1.5.4.tgz#73652f04fbc7cf3efc60eb9474eb2bddea915d1f"
+  dependencies:
+    "@webassemblyjs/ast" "1.5.4"
+    "@webassemblyjs/helper-buffer" "1.5.4"
+    "@webassemblyjs/helper-wasm-bytecode" "1.5.4"
+    "@webassemblyjs/wasm-gen" "1.5.4"
+    debug "^3.1.0"
+
+"@webassemblyjs/leb128@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/leb128/-/leb128-1.5.4.tgz#3adbd9a4c12324397533aedb9ad4b0a6e1837ad1"
   dependencies:
     leb "^0.3.0"
 
-"@webassemblyjs/validation@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/validation/-/validation-1.5.1.tgz#ce8e06f7be7392e0ddb7dab55b6c0f37f63dcaa6"
+"@webassemblyjs/validation@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/validation/-/validation-1.5.4.tgz#4efebc3d6634c56b09f7f1f11de7794ff87acb7e"
   dependencies:
-    "@webassemblyjs/ast" "1.5.1"
+    "@webassemblyjs/ast" "1.5.4"
     debug "3.0.1"
 
-"@webassemblyjs/wasm-edit@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-edit/-/wasm-edit-1.5.1.tgz#4b3eb413031e63de2c4fddd69eda3f0a2a43c772"
+"@webassemblyjs/wasm-edit@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-edit/-/wasm-edit-1.5.4.tgz#40d3d76a31755e5497559dfe8733fa753e23698d"
   dependencies:
-    "@webassemblyjs/ast" "1.5.1"
-    "@webassemblyjs/helper-buffer" "1.5.1"
-    "@webassemblyjs/helper-wasm-bytecode" "1.5.1"
-    "@webassemblyjs/helper-wasm-section" "1.5.1"
-    "@webassemblyjs/wasm-gen" "1.5.1"
-    "@webassemblyjs/wasm-opt" "1.5.1"
-    "@webassemblyjs/wasm-parser" "1.5.1"
-    "@webassemblyjs/wast-printer" "1.5.1"
+    "@webassemblyjs/ast" "1.5.4"
+    "@webassemblyjs/helper-buffer" "1.5.4"
+    "@webassemblyjs/helper-wasm-bytecode" "1.5.4"
+    "@webassemblyjs/helper-wasm-section" "1.5.4"
+    "@webassemblyjs/wasm-gen" "1.5.4"
+    "@webassemblyjs/wasm-opt" "1.5.4"
+    "@webassemblyjs/wasm-parser" "1.5.4"
+    "@webassemblyjs/wast-printer" "1.5.4"
     debug "^3.1.0"
 
-"@webassemblyjs/wasm-gen@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-gen/-/wasm-gen-1.5.1.tgz#805c1b15ef43e3f311e96d4f8a648f03bfc3b5a2"
+"@webassemblyjs/wasm-gen@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-gen/-/wasm-gen-1.5.4.tgz#e34ce3b4599aa56e28b21afd7731da7d374f0b28"
   dependencies:
-    "@webassemblyjs/ast" "1.5.1"
-    "@webassemblyjs/helper-wasm-bytecode" "1.5.1"
-    "@webassemblyjs/leb128" "1.5.1"
+    "@webassemblyjs/ast" "1.5.4"
+    "@webassemblyjs/helper-wasm-bytecode" "1.5.4"
+    "@webassemblyjs/leb128" "1.5.4"
 
-"@webassemblyjs/wasm-opt@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-opt/-/wasm-opt-1.5.1.tgz#01f3e0f5ea89762e02a374a8d34a1b418b6066ee"
+"@webassemblyjs/wasm-opt@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-opt/-/wasm-opt-1.5.4.tgz#8abc137664f3bca68cf1d20597fd755787d6a380"
   dependencies:
-    "@webassemblyjs/ast" "1.5.1"
-    "@webassemblyjs/helper-buffer" "1.5.1"
-    "@webassemblyjs/wasm-gen" "1.5.1"
-    "@webassemblyjs/wasm-parser" "1.5.1"
+    "@webassemblyjs/ast" "1.5.4"
+    "@webassemblyjs/helper-buffer" "1.5.4"
+    "@webassemblyjs/wasm-gen" "1.5.4"
+    "@webassemblyjs/wasm-parser" "1.5.4"
     debug "^3.1.0"
 
-"@webassemblyjs/wasm-parser@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-parser/-/wasm-parser-1.5.1.tgz#ee8c5562fa6a1213dd535c4b59dd2d7760bbf0f3"
+"@webassemblyjs/wasm-parser@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-parser/-/wasm-parser-1.5.4.tgz#9abaf1b2c521c0d01051cd0a65a1d74b3d78deaa"
   dependencies:
-    "@webassemblyjs/ast" "1.5.1"
-    "@webassemblyjs/helper-wasm-bytecode" "1.5.1"
-    "@webassemblyjs/leb128" "1.5.1"
-    "@webassemblyjs/wasm-parser" "1.5.1"
-    webassemblyjs "1.5.1"
+    "@webassemblyjs/ast" "1.5.4"
+    "@webassemblyjs/helper-wasm-bytecode" "1.5.4"
+    "@webassemblyjs/leb128" "1.5.4"
+    "@webassemblyjs/wasm-parser" "1.5.4"
+    webassemblyjs "1.5.4"
 
-"@webassemblyjs/wast-parser@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-parser/-/wast-parser-1.5.1.tgz#4da00bf7f4e2532c6ed674089a072ae604aeaaab"
+"@webassemblyjs/wast-parser@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-parser/-/wast-parser-1.5.4.tgz#799a78355f153607c541fdbfe0466119afc8e808"
   dependencies:
-    "@webassemblyjs/ast" "1.5.1"
-    "@webassemblyjs/floating-point-hex-parser" "1.5.1"
-    "@webassemblyjs/helper-code-frame" "1.5.1"
-    "@webassemblyjs/helper-fsm" "1.5.1"
+    "@webassemblyjs/ast" "1.5.4"
+    "@webassemblyjs/floating-point-hex-parser" "1.5.4"
+    "@webassemblyjs/helper-code-frame" "1.5.4"
+    "@webassemblyjs/helper-fsm" "1.5.4"
     long "^3.2.0"
-    webassemblyjs "1.5.1"
+    webassemblyjs "1.5.4"
 
-"@webassemblyjs/wast-printer@1.5.1":
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-printer/-/wast-printer-1.5.1.tgz#91f52975decdd98051d28bf7fe89c1faa978d9a8"
+"@webassemblyjs/wast-printer@1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-printer/-/wast-printer-1.5.4.tgz#c02284c96735537f15944dfab5150df3935bcb8d"
   dependencies:
-    "@webassemblyjs/ast" "1.5.1"
-    "@webassemblyjs/wast-parser" "1.5.1"
+    "@webassemblyjs/ast" "1.5.4"
+    "@webassemblyjs/wast-parser" "1.5.4"
     long "^3.2.0"
 
 abab@^1.0.4:
@@ -6281,14 +6281,14 @@ watchpack@^1.5.0:
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
 
-webassemblyjs@1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/webassemblyjs/-/webassemblyjs-1.5.1.tgz#645caab374dd1803cfbfbaa7489bb4b72f2061ff"
+webassemblyjs@1.5.4:
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/webassemblyjs/-/webassemblyjs-1.5.4.tgz#d8b2a4c2d70a4c911ca446f20e49bc22cde09d15"
   dependencies:
-    "@webassemblyjs/ast" "1.5.1"
-    "@webassemblyjs/validation" "1.5.1"
-    "@webassemblyjs/wasm-parser" "1.5.1"
-    "@webassemblyjs/wast-parser" "1.5.1"
+    "@webassemblyjs/ast" "1.5.4"
+    "@webassemblyjs/validation" "1.5.4"
+    "@webassemblyjs/wasm-parser" "1.5.4"
+    "@webassemblyjs/wast-parser" "1.5.4"
     long "^3.2.0"
 
 webidl-conversions@^4.0.1, webidl-conversions@^4.0.2:
