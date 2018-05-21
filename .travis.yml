@@ -14,64 +14,64 @@ matrix:
   include:
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART=""
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2" JOB_PART="ConfigTestCases.test.js|Stats.test.js"
   allow_failures:
     - os: osx
   fast_finish: true
@@ -83,7 +83,7 @@ install:
 
 script:
   - yarn cover:init
-  - yarn cover:integration --ci $JEST
+  - yarn cover:single --ci $JEST $JOB_PART
   - yarn cover:report-min
 
 notifications:
