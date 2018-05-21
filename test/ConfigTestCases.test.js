@@ -270,7 +270,7 @@ describe("ConfigTestCases", () => {
 										if (exportedTests.length < filesCount)
 											return done(new Error("No tests exported by test case"));
 										if (testConfig.afterExecute) testConfig.afterExecute();
-										const asyncSuite = describe("exported tests", () => {
+										const asyncSuite = describe(`ConfigTestCases ${category.name} ${testName} exported tests`, () => {
 											exportedBeforeEach.forEach(beforeEach);
 											exportedAfterEach.forEach(afterEach);
 											exportedTests.forEach(
