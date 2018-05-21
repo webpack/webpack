@@ -18,18 +18,6 @@ describe("ConfigTestCases", () => {
 
 	jest.setTimeout(10000);
 
-	beforeEach(() => {
-		process.stdout.write(
-			`BEFORE\n\n\n`
-		);
-	});
-
-	afterEach(() => {
-		process.stdout.write(
-			`AFTER\n\n\n`
-		);
-	});
-
 	categories = categories.map(cat => {
 		return {
 			name: cat,
@@ -69,12 +57,8 @@ describe("ConfigTestCases", () => {
 						testName + " should compile",
 						() =>
 							new Promise((resolve, reject) => {
-								process.stdout.write(`TEST ${category.name} > ${testName}\n`);
 								setTimeout(() => {
 									const done = err => {
-										process.stdout.write(
-											`DONE ${category.name} > ${testName}: ${err}\n\n`
-										);
 										setTimeout(() => {
 											if (err) return reject(err);
 											resolve();
@@ -126,9 +110,6 @@ describe("ConfigTestCases", () => {
 									}
 
 									webpack(options, (err, stats) => {
-										process.stdout.write(
-											`COMPILED ${category.name} > ${testName}\n`
-										);
 										if (err) {
 											const fakeStats = {
 												errors: [err.stack]
@@ -302,9 +283,6 @@ describe("ConfigTestCases", () => {
 										// workaround for jest running clearSpies on the wrong suite (invoked by clearResourcesForRunnable)
 										asyncSuite.disabled = true;
 
-										process.stdout.write(
-											`INNER ${category.name} > ${testName}\n`
-										);
 										jasmine
 											.getEnv()
 											.execute([asyncSuite.id], asyncSuite)
