@@ -67,7 +67,6 @@
     "rimraf": "^2.6.2",
     "script-loader": "~0.7.0",
     "simple-git": "^1.65.0",
-    "stackback": "^0.0.2",
     "style-loader": "^0.19.1",
     "typescript": "^2.9.0-dev.20180518",
     "url-loader": "^0.6.2",
@@ -126,8 +125,8 @@
     "cover": "yarn cover:init && yarn cover:all && yarn cover:report",
     "cover:init": "rimraf coverage",
     "cover:all": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --coverage",
-    "cover:single": "node -r ./setup/why-is-it-running.js --max-old-space-size=4096 node_modules/jest-cli/bin/jest --coverage",
-    "cover:integration": "node -r ./setup/why-is-it-running.js --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage",
+    "cover:single": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --coverage",
+    "cover:integration": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage",
     "cover:unit": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:report": "istanbul report",
     "cover:report-min": "istanbul report --report lcovonly"
