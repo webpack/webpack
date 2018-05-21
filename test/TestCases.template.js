@@ -162,10 +162,10 @@ const describeCases = config => {
 									});
 								})
 							};
-							let exportedTests = [];
 							it(
 								testName + " should compile",
 								done => {
+									const exportedTests = [];
 									webpack(options, (err, stats) => {
 										if (err) done(err);
 										const statOptions = Stats.presetToOptions("verbose");
