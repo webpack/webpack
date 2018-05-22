@@ -177,7 +177,7 @@ describe("HotTestCases", () => {
 								if (exportedTests.length < 1)
 									return done(new Error("No tests exported by test case"));
 
-								const asyncSuite = describe("exported tests", () => {
+								const asyncSuite = describe(`HotTestCases ${category.name} ${testName} exported tests`, () => {
 									exportedTests.forEach(
 										({ title, fn, timeout }) =>
 											fn

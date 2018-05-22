@@ -235,7 +235,7 @@ const describeCases = config => {
 										if (exportedTests.length === 0)
 											return done(new Error("No tests exported by test case"));
 
-										const asyncSuite = describe("exported tests", () => {
+										const asyncSuite = describe(`${config.name} ${category.name} ${testName} exported tests`, () => {
 											exportedTests.forEach(
 												({ title, fn, timeout }) =>
 													fn
