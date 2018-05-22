@@ -14,19 +14,19 @@ matrix:
   include:
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesDevtoolCheapInlineSourceMap.test.js|TestCasesDevtoolCheapSourceMap.test.js|TestCasesDevtoolEval.test.js|TestCasesDevtoolEvalNamedModules.test.js|TestCasesDevtoolEvalSourceMap.test.js|TestCasesDevtoolInlineSourceMap.test.js|TestCasesDevtoolSourceMap.test.js|TestCasesMinimizedHashedModules.test.js|TestCasesMinimizedSourceMap.test.js|TestCasesNormal.test.js|TestCasesProduction.test.js|TestCasesAllCombined.test.js|TestCasesDevelopment.test.js|TestCasesDevtoolCheapEvalModuleSourceMap.test.js|TestCasesDevtoolCheapEvalSourceMap.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesHot.test.js|TestCasesHotMultiStep.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesDevtoolCheapInlineSourceMap.test.js|TestCasesDevtoolCheapSourceMap.test.js|TestCasesDevtoolEval.test.js|TestCasesDevtoolEvalNamedModules.test.js|TestCasesDevtoolEvalSourceMap.test.js|TestCasesDevtoolInlineSourceMap.test.js|TestCasesDevtoolSourceMap.test.js|TestCasesMinimizedHashedModules.test.js|TestCasesMinimizedSourceMap.test.js|TestCasesNormal.test.js|TestCasesProduction.test.js|TestCasesAllCombined.test.js|TestCasesDevelopment.test.js|TestCasesDevtoolCheapEvalModuleSourceMap.test.js|TestCasesDevtoolCheapEvalSourceMap.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesHot.test.js|TestCasesHotMultiStep.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesDevtoolCheapInlineSourceMap.test.js|TestCasesDevtoolCheapSourceMap.test.js|TestCasesDevtoolEval.test.js|TestCasesDevtoolEvalNamedModules.test.js|TestCasesDevtoolEvalSourceMap.test.js|TestCasesDevtoolInlineSourceMap.test.js|TestCasesDevtoolSourceMap.test.js|TestCasesMinimizedHashedModules.test.js|TestCasesMinimizedSourceMap.test.js|TestCasesNormal.test.js|TestCasesProduction.test.js|TestCasesAllCombined.test.js|TestCasesDevelopment.test.js|TestCasesDevtoolCheapEvalModuleSourceMap.test.js|TestCasesDevtoolCheapEvalSourceMap.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesHot.test.js|TestCasesHotMultiStep.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesDevtoolCheapInlineSourceMap.test.js|TestCasesDevtoolCheapSourceMap.test.js|TestCasesDevtoolEval.test.js|TestCasesDevtoolEvalNamedModules.test.js|TestCasesDevtoolEvalSourceMap.test.js|TestCasesDevtoolInlineSourceMap.test.js|TestCasesDevtoolSourceMap.test.js|TestCasesMinimizedHashedModules.test.js|TestCasesMinimizedSourceMap.test.js|TestCasesNormal.test.js|TestCasesProduction.test.js|TestCasesAllCombined.test.js|TestCasesDevelopment.test.js|TestCasesDevtoolCheapEvalModuleSourceMap.test.js|TestCasesDevtoolCheapEvalSourceMap.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesHot.test.js|TestCasesHotMultiStep.test.js"
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesDevtoolCheapInlineSourceMap.test.js|TestCasesDevtoolCheapSourceMap.test.js|TestCasesDevtoolEval.test.js|TestCasesDevtoolEvalNamedModules.test.js|TestCasesDevtoolEvalSourceMap.test.js|TestCasesDevtoolInlineSourceMap.test.js|TestCasesDevtoolSourceMap.test.js|TestCasesMinimizedHashedModules.test.js|TestCasesMinimizedSourceMap.test.js|TestCasesNormal.test.js|TestCasesProduction.test.js|TestCasesAllCombined.test.js|TestCasesDevelopment.test.js|TestCasesDevtoolCheapEvalModuleSourceMap.test.js|TestCasesDevtoolCheapEvalSourceMap.test.js"
+      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="TestCasesHot.test.js|TestCasesHotMultiStep.test.js"
   allow_failures:
     - os: osx
   fast_finish: true
