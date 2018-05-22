@@ -1,1 +1,1 @@
-module.exports = [[/Can't resolve 'dll\/dep'/]];
+module.exports = [[/Can't resolve 'dll\/dep2'/]];
