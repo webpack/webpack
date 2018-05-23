@@ -78,6 +78,7 @@ const describeCases = config => {
 								category.name,
 								testName
 							);
+							const log = [];
 							const options = {
 								context: casesPath,
 								entry: "./" + category.name + "/" + testName + "/index",
@@ -160,15 +161,24 @@ const describeCases = config => {
 											);
 										});
 									});
-								})
+								}, new webpack.ProgressPlugin((...args) => {
+									log.push(args);
+								}))
 							};
 							it(
 								testName + " should compile",
 								done => {
-									process.stdout.write(`START ${config.name} ${category.name} ${testName}\n`);
+									const timeout = setTimeout(() => {
+										process.stdout.write(`\n\nHANGING ${config.name} ${category.name} ${testName}\n`);
+										for(const line of log) {
+											process.stdout.write(line.join(" ") + "\n");
+										}
+										process.stdout.write(`\n\n\n`);
+										done(new Error("Compilation is hanging"));
+									}, 50000);
 									const exportedTests = [];
 									webpack(options, (err, stats) => {
-										process.stdout.write(`COMP ${config.name} ${category.name} ${testName}\n`);
+										clearTimeout(timeout);
 										if (err) done(err);
 										const statOptions = Stats.presetToOptions("verbose");
 										statOptions.colors = false;
@@ -251,15 +261,7 @@ const describeCases = config => {
 										jasmine
 											.getEnv()
 											.execute([asyncSuite.id], asyncSuite)
-											.then(() => {
-												process.stdout.write(`SUCC ${config.name} ${category.name} ${testName}\n`);
-												done();
-											}, e => {
-												process.stdout.write(`COMP ${config.name} ${category.name} ${testName}\n`);
-												process.stdout.write(`FAIL ${config.name} ${category.name} ${testName}\n`);
-												done(e);
-											});
-											process.stdout.write(`COMP ${config.name} ${category.name} ${testName}\n`);
+											.then(done, done);
 									});
 								},
 								60000
