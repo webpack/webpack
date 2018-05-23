@@ -164,8 +164,8 @@ const describeCases = config => {
 									});
 								}, new webpack.ProgressPlugin((...args) => {
 									log.push(args);
-									if(startTime && startTime + 50000 > Date.now()) {
-										process.stdout.write(`\n\nBUSY HANGING ${config.name} ${category.name} ${testName}\n`);
+									if(startTime && startTime + 50000 < Date.now()) {
+										process.stdout.write(`\n\nBUSY HANGING ${config.name} ${category.name} ${testName} ${Date.now() - startTime}ms\n`);
 										for(const line of log) {
 											process.stdout.write(line.join(" ") + "\n");
 										}
