@@ -165,7 +165,7 @@ const describeCases = config => {
 							it(
 								testName + " should compile",
 								done => {
-									process.stdout.write(`START ${category.name} ${testName}`);
+									process.stdout.write(`START ${category.name} ${testName}\n`);
 									const exportedTests = [];
 									webpack(options, (err, stats) => {
 										if (err) done(err);
@@ -251,10 +251,10 @@ const describeCases = config => {
 											.getEnv()
 											.execute([asyncSuite.id], asyncSuite)
 											.then(() => {
-												process.stdout.write(`SUCC ${category.name} ${testName}`);
+												process.stdout.write(`SUCC ${category.name} ${testName}\n`);
 												done();
 											}, e => {
-												process.stdout.write(`FAIL ${category.name} ${testName}`);
+												process.stdout.write(`FAIL ${category.name} ${testName}\n`);
 												done(e);
 											});
 									});
