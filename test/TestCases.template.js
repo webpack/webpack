@@ -165,6 +165,7 @@ const describeCases = config => {
 							it(
 								testName + " should compile",
 								done => {
+									process.stdout.write(`START ${category.name} ${testName}`);
 									const exportedTests = [];
 									webpack(options, (err, stats) => {
 										if (err) done(err);
@@ -249,7 +250,13 @@ const describeCases = config => {
 										jasmine
 											.getEnv()
 											.execute([asyncSuite.id], asyncSuite)
-											.then(done, done);
+											.then(() => {
+												process.stdout.write(`SUCC ${category.name} ${testName}`);
+												done();
+											}, e => {
+												process.stdout.write(`FAIL ${category.name} ${testName}`);
+												done(e);
+											});
 									});
 								},
 								60000
