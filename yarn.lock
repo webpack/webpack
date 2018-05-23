@@ -125,6 +125,12 @@
     "@webassemblyjs/wasm-parser" "1.4.3"
     webassemblyjs "1.4.3"
 
+"@webassemblyjs/wast-loader@^1.5.4":
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-loader/-/wast-loader-1.5.4.tgz#6db66671edc5955cb77cbf90a6c4f627f6335a6a"
+  dependencies:
+    wabt "^1.0.0"
+
 "@webassemblyjs/wast-parser@1.4.3":
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-parser/-/wast-parser-1.4.3.tgz#3250402e2c5ed53dbe2233c9de1fe1f9f0d51745"
@@ -6256,6 +6262,10 @@ w3c-hr-time@^1.0.1:
   resolved "https://registry.yarnpkg.com/w3c-hr-time/-/w3c-hr-time-1.0.1.tgz#82ac2bff63d950ea9e3189a58a65625fedf19045"
   dependencies:
     browser-process-hrtime "^0.1.2"
+
+wabt@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/wabt/-/wabt-1.0.0.tgz#f33a5c4a6405370ec80ba97e782d092f1d599ff4"
 
 walker@~1.0.5:
   version "1.0.7"

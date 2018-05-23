@@ -8,6 +8,7 @@
     "@webassemblyjs/ast": "1.4.3",
     "@webassemblyjs/wasm-edit": "1.4.3",
     "@webassemblyjs/wasm-parser": "1.4.3",
+    "@webassemblyjs/wast-loader": "^1.5.4",
     "acorn": "^5.0.0",
     "acorn-dynamic-import": "^3.0.0",
     "ajv": "^6.1.0",
