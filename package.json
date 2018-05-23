@@ -52,7 +52,7 @@
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
-    "jest": "23.0.0-charlie.2",
+    "jest": "23.0.0-charlie.3",
     "jest-silent-reporter": "0.0.4",
     "json-loader": "^0.5.7",
     "less": "^2.5.1",
@@ -132,7 +132,6 @@
     "cover:report-min": "istanbul report --report lcovonly"
   },
   "jest": {
-    "forceExit": true,
     "setupTestFrameworkScriptFile": "<rootDir>/test/setupTestFramework.js",
     "testMatch": [
       "<rootDir>/test/*.test.js",
