@@ -168,6 +168,7 @@ const describeCases = config => {
 									process.stdout.write(`START ${config.name} ${category.name} ${testName}\n`);
 									const exportedTests = [];
 									webpack(options, (err, stats) => {
+										process.stdout.write(`COMP ${config.name} ${category.name} ${testName}\n`);
 										if (err) done(err);
 										const statOptions = Stats.presetToOptions("verbose");
 										statOptions.colors = false;
@@ -254,9 +255,11 @@ const describeCases = config => {
 												process.stdout.write(`SUCC ${config.name} ${category.name} ${testName}\n`);
 												done();
 											}, e => {
+												process.stdout.write(`COMP ${config.name} ${category.name} ${testName}\n`);
 												process.stdout.write(`FAIL ${config.name} ${category.name} ${testName}\n`);
 												done(e);
 											});
+											process.stdout.write(`COMP ${config.name} ${category.name} ${testName}\n`);
 									});
 								},
 								60000
