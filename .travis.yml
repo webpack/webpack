@@ -14,7 +14,7 @@ matrix:
   include:
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--showConfig JOB_PART="integration1"
+      env: NO_WATCH_TESTS=1 JEST="--showConfig --cacheDirectory .jest-cache" JOB_PART="integration1"
   allow_failures:
     - os: osx
   fast_finish: true
