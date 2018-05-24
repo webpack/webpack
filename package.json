@@ -102,7 +102,8 @@
     "test:integration": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\"",
     "test:basic": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/{TestCasesNormal,StatsTestCases,ConfigTestCases}.test.js\"",
     "test:unit": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\"",
-    "travis:integration": "yarn cover:init && yarn cover:integration --ci $JEST && yarn cover:report-min",
+    "travis:integration1": "yarn cover:init && yarn cover:integration1 --ci $JEST && yarn cover:report-min",
+    "travis:integration2": "yarn cover:init && yarn cover:integration2 --ci $JEST && yarn cover:report-min",
     "travis:basic": "yarn test:basic --ci $JEST",
     "travis:unit": "yarn cover:init && yarn cover:unit --ci",
     "travis:lint": "yarn lint",
@@ -127,6 +128,8 @@
     "cover:all": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --coverage",
     "cover:single": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --coverage",
     "cover:integration": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage",
+    "cover:integration1": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage \"test/((?!TestCases)|TestCasesD)\"",
+    "cover:integration2": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage \"test/TestCases(?!D)\"",
     "cover:unit": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:report": "istanbul report",
     "cover:report-min": "istanbul report --report lcovonly"
