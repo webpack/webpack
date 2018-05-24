@@ -25,9 +25,7 @@ install:
   - yarn link webpack --frozen-lockfile
 
 script:
-  - yarn cover:init
-  - yarn cover:$JOB_PART --ci $JEST
-  - yarn cover:report-min
+  - yarn travis:$JOB_PART
 
 notifications:
   slack:
