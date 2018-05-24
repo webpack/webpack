@@ -140,82 +140,82 @@ console.log(__webpack_require__(/*! module */ 8));
 /***/ }),
 /* 1 */
 /*!**************************************************************************!*\
-  !*** delegated ./alpha.js from dll-reference alpha_53e9c88e69872d1acfd3 ***!
+  !*** delegated ./alpha.js from dll-reference alpha_9acca21e0d34e518784e ***!
   \**************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference alpha_53e9c88e69872d1acfd3 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference alpha_9acca21e0d34e518784e */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!*********************************************!*\
-  !*** external "alpha_53e9c88e69872d1acfd3" ***!
+  !*** external "alpha_9acca21e0d34e518784e" ***!
   \*********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = alpha_53e9c88e69872d1acfd3;
+module.exports = alpha_9acca21e0d34e518784e;
 
 /***/ }),
 /* 3 */
 /*!**********************************************************************!*\
-  !*** delegated ./a.js from dll-reference alpha_53e9c88e69872d1acfd3 ***!
+  !*** delegated ./a.js from dll-reference alpha_9acca21e0d34e518784e ***!
   \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference alpha_53e9c88e69872d1acfd3 */ 2))(2);
+module.exports = (__webpack_require__(/*! dll-reference alpha_9acca21e0d34e518784e */ 2))(2);
 
 /***/ }),
 /* 4 */
 /*!************************************************************************!*\
-  !*** delegated ./beta.js from dll-reference beta_53e9c88e69872d1acfd3 ***!
+  !*** delegated ./beta.js from dll-reference beta_9acca21e0d34e518784e ***!
   \************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference beta_53e9c88e69872d1acfd3 */ 5))(5);
+module.exports = (__webpack_require__(/*! dll-reference beta_9acca21e0d34e518784e */ 5))(5);
 
 /***/ }),
 /* 5 */
 /*!********************************************!*\
-  !*** external "beta_53e9c88e69872d1acfd3" ***!
+  !*** external "beta_9acca21e0d34e518784e" ***!
   \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = beta_53e9c88e69872d1acfd3;
+module.exports = beta_9acca21e0d34e518784e;
 
 /***/ }),
 /* 6 */
 /*!*********************************************************************!*\
-  !*** delegated ./b.js from dll-reference beta_53e9c88e69872d1acfd3 ***!
+  !*** delegated ./b.js from dll-reference beta_9acca21e0d34e518784e ***!
   \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference beta_53e9c88e69872d1acfd3 */ 5))(6);
+module.exports = (__webpack_require__(/*! dll-reference beta_9acca21e0d34e518784e */ 5))(6);
 
 /***/ }),
 /* 7 */
 /*!**********************************************************************!*\
-  !*** delegated ./c.jsx from dll-reference beta_53e9c88e69872d1acfd3 ***!
+  !*** delegated ./c.jsx from dll-reference beta_9acca21e0d34e518784e ***!
   \**********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference beta_53e9c88e69872d1acfd3 */ 5))(7);
+module.exports = (__webpack_require__(/*! dll-reference beta_9acca21e0d34e518784e */ 5))(7);
 
 /***/ }),
 /* 8 */
 /*!*****************************************************************************************!*\
-  !*** delegated ../node_modules/module.js from dll-reference alpha_53e9c88e69872d1acfd3 ***!
+  !*** delegated ../node_modules/module.js from dll-reference alpha_9acca21e0d34e518784e ***!
   \*****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference alpha_53e9c88e69872d1acfd3 */ 2))(3);
+module.exports = (__webpack_require__(/*! dll-reference alpha_9acca21e0d34e518784e */ 2))(3);
 
 /***/ })
 /******/ ]);
@@ -227,66 +227,66 @@ module.exports = (__webpack_require__(/*! dll-reference alpha_53e9c88e69872d1acf
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
     Asset      Size  Chunks             Chunk Names
 output.js  6.19 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 549 bytes [entry] [rendered]
     > .\example.js main
-    [0] ./example.js 213 bytes {0} [built]
-        single entry .\example.js  main
-    [1] delegated ./alpha.js from dll-reference alpha_53e9c88e69872d1acfd3 42 bytes {0} [built]
-        cjs require ../dll/alpha [0] ./example.js 1:12-35
-    [2] external "alpha_53e9c88e69872d1acfd3" 42 bytes {0} [built]
-        delegated source dll-reference alpha_53e9c88e69872d1acfd3 [1] delegated ./alpha.js from dll-reference alpha_53e9c88e69872d1acfd3
-        delegated source dll-reference alpha_53e9c88e69872d1acfd3 [3] delegated ./a.js from dll-reference alpha_53e9c88e69872d1acfd3
-        delegated source dll-reference alpha_53e9c88e69872d1acfd3 [8] delegated ../node_modules/module.js from dll-reference alpha_53e9c88e69872d1acfd3
-    [3] delegated ./a.js from dll-reference alpha_53e9c88e69872d1acfd3 42 bytes {0} [built]
-        cjs require ../dll/a [0] ./example.js 2:12-31
-    [4] delegated ./beta.js from dll-reference beta_53e9c88e69872d1acfd3 42 bytes {0} [built]
-        cjs require beta/beta [0] ./example.js 4:12-32
-    [5] external "beta_53e9c88e69872d1acfd3" 42 bytes {0} [built]
-        delegated source dll-reference beta_53e9c88e69872d1acfd3 [4] delegated ./beta.js from dll-reference beta_53e9c88e69872d1acfd3
-        delegated source dll-reference beta_53e9c88e69872d1acfd3 [6] delegated ./b.js from dll-reference beta_53e9c88e69872d1acfd3
-        delegated source dll-reference beta_53e9c88e69872d1acfd3 [7] delegated ./c.jsx from dll-reference beta_53e9c88e69872d1acfd3
-    [6] delegated ./b.js from dll-reference beta_53e9c88e69872d1acfd3 42 bytes {0} [built]
-        cjs require beta/b [0] ./example.js 5:12-29
-    [7] delegated ./c.jsx from dll-reference beta_53e9c88e69872d1acfd3 42 bytes {0} [built]
-        cjs require beta/c [0] ./example.js 6:12-29
-    [8] delegated ../node_modules/module.js from dll-reference alpha_53e9c88e69872d1acfd3 42 bytes {0} [built]
-        cjs require module [0] ./example.js 8:12-29
+ [0] ./example.js 213 bytes {0} [built]
+     single entry .\example.js  main
+ [1] delegated ./alpha.js from dll-reference alpha_9acca21e0d34e518784e 42 bytes {0} [built]
+     cjs require ../dll/alpha [0] ./example.js 1:12-35
+ [2] external "alpha_9acca21e0d34e518784e" 42 bytes {0} [built]
+     delegated source dll-reference alpha_9acca21e0d34e518784e [1] delegated ./alpha.js from dll-reference alpha_9acca21e0d34e518784e
+     delegated source dll-reference alpha_9acca21e0d34e518784e [3] delegated ./a.js from dll-reference alpha_9acca21e0d34e518784e
+     delegated source dll-reference alpha_9acca21e0d34e518784e [8] delegated ../node_modules/module.js from dll-reference alpha_9acca21e0d34e518784e
+ [3] delegated ./a.js from dll-reference alpha_9acca21e0d34e518784e 42 bytes {0} [built]
+     cjs require ../dll/a [0] ./example.js 2:12-31
+ [4] delegated ./beta.js from dll-reference beta_9acca21e0d34e518784e 42 bytes {0} [built]
+     cjs require beta/beta [0] ./example.js 4:12-32
+ [5] external "beta_9acca21e0d34e518784e" 42 bytes {0} [built]
+     delegated source dll-reference beta_9acca21e0d34e518784e [4] delegated ./beta.js from dll-reference beta_9acca21e0d34e518784e
+     delegated source dll-reference beta_9acca21e0d34e518784e [6] delegated ./b.js from dll-reference beta_9acca21e0d34e518784e
+     delegated source dll-reference beta_9acca21e0d34e518784e [7] delegated ./c.jsx from dll-reference beta_9acca21e0d34e518784e
+ [6] delegated ./b.js from dll-reference beta_9acca21e0d34e518784e 42 bytes {0} [built]
+     cjs require beta/b [0] ./example.js 5:12-29
+ [7] delegated ./c.jsx from dll-reference beta_9acca21e0d34e518784e 42 bytes {0} [built]
+     cjs require beta/c [0] ./example.js 6:12-29
+ [8] delegated ../node_modules/module.js from dll-reference alpha_9acca21e0d34e518784e 42 bytes {0} [built]
+     cjs require module [0] ./example.js 8:12-29
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
     Asset       Size  Chunks             Chunk Names
 output.js  972 bytes       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 549 bytes [entry] [rendered]
     > .\example.js main
-    [0] external "beta_53e9c88e69872d1acfd3" 42 bytes {0} [built]
-        delegated source dll-reference beta_53e9c88e69872d1acfd3 [3] delegated ./c.jsx from dll-reference beta_53e9c88e69872d1acfd3
-        delegated source dll-reference beta_53e9c88e69872d1acfd3 [4] delegated ./b.js from dll-reference beta_53e9c88e69872d1acfd3
-        delegated source dll-reference beta_53e9c88e69872d1acfd3 [5] delegated ./beta.js from dll-reference beta_53e9c88e69872d1acfd3
-    [1] external "alpha_53e9c88e69872d1acfd3" 42 bytes {0} [built]
-        delegated source dll-reference alpha_53e9c88e69872d1acfd3 [2] delegated ../node_modules/module.js from dll-reference alpha_53e9c88e69872d1acfd3
-        delegated source dll-reference alpha_53e9c88e69872d1acfd3 [6] delegated ./a.js from dll-reference alpha_53e9c88e69872d1acfd3
-        delegated source dll-reference alpha_53e9c88e69872d1acfd3 [7] delegated ./alpha.js from dll-reference alpha_53e9c88e69872d1acfd3
-    [2] delegated ../node_modules/module.js from dll-reference alpha_53e9c88e69872d1acfd3 42 bytes {0} [built]
-        cjs require module [8] ./example.js 8:12-29
-    [3] delegated ./c.jsx from dll-reference beta_53e9c88e69872d1acfd3 42 bytes {0} [built]
-        cjs require beta/c [8] ./example.js 6:12-29
-    [4] delegated ./b.js from dll-reference beta_53e9c88e69872d1acfd3 42 bytes {0} [built]
-        cjs require beta/b [8] ./example.js 5:12-29
-    [5] delegated ./beta.js from dll-reference beta_53e9c88e69872d1acfd3 42 bytes {0} [built]
-        cjs require beta/beta [8] ./example.js 4:12-32
-    [6] delegated ./a.js from dll-reference alpha_53e9c88e69872d1acfd3 42 bytes {0} [built]
-        cjs require ../dll/a [8] ./example.js 2:12-31
-    [7] delegated ./alpha.js from dll-reference alpha_53e9c88e69872d1acfd3 42 bytes {0} [built]
-        cjs require ../dll/alpha [8] ./example.js 1:12-35
-    [8] ./example.js 213 bytes {0} [built]
-        single entry .\example.js  main
+ [0] external "beta_9acca21e0d34e518784e" 42 bytes {0} [built]
+     delegated source dll-reference beta_9acca21e0d34e518784e [3] delegated ./c.jsx from dll-reference beta_9acca21e0d34e518784e
+     delegated source dll-reference beta_9acca21e0d34e518784e [4] delegated ./b.js from dll-reference beta_9acca21e0d34e518784e
+     delegated source dll-reference beta_9acca21e0d34e518784e [5] delegated ./beta.js from dll-reference beta_9acca21e0d34e518784e
+ [1] external "alpha_9acca21e0d34e518784e" 42 bytes {0} [built]
+     delegated source dll-reference alpha_9acca21e0d34e518784e [2] delegated ../node_modules/module.js from dll-reference alpha_9acca21e0d34e518784e
+     delegated source dll-reference alpha_9acca21e0d34e518784e [6] delegated ./a.js from dll-reference alpha_9acca21e0d34e518784e
+     delegated source dll-reference alpha_9acca21e0d34e518784e [7] delegated ./alpha.js from dll-reference alpha_9acca21e0d34e518784e
+ [2] delegated ../node_modules/module.js from dll-reference alpha_9acca21e0d34e518784e 42 bytes {0} [built]
+     cjs require module [8] ./example.js 8:12-29
+ [3] delegated ./c.jsx from dll-reference beta_9acca21e0d34e518784e 42 bytes {0} [built]
+     cjs require beta/c [8] ./example.js 6:12-29
+ [4] delegated ./b.js from dll-reference beta_9acca21e0d34e518784e 42 bytes {0} [built]
+     cjs require beta/b [8] ./example.js 5:12-29
+ [5] delegated ./beta.js from dll-reference beta_9acca21e0d34e518784e 42 bytes {0} [built]
+     cjs require beta/beta [8] ./example.js 4:12-32
+ [6] delegated ./a.js from dll-reference alpha_9acca21e0d34e518784e 42 bytes {0} [built]
+     cjs require ../dll/a [8] ./example.js 2:12-31
+ [7] delegated ./alpha.js from dll-reference alpha_9acca21e0d34e518784e 42 bytes {0} [built]
+     cjs require ../dll/alpha [8] ./example.js 1:12-35
+ [8] ./example.js 213 bytes {0} [built]
+     single entry .\example.js  main
 ```

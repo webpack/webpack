@@ -92,11 +92,18 @@ require(
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
 /******/ 		1: 0
 /******/ 	};
 /******/
 /******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + chunkId + ".output.js"
+/******/ 	}
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -153,7 +160,7 @@ require(
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
-/******/ 				script.src = __webpack_require__.p + "" + chunkId + ".output.js";
+/******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/ 				var timeout = setTimeout(function(){
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
@@ -350,7 +357,7 @@ function webpackContext(req) {
 function webpackContextResolve(req) {
 	var id = map[req];
 	if(!(id + 1)) { // check for number or string
-		var e = new Error('Cannot find module "' + req + '".');
+		var e = new Error("Cannot find module '" + req + "'");
 		e.code = 'MODULE_NOT_FOUND';
 		throw e;
 	}
@@ -409,90 +416,90 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  1.87 KiB       0  [emitted]  
-  output.js  9.75 KiB       1  [emitted]  main
+  output.js    10 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 439 bytes <{1}> [rendered]
     > [3] ./example.js 7:0-14:1
-    [4] ../require.context/templates sync ^\.\/.*\.js$ 193 bytes {0} [built]
-        amd require context ../require.context/templates [3] ./example.js 7:0-14:1
-    [5] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./c.js
-    [6] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./b.js
-    [7] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./a.js
+ [4] ../require.context/templates sync ^\.\/.*\.js$ 193 bytes {0} [built]
+     amd require context ../require.context/templates [3] ./example.js 7:0-14:1
+ [5] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+     context element ./c.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./c.js
+ [6] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+     context element ./b.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./b.js
+ [7] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+     context element ./a.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./a.js
 chunk    {1} output.js (main) 1.03 KiB >{0}< [entry] [rendered]
     > .\example.js main
-    [0] ./amd.js 309 bytes {1} [built]
-        amd require ./amd [1] ./commonjs.js 5:0-11:1
-        cjs require ./amd [1] ./commonjs.js 8:13-29
-        harmony side effect evaluation ./amd [2] ./harmony.js 3:0-24
-        cjs require ./amd [3] ./example.js 3:11-27
-        amd require ./amd [3] ./example.js 7:0-14:1
-        amd require ./amd [3] ./example.js 7:0-14:1
-    [1] ./commonjs.js 233 bytes {1} [built]
-        amd require ./commonjs [0] ./amd.js 2:0-12:1
-        cjs require ./commonjs [0] ./amd.js 7:18-39
-        harmony side effect evaluation ./commonjs [2] ./harmony.js 2:0-34
-        cjs require ./commonjs [3] ./example.js 2:16-37
-        amd require ./commonjs [3] ./example.js 7:0-14:1
-        amd require ./commonjs [3] ./example.js 7:0-14:1
-    [2] ./harmony.js 101 bytes {1} [built]
-        [exports: default]
-        amd require ./harmony [0] ./amd.js 2:0-12:1
-        cjs require ./harmony [0] ./amd.js 8:17-37
-        amd require ./harmony [1] ./commonjs.js 5:0-11:1
-        cjs require ./harmony [1] ./commonjs.js 9:17-37
-        cjs require ./harmony [3] ./example.js 4:15-35
-    [3] ./example.js 410 bytes {1} [built]
-        single entry .\example.js  main
+ [0] ./amd.js 309 bytes {1} [built]
+     amd require ./amd [1] ./commonjs.js 5:0-11:1
+     cjs require ./amd [1] ./commonjs.js 8:13-29
+     harmony side effect evaluation ./amd [2] ./harmony.js 3:0-24
+     cjs require ./amd [3] ./example.js 3:11-27
+     amd require ./amd [3] ./example.js 7:0-14:1
+     amd require ./amd [3] ./example.js 7:0-14:1
+ [1] ./commonjs.js 233 bytes {1} [built]
+     amd require ./commonjs [0] ./amd.js 2:0-12:1
+     cjs require ./commonjs [0] ./amd.js 7:18-39
+     harmony side effect evaluation ./commonjs [2] ./harmony.js 2:0-34
+     cjs require ./commonjs [3] ./example.js 2:16-37
+     amd require ./commonjs [3] ./example.js 7:0-14:1
+     amd require ./commonjs [3] ./example.js 7:0-14:1
+ [2] ./harmony.js 101 bytes {1} [built]
+     [exports: default]
+     amd require ./harmony [0] ./amd.js 2:0-12:1
+     cjs require ./harmony [0] ./amd.js 8:17-37
+     amd require ./harmony [1] ./commonjs.js 5:0-11:1
+     cjs require ./harmony [1] ./commonjs.js 9:17-37
+     cjs require ./harmony [3] ./example.js 4:15-35
+ [3] ./example.js 410 bytes {1} [built]
+     single entry .\example.js  main
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  606 bytes       0  [emitted]  
-  output.js   2.04 KiB       1  [emitted]  main
+  output.js   2.06 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 439 bytes <{1}> [rendered]
     > [3] ./example.js 7:0-14:1
-    [4] ../require.context/templates sync ^\.\/.*\.js$ 193 bytes {0} [built]
-        amd require context ../require.context/templates [3] ./example.js 7:0-14:1
-    [5] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./c.js
-    [6] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./b.js
-    [7] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./a.js
+ [4] ../require.context/templates sync ^\.\/.*\.js$ 193 bytes {0} [built]
+     amd require context ../require.context/templates [3] ./example.js 7:0-14:1
+ [5] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+     context element ./c.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./c.js
+ [6] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+     context element ./b.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./b.js
+ [7] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+     context element ./a.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./a.js
 chunk    {1} output.js (main) 1.03 KiB >{0}< [entry] [rendered]
     > .\example.js main
-    [0] ./amd.js 309 bytes {1} [built]
-        amd require ./amd [1] ./commonjs.js 5:0-11:1
-        cjs require ./amd [1] ./commonjs.js 8:13-29
-        harmony side effect evaluation ./amd [2] ./harmony.js 3:0-24
-        cjs require ./amd [3] ./example.js 3:11-27
-        amd require ./amd [3] ./example.js 7:0-14:1
-        amd require ./amd [3] ./example.js 7:0-14:1
-    [1] ./commonjs.js 233 bytes {1} [built]
-        amd require ./commonjs [0] ./amd.js 2:0-12:1
-        cjs require ./commonjs [0] ./amd.js 7:18-39
-        harmony side effect evaluation ./commonjs [2] ./harmony.js 2:0-34
-        cjs require ./commonjs [3] ./example.js 2:16-37
-        amd require ./commonjs [3] ./example.js 7:0-14:1
-        amd require ./commonjs [3] ./example.js 7:0-14:1
-    [2] ./harmony.js 101 bytes {1} [built]
-        [exports: default]
-        amd require ./harmony [0] ./amd.js 2:0-12:1
-        cjs require ./harmony [0] ./amd.js 8:17-37
-        amd require ./harmony [1] ./commonjs.js 5:0-11:1
-        cjs require ./harmony [1] ./commonjs.js 9:17-37
-        cjs require ./harmony [3] ./example.js 4:15-35
-    [3] ./example.js 410 bytes {1} [built]
-        single entry .\example.js  main
+ [0] ./amd.js 309 bytes {1} [built]
+     amd require ./amd [1] ./commonjs.js 5:0-11:1
+     cjs require ./amd [1] ./commonjs.js 8:13-29
+     harmony side effect evaluation ./amd [2] ./harmony.js 3:0-24
+     cjs require ./amd [3] ./example.js 3:11-27
+     amd require ./amd [3] ./example.js 7:0-14:1
+     amd require ./amd [3] ./example.js 7:0-14:1
+ [1] ./commonjs.js 233 bytes {1} [built]
+     amd require ./commonjs [0] ./amd.js 2:0-12:1
+     cjs require ./commonjs [0] ./amd.js 7:18-39
+     harmony side effect evaluation ./commonjs [2] ./harmony.js 2:0-34
+     cjs require ./commonjs [3] ./example.js 2:16-37
+     amd require ./commonjs [3] ./example.js 7:0-14:1
+     amd require ./commonjs [3] ./example.js 7:0-14:1
+ [2] ./harmony.js 101 bytes {1} [built]
+     [exports: default]
+     amd require ./harmony [0] ./amd.js 2:0-12:1
+     cjs require ./harmony [0] ./amd.js 8:17-37
+     amd require ./harmony [1] ./commonjs.js 5:0-11:1
+     cjs require ./harmony [1] ./commonjs.js 9:17-37
+     cjs require ./harmony [3] ./example.js 4:15-35
+ [3] ./example.js 410 bytes {1} [built]
+     single entry .\example.js  main
 ```

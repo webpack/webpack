@@ -234,7 +234,7 @@ console.log("Missing Text");
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
 Child en:
     Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset     Size  Chunks             Chunk Names
@@ -242,8 +242,8 @@ Child en:
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > ./example main
-        [0] ./example.js 65 bytes {0} [built]
-            single entry ./example  main
+     [0] ./example.js 65 bytes {0} [built]
+         single entry ./example  main
 Child de:
     Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset     Size  Chunks             Chunk Names
@@ -251,8 +251,8 @@ Child de:
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > ./example main
-        [0] ./example.js 65 bytes {0} [built] [1 warning]
-            single entry ./example  main
+     [0] ./example.js 65 bytes {0} [built] [1 warning]
+         single entry ./example  main
     
     WARNING in ./example.js
     Missing localization: Missing Text
@@ -262,7 +262,7 @@ Child de:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
 Child en:
     Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset       Size  Chunks             Chunk Names
@@ -270,8 +270,8 @@ Child en:
     Entrypoint main = en.output.js
     chunk    {0} en.output.js (main) 65 bytes [entry] [rendered]
         > ./example main
-        [0] ./example.js 65 bytes {0} [built]
-            single entry ./example  main
+     [0] ./example.js 65 bytes {0} [built]
+         single entry ./example  main
 Child de:
     Hash: 0a1b2c3d4e5f6a7b8c9d
            Asset       Size  Chunks             Chunk Names
@@ -279,8 +279,8 @@ Child de:
     Entrypoint main = de.output.js
     chunk    {0} de.output.js (main) 65 bytes [entry] [rendered]
         > ./example main
-        [0] ./example.js 65 bytes {0} [built] [1 warning]
-            single entry ./example  main
+     [0] ./example.js 65 bytes {0} [built] [1 warning]
+         single entry ./example  main
     
     WARNING in ./example.js
     Missing localization: Missing Text

@@ -492,7 +492,14 @@
               "properties": {
                 "root": {
                   "description": "Name of the property exposed globally by a UMD library",
-                  "type": "string"
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/definitions/common.arrayOfStringValues"
+                    }
+                  ]
                 },
                 "amd": {
                   "description": "Name of the exposed AMD library in the UMD",
@@ -1671,6 +1678,10 @@
           "$ref": "#/definitions/resolve"
         }
       ]
+    },
+    "serve": {
+      "description": "Options for webpack-serve",
+      "type": "object"
     },
     "stats": {
       "description": "Used by the webpack CLI program to pass stats options.",

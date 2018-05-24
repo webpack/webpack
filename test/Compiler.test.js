@@ -2,7 +2,6 @@
 "use strict";
 
 const path = require("path");
-const sinon = require("sinon");
 
 const webpack = require("../");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
@@ -181,19 +180,19 @@ describe("Compiler", () => {
 		});
 		describe("purgeInputFileSystem", () => {
 			it("invokes purge() if inputFileSystem.purge", done => {
-				const mockPurge = sinon.spy();
+				const mockPurge = jest.fn();
 				compiler.inputFileSystem = {
 					purge: mockPurge
 				};
 				compiler.purgeInputFileSystem();
-				expect(mockPurge.callCount).toBe(1);
+				expect(mockPurge.mock.calls.length).toBe(1);
 				done();
 			});
 			it("does NOT invoke purge() if !inputFileSystem.purge", done => {
-				const mockPurge = sinon.spy();
+				const mockPurge = jest.fn();
 				compiler.inputFileSystem = null;
 				compiler.purgeInputFileSystem();
-				expect(mockPurge.callCount).toBe(0);
+				expect(mockPurge.mock.calls.length).toBe(0);
 				done();
 			});
 		});

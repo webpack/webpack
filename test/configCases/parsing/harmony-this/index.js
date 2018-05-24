@@ -2,10 +2,11 @@
 
 import {extendThisClass, returnThisArrow, returnThisMember, that} from "./abc";
 import d, {a, b as B, C as _C, D as _D, E, F, f1, f2, f3, G} from "./abc";
+import {bindThis, callThis, applyThis} from "./issue-7213";
 
 import * as abc from "./abc";
 
-it("should have this = undefined on harmony modules", function() {
+it("should have this = undefined on harmony modules", () => {
 	expect((typeof that)).toBe("undefined");
 	expect((typeof abc.that)).toBe("undefined");
 	expect((typeof returnThisArrow())).toBe("undefined");
@@ -21,7 +22,7 @@ it("should have this = undefined on harmony modules", function() {
 	}).toThrowError();
 });
 
-it("should not break classes and functions", function() {
+it("should not break classes and functions", () => {
 	expect((new _C).foo()).toBe("bar");
 	expect((new _C).bar()).toBe("bar");
 	expect((new _D).prop()).toBe("ok");
@@ -34,8 +35,11 @@ it("should not break classes and functions", function() {
 	expect((new G("ok")).getX()).toBe("ok");
 });
 
-function x() { throw new Error("should not be executed"); }
-it("should have this = undefined on imported non-strict functions", function() {
+function x() {
+	throw new Error("should not be executed");
+}
+
+it("should have this = undefined on imported non-strict functions", () => {
 	x
 	expect(d()).toBe("undefined");
 	x
@@ -53,11 +57,17 @@ import C2, { C } from "./new";
 
 import * as New from "./new";
 
-it("should be possible to use new correctly", function() {
+it("should be possible to use new correctly", () => {
 	x
 	expect(new C()).toEqual({ok: true});
 	x
 	expect(new C2()).toEqual({ok: true});
 	x
 	expect(new New.C()).toEqual({ok: true});
+});
+
+it("should not break Babel arrow function transform", () => {
+	expect(bindThis()).toBe(undefined);
+	expect(callThis).toBe(undefined);
+	expect(applyThis).toBe(undefined);
 });

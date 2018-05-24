@@ -19,7 +19,7 @@ environment:
       jest: --maxWorkers=2
     - nodejs_version: 6
       job_part: integration
-      jest: --runInBand
+      jest: --maxWorkers=2
 
 install:
   - ps: Install-Product node $env:nodejs_version x64
