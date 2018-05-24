@@ -14,34 +14,7 @@ matrix:
   include:
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="integration1"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="integration1"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="integration1"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="integration1"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="integration1"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="integration2"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="integration2"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="integration2"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="integration2"
-    - os: linux
-      node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST=--maxWorkers=2 JOB_PART="integration2"
+      env: NO_WATCH_TESTS=1 JEST=--showConfig JOB_PART="integration1"
   allow_failures:
     - os: osx
   fast_finish: true
