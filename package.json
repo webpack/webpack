@@ -8,7 +8,6 @@
     "@webassemblyjs/ast": "1.4.3",
     "@webassemblyjs/wasm-edit": "1.4.3",
     "@webassemblyjs/wasm-parser": "1.4.3",
-    "@webassemblyjs/wast-loader": "^1.5.4",
     "acorn": "^5.0.0",
     "acorn-dynamic-import": "^3.0.0",
     "ajv": "^6.1.0",
@@ -73,6 +72,7 @@
     "url-loader": "^0.6.2",
     "val-loader": "^1.0.2",
     "vm-browserify": "~0.0.0",
+    "wast-loader": "^1.5.5",
     "webpack-dev-middleware": "^1.9.0",
     "worker-loader": "^1.1.1",
     "xxhashjs": "^0.2.1"
