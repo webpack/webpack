@@ -177,13 +177,15 @@ describe("HotTestCases", () => {
 								if (exportedTests.length < 1)
 									return done(new Error("No tests exported by test case"));
 
-								const asyncSuite = describe("exported tests", () => {
-									exportedTests.forEach(
-										({ title, fn, timeout }) =>
-											fn
-												? fit(title, fn, timeout)
-												: fit(title, () => {}).pend("Skipped")
-									);
+								const asyncSuite = describe(`HotTestCases ${
+									category.name
+								} ${testName} exported tests`, () => {
+									exportedTests.forEach(({ title, fn, timeout }) => {
+										jest.setTimeout(10000);
+										return fn
+											? fit(title, fn, timeout)
+											: fit(title, () => {}).pend("Skipped");
+									});
 								});
 								// workaround for jest running clearSpies on the wrong suite (invoked by clearResourcesForRunnable)
 								asyncSuite.disabled = true;
