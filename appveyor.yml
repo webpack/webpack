@@ -15,10 +15,16 @@ environment:
     - nodejs_version: 8
       job_part: unit
     - nodejs_version: 8
-      job_part: integration
+      job_part: integration1
+      jest: --maxWorkers=2
+    - nodejs_version: 8
+      job_part: integration2
       jest: --maxWorkers=2
     - nodejs_version: 6
-      job_part: integration
+      job_part: integration1
+      jest: --maxWorkers=2
+    - nodejs_version: 6
+      job_part: integration2
       jest: --maxWorkers=2
 
 install:
