@@ -102,15 +102,12 @@
     "test:integration": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\"",
     "test:basic": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/{TestCasesNormal,StatsTestCases,ConfigTestCases}.test.js\"",
     "test:unit": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\"",
-    "travis:integration1": "yarn cover:init && yarn cover:integration \"test/((?!TestCases)|TestCasesD)\" --ci $JEST && yarn cover:report-min",
-    "travis:integration2": "yarn cover:init && yarn cover:integration \"test/TestCases(?!D)\" --ci $JEST && yarn cover:report-min",
+    "travis:integration": "yarn cover:init && yarn cover:integration \"test/((?!TestCases)|TestCasesD)\" --ci $JEST && mv coverage/coverage-final.json coverage/coverage-final-1.json && yarn cover:integration \"test/TestCases(?!D)\" --ci $JEST && mv coverage/coverage-final.json coverage/coverage-final-2.json",
     "travis:basic": "yarn test:basic --ci $JEST",
-    "travis:unit": "yarn cover:init && yarn cover:unit --ci",
-    "travis:lint": "yarn lint",
+    "travis:lint-unit": "yarn lint && yarn cover:init && yarn cover:unit --ci $JEST",
     "travis:benchmark": "yarn benchmark --ci",
-    "appveyor:integration1": "yarn cover:init && yarn cover:integration \"test/((?!TestCases)|TestCasesD)\" --ci %JEST% && yarn cover:report-min",
-    "appveyor:integration2": "yarn cover:init && yarn cover:integration \"test/TestCases(?!D)\" --ci %JEST% && yarn cover:report-min",
-    "appveyor:unit": "yarn cover:init && yarn cover:unit --ci && yarn cover:report-min",
+    "appveyor:integration": "yarn cover:init && yarn cover:integration \"test/((?!TestCases)|TestCasesD)\" --ci %JEST% && move coverage\\coverage-final.json coverage\\coverage-final-1.json && yarn cover:integration \"test/TestCases(?!D)\" --ci %JEST% && move coverage\\coverage-final.json coverage\\coverage-final-2.json",
+    "appveyor:unit": "yarn cover:init && yarn cover:unit --ci %JEST%",
     "appveyor:benchmark": "yarn benchmark --ci",
     "circleci:test": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --ci",
     "circleci:lint": "yarn lint",
@@ -129,8 +126,7 @@
     "cover:all": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --coverage",
     "cover:integration": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage",
     "cover:unit": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
-    "cover:report": "istanbul report",
-    "cover:report-min": "istanbul report --report lcovonly"
+    "cover:report": "istanbul report"
   },
   "jest": {
     "forceExit": true,
@@ -147,7 +143,8 @@
       "<rootDir>/test/fixtures/temp-",
       "<rootDir>/benchmark/",
       "<rootDir>/examples/*/dist",
-      "<rootDir>/coverage/"
+      "<rootDir>/coverage/",
+      "<rootDir>/.eslintcache/"
     ],
     "modulePathIgnorePatterns": [
       "<rootDir>/node_modules/webpack/node_modules/",
@@ -157,7 +154,8 @@
       "<rootDir>/test/fixtures/temp-",
       "<rootDir>/benchmark/",
       "<rootDir>/examples/*/dist",
-      "<rootDir>/coverage/"
+      "<rootDir>/coverage/",
+      "<rootDir>/.eslintcache/"
     ],
     "transformIgnorePatterns": [
       "<rootDir>/"
