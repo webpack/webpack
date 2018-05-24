@@ -14,12 +14,6 @@ environment:
   matrix:
     - nodejs_version: 8
       job_part: unit
-    - nodejs_version: 8
-      job_part: integration
-      jest: --maxWorkers=2
-    - nodejs_version: 6
-      job_part: integration
-      jest: --maxWorkers=2
 
 install:
   - ps: Install-Product node $env:nodejs_version x64

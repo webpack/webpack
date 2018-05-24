@@ -52,6 +52,8 @@ const describeCases = config => {
 	describe(config.name, () => {
 		categories.forEach(category => {
 			describe(category.name, function() {
+				jest.setTimeout(20000);
+
 				category.tests
 					.filter(test => {
 						const testDirectory = path.join(casesPath, category.name, test);
@@ -76,6 +78,8 @@ const describeCases = config => {
 								category.name,
 								testName
 							);
+							const log = [];
+							let startTime = 0;
 							const options = {
 								context: casesPath,
 								entry: "./" + category.name + "/" + testName + "/index",
@@ -158,13 +162,36 @@ const describeCases = config => {
 											);
 										});
 									});
-								})
+								}, new webpack.ProgressPlugin((...args) => {
+									log.push(args);
+									if(startTime && startTime + 50000 < Date.now()) {
+										process.stdout.write(`\n\nBUSY HANGING ${config.name} ${category.name} ${testName} ${Date.now() - startTime}ms\n`);
+										for(const line of log) {
+											process.stdout.write(line.join(" ") + "\n");
+										}
+										process.stdout.write(`\n\n\n`);
+										log.length = 0;
+										throw new Error("Compilation is busy hanging");
+									}
+								}))
 							};
-							let exportedTests = [];
 							it(
 								testName + " should compile",
 								done => {
+									startTime = Date.now();
+									const timeout = setTimeout(() => {
+										process.stdout.write(`\n\nHANGING ${config.name} ${category.name} ${testName}\n`);
+										for(const line of log) {
+											process.stdout.write(line.join(" ") + "\n");
+										}
+										process.stdout.write(`\n\n\n`);
+										log.length = 0;
+										done(new Error("Compilation is hanging"));
+									}, 50000);
+									const exportedTests = [];
 									webpack(options, (err, stats) => {
+										clearTimeout(timeout);
+										startTime = 0;
 										if (err) done(err);
 										const statOptions = Stats.presetToOptions("verbose");
 										statOptions.colors = false;
@@ -233,7 +260,7 @@ const describeCases = config => {
 										if (exportedTests.length === 0)
 											return done(new Error("No tests exported by test case"));
 
-										const asyncSuite = describe("exported tests", () => {
+										const asyncSuite = describe(`${config.name} ${category.name} ${testName} exported tests`, () => {
 											exportedTests.forEach(
 												({ title, fn, timeout }) =>
 													fn
