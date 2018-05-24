@@ -39,7 +39,7 @@ var path = require("path");
 var webpack = require("../../");
 
 module.exports = {
-	// mode: "development || "production",
+	// mode: "development" || "production",
 	entry: {
 		dll: ["./example"]
 	},
@@ -49,7 +49,7 @@ module.exports = {
 		library: "[name]_[hash]"
 	},
 	optimization: {
-		concatenateModules: true
+		concatenateModules: true // this is enabled by default in production mode
 	},
 	plugins: [
 		new webpack.DllPlugin({
