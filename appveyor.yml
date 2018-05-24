@@ -12,8 +12,11 @@ init:
 # what combinations to test
 environment:
   matrix:
-    - nodejs_version: 8
+    - nodejs_version: 10
       job_part: unit
+    - nodejs_version: 10
+      job_part: integration
+      jest: --maxWorkers=2
     - nodejs_version: 8
       job_part: integration1
       jest: --maxWorkers=2
