@@ -7,6 +7,9 @@ module.exports = {
 		__dirname,
 		"../../../js/config/records/stable-sort/records.json"
 	),
+	optimization: {
+		namedChunks: false
+	},
 	target: "node",
 	node: {
 		__dirname: false
