@@ -5,6 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
+const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 
 const Stats = require("../lib/Stats");
@@ -14,6 +15,8 @@ const prepareOptions = require("./helpers/prepareOptions");
 describe("ConfigTestCases", () => {
 	const casesPath = path.join(__dirname, "configCases");
 	let categories = fs.readdirSync(casesPath);
+
+	jest.setTimeout(10000);
 
 	categories = categories.map(cat => {
 		return {
@@ -47,7 +50,6 @@ describe("ConfigTestCases", () => {
 						category.name,
 						testName
 					);
-					mkdirp.sync(outputDirectory);
 					const exportedTests = [];
 					const exportedBeforeEach = [];
 					const exportedAfterEach = [];
@@ -59,6 +61,8 @@ describe("ConfigTestCases", () => {
 									if (err) return reject(err);
 									resolve();
 								};
+								rimraf.sync(outputDirectory);
+								mkdirp.sync(outputDirectory);
 								const options = prepareOptions(
 									require(path.join(testDirectory, "webpack.config.js")),
 									{ testPath: outputDirectory }
@@ -260,7 +264,9 @@ describe("ConfigTestCases", () => {
 									if (exportedTests.length < filesCount)
 										return done(new Error("No tests exported by test case"));
 									if (testConfig.afterExecute) testConfig.afterExecute();
-									const asyncSuite = describe("exported tests", () => {
+									const asyncSuite = describe(`ConfigTestCases ${
+										category.name
+									} ${testName} exported tests`, () => {
 										exportedBeforeEach.forEach(beforeEach);
 										exportedAfterEach.forEach(afterEach);
 										exportedTests.forEach(
