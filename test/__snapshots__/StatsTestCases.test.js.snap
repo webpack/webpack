@@ -2062,6 +2062,25 @@ Child
         ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./first.js (referenced with import())"
 `;
 
+exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
+"Hash: 0cb74fac5f3c1b7f2150
+Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
+  Asset      Size  Chunks             Chunk Names
+main.js  2.94 KiB       0  [emitted]  main
+Entrypoint main = main.js
+[0] ./node_modules/pmodule/b.js 69 bytes [built]
+    [no exports used]
+[1] ./node_modules/pmodule/a.js 60 bytes [built]
+    [no exports used]
+[2] ./index.js + 2 modules 158 bytes {0} [built]
+    | ./index.js 55 bytes [built]
+    | ./node_modules/pmodule/index.js 75 bytes [built]
+    |     [only some exports used: default]
+    | ./node_modules/pmodule/c.js 28 bytes [built]
+    |     [only some exports used: z]"
+`;
+
 exports[`StatsTestCases should print correct stats for simple 1`] = `
 "Hash: 1843cc9aed8366594774
 Time: Xms
