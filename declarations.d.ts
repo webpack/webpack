@@ -52,18 +52,23 @@ declare module "@webassemblyjs/ast" {
 		module: string;
 		descr: {
 			type: string;
-			valtype: string;
-			id: string;
+			valtype?: string;
+			id?: Identifier;
+			signature?: Signature;
 		};
 		name: string;
 	}
 	export class ModuleExport extends Node {
 		name: string;
 	}
+	export class ModuleExportDescr extends Node {}
 	export class IndexLiteral extends Node {}
 	export class NumberLiteral extends Node {}
+	export class FloatLiteral extends Node {}
 	export class Global extends Node {}
-	export class FuncParam extends Node {}
+	export class FuncParam extends Node {
+		valtype: string;
+	}
 	export class Instruction extends Node {}
 	export class CallInstruction extends Instruction {}
 	export class ObjectInstruction extends Instruction {}
@@ -71,13 +76,14 @@ declare module "@webassemblyjs/ast" {
 		signature: Signature;
 	}
 	export class Signature {
-		params: any;
-		result: any;
+		params: FuncParam[];
+		results: string[];
 	}
-	export class TypeInstructionFunc extends Node {}
+	export class TypeInstruction extends Node {}
 	export class IndexInFuncSection extends Node {}
 	export function indexLiteral(index: number): IndexLiteral;
-	export function numberLiteral(num: number): NumberLiteral;
+	export function numberLiteralFromRaw(num: number): NumberLiteral;
+	export function floatLiteral(value: number, nan?: boolean, inf?: boolean, raw?: string): FloatLiteral;
 	export function global(globalType: string, nodes: Node[]): Global;
 	export function identifier(indentifier: string): Identifier;
 	export function funcParam(valType: string, id: Identifier): FuncParam;
@@ -88,13 +94,17 @@ declare module "@webassemblyjs/ast" {
 		type: string,
 		init: Node[]
 	): ObjectInstruction;
-	export function func(initFuncId, funcParams, funcResults, funcBody): Func;
-	export function typeInstructionFunc(params, result): TypeInstructionFunc;
+	export function signature(params: FuncParam[], results: string[]): Signature;
+	export function func(initFuncId, Signature, funcBody): Func;
+	export function typeInstruction(id: Identifier, functype: Signature): TypeInstruction;
 	export function indexInFuncSection(index: IndexLiteral): IndexInFuncSection;
 	export function moduleExport(
 		identifier: string,
+		descr: ModuleExportDescr
+	): ModuleExport;
+	export function moduleExportDescr(
 		type: string,
-		index: IndexLiteral
+		index: ModuleExportDescr
 	): ModuleExport;
 
 	export function getSectionMetadata(ast: any, section: string);
