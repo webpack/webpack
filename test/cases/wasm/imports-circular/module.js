@@ -1,4 +1,4 @@
-import { addNumber } from "./wasm.wat";
+import { addNumber } from "./wasm.wasm";
 
 export var result = addNumber(22);
 

@@ -6,7 +6,7 @@ it("should allow to run a WebAssembly module (indirect)", function() {
 });
 
 it("should allow to run a WebAssembly module (direct)", function() {
-	return import("./wasm.wat?2").then(function(wasm) {
+	return import("./wasm.wasm?2").then(function(wasm) {
 		const result = wasm.add(wasm.getNumber(), 2);
 		expect(result).toEqual(42);
 	});
