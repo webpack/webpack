@@ -6174,11 +6174,21 @@ w3c-hr-time@^1.0.1:
   dependencies:
     browser-process-hrtime "^0.1.2"
 
+wabt@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/wabt/-/wabt-1.0.0.tgz#f33a5c4a6405370ec80ba97e782d092f1d599ff4"
+
 walker@~1.0.5:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/walker/-/walker-1.0.7.tgz#2f7f9b8fd10d677262b18a884e28d19618e028fb"
   dependencies:
     makeerror "1.0.x"
+
+wast-loader@^1.5.5:
+  version "1.5.5"
+  resolved "https://registry.yarnpkg.com/wast-loader/-/wast-loader-1.5.5.tgz#a1d6cdc468b6963a6e479de683dc74755f09b81a"
+  dependencies:
+    wabt "^1.0.0"
 
 watch@~0.18.0:
   version "0.18.0"
