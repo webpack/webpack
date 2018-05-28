@@ -91,31 +91,31 @@ it("should not find module when mode is weak and chunk not served elsewhere", fu
 	var name = "a";
 	return import(/* webpackMode: "weak" */ "./dir10/" + name)
 		.catch(function(e) {
-			e.should.match({ message: /not available/, code: /MODULE_NOT_FOUND/ });
-		})
+			expect(e).toMatchObject({ message: /not available/, code: /MODULE_NOT_FOUND/ });
+		});
 });
 
 it("should not find module when mode is weak and chunk not served elsewhere (without context)", function() {
 	return import(/* webpackMode: "weak" */ "./dir11/a")
 		.catch(function(e) {
-			e.should.match({ message: /not available/, code: /MODULE_NOT_FOUND/ });
-		})
+			expect(e).toMatchObject({ message: /not available/, code: /MODULE_NOT_FOUND/ });
+		});
 });
 
 function testChunkLoading(load, expectedSyncInitial, expectedSyncRequested) {
 	var sync = false;
 	var syncInitial = true;
 	var p = Promise.all([load("a"), load("b")]).then(function() {
-		syncInitial.should.be.eql(expectedSyncInitial);
+		expect(syncInitial).toBe(expectedSyncInitial);
 		sync = true;
 		var p = Promise.all([
 			load("a").then(function(a) {
-				a.should.be.eql({ default: "a" });
-				sync.should.be.eql(true);
+				expect(a).toEqual({ default: "a" });
+				expect(sync).toBe(true);
 			}),
 			load("c").then(function(c) {
-				c.should.be.eql({ default: "c" });
-				sync.should.be.eql(expectedSyncRequested);
+				expect(c).toEqual({ default: "c" });
+				expect(sync).toBe(expectedSyncRequested);
 			})
 		]);
 		Promise.resolve().then(function(){}).then(function(){}).then(function(){}).then(function(){

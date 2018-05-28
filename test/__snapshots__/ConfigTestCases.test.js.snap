@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConfigTestCases records issue-2991 exported tests should write relative paths to records 1`] = `
+"{
+  \\"modules\\": {
+    \\"byIdentifier\\": {
+      \\"external \\\\\\"path\\\\\\"\\": 0,
+      \\"external \\\\\\"fs\\\\\\"\\": 1,
+      \\"ignored  pkgs/somepackage/foo\\": 2,
+      \\"test.js\\": 3
+    },
+    \\"usedIds\\": {
+      \\"0\\": 0,
+      \\"1\\": 1,
+      \\"2\\": 2,
+      \\"3\\": 3
+    }
+  },
+  \\"chunks\\": {
+    \\"byName\\": {
+      \\"main\\": 0
+    },
+    \\"bySource\\": {},
+    \\"usedIds\\": [
+      0
+    ]
+  }
+}"
+`;
+
+exports[`ConfigTestCases records issue-7339 exported tests should write relative dynamic-require paths to records 1`] = `
+"{
+  \\"modules\\": {
+    \\"byIdentifier\\": {
+      \\"dependencies/foo.js\\": 0,
+      \\"dependencies/bar.js\\": 1,
+      \\"external \\\\\\"path\\\\\\"\\": 2,
+      \\"external \\\\\\"fs\\\\\\"\\": 3,
+      \\"dependencies sync /^\\\\\\\\.\\\\\\\\/.*$/\\": 4,
+      \\"test.js\\": 5
+    },
+    \\"usedIds\\": {
+      \\"0\\": 0,
+      \\"1\\": 1,
+      \\"2\\": 2,
+      \\"3\\": 3,
+      \\"4\\": 4,
+      \\"5\\": 5
+    }
+  },
+  \\"chunks\\": {
+    \\"byName\\": {
+      \\"main\\": 0
+    },
+    \\"bySource\\": {},
+    \\"usedIds\\": [
+      0
+    ]
+  }
+}"
+`;

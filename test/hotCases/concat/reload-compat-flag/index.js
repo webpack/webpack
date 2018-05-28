@@ -1,15 +1,13 @@
 var x = require("./module");
 
-it("should allow to hot replace modules in a ConcatenatedModule", function(done) {
-	x.should.be.eql({
-		default: "ok1",
-		__esModule: true
+it("should allow to hot replace modules in a ConcatenatedModule", (done) => {
+	expect(x).toEqual({
+		default: "ok1"
 	});
-	module.hot.accept("./module", function() {
+	module.hot.accept("./module", () => {
 		x = require("./module");
-		x.should.be.eql({
-			default: "ok2",
-			__esModule: true
+		expect(x).toEqual({
+			default: "ok2"
 		});
 		done();
 	});

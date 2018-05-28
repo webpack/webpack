@@ -4,17 +4,25 @@ Every pull request that you submit to webpack (besides README and spelling corre
 But don't give up hope!!! Although our tests may appear complex and overwhelming, once you become familiar with the test suite and structure, adding and creating tests will be fun and beneficial as you work inside the codebase! ❤
 
 ## tl;dr
-* Clone repo
-* install and link deps
-	* `yarn install && yarn link && yarn link webpack`
-	* `yarn test`
+Run all tests (this automatically runs the setup):
+```sh
+yarn test
+```
 
-* To run an individual suite: (recommended during development for easier isolated diffs)
+Run an individual suite:
+```sh
+yarn jest ConfigTestCases
+```
 
-Example: `$(npm bin)/mocha --grep ConfigTestCases`
+Watch mode:
+```sh
+yarn jest --watch ConfigTestCases
+```
+
+See also: [Jest CLI docs](https://facebook.github.io/jest/docs/cli.html)
 
 ## Test suite overview
-We use MochaJS for our tests. For more information on Mocha you can visit their [homepage](https://mochajs.org/)!
+We use Jest for our tests. For more information on Jest you can visit their [homepage](https://facebook.github.io/jest/)!
 
 ### Class Tests
 All test files can be found in *.test.js. There are many tests that simply test API's of a specific class/file (such as `Compiler`, `Errors`, Integration, `Parser`, `RuleSet`, Validation).

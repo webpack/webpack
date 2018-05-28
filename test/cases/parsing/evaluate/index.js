@@ -7,7 +7,7 @@ it("should evaluate null", function() {
 if("shouldn't evaluate expression", function() {
 	var value = "";
 	var x = (value + "") ? "fail" : "ok";
-	x.should.be.eql("ok");
+	expect(x).toBe("ok");
 });
 
 it("should short-circuit evaluating", function() {
@@ -18,5 +18,5 @@ it("should short-circuit evaluating", function() {
 
 it("should evaluate __dirname and __resourceQuery with replace and substr", function() {
 	var result = require("./resourceQuery/index?" + __dirname);
-	result.should.be.eql("?resourceQuery");
+	expect(result).toEqual("?resourceQuery");
 });

@@ -6,7 +6,7 @@ it("should detect a change on warnings change", function() {
 			STATE.hash = STATS_JSON.hash;
 			break;
 		case "1":
-			STATS_JSON.hash.should.be.not.eql(STATE.hash);
+			expect(STATS_JSON.hash).not.toBe(STATE.hash);
 			break;
 	}
 });

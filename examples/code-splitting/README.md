@@ -45,7 +45,7 @@ require.ensure(["c"], function(require) {
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
 /******/ 		var chunkIds = data[0];
-/******/ 		var moreModules = data[1]
+/******/ 		var moreModules = data[1];
 /******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
@@ -74,11 +74,18 @@ require.ensure(["c"], function(require) {
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
 /******/ 		1: 0
 /******/ 	};
 /******/
 /******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + chunkId + ".output.js"
+/******/ 	}
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -130,12 +137,12 @@ require.ensure(["c"], function(require) {
 /******/ 				var script = document.createElement('script');
 /******/
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120000;
+/******/ 				script.timeout = 120;
 /******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
-/******/ 				script.src = __webpack_require__.p + "" + chunkId + ".output.js";
+/******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/ 				var timeout = setTimeout(function(){
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
@@ -301,18 +308,18 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.8.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  490 bytes       0  [emitted]  
-  output.js   7.47 KiB       1  [emitted]  main
+  output.js   7.73 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes <{1}> [rendered]
     > [2] ./example.js 3:0-6:2
     2 modules
 chunk    {1} output.js (main) 166 bytes >{0}< [entry] [rendered]
     > .\example.js main
-    [2] ./example.js 144 bytes {1} [built]
-        single entry .\example.js  main
+ [2] ./example.js 144 bytes {1} [built]
+     single entry .\example.js  main
      + 2 hidden modules
 ```
 
@@ -320,17 +327,17 @@ chunk    {1} output.js (main) 166 bytes >{0}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.0.0-beta.2
+Version: webpack 4.8.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  95 bytes       0  [emitted]  
-  output.js  1.68 KiB       1  [emitted]  main
+  output.js  1.71 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 22 bytes <{1}> [rendered]
     > [2] ./example.js 3:0-6:2
     2 modules
 chunk    {1} output.js (main) 166 bytes >{0}< [entry] [rendered]
     > .\example.js main
-    [2] ./example.js 144 bytes {1} [built]
-        single entry .\example.js  main
+ [2] ./example.js 144 bytes {1} [built]
+     single entry .\example.js  main
      + 2 hidden modules
 ```

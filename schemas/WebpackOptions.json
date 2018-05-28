@@ -492,7 +492,14 @@
               "properties": {
                 "root": {
                   "description": "Name of the property exposed globally by a UMD library",
-                  "type": "string"
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/definitions/common.arrayOfStringValues"
+                    }
+                  ]
                 },
                 "amd": {
                   "description": "Name of the exposed AMD library in the UMD",
@@ -1330,10 +1337,17 @@
               "properties": {
                 "chunks": {
                   "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
-                  "enum": [
-                    "initial",
-                    "async",
-                    "all"
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "initial",
+                        "async",
+                        "all"
+                      ]
+                    },
+                    {
+                      "instanceof": "Function"
+                    }
                   ]
                 },
                 "minSize": {
@@ -1420,10 +1434,17 @@
                           },
                           "chunks": {
                             "description": "Select chunks for determining cache group content (defaults to \"initial\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
-                            "enum": [
-                              "initial",
-                              "async",
-                              "all"
+                            "oneOf": [
+                              {
+                                "enum": [
+                                  "initial",
+                                  "async",
+                                  "all"
+                                ]
+                              },
+                              {
+                                "instanceof": "Function"
+                              }
                             ]
                           },
                           "enforce": {
@@ -1658,6 +1679,10 @@
         }
       ]
     },
+    "serve": {
+      "description": "Options for webpack-serve",
+      "type": "object"
+    },
     "stats": {
       "description": "Used by the webpack CLI program to pass stats options.",
       "anyOf": [
@@ -1838,6 +1863,10 @@
             "entrypoints": {
               "type": "boolean",
               "description": "Display the entry points with the corresponding bundles"
+            },
+            "chunkGroups": {
+              "type": "boolean",
+              "description": "Display all chunk groups with the corresponding bundles"
             },
             "errorDetails": {
               "type": "boolean",
