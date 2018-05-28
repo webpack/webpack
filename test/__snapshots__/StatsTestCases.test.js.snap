@@ -680,15 +680,15 @@ exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`
     |     ModuleConcatenation bailout: Module is an entry point
     | ./node_modules/pmodule/a.js 49 bytes [built]
     | ./node_modules/pmodule/aa.js 24 bytes [built]
-[1] ./node_modules/pmodule/b.js 49 bytes [built]
+[1] ./node_modules/pmodule/index.js 63 bytes [built]
     ModuleConcatenation bailout: Module is not in any chunk
-[2] ./node_modules/pmodule/bb.js 24 bytes [built]
+[2] ./node_modules/pmodule/b.js 49 bytes [built]
     ModuleConcatenation bailout: Module is not in any chunk
-[3] ./node_modules/pmodule/c.js 49 bytes [built]
+[3] ./node_modules/pmodule/bb.js 24 bytes [built]
     ModuleConcatenation bailout: Module is not in any chunk
-[4] ./node_modules/pmodule/cc.js 24 bytes [built]
+[4] ./node_modules/pmodule/c.js 49 bytes [built]
     ModuleConcatenation bailout: Module is not in any chunk
-[5] ./node_modules/pmodule/index.js 63 bytes [built]
+[5] ./node_modules/pmodule/cc.js 24 bytes [built]
     ModuleConcatenation bailout: Module is not in any chunk"
 `;
 
@@ -2060,6 +2060,25 @@ Child
         | ./module_first.js 31 bytes [built]
     [8] ./lazy_first.js 55 bytes {2} [built]
         ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./first.js (referenced with import())"
+`;
+
+exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
+"Hash: 0cb74fac5f3c1b7f2150
+Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
+  Asset      Size  Chunks             Chunk Names
+main.js  2.94 KiB       0  [emitted]  main
+Entrypoint main = main.js
+[0] ./node_modules/pmodule/b.js 69 bytes [built]
+    [no exports used]
+[1] ./node_modules/pmodule/a.js 60 bytes [built]
+    [no exports used]
+[2] ./index.js + 2 modules 158 bytes {0} [built]
+    | ./index.js 55 bytes [built]
+    | ./node_modules/pmodule/index.js 75 bytes [built]
+    |     [only some exports used: default]
+    | ./node_modules/pmodule/c.js 28 bytes [built]
+    |     [only some exports used: z]"
 `;
 
 exports[`StatsTestCases should print correct stats for simple 1`] = `
