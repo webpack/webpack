@@ -52,6 +52,8 @@ const describeCases = config => {
 	describe(config.name, () => {
 		categories.forEach(category => {
 			describe(category.name, function() {
+				jest.setTimeout(20000);
+
 				category.tests
 					.filter(test => {
 						const testDirectory = path.join(casesPath, category.name, test);
@@ -139,8 +141,13 @@ const describeCases = config => {
 											loader: "coffee-loader"
 										},
 										{
-											test: /\.jade$/,
-											loader: "jade-loader"
+											test: /\.pug/,
+											loader: "pug-loader"
+										},
+										{
+											test: /\.wat$/i,
+											loader: "wast-loader",
+											type: "webassembly/experimental"
 										}
 									]
 								},
@@ -160,10 +167,10 @@ const describeCases = config => {
 									});
 								})
 							};
-							let exportedTests = [];
 							it(
 								testName + " should compile",
 								done => {
+									const exportedTests = [];
 									webpack(options, (err, stats) => {
 										if (err) done(err);
 										const statOptions = Stats.presetToOptions("verbose");
@@ -233,7 +240,9 @@ const describeCases = config => {
 										if (exportedTests.length === 0)
 											return done(new Error("No tests exported by test case"));
 
-										const asyncSuite = describe("exported tests", () => {
+										const asyncSuite = describe(`${config.name} ${
+											category.name
+										} ${testName} exported tests`, () => {
 											exportedTests.forEach(
 												({ title, fn, timeout }) =>
 													fn

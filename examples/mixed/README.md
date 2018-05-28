@@ -357,7 +357,7 @@ function webpackContext(req) {
 function webpackContextResolve(req) {
 	var id = map[req];
 	if(!(id + 1)) { // check for number or string
-		var e = new Error('Cannot find module "' + req + '".');
+		var e = new Error("Cannot find module '" + req + "'");
 		e.code = 'MODULE_NOT_FOUND';
 		throw e;
 	}
