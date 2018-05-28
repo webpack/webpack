@@ -80,6 +80,7 @@ it("should receive a namespace object when importing mixed content via context",
 		promiseTest(contextMixed("one"), { named: "named", default: { named: "named", default: "default" }, [Symbol.toStringTag]: "Module" }),
 		promiseTest(contextMixed("two"), { __esModule: true, named: "named", default: "default" }),
 		promiseTest(contextMixed("three"), { named: "named", default: "default", [Symbol.toStringTag]: "Module" }),
-		promiseTest(contextMixed("null"), { default: null, [Symbol.toStringTag]: "Module" })
+		promiseTest(contextMixed("null"), { default: null, [Symbol.toStringTag]: "Module" }),
+		promiseTest(contextMixed("json.json"), { named: "named", default: { named: "named", default: "default" }, [Symbol.toStringTag]: "Module" })
 	]);
 });

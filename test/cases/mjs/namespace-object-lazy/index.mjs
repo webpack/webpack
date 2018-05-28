@@ -40,11 +40,11 @@ function contextHarmony(name) {
 
 function contextMixed(name) {
 	return Promise.all([
-		import(`./dir-mixed/${name}.js`),
-		import(/* webpackMode: "lazy-once" */`./dir-mixed?1/${name}.js`),
-		import(/* webpackMode: "eager" */`./dir-mixed?2/${name}.js`)
+		import(`./dir-mixed/${name}`),
+		import(/* webpackMode: "lazy-once" */`./dir-mixed?1/${name}`),
+		import(/* webpackMode: "eager" */`./dir-mixed?2/${name}`)
 	]).then(function(results) {
-		return import(/* webpackMode: "weak" */`./dir-mixed/${name}.js`).then(function(r) {
+		return import(/* webpackMode: "weak" */`./dir-mixed/${name}`).then(function(r) {
 			results.push(r);
 			return results;
 		});
@@ -80,6 +80,7 @@ it("should receive a namespace object when importing mixed content via context",
 		promiseTest(contextMixed("one"), { default: { named: "named", default: "default" }, [Symbol.toStringTag]: "Module" }),
 		promiseTest(contextMixed("two"), { default: { __esModule: true, named: "named", default: "default" }, [Symbol.toStringTag]: "Module" }),
 		promiseTest(contextMixed("three"), { named: "named", default: "default", [Symbol.toStringTag]: "Module" }),
-		promiseTest(contextMixed("null"), { default: null, [Symbol.toStringTag]: "Module" })
+		promiseTest(contextMixed("null"), { default: null, [Symbol.toStringTag]: "Module" }),
+		promiseTest(contextMixed("json.json"), { named: "named", default: { named: "named", default: "default" }, [Symbol.toStringTag]: "Module" })
 	]);
 });
