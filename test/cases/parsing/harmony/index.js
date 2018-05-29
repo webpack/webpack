@@ -47,6 +47,7 @@ it("should import a whole module", function() {
 	expect(copy.d.c).toBe("c");
 	expect(copy.e).toBe("c");
 	expect((typeof abc)).toBe("object");
+	expect("" + abc).toBe("[object Module]");
 });
 
 it("should export functions", function() {
