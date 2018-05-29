@@ -2571,6 +2571,25 @@ chunk    {3} vendors.js (vendors) 20 bytes ={2}= >{0}< >{1}< [initial] [rendered
  [4] ./node_modules/y.js 20 bytes {3} [built]"
 `;
 
+exports[`StatsTestCases should print correct stats for split-chunks-issue-7401 1`] = `
+"Entrypoint a = vendors~a~c.js a.js
+Entrypoint b = b.js
+Chunk Group c = vendors~a~c.js c.js
+chunk    {0} vendors~a~c.js (vendors~a~c) 20 bytes <{3}> ={1}= ={2}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~c)
+    > ./a a
+    > ./c [3] ./b.js 1:0-41
+ [0] ./node_modules/x.js 20 bytes {0} [built]
+chunk    {1} c.js (c) 12 bytes <{3}> ={0}= [rendered]
+    > ./c [3] ./b.js 1:0-41
+ [1] ./c.js 12 bytes {1} [built]
+chunk    {2} a.js (a) 12 bytes ={0}= [entry] [rendered]
+    > ./a a
+ [2] ./a.js 12 bytes {2} [built]
+chunk    {3} b.js (b) 43 bytes >{0}< >{1}< [entry] [rendered]
+    > ./b b
+ [3] ./b.js 43 bytes {3} [built]"
+`;
+
 exports[`StatsTestCases should print correct stats for split-chunks-prefer-bigger-splits 1`] = `
 "Entrypoint main = default/main.js
 chunk    {0} default/async-b~async-c.js (async-b~async-c) 110 bytes <{4}> ={2}= ={3}= [rendered] split chunk (cache group: default) (name: async-b~async-c)
