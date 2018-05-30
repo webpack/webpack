@@ -1,12 +1,12 @@
 it("should disallow exporting a func signature with result i64", function() {
 	return import("./export-i64-result.wat").then(({a}) => {
-		expect(a).toThrow(/invalid type/);
+		expect(a).toThrow(/incompatible type signature/);
 	});
 });
 
 it("should disallow exporting a func signature with param i64", function() {
 	return import("./export-i64-param.wat").then(({a}) => {
-		expect(a).toThrow(/invalid type/);
+		expect(a).toThrow(/incompatible type signature/);
 	});
 });
 
