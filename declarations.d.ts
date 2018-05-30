@@ -62,7 +62,7 @@ declare module "@webassemblyjs/ast" {
 		name: string;
 		descr: ModuleExportDescr;
 	}
-    type Index = Identifier | NumberLiteral;
+	type Index = Identifier | NumberLiteral;
 	export class ModuleExportDescr extends Node {
 		exportType: string;
 		id: Index;
@@ -89,7 +89,12 @@ declare module "@webassemblyjs/ast" {
 	export class IndexInFuncSection extends Node {}
 	export function indexLiteral(index: number): Index;
 	export function numberLiteralFromRaw(num: number): NumberLiteral;
-	export function floatLiteral(value: number, nan?: boolean, inf?: boolean, raw?: string): FloatLiteral;
+	export function floatLiteral(
+		value: number,
+		nan?: boolean,
+		inf?: boolean,
+		raw?: string
+	): FloatLiteral;
 	export function global(globalType: string, nodes: Node[]): Global;
 	export function identifier(indentifier: string): Identifier;
 	export function funcParam(valType: string, id: Identifier): FuncParam;
@@ -102,7 +107,10 @@ declare module "@webassemblyjs/ast" {
 	): ObjectInstruction;
 	export function signature(params: FuncParam[], results: string[]): Signature;
 	export function func(initFuncId, Signature, funcBody): Func;
-	export function typeInstruction(id: Identifier, functype: Signature): TypeInstruction;
+	export function typeInstruction(
+		id: Identifier,
+		functype: Signature
+	): TypeInstruction;
 	export function indexInFuncSection(index: Index): IndexInFuncSection;
 	export function moduleExport(
 		identifier: string,
