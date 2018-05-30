@@ -579,6 +579,10 @@
         "umdNamedDefine": {
           "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
           "type": "boolean"
+        },
+        "entryPrefetchFunction": {
+          "description": "Sets the name of the global function in the entry chunk to prefetch/preload all designated children of the entry chunk",
+          "type": "string"
         }
       },
       "type": "object"
