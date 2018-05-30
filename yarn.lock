@@ -6187,8 +6187,8 @@ walker@~1.0.5:
     makeerror "1.0.x"
 
 wast-loader@^1.5.5:
-  version "1.5.5"
-  resolved "https://registry.yarnpkg.com/wast-loader/-/wast-loader-1.5.5.tgz#a1d6cdc468b6963a6e479de683dc74755f09b81a"
+  version "1.5.7"
+  resolved "https://registry.yarnpkg.com/wast-loader/-/wast-loader-1.5.7.tgz#1b165cef7225c70a7e82a50e4f8bf0bc1ec9f2fd"
   dependencies:
     wabt "^1.0.0"
 
