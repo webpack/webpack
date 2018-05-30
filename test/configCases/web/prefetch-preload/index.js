@@ -21,7 +21,7 @@ it("should prefetch and preload child chunks on chunk load", (done) => {
 	__webpack_nonce__ = "nonce";
 	__webpack_public_path__ = "/public/path/";
 
-	const promise = import(/* webpackChunkName: "chunk1", webpackPrefetch: true */ "./chunk1");
+	const promise = import(/* webpackChunkName: "chunk1" */ "./chunk1");
 	expect(document.head._children).toHaveLength(2);
 	const script = document.head._children[0];
 	expect(script._type).toBe("script");
