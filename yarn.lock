@@ -68,7 +68,7 @@
   version "1.5.9"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-fsm/-/helper-fsm-1.5.9.tgz#8f996268eb07ee6728130a9e97fa3aac32772454"
 
-"@webassemblyjs/helper-module-context@1.5.9":
+"@webassemblyjs/helper-module-context@1.5.9", "@webassemblyjs/helper-module-context@^1.5.9":
   version "1.5.9"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-module-context/-/helper-module-context-1.5.9.tgz#69e2eea310f755a0b750b84f8af59f890f2046ac"
 
