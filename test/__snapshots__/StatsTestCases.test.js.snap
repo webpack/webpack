@@ -1008,29 +1008,16 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for import-with-invalid-options-comments 1`] = `
-"Hash: 3933c30f2b0ad856b9f3
-Time: Xms
-Built at: Thu Jan 01 1970 00:00:00 GMT
-                       Asset       Size  Chunks             Chunk Names
-                    chunk.js   1.16 KiB       0  [emitted]  chunk
-                     main.js   7.85 KiB       1  [emitted]  main
-                        2.js  154 bytes       2  [emitted]  
-goingToCompileChunkName-b.js  163 bytes       3  [emitted]  goingToCompileChunkName-b
-                        4.js  157 bytes       4  [emitted]  
-Entrypoint main = main.js
-[0] ./chunk-a.js 27 bytes {2} [built]
-[1] ./chunk-b.js 27 bytes {3} [built]
-[2] ./chunk-c.js 27 bytes {4} [built]
-[3] ./chunk.js 318 bytes {0} [built] [2 warnings]
-[4] ./index.js 50 bytes {1} [built]
+"   6 modules
 
 WARNING in ./chunk.js
-compilation error while processing: /* webpack Prefetch: 0, webpackChunkName: \\"notGoingToCompile-c\\" */: Unexpected identifier
- @ ./index.js 4:11-77 1:0-49
+Compilation error while processing magic comment(-s): /* webpack Prefetch: 0, webpackChunkName: \\"notGoingToCompile-c\\" */: Unexpected identifier
 
 WARNING in ./chunk.js
-compilation error while processing: /* webpackPrefetch: true, webpackChunkName: notGoingToCompileChunkName */: notGoingToCompileChunkName is not defined
- @ ./index.js 2:11-84 1:0-49"
+Compilation error while processing magic comment(-s): /* webpackPrefetch: nope */: nope is not defined
+
+WARNING in ./chunk.js
+Compilation error while processing magic comment(-s): /* webpackPrefetch: true, webpackChunkName: notGoingToCompileChunkName */: notGoingToCompileChunkName is not defined"
 `;
 
 exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 1`] = `
