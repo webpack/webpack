@@ -8,6 +8,8 @@ const webpack = require("../lib/webpack");
 const base = path.join(__dirname, "fixtures", "errors");
 
 describe("Errors", () => {
+	jest.setTimeout(20000);
+
 	function customOutputFilesystem(c) {
 		const files = {};
 		c.outputFileSystem = {

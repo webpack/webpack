@@ -17,19 +17,20 @@ it("should get correct values when importing named exports from a CommonJs modul
 			default: "default"
 		}
 	});
-	const valueOf = "valueOf";
-	expect(star[valueOf]()).toEqual({
+	expect(star).toEqual({
 		default: {
 			data: "ok",
 			default: "default"
-		}
+		},
+		[Symbol.toStringTag]: "Module"
 	});
 	expect({ star }).toEqual({
 		star: {
 			default: {
 				data: "ok",
 				default: "default"
-			}
+			},
+			[Symbol.toStringTag]: "Module"
 		}
 	});
 	expect(star.default).toEqual({
@@ -40,7 +41,8 @@ it("should get correct values when importing named exports from a CommonJs modul
 		default: {
 			data: "ok",
 			default: "default"
-		}
+		},
+		[Symbol.toStringTag]: "Module"
 	});
 	expect(def1).toEqual({
 		data: "ok",
@@ -51,12 +53,13 @@ it("should get correct values when importing named exports from a CommonJs modul
 		default: "default"
 	});
 	expect((typeof data2)).toBe("undefined");
-	expect(reexport[valueOf]()).toEqual({
+	expect(reexport).toEqual({
 		ns: {
 			default: {
 				data: "ok",
 				default: "default"
-			}
+			},
+			[Symbol.toStringTag]: "Module"
 		},
 		default: {
 			data: "ok",
@@ -66,6 +69,7 @@ it("should get correct values when importing named exports from a CommonJs modul
 			data: "ok",
 			default: "default"
 		},
-		data: undefined
+		data: undefined,
+		[Symbol.toStringTag]: "Module"
 	});
 });
