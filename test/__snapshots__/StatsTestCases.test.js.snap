@@ -8,9 +8,9 @@ Child fitting:
     Built at: Thu Jan 01 1970 00:00:00 GMT
                       Asset      Size  Chunks             Chunk Names
     9ac13fb7087e9ff1b93e.js  1.05 KiB       0  [emitted]  
-    f2e891598128a57b072c.js  11.6 KiB       1  [emitted]  
+    f2e891598128a57b072c.js    11 KiB       1  [emitted]  
     d1ba53816ff760e185b0.js  1.94 KiB       2  [emitted]  
-    7b5b0a943e9362bc88c6.js  1.95 KiB       3  [emitted]  
+    7b5b0a943e9362bc88c6.js  1.94 KiB       3  [emitted]  
     Entrypoint main = d1ba53816ff760e185b0.js 7b5b0a943e9362bc88c6.js f2e891598128a57b072c.js
     chunk    {0} 9ac13fb7087e9ff1b93e.js 916 bytes <{1}> <{2}> <{3}>
         > ./g [4] ./index.js 7:0-13
@@ -34,9 +34,9 @@ Child content-change:
     Built at: Thu Jan 01 1970 00:00:00 GMT
                       Asset      Size  Chunks             Chunk Names
     9ac13fb7087e9ff1b93e.js  1.05 KiB       0  [emitted]  
-    f2e891598128a57b072c.js  11.6 KiB       1  [emitted]  
+    f2e891598128a57b072c.js    11 KiB       1  [emitted]  
     d1ba53816ff760e185b0.js  1.94 KiB       2  [emitted]  
-    7b5b0a943e9362bc88c6.js  1.95 KiB       3  [emitted]  
+    7b5b0a943e9362bc88c6.js  1.94 KiB       3  [emitted]  
     Entrypoint main = d1ba53816ff760e185b0.js 7b5b0a943e9362bc88c6.js f2e891598128a57b072c.js
     chunk    {0} 9ac13fb7087e9ff1b93e.js 916 bytes <{1}> <{2}> <{3}>
         > ./g [4] ./index.js 7:0-13
@@ -61,18 +61,18 @@ exports[`StatsTestCases should print correct stats for aggressive-splitting-on-d
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
                   Asset      Size  Chunks             Chunk Names
-cf8697fa2c994f39a5d4.js  1.95 KiB    6, 7  [emitted]  
-fd868baa40dab4fc30fd.js  1.94 KiB       0  [emitted]  
-79c527bb5bf9cba1dc12.js  1.97 KiB       2  [emitted]  
-e9d82e81fefd7353e8df.js  1.95 KiB    3, 1  [emitted]  
+cf8697fa2c994f39a5d4.js  1.94 KiB    6, 7  [emitted]  
+fd868baa40dab4fc30fd.js  1.93 KiB       0  [emitted]  
+79c527bb5bf9cba1dc12.js  1.96 KiB       2  [emitted]  
+e9d82e81fefd7353e8df.js  1.94 KiB    3, 1  [emitted]  
 ae76098eeb55b9c448f2.js  1.01 KiB       4  [emitted]  
 05d92aaacfbffa4b7e56.js  1.94 KiB       5  [emitted]  
-d6418937dfae4b3ee922.js  1.01 KiB       1  [emitted]  
-685acdc95ff4af957f47.js  1.01 KiB       7  [emitted]  
+d6418937dfae4b3ee922.js     1 KiB       1  [emitted]  
+685acdc95ff4af957f47.js     1 KiB       7  [emitted]  
 606f48c13070850338b1.js  1.94 KiB       8  [emitted]  
-c5a8eae840969538f450.js  1.95 KiB       9  [emitted]  
-c69b2f79fdf6e98907c4.js  10.3 KiB      10  [emitted]  main
-fcdf398c8972e4dcf788.js  1.95 KiB      11  [emitted]  
+c5a8eae840969538f450.js  1.94 KiB       9  [emitted]  
+c69b2f79fdf6e98907c4.js  9.68 KiB      10  [emitted]  main
+fcdf398c8972e4dcf788.js  1.94 KiB      11  [emitted]  
 Entrypoint main = c69b2f79fdf6e98907c4.js
 chunk    {0} fd868baa40dab4fc30fd.js 1.76 KiB <{10}> ={1}= ={2}= ={3}= ={7}= ={9}= [recorded] aggressive splitted
     > ./b ./d ./e ./f ./g [11] ./index.js 5:0-44
@@ -496,10 +496,10 @@ exports[`StatsTestCases should print correct stats for chunks 1`] = `
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
-0.bundle.js  157 bytes       0  [emitted]  
-1.bundle.js  294 bytes       1  [emitted]  
-  bundle.js   8.85 KiB       2  [emitted]  main
-3.bundle.js  232 bytes       3  [emitted]  
+0.bundle.js  152 bytes       0  [emitted]  
+1.bundle.js  289 bytes       1  [emitted]  
+  bundle.js   8.27 KiB       2  [emitted]  main
+3.bundle.js  227 bytes       3  [emitted]  
 Entrypoint main = bundle.js
 chunk    {0} 0.bundle.js 22 bytes <{2}> [rendered]
     > ./b [4] ./index.js 2:0-16
@@ -534,10 +534,10 @@ exports[`StatsTestCases should print correct stats for chunks-development 1`] = 
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
-0.bundle.js  438 bytes       0  [emitted]  
-1.bundle.js  302 bytes       1  [emitted]  
-2.bundle.js  593 bytes       2  [emitted]  
-  bundle.js   9.23 KiB    main  [emitted]  main
+0.bundle.js  433 bytes       0  [emitted]  
+1.bundle.js  297 bytes       1  [emitted]  
+2.bundle.js  588 bytes       2  [emitted]  
+  bundle.js   8.65 KiB    main  [emitted]  main
 Entrypoint main = bundle.js
 chunk {main} bundle.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
     > ./index main
@@ -615,8 +615,8 @@ exports[`StatsTestCases should print correct stats for commons-chunk-min-size-0 
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
               Asset       Size  Chunks             Chunk Names
-         entry-1.js   7.16 KiB       0  [emitted]  entry-1
-vendor-1~entry-1.js  319 bytes       1  [emitted]  vendor-1~entry-1
+         entry-1.js   6.58 KiB       0  [emitted]  entry-1
+vendor-1~entry-1.js  314 bytes       1  [emitted]  vendor-1~entry-1
 Entrypoint entry-1 = vendor-1~entry-1.js entry-1.js
 [0] ./entry-1.js 145 bytes {0} [built]
 [1] ./modules/a.js 22 bytes {1} [built]
@@ -632,8 +632,8 @@ exports[`StatsTestCases should print correct stats for commons-chunk-min-size-In
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
- entry-1.js   7.16 KiB       0  [emitted]  entry-1
-vendor-1.js  319 bytes       1  [emitted]  vendor-1
+ entry-1.js   6.58 KiB       0  [emitted]  entry-1
+vendor-1.js  314 bytes       1  [emitted]  vendor-1
 Entrypoint entry-1 = vendor-1.js entry-1.js
 [0] ./entry-1.js 145 bytes {0} [built]
 [1] ./modules/a.js 22 bytes {1} [built]
@@ -651,8 +651,8 @@ Child
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                              Asset       Size  Chunks             Chunk Names
-                            app.js   7.25 KiB       0  [emitted]  app
-    vendor.6a3bdffda9f0de672978.js  624 bytes       1  [emitted]  vendor
+                            app.js   6.67 KiB       0  [emitted]  app
+    vendor.6a3bdffda9f0de672978.js  619 bytes       1  [emitted]  vendor
     Entrypoint app = vendor.6a3bdffda9f0de672978.js app.js
     [./constants.js] 87 bytes {1} [built]
     [./entry-1.js] ./entry-1.js + 2 modules 190 bytes {0} [built]
@@ -664,8 +664,8 @@ Child
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                              Asset       Size  Chunks             Chunk Names
-                            app.js   7.26 KiB       0  [emitted]  app
-    vendor.6a3bdffda9f0de672978.js  624 bytes       1  [emitted]  vendor
+                            app.js   6.69 KiB       0  [emitted]  app
+    vendor.6a3bdffda9f0de672978.js  619 bytes       1  [emitted]  vendor
     Entrypoint app = vendor.6a3bdffda9f0de672978.js app.js
     [./constants.js] 87 bytes {1} [built]
     [./entry-2.js] ./entry-2.js + 2 modules 197 bytes {0} [built]
@@ -982,10 +982,10 @@ exports[`StatsTestCases should print correct stats for import-context-filter 1`]
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
    Asset       Size  Chunks             Chunk Names
-    0.js  310 bytes       0  [emitted]  
-    1.js  319 bytes       1  [emitted]  
-    2.js  313 bytes       2  [emitted]  
-entry.js   9.64 KiB       3  [emitted]  entry
+    0.js  305 bytes       0  [emitted]  
+    1.js  314 bytes       1  [emitted]  
+    2.js  308 bytes       2  [emitted]  
+entry.js   9.06 KiB       3  [emitted]  entry
 Entrypoint entry = entry.js
 [0] ./templates/bar.js 38 bytes {0} [optional] [built]
 [1] ./templates/baz.js 38 bytes {1} [optional] [built]
@@ -999,8 +999,8 @@ exports[`StatsTestCases should print correct stats for import-weak 1`] = `
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
    Asset       Size  Chunks             Chunk Names
-    0.js  154 bytes       0  [emitted]  
-entry.js   9.09 KiB       1  [emitted]  entry
+    0.js  149 bytes       0  [emitted]  
+entry.js   8.51 KiB       1  [emitted]  entry
 Entrypoint entry = entry.js
 [0] ./modules/b.js 22 bytes {0} [built]
 [1] ./entry.js 120 bytes {1} [built]
@@ -1014,7 +1014,7 @@ Child 1 chunks:
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
-    bundle.js  6.94 KiB       0  [emitted]  main
+    bundle.js  6.37 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     chunk    {0} bundle.js (main) 191 bytes <{0}> >{0}< [entry] [rendered]
      [0] ./index.js 73 bytes {0} [built]
@@ -1028,8 +1028,8 @@ Child 2 chunks:
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
-    0.bundle.js  637 bytes       0  [emitted]  
-      bundle.js   8.84 KiB       1  [emitted]  main
+    0.bundle.js  632 bytes       0  [emitted]  
+      bundle.js   8.26 KiB       1  [emitted]  main
     Entrypoint main = bundle.js
     chunk    {0} 0.bundle.js 118 bytes <{0}> <{1}> >{0}< [rendered]
      [0] ./d.js 22 bytes {0} [built]
@@ -1044,9 +1044,9 @@ Child 3 chunks:
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
-    0.bundle.js  499 bytes       0  [emitted]  
-    1.bundle.js  250 bytes       1  [emitted]  
-      bundle.js   8.84 KiB       2  [emitted]  main
+    0.bundle.js  494 bytes       0  [emitted]  
+    1.bundle.js  245 bytes       1  [emitted]  
+      bundle.js   8.26 KiB       2  [emitted]  main
     Entrypoint main = bundle.js
     chunk    {0} 0.bundle.js 74 bytes <{0}> <{2}> >{0}< >{1}< [rendered]
      [0] ./d.js 22 bytes {0} [built]
@@ -1062,10 +1062,10 @@ Child 4 chunks:
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
-    0.bundle.js  241 bytes       0  [emitted]  
-    1.bundle.js  250 bytes       1  [emitted]  
-    2.bundle.js  328 bytes       2  [emitted]  
-      bundle.js   8.84 KiB       3  [emitted]  main
+    0.bundle.js  236 bytes       0  [emitted]  
+    1.bundle.js  245 bytes       1  [emitted]  
+    2.bundle.js  323 bytes       2  [emitted]  
+      bundle.js   8.26 KiB       3  [emitted]  main
     Entrypoint main = bundle.js
     chunk    {0} 0.bundle.js 44 bytes <{2}> <{3}> [rendered]
      [0] ./d.js 22 bytes {0} [built]
@@ -1151,15 +1151,15 @@ chunk    {1} main.js (main) 12 bytes >{0}< [entry] [rendered]
 
 exports[`StatsTestCases should print correct stats for module-deduplication 1`] = `
 "Asset       Size  Chunks             Chunk Names
- 0.js  735 bytes    0, 5  [emitted]  
- 1.js  735 bytes    1, 4  [emitted]  
- 2.js  735 bytes    2, 3  [emitted]  
- 3.js  666 bytes       3  [emitted]  
- 4.js  666 bytes       4  [emitted]  
- 5.js  666 bytes       5  [emitted]  
-e1.js   9.98 KiB       6  [emitted]  e1
-e2.js     10 KiB       7  [emitted]  e2
-e3.js     10 KiB       8  [emitted]  e3
+ 0.js  730 bytes    0, 5  [emitted]  
+ 1.js  730 bytes    1, 4  [emitted]  
+ 2.js  730 bytes    2, 3  [emitted]  
+ 3.js  661 bytes       3  [emitted]  
+ 4.js  661 bytes       4  [emitted]  
+ 5.js  661 bytes       5  [emitted]  
+e1.js    9.4 KiB       6  [emitted]  e1
+e2.js   9.43 KiB       7  [emitted]  e2
+e3.js   9.45 KiB       8  [emitted]  e3
 Entrypoint e1 = e1.js
 Entrypoint e2 = e2.js
 Entrypoint e3 = e3.js
@@ -1200,12 +1200,12 @@ chunk    {8} e3.js (e3) 152 bytes >{0}< >{1}< >{3}< [entry] [rendered]
 
 exports[`StatsTestCases should print correct stats for module-deduplication-named 1`] = `
 "    Asset       Size  Chunks             Chunk Names
-async3.js  823 bytes       0  [emitted]  async3
-async1.js  823 bytes       1  [emitted]  async1
-async2.js  823 bytes       2  [emitted]  async2
-    e1.js   9.87 KiB       3  [emitted]  e1
-    e2.js   9.89 KiB       4  [emitted]  e2
-    e3.js   9.91 KiB       5  [emitted]  e3
+async3.js  818 bytes       0  [emitted]  async3
+async1.js  818 bytes       1  [emitted]  async1
+async2.js  818 bytes       2  [emitted]  async2
+    e1.js   9.29 KiB       3  [emitted]  e1
+    e2.js   9.31 KiB       4  [emitted]  e2
+    e3.js   9.33 KiB       5  [emitted]  e3
 Entrypoint e1 = e1.js
 Entrypoint e2 = e2.js
 Entrypoint e3 = e3.js
@@ -1321,8 +1321,8 @@ exports[`StatsTestCases should print correct stats for named-chunks-plugin 1`] =
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset       Size  Chunks             Chunk Names
- entry.js   7.01 KiB   entry  [emitted]  entry
-vendor.js  274 bytes  vendor  [emitted]  vendor
+ entry.js   6.43 KiB   entry  [emitted]  entry
+vendor.js  269 bytes  vendor  [emitted]  vendor
 Entrypoint entry = vendor.js entry.js
 [./entry.js] 72 bytes {entry} [built]
 [./modules/a.js] 22 bytes {vendor} [built]
@@ -1335,9 +1335,9 @@ exports[`StatsTestCases should print correct stats for named-chunks-plugin-async
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
                      Asset       Size                   Chunks             Chunk Names
-chunk-containing-__a_js.js  318 bytes  chunk-containing-__a_js  [emitted]  
-chunk-containing-__b_js.js  178 bytes  chunk-containing-__b_js  [emitted]  
-                  entry.js   8.75 KiB                    entry  [emitted]  entry
+chunk-containing-__a_js.js  313 bytes  chunk-containing-__a_js  [emitted]  
+chunk-containing-__b_js.js  173 bytes  chunk-containing-__b_js  [emitted]  
+                  entry.js   8.17 KiB                    entry  [emitted]  entry
 Entrypoint entry = entry.js
 [0] ./modules/b.js 22 bytes {chunk-containing-__b_js} [built]
 [1] ./modules/a.js 37 bytes {chunk-containing-__a_js} [built]
@@ -1371,14 +1371,14 @@ exports[`StatsTestCases should print correct stats for optimize-chunks 1`] = `
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
             Asset       Size  Chunks             Chunk Names
-          cir1.js  304 bytes       0  [emitted]  cir1
-            ab.js  188 bytes       1  [emitted]  ab
-           abd.js  282 bytes    2, 1  [emitted]  abd
-          cir2.js  304 bytes       3  [emitted]  cir2
-          main.js   9.65 KiB       4  [emitted]  main
-cir2 from cir1.js  364 bytes    5, 3  [emitted]  cir2 from cir1
-         chunk.js  195 bytes    6, 7  [emitted]  chunk
-      ac in ab.js  135 bytes       7  [emitted]  ac in ab
+          cir1.js  299 bytes       0  [emitted]  cir1
+            ab.js  183 bytes       1  [emitted]  ab
+           abd.js  277 bytes    2, 1  [emitted]  abd
+          cir2.js  299 bytes       3  [emitted]  cir2
+          main.js   9.07 KiB       4  [emitted]  main
+cir2 from cir1.js  359 bytes    5, 3  [emitted]  cir2 from cir1
+         chunk.js  190 bytes    6, 7  [emitted]  chunk
+      ac in ab.js  130 bytes       7  [emitted]  ac in ab
 Entrypoint main = main.js
 chunk    {0} cir1.js (cir1) 81 bytes <{3}> <{4}> >{5}< [rendered]
     > [3] ./circular2.js 1:0-79
@@ -1546,10 +1546,10 @@ exports[`StatsTestCases should print correct stats for performance-disabled 1`] 
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22><CLR=BOLD>Chunk Names</CLR>
-   <CLR=32,BOLD>0.js</CLR>  157 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-   <CLR=32,BOLD>1.js</CLR>  294 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-<CLR=32,BOLD>main.js</CLR>    302 KiB       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
-   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
+   <CLR=32,BOLD>0.js</CLR>  152 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
+   <CLR=32,BOLD>1.js</CLR>  289 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
+<CLR=32,BOLD>main.js</CLR>    301 KiB       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
+   <CLR=32,BOLD>3.js</CLR>  227 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
 Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 [0] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 [1] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
@@ -1563,10 +1563,10 @@ exports[`StatsTestCases should print correct stats for performance-error 1`] = `
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-   <CLR=32,BOLD>0.js</CLR>  157 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>1.js</CLR>  294 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>302 KiB</CLR>       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
-   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>0.js</CLR>  152 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>1.js</CLR>  289 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+   <CLR=32,BOLD>3.js</CLR>  227 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
 [0] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 [1] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
@@ -1578,11 +1578,11 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 <CLR=31,BOLD>ERROR in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
 Assets: 
-  main.js (302 KiB)</CLR>
+  main.js (301 KiB)</CLR>
 
 <CLR=31,BOLD>ERROR in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:
-  main (302 KiB)
+  main (301 KiB)
       main.js
 </CLR>"
 `;
@@ -1622,10 +1622,10 @@ exports[`StatsTestCases should print correct stats for performance-no-hints 1`] 
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-   <CLR=32,BOLD>0.js</CLR>  157 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>1.js</CLR>  294 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>302 KiB</CLR>       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
-   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>0.js</CLR>  152 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>1.js</CLR>  289 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+   <CLR=32,BOLD>3.js</CLR>  227 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
 [0] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 [1] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
@@ -1668,13 +1668,13 @@ For more info visit https://webpack.js.org/guides/code-splitting/</CLR>"
 
 exports[`StatsTestCases should print correct stats for prefetch 1`] = `
 "         Asset       Size  Chunks             Chunk Names
- prefetched.js  478 bytes       0  [emitted]  prefetched
-     normal.js  135 bytes       1  [emitted]  normal
-prefetched2.js  132 bytes       2  [emitted]  prefetched2
-prefetched3.js  135 bytes       3  [emitted]  prefetched3
-       main.js   9.51 KiB       4  [emitted]  main
-      inner.js  141 bytes       5  [emitted]  inner
-     inner2.js  206 bytes       6  [emitted]  inner2
+ prefetched.js  467 bytes       0  [emitted]  prefetched
+     normal.js  130 bytes       1  [emitted]  normal
+prefetched2.js  127 bytes       2  [emitted]  prefetched2
+prefetched3.js  130 bytes       3  [emitted]  prefetched3
+       main.js   9.73 KiB       4  [emitted]  main
+      inner.js  136 bytes       5  [emitted]  inner
+     inner2.js  201 bytes       6  [emitted]  inner2
 Entrypoint main = main.js (prefetch: prefetched2.js prefetched.js prefetched3.js)
 chunk    {0} prefetched.js (prefetched) 228 bytes <{4}> >{5}< >{6}< (prefetch: {6} {5}) [rendered]
 chunk    {1} normal.js (normal) 0 bytes <{4}> [rendered]
@@ -1701,13 +1701,13 @@ chunk   {10} a2.js (a2) 0 bytes <{0}> [rendered]"
 
 exports[`StatsTestCases should print correct stats for preload 1`] = `
 "        Asset       Size  Chunks             Chunk Names
- preloaded.js  472 bytes       0  [emitted]  preloaded
-    normal.js  135 bytes       1  [emitted]  normal
-preloaded2.js  132 bytes       2  [emitted]  preloaded2
-preloaded3.js  135 bytes       3  [emitted]  preloaded3
-      main.js   10.4 KiB       4  [emitted]  main
-     inner.js  141 bytes       5  [emitted]  inner
-    inner2.js  206 bytes       6  [emitted]  inner2
+ preloaded.js  467 bytes       0  [emitted]  preloaded
+    normal.js  130 bytes       1  [emitted]  normal
+preloaded2.js  127 bytes       2  [emitted]  preloaded2
+preloaded3.js  130 bytes       3  [emitted]  preloaded3
+      main.js   9.85 KiB       4  [emitted]  main
+     inner.js  136 bytes       5  [emitted]  inner
+    inner2.js  201 bytes       6  [emitted]  inner2
 Entrypoint main = main.js (preload: preloaded2.js preloaded.js preloaded3.js)
 chunk    {0} preloaded.js (preloaded) 226 bytes <{4}> >{5}< >{6}< (preload: {6} {5}) [rendered]
 chunk    {1} normal.js (normal) 0 bytes <{4}> [rendered]
@@ -1723,10 +1723,10 @@ exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
-   0.js  157 bytes       0  [emitted]  
-   1.js  294 bytes       1  [emitted]  
-main.js   8.85 KiB       2  [emitted]  main
-   3.js  232 bytes       3  [emitted]  
+   0.js  152 bytes       0  [emitted]  
+   1.js  289 bytes       1  [emitted]  
+main.js   8.28 KiB       2  [emitted]  main
+   3.js  227 bytes       3  [emitted]  
 Entrypoint main = main.js
 chunk    {0} 0.js 22 bytes <{2}> [rendered]
     > ./b [4] ./index.js 2:0-16
@@ -1782,10 +1782,10 @@ exports[`StatsTestCases should print correct stats for preset-normal 1`] = `
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
-   0.js  157 bytes       0  [emitted]  
-   1.js  294 bytes       1  [emitted]  
-main.js   8.85 KiB       2  [emitted]  main
-   3.js  232 bytes       3  [emitted]  
+   0.js  152 bytes       0  [emitted]  
+   1.js  289 bytes       1  [emitted]  
+main.js   8.28 KiB       2  [emitted]  main
+   3.js  227 bytes       3  [emitted]  
 Entrypoint main = main.js
 [0] ./d.js 22 bytes {3} [built]
 [1] ./e.js 22 bytes {3} [built]
@@ -1799,10 +1799,10 @@ exports[`StatsTestCases should print correct stats for preset-normal-performance
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-   <CLR=32,BOLD>0.js</CLR>  157 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>1.js</CLR>  294 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>302 KiB</CLR>       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
-   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>0.js</CLR>  152 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>1.js</CLR>  289 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+   <CLR=32,BOLD>3.js</CLR>  227 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
 [0] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 [1] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
@@ -1814,11 +1814,11 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 <CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
 Assets: 
-  main.js (302 KiB)</CLR>
+  main.js (301 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:
-  main (302 KiB)
+  main (301 KiB)
       main.js
 </CLR>"
 `;
@@ -1827,13 +1827,13 @@ exports[`StatsTestCases should print correct stats for preset-normal-performance
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
       <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-       <CLR=32,BOLD>0.js</CLR>  187 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-       <CLR=32,BOLD>1.js</CLR>  324 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-    <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>302 KiB</CLR>       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
-       <CLR=32,BOLD>3.js</CLR>  262 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+       <CLR=32,BOLD>0.js</CLR>  182 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+       <CLR=32,BOLD>1.js</CLR>  319 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+    <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+       <CLR=32,BOLD>3.js</CLR>  257 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
    <CLR=32,BOLD>0.js.map</CLR>  156 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
    <CLR=32,BOLD>1.js.map</CLR>  197 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-<CLR=32,BOLD>main.js.map</CLR>   1.73 MiB       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         main
+<CLR=32,BOLD>main.js.map</CLR>   1.72 MiB       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         main
    <CLR=32,BOLD>3.js.map</CLR>  214 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR> <CLR=32,BOLD>main.js.map</CLR>
 [0] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
@@ -1846,11 +1846,11 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 <CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
 Assets: 
-  main.js (302 KiB)</CLR>
+  main.js (301 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
 Entrypoints:
-  main (302 KiB)
+  main (301 KiB)
       main.js
 </CLR>"
 `;
@@ -1860,10 +1860,10 @@ exports[`StatsTestCases should print correct stats for preset-verbose 1`] = `
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
-   0.js  157 bytes       0  [emitted]  
-   1.js  294 bytes       1  [emitted]  
-main.js   8.85 KiB       2  [emitted]  main
-   3.js  232 bytes       3  [emitted]  
+   0.js  152 bytes       0  [emitted]  
+   1.js  289 bytes       1  [emitted]  
+main.js   8.28 KiB       2  [emitted]  main
+   3.js  227 bytes       3  [emitted]  
 Entrypoint main = main.js
 chunk    {0} 0.js 22 bytes <{2}> [rendered]
     > ./b [4] ./index.js 2:0-16
@@ -1951,9 +1951,9 @@ Entrypoint e2 = runtime~e2.js e2.js"
 exports[`StatsTestCases should print correct stats for runtime-chunk-integration 1`] = `
 "Child base:
          Asset       Size  Chunks             Chunk Names
-          0.js  724 bytes       0  [emitted]  
+          0.js  719 bytes       0  [emitted]  
       main1.js  542 bytes       1  [emitted]  main1
-    runtime.js   9.31 KiB       2  [emitted]  runtime
+    runtime.js   8.73 KiB       2  [emitted]  runtime
     Entrypoint main1 = runtime.js main1.js
     [0] ./b.js 20 bytes {0} [built]
     [1] ./c.js 20 bytes {0} [built]
@@ -1961,8 +1961,8 @@ exports[`StatsTestCases should print correct stats for runtime-chunk-integration
     [3] ./main1.js 66 bytes {1} [built]
 Child manifest is named entry:
           Asset       Size  Chunks             Chunk Names
-           0.js  724 bytes       0  [emitted]  
-    manifest.js   9.61 KiB       1  [emitted]  manifest
+           0.js  719 bytes       0  [emitted]  
+    manifest.js   9.04 KiB       1  [emitted]  manifest
        main1.js  542 bytes       2  [emitted]  main1
     Entrypoint main1 = manifest.js main1.js
     Entrypoint manifest = manifest.js
@@ -2067,8 +2067,8 @@ exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
-   0.js  486 bytes       0  [emitted]  
-main.js   9.88 KiB       1  [emitted]  main
+   0.js  481 bytes       0  [emitted]  
+main.js   9.31 KiB       1  [emitted]  main
 Entrypoint main = main.js
 [0] ./components/src/CompAB/utils.js 97 bytes {1} [built]
     harmony side effect evaluation ./utils [1] ./main.js + 1 modules 1:0-30
