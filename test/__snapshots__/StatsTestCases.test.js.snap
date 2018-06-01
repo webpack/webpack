@@ -1668,11 +1668,11 @@ For more info visit https://webpack.js.org/guides/code-splitting/</CLR>"
 
 exports[`StatsTestCases should print correct stats for prefetch 1`] = `
 "         Asset       Size  Chunks             Chunk Names
- prefetched.js  467 bytes       0  [emitted]  prefetched
+ prefetched.js  475 bytes       0  [emitted]  prefetched
      normal.js  130 bytes       1  [emitted]  normal
 prefetched2.js  127 bytes       2  [emitted]  prefetched2
 prefetched3.js  130 bytes       3  [emitted]  prefetched3
-       main.js   9.73 KiB       4  [emitted]  main
+       main.js    9.5 KiB       4  [emitted]  main
       inner.js  136 bytes       5  [emitted]  inner
      inner2.js  201 bytes       6  [emitted]  inner2
 Entrypoint main = main.js (prefetch: prefetched2.js prefetched.js prefetched3.js)

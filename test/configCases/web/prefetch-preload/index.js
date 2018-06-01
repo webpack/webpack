@@ -22,15 +22,26 @@ it("should prefetch and preload child chunks on chunk load", (done) => {
 	__webpack_public_path__ = "/public/path/";
 
 	const promise = import(/* webpackChunkName: "chunk1" */ "./chunk1");
-	expect(document.head._children).toHaveLength(2);
-	const script = document.head._children[0];
+	expect(document.head._children).toHaveLength(4);
+
+	let link = document.head._children[0];
+	expect(link._type).toBe("link");
+	expect(link.rel).toBe("prefetch");
+	expect(link.href).toBe("/public/path/chunk1-c.js");
+
+	link = document.head._children[1];
+	expect(link._type).toBe("link");
+	expect(link.rel).toBe("prefetch");
+	expect(link.href).toBe("/public/path/chunk1-a.js");
+
+	const script = document.head._children[2];
 	expect(script._type).toBe("script");
 	expect(script.src).toBe("/public/path/chunk1.js")
 	expect(script.getAttribute("nonce")).toBe("nonce")
 	expect(script.crossOrigin).toBe("anonymous");
 	expect(script.onload).toBeTypeOf("function");
 
-	let link = document.head._children[1];
+	link = document.head._children[3];
 	expect(link._type).toBe("link");
 	expect(link.rel).toBe("preload");
 	expect(link.as).toBe("script");
@@ -42,18 +53,5 @@ it("should prefetch and preload child chunks on chunk load", (done) => {
 	__non_webpack_require__("./chunk1.js");
 	script.onload();
 
-	return promise.then((ex) => {
-		expect(document.head._children).toHaveLength(4);
-
-		let link = document.head._children[2];
-		expect(link._type).toBe("link");
-		expect(link.rel).toBe("prefetch");
-		expect(link.href).toBe("/public/path/chunk1-c.js");
-
-		link = document.head._children[3];
-		expect(link._type).toBe("link");
-		expect(link.rel).toBe("prefetch");
-		expect(link.href).toBe("/public/path/chunk1-a.js");
-		done();
-	}, done);
+	return promise.then(() => done(), done);
 })
