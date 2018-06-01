@@ -16,11 +16,11 @@ describe("NormalModule", () => {
 	let resource;
 	let parser;
 	beforeEach(() => {
-		request = "some/request";
-		userRequest = "some/userRequest";
+		request = "/some/request";
+		userRequest = "/some/userRequest";
 		rawRequest = "some/rawRequest";
 		loaders = [];
-		resource = "some/resource";
+		resource = "/some/resource";
 		parser = {
 			parse() {}
 		};
@@ -66,14 +66,14 @@ describe("NormalModule", () => {
 		it("contextifies the userRequest of the module", () => {
 			expect(
 				normalModule.libIdent({
-					context: "some/context"
+					context: "/some/context"
 				})
 			).toBe("../userRequest");
 		});
 		describe("given a userRequest containing loaders", () => {
 			beforeEach(() => {
 				userRequest =
-					"some/userRequest!some/other/userRequest!some/thing/is/off/here";
+					"/some/userRequest!/some/other/userRequest!/some/thing/is/off/here";
 				normalModule = new NormalModule({
 					type: "javascript/auto",
 					request,
@@ -87,7 +87,7 @@ describe("NormalModule", () => {
 			it("contextifies every path in the userRequest", () => {
 				expect(
 					normalModule.libIdent({
-						context: "some/context"
+						context: "/some/context"
 					})
 				).toBe("../userRequest!../other/userRequest!../thing/is/off/here");
 			});
@@ -95,7 +95,7 @@ describe("NormalModule", () => {
 		describe("given a userRequest containing query parameters", () => {
 			it("ignores paths in query parameters", () => {
 				userRequest =
-					"some/context/loader?query=foo\\bar&otherPath=testpath/other";
+					"F:\\some\\context\\loader?query=foo\\bar&otherPath=testpath/other";
 				normalModule = new NormalModule({
 					type: "javascript/auto",
 					request,
@@ -107,7 +107,7 @@ describe("NormalModule", () => {
 				});
 				expect(
 					normalModule.libIdent({
-						context: "some/context"
+						context: "F:\\some\\context"
 					})
 				).toBe("./loader?query=foo\\bar&otherPath=testpath/other");
 			});
