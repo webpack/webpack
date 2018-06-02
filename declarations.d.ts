@@ -74,8 +74,12 @@ declare module "@webassemblyjs/ast" {
 		raw: string;
 	}
 	export class FloatLiteral extends Node {}
+	export class GlobalType extends Node {
+		valtype: string;
+	}
 	export class Global extends Node {
 		init: Instruction[];
+		globalType: GlobalType;
 	}
 	export class FuncParam extends Node {
 		valtype: string;
