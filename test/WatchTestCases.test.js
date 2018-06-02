@@ -5,6 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
+const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const { remove } = require("./helpers/remove");
 
@@ -54,6 +55,15 @@ describe("WatchTestCases", () => {
 			tests: fs
 				.readdirSync(path.join(casesPath, cat))
 				.filter(folder => folder.indexOf("_") < 0)
+				.filter(testName => {
+					const testDirectory = path.join(casesPath, cat, testName);
+					const filterPath = path.join(testDirectory, "test.filter.js");
+					if (fs.existsSync(filterPath) && !require(filterPath)()) {
+						describe.skip(testName, () => it("filtered"));
+						return false;
+					}
+					return true;
+				})
 				.sort()
 		};
 	});
@@ -76,9 +86,7 @@ describe("WatchTestCases", () => {
 						"js",
 						"watch-src",
 						category.name,
-						`${testName}-${Math.random()
-							.toPrecision(21)
-							.slice(2)}`
+						testName
 					);
 					const testDirectory = path.join(casesPath, category.name, testName);
 					const runs = fs
@@ -89,7 +97,9 @@ describe("WatchTestCases", () => {
 						})
 						.map(name => ({ name }));
 
-					let exportedTests = [];
+					beforeAll(done => {
+						rimraf(tempDirectory, done);
+					});
 
 					it(
 						testName + " should compile",
@@ -201,6 +211,8 @@ describe("WatchTestCases", () => {
 										)
 											return;
 
+										const exportedTests = [];
+
 										function _it(title, fn) {
 											exportedTests.push({ title, fn, timeout: 45000 });
 										}
@@ -293,38 +305,45 @@ describe("WatchTestCases", () => {
 										if (exportedTests.length < 1)
 											return done(new Error("No tests exported by test case"));
 
-										runIdx++;
-										if (runIdx < runs.length) {
-											run = runs[runIdx];
-											waitMode = true;
-											setTimeout(() => {
-												waitMode = false;
-												currentWatchStepModule.step = run.name;
-												copyDiff(
-													path.join(testDirectory, run.name),
-													tempDirectory,
-													false
-												);
-											}, 1500);
-										} else {
-											watching.close();
+										const continueStep = () => {
+											runIdx++;
+											if (runIdx < runs.length) {
+												run = runs[runIdx];
+												waitMode = true;
+												setTimeout(() => {
+													waitMode = false;
+													currentWatchStepModule.step = run.name;
+													copyDiff(
+														path.join(testDirectory, run.name),
+														tempDirectory,
+														false
+													);
+												}, 1500);
+											} else {
+												watching.close();
 
-											const asyncSuite = describe("exported tests", () => {
-												exportedTests.forEach(
-													({ title, fn, timeout }) =>
-														fn
-															? fit(title, fn, timeout)
-															: fit(title, () => {}).pend("Skipped")
-												);
-											});
-											// workaround for jest running clearSpies on the wrong suite (invoked by clearResourcesForRunnable)
-											asyncSuite.disabled = true;
+												done();
+											}
+										};
 
-											jasmine
-												.getEnv()
-												.execute([asyncSuite.id], asyncSuite)
-												.then(done, done);
-										}
+										// Run the tests
+										const asyncSuite = describe(`WatchTestCases ${
+											category.name
+										} ${testName} step ${run.name}`, () => {
+											exportedTests.forEach(
+												({ title, fn, timeout }) =>
+													fn
+														? fit(title, fn, timeout)
+														: fit(title, () => {}).pend("Skipped")
+											);
+										});
+										// workaround for jest running clearSpies on the wrong suite (invoked by clearResourcesForRunnable)
+										asyncSuite.disabled = true;
+
+										jasmine
+											.getEnv()
+											.execute([asyncSuite.id], asyncSuite)
+											.then(continueStep, done);
 									}
 								);
 							}, 300);
