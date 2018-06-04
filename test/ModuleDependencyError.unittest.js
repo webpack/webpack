@@ -29,7 +29,11 @@ describe("ModuleDependencyError", () => {
 		});
 
 		it("has a message property", () => {
-			expect(env.moduleDependencyError.message).toBe("Location Error Message");
+			expect(env.moduleDependencyError.message).toBe("Error Message");
+		});
+
+		it("has a loc property", () => {
+			expect(env.moduleDependencyError.loc).toBe("Location");
 		});
 
 		it("has a details property", () => {
@@ -38,8 +42,8 @@ describe("ModuleDependencyError", () => {
 			);
 		});
 
-		it("has an origin property", () => {
-			expect(env.moduleDependencyError.origin).toBe("myModule");
+		it("has an module property", () => {
+			expect(env.moduleDependencyError.module).toBe("myModule");
 		});
 
 		it("has an error property", () => {

@@ -36,6 +36,7 @@ declare module "@webassemblyjs/ast" {
 			ModuleImport?: (p: NodePath<ModuleImport>) => void;
 			ModuleExport?: (p: NodePath<ModuleExport>) => void;
 			Start?: (p: NodePath<Start>) => void;
+			Global?: (p: NodePath<Global>) => void;
 		}
 	);
 	export class NodePath<T> {
@@ -64,18 +65,29 @@ declare module "@webassemblyjs/ast" {
 	}
 	type Index = Identifier | NumberLiteral;
 	export class ModuleExportDescr extends Node {
+		type: string;
 		exportType: string;
 		id: Index;
 	}
 	export class NumberLiteral extends Node {
 		value: number;
+		raw: string;
 	}
 	export class FloatLiteral extends Node {}
-	export class Global extends Node {}
+	export class GlobalType extends Node {
+		valtype: string;
+	}
+	export class Global extends Node {
+		init: Instruction[];
+		globalType: GlobalType;
+	}
 	export class FuncParam extends Node {
 		valtype: string;
 	}
-	export class Instruction extends Node {}
+	export class Instruction extends Node {
+		id: string;
+		args: NumberLiteral[];
+	}
 	export class CallInstruction extends Instruction {}
 	export class ObjectInstruction extends Instruction {}
 	export class Func extends Node {
