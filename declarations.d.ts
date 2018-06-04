@@ -134,6 +134,10 @@ declare module "@webassemblyjs/ast" {
 	): ModuleExport;
 
 	export function getSectionMetadata(ast: any, section: string);
+
+	// Node matcher
+	export function isGlobalType(n: Node): boolean;
+	export function isFuncImportDescr(n: Node): boolean;
 }
 
 /**
