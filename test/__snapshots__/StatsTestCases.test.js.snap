@@ -1425,12 +1425,12 @@ Entrypoint main = main.js
     | ./index.js 15 bytes [built]
     | ./a.js 15 bytes [built]
 
-ERROR in ./b.js
+ERROR in ./b.js 6:7
 Module parse failed: Unexpected token (6:7)
 You may need an appropriate loader to handle this file type.
 | includes
 | a
-| parser )
+> parser )
 | error
 | in
  @ ./a.js 2:0-13
