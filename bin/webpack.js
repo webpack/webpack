@@ -6,10 +6,26 @@
 */
 var path = require("path");
 
+var ifOutOfLocal = function() {
+	var relate = path.relative(path.join(process.cwd(), "node_modules"), __filename).split(path.sep);
+	var ifOut = false;
+	for(var i = 0; i < relate.length; i++) {
+		var match = relate[i].match(/\.\./);
+		if(match) {
+			ifOut = true;
+			break;
+		}
+	}
+	return ifOut;
+};
+
 // Local version replace global one
 try {
 	var localWebpack = require.resolve(path.join(process.cwd(), "node_modules", "webpack", "bin", "webpack.js"));
-	if(__filename !== localWebpack) {
+	// fix: able to run webpack install in second dependencies`s dir
+	// https://github.com/webpack/webpack/issues/7461
+	var ifOut = ifOutOfLocal();
+	if(__filename !== localWebpack && ifOut) {
 		return require(localWebpack);
 	}
 } catch(e) {}
