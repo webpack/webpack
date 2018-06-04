@@ -120,8 +120,9 @@
 If you think an example is missing, please report it as issue. :)
 
 # Building an Example
-1. Run `npm install` in the root of the project.
-2. Run `npm link webpack` in the root of the project.
-3. Run `node build.js` in the specific example directory. (Ex: `cd examples/commonjs && node build.js`)
+1. Run `yarn` in the root of the project.
+2. Run `yarn link webpack` in the root of the project.
+3. Run `yarn add --dev webpack-cli` in the root of the project.
+4. Run `node build.js` in the specific example directory. (Ex: `cd examples/commonjs && node build.js`)
 
 Note: To build all examples run `npm run build:examples`
