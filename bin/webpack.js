@@ -6,14 +6,14 @@
 */
 var path = require("path");
 
-var ifOutOfLocal = function () {
+var ifOutOfLocal = function() {
   var relate = path.relative(path.join(process.cwd(), "node_modules"), __filename).split(path.sep);
   var ifOut = false;
-  for (var i = 0; i < relate.length; i++) {
+  for(var i = 0; i < relate.length; i++) {
     var match = relate[i].match(/\.\./);
-    if (match) {
+    if(match) {
       ifOut = true;
-      break
+      break;
     }
   }
   return ifOut;
