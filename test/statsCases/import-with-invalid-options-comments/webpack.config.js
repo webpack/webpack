@@ -4,5 +4,12 @@ module.exports = {
 	output: {
 		chunkFilename: "[name].js"
 	},
-	stats: "minimal"
+	stats: {
+		timings: false,
+		hash: false,
+		entrypoints: false,
+		assets: false,
+		errorDetails: true,
+		moduleTrace: true
+	}
 };
