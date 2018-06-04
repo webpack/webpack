@@ -159,6 +159,26 @@ describe("Parser", () => {
 				fgh: ["test", "test ttt", "test e"]
 			}
 		],
+		"in try, no binding": [
+			function() {
+				try {
+					fgh.sub;
+					fgh;
+
+					function test(ttt) {
+						fgh.sub;
+						fgh;
+					}
+				} catch {
+					fgh.sub;
+					fgh;
+				}
+			},
+			{
+				fghsub: ["try", "notry", "notry"],
+				fgh: ["test", "test ttt", "test"]
+			}
+		],
 		"renaming with const": [
 			function() {
 				const xyz = abc;
