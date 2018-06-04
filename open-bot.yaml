@@ -77,7 +77,7 @@ rules:
       id: logResult
       value: "{{{fetch}}}"
       remove:
-        - "\\m\\[2K\\m\\[1G|\\m\\[999D\\m\\[K"
+        - ".\\[2K.\\[1G|.\\[999D.\\[K"
         - "^[\\s\\S]+?\\$ yarn travis:\\$JOB_PART.*\n"
         - "\\$ node --max-old-space-size=4096.*\n"
         - ".+rimraf coverage"
@@ -90,7 +90,7 @@ rules:
         - "Force exiting Jest\n\nHave you considered.+"
         - "=============================== Coverage summary ===============================[\\s\\S]+?================================================================================"
         - " *PASS *test/.*\n"
-        - "^\\s+|\\s+$"
+        - "^\\s+\n|\\s+$"
     string_cleanup_1:
       id: firstError
       value: "{{{logResult}}}"
@@ -162,7 +162,7 @@ rules:
       id: logResult
       value: "{{{fetch}}}"
       remove:
-        - "\\m\\[2K\\m\\[1G|\\m\\[999D\\m\\[K"
+        - ".\\[2K.\\[1G|.\\[999D.\\[K"
         - "^[\\s\\S]+?\\$ yarn travis:\\$JOB_PART.*\n"
         - "\\$ node --max-old-space-size=4096.*\n"
         - ".+rimraf coverage"
@@ -176,7 +176,7 @@ rules:
         - "Force exiting Jest\n\nHave you considered.+"
         - "=============================== Coverage summary ===============================[\\s\\S]+?================================================================================"
         - " *PASS *test/.*\n"
-        - "^\\s+|\\s+$"
+        - "^\\s+\n|\\s+$"
     string_cleanup_1:
       id: firstError
       value: "{{{logResult}}}"
@@ -248,7 +248,7 @@ rules:
       id: logResult
       value: "{{{fetch}}}"
       remove:
-        - "\\m\\[2K\\m\\[1G|\\m\\[999D\\m\\[K"
+        - ".\\[2K.\\[1G|.\\[999D.\\[K"
         - "^[\\s\\S]+?\\$ yarn travis:\\$JOB_PART.*\n"
         - "\\$ node --max-old-space-size=4096.*\n"
         - ".+rimraf coverage"
@@ -262,7 +262,7 @@ rules:
         - "Force exiting Jest\n\nHave you considered.+"
         - "=============================== Coverage summary ===============================[\\s\\S]+?================================================================================"
         - " *PASS *test/.*\n"
-        - "^\\s+|\\s+$"
+        - "^\\s+\n|\\s+$"
   actions:
     comment:
       identifier: "ci-result"
