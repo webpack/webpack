@@ -94,6 +94,7 @@ declare module "@webassemblyjs/ast" {
 		signature: Signature;
 	}
 	export class Signature {
+		type: "Signature";
 		params: FuncParam[];
 		results: string[];
 	}
@@ -118,7 +119,7 @@ declare module "@webassemblyjs/ast" {
 		init: Node[]
 	): ObjectInstruction;
 	export function signature(params: FuncParam[], results: string[]): Signature;
-	export function func(initFuncId, Signature, funcBody): Func;
+	export function func(initFuncId, signature: Signature, funcBody): Func;
 	export function typeInstruction(
 		id: Identifier,
 		functype: Signature
@@ -134,6 +135,10 @@ declare module "@webassemblyjs/ast" {
 	): ModuleExportDescr;
 
 	export function getSectionMetadata(ast: any, section: string);
+	export class FuncSignature {
+		args: string[];
+		result: string[];
+	}
 }
 
 /**
