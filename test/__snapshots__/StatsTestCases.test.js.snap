@@ -1007,6 +1007,28 @@ Entrypoint entry = entry.js
 [2] ./modules/a.js 37 bytes [built]"
 `;
 
+exports[`StatsTestCases should print correct stats for import-with-invalid-options-comments 1`] = `
+"Built at: Thu Jan 01 1970 00:00:00 GMT
+[0] ./chunk-a.js 27 bytes {2} [built]
+[1] ./chunk-b.js 27 bytes {3} [built]
+[2] ./chunk-c.js 27 bytes {4} [built]
+[3] ./chunk-d.js 27 bytes {5} [built]
+[4] ./chunk.js 401 bytes {0} [built] [3 warnings]
+[5] ./index.js 50 bytes {1} [built]
+
+WARNING in ./chunk.js 4:11-77
+Compilation error while processing magic comment(-s): /* webpack Prefetch: 0, webpackChunkName: \\"notGoingToCompile-c\\" */: Unexpected identifier
+ @ ./index.js 1:0-49
+
+WARNING in ./chunk.js 5:11-38
+Compilation error while processing magic comment(-s): /* webpackPrefetch: nope */: nope is not defined
+ @ ./index.js 1:0-49
+
+WARNING in ./chunk.js 2:11-84
+Compilation error while processing magic comment(-s): /* webpackPrefetch: true, webpackChunkName: notGoingToCompileChunkName */: notGoingToCompileChunkName is not defined
+ @ ./index.js 1:0-49"
+`;
+
 exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 1`] = `
 "Hash: 3c127dca42ce1c13b8eae6c0ceac1aa3be512946a5969fc94d792cce5364503bf42779f704747e2d
 Child 1 chunks:
