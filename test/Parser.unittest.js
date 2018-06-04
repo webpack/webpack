@@ -159,26 +159,6 @@ describe("Parser", () => {
 				fgh: ["test", "test ttt", "test e"]
 			}
 		],
-		"in try, no binding": [
-			function() {
-				try {
-					fgh.sub;
-					fgh;
-
-					function test(ttt) {
-						fgh.sub;
-						fgh;
-					}
-				} catch {
-					fgh.sub;
-					fgh;
-				}
-			},
-			{
-				fghsub: ["try", "notry", "notry"],
-				fgh: ["test", "test ttt", "test"]
-			}
-		],
 		"renaming with const": [
 			function() {
 				const xyz = abc;
@@ -628,6 +608,21 @@ describe("Parser", () => {
 			const cases = {
 				"object spread": "({...obj})",
 				"object rest": "({...obj} = foo)"
+			};
+			Object.keys(cases).forEach(name => {
+				const expr = cases[name];
+				it(name, () => {
+					const actual = Parser.parse(expr);
+					expect(typeof actual).toBe("object");
+				});
+			});
+		});
+	});
+
+	describe("optional catch binding support", () => {
+		describe("should accept", () => {
+			const cases = {
+				"optional binding": "try {} catch {}"
 			};
 			Object.keys(cases).forEach(name => {
 				const expr = cases[name];
