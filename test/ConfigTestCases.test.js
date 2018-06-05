@@ -7,6 +7,7 @@ const vm = require("vm");
 const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const FakeDocument = require("./helpers/FakeDocument");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
@@ -176,7 +177,8 @@ describe("ConfigTestCases", () => {
 										console: console,
 										expect: expect,
 										setTimeout: setTimeout,
-										clearTimeout: clearTimeout
+										clearTimeout: clearTimeout,
+										document: new FakeDocument()
 									};
 
 									function _require(currentDirectory, module) {
