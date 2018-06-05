@@ -350,8 +350,7 @@ describe("Errors", () => {
 			(errors, warnings) => {
 				expect(errors).toHaveLength(1);
 				const messages = errors[0].split("\n");
-				expect(messages[1]).toMatch(/^Module build failed:$/);
-				expect(messages[2]).toMatch(/didn't return/);
+				expect(messages[1]).toMatch(/^Module build failed: Final loader \(.+\) didn't return a Buffer or String/);
 				done();
 			}
 		);
