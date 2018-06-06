@@ -139,6 +139,12 @@ declare module "@webassemblyjs/ast" {
 		args: string[];
 		result: string[];
 	}
+
+	// Node matcher
+	export function isGlobalType(n: Node): boolean;
+	export function isTable(n: Node): boolean;
+	export function isMemory(n: Node): boolean;
+	export function isFuncImportDescr(n: Node): boolean;
 }
 
 /**
