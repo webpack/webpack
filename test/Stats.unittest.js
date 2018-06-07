@@ -19,7 +19,7 @@ describe(
 				});
 				const inputPath =
 					"./node_modules/ts-loader!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./src/app.vue";
-				const expectPath = `./src/app.vue (${inputPath})\n`;
+				const expectPath = `./src/app.vue (${inputPath})`;
 
 				expect(mockStats.formatFilePath(inputPath)).toBe(expectPath);
 			});

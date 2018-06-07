@@ -144,6 +144,11 @@ const describeCases = config => {
 										{
 											test: /\.pug/,
 											loader: "pug-loader"
+										},
+										{
+											test: /\.wat$/i,
+											loader: "wast-loader",
+											type: "webassembly/experimental"
 										}
 									]
 								},
