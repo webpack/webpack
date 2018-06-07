@@ -77,25 +77,32 @@ rules:
       id: logResult
       value: "{{{fetch}}}"
       remove:
+        - ".\\[2K.\\[1G|.\\[999D.\\[K"
         - "^[\\s\\S]+?\\$ yarn travis:\\$JOB_PART.*\n"
         - "\\$ node --max-old-space-size=4096.*\n"
-        - "^yarn run.+\n"
-        - "\\(node:\\d+\\) \\[DEP0005\\].+\n"
+        - ".+rimraf coverage"
+        - "yarn run.+\n"
+        - "\\(node:\\d+\\) (\\[DEP0005\\]|DeprecationWarning).+\n"
         - "\\$ yarn (cover|test):.+\n"
         - "Ran all test suites.\n[\\s\\S]*"
-        - "PASS test/.*\n"
+        - "error Command failed with exit code \\d+.\n"
+        - "info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.\n"
+        - "Force exiting Jest\n\nHave you considered.+"
+        - "=============================== Coverage summary ===============================[\\s\\S]+?================================================================================"
+        - " *PASS *test/.*\n"
+        - "^\\s+\n|\\s+$"
     string_cleanup_1:
       id: firstError
       value: "{{{logResult}}}"
       remove:
-        - "\n\n  ●[\\s\\S]*"
+        - "\n\n(  ●| FAIL)[\\s\\S]*"
         - "Test Suites:[\\s\\S]*"
         - "\\s+$"
     string_cleanup_2:
       id: remainingErrors
       value: "{{{logResult}}}"
       remove:
-        - "^[\\s\\S]+?(?=\n\n  ●|$)"
+        - "^[\\s\\S]+?(?=\n\n(  ●| FAIL)|$)"
         - "^\n+"
         - "Test Suites:[\\s\\S]*"
         - "\\s+$"
@@ -155,25 +162,33 @@ rules:
       id: logResult
       value: "{{{fetch}}}"
       remove:
+        - ".\\[2K.\\[1G|.\\[999D.\\[K"
         - "^[\\s\\S]+?\\$ yarn travis:\\$JOB_PART.*\n"
         - "\\$ node --max-old-space-size=4096.*\n"
-        - "^yarn run.+\n"
-        - "\\(node:\\d+\\) \\[DEP0005\\].+\n"
+        - ".+rimraf coverage"
+        - "yarn run.+\n"
+        - "\\(node:\\d+\\) (\\[DEP0005\\]|DeprecationWarning).+\n"
         - "\\$ yarn (cover|test):.+\n"
         - "The command \"yarn travis:\\$JOB_PART\" exited[\\s\\S]*"
-        - "PASS test/.*\n"
+        - "Ran all test suites.+\n"
+        - "error Command failed with exit code \\d+.\n"
+        - "info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.\n"
+        - "Force exiting Jest\n\nHave you considered.+"
+        - "=============================== Coverage summary ===============================[\\s\\S]+?================================================================================"
+        - " *PASS *test/.*\n"
+        - "^\\s+\n|\\s+$"
     string_cleanup_1:
       id: firstError
       value: "{{{logResult}}}"
       remove:
-        - "\n\n  ●[\\s\\S]*"
+        - "\n\n(  ●| FAIL)[\\s\\S]*"
         - "Test Suites:[\\s\\S]*"
         - "\\s+$"
     string_cleanup_2:
       id: remainingErrors
       value: "{{{logResult}}}"
       remove:
-        - "^[\\s\\S]+?(?=\n\n  ●|$)"
+        - "^[\\s\\S]+?(?=\n\n(  ●| FAIL)|$)"
         - "^\n+"
         - "Test Suites:[\\s\\S]*"
         - "\\s+$"
@@ -233,13 +248,21 @@ rules:
       id: logResult
       value: "{{{fetch}}}"
       remove:
+        - ".\\[2K.\\[1G|.\\[999D.\\[K"
         - "^[\\s\\S]+?\\$ yarn travis:\\$JOB_PART.*\n"
         - "\\$ node --max-old-space-size=4096.*\n"
-        - "^yarn run.+\n"
-        - "\\(node:\\d+\\) \\[DEP0005\\].+\n"
+        - ".+rimraf coverage"
+        - "yarn run.+\n"
+        - "\\(node:\\d+\\) (\\[DEP0005\\]|DeprecationWarning).+\n"
         - "\\$ yarn (unit|lint).+\n"
         - "The command \"yarn travis:\\$JOB_PART\" exited[\\s\\S]*"
-        - "PASS test/.*\n"
+        - "Ran all test suites.+\n"
+        - "error Command failed with exit code \\d+.\n"
+        - "info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.\n"
+        - "Force exiting Jest\n\nHave you considered.+"
+        - "=============================== Coverage summary ===============================[\\s\\S]+?================================================================================"
+        - " *PASS *test/.*\n"
+        - "^\\s+\n|\\s+$"
   actions:
     comment:
       identifier: "ci-result"
@@ -590,7 +613,7 @@ rules:
       message: |-
         *For maintainers only:*
 
-        * [x] <!-- document --> This need to be documented (issue in webpack/webpack.js.org will be filed when merged)
+        * [ ] <!-- document --> This need to be documented (issue in webpack/webpack.js.org will be filed when merged)
 
 
 # When a pull request need to be documented, create an issue in webpack/webpack.js.org when merged

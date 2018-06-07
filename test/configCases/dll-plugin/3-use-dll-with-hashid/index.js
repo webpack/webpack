@@ -8,7 +8,7 @@ it("should load a module from dll", function() {
 
 it("should load an async module from dll", function(done) {
 	require("../0-create-dll/b")().then(function(c) {
-		expect(c).toEqual({ default: "c" });
+		expect(c).toEqual({ default: "c", [Symbol.toStringTag]: "Module" });
 		done();
 	}).catch(done);
 });
