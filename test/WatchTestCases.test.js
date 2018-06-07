@@ -327,7 +327,9 @@ describe("WatchTestCases", () => {
 										};
 
 										// Run the tests
-										const asyncSuite = describe(`step ${run.name}`, () => {
+										const asyncSuite = describe(`WatchTestCases ${
+											category.name
+										} ${testName} step ${run.name}`, () => {
 											exportedTests.forEach(
 												({ title, fn, timeout }) =>
 													fn

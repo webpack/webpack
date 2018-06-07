@@ -343,30 +343,30 @@ describe("Parser", () => {
 	});
 
 	it("should get correct options from comments", () => {
-		const source = `/* foo:"foo", bar: true, */
-		/* baz:1, webpackChunkName: "chunkName" */`;
+		const source = `/* webpackFoo:"foo", webpackBar: true, */
+		/* webpackBaz:1, webpackChunkName: "chunkName" */`;
 
 		const testParser = new Parser({});
 		let options;
 		testParser.hooks.program.tap("ParserTest", (ast, comments) => {
-			options = testParser.getCommentOptions(ast.range);
+			options = testParser.parseCommentOptions(ast.range).options;
 			return true;
 		});
 		testParser.parse(source);
 
 		expect(typeof options).toBe("object");
-		expect(options.foo).toBe("foo");
-		expect(options.bar).toBe(true);
-		expect(options.baz).toBe(1);
+		expect(options.webpackFoo).toBe("foo");
+		expect(options.webpackBar).toBe(true);
+		expect(options.webpackBaz).toBe(1);
 		expect(options.webpackChunkName).toBe("chunkName");
 	});
 
 	it("should support context modified while getting options from comments", () => {
 		const source = `
-		/* foo: aBoolean ? "foo" : "bar", bar:typeof aObject !== "object" ? false : true, */
+		/* webpackFoo: aBoolean ? "foo" : "bar", webpackBar:typeof aObject !== "object" ? false : true, */
 		/*
-			baz: anotherObject.propA.c,
-		    callFuncRst: myFunc(),
+			webpackBaz: anotherObject.propA.c,
+			webpackFuncRst: myFunc(),
 			webpackChunkName: process.env.MY_VAR === "myVar" ? "chunkName" : null
 		*/
 		`;
@@ -397,10 +397,10 @@ describe("Parser", () => {
 		testParser.parse(source);
 
 		expect(typeof options).toBe("object");
-		expect(options.foo).toBe("foo");
-		expect(options.bar).toBe(true);
-		expect(options.baz).toBe(1);
-		expect(options.callFuncRst).toBe("myFuncRst");
+		expect(options.webpackFoo).toBe("foo");
+		expect(options.webpackBar).toBe(true);
+		expect(options.webpackBaz).toBe(1);
+		expect(options.webpackFuncRst).toBe("myFuncRst");
 		expect(options.webpackChunkName).toBe("chunkName");
 	});
 
@@ -670,6 +670,21 @@ describe("Parser", () => {
 			const cases = {
 				"object spread": "({...obj})",
 				"object rest": "({...obj} = foo)"
+			};
+			Object.keys(cases).forEach(name => {
+				const expr = cases[name];
+				it(name, () => {
+					const actual = Parser.parse(expr);
+					expect(typeof actual).toBe("object");
+				});
+			});
+		});
+	});
+
+	describe("optional catch binding support", () => {
+		describe("should accept", () => {
+			const cases = {
+				"optional binding": "try {} catch {}"
 			};
 			Object.keys(cases).forEach(name => {
 				const expr = cases[name];
