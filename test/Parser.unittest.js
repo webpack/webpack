@@ -618,4 +618,19 @@ describe("Parser", () => {
 			});
 		});
 	});
+
+	describe("optional catch binding support", () => {
+		describe("should accept", () => {
+			const cases = {
+				"optional binding": "try {} catch {}"
+			};
+			Object.keys(cases).forEach(name => {
+				const expr = cases[name];
+				it(name, () => {
+					const actual = Parser.parse(expr);
+					expect(typeof actual).toBe("object");
+				});
+			});
+		});
+	});
 });
