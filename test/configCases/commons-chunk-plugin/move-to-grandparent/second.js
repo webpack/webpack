@@ -1,6 +1,6 @@
 it("should handle indirect children with multiple parents correctly", function(done) {
   import('./pageB').then(b => {
-    b.default.should.be.eql("reuse");
+    expect(b.default).toBe("reuse");
     done()
   }).catch(e => {
 		done();

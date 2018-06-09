@@ -4,8 +4,8 @@ it("should run", function() {
 
 it("should have exported", function(done) {
 	setTimeout(function() {
-		exported.object.should.be.eql(module.exports.object);
-		exported.second.should.be.eql(module.exports.second);
+		expect(exported.object).toBe(module.exports.object);
+		expect(exported.second).toBe(module.exports.second);
 		done();
 	}, 1);
 });

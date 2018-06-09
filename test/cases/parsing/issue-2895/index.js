@@ -1,6 +1,6 @@
 import { a, b } from "./a";
 
 it("should export a const value without semicolon", function() {
-	a.should.be.eql({x: 1});
-	b.should.be.eql({x: 2});
+	expect(a).toEqual({x: 1});
+	expect(b).toEqual({x: 2});
 });

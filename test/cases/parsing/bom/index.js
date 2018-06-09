@@ -1,9 +1,14 @@
 it("should load a utf-8 file with BOM", function() {
 	var result = require("./bomfile");
-	result.should.be.eql("ok");
+	expect(result).toEqual("ok");
 });
 
 it("should load a css file with BOM", function() {
 	var css = require("!css-loader!./bomfile.css") + "";
-	css.should.be.eql("body{color:#abc}");
+	expect(css).toBe("body{color:#abc}");
+});
+
+it("should load a json file with BOM", function() {
+	var result = require("./bomfile.json");
+	expect(result.message).toEqual("ok");
 });

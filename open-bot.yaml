@@ -59,7 +59,92 @@ rules:
 
 
 
-# Report specific error message if mocha for integration tests fails
+# Report specific error message if jest for basic tests fails
+- filters:
+    ensure:
+      value: "{{report_ci}}"
+      equals: yep
+    commit: true
+    status:
+      context: "continuous-integration/travis-ci/pr"
+    travis_job:
+      state: "failed"
+      allow_failure: false
+      config:
+        env: JOB_PART=basic
+    fetch: travis_job.log
+    string_cleanup:
+      id: logResult
+      value: "{{{fetch}}}"
+      remove:
+        - ".\\[2K.\\[1G|.\\[999D.\\[K"
+        - "^[\\s\\S]+?\\$ yarn travis:\\$JOB_PART.*\n"
+        - "\\$ node --max-old-space-size=4096.*\n"
+        - ".+rimraf coverage"
+        - "yarn run.+\n"
+        - "\\(node:\\d+\\) (\\[DEP0005\\]|DeprecationWarning).+\n"
+        - "\\$ yarn (cover|test):.+\n"
+        - "Ran all test suites.\n[\\s\\S]*"
+        - "error Command failed with exit code \\d+.\n"
+        - "info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.\n"
+        - "Force exiting Jest\n\nHave you considered.+"
+        - "=============================== Coverage summary ===============================[\\s\\S]+?================================================================================"
+        - " *PASS *test/.*\n"
+        - "^\\s+\n|\\s+$"
+    string_cleanup_1:
+      id: firstError
+      value: "{{{logResult}}}"
+      remove:
+        - "\n\n(  ●| FAIL)[\\s\\S]*"
+        - "Test Suites:[\\s\\S]*"
+        - "\\s+$"
+    string_cleanup_2:
+      id: remainingErrors
+      value: "{{{logResult}}}"
+      remove:
+        - "^[\\s\\S]+?(?=\n\n(  ●| FAIL)|$)"
+        - "^\n+"
+        - "Test Suites:[\\s\\S]*"
+        - "\\s+$"
+    string_cleanup_3:
+      id: summary
+      value: "{{{logResult}}}"
+      remove:
+        - "^[\\s\\S]+?(?=Test Suites:)"
+        - "\\s+$"
+  actions:
+    comment:
+      identifier: "ci-result"
+      message: |-
+        The basic integration tests failed.
+
+        @{{commit.author.login}} Please review the following output log for errors:
+
+        ```text
+        {{{firstError}}}
+        ```
+        {{#if remainingErrors}}
+        <details>
+          <summary>Show remaining errors</summary>
+
+        ```text
+        {{{remainingErrors}}}
+        ```
+        </details>
+        {{/if}}
+
+        ```text
+        {{{summary}}}
+        ```
+
+        See [complete report here]({{status.target_url}}).
+    set:
+      id: report_ci
+      value: nope
+
+
+
+# Report specific error message if jest for integration tests fails
 - filters:
     ensure:
       value: "{{report_ci}}"
@@ -77,27 +162,54 @@ rules:
       id: logResult
       value: "{{{fetch}}}"
       remove:
-        - "^[\\s\\S]+?\\d+\\s+pending\n+"
-        - "npm ERR!.*\n"
-        - "\n*=============================================================================\n[\\s\\S]*"
+        - ".\\[2K.\\[1G|.\\[999D.\\[K"
+        - "^[\\s\\S]+?\\$ yarn travis:\\$JOB_PART.*\n"
+        - "\\$ node --max-old-space-size=4096.*\n"
+        - ".+rimraf coverage"
+        - "yarn run.+\n"
+        - "\\(node:\\d+\\) (\\[DEP0005\\]|DeprecationWarning).+\n"
+        - "\\$ yarn (cover|test):.+\n"
+        - "The command \"yarn travis:\\$JOB_PART\" exited[\\s\\S]*"
+        - "Ran all test suites.+\n"
+        - "error Command failed with exit code \\d+.\n"
+        - "info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.\n"
+        - "Force exiting Jest\n\nHave you considered.+"
+        - "=============================== Coverage summary ===============================[\\s\\S]+?================================================================================"
+        - " *PASS *test/.*\n"
+        - "^\\s+\n|\\s+$"
     string_cleanup_1:
       id: firstError
       value: "{{{logResult}}}"
       remove:
-        - "\\s2\\)\\s[\\s\\S]*"
+        - "\n\n(  ●| FAIL)[\\s\\S]*"
+        - "Test Suites:[\\s\\S]*"
+        - "\\s+$"
     string_cleanup_2:
       id: remainingErrors
       value: "{{{logResult}}}"
       remove:
-        - "^[\\s\\S]+?(?=\\s2\\)\\s)"
+        - "^[\\s\\S]+?(?=\n\n(  ●| FAIL)|$)"
+        - "^\n+"
+        - "Test Suites:[\\s\\S]*"
+        - "\\s+$"
+    string_cleanup_3:
+      id: summary
+      value: "{{{logResult}}}"
+      remove:
+        - "^[\\s\\S]+?(?=Test Suites:)"
+        - "\\s+$"
   actions:
     comment:
       identifier: "ci-result"
       message: |-
+        The basic integration tests succeeded, but the full suite failed.
+
         @{{commit.author.login}} Please review the following output log for errors:
+
         ```text
         {{{firstError}}}
         ```
+        {{#if remainingErrors}}
         <details>
           <summary>Show remaining errors</summary>
 
@@ -105,6 +217,11 @@ rules:
         {{{remainingErrors}}}
         ```
         </details>
+        {{/if}}
+
+        ```text
+        {{{summary}}}
+        ```
 
         See [complete report here]({{status.target_url}}).
     set:
@@ -113,7 +230,7 @@ rules:
 
 
 
-# Report specific error message if mocha for unit tests fails
+# Report specific error message if jest for unit tests or liniting fails
 - filters:
     ensure:
       value: "{{report_ci}}"
@@ -125,63 +242,40 @@ rules:
       state: "failed"
       allow_failure: false
       config:
-        env: JOB_PART=unit
+        env: JOB_PART=lint-unit
     fetch: travis_job.log
     string_cleanup:
       id: logResult
       value: "{{{fetch}}}"
       remove:
-        - "^[\\s\\S]+?\\d+\\s+pending\n+"
-        - "npm ERR!.*\n"
-        - "\n*=============================================================================\n[\\s\\S]*"
+        - ".\\[2K.\\[1G|.\\[999D.\\[K"
+        - "^[\\s\\S]+?\\$ yarn travis:\\$JOB_PART.*\n"
+        - "\\$ node --max-old-space-size=4096.*\n"
+        - ".+rimraf coverage"
+        - "yarn run.+\n"
+        - "\\(node:\\d+\\) (\\[DEP0005\\]|DeprecationWarning).+\n"
+        - "\\$ yarn (unit|lint).+\n"
+        - "The command \"yarn travis:\\$JOB_PART\" exited[\\s\\S]*"
+        - "Ran all test suites.+\n"
+        - "error Command failed with exit code \\d+.\n"
+        - "info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.\n"
+        - "Force exiting Jest\n\nHave you considered.+"
+        - "=============================== Coverage summary ===============================[\\s\\S]+?================================================================================"
+        - " *PASS *test/.*\n"
+        - "^\\s+\n|\\s+$"
   actions:
     comment:
       identifier: "ci-result"
       message: |-
+        The integration tests look fine, but there are code style issues or unit test failures in the Pull Request.
+
         @{{commit.author.login}} Please review the following output log for errors:
 
         ``` text
         {{{logResult}}}
         ```
 
-        Instead of updating these (outdated?) unit tests, you can choose to delete them and add integration tests instead. That would be great.
-
-        See [complete report here]({{status.target_url}}).
-    set:
-      id: report_ci
-      value: nope
-
-
-
-# Report specific error message if linting fails
-- filters:
-    ensure:
-      value: "{{report_ci}}"
-      equals: yep
-    commit: true
-    status:
-      context: "continuous-integration/travis-ci/pr"
-    travis_job:
-      state: "failed"
-      config:
-        env: JOB_PART=lint
-    fetch: travis_job.log
-    string_cleanup:
-      id: logResult
-      value: "{{{fetch}}}"
-      remove:
-        - "^[\\s\\S]+?npm run travis:\\$JOB_PART\n*"
-        - "npm ERR!.*\n"
-        - "\n*The command \"npm run travis:\\$JOB_PART\" exited [\\s\\S]*"
-  actions:
-    comment:
-      identifier: "ci-result"
-      message: |-
-        @{{commit.author.login}} The tests look fine, but there are code style issue in your Pull Request. Please review the following:
-
-        ``` text
-        {{{logResult}}}
-        ```
+        If the unit tests are outdated, you can choose to delete them and add integration tests instead. That would be great.
 
         See [complete report here]({{status.target_url}}).
     set:
@@ -397,18 +491,6 @@ rules:
 
 
 
-# add small label to small pull requests
-- filters:
-    open: true
-    pull_request:
-      additions: "<= 10"
-      deletions: "<= 10"
-      changed_files: "<= 2"
-  actions:
-    label: "PR: small"
-
-
-
 # add non-master label to pull request to other branch
 - filters:
     open: true
@@ -517,10 +599,57 @@ rules:
         If you think this is still a valid issue, please file a new issue with additional information.
 
 
+# Add action actions box to each pull request
+- filters:
+    pull_request: true
+    open: true
+    not:
+      comment:
+        matching: admin-actions
+        author: webpack-bot
+  actions:
+    comment:
+      identifier: admin-actions
+      message: |-
+        *For maintainers only:*
+
+        * [ ] <!-- document --> This need to be documented (issue in webpack/webpack.js.org will be filed when merged)
+
+
+# When a pull request need to be documented, create an issue in webpack/webpack.js.org when merged
+- filters:
+    pull_request:
+      merged: true
+    comment:
+      author: webpack-bot
+      matching: "\\* \\[x\\] <!-- document -->"
+    not:
+      comment_1:
+        author: webpack-bot
+        matching: admin-action-document-executed
+  actions:
+    new_issue:
+      target: webpack/webpack.js.org
+      title: "Document webpack change: {{{pull_request.title}}}"
+      body: |-
+        <!-- documentation request from webpack/webpack -->
+
+        *A pull request by @{{pull_request.user.login}} was merged and maintainers requested a documentation change.*
+
+        See pull request: {{{pull_request.html_url}}}
+
+        ---
+
+        {{{pull_request.body}}}
+    comment:
+      identifier: admin-action-document-executed
+      message: |-
+        I've created an issue to document this in webpack/webpack.js.org.
 
 
 
-# Check issues every week
+
+# Check open issues and pull requests every day
 - filters:
     open: true
   actions:

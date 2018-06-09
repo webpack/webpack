@@ -1,5 +1,5 @@
 it("should be able to use a context with a loader", function() {
 	var abc = "abc", scr = "script.coffee";
-	require("../_resources/" + scr).should.be.eql("coffee test");
-	require("raw-loader!../_resources/" + abc + ".txt").should.be.eql("abc");
+	expect(require("../_resources/" + scr)).toBe("coffee test");
+	expect(require("raw-loader!../_resources/" + abc + ".txt")).toBe("abc");
 });

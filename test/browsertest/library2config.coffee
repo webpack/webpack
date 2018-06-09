@@ -12,11 +12,6 @@ exports.default = new Promise (resolve, reject) ->
 				]
 			amd:
 				fromOptions: true
-			resolve:
-				# cannot resolve should outside the outermost node_modules
-				# so it is injected here
-				alias:
-					should: require.resolve "should"
 			plugins: [
 				new webpack.optimize.LimitChunkCountPlugin
 					maxChunks: 3
