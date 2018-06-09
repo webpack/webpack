@@ -41,8 +41,7 @@ module.exports = {
 			"preferType": {
 				"*": "any"
 			},
-			"requireReturnType": true,
-			requireReturnDescription: false
+			"requireReturnType": true
 		}],
 		"node/no-unsupported-features": "error",
 		"node/no-deprecated-api": "error",
