@@ -113,22 +113,10 @@ declare module "@webassemblyjs/ast" {
 		index: Index
 	): ModuleExportDescr;
 
-<<<<<<< HEAD
-	export class Tracer {
-		constructor(options: { noStream: boolean });
-		pipe(stream: NodeJS.WritableStream): void;
-		instantEvent(event: Event): void;
-		counter: number;
-		trace: {
-			begin(event: Event): void;
-			end(event: Event): void;
-		};
-=======
 	export function getSectionMetadata(ast: any, section: string);
 	export class FuncSignature {
 		args: string[];
 		result: string[];
->>>>>>> 02a955b4335cb7eeeb4dd1c96ef5407c6bcea158
 	}
 
 	// Node matcher
