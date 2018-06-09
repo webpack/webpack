@@ -1546,6 +1546,10 @@
           "description": "Check for incompatible wasm types when importing/exporting from/to ESM",
           "type": "boolean"
         },
+        "mangleWasmImports": {
+          "description": "Reduce size of WASM by changing imports to shorter strings.",
+          "type": "boolean"
+        },
         "namedModules": {
           "description": "Use readable module identifiers for better debugging",
           "type": "boolean"

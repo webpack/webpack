@@ -7,27 +7,6 @@ declare namespace NodeJS {
 	}
 }
 
-// There are no typings for chrome-trace-event
-declare module "chrome-trace-event" {
-	interface Event {
-		name: string;
-		id?: number;
-		cat: string[];
-		args?: Object;
-	}
-
-	export class Tracer {
-		constructor(options: { noStream: boolean });
-		pipe(stream: NodeJS.WritableStream): void;
-		instantEvent(event: Event): void;
-		counter: number;
-		trace: {
-			begin(event: Event): void;
-			end(event: Event): void;
-		};
-	}
-}
-
 // There are no typings for @webassemblyjs/ast
 declare module "@webassemblyjs/ast" {
 	export function traverse(
@@ -139,6 +118,12 @@ declare module "@webassemblyjs/ast" {
 		args: string[];
 		result: string[];
 	}
+
+	// Node matcher
+	export function isGlobalType(n: Node): boolean;
+	export function isTable(n: Node): boolean;
+	export function isMemory(n: Node): boolean;
+	export function isFuncImportDescr(n: Node): boolean;
 }
 
 /**

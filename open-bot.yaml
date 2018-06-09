@@ -613,7 +613,7 @@ rules:
       message: |-
         *For maintainers only:*
 
-        * [x] <!-- document --> This need to be documented (issue in webpack/webpack.js.org will be filed when merged)
+        * [ ] <!-- document --> This need to be documented (issue in webpack/webpack.js.org will be filed when merged)
 
 
 # When a pull request need to be documented, create an issue in webpack/webpack.js.org when merged
