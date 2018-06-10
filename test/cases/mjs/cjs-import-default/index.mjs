@@ -5,58 +5,61 @@ import { ns, default as def1, def as def2, data as data2 } from "./reexport.mjs"
 import * as reexport from "./reexport.mjs";
 
 it("should get correct values when importing named exports from a CommonJs module from mjs", function() {
-	(typeof data).should.be.eql("undefined");
-	({ data }).should.be.eql({ data: undefined });
-	def.should.be.eql({
+	expect(typeof data).toBe("undefined");
+	expect({ data }).toEqual({ data: undefined });
+	expect(def).toEqual({
 		data: "ok",
 		default: "default"
 	});
-	({ def }).should.be.eql({
+	expect({ def }).toEqual({
 		def: {
 			data: "ok",
 			default: "default"
 		}
 	});
-	const valueOf = "valueOf";
-	star[valueOf]().should.be.eql({
+	expect(star).toEqual({
 		default: {
 			data: "ok",
 			default: "default"
-		}
+		},
+		[Symbol.toStringTag]: "Module"
 	});
-	({ star }).should.be.eql({
+	expect({ star }).toEqual({
 		star: {
 			default: {
 				data: "ok",
 				default: "default"
-			}
+			},
+			[Symbol.toStringTag]: "Module"
 		}
 	});
-	star.default.should.be.eql({
+	expect(star.default).toEqual({
 		data: "ok",
 		default: "default"
 	});
-	ns.should.be.eql({
+	expect(ns).toEqual({
 		default: {
 			data: "ok",
 			default: "default"
-		}
+		},
+		[Symbol.toStringTag]: "Module"
 	});
-	def1.should.be.eql({
+	expect(def1).toEqual({
 		data: "ok",
 		default: "default"
 	});
-	def2.should.be.eql({
+	expect(def2).toEqual({
 		data: "ok",
 		default: "default"
 	});
-	(typeof data2).should.be.eql("undefined");
-	reexport[valueOf]().should.be.eql({
+	expect((typeof data2)).toBe("undefined");
+	expect(reexport).toEqual({
 		ns: {
 			default: {
 				data: "ok",
 				default: "default"
-			}
+			},
+			[Symbol.toStringTag]: "Module"
 		},
 		default: {
 			data: "ok",
@@ -66,6 +69,7 @@ it("should get correct values when importing named exports from a CommonJs modul
 			data: "ok",
 			default: "default"
 		},
-		data: undefined
+		data: undefined,
+		[Symbol.toStringTag]: "Module"
 	});
 });

@@ -1,11 +1,14 @@
 var testData = require("./src/index.js");
 
 it("should export the correct values", function() {
-	testData.should.be.eql({
+	expect(testData).toEqual({
 		icon: {
 			svg: {
-				default: 1
-			}
-		}
+				default: 1,
+				[Symbol.toStringTag]: "Module"
+			},
+			[Symbol.toStringTag]: "Module"
+		},
+		[Symbol.toStringTag]: "Module"
 	});
-})
+});

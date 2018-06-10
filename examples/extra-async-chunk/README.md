@@ -83,11 +83,18 @@ require.ensure(["./a"], function(require) {
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
 /******/ 		3: 0
 /******/ 	};
 /******/
 /******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + chunkId + ".output.js"
+/******/ 	}
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -144,7 +151,7 @@ require.ensure(["./a"], function(require) {
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
-/******/ 				script.src = __webpack_require__.p + "" + chunkId + ".output.js";
+/******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/ 				var timeout = setTimeout(function(){
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
@@ -324,66 +331,66 @@ module.exports = "c";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  405 bytes       0  [emitted]  
 1.output.js  241 bytes       1  [emitted]  
 2.output.js  241 bytes       2  [emitted]  
-  output.js   7.31 KiB       3  [emitted]  main
+  output.js   7.58 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes <{3}> ={1}= ={2}= [rendered] split chunk (cache group: default)
     > ./a ./b ./c [2] ./example.js 2:0-30
     > [2] ./example.js 5:0-8:2
-    [0] ./b.js 21 bytes {0} [built]
-        amd require ./b [2] ./example.js 2:0-30
-        cjs require ./b [2] ./example.js 6:1-15
-    [1] ./a.js 21 bytes {0} [built]
-        amd require ./a [2] ./example.js 2:0-30
-        require.ensure item ./a [2] ./example.js 5:0-8:2
+ [0] ./b.js 21 bytes {0} [built]
+     amd require ./b [2] ./example.js 2:0-30
+     cjs require ./b [2] ./example.js 6:1-15
+ [1] ./a.js 21 bytes {0} [built]
+     amd require ./a [2] ./example.js 2:0-30
+     require.ensure item ./a [2] ./example.js 5:0-8:2
 chunk    {1} 1.output.js 21 bytes <{3}> ={0}= [rendered]
     > [2] ./example.js 5:0-8:2
-    [3] ./d.js 21 bytes {1} [built]
-        cjs require ./d [2] ./example.js 7:1-15
+ [3] ./d.js 21 bytes {1} [built]
+     cjs require ./d [2] ./example.js 7:1-15
 chunk    {2} 2.output.js 21 bytes <{3}> ={0}= [rendered]
     > ./a ./b ./c [2] ./example.js 2:0-30
-    [4] ./c.js 21 bytes {2} [built]
-        amd require ./c [2] ./example.js 2:0-30
+ [4] ./c.js 21 bytes {2} [built]
+     amd require ./c [2] ./example.js 2:0-30
 chunk    {3} output.js (main) 164 bytes >{0}< >{1}< >{2}< [entry] [rendered]
     > .\example.js main
-    [2] ./example.js 164 bytes {3} [built]
-        single entry .\example.js  main
+ [2] ./example.js 164 bytes {3} [built]
+     single entry .\example.js  main
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  118 bytes       0  [emitted]  
 1.output.js   91 bytes       1  [emitted]  
 2.output.js   91 bytes       2  [emitted]  
-  output.js   1.73 KiB       3  [emitted]  main
+  output.js   1.75 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 42 bytes <{3}> ={1}= ={2}= [rendered] split chunk (cache group: default)
     > ./a ./b ./c [2] ./example.js 2:0-30
     > [2] ./example.js 5:0-8:2
-    [0] ./b.js 21 bytes {0} [built]
-        amd require ./b [2] ./example.js 2:0-30
-        cjs require ./b [2] ./example.js 6:1-15
-    [1] ./a.js 21 bytes {0} [built]
-        amd require ./a [2] ./example.js 2:0-30
-        require.ensure item ./a [2] ./example.js 5:0-8:2
+ [0] ./b.js 21 bytes {0} [built]
+     amd require ./b [2] ./example.js 2:0-30
+     cjs require ./b [2] ./example.js 6:1-15
+ [1] ./a.js 21 bytes {0} [built]
+     amd require ./a [2] ./example.js 2:0-30
+     require.ensure item ./a [2] ./example.js 5:0-8:2
 chunk    {1} 1.output.js 21 bytes <{3}> ={0}= [rendered]
     > [2] ./example.js 5:0-8:2
-    [3] ./d.js 21 bytes {1} [built]
-        cjs require ./d [2] ./example.js 7:1-15
+ [3] ./d.js 21 bytes {1} [built]
+     cjs require ./d [2] ./example.js 7:1-15
 chunk    {2} 2.output.js 21 bytes <{3}> ={0}= [rendered]
     > ./a ./b ./c [2] ./example.js 2:0-30
-    [4] ./c.js 21 bytes {2} [built]
-        amd require ./c [2] ./example.js 2:0-30
+ [4] ./c.js 21 bytes {2} [built]
+     amd require ./c [2] ./example.js 2:0-30
 chunk    {3} output.js (main) 164 bytes >{0}< >{1}< >{2}< [entry] [rendered]
     > .\example.js main
-    [2] ./example.js 164 bytes {3} [built]
-        single entry .\example.js  main
+ [2] ./example.js 164 bytes {3} [built]
+     single entry .\example.js  main
 ```

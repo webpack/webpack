@@ -143,7 +143,7 @@ function webpackContext(req) {
 function webpackContextResolve(req) {
 	var id = map[req];
 	if(!(id + 1)) { // check for number or string
-		var e = new Error('Cannot find module "' + req + '".');
+		var e = new Error("Cannot find module '" + req + "'");
 		e.code = 'MODULE_NOT_FOUND';
 		throw e;
 	}
@@ -202,50 +202,50 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
     Asset      Size  Chunks             Chunk Names
 output.js  4.48 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 613 bytes [entry] [rendered]
     > .\example.js main
-    [0] ./example.js 150 bytes {0} [built]
-        single entry .\example.js  main
-    [1] ./templates sync ^\.\/.*$ 217 bytes {0} [built]
-        cjs require context ./templates [0] ./example.js 2:8-44
-    [2] ./templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a.js [1] ./templates sync ^\.\/.*$ ./a.js
-        context element ./a [1] ./templates sync ^\.\/.*$ ./a
-    [3] ./templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b.js [1] ./templates sync ^\.\/.*$ ./b.js
-        context element ./b [1] ./templates sync ^\.\/.*$ ./b
-    [4] ./templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c.js [1] ./templates sync ^\.\/.*$ ./c.js
-        context element ./c [1] ./templates sync ^\.\/.*$ ./c
+ [0] ./example.js 150 bytes {0} [built]
+     single entry .\example.js  main
+ [1] ./templates sync ^\.\/.*$ 217 bytes {0} [built]
+     cjs require context ./templates [0] ./example.js 2:8-44
+ [2] ./templates/a.js 82 bytes {0} [optional] [built]
+     context element ./a.js [1] ./templates sync ^\.\/.*$ ./a.js
+     context element ./a [1] ./templates sync ^\.\/.*$ ./a
+ [3] ./templates/b.js 82 bytes {0} [optional] [built]
+     context element ./b.js [1] ./templates sync ^\.\/.*$ ./b.js
+     context element ./b [1] ./templates sync ^\.\/.*$ ./b
+ [4] ./templates/c.js 82 bytes {0} [optional] [built]
+     context element ./c.js [1] ./templates sync ^\.\/.*$ ./c.js
+     context element ./c [1] ./templates sync ^\.\/.*$ ./c
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
     Asset      Size  Chunks             Chunk Names
 output.js  1.16 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 613 bytes [entry] [rendered]
     > .\example.js main
-    [0] ./templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c.js [3] ./templates sync ^\.\/.*$ ./c.js
-        context element ./c [3] ./templates sync ^\.\/.*$ ./c
-    [1] ./templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b.js [3] ./templates sync ^\.\/.*$ ./b.js
-        context element ./b [3] ./templates sync ^\.\/.*$ ./b
-    [2] ./templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a.js [3] ./templates sync ^\.\/.*$ ./a.js
-        context element ./a [3] ./templates sync ^\.\/.*$ ./a
-    [3] ./templates sync ^\.\/.*$ 217 bytes {0} [built]
-        cjs require context ./templates [4] ./example.js 2:8-44
-    [4] ./example.js 150 bytes {0} [built]
-        single entry .\example.js  main
+ [0] ./templates/c.js 82 bytes {0} [optional] [built]
+     context element ./c.js [3] ./templates sync ^\.\/.*$ ./c.js
+     context element ./c [3] ./templates sync ^\.\/.*$ ./c
+ [1] ./templates/b.js 82 bytes {0} [optional] [built]
+     context element ./b.js [3] ./templates sync ^\.\/.*$ ./b.js
+     context element ./b [3] ./templates sync ^\.\/.*$ ./b
+ [2] ./templates/a.js 82 bytes {0} [optional] [built]
+     context element ./a.js [3] ./templates sync ^\.\/.*$ ./a.js
+     context element ./a [3] ./templates sync ^\.\/.*$ ./a
+ [3] ./templates sync ^\.\/.*$ 217 bytes {0} [built]
+     cjs require context ./templates [4] ./example.js 2:8-44
+ [4] ./example.js 150 bytes {0} [built]
+     single entry .\example.js  main
 ```
 
 # Code Splitting

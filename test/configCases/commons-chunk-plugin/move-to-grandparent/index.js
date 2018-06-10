@@ -3,8 +3,8 @@ it("should correctly include indirect children in common chunk", function(done) 
 		import('./pageA'),
 		import('./pageB').then(m => m.default)
 	]).then((imports) => {
-		imports[0].default.should.be.eql("reuse");
-		imports[1].default.should.be.eql("reuse");
+		expect(imports[0].default).toBe("reuse");
+		expect(imports[1].default).toBe("reuse");
 		done();
 	}).catch(e => {
 		done(e);

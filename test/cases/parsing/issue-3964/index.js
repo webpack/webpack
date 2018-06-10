@@ -1,4 +1,4 @@
 it("should be possible to export default an imported name", function() {
 	var x = require("./module");
-	x.should.be.eql({ default: 1234 });
+	expect(x).toEqual({ default: 1234, [Symbol.toStringTag]: "Module" });
 });

@@ -1,6 +1,6 @@
 This is the vendor build part.
 
-It's built separately from the app part. The vendors dll is only built when vendors has changed and not while the normal development cycle.
+It's built separately from the app part. The vendors dll is only built when the array of vendors has changed and not during the normal development cycle.
 
 The DllPlugin in combination with the `output.library` option exposes the internal require function as global variable in the target environment.
 
@@ -41,7 +41,7 @@ export function square(n) {
 # dist/vendor.js
 
 ``` javascript
-var vendor_lib_bc3751dcff9f91451e0e =
+var vendor_lib_f3fbcfb4ec389ba5bbf0 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -157,7 +157,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ``` javascript
-{"name":"vendor_lib_bc3751dcff9f91451e0e","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
+{"name":"vendor_lib_f3fbcfb4ec389ba5bbf0","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
 ```
 
 # Info
@@ -166,15 +166,15 @@ function square(n) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
     Asset      Size  Chunks             Chunk Names
 vendor.js  3.32 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
     > main
-    [0] dll main 12 bytes {0} [built]
-        dll entry 
-        
+ [0] dll main 12 bytes {0} [built]
+     dll entry 
+     
      + 1 hidden module
 ```
 
@@ -182,15 +182,15 @@ chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
     Asset       Size  Chunks             Chunk Names
 vendor.js  704 bytes       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
     > main
-    [1] dll main 12 bytes {0} [built]
-        dll entry 
-        
+ [1] dll main 12 bytes {0} [built]
+     dll entry 
+     
      + 1 hidden module
 ```
 

@@ -1,8 +1,8 @@
 it("should be able to rename require by var", function() {
 	var cjsRequire; // just to make it difficult
 	var cjsRequire = require, cjsRequire2 = typeof require !== "undefined" && require;
-	cjsRequire("./file").should.be.eql("ok");
-	cjsRequire2("./file").should.be.eql("ok");
+	expect(cjsRequire("./file")).toBe("ok");
+	expect(cjsRequire2("./file")).toBe("ok");
 });
 
 it("should be able to rename require by assign", function() {
@@ -10,39 +10,39 @@ it("should be able to rename require by assign", function() {
 	(function() {
 		cjsRequire = require;
 		cjsRequire2 = typeof require === "function" && require;
-		cjsRequire("./file").should.be.eql("ok");
-		cjsRequire2("./file").should.be.eql("ok");
+		expect(cjsRequire("./file")).toBe("ok");
+		expect(cjsRequire2("./file")).toBe("ok");
 	}());
 });
 
 it("should be able to rename require by IIFE", function() {
 	(function(cjsRequire) {
-		cjsRequire("./file").should.be.eql("ok");
+		expect(cjsRequire("./file")).toBe("ok");
 	}(require));
 });
 
 it("should be able to rename require by IIFE call", function() {
 	(function(somethingElse, cjsRequire) {
-		cjsRequire("./file").should.be.eql("ok");
-		somethingElse.should.be.eql(123);
+		expect(cjsRequire("./file")).toBe("ok");
+		expect(somethingElse).toBe(123);
 	}.call(this, 123, typeof require === "function" ? require : "error"));
 });
 
 it("should be able to rename stuff by IIFE call", function() {
 	(function(_exports, _exports2, _module, _module2, _define, _define2, _require, _require2) {
 		_define(function(R, E, M) {
-			R("./file").should.be.eql("ok");
-			_require("./file").should.be.eql("ok");
-			_require2("./file").should.be.eql("ok");
-			E.should.be.eql(exports);
-			_exports.should.be.eql(exports);
-			_exports2.should.be.eql(exports);
-			M.should.be.eql(module);
-			_module.should.be.eql(module);
-			_module2.should.be.eql(module);
+			expect(R("./file")).toBe("ok");
+			expect(_require("./file")).toBe("ok");
+			expect(_require2("./file")).toBe("ok");
+			expect(E).toBe(exports);
+			expect(_exports).toBe(exports);
+			expect(_exports2).toBe(exports);
+			expect(M).toBe(module);
+			expect(_module).toBe(module);
+			expect(_module2).toBe(module);
 		});
 		_define2(["./file"], function(file) {
-			file.should.be.eql("ok");
+			expect(file).toBe("ok");
 		});
 	}).call(this,
 			typeof exports !== 'undefined' ? exports : null,
@@ -57,8 +57,8 @@ it("should be able to rename stuff by IIFE call", function() {
 
 it("should accept less parameters in a IIFE call", function() {
 	(function(r, require) {
-		r("./file").should.be.eql("ok");
-		(typeof require).should.be.eql("undefined");
+		expect(r("./file")).toBe("ok");
+		expect((typeof require)).toBe("undefined");
 	}(require));
 });
 
@@ -70,12 +70,12 @@ it("should accept more parameters in a IIFE call", function() {
 it("should be able to rename stuff by IIFE call", function() {
 	(function(_exports, _module, _define, _require) {
 		_define(function(R, E, M) {
-			R("./file").should.be.eql("ok");
-			_require("./file").should.be.eql("ok");
-			E.should.be.eql(exports);
-			_exports.should.be.eql(exports);
-			M.should.be.eql(module);
-			_module.should.be.eql(module);
+			expect(R("./file")).toBe("ok");
+			expect(_require("./file")).toBe("ok");
+			expect(E).toBe(exports);
+			expect(_exports).toBe(exports);
+			expect(M).toBe(module);
+			expect(_module).toBe(module);
 		});
 	}).call(this,
 			typeof exports !== 'undefined' ? exports : null,
