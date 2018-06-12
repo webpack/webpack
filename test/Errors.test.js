@@ -43,6 +43,15 @@ describe("Errors", () => {
 			callback(stats.errors, stats.warnings);
 		});
 	}
+
+	function getErrorsPromise(options, callback) {
+		return new Promise((resolve, reject) => {
+			getErrors(options, (errors, warnings) => {
+				callback(errors, warnings);
+				resolve();
+			});
+		});
+	}
 	it("should throw an error if file doesn't exist", done => {
 		getErrors(
 			{
@@ -186,6 +195,164 @@ describe("Errors", () => {
 					expect(lines[2]).toMatch(/\[chunkhash\].js/);
 					expect(lines[2]).toMatch(/use \[hash\] instead/);
 				});
+				done();
+			}
+		);
+	});
+	it("should show loader name when emit/throw errors or warnings from loaders", () => {
+		return Promise.all([
+			getErrorsPromise(
+				{
+					mode: "development",
+					entry: "./entry-point-error-loader-required.js"
+				},
+				(errors, warnings) => {
+					expect(warnings).toHaveLength(1);
+					expect(warnings[0].split("\n")[1]).toMatch(
+						/^Module Warning \(from .\/emit-error-loader.js\):$/
+					);
+					expect(errors).toHaveLength(1);
+					expect(errors[0].split("\n")[1]).toMatch(
+						/^Module Error \(from .\/emit-error-loader.js\):$/
+					);
+				}
+			),
+			getErrorsPromise(
+				{
+					mode: "development",
+					entry: path.resolve(base, "./emit-error-loader") + "!./entry-point.js"
+				},
+				(errors, warnings) => {
+					expect(warnings).toHaveLength(1);
+					expect(warnings[0].split("\n")[1]).toMatch(
+						/^Module Warning \(from .\/emit-error-loader.js\):$/
+					);
+					expect(errors).toHaveLength(1);
+					expect(errors[0].split("\n")[1]).toMatch(
+						/^Module Error \(from .\/emit-error-loader.js\):$/
+					);
+				}
+			),
+			getErrorsPromise(
+				{
+					mode: "development",
+					entry: "./not-a-json.js",
+					module: {
+						rules: [
+							{
+								test: /not-a-json\.js$/,
+								use: [
+									"json-loader",
+									{
+										loader: path.resolve(base, "./emit-error-loader")
+									}
+								]
+							}
+						]
+					}
+				},
+				(errors, warnings) => {
+					expect(warnings).toHaveLength(1);
+					expect(warnings[0].split("\n")[1]).toMatch(
+						/^Module Warning \(from .\/emit-error-loader.js\):$/
+					);
+					expect(errors).toHaveLength(2);
+					expect(errors[0].split("\n")[1]).toMatch(
+						/^Module Error \(from .\/emit-error-loader.js\):$/
+					);
+					expect(errors[1].split("\n")[1]).toMatch(
+						/^Module build failed \(from \(webpack\)\/node_modules\/json-loader\/index.js\):$/
+					);
+				}
+			),
+			getErrorsPromise(
+				{
+					mode: "development",
+					entry: "./entry-point.js",
+					module: {
+						rules: [
+							{
+								test: /entry-point\.js$/,
+								use: path.resolve(base, "./async-error-loader")
+							}
+						]
+					}
+				},
+				(errors, warnings) => {
+					expect(errors).toHaveLength(1);
+					expect(errors[0].split("\n")[1]).toMatch(
+						/^Module build failed \(from .\/async-error-loader.js\):$/
+					);
+				}
+			),
+			getErrorsPromise(
+				{
+					mode: "development",
+					entry: "./entry-point.js",
+					module: {
+						rules: [
+							{
+								test: /entry-point\.js$/,
+								use: path.resolve(base, "./throw-error-loader")
+							}
+						]
+					}
+				},
+				(errors, warnings) => {
+					expect(errors).toHaveLength(1);
+					expect(errors[0].split("\n")[1]).toMatch(
+						/^Module build failed \(from .\/throw-error-loader.js\):$/
+					);
+				}
+			),
+			getErrorsPromise(
+				{
+					mode: "development",
+					entry: "./entry-point.js",
+					module: {
+						rules: [
+							{
+								test: /entry-point\.js$/,
+								use: path.resolve(base, "./irregular-error-loader")
+							}
+						]
+					}
+				},
+				(errors, warnings) => {
+					expect(warnings).toHaveLength(2);
+					expect(warnings[0].split("\n")[1]).toMatch(
+						/^Module Warning \(from .\/irregular-error-loader.js\):$/
+					);
+					expect(warnings[1].split("\n")[1]).toMatch(
+						/^Module Warning \(from .\/irregular-error-loader.js\):$/
+					);
+
+					expect(errors).toHaveLength(3);
+					expect(errors[0].split("\n")[1]).toMatch(
+						/^Module Error \(from .\/irregular-error-loader.js\):$/
+					);
+					expect(errors[1].split("\n")[1]).toMatch(
+						/^Module Error \(from .\/irregular-error-loader.js\):$/
+					);
+					expect(errors[2].split("\n")[1]).toMatch(
+						/^Module build failed \(from .\/irregular-error-loader.js\):$/
+					);
+				}
+			)
+		]);
+	});
+	it("should throw a build error if no source be returned after run loaders", done => {
+		getErrors(
+			{
+				mode: "development",
+				entry: path.resolve(base, "./no-return-loader") + "!./entry-point.js"
+			},
+			(errors, warnings) => {
+				expect(errors).toHaveLength(1);
+				const messages = errors[0].split("\n");
+				expect(messages[1]).toMatch(
+					/^Module build failed: Error: Final loader \(.+\) didn't return a Buffer or String/
+				);
 				done();
 			}
 		);
