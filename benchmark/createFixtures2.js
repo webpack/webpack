@@ -14,7 +14,7 @@ function genModule(prefix, depth, asyncDepth, multiplex, r, circular) {
 	const isAsync = depth >= asyncDepth;
 	if (!isAsync) circular.push(path.resolve(fixtures, prefix + "/index.js"));
 	source.push("(function() {");
-	const m = r % multiplex + 1;
+	const m = (r % multiplex) + 1;
 	let sum = 1;
 	let item;
 	try {
