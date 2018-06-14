@@ -1,5 +1,4 @@
-// eslint-disable-next-line node/no-extraneous-require
-const webpack = require("webpack");
+const webpack = require("../");
 const path = require("path");
 
 webpack(

@@ -6,7 +6,7 @@ const fixtures = path.join(__dirname, "fixtures");
 try {
 	fs.mkdirSync(fixtures);
 } catch (e) {
-	// catch here
+	// The directory already exists
 }
 
 function genModule(prefix, depth, asyncDepth, multiplex, r, circular) {
@@ -20,7 +20,7 @@ function genModule(prefix, depth, asyncDepth, multiplex, r, circular) {
 	try {
 		fs.mkdirSync(path.resolve(fixtures, prefix));
 	} catch (e) {
-		// catch here
+		// The directory already exists
 	}
 	if (depth > 0) {
 		for (let i = 0; i < m; i++) {

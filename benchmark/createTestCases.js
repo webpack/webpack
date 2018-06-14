@@ -67,8 +67,7 @@ function createTree(fs, count, folder) {
 				}
 				make(
 					`${prefix}-${i}`,
-					// eslint-disable-next-line node/no-unsupported-features
-					depth > 4 || count > 30 ? 0 : count + depth + i ** 2,
+					depth > 4 || count > 30 ? 0 : count + depth + Math.pow(i, 2),
 					depth + 1
 				);
 			}

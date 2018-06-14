@@ -6,7 +6,7 @@ const fixtures = path.join(__dirname, "fixtures");
 try {
 	fs.mkdirSync(fixtures);
 } catch (e) {
-	// catch here
+	// The directory already exists
 }
 
 function generateRequireString(conditional, suffix) {
