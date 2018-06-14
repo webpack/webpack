@@ -5,20 +5,20 @@ it("should be able to set the public path", function() {
 
 	global.xyz = "xyz";
 	__webpack_public_path__ = global.xyz;
-	__webpack_require__.p.should.be.eql("xyz");
+	expect(__webpack_require__.p).toBe("xyz");
 	delete global.xyz;
 
 	window.something = "something";
 	__webpack_public_path__ = window.something;
-	__webpack_require__.p.should.be.eql("something");
+	expect(__webpack_require__.p).toBe("something");
 	delete window.something;
 
 	__webpack_public_path__ = "abc";
-	__webpack_require__.p.should.be.eql("abc");
+	expect(__webpack_require__.p).toBe("abc");
 
 	__webpack_public_path__ = func();
-	__webpack_require__.p.should.be.eql("func");
-	
+	expect(__webpack_require__.p).toBe("func");
+
 	__webpack_public_path__ = originalValue;
 
 	function func() {

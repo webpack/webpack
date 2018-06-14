@@ -5,28 +5,30 @@ import f from "./f";
 import h from "./h";
 import j from "./j";
 
-it("should fire the correct events", function(done) {
+it("should fire the correct events", (done) => {
 	var events = [];
 	var options = {
 		ignoreUnaccepted: true,
 		ignoreDeclined: true,
 		ignoreErrored: true,
-		onDeclined: function(data) { events.push(data); },
-		onUnaccepted: function(data) { events.push(data); },
-		onAccepted: function(data) { events.push(data); },
-		onErrored: function(data) { events.push(data); }
+		onDeclined(data) { events.push(data); },
+		onUnaccepted(data) { events.push(data); },
+		onAccepted(data) { events.push(data); },
+		onErrored(data) { events.push(data); }
 	};
 
 	function waitForUpdate(fn) {
-		NEXT(require("../../update")(done, options, function() {
+		NEXT(require("../../update")(done, options, () => {
 			try {
 				fn();
-			} catch(e) { done(e); }
+			} catch(e) {
+				done(e);
+			}
 		}));
 	}
 
-	waitForUpdate(function() {
-		events.should.be.eql([
+	waitForUpdate(() => {
+		expect(events).toEqual([
 			{
 				type: "unaccepted",
 				moduleId: "./index.js",

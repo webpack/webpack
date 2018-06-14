@@ -94,6 +94,7 @@ module.exports = [
 		optimization: {
 			splitChunks: {
 				minSize: 0,
+				maxInitialRequests: Infinity,
 				chunks: "all"
 			}
 		},

@@ -26,89 +26,90 @@ import "unused";
 
 
 it("should import a default export from a module", function() {
-	defaultExport.should.be.eql("def");
+	expect(defaultExport).toBe("def");
 });
 
 it("should import an identifier from a module", function() {
-	a.should.be.eql("a");
-	B.should.be.eql("b");
+	expect(a).toBe("a");
+	expect(B).toBe("b");
 });
 
 it("should import a whole module", function() {
-	abc.a.should.be.eql("a");
-	abc.b.should.be.eql("b");
-	abc.c.should.be.eql("c");
-	abc.d.c.should.be.eql("c");
-	abc.e.should.be.eql("c");
+	expect(abc.a).toBe("a");
+	expect(abc.b).toBe("b");
+	expect(abc.c).toBe("c");
+	expect(abc.d.c).toBe("c");
+	expect(abc.e).toBe("c");
 	var copy = (function(a) { return a; }(abc));
-	copy.a.should.be.eql("a");
-	copy.b.should.be.eql("b");
-	copy.c.should.be.eql("c");
-	copy.d.c.should.be.eql("c");
-	copy.e.should.be.eql("c");
-	(typeof abc).should.be.eql("object");
+	expect(copy.a).toBe("a");
+	expect(copy.b).toBe("b");
+	expect(copy.c).toBe("c");
+	expect(copy.d.c).toBe("c");
+	expect(copy.e).toBe("c");
+	expect((typeof abc)).toBe("object");
+	expect("" + abc).toBe("[object Module]");
 });
 
 it("should export functions", function() {
-	fn.should.have.type("function");
-	fn().should.be.eql("fn");
-	(fn === fn).should.be.eql(true);
+	expect(fn).toBeTypeOf("function");
+	expect(fn()).toBe("fn");
+	expect((fn === fn)).toBe(true);
 });
 
 it("should multiple variables with one statement", function() {
-	one.should.be.eql("one");
-	two.should.be.eql("two");
+	expect(one).toBe("one");
+	expect(two).toBe("two");
 });
 
 it("should still be able to use exported stuff", function() {
-	test1.should.be.eql("fn");
-	test2.should.be.eql("two");
+	expect(test1).toBe("fn");
+	expect(test2).toBe("two");
 });
 
 it("should reexport a module", function() {
-	rea.should.be.eql("a");
-	reb.should.be.eql("b");
-	rec.should.be.eql("c");
-	reo.should.be.eql("one");
-	retwo.should.be.eql("two");
-	rea2.should.be.eql("a");
+	expect(rea).toBe("a");
+	expect(reb).toBe("b");
+	expect(rec).toBe("c");
+	expect(reo).toBe("one");
+	expect(retwo).toBe("two");
+	expect(rea2).toBe("a");
 });
 
 it("should support circular dependencies", function() {
-	threeIsOdd.should.be.eql(true);
-	even(4).should.be.eql(true);
+	expect(threeIsOdd).toBe(true);
+	expect(even(4)).toBe(true);
 });
 
 it("should support export specifier", function() {
-	specA.should.be.eql(1);
-	specB.should.be.eql(2);
+	expect(specA).toBe(1);
+	expect(specB).toBe(2);
 });
 
 it("should be able to import commonjs", function() {
 	function x() { throw new Error("should not be executed"); }
 	// next line doesn't end with semicolon
 	x
-	Thing.should.have.type("function");
+	expect(Thing).toBeTypeOf("function");
 	x
-	Thing().should.be.eql("thing");
+	expect(Thing()).toBe("thing");
 	x
-	Other.should.be.eql("other");
+	expect(Other).toBe("other");
 
-	Thing2.should.have.type("function");
-	new Thing2().value.should.be.eql("thing");
-	Other2.should.be.eql("other");
-	Thing3().should.be.eql("thing");
+	expect(Thing2).toBeTypeOf("function");
+	expect(new Thing2().value).toBe("thing");
+	expect(Other2).toBe("other");
+	expect(Thing3()).toBe("thing");
 });
 
 it("should be able to import commonjs with star import", function() {
 	var copyOfCommonjs = commonjs;
-	commonjs().should.be.eql("thing");
-	commonjs.Other.should.be.eql("other");
-	copyOfCommonjs().should.be.eql("thing");
-	copyOfCommonjs.Other.should.be.eql("other");
+	expect(commonjs()).toBe("thing");
+	expect(commonjs.Other).toBe("other");
+	expect(copyOfCommonjs()).toBe("thing");
+	expect(copyOfCommonjs.Other).toBe("other");
 	var copyOfCommonjsTrans = commonjsTrans;
-	new commonjsTrans.default().value.should.be.eql("thing");
-	commonjsTrans.Other.should.be.eql("other");
-	new copyOfCommonjsTrans.default().value.should.be.eql("thing");
-	copyOfCommonjsTrans.Other.should.be.eql("other");
+	expect(new commonjsTrans.default().value).toBe("thing");
+	expect(commonjsTrans.Other).toBe("other");
+	expect(new copyOfCommonjsTrans.default().value).toBe("thing");
+	expect(copyOfCommonjsTrans.Other).toBe("other");
 });

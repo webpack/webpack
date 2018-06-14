@@ -1,4 +1,0 @@
---full-trace
---reporter dot
---check-leaks
---globals Base64

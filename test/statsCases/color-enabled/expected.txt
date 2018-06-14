@@ -1,7 +1,0 @@
-Hash: <CLR=BOLD>0b32ee714cee3c8b25d4</CLR>
-Time: <CLR=BOLD>X</CLR>ms
-Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
-  <CLR=BOLD>Asset</CLR>      <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22><CLR=BOLD>Chunk Names</CLR>
-<CLR=32,BOLD>main.js</CLR>  2.61 KiB       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
-Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
-[0] <CLR=BOLD>./index.js</CLR> 0 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>

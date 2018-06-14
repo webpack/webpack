@@ -183,34 +183,34 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
     Asset      Size  Chunks             Chunk Names
 output.js  4.17 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > .\example.js main
-    [0] ./example.js 113 bytes {0} [built]
-        single entry .\example.js  main
-    [1] external "add" 42 bytes {0} [built]
-        cjs require add [0] ./example.js 1:10-24
-    [2] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
-        cjs require subtract [0] ./example.js 2:15-34
+ [0] ./example.js 113 bytes {0} [built]
+     single entry .\example.js  main
+ [1] external "add" 42 bytes {0} [built]
+     cjs require add [0] ./example.js 1:10-24
+ [2] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
+     cjs require subtract [0] ./example.js 2:15-34
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
     Asset      Size  Chunks             Chunk Names
 output.js  1.02 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
     > .\example.js main
-    [0] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
-        cjs require subtract [2] ./example.js 2:15-34
-    [1] external "add" 42 bytes {0} [built]
-        cjs require add [2] ./example.js 1:10-24
-    [2] ./example.js 113 bytes {0} [built]
-        single entry .\example.js  main
+ [0] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
+     cjs require subtract [2] ./example.js 2:15-34
+ [1] external "add" 42 bytes {0} [built]
+     cjs require add [2] ./example.js 1:10-24
+ [2] ./example.js 113 bytes {0} [built]
+     single entry .\example.js  main
 ```
