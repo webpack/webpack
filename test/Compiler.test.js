@@ -448,4 +448,26 @@ describe("Compiler", () => {
 			});
 		});
 	});
+	it("should use cache on second run call", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "development",
+			devtool: false,
+			entry: "./fixtures/count-loader!./fixtures/count-loader",
+			output: {
+				path: "/"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		compiler.run(() => {
+			compiler.run(() => {
+				const result = compiler.outputFileSystem.readFileSync(
+					"/main.js",
+					"utf-8"
+				);
+				expect(result).toContain("module.exports = 0;");
+				done();
+			});
+		});
+	})
 });
