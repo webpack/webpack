@@ -1,7 +1,7 @@
 import Answer, { bar } from "dll/index";
 
 it("should load a module from dll", function() {
-	expect(require("dll/index")).toEqual({ bar: "bar", default: 42 });
+	expect(require("dll/index")).toEqual({ bar: "bar", default: 42, [Symbol.toStringTag]: "Module" });
 });
 
 it("should load an harmony module from dll (default export)", function() {

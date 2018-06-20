@@ -50,7 +50,7 @@ it("should pass mangle options", function() {
 
 	const source = fs.readFileSync(path.join(__dirname, "ie8.js"), "utf-8");
 
-	expect(source).toMatch("t.exports=function(t){return function(n){try{t()}catch(t){n(t)}}}");
+	expect(source).toMatch(".exports=function(e){return function(t){try{e()}catch(e){t(e)}}}");
 });
 
 it("should pass compress options", function() {
@@ -59,7 +59,7 @@ it("should pass compress options", function() {
 
 	const source = fs.readFileSync(path.join(__dirname, "compress.js"), "utf-8");
 
-	expect(source).toMatch("o.exports=function(){console.log(4),console.log(6),console.log(4),console.log(7)}");
+	expect(source).toMatch(".exports=function(){console.log(4),console.log(6),console.log(4),console.log(7)}");
 });
 
 require.include("./test.js");
