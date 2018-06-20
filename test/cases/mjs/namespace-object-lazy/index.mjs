@@ -1,13 +1,13 @@
 it("should receive a namespace object when importing commonjs", function(done) {
 	import("./cjs.js").then(function(result) {
-		result.should.be.eql({ default: { named: "named", default: "default" } });
+		expect(result).toEqual({ default: { named: "named", default: "default" }, [Symbol.toStringTag]: "Module" });
 		done();
 	}).catch(done);
 });
 
 it("should receive a namespace object when importing commonjs with __esModule", function(done) {
 	import("./cjs-esmodule.js").then(function(result) {
-		result.should.be.eql({ default: { __esModule: true, named: "named", default: "default" } });
+		expect(result).toEqual({ default: { __esModule: true, named: "named", default: "default" }, [Symbol.toStringTag]: "Module" });
 		done();
 	}).catch(done);
 });
@@ -40,11 +40,11 @@ function contextHarmony(name) {
 
 function contextMixed(name) {
 	return Promise.all([
-		import(`./dir-mixed/${name}.js`),
-		import(/* webpackMode: "lazy-once" */`./dir-mixed?1/${name}.js`),
-		import(/* webpackMode: "eager" */`./dir-mixed?2/${name}.js`)
+		import(`./dir-mixed/${name}`),
+		import(/* webpackMode: "lazy-once" */`./dir-mixed?1/${name}`),
+		import(/* webpackMode: "eager" */`./dir-mixed?2/${name}`)
 	]).then(function(results) {
-		return import(/* webpackMode: "weak" */`./dir-mixed/${name}.js`).then(function(r) {
+		return import(/* webpackMode: "weak" */`./dir-mixed/${name}`).then(function(r) {
 			results.push(r);
 			return results;
 		});
@@ -54,32 +54,33 @@ function contextMixed(name) {
 function promiseTest(promise, equalsTo) {
 	return promise.then(function(results) {
 		for(const result of results)
-			result.should.be.eql(equalsTo);
+			expect(result).toEqual(equalsTo);
 	});
 }
 
 it("should receive a namespace object when importing commonjs via context", function() {
 	return Promise.all([
-		promiseTest(contextCJS("one"), { default: { named: "named", default: "default" } }),
-		promiseTest(contextCJS("two"), { default: { __esModule: true, named: "named", default: "default" } }),
-		promiseTest(contextCJS("three"), { default: { named: "named", default: "default" } }),
-		promiseTest(contextCJS("null"), { default: null })
+		promiseTest(contextCJS("one"), { default: { named: "named", default: "default" }, [Symbol.toStringTag]: "Module" }),
+		promiseTest(contextCJS("two"), { default: { __esModule: true, named: "named", default: "default" }, [Symbol.toStringTag]: "Module" }),
+		promiseTest(contextCJS("three"), { default: { named: "named", default: "default" }, [Symbol.toStringTag]: "Module" }),
+		promiseTest(contextCJS("null"), { default: null, [Symbol.toStringTag]: "Module" })
 	]);
 });
 
 it("should receive a namespace object when importing harmony via context", function() {
 	return Promise.all([
-		promiseTest(contextHarmony("one"), { named: "named", default: "default" }),
-		promiseTest(contextHarmony("two"), { named: "named", default: "default" }),
-		promiseTest(contextHarmony("three"), { named: "named", default: "default" })
+		promiseTest(contextHarmony("one"), { named: "named", default: "default", [Symbol.toStringTag]: "Module" }),
+		promiseTest(contextHarmony("two"), { named: "named", default: "default", [Symbol.toStringTag]: "Module" }),
+		promiseTest(contextHarmony("three"), { named: "named", default: "default", [Symbol.toStringTag]: "Module" })
 	]);
 });
 
 it("should receive a namespace object when importing mixed content via context", function() {
 	return Promise.all([
-		promiseTest(contextMixed("one"), { default: { named: "named", default: "default" } }),
-		promiseTest(contextMixed("two"), { default: { __esModule: true, named: "named", default: "default" } }),
-		promiseTest(contextMixed("three"), { named: "named", default: "default" }),
-		promiseTest(contextMixed("null"), { default: null })
+		promiseTest(contextMixed("one"), { default: { named: "named", default: "default" }, [Symbol.toStringTag]: "Module" }),
+		promiseTest(contextMixed("two"), { default: { __esModule: true, named: "named", default: "default" }, [Symbol.toStringTag]: "Module" }),
+		promiseTest(contextMixed("three"), { named: "named", default: "default", [Symbol.toStringTag]: "Module" }),
+		promiseTest(contextMixed("null"), { default: null, [Symbol.toStringTag]: "Module" }),
+		promiseTest(contextMixed("json.json"), { named: "named", default: { named: "named", default: "default" }, [Symbol.toStringTag]: "Module" })
 	]);
 });

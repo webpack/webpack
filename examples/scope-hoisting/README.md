@@ -152,11 +152,18 @@ module.exports = {
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
 /******/ 		1: 0
 /******/ 	};
 /******/
 /******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + chunkId + ".output.js"
+/******/ 	}
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -213,7 +220,7 @@ module.exports = {
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
-/******/ 				script.src = __webpack_require__.p + "" + chunkId + ".output.js";
+/******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/ 				var timeout = setTimeout(function(){
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
@@ -440,76 +447,76 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  1.87 KiB       0  [emitted]  
-  output.js   8.2 KiB       1  [emitted]  main
+  output.js  8.47 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 286 bytes <{1}> [rendered]
     > ./lazy [] 4:0-16
-    [3] ./lazy.js + 2 modules 242 bytes {0} [built]
-        [exports: d, c, x, y]
-        import() ./lazy  ./example.js 4:0-16
-        | ./lazy.js 60 bytes [built]
-        |    [exports: d, c, x, y]
-        |    import() ./lazy  ./example.js 4:0-16
-        |     + 2 hidden modules
+ [3] ./lazy.js + 2 modules 242 bytes {0} [built]
+     [exports: d, c, x, y]
+     import() ./lazy  ./example.js 4:0-16
+     | ./lazy.js 60 bytes [built]
+     |     [exports: d, c, x, y]
+     |     import() ./lazy  ./example.js 4:0-16
+     |     + 2 hidden modules
      + 1 hidden module
 chunk    {1} output.js (main) 390 bytes >{0}< [entry] [rendered]
     > .\example.js main
-    [0] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
-        [exports: x, y]
-        [only some exports used: x, y]
-        harmony side effect evaluation shared [1] ./example.js + 2 modules 3:0-23
-        harmony export imported specifier shared [1] ./example.js + 2 modules 3:0-23
-        harmony side effect evaluation shared [3] ./lazy.js + 2 modules 6:0-30
-        harmony export imported specifier shared [3] ./lazy.js + 2 modules 6:0-30
-        harmony export imported specifier shared [3] ./lazy.js + 2 modules 6:0-30
-        |    2 modules
-    [1] ./example.js + 2 modules 285 bytes {1} [built]
-        [no exports]
-        single entry .\example.js  main
-        | ./example.js 167 bytes [built]
-        |    [no exports]
-        |    single entry .\example.js  main
-        |     + 2 hidden modules
+ [0] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
+     [exports: x, y]
+     [all exports used]
+     harmony side effect evaluation shared [1] ./example.js + 2 modules 3:0-23
+     harmony export imported specifier shared [1] ./example.js + 2 modules 3:0-23
+     harmony side effect evaluation shared [3] ./lazy.js + 2 modules 6:0-30
+     harmony export imported specifier shared [3] ./lazy.js + 2 modules 6:0-30
+     harmony export imported specifier shared [3] ./lazy.js + 2 modules 6:0-30
+     |    2 modules
+ [1] ./example.js + 2 modules 285 bytes {1} [built]
+     [no exports]
+     single entry .\example.js  main
+     | ./example.js 167 bytes [built]
+     |     [no exports]
+     |     single entry .\example.js  main
+     |     + 2 hidden modules
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  362 bytes       0  [emitted]  
-  output.js    1.8 KiB       1  [emitted]  main
+  output.js   1.82 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 286 bytes <{1}> [rendered]
     > ./lazy [] 4:0-16
-    [3] ./lazy.js + 2 modules 242 bytes {0} [built]
-        [exports: d, c, x, y]
-        import() ./lazy  ./example.js 4:0-16
-        | ./lazy.js 60 bytes [built]
-        |    [exports: d, c, x, y]
-        |    import() ./lazy  ./example.js 4:0-16
-        |     + 2 hidden modules
+ [3] ./lazy.js + 2 modules 242 bytes {0} [built]
+     [exports: d, c, x, y]
+     import() ./lazy  ./example.js 4:0-16
+     | ./lazy.js 60 bytes [built]
+     |     [exports: d, c, x, y]
+     |     import() ./lazy  ./example.js 4:0-16
+     |     + 2 hidden modules
      + 1 hidden module
 chunk    {1} output.js (main) 390 bytes >{0}< [entry] [rendered]
     > .\example.js main
-    [0] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
-        [exports: x, y]
-        [only some exports used: x, y]
-        harmony side effect evaluation shared [1] ./example.js + 2 modules 3:0-23
-        harmony export imported specifier shared [1] ./example.js + 2 modules 3:0-23
-        harmony side effect evaluation shared [3] ./lazy.js + 2 modules 6:0-30
-        harmony export imported specifier shared [3] ./lazy.js + 2 modules 6:0-30
-        harmony export imported specifier shared [3] ./lazy.js + 2 modules 6:0-30
-        |    2 modules
-    [1] ./example.js + 2 modules 285 bytes {1} [built]
-        [no exports]
-        single entry .\example.js  main
-        | ./example.js 167 bytes [built]
-        |    [no exports]
-        |    single entry .\example.js  main
-        |     + 2 hidden modules
+ [0] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
+     [exports: x, y]
+     [all exports used]
+     harmony side effect evaluation shared [1] ./example.js + 2 modules 3:0-23
+     harmony export imported specifier shared [1] ./example.js + 2 modules 3:0-23
+     harmony side effect evaluation shared [3] ./lazy.js + 2 modules 6:0-30
+     harmony export imported specifier shared [3] ./lazy.js + 2 modules 6:0-30
+     harmony export imported specifier shared [3] ./lazy.js + 2 modules 6:0-30
+     |    2 modules
+ [1] ./example.js + 2 modules 285 bytes {1} [built]
+     [no exports]
+     single entry .\example.js  main
+     | ./example.js 167 bytes [built]
+     |     [no exports]
+     |     single entry .\example.js  main
+     |     + 2 hidden modules
 ```

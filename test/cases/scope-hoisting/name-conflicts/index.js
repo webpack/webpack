@@ -6,10 +6,10 @@ import value5 from "./module?{";
 import value6 from "./module?}";
 
 it("should not break on name conflicts", function() {
-	value1.should.be.eql("a");
-	value2.should.be.eql("a");
-	value3.should.be.eql("a");
-	value4.should.be.eql("a");
-	value5.should.be.eql("a");
-	value6.should.be.eql("a");
+	expect(value1).toBe("a");
+	expect(value2).toBe("a");
+	expect(value3).toBe("a");
+	expect(value4).toBe("a");
+	expect(value5).toBe("a");
+	expect(value6).toBe("a");
 });
