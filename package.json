@@ -50,6 +50,7 @@
     "express": "~4.13.1",
     "file-loader": "^1.1.6",
     "glob": "^7.1.2",
+    "husky": "^1.0.0-rc.6",
     "i18n-webpack-plugin": "^1.0.0",
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
@@ -59,8 +60,9 @@
     "json-loader": "^0.5.7",
     "less": "^2.5.1",
     "less-loader": "^4.0.3",
+    "lint-staged": "^7.1.0",
     "lodash": "^4.17.4",
-    "prettier": "^1.13.2",
+    "prettier": "^1.13.5",
     "pug": "^2.0.3",
     "pug-loader": "^2.4.0",
     "raw-loader": "~0.5.0",
@@ -118,10 +120,10 @@
     "pretest": "yarn lint",
     "prelint": "yarn setup",
     "lint": "yarn code-lint && yarn schema-lint && yarn type-lint",
-    "code-lint": "eslint --cache setup lib bin hot buildin \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\"",
+    "code-lint": "eslint --cache setup lib bin hot buildin benchmark \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\"",
     "type-lint": "tsc --pretty",
     "fix": "yarn code-lint --fix",
-    "pretty": "prettier --write \"setup/**/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" \"declarations.d.ts\"",
+    "pretty": "prettier --write \"setup/**/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"benchmark/**/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" \"declarations.d.ts\"",
     "schema-lint": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.lint.js\" --no-verbose",
     "benchmark": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.benchmark.js\" --runInBand",
     "cover": "yarn cover:init && yarn cover:all && yarn cover:report",
@@ -130,6 +132,16 @@
     "cover:integration": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage",
     "cover:unit": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:report": "istanbul report"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "lib/**/*.js": [
+      "eslint --cache"
+    ]
   },
   "jest": {
     "forceExit": true,
