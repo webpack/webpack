@@ -469,5 +469,5 @@ describe("Compiler", () => {
 				done();
 			});
 		});
-	})
+	});
 });
