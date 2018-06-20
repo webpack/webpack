@@ -50,6 +50,7 @@
     "express": "~4.13.1",
     "file-loader": "^1.1.6",
     "glob": "^7.1.2",
+    "husky": "^1.0.0-rc.6",
     "i18n-webpack-plugin": "^1.0.0",
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
@@ -59,6 +60,7 @@
     "json-loader": "^0.5.7",
     "less": "^2.5.1",
     "less-loader": "^4.0.3",
+    "lint-staged": "^7.1.0",
     "lodash": "^4.17.4",
     "prettier": "^1.13.5",
     "pug": "^2.0.3",
@@ -130,6 +132,16 @@
     "cover:integration": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage",
     "cover:unit": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
     "cover:report": "istanbul report"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "lib/**/*.js": [
+      "eslint --cache"
+    ]
   },
   "jest": {
     "forceExit": true,
