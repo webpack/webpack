@@ -61,13 +61,13 @@ exports[`StatsTestCases should print correct stats for aggressive-splitting-on-d
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
                   Asset      Size  Chunks             Chunk Names
-cf8697fa2c994f39a5d4.js  1.94 KiB    6, 7  [emitted]  
 fd868baa40dab4fc30fd.js  1.93 KiB       0  [emitted]  
-79c527bb5bf9cba1dc12.js  1.96 KiB       2  [emitted]  
+d6418937dfae4b3ee922.js     1 KiB       1  [emitted]  
 e9d82e81fefd7353e8df.js  1.94 KiB    3, 1  [emitted]  
 ae76098eeb55b9c448f2.js  1.01 KiB       4  [emitted]  
 05d92aaacfbffa4b7e56.js  1.94 KiB       5  [emitted]  
-d6418937dfae4b3ee922.js     1 KiB       1  [emitted]  
+cf8697fa2c994f39a5d4.js  1.94 KiB    6, 7  [emitted]  
+79c527bb5bf9cba1dc12.js  1.96 KiB       2  [emitted]  
 685acdc95ff4af957f47.js     1 KiB       7  [emitted]  
 606f48c13070850338b1.js  1.94 KiB       8  [emitted]  
 c5a8eae840969538f450.js  1.94 KiB       9  [emitted]  
