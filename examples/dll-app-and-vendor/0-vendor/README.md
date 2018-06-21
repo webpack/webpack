@@ -1,6 +1,6 @@
 This is the vendor build part.
 
-It's built separately from the app part. The vendors dll is only built when vendors has changed and not while the normal development cycle.
+It's built separately from the app part. The vendors dll is only built when the array of vendors has changed and not during the normal development cycle.
 
 The DllPlugin in combination with the `output.library` option exposes the internal require function as global variable in the target environment.
 
