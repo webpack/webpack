@@ -15,7 +15,8 @@ it("should import into object shorthand", function() {
 		b: 456,
 		c: {
 			a: 123,
-			default: 456
+			default: 456,
+			[Symbol.toStringTag]: "Module"
 		}
 	});
 })

@@ -1542,6 +1542,14 @@
           "description": "Avoid emitting assets when errors occur",
           "type": "boolean"
         },
+        "checkWasmTypes": {
+          "description": "Check for incompatible wasm types when importing/exporting from/to ESM",
+          "type": "boolean"
+        },
+        "mangleWasmImports": {
+          "description": "Reduce size of WASM by changing imports to shorter strings.",
+          "type": "boolean"
+        },
         "namedModules": {
           "description": "Use readable module identifiers for better debugging",
           "type": "boolean"
@@ -1678,6 +1686,10 @@
           "$ref": "#/definitions/resolve"
         }
       ]
+    },
+    "serve": {
+      "description": "Options for webpack-serve",
+      "type": "object"
     },
     "stats": {
       "description": "Used by the webpack CLI program to pass stats options.",

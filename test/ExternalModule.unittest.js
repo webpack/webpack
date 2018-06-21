@@ -171,7 +171,7 @@ describe("ExternalModule", () => {
 			// set up
 			const variableToCheck = "foo";
 			const request = "bar";
-			const expected = `if(typeof foo === 'undefined') {var e = new Error("Cannot find module \\"bar\\""); e.code = 'MODULE_NOT_FOUND'; throw e;}
+			const expected = `if(typeof foo === 'undefined') {var e = new Error("Cannot find module 'bar'"); e.code = 'MODULE_NOT_FOUND'; throw e;}
 `;
 
 			// invoke
@@ -207,7 +207,7 @@ describe("ExternalModule", () => {
 				// set up
 				const id = "someId";
 				const optional = true;
-				const expected = `if(typeof __WEBPACK_EXTERNAL_MODULE_someId__ === 'undefined') {var e = new Error("Cannot find module \\"some/request\\""); e.code = 'MODULE_NOT_FOUND'; throw e;}
+				const expected = `if(typeof __WEBPACK_EXTERNAL_MODULE_someId__ === 'undefined') {var e = new Error("Cannot find module 'some/request'"); e.code = 'MODULE_NOT_FOUND'; throw e;}
 module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 
 				// invoke
@@ -239,7 +239,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE_someId__;`;
 			it("checks for the existence of the request setting it", () => {
 				// set up
 				const optional = true;
-				const expected = `if(typeof some/request === 'undefined') {var e = new Error("Cannot find module \\"some/request\\""); e.code = 'MODULE_NOT_FOUND'; throw e;}
+				const expected = `if(typeof some/request === 'undefined') {var e = new Error("Cannot find module 'some/request'"); e.code = 'MODULE_NOT_FOUND'; throw e;}
 module.exports = some/request;`;
 
 				// invoke

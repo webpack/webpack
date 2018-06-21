@@ -3,6 +3,7 @@ it("should support multiple reexports", function() {
 		xa: "a",
 		xb: "b",
 		xc: "c",
-		xd: "d"
+		xd: "d",
+		[Symbol.toStringTag]: "Module"
 	});
 });
