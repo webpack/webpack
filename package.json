@@ -141,7 +141,8 @@
   },
   "lint-staged": {
     "lib/**/*.js": [
-      "eslint --cache"
+      "eslint --cache",
+      "tsc"
     ]
   },
   "jest": {
