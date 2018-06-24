@@ -391,7 +391,7 @@ describe("Parser", () => {
 		});
 		let options;
 		testParser.hooks.program.tap("ParserTest", (ast, comments) => {
-			options = testParser.getCommentOptions(ast.range);
+			options = testParser.parseCommentOptions(ast.range).options;
 			return true;
 		});
 		testParser.parse(source);
