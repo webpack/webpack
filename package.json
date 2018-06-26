@@ -51,7 +51,6 @@
     "file-loader": "^1.1.6",
     "glob": "^7.1.2",
     "husky": "^1.0.0-rc.6",
-    "i18n-webpack-plugin": "^1.0.0",
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",

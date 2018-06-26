@@ -2698,10 +2698,6 @@ husky@^1.0.0-rc.6:
     run-node "^1.0.0"
     slash "^2.0.0"
 
-i18n-webpack-plugin@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/i18n-webpack-plugin/-/i18n-webpack-plugin-1.0.0.tgz#0ca12296ec937a4f94325cd0264d08f4e0549831"
-
 iconv-lite@0.4.19:
   version "0.4.19"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.19.tgz#f7468f60135f5e5dad3399c0a81be9a1603a082b"
