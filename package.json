@@ -78,7 +78,7 @@
     "vm-browserify": "~0.0.0",
     "wast-loader": "^1.5.5",
     "webpack-dev-middleware": "^1.9.0",
-    "worker-loader": "^1.1.1",
+    "worker-loader": "^2.0.0",
     "xxhashjs": "^0.2.1"
   },
   "engines": {
