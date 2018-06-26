@@ -81,7 +81,7 @@
     "xxhashjs": "^0.2.1"
   },
   "engines": {
-    "node": ">=6.11.5"
+    "node": ">=8.9.0"
   },
   "repository": {
     "type": "git",
