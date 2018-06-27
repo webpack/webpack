@@ -565,12 +565,12 @@ rules:
     ensure:
       value: "{{issue.reactions.[+1]}}"
       range: "< 10"
-    last_action_age: 26w # half a year
+    last_action_age: 13w # three months
   actions:
     comment:
       identifer: inactive-warning
       message: |-
-        **This issue had no activity for at least half a year.**
+        **This issue had no activity for at least three months.**
 
         It's subject to automatic issue closing if there is no activity in the next 15 days.
     label: inactive
@@ -578,7 +578,7 @@ rules:
     open: true
     label: inactive
     last_action_age:
-      maximum: 26w # half a year
+      maximum: 13w # three months
   actions:
     label:
       remove:
