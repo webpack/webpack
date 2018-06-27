@@ -29,7 +29,7 @@ The configuration required for this is:
 
 <!-- inlined minimized file "runtime~main.[chunkhash].js" -->
 <script>
-{{production:dist/runtime~main.chunkhash.js}}
+{{production:dist/runtime~main.HASH.js}}
 </script>
 
 <script src="dist/main.[chunkhash].js"></script>
@@ -41,13 +41,13 @@ The configuration required for this is:
 # dist/runtime~main.[chunkhash].js
 
 ``` javascript
-{{dist/runtime~main.chunkhash.js}}
+{{dist/runtime~main.HASH.js}}
 ```
 
 # dist/main.[chunkhash].js
 
 ``` javascript
-{{dist/main.chunkhash.js}}
+{{dist/main.HASH.js}}
 ```
 
 # Info
