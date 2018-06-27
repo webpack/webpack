@@ -159,8 +159,13 @@ if (installedClis.length === 0) {
 } else if (installedClis.length === 1) {
 	const path = require("path");
 	const pkgPath = require.resolve(`${installedClis[0].package}/package.json`);
-	const pkg = require(pkgPath); // eslint-disable-line
-	require(path.resolve(path.dirname(pkgPath), pkg.bin[installedClis[0].binName])); // eslint-disable-line
+	// eslint-disable-next-line node/no-missing-require
+	const pkg = require(pkgPath);
+	// eslint-disable-next-line node/no-missing-require
+	require(path.resolve(
+		path.dirname(pkgPath),
+		pkg.bin[installedClis[0].binName]
+	));
 } else {
 	console.warn(
 		`You have installed ${installedClis
