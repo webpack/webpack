@@ -39,7 +39,6 @@ exports.replaceBase = (template) => {
 		.replace(timeRegexp, "")
 		.replace(buildAtRegexp, "")
 		.replace(hashRegexp, "Hash: 0a1b2c3d4e5f6a7b8c9d")
-		.replace(/\.chunkhash\./g, ".[chunkhash].")
 		.replace(runtimeRegexp, function(match) {
 			match = runtimeRegexp.exec(match);
 			const prefix = match[1] ? "" : "```\n";
@@ -60,6 +59,22 @@ exports.replaceResults = (template, baseDir, stdout, prefix) => {
 		match = match.substr(2 + (prefix ? prefix.length + 1 : 0), match.length - 4 - (prefix ? prefix.length + 1 : 0));
 		if(match === "stdout")
 			return stdout;
-		return fs.readFileSync(path.join(baseDir, match), "utf-8").replace(/[\r\n]*$/, "");
+		let matchPath = path.join(baseDir, match);
+		if (/HASH/.test(match)) {
+			const files = fs.readdirSync(path.dirname(matchPath));
+			const matchBasename = path.basename(matchPath);
+			const fileRegExp = new RegExp(
+				`^${matchBasename
+					.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
+					.replace(/HASH/g, "[a-f0-9]{20}")}$`,
+				"i"
+			);
+			const matchingFiles = files.filter(file => fileRegExp.test(file));
+			if (matchingFiles.length !== 1) {
+				throw new Error(`No file found matching ${fileRegExp}`);
+			}
+			matchPath = path.join(path.dirname(matchPath), matchingFiles[0]);
+		}
+		return fs.readFileSync(matchPath, "utf-8").replace(/[\r\n]*$/, "");
 	});
 };
