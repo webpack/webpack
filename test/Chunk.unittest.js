@@ -22,34 +22,6 @@ describe("Chunk", () => {
 		expect(ChunkInstance.canBeInitial()).toBe(false);
 	});
 
-	describe("entry", () => {
-		it("returns an error if get entry", () => {
-			expect(() => {
-				ChunkInstance.entry;
-			}).toThrow("Chunk.entry was removed. Use hasRuntime()");
-		});
-
-		it("returns an error if set an entry", () => {
-			expect(() => {
-				ChunkInstance.entry = 10;
-			}).toThrow("Chunk.entry was removed. Use hasRuntime()");
-		});
-	});
-
-	describe("initial", () => {
-		it("returns an error if get initial", () => {
-			expect(() => {
-				ChunkInstance.initial;
-			}).toThrow("Chunk.initial was removed. Use canBeInitial/isOnlyInitial()");
-		});
-
-		it("returns an error if set an initial", () => {
-			expect(() => {
-				ChunkInstance.initial = 10;
-			}).toThrow("Chunk.initial was removed. Use canBeInitial/isOnlyInitial()");
-		});
-	});
-
 	describe("hasRuntime", () => {
 		it("returns false", () => {
 			expect(ChunkInstance.hasRuntime()).toBe(false);

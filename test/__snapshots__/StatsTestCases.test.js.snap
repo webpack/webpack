@@ -650,10 +650,10 @@ Child
     Hash: 707868320b2a03412b3f
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
-                             Asset       Size  Chunks             Chunk Names
-                            app.js   6.69 KiB       0  [emitted]  app
-    vendor.6a3bdffda9f0de672978.js  619 bytes       1  [emitted]  vendor
-    Entrypoint app = vendor.6a3bdffda9f0de672978.js app.js
+        Asset       Size  Chunks             Chunk Names
+       app.js   6.69 KiB       0  [emitted]  app
+    vendor.js  619 bytes       1  [emitted]  vendor
+    Entrypoint app = vendor.js app.js
     [./constants.js] 87 bytes {1} [built]
     [./entry-1.js] ./entry-1.js + 2 modules 190 bytes {0} [built]
         | ./entry-1.js 67 bytes [built]
@@ -663,10 +663,10 @@ Child
     Hash: e3b00ef4ecd794b284d6
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
-                             Asset       Size  Chunks             Chunk Names
-                            app.js    6.7 KiB       0  [emitted]  app
-    vendor.6a3bdffda9f0de672978.js  619 bytes       1  [emitted]  vendor
-    Entrypoint app = vendor.6a3bdffda9f0de672978.js app.js
+        Asset       Size  Chunks             Chunk Names
+       app.js    6.7 KiB       0  [emitted]  app
+    vendor.js  619 bytes       1  [emitted]  vendor
+    Entrypoint app = vendor.js app.js
     [./constants.js] 87 bytes {1} [built]
     [./entry-2.js] ./entry-2.js + 2 modules 197 bytes {0} [built]
         | ./entry-2.js 67 bytes [built]
