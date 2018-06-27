@@ -2796,18 +2796,6 @@ Entrypoint main = bundle.js
 [1] ./a.js 249 bytes {0} [built]
 [2] (webpack)/buildin/module.js 497 bytes {0} [built]
 
-WARNING in UglifyJs Plugin: null in bundle.js
-
-WARNING in UglifyJs Plugin: null in bundle.js
-
-WARNING in UglifyJs Plugin: null in bundle.js
-
-WARNING in UglifyJs Plugin: null in bundle.js
-
-WARNING in UglifyJs Plugin: null in bundle.js
-
-WARNING in UglifyJs Plugin: null in bundle.js
-
 WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction1 [./a.js:3,0] in bundle.js
 
 WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction2 [./a.js:4,0] in bundle.js
