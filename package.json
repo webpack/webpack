@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "4.12.0",
+  "version": "4.12.2",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -114,8 +114,6 @@
     "appveyor:integration": "yarn cover:init && yarn cover:integration \"test/((?!TestCases)|TestCasesD)\" --ci %JEST% && move coverage\\coverage-final.json coverage\\coverage-final-1.json && yarn cover:integration \"test/TestCases(?!D)\" --ci %JEST% && move coverage\\coverage-final.json coverage\\coverage-final-2.json",
     "appveyor:unit": "yarn cover:init && yarn cover:unit --ci %JEST%",
     "appveyor:benchmark": "yarn benchmark --ci",
-    "circleci:test": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --ci",
-    "circleci:lint": "yarn lint",
     "build:examples": "cd examples && node buildAll.js",
     "pretest": "yarn lint",
     "prelint": "yarn setup",
