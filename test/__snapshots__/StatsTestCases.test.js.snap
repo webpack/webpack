@@ -1767,7 +1767,7 @@ exports[`StatsTestCases should print correct stats for preload 1`] = `
     normal.js  130 bytes       1  [emitted]  normal
 preloaded2.js  127 bytes       2  [emitted]  preloaded2
 preloaded3.js  130 bytes       3  [emitted]  preloaded3
-      main.js   9.87 KiB       4  [emitted]  main
+      main.js   9.86 KiB       4  [emitted]  main
      inner.js  136 bytes       5  [emitted]  inner
     inner2.js  201 bytes       6  [emitted]  inner2
 Entrypoint main = main.js (preload: preloaded2.js preloaded.js preloaded3.js)
