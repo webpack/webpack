@@ -693,7 +693,7 @@ exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`
 `;
 
 exports[`StatsTestCases should print correct stats for define-plugin 1`] = `
-"Hash: cfe08d4450db77f81610f4228fcb997ec81e2aa6
+"Hash: cfe08d4450db77f81610f4228fcb997ec81e2aa6bb43e7d151657ea2b793
 Child
     Hash: cfe08d4450db77f81610
     Time: Xms
@@ -704,6 +704,14 @@ Child
     [0] ./index.js 24 bytes {0} [built]
 Child
     Hash: f4228fcb997ec81e2aa6
+    Time: Xms
+    Built at: Thu Jan 01 1970 00:00:00 GMT
+      Asset     Size  Chunks             Chunk Names
+    main.js  3.6 KiB       0  [emitted]  main
+    Entrypoint main = main.js
+    [0] ./index.js 24 bytes {0} [built]
+Child
+    Hash: bb43e7d151657ea2b793
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset     Size  Chunks             Chunk Names
