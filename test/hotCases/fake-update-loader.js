@@ -1,6 +1,8 @@
 module.exports = function(source) {
-	this.cacheable(false);
 	var idx = this.updateIndex;
 	var items = source.split(/---+\r?\n/g);
+	if (items.length > 1) {
+		this.cacheable(false);
+	}
 	return items[idx] || items[items.length - 1];
-}
+};
