@@ -9,39 +9,56 @@ branches:
 
 cache:
   yarn: true
+  directories:
+    - ".jest-cache"
+    - ".eslintcache"
+
+stages:
+ - basic
+ - advanced
+ - versions
 
 matrix:
   include:
     - os: linux
-      node_js: "8"
-      env: NO_WATCH_TESTS=1 JOB_PART=lint
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=basic
+      stage: basic
+    - os: linux
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=lint-unit
+      stage: advanced
+    - os: linux
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
+      stage: advanced
+    - os: osx
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
+      stage: versions
     - os: linux
       node_js: "8"
-      env: NO_WATCH_TESTS=1 JOB_PART=integration
-    - os: linux
-      node_js: "8"
-      env: NO_WATCH_TESTS=1 JOB_PART=unit
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
+      stage: versions
     - os: linux
       node_js: "6"
-      env: NO_WATCH_TESTS=1 JOB_PART=integration
-    - os: osx
-      node_js: "8"
-      env: NO_WATCH_TESTS=1 JOB_PART=integration
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
+      stage: versions
+  fast_finish: true
   allow_failures:
     - os: osx
-  fast_finish: true
 
 install:
   - yarn --frozen-lockfile
   - yarn link --frozen-lockfile || true
   - yarn link webpack --frozen-lockfile
 
-script: npm run travis:$JOB_PART
+script: yarn travis:$JOB_PART
 
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
-  - bash <(curl -s https://codecov.io/bash) -F $JOB_PART
-  - rm -rf ./coverage
+  - bash <(curl -s https://codecov.io/bash) -F $JOB_PART -X gcov
+  - rm -f .jest-cache/haste-map* .jest-cache/perf-cache*
 
 notifications:
   slack:

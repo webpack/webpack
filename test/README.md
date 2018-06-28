@@ -4,16 +4,25 @@ Every pull request that you submit to webpack (besides README and spelling corre
 But don't give up hope!!! Although our tests may appear complex and overwhelming, once you become familiar with the test suite and structure, adding and creating tests will be fun and beneficial as you work inside the codebase! ❤
 
 ## tl;dr
-* Clone repo
-* Run tests (this automatically runs the setup)
-	* `yarn test`
+Run all tests (this automatically runs the setup):
+```sh
+yarn test
+```
 
-* To run an individual suite: (recommended during development for easier isolated diffs)
+Run an individual suite:
+```sh
+yarn jest ConfigTestCases
+```
 
-Example: `$(npm bin)/mocha --grep ConfigTestCases`
+Watch mode:
+```sh
+yarn jest --watch ConfigTestCases
+```
+
+See also: [Jest CLI docs](https://facebook.github.io/jest/docs/cli.html)
 
 ## Test suite overview
-We use MochaJS for our tests. For more information on Mocha you can visit their [homepage](https://mochajs.org/)!
+We use Jest for our tests. For more information on Jest you can visit their [homepage](https://facebook.github.io/jest/)!
 
 ### Class Tests
 All test files can be found in *.test.js. There are many tests that simply test API's of a specific class/file (such as `Compiler`, `Errors`, Integration, `Parser`, `RuleSet`, Validation).
@@ -37,11 +46,23 @@ In addition to an `index.js`, these configCases require a `webpack.config.js` is
 #### statsCases (`StatsTestCases.test.js`)
 Stats cases are similar to configCases except specifically focusing on the `expected` output of your stats. Instead of writing to the console, however the output of stats will be written to disk.
 
-By default, the "expected" outcome is a pain to write by hand so instead when statsCases are run the following happens:
+By default, the "expected" outcome is a pain to write by hand so instead when statsCases are run, runner is checking output using jest's awesome snapshot functionality.
 
-* Checks for `expected.txt` file containing expected results.
-* If the `expected.txt` doesn't match what is output, then an `actual.txt` stats output file will be created and the test will fail. (A typical workflow for stats cases is to fail the test and copy the results from `actual.txt` to `expected.txt`.)
-* If the actual output matches `expected.txt`, the tests passes and you are free to submit that PR with pride!!!
+Basically you don't need to write any expected behaviors your self. The assumption is that the stats output from your test code is what you expect.
+
+Please follow the approach described bellow:
+
+* write your test code in ```statsCases/``` folder by creating a separate folder for it, for example
+```statsCases/some-file-import-stats/index.js```
+```
+    import(./someModule);
+```
+** dont's forget the ```webpack.config.js```
+* run the test
+* jest will automatically add the output from your test code to ```StatsTestCases.test.js.snap``` and you can always check your results there
+* Next time test will run -> runner will compare results against your output written to snapshot previously
+
+You can read more about SnapShot testing [right here](https://facebook.github.io/jest/docs/en/snapshot-testing.html)
 
 ## Questions? Comments?
 If you are still nervous or don't quite understand, please submit an issue and tag us in it, and provide a relevant PR while working on!

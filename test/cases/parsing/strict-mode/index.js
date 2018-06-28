@@ -9,11 +9,11 @@ define(["./abc"], function(abc) {
 		var x = (function() {
 			return this;
 		})();
-		(typeof x).should.be.eql("undefined");
+		expect((typeof x)).toBe("undefined");
 	});
 
 	it("should import modules in strict mode", function() {
-		a().should.be.eql("undefined");
+		expect(a()).toBe("undefined");
 	});
 
 });

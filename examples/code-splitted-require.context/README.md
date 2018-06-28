@@ -52,11 +52,18 @@ getTemplate("b", function(b) {
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
 /******/ 		1: 0
 /******/ 	};
 /******/
 /******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + chunkId + ".output.js"
+/******/ 	}
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -113,7 +120,7 @@ getTemplate("b", function(b) {
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
-/******/ 				script.src = __webpack_require__.p + "" + chunkId + ".output.js";
+/******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/ 				var timeout = setTimeout(function(){
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
@@ -252,7 +259,7 @@ function webpackContext(req) {
 function webpackContextResolve(req) {
 	var id = map[req];
 	if(!(id + 1)) { // check for number or string
-		var e = new Error('Cannot find module "' + req + '".');
+		var e = new Error("Cannot find module '" + req + "'");
 		e.code = 'MODULE_NOT_FOUND';
 		throw e;
 	}
@@ -311,54 +318,54 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  1.86 KiB       0  [emitted]  
-  output.js  7.13 KiB       1  [emitted]  main
+  output.js   7.4 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 463 bytes <{1}> [rendered]
     > [0] ./example.js 2:1-4:3
-    [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {0} [built]
-        cjs require context ../require.context/templates [0] ./example.js 3:11-64
-    [2] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c.js [1] ../require.context/templates sync ^\.\/.*$ ./c.js
-        context element ./c [1] ../require.context/templates sync ^\.\/.*$ ./c
-    [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b.js [1] ../require.context/templates sync ^\.\/.*$ ./b.js
-        context element ./b [1] ../require.context/templates sync ^\.\/.*$ ./b
-    [4] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a.js [1] ../require.context/templates sync ^\.\/.*$ ./a.js
-        context element ./a [1] ../require.context/templates sync ^\.\/.*$ ./a
+ [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {0} [built]
+     cjs require context ../require.context/templates [0] ./example.js 3:11-64
+ [2] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+     context element ./c.js [1] ../require.context/templates sync ^\.\/.*$ ./c.js
+     context element ./c [1] ../require.context/templates sync ^\.\/.*$ ./c
+ [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+     context element ./b.js [1] ../require.context/templates sync ^\.\/.*$ ./b.js
+     context element ./b [1] ../require.context/templates sync ^\.\/.*$ ./b
+ [4] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+     context element ./a.js [1] ../require.context/templates sync ^\.\/.*$ ./a.js
+     context element ./a [1] ../require.context/templates sync ^\.\/.*$ ./a
 chunk    {1} output.js (main) 276 bytes >{0}< [entry] [rendered]
     > .\example.js main
-    [0] ./example.js 276 bytes {1} [built]
-        single entry .\example.js  main
+ [0] ./example.js 276 bytes {1} [built]
+     single entry .\example.js  main
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.5.0
+Version: webpack 4.8.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  627 bytes       0  [emitted]  
-  output.js   1.73 KiB       1  [emitted]  main
+  output.js   1.75 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 463 bytes <{1}> [rendered]
     > [0] ./example.js 2:1-4:3
-    [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {0} [built]
-        cjs require context ../require.context/templates [0] ./example.js 3:11-64
-    [2] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c.js [1] ../require.context/templates sync ^\.\/.*$ ./c.js
-        context element ./c [1] ../require.context/templates sync ^\.\/.*$ ./c
-    [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b.js [1] ../require.context/templates sync ^\.\/.*$ ./b.js
-        context element ./b [1] ../require.context/templates sync ^\.\/.*$ ./b
-    [4] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a.js [1] ../require.context/templates sync ^\.\/.*$ ./a.js
-        context element ./a [1] ../require.context/templates sync ^\.\/.*$ ./a
+ [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {0} [built]
+     cjs require context ../require.context/templates [0] ./example.js 3:11-64
+ [2] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+     context element ./c.js [1] ../require.context/templates sync ^\.\/.*$ ./c.js
+     context element ./c [1] ../require.context/templates sync ^\.\/.*$ ./c
+ [3] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+     context element ./b.js [1] ../require.context/templates sync ^\.\/.*$ ./b.js
+     context element ./b [1] ../require.context/templates sync ^\.\/.*$ ./b
+ [4] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+     context element ./a.js [1] ../require.context/templates sync ^\.\/.*$ ./a.js
+     context element ./a [1] ../require.context/templates sync ^\.\/.*$ ./a
 chunk    {1} output.js (main) 276 bytes >{0}< [entry] [rendered]
     > .\example.js main
-    [0] ./example.js 276 bytes {1} [built]
-        single entry .\example.js  main
+ [0] ./example.js 276 bytes {1} [built]
+     single entry .\example.js  main
 ```

@@ -1,0 +1,8 @@
+(module
+	(memory (export "memory") 1)
+	(data (i32.const 16) "Hello World\00")
+	(func (export "getString") (result i32)
+		(i32.const 16)
+	)
+)
+

@@ -2,19 +2,19 @@
 "use strict";
 
 it("should ignore resources that match resource regex and context", function() {
-	(function() {
+	expect(function() {
 		require("./folder-b/normal-module");
-	}).should.throw();
+	}).toThrowError();
 });
 
 it("should not ignore resources that match resource but not context", function() {
-	(function() {
+	expect(function() {
 		require("./folder-a/normal-module");
-	}).should.not.throw();
+	}).not.toThrowError();
 });
 
 it("should not ignore resources that do not match resource but do match context", function() {
-	(function() {
+	expect(function() {
 		require("./folder-b/only-context-match");
-	}).should.not.throw();
+	}).not.toThrowError();
 });

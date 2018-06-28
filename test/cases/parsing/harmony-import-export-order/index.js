@@ -3,8 +3,8 @@ it("should process imports of star exports in the correct order", function() {
 	tracker.list.length = 0;
 	delete require.cache[require.resolve("./c")];
 	var c = require("./c");
-	tracker.list.should.be.eql(["a", "b", "c"]);
-	c.ax.should.be.eql("ax");
-	c.bx.should.be.eql("ax");
-	c.cx.should.be.eql("ax");
+	expect(tracker.list).toEqual(["a", "b", "c"]);
+	expect(c.ax).toBe("ax");
+	expect(c.bx).toBe("ax");
+	expect(c.cx).toBe("ax");
 });

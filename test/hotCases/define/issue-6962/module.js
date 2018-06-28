@@ -1,12 +1,12 @@
 import value1 from "./a";
 
 it("should have the expected static path defined", function() {
-	DEFINE_PATH.should.be.eql('./a');
+	expect(DEFINE_PATH).toBe('./a');
 });
 
 it("should hot.accept the module located at the static file path without breaking the compiler", function() {
 	module.hot.accept("./a");
-	value1.should.be.eql(1);
+	expect(value1).toBe(1);
 });
 
 it("should hot.accept the module located at the defined file path without breaking the compiler, when one argument is passed to hot.accept", function() {
