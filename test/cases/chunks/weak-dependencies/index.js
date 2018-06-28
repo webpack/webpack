@@ -5,9 +5,9 @@ it("should not include a module with a weak dependency", function() {
 	var d = !!__webpack_modules__[require.resolveWeak("./d")];
 	require(["./c"]);
 	require("./d");
-	
-	a.should.be.eql(false);
-	b.should.be.eql(true);
-	c.should.be.eql(false);
-	d.should.be.eql(true);
+
+	expect(a).toBe(false);
+	expect(b).toBe(true);
+	expect(c).toBe(false);
+	expect(d).toBe(true);
 });

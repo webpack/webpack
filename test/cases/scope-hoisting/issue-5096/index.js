@@ -9,5 +9,5 @@ if(Math.random() < -1)
 	console.log(module);
 
 it("should compile fine", function() {
-	b.should.be.eql("a");
+	expect(b).toBe("a");
 });

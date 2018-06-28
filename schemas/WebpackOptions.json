@@ -492,7 +492,14 @@
               "properties": {
                 "root": {
                   "description": "Name of the property exposed globally by a UMD library",
-                  "type": "string"
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/definitions/common.arrayOfStringValues"
+                    }
+                  ]
                 },
                 "amd": {
                   "description": "Name of the exposed AMD library in the UMD",
@@ -1535,6 +1542,14 @@
           "description": "Avoid emitting assets when errors occur",
           "type": "boolean"
         },
+        "checkWasmTypes": {
+          "description": "Check for incompatible wasm types when importing/exporting from/to ESM",
+          "type": "boolean"
+        },
+        "mangleWasmImports": {
+          "description": "Reduce size of WASM by changing imports to shorter strings.",
+          "type": "boolean"
+        },
         "namedModules": {
           "description": "Use readable module identifiers for better debugging",
           "type": "boolean"
@@ -1671,6 +1686,10 @@
           "$ref": "#/definitions/resolve"
         }
       ]
+    },
+    "serve": {
+      "description": "Options for webpack-serve",
+      "type": "object"
     },
     "stats": {
       "description": "Used by the webpack CLI program to pass stats options.",
@@ -1852,6 +1871,10 @@
             "entrypoints": {
               "type": "boolean",
               "description": "Display the entry points with the corresponding bundles"
+            },
+            "chunkGroups": {
+              "type": "boolean",
+              "description": "Display all chunk groups with the corresponding bundles"
             },
             "errorDetails": {
               "type": "boolean",

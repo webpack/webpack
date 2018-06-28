@@ -1,18 +1,18 @@
 const webpack = require("../lib/webpack");
 const RemovedPluginError = require("../lib/RemovedPluginError");
-require("should");
 
 describe("removed plugin errors", () => {
 	it("should error when accessing removed plugins", () => {
-		(() => webpack.optimize.UglifyJsPlugin).should.throw(RemovedPluginError, {
-			message: /webpack\.optimize\.UglifyJsPlugin has been removed, please use config\.optimization\.minimize instead\./
-		});
+		expect(() => webpack.optimize.UglifyJsPlugin).toThrow(RemovedPluginError);
+		expect(
+			() => webpack.optimize.UglifyJsPlugin
+		).toThrowErrorMatchingSnapshot();
 
-		(() => webpack.optimize.CommonsChunkPlugin).should.throw(
-			RemovedPluginError,
-			{
-				message: /webpack\.optimize\.CommonsChunkPlugin has been removed, please use config\.optimization\.splitChunks instead\./
-			}
+		expect(() => webpack.optimize.CommonsChunkPlugin).toThrow(
+			RemovedPluginError
 		);
+		expect(
+			() => webpack.optimize.CommonsChunkPlugin
+		).toThrowErrorMatchingSnapshot();
 	});
 });

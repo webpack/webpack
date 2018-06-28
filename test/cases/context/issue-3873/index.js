@@ -3,5 +3,5 @@ function get(name) {
 }
 
 it("should automatically infer the index.js file", function() {
-	get("module").should.be.eql("module");
+	expect(get("module")).toBe("module");
 });

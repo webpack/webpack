@@ -39,8 +39,15 @@
       ],
       "properties": {
         "banner": {
-          "description": "The banner as string, it will be wrapped in a comment",
-          "type": "string"
+          "description": "Specifies the banner",
+          "anyOf": [
+            {
+              "instanceof": "Function"
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "raw": {
           "description": "If true, banner will not be wrapped in a comment",
@@ -75,6 +82,10 @@
           ]
         }
       }
+    },
+    {
+      "description": "The banner as function, it will be wrapped in a comment",
+      "instanceof": "Function"
     },
     {
       "description": "The banner as string, it will be wrapped in a comment",
