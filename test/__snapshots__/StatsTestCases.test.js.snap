@@ -720,6 +720,29 @@ Child
     [0] ./index.js 24 bytes {0} [built]"
 `;
 
+exports[`StatsTestCases should print correct stats for dll-reference-plugin-issue-7624 1`] = `
+"Hash: 29b62432962bce4c54c0
+Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
+    Asset     Size  Chunks             Chunk Names
+bundle.js  3.6 KiB       0  [emitted]  main
+Entrypoint main = bundle.js
+[0] ./entry.js 29 bytes {0} [built]"
+`;
+
+exports[`StatsTestCases should print correct stats for dll-reference-plugin-issue-7624-error 1`] = `
+"Hash: db465df0da5d95ebf88f
+Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
+    Asset     Size  Chunks  Chunk Names
+bundle.js  3.6 KiB       0  main
+Entrypoint main = bundle.js
+[0] ./entry.js 29 bytes {0} [built]
+
+ERROR in Dll manifest Xdir/dll-reference-plugin-issue-7624-error/blank-manifest.json
+Unexpected end of JSON input while parsing near ''"
+`;
+
 exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] = `
 "Hash: 52eadc5de721f000106b
 Time: Xms
