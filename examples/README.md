@@ -15,12 +15,6 @@
 
 [code-splitting-specify-chunk-name](code-splitting-specify-chunk-name)
 
-[move-to-parent](move-to-parent)
-
-[multiple-commons-chunks](multiple-commons-chunks)
-
-[multiple-entry-points-commons-chunk-css-bundle](multiple-entry-points-commons-chunk-css-bundle)
-
 [named-chunks](named-chunks) example demonstrating merging of chunks with named chunks
 
 [two-explicit-vendor-chunks](two-explicit-vendor-chunks)
@@ -48,11 +42,6 @@
 
 ## CommonJS
 [commonjs](commonjs) example demonstrating a very simple program
-
-## Css Bundle
-[css-bundle](css-bundle)
-
-[multiple-entry-points-commons-chunk-css-bundle](multiple-entry-points-commons-chunk-css-bundle)
 
 ## DLL
 [dll](dll)
