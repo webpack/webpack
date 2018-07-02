@@ -207,7 +207,7 @@ Child default:
     Entrypoint a = default/a.js
     Entrypoint b = default/b.js
     Entrypoint c = default/c.js
-    chunk    {0} default/vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{9}> ={1}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= >{2}< >{4}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~async-c)
+    chunk    {0} default/vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{9}> ={1}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= >{2}< >{4}< [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-a~async-b~async-c)
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
@@ -223,7 +223,7 @@ Child default:
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
      [2] ./f.js 20 bytes {2} {11} {12} [built]
-    chunk    {3} default/vendors~async-a~async-b.js (vendors~async-a~async-b) 20 bytes <{9}> ={0}= ={1}= ={2}= ={5}= ={6}= >{2}< >{4}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b)
+    chunk    {3} default/vendors~async-a~async-b.js (vendors~async-a~async-b) 20 bytes <{9}> ={0}= ={1}= ={2}= ={5}= ={6}= >{2}< >{4}< [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-a~async-b)
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
      [3] ./node_modules/y.js 20 bytes {3} {10} {11} [built]
@@ -242,7 +242,7 @@ Child default:
     chunk    {7} default/async-c.js (async-c) 72 bytes <{9}> ={0}= ={1}= ={2}= ={8}= [rendered]
         > ./c [8] ./index.js 3:0-47
      [6] ./c.js 72 bytes {7} {12} [built]
-    chunk    {8} default/vendors~async-c.js (vendors~async-c) 20 bytes <{9}> ={0}= ={1}= ={2}= ={7}= [rendered] split chunk (cache group: vendors) (name: vendors~async-c)
+    chunk    {8} default/vendors~async-c.js (vendors~async-c) 20 bytes <{9}> ={0}= ={1}= ={2}= ={7}= [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-c)
         > ./c [8] ./index.js 3:0-47
      [4] ./node_modules/z.js 20 bytes {8} {12} [built]
     chunk    {9} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{5}< >{6}< >{7}< >{8}< [entry] [rendered]
@@ -2180,7 +2180,7 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
     Entrypoint a = default/a.js
     Entrypoint b = default/b.js
     Entrypoint c = default/c.js
-    chunk    {0} default/vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{9}> ={1}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= >{2}< >{4}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~async-c)
+    chunk    {0} default/vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{9}> ={1}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= >{2}< >{4}< [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-a~async-b~async-c)
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
@@ -2196,7 +2196,7 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
      [2] ./f.js 20 bytes {2} {11} {12} [built]
-    chunk    {3} default/vendors~async-a~async-b.js (vendors~async-a~async-b) 20 bytes <{9}> ={0}= ={1}= ={2}= ={5}= ={6}= >{2}< >{4}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b)
+    chunk    {3} default/vendors~async-a~async-b.js (vendors~async-a~async-b) 20 bytes <{9}> ={0}= ={1}= ={2}= ={5}= ={6}= >{2}< >{4}< [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-a~async-b)
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
      [3] ./node_modules/y.js 20 bytes {3} {10} {11} [built]
@@ -2215,7 +2215,7 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
     chunk    {7} default/async-c.js (async-c) 72 bytes <{9}> ={0}= ={1}= ={2}= ={8}= [rendered]
         > ./c [8] ./index.js 3:0-47
      [6] ./c.js 72 bytes {7} {12} [built]
-    chunk    {8} default/vendors~async-c.js (vendors~async-c) 20 bytes <{9}> ={0}= ={1}= ={2}= ={7}= [rendered] split chunk (cache group: vendors) (name: vendors~async-c)
+    chunk    {8} default/vendors~async-c.js (vendors~async-c) 20 bytes <{9}> ={0}= ={1}= ={2}= ={7}= [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-c)
         > ./c [8] ./index.js 3:0-47
      [4] ./node_modules/z.js 20 bytes {8} {12} [built]
     chunk    {9} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{5}< >{6}< >{7}< >{8}< [entry] [rendered]
@@ -2248,7 +2248,7 @@ Child all-chunks:
     Entrypoint a = default/vendors~a~async-a~async-b~async-c~b~c.js default/vendors~a~async-a~async-b~b.js default/a~async-a~async-b~async-c~b~c.js default/a.js
     Entrypoint b = default/vendors~a~async-a~async-b~async-c~b~c.js default/vendors~a~async-a~async-b~b.js default/a~async-a~async-b~async-c~b~c.js default/b.js
     Entrypoint c = default/vendors~a~async-a~async-b~async-c~b~c.js default/vendors~async-c~c.js default/a~async-a~async-b~async-c~b~c.js default/c.js
-    chunk    {0} default/vendors~a~async-a~async-b~async-c~b~c.js (vendors~a~async-a~async-b~async-c~b~c) 20 bytes <{9}> ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~async-c~b~c)
+    chunk    {0} default/vendors~a~async-a~async-b~async-c~b~c.js (vendors~a~async-a~async-b~async-c~b~c) 20 bytes <{9}> ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~a~async-a~async-b~async-c~b~c)
         > ./a a
         > ./b b
         > ./c c
@@ -2270,13 +2270,13 @@ Child all-chunks:
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
      [0] ./f.js 20 bytes {2} {11} {12} [built]
-    chunk    {3} default/vendors~a~async-a~async-b~b.js (vendors~a~async-a~async-b~b) 20 bytes <{9}> ={0}= ={1}= ={10}= ={11}= ={2}= ={6}= ={7}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~b)
+    chunk    {3} default/vendors~a~async-a~async-b~b.js (vendors~a~async-a~async-b~b) 20 bytes <{9}> ={0}= ={1}= ={10}= ={11}= ={2}= ={6}= ={7}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~a~async-a~async-b~b)
         > ./a a
         > ./b b
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
      [3] ./node_modules/y.js 20 bytes {3} [built]
-    chunk    {4} default/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{9}> ={0}= ={1}= ={12}= ={2}= ={8}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~c)
+    chunk    {4} default/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{9}> ={0}= ={1}= ={12}= ={2}= ={8}= [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-c~c)
         > ./c c
         > ./c [8] ./index.js 3:0-47
      [7] ./node_modules/z.js 20 bytes {4} [built]
@@ -2372,7 +2372,7 @@ Child name-too-long:
     Entrypoint aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f.js vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccc~18066793.js async-a.js aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js
     Entrypoint bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb = vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f.js vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccc~18066793.js async-b~async-c~async-g~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccccccccccccccccccc.js async-b.js bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js
     Entrypoint cccccccccccccccccccccccccccccc = vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f.js vendors~async-c~cccccccccccccccccccccccccccccc.js aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccc~18066793.js async-b~async-c~async-g~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccccccccccccccccccc.js async-c.js cccccccccccccccccccccccccccccc.js
-    chunk    {0} vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f.js (vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f) 20 bytes <{9}> ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f)
+    chunk    {0} vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f.js (vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f) 20 bytes <{9}> ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f)
         > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
         > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
         > ./c cccccccccccccccccccccccccccccc
@@ -2396,7 +2396,7 @@ Child name-too-long:
         > ./b [4] ./index.js 2:0-47
         > ./c [4] ./index.js 3:0-47
      [0] ./f.js 20 bytes {2} [built]
-    chunk    {3} vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js (vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) 20 bytes <{9}> ={0}= ={1}= ={10}= ={11}= ={2}= ={4}= ={5}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)
+    chunk    {3} vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js (vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) 20 bytes <{9}> ={0}= ={1}= ={10}= ={11}= ={2}= ={4}= ={5}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)
         > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
         > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
         > ./a [4] ./index.js 1:0-47
@@ -2416,7 +2416,7 @@ Child name-too-long:
         > ./c cccccccccccccccccccccccccccccc
         > ./c [4] ./index.js 3:0-47
      [6] ./c.js 72 bytes {6} [built]
-    chunk    {7} vendors~async-c~cccccccccccccccccccccccccccccc.js (vendors~async-c~cccccccccccccccccccccccccccccc) 20 bytes <{9}> ={0}= ={1}= ={12}= ={2}= ={6}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~cccccccccccccccccccccccccccccc)
+    chunk    {7} vendors~async-c~cccccccccccccccccccccccccccccc.js (vendors~async-c~cccccccccccccccccccccccccccccc) 20 bytes <{9}> ={0}= ={1}= ={12}= ={2}= ={6}= [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-c~cccccccccccccccccccccccccccccc)
         > ./c cccccccccccccccccccccccccccccc
         > ./c [4] ./index.js 3:0-47
      [7] ./node_modules/z.js 20 bytes {7} [built]
@@ -2438,7 +2438,7 @@ Child custom-chunks-filter:
     Entrypoint a = default/a.js
     Entrypoint b = default/vendors~async-a~async-b~async-c~b~c.js default/vendors~async-a~async-b~b.js default/async-a~async-b~async-c~b~c.js default/b.js
     Entrypoint c = default/vendors~async-a~async-b~async-c~b~c.js default/vendors~async-c~c.js default/async-a~async-b~async-c~b~c.js default/c.js
-    chunk    {0} default/vendors~async-a~async-b~async-c~b~c.js (vendors~async-a~async-b~async-c~b~c) 20 bytes <{9}> ={1}= ={11}= ={12}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~async-c~b~c)
+    chunk    {0} default/vendors~async-a~async-b~async-c~b~c.js (vendors~async-a~async-b~async-c~b~c) 20 bytes <{9}> ={1}= ={11}= ={12}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-a~async-b~async-c~b~c)
         > ./b b
         > ./c c
         > ./a [8] ./index.js 1:0-47
@@ -2458,12 +2458,12 @@ Child custom-chunks-filter:
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
      [0] ./f.js 20 bytes {2} {11} {12} [built]
-    chunk    {3} default/vendors~async-a~async-b~b.js (vendors~async-a~async-b~b) 20 bytes <{9}> ={0}= ={1}= ={11}= ={2}= ={6}= ={7}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~b)
+    chunk    {3} default/vendors~async-a~async-b~b.js (vendors~async-a~async-b~b) 20 bytes <{9}> ={0}= ={1}= ={11}= ={2}= ={6}= ={7}= >{2}< >{5}< [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-a~async-b~b)
         > ./b b
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
      [3] ./node_modules/y.js 20 bytes {3} {10} [built]
-    chunk    {4} default/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{9}> ={0}= ={1}= ={12}= ={2}= ={8}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~c)
+    chunk    {4} default/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{9}> ={0}= ={1}= ={12}= ={2}= ={8}= [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-c~c)
         > ./c c
         > ./c [8] ./index.js 3:0-47
      [7] ./node_modules/z.js 20 bytes {4} [built]
@@ -2600,7 +2600,7 @@ chunk    {8} main.js (main) 343 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{5}< >{6}< 
 
 exports[`StatsTestCases should print correct stats for split-chunks-issue-6413 1`] = `
 "Entrypoint main = main.js
-chunk    {0} vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{5}> ={1}= ={2}= ={3}= ={4}= [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~async-c)
+chunk    {0} vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{5}> ={1}= ={2}= ={3}= ={4}= [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-a~async-b~async-c)
     > ./a [5] ./index.js 1:0-47
     > ./b [5] ./index.js 2:0-47
     > ./c [5] ./index.js 3:0-47
@@ -2646,7 +2646,7 @@ exports[`StatsTestCases should print correct stats for split-chunks-issue-7401 1
 "Entrypoint a = vendors~a~c.js a.js
 Entrypoint b = b.js
 Chunk Group c = vendors~a~c.js c.js
-chunk    {0} vendors~a~c.js (vendors~a~c) 20 bytes <{3}> ={1}= ={2}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~c)
+chunk    {0} vendors~a~c.js (vendors~a~c) 20 bytes <{3}> ={1}= ={2}= [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~a~c)
     > ./a a
     > ./c [3] ./b.js 1:0-41
  [0] ./node_modules/x.js 20 bytes {0} [built]

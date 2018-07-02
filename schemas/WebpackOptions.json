@@ -1493,6 +1493,15 @@
                               }
                             ]
                           },
+                          "automaticNameDelimiter": {
+                            "description": "Sets the name delimiter for created chunks",
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "automaticNamePrefix": {
+                            "description": "Sets the name prefix for created chunks",
+                            "type": "string"
+                          },
                           "filename": {
                             "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
                             "type": "string",
