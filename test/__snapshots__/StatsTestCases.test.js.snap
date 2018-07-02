@@ -2854,39 +2854,3 @@ WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction4 [
 
 WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction5 [./a.js:7,0] in bundle.js"
 `;
-
-exports[`StatsTestCases should print correct stats for wasm-in-initial-chunk-error 1`] = `
-"Hash: 9f32353d97d5973caae9
-Time: Xms
-Built at: Thu Jan 01 1970 00:00:00 GMT
-  Asset       Size  Chunks  Chunk Names
-   0.js  130 bytes       0  
-main.js   9.54 KiB       1  main
-Entrypoint main = main.js
-[0] ./wasm.wat 42 bytes {1} [built]
-[1] ./module2.js 45 bytes {1} [built]
-[2] ./module3.js 47 bytes {1} [built]
-[3] ./wasm2.wat 42 bytes {1} [built]
-[4] ./index.js + 1 modules 124 bytes {1} [built]
-    | ./index.js 19 bytes [built]
-    | ./module.js 100 bytes [built]
-[5] ./async.js 0 bytes {0} [built]
-
-WARNING in configuration
-The 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
-You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/concepts/mode/
-
-ERROR in ./wasm2.wat
-WebAssembly module is included in initial chunk.
-This is not allowed, because WebAssembly download and compilation must happen asynchronous.
-Add an async splitpoint (i. e. import()) somewhere between your entrypoint and the WebAssembly module:
-* ./index.js --> ./module.js --> ./module2.js --> ./module3.js --> ./wasm2.wat
-
-ERROR in ./wasm.wat
-WebAssembly module is included in initial chunk.
-This is not allowed, because WebAssembly download and compilation must happen asynchronous.
-Add an async splitpoint (i. e. import()) somewhere between your entrypoint and the WebAssembly module:
-* ./index.js --> ./module.js --> ./wasm.wat
-* ... --> ./module.js --> ./module2.js --> ./wasm.wat
-* ... --> ./module2.js --> ./module3.js --> ./wasm.wat"
-`;
