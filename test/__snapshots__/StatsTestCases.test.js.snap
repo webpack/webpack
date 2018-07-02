@@ -731,7 +731,7 @@ Entrypoint main = bundle.js
 `;
 
 exports[`StatsTestCases should print correct stats for dll-reference-plugin-issue-7624-error 1`] = `
-"Hash: db465df0da5d95ebf88f
+"Hash: 701dcf62b26d0347b899
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset     Size  Chunks  Chunk Names
@@ -739,7 +739,7 @@ bundle.js  3.6 KiB       0  main
 Entrypoint main = bundle.js
 [0] ./entry.js 29 bytes {0} [built]
 
-ERROR in Dll manifest Xdir/dll-reference-plugin-issue-7624-error/blank-manifest.json
+ERROR in Dll manifest blank-manifest.json
 Unexpected end of JSON input while parsing near ''"
 `;
 
