@@ -746,7 +746,7 @@ Entrypoint main = main.js
 
 exports[`StatsTestCases should print correct stats for filter-warnings 1`] = `
 "Hash: 4269d427a8c1110386b44269d427a8c1110386b44269d427a8c1110386b44269d427a8c1110386b44269d427a8c1110386b44269d427a8c1110386b44269d427a8c1110386b44269d427a8c1110386b44269d427a8c1110386b44269d427a8c1110386b44269d427a8c1110386b44269d427a8c1110386b44269d427a8c1110386b4
-Child
+Child undefined:
     Hash: 4269d427a8c1110386b4
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
@@ -754,61 +754,70 @@ Child
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     
-    WARNING in bundle.js from UglifyJs
-    Dropping side-effect-free statement [./index.js:6,0]
-    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
-Child
+    WARNING in UglifyJs Plugin: Dropping side-effect-free statement [./index.js:6,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
+Child UglifyJs:
     Hash: 4269d427a8c1110386b4
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-Child
+Child /UglifyJs/:
     Hash: 4269d427a8c1110386b4
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-Child
+Child warnings => true:
     Hash: 4269d427a8c1110386b4
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-Child
+Child [UglifyJs]:
     Hash: 4269d427a8c1110386b4
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-Child
+Child [/UglifyJs/]:
     Hash: 4269d427a8c1110386b4
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-Child
+Child [warnings => true]:
     Hash: 4269d427a8c1110386b4
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-Child
+Child should not filter:
     Hash: 4269d427a8c1110386b4
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
@@ -816,19 +825,28 @@ Child
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     
-    WARNING in bundle.js from UglifyJs
-    Dropping side-effect-free statement [./index.js:6,0]
-    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
-Child
+    WARNING in UglifyJs Plugin: Dropping side-effect-free statement [./index.js:6,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
+Child /should not filter/:
     Hash: 4269d427a8c1110386b4
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
@@ -836,19 +854,28 @@ Child
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     
-    WARNING in bundle.js from UglifyJs
-    Dropping side-effect-free statement [./index.js:6,0]
-    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
-Child
+    WARNING in UglifyJs Plugin: Dropping side-effect-free statement [./index.js:6,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
+Child warnings => false:
     Hash: 4269d427a8c1110386b4
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
@@ -856,19 +883,28 @@ Child
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     
-    WARNING in bundle.js from UglifyJs
-    Dropping side-effect-free statement [./index.js:6,0]
-    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
-Child
+    WARNING in UglifyJs Plugin: Dropping side-effect-free statement [./index.js:6,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
+Child [should not filter]:
     Hash: 4269d427a8c1110386b4
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
@@ -876,19 +912,28 @@ Child
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     
-    WARNING in bundle.js from UglifyJs
-    Dropping side-effect-free statement [./index.js:6,0]
-    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
-Child
+    WARNING in UglifyJs Plugin: Dropping side-effect-free statement [./index.js:6,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
+Child [/should not filter/]:
     Hash: 4269d427a8c1110386b4
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
@@ -896,19 +941,28 @@ Child
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     
-    WARNING in bundle.js from UglifyJs
-    Dropping side-effect-free statement [./index.js:6,0]
-    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
-Child
+    WARNING in UglifyJs Plugin: Dropping side-effect-free statement [./index.js:6,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
+Child [warnings => false]:
     Hash: 4269d427a8c1110386b4
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
@@ -916,18 +970,27 @@ Child
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     
-    WARNING in bundle.js from UglifyJs
-    Dropping side-effect-free statement [./index.js:6,0]
-    Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]"
+    WARNING in UglifyJs Plugin: Dropping side-effect-free statement [./index.js:6,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0] in bundle.js
+    
+    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js"
 `;
 
 exports[`StatsTestCases should print correct stats for graph-correctness-entries 1`] = `
@@ -2781,10 +2844,13 @@ Entrypoint main = bundle.js
 [1] ./a.js 249 bytes {0} [built]
 [2] (webpack)/buildin/module.js 497 bytes {0} [built]
 
-WARNING in bundle.js from UglifyJs
-Dropping unused function someUnRemoteUsedFunction1 [./a.js:3,0]
-Dropping unused function someUnRemoteUsedFunction2 [./a.js:4,0]
-Dropping unused function someUnRemoteUsedFunction3 [./a.js:5,0]
-Dropping unused function someUnRemoteUsedFunction4 [./a.js:6,0]
-Dropping unused function someUnRemoteUsedFunction5 [./a.js:7,0]"
+WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction1 [./a.js:3,0] in bundle.js
+
+WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction2 [./a.js:4,0] in bundle.js
+
+WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction3 [./a.js:5,0] in bundle.js
+
+WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction4 [./a.js:6,0] in bundle.js
+
+WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction5 [./a.js:7,0] in bundle.js"
 `;

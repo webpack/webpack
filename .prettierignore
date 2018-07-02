@@ -13,3 +13,4 @@
 !examples/**/webpack.config.js
 !schemas/**/*.js
 !declarations.d.ts
+!tsconfig.json

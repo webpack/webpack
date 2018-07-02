@@ -34,6 +34,7 @@
   "devDependencies": {
     "@types/node": "^9.6.4",
     "@types/tapable": "^1.0.1",
+    "@types/webpack-sources": "^0.1.4",
     "benchmark": "^2.1.1",
     "bundle-loader": "~0.5.0",
     "codacy-coverage": "^2.0.1",
@@ -122,7 +123,7 @@
     "code-lint": "eslint --cache setup lib bin hot buildin benchmark \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\"",
     "type-lint": "tsc --pretty",
     "fix": "yarn code-lint --fix",
-    "pretty": "prettier --write \"setup/**/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"benchmark/**/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" \"declarations.d.ts\"",
+    "pretty": "prettier --write \"setup/**/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"benchmark/**/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" \"declarations.d.ts\" \"tsconfig.json\"",
     "schema-lint": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.lint.js\" --no-verbose",
     "benchmark": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.benchmark.js\" --runInBand",
     "cover": "yarn cover:init && yarn cover:all && yarn cover:report",
