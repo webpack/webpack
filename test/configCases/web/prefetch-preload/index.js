@@ -10,11 +10,11 @@ beforeEach(() => {
 afterEach(() => {
 	__webpack_nonce__ = oldNonce;
 	__webpack_public_path__ = oldPublicPath;
-})
+});
 
 it("should prefetch and preload child chunks on chunk load", () => {
 	__webpack_nonce__ = "nonce";
-	__webpack_public_path__ = "/public/path/";
+	__webpack_public_path__ = "https://example.com/public/path/";
 
 	let link, script;
 

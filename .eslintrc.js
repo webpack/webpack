@@ -32,6 +32,7 @@ module.exports = {
 		"valid-jsdoc": ["error", {
 			"prefer": {
 				"return": "returns",
+				"prop": "property",
 				"memberof": "DONTUSE",
 				"class": "DONTUSE",
 				"inheritdoc": "DONTUSE",

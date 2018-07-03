@@ -51,6 +51,12 @@ or in watch mode
 yarn test:unit --watch
 ```
 
+### To update Jest snapshots use
+
+```bash
+yarn test:update-snapshots
+```
+
 ### To run code formatter (prettier) run
 
 ```bash
