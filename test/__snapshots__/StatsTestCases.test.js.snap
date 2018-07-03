@@ -693,77 +693,34 @@ exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`
 `;
 
 exports[`StatsTestCases should print correct stats for define-plugin 1`] = `
-"Hash: d6e25cb8b1e0c3b068071060bebb14f9ce188c766013be9638c18af8aa09
+"Hash: 1b27cafd20734c235b33e1d660e659aa9e3bf9336013be9638c18af8aa09
 Child
-    Hash: d6e25cb8b1e0c3b06807
+    Hash: 1b27cafd20734c235b33
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
-      Asset       Size  Chunks                    Chunk Names
-       0.js  127 bytes       0  [emitted]         
-       1.js    293 KiB       1  [emitted]  [big]  
-       2.js    147 KiB       2  [emitted]         
-       3.js  130 bytes       3  [emitted]         
-    main.js   8.88 KiB       4  [emitted]         main
+               Asset       Size  Chunks             Chunk Names
+    contextChunk0.js  127 bytes       0  [emitted]  contextChunk0
+    contextChunk2.js    147 KiB       1  [emitted]  contextChunk2
+             main.js   8.93 KiB       2  [emitted]  main
     Entrypoint main = main.js
     [0] ./dir/empty.js 0 bytes {0} [optional] [built]
-    [1] ./dir/huge.js 293 KiB {1} [optional] [built]
-    [2] ./dir/middle.js 147 KiB {2} [optional] [built]
-    [3] ./a.js 0 bytes {3} [built]
-    [4] ./index.js 339 bytes {4} [built] [3 warnings]
-    [5] ./dir lazy ^\\\\.\\\\/.*$ namespace object 160 bytes {4} [built]
-    
-    WARNING in ./index.js 6:1-10:3
-    Compilation error while processing magic comment(-s): /*
-    		webpackChunkName: CHUNK_INFO.contextChunkName(),
-    		webpackInclude: CHUNK_INFO.contextInclude,
-    		webpackExclude: CHUNK_INFO.contextExclude,
-    	*/: CHUNK_INFO is not defined
-    
-    WARNING in ./index.js 2:0-44
-    Compilation error while processing magic comment(-s): /* webpackChunkName: CHUNK_INFO.chunkName */: CHUNK_INFO is not defined
-    
-    WARNING in ./index.js 1:7-51
-    Compilation error while processing magic comment(-s): /* webpackMode: SERVER ? \\"eager\\" : \\"lazy\\" */: SERVER is not defined
-    
-    WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
-    This can impact web performance.
-    Assets: 
-      1.js (293 KiB)
+    [1] ./dir/middle.js 147 KiB {1} [optional] [built]
+    [2] ./index.js 339 bytes {2} [built]
+    [3] ./a.js 0 bytes {2} [built]
+    [4] ./dir lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: huge\\\\.js$ namespace object 160 bytes {2} [built]
 Child
-    Hash: 1060bebb14f9ce188c76
+    Hash: e1d660e659aa9e3bf933
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
-      Asset       Size  Chunks                    Chunk Names
-       0.js  127 bytes       0  [emitted]         
-       1.js    293 KiB       1  [emitted]  [big]  
-       2.js    147 KiB       2  [emitted]         
-       3.js  130 bytes       3  [emitted]         
-    main.js   8.88 KiB       4  [emitted]         main
+                      Asset       Size  Chunks             Chunk Names
+    anotherContextChunk0.js  127 bytes       0  [emitted]  anotherContextChunk0
+                     bar.js  136 bytes       1  [emitted]  bar
+                    main.js   8.83 KiB       2  [emitted]  main
     Entrypoint main = main.js
     [0] ./dir/empty.js 0 bytes {0} [optional] [built]
-    [1] ./dir/huge.js 293 KiB {1} [optional] [built]
-    [2] ./dir/middle.js 147 KiB {2} [optional] [built]
-    [3] ./a.js 0 bytes {3} [built]
-    [4] ./index.js 339 bytes {4} [built] [3 warnings]
-    [5] ./dir lazy ^\\\\.\\\\/.*$ namespace object 160 bytes {4} [built]
-    
-    WARNING in ./index.js 6:1-10:3
-    Compilation error while processing magic comment(-s): /*
-    		webpackChunkName: CHUNK_INFO.contextChunkName(),
-    		webpackInclude: CHUNK_INFO.contextInclude,
-    		webpackExclude: CHUNK_INFO.contextExclude,
-    	*/: CHUNK_INFO is not defined
-    
-    WARNING in ./index.js 2:0-44
-    Compilation error while processing magic comment(-s): /* webpackChunkName: CHUNK_INFO.chunkName */: CHUNK_INFO is not defined
-    
-    WARNING in ./index.js 1:7-51
-    Compilation error while processing magic comment(-s): /* webpackMode: SERVER ? \\"eager\\" : \\"lazy\\" */: SERVER is not defined
-    
-    WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
-    This can impact web performance.
-    Assets: 
-      1.js (293 KiB)
+    [1] ./a.js 0 bytes {1} [built]
+    [2] ./index.js 339 bytes {2} [built]
+    [3] ./dir lazy ^\\\\.\\\\/.*$ include: empty\\\\.js$ exclude: huge\\\\.js$ namespace object 160 bytes {2} [built]
 Child
     Hash: 6013be9638c18af8aa09
     Time: Xms
