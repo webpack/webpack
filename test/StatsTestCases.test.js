@@ -15,7 +15,16 @@ const tests = fs
 		testName =>
 			fs.existsSync(path.join(base, testName, "index.js")) ||
 			fs.existsSync(path.join(base, testName, "webpack.config.js"))
-	);
+	)
+	.filter(testName => {
+		const testDirectory = path.join(base, testName);
+		const filterPath = path.join(testDirectory, "test.filter.js");
+		if (fs.existsSync(filterPath) && !require(filterPath)()) {
+			describe.skip(testName, () => it("filtered"));
+			return false;
+		}
+		return true;
+	});
 
 describe("StatsTestCases", () => {
 	tests.forEach(testName => {

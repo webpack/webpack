@@ -178,7 +178,14 @@ describe("ConfigTestCases", () => {
 										expect: expect,
 										setTimeout: setTimeout,
 										clearTimeout: clearTimeout,
-										document: new FakeDocument()
+										document: new FakeDocument(),
+										location: {
+											href: "https://test.cases/path/index.html",
+											origin: "https://test.cases",
+											toString() {
+												return "https://test.cases/path/index.html";
+											}
+										}
 									};
 
 									function _require(currentDirectory, module) {

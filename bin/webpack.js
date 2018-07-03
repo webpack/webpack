@@ -47,6 +47,7 @@ const isInstalled = packageName => {
  * @typedef {Object} CliOption
  * @property {string} name display name
  * @property {string} package npm package name
+ * @property {string} binName name of the executable file
  * @property {string} alias shortcut for choice
  * @property {boolean} installed currently installed?
  * @property {string} url homepage
@@ -58,6 +59,7 @@ const CLIs = [
 	{
 		name: "webpack-cli",
 		package: "webpack-cli",
+		binName: "webpack-cli",
 		alias: "cli",
 		installed: isInstalled("webpack-cli"),
 		url: "https://github.com/webpack/webpack-cli",
@@ -66,6 +68,7 @@ const CLIs = [
 	{
 		name: "webpack-command",
 		package: "webpack-command",
+		binName: "webpack-command",
 		alias: "command",
 		installed: isInstalled("webpack-command"),
 		url: "https://github.com/webpack-contrib/webpack-command",
@@ -154,7 +157,15 @@ if (installedClis.length === 0) {
 			});
 	});
 } else if (installedClis.length === 1) {
-	require(installedClis[0].package); // eslint-disable-line
+	const path = require("path");
+	const pkgPath = require.resolve(`${installedClis[0].package}/package.json`);
+	// eslint-disable-next-line node/no-missing-require
+	const pkg = require(pkgPath);
+	// eslint-disable-next-line node/no-missing-require
+	require(path.resolve(
+		path.dirname(pkgPath),
+		pkg.bin[installedClis[0].binName]
+	));
 } else {
 	console.warn(
 		`You have installed ${installedClis
