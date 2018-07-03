@@ -48,6 +48,7 @@ module.exports = [
 	[warnings => false]
 ].map(filter =>
 	Object.assign({}, baseConfig, {
+		name: Array.isArray(filter) ? `[${filter}]` : `${filter}`,
 		stats: Object.assign({}, baseConfig.stats, {
 			warningsFilter: filter
 		})

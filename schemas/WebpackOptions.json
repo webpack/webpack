@@ -1554,6 +1554,10 @@
           "description": "Use readable module identifiers for better debugging",
           "type": "boolean"
         },
+        "hashedModuleIds": {
+          "description": "Use hashed module id instead module identifiers for better long term caching",
+          "type": "boolean"
+        },
         "namedChunks": {
           "description": "Use readable chunk identifiers for better debugging",
           "type": "boolean"
