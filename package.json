@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "4.12.2",
+  "version": "4.13.0",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -15,7 +15,7 @@
     "ajv": "^6.1.0",
     "ajv-keywords": "^3.1.0",
     "chrome-trace-event": "^1.0.0",
-    "enhanced-resolve": "^4.0.0",
+    "enhanced-resolve": "^4.1.0",
     "eslint-scope": "^3.7.1",
     "json-parse-better-errors": "^1.0.2",
     "loader-runner": "^2.3.0",
@@ -103,6 +103,7 @@
   "scripts": {
     "setup": "node ./setup/setup.js",
     "test": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest",
+    "test:update-snapshots": "yarn jest -u",
     "test:integration": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\"",
     "test:basic": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/{TestCasesNormal,StatsTestCases,ConfigTestCases}.test.js\"",
     "test:unit": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\"",

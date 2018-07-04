@@ -29,6 +29,7 @@ const DEFAULT_OPTIMIZATIONS = {
 	noEmitOnErrors: false,
 	concatenateModules: false,
 	namedModules: false,
+	hashedModuleIds: false,
 	minimizer: [uglifyJsForTesting]
 };
 
