@@ -1351,7 +1351,12 @@
                   ]
                 },
                 "minSize": {
-                  "description": "Minimal size for the created chunk",
+                  "description": "Minimal size for the created chunks",
+                  "type": "number",
+                  "minimum": 0
+                },
+                "maxSize": {
+                  "description": "Maximal size hint for the created chunks",
                   "type": "number",
                   "minimum": 0
                 },
@@ -1393,6 +1398,32 @@
                   "description": "Sets the name delimiter for created chunks",
                   "type": "string",
                   "minLength": 1
+                },
+                "hidePathInfo": {
+                  "description": "Prevents exposing path info when creating names for parts splitted by maxSize",
+                  "type": "boolean"
+                },
+                "fallbackCacheGroup": {
+                  "description": "Options for modules not selected by any other cache group",
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "minSize": {
+                      "description": "Minimal size for the created chunk",
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "maxSize": {
+                      "description": "Maximal size hint for the created chunks",
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "automaticNameDelimiter": {
+                      "description": "Sets the name delimiter for created chunks",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
                 },
                 "cacheGroups": {
                   "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)",
@@ -1457,6 +1488,11 @@
                           },
                           "minSize": {
                             "description": "Minimal size for the created chunk",
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "maxSize": {
+                            "description": "Maximal size hint for the created chunks",
                             "type": "number",
                             "minimum": 0
                           },
