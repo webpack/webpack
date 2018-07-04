@@ -246,6 +246,50 @@ describe("Parser", () => {
 				abc: ["xyz"],
 				fgh: ["xyz"]
 			}
+		],
+		"literal var definition": [
+			function() {
+				var smu = "cbd";
+			},
+			{
+				smu: "Literal"
+			}
+		],
+		"null var definition ": [
+			function() {
+				var smu;
+				smu = 123;
+			},
+			{
+				smu: null
+			}
+		],
+		"object var definition": [
+			function() {
+				var smu = {
+					smu: 123,
+					bla: 3456
+				};
+			},
+			{
+				smu: "ObjectExpression"
+			}
+		],
+		"array var decalaration": [
+			function() {
+				var smu = [1, 2, 3];
+			},
+			{
+				smu: "ArrayExpression"
+			}
+		],
+		"array destruct var decalaration": [
+			function() {
+				var [{ smu }] = [{ testVar: "abc" }, { otherVar: "bcd" }];
+			},
+			{
+				smu: "ArrayExpression"
+			}
 		]
 	};
 	/* eslint-enable no-undef */
@@ -305,6 +349,16 @@ describe("Parser", () => {
 				testParser.state.xyz.push(testParser.parseString(expr.arguments[0]));
 				return true;
 			});
+
+			testParser.hooks.varDeclaration.tap(
+				"smu",
+				"ParserTest",
+				(decl, initExpr) => {
+					testParser.state.smu = initExpr && initExpr.type;
+					return true;
+				}
+			);
+
 			const actual = testParser.parse(source);
 			expect(typeof actual).toBe("object");
 			expect(actual).toEqual(state);
