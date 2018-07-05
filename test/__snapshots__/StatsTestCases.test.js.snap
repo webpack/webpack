@@ -2774,90 +2774,98 @@ chunk    {3} b.js (b) 43 bytes >{0}< >{1}< [entry] [rendered]
 
 exports[`StatsTestCases should print correct stats for split-chunks-max-size 1`] = `
 "Child production:
-    Entrypoint main = prod-main~6e7ead72.js prod-main~6a2ae26b.js prod-main~17acad98.js prod-main~b2c7414a.js prod-main~75f09de8.js prod-main~052b3814.js prod-main~3ff27526.js prod-main~11485824.js prod-main~c6931360.js prod-main~cd7c5bfc.js prod-main~02369f19.js
-    chunk    {0} prod-main~02369f19.js (main~02369f19) 1.57 KiB ={1}= ={10}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [entry] [rendered]
+    Entrypoint main = prod-vendors~main~7274e1de.js prod-vendors~main~0feae4ad.js prod-main~6e7ead72.js prod-main~6a2ae26b.js prod-main~17acad98.js prod-main~b2c7414a.js prod-main~75f09de8.js prod-main~052b3814.js prod-main~3ff27526.js prod-main~11485824.js prod-main~c6931360.js prod-main~cd7c5bfc.js prod-main~02369f19.js
+    chunk    {0} prod-main~02369f19.js (main~02369f19) 1.57 KiB ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [entry] [rendered]
         > ./ main
      [11] ./very-big.js?1 1.57 KiB {0} [built]
-    chunk    {1} prod-main~6e7ead72.js (main~6e7ead72) 536 bytes ={0}= ={10}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
+    chunk    {1} prod-vendors~main~0feae4ad.js (vendors~main~0feae4ad) 1.57 KiB ={0}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~main)
         > ./ main
-     [0] ./big.js?1 268 bytes {1} [built]
-     [1] ./big.js?2 268 bytes {1} [built]
-    chunk    {2} prod-main~6a2ae26b.js (main~6a2ae26b) 536 bytes ={0}= ={1}= ={10}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
+     [43] ./node_modules/very-big.js?1 1.57 KiB {1} [built]
+    chunk    {2} prod-main~6e7ead72.js (main~6e7ead72) 536 bytes ={0}= ={1}= ={10}= ={11}= ={12}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
         > ./ main
-     [34] ./in-some-directory/big.js?1 268 bytes {2} [built]
-     [35] ./in-some-directory/small.js?1 67 bytes {2} [built]
-     [36] ./in-some-directory/small.js?2 67 bytes {2} [built]
-     [37] ./in-some-directory/small.js?3 67 bytes {2} [built]
-     [38] ./in-some-directory/small.js?4 67 bytes {2} [built]
-    chunk    {3} prod-main~17acad98.js (main~17acad98) 1.57 KiB ={0}= ={1}= ={10}= ={2}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
+     [0] ./big.js?1 268 bytes {2} [built]
+     [1] ./big.js?2 268 bytes {2} [built]
+    chunk    {3} prod-main~6a2ae26b.js (main~6a2ae26b) 536 bytes ={0}= ={1}= ={10}= ={11}= ={12}= ={2}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
         > ./ main
-     [39] ./in-some-directory/very-big.js?1 1.57 KiB {3} [built]
-    chunk    {4} prod-main~b2c7414a.js (main~b2c7414a) 1.11 KiB ={0}= ={1}= ={10}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
+     [34] ./in-some-directory/big.js?1 268 bytes {3} [built]
+     [35] ./in-some-directory/small.js?1 67 bytes {3} [built]
+     [36] ./in-some-directory/small.js?2 67 bytes {3} [built]
+     [37] ./in-some-directory/small.js?3 67 bytes {3} [built]
+     [38] ./in-some-directory/small.js?4 67 bytes {3} [built]
+    chunk    {4} prod-main~17acad98.js (main~17acad98) 1.57 KiB ={0}= ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
         > ./ main
-     [40] ./index.js 1.11 KiB {4} [built]
-    chunk    {5} prod-main~75f09de8.js (main~75f09de8) 603 bytes ={0}= ={1}= ={10}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
+     [39] ./in-some-directory/very-big.js?1 1.57 KiB {4} [built]
+    chunk    {5} prod-main~b2c7414a.js (main~b2c7414a) 1.19 KiB ={0}= ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
         > ./ main
-     [25] ./inner-module/small.js?1 67 bytes {5} [built]
-     [26] ./inner-module/small.js?2 67 bytes {5} [built]
-     [27] ./inner-module/small.js?3 67 bytes {5} [built]
-     [28] ./inner-module/small.js?4 67 bytes {5} [built]
-     [29] ./inner-module/small.js?5 67 bytes {5} [built]
-     [30] ./inner-module/small.js?6 67 bytes {5} [built]
-     [31] ./inner-module/small.js?7 67 bytes {5} [built]
-     [32] ./inner-module/small.js?8 67 bytes {5} [built]
-     [33] ./inner-module/small.js?9 67 bytes {5} [built]
-    chunk    {6} prod-main~052b3814.js (main~052b3814) 603 bytes ={0}= ={1}= ={10}= ={2}= ={3}= ={4}= ={5}= ={7}= ={8}= ={9}= [initial] [rendered]
+     [44] ./index.js 1.19 KiB {5} [built]
+    chunk    {6} prod-main~75f09de8.js (main~75f09de8) 603 bytes ={0}= ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={7}= ={8}= ={9}= [initial] [rendered]
         > ./ main
-      [2] ./small.js?1 67 bytes {6} [built]
-      [3] ./small.js?2 67 bytes {6} [built]
-      [4] ./small.js?3 67 bytes {6} [built]
-      [5] ./small.js?4 67 bytes {6} [built]
-      [6] ./small.js?5 67 bytes {6} [built]
-      [7] ./small.js?6 67 bytes {6} [built]
-      [8] ./small.js?7 67 bytes {6} [built]
-      [9] ./small.js?8 67 bytes {6} [built]
-     [10] ./small.js?9 67 bytes {6} [built]
-    chunk    {7} prod-main~3ff27526.js (main~3ff27526) 536 bytes ={0}= ={1}= ={10}= ={2}= ={3}= ={4}= ={5}= ={6}= ={8}= ={9}= [initial] [rendered]
+     [25] ./inner-module/small.js?1 67 bytes {6} [built]
+     [26] ./inner-module/small.js?2 67 bytes {6} [built]
+     [27] ./inner-module/small.js?3 67 bytes {6} [built]
+     [28] ./inner-module/small.js?4 67 bytes {6} [built]
+     [29] ./inner-module/small.js?5 67 bytes {6} [built]
+     [30] ./inner-module/small.js?6 67 bytes {6} [built]
+     [31] ./inner-module/small.js?7 67 bytes {6} [built]
+     [32] ./inner-module/small.js?8 67 bytes {6} [built]
+     [33] ./inner-module/small.js?9 67 bytes {6} [built]
+    chunk    {7} prod-main~052b3814.js (main~052b3814) 603 bytes ={0}= ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={8}= ={9}= [initial] [rendered]
         > ./ main
-     [14] ./subfolder/big.js?1 268 bytes {7} [built]
-     [15] ./subfolder/big.js?2 268 bytes {7} [built]
-    chunk    {8} prod-main~11485824.js (main~11485824) 603 bytes ={0}= ={1}= ={10}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={9}= [initial] [rendered]
+      [2] ./small.js?1 67 bytes {7} [built]
+      [3] ./small.js?2 67 bytes {7} [built]
+      [4] ./small.js?3 67 bytes {7} [built]
+      [5] ./small.js?4 67 bytes {7} [built]
+      [6] ./small.js?5 67 bytes {7} [built]
+      [7] ./small.js?6 67 bytes {7} [built]
+      [8] ./small.js?7 67 bytes {7} [built]
+      [9] ./small.js?8 67 bytes {7} [built]
+     [10] ./small.js?9 67 bytes {7} [built]
+    chunk    {8} prod-main~3ff27526.js (main~3ff27526) 536 bytes ={0}= ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={9}= [initial] [rendered]
         > ./ main
-     [16] ./subfolder/small.js?1 67 bytes {8} [built]
-     [17] ./subfolder/small.js?2 67 bytes {8} [built]
-     [18] ./subfolder/small.js?3 67 bytes {8} [built]
-     [19] ./subfolder/small.js?4 67 bytes {8} [built]
-     [20] ./subfolder/small.js?5 67 bytes {8} [built]
-     [21] ./subfolder/small.js?6 67 bytes {8} [built]
-     [22] ./subfolder/small.js?7 67 bytes {8} [built]
-     [23] ./subfolder/small.js?8 67 bytes {8} [built]
-     [24] ./subfolder/small.js?9 67 bytes {8} [built]
-    chunk    {9} prod-main~c6931360.js (main~c6931360) 1.57 KiB ={0}= ={1}= ={10}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= [initial] [rendered]
+     [14] ./subfolder/big.js?1 268 bytes {8} [built]
+     [15] ./subfolder/big.js?2 268 bytes {8} [built]
+    chunk    {9} prod-main~11485824.js (main~11485824) 603 bytes ={0}= ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= [initial] [rendered]
         > ./ main
-     [12] ./very-big.js?2 1.57 KiB {9} [built]
-    chunk   {10} prod-main~cd7c5bfc.js (main~cd7c5bfc) 1.57 KiB ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
+     [16] ./subfolder/small.js?1 67 bytes {9} [built]
+     [17] ./subfolder/small.js?2 67 bytes {9} [built]
+     [18] ./subfolder/small.js?3 67 bytes {9} [built]
+     [19] ./subfolder/small.js?4 67 bytes {9} [built]
+     [20] ./subfolder/small.js?5 67 bytes {9} [built]
+     [21] ./subfolder/small.js?6 67 bytes {9} [built]
+     [22] ./subfolder/small.js?7 67 bytes {9} [built]
+     [23] ./subfolder/small.js?8 67 bytes {9} [built]
+     [24] ./subfolder/small.js?9 67 bytes {9} [built]
+    chunk   {10} prod-main~c6931360.js (main~c6931360) 1.57 KiB ={0}= ={1}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
         > ./ main
-     [13] ./very-big.js?3 1.57 KiB {10} [built]
+     [12] ./very-big.js?2 1.57 KiB {10} [built]
+    chunk   {11} prod-main~cd7c5bfc.js (main~cd7c5bfc) 1.57 KiB ={0}= ={1}= ={10}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
+        > ./ main
+     [13] ./very-big.js?3 1.57 KiB {11} [built]
+    chunk   {12} prod-vendors~main~7274e1de.js (vendors~main~7274e1de) 402 bytes ={0}= ={1}= ={10}= ={11}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
+        > ./ main
+     [40] ./node_modules/big.js?1 268 bytes {12} [built]
+     [41] ./node_modules/small.js?1 67 bytes {12} [built]
+     [42] ./node_modules/small.js?2 67 bytes {12} [built]
 Child development:
-    Entrypoint main = dev-main~._big.js~1.js dev-main~._in-some-directory_b.js dev-main~._in-some-directory_very-big.js~8d76cf03.js dev-main~._index.js~41f5a26e.js dev-main~._inner-module_small.js~3.js dev-main~._small.js~1.js dev-main~._subfolder_big.js~b.js dev-main~._subfolder_small.js~1.js dev-main~._very-big.js~08cf55cf.js dev-main~._very-big.js~4647fb9d.js dev-main~._very-big.js~62f7f644.js
-    chunk {main~._big.js~1} dev-main~._big.js~1.js (main~._big.js~1) 536 bytes ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= [initial] [rendered]
+    Entrypoint main = dev-vendors~main~._node_modules_b.js dev-vendors~main~._node_modules_very-big.js~6bdbed7b.js dev-main~._big.js~1.js dev-main~._in-some-directory_b.js dev-main~._in-some-directory_very-big.js~8d76cf03.js dev-main~._index.js~41f5a26e.js dev-main~._inner-module_small.js~3.js dev-main~._small.js~1.js dev-main~._subfolder_big.js~b.js dev-main~._subfolder_small.js~1.js dev-main~._very-big.js~08cf55cf.js dev-main~._very-big.js~4647fb9d.js dev-main~._very-big.js~62f7f644.js
+    chunk {main~._big.js~1} dev-main~._big.js~1.js (main~._big.js~1) 536 bytes ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
         > ./ main
      [./big.js?1] 268 bytes {main~._big.js~1} [built]
      [./big.js?2] 268 bytes {main~._big.js~1} [built]
-    chunk {main~._in-some-directory_b} dev-main~._in-some-directory_b.js (main~._in-some-directory_b) 536 bytes ={main~._big.js~1}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= [initial] [rendered]
+    chunk {main~._in-some-directory_b} dev-main~._in-some-directory_b.js (main~._in-some-directory_b) 536 bytes ={main~._big.js~1}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
         > ./ main
      [./in-some-directory/big.js?1] 268 bytes {main~._in-some-directory_b} [built]
      [./in-some-directory/small.js?1] 67 bytes {main~._in-some-directory_b} [built]
      [./in-some-directory/small.js?2] 67 bytes {main~._in-some-directory_b} [built]
      [./in-some-directory/small.js?3] 67 bytes {main~._in-some-directory_b} [built]
      [./in-some-directory/small.js?4] 67 bytes {main~._in-some-directory_b} [built]
-    chunk {main~._in-some-directory_very-big.js~8d76cf03} dev-main~._in-some-directory_very-big.js~8d76cf03.js (main~._in-some-directory_very-big.js~8d76cf03) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= [initial] [rendered]
+    chunk {main~._in-some-directory_very-big.js~8d76cf03} dev-main~._in-some-directory_very-big.js~8d76cf03.js (main~._in-some-directory_very-big.js~8d76cf03) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
         > ./ main
      [./in-some-directory/very-big.js?1] 1.57 KiB {main~._in-some-directory_very-big.js~8d76cf03} [built]
-    chunk {main~._index.js~41f5a26e} dev-main~._index.js~41f5a26e.js (main~._index.js~41f5a26e) 1.11 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= [initial] [rendered]
+    chunk {main~._index.js~41f5a26e} dev-main~._index.js~41f5a26e.js (main~._index.js~41f5a26e) 1.19 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
         > ./ main
-     [./index.js] 1.11 KiB {main~._index.js~41f5a26e} [built]
-    chunk {main~._inner-module_small.js~3} dev-main~._inner-module_small.js~3.js (main~._inner-module_small.js~3) 603 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= [initial] [rendered]
+     [./index.js] 1.19 KiB {main~._index.js~41f5a26e} [built]
+    chunk {main~._inner-module_small.js~3} dev-main~._inner-module_small.js~3.js (main~._inner-module_small.js~3) 603 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
         > ./ main
      [./inner-module/small.js?1] 67 bytes {main~._inner-module_small.js~3} [built]
      [./inner-module/small.js?2] 67 bytes {main~._inner-module_small.js~3} [built]
@@ -2868,7 +2876,7 @@ Child development:
      [./inner-module/small.js?7] 67 bytes {main~._inner-module_small.js~3} [built]
      [./inner-module/small.js?8] 67 bytes {main~._inner-module_small.js~3} [built]
      [./inner-module/small.js?9] 67 bytes {main~._inner-module_small.js~3} [built]
-    chunk {main~._small.js~1} dev-main~._small.js~1.js (main~._small.js~1) 603 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= [initial] [rendered]
+    chunk {main~._small.js~1} dev-main~._small.js~1.js (main~._small.js~1) 603 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
         > ./ main
      [./small.js?1] 67 bytes {main~._small.js~1} [built]
      [./small.js?2] 67 bytes {main~._small.js~1} [built]
@@ -2879,11 +2887,11 @@ Child development:
      [./small.js?7] 67 bytes {main~._small.js~1} [built]
      [./small.js?8] 67 bytes {main~._small.js~1} [built]
      [./small.js?9] 67 bytes {main~._small.js~1} [built]
-    chunk {main~._subfolder_big.js~b} dev-main~._subfolder_big.js~b.js (main~._subfolder_big.js~b) 536 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= [initial] [rendered]
+    chunk {main~._subfolder_big.js~b} dev-main~._subfolder_big.js~b.js (main~._subfolder_big.js~b) 536 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
         > ./ main
      [./subfolder/big.js?1] 268 bytes {main~._subfolder_big.js~b} [built]
      [./subfolder/big.js?2] 268 bytes {main~._subfolder_big.js~b} [built]
-    chunk {main~._subfolder_small.js~1} dev-main~._subfolder_small.js~1.js (main~._subfolder_small.js~1) 603 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= [initial] [rendered]
+    chunk {main~._subfolder_small.js~1} dev-main~._subfolder_small.js~1.js (main~._subfolder_small.js~1) 603 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
         > ./ main
      [./subfolder/small.js?1] 67 bytes {main~._subfolder_small.js~1} [built]
      [./subfolder/small.js?2] 67 bytes {main~._subfolder_small.js~1} [built]
@@ -2894,15 +2902,23 @@ Child development:
      [./subfolder/small.js?7] 67 bytes {main~._subfolder_small.js~1} [built]
      [./subfolder/small.js?8] 67 bytes {main~._subfolder_small.js~1} [built]
      [./subfolder/small.js?9] 67 bytes {main~._subfolder_small.js~1} [built]
-    chunk {main~._very-big.js~08cf55cf} dev-main~._very-big.js~08cf55cf.js (main~._very-big.js~08cf55cf) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= [initial] [rendered]
+    chunk {main~._very-big.js~08cf55cf} dev-main~._very-big.js~08cf55cf.js (main~._very-big.js~08cf55cf) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
         > ./ main
      [./very-big.js?2] 1.57 KiB {main~._very-big.js~08cf55cf} [built]
-    chunk {main~._very-big.js~4647fb9d} dev-main~._very-big.js~4647fb9d.js (main~._very-big.js~4647fb9d) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~62f7f644}= [initial] [rendered]
+    chunk {main~._very-big.js~4647fb9d} dev-main~._very-big.js~4647fb9d.js (main~._very-big.js~4647fb9d) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
         > ./ main
      [./very-big.js?3] 1.57 KiB {main~._very-big.js~4647fb9d} [built]
-    chunk {main~._very-big.js~62f7f644} dev-main~._very-big.js~62f7f644.js (main~._very-big.js~62f7f644) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= [entry] [rendered]
+    chunk {main~._very-big.js~62f7f644} dev-main~._very-big.js~62f7f644.js (main~._very-big.js~62f7f644) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [entry] [rendered]
         > ./ main
-     [./very-big.js?1] 1.57 KiB {main~._very-big.js~62f7f644} [built]"
+     [./very-big.js?1] 1.57 KiB {main~._very-big.js~62f7f644} [built]
+    chunk {vendors~main~._node_modules_b} dev-vendors~main~._node_modules_b.js (vendors~main~._node_modules_b) 402 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
+        > ./ main
+     [./node_modules/big.js?1] 268 bytes {vendors~main~._node_modules_b} [built]
+     [./node_modules/small.js?1] 67 bytes {vendors~main~._node_modules_b} [built]
+     [./node_modules/small.js?2] 67 bytes {vendors~main~._node_modules_b} [built]
+    chunk {vendors~main~._node_modules_very-big.js~6bdbed7b} dev-vendors~main~._node_modules_very-big.js~6bdbed7b.js (vendors~main~._node_modules_very-big.js~6bdbed7b) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~main)
+        > ./ main
+     [./node_modules/very-big.js?1] 1.57 KiB {vendors~main~._node_modules_very-big.js~6bdbed7b} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-prefer-bigger-splits 1`] = `
