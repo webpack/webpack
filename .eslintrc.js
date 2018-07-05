@@ -35,7 +35,6 @@ module.exports = {
 				"prop": "property",
 				"memberof": "DONTUSE",
 				"class": "DONTUSE",
-				"extends": "DONTUSE",
 				"inheritdoc": "DONTUSE",
 				"description": "DONTUSE",
 				"readonly": "DONTUSE"
