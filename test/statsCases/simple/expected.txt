@@ -1,5 +1,0 @@
-Hash: 1021800667e51386395b
-Time: Xms
-    Asset      Size  Chunks             Chunk Names
-bundle.js  2.88 KiB    main  [emitted]  main
-[./index.js] 0 bytes {main} [built]

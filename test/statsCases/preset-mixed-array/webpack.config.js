@@ -5,12 +5,14 @@ module.exports = [
 		entry: "./index",
 		stats: "minimal"
 	},
+
 	{
 		name: "none",
 		mode: "production",
 		entry: "./index",
 		stats: false
 	},
+
 	{
 		name: "verbose",
 		mode: "production",
@@ -19,6 +21,7 @@ module.exports = [
 			entrypoints: true,
 			hash: false,
 			timings: false,
+			builtAt: false,
 			chunks: false,
 			assets: false
 		}

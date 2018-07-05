@@ -1,1 +1,0 @@
-const foo = require('./foo');

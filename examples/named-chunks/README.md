@@ -24,7 +24,7 @@ require.ensure(["b"], function(require) {
 ```
 
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -32,10 +32,12 @@ require.ensure(["b"], function(require) {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
-/******/ 		var chunkIds = data[0], moreModules = data[1], executeModules = data[2];
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1];
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId]) {
@@ -55,15 +57,23 @@ require.ensure(["b"], function(require) {
 /******/
 /******/ 	};
 /******/
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
 /******/ 		2: 0
 /******/ 	};
 /******/
-/******/ 	var scheduledModules = [];
+/******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + chunkId + ".output.js"
+/******/ 	}
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -113,13 +123,14 @@ require.ensure(["b"], function(require) {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120000;
+/******/ 				script.timeout = 120;
 /******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
-/******/ 				script.src = __webpack_require__.p + "" + chunkId + ".output.js";
+/******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/ 				var timeout = setTimeout(function(){
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
@@ -182,19 +193,21 @@ require.ensure(["b"], function(require) {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 	var parentJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 	jsonpArray.push = webpackJsonpCallback;
 /******/ 	jsonpArray = jsonpArray.slice();
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 ```
@@ -206,63 +219,57 @@ require.ensure(["b"], function(require) {
 /* 0 */,
 /* 1 */,
 /* 2 */
+/*!***************************!*\
+  !*** ./node_modules/a.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// module a
+
+/***/ }),
+/* 3 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
-var a = __webpack_require__(/*! a */ 3);
+var a = __webpack_require__(/*! a */ 2);
 
-__webpack_require__.e/* require.ensure */(0/*! my own chunk */).then((function(require) {
+__webpack_require__.e(/*! require.ensure | my own chunk */ 1).then((function(require) {
 	// a named chunk
 	var c = __webpack_require__(/*! c */ 4);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-__webpack_require__.e/* require.ensure */(0/*! my own chunk */).then((function(require) {
+__webpack_require__.e(/*! require.ensure | my own chunk */ 1).then((function(require) {
 	// another chunk with the same name
 	var d = __webpack_require__(/*! d */ 1);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-__webpack_require__.e/* require.ensure */(0/*! my own chunk */).then((function(require) {
+__webpack_require__.e(/*! require.ensure | my own chunk */ 1).then((function(require) {
 	// the same again
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-__webpack_require__.e/* require.ensure */(1).then((function(require) {
+__webpack_require__.e(/*! require.ensure */ 0).then((function(require) {
 	// chunk without name
 	var d = __webpack_require__(/*! d */ 1);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
 
-/***/ }),
-/* 3 */
-/*!***************************!*\
-  !*** ./node_modules/a.js ***!
-  \***************************/
-/*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports) {
-
-// module a
-
 /***/ })
 /******/ ]);
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0,1],[
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
 /* 0 */
 /*!***************************!*\
   !*** ./node_modules/b.js ***!
   \***************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module b
@@ -273,8 +280,33 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   !*** ./node_modules/d.js ***!
   \***************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
+/***/ (function(module, exports) {
+
+// module d
+
+/***/ })
+]]);
+```
+
+# dist/1.output.js
+
+``` javascript
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
+/* 0 */
+/*!***************************!*\
+  !*** ./node_modules/b.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// module b
+
+/***/ }),
+/* 1 */
+/*!***************************!*\
+  !*** ./node_modules/d.js ***!
+  \***************************/
+/*! no static exports found */
 /***/ (function(module, exports) {
 
 // module d
@@ -287,8 +319,6 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
   !*** ./node_modules/c.js ***!
   \***************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module c
@@ -297,85 +327,54 @@ __webpack_require__.e/* require.ensure */(1).then((function(require) {
 ]]);
 ```
 
-# js/1.output.js
-
-``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
-/* 0 */
-/*!***************************!*\
-  !*** ./node_modules/b.js ***!
-  \***************************/
-/*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports) {
-
-// module b
-
-/***/ }),
-/* 1 */
-/*!***************************!*\
-  !*** ./node_modules/d.js ***!
-  \***************************/
-/*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports) {
-
-// module d
-
-/***/ })
-]]);
-```
-
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: a4fbcc7d664f6f0aeb32
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
       Asset       Size  Chunks             Chunk Names
-0.output.js  964 bytes    0, 1  [emitted]  my own chunk
-1.output.js  653 bytes       1  [emitted]  
-  output.js   8.01 KiB       2  [emitted]  main
+0.output.js  463 bytes       0  [emitted]  
+1.output.js  677 bytes       1  [emitted]  my own chunk
+  output.js   8.13 KiB       2  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
-    > my own chunk [2] ./example.js 3:0-6:18
-    > my own chunk [2] ./example.js 8:0-11:18
-    > my own chunk [2] ./example.js 13:0-15:18
-    3 modules
-chunk    {1} 1.output.js 22 bytes {2} [rendered]
-    > [2] ./example.js 17:0-20:2
+chunk    {0} 0.output.js 22 bytes <{2}> [rendered]
+    > [3] ./example.js 17:0-20:2
     2 modules
-chunk    {2} output.js (main) 452 bytes [entry] [rendered]
-    > main [2] ./example.js 
-    [2] ./example.js 441 bytes {2} [built]
-        single entry .\example.js  main
+chunk    {1} 1.output.js (my own chunk) 33 bytes <{2}> [rendered]
+    > [3] ./example.js 13:0-15:18
+    > [3] ./example.js 3:0-6:18
+    > [3] ./example.js 8:0-11:18
+    3 modules
+chunk    {2} output.js (main) 452 bytes >{0}< >{1}< [entry] [rendered]
+    > .\example.js main
+ [3] ./example.js 441 bytes {2} [built]
+     single entry .\example.js  main
      + 1 hidden module
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: a4fbcc7d664f6f0aeb32
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
       Asset       Size  Chunks             Chunk Names
-0.output.js  112 bytes    0, 1  [emitted]  my own chunk
-1.output.js   92 bytes       1  [emitted]  
-  output.js   1.81 KiB       2  [emitted]  main
+0.output.js   92 bytes       0  [emitted]  
+1.output.js  112 bytes    1, 0  [emitted]  my own chunk
+  output.js   1.84 KiB       2  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js (my own chunk) 33 bytes {2} [rendered]
-    > my own chunk [2] ./example.js 3:0-6:18
-    > my own chunk [2] ./example.js 8:0-11:18
-    > my own chunk [2] ./example.js 13:0-15:18
-    3 modules
-chunk    {1} 1.output.js 22 bytes {2} [rendered]
-    > [2] ./example.js 17:0-20:2
+chunk    {0} 0.output.js 22 bytes <{2}> [rendered]
+    > [3] ./example.js 17:0-20:2
     2 modules
-chunk    {2} output.js (main) 452 bytes [entry] [rendered]
-    > main [2] ./example.js 
-    [2] ./example.js 441 bytes {2} [built]
-        single entry .\example.js  main
+chunk    {1} 1.output.js (my own chunk) 33 bytes <{2}> [rendered]
+    > [3] ./example.js 13:0-15:18
+    > [3] ./example.js 3:0-6:18
+    > [3] ./example.js 8:0-11:18
+    3 modules
+chunk    {2} output.js (main) 452 bytes >{0}< >{1}< [entry] [rendered]
+    > .\example.js main
+ [3] ./example.js 441 bytes {2} [built]
+     single entry .\example.js  main
      + 1 hidden module
 ```

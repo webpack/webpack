@@ -1,4 +1,3 @@
-var CommonsChunkPlugin = require("../../../../lib/optimize/CommonsChunkPlugin");
 var HotModuleReplacementPlugin = require("../../../../lib/HotModuleReplacementPlugin");
 module.exports = {
 	entry: {
@@ -10,10 +9,11 @@ module.exports = {
 	output: {
 		filename: "[name].js"
 	},
-	plugins: [
-		new CommonsChunkPlugin({
+	optimization: {
+		splitChunks: {
+			minSize: 1,
 			name: "vendor"
-		}),
-		new HotModuleReplacementPlugin()
-	]
+		}
+	},
+	plugins: [new HotModuleReplacementPlugin()]
 };

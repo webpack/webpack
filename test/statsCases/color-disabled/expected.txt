@@ -1,5 +1,0 @@
-Hash: 0be92f7ab7df0ba4d10a
-Time: Xms
-  Asset     Size  Chunks             Chunk Names
-main.js  2.6 KiB       0  [emitted]  main
-   [0] ./index.js 0 bytes {0} [built]

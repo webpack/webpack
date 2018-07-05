@@ -52,7 +52,7 @@ export { b } from "./b";
 export { c } from "./c";
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -121,7 +121,8 @@ export { c } from "./c";
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -134,47 +135,157 @@ export { c } from "./c";
 ``` javascript
 /******/ ([
 /* 0 */
-/*!********************************!*\
-  !*** ./example.js + 6 modules ***!
-  \********************************/
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
 /*! no exports provided */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is an entry point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-
-// CONCATENATED MODULE: ./node_modules/big-module/a.js
-const a = "a";
-
-// CONCATENATED MODULE: ./node_modules/big-module/b.js
-const b = "b";
-
-// CONCATENATED MODULE: ./node_modules/big-module/c.js
-const c = "c";
-
-// CONCATENATED MODULE: ./node_modules/big-module/index.js
-
-
-
-
-// CONCATENATED MODULE: ./node_modules/big-module-with-flag/a.js
-const a_a = "a";
-
-// CONCATENATED MODULE: ./node_modules/big-module-with-flag/b.js
-const b_b = "b";
-
-// CONCATENATED MODULE: ./example.js
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var big_module__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! big-module */ 1);
+/* harmony import */ var big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! big-module-with-flag */ 5);
 
 
 
 console.log(
-	a,
-	b,
-	a_a,
-	b_b
+	big_module__WEBPACK_IMPORTED_MODULE_0__["a"],
+	big_module__WEBPACK_IMPORTED_MODULE_0__["b"],
+	big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__["a"],
+	big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__["b"]
 );
+
+
+/***/ }),
+/* 1 */
+/*!******************************************!*\
+  !*** ./node_modules/big-module/index.js ***!
+  \******************************************/
+/*! exports provided: a, b, c */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */ 2);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _a__WEBPACK_IMPORTED_MODULE_0__["a"]; });
+
+/* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */ 3);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _b__WEBPACK_IMPORTED_MODULE_1__["b"]; });
+
+/* harmony import */ var _c__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./c */ 4);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "c", function() { return _c__WEBPACK_IMPORTED_MODULE_2__["c"]; });
+
+
+
+
+
+
+/***/ }),
+/* 2 */
+/*!**************************************!*\
+  !*** ./node_modules/big-module/a.js ***!
+  \**************************************/
+/*! exports provided: a */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return a; });
+const a = "a";
+
+
+/***/ }),
+/* 3 */
+/*!**************************************!*\
+  !*** ./node_modules/big-module/b.js ***!
+  \**************************************/
+/*! exports provided: b */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return b; });
+const b = "b";
+
+
+/***/ }),
+/* 4 */
+/*!**************************************!*\
+  !*** ./node_modules/big-module/c.js ***!
+  \**************************************/
+/*! exports provided: c */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return c; });
+const c = "c";
+
+
+/***/ }),
+/* 5 */
+/*!****************************************************!*\
+  !*** ./node_modules/big-module-with-flag/index.js ***!
+  \****************************************************/
+/*! exports provided: a, b, c */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */ 6);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _a__WEBPACK_IMPORTED_MODULE_0__["a"]; });
+
+/* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */ 7);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _b__WEBPACK_IMPORTED_MODULE_1__["b"]; });
+
+/* harmony import */ var _c__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./c */ 8);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "c", function() { return _c__WEBPACK_IMPORTED_MODULE_2__["c"]; });
+
+
+
+
+
+
+/***/ }),
+/* 6 */
+/*!************************************************!*\
+  !*** ./node_modules/big-module-with-flag/a.js ***!
+  \************************************************/
+/*! exports provided: a */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return a; });
+const a = "a";
+
+
+/***/ }),
+/* 7 */
+/*!************************************************!*\
+  !*** ./node_modules/big-module-with-flag/b.js ***!
+  \************************************************/
+/*! exports provided: b */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return b; });
+const b = "b";
+
+
+/***/ }),
+/* 8 */
+/*!************************************************!*\
+  !*** ./node_modules/big-module-with-flag/c.js ***!
+  \************************************************/
+/*! exports provided: c */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return c; });
+const c = "c";
 
 
 /***/ })
@@ -183,32 +294,37 @@ console.log(
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 1b6ad20ba7bd65d7f026
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
     Asset      Size  Chunks             Chunk Names
-output.js  3.47 KiB       0  [emitted]  main
+output.js  7.89 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 342 bytes [entry] [rendered]
-    > main [] 
-    [0] ./example.js + 6 modules 342 bytes {0} [built]
-        [no exports]
-        single entry .\example.js  main
+chunk    {0} output.js (main) 422 bytes [entry] [rendered]
+    > .\example.js main
+ [0] ./example.js 140 bytes {0} [built]
+     [no exports]
+     single entry .\example.js  main
+     + 8 hidden modules
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 1b6ad20ba7bd65d7f026
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
     Asset       Size  Chunks             Chunk Names
-output.js  640 bytes       0  [emitted]  main
+output.js  600 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 342 bytes [entry] [rendered]
-    > main [] 
-    [0] ./example.js + 6 modules 342 bytes {0} [built]
-        [no exports]
-        single entry .\example.js  main
+chunk    {0} output.js (main) 325 bytes [entry] [rendered]
+    > .\example.js main
+ [0] ./example.js + 6 modules 325 bytes {0} [built]
+     [no exports]
+     single entry .\example.js  main
+     | ./example.js 140 bytes [built]
+     |     [no exports]
+     |     single entry .\example.js  main
+     |     + 6 hidden modules
 ```

@@ -1,6 +1,6 @@
 var webpack = require("../../");
 module.exports = {
-	mode: "production",
+	// mode: "development" || "production",
 	plugins: [
 		new webpack.LoaderOptionsPlugin({
 			options: {
@@ -12,5 +12,8 @@ module.exports = {
 				}
 			}
 		})
-	]
+	],
+	optimization: {
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 };

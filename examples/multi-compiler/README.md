@@ -16,10 +16,10 @@ var webpack = require("../../");
 module.exports = [
 	{
 		name: "mobile",
-		mode: "production",
+		// mode: "development || "production",
 		entry: "./example",
 		output: {
-			path: path.join(__dirname, "js"),
+			path: path.join(__dirname, "dist"),
 			filename: "mobile.js"
 		},
 		plugins: [
@@ -28,12 +28,13 @@ module.exports = [
 			})
 		]
 	},
+
 	{
 		name: "desktop",
-		mode: "production",
+		// mode: "development || "production",
 		entry: "./example",
 		output: {
-			path: path.join(__dirname, "js"),
+			path: path.join(__dirname, "dist"),
 			filename: "desktop.js"
 		},
 		plugins: [
@@ -45,7 +46,7 @@ module.exports = [
 ];
 ```
 
-# js/desktop.js
+# dist/desktop.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -114,7 +115,8 @@ module.exports = [
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -131,20 +133,16 @@ module.exports = [
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
-if(false) {
-	require("./mobile-stuff");
-}
+if(false) {}
 console.log("Running " + "desktop" + " build");
 
 /***/ })
 /******/ ]);
 ```
 
-# js/mobile.js
+# dist/mobile.js
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
@@ -211,7 +209,8 @@ console.log("Running " + "desktop" + " build");
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -223,8 +222,6 @@ console.log("Running " + "desktop" + " build");
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 if(true) {
@@ -238,8 +235,6 @@ console.log("Running " + "mobile" + " build");
   !*** ./mobile-stuff.js ***!
   \*************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // mobile only stuff
@@ -250,56 +245,56 @@ console.log("Running " + "mobile" + " build");
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 38f1b6745f2b6ecb12f3dc51c5defcd12cfd66b4
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
 Child mobile:
-    Hash: 38f1b6745f2b6ecb12f3
+    Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset      Size  Chunks             Chunk Names
-    mobile.js  3.22 KiB       0  [emitted]  main
+    mobile.js  3.04 KiB       0  [emitted]  main
     Entrypoint main = mobile.js
     chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
-        > main [0] ./example.js 
-        [0] ./example.js 97 bytes {0} [built]
-            single entry ./example  main
-        [1] ./mobile-stuff.js 20 bytes {0} [built]
-            cjs require ./mobile-stuff [0] ./example.js 2:1-26
+        > ./example main
+     [0] ./example.js 97 bytes {0} [built]
+         single entry ./example  main
+     [1] ./mobile-stuff.js 20 bytes {0} [built]
+         cjs require ./mobile-stuff [0] ./example.js 2:1-26
 Child desktop:
-    Hash: dc51c5defcd12cfd66b4
-         Asset      Size  Chunks             Chunk Names
-    desktop.js  2.91 KiB       0  [emitted]  main
+    Hash: 0a1b2c3d4e5f6a7b8c9d
+         Asset     Size  Chunks             Chunk Names
+    desktop.js  2.8 KiB       0  [emitted]  main
     Entrypoint main = desktop.js
     chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
-        > main [0] ./example.js 
-        [0] ./example.js 97 bytes {0} [built]
-            single entry ./example  main
+        > ./example main
+     [0] ./example.js 97 bytes {0} [built]
+         single entry ./example  main
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 38f1b6745f2b6ecb12f3dc51c5defcd12cfd66b4
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
 Child mobile:
-    Hash: 38f1b6745f2b6ecb12f3
+    Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset       Size  Chunks             Chunk Names
-    mobile.js  606 bytes       0  [emitted]  main
+    mobile.js  608 bytes       0  [emitted]  main
     Entrypoint main = mobile.js
     chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
-        > main [0] ./example.js 
-        [0] ./example.js 97 bytes {0} [built]
-            single entry ./example  main
-        [1] ./mobile-stuff.js 20 bytes {0} [built]
-            cjs require ./mobile-stuff [0] ./example.js 2:1-26
+        > ./example main
+     [0] ./mobile-stuff.js 20 bytes {0} [built]
+         cjs require ./mobile-stuff [1] ./example.js 2:1-26
+     [1] ./example.js 97 bytes {0} [built]
+         single entry ./example  main
 Child desktop:
-    Hash: dc51c5defcd12cfd66b4
+    Hash: 0a1b2c3d4e5f6a7b8c9d
          Asset       Size  Chunks             Chunk Names
-    desktop.js  586 bytes       0  [emitted]  main
+    desktop.js  588 bytes       0  [emitted]  main
     Entrypoint main = desktop.js
     chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
-        > main [0] ./example.js 
-        [0] ./example.js 97 bytes {0} [built]
-            single entry ./example  main
+        > ./example main
+     [0] ./example.js 97 bytes {0} [built]
+         single entry ./example  main
 ```

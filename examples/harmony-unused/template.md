@@ -24,28 +24,28 @@ In addition to that, `library.js` simulates an entry point to a big library. `li
 {{library.js}}
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{js/output.js}}
+{{dist/output.js}}
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
-{{min:js/output.js}}
+{{production:dist/output.js}}
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

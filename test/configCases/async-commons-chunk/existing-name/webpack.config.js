@@ -4,15 +4,11 @@ module.exports = {
 	performance: {
 		hints: false
 	},
-	plugins: [
-		new webpack.optimize.CommonsChunkPlugin({
-			chunks: ["a+b", "a+b+c"],
-			async: "a+b",
-		}),
-		new webpack.optimize.CommonsChunkPlugin({
-			chunks: ["a", "a+b"],
-			async: "a",
-		}),
-		new webpack.NamedChunksPlugin()
-	]
+	optimization: {
+		splitChunks: {
+			minSize: 1,
+			name: true
+		}
+	},
+	plugins: [new webpack.NamedChunksPlugin()]
 };

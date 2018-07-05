@@ -1,8 +1,11 @@
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	module: {
 		rules: [
-			{ test: /\.css$/, loader: "css-loader" }
+			{
+				test: /\.css$/,
+				loader: "css-loader"
+			}
 		]
 	}
 };

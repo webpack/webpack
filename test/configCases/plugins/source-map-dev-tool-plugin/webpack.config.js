@@ -6,8 +6,8 @@ module.exports = {
 		__filename: false
 	},
 	entry: {
-		"bundle0": ["./index.js"],
-		"public/test": ["./test.js"],
+		bundle0: ["./index.js"],
+		"public/test": ["./test.js"]
 	},
 	output: {
 		filename: "[name].js"

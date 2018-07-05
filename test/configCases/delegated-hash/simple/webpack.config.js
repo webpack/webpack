@@ -8,9 +8,15 @@ module.exports = {
 			type: "require",
 			context: __dirname,
 			content: {
-				"./a.js": { id: 0 },
-				"./loader.js!./b.js": { id: 1 },
-				"./dir/c.js": { id: 2 }
+				"./a.js": {
+					id: 0
+				},
+				"./loader.js!./b.js": {
+					id: 1
+				},
+				"./dir/c.js": {
+					id: 2
+				}
 			}
 		}),
 		new DelegatedPlugin({
@@ -18,8 +24,12 @@ module.exports = {
 			type: "object",
 			context: __dirname,
 			content: {
-				"./d.js": { id: 3 },
-				"./e.js": { id: 4 }
+				"./d.js": {
+					id: 3
+				},
+				"./e.js": {
+					id: 4
+				}
 			}
 		})
 	]

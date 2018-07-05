@@ -31,7 +31,7 @@ module.exports = function(content) {
 }
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -100,10 +100,11 @@ module.exports = function(content) {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
@@ -113,15 +114,40 @@ module.exports = function(content) {
 ``` javascript
 /******/ ([
 /* 0 */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// use our loader
+console.dir(__webpack_require__(/*! ./loader!./file */ 1));
+
+// use buildin css loader
+console.dir(__webpack_require__(/*! ./test.css */ 2)); // default by extension
+console.dir(__webpack_require__(/*! css-loader!./test.css */ 2)); // manual
+
+
+/***/ }),
+/* 1 */
+/*!*****************************!*\
+  !*** ./loader.js!./file.js ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+exports.answer = 42;
+exports.foo = "bar";
+
+/***/ }),
+/* 2 */
 /*!****************************************************!*\
   !*** (webpack)/node_modules/css-loader!./test.css ***!
   \****************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/lib/css-base.js */ 3)(undefined);
+exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/lib/css-base.js */ 3)(false);
 // imports
 
 
@@ -132,44 +158,11 @@ exports.push([module.i, ".some-class {\r\n\tcolor: hotpink;\r\n}\r\n", ""]);
 
 
 /***/ }),
-/* 1 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports, __webpack_require__) {
-
-// use our loader
-console.dir(__webpack_require__(/*! ./loader!./file */ 2));
-
-// use buildin css loader
-console.dir(__webpack_require__(/*! ./test.css */ 0)); // default by extension
-console.dir(__webpack_require__(/*! css-loader!./test.css */ 0)); // manual
-
-
-/***/ }),
-/* 2 */
-/*!*****************************!*\
-  !*** ./loader.js!./file.js ***!
-  \*****************************/
-/*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports) {
-
-exports.answer = 42;
-exports.foo = "bar";
-
-/***/ }),
 /* 3 */
 /*!*********************************************************!*\
   !*** (webpack)/node_modules/css-loader/lib/css-base.js ***!
   \*********************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 /*
@@ -266,42 +259,42 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: cb0ecece43c771e1f9e7
-Version: webpack next
-    Asset      Size  Chunks             Chunk Names
-output.js  6.56 KiB       0  [emitted]  main
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
+    Asset     Size  Chunks             Chunk Names
+output.js  6.2 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 2.66 KiB [entry] [rendered]
-    > main [1] ./example.js 
-    [0] (webpack)/node_modules/css-loader!./test.css 209 bytes {0} [built]
-        cjs require !css-loader!./test.css [1] ./example.js 6:12-45
-        cjs require ./test.css [1] ./example.js 5:12-33
-    [1] ./example.js 210 bytes {0} [built]
-        single entry .\example.js  main
-    [2] ./loader.js!./file.js 41 bytes {0} [built]
-        cjs require ./loader!./file [1] ./example.js 2:12-38
+chunk    {0} output.js (main) 2.65 KiB [entry] [rendered]
+    > .\example.js main
+ [0] ./example.js 210 bytes {0} [built]
+     single entry .\example.js  main
+ [1] ./loader.js!./file.js 41 bytes {0} [built]
+     cjs require ./loader!./file [0] ./example.js 2:12-38
+ [2] (webpack)/node_modules/css-loader!./test.css 205 bytes {0} [built]
+     cjs require !css-loader!./test.css [0] ./example.js 6:12-45
+     cjs require ./test.css [0] ./example.js 5:12-33
      + 1 hidden module
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 362753a4b9c9758ad0e2
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
     Asset      Size  Chunks             Chunk Names
 output.js  1.51 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 2.64 KiB [entry] [rendered]
-    > main [1] ./example.js 
-    [0] (webpack)/node_modules/css-loader!./test.css 192 bytes {0} [built]
-        cjs require !css-loader!./test.css [1] ./example.js 6:12-45
-        cjs require ./test.css [1] ./example.js 5:12-33
-    [1] ./example.js 210 bytes {0} [built]
-        single entry .\example.js  main
-    [2] ./loader.js!./file.js 41 bytes {0} [built]
-        cjs require ./loader!./file [1] ./example.js 2:12-38
+chunk    {0} output.js (main) 2.65 KiB [entry] [rendered]
+    > .\example.js main
+ [0] (webpack)/node_modules/css-loader!./test.css 205 bytes {0} [built]
+     cjs require !css-loader!./test.css [3] ./example.js 6:12-45
+     cjs require ./test.css [3] ./example.js 5:12-33
+ [2] ./loader.js!./file.js 41 bytes {0} [built]
+     cjs require ./loader!./file [3] ./example.js 2:12-38
+ [3] ./example.js 210 bytes {0} [built]
+     single entry .\example.js  main
      + 1 hidden module
 ```

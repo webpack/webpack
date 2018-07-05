@@ -12,17 +12,9 @@ exports.default = new Promise (resolve, reject) ->
 				]
 			amd:
 				fromOptions: true
-			resolve:
-				# cannot resolve should outside the outermost node_modules
-				# so it is injected here
-				alias:
-					should: require.resolve "should"
 			plugins: [
 				new webpack.optimize.LimitChunkCountPlugin
 					maxChunks: 3
-				new webpack.optimize.CommonsChunkPlugin
-					name: "common"
-					filename: "library2.commons.js"
 				new webpack.DefinePlugin
 					"typeof CONST_TYPEOF": JSON.stringify("typeof"),
 					CONST_UNDEFINED: undefined,

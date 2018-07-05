@@ -1,5 +1,5 @@
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	output: {
 		webassemblyModuleFilename: "[modulehash].wasm",
 		publicPath: "js/"
@@ -11,5 +11,8 @@ module.exports = {
 				type: "webassembly/experimental"
 			}
 		]
+	},
+	optimization: {
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
 	}
 };

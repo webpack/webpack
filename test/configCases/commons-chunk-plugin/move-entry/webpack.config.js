@@ -1,16 +1,21 @@
-var CommonsChunkPlugin = require("../../../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
 	entry: {
-		main: "./index",
-		second: "./index"
+		main: "./index?0",
+		second: "./index?1"
 	},
 	target: "web",
 	output: {
 		filename: "[name].js"
 	},
-	plugins: [
-		new CommonsChunkPlugin({
-			name: "commons"
-		})
-	]
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				commons: {
+					chunks: "initial",
+					minSize: 0,
+					name: "commons"
+				}
+			}
+		}
+	}
 };

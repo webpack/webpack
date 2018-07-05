@@ -1,8 +1,7 @@
 "use strict";
 
-/*globals describe it before after  */
+/* globals describe it */
 const path = require("path");
-require("should");
 const MemoryFs = require("memory-fs");
 const webpack = require("../");
 
@@ -20,51 +19,55 @@ const createSingleCompiler = () => {
 };
 
 const createMultiCompiler = () => {
-	return createCompiler([{
-		context: path.join(__dirname, "fixtures"),
-		entry: "./a.js"
-	}]);
+	return createCompiler([
+		{
+			context: path.join(__dirname, "fixtures"),
+			entry: "./a.js"
+		}
+	]);
 };
 
-describe("WatcherEvents", function() {
-	this.timeout(10000);
+describe("WatcherEvents", () => {
+	if (process.env.NO_WATCH_TESTS) {
+		it.skip("long running tests excluded", () => {});
+		return;
+	}
 
-	it("should emit 'watch-close' when using single-compiler mode and the compiler is not running", function(done) {
+	jest.setTimeout(10000);
+
+	it("should emit 'watch-close' when using single-compiler mode and the compiler is not running", done => {
 		let called = false;
 
 		const compiler = createSingleCompiler();
 		const watcher = compiler.watch({}, (err, stats) => {
-			called.should.be.exactly(true);
+			expect(called).toBe(true);
 			done(err);
 		});
 
-		compiler.plugin("watch-close", () => {
+		compiler.hooks.watchClose.tap("WatcherEventsTest", () => {
 			called = true;
 		});
 
-		compiler.plugin("done", () => {
+		compiler.hooks.done.tap("WatcherEventsTest", () => {
 			watcher.close();
 		});
-
 	});
 
-	it("should emit 'watch-close' when using multi-compiler mode and the compiler is not running", function(done) {
+	it("should emit 'watch-close' when using multi-compiler mode and the compiler is not running", done => {
 		let called = false;
 
 		const compiler = createMultiCompiler();
 		const watcher = compiler.watch({}, (err, stats) => {
-			called.should.be.exactly(true);
+			expect(called).toBe(true);
 			done(err);
 		});
 
-		compiler.plugin("watch-close", () => {
+		compiler.hooks.watchClose.tap("WatcherEventsTest", () => {
 			called = true;
 		});
 
-		compiler.plugin("done", () => {
+		compiler.hooks.done.tap("WatcherEventsTest", () => {
 			watcher.close();
 		});
-
 	});
-
 });

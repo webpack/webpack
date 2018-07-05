@@ -24,7 +24,10 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.DllPlugin({
-			path: path.resolve(__dirname, "../../../js/config/dll-plugin/manifest0.json")
+			path: path.resolve(
+				__dirname,
+				"../../../js/config/dll-plugin/manifest0.json"
+			)
 		})
 	]
 };

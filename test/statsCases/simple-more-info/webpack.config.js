@@ -14,6 +14,7 @@ module.exports = {
 		cachedAssets: true,
 		source: true,
 		errorDetails: true,
-		publicPath: true
+		publicPath: true,
+		outputPath: true
 	}
 };

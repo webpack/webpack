@@ -3,10 +3,10 @@
 ``` javascript
 var path = require("path");
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	entry: "./example",
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		filename: "MyLibrary.umd.js",
 		library: "MyLibrary",
 		libraryTarget: "umd"
@@ -14,7 +14,7 @@ module.exports = {
 };
 ```
 
-# js/MyLibrary.umd.js
+# dist/MyLibrary.umd.js
 
 ``` javascript
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -26,7 +26,7 @@ module.exports = {
 		exports["MyLibrary"] = factory();
 	else
 		root["MyLibrary"] = factory();
-})(typeof self !== 'undefined' ? self : this, function() {
+})(window, function() {
 ```
 <details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -95,7 +95,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -112,8 +113,6 @@ return /******/ (function(modules) { // webpackBootstrap
   !*** ./example.js ***!
   \********************/
 /*! exports provided: value, increment, default */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is an entry point */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -134,32 +133,32 @@ function increment() {
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 3644f1adc4c521a71110
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
            Asset      Size  Chunks             Chunk Names
-MyLibrary.umd.js  3.66 KiB       0  [emitted]  main
+MyLibrary.umd.js  3.56 KiB       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
-    > main [0] ./example.js 
-    [0] ./example.js 97 bytes {0} [built]
-        [exports: value, increment, default]
-        single entry ./example  main
+    > ./example main
+ [0] ./example.js 97 bytes {0} [built]
+     [exports: value, increment, default]
+     single entry ./example  main
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 3644f1adc4c521a71110
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
            Asset       Size  Chunks             Chunk Names
-MyLibrary.umd.js  952 bytes       0  [emitted]  main
+MyLibrary.umd.js  926 bytes       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
-    > main [0] ./example.js 
-    [0] ./example.js 97 bytes {0} [built]
-        [exports: value, increment, default]
-        single entry ./example  main
+    > ./example main
+ [0] ./example.js 97 bytes {0} [built]
+     [exports: value, increment, default]
+     single entry ./example  main
 ```

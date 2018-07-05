@@ -1,5 +1,4 @@
 {
-  "id": "DllPlugin",
   "additionalProperties": false,
   "required": [
     "path"
@@ -24,6 +23,10 @@
       "description": "Absolute path to the manifest json file (output)",
       "minLength": 1,
       "type": "string"
+    },
+    "entryOnly": {
+      "description": "If true, only entry points will be exposed",
+      "type": "boolean"
     }
   }
 }

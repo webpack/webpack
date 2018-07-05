@@ -4,22 +4,22 @@
 {{webpack.config.js}}
 ```
 
-# js/MyLibrary.umd.js
+# dist/MyLibrary.umd.js
 
 ``` javascript
-{{js/MyLibrary.umd.js}}
+{{dist/MyLibrary.umd.js}}
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

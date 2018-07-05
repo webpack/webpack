@@ -1,17 +1,17 @@
 /* globals describe, it, beforeEach */
 "use strict";
-require("should");
+
 const MemoryFs = require("memory-fs");
 const ContextModuleFactory = require("../lib/ContextModuleFactory");
 
-describe("ContextModuleFactory", function() {
-	describe("resolveDependencies", function() {
+describe("ContextModuleFactory", () => {
+	describe("resolveDependencies", () => {
 		let factory, memfs;
-		beforeEach(function() {
+		beforeEach(() => {
 			factory = new ContextModuleFactory([]);
 			memfs = new MemoryFs();
 		});
-		it("should not report an error when ENOENT errors happen", function(done) {
+		it("should not report an error when ENOENT errors happen", done => {
 			memfs.readdir = (dir, callback) => {
 				setTimeout(() => callback(null, ["/file"]));
 			};
@@ -20,18 +20,22 @@ describe("ContextModuleFactory", function() {
 				err.code = "ENOENT";
 				setTimeout(() => callback(err, null));
 			};
-			factory.resolveDependencies(memfs, {
-				resource: "/",
-				recursive: true,
-				regExp: /.*/
-			}, (err, res) => {
-				(!!err).should.be.false();
-				res.should.be.an.Array();
-				res.length.should.be.exactly(0);
-				done();
-			});
+			factory.resolveDependencies(
+				memfs,
+				{
+					resource: "/",
+					recursive: true,
+					regExp: /.*/
+				},
+				(err, res) => {
+					expect(err).toBeFalsy();
+					expect(Array.isArray(res)).toBe(true);
+					expect(res.length).toBe(0);
+					done();
+				}
+			);
 		});
-		it("should report an error when non-ENOENT errors happen", function(done) {
+		it("should report an error when non-ENOENT errors happen", done => {
 			memfs.readdir = (dir, callback) => {
 				setTimeout(() => callback(null, ["/file"]));
 			};
@@ -40,15 +44,19 @@ describe("ContextModuleFactory", function() {
 				err.code = "EACCES";
 				setTimeout(() => callback(err, null));
 			};
-			factory.resolveDependencies(memfs, {
-				resource: "/",
-				recursive: true,
-				regExp: /.*/
-			}, (err, res) => {
-				err.should.be.an.Error();
-				(!!res).should.be.false();
-				done();
-			});
+			factory.resolveDependencies(
+				memfs,
+				{
+					resource: "/",
+					recursive: true,
+					regExp: /.*/
+				},
+				(err, res) => {
+					expect(err).toBeInstanceOf(Error);
+					expect(res).toBeFalsy();
+					done();
+				}
+			);
 		});
 	});
 });

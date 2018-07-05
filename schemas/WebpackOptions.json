@@ -332,12 +332,25 @@
           "type": "string",
           "absolutePath": false
         },
+        "globalObject": {
+          "description": "An expression which is used to address the global object/scope in runtime code",
+          "type": "string",
+          "minLength": 1
+        },
         "crossOriginLoading": {
           "description": "This option enables cross-origin loading of chunks.",
           "enum": [
             false,
             "anonymous",
             "use-credentials"
+          ]
+        },
+        "jsonpScriptType": {
+          "description": "This option enables loading async chunks via a custom script type, such as script type=\"module\"",
+          "enum": [
+            false,
+            "text/javascript",
+            "module"
           ]
         },
         "chunkLoadTimeout": {
@@ -385,7 +398,14 @@
         },
         "filename": {
           "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
-          "type": "string",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ],
           "absolutePath": false
         },
         "hashDigest": {
@@ -403,8 +423,15 @@
         },
         "hashFunction": {
           "description": "Algorithm used for generation the hash (see node.js crypto package)",
-          "minLength": 1,
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "instanceof": "Function"
+            }
+          ]
         },
         "hashSalt": {
           "description": "Any string which is added to the hash to salt it",
@@ -413,7 +440,14 @@
         },
         "hotUpdateChunkFilename": {
           "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
-          "type": "string",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ],
           "absolutePath": false
         },
         "hotUpdateFunction": {
@@ -422,7 +456,14 @@
         },
         "hotUpdateMainFilename": {
           "description": "The filename of the Hot Update Main File. It is inside the `output.path` directory.",
-          "type": "string",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ],
           "absolutePath": false
         },
         "jsonpFunction": {
@@ -451,7 +492,14 @@
               "properties": {
                 "root": {
                   "description": "Name of the property exposed globally by a UMD library",
-                  "type": "string"
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/definitions/common.arrayOfStringValues"
+                    }
+                  ]
                 },
                 "amd": {
                   "description": "Name of the exposed AMD library in the UMD",
@@ -473,6 +521,7 @@
             "assign",
             "this",
             "window",
+            "self",
             "global",
             "commonjs",
             "commonjs2",
@@ -505,7 +554,14 @@
         },
         "publicPath": {
           "description": "The `publicPath` specifies the public URL address of the output files when referenced in a browser.",
-          "type": "string"
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "Function"
+            }
+          ]
         },
         "sourceMapFilename": {
           "description": "The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.",
@@ -624,7 +680,7 @@
           ]
         },
         "moduleExtensions": {
-          "description": "Extenstions added to the module request when trying to find the module",
+          "description": "Extensions added to the module request when trying to find the module",
           "anyOf": [
             {
               "$ref": "#/definitions/common.arrayOfStringValues"
@@ -662,7 +718,7 @@
           "type": "boolean"
         },
         "concord": {
-          "description": "Enable condord resolving extras",
+          "description": "Enable concord resolving extras",
           "type": "boolean"
         },
         "unsafeCache": {
@@ -872,6 +928,10 @@
             }
           ]
         },
+        "sideEffects": {
+          "description": "Flags a module as with or without side effects",
+          "type": "boolean"
+        },
         "query": {
           "description": "Shortcut for use.query",
           "anyOf": [
@@ -1057,7 +1117,7 @@
   },
   "properties": {
     "mode": {
-      "description": "Set the value of `require.amd` and `define.amd`.",
+      "description": "Enable production optimizations or development hints.",
       "enum": [
         "development",
         "production",
@@ -1235,7 +1295,7 @@
           "description": "Remove chunks which are empty",
           "type": "boolean"
         },
-        "mergedDuplicateChunks": {
+        "mergeDuplicateChunks": {
           "description": "Merge chunks which contain the same modules",
           "type": "boolean"
         },
@@ -1263,12 +1323,275 @@
           "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer",
           "type": "boolean"
         },
+        "splitChunks": {
+          "description": "Optimize duplication and caching by splitting chunks by shared modules and cache group",
+          "oneOf": [
+            {
+              "enum": [
+                false
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "chunks": {
+                  "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "initial",
+                        "async",
+                        "all"
+                      ]
+                    },
+                    {
+                      "instanceof": "Function"
+                    }
+                  ]
+                },
+                "minSize": {
+                  "description": "Minimal size for the created chunks",
+                  "type": "number",
+                  "minimum": 0
+                },
+                "maxSize": {
+                  "description": "Maximal size hint for the created chunks",
+                  "type": "number",
+                  "minimum": 0
+                },
+                "minChunks": {
+                  "description": "Minimum number of times a module has to be duplicated until it's considered for splitting",
+                  "type": "number",
+                  "minimum": 1
+                },
+                "maxAsyncRequests": {
+                  "description": "Maximum number of requests which are accepted for on-demand loading",
+                  "type": "number",
+                  "minimum": 1
+                },
+                "maxInitialRequests": {
+                  "description": "Maximum number of initial chunks which are accepted for an entry point",
+                  "type": "number",
+                  "minimum": 1
+                },
+                "name": {
+                  "description": "Give chunks created a name (chunks with equal name are merged)",
+                  "oneOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "instanceof": "Function"
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "filename": {
+                  "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "automaticNameDelimiter": {
+                  "description": "Sets the name delimiter for created chunks",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "hidePathInfo": {
+                  "description": "Prevents exposing path info when creating names for parts splitted by maxSize",
+                  "type": "boolean"
+                },
+                "fallbackCacheGroup": {
+                  "description": "Options for modules not selected by any other cache group",
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "minSize": {
+                      "description": "Minimal size for the created chunk",
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "maxSize": {
+                      "description": "Maximal size hint for the created chunks",
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "automaticNameDelimiter": {
+                      "description": "Sets the name delimiter for created chunks",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                },
+                "cacheGroups": {
+                  "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)",
+                  "type": "object",
+                  "additionalProperties": {
+                    "description": "Configuration for a cache group",
+                    "anyOf": [
+                      {
+                        "enum": [
+                          false
+                        ]
+                      },
+                      {
+                        "instanceof": "Function"
+                      },
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "instanceof": "RegExp"
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                          "test": {
+                            "description": "Assign modules to a cache group",
+                            "oneOf": [
+                              {
+                                "instanceof": "Function"
+                              },
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "instanceof": "RegExp"
+                              }
+                            ]
+                          },
+                          "chunks": {
+                            "description": "Select chunks for determining cache group content (defaults to \"initial\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
+                            "oneOf": [
+                              {
+                                "enum": [
+                                  "initial",
+                                  "async",
+                                  "all"
+                                ]
+                              },
+                              {
+                                "instanceof": "Function"
+                              }
+                            ]
+                          },
+                          "enforce": {
+                            "description": "Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group",
+                            "type": "boolean"
+                          },
+                          "priority": {
+                            "description": "Priority of this cache group",
+                            "type": "number"
+                          },
+                          "minSize": {
+                            "description": "Minimal size for the created chunk",
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "maxSize": {
+                            "description": "Maximal size hint for the created chunks",
+                            "type": "number",
+                            "minimum": 0
+                          },
+                          "minChunks": {
+                            "description": "Minimum number of times a module has to be duplicated until it's considered for splitting",
+                            "type": "number",
+                            "minimum": 1
+                          },
+                          "maxAsyncRequests": {
+                            "description": "Maximum number of requests which are accepted for on-demand loading",
+                            "type": "number",
+                            "minimum": 1
+                          },
+                          "maxInitialRequests": {
+                            "description": "Maximum number of initial chunks which are accepted for an entry point",
+                            "type": "number",
+                            "minimum": 1
+                          },
+                          "reuseExistingChunk": {
+                            "description": "Try to reuse existing chunk (with name) when it has matching modules",
+                            "type": "boolean"
+                          },
+                          "name": {
+                            "description": "Give chunks for this cache group a name (chunks with equal name are merged)",
+                            "oneOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "instanceof": "Function"
+                              },
+                              {
+                                "type": "string"
+                              }
+                            ]
+                          },
+                          "filename": {
+                            "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
+                            "type": "string",
+                            "minLength": 1
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "runtimeChunk": {
+          "description": "Create an additional chunk which contains only the webpack runtime and chunk hash maps",
+          "oneOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "enum": [
+                "single",
+                "multiple"
+              ]
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": {
+                  "description": "The name or name factory for the runtime chunks",
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "instanceof": "Function"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
         "noEmitOnErrors": {
           "description": "Avoid emitting assets when errors occur",
           "type": "boolean"
         },
+        "checkWasmTypes": {
+          "description": "Check for incompatible wasm types when importing/exporting from/to ESM",
+          "type": "boolean"
+        },
+        "mangleWasmImports": {
+          "description": "Reduce size of WASM by changing imports to shorter strings.",
+          "type": "boolean"
+        },
         "namedModules": {
           "description": "Use readable module identifiers for better debugging",
+          "type": "boolean"
+        },
+        "hashedModuleIds": {
+          "description": "Use hashed module id instead module identifiers for better long term caching",
           "type": "boolean"
         },
         "namedChunks": {
@@ -1404,6 +1727,10 @@
         }
       ]
     },
+    "serve": {
+      "description": "Options for webpack-serve",
+      "type": "object"
+    },
     "stats": {
       "description": "Used by the webpack CLI program to pass stats options.",
       "anyOf": [
@@ -1431,6 +1758,10 @@
             "timings": {
               "type": "boolean",
               "description": "add timing information"
+            },
+            "builtAt": {
+              "type": "boolean",
+              "description": "add built at time information"
             },
             "performance": {
               "type": "boolean",
@@ -1503,6 +1834,14 @@
               "type": "boolean",
               "description": "add built modules information"
             },
+            "nestedModules": {
+              "type": "boolean",
+              "description": "add information about modules nested in other modules (like with module concatenation)"
+            },
+            "moduleAssets": {
+              "type": "boolean",
+              "description": "add information about assets inside modules"
+            },
             "children": {
               "type": "boolean",
               "description": "add children information"
@@ -1548,10 +1887,13 @@
               ]
             },
             "excludeModules": {
-              "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps or Functions",
+              "description": "Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions",
               "anyOf": [
                 {
                   "$ref": "#/definitions/filter-types"
+                },
+                {
+                  "type": "boolean"
                 }
               ]
             },
@@ -1560,12 +1902,19 @@
               "anyOf": [
                 {
                   "$ref": "#/definitions/filter-types"
+                },
+                {
+                  "type": "boolean"
                 }
               ]
             },
             "entrypoints": {
               "type": "boolean",
               "description": "Display the entry points with the corresponding bundles"
+            },
+            "chunkGroups": {
+              "type": "boolean",
+              "description": "Display all chunk groups with the corresponding bundles"
             },
             "errorDetails": {
               "type": "boolean",
@@ -1594,6 +1943,10 @@
             "publicPath": {
               "type": "boolean",
               "description": "Add public path information"
+            },
+            "outputPath": {
+              "type": "boolean",
+              "description": "Add output path information"
             },
             "providedExports": {
               "type": "boolean",
@@ -1634,8 +1987,6 @@
             "node",
             "async-node",
             "node-webkit",
-            "atom",
-            "electron",
             "electron-main",
             "electron-renderer"
           ]
@@ -1681,8 +2032,5 @@
       "type": "object"
     }
   },
-  "required": [
-    "entry"
-  ],
   "type": "object"
 }

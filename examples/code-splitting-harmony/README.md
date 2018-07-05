@@ -25,7 +25,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 ```
 
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -33,10 +33,12 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
-/******/ 		var chunkIds = data[0], moreModules = data[1], executeModules = data[2];
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1];
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId]) {
@@ -56,15 +58,23 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/
 /******/ 	};
 /******/
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
 /******/ 		3: 0
 /******/ 	};
 /******/
-/******/ 	var scheduledModules = [];
+/******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + chunkId + ".output.js"
+/******/ 	}
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -114,13 +124,14 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120000;
+/******/ 				script.timeout = 120;
 /******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
-/******/ 				script.src = __webpack_require__.p + "" + chunkId + ".output.js";
+/******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/ 				var timeout = setTimeout(function(){
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
@@ -183,19 +194,21 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 	var parentJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 	jsonpArray.push = webpackJsonpCallback;
 /******/ 	jsonpArray = jsonpArray.slice();
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 ```
@@ -207,32 +220,49 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /* 0 */,
 /* 1 */,
 /* 2 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! no exports provided */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is an entry point */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/*!*******************************************************!*\
+  !*** ./node_modules/c lazy ^\.\/.*$ namespace object ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! a */3);
-/* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(a__WEBPACK_IMPORTED_MODULE_0__);
-
-
-__webpack_require__.e/* import() */(2).then(function() { var module = __webpack_require__(/*! b */5); return typeof module === "object" && module && module.__esModule ? module : /* fake namespace object */ { "default": module }; }).then(function(b) {
-	console.log("b loaded", b);
-})
-
-function loadC(name) {
-	return __webpack_require__(/*! c */ 4)("./" + name);
+var map = {
+	"./1": [
+		1,
+		1
+	],
+	"./1.js": [
+		1,
+		1
+	],
+	"./2": [
+		0,
+		0
+	],
+	"./2.js": [
+		0,
+		0
+	]
+};
+function webpackAsyncContext(req) {
+	var ids = map[req];
+	if(!ids) {
+		return Promise.resolve().then(function() {
+			var e = new Error("Cannot find module '" + req + "'");
+			e.code = 'MODULE_NOT_FOUND';
+			throw e;
+		});
+	}
+	return __webpack_require__.e(ids[1]).then(function() {
+		var module = __webpack_require__(ids[0]);
+		return (typeof module === "object" && module && module.__esModule ? module : Object.assign({/* fake namespace object */}, typeof module === "object" && module, { "default": module }));
+	});
 }
-
-Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
-	console.log("c/1 and c/2 loaded", arr);
-});
-
+webpackAsyncContext.keys = function webpackAsyncContextKeys() {
+	return Object.keys(map);
+};
+webpackAsyncContext.id = 2;
+module.exports = webpackAsyncContext;
 
 /***/ }),
 /* 3 */
@@ -240,53 +270,36 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
   !*** ./node_modules/a.js ***!
   \***************************/
 /*! no static exports found */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 // module a
 
 /***/ }),
 /* 4 */
-/*!*******************************************************!*\
-  !*** ./node_modules/c lazy ^\.\/.*$ namespace object ***!
-  \*******************************************************/
-/*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports, __webpack_require__) {
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-var map = {
-	"./1": [
-		0,
-		1
-	],
-	"./1.js": [
-		0,
-		1
-	],
-	"./2": [
-		1,
-		0
-	],
-	"./2.js": [
-		1,
-		0
-	]
-};
-function webpackAsyncContext(req) {
-	var ids = map[req];
-	if(!ids)
-		return Promise.resolve().then(function() { throw new Error("Cannot find module '" + req + "'."); });
-	return __webpack_require__.e(ids[1]).then(function() {
-		var module = __webpack_require__(ids[0]);
-		return typeof module === "object" && module && module.__esModule ? module : /* fake namespace object */ { "default": module };;
-	});
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! a */ 3);
+/* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(a__WEBPACK_IMPORTED_MODULE_0__);
+
+
+__webpack_require__.e(/*! import() */ 2).then(function() { var module = __webpack_require__(/*! b */ 5); return typeof module === "object" && module && module.__esModule ? module : Object.assign({/* fake namespace object */}, typeof module === "object" && module, { "default": module }); }).then(function(b) {
+	console.log("b loaded", b);
+})
+
+function loadC(name) {
+	return __webpack_require__(2)("./" + name);
 }
-webpackAsyncContext.keys = function webpackAsyncContextKeys() {
-	return Object.keys(map);
-};
-webpackAsyncContext.id = 4;
-module.exports = webpackAsyncContext;
+
+Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
+	console.log("c/1 and c/2 loaded", arr);
+});
+
 
 /***/ })
 /******/ ]);
@@ -295,58 +308,66 @@ module.exports = webpackAsyncContext;
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 99774db1d98bb53fa195
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
       Asset       Size  Chunks             Chunk Names
-0.output.js  379 bytes       0  [emitted]  
-1.output.js  370 bytes       1  [emitted]  
-2.output.js  365 bytes       2  [emitted]  
-  output.js   8.89 KiB       3  [emitted]  main
+0.output.js  275 bytes       0  [emitted]  
+1.output.js  284 bytes       1  [emitted]  
+2.output.js  270 bytes       2  [emitted]  
+  output.js   9.11 KiB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 13 bytes {3} [rendered]
+chunk    {0} 0.output.js 13 bytes <{3}> [rendered]
+    > ./2 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2
+    > ./2.js [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2.js
     1 module
-chunk    {1} 1.output.js 13 bytes {3} [rendered]
+chunk    {1} 1.output.js 13 bytes <{3}> [rendered]
+    > ./1 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./1
+    > ./1.js [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./1.js
     1 module
-chunk    {2} 2.output.js 11 bytes {3} [rendered]
-    > [2] ./example.js 3:0-11
+chunk    {2} 2.output.js 11 bytes <{3}> [rendered]
+    > b [4] ./example.js 3:0-11
     1 module
-chunk    {3} output.js (main) 427 bytes [entry] [rendered]
-    > main [2] ./example.js 
-    [2] ./example.js 256 bytes {3} [built]
-        [no exports]
-        single entry .\example.js  main
-    [4] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {3} [built]
-        import() context lazy c [2] ./example.js 8:8-27
+chunk    {3} output.js (main) 427 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+    > .\example.js main
+ [2] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {3} [built]
+     import() context lazy c [4] ./example.js 8:8-27
+ [4] ./example.js 256 bytes {3} [built]
+     [no exports]
+     single entry .\example.js  main
      + 1 hidden module
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 99774db1d98bb53fa195
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
       Asset      Size  Chunks             Chunk Names
-0.output.js  77 bytes       0  [emitted]  
-1.output.js  76 bytes       1  [emitted]  
+0.output.js  76 bytes       0  [emitted]  
+1.output.js  77 bytes       1  [emitted]  
 2.output.js  78 bytes       2  [emitted]  
-  output.js  2.21 KiB       3  [emitted]  main
+  output.js  2.35 KiB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 13 bytes {3} [rendered]
+chunk    {0} 0.output.js 13 bytes <{3}> [rendered]
+    > ./2 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2
+    > ./2.js [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2.js
     1 module
-chunk    {1} 1.output.js 13 bytes {3} [rendered]
+chunk    {1} 1.output.js 13 bytes <{3}> [rendered]
+    > ./1 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./1
+    > ./1.js [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./1.js
     1 module
-chunk    {2} 2.output.js 11 bytes {3} [rendered]
-    > [2] ./example.js 3:0-11
+chunk    {2} 2.output.js 11 bytes <{3}> [rendered]
+    > b [4] ./example.js 3:0-11
     1 module
-chunk    {3} output.js (main) 427 bytes [entry] [rendered]
-    > main [2] ./example.js 
-    [2] ./example.js 256 bytes {3} [built]
-        [no exports]
-        single entry .\example.js  main
-    [4] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {3} [built]
-        import() context lazy c [2] ./example.js 8:8-27
+chunk    {3} output.js (main) 427 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+    > .\example.js main
+ [2] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {3} [built]
+     import() context lazy c [4] ./example.js 8:8-27
+ [4] ./example.js 256 bytes {3} [built]
+     [no exports]
+     single entry .\example.js  main
      + 1 hidden module
 ```

@@ -14,86 +14,66 @@
       "a.js": 10,
       "index.js": 11
     },
-    "usedIds": {
-      "0": 0,
-      "1": 1,
-      "2": 2,
-      "3": 3,
-      "4": 4,
-      "5": 5,
-      "6": 6,
-      "7": 7,
-      "8": 8,
-      "9": 9,
-      "10": 10,
-      "11": 11
-    }
-  },
-  "chunks": {
-    "byName": {
-      "main": 7
-    },
-    "byBlocks": {
-      "index.js:3/5:0": 0,
-      "index.js:4/5:2": 0,
-      "index.js:5/5:2": 0,
-      "index.js:2/5:0": 1,
-      "index.js:4/5:1": 1,
-      "index.js:5/5:1": 1,
-      "index.js:1/5:0": 2,
-      "index.js:4/5:0": 2,
-      "index.js:5/5:0": 2,
-      "index.js:3/5:2": 3,
-      "index.js:5/5:4": 3,
-      "index.js:3/5:1": 4,
-      "index.js:5/5:3": 4,
-      "index.js:2/5:1": 5,
-      "index.js:1/5:1": 5,
-      "index.js:0/5": 6
-    },
-    "usedIds": {
-      "0": 0,
-      "1": 1,
-      "2": 2,
-      "3": 3,
-      "4": 4,
-      "5": 5,
-      "6": 6,
-      "7": 7
-    }
+    "usedIds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ]
   },
   "aggressiveSplits": [
+    {
+      "modules": [
+        "x.js",
+        "y.js"
+      ],
+      "size": 1798,
+      "hash": "xxx",
+      "id": 0
+    },
+    {
+      "modules": [
+        "b.js",
+        "d.js"
+      ],
+      "size": 1798,
+      "hash": "ba1a8dd27d611254d4950a3f52eb4b10",
+      "id": 0
+    },
     {
       "modules": [
         "f.js",
         "g.js"
       ],
-      "hash": "c659704b2f31cae80013194b956d16ba",
-      "id": 0
-    },
-    {
-      "modules": [
-        "d.js",
-        "e.js"
-      ],
-      "hash": "9799e4f21dc14d39e2fe3e51c13dd5a6",
-      "id": 1
-    },
-    {
-      "modules": [
-        "j.js",
-        "k.js"
-      ],
-      "hash": "7067a3cecd9faa0aea363a87183b6d93",
-      "id": 3
+      "size": 1800,
+      "hash": "81950df8ced1664c8037f845fc519717",
+      "id": 2
     },
     {
       "modules": [
         "h.js",
         "i.js"
       ],
-      "hash": "ffed75a7125f4bffaa65bced2b62fc6c",
-      "id": 4
+      "size": 1798,
+      "hash": "2a7cf3b38962fac54bb997c2ccbd71d6",
+      "id": 3
+    },
+    {
+      "modules": [
+        "c.js",
+        "d.js"
+      ],
+      "size": 1798,
+      "hash": "xxx",
+      "id": 8
     }
   ]
 }

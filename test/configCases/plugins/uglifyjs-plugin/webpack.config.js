@@ -18,26 +18,25 @@ module.exports = {
 		minimize: true,
 		minimizer: [
 			new UglifyJsPlugin({
-				exclude: [
-					"vendors.js",
-					"extract.js"
-				]
+				cache: false,
+				parallel: false,
+				exclude: ["vendors.js", "extract.js"]
 			}),
 			new UglifyJsPlugin({
+				cache: false,
+				parallel: false,
 				extractComments: true,
-				include: [
-					"extract.js"
-				]
+				include: ["extract.js"]
 			}),
 			new UglifyJsPlugin({
+				cache: false,
+				parallel: false,
 				uglifyOptions: {
 					compress: {
 						passes: 2
 					}
 				},
-				include: [
-					"compress.js"
-				]
+				include: ["compress.js"]
 			})
 		]
 	}

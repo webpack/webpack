@@ -11,28 +11,28 @@
 {{webpack.config.js}}
 ```
 
-# js/desktop.js
+# dist/desktop.js
 
 ``` javascript
-{{js/desktop.js}}
+{{dist/desktop.js}}
 ```
 
-# js/mobile.js
+# dist/mobile.js
 
 ``` javascript
-{{js/mobile.js}}
+{{dist/mobile.js}}
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
 {{stdout}}
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-{{min:stdout}}
+{{production:stdout}}
 ```

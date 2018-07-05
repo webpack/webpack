@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`removed plugin errors should error when accessing removed plugins 1`] = `"webpack.optimize.UglifyJsPlugin has been removed, please use config.optimization.minimize instead."`;
+
+exports[`removed plugin errors should error when accessing removed plugins 2`] = `"webpack.optimize.CommonsChunkPlugin has been removed, please use config.optimization.splitChunks instead."`;

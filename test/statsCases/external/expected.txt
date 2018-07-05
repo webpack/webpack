@@ -1,6 +1,0 @@
-Hash: dfff25717ba14e81a924
-Time: Xms
-  Asset      Size  Chunks             Chunk Names
-main.js  2.73 KiB       0  [emitted]  main
-   [0] ./index.js 17 bytes {0} [built]
-   [1] external "test" 42 bytes {0} [built]

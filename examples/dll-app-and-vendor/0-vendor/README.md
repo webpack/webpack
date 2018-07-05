@@ -1,10 +1,10 @@
 This is the vendor build part.
 
-It's built separatly from the app part. The vendors dll is only built when vendors has changed and not while the normal development cycle.
+It's built separately from the app part. The vendors dll is only built when the array of vendors has changed and not during the normal development cycle.
 
-The DllPlugin in combination with the `output.library` option exposes the internal require function as global variable in the target enviroment.
+The DllPlugin in combination with the `output.library` option exposes the internal require function as global variable in the target environment.
 
-A manifest is creates which includes mappings from module names to internal ids.
+A manifest is created which includes mappings from module names to internal ids.
 
 ### webpack.config.js
 
@@ -13,20 +13,20 @@ var path = require("path");
 var webpack = require("../../../");
 
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	context: __dirname,
 	entry: ["example-vendor"],
 	output: {
 		filename: "vendor.js", // best use [hash] here too
-		path: path.resolve(__dirname, "js"),
-		library: "vendor_lib_[hash]",
+		path: path.resolve(__dirname, "dist"),
+		library: "vendor_lib_[hash]"
 	},
 	plugins: [
 		new webpack.DllPlugin({
 			name: "vendor_lib_[hash]",
-			path: path.resolve(__dirname, "js/vendor-manifest.json"),
-		}),
-	],
+			path: path.resolve(__dirname, "dist/vendor-manifest.json")
+		})
+	]
 };
 ```
 
@@ -38,10 +38,10 @@ export function square(n) {
 }
 ```
 
-# js/vendor.js
+# dist/vendor.js
 
 ``` javascript
-var vendor_lib_668eb208c131c5341859 =
+var vendor_lib_f3fbcfb4ec389ba5bbf0 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -110,7 +110,8 @@ var vendor_lib_668eb208c131c5341859 =
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -128,7 +129,6 @@ var vendor_lib_668eb208c131c5341859 =
   \****************/
 /*! no static exports found */
 /*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__;
@@ -140,7 +140,6 @@ module.exports = __webpack_require__;
   \*****************************************/
 /*! exports provided: square */
 /*! all exports used */
-/*! ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: dll main (referenced with single entry) and by: DllPlugin */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -155,43 +154,43 @@ function square(n) {
 /******/ ]);
 ```
 
-# js/vendor-manifest.json
+# dist/vendor-manifest.json
 
 ``` javascript
-{"name":"vendor_lib_668eb208c131c5341859","content":{"../node_modules/example-vendor.js":{"id":1,"meta":{"harmonyModule":true},"exports":["square"]}}}
+{"name":"vendor_lib_f3fbcfb4ec389ba5bbf0","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
 ```
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: 668eb208c131c5341859
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
     Asset      Size  Chunks             Chunk Names
-vendor.js  3.53 KiB       0  [emitted]  main
+vendor.js  3.32 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
-    > main [0] dll main 
-    [0] dll main 12 bytes {0} [built]
-        dll entry 
-        
+    > main
+ [0] dll main 12 bytes {0} [built]
+     dll entry 
+     
      + 1 hidden module
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: 668eb208c131c5341859
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
     Asset       Size  Chunks             Chunk Names
-vendor.js  702 bytes       0  [emitted]  main
+vendor.js  704 bytes       0  [emitted]  main
 Entrypoint main = vendor.js
 chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
-    > main [0] dll main 
-    [0] dll main 12 bytes {0} [built]
-        dll entry 
-        
+    > main
+ [1] dll main 12 bytes {0} [built]
+     dll entry 
+     
      + 1 hidden module
 ```
 

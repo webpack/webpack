@@ -54,7 +54,7 @@ require(
 );
 ```
 
-# js/output.js
+# dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -62,10 +62,12 @@ require(
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
-/******/ 		var chunkIds = data[0], moreModules = data[1], executeModules = data[2];
+/******/ 		var chunkIds = data[0];
+/******/ 		var moreModules = data[1];
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
-/******/ 		var moduleId, chunkId, i = 0, resolves = [], result;
+/******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
 /******/ 			if(installedChunks[chunkId]) {
@@ -85,15 +87,23 @@ require(
 /******/
 /******/ 	};
 /******/
+/******/
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
 /******/ 	// object to store loaded and loading chunks
+/******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
+/******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
 /******/ 		1: 0
 /******/ 	};
 /******/
-/******/ 	var scheduledModules = [];
+/******/
+/******/
+/******/ 	// script path function
+/******/ 	function jsonpScriptSrc(chunkId) {
+/******/ 		return __webpack_require__.p + "" + chunkId + ".output.js"
+/******/ 	}
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -143,13 +153,14 @@ require(
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/
 /******/ 				script.charset = 'utf-8';
-/******/ 				script.timeout = 120000;
+/******/ 				script.timeout = 120;
 /******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
-/******/ 				script.src = __webpack_require__.p + "" + chunkId + ".output.js";
+/******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/ 				var timeout = setTimeout(function(){
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
@@ -212,16 +223,18 @@ require(
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };
 /******/
 /******/ 	var jsonpArray = window["webpackJsonp"] = window["webpackJsonp"] || [];
-/******/ 	var parentJsonpFunction = jsonpArray.push.bind(jsonpArray);
+/******/ 	var oldJsonpFunction = jsonpArray.push.bind(jsonpArray);
 /******/ 	jsonpArray.push = webpackJsonpCallback;
 /******/ 	jsonpArray = jsonpArray.slice();
 /******/ 	for(var i = 0; i < jsonpArray.length; i++) webpackJsonpCallback(jsonpArray[i]);
+/******/ 	var parentJsonpFunction = oldJsonpFunction;
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 3);
@@ -234,37 +247,16 @@ require(
 ``` javascript
 /******/ ([
 /* 0 */
-/*!*********************!*\
-  !*** ./commonjs.js ***!
-  \*********************/
-/*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports, __webpack_require__) {
-
-// CommonJs Module Format
-module.exports = 123;
-
-// but you can use amd style requires
-Promise.resolve().then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./amd */ 1), __webpack_require__(/*! ./harmony */ 2)]; ((function(amd1, harmony) {
-		var amd2 = __webpack_require__(/*! ./amd */ 1);
-		var harmony2 = __webpack_require__(/*! ./harmony */ 2);
-	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
-
-/***/ }),
-/* 1 */
 /*!****************!*\
   !*** ./amd.js ***!
   \****************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Format
-!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./commonjs */ 0), __webpack_require__(/*! ./harmony */ 2)], __WEBPACK_AMD_DEFINE_RESULT__ = (function(commonjs1, harmony1) {
+!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__(/*! ./commonjs */ 1), __webpack_require__(/*! ./harmony */ 2)], __WEBPACK_AMD_DEFINE_RESULT__ = (function(commonjs1, harmony1) {
 		// but you can use CommonJs-style requires:
-		var commonjs2 = __webpack_require__(/*! ./commonjs */ 0);
+		var commonjs2 = __webpack_require__(/*! ./commonjs */ 1);
 		var harmony2 = __webpack_require__(/*! ./harmony */ 2);
 		// Do something...
 		return 456;
@@ -272,20 +264,35 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;// AMD Module Fo
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 /***/ }),
+/* 1 */
+/*!*********************!*\
+  !*** ./commonjs.js ***!
+  \*********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// CommonJs Module Format
+module.exports = 123;
+
+// but you can use amd style requires
+Promise.resolve(/*! AMD require */).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./amd */ 0), __webpack_require__(/*! ./harmony */ 2)]; (function(amd1, harmony) {
+		var amd2 = __webpack_require__(/*! ./amd */ 0);
+		var harmony2 = __webpack_require__(/*! ./harmony */ 2);
+	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
+
+/***/ }),
 /* 2 */
 /*!********************!*\
   !*** ./harmony.js ***!
   \********************/
 /*! exports provided: default */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./amd.js (referenced with amd require, cjs require), ./commonjs.js (referenced with amd require, cjs require), ./example.js (referenced with cjs require) */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _commonjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./commonjs */0);
+/* harmony import */ var _commonjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./commonjs */ 1);
 /* harmony import */ var _commonjs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_commonjs__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _amd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./amd */1);
+/* harmony import */ var _amd__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./amd */ 0);
 /* harmony import */ var _amd__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_amd__WEBPACK_IMPORTED_MODULE_1__);
 // ES6 Modules
 
@@ -300,29 +307,27 @@ __webpack_require__.r(__webpack_exports__);
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 // CommonJs-style requires
-var commonjs1 = __webpack_require__(/*! ./commonjs */ 0);
-var amd1 = __webpack_require__(/*! ./amd */ 1);
+var commonjs1 = __webpack_require__(/*! ./commonjs */ 1);
+var amd1 = __webpack_require__(/*! ./amd */ 0);
 var harmony1 = __webpack_require__(/*! ./harmony */ 2);
 
 // AMD-style requires (with all webpack features)
-__webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [
-	__webpack_require__(/*! ./commonjs */ 0), __webpack_require__(/*! ./amd */ 1),
-	__webpack_require__(/*! ../require.context/templates */ 4)("./"+amd1+".js"),
-	Math.random() < 0.5 ? __webpack_require__(/*! ./commonjs */ 0) : __webpack_require__(/*! ./amd */ 1)]; ((function(commonjs2, amd2, template, randModule) {
+__webpack_require__.e(/*! AMD require */ 0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [
+	__webpack_require__(/*! ./commonjs */ 1), __webpack_require__(/*! ./amd */ 0),
+	__webpack_require__(4)("./"+amd1+".js"),
+	Math.random() < 0.5 ? __webpack_require__(/*! ./commonjs */ 1) : __webpack_require__(/*! ./amd */ 0)]; (function(commonjs2, amd2, template, randModule) {
 		// Do something with it...
-	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__));}).catch(__webpack_require__.oe);
+	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
 
 
 /***/ })
 /******/ ]);
 ```
 
-# js/0.output.js
+# dist/0.output.js
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
@@ -335,14 +340,12 @@ __webpack_require__.e/* require */(0).then(function() { var __WEBPACK_AMD_REQUIR
   !*** ../require.context/templates sync ^\.\/.*\.js$ ***!
   \******************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./a.js": 5,
+	"./a.js": 7,
 	"./b.js": 6,
-	"./c.js": 7
+	"./c.js": 5
 };
 
 
@@ -353,8 +356,11 @@ function webpackContext(req) {
 }
 function webpackContextResolve(req) {
 	var id = map[req];
-	if(!(id + 1)) // check for number or string
-		throw new Error("Cannot find module '" + req + "'.");
+	if(!(id + 1)) { // check for number or string
+		var e = new Error("Cannot find module '" + req + "'");
+		e.code = 'MODULE_NOT_FOUND';
+		throw e;
+	}
 	return id;
 }
 webpackContext.keys = function webpackContextKeys() {
@@ -367,15 +373,13 @@ webpackContext.id = 4;
 /***/ }),
 /* 5 */
 /*!*****************************************!*\
-  !*** ../require.context/templates/a.js ***!
+  !*** ../require.context/templates/c.js ***!
   \*****************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
-	return "This text was generated by template A";
+	return "This text was generated by template C";
 }
 
 /***/ }),
@@ -384,8 +388,6 @@ module.exports = function() {
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
@@ -395,15 +397,13 @@ module.exports = function() {
 /***/ }),
 /* 7 */
 /*!*****************************************!*\
-  !*** ../require.context/templates/c.js ***!
+  !*** ../require.context/templates/a.js ***!
   \*****************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = function() {
-	return "This text was generated by template C";
+	return "This text was generated by template A";
 }
 
 /***/ })
@@ -412,94 +412,94 @@ module.exports = function() {
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: c5e217711d33e344c3e3
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
       Asset      Size  Chunks             Chunk Names
-0.output.js  2.19 KiB       0  [emitted]  
-  output.js  10.3 KiB       1  [emitted]  main
+0.output.js  1.87 KiB       0  [emitted]  
+  output.js    10 KiB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 439 bytes {1} [rendered]
+chunk    {0} 0.output.js 439 bytes <{1}> [rendered]
     > [3] ./example.js 7:0-14:1
-    [4] ../require.context/templates sync ^\.\/.*\.js$ 193 bytes {0} [built]
-        amd require context ../require.context/templates [3] ./example.js 7:0-14:1
-    [5] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./a.js
-    [6] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./b.js
-    [7] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./c.js
-chunk    {1} output.js (main) 1.03 KiB [entry] [rendered]
-    > main [3] ./example.js 
-    [0] ./commonjs.js 233 bytes {1} [built]
-        amd require ./commonjs [1] ./amd.js 2:0-12:1
-        cjs require ./commonjs [1] ./amd.js 7:18-39
-        harmony side effect evaluation ./commonjs [2] ./harmony.js 2:0-34
-        cjs require ./commonjs [3] ./example.js 2:16-37
-        amd require ./commonjs [3] ./example.js 7:0-14:1
-        amd require ./commonjs [3] ./example.js 7:0-14:1
-    [1] ./amd.js 309 bytes {1} [built]
-        amd require ./amd [0] ./commonjs.js 5:0-11:1
-        cjs require ./amd [0] ./commonjs.js 8:13-29
-        harmony side effect evaluation ./amd [2] ./harmony.js 3:0-24
-        cjs require ./amd [3] ./example.js 3:11-27
-        amd require ./amd [3] ./example.js 7:0-14:1
-        amd require ./amd [3] ./example.js 7:0-14:1
-    [2] ./harmony.js 101 bytes {1} [built]
-        [exports: default]
-        amd require ./harmony [0] ./commonjs.js 5:0-11:1
-        cjs require ./harmony [0] ./commonjs.js 9:17-37
-        amd require ./harmony [1] ./amd.js 2:0-12:1
-        cjs require ./harmony [1] ./amd.js 8:17-37
-        cjs require ./harmony [3] ./example.js 4:15-35
-    [3] ./example.js 410 bytes {1} [built]
-        single entry .\example.js  main
+ [4] ../require.context/templates sync ^\.\/.*\.js$ 193 bytes {0} [built]
+     amd require context ../require.context/templates [3] ./example.js 7:0-14:1
+ [5] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+     context element ./c.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./c.js
+ [6] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+     context element ./b.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./b.js
+ [7] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+     context element ./a.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./a.js
+chunk    {1} output.js (main) 1.03 KiB >{0}< [entry] [rendered]
+    > .\example.js main
+ [0] ./amd.js 309 bytes {1} [built]
+     amd require ./amd [1] ./commonjs.js 5:0-11:1
+     cjs require ./amd [1] ./commonjs.js 8:13-29
+     harmony side effect evaluation ./amd [2] ./harmony.js 3:0-24
+     cjs require ./amd [3] ./example.js 3:11-27
+     amd require ./amd [3] ./example.js 7:0-14:1
+     amd require ./amd [3] ./example.js 7:0-14:1
+ [1] ./commonjs.js 233 bytes {1} [built]
+     amd require ./commonjs [0] ./amd.js 2:0-12:1
+     cjs require ./commonjs [0] ./amd.js 7:18-39
+     harmony side effect evaluation ./commonjs [2] ./harmony.js 2:0-34
+     cjs require ./commonjs [3] ./example.js 2:16-37
+     amd require ./commonjs [3] ./example.js 7:0-14:1
+     amd require ./commonjs [3] ./example.js 7:0-14:1
+ [2] ./harmony.js 101 bytes {1} [built]
+     [exports: default]
+     amd require ./harmony [0] ./amd.js 2:0-12:1
+     cjs require ./harmony [0] ./amd.js 8:17-37
+     amd require ./harmony [1] ./commonjs.js 5:0-11:1
+     cjs require ./harmony [1] ./commonjs.js 9:17-37
+     cjs require ./harmony [3] ./example.js 4:15-35
+ [3] ./example.js 410 bytes {1} [built]
+     single entry .\example.js  main
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: c5e217711d33e344c3e3
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
       Asset       Size  Chunks             Chunk Names
-0.output.js  571 bytes       0  [emitted]  
-  output.js   2.03 KiB       1  [emitted]  main
+0.output.js  606 bytes       0  [emitted]  
+  output.js   2.06 KiB       1  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 439 bytes {1} [rendered]
+chunk    {0} 0.output.js 439 bytes <{1}> [rendered]
     > [3] ./example.js 7:0-14:1
-    [4] ../require.context/templates sync ^\.\/.*\.js$ 193 bytes {0} [built]
-        amd require context ../require.context/templates [3] ./example.js 7:0-14:1
-    [5] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
-        context element ./a.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./a.js
-    [6] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
-        context element ./b.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./b.js
-    [7] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
-        context element ./c.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./c.js
-chunk    {1} output.js (main) 1.03 KiB [entry] [rendered]
-    > main [3] ./example.js 
-    [0] ./commonjs.js 233 bytes {1} [built]
-        amd require ./commonjs [1] ./amd.js 2:0-12:1
-        cjs require ./commonjs [1] ./amd.js 7:18-39
-        harmony side effect evaluation ./commonjs [2] ./harmony.js 2:0-34
-        cjs require ./commonjs [3] ./example.js 2:16-37
-        amd require ./commonjs [3] ./example.js 7:0-14:1
-        amd require ./commonjs [3] ./example.js 7:0-14:1
-    [1] ./amd.js 309 bytes {1} [built]
-        amd require ./amd [0] ./commonjs.js 5:0-11:1
-        cjs require ./amd [0] ./commonjs.js 8:13-29
-        harmony side effect evaluation ./amd [2] ./harmony.js 3:0-24
-        cjs require ./amd [3] ./example.js 3:11-27
-        amd require ./amd [3] ./example.js 7:0-14:1
-        amd require ./amd [3] ./example.js 7:0-14:1
-    [2] ./harmony.js 101 bytes {1} [built]
-        [exports: default]
-        amd require ./harmony [0] ./commonjs.js 5:0-11:1
-        cjs require ./harmony [0] ./commonjs.js 9:17-37
-        amd require ./harmony [1] ./amd.js 2:0-12:1
-        cjs require ./harmony [1] ./amd.js 8:17-37
-        cjs require ./harmony [3] ./example.js 4:15-35
-    [3] ./example.js 410 bytes {1} [built]
-        single entry .\example.js  main
+ [4] ../require.context/templates sync ^\.\/.*\.js$ 193 bytes {0} [built]
+     amd require context ../require.context/templates [3] ./example.js 7:0-14:1
+ [5] ../require.context/templates/c.js 82 bytes {0} [optional] [built]
+     context element ./c.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./c.js
+ [6] ../require.context/templates/b.js 82 bytes {0} [optional] [built]
+     context element ./b.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./b.js
+ [7] ../require.context/templates/a.js 82 bytes {0} [optional] [built]
+     context element ./a.js [4] ../require.context/templates sync ^\.\/.*\.js$ ./a.js
+chunk    {1} output.js (main) 1.03 KiB >{0}< [entry] [rendered]
+    > .\example.js main
+ [0] ./amd.js 309 bytes {1} [built]
+     amd require ./amd [1] ./commonjs.js 5:0-11:1
+     cjs require ./amd [1] ./commonjs.js 8:13-29
+     harmony side effect evaluation ./amd [2] ./harmony.js 3:0-24
+     cjs require ./amd [3] ./example.js 3:11-27
+     amd require ./amd [3] ./example.js 7:0-14:1
+     amd require ./amd [3] ./example.js 7:0-14:1
+ [1] ./commonjs.js 233 bytes {1} [built]
+     amd require ./commonjs [0] ./amd.js 2:0-12:1
+     cjs require ./commonjs [0] ./amd.js 7:18-39
+     harmony side effect evaluation ./commonjs [2] ./harmony.js 2:0-34
+     cjs require ./commonjs [3] ./example.js 2:16-37
+     amd require ./commonjs [3] ./example.js 7:0-14:1
+     amd require ./commonjs [3] ./example.js 7:0-14:1
+ [2] ./harmony.js 101 bytes {1} [built]
+     [exports: default]
+     amd require ./harmony [0] ./amd.js 2:0-12:1
+     cjs require ./harmony [0] ./amd.js 8:17-37
+     amd require ./harmony [1] ./commonjs.js 5:0-11:1
+     cjs require ./harmony [1] ./commonjs.js 9:17-37
+     cjs require ./harmony [3] ./example.js 4:15-35
+ [3] ./example.js 410 bytes {1} [built]
+     single entry .\example.js  main
 ```

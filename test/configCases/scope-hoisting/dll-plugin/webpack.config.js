@@ -8,9 +8,9 @@ module.exports = {
 				"./module": {
 					id: 1,
 					buildMeta: {
-						harmonyModule: true,
+						exportsType: "namespace",
 						providedExports: ["default"]
-					},
+					}
 				}
 			}
 		}),

@@ -1,7 +1,7 @@
 var testData = require("./src/index.js");
 
 it("should export the correct values", function() {
-	testData.should.be.eql({
+	expect(testData).toEqual({
 		svg5: {
 			svg: {
 				clinical1: {
@@ -9,8 +9,10 @@ it("should export the correct values", function() {
 				},
 				clinical2: {
 					svg2: 2
-				}
-			}
+				},
+				[Symbol.toStringTag]: "Module"
+			},
+			[Symbol.toStringTag]: "Module"
 		},
 		svg6: {
 			svg: {
@@ -19,8 +21,11 @@ it("should export the correct values", function() {
 				},
 				clinical2: {
 					svg2: 20
-				}
-			}
-		}
+				},
+				[Symbol.toStringTag]: "Module"
+			},
+			[Symbol.toStringTag]: "Module"
+		},
+		[Symbol.toStringTag]: "Module"
 	});
 })

@@ -28,14 +28,14 @@ exports.exampleValue = subtract(add(42, 2), 2);
 
 ``` javascript
 module.exports = {
-	mode: "production",
+	// mode: "development || "production",
 	output: {
 		libraryTarget: "umd"
 	},
 	externals: [
 		"add",
 		{
-			"subtract": {
+			subtract: {
 				root: "subtract",
 				commonjs2: "./subtract",
 				commonjs: ["./math", "subtract"],
@@ -46,7 +46,7 @@ module.exports = {
 };
 ```
 
-# js/output.js
+# dist/output.js
 
 ``` javascript
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -58,7 +58,7 @@ module.exports = {
 		var a = typeof exports === 'object' ? factory(require("add"), require("./math")["subtract"]) : factory(root["add"], root["subtract"]);
 		for(var i in a) (typeof exports === 'object' ? exports : root)[i] = a[i];
 	}
-})(typeof self !== 'undefined' ? self : this, function(__WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__) {
+})(window, function(__WEBPACK_EXTERNAL_MODULE__1__, __WEBPACK_EXTERNAL_MODULE__2__) {
 ```
 <details><summary><code>return /******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -127,7 +127,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -144,8 +145,6 @@ return /******/ (function(modules) { // webpackBootstrap
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports, __webpack_require__) {
 
 var add = __webpack_require__(/*! add */ 1);
@@ -159,8 +158,6 @@ exports.exampleValue = subtract(add(42, 2), 2);
   !*** external "add" ***!
   \**********************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
@@ -171,8 +168,6 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
   !*** external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} ***!
   \***************************************************************************************************************/
 /*! no static exports found */
-/*! all exports used */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, exports) {
 
 module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
@@ -184,38 +179,38 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: ffa746601696f82316c5
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
     Asset      Size  Chunks             Chunk Names
-output.js  4.47 KiB       0  [emitted]  main
+output.js  4.17 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
-    > main [0] ./example.js 
-    [0] ./example.js 113 bytes {0} [built]
-        single entry .\example.js  main
-    [1] external "add" 42 bytes {0} [built]
-        cjs require add [0] ./example.js 1:10-24
-    [2] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
-        cjs require subtract [0] ./example.js 2:15-34
+    > .\example.js main
+ [0] ./example.js 113 bytes {0} [built]
+     single entry .\example.js  main
+ [1] external "add" 42 bytes {0} [built]
+     cjs require add [0] ./example.js 1:10-24
+ [2] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
+     cjs require subtract [0] ./example.js 2:15-34
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: ffa746601696f82316c5
-Version: webpack next
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.8.0
     Asset      Size  Chunks             Chunk Names
-output.js  1.05 KiB       0  [emitted]  main
+output.js  1.02 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 197 bytes [entry] [rendered]
-    > main [0] ./example.js 
-    [0] ./example.js 113 bytes {0} [built]
-        single entry .\example.js  main
-    [1] external "add" 42 bytes {0} [built]
-        cjs require add [0] ./example.js 1:10-24
-    [2] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
-        cjs require subtract [0] ./example.js 2:15-34
+    > .\example.js main
+ [0] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
+     cjs require subtract [2] ./example.js 2:15-34
+ [1] external "add" 42 bytes {0} [built]
+     cjs require add [2] ./example.js 1:10-24
+ [2] ./example.js 113 bytes {0} [built]
+     single entry .\example.js  main
 ```
