@@ -20,20 +20,6 @@ const createLocation = (start, end, index) => {
 };
 
 describe("compareLocations", () => {
-	describe("string location comparison", () => {
-		it("returns -1 when the first string comes before the second string", () => {
-			expect(compareLocations("alpha", "beta")).toBe(-1);
-		});
-
-		it("returns 1 when the first string comes after the second string", () => {
-			expect(compareLocations("beta", "alpha")).toBe(1);
-		});
-
-		it("returns 0 when the first string is the same as the second string", () => {
-			expect(compareLocations("charlie", "charlie")).toBe(0);
-		});
-	});
-
 	describe("object location comparison", () => {
 		let a, b;
 
@@ -102,27 +88,18 @@ describe("compareLocations", () => {
 		});
 	});
 
-	describe("string and object location comparison", () => {
-		it("returns 1 when the first parameter is a string and the second parameter is an object", () => {
-			expect(compareLocations("alpha", createLocation())).toBe(1);
-		});
-
-		it("returns -1 when the first parameter is an object and the second parameter is a string", () => {
-			expect(compareLocations(createLocation(), "alpha")).toBe(-1);
-		});
-	});
-
 	describe("unknown location type comparison", () => {
-		it("returns 0 when the first parameter is an object and the second parameter is a number", () => {
+		it("returns 0 when the first parameter is an object and the second parameter is not", () => {
 			expect(compareLocations(createLocation(), 123)).toBe(0);
+			expect(compareLocations(createLocation(), "alpha")).toBe(0);
 		});
 
 		it("returns undefined when the first parameter is a number and the second parameter is an object", () => {
 			expect(compareLocations(123, createLocation())).toBe(undefined);
 		});
 
-		it("returns 0 when the first parameter is a string and the second parameter is a number", () => {
-			expect(compareLocations("alpha", 123)).toBe(0);
+		it("returns undefined when the first parameter is a string and the second parameter is a number", () => {
+			expect(compareLocations("alpha", 123)).toBe(undefined);
 		});
 
 		it("returns undefined when the first parameter is a number and the second parameter is a string", () => {
