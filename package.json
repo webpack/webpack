@@ -90,7 +90,6 @@
   },
   "homepage": "https://github.com/webpack/webpack",
   "main": "lib/webpack.js",
-  "web": "lib/webpack.web.js",
   "bin": "./bin/webpack.js",
   "files": [
     "lib/",
