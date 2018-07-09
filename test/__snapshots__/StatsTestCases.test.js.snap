@@ -467,28 +467,28 @@ Child all:
 `;
 
 exports[`StatsTestCases should print correct stats for chunk-module-id-range 1`] = `
-"Hash: 7d8eb8b4418c6ae6a262
+"Hash: b385901db3d63ff731a3
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
    Asset      Size  Chunks             Chunk Names
-main2.js  4.85 KiB       0  [emitted]  main2
-main1.js  4.86 KiB       1  [emitted]  main1
+main1.js  4.86 KiB       0  [emitted]  main1
+main2.js  4.85 KiB       1  [emitted]  main2
 Entrypoint main1 = main1.js
 Entrypoint main2 = main2.js
-chunk    {0} main2.js (main2) 136 bytes [entry] [rendered]
-    > ./main2 main2
-   [0] ./e.js 20 bytes {0} [built]
-   [1] ./f.js 20 bytes {0} [built]
-   [2] ./main2.js 56 bytes {0} [built]
- [100] ./d.js 20 bytes {0} {1} [built]
- [101] ./a.js 20 bytes {0} {1} [built]
-chunk    {1} main1.js (main1) 136 bytes [entry] [rendered]
+chunk    {0} main1.js (main1) 136 bytes [entry] [rendered]
     > ./main1 main1
-   [3] ./b.js 20 bytes {1} [built]
-   [4] ./main1.js 56 bytes {1} [built]
+   [3] ./b.js 20 bytes {0} [built]
+   [4] ./main1.js 56 bytes {0} [built]
  [100] ./d.js 20 bytes {0} {1} [built]
  [101] ./a.js 20 bytes {0} {1} [built]
- [102] ./c.js 20 bytes {1} [built]"
+ [102] ./c.js 20 bytes {0} [built]
+chunk    {1} main2.js (main2) 136 bytes [entry] [rendered]
+    > ./main2 main2
+   [0] ./e.js 20 bytes {1} [built]
+   [1] ./f.js 20 bytes {1} [built]
+   [2] ./main2.js 56 bytes {1} [built]
+ [100] ./d.js 20 bytes {0} {1} [built]
+ [101] ./a.js 20 bytes {0} {1} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for chunks 1`] = `
@@ -530,14 +530,14 @@ chunk    {3} 3.bundle.js 44 bytes <{1}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for chunks-development 1`] = `
-"Hash: 491964abb8a9925c2f65
+"Hash: 83bf92a94bc3834801e8
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
-0.bundle.js  433 bytes       0  [emitted]  
-1.bundle.js  297 bytes       1  [emitted]  
-2.bundle.js  588 bytes       2  [emitted]  
+0.bundle.js  297 bytes       0  [emitted]  
+1.bundle.js  433 bytes       1  [emitted]  
   bundle.js   8.67 KiB    main  [emitted]  main
+2.bundle.js  588 bytes       2  [emitted]  
 Entrypoint main = bundle.js
 chunk {main} bundle.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
     > ./index main
@@ -548,17 +548,17 @@ chunk {main} bundle.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
  [./index.js] 51 bytes {main} [built]
      single entry ./index  main
      factory:Xms building:Xms = Xms
-chunk    {0} 0.bundle.js 54 bytes <{main}> >{2}< [rendered]
-    > ./c [./index.js] ./index.js 3:0-16
- [./c.js] 54 bytes {0} [built]
-     amd require ./c [./index.js] 3:0-16
-     [./index.js] Xms -> factory:Xms building:Xms = Xms
-chunk    {1} 1.bundle.js 22 bytes <{main}> [rendered]
+chunk    {0} 0.bundle.js 22 bytes <{main}> [rendered]
     > ./b [./index.js] ./index.js 2:0-16
- [./b.js] 22 bytes {1} [built]
+ [./b.js] 22 bytes {0} [built]
      amd require ./b [./index.js] 2:0-16
      [./index.js] Xms -> factory:Xms building:Xms = Xms
-chunk    {2} 2.bundle.js 60 bytes <{0}> [rendered]
+chunk    {1} 1.bundle.js 54 bytes <{main}> >{2}< [rendered]
+    > ./c [./index.js] ./index.js 3:0-16
+ [./c.js] 54 bytes {1} [built]
+     amd require ./c [./index.js] 3:0-16
+     [./index.js] Xms -> factory:Xms building:Xms = Xms
+chunk    {2} 2.bundle.js 60 bytes <{1}> [rendered]
     > [./c.js] ./c.js 1:0-52
  [./d.js] 22 bytes {2} [built]
      require.ensure item ./d [./c.js] 1:0-52
