@@ -89,25 +89,18 @@ describe("compareLocations", () => {
 	});
 
 	describe("unknown location type comparison", () => {
-		it("returns 0 when the first parameter is an object and the second parameter is not", () => {
-			expect(compareLocations(createLocation(), 123)).toBe(0);
-			expect(compareLocations(createLocation(), "alpha")).toBe(0);
+		it("returns 1 when the first parameter is an object and the second parameter is not", () => {
+			expect(compareLocations(createLocation(), 123)).toBe(1);
+			expect(compareLocations(createLocation(), "alpha")).toBe(1);
 		});
 
-		it("returns undefined when the first parameter is a number and the second parameter is an object", () => {
-			expect(compareLocations(123, createLocation())).toBe(undefined);
+		it("returns -1 when the first parameter is not an object and the second parameter is", () => {
+			expect(compareLocations(123, createLocation())).toBe(-1);
+			expect(compareLocations("alpha", createLocation())).toBe(-1);
 		});
 
-		it("returns undefined when the first parameter is a string and the second parameter is a number", () => {
-			expect(compareLocations("alpha", 123)).toBe(undefined);
-		});
-
-		it("returns undefined when the first parameter is a number and the second parameter is a string", () => {
-			expect(compareLocations(123, "alpha")).toBe(undefined);
-		});
-
-		it("returns undefined when both the first parameter and the second parameter is a number", () => {
-			expect(compareLocations(123, 456)).toBe(undefined);
+		it("returns 0 when both the first parameter and the second parameter is an object", () => {
+			expect(compareLocations(123, 456)).toBe(0);
 		});
 	});
 });
