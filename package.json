@@ -56,7 +56,7 @@
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
-    "jest": "^23.0.1",
+    "jest": "^23.3.0",
     "jest-silent-reporter": "^0.0.5",
     "json-loader": "^0.5.7",
     "less": "^2.5.1",
@@ -81,6 +81,14 @@
     "webpack-dev-middleware": "^1.9.0",
     "worker-loader": "^1.1.1",
     "xxhashjs": "^0.2.1"
+  },
+  "resolutions": {
+    "**/jest-message-util/micromatch": "^2.3.11",
+    "**/jest-cli/micromatch": "^2.3.11",
+    "**/jest-runtime/micromatch": "^2.3.11",
+    "**/jest-haste-map/micromatch": "^2.3.11",
+    "**/jest-haste-map/sane/micromatch": "^2.3.11",
+    "**/jest-config/babel-jest/babel-plugin-istanbul/test-exclude/micromatch": "^2.3.11"
   },
   "engines": {
     "node": ">=6.11.5"
@@ -179,7 +187,8 @@
     "coveragePathIgnorePatterns": [
       "\\.runtime\\.js$",
       "<rootDir>/test/",
-      "<rootDir>/schemas/"
+      "<rootDir>/schemas/",
+      "<rootDir>/node_modules/"
     ],
     "testEnvironment": "node",
     "coverageReporters": [

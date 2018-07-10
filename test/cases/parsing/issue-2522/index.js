@@ -13,10 +13,9 @@ it("should import into object shorthand", function() {
 		a: 123,
 		aa: 123,
 		b: 456,
-		c: {
+		c: nsObj({
 			a: 123,
-			default: 456,
-			[Symbol.toStringTag]: "Module"
-		}
+			default: 456
+		})
 	});
 })
