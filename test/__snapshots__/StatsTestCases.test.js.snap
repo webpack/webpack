@@ -2671,6 +2671,41 @@ Child custom-chunks-filter-in-cache-groups:
      [5] ./c.js 72 bytes {3} {8} [built]"
 `;
 
+exports[`StatsTestCases should print correct stats for split-chunks-automatic-name 1`] = `
+"Entrypoint main = main.js
+chunk    {0} common~async-a~async-b~async-c.js (common~async-a~async-b~async-c) 40 bytes <{7}> ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= [rendered] split chunk (cache group: vendors) (name: common~async-a~async-b~async-c)
+    > ./a [8] ./index.js 1:0-47
+    > ./b [8] ./index.js 2:0-47
+    > ./c [8] ./index.js 3:0-47
+ [0] ./d.js 20 bytes {0} [built]
+ [1] ./node_modules/x.js 20 bytes {0} [built]
+chunk    {1} common~async-b~async-c.js (common~async-b~async-c) 20 bytes <{7}> ={0}= ={2}= ={4}= ={5}= ={6}= [rendered] split chunk (cache group: vendors) (name: common~async-b~async-c)
+    > ./b [8] ./index.js 2:0-47
+    > ./c [8] ./index.js 3:0-47
+ [3] ./f.js 20 bytes {1} [built]
+chunk    {2} common~async-a~async-b.js (common~async-a~async-b) 20 bytes <{7}> ={0}= ={1}= ={3}= ={4}= [rendered] split chunk (cache group: vendors) (name: common~async-a~async-b)
+    > ./a [8] ./index.js 1:0-47
+    > ./b [8] ./index.js 2:0-47
+ [2] ./node_modules/y.js 20 bytes {2} [built]
+chunk    {3} async-a.js (async-a) 107 bytes <{7}> ={0}= ={2}= [rendered]
+    > ./a [8] ./index.js 1:0-47
+ [7] ./a.js + 1 modules 107 bytes {3} [built]
+     | ./a.js 72 bytes [built]
+     | ./e.js 20 bytes [built]
+chunk    {4} async-b.js (async-b) 72 bytes <{7}> ={0}= ={1}= ={2}= [rendered]
+    > ./b [8] ./index.js 2:0-47
+ [5] ./b.js 72 bytes {4} [built]
+chunk    {5} async-c.js (async-c) 72 bytes <{7}> ={0}= ={1}= ={6}= [rendered]
+    > ./c [8] ./index.js 3:0-47
+ [6] ./c.js 72 bytes {5} [built]
+chunk    {6} common~async-c.js (common~async-c) 20 bytes <{7}> ={0}= ={1}= ={5}= [rendered] split chunk (cache group: vendors) (name: common~async-c)
+    > ./c [8] ./index.js 3:0-47
+ [4] ./node_modules/z.js 20 bytes {6} [built]
+chunk    {7} main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{5}< >{6}< [entry] [rendered]
+    > ./ main
+ [8] ./index.js 147 bytes {7} [built]"
+`;
+
 exports[`StatsTestCases should print correct stats for split-chunks-combinations 1`] = `
 "Entrypoint main = main.js
 chunk    {0} async-a~async-b.js (async-a~async-b) 134 bytes <{8}> ={1}= ={2}= [rendered] split chunk (cache group: default) (name: async-a~async-b)
