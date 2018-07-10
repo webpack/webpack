@@ -187,7 +187,8 @@
     "coveragePathIgnorePatterns": [
       "\\.runtime\\.js$",
       "<rootDir>/test/",
-      "<rootDir>/schemas/"
+      "<rootDir>/schemas/",
+      "<rootDir>/node_modules/"
     ],
     "testEnvironment": "node",
     "coverageReporters": [
