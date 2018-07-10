@@ -151,6 +151,7 @@ describe("HotTestCases", () => {
 										const fn = vm.runInThisContext(
 											"(function(require, module, exports, __dirname, __filename, it, expect, NEXT, STATS) {" +
 												"global.expect = expect;" +
+												'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 												fs.readFileSync(p, "utf-8") +
 												"\n})",
 											p

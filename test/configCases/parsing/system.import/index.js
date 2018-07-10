@@ -22,7 +22,7 @@ it("should be able to use System.import()", done => {
 			if(__SYSTEM__ === false) {
 				done(new Error("System.import should not be parsed"));
 			} else {
-				expect(mod).toEqual({ default: "ok", [Symbol.toStringTag]: "Module" });
+				expect(mod).toEqual(nsObj({ default: "ok" }));
 				done();
 			}
 		});
