@@ -1529,6 +1529,15 @@
                               }
                             ]
                           },
+                          "automaticNameDelimiter": {
+                            "description": "Sets the name delimiter for created chunks",
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "automaticNamePrefix": {
+                            "description": "Sets the name prefix for created chunks",
+                            "type": "string"
+                          },
                           "filename": {
                             "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
                             "type": "string",
@@ -1586,16 +1595,37 @@
           "description": "Reduce size of WASM by changing imports to shorter strings.",
           "type": "boolean"
         },
+        "moduleIds": {
+          "description": "Define the algorithm to choose module ids (natural: numeric ids in order for usage, named: readable ids for better debugging, hashed: short hashes as ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)",
+          "enum": [
+            "natural",
+            "named",
+            "hashed",
+            "size",
+            "total-size",
+            false
+          ]
+        },
+        "chunkIds": {
+          "description": "Define the algorithm to choose chunk ids (named: readable ids for better debugging, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)",
+          "enum": [
+            "natural",
+            "named",
+            "size",
+            "total-size",
+            false
+          ]
+        },
         "namedModules": {
-          "description": "Use readable module identifiers for better debugging",
+          "description": "Use readable module identifiers for better debugging (deprecated, used moduleIds: named instead)",
           "type": "boolean"
         },
         "hashedModuleIds": {
-          "description": "Use hashed module id instead module identifiers for better long term caching",
+          "description": "Use hashed module id instead module identifiers for better long term caching (deprecated, used moduleIds: hashed instead)",
           "type": "boolean"
         },
         "namedChunks": {
-          "description": "Use readable chunk identifiers for better debugging",
+          "description": "Use readable chunk identifiers for better debugging (deprecated, used chunkIds: named instead)",
           "type": "boolean"
         },
         "portableRecords": {

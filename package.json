@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "4.15.0",
+  "version": "4.15.1",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -56,7 +56,7 @@
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
-    "jest": "^23.0.1",
+    "jest": "^23.3.0",
     "jest-silent-reporter": "^0.0.5",
     "json-loader": "^0.5.7",
     "less": "^2.5.1",
@@ -81,6 +81,14 @@
     "webpack-dev-middleware": "^1.9.0",
     "worker-loader": "^1.1.1",
     "xxhashjs": "^0.2.1"
+  },
+  "resolutions": {
+    "**/jest-message-util/micromatch": "^2.3.11",
+    "**/jest-cli/micromatch": "^2.3.11",
+    "**/jest-runtime/micromatch": "^2.3.11",
+    "**/jest-haste-map/micromatch": "^2.3.11",
+    "**/jest-haste-map/sane/micromatch": "^2.3.11",
+    "**/jest-config/babel-jest/babel-plugin-istanbul/test-exclude/micromatch": "^2.3.11"
   },
   "engines": {
     "node": ">=6.11.5"
@@ -109,11 +117,11 @@
     "test:integration": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\"",
     "test:basic": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/{TestCasesNormal,StatsTestCases,ConfigTestCases}.test.js\"",
     "test:unit": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\"",
-    "travis:integration": "yarn cover:init && yarn cover:integration \"test/((?!TestCases)|TestCasesD)\" --ci $JEST && mv coverage/coverage-final.json coverage/coverage-final-1.json && yarn cover:integration \"test/TestCases(?!D)\" --ci $JEST && mv coverage/coverage-final.json coverage/coverage-final-2.json",
+    "travis:integration": "yarn cover:init && yarn cover:integration \"test/(?!TestCases)\" --ci $JEST && mv coverage/coverage-final.json coverage/coverage-final-1.json && yarn cover:integration \"test/TestCasesD\" --ci $JEST && mv coverage/coverage-final.json coverage/coverage-final-2.json && yarn cover:integration \"test/TestCases(?!D)\" --ci $JEST && mv coverage/coverage-final.json coverage/coverage-final-3.json",
     "travis:basic": "yarn test:basic --ci $JEST",
     "travis:lint-unit": "yarn lint && yarn cover:init && yarn cover:unit --ci $JEST",
     "travis:benchmark": "yarn benchmark --ci",
-    "appveyor:integration": "yarn cover:init && yarn cover:integration \"test/((?!TestCases)|TestCasesD)\" --ci %JEST% && move coverage\\coverage-final.json coverage\\coverage-final-1.json && yarn cover:integration \"test/TestCases(?!D)\" --ci %JEST% && move coverage\\coverage-final.json coverage\\coverage-final-2.json",
+    "appveyor:integration": "yarn cover:init && yarn cover:integration \"test/(?!TestCases)\" --ci %JEST% && move coverage\\coverage-final.json coverage\\coverage-final-1.json&& yarn cover:integration \"test/TestCasesD\" --ci %JEST% && move coverage\\coverage-final.json coverage\\coverage-final-2.json && yarn cover:integration \"test/TestCases(?!D)\" --ci %JEST% && move coverage\\coverage-final.json coverage\\coverage-final-3.json",
     "appveyor:unit": "yarn cover:init && yarn cover:unit --ci %JEST%",
     "appveyor:benchmark": "yarn benchmark --ci",
     "build:examples": "cd examples && node buildAll.js",
@@ -179,7 +187,8 @@
     "coveragePathIgnorePatterns": [
       "\\.runtime\\.js$",
       "<rootDir>/test/",
-      "<rootDir>/schemas/"
+      "<rootDir>/schemas/",
+      "<rootDir>/node_modules/"
     ],
     "testEnvironment": "node",
     "coverageReporters": [

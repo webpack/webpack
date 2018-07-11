@@ -1,6 +1,6 @@
 # Info
 
-This example illustrates webpack's algorthim for automatic deduplication using `optimization.splitChunks`.
+This example illustrates webpack's algorithm for automatic deduplication using `optimization.splitChunks`.
 
 This example application contains 7 pages, each of them importing 1-3 modules from the `node_modules` folder (vendor libs) and 0-3 modules from the `stuff` folder (application modules). In reallity an application is probably more complex, but the same mechanisms apply.
 
@@ -41,7 +41,7 @@ module.exports = {
 			chunks: "all",
 			maxInitialRequests: 20, // for HTTP2
 			maxAsyncRequests: 20, // for HTTP2
-			minSize: 40 // for example only: choosen to match 2 modules
+			minSize: 40 // for example only: chosen to match 2 modules
 			// omit minSize in real use case to use the default of 30kb
 		}
 	}
