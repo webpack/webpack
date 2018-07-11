@@ -6,9 +6,8 @@ it("should correctly tree shake star exports", function() {
 	expect(aa).toBe("aa");
 	expect(aa2).toBe("aa");
 	expect(d).toBe("d");
-	expect(root6).toEqual({
+	expect(root6).toEqual(nsObj({
 		aa: "aa",
-		c: "c",
-		[Symbol.toStringTag]: "Module"
-	});
+		c: "c"
+	}));
 });

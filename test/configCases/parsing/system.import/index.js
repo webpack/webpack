@@ -20,10 +20,9 @@ it("should be able to use System.import()", done => {
 	try {
 		System.import("./module").then(mod => {
 			if(__SYSTEM__) {
-				expect(mod).toEqual({
-					default: "ok",
-					[Symbol.toStringTag]: "Module"
-				});
+				expect(mod).toEqual(nsObj({
+					default: "ok"
+				}));
 				done();
 			} else {
 				done(new Error("System.import should not be parsed"));

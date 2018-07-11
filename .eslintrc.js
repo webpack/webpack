@@ -61,7 +61,7 @@ module.exports = {
 				browser: true
 			},
 			globals: {
-				Promise: false,
+				Promise: false
 			},
 			parserOptions: {
 				ecmaVersion: 5
@@ -71,6 +71,9 @@ module.exports = {
 			files: ["test/**/*.js"],
 			env: {
 				"jest/globals": true
+			},
+			globals: {
+				nsObj: false
 			}
 		}
 	]

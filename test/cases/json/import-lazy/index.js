@@ -9,27 +9,23 @@ it("should be possible to import json data async", function() {
 		import("../data/f.json"),
 		import("../data/g.json")
 	]).then(([a, b, c, d, e, f, g]) => {
-		expect(a).toEqual({
-			default: null,
-			[Symbol.toStringTag]: "Module"
-		});
-		expect(b).toEqual({
-			default: 123,
-			[Symbol.toStringTag]: "Module"
-		});
-		expect(c).toEqual({
+		expect(a).toEqual(nsObj({
+			default: null
+		}));
+		expect(b).toEqual(nsObj({
+			default: 123
+		}));
+		expect(c).toEqual(nsObj({
 			0: 1,
 			1: 2,
 			2: 3,
 			3: 4,
-			default: [1, 2, 3, 4],
-			[Symbol.toStringTag]: "Module"
-		});
-		expect(d).toEqual({
-			default: {},
-			[Symbol.toStringTag]: "Module"
-		});
-		expect(e).toEqual({
+			default: [1, 2, 3, 4]
+		}));
+		expect(d).toEqual(nsObj({
+			default: {}
+		}));
+		expect(e).toEqual(nsObj({
 			aa: 1,
 			bb: 2,
 			1: "x",
@@ -37,25 +33,22 @@ it("should be possible to import json data async", function() {
 				aa: 1,
 				bb: 2,
 				"1": "x"
-			},
-			[Symbol.toStringTag]: "Module"
-		});
-		expect(f).toEqual({
+			}
+		}));
+		expect(f).toEqual(nsObj({
 			named: "named",
 			default: {
 				named: "named",
 				"default": "default",
 				__esModule: true
-			},
-			[Symbol.toStringTag]: "Module"
-		});
-		expect(g).toEqual({
+			}
+		}));
+		expect(g).toEqual(nsObj({
 			named: {},
 			default: {
 				named: {}
-			},
-			[Symbol.toStringTag]: "Module"
-		});
+			}
+		}));
 		expect(g.named).toBe(g.default.named);
 	});
 });
