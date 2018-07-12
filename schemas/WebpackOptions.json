@@ -410,11 +410,7 @@
         },
         "hashDigest": {
           "description": "Digest type used for the hash",
-          "enum": [
-            "latin1",
-            "hex",
-            "base64"
-          ]
+          "type": "string"
         },
         "hashDigestLength": {
           "description": "Number of chars which are used for the hash",
