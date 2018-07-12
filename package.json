@@ -74,7 +74,6 @@
     "style-loader": "^0.19.1",
     "typescript": "^2.9.1",
     "url-loader": "^0.6.2",
-    "val-loader": "^1.0.2",
     "vm-browserify": "~0.0.0",
     "wast-loader": "^1.5.5",
     "webpack-dev-middleware": "^1.9.0",
