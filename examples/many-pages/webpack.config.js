@@ -14,7 +14,7 @@ module.exports = {
 			chunks: "all",
 			maxInitialRequests: 20, // for HTTP2
 			maxAsyncRequests: 20, // for HTTP2
-			minSize: 40 // for example only: choosen to match 2 modules
+			minSize: 40 // for example only: chosen to match 2 modules
 			// omit minSize in real use case to use the default of 30kb
 		}
 	}

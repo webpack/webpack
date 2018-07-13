@@ -245,6 +245,7 @@ describe("WatchTestCases", () => {
 												) {
 													fn = vm.runInNewContext(
 														"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect, window) {" +
+															'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 															content +
 															"\n})",
 														globalContext,
@@ -254,6 +255,7 @@ describe("WatchTestCases", () => {
 													fn = vm.runInThisContext(
 														"(function(require, module, exports, __dirname, __filename, it, WATCH_STEP, STATS_JSON, STATE, expect) {" +
 															"global.expect = expect;" +
+															'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 															content +
 															"\n})",
 														p

@@ -216,6 +216,7 @@ const describeCases = config => {
 												const fn = vm.runInThisContext(
 													"(function(require, module, exports, __dirname, it, expect) {" +
 														"global.expect = expect;" +
+														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 														fs.readFileSync(p, "utf-8") +
 														"\n})",
 													p

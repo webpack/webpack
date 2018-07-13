@@ -27,7 +27,7 @@ yarn link webpack
 yarn test
 ```
 
-### To run only intergration tests use
+### To run only integration tests use
 
 ```bash
 yarn test:integration

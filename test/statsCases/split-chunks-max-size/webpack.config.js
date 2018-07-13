@@ -21,7 +21,8 @@ module.exports = [
 		optimization: {
 			splitChunks: {
 				minSize: 100,
-				maxSize: 1000
+				maxSize: 1000,
+				chunks: "all"
 			}
 		},
 		stats
@@ -38,7 +39,8 @@ module.exports = [
 		optimization: {
 			splitChunks: {
 				minSize: 100,
-				maxSize: 1000
+				maxSize: 1000,
+				chunks: "all"
 			}
 		},
 		stats
