@@ -19,7 +19,7 @@ module.exports = {
 			exclude: ["vendors.js"]
 		}),
 		new webpack.BannerPlugin({
-			banner: ({ chunk }) => `multiline\nbanner\n${chunk.id}`
+			banner: ({ chunk }) => `multiline\nbanner\n${chunk.name}`
 		})
 	]
 };
