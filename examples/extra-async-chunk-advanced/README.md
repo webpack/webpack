@@ -30,7 +30,7 @@ module.exports = {
 		splitChunks: {
 			minSize: 0 // This example is too small
 		},
-		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+		chunkIds: "total-size" // To keep filename consistent between different modes (for example building only)
 	}
 };
 ```
