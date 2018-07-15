@@ -17,7 +17,7 @@ describe("ConfigTestCases", () => {
 	const casesPath = path.join(__dirname, "configCases");
 	let categories = fs.readdirSync(casesPath);
 
-	jest.setTimeout(10000);
+	jest.setTimeout(20000);
 
 	categories = categories.map(cat => {
 		return {
@@ -211,6 +211,7 @@ describe("ConfigTestCases", () => {
 											) {
 												fn = vm.runInNewContext(
 													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest, window) {" +
+														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 														content +
 														"\n})",
 													globalContext,
@@ -220,6 +221,7 @@ describe("ConfigTestCases", () => {
 												fn = vm.runInThisContext(
 													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest) {" +
 														"global.expect = expect; " +
+														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 														content +
 														"\n})",
 													p

@@ -6,7 +6,7 @@ it("should contain banner in bundle0 chunk", () => {
 	expect(source).toMatch("A test value");
 	expect(source).toMatch("banner is a string");
 	expect(source).toMatch("banner is a function");
-	expect(source).toMatch("/*!\n * multiline\n * banner\n * 1\n */");
+	expect(source).toMatch("/*!\n * multiline\n * banner\n * bundle0\n */");
 });
 
 it("should not contain banner in vendors chunk", () => {

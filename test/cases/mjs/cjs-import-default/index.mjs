@@ -17,33 +17,30 @@ it("should get correct values when importing named exports from a CommonJs modul
 			default: "default"
 		}
 	});
-	expect(star).toEqual({
+	expect(star).toEqual(nsObj({
 		default: {
 			data: "ok",
 			default: "default"
-		},
-		[Symbol.toStringTag]: "Module"
-	});
+		}
+	}));
 	expect({ star }).toEqual({
-		star: {
+		star: nsObj({
 			default: {
 				data: "ok",
 				default: "default"
-			},
-			[Symbol.toStringTag]: "Module"
-		}
+			}
+		})
 	});
 	expect(star.default).toEqual({
 		data: "ok",
 		default: "default"
 	});
-	expect(ns).toEqual({
+	expect(ns).toEqual(nsObj({
 		default: {
 			data: "ok",
 			default: "default"
-		},
-		[Symbol.toStringTag]: "Module"
-	});
+		}
+	}));
 	expect(def1).toEqual({
 		data: "ok",
 		default: "default"
@@ -53,14 +50,13 @@ it("should get correct values when importing named exports from a CommonJs modul
 		default: "default"
 	});
 	expect((typeof data2)).toBe("undefined");
-	expect(reexport).toEqual({
-		ns: {
+	expect(reexport).toEqual(nsObj({
+		ns: nsObj({
 			default: {
 				data: "ok",
 				default: "default"
-			},
-			[Symbol.toStringTag]: "Module"
-		},
+			}
+		}),
 		default: {
 			data: "ok",
 			default: "default"
@@ -69,7 +65,6 @@ it("should get correct values when importing named exports from a CommonJs modul
 			data: "ok",
 			default: "default"
 		},
-		data: undefined,
-		[Symbol.toStringTag]: "Module"
-	});
+		data: undefined
+	}));
 });

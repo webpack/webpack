@@ -57,89 +57,89 @@ Child content-change:
 `;
 
 exports[`StatsTestCases should print correct stats for aggressive-splitting-on-demand 1`] = `
-"Hash: 6fd6445da5532a699ea4
+"Hash: 22813fefc4dae997c5fe
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
                   Asset      Size  Chunks             Chunk Names
-58f368c01f66002b0eb3.js  1.94 KiB    6, 7  [emitted]  
+a2fea791e74e99836233.js  1.94 KiB       6  [emitted]  
 2736cf9d79233cd0a9b6.js  1.93 KiB       0  [emitted]  
 7f83e5c2f4e52435dd2c.js  1.96 KiB       2  [emitted]  
 43c1ac24102c075ecb2d.js  1.94 KiB    3, 1  [emitted]  
-a35356222d6a2151f7d3.js  1.01 KiB       4  [emitted]  
-e5fb899955fa03a8053b.js  1.94 KiB       5  [emitted]  
+db744382311550539cad.js   9.7 KiB       4  [emitted]  main
+6a80fd33f274d3117a32.js  1.01 KiB       5  [emitted]  
 29de52df747b400f6177.js     1 KiB       1  [emitted]  
-6a8e74d82c35e3f013d2.js     1 KiB       7  [emitted]  
+a9463ba36646aa40b97c.js  1.94 KiB    7, 9  [emitted]  
 5bc7f208cd99a83b4e33.js  1.94 KiB       8  [emitted]  
-13713792eb1b5038ab8b.js  1.94 KiB       9  [emitted]  
-d886db099ddf05aadc6d.js   9.7 KiB      10  [emitted]  main
+819c28704a84308cd0f6.js     1 KiB       9  [emitted]  
+5ea68201264e1d2b28e9.js  1.94 KiB      10  [emitted]  
 ba9fedb7aa0c69201639.js  1.94 KiB      11  [emitted]  
-Entrypoint main = d886db099ddf05aadc6d.js
-chunk    {0} 2736cf9d79233cd0a9b6.js 1.76 KiB <{10}> ={1}= ={2}= ={3}= ={7}= ={9}= [recorded] aggressive splitted
+Entrypoint main = db744382311550539cad.js
+chunk    {0} 2736cf9d79233cd0a9b6.js 1.76 KiB <{4}> ={1}= ={2}= ={3}= ={9}= ={10}= [recorded] aggressive splitted
     > ./b ./d ./e ./f ./g [11] ./index.js 5:0-44
     > ./b ./d ./e ./f ./g ./h ./i ./j ./k [11] ./index.js 6:0-72
- [0] ./b.js 899 bytes {0} {5} [built]
+ [0] ./b.js 899 bytes {0} {6} [built]
  [1] ./d.js 899 bytes {0} {8} [built]
-chunk    {1} 29de52df747b400f6177.js 899 bytes <{10}> ={0}= ={2}= ={8}=
+chunk    {1} 29de52df747b400f6177.js 899 bytes <{4}> ={0}= ={2}= ={8}=
     > ./c ./d ./e [11] ./index.js 3:0-30
     > ./b ./d ./e ./f ./g [11] ./index.js 5:0-44
  [2] ./e.js 899 bytes {1} {3} [built]
-chunk    {2} 7f83e5c2f4e52435dd2c.js 1.76 KiB <{10}> ={0}= ={1}= ={11}= ={3}= ={6}= ={7}= ={9}= [recorded] aggressive splitted
+chunk    {2} 7f83e5c2f4e52435dd2c.js 1.76 KiB <{4}> ={0}= ={1}= ={3}= ={7}= ={9}= ={10}= ={11}= [recorded] aggressive splitted
     > ./f ./g ./h ./i ./j ./k [11] ./index.js 4:0-51
     > ./b ./d ./e ./f ./g [11] ./index.js 5:0-44
     > ./b ./d ./e ./f ./g ./h ./i ./j ./k [11] ./index.js 6:0-72
  [3] ./f.js 899 bytes {2} [built]
  [4] ./g.js 901 bytes {2} [built]
-chunk    {3} 43c1ac24102c075ecb2d.js 1.76 KiB <{10}> ={0}= ={2}= ={7}= ={9}= [rendered] [recorded] aggressive splitted
+chunk    {3} 43c1ac24102c075ecb2d.js 1.76 KiB <{4}> ={0}= ={2}= ={9}= ={10}= [rendered] [recorded] aggressive splitted
     > ./b ./d ./e ./f ./g ./h ./i ./j ./k [11] ./index.js 6:0-72
  [2] ./e.js 899 bytes {1} {3} [built]
  [6] ./h.js 899 bytes {3} {11} [built]
-chunk    {4} a35356222d6a2151f7d3.js 899 bytes <{10}>
+chunk    {4} db744382311550539cad.js (main) 248 bytes >{0}< >{1}< >{2}< >{3}< >{5}< >{6}< >{7}< >{8}< >{9}< >{10}< >{11}< [entry] [rendered]
+    > ./index main
+ [11] ./index.js 248 bytes {4} [built]
+chunk    {5} 6a80fd33f274d3117a32.js 899 bytes <{4}>
     > ./a [11] ./index.js 1:0-16
- [10] ./a.js 899 bytes {4} [built]
-chunk    {5} e5fb899955fa03a8053b.js 1.76 KiB <{10}>
+ [10] ./a.js 899 bytes {5} [built]
+chunk    {6} a2fea791e74e99836233.js 1.76 KiB <{4}>
     > ./b ./c [11] ./index.js 2:0-23
- [0] ./b.js 899 bytes {0} {5} [built]
- [5] ./c.js 899 bytes {5} {8} [built]
-chunk    {6} 58f368c01f66002b0eb3.js 1.76 KiB <{10}> ={11}= ={2}=
+ [0] ./b.js 899 bytes {0} {6} [built]
+ [5] ./c.js 899 bytes {6} {8} [built]
+chunk    {7} a9463ba36646aa40b97c.js 1.76 KiB <{4}> ={2}= ={11}=
     > ./f ./g ./h ./i ./j ./k [11] ./index.js 4:0-51
- [8] ./j.js 901 bytes {6} {9} [built]
- [9] ./k.js 899 bytes {6} {7} [built]
-chunk    {7} 6a8e74d82c35e3f013d2.js 899 bytes <{10}> ={0}= ={2}= ={3}= ={9}=
-    > ./b ./d ./e ./f ./g ./h ./i ./j ./k [11] ./index.js 6:0-72
- [9] ./k.js 899 bytes {6} {7} [built]
-chunk    {8} 5bc7f208cd99a83b4e33.js 1.76 KiB <{10}> ={1}= [recorded] aggressive splitted
+ [8] ./j.js 901 bytes {7} {10} [built]
+ [9] ./k.js 899 bytes {7} {9} [built]
+chunk    {8} 5bc7f208cd99a83b4e33.js 1.76 KiB <{4}> ={1}= [recorded] aggressive splitted
     > ./c ./d ./e [11] ./index.js 3:0-30
  [1] ./d.js 899 bytes {0} {8} [built]
- [5] ./c.js 899 bytes {5} {8} [built]
-chunk    {9} 13713792eb1b5038ab8b.js 1.76 KiB <{10}> ={0}= ={2}= ={3}= ={7}= [rendered] [recorded] aggressive splitted
+ [5] ./c.js 899 bytes {6} {8} [built]
+chunk    {9} 819c28704a84308cd0f6.js 899 bytes <{4}> ={0}= ={2}= ={3}= ={10}=
     > ./b ./d ./e ./f ./g ./h ./i ./j ./k [11] ./index.js 6:0-72
- [7] ./i.js 899 bytes {9} {11} [built]
- [8] ./j.js 901 bytes {6} {9} [built]
-chunk   {10} d886db099ddf05aadc6d.js (main) 248 bytes >{0}< >{1}< >{11}< >{2}< >{3}< >{4}< >{5}< >{6}< >{7}< >{8}< >{9}< [entry] [rendered]
-    > ./index main
- [11] ./index.js 248 bytes {10} [built]
-chunk   {11} ba9fedb7aa0c69201639.js 1.76 KiB <{10}> ={2}= ={6}= [rendered] [recorded] aggressive splitted
+ [9] ./k.js 899 bytes {7} {9} [built]
+chunk   {10} 5ea68201264e1d2b28e9.js 1.76 KiB <{4}> ={0}= ={2}= ={3}= ={9}= [rendered] [recorded] aggressive splitted
+    > ./b ./d ./e ./f ./g ./h ./i ./j ./k [11] ./index.js 6:0-72
+ [7] ./i.js 899 bytes {10} {11} [built]
+ [8] ./j.js 901 bytes {7} {10} [built]
+chunk   {11} ba9fedb7aa0c69201639.js 1.76 KiB <{4}> ={2}= ={7}= [rendered] [recorded] aggressive splitted
     > ./f ./g ./h ./i ./j ./k [11] ./index.js 4:0-51
  [6] ./h.js 899 bytes {3} {11} [built]
- [7] ./i.js 899 bytes {9} {11} [built]"
+ [7] ./i.js 899 bytes {10} {11} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for async-commons-chunk 1`] = `
 "Entrypoint main = main.js
-chunk    {0} 0.js 21 bytes <{3}> ={1}= ={2}= [rendered] reused as split chunk (cache group: default)
-    > [3] ./index.js 17:1-21:3
-    > [3] ./index.js 2:1-5:3
-    > ./a ./b [3] ./index.js 9:1-13:3
+chunk    {0} 0.js 21 bytes <{1}> ={2}= ={3}= [rendered] reused as split chunk (cache group: default)
+    > [1] ./index.js 17:1-21:3
+    > [1] ./index.js 2:1-5:3
+    > ./a ./b [1] ./index.js 9:1-13:3
  [0] ./a.js 21 bytes {0} [built]
-chunk    {1} 1.js 21 bytes <{3}> ={0}= [rendered]
-    > ./a ./b [3] ./index.js 9:1-13:3
- [1] ./b.js 21 bytes {1} [built]
-chunk    {2} 2.js 21 bytes <{3}> ={0}= [rendered]
-    > [3] ./index.js 17:1-21:3
- [2] ./c.js 21 bytes {2} [built]
-chunk    {3} main.js (main) 515 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+chunk    {1} main.js (main) 515 bytes >{0}< >{2}< >{3}< [entry] [rendered]
     > ./ main
- [3] ./index.js 515 bytes {3} [built]"
+ [1] ./index.js 515 bytes {1} [built]
+chunk    {2} 2.js 21 bytes <{1}> ={0}= [rendered]
+    > ./a ./b [1] ./index.js 9:1-13:3
+ [2] ./b.js 21 bytes {2} [built]
+chunk    {3} 3.js 21 bytes <{1}> ={0}= [rendered]
+    > [1] ./index.js 17:1-21:3
+ [3] ./c.js 21 bytes {3} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for async-commons-chunk-auto 1`] = `
@@ -148,192 +148,192 @@ exports[`StatsTestCases should print correct stats for async-commons-chunk-auto 
     Entrypoint a = disabled/a.js
     Entrypoint b = disabled/b.js
     Entrypoint c = disabled/c.js
-    chunk    {0} disabled/async-a.js (async-a) 216 bytes <{4}> >{3}< [rendered]
-        > ./a [7] ./index.js 1:0-47
-     [0] ./d.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-     [3] ./node_modules/y.js 20 bytes {0} {1} {5} {6} [built]
-     [5] ./a.js + 1 modules 156 bytes {0} {5} [built]
-         | ./a.js 121 bytes [built]
-         | ./e.js 20 bytes [built]
-    chunk    {1} disabled/async-b.js (async-b) 152 bytes <{4}> [rendered]
-        > ./b [7] ./index.js 2:0-47
-     [0] ./d.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-     [2] ./f.js 20 bytes {1} {2} {3} {6} {7} [built]
-     [3] ./node_modules/y.js 20 bytes {0} {1} {5} {6} [built]
-     [4] ./b.js 72 bytes {1} {6} [built]
-    chunk    {2} disabled/async-c.js (async-c) 167 bytes <{4}> [rendered]
-        > ./c [7] ./index.js 3:0-47
-     [0] ./d.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-     [2] ./f.js 20 bytes {1} {2} {3} {6} {7} [built]
-     [6] ./c.js + 1 modules 107 bytes {2} {7} [built]
-         | ./c.js 72 bytes [built]
-         | ./node_modules/z.js 20 bytes [built]
-    chunk    {3} disabled/async-g.js (async-g) 54 bytes <{0}> <{5}> [rendered]
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-     [2] ./f.js 20 bytes {1} {2} {3} {6} {7} [built]
-     [8] ./g.js 34 bytes {3} [built]
-    chunk    {4} disabled/main.js (main) 147 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+    chunk    {0} disabled/main.js (main) 147 bytes >{4}< >{5}< >{6}< [entry] [rendered]
         > ./ main
-     [7] ./index.js 147 bytes {4} [built]
-    chunk    {5} disabled/a.js (a) 216 bytes >{3}< [entry] [rendered]
+     [7] ./index.js 147 bytes {0} [built]
+    chunk    {1} disabled/a.js (a) 216 bytes >{7}< [entry] [rendered]
         > ./a a
-     [0] ./d.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-     [3] ./node_modules/y.js 20 bytes {0} {1} {5} {6} [built]
-     [5] ./a.js + 1 modules 156 bytes {0} {5} [built]
+     [0] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
+     [1] ./node_modules/x.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
+     [3] ./node_modules/y.js 20 bytes {1} {2} {4} {5} [built]
+     [5] ./a.js + 1 modules 156 bytes {1} {4} [built]
          | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-    chunk    {6} disabled/b.js (b) 152 bytes [entry] [rendered]
+    chunk    {2} disabled/b.js (b) 152 bytes [entry] [rendered]
         > ./b b
-     [0] ./d.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-     [2] ./f.js 20 bytes {1} {2} {3} {6} {7} [built]
-     [3] ./node_modules/y.js 20 bytes {0} {1} {5} {6} [built]
-     [4] ./b.js 72 bytes {1} {6} [built]
-    chunk    {7} disabled/c.js (c) 167 bytes [entry] [rendered]
+     [0] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
+     [1] ./node_modules/x.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
+     [2] ./f.js 20 bytes {2} {3} {5} {6} {7} [built]
+     [3] ./node_modules/y.js 20 bytes {1} {2} {4} {5} [built]
+     [4] ./b.js 72 bytes {2} {5} [built]
+    chunk    {3} disabled/c.js (c) 167 bytes [entry] [rendered]
         > ./c c
-     [0] ./d.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {1} {2} {5} {6} {7} [built]
-     [2] ./f.js 20 bytes {1} {2} {3} {6} {7} [built]
-     [6] ./c.js + 1 modules 107 bytes {2} {7} [built]
+     [0] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
+     [1] ./node_modules/x.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
+     [2] ./f.js 20 bytes {2} {3} {5} {6} {7} [built]
+     [6] ./c.js + 1 modules 107 bytes {3} {6} [built]
          | ./c.js 72 bytes [built]
          | ./node_modules/z.js 20 bytes [built]
+    chunk    {4} disabled/async-a.js (async-a) 216 bytes <{0}> >{7}< [rendered]
+        > ./a [7] ./index.js 1:0-47
+     [0] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
+     [1] ./node_modules/x.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
+     [3] ./node_modules/y.js 20 bytes {1} {2} {4} {5} [built]
+     [5] ./a.js + 1 modules 156 bytes {1} {4} [built]
+         | ./a.js 121 bytes [built]
+         | ./e.js 20 bytes [built]
+    chunk    {5} disabled/async-b.js (async-b) 152 bytes <{0}> [rendered]
+        > ./b [7] ./index.js 2:0-47
+     [0] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
+     [1] ./node_modules/x.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
+     [2] ./f.js 20 bytes {2} {3} {5} {6} {7} [built]
+     [3] ./node_modules/y.js 20 bytes {1} {2} {4} {5} [built]
+     [4] ./b.js 72 bytes {2} {5} [built]
+    chunk    {6} disabled/async-c.js (async-c) 167 bytes <{0}> [rendered]
+        > ./c [7] ./index.js 3:0-47
+     [0] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
+     [1] ./node_modules/x.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
+     [2] ./f.js 20 bytes {2} {3} {5} {6} {7} [built]
+     [6] ./c.js + 1 modules 107 bytes {3} {6} [built]
+         | ./c.js 72 bytes [built]
+         | ./node_modules/z.js 20 bytes [built]
+    chunk    {7} disabled/async-g.js (async-g) 54 bytes <{1}> <{4}> [rendered]
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+     [2] ./f.js 20 bytes {2} {3} {5} {6} {7} [built]
+     [8] ./g.js 34 bytes {7} [built]
 Child default:
     Entrypoint main = default/main.js
     Entrypoint a = default/a.js
     Entrypoint b = default/b.js
     Entrypoint c = default/c.js
-    chunk    {0} default/vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{9}> ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={8}= >{2}< >{7}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~async-c)
+    chunk    {0} default/vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{4}> ={1}= ={2}= ={3}= ={8}= ={9}= ={10}= ={12}= >{2}< >{11}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~async-c)
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
-     [1] ./node_modules/x.js 20 bytes {0} {10} {11} {12} [built]
-    chunk    {1} default/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{9}> ={0}= ={2}= ={3}= ={4}= ={5}= ={6}= ={8}= >{2}< >{7}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
+     [1] ./node_modules/x.js 20 bytes {0} {5} {6} {7} [built]
+    chunk    {1} default/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{4}> ={0}= ={2}= ={3}= ={8}= ={9}= ={10}= ={12}= >{2}< >{11}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-    chunk    {2} default/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{10}> <{3}> <{4}> <{9}> ={0}= ={1}= ={3}= ={5}= ={6}= ={7}= ={8}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
+     [0] ./d.js 20 bytes {1} {5} {6} {7} [built]
+    chunk    {2} default/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{3}> <{4}> <{5}> <{8}> ={0}= ={1}= ={3}= ={9}= ={10}= ={11}= ={12}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
         > ./g [] 6:0-47
         > ./g [] 6:0-47
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
-     [2] ./f.js 20 bytes {2} {11} {12} [built]
-    chunk    {3} default/vendors~async-a~async-b.js (vendors~async-a~async-b) 20 bytes <{9}> ={0}= ={1}= ={2}= ={4}= ={5}= >{2}< >{7}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b)
+     [2] ./f.js 20 bytes {2} {6} {7} [built]
+    chunk    {3} default/vendors~async-a~async-b.js (vendors~async-a~async-b) 20 bytes <{4}> ={0}= ={1}= ={2}= ={8}= ={9}= >{2}< >{11}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b)
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
-     [3] ./node_modules/y.js 20 bytes {3} {10} {11} [built]
-    chunk    {4} default/async-a.js (async-a) 156 bytes <{9}> ={0}= ={1}= ={3}= >{2}< >{7}< [rendered]
-        > ./a [8] ./index.js 1:0-47
-     [7] ./a.js + 1 modules 156 bytes {4} {10} [built]
-         | ./a.js 121 bytes [built]
-         | ./e.js 20 bytes [built]
-    chunk    {5} default/async-b.js (async-b) 72 bytes <{9}> ={0}= ={1}= ={2}= ={3}= [rendered]
-        > ./b [8] ./index.js 2:0-47
-     [5] ./b.js 72 bytes {5} {11} [built]
-    chunk    {6} default/async-c.js (async-c) 72 bytes <{9}> ={0}= ={1}= ={2}= ={8}= [rendered]
-        > ./c [8] ./index.js 3:0-47
-     [6] ./c.js 72 bytes {6} {12} [built]
-    chunk    {7} default/async-g.js (async-g) 34 bytes <{0}> <{1}> <{10}> <{3}> <{4}> ={2}= [rendered]
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-     [9] ./g.js 34 bytes {7} [built]
-    chunk    {8} default/vendors~async-c.js (vendors~async-c) 20 bytes <{9}> ={0}= ={1}= ={2}= ={6}= [rendered] split chunk (cache group: vendors) (name: vendors~async-c)
-        > ./c [8] ./index.js 3:0-47
-     [4] ./node_modules/z.js 20 bytes {8} {12} [built]
-    chunk    {9} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{5}< >{6}< >{8}< [entry] [rendered]
+     [3] ./node_modules/y.js 20 bytes {3} {5} {6} [built]
+    chunk    {4} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{8}< >{9}< >{10}< >{12}< [entry] [rendered]
         > ./ main
-     [8] ./index.js 147 bytes {9} [built]
-    chunk   {10} default/a.js (a) 216 bytes >{2}< >{7}< [entry] [rendered]
+     [8] ./index.js 147 bytes {4} [built]
+    chunk    {5} default/a.js (a) 216 bytes >{2}< >{11}< [entry] [rendered]
         > ./a a
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {10} {11} {12} [built]
-     [3] ./node_modules/y.js 20 bytes {3} {10} {11} [built]
-     [7] ./a.js + 1 modules 156 bytes {4} {10} [built]
+     [0] ./d.js 20 bytes {1} {5} {6} {7} [built]
+     [1] ./node_modules/x.js 20 bytes {0} {5} {6} {7} [built]
+     [3] ./node_modules/y.js 20 bytes {3} {5} {6} [built]
+     [6] ./a.js + 1 modules 156 bytes {5} {8} [built]
          | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-    chunk   {11} default/b.js (b) 152 bytes [entry] [rendered]
+    chunk    {6} default/b.js (b) 152 bytes [entry] [rendered]
         > ./b b
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {10} {11} {12} [built]
-     [2] ./f.js 20 bytes {2} {11} {12} [built]
-     [3] ./node_modules/y.js 20 bytes {3} {10} {11} [built]
-     [5] ./b.js 72 bytes {5} {11} [built]
-    chunk   {12} default/c.js (c) 152 bytes [entry] [rendered]
+     [0] ./d.js 20 bytes {1} {5} {6} {7} [built]
+     [1] ./node_modules/x.js 20 bytes {0} {5} {6} {7} [built]
+     [2] ./f.js 20 bytes {2} {6} {7} [built]
+     [3] ./node_modules/y.js 20 bytes {3} {5} {6} [built]
+     [4] ./b.js 72 bytes {6} {9} [built]
+    chunk    {7} default/c.js (c) 152 bytes [entry] [rendered]
         > ./c c
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {10} {11} {12} [built]
-     [2] ./f.js 20 bytes {2} {11} {12} [built]
-     [4] ./node_modules/z.js 20 bytes {8} {12} [built]
-     [6] ./c.js 72 bytes {6} {12} [built]
+     [0] ./d.js 20 bytes {1} {5} {6} {7} [built]
+     [1] ./node_modules/x.js 20 bytes {0} {5} {6} {7} [built]
+     [2] ./f.js 20 bytes {2} {6} {7} [built]
+     [5] ./c.js 72 bytes {7} {10} [built]
+     [7] ./node_modules/z.js 20 bytes {7} {12} [built]
+    chunk    {8} default/async-a.js (async-a) 156 bytes <{4}> ={0}= ={1}= ={3}= >{2}< >{11}< [rendered]
+        > ./a [8] ./index.js 1:0-47
+     [6] ./a.js + 1 modules 156 bytes {5} {8} [built]
+         | ./a.js 121 bytes [built]
+         | ./e.js 20 bytes [built]
+    chunk    {9} default/async-b.js (async-b) 72 bytes <{4}> ={0}= ={1}= ={2}= ={3}= [rendered]
+        > ./b [8] ./index.js 2:0-47
+     [4] ./b.js 72 bytes {6} {9} [built]
+    chunk   {10} default/async-c.js (async-c) 72 bytes <{4}> ={0}= ={1}= ={2}= ={12}= [rendered]
+        > ./c [8] ./index.js 3:0-47
+     [5] ./c.js 72 bytes {7} {10} [built]
+    chunk   {11} default/async-g.js (async-g) 34 bytes <{0}> <{1}> <{3}> <{5}> <{8}> ={2}= [rendered]
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+     [9] ./g.js 34 bytes {11} [built]
+    chunk   {12} default/vendors~async-c.js (vendors~async-c) 20 bytes <{4}> ={0}= ={1}= ={2}= ={10}= [rendered] split chunk (cache group: vendors) (name: vendors~async-c)
+        > ./c [8] ./index.js 3:0-47
+     [7] ./node_modules/z.js 20 bytes {7} {12} [built]
 Child vendors:
     Entrypoint main = vendors/main.js
     Entrypoint a = vendors/vendors.js vendors/a.js
     Entrypoint b = vendors/vendors.js vendors/b.js
     Entrypoint c = vendors/vendors.js vendors/c.js
-    chunk    {0} vendors/async-a.js (async-a) 216 bytes <{5}> >{3}< [rendered]
-        > ./a [8] ./index.js 1:0-47
-     [0] ./d.js 20 bytes {0} {1} {2} {6} {7} {8} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {1} {2} {4} [built]
-     [3] ./node_modules/y.js 20 bytes {0} {1} {4} [built]
-     [7] ./a.js + 1 modules 156 bytes {0} {6} [built]
-         | ./a.js 121 bytes [built]
-         | ./e.js 20 bytes [built]
-    chunk    {1} vendors/async-b.js (async-b) 152 bytes <{5}> [rendered]
-        > ./b [8] ./index.js 2:0-47
-     [0] ./d.js 20 bytes {0} {1} {2} {6} {7} {8} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {1} {2} {4} [built]
-     [2] ./f.js 20 bytes {1} {2} {3} {7} {8} [built]
-     [3] ./node_modules/y.js 20 bytes {0} {1} {4} [built]
-     [5] ./b.js 72 bytes {1} {7} [built]
-    chunk    {2} vendors/async-c.js (async-c) 152 bytes <{5}> [rendered]
-        > ./c [8] ./index.js 3:0-47
-     [0] ./d.js 20 bytes {0} {1} {2} {6} {7} {8} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {1} {2} {4} [built]
-     [2] ./f.js 20 bytes {1} {2} {3} {7} {8} [built]
-     [4] ./node_modules/z.js 20 bytes {2} {4} [built]
-     [6] ./c.js 72 bytes {2} {8} [built]
-    chunk    {3} vendors/async-g.js (async-g) 54 bytes <{0}> <{4}> <{6}> [rendered]
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-     [2] ./f.js 20 bytes {1} {2} {3} {7} {8} [built]
-     [9] ./g.js 34 bytes {3} [built]
-    chunk    {4} vendors/vendors.js (vendors) 60 bytes ={6}= ={7}= ={8}= >{3}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
+    chunk    {0} vendors/vendors.js (vendors) 60 bytes ={2}= ={3}= ={4}= >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./a a
         > ./b b
         > ./c c
-     [1] ./node_modules/x.js 20 bytes {0} {1} {2} {4} [built]
-     [3] ./node_modules/y.js 20 bytes {0} {1} {4} [built]
-     [4] ./node_modules/z.js 20 bytes {2} {4} [built]
-    chunk    {5} vendors/main.js (main) 147 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+     [1] ./node_modules/x.js 20 bytes {0} {5} {6} {7} [built]
+     [3] ./node_modules/y.js 20 bytes {0} {5} {6} [built]
+     [7] ./node_modules/z.js 20 bytes {0} {7} [built]
+    chunk    {1} vendors/main.js (main) 147 bytes >{5}< >{6}< >{7}< [entry] [rendered]
         > ./ main
-     [8] ./index.js 147 bytes {5} [built]
-    chunk    {6} vendors/a.js (a) 176 bytes ={4}= >{3}< [entry] [rendered]
+     [8] ./index.js 147 bytes {1} [built]
+    chunk    {2} vendors/a.js (a) 176 bytes ={0}= >{8}< [entry] [rendered]
         > ./a a
-     [0] ./d.js 20 bytes {0} {1} {2} {6} {7} {8} [built]
-     [7] ./a.js + 1 modules 156 bytes {0} {6} [built]
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [6] ./a.js + 1 modules 156 bytes {2} {5} [built]
          | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-    chunk    {7} vendors/b.js (b) 112 bytes ={4}= [entry] [rendered]
+    chunk    {3} vendors/b.js (b) 112 bytes ={0}= [entry] [rendered]
         > ./b b
-     [0] ./d.js 20 bytes {0} {1} {2} {6} {7} {8} [built]
-     [2] ./f.js 20 bytes {1} {2} {3} {7} {8} [built]
-     [5] ./b.js 72 bytes {1} {7} [built]
-    chunk    {8} vendors/c.js (c) 112 bytes ={4}= [entry] [rendered]
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [2] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [4] ./b.js 72 bytes {3} {6} [built]
+    chunk    {4} vendors/c.js (c) 112 bytes ={0}= [entry] [rendered]
         > ./c c
-     [0] ./d.js 20 bytes {0} {1} {2} {6} {7} {8} [built]
-     [2] ./f.js 20 bytes {1} {2} {3} {7} {8} [built]
-     [6] ./c.js 72 bytes {2} {8} [built]
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [2] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [5] ./c.js 72 bytes {4} {7} [built]
+    chunk    {5} vendors/async-a.js (async-a) 216 bytes <{1}> >{8}< [rendered]
+        > ./a [8] ./index.js 1:0-47
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [1] ./node_modules/x.js 20 bytes {0} {5} {6} {7} [built]
+     [3] ./node_modules/y.js 20 bytes {0} {5} {6} [built]
+     [6] ./a.js + 1 modules 156 bytes {2} {5} [built]
+         | ./a.js 121 bytes [built]
+         | ./e.js 20 bytes [built]
+    chunk    {6} vendors/async-b.js (async-b) 152 bytes <{1}> [rendered]
+        > ./b [8] ./index.js 2:0-47
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [1] ./node_modules/x.js 20 bytes {0} {5} {6} {7} [built]
+     [2] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [3] ./node_modules/y.js 20 bytes {0} {5} {6} [built]
+     [4] ./b.js 72 bytes {3} {6} [built]
+    chunk    {7} vendors/async-c.js (async-c) 152 bytes <{1}> [rendered]
+        > ./c [8] ./index.js 3:0-47
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [1] ./node_modules/x.js 20 bytes {0} {5} {6} {7} [built]
+     [2] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [5] ./c.js 72 bytes {4} {7} [built]
+     [7] ./node_modules/z.js 20 bytes {0} {7} [built]
+    chunk    {8} vendors/async-g.js (async-g) 54 bytes <{0}> <{2}> <{5}> [rendered]
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+     [2] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [9] ./g.js 34 bytes {8} [built]
 Child multiple-vendors:
     Entrypoint main = multiple-vendors/main.js
     Entrypoint a = multiple-vendors/libs-x.js multiple-vendors/vendors~a~async-a~async-b~b.js multiple-vendors/a.js
     Entrypoint b = multiple-vendors/libs-x.js multiple-vendors/vendors~a~async-a~async-b~b.js multiple-vendors/b.js
     Entrypoint c = multiple-vendors/libs-x.js multiple-vendors/vendors~async-c~c.js multiple-vendors/c.js
-    chunk    {0} multiple-vendors/libs-x.js (libs-x) 20 bytes <{9}> ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: libs) (name: libs-x)
+    chunk    {0} multiple-vendors/libs-x.js (libs-x) 20 bytes <{5}> ={1}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= >{3}< >{12}< [initial] [rendered] split chunk (cache group: libs) (name: libs-x)
         > ./a a
         > ./b b
         > ./c c
@@ -341,67 +341,67 @@ Child multiple-vendors:
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
      [2] ./node_modules/x.js 20 bytes {0} [built]
-    chunk    {1} multiple-vendors/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{9}> ={0}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= >{2}< >{8}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
-        > ./a [8] ./index.js 1:0-47
-        > ./b [8] ./index.js 2:0-47
-        > ./c [8] ./index.js 3:0-47
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-    chunk    {2} multiple-vendors/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{10}> <{3}> <{5}> <{9}> ={0}= ={1}= ={3}= ={4}= ={6}= ={7}= ={8}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-        > ./b [8] ./index.js 2:0-47
-        > ./c [8] ./index.js 3:0-47
-     [1] ./f.js 20 bytes {2} {11} {12} [built]
-    chunk    {3} multiple-vendors/vendors~a~async-a~async-b~b.js (vendors~a~async-a~async-b~b) 20 bytes <{9}> ={0}= ={1}= ={10}= ={11}= ={2}= ={5}= ={6}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~b)
+    chunk    {1} multiple-vendors/vendors~a~async-a~async-b~b.js (vendors~a~async-a~async-b~b) 20 bytes <{5}> ={0}= ={2}= ={3}= ={6}= ={7}= ={9}= ={10}= >{3}< >{12}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~b)
         > ./a a
         > ./b b
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
-     [3] ./node_modules/y.js 20 bytes {3} [built]
-    chunk    {4} multiple-vendors/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{9}> ={0}= ={1}= ={12}= ={2}= ={7}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~c)
+     [3] ./node_modules/y.js 20 bytes {1} [built]
+    chunk    {2} multiple-vendors/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{5}> ={0}= ={1}= ={3}= ={4}= ={9}= ={10}= ={11}= >{3}< >{12}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
+        > ./a [8] ./index.js 1:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+    chunk    {3} multiple-vendors/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{2}> <{5}> <{6}> <{9}> ={0}= ={1}= ={2}= ={4}= ={10}= ={11}= ={12}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
+     [1] ./f.js 20 bytes {3} {7} {8} [built]
+    chunk    {4} multiple-vendors/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{5}> ={0}= ={2}= ={3}= ={8}= ={11}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~c)
         > ./c c
         > ./c [8] ./index.js 3:0-47
      [7] ./node_modules/z.js 20 bytes {4} [built]
-    chunk    {5} multiple-vendors/async-a.js (async-a) 156 bytes <{9}> ={0}= ={1}= ={3}= >{2}< >{8}< [rendered]
-        > ./a [8] ./index.js 1:0-47
-     [6] ./a.js + 1 modules 156 bytes {5} {10} [built]
-         | ./a.js 121 bytes [built]
-         | ./e.js 20 bytes [built]
-    chunk    {6} multiple-vendors/async-b.js (async-b) 72 bytes <{9}> ={0}= ={1}= ={2}= ={3}= [rendered]
-        > ./b [8] ./index.js 2:0-47
-     [4] ./b.js 72 bytes {6} {11} [built]
-    chunk    {7} multiple-vendors/async-c.js (async-c) 72 bytes <{9}> ={0}= ={1}= ={2}= ={4}= [rendered]
-        > ./c [8] ./index.js 3:0-47
-     [5] ./c.js 72 bytes {7} {12} [built]
-    chunk    {8} multiple-vendors/async-g.js (async-g) 34 bytes <{0}> <{1}> <{10}> <{3}> <{5}> ={2}= [rendered]
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-     [9] ./g.js 34 bytes {8} [built]
-    chunk    {9} multiple-vendors/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{5}< >{6}< >{7}< [entry] [rendered]
+    chunk    {5} multiple-vendors/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{9}< >{10}< >{11}< [entry] [rendered]
         > ./ main
-     [8] ./index.js 147 bytes {9} [built]
-    chunk   {10} multiple-vendors/a.js (a) 176 bytes ={0}= ={3}= >{2}< >{8}< [entry] [rendered]
+     [8] ./index.js 147 bytes {5} [built]
+    chunk    {6} multiple-vendors/a.js (a) 176 bytes ={0}= ={1}= >{3}< >{12}< [entry] [rendered]
         > ./a a
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [6] ./a.js + 1 modules 156 bytes {5} {10} [built]
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+     [6] ./a.js + 1 modules 156 bytes {6} {9} [built]
          | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-    chunk   {11} multiple-vendors/b.js (b) 112 bytes ={0}= ={3}= [entry] [rendered]
+    chunk    {7} multiple-vendors/b.js (b) 112 bytes ={0}= ={1}= [entry] [rendered]
         > ./b b
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [1] ./f.js 20 bytes {2} {11} {12} [built]
-     [4] ./b.js 72 bytes {6} {11} [built]
-    chunk   {12} multiple-vendors/c.js (c) 112 bytes ={0}= ={4}= [entry] [rendered]
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+     [1] ./f.js 20 bytes {3} {7} {8} [built]
+     [4] ./b.js 72 bytes {7} {10} [built]
+    chunk    {8} multiple-vendors/c.js (c) 112 bytes ={0}= ={4}= [entry] [rendered]
         > ./c c
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [1] ./f.js 20 bytes {2} {11} {12} [built]
-     [5] ./c.js 72 bytes {7} {12} [built]
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+     [1] ./f.js 20 bytes {3} {7} {8} [built]
+     [5] ./c.js 72 bytes {8} {11} [built]
+    chunk    {9} multiple-vendors/async-a.js (async-a) 156 bytes <{5}> ={0}= ={1}= ={2}= >{3}< >{12}< [rendered]
+        > ./a [8] ./index.js 1:0-47
+     [6] ./a.js + 1 modules 156 bytes {6} {9} [built]
+         | ./a.js 121 bytes [built]
+         | ./e.js 20 bytes [built]
+    chunk   {10} multiple-vendors/async-b.js (async-b) 72 bytes <{5}> ={0}= ={1}= ={2}= ={3}= [rendered]
+        > ./b [8] ./index.js 2:0-47
+     [4] ./b.js 72 bytes {7} {10} [built]
+    chunk   {11} multiple-vendors/async-c.js (async-c) 72 bytes <{5}> ={0}= ={2}= ={3}= ={4}= [rendered]
+        > ./c [8] ./index.js 3:0-47
+     [5] ./c.js 72 bytes {8} {11} [built]
+    chunk   {12} multiple-vendors/async-g.js (async-g) 34 bytes <{0}> <{1}> <{2}> <{6}> <{9}> ={3}= [rendered]
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+     [9] ./g.js 34 bytes {12} [built]
 Child all:
     Entrypoint main = all/main.js
     Entrypoint a = all/vendors~a~async-a~async-b~async-c~b~c.js all/vendors~a~async-a~async-b~b.js all/a.js
     Entrypoint b = all/vendors~a~async-a~async-b~async-c~b~c.js all/vendors~a~async-a~async-b~b.js all/b.js
     Entrypoint c = all/vendors~a~async-a~async-b~async-c~b~c.js all/vendors~async-c~c.js all/c.js
-    chunk    {0} all/vendors~a~async-a~async-b~async-c~b~c.js (vendors~a~async-a~async-b~async-c~b~c) 20 bytes <{9}> ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~async-c~b~c)
+    chunk    {0} all/vendors~a~async-a~async-b~async-c~b~c.js (vendors~a~async-a~async-b~async-c~b~c) 20 bytes <{5}> ={1}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= >{3}< >{12}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~async-c~b~c)
         > ./a a
         > ./b b
         > ./c c
@@ -409,65 +409,65 @@ Child all:
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
      [2] ./node_modules/x.js 20 bytes {0} [built]
-    chunk    {1} all/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{9}> ={0}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= >{2}< >{8}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
-        > ./a [8] ./index.js 1:0-47
-        > ./b [8] ./index.js 2:0-47
-        > ./c [8] ./index.js 3:0-47
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-    chunk    {2} all/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{10}> <{3}> <{5}> <{9}> ={0}= ={1}= ={3}= ={4}= ={6}= ={7}= ={8}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-        > ./b [8] ./index.js 2:0-47
-        > ./c [8] ./index.js 3:0-47
-     [1] ./f.js 20 bytes {2} {11} {12} [built]
-    chunk    {3} all/vendors~a~async-a~async-b~b.js (vendors~a~async-a~async-b~b) 20 bytes <{9}> ={0}= ={1}= ={10}= ={11}= ={2}= ={5}= ={6}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~b)
+    chunk    {1} all/vendors~a~async-a~async-b~b.js (vendors~a~async-a~async-b~b) 20 bytes <{5}> ={0}= ={2}= ={3}= ={6}= ={7}= ={9}= ={10}= >{3}< >{12}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~b)
         > ./a a
         > ./b b
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
-     [3] ./node_modules/y.js 20 bytes {3} [built]
-    chunk    {4} all/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{9}> ={0}= ={1}= ={12}= ={2}= ={7}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~c)
+     [3] ./node_modules/y.js 20 bytes {1} [built]
+    chunk    {2} all/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{5}> ={0}= ={1}= ={3}= ={4}= ={9}= ={10}= ={11}= >{3}< >{12}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
+        > ./a [8] ./index.js 1:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+    chunk    {3} all/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{2}> <{5}> <{6}> <{9}> ={0}= ={1}= ={2}= ={4}= ={10}= ={11}= ={12}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
+     [1] ./f.js 20 bytes {3} {7} {8} [built]
+    chunk    {4} all/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{5}> ={0}= ={2}= ={3}= ={8}= ={11}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~c)
         > ./c c
         > ./c [8] ./index.js 3:0-47
      [7] ./node_modules/z.js 20 bytes {4} [built]
-    chunk    {5} all/async-a.js (async-a) 156 bytes <{9}> ={0}= ={1}= ={3}= >{2}< >{8}< [rendered]
-        > ./a [8] ./index.js 1:0-47
-     [6] ./a.js + 1 modules 156 bytes {5} {10} [built]
-         | ./a.js 121 bytes [built]
-         | ./e.js 20 bytes [built]
-    chunk    {6} all/async-b.js (async-b) 72 bytes <{9}> ={0}= ={1}= ={2}= ={3}= [rendered]
-        > ./b [8] ./index.js 2:0-47
-     [4] ./b.js 72 bytes {6} {11} [built]
-    chunk    {7} all/async-c.js (async-c) 72 bytes <{9}> ={0}= ={1}= ={2}= ={4}= [rendered]
-        > ./c [8] ./index.js 3:0-47
-     [5] ./c.js 72 bytes {7} {12} [built]
-    chunk    {8} all/async-g.js (async-g) 34 bytes <{0}> <{1}> <{10}> <{3}> <{5}> ={2}= [rendered]
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-     [9] ./g.js 34 bytes {8} [built]
-    chunk    {9} all/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{5}< >{6}< >{7}< [entry] [rendered]
+    chunk    {5} all/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{9}< >{10}< >{11}< [entry] [rendered]
         > ./ main
-     [8] ./index.js 147 bytes {9} [built]
-    chunk   {10} all/a.js (a) 176 bytes ={0}= ={3}= >{2}< >{8}< [entry] [rendered]
+     [8] ./index.js 147 bytes {5} [built]
+    chunk    {6} all/a.js (a) 176 bytes ={0}= ={1}= >{3}< >{12}< [entry] [rendered]
         > ./a a
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [6] ./a.js + 1 modules 156 bytes {5} {10} [built]
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+     [6] ./a.js + 1 modules 156 bytes {6} {9} [built]
          | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-    chunk   {11} all/b.js (b) 112 bytes ={0}= ={3}= [entry] [rendered]
+    chunk    {7} all/b.js (b) 112 bytes ={0}= ={1}= [entry] [rendered]
         > ./b b
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [1] ./f.js 20 bytes {2} {11} {12} [built]
-     [4] ./b.js 72 bytes {6} {11} [built]
-    chunk   {12} all/c.js (c) 112 bytes ={0}= ={4}= [entry] [rendered]
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+     [1] ./f.js 20 bytes {3} {7} {8} [built]
+     [4] ./b.js 72 bytes {7} {10} [built]
+    chunk    {8} all/c.js (c) 112 bytes ={0}= ={4}= [entry] [rendered]
         > ./c c
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [1] ./f.js 20 bytes {2} {11} {12} [built]
-     [5] ./c.js 72 bytes {7} {12} [built]"
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+     [1] ./f.js 20 bytes {3} {7} {8} [built]
+     [5] ./c.js 72 bytes {8} {11} [built]
+    chunk    {9} all/async-a.js (async-a) 156 bytes <{5}> ={0}= ={1}= ={2}= >{3}< >{12}< [rendered]
+        > ./a [8] ./index.js 1:0-47
+     [6] ./a.js + 1 modules 156 bytes {6} {9} [built]
+         | ./a.js 121 bytes [built]
+         | ./e.js 20 bytes [built]
+    chunk   {10} all/async-b.js (async-b) 72 bytes <{5}> ={0}= ={1}= ={2}= ={3}= [rendered]
+        > ./b [8] ./index.js 2:0-47
+     [4] ./b.js 72 bytes {7} {10} [built]
+    chunk   {11} all/async-c.js (async-c) 72 bytes <{5}> ={0}= ={2}= ={3}= ={4}= [rendered]
+        > ./c [8] ./index.js 3:0-47
+     [5] ./c.js 72 bytes {8} {11} [built]
+    chunk   {12} all/async-g.js (async-g) 34 bytes <{0}> <{1}> <{2}> <{6}> <{9}> ={3}= [rendered]
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+     [9] ./g.js 34 bytes {12} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for chunk-module-id-range 1`] = `
-"Hash: 7d8eb8b4418c6ae6a262
+"Hash: 8683bda4416097d173ee
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
    Asset      Size  Chunks             Chunk Names
@@ -477,68 +477,86 @@ Entrypoint main1 = main1.js
 Entrypoint main2 = main2.js
 chunk    {0} main2.js (main2) 136 bytes [entry] [rendered]
     > ./main2 main2
-   [0] ./e.js 20 bytes {0} [built]
-   [1] ./f.js 20 bytes {0} [built]
-   [2] ./main2.js 56 bytes {0} [built]
- [100] ./d.js 20 bytes {0} {1} [built]
+   [0] ./d.js 20 bytes {0} {1} [built]
+   [1] ./e.js 20 bytes {0} [built]
+   [2] ./f.js 20 bytes {0} [built]
+   [3] ./main2.js 56 bytes {0} [built]
  [101] ./a.js 20 bytes {0} {1} [built]
 chunk    {1} main1.js (main1) 136 bytes [entry] [rendered]
     > ./main1 main1
-   [3] ./b.js 20 bytes {1} [built]
-   [4] ./main1.js 56 bytes {1} [built]
- [100] ./d.js 20 bytes {0} {1} [built]
+   [0] ./d.js 20 bytes {0} {1} [built]
+   [4] ./c.js 20 bytes {1} [built]
+ [100] ./main1.js 56 bytes {1} [built]
  [101] ./a.js 20 bytes {0} {1} [built]
- [102] ./c.js 20 bytes {1} [built]"
+ [102] ./b.js 20 bytes {1} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for chunks 1`] = `
-"Hash: 337155e238d6550ce6f7
+"Hash: bb90fc9e61205a066fee
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
-0.bundle.js  152 bytes       0  [emitted]  
-1.bundle.js  289 bytes       1  [emitted]  
-  bundle.js   8.29 KiB       2  [emitted]  main
-3.bundle.js  227 bytes       3  [emitted]  
+  bundle.js   8.28 KiB       0  [emitted]  main
+1.bundle.js  152 bytes       1  [emitted]  
+2.bundle.js  289 bytes       2  [emitted]  
+3.bundle.js  232 bytes       3  [emitted]  
 Entrypoint main = bundle.js
-chunk    {0} 0.bundle.js 22 bytes <{2}> [rendered]
-    > ./b [4] ./index.js 2:0-16
- [2] ./b.js 22 bytes {0} [built]
-     amd require ./b [4] ./index.js 2:0-16
-     [4] Xms -> factory:Xms building:Xms = Xms
-chunk    {1} 1.bundle.js 54 bytes <{2}> >{3}< [rendered]
-    > ./c [4] ./index.js 3:0-16
- [3] ./c.js 54 bytes {1} [built]
-     amd require ./c [4] ./index.js 3:0-16
-     [4] Xms -> factory:Xms building:Xms = Xms
-chunk    {2} bundle.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
+chunk    {0} bundle.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
     > ./index main
- [4] ./index.js 51 bytes {2} [built]
+ [0] ./index.js 51 bytes {0} [built]
      single entry ./index  main
      factory:Xms building:Xms = Xms
- [5] ./a.js 22 bytes {2} [built]
-     cjs require ./a [4] ./index.js 1:0-14
-     [4] Xms -> factory:Xms building:Xms = Xms
-chunk    {3} 3.bundle.js 44 bytes <{1}> [rendered]
+ [1] ./a.js 22 bytes {0} [built]
+     cjs require ./a [0] ./index.js 1:0-14
+     [0] Xms -> factory:Xms building:Xms = Xms
+chunk    {1} 1.bundle.js 22 bytes <{0}> [rendered]
+    > ./b [0] ./index.js 2:0-16
+ [2] ./b.js 22 bytes {1} [built]
+     amd require ./b [0] ./index.js 2:0-16
+     [0] Xms -> factory:Xms building:Xms = Xms
+chunk    {2} 2.bundle.js 54 bytes <{0}> >{3}< [rendered]
+    > ./c [0] ./index.js 3:0-16
+ [3] ./c.js 54 bytes {2} [built]
+     amd require ./c [0] ./index.js 3:0-16
+     [0] Xms -> factory:Xms building:Xms = Xms
+chunk    {3} 3.bundle.js 44 bytes <{2}> [rendered]
     > [3] ./c.js 1:0-52
- [0] ./d.js 22 bytes {3} [built]
+ [4] ./d.js 22 bytes {3} [built]
      require.ensure item ./d [3] ./c.js 1:0-52
-     [4] Xms -> [3] Xms -> factory:Xms building:Xms = Xms
- [1] ./e.js 22 bytes {3} [built]
+     [0] Xms -> [3] Xms -> factory:Xms building:Xms = Xms
+ [5] ./e.js 22 bytes {3} [built]
      require.ensure item ./e [3] ./c.js 1:0-52
-     [4] Xms -> [3] Xms -> factory:Xms building:Xms = Xms"
+     [0] Xms -> [3] Xms -> factory:Xms building:Xms = Xms"
 `;
 
 exports[`StatsTestCases should print correct stats for chunks-development 1`] = `
-"Hash: 491964abb8a9925c2f65
+"Hash: 83bf92a94bc3834801e8
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
-0.bundle.js  433 bytes       0  [emitted]  
-1.bundle.js  297 bytes       1  [emitted]  
-2.bundle.js  588 bytes       2  [emitted]  
   bundle.js   8.67 KiB    main  [emitted]  main
+0.bundle.js  297 bytes       0  [emitted]  
+1.bundle.js  433 bytes       1  [emitted]  
+2.bundle.js  588 bytes       2  [emitted]  
 Entrypoint main = bundle.js
+chunk    {0} 0.bundle.js 22 bytes <{main}> [rendered]
+    > ./b [./index.js] ./index.js 2:0-16
+ [./b.js] 22 bytes {0} [built]
+     amd require ./b [./index.js] 2:0-16
+     [./index.js] Xms -> factory:Xms building:Xms = Xms
+chunk    {1} 1.bundle.js 54 bytes <{main}> >{2}< [rendered]
+    > ./c [./index.js] ./index.js 3:0-16
+ [./c.js] 54 bytes {1} [built]
+     amd require ./c [./index.js] 3:0-16
+     [./index.js] Xms -> factory:Xms building:Xms = Xms
+chunk    {2} 2.bundle.js 60 bytes <{1}> [rendered]
+    > [./c.js] ./c.js 1:0-52
+ [./d.js] 22 bytes {2} [built]
+     require.ensure item ./d [./c.js] 1:0-52
+     [./index.js] Xms -> [./c.js] Xms -> factory:Xms building:Xms = Xms
+ [./e.js] 38 bytes {2} [built]
+     require.ensure item ./e [./c.js] 1:0-52
+     [./index.js] Xms -> [./c.js] Xms -> factory:Xms building:Xms = Xms
 chunk {main} bundle.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
     > ./index main
  [./a.js] 22 bytes {main} [built]
@@ -547,37 +565,19 @@ chunk {main} bundle.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
      [./index.js] Xms -> factory:Xms building:Xms = Xms
  [./index.js] 51 bytes {main} [built]
      single entry ./index  main
-     factory:Xms building:Xms = Xms
-chunk    {0} 0.bundle.js 54 bytes <{main}> >{2}< [rendered]
-    > ./c [./index.js] ./index.js 3:0-16
- [./c.js] 54 bytes {0} [built]
-     amd require ./c [./index.js] 3:0-16
-     [./index.js] Xms -> factory:Xms building:Xms = Xms
-chunk    {1} 1.bundle.js 22 bytes <{main}> [rendered]
-    > ./b [./index.js] ./index.js 2:0-16
- [./b.js] 22 bytes {1} [built]
-     amd require ./b [./index.js] 2:0-16
-     [./index.js] Xms -> factory:Xms building:Xms = Xms
-chunk    {2} 2.bundle.js 60 bytes <{0}> [rendered]
-    > [./c.js] ./c.js 1:0-52
- [./d.js] 22 bytes {2} [built]
-     require.ensure item ./d [./c.js] 1:0-52
-     [./index.js] Xms -> [./c.js] Xms -> factory:Xms building:Xms = Xms
- [./e.js] 38 bytes {2} [built]
-     require.ensure item ./e [./c.js] 1:0-52
-     [./index.js] Xms -> [./c.js] Xms -> factory:Xms building:Xms = Xms"
+     factory:Xms building:Xms = Xms"
 `;
 
 exports[`StatsTestCases should print correct stats for circular-correctness 1`] = `
 "Entrypoint main = bundle.js
-chunk    {0} 0.bundle.js (a) 49 bytes <{2}> <{3}> >{3}< [rendered]
- [1] ./module-a.js 49 bytes {0} [built]
-chunk    {1} 1.bundle.js (b) 49 bytes <{2}> <{3}> >{3}< [rendered]
- [2] ./module-b.js 49 bytes {1} [built]
-chunk    {2} bundle.js (main) 98 bytes >{0}< >{1}< [entry] [rendered]
- [3] ./index.js 98 bytes {2} [built]
-chunk    {3} 3.bundle.js (c) 98 bytes <{0}> <{1}> >{0}< >{1}< [rendered]
- [0] ./module-c.js 98 bytes {3} [built]"
+chunk    {0} bundle.js (main) 98 bytes >{1}< >{2}< [entry] [rendered]
+ [0] ./index.js 98 bytes {0} [built]
+chunk    {1} 1.bundle.js (a) 49 bytes <{0}> <{3}> >{3}< [rendered]
+ [1] ./module-a.js 49 bytes {1} [built]
+chunk    {2} 2.bundle.js (b) 49 bytes <{0}> <{3}> >{3}< [rendered]
+ [2] ./module-b.js 49 bytes {2} [built]
+chunk    {3} 3.bundle.js (c) 98 bytes <{1}> <{2}> >{1}< >{2}< [rendered]
+ [3] ./module-c.js 98 bytes {3} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for color-disabled 1`] = `
@@ -996,56 +996,56 @@ Child [warnings => false]:
 exports[`StatsTestCases should print correct stats for graph-correctness-entries 1`] = `
 "Entrypoint e1 = e1.js
 Entrypoint e2 = e2.js
-chunk    {0} a.js (a) 49 bytes <{1}> <{2}> >{4}< [rendered]
- [0] ./module-a.js 49 bytes {0} [built]
-     import() ./module-a [1] ./module-c.js 1:0-47
-     import() ./module-a [3] ./e1.js 1:0-47
-chunk    {1} c.js (c) 49 bytes <{3}> <{4}> >{0}< [rendered]
- [1] ./module-c.js 49 bytes {1} [built]
-     import() ./module-c [2] ./module-b.js 1:0-47
-     import() ./module-c [4] ./e2.js 1:0-47
-chunk    {2} e1.js (e1) 49 bytes >{0}< [entry] [rendered]
- [3] ./e1.js 49 bytes {2} [built]
+chunk    {0} e1.js (e1) 49 bytes >{2}< [entry] [rendered]
+ [0] ./e1.js 49 bytes {0} [built]
      single entry ./e1  e1
-chunk    {3} e2.js (e2) 49 bytes >{1}< [entry] [rendered]
- [4] ./e2.js 49 bytes {3} [built]
+chunk    {1} e2.js (e2) 49 bytes >{3}< [entry] [rendered]
+ [1] ./e2.js 49 bytes {1} [built]
      single entry ./e2  e2
-chunk    {4} b.js (b) 49 bytes <{0}> >{1}< [rendered]
- [2] ./module-b.js 49 bytes {4} [built]
-     import() ./module-b [0] ./module-a.js 1:0-47"
+chunk    {2} a.js (a) 49 bytes <{0}> <{3}> >{4}< [rendered]
+ [2] ./module-a.js 49 bytes {2} [built]
+     import() ./module-a [0] ./e1.js 1:0-47
+     import() ./module-a [3] ./module-c.js 1:0-47
+chunk    {3} c.js (c) 49 bytes <{1}> <{4}> >{2}< [rendered]
+ [3] ./module-c.js 49 bytes {3} [built]
+     import() ./module-c [1] ./e2.js 1:0-47
+     import() ./module-c [4] ./module-b.js 1:0-47
+chunk    {4} b.js (b) 49 bytes <{2}> >{3}< [rendered]
+ [4] ./module-b.js 49 bytes {4} [built]
+     import() ./module-b [2] ./module-a.js 1:0-47"
 `;
 
 exports[`StatsTestCases should print correct stats for graph-correctness-modules 1`] = `
 "Entrypoint e1 = e1.js
 Entrypoint e2 = e2.js
-chunk    {0} y.js (y) 0 bytes <{3}> <{4}> [rendered]
- [3] ./module-y.js 0 bytes {0} [built]
-     import() ./module-y [0] ./module-x.js 1:0-47
-chunk    {1} a.js (a) 49 bytes <{2}> <{3}> >{5}< [rendered]
- [1] ./module-a.js 49 bytes {1} [built]
-     import() ./module-a [2] ./module-c.js 1:0-47
-     import() ./module-a [5] ./e1.js 2:0-47
-chunk    {2} c.js (c) 49 bytes <{4}> <{5}> >{1}< [rendered]
- [2] ./module-c.js 49 bytes {2} [built]
-     import() ./module-c [4] ./module-b.js 1:0-47
-     import() ./module-c [6] ./e2.js 2:0-47
-chunk    {3} e1.js (e1) 119 bytes >{0}< >{1}< [entry] [rendered]
- [0] ./module-x.js 49 bytes {3} {4} [built]
-     import() ./module-x [4] ./module-b.js 2:0-20
-     harmony side effect evaluation ./module-x [5] ./e1.js 1:0-20
-     harmony side effect evaluation ./module-x [6] ./e2.js 1:0-20
- [5] ./e1.js 70 bytes {3} [built]
+chunk    {0} e1.js (e1) 119 bytes >{2}< >{3}< [entry] [rendered]
+ [0] ./module-x.js 49 bytes {0} {1} [built]
+     harmony side effect evaluation ./module-x [2] ./e1.js 1:0-20
+     harmony side effect evaluation ./module-x [3] ./e2.js 1:0-20
+     import() ./module-x [6] ./module-b.js 2:0-20
+ [2] ./e1.js 70 bytes {0} [built]
      single entry ./e1  e1
-chunk    {4} e2.js (e2) 119 bytes >{0}< >{2}< [entry] [rendered]
- [0] ./module-x.js 49 bytes {3} {4} [built]
-     import() ./module-x [4] ./module-b.js 2:0-20
-     harmony side effect evaluation ./module-x [5] ./e1.js 1:0-20
-     harmony side effect evaluation ./module-x [6] ./e2.js 1:0-20
- [6] ./e2.js 70 bytes {4} [built]
+chunk    {1} e2.js (e2) 119 bytes >{3}< >{4}< [entry] [rendered]
+ [0] ./module-x.js 49 bytes {0} {1} [built]
+     harmony side effect evaluation ./module-x [2] ./e1.js 1:0-20
+     harmony side effect evaluation ./module-x [3] ./e2.js 1:0-20
+     import() ./module-x [6] ./module-b.js 2:0-20
+ [3] ./e2.js 70 bytes {1} [built]
      single entry ./e2  e2
-chunk    {5} b.js (b) 179 bytes <{1}> >{2}< [rendered]
- [4] ./module-b.js 179 bytes {5} [built]
-     import() ./module-b [1] ./module-a.js 1:0-47"
+chunk    {2} a.js (a) 49 bytes <{0}> <{4}> >{5}< [rendered]
+ [4] ./module-a.js 49 bytes {2} [built]
+     import() ./module-a [2] ./e1.js 2:0-47
+     import() ./module-a [5] ./module-c.js 1:0-47
+chunk    {3} y.js (y) 0 bytes <{0}> <{1}> [rendered]
+ [1] ./module-y.js 0 bytes {3} [built]
+     import() ./module-y [0] ./module-x.js 1:0-47
+chunk    {4} c.js (c) 49 bytes <{1}> <{5}> >{2}< [rendered]
+ [5] ./module-c.js 49 bytes {4} [built]
+     import() ./module-c [3] ./e2.js 2:0-47
+     import() ./module-c [6] ./module-b.js 1:0-47
+chunk    {5} b.js (b) 179 bytes <{2}> >{4}< [rendered]
+ [6] ./module-b.js 179 bytes {5} [built]
+     import() ./module-b [4] ./module-a.js 1:0-47"
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
@@ -1066,26 +1066,26 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for import-weak 1`] = `
-"Hash: 5043a861e2975c70a2e7
+"Hash: dbee3e50dffcb0b8c23e
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
    Asset       Size  Chunks             Chunk Names
-    0.js  149 bytes       0  [emitted]  
-entry.js   8.53 KiB       1  [emitted]  entry
+entry.js   8.53 KiB       0  [emitted]  entry
+    1.js  149 bytes       1  [emitted]  
 Entrypoint entry = entry.js
-[0] ./modules/b.js 22 bytes {0} [built]
-[1] ./entry.js 120 bytes {1} [built]
+[0] ./modules/b.js 22 bytes {1} [built]
+[1] ./entry.js 120 bytes {0} [built]
 [2] ./modules/a.js 37 bytes [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for import-with-invalid-options-comments 1`] = `
 "Built at: Thu Jan 01 1970 00:00:00 GMT
-[0] ./chunk-a.js 27 bytes {2} [built]
-[1] ./chunk-b.js 27 bytes {3} [built]
-[2] ./chunk-c.js 27 bytes {4} [built]
-[3] ./chunk-d.js 27 bytes {5} [built]
-[4] ./chunk.js 401 bytes {0} [built] [3 warnings]
-[5] ./index.js 50 bytes {1} [built]
+[0] ./index.js 50 bytes {0} [built]
+[1] ./chunk.js 401 bytes {1} [built] [3 warnings]
+[2] ./chunk-a.js 27 bytes {2} [built]
+[3] ./chunk-b.js 27 bytes {3} [built]
+[4] ./chunk-c.js 27 bytes {4} [built]
+[5] ./chunk-d.js 27 bytes {5} [built]
 
 WARNING in ./chunk.js 4:11-77
 Compilation error while processing magic comment(-s): /* webpack Prefetch: 0, webpackChunkName: \\"notGoingToCompile-c\\" */: Unexpected identifier
@@ -1101,7 +1101,7 @@ Compilation error while processing magic comment(-s): /* webpackPrefetch: true, 
 `;
 
 exports[`StatsTestCases should print correct stats for issue-7577 1`] = `
-"Hash: 343642fcbd3799129ba328960aea386766e9b4685f5e642073649561789d
+"Hash: 343642fcbd3799129ba328960aea386766e9b4687cb799c3c09b3e52b1ac
 Child
     Hash: 343642fcbd3799129ba3
     Time: Xms
@@ -1125,23 +1125,23 @@ Child
     [0] ./node_modules/vendor.js 23 bytes {vendors~main} [built]
     [1] ./b.js 17 bytes {all~main} [built]
 Child
-    Hash: 5f5e642073649561789d
+    Hash: 7cb799c3c09b3e52b1ac
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                                      Asset       Size        Chunks             Chunk Names
-               c-0-6bb505f933a38ad423d3.js  150 bytes             0  [emitted]  
-               c-1-e2f2199a8d3d8508c29c.js  459 bytes             1  [emitted]  
-        c-all~main-5bf91ad3502dd7005727.js  299 bytes      all~main  [emitted]  all~main
-            c-main-b48f733d0f40de7539ce.js  114 bytes          main  [emitted]  main
-    c-runtime~main-4582dbde6a81040ef3aa.js   8.84 KiB  runtime~main  [emitted]  runtime~main
-    Entrypoint main = c-runtime~main-4582dbde6a81040ef3aa.js c-all~main-5bf91ad3502dd7005727.js c-main-b48f733d0f40de7539ce.js (prefetch: c-0-6bb505f933a38ad423d3.js c-1-e2f2199a8d3d8508c29c.js)
-    [0] ./node_modules/vendor.js 23 bytes {0} [built]
-    [1] ./b.js 17 bytes {1} [built]
-    [2] ./c.js 61 bytes {all~main} [built]"
+            c-main-a7197f03f8f2dfea0fa5.js  114 bytes          main  [emitted]  main
+               c-0-775a18a4f14e4483daf8.js  153 bytes             0  [emitted]  
+               c-1-f0767101f6e51d910fd6.js  450 bytes             1  [emitted]  
+        c-all~main-7b1b86e650f3856c17c9.js  305 bytes      all~main  [emitted]  all~main
+    c-runtime~main-07e05a23b9679c3f51dd.js   8.84 KiB  runtime~main  [emitted]  runtime~main
+    Entrypoint main = c-runtime~main-07e05a23b9679c3f51dd.js c-all~main-7b1b86e650f3856c17c9.js c-main-a7197f03f8f2dfea0fa5.js (prefetch: c-0-775a18a4f14e4483daf8.js c-1-f0767101f6e51d910fd6.js)
+    [0] ./b.js 17 bytes {1} [built]
+    [1] ./c.js 61 bytes {all~main} [built]
+    [2] ./node_modules/vendor.js 23 bytes {0} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 1`] = `
-"Hash: 3f682d19df3a78cc355bf6b5cf6affcd0a3789f4d4554dbae635e8619c03ae9e4a73fc96c164d6f0
+"Hash: 3f682d19df3a78cc355b358ecf1b8718ebbde62e08074f8efde660b3b349f7c7c171ed4a3a7adb19
 Child 1 chunks:
     Hash: 3f682d19df3a78cc355b
     Time: Xms
@@ -1157,59 +1157,59 @@ Child 1 chunks:
      [4] ./d.js 22 bytes {0} [built]
      [5] ./e.js 22 bytes {0} [built]
 Child 2 chunks:
-    Hash: f6b5cf6affcd0a3789f4
+    Hash: 358ecf1b8718ebbde62e
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
-    0.bundle.js  632 bytes       0  [emitted]  
+    0.bundle.js  641 bytes       0  [emitted]  
       bundle.js   8.28 KiB       1  [emitted]  main
     Entrypoint main = bundle.js
     chunk    {0} 0.bundle.js 118 bytes <{0}> <{1}> >{0}< [rendered]
-     [0] ./d.js 22 bytes {0} [built]
-     [1] ./e.js 22 bytes {0} [built]
-     [2] ./a.js 22 bytes {0} [built]
-     [3] ./b.js 22 bytes {0} [built]
-     [4] ./c.js 30 bytes {0} [built]
+     [1] ./a.js 22 bytes {0} [built]
+     [2] ./b.js 22 bytes {0} [built]
+     [3] ./c.js 30 bytes {0} [built]
+     [4] ./d.js 22 bytes {0} [built]
+     [5] ./e.js 22 bytes {0} [built]
     chunk    {1} bundle.js (main) 73 bytes >{0}< [entry] [rendered]
-     [5] ./index.js 73 bytes {1} [built]
+     [0] ./index.js 73 bytes {1} [built]
 Child 3 chunks:
-    Hash: d4554dbae635e8619c03
+    Hash: 08074f8efde660b3b349
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
     0.bundle.js  494 bytes       0  [emitted]  
-    1.bundle.js  245 bytes       1  [emitted]  
+    1.bundle.js  232 bytes       1  [emitted]  
       bundle.js   8.28 KiB       2  [emitted]  main
     Entrypoint main = bundle.js
     chunk    {0} 0.bundle.js 74 bytes <{0}> <{2}> >{0}< >{1}< [rendered]
-     [0] ./d.js 22 bytes {0} [built]
-     [2] ./a.js 22 bytes {0} [built]
-     [4] ./c.js 30 bytes {0} [built]
+     [1] ./a.js 22 bytes {0} [built]
+     [3] ./c.js 30 bytes {0} [built]
+     [4] ./d.js 22 bytes {0} [built]
     chunk    {1} 1.bundle.js 44 bytes <{0}> <{2}> [rendered]
-     [1] ./e.js 22 bytes {1} [built]
-     [3] ./b.js 22 bytes {1} [built]
+     [2] ./b.js 22 bytes {1} [built]
+     [5] ./e.js 22 bytes {1} [built]
     chunk    {2} bundle.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
-     [5] ./index.js 73 bytes {2} [built]
+     [0] ./index.js 73 bytes {2} [built]
 Child 4 chunks:
-    Hash: ae9e4a73fc96c164d6f0
+    Hash: f7c7c171ed4a3a7adb19
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
-    0.bundle.js  236 bytes       0  [emitted]  
-    1.bundle.js  245 bytes       1  [emitted]  
-    2.bundle.js  323 bytes       2  [emitted]  
-      bundle.js   8.28 KiB       3  [emitted]  main
+    0.bundle.js  254 bytes       0  [emitted]  
+    1.bundle.js  232 bytes       1  [emitted]  
+      bundle.js   8.28 KiB       2  [emitted]  main
+    3.bundle.js  323 bytes       3  [emitted]  
     Entrypoint main = bundle.js
     chunk    {0} 0.bundle.js 44 bytes <{2}> <{3}> [rendered]
-     [0] ./d.js 22 bytes {0} [built]
-     [2] ./a.js 22 bytes {0} [built]
+     [1] ./a.js 22 bytes {0} [built]
+     [4] ./d.js 22 bytes {0} [built]
     chunk    {1} 1.bundle.js 44 bytes <{2}> <{3}> [rendered]
-     [1] ./e.js 22 bytes {1} [built]
-     [3] ./b.js 22 bytes {1} [built]
-    chunk    {2} 2.bundle.js 30 bytes <{3}> >{0}< >{1}< [rendered]
-     [4] ./c.js 30 bytes {2} [built]
-    chunk    {3} bundle.js (main) 73 bytes >{0}< >{1}< >{2}< [entry] [rendered]
-     [5] ./index.js 73 bytes {3} [built]"
+     [2] ./b.js 22 bytes {1} [built]
+     [5] ./e.js 22 bytes {1} [built]
+    chunk    {2} bundle.js (main) 73 bytes >{0}< >{1}< >{3}< [entry] [rendered]
+     [0] ./index.js 73 bytes {2} [built]
+    chunk    {3} 3.bundle.js 30 bytes <{2}> >{0}< >{1}< [rendered]
+     [3] ./c.js 30 bytes {3} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for max-modules 1`] = `
@@ -1268,107 +1268,107 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for module-assets 1`] = `
-"Hash: ceae20d6bebac3a4387e
+"Hash: bd21dd593eac70b70df9
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint main = main.js
-chunk    {0} 0.js 68 bytes <{1}> [rendered]
- [0] ./node_modules/a/1.png 51 bytes {0} [built] [1 asset]
- [1] ./node_modules/a/index.js 17 bytes {0} [built]
-chunk    {1} main.js (main) 12 bytes >{0}< [entry] [rendered]
- [2] ./index.js 12 bytes {1} [built]
-[0] ./node_modules/a/1.png 51 bytes {0} [built] [1 asset]
-[1] ./node_modules/a/index.js 17 bytes {0} [built]
-[2] ./index.js 12 bytes {1} [built]"
+chunk    {0} main.js (main) 12 bytes >{1}< [entry] [rendered]
+ [0] ./index.js 12 bytes {0} [built]
+chunk    {1} 1.js 68 bytes <{0}> [rendered]
+ [1] ./node_modules/a/index.js 17 bytes {1} [built]
+ [2] ./node_modules/a/1.png 51 bytes {1} [built] [1 asset]
+[0] ./index.js 12 bytes {0} [built]
+[1] ./node_modules/a/index.js 17 bytes {1} [built]
+[2] ./node_modules/a/1.png 51 bytes {1} [built] [1 asset]"
 `;
 
 exports[`StatsTestCases should print correct stats for module-deduplication 1`] = `
 "Asset       Size  Chunks             Chunk Names
- 0.js  730 bytes    0, 4  [emitted]  
- 1.js  730 bytes    1, 5  [emitted]  
- 2.js  730 bytes    2, 3  [emitted]  
- 3.js  661 bytes       3  [emitted]  
- 4.js  661 bytes       4  [emitted]  
- 5.js  661 bytes       5  [emitted]  
-e1.js   9.42 KiB       6  [emitted]  e1
-e2.js   9.44 KiB       7  [emitted]  e2
-e3.js   9.46 KiB       8  [emitted]  e3
+ 0.js  730 bytes    0, 7  [emitted]  
+ 1.js  730 bytes    1, 8  [emitted]  
+ 2.js  730 bytes    2, 6  [emitted]  
+e1.js   9.42 KiB       3  [emitted]  e1
+e2.js   9.44 KiB       4  [emitted]  e2
+e3.js   9.46 KiB       5  [emitted]  e3
+ 6.js  661 bytes       6  [emitted]  
+ 7.js  661 bytes       7  [emitted]  
+ 8.js  661 bytes       8  [emitted]  
 Entrypoint e1 = e1.js
 Entrypoint e2 = e2.js
 Entrypoint e3 = e3.js
-chunk    {0} 0.js 37 bytes <{6}> <{8}> [rendered]
- [3] ./f.js 9 bytes {0} {7} [built]
- [6] ./async2.js 28 bytes {0} {4} [built]
-chunk    {1} 1.js 37 bytes <{6}> <{7}> [rendered]
- [4] ./h.js 9 bytes {1} {8} [built]
- [7] ./async3.js 28 bytes {1} {5} [built]
-chunk    {2} 2.js 37 bytes <{7}> <{8}> [rendered]
- [2] ./d.js 9 bytes {2} {6} [built]
- [5] ./async1.js 28 bytes {2} {3} [built]
-chunk    {3} 3.js 28 bytes <{6}> [rendered]
- [5] ./async1.js 28 bytes {2} {3} [built]
-chunk    {4} 4.js 28 bytes <{7}> [rendered]
- [6] ./async2.js 28 bytes {0} {4} [built]
-chunk    {5} 5.js 28 bytes <{8}> [rendered]
- [7] ./async3.js 28 bytes {1} {5} [built]
-chunk    {6} e1.js (e1) 152 bytes >{0}< >{1}< >{3}< [entry] [rendered]
- [0] ./b.js 9 bytes {6} {7} {8} [built]
- [1] ./a.js 9 bytes {6} {7} {8} [built]
- [2] ./d.js 9 bytes {2} {6} [built]
- [8] ./e1.js 116 bytes {6} [built]
- [9] ./c.js 9 bytes {6} [built]
-chunk    {7} e2.js (e2) 152 bytes >{1}< >{2}< >{4}< [entry] [rendered]
-  [0] ./b.js 9 bytes {6} {7} {8} [built]
-  [1] ./a.js 9 bytes {6} {7} {8} [built]
-  [3] ./f.js 9 bytes {0} {7} [built]
- [10] ./e2.js 116 bytes {7} [built]
- [11] ./e.js 9 bytes {7} [built]
-chunk    {8} e3.js (e3) 152 bytes >{0}< >{2}< >{5}< [entry] [rendered]
-  [0] ./b.js 9 bytes {6} {7} {8} [built]
-  [1] ./a.js 9 bytes {6} {7} {8} [built]
-  [4] ./h.js 9 bytes {1} {8} [built]
- [12] ./e3.js 116 bytes {8} [built]
- [13] ./g.js 9 bytes {8} [built]"
+chunk    {0} 0.js 37 bytes <{3}> <{5}> [rendered]
+ [3] ./async2.js 28 bytes {0} {7} [built]
+ [6] ./f.js 9 bytes {0} {4} [built]
+chunk    {1} 1.js 37 bytes <{3}> <{4}> [rendered]
+ [4] ./async3.js 28 bytes {1} {8} [built]
+ [7] ./h.js 9 bytes {1} {5} [built]
+chunk    {2} 2.js 37 bytes <{4}> <{5}> [rendered]
+ [2] ./async1.js 28 bytes {2} {6} [built]
+ [5] ./d.js 9 bytes {2} {3} [built]
+chunk    {3} e1.js (e1) 152 bytes >{0}< >{1}< >{6}< [entry] [rendered]
+ [0] ./b.js 9 bytes {3} {4} {5} [built]
+ [1] ./a.js 9 bytes {3} {4} {5} [built]
+ [5] ./d.js 9 bytes {2} {3} [built]
+ [8] ./e1.js 116 bytes {3} [built]
+ [9] ./c.js 9 bytes {3} [built]
+chunk    {4} e2.js (e2) 152 bytes >{1}< >{2}< >{7}< [entry] [rendered]
+  [0] ./b.js 9 bytes {3} {4} {5} [built]
+  [1] ./a.js 9 bytes {3} {4} {5} [built]
+  [6] ./f.js 9 bytes {0} {4} [built]
+ [10] ./e2.js 116 bytes {4} [built]
+ [11] ./e.js 9 bytes {4} [built]
+chunk    {5} e3.js (e3) 152 bytes >{0}< >{2}< >{8}< [entry] [rendered]
+  [0] ./b.js 9 bytes {3} {4} {5} [built]
+  [1] ./a.js 9 bytes {3} {4} {5} [built]
+  [7] ./h.js 9 bytes {1} {5} [built]
+ [12] ./e3.js 116 bytes {5} [built]
+ [13] ./g.js 9 bytes {5} [built]
+chunk    {6} 6.js 28 bytes <{3}> [rendered]
+ [2] ./async1.js 28 bytes {2} {6} [built]
+chunk    {7} 7.js 28 bytes <{4}> [rendered]
+ [3] ./async2.js 28 bytes {0} {7} [built]
+chunk    {8} 8.js 28 bytes <{5}> [rendered]
+ [4] ./async3.js 28 bytes {1} {8} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for module-deduplication-named 1`] = `
 "    Asset       Size  Chunks             Chunk Names
-async1.js  818 bytes       0  [emitted]  async1
-async2.js  818 bytes       1  [emitted]  async2
-async3.js  818 bytes       2  [emitted]  async3
-    e1.js   9.31 KiB       3  [emitted]  e1
-    e2.js   9.33 KiB       4  [emitted]  e2
-    e3.js   9.35 KiB       5  [emitted]  e3
+    e1.js   9.28 KiB       0  [emitted]  e1
+    e2.js    9.3 KiB       1  [emitted]  e2
+    e3.js   9.32 KiB       2  [emitted]  e3
+async1.js  820 bytes       3  [emitted]  async1
+async2.js  820 bytes       4  [emitted]  async2
+async3.js  820 bytes       5  [emitted]  async3
 Entrypoint e1 = e1.js
 Entrypoint e2 = e2.js
 Entrypoint e3 = e3.js
-chunk    {0} async1.js (async1) 89 bytes <{2}> <{3}> >{1}< [rendered]
+chunk    {0} e1.js (e1) 144 bytes >{3}< [entry] [rendered]
+ [0] ./b.js 9 bytes {0} {1} {2} [built]
+ [1] ./a.js 9 bytes {0} {1} {2} [built]
  [2] ./d.js 9 bytes {0} {3} [built]
- [5] ./async1.js 80 bytes {0} [built]
-chunk    {1} async2.js (async2) 89 bytes <{0}> <{4}> >{2}< [rendered]
+ [5] ./e1.js 108 bytes {0} [built]
+ [6] ./c.js 9 bytes {0} [built]
+chunk    {1} e2.js (e2) 144 bytes >{4}< [entry] [rendered]
+ [0] ./b.js 9 bytes {0} {1} {2} [built]
+ [1] ./a.js 9 bytes {0} {1} {2} [built]
  [3] ./f.js 9 bytes {1} {4} [built]
- [6] ./async2.js 80 bytes {1} [built]
-chunk    {2} async3.js (async3) 89 bytes <{1}> <{5}> >{0}< [rendered]
- [4] ./h.js 9 bytes {2} {5} [built]
- [7] ./async3.js 80 bytes {2} [built]
-chunk    {3} e1.js (e1) 144 bytes >{0}< [entry] [rendered]
- [0] ./b.js 9 bytes {3} {4} {5} [built]
- [1] ./a.js 9 bytes {3} {4} {5} [built]
- [2] ./d.js 9 bytes {0} {3} [built]
- [8] ./e1.js 108 bytes {3} [built]
- [9] ./c.js 9 bytes {3} [built]
-chunk    {4} e2.js (e2) 144 bytes >{1}< [entry] [rendered]
-  [0] ./b.js 9 bytes {3} {4} {5} [built]
-  [1] ./a.js 9 bytes {3} {4} {5} [built]
-  [3] ./f.js 9 bytes {1} {4} [built]
- [10] ./e2.js 108 bytes {4} [built]
- [11] ./e.js 9 bytes {4} [built]
-chunk    {5} e3.js (e3) 144 bytes >{2}< [entry] [rendered]
-  [0] ./b.js 9 bytes {3} {4} {5} [built]
-  [1] ./a.js 9 bytes {3} {4} {5} [built]
+ [7] ./e2.js 108 bytes {1} [built]
+ [8] ./e.js 9 bytes {1} [built]
+chunk    {2} e3.js (e3) 144 bytes >{5}< [entry] [rendered]
+  [0] ./b.js 9 bytes {0} {1} {2} [built]
+  [1] ./a.js 9 bytes {0} {1} {2} [built]
   [4] ./h.js 9 bytes {2} {5} [built]
- [12] ./e3.js 108 bytes {5} [built]
- [13] ./g.js 9 bytes {5} [built]"
+  [9] ./e3.js 108 bytes {2} [built]
+ [10] ./g.js 9 bytes {2} [built]
+chunk    {3} async1.js (async1) 89 bytes <{0}> <{5}> >{4}< [rendered]
+  [2] ./d.js 9 bytes {0} {3} [built]
+ [11] ./async1.js 80 bytes {3} [built]
+chunk    {4} async2.js (async2) 89 bytes <{1}> <{3}> >{5}< [rendered]
+  [3] ./f.js 9 bytes {1} {4} [built]
+ [12] ./async2.js 80 bytes {4} [built]
+chunk    {5} async3.js (async3) 89 bytes <{2}> <{4}> >{3}< [rendered]
+  [4] ./h.js 9 bytes {2} {5} [built]
+ [13] ./async3.js 80 bytes {5} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for module-trace-disabled-in-error 1`] = `
@@ -1402,51 +1402,51 @@ exports[`StatsTestCases should print correct stats for named-chunk-groups 1`] = 
     Chunk Group async-a = async-a~async-b.js async-a.js
     Chunk Group async-b = async-a~async-b.js async-b.js
     Chunk Group async-c = vendors.js async-c.js
-    chunk    {0} async-a~async-b.js (async-a~async-b) 133 bytes <{5}> ={1}= ={2}= [rendered] split chunk (cache group: default) (name: async-a~async-b)
-        > ./a [6] ./index.js 1:0-47
-        > ./b [6] ./index.js 2:0-47
-     [0] ./shared.js 133 bytes {0} [built]
-    chunk    {1} async-a.js (async-a) 40 bytes <{5}> ={0}= [rendered]
-        > ./a [6] ./index.js 1:0-47
-     [3] ./a.js 40 bytes {1} [built]
-    chunk    {2} async-b.js (async-b) 40 bytes <{5}> ={0}= [rendered]
-        > ./b [6] ./index.js 2:0-47
-     [4] ./b.js 40 bytes {2} [built]
-    chunk    {3} async-c.js (async-c) 45 bytes <{5}> ={4}= [rendered]
-        > ./c [6] ./index.js 3:0-47
-     [5] ./c.js 45 bytes {3} [built]
-    chunk    {4} vendors.js (vendors) 40 bytes <{5}> ={3}= [rendered] split chunk (cache group: vendors) (name: vendors)
-        > ./c [6] ./index.js 3:0-47
-     [1] ./node_modules/x.js 20 bytes {4} [built]
-     [2] ./node_modules/y.js 20 bytes {4} [built]
-    chunk    {5} main.js (main) 146 bytes >{0}< >{1}< >{2}< >{3}< >{4}< [entry] [rendered]
+    chunk    {0} async-a~async-b.js (async-a~async-b) 133 bytes <{1}> ={2}= ={3}= [rendered] split chunk (cache group: default) (name: async-a~async-b)
+        > ./a [0] ./index.js 1:0-47
+        > ./b [0] ./index.js 2:0-47
+     [4] ./shared.js 133 bytes {0} [built]
+    chunk    {1} main.js (main) 146 bytes >{0}< >{2}< >{3}< >{4}< >{5}< [entry] [rendered]
         > ./ main
-     [6] ./index.js 146 bytes {5} [built]
+     [0] ./index.js 146 bytes {1} [built]
+    chunk    {2} async-a.js (async-a) 40 bytes <{1}> ={0}= [rendered]
+        > ./a [0] ./index.js 1:0-47
+     [1] ./a.js 40 bytes {2} [built]
+    chunk    {3} async-b.js (async-b) 40 bytes <{1}> ={0}= [rendered]
+        > ./b [0] ./index.js 2:0-47
+     [2] ./b.js 40 bytes {3} [built]
+    chunk    {4} async-c.js (async-c) 45 bytes <{1}> ={5}= [rendered]
+        > ./c [0] ./index.js 3:0-47
+     [3] ./c.js 45 bytes {4} [built]
+    chunk    {5} vendors.js (vendors) 40 bytes <{1}> ={4}= [rendered] split chunk (cache group: vendors) (name: vendors)
+        > ./c [0] ./index.js 3:0-47
+     [5] ./node_modules/x.js 20 bytes {5} [built]
+     [6] ./node_modules/y.js 20 bytes {5} [built]
 Child
     Entrypoint main = main.js
     Chunk Group async-a = async-a~async-b.js async-a.js
     Chunk Group async-b = async-a~async-b.js async-b.js
     Chunk Group async-c = vendors.js async-c.js
-    chunk    {0} async-a~async-b.js (async-a~async-b) 133 bytes <{5}> ={1}= ={2}= [rendered] split chunk (cache group: default) (name: async-a~async-b)
-        > ./a [6] ./index.js 1:0-47
-        > ./b [6] ./index.js 2:0-47
-     [0] ./shared.js 133 bytes {0} [built]
-    chunk    {1} async-a.js (async-a) 40 bytes <{5}> ={0}= [rendered]
-        > ./a [6] ./index.js 1:0-47
-     [3] ./a.js 40 bytes {1} [built]
-    chunk    {2} async-b.js (async-b) 40 bytes <{5}> ={0}= [rendered]
-        > ./b [6] ./index.js 2:0-47
-     [4] ./b.js 40 bytes {2} [built]
-    chunk    {3} async-c.js (async-c) 45 bytes <{5}> ={4}= [rendered]
-        > ./c [6] ./index.js 3:0-47
-     [5] ./c.js 45 bytes {3} [built]
-    chunk    {4} vendors.js (vendors) 40 bytes <{5}> ={3}= [rendered] split chunk (cache group: vendors) (name: vendors)
-        > ./c [6] ./index.js 3:0-47
-     [1] ./node_modules/x.js 20 bytes {4} [built]
-     [2] ./node_modules/y.js 20 bytes {4} [built]
-    chunk    {5} main.js (main) 146 bytes >{0}< >{1}< >{2}< >{3}< >{4}< [entry] [rendered]
+    chunk    {0} async-a~async-b.js (async-a~async-b) 133 bytes <{1}> ={2}= ={3}= [rendered] split chunk (cache group: default) (name: async-a~async-b)
+        > ./a [0] ./index.js 1:0-47
+        > ./b [0] ./index.js 2:0-47
+     [4] ./shared.js 133 bytes {0} [built]
+    chunk    {1} main.js (main) 146 bytes >{0}< >{2}< >{3}< >{4}< >{5}< [entry] [rendered]
         > ./ main
-     [6] ./index.js 146 bytes {5} [built]"
+     [0] ./index.js 146 bytes {1} [built]
+    chunk    {2} async-a.js (async-a) 40 bytes <{1}> ={0}= [rendered]
+        > ./a [0] ./index.js 1:0-47
+     [1] ./a.js 40 bytes {2} [built]
+    chunk    {3} async-b.js (async-b) 40 bytes <{1}> ={0}= [rendered]
+        > ./b [0] ./index.js 2:0-47
+     [2] ./b.js 40 bytes {3} [built]
+    chunk    {4} async-c.js (async-c) 45 bytes <{1}> ={5}= [rendered]
+        > ./c [0] ./index.js 3:0-47
+     [3] ./c.js 45 bytes {4} [built]
+    chunk    {5} vendors.js (vendors) 40 bytes <{1}> ={4}= [rendered] split chunk (cache group: vendors) (name: vendors)
+        > ./c [0] ./index.js 3:0-47
+     [5] ./node_modules/x.js 20 bytes {5} [built]
+     [6] ./node_modules/y.js 20 bytes {5} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for named-chunks-plugin 1`] = `
@@ -1464,17 +1464,17 @@ Entrypoint entry = vendor.js entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for named-chunks-plugin-async 1`] = `
-"Hash: 8c348decadc8408ab829
+"Hash: 70179b5d2d5e089a82e9
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
                      Asset       Size                   Chunks             Chunk Names
-chunk-containing-__a_js.js  313 bytes  chunk-containing-__a_js  [emitted]  
-chunk-containing-__b_js.js  173 bytes  chunk-containing-__b_js  [emitted]  
+chunk-containing-__a_js.js  307 bytes  chunk-containing-__a_js  [emitted]  
+chunk-containing-__b_js.js  182 bytes  chunk-containing-__b_js  [emitted]  
                   entry.js   8.18 KiB                    entry  [emitted]  entry
 Entrypoint entry = entry.js
-[0] ./modules/b.js 22 bytes {chunk-containing-__b_js} [built]
-[1] ./modules/a.js 37 bytes {chunk-containing-__a_js} [built]
-[2] ./entry.js 47 bytes {entry} [built]"
+[0] ./entry.js 47 bytes {entry} [built]
+[1] ./modules/b.js 22 bytes {chunk-containing-__b_js} [built]
+[2] ./modules/a.js 37 bytes {chunk-containing-__a_js} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for no-emit-on-errors-plugin-with-child-error 1`] = `
@@ -1500,53 +1500,53 @@ Child child:
 `;
 
 exports[`StatsTestCases should print correct stats for optimize-chunks 1`] = `
-"Hash: 8d1bfb62ba8ed42918d6
+"Hash: 79cd36807b8c3ac6b11e
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
             Asset       Size  Chunks             Chunk Names
           cir1.js  299 bytes       0  [emitted]  cir1
-            ab.js  183 bytes       1  [emitted]  ab
-           abd.js  268 bytes    2, 1  [emitted]  abd
-          cir2.js  299 bytes       3  [emitted]  cir2
-          main.js   9.09 KiB       4  [emitted]  main
+          main.js   9.09 KiB       1  [emitted]  main
+            ab.js  183 bytes       2  [emitted]  ab
+           abd.js  250 bytes    3, 2  [emitted]  abd
+          cir2.js  299 bytes       4  [emitted]  cir2
       ac in ab.js  130 bytes       5  [emitted]  ac in ab
-         chunk.js  190 bytes    6, 5  [emitted]  chunk
-cir2 from cir1.js  359 bytes    7, 3  [emitted]  cir2 from cir1
+         chunk.js  212 bytes    6, 5  [emitted]  chunk
+cir2 from cir1.js  359 bytes    7, 4  [emitted]  cir2 from cir1
 Entrypoint main = main.js
-chunk    {0} cir1.js (cir1) 81 bytes <{3}> <{4}> >{7}< [rendered]
-    > [3] ./circular2.js 1:0-79
-    > [3] ./circular2.js 1:0-79
-    > [8] ./index.js 13:0-54
- [2] ./circular1.js 81 bytes {0} [built]
-chunk    {1} ab.js (ab) 0 bytes <{4}> >{5}< [rendered]
-    > [8] ./index.js 1:0-6:8
- [0] ./modules/a.js 0 bytes {1} {2} [built]
- [1] ./modules/b.js 0 bytes {1} {2} [built]
-chunk    {2} abd.js (abd) 0 bytes <{4}> >{6}< [rendered]
-    > [8] ./index.js 8:0-11:9
- [0] ./modules/a.js 0 bytes {1} {2} [built]
- [1] ./modules/b.js 0 bytes {1} {2} [built]
- [5] ./modules/d.js 0 bytes {2} {6} [built]
-chunk    {3} cir2.js (cir2) 81 bytes <{4}> >{0}< [rendered]
-    > [8] ./index.js 14:0-54
- [3] ./circular2.js 81 bytes {3} {7} [built]
-chunk    {4} main.js (main) 523 bytes >{0}< >{1}< >{2}< >{3}< [entry] [rendered]
+chunk    {0} cir1.js (cir1) 81 bytes <{1}> <{4}> >{7}< [rendered]
+    > [5] ./index.js 13:0-54
+    > [7] ./circular2.js 1:0-79
+    > [7] ./circular2.js 1:0-79
+ [6] ./circular1.js 81 bytes {0} [built]
+chunk    {1} main.js (main) 523 bytes >{0}< >{2}< >{3}< >{4}< [entry] [rendered]
     > ./index main
- [4] ./modules/f.js 0 bytes {4} [built]
- [8] ./index.js 523 bytes {4} [built]
-chunk    {5} ac in ab.js (ac in ab) 0 bytes <{1}> >{6}< [rendered]
-    > [8] ./index.js 2:1-5:15
- [6] ./modules/c.js 0 bytes {5} {6} [built]
-chunk    {6} chunk.js (chunk) 0 bytes <{2}> <{5}> [rendered]
-    > [8] ./index.js 3:2-4:13
-    > [8] ./index.js 9:1-10:12
- [5] ./modules/d.js 0 bytes {2} {6} [built]
- [6] ./modules/c.js 0 bytes {5} {6} [built]
+ [2] ./modules/f.js 0 bytes {1} [built]
+ [5] ./index.js 523 bytes {1} [built]
+chunk    {2} ab.js (ab) 0 bytes <{1}> >{5}< [rendered]
+    > [5] ./index.js 1:0-6:8
+ [0] ./modules/a.js 0 bytes {2} {3} [built]
+ [1] ./modules/b.js 0 bytes {2} {3} [built]
+chunk    {3} abd.js (abd) 0 bytes <{1}> >{6}< [rendered]
+    > [5] ./index.js 8:0-11:9
+ [0] ./modules/a.js 0 bytes {2} {3} [built]
+ [1] ./modules/b.js 0 bytes {2} {3} [built]
+ [3] ./modules/d.js 0 bytes {3} {6} [built]
+chunk    {4} cir2.js (cir2) 81 bytes <{1}> >{0}< [rendered]
+    > [5] ./index.js 14:0-54
+ [7] ./circular2.js 81 bytes {4} {7} [built]
+chunk    {5} ac in ab.js (ac in ab) 0 bytes <{2}> >{6}< [rendered]
+    > [5] ./index.js 2:1-5:15
+ [4] ./modules/c.js 0 bytes {5} {6} [built]
+chunk    {6} chunk.js (chunk) 0 bytes <{3}> <{5}> [rendered]
+    > [5] ./index.js 3:2-4:13
+    > [5] ./index.js 9:1-10:12
+ [3] ./modules/d.js 0 bytes {3} {6} [built]
+ [4] ./modules/c.js 0 bytes {5} {6} [built]
 chunk    {7} cir2 from cir1.js (cir2 from cir1) 81 bytes <{0}> [rendered]
-    > [2] ./circular1.js 1:0-79
-    > [2] ./circular1.js 1:0-79
- [3] ./circular2.js 81 bytes {3} {7} [built]
- [7] ./modules/e.js 0 bytes {7} [built]"
+    > [6] ./circular1.js 1:0-79
+    > [6] ./circular1.js 1:0-79
+ [7] ./circular2.js 81 bytes {4} {7} [built]
+ [8] ./modules/e.js 0 bytes {7} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for parse-error 1`] = `
@@ -1679,34 +1679,34 @@ exports[`StatsTestCases should print correct stats for performance-disabled 1`] 
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22><CLR=BOLD>Chunk Names</CLR>
-   <CLR=32,BOLD>0.js</CLR>  152 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-   <CLR=32,BOLD>1.js</CLR>  289 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-<CLR=32,BOLD>main.js</CLR>    301 KiB       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
-   <CLR=32,BOLD>3.js</CLR>  227 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
+<CLR=32,BOLD>main.js</CLR>    301 KiB       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
+   <CLR=32,BOLD>1.js</CLR>  152 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
+   <CLR=32,BOLD>2.js</CLR>  289 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
+   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
 Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
-[0] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[1] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[2] <CLR=BOLD>./b.js</CLR> 22 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
-[3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
-[4] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
-[5] <CLR=BOLD>./a.js</CLR> 293 KiB {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>"
+[0] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+[1] <CLR=BOLD>./a.js</CLR> 293 KiB {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+[2] <CLR=BOLD>./b.js</CLR> 22 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
+[3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
+[4] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+[5] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>"
 `;
 
 exports[`StatsTestCases should print correct stats for performance-error 1`] = `
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-   <CLR=32,BOLD>0.js</CLR>  152 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>1.js</CLR>  289 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
-   <CLR=32,BOLD>3.js</CLR>  227 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+   <CLR=32,BOLD>1.js</CLR>  152 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>2.js</CLR>  289 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
-[0] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[1] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[2] <CLR=BOLD>./b.js</CLR> 22 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
-[3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
-[4] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
-[5] <CLR=BOLD>./a.js</CLR> 293 KiB {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
+[0] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+[1] <CLR=BOLD>./a.js</CLR> 293 KiB {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+[2] <CLR=BOLD>./b.js</CLR> 22 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
+[3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
+[4] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+[5] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 
 <CLR=31,BOLD>ERROR in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
@@ -1755,17 +1755,17 @@ exports[`StatsTestCases should print correct stats for performance-no-hints 1`] 
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-   <CLR=32,BOLD>0.js</CLR>  152 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>1.js</CLR>  289 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
-   <CLR=32,BOLD>3.js</CLR>  227 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+   <CLR=32,BOLD>1.js</CLR>  152 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>2.js</CLR>  289 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
-[0] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[1] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[2] <CLR=BOLD>./b.js</CLR> 22 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
-[3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
-[4] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
-[5] <CLR=BOLD>./a.js</CLR> 293 KiB {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>"
+[0] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+[1] <CLR=BOLD>./a.js</CLR> 293 KiB {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+[2] <CLR=BOLD>./b.js</CLR> 22 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
+[3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
+[4] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+[5] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>"
 `;
 
 exports[`StatsTestCases should print correct stats for performance-oversize-limit-error 1`] = `
@@ -1801,85 +1801,85 @@ For more info visit https://webpack.js.org/guides/code-splitting/</CLR>"
 
 exports[`StatsTestCases should print correct stats for prefetch 1`] = `
 "         Asset       Size  Chunks             Chunk Names
- prefetched.js  475 bytes       0  [emitted]  prefetched
-     normal.js  130 bytes       1  [emitted]  normal
-prefetched2.js  127 bytes       2  [emitted]  prefetched2
-prefetched3.js  130 bytes       3  [emitted]  prefetched3
-       main.js   9.66 KiB       4  [emitted]  main
-      inner.js  136 bytes       5  [emitted]  inner
-     inner2.js  201 bytes       6  [emitted]  inner2
+       main.js   9.66 KiB       0  [emitted]  main
+ prefetched.js  475 bytes       1  [emitted]  prefetched
+     normal.js  130 bytes       2  [emitted]  normal
+prefetched2.js  127 bytes       3  [emitted]  prefetched2
+prefetched3.js  130 bytes       4  [emitted]  prefetched3
+      inner.js  130 bytes       5  [emitted]  inner
+     inner2.js  188 bytes       6  [emitted]  inner2
 Entrypoint main = main.js (prefetch: prefetched2.js prefetched.js prefetched3.js)
-chunk    {0} prefetched.js (prefetched) 228 bytes <{4}> >{5}< >{6}< (prefetch: {6} {5}) [rendered]
-chunk    {1} normal.js (normal) 0 bytes <{4}> [rendered]
-chunk    {2} prefetched2.js (prefetched2) 0 bytes <{4}> [rendered]
-chunk    {3} prefetched3.js (prefetched3) 0 bytes <{4}> [rendered]
-chunk    {4} main.js (main) 436 bytes >{0}< >{1}< >{2}< >{3}< (prefetch: {2} {0} {3}) [entry] [rendered]
-chunk    {5} inner.js (inner) 0 bytes <{0}> [rendered]
-chunk    {6} inner2.js (inner2) 0 bytes <{0}> [rendered]"
+chunk    {0} main.js (main) 436 bytes >{1}< >{2}< >{3}< >{4}< (prefetch: {3} {1} {4}) [entry] [rendered]
+chunk    {1} prefetched.js (prefetched) 228 bytes <{0}> >{5}< >{6}< (prefetch: {6} {5}) [rendered]
+chunk    {2} normal.js (normal) 0 bytes <{0}> [rendered]
+chunk    {3} prefetched2.js (prefetched2) 0 bytes <{0}> [rendered]
+chunk    {4} prefetched3.js (prefetched3) 0 bytes <{0}> [rendered]
+chunk    {5} inner.js (inner) 0 bytes <{1}> [rendered]
+chunk    {6} inner2.js (inner2) 0 bytes <{1}> [rendered]"
 `;
 
 exports[`StatsTestCases should print correct stats for prefetch-preload-mixed 1`] = `
-"chunk    {0} a.js (a) 136 bytes <{3}> >{4}< >{5}< (prefetch: {4} {5}) [rendered]
-chunk    {1} b.js (b) 203 bytes <{3}> >{6}< >{7}< >{8}< (prefetch: {6} {8}) (preload: {7}) [rendered]
-chunk    {2} c.js (c) 134 bytes <{3}> >{10}< >{9}< (preload: {9} {10}) [rendered]
-chunk    {3} main.js (main) 195 bytes >{0}< >{1}< >{2}< (prefetch: {0} {1} {2}) [entry] [rendered]
-chunk    {4} a1.js (a1) 0 bytes <{0}> [rendered]
-chunk    {5} a2.js (a2) 0 bytes <{0}> [rendered]
-chunk    {6} b1.js (b1) 0 bytes <{1}> [rendered]
-chunk    {7} b2.js (b2) 0 bytes <{1}> [rendered]
-chunk    {8} b3.js (b3) 0 bytes <{1}> [rendered]
-chunk    {9} c1.js (c1) 0 bytes <{2}> [rendered]
-chunk   {10} c2.js (c2) 0 bytes <{2}> [rendered]"
+"chunk    {0} main.js (main) 195 bytes >{1}< >{2}< >{3}< (prefetch: {1} {2} {3}) [entry] [rendered]
+chunk    {1} a.js (a) 136 bytes <{0}> >{4}< >{5}< (prefetch: {4} {5}) [rendered]
+chunk    {2} b.js (b) 203 bytes <{0}> >{6}< >{7}< >{8}< (prefetch: {6} {8}) (preload: {7}) [rendered]
+chunk    {3} c.js (c) 134 bytes <{0}> >{9}< >{10}< (preload: {9} {10}) [rendered]
+chunk    {4} a1.js (a1) 0 bytes <{1}> [rendered]
+chunk    {5} a2.js (a2) 0 bytes <{1}> [rendered]
+chunk    {6} b1.js (b1) 0 bytes <{2}> [rendered]
+chunk    {7} b2.js (b2) 0 bytes <{2}> [rendered]
+chunk    {8} b3.js (b3) 0 bytes <{2}> [rendered]
+chunk    {9} c1.js (c1) 0 bytes <{3}> [rendered]
+chunk   {10} c2.js (c2) 0 bytes <{3}> [rendered]"
 `;
 
 exports[`StatsTestCases should print correct stats for preload 1`] = `
 "        Asset       Size  Chunks             Chunk Names
- preloaded.js  467 bytes       0  [emitted]  preloaded
-    normal.js  130 bytes       1  [emitted]  normal
-preloaded2.js  127 bytes       2  [emitted]  preloaded2
-preloaded3.js  130 bytes       3  [emitted]  preloaded3
-      main.js   9.86 KiB       4  [emitted]  main
-     inner.js  136 bytes       5  [emitted]  inner
-    inner2.js  201 bytes       6  [emitted]  inner2
+      main.js   9.87 KiB       0  [emitted]  main
+ preloaded.js  467 bytes       1  [emitted]  preloaded
+    normal.js  130 bytes       2  [emitted]  normal
+preloaded2.js  127 bytes       3  [emitted]  preloaded2
+preloaded3.js  130 bytes       4  [emitted]  preloaded3
+     inner.js  130 bytes       5  [emitted]  inner
+    inner2.js  188 bytes       6  [emitted]  inner2
 Entrypoint main = main.js (preload: preloaded2.js preloaded.js preloaded3.js)
-chunk    {0} preloaded.js (preloaded) 226 bytes <{4}> >{5}< >{6}< (preload: {6} {5}) [rendered]
-chunk    {1} normal.js (normal) 0 bytes <{4}> [rendered]
-chunk    {2} preloaded2.js (preloaded2) 0 bytes <{4}> [rendered]
-chunk    {3} preloaded3.js (preloaded3) 0 bytes <{4}> [rendered]
-chunk    {4} main.js (main) 424 bytes >{0}< >{1}< >{2}< >{3}< (preload: {2} {0} {3}) [entry] [rendered]
-chunk    {5} inner.js (inner) 0 bytes <{0}> [rendered]
-chunk    {6} inner2.js (inner2) 0 bytes <{0}> [rendered]"
+chunk    {0} main.js (main) 424 bytes >{1}< >{2}< >{3}< >{4}< (preload: {3} {1} {4}) [entry] [rendered]
+chunk    {1} preloaded.js (preloaded) 226 bytes <{0}> >{5}< >{6}< (preload: {6} {5}) [rendered]
+chunk    {2} normal.js (normal) 0 bytes <{0}> [rendered]
+chunk    {3} preloaded2.js (preloaded2) 0 bytes <{0}> [rendered]
+chunk    {4} preloaded3.js (preloaded3) 0 bytes <{0}> [rendered]
+chunk    {5} inner.js (inner) 0 bytes <{1}> [rendered]
+chunk    {6} inner2.js (inner2) 0 bytes <{1}> [rendered]"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
-"Hash: d0fce43b3c0175d4cc8a
+"Hash: 437c9384ca68c9e15b6c
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
-   0.js  152 bytes       0  [emitted]  
-   1.js  289 bytes       1  [emitted]  
-main.js   8.29 KiB       2  [emitted]  main
-   3.js  227 bytes       3  [emitted]  
+main.js   8.29 KiB       0  [emitted]  main
+   1.js  152 bytes       1  [emitted]  
+   2.js  289 bytes       2  [emitted]  
+   3.js  232 bytes       3  [emitted]  
 Entrypoint main = main.js
-chunk    {0} 0.js 22 bytes <{2}> [rendered]
-    > ./b [4] ./index.js 2:0-16
-chunk    {1} 1.js 54 bytes <{2}> >{3}< [rendered]
-    > ./c [4] ./index.js 3:0-16
-chunk    {2} main.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
+chunk    {0} main.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
     > ./index main
-chunk    {3} 3.js 44 bytes <{1}> [rendered]
+chunk    {1} 1.js 22 bytes <{0}> [rendered]
+    > ./b [0] ./index.js 2:0-16
+chunk    {2} 2.js 54 bytes <{0}> >{3}< [rendered]
+    > ./c [0] ./index.js 3:0-16
+chunk    {3} 3.js 44 bytes <{2}> [rendered]
     > [3] ./c.js 1:0-52
-[0] ./d.js 22 bytes {3} [depth 2] [built]
+[0] ./index.js 51 bytes {0} [depth 0] [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
-[1] ./e.js 22 bytes {3} [depth 2] [built]
+[1] ./a.js 22 bytes {0} [depth 1] [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
-[2] ./b.js 22 bytes {0} [depth 1] [built]
+[2] ./b.js 22 bytes {1} [depth 1] [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
-[3] ./c.js 54 bytes {1} [depth 1] [built]
+[3] ./c.js 54 bytes {2} [depth 1] [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
-[4] ./index.js 51 bytes {2} [depth 0] [built]
+[4] ./d.js 22 bytes {3} [depth 2] [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
-[5] ./a.js 22 bytes {2} [depth 1] [built]
+[5] ./e.js 22 bytes {3} [depth 2] [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module"
 `;
 
@@ -1911,38 +1911,38 @@ exports[`StatsTestCases should print correct stats for preset-none-array 1`] = `
 exports[`StatsTestCases should print correct stats for preset-none-error 1`] = `""`;
 
 exports[`StatsTestCases should print correct stats for preset-normal 1`] = `
-"Hash: d0fce43b3c0175d4cc8a
+"Hash: 437c9384ca68c9e15b6c
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
-   0.js  152 bytes       0  [emitted]  
-   1.js  289 bytes       1  [emitted]  
-main.js   8.29 KiB       2  [emitted]  main
-   3.js  227 bytes       3  [emitted]  
+main.js   8.29 KiB       0  [emitted]  main
+   1.js  152 bytes       1  [emitted]  
+   2.js  289 bytes       2  [emitted]  
+   3.js  232 bytes       3  [emitted]  
 Entrypoint main = main.js
-[0] ./d.js 22 bytes {3} [built]
-[1] ./e.js 22 bytes {3} [built]
-[2] ./b.js 22 bytes {0} [built]
-[3] ./c.js 54 bytes {1} [built]
-[4] ./index.js 51 bytes {2} [built]
-[5] ./a.js 22 bytes {2} [built]"
+[0] ./index.js 51 bytes {0} [built]
+[1] ./a.js 22 bytes {0} [built]
+[2] ./b.js 22 bytes {1} [built]
+[3] ./c.js 54 bytes {2} [built]
+[4] ./d.js 22 bytes {3} [built]
+[5] ./e.js 22 bytes {3} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-normal-performance 1`] = `
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-   <CLR=32,BOLD>0.js</CLR>  152 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>1.js</CLR>  289 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
-   <CLR=32,BOLD>3.js</CLR>  227 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+<CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+   <CLR=32,BOLD>1.js</CLR>  152 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>2.js</CLR>  289 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
-[0] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[1] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[2] <CLR=BOLD>./b.js</CLR> 22 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
-[3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
-[4] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
-[5] <CLR=BOLD>./a.js</CLR> 293 KiB {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
+[0] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+[1] <CLR=BOLD>./a.js</CLR> 293 KiB {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+[2] <CLR=BOLD>./b.js</CLR> 22 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
+[3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
+[4] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+[5] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 
 <CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
@@ -1960,21 +1960,21 @@ exports[`StatsTestCases should print correct stats for preset-normal-performance
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
       <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-       <CLR=32,BOLD>0.js</CLR>  182 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-       <CLR=32,BOLD>1.js</CLR>  319 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-    <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
-       <CLR=32,BOLD>3.js</CLR>  257 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>0.js.map</CLR>  156 bytes       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>1.js.map</CLR>  197 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-<CLR=32,BOLD>main.js.map</CLR>   1.72 MiB       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         main
-   <CLR=32,BOLD>3.js.map</CLR>  214 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+    <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+       <CLR=32,BOLD>1.js</CLR>  182 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+       <CLR=32,BOLD>2.js</CLR>  319 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+       <CLR=32,BOLD>3.js</CLR>  262 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+<CLR=32,BOLD>main.js.map</CLR>   1.72 MiB       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         main
+   <CLR=32,BOLD>1.js.map</CLR>  156 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>2.js.map</CLR>  197 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>3.js.map</CLR>  216 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR> <CLR=32,BOLD>main.js.map</CLR>
-[0] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[1] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[2] <CLR=BOLD>./b.js</CLR> 22 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
-[3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
-[4] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
-[5] <CLR=BOLD>./a.js</CLR> 293 KiB {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
+[0] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+[1] <CLR=BOLD>./a.js</CLR> 293 KiB {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+[2] <CLR=BOLD>./b.js</CLR> 22 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
+[3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
+[4] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
+[5] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 
 <CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
@@ -1989,47 +1989,47 @@ Entrypoints:
 `;
 
 exports[`StatsTestCases should print correct stats for preset-verbose 1`] = `
-"Hash: d0fce43b3c0175d4cc8a
+"Hash: 437c9384ca68c9e15b6c
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
-   0.js  152 bytes       0  [emitted]  
-   1.js  289 bytes       1  [emitted]  
-main.js   8.29 KiB       2  [emitted]  main
-   3.js  227 bytes       3  [emitted]  
+main.js   8.29 KiB       0  [emitted]  main
+   1.js  152 bytes       1  [emitted]  
+   2.js  289 bytes       2  [emitted]  
+   3.js  232 bytes       3  [emitted]  
 Entrypoint main = main.js
-chunk    {0} 0.js 22 bytes <{2}> [rendered]
-    > ./b [4] ./index.js 2:0-16
- [2] ./b.js 22 bytes {0} [depth 1] [built]
-     ModuleConcatenation bailout: Module is not an ECMAScript module
-     amd require ./b [4] ./index.js 2:0-16
-     [4] Xms -> factory:Xms building:Xms = Xms
-chunk    {1} 1.js 54 bytes <{2}> >{3}< [rendered]
-    > ./c [4] ./index.js 3:0-16
- [3] ./c.js 54 bytes {1} [depth 1] [built]
-     ModuleConcatenation bailout: Module is not an ECMAScript module
-     amd require ./c [4] ./index.js 3:0-16
-     [4] Xms -> factory:Xms building:Xms = Xms
-chunk    {2} main.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
+chunk    {0} main.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
     > ./index main
- [4] ./index.js 51 bytes {2} [depth 0] [built]
+ [0] ./index.js 51 bytes {0} [depth 0] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      single entry ./index  main
      factory:Xms building:Xms = Xms
- [5] ./a.js 22 bytes {2} [depth 1] [built]
+ [1] ./a.js 22 bytes {0} [depth 1] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
-     cjs require ./a [4] ./index.js 1:0-14
-     [4] Xms -> factory:Xms building:Xms = Xms
-chunk    {3} 3.js 44 bytes <{1}> [rendered]
+     cjs require ./a [0] ./index.js 1:0-14
+     [0] Xms -> factory:Xms building:Xms = Xms
+chunk    {1} 1.js 22 bytes <{0}> [rendered]
+    > ./b [0] ./index.js 2:0-16
+ [2] ./b.js 22 bytes {1} [depth 1] [built]
+     ModuleConcatenation bailout: Module is not an ECMAScript module
+     amd require ./b [0] ./index.js 2:0-16
+     [0] Xms -> factory:Xms building:Xms = Xms
+chunk    {2} 2.js 54 bytes <{0}> >{3}< [rendered]
+    > ./c [0] ./index.js 3:0-16
+ [3] ./c.js 54 bytes {2} [depth 1] [built]
+     ModuleConcatenation bailout: Module is not an ECMAScript module
+     amd require ./c [0] ./index.js 3:0-16
+     [0] Xms -> factory:Xms building:Xms = Xms
+chunk    {3} 3.js 44 bytes <{2}> [rendered]
     > [3] ./c.js 1:0-52
- [0] ./d.js 22 bytes {3} [depth 2] [built]
+ [4] ./d.js 22 bytes {3} [depth 2] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      require.ensure item ./d [3] ./c.js 1:0-52
-     [4] Xms -> [3] Xms -> factory:Xms building:Xms = Xms
- [1] ./e.js 22 bytes {3} [depth 2] [built]
+     [0] Xms -> [3] Xms -> factory:Xms building:Xms = Xms
+ [5] ./e.js 22 bytes {3} [depth 2] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      require.ensure item ./e [3] ./c.js 1:0-52
-     [4] Xms -> [3] Xms -> factory:Xms building:Xms = Xms"
+     [0] Xms -> [3] Xms -> factory:Xms building:Xms = Xms"
 `;
 
 exports[`StatsTestCases should print correct stats for resolve-plugin-context 1`] = `
@@ -2084,26 +2084,26 @@ Entrypoint e2 = runtime~e2.js e2.js"
 exports[`StatsTestCases should print correct stats for runtime-chunk-integration 1`] = `
 "Child base:
          Asset       Size  Chunks             Chunk Names
-          0.js  719 bytes       0  [emitted]  
-      main1.js  542 bytes       1  [emitted]  main1
+          0.js  728 bytes       0  [emitted]  
+      main1.js  539 bytes       1  [emitted]  main1
     runtime.js   8.75 KiB       2  [emitted]  runtime
     Entrypoint main1 = runtime.js main1.js
-    [0] ./b.js 20 bytes {0} [built]
-    [1] ./c.js 20 bytes {0} [built]
-    [2] ./d.js 20 bytes {0} [built]
-    [3] ./main1.js 66 bytes {1} [built]
+    [0] ./main1.js 66 bytes {1} [built]
+    [1] ./b.js 20 bytes {0} [built]
+    [2] ./c.js 20 bytes {0} [built]
+    [3] ./d.js 20 bytes {0} [built]
 Child manifest is named entry:
           Asset       Size  Chunks             Chunk Names
-           0.js  719 bytes       0  [emitted]  
+           0.js  737 bytes       0  [emitted]  
     manifest.js   9.06 KiB       1  [emitted]  manifest
-       main1.js  542 bytes       2  [emitted]  main1
+       main1.js  539 bytes       2  [emitted]  main1
     Entrypoint main1 = manifest.js main1.js
     Entrypoint manifest = manifest.js
-    [0] ./b.js 20 bytes {0} [built]
-    [1] ./c.js 20 bytes {0} [built]
-    [2] ./d.js 20 bytes {0} [built]
-    [3] ./main1.js 66 bytes {2} [built]
-    [4] ./f.js 20 bytes {1} [built]"
+    [0] ./main1.js 66 bytes {2} [built]
+    [1] ./f.js 20 bytes {1} [built]
+    [2] ./b.js 20 bytes {0} [built]
+    [3] ./c.js 20 bytes {0} [built]
+    [4] ./d.js 20 bytes {0} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for runtime-chunk-issue-7382 1`] = `
@@ -2117,131 +2117,131 @@ Entrypoint e2 = runtime.js e2.js"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"Hash: 900e01719757ad40b4ee
+"Hash: 38ac43ee32f96265a6e0
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint index = index.js
 Entrypoint entry = entry.js
-[0] ./entry.js 32 bytes {1} {2} [built]
+[0] ./entry.js 32 bytes {0} {1} [built]
     ModuleConcatenation bailout: Module is an entry point
-[1] ./ref-from-cjs.js 45 bytes {1} [built]
+[1] ./ref-from-cjs.js 45 bytes {0} [built]
     ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./cjs.js (referenced with cjs require)
-[2] external \\"external\\" 42 bytes {1} [built]
+[2] ./index.js 176 bytes {0} [built]
+    ModuleConcatenation bailout: Module is an entry point
+[3] ./cjs.js 59 bytes {0} [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
-[3] ./concatenated.js + 2 modules 116 bytes {0} [built]
+[4] ./eval.js 35 bytes {0} [built]
+    ModuleConcatenation bailout: Module uses eval()
+[5] ./injected-vars.js 40 bytes {0} [built]
+    ModuleConcatenation bailout: Module uses injected variables (__dirname, __filename)
+[6] ./module-id.js 26 bytes {0} [built]
+    ModuleConcatenation bailout: Module uses module.id
+[7] ./module-loaded.js 30 bytes {0} [built]
+    ModuleConcatenation bailout: Module uses module.loaded
+[8] external \\"external\\" 42 bytes {0} [built]
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+[9] ./concatenated.js + 2 modules 116 bytes {2} [built]
     ModuleConcatenation bailout: Cannot concat with external \\"external\\" (<- Module is not an ECMAScript module)
     | ./concatenated.js 26 bytes [built]
     |     ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./index.js (referenced with import())
     | ./concatenated1.js 37 bytes [built]
-    | ./concatenated2.js 48 bytes [built]
-[4] ./index.js 176 bytes {1} [built]
-    ModuleConcatenation bailout: Module is an entry point
-[5] ./cjs.js 59 bytes {1} [built]
-    ModuleConcatenation bailout: Module is not an ECMAScript module
-[6] ./eval.js 35 bytes {1} [built]
-    ModuleConcatenation bailout: Module uses eval()
-[7] ./injected-vars.js 40 bytes {1} [built]
-    ModuleConcatenation bailout: Module uses injected variables (__dirname, __filename)
-[8] ./module-id.js 26 bytes {1} [built]
-    ModuleConcatenation bailout: Module uses module.id
-[9] ./module-loaded.js 30 bytes {1} [built]
-    ModuleConcatenation bailout: Module uses module.loaded"
+    | ./concatenated2.js 48 bytes [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
-"Hash: 4fe44d37d6d451751f0a83f3311f89e78104b088
+"Hash: 62dc20c341a326c0983423541003173315bf485b
 Child
-    Hash: 4fe44d37d6d451751f0a
+    Hash: 62dc20c341a326c09834
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
     Entrypoint first = vendor.js first.js
     Entrypoint second = vendor.js second.js
-     [0] ./common_lazy_shared.js 25 bytes {0} {1} {2} [built]
-     [1] ./common2.js 25 bytes {4} {5} [built]
-     [2] ./common_lazy.js 25 bytes {1} {2} [built]
-     [3] ./common.js 37 bytes {4} {5} [built]
-     [4] ./lazy_shared.js 31 bytes {0} [built]
-     [5] ./vendor.js 25 bytes {3} [built]
-     [6] ./lazy_first.js 55 bytes {1} [built]
-     [7] ./lazy_second.js 55 bytes {2} [built]
-     [8] ./first.js 207 bytes {4} [built]
-     [9] ./module_first.js 31 bytes {4} [built]
-    [10] ./second.js 177 bytes {5} [built]
+     [0] ./common2.js 25 bytes {1} {2} [built]
+     [1] ./common.js 37 bytes {1} {2} [built]
+     [2] ./vendor.js 25 bytes {0} [built]
+     [3] ./lazy_shared.js 31 bytes {4} [built]
+     [4] ./first.js 207 bytes {1} [built]
+     [5] ./module_first.js 31 bytes {1} [built]
+     [6] ./second.js 177 bytes {2} [built]
+     [7] ./lazy_first.js 55 bytes {3} [built]
+     [8] ./lazy_second.js 55 bytes {5} [built]
+     [9] ./common_lazy_shared.js 25 bytes {3} {4} {5} [built]
+    [10] ./common_lazy.js 25 bytes {3} {5} [built]
 Child
-    Hash: 83f3311f89e78104b088
+    Hash: 23541003173315bf485b
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
     Entrypoint first = vendor.js first.js
     Entrypoint second = vendor.js second.js
-    [0] ./common_lazy_shared.js 25 bytes {0} {1} {2} [built]
-    [1] ./common_lazy.js 25 bytes {1} {2} [built]
-    [2] ./common.js + 1 modules 62 bytes {4} {5} [built]
+    [0] ./common.js + 1 modules 62 bytes {1} {2} [built]
         | ./common.js 37 bytes [built]
         | ./common2.js 25 bytes [built]
-    [3] ./vendor.js 25 bytes {3} [built]
-    [4] ./lazy_shared.js 31 bytes {0} [built]
-        ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./first.js (referenced with import()), ./second.js (referenced with import())
-    [5] ./lazy_second.js 55 bytes {2} [built]
-        ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./second.js (referenced with import())
-    [6] ./second.js 177 bytes {5} [built]
+    [1] ./vendor.js 25 bytes {0} [built]
+    [2] ./second.js 177 bytes {2} [built]
         ModuleConcatenation bailout: Module is an entry point
-    [7] ./first.js + 1 modules 248 bytes {4} [built]
+    [3] ./common_lazy_shared.js 25 bytes {3} {4} {5} [built]
+    [4] ./common_lazy.js 25 bytes {3} {5} [built]
+    [5] ./lazy_shared.js 31 bytes {4} [built]
+        ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./first.js (referenced with import()), ./second.js (referenced with import())
+    [6] ./first.js + 1 modules 248 bytes {1} [built]
         ModuleConcatenation bailout: Cannot concat with ./common.js
         ModuleConcatenation bailout: Cannot concat with ./vendor.js
         | ./first.js 207 bytes [built]
         |     ModuleConcatenation bailout: Module is an entry point
         | ./module_first.js 31 bytes [built]
-    [8] ./lazy_first.js 55 bytes {1} [built]
+    [7] ./lazy_second.js 55 bytes {5} [built]
+        ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./second.js (referenced with import())
+    [8] ./lazy_first.js 55 bytes {3} [built]
         ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./first.js (referenced with import())"
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
-"Hash: a9b58d04269fe092c240
+"Hash: 4981ff1831c58ef47c99
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
-   0.js  481 bytes       0  [emitted]  
-main.js   9.32 KiB       1  [emitted]  main
+main.js   9.35 KiB       0  [emitted]  main
+   1.js  481 bytes       1  [emitted]  
 Entrypoint main = main.js
-[0] ./components/src/CompAB/utils.js 97 bytes {1} [built]
-    harmony side effect evaluation ./utils [1] ./main.js + 1 modules 1:0-30
-    harmony import specifier ./utils [1] ./main.js + 1 modules 5:2-5
+[0] ./components/src/CompAB/index.js 87 bytes [built]
+    [no exports used]
+    harmony side effect evaluation ./CompAB [3] ./components/src/index.js 1:0-40
+    harmony export imported specifier ./CompAB [3] ./components/src/index.js 1:0-40
+    harmony export imported specifier ./CompAB [3] ./components/src/index.js 1:0-40
+[1] ./components/src/CompC/CompC.js 33 bytes [built]
+    [no exports used]
+    harmony side effect evaluation ./CompC [2] ./components/src/CompC/index.js 1:0-34
+    harmony export imported specifier ./CompC [2] ./components/src/CompC/index.js 1:0-34
+[2] ./components/src/CompC/index.js 34 bytes [built]
+    [no exports used]
+    harmony side effect evaluation ./CompC [3] ./components/src/index.js 2:0-43
+    harmony export imported specifier ./CompC [3] ./components/src/index.js 2:0-43
+[3] ./components/src/index.js 84 bytes [built]
+    [no exports used]
+    harmony side effect evaluation ./components [6] ./foo.js 1:0-37
+    harmony side effect evaluation ./components [7] ./main.js + 1 modules 1:0-44
+[4] ./components/src/CompAB/CompA.js 89 bytes {0} [built]
+    [only some exports used: default]
+    harmony side effect evaluation ./CompA [0] ./components/src/CompAB/index.js 1:0-43
+    harmony export imported specifier ./CompA [0] ./components/src/CompAB/index.js 1:0-43
+    harmony import specifier ./components  ./main.js 3:15-20 (skipped side-effect-free modules)
+    harmony import specifier ./components [6] ./foo.js 3:20-25 (skipped side-effect-free modules)
+[5] ./components/src/CompAB/utils.js 97 bytes {0} [built]
     harmony side effect evaluation ./utils [4] ./components/src/CompAB/CompA.js 1:0-35
     harmony import specifier ./utils [4] ./components/src/CompAB/CompA.js 5:5-12
-[1] ./main.js + 1 modules 231 bytes {1} [built]
+    harmony side effect evaluation ./utils [7] ./main.js + 1 modules 1:0-30
+    harmony import specifier ./utils [7] ./main.js + 1 modules 5:2-5
+[6] ./foo.js 101 bytes {1} [built]
+    import() ./foo  ./main.js 6:0-15
+[7] ./main.js + 1 modules 231 bytes {0} [built]
     single entry ./main.js  main
     | ./main.js 144 bytes [built]
     |     single entry ./main.js  main
     | ./components/src/CompAB/CompB.js 77 bytes [built]
     |     [only some exports used: default]
-    |     harmony import specifier ./components  ./main.js 4:15-20 (skipped side-effect-free modules)
-    |     harmony side effect evaluation ./CompB [7] ./components/src/CompAB/index.js 2:0-43
-    |     harmony export imported specifier ./CompB [7] ./components/src/CompAB/index.js 2:0-43
-[2] ./components/src/index.js 84 bytes [built]
-    [no exports used]
-    harmony side effect evaluation ./components [1] ./main.js + 1 modules 1:0-44
-    harmony side effect evaluation ./components [3] ./foo.js 1:0-37
-[3] ./foo.js 101 bytes {0} [built]
-    import() ./foo  ./main.js 6:0-15
-[4] ./components/src/CompAB/CompA.js 89 bytes {1} [built]
-    [only some exports used: default]
-    harmony import specifier ./components  ./main.js 3:15-20 (skipped side-effect-free modules)
-    harmony import specifier ./components [3] ./foo.js 3:20-25 (skipped side-effect-free modules)
-    harmony side effect evaluation ./CompA [7] ./components/src/CompAB/index.js 1:0-43
-    harmony export imported specifier ./CompA [7] ./components/src/CompAB/index.js 1:0-43
-[5] ./components/src/CompC/index.js 34 bytes [built]
-    [no exports used]
-    harmony side effect evaluation ./CompC [2] ./components/src/index.js 2:0-43
-    harmony export imported specifier ./CompC [2] ./components/src/index.js 2:0-43
-[6] ./components/src/CompC/CompC.js 33 bytes [built]
-    [no exports used]
-    harmony side effect evaluation ./CompC [5] ./components/src/CompC/index.js 1:0-34
-    harmony export imported specifier ./CompC [5] ./components/src/CompC/index.js 1:0-34
-[7] ./components/src/CompAB/index.js 87 bytes [built]
-    [no exports used]
-    harmony side effect evaluation ./CompAB [2] ./components/src/index.js 1:0-40
-    harmony export imported specifier ./CompAB [2] ./components/src/index.js 1:0-40
-    harmony export imported specifier ./CompAB [2] ./components/src/index.js 1:0-40"
+    |     harmony side effect evaluation ./CompB [0] ./components/src/CompAB/index.js 2:0-43
+    |     harmony export imported specifier ./CompB [0] ./components/src/CompAB/index.js 2:0-43
+    |     harmony import specifier ./components  ./main.js 4:15-20 (skipped side-effect-free modules)"
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
@@ -2291,75 +2291,75 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
     Entrypoint a = default/a.js
     Entrypoint b = default/b.js
     Entrypoint c = default/c.js
-    chunk    {0} default/vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{9}> ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={8}= >{2}< >{7}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~async-c)
+    chunk    {0} default/vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{4}> ={1}= ={2}= ={3}= ={8}= ={9}= ={10}= ={12}= >{2}< >{11}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~async-c)
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
-     [1] ./node_modules/x.js 20 bytes {0} {10} {11} {12} [built]
-    chunk    {1} default/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{9}> ={0}= ={2}= ={3}= ={4}= ={5}= ={6}= ={8}= >{2}< >{7}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
+     [1] ./node_modules/x.js 20 bytes {0} {5} {6} {7} [built]
+    chunk    {1} default/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{4}> ={0}= ={2}= ={3}= ={8}= ={9}= ={10}= ={12}= >{2}< >{11}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-    chunk    {2} default/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{10}> <{3}> <{4}> <{9}> ={0}= ={1}= ={3}= ={5}= ={6}= ={7}= ={8}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
+     [0] ./d.js 20 bytes {1} {5} {6} {7} [built]
+    chunk    {2} default/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{3}> <{4}> <{5}> <{8}> ={0}= ={1}= ={3}= ={9}= ={10}= ={11}= ={12}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
         > ./g [] 6:0-47
         > ./g [] 6:0-47
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
-     [2] ./f.js 20 bytes {2} {11} {12} [built]
-    chunk    {3} default/vendors~async-a~async-b.js (vendors~async-a~async-b) 20 bytes <{9}> ={0}= ={1}= ={2}= ={4}= ={5}= >{2}< >{7}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b)
+     [2] ./f.js 20 bytes {2} {6} {7} [built]
+    chunk    {3} default/vendors~async-a~async-b.js (vendors~async-a~async-b) 20 bytes <{4}> ={0}= ={1}= ={2}= ={8}= ={9}= >{2}< >{11}< [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b)
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
-     [3] ./node_modules/y.js 20 bytes {3} {10} {11} [built]
-    chunk    {4} default/async-a.js (async-a) 156 bytes <{9}> ={0}= ={1}= ={3}= >{2}< >{7}< [rendered]
-        > ./a [8] ./index.js 1:0-47
-     [7] ./a.js + 1 modules 156 bytes {4} {10} [built]
-         | ./a.js 121 bytes [built]
-         | ./e.js 20 bytes [built]
-    chunk    {5} default/async-b.js (async-b) 72 bytes <{9}> ={0}= ={1}= ={2}= ={3}= [rendered]
-        > ./b [8] ./index.js 2:0-47
-     [5] ./b.js 72 bytes {5} {11} [built]
-    chunk    {6} default/async-c.js (async-c) 72 bytes <{9}> ={0}= ={1}= ={2}= ={8}= [rendered]
-        > ./c [8] ./index.js 3:0-47
-     [6] ./c.js 72 bytes {6} {12} [built]
-    chunk    {7} default/async-g.js (async-g) 34 bytes <{0}> <{1}> <{10}> <{3}> <{4}> ={2}= [rendered]
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-     [9] ./g.js 34 bytes {7} [built]
-    chunk    {8} default/vendors~async-c.js (vendors~async-c) 20 bytes <{9}> ={0}= ={1}= ={2}= ={6}= [rendered] split chunk (cache group: vendors) (name: vendors~async-c)
-        > ./c [8] ./index.js 3:0-47
-     [4] ./node_modules/z.js 20 bytes {8} {12} [built]
-    chunk    {9} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{5}< >{6}< >{8}< [entry] [rendered]
+     [3] ./node_modules/y.js 20 bytes {3} {5} {6} [built]
+    chunk    {4} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{8}< >{9}< >{10}< >{12}< [entry] [rendered]
         > ./ main
-     [8] ./index.js 147 bytes {9} [built]
-    chunk   {10} default/a.js (a) 216 bytes >{2}< >{7}< [entry] [rendered]
+     [8] ./index.js 147 bytes {4} [built]
+    chunk    {5} default/a.js (a) 216 bytes >{2}< >{11}< [entry] [rendered]
         > ./a a
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {10} {11} {12} [built]
-     [3] ./node_modules/y.js 20 bytes {3} {10} {11} [built]
-     [7] ./a.js + 1 modules 156 bytes {4} {10} [built]
+     [0] ./d.js 20 bytes {1} {5} {6} {7} [built]
+     [1] ./node_modules/x.js 20 bytes {0} {5} {6} {7} [built]
+     [3] ./node_modules/y.js 20 bytes {3} {5} {6} [built]
+     [6] ./a.js + 1 modules 156 bytes {5} {8} [built]
          | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-    chunk   {11} default/b.js (b) 152 bytes [entry] [rendered]
+    chunk    {6} default/b.js (b) 152 bytes [entry] [rendered]
         > ./b b
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {10} {11} {12} [built]
-     [2] ./f.js 20 bytes {2} {11} {12} [built]
-     [3] ./node_modules/y.js 20 bytes {3} {10} {11} [built]
-     [5] ./b.js 72 bytes {5} {11} [built]
-    chunk   {12} default/c.js (c) 152 bytes [entry] [rendered]
+     [0] ./d.js 20 bytes {1} {5} {6} {7} [built]
+     [1] ./node_modules/x.js 20 bytes {0} {5} {6} {7} [built]
+     [2] ./f.js 20 bytes {2} {6} {7} [built]
+     [3] ./node_modules/y.js 20 bytes {3} {5} {6} [built]
+     [4] ./b.js 72 bytes {6} {9} [built]
+    chunk    {7} default/c.js (c) 152 bytes [entry] [rendered]
         > ./c c
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [1] ./node_modules/x.js 20 bytes {0} {10} {11} {12} [built]
-     [2] ./f.js 20 bytes {2} {11} {12} [built]
-     [4] ./node_modules/z.js 20 bytes {8} {12} [built]
-     [6] ./c.js 72 bytes {6} {12} [built]
+     [0] ./d.js 20 bytes {1} {5} {6} {7} [built]
+     [1] ./node_modules/x.js 20 bytes {0} {5} {6} {7} [built]
+     [2] ./f.js 20 bytes {2} {6} {7} [built]
+     [5] ./c.js 72 bytes {7} {10} [built]
+     [7] ./node_modules/z.js 20 bytes {7} {12} [built]
+    chunk    {8} default/async-a.js (async-a) 156 bytes <{4}> ={0}= ={1}= ={3}= >{2}< >{11}< [rendered]
+        > ./a [8] ./index.js 1:0-47
+     [6] ./a.js + 1 modules 156 bytes {5} {8} [built]
+         | ./a.js 121 bytes [built]
+         | ./e.js 20 bytes [built]
+    chunk    {9} default/async-b.js (async-b) 72 bytes <{4}> ={0}= ={1}= ={2}= ={3}= [rendered]
+        > ./b [8] ./index.js 2:0-47
+     [4] ./b.js 72 bytes {6} {9} [built]
+    chunk   {10} default/async-c.js (async-c) 72 bytes <{4}> ={0}= ={1}= ={2}= ={12}= [rendered]
+        > ./c [8] ./index.js 3:0-47
+     [5] ./c.js 72 bytes {7} {10} [built]
+    chunk   {11} default/async-g.js (async-g) 34 bytes <{0}> <{1}> <{3}> <{5}> <{8}> ={2}= [rendered]
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+     [9] ./g.js 34 bytes {11} [built]
+    chunk   {12} default/vendors~async-c.js (vendors~async-c) 20 bytes <{4}> ={0}= ={1}= ={2}= ={10}= [rendered] split chunk (cache group: vendors) (name: vendors~async-c)
+        > ./c [8] ./index.js 3:0-47
+     [7] ./node_modules/z.js 20 bytes {7} {12} [built]
 Child all-chunks:
     Entrypoint main = default/main.js
     Entrypoint a = default/vendors~a~async-a~async-b~async-c~b~c.js default/vendors~a~async-a~async-b~b.js default/a.js
     Entrypoint b = default/vendors~a~async-a~async-b~async-c~b~c.js default/vendors~a~async-a~async-b~b.js default/b.js
     Entrypoint c = default/vendors~a~async-a~async-b~async-c~b~c.js default/vendors~async-c~c.js default/c.js
-    chunk    {0} default/vendors~a~async-a~async-b~async-c~b~c.js (vendors~a~async-a~async-b~async-c~b~c) 20 bytes <{9}> ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~async-c~b~c)
+    chunk    {0} default/vendors~a~async-a~async-b~async-c~b~c.js (vendors~a~async-a~async-b~async-c~b~c) 20 bytes <{5}> ={1}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= >{3}< >{12}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~async-c~b~c)
         > ./a a
         > ./b b
         > ./c c
@@ -2367,437 +2367,621 @@ Child all-chunks:
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
      [2] ./node_modules/x.js 20 bytes {0} [built]
-    chunk    {1} default/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{9}> ={0}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= >{2}< >{8}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
-        > ./a [8] ./index.js 1:0-47
-        > ./b [8] ./index.js 2:0-47
-        > ./c [8] ./index.js 3:0-47
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-    chunk    {2} default/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{10}> <{3}> <{5}> <{9}> ={0}= ={1}= ={3}= ={4}= ={6}= ={7}= ={8}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-        > ./b [8] ./index.js 2:0-47
-        > ./c [8] ./index.js 3:0-47
-     [1] ./f.js 20 bytes {2} {11} {12} [built]
-    chunk    {3} default/vendors~a~async-a~async-b~b.js (vendors~a~async-a~async-b~b) 20 bytes <{9}> ={0}= ={1}= ={10}= ={11}= ={2}= ={5}= ={6}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~b)
+    chunk    {1} default/vendors~a~async-a~async-b~b.js (vendors~a~async-a~async-b~b) 20 bytes <{5}> ={0}= ={2}= ={3}= ={6}= ={7}= ={9}= ={10}= >{3}< >{12}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~b)
         > ./a a
         > ./b b
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
-     [3] ./node_modules/y.js 20 bytes {3} [built]
-    chunk    {4} default/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{9}> ={0}= ={1}= ={12}= ={2}= ={7}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~c)
+     [3] ./node_modules/y.js 20 bytes {1} [built]
+    chunk    {2} default/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{5}> ={0}= ={1}= ={3}= ={4}= ={9}= ={10}= ={11}= >{3}< >{12}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
+        > ./a [8] ./index.js 1:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+    chunk    {3} default/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{2}> <{5}> <{6}> <{9}> ={0}= ={1}= ={2}= ={4}= ={10}= ={11}= ={12}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
+     [1] ./f.js 20 bytes {3} {7} {8} [built]
+    chunk    {4} default/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{5}> ={0}= ={2}= ={3}= ={8}= ={11}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~c)
         > ./c c
         > ./c [8] ./index.js 3:0-47
      [7] ./node_modules/z.js 20 bytes {4} [built]
-    chunk    {5} default/async-a.js (async-a) 156 bytes <{9}> ={0}= ={1}= ={3}= >{2}< >{8}< [rendered]
-        > ./a [8] ./index.js 1:0-47
-     [6] ./a.js + 1 modules 156 bytes {5} {10} [built]
-         | ./a.js 121 bytes [built]
-         | ./e.js 20 bytes [built]
-    chunk    {6} default/async-b.js (async-b) 72 bytes <{9}> ={0}= ={1}= ={2}= ={3}= [rendered]
-        > ./b [8] ./index.js 2:0-47
-     [4] ./b.js 72 bytes {6} {11} [built]
-    chunk    {7} default/async-c.js (async-c) 72 bytes <{9}> ={0}= ={1}= ={2}= ={4}= [rendered]
-        > ./c [8] ./index.js 3:0-47
-     [5] ./c.js 72 bytes {7} {12} [built]
-    chunk    {8} default/async-g.js (async-g) 34 bytes <{0}> <{1}> <{10}> <{3}> <{5}> ={2}= [rendered]
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-     [9] ./g.js 34 bytes {8} [built]
-    chunk    {9} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{5}< >{6}< >{7}< [entry] [rendered]
+    chunk    {5} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{9}< >{10}< >{11}< [entry] [rendered]
         > ./ main
-     [8] ./index.js 147 bytes {9} [built]
-    chunk   {10} default/a.js (a) 176 bytes ={0}= ={3}= >{2}< >{8}< [entry] [rendered]
+     [8] ./index.js 147 bytes {5} [built]
+    chunk    {6} default/a.js (a) 176 bytes ={0}= ={1}= >{3}< >{12}< [entry] [rendered]
         > ./a a
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [6] ./a.js + 1 modules 156 bytes {5} {10} [built]
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+     [6] ./a.js + 1 modules 156 bytes {6} {9} [built]
          | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-    chunk   {11} default/b.js (b) 112 bytes ={0}= ={3}= [entry] [rendered]
+    chunk    {7} default/b.js (b) 112 bytes ={0}= ={1}= [entry] [rendered]
         > ./b b
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [1] ./f.js 20 bytes {2} {11} {12} [built]
-     [4] ./b.js 72 bytes {6} {11} [built]
-    chunk   {12} default/c.js (c) 112 bytes ={0}= ={4}= [entry] [rendered]
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+     [1] ./f.js 20 bytes {3} {7} {8} [built]
+     [4] ./b.js 72 bytes {7} {10} [built]
+    chunk    {8} default/c.js (c) 112 bytes ={0}= ={4}= [entry] [rendered]
         > ./c c
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [1] ./f.js 20 bytes {2} {11} {12} [built]
-     [5] ./c.js 72 bytes {7} {12} [built]
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+     [1] ./f.js 20 bytes {3} {7} {8} [built]
+     [5] ./c.js 72 bytes {8} {11} [built]
+    chunk    {9} default/async-a.js (async-a) 156 bytes <{5}> ={0}= ={1}= ={2}= >{3}< >{12}< [rendered]
+        > ./a [8] ./index.js 1:0-47
+     [6] ./a.js + 1 modules 156 bytes {6} {9} [built]
+         | ./a.js 121 bytes [built]
+         | ./e.js 20 bytes [built]
+    chunk   {10} default/async-b.js (async-b) 72 bytes <{5}> ={0}= ={1}= ={2}= ={3}= [rendered]
+        > ./b [8] ./index.js 2:0-47
+     [4] ./b.js 72 bytes {7} {10} [built]
+    chunk   {11} default/async-c.js (async-c) 72 bytes <{5}> ={0}= ={2}= ={3}= ={4}= [rendered]
+        > ./c [8] ./index.js 3:0-47
+     [5] ./c.js 72 bytes {8} {11} [built]
+    chunk   {12} default/async-g.js (async-g) 34 bytes <{0}> <{1}> <{2}> <{6}> <{9}> ={3}= [rendered]
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+     [9] ./g.js 34 bytes {12} [built]
 Child manual:
     Entrypoint main = default/main.js
     Entrypoint a = default/vendors.js default/a.js
     Entrypoint b = default/vendors.js default/b.js
     Entrypoint c = default/vendors.js default/c.js
-    chunk    {0} default/vendors.js (vendors) 112 bytes <{5}> ={1}= ={2}= ={3}= ={6}= ={7}= ={8}= >{4}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
+    chunk    {0} default/vendors.js (vendors) 112 bytes <{1}> ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./a a
         > ./b b
         > ./c c
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
-     [2] ./node_modules/x.js 20 bytes {0} [built]
+     [1] ./node_modules/x.js 20 bytes {0} [built]
      [3] ./node_modules/y.js 20 bytes {0} [built]
      [6] ./node_modules/z.js 20 bytes {0} [built]
      [9] multi x y z 52 bytes {0} [built]
-    chunk    {1} default/async-a.js (async-a) 176 bytes <{5}> ={0}= >{4}< [rendered]
-        > ./a [8] ./index.js 1:0-47
-     [0] ./d.js 20 bytes {1} {2} {3} {6} {7} {8} [built]
-     [7] ./a.js + 1 modules 156 bytes {1} {6} [built]
-         | ./a.js 121 bytes [built]
-         | ./e.js 20 bytes [built]
-    chunk    {2} default/async-b.js (async-b) 112 bytes <{5}> ={0}= [rendered]
-        > ./b [8] ./index.js 2:0-47
-     [0] ./d.js 20 bytes {1} {2} {3} {6} {7} {8} [built]
-     [1] ./f.js 20 bytes {2} {3} {4} {7} {8} [built]
-     [4] ./b.js 72 bytes {2} {7} [built]
-    chunk    {3} default/async-c.js (async-c) 112 bytes <{5}> ={0}= [rendered]
-        > ./c [8] ./index.js 3:0-47
-     [0] ./d.js 20 bytes {1} {2} {3} {6} {7} {8} [built]
-     [1] ./f.js 20 bytes {2} {3} {4} {7} {8} [built]
-     [5] ./c.js 72 bytes {3} {8} [built]
-    chunk    {4} default/async-g.js (async-g) 54 bytes <{0}> <{1}> <{6}> [rendered]
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-      [1] ./f.js 20 bytes {2} {3} {4} {7} {8} [built]
-     [10] ./g.js 34 bytes {4} [built]
-    chunk    {5} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< [entry] [rendered]
+    chunk    {1} default/main.js (main) 147 bytes >{0}< >{5}< >{6}< >{7}< [entry] [rendered]
         > ./ main
-     [8] ./index.js 147 bytes {5} [built]
-    chunk    {6} default/a.js (a) 176 bytes ={0}= >{4}< [entry] [rendered]
+     [8] ./index.js 147 bytes {1} [built]
+    chunk    {2} default/a.js (a) 176 bytes ={0}= >{8}< [entry] [rendered]
         > ./a a
-     [0] ./d.js 20 bytes {1} {2} {3} {6} {7} {8} [built]
-     [7] ./a.js + 1 modules 156 bytes {1} {6} [built]
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [7] ./a.js + 1 modules 156 bytes {2} {5} [built]
          | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-    chunk    {7} default/b.js (b) 112 bytes ={0}= [entry] [rendered]
+    chunk    {3} default/b.js (b) 112 bytes ={0}= [entry] [rendered]
         > ./b b
-     [0] ./d.js 20 bytes {1} {2} {3} {6} {7} {8} [built]
-     [1] ./f.js 20 bytes {2} {3} {4} {7} {8} [built]
-     [4] ./b.js 72 bytes {2} {7} [built]
-    chunk    {8} default/c.js (c) 112 bytes ={0}= [entry] [rendered]
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [2] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [4] ./b.js 72 bytes {3} {6} [built]
+    chunk    {4} default/c.js (c) 112 bytes ={0}= [entry] [rendered]
         > ./c c
-     [0] ./d.js 20 bytes {1} {2} {3} {6} {7} {8} [built]
-     [1] ./f.js 20 bytes {2} {3} {4} {7} {8} [built]
-     [5] ./c.js 72 bytes {3} {8} [built]
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [2] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [5] ./c.js 72 bytes {4} {7} [built]
+    chunk    {5} default/async-a.js (async-a) 176 bytes <{1}> ={0}= >{8}< [rendered]
+        > ./a [8] ./index.js 1:0-47
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [7] ./a.js + 1 modules 156 bytes {2} {5} [built]
+         | ./a.js 121 bytes [built]
+         | ./e.js 20 bytes [built]
+    chunk    {6} default/async-b.js (async-b) 112 bytes <{1}> ={0}= [rendered]
+        > ./b [8] ./index.js 2:0-47
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [2] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [4] ./b.js 72 bytes {3} {6} [built]
+    chunk    {7} default/async-c.js (async-c) 112 bytes <{1}> ={0}= [rendered]
+        > ./c [8] ./index.js 3:0-47
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [2] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [5] ./c.js 72 bytes {4} {7} [built]
+    chunk    {8} default/async-g.js (async-g) 54 bytes <{0}> <{2}> <{5}> [rendered]
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+      [2] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [10] ./g.js 34 bytes {8} [built]
 Child name-too-long:
     Entrypoint main = main.js
     Entrypoint aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f.js vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccc~18066793.js async-a.js aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js
     Entrypoint bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb = vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f.js vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccc~18066793.js async-b~async-c~async-g~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccccccccccccccccccc.js async-b.js bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js
     Entrypoint cccccccccccccccccccccccccccccc = vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f.js vendors~async-c~cccccccccccccccccccccccccccccc.js aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccc~18066793.js async-b~async-c~async-g~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccccccccccccccccccc.js async-c.js cccccccccccccccccccccccccccccc.js
-    chunk    {0} vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f.js (vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f) 20 bytes <{9}> ={1}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f)
+    chunk    {0} vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f.js (vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f) 20 bytes <{8}> ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={9}= ={10}= ={11}= >{2}< >{12}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f)
         > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
         > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
         > ./c cccccccccccccccccccccccccccccc
         > ./a [4] ./index.js 1:0-47
         > ./b [4] ./index.js 2:0-47
         > ./c [4] ./index.js 3:0-47
-     [2] ./node_modules/x.js 20 bytes {0} [built]
-    chunk    {1} aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccc~18066793.js (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccc~18066793) 20 bytes <{9}> ={0}= ={10}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: default) (name: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccc~18066793)
+     [1] ./node_modules/x.js 20 bytes {0} [built]
+    chunk    {1} aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccc~18066793.js (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccc~18066793) 20 bytes <{8}> ={0}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={9}= ={10}= ={11}= >{2}< >{12}< [initial] [rendered] split chunk (cache group: default) (name: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccc~18066793)
         > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
         > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
         > ./c cccccccccccccccccccccccccccccc
         > ./a [4] ./index.js 1:0-47
         > ./b [4] ./index.js 2:0-47
         > ./c [4] ./index.js 3:0-47
-     [1] ./d.js 20 bytes {1} [built]
-    chunk    {2} async-b~async-c~async-g~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccccccccccccccccccc.js (async-b~async-c~async-g~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccccccccccccccccccc) 20 bytes <{0}> <{1}> <{10}> <{3}> <{4}> <{9}> ={0}= ={1}= ={11}= ={12}= ={3}= ={5}= ={6}= ={7}= ={8}= [initial] [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccccccccccccccccccc)
+     [0] ./d.js 20 bytes {1} [built]
+    chunk    {2} async-b~async-c~async-g~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccccccccccccccccccc.js (async-b~async-c~async-g~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccccccccccccccccccc) 20 bytes <{0}> <{1}> <{3}> <{4}> <{8}> <{9}> ={0}= ={1}= ={3}= ={5}= ={6}= ={7}= ={10}= ={11}= ={12}= [initial] [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccccccccccccccccccc)
         > ./g [] 6:0-47
         > ./g [] 6:0-47
         > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
         > ./c cccccccccccccccccccccccccccccc
         > ./b [4] ./index.js 2:0-47
         > ./c [4] ./index.js 3:0-47
-     [0] ./f.js 20 bytes {2} [built]
-    chunk    {3} vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js (vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) 20 bytes <{9}> ={0}= ={1}= ={10}= ={11}= ={2}= ={4}= ={5}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)
+     [2] ./f.js 20 bytes {2} [built]
+    chunk    {3} vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js (vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) 20 bytes <{8}> ={0}= ={1}= ={2}= ={4}= ={5}= ={9}= ={10}= >{2}< >{12}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)
         > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
         > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
         > ./a [4] ./index.js 1:0-47
         > ./b [4] ./index.js 2:0-47
      [3] ./node_modules/y.js 20 bytes {3} [built]
-    chunk    {4} async-a.js (async-a) 156 bytes <{9}> ={0}= ={1}= ={10}= ={3}= >{2}< >{8}< [initial] [rendered] reused as split chunk (cache group: default)
+    chunk    {4} async-a.js (async-a) 156 bytes <{8}> ={0}= ={1}= ={3}= ={9}= >{2}< >{12}< [initial] [rendered] reused as split chunk (cache group: default)
         > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
         > ./a [4] ./index.js 1:0-47
      [8] ./a.js + 1 modules 156 bytes {4} [built]
          | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-    chunk    {5} async-b.js (async-b) 72 bytes <{9}> ={0}= ={1}= ={11}= ={2}= ={3}= [initial] [rendered] reused as split chunk (cache group: default)
+    chunk    {5} async-b.js (async-b) 72 bytes <{8}> ={0}= ={1}= ={2}= ={3}= ={10}= [initial] [rendered] reused as split chunk (cache group: default)
         > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
         > ./b [4] ./index.js 2:0-47
      [5] ./b.js 72 bytes {5} [built]
-    chunk    {6} async-c.js (async-c) 72 bytes <{9}> ={0}= ={1}= ={12}= ={2}= ={7}= [initial] [rendered] reused as split chunk (cache group: default)
+    chunk    {6} async-c.js (async-c) 72 bytes <{8}> ={0}= ={1}= ={2}= ={7}= ={11}= [initial] [rendered] reused as split chunk (cache group: default)
         > ./c cccccccccccccccccccccccccccccc
         > ./c [4] ./index.js 3:0-47
      [6] ./c.js 72 bytes {6} [built]
-    chunk    {7} vendors~async-c~cccccccccccccccccccccccccccccc.js (vendors~async-c~cccccccccccccccccccccccccccccc) 20 bytes <{9}> ={0}= ={1}= ={12}= ={2}= ={6}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~cccccccccccccccccccccccccccccc)
+    chunk    {7} vendors~async-c~cccccccccccccccccccccccccccccc.js (vendors~async-c~cccccccccccccccccccccccccccccc) 20 bytes <{8}> ={0}= ={1}= ={2}= ={6}= ={11}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~cccccccccccccccccccccccccccccc)
         > ./c cccccccccccccccccccccccccccccc
         > ./c [4] ./index.js 3:0-47
      [7] ./node_modules/z.js 20 bytes {7} [built]
-    chunk    {8} async-g.js (async-g) 34 bytes <{0}> <{1}> <{10}> <{3}> <{4}> ={2}= [rendered]
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-     [9] ./g.js 34 bytes {8} [built]
-    chunk    {9} main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{5}< >{6}< >{7}< [entry] [rendered]
+    chunk    {8} main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{5}< >{6}< >{7}< [entry] [rendered]
         > ./ main
-     [4] ./index.js 147 bytes {9} [built]
-    chunk   {10} aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) 0 bytes ={0}= ={1}= ={3}= ={4}= >{2}< >{8}< [entry] [rendered]
+     [4] ./index.js 147 bytes {8} [built]
+    chunk    {9} aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) 0 bytes ={0}= ={1}= ={3}= ={4}= >{2}< >{12}< [entry] [rendered]
         > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-    chunk   {11} bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js (bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) 0 bytes ={0}= ={1}= ={2}= ={3}= ={5}= [entry] [rendered]
+    chunk   {10} bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js (bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) 0 bytes ={0}= ={1}= ={2}= ={3}= ={5}= [entry] [rendered]
         > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-    chunk   {12} cccccccccccccccccccccccccccccc.js (cccccccccccccccccccccccccccccc) 0 bytes ={0}= ={1}= ={2}= ={6}= ={7}= [entry] [rendered]
+    chunk   {11} cccccccccccccccccccccccccccccc.js (cccccccccccccccccccccccccccccc) 0 bytes ={0}= ={1}= ={2}= ={6}= ={7}= [entry] [rendered]
         > ./c cccccccccccccccccccccccccccccc
+    chunk   {12} async-g.js (async-g) 34 bytes <{0}> <{1}> <{3}> <{4}> <{9}> ={2}= [rendered]
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+     [9] ./g.js 34 bytes {12} [built]
 Child custom-chunks-filter:
     Entrypoint main = default/main.js
     Entrypoint a = default/a.js
     Entrypoint b = default/vendors~async-a~async-b~async-c~b~c.js default/vendors~async-a~async-b~b.js default/b.js
     Entrypoint c = default/vendors~async-a~async-b~async-c~b~c.js default/vendors~async-c~c.js default/c.js
-    chunk    {0} default/vendors~async-a~async-b~async-c~b~c.js (vendors~async-a~async-b~async-c~b~c) 20 bytes <{9}> ={1}= ={11}= ={12}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~async-c~b~c)
+    chunk    {0} default/vendors~async-a~async-b~async-c~b~c.js (vendors~async-a~async-b~async-c~b~c) 20 bytes <{5}> ={1}= ={2}= ={3}= ={4}= ={7}= ={8}= ={9}= ={10}= ={11}= >{3}< >{12}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~async-c~b~c)
         > ./b b
         > ./c c
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
-     [2] ./node_modules/x.js 20 bytes {0} {10} [built]
-    chunk    {1} default/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{9}> ={0}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= >{2}< >{8}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
-        > ./a [8] ./index.js 1:0-47
-        > ./b [8] ./index.js 2:0-47
-        > ./c [8] ./index.js 3:0-47
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-    chunk    {2} default/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{10}> <{3}> <{5}> <{9}> ={0}= ={1}= ={3}= ={4}= ={6}= ={7}= ={8}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-        > ./b [8] ./index.js 2:0-47
-        > ./c [8] ./index.js 3:0-47
-     [1] ./f.js 20 bytes {2} {11} {12} [built]
-    chunk    {3} default/vendors~async-a~async-b~b.js (vendors~async-a~async-b~b) 20 bytes <{9}> ={0}= ={1}= ={11}= ={2}= ={5}= ={6}= >{2}< >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~b)
+     [1] ./node_modules/x.js 20 bytes {0} {6} [built]
+    chunk    {1} default/vendors~async-a~async-b~b.js (vendors~async-a~async-b~b) 20 bytes <{5}> ={0}= ={2}= ={3}= ={7}= ={9}= ={10}= >{3}< >{12}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~b)
         > ./b b
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
-     [3] ./node_modules/y.js 20 bytes {3} {10} [built]
-    chunk    {4} default/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{9}> ={0}= ={1}= ={12}= ={2}= ={7}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~c)
+     [3] ./node_modules/y.js 20 bytes {1} {6} [built]
+    chunk    {2} default/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{5}> ={0}= ={1}= ={3}= ={4}= ={9}= ={10}= ={11}= >{3}< >{12}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
+        > ./a [8] ./index.js 1:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+    chunk    {3} default/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{2}> <{5}> <{6}> <{9}> ={0}= ={1}= ={2}= ={4}= ={10}= ={11}= ={12}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+        > ./b [8] ./index.js 2:0-47
+        > ./c [8] ./index.js 3:0-47
+     [2] ./f.js 20 bytes {3} {7} {8} [built]
+    chunk    {4} default/vendors~async-c~c.js (vendors~async-c~c) 20 bytes <{5}> ={0}= ={2}= ={3}= ={8}= ={11}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~async-c~c)
         > ./c c
         > ./c [8] ./index.js 3:0-47
      [7] ./node_modules/z.js 20 bytes {4} [built]
-    chunk    {5} default/async-a.js (async-a) 156 bytes <{9}> ={0}= ={1}= ={3}= >{2}< >{8}< [rendered]
-        > ./a [8] ./index.js 1:0-47
-     [6] ./a.js + 1 modules 156 bytes {5} {10} [built]
-         | ./a.js 121 bytes [built]
-         | ./e.js 20 bytes [built]
-    chunk    {6} default/async-b.js (async-b) 72 bytes <{9}> ={0}= ={1}= ={2}= ={3}= [rendered]
-        > ./b [8] ./index.js 2:0-47
-     [4] ./b.js 72 bytes {6} {11} [built]
-    chunk    {7} default/async-c.js (async-c) 72 bytes <{9}> ={0}= ={1}= ={2}= ={4}= [rendered]
-        > ./c [8] ./index.js 3:0-47
-     [5] ./c.js 72 bytes {7} {12} [built]
-    chunk    {8} default/async-g.js (async-g) 34 bytes <{0}> <{1}> <{10}> <{3}> <{5}> ={2}= [rendered]
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-     [9] ./g.js 34 bytes {8} [built]
-    chunk    {9} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{5}< >{6}< >{7}< [entry] [rendered]
+    chunk    {5} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{9}< >{10}< >{11}< [entry] [rendered]
         > ./ main
-     [8] ./index.js 147 bytes {9} [built]
-    chunk   {10} default/a.js (a) 216 bytes >{2}< >{8}< [entry] [rendered]
+     [8] ./index.js 147 bytes {5} [built]
+    chunk    {6} default/a.js (a) 216 bytes >{3}< >{12}< [entry] [rendered]
         > ./a a
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [2] ./node_modules/x.js 20 bytes {0} {10} [built]
-     [3] ./node_modules/y.js 20 bytes {3} {10} [built]
-     [6] ./a.js + 1 modules 156 bytes {5} {10} [built]
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+     [1] ./node_modules/x.js 20 bytes {0} {6} [built]
+     [3] ./node_modules/y.js 20 bytes {1} {6} [built]
+     [6] ./a.js + 1 modules 156 bytes {6} {9} [built]
          | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-    chunk   {11} default/b.js (b) 112 bytes ={0}= ={3}= [entry] [rendered]
+    chunk    {7} default/b.js (b) 112 bytes ={0}= ={1}= [entry] [rendered]
         > ./b b
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [1] ./f.js 20 bytes {2} {11} {12} [built]
-     [4] ./b.js 72 bytes {6} {11} [built]
-    chunk   {12} default/c.js (c) 112 bytes ={0}= ={4}= [entry] [rendered]
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+     [2] ./f.js 20 bytes {3} {7} {8} [built]
+     [4] ./b.js 72 bytes {7} {10} [built]
+    chunk    {8} default/c.js (c) 112 bytes ={0}= ={4}= [entry] [rendered]
         > ./c c
-     [0] ./d.js 20 bytes {1} {10} {11} {12} [built]
-     [1] ./f.js 20 bytes {2} {11} {12} [built]
-     [5] ./c.js 72 bytes {7} {12} [built]
+     [0] ./d.js 20 bytes {2} {6} {7} {8} [built]
+     [2] ./f.js 20 bytes {3} {7} {8} [built]
+     [5] ./c.js 72 bytes {8} {11} [built]
+    chunk    {9} default/async-a.js (async-a) 156 bytes <{5}> ={0}= ={1}= ={2}= >{3}< >{12}< [rendered]
+        > ./a [8] ./index.js 1:0-47
+     [6] ./a.js + 1 modules 156 bytes {6} {9} [built]
+         | ./a.js 121 bytes [built]
+         | ./e.js 20 bytes [built]
+    chunk   {10} default/async-b.js (async-b) 72 bytes <{5}> ={0}= ={1}= ={2}= ={3}= [rendered]
+        > ./b [8] ./index.js 2:0-47
+     [4] ./b.js 72 bytes {7} {10} [built]
+    chunk   {11} default/async-c.js (async-c) 72 bytes <{5}> ={0}= ={2}= ={3}= ={4}= [rendered]
+        > ./c [8] ./index.js 3:0-47
+     [5] ./c.js 72 bytes {8} {11} [built]
+    chunk   {12} default/async-g.js (async-g) 34 bytes <{0}> <{1}> <{2}> <{6}> <{9}> ={3}= [rendered]
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+     [9] ./g.js 34 bytes {12} [built]
 Child custom-chunks-filter-in-cache-groups:
     Entrypoint main = default/main.js
     Entrypoint a = default/a.js
     Entrypoint b = default/vendors.js default/b.js
     Entrypoint c = default/vendors.js default/c.js
-    chunk    {0} default/vendors.js (vendors) 112 bytes <{5}> ={1}= ={2}= ={3}= ={7}= ={8}= >{4}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
+    chunk    {0} default/vendors.js (vendors) 112 bytes <{1}> ={3}= ={4}= ={5}= ={6}= ={7}= >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./b b
         > ./c c
         > ./a [8] ./index.js 1:0-47
         > ./b [8] ./index.js 2:0-47
         > ./c [8] ./index.js 3:0-47
-     [2] ./node_modules/x.js 20 bytes {0} {6} [built]
-     [3] ./node_modules/y.js 20 bytes {0} {6} [built]
+     [1] ./node_modules/x.js 20 bytes {0} {2} [built]
+     [2] ./node_modules/y.js 20 bytes {0} {2} [built]
      [6] ./node_modules/z.js 20 bytes {0} [built]
      [9] multi x y z 52 bytes {0} [built]
-    chunk    {1} default/async-a.js (async-a) 176 bytes <{5}> ={0}= >{4}< [rendered]
-        > ./a [8] ./index.js 1:0-47
-     [0] ./d.js 20 bytes {1} {2} {3} {6} {7} {8} [built]
-     [7] ./a.js + 1 modules 156 bytes {1} {6} [built]
-         | ./a.js 121 bytes [built]
-         | ./e.js 20 bytes [built]
-    chunk    {2} default/async-b.js (async-b) 112 bytes <{5}> ={0}= [rendered]
-        > ./b [8] ./index.js 2:0-47
-     [0] ./d.js 20 bytes {1} {2} {3} {6} {7} {8} [built]
-     [1] ./f.js 20 bytes {2} {3} {4} {7} {8} [built]
-     [4] ./b.js 72 bytes {2} {7} [built]
-    chunk    {3} default/async-c.js (async-c) 112 bytes <{5}> ={0}= [rendered]
-        > ./c [8] ./index.js 3:0-47
-     [0] ./d.js 20 bytes {1} {2} {3} {6} {7} {8} [built]
-     [1] ./f.js 20 bytes {2} {3} {4} {7} {8} [built]
-     [5] ./c.js 72 bytes {3} {8} [built]
-    chunk    {4} default/async-g.js (async-g) 54 bytes <{0}> <{1}> <{6}> [rendered]
-        > ./g [] 6:0-47
-        > ./g [] 6:0-47
-      [1] ./f.js 20 bytes {2} {3} {4} {7} {8} [built]
-     [10] ./g.js 34 bytes {4} [built]
-    chunk    {5} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< [entry] [rendered]
+    chunk    {1} default/main.js (main) 147 bytes >{0}< >{5}< >{6}< >{7}< [entry] [rendered]
         > ./ main
-     [8] ./index.js 147 bytes {5} [built]
-    chunk    {6} default/a.js (a) 216 bytes >{4}< [entry] [rendered]
+     [8] ./index.js 147 bytes {1} [built]
+    chunk    {2} default/a.js (a) 216 bytes >{8}< [entry] [rendered]
         > ./a a
-     [0] ./d.js 20 bytes {1} {2} {3} {6} {7} {8} [built]
-     [2] ./node_modules/x.js 20 bytes {0} {6} [built]
-     [3] ./node_modules/y.js 20 bytes {0} {6} [built]
-     [7] ./a.js + 1 modules 156 bytes {1} {6} [built]
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [1] ./node_modules/x.js 20 bytes {0} {2} [built]
+     [2] ./node_modules/y.js 20 bytes {0} {2} [built]
+     [7] ./a.js + 1 modules 156 bytes {2} {5} [built]
          | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-    chunk    {7} default/b.js (b) 112 bytes ={0}= [entry] [rendered]
+    chunk    {3} default/b.js (b) 112 bytes ={0}= [entry] [rendered]
         > ./b b
-     [0] ./d.js 20 bytes {1} {2} {3} {6} {7} {8} [built]
-     [1] ./f.js 20 bytes {2} {3} {4} {7} {8} [built]
-     [4] ./b.js 72 bytes {2} {7} [built]
-    chunk    {8} default/c.js (c) 112 bytes ={0}= [entry] [rendered]
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [3] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [4] ./b.js 72 bytes {3} {6} [built]
+    chunk    {4} default/c.js (c) 112 bytes ={0}= [entry] [rendered]
         > ./c c
-     [0] ./d.js 20 bytes {1} {2} {3} {6} {7} {8} [built]
-     [1] ./f.js 20 bytes {2} {3} {4} {7} {8} [built]
-     [5] ./c.js 72 bytes {3} {8} [built]"
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [3] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [5] ./c.js 72 bytes {4} {7} [built]
+    chunk    {5} default/async-a.js (async-a) 176 bytes <{1}> ={0}= >{8}< [rendered]
+        > ./a [8] ./index.js 1:0-47
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [7] ./a.js + 1 modules 156 bytes {2} {5} [built]
+         | ./a.js 121 bytes [built]
+         | ./e.js 20 bytes [built]
+    chunk    {6} default/async-b.js (async-b) 112 bytes <{1}> ={0}= [rendered]
+        > ./b [8] ./index.js 2:0-47
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [3] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [4] ./b.js 72 bytes {3} {6} [built]
+    chunk    {7} default/async-c.js (async-c) 112 bytes <{1}> ={0}= [rendered]
+        > ./c [8] ./index.js 3:0-47
+     [0] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [3] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [5] ./c.js 72 bytes {4} {7} [built]
+    chunk    {8} default/async-g.js (async-g) 54 bytes <{0}> <{2}> <{5}> [rendered]
+        > ./g [] 6:0-47
+        > ./g [] 6:0-47
+      [3] ./f.js 20 bytes {3} {4} {6} {7} {8} [built]
+     [10] ./g.js 34 bytes {8} [built]"
+`;
+
+exports[`StatsTestCases should print correct stats for split-chunks-automatic-name 1`] = `
+"Entrypoint main = main.js
+chunk    {0} common~async-a~async-b~async-c.js (common~async-a~async-b~async-c) 40 bytes <{3}> ={1}= ={2}= ={4}= ={5}= ={6}= ={7}= [rendered] split chunk (cache group: vendors) (name: common~async-a~async-b~async-c)
+    > ./a [0] ./index.js 1:0-47
+    > ./b [0] ./index.js 2:0-47
+    > ./c [0] ./index.js 3:0-47
+ [4] ./d.js 20 bytes {0} [built]
+ [5] ./node_modules/x.js 20 bytes {0} [built]
+chunk    {1} common~async-b~async-c.js (common~async-b~async-c) 20 bytes <{3}> ={0}= ={2}= ={5}= ={6}= ={7}= [rendered] split chunk (cache group: vendors) (name: common~async-b~async-c)
+    > ./b [0] ./index.js 2:0-47
+    > ./c [0] ./index.js 3:0-47
+ [7] ./f.js 20 bytes {1} [built]
+chunk    {2} common~async-a~async-b.js (common~async-a~async-b) 20 bytes <{3}> ={0}= ={1}= ={4}= ={5}= [rendered] split chunk (cache group: vendors) (name: common~async-a~async-b)
+    > ./a [0] ./index.js 1:0-47
+    > ./b [0] ./index.js 2:0-47
+ [6] ./node_modules/y.js 20 bytes {2} [built]
+chunk    {3} main.js (main) 147 bytes >{0}< >{1}< >{2}< >{4}< >{5}< >{6}< >{7}< [entry] [rendered]
+    > ./ main
+ [0] ./index.js 147 bytes {3} [built]
+chunk    {4} async-a.js (async-a) 107 bytes <{3}> ={0}= ={2}= [rendered]
+    > ./a [0] ./index.js 1:0-47
+ [3] ./a.js + 1 modules 107 bytes {4} [built]
+     | ./a.js 72 bytes [built]
+     | ./e.js 20 bytes [built]
+chunk    {5} async-b.js (async-b) 72 bytes <{3}> ={0}= ={1}= ={2}= [rendered]
+    > ./b [0] ./index.js 2:0-47
+ [1] ./b.js 72 bytes {5} [built]
+chunk    {6} async-c.js (async-c) 72 bytes <{3}> ={0}= ={1}= ={7}= [rendered]
+    > ./c [0] ./index.js 3:0-47
+ [2] ./c.js 72 bytes {6} [built]
+chunk    {7} common~async-c.js (common~async-c) 20 bytes <{3}> ={0}= ={1}= ={6}= [rendered] split chunk (cache group: vendors) (name: common~async-c)
+    > ./c [0] ./index.js 3:0-47
+ [8] ./node_modules/z.js 20 bytes {7} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-combinations 1`] = `
 "Entrypoint main = main.js
-chunk    {0} async-a~async-b.js (async-a~async-b) 134 bytes <{8}> ={1}= ={2}= [rendered] split chunk (cache group: default) (name: async-a~async-b)
-    > ./a [9] ./index.js 1:0-47
-    > ./b [9] ./index.js 2:0-47
- [0] ./x.js 67 bytes {0} {3} {4} {5} {6} {7} [built]
- [1] ./y.js 67 bytes {0} [built]
-chunk    {1} async-a.js (async-a) 48 bytes <{8}> ={0}= [rendered]
-    > ./a [9] ./index.js 1:0-47
- [2] ./a.js 48 bytes {1} [built]
-chunk    {2} async-b.js (async-b) 48 bytes <{8}> ={0}= [rendered]
-    > ./b [9] ./index.js 2:0-47
- [3] ./b.js 48 bytes {2} [built]
-chunk    {3} async-c.js (async-c) 101 bytes <{8}> [rendered]
-    > ./c [9] ./index.js 3:0-47
- [0] ./x.js 67 bytes {0} {3} {4} {5} {6} {7} [built]
- [4] ./c.js 34 bytes {3} [built]
-chunk    {4} async-d.js (async-d) 101 bytes <{8}> [rendered]
-    > ./d [9] ./index.js 4:0-47
- [0] ./x.js 67 bytes {0} {3} {4} {5} {6} {7} [built]
- [5] ./d.js 34 bytes {4} [built]
-chunk    {5} async-e.js (async-e) 101 bytes <{8}> [rendered]
-    > ./e [9] ./index.js 5:0-47
- [0] ./x.js 67 bytes {0} {3} {4} {5} {6} {7} [built]
- [6] ./e.js 34 bytes {5} [built]
-chunk    {6} async-f.js (async-f) 101 bytes <{8}> [rendered]
-    > ./f [9] ./index.js 6:0-47
- [0] ./x.js 67 bytes {0} {3} {4} {5} {6} {7} [built]
- [7] ./f.js 34 bytes {6} [built]
-chunk    {7} async-g.js (async-g) 101 bytes <{8}> [rendered]
-    > ./g [9] ./index.js 7:0-47
- [0] ./x.js 67 bytes {0} {3} {4} {5} {6} {7} [built]
- [8] ./g.js 34 bytes {7} [built]
-chunk    {8} main.js (main) 343 bytes >{0}< >{1}< >{2}< >{3}< >{4}< >{5}< >{6}< >{7}< [entry] [rendered]
+chunk    {0} async-a~async-b.js (async-a~async-b) 134 bytes <{1}> ={2}= ={3}= [rendered] split chunk (cache group: default) (name: async-a~async-b)
+    > ./a [0] ./index.js 1:0-47
+    > ./b [0] ./index.js 2:0-47
+ [8] ./x.js 67 bytes {0} {4} {5} {6} {7} {8} [built]
+ [9] ./y.js 67 bytes {0} [built]
+chunk    {1} main.js (main) 343 bytes >{0}< >{2}< >{3}< >{4}< >{5}< >{6}< >{7}< >{8}< [entry] [rendered]
     > ./ main
- [9] ./index.js 343 bytes {8} [built]"
+ [0] ./index.js 343 bytes {1} [built]
+chunk    {2} async-a.js (async-a) 48 bytes <{1}> ={0}= [rendered]
+    > ./a [0] ./index.js 1:0-47
+ [1] ./a.js 48 bytes {2} [built]
+chunk    {3} async-b.js (async-b) 48 bytes <{1}> ={0}= [rendered]
+    > ./b [0] ./index.js 2:0-47
+ [2] ./b.js 48 bytes {3} [built]
+chunk    {4} async-c.js (async-c) 101 bytes <{1}> [rendered]
+    > ./c [0] ./index.js 3:0-47
+ [3] ./c.js 34 bytes {4} [built]
+ [8] ./x.js 67 bytes {0} {4} {5} {6} {7} {8} [built]
+chunk    {5} async-d.js (async-d) 101 bytes <{1}> [rendered]
+    > ./d [0] ./index.js 4:0-47
+ [4] ./d.js 34 bytes {5} [built]
+ [8] ./x.js 67 bytes {0} {4} {5} {6} {7} {8} [built]
+chunk    {6} async-e.js (async-e) 101 bytes <{1}> [rendered]
+    > ./e [0] ./index.js 5:0-47
+ [5] ./e.js 34 bytes {6} [built]
+ [8] ./x.js 67 bytes {0} {4} {5} {6} {7} {8} [built]
+chunk    {7} async-f.js (async-f) 101 bytes <{1}> [rendered]
+    > ./f [0] ./index.js 6:0-47
+ [6] ./f.js 34 bytes {7} [built]
+ [8] ./x.js 67 bytes {0} {4} {5} {6} {7} {8} [built]
+chunk    {8} async-g.js (async-g) 101 bytes <{1}> [rendered]
+    > ./g [0] ./index.js 7:0-47
+ [7] ./g.js 34 bytes {8} [built]
+ [8] ./x.js 67 bytes {0} {4} {5} {6} {7} {8} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-issue-6413 1`] = `
 "Entrypoint main = main.js
-chunk    {0} vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{5}> ={1}= ={2}= ={3}= ={4}= [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~async-c)
-    > ./a [5] ./index.js 1:0-47
-    > ./b [5] ./index.js 2:0-47
-    > ./c [5] ./index.js 3:0-47
- [1] ./node_modules/x.js 20 bytes {0} [built]
-chunk    {1} async-a~async-b~async-c.js (async-a~async-b~async-c) 11 bytes <{5}> ={0}= ={2}= ={3}= ={4}= [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
-    > ./a [5] ./index.js 1:0-47
-    > ./b [5] ./index.js 2:0-47
-    > ./c [5] ./index.js 3:0-47
- [0] ./common.js 11 bytes {1} [built]
-chunk    {2} async-a.js (async-a) 19 bytes <{5}> ={0}= ={1}= [rendered]
-    > ./a [5] ./index.js 1:0-47
- [2] ./a.js 19 bytes {2} [built]
-chunk    {3} async-b.js (async-b) 19 bytes <{5}> ={0}= ={1}= [rendered]
-    > ./b [5] ./index.js 2:0-47
- [3] ./b.js 19 bytes {3} [built]
-chunk    {4} async-c.js (async-c) 19 bytes <{5}> ={0}= ={1}= [rendered]
-    > ./c [5] ./index.js 3:0-47
- [4] ./c.js 19 bytes {4} [built]
-chunk    {5} main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< >{4}< [entry] [rendered]
+chunk    {0} vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{2}> ={1}= ={3}= ={4}= ={5}= [rendered] split chunk (cache group: vendors) (name: vendors~async-a~async-b~async-c)
+    > ./a [0] ./index.js 1:0-47
+    > ./b [0] ./index.js 2:0-47
+    > ./c [0] ./index.js 3:0-47
+ [5] ./node_modules/x.js 20 bytes {0} [built]
+chunk    {1} async-a~async-b~async-c.js (async-a~async-b~async-c) 11 bytes <{2}> ={0}= ={3}= ={4}= ={5}= [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
+    > ./a [0] ./index.js 1:0-47
+    > ./b [0] ./index.js 2:0-47
+    > ./c [0] ./index.js 3:0-47
+ [4] ./common.js 11 bytes {1} [built]
+chunk    {2} main.js (main) 147 bytes >{0}< >{1}< >{3}< >{4}< >{5}< [entry] [rendered]
     > ./ main
- [5] ./index.js 147 bytes {5} [built]"
+ [0] ./index.js 147 bytes {2} [built]
+chunk    {3} async-a.js (async-a) 19 bytes <{2}> ={0}= ={1}= [rendered]
+    > ./a [0] ./index.js 1:0-47
+ [1] ./a.js 19 bytes {3} [built]
+chunk    {4} async-b.js (async-b) 19 bytes <{2}> ={0}= ={1}= [rendered]
+    > ./b [0] ./index.js 2:0-47
+ [2] ./b.js 19 bytes {4} [built]
+chunk    {5} async-c.js (async-c) 19 bytes <{2}> ={0}= ={1}= [rendered]
+    > ./c [0] ./index.js 3:0-47
+ [3] ./c.js 19 bytes {5} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-issue-6696 1`] = `
 "Entrypoint main = vendors.js main.js
-chunk    {0} async-a.js (async-a) 32 bytes <{2}> <{3}> [rendered]
-    > ./a [3] ./index.js 2:0-47
- [0] ./node_modules/x.js 20 bytes {0} {1} [built]
- [1] ./a.js 12 bytes {0} [built]
-chunk    {1} async-b.js (async-b) 32 bytes <{2}> <{3}> [rendered]
-    > ./b [3] ./index.js 3:0-47
- [0] ./node_modules/x.js 20 bytes {0} {1} [built]
- [2] ./b.js 12 bytes {1} [built]
-chunk    {2} main.js (main) 110 bytes ={3}= >{0}< >{1}< [entry] [rendered]
+chunk    {0} main.js (main) 110 bytes ={3}= >{1}< >{2}< [entry] [rendered]
     > ./ main
- [3] ./index.js 110 bytes {2} [built]
-chunk    {3} vendors.js (vendors) 20 bytes ={2}= >{0}< >{1}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
+ [0] ./index.js 110 bytes {0} [built]
+chunk    {1} async-a.js (async-a) 32 bytes <{0}> <{3}> [rendered]
+    > ./a [0] ./index.js 2:0-47
+ [2] ./a.js 12 bytes {1} [built]
+ [4] ./node_modules/x.js 20 bytes {1} {2} [built]
+chunk    {2} async-b.js (async-b) 32 bytes <{0}> <{3}> [rendered]
+    > ./b [0] ./index.js 3:0-47
+ [3] ./b.js 12 bytes {2} [built]
+ [4] ./node_modules/x.js 20 bytes {1} {2} [built]
+chunk    {3} vendors.js (vendors) 20 bytes ={0}= >{1}< >{2}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
     > ./ main
- [4] ./node_modules/y.js 20 bytes {3} [built]"
+ [1] ./node_modules/y.js 20 bytes {3} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-issue-7401 1`] = `
 "Entrypoint a = vendors~a~c.js a.js
 Entrypoint b = b.js
 Chunk Group c = vendors~a~c.js c.js
-chunk    {0} vendors~a~c.js (vendors~a~c) 20 bytes <{3}> ={1}= ={2}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~c)
+chunk    {0} vendors~a~c.js (vendors~a~c) 20 bytes <{2}> ={1}= ={3}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~c)
     > ./a a
-    > ./c [3] ./b.js 1:0-41
+    > ./c [2] ./b.js 1:0-41
  [0] ./node_modules/x.js 20 bytes {0} [built]
-chunk    {1} c.js (c) 12 bytes <{3}> ={0}= [rendered]
-    > ./c [3] ./b.js 1:0-41
- [1] ./c.js 12 bytes {1} [built]
-chunk    {2} a.js (a) 12 bytes ={0}= [entry] [rendered]
+chunk    {1} a.js (a) 12 bytes ={0}= [entry] [rendered]
     > ./a a
- [2] ./a.js 12 bytes {2} [built]
-chunk    {3} b.js (b) 43 bytes >{0}< >{1}< [entry] [rendered]
+ [1] ./a.js 12 bytes {1} [built]
+chunk    {2} b.js (b) 43 bytes >{0}< >{3}< [entry] [rendered]
     > ./b b
- [3] ./b.js 43 bytes {3} [built]"
+ [2] ./b.js 43 bytes {2} [built]
+chunk    {3} c.js (c) 12 bytes <{2}> ={0}= [rendered]
+    > ./c [2] ./b.js 1:0-41
+ [3] ./c.js 12 bytes {3} [built]"
+`;
+
+exports[`StatsTestCases should print correct stats for split-chunks-max-size 1`] = `
+"Child production:
+    Entrypoint main = prod-vendors~main~7274e1de.js prod-vendors~main~0feae4ad.js prod-main~6e7ead72.js prod-main~6a2ae26b.js prod-main~17acad98.js prod-main~b2c7414a.js prod-main~75f09de8.js prod-main~052b3814.js prod-main~3ff27526.js prod-main~11485824.js prod-main~c6931360.js prod-main~cd7c5bfc.js prod-main~02369f19.js
+    chunk    {0} prod-main~02369f19.js (main~02369f19) 1.57 KiB ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= [entry] [rendered]
+        > ./ main
+     [11] ./very-big.js?1 1.57 KiB {0} [built]
+    chunk    {1} prod-vendors~main~0feae4ad.js (vendors~main~0feae4ad) 1.57 KiB ={0}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~main)
+        > ./ main
+     [43] ./node_modules/very-big.js?1 1.57 KiB {1} [built]
+    chunk    {2} prod-main~6e7ead72.js (main~6e7ead72) 536 bytes ={0}= ={1}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= [initial] [rendered]
+        > ./ main
+     [0] ./big.js?1 268 bytes {2} [built]
+     [1] ./big.js?2 268 bytes {2} [built]
+    chunk    {3} prod-main~6a2ae26b.js (main~6a2ae26b) 536 bytes ={0}= ={1}= ={2}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= [initial] [rendered]
+        > ./ main
+     [34] ./in-some-directory/big.js?1 268 bytes {3} [built]
+     [35] ./in-some-directory/small.js?1 67 bytes {3} [built]
+     [36] ./in-some-directory/small.js?2 67 bytes {3} [built]
+     [37] ./in-some-directory/small.js?3 67 bytes {3} [built]
+     [38] ./in-some-directory/small.js?4 67 bytes {3} [built]
+    chunk    {4} prod-main~17acad98.js (main~17acad98) 1.57 KiB ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= [initial] [rendered]
+        > ./ main
+     [39] ./in-some-directory/very-big.js?1 1.57 KiB {4} [built]
+    chunk    {5} prod-main~b2c7414a.js (main~b2c7414a) 1.19 KiB ={0}= ={1}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= [initial] [rendered]
+        > ./ main
+     [44] ./index.js 1.19 KiB {5} [built]
+    chunk    {6} prod-main~75f09de8.js (main~75f09de8) 603 bytes ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= [initial] [rendered]
+        > ./ main
+     [25] ./inner-module/small.js?1 67 bytes {6} [built]
+     [26] ./inner-module/small.js?2 67 bytes {6} [built]
+     [27] ./inner-module/small.js?3 67 bytes {6} [built]
+     [28] ./inner-module/small.js?4 67 bytes {6} [built]
+     [29] ./inner-module/small.js?5 67 bytes {6} [built]
+     [30] ./inner-module/small.js?6 67 bytes {6} [built]
+     [31] ./inner-module/small.js?7 67 bytes {6} [built]
+     [32] ./inner-module/small.js?8 67 bytes {6} [built]
+     [33] ./inner-module/small.js?9 67 bytes {6} [built]
+    chunk    {7} prod-main~052b3814.js (main~052b3814) 603 bytes ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={8}= ={9}= ={10}= ={11}= ={12}= [initial] [rendered]
+        > ./ main
+      [2] ./small.js?1 67 bytes {7} [built]
+      [3] ./small.js?2 67 bytes {7} [built]
+      [4] ./small.js?3 67 bytes {7} [built]
+      [5] ./small.js?4 67 bytes {7} [built]
+      [6] ./small.js?5 67 bytes {7} [built]
+      [7] ./small.js?6 67 bytes {7} [built]
+      [8] ./small.js?7 67 bytes {7} [built]
+      [9] ./small.js?8 67 bytes {7} [built]
+     [10] ./small.js?9 67 bytes {7} [built]
+    chunk    {8} prod-main~3ff27526.js (main~3ff27526) 536 bytes ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={9}= ={10}= ={11}= ={12}= [initial] [rendered]
+        > ./ main
+     [14] ./subfolder/big.js?1 268 bytes {8} [built]
+     [15] ./subfolder/big.js?2 268 bytes {8} [built]
+    chunk    {9} prod-main~11485824.js (main~11485824) 603 bytes ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={10}= ={11}= ={12}= [initial] [rendered]
+        > ./ main
+     [16] ./subfolder/small.js?1 67 bytes {9} [built]
+     [17] ./subfolder/small.js?2 67 bytes {9} [built]
+     [18] ./subfolder/small.js?3 67 bytes {9} [built]
+     [19] ./subfolder/small.js?4 67 bytes {9} [built]
+     [20] ./subfolder/small.js?5 67 bytes {9} [built]
+     [21] ./subfolder/small.js?6 67 bytes {9} [built]
+     [22] ./subfolder/small.js?7 67 bytes {9} [built]
+     [23] ./subfolder/small.js?8 67 bytes {9} [built]
+     [24] ./subfolder/small.js?9 67 bytes {9} [built]
+    chunk   {10} prod-main~c6931360.js (main~c6931360) 1.57 KiB ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={11}= ={12}= [initial] [rendered]
+        > ./ main
+     [12] ./very-big.js?2 1.57 KiB {10} [built]
+    chunk   {11} prod-main~cd7c5bfc.js (main~cd7c5bfc) 1.57 KiB ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={12}= [initial] [rendered]
+        > ./ main
+     [13] ./very-big.js?3 1.57 KiB {11} [built]
+    chunk   {12} prod-vendors~main~7274e1de.js (vendors~main~7274e1de) 402 bytes ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~main)
+        > ./ main
+     [40] ./node_modules/big.js?1 268 bytes {12} [built]
+     [41] ./node_modules/small.js?1 67 bytes {12} [built]
+     [42] ./node_modules/small.js?2 67 bytes {12} [built]
+Child development:
+    Entrypoint main = dev-vendors~main~._node_modules_b.js dev-vendors~main~._node_modules_very-big.js~6bdbed7b.js dev-main~._big.js~1.js dev-main~._in-some-directory_b.js dev-main~._in-some-directory_very-big.js~8d76cf03.js dev-main~._index.js~41f5a26e.js dev-main~._inner-module_small.js~3.js dev-main~._small.js~1.js dev-main~._subfolder_big.js~b.js dev-main~._subfolder_small.js~1.js dev-main~._very-big.js~08cf55cf.js dev-main~._very-big.js~4647fb9d.js dev-main~._very-big.js~62f7f644.js
+    chunk {main~._big.js~1} dev-main~._big.js~1.js (main~._big.js~1) 536 bytes ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
+        > ./ main
+     [./big.js?1] 268 bytes {main~._big.js~1} [built]
+     [./big.js?2] 268 bytes {main~._big.js~1} [built]
+    chunk {main~._in-some-directory_b} dev-main~._in-some-directory_b.js (main~._in-some-directory_b) 536 bytes ={main~._big.js~1}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
+        > ./ main
+     [./in-some-directory/big.js?1] 268 bytes {main~._in-some-directory_b} [built]
+     [./in-some-directory/small.js?1] 67 bytes {main~._in-some-directory_b} [built]
+     [./in-some-directory/small.js?2] 67 bytes {main~._in-some-directory_b} [built]
+     [./in-some-directory/small.js?3] 67 bytes {main~._in-some-directory_b} [built]
+     [./in-some-directory/small.js?4] 67 bytes {main~._in-some-directory_b} [built]
+    chunk {main~._in-some-directory_very-big.js~8d76cf03} dev-main~._in-some-directory_very-big.js~8d76cf03.js (main~._in-some-directory_very-big.js~8d76cf03) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
+        > ./ main
+     [./in-some-directory/very-big.js?1] 1.57 KiB {main~._in-some-directory_very-big.js~8d76cf03} [built]
+    chunk {main~._index.js~41f5a26e} dev-main~._index.js~41f5a26e.js (main~._index.js~41f5a26e) 1.19 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
+        > ./ main
+     [./index.js] 1.19 KiB {main~._index.js~41f5a26e} [built]
+    chunk {main~._inner-module_small.js~3} dev-main~._inner-module_small.js~3.js (main~._inner-module_small.js~3) 603 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
+        > ./ main
+     [./inner-module/small.js?1] 67 bytes {main~._inner-module_small.js~3} [built]
+     [./inner-module/small.js?2] 67 bytes {main~._inner-module_small.js~3} [built]
+     [./inner-module/small.js?3] 67 bytes {main~._inner-module_small.js~3} [built]
+     [./inner-module/small.js?4] 67 bytes {main~._inner-module_small.js~3} [built]
+     [./inner-module/small.js?5] 67 bytes {main~._inner-module_small.js~3} [built]
+     [./inner-module/small.js?6] 67 bytes {main~._inner-module_small.js~3} [built]
+     [./inner-module/small.js?7] 67 bytes {main~._inner-module_small.js~3} [built]
+     [./inner-module/small.js?8] 67 bytes {main~._inner-module_small.js~3} [built]
+     [./inner-module/small.js?9] 67 bytes {main~._inner-module_small.js~3} [built]
+    chunk {main~._small.js~1} dev-main~._small.js~1.js (main~._small.js~1) 603 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
+        > ./ main
+     [./small.js?1] 67 bytes {main~._small.js~1} [built]
+     [./small.js?2] 67 bytes {main~._small.js~1} [built]
+     [./small.js?3] 67 bytes {main~._small.js~1} [built]
+     [./small.js?4] 67 bytes {main~._small.js~1} [built]
+     [./small.js?5] 67 bytes {main~._small.js~1} [built]
+     [./small.js?6] 67 bytes {main~._small.js~1} [built]
+     [./small.js?7] 67 bytes {main~._small.js~1} [built]
+     [./small.js?8] 67 bytes {main~._small.js~1} [built]
+     [./small.js?9] 67 bytes {main~._small.js~1} [built]
+    chunk {main~._subfolder_big.js~b} dev-main~._subfolder_big.js~b.js (main~._subfolder_big.js~b) 536 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
+        > ./ main
+     [./subfolder/big.js?1] 268 bytes {main~._subfolder_big.js~b} [built]
+     [./subfolder/big.js?2] 268 bytes {main~._subfolder_big.js~b} [built]
+    chunk {main~._subfolder_small.js~1} dev-main~._subfolder_small.js~1.js (main~._subfolder_small.js~1) 603 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
+        > ./ main
+     [./subfolder/small.js?1] 67 bytes {main~._subfolder_small.js~1} [built]
+     [./subfolder/small.js?2] 67 bytes {main~._subfolder_small.js~1} [built]
+     [./subfolder/small.js?3] 67 bytes {main~._subfolder_small.js~1} [built]
+     [./subfolder/small.js?4] 67 bytes {main~._subfolder_small.js~1} [built]
+     [./subfolder/small.js?5] 67 bytes {main~._subfolder_small.js~1} [built]
+     [./subfolder/small.js?6] 67 bytes {main~._subfolder_small.js~1} [built]
+     [./subfolder/small.js?7] 67 bytes {main~._subfolder_small.js~1} [built]
+     [./subfolder/small.js?8] 67 bytes {main~._subfolder_small.js~1} [built]
+     [./subfolder/small.js?9] 67 bytes {main~._subfolder_small.js~1} [built]
+    chunk {main~._very-big.js~08cf55cf} dev-main~._very-big.js~08cf55cf.js (main~._very-big.js~08cf55cf) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
+        > ./ main
+     [./very-big.js?2] 1.57 KiB {main~._very-big.js~08cf55cf} [built]
+    chunk {main~._very-big.js~4647fb9d} dev-main~._very-big.js~4647fb9d.js (main~._very-big.js~4647fb9d) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered]
+        > ./ main
+     [./very-big.js?3] 1.57 KiB {main~._very-big.js~4647fb9d} [built]
+    chunk {main~._very-big.js~62f7f644} dev-main~._very-big.js~62f7f644.js (main~._very-big.js~62f7f644) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [entry] [rendered]
+        > ./ main
+     [./very-big.js?1] 1.57 KiB {main~._very-big.js~62f7f644} [built]
+    chunk {vendors~main~._node_modules_b} dev-vendors~main~._node_modules_b.js (vendors~main~._node_modules_b) 402 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~main)
+        > ./ main
+     [./node_modules/big.js?1] 268 bytes {vendors~main~._node_modules_b} [built]
+     [./node_modules/small.js?1] 67 bytes {vendors~main~._node_modules_b} [built]
+     [./node_modules/small.js?2] 67 bytes {vendors~main~._node_modules_b} [built]
+    chunk {vendors~main~._node_modules_very-big.js~6bdbed7b} dev-vendors~main~._node_modules_very-big.js~6bdbed7b.js (vendors~main~._node_modules_very-big.js~6bdbed7b) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~main)
+        > ./ main
+     [./node_modules/very-big.js?1] 1.57 KiB {vendors~main~._node_modules_very-big.js~6bdbed7b} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-prefer-bigger-splits 1`] = `
 "Entrypoint main = default/main.js
-chunk    {0} default/async-b~async-c.js (async-b~async-c) 110 bytes <{4}> ={2}= ={3}= [rendered] split chunk (cache group: default) (name: async-b~async-c)
-    > ./b [6] ./index.js 2:0-47
-    > ./c [6] ./index.js 3:0-47
- [0] ./d.js 43 bytes {0} {1} [built]
- [2] ./f.js 67 bytes {0} [built]
-chunk    {1} default/async-a.js (async-a) 134 bytes <{4}> [rendered]
-    > ./a [6] ./index.js 1:0-47
- [0] ./d.js 43 bytes {0} {1} [built]
- [1] ./e.js 43 bytes {1} {2} [built]
- [3] ./a.js 48 bytes {1} [built]
-chunk    {2} default/async-b.js (async-b) 105 bytes <{4}> ={0}= [rendered]
-    > ./b [6] ./index.js 2:0-47
- [1] ./e.js 43 bytes {1} {2} [built]
- [4] ./b.js 62 bytes {2} [built]
-chunk    {3} default/async-c.js (async-c) 48 bytes <{4}> ={0}= [rendered]
-    > ./c [6] ./index.js 3:0-47
- [5] ./c.js 48 bytes {3} [built]
-chunk    {4} default/main.js (main) 147 bytes >{0}< >{1}< >{2}< >{3}< [entry] [rendered]
+chunk    {0} default/async-b~async-c.js (async-b~async-c) 110 bytes <{1}> ={3}= ={4}= [rendered] split chunk (cache group: default) (name: async-b~async-c)
+    > ./b [0] ./index.js 2:0-47
+    > ./c [0] ./index.js 3:0-47
+ [4] ./d.js 43 bytes {0} {2} [built]
+ [6] ./f.js 67 bytes {0} [built]
+chunk    {1} default/main.js (main) 147 bytes >{0}< >{2}< >{3}< >{4}< [entry] [rendered]
     > ./ main
- [6] ./index.js 147 bytes {4} [built]"
+ [0] ./index.js 147 bytes {1} [built]
+chunk    {2} default/async-a.js (async-a) 134 bytes <{1}> [rendered]
+    > ./a [0] ./index.js 1:0-47
+ [1] ./a.js 48 bytes {2} [built]
+ [4] ./d.js 43 bytes {0} {2} [built]
+ [5] ./e.js 43 bytes {2} {3} [built]
+chunk    {3} default/async-b.js (async-b) 105 bytes <{1}> ={0}= [rendered]
+    > ./b [0] ./index.js 2:0-47
+ [2] ./b.js 62 bytes {3} [built]
+ [5] ./e.js 43 bytes {2} {3} [built]
+chunk    {4} default/async-c.js (async-c) 48 bytes <{1}> ={0}= [rendered]
+    > ./c [0] ./index.js 3:0-47
+ [3] ./c.js 48 bytes {4} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: 7664ceef8f3f695c9688
+"Hash: 676a77cd1dc12f6d6cc8
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks             Chunk Names
@@ -2811,13 +2995,13 @@ Entrypoint main = bundle.js
      [no exports used]
  [2] ./unknown.js 0 bytes {0} [built]
      [only some exports used: c]
- [3] ./unknown2.js 0 bytes {0} [built]
+ [3] ./reexport-unknown.js 83 bytes {0} [built]
+     [exports: a, b, c, d]
+     [only some exports used: a, c]
+ [4] ./reexport-star-unknown.js 68 bytes {0} [built]
+     [only some exports used: a, c]
+ [5] ./unknown2.js 0 bytes {0} [built]
      [only some exports used: y]
- [4] ./index.js 315 bytes {0} [built]
-     [no exports]
- [5] ./require.include.js 36 bytes {0} [built]
-     [exports: a, default]
-     [no exports used]
  [6] ./reexport-known.js 49 bytes {0} [built]
      [exports: a, b]
      [only some exports used: a]
@@ -2826,11 +3010,11 @@ Entrypoint main = bundle.js
      [only some exports used: a]
  [8] ./edge.js 45 bytes {0} [built]
      [only some exports used: y]
- [9] ./reexport-unknown.js 83 bytes {0} [built]
-     [exports: a, b, c, d]
-     [only some exports used: a, c]
-[10] ./reexport-star-unknown.js 68 bytes {0} [built]
-     [only some exports used: a, c]"
+ [9] ./index.js 315 bytes {0} [built]
+     [no exports]
+[10] ./require.include.js 36 bytes {0} [built]
+     [exports: a, default]
+     [no exports used]"
 `;
 
 exports[`StatsTestCases should print correct stats for warnings-uglifyjs 1`] = `
