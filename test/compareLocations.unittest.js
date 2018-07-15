@@ -99,7 +99,7 @@ describe("compareLocations", () => {
 			expect(compareLocations("alpha", createLocation())).toBe(-1);
 		});
 
-		it("returns 0 when both the first parameter and the second parameter is an object", () => {
+		it("returns 0 when both the first parameter and the second parameter are not objects", () => {
 			expect(compareLocations(123, 456)).toBe(0);
 		});
 	});
