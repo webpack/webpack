@@ -68,7 +68,6 @@ describe("StatsTestCases", () => {
 						])
 					);
 				};
-				new webpack.optimize.OccurrenceOrderPlugin().apply(c);
 			});
 			c.run((err, stats) => {
 				if (err) return done(err);

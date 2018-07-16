@@ -92,16 +92,19 @@ within webpack itself use this plugin interface. This makes webpack very
 
 |Name|Status|Install Size|Description|
 |:--:|:----:|:----------:|:----------|
-|[extract-text-webpack-plugin][extract]|![extract-npm]|![extract-size]|Extracts Text (CSS) from your bundles into a separate file (app.bundle.css)|
+|[mini-css-extract-plugin][mini-css]|![mini-css-npm]|![mini-css-size]|Extracts CSS into separate files. It creates a CSS file per JS file which contains CSS.|
 |[compression-webpack-plugin][compression]|![compression-npm]|![compression-size]|Prepares compressed versions of assets to serve them with Content-Encoding|
 |[i18n-webpack-plugin][i18n]|![i18n-npm]|![i18n-size]|Adds i18n support to your bundles|
 |[html-webpack-plugin][html-plugin]|![html-plugin-npm]|![html-plugin-size]| Simplifies creation of HTML files (`index.html`) to serve your bundles|
-
+|[extract-text-webpack-plugin][extract]|![extract-npm]|![extract-size]|Extract text from a bundle, or bundles, into a separate file|
 
 [common-npm]: https://img.shields.io/npm/v/webpack.svg
 [extract]: https://github.com/webpack/extract-text-webpack-plugin
 [extract-npm]: https://img.shields.io/npm/v/extract-text-webpack-plugin.svg
 [extract-size]: https://packagephobia.now.sh/badge?p=extract-text-webpack-plugin
+[mini-css]: https://github.com/webpack-contrib/mini-css-extract-plugin
+[mini-css-npm]: https://img.shields.io/npm/v/mini-css-extract-plugin.svg
+[mini-css-size]: https://packagephobia.now.sh/badge?p=mini-css-extract-plugin
 [component]: https://github.com/webpack/component-webpack-plugin
 [component-npm]: https://img.shields.io/npm/v/component-webpack-plugin.svg
 [component-size]: https://packagephobia.now.sh/badge?p=component-webpack-plugin

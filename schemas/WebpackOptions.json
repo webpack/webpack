@@ -410,11 +410,7 @@
         },
         "hashDigest": {
           "description": "Digest type used for the hash",
-          "enum": [
-            "latin1",
-            "hex",
-            "base64"
-          ]
+          "type": "string"
         },
         "hashDigestLength": {
           "description": "Number of chars which are used for the hash",
@@ -1596,7 +1592,7 @@
           "type": "boolean"
         },
         "moduleIds": {
-          "description": "Define the algorithm to choose module ids (natural: numeric ids in order for usage, named: readable ids for better debugging, hashed: short hashes as ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)",
+          "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: short hashes as ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)",
           "enum": [
             "natural",
             "named",
