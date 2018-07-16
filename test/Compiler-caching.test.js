@@ -17,6 +17,7 @@ describe("Compiler (caching)", () => {
 		options = new WebpackOptionsDefaulter().process(options);
 		options.cache = true;
 		options.entry = entry;
+		options.optimization.moduleIds = "natural";
 		options.optimization.minimize = false;
 		options.context = path.join(__dirname, "fixtures");
 		options.output.path = "/";
