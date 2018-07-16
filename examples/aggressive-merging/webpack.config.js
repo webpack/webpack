@@ -18,6 +18,6 @@ module.exports = {
 		})
 	],
 	optimization: {
-		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+		chunkIds: "total-size" // To keep filename consistent between different modes (for example building only)
 	}
 };
