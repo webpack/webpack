@@ -42,5 +42,19 @@ module.exports = [
 				])
 			})
 		]
+	},
+	{
+		mode: "production",
+		entry: "./index",
+		plugins: [
+			new webpack.DefinePlugin(
+				{
+					VALUE: webpack.DefinePlugin.runtimeValue(() => read("456.txt"), [
+						"./456.txt"
+					])
+				},
+				"prefix"
+			)
+		]
 	}
 ];
