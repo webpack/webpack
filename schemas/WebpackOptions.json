@@ -1299,10 +1299,6 @@
           "description": "Also flag chunks as loaded which contain a subset of the modules",
           "type": "boolean"
         },
-        "occurrenceOrder": {
-          "description": "Figure out a order of modules which results in the smallest initial bundle",
-          "type": "boolean"
-        },
         "sideEffects": {
           "description": "Skip over modules which are flagged to contain no side effects when exports are not used",
           "type": "boolean"
@@ -1611,18 +1607,6 @@
             "total-size",
             false
           ]
-        },
-        "namedModules": {
-          "description": "Use readable module identifiers for better debugging (deprecated, used moduleIds: named instead)",
-          "type": "boolean"
-        },
-        "hashedModuleIds": {
-          "description": "Use hashed module id instead module identifiers for better long term caching (deprecated, used moduleIds: hashed instead)",
-          "type": "boolean"
-        },
-        "namedChunks": {
-          "description": "Use readable chunk identifiers for better debugging (deprecated, used chunkIds: named instead)",
-          "type": "boolean"
         },
         "portableRecords": {
           "description": "Generate records with relative paths to be able to move the context folder",

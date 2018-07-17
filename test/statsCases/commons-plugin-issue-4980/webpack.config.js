@@ -19,7 +19,7 @@ module.exports = [
 					}
 				}
 			},
-			namedModules: true
+			moduleIds: "named"
 		}
 	},
 	{
@@ -41,7 +41,7 @@ module.exports = [
 					}
 				}
 			},
-			namedModules: true
+			moduleIds: "named"
 		}
 	}
 ];

@@ -2,7 +2,7 @@ const base = {
 	mode: "production",
 	optimization: {
 		runtimeChunk: true,
-		namedChunks: true,
+		chunkIds: "named",
 		splitChunks: {
 			minSize: 0,
 			chunks: "all",

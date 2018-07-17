@@ -22,14 +22,13 @@ const DEFAULT_OPTIMIZATIONS = {
 	removeEmptyChunks: true,
 	mergeDuplicateChunks: true,
 	flagIncludedChunks: true,
-	occurrenceOrder: true,
 	sideEffects: true,
 	providedExports: true,
 	usedExports: true,
 	noEmitOnErrors: false,
 	concatenateModules: false,
-	namedModules: false,
-	hashedModuleIds: false,
+	moduleIds: "size",
+	chunkIds: "size",
 	minimizer: [uglifyJsForTesting]
 };
 

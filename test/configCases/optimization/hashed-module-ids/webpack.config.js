@@ -1,5 +1,5 @@
 module.exports = {
 	optimization: {
-		hashedModuleIds: true
+		moduleIds: "hashed"
 	}
 };
