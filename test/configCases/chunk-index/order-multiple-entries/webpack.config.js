@@ -66,6 +66,8 @@ module.exports = {
 						asyncIndex2: "0: ./async.js"
 					});
 					const indicies = compilation.modules
+						.slice()
+						.sort((a, b) => a.index - b.index)
 						.map(
 							m =>
 								`${m.index}: ${m.readableIdentifier(
@@ -74,6 +76,8 @@ module.exports = {
 						)
 						.join(", ");
 					const indicies2 = compilation.modules
+						.slice()
+						.sort((a, b) => a.index2 - b.index2)
 						.map(
 							m =>
 								`${m.index2}: ${m.readableIdentifier(
@@ -82,10 +86,10 @@ module.exports = {
 						)
 						.join(", ");
 					expect(indicies).toEqual(
-						"2: ./shared.js, 4: ./c.js, 3: ./b.js, 1: ./a.js, 6: ./async.js, 5: ./entry2.js, 0: ./entry1.js"
+						"0: ./entry1.js, 1: ./a.js, 2: ./shared.js, 3: ./b.js, 4: ./c.js, 5: ./entry2.js, 6: ./async.js"
 					);
 					expect(indicies2).toEqual(
-						"0: ./shared.js, 3: ./c.js, 2: ./b.js, 1: ./a.js, 6: ./async.js, 5: ./entry2.js, 4: ./entry1.js"
+						"0: ./shared.js, 1: ./a.js, 2: ./b.js, 3: ./c.js, 4: ./entry1.js, 5: ./entry2.js, 6: ./async.js"
 					);
 				});
 			};
