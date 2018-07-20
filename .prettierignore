@@ -9,6 +9,7 @@
 !buildin/*.js
 !benchmark/**/*.js
 !test/*.js
+!tooling/*.js
 !test/**/webpack.config.js
 !examples/**/webpack.config.js
 !schemas/**/*.js
