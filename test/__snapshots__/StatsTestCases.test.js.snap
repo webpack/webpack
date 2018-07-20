@@ -560,8 +560,8 @@ chunk    {2} 2.bundle.js 60 bytes <{1}> [rendered]
 chunk {main} bundle.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
     > ./index main
  [./a.js] 22 bytes {main} [built]
-     cjs require ./a [./index.js] 1:0-14
      cjs require ./a [./e.js] 1:0-14
+     cjs require ./a [./index.js] 1:0-14
      [./index.js] Xms -> factory:Xms building:Xms = Xms
  [./index.js] 51 bytes {main} [built]
      single entry ./index  main
