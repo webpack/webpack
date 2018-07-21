@@ -1,0 +1,23 @@
+machine:
+  environment:
+    NO_WATCH_TESTS: 1
+
+machine:
+  environment:
+    PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
+
+dependencies:
+  pre:
+    - case $CIRCLE_NODE_INDEX in 0) NODE_VERSION=4 ;; 1) NODE_VERSION=8 ;; esac; nvm install $NODE_VERSION && nvm alias default $NODE_VERSION
+  override:
+    - yarn
+    - yarn link || true && yarn link webpack
+  cache_directories:
+    - ~/.cache/yarn
+
+test:
+  override:
+    - node -v
+    - yarn --version
+    - yarn run circleci:lint
+    - yarn run circleci:test

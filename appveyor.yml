@@ -1,0 +1,40 @@
+# appveyor file
+# http://www.appveyor.com/docs/appveyor-yml
+
+branches:
+  only:
+    - webpack-3
+    - master
+    - next
+
+init:
+  - git config --global core.autocrlf input
+
+# what combinations to test
+environment:
+  matrix:
+    - nodejs_version: 8
+      job_part: unit
+    - nodejs_version: 8
+      job_part: integration
+    - nodejs_version: 6
+      job_part: integration
+
+install:
+  - ps: Install-Product node $env:nodejs_version x64
+  - npm install yarn -g
+  - yarn install --frozen-lockfile
+  - yarn link --frozen-lockfile || yarn link --frozen-lockfile
+  - yarn link webpack --frozen-lockfile
+
+build: off
+
+matrix:
+  fast_finish: true
+
+test_script:
+  - node --version
+  - npm --version
+  - yarn --version
+  - cmd: npm run appveyor:%job_part%
+  - cmd: npm install -g codecov && codecov -F %job_part%

@@ -1,0 +1,23 @@
+Hash: 7d3a56317b2e339b1d822897fe6052020598632c
+Child
+    Hash: 7d3a56317b2e339b1d82
+    Time: Xms
+                             Asset       Size  Chunks             Chunk Names
+                            app.js    1.27 kB       0  [emitted]  app
+    vendor.bd2b4219dfda1a951495.js  443 bytes       1  [emitted]  vendor
+                        runtime.js    3.84 kB       2  [emitted]  runtime
+    [./constants.js] (webpack)/test/statsCases/commons-plugin-issue-4980/constants.js 87 bytes {1} [built]
+    [./entry-1.js] (webpack)/test/statsCases/commons-plugin-issue-4980/entry-1.js 67 bytes {0} [built]
+    [./submodule-a.js] (webpack)/test/statsCases/commons-plugin-issue-4980/submodule-a.js 59 bytes {0} [built]
+    [./submodule-b.js] (webpack)/test/statsCases/commons-plugin-issue-4980/submodule-b.js 59 bytes {0} [built]
+Child
+    Hash: 2897fe6052020598632c
+    Time: Xms
+                             Asset       Size  Chunks             Chunk Names
+                            app.js    1.32 kB       0  [emitted]  app
+    vendor.bd2b4219dfda1a951495.js  443 bytes       1  [emitted]  vendor
+                        runtime.js    3.84 kB       2  [emitted]  runtime
+    [./constants.js] (webpack)/test/statsCases/commons-plugin-issue-4980/constants.js 87 bytes {1} [built]
+    [./entry-2.js] (webpack)/test/statsCases/commons-plugin-issue-4980/entry-2.js 67 bytes {0} [built]
+    [./submodule-a.js] (webpack)/test/statsCases/commons-plugin-issue-4980/submodule-a.js 59 bytes {0} [built]
+    [./submodule-c.js] (webpack)/test/statsCases/commons-plugin-issue-4980/submodule-c.js 66 bytes {0} [built]

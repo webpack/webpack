@@ -2,40 +2,37 @@
 	MIT License http://www.opensource.org/licenses/mit-license.php
 	Author Tobias Koppers @sokra
 */
-var cp = require('child_process');
-var tc = require("./template-common");
-var Stats = require("../lib/Stats");
-// var webpackGraph = require("webpack-graph");
-var fs = require("fs");
-var path = require("path");
+"use strict";
 
-var extraArgs = "";
+const cp = require("child_process");
+const path = require("path");
+const tc = require("./template-common");
+const fs = require("fs");
 
-cp.exec("node ../../bin/webpack.js --display-reasons --display-chunks --optimize-minimize "+extraArgs+" ./example.js js/output.js", function (error, stdout, stderr) {
+const extraArgs = "";
+
+const targetArgs = global.NO_TARGET_ARGS ? "" : " ./example.js js/output.js";
+const displayReasons = global.NO_REASONS ? "" : " --display-reasons --display-used-exports --display-provided-exports";
+cp.exec(`node ${path.resolve(__dirname, "../bin/webpack.js")} ${displayReasons} --display-chunks --display-max-modules 99999 --display-origins --display-entrypoints --output-public-path "js/" -p ${extraArgs} ${targetArgs}`, function(error, stdout, stderr) {
 	if(stderr)
 		console.log(stderr);
-	if (error !== null)
+	if(error !== null)
 		console.log(error);
-	var readme = tc(fs.readFileSync(require("path").join(process.cwd(), "template.md"), "utf-8"), process.cwd(), stdout.replace(/[\r\n]*$/, ""), "min");
-	cp.exec("node ../../bin/webpack.js --display-reasons --display-chunks --output-pathinfo "+extraArgs+" ./example.js js/output.js", function (error, stdout, stderr) {
+	let readme;
+	try {
+		readme = tc.replaceResults(fs.readFileSync(require("path").join(process.cwd(), "template.md"), "utf-8"), process.cwd(), stdout.replace(/[\r\n]*$/, ""), "min");
+	} catch(e) {
+		console.log(stderr);
+		throw e;
+	}
+	cp.exec(`node ${path.resolve(__dirname, "../bin/webpack.js")} ${displayReasons} --display-chunks --display-max-modules 99999 --display-origins --display-entrypoints --output-public-path "js/" --output-pathinfo ${extraArgs} ${targetArgs}`, function(error, stdout, stderr) {
 		console.log(stdout);
 		if(stderr)
 			console.log(stderr);
-		if (error !== null)
+		if(error !== null)
 			console.log(error);
-		// var stats = JSON.parse(stdout);
-		// var formatedStats = Stats.jsonToString(stats, {
-			// context: process.cwd(),
-			// verbose: true
-		// });
-		// var filenameShortener = createFilenameShortener(process.cwd());
-		readme = tc(readme, process.cwd(), stdout.replace(/[\r\n]*$/, ""));
-		readme = readme.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+		readme = tc.replaceResults(readme, process.cwd(), stdout.replace(/[\r\n]*$/, ""));
+		readme = tc.replaceBase(readme);
 		fs.writeFile("README.md", readme, "utf-8", function() {});
-		// fs.writeFile("graph.svg", webpackGraph(stats, {
-			// nameShortener: filenameShortener,
-			// width: 500,
-			// height: 300
-		// }), "utf-8", function() {});
 	});
 });

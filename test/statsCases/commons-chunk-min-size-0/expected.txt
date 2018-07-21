@@ -1,0 +1,13 @@
+Hash: dc6038bec87a57d1a45e
+Time: Xms
+      Asset      Size  Chunks             Chunk Names
+ entry-1.js  25 bytes       0  [emitted]  entry-1
+vendor-1.js   4.83 kB       1  [emitted]  vendor-1
+   [0] (webpack)/test/statsCases/commons-chunk-min-size-0/modules/a.js 22 bytes {1} [built]
+   [1] (webpack)/test/statsCases/commons-chunk-min-size-0/modules/b.js 22 bytes {1} [built]
+   [2] (webpack)/test/statsCases/commons-chunk-min-size-0/modules/c.js 22 bytes {1} [built]
+   [3] (webpack)/test/statsCases/commons-chunk-min-size-0/modules/d.js 22 bytes {1} [built]
+   [4] (webpack)/test/statsCases/commons-chunk-min-size-0/modules/e.js 22 bytes {1} [built]
+   [5] (webpack)/test/statsCases/commons-chunk-min-size-0/modules/f.js 22 bytes {1} [built]
+   [6] multi ./modules/a ./modules/b ./modules/c 52 bytes {1} [built]
+   [7] (webpack)/test/statsCases/commons-chunk-min-size-0/entry-1.js 145 bytes {1} [built]

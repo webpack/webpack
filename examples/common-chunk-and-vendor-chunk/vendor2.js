@@ -1,0 +1,1 @@
+module.exports = "vendor2";

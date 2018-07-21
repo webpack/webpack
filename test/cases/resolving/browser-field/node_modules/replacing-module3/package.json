@@ -1,0 +1,5 @@
+{
+	"browser": {
+		"new-module": "new-module/inner"
+	}
+}

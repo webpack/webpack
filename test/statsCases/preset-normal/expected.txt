@@ -1,0 +1,13 @@
+Hash: fd034b07589b0d56afb3
+Time: Xms
+  Asset       Size  Chunks             Chunk Names
+   0.js  238 bytes       0  [emitted]  
+   1.js  102 bytes       1  [emitted]  
+   2.js  182 bytes       2  [emitted]  
+main.js     6.1 kB       3  [emitted]  main
+   [0] (webpack)/test/statsCases/preset-normal/index.js 51 bytes {3} [built]
+   [1] (webpack)/test/statsCases/preset-normal/a.js 22 bytes {3} [built]
+   [2] (webpack)/test/statsCases/preset-normal/b.js 22 bytes {1} [built]
+   [3] (webpack)/test/statsCases/preset-normal/c.js 54 bytes {0} [built]
+   [4] (webpack)/test/statsCases/preset-normal/d.js 22 bytes {2} [built]
+   [5] (webpack)/test/statsCases/preset-normal/e.js 22 bytes {2} [built]

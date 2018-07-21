@@ -1,0 +1,12 @@
+{
+	"concord": {
+		"modules": {
+			"app/**": "./modules/app/**",
+			"thing": "./the-thing"
+		},
+		"extensions": [
+			".my-js",
+			".js"
+		]
+	}
+}

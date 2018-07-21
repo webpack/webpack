@@ -1,0 +1,11 @@
+Hash: ac63e5be974bcdfea3a3
+Time: Xms
+      Asset       Size    Chunks             Chunk Names
+   entry.js  345 bytes     entry  [emitted]  entry
+manifest.js    3.85 kB  manifest  [emitted]  manifest
+  vendor.js  397 bytes    vendor  [emitted]  vendor
+   [0] multi ./modules/a ./modules/b 40 bytes {vendor} [built]
+[./entry.js] (webpack)/test/statsCases/named-chunks-plugin/entry.js 72 bytes {entry} [built]
+[./modules/a.js] (webpack)/test/statsCases/named-chunks-plugin/modules/a.js 22 bytes {vendor} [built]
+[./modules/b.js] (webpack)/test/statsCases/named-chunks-plugin/modules/b.js 22 bytes {vendor} [built]
+[./modules/c.js] (webpack)/test/statsCases/named-chunks-plugin/modules/c.js 22 bytes {entry} [built]

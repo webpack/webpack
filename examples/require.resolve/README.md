@@ -25,63 +25,115 @@ module.exports = Math.random();
 
 # js/output.js
 
+<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` javascript
-/******/ (function webpackBootstrap(modules) {
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	function require(moduleId) {
-/******/ 		if(installedModules[moduleId])
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
-/******/ 		module.loaded = true;
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	require.e = function requireEnsure(chunkId, callback) {
-/******/ 		callback.call(null, require);
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
-/******/ 	require.modules = modules;
-/******/ 	require.cache = installedModules;
-/******/ 	return require(0);
-/******/ })({
-/******/ c: "",
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ })
+/************************************************************************/
+```
 
-/***/ 0:
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/***/ function(module, exports, require) {
+</details>
 
-	var a = require(/*! ./a */ 1);
-	
-	// get module id
-	var aId = /*require.resolve*/(/*! ./a.js */ 1);
-	
-	// clear module in require.cache
-	delete require.cache[aId];
-	
-	// require module again, it should be reexecuted
-	var a2 = require(/*! ./a */ 1);
-	
-	// vertify it
-	if(a == a2) throw new Error("Cache clear failed :(");
-
-/***/ },
-
-/***/ 1:
+``` javascript
+/******/ ([
+/* 0 */
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
-/***/ function(module, exports, require) {
+/*! dynamic exports provided */
+/*! all exports used */
+/***/ (function(module, exports) {
 
-	module.exports = Math.random();
+module.exports = Math.random();
 
-/***/ }
-/******/ })
+/***/ }),
+/* 1 */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! dynamic exports provided */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
 
+var a = __webpack_require__(/*! ./a */ 0);
+
+// get module id
+var aId = /*require.resolve*/(/*! ./a.js */ 0);
+
+// clear module in require.cache
+delete __webpack_require__.c[aId];
+
+// require module again, it should be reexecuted
+var a2 = __webpack_require__(/*! ./a */ 0);
+
+// vertify it
+if(a == a2) throw new Error("Cache clear failed :(");
+
+/***/ })
+/******/ ]);
 ```
 
 # Info
@@ -89,29 +141,33 @@ module.exports = Math.random();
 ## Uncompressed
 
 ```
-Hash: d7292c834fe164b92f73e1a3aecfecd1
-Time: 26ms
-    Asset  Size  Chunks  Chunk Names
-output.js  1409       0  main       
-chunk    {0} output.js (main) 326
-    [0] ./example.js 295 [built] {0}
-    [1] ./a.js 31 [built] {0}
-        require.resolve ./a.js [0] ./example.js 4:10-35
-        cjs require ./a [0] ./example.js 1:8-22
-        cjs require ./a [0] ./example.js 10:9-23
+Hash: 4ed342adc60583d992ab
+Version: webpack 3.11.0
+    Asset     Size  Chunks             Chunk Names
+output.js  3.18 kB       0  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} output.js (main) 326 bytes [entry] [rendered]
+    > main [1] ./example.js 
+    [0] ./a.js 31 bytes {0} [built]
+        require.resolve ./a.js [1] ./example.js 4:10-35
+        cjs require ./a [1] ./example.js 1:8-22
+        cjs require ./a [1] ./example.js 10:9-23
+    [1] ./example.js 295 bytes {0} [built]
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: d7292c834fe164b92f73e1a3aecfecd1
-Time: 70ms
-    Asset  Size  Chunks  Chunk Names
-output.js   387       0  main       
-chunk    {0} output.js (main) 326
-    [0] ./example.js 295 [built] {0}
-    [1] ./a.js 31 [built] {0}
-        require.resolve ./a.js [0] ./example.js 4:10-35
-        cjs require ./a [0] ./example.js 1:8-22
-        cjs require ./a [0] ./example.js 10:9-23
+Hash: 4ed342adc60583d992ab
+Version: webpack 3.11.0
+    Asset       Size  Chunks             Chunk Names
+output.js  599 bytes       0  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} output.js (main) 326 bytes [entry] [rendered]
+    > main [1] ./example.js 
+    [0] ./a.js 31 bytes {0} [built]
+        require.resolve ./a.js [1] ./example.js 4:10-35
+        cjs require ./a [1] ./example.js 1:8-22
+        cjs require ./a [1] ./example.js 10:9-23
+    [1] ./example.js 295 bytes {0} [built]
 ```

@@ -1,0 +1,208 @@
+Child normal:
+          Asset       Size  Chunks             Chunk Names
+    0.bundle.js     1.3 kB       0  [emitted]  x4
+    1.bundle.js    1.03 kB       1  [emitted]  x3
+    2.bundle.js  819 bytes       2  [emitted]  x5
+    3.bundle.js  767 bytes       3  [emitted]  x2
+    4.bundle.js  470 bytes       4  [emitted]  x1
+    5.bundle.js    1.07 kB       5  [emitted]  xx5
+      bundle.js    6.18 kB       6  [emitted]  main
+    chunk    {0} 0.bundle.js (x4) 56 bytes {6} [rendered]
+        > x4 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 4:0-42
+        [0] (webpack)/test/statsCases/commons-chunk-plugin-children/a.js 0 bytes {0} {1} {2} {3} {4} [built]
+        [1] (webpack)/test/statsCases/commons-chunk-plugin-children/b.js 0 bytes {0} {1} {2} {3} [built]
+        [2] (webpack)/test/statsCases/commons-chunk-plugin-children/c.js 0 bytes {0} {1} {5} [built]
+        [3] (webpack)/test/statsCases/commons-chunk-plugin-children/d.js 0 bytes {0} {5} [built]
+        [8] (webpack)/test/statsCases/commons-chunk-plugin-children/x4.js 56 bytes {0} [built]
+    chunk    {1} 1.bundle.js (x3) 42 bytes {6} [rendered]
+        > x3 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 3:0-42
+        [0] (webpack)/test/statsCases/commons-chunk-plugin-children/a.js 0 bytes {0} {1} {2} {3} {4} [built]
+        [1] (webpack)/test/statsCases/commons-chunk-plugin-children/b.js 0 bytes {0} {1} {2} {3} [built]
+        [2] (webpack)/test/statsCases/commons-chunk-plugin-children/c.js 0 bytes {0} {1} {5} [built]
+        [7] (webpack)/test/statsCases/commons-chunk-plugin-children/x3.js 42 bytes {1} [built]
+    chunk    {2} 2.bundle.js (x5) 74 bytes {6} [rendered]
+        > x5 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 5:0-42
+        [0] (webpack)/test/statsCases/commons-chunk-plugin-children/a.js 0 bytes {0} {1} {2} {3} {4} [built]
+        [1] (webpack)/test/statsCases/commons-chunk-plugin-children/b.js 0 bytes {0} {1} {2} {3} [built]
+        [9] (webpack)/test/statsCases/commons-chunk-plugin-children/x5.js 74 bytes {2} [built]
+    chunk    {3} 3.bundle.js (x2) 28 bytes {6} [rendered]
+        > x2 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 2:0-42
+        [0] (webpack)/test/statsCases/commons-chunk-plugin-children/a.js 0 bytes {0} {1} {2} {3} {4} [built]
+        [1] (webpack)/test/statsCases/commons-chunk-plugin-children/b.js 0 bytes {0} {1} {2} {3} [built]
+        [6] (webpack)/test/statsCases/commons-chunk-plugin-children/x2.js 28 bytes {3} [built]
+    chunk    {4} 4.bundle.js (x1) 14 bytes {6} [rendered]
+        > x1 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 1:0-42
+        [0] (webpack)/test/statsCases/commons-chunk-plugin-children/a.js 0 bytes {0} {1} {2} {3} {4} [built]
+        [5] (webpack)/test/statsCases/commons-chunk-plugin-children/x1.js 14 bytes {4} [built]
+    chunk    {5} 5.bundle.js (xx5) 42 bytes {2} [rendered]
+        > xx5 [9] (webpack)/test/statsCases/commons-chunk-plugin-children/x5.js 3:0-44
+        [2] (webpack)/test/statsCases/commons-chunk-plugin-children/c.js 0 bytes {0} {1} {5} [built]
+        [3] (webpack)/test/statsCases/commons-chunk-plugin-children/d.js 0 bytes {0} {5} [built]
+       [10] (webpack)/test/statsCases/commons-chunk-plugin-children/xx5.js 42 bytes {5} [built]
+       [11] (webpack)/test/statsCases/commons-chunk-plugin-children/e.js 0 bytes {5} [built]
+    chunk    {6} bundle.js (main) 220 bytes [entry] [rendered]
+        > main [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 
+        [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 220 bytes {6} [built]
+Child children:
+          Asset       Size  Chunks             Chunk Names
+    0.bundle.js    1.16 kB       0  [emitted]  x4
+    1.bundle.js  890 bytes       1  [emitted]  x3
+    2.bundle.js  703 bytes       2  [emitted]  x5
+    3.bundle.js  622 bytes       3  [emitted]  x2
+    4.bundle.js  412 bytes       4  [emitted]  x1
+    5.bundle.js    1.07 kB       5  [emitted]  xx5
+      bundle.js     6.3 kB       6  [emitted]  main
+    chunk    {0} 0.bundle.js (x4) 56 bytes {6} [rendered]
+        > x4 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 4:0-42
+        [1] (webpack)/test/statsCases/commons-chunk-plugin-children/c.js 0 bytes {0} {1} {5} [built]
+        [3] (webpack)/test/statsCases/commons-chunk-plugin-children/d.js 0 bytes {0} {5} [built]
+        [8] (webpack)/test/statsCases/commons-chunk-plugin-children/x4.js 56 bytes {0} [built]
+    chunk    {1} 1.bundle.js (x3) 42 bytes {6} [rendered]
+        > x3 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 3:0-42
+        [1] (webpack)/test/statsCases/commons-chunk-plugin-children/c.js 0 bytes {0} {1} {5} [built]
+        [7] (webpack)/test/statsCases/commons-chunk-plugin-children/x3.js 42 bytes {1} [built]
+    chunk    {2} 2.bundle.js (x5) 74 bytes {6} [rendered]
+        > x5 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 5:0-42
+        [9] (webpack)/test/statsCases/commons-chunk-plugin-children/x5.js 74 bytes {2} [built]
+    chunk    {3} 3.bundle.js (x2) 28 bytes {6} [rendered]
+        > x2 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 2:0-42
+        [6] (webpack)/test/statsCases/commons-chunk-plugin-children/x2.js 28 bytes {3} [built]
+    chunk    {4} 4.bundle.js (x1) 14 bytes {6} [rendered]
+        > x1 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 1:0-42
+        [5] (webpack)/test/statsCases/commons-chunk-plugin-children/x1.js 14 bytes {4} [built]
+    chunk    {5} 5.bundle.js (xx5) 42 bytes {2} [rendered]
+        > xx5 [9] (webpack)/test/statsCases/commons-chunk-plugin-children/x5.js 3:0-44
+        [1] (webpack)/test/statsCases/commons-chunk-plugin-children/c.js 0 bytes {0} {1} {5} [built]
+        [3] (webpack)/test/statsCases/commons-chunk-plugin-children/d.js 0 bytes {0} {5} [built]
+       [10] (webpack)/test/statsCases/commons-chunk-plugin-children/xx5.js 42 bytes {5} [built]
+       [11] (webpack)/test/statsCases/commons-chunk-plugin-children/e.js 0 bytes {5} [built]
+    chunk    {6} bundle.js (main) 220 bytes [entry] [rendered]
+        > main [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 
+        [0] (webpack)/test/statsCases/commons-chunk-plugin-children/a.js 0 bytes {6} [built]
+        [2] (webpack)/test/statsCases/commons-chunk-plugin-children/b.js 0 bytes {6} [built]
+        [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 220 bytes {6} [built]
+Child async:
+          Asset       Size  Chunks             Chunk Names
+    0.bundle.js  142 bytes       0  [emitted]  
+    1.bundle.js    1.16 kB       1  [emitted]  x4
+    2.bundle.js  890 bytes       2  [emitted]  x3
+    3.bundle.js  703 bytes       3  [emitted]  x5
+    4.bundle.js  622 bytes       4  [emitted]  x2
+    5.bundle.js  412 bytes       5  [emitted]  x1
+    6.bundle.js    1.07 kB       6  [emitted]  xx5
+      bundle.js    6.38 kB       7  [emitted]  main
+    chunk    {0} 0.bundle.js 0 bytes {7} [rendered]
+        > async commons x1 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 1:0-42
+        > async commons x2 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 2:0-42
+        > async commons x3 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 3:0-42
+        > async commons x4 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 4:0-42
+        > async commons x5 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 5:0-42
+        [0] (webpack)/test/statsCases/commons-chunk-plugin-children/a.js 0 bytes {0} [built]
+        [2] (webpack)/test/statsCases/commons-chunk-plugin-children/b.js 0 bytes {0} [built]
+    chunk    {1} 1.bundle.js (x4) 56 bytes {7} [rendered]
+        > x4 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 4:0-42
+        [1] (webpack)/test/statsCases/commons-chunk-plugin-children/c.js 0 bytes {1} {2} {6} [built]
+        [3] (webpack)/test/statsCases/commons-chunk-plugin-children/d.js 0 bytes {1} {6} [built]
+        [8] (webpack)/test/statsCases/commons-chunk-plugin-children/x4.js 56 bytes {1} [built]
+    chunk    {2} 2.bundle.js (x3) 42 bytes {7} [rendered]
+        > x3 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 3:0-42
+        [1] (webpack)/test/statsCases/commons-chunk-plugin-children/c.js 0 bytes {1} {2} {6} [built]
+        [7] (webpack)/test/statsCases/commons-chunk-plugin-children/x3.js 42 bytes {2} [built]
+    chunk    {3} 3.bundle.js (x5) 74 bytes {7} [rendered]
+        > x5 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 5:0-42
+        [9] (webpack)/test/statsCases/commons-chunk-plugin-children/x5.js 74 bytes {3} [built]
+    chunk    {4} 4.bundle.js (x2) 28 bytes {7} [rendered]
+        > x2 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 2:0-42
+        [6] (webpack)/test/statsCases/commons-chunk-plugin-children/x2.js 28 bytes {4} [built]
+    chunk    {5} 5.bundle.js (x1) 14 bytes {7} [rendered]
+        > x1 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 1:0-42
+        [5] (webpack)/test/statsCases/commons-chunk-plugin-children/x1.js 14 bytes {5} [built]
+    chunk    {6} 6.bundle.js (xx5) 42 bytes {3} [rendered]
+        > xx5 [9] (webpack)/test/statsCases/commons-chunk-plugin-children/x5.js 3:0-44
+        [1] (webpack)/test/statsCases/commons-chunk-plugin-children/c.js 0 bytes {1} {2} {6} [built]
+        [3] (webpack)/test/statsCases/commons-chunk-plugin-children/d.js 0 bytes {1} {6} [built]
+       [10] (webpack)/test/statsCases/commons-chunk-plugin-children/xx5.js 42 bytes {6} [built]
+       [11] (webpack)/test/statsCases/commons-chunk-plugin-children/e.js 0 bytes {6} [built]
+    chunk    {7} bundle.js (main) 220 bytes [entry] [rendered]
+        > main [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 
+        [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 220 bytes {7} [built]
+Child deep-children:
+          Asset       Size  Chunks             Chunk Names
+    0.bundle.js  951 bytes       0  [emitted]  xx5
+    1.bundle.js     1.1 kB       1  [emitted]  x4
+    2.bundle.js  703 bytes       2  [emitted]  x5
+    3.bundle.js  832 bytes       3  [emitted]  x3
+    4.bundle.js  622 bytes       4  [emitted]  x2
+    5.bundle.js  412 bytes       5  [emitted]  x1
+      bundle.js    6.35 kB       6  [emitted]  main
+    chunk    {0} 0.bundle.js (xx5) 42 bytes {6} [rendered]
+        > xx5 [9] (webpack)/test/statsCases/commons-chunk-plugin-children/x5.js 3:0-44
+        [3] (webpack)/test/statsCases/commons-chunk-plugin-children/d.js 0 bytes {0} {1} [built]
+       [10] (webpack)/test/statsCases/commons-chunk-plugin-children/xx5.js 42 bytes {0} [built]
+       [11] (webpack)/test/statsCases/commons-chunk-plugin-children/e.js 0 bytes {0} [built]
+    chunk    {1} 1.bundle.js (x4) 56 bytes {6} [rendered]
+        > x4 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 4:0-42
+        [3] (webpack)/test/statsCases/commons-chunk-plugin-children/d.js 0 bytes {0} {1} [built]
+        [8] (webpack)/test/statsCases/commons-chunk-plugin-children/x4.js 56 bytes {1} [built]
+    chunk    {2} 2.bundle.js (x5) 74 bytes {6} [rendered]
+        > x5 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 5:0-42
+        [9] (webpack)/test/statsCases/commons-chunk-plugin-children/x5.js 74 bytes {2} [built]
+    chunk    {3} 3.bundle.js (x3) 42 bytes {6} [rendered]
+        > x3 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 3:0-42
+        [7] (webpack)/test/statsCases/commons-chunk-plugin-children/x3.js 42 bytes {3} [built]
+    chunk    {4} 4.bundle.js (x2) 28 bytes {6} [rendered]
+        > x2 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 2:0-42
+        [6] (webpack)/test/statsCases/commons-chunk-plugin-children/x2.js 28 bytes {4} [built]
+    chunk    {5} 5.bundle.js (x1) 14 bytes {6} [rendered]
+        > x1 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 1:0-42
+        [5] (webpack)/test/statsCases/commons-chunk-plugin-children/x1.js 14 bytes {5} [built]
+    chunk    {6} bundle.js (main) 220 bytes [entry] [rendered]
+        > main [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 
+        [0] (webpack)/test/statsCases/commons-chunk-plugin-children/a.js 0 bytes {6} [built]
+        [1] (webpack)/test/statsCases/commons-chunk-plugin-children/b.js 0 bytes {6} [built]
+        [2] (webpack)/test/statsCases/commons-chunk-plugin-children/c.js 0 bytes {6} [built]
+        [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 220 bytes {6} [built]
+Child deep-async:
+          Asset       Size  Chunks             Chunk Names
+    0.bundle.js  189 bytes       0  [emitted]  
+    1.bundle.js     1.1 kB       1  [emitted]  x4
+    2.bundle.js  744 bytes       2  [emitted]  x5
+    3.bundle.js  832 bytes       3  [emitted]  x3
+    4.bundle.js  622 bytes       4  [emitted]  x2
+    5.bundle.js  412 bytes       5  [emitted]  x1
+    6.bundle.js  951 bytes       6  [emitted]  xx5
+      bundle.js    6.38 kB       7  [emitted]  main
+    chunk    {0} 0.bundle.js 0 bytes {7} [rendered]
+        > async commons x1 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 1:0-42
+        > async commons x2 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 2:0-42
+        > async commons x3 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 3:0-42
+        > async commons x4 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 4:0-42
+        > async commons x5 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 5:0-42
+        > async commons xx5 [9] (webpack)/test/statsCases/commons-chunk-plugin-children/x5.js 3:0-44
+        [0] (webpack)/test/statsCases/commons-chunk-plugin-children/a.js 0 bytes {0} [built]
+        [1] (webpack)/test/statsCases/commons-chunk-plugin-children/b.js 0 bytes {0} [built]
+        [2] (webpack)/test/statsCases/commons-chunk-plugin-children/c.js 0 bytes {0} [built]
+    chunk    {1} 1.bundle.js (x4) 56 bytes {7} [rendered]
+        > x4 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 4:0-42
+        [3] (webpack)/test/statsCases/commons-chunk-plugin-children/d.js 0 bytes {1} {6} [built]
+        [8] (webpack)/test/statsCases/commons-chunk-plugin-children/x4.js 56 bytes {1} [built]
+    chunk    {2} 2.bundle.js (x5) 74 bytes {7} [rendered]
+        > x5 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 5:0-42
+        [9] (webpack)/test/statsCases/commons-chunk-plugin-children/x5.js 74 bytes {2} [built]
+    chunk    {3} 3.bundle.js (x3) 42 bytes {7} [rendered]
+        > x3 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 3:0-42
+        [7] (webpack)/test/statsCases/commons-chunk-plugin-children/x3.js 42 bytes {3} [built]
+    chunk    {4} 4.bundle.js (x2) 28 bytes {7} [rendered]
+        > x2 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 2:0-42
+        [6] (webpack)/test/statsCases/commons-chunk-plugin-children/x2.js 28 bytes {4} [built]
+    chunk    {5} 5.bundle.js (x1) 14 bytes {7} [rendered]
+        > x1 [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 1:0-42
+        [5] (webpack)/test/statsCases/commons-chunk-plugin-children/x1.js 14 bytes {5} [built]
+    chunk    {6} 6.bundle.js (xx5) 42 bytes {2} [rendered]
+        > xx5 [9] (webpack)/test/statsCases/commons-chunk-plugin-children/x5.js 3:0-44
+        [3] (webpack)/test/statsCases/commons-chunk-plugin-children/d.js 0 bytes {1} {6} [built]
+       [10] (webpack)/test/statsCases/commons-chunk-plugin-children/xx5.js 42 bytes {6} [built]
+       [11] (webpack)/test/statsCases/commons-chunk-plugin-children/e.js 0 bytes {6} [built]
+    chunk    {7} bundle.js (main) 220 bytes [entry] [rendered]
+        > main [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 
+        [4] (webpack)/test/statsCases/commons-chunk-plugin-children/index.js 220 bytes {7} [built]

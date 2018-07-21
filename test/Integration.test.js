@@ -1,12 +1,16 @@
-var should = require("should");
-var path = require("path");
+"use strict";
 
-var webpack = require("../lib/webpack");
+const should = require("should");
+const path = require("path");
+
+const webpack = require("../lib/webpack");
 
 describe("Integration", function() {
-	it("should compile library1", function(done) {
+	this.timeout(5000);
+	it("should compile library1", (done) => {
 		webpack({
 			entry: "library1",
+			bail: true,
 			context: path.join(__dirname, "browsertest"),
 			output: {
 				pathinfo: true,
@@ -14,14 +18,14 @@ describe("Integration", function() {
 				filename: "library1.js",
 				library: "library1"
 			}
-		}, function(err, stats) {
+		}, (err, stats) => {
 			if(err) throw err;
-			stats.hasErrors().should.be.not.ok;
-			stats.hasWarnings().should.be.not.ok;
+			stats.hasErrors().should.be.not.ok();
+			stats.hasWarnings().should.be.not.ok();
 			done();
 		});
 	});
-	it("should compile library2", function(done) {
+	it("should compile library2", (done) => {
 		webpack({
 			entry: "library2",
 			context: path.join(__dirname, "browsertest"),
@@ -32,31 +36,58 @@ describe("Integration", function() {
 				publicPath: "js/",
 				library: "library2"
 			},
+			bail: true,
 			module: {
-				postLoaders: [
-					{
-						test: /extra2\.js/,
-						loader: "raw!extra!val?cacheable"
-					}
-				]
-			},
-			optimize: {
-				maxChunks: 2,
+				rules: [{
+					test: /extra2\.js/,
+					loader: "raw!extra!val?cacheable",
+					enforce: "post"
+				}]
 			},
 			amd: {
 				fromOptions: true
 			},
-			plugins: {
-				"after-environment": function() {
-					this.resolver.plugin("module-resolved", function(request, callback) {
-						callback(null, request.replace(/extra\.js/, "extra2.js"));
+			resolve: {
+				// cannot resolve should outside the outermost node_modules
+				// so it is injected here
+				alias: {
+					should: require.resolve("should")
+				}
+			},
+			plugins: [
+				new webpack.optimize.LimitChunkCountPlugin({
+					maxChunks: 1
+				}),
+				new webpack.DefinePlugin({
+					"typeof CONST_TYPEOF": JSON.stringify("typeof"),
+					CONST_TRUE: true,
+					CONST_FALSE: false,
+					CONST_FUNCTION: function() {
+						return "ok";
+					},
+					CONST_NUMBER: 123,
+					CONST_NUMBER_EXPR: "1*100+23",
+					CONST_OBJECT: {
+						A: 1,
+						B: JSON.stringify("B"),
+						C: function() {
+							return "C";
+						}
+					}
+				}),
+				function() {
+					this.plugin("normal-module-factory", (nmf) => {
+						nmf.plugin("after-resolve", (data, callback) => {
+							data.resource = data.resource.replace(/extra\.js/, "extra2.js");
+							setTimeout(() => callback(null, data), 50);
+						});
 					});
 				}
-			}
-		}, function(err, stats) {
+			]
+		}, (err, stats) => {
 			if(err) throw err;
-			stats.hasErrors().should.be.not.ok;
-			stats.hasWarnings().should.be.not.ok;
+			stats.hasErrors().should.be.not.ok();
+			stats.hasWarnings().should.be.not.ok();
 			done();
 		});
 	});

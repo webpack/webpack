@@ -1,3 +1,10 @@
+This very simple example shows usage of CommonJS.
+
+The three files `example.js`, `increment.js` and `math.js` form a dependency chain. They use `require(dependency)` to declare dependencies.
+
+You can see the output file that webpack creates by bundling them together in one file. Keep in mind that webpack adds comments to make reading this file easier. These comments are removed when minimizing the file.
+
+You can also see the info messages webpack prints to console (for both normal and minimized build).
 
 # example.js
 
@@ -30,72 +37,125 @@ exports.add = function() {
 
 # js/output.js
 
+<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` javascript
-/******/ (function webpackBootstrap(modules) {
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	function require(moduleId) {
-/******/ 		if(installedModules[moduleId])
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
-/******/ 		module.loaded = true;
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	require.e = function requireEnsure(chunkId, callback) {
-/******/ 		callback.call(null, require);
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
-/******/ 	require.modules = modules;
-/******/ 	require.cache = installedModules;
-/******/ 	return require(0);
-/******/ })({
-/******/ c: "",
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+```
 
-/***/ 0:
+</details>
+
+``` javascript
+/******/ ([
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/***/ function(module, exports, require) {
+/*! dynamic exports provided */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
 
-	var inc = require(/*! ./increment */ 1).increment;
-	var a = 1;
-	inc(a); // 2
+var inc = __webpack_require__(/*! ./increment */ 1).increment;
+var a = 1;
+inc(a); // 2
 
-/***/ },
-
-/***/ 1:
+/***/ }),
+/* 1 */
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
-/***/ function(module, exports, require) {
+/*! dynamic exports provided */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
 
-	var add = require(/*! ./math */ 2).add;
-	exports.increment = function(val) {
-	    return add(val, 1);
-	};
+var add = __webpack_require__(/*! ./math */ 2).add;
+exports.increment = function(val) {
+    return add(val, 1);
+};
 
-/***/ },
-
-/***/ 2:
+/***/ }),
+/* 2 */
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
-/***/ function(module, exports, require) {
+/*! dynamic exports provided */
+/*! all exports used */
+/***/ (function(module, exports) {
 
-	exports.add = function() {
-	    var sum = 0, i = 0, args = arguments, l = args.length;
-	    while (i < l) {
-	        sum += args[i++];
-	    }
-	    return sum;
-	};
+exports.add = function() {
+    var sum = 0, i = 0, args = arguments, l = args.length;
+    while (i < l) {
+        sum += args[i++];
+    }
+    return sum;
+};
 
-/***/ }
-/******/ })
-
+/***/ })
+/******/ ]);
 ```
 
 # Info
@@ -103,29 +163,33 @@ exports.add = function() {
 ## Uncompressed
 
 ```
-Hash: 4c611f00cd8c22d720b7d5e5cf4d0cc2
-Time: 31ms
-    Asset  Size  Chunks  Chunk Names
-output.js  1559       0  main       
-chunk    {0} output.js (main) 329
-    [0] ./example.js 69 [built] {0}
-    [1] ./increment.js 98 [built] {0}
+Hash: 9407d8cd068b1845b368
+Version: webpack 3.11.0
+    Asset     Size  Chunks             Chunk Names
+output.js  3.39 kB       0  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} output.js (main) 329 bytes [entry] [rendered]
+    > main [0] ./example.js 
+    [0] ./example.js 69 bytes {0} [built]
+    [1] ./increment.js 98 bytes {0} [built]
         cjs require ./increment [0] ./example.js 1:10-32
-    [2] ./math.js 162 [built] {0}
+    [2] ./math.js 162 bytes {0} [built]
         cjs require ./math [1] ./increment.js 1:10-27
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 4c611f00cd8c22d720b7d5e5cf4d0cc2
-Time: 84ms
-    Asset  Size  Chunks  Chunk Names
-output.js   460       0  main       
-chunk    {0} output.js (main) 329
-    [0] ./example.js 69 [built] {0}
-    [1] ./increment.js 98 [built] {0}
+Hash: 9407d8cd068b1845b368
+Version: webpack 3.11.0
+    Asset       Size  Chunks             Chunk Names
+output.js  672 bytes       0  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} output.js (main) 329 bytes [entry] [rendered]
+    > main [0] ./example.js 
+    [0] ./example.js 69 bytes {0} [built]
+    [1] ./increment.js 98 bytes {0} [built]
         cjs require ./increment [0] ./example.js 1:10-32
-    [2] ./math.js 162 [built] {0}
+    [2] ./math.js 162 bytes {0} [built]
         cjs require ./math [1] ./increment.js 1:10-27
 ```

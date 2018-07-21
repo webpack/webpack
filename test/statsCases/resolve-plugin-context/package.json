@@ -1,0 +1,10 @@
+{
+  "name": "resolve-plugin-context-test",
+  "private": true,
+  "version": "1.0.0",
+  "dependencies": {
+    "abc": "1.0.0",
+    "def": "1.0.0",
+    "xyz": "1.0.0"
+  }
+}

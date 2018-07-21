@@ -1,0 +1,15 @@
+chunk    {0} 0.js (c) 49 bytes {2} {3} [rendered]
+    [1] (webpack)/test/statsCases/graph-correctness-entries/module-c.js 49 bytes {0} [built]
+        import() ./module-c [3] (webpack)/test/statsCases/graph-correctness-entries/module-b.js 1:0-47
+        import() ./module-c [4] (webpack)/test/statsCases/graph-correctness-entries/e2.js 1:0-47
+chunk    {1} 1.js (a) 49 bytes {0} {4} [rendered]
+    [0] (webpack)/test/statsCases/graph-correctness-entries/module-a.js 49 bytes {1} [built]
+        import() ./module-a [1] (webpack)/test/statsCases/graph-correctness-entries/module-c.js 1:0-47
+        import() ./module-a [2] (webpack)/test/statsCases/graph-correctness-entries/e1.js 1:0-47
+chunk    {2} 2.js (b) 49 bytes {1} [rendered]
+    [3] (webpack)/test/statsCases/graph-correctness-entries/module-b.js 49 bytes {2} [built]
+        import() ./module-b [0] (webpack)/test/statsCases/graph-correctness-entries/module-a.js 1:0-47
+chunk    {3} e2.js (e2) 49 bytes [entry] [rendered]
+    [4] (webpack)/test/statsCases/graph-correctness-entries/e2.js 49 bytes {3} [built]
+chunk    {4} e1.js (e1) 49 bytes [entry] [rendered]
+    [2] (webpack)/test/statsCases/graph-correctness-entries/e1.js 49 bytes {4} [built]

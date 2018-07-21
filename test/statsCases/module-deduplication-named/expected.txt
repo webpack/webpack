@@ -1,0 +1,34 @@
+Asset       Size  Chunks             Chunk Names
+ 0.js  769 bytes       0  [emitted]  async3
+ 1.js  769 bytes       1  [emitted]  async2
+ 2.js  769 bytes       2  [emitted]  async1
+e3.js    7.14 kB       3  [emitted]  e3
+e2.js    7.12 kB       4  [emitted]  e2
+e1.js    7.09 kB       5  [emitted]  e1
+chunk    {0} 0.js (async3) 89 bytes {1} {3} [rendered]
+    [4] (webpack)/test/statsCases/module-deduplication-named/h.js 9 bytes {0} {3} [built]
+    [7] (webpack)/test/statsCases/module-deduplication-named/async3.js 80 bytes {0} [built]
+chunk    {1} 1.js (async2) 89 bytes {2} {4} [rendered]
+    [3] (webpack)/test/statsCases/module-deduplication-named/f.js 9 bytes {1} {4} [built]
+    [6] (webpack)/test/statsCases/module-deduplication-named/async2.js 80 bytes {1} [built]
+chunk    {2} 2.js (async1) 89 bytes {0} {5} [rendered]
+    [2] (webpack)/test/statsCases/module-deduplication-named/d.js 9 bytes {2} {5} [built]
+    [5] (webpack)/test/statsCases/module-deduplication-named/async1.js 80 bytes {2} [built]
+chunk    {3} e3.js (e3) 144 bytes [entry] [rendered]
+    [0] (webpack)/test/statsCases/module-deduplication-named/b.js 9 bytes {3} {4} {5} [built]
+    [1] (webpack)/test/statsCases/module-deduplication-named/a.js 9 bytes {3} {4} {5} [built]
+    [4] (webpack)/test/statsCases/module-deduplication-named/h.js 9 bytes {0} {3} [built]
+   [12] (webpack)/test/statsCases/module-deduplication-named/e3.js 108 bytes {3} [built]
+   [13] (webpack)/test/statsCases/module-deduplication-named/g.js 9 bytes {3} [built]
+chunk    {4} e2.js (e2) 144 bytes [entry] [rendered]
+    [0] (webpack)/test/statsCases/module-deduplication-named/b.js 9 bytes {3} {4} {5} [built]
+    [1] (webpack)/test/statsCases/module-deduplication-named/a.js 9 bytes {3} {4} {5} [built]
+    [3] (webpack)/test/statsCases/module-deduplication-named/f.js 9 bytes {1} {4} [built]
+   [10] (webpack)/test/statsCases/module-deduplication-named/e2.js 108 bytes {4} [built]
+   [11] (webpack)/test/statsCases/module-deduplication-named/e.js 9 bytes {4} [built]
+chunk    {5} e1.js (e1) 144 bytes [entry] [rendered]
+    [0] (webpack)/test/statsCases/module-deduplication-named/b.js 9 bytes {3} {4} {5} [built]
+    [1] (webpack)/test/statsCases/module-deduplication-named/a.js 9 bytes {3} {4} {5} [built]
+    [2] (webpack)/test/statsCases/module-deduplication-named/d.js 9 bytes {2} {5} [built]
+    [8] (webpack)/test/statsCases/module-deduplication-named/e1.js 108 bytes {5} [built]
+    [9] (webpack)/test/statsCases/module-deduplication-named/c.js 9 bytes {5} [built]

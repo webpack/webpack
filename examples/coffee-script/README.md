@@ -25,72 +25,123 @@ module.exports = 42
 
 # js/output.js
 
+<details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
+
 ``` javascript
-/******/ (function webpackBootstrap(modules) {
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/ 	function require(moduleId) {
-/******/ 		if(installedModules[moduleId])
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
 /******/ 		};
-/******/ 		modules[moduleId].call(null, module, module.exports, require);
-/******/ 		module.loaded = true;
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	require.e = function requireEnsure(chunkId, callback) {
-/******/ 		callback.call(null, require);
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
 /******/ 	};
-/******/ 	require.modules = modules;
-/******/ 	require.cache = installedModules;
-/******/ 	return require(0);
-/******/ })({
-/******/ c: "",
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "js/";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ })
+/************************************************************************/
+```
 
-/***/ 0:
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/***/ function(module, exports, require) {
+</details>
 
-	console.log(require(/*! ./cup1 */ 2));
-
-/***/ },
-
-/***/ 1:
+``` javascript
+/******/ ([
+/* 0 */
 /*!*********************!*\
   !*** ./cup2.coffee ***!
   \*********************/
-/***/ function(module, exports, require) {
+/*! dynamic exports provided */
+/*! all exports used */
+/***/ (function(module, exports) {
 
-	
-	console.log("yeah coffee-script");
-	
-	module.exports = 42;
-	
+console.log("yeah coffee-script");
 
-/***/ },
+module.exports = 42;
 
-/***/ 2:
+
+/***/ }),
+/* 1 */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! dynamic exports provided */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
+
+console.log(__webpack_require__(/*! ./cup1 */ 2));
+
+/***/ }),
+/* 2 */
 /*!*********************!*\
   !*** ./cup1.coffee ***!
   \*********************/
-/***/ function(module, exports, require) {
+/*! dynamic exports provided */
+/*! all exports used */
+/***/ (function(module, exports, __webpack_require__) {
 
-	
-	module.exports = {
-	  cool: "stuff",
-	  answer: 42,
-	  external: require(/*! ./cup2.coffee */ 1),
-	  again: require(/*! ./cup2 */ 1)
-	};
-	
+module.exports = {
+  cool: "stuff",
+  answer: 42,
+  external: __webpack_require__(/*! ./cup2.coffee */ 0),
+  again: __webpack_require__(/*! ./cup2 */ 0)
+};
 
-/***/ }
-/******/ })
 
+/***/ })
+/******/ ]);
 ```
 
 # Info
@@ -98,31 +149,35 @@ module.exports = 42
 ## Uncompressed
 
 ```
-Hash: 30dcf8e5b6f3a18a2eb8eab2188e0643
-Time: 139ms
-    Asset  Size  Chunks  Chunk Names
-output.js  1465       0  main       
-chunk    {0} output.js (main) 208
-    [0] ./example.js 31 [built] {0}
-    [1] ./cup2.coffee 58 [built] {0}
-        cjs require ./cup2 [2] ./cup1.coffee 6:9-26
-        cjs require ./cup2.coffee [2] ./cup1.coffee 5:12-36
-    [2] ./cup1.coffee 119 [built] {0}
-        cjs require ./cup1 [0] ./example.js 1:12-29
+Hash: 22e68923dcce75e38966
+Version: webpack 3.11.0
+    Asset    Size  Chunks             Chunk Names
+output.js  3.3 kB       0  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} output.js (main) 206 bytes [entry] [rendered]
+    > main [1] ./example.js 
+    [0] ./cup2.coffee 57 bytes {0} [built]
+        cjs require ./cup2.coffee [2] ./cup1.coffee 4:12-36
+        cjs require ./cup2 [2] ./cup1.coffee 5:9-26
+    [1] ./example.js 31 bytes {0} [built]
+    [2] ./cup1.coffee 118 bytes {0} [built]
+        cjs require ./cup1 [1] ./example.js 1:12-29
 ```
 
 ## Minimized (uglify-js, no zip)
 
 ```
-Hash: 30dcf8e5b6f3a18a2eb8eab2188e0643
-Time: 382ms
-    Asset  Size  Chunks  Chunk Names
-output.js   418       0  main       
-chunk    {0} output.js (main) 208
-    [0] ./example.js 31 [built] {0}
-    [1] ./cup2.coffee 58 [built] {0}
-        cjs require ./cup2 [2] ./cup1.coffee 6:9-26
-        cjs require ./cup2.coffee [2] ./cup1.coffee 5:12-36
-    [2] ./cup1.coffee 119 [built] {0}
-        cjs require ./cup1 [0] ./example.js 1:12-29
+Hash: 22e68923dcce75e38966
+Version: webpack 3.11.0
+    Asset       Size  Chunks             Chunk Names
+output.js  640 bytes       0  [emitted]  main
+Entrypoint main = output.js
+chunk    {0} output.js (main) 206 bytes [entry] [rendered]
+    > main [1] ./example.js 
+    [0] ./cup2.coffee 57 bytes {0} [built]
+        cjs require ./cup2.coffee [2] ./cup1.coffee 4:12-36
+        cjs require ./cup2 [2] ./cup1.coffee 5:9-26
+    [1] ./example.js 31 bytes {0} [built]
+    [2] ./cup1.coffee 118 bytes {0} [built]
+        cjs require ./cup1 [1] ./example.js 1:12-29
 ```

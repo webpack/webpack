@@ -1,0 +1,8 @@
+chunk    {0} 0.bundle.js (b) 49 bytes {2} {3} [rendered]
+    [2] (webpack)/test/statsCases/circular-correctness/module-b.js 49 bytes {0} [built]
+chunk    {1} 1.bundle.js (a) 49 bytes {2} {3} [rendered]
+    [0] (webpack)/test/statsCases/circular-correctness/module-a.js 49 bytes {1} [built]
+chunk    {2} 2.bundle.js (c) 98 bytes {0} {1} [rendered]
+    [1] (webpack)/test/statsCases/circular-correctness/module-c.js 98 bytes {2} [built]
+chunk    {3} bundle.js (main) 98 bytes [entry] [rendered]
+    [3] (webpack)/test/statsCases/circular-correctness/index.js 98 bytes {3} [built]

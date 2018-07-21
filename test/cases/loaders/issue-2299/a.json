@@ -1,0 +1,7 @@
+{
+    "imports": [
+        "./subdir_1/b.json",
+        "./subdir_2/c.json"
+    ],
+    "a": true
+}

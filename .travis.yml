@@ -1,4 +1,50 @@
+sudo: false
+dist: trusty
 language: node_js
-node_js:
-  - 0.6
-  - 0.8
+
+branches:
+  only:
+    - webpack-3
+    - master
+    - next
+
+cache:
+  yarn: true
+
+matrix:
+  include:
+    - os: linux
+      node_js: "8"
+      env: NO_WATCH_TESTS=1 JOB_PART=lint
+    - os: linux
+      node_js: "8"
+      env: NO_WATCH_TESTS=1 JOB_PART=integration
+    - os: linux
+      node_js: "8"
+      env: NO_WATCH_TESTS=1 JOB_PART=unit
+    - os: linux
+      node_js: "6"
+      env: NO_WATCH_TESTS=1 JOB_PART=integration
+    - os: linux
+      node_js: "4"
+      env: NO_WATCH_TESTS=1 JOB_PART=integration
+    - os: osx
+      node_js: "8"
+      env: NO_WATCH_TESTS=1 JOB_PART=integration
+  allow_failures:
+    - os: osx
+  fast_finish: true
+
+install:
+  - bash ./ci/travis-install.sh
+
+script: npm run travis:$JOB_PART
+
+after_success:
+  - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
+  - bash <(curl -s https://codecov.io/bash) -F $JOB_PART
+  - rm -rf ./coverage
+
+notifications:
+  slack:
+    secure: JduSdKWwbnLCwo7Z4E59SGE+Uw832UwnXzQiKEpg1BV45MYDPRiGltly1tRHmPh9OGjvGx3XSkC2tNGOBLtL4UL2SCkf012x0t7jDutKRfcv/njynl8jk8l+UhPmaWiHXDQAgGiiKdL4RfzPLW3HeVHCOWm0LKMzcarTa8tw+rE=

@@ -1,37 +1,15 @@
-var cp = require('child_process');
+"use strict";
 
-var cmds = [
-	"cd code-splitted-require.context && node build.js",
-	"cd code-splitted-require.context-amd && node build.js",
-	"cd code-splitting && node build.js",
-	"cd coffee-script && node build.js",
-	"cd loader && node build.js",
-	"cd require.context && node build.js",
-	"cd code-splitting-bundle-loader && node build.js",
-	"cd commonjs && node build.js",
-	"cd named-chucks && node build.js",
-	"cd require.resolve && node build.js",
-	"cd mixed && node build.js",
-	"cd web-worker && node build.js",
-	"cd i18n && node build.js",
-	"cd labeled-modules && node build.js",
-	"cd component && node build.js",
-];
+const cp = require("child_process");
+const examples = require("./examples");
 
-var stack = function() {
-	console.log("done");
-};
-for(var i = cmds.length-1; i >= 0; i--) {
-	var cmd = cmds[i];
-	stack = (function(next, cmd) {
-		return function() {
-			console.log(cmd);
-			cp.exec(cmd, function(error, stdout, stderr) {
-				if(error) console.error(error);
-				else if(stderr) console.error(stderr), next();
-				else next();
-			});
-		}
-	}(stack, cmd));
+const cmds = examples.map(function(dirname) {
+	return "cd " + dirname + " && node build.js";
+});
+
+let i = 0;
+for(const cmd of cmds) {
+	console.log(`[${++i}/${cmds.length}] ${cmd}`);
+	cp.execSync(cmd, { encoding: "utf-8" });
 }
-stack();
+console.log("done");

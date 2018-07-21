@@ -1,0 +1,2 @@
+require("./a");
+require("./b");

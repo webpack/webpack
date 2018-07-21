@@ -1,0 +1,7 @@
+--entry ./index.js
+--config ./webpack.config.js
+--output-filename [name].js
+--output-chunk-filename [id].chunk.js
+--target async-node
+--module-bind-pre pre=./pre-loader
+--module-bind-post post=./post-loader
