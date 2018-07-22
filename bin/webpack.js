@@ -114,7 +114,7 @@ if (installedClis.length === 0) {
 	questionInterface.question(question, answer => {
 		questionInterface.close();
 
-		const normalizedAnswer = answer.toLowerCase();
+		const normalizedAnswer = answer.toLowerCase().trim();
 		const selectedPackage = CLIs.find(item => {
 			return item.name === normalizedAnswer || item.alias === normalizedAnswer;
 		});
