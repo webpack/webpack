@@ -104,7 +104,7 @@ if (installedClis.length === 0) {
 	);
 
 	let question = `Which one do you like to install (${CLIs.map(
-		item => item.name
+		item => item.alias
 	).join("/")}):\n`;
 
 	const questionInterface = readLine.createInterface({
