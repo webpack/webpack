@@ -19,7 +19,7 @@ module.exports = {
 							ref.importedNames.includes("unused")
 						) {
 							return new DependencyReference(
-								ref.module,
+								() => ref.module,
 								ref.importedNames.filter(item => item !== "unused"),
 								ref.weak,
 								ref.order
