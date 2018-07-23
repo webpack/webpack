@@ -14,18 +14,19 @@ const doWrite = process.argv.includes("--write");
 const typeChecker = program.getTypeChecker();
 
 /**
- * @param {ts.ClassDeclaration} node the class declaration
- * @returns {Set<ts.ClassDeclaration>} the base class declarations
+ * @param {ts.ClassDeclaration | ts.ClassExpression} node the class declaration
+ * @returns {Set<ts.ClassDeclaration | ts.ClassExpression>} the base class declarations
  */
 const getBaseClasses = node => {
-	/** @type {Set<ts.ClassDeclaration>} */
+	/** @type {Set<ts.ClassDeclaration | ts.ClassExpression>} */
 	const decls = new Set();
 	if (node.heritageClauses) {
 		for (const clause of node.heritageClauses) {
 			for (const clauseType of clause.types) {
 				const type = typeChecker.getTypeAtLocation(clauseType);
-				if (ts.isClassDeclaration(type.symbol.valueDeclaration))
-					decls.add(type.symbol.valueDeclaration);
+				const decl = type.symbol.valueDeclaration;
+				if (ts.isClassDeclaration(decl) || ts.isClassExpression(decl))
+					decls.add(decl);
 			}
 		}
 	}
@@ -33,7 +34,7 @@ const getBaseClasses = node => {
 };
 
 /**
- * @param {ts.ClassDeclaration} classNode the class declaration
+ * @param {ts.ClassDeclaration | ts.ClassExpression} classNode the class declaration
  * @param {string} memberName name of the member
  * @returns {ts.MethodDeclaration | null} base class member declaration when found
  */
@@ -60,8 +61,13 @@ for (const sourceFile of program.getSourceFiles()) {
 		file.toLowerCase().startsWith(libPath.replace(/\\/g, "/").toLowerCase())
 	) {
 		const updates = [];
-		sourceFile.forEachChild(node => {
-			if (ts.isClassDeclaration(node)) {
+
+		/**
+		 * @param {ts.Node} node the traversed node
+		 * @returns {void}
+		 */
+		const nodeHandler = node => {
+			if (ts.isClassDeclaration(node) || ts.isClassExpression(node)) {
 				for (const member of node.members) {
 					if (ts.isMethodDeclaration(member)) {
 						const baseDecl = findDeclarationInBaseClass(
@@ -73,8 +79,10 @@ for (const sourceFile of program.getSourceFiles()) {
 							const baseDeclAsAny = /** @type {any} */ (baseDecl);
 							const currentJsDoc = memberAsAny.jsDoc && memberAsAny.jsDoc[0];
 							const baseJsDoc = baseDeclAsAny.jsDoc && baseDeclAsAny.jsDoc[0];
-							const currentJsDocText = currentJsDoc && currentJsDoc.getText();
-							let baseJsDocText = baseJsDoc && baseJsDoc.getText();
+							const currentJsDocText =
+								currentJsDoc && currentJsDoc.getText().replace(/\r\n?/g, "\n");
+							let baseJsDocText =
+								baseJsDoc && baseJsDoc.getText().replace(/\r\n?/g, "\n");
 							if (baseJsDocText) {
 								baseJsDocText = baseJsDocText.replace(
 									/\t \* @abstract\r?\n/g,
@@ -86,7 +94,8 @@ for (const sourceFile of program.getSourceFiles()) {
 										member: member.name.getText(),
 										start: member.getStart(),
 										end: member.getStart(),
-										content: baseJsDocText + "\n\t"
+										content: baseJsDocText + "\n\t",
+										oldContent: ""
 									});
 								} else if (
 									baseJsDocText &&
@@ -98,7 +107,8 @@ for (const sourceFile of program.getSourceFiles()) {
 											member: member.name.getText(),
 											start: currentJsDoc.getStart(),
 											end: currentJsDoc.getEnd(),
-											content: baseJsDocText
+											content: baseJsDocText,
+											oldContent: currentJsDocText
 										});
 									} else {
 										updates.push({
@@ -113,8 +123,12 @@ for (const sourceFile of program.getSourceFiles()) {
 						}
 					}
 				}
+			} else {
+				node.forEachChild(nodeHandler);
 			}
-		});
+		};
+		sourceFile.forEachChild(nodeHandler);
+
 		if (updates.length > 0) {
 			if (doWrite) {
 				let fileContent = fs.readFileSync(file, "utf-8");
@@ -135,6 +149,9 @@ for (const sourceFile of program.getSourceFiles()) {
 					console.log(
 						`* ${update.member} should have this JSDoc:\n\t${update.content}`
 					);
+					if (update.oldContent) {
+						console.log(`instead of\n\t${update.oldContent}`);
+					}
 				}
 				console.log();
 			}
