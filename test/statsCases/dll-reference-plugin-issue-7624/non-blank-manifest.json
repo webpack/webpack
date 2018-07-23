@@ -1,0 +1,11 @@
+{
+  "name": "foo",
+  "content": {
+    "./foo.js": {
+      "id": 0,
+      "buildMeta": {
+        "providedExports": true
+      }
+    }
+  }
+}
