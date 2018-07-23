@@ -1669,37 +1669,71 @@
     },
     "performance": {
       "description": "Configuration for web performance recommendations.",
-      "anyOf": [
+      "oneOf": [
         {
           "enum": [
             false
           ]
         },
         {
-          "additionalProperties": false,
-          "properties": {
-            "assetFilter": {
-              "description": "Filter function to select assets that are checked",
-              "instanceof": "Function"
+          "type": "array",
+          "items": {
+            "description": "Configuration entry for web performance recommendations.",
+            "additionalProperties": false,
+            "properties": {
+              "assetFilter": {
+                "description": "Filter function to select assets that are checked",
+                "instanceof": "Function"
+              },
+              "hints": {
+                "description": "Sets the format of the hints: warnings, errors or nothing at all",
+                "enum": [
+                  false,
+                  "warning",
+                  "error"
+                ]
+              },
+              "maxEntrypointSize": {
+                "description": "Total size of an entry point (in bytes)",
+                "type": "number"
+              },
+              "maxAssetSize": {
+                "description": "Filesize limit (in bytes) when exceeded, that webpack will provide performance hints",
+                "type": "number"
+              }
             },
-            "hints": {
-              "description": "Sets the format of the hints: warnings, errors or nothing at all",
-              "enum": [
-                false,
-                "warning",
-                "error"
-              ]
-            },
-            "maxEntrypointSize": {
-              "description": "Total size of an entry point (in bytes)",
-              "type": "number"
-            },
-            "maxAssetSize": {
-              "description": "Filesize limit (in bytes) when exceeded, that webpack will provide performance hints",
-              "type": "number"
+            "type": "object"
+          }
+        },
+        {
+          "anyOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "assetFilter": {
+                  "description": "Filter function to select assets that are checked",
+                  "instanceof": "Function"
+                },
+                "hints": {
+                  "description": "Sets the format of the hints: warnings, errors or nothing at all",
+                  "enum": [
+                    false,
+                    "warning",
+                    "error"
+                  ]
+                },
+                "maxEntrypointSize": {
+                  "description": "Total size of an entry point (in bytes)",
+                  "type": "number"
+                },
+                "maxAssetSize": {
+                  "description": "Filesize limit (in bytes) when exceeded, that webpack will provide performance hints",
+                  "type": "number"
+                }
+              },
+              "type": "object"
             }
-          },
-          "type": "object"
+          ]
         }
       ]
     },
