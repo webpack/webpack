@@ -926,7 +926,14 @@
         },
         "sideEffects": {
           "description": "Flags a module as with or without side effects",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/common.arrayOfStringOrStringArrayValues"
+            }
+          ]
         },
         "query": {
           "description": "Shortcut for use.query",
@@ -1305,7 +1312,14 @@
         },
         "sideEffects": {
           "description": "Skip over modules which are flagged to contain no side effects when exports are not used",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "$ref": "#/definitions/common.arrayOfStringOrStringArrayValues"
+            }
+          ]
         },
         "providedExports": {
           "description": "Figure out which exports are provided by modules to generate more efficient code",
