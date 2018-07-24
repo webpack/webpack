@@ -216,138 +216,138 @@
     "@types/source-list-map" "*"
     source-map "^0.6.1"
 
-"@webassemblyjs/ast@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.7.3.tgz#aecc6f26eabf2e3f2d43544a70ea1631556641cf"
+"@webassemblyjs/ast@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.7.4.tgz#ce4cc5bcd7accd73f361cbd5eb1c32618b3b4f85"
   dependencies:
-    "@webassemblyjs/helper-module-context" "1.7.3"
-    "@webassemblyjs/helper-wasm-bytecode" "1.7.3"
-    "@webassemblyjs/wast-parser" "1.7.3"
+    "@webassemblyjs/helper-module-context" "1.7.4"
+    "@webassemblyjs/helper-wasm-bytecode" "1.7.4"
+    "@webassemblyjs/wast-parser" "1.7.4"
     mamacro "^0.0.3"
 
-"@webassemblyjs/floating-point-hex-parser@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/floating-point-hex-parser/-/floating-point-hex-parser-1.7.3.tgz#75da2171e1db1cacecc1b43bc3aca96e5fdd7e08"
+"@webassemblyjs/floating-point-hex-parser@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/floating-point-hex-parser/-/floating-point-hex-parser-1.7.4.tgz#94b858426e1ec362f26d89eb7f060fb576744496"
 
-"@webassemblyjs/helper-api-error@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-api-error/-/helper-api-error-1.7.3.tgz#75a1268afa5e50579de4ee2970b5054b0c0f7fb2"
+"@webassemblyjs/helper-api-error@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-api-error/-/helper-api-error-1.7.4.tgz#1e865551aae8167ad5597736f6eadce3bb4fe169"
 
-"@webassemblyjs/helper-buffer@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-buffer/-/helper-buffer-1.7.3.tgz#37efe2b1a9166614771d1fdfe0615e789d4dc97a"
+"@webassemblyjs/helper-buffer@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-buffer/-/helper-buffer-1.7.4.tgz#252f204131770e1e2fff71103b8911ec545c0403"
   dependencies:
     "@xtuc/buffer" "^5.2.2"
 
-"@webassemblyjs/helper-code-frame@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-code-frame/-/helper-code-frame-1.7.3.tgz#dca94437553bd2737a88592f20ac09abfa8164a3"
+"@webassemblyjs/helper-code-frame@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-code-frame/-/helper-code-frame-1.7.4.tgz#a0f1ed8e195bff6599b8155beda731767a59e30c"
   dependencies:
-    "@webassemblyjs/wast-printer" "1.7.3"
+    "@webassemblyjs/wast-printer" "1.7.4"
 
-"@webassemblyjs/helper-fsm@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-fsm/-/helper-fsm-1.7.3.tgz#4c758b409185733c6299dc025e244f9033faccc2"
+"@webassemblyjs/helper-fsm@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-fsm/-/helper-fsm-1.7.4.tgz#cd6ee366897954f9d5adbc86b0a015fa6731e654"
 
-"@webassemblyjs/helper-module-context@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-module-context/-/helper-module-context-1.7.3.tgz#d5b287254487ca051191c344ec515a28fa30b281"
+"@webassemblyjs/helper-module-context@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-module-context/-/helper-module-context-1.7.4.tgz#1def26eaf2a84581b4bff34eb11ae73a2c8196ed"
   dependencies:
     mamacro "^0.0.3"
 
-"@webassemblyjs/helper-wasm-bytecode@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-bytecode/-/helper-wasm-bytecode-1.7.3.tgz#c833b08063b6880a9d5498342aa52b0935b34413"
+"@webassemblyjs/helper-wasm-bytecode@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-bytecode/-/helper-wasm-bytecode-1.7.4.tgz#74a438e7663331987d88594268bdbbc910f8627c"
 
-"@webassemblyjs/helper-wasm-section@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-section/-/helper-wasm-section-1.7.3.tgz#f663c1e2c9143cccef3c01f56bd7310ff2010ea2"
+"@webassemblyjs/helper-wasm-section@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/helper-wasm-section/-/helper-wasm-section-1.7.4.tgz#7e7bf997234fe3dcd2a10639ae226376b94aa39a"
   dependencies:
-    "@webassemblyjs/ast" "1.7.3"
-    "@webassemblyjs/helper-buffer" "1.7.3"
-    "@webassemblyjs/helper-wasm-bytecode" "1.7.3"
-    "@webassemblyjs/wasm-gen" "1.7.3"
+    "@webassemblyjs/ast" "1.7.4"
+    "@webassemblyjs/helper-buffer" "1.7.4"
+    "@webassemblyjs/helper-wasm-bytecode" "1.7.4"
+    "@webassemblyjs/wasm-gen" "1.7.4"
 
-"@webassemblyjs/ieee754@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/ieee754/-/ieee754-1.7.3.tgz#21f00d64e108fac37ff72d40af3d63cde2b23cb2"
+"@webassemblyjs/ieee754@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/ieee754/-/ieee754-1.7.4.tgz#b58c92c364a954a027d7415adc1bf10dd74d7ac5"
   dependencies:
     "@xtuc/buffer" "^5.2.2"
     "@xtuc/ieee754" "^1.2.0"
 
-"@webassemblyjs/leb128@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/leb128/-/leb128-1.7.3.tgz#886f1701d3538400466a45ba88fd625b64a0b125"
+"@webassemblyjs/leb128@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/leb128/-/leb128-1.7.4.tgz#15233f256bb8b2bc1e796b0f3ea016db4b14f528"
   dependencies:
     "@xtuc/buffer" "^5.2.2"
     "@xtuc/long" "4.2.1"
 
-"@webassemblyjs/utf8@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/utf8/-/utf8-1.7.3.tgz#ec748cc4d61bbe4d239b09e08db206fe75339a9d"
+"@webassemblyjs/utf8@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/utf8/-/utf8-1.7.4.tgz#666d62a359770c25647e3ecff0990e5b13fe43ed"
 
-"@webassemblyjs/wasm-edit@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-edit/-/wasm-edit-1.7.3.tgz#c74beead01c2001aff0d4d5204d55c5839a6f432"
+"@webassemblyjs/wasm-edit@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-edit/-/wasm-edit-1.7.4.tgz#09a36001dbd5471c1adfb63000f477d05536f1e7"
   dependencies:
-    "@webassemblyjs/ast" "1.7.3"
-    "@webassemblyjs/helper-buffer" "1.7.3"
-    "@webassemblyjs/helper-wasm-bytecode" "1.7.3"
-    "@webassemblyjs/helper-wasm-section" "1.7.3"
-    "@webassemblyjs/wasm-gen" "1.7.3"
-    "@webassemblyjs/wasm-opt" "1.7.3"
-    "@webassemblyjs/wasm-parser" "1.7.3"
-    "@webassemblyjs/wast-printer" "1.7.3"
+    "@webassemblyjs/ast" "1.7.4"
+    "@webassemblyjs/helper-buffer" "1.7.4"
+    "@webassemblyjs/helper-wasm-bytecode" "1.7.4"
+    "@webassemblyjs/helper-wasm-section" "1.7.4"
+    "@webassemblyjs/wasm-gen" "1.7.4"
+    "@webassemblyjs/wasm-opt" "1.7.4"
+    "@webassemblyjs/wasm-parser" "1.7.4"
+    "@webassemblyjs/wast-printer" "1.7.4"
 
-"@webassemblyjs/wasm-gen@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-gen/-/wasm-gen-1.7.3.tgz#05c45b6b50495b32fa737db01d28dca1286ac901"
+"@webassemblyjs/wasm-gen@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-gen/-/wasm-gen-1.7.4.tgz#15cddae961bbde68661b740308cd188e2b93318a"
   dependencies:
-    "@webassemblyjs/ast" "1.7.3"
-    "@webassemblyjs/helper-wasm-bytecode" "1.7.3"
-    "@webassemblyjs/ieee754" "1.7.3"
-    "@webassemblyjs/leb128" "1.7.3"
-    "@webassemblyjs/utf8" "1.7.3"
+    "@webassemblyjs/ast" "1.7.4"
+    "@webassemblyjs/helper-wasm-bytecode" "1.7.4"
+    "@webassemblyjs/ieee754" "1.7.4"
+    "@webassemblyjs/leb128" "1.7.4"
+    "@webassemblyjs/utf8" "1.7.4"
 
-"@webassemblyjs/wasm-opt@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-opt/-/wasm-opt-1.7.3.tgz#8e1d73511a59d24ce6d9134d9ad53f7e6f4083af"
+"@webassemblyjs/wasm-opt@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-opt/-/wasm-opt-1.7.4.tgz#c79457aff41b0f6d4db5b015506f7c050e23ab26"
   dependencies:
-    "@webassemblyjs/ast" "1.7.3"
-    "@webassemblyjs/helper-buffer" "1.7.3"
-    "@webassemblyjs/wasm-gen" "1.7.3"
-    "@webassemblyjs/wasm-parser" "1.7.3"
+    "@webassemblyjs/ast" "1.7.4"
+    "@webassemblyjs/helper-buffer" "1.7.4"
+    "@webassemblyjs/wasm-gen" "1.7.4"
+    "@webassemblyjs/wasm-parser" "1.7.4"
 
-"@webassemblyjs/wasm-parser@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-parser/-/wasm-parser-1.7.3.tgz#dee9769b25dd1a73fcf2a4e6999af0b209d391f9"
+"@webassemblyjs/wasm-parser@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wasm-parser/-/wasm-parser-1.7.4.tgz#8a8f8ebd9594a9fbd3d69437bfd1a28d35c10a06"
   dependencies:
-    "@webassemblyjs/ast" "1.7.3"
-    "@webassemblyjs/helper-api-error" "1.7.3"
-    "@webassemblyjs/helper-wasm-bytecode" "1.7.3"
-    "@webassemblyjs/ieee754" "1.7.3"
-    "@webassemblyjs/leb128" "1.7.3"
-    "@webassemblyjs/utf8" "1.7.3"
+    "@webassemblyjs/ast" "1.7.4"
+    "@webassemblyjs/helper-api-error" "1.7.4"
+    "@webassemblyjs/helper-wasm-bytecode" "1.7.4"
+    "@webassemblyjs/ieee754" "1.7.4"
+    "@webassemblyjs/leb128" "1.7.4"
+    "@webassemblyjs/utf8" "1.7.4"
     "@xtuc/buffer" "^5.2.2"
 
-"@webassemblyjs/wast-parser@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-parser/-/wast-parser-1.7.3.tgz#2536482b1988016b402702ce87179aedea5e0c65"
+"@webassemblyjs/wast-parser@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-parser/-/wast-parser-1.7.4.tgz#4cda746d8e5bc22516f769910bb134d48c9392bc"
   dependencies:
-    "@webassemblyjs/ast" "1.7.3"
-    "@webassemblyjs/floating-point-hex-parser" "1.7.3"
-    "@webassemblyjs/helper-api-error" "1.7.3"
-    "@webassemblyjs/helper-code-frame" "1.7.3"
-    "@webassemblyjs/helper-fsm" "1.7.3"
+    "@webassemblyjs/ast" "1.7.4"
+    "@webassemblyjs/floating-point-hex-parser" "1.7.4"
+    "@webassemblyjs/helper-api-error" "1.7.4"
+    "@webassemblyjs/helper-code-frame" "1.7.4"
+    "@webassemblyjs/helper-fsm" "1.7.4"
     "@xtuc/long" "4.2.1"
     mamacro "^0.0.3"
 
-"@webassemblyjs/wast-printer@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-printer/-/wast-printer-1.7.3.tgz#3851aa98cf4d5e51b93cdf014ea494ac0f98c81b"
+"@webassemblyjs/wast-printer@1.7.4":
+  version "1.7.4"
+  resolved "https://registry.yarnpkg.com/@webassemblyjs/wast-printer/-/wast-printer-1.7.4.tgz#84e8bdcf21c37b4a8f5476878ade3967d6adac99"
   dependencies:
-    "@webassemblyjs/ast" "1.7.3"
-    "@webassemblyjs/wast-parser" "1.7.3"
+    "@webassemblyjs/ast" "1.7.4"
+    "@webassemblyjs/wast-parser" "1.7.4"
     "@xtuc/long" "4.2.1"
 
 "@xtuc/buffer@^5.2.2":
