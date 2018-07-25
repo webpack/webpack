@@ -128,7 +128,7 @@
     "code-lint": "eslint --cache setup lib bin hot buildin benchmark tooling \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\"",
     "type-lint": "tsc --pretty",
     "fix": "yarn code-lint --fix",
-    "pretty": "prettier --write \"setup/**/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"benchmark/**/*.js\" \"tooling/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" \"declarations.d.ts\" \"tsconfig.json\"",
+    "pretty": "prettier --write --loglevel warn \"setup/**/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"benchmark/**/*.js\" \"tooling/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" \"declarations.d.ts\" \"tsconfig.json\"",
     "schema-lint": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.lint.js\" --no-verbose",
     "benchmark": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.benchmark.js\" --runInBand",
     "cover": "yarn cover:init && yarn cover:all && yarn cover:report",
