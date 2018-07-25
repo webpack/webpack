@@ -24,6 +24,8 @@ const withoutNamedEntry = Object.assign({}, baseConfig, {
 		main1: "./main1"
 	},
 	optimization: {
+		moduleIds: "natural",
+		chunkIds: "natural",
 		runtimeChunk: "single"
 	}
 });
@@ -35,6 +37,8 @@ const withNamedEntry = Object.assign({}, baseConfig, {
 		manifest: "./f"
 	},
 	optimization: {
+		moduleIds: "natural",
+		chunkIds: "natural",
 		runtimeChunk: {
 			name: "manifest"
 		}

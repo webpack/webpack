@@ -9,6 +9,8 @@ module.exports = [
 			app: "./entry-1.js"
 		},
 		optimization: {
+			moduleIds: "named",
+			chunkIds: "natural",
 			splitChunks: {
 				cacheGroups: {
 					vendor: {
@@ -18,8 +20,7 @@ module.exports = [
 						test: /constants/
 					}
 				}
-			},
-			moduleIds: "named"
+			}
 		}
 	},
 	{
@@ -31,6 +32,8 @@ module.exports = [
 			app: "./entry-2.js"
 		},
 		optimization: {
+			moduleIds: "named",
+			chunkIds: "natural",
 			splitChunks: {
 				cacheGroups: {
 					vendor: {
@@ -40,8 +43,7 @@ module.exports = [
 						test: /constants/
 					}
 				}
-			},
-			moduleIds: "named"
+			}
 		}
 	}
 ];

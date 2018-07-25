@@ -15,6 +15,8 @@ module.exports = {
 		main: "./"
 	},
 	optimization: {
+		moduleIds: "natural",
+		chunkIds: "natural",
 		splitChunks: {
 			chunks: "all",
 			minSize: 1,

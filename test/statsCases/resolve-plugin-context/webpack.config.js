@@ -2,6 +2,7 @@ var ResolvePackageFromRootPlugin = require("./ResolvePackageFromRootPlugin");
 
 module.exports = {
 	mode: "production",
+	optimization: { moduleIds: "natural", chunkIds: "natural" },
 	entry: "./index",
 	output: {
 		filename: "bundle.js"

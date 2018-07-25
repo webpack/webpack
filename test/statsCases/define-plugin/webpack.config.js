@@ -11,6 +11,7 @@ function read(path) {
 module.exports = [
 	{
 		mode: "production",
+		optimization: { moduleIds: "natural", chunkIds: "natural" },
 		entry: "./index",
 		plugins: [
 			new webpack.DefinePlugin({
@@ -21,6 +22,7 @@ module.exports = [
 
 	{
 		mode: "production",
+		optimization: { moduleIds: "natural", chunkIds: "natural" },
 		entry: "./index",
 		plugins: [
 			new webpack.DefinePlugin({
@@ -31,6 +33,7 @@ module.exports = [
 
 	{
 		mode: "production",
+		optimization: { moduleIds: "natural", chunkIds: "natural" },
 		entry: "./index",
 		plugins: [
 			new webpack.DefinePlugin({

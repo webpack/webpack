@@ -2,6 +2,7 @@ module.exports = [
 	{
 		name: "minimal",
 		mode: "production",
+		optimization: { moduleIds: "natural", chunkIds: "natural" },
 		entry: "./index",
 		stats: "minimal"
 	},
@@ -9,6 +10,7 @@ module.exports = [
 	{
 		name: "none",
 		mode: "production",
+		optimization: { moduleIds: "natural", chunkIds: "natural" },
 		entry: "./index",
 		stats: false
 	},
@@ -16,6 +18,7 @@ module.exports = [
 	{
 		name: "verbose",
 		mode: "production",
+		optimization: { moduleIds: "natural", chunkIds: "natural" },
 		entry: "./index",
 		stats: {
 			entrypoints: true,

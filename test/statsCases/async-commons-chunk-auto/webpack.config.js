@@ -23,6 +23,8 @@ module.exports = [
 			filename: "disabled/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: false
 		},
 		stats
@@ -40,6 +42,8 @@ module.exports = [
 			filename: "default/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0 // enforce all
 			}
@@ -60,6 +64,8 @@ module.exports = [
 			filename: "vendors/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				cacheGroups: {
 					vendors: {
@@ -87,6 +93,8 @@ module.exports = [
 			filename: "multiple-vendors/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0, // enforce all
 				chunks: "all",
@@ -120,6 +128,8 @@ module.exports = [
 			filename: "all/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0, // enforce all
 				chunks: "all",

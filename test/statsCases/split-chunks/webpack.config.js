@@ -22,6 +22,8 @@ module.exports = [
 			filename: "default/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0 // enforce all
 			}
@@ -42,6 +44,8 @@ module.exports = [
 			filename: "default/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0, // enforce all,
 				chunks: "all"
@@ -64,6 +68,8 @@ module.exports = [
 			filename: "default/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0, // enforce all,
 				chunks: "all",
@@ -92,6 +98,8 @@ module.exports = [
 			filename: "[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0,
 				maxInitialRequests: Infinity,
@@ -114,6 +122,8 @@ module.exports = [
 			filename: "default/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0,
 				chunks: chunk => chunk.name !== "a"
@@ -136,6 +146,8 @@ module.exports = [
 			filename: "default/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0,
 				chunks: "all",
