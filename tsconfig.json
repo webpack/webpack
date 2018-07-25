@@ -7,9 +7,10 @@
 		"checkJs": true,
 		"noEmit": true,
 		"strict": false,
+		"noImplicitThis": true,
 		"alwaysStrict": true,
 		"types": ["node"],
 		"esModuleInterop": true
 	},
-	"include": ["declarations.d.ts", "bin/*.js", "lib/**/*.js"]
+	"include": ["declarations.d.ts", "bin/*.js", "lib/**/*.js", "tooling/**/*.js"]
 }

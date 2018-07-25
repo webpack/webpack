@@ -94,6 +94,42 @@ describe("Errors", () => {
 			}
 		);
 	});
+	it("should report require.main.require as unsupported", done => {
+		getErrors(
+			{
+				mode: "development",
+				entry: "./require.main.require"
+			},
+			(errors, warnings) => {
+				expect(errors).toHaveLength(0);
+				expect(warnings).toHaveLength(1);
+				const lines = warnings[0].split("\n");
+				expect(lines[0]).toMatch(/require.main.require\.js/);
+				expect(lines[1]).toMatch(
+					/require.main.require is not supported by webpack/
+				);
+				done();
+			}
+		);
+	});
+	it("should report module.parent.require as unsupported", done => {
+		getErrors(
+			{
+				mode: "development",
+				entry: "./module.parent.require"
+			},
+			(errors, warnings) => {
+				expect(errors).toHaveLength(0);
+				expect(warnings).toHaveLength(1);
+				const lines = warnings[0].split("\n");
+				expect(lines[0]).toMatch(/module.parent.require\.js/);
+				expect(lines[1]).toMatch(
+					/module.parent.require is not supported by webpack/
+				);
+				done();
+			}
+		);
+	});
 	it("should warn about case-sensitive module names", done => {
 		getErrors(
 			{

@@ -560,8 +560,8 @@ chunk    {2} 2.bundle.js 60 bytes <{1}> [rendered]
 chunk {main} bundle.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
     > ./index main
  [./a.js] 22 bytes {main} [built]
-     cjs require ./a [./index.js] 1:0-14
      cjs require ./a [./e.js] 1:0-14
+     cjs require ./a [./index.js] 1:0-14
      [./index.js] Xms -> factory:Xms building:Xms = Xms
  [./index.js] 51 bytes {main} [built]
      single entry ./index  main
@@ -718,6 +718,29 @@ Child
     main.js  3.6 KiB       0  [emitted]  main
     Entrypoint main = main.js
     [0] ./index.js 24 bytes {0} [built]"
+`;
+
+exports[`StatsTestCases should print correct stats for dll-reference-plugin-issue-7624 1`] = `
+"Hash: 29b62432962bce4c54c0
+Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
+    Asset     Size  Chunks             Chunk Names
+bundle.js  3.6 KiB       0  [emitted]  main
+Entrypoint main = bundle.js
+[0] ./entry.js 29 bytes {0} [built]"
+`;
+
+exports[`StatsTestCases should print correct stats for dll-reference-plugin-issue-7624-error 1`] = `
+"Hash: 701dcf62b26d0347b899
+Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
+    Asset     Size  Chunks  Chunk Names
+bundle.js  3.6 KiB       0  main
+Entrypoint main = bundle.js
+[0] ./entry.js 29 bytes {0} [built]
+
+ERROR in Dll manifest blank-manifest.json
+Unexpected end of JSON input while parsing near ''"
 `;
 
 exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] = `
