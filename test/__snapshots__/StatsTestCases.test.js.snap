@@ -2276,14 +2276,27 @@ main.js  3.9 KiB       0  [emitted]  main
 Entrypoint main = main.js
 [0] ./node_modules/pmodule/b.js 69 bytes [built]
     [no exports used]
+    harmony side effect evaluation ./b [2] ./index.js + 2 modules 2:0-30
+    harmony export imported specifier ./b [2] ./index.js + 2 modules 2:0-30
+    harmony export imported specifier ./b [2] ./index.js + 2 modules 2:0-30
+    harmony export imported specifier ./b [2] ./index.js + 2 modules 2:0-30
 [1] ./node_modules/pmodule/a.js 60 bytes [built]
     [no exports used]
+    harmony side effect evaluation ./a [2] ./index.js + 2 modules 1:0-20
+    harmony export imported specifier ./a [2] ./index.js + 2 modules 1:0-20
 [2] ./index.js + 2 modules 158 bytes {0} [built]
+    single entry ./index  main
     | ./index.js 55 bytes [built]
+    |     single entry ./index  main
     | ./node_modules/pmodule/index.js 75 bytes [built]
     |     [only some exports used: default]
+    |     harmony side effect evaluation pmodule  ./index.js 1:0-33
+    |     harmony import specifier pmodule  ./index.js 3:12-15
     | ./node_modules/pmodule/c.js 28 bytes [built]
-    |     [only some exports used: z]"
+    |     [only some exports used: z]
+    |     harmony import specifier pmodule  ./index.js 3:17-18 (skipped side-effect-free modules)
+    |     harmony side effect evaluation ./c [0] ./node_modules/pmodule/b.js 5:0-24
+    |     harmony export imported specifier ./c [0] ./node_modules/pmodule/b.js 5:0-24"
 `;
 
 exports[`StatsTestCases should print correct stats for simple 1`] = `
