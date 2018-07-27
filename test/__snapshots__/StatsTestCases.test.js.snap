@@ -2228,27 +2228,27 @@ Entrypoint main = main.js
     [only some exports used: default]
     harmony side effect evaluation ./CompA  ./components/src/CompAB/index.js 1:0-43
     harmony export imported specifier ./CompA  ./components/src/CompAB/index.js 1:0-43
-    harmony import specifier ./components  ./main.js 3:15-20 (skipped side-effect-free modules)
     harmony import specifier ./components [2] ./foo.js 3:20-25 (skipped side-effect-free modules)
+    harmony import specifier ./components [3] ./main.js + 1 modules 3:15-20 (skipped side-effect-free modules)
 [1] ./components/src/CompAB/utils.js 97 bytes {0} [built]
     harmony side effect evaluation ./utils [0] ./components/src/CompAB/CompA.js 1:0-35
-    harmony side effect evaluation ./utils  ./components/src/CompAB/CompB.js 1:0-30
-    harmony import specifier ./utils  ./components/src/CompAB/CompB.js 5:2-5
     harmony import specifier ./utils [0] ./components/src/CompAB/CompA.js 5:5-12
+    harmony side effect evaluation ./utils [3] ./main.js + 1 modules 1:0-30
+    harmony import specifier ./utils [3] ./main.js + 1 modules 5:2-5
 [2] ./foo.js 101 bytes {1} [built]
-    import() ./foo  ./main.js 6:0-15
+    import() ./foo [3] ./main.js + 1 modules 6:0-15
 [3] ./main.js + 1 modules 231 bytes {0} [built]
-    single entry ./main.js [3] ./main.js + 1 modules main
+    harmony side effect evaluation ./CompB  ./components/src/CompAB/index.js 2:0-43
+    harmony export imported specifier ./CompB  ./components/src/CompAB/index.js 2:0-43
+    single entry ./main.js  main
     | ./main.js 144 bytes [built]
     | ./components/src/CompAB/CompB.js 77 bytes [built]
     |     [only some exports used: default]
-    |     harmony side effect evaluation ./CompB  ./components/src/CompAB/index.js 2:0-43
-    |     harmony export imported specifier ./CompB  ./components/src/CompAB/index.js 2:0-43
     |     harmony import specifier ./components  ./main.js 4:15-20 (skipped side-effect-free modules)
 ./components/src/index.js 84 bytes [built]
     [no exports used]
-    harmony side effect evaluation ./components  ./main.js 1:0-44
     harmony side effect evaluation ./components [2] ./foo.js 1:0-37
+    harmony side effect evaluation ./components [3] ./main.js + 1 modules 1:0-44
 ./components/src/CompAB/index.js 87 bytes [built]
     [no exports used]
     harmony side effect evaluation ./CompAB  ./components/src/index.js 1:0-40
@@ -2272,7 +2272,9 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
 main.js  3.9 KiB       0  [emitted]  main
 Entrypoint main = main.js
 [0] ./index.js + 2 modules 158 bytes {0} [built]
-    single entry ./index [0] ./index.js + 2 modules main
+    harmony side effect evaluation ./c  ./node_modules/pmodule/b.js 5:0-24
+    harmony export imported specifier ./c  ./node_modules/pmodule/b.js 5:0-24
+    single entry ./index  main
     | ./index.js 55 bytes [built]
     | ./node_modules/pmodule/index.js 75 bytes [built]
     |     [only some exports used: default]
@@ -2281,18 +2283,16 @@ Entrypoint main = main.js
     | ./node_modules/pmodule/c.js 28 bytes [built]
     |     [only some exports used: z]
     |     harmony import specifier pmodule  ./index.js 3:17-18 (skipped side-effect-free modules)
-    |     harmony side effect evaluation ./c  ./node_modules/pmodule/b.js 5:0-24
-    |     harmony export imported specifier ./c  ./node_modules/pmodule/b.js 5:0-24
 ./node_modules/pmodule/a.js 60 bytes [built]
     [no exports used]
-    harmony side effect evaluation ./a  ./node_modules/pmodule/index.js 1:0-20
-    harmony export imported specifier ./a  ./node_modules/pmodule/index.js 1:0-20
+    harmony side effect evaluation ./a [0] ./index.js + 2 modules 1:0-20
+    harmony export imported specifier ./a [0] ./index.js + 2 modules 1:0-20
 ./node_modules/pmodule/b.js 69 bytes [built]
     [no exports used]
-    harmony side effect evaluation ./b  ./node_modules/pmodule/index.js 2:0-30
-    harmony export imported specifier ./b  ./node_modules/pmodule/index.js 2:0-30
-    harmony export imported specifier ./b  ./node_modules/pmodule/index.js 2:0-30
-    harmony export imported specifier ./b  ./node_modules/pmodule/index.js 2:0-30"
+    harmony side effect evaluation ./b [0] ./index.js + 2 modules 2:0-30
+    harmony export imported specifier ./b [0] ./index.js + 2 modules 2:0-30
+    harmony export imported specifier ./b [0] ./index.js + 2 modules 2:0-30
+    harmony export imported specifier ./b [0] ./index.js + 2 modules 2:0-30"
 `;
 
 exports[`StatsTestCases should print correct stats for simple 1`] = `
