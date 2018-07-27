@@ -2,6 +2,8 @@ module.exports = {
 	mode: "production",
 	entry: "./",
 	optimization: {
+		moduleIds: "natural",
+		chunkIds: "natural",
 		splitChunks: {
 			minSize: 0
 		}

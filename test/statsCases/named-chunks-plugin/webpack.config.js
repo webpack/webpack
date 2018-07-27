@@ -7,6 +7,8 @@ module.exports = {
 		entry: "./entry"
 	},
 	optimization: {
+		moduleIds: "natural",
+		chunkIds: "natural",
 		splitChunks: {
 			cacheGroups: {
 				vendor: {

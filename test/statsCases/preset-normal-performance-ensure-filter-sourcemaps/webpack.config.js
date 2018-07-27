@@ -1,5 +1,6 @@
 module.exports = {
 	mode: "production",
+	optimization: { moduleIds: "natural", chunkIds: "natural" },
 	devtool: "sourcemap",
 	performance: {
 		hints: "warning"
