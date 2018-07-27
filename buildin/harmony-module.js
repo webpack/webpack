@@ -1,6 +1,6 @@
-module.exports = function(originalModule) {
-	if (!originalModule.webpackPolyfill) {
-		var module = Object.create(originalModule);
+module.exports = function(module) {
+	if (!module.webpackPolyfill) {
+		module = Object.create(module);
 		// module.parent = undefined by default
 		if (!module.children) module.children = [];
 		Object.defineProperty(module, "loaded", {
