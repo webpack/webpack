@@ -2140,35 +2140,40 @@ Entrypoint e2 = runtime.js e2.js"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"Hash: bf9a22b1af339b9522d3
+"Hash: d2ef5dba31e3842e442c
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint index = index.js
 Entrypoint entry = entry.js
-[0] ./index.js 176 bytes {0} [built]
-    ModuleConcatenation bailout: Module is an entry point
-[1] ./cjs.js 59 bytes {0} [built]
+[0] ./cjs.js 59 bytes {0} [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
-[2] ./ref-from-cjs.js 45 bytes {0} [built]
+[1] ./ref-from-cjs.js 45 bytes {0} [built]
     ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./cjs.js (referenced with cjs require)
-[3] ./entry.js 32 bytes {0} {1} [built]
+[2] ./entry.js 32 bytes {0} {1} [built]
     ModuleConcatenation bailout: Module is an entry point
-[4] ./eval.js 35 bytes {0} [built]
+[3] ./eval.js 35 bytes {0} [built]
     ModuleConcatenation bailout: Module uses eval()
-[5] ./injected-vars.js 40 bytes {0} [built]
-    ModuleConcatenation bailout: Module uses injected variables (__dirname, __filename)
-[6] ./module-id.js 26 bytes {0} [built]
+[4] ./module-id.js 26 bytes {0} [built]
     ModuleConcatenation bailout: Module uses module.id
-[7] ./module-loaded.js 30 bytes {0} [built]
+[5] ./module-loaded.js 30 bytes {0} [built]
     ModuleConcatenation bailout: Module uses module.loaded
-[8] external \\"external\\" 42 bytes {0} [built]
+[6] external \\"external\\" 42 bytes {0} [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
-[9] ./concatenated.js + 2 modules 116 bytes {2} [built]
+[7] ./concatenated.js + 2 modules 116 bytes {2} [built]
     ModuleConcatenation bailout: Cannot concat with external \\"external\\" (<- Module is not an ECMAScript module)
     | ./concatenated.js 26 bytes [built]
     |     ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./index.js (referenced with import())
     | ./concatenated1.js 37 bytes [built]
-    | ./concatenated2.js 48 bytes [built]"
+    | ./concatenated2.js 48 bytes [built]
+[8] ./index.js + 1 modules 246 bytes {0} [built]
+    ModuleConcatenation bailout: Cannot concat with ./entry.js (<- Module is an entry point)
+    ModuleConcatenation bailout: Cannot concat with ./eval.js (<- Module uses eval())
+    ModuleConcatenation bailout: Cannot concat with ./module-id.js (<- Module uses module.id)
+    ModuleConcatenation bailout: Cannot concat with ./module-loaded.js (<- Module uses module.loaded)
+    ModuleConcatenation bailout: Cannot concat with ./ref-from-cjs.js (<- Module is referenced from these modules with unsupported syntax: ./cjs.js (referenced with cjs require))
+    | ./index.js 176 bytes [built]
+    |     ModuleConcatenation bailout: Module is an entry point
+    | ./injected-vars.js 40 bytes [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
@@ -2268,7 +2273,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
-"Hash: 980368b0881b2e89c7d2
+"Hash: d4d2f3c4f634c2ec66a7
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset     Size  Chunks             Chunk Names
@@ -3017,7 +3022,7 @@ chunk    {4} default/async-c.js (async-c) 48 bytes <{0}> ={2}= [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: 121976b02a296df7234f
+"Hash: f687604cd8440a9db715
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks             Chunk Names
