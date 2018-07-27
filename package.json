@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "4.16.2",
+  "version": "4.16.3",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -55,7 +55,7 @@
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
-    "jest": "^23.3.0",
+    "jest": "^23.4.1",
     "jest-silent-reporter": "^0.0.5",
     "json-loader": "^0.5.7",
     "less": "^2.5.1",
@@ -79,14 +79,6 @@
     "webpack-dev-middleware": "^1.9.0",
     "worker-loader": "^2.0.0",
     "xxhashjs": "^0.2.1"
-  },
-  "resolutions": {
-    "**/jest-message-util/micromatch": "^2.3.11",
-    "**/jest-cli/micromatch": "^2.3.11",
-    "**/jest-runtime/micromatch": "^2.3.11",
-    "**/jest-haste-map/micromatch": "^2.3.11",
-    "**/jest-haste-map/sane/micromatch": "^2.3.11",
-    "**/jest-config/babel-jest/babel-plugin-istanbul/test-exclude/micromatch": "^2.3.11"
   },
   "engines": {
     "node": ">=8.9.0"
