@@ -1,7 +1,7 @@
 # webpack.config.js
 
 ``` javascript
-var path = require("path");
+const path = require("path");
 module.exports = {
 	// mode: "development || "production",
 	entry: "./example",
@@ -33,7 +33,7 @@ module.exports = {
 ``` js
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
-/******/ 	var installedModules = {};
+/******/ 	let installedModules = {};
 /******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
@@ -43,7 +43,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 			return installedModules[moduleId].exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
+/******/ 		let module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
 /******/ 			l: false,
 /******/ 			exports: {}
@@ -84,7 +84,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
+/******/ 		const getter = module && module.__esModule ?
 /******/ 			function getDefault() { return module['default']; } :
 /******/ 			function getModuleExports() { return module; };
 /******/ 		__webpack_require__.d(getter, 'a', getter);
@@ -119,7 +119,7 @@ return /******/ (function(modules) { // webpackBootstrap
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "value", function() { return value; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "increment", function() { return increment; });
-var value = 0;
+let value = 0;
 function increment() {
 	value++;
 }
