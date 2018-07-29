@@ -9,15 +9,15 @@ You can also see the info messages webpack prints to console (for both normal an
 # example.js
 
 ``` javascript
-var inc = require('./increment').increment;
-var a = 1;
+const inc = require('./increment').increment;
+const a = 1;
 inc(a); // 2
 ```
 
 # increment.js
 
 ``` javascript
-var add = require('./math').add;
+const add = require('./math').add;
 exports.increment = function(val) {
     return add(val, 1);
 };
@@ -27,7 +27,7 @@ exports.increment = function(val) {
 
 ``` javascript
 exports.add = function() {
-    var sum = 0, i = 0, args = arguments, l = args.length;
+    let sum = 0, i = 0, args = arguments, l = args.length;
     while (i < l) {
         sum += args[i++];
     }
