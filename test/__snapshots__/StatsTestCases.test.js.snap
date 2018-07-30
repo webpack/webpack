@@ -2140,40 +2140,33 @@ Entrypoint e2 = runtime.js e2.js"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"Hash: d2ef5dba31e3842e442c
+"Hash: ba85b8371afc898d85d7
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint index = index.js
 Entrypoint entry = entry.js
-[0] ./cjs.js 59 bytes {0} [built]
-    ModuleConcatenation bailout: Module is not an ECMAScript module
-[1] ./ref-from-cjs.js 45 bytes {0} [built]
-    ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./cjs.js (referenced with cjs require)
-[2] ./entry.js 32 bytes {0} {1} [built]
+[0] ./index.js 150 bytes {0} [built]
     ModuleConcatenation bailout: Module is an entry point
-[3] ./eval.js 35 bytes {0} [built]
-    ModuleConcatenation bailout: Module uses eval()
-[4] ./module-id.js 26 bytes {0} [built]
-    ModuleConcatenation bailout: Module uses module.id
-[5] ./module-loaded.js 30 bytes {0} [built]
-    ModuleConcatenation bailout: Module uses module.loaded
-[6] external \\"external\\" 42 bytes {0} [built]
+[1] ./cjs.js 59 bytes {0} [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
-[7] ./concatenated.js + 2 modules 116 bytes {2} [built]
+[2] ./ref-from-cjs.js 45 bytes {0} [built]
+    ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./cjs.js (referenced with cjs require)
+[3] ./entry.js 32 bytes {0} {1} [built]
+    ModuleConcatenation bailout: Module is an entry point
+[4] ./eval.js 35 bytes {0} [built]
+    ModuleConcatenation bailout: Module uses eval()
+[5] ./module-id.js 26 bytes {0} [built]
+    ModuleConcatenation bailout: Module uses module.id
+[6] ./module-loaded.js 30 bytes {0} [built]
+    ModuleConcatenation bailout: Module uses module.loaded
+[7] external \\"external\\" 42 bytes {0} [built]
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+[8] ./concatenated.js + 2 modules 116 bytes {2} [built]
     ModuleConcatenation bailout: Cannot concat with external \\"external\\" (<- Module is not an ECMAScript module)
     | ./concatenated.js 26 bytes [built]
     |     ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./index.js (referenced with import())
     | ./concatenated1.js 37 bytes [built]
-    | ./concatenated2.js 48 bytes [built]
-[8] ./index.js + 1 modules 246 bytes {0} [built]
-    ModuleConcatenation bailout: Cannot concat with ./entry.js (<- Module is an entry point)
-    ModuleConcatenation bailout: Cannot concat with ./eval.js (<- Module uses eval())
-    ModuleConcatenation bailout: Cannot concat with ./module-id.js (<- Module uses module.id)
-    ModuleConcatenation bailout: Cannot concat with ./module-loaded.js (<- Module uses module.loaded)
-    ModuleConcatenation bailout: Cannot concat with ./ref-from-cjs.js (<- Module is referenced from these modules with unsupported syntax: ./cjs.js (referenced with cjs require))
-    | ./index.js 176 bytes [built]
-    |     ModuleConcatenation bailout: Module is an entry point
-    | ./injected-vars.js 40 bytes [built]"
+    | ./concatenated2.js 48 bytes [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
