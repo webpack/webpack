@@ -156,8 +156,8 @@ const describeCases = config => {
 									this.hooks.compilation.tap("TestCasesTest", compilation => {
 										[
 											"optimize",
-											"optimizeModulesBasic",
-											"optimizeChunksBasic",
+											"optimizeModules",
+											"optimizeChunks",
 											"afterOptimizeTree",
 											"afterOptimizeAssets"
 										].forEach(hook => {

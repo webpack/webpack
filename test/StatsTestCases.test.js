@@ -71,8 +71,8 @@ describe("StatsTestCases", () => {
 				c.hooks.compilation.tap("StatsTestCasesTest", compilation => {
 					[
 						"optimize",
-						"optimizeModulesBasic",
-						"optimizeChunksBasic",
+						"optimizeModules",
+						"optimizeChunks",
 						"afterOptimizeTree",
 						"afterOptimizeAssets",
 						"beforeHash"
