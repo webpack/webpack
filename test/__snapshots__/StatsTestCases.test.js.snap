@@ -768,9 +768,9 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for filter-warnings 1`] = `
-"Hash: e07b7689fa3da3cd7a06e07b7689fa3da3cd7a06e07b7689fa3da3cd7a06e07b7689fa3da3cd7a06e07b7689fa3da3cd7a06e07b7689fa3da3cd7a06e07b7689fa3da3cd7a06e07b7689fa3da3cd7a06e07b7689fa3da3cd7a06e07b7689fa3da3cd7a06e07b7689fa3da3cd7a06e07b7689fa3da3cd7a06e07b7689fa3da3cd7a06
+"Hash: 0f57e2bad314fb37b8ed0f57e2bad314fb37b8ed0f57e2bad314fb37b8ed0f57e2bad314fb37b8ed0f57e2bad314fb37b8ed0f57e2bad314fb37b8ed0f57e2bad314fb37b8ed0f57e2bad314fb37b8ed0f57e2bad314fb37b8ed0f57e2bad314fb37b8ed0f57e2bad314fb37b8ed0f57e2bad314fb37b8ed0f57e2bad314fb37b8ed
 Child undefined:
-    Hash: e07b7689fa3da3cd7a06
+    Hash: 0f57e2bad314fb37b8ed
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -799,49 +799,49 @@ Child undefined:
     
     WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
 Child UglifyJs:
-    Hash: e07b7689fa3da3cd7a06
+    Hash: 0f57e2bad314fb37b8ed
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.84 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child /UglifyJs/:
-    Hash: e07b7689fa3da3cd7a06
+    Hash: 0f57e2bad314fb37b8ed
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.84 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child warnings => true:
-    Hash: e07b7689fa3da3cd7a06
+    Hash: 0f57e2bad314fb37b8ed
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.84 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child [UglifyJs]:
-    Hash: e07b7689fa3da3cd7a06
+    Hash: 0f57e2bad314fb37b8ed
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.84 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child [/UglifyJs/]:
-    Hash: e07b7689fa3da3cd7a06
+    Hash: 0f57e2bad314fb37b8ed
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.84 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child [warnings => true]:
-    Hash: e07b7689fa3da3cd7a06
+    Hash: 0f57e2bad314fb37b8ed
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.84 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child should not filter:
-    Hash: e07b7689fa3da3cd7a06
+    Hash: 0f57e2bad314fb37b8ed
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -870,7 +870,7 @@ Child should not filter:
     
     WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
 Child /should not filter/:
-    Hash: e07b7689fa3da3cd7a06
+    Hash: 0f57e2bad314fb37b8ed
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -899,7 +899,7 @@ Child /should not filter/:
     
     WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
 Child warnings => false:
-    Hash: e07b7689fa3da3cd7a06
+    Hash: 0f57e2bad314fb37b8ed
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -928,7 +928,7 @@ Child warnings => false:
     
     WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
 Child [should not filter]:
-    Hash: e07b7689fa3da3cd7a06
+    Hash: 0f57e2bad314fb37b8ed
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -957,7 +957,7 @@ Child [should not filter]:
     
     WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
 Child [/should not filter/]:
-    Hash: e07b7689fa3da3cd7a06
+    Hash: 0f57e2bad314fb37b8ed
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -986,7 +986,7 @@ Child [/should not filter/]:
     
     WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
 Child [warnings => false]:
-    Hash: e07b7689fa3da3cd7a06
+    Hash: 0f57e2bad314fb37b8ed
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -3052,7 +3052,7 @@ Entrypoint main = bundle.js
 `;
 
 exports[`StatsTestCases should print correct stats for warnings-uglifyjs 1`] = `
-"Hash: 219769011ba79739bde4
+"Hash: ed8a6765253160add1c8
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks             Chunk Names
