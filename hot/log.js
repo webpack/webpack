@@ -30,9 +30,11 @@ module.exports = function(level, msg) {
 	}
 };
 
+/* eslint-disable node/no-unsupported-features/node-builtins */
 var group = console.group || dummy;
 var groupCollapsed = console.groupCollapsed || dummy;
 var groupEnd = console.groupEnd || dummy;
+/* eslint-enable node/no-unsupported-features/node-builtins */
 
 module.exports.group = logGroup(group);
 
