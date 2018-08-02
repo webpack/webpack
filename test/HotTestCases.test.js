@@ -5,6 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 
 const webpack = require("../lib/webpack");
 
@@ -24,11 +25,10 @@ describe("HotTestCases", () => {
 	categories.forEach(category => {
 		describe(category.name, () => {
 			category.tests.forEach(testName => {
-				describe(
-					testName,
-					() => {
-						let exportedTests = [];
-						it(testName + " should compile", done => {
+				describe(testName, () => {
+					it(
+						testName + " should compile",
+						done => {
 							const testDirectory = path.join(
 								casesPath,
 								category.name,
@@ -106,10 +106,6 @@ describe("HotTestCases", () => {
 									return;
 								}
 
-								function _it(title, fn) {
-									exportedTests.push({ title, fn, timeout: 10000 });
-								}
-
 								function _next(callback) {
 									fakeUpdateLoaderOptions.updateIndex++;
 									compiler.run((err, stats) => {
@@ -175,31 +171,20 @@ describe("HotTestCases", () => {
 									} else return require(module);
 								}
 								_require("./bundle.js");
-								if (exportedTests.length < 1)
+								if (getNumberOfTests() < 1)
 									return done(new Error("No tests exported by test case"));
 
-								const asyncSuite = describe(`HotTestCases ${
-									category.name
-								} ${testName} exported tests`, () => {
-									exportedTests.forEach(({ title, fn, timeout }) => {
-										jest.setTimeout(10000);
-										return fn
-											? fit(title, fn, timeout)
-											: fit(title, () => {}).pend("Skipped");
-									});
-								});
-								// workaround for jest running clearSpies on the wrong suite (invoked by clearResourcesForRunnable)
-								asyncSuite.disabled = true;
-
-								jasmine
-									.getEnv()
-									.execute([asyncSuite.id], asyncSuite)
-									.then(done, done);
+								done();
 							});
-						});
-					},
-					10000
-				);
+						},
+						10000
+					);
+
+					const { it: _it, getNumberOfTests } = createLazyTestEnv(
+						jasmine.getEnv(),
+						10000
+					);
+				});
 			});
 		});
 	});
