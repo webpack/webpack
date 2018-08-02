@@ -241,5 +241,7 @@ declare const WebAssembly;
 declare const importScripts;
 declare const $crossOriginLoading$;
 declare const chunkId;
+declare const $currentChunk$;
+declare var webpackHotState;
 
 type TODO = any;
