@@ -7,6 +7,7 @@ const vm = require("vm");
 const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const { remove } = require("./helpers/remove");
 
 const Stats = require("../lib/Stats");
@@ -140,6 +141,7 @@ describe("WatchTestCases", () => {
 							let triggeringFilename;
 							let lastHash = "";
 							const currentWatchStepModule = require("./helpers/currentWatchStep");
+							let compilationFinished = done;
 							currentWatchStepModule.step = run.name;
 							copyDiff(path.join(testDirectory, run.name), tempDirectory, true);
 
@@ -156,13 +158,15 @@ describe("WatchTestCases", () => {
 										aggregateTimeout: 1000
 									},
 									(err, stats) => {
-										if (err) return done(err);
+										if (err) return compilationFinished(err);
 										if (!stats)
-											return done(new Error("No stats reported from Compiler"));
+											return compilationFinished(
+												new Error("No stats reported from Compiler")
+											);
 										if (stats.hash === lastHash) return;
 										lastHash = stats.hash;
 										if (run.done && lastHash !== stats.hash) {
-											return done(
+											return compilationFinished(
 												new Error(
 													"Compilation changed but no change was issued " +
 														lastHash +
@@ -178,7 +182,7 @@ describe("WatchTestCases", () => {
 										}
 										if (waitMode) return;
 										run.done = true;
-										if (err) return done(err);
+										if (err) return compilationFinished(err);
 										const statOptions = Stats.presetToOptions("verbose");
 										statOptions.colors = false;
 										mkdirp.sync(outputDirectory);
@@ -196,7 +200,7 @@ describe("WatchTestCases", () => {
 												jsonStats,
 												"error",
 												"Error",
-												done
+												compilationFinished
 											)
 										)
 											return;
@@ -206,16 +210,10 @@ describe("WatchTestCases", () => {
 												jsonStats,
 												"warning",
 												"Warning",
-												done
+												compilationFinished
 											)
 										)
 											return;
-
-										const exportedTests = [];
-
-										function _it(title, fn) {
-											exportedTests.push({ title, fn, timeout: 45000 });
-										}
 
 										const globalContext = {
 											console: console,
@@ -271,7 +269,7 @@ describe("WatchTestCases", () => {
 													m.exports,
 													path.dirname(p),
 													p,
-													_it,
+													run.it,
 													run.name,
 													jsonStats,
 													state,
@@ -298,22 +296,26 @@ describe("WatchTestCases", () => {
 											// empty
 										}
 
-										if (testConfig.noTests) return process.nextTick(done);
+										if (testConfig.noTests)
+											return process.nextTick(compilationFinished);
 										_require(
 											outputDirectory,
 											testConfig.bundlePath || "./bundle.js"
 										);
 
-										if (exportedTests.length < 1)
-											return done(new Error("No tests exported by test case"));
+										if (run.getNumberOfTests() < 1)
+											return compilationFinished(
+												new Error("No tests exported by test case")
+											);
 
-										const continueStep = () => {
+										run.it("should compile the next step", done => {
 											runIdx++;
 											if (runIdx < runs.length) {
 												run = runs[runIdx];
 												waitMode = true;
 												setTimeout(() => {
 													waitMode = false;
+													compilationFinished = done;
 													currentWatchStepModule.step = run.name;
 													copyDiff(
 														path.join(testDirectory, run.name),
@@ -326,32 +328,25 @@ describe("WatchTestCases", () => {
 
 												done();
 											}
-										};
-
-										// Run the tests
-										const asyncSuite = describe(`WatchTestCases ${
-											category.name
-										} ${testName} step ${run.name}`, () => {
-											exportedTests.forEach(
-												({ title, fn, timeout }) =>
-													fn
-														? fit(title, fn, timeout)
-														: fit(title, () => {}).pend("Skipped")
-											);
 										});
-										// workaround for jest running clearSpies on the wrong suite (invoked by clearResourcesForRunnable)
-										asyncSuite.disabled = true;
 
-										jasmine
-											.getEnv()
-											.execute([asyncSuite.id], asyncSuite)
-											.then(continueStep, done);
+										compilationFinished();
 									}
 								);
 							}, 300);
 						},
 						45000
 					);
+
+					for (const run of runs) {
+						const { it: _it, getNumberOfTests } = createLazyTestEnv(
+							jasmine.getEnv(),
+							10000,
+							run.name
+						);
+						run.it = _it;
+						run.getNumberOfTests = getNumberOfTests;
+					}
 
 					afterAll(() => {
 						remove(tempDirectory);
