@@ -150,7 +150,7 @@ describe("HotTestCases", () => {
 										const p = path.join(outputDirectory, module);
 										const fn = vm.runInThisContext(
 											"(function(require, module, exports, __dirname, __filename, it, expect, NEXT, STATS) {" +
-												"global.expect = expect;" +
+												"global.expect = expect; delete global.webpackHotState;" +
 												'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 												fs.readFileSync(p, "utf-8") +
 												"\n})",
