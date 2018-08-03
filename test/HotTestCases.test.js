@@ -109,7 +109,7 @@ describe("HotTestCases", () => {
 								function _next(callback) {
 									fakeUpdateLoaderOptions.updateIndex++;
 									compiler.run((err, stats) => {
-										if (err) return done(err);
+										if (err) return callback(err);
 										const jsonStats = stats.toJson({
 											errorDetails: true
 										});
@@ -120,7 +120,7 @@ describe("HotTestCases", () => {
 												"error",
 												"errors" + fakeUpdateLoaderOptions.updateIndex,
 												"Error",
-												done
+												callback
 											)
 										) {
 											return;
@@ -132,12 +132,12 @@ describe("HotTestCases", () => {
 												"warning",
 												"warnings" + fakeUpdateLoaderOptions.updateIndex,
 												"Warning",
-												done
+												callback
 											)
 										) {
 											return;
 										}
-										if (callback) callback(jsonStats);
+										callback(null, jsonStats);
 									});
 								}
 
