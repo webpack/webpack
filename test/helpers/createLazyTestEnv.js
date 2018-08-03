@@ -1,8 +1,11 @@
-module.exports = (env, globalTimeout = 2000) => {
-	const suite = env.describe("exported tests", () => {
-		// this must have a child to be handled correctly
-		env.it("should run the exported tests", () => {});
-	});
+module.exports = (env, globalTimeout = 2000, nameSuffix = "") => {
+	const suite = env.describe(
+		nameSuffix ? `exported tests ${nameSuffix}` : "exported tests",
+		() => {
+			// this must have a child to be handled correctly
+			env.it("should run the exported tests", () => {});
+		}
+	);
 	let numberOfTests = 0;
 	const beforeAndAfterFns = () => {
 		let currentSuite = suite;
