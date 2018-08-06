@@ -645,9 +645,9 @@ Entrypoint entry-1 = vendor-1.js entry-1.js
 `;
 
 exports[`StatsTestCases should print correct stats for commons-plugin-issue-4980 1`] = `
-"Hash: baedd77eb4453c9fa9f7984157e2c38778c8579f
+"Hash: 137d627ba070d33cdda49a001f783027b840be9c
 Child
-    Hash: baedd77eb4453c9fa9f7
+    Hash: 137d627ba070d33cdda4
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset       Size  Chunks             Chunk Names
@@ -660,7 +660,7 @@ Child
         | ./submodule-a.js 59 bytes [built]
         | ./submodule-b.js 59 bytes [built]
 Child
-    Hash: 984157e2c38778c8579f
+    Hash: 9a001f783027b840be9c
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset       Size  Chunks             Chunk Names
@@ -1124,7 +1124,7 @@ Compilation error while processing magic comment(-s): /* webpackPrefetch: true, 
 `;
 
 exports[`StatsTestCases should print correct stats for issue-7577 1`] = `
-"Hash: 343642fcbd3799129ba32c35ee2e2540e24d30f79bb497d4a15c1a430bc3
+"Hash: 343642fcbd3799129ba3c304c0cf29920d9747260bd6e5e36b1ff9a17678
 Child
     Hash: 343642fcbd3799129ba3
     Time: Xms
@@ -1136,28 +1136,28 @@ Child
     Entrypoint main = a-runtime~main-aa303e56a90b4559481f.js a-all~main-0034bb84916bcade4cc7.js a-main-14ee9c594789bd77b887.js
     [0] ./a.js 18 bytes {all~main} [built]
 Child
-    Hash: 2c35ee2e2540e24d30f7
+    Hash: c304c0cf29920d974726
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                                      Asset       Size        Chunks             Chunk Names
         b-all~main-a293363005660974db22.js  459 bytes      all~main  [emitted]  all~main
             b-main-1dc1f5a633a7b6c2376f.js  123 bytes          main  [emitted]  main
     b-runtime~main-937400e6bee421a9af47.js   6.05 KiB  runtime~main  [emitted]  runtime~main
-    b-vendors~main-18b100868c1420a63ed1.js  172 bytes  vendors~main  [emitted]  vendors~main
-    Entrypoint main = b-runtime~main-937400e6bee421a9af47.js b-vendors~main-18b100868c1420a63ed1.js b-all~main-a293363005660974db22.js b-main-1dc1f5a633a7b6c2376f.js
+    b-vendors~main-13c0fc262f08dee65613.js  172 bytes  vendors~main  [emitted]  vendors~main
+    Entrypoint main = b-runtime~main-937400e6bee421a9af47.js b-vendors~main-13c0fc262f08dee65613.js b-all~main-a293363005660974db22.js b-main-1dc1f5a633a7b6c2376f.js
     [0] ./b.js 17 bytes {all~main} [built]
     [1] ./node_modules/vendor.js 23 bytes {vendors~main} [built]
 Child
-    Hash: 9bb497d4a15c1a430bc3
+    Hash: 0bd6e5e36b1ff9a17678
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                                      Asset       Size        Chunks             Chunk Names
             c-main-5eaed336f1da9c475636.js  114 bytes          main  [emitted]  main
-               c-0-775a18a4f14e4483daf8.js  153 bytes             0  [emitted]  
+               c-0-598d23de6ad7df2ab6e4.js  153 bytes             0  [emitted]  
                c-1-9039f4a1a11a97f28320.js  459 bytes             1  [emitted]  
         c-all~main-166656d0ac46d1a19871.js  296 bytes      all~main  [emitted]  all~main
-    c-runtime~main-f75fab64c3cdea8ed8da.js   8.84 KiB  runtime~main  [emitted]  runtime~main
-    Entrypoint main = c-runtime~main-f75fab64c3cdea8ed8da.js c-all~main-166656d0ac46d1a19871.js c-main-5eaed336f1da9c475636.js (prefetch: c-0-775a18a4f14e4483daf8.js c-1-9039f4a1a11a97f28320.js)
+    c-runtime~main-54fe8e7231733bcf484a.js   8.84 KiB  runtime~main  [emitted]  runtime~main
+    Entrypoint main = c-runtime~main-54fe8e7231733bcf484a.js c-all~main-166656d0ac46d1a19871.js c-main-5eaed336f1da9c475636.js (prefetch: c-0-598d23de6ad7df2ab6e4.js c-1-9039f4a1a11a97f28320.js)
     [0] ./c.js 61 bytes {all~main} [built]
     [1] ./b.js 17 bytes {1} [built]
     [2] ./node_modules/vendor.js 23 bytes {0} [built]"
@@ -1291,7 +1291,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for module-assets 1`] = `
-"Hash: bd21dd593eac70b70df9
+"Hash: 0aa43ba74041bc65bc0a
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint main = main.js
@@ -2140,7 +2140,7 @@ Entrypoint e2 = runtime.js e2.js"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"Hash: ba85b8371afc898d85d7
+"Hash: a0a30b6e8932d0227376
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint index = index.js
@@ -2170,9 +2170,9 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
-"Hash: 1dfce172ee295757b605590e0d30e5aff8c2a291
+"Hash: d1e41fb7099e132879ee438a93ced10bfac3b362
 Child
-    Hash: 1dfce172ee295757b605
+    Hash: d1e41fb7099e132879ee
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
     Entrypoint first = vendor.js first.js
@@ -2189,7 +2189,7 @@ Child
      [9] ./lazy_shared.js 31 bytes {5} [built]
     [10] ./lazy_second.js 55 bytes {4} [built]
 Child
-    Hash: 590e0d30e5aff8c2a291
+    Hash: 438a93ced10bfac3b362
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
     Entrypoint first = vendor.js first.js
@@ -2217,7 +2217,7 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
-"Hash: fc134cf8abf3bf1e21dc
+"Hash: 4f5d38944616c15bd399
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
@@ -2246,26 +2246,26 @@ Entrypoint main = main.js
     |     [only some exports used: default]
     |     harmony import specifier ./components  ./main.js 4:15-20 (skipped side-effect-free modules)
 ./components/src/index.js 84 bytes [built]
-    [no exports used]
+    [module unused]
     harmony side effect evaluation ./components [2] ./foo.js 1:0-37
     harmony side effect evaluation ./components [3] ./main.js + 1 modules 1:0-44
 ./components/src/CompAB/index.js 87 bytes [built]
-    [no exports used]
+    [module unused]
     harmony side effect evaluation ./CompAB  ./components/src/index.js 1:0-40
     harmony export imported specifier ./CompAB  ./components/src/index.js 1:0-40
     harmony export imported specifier ./CompAB  ./components/src/index.js 1:0-40
 ./components/src/CompC/index.js 34 bytes [built]
-    [no exports used]
+    [module unused]
     harmony side effect evaluation ./CompC  ./components/src/index.js 2:0-43
     harmony export imported specifier ./CompC  ./components/src/index.js 2:0-43
 ./components/src/CompC/CompC.js 33 bytes [built]
-    [no exports used]
+    [module unused]
     harmony side effect evaluation ./CompC  ./components/src/CompC/index.js 1:0-34
     harmony export imported specifier ./CompC  ./components/src/CompC/index.js 1:0-34"
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
-"Hash: d4d2f3c4f634c2ec66a7
+"Hash: c7b680da5c0d869389e8
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset     Size  Chunks             Chunk Names
@@ -2284,11 +2284,11 @@ Entrypoint main = main.js
     |     [only some exports used: z]
     |     harmony import specifier pmodule  ./index.js 3:17-18 (skipped side-effect-free modules)
 ./node_modules/pmodule/a.js 60 bytes [built]
-    [no exports used]
+    [module unused]
     harmony side effect evaluation ./a [0] ./index.js + 2 modules 1:0-20
     harmony export imported specifier ./a [0] ./index.js + 2 modules 1:0-20
 ./node_modules/pmodule/b.js 69 bytes [built]
-    [no exports used]
+    [module unused]
     harmony side effect evaluation ./b [0] ./index.js + 2 modules 2:0-30
     harmony export imported specifier ./b [0] ./index.js + 2 modules 2:0-30
     harmony export imported specifier ./b [0] ./index.js + 2 modules 2:0-30
@@ -3013,11 +3013,11 @@ chunk    {4} default/async-c.js (async-c) 48 bytes <{0}> ={2}= [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: f687604cd8440a9db715
+"Hash: 40df5eaa38b35883e99e
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks             Chunk Names
-bundle.js  8.23 KiB       0  [emitted]  main
+bundle.js  8.22 KiB       0  [emitted]  main
 Entrypoint main = bundle.js
  [0] ./index.js 315 bytes {0} [built]
      [no exports]

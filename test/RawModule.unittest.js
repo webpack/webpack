@@ -5,7 +5,6 @@ const OriginalSource = require("webpack-sources").OriginalSource;
 const RawSource = require("webpack-sources").RawSource;
 const RequestShortener = require("../lib/RequestShortener");
 const path = require("path");
-const crypto = require("crypto");
 
 describe("RawModule", () => {
 	const source = "sourceStr attribute";
@@ -66,19 +65,5 @@ describe("RawModule", () => {
 				expect(myRawModule.source()).toEqual(rawSource);
 			}
 		);
-	});
-
-	describe("updateHash", () => {
-		it("should include sourceStr in its hash", () => {
-			const hashModule = module => {
-				const hash = crypto.createHash("sha256");
-				module.updateHash(hash);
-				return hash.digest("hex");
-			};
-
-			const hashFoo = hashModule(new RawModule('"foo"'));
-			const hashBar = hashModule(new RawModule('"bar"'));
-			expect(hashFoo).not.toBe(hashBar);
-		});
 	});
 });
