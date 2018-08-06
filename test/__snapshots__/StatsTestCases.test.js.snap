@@ -645,9 +645,9 @@ Entrypoint entry-1 = vendor-1.js entry-1.js
 `;
 
 exports[`StatsTestCases should print correct stats for commons-plugin-issue-4980 1`] = `
-"Hash: baedd77eb4453c9fa9f7984157e2c38778c8579f
+"Hash: bb2e5f90771d3e455287f855579fc92cc132a7e7
 Child
-    Hash: baedd77eb4453c9fa9f7
+    Hash: bb2e5f90771d3e455287
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset       Size  Chunks             Chunk Names
@@ -660,7 +660,7 @@ Child
         | ./submodule-a.js 59 bytes [built]
         | ./submodule-b.js 59 bytes [built]
 Child
-    Hash: 984157e2c38778c8579f
+    Hash: f855579fc92cc132a7e7
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset       Size  Chunks             Chunk Names
@@ -2140,7 +2140,7 @@ Entrypoint e2 = runtime.js e2.js"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"Hash: ba85b8371afc898d85d7
+"Hash: 228d4a8e20984671a19e
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint index = index.js
@@ -2217,7 +2217,7 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
-"Hash: fc134cf8abf3bf1e21dc
+"Hash: c1a73df9634a4a29fd80
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
@@ -2265,7 +2265,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
-"Hash: d4d2f3c4f634c2ec66a7
+"Hash: 5200b5dfad57ef2e6c35
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset     Size  Chunks             Chunk Names
@@ -3013,11 +3013,11 @@ chunk    {4} default/async-c.js (async-c) 48 bytes <{0}> ={2}= [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: f687604cd8440a9db715
+"Hash: bf9939407549f8882327
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks             Chunk Names
-bundle.js  8.23 KiB       0  [emitted]  main
+bundle.js  8.22 KiB       0  [emitted]  main
 Entrypoint main = bundle.js
  [0] ./index.js 315 bytes {0} [built]
      [no exports]
