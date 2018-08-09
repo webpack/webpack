@@ -679,15 +679,15 @@ exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`
     | ./index.js 46 bytes [built]
     | ./node_modules/pmodule/a.js 49 bytes [built]
     | ./node_modules/pmodule/aa.js 24 bytes [built]
-./node_modules/pmodule/index.js 63 bytes [built]
+./node_modules/pmodule/index.js 63 bytes [orphan] [built]
     ModuleConcatenation bailout: Module is not in any chunk
-./node_modules/pmodule/b.js 49 bytes [built]
+./node_modules/pmodule/b.js 49 bytes [orphan] [built]
     ModuleConcatenation bailout: Module is not in any chunk
-./node_modules/pmodule/c.js 49 bytes [built]
+./node_modules/pmodule/c.js 49 bytes [orphan] [built]
     ModuleConcatenation bailout: Module is not in any chunk
-./node_modules/pmodule/bb.js 24 bytes [built]
+./node_modules/pmodule/bb.js 24 bytes [orphan] [built]
     ModuleConcatenation bailout: Module is not in any chunk
-./node_modules/pmodule/cc.js 24 bytes [built]
+./node_modules/pmodule/cc.js 24 bytes [orphan] [built]
     ModuleConcatenation bailout: Module is not in any chunk"
 `;
 
@@ -1097,7 +1097,7 @@ entry.js   8.46 KiB       0  [emitted]  entry
 Entrypoint entry = entry.js
 [0] ./entry.js 120 bytes {0} [built]
 [1] ./modules/b.js 22 bytes {1} [built]
-./modules/a.js 37 bytes [built]"
+    + 1 hidden module"
 `;
 
 exports[`StatsTestCases should print correct stats for import-with-invalid-options-comments 1`] = `
@@ -2247,20 +2247,20 @@ Entrypoint main = main.js
     | ./components/src/CompAB/CompB.js 77 bytes [built]
     |     [only some exports used: default]
     |     harmony import specifier ./components  ./main.js 4:15-20 (skipped side-effect-free modules)
-./components/src/index.js 84 bytes [built]
+./components/src/index.js 84 bytes [orphan] [built]
     [module unused]
     harmony side effect evaluation ./components [2] ./foo.js 1:0-37
     harmony side effect evaluation ./components [3] ./main.js + 1 modules 1:0-44
-./components/src/CompAB/index.js 87 bytes [built]
+./components/src/CompAB/index.js 87 bytes [orphan] [built]
     [module unused]
     harmony side effect evaluation ./CompAB  ./components/src/index.js 1:0-40
     harmony export imported specifier ./CompAB  ./components/src/index.js 1:0-40
     harmony export imported specifier ./CompAB  ./components/src/index.js 1:0-40
-./components/src/CompC/index.js 34 bytes [built]
+./components/src/CompC/index.js 34 bytes [orphan] [built]
     [module unused]
     harmony side effect evaluation ./CompC  ./components/src/index.js 2:0-43
     harmony export imported specifier ./CompC  ./components/src/index.js 2:0-43
-./components/src/CompC/CompC.js 33 bytes [built]
+./components/src/CompC/CompC.js 33 bytes [orphan] [built]
     [module unused]
     harmony side effect evaluation ./CompC  ./components/src/CompC/index.js 1:0-34
     harmony export imported specifier ./CompC  ./components/src/CompC/index.js 1:0-34"
@@ -2285,11 +2285,11 @@ Entrypoint main = main.js
     | ./node_modules/pmodule/c.js 28 bytes [built]
     |     [only some exports used: z]
     |     harmony import specifier pmodule  ./index.js 3:17-18 (skipped side-effect-free modules)
-./node_modules/pmodule/a.js 60 bytes [built]
+./node_modules/pmodule/a.js 60 bytes [orphan] [built]
     [module unused]
     harmony side effect evaluation ./a [0] ./index.js + 2 modules 1:0-20
     harmony export imported specifier ./a [0] ./index.js + 2 modules 1:0-20
-./node_modules/pmodule/b.js 69 bytes [built]
+./node_modules/pmodule/b.js 69 bytes [orphan] [built]
     [module unused]
     harmony side effect evaluation ./b [0] ./index.js + 2 modules 2:0-30
     harmony export imported specifier ./b [0] ./index.js + 2 modules 2:0-30

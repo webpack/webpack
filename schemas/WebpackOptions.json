@@ -1844,6 +1844,10 @@
               "type": "boolean",
               "description": "add built modules information"
             },
+            "orphanModules": {
+              "type": "boolean",
+              "description": "add information about orphan modules"
+            },
             "nestedModules": {
               "type": "boolean",
               "description": "add information about modules nested in other modules (like with module concatenation)"
@@ -1858,7 +1862,7 @@
             },
             "cached": {
               "type": "boolean",
-              "description": "add also information about cached (not built) modules"
+              "description": "add information about cached (not built) modules"
             },
             "cachedAssets": {
               "type": "boolean",
