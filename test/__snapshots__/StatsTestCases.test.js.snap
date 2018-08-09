@@ -171,32 +171,32 @@ exports[`StatsTestCases should print correct stats for async-commons-chunk-auto 
      [2] ./node_modules/x.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
      [3] ./node_modules/y.js 20 bytes {1} {2} {3} {4} [built]
      [7] ./a.js + 1 modules 156 bytes {3} {4} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
     chunk    {4} disabled/async-a.js (async-a) 216 bytes <{0}> >{7}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [1] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
      [2] ./node_modules/x.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
      [3] ./node_modules/y.js 20 bytes {1} {2} {3} {4} [built]
      [7] ./a.js + 1 modules 156 bytes {3} {4} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
     chunk    {5} disabled/c.js (c) 167 bytes [entry] [rendered]
         > ./c c
      [1] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
      [2] ./node_modules/x.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
      [5] ./f.js 20 bytes {1} {2} {5} {6} {7} [built]
      [8] ./c.js + 1 modules 107 bytes {5} {6} [built]
+         | ./c.js 72 bytes [built]
          | ./node_modules/z.js 20 bytes [built]
-         |     + 1 hidden module
     chunk    {6} disabled/async-c.js (async-c) 167 bytes <{0}> [rendered]
         > ./c [0] ./index.js 3:0-47
      [1] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
      [2] ./node_modules/x.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
      [5] ./f.js 20 bytes {1} {2} {5} {6} {7} [built]
      [8] ./c.js + 1 modules 107 bytes {5} {6} [built]
+         | ./c.js 72 bytes [built]
          | ./node_modules/z.js 20 bytes [built]
-         |     + 1 hidden module
     chunk    {7} disabled/async-g.js (async-g) 54 bytes <{3}> <{4}> [rendered]
         > ./g [] 6:0-47
         > ./g [] 6:0-47
@@ -228,8 +228,8 @@ Child default:
      [2] ./node_modules/x.js 20 bytes {2} {3} {4} {5} [built]
      [3] ./node_modules/y.js 20 bytes {2} {3} {6} [built]
      [9] ./a.js + 1 modules 156 bytes {3} {12} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
     chunk    {4} default/c.js (c) 152 bytes [entry] [rendered]
         > ./c c
      [1] ./d.js 20 bytes {1} {2} {3} {4} [built]
@@ -268,8 +268,8 @@ Child default:
     chunk   {12} default/async-a.js (async-a) 156 bytes <{0}> ={1}= ={5}= ={6}= >{8}< >{11}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [9] ./a.js + 1 modules 156 bytes {3} {12} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
 Child vendors:
     Entrypoint main = vendors/main.js
     Entrypoint a = vendors/vendors.js vendors/a.js
@@ -291,8 +291,8 @@ Child vendors:
      [2] ./node_modules/x.js 20 bytes {1} {2} {3} {7} [built]
      [3] ./node_modules/y.js 20 bytes {1} {2} {7} [built]
      [9] ./a.js + 1 modules 156 bytes {2} {6} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
     chunk    {3} vendors/async-c.js (async-c) 152 bytes <{0}> [rendered]
         > ./c [0] ./index.js 3:0-47
      [1] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
@@ -314,8 +314,8 @@ Child vendors:
         > ./a a
      [1] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
      [9] ./a.js + 1 modules 156 bytes {2} {6} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
     chunk    {7} vendors/vendors.js (vendors) 60 bytes ={4}= ={5}= ={6}= >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./a a
         > ./b b
@@ -389,13 +389,13 @@ Child multiple-vendors:
     chunk   {11} multiple-vendors/a.js (a) 156 bytes ={1}= ={2}= ={3}= >{6}< >{10}< [entry] [rendered]
         > ./a a
      [9] ./a.js + 1 modules 156 bytes {11} {12} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
     chunk   {12} multiple-vendors/async-a.js (async-a) 156 bytes <{0}> ={1}= ={2}= ={3}= >{6}< >{10}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [9] ./a.js + 1 modules 156 bytes {11} {12} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
 Child all:
     Entrypoint main = all/main.js
     Entrypoint a = all/vendors~a~async-a~async-b~async-c~b~c.js all/vendors~a~async-a~async-b~b.js all/a~async-a~async-b~async-c~b~c.js all/a.js
@@ -457,13 +457,13 @@ Child all:
     chunk   {11} all/a.js (a) 156 bytes ={1}= ={2}= ={3}= >{6}< >{10}< [entry] [rendered]
         > ./a a
      [9] ./a.js + 1 modules 156 bytes {11} {12} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
     chunk   {12} all/async-a.js (async-a) 156 bytes <{0}> ={1}= ={2}= ={3}= >{6}< >{10}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [9] ./a.js + 1 modules 156 bytes {11} {12} [built]
-         | ./e.js 20 bytes [built]
-         |     + 1 hidden module"
+         | ./a.js 121 bytes [built]
+         | ./e.js 20 bytes [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for chunk-module-id-range 1`] = `
@@ -656,9 +656,9 @@ Child
     Entrypoint app = vendor.js app.js
     [./constants.js] 87 bytes {0} [built]
     [./entry-1.js] ./entry-1.js + 2 modules 190 bytes {1} [built]
+        | ./entry-1.js 67 bytes [built]
         | ./submodule-a.js 59 bytes [built]
         | ./submodule-b.js 59 bytes [built]
-        |     + 1 hidden module
 Child
     Hash: 9a001f783027b840be9c
     Time: Xms
@@ -669,16 +669,16 @@ Child
     Entrypoint app = vendor.js app.js
     [./constants.js] 87 bytes {0} [built]
     [./entry-2.js] ./entry-2.js + 2 modules 197 bytes {1} [built]
+        | ./entry-2.js 67 bytes [built]
         | ./submodule-a.js 59 bytes [built]
-        | ./submodule-c.js 66 bytes [built]
-        |     + 1 hidden module"
+        | ./submodule-c.js 66 bytes [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`] = `
 "[0] ./index.js + 2 modules 119 bytes {0} [built]
-    | ./index.js 46 bytes [orphan] [built]
-    | ./node_modules/pmodule/a.js 49 bytes [orphan] [built]
-    | ./node_modules/pmodule/aa.js 24 bytes [orphan] [built]
+    | ./index.js 46 bytes [built]
+    | ./node_modules/pmodule/a.js 49 bytes [built]
+    | ./node_modules/pmodule/aa.js 24 bytes [built]
 ./node_modules/pmodule/index.js 63 bytes [orphan] [built]
     ModuleConcatenation bailout: Module is not in any chunk
 ./node_modules/pmodule/b.js 49 bytes [orphan] [built]
@@ -1097,7 +1097,7 @@ entry.js   8.46 KiB       0  [emitted]  entry
 Entrypoint entry = entry.js
 [0] ./entry.js 120 bytes {0} [built]
 [1] ./modules/b.js 22 bytes {1} [built]
-./modules/a.js 37 bytes [built]"
+    + 1 hidden module"
 `;
 
 exports[`StatsTestCases should print correct stats for import-with-invalid-options-comments 1`] = `
@@ -1577,8 +1577,8 @@ main.js  4.01 KiB       0  main
 Entrypoint main = main.js
 [0] ./b.js 169 bytes {0} [built] [failed] [1 error]
 [1] ./index.js + 1 modules 35 bytes {0} [built]
+    | ./index.js 15 bytes [built]
     | ./a.js 15 bytes [built]
-    |     + 1 hidden module
 
 ERROR in ./b.js 6:7
 Module parse failed: Unexpected token (6:7)
@@ -2164,9 +2164,9 @@ Entrypoint entry = entry.js
     ModuleConcatenation bailout: Module is not an ECMAScript module
 [8] ./concatenated.js + 2 modules 116 bytes {2} [built]
     ModuleConcatenation bailout: Cannot concat with external \\"external\\" (<- Module is not an ECMAScript module)
-    | ./concatenated.js 26 bytes [orphan] [built]
-    | ./concatenated1.js 37 bytes [orphan] [built]
-    | ./concatenated2.js 48 bytes [orphan] [built]"
+    | ./concatenated.js 26 bytes [built]
+    | ./concatenated1.js 37 bytes [built]
+    | ./concatenated2.js 48 bytes [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
@@ -2211,11 +2211,11 @@ Child
     [7] ./first.js + 1 modules 248 bytes {5} [built]
         ModuleConcatenation bailout: Cannot concat with ./common.js (<- Module is referenced from different chunks by these modules: ./first.js + 1 modules, ./second.js)
         ModuleConcatenation bailout: Cannot concat with ./vendor.js (<- Module is referenced from different chunks by these modules: ./first.js + 1 modules, ./second.js)
-        | ./first.js 207 bytes [orphan] [built]
-        | ./module_first.js 31 bytes [orphan] [built]
+        | ./first.js 207 bytes [built]
+        | ./module_first.js 31 bytes [built]
     [8] ./common.js + 1 modules 62 bytes {1} {5} [built]
-        | ./common.js 37 bytes [orphan] [built]
-        | ./common2.js 25 bytes [orphan] [built]"
+        | ./common.js 37 bytes [built]
+        | ./common2.js 25 bytes [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
@@ -2243,8 +2243,8 @@ Entrypoint main = main.js
     harmony side effect evaluation ./CompB  ./components/src/CompAB/index.js 2:0-43
     harmony export imported specifier ./CompB  ./components/src/CompAB/index.js 2:0-43
     single entry ./main.js  main
-    | ./main.js 144 bytes [orphan] [built]
-    | ./components/src/CompAB/CompB.js 77 bytes [orphan] [built]
+    | ./main.js 144 bytes [built]
+    | ./components/src/CompAB/CompB.js 77 bytes [built]
     |     [only some exports used: default]
     |     harmony import specifier ./components  ./main.js 4:15-20 (skipped side-effect-free modules)
 ./components/src/index.js 84 bytes [orphan] [built]
@@ -2277,12 +2277,12 @@ Entrypoint main = main.js
     harmony side effect evaluation ./c  ./node_modules/pmodule/b.js 5:0-24
     harmony export imported specifier ./c  ./node_modules/pmodule/b.js 5:0-24
     single entry ./index  main
-    | ./index.js 55 bytes [orphan] [built]
-    | ./node_modules/pmodule/index.js 75 bytes [orphan] [built]
+    | ./index.js 55 bytes [built]
+    | ./node_modules/pmodule/index.js 75 bytes [built]
     |     [only some exports used: default]
     |     harmony side effect evaluation pmodule  ./index.js 1:0-33
     |     harmony import specifier pmodule  ./index.js 3:12-15
-    | ./node_modules/pmodule/c.js 28 bytes [orphan] [built]
+    | ./node_modules/pmodule/c.js 28 bytes [built]
     |     [only some exports used: z]
     |     harmony import specifier pmodule  ./index.js 3:17-18 (skipped side-effect-free modules)
 ./node_modules/pmodule/a.js 60 bytes [orphan] [built]
@@ -2346,8 +2346,8 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
      [2] ./node_modules/x.js 20 bytes {2} {3} {4} {5} [built]
      [3] ./node_modules/y.js 20 bytes {2} {3} {6} [built]
      [9] ./a.js + 1 modules 156 bytes {3} {12} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
     chunk    {4} default/c.js (c) 152 bytes [entry] [rendered]
         > ./c c
      [1] ./d.js 20 bytes {1} {2} {3} {4} [built]
@@ -2386,8 +2386,8 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
     chunk   {12} default/async-a.js (async-a) 156 bytes <{0}> ={1}= ={5}= ={6}= >{8}< >{11}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [9] ./a.js + 1 modules 156 bytes {3} {12} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
 Child all-chunks:
     Entrypoint main = default/main.js
     Entrypoint a = default/vendors~a~async-a~async-b~async-c~b~c.js default/vendors~a~async-a~async-b~b.js default/a~async-a~async-b~async-c~b~c.js default/a.js
@@ -2449,13 +2449,13 @@ Child all-chunks:
     chunk   {11} default/a.js (a) 156 bytes ={1}= ={2}= ={3}= >{6}< >{10}< [entry] [rendered]
         > ./a a
      [9] ./a.js + 1 modules 156 bytes {11} {12} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
     chunk   {12} default/async-a.js (async-a) 156 bytes <{0}> ={1}= ={2}= ={3}= >{6}< >{10}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [9] ./a.js + 1 modules 156 bytes {11} {12} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
 Child manual:
     Entrypoint main = default/main.js
     Entrypoint a = default/vendors.js default/a.js
@@ -2488,14 +2488,14 @@ Child manual:
         > ./a a
       [1] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
      [10] ./a.js + 1 modules 156 bytes {5} {6} [built]
+          | ./a.js 121 bytes [built]
           | ./e.js 20 bytes [built]
-          |     + 1 hidden module
     chunk    {6} default/async-a.js (async-a) 176 bytes <{0}> ={7}= >{8}< [rendered]
         > ./a [0] ./index.js 1:0-47
       [1] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
      [10] ./a.js + 1 modules 156 bytes {5} {6} [built]
+          | ./a.js 121 bytes [built]
           | ./e.js 20 bytes [built]
-          |     + 1 hidden module
     chunk    {7} default/vendors.js (vendors) 112 bytes <{0}> ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./a a
         > ./b b
@@ -2576,8 +2576,8 @@ Child name-too-long:
         > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
         > ./a [0] ./index.js 1:0-47
      [9] ./a.js + 1 modules 156 bytes {12} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
 Child custom-chunks-filter:
     Entrypoint main = default/main.js
     Entrypoint a = default/a.js
@@ -2599,8 +2599,8 @@ Child custom-chunks-filter:
      [2] ./node_modules/x.js 20 bytes {2} {3} [built]
      [3] ./node_modules/y.js 20 bytes {2} {4} [built]
      [9] ./a.js + 1 modules 156 bytes {2} {12} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
     chunk    {3} default/vendors~async-a~async-b~async-c~b~c.js (vendors~async-a~async-b~async-c~b~c) 20 bytes <{0}> ={1}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={12}= >{7}< >{11}< [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-a~async-b~async-c~b~c)
         > ./b b
         > ./c c
@@ -2644,8 +2644,8 @@ Child custom-chunks-filter:
     chunk   {12} default/async-a.js (async-a) 156 bytes <{0}> ={1}= ={3}= ={4}= >{7}< >{11}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [9] ./a.js + 1 modules 156 bytes {2} {12} [built]
+         | ./a.js 121 bytes [built]
          | ./e.js 20 bytes [built]
-         |     + 1 hidden module
 Child custom-chunks-filter-in-cache-groups:
     Entrypoint main = default/main.js
     Entrypoint a = default/a.js
@@ -2660,8 +2660,8 @@ Child custom-chunks-filter-in-cache-groups:
       [2] ./node_modules/x.js 20 bytes {1} {7} [built]
       [3] ./node_modules/y.js 20 bytes {1} {7} [built]
      [10] ./a.js + 1 modules 156 bytes {1} {6} [built]
+          | ./a.js 121 bytes [built]
           | ./e.js 20 bytes [built]
-          |     + 1 hidden module
     chunk    {2} default/b.js (b) 112 bytes ={7}= [entry] [rendered]
         > ./b b
      [1] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
@@ -2686,8 +2686,8 @@ Child custom-chunks-filter-in-cache-groups:
         > ./a [0] ./index.js 1:0-47
       [1] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
      [10] ./a.js + 1 modules 156 bytes {1} {6} [built]
+          | ./a.js 121 bytes [built]
           | ./e.js 20 bytes [built]
-          |     + 1 hidden module
     chunk    {7} default/vendors.js (vendors) 112 bytes <{0}> ={2}= ={3}= ={4}= ={5}= ={6}= >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./b b
         > ./c c
