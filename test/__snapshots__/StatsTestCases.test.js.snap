@@ -677,7 +677,6 @@ Child
 exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`] = `
 "[0] ./index.js + 2 modules 119 bytes {0} [built]
     | ./index.js 46 bytes [built]
-    |     ModuleConcatenation bailout: Module is an entry point
     | ./node_modules/pmodule/a.js 49 bytes [built]
     | ./node_modules/pmodule/aa.js 24 bytes [built]
 ./node_modules/pmodule/index.js 63 bytes [built]
@@ -2146,13 +2145,15 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint index = index.js
 Entrypoint entry = entry.js
 [0] ./index.js 150 bytes {0} [built]
-    ModuleConcatenation bailout: Module is an entry point
+    ModuleConcatenation bailout: Cannot concat with ./entry.js (<- Module is an entry point)
+    ModuleConcatenation bailout: Cannot concat with ./eval.js (<- Module uses eval())
+    ModuleConcatenation bailout: Cannot concat with ./module-id.js (<- Module uses module.id)
+    ModuleConcatenation bailout: Cannot concat with ./module-loaded.js (<- Module uses module.loaded)
+    ModuleConcatenation bailout: Cannot concat with ./ref-from-cjs.js (<- Module is referenced from these modules with unsupported syntax: ./cjs.js (referenced with cjs require))
 [1] ./cjs.js 59 bytes {0} [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
 [2] ./ref-from-cjs.js 45 bytes {0} [built]
-    ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./cjs.js (referenced with cjs require)
 [3] ./entry.js 32 bytes {0} {1} [built]
-    ModuleConcatenation bailout: Module is an entry point
 [4] ./eval.js 35 bytes {0} [built]
     ModuleConcatenation bailout: Module uses eval()
 [5] ./module-id.js 26 bytes {0} [built]
@@ -2164,7 +2165,6 @@ Entrypoint entry = entry.js
 [8] ./concatenated.js + 2 modules 116 bytes {2} [built]
     ModuleConcatenation bailout: Cannot concat with external \\"external\\" (<- Module is not an ECMAScript module)
     | ./concatenated.js 26 bytes [built]
-    |     ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./index.js (referenced with import())
     | ./concatenated1.js 37 bytes [built]
     | ./concatenated2.js 48 bytes [built]"
 `;
@@ -2196,20 +2196,22 @@ Child
     Entrypoint second = vendor.js second.js
     [0] ./vendor.js 25 bytes {0} [built]
     [1] ./second.js 177 bytes {1} [built]
-        ModuleConcatenation bailout: Module is an entry point
+        ModuleConcatenation bailout: Cannot concat with ./common.js (<- Module is referenced from different chunks by these modules: ./first.js + 1 modules, ./second.js)
+        ModuleConcatenation bailout: Cannot concat with ./vendor.js (<- Module is referenced from different chunks by these modules: ./first.js + 1 modules, ./second.js)
     [2] ./lazy_first.js 55 bytes {2} [built]
-        ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./first.js (referenced with import())
+        ModuleConcatenation bailout: Cannot concat with ./common_lazy.js (<- Module is referenced from different chunks by these modules: ./lazy_first.js, ./lazy_second.js)
+        ModuleConcatenation bailout: Cannot concat with ./common_lazy_shared.js (<- Module is referenced from different chunks by these modules: ./lazy_first.js, ./lazy_second.js, ./lazy_shared.js)
     [3] ./common_lazy.js 25 bytes {2} {3} [built]
     [4] ./common_lazy_shared.js 25 bytes {2} {3} {4} [built]
     [5] ./lazy_shared.js 31 bytes {4} [built]
-        ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./first.js (referenced with import()), ./second.js (referenced with import())
+        ModuleConcatenation bailout: Cannot concat with ./common_lazy_shared.js (<- Module is referenced from different chunks by these modules: ./lazy_first.js, ./lazy_second.js, ./lazy_shared.js)
     [6] ./lazy_second.js 55 bytes {3} [built]
-        ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./second.js (referenced with import())
+        ModuleConcatenation bailout: Cannot concat with ./common_lazy.js (<- Module is referenced from different chunks by these modules: ./lazy_first.js, ./lazy_second.js)
+        ModuleConcatenation bailout: Cannot concat with ./common_lazy_shared.js (<- Module is referenced from different chunks by these modules: ./lazy_first.js, ./lazy_second.js, ./lazy_shared.js)
     [7] ./first.js + 1 modules 248 bytes {5} [built]
-        ModuleConcatenation bailout: Cannot concat with ./common.js
-        ModuleConcatenation bailout: Cannot concat with ./vendor.js
+        ModuleConcatenation bailout: Cannot concat with ./common.js (<- Module is referenced from different chunks by these modules: ./first.js + 1 modules, ./second.js)
+        ModuleConcatenation bailout: Cannot concat with ./vendor.js (<- Module is referenced from different chunks by these modules: ./first.js + 1 modules, ./second.js)
         | ./first.js 207 bytes [built]
-        |     ModuleConcatenation bailout: Module is an entry point
         | ./module_first.js 31 bytes [built]
     [8] ./common.js + 1 modules 62 bytes {1} {5} [built]
         | ./common.js 37 bytes [built]
