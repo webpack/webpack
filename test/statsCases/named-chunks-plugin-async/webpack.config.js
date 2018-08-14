@@ -2,6 +2,7 @@
 
 const NamedChunksPlugin = require("../../../lib/NamedChunksPlugin");
 const RequestShortener = require("../../../lib/RequestShortener");
+const { compareModulesById } = require("../../../lib/util/comparators");
 
 module.exports = {
 	mode: "production",
@@ -10,17 +11,20 @@ module.exports = {
 		entry: "./entry"
 	},
 	plugins: [
-		new NamedChunksPlugin(function(chunk) {
+		new NamedChunksPlugin(function(chunk, { chunkGraph }) {
 			if (chunk.name) {
 				return chunk.name;
 			}
 			const chunkModulesToName = chunk =>
-				Array.from(chunk.modulesIterable, mod => {
-					const rs = new RequestShortener(mod.context);
-					return rs.shorten(mod.request).replace(/[./\\]/g, "_");
-				}).join("-");
+				Array.from(
+					chunkGraph.getOrderedChunkModulesIterable(chunk, compareModulesById),
+					mod => {
+						const rs = new RequestShortener(mod.context);
+						return rs.shorten(mod.request).replace(/[./\\]/g, "_");
+					}
+				).join("-");
 
-			if (chunk.getNumberOfModules() > 0) {
+			if (chunkGraph.getNumberOfChunkModules(chunk) > 0) {
 				return `chunk-containing-${chunkModulesToName(chunk)}`;
 			}
 

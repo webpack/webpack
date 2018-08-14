@@ -23,7 +23,9 @@ module.exports = {
 						const modules = new Map();
 						const modules2 = new Map();
 						for (const chunk of group.chunks) {
-							for (const module of chunk.modulesIterable) {
+							for (const module of compilation.chunkGraph.getChunkModulesIterable(
+								chunk
+							)) {
 								modules.set(module, group.getModuleIndex(module));
 								modules2.set(module, group.getModuleIndex2(module));
 							}
