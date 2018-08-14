@@ -97,12 +97,12 @@ const schema = [
 	},
 	{
 		title: "type imports",
-		regexp: /(\/\*\* @typedef \{import\("[^"]+"\)(\.\w+)*\} \w+ \*\/\n)+\n/g,
+		regexp: /(\/\*\* (?:@template \w+ )*@typedef \{import\("[^"]+"\)(\.\w+)*(?:<(?:(?:\w\.)*\w+, )*(?:\w\.)*\w+>)?\} \w+(?:<(?:(?:\w\.)*\w+, )*(?:\w\.)*\w+>)? \*\/\n)+\n/g,
 		updateMessage: "sort type imports alphabetically",
 		update(content) {
 			const items = execToArray(
 				content,
-				/\/\*\* @typedef \{import\("([^"]+)"\)((?:\.\w+)*)\} \w+ \*\/\n/g
+				/\/\*\* (?:@template \w+ )*@typedef \{import\("([^"]+)"\)((?:\.\w+)*(?:<(?:(?:\w\.)*\w+, )*(?:\w\.)*\w+>)?)\} \w+(?:<(?:(?:\w\.)*\w+, )*(?:\w\.)*\w+>)? \*\/\n/g
 			);
 			items.sort(sortImport);
 			return items.map(item => item.content).join("") + "\n";
