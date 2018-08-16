@@ -75,8 +75,8 @@ for (const sourceFile of program.getSourceFiles()) {
 							member.name.getText()
 						);
 						if (baseDecl) {
-							const memberAsAny = /** @type {any} */ (member);
-							const baseDeclAsAny = /** @type {any} */ (baseDecl);
+							const memberAsAny = /** @type {TODO} */ (member);
+							const baseDeclAsAny = /** @type {TODO} */ (baseDecl);
 							const currentJsDoc = memberAsAny.jsDoc && memberAsAny.jsDoc[0];
 							const baseJsDoc = baseDeclAsAny.jsDoc && baseDeclAsAny.jsDoc[0];
 							const currentJsDocText =
