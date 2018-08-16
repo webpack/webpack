@@ -68,6 +68,20 @@ describe("StatsTestCases", () => {
 						])
 					);
 				};
+				c.hooks.compilation.tap("StatsTestCasesTest", compilation => {
+					[
+						"optimize",
+						"optimizeModulesBasic",
+						"optimizeChunksBasic",
+						"afterOptimizeTree",
+						"afterOptimizeAssets",
+						"beforeHash"
+					].forEach(hook => {
+						compilation.hooks[hook].tap("TestCasesTest", () =>
+							compilation.checkConstraints()
+						);
+					});
+				});
 			});
 			c.run((err, stats) => {
 				if (err) return done(err);
