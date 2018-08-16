@@ -11,13 +11,16 @@ module.exports = {
 		entry: "./entry"
 	},
 	plugins: [
-		new NamedChunksPlugin(function(chunk, { chunkGraph }) {
+		new NamedChunksPlugin(function(chunk, { chunkGraph, moduleGraph }) {
 			if (chunk.name) {
 				return chunk.name;
 			}
 			const chunkModulesToName = chunk =>
 				Array.from(
-					chunkGraph.getOrderedChunkModulesIterable(chunk, compareModulesById),
+					chunkGraph.getOrderedChunkModulesIterable(
+						chunk,
+						compareModulesById(moduleGraph)
+					),
 					mod => {
 						const rs = new RequestShortener(mod.context);
 						return rs.shorten(mod.request).replace(/[./\\]/g, "_");
