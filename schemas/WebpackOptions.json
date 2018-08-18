@@ -1319,6 +1319,17 @@
           "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer",
           "type": "boolean"
         },
+        "reloadChunks": {
+          "description": "Reload while chunks load failure",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "alternatePublicPath": {
+              "description": "An alternate publicPath to reload missing chunks",
+              "type": "string"
+            }
+          }
+        },
         "splitChunks": {
           "description": "Optimize duplication and caching by splitting chunks by shared modules and cache group",
           "oneOf": [
