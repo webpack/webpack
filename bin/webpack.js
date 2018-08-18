@@ -162,9 +162,11 @@ if (installedClis.length === 0) {
 	// eslint-disable-next-line node/no-missing-require
 	const pkg = require(pkgPath);
 	// eslint-disable-next-line node/no-missing-require
+	// resolve webpack-command to webpack to avoid undefined path issue
+	const binName = installedClis[0].binName === 'webpack-command' ? 'webpack' : installedClis[0].binName;
 	require(path.resolve(
 		path.dirname(pkgPath),
-		pkg.bin[installedClis[0].binName]
+		pkg.bin[binName]
 	));
 } else {
 	console.warn(
