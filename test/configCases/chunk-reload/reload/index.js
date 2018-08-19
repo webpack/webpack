@@ -1,4 +1,4 @@
-it("should reload success", async () => {
+it("should reload success", () => {
 	const importer = import("./foo" /* webpackChunkName: "foo" */);
 	let scripts = document.head._children;
 	expect(scripts).toHaveLength(1);
@@ -11,6 +11,7 @@ it("should reload success", async () => {
 	expect(scripts[1].src).not.toMatch(/notFound/);
 	__non_webpack_require__("./foo.js");
 	scripts[1].onload();
-	const foo = await importer;
-	expect(foo.default).toBe("foo");
+	return importer.then((foo) => {
+		expect(foo.default).toBe("foo");
+	});
 });
