@@ -6,8 +6,9 @@ module.exports = {
 	entry: "./test.js",
 	plugins: [
 		new IgnorePlugin({
-			resourceRegExp: /ignored-module/,
-			contextRegExp: /folder-b/
+			checkResource: function(resource) {
+				return /ignored-module/.test(resource);
+			}
 		})
 	]
 };
