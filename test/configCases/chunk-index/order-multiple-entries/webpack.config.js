@@ -16,6 +16,7 @@ module.exports = {
 			 * @returns {void}
 			 */
 			const handler = compilation => {
+				const moduleGraph = compilation.moduleGraph;
 				compilation.hooks.afterSeal.tap("testcase", () => {
 					const data = {};
 					for (const [name, group] of compilation.namedChunkGroups) {
@@ -69,20 +70,28 @@ module.exports = {
 					});
 					const indicies = compilation.modules
 						.slice()
-						.sort((a, b) => a.index - b.index)
+						.sort(
+							(a, b) =>
+								moduleGraph.getPreOrderIndex(a) -
+								moduleGraph.getPreOrderIndex(b)
+						)
 						.map(
 							m =>
-								`${m.index}: ${m.readableIdentifier(
+								`${moduleGraph.getPreOrderIndex(m)}: ${m.readableIdentifier(
 									compilation.requestShortener
 								)}`
 						)
 						.join(", ");
 					const indicies2 = compilation.modules
 						.slice()
-						.sort((a, b) => a.index2 - b.index2)
+						.sort(
+							(a, b) =>
+								moduleGraph.getPostOrderIndex(a) -
+								moduleGraph.getPostOrderIndex(b)
+						)
 						.map(
 							m =>
-								`${m.index2}: ${m.readableIdentifier(
+								`${moduleGraph.getPostOrderIndex(m)}: ${m.readableIdentifier(
 									compilation.requestShortener
 								)}`
 						)
