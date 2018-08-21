@@ -62,7 +62,7 @@ Please follow the approach described bellow:
 * jest will automatically add the output from your test code to ```StatsTestCases.test.js.snap``` and you can always check your results there
 * Next time test will run -> runner will compare results against your output written to snapshot previously
 
-You can read more about SnapShot testing [right here](https://facebook.github.io/jest/docs/en/snapshot-testing.html)
+You can read more about SnapShot testing [right here](https://jestjs.io/docs/snapshot-testing)
 
 ## Questions? Comments?
 If you are still nervous or don't quite understand, please submit an issue and tag us in it, and provide a relevant PR while working on!
