@@ -132,7 +132,7 @@ describe("StatsTestCases", () => {
 					.replace(/\r\n?/g, "\n")
 					.replace(/[\t ]*Version:.+\n/g, "")
 					.replace(path.join(base, testName), "Xdir/" + testName)
-					.replace(/ dependencies:Xms/g, "");
+					.replace(/, additional resolving: Xms/g, "");
 				expect(actual).toMatchSnapshot();
 				done();
 			});
