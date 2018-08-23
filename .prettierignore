@@ -2,6 +2,7 @@
 **/*.*
 
 # Enable prettier for the following paths.
+!*.{ts,js,json}
 !setup/**/*.js
 !lib/**/*.js
 !bin/*.js
@@ -13,5 +14,3 @@
 !test/**/webpack.config.js
 !examples/**/webpack.config.js
 !schemas/**/*.js
-!declarations.d.ts
-!tsconfig.json

@@ -123,7 +123,7 @@
     "code-lint": "eslint --cache setup lib bin hot buildin benchmark tooling \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\"",
     "type-lint": "tsc --pretty",
     "fix": "yarn code-lint --fix",
-    "pretty": "prettier --write \"setup/**/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"benchmark/**/*.js\" \"tooling/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" \"declarations.d.ts\" \"tsconfig.json\"",
+    "pretty": "prettier --write \"*.{ts,js,json}\" \"setup/**/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"benchmark/**/*.js\" \"tooling/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\"",
     "schema-lint": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.lint.js\" --no-verbose",
     "benchmark": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.benchmark.js\" --runInBand",
     "cover": "yarn cover:init && yarn cover:all && yarn cover:report",
@@ -139,7 +139,7 @@
     }
   },
   "lint-staged": {
-    "lib/**/*.js": [
+    "*.js|{lib,setup,bin,hot,buildin,tooling,schemas}/**/*.js|test/*.js|{test,examples}/**/webpack.config.js}": [
       "eslint --cache"
     ]
   },
@@ -151,36 +151,38 @@
       "<rootDir>/test/*.unittest.js"
     ],
     "watchPathIgnorePatterns": [
-      "<rootDir>/node_modules/webpack/node_modules/",
-      "<rootDir>/test/js/",
-      "<rootDir>/test/browsertest/js/",
-      "<rootDir>/test/fixtures/temp-cache-fixture/",
+      "<rootDir>/.git",
+      "<rootDir>/node_modules",
+      "<rootDir>/test/js",
+      "<rootDir>/test/browsertest/js",
+      "<rootDir>/test/fixtures/temp-cache-fixture",
       "<rootDir>/test/fixtures/temp-",
-      "<rootDir>/benchmark/",
+      "<rootDir>/benchmark",
       "<rootDir>/examples/*/dist",
-      "<rootDir>/coverage/",
-      "<rootDir>/.eslintcache/"
+      "<rootDir>/coverage",
+      "<rootDir>/.eslintcache"
     ],
     "modulePathIgnorePatterns": [
-      "<rootDir>/node_modules/webpack/node_modules/",
-      "<rootDir>/test/js/",
-      "<rootDir>/test/browsertest/js/",
-      "<rootDir>/test/fixtures/temp-cache-fixture/",
+      "<rootDir>/.git",
+      "<rootDir>/node_modules/webpack/node_modules",
+      "<rootDir>/test/js",
+      "<rootDir>/test/browsertest/js",
+      "<rootDir>/test/fixtures/temp-cache-fixture",
       "<rootDir>/test/fixtures/temp-",
-      "<rootDir>/benchmark/",
+      "<rootDir>/benchmark",
       "<rootDir>/examples/*/dist",
-      "<rootDir>/coverage/",
-      "<rootDir>/.eslintcache/"
+      "<rootDir>/coverage",
+      "<rootDir>/.eslintcache"
     ],
     "transformIgnorePatterns": [
-      "<rootDir>/"
+      "<rootDir>"
     ],
     "coverageDirectory": "<rootDir>/coverage",
     "coveragePathIgnorePatterns": [
       "\\.runtime\\.js$",
-      "<rootDir>/test/",
-      "<rootDir>/schemas/",
-      "<rootDir>/node_modules/"
+      "<rootDir>/test",
+      "<rootDir>/schemas",
+      "<rootDir>/node_modules"
     ],
     "testEnvironment": "node",
     "coverageReporters": [
