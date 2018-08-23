@@ -9,7 +9,7 @@ module.exports = {
 	},
 	output: {
 		path: path.join(__dirname, "dist"),
-		filename: "[name].chunkhash.js",
-		chunkFilename: "[name].chunkhash.js"
+		filename: "[name].[chunkhash].js",
+		chunkFilename: "[name].[chunkhash].js"
 	}
 };
