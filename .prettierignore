@@ -2,6 +2,7 @@
 **/*.*
 
 # Enable prettier for the following paths.
+!*.js
 !setup/**/*.js
 !lib/**/*.js
 !bin/*.js
