@@ -26,7 +26,7 @@ module.exports = ajv =>
 				let passes = true;
 				const isExclamationMarkPresent = data.includes("!");
 				const isCorrectAbsoluteOrRelativePath =
-					expected === /^(?:[A-Za-z]:\\|\/)/.test(data);
+					expected === /^(?:[A-Za-z]:[\\/]|\/)/.test(data);
 
 				if (isExclamationMarkPresent) {
 					callback.errors = [
