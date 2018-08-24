@@ -1,8 +1,6 @@
 {
   "additionalProperties": false,
-  "required": [
-    "path"
-  ],
+  "required": ["path"],
   "properties": {
     "context": {
       "description": "Context of requests in the manifest file (defaults to the webpack context)",

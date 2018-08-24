@@ -11,9 +11,7 @@
         }
       },
       "additionalProperties": true,
-      "required": [
-        "apply"
-      ]
+      "required": ["apply"]
     },
     "common.pluginObject": {
       "description": "Plugin instance",
@@ -25,9 +23,7 @@
         }
       },
       "additionalProperties": true,
-      "required": [
-        "apply"
-      ]
+      "required": ["apply"]
     },
     "common.arrayOfStringOrStringArrayValues": {
       "items": {
@@ -339,19 +335,11 @@
         },
         "crossOriginLoading": {
           "description": "This option enables cross-origin loading of chunks.",
-          "enum": [
-            false,
-            "anonymous",
-            "use-credentials"
-          ]
+          "enum": [false, "anonymous", "use-credentials"]
         },
         "jsonpScriptType": {
           "description": "This option enables loading async chunks via a custom script type, such as script type=\"module\"",
-          "enum": [
-            false,
-            "text/javascript",
-            "module"
-          ]
+          "enum": [false, "text/javascript", "module"]
         },
         "chunkLoadTimeout": {
           "description": "Number of milliseconds before chunk request expires",
@@ -837,10 +825,7 @@
       "properties": {
         "enforce": {
           "description": "Enforce this rule as pre or post step",
-          "enum": [
-            "pre",
-            "post"
-          ]
+          "enum": ["pre", "post"]
         },
         "exclude": {
           "description": "Shortcut for resource.exclude",
@@ -1114,11 +1099,7 @@
   "properties": {
     "mode": {
       "description": "Enable production optimizations or development hints.",
-      "enum": [
-        "development",
-        "production",
-        "none"
-      ]
+      "enum": ["development", "production", "none"]
     },
     "amd": {
       "description": "Set the value of `require.amd` and `define.amd`."
@@ -1164,9 +1145,7 @@
           "type": "string"
         },
         {
-          "enum": [
-            false
-          ]
+          "enum": [false]
         }
       ]
     },
@@ -1206,52 +1185,29 @@
       "description": "Include polyfills or mocks for various node stuff.",
       "anyOf": [
         {
-          "enum": [
-            false
-          ]
+          "enum": [false]
         },
         {
           "additionalProperties": {
             "description": "Include a polyfill for the node.js module",
-            "enum": [
-              false,
-              true,
-              "mock",
-              "empty"
-            ]
+            "enum": [false, true, "mock", "empty"]
           },
           "properties": {
             "Buffer": {
               "description": "Include a polyfill for the 'Buffer' variable",
-              "enum": [
-                false,
-                true,
-                "mock"
-              ]
+              "enum": [false, true, "mock"]
             },
             "__dirname": {
               "description": "Include a polyfill for the '__dirname' variable",
-              "enum": [
-                false,
-                true,
-                "mock"
-              ]
+              "enum": [false, true, "mock"]
             },
             "__filename": {
               "description": "Include a polyfill for the '__filename' variable",
-              "enum": [
-                false,
-                true,
-                "mock"
-              ]
+              "enum": [false, true, "mock"]
             },
             "console": {
               "description": "Include a polyfill for the 'console' variable",
-              "enum": [
-                false,
-                true,
-                "mock"
-              ]
+              "enum": [false, true, "mock"]
             },
             "global": {
               "description": "Include a polyfill for the 'global' variable",
@@ -1259,11 +1215,7 @@
             },
             "process": {
               "description": "Include a polyfill for the 'process' variable",
-              "enum": [
-                false,
-                true,
-                "mock"
-              ]
+              "enum": [false, true, "mock"]
             }
           },
           "type": "object"
@@ -1323,9 +1275,7 @@
           "description": "Optimize duplication and caching by splitting chunks by shared modules and cache group",
           "oneOf": [
             {
-              "enum": [
-                false
-              ]
+              "enum": [false]
             },
             {
               "type": "object",
@@ -1335,11 +1285,7 @@
                   "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
                   "oneOf": [
                     {
-                      "enum": [
-                        "initial",
-                        "async",
-                        "all"
-                      ]
+                      "enum": ["initial", "async", "all"]
                     },
                     {
                       "instanceof": "Function"
@@ -1428,9 +1374,7 @@
                     "description": "Configuration for a cache group",
                     "anyOf": [
                       {
-                        "enum": [
-                          false
-                        ]
+                        "enum": [false]
                       },
                       {
                         "instanceof": "Function"
@@ -1463,11 +1407,7 @@
                             "description": "Select chunks for determining cache group content (defaults to \"initial\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
                             "oneOf": [
                               {
-                                "enum": [
-                                  "initial",
-                                  "async",
-                                  "all"
-                                ]
+                                "enum": ["initial", "async", "all"]
                               },
                               {
                                 "instanceof": "Function"
@@ -1555,10 +1495,7 @@
               "type": "boolean"
             },
             {
-              "enum": [
-                "single",
-                "multiple"
-              ]
+              "enum": ["single", "multiple"]
             },
             {
               "type": "object",
@@ -1593,24 +1530,11 @@
         },
         "moduleIds": {
           "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: short hashes as ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)",
-          "enum": [
-            "natural",
-            "named",
-            "hashed",
-            "size",
-            "total-size",
-            false
-          ]
+          "enum": ["natural", "named", "hashed", "size", "total-size", false]
         },
         "chunkIds": {
           "description": "Define the algorithm to choose chunk ids (named: readable ids for better debugging, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)",
-          "enum": [
-            "natural",
-            "named",
-            "size",
-            "total-size",
-            false
-          ]
+          "enum": ["natural", "named", "size", "total-size", false]
         },
         "namedModules": {
           "description": "Use readable module identifiers for better debugging (deprecated, used moduleIds: named instead)",
@@ -1651,9 +1575,7 @@
           "description": "Set process.env.NODE_ENV to a specific value",
           "anyOf": [
             {
-              "enum": [
-                false
-              ]
+              "enum": [false]
             },
             {
               "type": "string"
@@ -1671,9 +1593,7 @@
       "description": "Configuration for web performance recommendations.",
       "anyOf": [
         {
-          "enum": [
-            false
-          ]
+          "enum": [false]
         },
         {
           "additionalProperties": false,
@@ -1684,11 +1604,7 @@
             },
             "hints": {
               "description": "Sets the format of the hints: warnings, errors or nothing at all",
-              "enum": [
-                false,
-                "warning",
-                "error"
-              ]
+              "enum": [false, "warning", "error"]
             },
             "maxEntrypointSize": {
               "description": "Total size of an entry point (in bytes)",
