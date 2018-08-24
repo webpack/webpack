@@ -1442,7 +1442,21 @@
                         "additionalProperties": false,
                         "properties": {
                           "test": {
-                            "description": "Assign modules to a cache group",
+                            "description": "Assign modules to a cache group by module name",
+                            "oneOf": [
+                              {
+                                "instanceof": "Function"
+                              },
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "instanceof": "RegExp"
+                              }
+                            ]
+                          },
+                          "type": {
+                            "description": "Assign modules to a cache group by module type",
                             "oneOf": [
                               {
                                 "instanceof": "Function"
