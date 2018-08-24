@@ -34,9 +34,7 @@
     {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "banner"
-      ],
+      "required": ["banner"],
       "properties": {
         "banner": {
           "description": "Specifies the banner",

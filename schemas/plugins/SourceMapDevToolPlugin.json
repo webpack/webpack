@@ -62,10 +62,7 @@
       "oneOf": [
         {
           "description": "Disable separate SourceMap file and inline SourceMap as DataUrl",
-          "enum": [
-            false,
-            null
-          ]
+          "enum": [false, null]
         },
         {
           "type": "string",
@@ -79,10 +76,7 @@
       "oneOf": [
         {
           "description": "Append no SourceMap comment to the bundle, but still generate SourceMaps",
-          "enum": [
-            false,
-            null
-          ]
+          "enum": [false, null]
         },
         {
           "minLength": 1,
