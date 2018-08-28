@@ -19,7 +19,7 @@ module.exports = {
 				Array.from(
 					chunkGraph.getOrderedChunkModulesIterable(
 						chunk,
-						compareModulesById(moduleGraph)
+						compareModulesById(chunkGraph)
 					),
 					mod => {
 						const rs = new RequestShortener(mod.context);
