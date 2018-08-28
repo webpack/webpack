@@ -45,9 +45,7 @@ describe("NormalModule", () => {
 		});
 		it("returns an identifier from toString", () => {
 			normalModule.debugId = 1000;
-			expect(normalModule.toString()).toBe("Module[1000]");
-			normalModule.id = 1;
-			expect(normalModule.toString()).toBe("Module[1]");
+			expect(normalModule.toString()).toBe("Module[1000: /some/request]");
 		});
 	});
 
