@@ -103,9 +103,7 @@ if (installedClis.length === 0) {
 		)}".`
 	);
 
-	let question = `Which one do you like to install (${CLIs.map(
-		item => item.name
-	).join("/")}):\n`;
+	let question = `Do you want to install 'webpack-cli' (yes/no): `;
 
 	const questionInterface = readLine.createInterface({
 		input: process.stdin,
@@ -114,35 +112,22 @@ if (installedClis.length === 0) {
 	questionInterface.question(question, answer => {
 		questionInterface.close();
 
-		const normalizedAnswer = answer.toLowerCase();
-		const selectedPackage = CLIs.find(item => {
-			return item.name === normalizedAnswer || item.alias === normalizedAnswer;
-		});
+		const normalizedAnswer = answer.toLowerCase().startsWith("y");
 
 		if (!normalizedAnswer) {
 			console.error(
-				"One CLI needs to be installed alongside webpack to use the CLI."
-			);
-			process.exitCode = 1;
-
-			return;
-		} else if (!selectedPackage) {
-			console.error(
-				"No matching choice.\n" +
-					"One CLI needs to be installed alongside webpack to use the CLI.\n" +
-					"Try to installing your CLI of choice manually."
+				"You need to install 'webpack-cli' for using webpack via CLI.\n" +
+					"Also you can installing CLI manually."
 			);
 			process.exitCode = 1;
 
 			return;
 		}
 
-		const packageName = selectedPackage.package;
+		const packageName = "webpack-cli";
 
 		console.log(
-			`Installing '${
-				selectedPackage.name
-			}' (running '${packageManager} ${installOptions.join(
+			`Installing '${packageName}' (running '${packageManager} ${installOptions.join(
 				" "
 			)} ${packageName}')...`
 		);
