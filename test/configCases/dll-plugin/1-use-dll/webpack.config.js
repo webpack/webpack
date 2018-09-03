@@ -1,6 +1,9 @@
 var webpack = require("../../../../");
 
 module.exports = {
+	optimization: {
+		moduleIds: "named"
+	},
 	plugins: [
 		new webpack.DllReferencePlugin({
 			manifest: require("../../../js/config/dll-plugin/manifest0.json"), // eslint-disable-line node/no-missing-require
@@ -8,7 +11,6 @@ module.exports = {
 			scope: "dll",
 			sourceType: "commonjs2",
 			extensions: [".js", ".jsx"]
-		}),
-		new webpack.NamedModulesPlugin()
+		})
 	]
 };

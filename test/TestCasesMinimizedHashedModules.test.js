@@ -6,6 +6,8 @@ describe("TestCases", () => {
 		name: "minimized-hashed-modules",
 		mode: "production",
 		minimize: true,
-		plugins: [new webpack.HashedModuleIdsPlugin()]
+		optimization: {
+			moduleIds: "hashed"
+		}
 	});
 });

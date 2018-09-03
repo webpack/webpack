@@ -1,6 +1,9 @@
 var webpack = require("../../../../");
 module.exports = [
 	{
+		optimization: {
+			moduleIds: false
+		},
 		plugins: [
 			new webpack.HashedModuleIdsPlugin({
 				hashDigestLength: 2
@@ -8,6 +11,9 @@ module.exports = [
 		]
 	},
 	{
+		optimization: {
+			moduleIds: false
+		},
 		plugins: [
 			new webpack.HashedModuleIdsPlugin({
 				hashDigest: "hex",
@@ -16,6 +22,9 @@ module.exports = [
 		]
 	},
 	{
+		optimization: {
+			moduleIds: false
+		},
 		plugins: [
 			new webpack.HashedModuleIdsPlugin({
 				hashFunction: "sha1",

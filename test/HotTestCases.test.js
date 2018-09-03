@@ -59,6 +59,9 @@ describe("HotTestCases", () => {
 								options.output.filename = "bundle.js";
 							if (options.output.pathinfo === undefined)
 								options.output.pathinfo = true;
+							if (!options.optimization) options.optimization = {};
+							if (!options.optimization.moduleIds)
+								options.optimization.moduleIds = "named";
 							if (!options.module) options.module = {};
 							if (!options.module.rules) options.module.rules = [];
 							options.module.rules.push({
@@ -73,7 +76,6 @@ describe("HotTestCases", () => {
 							if (!options.plugins) options.plugins = [];
 							options.plugins.push(
 								new webpack.HotModuleReplacementPlugin(),
-								new webpack.NamedModulesPlugin(),
 								new webpack.LoaderOptionsPlugin(fakeUpdateLoaderOptions)
 							);
 							if (!options.recordsPath) options.recordsPath = recordsPath;
