@@ -5,7 +5,7 @@ module.exports = [
 			moduleIds: false
 		},
 		plugins: [
-			new webpack.HashedModuleIdsPlugin({
+			new webpack.ids.HashedModuleIdsPlugin({
 				hashDigestLength: 2
 			})
 		]
@@ -15,7 +15,7 @@ module.exports = [
 			moduleIds: false
 		},
 		plugins: [
-			new webpack.HashedModuleIdsPlugin({
+			new webpack.ids.HashedModuleIdsPlugin({
 				hashDigest: "hex",
 				hashDigestLength: 2
 			})
@@ -26,7 +26,7 @@ module.exports = [
 			moduleIds: false
 		},
 		plugins: [
-			new webpack.HashedModuleIdsPlugin({
+			new webpack.ids.HashedModuleIdsPlugin({
 				hashFunction: "sha1",
 				hashDigestLength: 3
 			})

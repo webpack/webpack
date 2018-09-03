@@ -1,4 +1,3 @@
-var webpack = require("../../../../");
 module.exports = {
 	optimization: {
 		moduleIds: "named",
