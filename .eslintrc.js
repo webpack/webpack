@@ -1,7 +1,11 @@
 module.exports = {
 	root: true,
 	plugins: ["prettier", "node", "jest"],
-	extends: ["eslint:recommended", "plugin:node/recommended", "plugin:prettier/recommended"],
+	extends: [
+		"eslint:recommended",
+		"plugin:node/recommended",
+		"plugin:prettier/recommended"
+	],
 	env: {
 		node: true,
 		es6: true
@@ -16,8 +20,8 @@ module.exports = {
 		"no-template-curly-in-string": "error",
 		"no-caller": "error",
 		"no-control-regex": "off",
-		"yoda": "error",
-		"eqeqeq": "error",
+		yoda: "error",
+		eqeqeq: "error",
 		"global-require": "off",
 		"brace-style": "error",
 		"eol-last": "error",
@@ -27,23 +31,26 @@ module.exports = {
 		"no-unused-vars": ["error", { args: "none" }],
 		"no-unsafe-negation": "error",
 		"no-loop-func": "warn",
-		"indent": "off",
+		indent: "off",
 		"no-console": "off",
-		"valid-jsdoc": ["error", {
-			"prefer": {
-				"return": "returns",
-				"prop": "property",
-				"memberof": "DONTUSE",
-				"class": "DONTUSE",
-				"inheritdoc": "DONTUSE",
-				"description": "DONTUSE",
-				"readonly": "DONTUSE"
-			},
-			"preferType": {
-				"*": "any"
-			},
-			"requireReturnType": true
-		}],
+		"valid-jsdoc": [
+			"error",
+			{
+				prefer: {
+					return: "returns",
+					prop: "property",
+					memberof: "DONTUSE",
+					class: "DONTUSE",
+					inheritdoc: "DONTUSE",
+					description: "DONTUSE",
+					readonly: "DONTUSE"
+				},
+				preferType: {
+					"*": "any"
+				},
+				requireReturnType: true
+			}
+		],
 		"node/no-unsupported-features": "error",
 		"node/no-deprecated-api": "error",
 		"node/no-missing-import": "error",

@@ -29,7 +29,7 @@
     "tapable": "^1.0.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "watchpack": "^1.5.0",
-    "webpack-sources": "^1.0.1"
+    "webpack-sources": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^9.6.4",
@@ -113,12 +113,12 @@
     "pretest": "yarn lint",
     "prelint": "yarn setup",
     "lint": "yarn code-lint && yarn schema-lint && yarn type-lint && yarn special-lint",
-    "code-lint": "eslint --cache setup lib bin hot buildin benchmark tooling \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\"",
+    "code-lint": "eslint --cache \"{setup,lib,bin,hot,buildin,benchmark,tooling,schemas}/**/*.js\" \"test/*.js\" \"test/{configCases,watchCases,statsCases,hotCases}/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
     "type-lint": "tsc --pretty",
     "special-lint": "node tooling/inherit-types && node tooling/format-file-header",
     "special-lint-fix": "node tooling/inherit-types --write --override && node tooling/format-file-header --write",
     "fix": "yarn code-lint --fix && yarn special-lint-fix",
-    "pretty": "prettier --write --loglevel warn \"setup/**/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"benchmark/**/*.js\" \"tooling/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" \"declarations.d.ts\" \"tsconfig.json\"",
+    "pretty": "prettier --loglevel warn --write \"*.{ts,js,json}\" \"{setup,lib,bin,hot,buildin,benchmark,tooling,schemas}/**/*.{js,json}\" \"test/*.js\" \"test/{configCases,watchCases,statsCases,hotCases}/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
     "schema-lint": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.lint.js\" --no-verbose",
     "benchmark": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.benchmark.js\" --runInBand",
     "cover": "yarn cover:init && yarn cover:all && yarn cover:report",
@@ -134,7 +134,7 @@
     }
   },
   "lint-staged": {
-    "lib/**/*.js": [
+    "*.js|{lib,setup,bin,hot,buildin,tooling,schemas}/**/*.js|test/*.js|{test,examples}/**/webpack.config.js}": [
       "eslint --cache"
     ]
   },
@@ -146,36 +146,38 @@
       "<rootDir>/test/*.unittest.js"
     ],
     "watchPathIgnorePatterns": [
-      "<rootDir>/node_modules/webpack/node_modules/",
-      "<rootDir>/test/js/",
-      "<rootDir>/test/browsertest/js/",
-      "<rootDir>/test/fixtures/temp-cache-fixture/",
+      "<rootDir>/.git",
+      "<rootDir>/node_modules",
+      "<rootDir>/test/js",
+      "<rootDir>/test/browsertest/js",
+      "<rootDir>/test/fixtures/temp-cache-fixture",
       "<rootDir>/test/fixtures/temp-",
-      "<rootDir>/benchmark/",
+      "<rootDir>/benchmark",
       "<rootDir>/examples/*/dist",
-      "<rootDir>/coverage/",
-      "<rootDir>/.eslintcache/"
+      "<rootDir>/coverage",
+      "<rootDir>/.eslintcache"
     ],
     "modulePathIgnorePatterns": [
-      "<rootDir>/node_modules/webpack/node_modules/",
-      "<rootDir>/test/js/",
-      "<rootDir>/test/browsertest/js/",
-      "<rootDir>/test/fixtures/temp-cache-fixture/",
+      "<rootDir>/.git",
+      "<rootDir>/node_modules/webpack/node_modules",
+      "<rootDir>/test/js",
+      "<rootDir>/test/browsertest/js",
+      "<rootDir>/test/fixtures/temp-cache-fixture",
       "<rootDir>/test/fixtures/temp-",
-      "<rootDir>/benchmark/",
+      "<rootDir>/benchmark",
       "<rootDir>/examples/*/dist",
-      "<rootDir>/coverage/",
-      "<rootDir>/.eslintcache/"
+      "<rootDir>/coverage",
+      "<rootDir>/.eslintcache"
     ],
     "transformIgnorePatterns": [
-      "<rootDir>/"
+      "<rootDir>"
     ],
     "coverageDirectory": "<rootDir>/coverage",
     "coveragePathIgnorePatterns": [
       "\\.runtime\\.js$",
-      "<rootDir>/test/",
-      "<rootDir>/schemas/",
-      "<rootDir>/node_modules/"
+      "<rootDir>/test",
+      "<rootDir>/schemas",
+      "<rootDir>/node_modules"
     ],
     "testEnvironment": "node",
     "coverageReporters": [

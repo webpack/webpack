@@ -28,12 +28,6 @@ describe("Schemas", () => {
 			});
 
 			if (content) {
-				it("should be formated correctly", () => {
-					expect(fileContent.replace(/\r\n?/g, "\n")).toBe(
-						JSON.stringify(content, 0, 2) + "\n"
-					);
-				});
-
 				const arrayProperties = ["oneOf", "anyOf", "allOf"];
 				const allowedProperties = [
 					"definitions",
