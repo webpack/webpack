@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "4.16.1",
+  "version": "4.17.1",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -29,7 +29,7 @@
     "tapable": "^1.0.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "watchpack": "^1.5.0",
-    "webpack-sources": "^1.0.1"
+    "webpack-sources": "^1.2.0"
   },
   "devDependencies": {
     "@types/node": "^9.6.4",
@@ -43,10 +43,10 @@
     "coveralls": "^2.11.2",
     "css-loader": "^0.28.3",
     "es6-promise-polyfill": "^1.1.1",
-    "eslint": "^5.1.0",
+    "eslint": "^5.2.0",
     "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-jest": "^21.17.0",
-    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-jest": "^21.18.0",
+    "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-prettier": "^2.6.2",
     "express": "~4.13.1",
     "file-loader": "^1.1.6",
@@ -56,14 +56,14 @@
     "istanbul": "^0.4.5",
     "jade": "^1.11.0",
     "jade-loader": "~0.8.0",
-    "jest": "^23.3.0",
+    "jest": "^23.4.1",
     "jest-silent-reporter": "^0.0.5",
     "json-loader": "^0.5.7",
     "less": "^2.5.1",
     "less-loader": "^4.0.3",
     "lint-staged": "^7.2.0",
     "lodash": "^4.17.4",
-    "prettier": "^1.13.7",
+    "prettier": "^1.14.0",
     "pug": "^2.0.3",
     "pug-loader": "^2.4.0",
     "raw-loader": "~0.5.0",
@@ -81,14 +81,6 @@
     "webpack-dev-middleware": "^1.9.0",
     "worker-loader": "^1.1.1",
     "xxhashjs": "^0.2.1"
-  },
-  "resolutions": {
-    "**/jest-message-util/micromatch": "^2.3.11",
-    "**/jest-cli/micromatch": "^2.3.11",
-    "**/jest-runtime/micromatch": "^2.3.11",
-    "**/jest-haste-map/micromatch": "^2.3.11",
-    "**/jest-haste-map/sane/micromatch": "^2.3.11",
-    "**/jest-config/babel-jest/babel-plugin-istanbul/test-exclude/micromatch": "^2.3.11"
   },
   "engines": {
     "node": ">=6.11.5"
@@ -128,10 +120,10 @@
     "pretest": "yarn lint",
     "prelint": "yarn setup",
     "lint": "yarn code-lint && yarn schema-lint && yarn type-lint",
-    "code-lint": "eslint --cache setup lib bin hot buildin benchmark \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\"",
+    "code-lint": "eslint --cache \"{setup,lib,bin,hot,buildin,benchmark,tooling,schemas}/**/*.js\" \"test/*.js\" \"test/{configCases,watchCases,statsCases,hotCases}/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
     "type-lint": "tsc --pretty",
     "fix": "yarn code-lint --fix",
-    "pretty": "prettier --write \"setup/**/*.js\" \"lib/**/*.js\" \"bin/*.js\" \"hot/*.js\" \"buildin/*.js\" \"benchmark/**/*.js\" \"test/*.js\" \"test/**/webpack.config.js\" \"examples/**/webpack.config.js\" \"schemas/**/*.js\" \"declarations.d.ts\" \"tsconfig.json\"",
+    "pretty": "prettier --loglevel warn --write \"*.{ts,js,json}\" \"{setup,lib,bin,hot,buildin,benchmark,tooling,schemas}/**/*.{js,json}\" \"test/*.js\" \"test/{configCases,watchCases,statsCases,hotCases}/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
     "schema-lint": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.lint.js\" --no-verbose",
     "benchmark": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.benchmark.js\" --runInBand",
     "cover": "yarn cover:init && yarn cover:all && yarn cover:report",
@@ -147,7 +139,7 @@
     }
   },
   "lint-staged": {
-    "lib/**/*.js": [
+    "*.js|{lib,setup,bin,hot,buildin,tooling,schemas}/**/*.js|test/*.js|{test,examples}/**/webpack.config.js}": [
       "eslint --cache"
     ]
   },
@@ -159,36 +151,38 @@
       "<rootDir>/test/*.unittest.js"
     ],
     "watchPathIgnorePatterns": [
-      "<rootDir>/node_modules/webpack/node_modules/",
-      "<rootDir>/test/js/",
-      "<rootDir>/test/browsertest/js/",
-      "<rootDir>/test/fixtures/temp-cache-fixture/",
+      "<rootDir>/.git",
+      "<rootDir>/node_modules",
+      "<rootDir>/test/js",
+      "<rootDir>/test/browsertest/js",
+      "<rootDir>/test/fixtures/temp-cache-fixture",
       "<rootDir>/test/fixtures/temp-",
-      "<rootDir>/benchmark/",
+      "<rootDir>/benchmark",
       "<rootDir>/examples/*/dist",
-      "<rootDir>/coverage/",
-      "<rootDir>/.eslintcache/"
+      "<rootDir>/coverage",
+      "<rootDir>/.eslintcache"
     ],
     "modulePathIgnorePatterns": [
-      "<rootDir>/node_modules/webpack/node_modules/",
-      "<rootDir>/test/js/",
-      "<rootDir>/test/browsertest/js/",
-      "<rootDir>/test/fixtures/temp-cache-fixture/",
+      "<rootDir>/.git",
+      "<rootDir>/node_modules/webpack/node_modules",
+      "<rootDir>/test/js",
+      "<rootDir>/test/browsertest/js",
+      "<rootDir>/test/fixtures/temp-cache-fixture",
       "<rootDir>/test/fixtures/temp-",
-      "<rootDir>/benchmark/",
+      "<rootDir>/benchmark",
       "<rootDir>/examples/*/dist",
-      "<rootDir>/coverage/",
-      "<rootDir>/.eslintcache/"
+      "<rootDir>/coverage",
+      "<rootDir>/.eslintcache"
     ],
     "transformIgnorePatterns": [
-      "<rootDir>/"
+      "<rootDir>"
     ],
     "coverageDirectory": "<rootDir>/coverage",
     "coveragePathIgnorePatterns": [
       "\\.runtime\\.js$",
-      "<rootDir>/test/",
-      "<rootDir>/schemas/",
-      "<rootDir>/node_modules/"
+      "<rootDir>/test",
+      "<rootDir>/schemas",
+      "<rootDir>/node_modules"
     ],
     "testEnvironment": "node",
     "coverageReporters": [

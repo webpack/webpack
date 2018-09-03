@@ -1,16 +1,8 @@
-# Ignore all paths.
-**/*.*
-
-# Enable prettier for the following paths.
-!setup/**/*.js
-!lib/**/*.js
-!bin/*.js
-!hot/*.js
-!buildin/*.js
-!benchmark/**/*.js
+# Ignore test fixtures
+test
 !test/*.js
 !test/**/webpack.config.js
+
+# Ignore example fixtures
+examples
 !examples/**/webpack.config.js
-!schemas/**/*.js
-!declarations.d.ts
-!tsconfig.json

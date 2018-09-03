@@ -560,8 +560,8 @@ chunk    {2} 2.bundle.js 60 bytes <{1}> [rendered]
 chunk {main} bundle.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
     > ./index main
  [./a.js] 22 bytes {main} [built]
-     cjs require ./a [./index.js] 1:0-14
      cjs require ./a [./e.js] 1:0-14
+     cjs require ./a [./index.js] 1:0-14
      [./index.js] Xms -> factory:Xms building:Xms = Xms
  [./index.js] 51 bytes {main} [built]
      single entry ./index  main
@@ -718,6 +718,29 @@ Child
     main.js  3.6 KiB       0  [emitted]  main
     Entrypoint main = main.js
     [0] ./index.js 24 bytes {0} [built]"
+`;
+
+exports[`StatsTestCases should print correct stats for dll-reference-plugin-issue-7624 1`] = `
+"Hash: 29b62432962bce4c54c0
+Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
+    Asset     Size  Chunks             Chunk Names
+bundle.js  3.6 KiB       0  [emitted]  main
+Entrypoint main = bundle.js
+[0] ./entry.js 29 bytes {0} [built]"
+`;
+
+exports[`StatsTestCases should print correct stats for dll-reference-plugin-issue-7624-error 1`] = `
+"Hash: 701dcf62b26d0347b899
+Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
+    Asset     Size  Chunks  Chunk Names
+bundle.js  3.6 KiB       0  main
+Entrypoint main = bundle.js
+[0] ./entry.js 29 bytes {0} [built]
+
+ERROR in Dll manifest blank-manifest.json
+Unexpected end of JSON input while parsing near ''"
 `;
 
 exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] = `
@@ -2196,7 +2219,7 @@ Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
        <CLR=32,BOLD>3.js</CLR>  262 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
 <CLR=32,BOLD>main.js.map</CLR>   1.72 MiB       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         main
    <CLR=32,BOLD>1.js.map</CLR>  156 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>2.js.map</CLR>  197 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>2.js.map</CLR>  210 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
    <CLR=32,BOLD>3.js.map</CLR>  216 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR> <CLR=32,BOLD>main.js.map</CLR>
 [0] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>

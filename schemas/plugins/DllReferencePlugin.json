@@ -2,14 +2,10 @@
   "additionalProperties": false,
   "anyOf": [
     {
-      "required": [
-        "manifest"
-      ]
+      "required": ["manifest"]
     },
     {
-      "required": [
-        "content"
-      ]
+      "required": ["content"]
     }
   ],
   "properties": {
@@ -60,10 +56,7 @@
     },
     "type": {
       "description": "The way how the export of the dll bundle is used",
-      "enum": [
-        "require",
-        "object"
-      ]
+      "enum": ["require", "object"]
     },
     "scope": {
       "description": "Prefix which is used for accessing the content of the dll",
