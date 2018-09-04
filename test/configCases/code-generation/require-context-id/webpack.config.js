@@ -1,4 +1,5 @@
-var webpack = require("../../../../");
 module.exports = {
-	plugins: [new webpack.HashedModuleIdsPlugin()]
+	optimization: {
+		moduleIds: "hashed"
+	}
 };
