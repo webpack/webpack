@@ -14,7 +14,7 @@ module.exports = {
 		}),
 		new webpack.ids.ChunkModuleIdRangePlugin({
 			name: "main2",
-			order: "index2"
+			order: "postOrderIndex"
 		})
 	],
 	stats: {

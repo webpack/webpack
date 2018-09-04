@@ -27,8 +27,8 @@ module.exports = {
 							for (const module of compilation.chunkGraph.getChunkModulesIterable(
 								chunk
 							)) {
-								modules.set(module, group.getModuleIndex(module));
-								modules2.set(module, group.getModuleIndex2(module));
+								modules.set(module, group.getModulePreOrderIndex(module));
+								modules2.set(module, group.getModulePostOrderIndex(module));
 							}
 						}
 						const sortedModules = Array.from(modules).sort((a, b) => {
