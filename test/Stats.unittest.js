@@ -116,7 +116,7 @@ describe(
 					entrypoints: new Map(),
 					namedChunkGroups: new Map(),
 					chunks: [],
-					modules: [],
+					modules: new Set(),
 					children: [],
 					hash: "1234",
 					mainTemplate: {
@@ -142,7 +142,7 @@ describe(
 					entrypoints: new Map(),
 					chunks: [],
 					namedChunkGroups: new Map(),
-					modules: [],
+					modules: new Set(),
 					children: [],
 					hash: "1234",
 					mainTemplate: {
