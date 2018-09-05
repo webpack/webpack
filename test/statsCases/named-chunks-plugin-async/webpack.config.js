@@ -1,17 +1,17 @@
 "use strict";
 
-const NamedChunksPlugin = require("../../../lib/NamedChunksPlugin");
+const webpack = require("../../../");
 const RequestShortener = require("../../../lib/RequestShortener");
 const { compareModulesById } = require("../../../lib/util/comparators");
 
 module.exports = {
 	mode: "production",
-	optimization: { moduleIds: "natural", chunkIds: "natural" },
+	optimization: { moduleIds: "natural", chunkIds: false },
 	entry: {
 		entry: "./entry"
 	},
 	plugins: [
-		new NamedChunksPlugin(function(chunk, { chunkGraph, moduleGraph }) {
+		new webpack.ids.NamedChunkIdsPlugin((chunk, { chunkGraph }) => {
 			if (chunk.name) {
 				return chunk.name;
 			}
