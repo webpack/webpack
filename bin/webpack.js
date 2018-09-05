@@ -116,8 +116,8 @@ if (installedClis.length === 0) {
 
 		if (!normalizedAnswer) {
 			console.error(
-				"You need to install 'webpack-cli' for using webpack via CLI.\n" +
-					"Also you can installing CLI manually."
+				"You need to install 'webpack-cli' to use webpack via CLI.\n" +
+					"You can also install the CLI manually."
 			);
 			process.exitCode = 1;
 
