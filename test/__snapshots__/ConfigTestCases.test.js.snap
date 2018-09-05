@@ -2,27 +2,28 @@
 
 exports[`ConfigTestCases records issue-2991 exported tests should write relative paths to records 1`] = `
 "{
-  \\"modules\\": {
-    \\"byIdentifier\\": {
-      \\"test.js\\": 0,
-      \\"ignored  pkgs/somepackage/foo\\": 1,
-      \\"external \\\\\\"fs\\\\\\"\\": 2,
-      \\"external \\\\\\"path\\\\\\"\\": 3
-    },
-    \\"usedIds\\": {
-      \\"0\\": 0,
-      \\"1\\": 1,
-      \\"2\\": 2,
-      \\"3\\": 3
-    }
-  },
   \\"chunks\\": {
     \\"byName\\": {
       \\"main\\": 0
     },
-    \\"bySource\\": {},
+    \\"bySource\\": {
+    },
     \\"usedIds\\": [
       0
+    ]
+  },
+  \\"modules\\": {
+    \\"byIdentifier\\": {
+      \\"external \\\\\\"fs\\\\\\"\\": 2,
+      \\"external \\\\\\"path\\\\\\"\\": 3,
+      \\"ignored  pkgs/somepackage/foo\\": 1,
+      \\"test.js\\": 0
+    },
+    \\"usedIds\\": [
+      0,
+      1,
+      2,
+      3
     ]
   }
 }"
@@ -30,31 +31,32 @@ exports[`ConfigTestCases records issue-2991 exported tests should write relative
 
 exports[`ConfigTestCases records issue-7339 exported tests should write relative dynamic-require paths to records 1`] = `
 "{
-  \\"modules\\": {
-    \\"byIdentifier\\": {
-      \\"dependencies/bar.js\\": 0,
-      \\"dependencies/foo.js\\": 1,
-      \\"test.js\\": 2,
-      \\"dependencies sync /^\\\\\\\\.\\\\\\\\/.*$/\\": 3,
-      \\"external \\\\\\"fs\\\\\\"\\": 4,
-      \\"external \\\\\\"path\\\\\\"\\": 5
-    },
-    \\"usedIds\\": {
-      \\"0\\": 0,
-      \\"1\\": 1,
-      \\"2\\": 2,
-      \\"3\\": 3,
-      \\"4\\": 4,
-      \\"5\\": 5
-    }
-  },
   \\"chunks\\": {
     \\"byName\\": {
       \\"main\\": 0
     },
-    \\"bySource\\": {},
+    \\"bySource\\": {
+    },
     \\"usedIds\\": [
       0
+    ]
+  },
+  \\"modules\\": {
+    \\"byIdentifier\\": {
+      \\"dependencies sync /^\\\\\\\\.\\\\\\\\/.*$/\\": 3,
+      \\"dependencies/bar.js\\": 0,
+      \\"dependencies/foo.js\\": 1,
+      \\"external \\\\\\"fs\\\\\\"\\": 4,
+      \\"external \\\\\\"path\\\\\\"\\": 5,
+      \\"test.js\\": 2
+    },
+    \\"usedIds\\": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
     ]
   }
 }"
