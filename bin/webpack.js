@@ -81,7 +81,7 @@ const installedClis = CLIs.filter(cli => cli.installed);
 if (installedClis.length === 0) {
 	const path = require("path");
 	const fs = require("fs");
-	const readLine = require("readline");
+	const inquirer = require("inquirer");
 
 	let notify =
 		"One CLI for webpack must be installed. These are recommended choices, delivered as separate packages:";
@@ -103,59 +103,62 @@ if (installedClis.length === 0) {
 		)}".`
 	);
 
-	let question = `Which one do you like to install (${CLIs.map(
-		item => item.name
-	).join("/")}):\n`;
-
-	const questionInterface = readLine.createInterface({
-		input: process.stdin,
-		output: process.stderr
-	});
-	questionInterface.question(question, answer => {
-		questionInterface.close();
-
-		const normalizedAnswer = answer.toLowerCase();
-		const selectedPackage = CLIs.find(item => {
-			return item.name === normalizedAnswer || item.alias === normalizedAnswer;
-		});
-
-		if (!normalizedAnswer) {
-			console.error(
-				"One CLI needs to be installed alongside webpack to use the CLI."
-			);
-			process.exitCode = 1;
-
-			return;
-		} else if (!selectedPackage) {
-			console.error(
-				"No matching choice.\n" +
-					"One CLI needs to be installed alongside webpack to use the CLI.\n" +
-					"Try to installing your CLI of choice manually."
-			);
-			process.exitCode = 1;
-
-			return;
-		}
-
-		const packageName = selectedPackage.package;
-
-		console.log(
-			`Installing '${
-				selectedPackage.name
-			}' (running '${packageManager} ${installOptions.join(
-				" "
-			)} ${packageName}')...`
-		);
-
-		runCommand(packageManager, installOptions.concat(packageName))
-			.then(() => {
-				require(packageName); //eslint-disable-line
-			})
-			.catch(error => {
-				console.error(error);
-				process.exitCode = 1;
+	let question = `Which one do you like to install:`;
+	inquirer
+		.prompt([
+			{
+				name: "cli",
+				type: "list",
+				message: question,
+				choices: CLIs.map(item => item.name),
+				default: CLIs[0].name
+			}
+		])
+		.then(answers => {
+			const normalizedAnswer = answers.cli;
+			const selectedPackage = CLIs.find(item => {
+				return (
+					item.name === normalizedAnswer || item.alias === normalizedAnswer
+				);
 			});
-	});
+
+			if (!normalizedAnswer) {
+				console.error(
+					"One CLI needs to be installed alongside webpack to use the CLI."
+				);
+				process.exitCode = 1;
+
+				return;
+			} else if (!selectedPackage) {
+				console.error(
+					"No matching choice.\n" +
+						"One CLI needs to be installed alongside webpack to use the CLI.\n" +
+						"Try to installing your CLI of choice manually."
+				);
+				process.exitCode = 1;
+
+				return;
+			}
+
+			const packageName = selectedPackage.package;
+
+			console.log(
+				`Installing '${
+					selectedPackage.name
+				}' (running '${packageManager} ${installOptions.join(
+					" "
+				)} ${packageName}')...`
+			);
+
+			runCommand(packageManager, installOptions.concat(packageName))
+				.then(() => {
+					require(packageName); //eslint-disable-line
+				})
+				.catch(error => {
+					console.error(error);
+					process.exitCode = 1;
+				});
+		});
 } else if (installedClis.length === 1) {
 	const path = require("path");
 	const pkgPath = require.resolve(`${installedClis[0].package}/package.json`);
