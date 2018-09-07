@@ -61,17 +61,14 @@ describe("Errors", () => {
 			(errors, warnings) => {
 				expect(errors).toHaveLength(2);
 				expect(warnings).toHaveLength(0);
-				errors.sort();
 				let lines = errors[0].split("\n");
-				expect(lines[0]).toMatch(/missingFile.js/);
-				expect(lines[1]).toMatch(/^Module not found/);
-				expect(lines[1]).toMatch(/\.\/dir\/missing2/);
-				expect(lines[2]).toMatch(/missingFile.js 12:9/);
-				lines = errors[1].split("\n");
-				expect(lines[0]).toMatch(/missingFile.js/);
+				expect(lines[0]).toMatch(/missingFile.js 4:0/);
 				expect(lines[1]).toMatch(/^Module not found/);
 				expect(lines[1]).toMatch(/\.\/missing/);
-				expect(lines[2]).toMatch(/missingFile.js 4:0/);
+				lines = errors[1].split("\n");
+				expect(lines[0]).toMatch(/missingFile.js 12:9/);
+				expect(lines[1]).toMatch(/^Module not found/);
+				expect(lines[1]).toMatch(/\.\/dir\/missing2/);
 				done();
 			}
 		);
@@ -193,17 +190,15 @@ describe("Errors", () => {
 			(errors, warnings) => {
 				expect(errors).toHaveLength(2);
 				expect(warnings).toHaveLength(0);
-				errors.sort();
+				console.log(errors);
 				let lines = errors[0].split("\n");
-				expect(lines[0]).toMatch(/missingFile.js/);
-				expect(lines[1]).toMatch(/^Module not found/);
-				expect(lines[1]).toMatch(/\.\/dir\/missing2/);
-				expect(lines[2]).toMatch(/missingFile.js 12:9/);
-				lines = errors[1].split("\n");
-				expect(lines[0]).toMatch(/missingFile.js/);
+				expect(lines[0]).toMatch(/missingFile.js 4:0/);
 				expect(lines[1]).toMatch(/^Module not found/);
 				expect(lines[1]).toMatch(/\.\/missing/);
-				expect(lines[2]).toMatch(/missingFile.js 4:0/);
+				lines = errors[1].split("\n");
+				expect(lines[0]).toMatch(/missingFile.js 12:9/);
+				expect(lines[1]).toMatch(/^Module not found/);
+				expect(lines[1]).toMatch(/\.\/dir\/missing2/);
 				done();
 			}
 		);
