@@ -68,8 +68,7 @@ module.exports = {
 						asyncIndex: "0: ./async.js",
 						asyncIndex2: "0: ./async.js"
 					});
-					const indicies = compilation.modules
-						.slice()
+					const indicies = Array.from(compilation.modules)
 						.sort(
 							(a, b) =>
 								moduleGraph.getPreOrderIndex(a) -
@@ -82,8 +81,7 @@ module.exports = {
 								)}`
 						)
 						.join(", ");
-					const indicies2 = compilation.modules
-						.slice()
+					const indicies2 = Array.from(compilation.modules)
 						.sort(
 							(a, b) =>
 								moduleGraph.getPostOrderIndex(a) -
