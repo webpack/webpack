@@ -101,7 +101,7 @@ Child extract-text-webpack-plugin ../../node_modules/extract-text-webpack-plugin
          + 1 hidden module
 ```
 
-## Minimized (uglify-js, no zip)
+## Minimized (terser, no zip)
 
 ```
 Hash: edbe0e91ba86d814d855
