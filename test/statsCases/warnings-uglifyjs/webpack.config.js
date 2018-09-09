@@ -1,4 +1,4 @@
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 module.exports = {
 	mode: "production",
 	entry: "./index",
@@ -10,9 +10,9 @@ module.exports = {
 		chunkIds: "natural",
 		minimize: true,
 		minimizer: [
-			new UglifyJsPlugin({
+			new TerserPlugin({
 				sourceMap: true,
-				uglifyOptions: {
+				terserOptions: {
 					compress: {
 						warnings: true
 					},
