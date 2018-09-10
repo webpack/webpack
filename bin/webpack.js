@@ -50,6 +50,7 @@ const isInstalled = packageName => {
  * @property {string} binName name of the executable file
  * @property {string} alias shortcut for choice
  * @property {boolean} installed currently installed?
+ * @property {boolean} recommended is recommended
  * @property {string} url homepage
  * @property {string} description description
  */
@@ -62,6 +63,7 @@ const CLIs = [
 		binName: "webpack-cli",
 		alias: "cli",
 		installed: isInstalled("webpack-cli"),
+		recommended: true,
 		url: "https://github.com/webpack/webpack-cli",
 		description: "The original webpack full-featured CLI."
 	},
@@ -71,6 +73,7 @@ const CLIs = [
 		binName: "webpack-command",
 		alias: "command",
 		installed: isInstalled("webpack-command"),
+		recommended: false,
 		url: "https://github.com/webpack-contrib/webpack-command",
 		description: "A lightweight, opinionated webpack CLI."
 	}
@@ -87,7 +90,9 @@ if (installedClis.length === 0) {
 		"One CLI for webpack must be installed. These are recommended choices, delivered as separate packages:";
 
 	for (const item of CLIs) {
-		notify += `\n - ${item.name} (${item.url})\n   ${item.description}`;
+		if (item.recommended) {
+			notify += `\n - ${item.name} (${item.url})\n   ${item.description}`;
+		}
 	}
 
 	console.error(notify);
