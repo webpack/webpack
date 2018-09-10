@@ -1,0 +1,31 @@
+{
+  "type": "object",
+  "oneOf": [
+    {
+      "additionalProperties": false,
+      "properties": {
+        "resourceRegExp": {
+          "description": "A RegExp to test the request against",
+          "instanceof": "RegExp"
+        },
+        "contextRegExp": {
+          "description": "A RegExp to test the context (directory) against",
+          "instanceof": "RegExp"
+        }
+      }
+    },
+    {
+      "additionalProperties": false,
+      "properties": {
+        "checkResource": {
+          "description": "A filter function for resource",
+          "instanceof": "Function"
+        },
+        "checkContext": {
+          "description": "A filter function for context",
+          "instanceof": "Function"
+        }
+      }
+    }
+  ]
+}
