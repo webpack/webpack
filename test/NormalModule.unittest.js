@@ -190,7 +190,7 @@ describe("NormalModule", () => {
 			expect(normalModule.hasDependencies()).toBe(false);
 		});
 	});
-	describe("#needRebuild", () => {
+	describe("#needBuild", () => {
 		let fileTimestamps;
 		let contextTimestamps;
 		let fileDependencies;
@@ -211,13 +211,14 @@ describe("NormalModule", () => {
 			fileTimestamps = new Map([[fileA, 1], [fileB, 1]]);
 			contextTimestamps = new Map([[fileA, 1], [fileB, 1]]);
 			normalModule.buildTimestamp = 2;
+			normalModule._forceBuild = false;
 			setDeps(fileDependencies, contextDependencies);
 		});
 		describe("given all timestamps are older than the buildTimestamp", () => {
 			it("returns false", () => {
-				expect(
-					normalModule.needRebuild(fileTimestamps, contextTimestamps)
-				).toBe(false);
+				expect(normalModule.needBuild(fileTimestamps, contextTimestamps)).toBe(
+					false
+				);
 			});
 		});
 		describe("given a file timestamp is newer than the buildTimestamp", () => {
@@ -225,9 +226,9 @@ describe("NormalModule", () => {
 				fileTimestamps.set(fileA, 3);
 			});
 			it("returns true", () => {
-				expect(
-					normalModule.needRebuild(fileTimestamps, contextTimestamps)
-				).toBe(true);
+				expect(normalModule.needBuild(fileTimestamps, contextTimestamps)).toBe(
+					true
+				);
 			});
 		});
 		describe("given a no file timestamp exists", () => {
@@ -235,9 +236,9 @@ describe("NormalModule", () => {
 				fileTimestamps = new Map();
 			});
 			it("returns true", () => {
-				expect(
-					normalModule.needRebuild(fileTimestamps, contextTimestamps)
-				).toBe(true);
+				expect(normalModule.needBuild(fileTimestamps, contextTimestamps)).toBe(
+					true
+				);
 			});
 		});
 		describe("given a context timestamp is newer than the buildTimestamp", () => {
@@ -245,9 +246,9 @@ describe("NormalModule", () => {
 				contextTimestamps.set(fileA, 3);
 			});
 			it("returns true", () => {
-				expect(
-					normalModule.needRebuild(fileTimestamps, contextTimestamps)
-				).toBe(true);
+				expect(normalModule.needBuild(fileTimestamps, contextTimestamps)).toBe(
+					true
+				);
 			});
 		});
 		describe("given a no context timestamp exists", () => {
@@ -255,9 +256,9 @@ describe("NormalModule", () => {
 				contextTimestamps = new Map();
 			});
 			it("returns true", () => {
-				expect(
-					normalModule.needRebuild(fileTimestamps, contextTimestamps)
-				).toBe(true);
+				expect(normalModule.needBuild(fileTimestamps, contextTimestamps)).toBe(
+					true
+				);
 			});
 		});
 	});

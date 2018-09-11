@@ -36,12 +36,6 @@ describe("RawModule", () => {
 		);
 	});
 
-	describe("needRebuild", () => {
-		it("returns false", () => {
-			expect(myRawModule.needRebuild()).toBe(false);
-		});
-	});
-
 	describe("source", () => {
 		it(
 			"returns a new OriginalSource instance with sourceStr attribute and " +
