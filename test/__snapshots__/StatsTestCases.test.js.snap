@@ -505,28 +505,28 @@ chunk    {0} bundle.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
     > ./index main
  [0] ./index.js 51 bytes {0} [built]
      entry ./index  main
-     Xms (resolving: Xms, building: Xms)
+     Xms (resolving: Xms, integration: Xms, building: Xms)
  [1] ./a.js 22 bytes {0} [built]
      cjs require ./a [0] ./index.js 1:0-14
-     [0] Xms -> Xms (resolving: Xms, building: Xms)
+     [0] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
 chunk    {1} 1.bundle.js 22 bytes <{0}> [rendered]
     > ./b [0] ./index.js 2:0-16
  [2] ./b.js 22 bytes {1} [built]
      amd require ./b [0] ./index.js 2:0-16
-     [0] Xms -> Xms (resolving: Xms, building: Xms)
+     [0] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
 chunk    {2} 2.bundle.js 54 bytes <{0}> >{3}< [rendered]
     > ./c [0] ./index.js 3:0-16
  [3] ./c.js 54 bytes {2} [built]
      amd require ./c [0] ./index.js 3:0-16
-     [0] Xms -> Xms (resolving: Xms, building: Xms)
+     [0] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
 chunk    {3} 3.bundle.js 44 bytes <{2}> [rendered]
     > [3] ./c.js 1:0-52
  [4] ./d.js 22 bytes {3} [built]
      require.ensure item ./d [3] ./c.js 1:0-52
-     [0] Xms -> [3] Xms -> Xms (resolving: Xms, building: Xms)
+     [0] Xms -> [3] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
  [5] ./e.js 22 bytes {3} [built]
      require.ensure item ./e [3] ./c.js 1:0-52
-     [0] Xms -> [3] Xms -> Xms (resolving: Xms, building: Xms)"
+     [0] Xms -> [3] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)"
 `;
 
 exports[`StatsTestCases should print correct stats for chunks-development 1`] = `
@@ -543,29 +543,29 @@ chunk    {0} 0.bundle.js 60 bytes <{c}> [rendered]
     > [./c.js] ./c.js 1:0-52
  [./d.js] 22 bytes {0} [built]
      require.ensure item ./d [./c.js] 1:0-52
-     [./index.js] Xms -> [./c.js] Xms -> Xms (resolving: Xms, building: Xms)
+     [./index.js] Xms -> [./c.js] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
  [./e.js] 38 bytes {0} [built]
      require.ensure item ./e [./c.js] 1:0-52
-     [./index.js] Xms -> [./c.js] Xms -> Xms (resolving: Xms, building: Xms)
+     [./index.js] Xms -> [./c.js] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
 chunk {b} b.bundle.js 22 bytes <{main}> [rendered]
     > ./b [./index.js] ./index.js 2:0-16
  [./b.js] 22 bytes {b} [built]
      amd require ./b [./index.js] 2:0-16
-     [./index.js] Xms -> Xms (resolving: Xms, building: Xms)
+     [./index.js] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
 chunk {c} c.bundle.js 54 bytes <{main}> >{0}< [rendered]
     > ./c [./index.js] ./index.js 3:0-16
  [./c.js] 54 bytes {c} [built]
      amd require ./c [./index.js] 3:0-16
-     [./index.js] Xms -> Xms (resolving: Xms, building: Xms)
+     [./index.js] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
 chunk {main} bundle.js (main) 73 bytes >{b}< >{c}< [entry] [rendered]
     > ./index main
  [./a.js] 22 bytes {main} [built]
      cjs require ./a [./e.js] 1:0-14
      cjs require ./a [./index.js] 1:0-14
-     [./index.js] Xms -> Xms (resolving: Xms, building: Xms)
+     [./index.js] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
  [./index.js] 51 bytes {main} [built]
      entry ./index  main
-     Xms (resolving: Xms, building: Xms)"
+     Xms (resolving: Xms, integration: Xms, building: Xms)"
 `;
 
 exports[`StatsTestCases should print correct stats for circular-correctness 1`] = `
@@ -1109,16 +1109,16 @@ exports[`StatsTestCases should print correct stats for import-with-invalid-optio
 [4] ./chunk-c.js 27 bytes {4} [built]
 [5] ./chunk-d.js 27 bytes {5} [built]
 
+WARNING in ./chunk.js 2:11-84
+Compilation error while processing magic comment(-s): /* webpackPrefetch: true, webpackChunkName: notGoingToCompileChunkName */: notGoingToCompileChunkName is not defined
+ @ ./index.js 1:0-49
+
 WARNING in ./chunk.js 4:11-77
 Compilation error while processing magic comment(-s): /* webpack Prefetch: 0, webpackChunkName: \\"notGoingToCompile-c\\" */: Unexpected identifier
  @ ./index.js 1:0-49
 
 WARNING in ./chunk.js 5:11-38
 Compilation error while processing magic comment(-s): /* webpackPrefetch: nope */: nope is not defined
- @ ./index.js 1:0-49
-
-WARNING in ./chunk.js 2:11-84
-Compilation error while processing magic comment(-s): /* webpackPrefetch: true, webpackChunkName: notGoingToCompileChunkName */: notGoingToCompileChunkName is not defined
  @ ./index.js 1:0-49"
 `;
 
@@ -1397,25 +1397,52 @@ exports[`StatsTestCases should print correct stats for module-trace-disabled-in-
 "Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset      Size  Chunks  Chunk Names
-main.js  3.75 KiB       0  main
+main.js  4.19 KiB       0  main
 Entrypoint main = main.js
-[0] ./index.js 25 bytes {0} [built]
+[0] ./index.js 19 bytes {0} [built]
+[1] ./inner.js 53 bytes {0} [built]
+[2] ./not-existing.js 26 bytes {0} [built]
+[3] ./parse-error.js 167 bytes {0} [built] [failed] [1 error]
 
-ERROR in ./index.js
-Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/module-trace-disabled-in-error'"
+ERROR in ./not-existing.js 1:0-25
+Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/module-trace-disabled-in-error'
+
+ERROR in ./parse-error.js 3:4
+Module parse failed: Unexpected token (3:4)
+You may need an appropriate loader to handle this file type.
+| Here
+| could
+> be :)
+| your
+| code"
 `;
 
 exports[`StatsTestCases should print correct stats for module-trace-enabled-in-error 1`] = `
 "Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset      Size  Chunks  Chunk Names
-main.js  3.75 KiB       0  main
+main.js  4.19 KiB       0  main
 Entrypoint main = main.js
-[0] ./index.js 25 bytes {0} [built]
+[0] ./index.js 19 bytes {0} [built]
+[1] ./inner.js 53 bytes {0} [built]
+[2] ./not-existing.js 26 bytes {0} [built]
+[3] ./parse-error.js 167 bytes {0} [built] [failed] [1 error]
 
-ERROR in ./index.js
+ERROR in ./not-existing.js 1:0-25
 Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/module-trace-enabled-in-error'
- @ ./index.js 1:0-25"
+ @ ./inner.js 1:0-25
+ @ ./index.js 1:0-18
+
+ERROR in ./parse-error.js 3:4
+Module parse failed: Unexpected token (3:4)
+You may need an appropriate loader to handle this file type.
+| Here
+| could
+> be :)
+| your
+| code
+ @ ./inner.js 2:0-24
+ @ ./index.js 1:0-18"
 `;
 
 exports[`StatsTestCases should print correct stats for named-chunk-groups 1`] = `
@@ -1589,7 +1616,7 @@ You may need an appropriate loader to handle this file type.
 | error
 | in
  @ ./a.js 2:0-13
- @ ./index.js"
+ @ ./index.js 2:0-13"
 `;
 
 exports[`StatsTestCases should print correct stats for performance-different-mode-and-target 1`] = `
@@ -1909,9 +1936,8 @@ exports[`StatsTestCases should print correct stats for preset-errors-only 1`] = 
 
 exports[`StatsTestCases should print correct stats for preset-errors-only-error 1`] = `
 "
-ERROR in ./index.js
-Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/preset-errors-only-error'
- @ ./index.js 1:0-25"
+ERROR in ./index.js 1:0-25
+Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/preset-errors-only-error'"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-minimal 1`] = `"   6 modules"`;
@@ -2025,33 +2051,33 @@ chunk    {0} main.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
  [0] ./index.js 51 bytes {0} [depth 0] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      entry ./index  main
-     Xms (resolving: Xms, building: Xms)
+     Xms (resolving: Xms, integration: Xms, building: Xms)
  [1] ./a.js 22 bytes {0} [depth 1] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      cjs require ./a [0] ./index.js 1:0-14
-     [0] Xms -> Xms (resolving: Xms, building: Xms)
+     [0] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
 chunk    {1} 1.js 22 bytes <{0}> [rendered]
     > ./b [0] ./index.js 2:0-16
  [2] ./b.js 22 bytes {1} [depth 1] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      amd require ./b [0] ./index.js 2:0-16
-     [0] Xms -> Xms (resolving: Xms, building: Xms)
+     [0] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
 chunk    {2} 2.js 54 bytes <{0}> >{3}< [rendered]
     > ./c [0] ./index.js 3:0-16
  [3] ./c.js 54 bytes {2} [depth 1] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      amd require ./c [0] ./index.js 3:0-16
-     [0] Xms -> Xms (resolving: Xms, building: Xms)
+     [0] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
 chunk    {3} 3.js 44 bytes <{2}> [rendered]
     > [3] ./c.js 1:0-52
  [4] ./d.js 22 bytes {3} [depth 2] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      require.ensure item ./d [3] ./c.js 1:0-52
-     [0] Xms -> [3] Xms -> Xms (resolving: Xms, building: Xms)
+     [0] Xms -> [3] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
  [5] ./e.js 22 bytes {3} [depth 2] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      require.ensure item ./e [3] ./c.js 1:0-52
-     [0] Xms -> [3] Xms -> Xms (resolving: Xms, building: Xms)"
+     [0] Xms -> [3] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)"
 `;
 
 exports[`StatsTestCases should print correct stats for resolve-plugin-context 1`] = `
@@ -2316,7 +2342,7 @@ bundle.js  3.57 KiB       0  [emitted]  main
 Entrypoint main = bundle.js
 [0] ./index.js 0 bytes {0} [built]
     entry ./index  main
-    Xms (resolving: Xms, building: Xms)"
+    Xms (resolving: Xms, integration: Xms, building: Xms)"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
