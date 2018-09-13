@@ -26,7 +26,7 @@
     "neo-async": "^2.5.0",
     "node-libs-browser": "^2.0.0",
     "schema-utils": "^0.4.4",
-    "tapable": "^1.0.0",
+    "tapable": "^1.1.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "watchpack": "^1.5.0",
     "webpack-sources": "^1.2.0"
