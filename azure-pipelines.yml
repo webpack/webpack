@@ -140,3 +140,38 @@ jobs:
           yarn cover:integration "test/TestCases(?!D)" --ci
           mv coverage/coverage-final.json coverage/coverage-final-3.json
         displayName: "Run tests with coverage"
+  - job: windows
+    dependsOn:
+      - basic
+      - lint
+    pool:
+      vmImage: vs2017-win2016
+    strategy:
+      maxParallel: 3
+      matrix:
+        node-10:
+          node_version: ^10.10.0
+        node-8:
+          node_version: ^8.12.0
+        node-6:
+          node_version: ^6.14.4
+    steps:
+      - task: NodeTool@0
+        displayName: "Install Node.js"
+        inputs:
+          versionSpec: $(node_version)
+      - script: |
+          npm install --global yarn
+        displayName: "Install Yarn"
+      - script: |
+          node -v
+          yarn -v
+        displayName: "Print versions"
+      - script: |
+          yarn --frozen-lockfile
+          yarn link --frozen-lockfile || true
+          yarn link webpack --frozen-lockfile
+        displayName: "Install dependencies"
+      - script:
+          yarn cover:init && yarn cover:integration "test/(?!TestCases)" --ci --maxWorkers=2 && move coverage\\coverage-final.json coverage\\coverage-final-1.json && yarn cover:integration "test/TestCasesD" --ci --maxWorkers=2 && move coverage\\coverage-final.json coverage\\coverage-final-2.json && yarn cover:integration "test/TestCases(?!D)" --ci --maxWorkers=2 && move coverage\\coverage-final.json coverage\\coverage-final-3.json
+        displayName: "Run tests with coverage"
