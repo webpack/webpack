@@ -74,6 +74,44 @@ describe(
 					expect(mockStats.hasWarnings()).toBe(false);
 				});
 			});
+			describe("does filter", () => {
+				it("hasWarnings all filtered", () => {
+					const mockStats = new Stats({
+						children: [],
+						warnings: ["firstError", "secondError"],
+						hash: "1234",
+						compiler: {
+							context: ""
+						}
+					});
+					const warningsFilter = /Error/;
+					expect(mockStats.hasWarnings({ warningsFilter })).toBe(false);
+				});
+				it("hasWarnings some filtered", () => {
+					const mockStats = new Stats({
+						children: [],
+						warnings: ["firstError", "secondError"],
+						hash: "1234",
+						compiler: {
+							context: ""
+						}
+					});
+					const warningsFilter = /secondError/;
+					expect(mockStats.hasWarnings({ warningsFilter })).toBe(true);
+				});
+				it("hasWarnings none filtered", () => {
+					const mockStats = new Stats({
+						children: [],
+						warnings: ["firstError", "secondError"],
+						hash: "1234",
+						compiler: {
+							context: ""
+						}
+					});
+					const warningsFilter = /thirdError/;
+					expect(mockStats.hasWarnings({ warningsFilter })).toBe(true);
+				});
+			});
 			describe("children have", () => {
 				it("hasErrors", () => {
 					const mockStats = new Stats({
