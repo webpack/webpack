@@ -1598,6 +1598,10 @@
         {
           "additionalProperties": false,
           "properties": {
+            "compress": {
+              "description": "Apply performance budgets to gzip-compressed asset sizes",
+              "type": "boolean"
+            },
             "assetFilter": {
               "description": "Filter function to select assets that are checked",
               "instanceof": "Function"

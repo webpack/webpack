@@ -16,6 +16,7 @@
     "chrome-trace-event": "^1.0.0",
     "enhanced-resolve": "^4.1.0",
     "eslint-scope": "^4.0.0",
+    "gzip-size": "^5.0.0",
     "json-parse-better-errors": "^1.0.2",
     "loader-runner": "^2.3.0",
     "loader-utils": "^1.1.0",
