@@ -3040,7 +3040,7 @@ Entrypoint main = bundle.js
      [no exports used]"
 `;
 
-exports[`StatsTestCases should print correct stats for warnings-uglifyjs 1`] = `
+exports[`StatsTestCases should print correct stats for warnings-terser 1`] = `
 "Hash: 5ddef8e3e0b2f2c278c4
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
