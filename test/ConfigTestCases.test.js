@@ -85,12 +85,13 @@ describe("ConfigTestCases", () => {
 								});
 								let testConfig = {
 									findBundle: function(i, options) {
+										const ext = path.extname(options.output.filename);
 										if (
 											fs.existsSync(
-												path.join(options.output.path, "bundle" + i + ".js")
+												path.join(options.output.path, "bundle" + i + ext)
 											)
 										) {
-											return "./bundle" + i + ".js";
+											return "./bundle" + i + ext;
 										}
 									},
 									timeout: 30000
