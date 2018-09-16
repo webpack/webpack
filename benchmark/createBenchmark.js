@@ -17,7 +17,7 @@ webpack(
 			moduleIds: "named"
 		},
 		plugins: [
-			new webpack.IgnorePlugin(/^(fsevents|uglify-js)$/),
+			new webpack.IgnorePlugin(/^(fsevents|terser)$/),
 			new webpack.NormalModuleReplacementPlugin(
 				/^.\/loadLoader$/,
 				path.resolve(__dirname, "./createBenchmark/loadLoader")

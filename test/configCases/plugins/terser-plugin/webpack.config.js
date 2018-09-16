@@ -1,4 +1,4 @@
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 module.exports = {
 	node: {
 		__dirname: false,
@@ -17,21 +17,21 @@ module.exports = {
 	optimization: {
 		minimize: true,
 		minimizer: [
-			new UglifyJsPlugin({
+			new TerserPlugin({
 				cache: false,
 				parallel: false,
 				exclude: ["vendors.js", "extract.js"]
 			}),
-			new UglifyJsPlugin({
+			new TerserPlugin({
 				cache: false,
 				parallel: false,
 				extractComments: true,
 				include: ["extract.js"]
 			}),
-			new UglifyJsPlugin({
+			new TerserPlugin({
 				cache: false,
 				parallel: false,
-				uglifyOptions: {
+				terserOptions: {
 					compress: {
 						passes: 2
 					}
