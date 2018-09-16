@@ -23,7 +23,7 @@ module.exports = {
 					},
 					warnings: true
 				},
-				warningsFilter(filename) {
+				warningsFilter(message, filename) {
 					return /a\.js$/.test(filename);
 				}
 			})
