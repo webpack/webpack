@@ -1,6 +1,6 @@
 module.exports = {
 	output: {
-		libraryTarget: () => "var",
+		libraryTarget: "var",
 		library: () => "testLibrary"
 	}
 };

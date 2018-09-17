@@ -1,6 +1,6 @@
 module.exports = {
 	output: {
-		libraryTarget: () => "umd",
+		libraryTarget: "umd",
 		library: () => ({
 			root: ["test", "library"],
 			amd: "test-library",
