@@ -29,7 +29,12 @@ export type CommonNonEmptyArrayOfUniqueStringValues = string[];
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "externals".
  */
-export type Externals =
+export type Externals = ExternalItem | ExternalItem[];
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "external-item".
+ */
+export type ExternalItem =
 	| string
 	| {
 			/**
@@ -45,13 +50,19 @@ export type Externals =
 	  }
 	| {
 			[k: string]: any;
-	  }
-	| Externals[];
+	  };
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "common.arrayOfStringValues".
  */
 export type CommonArrayOfStringValues = string[];
+/**
+ * One or multiple rule conditions
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "ruleSet-condition-or-conditions".
+ */
+export type RuleSetConditionOrConditions = RuleSetCondition | RuleSetConditions;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "ruleSet-condition".
@@ -70,11 +81,11 @@ export type RuleSetCondition =
 			/**
 			 * Exclude all modules matching any of these conditions
 			 */
-			exclude?: RuleSetCondition;
+			exclude?: RuleSetConditionOrConditions;
 			/**
 			 * Exclude all modules matching not any of these conditions
 			 */
-			include?: RuleSetCondition;
+			include?: RuleSetConditionOrConditions;
 			/**
 			 * Logical NOT
 			 */
@@ -86,13 +97,13 @@ export type RuleSetCondition =
 			/**
 			 * Exclude all modules matching any of these conditions
 			 */
-			test?: RuleSetCondition;
+			test?: RuleSetConditionOrConditions;
 	  };
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "ruleSet-conditions".
  */
-export type RuleSetConditions = RuleSetCondition[];
+export type RuleSetConditions = RuleSetConditionsRecursive;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "ruleSet-loader".
@@ -149,6 +160,15 @@ export type RuleSetQuery =
  * via the `definition` "common.arrayOfStringOrStringArrayValues".
  */
 export type CommonArrayOfStringOrStringArrayValues = (string | string[])[];
+/**
+ * Function acting as plugin
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "common.pluginFunction".
+ */
+export type CommonPluginFunction = (
+	compiler: import("../lib/Compiler")
+) => void;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "ruleSet-rules".
@@ -943,7 +963,7 @@ export interface RuleSetRule {
 	/**
 	 * Match the child compiler name
 	 */
-	compiler?: RuleSetCondition;
+	compiler?: RuleSetConditionOrConditions;
 	/**
 	 * Enforce this rule as pre or post step
 	 */
@@ -951,19 +971,19 @@ export interface RuleSetRule {
 	/**
 	 * Shortcut for resource.exclude
 	 */
-	exclude?: RuleSetCondition & {
+	exclude?: RuleSetConditionOrConditions & {
 		[k: string]: any;
 	};
 	/**
 	 * Shortcut for resource.include
 	 */
-	include?: RuleSetCondition & {
+	include?: RuleSetConditionOrConditions & {
 		[k: string]: any;
 	};
 	/**
 	 * Match the issuer of the module (The module pointing to this module)
 	 */
-	issuer?: RuleSetCondition & {
+	issuer?: RuleSetConditionOrConditions & {
 		[k: string]: any;
 	};
 	/**
@@ -999,13 +1019,13 @@ export interface RuleSetRule {
 	/**
 	 * Match the resource path of the module
 	 */
-	resource?: RuleSetCondition & {
+	resource?: RuleSetConditionOrConditions & {
 		[k: string]: any;
 	};
 	/**
 	 * Match the resource query of the module
 	 */
-	resourceQuery?: RuleSetCondition;
+	resourceQuery?: RuleSetConditionOrConditions;
 	/**
 	 * Match and execute these rules when this rule is matched
 	 */
@@ -1017,7 +1037,7 @@ export interface RuleSetRule {
 	/**
 	 * Shortcut for resource.test
 	 */
-	test?: RuleSetCondition & {
+	test?: RuleSetConditionOrConditions & {
 		[k: string]: any;
 	};
 	/**
@@ -1156,24 +1176,7 @@ export interface CommonPluginObject {
 	/**
 	 * The run point of the plugin, required method.
 	 */
-	apply: {
-		[k: string]: any;
-	};
-	[k: string]: any;
-}
-/**
- * Function acting as plugin
- *
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "common.pluginFunction".
- */
-export interface CommonPluginFunction {
-	/**
-	 * The run point of the plugin, required method.
-	 */
-	apply: {
-		[k: string]: any;
-	};
+	apply: (compiler: import("../lib/Compiler")) => void;
 	[k: string]: any;
 }
 /**

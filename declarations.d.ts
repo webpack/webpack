@@ -220,6 +220,11 @@ declare module "@webassemblyjs/ast" {
 	export function isFuncImportDescr(n: Node): boolean;
 }
 
+// This "hack" is needed because typescript doesn't support recursive type definitions
+// It's referenced from "ruleSet-conditions" in schemas/WebpackOptions.json
+interface RuleSetConditionsRecursive
+	extends Array<import("./declarations/WebpackOptions").RuleSetCondition> {}
+
 /**
  * Global variable declarations
  * @todo Once this issue is resolved, remove these globals and add JSDoc onsite instead
