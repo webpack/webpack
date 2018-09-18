@@ -124,6 +124,9 @@
                 "type": "object"
               },
               {
+                "$ref": "#/definitions/common.arrayOfStringValues"
+              },
+              {
                 "type": "boolean"
               }
             ]
