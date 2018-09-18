@@ -1,49 +1,79 @@
 const fs = require("fs");
 const path = require("path");
-const style = require("../.prettierrc.js"); // eslint-disable-line
+const mkdirp = require("mkdirp");
+const prettierrc = require("../.prettierrc.js"); // eslint-disable-line
 const { compileFromFile } = require("json-schema-to-typescript");
+
 const schemasDir = path.resolve(__dirname, "../schemas");
+const style = {
+	printWidth: prettierrc.printWidth,
+	useTabs: prettierrc.useTabs,
+	tabWidth: prettierrc.tabWidth
+};
+
+// When --write is set, files will be written in place
+// Elsewise it only prints outdated files
+const doWrite = process.argv.includes("--write");
 
 const makeSchemas = () => {
 	// include the top level folder "./schemas" by default
-	const dirs = [schemasDir];
+	const dirs = new Set([schemasDir]);
 
 	// search for all nestedDirs inside of this folder
-	// TODO: Although I don't think it makes sense at all to ever have nested folders here, (just one level deep)
-	// this should technically have recursive handling for those nested folers
-	for (let dir of fs.readdirSync(schemasDir)) {
-		const absDirPath = path.resolve(schemasDir, dir);
-		console.log(dir, schemasDir);
-		if (fs.statSync(absDirPath).isDirectory()) {
-			dirs.push(absDirPath);
+	for (let dirWithSchemas of dirs) {
+		for (let item of fs.readdirSync(dirWithSchemas)) {
+			const absPath = path.resolve(dirWithSchemas, item);
+			if (fs.statSync(absPath).isDirectory()) {
+				dirs.add(absPath);
+			} else if (item.endsWith(".json")) {
+				makeDefinitionsForSchema(absPath);
+			}
 		}
 	}
-
-	for (let dirWithSchemas of dirs) {
-		processSchemasInDir(dirWithSchemas);
-	}
 };
 
-const processSchemasInDir = absDirPath => {
-	const schemas = fs
-		.readdirSync(absDirPath)
-		.filter(name => name.endsWith(".json"))
-		.map(name => ({
-			fileName: name.split(".")[0],
-			name: path.resolve(absDirPath, name)
-		}));
-	for (let { fileName, name } of schemas) {
-		makeDefinitionsForSchema(fileName, path.resolve(absDirPath, name));
-	}
-};
-
-const makeDefinitionsForSchema = (fileName, absSchemaPath) => {
-	compileFromFile(absSchemaPath, { style }).then(ts => {
-		fs.writeFileSync(
-			path.resolve(__dirname, `../declarations/${fileName}.d.ts`),
-			ts
-		);
-	});
+const makeDefinitionsForSchema = absSchemaPath => {
+	const basename = path
+		.relative(schemasDir, absSchemaPath)
+		.replace(/\.json$/i, "");
+	const filename = path.resolve(__dirname, `../declarations/${basename}.d.ts`);
+	compileFromFile(absSchemaPath, {
+		bannerComment:
+			"/**\n * This file was automatically generated.\n * DO NOT MODIFY BY HAND.\n * Run `yarn special-lint-fix` to update\n */",
+		unreachableDefinitions: true,
+		style
+	}).then(
+		ts => {
+			let normalizedContent = "";
+			try {
+				const content = fs.readFileSync(filename, "utf-8");
+				normalizedContent = content.replace(/\r\n?/g, "\n");
+			} catch (e) {
+				// ignore
+			}
+			if (normalizedContent.trim() !== ts.trim()) {
+				if (doWrite) {
+					mkdirp.sync(path.dirname(filename));
+					fs.writeFileSync(filename, ts, "utf-8");
+					console.error(
+						`declarations/${basename.replace(/\\/g, "/")}.d.ts updated`
+					);
+				} else {
+					console.error(
+						`declarations/${basename.replace(
+							/\\/g,
+							"/"
+						)}.d.ts need to be updated`
+					);
+				}
+				process.exitCode = 1;
+			}
+		},
+		err => {
+			console.error(err);
+			process.exitCode = 1;
+		}
+	);
 };
 
 makeSchemas();
