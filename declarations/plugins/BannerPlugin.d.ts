@@ -15,25 +15,25 @@ export type BannerPlugin =
 				  }
 				| string;
 			/**
-			 * If true, banner will not be wrapped in a comment
-			 */
-			raw?: boolean;
-			/**
 			 * If true, the banner will only be added to the entry chunks
 			 */
 			entryOnly?: boolean;
 			/**
-			 * Include all modules that pass test assertion
+			 * Exclude all modules matching any of these conditions
 			 */
-			test?: Rules;
+			exclude?: Rules;
 			/**
 			 * Include all modules matching any of these conditions
 			 */
 			include?: Rules;
 			/**
-			 * Exclude all modules matching any of these conditions
+			 * If true, banner will not be wrapped in a comment
 			 */
-			exclude?: Rules;
+			raw?: boolean;
+			/**
+			 * Include all modules that pass test assertion
+			 */
+			test?: Rules;
 	  }
 	| {
 			[k: string]: any;

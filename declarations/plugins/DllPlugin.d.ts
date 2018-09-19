@@ -10,19 +10,19 @@ export interface DllPlugin {
 	 */
 	context?: string;
 	/**
+	 * If true, only entry points will be exposed
+	 */
+	entryOnly?: boolean;
+	/**
 	 * Name of the exposed dll function (external name, use value of 'output.library')
 	 */
 	name?: string;
-	/**
-	 * Type of the dll bundle (external type, use value of 'output.libraryTarget')
-	 */
-	type?: string;
 	/**
 	 * Absolute path to the manifest json file (output)
 	 */
 	path: string;
 	/**
-	 * If true, only entry points will be exposed
+	 * Type of the dll bundle (external type, use value of 'output.libraryTarget')
 	 */
-	entryOnly?: boolean;
+	type?: string;
 }

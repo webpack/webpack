@@ -6,14 +6,6 @@
 
 export interface AggressiveSplittingPlugin {
 	/**
-	 * Byte, split point. Default: 30720
-	 */
-	minSize?: number;
-	/**
-	 * Byte, maxsize of per file. Default: 51200
-	 */
-	maxSize?: number;
-	/**
 	 * Default: 0
 	 */
 	chunkOverhead?: number;
@@ -21,4 +13,12 @@ export interface AggressiveSplittingPlugin {
 	 * Default: 1
 	 */
 	entryChunkMultiplicator?: number;
+	/**
+	 * Byte, maxsize of per file. Default: 51200
+	 */
+	maxSize?: number;
+	/**
+	 * Byte, split point. Default: 30720
+	 */
+	minSize?: number;
 }
