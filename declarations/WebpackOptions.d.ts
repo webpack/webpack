@@ -8,18 +8,19 @@
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "Entry".
  */
-export type Entry =
-	| {
-			/**
-			 * An entry point with name
-			 */
-			[k: string]: string | NonEmptyArrayOfUniqueStringValues;
-	  }
-	| string
-	| NonEmptyArrayOfUniqueStringValues
-	| {
-			[k: string]: any;
-	  };
+export type Entry = EntryDynamic | EntryStatic;
+/**
+ * A Function returning an entry object, an entry string, an entry array or a promise to these things.
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "EntryDynamic".
+ */
+export type EntryDynamic = (() => EntryStatic | Promise<EntryStatic>);
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "EntryStatic".
+ */
+export type EntryStatic = EntryObject | EntryItem;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "NonEmptyArrayOfUniqueStringValues".
@@ -27,9 +28,27 @@ export type Entry =
 export type NonEmptyArrayOfUniqueStringValues = string[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "EntryItem".
+ */
+export type EntryItem = string | NonEmptyArrayOfUniqueStringValues;
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "Externals".
  */
-export type Externals = ExternalItem | ExternalItem[];
+export type Externals =
+	| ((
+			context: string,
+			request: string,
+			callback: (err?: Error, result?: string) => void
+	  ) => void)
+	| ExternalItem
+	| (
+			| ((
+					context: string,
+					request: string,
+					callback: (err?: Error, result?: string) => void
+			  ) => void)
+			| ExternalItem)[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "ExternalItem".
@@ -72,7 +91,7 @@ export type RuleSetCondition =
 			[k: string]: any;
 	  }
 	| string
-	| RuleSetConditions
+	| Function
 	| {
 			/**
 			 * Logical AND
@@ -113,21 +132,14 @@ export type RuleSetLoader = string;
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "RuleSetUse".
  */
-export type RuleSetUse =
-	| RuleSetUseItem
-	| {
-			[k: string]: any;
-	  }
-	| RuleSetUseItem[];
+export type RuleSetUse = RuleSetUseItem | Function | RuleSetUseItem[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "RuleSetUseItem".
  */
 export type RuleSetUseItem =
 	| RuleSetLoader
-	| {
-			[k: string]: any;
-	  }
+	| Function
 	| {
 			/**
 			 * Unique loader identifier
@@ -187,7 +199,8 @@ export type FilterItemTypes =
 	| {
 			[k: string]: any;
 	  }
-	| string;
+	| string
+	| Function;
 
 export interface WebpackOptions {
 	/**
@@ -325,9 +338,7 @@ export interface WebpackOptions {
 				| "node-webkit"
 				| "electron-main"
 				| "electron-renderer")
-		| {
-				[k: string]: any;
-		  };
+		| ((compiler: import("../lib/Compiler")) => void);
 	/**
 	 * Enter watch mode, which rebuilds on file change.
 	 */
@@ -355,6 +366,18 @@ export interface WebpackOptions {
 		 */
 		stdin?: boolean;
 	};
+}
+/**
+ * Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "EntryObject".
+ */
+export interface EntryObject {
+	/**
+	 * An entry point with name
+	 */
+	[k: string]: string | NonEmptyArrayOfUniqueStringValues;
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
@@ -395,6 +418,7 @@ export interface ModuleOptions {
 		| {
 				[k: string]: any;
 		  }
+		| Function
 		| string[]
 		| string;
 	/**
@@ -432,11 +456,7 @@ export interface ModuleOptions {
 	/**
 	 * Cache the resolving of module requests
 	 */
-	unsafeCache?:
-		| boolean
-		| {
-				[k: string]: any;
-		  };
+	unsafeCache?: boolean | Function;
 	/**
 	 * Enable warnings for partial dynamic dependencies
 	 */
@@ -587,9 +607,7 @@ export interface ResolveOptions {
 	/**
 	 * Predicate function to decide which requests should be cached
 	 */
-	cachePredicate?: {
-		[k: string]: any;
-	};
+	cachePredicate?: Function;
 	/**
 	 * Include the context information in the cache identifier when caching
 	 */
@@ -803,11 +821,7 @@ export interface OptimizationOptions {
 				/**
 				 * The name or name factory for the runtime chunks
 				 */
-				name?:
-					| string
-					| {
-							[k: string]: any;
-					  };
+				name?: string | Function;
 		  };
 	/**
 	 * Skip over modules which are flagged to contain no side effects when exports are not used
@@ -840,10 +854,11 @@ export interface OptimizationSplitChunksOptions {
 		 */
 		[k: string]:
 			| false
+			| Function
+			| string
 			| {
 					[k: string]: any;
 			  }
-			| string
 			| {
 					/**
 					 * Sets the name delimiter for created chunks
@@ -856,11 +871,7 @@ export interface OptimizationSplitChunksOptions {
 					/**
 					 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML)
 					 */
-					chunks?:
-						| ("initial" | "async" | "all")
-						| {
-								[k: string]: any;
-						  };
+					chunks?: ("initial" | "async" | "all") | Function;
 					/**
 					 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group
 					 */
@@ -892,12 +903,7 @@ export interface OptimizationSplitChunksOptions {
 					/**
 					 * Give chunks for this cache group a name (chunks with equal name are merged)
 					 */
-					name?:
-						| boolean
-						| {
-								[k: string]: any;
-						  }
-						| string;
+					name?: boolean | Function | string;
 					/**
 					 * Priority of this cache group
 					 */
@@ -910,20 +916,17 @@ export interface OptimizationSplitChunksOptions {
 					 * Assign modules to a cache group
 					 */
 					test?:
+						| Function
+						| string
 						| {
 								[k: string]: any;
-						  }
-						| string;
+						  };
 			  };
 	};
 	/**
 	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML)
 	 */
-	chunks?:
-		| ("initial" | "async" | "all")
-		| {
-				[k: string]: any;
-		  };
+	chunks?: ("initial" | "async" | "all") | Function;
 	/**
 	 * Options for modules not selected by any other cache group
 	 */
@@ -972,12 +975,7 @@ export interface OptimizationSplitChunksOptions {
 	/**
 	 * Give chunks created a name (chunks with equal name are merged)
 	 */
-	name?:
-		| boolean
-		| {
-				[k: string]: any;
-		  }
-		| string;
+	name?: boolean | Function | string;
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
@@ -1026,11 +1024,7 @@ export interface OutputOptions {
 	/**
 	 * Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.
 	 */
-	devtoolFallbackModuleFilenameTemplate?:
-		| string
-		| {
-				[k: string]: any;
-		  };
+	devtoolFallbackModuleFilenameTemplate?: string | Function;
 	/**
 	 * Enable line to line mapped mode for all/specified modules. Line to line mapped mode uses a simple SourceMap where each line of the generated source is mapped to the same line of the original source. It’s a performance optimization. Only use it if your performance need to be better and you are sure that input lines match which generated lines.
 	 */
@@ -1042,11 +1036,7 @@ export interface OutputOptions {
 	/**
 	 * Filename template string of function for the sources array in a generated SourceMap.
 	 */
-	devtoolModuleFilenameTemplate?:
-		| string
-		| {
-				[k: string]: any;
-		  };
+	devtoolModuleFilenameTemplate?: string | Function;
 	/**
 	 * Module namespace to use when interpolating filename template string for the sources array in a generated SourceMap. Defaults to `output.library` if not set. It's useful for avoiding runtime collisions in sourcemaps from multiple webpack projects built as libraries.
 	 */
@@ -1054,11 +1044,7 @@ export interface OutputOptions {
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
-	filename?:
-		| string
-		| {
-				[k: string]: any;
-		  };
+	filename?: string | Function;
 	/**
 	 * An expression which is used to address the global object/scope in runtime code
 	 */
@@ -1082,11 +1068,7 @@ export interface OutputOptions {
 	/**
 	 * The filename of the Hot Update Chunks. They are inside the output.path directory.
 	 */
-	hotUpdateChunkFilename?:
-		| string
-		| {
-				[k: string]: any;
-		  };
+	hotUpdateChunkFilename?: string | Function;
 	/**
 	 * The JSONP function used by webpack for async loading of hot update chunks.
 	 */
@@ -1094,11 +1076,7 @@ export interface OutputOptions {
 	/**
 	 * The filename of the Hot Update Main File. It is inside the `output.path` directory.
 	 */
-	hotUpdateMainFilename?:
-		| string
-		| {
-				[k: string]: any;
-		  };
+	hotUpdateMainFilename?: string | Function;
 	/**
 	 * The JSONP function used by webpack for async loading of chunks.
 	 */
@@ -1110,23 +1088,7 @@ export interface OutputOptions {
 	/**
 	 * If set, export the bundle as library. `output.library` is the name.
 	 */
-	library?:
-		| string
-		| string[]
-		| {
-				/**
-				 * Name of the exposed AMD library in the UMD
-				 */
-				amd?: string;
-				/**
-				 * Name of the exposed commonjs export in the UMD
-				 */
-				commonjs?: string;
-				/**
-				 * Name of the property exposed globally by a UMD library
-				 */
-				root?: string | ArrayOfStringValues;
-		  };
+	library?: string | string[] | LibraryCustomUmdObject;
 	/**
 	 * Specify which export should be exposed as library
 	 */
@@ -1159,11 +1121,7 @@ export interface OutputOptions {
 	/**
 	 * The `publicPath` specifies the public URL address of the output files when referenced in a browser.
 	 */
-	publicPath?:
-		| string
-		| {
-				[k: string]: any;
-		  };
+	publicPath?: string | Function;
 	/**
 	 * The filename of the SourceMaps for the JavaScript files. They are inside the `output.path` directory.
 	 */
@@ -1187,15 +1145,31 @@ export interface OutputOptions {
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "LibraryCustomUmdObject".
+ */
+export interface LibraryCustomUmdObject {
+	/**
+	 * Name of the exposed AMD library in the UMD
+	 */
+	amd?: string;
+	/**
+	 * Name of the exposed commonjs export in the UMD
+	 */
+	commonjs?: string;
+	/**
+	 * Name of the property exposed globally by a UMD library
+	 */
+	root?: string | ArrayOfStringValues;
+}
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "PerformanceOptions".
  */
 export interface PerformanceOptions {
 	/**
 	 * Filter function to select assets that are checked
 	 */
-	assetFilter?: {
-		[k: string]: any;
-	};
+	assetFilter?: Function;
 	/**
 	 * Sets the format of the hints: warnings, errors or nothing at all
 	 */

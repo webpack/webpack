@@ -29,30 +29,22 @@
       }
     },
     "Entry": {
-      "oneOf": [
+      "anyOf": [
         {
-          "description": "Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.",
-          "type": "object",
-          "additionalProperties": {
-            "description": "An entry point with name",
-            "oneOf": [
-              {
-                "description": "The string is resolved to a module which is loaded upon startup.",
-                "type": "string",
-                "minLength": 1
-              },
-              {
-                "description": "All modules are loaded upon startup. The last one is exported.",
-                "anyOf": [
-                  {
-                    "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
-                  }
-                ]
-              }
-            ]
-          },
-          "minProperties": 1
+          "$ref": "#/definitions/EntryDynamic"
         },
+        {
+          "$ref": "#/definitions/EntryStatic"
+        }
+      ]
+    },
+    "EntryDynamic": {
+      "description": "A Function returning an entry object, an entry string, an entry array or a promise to these things.",
+      "instanceof": "Function",
+      "tsType": "(() => EntryStatic | Promise<EntryStatic>)"
+    },
+    "EntryItem": {
+      "oneOf": [
         {
           "description": "An entry point without name. The string is resolved to a module which is loaded upon startup.",
           "type": "string",
@@ -65,10 +57,39 @@
               "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
             }
           ]
+        }
+      ]
+    },
+    "EntryObject": {
+      "description": "Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.",
+      "type": "object",
+      "additionalProperties": {
+        "description": "An entry point with name",
+        "oneOf": [
+          {
+            "description": "The string is resolved to a module which is loaded upon startup.",
+            "type": "string",
+            "minLength": 1
+          },
+          {
+            "description": "All modules are loaded upon startup. The last one is exported.",
+            "anyOf": [
+              {
+                "$ref": "#/definitions/NonEmptyArrayOfUniqueStringValues"
+              }
+            ]
+          }
+        ]
+      },
+      "minProperties": 1
+    },
+    "EntryStatic": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/EntryObject"
         },
         {
-          "description": "A Function returning an entry object, an entry string, an entry array or a promise to these things.",
-          "instanceof": "Function"
+          "$ref": "#/definitions/EntryItem"
         }
       ]
     },
@@ -100,10 +121,6 @@
           }
         },
         {
-          "description": "`function(context, request, callback(err, result))` The function is called on each dependency.",
-          "instanceof": "Function"
-        },
-        {
           "description": "Every matched dependency becomes external.",
           "instanceof": "RegExp"
         }
@@ -112,6 +129,11 @@
     "Externals": {
       "anyOf": [
         {
+          "description": "`function(context, request, callback(err, result))` The function is called on each dependency.",
+          "instanceof": "Function",
+          "tsType": "((context: string, request: string, callback: (err?: Error, result?: string) => void) => void)"
+        },
+        {
           "$ref": "#/definitions/ExternalItem"
         },
         {
@@ -119,6 +141,11 @@
           "items": {
             "description": "External configuration",
             "anyOf": [
+              {
+                "description": "`function(context, request, callback(err, result))` The function is called on each dependency.",
+                "instanceof": "Function",
+                "tsType": "((context: string, request: string, callback: (err?: Error, result?: string) => void) => void)"
+              },
               {
                 "$ref": "#/definitions/ExternalItem"
               }
@@ -136,7 +163,8 @@
           "type": "string"
         },
         {
-          "instanceof": "Function"
+          "instanceof": "Function",
+          "tsType": "Function"
         }
       ]
     },
@@ -157,6 +185,31 @@
           }
         }
       ]
+    },
+    "LibraryCustomUmdObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "amd": {
+          "description": "Name of the exposed AMD library in the UMD",
+          "type": "string"
+        },
+        "commonjs": {
+          "description": "Name of the exposed commonjs export in the UMD",
+          "type": "string"
+        },
+        "root": {
+          "description": "Name of the property exposed globally by a UMD library",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/ArrayOfStringValues"
+            }
+          ]
+        }
+      }
     },
     "ModuleOptions": {
       "type": "object",
@@ -208,7 +261,8 @@
               "instanceof": "RegExp"
             },
             {
-              "instanceof": "Function"
+              "instanceof": "Function",
+              "tsType": "Function"
             },
             {
               "type": "array",
@@ -271,7 +325,8 @@
               "type": "boolean"
             },
             {
-              "instanceof": "Function"
+              "instanceof": "Function",
+              "tsType": "Function"
             }
           ]
         },
@@ -451,7 +506,8 @@
                       "type": "string"
                     },
                     {
-                      "instanceof": "Function"
+                      "instanceof": "Function",
+                      "tsType": "Function"
                     }
                   ]
                 }
@@ -499,7 +555,8 @@
                 "enum": [false]
               },
               {
-                "instanceof": "Function"
+                "instanceof": "Function",
+                "tsType": "Function"
               },
               {
                 "type": "string"
@@ -527,7 +584,8 @@
                         "enum": ["initial", "async", "all"]
                       },
                       {
-                        "instanceof": "Function"
+                        "instanceof": "Function",
+                        "tsType": "Function"
                       }
                     ]
                   },
@@ -572,7 +630,8 @@
                         "type": "boolean"
                       },
                       {
-                        "instanceof": "Function"
+                        "instanceof": "Function",
+                        "tsType": "Function"
                       },
                       {
                         "type": "string"
@@ -591,7 +650,8 @@
                     "description": "Assign modules to a cache group",
                     "oneOf": [
                       {
-                        "instanceof": "Function"
+                        "instanceof": "Function",
+                        "tsType": "Function"
                       },
                       {
                         "type": "string"
@@ -613,7 +673,8 @@
               "enum": ["initial", "async", "all"]
             },
             {
-              "instanceof": "Function"
+              "instanceof": "Function",
+              "tsType": "Function"
             }
           ]
         },
@@ -680,7 +741,8 @@
               "type": "boolean"
             },
             {
-              "instanceof": "Function"
+              "instanceof": "Function",
+              "tsType": "Function"
             },
             {
               "type": "string"
@@ -749,7 +811,8 @@
               "type": "string"
             },
             {
-              "instanceof": "Function"
+              "instanceof": "Function",
+              "tsType": "Function"
             }
           ]
         },
@@ -773,7 +836,8 @@
               "type": "string"
             },
             {
-              "instanceof": "Function"
+              "instanceof": "Function",
+              "tsType": "Function"
             }
           ]
         },
@@ -788,7 +852,8 @@
               "type": "string"
             },
             {
-              "instanceof": "Function"
+              "instanceof": "Function",
+              "tsType": "Function"
             }
           ],
           "absolutePath": false
@@ -832,7 +897,8 @@
               "type": "string"
             },
             {
-              "instanceof": "Function"
+              "instanceof": "Function",
+              "tsType": "Function"
             }
           ],
           "absolutePath": false
@@ -848,7 +914,8 @@
               "type": "string"
             },
             {
-              "instanceof": "Function"
+              "instanceof": "Function",
+              "tsType": "Function"
             }
           ],
           "absolutePath": false
@@ -875,29 +942,7 @@
               }
             },
             {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "amd": {
-                  "description": "Name of the exposed AMD library in the UMD",
-                  "type": "string"
-                },
-                "commonjs": {
-                  "description": "Name of the exposed commonjs export in the UMD",
-                  "type": "string"
-                },
-                "root": {
-                  "description": "Name of the property exposed globally by a UMD library",
-                  "anyOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "$ref": "#/definitions/ArrayOfStringValues"
-                    }
-                  ]
-                }
-              }
+              "$ref": "#/definitions/LibraryCustomUmdObject"
             }
           ]
         },
@@ -946,7 +991,8 @@
               "type": "string"
             },
             {
-              "instanceof": "Function"
+              "instanceof": "Function",
+              "tsType": "Function"
             }
           ]
         },
@@ -980,7 +1026,8 @@
       "properties": {
         "assetFilter": {
           "description": "Filter function to select assets that are checked",
-          "instanceof": "Function"
+          "instanceof": "Function",
+          "tsType": "Function"
         },
         "hints": {
           "description": "Sets the format of the hints: warnings, errors or nothing at all",
@@ -1044,7 +1091,8 @@
         },
         "cachePredicate": {
           "description": "Predicate function to decide which requests should be cached",
-          "instanceof": "Function"
+          "instanceof": "Function",
+          "tsType": "Function"
         },
         "cacheWithContext": {
           "description": "Include the context information in the cache identifier when caching",
@@ -1163,7 +1211,8 @@
           "minLength": 1
         },
         {
-          "instanceof": "Function"
+          "instanceof": "Function",
+          "tsType": "Function"
         },
         {
           "$ref": "#/definitions/RuleSetConditions"
@@ -1446,7 +1495,8 @@
           "$ref": "#/definitions/RuleSetUseItem"
         },
         {
-          "instanceof": "Function"
+          "instanceof": "Function",
+          "tsType": "Function"
         },
         {
           "type": "array",
@@ -1467,7 +1517,8 @@
           "$ref": "#/definitions/RuleSetLoader"
         },
         {
-          "instanceof": "Function"
+          "instanceof": "Function",
+          "tsType": "Function"
         },
         {
           "type": "object",
@@ -1739,7 +1790,8 @@
       "properties": {
         "apply": {
           "description": "The run point of the plugin, required method.",
-          "instanceof": "Function"
+          "instanceof": "Function",
+          "tsType": "Function"
         }
       },
       "required": ["apply"],
@@ -1980,7 +2032,8 @@
           ]
         },
         {
-          "instanceof": "Function"
+          "instanceof": "Function",
+          "tsType": "((compiler: import('../lib/Compiler')) => void)"
         }
       ]
     },
