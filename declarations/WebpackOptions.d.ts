@@ -263,7 +263,7 @@ export interface WebpackOptions {
 	/**
 	 * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
 	 */
-	output?: string | OutputOptions;
+	output?: OutputOptions;
 	/**
 	 * The number of parallel processed modules in the compilation.
 	 */
