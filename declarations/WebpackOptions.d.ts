@@ -6,33 +6,33 @@
 
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "entry".
+ * via the `definition` "Entry".
  */
 export type Entry =
 	| {
 			/**
 			 * An entry point with name
 			 */
-			[k: string]: string | CommonNonEmptyArrayOfUniqueStringValues;
+			[k: string]: string | NonEmptyArrayOfUniqueStringValues;
 	  }
 	| string
-	| CommonNonEmptyArrayOfUniqueStringValues
+	| NonEmptyArrayOfUniqueStringValues
 	| {
 			[k: string]: any;
 	  };
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "common.nonEmptyArrayOfUniqueStringValues".
+ * via the `definition` "NonEmptyArrayOfUniqueStringValues".
  */
-export type CommonNonEmptyArrayOfUniqueStringValues = string[];
+export type NonEmptyArrayOfUniqueStringValues = string[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "externals".
+ * via the `definition` "Externals".
  */
 export type Externals = ExternalItem | ExternalItem[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "external-item".
+ * via the `definition` "ExternalItem".
  */
 export type ExternalItem =
 	| string
@@ -45,7 +45,7 @@ export type ExternalItem =
 				| {
 						[k: string]: any;
 				  }
-				| CommonArrayOfStringValues
+				| ArrayOfStringValues
 				| boolean;
 	  }
 	| {
@@ -53,19 +53,19 @@ export type ExternalItem =
 	  };
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "common.arrayOfStringValues".
+ * via the `definition` "ArrayOfStringValues".
  */
-export type CommonArrayOfStringValues = string[];
+export type ArrayOfStringValues = string[];
 /**
  * One or multiple rule conditions
  *
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ruleSet-condition-or-conditions".
+ * via the `definition` "RuleSetConditionOrConditions".
  */
 export type RuleSetConditionOrConditions = RuleSetCondition | RuleSetConditions;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ruleSet-condition".
+ * via the `definition` "RuleSetCondition".
  */
 export type RuleSetCondition =
 	| {
@@ -101,17 +101,17 @@ export type RuleSetCondition =
 	  };
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ruleSet-conditions".
+ * via the `definition` "RuleSetConditions".
  */
 export type RuleSetConditions = RuleSetConditionsRecursive;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ruleSet-loader".
+ * via the `definition` "RuleSetLoader".
  */
 export type RuleSetLoader = string;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ruleSet-use".
+ * via the `definition` "RuleSetUse".
  */
 export type RuleSetUse =
 	| RuleSetUseItem
@@ -121,7 +121,7 @@ export type RuleSetUse =
 	| RuleSetUseItem[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ruleSet-use-item".
+ * via the `definition` "RuleSetUseItem".
  */
 export type RuleSetUseItem =
 	| RuleSetLoader
@@ -148,7 +148,7 @@ export type RuleSetUseItem =
 	  };
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ruleSet-query".
+ * via the `definition` "RuleSetQuery".
  */
 export type RuleSetQuery =
 	| {
@@ -157,31 +157,31 @@ export type RuleSetQuery =
 	| string;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "common.arrayOfStringOrStringArrayValues".
+ * via the `definition` "ArrayOfStringOrStringArrayValues".
  */
-export type CommonArrayOfStringOrStringArrayValues = (string | string[])[];
+export type ArrayOfStringOrStringArrayValues = (string | string[])[];
 /**
  * Function acting as plugin
  *
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "common.pluginFunction".
+ * via the `definition` "WebpackPluginFunction".
  */
-export type CommonPluginFunction = (
+export type WebpackPluginFunction = (
 	compiler: import("../lib/Compiler")
 ) => void;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ruleSet-rules".
+ * via the `definition` "RuleSetRules".
  */
 export type RuleSetRules = RuleSetRule[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "filter-types".
+ * via the `definition` "FilterTypes".
  */
 export type FilterTypes = FilterItemTypes | FilterItemTypes[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "filter-item-types".
+ * via the `definition` "FilterItemTypes".
  */
 export type FilterItemTypes =
 	| {
@@ -247,7 +247,7 @@ export interface WebpackOptions {
 	/**
 	 * Options affecting the normal modules (`NormalModuleFactory`).
 	 */
-	module?: Module;
+	module?: ModuleOptions;
 	/**
 	 * Name of the configuration. Used when loading multiple configurations.
 	 */
@@ -255,305 +255,15 @@ export interface WebpackOptions {
 	/**
 	 * Include polyfills or mocks for various node stuff.
 	 */
-	node?:
-		| false
-		| {
-				/**
-				 * Include a polyfill for the 'Buffer' variable
-				 */
-				Buffer?: false | true | "mock";
-				/**
-				 * Include a polyfill for the '__dirname' variable
-				 */
-				__dirname?: false | true | "mock";
-				/**
-				 * Include a polyfill for the '__filename' variable
-				 */
-				__filename?: false | true | "mock";
-				/**
-				 * Include a polyfill for the 'console' variable
-				 */
-				console?: false | true | "mock";
-				/**
-				 * Include a polyfill for the 'global' variable
-				 */
-				global?: boolean;
-				/**
-				 * Include a polyfill for the 'process' variable
-				 */
-				process?: false | true | "mock";
-				/**
-				 * Include a polyfill for the node.js module
-				 */
-				[k: string]: false | true | "mock" | "empty";
-		  };
+	node?: false | NodeOptions;
 	/**
 	 * Enables/Disables integrated optimizations
 	 */
-	optimization?: {
-		/**
-		 * Check for incompatible wasm types when importing/exporting from/to ESM
-		 */
-		checkWasmTypes?: boolean;
-		/**
-		 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)
-		 */
-		chunkIds?: "natural" | "named" | "size" | "total-size" | false;
-		/**
-		 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer
-		 */
-		concatenateModules?: boolean;
-		/**
-		 * Also flag chunks as loaded which contain a subset of the modules
-		 */
-		flagIncludedChunks?: boolean;
-		/**
-		 * Use hashed module id instead module identifiers for better long term caching (deprecated, used moduleIds: hashed instead)
-		 */
-		hashedModuleIds?: boolean;
-		/**
-		 * Reduce size of WASM by changing imports to shorter strings.
-		 */
-		mangleWasmImports?: boolean;
-		/**
-		 * Merge chunks which contain the same modules
-		 */
-		mergeDuplicateChunks?: boolean;
-		/**
-		 * Enable minimizing the output. Uses optimization.minimizer.
-		 */
-		minimize?: boolean;
-		/**
-		 * Minimizer(s) to use for minimizing the output
-		 */
-		minimizer?: (CommonPluginObject | CommonPluginFunction)[];
-		/**
-		 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: short hashes as ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)
-		 */
-		moduleIds?: "natural" | "named" | "hashed" | "size" | "total-size" | false;
-		/**
-		 * Use readable chunk identifiers for better debugging (deprecated, used chunkIds: named instead)
-		 */
-		namedChunks?: boolean;
-		/**
-		 * Use readable module identifiers for better debugging (deprecated, used moduleIds: named instead)
-		 */
-		namedModules?: boolean;
-		/**
-		 * Avoid emitting assets when errors occur
-		 */
-		noEmitOnErrors?: boolean;
-		/**
-		 * Set process.env.NODE_ENV to a specific value
-		 */
-		nodeEnv?: false | string;
-		/**
-		 * Figure out a order of modules which results in the smallest initial bundle
-		 */
-		occurrenceOrder?: boolean;
-		/**
-		 * Generate records with relative paths to be able to move the context folder
-		 */
-		portableRecords?: boolean;
-		/**
-		 * Figure out which exports are provided by modules to generate more efficient code
-		 */
-		providedExports?: boolean;
-		/**
-		 * Removes modules from chunks when these modules are already included in all parents
-		 */
-		removeAvailableModules?: boolean;
-		/**
-		 * Remove chunks which are empty
-		 */
-		removeEmptyChunks?: boolean;
-		/**
-		 * Create an additional chunk which contains only the webpack runtime and chunk hash maps
-		 */
-		runtimeChunk?:
-			| boolean
-			| ("single" | "multiple")
-			| {
-					/**
-					 * The name or name factory for the runtime chunks
-					 */
-					name?:
-						| string
-						| {
-								[k: string]: any;
-						  };
-			  };
-		/**
-		 * Skip over modules which are flagged to contain no side effects when exports are not used
-		 */
-		sideEffects?: boolean;
-		/**
-		 * Optimize duplication and caching by splitting chunks by shared modules and cache group
-		 */
-		splitChunks?:
-			| false
-			| {
-					/**
-					 * Sets the name delimiter for created chunks
-					 */
-					automaticNameDelimiter?: string;
-					/**
-					 * Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)
-					 */
-					cacheGroups?: {
-						/**
-						 * Configuration for a cache group
-						 */
-						[k: string]:
-							| false
-							| {
-									[k: string]: any;
-							  }
-							| string
-							| {
-									/**
-									 * Sets the name delimiter for created chunks
-									 */
-									automaticNameDelimiter?: string;
-									/**
-									 * Sets the name prefix for created chunks
-									 */
-									automaticNamePrefix?: string;
-									/**
-									 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML)
-									 */
-									chunks?:
-										| ("initial" | "async" | "all")
-										| {
-												[k: string]: any;
-										  };
-									/**
-									 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group
-									 */
-									enforce?: boolean;
-									/**
-									 * Sets the template for the filename for created chunks (Only works for initial chunks)
-									 */
-									filename?: string;
-									/**
-									 * Maximum number of requests which are accepted for on-demand loading
-									 */
-									maxAsyncRequests?: number;
-									/**
-									 * Maximum number of initial chunks which are accepted for an entry point
-									 */
-									maxInitialRequests?: number;
-									/**
-									 * Maximal size hint for the created chunks
-									 */
-									maxSize?: number;
-									/**
-									 * Minimum number of times a module has to be duplicated until it's considered for splitting
-									 */
-									minChunks?: number;
-									/**
-									 * Minimal size for the created chunk
-									 */
-									minSize?: number;
-									/**
-									 * Give chunks for this cache group a name (chunks with equal name are merged)
-									 */
-									name?:
-										| boolean
-										| {
-												[k: string]: any;
-										  }
-										| string;
-									/**
-									 * Priority of this cache group
-									 */
-									priority?: number;
-									/**
-									 * Try to reuse existing chunk (with name) when it has matching modules
-									 */
-									reuseExistingChunk?: boolean;
-									/**
-									 * Assign modules to a cache group
-									 */
-									test?:
-										| {
-												[k: string]: any;
-										  }
-										| string;
-							  };
-					};
-					/**
-					 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML)
-					 */
-					chunks?:
-						| ("initial" | "async" | "all")
-						| {
-								[k: string]: any;
-						  };
-					/**
-					 * Options for modules not selected by any other cache group
-					 */
-					fallbackCacheGroup?: {
-						/**
-						 * Sets the name delimiter for created chunks
-						 */
-						automaticNameDelimiter?: string;
-						/**
-						 * Maximal size hint for the created chunks
-						 */
-						maxSize?: number;
-						/**
-						 * Minimal size for the created chunk
-						 */
-						minSize?: number;
-					};
-					/**
-					 * Sets the template for the filename for created chunks (Only works for initial chunks)
-					 */
-					filename?: string;
-					/**
-					 * Prevents exposing path info when creating names for parts splitted by maxSize
-					 */
-					hidePathInfo?: boolean;
-					/**
-					 * Maximum number of requests which are accepted for on-demand loading
-					 */
-					maxAsyncRequests?: number;
-					/**
-					 * Maximum number of initial chunks which are accepted for an entry point
-					 */
-					maxInitialRequests?: number;
-					/**
-					 * Maximal size hint for the created chunks
-					 */
-					maxSize?: number;
-					/**
-					 * Minimum number of times a module has to be duplicated until it's considered for splitting
-					 */
-					minChunks?: number;
-					/**
-					 * Minimal size for the created chunks
-					 */
-					minSize?: number;
-					/**
-					 * Give chunks created a name (chunks with equal name are merged)
-					 */
-					name?:
-						| boolean
-						| {
-								[k: string]: any;
-						  }
-						| string;
-			  };
-		/**
-		 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code
-		 */
-		usedExports?: boolean;
-	};
+	optimization?: OptimizationOptions;
 	/**
 	 * Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.
 	 */
-	output?: Output;
+	output?: string | OutputOptions;
 	/**
 	 * The number of parallel processed modules in the compilation.
 	 */
@@ -561,32 +271,11 @@ export interface WebpackOptions {
 	/**
 	 * Configuration for web performance recommendations.
 	 */
-	performance?:
-		| false
-		| {
-				/**
-				 * Filter function to select assets that are checked
-				 */
-				assetFilter?: {
-					[k: string]: any;
-				};
-				/**
-				 * Sets the format of the hints: warnings, errors or nothing at all
-				 */
-				hints?: false | "warning" | "error";
-				/**
-				 * Filesize limit (in bytes) when exceeded, that webpack will provide performance hints
-				 */
-				maxAssetSize?: number;
-				/**
-				 * Total size of an entry point (in bytes)
-				 */
-				maxEntrypointSize?: number;
-		  };
+	performance?: false | PerformanceOptions;
 	/**
 	 * Add additional plugins to the compiler.
 	 */
-	plugins?: (CommonPluginObject | CommonPluginFunction)[];
+	plugins?: (WebpackPluginInstance | WebpackPluginFunction)[];
 	/**
 	 * Capture timing information for each module.
 	 */
@@ -606,11 +295,11 @@ export interface WebpackOptions {
 	/**
 	 * Options for the resolver
 	 */
-	resolve?: Resolve;
+	resolve?: ResolveOptions;
 	/**
 	 * Options for the resolver when resolving loaders
 	 */
-	resolveLoader?: Resolve;
+	resolveLoader?: ResolveOptions;
 	/**
 	 * Options for webpack-serve
 	 */
@@ -621,199 +310,7 @@ export interface WebpackOptions {
 	 * Used by the webpack CLI program to pass stats options.
 	 */
 	stats?:
-		| {
-				/**
-				 * fallback value for stats options when an option is not defined (has precedence over local webpack defaults)
-				 */
-				all?: boolean;
-				/**
-				 * add assets information
-				 */
-				assets?: boolean;
-				/**
-				 * sort the assets by that field
-				 */
-				assetsSort?: string;
-				/**
-				 * add built at time information
-				 */
-				builtAt?: boolean;
-				/**
-				 * add also information about cached (not built) modules
-				 */
-				cached?: boolean;
-				/**
-				 * Show cached assets (setting this to `false` only shows emitted files)
-				 */
-				cachedAssets?: boolean;
-				/**
-				 * add children information
-				 */
-				children?: boolean;
-				/**
-				 * Display all chunk groups with the corresponding bundles
-				 */
-				chunkGroups?: boolean;
-				/**
-				 * add built modules information to chunk information
-				 */
-				chunkModules?: boolean;
-				/**
-				 * add the origins of chunks and chunk merging info
-				 */
-				chunkOrigins?: boolean;
-				/**
-				 * add chunk information
-				 */
-				chunks?: boolean;
-				/**
-				 * sort the chunks by that field
-				 */
-				chunksSort?: string;
-				/**
-				 * Enables/Disables colorful output
-				 */
-				colors?:
-					| boolean
-					| {
-							/**
-							 * Custom color for bold text
-							 */
-							bold?: string;
-							/**
-							 * Custom color for cyan text
-							 */
-							cyan?: string;
-							/**
-							 * Custom color for green text
-							 */
-							green?: string;
-							/**
-							 * Custom color for magenta text
-							 */
-							magenta?: string;
-							/**
-							 * Custom color for red text
-							 */
-							red?: string;
-							/**
-							 * Custom color for yellow text
-							 */
-							yellow?: string;
-					  };
-				/**
-				 * context directory for request shortening
-				 */
-				context?: string;
-				/**
-				 * add module depth in module graph
-				 */
-				depth?: boolean;
-				/**
-				 * Display the entry points with the corresponding bundles
-				 */
-				entrypoints?: boolean;
-				/**
-				 * add --env information
-				 */
-				env?: boolean;
-				/**
-				 * add details to errors (like resolving log)
-				 */
-				errorDetails?: boolean;
-				/**
-				 * add errors
-				 */
-				errors?: boolean;
-				/**
-				 * Please use excludeModules instead.
-				 */
-				exclude?: FilterTypes | boolean;
-				/**
-				 * Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions
-				 */
-				excludeAssets?: FilterTypes;
-				/**
-				 * Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions
-				 */
-				excludeModules?: FilterTypes | boolean;
-				/**
-				 * add the hash of the compilation
-				 */
-				hash?: boolean;
-				/**
-				 * Set the maximum number of modules to be shown
-				 */
-				maxModules?: number;
-				/**
-				 * add information about assets inside modules
-				 */
-				moduleAssets?: boolean;
-				/**
-				 * add dependencies and origin of warnings/errors
-				 */
-				moduleTrace?: boolean;
-				/**
-				 * add built modules information
-				 */
-				modules?: boolean;
-				/**
-				 * sort the modules by that field
-				 */
-				modulesSort?: string;
-				/**
-				 * add information about modules nested in other modules (like with module concatenation)
-				 */
-				nestedModules?: boolean;
-				/**
-				 * show reasons why optimization bailed out for modules
-				 */
-				optimizationBailout?: boolean;
-				/**
-				 * Add output path information
-				 */
-				outputPath?: boolean;
-				/**
-				 * add performance hint flags
-				 */
-				performance?: boolean;
-				/**
-				 * show exports provided by modules
-				 */
-				providedExports?: boolean;
-				/**
-				 * Add public path information
-				 */
-				publicPath?: boolean;
-				/**
-				 * add information about the reasons why modules are included
-				 */
-				reasons?: boolean;
-				/**
-				 * add the source code of modules
-				 */
-				source?: boolean;
-				/**
-				 * add timing information
-				 */
-				timings?: boolean;
-				/**
-				 * show exports used by modules
-				 */
-				usedExports?: boolean;
-				/**
-				 * add webpack version information
-				 */
-				version?: boolean;
-				/**
-				 * add warnings
-				 */
-				warnings?: boolean;
-				/**
-				 * Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions
-				 */
-				warningsFilter?: FilterTypes;
-		  }
+		| StatsOptions
 		| boolean
 		| ("none" | "errors-only" | "minimal" | "normal" | "detailed" | "verbose");
 	/**
@@ -861,9 +358,9 @@ export interface WebpackOptions {
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "module".
+ * via the `definition` "ModuleOptions".
  */
-export interface Module {
+export interface ModuleOptions {
 	/**
 	 * An array of rules applied by default for modules.
 	 */
@@ -957,7 +454,7 @@ export interface Module {
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "ruleSet-rule".
+ * via the `definition` "RuleSetRule".
  */
 export interface RuleSetRule {
 	/**
@@ -1015,7 +512,7 @@ export interface RuleSetRule {
 	/**
 	 * Options for the resolver
 	 */
-	resolve?: Resolve;
+	resolve?: ResolveOptions;
 	/**
 	 * Match the resource path of the module
 	 */
@@ -1056,9 +553,9 @@ export interface RuleSetRule {
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "resolve".
+ * via the `definition` "ResolveOptions".
  */
-export interface Resolve {
+export interface ResolveOptions {
 	/**
 	 * Redirect module requests
 	 */
@@ -1086,7 +583,7 @@ export interface Resolve {
 	/**
 	 * Fields in the description file (package.json) which are used to redirect requests inside the module
 	 */
-	aliasFields?: CommonArrayOfStringOrStringArrayValues;
+	aliasFields?: ArrayOfStringOrStringArrayValues;
 	/**
 	 * Predicate function to decide which requests should be cached
 	 */
@@ -1104,7 +601,7 @@ export interface Resolve {
 	/**
 	 * Filenames used to find a description file
 	 */
-	descriptionFiles?: CommonArrayOfStringValues;
+	descriptionFiles?: ArrayOfStringValues;
 	/**
 	 * Enforce using one of the extensions from the extensions option
 	 */
@@ -1116,7 +613,7 @@ export interface Resolve {
 	/**
 	 * Extensions added to the request when trying to find the file
 	 */
-	extensions?: CommonArrayOfStringValues;
+	extensions?: ArrayOfStringValues;
 	/**
 	 * Filesystem for the resolver
 	 */
@@ -1126,23 +623,23 @@ export interface Resolve {
 	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point
 	 */
-	mainFields?: CommonArrayOfStringOrStringArrayValues;
+	mainFields?: ArrayOfStringOrStringArrayValues;
 	/**
 	 * Filenames used to find the default entry point if there is no description file or main field
 	 */
-	mainFiles?: CommonArrayOfStringValues;
+	mainFiles?: ArrayOfStringValues;
 	/**
 	 * Extensions added to the module request when trying to find the module
 	 */
-	moduleExtensions?: CommonArrayOfStringValues;
+	moduleExtensions?: ArrayOfStringValues;
 	/**
 	 * Folder names or directory paths where to find modules
 	 */
-	modules?: CommonArrayOfStringValues;
+	modules?: ArrayOfStringValues;
 	/**
 	 * Plugins for the resolver
 	 */
-	plugins?: (CommonPluginObject | CommonPluginFunction)[];
+	plugins?: (WebpackPluginInstance | WebpackPluginFunction)[];
 	/**
 	 * Custom resolver
 	 */
@@ -1170,9 +667,9 @@ export interface Resolve {
  * Plugin instance
  *
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "common.pluginObject".
+ * via the `definition` "WebpackPluginInstance".
  */
-export interface CommonPluginObject {
+export interface WebpackPluginInstance {
 	/**
 	 * The run point of the plugin, required method.
 	 */
@@ -1181,9 +678,312 @@ export interface CommonPluginObject {
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "output".
+ * via the `definition` "NodeOptions".
  */
-export interface Output {
+export interface NodeOptions {
+	/**
+	 * Include a polyfill for the 'Buffer' variable
+	 */
+	Buffer?: false | true | "mock";
+	/**
+	 * Include a polyfill for the '__dirname' variable
+	 */
+	__dirname?: false | true | "mock";
+	/**
+	 * Include a polyfill for the '__filename' variable
+	 */
+	__filename?: false | true | "mock";
+	/**
+	 * Include a polyfill for the 'console' variable
+	 */
+	console?: false | true | "mock";
+	/**
+	 * Include a polyfill for the 'global' variable
+	 */
+	global?: boolean;
+	/**
+	 * Include a polyfill for the 'process' variable
+	 */
+	process?: false | true | "mock";
+	/**
+	 * Include a polyfill for the node.js module
+	 */
+	[k: string]: false | true | "mock" | "empty";
+}
+/**
+ * Enables/Disables integrated optimizations
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "OptimizationOptions".
+ */
+export interface OptimizationOptions {
+	/**
+	 * Check for incompatible wasm types when importing/exporting from/to ESM
+	 */
+	checkWasmTypes?: boolean;
+	/**
+	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)
+	 */
+	chunkIds?: "natural" | "named" | "size" | "total-size" | false;
+	/**
+	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer
+	 */
+	concatenateModules?: boolean;
+	/**
+	 * Also flag chunks as loaded which contain a subset of the modules
+	 */
+	flagIncludedChunks?: boolean;
+	/**
+	 * Use hashed module id instead module identifiers for better long term caching (deprecated, used moduleIds: hashed instead)
+	 */
+	hashedModuleIds?: boolean;
+	/**
+	 * Reduce size of WASM by changing imports to shorter strings.
+	 */
+	mangleWasmImports?: boolean;
+	/**
+	 * Merge chunks which contain the same modules
+	 */
+	mergeDuplicateChunks?: boolean;
+	/**
+	 * Enable minimizing the output. Uses optimization.minimizer.
+	 */
+	minimize?: boolean;
+	/**
+	 * Minimizer(s) to use for minimizing the output
+	 */
+	minimizer?: (WebpackPluginInstance | WebpackPluginFunction)[];
+	/**
+	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: short hashes as ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)
+	 */
+	moduleIds?: "natural" | "named" | "hashed" | "size" | "total-size" | false;
+	/**
+	 * Use readable chunk identifiers for better debugging (deprecated, used chunkIds: named instead)
+	 */
+	namedChunks?: boolean;
+	/**
+	 * Use readable module identifiers for better debugging (deprecated, used moduleIds: named instead)
+	 */
+	namedModules?: boolean;
+	/**
+	 * Avoid emitting assets when errors occur
+	 */
+	noEmitOnErrors?: boolean;
+	/**
+	 * Set process.env.NODE_ENV to a specific value
+	 */
+	nodeEnv?: false | string;
+	/**
+	 * Figure out a order of modules which results in the smallest initial bundle
+	 */
+	occurrenceOrder?: boolean;
+	/**
+	 * Generate records with relative paths to be able to move the context folder
+	 */
+	portableRecords?: boolean;
+	/**
+	 * Figure out which exports are provided by modules to generate more efficient code
+	 */
+	providedExports?: boolean;
+	/**
+	 * Removes modules from chunks when these modules are already included in all parents
+	 */
+	removeAvailableModules?: boolean;
+	/**
+	 * Remove chunks which are empty
+	 */
+	removeEmptyChunks?: boolean;
+	/**
+	 * Create an additional chunk which contains only the webpack runtime and chunk hash maps
+	 */
+	runtimeChunk?:
+		| boolean
+		| ("single" | "multiple")
+		| {
+				/**
+				 * The name or name factory for the runtime chunks
+				 */
+				name?:
+					| string
+					| {
+							[k: string]: any;
+					  };
+		  };
+	/**
+	 * Skip over modules which are flagged to contain no side effects when exports are not used
+	 */
+	sideEffects?: boolean;
+	/**
+	 * Optimize duplication and caching by splitting chunks by shared modules and cache group
+	 */
+	splitChunks?: false | OptimizationSplitChunksOptions;
+	/**
+	 * Figure out which exports are used by modules to mangle export names, omit unused exports and generate more efficient code
+	 */
+	usedExports?: boolean;
+}
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "OptimizationSplitChunksOptions".
+ */
+export interface OptimizationSplitChunksOptions {
+	/**
+	 * Sets the name delimiter for created chunks
+	 */
+	automaticNameDelimiter?: string;
+	/**
+	 * Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)
+	 */
+	cacheGroups?: {
+		/**
+		 * Configuration for a cache group
+		 */
+		[k: string]:
+			| false
+			| {
+					[k: string]: any;
+			  }
+			| string
+			| {
+					/**
+					 * Sets the name delimiter for created chunks
+					 */
+					automaticNameDelimiter?: string;
+					/**
+					 * Sets the name prefix for created chunks
+					 */
+					automaticNamePrefix?: string;
+					/**
+					 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML)
+					 */
+					chunks?:
+						| ("initial" | "async" | "all")
+						| {
+								[k: string]: any;
+						  };
+					/**
+					 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group
+					 */
+					enforce?: boolean;
+					/**
+					 * Sets the template for the filename for created chunks (Only works for initial chunks)
+					 */
+					filename?: string;
+					/**
+					 * Maximum number of requests which are accepted for on-demand loading
+					 */
+					maxAsyncRequests?: number;
+					/**
+					 * Maximum number of initial chunks which are accepted for an entry point
+					 */
+					maxInitialRequests?: number;
+					/**
+					 * Maximal size hint for the created chunks
+					 */
+					maxSize?: number;
+					/**
+					 * Minimum number of times a module has to be duplicated until it's considered for splitting
+					 */
+					minChunks?: number;
+					/**
+					 * Minimal size for the created chunk
+					 */
+					minSize?: number;
+					/**
+					 * Give chunks for this cache group a name (chunks with equal name are merged)
+					 */
+					name?:
+						| boolean
+						| {
+								[k: string]: any;
+						  }
+						| string;
+					/**
+					 * Priority of this cache group
+					 */
+					priority?: number;
+					/**
+					 * Try to reuse existing chunk (with name) when it has matching modules
+					 */
+					reuseExistingChunk?: boolean;
+					/**
+					 * Assign modules to a cache group
+					 */
+					test?:
+						| {
+								[k: string]: any;
+						  }
+						| string;
+			  };
+	};
+	/**
+	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML)
+	 */
+	chunks?:
+		| ("initial" | "async" | "all")
+		| {
+				[k: string]: any;
+		  };
+	/**
+	 * Options for modules not selected by any other cache group
+	 */
+	fallbackCacheGroup?: {
+		/**
+		 * Sets the name delimiter for created chunks
+		 */
+		automaticNameDelimiter?: string;
+		/**
+		 * Maximal size hint for the created chunks
+		 */
+		maxSize?: number;
+		/**
+		 * Minimal size for the created chunk
+		 */
+		minSize?: number;
+	};
+	/**
+	 * Sets the template for the filename for created chunks (Only works for initial chunks)
+	 */
+	filename?: string;
+	/**
+	 * Prevents exposing path info when creating names for parts splitted by maxSize
+	 */
+	hidePathInfo?: boolean;
+	/**
+	 * Maximum number of requests which are accepted for on-demand loading
+	 */
+	maxAsyncRequests?: number;
+	/**
+	 * Maximum number of initial chunks which are accepted for an entry point
+	 */
+	maxInitialRequests?: number;
+	/**
+	 * Maximal size hint for the created chunks
+	 */
+	maxSize?: number;
+	/**
+	 * Minimum number of times a module has to be duplicated until it's considered for splitting
+	 */
+	minChunks?: number;
+	/**
+	 * Minimal size for the created chunks
+	 */
+	minSize?: number;
+	/**
+	 * Give chunks created a name (chunks with equal name are merged)
+	 */
+	name?:
+		| boolean
+		| {
+				[k: string]: any;
+		  }
+		| string;
+}
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "OutputOptions".
+ */
+export interface OutputOptions {
 	/**
 	 * Add a comment in the UMD wrapper.
 	 */
@@ -1274,11 +1074,7 @@ export interface Output {
 	/**
 	 * Algorithm used for generation the hash (see node.js crypto package)
 	 */
-	hashFunction?:
-		| string
-		| {
-				[k: string]: any;
-		  };
+	hashFunction?: string | (new () => import("../lib/util/createHash").Hash);
 	/**
 	 * Any string which is added to the hash to salt it
 	 */
@@ -1329,12 +1125,12 @@ export interface Output {
 				/**
 				 * Name of the property exposed globally by a UMD library
 				 */
-				root?: string | CommonArrayOfStringValues;
+				root?: string | ArrayOfStringValues;
 		  };
 	/**
 	 * Specify which export should be exposed as library
 	 */
-	libraryExport?: string | CommonArrayOfStringValues;
+	libraryExport?: string | ArrayOfStringValues;
 	/**
 	 * Type of library
 	 */
@@ -1388,4 +1184,225 @@ export interface Output {
 	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
 	 */
 	webassemblyModuleFilename?: string;
+}
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "PerformanceOptions".
+ */
+export interface PerformanceOptions {
+	/**
+	 * Filter function to select assets that are checked
+	 */
+	assetFilter?: {
+		[k: string]: any;
+	};
+	/**
+	 * Sets the format of the hints: warnings, errors or nothing at all
+	 */
+	hints?: false | "warning" | "error";
+	/**
+	 * Filesize limit (in bytes) when exceeded, that webpack will provide performance hints
+	 */
+	maxAssetSize?: number;
+	/**
+	 * Total size of an entry point (in bytes)
+	 */
+	maxEntrypointSize?: number;
+}
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "StatsOptions".
+ */
+export interface StatsOptions {
+	/**
+	 * fallback value for stats options when an option is not defined (has precedence over local webpack defaults)
+	 */
+	all?: boolean;
+	/**
+	 * add assets information
+	 */
+	assets?: boolean;
+	/**
+	 * sort the assets by that field
+	 */
+	assetsSort?: string;
+	/**
+	 * add built at time information
+	 */
+	builtAt?: boolean;
+	/**
+	 * add also information about cached (not built) modules
+	 */
+	cached?: boolean;
+	/**
+	 * Show cached assets (setting this to `false` only shows emitted files)
+	 */
+	cachedAssets?: boolean;
+	/**
+	 * add children information
+	 */
+	children?: boolean;
+	/**
+	 * Display all chunk groups with the corresponding bundles
+	 */
+	chunkGroups?: boolean;
+	/**
+	 * add built modules information to chunk information
+	 */
+	chunkModules?: boolean;
+	/**
+	 * add the origins of chunks and chunk merging info
+	 */
+	chunkOrigins?: boolean;
+	/**
+	 * add chunk information
+	 */
+	chunks?: boolean;
+	/**
+	 * sort the chunks by that field
+	 */
+	chunksSort?: string;
+	/**
+	 * Enables/Disables colorful output
+	 */
+	colors?:
+		| boolean
+		| {
+				/**
+				 * Custom color for bold text
+				 */
+				bold?: string;
+				/**
+				 * Custom color for cyan text
+				 */
+				cyan?: string;
+				/**
+				 * Custom color for green text
+				 */
+				green?: string;
+				/**
+				 * Custom color for magenta text
+				 */
+				magenta?: string;
+				/**
+				 * Custom color for red text
+				 */
+				red?: string;
+				/**
+				 * Custom color for yellow text
+				 */
+				yellow?: string;
+		  };
+	/**
+	 * context directory for request shortening
+	 */
+	context?: string;
+	/**
+	 * add module depth in module graph
+	 */
+	depth?: boolean;
+	/**
+	 * Display the entry points with the corresponding bundles
+	 */
+	entrypoints?: boolean;
+	/**
+	 * add --env information
+	 */
+	env?: boolean;
+	/**
+	 * add details to errors (like resolving log)
+	 */
+	errorDetails?: boolean;
+	/**
+	 * add errors
+	 */
+	errors?: boolean;
+	/**
+	 * Please use excludeModules instead.
+	 */
+	exclude?: FilterTypes | boolean;
+	/**
+	 * Suppress assets that match the specified filters. Filters can be Strings, RegExps or Functions
+	 */
+	excludeAssets?: FilterTypes;
+	/**
+	 * Suppress modules that match the specified filters. Filters can be Strings, RegExps, Booleans or Functions
+	 */
+	excludeModules?: FilterTypes | boolean;
+	/**
+	 * add the hash of the compilation
+	 */
+	hash?: boolean;
+	/**
+	 * Set the maximum number of modules to be shown
+	 */
+	maxModules?: number;
+	/**
+	 * add information about assets inside modules
+	 */
+	moduleAssets?: boolean;
+	/**
+	 * add dependencies and origin of warnings/errors
+	 */
+	moduleTrace?: boolean;
+	/**
+	 * add built modules information
+	 */
+	modules?: boolean;
+	/**
+	 * sort the modules by that field
+	 */
+	modulesSort?: string;
+	/**
+	 * add information about modules nested in other modules (like with module concatenation)
+	 */
+	nestedModules?: boolean;
+	/**
+	 * show reasons why optimization bailed out for modules
+	 */
+	optimizationBailout?: boolean;
+	/**
+	 * Add output path information
+	 */
+	outputPath?: boolean;
+	/**
+	 * add performance hint flags
+	 */
+	performance?: boolean;
+	/**
+	 * show exports provided by modules
+	 */
+	providedExports?: boolean;
+	/**
+	 * Add public path information
+	 */
+	publicPath?: boolean;
+	/**
+	 * add information about the reasons why modules are included
+	 */
+	reasons?: boolean;
+	/**
+	 * add the source code of modules
+	 */
+	source?: boolean;
+	/**
+	 * add timing information
+	 */
+	timings?: boolean;
+	/**
+	 * show exports used by modules
+	 */
+	usedExports?: boolean;
+	/**
+	 * add webpack version information
+	 */
+	version?: boolean;
+	/**
+	 * add warnings
+	 */
+	warnings?: boolean;
+	/**
+	 * Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions
+	 */
+	warningsFilter?: FilterTypes;
 }
