@@ -4,7 +4,7 @@
  * Run `yarn special-lint-fix` to update
  */
 
-export interface OccurrenceOrderModuleIdsPlugin {
+export interface OccurrenceOrderModuleIdsPluginOptions {
 	/**
 	 * Prioritise initial size over total size
 	 */

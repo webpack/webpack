@@ -4,7 +4,7 @@
  * Run `yarn special-lint-fix` to update
  */
 
-export interface DllPlugin {
+export interface DllPluginOptions {
 	/**
 	 * Context of requests in the manifest file (defaults to the webpack context)
 	 */

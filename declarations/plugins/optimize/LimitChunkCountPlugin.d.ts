@@ -4,7 +4,7 @@
  * Run `yarn special-lint-fix` to update
  */
 
-export interface LimitChunkCountPlugin {
+export interface LimitChunkCountPluginOptions {
 	/**
 	 * Limit the maximum number of chunks using a value greater greater than or equal to 1
 	 */

@@ -4,6 +4,6 @@
  * Run `yarn special-lint-fix` to update
  */
 
-export type DllReferencePlugin = {
+export type DllReferencePluginOptions = {
 	[k: string]: any;
 };

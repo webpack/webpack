@@ -4,7 +4,11 @@
  * Run `yarn special-lint-fix` to update
  */
 
-export interface HashedModuleIdsPlugin {
+export interface HashedModuleIdsPluginOptions {
+	/**
+	 * The context directory for creating names.
+	 */
+	context?: string;
 	/**
 	 * The encoding to use when generating the hash, defaults to 'base64'. All encodings from Node.JS' hash.digest are supported.
 	 */

@@ -1,4 +1,5 @@
 {
+  "title": "DllReferencePluginOptions",
   "additionalProperties": false,
   "properties": {
     "content": {

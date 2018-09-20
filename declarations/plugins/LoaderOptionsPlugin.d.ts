@@ -4,7 +4,7 @@
  * Run `yarn special-lint-fix` to update
  */
 
-export interface LoaderOptionsPlugin {
+export interface LoaderOptionsPluginOptions {
 	/**
 	 * Whether loaders should be in debug mode or not. debug will be removed as of webpack 3
 	 */

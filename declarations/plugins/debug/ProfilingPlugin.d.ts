@@ -4,7 +4,7 @@
  * Run `yarn special-lint-fix` to update
  */
 
-export interface ProfilingPlugin {
+export interface ProfilingPluginOptions {
 	/**
 	 * Path to the output file e.g. `profiling/events.json`. Defaults to `events.json`.
 	 */

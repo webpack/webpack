@@ -4,7 +4,7 @@
  * Run `yarn special-lint-fix` to update
  */
 
-export type IgnorePlugin =
+export type IgnorePluginOptions =
 	| {
 			/**
 			 * A RegExp to test the context (directory) against
@@ -23,13 +23,9 @@ export type IgnorePlugin =
 			/**
 			 * A filter function for context
 			 */
-			checkContext?: {
-				[k: string]: any;
-			};
+			checkContext?: ((context: string) => boolean);
 			/**
 			 * A filter function for resource
 			 */
-			checkResource?: {
-				[k: string]: any;
-			};
+			checkResource?: ((resource: string) => boolean);
 	  };

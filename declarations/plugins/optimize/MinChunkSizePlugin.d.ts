@@ -4,7 +4,7 @@
  * Run `yarn special-lint-fix` to update
  */
 
-export interface MinChunkSizePlugin {
+export interface MinChunkSizePluginOptions {
 	/**
 	 * Minimum number of characters
 	 */

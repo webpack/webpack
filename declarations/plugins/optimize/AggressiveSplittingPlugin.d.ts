@@ -4,7 +4,7 @@
  * Run `yarn special-lint-fix` to update
  */
 
-export interface AggressiveSplittingPlugin {
+export interface AggressiveSplittingPluginOptions {
 	/**
 	 * Default: 0
 	 */

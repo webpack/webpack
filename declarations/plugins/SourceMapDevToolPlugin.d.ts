@@ -5,12 +5,12 @@
  */
 
 /**
- * This interface was referenced by `SourceMapDevToolPlugin`'s JSON-Schema
+ * This interface was referenced by `SourceMapDevToolPluginOptions`'s JSON-Schema
  * via the `definition` "rules".
  */
 export type Rules = Rule[] | Rule;
 /**
- * This interface was referenced by `SourceMapDevToolPlugin`'s JSON-Schema
+ * This interface was referenced by `SourceMapDevToolPluginOptions`'s JSON-Schema
  * via the `definition` "rule".
  */
 export type Rule =
@@ -19,7 +19,7 @@ export type Rule =
 	  }
 	| string;
 
-export interface SourceMapDevToolPlugin {
+export interface SourceMapDevToolPluginOptions {
 	/**
 	 * Appends the given value to the original asset. Usually the #sourceMappingURL comment. [url] is replaced with a URL to the source map file. false disables the appending
 	 */
@@ -35,11 +35,7 @@ export interface SourceMapDevToolPlugin {
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict
 	 */
-	fallbackModuleFilenameTemplate?:
-		| {
-				[k: string]: any;
-		  }
-		| string;
+	fallbackModuleFilenameTemplate?: Function | string;
 	/**
 	 * Path prefix to which the [file] placeholder is relative to
 	 */
@@ -78,11 +74,7 @@ export interface SourceMapDevToolPlugin {
 	/**
 	 * Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap
 	 */
-	moduleFilenameTemplate?:
-		| {
-				[k: string]: any;
-		  }
-		| string;
+	moduleFilenameTemplate?: Function | string;
 	/**
 	 * Namespace prefix to allow multiple webpack roots in the devtools
 	 */
