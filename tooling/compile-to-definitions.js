@@ -65,8 +65,8 @@ const makeDefinitionsForSchema = absSchemaPath => {
 							"/"
 						)}.d.ts need to be updated`
 					);
+					process.exitCode = 1;
 				}
-				process.exitCode = 1;
 			}
 		},
 		err => {

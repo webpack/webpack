@@ -124,8 +124,8 @@ const formatSchema = schemaPath => {
 				console.error(
 					`schemas/${basename.replace(/\\/g, "/")} need to be updated`
 				);
+				process.exitCode = 1;
 			}
-			process.exitCode = 1;
 		}
 	});
 };
