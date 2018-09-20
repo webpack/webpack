@@ -37,7 +37,9 @@ const PROPERTIES = [
 	"$ref",
 	"definitions",
 
+	"$id",
 	"id",
+	"title",
 	"description",
 	"type",
 

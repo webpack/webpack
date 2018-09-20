@@ -32,7 +32,8 @@ describe("Schemas", () => {
 				const allowedProperties = [
 					"definitions",
 					"$ref",
-					"id",
+					"$id",
+					"title",
 					"items",
 					"properties",
 					"additionalProperties",
