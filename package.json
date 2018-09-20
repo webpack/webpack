@@ -28,7 +28,7 @@
     "tapable": "^1.1.0",
     "uglifyjs-webpack-plugin": "^1.2.4",
     "watchpack": "^1.5.0",
-    "webpack-sources": "^1.2.0"
+    "webpack-sources": "^1.3.0"
   },
   "devDependencies": {
     "@types/node": "^9.6.4",
