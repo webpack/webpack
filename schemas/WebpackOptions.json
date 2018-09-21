@@ -1880,10 +1880,6 @@
       "description": "Options affecting the output of the compilation. `output` options tell webpack how to write the compiled files to disk.",
       "anyOf": [
         {
-          "type": "string",
-          "absolutePath": true
-        },
-        {
           "$ref": "#/definitions/OutputOptions"
         }
       ]
