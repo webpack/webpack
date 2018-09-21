@@ -3,7 +3,8 @@
     "rule": {
       "oneOf": [
         {
-          "instanceof": "RegExp"
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
         },
         {
           "type": "string",

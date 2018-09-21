@@ -122,7 +122,8 @@
         },
         {
           "description": "Every matched dependency becomes external.",
-          "instanceof": "RegExp"
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
         }
       ]
     },
@@ -157,7 +158,8 @@
     "FilterItemTypes": {
       "anyOf": [
         {
-          "instanceof": "RegExp"
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
         },
         {
           "type": "string"
@@ -238,7 +240,8 @@
               "type": "boolean"
             },
             {
-              "instanceof": "RegExp"
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
             }
           ]
         },
@@ -253,12 +256,14 @@
               "type": "array",
               "items": {
                 "description": "A regular expression, when matched the module is not parsed",
-                "instanceof": "RegExp"
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
               },
               "minItems": 1
             },
             {
-              "instanceof": "RegExp"
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
             },
             {
               "instanceof": "Function",
@@ -310,7 +315,8 @@
               "type": "boolean"
             },
             {
-              "instanceof": "RegExp"
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
             }
           ]
         },
@@ -340,7 +346,8 @@
         },
         "wrappedContextRegExp": {
           "description": "Set the inner regular expression for partial dynamic dependencies",
-          "instanceof": "RegExp"
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
         }
       }
     },
@@ -554,7 +561,8 @@
                 "type": "string"
               },
               {
-                "instanceof": "RegExp"
+                "instanceof": "RegExp",
+                "tsType": "RegExp"
               },
               {
                 "type": "object",
@@ -642,13 +650,15 @@
                     "description": "Assign modules to a cache group by module name",
                     "oneOf": [
                       {
-                        "instanceof": "Function"
+                        "instanceof": "Function",
+                        "tsType": "Function"
                       },
                       {
                         "type": "string"
                       },
                       {
-                        "instanceof": "RegExp"
+                        "instanceof": "RegExp",
+                        "tsType": "RegExp"
                       }
                     ]
                   },
@@ -663,7 +673,8 @@
                         "type": "string"
                       },
                       {
-                        "instanceof": "RegExp"
+                        "instanceof": "RegExp",
+                        "tsType": "RegExp"
                       }
                     ]
                   }
@@ -1210,7 +1221,8 @@
     "RuleSetCondition": {
       "anyOf": [
         {
-          "instanceof": "RegExp"
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
         },
         {
           "type": "string",
