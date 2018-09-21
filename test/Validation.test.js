@@ -252,9 +252,13 @@ describe("Validation", () => {
 				}
 			},
 			message: [
-				' - configuration.output.filename: A relative path is expected. However, the provided value "/bar" is an absolute path!',
+				" - configuration.output.filename should be one of these:",
+				"   string | function",
 				"   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
-				"   Please use output.path to specify absolute path and output.filename for the file name."
+				"   Details:",
+				'    * configuration.output.filename: A relative path is expected. However, the provided value "/bar" is an absolute path!',
+				"      Please use output.path to specify absolute path and output.filename for the file name.",
+				"    * configuration.output.filename should be an instance of function"
 			]
 		},
 		{
@@ -365,9 +369,6 @@ describe("Validation", () => {
 				"   object { apply, … } | function",
 				"   -> Plugin of type object or instanceof Function",
 				"   Details:",
-				"    * configuration.plugins[0] misses the property 'apply'.",
-				"      function",
-				"      -> The run point of the plugin, required method.",
 				"    * configuration.plugins[0] misses the property 'apply'.",
 				"      function",
 				"      -> The run point of the plugin, required method.",
