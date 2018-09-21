@@ -1,7 +1,13 @@
 {
+  "title": "HashedModuleIdsPluginOptions",
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "context": {
+      "description": "The context directory for creating names.",
+      "type": "string",
+      "absolutePath": true
+    },
     "hashDigest": {
       "description": "The encoding to use when generating the hash, defaults to 'base64'. All encodings from Node.JS' hash.digest are supported.",
       "enum": ["hex", "latin1", "base64"]

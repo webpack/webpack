@@ -1,6 +1,11 @@
 {
   "definitions": {
-    "rule": {
+    "BannerFunction": {
+      "description": "The banner as function, it will be wrapped in a comment",
+      "instanceof": "Function",
+      "tsType": "(data: { hash: string, chunk: import('../../lib/Chunk'), filename: string, basename: string, query: string}) => string"
+    },
+    "Rule": {
       "oneOf": [
         {
           "instanceof": "RegExp"
@@ -11,7 +16,7 @@
         }
       ]
     },
-    "rules": {
+    "Rules": {
       "oneOf": [
         {
           "type": "array",
@@ -19,19 +24,21 @@
             "description": "A rule condition",
             "anyOf": [
               {
-                "$ref": "#/definitions/rule"
+                "$ref": "#/definitions/Rule"
               }
             ]
           }
         },
         {
-          "$ref": "#/definitions/rule"
+          "$ref": "#/definitions/Rule"
         }
       ]
     }
   },
+  "title": "BannerPluginArgument",
   "oneOf": [
     {
+      "title": "BannerPluginOptions",
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -39,7 +46,7 @@
           "description": "Specifies the banner",
           "anyOf": [
             {
-              "instanceof": "Function"
+              "$ref": "#/definitions/BannerFunction"
             },
             {
               "type": "string"
@@ -54,7 +61,7 @@
           "description": "Exclude all modules matching any of these conditions",
           "anyOf": [
             {
-              "$ref": "#/definitions/rules"
+              "$ref": "#/definitions/Rules"
             }
           ]
         },
@@ -62,7 +69,7 @@
           "description": "Include all modules matching any of these conditions",
           "anyOf": [
             {
-              "$ref": "#/definitions/rules"
+              "$ref": "#/definitions/Rules"
             }
           ]
         },
@@ -74,7 +81,7 @@
           "description": "Include all modules that pass test assertion",
           "anyOf": [
             {
-              "$ref": "#/definitions/rules"
+              "$ref": "#/definitions/Rules"
             }
           ]
         }
@@ -82,8 +89,7 @@
       "required": ["banner"]
     },
     {
-      "description": "The banner as function, it will be wrapped in a comment",
-      "instanceof": "Function"
+      "$ref": "#/definitions/BannerFunction"
     },
     {
       "description": "The banner as string, it will be wrapped in a comment",

@@ -1,4 +1,5 @@
 {
+  "title": "MinChunkSizePluginOptions",
   "type": "object",
   "additionalProperties": false,
   "properties": {

@@ -1,7 +1,8 @@
 {
-  "type": "object",
+  "title": "IgnorePluginOptions",
   "oneOf": [
     {
+      "type": "object",
       "additionalProperties": false,
       "properties": {
         "contextRegExp": {
@@ -15,15 +16,18 @@
       }
     },
     {
+      "type": "object",
       "additionalProperties": false,
       "properties": {
         "checkContext": {
           "description": "A filter function for context",
-          "instanceof": "Function"
+          "instanceof": "Function",
+          "tsType": "((context: string) => boolean)"
         },
         "checkResource": {
           "description": "A filter function for resource",
-          "instanceof": "Function"
+          "instanceof": "Function",
+          "tsType": "((resource: string) => boolean)"
         }
       }
     }

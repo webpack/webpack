@@ -30,6 +30,7 @@
       ]
     }
   },
+  "title": "SourceMapDevToolPluginOptions",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -63,7 +64,8 @@
       "oneOf": [
         {
           "description": "Custom function generating the identifer",
-          "instanceof": "Function"
+          "instanceof": "Function",
+          "tsType": "Function"
         },
         {
           "type": "string",
@@ -145,7 +147,8 @@
       "oneOf": [
         {
           "description": "Custom function generating the identifer",
-          "instanceof": "Function"
+          "instanceof": "Function",
+          "tsType": "Function"
         },
         {
           "type": "string",
