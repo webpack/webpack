@@ -1,11 +1,12 @@
 {
+  "title": "HashedModuleIdsPluginOptions",
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "hashFunction": {
-      "description": "The hashing algorithm to use, defaults to 'md5'. All functions from Node.JS' crypto.createHash are supported.",
+    "context": {
+      "description": "The context directory for creating names.",
       "type": "string",
-      "minLength": 1
+      "absolutePath": true
     },
     "hashDigest": {
       "description": "The encoding to use when generating the hash, defaults to 'base64'. All encodings from Node.JS' hash.digest are supported.",
@@ -15,6 +16,11 @@
       "description": "The prefix length of the hash digest to use, defaults to 4.",
       "type": "number",
       "minimum": 1
+    },
+    "hashFunction": {
+      "description": "The hashing algorithm to use, defaults to 'md5'. All functions from Node.JS' crypto.createHash are supported.",
+      "type": "string",
+      "minLength": 1
     }
   }
 }
