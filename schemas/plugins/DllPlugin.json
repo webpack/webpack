@@ -1,5 +1,6 @@
 {
   "title": "DllPluginOptions",
+  "type": "object",
   "additionalProperties": false,
   "properties": {
     "context": {
