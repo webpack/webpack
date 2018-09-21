@@ -7,11 +7,13 @@
       "properties": {
         "contextRegExp": {
           "description": "A RegExp to test the context (directory) against",
-          "instanceof": "RegExp"
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
         },
         "resourceRegExp": {
           "description": "A RegExp to test the request against",
-          "instanceof": "RegExp"
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
         }
       }
     },

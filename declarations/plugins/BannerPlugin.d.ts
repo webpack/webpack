@@ -21,11 +21,7 @@ export type BannerFunction = (
 	}
 ) => string;
 export type Rules = Rule[] | Rule;
-export type Rule =
-	| {
-			[k: string]: any;
-	  }
-	| string;
+export type Rule = RegExp | string;
 
 export interface BannerPluginOptions {
 	/**

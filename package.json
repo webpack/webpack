@@ -17,7 +17,7 @@
     "enhanced-resolve": "^4.1.0",
     "eslint-scope": "^4.0.0",
     "json-parse-better-errors": "^1.0.2",
-    "json-schema-to-typescript": "^5.7.0",
+    "json-schema-to-typescript": "^6.0.1",
     "loader-runner": "^2.3.0",
     "loader-utils": "^1.1.0",
     "memory-fs": "~0.4.1",

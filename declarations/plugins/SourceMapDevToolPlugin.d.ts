@@ -13,11 +13,7 @@ export type Rules = Rule[] | Rule;
  * This interface was referenced by `SourceMapDevToolPluginOptions`'s JSON-Schema
  * via the `definition` "rule".
  */
-export type Rule =
-	| {
-			[k: string]: any;
-	  }
-	| string;
+export type Rule = RegExp | string;
 
 export interface SourceMapDevToolPluginOptions {
 	/**

@@ -9,15 +9,11 @@ export type IgnorePluginOptions =
 			/**
 			 * A RegExp to test the context (directory) against
 			 */
-			contextRegExp?: {
-				[k: string]: any;
-			};
+			contextRegExp?: RegExp;
 			/**
 			 * A RegExp to test the request against
 			 */
-			resourceRegExp?: {
-				[k: string]: any;
-			};
+			resourceRegExp?: RegExp;
 	  }
 	| {
 			/**

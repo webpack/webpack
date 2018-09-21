@@ -76,7 +76,7 @@ describe("Schemas", () => {
 						}
 					});
 
-					if (Object.keys(item).indexOf("$ref") >= 0) {
+					if ("$ref" in item) {
 						it("should not have other properties next to $ref", () => {
 							const otherProperties = Object.keys(item).filter(
 								p => p !== "$ref"
@@ -87,6 +87,14 @@ describe("Schemas", () => {
 										", "
 									)})`
 								);
+							}
+						});
+					}
+
+					if ("instanceof" in item) {
+						it("should have tsType specified when using instanceof", () => {
+							if (!("tsType" in item)) {
+								throw new Error("When using instanceof, tsType is required");
 							}
 						});
 					}

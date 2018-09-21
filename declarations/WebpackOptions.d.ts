@@ -67,9 +67,7 @@ export type ExternalItem =
 				| ArrayOfStringValues
 				| boolean;
 	  }
-	| {
-			[k: string]: any;
-	  };
+	| RegExp;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "ArrayOfStringValues".
@@ -87,11 +85,10 @@ export type RuleSetConditionOrConditions = RuleSetCondition | RuleSetConditions;
  * via the `definition` "RuleSetCondition".
  */
 export type RuleSetCondition =
-	| {
-			[k: string]: any;
-	  }
+	| RegExp
 	| string
 	| Function
+	| RuleSetConditions
 	| {
 			/**
 			 * Logical AND
@@ -195,12 +192,7 @@ export type FilterTypes = FilterItemTypes | FilterItemTypes[];
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "FilterItemTypes".
  */
-export type FilterItemTypes =
-	| {
-			[k: string]: any;
-	  }
-	| string
-	| Function;
+export type FilterItemTypes = RegExp | string | Function;
 
 export interface WebpackOptions {
 	/**
@@ -399,11 +391,7 @@ export interface ModuleOptions {
 	/**
 	 * Sets the default regular expression for full dynamic dependencies
 	 */
-	exprContextRegExp?:
-		| boolean
-		| {
-				[k: string]: any;
-		  };
+	exprContextRegExp?: boolean | RegExp;
 	/**
 	 * Set the default request for full dynamic dependencies
 	 */
@@ -411,16 +399,7 @@ export interface ModuleOptions {
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
-	noParse?:
-		| {
-				[k: string]: any;
-		  }[]
-		| {
-				[k: string]: any;
-		  }
-		| Function
-		| string[]
-		| string;
+	noParse?: RegExp[] | RegExp | Function | string[] | string;
 	/**
 	 * An array of rules applied for modules.
 	 */
@@ -444,11 +423,7 @@ export interface ModuleOptions {
 	/**
 	 * Sets the regular expression when using the require function in a not statically analyse-able way
 	 */
-	unknownContextRegExp?:
-		| boolean
-		| {
-				[k: string]: any;
-		  };
+	unknownContextRegExp?: boolean | RegExp;
 	/**
 	 * Sets the request when using the require function in a not statically analyse-able way
 	 */
@@ -468,9 +443,7 @@ export interface ModuleOptions {
 	/**
 	 * Set the inner regular expression for partial dynamic dependencies
 	 */
-	wrappedContextRegExp?: {
-		[k: string]: any;
-	};
+	wrappedContextRegExp?: RegExp;
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
@@ -856,9 +829,7 @@ export interface OptimizationSplitChunksOptions {
 			| false
 			| Function
 			| string
-			| {
-					[k: string]: any;
-			  }
+			| RegExp
 			| {
 					/**
 					 * Sets the name delimiter for created chunks
@@ -915,12 +886,7 @@ export interface OptimizationSplitChunksOptions {
 					/**
 					 * Assign modules to a cache group
 					 */
-					test?:
-						| Function
-						| string
-						| {
-								[k: string]: any;
-						  };
+					test?: Function | string | RegExp;
 			  };
 	};
 	/**
