@@ -286,7 +286,7 @@
         },
         "rules": {
           "description": "An array of rules applied for modules.",
-          "allOf": [
+          "anyOf": [
             {
               "$ref": "#/definitions/RuleSetRules"
             }
@@ -858,14 +858,14 @@
           "description": "Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
           "anyOf": [
             {
-              "type": "string"
+              "type": "string",
+              "absolutePath": false
             },
             {
               "instanceof": "Function",
               "tsType": "Function"
             }
-          ],
-          "absolutePath": false
+          ]
         },
         "globalObject": {
           "description": "An expression which is used to address the global object/scope in runtime code",
@@ -903,14 +903,14 @@
           "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
           "anyOf": [
             {
-              "type": "string"
+              "type": "string",
+              "absolutePath": false
             },
             {
               "instanceof": "Function",
               "tsType": "Function"
             }
-          ],
-          "absolutePath": false
+          ]
         },
         "hotUpdateFunction": {
           "description": "The JSONP function used by webpack for async loading of hot update chunks.",
@@ -920,14 +920,14 @@
           "description": "The filename of the Hot Update Main File. It is inside the `output.path` directory.",
           "anyOf": [
             {
-              "type": "string"
+              "type": "string",
+              "absolutePath": false
             },
             {
               "instanceof": "Function",
               "tsType": "Function"
             }
-          ],
-          "absolutePath": false
+          ]
         },
         "jsonpFunction": {
           "description": "The JSONP function used by webpack for async loading of chunks.",
@@ -1222,7 +1222,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((value: string) => boolean)"
         },
         {
           "$ref": "#/definitions/RuleSetConditions"
@@ -1283,6 +1283,79 @@
         }
       ]
     },
+    "RuleSetConditionAbsolute": {
+      "anyOf": [
+        {
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
+        },
+        {
+          "type": "string",
+          "absolutePath": true
+        },
+        {
+          "instanceof": "Function",
+          "tsType": "((value: string) => boolean)"
+        },
+        {
+          "$ref": "#/definitions/RuleSetConditionsAbsolute"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "and": {
+              "description": "Logical AND",
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/RuleSetConditionsAbsolute"
+                }
+              ]
+            },
+            "exclude": {
+              "description": "Exclude all modules matching any of these conditions",
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
+                }
+              ]
+            },
+            "include": {
+              "description": "Exclude all modules matching not any of these conditions",
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
+                }
+              ]
+            },
+            "not": {
+              "description": "Logical NOT",
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/RuleSetConditionsAbsolute"
+                }
+              ]
+            },
+            "or": {
+              "description": "Logical OR",
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/RuleSetConditionsAbsolute"
+                }
+              ]
+            },
+            "test": {
+              "description": "Exclude all modules matching any of these conditions",
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
     "RuleSetConditionOrConditions": {
       "description": "One or multiple rule conditions",
       "anyOf": [
@@ -1291,6 +1364,17 @@
         },
         {
           "$ref": "#/definitions/RuleSetConditions"
+        }
+      ]
+    },
+    "RuleSetConditionOrConditionsAbsolute": {
+      "description": "One or multiple rule conditions",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/RuleSetConditionAbsolute"
+        },
+        {
+          "$ref": "#/definitions/RuleSetConditionsAbsolute"
         }
       ]
     },
@@ -1305,6 +1389,18 @@
         ]
       },
       "tsType": "RuleSetConditionsRecursive"
+    },
+    "RuleSetConditionsAbsolute": {
+      "type": "array",
+      "items": {
+        "description": "A rule condition",
+        "anyOf": [
+          {
+            "$ref": "#/definitions/RuleSetConditionAbsolute"
+          }
+        ]
+      },
+      "tsType": "RuleSetConditionsAbsoluteRecursive"
     },
     "RuleSetLoader": {
       "type": "string",
@@ -1338,34 +1434,25 @@
         },
         "exclude": {
           "description": "Shortcut for resource.exclude",
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/RuleSetConditionOrConditions"
-            },
-            {
-              "absolutePath": true
+              "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
           ]
         },
         "include": {
           "description": "Shortcut for resource.include",
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/RuleSetConditionOrConditions"
-            },
-            {
-              "absolutePath": true
+              "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
           ]
         },
         "issuer": {
           "description": "Match the issuer of the module (The module pointing to this module)",
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/RuleSetConditionOrConditions"
-            },
-            {
-              "absolutePath": true
+              "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
           ]
         },
@@ -1428,12 +1515,9 @@
         },
         "resource": {
           "description": "Match the resource path of the module",
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/RuleSetConditionOrConditions"
-            },
-            {
-              "absolutePath": true
+              "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
           ]
         },
@@ -1459,12 +1543,9 @@
         },
         "test": {
           "description": "Shortcut for resource.test",
-          "allOf": [
+          "anyOf": [
             {
-              "$ref": "#/definitions/RuleSetConditionOrConditions"
-            },
-            {
-              "absolutePath": true
+              "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
           ]
         },
@@ -1796,15 +1877,6 @@
     },
     "WebpackPluginFunction": {
       "description": "Function acting as plugin",
-      "additionalProperties": true,
-      "properties": {
-        "apply": {
-          "description": "The run point of the plugin, required method.",
-          "instanceof": "Function",
-          "tsType": "Function"
-        }
-      },
-      "required": ["apply"],
       "instanceof": "Function",
       "tsType": "(compiler: import('../lib/Compiler')) => void"
     },

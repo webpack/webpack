@@ -87,7 +87,7 @@ export type RuleSetConditionOrConditions = RuleSetCondition | RuleSetConditions;
 export type RuleSetCondition =
 	| RegExp
 	| string
-	| Function
+	| ((value: string) => boolean)
 	| RuleSetConditions
 	| {
 			/**
@@ -120,6 +120,55 @@ export type RuleSetCondition =
  * via the `definition` "RuleSetConditions".
  */
 export type RuleSetConditions = RuleSetConditionsRecursive;
+/**
+ * One or multiple rule conditions
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "RuleSetConditionOrConditionsAbsolute".
+ */
+export type RuleSetConditionOrConditionsAbsolute =
+	| RuleSetConditionAbsolute
+	| RuleSetConditionsAbsolute;
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "RuleSetConditionAbsolute".
+ */
+export type RuleSetConditionAbsolute =
+	| RegExp
+	| string
+	| ((value: string) => boolean)
+	| RuleSetConditionsAbsolute
+	| {
+			/**
+			 * Logical AND
+			 */
+			and?: RuleSetConditionsAbsolute;
+			/**
+			 * Exclude all modules matching any of these conditions
+			 */
+			exclude?: RuleSetConditionOrConditionsAbsolute;
+			/**
+			 * Exclude all modules matching not any of these conditions
+			 */
+			include?: RuleSetConditionOrConditionsAbsolute;
+			/**
+			 * Logical NOT
+			 */
+			not?: RuleSetConditionsAbsolute;
+			/**
+			 * Logical OR
+			 */
+			or?: RuleSetConditionsAbsolute;
+			/**
+			 * Exclude all modules matching any of these conditions
+			 */
+			test?: RuleSetConditionOrConditionsAbsolute;
+	  };
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "RuleSetConditionsAbsolute".
+ */
+export type RuleSetConditionsAbsolute = RuleSetConditionsAbsoluteRecursive;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "RuleSetLoader".
@@ -461,21 +510,15 @@ export interface RuleSetRule {
 	/**
 	 * Shortcut for resource.exclude
 	 */
-	exclude?: RuleSetConditionOrConditions & {
-		[k: string]: any;
-	};
+	exclude?: RuleSetConditionOrConditionsAbsolute;
 	/**
 	 * Shortcut for resource.include
 	 */
-	include?: RuleSetConditionOrConditions & {
-		[k: string]: any;
-	};
+	include?: RuleSetConditionOrConditionsAbsolute;
 	/**
 	 * Match the issuer of the module (The module pointing to this module)
 	 */
-	issuer?: RuleSetConditionOrConditions & {
-		[k: string]: any;
-	};
+	issuer?: RuleSetConditionOrConditionsAbsolute;
 	/**
 	 * Shortcut for use.loader
 	 */
@@ -509,9 +552,7 @@ export interface RuleSetRule {
 	/**
 	 * Match the resource path of the module
 	 */
-	resource?: RuleSetConditionOrConditions & {
-		[k: string]: any;
-	};
+	resource?: RuleSetConditionOrConditionsAbsolute;
 	/**
 	 * Match the resource query of the module
 	 */
@@ -527,9 +568,7 @@ export interface RuleSetRule {
 	/**
 	 * Shortcut for resource.test
 	 */
-	test?: RuleSetConditionOrConditions & {
-		[k: string]: any;
-	};
+	test?: RuleSetConditionOrConditionsAbsolute;
 	/**
 	 * Module type to use for the module
 	 */

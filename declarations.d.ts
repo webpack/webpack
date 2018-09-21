@@ -224,6 +224,10 @@ declare module "@webassemblyjs/ast" {
 // It's referenced from "ruleSet-conditions" in schemas/WebpackOptions.json
 interface RuleSetConditionsRecursive
 	extends Array<import("./declarations/WebpackOptions").RuleSetCondition> {}
+interface RuleSetConditionsAbsoluteRecursive
+	extends Array<
+			import("./declarations/WebpackOptions").RuleSetConditionAbsolute
+		> {}
 
 /**
  * Global variable declarations
