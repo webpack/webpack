@@ -13,21 +13,8 @@ cache:
   - "..\\.yarn-cache"
   - ".jest-cache"
 
-# what combinations to test
-environment:
-  matrix:
-    - nodejs_version: 10
-      job_part: unit
-      jest: --maxWorkers=2 --cacheDirectory .jest-cache
-    - nodejs_version: 10
-      job_part: integration
-      jest: --maxWorkers=2 --cacheDirectory .jest-cache
-    - nodejs_version: 6
-      job_part: integration
-      jest: --maxWorkers=2 --cacheDirectory .jest-cache
-
 install:
-  - ps: Install-Product node $env:nodejs_version x64
+  - ps: Install-Product node 10 x64
   - yarn --frozen-lockfile --preferred-cache-folder ..\\.yarn-cache
   - yarn link --frozen-lockfile --preferred-cache-folder ..\\.yarn-cache || yarn link --frozen-lockfile --preferred-cache-folder ..\\.yarn-cache
   - yarn link webpack --frozen-lockfile --preferred-cache-folder ..\\.yarn-cache
@@ -40,8 +27,8 @@ matrix:
 test_script:
   - node --version
   - yarn --version
-  - cmd: set JEST=%jest%
-  - cmd: yarn appveyor:%job_part%
+  - cmd: set JEST=--maxWorkers=2 --cacheDirectory .jest-cache
+  - cmd: yarn appveyor:integration
   - cmd: yarn istanbul report --report lcovonly
   - cmd: yarn unlink webpack
   - cmd: yarn global add codecov && codecov -F %job_part% --disable=gcov
