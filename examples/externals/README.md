@@ -101,17 +101,32 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -183,13 +198,13 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
+Version: webpack 4.20.1
     Asset      Size  Chunks             Chunk Names
-output.js  4.17 KiB       0  [emitted]  main
+output.js  5.13 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 197 bytes [entry] [rendered]
+chunk    {0} output.js (main) 194 bytes [entry] [rendered]
     > .\example.js main
- [0] ./example.js 113 bytes {0} [built]
+ [0] ./example.js 110 bytes {0} [built]
      single entry .\example.js  main
  [1] external "add" 42 bytes {0} [built]
      cjs require add [0] ./example.js 1:10-24
@@ -201,16 +216,16 @@ chunk    {0} output.js (main) 197 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
-    Asset      Size  Chunks             Chunk Names
-output.js  1.02 KiB       0  [emitted]  main
+Version: webpack 4.20.1
+    Asset     Size  Chunks             Chunk Names
+output.js  1.4 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 197 bytes [entry] [rendered]
+chunk    {0} output.js (main) 194 bytes [entry] [rendered]
     > .\example.js main
- [0] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
-     cjs require subtract [2] ./example.js 2:15-34
- [1] external "add" 42 bytes {0} [built]
-     cjs require add [2] ./example.js 1:10-24
- [2] ./example.js 113 bytes {0} [built]
+ [0] ./example.js 110 bytes {0} [built]
      single entry .\example.js  main
+ [1] external "add" 42 bytes {0} [built]
+     cjs require add [0] ./example.js 1:10-24
+ [2] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {0} [built]
+     cjs require subtract [0] ./example.js 2:15-34
 ```

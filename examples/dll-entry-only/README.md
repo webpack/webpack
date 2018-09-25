@@ -64,7 +64,7 @@ module.exports = {
 # dist/dll.js
 
 ``` javascript
-var dll_3392692e94d8b928900f =
+var dll_3eea518f6d09aac41ec7 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -107,17 +107,32 @@ var dll_3392692e94d8b928900f =
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -195,9 +210,9 @@ var a = "a";
 var cjs = __webpack_require__(1);
 
 // CONCATENATED MODULE: ./example.js
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "a", function() { return a; });
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "b", function() { return b; });
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "c", function() { return cjs["c"]; });
+/* concated harmony reexport a */__webpack_require__.d(__webpack_exports__, "a", function() { return a; });
+/* concated harmony reexport b */__webpack_require__.d(__webpack_exports__, "b", function() { return b; });
+/* concated harmony reexport c */__webpack_require__.d(__webpack_exports__, "c", function() { return cjs["c"]; });
 
 
 
@@ -209,7 +224,7 @@ var cjs = __webpack_require__(1);
 # dist/dll-manifest.json
 
 ``` javascript
-{"name":"dll_3392692e94d8b928900f","content":{"./example.js":{"id":2,"buildMeta":{"exportsType":"namespace","providedExports":["a","b","c"]}}}}
+{"name":"dll_3eea518f6d09aac41ec7","content":{"./example.js":{"id":2,"buildMeta":{"exportsType":"namespace","providedExports":["a","b","c"]}}}}
 ```
 
 # Info
@@ -218,9 +233,9 @@ var cjs = __webpack_require__(1);
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.3
+Version: webpack 4.20.1
  Asset      Size  Chunks             Chunk Names
-dll.js  4.01 KiB       0  [emitted]  dll
+dll.js  4.98 KiB       0  [emitted]  dll
 Entrypoint dll = dll.js
 chunk    {0} dll.js (dll) 216 bytes [entry] [rendered]
     > dll
@@ -231,10 +246,10 @@ chunk    {0} dll.js (dll) 216 bytes [entry] [rendered]
      harmony export imported specifier ./cjs [2] ./example.js + 2 modules 2:0-26
  [2] ./example.js + 2 modules 162 bytes {0} [built]
      [exports: a, b, c]
-     single entry ./example [0] dll dll dll:0
+     single entry ./example [0] dll dll dll[0]
      | ./example.js 55 bytes [built]
      |     [exports: a, b, c]
-     |     single entry ./example [0] dll dll dll:0
+     |     single entry ./example [0] dll dll dll[0]
      | ./a.js 53 bytes [built]
      |     [exports: a, b]
      |     harmony side effect evaluation ./a  ./example.js 1:0-27
@@ -250,22 +265,24 @@ chunk    {0} dll.js (dll) 216 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.3
- Asset       Size  Chunks             Chunk Names
-dll.js  791 bytes       0  [emitted]  dll
+Version: webpack 4.20.1
+ Asset      Size  Chunks             Chunk Names
+dll.js  1.15 KiB       0  [emitted]  dll
 Entrypoint dll = dll.js
 chunk    {0} dll.js (dll) 216 bytes [entry] [rendered]
     > dll
  [0] ./cjs.js 42 bytes {0} [built]
      [only some exports used: c]
-     harmony side effect evaluation ./cjs [1] ./example.js + 2 modules 2:0-26
-     harmony export imported specifier ./cjs [1] ./example.js + 2 modules 2:0-26
- [1] ./example.js + 2 modules 162 bytes {0} [built]
+     harmony side effect evaluation ./cjs [2] ./example.js + 2 modules 2:0-26
+     harmony export imported specifier ./cjs [2] ./example.js + 2 modules 2:0-26
+ [1] dll dll 12 bytes {0} [built]
+     dll entry 
+ [2] ./example.js + 2 modules 162 bytes {0} [built]
      [exports: a, b, c]
-     single entry ./example [2] dll dll dll:0
+     single entry ./example [1] dll dll dll[0]
      | ./example.js 55 bytes [built]
      |     [exports: a, b, c]
-     |     single entry ./example [2] dll dll dll:0
+     |     single entry ./example [1] dll dll dll[0]
      | ./a.js 53 bytes [built]
      |     [exports: a, b]
      |     [all exports used]
@@ -277,6 +294,4 @@ chunk    {0} dll.js (dll) 216 bytes [entry] [rendered]
      |     [all exports used]
      |     harmony side effect evaluation ./b  ./a.js 3:0-20
      |     harmony export imported specifier ./b  ./a.js 3:0-20
- [2] dll dll 12 bytes {0} [built]
-     dll entry 
 ```
