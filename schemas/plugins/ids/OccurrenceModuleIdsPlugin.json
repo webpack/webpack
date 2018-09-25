@@ -1,5 +1,5 @@
 {
-  "title": "OccurrenceOrderModuleIdsPluginOptions",
+  "title": "OccurrenceModuleIdsPluginOptions",
   "type": "object",
   "additionalProperties": false,
   "properties": {

@@ -1,5 +1,5 @@
 {
-  "title": "OccurrenceOrderChunkIdsPluginOptions",
+  "title": "OccurrenceChunkIdsPluginOptions",
   "type": "object",
   "additionalProperties": false,
   "properties": {

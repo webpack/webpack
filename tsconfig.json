@@ -12,5 +12,11 @@
     "types": ["node"],
     "esModuleInterop": true
   },
-  "include": ["declarations.d.ts", "bin/*.js", "lib/**/*.js", "tooling/**/*.js"]
+  "include": [
+    "declarations.d.ts",
+    "declarations/*.d.ts",
+    "bin/*.js",
+    "lib/**/*.js",
+    "tooling/**/*.js"
+  ]
 }
