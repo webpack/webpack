@@ -74,17 +74,32 @@ module.exports = function(content) {
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -263,19 +278,22 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
-    Asset     Size  Chunks             Chunk Names
-output.js  6.2 KiB       0  [emitted]  main
+Version: webpack 5.0.0-next
+    Asset      Size  Chunks             Chunk Names
+output.js  7.16 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 2.65 KiB [entry] [rendered]
     > .\example.js main
  [0] ./example.js 210 bytes {0} [built]
-     single entry .\example.js  main
+     [used exports unknown]
+     entry .\example.js  main
  [1] ./loader.js!./file.js 41 bytes {0} [built]
+     [used exports unknown]
      cjs require ./loader!./file [0] ./example.js 2:12-38
  [2] (webpack)/node_modules/css-loader!./test.css 205 bytes {0} [built]
-     cjs require !css-loader!./test.css [0] ./example.js 6:12-45
+     [used exports unknown]
      cjs require ./test.css [0] ./example.js 5:12-33
+     cjs require !css-loader!./test.css [0] ./example.js 6:12-45
      + 1 hidden module
 ```
 
@@ -283,18 +301,18 @@ chunk    {0} output.js (main) 2.65 KiB [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
+Version: webpack 5.0.0-next
     Asset      Size  Chunks             Chunk Names
-output.js  1.51 KiB       0  [emitted]  main
+output.js  1.89 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 2.65 KiB [entry] [rendered]
     > .\example.js main
  [0] (webpack)/node_modules/css-loader!./test.css 205 bytes {0} [built]
-     cjs require !css-loader!./test.css [3] ./example.js 6:12-45
-     cjs require ./test.css [3] ./example.js 5:12-33
+     cjs require ./test.css [1] ./example.js 5:12-33
+     cjs require !css-loader!./test.css [1] ./example.js 6:12-45
+ [1] ./example.js 210 bytes {0} [built]
+     entry .\example.js  main
  [2] ./loader.js!./file.js 41 bytes {0} [built]
-     cjs require ./loader!./file [3] ./example.js 2:12-38
- [3] ./example.js 210 bytes {0} [built]
-     single entry .\example.js  main
+     cjs require ./loader!./file [1] ./example.js 2:12-38
      + 1 hidden module
 ```

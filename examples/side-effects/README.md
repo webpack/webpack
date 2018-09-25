@@ -95,17 +95,32 @@ export { c } from "./c";
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -166,15 +181,12 @@ console.log(
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */ 2);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _a__WEBPACK_IMPORTED_MODULE_0__["a"]; });
-
-/* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */ 3);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _b__WEBPACK_IMPORTED_MODULE_1__["b"]; });
-
-/* harmony import */ var _c__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./c */ 4);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "c", function() { return _c__WEBPACK_IMPORTED_MODULE_2__["c"]; });
-
+/* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */ 2);
+/* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */ 3);
+/* harmony import */ var _c__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./c */ 4);
 
 
 
@@ -232,15 +244,12 @@ const c = "c";
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */ 6);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _a__WEBPACK_IMPORTED_MODULE_0__["a"]; });
-
-/* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */ 7);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _b__WEBPACK_IMPORTED_MODULE_1__["b"]; });
-
-/* harmony import */ var _c__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./c */ 8);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "c", function() { return _c__WEBPACK_IMPORTED_MODULE_2__["c"]; });
-
+/* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */ 6);
+/* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */ 7);
+/* harmony import */ var _c__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./c */ 8);
 
 
 
@@ -298,15 +307,16 @@ const c = "c";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
+Version: webpack 5.0.0-next
     Asset      Size  Chunks             Chunk Names
-output.js  7.89 KiB       0  [emitted]  main
+output.js  8.86 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 422 bytes [entry] [rendered]
+chunk    {0} output.js (main) 443 bytes [entry] [rendered]
     > .\example.js main
- [0] ./example.js 140 bytes {0} [built]
+ [0] ./example.js 149 bytes {0} [built]
      [no exports]
-     single entry .\example.js  main
+     [used exports unknown]
+     entry .\example.js  main
      + 8 hidden modules
 ```
 
@@ -314,17 +324,20 @@ chunk    {0} output.js (main) 422 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
+Version: webpack 5.0.0-next
     Asset       Size  Chunks             Chunk Names
-output.js  600 bytes       0  [emitted]  main
+output.js  985 bytes       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 325 bytes [entry] [rendered]
+chunk    {0} output.js (main) 342 bytes [entry] [rendered]
     > .\example.js main
- [0] ./example.js + 6 modules 325 bytes {0} [built]
+ [0] ./example.js + 6 modules 342 bytes {0} [built]
      [no exports]
-     single entry .\example.js  main
-     | ./example.js 140 bytes [built]
+     harmony side effect evaluation ./a  ./node_modules/big-module-with-flag/index.js 1:0-24
+     harmony export imported specifier ./a  ./node_modules/big-module-with-flag/index.js 1:0-24
+     harmony side effect evaluation ./b  ./node_modules/big-module-with-flag/index.js 2:0-24
+     harmony export imported specifier ./b  ./node_modules/big-module-with-flag/index.js 2:0-24
+     entry .\example.js  main
+     | ./example.js 149 bytes [built]
      |     [no exports]
-     |     single entry .\example.js  main
      |     + 6 hidden modules
 ```

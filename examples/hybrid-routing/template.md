@@ -32,10 +32,10 @@
 {{pageA.html}}
 ```
 
-# dist/pageA~pageB.chunk.js
+# dist/pageA~pageB.bundle.js
 
 ``` javascript
-{{dist/pageA~pageB.chunk.js}}
+{{dist/pageA~pageB.bundle.js}}
 ```
 
 # dist/pageA.bundle.js

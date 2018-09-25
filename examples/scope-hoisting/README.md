@@ -125,6 +125,7 @@ module.exports = {
 /******/ 		var chunkIds = data[0];
 /******/ 		var moreModules = data[1];
 /******/
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
@@ -141,6 +142,7 @@ module.exports = {
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
 /******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
 /******/ 		}
@@ -155,7 +157,7 @@ module.exports = {
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		1: 0
+/******/ 		0: 0
 /******/ 	};
 /******/
 /******/
@@ -213,19 +215,16 @@ module.exports = {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/ 				var onScriptComplete;
 /******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120;
-/******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
-/******/ 				var timeout = setTimeout(function(){
-/******/ 					onScriptComplete({ type: 'timeout', target: script });
-/******/ 				}, 120000);
-/******/ 				script.onerror = script.onload = onScriptComplete;
-/******/ 				function onScriptComplete(event) {
+/******/
+/******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
 /******/ 					clearTimeout(timeout);
@@ -242,6 +241,10 @@ module.exports = {
 /******/ 						installedChunks[chunkId] = undefined;
 /******/ 					}
 /******/ 				};
+/******/ 				var timeout = setTimeout(function(){
+/******/ 					onScriptComplete({ type: 'timeout', target: script });
+/******/ 				}, 120000);
+/******/ 				script.onerror = script.onload = onScriptComplete;
 /******/ 				head.appendChild(script);
 /******/ 			}
 /******/ 		}
@@ -257,17 +260,32 @@ module.exports = {
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -297,7 +315,7 @@ module.exports = {
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
@@ -307,42 +325,19 @@ module.exports = {
 ``` javascript
 /******/ ([
 /* 0 */
-/*!********************************************!*\
-  !*** ./node_modules/shared.js + 1 modules ***!
-  \********************************************/
-/*! exports provided: x, y */
-/*! exports used: x, y */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-
-// CONCATENATED MODULE: ./node_modules/shared2.js
-// shared2 module
-var y = "y";
-
-// CONCATENATED MODULE: ./node_modules/shared.js
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return x; });
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "b", function() { return y; });
-// shared module
-var x = "x";
-
-
-
-/***/ }),
-/* 1 */
 /*!********************************!*\
   !*** ./example.js + 2 modules ***!
   \********************************/
 /*! no exports provided */
 /*! all exports used */
-/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js because of ./node_modules/c.js */
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js (<- Module is referenced from different chunks by these modules: ./lazy.js + 2 modules) */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./node_modules/shared.js + 1 modules
-var shared = __webpack_require__(0);
+var shared = __webpack_require__(1);
 
 // CONCATENATED MODULE: ./node_modules/a.js
 // module a
@@ -359,55 +354,65 @@ function b_a() {
 
 
 
-__webpack_require__.e(/*! import() */ 0).then(__webpack_require__.bind(null, /*! ./lazy */ 3)).then(function(lazy) {
+__webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*! ./lazy */ 2)).then(function(lazy) {
 	console.log(a, b_a(), shared["a" /* x */], shared["b" /* y */], lazy.c, lazy.d.a, lazy.x, lazy.y);
 });
+
+
+/***/ }),
+/* 1 */
+/*!********************************************!*\
+  !*** ./node_modules/shared.js + 1 modules ***!
+  \********************************************/
+/*! exports provided: x, y */
+/*! exports used: x, y */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+
+// CONCATENATED MODULE: ./node_modules/shared2.js
+// shared2 module
+var y = "y";
+
+// CONCATENATED MODULE: ./node_modules/shared.js
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return x; });
+/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "b", function() { return y; });
+// shared module
+var x = "x";
+
 
 
 /***/ })
 /******/ ]);
 ```
 
-# dist/0.output.js
+# dist/1.output.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */,
 /* 1 */,
 /* 2 */
-/*!*****************************!*\
-  !*** ./node_modules/cjs.js ***!
-  \*****************************/
-/*! no static exports found */
-/*! exports used: c */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports) {
-
-// module cjs (commonjs)
-exports.c = "e";
-
-
-/***/ }),
-/* 3 */
 /*!*****************************!*\
   !*** ./lazy.js + 2 modules ***!
   \*****************************/
 /*! exports provided: d, c, x, y */
 /*! all exports used */
 /*! ModuleConcatenation bailout: Cannot concat with ./node_modules/cjs.js (<- Module is not an ECMAScript module) */
-/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js */
+/*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js (<- Module is referenced from different chunks by these modules: ./lazy.js + 2 modules) */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 var d_namespaceObject = {};
+__webpack_require__.r(d_namespaceObject);
 __webpack_require__.d(d_namespaceObject, "a", function() { return a; });
 
 // EXTERNAL MODULE: ./node_modules/cjs.js
-var cjs = __webpack_require__(2);
+var cjs = __webpack_require__(3);
 
 // EXTERNAL MODULE: ./node_modules/shared.js + 1 modules
-var shared = __webpack_require__(0);
+var shared = __webpack_require__(1);
 
 // CONCATENATED MODULE: ./node_modules/c.js
 // module c
@@ -422,13 +427,27 @@ var c = String.fromCharCode(cjs["c"].charCodeAt(0) - 2);
 var a = "d";
 
 // CONCATENATED MODULE: ./lazy.js
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "c", function() { return c; });
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "x", function() { return shared["a" /* x */]; });
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "y", function() { return shared["b" /* y */]; });
-/* concated harmony reexport */__webpack_require__.d(__webpack_exports__, "d", function() { return d_namespaceObject; });
+/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "c", function() { return c; });
+/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "x", function() { return shared["a" /* x */]; });
+/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "y", function() { return shared["b" /* y */]; });
+/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "d", function() { return d_namespaceObject; });
 
 
 
+
+
+/***/ }),
+/* 3 */
+/*!*****************************!*\
+  !*** ./node_modules/cjs.js ***!
+  \*****************************/
+/*! no static exports found */
+/*! exports used: c */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
+/***/ (function(module, exports) {
+
+// module cjs (commonjs)
+exports.c = "e";
 
 
 /***/ })
@@ -438,7 +457,7 @@ var a = "d";
 Minimized
 
 ``` javascript
-(window.webpackJsonp=window.webpackJsonp||[]).push([[0],[,,function(n,r){r.c="e"},function(n,r,t){"use strict";t.r(r);var c={};t.d(c,"a",function(){return e});var o=t(2),u=t(0),d=String.fromCharCode(o.c.charCodeAt(0)-2),e="d";t.d(r,"c",function(){return d}),t.d(r,"x",function(){return u.a}),t.d(r,"y",function(){return u.b}),t.d(r,"d",function(){return c})}]]);
+(window.webpackJsonp=window.webpackJsonp||[]).push([[1],[,,function(n,r,t){"use strict";t.r(r);var c={};t.r(c),t.d(c,"a",function(){return e});var o=t(3),u=t(0),d=String.fromCharCode(o.c.charCodeAt(0)-2),e="d";t.d(r,"c",function(){return d}),t.d(r,"x",function(){return u.a}),t.d(r,"y",function(){return u.b}),t.d(r,"d",function(){return c})},function(n,r){r.c="e"}]]);
 ```
 
 # Info
@@ -447,76 +466,72 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
+Version: webpack 5.0.0-next
       Asset      Size  Chunks             Chunk Names
-0.output.js  1.87 KiB       0  [emitted]  
-  output.js  8.47 KiB       1  [emitted]  main
+1.output.js     2 KiB       1  [emitted]  
+  output.js  9.54 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 286 bytes <{1}> [rendered]
-    > ./lazy [] 4:0-16
- [3] ./lazy.js + 2 modules 242 bytes {0} [built]
-     [exports: d, c, x, y]
-     import() ./lazy  ./example.js 4:0-16
-     | ./lazy.js 60 bytes [built]
-     |     [exports: d, c, x, y]
-     |     import() ./lazy  ./example.js 4:0-16
-     |     + 2 hidden modules
-     + 1 hidden module
-chunk    {1} output.js (main) 390 bytes >{0}< [entry] [rendered]
+chunk    {0} output.js (main) 390 bytes >{1}< [entry] [rendered]
     > .\example.js main
- [0] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
-     [exports: x, y]
-     [all exports used]
-     harmony side effect evaluation shared [1] ./example.js + 2 modules 3:0-23
-     harmony export imported specifier shared [1] ./example.js + 2 modules 3:0-23
-     harmony side effect evaluation shared [3] ./lazy.js + 2 modules 6:0-30
-     harmony export imported specifier shared [3] ./lazy.js + 2 modules 6:0-30
-     harmony export imported specifier shared [3] ./lazy.js + 2 modules 6:0-30
-     |    2 modules
- [1] ./example.js + 2 modules 285 bytes {1} [built]
+ [0] ./example.js + 2 modules 285 bytes {0} [built]
      [no exports]
-     single entry .\example.js  main
+     entry .\example.js  main
      | ./example.js 167 bytes [built]
      |     [no exports]
-     |     single entry .\example.js  main
      |     + 2 hidden modules
+ [1] ./node_modules/shared.js + 1 modules 105 bytes {0} [built]
+     [exports: x, y]
+     [all exports used]
+     harmony side effect evaluation shared [0] ./example.js + 2 modules 3:0-23
+     harmony export imported specifier shared [0] ./example.js + 2 modules 3:0-23
+     harmony side effect evaluation shared [2] ./lazy.js + 2 modules 6:0-30
+     harmony export imported specifier shared [2] ./lazy.js + 2 modules 6:0-30
+     harmony export imported specifier shared [2] ./lazy.js + 2 modules 6:0-30
+     |    2 modules
+chunk    {1} 1.output.js 286 bytes <{0}> [rendered]
+    > ./lazy [] 4:0-16
+ [2] ./lazy.js + 2 modules 242 bytes {1} [built]
+     [exports: d, c, x, y]
+     import() ./lazy [0] ./example.js + 2 modules 4:0-16
+     | ./lazy.js 60 bytes [built]
+     |     [exports: d, c, x, y]
+     |     + 2 hidden modules
+     + 1 hidden module
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
+Version: webpack 5.0.0-next
       Asset       Size  Chunks             Chunk Names
-0.output.js  362 bytes       0  [emitted]  
-  output.js   1.82 KiB       1  [emitted]  main
+1.output.js  369 bytes       1  [emitted]  
+  output.js    2.2 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 286 bytes <{1}> [rendered]
-    > ./lazy [] 4:0-16
- [3] ./lazy.js + 2 modules 242 bytes {0} [built]
-     [exports: d, c, x, y]
-     import() ./lazy  ./example.js 4:0-16
-     | ./lazy.js 60 bytes [built]
-     |     [exports: d, c, x, y]
-     |     import() ./lazy  ./example.js 4:0-16
-     |     + 2 hidden modules
-     + 1 hidden module
-chunk    {1} output.js (main) 390 bytes >{0}< [entry] [rendered]
+chunk    {0} output.js (main) 390 bytes >{1}< [entry] [rendered]
     > .\example.js main
- [0] ./node_modules/shared.js + 1 modules 105 bytes {1} [built]
+ [0] ./node_modules/shared.js + 1 modules 105 bytes {0} [built]
      [exports: x, y]
      [all exports used]
      harmony side effect evaluation shared [1] ./example.js + 2 modules 3:0-23
      harmony export imported specifier shared [1] ./example.js + 2 modules 3:0-23
-     harmony side effect evaluation shared [3] ./lazy.js + 2 modules 6:0-30
-     harmony export imported specifier shared [3] ./lazy.js + 2 modules 6:0-30
-     harmony export imported specifier shared [3] ./lazy.js + 2 modules 6:0-30
+     harmony side effect evaluation shared [2] ./lazy.js + 2 modules 6:0-30
+     harmony export imported specifier shared [2] ./lazy.js + 2 modules 6:0-30
+     harmony export imported specifier shared [2] ./lazy.js + 2 modules 6:0-30
      |    2 modules
- [1] ./example.js + 2 modules 285 bytes {1} [built]
+ [1] ./example.js + 2 modules 285 bytes {0} [built]
      [no exports]
-     single entry .\example.js  main
+     entry .\example.js  main
      | ./example.js 167 bytes [built]
      |     [no exports]
-     |     single entry .\example.js  main
      |     + 2 hidden modules
+chunk    {1} 1.output.js 286 bytes <{0}> [rendered]
+    > ./lazy [] 4:0-16
+ [2] ./lazy.js + 2 modules 242 bytes {1} [built]
+     [exports: d, c, x, y]
+     import() ./lazy [1] ./example.js + 2 modules 4:0-16
+     | ./lazy.js 60 bytes [built]
+     |     [exports: d, c, x, y]
+     |     + 2 hidden modules
+     + 1 hidden module
 ```
