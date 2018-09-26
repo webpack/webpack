@@ -215,9 +215,14 @@ describe("NormalModule", () => {
 			setDeps(fileDependencies, contextDependencies);
 		});
 		describe("given all timestamps are older than the buildTimestamp", () => {
-			it("returns false", () => {
-				expect(normalModule.needBuild(fileTimestamps, contextTimestamps)).toBe(
-					false
+			it("returns false", done => {
+				normalModule.needBuild(
+					{ fileTimestamps, contextTimestamps },
+					(err, result) => {
+						if (err) return done(err);
+						expect(result).toBe(false);
+						done();
+					}
 				);
 			});
 		});
@@ -225,9 +230,14 @@ describe("NormalModule", () => {
 			beforeEach(() => {
 				fileTimestamps.set(fileA, 3);
 			});
-			it("returns true", () => {
-				expect(normalModule.needBuild(fileTimestamps, contextTimestamps)).toBe(
-					true
+			it("returns true", done => {
+				normalModule.needBuild(
+					{ fileTimestamps, contextTimestamps },
+					(err, result) => {
+						if (err) return done(err);
+						expect(result).toBe(true);
+						done();
+					}
 				);
 			});
 		});
@@ -235,9 +245,14 @@ describe("NormalModule", () => {
 			beforeEach(() => {
 				fileTimestamps = new Map();
 			});
-			it("returns true", () => {
-				expect(normalModule.needBuild(fileTimestamps, contextTimestamps)).toBe(
-					true
+			it("returns true", done => {
+				normalModule.needBuild(
+					{ fileTimestamps, contextTimestamps },
+					(err, result) => {
+						if (err) return done(err);
+						expect(result).toBe(true);
+						done();
+					}
 				);
 			});
 		});
@@ -245,9 +260,14 @@ describe("NormalModule", () => {
 			beforeEach(() => {
 				contextTimestamps.set(fileA, 3);
 			});
-			it("returns true", () => {
-				expect(normalModule.needBuild(fileTimestamps, contextTimestamps)).toBe(
-					true
+			it("returns true", done => {
+				normalModule.needBuild(
+					{ fileTimestamps, contextTimestamps },
+					(err, result) => {
+						if (err) return done(err);
+						expect(result).toBe(true);
+						done();
+					}
 				);
 			});
 		});
@@ -255,9 +275,14 @@ describe("NormalModule", () => {
 			beforeEach(() => {
 				contextTimestamps = new Map();
 			});
-			it("returns true", () => {
-				expect(normalModule.needBuild(fileTimestamps, contextTimestamps)).toBe(
-					true
+			it("returns true", done => {
+				normalModule.needBuild(
+					{ fileTimestamps, contextTimestamps },
+					(err, result) => {
+						if (err) return done(err);
+						expect(result).toBe(true);
+						done();
+					}
 				);
 			});
 		});
