@@ -577,6 +577,7 @@ export interface RuleSetRule {
 		| "javascript/dynamic"
 		| "javascript/esm"
 		| "json"
+		| "url/experimental"
 		| "webassembly/experimental";
 	/**
 	 * Modifiers applied to the module when rule is matched
@@ -1138,6 +1139,10 @@ export interface OutputOptions {
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
 	 */
 	umdNamedDefine?: boolean;
+	/**
+	 * The filename of URL modules as relative path inside the `output.path` directory.
+	 */
+	urlModuleFilename?: string;
 	/**
 	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
 	 */
