@@ -1130,9 +1130,8 @@ Child
     Built at: Thu Jan 01 1970 00:00:00 GMT
                                      Asset       Size        Chunks             Chunk Names
         a-all~main-0034bb84916bcade4cc7.js  154 bytes      all~main  [emitted]  all~main
-            a-main-9407860001b0bf9acb00.js  108 bytes          main  [emitted]  main
     a-runtime~main-7b4918090cfe19b7778a.js   6.05 KiB  runtime~main  [emitted]  runtime~main
-    Entrypoint main = a-runtime~main-7b4918090cfe19b7778a.js a-all~main-0034bb84916bcade4cc7.js a-main-9407860001b0bf9acb00.js
+    Entrypoint main = a-runtime~main-7b4918090cfe19b7778a.js a-all~main-0034bb84916bcade4cc7.js
     [0] ./a.js 18 bytes {all~main} [built]
 Child
     Hash: 911d2dc5fcfb39a569f9
@@ -1140,10 +1139,9 @@ Child
     Built at: Thu Jan 01 1970 00:00:00 GMT
                                      Asset       Size        Chunks             Chunk Names
         b-all~main-8fc824ada14cfa87179b.js  459 bytes      all~main  [emitted]  all~main
-            b-main-9b8bde6297868240e02c.js  123 bytes          main  [emitted]  main
     b-runtime~main-7b4918090cfe19b7778a.js   6.05 KiB  runtime~main  [emitted]  runtime~main
     b-vendors~main-13c0fc262f08dee65613.js  172 bytes  vendors~main  [emitted]  vendors~main
-    Entrypoint main = b-runtime~main-7b4918090cfe19b7778a.js b-vendors~main-13c0fc262f08dee65613.js b-all~main-8fc824ada14cfa87179b.js b-main-9b8bde6297868240e02c.js
+    Entrypoint main = b-runtime~main-7b4918090cfe19b7778a.js b-vendors~main-13c0fc262f08dee65613.js b-all~main-8fc824ada14cfa87179b.js
     [0] ./b.js 17 bytes {all~main} [built]
     [1] ./node_modules/vendor.js 23 bytes {vendors~main} [built]
 Child
@@ -1154,9 +1152,8 @@ Child
         c-all~main-3f17001edc510ffa13b4.js  302 bytes      all~main  [emitted]  all~main
               c-b0-08b1c51075eefabb49b0.js  462 bytes            b0  [emitted]  
               c-b1-b4adffe55c7947bb635f.js  156 bytes            b1  [emitted]  
-            c-main-d86aa80e7330f9a4e0c2.js  120 bytes          main  [emitted]  main
     c-runtime~main-31bf128e90b5a01a6a37.js   8.84 KiB  runtime~main  [emitted]  runtime~main
-    Entrypoint main = c-runtime~main-31bf128e90b5a01a6a37.js c-all~main-3f17001edc510ffa13b4.js c-main-d86aa80e7330f9a4e0c2.js (prefetch: c-b1-b4adffe55c7947bb635f.js c-b0-08b1c51075eefabb49b0.js)
+    Entrypoint main = c-runtime~main-31bf128e90b5a01a6a37.js c-all~main-3f17001edc510ffa13b4.js (prefetch: c-b1-b4adffe55c7947bb635f.js c-b0-08b1c51075eefabb49b0.js)
     [0] ./c.js 61 bytes {all~main} [built]
     [1] ./b.js 17 bytes {b0} [built]
     [2] ./node_modules/vendor.js 23 bytes {b1} [built]"
@@ -2155,8 +2152,8 @@ Child manifest is named entry:
 `;
 
 exports[`StatsTestCases should print correct stats for runtime-chunk-issue-7382 1`] = `
-"Entrypoint e1 = runtime.js all.js e1.js
-Entrypoint e2 = runtime.js all.js e2.js"
+"Entrypoint e1 = runtime.js all.js
+Entrypoint e2 = runtime.js all.js"
 `;
 
 exports[`StatsTestCases should print correct stats for runtime-chunk-single 1`] = `
