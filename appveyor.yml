@@ -27,7 +27,8 @@ matrix:
 test_script:
   - node --version
   - yarn --version
-  - cmd: set JEST_SILENT_REPORTER_DOTS=1 & JEST=--maxWorkers=2 --cacheDirectory .jest-cache --reporters=jest-silent-reporter
+  - cmd: set JEST_SILENT_REPORTER_DOTS=1
+  - cmd: set JEST=--maxWorkers=2 --cacheDirectory .jest-cache --reporters=jest-silent-reporter
   - cmd: yarn appveyor:integration
   - cmd: yarn istanbul report --report lcovonly
   - cmd: yarn unlink webpack
