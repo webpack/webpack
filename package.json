@@ -39,7 +39,7 @@
     "codacy-coverage": "^2.0.1",
     "coffee-loader": "^0.9.0",
     "coffeescript": "^1.10.0",
-    "coveralls": "^2.11.2",
+    "coveralls": "^3.0.2",
     "css-loader": "^0.28.3",
     "es6-promise-polyfill": "^1.1.1",
     "eslint": "^5.2.0",
