@@ -4182,10 +4182,10 @@ jest-serializer@^23.0.1:
   resolved "https://registry.yarnpkg.com/jest-serializer/-/jest-serializer-23.0.1.tgz#a3776aeb311e90fe83fab9e533e85102bd164165"
   integrity sha1-o3dq6zEekP6D+rnlM+hRAr0WQWU=
 
-jest-silent-reporter@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/jest-silent-reporter/-/jest-silent-reporter-0.0.5.tgz#14139b7a991b7bcca880dd8a69c33a91723a8f1f"
-  integrity sha512-LWNEJEeI9jbqOaNyqmnLWyEJXaNlDMCDqX6NbY89pzgerb3iExky56zD5oBvh+nvgzEND9cjL57EhifaAJBhjw==
+jest-silent-reporter@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/jest-silent-reporter/-/jest-silent-reporter-0.1.1.tgz#2580704abf6245009f486fbea68f697dd7db2f48"
+  integrity sha512-nrRzOV4151hG354tnVWfyZbFGJdylpadRWYWWPSD+WeOz2hQOjUGxvIFODnaY9cKQ7JWCtG+5LgSss22ccRhBg==
   dependencies:
     chalk "^2.3.1"
     jest-util "^23.0.0"
