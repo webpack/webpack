@@ -239,7 +239,7 @@ describe("Validation", () => {
 				}
 			},
 			message: [
-				' - configuration.output.path: The provided value "/somepath/!test" contans exclamation mark (!) which is not allowed because it\'s reserved for loader syntax.',
+				' - configuration.output.path: The provided value "/somepath/!test" contains exclamation mark (!) which is not allowed because it\'s reserved for loader syntax.',
 				"   -> The output directory as **absolute path** (required)."
 			]
 		},

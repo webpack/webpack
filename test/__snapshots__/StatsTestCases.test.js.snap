@@ -7,10 +7,10 @@ Child fitting:
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                       Asset      Size  Chunks             Chunk Names
-    5d5aae6ca1af5d6e6ea4.js  1.94 KiB       3  [emitted]  
-    7029d2a129d88406bdea.js  1.94 KiB       1  [emitted]  
-    971ab7b8450aa86d5fb9.js  11.1 KiB       2  [emitted]  
-    d4b551c6319035df2898.js  1.05 KiB       0  [emitted]  
+    5d5aae6ca1af5d6e6ea4.js  1.94 KiB       3  [emitted]
+    7029d2a129d88406bdea.js  1.94 KiB       1  [emitted]
+    971ab7b8450aa86d5fb9.js  11.1 KiB       2  [emitted]
+    d4b551c6319035df2898.js  1.05 KiB       0  [emitted]
     Entrypoint main = 5d5aae6ca1af5d6e6ea4.js 7029d2a129d88406bdea.js 971ab7b8450aa86d5fb9.js
     chunk    {0} d4b551c6319035df2898.js 916 bytes <{1}> <{2}> <{3}>
         > ./g [4] ./index.js 7:0-13
@@ -33,10 +33,10 @@ Child content-change:
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                       Asset      Size  Chunks             Chunk Names
-    5d5aae6ca1af5d6e6ea4.js  1.94 KiB       3  [emitted]  
-    7029d2a129d88406bdea.js  1.94 KiB       1  [emitted]  
-    971ab7b8450aa86d5fb9.js  11.1 KiB       2  [emitted]  
-    d4b551c6319035df2898.js  1.05 KiB       0  [emitted]  
+    5d5aae6ca1af5d6e6ea4.js  1.94 KiB       3  [emitted]
+    7029d2a129d88406bdea.js  1.94 KiB       1  [emitted]
+    971ab7b8450aa86d5fb9.js  11.1 KiB       2  [emitted]
+    d4b551c6319035df2898.js  1.05 KiB       0  [emitted]
     Entrypoint main = 5d5aae6ca1af5d6e6ea4.js 7029d2a129d88406bdea.js 971ab7b8450aa86d5fb9.js
     chunk    {0} d4b551c6319035df2898.js 916 bytes <{1}> <{2}> <{3}>
         > ./g [4] ./index.js 7:0-13
@@ -61,18 +61,18 @@ exports[`StatsTestCases should print correct stats for aggressive-splitting-on-d
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
                   Asset      Size  Chunks             Chunk Names
-01a8254701931adbf278.js  1.01 KiB       9  [emitted]  
-01a8f6900f403d5703b2.js  1.94 KiB    3, 4  [emitted]  
-138d0972019f89a65bcf.js  1.94 KiB       1  [emitted]  
+01a8254701931adbf278.js  1.01 KiB       9  [emitted]
+01a8f6900f403d5703b2.js  1.94 KiB    3, 4  [emitted]
+138d0972019f89a65bcf.js  1.94 KiB       1  [emitted]
 22cae813c6150b7254dd.js   9.7 KiB      10  [emitted]  main
-2736cf9d79233cd0a9b6.js  1.93 KiB       0  [emitted]  
-58f368c01f66002b0eb3.js  1.94 KiB    6, 7  [emitted]  
-6a8e74d82c35e3f013d2.js     1 KiB       7  [emitted]  
-7f83e5c2f4e52435dd2c.js  1.96 KiB       2  [emitted]  
-ba9fedb7aa0c69201639.js  1.94 KiB      11  [emitted]  
-c99c160aba2d9a94e5d1.js  1.94 KiB       5  [emitted]  
-ee043b525cd899e33ec0.js  1.94 KiB       8  [emitted]  
-f0ef1f91cb22147f3f2c.js     1 KiB       4  [emitted]  
+2736cf9d79233cd0a9b6.js  1.93 KiB       0  [emitted]
+58f368c01f66002b0eb3.js  1.94 KiB    6, 7  [emitted]
+6a8e74d82c35e3f013d2.js     1 KiB       7  [emitted]
+7f83e5c2f4e52435dd2c.js  1.96 KiB       2  [emitted]
+ba9fedb7aa0c69201639.js  1.94 KiB      11  [emitted]
+c99c160aba2d9a94e5d1.js  1.94 KiB       5  [emitted]
+ee043b525cd899e33ec0.js  1.94 KiB       8  [emitted]
+f0ef1f91cb22147f3f2c.js     1 KiB       4  [emitted]
 Entrypoint main = 22cae813c6150b7254dd.js
 chunk    {0} 2736cf9d79233cd0a9b6.js 1.76 KiB <{10}> ={2}= ={3}= ={4}= ={5}= ={7}= [recorded] aggressive splitted
     > ./b ./d ./e ./f ./g [11] ./index.js 5:0-44
@@ -496,9 +496,9 @@ exports[`StatsTestCases should print correct stats for chunks 1`] = `
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
-1.bundle.js  152 bytes       1  [emitted]  
-2.bundle.js  289 bytes       2  [emitted]  
-3.bundle.js  232 bytes       3  [emitted]  
+1.bundle.js  152 bytes       1  [emitted]
+2.bundle.js  289 bytes       2  [emitted]
+3.bundle.js  232 bytes       3  [emitted]
   bundle.js   8.28 KiB       0  [emitted]  main
 Entrypoint main = bundle.js
 chunk    {0} bundle.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
@@ -534,10 +534,10 @@ exports[`StatsTestCases should print correct stats for chunks-development 1`] = 
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
-0.bundle.js  588 bytes       0  [emitted]  
-b.bundle.js  299 bytes       b  [emitted]  
+0.bundle.js  588 bytes       0  [emitted]
+b.bundle.js  299 bytes       b  [emitted]
   bundle.js   8.67 KiB    main  [emitted]  main
-c.bundle.js  435 bytes       c  [emitted]  
+c.bundle.js  435 bytes       c  [emitted]
 Entrypoint main = bundle.js
 chunk    {0} 0.bundle.js 60 bytes <{c}> [rendered]
     > [./c.js] ./c.js 1:0-52
@@ -775,27 +775,27 @@ Child undefined:
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.84 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-    
+
     WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child Terser:
     Hash: 70b5eb88941464457a7d
@@ -846,27 +846,27 @@ Child should not filter:
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.84 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-    
+
     WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child /should not filter/:
     Hash: 70b5eb88941464457a7d
@@ -875,27 +875,27 @@ Child /should not filter/:
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.84 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-    
+
     WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child warnings => false:
     Hash: 70b5eb88941464457a7d
@@ -904,27 +904,27 @@ Child warnings => false:
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.84 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-    
+
     WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child [should not filter]:
     Hash: 70b5eb88941464457a7d
@@ -933,27 +933,27 @@ Child [should not filter]:
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.84 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-    
+
     WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child [/should not filter/]:
     Hash: 70b5eb88941464457a7d
@@ -962,27 +962,27 @@ Child [/should not filter/]:
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.84 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-    
+
     WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child [warnings => false]:
     Hash: 70b5eb88941464457a7d
@@ -991,27 +991,27 @@ Child [warnings => false]:
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.84 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-    
+
     WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
-    
+
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]"
 `;
 
@@ -1075,9 +1075,9 @@ exports[`StatsTestCases should print correct stats for import-context-filter 1`]
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
    Asset       Size  Chunks             Chunk Names
-    1.js  308 bytes       1  [emitted]  
-    2.js  308 bytes       2  [emitted]  
-    3.js  308 bytes       3  [emitted]  
+    1.js  308 bytes       1  [emitted]
+    2.js  308 bytes       2  [emitted]
+    3.js  308 bytes       3  [emitted]
 entry.js   9.05 KiB       0  [emitted]  entry
 Entrypoint entry = entry.js
 [0] ./entry.js 450 bytes {0} [built]
@@ -1092,7 +1092,7 @@ exports[`StatsTestCases should print correct stats for import-weak 1`] = `
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
    Asset       Size  Chunks             Chunk Names
-    1.js  158 bytes       1  [emitted]  
+    1.js  158 bytes       1  [emitted]
 entry.js   8.46 KiB       0  [emitted]  entry
 Entrypoint entry = entry.js
 [0] ./entry.js 120 bytes {0} [built]
@@ -1152,8 +1152,8 @@ Child
     Built at: Thu Jan 01 1970 00:00:00 GMT
                                      Asset       Size        Chunks             Chunk Names
         c-all~main-3f17001edc510ffa13b4.js  302 bytes      all~main  [emitted]  all~main
-              c-b0-08b1c51075eefabb49b0.js  462 bytes            b0  [emitted]  
-              c-b1-b4adffe55c7947bb635f.js  156 bytes            b1  [emitted]  
+              c-b0-08b1c51075eefabb49b0.js  462 bytes            b0  [emitted]
+              c-b1-b4adffe55c7947bb635f.js  156 bytes            b1  [emitted]
             c-main-d86aa80e7330f9a4e0c2.js  120 bytes          main  [emitted]  main
     c-runtime~main-31bf128e90b5a01a6a37.js   8.84 KiB  runtime~main  [emitted]  runtime~main
     Entrypoint main = c-runtime~main-31bf128e90b5a01a6a37.js c-all~main-3f17001edc510ffa13b4.js c-main-d86aa80e7330f9a4e0c2.js (prefetch: c-b1-b4adffe55c7947bb635f.js c-b0-08b1c51075eefabb49b0.js)
@@ -1183,7 +1183,7 @@ Child 2 chunks:
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
-    1.bundle.js  641 bytes       1  [emitted]  
+    1.bundle.js  641 bytes       1  [emitted]
       bundle.js   8.28 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     chunk    {0} bundle.js (main) 73 bytes >{1}< [entry] [rendered]
@@ -1199,8 +1199,8 @@ Child 3 chunks:
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
-    1.bundle.js  494 bytes       1  [emitted]  
-    2.bundle.js  232 bytes       2  [emitted]  
+    1.bundle.js  494 bytes       1  [emitted]
+    2.bundle.js  232 bytes       2  [emitted]
       bundle.js   8.28 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     chunk    {0} bundle.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
@@ -1217,9 +1217,9 @@ Child 4 chunks:
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
-    1.bundle.js  254 bytes       1  [emitted]  
-    2.bundle.js  232 bytes       2  [emitted]  
-    3.bundle.js  323 bytes       3  [emitted]  
+    1.bundle.js  254 bytes       1  [emitted]
+    2.bundle.js  232 bytes       2  [emitted]
+    3.bundle.js  323 bytes       3  [emitted]
       bundle.js   8.28 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     chunk    {0} bundle.js (main) 73 bytes >{1}< >{2}< >{3}< [entry] [rendered]
@@ -1306,12 +1306,12 @@ chunk    {1} 1.js 68 bytes <{0}> [rendered]
 
 exports[`StatsTestCases should print correct stats for module-deduplication 1`] = `
 "Asset       Size  Chunks             Chunk Names
- 3.js  731 bytes    3, 6  [emitted]  
- 4.js  731 bytes    4, 7  [emitted]  
- 5.js  733 bytes    5, 8  [emitted]  
- 6.js  662 bytes       6  [emitted]  
- 7.js  662 bytes       7  [emitted]  
- 8.js  663 bytes       8  [emitted]  
+ 3.js  731 bytes    3, 6  [emitted]
+ 4.js  731 bytes    4, 7  [emitted]
+ 5.js  733 bytes    5, 8  [emitted]
+ 6.js  662 bytes       6  [emitted]
+ 7.js  662 bytes       7  [emitted]
+ 8.js  663 bytes       8  [emitted]
 e1.js   9.38 KiB       0  [emitted]  e1
 e2.js   9.41 KiB       1  [emitted]  e2
 e3.js   9.44 KiB       2  [emitted]  e3
@@ -1517,8 +1517,8 @@ exports[`StatsTestCases should print correct stats for named-chunks-plugin-async
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
                      Asset       Size                   Chunks             Chunk Names
-chunk-containing-__a_js.js  313 bytes  chunk-containing-__a_js  [emitted]  
-chunk-containing-__b_js.js  176 bytes  chunk-containing-__b_js  [emitted]  
+chunk-containing-__a_js.js  313 bytes  chunk-containing-__a_js  [emitted]
+chunk-containing-__b_js.js  176 bytes  chunk-containing-__b_js  [emitted]
                   entry.js   8.18 KiB                    entry  [emitted]  entry
 Entrypoint entry = entry.js
 [0] ./entry.js 47 bytes {entry} [built]
@@ -1532,7 +1532,7 @@ Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks  Chunk Names
 bundle.js  3.57 KiB       0  main
- child.js  3.57 KiB          
+ child.js  3.57 KiB
 Entrypoint main = bundle.js
 [0] ./index.js 0 bytes {0} [built]
 
@@ -1544,7 +1544,7 @@ Child child:
     child.js  3.57 KiB       0  child
     Entrypoint child = child.js
     [0] ./index.js 0 bytes {0} [built]
-    
+
     ERROR in forced error"
 `;
 
@@ -1629,19 +1629,19 @@ Child
     warning.pro-web.js  297 KiB       0  [emitted]  [big]  main
     Entrypoint main [big] = warning.pro-web.js
     [0] ./index.js 293 KiB {0} [built]
-    
+
     WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
     This can impact web performance.
-    Assets: 
+    Assets:
       warning.pro-web.js (297 KiB)
-    
+
     WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
     Entrypoints:
       main (297 KiB)
           warning.pro-web.js
-    
-    
-    WARNING in webpack performance recommendations: 
+
+
+    WARNING in webpack performance recommendations:
     You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
     For more info visit https://webpack.js.org/guides/code-splitting/
 Child
@@ -1652,19 +1652,19 @@ Child
     warning.pro-webworker.js  297 KiB       0  [emitted]  [big]  main
     Entrypoint main [big] = warning.pro-webworker.js
     [0] ./index.js 293 KiB {0} [built]
-    
+
     WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
     This can impact web performance.
-    Assets: 
+    Assets:
       warning.pro-webworker.js (297 KiB)
-    
+
     WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
     Entrypoints:
       main (297 KiB)
           warning.pro-webworker.js
-    
-    
-    WARNING in webpack performance recommendations: 
+
+
+    WARNING in webpack performance recommendations:
     You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
     For more info visit https://webpack.js.org/guides/code-splitting/
 Child
@@ -1707,19 +1707,19 @@ Child
     warning.pro-node-with-hints-set.js  297 KiB       0  [emitted]  [big]  main
     Entrypoint main [big] = warning.pro-node-with-hints-set.js
     [0] ./index.js 293 KiB {0} [built]
-    
+
     WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
     This can impact web performance.
-    Assets: 
+    Assets:
       warning.pro-node-with-hints-set.js (297 KiB)
-    
+
     WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
     Entrypoints:
       main (297 KiB)
           warning.pro-node-with-hints-set.js
-    
-    
-    WARNING in webpack performance recommendations: 
+
+
+    WARNING in webpack performance recommendations:
     You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
     For more info visit https://webpack.js.org/guides/code-splitting/"
 `;
@@ -1728,9 +1728,9 @@ exports[`StatsTestCases should print correct stats for performance-disabled 1`] 
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22><CLR=BOLD>Chunk Names</CLR>
-   <CLR=32,BOLD>1.js</CLR>  152 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-   <CLR=32,BOLD>2.js</CLR>  289 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
-   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>  
+   <CLR=32,BOLD>1.js</CLR>  152 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>
+   <CLR=32,BOLD>2.js</CLR>  289 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>
+   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>
 <CLR=32,BOLD>main.js</CLR>    301 KiB       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
 Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 [0] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
@@ -1745,9 +1745,9 @@ exports[`StatsTestCases should print correct stats for performance-error 1`] = `
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-   <CLR=32,BOLD>1.js</CLR>  152 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>2.js</CLR>  289 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>1.js</CLR>  152 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>
+   <CLR=32,BOLD>2.js</CLR>  289 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>
+   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>
 <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
 [0] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
@@ -1759,7 +1759,7 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 
 <CLR=31,BOLD>ERROR in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (301 KiB)</CLR>
 
 <CLR=31,BOLD>ERROR in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1786,7 +1786,7 @@ Entrypoint <CLR=BOLD>sec</CLR> = <CLR=32,BOLD>sec.js</CLR>
 
 <CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (297 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1795,7 +1795,7 @@ Entrypoints:
       main.js
 </CLR>
 
-<CLR=33,BOLD>WARNING in webpack performance recommendations: 
+<CLR=33,BOLD>WARNING in webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/</CLR>"
 `;
@@ -1804,9 +1804,9 @@ exports[`StatsTestCases should print correct stats for performance-no-hints 1`] 
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-   <CLR=32,BOLD>1.js</CLR>  152 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>2.js</CLR>  289 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>1.js</CLR>  152 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>
+   <CLR=32,BOLD>2.js</CLR>  289 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>
+   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>
 <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
 [0] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
@@ -1831,7 +1831,7 @@ Entrypoint <CLR=BOLD>sec</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>sec.js</C
 
 <CLR=31,BOLD>ERROR in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (297 KiB)
   sec.js (297 KiB)</CLR>
 
@@ -1843,7 +1843,7 @@ Entrypoints:
       sec.js
 </CLR>
 
-<CLR=31,BOLD>ERROR in webpack performance recommendations: 
+<CLR=31,BOLD>ERROR in webpack performance recommendations:
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/</CLR>"
 `;
@@ -1905,9 +1905,9 @@ exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
-   1.js  152 bytes       1  [emitted]  
-   2.js  289 bytes       2  [emitted]  
-   3.js  232 bytes       3  [emitted]  
+   1.js  152 bytes       1  [emitted]
+   2.js  289 bytes       2  [emitted]
+   3.js  232 bytes       3  [emitted]
 main.js   8.29 KiB       0  [emitted]  main
 Entrypoint main = main.js
 chunk    {0} main.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
@@ -1963,9 +1963,9 @@ exports[`StatsTestCases should print correct stats for preset-normal 1`] = `
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
-   1.js  152 bytes       1  [emitted]  
-   2.js  289 bytes       2  [emitted]  
-   3.js  232 bytes       3  [emitted]  
+   1.js  152 bytes       1  [emitted]
+   2.js  289 bytes       2  [emitted]
+   3.js  232 bytes       3  [emitted]
 main.js   8.29 KiB       0  [emitted]  main
 Entrypoint main = main.js
 [0] ./index.js 51 bytes {0} [built]
@@ -1980,9 +1980,9 @@ exports[`StatsTestCases should print correct stats for preset-normal-performance
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
   <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-   <CLR=32,BOLD>1.js</CLR>  152 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>2.js</CLR>  289 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+   <CLR=32,BOLD>1.js</CLR>  152 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>
+   <CLR=32,BOLD>2.js</CLR>  289 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>
+   <CLR=32,BOLD>3.js</CLR>  232 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>
 <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR>
 [0] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
@@ -1994,7 +1994,7 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 
 <CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (301 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -2008,12 +2008,12 @@ exports[`StatsTestCases should print correct stats for preset-normal-performance
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
       <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22>       <CLR=BOLD>Chunk Names</CLR>
-       <CLR=32,BOLD>1.js</CLR>  182 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>1.js.map</CLR>  156 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-       <CLR=32,BOLD>2.js</CLR>  319 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>2.js.map</CLR>  210 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-       <CLR=32,BOLD>3.js</CLR>  262 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
-   <CLR=32,BOLD>3.js.map</CLR>  216 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>         
+       <CLR=32,BOLD>1.js</CLR>  182 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>
+   <CLR=32,BOLD>1.js.map</CLR>  156 bytes       <CLR=BOLD>1</CLR>  <CLR=32,BOLD>[emitted]</CLR>
+       <CLR=32,BOLD>2.js</CLR>  319 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>
+   <CLR=32,BOLD>2.js.map</CLR>  210 bytes       <CLR=BOLD>2</CLR>  <CLR=32,BOLD>[emitted]</CLR>
+       <CLR=32,BOLD>3.js</CLR>  262 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>
+   <CLR=32,BOLD>3.js.map</CLR>  216 bytes       <CLR=BOLD>3</CLR>  <CLR=32,BOLD>[emitted]</CLR>
     <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
 <CLR=32,BOLD>main.js.map</CLR>   1.72 MiB       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>         main
 Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR> <CLR=32,BOLD>main.js.map</CLR>
@@ -2026,7 +2026,7 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 
 <CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets: 
+Assets:
   main.js (301 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -2041,9 +2041,9 @@ exports[`StatsTestCases should print correct stats for preset-verbose 1`] = `
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
-   1.js  152 bytes       1  [emitted]  
-   2.js  289 bytes       2  [emitted]  
-   3.js  232 bytes       3  [emitted]  
+   1.js  152 bytes       1  [emitted]
+   2.js  289 bytes       2  [emitted]
+   3.js  232 bytes       3  [emitted]
 main.js   8.29 KiB       0  [emitted]  main
 Entrypoint main = main.js
 chunk    {0} main.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
@@ -2132,7 +2132,7 @@ Entrypoint e2 = runtime~e2.js e2.js"
 exports[`StatsTestCases should print correct stats for runtime-chunk-integration 1`] = `
 "Child base:
          Asset       Size  Chunks             Chunk Names
-          2.js  728 bytes       2  [emitted]  
+          2.js  728 bytes       2  [emitted]
       main1.js  539 bytes       1  [emitted]  main1
     runtime.js   8.75 KiB       0  [emitted]  runtime
     Entrypoint main1 = runtime.js main1.js
@@ -2142,7 +2142,7 @@ exports[`StatsTestCases should print correct stats for runtime-chunk-integration
     [3] ./d.js 20 bytes {2} [built]
 Child manifest is named entry:
           Asset       Size  Chunks             Chunk Names
-           2.js  737 bytes       2  [emitted]  
+           2.js  737 bytes       2  [emitted]
        main1.js  539 bytes       0  [emitted]  main1
     manifest.js   9.06 KiB       1  [emitted]  manifest
     Entrypoint main1 = manifest.js main1.js
@@ -2249,7 +2249,7 @@ exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
-   1.js  481 bytes       1  [emitted]  
+   1.js  481 bytes       1  [emitted]
 main.js   9.31 KiB       0  [emitted]  main
 Entrypoint main = main.js
 [0] ./main.js + 1 modules 231 bytes {0} [built]

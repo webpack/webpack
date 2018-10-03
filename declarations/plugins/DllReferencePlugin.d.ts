@@ -78,6 +78,7 @@ export type DllReferencePluginOptionsSourceType =
 	| "commonjs2"
 	| "commonjs-module"
 	| "amd"
+	| "amd-require"
 	| "umd"
 	| "umd2"
 	| "jsonp";
