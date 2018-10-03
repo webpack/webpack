@@ -14,7 +14,7 @@ export interface DllPluginOptions {
 	 */
 	entryOnly?: boolean;
 	/**
-	 * If true, manifest json file(output) will be formatted
+	 * If true, manifest json file (output) will be formatted
 	 */
 	format?: boolean;
 	/**
