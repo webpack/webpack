@@ -168,17 +168,20 @@ module.exports = 42;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
     Asset      Size  Chunks             Chunk Names
 output.js  4.31 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 206 bytes [entry] [rendered]
     > .\example.js main
  [0] ./example.js 31 bytes {0} [built]
-     single entry .\example.js  main
+     [used exports unknown]
+     entry .\example.js  main
  [1] ./cup1.coffee 118 bytes {0} [built]
+     [used exports unknown]
      cjs require ./cup1 [0] ./example.js 1:12-29
  [2] ./cup2.coffee 57 bytes {0} [built]
+     [used exports unknown]
      cjs require ./cup2.coffee [1] ./cup1.coffee 4:12-36
      cjs require ./cup2 [1] ./cup1.coffee 5:9-26
 ```
@@ -187,7 +190,7 @@ chunk    {0} output.js (main) 206 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
     Asset      Size  Chunks             Chunk Names
 output.js  1.07 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -197,7 +200,7 @@ chunk    {0} output.js (main) 206 bytes [entry] [rendered]
      cjs require ./cup2.coffee [2] ./cup1.coffee 4:12-36
      cjs require ./cup2 [2] ./cup1.coffee 5:9-26
  [1] ./example.js 31 bytes {0} [built]
-     single entry .\example.js  main
+     entry .\example.js  main
  [2] ./cup1.coffee 118 bytes {0} [built]
      cjs require ./cup1 [1] ./example.js 1:12-29
 ```

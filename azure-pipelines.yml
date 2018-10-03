@@ -71,8 +71,6 @@ jobs:
           node_version: ^10.10.0
         node-8:
           node_version: ^8.12.0
-        node-6:
-          node_version: ^6.14.4
     steps:
       - task: NodeTool@0
         displayName: "Install Node.js"
@@ -119,8 +117,6 @@ jobs:
           node_version: ^10.10.0
         node-8:
           node_version: ^8.12.0
-        node-6:
-          node_version: ^6.14.4
     steps:
       - task: NodeTool@0
         displayName: "Install Node.js"
@@ -166,8 +162,6 @@ jobs:
           node_version: ^10.10.0
         node-8:
           node_version: ^8.12.0
-        node-6:
-          node_version: ^6.14.4
     steps:
       - task: NodeTool@0
         displayName: "Install Node.js"

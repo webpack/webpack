@@ -233,7 +233,7 @@ export default foo;
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
@@ -242,10 +242,7 @@ export default foo;
 
 ``` javascript
 /******/ ([
-/* 0 */,
-/* 1 */,
-/* 2 */,
-/* 3 */
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
@@ -254,7 +251,7 @@ export default foo;
 
 async function getTemplate(templateName) {
 	try {
-		let template = await __webpack_require__(4)(`./${templateName}`);
+		let template = await __webpack_require__(1)(`./${templateName}`);
 		console.log(template);
 	} catch(err) {
 		console.error("template error");
@@ -270,7 +267,7 @@ getTemplate("baz");
 
 
 /***/ }),
-/* 4 */
+/* 1 */
 /*!**************************************************!*\
   !*** ./templates lazy ^\.\/.*$ namespace object ***!
   \**************************************************/
@@ -279,27 +276,27 @@ getTemplate("baz");
 
 var map = {
 	"./bar": [
-		0,
+		2,
 		0
 	],
 	"./bar.js": [
-		0,
+		2,
 		0
 	],
 	"./baz": [
-		1,
+		3,
 		1
 	],
 	"./baz.js": [
-		1,
+		3,
 		1
 	],
 	"./foo": [
-		2,
+		4,
 		2
 	],
 	"./foo.js": [
-		2,
+		4,
 		2
 	]
 };
@@ -320,7 +317,7 @@ function webpackAsyncContext(req) {
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
 	return Object.keys(map);
 };
-webpackAsyncContext.id = 4;
+webpackAsyncContext.id = 1;
 module.exports = webpackAsyncContext;
 
 /***/ })
@@ -333,78 +330,83 @@ module.exports = webpackAsyncContext;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
       Asset       Size  Chunks             Chunk Names
-0.output.js  433 bytes       0  [emitted]  
-1.output.js  442 bytes       1  [emitted]  
-2.output.js  436 bytes       2  [emitted]  
-  output.js   9.29 KiB       3  [emitted]  main
+0.output.js  439 bytes       0  [emitted]  
+1.output.js  439 bytes       1  [emitted]  
+2.output.js  439 bytes       2  [emitted]  
+  output.js   9.28 KiB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 38 bytes <{3}> [rendered]
-    > ./bar [4] ./templates lazy ^\.\/.*$ namespace object ./bar
-    > ./bar.js [4] ./templates lazy ^\.\/.*$ namespace object ./bar.js
- [0] ./templates/bar.js 38 bytes {0} [optional] [built]
+chunk    {0} 0.output.js 41 bytes <{3}> [rendered]
+    > ./bar [1] ./templates lazy ^\.\/.*$ namespace object ./bar
+    > ./bar.js [1] ./templates lazy ^\.\/.*$ namespace object ./bar.js
+ [2] ./templates/bar.js 41 bytes {0} [optional] [built]
      [exports: default]
-     context element ./bar [4] ./templates lazy ^\.\/.*$ namespace object ./bar
-     context element ./bar.js [4] ./templates lazy ^\.\/.*$ namespace object ./bar.js
-chunk    {1} 1.output.js 38 bytes <{3}> [rendered]
-    > ./baz [4] ./templates lazy ^\.\/.*$ namespace object ./baz
-    > ./baz.js [4] ./templates lazy ^\.\/.*$ namespace object ./baz.js
- [1] ./templates/baz.js 38 bytes {1} [optional] [built]
+     [used exports unknown]
+     context element ./bar [1] ./templates lazy ^\.\/.*$ namespace object ./bar
+     context element ./bar.js [1] ./templates lazy ^\.\/.*$ namespace object ./bar.js
+chunk    {1} 1.output.js 41 bytes <{3}> [rendered]
+    > ./baz [1] ./templates lazy ^\.\/.*$ namespace object ./baz
+    > ./baz.js [1] ./templates lazy ^\.\/.*$ namespace object ./baz.js
+ [3] ./templates/baz.js 41 bytes {1} [optional] [built]
      [exports: default]
-     context element ./baz [4] ./templates lazy ^\.\/.*$ namespace object ./baz
-     context element ./baz.js [4] ./templates lazy ^\.\/.*$ namespace object ./baz.js
-chunk    {2} 2.output.js 38 bytes <{3}> [rendered]
-    > ./foo [4] ./templates lazy ^\.\/.*$ namespace object ./foo
-    > ./foo.js [4] ./templates lazy ^\.\/.*$ namespace object ./foo.js
- [2] ./templates/foo.js 38 bytes {2} [optional] [built]
+     [used exports unknown]
+     context element ./baz [1] ./templates lazy ^\.\/.*$ namespace object ./baz
+     context element ./baz.js [1] ./templates lazy ^\.\/.*$ namespace object ./baz.js
+chunk    {2} 2.output.js 41 bytes <{3}> [rendered]
+    > ./foo [1] ./templates lazy ^\.\/.*$ namespace object ./foo
+    > ./foo.js [1] ./templates lazy ^\.\/.*$ namespace object ./foo.js
+ [4] ./templates/foo.js 41 bytes {2} [optional] [built]
      [exports: default]
-     context element ./foo [4] ./templates lazy ^\.\/.*$ namespace object ./foo
-     context element ./foo.js [4] ./templates lazy ^\.\/.*$ namespace object ./foo.js
-chunk    {3} output.js (main) 441 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+     [used exports unknown]
+     context element ./foo [1] ./templates lazy ^\.\/.*$ namespace object ./foo
+     context element ./foo.js [1] ./templates lazy ^\.\/.*$ namespace object ./foo.js
+chunk    {3} output.js (main) 456 bytes >{0}< >{1}< >{2}< [entry] [rendered]
     > .\example.js main
- [3] ./example.js 281 bytes {3} [built]
-     single entry .\example.js  main
- [4] ./templates lazy ^\.\/.*$ namespace object 160 bytes {3} [optional] [built]
-     import() context lazy ./templates [3] ./example.js 3:23-60
+ [0] ./example.js 296 bytes {3} [built]
+     [used exports unknown]
+     entry .\example.js  main
+ [1] ./templates lazy ^\.\/.*$ namespace object 160 bytes {3} [optional] [built]
+     [used exports unknown]
+     import() context lazy ./templates [0] ./example.js 3:23-60
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
       Asset       Size  Chunks             Chunk Names
 0.output.js  113 bytes       0  [emitted]  
 1.output.js  114 bytes       1  [emitted]  
 2.output.js  115 bytes       2  [emitted]  
   output.js    2.5 KiB       3  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} 0.output.js 38 bytes <{3}> [rendered]
+chunk    {0} 0.output.js 41 bytes <{3}> [rendered]
     > ./bar [4] ./templates lazy ^\.\/.*$ namespace object ./bar
     > ./bar.js [4] ./templates lazy ^\.\/.*$ namespace object ./bar.js
- [0] ./templates/bar.js 38 bytes {0} [optional] [built]
+ [0] ./templates/bar.js 41 bytes {0} [optional] [built]
      [exports: default]
      context element ./bar [4] ./templates lazy ^\.\/.*$ namespace object ./bar
      context element ./bar.js [4] ./templates lazy ^\.\/.*$ namespace object ./bar.js
-chunk    {1} 1.output.js 38 bytes <{3}> [rendered]
+chunk    {1} 1.output.js 41 bytes <{3}> [rendered]
     > ./baz [4] ./templates lazy ^\.\/.*$ namespace object ./baz
     > ./baz.js [4] ./templates lazy ^\.\/.*$ namespace object ./baz.js
- [1] ./templates/baz.js 38 bytes {1} [optional] [built]
+ [1] ./templates/baz.js 41 bytes {1} [optional] [built]
      [exports: default]
      context element ./baz [4] ./templates lazy ^\.\/.*$ namespace object ./baz
      context element ./baz.js [4] ./templates lazy ^\.\/.*$ namespace object ./baz.js
-chunk    {2} 2.output.js 38 bytes <{3}> [rendered]
+chunk    {2} 2.output.js 41 bytes <{3}> [rendered]
     > ./foo [4] ./templates lazy ^\.\/.*$ namespace object ./foo
     > ./foo.js [4] ./templates lazy ^\.\/.*$ namespace object ./foo.js
- [2] ./templates/foo.js 38 bytes {2} [optional] [built]
+ [2] ./templates/foo.js 41 bytes {2} [optional] [built]
      [exports: default]
      context element ./foo [4] ./templates lazy ^\.\/.*$ namespace object ./foo
      context element ./foo.js [4] ./templates lazy ^\.\/.*$ namespace object ./foo.js
-chunk    {3} output.js (main) 441 bytes >{0}< >{1}< >{2}< [entry] [rendered]
+chunk    {3} output.js (main) 456 bytes >{0}< >{1}< >{2}< [entry] [rendered]
     > .\example.js main
- [3] ./example.js 281 bytes {3} [built]
-     single entry .\example.js  main
+ [3] ./example.js 296 bytes {3} [built]
+     entry .\example.js  main
  [4] ./templates lazy ^\.\/.*$ namespace object 160 bytes {3} [optional] [built]
      import() context lazy ./templates [3] ./example.js 3:23-60
 ```

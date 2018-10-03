@@ -10,6 +10,8 @@ module.exports = [
 			filename: "[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			concatenateModules: false,
 			splitChunks: {
 				cacheGroups: {
@@ -38,6 +40,8 @@ module.exports = [
 			filename: "[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				cacheGroups: {
 					vendor: {
@@ -51,6 +55,7 @@ module.exports = [
 		},
 		stats: {
 			assets: false,
+			orphanModules: true,
 			optimizationBailout: true
 		}
 	}

@@ -22,6 +22,8 @@ module.exports = [
 			filename: "default/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0 // enforce all
 			}
@@ -42,6 +44,8 @@ module.exports = [
 			filename: "default/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0, // enforce all,
 				chunks: "all"
@@ -55,22 +59,23 @@ module.exports = [
 		mode: "production",
 		entry: {
 			main: "./",
-			a: "./a",
-			b: "./b",
-			c: "./c",
-			vendors: ["x", "y", "z"]
+			a: ["x", "y", "z", "./a"],
+			b: ["x", "y", "z", "./b"],
+			c: ["x", "y", "z", "./c"]
 		},
 		output: {
 			filename: "default/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0, // enforce all,
 				chunks: "all",
 				cacheGroups: {
 					default: false,
 					vendors: {
-						test: "vendors",
+						test: /[\\/]node_modules[\\/]/,
 						name: "vendors",
 						enforce: true
 					}
@@ -92,6 +97,8 @@ module.exports = [
 			filename: "[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0,
 				maxInitialRequests: Infinity,
@@ -114,6 +121,8 @@ module.exports = [
 			filename: "default/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0,
 				chunks: chunk => chunk.name !== "a"
@@ -127,22 +136,23 @@ module.exports = [
 		mode: "production",
 		entry: {
 			main: "./",
-			a: "./a",
-			b: "./b",
-			c: "./c",
-			vendors: ["x", "y", "z"]
+			a: ["x", "y", "z", "./a"],
+			b: ["x", "y", "z", "./b"],
+			c: ["x", "y", "z", "./c"]
 		},
 		output: {
 			filename: "default/[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 0,
 				chunks: "all",
 				cacheGroups: {
 					default: false,
 					vendors: {
-						test: "vendors",
+						test: /[\\/]node_modules[\\/]/,
 						name: "vendors",
 						enforce: true,
 						chunks: chunk => chunk.name !== "a"

@@ -167,7 +167,7 @@ exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader
 
 
 // module
-exports.push([module.i, ".some-class {\n\tcolor: hotpink;\n}\n", ""]);
+exports.push([module.i, ".some-class {\r\n\tcolor: hotpink;\r\n}\r\n", ""]);
 
 // exports
 
@@ -278,17 +278,20 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
     Asset      Size  Chunks             Chunk Names
-output.js  7.15 KiB       0  [emitted]  main
+output.js  7.16 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 2.64 KiB [entry] [rendered]
+chunk    {0} output.js (main) 2.65 KiB [entry] [rendered]
     > .\example.js main
- [0] ./example.js 204 bytes {0} [built]
-     single entry .\example.js  main
+ [0] ./example.js 210 bytes {0} [built]
+     [used exports unknown]
+     entry .\example.js  main
  [1] ./loader.js!./file.js 41 bytes {0} [built]
+     [used exports unknown]
      cjs require ./loader!./file [0] ./example.js 2:12-38
- [2] (webpack)/node_modules/css-loader!./test.css 199 bytes {0} [built]
+ [2] (webpack)/node_modules/css-loader!./test.css 205 bytes {0} [built]
+     [used exports unknown]
      cjs require ./test.css [0] ./example.js 5:12-33
      cjs require !css-loader!./test.css [0] ./example.js 6:12-45
      + 1 hidden module
@@ -298,17 +301,17 @@ chunk    {0} output.js (main) 2.64 KiB [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
     Asset      Size  Chunks             Chunk Names
 output.js  1.89 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 2.64 KiB [entry] [rendered]
+chunk    {0} output.js (main) 2.65 KiB [entry] [rendered]
     > .\example.js main
- [0] (webpack)/node_modules/css-loader!./test.css 199 bytes {0} [built]
+ [0] (webpack)/node_modules/css-loader!./test.css 205 bytes {0} [built]
      cjs require ./test.css [1] ./example.js 5:12-33
      cjs require !css-loader!./test.css [1] ./example.js 6:12-45
- [1] ./example.js 204 bytes {0} [built]
-     single entry .\example.js  main
+ [1] ./example.js 210 bytes {0} [built]
+     entry .\example.js  main
  [2] ./loader.js!./file.js 41 bytes {0} [built]
      cjs require ./loader!./file [1] ./example.js 2:12-38
      + 1 hidden module

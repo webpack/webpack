@@ -49,13 +49,6 @@ describe("StatsTestCases", () => {
 				if (!options.optimization) options.optimization = {};
 				if (options.optimization.minimize === undefined)
 					options.optimization.minimize = false;
-				// To support deprecated loaders
-				// TODO remove in webpack 5
-				options.plugins.push(
-					new webpack.LoaderOptionsPlugin({
-						options: {}
-					})
-				);
 			});
 			const c = webpack(options);
 			const compilers = c.compilers ? c.compilers : [c];
@@ -75,6 +68,20 @@ describe("StatsTestCases", () => {
 						])
 					);
 				};
+				c.hooks.compilation.tap("StatsTestCasesTest", compilation => {
+					[
+						"optimize",
+						"optimizeModules",
+						"optimizeChunks",
+						"afterOptimizeTree",
+						"afterOptimizeAssets",
+						"beforeHash"
+					].forEach(hook => {
+						compilation.hooks[hook].tap("TestCasesTest", () =>
+							compilation.checkConstraints()
+						);
+					});
+				});
 			});
 			c.run((err, stats) => {
 				if (err) return done(err);
@@ -125,7 +132,7 @@ describe("StatsTestCases", () => {
 					.replace(/\r\n?/g, "\n")
 					.replace(/[\t ]*Version:.+\n/g, "")
 					.replace(path.join(base, testName), "Xdir/" + testName)
-					.replace(/ dependencies:Xms/g, "");
+					.replace(/, additional resolving: Xms/g, "");
 				expect(actual).toMatchSnapshot();
 				done();
 			});

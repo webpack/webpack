@@ -1,6 +1,7 @@
 var webpack = require("../../../");
 module.exports = {
 	mode: "production",
+	optimization: { moduleIds: "natural", chunkIds: "natural" },
 	entry: "./index",
 	cache: true, // AggressiveSplittingPlugin rebuilds multiple times, we need to cache the assets
 	output: {

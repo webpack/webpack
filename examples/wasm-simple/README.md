@@ -380,7 +380,7 @@ function timed(name, fn) {
 "use strict";
 // Instantiate WebAssembly module
 var wasmExports = __webpack_require__.w[module.i];
-__webpack_require__.r(exports);
+
 // export exports from WebAssembly module
 for(var name in wasmExports) if(name != "__webpack_init__") exports[name] = wasmExports[name];
 // exec imports from WebAssembly module (for esm order)
@@ -408,7 +408,7 @@ wasmExports["__webpack_init__"]()
 "use strict";
 // Instantiate WebAssembly module
 var wasmExports = __webpack_require__.w[module.i];
-__webpack_require__.r(exports);
+
 // export exports from WebAssembly module
 for(var name in wasmExports) if(name != "__webpack_init__") exports[name] = wasmExports[name];
 // exec imports from WebAssembly module (for esm order)
@@ -427,17 +427,14 @@ wasmExports["__webpack_init__"]()
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "add", function() { return _add_wasm__WEBPACK_IMPORTED_MODULE_0__["add"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "factorial", function() { return _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__["factorial"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "fibonacci", function() { return _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__["fibonacci"]; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "factorialJavascript", function() { return factorialJavascript; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fibonacciJavascript", function() { return fibonacciJavascript; });
 /* harmony import */ var _add_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./add.wasm */ 1);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "add", function() { return _add_wasm__WEBPACK_IMPORTED_MODULE_0__["add"]; });
-
 /* harmony import */ var _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./factorial.wasm */ 3);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "factorial", function() { return _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__["factorial"]; });
-
 /* harmony import */ var _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./fibonacci.wasm */ 4);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "fibonacci", function() { return _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__["fibonacci"]; });
-
 
 
 
@@ -466,7 +463,7 @@ function fibonacciJavascript(i) {
 "use strict";
 // Instantiate WebAssembly module
 var wasmExports = __webpack_require__.w[module.i];
-__webpack_require__.r(exports);
+
 // export exports from WebAssembly module
 for(var name in wasmExports) if(name != "__webpack_init__") exports[name] = wasmExports[name];
 // exec imports from WebAssembly module (for esm order)
@@ -486,7 +483,7 @@ wasmExports["__webpack_init__"]()
 "use strict";
 // Instantiate WebAssembly module
 var wasmExports = __webpack_require__.w[module.i];
-__webpack_require__.r(exports);
+
 // export exports from WebAssembly module
 for(var name in wasmExports) if(name != "__webpack_init__") exports[name] = wasmExports[name];
 // exec imports from WebAssembly module (for esm order)
@@ -505,42 +502,48 @@ wasmExports["__webpack_init__"]()
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
                     Asset          Size  Chunks             Chunk Names
-                output.js      11.3 KiB       0  [emitted]  main
-              1.output.js     636 bytes       1  [emitted]  
-c50d6212832abfc3ae1e.wasm  unknown size    1, 2  [emitted]  
-              2.output.js      3.37 KiB       2  [emitted]  
+              1.output.js     605 bytes       1  [emitted]  
+              2.output.js      3.29 KiB       2  [emitted]  
 3580ad47c1ba500584ea.wasm  unknown size       2  [emitted]  
 baf012e37fe9b85e815a.wasm  unknown size       2  [emitted]  
+c50d6212832abfc3ae1e.wasm  unknown size    1, 2  [emitted]  
+                output.js      11.3 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 762 bytes >{1}< >{2}< [entry] [rendered]
+chunk    {0} output.js (main) 788 bytes >{1}< >{2}< [entry] [rendered]
     > .\example.js main
- [0] ./example.js 762 bytes {0} [built]
-     single entry .\example.js  main
+ [0] ./example.js 788 bytes {0} [built]
+     [used exports unknown]
+     entry .\example.js  main
 chunk    {1} 1.output.js, c50d6212832abfc3ae1e.wasm 41 bytes <{0}> [rendered]
     > ./add.wasm [0] ./example.js 1:0-20
  [1] ./add.wasm 41 bytes {1} {2} [built]
      [exports: add]
+     [used exports unknown]
      import() ./add.wasm [0] ./example.js 1:0-20
      harmony side effect evaluation ./add.wasm [2] ./math.js 1:0-33
      harmony export imported specifier ./add.wasm [2] ./math.js 5:0-37
-chunk    {2} 2.output.js, c50d6212832abfc3ae1e.wasm, 3580ad47c1ba500584ea.wasm, baf012e37fe9b85e815a.wasm 570 bytes <{0}> [rendered]
+chunk    {2} 2.output.js, c50d6212832abfc3ae1e.wasm, 3580ad47c1ba500584ea.wasm, baf012e37fe9b85e815a.wasm 585 bytes <{0}> [rendered]
     > ./math [0] ./example.js 3:1-17
  [1] ./add.wasm 41 bytes {1} {2} [built]
      [exports: add]
+     [used exports unknown]
      import() ./add.wasm [0] ./example.js 1:0-20
      harmony side effect evaluation ./add.wasm [2] ./math.js 1:0-33
      harmony export imported specifier ./add.wasm [2] ./math.js 5:0-37
- [2] ./math.js 400 bytes {2} [built]
+ [2] ./math.js 415 bytes {2} [built]
      [exports: add, factorial, fibonacci, factorialJavascript, fibonacciJavascript]
+     [used exports unknown]
      import() ./math [0] ./example.js 3:1-17
  [3] ./factorial.wasm 62 bytes {2} [built]
      [exports: factorial]
+     [used exports unknown]
      harmony side effect evaluation ./factorial.wasm [2] ./math.js 2:0-45
      harmony export imported specifier ./factorial.wasm [2] ./math.js 5:0-37
  [4] ./fibonacci.wasm 67 bytes {2} [built]
      [exports: fibonacci]
+     [used exports unknown]
      harmony side effect evaluation ./fibonacci.wasm [2] ./math.js 3:0-45
      harmony export imported specifier ./fibonacci.wasm [2] ./math.js 5:0-37
 ```
@@ -549,19 +552,19 @@ chunk    {2} 2.output.js, c50d6212832abfc3ae1e.wasm, 3580ad47c1ba500584ea.wasm, 
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
                     Asset          Size   Chunks             Chunk Names
-                output.js      3.32 KiB        0  [emitted]  main
               1.output.js     184 bytes        1  [emitted]  
+1d67ba2dee85adffeb00.wasm  unknown size     2, 1  [emitted]  
+              2.output.js     674 bytes     2, 1  [emitted]  
 a36cec63b02caac8e61a.wasm  unknown size  1, 2, 1  [emitted]  
-              2.output.js     681 bytes     2, 1  [emitted]  
-a04390412f9500b1d7ae.wasm  unknown size     2, 1  [emitted]  
-0a12d714e570b7fd9d8b.wasm  unknown size     2, 1  [emitted]  
+ae1526306a934d43a9d9.wasm  unknown size     2, 1  [emitted]  
+                output.js      3.32 KiB        0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 762 bytes >{1}< >{2}< [entry] [rendered]
+chunk    {0} output.js (main) 788 bytes >{1}< >{2}< [entry] [rendered]
     > .\example.js main
- [0] ./example.js 762 bytes {0} [built]
-     single entry .\example.js  main
+ [0] ./example.js 788 bytes {0} [built]
+     entry .\example.js  main
 chunk    {1} 1.output.js, a36cec63b02caac8e61a.wasm 41 bytes <{0}> [rendered]
     > ./add.wasm [0] ./example.js 1:0-20
  [1] ./add.wasm 41 bytes {1} {2} [built]
@@ -569,14 +572,14 @@ chunk    {1} 1.output.js, a36cec63b02caac8e61a.wasm 41 bytes <{0}> [rendered]
      import() ./add.wasm [0] ./example.js 1:0-20
      harmony side effect evaluation ./add.wasm [2] ./math.js 1:0-33
      harmony export imported specifier ./add.wasm [2] ./math.js 5:0-37
-chunk    {2} 2.output.js, a36cec63b02caac8e61a.wasm, a04390412f9500b1d7ae.wasm, 0a12d714e570b7fd9d8b.wasm 570 bytes <{0}> [rendered]
+chunk    {2} 2.output.js, a36cec63b02caac8e61a.wasm, 1d67ba2dee85adffeb00.wasm, ae1526306a934d43a9d9.wasm 585 bytes <{0}> [rendered]
     > ./math [0] ./example.js 3:1-17
  [1] ./add.wasm 41 bytes {1} {2} [built]
      [exports: add]
      import() ./add.wasm [0] ./example.js 1:0-20
      harmony side effect evaluation ./add.wasm [2] ./math.js 1:0-33
      harmony export imported specifier ./add.wasm [2] ./math.js 5:0-37
- [2] ./math.js 400 bytes {2} [built]
+ [2] ./math.js 415 bytes {2} [built]
      [exports: add, factorial, fibonacci, factorialJavascript, fibonacciJavascript]
      import() ./math [0] ./example.js 3:1-17
  [3] ./factorial.wasm 62 bytes {2} [built]

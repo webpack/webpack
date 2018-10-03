@@ -1,5 +1,6 @@
 module.exports = {
 	mode: "production",
+	optimization: { moduleIds: "natural", chunkIds: "natural" },
 	entry: {
 		main: "./index",
 		sec: "./index2"

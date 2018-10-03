@@ -216,23 +216,28 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
     Asset      Size  Chunks             Chunk Names
-output.js  5.41 KiB       0  [emitted]  main
+output.js  5.42 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 603 bytes [entry] [rendered]
+chunk    {0} output.js (main) 613 bytes [entry] [rendered]
     > .\example.js main
- [0] ./example.js 146 bytes {0} [built]
-     single entry .\example.js  main
+ [0] ./example.js 150 bytes {0} [built]
+     [used exports unknown]
+     entry .\example.js  main
  [1] ./templates sync ^\.\/.*$ 217 bytes {0} [built]
+     [used exports unknown]
      cjs require context ./templates [0] ./example.js 2:8-44
- [2] ./templates/a.js 80 bytes {0} [optional] [built]
+ [2] ./templates/a.js 82 bytes {0} [optional] [built]
+     [used exports unknown]
      context element ./a [1] ./templates sync ^\.\/.*$ ./a
      context element ./a.js [1] ./templates sync ^\.\/.*$ ./a.js
- [3] ./templates/b.js 80 bytes {0} [optional] [built]
+ [3] ./templates/b.js 82 bytes {0} [optional] [built]
+     [used exports unknown]
      context element ./b [1] ./templates sync ^\.\/.*$ ./b
      context element ./b.js [1] ./templates sync ^\.\/.*$ ./b.js
- [4] ./templates/c.js 80 bytes {0} [optional] [built]
+ [4] ./templates/c.js 82 bytes {0} [optional] [built]
+     [used exports unknown]
      context element ./c [1] ./templates sync ^\.\/.*$ ./c
      context element ./c.js [1] ./templates sync ^\.\/.*$ ./c.js
 ```
@@ -241,23 +246,23 @@ chunk    {0} output.js (main) 603 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
     Asset      Size  Chunks             Chunk Names
 output.js  1.54 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 603 bytes [entry] [rendered]
+chunk    {0} output.js (main) 613 bytes [entry] [rendered]
     > .\example.js main
- [0] ./templates/a.js 80 bytes {0} [optional] [built]
+ [0] ./templates/a.js 82 bytes {0} [optional] [built]
      context element ./a [4] ./templates sync ^\.\/.*$ ./a
      context element ./a.js [4] ./templates sync ^\.\/.*$ ./a.js
- [1] ./templates/b.js 80 bytes {0} [optional] [built]
+ [1] ./templates/b.js 82 bytes {0} [optional] [built]
      context element ./b [4] ./templates sync ^\.\/.*$ ./b
      context element ./b.js [4] ./templates sync ^\.\/.*$ ./b.js
- [2] ./templates/c.js 80 bytes {0} [optional] [built]
+ [2] ./templates/c.js 82 bytes {0} [optional] [built]
      context element ./c [4] ./templates sync ^\.\/.*$ ./c
      context element ./c.js [4] ./templates sync ^\.\/.*$ ./c.js
- [3] ./example.js 146 bytes {0} [built]
-     single entry .\example.js  main
+ [3] ./example.js 150 bytes {0} [built]
+     entry .\example.js  main
  [4] ./templates sync ^\.\/.*$ 217 bytes {0} [built]
      cjs require context ./templates [3] ./example.js 2:8-44
 ```

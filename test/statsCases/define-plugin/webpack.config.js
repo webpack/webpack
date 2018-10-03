@@ -4,13 +4,14 @@ var join = require("path").join;
 
 function read(path) {
 	return JSON.stringify(
-		fs.readFileSync(join(__dirname, path), "utf8").replace(/\r\n/g, "\n")
+		fs.readFileSync(join(__dirname, path), "utf8").replace(/\r\n?/g, "\n")
 	);
 }
 
 module.exports = [
 	{
 		mode: "production",
+		optimization: { moduleIds: "natural", chunkIds: "natural" },
 		entry: "./index",
 		plugins: [
 			new webpack.DefinePlugin({
@@ -21,6 +22,7 @@ module.exports = [
 
 	{
 		mode: "production",
+		optimization: { moduleIds: "natural", chunkIds: "natural" },
 		entry: "./index",
 		plugins: [
 			new webpack.DefinePlugin({
@@ -31,6 +33,7 @@ module.exports = [
 
 	{
 		mode: "production",
+		optimization: { moduleIds: "natural", chunkIds: "natural" },
 		entry: "./index",
 		plugins: [
 			new webpack.DefinePlugin({

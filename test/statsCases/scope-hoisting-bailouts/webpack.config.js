@@ -1,5 +1,6 @@
 module.exports = {
 	mode: "production",
+	optimization: { moduleIds: "natural", chunkIds: "natural" },
 	entry: {
 		index: "./index.js",
 		entry: "./entry.js"
@@ -11,6 +12,7 @@ module.exports = {
 	externals: ["external"],
 	stats: {
 		assets: false,
+		orphanModules: true,
 		optimizationBailout: true
 	}
 };

@@ -1,5 +1,3 @@
-var webpack = require("../../../../");
-
 module.exports = {
 	performance: {
 		hints: false
@@ -8,7 +6,7 @@ module.exports = {
 		splitChunks: {
 			minSize: 1,
 			name: true
-		}
-	},
-	plugins: [new webpack.NamedChunksPlugin()]
+		},
+		chunkIds: "named"
+	}
 };

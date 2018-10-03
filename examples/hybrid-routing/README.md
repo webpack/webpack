@@ -23,7 +23,7 @@ module.exports = {
 			chunks: "all",
 			minSize: 0 // This example is too small
 		},
-		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+		chunkIds: "total-size" // To keep filename consistent between different modes (for example building only)
 	}
 };
 ```
@@ -84,11 +84,12 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 </html>
 ```
 
-# dist/pageA~pageB.chunk.js
+# dist/pageA~pageB.bundle.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],[
-/* 0 */
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
+/* 0 */,
+/* 1 */
 /*!*******************!*\
   !*** ./render.js ***!
   \*******************/
@@ -100,15 +101,15 @@ module.exports = function(page) {
 };
 
 /***/ }),
-/* 1 */,
-/* 2 */
+/* 2 */,
+/* 3 */
 /*!*******************!*\
   !*** ./router.js ***!
   \*******************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var render = __webpack_require__(/*! ./render */ 0);
+var render = __webpack_require__(/*! ./render */ 1);
 
 // Event when another page should be opened
 // Maybe hook click on links, hashchange or popstate
@@ -122,17 +123,14 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 	//  using the require.context method.
 
 	// This line may throw a exception on runtime if the page wasn't found.
-	__webpack_require__(6)(`./${name}Page`).then(page => {;
+	__webpack_require__(4)(`./${name}Page`).then(page => {;
 		render(page.default);
 	});
 }
 
 
 /***/ }),
-/* 3 */,
-/* 4 */,
-/* 5 */,
-/* 6 */
+/* 4 */
 /*!********************************************!*\
   !*** . lazy ^\.\/.*Page$ namespace object ***!
   \********************************************/
@@ -141,12 +139,12 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 
 var map = {
 	"./aPage": [
-		1,
-		0
+		2,
+		1
 	],
 	"./bPage": [
-		3,
-		1
+		6,
+		2
 	]
 };
 function webpackAsyncContext(req) {
@@ -166,7 +164,7 @@ function webpackAsyncContext(req) {
 webpackAsyncContext.keys = function webpackAsyncContextKeys() {
 	return Object.keys(map);
 };
-webpackAsyncContext.id = 6;
+webpackAsyncContext.id = 4;
 module.exports = webpackAsyncContext;
 
 /***/ })
@@ -243,7 +241,7 @@ module.exports = webpackAsyncContext;
 /******/
 /******/ 	// script path function
 /******/ 	function jsonpScriptSrc(chunkId) {
-/******/ 		return __webpack_require__.p + "" + ({"1":"bPage"}[chunkId]||chunkId) + ".chunk.js"
+/******/ 		return __webpack_require__.p + "" + ({"2":"bPage"}[chunkId]||chunkId) + ".chunk.js"
 /******/ 	}
 /******/
 /******/ 	// The require function
@@ -394,7 +392,7 @@ module.exports = webpackAsyncContext;
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([4,2,0]);
+/******/ 	deferredModules.push([0,0,1], [3,0,1]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
@@ -404,22 +402,8 @@ module.exports = webpackAsyncContext;
 </details>
 
 ``` javascript
-/******/ ({
-
-/***/ 4:
-/*!*******************************!*\
-  !*** multi ./aEntry ./router ***!
-  \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! ./aEntry */5);
-module.exports = __webpack_require__(/*! ./router */2);
-
-
-/***/ }),
-
-/***/ 5:
+/******/ ([
+/* 0 */
 /*!*******************!*\
   !*** ./aEntry.js ***!
   \*******************/
@@ -427,20 +411,19 @@ module.exports = __webpack_require__(/*! ./router */2);
 /***/ (function(module, exports, __webpack_require__) {
 
 // Just show the page "a"
-var render = __webpack_require__(/*! ./render */ 0);
-render(__webpack_require__(/*! ./aPage */ 1));
+var render = __webpack_require__(/*! ./render */ 1);
+render(__webpack_require__(/*! ./aPage */ 2));
 
 /***/ })
-
-/******/ });
+/******/ ]);
 ```
 
 # dist/aPage.chunk.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
-/* 0 */,
-/* 1 */
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
+
+/***/ 2:
 /*!******************!*\
   !*** ./aPage.js ***!
   \******************/
@@ -452,7 +435,8 @@ module.exports = function() {
 };
 
 /***/ })
-]]);
+
+}]);
 ```
 
 # Info
@@ -461,104 +445,117 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
-               Asset       Size  Chunks             Chunk Names
-      aPage.chunk.js  297 bytes       0  [emitted]  aPage
-      bPage.chunk.js  291 bytes       1  [emitted]  bPage
-pageA~pageB.chunk.js   2.02 KiB       2  [emitted]  pageA~pageB
-     pageA.bundle.js   9.48 KiB       3  [emitted]  pageA
-     pageB.bundle.js   9.48 KiB       4  [emitted]  pageB
-Entrypoint pageA = pageA~pageB.chunk.js aPage.chunk.js pageA.bundle.js
-Entrypoint pageB = pageA~pageB.chunk.js bPage.chunk.js pageB.bundle.js
-chunk    {0} aPage.chunk.js (aPage) 59 bytes <{1}> <{2}> <{4}> ={2}= ={3}= >{1}< [initial] [rendered] reused as split chunk (cache group: default)
-    > pageA
-    > ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
-    > ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
- [1] ./aPage.js 59 bytes {0} [built]
-     cjs require ./aPage [5] ./aEntry.js 3:7-25
-     context element ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
-chunk    {1} bPage.chunk.js (bPage) 59 bytes <{0}> <{2}> <{3}> ={2}= ={4}= >{0}< [initial] [rendered] reused as split chunk (cache group: default)
-    > pageB
-    > ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
-    > ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
- [3] ./bPage.js 59 bytes {1} [built]
-     context element ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
-     cjs require ./bPage [8] ./bEntry.js 3:7-25
-chunk    {2} pageA~pageB.chunk.js (pageA~pageB) 950 bytes ={0}= ={1}= ={3}= ={4}= >{0}< >{1}< [initial] [rendered] split chunk (cache group: default) (name: pageA~pageB)
-    > pageA
-    > pageB
- [0] ./render.js 58 bytes {2} [built]
-     cjs require ./render [2] ./router.js 1:13-32
-     cjs require ./render [5] ./aEntry.js 2:13-32
-     cjs require ./render [8] ./bEntry.js 2:13-32
- [2] ./router.js 732 bytes {2} [built]
-     single entry ./router [4] multi ./aEntry ./router pageA[1]
-     single entry ./router [7] multi ./bEntry ./router pageB[1]
- [6] . lazy ^\.\/.*Page$ namespace object 160 bytes {2} [built]
-     import() context lazy . [2] ./router.js 15:1-59
-chunk    {3} pageA.bundle.js (pageA) 127 bytes ={0}= ={2}= >{1}< [entry] [rendered]
-    > pageA
- [4] multi ./aEntry ./router 40 bytes {3} [built]
-     multi entry 
- [5] ./aEntry.js 87 bytes {3} [built]
-     single entry ./aEntry [4] multi ./aEntry ./router pageA[0]
-chunk    {4} pageB.bundle.js (pageB) 127 bytes ={1}= ={2}= >{0}< [entry] [rendered]
-    > pageB
- [7] multi ./bEntry ./router 40 bytes {4} [built]
-     multi entry 
- [8] ./bEntry.js 87 bytes {4} [built]
-     single entry ./bEntry [7] multi ./bEntry ./router pageB[0]
+Version: webpack 5.0.0-next
+                Asset       Size  Chunks             Chunk Names
+       aPage.chunk.js  293 bytes       1  [emitted]  aPage
+       bPage.chunk.js  293 bytes       2  [emitted]  bPage
+      pageA.bundle.js   9.18 KiB       3  [emitted]  pageA
+pageA~pageB.bundle.js   2.02 KiB       0  [emitted]  pageA~pageB
+      pageB.bundle.js   9.18 KiB       4  [emitted]  pageB
+Entrypoint pageA = pageA~pageB.bundle.js aPage.chunk.js pageA.bundle.js
+Entrypoint pageB = pageA~pageB.bundle.js bPage.chunk.js pageB.bundle.js
+chunk    {0} pageA~pageB.bundle.js (pageA~pageB) 970 bytes ={1}= ={2}= ={3}= ={4}= >{1}< >{2}< [initial] [rendered] split chunk (cache group: default) (name: pageA~pageB)
+    > ./aEntry pageA
+    > ./router pageA
+    > ./bEntry pageB
+    > ./router pageB
+ [1] ./render.js 60 bytes {0} [built]
+     [used exports unknown]
+     cjs require ./render [0] ./aEntry.js 2:13-32
+     cjs require ./render [3] ./router.js 1:13-32
+     cjs require ./render [5] ./bEntry.js 2:13-32
+ [3] ./router.js 750 bytes {0} [built]
+     [used exports unknown]
+     entry ./router  pageA
+     entry ./router  pageB
+ [4] . lazy ^\.\/.*Page$ namespace object 160 bytes {0} [built]
+     [used exports unknown]
+     import() context lazy . [3] ./router.js 15:1-59
+chunk    {1} aPage.chunk.js (aPage) 61 bytes <{0}> <{2}> <{4}> ={0}= ={3}= >{2}< [initial] [rendered] reused as split chunk (cache group: default)
+    > ./aPage [4] . lazy ^\.\/.*Page$ namespace object ./aPage
+    > ./aPage [4] . lazy ^\.\/.*Page$ namespace object ./aPage
+    > ./aEntry pageA
+    > ./router pageA
+ [2] ./aPage.js 61 bytes {1} [built]
+     [used exports unknown]
+     cjs require ./aPage [0] ./aEntry.js 3:7-25
+     context element ./aPage [4] . lazy ^\.\/.*Page$ namespace object ./aPage
+chunk    {2} bPage.chunk.js (bPage) 61 bytes <{0}> <{1}> <{3}> ={0}= ={4}= >{1}< [initial] [rendered] reused as split chunk (cache group: default)
+    > ./bPage [4] . lazy ^\.\/.*Page$ namespace object ./bPage
+    > ./bPage [4] . lazy ^\.\/.*Page$ namespace object ./bPage
+    > ./bEntry pageB
+    > ./router pageB
+ [6] ./bPage.js 61 bytes {2} [built]
+     [used exports unknown]
+     context element ./bPage [4] . lazy ^\.\/.*Page$ namespace object ./bPage
+     cjs require ./bPage [5] ./bEntry.js 3:7-25
+chunk    {3} pageA.bundle.js (pageA) 89 bytes ={0}= ={1}= >{2}< [entry] [rendered]
+    > ./aEntry pageA
+    > ./router pageA
+ [0] ./aEntry.js 89 bytes {3} [built]
+     [used exports unknown]
+     entry ./aEntry  pageA
+chunk    {4} pageB.bundle.js (pageB) 89 bytes ={0}= ={2}= >{1}< [entry] [rendered]
+    > ./bEntry pageB
+    > ./router pageB
+ [5] ./bEntry.js 89 bytes {4} [built]
+     [used exports unknown]
+     entry ./bEntry  pageB
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
-               Asset       Size  Chunks             Chunk Names
-      aPage.chunk.js  122 bytes       0  [emitted]  aPage
-      bPage.chunk.js  123 bytes       1  [emitted]  bPage
-pageA~pageB.chunk.js  545 bytes       2  [emitted]  pageA~pageB
-     pageA.bundle.js   2.25 KiB       3  [emitted]  pageA
-     pageB.bundle.js   2.25 KiB       4  [emitted]  pageB
-Entrypoint pageA = pageA~pageB.chunk.js aPage.chunk.js pageA.bundle.js
-Entrypoint pageB = pageA~pageB.chunk.js bPage.chunk.js pageB.bundle.js
-chunk    {0} aPage.chunk.js (aPage) 59 bytes <{1}> <{2}> <{4}> ={2}= ={3}= >{1}< [initial] [rendered] reused as split chunk (cache group: default)
-    > pageA
-    > ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
-    > ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
- [1] ./aPage.js 59 bytes {0} [built]
-     cjs require ./aPage [5] ./aEntry.js 3:7-25
-     context element ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
-chunk    {1} bPage.chunk.js (bPage) 59 bytes <{0}> <{2}> <{3}> ={2}= ={4}= >{0}< [initial] [rendered] reused as split chunk (cache group: default)
-    > pageB
-    > ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
-    > ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
- [3] ./bPage.js 59 bytes {1} [built]
-     context element ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
-     cjs require ./bPage [8] ./bEntry.js 3:7-25
-chunk    {2} pageA~pageB.chunk.js (pageA~pageB) 950 bytes ={0}= ={1}= ={3}= ={4}= >{0}< >{1}< [initial] [rendered] split chunk (cache group: default) (name: pageA~pageB)
-    > pageA
-    > pageB
- [0] ./render.js 58 bytes {2} [built]
-     cjs require ./render [2] ./router.js 1:13-32
-     cjs require ./render [5] ./aEntry.js 2:13-32
-     cjs require ./render [8] ./bEntry.js 2:13-32
- [2] ./router.js 732 bytes {2} [built]
-     single entry ./router [4] multi ./aEntry ./router pageA[1]
-     single entry ./router [7] multi ./bEntry ./router pageB[1]
- [6] . lazy ^\.\/.*Page$ namespace object 160 bytes {2} [built]
-     import() context lazy . [2] ./router.js 15:1-59
-chunk    {3} pageA.bundle.js (pageA) 127 bytes ={0}= ={2}= >{1}< [entry] [rendered]
-    > pageA
- [4] multi ./aEntry ./router 40 bytes {3} [built]
-     multi entry 
- [5] ./aEntry.js 87 bytes {3} [built]
-     single entry ./aEntry [4] multi ./aEntry ./router pageA[0]
-chunk    {4} pageB.bundle.js (pageB) 127 bytes ={1}= ={2}= >{0}< [entry] [rendered]
-    > pageB
- [7] multi ./bEntry ./router 40 bytes {4} [built]
-     multi entry 
- [8] ./bEntry.js 87 bytes {4} [built]
-     single entry ./bEntry [7] multi ./bEntry ./router pageB[0]
+Version: webpack 5.0.0-next
+                Asset       Size  Chunks             Chunk Names
+       aPage.chunk.js  122 bytes       1  [emitted]  aPage
+       bPage.chunk.js  123 bytes       2  [emitted]  bPage
+      pageA.bundle.js   2.22 KiB       3  [emitted]  pageA
+pageA~pageB.bundle.js  545 bytes       0  [emitted]  pageA~pageB
+      pageB.bundle.js   2.22 KiB       4  [emitted]  pageB
+Entrypoint pageA = pageA~pageB.bundle.js aPage.chunk.js pageA.bundle.js
+Entrypoint pageB = pageA~pageB.bundle.js bPage.chunk.js pageB.bundle.js
+chunk    {0} pageA~pageB.bundle.js (pageA~pageB) 970 bytes ={1}= ={2}= ={3}= ={4}= >{1}< >{2}< [initial] [rendered] split chunk (cache group: default) (name: pageA~pageB)
+    > ./aEntry pageA
+    > ./router pageA
+    > ./bEntry pageB
+    > ./router pageB
+ [0] ./render.js 60 bytes {0} [built]
+     cjs require ./render [3] ./aEntry.js 2:13-32
+     cjs require ./render [5] ./bEntry.js 2:13-32
+     cjs require ./render [6] ./router.js 1:13-32
+ [4] . lazy ^\.\/.*Page$ namespace object 160 bytes {0} [built]
+     import() context lazy . [6] ./router.js 15:1-59
+ [6] ./router.js 750 bytes {0} [built]
+     entry ./router  pageA
+     entry ./router  pageB
+chunk    {1} aPage.chunk.js (aPage) 61 bytes <{0}> <{2}> <{4}> ={0}= ={3}= >{2}< [initial] [rendered] reused as split chunk (cache group: default)
+    > ./aPage [4] . lazy ^\.\/.*Page$ namespace object ./aPage
+    > ./aPage [4] . lazy ^\.\/.*Page$ namespace object ./aPage
+    > ./aEntry pageA
+    > ./router pageA
+ [1] ./aPage.js 61 bytes {1} [built]
+     cjs require ./aPage [3] ./aEntry.js 3:7-25
+     context element ./aPage [4] . lazy ^\.\/.*Page$ namespace object ./aPage
+chunk    {2} bPage.chunk.js (bPage) 61 bytes <{0}> <{1}> <{3}> ={0}= ={4}= >{1}< [initial] [rendered] reused as split chunk (cache group: default)
+    > ./bPage [4] . lazy ^\.\/.*Page$ namespace object ./bPage
+    > ./bPage [4] . lazy ^\.\/.*Page$ namespace object ./bPage
+    > ./bEntry pageB
+    > ./router pageB
+ [2] ./bPage.js 61 bytes {2} [built]
+     context element ./bPage [4] . lazy ^\.\/.*Page$ namespace object ./bPage
+     cjs require ./bPage [5] ./bEntry.js 3:7-25
+chunk    {3} pageA.bundle.js (pageA) 89 bytes ={0}= ={1}= >{2}< [entry] [rendered]
+    > ./aEntry pageA
+    > ./router pageA
+ [3] ./aEntry.js 89 bytes {3} [built]
+     [module unused]
+     entry ./aEntry  pageA
+chunk    {4} pageB.bundle.js (pageB) 89 bytes ={0}= ={2}= >{1}< [entry] [rendered]
+    > ./bEntry pageB
+    > ./router pageB
+ [5] ./bEntry.js 89 bytes {4} [built]
+     [module unused]
+     entry ./bEntry  pageB
 ```

@@ -8,7 +8,7 @@ module.exports = {
 		"../../../js/config/records/stable-sort/records.json"
 	),
 	optimization: {
-		namedChunks: false
+		chunkIds: "size"
 	},
 	target: "node",
 	node: {

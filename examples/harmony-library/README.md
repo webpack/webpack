@@ -152,28 +152,29 @@ function increment() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
            Asset      Size  Chunks             Chunk Names
 MyLibrary.umd.js  4.52 KiB       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
-chunk    {0} MyLibrary.umd.js (main) 92 bytes [entry] [rendered]
+chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
     > ./example main
- [0] ./example.js 92 bytes {0} [built]
+ [0] ./example.js 97 bytes {0} [built]
      [exports: value, increment, default]
-     single entry ./example  main
+     [used exports unknown]
+     entry ./example  main
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
            Asset      Size  Chunks             Chunk Names
 MyLibrary.umd.js  1.28 KiB       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
-chunk    {0} MyLibrary.umd.js (main) 92 bytes [entry] [rendered]
+chunk    {0} MyLibrary.umd.js (main) 97 bytes [entry] [rendered]
     > ./example main
- [0] ./example.js 92 bytes {0} [built]
+ [0] ./example.js 97 bytes {0} [built]
      [exports: value, increment, default]
-     single entry ./example  main
+     entry ./example  main
 ```

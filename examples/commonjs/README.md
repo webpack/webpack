@@ -184,17 +184,20 @@ exports.add = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
     Asset     Size  Chunks             Chunk Names
 output.js  4.4 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 326 bytes [entry] [rendered]
+chunk    {0} output.js (main) 332 bytes [entry] [rendered]
     > .\example.js main
  [0] ./example.js 72 bytes {0} [built]
-     single entry .\example.js  main
+     [used exports unknown]
+     entry .\example.js  main
  [1] ./increment.js 98 bytes {0} [built]
+     [used exports unknown]
      cjs require ./increment [0] ./example.js 1:12-34
- [2] ./math.js 156 bytes {0} [built]
+ [2] ./math.js 162 bytes {0} [built]
+     [used exports unknown]
      cjs require ./math [1] ./increment.js 1:12-29
 ```
 
@@ -202,16 +205,16 @@ chunk    {0} output.js (main) 326 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
     Asset     Size  Chunks             Chunk Names
 output.js  1.1 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 326 bytes [entry] [rendered]
+chunk    {0} output.js (main) 332 bytes [entry] [rendered]
     > .\example.js main
  [0] ./example.js 72 bytes {0} [built]
-     single entry .\example.js  main
+     entry .\example.js  main
  [1] ./increment.js 98 bytes {0} [built]
      cjs require ./increment [0] ./example.js 1:12-34
- [2] ./math.js 156 bytes {0} [built]
+ [2] ./math.js 162 bytes {0} [built]
      cjs require ./math [1] ./increment.js 1:12-29
 ```

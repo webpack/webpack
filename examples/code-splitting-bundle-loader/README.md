@@ -291,20 +291,23 @@ module.exports = "It works";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
       Asset       Size  Chunks             Chunk Names
-  output.js   8.84 KiB       0  [emitted]  main
 1.output.js  257 bytes       1  [emitted]  
+  output.js   8.84 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 375 bytes >{1}< [entry] [rendered]
+chunk    {0} output.js (main) 378 bytes >{1}< [entry] [rendered]
     > .\example.js main
- [0] ./example.js 94 bytes {0} [built]
-     single entry .\example.js  main
+ [0] ./example.js 97 bytes {0} [built]
+     [used exports unknown]
+     entry .\example.js  main
  [1] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {0} [built]
+     [used exports unknown]
      cjs require bundle-loader!./file.js [0] ./example.js 1:0-34
 chunk    {1} 1.output.js 28 bytes <{0}> [rendered]
     > [1] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
  [2] ./file.js 28 bytes {1} [built]
+     [used exports unknown]
      cjs require !!./file.js [1] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
 ```
 
@@ -312,15 +315,15 @@ chunk    {1} 1.output.js 28 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
       Asset      Size  Chunks             Chunk Names
-  output.js  2.19 KiB       0  [emitted]  main
 1.output.js  98 bytes       1  [emitted]  
+  output.js  2.19 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 375 bytes >{1}< [entry] [rendered]
+chunk    {0} output.js (main) 378 bytes >{1}< [entry] [rendered]
     > .\example.js main
- [0] ./example.js 94 bytes {0} [built]
-     single entry .\example.js  main
+ [0] ./example.js 97 bytes {0} [built]
+     entry .\example.js  main
  [1] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {0} [built]
      cjs require bundle-loader!./file.js [0] ./example.js 1:0-34
 chunk    {1} 1.output.js 28 bytes <{0}> [rendered]

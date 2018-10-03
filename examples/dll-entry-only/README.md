@@ -64,7 +64,7 @@ module.exports = {
 # dist/dll.js
 
 ``` javascript
-var dll_3eea518f6d09aac41ec7 =
+var dll_1e2cfb78cccc54ddd489 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -173,19 +173,6 @@ module.exports = __webpack_require__;
 
 /***/ }),
 /* 1 */
-/*!****************!*\
-  !*** ./cjs.js ***!
-  \****************/
-/*! no static exports found */
-/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
-/***/ (function(module, exports) {
-
-// module cjs (commonjs)
-exports.c = "c";
-
-
-/***/ }),
-/* 2 */
 /*!********************************!*\
   !*** ./example.js + 2 modules ***!
   \********************************/
@@ -207,14 +194,27 @@ var a = "a";
 
 
 // EXTERNAL MODULE: ./cjs.js
-var cjs = __webpack_require__(1);
+var cjs = __webpack_require__(2);
 
 // CONCATENATED MODULE: ./example.js
-/* concated harmony reexport a */__webpack_require__.d(__webpack_exports__, "a", function() { return a; });
-/* concated harmony reexport b */__webpack_require__.d(__webpack_exports__, "b", function() { return b; });
-/* concated harmony reexport c */__webpack_require__.d(__webpack_exports__, "c", function() { return cjs["c"]; });
+/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "a", function() { return a; });
+/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "b", function() { return b; });
+/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "c", function() { return cjs["c"]; });
 
 
+
+
+/***/ }),
+/* 2 */
+/*!****************!*\
+  !*** ./cjs.js ***!
+  \****************/
+/*! no static exports found */
+/*! ModuleConcatenation bailout: Module is not an ECMAScript module */
+/***/ (function(module, exports) {
+
+// module cjs (commonjs)
+exports.c = "c";
 
 
 /***/ })
@@ -224,7 +224,7 @@ var cjs = __webpack_require__(1);
 # dist/dll-manifest.json
 
 ``` javascript
-{"name":"dll_3eea518f6d09aac41ec7","content":{"./example.js":{"id":2,"buildMeta":{"exportsType":"namespace","providedExports":["a","b","c"]}}}}
+{"name":"dll_1e2cfb78cccc54ddd489","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["a","b","c"]}}}}
 ```
 
 # Info
@@ -233,65 +233,69 @@ var cjs = __webpack_require__(1);
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
  Asset      Size  Chunks             Chunk Names
-dll.js  4.98 KiB       0  [emitted]  dll
+dll.js  4.99 KiB       0  [emitted]  dll
 Entrypoint dll = dll.js
-chunk    {0} dll.js (dll) 216 bytes [entry] [rendered]
+chunk    {0} dll.js (dll) 227 bytes [entry] [rendered]
     > dll
  [0] dll dll 12 bytes {0} [built]
+     [used exports unknown]
      dll entry 
- [1] ./cjs.js 42 bytes {0} [built]
-     harmony side effect evaluation ./cjs [2] ./example.js + 2 modules 2:0-26
-     harmony export imported specifier ./cjs [2] ./example.js + 2 modules 2:0-26
- [2] ./example.js + 2 modules 162 bytes {0} [built]
+ [1] ./example.js + 2 modules 171 bytes {0} [built]
      [exports: a, b, c]
-     single entry ./example [0] dll dll dll[0]
-     | ./example.js 55 bytes [built]
-     |     [exports: a, b, c]
-     |     single entry ./example [0] dll dll dll[0]
-     | ./a.js 53 bytes [built]
+     [used exports unknown]
+     entry ./example [0] dll dll dll[0]
+     | ./b.js 53 bytes [built]
+     |     [exports: b]
+     |     [used exports unknown]
+     |     harmony side effect evaluation ./b  ./a.js 3:0-20
+     |     harmony export imported specifier ./b  ./a.js 3:0-20
+     | ./a.js 56 bytes [built]
      |     [exports: a, b]
+     |     [used exports unknown]
      |     harmony side effect evaluation ./a  ./example.js 1:0-27
      |     harmony export imported specifier ./a  ./example.js 1:0-27
      |     harmony export imported specifier ./a  ./example.js 1:0-27
-     | ./b.js 49 bytes [built]
-     |     [exports: b]
-     |     harmony side effect evaluation ./b  ./a.js 3:0-20
-     |     harmony export imported specifier ./b  ./a.js 3:0-20
+     | ./example.js 57 bytes [built]
+     |     [exports: a, b, c]
+     |     [used exports unknown]
+ [2] ./cjs.js 44 bytes {0} [built]
+     [used exports unknown]
+     harmony side effect evaluation ./cjs [1] ./example.js + 2 modules 2:0-26
+     harmony export imported specifier ./cjs [1] ./example.js + 2 modules 2:0-26
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
  Asset      Size  Chunks             Chunk Names
 dll.js  1.15 KiB       0  [emitted]  dll
 Entrypoint dll = dll.js
-chunk    {0} dll.js (dll) 216 bytes [entry] [rendered]
+chunk    {0} dll.js (dll) 227 bytes [entry] [rendered]
     > dll
- [0] ./cjs.js 42 bytes {0} [built]
+ [0] ./cjs.js 44 bytes {0} [built]
      [only some exports used: c]
      harmony side effect evaluation ./cjs [2] ./example.js + 2 modules 2:0-26
      harmony export imported specifier ./cjs [2] ./example.js + 2 modules 2:0-26
  [1] dll dll 12 bytes {0} [built]
      dll entry 
- [2] ./example.js + 2 modules 162 bytes {0} [built]
+ [2] ./example.js + 2 modules 171 bytes {0} [built]
      [exports: a, b, c]
-     single entry ./example [1] dll dll dll[0]
-     | ./example.js 55 bytes [built]
-     |     [exports: a, b, c]
-     |     single entry ./example [1] dll dll dll[0]
-     | ./a.js 53 bytes [built]
+     entry ./example [1] dll dll dll[0]
+     | ./b.js 53 bytes [built]
+     |     [exports: b]
+     |     [all exports used]
+     |     harmony side effect evaluation ./b  ./a.js 3:0-20
+     |     harmony export imported specifier ./b  ./a.js 3:0-20
+     | ./a.js 56 bytes [built]
      |     [exports: a, b]
      |     [all exports used]
      |     harmony side effect evaluation ./a  ./example.js 1:0-27
      |     harmony export imported specifier ./a  ./example.js 1:0-27
      |     harmony export imported specifier ./a  ./example.js 1:0-27
-     | ./b.js 49 bytes [built]
-     |     [exports: b]
-     |     [all exports used]
-     |     harmony side effect evaluation ./b  ./a.js 3:0-20
-     |     harmony export imported specifier ./b  ./a.js 3:0-20
+     | ./example.js 57 bytes [built]
+     |     [exports: a, b, c]
 ```

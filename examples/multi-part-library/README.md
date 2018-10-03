@@ -275,7 +275,7 @@ module.exports = "beta";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
              Asset      Size  Chunks             Chunk Names
 MyLibrary.alpha.js  4.12 KiB       0  [emitted]  alpha
  MyLibrary.beta.js  4.12 KiB       1  [emitted]  beta
@@ -284,18 +284,20 @@ Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
     > ./alpha alpha
  [0] ./alpha.js 25 bytes {0} [built]
-     single entry ./alpha  alpha
+     [used exports unknown]
+     entry ./alpha  alpha
 chunk    {1} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     > ./beta beta
  [1] ./beta.js 24 bytes {1} [built]
-     single entry ./beta  beta
+     [used exports unknown]
+     entry ./beta  beta
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
              Asset      Size  Chunks             Chunk Names
 MyLibrary.alpha.js  1.19 KiB       0  [emitted]  alpha
  MyLibrary.beta.js  1.19 KiB       1  [emitted]  beta
@@ -304,9 +306,9 @@ Entrypoint beta = MyLibrary.beta.js
 chunk    {0} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
     > ./alpha alpha
  [0] ./alpha.js 25 bytes {0} [built]
-     single entry ./alpha  alpha
+     entry ./alpha  alpha
 chunk    {1} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
     > ./beta beta
  [1] ./beta.js 24 bytes {1} [built]
-     single entry ./beta  beta
+     entry ./beta  beta
 ```

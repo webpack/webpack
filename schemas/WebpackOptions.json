@@ -415,10 +415,6 @@
           "description": "Also flag chunks as loaded which contain a subset of the modules",
           "type": "boolean"
         },
-        "hashedModuleIds": {
-          "description": "Use hashed module id instead module identifiers for better long term caching (deprecated, used moduleIds: hashed instead)",
-          "type": "boolean"
-        },
         "mangleWasmImports": {
           "description": "Reduce size of WASM by changing imports to shorter strings.",
           "type": "boolean"
@@ -447,16 +443,16 @@
           }
         },
         "moduleIds": {
-          "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: short hashes as ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)",
-          "enum": ["natural", "named", "hashed", "size", "total-size", false]
-        },
-        "namedChunks": {
-          "description": "Use readable chunk identifiers for better debugging (deprecated, used chunkIds: named instead)",
-          "type": "boolean"
-        },
-        "namedModules": {
-          "description": "Use readable module identifiers for better debugging (deprecated, used moduleIds: named instead)",
-          "type": "boolean"
+          "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)",
+          "enum": [
+            "natural",
+            "named",
+            "hashed",
+            "deterministic",
+            "size",
+            "total-size",
+            false
+          ]
         },
         "noEmitOnErrors": {
           "description": "Avoid emitting assets when errors occur",
@@ -472,10 +468,6 @@
               "type": "string"
             }
           ]
-        },
-        "occurrenceOrder": {
-          "description": "Figure out a order of modules which results in the smallest initial bundle",
-          "type": "boolean"
         },
         "portableRecords": {
           "description": "Generate records with relative paths to be able to move the context folder",
@@ -655,7 +647,23 @@
                     "type": "boolean"
                   },
                   "test": {
-                    "description": "Assign modules to a cache group",
+                    "description": "Assign modules to a cache group by module name",
+                    "oneOf": [
+                      {
+                        "instanceof": "Function",
+                        "tsType": "Function"
+                      },
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "instanceof": "RegExp",
+                        "tsType": "RegExp"
+                      }
+                    ]
+                  },
+                  "type": {
+                    "description": "Assign modules to a cache group by module type",
                     "oneOf": [
                       {
                         "instanceof": "Function",
@@ -901,16 +909,8 @@
         },
         "hotUpdateChunkFilename": {
           "description": "The filename of the Hot Update Chunks. They are inside the output.path directory.",
-          "anyOf": [
-            {
-              "type": "string",
-              "absolutePath": false
-            },
-            {
-              "instanceof": "Function",
-              "tsType": "Function"
-            }
-          ]
+          "type": "string",
+          "absolutePath": false
         },
         "hotUpdateFunction": {
           "description": "The JSONP function used by webpack for async loading of hot update chunks.",
@@ -918,16 +918,8 @@
         },
         "hotUpdateMainFilename": {
           "description": "The filename of the Hot Update Main File. It is inside the `output.path` directory.",
-          "anyOf": [
-            {
-              "type": "string",
-              "absolutePath": false
-            },
-            {
-              "instanceof": "Function",
-              "tsType": "Function"
-            }
-          ]
+          "type": "string",
+          "absolutePath": false
         },
         "jsonpFunction": {
           "description": "The JSONP function used by webpack for async loading of chunks.",
@@ -1669,7 +1661,7 @@
           "type": "boolean"
         },
         "cached": {
-          "description": "add also information about cached (not built) modules",
+          "description": "add information about cached (not built) modules",
           "type": "boolean"
         },
         "cachedAssets": {
@@ -1824,6 +1816,10 @@
         },
         "optimizationBailout": {
           "description": "show reasons why optimization bailed out for modules",
+          "type": "boolean"
+        },
+        "orphanModules": {
+          "description": "add information about orphan modules",
           "type": "boolean"
         },
         "outputPath": {

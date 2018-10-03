@@ -225,7 +225,7 @@ require.ensure(["b"], function(require) {
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
@@ -234,25 +234,23 @@ require.ensure(["b"], function(require) {
 
 ``` javascript
 /******/ ([
-/* 0 */,
-/* 1 */,
-/* 2 */
+/* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var a = __webpack_require__(/*! a */ 3);
+var a = __webpack_require__(/*! a */ 1);
 
 __webpack_require__.e(/*! require.ensure | my own chunk */ 1).then((function(require) {
 	// a named chunk
-	var c = __webpack_require__(/*! c */ 4);
+	var c = __webpack_require__(/*! c */ 3);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
 __webpack_require__.e(/*! require.ensure | my own chunk */ 1).then((function(require) {
 	// another chunk with the same name
-	var d = __webpack_require__(/*! d */ 1);
+	var d = __webpack_require__(/*! d */ 4);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
 __webpack_require__.e(/*! require.ensure | my own chunk */ 1).then((function(require) {
@@ -261,12 +259,12 @@ __webpack_require__.e(/*! require.ensure | my own chunk */ 1).then((function(req
 
 __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 	// chunk without name
-	var d = __webpack_require__(/*! d */ 1);
+	var d = __webpack_require__(/*! d */ 4);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
 
 /***/ }),
-/* 3 */
+/* 1 */
 /*!***************************!*\
   !*** ./node_modules/a.js ***!
   \***************************/
@@ -283,7 +281,9 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
-/* 0 */
+/* 0 */,
+/* 1 */,
+/* 2 */
 /*!***************************!*\
   !*** ./node_modules/b.js ***!
   \***************************/
@@ -293,19 +293,7 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 // module b
 
 /***/ }),
-/* 1 */
-/*!***************************!*\
-  !*** ./node_modules/d.js ***!
-  \***************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// module d
-
-/***/ }),
-/* 2 */,
-/* 3 */,
-/* 4 */
+/* 3 */
 /*!***************************!*\
   !*** ./node_modules/c.js ***!
   \***************************/
@@ -313,6 +301,16 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 /***/ (function(module, exports) {
 
 // module c
+
+/***/ }),
+/* 4 */
+/*!***************************!*\
+  !*** ./node_modules/d.js ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// module d
 
 /***/ })
 ]]);
@@ -322,7 +320,9 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 
 ``` javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],[
-/* 0 */
+/* 0 */,
+/* 1 */,
+/* 2 */
 /*!***************************!*\
   !*** ./node_modules/b.js ***!
   \***************************/
@@ -332,7 +332,8 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 // module b
 
 /***/ }),
-/* 1 */
+/* 3 */,
+/* 4 */
 /*!***************************!*\
   !*** ./node_modules/d.js ***!
   \***************************/
@@ -351,24 +352,25 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
       Asset       Size  Chunks             Chunk Names
-  output.js   9.12 KiB       0  [emitted]  main
 1.output.js  677 bytes       1  [emitted]  my own chunk
-2.output.js  463 bytes       2  [emitted]  
+2.output.js  490 bytes       2  [emitted]  
+  output.js   9.13 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 432 bytes >{1}< >{2}< [entry] [rendered]
+chunk    {0} output.js (main) 452 bytes >{1}< >{2}< [entry] [rendered]
     > .\example.js main
- [2] ./example.js 421 bytes {0} [built]
-     single entry .\example.js  main
+ [0] ./example.js 441 bytes {0} [built]
+     [used exports unknown]
+     entry .\example.js  main
      + 1 hidden module
 chunk    {1} 1.output.js (my own chunk) 33 bytes <{0}> [rendered]
-    > [2] ./example.js 13:0-15:18
-    > [2] ./example.js 3:0-6:18
-    > [2] ./example.js 8:0-11:18
+    > [0] ./example.js 13:0-15:18
+    > [0] ./example.js 3:0-6:18
+    > [0] ./example.js 8:0-11:18
     3 modules
 chunk    {2} 2.output.js 22 bytes <{0}> [rendered]
-    > [2] ./example.js 17:0-20:2
+    > [0] ./example.js 17:0-20:2
     2 modules
 ```
 
@@ -376,23 +378,23 @@ chunk    {2} 2.output.js 22 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
       Asset       Size  Chunks             Chunk Names
-  output.js   2.22 KiB       0  [emitted]  main
-1.output.js  112 bytes    1, 2  [emitted]  my own chunk
-2.output.js   92 bytes       2  [emitted]  
+0.output.js   92 bytes       0  [emitted]  
+1.output.js  112 bytes    1, 0  [emitted]  my own chunk
+  output.js   2.22 KiB       2  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 432 bytes >{1}< >{2}< [entry] [rendered]
-    > .\example.js main
- [2] ./example.js 421 bytes {0} [built]
-     single entry .\example.js  main
-     + 1 hidden module
-chunk    {1} 1.output.js (my own chunk) 33 bytes <{0}> [rendered]
+chunk    {0} 0.output.js 22 bytes <{2}> [rendered]
+    > [2] ./example.js 17:0-20:2
+    2 modules
+chunk    {1} 1.output.js (my own chunk) 33 bytes <{2}> [rendered]
     > [2] ./example.js 13:0-15:18
     > [2] ./example.js 3:0-6:18
     > [2] ./example.js 8:0-11:18
     3 modules
-chunk    {2} 2.output.js 22 bytes <{0}> [rendered]
-    > [2] ./example.js 17:0-20:2
-    2 modules
+chunk    {2} output.js (main) 452 bytes >{0}< >{1}< [entry] [rendered]
+    > .\example.js main
+ [2] ./example.js 441 bytes {2} [built]
+     entry .\example.js  main
+     + 1 hidden module
 ```

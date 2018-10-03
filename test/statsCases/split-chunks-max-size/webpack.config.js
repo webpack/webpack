@@ -19,6 +19,8 @@ module.exports = [
 			filename: "prod-[name].js"
 		},
 		optimization: {
+			moduleIds: "natural",
+			chunkIds: "natural",
 			splitChunks: {
 				minSize: 100,
 				maxSize: 1000,

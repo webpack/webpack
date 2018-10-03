@@ -16,6 +16,7 @@ module.exports = {
 			 * @returns {void}
 			 */
 			const handler = compilation => {
+				const moduleGraph = compilation.moduleGraph;
 				compilation.hooks.afterSeal.tap("testcase", () => {
 					const data = {};
 					for (const [name, group] of compilation.namedChunkGroups) {
@@ -23,9 +24,11 @@ module.exports = {
 						const modules = new Map();
 						const modules2 = new Map();
 						for (const chunk of group.chunks) {
-							for (const module of chunk.modulesIterable) {
-								modules.set(module, group.getModuleIndex(module));
-								modules2.set(module, group.getModuleIndex2(module));
+							for (const module of compilation.chunkGraph.getChunkModulesIterable(
+								chunk
+							)) {
+								modules.set(module, group.getModulePreOrderIndex(module));
+								modules2.set(module, group.getModulePostOrderIndex(module));
 							}
 						}
 						const sortedModules = Array.from(modules).sort((a, b) => {
@@ -65,22 +68,28 @@ module.exports = {
 						asyncIndex: "0: ./async.js",
 						asyncIndex2: "0: ./async.js"
 					});
-					const indicies = compilation.modules
-						.slice()
-						.sort((a, b) => a.index - b.index)
+					const indicies = Array.from(compilation.modules)
+						.sort(
+							(a, b) =>
+								moduleGraph.getPreOrderIndex(a) -
+								moduleGraph.getPreOrderIndex(b)
+						)
 						.map(
 							m =>
-								`${m.index}: ${m.readableIdentifier(
+								`${moduleGraph.getPreOrderIndex(m)}: ${m.readableIdentifier(
 									compilation.requestShortener
 								)}`
 						)
 						.join(", ");
-					const indicies2 = compilation.modules
-						.slice()
-						.sort((a, b) => a.index2 - b.index2)
+					const indicies2 = Array.from(compilation.modules)
+						.sort(
+							(a, b) =>
+								moduleGraph.getPostOrderIndex(a) -
+								moduleGraph.getPostOrderIndex(b)
+						)
 						.map(
 							m =>
-								`${m.index2}: ${m.readableIdentifier(
+								`${moduleGraph.getPostOrderIndex(m)}: ${m.readableIdentifier(
 									compilation.requestShortener
 								)}`
 						)

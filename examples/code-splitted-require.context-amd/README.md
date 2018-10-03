@@ -335,26 +335,31 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
       Asset      Size  Chunks             Chunk Names
-  output.js  8.47 KiB       0  [emitted]  main
-1.output.js  1.83 KiB       1  [emitted]  
+1.output.js  1.84 KiB       1  [emitted]  
+  output.js  8.48 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 251 bytes >{1}< [entry] [rendered]
+chunk    {0} output.js (main) 261 bytes >{1}< [entry] [rendered]
     > .\example.js main
- [0] ./example.js 251 bytes {0} [built]
-     single entry .\example.js  main
-chunk    {1} 1.output.js 457 bytes <{0}> [rendered]
+ [0] ./example.js 261 bytes {0} [built]
+     [used exports unknown]
+     entry .\example.js  main
+chunk    {1} 1.output.js 463 bytes <{0}> [rendered]
     > [0] ./example.js 2:1-4:3
  [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {1} [built]
+     [used exports unknown]
      amd require context ../require.context/templates [0] ./example.js 2:1-4:3
- [2] ../require.context/templates/a.js 80 bytes {1} [optional] [built]
+ [2] ../require.context/templates/a.js 82 bytes {1} [optional] [built]
+     [used exports unknown]
      context element ./a [1] ../require.context/templates sync ^\.\/.*$ ./a
      context element ./a.js [1] ../require.context/templates sync ^\.\/.*$ ./a.js
- [3] ../require.context/templates/b.js 80 bytes {1} [optional] [built]
+ [3] ../require.context/templates/b.js 82 bytes {1} [optional] [built]
+     [used exports unknown]
      context element ./b [1] ../require.context/templates sync ^\.\/.*$ ./b
      context element ./b.js [1] ../require.context/templates sync ^\.\/.*$ ./b.js
- [4] ../require.context/templates/c.js 80 bytes {1} [optional] [built]
+ [4] ../require.context/templates/c.js 82 bytes {1} [optional] [built]
+     [used exports unknown]
      context element ./c [1] ../require.context/templates sync ^\.\/.*$ ./c
      context element ./c.js [1] ../require.context/templates sync ^\.\/.*$ ./c.js
 ```
@@ -363,26 +368,26 @@ chunk    {1} 1.output.js 457 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 5.0.0-next
       Asset       Size  Chunks             Chunk Names
-  output.js   2.15 KiB       0  [emitted]  main
 1.output.js  626 bytes       1  [emitted]  
+  output.js   2.15 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 251 bytes >{1}< [entry] [rendered]
+chunk    {0} output.js (main) 261 bytes >{1}< [entry] [rendered]
     > .\example.js main
- [0] ./example.js 251 bytes {0} [built]
-     single entry .\example.js  main
-chunk    {1} 1.output.js 457 bytes <{0}> [rendered]
+ [0] ./example.js 261 bytes {0} [built]
+     entry .\example.js  main
+chunk    {1} 1.output.js 463 bytes <{0}> [rendered]
     > [0] ./example.js 2:1-4:3
  [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {1} [built]
      amd require context ../require.context/templates [0] ./example.js 2:1-4:3
- [2] ../require.context/templates/a.js 80 bytes {1} [optional] [built]
+ [2] ../require.context/templates/a.js 82 bytes {1} [optional] [built]
      context element ./a [1] ../require.context/templates sync ^\.\/.*$ ./a
      context element ./a.js [1] ../require.context/templates sync ^\.\/.*$ ./a.js
- [3] ../require.context/templates/b.js 80 bytes {1} [optional] [built]
+ [3] ../require.context/templates/b.js 82 bytes {1} [optional] [built]
      context element ./b [1] ../require.context/templates sync ^\.\/.*$ ./b
      context element ./b.js [1] ../require.context/templates sync ^\.\/.*$ ./b.js
- [4] ../require.context/templates/c.js 80 bytes {1} [optional] [built]
+ [4] ../require.context/templates/c.js 82 bytes {1} [optional] [built]
      context element ./c [1] ../require.context/templates sync ^\.\/.*$ ./c
      context element ./c.js [1] ../require.context/templates sync ^\.\/.*$ ./c.js
 ```

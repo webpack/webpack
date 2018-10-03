@@ -2,6 +2,7 @@ var webpack = require("../../../");
 module.exports = [1, 2, 3, 4].map(n => ({
 	name: `${n} chunks`,
 	mode: "production",
+	optimization: { moduleIds: "natural", chunkIds: "natural" },
 	entry: "./index",
 	output: {
 		filename: "bundle.js"

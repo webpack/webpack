@@ -1,3 +1,3 @@
 module.exports = [
-	[/system_undef/, /System\.import\(\) is deprecated/]
+	[/system_true/, /System\.import\(\) is deprecated/]
 ];

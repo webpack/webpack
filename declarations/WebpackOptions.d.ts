@@ -764,10 +764,6 @@ export interface OptimizationOptions {
 	 */
 	flagIncludedChunks?: boolean;
 	/**
-	 * Use hashed module id instead module identifiers for better long term caching (deprecated, used moduleIds: hashed instead)
-	 */
-	hashedModuleIds?: boolean;
-	/**
 	 * Reduce size of WASM by changing imports to shorter strings.
 	 */
 	mangleWasmImports?: boolean;
@@ -784,17 +780,16 @@ export interface OptimizationOptions {
 	 */
 	minimizer?: (WebpackPluginInstance | WebpackPluginFunction)[];
 	/**
-	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: short hashes as ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)
+	 * Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: short hashes as ids for better long term caching, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)
 	 */
-	moduleIds?: "natural" | "named" | "hashed" | "size" | "total-size" | false;
-	/**
-	 * Use readable chunk identifiers for better debugging (deprecated, used chunkIds: named instead)
-	 */
-	namedChunks?: boolean;
-	/**
-	 * Use readable module identifiers for better debugging (deprecated, used moduleIds: named instead)
-	 */
-	namedModules?: boolean;
+	moduleIds?:
+		| "natural"
+		| "named"
+		| "hashed"
+		| "deterministic"
+		| "size"
+		| "total-size"
+		| false;
 	/**
 	 * Avoid emitting assets when errors occur
 	 */
@@ -803,10 +798,6 @@ export interface OptimizationOptions {
 	 * Set process.env.NODE_ENV to a specific value
 	 */
 	nodeEnv?: false | string;
-	/**
-	 * Figure out a order of modules which results in the smallest initial bundle
-	 */
-	occurrenceOrder?: boolean;
 	/**
 	 * Generate records with relative paths to be able to move the context folder
 	 */
@@ -923,9 +914,13 @@ export interface OptimizationSplitChunksOptions {
 					 */
 					reuseExistingChunk?: boolean;
 					/**
-					 * Assign modules to a cache group
+					 * Assign modules to a cache group by module name
 					 */
 					test?: Function | string | RegExp;
+					/**
+					 * Assign modules to a cache group by module type
+					 */
+					type?: Function | string | RegExp;
 			  };
 	};
 	/**
@@ -1073,7 +1068,7 @@ export interface OutputOptions {
 	/**
 	 * The filename of the Hot Update Chunks. They are inside the output.path directory.
 	 */
-	hotUpdateChunkFilename?: string | Function;
+	hotUpdateChunkFilename?: string;
 	/**
 	 * The JSONP function used by webpack for async loading of hot update chunks.
 	 */
@@ -1081,7 +1076,7 @@ export interface OutputOptions {
 	/**
 	 * The filename of the Hot Update Main File. It is inside the `output.path` directory.
 	 */
-	hotUpdateMainFilename?: string | Function;
+	hotUpdateMainFilename?: string;
 	/**
 	 * The JSONP function used by webpack for async loading of chunks.
 	 */
@@ -1211,7 +1206,7 @@ export interface StatsOptions {
 	 */
 	builtAt?: boolean;
 	/**
-	 * add also information about cached (not built) modules
+	 * add information about cached (not built) modules
 	 */
 	cached?: boolean;
 	/**
@@ -1341,6 +1336,10 @@ export interface StatsOptions {
 	 * show reasons why optimization bailed out for modules
 	 */
 	optimizationBailout?: boolean;
+	/**
+	 * add information about orphan modules
+	 */
+	orphanModules?: boolean;
 	/**
 	 * Add output path information
 	 */
