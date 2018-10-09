@@ -505,28 +505,28 @@ chunk    {0} bundle.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
     > ./index main
  [0] ./index.js 51 bytes {0} [built]
      entry ./index  main
-     Xms (resolving: Xms, integration: Xms, building: Xms)
+     Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
  [1] ./a.js 22 bytes {0} [built]
      cjs require ./a [0] ./index.js 1:0-14
-     [0] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
+     [0] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
 chunk    {1} 1.bundle.js 22 bytes <{0}> [rendered]
     > ./b [0] ./index.js 2:0-16
  [2] ./b.js 22 bytes {1} [built]
      amd require ./b [0] ./index.js 2:0-16
-     [0] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
+     [0] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
 chunk    {2} 2.bundle.js 54 bytes <{0}> >{3}< [rendered]
     > ./c [0] ./index.js 3:0-16
  [3] ./c.js 54 bytes {2} [built]
      amd require ./c [0] ./index.js 3:0-16
-     [0] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
+     [0] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
 chunk    {3} 3.bundle.js 44 bytes <{2}> [rendered]
     > [3] ./c.js 1:0-52
  [4] ./d.js 22 bytes {3} [built]
      require.ensure item ./d [3] ./c.js 1:0-52
-     [0] Xms -> [3] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
+     [0] Xms -> [3] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
  [5] ./e.js 22 bytes {3} [built]
      require.ensure item ./e [3] ./c.js 1:0-52
-     [0] Xms -> [3] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)"
+     [0] Xms -> [3] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)"
 `;
 
 exports[`StatsTestCases should print correct stats for chunks-development 1`] = `
@@ -543,29 +543,29 @@ chunk    {0} 0.bundle.js 60 bytes <{c}> [rendered]
     > [./c.js] ./c.js 1:0-52
  [./d.js] 22 bytes {0} [built]
      require.ensure item ./d [./c.js] 1:0-52
-     [./index.js] Xms -> [./c.js] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
+     [./index.js] Xms -> [./c.js] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
  [./e.js] 38 bytes {0} [built]
      require.ensure item ./e [./c.js] 1:0-52
-     [./index.js] Xms -> [./c.js] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
+     [./index.js] Xms -> [./c.js] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
 chunk {b} b.bundle.js 22 bytes <{main}> [rendered]
     > ./b [./index.js] ./index.js 2:0-16
  [./b.js] 22 bytes {b} [built]
      amd require ./b [./index.js] 2:0-16
-     [./index.js] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
+     [./index.js] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
 chunk {c} c.bundle.js 54 bytes <{main}> >{0}< [rendered]
     > ./c [./index.js] ./index.js 3:0-16
  [./c.js] 54 bytes {c} [built]
      amd require ./c [./index.js] 3:0-16
-     [./index.js] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
+     [./index.js] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
 chunk {main} bundle.js (main) 73 bytes >{b}< >{c}< [entry] [rendered]
     > ./index main
  [./a.js] 22 bytes {main} [built]
      cjs require ./a [./e.js] 1:0-14
      cjs require ./a [./index.js] 1:0-14
-     [./index.js] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
+     [./index.js] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
  [./index.js] 51 bytes {main} [built]
      entry ./index  main
-     Xms (resolving: Xms, integration: Xms, building: Xms)"
+     Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)"
 `;
 
 exports[`StatsTestCases should print correct stats for circular-correctness 1`] = `
@@ -2051,33 +2051,33 @@ chunk    {0} main.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
  [0] ./index.js 51 bytes {0} [depth 0] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      entry ./index  main
-     Xms (resolving: Xms, integration: Xms, building: Xms)
+     Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
  [1] ./a.js 22 bytes {0} [depth 1] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      cjs require ./a [0] ./index.js 1:0-14
-     [0] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
+     [0] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
 chunk    {1} 1.js 22 bytes <{0}> [rendered]
     > ./b [0] ./index.js 2:0-16
  [2] ./b.js 22 bytes {1} [depth 1] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      amd require ./b [0] ./index.js 2:0-16
-     [0] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
+     [0] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
 chunk    {2} 2.js 54 bytes <{0}> >{3}< [rendered]
     > ./c [0] ./index.js 3:0-16
  [3] ./c.js 54 bytes {2} [depth 1] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      amd require ./c [0] ./index.js 3:0-16
-     [0] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
+     [0] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
 chunk    {3} 3.js 44 bytes <{2}> [rendered]
     > [3] ./c.js 1:0-52
  [4] ./d.js 22 bytes {3} [depth 2] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      require.ensure item ./d [3] ./c.js 1:0-52
-     [0] Xms -> [3] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)
+     [0] Xms -> [3] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
  [5] ./e.js 22 bytes {3} [depth 2] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      require.ensure item ./e [3] ./c.js 1:0-52
-     [0] Xms -> [3] Xms -> Xms (resolving: Xms, integration: Xms, building: Xms)"
+     [0] Xms -> [3] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)"
 `;
 
 exports[`StatsTestCases should print correct stats for resolve-plugin-context 1`] = `
@@ -2342,7 +2342,7 @@ bundle.js  3.57 KiB       0  [emitted]  main
 Entrypoint main = bundle.js
 [0] ./index.js 0 bytes {0} [built]
     entry ./index  main
-    Xms (resolving: Xms, integration: Xms, building: Xms)"
+    Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks 1`] = `

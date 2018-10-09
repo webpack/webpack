@@ -257,11 +257,7 @@ export interface WebpackOptions {
 	/**
 	 * Cache generated modules and chunks to improve performance for multiple incremental builds.
 	 */
-	cache?:
-		| boolean
-		| {
-				[k: string]: any;
-		  };
+	cache?: false | true | MemoryCacheOptions | FileCacheOptions;
 	/**
 	 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
 	 */
@@ -407,6 +403,54 @@ export interface WebpackOptions {
 		 */
 		stdin?: boolean;
 	};
+}
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "MemoryCacheOptions".
+ */
+export interface MemoryCacheOptions {
+	/**
+	 * In memory caching
+	 */
+	type: "memory";
+}
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "FileCacheOptions".
+ */
+export interface FileCacheOptions {
+	/**
+	 * Base directory for the cache (defaults to node_modules/.cache/webpack).
+	 */
+	cacheDirectory?: string;
+	/**
+	 * Algorithm used for generation the hash (see node.js crypto package)
+	 */
+	hashAlgorithm?: string;
+	/**
+	 * Display log info when cache in accessed.
+	 */
+	log?: boolean;
+	/**
+	 * Name for the cache. Different names will lead to different coexisting caches.
+	 */
+	name?: string;
+	/**
+	 * When to store data to the filesystem. (idle: Store data when compiler is idle; background: Store data in background while compiling, but doesn't block the compilation; instant: Store data when creating blocking compilation until data is stored; defaults to idle)
+	 */
+	store?: "idle" | "background" | "instant";
+	/**
+	 * Filesystem caching
+	 */
+	type: "filesystem";
+	/**
+	 * Version of the cache data. Different versions won't allow to reuse the cache and override existing content. Update the version when config changed in a way which doesn't allow to reuse cache. This will invalidate the cache.
+	 */
+	version?: string;
+	/**
+	 * Display warnings when (de)serialization of data failed.
+	 */
+	warn?: boolean;
 }
 /**
  * Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.
