@@ -43,44 +43,44 @@ const printData = async (data, indent) => {
 		if (item === ESCAPE) {
 			const nextItem = read();
 			if (nextItem === ESCAPE_ESCAPE_VALUE) {
-				printLine(`- null`);
+				printLine("null");
 			} else if (nextItem === ESCAPE_UNDEFINED) {
-				printLine(`- undefined`);
+				printLine("undefined");
 			} else if (nextItem === ESCAPE_END_OBJECT) {
 				indent = indent.slice(0, indent.length - 2);
 				printLine(`} = #${currentReference++}`);
 			} else if (typeof nextItem === "number" && nextItem < 0) {
-				printLine(`- Reference ${nextItem} => #${currentReference + nextItem}`);
+				printLine(`Reference ${nextItem} => #${currentReference + nextItem}`);
 			} else {
 				const request = nextItem;
 				if (typeof request === "number") {
 					printLine(
-						`- Object (Reference ${request} => @${currentTypeReference -
+						`Object (Reference ${request} => @${currentTypeReference -
 							request}) {`
 					);
 				} else {
 					const name = read();
 					printLine(
-						`- Object (${request} / ${name} @${currentTypeReference++}) {`
+						`Object (${request} / ${name} @${currentTypeReference++}) {`
 					);
 				}
 				indent += "  ";
 			}
 		} else if (typeof item === "string") {
 			if (item !== "") {
-				printLine(`- string ${JSON.stringify(item)} = #${currentReference++}`);
+				printLine(`${JSON.stringify(item)} = #${currentReference++}`);
 			} else {
-				printLine('- string ""');
+				printLine('""');
 			}
 		} else if (Buffer.isBuffer(item)) {
-			printLine(`- buffer ${item.toString("hex")} = #${currentReference++}`);
+			printLine(`buffer ${item.toString("hex")} = #${currentReference++}`);
 		} else if (typeof item === "function") {
 			const innerData = await item();
-			printLine(`- lazy {`);
+			printLine(`lazy {`);
 			await printData(innerData, indent + "  ");
 			printLine(`}`);
 		} else {
-			printLine(`- ${item}`);
+			printLine(`${item}`);
 		}
 	}
 };
