@@ -9,9 +9,9 @@ const serializer = new Serializer([
 ]);
 
 const ESCAPE = null;
-const ESCAPE_ESCAPE_VALUE = 1;
-const ESCAPE_END_OBJECT = 2;
-const ESCAPE_UNDEFINED = 3;
+const ESCAPE_ESCAPE_VALUE = null;
+const ESCAPE_END_OBJECT = true;
+const ESCAPE_UNDEFINED = false;
 
 const printData = async (data, indent) => {
 	if (!Array.isArray(data)) throw new Error("Not an array");
@@ -34,52 +34,49 @@ const printData = async (data, indent) => {
 	const read = () => {
 		return data[i++];
 	};
-	console.log(`${indent}Version: ${read()}`);
+	const printLine = content => {
+		console.log(`${indent}${content}`);
+	};
+	printLine(`Version: ${read()}`);
 	while (i < data.length) {
 		const item = read();
 		if (item === ESCAPE) {
 			const nextItem = read();
 			if (nextItem === ESCAPE_ESCAPE_VALUE) {
-				console.log(`${indent}- null`);
+				printLine(`- null`);
 			} else if (nextItem === ESCAPE_UNDEFINED) {
-				console.log(`${indent}- undefined`);
+				printLine(`- undefined`);
 			} else if (nextItem === ESCAPE_END_OBJECT) {
 				indent = indent.slice(0, indent.length - 2);
-				console.log(`${indent}} #${currentReference++}`);
-			} else if (typeof nextItem === "number") {
-				console.log(
-					`${indent}- Reference ${nextItem} => #${currentReference + nextItem}`
-				);
+				printLine(`} = #${currentReference++}`);
+			} else if (typeof nextItem === "number" && nextItem < 0) {
+				printLine(`- Reference ${nextItem} => #${currentReference + nextItem}`);
 			} else {
 				const request = nextItem;
-				let name = read();
-				if (request === null && name < 0) {
-					console.log(
-						`${indent}- Object (Reference ${name} => @${currentTypeReference +
-							name}) {`
+				if (typeof request === "number") {
+					printLine(
+						`- Object (Reference ${request} => @${currentTypeReference -
+							request}) {`
 					);
 				} else {
-					console.log(
-						`${indent}- Object (${request} / ${name} @${currentTypeReference++}) {`
+					const name = read();
+					printLine(
+						`- Object (${request} / ${name} @${currentTypeReference++}) {`
 					);
 				}
 				indent += "  ";
 			}
 		} else if (typeof item === "string") {
-			console.log(
-				`${indent}- string ${JSON.stringify(item)} #${currentReference++}`
-			);
+			printLine(`- string ${JSON.stringify(item)} = #${currentReference++}`);
 		} else if (Buffer.isBuffer(item)) {
-			console.log(
-				`${indent}- buffer ${item.toString("hex")} #${currentReference++}`
-			);
+			printLine(`- buffer ${item.toString("hex")} = #${currentReference++}`);
 		} else if (typeof item === "function") {
 			const innerData = await item();
-			console.log(`${indent}- lazy {`);
+			printLine(`- lazy {`);
 			await printData(innerData, indent + "  ");
-			console.log(`${indent}}`);
+			printLine(`}`);
 		} else {
-			console.log(`${indent}- ${item}`);
+			printLine(`- ${item}`);
 		}
 	}
 };
