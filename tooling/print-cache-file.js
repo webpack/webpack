@@ -67,7 +67,11 @@ const printData = async (data, indent) => {
 				indent += "  ";
 			}
 		} else if (typeof item === "string") {
-			printLine(`- string ${JSON.stringify(item)} = #${currentReference++}`);
+			if (item !== "") {
+				printLine(`- string ${JSON.stringify(item)} = #${currentReference++}`);
+			} else {
+				printLine('- string ""');
+			}
 		} else if (Buffer.isBuffer(item)) {
 			printLine(`- buffer ${item.toString("hex")} = #${currentReference++}`);
 		} else if (typeof item === "function") {
