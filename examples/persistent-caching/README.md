@@ -19,7 +19,7 @@ module.exports = (env = "development") => ({
 	cache: {
 		type: "filesystem",
 		cacheDirectory: path.resolve(__dirname, ".cache"),
-		warn: true
+		loglevel: "warning"
 	}
 });
 ```
