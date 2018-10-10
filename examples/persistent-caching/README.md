@@ -18,7 +18,6 @@ module.exports = (env = "development") => ({
 	mode: env,
 	cache: {
 		type: "filesystem",
-		name: env,
 		cacheDirectory: path.resolve(__dirname, ".cache"),
 		warn: true
 	}
@@ -31,9 +30,9 @@ module.exports = (env = "development") => ({
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-next
     Asset      Size  Chunks             Chunk Names
-output.js  1.34 MiB       0  [emitted]  main
+output.js  1.44 MiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 1.19 MiB [entry]
+chunk    {0} output.js (main) 1.23 MiB [entry]
     > .\example.js main
-    670 modules
+    684 modules
 ```

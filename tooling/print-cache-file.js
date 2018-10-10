@@ -28,6 +28,8 @@ const printData = async (data, indent) => {
 		}
 		return;
 	}
+	let currentReference = 0;
+	let currentTypeReference = 0;
 	let i = 0;
 	const read = () => {
 		return data[i++];
@@ -43,23 +45,41 @@ const printData = async (data, indent) => {
 				console.log(`${indent}- undefined`);
 			} else if (nextItem === ESCAPE_END_OBJECT) {
 				indent = indent.slice(0, indent.length - 2);
-				console.log(`${indent}}`);
+				console.log(`${indent}} #${currentReference++}`);
 			} else if (typeof nextItem === "number") {
-				console.log(`${indent}- Reference ${nextItem}`);
+				console.log(
+					`${indent}- Reference ${nextItem} => #${currentReference + nextItem}`
+				);
 			} else {
+				const request = nextItem;
 				let name = read();
-				console.log(`${indent}- Object (${name}) {`);
+				if (request === null && name < 0) {
+					console.log(
+						`${indent}- Object (Reference ${name} => @${currentTypeReference +
+							name}) {`
+					);
+				} else {
+					console.log(
+						`${indent}- Object (${request} / ${name} @${currentTypeReference++}) {`
+					);
+				}
 				indent += "  ";
 			}
 		} else if (typeof item === "string") {
-			console.log(`${indent}- string ${JSON.stringify(item)}`);
+			console.log(
+				`${indent}- string ${JSON.stringify(item)} #${currentReference++}`
+			);
 		} else if (Buffer.isBuffer(item)) {
-			console.log(`${indent}- buffer ${item.toString("hex")}`);
+			console.log(
+				`${indent}- buffer ${item.toString("hex")} #${currentReference++}`
+			);
 		} else if (typeof item === "function") {
 			const innerData = await item();
 			console.log(`${indent}- lazy {`);
 			await printData(innerData, indent + "  ");
 			console.log(`${indent}}`);
+		} else {
+			console.log(`${indent}- ${item}`);
 		}
 	}
 };
