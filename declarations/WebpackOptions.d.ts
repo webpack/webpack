@@ -428,9 +428,9 @@ export interface FileCacheOptions {
 	 */
 	hashAlgorithm?: string;
 	/**
-	 * Display log info when cache in accessed.
+	 * Display log info. (debug: all access and errors with stack trace, info: all access, warning: only failed serialization)
 	 */
-	log?: boolean;
+	loglevel?: "debug" | "info" | "warning";
 	/**
 	 * Name for the cache. Different names will lead to different coexisting caches.
 	 */
@@ -447,10 +447,6 @@ export interface FileCacheOptions {
 	 * Version of the cache data. Different versions won't allow to reuse the cache and override existing content. Update the version when config changed in a way which doesn't allow to reuse cache. This will invalidate the cache.
 	 */
 	version?: string;
-	/**
-	 * Display warnings when (de)serialization of data failed.
-	 */
-	warn?: boolean;
 }
 /**
  * Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.
