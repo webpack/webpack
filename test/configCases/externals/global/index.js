@@ -1,5 +1,6 @@
-afterEach(() => {
+afterEach(done => {
 	delete global.EXTERNAL_TEST_GLOBAL;
+	done();
 });
 
 it("should move externals in chunks into entry chunk", function() {
