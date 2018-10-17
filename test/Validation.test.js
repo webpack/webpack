@@ -22,17 +22,17 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.entry should be one of these:",
-				"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string] | function",
+				"   function | object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]",
 				"   -> The entry point(s) of the compilation.",
 				"   Details:",
+				"    * configuration.entry should be an instance of function",
+				"      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.",
 				"    * configuration.entry should be an object.",
 				"      -> Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.",
 				"    * configuration.entry should not be empty.",
 				"      -> An entry point without name. The string is resolved to a module which is loaded upon startup.",
 				"    * configuration.entry should be an array:",
-				"      [non-empty string]",
-				"    * configuration.entry should be an instance of function",
-				"      -> A Function returning an entry object, an entry string, an entry array or a promise to these things."
+				"      [non-empty string]"
 			]
 		},
 		{
@@ -44,18 +44,18 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.entry should be one of these:",
-				"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string] | function",
+				"   function | object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]",
 				"   -> The entry point(s) of the compilation.",
 				"   Details:",
+				"    * configuration.entry should be an instance of function",
+				"      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.",
 				"    * configuration.entry['bundle'] should be a string.",
 				"      -> The string is resolved to a module which is loaded upon startup.",
 				"    * configuration.entry['bundle'] should not be empty.",
 				"    * configuration.entry should be a string.",
 				"      -> An entry point without name. The string is resolved to a module which is loaded upon startup.",
 				"    * configuration.entry should be an array:",
-				"      [non-empty string]",
-				"    * configuration.entry should be an instance of function",
-				"      -> A Function returning an entry object, an entry string, an entry array or a promise to these things."
+				"      [non-empty string]"
 			]
 		},
 		{
@@ -89,16 +89,16 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.entry should be one of these:",
-				"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string] | function",
+				"   function | object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]",
 				"   -> The entry point(s) of the compilation.",
 				"   Details:",
+				"    * configuration.entry should be an instance of function",
+				"      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.",
 				"    * configuration.entry should be an object.",
 				"      -> Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.",
 				"    * configuration.entry should be a string.",
 				"      -> An entry point without name. The string is resolved to a module which is loaded upon startup.",
-				"    * configuration.entry should not contain the item 'abc' twice.",
-				"    * configuration.entry should be an instance of function",
-				"      -> A Function returning an entry object, an entry string, an entry array or a promise to these things."
+				"    * configuration.entry should not contain the item 'abc' twice."
 			]
 		},
 		{
@@ -111,17 +111,17 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.entry should be one of these:",
-				"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string] | function",
+				"   function | object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]",
 				"   -> The entry point(s) of the compilation.",
 				"   Details:",
+				"    * configuration.entry should be an instance of function",
+				"      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.",
 				"    * configuration.entry should be an object.",
 				"      -> Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.",
 				"    * configuration.entry should be a string.",
 				"      -> An entry point without name. The string is resolved to a module which is loaded upon startup.",
 				"    * configuration.entry[0] should be a string.",
 				"      -> A non-empty string",
-				"    * configuration.entry should be an instance of function",
-				"      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.",
 				" - configuration.output.filename should be one of these:",
 				"   string | function",
 				"   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
@@ -145,17 +145,17 @@ describe("Validation", () => {
 			],
 			message: [
 				" - configuration[0].entry should be one of these:",
-				"   object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string] | function",
+				"   function | object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]",
 				"   -> The entry point(s) of the compilation.",
 				"   Details:",
+				"    * configuration[0].entry should be an instance of function",
+				"      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.",
 				"    * configuration[0].entry should be an object.",
 				"      -> Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.",
 				"    * configuration[0].entry should be a string.",
 				"      -> An entry point without name. The string is resolved to a module which is loaded upon startup.",
 				"    * configuration[0].entry[0] should be a string.",
 				"      -> A non-empty string",
-				"    * configuration[0].entry should be an instance of function",
-				"      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.",
 				" - configuration[1].output.filename should be one of these:",
 				"   string | function",
 				"   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
@@ -185,7 +185,7 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration.module.rules[0].oneOf[0] has an unknown property 'passer'. These properties are valid:",
-				"   object { enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, resolve?, sideEffects?, query?, type?, resource?, resourceQuery?, compiler?, rules?, test?, use? }",
+				"   object { compiler?, enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, query?, resolve?, resource?, resourceQuery?, rules?, sideEffects?, test?, type?, use? }",
 				"   -> A rule"
 			]
 		},
@@ -197,9 +197,9 @@ describe("Validation", () => {
 			},
 			message: [
 				" - configuration has an unknown property 'postcss'. These properties are valid:",
-				"   object { mode?, amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry?, externals?, " +
-					"loader?, module?, name?, node?, output?, optimization?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, " +
-					"recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, serve?, stats?, target?, watch?, watchOptions? }",
+				"   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry?, externals?, loader?, mode?, module?, " +
+					"name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, " +
+					"recordsPath?, resolve?, resolveLoader?, serve?, stats?, target?, watch?, watchOptions? }",
 				"   For typos: please correct them.",
 				"   For loader options: webpack >= v2.0.0 no longer allows custom properties in configuration.",
 				"     Loaders should be updated to allow passing options via loader options in module.rules.",
@@ -239,7 +239,7 @@ describe("Validation", () => {
 				}
 			},
 			message: [
-				' - configuration.output.path: The provided value "/somepath/!test" contans exclamation mark (!) which is not allowed because it\'s reserved for loader syntax.',
+				' - configuration.output.path: The provided value "/somepath/!test" contains exclamation mark (!) which is not allowed because it\'s reserved for loader syntax.',
 				"   -> The output directory as **absolute path** (required)."
 			]
 		},
@@ -252,9 +252,13 @@ describe("Validation", () => {
 				}
 			},
 			message: [
-				' - configuration.output.filename: A relative path is expected. However, the provided value "/bar" is an absolute path!',
+				" - configuration.output.filename should be one of these:",
+				"   string | function",
 				"   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.",
-				"   Please use output.path to specify absolute path and output.filename for the file name."
+				"   Details:",
+				'    * configuration.output.filename: A relative path is expected. However, the provided value "/bar" is an absolute path!',
+				"      Please use output.path to specify absolute path and output.filename for the file name.",
+				"    * configuration.output.filename should be an instance of function"
 			]
 		},
 		{
@@ -365,9 +369,6 @@ describe("Validation", () => {
 				"   object { apply, … } | function",
 				"   -> Plugin of type object or instanceof Function",
 				"   Details:",
-				"    * configuration.plugins[0] misses the property 'apply'.",
-				"      function",
-				"      -> The run point of the plugin, required method.",
 				"    * configuration.plugins[0] misses the property 'apply'.",
 				"      function",
 				"      -> The run point of the plugin, required method.",

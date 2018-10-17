@@ -7,6 +7,7 @@ const vm = require("vm");
 const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const FakeDocument = require("./helpers/FakeDocument");
 
 const Stats = require("../lib/Stats");
@@ -17,7 +18,7 @@ describe("ConfigTestCases", () => {
 	const casesPath = path.join(__dirname, "configCases");
 	let categories = fs.readdirSync(casesPath);
 
-	jest.setTimeout(10000);
+	jest.setTimeout(20000);
 
 	categories = categories.map(cat => {
 		return {
@@ -51,9 +52,6 @@ describe("ConfigTestCases", () => {
 						category.name,
 						testName
 					);
-					const exportedTests = [];
-					const exportedBeforeEach = [];
-					const exportedAfterEach = [];
 					it(
 						testName + " should compile",
 						() =>
@@ -87,12 +85,13 @@ describe("ConfigTestCases", () => {
 								});
 								let testConfig = {
 									findBundle: function(i, options) {
+										const ext = path.extname(options.output.filename);
 										if (
 											fs.existsSync(
-												path.join(options.output.path, "bundle" + i + ".js")
+												path.join(options.output.path, "bundle" + i + ext)
 											)
 										) {
-											return "./bundle" + i + ".js";
+											return "./bundle" + i + ext;
 										}
 									},
 									timeout: 30000
@@ -106,6 +105,7 @@ describe("ConfigTestCases", () => {
 								} catch (e) {
 									// ignored
 								}
+								if (testConfig.timeout) setDefaultTimeout(testConfig.timeout);
 
 								webpack(options, (err, stats) => {
 									if (err) {
@@ -157,28 +157,19 @@ describe("ConfigTestCases", () => {
 									)
 										return;
 
-									function _it(title, fn) {
-										exportedTests.push({
-											title,
-											fn,
-											timeout: testConfig.timeout
-										});
-									}
-
-									function _beforeEach(fn) {
-										return exportedBeforeEach.push(fn);
-									}
-
-									function _afterEach(fn) {
-										return exportedAfterEach.push(fn);
-									}
-
 									const globalContext = {
 										console: console,
 										expect: expect,
 										setTimeout: setTimeout,
 										clearTimeout: clearTimeout,
-										document: new FakeDocument()
+										document: new FakeDocument(),
+										location: {
+											href: "https://test.cases/path/index.html",
+											origin: "https://test.cases",
+											toString() {
+												return "https://test.cases/path/index.html";
+											}
+										}
 									};
 
 									function _require(currentDirectory, module) {
@@ -204,6 +195,7 @@ describe("ConfigTestCases", () => {
 											) {
 												fn = vm.runInNewContext(
 													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest, window) {" +
+														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 														content +
 														"\n})",
 													globalContext,
@@ -213,6 +205,7 @@ describe("ConfigTestCases", () => {
 												fn = vm.runInThisContext(
 													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest) {" +
 														"global.expect = expect; " +
+														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 														content +
 														"\n})",
 													p
@@ -263,31 +256,21 @@ describe("ConfigTestCases", () => {
 												"Should have found at least one bundle file per webpack config"
 											)
 										);
-									if (exportedTests.length < filesCount)
+									if (getNumberOfTests() < filesCount)
 										return done(new Error("No tests exported by test case"));
 									if (testConfig.afterExecute) testConfig.afterExecute();
-									const asyncSuite = describe(`ConfigTestCases ${
-										category.name
-									} ${testName} exported tests`, () => {
-										exportedBeforeEach.forEach(beforeEach);
-										exportedAfterEach.forEach(afterEach);
-										exportedTests.forEach(
-											({ title, fn, timeout }) =>
-												fn
-													? fit(title, fn, timeout)
-													: fit(title, () => {}).pend("Skipped")
-										);
-									});
-									// workaround for jest running clearSpies on the wrong suite (invoked by clearResourcesForRunnable)
-									asyncSuite.disabled = true;
-
-									jasmine
-										.getEnv()
-										.execute([asyncSuite.id], asyncSuite)
-										.then(done, done);
+									done();
 								});
 							})
 					);
+
+					const {
+						it: _it,
+						beforeEach: _beforeEach,
+						afterEach: _afterEach,
+						setDefaultTimeout,
+						getNumberOfTests
+					} = createLazyTestEnv(jasmine.getEnv(), 10000);
 				});
 			});
 		});

@@ -50,10 +50,11 @@ describe("HotModuleReplacementPlugin", () => {
 			output: {
 				path: path.join(__dirname, "js", "HotModuleReplacementPlugin")
 			},
-			plugins: [
-				new webpack.HotModuleReplacementPlugin(),
-				new webpack.optimize.OccurrenceOrderPlugin()
-			]
+			plugins: [new webpack.HotModuleReplacementPlugin()],
+			optimization: {
+				moduleIds: "size",
+				chunkIds: "size"
+			}
 		});
 		fs.writeFileSync(entryFile, "1", "utf-8");
 		compiler.run((err, stats) => {

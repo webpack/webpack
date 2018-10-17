@@ -36,7 +36,7 @@ module.exports = {
 # dist/MyDll.alpha.js
 
 ``` javascript
-var alpha_9acca21e0d34e518784e =
+var alpha_d61ee01b5c383d26e2c0 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -79,17 +79,32 @@ var alpha_9acca21e0d34e518784e =
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -168,7 +183,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ``` javascript
-{"name":"alpha_9acca21e0d34e518784e","content":{"./alpha.js":{"id":1,"buildMeta":{"providedExports":true}},"./a.js":{"id":2,"buildMeta":{"providedExports":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"providedExports":true}}}}
+{"name":"alpha_d61ee01b5c383d26e2c0","content":{"./alpha.js":{"id":1,"buildMeta":{"providedExports":true}},"./a.js":{"id":2,"buildMeta":{"providedExports":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"providedExports":true}}}}
 ```
 
 # Info
@@ -177,74 +192,74 @@ module.exports = "module";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
+Version: webpack 4.20.1
          Asset      Size  Chunks             Chunk Names
-MyDll.alpha.js  3.46 KiB       0  [emitted]  alpha
- MyDll.beta.js  3.43 KiB       1  [emitted]  beta
+MyDll.alpha.js  4.42 KiB       0  [emitted]  alpha
+ MyDll.beta.js   4.4 KiB       1  [emitted]  beta
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
 chunk    {0} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
     > alpha
  [0] dll alpha 12 bytes {0} [built]
      dll entry 
-     
+      DllPlugin
  [1] ./alpha.js 25 bytes {0} [built]
-     
-     single entry ./alpha [0] dll alpha alpha:0
+     single entry ./alpha [0] dll alpha alpha[0]
+      DllPlugin
  [2] ./a.js 21 bytes {0} [built]
-     
-     single entry ./a [0] dll alpha alpha:1
+     single entry ./a [0] dll alpha alpha[1]
+      DllPlugin
      + 1 hidden module
 chunk    {1} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
     > beta
  [4] dll beta 12 bytes {1} [built]
      dll entry 
-     
+      DllPlugin
  [5] ./beta.js 24 bytes {1} [built]
-     
-     single entry ./beta [4] dll beta beta:0
+     single entry ./beta [4] dll beta beta[0]
+      DllPlugin
  [6] ./b.js 21 bytes {1} [built]
-     
-     single entry ./b [4] dll beta beta:1
+     single entry ./b [4] dll beta beta[1]
+      DllPlugin
  [7] ./c.jsx 23 bytes {1} [built]
-     
-     single entry ./c [4] dll beta beta:2
+     single entry ./c [4] dll beta beta[2]
+      DllPlugin
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
-         Asset       Size  Chunks             Chunk Names
- MyDll.beta.js  691 bytes       0  [emitted]  beta
-MyDll.alpha.js  700 bytes       1  [emitted]  alpha
+Version: webpack 4.20.1
+         Asset      Size  Chunks             Chunk Names
+MyDll.alpha.js  1.06 KiB       0  [emitted]  alpha
+ MyDll.beta.js  1.05 KiB       1  [emitted]  beta
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
-chunk    {0} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
-    > beta
- [0] ./c.jsx 23 bytes {0} [built]
-     
-     single entry ./c [3] dll beta beta:2
- [1] ./b.js 21 bytes {0} [built]
-     
-     single entry ./b [3] dll beta beta:1
- [2] ./beta.js 24 bytes {0} [built]
-     
-     single entry ./beta [3] dll beta beta:0
- [3] dll beta 12 bytes {0} [built]
-     dll entry 
-     
-chunk    {1} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
+chunk    {0} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
     > alpha
- [5] ./a.js 21 bytes {1} [built]
-     
-     single entry ./a [7] dll alpha alpha:1
- [6] ./alpha.js 25 bytes {1} [built]
-     
-     single entry ./alpha [7] dll alpha alpha:0
- [7] dll alpha 12 bytes {1} [built]
+ [0] dll alpha 12 bytes {0} [built]
      dll entry 
-     
+      DllPlugin
+ [1] ./alpha.js 25 bytes {0} [built]
+     single entry ./alpha [0] dll alpha alpha[0]
+      DllPlugin
+ [2] ./a.js 21 bytes {0} [built]
+     single entry ./a [0] dll alpha alpha[1]
+      DllPlugin
      + 1 hidden module
+chunk    {1} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
+    > beta
+ [4] dll beta 12 bytes {1} [built]
+     dll entry 
+      DllPlugin
+ [5] ./beta.js 24 bytes {1} [built]
+     single entry ./beta [4] dll beta beta[0]
+      DllPlugin
+ [6] ./b.js 21 bytes {1} [built]
+     single entry ./b [4] dll beta beta[1]
+      DllPlugin
+ [7] ./c.jsx 23 bytes {1} [built]
+     single entry ./c [4] dll beta beta[2]
+      DllPlugin
 ```

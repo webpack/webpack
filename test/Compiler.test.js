@@ -85,7 +85,7 @@ describe("Compiler", () => {
 			expect(Object.keys(files)).toEqual(["/main.js"]);
 			const bundle = files["/main.js"];
 			expect(bundle).toMatch("function __webpack_require__(");
-			expect(bundle).toMatch("__webpack_require__(/*! ./a */ 0);");
+			expect(bundle).toMatch(/__webpack_require__\(\/\*! \.\/a \*\/ \d\);/);
 			expect(bundle).toMatch("./c.js");
 			expect(bundle).toMatch("./a.js");
 			expect(bundle).toMatch("This is a");
@@ -145,9 +145,9 @@ describe("Compiler", () => {
 	it("should compile a file with multiple chunks", done => {
 		compile("./chunks", {}, (stats, files) => {
 			expect(stats.chunks).toHaveLength(2);
-			expect(Object.keys(files)).toEqual(["/0.js", "/main.js"]);
+			expect(Object.keys(files)).toEqual(["/main.js", "/1.js"]);
 			const bundle = files["/main.js"];
-			const chunk = files["/0.js"];
+			const chunk = files["/1.js"];
 			expect(bundle).toMatch("function __webpack_require__(");
 			expect(bundle).toMatch("__webpack_require__(/*! ./b */");
 			expect(chunk).not.toMatch("__webpack_require__(/* ./b */");
@@ -444,6 +444,28 @@ describe("Compiler", () => {
 		watching.close(() => {
 			compiler.watch({}, (err, stats) => {
 				if (err) return done(err);
+				done();
+			});
+		});
+	});
+	it("should use cache on second run call", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "development",
+			devtool: false,
+			entry: "./fixtures/count-loader!./fixtures/count-loader",
+			output: {
+				path: "/"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		compiler.run(() => {
+			compiler.run(() => {
+				const result = compiler.outputFileSystem.readFileSync(
+					"/main.js",
+					"utf-8"
+				);
+				expect(result).toContain("module.exports = 0;");
 				done();
 			});
 		});

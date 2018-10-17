@@ -72,7 +72,7 @@ module.exports = {
 # dist/vendor.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
 
 /***/ 1:
 /*!*********************************!*\
@@ -102,7 +102,7 @@ module.exports = "vendor2";
 # dist/commons~pageA~pageB~pageC.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[4],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
 
 /***/ 3:
 /*!*********************!*\
@@ -121,7 +121,7 @@ module.exports = "utility2";
 # dist/commons~pageB~pageC.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[5],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[4],{
 
 /***/ 6:
 /*!*********************!*\
@@ -148,6 +148,7 @@ module.exports = "utility3";
 /******/ 		var chunkIds = data[0];
 /******/ 		var moreModules = data[1];
 /******/ 		var executeModules = data[2];
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
@@ -164,6 +165,7 @@ module.exports = "utility3";
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
 /******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
 /******/ 		}
@@ -237,17 +239,32 @@ module.exports = "utility3";
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -274,7 +291,7 @@ module.exports = "utility3";
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([0,3,4]);
+/******/ 	deferredModules.push([0,1,2]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
@@ -323,6 +340,7 @@ module.exports = "utility1";
 /******/ 		var chunkIds = data[0];
 /******/ 		var moreModules = data[1];
 /******/ 		var executeModules = data[2];
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
@@ -339,6 +357,7 @@ module.exports = "utility1";
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
 /******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
 /******/ 		}
@@ -373,7 +392,7 @@ module.exports = "utility1";
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		1: 0
+/******/ 		3: 0
 /******/ 	};
 /******/
 /******/ 	var deferredModules = [];
@@ -412,17 +431,32 @@ module.exports = "utility1";
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -449,7 +483,7 @@ module.exports = "utility1";
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([4,3,4,5]);
+/******/ 	deferredModules.push([4,1,2,4]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
@@ -484,6 +518,7 @@ module.exports = "pageB";
 /******/ 		var chunkIds = data[0];
 /******/ 		var moreModules = data[1];
 /******/ 		var executeModules = data[2];
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
@@ -500,6 +535,7 @@ module.exports = "pageB";
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
 /******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
 /******/ 		}
@@ -534,7 +570,7 @@ module.exports = "pageB";
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		2: 0
+/******/ 		5: 0
 /******/ 	};
 /******/
 /******/ 	var deferredModules = [];
@@ -573,17 +609,32 @@ module.exports = "pageB";
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -610,7 +661,7 @@ module.exports = "pageB";
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([7,4,5]);
+/******/ 	deferredModules.push([7,2,4]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
@@ -640,63 +691,63 @@ module.exports = "pageC";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
+Version: webpack 4.20.1
                        Asset       Size  Chunks             Chunk Names
-                    pageA.js   5.72 KiB       0  [emitted]  pageA
-                    pageB.js   5.52 KiB       1  [emitted]  pageB
-                    pageC.js   5.47 KiB       2  [emitted]  pageC
-                   vendor.js  536 bytes       3  [emitted]  vendor
-commons~pageA~pageB~pageC.js  269 bytes       4  [emitted]  commons~pageA~pageB~pageC
-      commons~pageB~pageC.js  269 bytes       5  [emitted]  commons~pageB~pageC
+                    pageA.js    6.7 KiB       0  [emitted]  pageA
+                   vendor.js  536 bytes       1  [emitted]  vendor
+commons~pageA~pageB~pageC.js  269 bytes       2  [emitted]  commons~pageA~pageB~pageC
+                    pageB.js    6.5 KiB       3  [emitted]  pageB
+      commons~pageB~pageC.js  269 bytes       4  [emitted]  commons~pageB~pageC
+                    pageC.js   6.45 KiB       5  [emitted]  pageC
 Entrypoint pageA = vendor.js commons~pageA~pageB~pageC.js pageA.js
 Entrypoint pageB = vendor.js commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageB.js
 Entrypoint pageC = commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageC.js
-chunk    {0} pageA.js (pageA) 165 bytes ={3}= ={4}= [entry] [rendered]
+chunk    {0} pageA.js (pageA) 165 bytes ={1}= ={2}= [entry] [rendered]
     > ./pageA pageA
  [0] ./pageA.js 137 bytes {0} [built]
      single entry ./pageA  pageA
  [2] ./utility1.js 28 bytes {0} [built]
      cjs require ./utility1 [0] ./pageA.js 2:15-36
-chunk    {1} pageB.js (pageB) 137 bytes ={3}= ={4}= ={5}= [entry] [rendered]
-    > ./pageB pageB
- [4] ./pageB.js 137 bytes {1} [built]
-     single entry ./pageB  pageB
-chunk    {2} pageC.js (pageC) 105 bytes ={4}= ={5}= [entry] [rendered]
-    > ./pageC pageC
- [7] ./pageC.js 105 bytes {2} [built]
-     single entry ./pageC  pageC
-chunk    {3} vendor.js (vendor) 54 bytes ={0}= ={1}= ={4}= ={5}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
+chunk    {1} vendor.js (vendor) 54 bytes ={0}= ={2}= ={3}= ={4}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
     > ./pageA pageA
     > ./pageB pageB
     2 modules
-chunk    {4} commons~pageA~pageB~pageC.js (commons~pageA~pageB~pageC) 28 bytes ={0}= ={1}= ={2}= ={3}= ={5}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageA~pageB~pageC)
+chunk    {2} commons~pageA~pageB~pageC.js (commons~pageA~pageB~pageC) 28 bytes ={0}= ={1}= ={3}= ={4}= ={5}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageA~pageB~pageC)
     > ./pageA pageA
     > ./pageB pageB
     > ./pageC pageC
- [3] ./utility2.js 28 bytes {4} [built]
+ [3] ./utility2.js 28 bytes {2} [built]
      cjs require ./utility2 [0] ./pageA.js 3:15-36
      cjs require ./utility2 [4] ./pageB.js 2:15-36
      cjs require ./utility2 [7] ./pageC.js 1:15-36
-chunk    {5} commons~pageB~pageC.js (commons~pageB~pageC) 28 bytes ={1}= ={2}= ={3}= ={4}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageB~pageC)
+chunk    {3} pageB.js (pageB) 137 bytes ={1}= ={2}= ={4}= [entry] [rendered]
+    > ./pageB pageB
+ [4] ./pageB.js 137 bytes {3} [built]
+     single entry ./pageB  pageB
+chunk    {4} commons~pageB~pageC.js (commons~pageB~pageC) 28 bytes ={1}= ={2}= ={3}= ={5}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageB~pageC)
     > ./pageB pageB
     > ./pageC pageC
- [6] ./utility3.js 28 bytes {5} [built]
+ [6] ./utility3.js 28 bytes {4} [built]
      cjs require ./utility3 [4] ./pageB.js 3:15-36
      cjs require ./utility3 [7] ./pageC.js 2:15-36
+chunk    {5} pageC.js (pageC) 102 bytes ={2}= ={4}= [entry] [rendered]
+    > ./pageC pageC
+ [7] ./pageC.js 102 bytes {5} [built]
+     single entry ./pageC  pageC
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
+Version: webpack 4.20.1
                        Asset       Size  Chunks             Chunk Names
 commons~pageA~pageB~pageC.js   96 bytes       0  [emitted]  commons~pageA~pageB~pageC
-      commons~pageB~pageC.js   97 bytes       1  [emitted]  commons~pageB~pageC
-                   vendor.js  134 bytes       2  [emitted]  vendor
-                    pageC.js    1.1 KiB       3  [emitted]  pageC
-                    pageB.js   1.11 KiB       4  [emitted]  pageB
-                    pageA.js   1.15 KiB       5  [emitted]  pageA
+                   vendor.js  134 bytes       1  [emitted]  vendor
+      commons~pageB~pageC.js   97 bytes       2  [emitted]  commons~pageB~pageC
+                    pageA.js   1.52 KiB       3  [emitted]  pageA
+                    pageB.js   1.49 KiB       4  [emitted]  pageB
+                    pageC.js   1.48 KiB       5  [emitted]  pageC
 Entrypoint pageA = vendor.js commons~pageA~pageB~pageC.js pageA.js
 Entrypoint pageB = vendor.js commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageB.js
 Entrypoint pageC = commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageC.js
@@ -705,31 +756,31 @@ chunk    {0} commons~pageA~pageB~pageC.js (commons~pageA~pageB~pageC) 28 bytes =
     > ./pageB pageB
     > ./pageC pageC
  [0] ./utility2.js 28 bytes {0} [built]
-     cjs require ./utility2 [2] ./pageC.js 1:15-36
-     cjs require ./utility2 [4] ./pageB.js 2:15-36
-     cjs require ./utility2 [7] ./pageA.js 3:15-36
-chunk    {1} commons~pageB~pageC.js (commons~pageB~pageC) 28 bytes ={0}= ={2}= ={3}= ={4}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageB~pageC)
-    > ./pageB pageB
-    > ./pageC pageC
- [1] ./utility3.js 28 bytes {1} [built]
-     cjs require ./utility3 [2] ./pageC.js 2:15-36
-     cjs require ./utility3 [4] ./pageB.js 3:15-36
-chunk    {2} vendor.js (vendor) 54 bytes ={0}= ={1}= ={4}= ={5}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
+     cjs require ./utility2 [2] ./pageA.js 3:15-36
+     cjs require ./utility2 [5] ./pageB.js 2:15-36
+     cjs require ./utility2 [7] ./pageC.js 1:15-36
+chunk    {1} vendor.js (vendor) 54 bytes ={0}= ={2}= ={3}= ={4}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
     > ./pageA pageA
     > ./pageB pageB
     2 modules
-chunk    {3} pageC.js (pageC) 105 bytes ={0}= ={1}= [entry] [rendered]
+chunk    {2} commons~pageB~pageC.js (commons~pageB~pageC) 28 bytes ={0}= ={1}= ={4}= ={5}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageB~pageC)
+    > ./pageB pageB
     > ./pageC pageC
- [2] ./pageC.js 105 bytes {3} [built]
-     single entry ./pageC  pageC
+ [1] ./utility3.js 28 bytes {2} [built]
+     cjs require ./utility3 [5] ./pageB.js 3:15-36
+     cjs require ./utility3 [7] ./pageC.js 2:15-36
+chunk    {3} pageA.js (pageA) 165 bytes ={0}= ={1}= [entry] [rendered]
+    > ./pageA pageA
+ [2] ./pageA.js 137 bytes {3} [built]
+     single entry ./pageA  pageA
+ [4] ./utility1.js 28 bytes {3} [built]
+     cjs require ./utility1 [2] ./pageA.js 2:15-36
 chunk    {4} pageB.js (pageB) 137 bytes ={0}= ={1}= ={2}= [entry] [rendered]
     > ./pageB pageB
- [4] ./pageB.js 137 bytes {4} [built]
+ [5] ./pageB.js 137 bytes {4} [built]
      single entry ./pageB  pageB
-chunk    {5} pageA.js (pageA) 165 bytes ={0}= ={2}= [entry] [rendered]
-    > ./pageA pageA
- [5] ./utility1.js 28 bytes {5} [built]
-     cjs require ./utility1 [7] ./pageA.js 2:15-36
- [7] ./pageA.js 137 bytes {5} [built]
-     single entry ./pageA  pageA
+chunk    {5} pageC.js (pageC) 102 bytes ={0}= ={2}= [entry] [rendered]
+    > ./pageC pageC
+ [7] ./pageC.js 102 bytes {5} [built]
+     single entry ./pageC  pageC
 ```

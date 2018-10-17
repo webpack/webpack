@@ -35,7 +35,7 @@ module.exports = ajv =>
 							data,
 							`The provided value ${JSON.stringify(
 								data
-							)} contans exclamation mark (!) which is not allowed because it's reserved for loader syntax.`
+							)} contains exclamation mark (!) which is not allowed because it's reserved for loader syntax.`
 						)
 					];
 					passes = false;

@@ -4,10 +4,10 @@ exports[`ConfigTestCases records issue-2991 exported tests should write relative
 "{
   \\"modules\\": {
     \\"byIdentifier\\": {
-      \\"external \\\\\\"path\\\\\\"\\": 0,
-      \\"external \\\\\\"fs\\\\\\"\\": 1,
-      \\"ignored  pkgs/somepackage/foo\\": 2,
-      \\"test.js\\": 3
+      \\"test.js\\": 0,
+      \\"ignored  pkgs/somepackage/foo\\": 1,
+      \\"external \\\\\\"fs\\\\\\"\\": 2,
+      \\"external \\\\\\"path\\\\\\"\\": 3
     },
     \\"usedIds\\": {
       \\"0\\": 0,
@@ -32,12 +32,12 @@ exports[`ConfigTestCases records issue-7339 exported tests should write relative
 "{
   \\"modules\\": {
     \\"byIdentifier\\": {
-      \\"dependencies/foo.js\\": 0,
-      \\"dependencies/bar.js\\": 1,
-      \\"external \\\\\\"path\\\\\\"\\": 2,
-      \\"external \\\\\\"fs\\\\\\"\\": 3,
-      \\"dependencies sync /^\\\\\\\\.\\\\\\\\/.*$/\\": 4,
-      \\"test.js\\": 5
+      \\"dependencies/bar.js\\": 0,
+      \\"dependencies/foo.js\\": 1,
+      \\"test.js\\": 2,
+      \\"dependencies sync /^\\\\\\\\.\\\\\\\\/.*$/\\": 3,
+      \\"external \\\\\\"fs\\\\\\"\\": 4,
+      \\"external \\\\\\"path\\\\\\"\\": 5
     },
     \\"usedIds\\": {
       \\"0\\": 0,

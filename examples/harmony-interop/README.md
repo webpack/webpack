@@ -107,17 +107,32 @@ export var named = "named";
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -260,13 +275,13 @@ var named = "named";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
+Version: webpack 4.20.1
     Asset      Size  Chunks             Chunk Names
-output.js  6.12 KiB       0  [emitted]  main
+output.js  7.05 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 1.16 KiB [entry] [rendered]
+chunk    {0} output.js (main) 1.13 KiB [entry] [rendered]
     > .\example.js main
- [0] ./example.js 389 bytes {0} [built]
+ [0] ./example.js 373 bytes {0} [built]
      [no exports]
      single entry .\example.js  main
  [1] ./fs.js 257 bytes {0} [built]
@@ -278,12 +293,12 @@ chunk    {0} output.js (main) 1.16 KiB [entry] [rendered]
      harmony import specifier ./fs [0] ./example.js 9:0-12
      harmony side effect evaluation ./fs [2] ./reexport-commonjs.js 2:0-21
      harmony export imported specifier ./fs [2] ./reexport-commonjs.js 2:0-21
- [2] ./reexport-commonjs.js 308 bytes {0} [built]
+ [2] ./reexport-commonjs.js 301 bytes {0} [built]
      harmony side effect evaluation ./reexport-commonjs [0] ./example.js 12:0-60
      harmony import specifier ./reexport-commonjs [0] ./example.js 13:0-9
- [3] ./example2.js 159 bytes {0} [built]
+ [3] ./example2.js 152 bytes {0} [built]
      harmony side effect evaluation ./example2 [0] ./example.js 16:0-20
- [4] ./harmony.js 78 bytes {0} [built]
+ [4] ./harmony.js 75 bytes {0} [built]
      [exports: default, named]
      cjs require ./harmony [3] ./example2.js 4:13-33
 ```
@@ -292,33 +307,33 @@ chunk    {0} output.js (main) 1.16 KiB [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
-    Asset       Size  Chunks             Chunk Names
-output.js  993 bytes       0  [emitted]  main
+Version: webpack 4.20.1
+    Asset      Size  Chunks             Chunk Names
+output.js  1.35 KiB       0  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 1.16 KiB [entry] [rendered]
+chunk    {0} output.js (main) 1.13 KiB [entry] [rendered]
     > .\example.js main
  [0] ./fs.js 257 bytes {0} [built]
      [only some exports used: default, readFile]
      harmony side effect evaluation ./fs [1] ./reexport-commonjs.js 2:0-21
      harmony export imported specifier ./fs [1] ./reexport-commonjs.js 2:0-21
-     harmony side effect evaluation ./fs [4] ./example.js 4:0-22
-     harmony side effect evaluation ./fs [4] ./example.js 5:0-32
-     harmony side effect evaluation ./fs [4] ./example.js 6:0-28
-     harmony import specifier ./fs [4] ./example.js 7:0-2
-     harmony import specifier ./fs [4] ./example.js 8:0-8
-     harmony import specifier ./fs [4] ./example.js 9:0-12
- [1] ./reexport-commonjs.js 308 bytes {0} [built]
+     harmony side effect evaluation ./fs [2] ./example.js 4:0-22
+     harmony side effect evaluation ./fs [2] ./example.js 5:0-32
+     harmony side effect evaluation ./fs [2] ./example.js 6:0-28
+     harmony import specifier ./fs [2] ./example.js 7:0-2
+     harmony import specifier ./fs [2] ./example.js 8:0-8
+     harmony import specifier ./fs [2] ./example.js 9:0-12
+ [1] ./reexport-commonjs.js 301 bytes {0} [built]
      [only some exports used: readFile]
-     harmony side effect evaluation ./reexport-commonjs [4] ./example.js 12:0-60
-     harmony import specifier ./reexport-commonjs [4] ./example.js 13:0-9
- [2] ./harmony.js 78 bytes {0} [built]
-     [exports: default, named]
-     cjs require ./harmony [3] ./example2.js 4:13-33
- [3] ./example2.js 159 bytes {0} [built]
-     [no exports used]
-     harmony side effect evaluation ./example2 [4] ./example.js 16:0-20
- [4] ./example.js 389 bytes {0} [built]
+     harmony side effect evaluation ./reexport-commonjs [2] ./example.js 12:0-60
+     harmony import specifier ./reexport-commonjs [2] ./example.js 13:0-9
+ [2] ./example.js 373 bytes {0} [built]
      [no exports]
      single entry .\example.js  main
+ [3] ./example2.js 152 bytes {0} [built]
+     [no exports used]
+     harmony side effect evaluation ./example2 [2] ./example.js 16:0-20
+ [4] ./harmony.js 75 bytes {0} [built]
+     [exports: default, named]
+     cjs require ./harmony [3] ./example2.js 4:13-33
 ```

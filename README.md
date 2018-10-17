@@ -11,10 +11,14 @@
 [![deps][deps]][deps-url]
 [![tests][tests]][tests-url]
 [![builds][builds]][builds-url]
+[![builds2][builds2]][builds2-url]
 [![coverage][cover]][cover-url]
 [![licenses][licenses]][licenses-url]
 
   <br>
+  <a href="https://dependabot.com/compatibility-score.html?dependency-name=webpack&package-manager=npm_and_yarn&new-version=latest">
+    <img src="https://api.dependabot.com/badges/compatibility_score?dependency-name=webpack&package-manager=npm_and_yarn&version-scheme=semver&target-version=latest">
+  </a>
 	<a href="https://npmcharts.com/compare/webpack?minimal=true">
 		<img src="https://img.shields.io/npm/dm/webpack.svg">
 	</a>
@@ -55,8 +59,6 @@ yarn add webpack --dev
 
 <h2 align="center">Introduction</h2>
 
-> This README reflects webpack v2.x and v3.x. The webpack v1.x documentation has been deprecated and deleted.
-
 webpack is a bundler for modules. The main purpose is to bundle JavaScript
 files for usage in a browser, yet it is also capable of transforming, bundling,
 or packaging just about any resource or asset.
@@ -89,16 +91,19 @@ within webpack itself use this plugin interface. This makes webpack very
 
 |Name|Status|Install Size|Description|
 |:--:|:----:|:----------:|:----------|
-|[extract-text-webpack-plugin][extract]|![extract-npm]|![extract-size]|Extracts Text (CSS) from your bundles into a separate file (app.bundle.css)|
+|[mini-css-extract-plugin][mini-css]|![mini-css-npm]|![mini-css-size]|Extracts CSS into separate files. It creates a CSS file per JS file which contains CSS.|
 |[compression-webpack-plugin][compression]|![compression-npm]|![compression-size]|Prepares compressed versions of assets to serve them with Content-Encoding|
 |[i18n-webpack-plugin][i18n]|![i18n-npm]|![i18n-size]|Adds i18n support to your bundles|
 |[html-webpack-plugin][html-plugin]|![html-plugin-npm]|![html-plugin-size]| Simplifies creation of HTML files (`index.html`) to serve your bundles|
-
+|[extract-text-webpack-plugin][extract]|![extract-npm]|![extract-size]|Extract text from a bundle, or bundles, into a separate file|
 
 [common-npm]: https://img.shields.io/npm/v/webpack.svg
 [extract]: https://github.com/webpack/extract-text-webpack-plugin
 [extract-npm]: https://img.shields.io/npm/v/extract-text-webpack-plugin.svg
 [extract-size]: https://packagephobia.now.sh/badge?p=extract-text-webpack-plugin
+[mini-css]: https://github.com/webpack-contrib/mini-css-extract-plugin
+[mini-css-npm]: https://img.shields.io/npm/v/mini-css-extract-plugin.svg
+[mini-css-size]: https://packagephobia.now.sh/badge?p=mini-css-extract-plugin
 [component]: https://github.com/webpack/component-webpack-plugin
 [component-npm]: https://img.shields.io/npm/v/component-webpack-plugin.svg
 [component-size]: https://packagephobia.now.sh/badge?p=component-webpack-plugin
@@ -217,7 +222,7 @@ or are automatically applied via regex from your webpack configuration.
 |<a href="https://github.com/webpack/style-loader">`<style>`</a>|![style-npm]|![style-size]|Add exports of a module as style to DOM|
 |<a href="https://github.com/webpack/css-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/css-3.svg"></a>|![css-npm]|![css-size]|Loads CSS file with resolved imports and returns CSS code|
 |<a href="https://github.com/webpack/less-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/less-63.svg"></a>|![less-npm]|![less-size]|Loads and compiles a LESS file|
-|<a href="https://github.com/jtangelder/sass-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/sass-1.svg"></a>|![sass-npm]|![sass-size]|Loads and compiles a SASS/SCSS file|
+|<a href="https://github.com/jtangelder/sass-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/sass-1.svg"></a>|![sass-npm]|![sass-size]|Loads and compiles a Sass/SCSS file|
 |<a href="https://github.com/shama/stylus-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/stylus.svg"></a>|![stylus-npm]|![stylus-size]|Loads and compiles a Stylus file|
 |<a href="https://github.com/postcss/postcss-loader"><img width="48" height="48" src="https://worldvectorlogo.com/logos/postcss.svg"></a>|![postcss-npm]|![postcss-size]|Loads and transforms a CSS/SSS file using [PostCSS](http://postcss.org)|
 
@@ -747,6 +752,9 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 [builds-url]: https://ci.appveyor.com/project/sokra/webpack/branch/master
 [builds]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
+
+[builds2]: https://dev.azure.com/webpack/webpack/_apis/build/status/webpack.webpack
+[builds2-url]: https://dev.azure.com/webpack/webpack/_build/latest?definitionId=3
 
 [licenses-url]: https://app.fossa.io/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack?ref=badge_shield
 [licenses]: https://app.fossa.io/api/projects/git%2Bhttps%3A%2F%2Fgithub.com%2Fwebpack%2Fwebpack.svg?type=shield

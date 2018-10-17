@@ -1,0 +1,192 @@
+jobs:
+  - job: basic
+    pool:
+      vmImage: ubuntu-16.04
+    steps:
+      - task: NodeTool@0
+        displayName: "Install Node.js"
+        inputs:
+          versionSpec: "^10.10.0"
+      - script: |
+          curl -o- -L https://yarnpkg.com/install.sh | bash
+        displayName: "Install Yarn"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          node -v
+          yarn -v
+        displayName: "Print versions"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn --frozen-lockfile
+          yarn link --frozen-lockfile || true
+          yarn link webpack --frozen-lockfile
+        displayName: "Install dependencies"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn test:basic --ci
+          yarn test:unit --ci
+        displayName: "Run basic tests"
+  - job: lint
+    pool:
+      vmImage: ubuntu-16.04
+    steps:
+      - task: NodeTool@0
+        displayName: "Install Node.js"
+        inputs:
+          versionSpec: "^10.10.0"
+      - script: |
+          curl -o- -L https://yarnpkg.com/install.sh | bash
+        displayName: "Install Yarn"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          node -v
+          yarn -v
+        displayName: "Print versions"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn --frozen-lockfile
+          yarn link --frozen-lockfile || true
+          yarn link webpack --frozen-lockfile
+        displayName: "Install dependencies"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn lint
+        displayName: "Run linting"
+  - job: linux
+    dependsOn:
+      - basic
+      - lint
+    pool:
+      vmImage: ubuntu-16.04
+    strategy:
+      maxParallel: 3
+      matrix:
+        node-10:
+          node_version: ^10.10.0
+        node-8:
+          node_version: ^8.12.0
+        node-6:
+          node_version: ^6.14.4
+    steps:
+      - task: NodeTool@0
+        displayName: "Install Node.js"
+        inputs:
+          versionSpec: $(node_version)
+      - script: |
+          curl -o- -L https://yarnpkg.com/install.sh | bash
+        displayName: "Install Yarn"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          node -v
+          yarn -v
+        displayName: "Print versions"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn --frozen-lockfile
+          yarn link --frozen-lockfile || true
+          yarn link webpack --frozen-lockfile
+        displayName: "Install dependencies"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn cover:init
+          yarn cover:integration "test/(?!TestCases)" --ci --maxWorkers=2
+          mv coverage/coverage-final.json coverage/coverage-final-1.json
+          yarn cover:integration "test/TestCasesD" --ci --maxWorkers=2
+          mv coverage/coverage-final.json coverage/coverage-final-2.json
+          yarn cover:integration "test/TestCases(?!D)" --ci --maxWorkers=2
+          mv coverage/coverage-final.json coverage/coverage-final-3.json
+        displayName: "Run tests with coverage"
+  - job: macos
+    dependsOn:
+      - basic
+      - lint
+    pool:
+      vmImage: "macOS 10.13"
+    strategy:
+      maxParallel: 3
+      matrix:
+        node-10:
+          node_version: ^10.10.0
+        node-8:
+          node_version: ^8.12.0
+        node-6:
+          node_version: ^6.14.4
+    steps:
+      - task: NodeTool@0
+        displayName: "Install Node.js"
+        inputs:
+          versionSpec: $(node_version)
+      - script: |
+          curl -o- -L https://yarnpkg.com/install.sh | bash
+        displayName: "Install Yarn"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          node -v
+          yarn -v
+        displayName: "Print versions"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn --frozen-lockfile
+          yarn link --frozen-lockfile || true
+          yarn link webpack --frozen-lockfile
+        displayName: "Install dependencies"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn cover:init
+          yarn cover:integration "test/(?!TestCases)" --ci
+          mv coverage/coverage-final.json coverage/coverage-final-1.json
+          yarn cover:integration "test/TestCasesD" --ci
+          mv coverage/coverage-final.json coverage/coverage-final-2.json
+          yarn cover:integration "test/TestCases(?!D)" --ci
+          mv coverage/coverage-final.json coverage/coverage-final-3.json
+        displayName: "Run tests with coverage"
+  - job: windows
+    dependsOn:
+      - basic
+      - lint
+    pool:
+      vmImage: vs2017-win2016
+    strategy:
+      maxParallel: 3
+      matrix:
+        node-10:
+          node_version: ^10.10.0
+        node-8:
+          node_version: ^8.12.0
+        node-6:
+          node_version: ^6.14.4
+    steps:
+      - task: NodeTool@0
+        displayName: "Install Node.js"
+        inputs:
+          versionSpec: $(node_version)
+      - script: |
+          npm install --global yarn
+        displayName: "Install Yarn"
+      - script: |
+          set -e
+          node -v
+          yarn -v
+        displayName: "Print versions"
+      - script: |
+          set -e
+          yarn --frozen-lockfile
+          yarn link --frozen-lockfile || true
+          yarn link webpack --frozen-lockfile
+        displayName: "Install dependencies"
+      - script: |
+          set -e
+          yarn cover:init && yarn cover:integration "test/(?!TestCases)" --ci --maxWorkers=2 && move coverage\\coverage-final.json coverage\\coverage-final-1.json && yarn cover:integration "test/TestCasesD" --ci --maxWorkers=2 && move coverage\\coverage-final.json coverage\\coverage-final-2.json && yarn cover:integration "test/TestCases(?!D)" --ci --maxWorkers=2 && move coverage\\coverage-final.json coverage\\coverage-final-3.json
+        displayName: "Run tests with coverage"
