@@ -96,14 +96,13 @@ jobs:
         displayName: "Install dependencies"
       - script: |
           set -e
-          set JEST_SILENT_REPORTER_DOTS=1
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn cover:init
-          yarn cover:integration "test/(?!TestCases)" --ci --maxWorkers=2 --reporters=jest-silent-reporter
+          yarn cover:integration "test/(?!TestCases)" --ci --maxWorkers=2
           mv coverage/coverage-final.json coverage/coverage-final-1.json
-          yarn cover:integration "test/TestCasesD" --ci --maxWorkers=2 --reporters=jest-silent-reporter
+          yarn cover:integration "test/TestCasesD" --ci --maxWorkers=2
           mv coverage/coverage-final.json coverage/coverage-final-2.json
-          yarn cover:integration "test/TestCases(?!D)" --ci --maxWorkers=2 --reporters=jest-silent-reporter
+          yarn cover:integration "test/TestCases(?!D)" --ci --maxWorkers=2
           mv coverage/coverage-final.json coverage/coverage-final-3.json
         displayName: "Run tests with coverage"
   - job: macos
@@ -189,6 +188,5 @@ jobs:
         displayName: "Install dependencies"
       - script: |
           set -e
-          set JEST_SILENT_REPORTER_DOTS=1
-          yarn cover:init && yarn cover:integration "test/(?!TestCases)" --ci --maxWorkers=2 --reporters=jest-silent-reporter && move coverage\\coverage-final.json coverage\\coverage-final-1.json && yarn cover:integration "test/TestCasesD" --ci --maxWorkers=2 --reporters=jest-silent-reporter && move coverage\\coverage-final.json coverage\\coverage-final-2.json && yarn cover:integration "test/TestCases(?!D)" --ci --maxWorkers=2 --reporters=jest-silent-reporter && move coverage\\coverage-final.json coverage\\coverage-final-3.json
+          yarn cover:init && yarn cover:integration "test/(?!TestCases)" --ci --maxWorkers=2 && move coverage\\coverage-final.json coverage\\coverage-final-1.json && yarn cover:integration "test/TestCasesD" --ci --maxWorkers=2 && move coverage\\coverage-final.json coverage\\coverage-final-2.json && yarn cover:integration "test/TestCases(?!D)" --ci --maxWorkers=2 && move coverage\\coverage-final.json coverage\\coverage-final-3.json
         displayName: "Run tests with coverage"
