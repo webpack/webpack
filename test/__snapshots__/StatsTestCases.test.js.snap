@@ -3041,15 +3041,21 @@ Entrypoint main = bundle.js
 `;
 
 exports[`StatsTestCases should print correct stats for warnings-uglifyjs 1`] = `
-"Hash: 5ddef8e3e0b2f2c278c4
+"Hash: 6480b1c08c0ca3d967aa
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks             Chunk Names
-bundle.js  2.89 KiB       0  [emitted]  main
+bundle.js  2.96 KiB       0  [emitted]  main
 Entrypoint main = bundle.js
-[0] ./index.js 299 bytes {0} [built]
-[1] ./a.js 249 bytes {0} [built]
-[2] (webpack)/buildin/module.js 497 bytes {0} [built]
+[0] ./a.js 249 bytes {0} [built]
+[1] (webpack)/buildin/module.js 497 bytes {0} [built]
+[2] ./index.js + 1 modules 1.32 KiB {0} [built]
+    [no exports]
+    | ./index.js 877 bytes [built]
+    |     [no exports]
+    | ./conditional.js 476 bytes [built]
+    |     [exports: ifTrue, ifTrueElse, ifFalse, ifFalseElse, ternaryTrueLeft, ternaryTrueRight, ternaryFalseLeft, ternaryFalseRight, logicalAndTrue, logicalAndFalse, logicalOrTrue, logicalOrFalse]
+    |     [only some exports used: ifTrue, ifFalseElse, ternaryTrueLeft, ternaryFalseRight, logicalAndTrue, logicalOrFalse]
 
 WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction1 [./a.js:3,0] in bundle.js
 
