@@ -199,7 +199,6 @@ exports[`StatsTestCases should print correct stats for async-commons-chunk-auto 
          | ./c.js 72 bytes [built]
     chunk    {7} disabled/async-g.js (async-g) 54 bytes <{1}> <{2}> [rendered]
         > ./g [] 6:0-47
-        > ./g [] 6:0-47
      [6] ./f.js 20 bytes {3} {4} {5} {6} {7} [built]
      [8] ./g.js 34 bytes {7} [built]
 Child default:
@@ -258,7 +257,6 @@ Child default:
         > ./b [0] ./index.js 2:0-47
         > ./c [0] ./index.js 3:0-47
         > ./g [] 6:0-47
-        > ./g [] 6:0-47
      [6] ./f.js 20 bytes {4} {5} {9} [built]
     chunk   {10} default/async-c.js (async-c) 72 bytes <{0}> ={3}= ={6}= ={9}= ={11}= [rendered]
         > ./c [0] ./index.js 3:0-47
@@ -267,7 +265,6 @@ Child default:
         > ./c [0] ./index.js 3:0-47
      [8] ./node_modules/z.js 20 bytes {5} {11} [built]
     chunk   {12} default/async-g.js (async-g) 34 bytes <{1}> <{2}> <{3}> <{6}> <{7}> ={9}= [rendered]
-        > ./g [] 6:0-47
         > ./g [] 6:0-47
      [9] ./g.js 34 bytes {12} [built]
 Child vendors:
@@ -325,7 +322,6 @@ Child vendors:
      [8] ./node_modules/z.js 20 bytes {4} {7} [built]
     chunk    {8} vendors/async-g.js (async-g) 54 bytes <{1}> <{2}> <{7}> [rendered]
         > ./g [] 6:0-47
-        > ./g [] 6:0-47
      [6] ./f.js 20 bytes {3} {4} {5} {6} {8} [built]
      [9] ./g.js 34 bytes {8} [built]
 Child multiple-vendors:
@@ -379,7 +375,6 @@ Child multiple-vendors:
         > ./b [0] ./index.js 2:0-47
         > ./c [0] ./index.js 3:0-47
         > ./g [] 6:0-47
-        > ./g [] 6:0-47
      [6] ./f.js 20 bytes {7} {8} {9} [built]
     chunk    {9} multiple-vendors/c.js (c) 92 bytes ={3}= ={4}= ={11}= [entry] [rendered]
         > ./c c
@@ -393,7 +388,6 @@ Child multiple-vendors:
         > ./c c
      [8] ./node_modules/z.js 20 bytes {11} [built]
     chunk   {12} multiple-vendors/async-g.js (async-g) 34 bytes <{1}> <{2}> <{3}> <{4}> <{5}> ={8}= [rendered]
-        > ./g [] 6:0-47
         > ./g [] 6:0-47
      [9] ./g.js 34 bytes {12} [built]
 Child all:
@@ -447,7 +441,6 @@ Child all:
         > ./b [0] ./index.js 2:0-47
         > ./c [0] ./index.js 3:0-47
         > ./g [] 6:0-47
-        > ./g [] 6:0-47
      [6] ./f.js 20 bytes {7} {8} {9} [built]
     chunk    {9} all/c.js (c) 92 bytes ={3}= ={4}= ={11}= [entry] [rendered]
         > ./c c
@@ -461,7 +454,6 @@ Child all:
         > ./c c
      [8] ./node_modules/z.js 20 bytes {11} [built]
     chunk   {12} all/async-g.js (async-g) 34 bytes <{1}> <{2}> <{3}> <{4}> <{5}> ={8}= [rendered]
-        > ./g [] 6:0-47
         > ./g [] 6:0-47
      [9] ./g.js 34 bytes {12} [built]"
 `;
@@ -1583,13 +1575,11 @@ chunk    {3} chunk.js (chunk) 0 bytes <{2}> <{7}> [rendered]
 chunk    {4} cir1.js (cir1) 81 bytes <{0}> <{5}> >{6}< [rendered]
     > [0] ./index.js 13:0-54
     > [6] ./circular2.js 1:0-79
-    > [6] ./circular2.js 1:0-79
  [5] ./circular1.js 81 bytes {4} [built]
 chunk    {5} cir2.js (cir2) 81 bytes <{0}> >{4}< [rendered]
     > [0] ./index.js 14:0-54
  [6] ./circular2.js 81 bytes {5} {6} [built]
 chunk    {6} cir2 from cir1.js (cir2 from cir1) 81 bytes <{4}> [rendered]
-    > [5] ./circular1.js 1:0-79
     > [5] ./circular1.js 1:0-79
  [6] ./circular2.js 81 bytes {5} {6} [built]
  [8] ./modules/e.js 0 bytes {6} [built]
@@ -2402,7 +2392,6 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
         > ./b [0] ./index.js 2:0-47
         > ./c [0] ./index.js 3:0-47
         > ./g [] 6:0-47
-        > ./g [] 6:0-47
      [6] ./f.js 20 bytes {4} {5} {9} [built]
     chunk   {10} default/async-c.js (async-c) 72 bytes <{0}> ={3}= ={6}= ={9}= ={11}= [rendered]
         > ./c [0] ./index.js 3:0-47
@@ -2411,7 +2400,6 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
         > ./c [0] ./index.js 3:0-47
      [8] ./node_modules/z.js 20 bytes {5} {11} [built]
     chunk   {12} default/async-g.js (async-g) 34 bytes <{1}> <{2}> <{3}> <{6}> <{7}> ={9}= [rendered]
-        > ./g [] 6:0-47
         > ./g [] 6:0-47
      [9] ./g.js 34 bytes {12} [built]
 Child all-chunks:
@@ -2465,7 +2453,6 @@ Child all-chunks:
         > ./b [0] ./index.js 2:0-47
         > ./c [0] ./index.js 3:0-47
         > ./g [] 6:0-47
-        > ./g [] 6:0-47
      [6] ./f.js 20 bytes {7} {8} {9} [built]
     chunk    {9} default/c.js (c) 92 bytes ={3}= ={4}= ={11}= [entry] [rendered]
         > ./c c
@@ -2479,7 +2466,6 @@ Child all-chunks:
         > ./c c
      [8] ./node_modules/z.js 20 bytes {11} [built]
     chunk   {12} default/async-g.js (async-g) 34 bytes <{1}> <{2}> <{3}> <{4}> <{5}> ={8}= [rendered]
-        > ./g [] 6:0-47
         > ./g [] 6:0-47
      [9] ./g.js 34 bytes {12} [built]
 Child manual:
@@ -2496,24 +2482,24 @@ Child manual:
         > ./c [0] ./index.js 3:0-47
         > ./a a
         > x a
-        > z a
         > y a
-        > z b
-        > y b
-        > x b
+        > z a
         > ./b b
+        > x b
+        > y b
+        > z b
+        > ./c c
         > x c
         > y c
         > z c
-        > ./c c
      [1] ./node_modules/x.js 20 bytes {1} [built]
      [2] ./node_modules/y.js 20 bytes {1} [built]
      [3] ./node_modules/z.js 20 bytes {1} [built]
     chunk    {2} default/a.js (a) 176 bytes ={1}= >{8}< [entry] [rendered]
+        > ./a a
         > x a
         > y a
         > z a
-        > ./a a
      [4] ./a.js + 1 modules 156 bytes {2} {3} [built]
          | ./e.js 20 bytes [built]
          | ./a.js 121 bytes [built]
@@ -2525,10 +2511,10 @@ Child manual:
          | ./a.js 121 bytes [built]
      [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
     chunk    {4} default/b.js (b) 112 bytes ={1}= [entry] [rendered]
+        > ./b b
         > x b
         > y b
         > z b
-        > ./b b
      [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
      [6] ./b.js 72 bytes {4} {5} [built]
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
@@ -2538,10 +2524,10 @@ Child manual:
      [6] ./b.js 72 bytes {4} {5} [built]
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
     chunk    {6} default/c.js (c) 112 bytes ={1}= [entry] [rendered]
+        > ./c c
         > x c
         > y c
         > z c
-        > ./c c
      [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
      [8] ./c.js 72 bytes {6} {7} [built]
@@ -2551,7 +2537,6 @@ Child manual:
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
      [8] ./c.js 72 bytes {6} {7} [built]
     chunk    {8} default/async-g.js (async-g) 54 bytes <{1}> <{2}> <{3}> [rendered]
-        > ./g [] 6:0-47
         > ./g [] 6:0-47
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
      [9] ./g.js 34 bytes {8} [built]
@@ -2605,7 +2590,6 @@ Child name-too-long:
         > ./b [0] ./index.js 2:0-47
         > ./c [0] ./index.js 3:0-47
         > ./g [] 6:0-47
-        > ./g [] 6:0-47
         > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
         > ./c cccccccccccccccccccccccccccccc
      [6] ./f.js 20 bytes {9} [built]
@@ -2618,7 +2602,6 @@ Child name-too-long:
         > ./c cccccccccccccccccccccccccccccc
      [8] ./node_modules/z.js 20 bytes {11} [built]
     chunk   {12} async-g.js (async-g) 34 bytes <{2}> <{4}> <{5}> <{6}> <{7}> ={9}= [rendered]
-        > ./g [] 6:0-47
         > ./g [] 6:0-47
      [9] ./g.js 34 bytes {12} [built]
 Child custom-chunks-filter:
@@ -2672,7 +2655,6 @@ Child custom-chunks-filter:
         > ./b [0] ./index.js 2:0-47
         > ./c [0] ./index.js 3:0-47
         > ./g [] 6:0-47
-        > ./g [] 6:0-47
      [6] ./f.js 20 bytes {7} {8} {9} [built]
     chunk    {9} default/c.js (c) 92 bytes ={3}= ={4}= ={11}= [entry] [rendered]
         > ./c c
@@ -2686,7 +2668,6 @@ Child custom-chunks-filter:
         > ./c c
      [8] ./node_modules/z.js 20 bytes {11} [built]
     chunk   {12} default/async-g.js (async-g) 34 bytes <{1}> <{2}> <{3}> <{4}> <{5}> ={8}= [rendered]
-        > ./g [] 6:0-47
         > ./g [] 6:0-47
      [9] ./g.js 34 bytes {12} [built]
 Child custom-chunks-filter-in-cache-groups:
@@ -2706,17 +2687,17 @@ Child custom-chunks-filter-in-cache-groups:
         > y b
         > z b
         > ./c c
-        > z c
         > x c
         > y c
+        > z c
      [1] ./node_modules/x.js 20 bytes {1} {2} [built]
      [2] ./node_modules/y.js 20 bytes {1} {2} [built]
      [3] ./node_modules/z.js 20 bytes {1} {2} [built]
     chunk    {2} default/a.js (a) 236 bytes >{8}< [entry] [rendered]
+        > ./a a
         > x a
         > y a
         > z a
-        > ./a a
      [1] ./node_modules/x.js 20 bytes {1} {2} [built]
      [2] ./node_modules/y.js 20 bytes {1} {2} [built]
      [3] ./node_modules/z.js 20 bytes {1} {2} [built]
@@ -2731,10 +2712,10 @@ Child custom-chunks-filter-in-cache-groups:
          | ./a.js 121 bytes [built]
      [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
     chunk    {4} default/b.js (b) 112 bytes ={1}= [entry] [rendered]
+        > ./b b
         > x b
         > y b
         > z b
-        > ./b b
      [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
      [6] ./b.js 72 bytes {4} {5} [built]
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
@@ -2744,10 +2725,10 @@ Child custom-chunks-filter-in-cache-groups:
      [6] ./b.js 72 bytes {4} {5} [built]
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
     chunk    {6} default/c.js (c) 112 bytes ={1}= [entry] [rendered]
+        > ./c c
         > x c
         > y c
         > z c
-        > ./c c
      [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
      [8] ./c.js 72 bytes {6} {7} [built]
@@ -2757,7 +2738,6 @@ Child custom-chunks-filter-in-cache-groups:
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
      [8] ./c.js 72 bytes {6} {7} [built]
     chunk    {8} default/async-g.js (async-g) 54 bytes <{1}> <{2}> <{3}> [rendered]
-        > ./g [] 6:0-47
         > ./g [] 6:0-47
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
      [9] ./g.js 34 bytes {8} [built]"
