@@ -1100,6 +1100,7 @@ export interface OutputOptions {
 		| "commonjs2"
 		| "commonjs-module"
 		| "amd"
+		| "amd-require"
 		| "umd"
 		| "umd2"
 		| "jsonp";
