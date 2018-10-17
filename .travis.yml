@@ -22,27 +22,27 @@ matrix:
   include:
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST_SILENT_REPORTER_DOTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache --reporters jest-silent-reporter" JOB_PART=basic
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=basic
       stage: basic
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST_SILENT_REPORTER_DOTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache --reporters jest-silent-reporter" JOB_PART=lint-unit
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=lint-unit
       stage: advanced
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST_SILENT_REPORTER_DOTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache --reporters jest-silent-reporter" JOB_PART=integration
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
       stage: advanced
     - os: osx
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST_SILENT_REPORTER_DOTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache --reporters jest-silent-reporter" JOB_PART=integration
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
       stage: versions
     - os: linux
       node_js: "8"
-      env: NO_WATCH_TESTS=1 JEST_SILENT_REPORTER_DOTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache --reporters jest-silent-reporter" JOB_PART=integration
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
       stage: versions
     - os: linux
       node_js: "6"
-      env: NO_WATCH_TESTS=1 JEST_SILENT_REPORTER_DOTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache --reporters jest-silent-reporter" JOB_PART=integration
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
       stage: versions
   fast_finish: true
   allow_failures:
