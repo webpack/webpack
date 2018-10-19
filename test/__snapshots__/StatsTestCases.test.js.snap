@@ -1164,7 +1164,7 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 1`] = `
-"Hash: eb610b429c869eba72876747d3a05d57aba4ed011c34e7c25ef408f41e6c4d70e3d24b67ba636024
+"Hash: eb610b429c869eba72876747d3a05d57aba4ed0100a352bc82c330d5a88b516679988e145181f3e2
 Child 1 chunks:
     Hash: eb610b429c869eba7287
     Time: Xms
@@ -1196,42 +1196,42 @@ Child 2 chunks:
     chunk    {1} bundle.js (main) 73 bytes >{0}< [entry] [rendered]
      [0] ./index.js 73 bytes {1} [built]
 Child 3 chunks:
-    Hash: 1c34e7c25ef408f41e6c
+    Hash: 00a352bc82c330d5a88b
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
-    0.bundle.js  494 bytes       0  [emitted]  
+    0.bundle.js  485 bytes       0  [emitted]  
     1.bundle.js  232 bytes       1  [emitted]  
       bundle.js   8.28 KiB       2  [emitted]  main
     Entrypoint main = bundle.js
-    chunk    {0} 0.bundle.js 74 bytes <{0}> <{2}> >{0}< >{1}< [rendered]
+    chunk    {0} 0.bundle.js 74 bytes <{2}> >{1}< [rendered]
      [1] ./a.js 22 bytes {0} [built]
+     [2] ./b.js 22 bytes {0} [built]
      [3] ./c.js 30 bytes {0} [built]
-     [4] ./d.js 22 bytes {0} [built]
-    chunk    {1} 1.bundle.js 44 bytes <{0}> <{2}> [rendered]
-     [2] ./b.js 22 bytes {1} [built]
+    chunk    {1} 1.bundle.js 44 bytes <{0}> [rendered]
+     [4] ./d.js 22 bytes {1} [built]
      [5] ./e.js 22 bytes {1} [built]
-    chunk    {2} bundle.js (main) 73 bytes >{0}< >{1}< [entry] [rendered]
+    chunk    {2} bundle.js (main) 73 bytes >{0}< [entry] [rendered]
      [0] ./index.js 73 bytes {2} [built]
 Child 4 chunks:
-    Hash: 4d70e3d24b67ba636024
+    Hash: 516679988e145181f3e2
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
-    0.bundle.js  254 bytes       0  [emitted]  
+    0.bundle.js  236 bytes       0  [emitted]  
     1.bundle.js  232 bytes       1  [emitted]  
     3.bundle.js  323 bytes       3  [emitted]  
       bundle.js   8.28 KiB       2  [emitted]  main
     Entrypoint main = bundle.js
-    chunk    {0} 0.bundle.js 44 bytes <{2}> <{3}> [rendered]
+    chunk    {0} 0.bundle.js 44 bytes <{2}> [rendered]
      [1] ./a.js 22 bytes {0} [built]
-     [4] ./d.js 22 bytes {0} [built]
-    chunk    {1} 1.bundle.js 44 bytes <{2}> <{3}> [rendered]
-     [2] ./b.js 22 bytes {1} [built]
+     [2] ./b.js 22 bytes {0} [built]
+    chunk    {1} 1.bundle.js 44 bytes <{3}> [rendered]
+     [4] ./d.js 22 bytes {1} [built]
      [5] ./e.js 22 bytes {1} [built]
-    chunk    {2} bundle.js (main) 73 bytes >{0}< >{1}< >{3}< [entry] [rendered]
+    chunk    {2} bundle.js (main) 73 bytes >{0}< >{3}< [entry] [rendered]
      [0] ./index.js 73 bytes {2} [built]
-    chunk    {3} 3.bundle.js 30 bytes <{2}> >{0}< >{1}< [rendered]
+    chunk    {3} 3.bundle.js 30 bytes <{2}> >{1}< [rendered]
      [3] ./c.js 30 bytes {3} [built]"
 `;
 
