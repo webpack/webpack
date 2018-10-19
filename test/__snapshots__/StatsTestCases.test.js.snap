@@ -61,13 +61,13 @@ exports[`StatsTestCases should print correct stats for aggressive-splitting-on-d
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
                   Asset      Size  Chunks             Chunk Names
-a2fea791e74e99836233.js  1.94 KiB       6  [emitted]  
 2736cf9d79233cd0a9b6.js  1.93 KiB       0  [emitted]  
+29de52df747b400f6177.js     1 KiB       1  [emitted]  
 7f83e5c2f4e52435dd2c.js  1.96 KiB       2  [emitted]  
 43c1ac24102c075ecb2d.js  1.94 KiB    3, 1  [emitted]  
 3d7e118b7fada40e804e.js   9.7 KiB       4  [emitted]  main
 6a80fd33f274d3117a32.js  1.01 KiB       5  [emitted]  
-29de52df747b400f6177.js     1 KiB       1  [emitted]  
+a2fea791e74e99836233.js  1.94 KiB       6  [emitted]  
 a9463ba36646aa40b97c.js  1.94 KiB    7, 9  [emitted]  
 5bc7f208cd99a83b4e33.js  1.94 KiB       8  [emitted]  
 819c28704a84308cd0f6.js     1 KiB       9  [emitted]  
@@ -1258,10 +1258,10 @@ Entrypoint main = main.js
 [15] ./c.js?3 33 bytes {0} [built]
 [17] ./c.js?4 33 bytes {0} [built]
 [19] ./c.js?5 33 bytes {0} [built]
+[21] ./c.js?6 33 bytes {0} [built]
 [23] ./c.js?7 33 bytes {0} [built]
 [25] ./c.js?8 33 bytes {0} [built]
 [27] ./c.js?9 33 bytes {0} [built]
-[29] ./c.js?10 33 bytes {0} [built]
     + 11 hidden modules"
 `;
 
@@ -1285,8 +1285,8 @@ Entrypoint main = main.js
 [10] ./index.js 181 bytes {0} [built]
 [11] ./c.js?1 33 bytes {0} [built]
 [13] ./c.js?2 33 bytes {0} [built]
-[27] ./c.js?9 33 bytes {0} [built]
-[29] ./c.js?10 33 bytes {0} [built]
+[15] ./c.js?3 33 bytes {0} [built]
+[17] ./c.js?4 33 bytes {0} [built]
     + 16 hidden modules"
 `;
 
@@ -2076,10 +2076,10 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset      Size  Chunks             Chunk Names
 main.js  6.81 KiB       0  [emitted]  main
 Entrypoint main = main.js
-[29] ./c.js?10 33 bytes {0} [built]
 [27] ./c.js?9 33 bytes {0} [built]
 [25] ./c.js?8 33 bytes {0} [built]
 [23] ./c.js?7 33 bytes {0} [built]
+[21] ./c.js?6 33 bytes {0} [built]
 [19] ./c.js?5 33 bytes {0} [built]
 [17] ./c.js?4 33 bytes {0} [built]
 [15] ./c.js?3 33 bytes {0} [built]
