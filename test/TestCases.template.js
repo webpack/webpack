@@ -5,11 +5,13 @@ const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
+const rimraf = require("rimraf");
 const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 
 const Stats = require("../lib/Stats");
+const FileCachePlugin = require("../lib/cache/FileCachePlugin");
 const webpack = require("../lib/webpack");
 
 const terserForTesting = new TerserPlugin({
@@ -79,6 +81,13 @@ const describeCases = config => {
 								category.name,
 								testName
 							);
+							const cacheDirectory = path.join(
+								__dirname,
+								"js/.cache",
+								config.name,
+								category.name,
+								testName
+							);
 							const options = {
 								context: casesPath,
 								entry: "./" + category.name + "/" + testName + "/index",
@@ -94,6 +103,12 @@ const describeCases = config => {
 									  ),
 								performance: {
 									hints: false
+								},
+								cache: {
+									type: "filesystem",
+									cacheDirectory: cacheDirectory,
+									loglevel: "warning",
+									store: "instant"
 								},
 								output: {
 									pathinfo: true,
@@ -168,11 +183,22 @@ const describeCases = config => {
 									});
 								})
 							};
+							beforeAll(done => {
+								rimraf(cacheDirectory, done);
+							});
+							it(testName + " should pre-compile", done => {
+								FileCachePlugin.purgeMemoryCache();
+								webpack(options, err => {
+									if (err) return done(err);
+									FileCachePlugin.purgeMemoryCache();
+									done();
+								});
+							});
 							it(
 								testName + " should compile",
 								done => {
 									webpack(options, (err, stats) => {
-										if (err) done(err);
+										if (err) return done(err);
 										const statOptions = Stats.presetToOptions("verbose");
 										statOptions.colors = false;
 										mkdirp.sync(outputDirectory);

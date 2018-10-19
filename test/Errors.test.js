@@ -190,7 +190,6 @@ describe("Errors", () => {
 			(errors, warnings) => {
 				expect(errors).toHaveLength(2);
 				expect(warnings).toHaveLength(0);
-				console.log(errors);
 				let lines = errors[0].split("\n");
 				expect(lines[0]).toMatch(/missingFile.js 4:0/);
 				expect(lines[1]).toMatch(/^Module not found/);

@@ -155,6 +155,42 @@
         }
       ]
     },
+    "FileCacheOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cacheDirectory": {
+          "description": "Base directory for the cache (defaults to node_modules/.cache/webpack).",
+          "type": "string",
+          "absolutePath": true
+        },
+        "hashAlgorithm": {
+          "description": "Algorithm used for generation the hash (see node.js crypto package)",
+          "type": "string"
+        },
+        "loglevel": {
+          "description": "Display log info. (debug: all access and errors with stack trace, info: all access, warning: only failed serialization)",
+          "enum": ["debug", "info", "warning"]
+        },
+        "name": {
+          "description": "Name for the cache. Different names will lead to different coexisting caches.",
+          "type": "string"
+        },
+        "store": {
+          "description": "When to store data to the filesystem. (idle: Store data when compiler is idle; background: Store data in background while compiling, but doesn't block the compilation; instant: Store data when creating blocking compilation until data is stored; defaults to idle)",
+          "enum": ["idle", "background", "instant"]
+        },
+        "type": {
+          "description": "Filesystem caching",
+          "enum": ["filesystem"]
+        },
+        "version": {
+          "description": "Version of the cache data. Different versions won't allow to reuse the cache and override existing content. Update the version when config changed in a way which doesn't allow to reuse cache. This will invalidate the cache.",
+          "type": "string"
+        }
+      },
+      "required": ["type"]
+    },
     "FilterItemTypes": {
       "anyOf": [
         {
@@ -212,6 +248,17 @@
           ]
         }
       }
+    },
+    "MemoryCacheOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "description": "In memory caching",
+          "enum": ["memory"]
+        }
+      },
+      "required": ["type"]
     },
     "ModuleOptions": {
       "type": "object",
@@ -1897,12 +1944,28 @@
       "description": "Cache generated modules and chunks to improve performance for multiple incremental builds.",
       "anyOf": [
         {
-          "description": "You can pass `false` to disable it.",
-          "type": "boolean"
+          "description": "Disable caching.",
+          "enum": [false]
         },
         {
-          "description": "You can pass an object to enable it and let webpack use the passed object as cache. This way you can share the cache object between multiple compiler calls.",
-          "type": "object"
+          "description": "Enable in memory caching.",
+          "enum": [true]
+        },
+        {
+          "description": "Options for memory caching.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/MemoryCacheOptions"
+            }
+          ]
+        },
+        {
+          "description": "Options for persistent caching.",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/FileCacheOptions"
+            }
+          ]
         }
       ]
     },

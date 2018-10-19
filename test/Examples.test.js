@@ -26,6 +26,7 @@ describe("Examples", () => {
 					webpackConfigPath.substr(1);
 				if (fs.existsSync(webpackConfigPath))
 					options = require(webpackConfigPath);
+				if (typeof options === "function") options = options();
 				if (Array.isArray(options)) options.forEach(processOptions);
 				else processOptions(options);
 

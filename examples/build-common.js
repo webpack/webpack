@@ -42,9 +42,9 @@ const doCompileAndReplace = (args, prefix, callback) => {
 };
 
 async.series([
-	callback => doCompileAndReplace("--mode production", "production", callback),
-	callback => doCompileAndReplace("--mode development --devtool none", "development", callback),
-	callback => doCompileAndReplace("--mode none --output-pathinfo", "", callback)
+	callback => doCompileAndReplace("--mode production --env production", "production", callback),
+	callback => doCompileAndReplace("--mode development --env development --devtool none", "development", callback),
+	callback => doCompileAndReplace("--mode none --env none --output-pathinfo", "", callback)
 ], () => {
 	readme = tc.replaceBase(readme);
 	fs.writeFile("README.md", readme, "utf-8", function() {});
