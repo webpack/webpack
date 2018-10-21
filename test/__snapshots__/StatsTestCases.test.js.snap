@@ -522,7 +522,7 @@ chunk    {3} 3.bundle.js 44 bytes <{2}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for chunks-development 1`] = `
-"Hash: 45b6636dfd64ed682f3c
+"Hash: ec5082ccf21fad8b711b
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
