@@ -448,7 +448,7 @@ describe("Compiler", () => {
 			});
 		});
 	});
-  it('should flag watchMode as true in watch', function(done) {
+	it("should flag watchMode as true in watch", function(done) {
 		const compiler = webpack({
 			context: __dirname,
 			mode: "production",
@@ -460,12 +460,12 @@ describe("Compiler", () => {
 		});
 
 		compiler.outputFileSystem = new MemoryFs();
-		compiler.watch({}, (err) => {
+		compiler.watch({}, err => {
 			if (err) return done(err);
-      expect(compiler.watchMode).toBeTruthy();
-      done();
+			expect(compiler.watchMode).toBeTruthy();
+			done();
 		});
-  });
+	});
 	it("should use cache on second run call", function(done) {
 		const compiler = webpack({
 			context: __dirname,
