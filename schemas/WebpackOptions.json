@@ -169,8 +169,8 @@
           "type": "string"
         },
         "loglevel": {
-          "description": "Display log info. (debug: all access and errors with stack trace, info: all access, warning: only failed serialization)",
-          "enum": ["debug", "info", "warning"]
+          "description": "Display log info. (debug: all access and errors with stack trace, verbose: all access, info: all write access, warning: only failed serialization)",
+          "enum": ["debug", "verbose", "info", "warning"]
         },
         "name": {
           "description": "Name for the cache. Different names will lead to different coexisting caches.",

@@ -428,9 +428,9 @@ export interface FileCacheOptions {
 	 */
 	hashAlgorithm?: string;
 	/**
-	 * Display log info. (debug: all access and errors with stack trace, info: all access, warning: only failed serialization)
+	 * Display log info. (debug: all access and errors with stack trace, verbose: all access, info: all write access, warning: only failed serialization)
 	 */
-	loglevel?: "debug" | "info" | "warning";
+	loglevel?: "debug" | "verbose" | "info" | "warning";
 	/**
 	 * Name for the cache. Different names will lead to different coexisting caches.
 	 */
