@@ -4,6 +4,21 @@ it("should evaluate null", function() {
 		require("fail");
 });
 
+it("should evaluate logical expression", function() {
+	var value1 = "hello" || require("fail");
+	var value2 = typeof require === "function" || require("fail");
+	var value3 = "" && require("fail");
+	var value4 = typeof require !== "function" && require("fail");
+	var value5 = "hello" && (() => "value5")();
+	var value6 = "" || (() => "value6")();
+	expect(value1).toBe("hello");
+	expect(value2).toBe(true);
+	expect(value3).toBe("");
+	expect(value4).toBe(false);
+	expect(value5).toBe("value5");
+	expect(value6).toBe("value6");
+});
+
 if("shouldn't evaluate expression", function() {
 	var value = "";
 	var x = (value + "") ? "fail" : "ok";
