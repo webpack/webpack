@@ -460,10 +460,14 @@ describe("Compiler", () => {
 		});
 
 		compiler.outputFileSystem = new MemoryFs();
-		compiler.watch({}, err => {
+
+		const watch = compiler.watch({}, err => {
 			if (err) return done(err);
 			expect(compiler.watchMode).toBeTruthy();
-			done();
+			watch.close(() => {
+				expect(compiler.watchMode).toBeFalsy();
+				done();
+			});
 		});
 	});
 	it("should use cache on second run call", function(done) {
