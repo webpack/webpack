@@ -539,15 +539,6 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
 2.bundle.js  433 bytes       2  [emitted]  
   bundle.js   8.67 KiB    main  [emitted]  main
 Entrypoint main = bundle.js
-chunk {main} bundle.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
-    > ./index main
- [./a.js] 22 bytes {main} [built]
-     cjs require ./a [./e.js] 1:0-14
-     cjs require ./a [./index.js] 1:0-14
-     [./index.js] Xms -> factory:Xms building:Xms = Xms
- [./index.js] 51 bytes {main} [built]
-     single entry ./index  main
-     factory:Xms building:Xms = Xms
 chunk    {0} 0.bundle.js 60 bytes <{2}> [rendered]
     > [./c.js] ./c.js 1:0-52
  [./d.js] 22 bytes {0} [built]
@@ -565,7 +556,16 @@ chunk    {2} 2.bundle.js 54 bytes <{main}> >{0}< [rendered]
     > ./c [./index.js] ./index.js 3:0-16
  [./c.js] 54 bytes {2} [built]
      amd require ./c [./index.js] 3:0-16
-     [./index.js] Xms -> factory:Xms building:Xms = Xms"
+     [./index.js] Xms -> factory:Xms building:Xms = Xms
+chunk {main} bundle.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
+    > ./index main
+ [./a.js] 22 bytes {main} [built]
+     cjs require ./a [./e.js] 1:0-14
+     cjs require ./a [./index.js] 1:0-14
+     [./index.js] Xms -> factory:Xms building:Xms = Xms
+ [./index.js] 51 bytes {main} [built]
+     single entry ./index  main
+     factory:Xms building:Xms = Xms"
 `;
 
 exports[`StatsTestCases should print correct stats for circular-correctness 1`] = `
@@ -2172,7 +2172,7 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
-"Hash: 6c533d1d4bdbf3084c6b2d1c053d3d2d97b18b5b
+"Hash: 6c533d1d4bdbf3084c6bde70767a6c9e8ee03ab6
 Child
     Hash: 6c533d1d4bdbf3084c6b
     Time: Xms
@@ -2191,7 +2191,7 @@ Child
      [9] ./common_lazy_shared.js 25 bytes {2} {3} {4} [built]
     [10] ./common_lazy.js 25 bytes {2} {3} [built]
 Child
-    Hash: 2d1c053d3d2d97b18b5b
+    Hash: de70767a6c9e8ee03ab6
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
     Entrypoint first = vendor.js first.js
@@ -2202,18 +2202,18 @@ Child
     [1] ./vendor.js 25 bytes {0} [built]
     [2] ./second.js 177 bytes {5} [built]
         ModuleConcatenation bailout: Module is an entry point
-    [3] ./common_lazy_shared.js 25 bytes {2} {3} {4} [built]
-    [4] ./common_lazy.js 25 bytes {2} {3} [built]
-    [5] ./lazy_shared.js 31 bytes {4} [built]
-        ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./first.js (referenced with import()), ./second.js (referenced with import())
-    [6] ./first.js + 1 modules 248 bytes {1} [built]
+    [3] ./first.js + 1 modules 248 bytes {1} [built]
         ModuleConcatenation bailout: Cannot concat with ./common.js
         ModuleConcatenation bailout: Cannot concat with ./vendor.js
         | ./first.js 207 bytes [built]
         |     ModuleConcatenation bailout: Module is an entry point
         | ./module_first.js 31 bytes [built]
-    [7] ./lazy_second.js 55 bytes {3} [built]
+    [4] ./lazy_shared.js 31 bytes {4} [built]
+        ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./first.js (referenced with import()), ./second.js (referenced with import())
+    [5] ./lazy_second.js 55 bytes {3} [built]
         ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./second.js (referenced with import())
+    [6] ./common_lazy_shared.js 25 bytes {2} {3} {4} [built]
+    [7] ./common_lazy.js 25 bytes {2} {3} [built]
     [8] ./lazy_first.js 55 bytes {2} [built]
         ModuleConcatenation bailout: Module is referenced from these modules with unsupported syntax: ./first.js (referenced with import())"
 `;

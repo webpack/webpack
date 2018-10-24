@@ -8,6 +8,7 @@ const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 const MemoryFs = require("memory-fs");
 
 describe("Compiler", () => {
+	jest.setTimeout(20000);
 	function compile(entry, options, callback) {
 		const noOutputPath = !options.output || !options.output.path;
 		if (!options.mode) options.mode = "production";
