@@ -42,7 +42,7 @@ matrix:
     - os: linux
       node_js: "10"
       env:
-        - NODEJS_VERSION=v11.0.0-nightly201810139f7e3a4040
+        - NODEJS_VERSION=v12.0.0-nightly20181024bb79e768e5
         - YARN_EXTRA_ARGS="--ignore-engines"
         - NO_WATCH_TESTS=1
         - JEST="--maxWorkers=2 --cacheDirectory .jest-cache"
