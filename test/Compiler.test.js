@@ -448,6 +448,28 @@ describe("Compiler", () => {
 			});
 		});
 	});
+	it("should flag watchMode as true in watch", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+
+		compiler.outputFileSystem = new MemoryFs();
+
+		const watch = compiler.watch({}, err => {
+			if (err) return done(err);
+			expect(compiler.watchMode).toBeTruthy();
+			watch.close(() => {
+				expect(compiler.watchMode).toBeFalsy();
+				done();
+			});
+		});
+	});
 	it("should use cache on second run call", function(done) {
 		const compiler = webpack({
 			context: __dirname,
