@@ -16,7 +16,6 @@ cache:
 stages:
   - basic
   - advanced
-  - versions
 
 matrix:
   include:
@@ -39,25 +38,8 @@ matrix:
       node_js: "10"
       env:
         NO_WATCH_TESTS=1 ALTERNATIVE_SORT=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
-      stage: versions
-    - os: osx
-      node_js: "10"
-      env:
-        NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
-      stage: versions
-    - os: linux
-      node_js: "8"
-      env:
-        NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
-      stage: versions
-    - os: linux
-      node_js: "6"
-      env:
-        NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
-      stage: versions
+      stage: advanced
   fast_finish: true
-  allow_failures:
-    - os: osx
 
 install:
   - yarn --frozen-lockfile
