@@ -27,7 +27,7 @@ module.exports = function checkArrayExpectation(
 					new Error(
 						`More ${kind}s while compiling than expected:\n\n${array.join(
 							"\n\n"
-						)}. Check expected warnings: ${filename}`
+						)}. Check expected ${kind}s: ${expectedFilename}`
 					)
 				),
 				true
@@ -38,7 +38,7 @@ module.exports = function checkArrayExpectation(
 					new Error(
 						`Less ${kind}s while compiling than expected:\n\n${array.join(
 							"\n\n"
-						)}. Check expected warnings: ${filename}`
+						)}. Check expected ${kind}s: ${expectedFilename}`
 					)
 				),
 				true
