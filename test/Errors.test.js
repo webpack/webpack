@@ -202,33 +202,6 @@ describe("Errors", () => {
 			}
 		);
 	});
-	it("should throw an error when trying to use [chunkhash] when it's invalid", done => {
-		getErrors(
-			{
-				mode: "development",
-				entry: {
-					a: "./entry-point",
-					b: "./entry-point",
-					c: "./entry-point"
-				},
-				output: {
-					filename: "[chunkhash].js"
-				},
-				plugins: [new webpack.HotModuleReplacementPlugin()]
-			},
-			(errors, warnings) => {
-				expect(errors).toHaveLength(3);
-				expect(warnings).toHaveLength(0);
-				errors.forEach(error => {
-					const lines = error.split("\n");
-					expect(lines[0]).toMatch(/chunk (a|b|c)/);
-					expect(lines[2]).toMatch(/\[chunkhash\].js/);
-					expect(lines[2]).toMatch(/use \[hash\] instead/);
-				});
-				done();
-			}
-		);
-	});
 	it("should show loader name when emit/throw errors or warnings from loaders", () => {
 		return Promise.all([
 			getErrorsPromise(
