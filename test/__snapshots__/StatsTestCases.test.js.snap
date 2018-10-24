@@ -539,15 +539,6 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
 2.bundle.js  433 bytes       2  [emitted]  
   bundle.js   8.67 KiB    main  [emitted]  main
 Entrypoint main = bundle.js
-chunk {main} bundle.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
-    > ./index main
- [./a.js] 22 bytes {main} [built]
-     cjs require ./a [./e.js] 1:0-14
-     cjs require ./a [./index.js] 1:0-14
-     [./index.js] Xms -> factory:Xms building:Xms = Xms
- [./index.js] 51 bytes {main} [built]
-     single entry ./index  main
-     factory:Xms building:Xms = Xms
 chunk    {0} 0.bundle.js 60 bytes <{2}> [rendered]
     > [./c.js] ./c.js 1:0-52
  [./d.js] 22 bytes {0} [built]
@@ -565,7 +556,16 @@ chunk    {2} 2.bundle.js 54 bytes <{main}> >{0}< [rendered]
     > ./c [./index.js] ./index.js 3:0-16
  [./c.js] 54 bytes {2} [built]
      amd require ./c [./index.js] 3:0-16
-     [./index.js] Xms -> factory:Xms building:Xms = Xms"
+     [./index.js] Xms -> factory:Xms building:Xms = Xms
+chunk {main} bundle.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
+    > ./index main
+ [./a.js] 22 bytes {main} [built]
+     cjs require ./a [./e.js] 1:0-14
+     cjs require ./a [./index.js] 1:0-14
+     [./index.js] Xms -> factory:Xms building:Xms = Xms
+ [./index.js] 51 bytes {main} [built]
+     single entry ./index  main
+     factory:Xms building:Xms = Xms"
 `;
 
 exports[`StatsTestCases should print correct stats for circular-correctness 1`] = `
