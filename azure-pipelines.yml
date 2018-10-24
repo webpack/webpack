@@ -98,12 +98,7 @@ jobs:
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn cover:init
-          yarn cover:integration "test/(?!TestCases)" --ci --maxWorkers=2
-          mv coverage/coverage-final.json coverage/coverage-final-1.json
-          yarn cover:integration "test/TestCasesD" --ci --maxWorkers=2
-          mv coverage/coverage-final.json coverage/coverage-final-2.json
-          yarn cover:integration "test/TestCases(?!D)" --ci --maxWorkers=2
-          mv coverage/coverage-final.json coverage/coverage-final-3.json
+          yarn cover:integration --ci --maxWorkers=2
         displayName: "Run tests with coverage"
   - job: macos
     dependsOn:
@@ -145,12 +140,7 @@ jobs:
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn cover:init
-          yarn cover:integration "test/(?!TestCases)" --ci
-          mv coverage/coverage-final.json coverage/coverage-final-1.json
-          yarn cover:integration "test/TestCasesD" --ci
-          mv coverage/coverage-final.json coverage/coverage-final-2.json
-          yarn cover:integration "test/TestCases(?!D)" --ci
-          mv coverage/coverage-final.json coverage/coverage-final-3.json
+          yarn cover:integration --ci
         displayName: "Run tests with coverage"
   - job: windows
     dependsOn:
@@ -188,5 +178,5 @@ jobs:
         displayName: "Install dependencies"
       - script: |
           set -e
-          yarn cover:init && yarn cover:integration "test/(?!TestCases)" --ci --maxWorkers=2 && move coverage\\coverage-final.json coverage\\coverage-final-1.json && yarn cover:integration "test/TestCasesD" --ci --maxWorkers=2 && move coverage\\coverage-final.json coverage\\coverage-final-2.json && yarn cover:integration "test/TestCases(?!D)" --ci --maxWorkers=2 && move coverage\\coverage-final.json coverage\\coverage-final-3.json
+          yarn cover:init && yarn cover:integration --ci --maxWorkers=2
         displayName: "Run tests with coverage"
