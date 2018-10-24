@@ -1155,49 +1155,49 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 1`] = `
-"Hash: 4c55553bd94205710a5fee833b1335bf5cefe6d3ef8e4ba109adf5abb5d72c01d0bad8a1ac53a2ee
+"Hash: a25acced7f3c09454b1841186629d7e58ef80e368b91914e07e28dd7218e7feaf0ceedae853c7093
 Child 1 chunks:
-    Hash: 4c55553bd94205710a5f
+    Hash: a25acced7f3c09454b18
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  6.67 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-    chunk    {0} bundle.js (main) 191 bytes <{0}> >{0}< [entry] [rendered]
-     [0] ./index.js 73 bytes {0} [built]
+    chunk    {0} bundle.js (main) 219 bytes <{0}> >{0}< [entry] [rendered]
+     [0] ./index.js 101 bytes {0} [built]
      [1] ./a.js 22 bytes {0} [built]
      [2] ./b.js 22 bytes {0} [built]
      [3] ./c.js 30 bytes {0} [built]
      [4] ./d.js 22 bytes {0} [built]
      [5] ./e.js 22 bytes {0} [built]
 Child 2 chunks:
-    Hash: ee833b1335bf5cefe6d3
+    Hash: 41186629d7e58ef80e36
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
-    1.bundle.js  641 bytes       1  [emitted]  
+    1.bundle.js  641 bytes       1  [emitted]  c
       bundle.js   8.28 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-    chunk    {0} bundle.js (main) 73 bytes >{1}< [entry] [rendered]
-     [0] ./index.js 73 bytes {0} [built]
-    chunk    {1} 1.bundle.js 118 bytes <{0}> <{1}> >{1}< [rendered]
+    chunk    {0} bundle.js (main) 101 bytes >{1}< [entry] [rendered]
+     [0] ./index.js 101 bytes {0} [built]
+    chunk    {1} 1.bundle.js (c) 118 bytes <{0}> <{1}> >{1}< [rendered]
      [1] ./a.js 22 bytes {1} [built]
      [2] ./b.js 22 bytes {1} [built]
      [3] ./c.js 30 bytes {1} [built]
      [4] ./d.js 22 bytes {1} [built]
      [5] ./e.js 22 bytes {1} [built]
 Child 3 chunks:
-    Hash: ef8e4ba109adf5abb5d7
+    Hash: 8b91914e07e28dd7218e
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
-    1.bundle.js  485 bytes       1  [emitted]  
+    1.bundle.js  485 bytes       1  [emitted]  c
     2.bundle.js  232 bytes       2  [emitted]  
       bundle.js   8.28 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-    chunk    {0} bundle.js (main) 73 bytes >{1}< [entry] [rendered]
-     [0] ./index.js 73 bytes {0} [built]
-    chunk    {1} 1.bundle.js 74 bytes <{0}> >{2}< [rendered]
+    chunk    {0} bundle.js (main) 101 bytes >{1}< [entry] [rendered]
+     [0] ./index.js 101 bytes {0} [built]
+    chunk    {1} 1.bundle.js (c) 74 bytes <{0}> >{2}< [rendered]
      [1] ./a.js 22 bytes {1} [built]
      [2] ./b.js 22 bytes {1} [built]
      [3] ./c.js 30 bytes {1} [built]
@@ -1205,21 +1205,21 @@ Child 3 chunks:
      [4] ./d.js 22 bytes {2} [built]
      [5] ./e.js 22 bytes {2} [built]
 Child 4 chunks:
-    Hash: 2c01d0bad8a1ac53a2ee
+    Hash: 7feaf0ceedae853c7093
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
           Asset       Size  Chunks             Chunk Names
     1.bundle.js  236 bytes       1  [emitted]  
-    2.bundle.js  323 bytes       2  [emitted]  
+    2.bundle.js  323 bytes       2  [emitted]  c
     3.bundle.js  232 bytes       3  [emitted]  
       bundle.js   8.28 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-    chunk    {0} bundle.js (main) 73 bytes >{1}< >{2}< [entry] [rendered]
-     [0] ./index.js 73 bytes {0} [built]
+    chunk    {0} bundle.js (main) 101 bytes >{1}< >{2}< [entry] [rendered]
+     [0] ./index.js 101 bytes {0} [built]
     chunk    {1} 1.bundle.js 44 bytes <{0}> [rendered]
      [1] ./a.js 22 bytes {1} [built]
      [2] ./b.js 22 bytes {1} [built]
-    chunk    {2} 2.bundle.js 30 bytes <{0}> >{3}< [rendered]
+    chunk    {2} 2.bundle.js (c) 30 bytes <{0}> >{3}< [rendered]
      [3] ./c.js 30 bytes {2} [built]
     chunk    {3} 3.bundle.js 44 bytes <{2}> [rendered]
      [4] ./d.js 22 bytes {3} [built]

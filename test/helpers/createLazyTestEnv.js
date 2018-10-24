@@ -1,3 +1,40 @@
+// this function allows to release memory in fn context
+// after the function has been called.
+const createOnceFn = fn => {
+	if (!fn) return null;
+	if (fn.length >= 1) {
+		return done => {
+			fn(done);
+			fn = null;
+		};
+	}
+	return () => {
+		const r = fn();
+		fn = null;
+		return r;
+	};
+};
+
+// this function allows to release memory in fn context
+// manually, usually after the suite has been run.
+const createDisposableFn = fn => {
+	if (!fn) return null;
+	let rfn;
+	if (fn.length >= 1) {
+		rfn = done => {
+			fn(done);
+		};
+	} else {
+		rfn = () => {
+			return fn();
+		};
+	}
+	rfn.dispose = () => {
+		fn = null;
+	};
+	return rfn;
+};
+
 module.exports = (env, globalTimeout = 2000, nameSuffix = "") => {
 	const suite = env.describe(
 		nameSuffix ? `exported tests ${nameSuffix}` : "exported tests",
@@ -32,6 +69,7 @@ module.exports = (env, globalTimeout = 2000, nameSuffix = "") => {
 			return numberOfTests;
 		},
 		it(title, fn, timeout = globalTimeout) {
+			fn = createOnceFn(fn);
 			numberOfTests++;
 			let spec;
 			if(fn) {
@@ -49,15 +87,31 @@ module.exports = (env, globalTimeout = 2000, nameSuffix = "") => {
 			spec.result.fullName = spec.getFullName();
 		},
 		beforeEach(fn, timeout = globalTimeout) {
+			fn = createDisposableFn(fn);
 			suite.beforeEach({
 				fn,
 				timeout: () => timeout
 			});
+			suite.afterAll({
+				fn: done => {
+					fn.dispose();
+					done();
+				},
+				timeout: () => 1000
+			});
 		},
 		afterEach(fn, timeout = globalTimeout) {
+			fn = createDisposableFn(fn);
 			suite.afterEach({
 				fn,
 				timeout: () => timeout
+			});
+			suite.afterAll({
+				fn: done => {
+					fn.dispose();
+					done();
+				},
+				timeout: () => 1000
 			});
 		}
 	};
