@@ -29,6 +29,11 @@ const createSingleCompiler = () => {
 };
 
 describe("RemovedFiles", () => {
+	if (process.env.NO_WATCH_TESTS) {
+		it.skip("watch tests excluded", () => {});
+		return;
+	}
+
 	jest.setTimeout(20000);
 
 	function cleanup() {
