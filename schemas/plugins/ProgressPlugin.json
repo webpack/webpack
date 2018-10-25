@@ -1,0 +1,42 @@
+{
+  "definitions": {
+    "HandlerFunction": {
+      "description": "Function that executes for every progress step",
+      "instanceof": "Function",
+      "tsType": "((percentage: number, msg: string, ...args) => void)"
+    }
+  },
+  "title": "ProgressPluginArgument",
+  "oneOf": [
+    {
+      "title": "ProgressPluginOptions",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "handler": {
+          "description": "Function that executes for every progress step",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/HandlerFunction"
+            }
+          ]
+        },
+        "mode": {
+          "description": "Counting mode. Default: modules",
+          "enum": ["modules", "entries"]
+        },
+        "modulesCount": {
+          "description": "Minimum modules count to start with. Only for mode=modules. Default: 500",
+          "type": "number"
+        },
+        "profile": {
+          "description": "Collect profile data for progress steps. Default: false",
+          "enum": [true, false, null]
+        }
+      }
+    },
+    {
+      "$ref": "#/definitions/HandlerFunction"
+    }
+  ]
+}
