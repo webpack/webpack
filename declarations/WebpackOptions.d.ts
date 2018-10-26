@@ -1016,6 +1016,10 @@ export interface OutputOptions {
 	 */
 	chunkCallbackName?: string;
 	/**
+	 * The character encoding used in the chunks, defaults to `utf-8`.
+	 */
+	chunkCharset?: string;
+	/**
 	 * The filename of non-entry chunks as relative path inside the `output.path` directory.
 	 */
 	chunkFilename?: string;

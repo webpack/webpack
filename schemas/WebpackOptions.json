@@ -800,6 +800,10 @@
           "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
           "type": "string"
         },
+        "chunkCharset": {
+          "description": "The character encoding used in the chunks, defaults to `utf-8`.",
+          "type": "string"
+        },
         "chunkFilename": {
           "description": "The filename of non-entry chunks as relative path inside the `output.path` directory.",
           "type": "string",
