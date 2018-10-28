@@ -56,3 +56,8 @@ it("should provide ES2015 modules", function() {
 	expect((es2015_alias)).toBe("ECMAScript Harmony");
 	expect((es2015_year)).toBe(2015);
 });
+
+it("should not provide for mjs", function(){
+	var foo = require(__dirname + "/foo.mjs").default;
+	expect(foo()).toBe("undefined");
+});
