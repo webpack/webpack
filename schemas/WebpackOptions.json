@@ -796,12 +796,12 @@
             }
           ]
         },
-        "chunkCallbackName": {
-          "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
+        "charset": {
+          "description": "The character encoding used in the chunks, defaults to `utf-8`.",
           "type": "string"
         },
-        "chunkCharset": {
-          "description": "The character encoding used in the chunks, defaults to `utf-8`.",
+        "chunkCallbackName": {
+          "description": "The callback function name used by webpack for loading of chunks in WebWorkers.",
           "type": "string"
         },
         "chunkFilename": {

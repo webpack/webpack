@@ -1012,13 +1012,13 @@ export interface OutputOptions {
 				root?: string;
 		  };
 	/**
+	 * The character encoding used in the chunks, defaults to `utf-8`.
+	 */
+	charset?: string;
+	/**
 	 * The callback function name used by webpack for loading of chunks in WebWorkers.
 	 */
 	chunkCallbackName?: string;
-	/**
-	 * The character encoding used in the chunks, defaults to `utf-8`.
-	 */
-	chunkCharset?: string;
 	/**
 	 * The filename of non-entry chunks as relative path inside the `output.path` directory.
 	 */
