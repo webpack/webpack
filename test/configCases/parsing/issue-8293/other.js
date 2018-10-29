@@ -1,1 +1,1 @@
-import(`./dir/${NAME}.js`);
+import(`./${CONST_PREFIX}/${DEFINED_EXPRESSION}/${CONST_SUFFIX}`);

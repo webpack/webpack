@@ -13,7 +13,9 @@ module.exports = {
 	},
 	plugins: [
 		new webpack.DefinePlugin({
-			NAME: "foobar"
+			CONST_PREFIX: JSON.stringify("prefix"),
+			CONST_SUFFIX: JSON.stringify("suffix"),
+			DEFINED_EXPRESSION: "foobar"
 		})
 	]
 };
