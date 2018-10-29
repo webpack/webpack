@@ -82,12 +82,12 @@ const schema = [
 	},
 	{
 		title: "imports",
-		regexp: /(const (\{\s+\w+(,\s+\w+)*\s+\}|\w+) = require\("[^"]+"\)(\.\w+)*;\n)+\n/g,
+		regexp: /(const (\{\s+\w+(,\s+\w+)*\s+\}|\w+) = (\/\*\* @type \{TODO\} \*\/\s\()?require\("[^"]+"\)\)?(\.\w+)*;\n)+\n/g,
 		updateMessage: "sort imports alphabetically",
 		update(content) {
 			const items = execToArray(
 				content,
-				/const (?:\{\s+\w+(?:,\s+\w+)*\s+\}|\w+) = require\("([^"]+)"\)((?:\.\w+)*);\n/g
+				/const (?:\{\s+\w+(?:,\s+\w+)*\s+\}|\w+) = (?:\/\*\* @type \{TODO\} \*\/\s\()?require\("([^"]+)"\)\)?((?:\.\w+)*);\n/g
 			);
 			items.sort(sortImport);
 			return items.map(item => item.content).join("") + "\n";

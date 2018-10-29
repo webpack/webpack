@@ -29,7 +29,7 @@ const tests = fs
 describe("StatsTestCases", () => {
 	tests.forEach(testName => {
 		it("should print correct stats for " + testName, done => {
-			jest.setTimeout(10000);
+			jest.setTimeout(30000);
 			let options = {
 				mode: "development",
 				entry: "./index",
