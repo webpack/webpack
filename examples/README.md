@@ -1,6 +1,6 @@
 # Examples
 ## Aggressive Merging
-[aggressive-merging](aggressive-merging) 
+[aggressive-merging](aggressive-merging)
 
 ## Chunk
 [chunkhash](chunkhash)
@@ -31,9 +31,9 @@
 
 [code-splitting-bundle-loader](code-splitting-bundle-loader) example demonstrating Code Splitting through the builder loader
 
-[code-splitting-harmony](code-splitting-harmony) 
+[code-splitting-harmony](code-splitting-harmony)
 
-[code-splitting-native-import-context](code-splitting-native-import-context) 
+[code-splitting-native-import-context](code-splitting-native-import-context)
 
 [code-splitting-specify-chunk-name](code-splitting-specify-chunk-name)
 
@@ -110,7 +110,7 @@ If you think an example is missing, please report it as issue. :)
 
 # Building an Example
 1. Run `yarn` in the root of the project.
-2. Run `yarn link webpack` in the root of the project.
+2. Run `yarn setup` in the root of the project.
 3. Run `yarn add --dev webpack-cli` in the root of the project.
 4. Run `node build.js` in the specific example directory. (Ex: `cd examples/commonjs && node build.js`)
 
