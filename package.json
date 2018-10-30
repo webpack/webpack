@@ -107,6 +107,7 @@
     "test": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest",
     "test:update-snapshots": "yarn jest -u",
     "test:integration": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\"",
+    "test:HMR": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/{HotModuleReplacementPlugin}.test.js\"",
     "test:basic": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/{TestCasesNormal,StatsTestCases,ConfigTestCases}.test.js\"",
     "test:unit": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\"",
     "travis:integration": "yarn cover:init && yarn cover:integration --ci $JEST",
