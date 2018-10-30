@@ -187,7 +187,11 @@ const describeCases = config => {
 								})
 							};
 							beforeAll(done => {
+								FileCachePlugin.purgeMemoryCache();
 								rimraf(cacheDirectory, done);
+							});
+							afterAll(() => {
+								FileCachePlugin.purgeMemoryCache();
 							});
 							if (config.cache) {
 								it(testName + " should pre-compile", done => {
