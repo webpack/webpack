@@ -27,9 +27,11 @@ module.exports = {
 			"typeof suppe": "typeof wurst",
 			wurst: "suppe",
 			suppe: "wurst",
-			RUNTIMEVALUE_CALLBACK_ARGUMENT_IS_A_MODULE: DefinePlugin.runtimeValue(function(currentModule) {
-				return typeof currentModule === 'object';
-			})
+			RUNTIMEVALUE_CALLBACK_ARGUMENT_IS_A_MODULE: DefinePlugin.runtimeValue(
+				function(currentModule) {
+					return typeof currentModule === "object";
+				}
+			)
 		})
 	]
 };
