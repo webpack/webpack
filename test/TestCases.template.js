@@ -194,12 +194,20 @@ const describeCases = config => {
 								FileCachePlugin.purgeMemoryCache();
 							});
 							if (config.cache) {
-								it(testName + " should pre-compile", done => {
+								it(`${testName} should pre-compile to fill disk cache`, done => {
 									FileCachePlugin.purgeMemoryCache();
 									const compiler = webpack(options, err => {
 										if (err) return done(err);
 										compiler.close(() => {
-											FileCachePlugin.purgeMemoryCache();
+											done();
+										});
+									});
+								});
+								it(`${testName} should pre-compile to fill memory cache`, done => {
+									FileCachePlugin.purgeMemoryCache();
+									const compiler = webpack(options, err => {
+										if (err) return done(err);
+										compiler.close(() => {
 											done();
 										});
 									});
