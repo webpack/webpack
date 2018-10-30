@@ -34,7 +34,7 @@ it("should detect query strings in dynamic import as a static value 2", function
 	]);
 });
 
-it("should detect query strings in dynamic import as a static value 2", function() {
+it("should detect query strings in dynamic import as a static value 3", function() {
 	var testFileName = "a";
 
 	return Promise.all([
