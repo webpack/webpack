@@ -104,12 +104,15 @@ const describeCases = config => {
 								performance: {
 									hints: false
 								},
-								cache: {
-									type: "filesystem",
-									cacheDirectory: cacheDirectory,
-									loglevel: "warning",
-									store: "instant"
-								},
+								cache:
+									config.cache &&
+									Object.assign(
+										{
+											loglevel: "warning",
+											cacheDirectory
+										},
+										config.cache
+									),
 								output: {
 									pathinfo: true,
 									path: outputDirectory,
@@ -184,20 +187,36 @@ const describeCases = config => {
 								})
 							};
 							beforeAll(done => {
+								FileCachePlugin.purgeMemoryCache();
 								rimraf(cacheDirectory, done);
 							});
-							it(testName + " should pre-compile", done => {
+							afterAll(() => {
 								FileCachePlugin.purgeMemoryCache();
-								webpack(options, err => {
-									if (err) return done(err);
-									FileCachePlugin.purgeMemoryCache();
-									done();
-								});
 							});
+							if (config.cache) {
+								it(`${testName} should pre-compile to fill disk cache`, done => {
+									FileCachePlugin.purgeMemoryCache();
+									const compiler = webpack(options, err => {
+										if (err) return done(err);
+										compiler.close(() => {
+											done();
+										});
+									});
+								});
+								it(`${testName} should pre-compile to fill memory cache`, done => {
+									FileCachePlugin.purgeMemoryCache();
+									const compiler = webpack(options, err => {
+										if (err) return done(err);
+										compiler.close(() => {
+											done();
+										});
+									});
+								});
+							}
 							it(
 								testName + " should compile",
 								done => {
-									webpack(options, (err, stats) => {
+									const compiler = webpack(options, (err, stats) => {
 										if (err) return done(err);
 										const statOptions = Stats.presetToOptions("verbose");
 										statOptions.colors = false;
@@ -263,7 +282,10 @@ const describeCases = config => {
 										if (getNumberOfTests() === 0)
 											return done(new Error("No tests exported by test case"));
 
-										done();
+										compiler.close(err => {
+											if (err) return done(err);
+											done();
+										});
 									});
 								},
 								60000

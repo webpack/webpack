@@ -428,17 +428,17 @@ export interface FileCacheOptions {
 	 */
 	hashAlgorithm?: string;
 	/**
-	 * Display log info. (debug: all access and errors with stack trace, info: all access, warning: only failed serialization)
+	 * Display log info. (debug: all access and errors with stack trace, verbose: all access, info: all write access, warning: only failed serialization)
 	 */
-	loglevel?: "debug" | "info" | "warning";
+	loglevel?: "debug" | "verbose" | "info" | "warning";
 	/**
 	 * Name for the cache. Different names will lead to different coexisting caches.
 	 */
 	name?: string;
 	/**
-	 * When to store data to the filesystem. (idle: Store data when compiler is idle; background: Store data in background while compiling, but doesn't block the compilation; instant: Store data when creating blocking compilation until data is stored; defaults to idle)
+	 * When to store data to the filesystem. (pack: Store data when compiler is idle in a single file, idle: Store data when compiler is idle in multiple files; background: Store data in background while compiling, but doesn't block the compilation; instant: Store data when creating blocking compilation until data is stored; defaults to idle)
 	 */
-	store?: "idle" | "background" | "instant";
+	store?: "pack" | "idle" | "background" | "instant";
 	/**
 	 * Filesystem caching
 	 */
