@@ -657,6 +657,10 @@ export interface ResolveOptions {
 	 */
 	aliasFields?: ArrayOfStringOrStringArrayValues;
 	/**
+	 * Enable caching of successfully resolved requests (cache entries are revalidated)
+	 */
+	cache?: boolean;
+	/**
 	 * Predicate function to decide which requests should be cached
 	 */
 	cachePredicate?: Function;
@@ -721,7 +725,7 @@ export interface ResolveOptions {
 	 */
 	symlinks?: boolean;
 	/**
-	 * Enable caching of successfully resolved requests
+	 * Enable caching of successfully resolved requests (cache entries are not revalidated)
 	 */
 	unsafeCache?:
 		| boolean
