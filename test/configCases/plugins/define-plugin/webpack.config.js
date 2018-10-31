@@ -1,4 +1,5 @@
 var DefinePlugin = require("../../../../lib/DefinePlugin");
+const Module = require("../../../../lib/Module");
 module.exports = {
 	plugins: [
 		new DefinePlugin({
@@ -28,8 +29,8 @@ module.exports = {
 			wurst: "suppe",
 			suppe: "wurst",
 			RUNTIMEVALUE_CALLBACK_ARGUMENT_IS_A_MODULE: DefinePlugin.runtimeValue(
-				function(currentModule) {
-					return typeof currentModule === "object";
+				function({ module }) {
+					return module instanceof Module;
 				}
 			)
 		})
