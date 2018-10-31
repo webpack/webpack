@@ -1130,6 +1130,10 @@
             }
           ]
         },
+        "cache": {
+          "description": "Enable caching of successfully resolved requests (cache entries are revalidated)",
+          "type": "boolean"
+        },
         "cachePredicate": {
           "description": "Predicate function to decide which requests should be cached",
           "instanceof": "Function",
@@ -1225,7 +1229,7 @@
           "type": "boolean"
         },
         "unsafeCache": {
-          "description": "Enable caching of successfully resolved requests",
+          "description": "Enable caching of successfully resolved requests (cache entries are not revalidated)",
           "anyOf": [
             {
               "type": "boolean"
