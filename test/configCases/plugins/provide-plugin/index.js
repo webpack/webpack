@@ -58,6 +58,6 @@ it("should provide ES2015 modules", function() {
 });
 
 it("should not provide for mjs", function(){
-	var foo = require(__dirname + "/foo.mjs").default;
+	var foo = require("./foo.mjs").default;
 	expect(foo()).toBe("undefined");
 });
