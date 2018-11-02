@@ -21,23 +21,19 @@ matrix:
   include:
     - os: linux
       node_js: "10"
-      env:
-        NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=basic
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=basic
       stage: basic
     - os: linux
       node_js: "10"
-      env:
-        NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=lint-unit
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=lint-unit
       stage: advanced
     - os: linux
       node_js: "10"
-      env:
-        NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
       stage: advanced
     - os: linux
       node_js: "10"
-      env:
-        NO_WATCH_TESTS=1 ALTERNATIVE_SORT=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
+      env: NO_WATCH_TESTS=1 ALTERNATIVE_SORT=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
       stage: advanced
     - os: linux
       node_js: "10"
@@ -74,5 +70,4 @@ after_success:
 
 notifications:
   slack:
-    secure:
-      JduSdKWwbnLCwo7Z4E59SGE+Uw832UwnXzQiKEpg1BV45MYDPRiGltly1tRHmPh9OGjvGx3XSkC2tNGOBLtL4UL2SCkf012x0t7jDutKRfcv/njynl8jk8l+UhPmaWiHXDQAgGiiKdL4RfzPLW3HeVHCOWm0LKMzcarTa8tw+rE=
+    secure: JduSdKWwbnLCwo7Z4E59SGE+Uw832UwnXzQiKEpg1BV45MYDPRiGltly1tRHmPh9OGjvGx3XSkC2tNGOBLtL4UL2SCkf012x0t7jDutKRfcv/njynl8jk8l+UhPmaWiHXDQAgGiiKdL4RfzPLW3HeVHCOWm0LKMzcarTa8tw+rE=
