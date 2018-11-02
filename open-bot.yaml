@@ -504,8 +504,7 @@ rules:
   # Move issue task
   - filters:
       open: true
-      comment:
-        "\\s*@webpack-bot\\s+move\\s+(?:to\\s+)?([a-z0-9_\\-\\.]+/[a-z0-9_\\-\\.]+)\\s*([\\s\\S]*)$"
+      comment: "\\s*@webpack-bot\\s+move\\s+(?:to\\s+)?([a-z0-9_\\-\\.]+/[a-z0-9_\\-\\.]+)\\s*([\\s\\S]*)$"
       not:
         comment_1:
           matching: "moved\\-by\\-bot"

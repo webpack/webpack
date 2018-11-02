@@ -114,3 +114,7 @@ it("should follow renamings in var (issue 5215)", function() {
 	expect(TEST).toBe("test");
 	expect(DEFINED_NESTED_KEY).toBe(5);
 });
+
+it("should check that runtimeValue callback argument is a module", function() {
+	expect(RUNTIMEVALUE_CALLBACK_ARGUMENT_IS_A_MODULE).toEqual(true);
+});
