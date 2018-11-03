@@ -4,6 +4,7 @@
 const path = require("path");
 
 const webpack = require("../");
+const Stats = require("../lib/Stats");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 const MemoryFs = require("memory-fs");
 
@@ -258,6 +259,76 @@ describe("Compiler", () => {
 			done();
 		});
 	});
+	/* eslint-disable node/no-unsupported-features */
+	/* eslint-disable node/no-unsupported-features/es-syntax */
+	it("should bubble up errors when wrapped in a promise and bail is true", async done => {
+		try {
+			const createCompiler = options => {
+				return new Promise((resolve, reject) => {
+					const c = webpack(options);
+					c.run((err, stats) => {
+						if (err) {
+							reject(err);
+						}
+						if (stats !== undefined && "errors" in stats) {
+							reject(err);
+						} else {
+							resolve(stats);
+						}
+					});
+				});
+			};
+			const compiler = await createCompiler({
+				context: __dirname,
+				mode: "production",
+				entry: "./missing-file",
+				output: {
+					path: "/",
+					filename: "bundle.js"
+				},
+				bail: true
+			});
+			done();
+			return compiler;
+		} catch (err) {
+			expect(err.toString()).toMatch(
+				"EntryModuleNotFoundError: Entry module not found: Error: Can't resolve './missing-file'"
+			);
+			done();
+		}
+	});
+	/* eslint-disable node/no-unsupported-features */
+	/* eslint-disable node/no-unsupported-features/es-syntax */
+	it("should not emit compilation errors in async (watch)", async done => {
+		try {
+			const createCompiler = options => {
+				return new Promise((resolve, reject) => {
+					const c = webpack(options);
+					c.outputFileSystem = new MemoryFs();
+					const watching = c.watch({}, (err, stats) => {
+						watching.close();
+						if (err) return reject(err);
+						resolve(stats);
+					});
+				});
+			};
+			const compiler = await createCompiler({
+				context: __dirname,
+				mode: "production",
+				entry: "./missing-file",
+				output: {
+					path: "/",
+					filename: "bundle.js"
+				},
+				watch: true
+			});
+			expect(compiler).toBeInstanceOf(Stats);
+			done();
+		} catch (err) {
+			done(err);
+		}
+	});
+
 	it("should not emit on errors (watch)", done => {
 		const compiler = webpack({
 			context: __dirname,

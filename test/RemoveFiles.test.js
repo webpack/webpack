@@ -29,7 +29,7 @@ const createSingleCompiler = () => {
 };
 
 describe("RemovedFiles", () => {
-	jest.setTimeout(20000);
+	jest.setTimeout(50000);
 
 	function cleanup() {
 		rimraf.sync(tempFolderPath);
