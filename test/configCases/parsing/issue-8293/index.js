@@ -11,6 +11,8 @@ const path = require("path");
 			expect(source).toContain(`\`./\${foobar}/suffix0`);
 			expect(source).toContain(`\`./\${foobar}/suffix3`);
 			expect(source).not.toContain(`\`./\${foobar}/suffix4`);
+			expect(source).not.toContain(`\`./\${DEFINED_EXPRESSION}/\${CONST_SUFFIX4}`);
+			expect(source).not.toContain(`typeof require ===`);
 		});
 	}
 );
