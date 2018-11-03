@@ -145,7 +145,7 @@ describe("HotModuleReplacementPlugin", () => {
 			},
 			plugins: [new webpack.HotModuleReplacementPlugin()],
 			optimization: {
-				namedChunks: true
+				chunkIds: "named"
 			}
 		});
 		fs.writeFileSync(entryFile, "1", "utf-8");
