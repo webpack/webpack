@@ -4,12 +4,8 @@
       "description": "Function that executes for every progress step",
       "instanceof": "Function",
       "tsType": "((percentage: number, msg: string, ...args: string[]) => void)"
-    }
-  },
-  "title": "ProgressPluginArgument",
-  "oneOf": [
-    {
-      "title": "ProgressPluginOptions",
+    },
+    "ProgressPluginOptions": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
@@ -42,6 +38,12 @@
           "enum": [true, false, null]
         }
       }
+    }
+  },
+  "title": "ProgressPluginArgument",
+  "oneOf": [
+    {
+      "$ref": "#/definitions/ProgressPluginOptions"
     },
     {
       "$ref": "#/definitions/HandlerFunction"
