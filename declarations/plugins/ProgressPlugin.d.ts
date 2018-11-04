@@ -16,9 +16,21 @@ export type HandlerFunction = ((
 
 export interface ProgressPluginOptions {
 	/**
+	 * Show active modules count and one active module in progress message
+	 */
+	activeModules?: boolean;
+	/**
+	 * Show entries count in progress message
+	 */
+	entries?: boolean;
+	/**
 	 * Function that executes for every progress step
 	 */
 	handler?: HandlerFunction;
+	/**
+	 * Show modules count in progress message
+	 */
+	modules?: boolean;
 	/**
 	 * Minimum modules count to start with. Only for mode=modules. Default: 500
 	 */
