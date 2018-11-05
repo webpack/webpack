@@ -12,6 +12,10 @@
       "description": "If true, only entry points will be exposed",
       "type": "boolean"
     },
+    "format": {
+      "description": "If true, manifest json file (output) will be formatted",
+      "type": "boolean"
+    },
     "name": {
       "description": "Name of the exposed dll function (external name, use value of 'output.library')",
       "type": "string",

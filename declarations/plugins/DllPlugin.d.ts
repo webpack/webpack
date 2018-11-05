@@ -14,6 +14,10 @@ export interface DllPluginOptions {
 	 */
 	entryOnly?: boolean;
 	/**
+	 * If true, manifest json file (output) will be formatted
+	 */
+	format?: boolean;
+	/**
 	 * Name of the exposed dll function (external name, use value of 'output.library')
 	 */
 	name?: string;
