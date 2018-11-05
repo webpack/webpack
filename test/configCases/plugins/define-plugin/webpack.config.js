@@ -32,7 +32,8 @@ module.exports = {
 				function({ module }) {
 					return module instanceof Module;
 				}
-			)
+			),
+			A_DOT_J: '"a.j"'
 		})
 	]
 };

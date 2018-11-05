@@ -118,3 +118,10 @@ it("should follow renamings in var (issue 5215)", function() {
 it("should check that runtimeValue callback argument is a module", function() {
 	expect(RUNTIMEVALUE_CALLBACK_ARGUMENT_IS_A_MODULE).toEqual(true);
 });
+
+it("should expand properly", function() {
+	var tmp = '';
+	expect(function() {
+		require('./' + A_DOT_J + tmp + 's');
+	}).not.toThrowError(ReferenceError, "A_DOT_J is not defined");
+});
