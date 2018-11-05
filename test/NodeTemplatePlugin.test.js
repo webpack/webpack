@@ -5,6 +5,7 @@ const path = require("path");
 const webpack = require("../lib/webpack");
 
 describe("NodeTemplatePlugin", () => {
+	jest.setTimeout(20000);
 	it("should compile and run a simple module", done => {
 		webpack(
 			{
