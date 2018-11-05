@@ -237,7 +237,7 @@ interface RuleSetConditionsAbsoluteRecursive
 declare const $hash$;
 declare const $requestTimeout$;
 declare const installedModules;
-declare const $require$;
+declare const __webpack_require__;
 declare const hotDownloadManifest;
 declare const hotDownloadUpdateChunk;
 declare const hotDisposeChunk;
