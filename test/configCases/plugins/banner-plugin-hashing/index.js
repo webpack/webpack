@@ -34,19 +34,27 @@ it("should interpolate name in chunk banner", () => {
 });
 
 it("should interpolate basename in chunk banner", () => {
-	expect(banner["filebase"]).toBe("banner.js");
+	expect(banner["base"]).toBe("banner.js");
 });
 
 it("should interpolate query in chunk banner", () => {
 	expect(banner["query"]).toBe("?value");
 });
 
+it("should interpolate path in chunk banner", () => {
+	expect(banner["path"]).toBe("dist/");
+});
+
+it("should interpolate ext in chunk banner", () => {
+	expect(banner["ext"]).toBe(".js");
+});
+
 it("should parse entry into file in chunk banner", () => {
-	expect(banner["file"]).not.toBe(banner["filebase"]);
+	expect(banner["file"]).not.toBe(banner["base"]);
 });
 
 it("should parse entry into name in chunk banner", () => {
-	expect(banner["filebase"]).not.toBe(banner["name"]);
+	expect(banner["base"]).not.toBe(banner["name"]);
 });
 
 require.include("./test.js");
