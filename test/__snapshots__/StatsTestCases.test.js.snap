@@ -620,7 +620,7 @@ Entrypoint entry-1 = vendor-1~entry-1.js entry-1.js
 `;
 
 exports[`StatsTestCases should print correct stats for commons-chunk-min-size-Infinity 1`] = `
-"Hash: 7388fd3835d086c09d10
+"Hash: bcdb58652e7a75d06e5f
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
@@ -2675,10 +2675,25 @@ Child custom-chunks-filter-in-cache-groups:
     Entrypoint a = default/a.js
     Entrypoint b = default/vendors.js default/b.js
     Entrypoint c = default/vendors.js default/c.js
-    chunk    {0} default/main.js (main) 147 bytes >{2}< >{3}< >{4}< >{6}< [entry] [rendered]
+    chunk    {0} default/main.js (main) 147 bytes >{1}< >{3}< >{4}< >{6}< [entry] [rendered]
         > ./ main
      [0] ./index.js 147 bytes {0} [built]
-    chunk    {1} default/a.js (a) 236 bytes >{8}< [entry] [rendered]
+    chunk    {1} default/vendors.js (vendors) 60 bytes <{0}> ={3}= ={4}= ={5}= ={6}= ={7}= >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
+        > ./a [0] ./index.js 1:0-47
+        > ./b [0] ./index.js 2:0-47
+        > ./c [0] ./index.js 3:0-47
+        > ./b b
+        > x b
+        > y b
+        > z b
+        > ./c c
+        > x c
+        > y c
+        > z c
+     [1] ./node_modules/x.js 20 bytes {1} {2} [built]
+     [2] ./node_modules/y.js 20 bytes {1} {2} [built]
+     [3] ./node_modules/z.js 20 bytes {1} {2} [built]
+    chunk    {2} default/a.js (a) 236 bytes >{8}< [entry] [rendered]
         > ./a a
         > x a
         > y a
@@ -2686,55 +2701,40 @@ Child custom-chunks-filter-in-cache-groups:
      [1] ./node_modules/x.js 20 bytes {1} {2} [built]
      [2] ./node_modules/y.js 20 bytes {1} {2} [built]
      [3] ./node_modules/z.js 20 bytes {1} {2} [built]
-     [4] ./a.js + 1 modules 156 bytes {1} {3} [built]
+     [4] ./a.js + 1 modules 156 bytes {2} {3} [built]
          | ./e.js 20 bytes [built]
          | ./a.js 121 bytes [built]
-     [5] ./d.js 20 bytes {1} {3} {4} {5} {6} {7} [built]
-    chunk    {2} default/vendors.js (vendors) 60 bytes <{0}> ={3}= ={4}= ={5}= ={6}= ={7}= >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
+     [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+    chunk    {3} default/async-a.js (async-a) 176 bytes <{0}> ={1}= >{8}< [rendered]
         > ./a [0] ./index.js 1:0-47
+     [4] ./a.js + 1 modules 156 bytes {2} {3} [built]
+         | ./e.js 20 bytes [built]
+         | ./a.js 121 bytes [built]
+     [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+    chunk    {4} default/async-b.js (async-b) 112 bytes <{0}> ={1}= [rendered]
         > ./b [0] ./index.js 2:0-47
-        > ./c [0] ./index.js 3:0-47
+     [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
+     [6] ./b.js 72 bytes {4} {5} [built]
+     [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
+    chunk    {5} default/b.js (b) 112 bytes ={1}= [entry] [rendered]
         > ./b b
         > x b
         > y b
         > z b
-        > ./c c
-        > x c
-        > y c
-        > z c
-     [1] ./node_modules/x.js 20 bytes {1} {2} [built]
-     [2] ./node_modules/y.js 20 bytes {1} {2} [built]
-     [3] ./node_modules/z.js 20 bytes {1} {2} [built]
-    chunk    {3} default/async-a.js (async-a) 176 bytes <{0}> ={2}= >{8}< [rendered]
-        > ./a [0] ./index.js 1:0-47
-     [4] ./a.js + 1 modules 156 bytes {1} {3} [built]
-         | ./e.js 20 bytes [built]
-         | ./a.js 121 bytes [built]
-     [5] ./d.js 20 bytes {1} {3} {4} {5} {6} {7} [built]
-    chunk    {4} default/async-b.js (async-b) 112 bytes <{0}> ={2}= [rendered]
-        > ./b [0] ./index.js 2:0-47
-     [5] ./d.js 20 bytes {1} {3} {4} {5} {6} {7} [built]
+     [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
      [6] ./b.js 72 bytes {4} {5} [built]
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
-    chunk    {5} default/b.js (b) 112 bytes ={2}= [entry] [rendered]
-        > ./b b
-        > x b
-        > y b
-        > z b
-     [5] ./d.js 20 bytes {1} {3} {4} {5} {6} {7} [built]
-     [6] ./b.js 72 bytes {4} {5} [built]
-     [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
-    chunk    {6} default/async-c.js (async-c) 112 bytes <{0}> ={2}= [rendered]
+    chunk    {6} default/async-c.js (async-c) 112 bytes <{0}> ={1}= [rendered]
         > ./c [0] ./index.js 3:0-47
-     [5] ./d.js 20 bytes {1} {3} {4} {5} {6} {7} [built]
+     [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
      [8] ./c.js 72 bytes {6} {7} [built]
-    chunk    {7} default/c.js (c) 112 bytes ={2}= [entry] [rendered]
+    chunk    {7} default/c.js (c) 112 bytes ={1}= [entry] [rendered]
         > ./c c
         > x c
         > y c
         > z c
-     [5] ./d.js 20 bytes {1} {3} {4} {5} {6} {7} [built]
+     [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
      [8] ./c.js 72 bytes {6} {7} [built]
     chunk    {8} default/async-g.js (async-g) 54 bytes <{1}> <{2}> <{3}> [rendered]
