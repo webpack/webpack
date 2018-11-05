@@ -2,8 +2,8 @@
 it("should define FALSE", function() {
 	expect(FALSE).toBe(false);
 	expect((typeof TRUE)).toBe("boolean");
-	var x = require(FALSE ? "fail" : "./a");
-	var y = FALSE ? require("fail") : require("./a");
+	var x = require(FALSE ? "fail" : "./dir/a");
+	var y = FALSE ? require("fail") : require("./dir/a");
 });
 
 it("should define CODE", function() {
@@ -117,4 +117,18 @@ it("should follow renamings in var (issue 5215)", function() {
 
 it("should check that runtimeValue callback argument is a module", function() {
 	expect(RUNTIMEVALUE_CALLBACK_ARGUMENT_IS_A_MODULE).toEqual(true);
+});
+
+it("should expand properly", function() {
+	const a = require("./dir/a");
+	var tmp = '';
+	expect(require('./dir/' + A_DOT_J + tmp + 's')).toBe(a);
+	expect(require('./dir/' + tmp + A_DOT_J + 's')).toBe(a);
+	expect(require('./dir/' + tmp + A_DOT_J + tmp + 's')).toBe(a);
+	expect(require('./dir/' + tmp + A_DOT_J + (tmp + 's'))).toBe(a);
+	expect(require('./dir/' + tmp + (A_DOT_J + tmp + 's'))).toBe(a);
+	expect(require('./dir/' + tmp + (A_DOT_J + tmp) + 's')).toBe(a);
+	expect(require('./dir/' + (tmp + A_DOT_J + tmp + 's'))).toBe(a);
+	expect(require('./dir/' + (tmp + A_DOT_J + tmp) + 's')).toBe(a);
+	expect(require('./dir/' + (tmp + A_DOT_J) + tmp + 's')).toBe(a);
 });
