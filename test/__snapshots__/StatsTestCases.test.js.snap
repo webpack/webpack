@@ -620,7 +620,7 @@ Entrypoint entry-1 = vendor-1~entry-1.js entry-1.js
 `;
 
 exports[`StatsTestCases should print correct stats for commons-chunk-min-size-Infinity 1`] = `
-"Hash: bcdb58652e7a75d06e5f
+"Hash: 7388fd3835d086c09d10
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
@@ -3047,30 +3047,30 @@ Child switched:
      [878] ./subfolder/small.js?4 67 bytes {2} [built]
      [881] ./subfolder/small.js?5 67 bytes {2} [built]
      [890] ./subfolder/big.js?1 268 bytes {2} [built]
-    chunk    {3} switched-main~748942c6.js (main~748942c6) 1.18 KiB ={0}= ={1}= ={2}= ={4}= ={5}= ={6}= ={7}= ={8}= [initial] [rendered]
+    chunk    {3} switched-vendors~main~7274e1de.js (vendors~main~7274e1de) 1.96 KiB ={0}= ={1}= ={2}= ={4}= ={5}= ={6}= ={7}= ={8}= [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~main)
         > ./ main
-     [235] ./inner-module/small.js?1 67 bytes {3} [built]
-     [243] ./inner-module/small.js?6 67 bytes {3} [built]
-     [332] ./small.js?9 67 bytes {3} [built]
-     [366] ./small.js?8 67 bytes {3} [built]
-     [428] ./small.js?6 67 bytes {3} [built]
-     [539] ./inner-module/small.js?5 67 bytes {3} [built]
-     [541] ./small.js?5 67 bytes {3} [built]
-     [568] ./small.js?4 67 bytes {3} [built]
-     [570] ./small.js?1 67 bytes {3} [built]
-     [611] ./small.js?3 67 bytes {3} [built]
-     [712] ./inner-module/small.js?4 67 bytes {3} [built]
-     [731] ./inner-module/small.js?2 67 bytes {3} [built]
-     [803] ./small.js?7 67 bytes {3} [built]
-     [853] ./inner-module/small.js?3 67 bytes {3} [built]
-     [991] ./small.js?2 67 bytes {3} [built]
+     [208] ./node_modules/small.js?1 67 bytes {3} [built]
+     [447] ./node_modules/big.js?1 268 bytes {3} [built]
+     [726] ./node_modules/very-big.js?1 1.57 KiB {3} [built]
+     [983] ./node_modules/small.js?2 67 bytes {3} [built]
+    chunk    {4} switched-main~748942c6.js (main~748942c6) 1.18 KiB ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= [initial] [rendered]
+        > ./ main
+     [235] ./inner-module/small.js?1 67 bytes {4} [built]
+     [243] ./inner-module/small.js?6 67 bytes {4} [built]
+     [332] ./small.js?9 67 bytes {4} [built]
+     [366] ./small.js?8 67 bytes {4} [built]
+     [428] ./small.js?6 67 bytes {4} [built]
+     [539] ./inner-module/small.js?5 67 bytes {4} [built]
+     [541] ./small.js?5 67 bytes {4} [built]
+     [568] ./small.js?4 67 bytes {4} [built]
+     [570] ./small.js?1 67 bytes {4} [built]
+     [611] ./small.js?3 67 bytes {4} [built]
+     [712] ./inner-module/small.js?4 67 bytes {4} [built]
+     [731] ./inner-module/small.js?2 67 bytes {4} [built]
+     [803] ./small.js?7 67 bytes {4} [built]
+     [853] ./inner-module/small.js?3 67 bytes {4} [built]
+     [991] ./small.js?2 67 bytes {4} [built]
          + 3 hidden modules
-    chunk    {4} switched-vendors~main~7274e1de.js (vendors~main~7274e1de) 1.96 KiB ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~main)
-        > ./ main
-     [208] ./node_modules/small.js?1 67 bytes {4} [built]
-     [447] ./node_modules/big.js?1 268 bytes {4} [built]
-     [726] ./node_modules/very-big.js?1 1.57 KiB {4} [built]
-     [983] ./node_modules/small.js?2 67 bytes {4} [built]
     chunk    {5} switched-main~c6931360.js (main~c6931360) 1.57 KiB ={0}= ={1}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= [initial] [rendered]
         > ./ main
      [772] ./very-big.js?2 1.57 KiB {5} [built]
