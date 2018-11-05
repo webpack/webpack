@@ -620,7 +620,7 @@ Entrypoint entry-1 = vendor-1~entry-1.js entry-1.js
 `;
 
 exports[`StatsTestCases should print correct stats for commons-chunk-min-size-Infinity 1`] = `
-"Hash: bcdb58652e7a75d06e5f
+"Hash: 809e6039b017b13ffe7f
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
@@ -3031,28 +3031,28 @@ Child switched:
     chunk    {0} switched-main~cd7c5bfc.js (main~cd7c5bfc) 1.57 KiB ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= [initial] [rendered]
         > ./ main
      [57] ./very-big.js?3 1.57 KiB {0} [built]
-    chunk    {1} switched-main~02369f19.js (main~02369f19) 1.57 KiB ={0}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= [entry] [rendered]
+    chunk    {1} switched-vendors~main~7274e1de.js (vendors~main~7274e1de) 1.96 KiB ={0}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~main)
         > ./ main
-     [358] ./very-big.js?1 1.57 KiB {1} [built]
-    chunk    {2} switched-main~d9f1562b.js (main~d9f1562b) 1.11 KiB ={0}= ={1}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= [initial] [rendered]
+     [208] ./node_modules/small.js?1 67 bytes {1} [built]
+     [447] ./node_modules/big.js?1 268 bytes {1} [built]
+     [726] ./node_modules/very-big.js?1 1.57 KiB {1} [built]
+     [983] ./node_modules/small.js?2 67 bytes {1} [built]
+    chunk    {2} switched-main~02369f19.js (main~02369f19) 1.57 KiB ={0}= ={1}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= [entry] [rendered]
         > ./ main
-       [8] ./subfolder/small.js?3 67 bytes {2} [built]
-      [52] ./subfolder/small.js?2 67 bytes {2} [built]
-     [329] ./subfolder/small.js?9 67 bytes {2} [built]
-     [373] ./subfolder/small.js?1 67 bytes {2} [built]
-     [494] ./subfolder/small.js?7 67 bytes {2} [built]
-     [794] ./subfolder/small.js?8 67 bytes {2} [built]
-     [797] ./subfolder/small.js?6 67 bytes {2} [built]
-     [848] ./subfolder/big.js?2 268 bytes {2} [built]
-     [878] ./subfolder/small.js?4 67 bytes {2} [built]
-     [881] ./subfolder/small.js?5 67 bytes {2} [built]
-     [890] ./subfolder/big.js?1 268 bytes {2} [built]
-    chunk    {3} switched-vendors~main~7274e1de.js (vendors~main~7274e1de) 1.96 KiB ={0}= ={1}= ={2}= ={4}= ={5}= ={6}= ={7}= ={8}= [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~main)
+     [358] ./very-big.js?1 1.57 KiB {2} [built]
+    chunk    {3} switched-main~d9f1562b.js (main~d9f1562b) 1.11 KiB ={0}= ={1}= ={2}= ={4}= ={5}= ={6}= ={7}= ={8}= [initial] [rendered]
         > ./ main
-     [208] ./node_modules/small.js?1 67 bytes {3} [built]
-     [447] ./node_modules/big.js?1 268 bytes {3} [built]
-     [726] ./node_modules/very-big.js?1 1.57 KiB {3} [built]
-     [983] ./node_modules/small.js?2 67 bytes {3} [built]
+       [8] ./subfolder/small.js?3 67 bytes {3} [built]
+      [52] ./subfolder/small.js?2 67 bytes {3} [built]
+     [329] ./subfolder/small.js?9 67 bytes {3} [built]
+     [373] ./subfolder/small.js?1 67 bytes {3} [built]
+     [494] ./subfolder/small.js?7 67 bytes {3} [built]
+     [794] ./subfolder/small.js?8 67 bytes {3} [built]
+     [797] ./subfolder/small.js?6 67 bytes {3} [built]
+     [848] ./subfolder/big.js?2 268 bytes {3} [built]
+     [878] ./subfolder/small.js?4 67 bytes {3} [built]
+     [881] ./subfolder/small.js?5 67 bytes {3} [built]
+     [890] ./subfolder/big.js?1 268 bytes {3} [built]
     chunk    {4} switched-main~748942c6.js (main~748942c6) 1.18 KiB ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= [initial] [rendered]
         > ./ main
      [235] ./inner-module/small.js?1 67 bytes {4} [built]
@@ -3172,18 +3172,18 @@ chunk    {0} default/main.js (main) 147 bytes >{1}< >{2}< >{3}< >{4}< [entry] [r
 chunk    {1} default/async-a.js (async-a) 134 bytes <{0}> [rendered]
     > ./a [0] ./index.js 1:0-47
  [1] ./a.js 48 bytes {1} [built]
- [2] ./d.js 43 bytes {1} {2} [built]
- [3] ./e.js 43 bytes {1} {3} [built]
-chunk    {2} default/async-b~async-c.js (async-b~async-c) 110 bytes <{0}> ={3}= ={4}= [rendered] split chunk (cache group: default) (name: async-b~async-c)
+ [2] ./d.js 43 bytes {1} {3} [built]
+ [3] ./e.js 43 bytes {1} {2} [built]
+chunk    {2} default/async-b.js (async-b) 105 bytes <{0}> ={3}= [rendered]
+    > ./b [0] ./index.js 2:0-47
+ [3] ./e.js 43 bytes {1} {2} [built]
+ [4] ./b.js 62 bytes {2} [built]
+chunk    {3} default/async-b~async-c.js (async-b~async-c) 110 bytes <{0}> ={2}= ={4}= [rendered] split chunk (cache group: default) (name: async-b~async-c)
     > ./b [0] ./index.js 2:0-47
     > ./c [0] ./index.js 3:0-47
- [2] ./d.js 43 bytes {1} {2} [built]
- [5] ./f.js 67 bytes {2} [built]
-chunk    {3} default/async-b.js (async-b) 105 bytes <{0}> ={2}= [rendered]
-    > ./b [0] ./index.js 2:0-47
- [3] ./e.js 43 bytes {1} {3} [built]
- [4] ./b.js 62 bytes {3} [built]
-chunk    {4} default/async-c.js (async-c) 48 bytes <{0}> ={2}= [rendered]
+ [2] ./d.js 43 bytes {1} {3} [built]
+ [5] ./f.js 67 bytes {3} [built]
+chunk    {4} default/async-c.js (async-c) 48 bytes <{0}> ={3}= [rendered]
     > ./c [0] ./index.js 3:0-47
  [6] ./c.js 48 bytes {4} [built]"
 `;
