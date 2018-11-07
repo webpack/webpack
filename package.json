@@ -101,6 +101,7 @@
     "hot/",
     "web_modules/",
     "schemas/",
+    "declarations.d.ts",
     "SECURITY.md"
   ],
   "scripts": {
