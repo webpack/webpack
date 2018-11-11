@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-process.exitCode = 0;
-
 /**
  * @param {string} command process to run
  * @param {string[]} args commandline arguments
