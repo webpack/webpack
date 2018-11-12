@@ -45,25 +45,6 @@ export interface SourceMapDevToolPluginOptions {
 	 */
 	include?: Rules;
 	/**
-	 * (deprecated) try to map original files line to line to generated files
-	 */
-	lineToLine?:
-		| boolean
-		| {
-				/**
-				 * Exclude modules that match the given value from source map generation
-				 */
-				exclude?: Rules;
-				/**
-				 * Include source maps for module paths that match the given value
-				 */
-				include?: Rules;
-				/**
-				 * Include source maps for modules based on their extension (defaults to .js and .css)
-				 */
-				test?: Rules;
-		  };
-	/**
 	 * Indicates whether SourceMaps from loaders should be used (defaults to true)
 	 */
 	module?: boolean;
