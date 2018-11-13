@@ -796,9 +796,9 @@ export interface OptimizationOptions {
 	 */
 	checkWasmTypes?: boolean;
 	/**
-	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)
+	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, hashed: short hashes as ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)
 	 */
-	chunkIds?: "natural" | "named" | "size" | "total-size" | false;
+	chunkIds?: "natural" | "named" | "hashed" | "size" | "total-size" | false;
 	/**
 	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer
 	 */

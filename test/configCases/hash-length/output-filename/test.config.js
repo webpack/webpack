@@ -18,7 +18,7 @@ module.exports = {
 
 		var bundleDetects = [
 			options.amd.expectedChunkFilenameLength && {
-				regex: new RegExp("^\\d+.bundle" + i, "i"),
+				regex: new RegExp("^\\w+.bundle" + i, "i"),
 				expectedNameLength: options.amd.expectedChunkFilenameLength
 			},
 			{

@@ -6,6 +6,9 @@ module.exports = {
 		__dirname,
 		"../../../js/config/records/issue-7339/records.json"
 	),
+	optimization: {
+		chunkIds: "total-size"
+	},
 	target: "node",
 	node: {
 		__dirname: false

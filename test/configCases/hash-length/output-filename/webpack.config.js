@@ -9,7 +9,7 @@ module.exports = [
 		},
 		amd: {
 			expectedFilenameLength: 17,
-			expectedChunkFilenameLength: 19
+			expectedChunkFilenameLength: 22
 		}
 	},
 	{
@@ -21,7 +21,7 @@ module.exports = [
 		},
 		amd: {
 			expectedFilenameLength: 31,
-			expectedChunkFilenameLength: 33
+			expectedChunkFilenameLength: 36
 		}
 	},
 	{
@@ -32,7 +32,7 @@ module.exports = [
 		},
 		amd: {
 			expectedFilenameLength: 19,
-			expectedChunkFilenameLength: 21
+			expectedChunkFilenameLength: 24
 		}
 	},
 	{
@@ -43,7 +43,7 @@ module.exports = [
 		},
 		amd: {
 			expectedFilenameLength: 31,
-			expectedChunkFilenameLength: 33
+			expectedChunkFilenameLength: 36
 		}
 	},
 	{
@@ -54,7 +54,7 @@ module.exports = [
 		},
 		amd: {
 			expectedFilenameLength: 31,
-			expectedChunkFilenameLength: 21
+			expectedChunkFilenameLength: 24
 		}
 	},
 	{
@@ -65,7 +65,7 @@ module.exports = [
 		},
 		amd: {
 			expectedFilenameLength: 17,
-			expectedChunkFilenameLength: 21
+			expectedChunkFilenameLength: 24
 		}
 	},
 	{
@@ -76,7 +76,7 @@ module.exports = [
 		},
 		amd: {
 			expectedFilenameLength: 31,
-			expectedChunkFilenameLength: 20
+			expectedChunkFilenameLength: 23
 		},
 		plugins: [new webpack.HotModuleReplacementPlugin()]
 	},
@@ -89,7 +89,7 @@ module.exports = [
 		target: "node",
 		amd: {
 			expectedFilenameLength: 18,
-			expectedChunkFilenameLength: 20
+			expectedChunkFilenameLength: 23
 		}
 	},
 	{
@@ -101,7 +101,7 @@ module.exports = [
 		target: "node",
 		amd: {
 			expectedFilenameLength: 31,
-			expectedChunkFilenameLength: 20
+			expectedChunkFilenameLength: 23
 		}
 	},
 	{
@@ -113,7 +113,7 @@ module.exports = [
 		target: "node",
 		amd: {
 			expectedFilenameLength: 31,
-			expectedChunkFilenameLength: 20
+			expectedChunkFilenameLength: 23
 		}
 	},
 	{
@@ -125,7 +125,7 @@ module.exports = [
 		target: "node",
 		amd: {
 			expectedFilenameLength: 32,
-			expectedChunkFilenameLength: 34
+			expectedChunkFilenameLength: 37
 		}
 	},
 	{
@@ -137,7 +137,7 @@ module.exports = [
 		target: "node",
 		amd: {
 			expectedFilenameLength: 9 + 7 + 3,
-			expectedChunkFilenameLength: 2 + 9 + 7 + 3
+			expectedChunkFilenameLength: 5 + 9 + 7 + 3
 		}
 	},
 	{
@@ -149,7 +149,7 @@ module.exports = [
 		target: "async-node",
 		amd: {
 			expectedFilenameLength: 32,
-			expectedChunkFilenameLength: 34
+			expectedChunkFilenameLength: 37
 		}
 	},
 	{
@@ -161,7 +161,7 @@ module.exports = [
 		target: "async-node",
 		amd: {
 			expectedFilenameLength: 9 + 7 + 3,
-			expectedChunkFilenameLength: 2 + 9 + 7 + 3
+			expectedChunkFilenameLength: 5 + 9 + 7 + 3
 		}
 	},
 	{
@@ -175,7 +175,7 @@ module.exports = [
 		target: "web",
 		amd: {
 			expectedFilenameLength: 32,
-			expectedChunkFilenameLength: 34
+			expectedChunkFilenameLength: 37
 		}
 	},
 	{
@@ -189,7 +189,7 @@ module.exports = [
 		target: "web",
 		amd: {
 			expectedFilenameLength: 9 + 7 + 3,
-			expectedChunkFilenameLength: 2 + 9 + 7 + 3
+			expectedChunkFilenameLength: 5 + 9 + 7 + 3
 		}
 	},
 	{
@@ -203,7 +203,7 @@ module.exports = [
 		target: "webworker",
 		amd: {
 			expectedFilenameLength: 32,
-			expectedChunkFilenameLength: 34
+			expectedChunkFilenameLength: 37
 		}
 	},
 	{
@@ -217,7 +217,7 @@ module.exports = [
 		target: "webworker",
 		amd: {
 			expectedFilenameLength: 9 + 7 + 3,
-			expectedChunkFilenameLength: 2 + 9 + 7 + 3
+			expectedChunkFilenameLength: 5 + 9 + 7 + 3
 		}
 	}
 ];
