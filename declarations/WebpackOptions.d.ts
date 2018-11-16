@@ -1063,14 +1063,6 @@ export interface OutputOptions {
 	 */
 	devtoolFallbackModuleFilenameTemplate?: string | Function;
 	/**
-	 * Enable line to line mapped mode for all/specified modules. Line to line mapped mode uses a simple SourceMap where each line of the generated source is mapped to the same line of the original source. It’s a performance optimization. Only use it if your performance need to be better and you are sure that input lines match which generated lines.
-	 */
-	devtoolLineToLine?:
-		| boolean
-		| {
-				[k: string]: any;
-		  };
-	/**
 	 * Filename template string of function for the sources array in a generated SourceMap.
 	 */
 	devtoolModuleFilenameTemplate?: string | Function;
