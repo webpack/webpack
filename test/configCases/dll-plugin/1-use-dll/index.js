@@ -43,6 +43,7 @@ it("should give modules the correct ids", function() {
 		"dll/e1.js",
 		"dll/e2.js",
 		"dll/f.jsx",
-		"dll/g.abc.js"
+		"dll/g.abc.js",
+		"runtime: define property getter"
     ]);
 });

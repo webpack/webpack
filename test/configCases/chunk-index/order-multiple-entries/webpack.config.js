@@ -27,8 +27,14 @@ module.exports = {
 							for (const module of compilation.chunkGraph.getChunkModulesIterable(
 								chunk
 							)) {
-								modules.set(module, group.getModulePreOrderIndex(module));
-								modules2.set(module, group.getModulePostOrderIndex(module));
+								const preOrder = group.getModulePreOrderIndex(module);
+								if (typeof preOrder === "number") {
+									modules.set(module, preOrder);
+								}
+								const postOrder = group.getModulePostOrderIndex(module);
+								if (typeof postOrder === "number") {
+									modules2.set(module, postOrder);
+								}
 							}
 						}
 						const sortedModules = Array.from(modules).sort((a, b) => {
@@ -69,27 +75,23 @@ module.exports = {
 						asyncIndex2: "0: ./async.js"
 					});
 					const indicies = Array.from(compilation.modules)
-						.sort(
-							(a, b) =>
-								moduleGraph.getPreOrderIndex(a) -
-								moduleGraph.getPreOrderIndex(b)
-						)
+						.map(m => [moduleGraph.getPreOrderIndex(m), m])
+						.filter(p => typeof p[0] === "number")
+						.sort((a, b) => a[0] - b[0])
 						.map(
-							m =>
-								`${moduleGraph.getPreOrderIndex(m)}: ${m.readableIdentifier(
+							([i, m]) =>
+								`${i}: ${m.readableIdentifier(
 									compilation.requestShortener
 								)}`
 						)
 						.join(", ");
 					const indicies2 = Array.from(compilation.modules)
-						.sort(
-							(a, b) =>
-								moduleGraph.getPostOrderIndex(a) -
-								moduleGraph.getPostOrderIndex(b)
-						)
+						.map(m => [moduleGraph.getPostOrderIndex(m), m])
+						.filter(p => typeof p[0] === "number")
+						.sort((a, b) => a[0] - b[0])
 						.map(
-							m =>
-								`${moduleGraph.getPostOrderIndex(m)}: ${m.readableIdentifier(
+							([i, m]) =>
+								`${i}: ${m.readableIdentifier(
 									compilation.requestShortener
 								)}`
 						)
