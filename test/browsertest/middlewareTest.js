@@ -23,9 +23,7 @@ app.configure(function() {
 		resolve: {
 			alias: {
 				vm: "vm-browserify"
-			}
-		},
-		resolve: {
+			},
 			unsafeCache: true
 		},
 		cache: true,
