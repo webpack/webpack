@@ -17,7 +17,7 @@ module.exports = function checkArrayExpectation(
 	}
 	let array = object[`${kind}s`].slice().sort();
 	if (kind === "warning")
-		array = array.filter(item => !/from UglifyJs/.test(item));
+		array = array.filter(item => !/from Terser/.test(item));
 	if (fs.existsSync(path.join(testDirectory, `${filename}.js`))) {
 		const expectedFilename = path.join(testDirectory, `${filename}.js`);
 		const expected = require(expectedFilename);

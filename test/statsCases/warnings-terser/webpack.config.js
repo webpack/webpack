@@ -1,4 +1,4 @@
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 module.exports = {
 	mode: "production",
 	entry: "./index",
@@ -8,9 +8,9 @@ module.exports = {
 	optimization: {
 		minimize: true,
 		minimizer: [
-			new UglifyJsPlugin({
+			new TerserPlugin({
 				sourceMap: true,
-				uglifyOptions: {
+				terserOptions: {
 					compress: {
 						warnings: true
 					},
@@ -21,7 +21,7 @@ module.exports = {
 					},
 					warnings: true
 				},
-				warningsFilter(filename) {
+				warningsFilter(message, filename) {
 					return /a\.js$/.test(filename);
 				}
 			})

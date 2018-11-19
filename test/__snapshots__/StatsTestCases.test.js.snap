@@ -777,35 +777,35 @@ Child undefined:
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     
-    WARNING in UglifyJs Plugin: Dropping side-effect-free statement [./index.js:6,0] in bundle.js
+    WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
-Child UglifyJs:
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
+Child Terser:
     Hash: 8d381ad7d9791ae0d2ff
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-Child /UglifyJs/:
+Child /Terser/:
     Hash: 8d381ad7d9791ae0d2ff
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
@@ -819,14 +819,14 @@ Child warnings => true:
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-Child [UglifyJs]:
+Child [Terser]:
     Hash: 8d381ad7d9791ae0d2ff
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
-Child [/UglifyJs/]:
+Child [/Terser/]:
     Hash: 8d381ad7d9791ae0d2ff
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
@@ -848,27 +848,27 @@ Child should not filter:
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     
-    WARNING in UglifyJs Plugin: Dropping side-effect-free statement [./index.js:6,0] in bundle.js
+    WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child /should not filter/:
     Hash: 8d381ad7d9791ae0d2ff
     Time: Xms
@@ -877,27 +877,27 @@ Child /should not filter/:
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     
-    WARNING in UglifyJs Plugin: Dropping side-effect-free statement [./index.js:6,0] in bundle.js
+    WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child warnings => false:
     Hash: 8d381ad7d9791ae0d2ff
     Time: Xms
@@ -906,27 +906,27 @@ Child warnings => false:
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     
-    WARNING in UglifyJs Plugin: Dropping side-effect-free statement [./index.js:6,0] in bundle.js
+    WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child [should not filter]:
     Hash: 8d381ad7d9791ae0d2ff
     Time: Xms
@@ -935,27 +935,27 @@ Child [should not filter]:
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     
-    WARNING in UglifyJs Plugin: Dropping side-effect-free statement [./index.js:6,0] in bundle.js
+    WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child [/should not filter/]:
     Hash: 8d381ad7d9791ae0d2ff
     Time: Xms
@@ -964,27 +964,27 @@ Child [/should not filter/]:
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     
-    WARNING in UglifyJs Plugin: Dropping side-effect-free statement [./index.js:6,0] in bundle.js
+    WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child [warnings => false]:
     Hash: 8d381ad7d9791ae0d2ff
     Time: Xms
@@ -993,27 +993,27 @@ Child [warnings => false]:
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
     
-    WARNING in UglifyJs Plugin: Dropping side-effect-free statement [./index.js:6,0] in bundle.js
+    WARNING in Terser Plugin: Dropping side-effect-free statement [./index.js:6,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction1 [./index.js:8,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction2 [./index.js:9,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction3 [./index.js:10,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction4 [./index.js:11,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someUnUsedFunction5 [./index.js:12,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction1 [./a.js:3,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction2 [./a.js:4,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction3 [./a.js:5,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0] in bundle.js
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction4 [./a.js:6,0]
     
-    WARNING in UglifyJs Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0] in bundle.js"
+    WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]"
 `;
 
 exports[`StatsTestCases should print correct stats for graph-correctness-entries 1`] = `
@@ -3040,7 +3040,7 @@ Entrypoint main = bundle.js
      [no exports used]"
 `;
 
-exports[`StatsTestCases should print correct stats for warnings-uglifyjs 1`] = `
+exports[`StatsTestCases should print correct stats for warnings-terser 1`] = `
 "Hash: 5ddef8e3e0b2f2c278c4
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
@@ -3051,13 +3051,13 @@ Entrypoint main = bundle.js
 [1] ./a.js 249 bytes {0} [built]
 [2] (webpack)/buildin/module.js 497 bytes {0} [built]
 
-WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction1 [./a.js:3,0] in bundle.js
+WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction1 [./a.js:3,0]
 
-WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction2 [./a.js:4,0] in bundle.js
+WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction2 [./a.js:4,0]
 
-WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction3 [./a.js:5,0] in bundle.js
+WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction3 [./a.js:5,0]
 
-WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction4 [./a.js:6,0] in bundle.js
+WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction4 [./a.js:6,0]
 
-WARNING in UglifyJs Plugin: Dropping unused function someUnRemoteUsedFunction5 [./a.js:7,0] in bundle.js"
+WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [./a.js:7,0]"
 `;
