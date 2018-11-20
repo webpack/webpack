@@ -44,6 +44,7 @@ it("should give modules the correct ids", function() {
 		"dll/e2.js",
 		"dll/f.jsx",
 		"dll/g.abc.js",
+		"runtime: compat get default export",
 		"runtime: define property getter",
 		"runtime: make namespace object",
     ]);
