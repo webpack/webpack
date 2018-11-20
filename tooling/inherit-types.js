@@ -137,8 +137,8 @@ for (const sourceFile of program.getSourceFiles()) {
 					);
 				}
 				console.log();
+				process.exitCode = 1;
 			}
-			process.exitCode = 1;
 		}
 	}
 }

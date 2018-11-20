@@ -1,11 +1,12 @@
 {
-  "additionalProperties": false,
+  "title": "MinChunkSizePluginOptions",
   "type": "object",
-  "required": ["minChunkSize"],
+  "additionalProperties": false,
   "properties": {
     "minChunkSize": {
       "description": "Minimum number of characters",
       "type": "number"
     }
-  }
+  },
+  "required": ["minChunkSize"]
 }

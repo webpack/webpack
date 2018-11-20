@@ -23,10 +23,10 @@
 {{dist/hash.worker.js}}
 ```
 
-# dist/0.[hash].worker.js
+# dist/1.[hash].worker.js
 
 ``` javascript
-{{dist/0.hash.worker.js}}
+{{dist/1.hash.worker.js}}
 ```
 
 # Info

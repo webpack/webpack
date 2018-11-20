@@ -110,7 +110,7 @@ declare module "@webassemblyjs/ast" {
 			Start?: (p: NodePath<Start>) => void;
 			Global?: (p: NodePath<Global>) => void;
 		}
-	);
+	): void;
 	export class NodePath<T> {
 		node: T;
 	}
@@ -121,14 +121,15 @@ declare module "@webassemblyjs/ast" {
 	export class Start extends Node {
 		index: Identifier;
 	}
+	export class ModuleImportDescription {
+		type: string;
+		valtype?: string;
+		id?: Identifier;
+		signature?: Signature;
+	}
 	export class ModuleImport extends Node {
 		module: string;
-		descr: {
-			type: string;
-			valtype?: string;
-			id?: Identifier;
-			signature?: Signature;
-		};
+		descr: ModuleImportDescription;
 		name: string;
 	}
 	export class ModuleExport extends Node {
@@ -218,6 +219,15 @@ declare module "@webassemblyjs/ast" {
 	export function isMemory(n: Node): boolean;
 	export function isFuncImportDescr(n: Node): boolean;
 }
+
+// This "hack" is needed because typescript doesn't support recursive type definitions
+// It's referenced from "ruleSet-conditions" in schemas/WebpackOptions.json
+interface RuleSetConditionsRecursive
+	extends Array<import("./declarations/WebpackOptions").RuleSetCondition> {}
+interface RuleSetConditionsAbsoluteRecursive
+	extends Array<
+			import("./declarations/WebpackOptions").RuleSetConditionAbsolute
+		> {}
 
 /**
  * Global variable declarations

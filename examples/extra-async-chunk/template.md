@@ -50,16 +50,16 @@ Pretty useful for a router in a SPA.
 {{dist/0.output.js}}
 ```
 
-# dist/1.output.js
-
-``` javascript
-{{dist/1.output.js}}
-```
-
 # dist/2.output.js
 
 ``` javascript
 {{dist/2.output.js}}
+```
+
+# dist/3.output.js
+
+``` javascript
+{{dist/3.output.js}}
 ```
 
 # Info

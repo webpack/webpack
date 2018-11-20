@@ -13,3 +13,11 @@ it("should not update a define when dependencies list is missing", function() {
 		type: "string"
 	}));
 });
+
+it("should update always when fileDependencies is true", function() {
+	const module3 = require("./module3");
+	expect(module3).toEqual(nsObj({
+		default: WATCH_STEP,
+		type: "string"
+	}));
+});

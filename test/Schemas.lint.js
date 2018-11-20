@@ -32,14 +32,14 @@ describe("Schemas", () => {
 				const allowedProperties = [
 					"definitions",
 					"$ref",
-					"id",
+					"$id",
+					"title",
 					"items",
 					"properties",
 					"additionalProperties",
 					"type",
 					"oneOf",
 					"anyOf",
-					"allOf",
 					"absolutePath",
 					"description",
 					"enum",
@@ -49,7 +49,8 @@ describe("Schemas", () => {
 					"uniqueItems",
 					"minItems",
 					"minProperties",
-					"instanceof"
+					"instanceof",
+					"tsType"
 				];
 
 				const validateProperty = property => {
@@ -74,7 +75,7 @@ describe("Schemas", () => {
 						}
 					});
 
-					if (Object.keys(item).indexOf("$ref") >= 0) {
+					if ("$ref" in item) {
 						it("should not have other properties next to $ref", () => {
 							const otherProperties = Object.keys(item).filter(
 								p => p !== "$ref"
@@ -84,6 +85,34 @@ describe("Schemas", () => {
 									`When using $ref not other properties are possible (${otherProperties.join(
 										", "
 									)})`
+								);
+							}
+						});
+					}
+
+					if ("instanceof" in item) {
+						it("should have tsType specified when using instanceof", () => {
+							if (!("tsType" in item)) {
+								throw new Error("When using instanceof, tsType is required");
+							}
+						});
+					}
+
+					if ("absolutePath" in item) {
+						it("should have type: 'string' specified when using absolutePath", () => {
+							if (item.type !== "string") {
+								throw new Error(
+									"When using absolutePath, type must be 'string'"
+								);
+							}
+						});
+					}
+
+					if ("properties" in item || "additionalProperties" in item) {
+						it("should have type: 'object' specified when using properties or additionalProperties", () => {
+							if (item.type !== "object") {
+								throw new Error(
+									"When using properties or additionalProperties, type must be 'object'"
 								);
 							}
 						});

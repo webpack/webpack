@@ -1,0 +1,227 @@
+jobs:
+  - job: basic
+    pool:
+      vmImage: ubuntu-16.04
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "^10.10.0"
+        displayName: "Install Node.js"
+      - script: |
+          curl -o- -L https://yarnpkg.com/install.sh | bash
+        displayName: "Install Yarn"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          node -v
+          yarn -v
+        displayName: "Print versions"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn --frozen-lockfile
+          yarn link --frozen-lockfile || true
+          yarn link webpack --frozen-lockfile
+        displayName: "Install dependencies"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          export JEST_JUNIT_OUTPUT=./basic-junit.xml
+          yarn test:basic --ci --reporters=jest-junit
+          export JEST_JUNIT_OUTPUT=./unit-junit.xml
+          yarn test:unit --ci --reporters=jest-junit
+        displayName: "Run basic tests"
+      - task: PublishTestResults@2
+        inputs:
+          testRunTitle: "basic"
+          testResultsFiles: "**/basic-junit.xml"
+        condition: succeededOrFailed()
+        displayName: "Publish basic test results"
+      - task: PublishTestResults@2
+        inputs:
+          testRunTitle: "unit"
+          testResultsFiles: "**/unit-junit.xml"
+        condition: succeededOrFailed()
+        displayName: "Publish unit test results"
+
+  - job: lint
+    pool:
+      vmImage: ubuntu-16.04
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "^10.10.0"
+        displayName: "Install Node.js"
+      - script: |
+          curl -o- -L https://yarnpkg.com/install.sh | bash
+        displayName: "Install Yarn"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          node -v
+          yarn -v
+        displayName: "Print versions"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn --frozen-lockfile
+          yarn link --frozen-lockfile || true
+          yarn link webpack --frozen-lockfile
+        displayName: "Install dependencies"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn -s run code-lint --format junit > junit.xml
+          yarn schema-lint
+          yarn type-lint
+          yarn special-lint
+        displayName: "Run linting"
+      - task: PublishTestResults@2
+        inputs:
+          testRunTitle: "lint"
+          testResultsFiles: "**/junit.xml"
+        condition: succeededOrFailed()
+        displayName: "Publish lint results"
+
+  - job: Linux
+    dependsOn:
+      - basic
+      - lint
+    pool:
+      vmImage: ubuntu-16.04
+    strategy:
+      maxParallel: 3
+      matrix:
+        node-10:
+          node_version: ^10.10.0
+        node-8:
+          node_version: ^8.12.0
+        node-6:
+          node_version: ^6.14.4
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: $(node_version)
+        displayName: "Install Node.js $(node_version)"
+      - script: |
+          curl -o- -L https://yarnpkg.com/install.sh | bash
+        displayName: "Install Yarn"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          node -v
+          yarn -v
+        displayName: "Print versions"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn --frozen-lockfile
+          yarn link --frozen-lockfile || true
+          yarn link webpack --frozen-lockfile
+        displayName: "Install dependencies"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn cover:init
+          yarn cover:integration --ci --maxWorkers=2 --reporters=jest-junit
+        displayName: "Run tests with coverage"
+      - task: PublishTestResults@2
+        inputs:
+          testRunTitle: "Linux with Node.js $(node_version)"
+          testResultsFiles: "**/junit.xml"
+        condition: succeededOrFailed()
+        displayName: "Publish test results"
+
+  - job: macOS
+    dependsOn:
+      - basic
+      - lint
+    pool:
+      vmImage: "macOS 10.13"
+    strategy:
+      maxParallel: 3
+      matrix:
+        node-10:
+          node_version: ^10.10.0
+        node-8:
+          node_version: ^8.12.0
+        node-6:
+          node_version: ^6.14.4
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: $(node_version)
+        displayName: "Install Node.js $(node_version)"
+      - script: |
+          curl -o- -L https://yarnpkg.com/install.sh | bash
+        displayName: "Install Yarn"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          node -v
+          yarn -v
+        displayName: "Print versions"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn --frozen-lockfile
+          yarn link --frozen-lockfile || true
+          yarn link webpack --frozen-lockfile
+        displayName: "Install dependencies"
+      - script: |
+          set -e
+          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+          yarn cover:init
+          yarn cover:integration --ci --reporters=jest-junit
+        displayName: "Run tests with coverage"
+      - task: PublishTestResults@2
+        inputs:
+          testRunTitle: "macOS with Node.js $(node_version)"
+          testResultsFiles: "**/junit.xml"
+        condition: succeededOrFailed()
+        displayName: "Publish test results"
+
+  - job: Windows
+    dependsOn:
+      - basic
+      - lint
+    pool:
+      vmImage: vs2017-win2016
+    strategy:
+      maxParallel: 3
+      matrix:
+        node-10:
+          node_version: ^10.10.0
+        node-8:
+          node_version: ^8.12.0
+        node-6:
+          node_version: ^6.14.4
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: $(node_version)
+        displayName: "Install Node.js $(node_version)"
+      - script: |
+          npm install --global yarn
+        displayName: "Install Yarn"
+      - script: |
+          set -e
+          node -v
+          yarn -v
+        displayName: "Print versions"
+      - script: |
+          set -e
+          yarn --frozen-lockfile
+          yarn link --frozen-lockfile || true
+          yarn link webpack --frozen-lockfile
+        displayName: "Install dependencies"
+      - script: |
+          set -e
+          yarn cover:init && yarn cover:integration --ci --maxWorkers=2 --reporters=jest-junit
+        displayName: "Run tests with coverage"
+      - task: PublishTestResults@2
+        inputs:
+          testRunTitle: "Windows with Node.js $(node_version)"
+          testResultsFiles: "**/junit.xml"
+        condition: succeededOrFailed()
+        displayName: "Publish test results"

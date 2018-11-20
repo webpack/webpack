@@ -1,65 +1,68 @@
 {
   "definitions": {
-    "rule": {
+    "BannerFunction": {
+      "description": "The banner as function, it will be wrapped in a comment",
+      "instanceof": "Function",
+      "tsType": "(data: { hash: string, chunk: import('../../lib/Chunk'), filename: string, basename: string, query: string}) => string"
+    },
+    "Rule": {
       "oneOf": [
         {
-          "instanceof": "RegExp"
+          "instanceof": "RegExp",
+          "tsType": "RegExp"
         },
         {
-          "minLength": 1,
-          "type": "string"
+          "type": "string",
+          "minLength": 1
         }
       ]
     },
-    "rules": {
+    "Rules": {
       "oneOf": [
         {
+          "type": "array",
           "items": {
             "description": "A rule condition",
             "anyOf": [
               {
-                "$ref": "#/definitions/rule"
+                "$ref": "#/definitions/Rule"
               }
             ]
-          },
-          "type": "array"
+          }
         },
         {
-          "$ref": "#/definitions/rule"
+          "$ref": "#/definitions/Rule"
         }
       ]
     }
   },
+  "title": "BannerPluginArgument",
   "oneOf": [
     {
+      "title": "BannerPluginOptions",
       "type": "object",
       "additionalProperties": false,
-      "required": ["banner"],
       "properties": {
         "banner": {
           "description": "Specifies the banner",
           "anyOf": [
             {
-              "instanceof": "Function"
+              "$ref": "#/definitions/BannerFunction"
             },
             {
               "type": "string"
             }
           ]
         },
-        "raw": {
-          "description": "If true, banner will not be wrapped in a comment",
-          "type": "boolean"
-        },
         "entryOnly": {
           "description": "If true, the banner will only be added to the entry chunks",
           "type": "boolean"
         },
-        "test": {
-          "description": "Include all modules that pass test assertion",
+        "exclude": {
+          "description": "Exclude all modules matching any of these conditions",
           "anyOf": [
             {
-              "$ref": "#/definitions/rules"
+              "$ref": "#/definitions/Rules"
             }
           ]
         },
@@ -67,28 +70,32 @@
           "description": "Include all modules matching any of these conditions",
           "anyOf": [
             {
-              "$ref": "#/definitions/rules"
+              "$ref": "#/definitions/Rules"
             }
           ]
         },
-        "exclude": {
-          "description": "Exclude all modules matching any of these conditions",
+        "raw": {
+          "description": "If true, banner will not be wrapped in a comment",
+          "type": "boolean"
+        },
+        "test": {
+          "description": "Include all modules that pass test assertion",
           "anyOf": [
             {
-              "$ref": "#/definitions/rules"
+              "$ref": "#/definitions/Rules"
             }
           ]
         }
-      }
+      },
+      "required": ["banner"]
     },
     {
-      "description": "The banner as function, it will be wrapped in a comment",
-      "instanceof": "Function"
+      "$ref": "#/definitions/BannerFunction"
     },
     {
       "description": "The banner as string, it will be wrapped in a comment",
-      "minLength": 1,
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     }
   ]
 }

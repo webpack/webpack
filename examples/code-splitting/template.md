@@ -18,7 +18,7 @@ You can see that webpack outputs two files/chunks:
   * the entry point `example.js`
   * module `a`
   * module `b`
-* `1.js` is an additional chunk (on demand loaded) and contains
+* `1.output.js` is an additional chunk (on demand loaded) and contains
   * module `c`
   * module `d`
 
@@ -37,16 +37,16 @@ You can see that chunks are loaded via JSONP. The additional chunks are pretty s
 {{dist/output.js}}
 ```
 
-# dist/0.output.js
+# dist/1.output.js
 
 ``` javascript
-{{dist/0.output.js}}
+{{dist/1.output.js}}
 ```
 
 Minimized
 
 ``` javascript
-{{production:dist/0.output.js}}
+{{production:dist/1.output.js}}
 ```
 
 # Info

@@ -41,7 +41,7 @@ export function square(n) {
 # dist/vendor.js
 
 ``` javascript
-var vendor_lib_f3fbcfb4ec389ba5bbf0 =
+var vendor_lib_a132d30959ef28c3f004 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -84,17 +84,32 @@ var vendor_lib_f3fbcfb4ec389ba5bbf0 =
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -157,7 +172,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ``` javascript
-{"name":"vendor_lib_f3fbcfb4ec389ba5bbf0","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
+{"name":"vendor_lib_a132d30959ef28c3f004","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
 ```
 
 # Info
@@ -166,15 +181,15 @@ function square(n) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
+Version: webpack 4.20.1
     Asset      Size  Chunks             Chunk Names
-vendor.js  3.32 KiB       0  [emitted]  main
+vendor.js  4.28 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
-chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
+chunk    {0} vendor.js (main) 57 bytes [entry] [rendered]
     > main
  [0] dll main 12 bytes {0} [built]
      dll entry 
-     
+      DllPlugin
      + 1 hidden module
 ```
 
@@ -182,15 +197,15 @@ chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
-    Asset       Size  Chunks             Chunk Names
-vendor.js  704 bytes       0  [emitted]  main
+Version: webpack 4.20.1
+    Asset      Size  Chunks             Chunk Names
+vendor.js  1.06 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
-chunk    {0} vendor.js (main) 60 bytes [entry] [rendered]
+chunk    {0} vendor.js (main) 57 bytes [entry] [rendered]
     > main
- [1] dll main 12 bytes {0} [built]
+ [0] dll main 12 bytes {0} [built]
      dll entry 
-     
+      DllPlugin
      + 1 hidden module
 ```
 
