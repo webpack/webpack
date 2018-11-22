@@ -225,6 +225,7 @@ export type ArrayOfStringOrStringArrayValues = (string | string[])[];
  * via the `definition` "WebpackPluginFunction".
  */
 export type WebpackPluginFunction = (
+	this: import("../lib/Compiler"),
 	compiler: import("../lib/Compiler")
 ) => void;
 /**
