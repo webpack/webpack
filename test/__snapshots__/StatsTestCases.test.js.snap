@@ -28,13 +28,13 @@ Child fitting:
       [3] ./e.js 899 bytes {3} [built]
       [4] ./index.js 111 bytes {3} [built]
       [6] ./f.js 900 bytes {3} [built]
-      [8] runtime for ensure chunk 305 bytes {3}
-      [9] runtime for create fake namespace object 731 bytes {3}
-     [10] runtime for define property getter 281 bytes {3}
-     [11] runtime for make namespace object 279 bytes {3}
-     [12] runtime for jsonp chunk loading 3.87 KiB {3}
-     [13] runtime for get chunk javascript filename 106 bytes {3}
-     [14] runtime for publicPath 27 bytes {3}
+      [8] webpack/runtime/ensure chunk 305 bytes {3}
+      [9] webpack/runtime/create fake namespace object 731 bytes {3}
+     [10] webpack/runtime/define property getter 281 bytes {3}
+     [11] webpack/runtime/make namespace object 279 bytes {3}
+     [12] webpack/runtime/jsonp chunk loading 3.87 KiB {3}
+     [13] webpack/runtime/get chunk javascript filename 106 bytes {3}
+     [14] webpack/runtime/publicPath 27 bytes {3}
 Child content-change:
     Hash: a33638e43ce0ec26dd06
     Time: Xms
@@ -61,13 +61,13 @@ Child content-change:
       [3] ./e.js 899 bytes {3} [built]
       [4] ./index.js 111 bytes {3} [built]
       [6] ./f.js 900 bytes {3} [built]
-      [8] runtime for ensure chunk 305 bytes {3}
-      [9] runtime for create fake namespace object 731 bytes {3}
-     [10] runtime for define property getter 281 bytes {3}
-     [11] runtime for make namespace object 279 bytes {3}
-     [12] runtime for jsonp chunk loading 3.87 KiB {3}
-     [13] runtime for get chunk javascript filename 106 bytes {3}
-     [14] runtime for publicPath 27 bytes {3}"
+      [8] webpack/runtime/ensure chunk 305 bytes {3}
+      [9] webpack/runtime/create fake namespace object 731 bytes {3}
+     [10] webpack/runtime/define property getter 281 bytes {3}
+     [11] webpack/runtime/make namespace object 279 bytes {3}
+     [12] webpack/runtime/jsonp chunk loading 3.87 KiB {3}
+     [13] webpack/runtime/get chunk javascript filename 106 bytes {3}
+     [14] webpack/runtime/publicPath 27 bytes {3}"
 `;
 
 exports[`StatsTestCases should print correct stats for aggressive-splitting-on-demand 1`] = `
@@ -132,10 +132,10 @@ chunk    {9} 01a8254701931adbf278.js 899 bytes <{10}>
 chunk   {10} 907cd5ff2df32965ef4d.js (main) 3.85 KiB >{0}< >{1}< >{2}< >{3}< >{4}< >{5}< >{6}< >{7}< >{8}< >{9}< >{11}< [entry] [rendered]
     > ./index main
  [11] ./index.js 248 bytes {10} [built]
- [12] runtime for ensure chunk 305 bytes {10}
- [13] runtime for jsonp chunk loading 2.92 KiB {10}
- [14] runtime for get chunk javascript filename 377 bytes {10}
- [15] runtime for publicPath 27 bytes {10}
+ [12] webpack/runtime/ensure chunk 305 bytes {10}
+ [13] webpack/runtime/jsonp chunk loading 2.92 KiB {10}
+ [14] webpack/runtime/get chunk javascript filename 377 bytes {10}
+ [15] webpack/runtime/publicPath 27 bytes {10}
 chunk   {11} ba9fedb7aa0c69201639.js 1.76 KiB <{10}> ={2}= ={6}= [rendered] [recorded] aggressive splitted
     > ./f ./g ./h ./i ./j ./k [11] ./index.js 4:0-51
  [6] ./h.js 899 bytes {3} {11} [built]
@@ -147,10 +147,10 @@ exports[`StatsTestCases should print correct stats for async-commons-chunk 1`] =
 chunk    {0} main.js (main) 3.83 KiB >{1}< >{2}< >{3}< [entry] [rendered]
     > ./ main
  [0] ./index.js 515 bytes {0} [built]
- [4] runtime for ensure chunk 305 bytes {0}
- [5] runtime for jsonp chunk loading 2.92 KiB {0}
- [6] runtime for get chunk javascript filename 91 bytes {0}
- [7] runtime for publicPath 27 bytes {0}
+ [4] webpack/runtime/ensure chunk 305 bytes {0}
+ [5] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+ [6] webpack/runtime/get chunk javascript filename 91 bytes {0}
+ [7] webpack/runtime/publicPath 27 bytes {0}
 chunk    {1} 1.js 21 bytes <{0}> ={2}= ={3}= [rendered] reused as split chunk (cache group: default)
     > [0] ./index.js 17:1-21:3
     > [0] ./index.js 2:1-5:3
@@ -173,13 +173,13 @@ exports[`StatsTestCases should print correct stats for async-commons-chunk-auto 
     chunk    {0} disabled/main.js (main) 4.41 KiB >{2}< >{3}< >{5}< [entry] [rendered]
         > ./ main
       [0] ./index.js 147 bytes {0} [built]
-      [9] runtime for ensure chunk 305 bytes {0}
-     [10] runtime for make namespace object 279 bytes {0}
-     [11] runtime for define property getter 281 bytes {0}
-     [12] runtime for compat get default export 328 bytes {0}
-     [13] runtime for jsonp chunk loading 2.92 KiB {0}
-     [14] runtime for get chunk javascript filename 155 bytes {0}
-     [15] runtime for publicPath 27 bytes {0}
+      [9] webpack/runtime/ensure chunk 305 bytes {0}
+     [10] webpack/runtime/make namespace object 279 bytes {0}
+     [11] webpack/runtime/define property getter 281 bytes {0}
+     [12] webpack/runtime/compat get default export 328 bytes {0}
+     [13] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [14] webpack/runtime/get chunk javascript filename 155 bytes {0}
+     [15] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} disabled/a.js (a) 4.44 KiB >{7}< [entry] [rendered]
         > ./a a
       [1] ./a.js + 1 modules 156 bytes {1} {2} [built]
@@ -188,13 +188,13 @@ exports[`StatsTestCases should print correct stats for async-commons-chunk-auto 
       [2] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
       [3] ./node_modules/x.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
       [4] ./node_modules/y.js 20 bytes {1} {2} {3} {4} [built]
-     [16] runtime for make namespace object 279 bytes {1}
-     [17] runtime for define property getter 281 bytes {1}
-     [18] runtime for compat get default export 328 bytes {1}
-     [19] runtime for ensure chunk 305 bytes {1}
-     [20] runtime for jsonp chunk loading 2.93 KiB {1}
-     [21] runtime for get chunk javascript filename 113 bytes {1}
-     [22] runtime for publicPath 27 bytes {1}
+     [16] webpack/runtime/make namespace object 279 bytes {1}
+     [17] webpack/runtime/define property getter 281 bytes {1}
+     [18] webpack/runtime/compat get default export 328 bytes {1}
+     [19] webpack/runtime/ensure chunk 305 bytes {1}
+     [20] webpack/runtime/jsonp chunk loading 2.93 KiB {1}
+     [21] webpack/runtime/get chunk javascript filename 113 bytes {1}
+     [22] webpack/runtime/publicPath 27 bytes {1}
     chunk    {2} disabled/async-a.js (async-a) 216 bytes <{0}> >{7}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [1] ./a.js + 1 modules 156 bytes {1} {2} [built]
@@ -217,7 +217,7 @@ exports[`StatsTestCases should print correct stats for async-commons-chunk-auto 
       [4] ./node_modules/y.js 20 bytes {1} {2} {3} {4} [built]
       [5] ./b.js 72 bytes {3} {4} [built]
       [6] ./f.js 20 bytes {3} {4} {5} {6} {7} [built]
-     [23] runtime for make namespace object 279 bytes {4}
+     [23] webpack/runtime/make namespace object 279 bytes {4}
     chunk    {5} disabled/async-c.js (async-c) 167 bytes <{0}> [rendered]
         > ./c [0] ./index.js 3:0-47
      [2] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
@@ -234,9 +234,9 @@ exports[`StatsTestCases should print correct stats for async-commons-chunk-auto 
       [7] ./c.js + 1 modules 107 bytes {5} {6} [built]
           | ./node_modules/z.js 20 bytes [built]
           | ./c.js 72 bytes [built]
-     [24] runtime for make namespace object 279 bytes {6}
-     [25] runtime for define property getter 281 bytes {6}
-     [26] runtime for compat get default export 328 bytes {6}
+     [24] webpack/runtime/make namespace object 279 bytes {6}
+     [25] webpack/runtime/define property getter 281 bytes {6}
+     [26] webpack/runtime/compat get default export 328 bytes {6}
     chunk    {7} disabled/async-g.js (async-g) 54 bytes <{1}> <{2}> [rendered]
         > ./g [] 6:0-47
      [6] ./f.js 20 bytes {3} {4} {5} {6} {7} [built]
@@ -249,13 +249,13 @@ Child default:
     chunk    {0} default/main.js (main) 4.55 KiB >{1}< >{3}< >{6}< >{7}< >{8}< >{9}< >{10}< >{11}< [entry] [rendered]
         > ./ main
       [0] ./index.js 147 bytes {0} [built]
-     [10] runtime for ensure chunk 305 bytes {0}
-     [11] runtime for make namespace object 279 bytes {0}
-     [12] runtime for define property getter 281 bytes {0}
-     [13] runtime for compat get default export 328 bytes {0}
-     [14] runtime for jsonp chunk loading 2.92 KiB {0}
-     [15] runtime for get chunk javascript filename 307 bytes {0}
-     [16] runtime for publicPath 27 bytes {0}
+     [10] webpack/runtime/ensure chunk 305 bytes {0}
+     [11] webpack/runtime/make namespace object 279 bytes {0}
+     [12] webpack/runtime/define property getter 281 bytes {0}
+     [13] webpack/runtime/compat get default export 328 bytes {0}
+     [14] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [15] webpack/runtime/get chunk javascript filename 307 bytes {0}
+     [16] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} default/async-a.js (async-a) 156 bytes <{0}> ={3}= ={6}= ={7}= >{9}< >{12}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [1] ./a.js + 1 modules 156 bytes {1} {2} [built]
@@ -269,13 +269,13 @@ Child default:
       [2] ./d.js 20 bytes {2} {3} {4} {5} [built]
       [3] ./node_modules/x.js 20 bytes {2} {4} {5} {6} [built]
       [4] ./node_modules/y.js 20 bytes {2} {4} {7} [built]
-     [17] runtime for make namespace object 279 bytes {2}
-     [18] runtime for define property getter 281 bytes {2}
-     [19] runtime for compat get default export 328 bytes {2}
-     [20] runtime for ensure chunk 305 bytes {2}
-     [21] runtime for jsonp chunk loading 2.95 KiB {2}
-     [22] runtime for get chunk javascript filename 143 bytes {2}
-     [23] runtime for publicPath 27 bytes {2}
+     [17] webpack/runtime/make namespace object 279 bytes {2}
+     [18] webpack/runtime/define property getter 281 bytes {2}
+     [19] webpack/runtime/compat get default export 328 bytes {2}
+     [20] webpack/runtime/ensure chunk 305 bytes {2}
+     [21] webpack/runtime/jsonp chunk loading 2.95 KiB {2}
+     [22] webpack/runtime/get chunk javascript filename 143 bytes {2}
+     [23] webpack/runtime/publicPath 27 bytes {2}
     chunk    {3} default/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{0}> ={1}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= >{9}< >{12}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
         > ./a [0] ./index.js 1:0-47
         > ./b [0] ./index.js 2:0-47
@@ -288,7 +288,7 @@ Child default:
       [4] ./node_modules/y.js 20 bytes {2} {4} {7} [built]
       [5] ./b.js 72 bytes {4} {8} [built]
       [6] ./f.js 20 bytes {4} {5} {9} [built]
-     [24] runtime for make namespace object 279 bytes {4}
+     [24] webpack/runtime/make namespace object 279 bytes {4}
     chunk    {5} default/c.js (c) 431 bytes [entry] [rendered]
         > ./c c
       [2] ./d.js 20 bytes {2} {3} {4} {5} [built]
@@ -296,7 +296,7 @@ Child default:
       [6] ./f.js 20 bytes {4} {5} {9} [built]
       [7] ./c.js 72 bytes {5} {10} [built]
       [8] ./node_modules/z.js 20 bytes {5} {11} [built]
-     [25] runtime for make namespace object 279 bytes {5}
+     [25] webpack/runtime/make namespace object 279 bytes {5}
     chunk    {6} default/vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{0}> ={1}= ={3}= ={7}= ={8}= ={9}= ={10}= ={11}= >{9}< >{12}< [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-a~async-b~async-c)
         > ./a [0] ./index.js 1:0-47
         > ./b [0] ./index.js 2:0-47
@@ -331,26 +331,26 @@ Child vendors:
     chunk    {0} vendors/main.js (main) 4.4 KiB >{2}< >{3}< >{4}< [entry] [rendered]
         > ./ main
       [0] ./index.js 147 bytes {0} [built]
-     [10] runtime for ensure chunk 305 bytes {0}
-     [11] runtime for make namespace object 279 bytes {0}
-     [12] runtime for define property getter 281 bytes {0}
-     [13] runtime for compat get default export 328 bytes {0}
-     [14] runtime for jsonp chunk loading 2.92 KiB {0}
-     [15] runtime for get chunk javascript filename 154 bytes {0}
-     [16] runtime for publicPath 27 bytes {0}
+     [10] webpack/runtime/ensure chunk 305 bytes {0}
+     [11] webpack/runtime/make namespace object 279 bytes {0}
+     [12] webpack/runtime/define property getter 281 bytes {0}
+     [13] webpack/runtime/compat get default export 328 bytes {0}
+     [14] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [15] webpack/runtime/get chunk javascript filename 154 bytes {0}
+     [16] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} vendors/a.js (a) 5.34 KiB ={7}= >{8}< [entry] [rendered]
         > ./a a
       [1] ./a.js + 1 modules 156 bytes {1} {2} [built]
           | ./e.js 20 bytes [built]
           | ./a.js 121 bytes [built]
       [2] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
-     [17] runtime for make namespace object 279 bytes {1}
-     [18] runtime for define property getter 281 bytes {1}
-     [19] runtime for compat get default export 328 bytes {1}
-     [20] runtime for ensure chunk 305 bytes {1}
-     [21] runtime for jsonp chunk loading 3.86 KiB {1}
-     [22] runtime for get chunk javascript filename 112 bytes {1}
-     [23] runtime for publicPath 27 bytes {1}
+     [17] webpack/runtime/make namespace object 279 bytes {1}
+     [18] webpack/runtime/define property getter 281 bytes {1}
+     [19] webpack/runtime/compat get default export 328 bytes {1}
+     [20] webpack/runtime/ensure chunk 305 bytes {1}
+     [21] webpack/runtime/jsonp chunk loading 3.86 KiB {1}
+     [22] webpack/runtime/get chunk javascript filename 112 bytes {1}
+     [23] webpack/runtime/publicPath 27 bytes {1}
     chunk    {2} vendors/async-a.js (async-a) 216 bytes <{0}> >{8}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [1] ./a.js + 1 modules 156 bytes {1} {2} [built]
@@ -378,15 +378,15 @@ Child vendors:
       [2] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
       [5] ./b.js 72 bytes {3} {5} [built]
       [6] ./f.js 20 bytes {3} {4} {5} {6} {8} [built]
-     [24] runtime for make namespace object 279 bytes {5}
-     [25] runtime for jsonp chunk loading 2.14 KiB {5}
+     [24] webpack/runtime/make namespace object 279 bytes {5}
+     [25] webpack/runtime/jsonp chunk loading 2.14 KiB {5}
     chunk    {6} vendors/c.js (c) 2.52 KiB ={7}= [entry] [rendered]
         > ./c c
       [2] ./d.js 20 bytes {1} {2} {3} {4} {5} {6} [built]
       [6] ./f.js 20 bytes {3} {4} {5} {6} {8} [built]
       [7] ./c.js 72 bytes {4} {6} [built]
-     [26] runtime for make namespace object 279 bytes {6}
-     [27] runtime for jsonp chunk loading 2.14 KiB {6}
+     [26] webpack/runtime/make namespace object 279 bytes {6}
+     [27] webpack/runtime/jsonp chunk loading 2.14 KiB {6}
     chunk    {7} vendors/vendors.js (vendors) 60 bytes ={1}= ={5}= ={6}= >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./a a
         > ./b b
@@ -406,25 +406,25 @@ Child multiple-vendors:
     chunk    {0} multiple-vendors/main.js (main) 4.55 KiB >{2}< >{3}< >{4}< >{5}< >{6}< >{8}< >{10}< >{11}< [entry] [rendered]
         > ./ main
       [0] ./index.js 147 bytes {0} [built]
-     [10] runtime for ensure chunk 305 bytes {0}
-     [11] runtime for make namespace object 279 bytes {0}
-     [12] runtime for define property getter 281 bytes {0}
-     [13] runtime for compat get default export 328 bytes {0}
-     [14] runtime for jsonp chunk loading 2.92 KiB {0}
-     [15] runtime for get chunk javascript filename 303 bytes {0}
-     [16] runtime for publicPath 27 bytes {0}
+     [10] webpack/runtime/ensure chunk 305 bytes {0}
+     [11] webpack/runtime/make namespace object 279 bytes {0}
+     [12] webpack/runtime/define property getter 281 bytes {0}
+     [13] webpack/runtime/compat get default export 328 bytes {0}
+     [14] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [15] webpack/runtime/get chunk javascript filename 303 bytes {0}
+     [16] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} multiple-vendors/a.js (a) 5.37 KiB ={3}= ={4}= ={5}= >{8}< >{12}< [entry] [rendered]
         > ./a a
       [1] ./a.js + 1 modules 156 bytes {1} {2} [built]
           | ./e.js 20 bytes [built]
           | ./a.js 121 bytes [built]
-     [17] runtime for make namespace object 279 bytes {1}
-     [18] runtime for define property getter 281 bytes {1}
-     [19] runtime for compat get default export 328 bytes {1}
-     [20] runtime for ensure chunk 305 bytes {1}
-     [21] runtime for jsonp chunk loading 3.87 KiB {1}
-     [22] runtime for get chunk javascript filename 152 bytes {1}
-     [23] runtime for publicPath 27 bytes {1}
+     [17] webpack/runtime/make namespace object 279 bytes {1}
+     [18] webpack/runtime/define property getter 281 bytes {1}
+     [19] webpack/runtime/compat get default export 328 bytes {1}
+     [20] webpack/runtime/ensure chunk 305 bytes {1}
+     [21] webpack/runtime/jsonp chunk loading 3.87 KiB {1}
+     [22] webpack/runtime/get chunk javascript filename 152 bytes {1}
+     [23] webpack/runtime/publicPath 27 bytes {1}
     chunk    {2} multiple-vendors/async-a.js (async-a) 156 bytes <{0}> ={3}= ={4}= ={5}= >{8}< >{12}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [1] ./a.js + 1 modules 156 bytes {1} {2} [built]
@@ -459,8 +459,8 @@ Child multiple-vendors:
         > ./b b
       [5] ./b.js 72 bytes {6} {7} [built]
       [6] ./f.js 20 bytes {7} {8} {9} [built]
-     [24] runtime for make namespace object 279 bytes {7}
-     [25] runtime for jsonp chunk loading 2.16 KiB {7}
+     [24] webpack/runtime/make namespace object 279 bytes {7}
+     [25] webpack/runtime/jsonp chunk loading 2.16 KiB {7}
     chunk    {8} multiple-vendors/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{2}> <{3}> <{4}> <{5}> ={3}= ={4}= ={5}= ={6}= ={10}= ={11}= ={12}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
         > ./b [0] ./index.js 2:0-47
         > ./c [0] ./index.js 3:0-47
@@ -470,8 +470,8 @@ Child multiple-vendors:
         > ./c c
       [6] ./f.js 20 bytes {7} {8} {9} [built]
       [7] ./c.js 72 bytes {9} {10} [built]
-     [26] runtime for make namespace object 279 bytes {9}
-     [27] runtime for jsonp chunk loading 2.16 KiB {9}
+     [26] webpack/runtime/make namespace object 279 bytes {9}
+     [27] webpack/runtime/jsonp chunk loading 2.16 KiB {9}
     chunk   {10} multiple-vendors/async-c.js (async-c) 72 bytes <{0}> ={3}= ={4}= ={8}= ={11}= [rendered]
         > ./c [0] ./index.js 3:0-47
      [7] ./c.js 72 bytes {9} {10} [built]
@@ -490,25 +490,25 @@ Child all:
     chunk    {0} all/main.js (main) 4.57 KiB >{2}< >{3}< >{4}< >{5}< >{6}< >{8}< >{10}< >{11}< [entry] [rendered]
         > ./ main
       [0] ./index.js 147 bytes {0} [built]
-     [10] runtime for ensure chunk 305 bytes {0}
-     [11] runtime for make namespace object 279 bytes {0}
-     [12] runtime for define property getter 281 bytes {0}
-     [13] runtime for compat get default export 328 bytes {0}
-     [14] runtime for jsonp chunk loading 2.92 KiB {0}
-     [15] runtime for get chunk javascript filename 321 bytes {0}
-     [16] runtime for publicPath 27 bytes {0}
+     [10] webpack/runtime/ensure chunk 305 bytes {0}
+     [11] webpack/runtime/make namespace object 279 bytes {0}
+     [12] webpack/runtime/define property getter 281 bytes {0}
+     [13] webpack/runtime/compat get default export 328 bytes {0}
+     [14] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [15] webpack/runtime/get chunk javascript filename 321 bytes {0}
+     [16] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} all/a.js (a) 5.35 KiB ={3}= ={4}= ={5}= >{8}< >{12}< [entry] [rendered]
         > ./a a
       [1] ./a.js + 1 modules 156 bytes {1} {2} [built]
           | ./e.js 20 bytes [built]
           | ./a.js 121 bytes [built]
-     [17] runtime for make namespace object 279 bytes {1}
-     [18] runtime for define property getter 281 bytes {1}
-     [19] runtime for compat get default export 328 bytes {1}
-     [20] runtime for ensure chunk 305 bytes {1}
-     [21] runtime for jsonp chunk loading 3.87 KiB {1}
-     [22] runtime for get chunk javascript filename 139 bytes {1}
-     [23] runtime for publicPath 27 bytes {1}
+     [17] webpack/runtime/make namespace object 279 bytes {1}
+     [18] webpack/runtime/define property getter 281 bytes {1}
+     [19] webpack/runtime/compat get default export 328 bytes {1}
+     [20] webpack/runtime/ensure chunk 305 bytes {1}
+     [21] webpack/runtime/jsonp chunk loading 3.87 KiB {1}
+     [22] webpack/runtime/get chunk javascript filename 139 bytes {1}
+     [23] webpack/runtime/publicPath 27 bytes {1}
     chunk    {2} all/async-a.js (async-a) 156 bytes <{0}> ={3}= ={4}= ={5}= >{8}< >{12}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [1] ./a.js + 1 modules 156 bytes {1} {2} [built]
@@ -543,8 +543,8 @@ Child all:
         > ./b b
       [5] ./b.js 72 bytes {6} {7} [built]
       [6] ./f.js 20 bytes {7} {8} {9} [built]
-     [24] runtime for make namespace object 279 bytes {7}
-     [25] runtime for jsonp chunk loading 2.16 KiB {7}
+     [24] webpack/runtime/make namespace object 279 bytes {7}
+     [25] webpack/runtime/jsonp chunk loading 2.16 KiB {7}
     chunk    {8} all/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{2}> <{3}> <{4}> <{5}> ={3}= ={4}= ={5}= ={6}= ={10}= ={11}= ={12}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
         > ./b [0] ./index.js 2:0-47
         > ./c [0] ./index.js 3:0-47
@@ -554,8 +554,8 @@ Child all:
         > ./c c
       [6] ./f.js 20 bytes {7} {8} {9} [built]
       [7] ./c.js 72 bytes {9} {10} [built]
-     [26] runtime for make namespace object 279 bytes {9}
-     [27] runtime for jsonp chunk loading 2.16 KiB {9}
+     [26] webpack/runtime/make namespace object 279 bytes {9}
+     [27] webpack/runtime/jsonp chunk loading 2.16 KiB {9}
     chunk   {10} all/async-c.js (async-c) 72 bytes <{0}> ={3}= ={4}= ={8}= ={11}= [rendered]
         > ./c [0] ./index.js 3:0-47
      [7] ./c.js 72 bytes {9} {10} [built]
@@ -583,13 +583,13 @@ chunk    {0} main2.js (main2) 415 bytes [entry] [rendered]
    [1] ./e.js 20 bytes {0} [built]
    [2] ./f.js 20 bytes {0} [built]
    [3] ./main2.js 56 bytes {0} [built]
-   [6] runtime for make namespace object 279 bytes {0}
+   [6] webpack/runtime/make namespace object 279 bytes {0}
  [101] ./a.js 20 bytes {0} {1} [built]
 chunk    {1} main1.js (main1) 415 bytes [entry] [rendered]
     > ./main1 main1
    [0] ./d.js 20 bytes {0} {1} [built]
    [4] ./c.js 20 bytes {1} [built]
-   [5] runtime for make namespace object 279 bytes {1}
+   [5] webpack/runtime/make namespace object 279 bytes {1}
  [100] ./main1.js 56 bytes {1} [built]
  [101] ./a.js 20 bytes {0} {1} [built]
  [102] ./b.js 20 bytes {1} [built]"
@@ -613,10 +613,10 @@ chunk    {0} bundle.js (main) 3.4 KiB >{1}< >{2}< [entry] [rendered]
  [1] ./a.js 22 bytes {0} [built]
      cjs require ./a [0] ./index.js 1:0-14
      [0] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
- [6] runtime for ensure chunk 305 bytes {0}
- [7] runtime for jsonp chunk loading 2.92 KiB {0}
- [8] runtime for get chunk javascript filename 83 bytes {0}
- [9] runtime for publicPath 27 bytes {0}
+ [6] webpack/runtime/ensure chunk 305 bytes {0}
+ [7] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+ [8] webpack/runtime/get chunk javascript filename 83 bytes {0}
+ [9] webpack/runtime/publicPath 27 bytes {0}
 chunk    {1} 1.bundle.js 22 bytes <{0}> [rendered]
     > ./b [0] ./index.js 2:0-16
  [2] ./b.js 22 bytes {1} [built]
@@ -638,13 +638,13 @@ chunk    {3} 3.bundle.js 44 bytes <{2}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for chunks-development 1`] = `
-"Hash: c3a575a9120aeddda5c8
+"Hash: 3d5a4237b7656ead9af9
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
       Asset       Size  Chunks             Chunk Names
 0.bundle.js  680 bytes       0  [emitted]  
 b.bundle.js  326 bytes       b  [emitted]  
-  bundle.js   7.78 KiB    main  [emitted]  main
+  bundle.js    7.9 KiB    main  [emitted]  main
 c.bundle.js  523 bytes       c  [emitted]  
 Entrypoint main = bundle.js
 chunk    {0} 0.bundle.js 60 bytes <{c}> [rendered]
@@ -674,23 +674,23 @@ chunk {main} bundle.js (main) 3.4 KiB >{b}< >{c}< [entry] [rendered]
  [./index.js] 51 bytes {main} [built]
      entry ./index  main
      Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
- [runtime: ensure chunk] runtime for ensure chunk 305 bytes {main}
- [runtime: get chunk javascript filename] runtime for get chunk javascript filename 83 bytes {main}
- [runtime: jsonp chunk loading] runtime for jsonp chunk loading 2.92 KiB {main}
- [runtime: publicPath] runtime for publicPath 27 bytes {main}"
+ [webpack/runtime/ensure chunk] 305 bytes {main}
+ [webpack/runtime/get chunk javascript filename] 83 bytes {main}
+ [webpack/runtime/jsonp chunk loading] 2.92 KiB {main}
+ [webpack/runtime/publicPath] 27 bytes {main}"
 `;
 
 exports[`StatsTestCases should print correct stats for circular-correctness 1`] = `
 "Entrypoint main = bundle.js
 chunk    {0} bundle.js (main) 4.68 KiB >{1}< >{2}< [entry] [rendered]
   [0] ./index.js 98 bytes {0} [built]
-  [4] runtime for ensure chunk 305 bytes {0}
-  [5] runtime for create fake namespace object 731 bytes {0}
-  [6] runtime for define property getter 281 bytes {0}
-  [7] runtime for make namespace object 279 bytes {0}
-  [8] runtime for jsonp chunk loading 2.92 KiB {0}
-  [9] runtime for get chunk javascript filename 83 bytes {0}
- [10] runtime for publicPath 27 bytes {0}
+  [4] webpack/runtime/ensure chunk 305 bytes {0}
+  [5] webpack/runtime/create fake namespace object 731 bytes {0}
+  [6] webpack/runtime/define property getter 281 bytes {0}
+  [7] webpack/runtime/make namespace object 279 bytes {0}
+  [8] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+  [9] webpack/runtime/get chunk javascript filename 83 bytes {0}
+ [10] webpack/runtime/publicPath 27 bytes {0}
 chunk    {1} 1.bundle.js (a) 49 bytes <{0}> <{3}> >{3}< [rendered]
  [1] ./module-a.js 49 bytes {1} [built]
 chunk    {2} 2.bundle.js (b) 49 bytes <{0}> <{3}> >{3}< [rendered]
@@ -744,7 +744,7 @@ Entrypoint entry-1 = vendor-1~entry-1.js entry-1.js
 [4] ./modules/d.js 22 bytes {0} [built]
 [5] ./modules/e.js 22 bytes {0} [built]
 [6] ./modules/f.js 22 bytes {0} [built]
-[7] runtime for jsonp chunk loading 2.14 KiB {0}"
+[7] webpack/runtime/jsonp chunk loading 2.14 KiB {0}"
 `;
 
 exports[`StatsTestCases should print correct stats for commons-chunk-min-size-Infinity 1`] = `
@@ -762,17 +762,17 @@ Entrypoint entry-1 = vendor-1.js entry-1.js
 [4] ./modules/d.js 22 bytes {0} [built]
 [5] ./modules/e.js 22 bytes {0} [built]
 [6] ./modules/f.js 22 bytes {0} [built]
-[7] runtime for jsonp chunk loading 2.14 KiB {0}"
+[7] webpack/runtime/jsonp chunk loading 2.14 KiB {0}"
 `;
 
 exports[`StatsTestCases should print correct stats for commons-plugin-issue-4980 1`] = `
-"Hash: c004144334887fac0979f73a6d6b29142db2ea22
+"Hash: 11ebfe8587b72f0a0a8d24008e00baae32d3e09f
 Child
-    Hash: c004144334887fac0979
+    Hash: 11ebfe8587b72f0a0a8d
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset       Size  Chunks             Chunk Names
-       app.js   5.76 KiB       1  [emitted]  app
+       app.js   5.81 KiB       1  [emitted]  app
     vendor.js  627 bytes       0  [emitted]  vendor
     Entrypoint app = vendor.js app.js
     [./constants.js] 87 bytes {0} [built]
@@ -780,16 +780,16 @@ Child
         | ./submodule-a.js 59 bytes [built]
         | ./submodule-b.js 59 bytes [built]
         | ./entry-1.js 67 bytes [built]
-    [runtime: compat get default export] runtime for compat get default export 328 bytes {1}
-    [runtime: define property getter] runtime for define property getter 281 bytes {1}
-    [runtime: jsonp chunk loading] runtime for jsonp chunk loading 2.15 KiB {1}
-    [runtime: make namespace object] runtime for make namespace object 279 bytes {1}
+    [webpack/runtime/compat get default export] 328 bytes {1}
+    [webpack/runtime/define property getter] 281 bytes {1}
+    [webpack/runtime/jsonp chunk loading] 2.15 KiB {1}
+    [webpack/runtime/make namespace object] 279 bytes {1}
 Child
-    Hash: f73a6d6b29142db2ea22
+    Hash: 24008e00baae32d3e09f
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset       Size  Chunks             Chunk Names
-       app.js   5.78 KiB       1  [emitted]  app
+       app.js   5.83 KiB       1  [emitted]  app
     vendor.js  627 bytes       0  [emitted]  vendor
     Entrypoint app = vendor.js app.js
     [./constants.js] 87 bytes {0} [built]
@@ -797,10 +797,10 @@ Child
         | ./submodule-a.js 59 bytes [built]
         | ./submodule-c.js 66 bytes [built]
         | ./entry-2.js 67 bytes [built]
-    [runtime: compat get default export] runtime for compat get default export 328 bytes {1}
-    [runtime: define property getter] runtime for define property getter 281 bytes {1}
-    [runtime: jsonp chunk loading] runtime for jsonp chunk loading 2.15 KiB {1}
-    [runtime: make namespace object] runtime for make namespace object 279 bytes {1}"
+    [webpack/runtime/compat get default export] 328 bytes {1}
+    [webpack/runtime/define property getter] 281 bytes {1}
+    [webpack/runtime/jsonp chunk loading] 2.15 KiB {1}
+    [webpack/runtime/make namespace object] 279 bytes {1}"
 `;
 
 exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`] = `
@@ -882,7 +882,7 @@ bundle.js  1.84 KiB       0  [emitted]  main
 Entrypoint main = bundle.js
 [0] ./index.js 77 bytes {0} [built]
 [1] ./a.txt 43 bytes {0} [built]
-[4] runtime for publicPath 27 bytes {0}
+[4] webpack/runtime/publicPath 27 bytes {0}
     + 2 hidden modules"
 `;
 
@@ -1152,23 +1152,23 @@ Entrypoint e2 = e2.js
 chunk    {0} e1.js (e1) 4.66 KiB >{2}< [entry] [rendered]
   [0] ./e1.js 49 bytes {0} [built]
       entry ./e1  e1
-  [5] runtime for ensure chunk 305 bytes {0}
-  [6] runtime for create fake namespace object 731 bytes {0}
-  [7] runtime for define property getter 281 bytes {0}
-  [8] runtime for make namespace object 279 bytes {0}
-  [9] runtime for jsonp chunk loading 2.92 KiB {0}
- [10] runtime for get chunk javascript filename 114 bytes {0}
- [11] runtime for publicPath 27 bytes {0}
+  [5] webpack/runtime/ensure chunk 305 bytes {0}
+  [6] webpack/runtime/create fake namespace object 731 bytes {0}
+  [7] webpack/runtime/define property getter 281 bytes {0}
+  [8] webpack/runtime/make namespace object 279 bytes {0}
+  [9] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+ [10] webpack/runtime/get chunk javascript filename 114 bytes {0}
+ [11] webpack/runtime/publicPath 27 bytes {0}
 chunk    {1} e2.js (e2) 4.66 KiB >{3}< [entry] [rendered]
   [1] ./e2.js 49 bytes {1} [built]
       entry ./e2  e2
- [12] runtime for ensure chunk 305 bytes {1}
- [13] runtime for create fake namespace object 731 bytes {1}
- [14] runtime for define property getter 281 bytes {1}
- [15] runtime for make namespace object 279 bytes {1}
- [16] runtime for jsonp chunk loading 2.92 KiB {1}
- [17] runtime for get chunk javascript filename 114 bytes {1}
- [18] runtime for publicPath 27 bytes {1}
+ [12] webpack/runtime/ensure chunk 305 bytes {1}
+ [13] webpack/runtime/create fake namespace object 731 bytes {1}
+ [14] webpack/runtime/define property getter 281 bytes {1}
+ [15] webpack/runtime/make namespace object 279 bytes {1}
+ [16] webpack/runtime/jsonp chunk loading 2.92 KiB {1}
+ [17] webpack/runtime/get chunk javascript filename 114 bytes {1}
+ [18] webpack/runtime/publicPath 27 bytes {1}
 chunk    {2} a.js (a) 49 bytes <{0}> <{3}> >{4}< [rendered]
  [2] ./module-a.js 49 bytes {2} [built]
      import() ./module-a [0] ./e1.js 1:0-47
@@ -1192,14 +1192,14 @@ chunk    {0} e1.js (e1) 5.06 KiB >{2}< >{3}< [entry] [rendered]
       harmony side effect evaluation ./module-x [0] ./e1.js 1:0-20
       harmony side effect evaluation ./module-x [2] ./e2.js 1:0-20
       import() ./module-x [6] ./module-b.js 2:0-20
-  [7] runtime for make namespace object 279 bytes {0}
-  [8] runtime for compat get default export 328 bytes {0}
-  [9] runtime for ensure chunk 305 bytes {0}
- [10] runtime for create fake namespace object 731 bytes {0}
- [11] runtime for define property getter 281 bytes {0}
- [12] runtime for jsonp chunk loading 2.92 KiB {0}
- [13] runtime for get chunk javascript filename 122 bytes {0}
- [14] runtime for publicPath 27 bytes {0}
+  [7] webpack/runtime/make namespace object 279 bytes {0}
+  [8] webpack/runtime/compat get default export 328 bytes {0}
+  [9] webpack/runtime/ensure chunk 305 bytes {0}
+ [10] webpack/runtime/create fake namespace object 731 bytes {0}
+ [11] webpack/runtime/define property getter 281 bytes {0}
+ [12] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+ [13] webpack/runtime/get chunk javascript filename 122 bytes {0}
+ [14] webpack/runtime/publicPath 27 bytes {0}
 chunk    {1} e2.js (e2) 5.06 KiB >{3}< >{4}< [entry] [rendered]
   [1] ./module-x.js 49 bytes {0} {1} [built]
       harmony side effect evaluation ./module-x [0] ./e1.js 1:0-20
@@ -1207,14 +1207,14 @@ chunk    {1} e2.js (e2) 5.06 KiB >{3}< >{4}< [entry] [rendered]
       import() ./module-x [6] ./module-b.js 2:0-20
   [2] ./e2.js 70 bytes {1} [built]
       entry ./e2  e2
- [15] runtime for ensure chunk 305 bytes {1}
- [16] runtime for create fake namespace object 731 bytes {1}
- [17] runtime for define property getter 281 bytes {1}
- [18] runtime for make namespace object 279 bytes {1}
- [19] runtime for compat get default export 328 bytes {1}
- [20] runtime for jsonp chunk loading 2.92 KiB {1}
- [21] runtime for get chunk javascript filename 122 bytes {1}
- [22] runtime for publicPath 27 bytes {1}
+ [15] webpack/runtime/ensure chunk 305 bytes {1}
+ [16] webpack/runtime/create fake namespace object 731 bytes {1}
+ [17] webpack/runtime/define property getter 281 bytes {1}
+ [18] webpack/runtime/make namespace object 279 bytes {1}
+ [19] webpack/runtime/compat get default export 328 bytes {1}
+ [20] webpack/runtime/jsonp chunk loading 2.92 KiB {1}
+ [21] webpack/runtime/get chunk javascript filename 122 bytes {1}
+ [22] webpack/runtime/publicPath 27 bytes {1}
 chunk    {2} a.js (a) 49 bytes <{0}> <{4}> >{5}< [rendered]
  [3] ./module-a.js 49 bytes {2} [built]
      import() ./module-a [0] ./e1.js 2:0-47
@@ -1246,11 +1246,11 @@ Entrypoint entry = entry.js
 [2] ./templates/bar.js 38 bytes {1} [optional] [built]
 [3] ./templates/baz.js 38 bytes {2} [optional] [built]
 [4] ./templates/foo.js 38 bytes {3} [optional] [built]
-[5] runtime for ensure chunk 305 bytes {0}
-[6] runtime for make namespace object 279 bytes {0}
-[7] runtime for jsonp chunk loading 2.92 KiB {0}
-[8] runtime for get chunk javascript filename 91 bytes {0}
-[9] runtime for publicPath 27 bytes {0}"
+[5] webpack/runtime/ensure chunk 305 bytes {0}
+[6] webpack/runtime/make namespace object 279 bytes {0}
+[7] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+[8] webpack/runtime/get chunk javascript filename 91 bytes {0}
+[9] webpack/runtime/publicPath 27 bytes {0}"
 `;
 
 exports[`StatsTestCases should print correct stats for import-weak 1`] = `
@@ -1263,13 +1263,13 @@ entry.js   7.63 KiB       0  [emitted]  entry
 Entrypoint entry = entry.js
 [0] ./entry.js 120 bytes {0} [built]
 [1] ./modules/b.js 22 bytes {1} [built]
-[2] runtime for create fake namespace object 731 bytes {0}
-[3] runtime for ensure chunk 305 bytes {0}
-[4] runtime for define property getter 281 bytes {0}
-[5] runtime for make namespace object 279 bytes {0}
-[6] runtime for jsonp chunk loading 2.92 KiB {0}
-[7] runtime for get chunk javascript filename 91 bytes {0}
-[8] runtime for publicPath 27 bytes {0}
+[2] webpack/runtime/create fake namespace object 731 bytes {0}
+[3] webpack/runtime/ensure chunk 305 bytes {0}
+[4] webpack/runtime/define property getter 281 bytes {0}
+[5] webpack/runtime/make namespace object 279 bytes {0}
+[6] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+[7] webpack/runtime/get chunk javascript filename 91 bytes {0}
+[8] webpack/runtime/publicPath 27 bytes {0}
     + 1 hidden module"
 `;
 
@@ -1281,13 +1281,13 @@ exports[`StatsTestCases should print correct stats for import-with-invalid-optio
  [3] ./chunk-b.js 27 bytes {3} [built]
  [4] ./chunk-c.js 27 bytes {4} [built]
  [5] ./chunk-d.js 27 bytes {5} [built]
- [6] runtime for ensure chunk 305 bytes {0}
- [7] runtime for make namespace object 279 bytes {0}
- [8] runtime for create fake namespace object 731 bytes {0}
- [9] runtime for define property getter 281 bytes {0}
-[10] runtime for jsonp chunk loading 3.46 KiB {0}
-[11] runtime for get chunk javascript filename 144 bytes {0}
-[12] runtime for publicPath 27 bytes {0}
+ [6] webpack/runtime/ensure chunk 305 bytes {0}
+ [7] webpack/runtime/make namespace object 279 bytes {0}
+ [8] webpack/runtime/create fake namespace object 731 bytes {0}
+ [9] webpack/runtime/define property getter 281 bytes {0}
+[10] webpack/runtime/jsonp chunk loading 3.46 KiB {0}
+[11] webpack/runtime/get chunk javascript filename 144 bytes {0}
+[12] webpack/runtime/publicPath 27 bytes {0}
 
 WARNING in ./chunk.js 2:11-84
 Compilation error while processing magic comment(-s): /* webpackPrefetch: true, webpackChunkName: notGoingToCompileChunkName */: notGoingToCompileChunkName is not defined
@@ -1314,7 +1314,7 @@ Child
     a-runtime~main-21608f21e59ce4f420fe.js   3.57 KiB  runtime~main  [emitted]  runtime~main
     Entrypoint main = a-runtime~main-21608f21e59ce4f420fe.js a-all~main-0034bb84916bcade4cc7.js a-main-9407860001b0bf9acb00.js
     [0] ./a.js 18 bytes {all~main} [built]
-    [1] runtime for jsonp chunk loading 2.15 KiB {runtime~main}
+    [1] webpack/runtime/jsonp chunk loading 2.15 KiB {runtime~main}
 Child
     Hash: fc118df3ae2f5e1cea28
     Time: Xms
@@ -1327,10 +1327,10 @@ Child
     Entrypoint main = b-runtime~main-8e6043c2b9b93ea293be.js b-vendors~main-13c0fc262f08dee65613.js b-all~main-8fc824ada14cfa87179b.js b-main-9b8bde6297868240e02c.js
     [0] ./b.js 17 bytes {all~main} [built]
     [1] ./node_modules/vendor.js 23 bytes {vendors~main} [built]
-    [2] runtime for make namespace object 279 bytes {runtime~main}
-    [3] runtime for compat get default export 328 bytes {runtime~main}
-    [4] runtime for define property getter 281 bytes {runtime~main}
-    [5] runtime for jsonp chunk loading 2.15 KiB {runtime~main}
+    [2] webpack/runtime/make namespace object 279 bytes {runtime~main}
+    [3] webpack/runtime/compat get default export 328 bytes {runtime~main}
+    [4] webpack/runtime/define property getter 281 bytes {runtime~main}
+    [5] webpack/runtime/jsonp chunk loading 2.15 KiB {runtime~main}
 Child
     Hash: 60c755782a5662183750
     Time: Xms
@@ -1345,13 +1345,13 @@ Child
     [0] ./c.js 61 bytes {all~main} [built]
     [1] ./b.js 17 bytes {b0} [built]
     [2] ./node_modules/vendor.js 23 bytes {b1} [built]
-    [3] runtime for ensure chunk 305 bytes {runtime~main}
-    [4] runtime for make namespace object 279 bytes {runtime~main}
-    [5] runtime for compat get default export 328 bytes {runtime~main}
-    [6] runtime for define property getter 281 bytes {runtime~main}
-    [7] runtime for jsonp chunk loading 3.87 KiB {runtime~main}
-    [8] runtime for get chunk javascript filename 168 bytes {runtime~main}
-    [9] runtime for publicPath 27 bytes {runtime~main}"
+    [3] webpack/runtime/ensure chunk 305 bytes {runtime~main}
+    [4] webpack/runtime/make namespace object 279 bytes {runtime~main}
+    [5] webpack/runtime/compat get default export 328 bytes {runtime~main}
+    [6] webpack/runtime/define property getter 281 bytes {runtime~main}
+    [7] webpack/runtime/jsonp chunk loading 3.87 KiB {runtime~main}
+    [8] webpack/runtime/get chunk javascript filename 168 bytes {runtime~main}
+    [9] webpack/runtime/publicPath 27 bytes {runtime~main}"
 `;
 
 exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 1`] = `
@@ -1370,9 +1370,9 @@ Child 1 chunks:
      [3] ./c.js 30 bytes {0} [built]
      [4] ./d.js 22 bytes {0} [built]
      [5] ./e.js 22 bytes {0} [built]
-     [6] runtime for create fake namespace object 731 bytes {0}
-     [7] runtime for define property getter 281 bytes {0}
-     [8] runtime for make namespace object 279 bytes {0}
+     [6] webpack/runtime/create fake namespace object 731 bytes {0}
+     [7] webpack/runtime/define property getter 281 bytes {0}
+     [8] webpack/runtime/make namespace object 279 bytes {0}
 Child 2 chunks:
     Hash: a1a826ebc96c6f8cf987
     Time: Xms
@@ -1383,13 +1383,13 @@ Child 2 chunks:
     Entrypoint main = bundle.js
     chunk    {0} bundle.js (main) 4.68 KiB >{1}< [entry] [rendered]
       [0] ./index.js 101 bytes {0} [built]
-      [6] runtime for ensure chunk 305 bytes {0}
-      [7] runtime for create fake namespace object 731 bytes {0}
-      [8] runtime for define property getter 281 bytes {0}
-      [9] runtime for make namespace object 279 bytes {0}
-     [10] runtime for jsonp chunk loading 2.92 KiB {0}
-     [11] runtime for get chunk javascript filename 83 bytes {0}
-     [12] runtime for publicPath 27 bytes {0}
+      [6] webpack/runtime/ensure chunk 305 bytes {0}
+      [7] webpack/runtime/create fake namespace object 731 bytes {0}
+      [8] webpack/runtime/define property getter 281 bytes {0}
+      [9] webpack/runtime/make namespace object 279 bytes {0}
+     [10] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [11] webpack/runtime/get chunk javascript filename 83 bytes {0}
+     [12] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} 1.bundle.js (c) 118 bytes <{0}> <{1}> >{1}< [rendered]
      [1] ./a.js 22 bytes {1} [built]
      [2] ./b.js 22 bytes {1} [built]
@@ -1407,13 +1407,13 @@ Child 3 chunks:
     Entrypoint main = bundle.js
     chunk    {0} bundle.js (main) 4.68 KiB >{1}< [entry] [rendered]
       [0] ./index.js 101 bytes {0} [built]
-      [6] runtime for ensure chunk 305 bytes {0}
-      [7] runtime for create fake namespace object 731 bytes {0}
-      [8] runtime for define property getter 281 bytes {0}
-      [9] runtime for make namespace object 279 bytes {0}
-     [10] runtime for jsonp chunk loading 2.92 KiB {0}
-     [11] runtime for get chunk javascript filename 83 bytes {0}
-     [12] runtime for publicPath 27 bytes {0}
+      [6] webpack/runtime/ensure chunk 305 bytes {0}
+      [7] webpack/runtime/create fake namespace object 731 bytes {0}
+      [8] webpack/runtime/define property getter 281 bytes {0}
+      [9] webpack/runtime/make namespace object 279 bytes {0}
+     [10] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [11] webpack/runtime/get chunk javascript filename 83 bytes {0}
+     [12] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} 1.bundle.js (c) 74 bytes <{0}> >{2}< [rendered]
      [1] ./a.js 22 bytes {1} [built]
      [2] ./b.js 22 bytes {1} [built]
@@ -1433,13 +1433,13 @@ Child 4 chunks:
     Entrypoint main = bundle.js
     chunk    {0} bundle.js (main) 4.68 KiB >{1}< >{2}< [entry] [rendered]
       [0] ./index.js 101 bytes {0} [built]
-      [6] runtime for ensure chunk 305 bytes {0}
-      [7] runtime for create fake namespace object 731 bytes {0}
-      [8] runtime for define property getter 281 bytes {0}
-      [9] runtime for make namespace object 279 bytes {0}
-     [10] runtime for jsonp chunk loading 2.92 KiB {0}
-     [11] runtime for get chunk javascript filename 83 bytes {0}
-     [12] runtime for publicPath 27 bytes {0}
+      [6] webpack/runtime/ensure chunk 305 bytes {0}
+      [7] webpack/runtime/create fake namespace object 731 bytes {0}
+      [8] webpack/runtime/define property getter 281 bytes {0}
+      [9] webpack/runtime/make namespace object 279 bytes {0}
+     [10] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [11] webpack/runtime/get chunk javascript filename 83 bytes {0}
+     [12] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} 1.bundle.js 44 bytes <{0}> [rendered]
      [1] ./a.js 22 bytes {1} [built]
      [2] ./b.js 22 bytes {1} [built]
@@ -1512,26 +1512,26 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint main = main.js
 chunk    {0} main.js (main) 4.21 KiB >{1}< [entry] [rendered]
  [0] ./index.js 12 bytes {0} [built]
- [3] runtime for ensure chunk 305 bytes {0}
- [4] runtime for make namespace object 279 bytes {0}
- [5] runtime for compat get default export 328 bytes {0}
- [6] runtime for define property getter 281 bytes {0}
- [7] runtime for publicPath 27 bytes {0}
- [8] runtime for jsonp chunk loading 2.92 KiB {0}
- [9] runtime for get chunk javascript filename 91 bytes {0}
+ [3] webpack/runtime/ensure chunk 305 bytes {0}
+ [4] webpack/runtime/make namespace object 279 bytes {0}
+ [5] webpack/runtime/compat get default export 328 bytes {0}
+ [6] webpack/runtime/define property getter 281 bytes {0}
+ [7] webpack/runtime/publicPath 27 bytes {0}
+ [8] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+ [9] webpack/runtime/get chunk javascript filename 91 bytes {0}
 chunk    {1} 1.js 68 bytes <{0}> [rendered]
  [1] ./node_modules/a/index.js 17 bytes {1} [built]
  [2] ./node_modules/a/1.png 51 bytes {1} [built] [1 asset]
 [0] ./index.js 12 bytes {0} [built]
 [1] ./node_modules/a/index.js 17 bytes {1} [built]
 [2] ./node_modules/a/1.png 51 bytes {1} [built] [1 asset]
-[3] runtime for ensure chunk 305 bytes {0}
-[4] runtime for make namespace object 279 bytes {0}
-[5] runtime for compat get default export 328 bytes {0}
-[6] runtime for define property getter 281 bytes {0}
-[7] runtime for publicPath 27 bytes {0}
-[8] runtime for jsonp chunk loading 2.92 KiB {0}
-[9] runtime for get chunk javascript filename 91 bytes {0}"
+[3] webpack/runtime/ensure chunk 305 bytes {0}
+[4] webpack/runtime/make namespace object 279 bytes {0}
+[5] webpack/runtime/compat get default export 328 bytes {0}
+[6] webpack/runtime/define property getter 281 bytes {0}
+[7] webpack/runtime/publicPath 27 bytes {0}
+[8] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+[9] webpack/runtime/get chunk javascript filename 91 bytes {0}"
 `;
 
 exports[`StatsTestCases should print correct stats for module-deduplication 1`] = `
@@ -1554,39 +1554,39 @@ chunk    {0} e1.js (e1) 4.35 KiB >{4}< >{5}< >{6}< [entry] [rendered]
   [2] ./b.js 9 bytes {0} {1} {2} [built]
   [3] ./c.js 9 bytes {0} [built]
   [4] ./d.js 9 bytes {0} {3} [built]
- [14] runtime for make namespace object 279 bytes {0}
- [15] runtime for compat get default export 328 bytes {0}
- [16] runtime for ensure chunk 305 bytes {0}
- [17] runtime for define property getter 281 bytes {0}
- [18] runtime for jsonp chunk loading 2.92 KiB {0}
- [19] runtime for get chunk javascript filename 91 bytes {0}
- [20] runtime for publicPath 27 bytes {0}
+ [14] webpack/runtime/make namespace object 279 bytes {0}
+ [15] webpack/runtime/compat get default export 328 bytes {0}
+ [16] webpack/runtime/ensure chunk 305 bytes {0}
+ [17] webpack/runtime/define property getter 281 bytes {0}
+ [18] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+ [19] webpack/runtime/get chunk javascript filename 91 bytes {0}
+ [20] webpack/runtime/publicPath 27 bytes {0}
 chunk    {1} e2.js (e2) 4.35 KiB >{3}< >{5}< >{7}< [entry] [rendered]
   [1] ./a.js 9 bytes {0} {1} {2} [built]
   [2] ./b.js 9 bytes {0} {1} {2} [built]
   [5] ./e2.js 116 bytes {1} [built]
   [6] ./e.js 9 bytes {1} [built]
   [7] ./f.js 9 bytes {1} {4} [built]
- [21] runtime for make namespace object 279 bytes {1}
- [22] runtime for compat get default export 328 bytes {1}
- [23] runtime for ensure chunk 305 bytes {1}
- [24] runtime for define property getter 281 bytes {1}
- [25] runtime for jsonp chunk loading 2.92 KiB {1}
- [26] runtime for get chunk javascript filename 91 bytes {1}
- [27] runtime for publicPath 27 bytes {1}
+ [21] webpack/runtime/make namespace object 279 bytes {1}
+ [22] webpack/runtime/compat get default export 328 bytes {1}
+ [23] webpack/runtime/ensure chunk 305 bytes {1}
+ [24] webpack/runtime/define property getter 281 bytes {1}
+ [25] webpack/runtime/jsonp chunk loading 2.92 KiB {1}
+ [26] webpack/runtime/get chunk javascript filename 91 bytes {1}
+ [27] webpack/runtime/publicPath 27 bytes {1}
 chunk    {2} e3.js (e3) 4.35 KiB >{3}< >{4}< >{8}< [entry] [rendered]
   [1] ./a.js 9 bytes {0} {1} {2} [built]
   [2] ./b.js 9 bytes {0} {1} {2} [built]
   [8] ./e3.js 116 bytes {2} [built]
   [9] ./g.js 9 bytes {2} [built]
  [10] ./h.js 9 bytes {2} {5} [built]
- [28] runtime for make namespace object 279 bytes {2}
- [29] runtime for compat get default export 328 bytes {2}
- [30] runtime for ensure chunk 305 bytes {2}
- [31] runtime for define property getter 281 bytes {2}
- [32] runtime for jsonp chunk loading 2.92 KiB {2}
- [33] runtime for get chunk javascript filename 91 bytes {2}
- [34] runtime for publicPath 27 bytes {2}
+ [28] webpack/runtime/make namespace object 279 bytes {2}
+ [29] webpack/runtime/compat get default export 328 bytes {2}
+ [30] webpack/runtime/ensure chunk 305 bytes {2}
+ [31] webpack/runtime/define property getter 281 bytes {2}
+ [32] webpack/runtime/jsonp chunk loading 2.92 KiB {2}
+ [33] webpack/runtime/get chunk javascript filename 91 bytes {2}
+ [34] webpack/runtime/publicPath 27 bytes {2}
 chunk    {3} 3.js 37 bytes <{1}> <{2}> [rendered]
   [4] ./d.js 9 bytes {0} {3} [built]
  [11] ./async1.js 28 bytes {3} {6} [built]
@@ -1621,39 +1621,39 @@ chunk    {0} e1.js (e1) 4.38 KiB >{3}< [entry] [rendered]
   [2] ./b.js 9 bytes {0} {1} {2} [built]
   [3] ./c.js 9 bytes {0} [built]
   [4] ./d.js 9 bytes {0} {3} [built]
- [14] runtime for make namespace object 279 bytes {0}
- [15] runtime for compat get default export 328 bytes {0}
- [16] runtime for ensure chunk 305 bytes {0}
- [17] runtime for define property getter 281 bytes {0}
- [18] runtime for jsonp chunk loading 2.92 KiB {0}
- [19] runtime for get chunk javascript filename 129 bytes {0}
- [20] runtime for publicPath 27 bytes {0}
+ [14] webpack/runtime/make namespace object 279 bytes {0}
+ [15] webpack/runtime/compat get default export 328 bytes {0}
+ [16] webpack/runtime/ensure chunk 305 bytes {0}
+ [17] webpack/runtime/define property getter 281 bytes {0}
+ [18] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+ [19] webpack/runtime/get chunk javascript filename 129 bytes {0}
+ [20] webpack/runtime/publicPath 27 bytes {0}
 chunk    {1} e2.js (e2) 4.38 KiB >{4}< [entry] [rendered]
   [1] ./a.js 9 bytes {0} {1} {2} [built]
   [2] ./b.js 9 bytes {0} {1} {2} [built]
   [5] ./e2.js 108 bytes {1} [built]
   [6] ./e.js 9 bytes {1} [built]
   [7] ./f.js 9 bytes {1} {4} [built]
- [21] runtime for make namespace object 279 bytes {1}
- [22] runtime for compat get default export 328 bytes {1}
- [23] runtime for ensure chunk 305 bytes {1}
- [24] runtime for define property getter 281 bytes {1}
- [25] runtime for jsonp chunk loading 2.92 KiB {1}
- [26] runtime for get chunk javascript filename 129 bytes {1}
- [27] runtime for publicPath 27 bytes {1}
+ [21] webpack/runtime/make namespace object 279 bytes {1}
+ [22] webpack/runtime/compat get default export 328 bytes {1}
+ [23] webpack/runtime/ensure chunk 305 bytes {1}
+ [24] webpack/runtime/define property getter 281 bytes {1}
+ [25] webpack/runtime/jsonp chunk loading 2.92 KiB {1}
+ [26] webpack/runtime/get chunk javascript filename 129 bytes {1}
+ [27] webpack/runtime/publicPath 27 bytes {1}
 chunk    {2} e3.js (e3) 4.38 KiB >{5}< [entry] [rendered]
   [1] ./a.js 9 bytes {0} {1} {2} [built]
   [2] ./b.js 9 bytes {0} {1} {2} [built]
   [8] ./e3.js 108 bytes {2} [built]
   [9] ./g.js 9 bytes {2} [built]
  [10] ./h.js 9 bytes {2} {5} [built]
- [28] runtime for make namespace object 279 bytes {2}
- [29] runtime for compat get default export 328 bytes {2}
- [30] runtime for ensure chunk 305 bytes {2}
- [31] runtime for define property getter 281 bytes {2}
- [32] runtime for jsonp chunk loading 2.92 KiB {2}
- [33] runtime for get chunk javascript filename 129 bytes {2}
- [34] runtime for publicPath 27 bytes {2}
+ [28] webpack/runtime/make namespace object 279 bytes {2}
+ [29] webpack/runtime/compat get default export 328 bytes {2}
+ [30] webpack/runtime/ensure chunk 305 bytes {2}
+ [31] webpack/runtime/define property getter 281 bytes {2}
+ [32] webpack/runtime/jsonp chunk loading 2.92 KiB {2}
+ [33] webpack/runtime/get chunk javascript filename 129 bytes {2}
+ [34] webpack/runtime/publicPath 27 bytes {2}
 chunk    {3} async1.js (async1) 89 bytes <{0}> <{5}> >{4}< [rendered]
   [4] ./d.js 9 bytes {0} {3} [built]
  [11] ./async1.js 80 bytes {3} [built]
@@ -1726,13 +1726,13 @@ exports[`StatsTestCases should print correct stats for named-chunk-groups 1`] = 
     chunk    {0} main.js (main) 4.42 KiB >{1}< >{2}< >{3}< >{4}< >{5}< [entry] [rendered]
         > ./ main
       [0] ./index.js 146 bytes {0} [built]
-      [7] runtime for ensure chunk 305 bytes {0}
-      [8] runtime for make namespace object 279 bytes {0}
-      [9] runtime for compat get default export 328 bytes {0}
-     [10] runtime for define property getter 281 bytes {0}
-     [11] runtime for jsonp chunk loading 2.92 KiB {0}
-     [12] runtime for get chunk javascript filename 168 bytes {0}
-     [13] runtime for publicPath 27 bytes {0}
+      [7] webpack/runtime/ensure chunk 305 bytes {0}
+      [8] webpack/runtime/make namespace object 279 bytes {0}
+      [9] webpack/runtime/compat get default export 328 bytes {0}
+     [10] webpack/runtime/define property getter 281 bytes {0}
+     [11] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [12] webpack/runtime/get chunk javascript filename 168 bytes {0}
+     [13] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} async-a.js (async-a) 40 bytes <{0}> ={2}= [rendered]
         > ./a [0] ./index.js 1:0-47
      [1] ./a.js 40 bytes {1} [built]
@@ -1758,13 +1758,13 @@ Child
     chunk    {0} main.js (main) 4.42 KiB >{1}< >{2}< >{3}< >{4}< >{5}< [entry] [rendered]
         > ./ main
       [0] ./index.js 146 bytes {0} [built]
-      [7] runtime for ensure chunk 305 bytes {0}
-      [8] runtime for make namespace object 279 bytes {0}
-      [9] runtime for compat get default export 328 bytes {0}
-     [10] runtime for define property getter 281 bytes {0}
-     [11] runtime for jsonp chunk loading 2.92 KiB {0}
-     [12] runtime for get chunk javascript filename 168 bytes {0}
-     [13] runtime for publicPath 27 bytes {0}
+      [7] webpack/runtime/ensure chunk 305 bytes {0}
+      [8] webpack/runtime/make namespace object 279 bytes {0}
+      [9] webpack/runtime/compat get default export 328 bytes {0}
+     [10] webpack/runtime/define property getter 281 bytes {0}
+     [11] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [12] webpack/runtime/get chunk javascript filename 168 bytes {0}
+     [13] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} async-a.js (async-a) 40 bytes <{0}> ={2}= [rendered]
         > ./a [0] ./index.js 1:0-47
      [1] ./a.js 40 bytes {1} [built]
@@ -1785,18 +1785,18 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for named-chunks-plugin 1`] = `
-"Hash: a966e46e6f3fa17dc290
+"Hash: 19ae6da3ea4a1dde5ded
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset       Size  Chunks             Chunk Names
- entry.js   3.94 KiB   entry  [emitted]  entry
+ entry.js   3.95 KiB   entry  [emitted]  entry
 vendor.js  251 bytes  vendor  [emitted]  vendor
 Entrypoint entry = vendor.js entry.js
 [./entry.js] 72 bytes {entry} [built]
 [./modules/a.js] 22 bytes {vendor} [built]
 [./modules/b.js] 22 bytes {vendor} [built]
 [./modules/c.js] 22 bytes {entry} [built]
-[runtime: jsonp chunk loading] runtime for jsonp chunk loading 2.16 KiB {entry}"
+[webpack/runtime/jsonp chunk loading] 2.16 KiB {entry}"
 `;
 
 exports[`StatsTestCases should print correct stats for named-chunks-plugin-async 1`] = `
@@ -1811,13 +1811,13 @@ Entrypoint entry = entry.js
 [0] ./entry.js 47 bytes {entry} [built]
 [1] ./modules/a.js 37 bytes {chunk-containing-__a_js} [built]
 [2] ./modules/b.js 22 bytes {chunk-containing-__b_js} [built]
-[3] runtime for ensure chunk 305 bytes {entry}
-[4] runtime for create fake namespace object 731 bytes {entry}
-[5] runtime for define property getter 281 bytes {entry}
-[6] runtime for make namespace object 279 bytes {entry}
-[7] runtime for jsonp chunk loading 2.92 KiB {entry}
-[8] runtime for get chunk javascript filename 91 bytes {entry}
-[9] runtime for publicPath 27 bytes {entry}"
+[3] webpack/runtime/ensure chunk 305 bytes {entry}
+[4] webpack/runtime/create fake namespace object 731 bytes {entry}
+[5] webpack/runtime/define property getter 281 bytes {entry}
+[6] webpack/runtime/make namespace object 279 bytes {entry}
+[7] webpack/runtime/jsonp chunk loading 2.92 KiB {entry}
+[8] webpack/runtime/get chunk javascript filename 91 bytes {entry}
+[9] webpack/runtime/publicPath 27 bytes {entry}"
 `;
 
 exports[`StatsTestCases should print correct stats for no-emit-on-errors-plugin-with-child-error 1`] = `
@@ -1860,10 +1860,10 @@ chunk    {0} main.js (main) 3.93 KiB >{1}< >{2}< >{4}< >{5}< [entry] [rendered]
     > ./index main
   [0] ./index.js 523 bytes {0} [built]
   [1] ./modules/f.js 0 bytes {0} [built]
-  [9] runtime for ensure chunk 305 bytes {0}
- [10] runtime for jsonp chunk loading 2.92 KiB {0}
- [11] runtime for get chunk javascript filename 179 bytes {0}
- [12] runtime for publicPath 27 bytes {0}
+  [9] webpack/runtime/ensure chunk 305 bytes {0}
+ [10] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+ [11] webpack/runtime/get chunk javascript filename 179 bytes {0}
+ [12] webpack/runtime/publicPath 27 bytes {0}
 chunk    {1} ab.js (ab) 0 bytes <{0}> >{7}< [rendered]
     > [0] ./index.js 1:0-6:8
  [2] ./modules/a.js 0 bytes {1} {2} [built]
@@ -1902,10 +1902,10 @@ Entrypoint main = main.js
     | ./a.js 15 bytes [built]
     | ./index.js 15 bytes [built]
 [1] ./b.js 169 bytes {0} [built] [failed] [1 error]
-[2] runtime for make namespace object 279 bytes {0}
-[3] runtime for define property getter 281 bytes {0}
-[4] runtime for create fake namespace object 731 bytes {0}
-[5] runtime for compat get default export 328 bytes {0}
+[2] webpack/runtime/make namespace object 279 bytes {0}
+[3] webpack/runtime/define property getter 281 bytes {0}
+[4] webpack/runtime/create fake namespace object 731 bytes {0}
+[5] webpack/runtime/compat get default export 328 bytes {0}
 
 ERROR in ./b.js 6:7
 Module parse failed: Unexpected token (6:7)
@@ -2039,10 +2039,10 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 [3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
 [4] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 [5] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[6] <CLR=BOLD>runtime for ensure chunk</CLR> 305 bytes {<CLR=33,BOLD>0</CLR>}
-[7] <CLR=BOLD>runtime for jsonp chunk loading</CLR> 2.92 KiB {<CLR=33,BOLD>0</CLR>}
-[8] <CLR=BOLD>runtime for get chunk javascript filename</CLR> 91 bytes {<CLR=33,BOLD>0</CLR>}
-[9] <CLR=BOLD>runtime for publicPath</CLR> 27 bytes {<CLR=33,BOLD>0</CLR>}"
+[6] <CLR=BOLD>webpack/runtime/ensure chunk</CLR> 305 bytes {<CLR=33,BOLD>0</CLR>}
+[7] <CLR=BOLD>webpack/runtime/jsonp chunk loading</CLR> 2.92 KiB {<CLR=33,BOLD>0</CLR>}
+[8] <CLR=BOLD>webpack/runtime/get chunk javascript filename</CLR> 91 bytes {<CLR=33,BOLD>0</CLR>}
+[9] <CLR=BOLD>webpack/runtime/publicPath</CLR> 27 bytes {<CLR=33,BOLD>0</CLR>}"
 `;
 
 exports[`StatsTestCases should print correct stats for performance-error 1`] = `
@@ -2060,10 +2060,10 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 [3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
 [4] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 [5] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[6] <CLR=BOLD>runtime for ensure chunk</CLR> 305 bytes {<CLR=33,BOLD>0</CLR>}
-[7] <CLR=BOLD>runtime for jsonp chunk loading</CLR> 2.92 KiB {<CLR=33,BOLD>0</CLR>}
-[8] <CLR=BOLD>runtime for get chunk javascript filename</CLR> 91 bytes {<CLR=33,BOLD>0</CLR>}
-[9] <CLR=BOLD>runtime for publicPath</CLR> 27 bytes {<CLR=33,BOLD>0</CLR>}
+[6] <CLR=BOLD>webpack/runtime/ensure chunk</CLR> 305 bytes {<CLR=33,BOLD>0</CLR>}
+[7] <CLR=BOLD>webpack/runtime/jsonp chunk loading</CLR> 2.92 KiB {<CLR=33,BOLD>0</CLR>}
+[8] <CLR=BOLD>webpack/runtime/get chunk javascript filename</CLR> 91 bytes {<CLR=33,BOLD>0</CLR>}
+[9] <CLR=BOLD>webpack/runtime/publicPath</CLR> 27 bytes {<CLR=33,BOLD>0</CLR>}
 
 <CLR=31,BOLD>ERROR in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
@@ -2123,10 +2123,10 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 [3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
 [4] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 [5] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[6] <CLR=BOLD>runtime for ensure chunk</CLR> 305 bytes {<CLR=33,BOLD>0</CLR>}
-[7] <CLR=BOLD>runtime for jsonp chunk loading</CLR> 2.92 KiB {<CLR=33,BOLD>0</CLR>}
-[8] <CLR=BOLD>runtime for get chunk javascript filename</CLR> 91 bytes {<CLR=33,BOLD>0</CLR>}
-[9] <CLR=BOLD>runtime for publicPath</CLR> 27 bytes {<CLR=33,BOLD>0</CLR>}"
+[6] <CLR=BOLD>webpack/runtime/ensure chunk</CLR> 305 bytes {<CLR=33,BOLD>0</CLR>}
+[7] <CLR=BOLD>webpack/runtime/jsonp chunk loading</CLR> 2.92 KiB {<CLR=33,BOLD>0</CLR>}
+[8] <CLR=BOLD>webpack/runtime/get chunk javascript filename</CLR> 91 bytes {<CLR=33,BOLD>0</CLR>}
+[9] <CLR=BOLD>webpack/runtime/publicPath</CLR> 27 bytes {<CLR=33,BOLD>0</CLR>}"
 `;
 
 exports[`StatsTestCases should print correct stats for performance-oversize-limit-error 1`] = `
@@ -2242,13 +2242,13 @@ chunk    {3} 3.js 44 bytes <{2}> [rendered]
     ModuleConcatenation bailout: Module is not an ECMAScript module
 [5] ./e.js 22 bytes {3} [depth 2] [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
-[6] runtime for ensure chunk 305 bytes {0}
+[6] webpack/runtime/ensure chunk 305 bytes {0}
     [no exports used]
-[7] runtime for jsonp chunk loading 2.92 KiB {0}
+[7] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
     [no exports used]
-[8] runtime for get chunk javascript filename 91 bytes {0}
+[8] webpack/runtime/get chunk javascript filename 91 bytes {0}
     [no exports used]
-[9] runtime for publicPath 27 bytes {0}
+[9] webpack/runtime/publicPath 27 bytes {0}
     [no exports used]"
 `;
 
@@ -2294,10 +2294,10 @@ Entrypoint main = main.js
 [3] ./c.js 54 bytes {2} [built]
 [4] ./d.js 22 bytes {3} [built]
 [5] ./e.js 22 bytes {3} [built]
-[6] runtime for ensure chunk 305 bytes {0}
-[7] runtime for jsonp chunk loading 2.92 KiB {0}
-[8] runtime for get chunk javascript filename 91 bytes {0}
-[9] runtime for publicPath 27 bytes {0}"
+[6] webpack/runtime/ensure chunk 305 bytes {0}
+[7] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+[8] webpack/runtime/get chunk javascript filename 91 bytes {0}
+[9] webpack/runtime/publicPath 27 bytes {0}"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-normal-performance 1`] = `
@@ -2315,10 +2315,10 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 [3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
 [4] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 [5] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[6] <CLR=BOLD>runtime for ensure chunk</CLR> 305 bytes {<CLR=33,BOLD>0</CLR>}
-[7] <CLR=BOLD>runtime for jsonp chunk loading</CLR> 2.92 KiB {<CLR=33,BOLD>0</CLR>}
-[8] <CLR=BOLD>runtime for get chunk javascript filename</CLR> 91 bytes {<CLR=33,BOLD>0</CLR>}
-[9] <CLR=BOLD>runtime for publicPath</CLR> 27 bytes {<CLR=33,BOLD>0</CLR>}
+[6] <CLR=BOLD>webpack/runtime/ensure chunk</CLR> 305 bytes {<CLR=33,BOLD>0</CLR>}
+[7] <CLR=BOLD>webpack/runtime/jsonp chunk loading</CLR> 2.92 KiB {<CLR=33,BOLD>0</CLR>}
+[8] <CLR=BOLD>webpack/runtime/get chunk javascript filename</CLR> 91 bytes {<CLR=33,BOLD>0</CLR>}
+[9] <CLR=BOLD>webpack/runtime/publicPath</CLR> 27 bytes {<CLR=33,BOLD>0</CLR>}
 
 <CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
@@ -2351,10 +2351,10 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 [3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>2</CLR>}<CLR=32,BOLD> [built]</CLR>
 [4] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 [5] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
-[6] <CLR=BOLD>runtime for ensure chunk</CLR> 305 bytes {<CLR=33,BOLD>0</CLR>}
-[7] <CLR=BOLD>runtime for jsonp chunk loading</CLR> 2.92 KiB {<CLR=33,BOLD>0</CLR>}
-[8] <CLR=BOLD>runtime for get chunk javascript filename</CLR> 91 bytes {<CLR=33,BOLD>0</CLR>}
-[9] <CLR=BOLD>runtime for publicPath</CLR> 27 bytes {<CLR=33,BOLD>0</CLR>}
+[6] <CLR=BOLD>webpack/runtime/ensure chunk</CLR> 305 bytes {<CLR=33,BOLD>0</CLR>}
+[7] <CLR=BOLD>webpack/runtime/jsonp chunk loading</CLR> 2.92 KiB {<CLR=33,BOLD>0</CLR>}
+[8] <CLR=BOLD>webpack/runtime/get chunk javascript filename</CLR> 91 bytes {<CLR=33,BOLD>0</CLR>}
+[9] <CLR=BOLD>webpack/runtime/publicPath</CLR> 27 bytes {<CLR=33,BOLD>0</CLR>}
 
 <CLR=33,BOLD>WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
@@ -2388,13 +2388,13 @@ chunk    {0} main.js (main) 3.4 KiB >{1}< >{2}< [entry] [rendered]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      cjs require ./a [0] ./index.js 1:0-14
      [0] Xms -> Xms (resolving: Xms, restoring: Xms, integration: Xms, building: Xms, storing: Xms)
- [6] runtime for ensure chunk 305 bytes {0}
+ [6] webpack/runtime/ensure chunk 305 bytes {0}
      [no exports used]
- [7] runtime for jsonp chunk loading 2.92 KiB {0}
+ [7] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
      [no exports used]
- [8] runtime for get chunk javascript filename 91 bytes {0}
+ [8] webpack/runtime/get chunk javascript filename 91 bytes {0}
      [no exports used]
- [9] runtime for publicPath 27 bytes {0}
+ [9] webpack/runtime/publicPath 27 bytes {0}
      [no exports used]
 chunk    {1} 1.js 22 bytes <{0}> [rendered]
     > ./b [0] ./index.js 2:0-16
@@ -2480,11 +2480,11 @@ exports[`StatsTestCases should print correct stats for runtime-chunk-integration
     [1] ./b.js 20 bytes {2} [built]
     [2] ./c.js 20 bytes {2} [built]
     [3] ./d.js 20 bytes {2} [built]
-    [4] runtime for make namespace object 279 bytes {0}
-    [5] runtime for ensure chunk 305 bytes {0}
-    [6] runtime for jsonp chunk loading 3.86 KiB {0}
-    [7] runtime for get chunk javascript filename 91 bytes {0}
-    [8] runtime for publicPath 27 bytes {0}
+    [4] webpack/runtime/make namespace object 279 bytes {0}
+    [5] webpack/runtime/ensure chunk 305 bytes {0}
+    [6] webpack/runtime/jsonp chunk loading 3.86 KiB {0}
+    [7] webpack/runtime/get chunk javascript filename 91 bytes {0}
+    [8] webpack/runtime/publicPath 27 bytes {0}
 Child manifest is named entry:
           Asset       Size  Chunks             Chunk Names
            2.js  761 bytes       2  [emitted]  
@@ -2497,15 +2497,15 @@ Child manifest is named entry:
      [2] ./b.js 20 bytes {2} [built]
      [3] ./c.js 20 bytes {2} [built]
      [4] ./d.js 20 bytes {2} [built]
-     [5] runtime for make namespace object 279 bytes {1}
-     [6] runtime for ensure chunk 305 bytes {1}
-     [7] runtime for jsonp chunk loading 3.86 KiB {1}
-     [8] runtime for get chunk javascript filename 91 bytes {1}
-     [9] runtime for publicPath 27 bytes {1}
-    [10] runtime for make namespace object 279 bytes {1}
-    [11] runtime for ensure chunk 305 bytes {1}
-    [12] runtime for get chunk javascript filename 91 bytes {1}
-    [13] runtime for publicPath 27 bytes {1}"
+     [5] webpack/runtime/make namespace object 279 bytes {1}
+     [6] webpack/runtime/ensure chunk 305 bytes {1}
+     [7] webpack/runtime/jsonp chunk loading 3.86 KiB {1}
+     [8] webpack/runtime/get chunk javascript filename 91 bytes {1}
+     [9] webpack/runtime/publicPath 27 bytes {1}
+    [10] webpack/runtime/make namespace object 279 bytes {1}
+    [11] webpack/runtime/ensure chunk 305 bytes {1}
+    [12] webpack/runtime/get chunk javascript filename 91 bytes {1}
+    [13] webpack/runtime/publicPath 27 bytes {1}"
 `;
 
 exports[`StatsTestCases should print correct stats for runtime-chunk-issue-7382 1`] = `
@@ -2547,12 +2547,12 @@ Entrypoint entry = entry.js
      | ./concatenated.js 26 bytes [built]
  [8] external \\"external\\" 42 bytes {0} [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
-[10] runtime for compat get default export 328 bytes {0}
-[11] runtime for ensure chunk 305 bytes {0}
-[12] runtime for define property getter 281 bytes {0}
-[13] runtime for create fake namespace object 731 bytes {0}
-[14] runtime for jsonp chunk loading 2.93 KiB {0}
-[15] runtime for get chunk javascript filename 91 bytes {0}
+[10] webpack/runtime/compat get default export 328 bytes {0}
+[11] webpack/runtime/ensure chunk 305 bytes {0}
+[12] webpack/runtime/define property getter 281 bytes {0}
+[13] webpack/runtime/create fake namespace object 731 bytes {0}
+[14] webpack/runtime/jsonp chunk loading 2.93 KiB {0}
+[15] webpack/runtime/get chunk javascript filename 91 bytes {0}
     + 3 hidden modules"
 `;
 
@@ -2575,10 +2575,10 @@ Child
      [8] ./common_lazy_shared.js 25 bytes {3} {4} {5} [built]
      [9] ./lazy_shared.js 31 bytes {5} [built]
     [10] ./lazy_second.js 55 bytes {4} [built]
-    [12] runtime for ensure chunk 305 bytes {0}
-    [14] runtime for get chunk javascript filename 125 bytes {0}
-    [17] runtime for ensure chunk 305 bytes {2}
-    [19] runtime for get chunk javascript filename 126 bytes {2}
+    [12] webpack/runtime/ensure chunk 305 bytes {0}
+    [14] webpack/runtime/get chunk javascript filename 125 bytes {0}
+    [17] webpack/runtime/ensure chunk 305 bytes {2}
+    [19] webpack/runtime/get chunk javascript filename 126 bytes {2}
         + 6 hidden modules
 Child
     Hash: d35a55cccc7fa3b34f79
@@ -2608,12 +2608,12 @@ Child
      [8] ./lazy_second.js 55 bytes {4} [built]
          ModuleConcatenation bailout: Cannot concat with ./common_lazy.js (<- Module is referenced from different chunks by these modules: ./lazy_first.js, ./lazy_second.js)
          ModuleConcatenation bailout: Cannot concat with ./common_lazy_shared.js (<- Module is referenced from different chunks by these modules: ./lazy_first.js, ./lazy_second.js, ./lazy_shared.js)
-    [10] runtime for define property getter 281 bytes {0}
-    [11] runtime for compat get default export 328 bytes {0}
-    [12] runtime for ensure chunk 305 bytes {0}
-    [14] runtime for get chunk javascript filename 125 bytes {0}
-    [17] runtime for define property getter 281 bytes {2}
-    [18] runtime for ensure chunk 305 bytes {2}
+    [10] webpack/runtime/define property getter 281 bytes {0}
+    [11] webpack/runtime/compat get default export 328 bytes {0}
+    [12] webpack/runtime/ensure chunk 305 bytes {0}
+    [14] webpack/runtime/get chunk javascript filename 125 bytes {0}
+    [17] webpack/runtime/define property getter 281 bytes {2}
+    [18] webpack/runtime/ensure chunk 305 bytes {2}
         + 7 hidden modules"
 `;
 
@@ -2646,19 +2646,19 @@ Entrypoint main = main.js
      harmony import specifier ./utils [1] ./components/src/CompAB/CompA.js 5:5-12
  [3] ./foo.js 101 bytes {1} [built]
      import() ./foo [0] ./main.js + 1 modules 6:0-15
- [4] runtime for make namespace object 279 bytes {0}
+ [4] webpack/runtime/make namespace object 279 bytes {0}
      [no exports used]
- [5] runtime for define property getter 281 bytes {0}
+ [5] webpack/runtime/define property getter 281 bytes {0}
      [no exports used]
- [6] runtime for compat get default export 328 bytes {0}
+ [6] webpack/runtime/compat get default export 328 bytes {0}
      [no exports used]
- [7] runtime for ensure chunk 305 bytes {0}
+ [7] webpack/runtime/ensure chunk 305 bytes {0}
      [no exports used]
- [8] runtime for jsonp chunk loading 2.92 KiB {0}
+ [8] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
      [no exports used]
- [9] runtime for get chunk javascript filename 91 bytes {0}
+ [9] webpack/runtime/get chunk javascript filename 91 bytes {0}
      [no exports used]
-[10] runtime for publicPath 27 bytes {0}
+[10] webpack/runtime/publicPath 27 bytes {0}
      [no exports used]
 ./components/src/index.js 84 bytes [orphan] [built]
      [module unused]
@@ -2698,9 +2698,9 @@ Entrypoint main = main.js
     |     [only some exports used: z]
     |     harmony import specifier pmodule  ./index.js 3:17-18 (skipped side-effect-free modules)
     | ./index.js 55 bytes [built]
-[1] runtime for make namespace object 279 bytes {0}
+[1] webpack/runtime/make namespace object 279 bytes {0}
     [no exports used]
-[2] runtime for define property getter 281 bytes {0}
+[2] webpack/runtime/define property getter 281 bytes {0}
     [no exports used]
 ./node_modules/pmodule/a.js 60 bytes [orphan] [built]
     [module unused]
@@ -2745,13 +2745,13 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
     chunk    {0} default/main.js (main) 4.55 KiB >{1}< >{3}< >{6}< >{7}< >{8}< >{9}< >{10}< >{11}< [entry] [rendered]
         > ./ main
       [0] ./index.js 147 bytes {0} [built]
-     [10] runtime for ensure chunk 305 bytes {0}
-     [11] runtime for make namespace object 279 bytes {0}
-     [12] runtime for define property getter 281 bytes {0}
-     [13] runtime for compat get default export 328 bytes {0}
-     [14] runtime for jsonp chunk loading 2.92 KiB {0}
-     [15] runtime for get chunk javascript filename 307 bytes {0}
-     [16] runtime for publicPath 27 bytes {0}
+     [10] webpack/runtime/ensure chunk 305 bytes {0}
+     [11] webpack/runtime/make namespace object 279 bytes {0}
+     [12] webpack/runtime/define property getter 281 bytes {0}
+     [13] webpack/runtime/compat get default export 328 bytes {0}
+     [14] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [15] webpack/runtime/get chunk javascript filename 307 bytes {0}
+     [16] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} default/async-a.js (async-a) 156 bytes <{0}> ={3}= ={6}= ={7}= >{9}< >{12}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [1] ./a.js + 1 modules 156 bytes {1} {2} [built]
@@ -2765,13 +2765,13 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
       [2] ./d.js 20 bytes {2} {3} {4} {5} [built]
       [3] ./node_modules/x.js 20 bytes {2} {4} {5} {6} [built]
       [4] ./node_modules/y.js 20 bytes {2} {4} {7} [built]
-     [17] runtime for make namespace object 279 bytes {2}
-     [18] runtime for define property getter 281 bytes {2}
-     [19] runtime for compat get default export 328 bytes {2}
-     [20] runtime for ensure chunk 305 bytes {2}
-     [21] runtime for jsonp chunk loading 2.95 KiB {2}
-     [22] runtime for get chunk javascript filename 143 bytes {2}
-     [23] runtime for publicPath 27 bytes {2}
+     [17] webpack/runtime/make namespace object 279 bytes {2}
+     [18] webpack/runtime/define property getter 281 bytes {2}
+     [19] webpack/runtime/compat get default export 328 bytes {2}
+     [20] webpack/runtime/ensure chunk 305 bytes {2}
+     [21] webpack/runtime/jsonp chunk loading 2.95 KiB {2}
+     [22] webpack/runtime/get chunk javascript filename 143 bytes {2}
+     [23] webpack/runtime/publicPath 27 bytes {2}
     chunk    {3} default/async-a~async-b~async-c.js (async-a~async-b~async-c) 20 bytes <{0}> ={1}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= >{9}< >{12}< [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c)
         > ./a [0] ./index.js 1:0-47
         > ./b [0] ./index.js 2:0-47
@@ -2784,7 +2784,7 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
       [4] ./node_modules/y.js 20 bytes {2} {4} {7} [built]
       [5] ./b.js 72 bytes {4} {8} [built]
       [6] ./f.js 20 bytes {4} {5} {9} [built]
-     [24] runtime for make namespace object 279 bytes {4}
+     [24] webpack/runtime/make namespace object 279 bytes {4}
     chunk    {5} default/c.js (c) 431 bytes [entry] [rendered]
         > ./c c
       [2] ./d.js 20 bytes {2} {3} {4} {5} [built]
@@ -2792,7 +2792,7 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
       [6] ./f.js 20 bytes {4} {5} {9} [built]
       [7] ./c.js 72 bytes {5} {10} [built]
       [8] ./node_modules/z.js 20 bytes {5} {11} [built]
-     [25] runtime for make namespace object 279 bytes {5}
+     [25] webpack/runtime/make namespace object 279 bytes {5}
     chunk    {6} default/vendors~async-a~async-b~async-c.js (vendors~async-a~async-b~async-c) 20 bytes <{0}> ={1}= ={3}= ={7}= ={8}= ={9}= ={10}= ={11}= >{9}< >{12}< [rendered] split chunk (cache group: defaultVendors) (name: vendors~async-a~async-b~async-c)
         > ./a [0] ./index.js 1:0-47
         > ./b [0] ./index.js 2:0-47
@@ -2827,25 +2827,25 @@ Child all-chunks:
     chunk    {0} default/main.js (main) 4.57 KiB >{2}< >{3}< >{4}< >{5}< >{6}< >{8}< >{10}< >{11}< [entry] [rendered]
         > ./ main
       [0] ./index.js 147 bytes {0} [built]
-     [10] runtime for ensure chunk 305 bytes {0}
-     [11] runtime for make namespace object 279 bytes {0}
-     [12] runtime for define property getter 281 bytes {0}
-     [13] runtime for compat get default export 328 bytes {0}
-     [14] runtime for jsonp chunk loading 2.92 KiB {0}
-     [15] runtime for get chunk javascript filename 325 bytes {0}
-     [16] runtime for publicPath 27 bytes {0}
+     [10] webpack/runtime/ensure chunk 305 bytes {0}
+     [11] webpack/runtime/make namespace object 279 bytes {0}
+     [12] webpack/runtime/define property getter 281 bytes {0}
+     [13] webpack/runtime/compat get default export 328 bytes {0}
+     [14] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [15] webpack/runtime/get chunk javascript filename 325 bytes {0}
+     [16] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} default/a.js (a) 5.36 KiB ={3}= ={4}= ={5}= >{8}< >{12}< [entry] [rendered]
         > ./a a
       [1] ./a.js + 1 modules 156 bytes {1} {2} [built]
           | ./e.js 20 bytes [built]
           | ./a.js 121 bytes [built]
-     [17] runtime for make namespace object 279 bytes {1}
-     [18] runtime for define property getter 281 bytes {1}
-     [19] runtime for compat get default export 328 bytes {1}
-     [20] runtime for ensure chunk 305 bytes {1}
-     [21] runtime for jsonp chunk loading 3.87 KiB {1}
-     [22] runtime for get chunk javascript filename 143 bytes {1}
-     [23] runtime for publicPath 27 bytes {1}
+     [17] webpack/runtime/make namespace object 279 bytes {1}
+     [18] webpack/runtime/define property getter 281 bytes {1}
+     [19] webpack/runtime/compat get default export 328 bytes {1}
+     [20] webpack/runtime/ensure chunk 305 bytes {1}
+     [21] webpack/runtime/jsonp chunk loading 3.87 KiB {1}
+     [22] webpack/runtime/get chunk javascript filename 143 bytes {1}
+     [23] webpack/runtime/publicPath 27 bytes {1}
     chunk    {2} default/async-a.js (async-a) 156 bytes <{0}> ={3}= ={4}= ={5}= >{8}< >{12}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [1] ./a.js + 1 modules 156 bytes {1} {2} [built]
@@ -2880,8 +2880,8 @@ Child all-chunks:
         > ./b b
       [5] ./b.js 72 bytes {6} {7} [built]
       [6] ./f.js 20 bytes {7} {8} {9} [built]
-     [24] runtime for make namespace object 279 bytes {7}
-     [25] runtime for jsonp chunk loading 2.16 KiB {7}
+     [24] webpack/runtime/make namespace object 279 bytes {7}
+     [25] webpack/runtime/jsonp chunk loading 2.16 KiB {7}
     chunk    {8} default/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{2}> <{3}> <{4}> <{5}> ={3}= ={4}= ={5}= ={6}= ={10}= ={11}= ={12}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
         > ./b [0] ./index.js 2:0-47
         > ./c [0] ./index.js 3:0-47
@@ -2891,8 +2891,8 @@ Child all-chunks:
         > ./c c
       [6] ./f.js 20 bytes {7} {8} {9} [built]
       [7] ./c.js 72 bytes {9} {10} [built]
-     [26] runtime for make namespace object 279 bytes {9}
-     [27] runtime for jsonp chunk loading 2.16 KiB {9}
+     [26] webpack/runtime/make namespace object 279 bytes {9}
+     [27] webpack/runtime/jsonp chunk loading 2.16 KiB {9}
     chunk   {10} default/async-c.js (async-c) 72 bytes <{0}> ={3}= ={4}= ={8}= ={11}= [rendered]
         > ./c [0] ./index.js 3:0-47
      [7] ./c.js 72 bytes {9} {10} [built]
@@ -2911,13 +2911,13 @@ Child manual:
     chunk    {0} default/main.js (main) 4.42 KiB >{1}< >{3}< >{4}< >{6}< [entry] [rendered]
         > ./ main
       [0] ./index.js 147 bytes {0} [built]
-     [10] runtime for ensure chunk 305 bytes {0}
-     [11] runtime for make namespace object 279 bytes {0}
-     [12] runtime for define property getter 281 bytes {0}
-     [13] runtime for compat get default export 328 bytes {0}
-     [14] runtime for jsonp chunk loading 2.92 KiB {0}
-     [15] runtime for get chunk javascript filename 168 bytes {0}
-     [16] runtime for publicPath 27 bytes {0}
+     [10] webpack/runtime/ensure chunk 305 bytes {0}
+     [11] webpack/runtime/make namespace object 279 bytes {0}
+     [12] webpack/runtime/define property getter 281 bytes {0}
+     [13] webpack/runtime/compat get default export 328 bytes {0}
+     [14] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [15] webpack/runtime/get chunk javascript filename 168 bytes {0}
+     [16] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} default/vendors.js (vendors) 60 bytes <{0}> ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./a [0] ./index.js 1:0-47
         > ./b [0] ./index.js 2:0-47
@@ -2946,13 +2946,13 @@ Child manual:
           | ./e.js 20 bytes [built]
           | ./a.js 121 bytes [built]
       [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
-     [17] runtime for make namespace object 279 bytes {2}
-     [18] runtime for define property getter 281 bytes {2}
-     [19] runtime for compat get default export 328 bytes {2}
-     [20] runtime for ensure chunk 305 bytes {2}
-     [21] runtime for jsonp chunk loading 3.89 KiB {2}
-     [22] runtime for get chunk javascript filename 112 bytes {2}
-     [23] runtime for publicPath 27 bytes {2}
+     [17] webpack/runtime/make namespace object 279 bytes {2}
+     [18] webpack/runtime/define property getter 281 bytes {2}
+     [19] webpack/runtime/compat get default export 328 bytes {2}
+     [20] webpack/runtime/ensure chunk 305 bytes {2}
+     [21] webpack/runtime/jsonp chunk loading 3.89 KiB {2}
+     [22] webpack/runtime/get chunk javascript filename 112 bytes {2}
+     [23] webpack/runtime/publicPath 27 bytes {2}
     chunk    {3} default/async-a.js (async-a) 176 bytes <{0}> ={1}= >{8}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [4] ./a.js + 1 modules 156 bytes {2} {3} [built]
@@ -2972,8 +2972,8 @@ Child manual:
       [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
       [6] ./b.js 72 bytes {4} {5} [built]
       [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
-     [24] runtime for make namespace object 279 bytes {5}
-     [25] runtime for jsonp chunk loading 2.17 KiB {5}
+     [24] webpack/runtime/make namespace object 279 bytes {5}
+     [25] webpack/runtime/jsonp chunk loading 2.17 KiB {5}
     chunk    {6} default/async-c.js (async-c) 112 bytes <{0}> ={1}= [rendered]
         > ./c [0] ./index.js 3:0-47
      [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
@@ -2987,8 +2987,8 @@ Child manual:
       [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
       [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
       [8] ./c.js 72 bytes {6} {7} [built]
-     [26] runtime for make namespace object 279 bytes {7}
-     [27] runtime for jsonp chunk loading 2.17 KiB {7}
+     [26] webpack/runtime/make namespace object 279 bytes {7}
+     [27] webpack/runtime/jsonp chunk loading 2.17 KiB {7}
     chunk    {8} default/async-g.js (async-g) 54 bytes <{1}> <{2}> <{3}> [rendered]
         > ./g [] 6:0-47
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
@@ -3000,31 +3000,31 @@ Child name-too-long:
     Entrypoint cccccccccccccccccccccccccccccc = vendors~aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccc~50ebc41f.js vendors~async-c~cccccccccccccccccccccccccccccc.js aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa~async-a~async-b~async-c~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccc~18066793.js async-b~async-c~async-g~bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb~cccccccccccccccccccccccccccccc.js async-c.js cccccccccccccccccccccccccccccc.js
     chunk    {0} aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.js (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa) 5.25 KiB ={4}= ={5}= ={6}= ={7}= >{9}< >{12}< [entry] [rendered]
         > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-     [17] runtime for make namespace object 279 bytes {0}
-     [18] runtime for define property getter 281 bytes {0}
-     [19] runtime for compat get default export 328 bytes {0}
-     [20] runtime for ensure chunk 305 bytes {0}
-     [21] runtime for jsonp chunk loading 3.87 KiB {0}
-     [22] runtime for get chunk javascript filename 197 bytes {0}
-     [23] runtime for publicPath 27 bytes {0}
+     [17] webpack/runtime/make namespace object 279 bytes {0}
+     [18] webpack/runtime/define property getter 281 bytes {0}
+     [19] webpack/runtime/compat get default export 328 bytes {0}
+     [20] webpack/runtime/ensure chunk 305 bytes {0}
+     [21] webpack/runtime/jsonp chunk loading 3.87 KiB {0}
+     [22] webpack/runtime/get chunk javascript filename 197 bytes {0}
+     [23] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb.js (bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb) 2.42 KiB ={5}= ={6}= ={7}= ={8}= ={9}= [entry] [rendered]
         > ./b bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
-     [24] runtime for make namespace object 279 bytes {1}
-     [25] runtime for jsonp chunk loading 2.15 KiB {1}
+     [24] webpack/runtime/make namespace object 279 bytes {1}
+     [25] webpack/runtime/jsonp chunk loading 2.15 KiB {1}
     chunk    {2} cccccccccccccccccccccccccccccc.js (cccccccccccccccccccccccccccccc) 2.42 KiB ={5}= ={6}= ={9}= ={10}= ={11}= [entry] [rendered]
         > ./c cccccccccccccccccccccccccccccc
-     [26] runtime for make namespace object 279 bytes {2}
-     [27] runtime for jsonp chunk loading 2.15 KiB {2}
+     [26] webpack/runtime/make namespace object 279 bytes {2}
+     [27] webpack/runtime/jsonp chunk loading 2.15 KiB {2}
     chunk    {3} main.js (main) 4.86 KiB >{4}< >{5}< >{6}< >{7}< >{8}< >{9}< >{10}< >{11}< [entry] [rendered]
         > ./ main
       [0] ./index.js 147 bytes {3} [built]
-     [10] runtime for ensure chunk 305 bytes {3}
-     [11] runtime for make namespace object 279 bytes {3}
-     [12] runtime for define property getter 281 bytes {3}
-     [13] runtime for compat get default export 328 bytes {3}
-     [14] runtime for jsonp chunk loading 2.92 KiB {3}
-     [15] runtime for get chunk javascript filename 618 bytes {3}
-     [16] runtime for publicPath 27 bytes {3}
+     [10] webpack/runtime/ensure chunk 305 bytes {3}
+     [11] webpack/runtime/make namespace object 279 bytes {3}
+     [12] webpack/runtime/define property getter 281 bytes {3}
+     [13] webpack/runtime/compat get default export 328 bytes {3}
+     [14] webpack/runtime/jsonp chunk loading 2.92 KiB {3}
+     [15] webpack/runtime/get chunk javascript filename 618 bytes {3}
+     [16] webpack/runtime/publicPath 27 bytes {3}
     chunk    {4} async-a.js (async-a) 156 bytes <{3}> ={0}= ={5}= ={6}= ={7}= >{9}< >{12}< [initial] [rendered] reused as split chunk (cache group: default)
         > ./a [0] ./index.js 1:0-47
         > ./a aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -3083,13 +3083,13 @@ Child custom-chunks-filter:
     chunk    {0} default/main.js (main) 4.57 KiB >{1}< >{3}< >{4}< >{5}< >{6}< >{8}< >{10}< >{11}< [entry] [rendered]
         > ./ main
       [0] ./index.js 147 bytes {0} [built]
-     [10] runtime for ensure chunk 305 bytes {0}
-     [11] runtime for make namespace object 279 bytes {0}
-     [12] runtime for define property getter 281 bytes {0}
-     [13] runtime for compat get default export 328 bytes {0}
-     [14] runtime for jsonp chunk loading 2.92 KiB {0}
-     [15] runtime for get chunk javascript filename 319 bytes {0}
-     [16] runtime for publicPath 27 bytes {0}
+     [10] webpack/runtime/ensure chunk 305 bytes {0}
+     [11] webpack/runtime/make namespace object 279 bytes {0}
+     [12] webpack/runtime/define property getter 281 bytes {0}
+     [13] webpack/runtime/compat get default export 328 bytes {0}
+     [14] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [15] webpack/runtime/get chunk javascript filename 319 bytes {0}
+     [16] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} default/async-a.js (async-a) 156 bytes <{0}> ={3}= ={4}= ={5}= >{8}< >{12}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [1] ./a.js + 1 modules 156 bytes {1} {2} [built]
@@ -3103,13 +3103,13 @@ Child custom-chunks-filter:
       [2] ./d.js 20 bytes {2} {3} [built]
       [3] ./node_modules/x.js 20 bytes {2} {4} [built]
       [4] ./node_modules/y.js 20 bytes {2} {5} [built]
-     [17] runtime for make namespace object 279 bytes {2}
-     [18] runtime for define property getter 281 bytes {2}
-     [19] runtime for compat get default export 328 bytes {2}
-     [20] runtime for ensure chunk 305 bytes {2}
-     [21] runtime for jsonp chunk loading 2.95 KiB {2}
-     [22] runtime for get chunk javascript filename 143 bytes {2}
-     [23] runtime for publicPath 27 bytes {2}
+     [17] webpack/runtime/make namespace object 279 bytes {2}
+     [18] webpack/runtime/define property getter 281 bytes {2}
+     [19] webpack/runtime/compat get default export 328 bytes {2}
+     [20] webpack/runtime/ensure chunk 305 bytes {2}
+     [21] webpack/runtime/jsonp chunk loading 2.95 KiB {2}
+     [22] webpack/runtime/get chunk javascript filename 143 bytes {2}
+     [23] webpack/runtime/publicPath 27 bytes {2}
     chunk    {3} default/async-a~async-b~async-c~b~c.js (async-a~async-b~async-c~b~c) 20 bytes <{0}> ={1}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= >{8}< >{12}< [initial] [rendered] split chunk (cache group: default) (name: async-a~async-b~async-c~b~c)
         > ./a [0] ./index.js 1:0-47
         > ./b [0] ./index.js 2:0-47
@@ -3136,8 +3136,8 @@ Child custom-chunks-filter:
         > ./b b
       [5] ./b.js 72 bytes {6} {7} [built]
       [6] ./f.js 20 bytes {7} {8} {9} [built]
-     [24] runtime for make namespace object 279 bytes {7}
-     [25] runtime for jsonp chunk loading 2.16 KiB {7}
+     [24] webpack/runtime/make namespace object 279 bytes {7}
+     [25] webpack/runtime/jsonp chunk loading 2.16 KiB {7}
     chunk    {8} default/async-b~async-c~async-g.js (async-b~async-c~async-g) 20 bytes <{0}> <{1}> <{2}> <{3}> <{4}> <{5}> ={3}= ={4}= ={5}= ={6}= ={10}= ={11}= ={12}= [rendered] split chunk (cache group: default) (name: async-b~async-c~async-g)
         > ./b [0] ./index.js 2:0-47
         > ./c [0] ./index.js 3:0-47
@@ -3147,8 +3147,8 @@ Child custom-chunks-filter:
         > ./c c
       [6] ./f.js 20 bytes {7} {8} {9} [built]
       [7] ./c.js 72 bytes {9} {10} [built]
-     [26] runtime for make namespace object 279 bytes {9}
-     [27] runtime for jsonp chunk loading 2.16 KiB {9}
+     [26] webpack/runtime/make namespace object 279 bytes {9}
+     [27] webpack/runtime/jsonp chunk loading 2.16 KiB {9}
     chunk   {10} default/async-c.js (async-c) 72 bytes <{0}> ={3}= ={4}= ={8}= ={11}= [rendered]
         > ./c [0] ./index.js 3:0-47
      [7] ./c.js 72 bytes {9} {10} [built]
@@ -3167,13 +3167,13 @@ Child custom-chunks-filter-in-cache-groups:
     chunk    {0} default/main.js (main) 4.42 KiB >{1}< >{3}< >{4}< >{6}< [entry] [rendered]
         > ./ main
       [0] ./index.js 147 bytes {0} [built]
-     [10] runtime for ensure chunk 305 bytes {0}
-     [11] runtime for make namespace object 279 bytes {0}
-     [12] runtime for define property getter 281 bytes {0}
-     [13] runtime for compat get default export 328 bytes {0}
-     [14] runtime for jsonp chunk loading 2.92 KiB {0}
-     [15] runtime for get chunk javascript filename 168 bytes {0}
-     [16] runtime for publicPath 27 bytes {0}
+     [10] webpack/runtime/ensure chunk 305 bytes {0}
+     [11] webpack/runtime/make namespace object 279 bytes {0}
+     [12] webpack/runtime/define property getter 281 bytes {0}
+     [13] webpack/runtime/compat get default export 328 bytes {0}
+     [14] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+     [15] webpack/runtime/get chunk javascript filename 168 bytes {0}
+     [16] webpack/runtime/publicPath 27 bytes {0}
     chunk    {1} default/vendors.js (vendors) 60 bytes <{0}> ={3}= ={4}= ={5}= ={6}= ={7}= >{8}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
         > ./a [0] ./index.js 1:0-47
         > ./b [0] ./index.js 2:0-47
@@ -3201,13 +3201,13 @@ Child custom-chunks-filter-in-cache-groups:
           | ./e.js 20 bytes [built]
           | ./a.js 121 bytes [built]
       [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
-     [17] runtime for make namespace object 279 bytes {2}
-     [18] runtime for define property getter 281 bytes {2}
-     [19] runtime for compat get default export 328 bytes {2}
-     [20] runtime for ensure chunk 305 bytes {2}
-     [21] runtime for jsonp chunk loading 2.93 KiB {2}
-     [22] runtime for get chunk javascript filename 112 bytes {2}
-     [23] runtime for publicPath 27 bytes {2}
+     [17] webpack/runtime/make namespace object 279 bytes {2}
+     [18] webpack/runtime/define property getter 281 bytes {2}
+     [19] webpack/runtime/compat get default export 328 bytes {2}
+     [20] webpack/runtime/ensure chunk 305 bytes {2}
+     [21] webpack/runtime/jsonp chunk loading 2.93 KiB {2}
+     [22] webpack/runtime/get chunk javascript filename 112 bytes {2}
+     [23] webpack/runtime/publicPath 27 bytes {2}
     chunk    {3} default/async-a.js (async-a) 176 bytes <{0}> ={1}= >{8}< [rendered]
         > ./a [0] ./index.js 1:0-47
      [4] ./a.js + 1 modules 156 bytes {2} {3} [built]
@@ -3227,8 +3227,8 @@ Child custom-chunks-filter-in-cache-groups:
       [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
       [6] ./b.js 72 bytes {4} {5} [built]
       [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
-     [24] runtime for make namespace object 279 bytes {5}
-     [25] runtime for jsonp chunk loading 2.17 KiB {5}
+     [24] webpack/runtime/make namespace object 279 bytes {5}
+     [25] webpack/runtime/jsonp chunk loading 2.17 KiB {5}
     chunk    {6} default/async-c.js (async-c) 112 bytes <{0}> ={1}= [rendered]
         > ./c [0] ./index.js 3:0-47
      [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
@@ -3242,8 +3242,8 @@ Child custom-chunks-filter-in-cache-groups:
       [5] ./d.js 20 bytes {2} {3} {4} {5} {6} {7} [built]
       [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
       [8] ./c.js 72 bytes {6} {7} [built]
-     [26] runtime for make namespace object 279 bytes {7}
-     [27] runtime for jsonp chunk loading 2.17 KiB {7}
+     [26] webpack/runtime/make namespace object 279 bytes {7}
+     [27] webpack/runtime/jsonp chunk loading 2.17 KiB {7}
     chunk    {8} default/async-g.js (async-g) 54 bytes <{1}> <{2}> <{3}> [rendered]
         > ./g [] 6:0-47
      [7] ./f.js 20 bytes {4} {5} {6} {7} {8} [built]
@@ -3255,13 +3255,13 @@ exports[`StatsTestCases should print correct stats for split-chunks-automatic-na
 chunk    {0} main.js (main) 4.5 KiB >{1}< >{2}< >{3}< >{4}< >{5}< >{6}< >{7}< [entry] [rendered]
     > ./ main
   [0] ./index.js 147 bytes {0} [built]
-  [9] runtime for ensure chunk 305 bytes {0}
- [10] runtime for make namespace object 279 bytes {0}
- [11] runtime for define property getter 281 bytes {0}
- [12] runtime for compat get default export 328 bytes {0}
- [13] runtime for jsonp chunk loading 2.92 KiB {0}
- [14] runtime for get chunk javascript filename 248 bytes {0}
- [15] runtime for publicPath 27 bytes {0}
+  [9] webpack/runtime/ensure chunk 305 bytes {0}
+ [10] webpack/runtime/make namespace object 279 bytes {0}
+ [11] webpack/runtime/define property getter 281 bytes {0}
+ [12] webpack/runtime/compat get default export 328 bytes {0}
+ [13] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+ [14] webpack/runtime/get chunk javascript filename 248 bytes {0}
+ [15] webpack/runtime/publicPath 27 bytes {0}
 chunk    {1} async-a.js (async-a) 107 bytes <{0}> ={2}= ={3}= [rendered]
     > ./a [0] ./index.js 1:0-47
  [1] ./a.js + 1 modules 107 bytes {1} [built]
@@ -3297,13 +3297,13 @@ exports[`StatsTestCases should print correct stats for split-chunks-combinations
 chunk    {0} main.js (main) 4.65 KiB >{1}< >{2}< >{3}< >{4}< >{5}< >{6}< >{7}< >{8}< [entry] [rendered]
     > ./ main
   [0] ./index.js 343 bytes {0} [built]
- [10] runtime for ensure chunk 305 bytes {0}
- [11] runtime for make namespace object 279 bytes {0}
- [12] runtime for compat get default export 328 bytes {0}
- [13] runtime for define property getter 281 bytes {0}
- [14] runtime for jsonp chunk loading 2.92 KiB {0}
- [15] runtime for get chunk javascript filename 210 bytes {0}
- [16] runtime for publicPath 27 bytes {0}
+ [10] webpack/runtime/ensure chunk 305 bytes {0}
+ [11] webpack/runtime/make namespace object 279 bytes {0}
+ [12] webpack/runtime/compat get default export 328 bytes {0}
+ [13] webpack/runtime/define property getter 281 bytes {0}
+ [14] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+ [15] webpack/runtime/get chunk javascript filename 210 bytes {0}
+ [16] webpack/runtime/publicPath 27 bytes {0}
 chunk    {1} async-a.js (async-a) 48 bytes <{0}> ={2}= [rendered]
     > ./a [0] ./index.js 1:0-47
  [1] ./a.js 48 bytes {1} [built]
@@ -3342,11 +3342,11 @@ exports[`StatsTestCases should print correct stats for split-chunks-issue-6413 1
 chunk    {0} main.js (main) 3.85 KiB >{1}< >{2}< >{3}< >{4}< >{5}< [entry] [rendered]
     > ./ main
   [0] ./index.js 147 bytes {0} [built]
-  [6] runtime for ensure chunk 305 bytes {0}
-  [7] runtime for make namespace object 279 bytes {0}
-  [8] runtime for jsonp chunk loading 2.92 KiB {0}
-  [9] runtime for get chunk javascript filename 200 bytes {0}
- [10] runtime for publicPath 27 bytes {0}
+  [6] webpack/runtime/ensure chunk 305 bytes {0}
+  [7] webpack/runtime/make namespace object 279 bytes {0}
+  [8] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+  [9] webpack/runtime/get chunk javascript filename 200 bytes {0}
+ [10] webpack/runtime/publicPath 27 bytes {0}
 chunk    {1} async-a.js (async-a) 19 bytes <{0}> ={2}= ={3}= [rendered]
     > ./a [0] ./index.js 1:0-47
  [1] ./a.js 19 bytes {1} [built]
@@ -3373,11 +3373,11 @@ exports[`StatsTestCases should print correct stats for split-chunks-issue-6696 1
 chunk    {0} main.js (main) 4.68 KiB ={1}= >{2}< >{3}< [entry] [rendered]
     > ./ main
  [0] ./index.js 110 bytes {0} [built]
- [5] runtime for make namespace object 279 bytes {0}
- [6] runtime for ensure chunk 305 bytes {0}
- [7] runtime for jsonp chunk loading 3.86 KiB {0}
- [8] runtime for get chunk javascript filename 118 bytes {0}
- [9] runtime for publicPath 27 bytes {0}
+ [5] webpack/runtime/make namespace object 279 bytes {0}
+ [6] webpack/runtime/ensure chunk 305 bytes {0}
+ [7] webpack/runtime/jsonp chunk loading 3.86 KiB {0}
+ [8] webpack/runtime/get chunk javascript filename 118 bytes {0}
+ [9] webpack/runtime/publicPath 27 bytes {0}
 chunk    {1} vendors.js (vendors) 20 bytes ={0}= >{2}< >{3}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors)
     > ./ main
  [1] ./node_modules/y.js 20 bytes {1} [built]
@@ -3398,8 +3398,8 @@ Chunk Group c = vendors~a~c.js c.js
 chunk    {0} a.js (a) 2.42 KiB ={1}= [entry] [rendered]
     > ./a a
  [0] ./a.js 12 bytes {0} [built]
- [4] runtime for make namespace object 279 bytes {0}
- [5] runtime for jsonp chunk loading 2.14 KiB {0}
+ [4] webpack/runtime/make namespace object 279 bytes {0}
+ [5] webpack/runtime/jsonp chunk loading 2.14 KiB {0}
 chunk    {1} vendors~a~c.js (vendors~a~c) 20 bytes <{2}> ={0}= ={3}= [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~a~c)
     > ./c [2] ./b.js 1:0-41
     > ./a a
@@ -3407,11 +3407,11 @@ chunk    {1} vendors~a~c.js (vendors~a~c) 20 bytes <{2}> ={0}= ={3}= [initial] [
 chunk    {2} b.js (b) 3.67 KiB >{1}< >{3}< [entry] [rendered]
     > ./b b
   [2] ./b.js 43 bytes {2} [built]
-  [6] runtime for ensure chunk 305 bytes {2}
-  [7] runtime for make namespace object 279 bytes {2}
-  [8] runtime for jsonp chunk loading 2.92 KiB {2}
-  [9] runtime for get chunk javascript filename 116 bytes {2}
- [10] runtime for publicPath 27 bytes {2}
+  [6] webpack/runtime/ensure chunk 305 bytes {2}
+  [7] webpack/runtime/make namespace object 279 bytes {2}
+  [8] webpack/runtime/jsonp chunk loading 2.92 KiB {2}
+  [9] webpack/runtime/get chunk javascript filename 116 bytes {2}
+ [10] webpack/runtime/publicPath 27 bytes {2}
 chunk    {3} c.js (c) 12 bytes <{2}> ={1}= [rendered]
     > ./c [2] ./b.js 1:0-41
  [3] ./c.js 12 bytes {3} [built]"
@@ -3441,10 +3441,10 @@ exports[`StatsTestCases should print correct stats for split-chunks-max-size 1`]
     chunk    {3} prod-main~02369f19.js (main~02369f19) 4.6 KiB ={0}= ={1}= ={2}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= [entry] [rendered]
         > ./ main
      [12] ./very-big.js?1 1.57 KiB {3} [built]
-     [45] runtime for make namespace object 279 bytes {3}
-     [46] runtime for compat get default export 328 bytes {3}
-     [47] runtime for define property getter 281 bytes {3}
-     [48] runtime for jsonp chunk loading 2.16 KiB {3}
+     [45] webpack/runtime/make namespace object 279 bytes {3}
+     [46] webpack/runtime/compat get default export 328 bytes {3}
+     [47] webpack/runtime/define property getter 281 bytes {3}
+     [48] webpack/runtime/jsonp chunk loading 2.16 KiB {3}
     chunk    {4} prod-main~c6931360.js (main~c6931360) 1.57 KiB ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= [initial] [rendered]
         > ./ main
      [13] ./very-big.js?2 1.57 KiB {4} [built]
@@ -3560,10 +3560,10 @@ Child development:
     chunk {main~._very-big.js~62f7f644} dev-main~._very-big.js~62f7f644.js (main~._very-big.js~62f7f644) 4.98 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={vendors~main~._node_modules_b}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [entry] [rendered]
         > ./ main
      [./very-big.js?1] 1.57 KiB {main~._very-big.js~62f7f644} [built]
-     [runtime: compat get default export] runtime for compat get default export 328 bytes {main~._very-big.js~62f7f644}
-     [runtime: define property getter] runtime for define property getter 281 bytes {main~._very-big.js~62f7f644}
-     [runtime: jsonp chunk loading] runtime for jsonp chunk loading 2.54 KiB {main~._very-big.js~62f7f644}
-     [runtime: make namespace object] runtime for make namespace object 279 bytes {main~._very-big.js~62f7f644}
+     [webpack/runtime/compat get default export] 328 bytes {main~._very-big.js~62f7f644}
+     [webpack/runtime/define property getter] 281 bytes {main~._very-big.js~62f7f644}
+     [webpack/runtime/jsonp chunk loading] 2.54 KiB {main~._very-big.js~62f7f644}
+     [webpack/runtime/make namespace object] 279 bytes {main~._very-big.js~62f7f644}
     chunk {vendors~main~._node_modules_b} dev-vendors~main~._node_modules_b.js (vendors~main~._node_modules_b) 402 bytes ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_very-big.js~6bdbed7b}= [initial] [rendered] split chunk (cache group: defaultVendors) (name: vendors~main)
         > ./ main
      [./node_modules/big.js?1] 268 bytes {vendors~main~._node_modules_b} [built]
@@ -3625,11 +3625,11 @@ Child switched:
      [983] ./node_modules/small.js?2 67 bytes {4} [built]
     chunk    {5} switched-main~02369f19.js (main~02369f19) 4.59 KiB ={0}= ={1}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= [entry] [rendered]
         > ./ main
-     [349] runtime for make namespace object 279 bytes {5}
+      [25] webpack/runtime/jsonp chunk loading 2.15 KiB {5}
+     [154] webpack/runtime/make namespace object 279 bytes {5}
+     [273] webpack/runtime/define property getter 281 bytes {5}
      [358] ./very-big.js?1 1.57 KiB {5} [built]
-     [660] runtime for jsonp chunk loading 2.15 KiB {5}
-     [805] runtime for define property getter 281 bytes {5}
-     [996] runtime for compat get default export 328 bytes {5}
+     [760] webpack/runtime/compat get default export 328 bytes {5}
     chunk    {6} switched-main~c6931360.js (main~c6931360) 1.57 KiB ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={7}= ={8}= [initial] [rendered]
         > ./ main
      [772] ./very-big.js?2 1.57 KiB {6} [built]
@@ -3688,11 +3688,11 @@ Child zero-min:
      [991] ./small.js?2 67 bytes {5} [built]
     chunk    {6} zero-min-main~02369f19.js (main~02369f19) 4.6 KiB ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= [entry] [rendered]
         > ./ main
-     [349] runtime for make namespace object 279 bytes {6}
+      [25] webpack/runtime/jsonp chunk loading 2.17 KiB {6}
+     [154] webpack/runtime/make namespace object 279 bytes {6}
+     [273] webpack/runtime/define property getter 281 bytes {6}
      [358] ./very-big.js?1 1.57 KiB {6} [built]
-     [660] runtime for jsonp chunk loading 2.17 KiB {6}
-     [805] runtime for define property getter 281 bytes {6}
-     [996] runtime for compat get default export 328 bytes {6}
+     [760] webpack/runtime/compat get default export 328 bytes {6}
     chunk    {7} zero-min-main~6a2ae26b.js (main~6a2ae26b) 536 bytes ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={8}= ={9}= ={10}= ={11}= ={12}= [initial] [rendered]
         > ./ main
      [605] ./in-some-directory/small.js?3 67 bytes {7} [built]
@@ -3723,13 +3723,13 @@ exports[`StatsTestCases should print correct stats for split-chunks-prefer-bigge
 chunk    {0} default/main.js (main) 4.41 KiB >{1}< >{2}< >{3}< >{4}< [entry] [rendered]
     > ./ main
   [0] ./index.js 147 bytes {0} [built]
-  [7] runtime for ensure chunk 305 bytes {0}
-  [8] runtime for make namespace object 279 bytes {0}
-  [9] runtime for compat get default export 328 bytes {0}
- [10] runtime for define property getter 281 bytes {0}
- [11] runtime for jsonp chunk loading 2.92 KiB {0}
- [12] runtime for get chunk javascript filename 162 bytes {0}
- [13] runtime for publicPath 27 bytes {0}
+  [7] webpack/runtime/ensure chunk 305 bytes {0}
+  [8] webpack/runtime/make namespace object 279 bytes {0}
+  [9] webpack/runtime/compat get default export 328 bytes {0}
+ [10] webpack/runtime/define property getter 281 bytes {0}
+ [11] webpack/runtime/jsonp chunk loading 2.92 KiB {0}
+ [12] webpack/runtime/get chunk javascript filename 162 bytes {0}
+ [13] webpack/runtime/publicPath 27 bytes {0}
 chunk    {1} default/async-a.js (async-a) 134 bytes <{0}> [rendered]
     > ./a [0] ./index.js 1:0-47
  [1] ./a.js 48 bytes {1} [built]
@@ -3784,11 +3784,11 @@ Entrypoint main = bundle.js
 [10] ./require.include.js 36 bytes {0} [built]
      [exports: a, default]
      [no exports used]
-[11] runtime for make namespace object 279 bytes {0}
+[11] webpack/runtime/make namespace object 279 bytes {0}
      [no exports used]
-[12] runtime for define property getter 281 bytes {0}
+[12] webpack/runtime/define property getter 281 bytes {0}
      [no exports used]
-[13] runtime for compat get default export 328 bytes {0}
+[13] webpack/runtime/compat get default export 328 bytes {0}
      [no exports used]"
 `;
 
