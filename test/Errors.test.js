@@ -312,6 +312,64 @@ describe("Errors", () => {
 						rules: [
 							{
 								test: /entry-point\.js$/,
+								use: path.resolve(base, "./doesnt-exist-loader")
+							}
+						]
+					}
+				},
+				(errors, warnings) => {
+					expect(errors).toHaveLength(1);
+					expect(errors[0]).toMatch(/^Module not found/);
+				}
+			),
+			getErrorsPromise(
+				{
+					mode: "development",
+					entry: "./entry-point.js",
+					module: {
+						rules: [
+							{
+								test: /entry-point\.js$/,
+								use: path.resolve(base, "./return-undefined-loader")
+							}
+						]
+					}
+				},
+				(errors, warnings) => {
+					expect(errors).toHaveLength(1);
+					expect(errors[0].split("\n")[1]).toMatch(
+						/^Module build failed: Error: Final loader \(\.\/return-undefined-loader\.js\) didn't return a Buffer or String$/
+					);
+				}
+			),
+			getErrorsPromise(
+				{
+					mode: "development",
+					entry: "./entry-point.js",
+					module: {
+						rules: [
+							{
+								test: /entry-point\.js$/,
+								use: path.resolve(base, "./module-exports-object-loader")
+							}
+						]
+					}
+				},
+				(errors, warnings) => {
+					expect(errors).toHaveLength(1);
+					expect(errors[0].split("\n")[1]).toMatch(
+						/^Module '.*\/module-exports-object-loader\.js' is not a loader \(must have normal or pitch function\)$/
+					);
+				}
+			),
+			getErrorsPromise(
+				{
+					mode: "development",
+					entry: "./entry-point.js",
+					module: {
+						rules: [
+							{
+								test: /entry-point\.js$/,
 								use: path.resolve(base, "./irregular-error-loader")
 							}
 						]
