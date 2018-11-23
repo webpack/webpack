@@ -2976,7 +2976,72 @@ Child development:
      [./node_modules/small.js?2] 67 bytes {vendors~main~._node_modules_b} [built]
     chunk {vendors~main~._node_modules_very-big.js~6bdbed7b} dev-vendors~main~._node_modules_very-big.js~6bdbed7b.js (vendors~main~._node_modules_very-big.js~6bdbed7b) 1.57 KiB ={main~._big.js~1}= ={main~._in-some-directory_b}= ={main~._in-some-directory_very-big.js~8d76cf03}= ={main~._index.js~41f5a26e}= ={main~._inner-module_small.js~3}= ={main~._small.js~1}= ={main~._subfolder_big.js~b}= ={main~._subfolder_small.js~1}= ={main~._very-big.js~08cf55cf}= ={main~._very-big.js~4647fb9d}= ={main~._very-big.js~62f7f644}= ={vendors~main~._node_modules_b}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~main)
         > ./ main
-     [./node_modules/very-big.js?1] 1.57 KiB {vendors~main~._node_modules_very-big.js~6bdbed7b} [built]"
+     [./node_modules/very-big.js?1] 1.57 KiB {vendors~main~._node_modules_very-big.js~6bdbed7b} [built]
+Child switched:
+    Entrypoint main = switched-vendors~main~7274e1de.js switched-vendors~main~0feae4ad.js switched-main~2bc5b870.js switched-main~748942c6.js switched-main~17acad98.js switched-main~b2c7414a.js switched-main~d9f1562b.js switched-main~c6931360.js switched-main~cd7c5bfc.js switched-main~02369f19.js
+    chunk    {0} switched-main~02369f19.js (main~02369f19) 1.57 KiB ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [entry] [rendered]
+        > ./ main
+     [11] ./very-big.js?1 1.57 KiB {0} [built]
+    chunk    {1} switched-main~17acad98.js (main~17acad98) 1.57 KiB ={0}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
+        > ./ main
+     [39] ./in-some-directory/very-big.js?1 1.57 KiB {1} [built]
+    chunk    {2} switched-main~2bc5b870.js (main~2bc5b870) 1.05 KiB ={0}= ={1}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
+        > ./ main
+      [0] ./big.js?1 268 bytes {2} [built]
+      [1] ./big.js?2 268 bytes {2} [built]
+     [34] ./in-some-directory/big.js?1 268 bytes {2} [built]
+     [35] ./in-some-directory/small.js?1 67 bytes {2} [built]
+     [36] ./in-some-directory/small.js?2 67 bytes {2} [built]
+     [37] ./in-some-directory/small.js?3 67 bytes {2} [built]
+     [38] ./in-some-directory/small.js?4 67 bytes {2} [built]
+    chunk    {3} switched-main~748942c6.js (main~748942c6) 1.18 KiB ={0}= ={1}= ={2}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
+        > ./ main
+      [2] ./small.js?1 67 bytes {3} [built]
+      [3] ./small.js?2 67 bytes {3} [built]
+      [4] ./small.js?3 67 bytes {3} [built]
+      [5] ./small.js?4 67 bytes {3} [built]
+      [6] ./small.js?5 67 bytes {3} [built]
+      [7] ./small.js?6 67 bytes {3} [built]
+      [8] ./small.js?7 67 bytes {3} [built]
+      [9] ./small.js?8 67 bytes {3} [built]
+     [10] ./small.js?9 67 bytes {3} [built]
+     [25] ./inner-module/small.js?1 67 bytes {3} [built]
+     [26] ./inner-module/small.js?2 67 bytes {3} [built]
+     [27] ./inner-module/small.js?3 67 bytes {3} [built]
+     [28] ./inner-module/small.js?4 67 bytes {3} [built]
+     [29] ./inner-module/small.js?5 67 bytes {3} [built]
+     [30] ./inner-module/small.js?6 67 bytes {3} [built]
+         + 3 hidden modules
+    chunk    {4} switched-main~b2c7414a.js (main~b2c7414a) 1.19 KiB ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
+        > ./ main
+     [44] ./index.js 1.19 KiB {4} [built]
+    chunk    {5} switched-main~c6931360.js (main~c6931360) 1.57 KiB ={0}= ={1}= ={2}= ={3}= ={4}= ={6}= ={7}= ={8}= ={9}= [initial] [rendered]
+        > ./ main
+     [12] ./very-big.js?2 1.57 KiB {5} [built]
+    chunk    {6} switched-main~cd7c5bfc.js (main~cd7c5bfc) 1.57 KiB ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={7}= ={8}= ={9}= [initial] [rendered]
+        > ./ main
+     [13] ./very-big.js?3 1.57 KiB {6} [built]
+    chunk    {7} switched-main~d9f1562b.js (main~d9f1562b) 1.11 KiB ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={8}= ={9}= [initial] [rendered]
+        > ./ main
+     [14] ./subfolder/big.js?1 268 bytes {7} [built]
+     [15] ./subfolder/big.js?2 268 bytes {7} [built]
+     [16] ./subfolder/small.js?1 67 bytes {7} [built]
+     [17] ./subfolder/small.js?2 67 bytes {7} [built]
+     [18] ./subfolder/small.js?3 67 bytes {7} [built]
+     [19] ./subfolder/small.js?4 67 bytes {7} [built]
+     [20] ./subfolder/small.js?5 67 bytes {7} [built]
+     [21] ./subfolder/small.js?6 67 bytes {7} [built]
+     [22] ./subfolder/small.js?7 67 bytes {7} [built]
+     [23] ./subfolder/small.js?8 67 bytes {7} [built]
+     [24] ./subfolder/small.js?9 67 bytes {7} [built]
+    chunk    {8} switched-vendors~main~0feae4ad.js (vendors~main~0feae4ad) 1.57 KiB ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={9}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~main)
+        > ./ main
+     [43] ./node_modules/very-big.js?1 1.57 KiB {8} [built]
+    chunk    {9} switched-vendors~main~7274e1de.js (vendors~main~7274e1de) 402 bytes ={0}= ={1}= ={2}= ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= [initial] [rendered] split chunk (cache group: vendors) (name: vendors~main)
+        > ./ main
+     [40] ./node_modules/big.js?1 268 bytes {9} [built]
+     [41] ./node_modules/small.js?1 67 bytes {9} [built]
+     [42] ./node_modules/small.js?2 67 bytes {9} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-prefer-bigger-splits 1`] = `
