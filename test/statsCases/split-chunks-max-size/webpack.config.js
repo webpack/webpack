@@ -63,4 +63,22 @@ module.exports = [
 		},
 		stats
 	},
+	{
+		name: "zero-min",
+		mode: "production",
+		entry: {
+			main: "./"
+		},
+		output: {
+			filename: "zero-min-[name].js"
+		},
+		optimization: {
+			splitChunks: {
+				minSize: 0,
+				maxSize: 1000,
+				chunks: "all"
+			}
+		},
+		stats
+	},
 ];
