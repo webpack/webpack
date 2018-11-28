@@ -234,20 +234,19 @@ interface RuleSetConditionsAbsoluteRecursive
  * @todo Once this issue is resolved, remove these globals and add JSDoc onsite instead
  * https://github.com/Microsoft/TypeScript/issues/15626
  */
-declare const $hash$;
-declare const $requestTimeout$;
-declare const $createFakeNamespaceObject$;
+declare const $moduleCache$;
+declare let $getFullHash$;
+declare const $interceptModuleExecution$;
+declare const $hmrDownloadManifest$;
+declare let $hmrDownloadUpdateHandlers$;
+declare let $hmrModuleData$;
+declare const $options$;
+declare const $updateModuleFactories$;
+declare const $updateRuntimeModules$;
+declare const $moduleFactories$;
 declare const $onError$;
 declare const $publicPath$;
-declare const installedModules;
 declare const __webpack_require__;
-declare const hotDownloadManifest;
-declare const hotDownloadUpdateChunk;
-declare const hotDisposeChunk;
-declare const modules;
-declare const installedChunks;
-declare const hotAddUpdateChunk;
-declare const parentHotUpdateCallback;
 declare const $hotChunkFilename$;
 declare const $hotMainFilename$;
 declare const WebAssembly;

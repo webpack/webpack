@@ -44,8 +44,8 @@ it("should give modules the correct ids", function() {
 		"dll/e2.js",
 		"dll/f.jsx",
 		"dll/g.abc.js",
-		"runtime: compat get default export",
-		"runtime: define property getter",
-		"runtime: make namespace object",
+		"webpack/runtime/compat get default export",
+		"webpack/runtime/define property getter",
+		"webpack/runtime/make namespace object",
     ]);
 });
