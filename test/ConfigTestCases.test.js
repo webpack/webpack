@@ -172,7 +172,7 @@ describe("ConfigTestCases", () => {
 										}
 									};
 
-									function _require(currentDirectory, module) {
+									function _require(currentDirectory, options, module) {
 										if (Array.isArray(module) || /^\.\.?\//.test(module)) {
 											let fn;
 											let content;
@@ -194,7 +194,7 @@ describe("ConfigTestCases", () => {
 												options.target === "webworker"
 											) {
 												fn = vm.runInNewContext(
-													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest, window) {" +
+													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest, window, self) {" +
 														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 														content +
 														"\n})",
@@ -216,7 +216,7 @@ describe("ConfigTestCases", () => {
 											};
 											fn.call(
 												m.exports,
-												_require.bind(null, path.dirname(p)),
+												_require.bind(null, path.dirname(p), options),
 												m,
 												m.exports,
 												path.dirname(p),
@@ -226,6 +226,7 @@ describe("ConfigTestCases", () => {
 												_afterEach,
 												expect,
 												jest,
+												globalContext,
 												globalContext
 											);
 											return m.exports;
@@ -243,7 +244,7 @@ describe("ConfigTestCases", () => {
 										const bundlePath = testConfig.findBundle(i, optionsArr[i]);
 										if (bundlePath) {
 											filesCount++;
-											_require(outputDirectory, bundlePath);
+											_require(outputDirectory, optionsArr[i], bundlePath);
 										}
 									}
 									// give a free pass to compilation that generated an error

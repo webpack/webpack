@@ -17,6 +17,5 @@ it("should give modules the correct ids", function() {
 		"./index.js",
 		"dll-reference ../0-create-dll/dll.js",
 		"dll/index.js",
-		"webpack/runtime/make namespace object",
 	]);
 });
