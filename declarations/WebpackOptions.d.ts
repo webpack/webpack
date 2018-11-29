@@ -669,10 +669,6 @@ export interface ResolveOptions {
 	 */
 	cacheWithContext?: boolean;
 	/**
-	 * Enable concord resolving extras
-	 */
-	concord?: boolean;
-	/**
 	 * Filenames used to find a description file
 	 */
 	descriptionFiles?: ArrayOfStringValues;

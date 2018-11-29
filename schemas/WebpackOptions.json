@@ -1130,10 +1130,6 @@
           "description": "Include the context information in the cache identifier when caching",
           "type": "boolean"
         },
-        "concord": {
-          "description": "Enable concord resolving extras",
-          "type": "boolean"
-        },
         "descriptionFiles": {
           "description": "Filenames used to find a description file",
           "anyOf": [
