@@ -135,8 +135,7 @@ const describeCases = config => {
 										".web.js",
 										".js",
 										".json"
-									],
-									concord: true
+									]
 								},
 								resolveLoader: {
 									modules: [
