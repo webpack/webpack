@@ -231,12 +231,12 @@ const describeCases = config => {
 									done();
 								});
 							},
-							10000
+							20000
 						);
 
 						const { it: _it, getNumberOfTests } = createLazyTestEnv(
 							jasmine.getEnv(),
-							10000
+							20000
 						);
 					});
 				});
