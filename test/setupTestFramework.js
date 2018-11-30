@@ -99,4 +99,6 @@ if(process.env.DEBUG_INFO) {
 // It leaks an Error object on construction
 // so it leaks the whole stack trace
 require("wast-loader");
+process.removeAllListeners("uncaughtException");
+process.removeAllListeners("unhandledRejection");
 
