@@ -96,7 +96,7 @@ describe("HotModuleReplacementPlugin", () => {
 				});
 			});
 		});
-	}, 60000);
+	}, 120000);
 
 	it("should correct working when entry is Object and key is a number", done => {
 		const entryFile = path.join(
