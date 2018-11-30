@@ -1,5 +1,8 @@
 "use strict";
 
 module.exports = {
-	mode: "production"
+	mode: "production",
+	optimization: {
+		minimize: false
+	}
 };
