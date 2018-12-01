@@ -1,7 +1,6 @@
 var HotModuleReplacementPlugin = require("../../../../lib/HotModuleReplacementPlugin");
 module.exports = {
 	entry: {
-		vendor: ["./vendor"],
 		main: "./index"
 	},
 	target: "web",
@@ -10,8 +9,14 @@ module.exports = {
 	},
 	optimization: {
 		splitChunks: {
-			minSize: 1,
-			name: "vendor"
+			cacheGroups: {
+				vendor: {
+					chunks: "all",
+					name: "vendor",
+					test: /vendor/,
+					enforce: true
+				}
+			}
 		}
 	},
 	plugins: [new HotModuleReplacementPlugin()]

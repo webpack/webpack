@@ -16,6 +16,6 @@ it("should give modules the correct ids", function() {
 	expect(Object.keys(__webpack_modules__).filter(m => !m.startsWith("../.."))).toEqual([
 		"./index.js",
 		"dll-reference ../0-create-dll/dll.js",
-		"dll/index.js"
+		"dll/index.js",
 	]);
 });

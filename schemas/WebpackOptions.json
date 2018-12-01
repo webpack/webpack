@@ -1868,6 +1868,10 @@
           "description": "add information about the reasons why modules are included",
           "type": "boolean"
         },
+        "runtime": {
+          "description": "add information about runtime modules",
+          "type": "boolean"
+        },
         "source": {
           "description": "add the source code of modules",
           "type": "boolean"

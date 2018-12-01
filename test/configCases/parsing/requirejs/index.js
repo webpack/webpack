@@ -11,7 +11,7 @@ it("should have a require.version", function() {
 });
 it("should have a requirejs.onError function", function() {
 	function f(){}
-	expect(requirejs.onError).toBeTypeOf("function"); // has default handler
+	expect(requirejs.onError).toBeTypeOf("undefined"); // has no default handler
 	var org = requirejs.onError;
 	requirejs.onError = f;
 	expect(requirejs.onError).toBe(f);

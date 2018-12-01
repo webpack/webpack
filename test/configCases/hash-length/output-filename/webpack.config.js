@@ -170,7 +170,7 @@ module.exports = [
 		output: {
 			filename: "bundle14.[contenthash].js",
 			chunkFilename: "[id].bundle14.[contenthash].js",
-			globalObject: "this"
+			globalObject: "window"
 		},
 		target: "web",
 		amd: {
@@ -184,7 +184,7 @@ module.exports = [
 		output: {
 			filename: "bundle15.[contenthash:7].js",
 			chunkFilename: "[id].bundle15.[contenthash:7].js",
-			globalObject: "this"
+			globalObject: "window"
 		},
 		target: "web",
 		amd: {
@@ -198,7 +198,7 @@ module.exports = [
 		output: {
 			filename: "bundle16.[contenthash].js",
 			chunkFilename: "[id].bundle16.[contenthash].js",
-			globalObject: "this"
+			globalObject: "self"
 		},
 		target: "webworker",
 		amd: {
@@ -212,7 +212,7 @@ module.exports = [
 		output: {
 			filename: "bundle17.[contenthash:7].js",
 			chunkFilename: "[id].bundle17.[contenthash:7].js",
-			globalObject: "this"
+			globalObject: "self"
 		},
 		target: "webworker",
 		amd: {
