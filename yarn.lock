@@ -4327,10 +4327,9 @@ load-json-file@^1.0.0:
     pinkie-promise "^2.0.0"
     strip-bom "^2.0.0"
 
-loader-runner@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-2.3.0.tgz#f482aea82d543e07921700d5a46ef26fdac6b8a2"
-  integrity sha1-9IKuqC1UPgeSFwDVpG7yb9rGuKI=
+loader-runner@hulkish/loader-runner#prefer-callback-errors:
+  version "2.3.1"
+  resolved "https://codeload.github.com/hulkish/loader-runner/tar.gz/863fad3e4bdba1f23be06b0725947cd10ea9ea69"
 
 loader-utils@^1.0.0, loader-utils@^1.0.2, loader-utils@^1.1.0:
   version "1.1.0"
@@ -5600,20 +5599,20 @@ prettier@^1.14.3:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.3.tgz#90238dd4c0684b7edce5f83b0fb7328e48bd0895"
   integrity sha512-qZDVnCrnpsRJJq5nSsiHCE3BYMED2OtsI+cmzIzF1QIfqm5ALf8tEJcO27zV1gKNKRPdhjO0dNWnrzssDQ1tFg==
 
+pretty-format@24.0.0-alpha.1, pretty-format@^24.0.0-alpha.1:
+  version "24.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-24.0.0-alpha.1.tgz#38dc7af33801d644755235be1940fc1b1799e112"
+  integrity sha512-fpbQUw/B3MQASmXyh+hchSq7GKg8EgRoC3IE8imHxVassZ6BTDlvflNgLAeexEez4Jm1df+pEfOZeINNH/Z89g==
+  dependencies:
+    ansi-regex "^4.0.0"
+    ansi-styles "^3.2.0"
+
 pretty-format@^23.6.0:
   version "23.6.0"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-23.6.0.tgz#5eaac8eeb6b33b987b7fe6097ea6a8a146ab5760"
   integrity sha512-zf9NV1NSlDLDjycnwm6hpFATCGl/K1lt0R/GdkAK2O5LN/rwJoB+Mh93gGJjut4YbmecbfgLWVGSTCr0Ewvvbw==
   dependencies:
     ansi-regex "^3.0.0"
-    ansi-styles "^3.2.0"
-
-pretty-format@^24.0.0-alpha.1:
-  version "24.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-24.0.0-alpha.1.tgz#38dc7af33801d644755235be1940fc1b1799e112"
-  integrity sha512-fpbQUw/B3MQASmXyh+hchSq7GKg8EgRoC3IE8imHxVassZ6BTDlvflNgLAeexEez4Jm1df+pEfOZeINNH/Z89g==
-  dependencies:
-    ansi-regex "^4.0.0"
     ansi-styles "^3.2.0"
 
 private@^0.1.8:
