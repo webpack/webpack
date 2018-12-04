@@ -45,7 +45,7 @@ module.exports = {
 
 <!-- inlined minimized file "runtime~main.[chunkhash].js" -->
 <script>
-!function(e){function r(r){for(var n,a,i=r[0],c=r[1],s=r[2],l=0,p=[];l<i.length;l++)a=i[l],o[a]&&p.push(o[a][0]),o[a]=0;for(n in c)Object.prototype.hasOwnProperty.call(c,n)&&(e[n]=c[n]);for(f&&f(r);p.length;)p.shift()();return u.push.apply(u,s||[]),t()}function t(){for(var e,r=0;r<u.length;r++){for(var t=u[r],n=!0,i=1;i<t.length;i++){var c=t[i];0!==o[c]&&(n=!1)}n&&(u.splice(r--,1),e=a(a.s=t[0]))}return e}var n={},o={2:0},u=[];function a(r){if(n[r])return n[r].exports;var t=n[r]={i:r,l:!1,exports:{}};return e[r].call(t.exports,t,t.exports,a),t.l=!0,t.exports}a.e=function(e){var r=[],t=o[e];if(0!==t)if(t)r.push(t[2]);else{var n=new Promise(function(r,n){t=o[e]=[r,n]});r.push(t[2]=n);var u=document.getElementsByTagName("head")[0],i=document.createElement("script");i.charset="utf-8",i.timeout=120,a.nc&&i.setAttribute("nonce",a.nc),i.src=function(e){return a.p+""+({}[e]||e)+"."+{0:"32c7573c0acdba48768e",1:"92cf35457750f37b6a94"}[e]+".js"}(e);var c=setTimeout(function(){s({type:"timeout",target:i})},12e4);function s(r){i.onerror=i.onload=null,clearTimeout(c);var t=o[e];if(0!==t){if(t){var n=r&&("load"===r.type?"missing":r.type),u=r&&r.target&&r.target.src,a=new Error("Loading chunk "+e+" failed.\n("+n+": "+u+")");a.type=n,a.request=u,t[1](a)}o[e]=void 0}}i.onerror=i.onload=s,u.appendChild(i)}return Promise.all(r)},a.m=e,a.c=n,a.d=function(e,r,t){a.o(e,r)||Object.defineProperty(e,r,{configurable:!1,enumerable:!0,get:t})},a.r=function(e){Object.defineProperty(e,"__esModule",{value:!0})},a.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return a.d(r,"a",r),r},a.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},a.p="dist/",a.oe=function(e){throw console.error(e),e};var i=window.webpackJsonp=window.webpackJsonp||[],c=i.push.bind(i);i.push=r,i=i.slice();for(var s=0;s<i.length;s++)r(i[s]);var f=c;t()}([]);
+!function(e){function t(t){for(var n,i,a=t[0],c=t[1],f=t[2],p=0,s=[];p<a.length;p++)i=a[p],o[i]&&s.push(o[i][0]),o[i]=0;for(n in c)Object.prototype.hasOwnProperty.call(c,n)&&(e[n]=c[n]);for(l&&l(t);s.length;)s.shift()();return u.push.apply(u,f||[]),r()}function r(){for(var e,t=0;t<u.length;t++){for(var r=u[t],n=!0,a=1;a<r.length;a++){var c=r[a];0!==o[c]&&(n=!1)}n&&(u.splice(t--,1),e=i(i.s=r[0]))}return e}var n={},o={1:0},u=[];function i(t){if(n[t])return n[t].exports;var r=n[t]={i:t,l:!1,exports:{}};return e[t].call(r.exports,r,r.exports,i),r.l=!0,r.exports}i.e=function(e){var t=[],r=o[e];if(0!==r)if(r)t.push(r[2]);else{var n=new Promise(function(t,n){r=o[e]=[t,n]});t.push(r[2]=n);var u,a=document.getElementsByTagName("head")[0],c=document.createElement("script");c.charset="utf-8",c.timeout=120,i.nc&&c.setAttribute("nonce",i.nc),c.src=function(e){return i.p+""+({}[e]||e)+"."+{2:"c7e499aa48deb5cef706",3:"286312fd09c94cc60804"}[e]+".js"}(e),u=function(t){c.onerror=c.onload=null,clearTimeout(f);var r=o[e];if(0!==r){if(r){var n=t&&("load"===t.type?"missing":t.type),u=t&&t.target&&t.target.src,i=new Error("Loading chunk "+e+" failed.\n("+n+": "+u+")");i.type=n,i.request=u,r[1](i)}o[e]=void 0}};var f=setTimeout(function(){u({type:"timeout",target:c})},12e4);c.onerror=c.onload=u,a.appendChild(c)}return Promise.all(t)},i.m=e,i.c=n,i.d=function(e,t,r){i.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},i.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},i.t=function(e,t){if(1&t&&(e=i(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(i.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var n in e)i.d(r,n,function(t){return e[t]}.bind(null,n));return r},i.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return i.d(t,"a",t),t},i.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},i.p="dist/",i.oe=function(e){throw console.error(e),e};var a=window.webpackJsonp=window.webpackJsonp||[],c=a.push.bind(a);a.push=t,a=a.slice();for(var f=0;f<a.length;f++)t(a[f]);var l=c;r()}([]);
 </script>
 
 <script src="dist/main.[chunkhash].js"></script>
@@ -124,7 +124,7 @@ module.exports = {
 /******/
 /******/ 	// script path function
 /******/ 	function jsonpScriptSrc(chunkId) {
-/******/ 		return __webpack_require__.p + "" + ({}[chunkId]||chunkId) + "." + {"1":"fa6b57c885684798171a","2":"c1157f7aaa2fbe326eb0"}[chunkId] + ".js"
+/******/ 		return __webpack_require__.p + "" + ({}[chunkId]||chunkId) + "." + {"2":"d787c192dcb74a7cd3cd","3":"79135d1ea22a48797f04"}[chunkId] + ".js"
 /******/ 	}
 /******/
 /******/ 	// The require function
@@ -312,52 +312,52 @@ __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.t.bind(null, /
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.1
+Version: webpack 4.26.1
                                Asset       Size  Chunks             Chunk Names
-        main.f2c88652f3eee6e71beb.js  877 bytes       0  [emitted]  main
-           1.fa6b57c885684798171a.js  270 bytes       1  [emitted]  
-           2.c1157f7aaa2fbe326eb0.js  264 bytes       2  [emitted]  
-runtime~main.6c3e755a35f5caab0048.js   7.81 KiB       3  [emitted]  runtime~main
-Entrypoint main = runtime~main.6c3e755a35f5caab0048.js main.f2c88652f3eee6e71beb.js
-chunk    {0} main.f2c88652f3eee6e71beb.js (main) 55 bytes ={3}= >{1}< >{2}< [initial] [rendered]
+           2.d787c192dcb74a7cd3cd.js  269 bytes       2  [emitted]  
+           3.79135d1ea22a48797f04.js  263 bytes       3  [emitted]  
+        main.5333b550b320d27dcf57.js  485 bytes       1  [emitted]  main
+runtime~main.1b582313c6884974bebe.js   8.83 KiB       0  [emitted]  runtime~main
+Entrypoint main = runtime~main.1b582313c6884974bebe.js main.5333b550b320d27dcf57.js
+chunk    {0} runtime~main.1b582313c6884974bebe.js (runtime~main) 0 bytes ={1}= >{2}< >{3}< [entry] [rendered]
     > ./example main
-chunk    {1} main.[chunkhash].js (main) 55 bytes ={0}= >{2}< >{3}< [initial] [rendered]
+chunk    {1} main.5333b550b320d27dcf57.js (main) 55 bytes ={0}= >{2}< >{3}< [initial] [rendered]
     > ./example main
  [0] ./example.js 55 bytes {1} [built]
      single entry ./example  main
-chunk    {1} 1.fa6b57c885684798171a.js 29 bytes <{0}> <{3}> [rendered]
+chunk    {2} 2.d787c192dcb74a7cd3cd.js 28 bytes <{0}> <{1}> [rendered]
     > ./async1 [0] ./example.js 2:0-18
  [1] ./async1.js 28 bytes {2} [built]
      import() ./async1 [0] ./example.js 2:0-18
-chunk    {2} 2.c1157f7aaa2fbe326eb0.js 29 bytes <{0}> <{3}> [rendered]
+chunk    {3} 3.79135d1ea22a48797f04.js 28 bytes <{0}> <{1}> [rendered]
     > ./async2 [0] ./example.js 3:0-18
  [2] ./async2.js 28 bytes {3} [built]
      import() ./async2 [0] ./example.js 3:0-18
-chunk    {3} runtime~main.6c3e755a35f5caab0048.js (runtime~main) 0 bytes ={0}= >{1}< >{2}< [entry] [rendered]
-    > ./example main
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.1
+Version: webpack 4.26.1
                                Asset       Size  Chunks             Chunk Names
-           0.32c7573c0acdba48768e.js   77 bytes       0  [emitted]  
-           1.92cf35457750f37b6a94.js   78 bytes       1  [emitted]  
-runtime~main.64c5443e7f0a7f6343da.js   1.83 KiB       2  [emitted]  runtime~main
-        main.e843f086c898c38ded0a.js  349 bytes       3  [emitted]  main
-Entrypoint main = runtime~main.64c5443e7f0a7f6343da.js main.e843f086c898c38ded0a.js
-chunk    {0} 0.32c7573c0acdba48768e.js 29 bytes <{2}> <{3}> [rendered]
-    > ./async2 [0] ./example.js 3:0-18
- [1] ./async2.js 29 bytes {0} [built]
-     import() ./async2 [0] ./example.js 3:0-18
-chunk    {1} 1.92cf35457750f37b6a94.js 29 bytes <{2}> <{3}> [rendered]
+           2.c7e499aa48deb5cef706.js   77 bytes       2  [emitted]  
+           3.286312fd09c94cc60804.js   78 bytes       3  [emitted]  
+        main.a4ebb2661afaaeec65fb.js  149 bytes       0  [emitted]  main
+runtime~main.890244417345f01f0883.js   2.21 KiB       1  [emitted]  runtime~main
+Entrypoint main = runtime~main.890244417345f01f0883.js main.a4ebb2661afaaeec65fb.js
+chunk    {0} main.a4ebb2661afaaeec65fb.js (main) 55 bytes ={1}= >{2}< >{3}< [initial] [rendered]
+    > ./example main
+ [0] ./example.js 55 bytes {0} [built]
+     single entry ./example  main
+chunk    {1} runtime~main.890244417345f01f0883.js (runtime~main) 0 bytes ={0}= >{2}< >{3}< [entry] [rendered]
+    > ./example main
+chunk    {2} 2.c7e499aa48deb5cef706.js 28 bytes <{0}> <{1}> [rendered]
     > ./async1 [0] ./example.js 2:0-18
- [1] ./async1.js 28 bytes {1} [built]
+ [1] ./async1.js 28 bytes {2} [built]
      import() ./async1 [0] ./example.js 2:0-18
-chunk    {2} runtime~main.64c5443e7f0a7f6343da.js (runtime~main) 0 bytes ={3}= >{0}< >{1}< [entry] [rendered]
-    > ./example main
-chunk    {3} main.e843f086c898c38ded0a.js (main) 55 bytes ={2}= >{0}< >{1}< [initial] [rendered]
-    > ./example main
+chunk    {3} 3.286312fd09c94cc60804.js 28 bytes <{0}> <{1}> [rendered]
+    > ./async2 [0] ./example.js 3:0-18
+ [2] ./async2.js 28 bytes {3} [built]
+     import() ./async2 [0] ./example.js 3:0-18
 ```
