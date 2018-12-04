@@ -83,4 +83,27 @@ module.exports = [
 		},
 		stats
 	},
+	{
+		name: "enforce-min-size",
+		mode: "production",
+		entry: {
+			main: "./"
+		},
+		output: {
+			filename: "enforce-min-size-[name].js"
+		},
+		optimization: {
+			splitChunks: {
+				minSize: 100,
+				cacheGroups: {
+					all: {
+						maxSize: 1000,
+						chunks: "all",
+						enforce: true
+					}
+				}
+			}
+		},
+		stats
+	},
 ];
