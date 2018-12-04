@@ -63,6 +63,7 @@ describe("StatsTestCases", () => {
 						args.concat([
 							(err, result) => {
 								if (err) return callback(err);
+								if (/\.wasm$/.test(args[0])) return callback(null, result);
 								callback(null, result.toString("utf-8").replace(/\r/g, ""));
 							}
 						])

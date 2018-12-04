@@ -3458,3 +3458,41 @@ WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction4 [./
 
 WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [./a.js:7,0]"
 `;
+
+exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
+"Hash: aaf7aaf6a9bce17fc635
+Time: Xms
+Built at: Thu Jan 01 1970 00:00:00 GMT
+                           Asset       Size  Chunks             Chunk Names
+                     1.bundle.js   5.59 KiB       1  [emitted]  
+46cd2b5787876cc1f6f5.module.wasm  132 bytes       1  [emitted]  
+8e00e13c987102e631df.module.wasm  511 bytes       1  [emitted]  
+8f1828430343773fe2e2.module.wasm  133 bytes       1  [emitted]  
+96cb6b7544a37a59f651.module.wasm  226 bytes       1  [emitted]  
+                       bundle.js   9.78 KiB       0  [emitted]  main
+df74c7b89cf80ed06dc7.module.wasm   95 bytes       1  [emitted]  
+fb965440c633ab0ab0e6.module.wasm  126 bytes       1  [emitted]  
+Entrypoint main = bundle.js
+chunk    {0} bundle.js (main) 6.97 KiB >{1}< [entry] [rendered]
+ [0] ./index.js 586 bytes {0} [built]
+     + 7 hidden modules
+chunk    {1} 1.bundle.js, 46cd2b5787876cc1f6f5.module.wasm, fb965440c633ab0ab0e6.module.wasm, 8f1828430343773fe2e2.module.wasm, df74c7b89cf80ed06dc7.module.wasm, 96cb6b7544a37a59f651.module.wasm, 8e00e13c987102e631df.module.wasm 2.03 KiB <{0}> [rendered]
+ [1] ./tests.js 1.4 KiB {1} [built]
+ [2] ./Q_rsqrt.wasm 100 bytes (javascript) 156 bytes (webassembly) {1} [built]
+ [3] ./testFunction.wasm 100 bytes (javascript) 154 bytes (webassembly) {1} [built]
+ [4] ./fact.wasm 100 bytes (javascript) 154 bytes (webassembly) {1} [built]
+ [5] ./popcnt.wasm 100 bytes (javascript) 120 bytes (webassembly) {1} [built]
+ [6] ./fast-math.wasm 105 bytes (javascript) 290 bytes (webassembly) {1} [built]
+ [7] ./node_modules/env.js 34 bytes {1} [built]
+ [8] ./duff.wasm 100 bytes (javascript) 531 bytes (webassembly) {1} [built]
+[0] ./index.js 586 bytes {0} [built]
+[1] ./tests.js 1.4 KiB {1} [built]
+[2] ./Q_rsqrt.wasm 100 bytes (javascript) 156 bytes (webassembly) {1} [built]
+[3] ./testFunction.wasm 100 bytes (javascript) 154 bytes (webassembly) {1} [built]
+[4] ./fact.wasm 100 bytes (javascript) 154 bytes (webassembly) {1} [built]
+[5] ./popcnt.wasm 100 bytes (javascript) 120 bytes (webassembly) {1} [built]
+[6] ./fast-math.wasm 105 bytes (javascript) 290 bytes (webassembly) {1} [built]
+[7] ./node_modules/env.js 34 bytes {1} [built]
+[8] ./duff.wasm 100 bytes (javascript) 531 bytes (webassembly) {1} [built]
+    + 7 hidden modules"
+`;
