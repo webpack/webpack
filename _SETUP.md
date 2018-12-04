@@ -27,7 +27,7 @@ yarn link webpack
 yarn test
 ```
 
-### To run only intergration tests use
+### To run only integration tests use
 
 ```bash
 yarn test:integration
@@ -49,6 +49,12 @@ or in watch mode
 
 ```bash
 yarn test:unit --watch
+```
+
+### To update Jest snapshots use
+
+```bash
+yarn test:update-snapshots
 ```
 
 ### To run code formatter (prettier) run

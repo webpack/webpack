@@ -5,13 +5,14 @@ const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
+const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 
 const Stats = require("../lib/Stats");
 const webpack = require("../lib/webpack");
 
-const uglifyJsForTesting = new UglifyJsPlugin({
+const terserForTesting = new TerserPlugin({
 	cache: false,
 	parallel: false,
 	sourceMap: true
@@ -29,12 +30,13 @@ const DEFAULT_OPTIMIZATIONS = {
 	noEmitOnErrors: false,
 	concatenateModules: false,
 	namedModules: false,
-	minimizer: [uglifyJsForTesting]
+	hashedModuleIds: false,
+	minimizer: [terserForTesting]
 };
 
 const NO_EMIT_ON_ERRORS_OPTIMIZATIONS = {
 	noEmitOnErrors: false,
-	minimizer: [uglifyJsForTesting]
+	minimizer: [terserForTesting]
 };
 
 const casesPath = path.join(__dirname, "cases");
@@ -52,6 +54,8 @@ const describeCases = config => {
 	describe(config.name, () => {
 		categories.forEach(category => {
 			describe(category.name, function() {
+				jest.setTimeout(20000);
+
 				category.tests
 					.filter(test => {
 						const testDirectory = path.join(casesPath, category.name, test);
@@ -139,8 +143,13 @@ const describeCases = config => {
 											loader: "coffee-loader"
 										},
 										{
-											test: /\.jade$/,
-											loader: "jade-loader"
+											test: /\.pug/,
+											loader: "pug-loader"
+										},
+										{
+											test: /\.wat$/i,
+											loader: "wast-loader",
+											type: "webassembly/experimental"
 										}
 									]
 								},
@@ -160,7 +169,6 @@ const describeCases = config => {
 									});
 								})
 							};
-							let exportedTests = [];
 							it(
 								testName + " should compile",
 								done => {
@@ -198,16 +206,13 @@ const describeCases = config => {
 										)
 											return;
 
-										function _it(title, fn) {
-											exportedTests.push({ title, fn, timeout: 10000 });
-										}
-
 										function _require(module) {
 											if (module.substr(0, 2) === "./") {
 												const p = path.join(outputDirectory, module);
 												const fn = vm.runInThisContext(
 													"(function(require, module, exports, __dirname, it, expect) {" +
 														"global.expect = expect;" +
+														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
 														fs.readFileSync(p, "utf-8") +
 														"\n})",
 													p
@@ -230,27 +235,18 @@ const describeCases = config => {
 										}
 										_require.webpackTestSuiteRequire = true;
 										_require("./bundle.js");
-										if (exportedTests.length === 0)
+										if (getNumberOfTests() === 0)
 											return done(new Error("No tests exported by test case"));
 
-										const asyncSuite = describe("exported tests", () => {
-											exportedTests.forEach(
-												({ title, fn, timeout }) =>
-													fn
-														? fit(title, fn, timeout)
-														: fit(title, () => {}).pend("Skipped")
-											);
-										});
-										// workaround for jest running clearSpies on the wrong suite (invoked by clearResourcesForRunnable)
-										asyncSuite.disabled = true;
-
-										jasmine
-											.getEnv()
-											.execute([asyncSuite.id], asyncSuite)
-											.then(done, done);
+										done();
 									});
 								},
 								60000
+							);
+
+							const { it: _it, getNumberOfTests } = createLazyTestEnv(
+								jasmine.getEnv(),
+								10000
 							);
 						});
 					});

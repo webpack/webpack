@@ -65,6 +65,7 @@ module.exports = {
 /******/ 		var chunkIds = data[0];
 /******/ 		var moreModules = data[1];
 /******/ 		var executeModules = data[2];
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
@@ -81,6 +82,7 @@ module.exports = {
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
 /******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
 /******/ 		}
@@ -115,7 +117,7 @@ module.exports = {
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		3: 0
+/******/ 		0: 0
 /******/ 	};
 /******/
 /******/ 	var deferredModules = [];
@@ -173,19 +175,16 @@ module.exports = {
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/ 				var onScriptComplete;
 /******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120;
-/******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
-/******/ 				var timeout = setTimeout(function(){
-/******/ 					onScriptComplete({ type: 'timeout', target: script });
-/******/ 				}, 120000);
-/******/ 				script.onerror = script.onload = onScriptComplete;
-/******/ 				function onScriptComplete(event) {
+/******/
+/******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
 /******/ 					clearTimeout(timeout);
@@ -202,6 +201,10 @@ module.exports = {
 /******/ 						installedChunks[chunkId] = undefined;
 /******/ 					}
 /******/ 				};
+/******/ 				var timeout = setTimeout(function(){
+/******/ 					onScriptComplete({ type: 'timeout', target: script });
+/******/ 				}, 120000);
+/******/ 				script.onerror = script.onload = onScriptComplete;
 /******/ 				head.appendChild(script);
 /******/ 			}
 /******/ 		}
@@ -217,17 +220,32 @@ module.exports = {
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -271,7 +289,7 @@ module.exports = {
 # dist/main.[chunkhash].js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */
 /*!********************!*\
   !*** ./example.js ***!
@@ -280,12 +298,12 @@ module.exports = {
 /***/ (function(module, exports, __webpack_require__) {
 
 // some module
-__webpack_require__.e(/*! import() */ 1).then(function() { var module = __webpack_require__(/*! ./async1 */ 1); return typeof module === "object" && module && module.__esModule ? module : Object.assign({/* fake namespace object */}, typeof module === "object" && module, { "default": module }); });
-__webpack_require__.e(/*! import() */ 2).then(function() { var module = __webpack_require__(/*! ./async2 */ 2); return typeof module === "object" && module && module.__esModule ? module : Object.assign({/* fake namespace object */}, typeof module === "object" && module, { "default": module }); });
+__webpack_require__.e(/*! import() */ 2).then(__webpack_require__.t.bind(null, /*! ./async1 */ 1, 7));
+__webpack_require__.e(/*! import() */ 3).then(__webpack_require__.t.bind(null, /*! ./async2 */ 2, 7));
 
 
 /***/ })
-],[[0,3]]]);
+],[[0,0]]]);
 ```
 
 # Info
@@ -303,15 +321,17 @@ runtime~main.6c3e755a35f5caab0048.js   7.81 KiB       3  [emitted]  runtime~main
 Entrypoint main = runtime~main.6c3e755a35f5caab0048.js main.f2c88652f3eee6e71beb.js
 chunk    {0} main.f2c88652f3eee6e71beb.js (main) 55 bytes ={3}= >{1}< >{2}< [initial] [rendered]
     > ./example main
- [0] ./example.js 55 bytes {0} [built]
+chunk    {1} main.[chunkhash].js (main) 55 bytes ={0}= >{2}< >{3}< [initial] [rendered]
+    > ./example main
+ [0] ./example.js 55 bytes {1} [built]
      single entry ./example  main
 chunk    {1} 1.fa6b57c885684798171a.js 29 bytes <{0}> <{3}> [rendered]
     > ./async1 [0] ./example.js 2:0-18
- [1] ./async1.js 29 bytes {1} [built]
+ [1] ./async1.js 28 bytes {2} [built]
      import() ./async1 [0] ./example.js 2:0-18
 chunk    {2} 2.c1157f7aaa2fbe326eb0.js 29 bytes <{0}> <{3}> [rendered]
     > ./async2 [0] ./example.js 3:0-18
- [2] ./async2.js 29 bytes {2} [built]
+ [2] ./async2.js 28 bytes {3} [built]
      import() ./async2 [0] ./example.js 3:0-18
 chunk    {3} runtime~main.6c3e755a35f5caab0048.js (runtime~main) 0 bytes ={0}= >{1}< >{2}< [entry] [rendered]
     > ./example main
@@ -334,12 +354,10 @@ chunk    {0} 0.32c7573c0acdba48768e.js 29 bytes <{2}> <{3}> [rendered]
      import() ./async2 [0] ./example.js 3:0-18
 chunk    {1} 1.92cf35457750f37b6a94.js 29 bytes <{2}> <{3}> [rendered]
     > ./async1 [0] ./example.js 2:0-18
- [2] ./async1.js 29 bytes {1} [built]
+ [1] ./async1.js 28 bytes {1} [built]
      import() ./async1 [0] ./example.js 2:0-18
 chunk    {2} runtime~main.64c5443e7f0a7f6343da.js (runtime~main) 0 bytes ={3}= >{0}< >{1}< [entry] [rendered]
     > ./example main
 chunk    {3} main.e843f086c898c38ded0a.js (main) 55 bytes ={2}= >{0}< >{1}< [initial] [rendered]
     > ./example main
- [0] ./example.js 55 bytes {3} [built]
-     single entry ./example  main
 ```

@@ -9,24 +9,15 @@ branches:
 init:
   - git config --global core.autocrlf input
 
-# what combinations to test
-environment:
-  matrix:
-    - nodejs_version: 8
-      job_part: unit
-    - nodejs_version: 8
-      job_part: integration
-      jest: --maxWorkers=2
-    - nodejs_version: 6
-      job_part: integration
-      jest: --maxWorkers=2
+cache:
+  - "..\\.yarn-cache"
+  - ".jest-cache"
 
 install:
-  - ps: Install-Product node $env:nodejs_version x64
-  - npm install yarn -g
-  - yarn install --frozen-lockfile
-  - yarn link --frozen-lockfile || yarn link --frozen-lockfile
-  - yarn link webpack --frozen-lockfile
+  - ps: Install-Product node 10 x64
+  - yarn --frozen-lockfile --preferred-cache-folder ..\\.yarn-cache
+  - yarn link --frozen-lockfile --preferred-cache-folder ..\\.yarn-cache || yarn link --frozen-lockfile --preferred-cache-folder ..\\.yarn-cache
+  - yarn link webpack --frozen-lockfile --preferred-cache-folder ..\\.yarn-cache
 
 build: off
 
@@ -36,7 +27,9 @@ matrix:
 test_script:
   - node --version
   - yarn --version
-  - cmd: set JEST=%jest%
-  - cmd: yarn appveyor:%job_part%
+  - cmd: set JEST=--maxWorkers=2 --cacheDirectory .jest-cache
+  - cmd: yarn appveyor:integration
+  - cmd: yarn istanbul report --report lcovonly
   - cmd: yarn unlink webpack
   - cmd: yarn global add codecov && codecov -F %job_part% --disable=gcov
+  - cmd: del /F /Q .jest-cache\\haste-map* .jest-cache\\perf-cache* 2> null || Ver > null

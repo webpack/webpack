@@ -16,11 +16,12 @@ module.exports = class FakeDocument {
 };
 
 class FakeElement {
-	constructor(type, autoload = true) {
+	constructor(type) {
 		this._type = type;
-		this._autoload = autoload;
 		this._children = [];
 		this._attributes = Object.create(null);
+		this._src = undefined;
+		this._href = undefined;
 	}
 
 	appendChild(node) {
@@ -35,32 +36,39 @@ class FakeElement {
 		return this._attributes[name];
 	}
 
-	get onload() {
-		return this._onload;
+	_toRealUrl(value) {
+		if (/^\//.test(value)) {
+			return `https://test.cases${value}`;
+		} else if (/^\.\.\//.test(value)) {
+			return `https://test.cases${value.substr(2)}`;
+		} else if (/^\.\//.test(value)) {
+			return `https://test.cases/path${value.substr(1)}`;
+		} else if (/^\w+:\/\//.test(value)) {
+			return value;
+		} else if (/^\/\//.test(value)) {
+			return `https:${value}`;
+		} else {
+			return `https://test.cases/path/${value}`;
+		}
 	}
 
-	set onload(script) {
-		if (this._autoload === true && typeof script === "function") {
-			script();
+	set src(value) {
+		if (this._type === "script") {
+			this._src = this._toRealUrl(value);
 		}
-		this._onload = script;
 	}
 
 	get src() {
 		return this._src;
 	}
 
-	set src(src) {
-		// eslint-disable-next-line no-undef
-		const publicPath = __webpack_public_path__;
-		eval(`
-			const path = require('path');
-			const fs = require('fs');
-			const content = fs.readFileSync(
-				path.join(__dirname, '${src}'.replace('${publicPath}', '')), "utf-8"
-			)
-			eval(content);
-		`);
-		this._src = src;
+	set href(value) {
+		if (this._type === "link") {
+			this._href = this._toRealUrl(value);
+		}
+	}
+
+	get href() {
+		return this._href;
 	}
 }

@@ -23,7 +23,9 @@ function testCase(load, done) {
 it("should be able to use expressions in import", function(done) {
 	function load(name, expected, callback) {
 		import("./dir/" + name).then(function(result) {
-			expect(result).toEqual({ default: expected });
+			expect(result).toEqual(nsObj({
+				default: expected
+			}));
 			callback();
 		}).catch(function(err) {
 			done(err);

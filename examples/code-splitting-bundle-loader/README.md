@@ -28,6 +28,7 @@ module.exports = "It works";
 /******/ 		var chunkIds = data[0];
 /******/ 		var moreModules = data[1];
 /******/
+/******/
 /******/ 		// add "moreModules" to the modules object,
 /******/ 		// then flag all "chunkIds" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
@@ -44,6 +45,7 @@ module.exports = "It works";
 /******/ 			}
 /******/ 		}
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(data);
+/******/
 /******/ 		while(resolves.length) {
 /******/ 			resolves.shift()();
 /******/ 		}
@@ -58,7 +60,7 @@ module.exports = "It works";
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// Promise = chunk loading, 0 = chunk loaded
 /******/ 	var installedChunks = {
-/******/ 		1: 0
+/******/ 		0: 0
 /******/ 	};
 /******/
 /******/
@@ -116,19 +118,16 @@ module.exports = "It works";
 /******/ 				// start chunk loading
 /******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
+/******/ 				var onScriptComplete;
 /******/
 /******/ 				script.charset = 'utf-8';
 /******/ 				script.timeout = 120;
-/******/
 /******/ 				if (__webpack_require__.nc) {
 /******/ 					script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
-/******/ 				var timeout = setTimeout(function(){
-/******/ 					onScriptComplete({ type: 'timeout', target: script });
-/******/ 				}, 120000);
-/******/ 				script.onerror = script.onload = onScriptComplete;
-/******/ 				function onScriptComplete(event) {
+/******/
+/******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
 /******/ 					clearTimeout(timeout);
@@ -145,6 +144,10 @@ module.exports = "It works";
 /******/ 						installedChunks[chunkId] = undefined;
 /******/ 					}
 /******/ 				};
+/******/ 				var timeout = setTimeout(function(){
+/******/ 					onScriptComplete({ type: 'timeout', target: script });
+/******/ 				}, 120000);
+/******/ 				script.onerror = script.onload = onScriptComplete;
 /******/ 				head.appendChild(script);
 /******/ 			}
 /******/ 		}
@@ -160,17 +163,32 @@ module.exports = "It works";
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -200,7 +218,7 @@ module.exports = "It works";
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 ```
@@ -210,6 +228,19 @@ module.exports = "It works";
 ``` javascript
 /******/ ([
 /* 0 */
+/*!********************!*\
+  !*** ./example.js ***!
+  \********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(/*! bundle-loader!./file.js */ 1)(function(fileJsExports) {
+	console.log(fileJsExports);
+});
+
+
+/***/ }),
+/* 1 */
 /*!******************************************************!*\
   !*** (webpack)/node_modules/bundle-loader!./file.js ***!
   \******************************************************/
@@ -222,7 +253,7 @@ module.exports = function(cb) {
 	if(cbs) cbs.push(cb);
 	else cb(data);
 }
-__webpack_require__.e(/*! require.ensure */ 0).then((function(require) {
+__webpack_require__.e(/*! require.ensure */ 1).then((function(require) {
 	data = __webpack_require__(/*! !./file.js */ 2);
 	var callbacks = cbs;
 	cbs = null;
@@ -231,27 +262,14 @@ __webpack_require__.e(/*! require.ensure */ 0).then((function(require) {
 	}
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
 
-/***/ }),
-/* 1 */
-/*!********************!*\
-  !*** ./example.js ***!
-  \********************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-__webpack_require__(/*! bundle-loader!./file.js */ 0)(function(fileJsExports) {
-	console.log(fileJsExports);
-});
-
-
 /***/ })
 /******/ ]);
 ```
 
-# dist/0.output.js
+# dist/1.output.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
 
 /***/ 2:
 /*!*****************!*\
@@ -273,40 +291,40 @@ module.exports = "It works";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
+Version: webpack 4.20.1
       Asset       Size  Chunks             Chunk Names
-0.output.js  257 bytes       0  [emitted]  
-  output.js   7.82 KiB       1  [emitted]  main
+  output.js   8.84 KiB       0  [emitted]  main
+1.output.js  257 bytes       1  [emitted]  
 Entrypoint main = output.js
-chunk    {0} 0.output.js 28 bytes <{1}> [rendered]
-    > [0] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
- [2] ./file.js 28 bytes {0} [built]
-     cjs require !!./file.js [0] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
-chunk    {1} output.js (main) 378 bytes >{0}< [entry] [rendered]
+chunk    {0} output.js (main) 375 bytes >{1}< [entry] [rendered]
     > .\example.js main
- [0] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {1} [built]
-     cjs require bundle-loader!./file.js [1] ./example.js 1:0-34
- [1] ./example.js 97 bytes {1} [built]
+ [0] ./example.js 94 bytes {0} [built]
      single entry .\example.js  main
+ [1] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {0} [built]
+     cjs require bundle-loader!./file.js [0] ./example.js 1:0-34
+chunk    {1} 1.output.js 28 bytes <{0}> [rendered]
+    > [1] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
+ [2] ./file.js 28 bytes {1} [built]
+     cjs require !!./file.js [1] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.8.0
+Version: webpack 4.20.1
       Asset      Size  Chunks             Chunk Names
-0.output.js  98 bytes       0  [emitted]  
-  output.js  1.81 KiB       1  [emitted]  main
+  output.js  2.19 KiB       0  [emitted]  main
+1.output.js  98 bytes       1  [emitted]  
 Entrypoint main = output.js
-chunk    {0} 0.output.js 28 bytes <{1}> [rendered]
-    > [0] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
- [2] ./file.js 28 bytes {0} [built]
-     cjs require !!./file.js [0] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
-chunk    {1} output.js (main) 378 bytes >{0}< [entry] [rendered]
+chunk    {0} output.js (main) 375 bytes >{1}< [entry] [rendered]
     > .\example.js main
- [0] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {1} [built]
-     cjs require bundle-loader!./file.js [1] ./example.js 1:0-34
- [1] ./example.js 97 bytes {1} [built]
+ [0] ./example.js 94 bytes {0} [built]
      single entry .\example.js  main
+ [1] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {0} [built]
+     cjs require bundle-loader!./file.js [0] ./example.js 1:0-34
+chunk    {1} 1.output.js 28 bytes <{0}> [rendered]
+    > [1] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
+ [2] ./file.js 28 bytes {1} [built]
+     cjs require !!./file.js [1] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
 ```

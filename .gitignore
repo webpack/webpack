@@ -10,4 +10,5 @@
 *.log
 .idea
 .vscode
+.eslintcache
 package-lock.json

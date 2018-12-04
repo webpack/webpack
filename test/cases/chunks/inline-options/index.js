@@ -110,11 +110,15 @@ function testChunkLoading(load, expectedSyncInitial, expectedSyncRequested) {
 		sync = true;
 		var p = Promise.all([
 			load("a").then(function(a) {
-				expect(a).toEqual({ default: "a" });
+				expect(a).toEqual(nsObj({
+					default: "a"
+				}));
 				expect(sync).toBe(true);
 			}),
 			load("c").then(function(c) {
-				expect(c).toEqual({ default: "c" });
+				expect(c).toEqual(nsObj({
+					default: "c"
+				}));
 				expect(sync).toBe(expectedSyncRequested);
 			})
 		]);

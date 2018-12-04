@@ -7,6 +7,9 @@ coverage:
   status:
     project:
       default: off
+      basic:
+        flags: basic
+        target: auto
       integration:
         flags: integration
         target: auto
@@ -15,6 +18,10 @@ coverage:
         target: 0%
     patch:
       default: off
+      basic:
+        flags: basic
+        target: 90%
+        base: pr
       integration:
         flags: integration
         target: 90%
@@ -25,6 +32,9 @@ coverage:
         base: pr
     changes:
       default: off
+      basic:
+        flags: basic
+        target: 0%
       integration:
         flags: integration
         target: 0%
@@ -32,3 +42,8 @@ coverage:
         flags: unit
         target: 0%
 comment: off
+flags:
+  basic:
+    joined: false
+  unit:
+    joined: false

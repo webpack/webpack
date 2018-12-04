@@ -1,6 +1,6 @@
 it("should receive a namespace object when importing commonjs", function(done) {
 	import("./cjs").then(function(result) {
-		expect(result).toEqual({ named: "named", default: { named: "named", default: "default" } });
+		expect(result).toEqual(nsObj({ named: "named", default: { named: "named", default: "default" } }));
 		done();
 	}).catch(done);
 });
@@ -60,26 +60,27 @@ function promiseTest(promise, equalsTo) {
 
 it("should receive a namespace object when importing commonjs via context", function() {
 	return Promise.all([
-		promiseTest(contextCJS("one"), { named: "named", default: { named: "named", default: "default" } }),
+		promiseTest(contextCJS("one"), nsObj({ named: "named", default: { named: "named", default: "default" } })),
 		promiseTest(contextCJS("two"), { __esModule: true, named: "named", default: "default" }),
-		promiseTest(contextCJS("three"), { named: "named", default: { named: "named", default: "default" } }),
-		promiseTest(contextCJS("null"), { default: null })
+		promiseTest(contextCJS("three"), nsObj({ named: "named", default: { named: "named", default: "default" } })),
+		promiseTest(contextCJS("null"), nsObj({ default: null }))
 	]);
 });
 
 it("should receive a namespace object when importing harmony via context", function() {
 	return Promise.all([
-		promiseTest(contextHarmony("one"), { named: "named", default: "default" }),
-		promiseTest(contextHarmony("two"), { named: "named", default: "default" }),
-		promiseTest(contextHarmony("three"), { named: "named", default: "default" })
+		promiseTest(contextHarmony("one"), nsObj({ named: "named", default: "default" })),
+		promiseTest(contextHarmony("two"), nsObj({ named: "named", default: "default" })),
+		promiseTest(contextHarmony("three"), nsObj({ named: "named", default: "default" }))
 	]);
 });
 
 it("should receive a namespace object when importing mixed content via context", function() {
 	return Promise.all([
-		promiseTest(contextMixed("one"), { named: "named", default: { named: "named", default: "default" } }),
+		promiseTest(contextMixed("one"), nsObj({ named: "named", default: { named: "named", default: "default" } })),
 		promiseTest(contextMixed("two"), { __esModule: true, named: "named", default: "default" }),
-		promiseTest(contextMixed("three"), { named: "named", default: "default" }),
-		promiseTest(contextMixed("null"), { default: null })
+		promiseTest(contextMixed("three"), nsObj({ named: "named", default: "default" })),
+		promiseTest(contextMixed("null"), nsObj({ default: null })),
+		promiseTest(contextMixed("json.json"), nsObj({ named: "named", default: { named: "named", default: "default" } }))
 	]);
 });

@@ -1,4 +1,4 @@
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const baseConfig = {
 	mode: "production",
 	entry: "./index",
@@ -8,9 +8,9 @@ const baseConfig = {
 	optimization: {
 		minimize: true,
 		minimizer: [
-			new UglifyJsPlugin({
+			new TerserPlugin({
 				sourceMap: true,
-				uglifyOptions: {
+				terserOptions: {
 					compress: {
 						warnings: true
 					},
@@ -34,11 +34,11 @@ const baseConfig = {
 
 module.exports = [
 	undefined,
-	"UglifyJs",
-	/UglifyJs/,
+	"Terser",
+	/Terser/,
 	warnings => true,
-	["UglifyJs"],
-	[/UglifyJs/],
+	["Terser"],
+	[/Terser/],
 	[warnings => true],
 	"should not filter",
 	/should not filter/,
@@ -48,6 +48,7 @@ module.exports = [
 	[warnings => false]
 ].map(filter =>
 	Object.assign({}, baseConfig, {
+		name: Array.isArray(filter) ? `[${filter}]` : `${filter}`,
 		stats: Object.assign({}, baseConfig.stats, {
 			warningsFilter: filter
 		})

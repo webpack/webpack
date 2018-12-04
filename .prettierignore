@@ -1,0 +1,8 @@
+# Ignore test fixtures
+test
+!test/*.js
+!test/**/webpack.config.js
+
+# Ignore example fixtures
+examples
+!examples/**/webpack.config.js
