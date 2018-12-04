@@ -342,10 +342,10 @@ Child vendors:
      [9] ./g.js 34 bytes {8} [built]
 Child multiple-vendors:
     Entrypoint main = multiple-vendors/main.js
-    Entrypoint a = multiple-vendors/libs-x.js multiple-vendors/vendors~a~async-a~async-b~b.js multiple-vendors/a~async-a~async-b~async-c~b~c.js multiple-vendors/a.js
-    Entrypoint b = multiple-vendors/libs-x.js multiple-vendors/vendors~a~async-a~async-b~b.js multiple-vendors/a~async-a~async-b~async-c~b~c.js multiple-vendors/b.js
-    Entrypoint c = multiple-vendors/libs-x.js multiple-vendors/vendors~async-c~c.js multiple-vendors/a~async-a~async-b~async-c~b~c.js multiple-vendors/c.js
-    chunk    {0} multiple-vendors/main.js (main) 4.81 KiB >{2}< >{3}< >{4}< >{5}< >{6}< >{8}< >{10}< >{11}< [entry] [rendered]
+    Entrypoint a = multiple-vendors/vendors~a~async-a~async-b~async-c~b~c.js multiple-vendors/vendors~a~async-a~async-b~b.js multiple-vendors/a~async-a~async-b~async-c~b~c.js multiple-vendors/a.js
+    Entrypoint b = multiple-vendors/vendors~a~async-a~async-b~async-c~b~c.js multiple-vendors/vendors~a~async-a~async-b~b.js multiple-vendors/a~async-a~async-b~async-c~b~c.js multiple-vendors/b.js
+    Entrypoint c = multiple-vendors/vendors~a~async-a~async-b~async-c~b~c.js multiple-vendors/vendors~async-c~c.js multiple-vendors/a~async-a~async-b~async-c~b~c.js multiple-vendors/c.js
+    chunk    {0} multiple-vendors/main.js (main) 4.84 KiB >{2}< >{3}< >{4}< >{5}< >{6}< >{8}< >{10}< >{11}< [entry] [rendered]
         > ./ main
      [0] ./index.js 147 bytes {0} [built]
          + 7 hidden modules
@@ -368,7 +368,7 @@ Child multiple-vendors:
         > ./b b
         > ./c c
      [2] ./d.js 20 bytes {3} [built]
-    chunk    {4} multiple-vendors/libs-x.js (libs-x) 20 bytes <{0}> ={1}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= >{8}< >{12}< [initial] [rendered] split chunk (cache group: libs) (name: libs-x)
+    chunk    {4} multiple-vendors/vendors~a~async-a~async-b~async-c~b~c.js (vendors~a~async-a~async-b~async-c~b~c) 20 bytes <{0}> ={1}= ={2}= ={3}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= >{8}< >{12}< [initial] [rendered] split chunk (cache group: vendors) (name: vendors~a~async-a~async-b~async-c~b~c)
         > ./a [0] ./index.js 1:0-47
         > ./b [0] ./index.js 2:0-47
         > ./c [0] ./index.js 3:0-47
@@ -3460,39 +3460,47 @@ WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [./
 `;
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
-"Hash: aaf7aaf6a9bce17fc635
+"Hash: 6c226bf7cb9fc6d91166
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
                            Asset       Size  Chunks             Chunk Names
-                     1.bundle.js   5.59 KiB       1  [emitted]  
-46cd2b5787876cc1f6f5.module.wasm  132 bytes       1  [emitted]  
-8e00e13c987102e631df.module.wasm  511 bytes       1  [emitted]  
-8f1828430343773fe2e2.module.wasm  133 bytes       1  [emitted]  
-96cb6b7544a37a59f651.module.wasm  226 bytes       1  [emitted]  
-                       bundle.js   9.78 KiB       0  [emitted]  main
+                     1.bundle.js   3.93 KiB       1  [emitted]  
+                     2.bundle.js  427 bytes       2  [emitted]  
+                     3.bundle.js  836 bytes       3  [emitted]  
+                     4.bundle.js  325 bytes       4  [emitted]  
+46cd2b5787876cc1f6f5.module.wasm  132 bytes       2  [emitted]  
+                     5.bundle.js  427 bytes       5  [emitted]  
+8e00e13c987102e631df.module.wasm  511 bytes       5  [emitted]  
+8f1828430343773fe2e2.module.wasm  133 bytes       3  [emitted]  
+96cb6b7544a37a59f651.module.wasm  226 bytes       3  [emitted]  
+                       bundle.js   10.5 KiB       0  [emitted]  main~b2c7414a
 df74c7b89cf80ed06dc7.module.wasm   95 bytes       1  [emitted]  
 fb965440c633ab0ab0e6.module.wasm  126 bytes       1  [emitted]  
 Entrypoint main = bundle.js
-chunk    {0} bundle.js (main) 6.97 KiB >{1}< [entry] [rendered]
+chunk    {0} bundle.js (main~b2c7414a) 7 KiB >{1}< >{2}< >{3}< >{4}< >{5}< [entry] [rendered]
  [0] ./index.js 586 bytes {0} [built]
      + 7 hidden modules
-chunk    {1} 1.bundle.js, 46cd2b5787876cc1f6f5.module.wasm, fb965440c633ab0ab0e6.module.wasm, 8f1828430343773fe2e2.module.wasm, df74c7b89cf80ed06dc7.module.wasm, 96cb6b7544a37a59f651.module.wasm, 8e00e13c987102e631df.module.wasm 2.03 KiB <{0}> [rendered]
+chunk    {1} 1.bundle.js, fb965440c633ab0ab0e6.module.wasm, df74c7b89cf80ed06dc7.module.wasm 1.6 KiB <{0}> ={2}= ={3}= ={4}= ={5}= [rendered]
  [1] ./tests.js 1.4 KiB {1} [built]
- [2] ./Q_rsqrt.wasm 100 bytes (javascript) 156 bytes (webassembly) {1} [built]
  [3] ./testFunction.wasm 100 bytes (javascript) 154 bytes (webassembly) {1} [built]
- [4] ./fact.wasm 100 bytes (javascript) 154 bytes (webassembly) {1} [built]
  [5] ./popcnt.wasm 100 bytes (javascript) 120 bytes (webassembly) {1} [built]
- [6] ./fast-math.wasm 105 bytes (javascript) 290 bytes (webassembly) {1} [built]
- [7] ./node_modules/env.js 34 bytes {1} [built]
- [8] ./duff.wasm 100 bytes (javascript) 531 bytes (webassembly) {1} [built]
+chunk    {2} 2.bundle.js, 46cd2b5787876cc1f6f5.module.wasm 100 bytes <{0}> ={1}= ={3}= ={4}= ={5}= [rendered]
+ [2] ./Q_rsqrt.wasm 100 bytes (javascript) 156 bytes (webassembly) {2} [built]
+chunk    {3} 3.bundle.js, 8f1828430343773fe2e2.module.wasm, 96cb6b7544a37a59f651.module.wasm 205 bytes <{0}> ={1}= ={2}= ={4}= ={5}= [rendered]
+ [4] ./fact.wasm 100 bytes (javascript) 154 bytes (webassembly) {3} [built]
+ [6] ./fast-math.wasm 105 bytes (javascript) 290 bytes (webassembly) {3} [built]
+chunk    {4} 4.bundle.js 34 bytes <{0}> ={1}= ={2}= ={3}= ={5}= [rendered] split chunk (cache group: defaultVendors)
+ [7] ./node_modules/env.js 34 bytes {4} [built]
+chunk    {5} 5.bundle.js, 8e00e13c987102e631df.module.wasm 100 bytes <{0}> ={1}= ={2}= ={3}= ={4}= [rendered]
+ [8] ./duff.wasm 100 bytes (javascript) 531 bytes (webassembly) {5} [built]
 [0] ./index.js 586 bytes {0} [built]
 [1] ./tests.js 1.4 KiB {1} [built]
-[2] ./Q_rsqrt.wasm 100 bytes (javascript) 156 bytes (webassembly) {1} [built]
+[2] ./Q_rsqrt.wasm 100 bytes (javascript) 156 bytes (webassembly) {2} [built]
 [3] ./testFunction.wasm 100 bytes (javascript) 154 bytes (webassembly) {1} [built]
-[4] ./fact.wasm 100 bytes (javascript) 154 bytes (webassembly) {1} [built]
+[4] ./fact.wasm 100 bytes (javascript) 154 bytes (webassembly) {3} [built]
 [5] ./popcnt.wasm 100 bytes (javascript) 120 bytes (webassembly) {1} [built]
-[6] ./fast-math.wasm 105 bytes (javascript) 290 bytes (webassembly) {1} [built]
-[7] ./node_modules/env.js 34 bytes {1} [built]
-[8] ./duff.wasm 100 bytes (javascript) 531 bytes (webassembly) {1} [built]
+[6] ./fast-math.wasm 105 bytes (javascript) 290 bytes (webassembly) {3} [built]
+[7] ./node_modules/env.js 34 bytes {4} [built]
+[8] ./duff.wasm 100 bytes (javascript) 531 bytes (webassembly) {5} [built]
     + 7 hidden modules"
 `;

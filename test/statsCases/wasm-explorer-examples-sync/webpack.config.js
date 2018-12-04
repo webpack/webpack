@@ -6,7 +6,13 @@ module.exports = {
 	},
 	optimization: {
 		moduleIds: "natural",
-		chunkIds: "natural"
+		chunkIds: "natural",
+		splitChunks: {
+			minSize: {},
+			maxSize: {
+				webassembly: 500
+			}
+		}
 	},
 	stats: {
 		chunks: true,
