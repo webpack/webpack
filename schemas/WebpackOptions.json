@@ -400,15 +400,8 @@
     },
     "NodeOptions": {
       "type": "object",
-      "additionalProperties": {
-        "description": "Include a polyfill for the node.js module",
-        "enum": [false, true, "mock", "empty"]
-      },
+      "additionalProperties": false,
       "properties": {
-        "Buffer": {
-          "description": "Include a polyfill for the 'Buffer' variable",
-          "enum": [false, true, "mock"]
-        },
         "__dirname": {
           "description": "Include a polyfill for the '__dirname' variable",
           "enum": [false, true, "mock"]
@@ -417,17 +410,9 @@
           "description": "Include a polyfill for the '__filename' variable",
           "enum": [false, true, "mock"]
         },
-        "console": {
-          "description": "Include a polyfill for the 'console' variable",
-          "enum": [false, true, "mock"]
-        },
         "global": {
           "description": "Include a polyfill for the 'global' variable",
           "type": "boolean"
-        },
-        "process": {
-          "description": "Include a polyfill for the 'process' variable",
-          "enum": [false, true, "mock"]
         }
       }
     },

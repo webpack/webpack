@@ -1,3 +1,6 @@
 module.exports = {
-	target: "web"
+	target: "web",
+	node: {
+		global: true
+	}
 };

@@ -765,10 +765,6 @@ export interface WebpackPluginInstance {
  */
 export interface NodeOptions {
 	/**
-	 * Include a polyfill for the 'Buffer' variable
-	 */
-	Buffer?: false | true | "mock";
-	/**
 	 * Include a polyfill for the '__dirname' variable
 	 */
 	__dirname?: false | true | "mock";
@@ -777,21 +773,9 @@ export interface NodeOptions {
 	 */
 	__filename?: false | true | "mock";
 	/**
-	 * Include a polyfill for the 'console' variable
-	 */
-	console?: false | true | "mock";
-	/**
 	 * Include a polyfill for the 'global' variable
 	 */
 	global?: boolean;
-	/**
-	 * Include a polyfill for the 'process' variable
-	 */
-	process?: false | true | "mock";
-	/**
-	 * Include a polyfill for the node.js module
-	 */
-	[k: string]: false | true | "mock" | "empty";
 }
 /**
  * Enables/Disables integrated optimizations
