@@ -1268,6 +1268,10 @@ export interface StatsOptions {
 	 */
 	chunkOrigins?: boolean;
 	/**
+	 * add root modules information to chunk information
+	 */
+	chunkRootModules?: boolean;
+	/**
 	 * add chunk information
 	 */
 	chunks?: boolean;
