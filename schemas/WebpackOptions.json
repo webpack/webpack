@@ -649,8 +649,11 @@
                   },
                   "maxSize": {
                     "description": "Maximal size hint for the created chunks",
-                    "type": "number",
-                    "minimum": 0
+                    "oneOf": [
+                      {
+                        "$ref": "#/definitions/OptimizationSplitChunksSizes"
+                      }
+                    ]
                   },
                   "minChunks": {
                     "description": "Minimum number of times a module has to be duplicated until it's considered for splitting",
@@ -659,8 +662,11 @@
                   },
                   "minSize": {
                     "description": "Minimal size for the created chunk",
-                    "type": "number",
-                    "minimum": 0
+                    "oneOf": [
+                      {
+                        "$ref": "#/definitions/OptimizationSplitChunksSizes"
+                      }
+                    ]
                   },
                   "name": {
                     "description": "Give chunks for this cache group a name (chunks with equal name are merged)",
@@ -746,13 +752,19 @@
             },
             "maxSize": {
               "description": "Maximal size hint for the created chunks",
-              "type": "number",
-              "minimum": 0
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/OptimizationSplitChunksSizes"
+                }
+              ]
             },
             "minSize": {
               "description": "Minimal size for the created chunk",
-              "type": "number",
-              "minimum": 0
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/OptimizationSplitChunksSizes"
+                }
+              ]
             }
           }
         },
@@ -777,8 +789,11 @@
         },
         "maxSize": {
           "description": "Maximal size hint for the created chunks",
-          "type": "number",
-          "minimum": 0
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
         },
         "minChunks": {
           "description": "Minimum number of times a module has to be duplicated until it's considered for splitting",
@@ -787,8 +802,11 @@
         },
         "minSize": {
           "description": "Minimal size for the created chunks",
-          "type": "number",
-          "minimum": 0
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
         },
         "name": {
           "description": "Give chunks created a name (chunks with equal name are merged)",
@@ -806,6 +824,23 @@
           ]
         }
       }
+    },
+    "OptimizationSplitChunksSizes": {
+      "anyOf": [
+        {
+          "description": "Size of the javascript part of the chunk",
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "description": "Specify size limits per size type",
+          "type": "object",
+          "additionalProperties": {
+            "description": "Size of the part of the chunk with the type of the key",
+            "type": "number"
+          }
+        }
+      ]
     },
     "OutputOptions": {
       "type": "object",

@@ -235,6 +235,18 @@ export type WebpackPluginFunction = (
 export type RuleSetRules = RuleSetRule[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "OptimizationSplitChunksSizes".
+ */
+export type OptimizationSplitChunksSizes =
+	| number
+	| {
+			/**
+			 * Size of the part of the chunk with the type of the key
+			 */
+			[k: string]: number;
+	  };
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "FilterTypes".
  */
 export type FilterTypes = FilterItemTypes | FilterItemTypes[];
@@ -926,7 +938,7 @@ export interface OptimizationSplitChunksOptions {
 					/**
 					 * Maximal size hint for the created chunks
 					 */
-					maxSize?: number;
+					maxSize?: OptimizationSplitChunksSizes;
 					/**
 					 * Minimum number of times a module has to be duplicated until it's considered for splitting
 					 */
@@ -934,7 +946,7 @@ export interface OptimizationSplitChunksOptions {
 					/**
 					 * Minimal size for the created chunk
 					 */
-					minSize?: number;
+					minSize?: OptimizationSplitChunksSizes;
 					/**
 					 * Give chunks for this cache group a name (chunks with equal name are merged)
 					 */
@@ -972,11 +984,11 @@ export interface OptimizationSplitChunksOptions {
 		/**
 		 * Maximal size hint for the created chunks
 		 */
-		maxSize?: number;
+		maxSize?: OptimizationSplitChunksSizes;
 		/**
 		 * Minimal size for the created chunk
 		 */
-		minSize?: number;
+		minSize?: OptimizationSplitChunksSizes;
 	};
 	/**
 	 * Sets the template for the filename for created chunks (Only works for initial chunks)
@@ -997,7 +1009,7 @@ export interface OptimizationSplitChunksOptions {
 	/**
 	 * Maximal size hint for the created chunks
 	 */
-	maxSize?: number;
+	maxSize?: OptimizationSplitChunksSizes;
 	/**
 	 * Minimum number of times a module has to be duplicated until it's considered for splitting
 	 */
@@ -1005,7 +1017,7 @@ export interface OptimizationSplitChunksOptions {
 	/**
 	 * Minimal size for the created chunks
 	 */
-	minSize?: number;
+	minSize?: OptimizationSplitChunksSizes;
 	/**
 	 * Give chunks created a name (chunks with equal name are merged)
 	 */
