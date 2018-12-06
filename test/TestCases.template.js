@@ -175,7 +175,7 @@ const describeCases = config => {
 										if (err) done(err);
 										const statOptions = Stats.presetToOptions("verbose");
 										statOptions.colors = false;
-										fs.mkdirSync(outputDirectory);
+										fs.mkdirSync(outputDirectory, { recursive: true });
 										fs.writeFileSync(
 											path.join(outputDirectory, "stats.txt"),
 											stats.toString(statOptions),

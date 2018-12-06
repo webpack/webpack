@@ -60,7 +60,7 @@ describe("ConfigTestCases", () => {
 									resolve();
 								};
 								rimraf.sync(outputDirectory);
-								fs.mkdirSync(outputDirectory);
+								fs.mkdirSync(outputDirectory, { recursive: true });
 								const options = prepareOptions(
 									require(path.join(testDirectory, "webpack.config.js")),
 									{ testPath: outputDirectory }
@@ -126,7 +126,7 @@ describe("ConfigTestCases", () => {
 									}
 									const statOptions = Stats.presetToOptions("verbose");
 									statOptions.colors = false;
-									fs.mkdirSync(outputDirectory);
+									fs.mkdirSync(outputDirectory, { recursive: true });
 									fs.writeFileSync(
 										path.join(outputDirectory, "stats.txt"),
 										stats.toString(statOptions),
