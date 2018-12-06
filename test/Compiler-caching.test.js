@@ -23,7 +23,7 @@ describe("Compiler (caching)", () => {
 		options.output.filename = "bundle.js";
 		options.output.pathinfo = true;
 		const logs = {
-			mkdirp: [],
+			mkdir: [],
 			writeFile: []
 		};
 
@@ -33,8 +33,8 @@ describe("Compiler (caching)", () => {
 			join() {
 				return [].join.call(arguments, "/").replace(/\/+/g, "/");
 			},
-			mkdirp(path, callback) {
-				logs.mkdirp.push(path);
+			mkdir(path, options, callback) {
+				logs.mkdir.push(path);
 				callback();
 			},
 			writeFile(name, content, callback) {

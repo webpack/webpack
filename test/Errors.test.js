@@ -14,7 +14,7 @@ describe("Errors", () => {
 		const files = {};
 		c.outputFileSystem = {
 			join: path.join.bind(path),
-			mkdirp(path, callback) {
+			mkdir(path, options, callback) {
 				callback();
 			},
 			writeFile(name, content, callback) {

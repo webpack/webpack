@@ -4,7 +4,6 @@
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
-const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
@@ -61,7 +60,7 @@ describe("ConfigTestCases", () => {
 									resolve();
 								};
 								rimraf.sync(outputDirectory);
-								mkdirp.sync(outputDirectory);
+								fs.mkdirSync(outputDirectory);
 								const options = prepareOptions(
 									require(path.join(testDirectory, "webpack.config.js")),
 									{ testPath: outputDirectory }
@@ -127,7 +126,7 @@ describe("ConfigTestCases", () => {
 									}
 									const statOptions = Stats.presetToOptions("verbose");
 									statOptions.colors = false;
-									mkdirp.sync(outputDirectory);
+									fs.mkdirSync(outputDirectory);
 									fs.writeFileSync(
 										path.join(outputDirectory, "stats.txt"),
 										stats.toString(statOptions),

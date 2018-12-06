@@ -21,7 +21,7 @@ describe("Compiler", () => {
 			minimize: false
 		};
 		const logs = {
-			mkdirp: [],
+			mkdir: [],
 			writeFile: []
 		};
 
@@ -31,8 +31,8 @@ describe("Compiler", () => {
 			join() {
 				return [].join.call(arguments, "/").replace(/\/+/g, "/");
 			},
-			mkdirp(path, callback) {
-				logs.mkdirp.push(path);
+			mkdir(path, options, callback) {
+				logs.mkdir.push(path);
 				callback();
 			},
 			writeFile(name, content, callback) {
@@ -75,7 +75,7 @@ describe("Compiler", () => {
 				}
 			},
 			(stats, files) => {
-				expect(stats.logs.mkdirp).toEqual(["/what", "/what/the"]);
+				expect(stats.logs.mkdir).toEqual(["/what", "/what/the"]);
 				done();
 			}
 		);

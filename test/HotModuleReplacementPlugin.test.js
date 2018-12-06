@@ -2,7 +2,6 @@
 
 const path = require("path");
 const fs = require("fs");
-const mkdirp = require("mkdirp");
 
 const webpack = require("../");
 
@@ -34,7 +33,7 @@ describe("HotModuleReplacementPlugin", () => {
 			"records.json"
 		);
 		try {
-			mkdirp.sync(path.join(__dirname, "js", "HotModuleReplacementPlugin"));
+			fs.mkdirSync(path.join(__dirname, "js", "HotModuleReplacementPlugin"));
 		} catch (e) {
 			// empty
 		}
@@ -124,7 +123,7 @@ describe("HotModuleReplacementPlugin", () => {
 			"records.json"
 		);
 		try {
-			mkdirp.sync(path.join(__dirname, "js", "HotModuleReplacementPlugin"));
+			fs.mkdirSync(path.join(__dirname, "js", "HotModuleReplacementPlugin"));
 		} catch (e) {
 			// empty
 		}

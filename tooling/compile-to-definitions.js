@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const mkdirp = require("mkdirp");
 const prettierrc = require("../.prettierrc.js"); // eslint-disable-line
 const { compileFromFile } = require("json-schema-to-typescript");
 
@@ -53,7 +52,7 @@ const makeDefinitionsForSchema = absSchemaPath => {
 			}
 			if (normalizedContent.trim() !== ts.trim()) {
 				if (doWrite) {
-					mkdirp.sync(path.dirname(filename));
+					fs.mkdirSync(path.dirname(filename));
 					fs.writeFileSync(filename, ts, "utf-8");
 					console.error(
 						`declarations/${basename.replace(/\\/g, "/")}.d.ts updated`

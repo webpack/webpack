@@ -4,7 +4,6 @@
 const path = require("path");
 const fs = require("fs");
 const vm = require("vm");
-const mkdirp = require("mkdirp");
 const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
@@ -176,7 +175,7 @@ const describeCases = config => {
 										if (err) done(err);
 										const statOptions = Stats.presetToOptions("verbose");
 										statOptions.colors = false;
-										mkdirp.sync(outputDirectory);
+										fs.mkdirSync(outputDirectory);
 										fs.writeFileSync(
 											path.join(outputDirectory, "stats.txt"),
 											stats.toString(statOptions),
