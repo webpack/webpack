@@ -4,8 +4,7 @@ module.exports = {
 	},
 	optimization: {
 		splitChunks: {
-			minSize: 1,
-			name: true
+			minSize: 1
 		},
 		chunkIds: "named"
 	}
