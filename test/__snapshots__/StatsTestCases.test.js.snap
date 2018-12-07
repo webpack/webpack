@@ -707,26 +707,26 @@ Unexpected end of JSON input while parsing near ''"
 `;
 
 exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] = `
-"Hash: b19f92f53cde62bd84fa
+"Hash: 5b058b2e733480315c39
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks             Chunk Names
 bundle.js  1.87 KiB   {404}  [emitted]  main
  + 1 hidden asset
 Entrypoint main = bundle.js
-[279] ./a.txt 43 bytes {404} [built]
+[237] ./a.txt 43 bytes {404} [built]
 [967] ./index.js 77 bytes {404} [built]
     + 3 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for external 1`] = `
-"Hash: f82f876aa71fe8ac2251
+"Hash: b6fc48424bf235879198
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset      Size  Chunks             Chunk Names
 main.js  1.35 KiB   {404}  [emitted]  main
 Entrypoint main = main.js
-[397] external \\"test\\" 42 bytes {404} [built]
+[317] external \\"test\\" 42 bytes {404} [built]
 [967] ./index.js 17 bytes {404} [built]"
 `;
 
@@ -1073,7 +1073,7 @@ chunk {trees} trees.js (trees) 70 bytes <{main}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
-"Hash: 9c6ab35bb82b94f495fa
+"Hash: 84a276e97488bda9f7f0
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
    Asset       Size  Chunks             Chunk Names
@@ -1082,7 +1082,7 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
   920.js  320 bytes   {920}  [emitted]  
 entry.js   7.03 KiB   {707}  [emitted]  entry
 Entrypoint entry = entry.js
-[169] ./templates lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: \\\\.noimport\\\\.js$ namespace object 160 bytes {707} [optional] [built]
+[281] ./templates lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: \\\\.noimport\\\\.js$ namespace object 160 bytes {707} [optional] [built]
 [374] ./templates/baz.js 38 bytes {374} [optional] [built]
 [457] ./templates/foo.js 38 bytes {457} [optional] [built]
 [865] ./entry.js 450 bytes {707} [built]
@@ -1301,7 +1301,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for module-assets 1`] = `
-"Hash: 2c99756b09cb439e3746
+"Hash: b43089f554599541b1d1
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint main = main.js
@@ -1309,10 +1309,10 @@ chunk  {404} main.js (main) 12 bytes (javascript) 4.45 KiB (runtime) >{687}< [en
  [967] ./index.js 12 bytes {404} [built]
      + 7 hidden chunk modules
 chunk  {687} 687.js 68 bytes <{404}> [rendered]
- [400] ./node_modules/a/1.png 51 bytes {687} [built] [1 asset]
  [687] ./node_modules/a/index.js 17 bytes {687} [built]
-[400] ./node_modules/a/1.png 51 bytes {687} [built] [1 asset]
+ [777] ./node_modules/a/1.png 51 bytes {687} [built] [1 asset]
 [687] ./node_modules/a/index.js 17 bytes {687} [built]
+[777] ./node_modules/a/1.png 51 bytes {687} [built] [1 asset]
 [967] ./index.js 12 bytes {404} [built]
     + 7 hidden modules"
 `;
@@ -2210,7 +2210,7 @@ Entrypoint e2 = runtime.js e2.js"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"Hash: e4f7044e92f3bd41cef0
+"Hash: cfed930245338a5f209d
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint index = index.js
@@ -2226,7 +2226,7 @@ Entrypoint entry = entry.js
       ModuleConcatenation bailout: Module is not an ECMAScript module
 [628] ./eval.js 35 bytes {800} [built]
       ModuleConcatenation bailout: Module uses eval()
-[673] external \\"external\\" 42 bytes {800} [built]
+[860] external \\"external\\" 42 bytes {800} [built]
       ModuleConcatenation bailout: Module is not an ECMAScript module
 [865] ./entry.js 32 bytes {707} {800} [built]
 [967] ./index.js 150 bytes {800} [built]

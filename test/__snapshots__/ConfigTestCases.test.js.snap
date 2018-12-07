@@ -14,16 +14,16 @@ exports[`ConfigTestCases records issue-2991 exported tests should write relative
   },
   \\"modules\\": {
     \\"byIdentifier\\": {
-      \\"external \\\\\\"fs\\\\\\"\\": 66,
-      \\"external \\\\\\"path\\\\\\"\\": 589,
-      \\"ignored pkgs/somepackage/foo\\": 583,
+      \\"external \\\\\\"fs\\\\\\"\\": 582,
+      \\"external \\\\\\"path\\\\\\"\\": 476,
+      \\"ignored pkgs/somepackage/foo\\": 940,
       \\"test.js\\": 316
     },
     \\"usedIds\\": [
-      66,
       316,
-      583,
-      589
+      476,
+      582,
+      940
     ]
   }
 }"
@@ -43,19 +43,19 @@ exports[`ConfigTestCases records issue-7339 exported tests should write relative
   },
   \\"modules\\": {
     \\"byIdentifier\\": {
-      \\"dependencies sync /^\\\\\\\\.\\\\\\\\/.*$/\\": 154,
+      \\"dependencies sync /^\\\\\\\\.\\\\\\\\/.*$/\\": 750,
       \\"dependencies/bar.js\\": 853,
       \\"dependencies/foo.js\\": 494,
-      \\"external \\\\\\"fs\\\\\\"\\": 66,
-      \\"external \\\\\\"path\\\\\\"\\": 589,
+      \\"external \\\\\\"fs\\\\\\"\\": 582,
+      \\"external \\\\\\"path\\\\\\"\\": 476,
       \\"test.js\\": 316
     },
     \\"usedIds\\": [
-      66,
-      154,
       316,
+      476,
       494,
-      589,
+      582,
+      750,
       853
     ]
   }
