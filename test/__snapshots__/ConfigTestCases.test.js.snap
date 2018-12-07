@@ -16,14 +16,14 @@ exports[`ConfigTestCases records issue-2991 exported tests should write relative
     \\"byIdentifier\\": {
       \\"external \\\\\\"fs\\\\\\"\\": 66,
       \\"external \\\\\\"path\\\\\\"\\": 589,
-      \\"ignored  pkgs/somepackage/foo\\": 760,
+      \\"ignored pkgs/somepackage/foo\\": 583,
       \\"test.js\\": 316
     },
     \\"usedIds\\": [
       66,
       316,
-      589,
-      760
+      583,
+      589
     ]
   }
 }"
