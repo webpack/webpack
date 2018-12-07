@@ -27,6 +27,7 @@ matrix:
 test_script:
   - node --version
   - yarn --version
+  - cmd: set NODE_NO_WARNINGS=1
   - cmd: set JEST=--maxWorkers=2 --cacheDirectory .jest-cache
   - cmd: yarn appveyor:integration
   - cmd: yarn istanbul report --report lcovonly
