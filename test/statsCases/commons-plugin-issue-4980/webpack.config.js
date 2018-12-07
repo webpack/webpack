@@ -3,14 +3,12 @@ module.exports = [
 	{
 		mode: "production",
 		output: {
-			chunkFilename: "[name].[chunkhash].js"
+			filename: "[name].[chunkhash].js"
 		},
 		entry: {
 			app: "./entry-1.js"
 		},
 		optimization: {
-			moduleIds: "named",
-			chunkIds: "natural",
 			splitChunks: {
 				cacheGroups: {
 					vendor: {
@@ -26,14 +24,12 @@ module.exports = [
 	{
 		mode: "production",
 		output: {
-			chunkFilename: "[name].[chunkhash].js"
+			filename: "[name].[chunkhash].js"
 		},
 		entry: {
 			app: "./entry-2.js"
 		},
 		optimization: {
-			moduleIds: "named",
-			chunkIds: "natural",
 			splitChunks: {
 				cacheGroups: {
 					vendor: {

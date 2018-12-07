@@ -6,8 +6,6 @@ module.exports = {
 		filename: "bundle.js"
 	},
 	optimization: {
-		moduleIds: "natural",
-		chunkIds: "natural",
 		minimize: true,
 		minimizer: [
 			new TerserPlugin({

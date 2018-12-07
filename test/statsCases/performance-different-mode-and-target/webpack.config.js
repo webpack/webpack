@@ -2,7 +2,6 @@ module.exports = [
 	{
 		entry: "./index",
 		mode: "production",
-		optimization: { moduleIds: "natural", chunkIds: "natural" },
 		target: "web",
 		output: {
 			filename: "warning.pro-web.js"
@@ -11,7 +10,6 @@ module.exports = [
 	{
 		entry: "./index",
 		mode: "production",
-		optimization: { moduleIds: "natural", chunkIds: "natural" },
 		target: "webworker",
 		output: {
 			filename: "warning.pro-webworker.js"
@@ -20,7 +18,6 @@ module.exports = [
 	{
 		entry: "./index",
 		mode: "production",
-		optimization: { moduleIds: "natural", chunkIds: "natural" },
 		target: "node",
 		output: {
 			filename: "no-warning.pro-node.js"
@@ -56,7 +53,6 @@ module.exports = [
 	{
 		entry: "./index",
 		mode: "production",
-		optimization: { moduleIds: "natural", chunkIds: "natural" },
 		target: "node",
 		performance: {
 			hints: "warning"

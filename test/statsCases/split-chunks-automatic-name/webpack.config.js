@@ -15,23 +15,23 @@ module.exports = {
 		main: "./"
 	},
 	optimization: {
-		moduleIds: "natural",
-		chunkIds: "natural",
+		chunkIds: "named",
 		splitChunks: {
 			chunks: "all",
 			cacheGroups: {
-				default: {
-					automaticNamePrefix: "common",
+				default: false,
+				defaultVendors: false,
+				a: {
+					idHint: "common",
 					reuseExistingChunk: true,
 					minChunks: 2,
-					priority: -20,
 					enforce: true // minChunks should have higher priority
 				},
-				vendors: {
-					automaticNamePrefix: "common",
+				b: {
+					idHint: "common",
 					test: /[\\/]node_modules[\\/]/,
 					minSize: 1,
-					priority: -10
+					priority: 10
 				}
 			}
 		}

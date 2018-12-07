@@ -5,8 +5,6 @@ module.exports = {
 		filename: "bundle.js"
 	},
 	optimization: {
-		moduleIds: "natural",
-		chunkIds: "natural",
 		splitChunks: {
 			minSize: {},
 			maxSize: {
