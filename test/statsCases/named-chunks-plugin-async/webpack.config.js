@@ -6,7 +6,7 @@ const { compareModulesById } = require("../../../lib/util/comparators");
 
 module.exports = {
 	mode: "production",
-	optimization: { moduleIds: "natural", chunkIds: false },
+	optimization: { chunkIds: false },
 	entry: {
 		entry: "./entry"
 	},

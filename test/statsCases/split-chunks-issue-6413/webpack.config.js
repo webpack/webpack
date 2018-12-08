@@ -18,8 +18,6 @@ module.exports = {
 		filename: "[name].js"
 	},
 	optimization: {
-		moduleIds: "natural",
-		chunkIds: "natural",
 		splitChunks: {
 			minSize: 0 // enforce all
 		}

@@ -451,8 +451,15 @@
           "type": "boolean"
         },
         "chunkIds": {
-          "description": "Define the algorithm to choose chunk ids (named: readable ids for better debugging, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)",
-          "enum": ["natural", "named", "size", "total-size", false]
+          "description": "Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)",
+          "enum": [
+            "natural",
+            "named",
+            "deterministic",
+            "size",
+            "total-size",
+            false
+          ]
         },
         "concatenateModules": {
           "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer",
@@ -612,10 +619,6 @@
                     "type": "string",
                     "minLength": 1
                   },
-                  "automaticNamePrefix": {
-                    "description": "Sets the name prefix for created chunks",
-                    "type": "string"
-                  },
                   "chunks": {
                     "description": "Select chunks for determining cache group content (defaults to \"initial\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
                     "oneOf": [
@@ -636,6 +639,10 @@
                     "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
                     "type": "string",
                     "minLength": 1
+                  },
+                  "idHint": {
+                    "description": "Sets the hint for chunk id",
+                    "type": "string"
                   },
                   "maxAsyncRequests": {
                     "description": "Maximum number of requests which are accepted for on-demand loading",
@@ -672,7 +679,7 @@
                     "description": "Give chunks for this cache group a name (chunks with equal name are merged)",
                     "oneOf": [
                       {
-                        "type": "boolean"
+                        "enum": [false]
                       },
                       {
                         "instanceof": "Function",
@@ -812,7 +819,7 @@
           "description": "Give chunks created a name (chunks with equal name are merged)",
           "oneOf": [
             {
-              "type": "boolean"
+              "enum": [false]
             },
             {
               "instanceof": "Function",

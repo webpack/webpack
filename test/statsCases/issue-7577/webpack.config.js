@@ -1,7 +1,7 @@
 const base = {
 	mode: "production",
 	optimization: {
-		moduleIds: "natural",
+		moduleIds: "named",
 		chunkIds: "named",
 		runtimeChunk: true,
 		splitChunks: {

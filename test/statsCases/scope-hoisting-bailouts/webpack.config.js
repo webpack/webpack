@@ -1,6 +1,5 @@
 module.exports = {
 	mode: "production",
-	optimization: { moduleIds: "natural", chunkIds: "natural" },
 	entry: {
 		index: "./index.js",
 		entry: "./entry.js"

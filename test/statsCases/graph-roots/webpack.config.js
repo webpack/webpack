@@ -2,8 +2,6 @@ module.exports = {
 	mode: "development",
 	entry: "./index.js",
 	optimization: {
-		moduleIds: "natural",
-		chunkIds: "natural",
 		splitChunks: false
 	},
 	stats: {

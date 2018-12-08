@@ -17,8 +17,6 @@ module.exports = {
 		filename: "default/[name].js"
 	},
 	optimization: {
-		moduleIds: "natural",
-		chunkIds: "natural",
 		splitChunks: {
 			minSize: 80
 		}

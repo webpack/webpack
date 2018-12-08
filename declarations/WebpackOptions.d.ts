@@ -805,9 +805,15 @@ export interface OptimizationOptions {
 	 */
 	checkWasmTypes?: boolean;
 	/**
-	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)
+	 * Define the algorithm to choose chunk ids (named: readable ids for better debugging, deterministic: numeric hash ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)
 	 */
-	chunkIds?: "natural" | "named" | "size" | "total-size" | false;
+	chunkIds?:
+		| "natural"
+		| "named"
+		| "deterministic"
+		| "size"
+		| "total-size"
+		| false;
 	/**
 	 * Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer
 	 */
@@ -912,10 +918,6 @@ export interface OptimizationSplitChunksOptions {
 					 */
 					automaticNameDelimiter?: string;
 					/**
-					 * Sets the name prefix for created chunks
-					 */
-					automaticNamePrefix?: string;
-					/**
 					 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML)
 					 */
 					chunks?: ("initial" | "async" | "all") | Function;
@@ -927,6 +929,10 @@ export interface OptimizationSplitChunksOptions {
 					 * Sets the template for the filename for created chunks (Only works for initial chunks)
 					 */
 					filename?: string;
+					/**
+					 * Sets the hint for chunk id
+					 */
+					idHint?: string;
 					/**
 					 * Maximum number of requests which are accepted for on-demand loading
 					 */
@@ -950,7 +956,7 @@ export interface OptimizationSplitChunksOptions {
 					/**
 					 * Give chunks for this cache group a name (chunks with equal name are merged)
 					 */
-					name?: boolean | Function | string;
+					name?: false | Function | string;
 					/**
 					 * Priority of this cache group
 					 */
@@ -1021,7 +1027,7 @@ export interface OptimizationSplitChunksOptions {
 	/**
 	 * Give chunks created a name (chunks with equal name are merged)
 	 */
-	name?: boolean | Function | string;
+	name?: false | Function | string;
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema

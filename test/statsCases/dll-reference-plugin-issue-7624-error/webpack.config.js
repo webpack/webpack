@@ -2,7 +2,6 @@ var webpack = require("../../../");
 
 module.exports = {
 	mode: "production",
-	optimization: { moduleIds: "natural", chunkIds: "natural" },
 	entry: "./entry.js",
 	output: {
 		filename: "bundle.js"
