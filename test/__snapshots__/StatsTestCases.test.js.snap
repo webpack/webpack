@@ -1412,6 +1412,31 @@ chunk  {735} async2.js (async2) 89 bytes <{281}> <{606}> >{544}< [rendered]
  [919] ./async2.js 80 bytes {735} [built]"
 `;
 
+exports[`StatsTestCases should print correct stats for module-not-found-error 1`] = `
+"
+ERROR in ./index.js 1:0-17
+Module not found: Error: Can't resolve 'buffer' in 'Xdir/module-not-found-error'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need these module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to install 'buffer'.
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.alias: { \\"buffer\\": false }
+
+ERROR in ./index.js 2:0-13
+Module not found: Error: Can't resolve 'os' in 'Xdir/module-not-found-error'
+
+BREAKING CHANGE: webpack < 5 used to include polyfills for node.js core modules by default.
+This is no longer the case. Verify if you need these module and configure a polyfill for it.
+
+If you want to include a polyfill, you need to:
+	- add an alias 'resolve.alias: { \\"os\\": \\"os-browserify/browser\\" }'
+	- install 'os-browserify'
+If you don't want to include a polyfill, you can use an empty module like this:
+	resolve.alias: { \\"os\\": false }"
+`;
+
 exports[`StatsTestCases should print correct stats for module-trace-disabled-in-error 1`] = `
 "Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT

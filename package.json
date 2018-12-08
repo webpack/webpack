@@ -24,7 +24,6 @@
     "micromatch": "^3.1.8",
     "mkdirp": "~0.5.0",
     "neo-async": "^2.5.0",
-    "node-libs-browser": "^2.0.0",
     "schema-utils": "^0.4.4",
     "tapable": "^1.1.0",
     "terser-webpack-plugin": "^1.1.0",

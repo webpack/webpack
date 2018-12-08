@@ -129,10 +129,12 @@ describe("StatsTestCases", () => {
 							"$1 Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT"
 						);
 				}
+				const testPath = path.join(base, testName);
+				const testPathPattern = testPath.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
 				actual = actual
 					.replace(/\r\n?/g, "\n")
 					.replace(/[\t ]*Version:.+\n/g, "")
-					.replace(path.join(base, testName), "Xdir/" + testName)
+					.replace(new RegExp(testPathPattern, "g"), "Xdir/" + testName)
 					.replace(/, additional resolving: Xms/g, "");
 				expect(actual).toMatchSnapshot();
 				done();
