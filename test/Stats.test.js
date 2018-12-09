@@ -1,7 +1,7 @@
 /*globals describe it */
 "use strict";
 
-const webpack = require("../lib/webpack");
+const webpack = require("..");
 const MemoryFs = require("memory-fs");
 
 describe("Stats", () => {

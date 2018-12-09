@@ -3,7 +3,7 @@
 
 const path = require("path");
 
-const webpack = require("../");
+const webpack = require("..");
 const Stats = require("../lib/Stats");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 const MemoryFs = require("memory-fs");

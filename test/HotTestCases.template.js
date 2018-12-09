@@ -7,7 +7,7 @@ const vm = require("vm");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 
-const webpack = require("../lib/webpack");
+const webpack = require("..");
 
 const casesPath = path.join(__dirname, "hotCases");
 let categories = fs

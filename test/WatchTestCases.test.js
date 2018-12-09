@@ -11,7 +11,7 @@ const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const { remove } = require("./helpers/remove");
 
 const Stats = require("../lib/Stats");
-const webpack = require("../lib/webpack");
+const webpack = require("..");
 
 function copyDiff(src, dest, initial) {
 	if (!fs.existsSync(dest)) fs.mkdirSync(dest);

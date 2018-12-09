@@ -5,7 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const rimraf = require("rimraf");
 
-const webpack = require("../");
+const webpack = require("..");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 let fixtureCount = 0;
 

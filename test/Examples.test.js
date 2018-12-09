@@ -3,7 +3,7 @@
 /* globals describe it */
 const path = require("path");
 const fs = require("fs");
-const webpack = require("../");
+const webpack = require("..");
 
 describe("Examples", () => {
 	const basePath = path.join(__dirname, "..", "examples");

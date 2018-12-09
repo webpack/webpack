@@ -84,7 +84,7 @@
     "url": "https://github.com/webpack/webpack.git"
   },
   "homepage": "https://github.com/webpack/webpack",
-  "main": "lib/webpack.js",
+  "main": "lib/index.js",
   "bin": "./bin/webpack.js",
   "files": [
     "lib/",

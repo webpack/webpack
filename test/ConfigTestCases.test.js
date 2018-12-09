@@ -11,7 +11,7 @@ const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const FakeDocument = require("./helpers/FakeDocument");
 
 const Stats = require("../lib/Stats");
-const webpack = require("../lib/webpack");
+const webpack = require("..");
 const prepareOptions = require("./helpers/prepareOptions");
 
 describe("ConfigTestCases", () => {
