@@ -896,68 +896,7 @@ export interface OptimizationSplitChunksOptions {
 			| Function
 			| string
 			| RegExp
-			| {
-					/**
-					 * Sets the name delimiter for created chunks
-					 */
-					automaticNameDelimiter?: string;
-					/**
-					 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML)
-					 */
-					chunks?: ("initial" | "async" | "all") | Function;
-					/**
-					 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group
-					 */
-					enforce?: boolean;
-					/**
-					 * Sets the template for the filename for created chunks (Only works for initial chunks)
-					 */
-					filename?: string;
-					/**
-					 * Sets the hint for chunk id
-					 */
-					idHint?: string;
-					/**
-					 * Maximum number of requests which are accepted for on-demand loading
-					 */
-					maxAsyncRequests?: number;
-					/**
-					 * Maximum number of initial chunks which are accepted for an entry point
-					 */
-					maxInitialRequests?: number;
-					/**
-					 * Maximal size hint for the created chunks
-					 */
-					maxSize?: OptimizationSplitChunksSizes;
-					/**
-					 * Minimum number of times a module has to be duplicated until it's considered for splitting
-					 */
-					minChunks?: number;
-					/**
-					 * Minimal size for the created chunk
-					 */
-					minSize?: OptimizationSplitChunksSizes;
-					/**
-					 * Give chunks for this cache group a name (chunks with equal name are merged)
-					 */
-					name?: false | Function | string;
-					/**
-					 * Priority of this cache group
-					 */
-					priority?: number;
-					/**
-					 * Try to reuse existing chunk (with name) when it has matching modules
-					 */
-					reuseExistingChunk?: boolean;
-					/**
-					 * Assign modules to a cache group by module name
-					 */
-					test?: Function | string | RegExp;
-					/**
-					 * Assign modules to a cache group by module type
-					 */
-					type?: Function | string | RegExp;
-			  };
+			| OptimizationSplitChunksCacheGroup;
 	};
 	/**
 	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML)
@@ -993,9 +932,17 @@ export interface OptimizationSplitChunksOptions {
 	 */
 	maxAsyncRequests?: number;
 	/**
+	 * Maximal size hint for the on-demand chunks
+	 */
+	maxAsyncSize?: OptimizationSplitChunksSizes;
+	/**
 	 * Maximum number of initial chunks which are accepted for an entry point
 	 */
 	maxInitialRequests?: number;
+	/**
+	 * Maximal size hint for the initial chunks
+	 */
+	maxInitialSize?: OptimizationSplitChunksSizes;
 	/**
 	 * Maximal size hint for the created chunks
 	 */
@@ -1012,6 +959,72 @@ export interface OptimizationSplitChunksOptions {
 	 * Give chunks created a name (chunks with equal name are merged)
 	 */
 	name?: false | Function | string;
+}
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "OptimizationSplitChunksCacheGroup".
+ */
+export interface OptimizationSplitChunksCacheGroup {
+	/**
+	 * Sets the name delimiter for created chunks
+	 */
+	automaticNameDelimiter?: string;
+	/**
+	 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML)
+	 */
+	chunks?: ("initial" | "async" | "all") | Function;
+	/**
+	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group
+	 */
+	enforce?: boolean;
+	/**
+	 * Sets the template for the filename for created chunks (Only works for initial chunks)
+	 */
+	filename?: string;
+	/**
+	 * Sets the hint for chunk id
+	 */
+	idHint?: string;
+	/**
+	 * Maximum number of requests which are accepted for on-demand loading
+	 */
+	maxAsyncRequests?: number;
+	/**
+	 * Maximum number of initial chunks which are accepted for an entry point
+	 */
+	maxInitialRequests?: number;
+	/**
+	 * Maximal size hint for the created chunks
+	 */
+	maxSize?: OptimizationSplitChunksSizes;
+	/**
+	 * Minimum number of times a module has to be duplicated until it's considered for splitting
+	 */
+	minChunks?: number;
+	/**
+	 * Minimal size for the created chunk
+	 */
+	minSize?: OptimizationSplitChunksSizes;
+	/**
+	 * Give chunks for this cache group a name (chunks with equal name are merged)
+	 */
+	name?: false | Function | string;
+	/**
+	 * Priority of this cache group
+	 */
+	priority?: number;
+	/**
+	 * Try to reuse existing chunk (with name) when it has matching modules
+	 */
+	reuseExistingChunk?: boolean;
+	/**
+	 * Assign modules to a cache group by module name
+	 */
+	test?: Function | string | RegExp;
+	/**
+	 * Assign modules to a cache group by module type
+	 */
+	type?: Function | string | RegExp;
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema

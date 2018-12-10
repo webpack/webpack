@@ -566,6 +566,128 @@
         }
       }
     },
+    "OptimizationSplitChunksCacheGroup": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "automaticNameDelimiter": {
+          "description": "Sets the name delimiter for created chunks",
+          "type": "string",
+          "minLength": 1
+        },
+        "chunks": {
+          "description": "Select chunks for determining cache group content (defaults to \"initial\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
+          "oneOf": [
+            {
+              "enum": ["initial", "async", "all"]
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "Function"
+            }
+          ]
+        },
+        "enforce": {
+          "description": "Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group",
+          "type": "boolean"
+        },
+        "filename": {
+          "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
+          "type": "string",
+          "minLength": 1
+        },
+        "idHint": {
+          "description": "Sets the hint for chunk id",
+          "type": "string"
+        },
+        "maxAsyncRequests": {
+          "description": "Maximum number of requests which are accepted for on-demand loading",
+          "type": "number",
+          "minimum": 1
+        },
+        "maxInitialRequests": {
+          "description": "Maximum number of initial chunks which are accepted for an entry point",
+          "type": "number",
+          "minimum": 1
+        },
+        "maxSize": {
+          "description": "Maximal size hint for the created chunks",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
+        },
+        "minChunks": {
+          "description": "Minimum number of times a module has to be duplicated until it's considered for splitting",
+          "type": "number",
+          "minimum": 1
+        },
+        "minSize": {
+          "description": "Minimal size for the created chunk",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
+        },
+        "name": {
+          "description": "Give chunks for this cache group a name (chunks with equal name are merged)",
+          "oneOf": [
+            {
+              "enum": [false]
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "Function"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "priority": {
+          "description": "Priority of this cache group",
+          "type": "number"
+        },
+        "reuseExistingChunk": {
+          "description": "Try to reuse existing chunk (with name) when it has matching modules",
+          "type": "boolean"
+        },
+        "test": {
+          "description": "Assign modules to a cache group by module name",
+          "oneOf": [
+            {
+              "instanceof": "Function",
+              "tsType": "Function"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            }
+          ]
+        },
+        "type": {
+          "description": "Assign modules to a cache group by module type",
+          "oneOf": [
+            {
+              "instanceof": "Function",
+              "tsType": "Function"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "instanceof": "RegExp",
+              "tsType": "RegExp"
+            }
+          ]
+        }
+      }
+    },
     "OptimizationSplitChunksOptions": {
       "type": "object",
       "additionalProperties": false,
@@ -596,126 +718,7 @@
                 "tsType": "RegExp"
               },
               {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                  "automaticNameDelimiter": {
-                    "description": "Sets the name delimiter for created chunks",
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "chunks": {
-                    "description": "Select chunks for determining cache group content (defaults to \"initial\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
-                    "oneOf": [
-                      {
-                        "enum": ["initial", "async", "all"]
-                      },
-                      {
-                        "instanceof": "Function",
-                        "tsType": "Function"
-                      }
-                    ]
-                  },
-                  "enforce": {
-                    "description": "Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group",
-                    "type": "boolean"
-                  },
-                  "filename": {
-                    "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "idHint": {
-                    "description": "Sets the hint for chunk id",
-                    "type": "string"
-                  },
-                  "maxAsyncRequests": {
-                    "description": "Maximum number of requests which are accepted for on-demand loading",
-                    "type": "number",
-                    "minimum": 1
-                  },
-                  "maxInitialRequests": {
-                    "description": "Maximum number of initial chunks which are accepted for an entry point",
-                    "type": "number",
-                    "minimum": 1
-                  },
-                  "maxSize": {
-                    "description": "Maximal size hint for the created chunks",
-                    "oneOf": [
-                      {
-                        "$ref": "#/definitions/OptimizationSplitChunksSizes"
-                      }
-                    ]
-                  },
-                  "minChunks": {
-                    "description": "Minimum number of times a module has to be duplicated until it's considered for splitting",
-                    "type": "number",
-                    "minimum": 1
-                  },
-                  "minSize": {
-                    "description": "Minimal size for the created chunk",
-                    "oneOf": [
-                      {
-                        "$ref": "#/definitions/OptimizationSplitChunksSizes"
-                      }
-                    ]
-                  },
-                  "name": {
-                    "description": "Give chunks for this cache group a name (chunks with equal name are merged)",
-                    "oneOf": [
-                      {
-                        "enum": [false]
-                      },
-                      {
-                        "instanceof": "Function",
-                        "tsType": "Function"
-                      },
-                      {
-                        "type": "string"
-                      }
-                    ]
-                  },
-                  "priority": {
-                    "description": "Priority of this cache group",
-                    "type": "number"
-                  },
-                  "reuseExistingChunk": {
-                    "description": "Try to reuse existing chunk (with name) when it has matching modules",
-                    "type": "boolean"
-                  },
-                  "test": {
-                    "description": "Assign modules to a cache group by module name",
-                    "oneOf": [
-                      {
-                        "instanceof": "Function",
-                        "tsType": "Function"
-                      },
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "instanceof": "RegExp",
-                        "tsType": "RegExp"
-                      }
-                    ]
-                  },
-                  "type": {
-                    "description": "Assign modules to a cache group by module type",
-                    "oneOf": [
-                      {
-                        "instanceof": "Function",
-                        "tsType": "Function"
-                      },
-                      {
-                        "type": "string"
-                      },
-                      {
-                        "instanceof": "RegExp",
-                        "tsType": "RegExp"
-                      }
-                    ]
-                  }
-                }
+                "$ref": "#/definitions/OptimizationSplitChunksCacheGroup"
               }
             ]
           }
@@ -774,10 +777,26 @@
           "type": "number",
           "minimum": 1
         },
+        "maxAsyncSize": {
+          "description": "Maximal size hint for the on-demand chunks",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
+        },
         "maxInitialRequests": {
           "description": "Maximum number of initial chunks which are accepted for an entry point",
           "type": "number",
           "minimum": 1
+        },
+        "maxInitialSize": {
+          "description": "Maximal size hint for the initial chunks",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
         },
         "maxSize": {
           "description": "Maximal size hint for the created chunks",
