@@ -396,26 +396,7 @@ export interface WebpackOptions {
 	/**
 	 * Options for the watcher
 	 */
-	watchOptions?: {
-		/**
-		 * Delay the rebuilt after the first change. Value is a time in ms.
-		 */
-		aggregateTimeout?: number;
-		/**
-		 * Ignore some files from watching
-		 */
-		ignored?: {
-			[k: string]: any;
-		};
-		/**
-		 * Enable polling mode for watching
-		 */
-		poll?: boolean | number;
-		/**
-		 * Stop watching when stdin stream has ended
-		 */
-		stdin?: boolean;
-	};
+	watchOptions?: WatchOptions;
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
@@ -1420,4 +1401,28 @@ export interface StatsOptions {
 	 * Suppress warnings that match the specified filters. Filters can be Strings, RegExps or Functions
 	 */
 	warningsFilter?: FilterTypes;
+}
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "WatchOptions".
+ */
+export interface WatchOptions {
+	/**
+	 * Delay the rebuilt after the first change. Value is a time in ms.
+	 */
+	aggregateTimeout?: number;
+	/**
+	 * Ignore some files from watching
+	 */
+	ignored?: {
+		[k: string]: any;
+	};
+	/**
+	 * Enable polling mode for watching
+	 */
+	poll?: boolean | number;
+	/**
+	 * Stop watching when stdin stream has ended
+	 */
+	stdin?: boolean;
 }
