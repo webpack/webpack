@@ -3,7 +3,7 @@
 /*globals describe it */
 const path = require("path");
 
-const webpack = require("../lib/webpack");
+const webpack = require("..");
 
 const base = path.join(__dirname, "fixtures", "errors");
 

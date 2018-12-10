@@ -4,7 +4,7 @@
 const path = require("path");
 const fs = require("fs");
 
-const webpack = require("../lib/webpack");
+const webpack = require("..");
 const Stats = require("../lib/Stats");
 
 const base = path.join(__dirname, "statsCases");

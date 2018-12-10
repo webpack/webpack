@@ -5,7 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const MemoryFs = require("memory-fs");
 
-const webpack = require("../");
+const webpack = require("..");
 
 describe("WatchDetection", () => {
 	if (process.env.NO_WATCH_TESTS) {

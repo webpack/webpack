@@ -2,7 +2,7 @@
 
 const path = require("path");
 const MemoryFs = require("memory-fs");
-const webpack = require("../");
+const webpack = require("..");
 
 const createMultiCompiler = () => {
 	const compiler = webpack([

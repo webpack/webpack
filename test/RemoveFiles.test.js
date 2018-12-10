@@ -3,7 +3,7 @@
 /* globals describe it */
 const path = require("path");
 const MemoryFs = require("memory-fs");
-const webpack = require("../");
+const webpack = require("..");
 const fs = require("fs");
 const rimraf = require("rimraf");
 

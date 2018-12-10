@@ -12,7 +12,7 @@ const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 
 const Stats = require("../lib/Stats");
 const FileCachePlugin = require("../lib/cache/FileCachePlugin");
-const webpack = require("../lib/webpack");
+const webpack = require("..");
 
 const terserForTesting = new TerserPlugin({
 	cache: false,

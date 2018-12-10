@@ -77,7 +77,7 @@ describe("BenchmarkTestCases", function() {
 
 					function doLoadWebpack() {
 						const baselineWebpack = require.requireActual(
-							path.resolve(baselinePath, "lib/webpack.js")
+							path.resolve(baselinePath, "lib/index.js")
 						);
 						baselines.push({
 							name: baselineInfo.name,

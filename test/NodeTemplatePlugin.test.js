@@ -2,7 +2,7 @@
 "use strict";
 
 const path = require("path");
-const webpack = require("../lib/webpack");
+const webpack = require("..");
 
 describe("NodeTemplatePlugin", () => {
 	jest.setTimeout(20000);
