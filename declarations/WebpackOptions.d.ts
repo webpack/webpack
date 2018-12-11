@@ -911,6 +911,14 @@ export interface OptimizationSplitChunksOptions {
 		 */
 		automaticNameDelimiter?: string;
 		/**
+		 * Maximal size hint for the on-demand chunks
+		 */
+		maxAsyncSize?: OptimizationSplitChunksSizes;
+		/**
+		 * Maximal size hint for the initial chunks
+		 */
+		maxInitialSize?: OptimizationSplitChunksSizes;
+		/**
 		 * Maximal size hint for the created chunks
 		 */
 		maxSize?: OptimizationSplitChunksSizes;
@@ -990,9 +998,17 @@ export interface OptimizationSplitChunksCacheGroup {
 	 */
 	maxAsyncRequests?: number;
 	/**
+	 * Maximal size hint for the on-demand chunks
+	 */
+	maxAsyncSize?: OptimizationSplitChunksSizes;
+	/**
 	 * Maximum number of initial chunks which are accepted for an entry point
 	 */
 	maxInitialRequests?: number;
+	/**
+	 * Maximal size hint for the initial chunks
+	 */
+	maxInitialSize?: OptimizationSplitChunksSizes;
 	/**
 	 * Maximal size hint for the created chunks
 	 */

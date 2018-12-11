@@ -605,10 +605,26 @@
           "type": "number",
           "minimum": 1
         },
+        "maxAsyncSize": {
+          "description": "Maximal size hint for the on-demand chunks",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
+        },
         "maxInitialRequests": {
           "description": "Maximum number of initial chunks which are accepted for an entry point",
           "type": "number",
           "minimum": 1
+        },
+        "maxInitialSize": {
+          "description": "Maximal size hint for the initial chunks",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
         },
         "maxSize": {
           "description": "Maximal size hint for the created chunks",
@@ -744,6 +760,22 @@
               "description": "Sets the name delimiter for created chunks",
               "type": "string",
               "minLength": 1
+            },
+            "maxAsyncSize": {
+              "description": "Maximal size hint for the on-demand chunks",
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/OptimizationSplitChunksSizes"
+                }
+              ]
+            },
+            "maxInitialSize": {
+              "description": "Maximal size hint for the initial chunks",
+              "oneOf": [
+                {
+                  "$ref": "#/definitions/OptimizationSplitChunksSizes"
+                }
+              ]
             },
             "maxSize": {
               "description": "Maximal size hint for the created chunks",
