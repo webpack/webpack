@@ -95,11 +95,11 @@ describe(
 					const mockStats = new Stats({
 						children: [
 							{
-								getStats: () =>
-									new Stats({
-										warnings: ["firstError"],
-										hash: "5678"
-									})
+							getStats: () =>
+								new Stats({
+									warnings: ["firstError"],
+									hash: "5678"
+								})
 							}
 						],
 						warnings: [],
@@ -134,8 +134,10 @@ describe(
 			});
 		});
 		describe("toJson", () => {
-			it("returns plain object representation", () => {
-				const mockStats = new Stats({
+			let fakeCompilation;
+			beforeEach(() => {
+				
+				fakeCompilation = {
 					errors: [],
 					warnings: [],
 					assets: [],
@@ -154,8 +156,12 @@ describe(
 					compiler: {
 						context: ""
 					}
-				});
+				};
+			});
+			it("returns plain object representation", () => {
+				const mockStats = new Stats(fakeCompilation);
 				const result = mockStats.toJson();
+
 				expect(result).toEqual({
 					assets: [],
 					assetsByChunkName: {},
@@ -173,6 +179,16 @@ describe(
 					version: packageJson.version,
 					warnings: []
 				});
+			});
+
+			it('Given showErrors it should return error with its stack', () => {
+				const fakeError = new Error('FAKE STACK');
+				fakeCompilation.errors = [fakeError];
+				const mockStats = new Stats(fakeCompilation);
+
+				const result = mockStats.toJson({ errorDetails: true });
+				
+				expect(result.errors[0]).toEqual(`${fakeError.message}\n${fakeError.stack}`);
 			});
 		});
 		describe("Presets", () => {
