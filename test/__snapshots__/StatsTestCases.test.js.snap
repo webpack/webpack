@@ -3243,24 +3243,25 @@ Child zero-min:
 Child max-async-size:
     Entrypoint main = max-async-size-main.js
     chunk   {14} max-async-size-async-b-77a8c116.js (async-b-77a8c116) 1.57 KiB <{404}> ={818}= ={865}= ={976}= [rendered]
-        > ./a [410] ./async/index.js 2:2-49
-        > ./b [410] ./async/index.js 3:2-49
+        > ./b [410] ./async/index.js 10:2-49
+        > ./a [410] ./async/index.js 9:2-49
      [772] ./very-big.js?2 1.57 KiB {14} [built]
-    chunk  {404} max-async-size-main.js (main) 150 bytes (javascript) 4.58 KiB (runtime) >{14}< >{818}< >{865}< >{976}< [entry] [rendered]
+    chunk  {404} max-async-size-main.js (main) 2.47 KiB (javascript) 4.58 KiB (runtime) >{14}< >{818}< >{865}< >{976}< [entry] [rendered]
         > ./async main
-     [410] ./async/index.js 150 bytes {404} [built]
+     [410] ./async/index.js 386 bytes {404} [built]
          + 7 hidden root modules
+         + 6 hidden dependent modules
     chunk  {818} max-async-size-async-b-12217e1d.js (async-b-12217e1d) 1.57 KiB <{404}> ={14}= ={865}= ={976}= [rendered]
-        > ./a [410] ./async/index.js 2:2-49
-        > ./b [410] ./async/index.js 3:2-49
+        > ./b [410] ./async/index.js 10:2-49
+        > ./a [410] ./async/index.js 9:2-49
      [358] ./very-big.js?1 1.57 KiB {818} [built]
     chunk  {865} max-async-size-async-b-89a43a0f.js (async-b-89a43a0f) 1.57 KiB <{404}> ={14}= ={818}= ={976}= [rendered]
-        > ./a [410] ./async/index.js 2:2-49
-        > ./b [410] ./async/index.js 3:2-49
+        > ./b [410] ./async/index.js 10:2-49
+        > ./a [410] ./async/index.js 9:2-49
      [57] ./very-big.js?3 1.57 KiB {865} [built]
     chunk  {976} max-async-size-async-b-bde52cb3.js (async-b-bde52cb3) 864 bytes <{404}> ={14}= ={818}= ={865}= [rendered]
-        > ./a [410] ./async/index.js 2:2-49
-        > ./b [410] ./async/index.js 3:2-49
+        > ./b [410] ./async/index.js 10:2-49
+        > ./a [410] ./async/index.js 9:2-49
       [92] ./async/b.js 72 bytes {976} [built]
      [887] ./async/a.js 189 bytes {976} [built]
          + 9 hidden dependent modules

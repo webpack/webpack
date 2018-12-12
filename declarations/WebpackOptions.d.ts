@@ -235,6 +235,16 @@ export type WebpackPluginFunction = (
 export type RuleSetRules = RuleSetRule[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "OptimizationSplitChunksGetCacheGroups".
+ */
+export type OptimizationSplitChunksGetCacheGroups = ((
+	module: import("../lib/Module")
+) =>
+	| OptimizationSplitChunksCacheGroup
+	| OptimizationSplitChunksCacheGroup[]
+	| void);
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "OptimizationSplitChunksSizes".
  */
 export type OptimizationSplitChunksSizes =
@@ -980,7 +990,9 @@ export interface OptimizationSplitChunksCacheGroup {
 	/**
 	 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML)
 	 */
-	chunks?: ("initial" | "async" | "all") | Function;
+	chunks?:
+		| ("initial" | "async" | "all")
+		| OptimizationSplitChunksGetCacheGroups;
 	/**
 	 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group
 	 */

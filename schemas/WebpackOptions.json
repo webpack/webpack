@@ -582,8 +582,7 @@
               "enum": ["initial", "async", "all"]
             },
             {
-              "instanceof": "Function",
-              "tsType": "Function"
+              "$ref": "#/definitions/OptimizationSplitChunksGetCacheGroups"
             }
           ]
         },
@@ -703,6 +702,10 @@
           ]
         }
       }
+    },
+    "OptimizationSplitChunksGetCacheGroups": {
+      "instanceof": "Function",
+      "tsType": "((module: import('../lib/Module')) => OptimizationSplitChunksCacheGroup | OptimizationSplitChunksCacheGroup[] | void)"
     },
     "OptimizationSplitChunksOptions": {
       "type": "object",
