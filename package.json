@@ -89,10 +89,8 @@
   "files": [
     "lib/",
     "bin/",
-    "buildin/",
     "declarations/",
     "hot/",
-    "web_modules/",
     "schemas/",
     "SECURITY.md"
   ],
