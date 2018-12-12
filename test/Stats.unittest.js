@@ -7,24 +7,6 @@ const packageJson = require("../package.json");
 describe(
 	"Stats",
 	() => {
-		describe("formatFilePath", () => {
-			it("emit the file path and request", () => {
-				const mockStats = new Stats({
-					children: [],
-					errors: ["firstError"],
-					hash: "1234",
-					compiler: {
-						context: ""
-					}
-				});
-				const inputPath =
-					"./node_modules/ts-loader!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./src/app.vue";
-				const expectPath = `./src/app.vue (${inputPath})`;
-
-				expect(mockStats.formatFilePath(inputPath)).toBe(expectPath);
-			});
-		});
-
 		describe("Error Handling", () => {
 			describe("does have", () => {
 				it("hasErrors", () => {
