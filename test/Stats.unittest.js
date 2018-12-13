@@ -95,11 +95,11 @@ describe(
 					const mockStats = new Stats({
 						children: [
 							{
-							getStats: () =>
-								new Stats({
-									warnings: ["firstError"],
-									hash: "5678"
-								})
+								getStats: () =>
+									new Stats({
+										warnings: ["firstError"],
+										hash: "5678"
+									})
 							}
 						],
 						warnings: [],
@@ -136,7 +136,6 @@ describe(
 		describe("toJson", () => {
 			let fakeCompilation;
 			beforeEach(() => {
-				
 				fakeCompilation = {
 					errors: [],
 					warnings: [],
@@ -181,14 +180,13 @@ describe(
 				});
 			});
 
-			it('Given showErrors it should return error with its stack', () => {
-				const fakeError = new Error('FAKE STACK');
+			it("returns an error with its stack when errorDetails is true", () => {
+				const fakeError = new Error("FAKE STACK");
 				fakeCompilation.errors = [fakeError];
 				const mockStats = new Stats(fakeCompilation);
-
 				const result = mockStats.toJson({ errorDetails: true });
 				
-				expect(result.errors[0]).toEqual(`${fakeError.message}\n${fakeError.stack}`);
+				expect(result.errors[0]).toEqual(fakeError.stack);
 			});
 		});
 		describe("Presets", () => {
