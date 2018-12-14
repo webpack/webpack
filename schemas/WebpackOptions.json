@@ -1933,6 +1933,36 @@
         }
       }
     },
+    "WatchOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "aggregateTimeout": {
+          "description": "Delay the rebuilt after the first change. Value is a time in ms.",
+          "type": "number"
+        },
+        "ignored": {
+          "description": "Ignore some files from watching"
+        },
+        "poll": {
+          "description": "Enable polling mode for watching",
+          "anyOf": [
+            {
+              "description": "`true`: use polling.",
+              "type": "boolean"
+            },
+            {
+              "description": "`number`: use polling with specified interval.",
+              "type": "number"
+            }
+          ]
+        },
+        "stdin": {
+          "description": "Stop watching when stdin stream has ended",
+          "type": "boolean"
+        }
+      }
+    },
     "WebpackPluginFunction": {
       "description": "Function acting as plugin",
       "instanceof": "Function",
@@ -2199,34 +2229,11 @@
     },
     "watchOptions": {
       "description": "Options for the watcher",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "aggregateTimeout": {
-          "description": "Delay the rebuilt after the first change. Value is a time in ms.",
-          "type": "number"
-        },
-        "ignored": {
-          "description": "Ignore some files from watching"
-        },
-        "poll": {
-          "description": "Enable polling mode for watching",
-          "anyOf": [
-            {
-              "description": "`true`: use polling.",
-              "type": "boolean"
-            },
-            {
-              "description": "`number`: use polling with specified interval.",
-              "type": "number"
-            }
-          ]
-        },
-        "stdin": {
-          "description": "Stop watching when stdin stream has ended",
-          "type": "boolean"
+      "anyOf": [
+        {
+          "$ref": "#/definitions/WatchOptions"
         }
-      }
+      ]
     }
   }
 }
