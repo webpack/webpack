@@ -82,6 +82,24 @@ module.exports = [
 		stats
 	},
 	{
+		name: "max-async-size",
+		mode: "production",
+		entry: {
+			main: "./async"
+		},
+		output: {
+			filename: "max-async-size-[name].js"
+		},
+		optimization: {
+			splitChunks: {
+				minSize: 0,
+				maxAsyncSize: 1000,
+				chunks: "all"
+			}
+		},
+		stats
+	},
+	{
 		name: "enforce-min-size",
 		mode: "production",
 		entry: {
