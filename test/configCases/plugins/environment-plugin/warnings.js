@@ -1,3 +1,3 @@
 module.exports = [
-	[/(ddd)/, /DDD environment variable is undefined./]
+	[{compilerPath: /ddd/}, /DDD environment variable is undefined./]
 ];

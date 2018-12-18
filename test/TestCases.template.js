@@ -10,7 +10,6 @@ const TerserPlugin = require("terser-webpack-plugin");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 
-const Stats = require("../lib/Stats");
 const FileCachePlugin = require("../lib/cache/FileCachePlugin");
 const webpack = require("..");
 
@@ -217,8 +216,10 @@ const describeCases = config => {
 								done => {
 									const compiler = webpack(options, (err, stats) => {
 										if (err) return done(err);
-										const statOptions = Stats.presetToOptions("verbose");
-										statOptions.colors = false;
+										const statOptions = {
+											preset: "verbose",
+											colors: false
+										};
 										mkdirp.sync(outputDirectory);
 										fs.writeFileSync(
 											path.join(outputDirectory, "stats.txt"),

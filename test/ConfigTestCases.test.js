@@ -10,7 +10,6 @@ const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
 const FakeDocument = require("./helpers/FakeDocument");
 
-const Stats = require("../lib/Stats");
 const webpack = require("..");
 const prepareOptions = require("./helpers/prepareOptions");
 
@@ -110,7 +109,12 @@ describe("ConfigTestCases", () => {
 								webpack(options, (err, stats) => {
 									if (err) {
 										const fakeStats = {
-											errors: [err.stack]
+											errors: [
+												{
+													message: err.message,
+													stack: err.stack
+												}
+											]
 										};
 										if (
 											checkArrayExpectation(
@@ -125,8 +129,10 @@ describe("ConfigTestCases", () => {
 										// Wait for uncaught errors to occur
 										return setTimeout(done, 200);
 									}
-									const statOptions = Stats.presetToOptions("verbose");
-									statOptions.colors = false;
+									const statOptions = {
+										preset: "verbose",
+										colors: false
+									};
 									mkdirp.sync(outputDirectory);
 									fs.writeFileSync(
 										path.join(outputDirectory, "stats.txt"),
@@ -136,6 +142,11 @@ describe("ConfigTestCases", () => {
 									const jsonStats = stats.toJson({
 										errorDetails: true
 									});
+									fs.writeFileSync(
+										path.join(outputDirectory, "stats.json"),
+										JSON.stringify(jsonStats, null, 2),
+										"utf-8"
+									);
 									if (
 										checkArrayExpectation(
 											testDirectory,
