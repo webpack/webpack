@@ -1,6 +1,6 @@
 module.exports = {
 	target: "web",
-	entry: "index.mjs",
+	entry: "./index.mjs",
 	performance: {
 		hints: false
 	},
