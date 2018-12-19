@@ -61,14 +61,14 @@ describe("Errors", () => {
 			(errors, warnings) => {
 				expect(errors).toHaveLength(2);
 				expect(warnings).toHaveLength(0);
-				let lines = errors[0].split("\n");
-				expect(lines[0]).toMatch(/missingFile.js 4:0/);
-				expect(lines[1]).toMatch(/^Module not found/);
-				expect(lines[1]).toMatch(/\.\/missing/);
-				lines = errors[1].split("\n");
-				expect(lines[0]).toMatch(/missingFile.js 12:9/);
-				expect(lines[1]).toMatch(/^Module not found/);
-				expect(lines[1]).toMatch(/\.\/dir\/missing2/);
+				expect(errors[0].moduleName).toMatch(/missingFile.js/);
+				expect(errors[0].loc).toMatch(/4:0/);
+				expect(errors[0].message).toMatch(/^Module not found/);
+				expect(errors[0].message).toMatch(/\.\/missing/);
+				expect(errors[1].moduleName).toMatch(/missingFile.js/);
+				expect(errors[1].loc).toMatch(/12:9/);
+				expect(errors[1].message).toMatch(/^Module not found/);
+				expect(errors[1].message).toMatch(/\.\/dir\/missing2/);
 				done();
 			}
 		);
@@ -82,9 +82,8 @@ describe("Errors", () => {
 			(errors, warnings) => {
 				expect(errors).toHaveLength(0);
 				expect(warnings).toHaveLength(1);
-				const lines = warnings[0].split("\n");
-				expect(lines[0]).toMatch(/require.extensions\.js/);
-				expect(lines[1]).toMatch(
+				expect(warnings[0].moduleName).toMatch(/require.extensions\.js/);
+				expect(warnings[0].message).toMatch(
 					/require.extensions is not supported by webpack/
 				);
 				done();
@@ -100,9 +99,8 @@ describe("Errors", () => {
 			(errors, warnings) => {
 				expect(errors).toHaveLength(0);
 				expect(warnings).toHaveLength(1);
-				const lines = warnings[0].split("\n");
-				expect(lines[0]).toMatch(/require.main.require\.js/);
-				expect(lines[1]).toMatch(
+				expect(warnings[0].moduleName).toMatch(/require.main.require\.js/);
+				expect(warnings[0].message).toMatch(
 					/require.main.require is not supported by webpack/
 				);
 				done();
@@ -118,9 +116,8 @@ describe("Errors", () => {
 			(errors, warnings) => {
 				expect(errors).toHaveLength(0);
 				expect(warnings).toHaveLength(1);
-				const lines = warnings[0].split("\n");
-				expect(lines[0]).toMatch(/module.parent.require\.js/);
-				expect(lines[1]).toMatch(
+				expect(warnings[0].moduleName).toMatch(/module.parent.require\.js/);
+				expect(warnings[0].message).toMatch(
 					/module.parent.require is not supported by webpack/
 				);
 				done();
@@ -136,13 +133,13 @@ describe("Errors", () => {
 			(errors, warnings) => {
 				if (errors.length === 0) {
 					expect(warnings).toHaveLength(1);
-					const lines = warnings[0].split("\n");
-					expect(lines[4]).toMatch(/FILE\.js/);
-					expect(lines[5]).toMatch(/Used by/);
-					expect(lines[6]).toMatch(/case-sensitive/);
-					expect(lines[7]).toMatch(/file\.js/);
-					expect(lines[8]).toMatch(/Used by/);
-					expect(lines[9]).toMatch(/case-sensitive/);
+					const lines = warnings[0].message.split("\n");
+					expect(lines[3]).toMatch(/FILE\.js/);
+					expect(lines[4]).toMatch(/Used by/);
+					expect(lines[5]).toMatch(/case-sensitive/);
+					expect(lines[6]).toMatch(/file\.js/);
+					expect(lines[7]).toMatch(/Used by/);
+					expect(lines[8]).toMatch(/case-sensitive/);
 				} else {
 					expect(errors).toHaveLength(1);
 					expect(warnings).toHaveLength(0);
@@ -159,11 +156,10 @@ describe("Errors", () => {
 			(errors, warnings) => {
 				expect(errors).toHaveLength(0);
 				expect(warnings).toHaveLength(1);
-				let lines = warnings[0].split("\n");
-				expect(lines[0]).toMatch(/configuration/);
-				expect(lines[1]).toMatch(/mode/);
-				expect(lines[1]).toMatch(/development/);
-				expect(lines[1]).toMatch(/production/);
+				expect(warnings[0].message).toMatch(/configuration/);
+				expect(warnings[0].message).toMatch(/mode/);
+				expect(warnings[0].message).toMatch(/development/);
+				expect(warnings[0].message).toMatch(/production/);
 				done();
 			}
 		);
@@ -190,14 +186,14 @@ describe("Errors", () => {
 			(errors, warnings) => {
 				expect(errors).toHaveLength(2);
 				expect(warnings).toHaveLength(0);
-				let lines = errors[0].split("\n");
-				expect(lines[0]).toMatch(/missingFile.js 4:0/);
-				expect(lines[1]).toMatch(/^Module not found/);
-				expect(lines[1]).toMatch(/\.\/missing/);
-				lines = errors[1].split("\n");
-				expect(lines[0]).toMatch(/missingFile.js 12:9/);
-				expect(lines[1]).toMatch(/^Module not found/);
-				expect(lines[1]).toMatch(/\.\/dir\/missing2/);
+				expect(errors[0].moduleName).toMatch(/missingFile.js/);
+				expect(errors[0].loc).toMatch(/4:0/);
+				expect(errors[0].message).toMatch(/^Module not found/);
+				expect(errors[0].message).toMatch(/\.\/missing/);
+				expect(errors[1].moduleName).toMatch(/missingFile.js/);
+				expect(errors[1].loc).toMatch(/12:9/);
+				expect(errors[1].message).toMatch(/^Module not found/);
+				expect(errors[1].message).toMatch(/\.\/dir\/missing2/);
 				done();
 			}
 		);
@@ -211,12 +207,12 @@ describe("Errors", () => {
 				},
 				(errors, warnings) => {
 					expect(warnings).toHaveLength(1);
-					expect(warnings[0].split("\n")[1]).toMatch(
-						/^Module Warning \(from .\/emit-error-loader.js\):$/
+					expect(warnings[0].message).toMatch(
+						/^Module Warning \(from .\/emit-error-loader.js\):/
 					);
 					expect(errors).toHaveLength(1);
-					expect(errors[0].split("\n")[1]).toMatch(
-						/^Module Error \(from .\/emit-error-loader.js\):$/
+					expect(errors[0].message).toMatch(
+						/^Module Error \(from .\/emit-error-loader.js\):/
 					);
 				}
 			),
@@ -227,12 +223,12 @@ describe("Errors", () => {
 				},
 				(errors, warnings) => {
 					expect(warnings).toHaveLength(1);
-					expect(warnings[0].split("\n")[1]).toMatch(
-						/^Module Warning \(from .\/emit-error-loader.js\):$/
+					expect(warnings[0].message).toMatch(
+						/^Module Warning \(from .\/emit-error-loader.js\):/
 					);
 					expect(errors).toHaveLength(1);
-					expect(errors[0].split("\n")[1]).toMatch(
-						/^Module Error \(from .\/emit-error-loader.js\):$/
+					expect(errors[0].message).toMatch(
+						/^Module Error \(from .\/emit-error-loader.js\):/
 					);
 				}
 			),
@@ -256,15 +252,15 @@ describe("Errors", () => {
 				},
 				(errors, warnings) => {
 					expect(warnings).toHaveLength(1);
-					expect(warnings[0].split("\n")[1]).toMatch(
-						/^Module Warning \(from .\/emit-error-loader.js\):$/
+					expect(warnings[0].message).toMatch(
+						/^Module Warning \(from .\/emit-error-loader.js\):/
 					);
 					expect(errors).toHaveLength(2);
-					expect(errors[0].split("\n")[1]).toMatch(
-						/^Module Error \(from .\/emit-error-loader.js\):$/
+					expect(errors[0].message).toMatch(
+						/^Module Error \(from .\/emit-error-loader.js\):/
 					);
-					expect(errors[1].split("\n")[1]).toMatch(
-						/^Module build failed \(from \(webpack\)\/node_modules\/json-loader\/index.js\):$/
+					expect(errors[1].message).toMatch(
+						/^Module build failed \(from \(webpack\)\/node_modules\/json-loader\/index.js\):/
 					);
 				}
 			),
@@ -283,8 +279,8 @@ describe("Errors", () => {
 				},
 				(errors, warnings) => {
 					expect(errors).toHaveLength(1);
-					expect(errors[0].split("\n")[1]).toMatch(
-						/^Module build failed \(from .\/async-error-loader.js\):$/
+					expect(errors[0].message).toMatch(
+						/^Module build failed \(from .\/async-error-loader.js\):/
 					);
 				}
 			),
@@ -303,8 +299,8 @@ describe("Errors", () => {
 				},
 				(errors, warnings) => {
 					expect(errors).toHaveLength(1);
-					expect(errors[0].split("\n")[1]).toMatch(
-						/^Module build failed \(from .\/throw-error-loader.js\):$/
+					expect(errors[0].message).toMatch(
+						/^Module build failed \(from .\/throw-error-loader.js\):/
 					);
 				}
 			),
@@ -323,22 +319,22 @@ describe("Errors", () => {
 				},
 				(errors, warnings) => {
 					expect(warnings).toHaveLength(2);
-					expect(warnings[0].split("\n")[1]).toMatch(
-						/^Module Warning \(from .\/irregular-error-loader.js\):$/
+					expect(warnings[0].message).toMatch(
+						/^Module Warning \(from .\/irregular-error-loader.js\):/
 					);
-					expect(warnings[1].split("\n")[1]).toMatch(
-						/^Module Warning \(from .\/irregular-error-loader.js\):$/
+					expect(warnings[1].message).toMatch(
+						/^Module Warning \(from .\/irregular-error-loader.js\):/
 					);
 
 					expect(errors).toHaveLength(3);
-					expect(errors[0].split("\n")[1]).toMatch(
-						/^Module Error \(from .\/irregular-error-loader.js\):$/
+					expect(errors[0].message).toMatch(
+						/^Module Error \(from .\/irregular-error-loader.js\):/
 					);
-					expect(errors[1].split("\n")[1]).toMatch(
-						/^Module Error \(from .\/irregular-error-loader.js\):$/
+					expect(errors[1].message).toMatch(
+						/^Module Error \(from .\/irregular-error-loader.js\):/
 					);
-					expect(errors[2].split("\n")[1]).toMatch(
-						/^Module build failed \(from .\/irregular-error-loader.js\):$/
+					expect(errors[2].message).toMatch(
+						/^Module build failed \(from .\/irregular-error-loader.js\):/
 					);
 				}
 			)
@@ -352,8 +348,7 @@ describe("Errors", () => {
 			},
 			(errors, warnings) => {
 				expect(errors).toHaveLength(1);
-				const messages = errors[0].split("\n");
-				expect(messages[1]).toMatch(
+				expect(errors[0].message).toMatch(
 					/^Module build failed: Error: Final loader \(.+\) didn't return a Buffer or String/
 				);
 				done();

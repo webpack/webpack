@@ -2,6 +2,34 @@
 const fs = require("fs");
 const path = require("path");
 
+const check = (expected, actual) => {
+	if(expected instanceof RegExp) {
+		expected = { message: expected };
+	}
+	return Object.keys(expected).every(key => {
+		let value = actual[key];
+		if(typeof value === "object") {
+			value = JSON.stringify(value);
+		}
+		return expected[key].test(value);
+	})
+}
+
+const explain = object => {
+	if(object instanceof RegExp) {
+		object = { message: object };
+	}
+	return Object.keys(object).map(key => {
+		let value = object[key];
+		if(typeof value === "object" && !(value instanceof RegExp)) {
+			value = JSON.stringify(value);
+		}
+		let msg = `${key} = ${value}`
+		if(msg.length > 100) msg = msg.slice(0, 97) + "...";
+		return msg;
+	}).join("; ");
+}
+
 module.exports = function checkArrayExpectation(
 	testDirectory,
 	object,
@@ -46,25 +74,25 @@ module.exports = function checkArrayExpectation(
 		for (let i = 0; i < array.length; i++) {
 			if (Array.isArray(expected[i])) {
 				for (let j = 0; j < expected[i].length; j++) {
-					if (!expected[i][j].test(array[i]))
+					if (!check(expected[i][j], array[i]))
 						return (
 							done(
 								new Error(
-									`${upperCaseKind} ${i}: ${array[i]} doesn't match ${expected[
+									`${upperCaseKind} ${i}: ${explain(array[i])} doesn't match ${explain(expected[
 										i
-									][j].toString()}`
+									][j])}`
 								)
 							),
 							true
 						);
 				}
-			} else if (!expected[i].test(array[i]))
+			} else if (!check(expected[i], array[i]))
 				return (
 					done(
 						new Error(
-							`${upperCaseKind} ${i}: ${array[i]} doesn't match ${expected[
+							`${upperCaseKind} ${i}: ${explain(array[i])} doesn't match ${explain(expected[
 								i
-							].toString()}`
+							])}`
 						)
 					),
 					true

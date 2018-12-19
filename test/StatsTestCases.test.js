@@ -5,7 +5,6 @@ const path = require("path");
 const fs = require("fs");
 
 const webpack = require("..");
-const Stats = require("../lib/Stats");
 
 const base = path.join(__dirname, "statsCases");
 const outputBase = path.join(__dirname, "js", "stats");
@@ -99,10 +98,10 @@ describe("StatsTestCases", () => {
 				if (typeof options.stats !== "undefined") {
 					toStringOptions = options.stats;
 					if (toStringOptions === null || typeof toStringOptions !== "object")
-						toStringOptions = Stats.presetToOptions(toStringOptions);
-					hasColorSetting = typeof options.stats.colors !== "undefined";
+						toStringOptions = { preset: toStringOptions };
 					if (!toStringOptions.context)
 						toStringOptions.context = path.join(base, testName);
+					hasColorSetting = typeof toStringOptions.colors !== "undefined";
 				}
 				if (Array.isArray(options) && !toStringOptions.children) {
 					toStringOptions.children = options.map(o => o.stats);
