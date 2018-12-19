@@ -372,10 +372,10 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
            Asset      Size  Chunks             Chunk Names
-  hash.worker.js  4.98 KiB          [emitted]  
 1.hash.worker.js  1.79 KiB          [emitted]  
+  hash.worker.js  4.98 KiB          [emitted]  
        output.js  4.42 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
@@ -386,8 +386,8 @@ chunk    {0} output.js (main) 326 bytes [entry] [rendered]
      cjs require worker-loader?name=hash.worker.js!./worker [0] ./example.js 1:13-66
 Child worker:
                Asset      Size  Chunks             Chunk Names
-      hash.worker.js  4.98 KiB       0  [emitted]  main
     1.hash.worker.js  1.79 KiB       1  [emitted]  
+      hash.worker.js  4.98 KiB       0  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} hash.worker.js (main) 162 bytes >{1}< [entry] [rendered]
         > !!.\worker.js main
@@ -412,10 +412,10 @@ Child worker:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
            Asset       Size  Chunks             Chunk Names
-  hash.worker.js   1.27 KiB          [emitted]  
 1.hash.worker.js  593 bytes          [emitted]  
+  hash.worker.js   1.27 KiB          [emitted]  
        output.js   1.06 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
@@ -426,8 +426,8 @@ chunk    {0} output.js (main) 326 bytes [entry] [rendered]
      cjs require worker-loader?name=hash.worker.js!./worker [0] ./example.js 1:13-66
 Child worker:
                Asset       Size  Chunks             Chunk Names
-      hash.worker.js   1.27 KiB       0  [emitted]  main
     1.hash.worker.js  593 bytes       1  [emitted]  
+      hash.worker.js   1.27 KiB       0  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} hash.worker.js (main) 162 bytes >{1}< [entry] [rendered]
         > !!.\worker.js main

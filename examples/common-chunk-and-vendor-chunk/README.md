@@ -691,14 +691,14 @@ module.exports = "pageC";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
                        Asset       Size  Chunks             Chunk Names
-                    pageA.js    6.7 KiB       0  [emitted]  pageA
-                   vendor.js  536 bytes       1  [emitted]  vendor
 commons~pageA~pageB~pageC.js  269 bytes       2  [emitted]  commons~pageA~pageB~pageC
-                    pageB.js    6.5 KiB       3  [emitted]  pageB
       commons~pageB~pageC.js  269 bytes       4  [emitted]  commons~pageB~pageC
+                    pageA.js    6.7 KiB       0  [emitted]  pageA
+                    pageB.js    6.5 KiB       3  [emitted]  pageB
                     pageC.js   6.45 KiB       5  [emitted]  pageC
+                   vendor.js  536 bytes       1  [emitted]  vendor
 Entrypoint pageA = vendor.js commons~pageA~pageB~pageC.js pageA.js
 Entrypoint pageB = vendor.js commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageB.js
 Entrypoint pageC = commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageC.js
@@ -740,14 +740,14 @@ chunk    {5} pageC.js (pageC) 102 bytes ={2}= ={4}= [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
                        Asset       Size  Chunks             Chunk Names
 commons~pageA~pageB~pageC.js   96 bytes       0  [emitted]  commons~pageA~pageB~pageC
-                   vendor.js  134 bytes       1  [emitted]  vendor
-      commons~pageB~pageC.js   97 bytes       2  [emitted]  commons~pageB~pageC
+      commons~pageB~pageC.js   97 bytes       1  [emitted]  commons~pageB~pageC
                     pageA.js   1.52 KiB       3  [emitted]  pageA
                     pageB.js   1.49 KiB       4  [emitted]  pageB
                     pageC.js   1.48 KiB       5  [emitted]  pageC
+                   vendor.js  134 bytes       2  [emitted]  vendor
 Entrypoint pageA = vendor.js commons~pageA~pageB~pageC.js pageA.js
 Entrypoint pageB = vendor.js commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageB.js
 Entrypoint pageC = commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageC.js
@@ -759,17 +759,17 @@ chunk    {0} commons~pageA~pageB~pageC.js (commons~pageA~pageB~pageC) 28 bytes =
      cjs require ./utility2 [2] ./pageA.js 3:15-36
      cjs require ./utility2 [5] ./pageB.js 2:15-36
      cjs require ./utility2 [7] ./pageC.js 1:15-36
-chunk    {1} vendor.js (vendor) 54 bytes ={0}= ={2}= ={3}= ={4}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
+chunk    {1} commons~pageB~pageC.js (commons~pageB~pageC) 28 bytes ={0}= ={2}= ={4}= ={5}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageB~pageC)
+    > ./pageB pageB
+    > ./pageC pageC
+ [1] ./utility3.js 28 bytes {1} [built]
+     cjs require ./utility3 [5] ./pageB.js 3:15-36
+     cjs require ./utility3 [7] ./pageC.js 2:15-36
+chunk    {2} vendor.js (vendor) 54 bytes ={0}= ={1}= ={3}= ={4}= [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
     > ./pageA pageA
     > ./pageB pageB
     2 modules
-chunk    {2} commons~pageB~pageC.js (commons~pageB~pageC) 28 bytes ={0}= ={1}= ={4}= ={5}= [initial] [rendered] split chunk (cache group: commons) (name: commons~pageB~pageC)
-    > ./pageB pageB
-    > ./pageC pageC
- [1] ./utility3.js 28 bytes {2} [built]
-     cjs require ./utility3 [5] ./pageB.js 3:15-36
-     cjs require ./utility3 [7] ./pageC.js 2:15-36
-chunk    {3} pageA.js (pageA) 165 bytes ={0}= ={1}= [entry] [rendered]
+chunk    {3} pageA.js (pageA) 165 bytes ={0}= ={2}= [entry] [rendered]
     > ./pageA pageA
  [2] ./pageA.js 137 bytes {3} [built]
      single entry ./pageA  pageA
@@ -779,7 +779,7 @@ chunk    {4} pageB.js (pageB) 137 bytes ={0}= ={1}= ={2}= [entry] [rendered]
     > ./pageB pageB
  [5] ./pageB.js 137 bytes {4} [built]
      single entry ./pageB  pageB
-chunk    {5} pageC.js (pageC) 102 bytes ={0}= ={2}= [entry] [rendered]
+chunk    {5} pageC.js (pageC) 102 bytes ={0}= ={1}= [entry] [rendered]
     > ./pageC pageC
  [7] ./pageC.js 102 bytes {5} [built]
      single entry ./pageC  pageC

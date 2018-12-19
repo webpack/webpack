@@ -123,7 +123,6 @@ require.ensure(["b"], function(require) {
 /******/ 				promises.push(installedChunkData[2] = promise);
 /******/
 /******/ 				// start chunk loading
-/******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
 /******/ 				var onScriptComplete;
 /******/
@@ -155,7 +154,7 @@ require.ensure(["b"], function(require) {
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
 /******/ 				script.onerror = script.onload = onScriptComplete;
-/******/ 				head.appendChild(script);
+/******/ 				document.head.appendChild(script);
 /******/ 			}
 /******/ 		}
 /******/ 		return Promise.all(promises);
@@ -351,11 +350,11 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
       Asset       Size  Chunks             Chunk Names
-  output.js   9.12 KiB       0  [emitted]  main
 1.output.js  677 bytes       1  [emitted]  my own chunk
 2.output.js  463 bytes       2  [emitted]  
+  output.js   9.07 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 432 bytes >{1}< >{2}< [entry] [rendered]
     > .\example.js main
@@ -376,11 +375,11 @@ chunk    {2} 2.output.js 22 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
       Asset       Size  Chunks             Chunk Names
-  output.js   2.22 KiB       0  [emitted]  main
 1.output.js  112 bytes    1, 2  [emitted]  my own chunk
 2.output.js   92 bytes       2  [emitted]  
+  output.js   2.19 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 432 bytes >{1}< >{2}< [entry] [rendered]
     > .\example.js main

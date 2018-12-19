@@ -309,7 +309,7 @@ module.exports = vendor_d9f5eab93a0e9010218f;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
 Child vendor:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset     Size  Chunks             Chunk Names
@@ -363,7 +363,7 @@ Child app:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
 Child vendor:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset      Size  Chunks             Chunk Names

@@ -161,7 +161,7 @@ module.exports = Math.random();
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
     Asset      Size  Chunks             Chunk Names
 output.js  4.21 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -179,7 +179,7 @@ chunk    {0} output.js (main) 313 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
     Asset      Size  Chunks             Chunk Names
 output.js  1.03 KiB       0  [emitted]  main
 Entrypoint main = output.js
