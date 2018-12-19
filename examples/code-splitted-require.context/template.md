@@ -10,10 +10,10 @@
 {{dist/output.js}}
 ```
 
-# dist/1.output.js
+# dist/925.output.js
 
 ``` javascript
-{{dist/1.output.js}}
+{{dist/925.output.js}}
 ```
 
 # Info

@@ -11,16 +11,16 @@
 {{dist/output.js}}
 ```
 
-# dist/1.output.js
+# dist/126.output.js
 
 ``` javascript
-{{dist/1.output.js}}
+{{dist/126.output.js}}
 ```
 
-# dist/2.output.js
+# dist/368.output.js
 
 ``` javascript
-{{dist/2.output.js}}
+{{dist/368.output.js}}
 ```
 
 # Info

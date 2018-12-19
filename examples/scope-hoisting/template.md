@@ -91,16 +91,16 @@ While module concatenation identifiers in modules are renamed to avoid conflicts
 {{dist/output.js}}
 ```
 
-# dist/1.output.js
+# dist/78.output.js
 
 ``` javascript
-{{dist/1.output.js}}
+{{dist/78.output.js}}
 ```
 
 Minimized
 
 ``` javascript
-{{production:dist/1.output.js}}
+{{production:dist/78.output.js}}
 ```
 
 # Info

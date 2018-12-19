@@ -40,7 +40,8 @@ exports.add = function() {
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
 ``` javascript
-/******/ (function(modules) { // webpackBootstrap
+/******/ (function(modules, runtime) { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -69,61 +70,10 @@ exports.add = function() {
 /******/ 	}
 /******/
 /******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// define getter function for harmony exports
-/******/ 	__webpack_require__.d = function(exports, name, getter) {
-/******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
-/******/ 		}
-/******/ 	};
-/******/
-/******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
-/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
-/******/ 	};
-/******/
-/******/ 	// getDefaultExport function for compatibility with non-harmony modules
-/******/ 	__webpack_require__.n = function(module) {
-/******/ 		var getter = module && module.__esModule ?
-/******/ 			function getDefault() { return module['default']; } :
-/******/ 			function getModuleExports() { return module; };
-/******/ 		__webpack_require__.d(getter, 'a', getter);
-/******/ 		return getter;
-/******/ 	};
-/******/
-/******/ 	// Object.prototype.hasOwnProperty.call
-/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "dist/";
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
 ```
@@ -137,7 +87,8 @@ exports.add = function() {
   !*** ./example.js ***!
   \********************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! runtime requirements: __webpack_require__ */
+/***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 const inc = __webpack_require__(/*! ./increment */ 1).increment;
 const a = 1;
@@ -150,7 +101,8 @@ inc(a); // 2
   !*** ./increment.js ***!
   \**********************/
 /*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
+/*! runtime requirements: __webpack_require__, __webpack_exports__ */
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
 
 const add = __webpack_require__(/*! ./math */ 2).add;
 exports.increment = function(val) {
@@ -164,7 +116,8 @@ exports.increment = function(val) {
   !*** ./math.js ***!
   \*****************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/*! runtime requirements: __webpack_exports__ */
+/***/ (function(__unusedmodule, exports) {
 
 exports.add = function() {
     var sum = 0, i = 0, args = arguments, l = args.length;
@@ -185,18 +138,18 @@ exports.add = function() {
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-next
-    Asset     Size  Chunks             Chunk Names
-output.js  4.4 KiB       0  [emitted]  main
+    Asset      Size  Chunks             Chunk Names
+output.js  2.21 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 332 bytes [entry] [rendered]
+chunk {0} output.js (main) 326 bytes [entry] [rendered]
     > .\example.js main
  [0] ./example.js 72 bytes {0} [built]
      [used exports unknown]
-     entry .\example.js  main
+     entry .\example.js main
  [1] ./increment.js 98 bytes {0} [built]
      [used exports unknown]
      cjs require ./increment [0] ./example.js 1:12-34
- [2] ./math.js 162 bytes {0} [built]
+ [2] ./math.js 156 bytes {0} [built]
      [used exports unknown]
      cjs require ./math [1] ./increment.js 1:12-29
 ```
@@ -206,15 +159,15 @@ chunk    {0} output.js (main) 332 bytes [entry] [rendered]
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-next
-    Asset     Size  Chunks             Chunk Names
-output.js  1.1 KiB       0  [emitted]  main
+    Asset       Size  Chunks             Chunk Names
+output.js  407 bytes   {404}  [emitted]  main
 Entrypoint main = output.js
-chunk    {0} output.js (main) 332 bytes [entry] [rendered]
+chunk {404} output.js (main) 326 bytes [entry] [rendered]
     > .\example.js main
- [0] ./example.js 72 bytes {0} [built]
-     entry .\example.js  main
- [1] ./increment.js 98 bytes {0} [built]
-     cjs require ./increment [0] ./example.js 1:12-34
- [2] ./math.js 162 bytes {0} [built]
-     cjs require ./math [1] ./increment.js 1:12-29
+ [275] ./example.js 72 bytes {404} [built]
+       entry .\example.js main
+ [529] ./increment.js 98 bytes {404} [built]
+       cjs require ./increment [275] ./example.js 1:12-34
+ [702] ./math.js 156 bytes {404} [built]
+       cjs require ./math [529] ./increment.js 1:12-29
 ```

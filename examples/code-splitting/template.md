@@ -37,16 +37,16 @@ You can see that chunks are loaded via JSONP. The additional chunks are pretty s
 {{dist/output.js}}
 ```
 
-# dist/1.output.js
+# dist/3.output.js
 
 ``` javascript
-{{dist/1.output.js}}
+{{dist/3.output.js}}
 ```
 
 Minimized
 
 ``` javascript
-{{production:dist/1.output.js}}
+{{production:dist/3.output.js}}
 ```
 
 # Info

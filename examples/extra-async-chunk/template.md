@@ -44,22 +44,22 @@ Pretty useful for a router in a SPA.
 {{dist/output.js}}
 ```
 
-# dist/0.output.js
+# dist/85.output.js
 
 ``` javascript
-{{dist/0.output.js}}
+{{dist/85.output.js}}
 ```
 
-# dist/2.output.js
+# dist/324.output.js
 
 ``` javascript
-{{dist/2.output.js}}
+{{dist/324.output.js}}
 ```
 
-# dist/3.output.js
+# dist/911.output.js
 
 ``` javascript
-{{dist/3.output.js}}
+{{dist/911.output.js}}
 ```
 
 # Info

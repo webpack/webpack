@@ -62,28 +62,28 @@ You can see that webpack outputs five files/chunks:
 {{dist/output.js}}
 ```
 
-# dist/0.output.js
+# dist/596.output.js
 
 ``` javascript
-{{dist/0.output.js}}
+{{dist/596.output.js}}
 ```
 
-# dist/2.output.js
+# dist/912.output.js
 
 ``` javascript
-{{dist/2.output.js}}
+{{dist/912.output.js}}
 ```
 
-# dist/3.output.js
+# dist/953.output.js
 
 ``` javascript
-{{dist/3.output.js}}
+{{dist/953.output.js}}
 ```
 
-# dist/4.output.js
+# dist/954.output.js
 
 ``` javascript
-{{dist/4.output.js}}
+{{dist/954.output.js}}
 ```
 
 # Info

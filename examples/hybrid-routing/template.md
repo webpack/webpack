@@ -32,10 +32,10 @@
 {{pageA.html}}
 ```
 
-# dist/pageA~pageB.bundle.js
+# dist/router_js.bundle.js
 
 ``` javascript
-{{dist/pageA~pageB.bundle.js}}
+{{dist/router_js.bundle.js}}
 ```
 
 # dist/pageA.bundle.js

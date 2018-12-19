@@ -6,7 +6,7 @@ module.exports = {
 	entry: "./test.js",
 	plugins: [
 		new IgnorePlugin({
-			checkResource: function(resource) {
+			checkResource(resource) {
 				return /ignored-module/.test(resource);
 			}
 		})
