@@ -1,6 +1,6 @@
 "use strict";
 
-const compareLocations = require("../lib/compareLocations");
+const { compareLocations } = require("../lib/util/comparators");
 const createPosition = overrides => {
 	return Object.assign(
 		{
