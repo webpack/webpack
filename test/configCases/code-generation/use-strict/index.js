@@ -19,7 +19,7 @@ it("should include only one use strict per module", function() {
 
 	expect(matches).toEqual([
 		"/* unused harmony default export */ var _unused_webpack_default_export = (\"a\");",
-		"/* webpack/runtime/make namespace object */",
+		"/******/ ",
 		"/******/ \t// The module cache",
 		"__webpack_require__.r(__webpack_exports__);",
 		"__webpack_require__.r(__webpack_exports__);",
