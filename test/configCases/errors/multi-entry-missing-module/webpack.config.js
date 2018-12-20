@@ -8,9 +8,7 @@ module.exports = {
 		filename: "[name].js"
 	},
 	plugins: [
-		new IgnorePlugin({
-			resourceRegExp: new RegExp(/intentionally-missing-module/)
-		})
+		new IgnorePlugin(/intentionally-missing-module/)
 	],
 	node: {
 		__dirname: false
