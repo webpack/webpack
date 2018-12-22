@@ -1280,6 +1280,10 @@ export interface StatsOptions {
 	 */
 	chunkOrigins?: boolean;
 	/**
+	 * add information about parent, children and sibling chunks to chunk information
+	 */
+	chunkRelations?: boolean;
+	/**
 	 * add root modules information to chunk information
 	 */
 	chunkRootModules?: boolean;
