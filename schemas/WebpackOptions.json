@@ -1941,6 +1941,17 @@
           "description": "add performance hint flags",
           "type": "boolean"
         },
+        "preset": {
+          "description": "preset for the default values",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
         "providedExports": {
           "description": "show exports provided by modules",
           "type": "boolean"

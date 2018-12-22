@@ -1403,6 +1403,10 @@ export interface StatsOptions {
 	 */
 	performance?: boolean;
 	/**
+	 * preset for the default values
+	 */
+	preset?: boolean | string;
+	/**
 	 * show exports provided by modules
 	 */
 	providedExports?: boolean;
