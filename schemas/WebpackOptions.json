@@ -1791,6 +1791,10 @@
           "description": "add the origins of chunks and chunk merging info",
           "type": "boolean"
         },
+        "chunkRelations": {
+          "description": "add information about parent, children and sibling chunks to chunk information",
+          "type": "boolean"
+        },
         "chunkRootModules": {
           "description": "add root modules information to chunk information",
           "type": "boolean"
@@ -1940,6 +1944,17 @@
         "performance": {
           "description": "add performance hint flags",
           "type": "boolean"
+        },
+        "preset": {
+          "description": "preset for the default values",
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "string"
+            }
+          ]
         },
         "providedExports": {
           "description": "show exports provided by modules",

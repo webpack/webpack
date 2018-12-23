@@ -1280,6 +1280,10 @@ export interface StatsOptions {
 	 */
 	chunkOrigins?: boolean;
 	/**
+	 * add information about parent, children and sibling chunks to chunk information
+	 */
+	chunkRelations?: boolean;
+	/**
 	 * add root modules information to chunk information
 	 */
 	chunkRootModules?: boolean;
@@ -1402,6 +1406,10 @@ export interface StatsOptions {
 	 * add performance hint flags
 	 */
 	performance?: boolean;
+	/**
+	 * preset for the default values
+	 */
+	preset?: boolean | string;
 	/**
 	 * show exports provided by modules
 	 */

@@ -12,6 +12,7 @@ module.exports = {
 		builtAt: false,
 		assets: false,
 		chunks: true,
+		chunkRelations: true,
 		chunkOrigins: true,
 		modules: false
 	}
