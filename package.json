@@ -72,7 +72,6 @@
     "style-loader": "^0.19.1",
     "typescript": "^3.1.6",
     "url-loader": "^0.6.2",
-    "vm-browserify": "^1.1.0",
     "wast-loader": "^1.5.5",
     "worker-loader": "^2.0.0",
     "xxhashjs": "^0.2.1"
