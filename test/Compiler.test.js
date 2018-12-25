@@ -517,6 +517,49 @@ describe("Compiler", () => {
 			});
 		});
 	});
+	it("should run again correctly inside afterDone hook", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		compiler.hooks.afterDone.tap("RunAgainTest", () => {
+			compiler.run((err, stats) => {
+				if (err) return done(err);
+				done();
+			});
+		});
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+		});
+	});
+	it("should watch again correctly inside afterDone hook", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		compiler.hooks.afterDone.tap("WatchAgainTest", () => {
+			compiler.watch({}, (err, stats) => {
+			if (err) return done(err);
+				done();
+			});
+		});
+		const watching = compiler.watch({}, (err, stats) => {
+			if (err) return done(err);
+			watching.close();
+		});
+	});
 	it("should flag watchMode as true in watch", function(done) {
 		const compiler = webpack({
 			context: __dirname,
