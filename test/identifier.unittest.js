@@ -24,17 +24,32 @@ describe("util/identifier", () => {
 						"./dir/to/somewhere|some/other/dir!../more/dir"
 					],
 					[
-						"c:\\\\some\\dir\\",
-						"c:\\\\some\\dir\\to\\somewhere|some/other/dir!../more/dir",
+						"c:\\some\\dir\\",
+						"c:\\some\\dir\\to\\somewhere|some/other/dir!../more/dir",
 						"./to/somewhere|some/other/dir!../more/dir"
 					],
 					[
-						"c:\\\\some\\dir\\",
-						"C:\\\\some\\dir\\to\\somewhere|some/other/dir!../more/dir",
+						"c:\\some\\dir\\",
+						"C:\\some\\dir\\to\\somewhere|some/other/dir!../more/dir",
 						"./to/somewhere|some/other/dir!../more/dir"
+					],
+					[
+						"C:\\some\\dir",
+						"C:\\some\\dir\\to\\somewhere|some/other/dir!../more/dir",
+						"./to/somewhere|some/other/dir!../more/dir"
+					],
+					[
+						"C:\\\\some\\dir",
+						"c:\\some\\\\dir\\to\\\\somewhere|some/other/dir!../more/dir",
+						"./to/somewhere|some/other/dir!../more/dir"
+					],
+					[
+						"/dir",
+						"/dir/to/somewhere??ref-123",
+						"./to/somewhere??ref-123"
 					]
 				].forEach(([context, pathConstruct, expected]) => {
-					
+
 						expect(identifierUtil.makePathsRelative(context, pathConstruct)).toBe(
 							expected
 						);
