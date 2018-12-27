@@ -45,4 +45,26 @@ describe("Stats", () => {
 			}
 		});
 	});
+	it("should omit all properties with all false", done => {
+		const compiler = webpack({
+			context: __dirname,
+			entry: "./fixtures/a"
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+			try {
+				expect(
+					stats.toJson({
+						all: false
+					})
+				).toEqual({
+
+				});
+				done();
+			} catch (e) {
+				done(e);
+			}
+		});
+	});
 });
