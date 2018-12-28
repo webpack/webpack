@@ -4,67 +4,113 @@
 const webpack = require("..");
 const MemoryFs = require("memory-fs");
 
-describe("Stats", () => {
-	it("should print env string in stats", done => {
-		const compiler = webpack({
-			context: __dirname,
-			entry: "./fixtures/a"
-		});
+const compile = options => {
+	return new Promise((resolve, reject) => {
+		const compiler = webpack(options);
 		compiler.outputFileSystem = new MemoryFs();
 		compiler.run((err, stats) => {
-			if (err) return done(err);
-			try {
-				expect(
-					stats.toString({
-						all: false,
-						env: true,
-						_env: "production"
-					})
-				).toBe('Environment (--env): "production"');
-				expect(
-					stats.toString({
-						all: false,
-						env: true,
-						_env: {
-							prod: ["foo", "bar"],
-							baz: true
-						}
-					})
-				).toBe(
-					"Environment (--env): {\n" +
-						'  "prod": [\n' +
-						'    "foo",\n' +
-						'    "bar"\n' +
-						"  ],\n" +
-						'  "baz": true\n' +
-						"}"
-				);
-				done();
-			} catch (e) {
-				done(e);
+			if (err) {
+				reject(err);
+			} else {
+				resolve(stats);
 			}
 		});
 	});
-	it("should omit all properties with all false", done => {
-		const compiler = webpack({
+};
+
+describe("Stats", () => {
+	it("should print env string in stats", async () => {
+		const stats = await compile({
 			context: __dirname,
 			entry: "./fixtures/a"
 		});
-		compiler.outputFileSystem = new MemoryFs();
-		compiler.run((err, stats) => {
-			if (err) return done(err);
-			try {
-				expect(
-					stats.toJson({
-						all: false
-					})
-				).toEqual({
-
-				});
-				done();
-			} catch (e) {
-				done(e);
-			}
+		expect(
+			stats.toString({
+				all: false,
+				env: true,
+				_env: "production"
+			})
+		).toBe('Environment (--env): "production"');
+		expect(
+			stats.toString({
+				all: false,
+				env: true,
+				_env: {
+					prod: ["foo", "bar"],
+					baz: true
+				}
+			})
+		).toBe(
+			"Environment (--env): {\n" +
+				'  "prod": [\n' +
+				'    "foo",\n' +
+				'    "bar"\n' +
+				"  ],\n" +
+				'  "baz": true\n' +
+				"}"
+		);
+	});
+	it("should omit all properties with all false", async () => {
+		const stats = await compile({
+			context: __dirname,
+			entry: "./fixtures/a"
+		});
+		expect(
+			stats.toJson({
+				all: false
+			})
+		).toEqual({});
+	});
+	describe("chunkGroups", () => {
+		it("should be empty when there is no additional chunks", async () => {
+			const stats = await compile({
+				context: __dirname,
+				entry: {
+					entryA: "./fixtures/a",
+					entryB: "./fixtures/b"
+				}
+			});
+			expect(
+				stats.toJson({
+					all: false,
+					chunkGroups: true
+				})
+			).toMatchInlineSnapshot(`
+Object {
+  "namedChunkGroups": Object {},
+}
+`);
+		});
+		it("should contain additional chunks", async () => {
+			const stats = await compile({
+				context: __dirname,
+				entry: {
+					entryA: "./fixtures/a",
+					entryB: "./fixtures/chunk-b"
+				}
+			});
+			expect(
+				stats.toJson({
+					all: false,
+					chunkGroups: true
+				})
+			).toMatchInlineSnapshot(`
+Object {
+  "namedChunkGroups": Object {
+    "chunkB": Object {
+      "assets": Array [
+        "chunkB.js",
+      ],
+      "childAssets": Object {},
+      "children": Object {},
+      "chunks": Array [
+        787,
+      ],
+      "name": "chunkB",
+    },
+  },
+}
+`);
 		});
 	});
 });
