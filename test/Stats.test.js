@@ -77,7 +77,30 @@ describe("Stats", () => {
 				})
 			).toMatchInlineSnapshot(`
 Object {
-  "namedChunkGroups": Object {},
+  "namedChunkGroups": Object {
+    "entryA": Object {
+      "assets": Array [
+        "entryA.js",
+      ],
+      "childAssets": Object {},
+      "children": Object {},
+      "chunks": Array [
+        827,
+      ],
+      "name": "entryA",
+    },
+    "entryB": Object {
+      "assets": Array [
+        "entryB.js",
+      ],
+      "childAssets": Object {},
+      "children": Object {},
+      "chunks": Array [
+        886,
+      ],
+      "name": "entryB",
+    },
+  },
 }
 `);
 		});
@@ -107,6 +130,28 @@ Object {
         787,
       ],
       "name": "chunkB",
+    },
+    "entryA": Object {
+      "assets": Array [
+        "entryA.js",
+      ],
+      "childAssets": Object {},
+      "children": Object {},
+      "chunks": Array [
+        827,
+      ],
+      "name": "entryA",
+    },
+    "entryB": Object {
+      "assets": Array [
+        "entryB.js",
+      ],
+      "childAssets": Object {},
+      "children": Object {},
+      "chunks": Array [
+        886,
+      ],
+      "name": "entryB",
     },
   },
 }
