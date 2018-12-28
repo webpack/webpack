@@ -1508,6 +1508,7 @@ You may need an appropriate loader to handle this file type.
 
 exports[`StatsTestCases should print correct stats for named-chunk-groups 1`] = `
 "Child
+    Chunk Group main = main.js
     Chunk Group async-a = 406.js async-a.js
     Chunk Group async-b = 406.js async-b.js
     Chunk Group async-c = vendors.js async-c.js
