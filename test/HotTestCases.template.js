@@ -60,7 +60,7 @@ const describeCases = config => {
 								if (!options.output.filename)
 									options.output.filename = "bundle.js";
 								if (!options.output.chunkFilename)
-									options.output.chunkFilename = "[name].chunk.[hash].js";
+									options.output.chunkFilename = "[name].chunk.[fullhash].js";
 								if (options.output.pathinfo === undefined)
 									options.output.pathinfo = true;
 								if (!options.optimization) options.optimization = {};

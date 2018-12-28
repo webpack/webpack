@@ -18,7 +18,7 @@ const banner = parseBanner(source)
 const REGEXP_HASH = /^[A-Za-z0-9]{20}$/
 
 it("should interpolate file hash in chunk banner", () => {
-	expect(REGEXP_HASH.test(banner["hash"])).toBe(true);
+	expect(REGEXP_HASH.test(banner["fullhash"])).toBe(true);
 });
 
 it("should interpolate chunkHash in chunk banner", () => {
