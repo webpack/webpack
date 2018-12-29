@@ -101,7 +101,7 @@ module.exports = function checkArrayExpectation(
 	} else if (array.length > 0) {
 		return (
 			done(
-				new Error(`${upperCaseKind}s while compiling:\n\n${array.join("\n\n")}`)
+				new Error(`${upperCaseKind}s while compiling:\n\n${array.map(explain).join("\n\n")}`)
 			),
 			true
 		);
