@@ -44,12 +44,15 @@ module.exports = function checkArrayExpectation(
 		filename = `${kind}s`;
 	}
 	let array = object[`${kind}s`];
-	if (kind === "warning")
-		array = array.filter(item => !/from Terser/.test(item));
+	if (Array.isArray(array)) {
+		if (kind === "warning"){
+			array = array.filter(item => !/from Terser/.test(item));
+		}
+	}
 	if (fs.existsSync(path.join(testDirectory, `${filename}.js`))) {
 		const expectedFilename = path.join(testDirectory, `${filename}.js`);
 		const expected = require(expectedFilename);
-		if (expected.length < array.length)
+		if (expected.length < array.length) {
 			return (
 				done(
 					new Error(
@@ -60,7 +63,7 @@ module.exports = function checkArrayExpectation(
 				),
 				true
 			);
-		else if (expected.length > array.length)
+		} else if (expected.length > array.length) {
 			return (
 				done(
 					new Error(
@@ -71,10 +74,11 @@ module.exports = function checkArrayExpectation(
 				),
 				true
 			);
+		}
 		for (let i = 0; i < array.length; i++) {
 			if (Array.isArray(expected[i])) {
 				for (let j = 0; j < expected[i].length; j++) {
-					if (!check(expected[i][j], array[i]))
+					if (!check(expected[i][j], array[i])) {
 						return (
 							done(
 								new Error(
@@ -85,6 +89,7 @@ module.exports = function checkArrayExpectation(
 							),
 							true
 						);
+					}
 				}
 			} else if (!check(expected[i], array[i]))
 				return (
