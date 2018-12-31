@@ -9,8 +9,8 @@ module.exports = {
 					id: 1,
 					buildMeta: {
 						exportsType: "namespace",
-						providedExports: ["default"]
-					}
+					},
+					exports: ["default"]
 				}
 			}
 		}),
