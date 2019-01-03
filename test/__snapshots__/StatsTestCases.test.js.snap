@@ -1948,7 +1948,7 @@ chunk {193} a.js (a) 136 bytes <{404}> >{103}< >{720}< (prefetch: {720} {103}) [
 chunk {253} b2.js (b2) 0 bytes <{912}> [rendered]
 chunk {284} b1.js (b1) 0 bytes <{912}> [rendered]
 chunk {322} b3.js (b3) 0 bytes <{912}> [rendered]
-chunk {404} main.js (main) 195 bytes (javascript) 6.19 KiB (runtime) >{43}< >{193}< >{912}< (prefetch: {193} {912} {43}) [entry] [rendered]
+chunk {404} main.js (main) 195 bytes (javascript) 6.18 KiB (runtime) >{43}< >{193}< >{912}< (prefetch: {193} {912} {43}) [entry] [rendered]
 chunk {515} c2.js (c2) 0 bytes <{43}> [rendered]
 chunk {720} a1.js (a1) 0 bytes <{193}> [rendered]
 chunk {852} c1.js (c1) 0 bytes <{43}> [rendered]
