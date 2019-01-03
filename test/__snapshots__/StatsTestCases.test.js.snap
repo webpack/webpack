@@ -1933,7 +1933,7 @@ prefetched2.js  119 bytes   {569}  [emitted]  prefetched2
 prefetched3.js  119 bytes   {402}  [emitted]  prefetched3
 Entrypoint main = main.js (prefetch: prefetched2.js prefetched.js prefetched3.js)
 chunk {402} prefetched3.js (prefetched3) 0 bytes <{404}> [rendered]
-chunk {404} main.js (main) 436 bytes (javascript) 5.92 KiB (runtime) >{402}< >{569}< >{586}< >{855}< (prefetch: {569} {586} {402}) [entry] [rendered]
+chunk {404} main.js (main) 436 bytes (javascript) 5.89 KiB (runtime) >{402}< >{569}< >{586}< >{855}< (prefetch: {569} {586} {402}) [entry] [rendered]
 chunk {503} inner.js (inner) 0 bytes <{586}> [rendered]
 chunk {557} inner2.js (inner2) 0 bytes <{586}> [rendered]
 chunk {569} prefetched2.js (prefetched2) 0 bytes <{404}> [rendered]
@@ -1948,7 +1948,7 @@ chunk {193} a.js (a) 136 bytes <{404}> >{103}< >{720}< (prefetch: {720} {103}) [
 chunk {253} b2.js (b2) 0 bytes <{912}> [rendered]
 chunk {284} b1.js (b1) 0 bytes <{912}> [rendered]
 chunk {322} b3.js (b3) 0 bytes <{912}> [rendered]
-chunk {404} main.js (main) 195 bytes (javascript) 6.22 KiB (runtime) >{43}< >{193}< >{912}< (prefetch: {193} {912} {43}) [entry] [rendered]
+chunk {404} main.js (main) 195 bytes (javascript) 6.19 KiB (runtime) >{43}< >{193}< >{912}< (prefetch: {193} {912} {43}) [entry] [rendered]
 chunk {515} c2.js (c2) 0 bytes <{43}> [rendered]
 chunk {720} a1.js (a1) 0 bytes <{193}> [rendered]
 chunk {852} c1.js (c1) 0 bytes <{43}> [rendered]
