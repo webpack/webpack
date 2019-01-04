@@ -6,6 +6,8 @@ const webpack = require("../");
 const rimraf = require("rimraf");
 
 describe("Profiling Plugin", function() {
+	jest.setTimeout(15000);
+
 	it("should handle output path with folder creation", done => {
 		const finalPath = "test/js/profilingPath/events.json";
 		const outputPath = path.join(__dirname, "/js/profilingPath");
