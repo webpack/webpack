@@ -88,7 +88,7 @@ describe("StatsTestCases", () => {
 				if (/error$/.test(testName)) {
 					expect(stats.hasErrors()).toBe(true);
 				} else if (stats.hasErrors()) {
-					return done(new Error(stats.toJson().errors.join("\n\n")));
+					return done(new Error(stats.toString({ all: false, errors: true })));
 				}
 				let toStringOptions = {
 					context: path.join(base, testName),
