@@ -57,8 +57,6 @@ before_install:
     fi
 
 install:
-  - yarn cache clean
-  - rm -rf node_modules
   - yarn --frozen-lockfile $YARN_EXTRA_ARGS
   - yarn link --frozen-lockfile $YARN_EXTRA_ARGS || true
   - yarn link webpack --frozen-lockfile $YARN_EXTRA_ARGS
