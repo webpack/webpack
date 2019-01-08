@@ -1094,7 +1094,7 @@ export interface OutputOptions {
 	/**
 	 * If set, export the bundle as library. `output.library` is the name.
 	 */
-	library?: string | string[] | LibraryCustomUmdObject;
+	library?: string | Function | string[] | LibraryCustomUmdObject;
 	/**
 	 * Specify which export should be exposed as library
 	 */
