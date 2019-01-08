@@ -76,6 +76,9 @@
     "worker-loader": "^2.0.0",
     "xxhashjs": "^0.2.1"
   },
+  "resolutions": {
+    "enhanced-resolve": "hulkish/enhanced-resolve#4517613"
+  },
   "engines": {
     "node": ">=8.9.0"
   },
