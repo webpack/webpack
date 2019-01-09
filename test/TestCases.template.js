@@ -181,12 +181,16 @@ const describeCases = config => {
 								rimraf(cacheDirectory, done);
 							});
 							if (config.cache) {
-								it(`${testName} should pre-compile to fill disk cache`, done => {
-									const compiler = webpack(options, err => {
+								it(`${testName} should pre-compile to fill disk cache (1st)`, done => {
+									webpack(options, err => {
 										if (err) return done(err);
-										compiler.close(() => {
-											done();
-										});
+										done();
+									});
+								});
+								it(`${testName} should pre-compile to fill disk cache (2nd)`, done => {
+									webpack(options, err => {
+										if (err) return done(err);
+										done();
 									});
 								});
 							}
