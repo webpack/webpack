@@ -1,2 +1,2 @@
-require("./c");
+require("./b");
 export const a = "a";

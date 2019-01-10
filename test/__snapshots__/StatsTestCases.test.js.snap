@@ -1453,17 +1453,16 @@ If you don't want to include a polyfill, you can use an empty module like this:
 `;
 
 exports[`StatsTestCases should print correct stats for module-reasons 1`] = `
-"Hash: 3584c47f06ef83e85f02
+"Hash: 5423dc08099c1caec38c
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset      Size  Chunks             Chunk Names
-main.js  2.75 KiB   {404}  [emitted]  main
+main.js  2.67 KiB   {404}  [emitted]  main
 Entrypoint main = main.js
-[523] ./index.js + 2 modules 102 bytes {404} [built]
+ [21] ./b.js 8 bytes {404} [built]
+      cjs require ./b [143] ./index.js + 1 modules 1:0-14 ./a.js
+[143] ./index.js + 1 modules 52 bytes {404} [built]
       entry ./index main
-[911] ./c.js 8 bytes {404} [built]
-      cjs require ./c [523] ./index.js + 2 modules 1:0-14 ./b.js
-      cjs require ./c [523] ./index.js + 2 modules 1:0-14 ./a.js
     + 2 hidden modules"
 `;
 
