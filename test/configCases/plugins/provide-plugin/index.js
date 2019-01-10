@@ -63,7 +63,7 @@ it("should not provide for mjs", function(){
 });
 
 it("should not provide a module in an excluded file", function() {
-	(function() {
+	expect((function() {
 		require("./ggg");
-	}).should.throw("aaa is not defined");
+	})).toThrow("aaa is not defined");
 });
