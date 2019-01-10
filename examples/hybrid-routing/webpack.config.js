@@ -1,27 +1,25 @@
 var path = require("path");
-var CommonsChunkPlugin = require("../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
+	// mode: "development || "production",
 	entry: {
 		// The entry points for the pages
-		pageA: "./aEntry",
-		pageB: "./bEntry",
-
-		// This file contains common modules but also the router entry
-		"commons": "./router"
+		// They also contains router
+		pageA: ["./aEntry", "./router"],
+		pageB: ["./bEntry", "./router"]
 	},
 	output: {
-		path: path.join(__dirname, "js"),
+		path: path.join(__dirname, "dist"),
 		publicPath: "js/",
 		filename: "[name].bundle.js",
-		chunkFilename: "[id].chunk.js"
+		chunkFilename: "[name].chunk.js"
 	},
-	plugins: [
-		// Extract common modules from the entries to the commons.js file
+	optimization: {
+		// Extract common modules from initial chunks too
 		// This is optional, but good for performance.
-		new CommonsChunkPlugin({
-			name: "commons",
-			filename: "commons.js"
-		})
-		// The pages cannot run without the commons.js file now.
-	]
+		splitChunks: {
+			chunks: "all",
+			minSize: 0 // This example is too small
+		},
+		occurrenceOrder: true // To keep filename consistent between different modes (for example building only)
+	}
 };

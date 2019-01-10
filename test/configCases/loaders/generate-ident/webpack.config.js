@@ -17,9 +17,7 @@ module.exports = {
 			},
 			{
 				test: /(b|c)\.js$/,
-				use: [
-					"./loader1"
-				]
+				use: ["./loader1"]
 			},
 			{
 				test: /b\.js$/,
@@ -42,6 +40,22 @@ module.exports = {
 						}
 					}
 				}
+			},
+			{
+				test: /d\.js$/,
+				use: [
+					"./loader1",
+					"./loader1",
+					"./loader1",
+					{
+						loader: "./loader2",
+						options: {
+							f: function() {
+								return "ok";
+							}
+						}
+					}
+				]
 			}
 		]
 	}

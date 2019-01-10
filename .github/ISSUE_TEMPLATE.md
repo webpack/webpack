@@ -19,4 +19,4 @@
 
 **If this is a feature request, what is motivation or use case for changing the behavior?**
 
-**Please mention other relevant information such as the browser version, Node.js version, webpack version and Operating System.**
+**Please mention other relevant information such as the browser version, Node.js version, webpack version, and Operating System.**

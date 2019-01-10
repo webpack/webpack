@@ -1,1 +1,0 @@
-chunk    {0} main.js (main) 0 bytes [entry] [rendered]

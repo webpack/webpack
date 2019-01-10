@@ -16,9 +16,10 @@ var webpack = require("../../");
 module.exports = [
 	{
 		name: "mobile",
+		// mode: "development || "production",
 		entry: "./example",
 		output: {
-			path: path.join(__dirname, "js"),
+			path: path.join(__dirname, "dist"),
 			filename: "mobile.js"
 		},
 		plugins: [
@@ -27,11 +28,13 @@ module.exports = [
 			})
 		]
 	},
+
 	{
 		name: "desktop",
+		// mode: "development || "production",
 		entry: "./example",
 		output: {
-			path: path.join(__dirname, "js"),
+			path: path.join(__dirname, "dist"),
 			filename: "desktop.js"
 		},
 		plugins: [
@@ -43,7 +46,7 @@ module.exports = [
 ];
 ```
 
-# js/desktop.js
+# dist/desktop.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -83,18 +86,35 @@ module.exports = [
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -110,7 +130,8 @@ module.exports = [
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(__webpack_require__.s = 0);
@@ -123,23 +144,20 @@ module.exports = [
 ``` javascript
 /******/ ([
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-if(false) {
-	require("./mobile-stuff");
-}
+if(false) {}
 console.log("Running " + "desktop" + " build");
 
 /***/ })
 /******/ ]);
 ```
 
-# js/mobile.js
+# dist/mobile.js
 
 ``` javascript
 /******/ (function(modules) { // webpackBootstrap
@@ -177,18 +195,35 @@ console.log("Running " + "desktop" + " build");
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
-/******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -204,36 +239,35 @@ console.log("Running " + "desktop" + " build");
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "js/";
+/******/ 	__webpack_require__.p = "dist/";
+/******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/* unknown exports provided */
-/* all exports used */
-/*!*************************!*\
-  !*** ./mobile-stuff.js ***!
-  \*************************/
-/***/ (function(module, exports) {
-
-// mobile only stuff
-
-/***/ }),
-/* 1 */
-/* unknown exports provided */
-/* all exports used */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 if(true) {
-	__webpack_require__(/*! ./mobile-stuff */ 0);
+	__webpack_require__(/*! ./mobile-stuff */ 1);
 }
 console.log("Running " + "mobile" + " build");
+
+/***/ }),
+/* 1 */
+/*!*************************!*\
+  !*** ./mobile-stuff.js ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+// mobile only stuff
 
 /***/ })
 /******/ ]);
@@ -241,52 +275,56 @@ console.log("Running " + "mobile" + " build");
 
 # Info
 
-## Uncompressed
+## Unoptimized
 
 ```
-Hash: f70659afcc9f62694e35cceba4bc5163d755f291
-Version: webpack 2.6.0
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.28.0
 Child mobile:
-    Hash: f70659afcc9f62694e35
-        Asset     Size  Chunks             Chunk Names
-    mobile.js  3.12 kB       0  [emitted]  main
+    Hash: 0a1b2c3d4e5f6a7b8c9d
+        Asset   Size  Chunks             Chunk Names
+    mobile.js  4 KiB       0  [emitted]  main
     Entrypoint main = mobile.js
-    chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
-        > main [1] ./example.js 
-        [0] ./mobile-stuff.js 20 bytes {0} [built]
-            cjs require ./mobile-stuff [1] ./example.js 2:1-26
-        [1] ./example.js 97 bytes {0} [built]
+    chunk    {0} mobile.js (main) 114 bytes [entry] [rendered]
+        > ./example main
+     [0] ./example.js 94 bytes {0} [built]
+         single entry ./example  main
+     [1] ./mobile-stuff.js 20 bytes {0} [built]
+         cjs require ./mobile-stuff [0] ./example.js 2:1-26
 Child desktop:
-    Hash: cceba4bc5163d755f291
-         Asset     Size  Chunks             Chunk Names
-    desktop.js  2.88 kB       0  [emitted]  main
+    Hash: 0a1b2c3d4e5f6a7b8c9d
+         Asset      Size  Chunks             Chunk Names
+    desktop.js  3.76 KiB       0  [emitted]  main
     Entrypoint main = desktop.js
-    chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
-        > main [0] ./example.js 
-        [0] ./example.js 97 bytes {0} [built]
+    chunk    {0} desktop.js (main) 94 bytes [entry] [rendered]
+        > ./example main
+     [0] ./example.js 94 bytes {0} [built]
+         single entry ./example  main
 ```
 
-## Minimized (uglify-js, no zip)
+## Production mode
 
 ```
-Hash: f70659afcc9f62694e35cceba4bc5163d755f291
-Version: webpack 2.6.0
+Hash: 0a1b2c3d4e5f6a7b8c9d
+Version: webpack 4.28.0
 Child mobile:
-    Hash: f70659afcc9f62694e35
+    Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset       Size  Chunks             Chunk Names
-    mobile.js  566 bytes       0  [emitted]  main
+    mobile.js  993 bytes       0  [emitted]  main
     Entrypoint main = mobile.js
-    chunk    {0} mobile.js (main) 117 bytes [entry] [rendered]
-        > main [1] ./example.js 
-        [0] ./mobile-stuff.js 20 bytes {0} [built]
-            cjs require ./mobile-stuff [1] ./example.js 2:1-26
-        [1] ./example.js 97 bytes {0} [built]
+    chunk    {0} mobile.js (main) 114 bytes [entry] [rendered]
+        > ./example main
+     [0] ./example.js 94 bytes {0} [built]
+         single entry ./example  main
+     [1] ./mobile-stuff.js 20 bytes {0} [built]
+         cjs require ./mobile-stuff [0] ./example.js 2:1-26
 Child desktop:
-    Hash: cceba4bc5163d755f291
+    Hash: 0a1b2c3d4e5f6a7b8c9d
          Asset       Size  Chunks             Chunk Names
-    desktop.js  546 bytes       0  [emitted]  main
+    desktop.js  973 bytes       0  [emitted]  main
     Entrypoint main = desktop.js
-    chunk    {0} desktop.js (main) 97 bytes [entry] [rendered]
-        > main [0] ./example.js 
-        [0] ./example.js 97 bytes {0} [built]
+    chunk    {0} desktop.js (main) 94 bytes [entry] [rendered]
+        > ./example main
+     [0] ./example.js 94 bytes {0} [built]
+         single entry ./example  main
 ```

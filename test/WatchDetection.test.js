@@ -1,7 +1,6 @@
 "use strict";
 
-/*globals describe it before after  */
-const should = require("should");
+/*globals describe it */
 const path = require("path");
 const fs = require("fs");
 const MemoryFs = require("memory-fs");
@@ -9,54 +8,75 @@ const MemoryFs = require("memory-fs");
 const webpack = require("../");
 
 describe("WatchDetection", () => {
-	for(let changeTimeout = 0; changeTimeout < 100; changeTimeout += 10) {
+	if (process.env.NO_WATCH_TESTS) {
+		it.skip("long running tests excluded", () => {});
+		return;
+	}
+
+	jest.setTimeout(10000);
+
+	for (let changeTimeout = 10; changeTimeout < 100; changeTimeout += 10) {
 		createTestCase(changeTimeout);
 	}
-	for(let changeTimeout = 100; changeTimeout <= 2000; changeTimeout += 100) {
+	for (let changeTimeout = 200; changeTimeout <= 2000; changeTimeout += 200) {
 		createTestCase(changeTimeout);
 	}
 
 	function createTestCase(changeTimeout) {
-		describe("time between changes " + changeTimeout + "ms", function() {
-			this.timeout(10000);
-			const fixturePath = path.join(__dirname, "fixtures", "temp-" + changeTimeout);
+		describe(`time between changes ${changeTimeout}ms`, () => {
+			const fixturePath = path.join(
+				__dirname,
+				"fixtures",
+				"temp-" + changeTimeout
+			);
 			const filePath = path.join(fixturePath, "file.js");
 			const file2Path = path.join(fixturePath, "file2.js");
 			const loaderPath = path.join(__dirname, "fixtures", "delay-loader.js");
-			before(() => {
+
+			beforeAll(() => {
 				try {
 					fs.mkdirSync(fixturePath);
-				} catch(e) {}
+				} catch (e) {
+					// empty
+				}
 				fs.writeFileSync(filePath, "require('./file2')", "utf-8");
 				fs.writeFileSync(file2Path, "original", "utf-8");
 			});
-			after((done) => {
+
+			afterAll(done => {
 				setTimeout(() => {
 					try {
 						fs.unlinkSync(filePath);
-					} catch(e) {}
+					} catch (e) {
+						// empty
+					}
 					try {
 						fs.unlinkSync(file2Path);
-					} catch(e) {}
+					} catch (e) {
+						// empty
+					}
 					try {
 						fs.rmdirSync(fixturePath);
-					} catch(e) {}
+					} catch (e) {
+						// empty
+					}
 					done();
 				}, 100); // cool down a bit
 			});
-			it("should build the bundle correctly", (done) => {
+
+			it("should build the bundle correctly", done => {
 				const compiler = webpack({
+					mode: "development",
 					entry: loaderPath + "!" + filePath,
 					output: {
 						path: "/",
 						filename: "bundle.js"
 					}
 				});
-				const memfs = compiler.outputFileSystem = new MemoryFs();
+				const memfs = (compiler.outputFileSystem = new MemoryFs());
 				let onChange;
-				compiler.plugin("done", () => {
-					if(onChange)
-						onChange();
+				compiler.hooks.done.tap("WatchDetectionTest", () => {
+					if (onChange) onChange();
 				});
 
 				let watcher;
@@ -65,19 +85,33 @@ describe("WatchDetection", () => {
 
 				function step1() {
 					onChange = () => {
-						if(memfs.readFileSync("/bundle.js") && memfs.readFileSync("/bundle.js").toString().indexOf("original") >= 0)
+						if (
+							memfs.readFileSync("/bundle.js") &&
+							memfs
+								.readFileSync("/bundle.js")
+								.toString()
+								.indexOf("original") >= 0
+						)
 							step2();
 					};
 
-					watcher = compiler.watch({
-						aggregateTimeout: 50
-					}, () => {});
+					watcher = compiler.watch(
+						{
+							aggregateTimeout: 50
+						},
+						() => {}
+					);
 				}
 
 				function step2() {
 					onChange = null;
 
-					fs.writeFile(filePath, "require('./file2'); again", "utf-8", handleError);
+					fs.writeFile(
+						filePath,
+						"require('./file2'); again",
+						"utf-8",
+						handleError
+					);
 
 					setTimeout(step3, changeTimeout);
 				}
@@ -92,23 +126,28 @@ describe("WatchDetection", () => {
 
 				function step4() {
 					onChange = () => {
-						if(memfs.readFileSync("/bundle.js").toString().indexOf("correct") >= 0)
-							step4();
+						if (
+							memfs
+								.readFileSync("/bundle.js")
+								.toString()
+								.indexOf("correct") >= 0
+						)
+							step5();
 					};
 
 					fs.writeFile(file2Path, "correct", "utf-8", handleError);
 				}
 
-				function step4() {
+				function step5() {
 					onChange = null;
 
 					watcher.close(() => {
-						setTimeout(done, 1000);
+						setTimeout(done, 500);
 					});
 				}
 
 				function handleError(err) {
-					if(err) done(err);
+					if (err) done(err);
 				}
 			});
 		});

@@ -1,45 +1,72 @@
 sudo: false
+dist: trusty
 language: node_js
 
 branches:
   only:
     - master
+    - next
 
 cache:
+  yarn: true
   directories:
-    - $HOME/.npm
-    - $HOME/.yarn-cache
+    - ".jest-cache"
+    - ".eslintcache"
+
+stages:
+  - basic
+  - advanced
 
 matrix:
   include:
     - os: linux
-      node_js: "7"
-      env: NO_WATCH_TESTS=1 JOB_PART=lint
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=basic
+      stage: basic
     - os: linux
-      node_js: "7"
-      env: NO_WATCH_TESTS=1 JOB_PART=test
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=lint-unit
+      stage: advanced
     - os: linux
-      node_js: "6"
-      env: NO_WATCH_TESTS=1 JOB_PART=test
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
+      stage: advanced
     - os: linux
-      node_js: "4.3"
-      env: NO_WATCH_TESTS=1 JOB_PART=test
-    - os: osx
-      node_js: "7"
-      env: NO_WATCH_TESTS=1 JOB_PART=test
-  allow_failures:
-    - os: osx
+      node_js: "10"
+      env: NO_WATCH_TESTS=1 ALTERNATIVE_SORT=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
+      stage: advanced
+    - os: linux
+      node_js: "10"
+      env:
+        - NODEJS_VERSION=v12.0.0-nightly20181024bb79e768e5
+        - YARN_EXTRA_ARGS="--ignore-engines"
+        - NO_WATCH_TESTS=1
+        - JEST="--maxWorkers=2 --cacheDirectory .jest-cache"
+        - JOB_PART=integration
+      stage: advanced
   fast_finish: true
 
-before_script:
-  - bash ./ci/travis-install.sh
+before_install:
+  - |
+    if [ "$NODEJS_VERSION" != "" ];
+    then
+      mkdir /opt/node
+      curl --silent "https://nodejs.org/download/nightly/$NODEJS_VERSION/node-$NODEJS_VERSION-linux-x64.tar.gz" | tar -zxf - --directory /opt/node
+      export PATH="/opt/node/node-$NODEJS_VERSION-linux-x64/bin:$PATH"
+      node --version
+    fi
 
-script: npm run travis:$JOB_PART
+install:
+  - yarn --frozen-lockfile $YARN_EXTRA_ARGS
+  - yarn link --frozen-lockfile $YARN_EXTRA_ARGS || true
+  - yarn link webpack --frozen-lockfile $YARN_EXTRA_ARGS
+
+script: yarn travis:$JOB_PART
 
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
-  - cat ./coverage/coverage.json | node_modules/codecov.io/bin/codecov.io.js
-  - rm -rf ./coverage
+  - bash <(curl -s https://codecov.io/bash) -F $JOB_PART -X gcov
+  - rm -f .jest-cache/haste-map* .jest-cache/perf-cache*
 
 notifications:
   slack:

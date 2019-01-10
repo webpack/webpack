@@ -1,69 +1,86 @@
 module.exports = {
-	"root": true,
-	"plugins": ["node"],
-	"extends": ["eslint:recommended", "plugin:node/recommended"],
-	"env": {
-		"node": true,
-		"es6": true,
+	root: true,
+	plugins: ["prettier", "node", "jest"],
+	extends: [
+		"eslint:recommended",
+		"plugin:node/recommended",
+		"plugin:prettier/recommended"
+	],
+	env: {
+		node: true,
+		es6: true
 	},
-	"parserOptions": { "ecmaVersion": 2017 },
-	"rules": {
-		"quotes": ["error", "double"],
+	parserOptions: {
+		ecmaVersion: 2017
+	},
+	rules: {
+		"prettier/prettier": "error",
 		"no-undef": "error",
 		"no-extra-semi": "error",
-		"semi": "error",
 		"no-template-curly-in-string": "error",
 		"no-caller": "error",
-		"yoda": "error",
-		"eqeqeq": "error",
+		"no-control-regex": "off",
+		yoda: "error",
+		eqeqeq: "error",
 		"global-require": "off",
-		"brace-style": "error",
+		"brace-style": "off",
 		"eol-last": "error",
-		"indent": ["error", "tab", { "SwitchCase": 1 }],
 		"no-extra-bind": "warn",
-		"no-empty": "off",
-		"no-multiple-empty-lines": "error",
-		"no-multi-spaces": "error",
 		"no-process-exit": "warn",
-		"space-in-parens": "error",
-		"no-trailing-spaces": "error",
 		"no-use-before-define": "off",
-		"no-unused-vars": ["error", { "args": "none" }],
-		"key-spacing": "error",
-		"space-infix-ops": "error",
+		"no-unused-vars": ["error", { args: "none" }],
 		"no-unsafe-negation": "error",
 		"no-loop-func": "warn",
-		"space-before-function-paren": ["error", "never"],
-		"space-before-blocks": "error",
-		"object-curly-spacing": ["error", "always"],
-		"keyword-spacing": ["error", {
-			"after": false,
-			"overrides": {
-				"const": { "after": true },
-				"try": { "after": true },
-				"else": { "after": true },
-				"throw": { "after": true },
-				"case": { "after": true },
-				"return": { "after": true },
-				"finally": { "after": true },
-				"do": { "after": true }
-			}
-		}],
+		indent: "off",
 		"no-console": "off",
-		"valid-jsdoc": "error",
-		"node/no-unsupported-features": ["error", { version: 4 }],
-		"node/no-deprecated-api": "error",
-		"node/no-missing-import": "error",
-		"node/no-missing-require": [
+		"valid-jsdoc": [
 			"error",
 			{
-				"allowModules": [
-					"webpack"
-				]
+				prefer: {
+					return: "returns",
+					prop: "property",
+					memberof: "DONTUSE",
+					class: "DONTUSE",
+					inheritdoc: "DONTUSE",
+					description: "DONTUSE",
+					readonly: "DONTUSE"
+				},
+				preferType: {
+					"*": "any"
+				},
+				requireReturnType: true
 			}
 		],
+		"node/no-unsupported-features": "error",
+		"node/no-deprecated-api": "error",
+		"node/no-missing-import": "error",
+		"node/no-missing-require": ["error", { allowModules: ["webpack"] }],
 		"node/no-unpublished-bin": "error",
 		"node/no-unpublished-require": "error",
 		"node/process-exit-as-throw": "error"
-	}
+	},
+	overrides: [
+		{
+			files: ["lib/**/*.runtime.js", "buildin/*.js", "hot/*.js"],
+			env: {
+				es6: false,
+				browser: true
+			},
+			globals: {
+				Promise: false
+			},
+			parserOptions: {
+				ecmaVersion: 5
+			}
+		},
+		{
+			files: ["test/**/*.js"],
+			env: {
+				"jest/globals": true
+			},
+			globals: {
+				nsObj: false
+			}
+		}
+	]
 };

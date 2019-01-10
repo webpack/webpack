@@ -31,9 +31,7 @@ module.exports = {
 			},
 			{
 				test: /b3\.js$/,
-				use: [
-					"some-loader?foo=someOtherMessage"
-				]
+				use: ["some-loader?foo=someOtherMessage"]
 			}
 		]
 	}

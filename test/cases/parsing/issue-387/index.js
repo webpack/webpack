@@ -10,7 +10,7 @@ it("should parse cujojs UMD modules", function() {
 			? define
 			: function (factory) { module.exports = factory(require); }
 	));
-	module.exports.should.be.eql(123);
+	expect(module.exports).toBe(123);
 });
 
 it("should parse cujojs UMD modules with deps", function() {
@@ -30,10 +30,10 @@ it("should parse cujojs UMD modules with deps", function() {
 				module.exports = factory.apply(null, deps);
 			}
 	));
-	module.exports.should.be.eql(1234);
+	expect(module.exports).toBe(1234);
 });
 
-it("should parse cujojs UMD modules with inlinded deps", function() {
+it("should parse cujojs UMD modules with inlined deps", function() {
 	(function (define) {
 
 		// using the define signature that triggers AMD-wrapped CommonJS
@@ -45,5 +45,5 @@ it("should parse cujojs UMD modules with inlinded deps", function() {
 			? define
 			: function (factory) { module.exports = factory(require); }
 	));
-	module.exports.should.be.eql(4321);
+	expect(module.exports).toBe(4321);
 });

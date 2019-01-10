@@ -6,12 +6,44 @@ coverage:
   range: "70...100"
   status:
     project:
-      default:
+      default: off
+      basic:
+        flags: basic
         target: auto
+      integration:
+        flags: integration
+        target: auto
+      unit:
+        flags: unit
+        target: 0%
     patch:
-      default:
-        target: auto
+      default: off
+      basic:
+        flags: basic
+        target: 90%
+        base: pr
+      integration:
+        flags: integration
+        target: 90%
+        base: pr
+      unit:
+        flags: unit
+        target: 0%
+        base: pr
     changes:
-      default:
-        branches: null
+      default: off
+      basic:
+        flags: basic
+        target: 0%
+      integration:
+        flags: integration
+        target: 0%
+      unit:
+        flags: unit
+        target: 0%
 comment: off
+flags:
+  basic:
+    joined: false
+  unit:
+    joined: false

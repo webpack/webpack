@@ -1,4 +1,3 @@
-var CommonsChunkPlugin = require("../../../../lib/optimize/CommonsChunkPlugin");
 module.exports = {
 	entry: {
 		vendor: ["external0", "./a"],
@@ -10,11 +9,17 @@ module.exports = {
 		libraryTarget: "umd"
 	},
 	externals: ["external0", "external1", "external2", "fs", "path"],
-	plugins: [
-		new CommonsChunkPlugin({
-			name: "vendor"
-		})
-	],
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				vendor: {
+					test: "vendor",
+					name: "vendor",
+					enforce: true
+				}
+			}
+		}
+	},
 	node: {
 		__filename: false,
 		__dirname: false

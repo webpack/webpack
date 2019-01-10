@@ -1,5 +1,8 @@
 var webpack = require("../../../");
-module.exports = {
+module.exports = ["fitting", "content-change"].map(type => ({
+	name: type,
+	mode: "production",
+	cache: true, // AggressiveSplittingPlugin rebuilds multiple times, we need to cache the assets
 	entry: "./index",
 	output: {
 		filename: "[chunkhash].js",
@@ -13,21 +16,14 @@ module.exports = {
 			maxSize: 2500
 		})
 	],
-	recordsInputPath: __dirname + "/input-records.json",
-	//recordsOutputPath: __dirname + "/records.json",
+	recordsInputPath: __dirname + `/input-records-${type}.json`,
+	//recordsOutputPath: __dirname + `/records-${type}.json`,
 	stats: {
-		reasons: false,
+		chunks: true,
 		chunkModules: true,
 		chunkOrigins: true,
 		entrypoints: true,
 		modules: false,
-		cached: true,
-		cachedAssets: true,
-		source: true,
-		errorDetails: true,
-		publicPath: true,
-		excludeModules: [
-			/e\.js/
-		]
+		publicPath: true
 	}
-};
+}));

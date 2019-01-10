@@ -1,0 +1,5 @@
+exports.default = [
+	function() {
+		return {};
+	}
+];

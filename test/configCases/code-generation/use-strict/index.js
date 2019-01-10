@@ -15,12 +15,14 @@ it("should include only one use strict per module", function() {
 		match = regExp.exec(source);
 	}
 
-	matches.should.be.eql([
-		"Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });",
-		"Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });",
-		"Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });",
+	matches.sort();
+
+	expect(matches).toEqual([
 		"/* unused harmony default export */ var _unused_webpack_default_export = (\"a\");",
-		"Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });",
-		"it(\"should include only one use strict per module\", function() {"
+		"__webpack_require__.r(__webpack_exports__);",
+		"__webpack_require__.r(__webpack_exports__);",
+		"__webpack_require__.r(__webpack_exports__);",
+		"__webpack_require__.r(__webpack_exports__);",
+		"it(\"should include only one use strict per module\", function() {",
 	]);
 });

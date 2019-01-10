@@ -5,3 +5,5 @@ import { a as a4, c as c4 } from "./reexport-star-unknown";
 import { y } from "./edge";
 
 console.log(a1, a2, a3, a4, c2, c4, y);
+
+require.include("./require.include");
