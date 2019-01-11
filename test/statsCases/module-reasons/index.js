@@ -1,1 +1,2 @@
 import "./a";
+import "./b";
