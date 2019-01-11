@@ -1462,8 +1462,8 @@ Entrypoint main = main.js
 [523] ./index.js + 2 modules 102 bytes {404} [built]
       entry ./index main
 [911] ./c.js 8 bytes {404} [built]
-      cjs require ./c [523] ./index.js + 2 modules 1:0-14 ./b.js
-      cjs require ./c [523] ./index.js + 2 modules 1:0-14 ./a.js
+      cjs require ./c [523] ./index.js + 2 modules ./b.js 1:0-14
+      cjs require ./c [523] ./index.js + 2 modules ./a.js 1:0-14
     + 2 hidden modules"
 `;
 
@@ -2372,20 +2372,20 @@ Entrypoint main = main.js
     | ./main.js 144 bytes [built]
 [1] ./components/src/CompAB/CompA.js 89 bytes {0} [built]
     [only some exports used: default]
-    harmony import specifier ./components [0] ./main.js + 1 modules 3:15-20 (skipped side-effect-free modules) ./main.js
+    harmony import specifier ./components [0] ./main.js + 1 modules ./main.js 3:15-20 (skipped side-effect-free modules)
     harmony import specifier ./components [3] ./foo.js 3:20-25 (skipped side-effect-free modules)
     harmony side effect evaluation ./CompA ./components/src/CompAB/index.js 1:0-43
     harmony export imported specifier ./CompA ./components/src/CompAB/index.js 1:0-43
 [2] ./components/src/CompAB/utils.js 97 bytes {0} [built]
-    harmony side effect evaluation ./utils [0] ./main.js + 1 modules 1:0-30 ./components/src/CompAB/CompB.js
-    harmony import specifier ./utils [0] ./main.js + 1 modules 5:2-5 ./components/src/CompAB/CompB.js
+    harmony side effect evaluation ./utils [0] ./main.js + 1 modules ./components/src/CompAB/CompB.js 1:0-30
+    harmony import specifier ./utils [0] ./main.js + 1 modules ./components/src/CompAB/CompB.js 5:2-5
     harmony side effect evaluation ./utils [1] ./components/src/CompAB/CompA.js 1:0-35
     harmony import specifier ./utils [1] ./components/src/CompAB/CompA.js 5:5-12
 [3] ./foo.js 101 bytes {1} [built]
-    import() ./foo [0] ./main.js + 1 modules 6:0-15 ./main.js
+    import() ./foo [0] ./main.js + 1 modules ./main.js 6:0-15
 ./components/src/index.js 84 bytes [orphan] [built]
     [module unused]
-    harmony side effect evaluation ./components [0] ./main.js + 1 modules 1:0-44 ./main.js
+    harmony side effect evaluation ./components [0] ./main.js + 1 modules ./main.js 1:0-44
     harmony side effect evaluation ./components [3] ./foo.js 1:0-37
 ./components/src/CompAB/index.js 87 bytes [orphan] [built]
     [module unused]
@@ -2424,14 +2424,14 @@ Entrypoint main = main.js
       | ./index.js 55 bytes [built]
 ./node_modules/pmodule/a.js 60 bytes [orphan] [built]
       [module unused]
-      harmony side effect evaluation ./a [690] ./index.js + 2 modules 1:0-20 ./node_modules/pmodule/index.js
-      harmony export imported specifier ./a [690] ./index.js + 2 modules 1:0-20 ./node_modules/pmodule/index.js
+      harmony side effect evaluation ./a [690] ./index.js + 2 modules ./node_modules/pmodule/index.js 1:0-20
+      harmony export imported specifier ./a [690] ./index.js + 2 modules ./node_modules/pmodule/index.js 1:0-20
 ./node_modules/pmodule/b.js 69 bytes [orphan] [built]
       [module unused]
-      harmony side effect evaluation ./b [690] ./index.js + 2 modules 2:0-30 ./node_modules/pmodule/index.js
-      harmony export imported specifier ./b [690] ./index.js + 2 modules 2:0-30 ./node_modules/pmodule/index.js
-      harmony export imported specifier ./b [690] ./index.js + 2 modules 2:0-30 ./node_modules/pmodule/index.js
-      harmony export imported specifier ./b [690] ./index.js + 2 modules 2:0-30 ./node_modules/pmodule/index.js
+      harmony side effect evaluation ./b [690] ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
+      harmony export imported specifier ./b [690] ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
+      harmony export imported specifier ./b [690] ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
+      harmony export imported specifier ./b [690] ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
     + 2 hidden modules"
 `;
 
