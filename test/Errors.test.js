@@ -6,7 +6,7 @@ const fs = require("fs");
 const webpack = require("..");
 const prettyFormat = require("pretty-format");
 
-const CWD_PATTERN = new RegExp(`${process.cwd()}`.replace(/\/|\\/, "/"), "gm");
+const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
 const ERROR_STACK_PATTERN = /(?:\n\s+at[^()]+\(?.*\)?)+/gm;
 
 function cleanError(err) {
@@ -63,17 +63,13 @@ const prettyFormatOptions = {
 				return typeof val === "string";
 			},
 			print(val) {
-				return `"${val.replace(/\n/gm, "\\n").replace(/"/gm, '\\"')}"`;
+				return `"${val
+					.replace(/\\/gm, "/")
+					.replace(/"/gm, '\\"')
+					.replace(/\n/gm, "\\n")
+				}"`;
 			}
-		},
-		// {
-		// 	test(val) {
-		// 		return typeof val === "object" && typeof val.loc !== "undefined";
-		// 	},
-		// 	print(val) {
-		// 		return `"${val.replace(/\n/gm, "\\n").replace(/"/gm, '\\"')}"`;
-		// 	}
-		// }
+		}
 	]
 };
 
@@ -100,7 +96,7 @@ expect.addSnapshotSerializer({
 
 const defaults = {
 	options: {
-		context: path.resolve(__dirname, "fixtures/errors"),
+		context: path.resolve(__dirname, "fixtures", "errors"),
 		mode: "none",
 		devtool: false,
 		optimization: {
@@ -242,7 +238,7 @@ Object {
 });
 
 const isCasePreservedFilesystem = fs.existsSync(
-	path.resolve(__dirname, "fixtures/errors/FILE.js")
+	path.resolve(__dirname, "fixtures", "errors", "FILE.js")
 );
 if (isCasePreservedFilesystem) {
 	it("should emit warning for case-preserved disk", async () => {
