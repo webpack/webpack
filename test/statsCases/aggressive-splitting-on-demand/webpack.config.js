@@ -1,4 +1,23 @@
-var webpack = require("../../../");
+jest.resetModules();
+jest.mock('util', () => ({
+	deprecate: jest.fn((...args) => {
+		console.warn(...args);
+	})
+}));
+
+const util = require('util');
+const AggressiveSplittingPlugin = require("../../../lib/optimize/AggressiveSplittingPlugin");
+
+// const spy = jest.spyOn(util, 'deprecate').mockImplementationOnce();
+const aggressiveSplitting = new AggressiveSplittingPlugin({
+	minSize: 1500,
+	maxSize: 2500
+});
+setImmediate(() => {
+	expect(util.deprecate).toHaveBeenCalledTimes(1);
+})
+// expect(util.deprecate).toHaveBeenCalledTimes(1);
+// util.deprecate.mockRestore();
 module.exports = {
 	mode: "production",
 	entry: "./index",
@@ -7,14 +26,8 @@ module.exports = {
 		filename: "[chunkhash].js",
 		chunkFilename: "[chunkhash].js"
 	},
-	plugins: [
-		new webpack.optimize.AggressiveSplittingPlugin({
-			minSize: 1500,
-			maxSize: 2500
-		})
-	],
+	plugins: [aggressiveSplitting],
 	recordsInputPath: __dirname + "/input-records.json",
-	//recordsOutputPath: __dirname + "/records.json",
 	stats: {
 		chunks: true,
 		chunkModules: true,
