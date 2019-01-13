@@ -683,4 +683,25 @@ describe("Compiler", () => {
 			});
 		});
 	});
+	it("should call the failed-hook on error", done => {
+		const failedSpy = jest.fn();
+		const compiler = webpack({
+			bail: true,
+			context: __dirname,
+			mode: "production",
+			entry: "./missing",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			},
+		});
+		compiler.hooks.failed.tap('CompilerTest', failedSpy);
+		compiler.outputFileSystem = new MemoryFs();
+		compiler.run((err, stats) => {
+			expect(err).toBeTruthy();
+			expect(failedSpy).toHaveBeenCalledTimes(1);
+			expect(failedSpy).toHaveBeenCalledWith(err);
+			done();
+		});
+	});
 });
