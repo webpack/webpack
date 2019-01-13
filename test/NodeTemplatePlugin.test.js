@@ -15,7 +15,7 @@ describe("NodeTemplatePlugin", () => {
 				output: {
 					path: path.join(__dirname, "js", "NodeTemplatePlugin"),
 					filename: "result.js",
-					chunkFilename: "[hash].result.[id].js",
+					chunkFilename: "[fullhash].result.[id].js",
 					library: "abc",
 					libraryTarget: "commonjs"
 				},
@@ -51,7 +51,7 @@ describe("NodeTemplatePlugin", () => {
 				output: {
 					path: path.join(__dirname, "js", "NodeTemplatePluginSingle"),
 					filename: "result2.js",
-					chunkFilename: "[hash].result2.[id].js",
+					chunkFilename: "[fullhash].result2.[id].js",
 					library: "def",
 					libraryTarget: "umd",
 					auxiliaryComment: "test"

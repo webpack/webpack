@@ -11,7 +11,7 @@ module.exports = {
 				__dirname,
 				"../../../js/config/plugins/lib-manifest-plugin/[name]-manifest.json"
 			),
-			name: "[name]_[hash]"
+			name: "[name]_[fullhash]"
 		})
 	],
 	node: {

@@ -44,37 +44,41 @@ module.exports = function checkArrayExpectation(
 		filename = `${kind}s`;
 	}
 	let array = object[`${kind}s`];
-	if (kind === "warning")
-		array = array.filter(item => !/from Terser/.test(item));
+	if (Array.isArray(array)) {
+		if (kind === "warning"){
+			array = array.filter(item => !/from Terser/.test(item));
+		}
+	}
 	if (fs.existsSync(path.join(testDirectory, `${filename}.js`))) {
 		const expectedFilename = path.join(testDirectory, `${filename}.js`);
 		const expected = require(expectedFilename);
-		if (expected.length < array.length)
+		if (expected.length < array.length) {
 			return (
 				done(
 					new Error(
-						`More ${kind}s while compiling than expected:\n\n${array.join(
+						`More ${kind}s while compiling than expected:\n\n${array.map(explain).join(
 							"\n\n"
 						)}. Check expected ${kind}s: ${expectedFilename}`
 					)
 				),
 				true
 			);
-		else if (expected.length > array.length)
+		} else if (expected.length > array.length) {
 			return (
 				done(
 					new Error(
-						`Less ${kind}s while compiling than expected:\n\n${array.join(
+						`Less ${kind}s while compiling than expected:\n\n${array.map(explain).join(
 							"\n\n"
 						)}. Check expected ${kind}s: ${expectedFilename}`
 					)
 				),
 				true
 			);
+		}
 		for (let i = 0; i < array.length; i++) {
 			if (Array.isArray(expected[i])) {
 				for (let j = 0; j < expected[i].length; j++) {
-					if (!check(expected[i][j], array[i]))
+					if (!check(expected[i][j], array[i])) {
 						return (
 							done(
 								new Error(
@@ -85,6 +89,7 @@ module.exports = function checkArrayExpectation(
 							),
 							true
 						);
+					}
 				}
 			} else if (!check(expected[i], array[i]))
 				return (
@@ -101,7 +106,7 @@ module.exports = function checkArrayExpectation(
 	} else if (array.length > 0) {
 		return (
 			done(
-				new Error(`${upperCaseKind}s while compiling:\n\n${array.join("\n\n")}`)
+				new Error(`${upperCaseKind}s while compiling:\n\n${array.map(explain).join("\n\n")}`)
 			),
 			true
 		);

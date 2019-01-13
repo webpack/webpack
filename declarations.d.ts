@@ -11,7 +11,7 @@ declare module "neo-async" {
 	export interface Dictionary<T> {
 		[key: string]: T;
 	}
-	export type IterableCollection<T> = T[] | IterableIterator<T> | Dictionary<T>;
+	export type IterableCollection<T> = T[] | Iterable<T> | Dictionary<T>;
 
 	export interface ErrorCallback<T> {
 		(err?: T): void;
