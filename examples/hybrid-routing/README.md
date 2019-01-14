@@ -292,7 +292,6 @@ module.exports = webpackAsyncContext;
 /******/ 				promises.push(installedChunkData[2] = promise);
 /******/
 /******/ 				// start chunk loading
-/******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
 /******/ 				var onScriptComplete;
 /******/
@@ -324,7 +323,7 @@ module.exports = webpackAsyncContext;
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
 /******/ 				script.onerror = script.onload = onScriptComplete;
-/******/ 				head.appendChild(script);
+/******/ 				document.head.appendChild(script);
 /******/ 			}
 /******/ 		}
 /******/ 		return Promise.all(promises);
@@ -461,26 +460,26 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
                Asset       Size  Chunks             Chunk Names
       aPage.chunk.js  297 bytes       0  [emitted]  aPage
       bPage.chunk.js  291 bytes       1  [emitted]  bPage
+     pageA.bundle.js   9.42 KiB       3  [emitted]  pageA
 pageA~pageB.chunk.js   2.02 KiB       2  [emitted]  pageA~pageB
-     pageA.bundle.js   9.48 KiB       3  [emitted]  pageA
-     pageB.bundle.js   9.48 KiB       4  [emitted]  pageB
+     pageB.bundle.js   9.42 KiB       4  [emitted]  pageB
 Entrypoint pageA = pageA~pageB.chunk.js aPage.chunk.js pageA.bundle.js
 Entrypoint pageB = pageA~pageB.chunk.js bPage.chunk.js pageB.bundle.js
 chunk    {0} aPage.chunk.js (aPage) 59 bytes <{1}> <{2}> <{4}> ={2}= ={3}= >{1}< [initial] [rendered] reused as split chunk (cache group: default)
+    > ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
+    > ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
     > pageA
-    > ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
-    > ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
  [1] ./aPage.js 59 bytes {0} [built]
      cjs require ./aPage [5] ./aEntry.js 3:7-25
      context element ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
 chunk    {1} bPage.chunk.js (bPage) 59 bytes <{0}> <{2}> <{3}> ={2}= ={4}= >{0}< [initial] [rendered] reused as split chunk (cache group: default)
+    > ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
+    > ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
     > pageB
-    > ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
-    > ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
  [3] ./bPage.js 59 bytes {1} [built]
      context element ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
      cjs require ./bPage [8] ./bEntry.js 3:7-25
@@ -514,26 +513,26 @@ chunk    {4} pageB.bundle.js (pageB) 127 bytes ={1}= ={2}= >{0}< [entry] [render
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
                Asset       Size  Chunks             Chunk Names
       aPage.chunk.js  122 bytes       0  [emitted]  aPage
       bPage.chunk.js  123 bytes       1  [emitted]  bPage
+     pageA.bundle.js   2.22 KiB       3  [emitted]  pageA
 pageA~pageB.chunk.js  545 bytes       2  [emitted]  pageA~pageB
-     pageA.bundle.js   2.25 KiB       3  [emitted]  pageA
-     pageB.bundle.js   2.25 KiB       4  [emitted]  pageB
+     pageB.bundle.js   2.22 KiB       4  [emitted]  pageB
 Entrypoint pageA = pageA~pageB.chunk.js aPage.chunk.js pageA.bundle.js
 Entrypoint pageB = pageA~pageB.chunk.js bPage.chunk.js pageB.bundle.js
 chunk    {0} aPage.chunk.js (aPage) 59 bytes <{1}> <{2}> <{4}> ={2}= ={3}= >{1}< [initial] [rendered] reused as split chunk (cache group: default)
+    > ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
+    > ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
     > pageA
-    > ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
-    > ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
  [1] ./aPage.js 59 bytes {0} [built]
      cjs require ./aPage [5] ./aEntry.js 3:7-25
      context element ./aPage [6] . lazy ^\.\/.*Page$ namespace object ./aPage
 chunk    {1} bPage.chunk.js (bPage) 59 bytes <{0}> <{2}> <{3}> ={2}= ={4}= >{0}< [initial] [rendered] reused as split chunk (cache group: default)
+    > ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
+    > ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
     > pageB
-    > ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
-    > ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
  [3] ./bPage.js 59 bytes {1} [built]
      context element ./bPage [6] . lazy ^\.\/.*Page$ namespace object ./bPage
      cjs require ./bPage [8] ./bEntry.js 3:7-25

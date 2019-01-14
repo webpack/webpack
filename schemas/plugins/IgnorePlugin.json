@@ -27,9 +27,9 @@
           "tsType": "((context: string) => boolean)"
         },
         "checkResource": {
-          "description": "A filter function for resource",
+          "description": "A filter function for resource and context",
           "instanceof": "Function",
-          "tsType": "((resource: string) => boolean)"
+          "tsType": "((resource: string, context: string) => boolean)"
         }
       }
     }

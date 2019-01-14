@@ -124,7 +124,6 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 				promises.push(installedChunkData[2] = promise);
 /******/
 /******/ 				// start chunk loading
-/******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
 /******/ 				var onScriptComplete;
 /******/
@@ -156,7 +155,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
 /******/ 				script.onerror = script.onload = onScriptComplete;
-/******/ 				head.appendChild(script);
+/******/ 				document.head.appendChild(script);
 /******/ 			}
 /******/ 		}
 /******/ 		return Promise.all(promises);
@@ -330,12 +329,12 @@ module.exports = webpackAsyncContext;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  275 bytes       0  [emitted]  
 1.output.js  284 bytes       1  [emitted]  
-  output.js   9.76 KiB       2  [emitted]  main
 3.output.js  270 bytes       3  [emitted]  
+  output.js    9.7 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes <{2}> [rendered]
     > ./1 [4] ./node_modules/c lazy ^\.\/.*$ namespace object ./1
@@ -362,12 +361,12 @@ chunk    {3} 3.output.js 11 bytes <{2}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
       Asset      Size  Chunks             Chunk Names
 0.output.js  76 bytes       0  [emitted]  
 1.output.js  77 bytes       1  [emitted]  
-  output.js  2.55 KiB       2  [emitted]  main
 3.output.js  78 bytes       3  [emitted]  
+  output.js  2.52 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes <{2}> [rendered]
     > ./1 [4] ./node_modules/c lazy ^\.\/.*$ namespace object ./1

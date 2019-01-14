@@ -87,7 +87,7 @@ module.exports = {
 # dist/commons.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
 /* 0 */
 /*!*******************!*\
   !*** ./common.js ***!
@@ -220,7 +220,6 @@ module.exports = "Common";
 /******/ 				promises.push(installedChunkData[2] = promise);
 /******/
 /******/ 				// start chunk loading
-/******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
 /******/ 				var onScriptComplete;
 /******/
@@ -252,7 +251,7 @@ module.exports = "Common";
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
 /******/ 				script.onerror = script.onload = onScriptComplete;
-/******/ 				head.appendChild(script);
+/******/ 				document.head.appendChild(script);
 /******/ 			}
 /******/ 		}
 /******/ 		return Promise.all(promises);
@@ -322,7 +321,7 @@ module.exports = "Common";
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([2,1]);
+/******/ 	deferredModules.push([2,0]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
@@ -342,7 +341,7 @@ module.exports = "Common";
 /***/ (function(module, exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 0);
-__webpack_require__.e(/*! AMD require */ 0).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 1)]; (function(shared) {
+__webpack_require__.e(/*! AMD require */ 1).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(/*! ./shared */ 1)]; (function(shared) {
 	shared("This is page A");
 }).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
 
@@ -468,7 +467,6 @@ __webpack_require__.e(/*! AMD require */ 0).then(function() { var __WEBPACK_AMD_
 /******/ 				promises.push(installedChunkData[2] = promise);
 /******/
 /******/ 				// start chunk loading
-/******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
 /******/ 				var onScriptComplete;
 /******/
@@ -500,7 +498,7 @@ __webpack_require__.e(/*! AMD require */ 0).then(function() { var __WEBPACK_AMD_
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
 /******/ 				script.onerror = script.onload = onScriptComplete;
-/******/ 				head.appendChild(script);
+/******/ 				document.head.appendChild(script);
 /******/ 			}
 /******/ 		}
 /******/ 		return Promise.all(promises);
@@ -570,7 +568,7 @@ __webpack_require__.e(/*! AMD require */ 0).then(function() { var __WEBPACK_AMD_
 /******/
 /******/
 /******/ 	// add entry module to deferred list
-/******/ 	deferredModules.push([3,1]);
+/******/ 	deferredModules.push([3,0]);
 /******/ 	// run deferred modules when ready
 /******/ 	return checkDeferredModules();
 /******/ })
@@ -585,7 +583,7 @@ __webpack_require__.e(/*! AMD require */ 0).then(function() { var __WEBPACK_AMD_
 /***/ (function(module, exports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 0);
-__webpack_require__.e(/*! require.ensure */ 0).then((function(require) {
+__webpack_require__.e(/*! require.ensure */ 1).then((function(require) {
 	var shared = __webpack_require__(/*! ./shared */ 1);
 	shared("This is page B");
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -595,10 +593,10 @@ __webpack_require__.e(/*! require.ensure */ 0).then((function(require) {
 /******/ });
 ```
 
-# dist/0.js
+# dist/1.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */,
 /* 1 */
 /*!*******************!*\
@@ -622,33 +620,33 @@ module.exports = function(msg) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
      Asset       Size  Chunks             Chunk Names
-      0.js  369 bytes       0  [emitted]  
-commons.js  258 bytes       1  [emitted]  commons
-  pageA.js   9.34 KiB       2  [emitted]  pageA
-  pageB.js   9.29 KiB       3  [emitted]  pageB
+      1.js  369 bytes       1  [emitted]  
+commons.js  258 bytes       0  [emitted]  commons
+  pageA.js   9.28 KiB       2  [emitted]  pageA
+  pageB.js   9.24 KiB       3  [emitted]  pageB
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
-chunk    {0} 0.js 88 bytes <{1}> <{2}> <{3}> [rendered]
-    > ./shared [2] ./pageA.js 2:0-4:2
-    > [3] ./pageB.js 2:0-5:2
- [1] ./shared.js 88 bytes {0} [built]
-     amd require ./shared [2] ./pageA.js 2:0-4:2
-     require.ensure item ./shared [3] ./pageB.js 2:0-5:2
-     cjs require ./shared [3] ./pageB.js 3:14-33
-chunk    {1} commons.js (commons) 26 bytes ={2}= ={3}= >{0}< [initial] [rendered] split chunk (cache group: commons) (name: commons)
+chunk    {0} commons.js (commons) 26 bytes ={2}= ={3}= >{1}< [initial] [rendered] split chunk (cache group: commons) (name: commons)
     > ./pageA pageA
     > ./pageB pageB
- [0] ./common.js 26 bytes {1} [built]
+ [0] ./common.js 26 bytes {0} [built]
      cjs require ./common [1] ./shared.js 1:13-32
      cjs require ./common [2] ./pageA.js 1:13-32
      cjs require ./common [3] ./pageB.js 1:13-32
-chunk    {2} pageA.js (pageA) 105 bytes ={1}= >{0}< [entry] [rendered]
+chunk    {1} 1.js 88 bytes <{0}> <{2}> <{3}> [rendered]
+    > ./shared [2] ./pageA.js 2:0-4:2
+    > [3] ./pageB.js 2:0-5:2
+ [1] ./shared.js 88 bytes {1} [built]
+     amd require ./shared [2] ./pageA.js 2:0-4:2
+     require.ensure item ./shared [3] ./pageB.js 2:0-5:2
+     cjs require ./shared [3] ./pageB.js 3:14-33
+chunk    {2} pageA.js (pageA) 105 bytes ={0}= >{1}< [entry] [rendered]
     > ./pageA pageA
  [2] ./pageA.js 105 bytes {2} [built]
      single entry ./pageA  pageA
-chunk    {3} pageB.js (pageB) 148 bytes ={1}= >{0}< [entry] [rendered]
+chunk    {3} pageB.js (pageB) 148 bytes ={0}= >{1}< [entry] [rendered]
     > ./pageB pageB
  [3] ./pageB.js 148 bytes {3} [built]
      single entry ./pageB  pageB
@@ -658,33 +656,33 @@ chunk    {3} pageB.js (pageB) 148 bytes ={1}= >{0}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
      Asset       Size  Chunks             Chunk Names
-      0.js  121 bytes       0  [emitted]  
-commons.js   94 bytes       1  [emitted]  commons
-  pageA.js   2.29 KiB       2  [emitted]  pageA
-  pageB.js   2.26 KiB       3  [emitted]  pageB
+      1.js  121 bytes       1  [emitted]  
+commons.js   94 bytes       0  [emitted]  commons
+  pageA.js   2.26 KiB       2  [emitted]  pageA
+  pageB.js   2.23 KiB       3  [emitted]  pageB
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
-chunk    {0} 0.js 88 bytes <{1}> <{2}> <{3}> [rendered]
-    > ./shared [2] ./pageA.js 2:0-4:2
-    > [3] ./pageB.js 2:0-5:2
- [1] ./shared.js 88 bytes {0} [built]
-     amd require ./shared [2] ./pageA.js 2:0-4:2
-     require.ensure item ./shared [3] ./pageB.js 2:0-5:2
-     cjs require ./shared [3] ./pageB.js 3:14-33
-chunk    {1} commons.js (commons) 26 bytes ={2}= ={3}= >{0}< [initial] [rendered] split chunk (cache group: commons) (name: commons)
+chunk    {0} commons.js (commons) 26 bytes ={2}= ={3}= >{1}< [initial] [rendered] split chunk (cache group: commons) (name: commons)
     > ./pageA pageA
     > ./pageB pageB
- [0] ./common.js 26 bytes {1} [built]
+ [0] ./common.js 26 bytes {0} [built]
      cjs require ./common [1] ./shared.js 1:13-32
      cjs require ./common [2] ./pageA.js 1:13-32
      cjs require ./common [3] ./pageB.js 1:13-32
-chunk    {2} pageA.js (pageA) 105 bytes ={1}= >{0}< [entry] [rendered]
+chunk    {1} 1.js 88 bytes <{0}> <{2}> <{3}> [rendered]
+    > ./shared [2] ./pageA.js 2:0-4:2
+    > [3] ./pageB.js 2:0-5:2
+ [1] ./shared.js 88 bytes {1} [built]
+     amd require ./shared [2] ./pageA.js 2:0-4:2
+     require.ensure item ./shared [3] ./pageB.js 2:0-5:2
+     cjs require ./shared [3] ./pageB.js 3:14-33
+chunk    {2} pageA.js (pageA) 105 bytes ={0}= >{1}< [entry] [rendered]
     > ./pageA pageA
  [2] ./pageA.js 105 bytes {2} [built]
      single entry ./pageA  pageA
-chunk    {3} pageB.js (pageB) 148 bytes ={1}= >{0}< [entry] [rendered]
+chunk    {3} pageB.js (pageB) 148 bytes ={0}= >{1}< [entry] [rendered]
     > ./pageB pageB
  [3] ./pageB.js 148 bytes {3} [built]
      single entry ./pageB  pageB

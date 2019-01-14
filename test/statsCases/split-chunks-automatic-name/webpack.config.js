@@ -17,17 +17,18 @@ module.exports = {
 	optimization: {
 		splitChunks: {
 			chunks: "all",
-			minSize: 1,
 			cacheGroups: {
 				default: {
 					automaticNamePrefix: "common",
 					reuseExistingChunk: true,
 					minChunks: 2,
-					priority: -20
+					priority: -20,
+					enforce: true // minChunks should have higher priority
 				},
 				vendors: {
 					automaticNamePrefix: "common",
 					test: /[\\/]node_modules[\\/]/,
+					minSize: 1,
 					priority: -10
 				}
 			}

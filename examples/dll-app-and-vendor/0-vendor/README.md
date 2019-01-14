@@ -181,7 +181,7 @@ function square(n) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
     Asset      Size  Chunks             Chunk Names
 vendor.js  4.28 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
@@ -197,7 +197,7 @@ chunk    {0} vendor.js (main) 57 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
     Asset      Size  Chunks             Chunk Names
 vendor.js  1.06 KiB       0  [emitted]  main
 Entrypoint main = vendor.js

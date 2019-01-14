@@ -203,7 +203,6 @@ module.exports = {
 /******/ 				promises.push(installedChunkData[2] = promise);
 /******/
 /******/ 				// start chunk loading
-/******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
 /******/ 				var onScriptComplete;
 /******/
@@ -235,7 +234,7 @@ module.exports = {
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
 /******/ 				script.onerror = script.onload = onScriptComplete;
-/******/ 				head.appendChild(script);
+/******/ 				document.head.appendChild(script);
 /******/ 			}
 /******/ 		}
 /******/ 		return Promise.all(promises);
@@ -455,13 +454,13 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  337 bytes       0  [emitted]  
-  output.js    8.8 KiB       1  [emitted]  main
 2.output.js  408 bytes       2  [emitted]  
 3.output.js  542 bytes       3  [emitted]  
 4.output.js  408 bytes       4  [emitted]  
+  output.js   8.74 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 69 bytes <{1}> <{3}> ={2}= ={4}= [rendered] split chunk (cache group: default)
     > [1] ./example.js 3:1-6:3
@@ -493,13 +492,13 @@ chunk    {4} 4.output.js 136 bytes <{3}> ={0}= [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  133 bytes       0  [emitted]  
-  output.js   2.16 KiB       1  [emitted]  main
 2.output.js  138 bytes       2  [emitted]  
 3.output.js  198 bytes       3  [emitted]  
 4.output.js  138 bytes       4  [emitted]  
+  output.js   2.13 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 69 bytes <{1}> <{3}> ={2}= ={4}= [rendered] split chunk (cache group: default)
     > [1] ./example.js 3:1-6:3

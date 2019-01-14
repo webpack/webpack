@@ -120,7 +120,6 @@ export function increment(val) {
 /******/ 				promises.push(installedChunkData[2] = promise);
 /******/
 /******/ 				// start chunk loading
-/******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
 /******/ 				var onScriptComplete;
 /******/
@@ -152,7 +151,7 @@ export function increment(val) {
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
 /******/ 				script.onerror = script.onload = onScriptComplete;
-/******/ 				head.appendChild(script);
+/******/ 				document.head.appendChild(script);
 /******/ 			}
 /******/ 		}
 /******/ 		return Promise.all(promises);
@@ -299,10 +298,10 @@ __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*!
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
       Asset       Size  Chunks             Chunk Names
-  output.js   9.53 KiB       0  [emitted]  main
 1.output.js  478 bytes       1  [emitted]  
+  output.js   9.48 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 400 bytes >{1}< [entry] [rendered]
     > .\example.js main
@@ -328,10 +327,10 @@ chunk    {1} 1.output.js 24 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
       Asset       Size  Chunks             Chunk Names
-  output.js   2.15 KiB       0  [emitted]  main
 1.output.js  144 bytes       1  [emitted]  
+  output.js    2.1 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 400 bytes >{1}< [entry] [rendered]
     > .\example.js main

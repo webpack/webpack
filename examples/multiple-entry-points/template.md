@@ -70,10 +70,10 @@ You can also see the info that is printed to console. It shows among others:
 {{dist/pageB.js}}
 ```
 
-# dist/0.js
+# dist/1.js
 
 ``` javascript
-{{dist/0.js}}
+{{dist/1.js}}
 ```
 
 # Info

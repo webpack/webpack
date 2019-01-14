@@ -131,7 +131,6 @@ export default foo;
 /******/ 				promises.push(installedChunkData[2] = promise);
 /******/
 /******/ 				// start chunk loading
-/******/ 				var head = document.getElementsByTagName('head')[0];
 /******/ 				var script = document.createElement('script');
 /******/ 				var onScriptComplete;
 /******/
@@ -163,7 +162,7 @@ export default foo;
 /******/ 					onScriptComplete({ type: 'timeout', target: script });
 /******/ 				}, 120000);
 /******/ 				script.onerror = script.onload = onScriptComplete;
-/******/ 				head.appendChild(script);
+/******/ 				document.head.appendChild(script);
 /******/ 			}
 /******/ 		}
 /******/ 		return Promise.all(promises);
@@ -333,12 +332,12 @@ module.exports = webpackAsyncContext;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  433 bytes       0  [emitted]  
 1.output.js  442 bytes       1  [emitted]  
 2.output.js  436 bytes       2  [emitted]  
-  output.js   9.29 KiB       3  [emitted]  main
+  output.js   9.24 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 38 bytes <{3}> [rendered]
     > ./bar [4] ./templates lazy ^\.\/.*$ namespace object ./bar
@@ -373,12 +372,12 @@ chunk    {3} output.js (main) 441 bytes >{0}< >{1}< >{2}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.20.1
+Version: webpack 4.28.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  113 bytes       0  [emitted]  
 1.output.js  114 bytes       1  [emitted]  
 2.output.js  115 bytes       2  [emitted]  
-  output.js    2.5 KiB       3  [emitted]  main
+  output.js   2.47 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 38 bytes <{3}> [rendered]
     > ./bar [4] ./templates lazy ^\.\/.*$ namespace object ./bar

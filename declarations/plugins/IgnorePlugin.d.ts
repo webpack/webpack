@@ -21,7 +21,7 @@ export type IgnorePluginOptions =
 			 */
 			checkContext?: ((context: string) => boolean);
 			/**
-			 * A filter function for resource
+			 * A filter function for resource and context
 			 */
-			checkResource?: ((resource: string) => boolean);
+			checkResource?: ((resource: string, context: string) => boolean);
 	  };

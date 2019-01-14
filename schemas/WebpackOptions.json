@@ -1879,7 +1879,7 @@
     "WebpackPluginFunction": {
       "description": "Function acting as plugin",
       "instanceof": "Function",
-      "tsType": "(compiler: import('../lib/Compiler')) => void"
+      "tsType": "(this: import('../lib/Compiler'), compiler: import('../lib/Compiler')) => void"
     },
     "WebpackPluginInstance": {
       "description": "Plugin instance",
