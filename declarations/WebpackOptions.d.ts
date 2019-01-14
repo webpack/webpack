@@ -1098,7 +1098,7 @@ export interface OutputOptions {
 	/**
 	 * Specify which export should be exposed as library
 	 */
-	libraryExport?: string | ArrayOfStringValues;
+	libraryExport?: string | Function | ArrayOfStringValues;
 	/**
 	 * Type of library
 	 */
