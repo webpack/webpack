@@ -5,9 +5,9 @@ const fs = require("graceful-fs");
 const webpack = require("../");
 const rimraf = require("rimraf");
 
-describe("Profiling Plugin", function() {
-	jest.setTimeout(15000);
+jest.useFakeTimers();
 
+describe("Profiling Plugin", function() {
 	it("should handle output path with folder creation", done => {
 		const outputPath = path.join(__dirname, "js/profilingPath");
 		const finalPath = path.join(outputPath, "events.json");

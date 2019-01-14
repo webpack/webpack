@@ -52,7 +52,21 @@ describe("Examples", () => {
 						errorDetails: true
 					});
 					if (stats.errors.length > 0) {
-						return done(new Error(stats.errors[0]));
+						stats.errors.forEach(err => {
+							console.error(
+								examplePath,
+								Object.assign(
+									new Error(),
+									err,
+								)
+							)
+						})
+						return done(
+							Object.assign(
+								new Error(),
+								stats.errors[0],
+							)
+						);
 					}
 					done();
 				});

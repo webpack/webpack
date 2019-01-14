@@ -25,12 +25,8 @@ const tests = fs
 		return true;
 	});
 
-beforeEach(() => {
-	jest.restoreAllMocks();
-});
-
 describe("StatsTestCases", () => {
-	tests.slice(0, 2).forEach(testName => {
+	tests.forEach(testName => {
 		it("should print correct stats for " + testName, done => {
 			jest.setTimeout(30000);
 			let options = {
@@ -40,12 +36,6 @@ describe("StatsTestCases", () => {
 					filename: "bundle.js"
 				}
 			};
-			try {
-				// try to load a test file
-				require(path.join(base, testName, "setup.js")).call();
-			} catch (e) {
-				// ignored
-			}
 			if (fs.existsSync(path.join(base, testName, "webpack.config.js"))) {
 				options = require(path.join(base, testName, "webpack.config.js"));
 			}
