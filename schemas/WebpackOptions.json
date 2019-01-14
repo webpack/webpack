@@ -966,6 +966,10 @@
               "type": "string"
             },
             {
+              "instanceof": "Function",
+              "tsType": "Function"
+            },
+            {
               "$ref": "#/definitions/ArrayOfStringValues"
             }
           ]
