@@ -19,7 +19,7 @@
     "events": "^3.0.0",
     "json-parse-better-errors": "^1.0.2",
     "json-stable-stringify": "^1.0.1",
-    "loader-runner": "hulkish/loader-runner#prefer-callback-errors",
+    "loader-runner": "3.0.0",
     "loader-utils": "^1.1.0",
     "memory-fs": "~0.4.1",
     "micromatch": "^3.1.8",

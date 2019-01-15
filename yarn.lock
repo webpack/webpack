@@ -4327,9 +4327,10 @@ load-json-file@^1.0.0:
     pinkie-promise "^2.0.0"
     strip-bom "^2.0.0"
 
-loader-runner@hulkish/loader-runner#prefer-callback-errors:
-  version "2.3.1"
-  resolved "https://codeload.github.com/hulkish/loader-runner/tar.gz/863fad3e4bdba1f23be06b0725947cd10ea9ea69"
+loader-runner@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/loader-runner/-/loader-runner-3.0.0.tgz#c86f303af2dacbd27eabd2ea3aaa957291562e23"
+  integrity sha512-BlinBEAJYOUubaKH9hMxshD1FltYLTd3FA4DoxEh/82C0Rc4cmcqI61bEUj0/osbmW9FCTXTpMAO/jHZDZC5Fw==
 
 loader-utils@^1.0.0, loader-utils@^1.0.2, loader-utils@^1.1.0:
   version "1.1.0"
