@@ -19,30 +19,8 @@ function cleanError(err) {
 		result.message = err.message.replace(ERROR_STACK_PATTERN, "");
 	}
 
-	if (result.loc) {
-		result.loc = "<muted>";
-	}
-
 	if (result.stack) {
 		result.stack = result.stack.replace(ERROR_STACK_PATTERN, "");
-	}
-
-	if (Array.isArray(result.moduleTrace)) {
-		result.moduleTrace = result.moduleTrace.map(record => {
-			if (record.dependencies) {
-				return Object.assign(record, {
-					dependencies: record.dependencies.map(dep => {
-						if (dep.loc) {
-							return Object.assign(dep, {
-								loc: "<muted>"
-							});
-						}
-
-						return dep;
-					})
-				});
-			}
-		});
 	}
 
 	return result;
@@ -66,8 +44,7 @@ const prettyFormatOptions = {
 				return `"${val
 					.replace(/\\/gm, "/")
 					.replace(/"/gm, '\\"')
-					.replace(/\n/gm, "\\n")
-				}"`;
+					.replace(/\n/gm, "\\n")}"`;
 			}
 		}
 	]
@@ -160,7 +137,7 @@ it("should emit warning for missingFile", async () => {
 Object {
   "errors": Array [
     Object {
-      "loc": "<muted>",
+      "loc": "4:0-20",
       "message": "Module not found: Error: Can't resolve './missing' in '<cwd>/test/fixtures/errors'",
       "moduleId": 0,
       "moduleIdentifier": "<cwd>/test/fixtures/errors/missingFile.js",
@@ -168,7 +145,7 @@ Object {
       "moduleTrace": Array [],
     },
     Object {
-      "loc": "<muted>",
+      "loc": "12:9-34",
       "message": "Module not found: Error: Can't resolve './dir/missing2' in '<cwd>/test/fixtures/errors'",
       "moduleId": 0,
       "moduleIdentifier": "<cwd>/test/fixtures/errors/missingFile.js",
@@ -188,7 +165,7 @@ Object {
   "errors": Array [],
   "warnings": Array [
     Object {
-      "loc": "<muted>",
+      "loc": "1:0-18",
       "message": "require.extensions is not supported by webpack. Use a loader instead.",
       "moduleId": 0,
       "moduleIdentifier": "<cwd>/test/fixtures/errors/require.extensions.js",
@@ -207,7 +184,7 @@ Object {
   "errors": Array [],
   "warnings": Array [
     Object {
-      "loc": "<muted>",
+      "loc": "1:0-20",
       "message": "require.main.require is not supported by webpack.",
       "moduleId": 0,
       "moduleIdentifier": "<cwd>/test/fixtures/errors/require.main.require.js",
@@ -225,7 +202,7 @@ Object {
   "errors": Array [],
   "warnings": Array [
     Object {
-      "loc": "<muted>",
+      "loc": "1:0-21",
       "message": "module.parent.require is not supported by webpack.",
       "moduleId": 0,
       "moduleIdentifier": "<cwd>/test/fixtures/errors/module.parent.require.js",
@@ -237,10 +214,10 @@ Object {
 `);
 });
 
-const isCasePreservedFilesystem = fs.existsSync(
+const isCaseInsensitiveFilesystem = fs.existsSync(
 	path.resolve(__dirname, "fixtures", "errors", "FILE.js")
 );
-if (isCasePreservedFilesystem) {
+if (isCaseInsensitiveFilesystem) {
 	it("should emit warning for case-preserved disk", async () => {
 		const result = await compile({
 			mode: "development",
@@ -259,7 +236,7 @@ Object {
         Object {
           "dependencies": Array [
             Object {
-              "loc": "<muted>",
+              "loc": "2:0-17",
             },
           ],
           "moduleId": "./FILE.js",
@@ -285,7 +262,7 @@ Object {
 Object {
   "errors": Array [
     Object {
-      "loc": "<muted>",
+      "loc": "2:0-17",
       "message": "Module not found: Error: Can't resolve './FILE' in '<cwd>/test/fixtures/errors'",
       "moduleId": "./case-sensitive.js",
       "moduleIdentifier": "<cwd>/test/fixtures/errors/case-sensitive.js",
@@ -328,7 +305,7 @@ it("should emit errors for missingFile for production", async () => {
 Object {
   "errors": Array [
     Object {
-      "loc": "<muted>",
+      "loc": "4:0-20",
       "message": "Module not found: Error: Can't resolve './missing' in '<cwd>/test/fixtures/errors'",
       "moduleId": 665,
       "moduleIdentifier": "<cwd>/test/fixtures/errors/missingFile.js",
@@ -336,7 +313,7 @@ Object {
       "moduleTrace": Array [],
     },
     Object {
-      "loc": "<muted>",
+      "loc": "12:9-34",
       "message": "Module not found: Error: Can't resolve './dir/missing2' in '<cwd>/test/fixtures/errors'",
       "moduleId": 665,
       "moduleIdentifier": "<cwd>/test/fixtures/errors/missingFile.js",
@@ -355,7 +332,7 @@ it("should emit module build errors", async () => {
 Object {
   "errors": Array [
     Object {
-      "loc": "<muted>",
+      "loc": "2:12",
       "message": "Module parse failed: Unexpected token (2:12)\\nYou may need an appropriate loader to handle this file type.\\n| window.foo = {\\n>   bar: true,;\\n| };\\n| ",
       "moduleId": 0,
       "moduleIdentifier": "<cwd>/test/fixtures/errors/has-syntax-error.js",
@@ -417,7 +394,7 @@ Object {
         Object {
           "dependencies": Array [
             Object {
-              "loc": "<muted>",
+              "loc": "1:0-40",
             },
           ],
           "moduleId": 1,
@@ -440,7 +417,7 @@ Object {
         Object {
           "dependencies": Array [
             Object {
-              "loc": "<muted>",
+              "loc": "1:0-40",
             },
           ],
           "moduleId": 1,
@@ -643,7 +620,7 @@ Object {
 Object {
   "errors": Array [
     Object {
-      "loc": "<muted>",
+      "loc": "main",
       "message": "Module not found: Error: Can't resolve './doesnt-exist-loader' in '<cwd>/test/fixtures/errors'",
     },
   ],
