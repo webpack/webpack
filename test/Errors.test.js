@@ -7,7 +7,7 @@ const webpack = require("..");
 const prettyFormat = require("pretty-format");
 
 const CWD_PATTERN = new RegExp(process.cwd().replace(/\\/g, "/"), "gm");
-const ERROR_STACK_PATTERN = /(?:\n\s+at[^()]+\(?.*\)?)+/gm;
+const ERROR_STACK_PATTERN = /(?:\n\s+at\s.*)+/gm;
 
 function cleanError(err) {
 	const result = Object.getOwnPropertyNames(err).reduce((result, key) => {
