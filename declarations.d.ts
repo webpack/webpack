@@ -105,7 +105,6 @@ declare module "neo-async" {
 	): void;
 
 	export const forEach: typeof each;
-
 	export const forEachLimit: typeof eachLimit;
 }
 
