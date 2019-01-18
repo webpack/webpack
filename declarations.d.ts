@@ -220,6 +220,101 @@ declare module "@webassemblyjs/ast" {
 	export function isFuncImportDescr(n: Node): boolean;
 }
 
+declare module "webpack-sources" {
+	type MapOptions = { columns?: boolean; module?: boolean };
+
+	export abstract class Source {
+		size(): number;
+
+		map(options?: MapOptions): Object;
+
+		sourceAndMap(
+			options?: MapOptions
+		): {
+			source: string | Buffer;
+			map: Object;
+		};
+
+		updateHash(hash: import("./lib/util/createHash").Hash): void;
+
+		source(): string | Buffer;
+	}
+
+	export class RawSource extends Source {
+		constructor(source: string | Buffer);
+
+		// TODO remove internals
+		_value: string | Buffer;
+	}
+
+	export class OriginalSource extends Source {
+		constructor(source: string | Buffer, name: string);
+
+		// TODO remove internals
+		_value: string | Buffer;
+		_name: string;
+	}
+
+	export class ReplaceSource extends Source {
+		constructor(source: Source, name?: string);
+
+		replace(start: number, end: number, newValue: string, name?: string): void;
+		insert(pos: number, newValue: string, name?: string): void;
+
+		// TODO remove internals
+		_name: string;
+		_source: string;
+		_replacements: {
+			start: number;
+			end: number;
+			content: string;
+			insertIndex: number;
+			name: string;
+		}[];
+	}
+
+	export class SourceMapSource extends Source {
+		constructor(
+			source: string,
+			name: string,
+			sourceMap: Object | string,
+			originalSource?: string,
+			innerSourceMap?: Object
+		);
+	}
+
+	export class ConcatSource extends Source {
+		constructor(...args: (string | Source)[]);
+
+		children: (string | Source)[];
+
+		add(item: string | Source): void;
+	}
+
+	export class PrefixSource extends Source {
+		constructor(prefix: string, source: string | Source);
+
+		_source: string | Source;
+		_prefix: string;
+	}
+
+	export class CachedSource extends Source {
+		constructor(source: Source);
+
+		_source: Source;
+		_cachedSource: string | Buffer;
+		_cachedBuffer: Buffer;
+		_cachedSize: number;
+		_cachedMaps: Object;
+	}
+
+	export class SizeOnlySource extends Source {
+		constructor(size: number);
+
+		_size: number;
+	}
+}
+
 // This "hack" is needed because typescript doesn't support recursive type definitions
 // It's referenced from "ruleSet-conditions" in schemas/WebpackOptions.json
 interface RuleSetConditionsRecursive
