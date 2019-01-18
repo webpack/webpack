@@ -34,7 +34,6 @@
   "devDependencies": {
     "@types/node": "^10.12.3",
     "@types/tapable": "^1.0.1",
-    "@types/webpack-sources": "^0.1.4",
     "benchmark": "^2.1.1",
     "bundle-loader": "~0.5.0",
     "codacy-coverage": "^3.1.0",
