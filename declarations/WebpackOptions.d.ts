@@ -470,6 +470,10 @@ export interface EntryObject {
  */
 export interface ModuleOptions {
 	/**
+	 * The default webpackMode for async bundles
+	 */
+	asyncChunkMode?: "eager" | "lazy";
+	/**
 	 * An array of rules applied by default for modules.
 	 */
 	defaultRules?: RuleSetRules;

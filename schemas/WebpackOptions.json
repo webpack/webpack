@@ -264,6 +264,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "asyncChunkMode": {
+          "description": "The default webpackMode for async bundles",
+          "enum": ["eager", "lazy"]
+        },
         "defaultRules": {
           "description": "An array of rules applied by default for modules.",
           "anyOf": [
