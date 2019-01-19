@@ -432,6 +432,10 @@ export interface FileCacheOptions {
 	 */
 	hashAlgorithm?: string;
 	/**
+	 * Time in ms after which idle period cache storing should happen (only for store: 'pack' or 'idle')
+	 */
+	idleTimeout?: number;
+	/**
 	 * Display log info. (debug: all access and errors with stack trace, verbose: all access, info: all write access, warning: only failed serialization)
 	 */
 	loglevel?: "debug" | "verbose" | "info" | "warning";
