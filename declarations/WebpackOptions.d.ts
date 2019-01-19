@@ -1052,6 +1052,10 @@ export interface OutputOptions {
 	 */
 	filename?: string | Function;
 	/**
+	 * Use the future version of asset emitting logic, which is allows freeing memory of assets after emitting. It could break plugins which assume that assets are still readable after emitting. Will be the new default in the next major version.
+	 */
+	futureEmitAssets?: boolean;
+	/**
 	 * An expression which is used to address the global object/scope in runtime code
 	 */
 	globalObject?: string;
