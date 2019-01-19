@@ -39,10 +39,18 @@ it("should give modules the correct ids", function() {
 		"dll/a.js",
 		"dll/b.js",
 		"dll/d.js",
+		"dll/directory/index.js",
 		"dll/e.js",
 		"dll/e1.js",
 		"dll/e2.js",
 		"dll/f.jsx",
 		"dll/g.abc.js"
     ]);
+});
+
+it("should resolve index for directory at dll", function() {
+	expect(require("dll/directory")).toBe("directoryModule");
+	expect(require("dll/directory/")).toBe("directoryModule");
+	expect(require("dll/directory/index")).toBe("directoryModule");
+	expect(require("dll/directory/index.js")).toBe("directoryModule");
 });
