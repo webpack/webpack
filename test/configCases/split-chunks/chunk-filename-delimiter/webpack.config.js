@@ -7,6 +7,9 @@ module.exports = {
 		__dirname: false,
 		__filename: false
 	},
+	module: {
+		asyncChunkMode: "lazy"
+	},
 	output: {
 		filename: "[name].js",
 		chunkFilename: "[name].bundle.js",

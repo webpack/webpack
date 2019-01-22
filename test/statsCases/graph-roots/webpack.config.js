@@ -4,6 +4,9 @@ module.exports = {
 	optimization: {
 		splitChunks: false
 	},
+	module: {
+		asyncChunkMode: "lazy"
+	},
 	stats: {
 		all: false,
 		chunks: true,
