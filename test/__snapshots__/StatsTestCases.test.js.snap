@@ -503,10 +503,10 @@ Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 PublicPath: (none)
               Asset       Size       Chunks             Chunk Names
-     b_js.bundle.js  329 bytes       {b_js}  [emitted]
-          bundle.js   7.86 KiB       {main}  [emitted]  main
-     c_js.bundle.js  538 bytes       {c_js}  [emitted]
-d_js-e_js.bundle.js  690 bytes  {d_js-e_js}  [emitted]
+     b_js.bundle.js  385 bytes       {b_js}  [emitted]
+          bundle.js   7.97 KiB       {main}  [emitted]  main
+     c_js.bundle.js  594 bytes       {c_js}  [emitted]
+d_js-e_js.bundle.js  802 bytes  {d_js-e_js}  [emitted]
 Entrypoint main = bundle.js
 chunk {b_js} b_js.bundle.js 22 bytes <{main}> [rendered]
     > ./b [./index.js] ./index.js 2:0-16
@@ -2440,7 +2440,7 @@ exports[`StatsTestCases should print correct stats for simple 1`] = `
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks             Chunk Names
-bundle.js  1.52 KiB  {main}  [emitted]  main
+bundle.js  1.57 KiB  {main}  [emitted]  main
 Entrypoint main = bundle.js
 [./index.js] 0 bytes {main} [built]"
 `;
