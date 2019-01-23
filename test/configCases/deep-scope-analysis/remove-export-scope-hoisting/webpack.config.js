@@ -18,9 +18,10 @@ module.exports = {
 							Array.isArray(ref.importedNames) &&
 							ref.importedNames.includes("unused")
 						) {
+							const newExports = ref.importedNames.filter(item => item !== "unused");
 							return new DependencyReference(
 								() => ref.module,
-								ref.importedNames.filter(item => item !== "unused"),
+								newExports.length > 0 ? newExports : false,
 								ref.weak,
 								ref.order
 							);
