@@ -10,7 +10,8 @@ module.exports = {
 			this.hooks.compilation.tap("Test", compilation => {
 				compilation.hooks.dependencyReference.tap(
 					"Test",
-					(ref, dep, module) => {
+					(ref, dep) => {
+						const module = compilation.moduleGraph.getParentModule(dep);
 						if (
 							module.identifier().endsWith("module.js") &&
 							ref.module &&
