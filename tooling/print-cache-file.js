@@ -90,5 +90,5 @@ const filename = process.argv[2];
 console.log(`Printing content of ${filename}`);
 
 serializer
-	.deserializeFromFile(path.resolve(filename))
+	.deserialize({ filename: path.resolve(filename) })
 	.then(data => printData(data, ""));
