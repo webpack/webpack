@@ -1,12 +1,12 @@
-This example demonstrates the AggressiveSplittingPlugin for splitting the bundle into multiple smaller chunks to improve caching. This works best with a HTTP2 web server elsewise there is an overhead for the increased number of requests.
+This example demonstrates the AggressiveSplittingPlugin for splitting the bundle into multiple smaller chunks to improve caching. This works best with a HTTP2 web server, otherwise there is an overhead for the increased number of requests.
 
-The AggressiveSplittingPlugin split every chunk until it reaches the specified `maxSize`. In this example it tries to create chunks with <50kB code (after minimizing this reduces to ~10kB). It groups modules together by folder structure. We assume modules in the same folder as similar likely to change and minimize and gzip good together.
+AggressiveSplittingPlugin splits every chunk until it reaches the specified `maxSize`. In this example it tries to create chunks with <50kB raw code, which typically minimizes to ~10kB. It groups modules together by folder structure, because modules in the same folder are likely to have similar repetitive text, making them gzip efficiently together. They are also likely to change together.
 
-The AggressiveSplittingPlugin records it's splitting in the webpack records and try to restore splitting from records. This ensures that after changes to the application old splittings (and chunks) are reused. They are probably already in the clients cache. Therefore it's heavily recommended to use records!
+AggressiveSplittingPlugin records its splitting in the webpack records. When it is next run, it tries to use the last recorded splitting. Since changes to application code between one run and the next are usually in only a few modules (or just one), re-using the old splittings (and chunks, which are probably still in the client's cache), is highly advantageous.
 
-Only chunks which are bigger than the specified `minSize` are stored into the records. This ensures that these chunks fill up as your application grows, instead of creating too many chunks for every change.
+Only chunks which are bigger than the specified `minSize` are stored into the records. This ensures that these chunks fill up as your application grows, instead of creating many records of small chunks for every change.
 
-Chunks can get invalid if a module changes. Modules from invalid chunks go back into the module pool and new chunks are created from all modules in the pool.
+If a module changes, its chunks are declared to be invalid, and are put back into the module pool. New chunks are created from all modules in the pool.
 
 There is a tradeoff here:
 
@@ -47,68 +47,68 @@ module.exports = {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
                   Asset      Size  Chunks             Chunk Names
-012d41696d0b21c267e2.js  52.1 KiB       3  [emitted]  
-01a5e0a48ef1d5101221.js  51.3 KiB       6  [emitted]  
-05bc20ecb7a41f59a7ad.js  51.9 KiB       8  [emitted]  
-138520955bcf6a832f95.js  32.4 KiB       2  [emitted]  
-13cc44aedbda1af97a57.js  36.1 KiB       0  [emitted]  
-208018412565bb15b6b3.js    43 KiB       5  [emitted]  
-233a8af62fb7023821c3.js  54.5 KiB       9  [emitted]  
-3644375f8a67ecb9cc87.js  43.7 KiB       1  [emitted]  
-369edb35bdbc7b657e7d.js  36.8 KiB       4  [emitted]  
-887f4d32e4d6ab8f32c5.js  41.7 KiB      11  [emitted]  
-917a9a9b910fd53d3c7a.js  12.6 KiB      14  [emitted]  
-b0c0c8ef586bac9956f9.js    46 KiB      12  [emitted]  
-e89c2af3413cab0db491.js  37.6 KiB       7  [emitted]  
-f24bb9d9f2dfa00384b2.js    43 KiB      13  [emitted]  
-fe837ee789f5f230b7e9.js  44.7 KiB      10  [emitted]  
-Entrypoint main = 138520955bcf6a832f95.js 3644375f8a67ecb9cc87.js 13cc44aedbda1af97a57.js
-chunk    {0} 13cc44aedbda1af97a57.js 28.3 KiB ={1}= ={2}= >{3}< >{4}< >{5}< >{6}< >{7}< >{8}< >{9}< >{10}< >{11}< >{12}< >{13}< >{14}< [entry] [rendered]
+0a0f27dcdc8ba1a1b4b5.js  36.8 KiB       4  [emitted]  
+1720e04fd18f5f8dcd95.js  52.1 KiB       3  [emitted]  
+1c33e7c9231d1b0dac91.js    43 KiB      13  [emitted]  
+3b424e33566ed6d0942c.js  54.5 KiB       9  [emitted]  
+554d0aaa9405a41a39c5.js  51.3 KiB       6  [emitted]  
+5df3f9a16253c400b355.js    46 KiB      12  [emitted]  
+66096f7964d21fc670d6.js  41.7 KiB      11  [emitted]  
+82f356175ebb96ba71e7.js  37.6 KiB       7  [emitted]  
+97afb6c3e6e959a31dd8.js  44.7 KiB      10  [emitted]  
+b151fc0a66a1fcdce12e.js  32.4 KiB       2  [emitted]  
+b54f0f53a39d17d1c444.js    43 KiB       5  [emitted]  
+c7a9c7d3afbcccecff17.js  51.9 KiB       8  [emitted]  
+d2dbaa46a12dabb4476a.js  12.6 KiB      14  [emitted]  
+d9d10902e1a11e8edd0b.js  36.1 KiB       0  [emitted]  
+deacfa20b80b9a83d92f.js  43.7 KiB       1  [emitted]  
+Entrypoint main = b151fc0a66a1fcdce12e.js deacfa20b80b9a83d92f.js d9d10902e1a11e8edd0b.js
+chunk    {0} d9d10902e1a11e8edd0b.js 28.3 KiB ={1}= ={2}= >{3}< >{4}< >{5}< >{6}< >{7}< >{8}< >{9}< >{10}< >{11}< >{12}< >{13}< >{14}< [entry] [rendered]
     > ./example main
  [0] ./example.js 42 bytes {0} [built]
      + 13 hidden modules
-chunk    {1} 3644375f8a67ecb9cc87.js 45.7 KiB ={0}= ={2}= >{3}< >{4}< >{5}< >{6}< >{7}< >{8}< >{9}< >{10}< >{11}< >{12}< >{13}< >{14}< [initial] [rendered] [recorded] aggressive splitted
+chunk    {1} deacfa20b80b9a83d92f.js 45.7 KiB ={0}= ={2}= >{3}< >{4}< >{5}< >{6}< >{7}< >{8}< >{9}< >{10}< >{11}< >{12}< >{13}< >{14}< [initial] [rendered] [recorded] aggressive splitted
     > ./example main
     9 modules
-chunk    {2} 138520955bcf6a832f95.js 39.3 KiB ={0}= ={1}= >{3}< >{4}< >{5}< >{6}< >{7}< >{8}< >{9}< >{10}< >{11}< >{12}< >{13}< >{14}< [initial] [rendered] [recorded] aggressive splitted
+chunk    {2} b151fc0a66a1fcdce12e.js 39.3 KiB ={0}= ={1}= >{3}< >{4}< >{5}< >{6}< >{7}< >{8}< >{9}< >{10}< >{11}< >{12}< >{13}< >{14}< [initial] [rendered] [recorded] aggressive splitted
     > ./example main
     8 modules
-chunk    {3} 012d41696d0b21c267e2.js 45.7 KiB <{0}> <{1}> <{2}> ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
+chunk    {3} 1720e04fd18f5f8dcd95.js 45.7 KiB <{0}> <{1}> <{2}> ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
     > react-dom [0] ./example.js 2:0-22
     23 modules
-chunk    {4} 369edb35bdbc7b657e7d.js 43.3 KiB <{0}> <{1}> <{2}> ={3}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
+chunk    {4} 0a0f27dcdc8ba1a1b4b5.js 43.3 KiB <{0}> <{1}> <{2}> ={3}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
     > react-dom [0] ./example.js 2:0-22
     3 modules
-chunk    {5} 208018412565bb15b6b3.js 44.4 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
+chunk    {5} b54f0f53a39d17d1c444.js 44.4 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
     > react-dom [0] ./example.js 2:0-22
     10 modules
-chunk    {6} 01a5e0a48ef1d5101221.js 46.6 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
+chunk    {6} 554d0aaa9405a41a39c5.js 46.6 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
     > react-dom [0] ./example.js 2:0-22
     24 modules
-chunk    {7} e89c2af3413cab0db491.js 34 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={8}= ={9}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
+chunk    {7} 82f356175ebb96ba71e7.js 34 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={8}= ={9}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
     > react-dom [0] ./example.js 2:0-22
     16 modules
-chunk    {8} 05bc20ecb7a41f59a7ad.js 48.2 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={7}= ={9}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
+chunk    {8} c7a9c7d3afbcccecff17.js 48.2 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={7}= ={9}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
     > react-dom [0] ./example.js 2:0-22
     20 modules
-chunk    {9} 233a8af62fb7023821c3.js 62.3 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
+chunk    {9} 3b424e33566ed6d0942c.js 62.3 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
     > react-dom [0] ./example.js 2:0-22
     7 modules
-chunk   {10} fe837ee789f5f230b7e9.js 46.2 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
+chunk   {10} 97afb6c3e6e959a31dd8.js 46.2 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={11}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
     > react-dom [0] ./example.js 2:0-22
     9 modules
-chunk   {11} 887f4d32e4d6ab8f32c5.js 48.4 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
+chunk   {11} 66096f7964d21fc670d6.js 48.4 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={12}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
     > react-dom [0] ./example.js 2:0-22
     6 modules
-chunk   {12} b0c0c8ef586bac9956f9.js 46.3 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
+chunk   {12} 5df3f9a16253c400b355.js 46.3 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={13}= ={14}= [rendered] split chunk (cache group: vendors)
     > react-dom [0] ./example.js 2:0-22
     10 modules
-chunk   {13} f24bb9d9f2dfa00384b2.js 46.9 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= ={14}= [rendered] split chunk (cache group: vendors)
+chunk   {13} 1c33e7c9231d1b0dac91.js 46.9 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= ={14}= [rendered] split chunk (cache group: vendors)
     > react-dom [0] ./example.js 2:0-22
     8 modules
-chunk   {14} 917a9a9b910fd53d3c7a.js 24.9 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= ={13}= [rendered] split chunk (cache group: vendors)
+chunk   {14} d2dbaa46a12dabb4476a.js 24.9 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}= ={6}= ={7}= ={8}= ={9}= ={10}= ={11}= ={12}= ={13}= [rendered] split chunk (cache group: vendors)
     > react-dom [0] ./example.js 2:0-22
     3 modules
 ```
@@ -117,68 +117,68 @@ chunk   {14} 917a9a9b910fd53d3c7a.js 24.9 KiB <{0}> <{1}> <{2}> ={3}= ={4}= ={5}
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
                   Asset      Size  Chunks             Chunk Names
-038f064775a082d4cdf8.js  10.5 KiB      13  [emitted]  
-1224f80dc3aeb763af36.js  10.1 KiB       6  [emitted]  
-172d1cac49cca2f61298.js  14.8 KiB      11  [emitted]  
-1b7bcaac00f6db186df5.js  8.13 KiB       3  [emitted]  
-2cbee071efe89f94ed71.js  4.21 KiB      14  [emitted]  
-310511095c27abc8ae98.js  11.1 KiB       7  [emitted]  
-3c6952c73c7fa66ecf72.js  10.2 KiB       0  [emitted]  
-3f82c8a721ddb58495d5.js  6.34 KiB       4  [emitted]  
-47a676cf74ee66c4622f.js    12 KiB       1  [emitted]  
-6e2a6dcf59d9fbe258c3.js  6.71 KiB       9  [emitted]  
-7c806f98402a2a00555a.js  9.96 KiB       2  [emitted]  
-877f926450c810e6671e.js  13.1 KiB       8  [emitted]  
-bcee3dafd08e8a477423.js  7.86 KiB      12  [emitted]  
-d13432b7d2fae9a5185f.js  10.9 KiB       5  [emitted]  
-ed89c03384649615e4e9.js  9.91 KiB      10  [emitted]  
-Entrypoint main = 6e2a6dcf59d9fbe258c3.js 310511095c27abc8ae98.js 3f82c8a721ddb58495d5.js
-chunk    {0} 3c6952c73c7fa66ecf72.js 46.6 KiB <{4}> <{7}> <{9}> ={1}= ={2}= ={3}= ={5}= ={6}= ={8}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
+2db04bafab3ddcad85f1.js  10.2 KiB       0  [emitted]  
+2e27b1d49ddf418301e2.js  4.21 KiB      14  [emitted]  
+2e8b58579b5cd770c950.js  10.9 KiB       5  [emitted]  
+51b05717d2888a690e0a.js  10.5 KiB      13  [emitted]  
+51d0bdcabbfda951dacf.js    12 KiB       1  [emitted]  
+6f2a052e30adf4750f01.js  9.96 KiB       2  [emitted]  
+70bf91c4560f24730b96.js  11.1 KiB       7  [emitted]  
+8feb6295c45a372b91cf.js  13.1 KiB       8  [emitted]  
+c7c3ee87ad4515affe37.js  6.34 KiB       4  [emitted]  
+d136f6995b73a3ce4d05.js  8.13 KiB       3  [emitted]  
+de0438f29bb715db872d.js  9.91 KiB      10  [emitted]  
+e98052f068d298c3c92b.js  10.1 KiB       6  [emitted]  
+ea1823fb419e58962983.js  14.8 KiB      11  [emitted]  
+ed23514132a692784b89.js  6.71 KiB       9  [emitted]  
+ff0fd762b2413530eafb.js  7.86 KiB      12  [emitted]  
+Entrypoint main = ed23514132a692784b89.js 70bf91c4560f24730b96.js c7c3ee87ad4515affe37.js
+chunk    {0} 2db04bafab3ddcad85f1.js 46.6 KiB <{4}> <{7}> <{9}> ={1}= ={2}= ={3}= ={5}= ={6}= ={8}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
     > react-dom [14] ./example.js 2:0-22
     24 modules
-chunk    {1} 47a676cf74ee66c4622f.js 45.7 KiB <{4}> <{7}> <{9}> ={0}= ={2}= ={3}= ={5}= ={6}= ={8}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
+chunk    {1} 51d0bdcabbfda951dacf.js 45.7 KiB <{4}> <{7}> <{9}> ={0}= ={2}= ={3}= ={5}= ={6}= ={8}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
     > react-dom [14] ./example.js 2:0-22
     23 modules
-chunk    {2} 7c806f98402a2a00555a.js 48.2 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={3}= ={5}= ={6}= ={8}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
+chunk    {2} 6f2a052e30adf4750f01.js 48.2 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={3}= ={5}= ={6}= ={8}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
     > react-dom [14] ./example.js 2:0-22
     20 modules
-chunk    {3} 1b7bcaac00f6db186df5.js 34 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={5}= ={6}= ={8}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
+chunk    {3} d136f6995b73a3ce4d05.js 34 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={5}= ={6}= ={8}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
     > react-dom [14] ./example.js 2:0-22
     16 modules
-chunk    {4} 3f82c8a721ddb58495d5.js 28.3 KiB ={7}= ={9}= >{0}< >{1}< >{2}< >{3}< >{5}< >{6}< >{8}< >{10}< >{11}< >{12}< >{13}< >{14}< [entry] [rendered]
+chunk    {4} c7c3ee87ad4515affe37.js 28.3 KiB ={7}= ={9}= >{0}< >{1}< >{2}< >{3}< >{5}< >{6}< >{8}< >{10}< >{11}< >{12}< >{13}< >{14}< [entry] [rendered]
     > ./example main
  [14] ./example.js 42 bytes {4} [built]
      + 13 hidden modules
-chunk    {5} d13432b7d2fae9a5185f.js 46.3 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={6}= ={8}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
+chunk    {5} 2e8b58579b5cd770c950.js 46.3 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={6}= ={8}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
     > react-dom [14] ./example.js 2:0-22
     10 modules
-chunk    {6} 1224f80dc3aeb763af36.js 44.4 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={5}= ={8}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
+chunk    {6} e98052f068d298c3c92b.js 44.4 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={5}= ={8}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
     > react-dom [14] ./example.js 2:0-22
     10 modules
-chunk    {7} 310511095c27abc8ae98.js 45.7 KiB ={4}= ={9}= >{0}< >{1}< >{2}< >{3}< >{5}< >{6}< >{8}< >{10}< >{11}< >{12}< >{13}< >{14}< [initial] [rendered] [recorded] aggressive splitted
+chunk    {7} 70bf91c4560f24730b96.js 45.7 KiB ={4}= ={9}= >{0}< >{1}< >{2}< >{3}< >{5}< >{6}< >{8}< >{10}< >{11}< >{12}< >{13}< >{14}< [initial] [rendered] [recorded] aggressive splitted
     > ./example main
     9 modules
-chunk    {8} 877f926450c810e6671e.js 46.2 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
+chunk    {8} 8feb6295c45a372b91cf.js 46.2 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={10}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
     > react-dom [14] ./example.js 2:0-22
     9 modules
-chunk    {9} 6e2a6dcf59d9fbe258c3.js 39.3 KiB ={4}= ={7}= >{0}< >{1}< >{2}< >{3}< >{5}< >{6}< >{8}< >{10}< >{11}< >{12}< >{13}< >{14}< [initial] [rendered] [recorded] aggressive splitted
+chunk    {9} ed23514132a692784b89.js 39.3 KiB ={4}= ={7}= >{0}< >{1}< >{2}< >{3}< >{5}< >{6}< >{8}< >{10}< >{11}< >{12}< >{13}< >{14}< [initial] [rendered] [recorded] aggressive splitted
     > ./example main
     8 modules
-chunk   {10} ed89c03384649615e4e9.js 46.9 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={8}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
+chunk   {10} de0438f29bb715db872d.js 46.9 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={8}= ={11}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
     > react-dom [14] ./example.js 2:0-22
     8 modules
-chunk   {11} 172d1cac49cca2f61298.js 62.3 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={8}= ={10}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
+chunk   {11} ea1823fb419e58962983.js 62.3 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={8}= ={10}= ={12}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
     > react-dom [14] ./example.js 2:0-22
     7 modules
-chunk   {12} bcee3dafd08e8a477423.js 48.4 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={8}= ={10}= ={11}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
+chunk   {12} ff0fd762b2413530eafb.js 48.4 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={8}= ={10}= ={11}= ={13}= ={14}= [rendered] [recorded] aggressive splitted
     > react-dom [14] ./example.js 2:0-22
     6 modules
-chunk   {13} 038f064775a082d4cdf8.js 43.3 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={8}= ={10}= ={11}= ={12}= ={14}= [rendered] [recorded] aggressive splitted
+chunk   {13} 51b05717d2888a690e0a.js 43.3 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={8}= ={10}= ={11}= ={12}= ={14}= [rendered] [recorded] aggressive splitted
     > react-dom [14] ./example.js 2:0-22
     3 modules
-chunk   {14} 2cbee071efe89f94ed71.js 24.9 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={8}= ={10}= ={11}= ={12}= ={13}= [rendered]
+chunk   {14} 2e27b1d49ddf418301e2.js 24.9 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}= ={3}= ={5}= ={6}= ={8}= ={10}= ={11}= ={12}= ={13}= [rendered]
     > react-dom [14] ./example.js 2:0-22
     3 modules
 ```
@@ -581,7 +581,7 @@ chunk   {14} 2cbee071efe89f94ed71.js 24.9 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}
         "../../node_modules/react/lib/ReactDOMFactories.js"
       ],
       "size": 46762,
-      "hash": "3644375f8a67ecb9cc8702027857ffc5",
+      "hash": "deacfa20b80b9a83d92f2c3bf7316764",
       "id": 1
     },
     {
@@ -596,7 +596,7 @@ chunk   {14} 2cbee071efe89f94ed71.js 24.9 KiB <{4}> <{7}> <{9}> ={0}= ={1}= ={2}
         "../../node_modules/prop-types/factory.js"
       ],
       "size": 40275,
-      "hash": "138520955bcf6a832f9517576e10ff18",
+      "hash": "b151fc0a66a1fcdce12e4135605909e6",
       "id": 2
     }
   ]

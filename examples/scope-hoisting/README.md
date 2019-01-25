@@ -465,13 +465,13 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
       Asset      Size  Chunks             Chunk Names
 1.output.js   1.9 KiB       1  [emitted]  
   output.js  9.41 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 372 bytes >{1}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./node_modules/shared.js + 1 modules 100 bytes {0} [built]
      [exports: x, y]
      [all exports used]
@@ -483,10 +483,10 @@ chunk    {0} output.js (main) 372 bytes >{1}< [entry] [rendered]
      |    2 modules
  [1] ./example.js + 2 modules 272 bytes {0} [built]
      [no exports]
-     single entry .\example.js  main
+     single entry ./example.js  main
      | ./example.js 161 bytes [built]
      |     [no exports]
-     |     single entry .\example.js  main
+     |     single entry ./example.js  main
      |     + 2 hidden modules
 chunk    {1} 1.output.js 273 bytes <{0}> [rendered]
     > ./lazy [] 4:0-16
@@ -504,13 +504,13 @@ chunk    {1} 1.output.js 273 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
       Asset       Size  Chunks             Chunk Names
 1.output.js  369 bytes       1  [emitted]  
   output.js   2.17 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 372 bytes >{1}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./node_modules/shared.js + 1 modules 100 bytes {0} [built]
      [exports: x, y]
      [all exports used]
@@ -522,10 +522,10 @@ chunk    {0} output.js (main) 372 bytes >{1}< [entry] [rendered]
      |    2 modules
  [1] ./example.js + 2 modules 272 bytes {0} [built]
      [no exports]
-     single entry .\example.js  main
+     single entry ./example.js  main
      | ./example.js 161 bytes [built]
      |     [no exports]
-     |     single entry .\example.js  main
+     |     single entry ./example.js  main
      |     + 2 hidden modules
 chunk    {1} 1.output.js 273 bytes <{0}> [rendered]
     > ./lazy [] 4:0-16

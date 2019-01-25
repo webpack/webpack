@@ -290,15 +290,15 @@ module.exports = "It works";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
       Asset       Size  Chunks             Chunk Names
 1.output.js  257 bytes       1  [emitted]  
   output.js   8.78 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 375 bytes >{1}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 94 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [1] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {0} [built]
      cjs require bundle-loader!./file.js [0] ./example.js 1:0-34
 chunk    {1} 1.output.js 28 bytes <{0}> [rendered]
@@ -311,15 +311,15 @@ chunk    {1} 1.output.js 28 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
       Asset      Size  Chunks             Chunk Names
 1.output.js  98 bytes       1  [emitted]  
   output.js  2.16 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 375 bytes >{1}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 94 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [1] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {0} [built]
      cjs require bundle-loader!./file.js [0] ./example.js 1:0-34
 chunk    {1} 1.output.js 28 bytes <{0}> [rendered]

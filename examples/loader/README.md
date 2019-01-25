@@ -278,14 +278,14 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
     Asset      Size  Chunks             Chunk Names
 output.js  7.15 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 2.64 KiB [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 204 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [1] ./loader.js!./file.js 41 bytes {0} [built]
      cjs require ./loader!./file [0] ./example.js 2:12-38
  [2] (webpack)/node_modules/css-loader!./test.css 199 bytes {0} [built]
@@ -298,17 +298,17 @@ chunk    {0} output.js (main) 2.64 KiB [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
     Asset      Size  Chunks             Chunk Names
 output.js  1.88 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 2.64 KiB [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] (webpack)/node_modules/css-loader!./test.css 199 bytes {0} [built]
      cjs require ./test.css [1] ./example.js 5:12-33
      cjs require !css-loader!./test.css [1] ./example.js 6:12-45
  [1] ./example.js 204 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [2] ./loader.js!./file.js 41 bytes {0} [built]
      cjs require ./loader!./file [1] ./example.js 2:12-38
      + 1 hidden module

@@ -325,15 +325,15 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
       Asset       Size  Chunks             Chunk Names
 1.output.js  490 bytes       1  [emitted]  
   output.js   8.69 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 161 bytes >{1}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [1] ./example.js 139 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
      + 2 hidden modules
 chunk    {1} 1.output.js 22 bytes <{0}> [rendered]
     > [1] ./example.js 3:0-6:2
@@ -344,15 +344,15 @@ chunk    {1} 1.output.js 22 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
       Asset      Size  Chunks             Chunk Names
 1.output.js  95 bytes       1  [emitted]  
   output.js  2.05 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 161 bytes >{1}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [1] ./example.js 139 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
      + 2 hidden modules
 chunk    {1} 1.output.js 22 bytes <{0}> [rendered]
     > [1] ./example.js 3:0-6:2

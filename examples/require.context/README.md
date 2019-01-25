@@ -216,14 +216,14 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
     Asset      Size  Chunks             Chunk Names
 output.js  5.41 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 603 bytes [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 146 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [1] ./templates sync ^\.\/.*$ 217 bytes {0} [built]
      cjs require context ./templates [0] ./example.js 2:8-44
  [2] ./templates/a.js 80 bytes {0} [optional] [built]
@@ -241,12 +241,12 @@ chunk    {0} output.js (main) 603 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
     Asset      Size  Chunks             Chunk Names
 output.js  1.54 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 603 bytes [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./templates/a.js 80 bytes {0} [optional] [built]
      context element ./a [4] ./templates sync ^\.\/.*$ ./a
      context element ./a.js [4] ./templates sync ^\.\/.*$ ./a.js
@@ -257,7 +257,7 @@ chunk    {0} output.js (main) 603 bytes [entry] [rendered]
      context element ./c [4] ./templates sync ^\.\/.*$ ./c
      context element ./c.js [4] ./templates sync ^\.\/.*$ ./c.js
  [3] ./example.js 146 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [4] ./templates sync ^\.\/.*$ 217 bytes {0} [built]
      cjs require context ./templates [3] ./example.js 2:8-44
 ```

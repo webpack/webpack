@@ -255,15 +255,15 @@ function c() { console.log("c"); }
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
     Asset      Size  Chunks             Chunk Names
 output.js  6.87 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 698 bytes [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 114 bytes {0} [built]
      [no exports]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [1] ./math.js 347 bytes {0} [built]
      [exports: add, multiply, list]
      harmony side effect evaluation ./math [0] ./example.js 1:0-29
@@ -287,12 +287,12 @@ chunk    {0} output.js (main) 698 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
     Asset      Size  Chunks             Chunk Names
 output.js  1.32 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 698 bytes [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./math.js 347 bytes {0} [built]
      [exports: add, multiply, list]
      [only some exports used: add, multiply]
@@ -315,5 +315,5 @@ chunk    {0} output.js (main) 698 bytes [entry] [rendered]
      harmony import specifier ./library [3] ./example.js 5:0-26
  [3] ./example.js 114 bytes {0} [built]
      [no exports]
-     single entry .\example.js  main
+     single entry ./example.js  main
 ```
