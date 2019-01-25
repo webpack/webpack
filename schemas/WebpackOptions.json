@@ -164,6 +164,11 @@
           "type": "string",
           "absolutePath": true
         },
+        "cacheLocation": {
+          "description": "Locations for the cache (defaults to cacheDirectory / name).",
+          "type": "string",
+          "absolutePath": true
+        },
         "hashAlgorithm": {
           "description": "Algorithm used for generation the hash (see node.js crypto package)",
           "type": "string"

@@ -428,6 +428,10 @@ export interface FileCacheOptions {
 	 */
 	cacheDirectory?: string;
 	/**
+	 * Locations for the cache (defaults to cacheDirectory / name).
+	 */
+	cacheLocation?: string;
+	/**
 	 * Algorithm used for generation the hash (see node.js crypto package)
 	 */
 	hashAlgorithm?: string;
