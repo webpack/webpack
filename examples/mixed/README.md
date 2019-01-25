@@ -432,13 +432,13 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
       Asset      Size  Chunks             Chunk Names
 1.output.js  1.84 KiB       1  [emitted]  
   output.js    11 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 1010 bytes >{1}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./commonjs.js 223 bytes {0} [built]
      amd require ./commonjs [1] ./amd.js 2:0-12:1
      cjs require ./commonjs [1] ./amd.js 7:18-39
@@ -461,7 +461,7 @@ chunk    {0} output.js (main) 1010 bytes >{1}< [entry] [rendered]
      cjs require ./harmony [1] ./amd.js 8:17-37
      cjs require ./harmony [3] ./example.js 4:15-35
  [3] ./example.js 396 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
 chunk    {1} 1.output.js 433 bytes <{0}> [rendered]
     > [3] ./example.js 7:0-14:1
  [4] ../require.context/templates sync ^\.\/.*\.js$ 193 bytes {1} [built]
@@ -478,13 +478,13 @@ chunk    {1} 1.output.js 433 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
       Asset       Size  Chunks             Chunk Names
 1.output.js  605 bytes       1  [emitted]  
   output.js   2.41 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 1010 bytes >{1}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./commonjs.js 223 bytes {0} [built]
      amd require ./commonjs [1] ./amd.js 2:0-12:1
      cjs require ./commonjs [1] ./amd.js 7:18-39
@@ -507,7 +507,7 @@ chunk    {0} output.js (main) 1010 bytes >{1}< [entry] [rendered]
      cjs require ./harmony [1] ./amd.js 8:17-37
      cjs require ./harmony [3] ./example.js 4:15-35
  [3] ./example.js 396 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
 chunk    {1} 1.output.js 433 bytes <{0}> [rendered]
     > [3] ./example.js 7:0-14:1
  [4] ../require.context/templates sync ^\.\/.*\.js$ 193 bytes {1} [built]

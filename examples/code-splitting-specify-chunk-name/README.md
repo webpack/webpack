@@ -324,7 +324,7 @@ module.exports = webpackAsyncContext;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  442 bytes       0  [emitted]  chunk-bar-baz0
 1.output.js  436 bytes       1  [emitted]  chunk-bar-baz2
@@ -353,9 +353,9 @@ chunk    {2} 2.output.js (chunk-foo) 38 bytes <{3}> [rendered]
      import() ./templates/foo [3] ./example.js 1:0-62
      cjs require ./templates/foo [3] ./example.js 6:11-37
 chunk    {3} output.js (main) 565 bytes >{0}< >{1}< >{2}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [3] ./example.js 405 bytes {3} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [4] ./templates lazy ^\.\/ba.*$ namespace object 160 bytes {3} [built]
      import() context lazy ./templates [3] ./example.js 11:0-84
 ```
@@ -364,7 +364,7 @@ chunk    {3} output.js (main) 565 bytes >{0}< >{1}< >{2}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  114 bytes       0  [emitted]  chunk-bar-baz0
 1.output.js  115 bytes       1  [emitted]  chunk-bar-baz2
@@ -393,9 +393,9 @@ chunk    {2} 2.output.js (chunk-foo) 38 bytes <{3}> [rendered]
      import() ./templates/foo [3] ./example.js 1:0-62
      cjs require ./templates/foo [3] ./example.js 6:11-37
 chunk    {3} output.js (main) 565 bytes >{0}< >{1}< >{2}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [3] ./example.js 405 bytes {3} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [4] ./templates lazy ^\.\/ba.*$ namespace object 160 bytes {3} [built]
      import() context lazy ./templates [3] ./example.js 11:0-84
 ```

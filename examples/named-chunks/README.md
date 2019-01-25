@@ -350,16 +350,16 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
       Asset       Size  Chunks             Chunk Names
 1.output.js  677 bytes       1  [emitted]  my own chunk
 2.output.js  463 bytes       2  [emitted]  
   output.js   9.07 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 432 bytes >{1}< >{2}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [2] ./example.js 421 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
      + 1 hidden module
 chunk    {1} 1.output.js (my own chunk) 33 bytes <{0}> [rendered]
     > [2] ./example.js 13:0-15:18
@@ -375,16 +375,16 @@ chunk    {2} 2.output.js 22 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
       Asset       Size  Chunks             Chunk Names
 1.output.js  112 bytes    1, 2  [emitted]  my own chunk
 2.output.js   92 bytes       2  [emitted]  
   output.js   2.19 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 432 bytes >{1}< >{2}< [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [2] ./example.js 421 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
      + 1 hidden module
 chunk    {1} 1.output.js (my own chunk) 33 bytes <{0}> [rendered]
     > [2] ./example.js 13:0-15:18

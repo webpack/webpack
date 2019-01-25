@@ -372,16 +372,16 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
            Asset      Size  Chunks             Chunk Names
 1.hash.worker.js  1.79 KiB          [emitted]  
   hash.worker.js  4.98 KiB          [emitted]  
        output.js  4.42 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 229 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [1] (webpack)/node_modules/worker-loader/dist/cjs.js?name=hash.worker.js!./worker.js 97 bytes {0} [not cacheable] [built]
      cjs require worker-loader?name=hash.worker.js!./worker [0] ./example.js 1:13-66
 Child worker:
@@ -390,9 +390,9 @@ Child worker:
       hash.worker.js  4.98 KiB       0  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} hash.worker.js (main) 162 bytes >{1}< [entry] [rendered]
-        > !!.\worker.js main
+        > !!./worker.js main
      [0] ./worker.js 162 bytes {0} [built]
-         single entry !!.\worker.js  main
+         single entry !!./worker.js  main
     chunk    {1} 1.hash.worker.js 457 bytes <{0}> [rendered]
         > [0] ./worker.js 3:1-5:3
      [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {1} [built]
@@ -412,16 +412,16 @@ Child worker:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.28.0
+Version: webpack 4.29.0
            Asset       Size  Chunks             Chunk Names
 1.hash.worker.js  593 bytes          [emitted]  
   hash.worker.js   1.27 KiB          [emitted]  
        output.js   1.06 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 229 bytes {0} [built]
-     single entry .\example.js  main
+     single entry ./example.js  main
  [1] (webpack)/node_modules/worker-loader/dist/cjs.js?name=hash.worker.js!./worker.js 97 bytes {0} [not cacheable] [built]
      cjs require worker-loader?name=hash.worker.js!./worker [0] ./example.js 1:13-66
 Child worker:
@@ -430,9 +430,9 @@ Child worker:
       hash.worker.js   1.27 KiB       0  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} hash.worker.js (main) 162 bytes >{1}< [entry] [rendered]
-        > !!.\worker.js main
+        > !!./worker.js main
      [0] ./worker.js 162 bytes {0} [built]
-         single entry !!.\worker.js  main
+         single entry !!./worker.js  main
     chunk    {1} 1.hash.worker.js 457 bytes <{0}> [rendered]
         > [0] ./worker.js 3:1-5:3
      [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {1} [built]
