@@ -43,6 +43,22 @@
   </p>
 </div>
 
+## Table of Contents
+1. [Install](#install)
+2. [Introduction](#introduction)
+3. [Concepts](#concepts)
+4. [Contributing](#contributing)
+5. [Support](#support)
+6. [Core Team](#core-team)
+7. [Sponsoring](#sponsoring)
+8. [Premium Partners](#premium-partners)
+9. [Other Backers and Sponsors](#other-backers-and-sponsors)
+10. [Gold Sponsors](#gold-sponsors)
+11. [Silver Sponsors](#silver-sponsors)
+12. [Bronze Sponsors](#bronze-sponsors)
+13. [Backers](#backers)
+14. [Thanks to](#thanks-to)
+
 <h2 align="center">Install</h2>
 
 Install with npm:
