@@ -6,8 +6,7 @@ exports[`ConfigTestCases records issue-2991 exported tests should write relative
     \\"byName\\": {
       \\"main\\": 404
     },
-    \\"bySource\\": {
-    },
+    \\"bySource\\": {},
     \\"usedIds\\": [
       404
     ]
@@ -35,8 +34,7 @@ exports[`ConfigTestCases records issue-7339 exported tests should write relative
     \\"byName\\": {
       \\"main\\": 404
     },
-    \\"bySource\\": {
-    },
+    \\"bySource\\": {},
     \\"usedIds\\": [
       404
     ]
