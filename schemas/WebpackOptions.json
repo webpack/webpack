@@ -469,6 +469,10 @@
           "description": "Also flag chunks as loaded which contain a subset of the modules",
           "type": "boolean"
         },
+        "mangleExports": {
+          "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports)",
+          "type": "boolean"
+        },
         "mangleWasmImports": {
           "description": "Reduce size of WASM by changing imports to shorter strings.",
           "type": "boolean"

@@ -26,6 +26,7 @@ const DEFAULT_OPTIMIZATIONS = {
 	sideEffects: true,
 	providedExports: true,
 	usedExports: true,
+	mangleExports: true,
 	noEmitOnErrors: false,
 	concatenateModules: false,
 	moduleIds: "size",
