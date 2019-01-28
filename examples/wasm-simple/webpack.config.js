@@ -1,7 +1,7 @@
 module.exports = {
 	// mode: "development || "production",
 	output: {
-		webassemblyModuleFilename: "[modulehash].wasm",
+		webassemblyModuleFilename: "[hash].wasm",
 		publicPath: "js/"
 	},
 	module: {
