@@ -58,7 +58,7 @@
 11. [Silver Sponsors](#silver-sponsors)
 12. [Bronze Sponsors](#bronze-sponsors)
 13. [Backers](#backers)
-14. [Special Thanks To](#special-thanks-to)
+14. [Special Thanks](#special-thanks-to)
 
 <h2 align="center">Install</h2>
 
