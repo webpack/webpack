@@ -43,6 +43,23 @@
   </p>
 </div>
 
+## Table of Contents
+
+1. [Install](#install)
+2. [Introduction](#introduction)
+3. [Concepts](#concepts)
+4. [Contributing](#contributing)
+5. [Support](#support)
+6. [Core Team](#core-team)
+7. [Sponsoring](#sponsoring)
+8. [Premium Partners](#premium-partners)
+9. [Other Backers and Sponsors](#other-backers-and-sponsors)
+10. [Gold Sponsors](#gold-sponsors)
+11. [Silver Sponsors](#silver-sponsors)
+12. [Bronze Sponsors](#bronze-sponsors)
+13. [Backers](#backers)
+14. [Special Thanks](#special-thanks-to)
+
 <h2 align="center">Install</h2>
 
 Install with npm:
@@ -724,7 +741,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 <a href="https://opencollective.com/webpack/backer/99/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/99/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/backer/100/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/100/avatar.svg?requireActive=false"></a>
 
-<h2 align="center">Thanks to</h2>
+<h2 align="center">Special Thanks to</h2>
 <p align="center">(In chronological order)</p>
 
 * @google for [Google Web Toolkit (GWT)](http://www.gwtproject.org/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.
