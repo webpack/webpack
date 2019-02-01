@@ -810,6 +810,10 @@ export interface OptimizationOptions {
 	 */
 	flagIncludedChunks?: boolean;
 	/**
+	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports)
+	 */
+	mangleExports?: boolean;
+	/**
 	 * Reduce size of WASM by changing imports to shorter strings.
 	 */
 	mangleWasmImports?: boolean;

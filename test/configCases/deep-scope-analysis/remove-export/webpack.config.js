@@ -10,7 +10,8 @@ module.exports = {
 			this.hooks.compilation.tap("Test", compilation => {
 				compilation.hooks.dependencyReference.tap(
 					"Test",
-					(ref, dep, module) => {
+					(ref, dep) => {
+						const module = compilation.moduleGraph.getParentModule(dep);
 						if (
 							module.identifier().endsWith("module.js") &&
 							ref.module &&
@@ -18,9 +19,10 @@ module.exports = {
 							Array.isArray(ref.importedNames) &&
 							ref.importedNames.includes("unused")
 						) {
+							const newExports = ref.importedNames.filter(item => item !== "unused");
 							return new DependencyReference(
 								() => ref.module,
-								ref.importedNames.filter(item => item !== "unused"),
+								newExports.length > 0 ? newExports : false,
 								ref.weak,
 								ref.order
 							);
