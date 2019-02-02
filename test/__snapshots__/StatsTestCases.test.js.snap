@@ -2266,7 +2266,7 @@ Child manifest is named entry:
           Asset       Size  Chunks             Chunk Names
          237.js  756 bytes   {237}  [emitted]
        main1.js  568 bytes   {876}  [emitted]  main1
-    manifest.js   10.1 KiB   {719}  [emitted]  manifest
+    manifest.js   8.69 KiB   {719}  [emitted]  manifest
     Entrypoint main1 = manifest.js main1.js
     Entrypoint manifest = manifest.js
      [21] ./b.js 20 bytes {237} [built]
@@ -2274,7 +2274,7 @@ Child manifest is named entry:
     [153] ./f.js 20 bytes {719} [built]
     [861] ./main1.js 66 bytes {876} [built]
     [911] ./c.js 20 bytes {237} [built]
-        + 9 hidden modules"
+        + 5 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for runtime-chunk-issue-7382 1`] = `
