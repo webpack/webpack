@@ -52,11 +52,16 @@ getTemplate("b", function(b) {
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -69,8 +74,8 @@ getTemplate("b", function(b) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
-/*! runtime requirements: __webpack_require__.e, __webpack_require__ */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__.e__webpack_require__,  */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 function getTemplate(templateName, callback) {
@@ -112,7 +117,10 @@ getTemplate("b", function(b) {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
+/******/ 		
+/******/ 		// This function only allows to reference on-demand chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
+/******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
 /******/ 	}();
@@ -247,8 +255,8 @@ getTemplate("b", function(b) {
 /*!**************************************************!*\
   !*** ../require.context/templates sync ^\.\/.*$ ***!
   \**************************************************/
-/*! no static exports found */
-/*! runtime requirements: module, __webpack_require__ */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module__webpack_require__,  */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 var map = {
@@ -286,7 +294,7 @@ webpackContext.id = 1;
 /*!*****************************************!*\
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -299,7 +307,7 @@ module.exports = function() {
 /*!*****************************************!*\
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -312,7 +320,7 @@ module.exports = function() {
 /*!*****************************************!*\
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -330,18 +338,18 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
         Asset      Size  Chunks             Chunk Names
-925.output.js  1.98 KiB   {925}  [emitted]
-    output.js  7.27 KiB   {404}  [emitted]  main
+925.output.js  2.14 KiB   {925}  [emitted]
+    output.js  7.58 KiB   {404}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 266 bytes (javascript) 3.55 KiB (runtime) >{925}< [entry] [rendered]
-    > .\example.js main
+chunk {404} output.js (main) 266 bytes (javascript) 3.65 KiB (runtime) [entry] [rendered]
+    > ./example.js main
  [0] ./example.js 266 bytes {404} [built]
      [used exports unknown]
-     entry .\example.js main
+     entry ./example.js main
      + 4 hidden chunk modules
-chunk {925} 925.output.js 457 bytes <{404}> [rendered]
+chunk {925} 925.output.js 457 bytes [rendered]
     > [0] ./example.js 2:1-4:3
  [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {925} [built]
      [used exports unknown]
@@ -364,17 +372,17 @@ chunk {925} 925.output.js 457 bytes <{404}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
         Asset       Size  Chunks             Chunk Names
 925.output.js  651 bytes   {925}  [emitted]
     output.js   1.49 KiB   {404}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 266 bytes (javascript) 3.55 KiB (runtime) >{925}< [entry] [rendered]
-    > .\example.js main
+chunk {404} output.js (main) 266 bytes (javascript) 3.65 KiB (runtime) [entry] [rendered]
+    > ./example.js main
  [275] ./example.js 266 bytes {404} [built]
-       entry .\example.js main
+       entry ./example.js main
      + 4 hidden chunk modules
-chunk {925} 925.output.js 457 bytes <{404}> [rendered]
+chunk {925} 925.output.js 457 bytes [rendered]
     > [275] ./example.js 2:1-4:3
  [145] ../require.context/templates/a.js 80 bytes {925} [optional] [built]
        context element ./a [925] ../require.context/templates sync ^\.\/.*$ ./a

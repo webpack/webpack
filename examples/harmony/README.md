@@ -59,11 +59,16 @@ export function increment(val) {
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -76,8 +81,8 @@ export function increment(val) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no exports provided */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.e */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__, __webpack_require__.e,  */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -98,8 +103,9 @@ __webpack_require__.e(/*! import() */ 912).then(__webpack_require__.bind(null, /
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
-/*! exports provided: increment */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.d */
+/*! export increment [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__, __webpack_require__.d,  */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -117,8 +123,9 @@ function increment(val) {
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
-/*! exports provided: add */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
+/*! export add [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__.d, __webpack_require__,  */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -182,7 +189,10 @@ function add() {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
+/******/ 		
+/******/ 		// This function only allows to reference on-demand chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
+/******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
 /******/ 	}();
@@ -314,17 +324,17 @@ function add() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
         Asset       Size  Chunks             Chunk Names
-912.output.js  604 bytes   {912}  [emitted]
-    output.js   9.58 KiB   {404}  [emitted]  main
+912.output.js  711 bytes   {912}  [emitted]
+    output.js   10.1 KiB   {404}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 400 bytes (javascript) 4.1 KiB (runtime) >{912}< [entry] [rendered]
-    > .\example.js main
+chunk {404} output.js (main) 400 bytes (javascript) 4.2 KiB (runtime) [entry] [rendered]
+    > ./example.js main
  [0] ./example.js 175 bytes {404} [built]
      [no exports]
      [used exports unknown]
-     entry .\example.js main
+     entry ./example.js main
  [1] ./increment.js 90 bytes {404} [built]
      [exports: increment]
      [used exports unknown]
@@ -336,7 +346,7 @@ chunk {404} output.js (main) 400 bytes (javascript) 4.1 KiB (runtime) >{912}< [e
      harmony side effect evaluation ./math [1] ./increment.js 1:0-29
      harmony import specifier ./math [1] ./increment.js 3:11-14
      + 6 hidden chunk modules
-chunk {912} 912.output.js 24 bytes <{404}> [rendered]
+chunk {912} 912.output.js 24 bytes [rendered]
     > ./async-loaded [0] ./example.js 6:0-24
  [3] ./async-loaded.js 24 bytes {912} [built]
      [exports: answer]
@@ -348,20 +358,20 @@ chunk {912} 912.output.js 24 bytes <{404}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
         Asset       Size  Chunks             Chunk Names
 912.output.js  149 bytes   {912}  [emitted]
     output.js   1.78 KiB   {404}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 400 bytes (javascript) 4.1 KiB (runtime) >{912}< [entry] [rendered]
-    > .\example.js main
+chunk {404} output.js (main) 400 bytes (javascript) 4.2 KiB (runtime) [entry] [rendered]
+    > ./example.js main
  [761] ./example.js + 2 modules 400 bytes {404} [built]
        [no exports]
-       entry .\example.js main
+       entry ./example.js main
      + 6 hidden chunk modules
-chunk {912} 912.output.js 24 bytes <{404}> [rendered]
+chunk {912} 912.output.js 24 bytes [rendered]
     > ./async-loaded ./example.js 6:0-24
  [912] ./async-loaded.js 24 bytes {912} [built]
        [exports: answer]
-       import() ./async-loaded [761] ./example.js + 2 modules 6:0-24
+       import() ./async-loaded [761] ./example.js + 2 modules ./example.js 6:0-24
 ```

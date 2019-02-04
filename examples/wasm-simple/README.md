@@ -94,11 +94,16 @@ export function fibonacciJavascript(i) {
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -111,8 +116,8 @@ export function fibonacciJavascript(i) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
-/*! runtime requirements: __webpack_require__.e, __webpack_require__ */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__.e__webpack_require__,  */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 __webpack_require__.e(/*! import() */ 183).then(__webpack_require__.bind(null, /*! ./add.wasm */ 1)).then(addModule => {
@@ -192,7 +197,10 @@ function timed(name, fn) {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
+/******/ 		
+/******/ 		// This function only allows to reference on-demand chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
+/******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
 /******/ 	}();
@@ -369,7 +377,7 @@ function timed(name, fn) {
 /******/ 					promises.push(installedWasmModuleData);
 /******/ 				else {
 /******/ 					var importObject = wasmImportObjects[wasmModuleId]();
-/******/ 					var req = fetch(__webpack_require__.p + "" + {"1":"30aba380c690e17b4bf0","3":"a6532f8707795812a6b0","4":"c0de8ff404b59fb40223"}[wasmModuleId] + ".wasm");
+/******/ 					var req = fetch(__webpack_require__.p + "" + {"1":"768a5da4710725bcb100","3":"41a5c50a2d48fb358c38","4":"98df0027b722ce87102e"}[wasmModuleId] + ".wasm");
 /******/ 					var promise;
 /******/ 					if(importObject instanceof Promise && typeof WebAssembly.compileStreaming === 'function') {
 /******/ 						promise = Promise.all([WebAssembly.compileStreaming(req), importObject]).then(function(items) {
@@ -407,8 +415,9 @@ function timed(name, fn) {
 /*!******************!*\
   !*** ./add.wasm ***!
   \******************/
-/*! exports provided: add */
-/*! runtime requirements: module, __webpack_require__.w, __webpack_exports__, __webpack_require__ */
+/*! export add [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: module__webpack_require__.w, __webpack_exports__, __webpack_require__,  */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -436,8 +445,9 @@ wasmExports["__webpack_init__"]()
 /*!******************!*\
   !*** ./add.wasm ***!
   \******************/
-/*! exports provided: add */
-/*! runtime requirements: module, __webpack_require__.w, __webpack_exports__, __webpack_require__ */
+/*! export add [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: module__webpack_require__.w, __webpack_exports__, __webpack_require__,  */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -457,8 +467,13 @@ wasmExports["__webpack_init__"]()
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
-/*! exports provided: add, factorial, fibonacci, factorialJavascript, fibonacciJavascript */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.d */
+/*! export add [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export factorial [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export factorialJavascript [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export fibonacci [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export fibonacciJavascript [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__, __webpack_require__.d,  */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -493,8 +508,9 @@ function fibonacciJavascript(i) {
 /*!************************!*\
   !*** ./factorial.wasm ***!
   \************************/
-/*! exports provided: factorial */
-/*! runtime requirements: module, __webpack_require__.w, __webpack_exports__, __webpack_require__ */
+/*! export factorial [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: module__webpack_require__.w, __webpack_exports__, __webpack_require__,  */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -514,8 +530,9 @@ wasmExports["__webpack_init__"]()
 /*!************************!*\
   !*** ./fibonacci.wasm ***!
   \************************/
-/*! exports provided: fibonacci */
-/*! runtime requirements: module, __webpack_require__.w, __webpack_exports__, __webpack_require__ */
+/*! export fibonacci [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: module__webpack_require__.w, __webpack_exports__, __webpack_require__,  */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -540,16 +557,16 @@ wasmExports["__webpack_init__"]()
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
                     Asset       Size        Chunks             Chunk Names
-            183.output.js  708 bytes         {183}  [emitted]
-30aba380c690e17b4bf0.wasm   67 bytes  {183}, {702}  [emitted]
-            702.output.js    3.7 KiB         {702}  [emitted]
-a6532f8707795812a6b0.wasm   88 bytes         {702}  [emitted]
-c0de8ff404b59fb40223.wasm   93 bytes         {702}  [emitted]
-                output.js   11.6 KiB         {404}  [emitted]  main
+            183.output.js  815 bytes         {183}  [emitted]
+41a5c50a2d48fb358c38.wasm   88 bytes         {702}  [emitted]
+            702.output.js   4.42 KiB         {702}  [emitted]
+768a5da4710725bcb100.wasm   67 bytes  {183}, {702}  [emitted]
+98df0027b722ce87102e.wasm   93 bytes         {702}  [emitted]
+                output.js   11.9 KiB         {404}  [emitted]  main
 Entrypoint main = output.js
-chunk {183} 183.output.js, 30aba380c690e17b4bf0.wasm 100 bytes (javascript) 41 bytes (webassembly) <{404}> [rendered]
+chunk {183} 183.output.js, 768a5da4710725bcb100.wasm 100 bytes (javascript) 41 bytes (webassembly) [rendered]
     > ./add.wasm [0] ./example.js 1:0-20
  [1] ./add.wasm 100 bytes (javascript) 41 bytes (webassembly) {183} {702} [built]
      [exports: add]
@@ -557,13 +574,13 @@ chunk {183} 183.output.js, 30aba380c690e17b4bf0.wasm 100 bytes (javascript) 41 b
      import() ./add.wasm [0] ./example.js 1:0-20
      harmony side effect evaluation ./add.wasm [2] ./math.js 1:0-33
      harmony export imported specifier ./add.wasm [2] ./math.js 5:0-37
-chunk {404} output.js (main) 762 bytes (javascript) 5.96 KiB (runtime) >{183}< >{702}< [entry] [rendered]
-    > .\example.js main
+chunk {404} output.js (main) 762 bytes (javascript) 6.06 KiB (runtime) [entry] [rendered]
+    > ./example.js main
  [0] ./example.js 762 bytes {404} [built]
      [used exports unknown]
-     entry .\example.js main
+     entry ./example.js main
      + 7 hidden chunk modules
-chunk {702} 702.output.js, 30aba380c690e17b4bf0.wasm, a6532f8707795812a6b0.wasm, c0de8ff404b59fb40223.wasm 700 bytes (javascript) 170 bytes (webassembly) <{404}> [rendered]
+chunk {702} 702.output.js, 768a5da4710725bcb100.wasm, 41a5c50a2d48fb358c38.wasm, 98df0027b722ce87102e.wasm 700 bytes (javascript) 170 bytes (webassembly) [rendered]
     > ./math [0] ./example.js 3:1-17
  [1] ./add.wasm 100 bytes (javascript) 41 bytes (webassembly) {183} {702} [built]
      [exports: add]
@@ -572,7 +589,7 @@ chunk {702} 702.output.js, 30aba380c690e17b4bf0.wasm, a6532f8707795812a6b0.wasm,
      harmony side effect evaluation ./add.wasm [2] ./math.js 1:0-33
      harmony export imported specifier ./add.wasm [2] ./math.js 5:0-37
  [2] ./math.js 400 bytes {702} [built]
-     [exports: add, factorial, fibonacci, factorialJavascript, fibonacciJavascript]
+     [exports: add, factorial, factorialJavascript, fibonacci, fibonacciJavascript]
      [used exports unknown]
      import() ./math [0] ./example.js 3:1-17
  [3] ./factorial.wasm 100 bytes (javascript) 62 bytes (webassembly) {702} [built]
@@ -591,28 +608,28 @@ chunk {702} 702.output.js, 30aba380c690e17b4bf0.wasm, a6532f8707795812a6b0.wasm,
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
                     Asset       Size        Chunks             Chunk Names
             183.output.js  189 bytes         {183}  [emitted]
-517a0da5a1df44a00c72.wasm   70 bytes  {183}, {702}  [emitted]
-5c505fd3c48799e0340d.wasm   67 bytes  {183}, {702}  [emitted]
-            702.output.js  699 bytes  {183}, {702}  [emitted]
-b8cc0ef8f69c2d0eaeba.wasm   65 bytes  {183}, {702}  [emitted]
+67213a60abcf4f23c6b4.wasm   78 bytes  {183}, {702}  [emitted]
+            702.output.js  715 bytes  {183}, {702}  [emitted]
+a4570b6a86c9fb8795ab.wasm   67 bytes  {183}, {702}  [emitted]
+f5e82906cffdecdc383f.wasm   73 bytes  {183}, {702}  [emitted]
                 output.js   3.06 KiB         {404}  [emitted]  main
 Entrypoint main = output.js
-chunk {183} 183.output.js, 5c505fd3c48799e0340d.wasm 100 bytes (javascript) 41 bytes (webassembly) <{404}> [rendered]
+chunk {183} 183.output.js, a4570b6a86c9fb8795ab.wasm 100 bytes (javascript) 41 bytes (webassembly) [rendered]
     > ./add.wasm [275] ./example.js 1:0-20
  [183] ./add.wasm 100 bytes (javascript) 41 bytes (webassembly) {183} {702} [built]
        [exports: add]
        import() ./add.wasm [275] ./example.js 1:0-20
        harmony side effect evaluation ./add.wasm [702] ./math.js 1:0-33
        harmony export imported specifier ./add.wasm [702] ./math.js 5:0-37
-chunk {404} output.js (main) 762 bytes (javascript) 5.98 KiB (runtime) >{183}< >{702}< [entry] [rendered]
-    > .\example.js main
+chunk {404} output.js (main) 762 bytes (javascript) 6.08 KiB (runtime) [entry] [rendered]
+    > ./example.js main
  [275] ./example.js 762 bytes {404} [built]
-       entry .\example.js main
+       entry ./example.js main
      + 7 hidden chunk modules
-chunk {702} 702.output.js, 5c505fd3c48799e0340d.wasm, 517a0da5a1df44a00c72.wasm, b8cc0ef8f69c2d0eaeba.wasm 700 bytes (javascript) 170 bytes (webassembly) <{404}> [rendered]
+chunk {702} 702.output.js, a4570b6a86c9fb8795ab.wasm, 67213a60abcf4f23c6b4.wasm, f5e82906cffdecdc383f.wasm 700 bytes (javascript) 170 bytes (webassembly) [rendered]
     > ./math [275] ./example.js 3:1-17
  [183] ./add.wasm 100 bytes (javascript) 41 bytes (webassembly) {183} {702} [built]
        [exports: add]
@@ -625,7 +642,7 @@ chunk {702} 702.output.js, 5c505fd3c48799e0340d.wasm, 517a0da5a1df44a00c72.wasm,
        harmony side effect evaluation ./fibonacci.wasm [702] ./math.js 3:0-45
        harmony export imported specifier ./fibonacci.wasm [702] ./math.js 5:0-37
  [702] ./math.js 400 bytes {702} [built]
-       [exports: add, factorial, fibonacci, factorialJavascript, fibonacciJavascript]
+       [exports: add, factorial, factorialJavascript, fibonacci, fibonacciJavascript]
        import() ./math [275] ./example.js 3:1-17
  [707] ./factorial.wasm 100 bytes (javascript) 62 bytes (webassembly) {702} [built]
        [exports: factorial]

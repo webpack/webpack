@@ -43,6 +43,23 @@
   </p>
 </div>
 
+## Table of Contents
+
+1. [Install](#install)
+2. [Introduction](#introduction)
+3. [Concepts](#concepts)
+4. [Contributing](#contributing)
+5. [Support](#support)
+6. [Core Team](#core-team)
+7. [Sponsoring](#sponsoring)
+8. [Premium Partners](#premium-partners)
+9. [Other Backers and Sponsors](#other-backers-and-sponsors)
+10. [Gold Sponsors](#gold-sponsors)
+11. [Silver Sponsors](#silver-sponsors)
+12. [Bronze Sponsors](#bronze-sponsors)
+13. [Backers](#backers)
+14. [Special Thanks](#special-thanks-to)
+
 <h2 align="center">Install</h2>
 
 Install with npm:
@@ -329,7 +346,7 @@ If you create a loader or plugin, we would <3 for you to open source it, and put
 
 <h2 align="center">Support</h2>
 
-We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of it's flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
+We consider webpack to be a low-level tool used not only individually but also layered beneath other awesome tools. Because of its flexibility, webpack isn't always the _easiest_ entry-level solution, however we do believe it is the most powerful. That said, we're always looking for ways improve and simplify the tool without compromising functionality. If you have any ideas on ways to accomplish this, we're all ears!
 
 If you're just getting started, take a look at [our new docs and concepts page](https://webpack.js.org/concepts/). This has a high level overview that is great for beginners!!
 
@@ -724,7 +741,7 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 <a href="https://opencollective.com/webpack/backer/99/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/99/avatar.svg?requireActive=false"></a>
 <a href="https://opencollective.com/webpack/backer/100/website?requireActive=false" target="_blank"><img src="https://opencollective.com/webpack/backer/100/avatar.svg?requireActive=false"></a>
 
-<h2 align="center">Thanks to</h2>
+<h2 align="center">Special Thanks to</h2>
 <p align="center">(In chronological order)</p>
 
 * @google for [Google Web Toolkit (GWT)](http://www.gwtproject.org/), which aims to compile Java to JavaScript. It features a similar [Code Splitting](http://www.gwtproject.org/doc/latest/DevGuideCodeSplitting.html) as webpack.

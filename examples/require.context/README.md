@@ -58,9 +58,14 @@ module.exports = function() {
 /******/
 /******/
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -73,7 +78,7 @@ module.exports = function() {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
@@ -88,8 +93,8 @@ console.log(getTemplate("b"));
 /*!*********************************!*\
   !*** ./templates sync ^\.\/.*$ ***!
   \*********************************/
-/*! no static exports found */
-/*! runtime requirements: module, __webpack_require__ */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module__webpack_require__,  */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 var map = {
@@ -127,7 +132,7 @@ webpackContext.id = 1;
 /*!************************!*\
   !*** ./templates/a.js ***!
   \************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -140,7 +145,7 @@ module.exports = function() {
 /*!************************!*\
   !*** ./templates/b.js ***!
   \************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -153,7 +158,7 @@ module.exports = function() {
 /*!************************!*\
   !*** ./templates/c.js ***!
   \************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -171,15 +176,15 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
     Asset      Size  Chunks             Chunk Names
-output.js  3.24 KiB     {0}  [emitted]  main
+output.js  3.57 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 603 bytes [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 146 bytes {0} [built]
      [used exports unknown]
-     entry .\example.js main
+     entry ./example.js main
  [1] ./templates sync ^\.\/.*$ 217 bytes {0} [built]
      [used exports unknown]
      cjs require context ./templates [0] ./example.js 2:8-44
@@ -201,12 +206,12 @@ chunk {0} output.js (main) 603 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
     Asset       Size  Chunks             Chunk Names
-output.js  869 bytes   {404}  [emitted]  main
+output.js  868 bytes   {404}  [emitted]  main
 Entrypoint main = output.js
 chunk {404} output.js (main) 603 bytes [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [117] ./templates/a.js 80 bytes {404} [optional] [built]
        context element ./a [545] ./templates sync ^\.\/.*$ ./a
        context element ./a.js [545] ./templates sync ^\.\/.*$ ./a.js
@@ -217,7 +222,7 @@ chunk {404} output.js (main) 603 bytes [entry] [rendered]
        context element ./b [545] ./templates sync ^\.\/.*$ ./b
        context element ./b.js [545] ./templates sync ^\.\/.*$ ./b.js
  [275] ./example.js 146 bytes {404} [built]
-       entry .\example.js main
+       entry ./example.js main
  [545] ./templates sync ^\.\/.*$ 217 bytes {404} [built]
        cjs require context ./templates [275] ./example.js 2:8-44
 ```

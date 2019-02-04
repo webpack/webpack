@@ -74,11 +74,16 @@ require.ensure(["c"], function(require) {
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -91,8 +96,8 @@ require.ensure(["c"], function(require) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
-/*! runtime requirements: __webpack_require__, __webpack_require__.e */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require____webpack_require__.e,  */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 var a = __webpack_require__(/*! a */ 1);
@@ -107,7 +112,7 @@ __webpack_require__.e(/*! require.ensure */ 3).then((function(require) {
 /*!***************************!*\
   !*** ./node_modules/a.js ***!
   \***************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements:  */
 /***/ (function() {
 
@@ -118,7 +123,7 @@ __webpack_require__.e(/*! require.ensure */ 3).then((function(require) {
 /*!***************************!*\
   !*** ./node_modules/b.js ***!
   \***************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements:  */
 /***/ (function() {
 
@@ -151,7 +156,10 @@ __webpack_require__.e(/*! require.ensure */ 3).then((function(require) {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
+/******/ 		
+/******/ 		// This function only allows to reference on-demand chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
+/******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
 /******/ 	}();
@@ -288,7 +296,7 @@ __webpack_require__.e(/*! require.ensure */ 3).then((function(require) {
 /*!***************************!*\
   !*** ./node_modules/c.js ***!
   \***************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements:  */
 /***/ (function() {
 
@@ -299,7 +307,7 @@ __webpack_require__.e(/*! require.ensure */ 3).then((function(require) {
 /*!***************************!*\
   !*** ./node_modules/d.js ***!
   \***************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements:  */
 /***/ (function() {
 
@@ -312,7 +320,7 @@ __webpack_require__.e(/*! require.ensure */ 3).then((function(require) {
 Minimized
 
 ``` javascript
-(window.webpackJsonp=window.webpackJsonp||[]).push([[3],{227:function(){},33:function(){}}]);
+(window.webpackJsonp=window.webpackJsonp||[]).push([[3],{33:function(){},227:function(){}}]);
 ```
 
 # Info
@@ -321,12 +329,12 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
       Asset       Size  Chunks             Chunk Names
-3.output.js  520 bytes     {3}  [emitted]
-  output.js   7.64 KiB   {404}  [emitted]  main
+3.output.js  602 bytes     {3}  [emitted]
+  output.js   8.03 KiB   {404}  [emitted]  main
 Entrypoint main = output.js
-chunk {3} 3.output.js 22 bytes <{404}> [rendered]
+chunk {3} 3.output.js 22 bytes [rendered]
     > [0] ./example.js 3:0-6:2
  [3] ./node_modules/c.js 11 bytes {3} [built]
      [used exports unknown]
@@ -334,11 +342,11 @@ chunk {3} 3.output.js 22 bytes <{404}> [rendered]
  [4] ./node_modules/d.js 11 bytes {3} [built]
      [used exports unknown]
      cjs require d [0] ./example.js 5:12-24
-chunk {404} output.js (main) 161 bytes (javascript) 3.55 KiB (runtime) >{3}< [entry] [rendered]
-    > .\example.js main
+chunk {404} output.js (main) 161 bytes (javascript) 3.65 KiB (runtime) [entry] [rendered]
+    > ./example.js main
  [0] ./example.js 139 bytes {404} [built]
      [used exports unknown]
-     entry .\example.js main
+     entry ./example.js main
  [1] ./node_modules/a.js 11 bytes {404} [built]
      [used exports unknown]
      cjs require a [0] ./example.js 1:8-20
@@ -353,25 +361,25 @@ chunk {404} output.js (main) 161 bytes (javascript) 3.55 KiB (runtime) >{3}< [en
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
       Asset      Size  Chunks             Chunk Names
 3.output.js  93 bytes     {3}  [emitted]
   output.js  1.45 KiB   {404}  [emitted]  main
 Entrypoint main = output.js
-chunk {3} 3.output.js 22 bytes <{404}> [rendered]
+chunk {3} 3.output.js 22 bytes [rendered]
     > [275] ./example.js 3:0-6:2
   [33] ./node_modules/d.js 11 bytes {3} [built]
        cjs require d [275] ./example.js 5:12-24
  [227] ./node_modules/c.js 11 bytes {3} [built]
        require.ensure item c [275] ./example.js 3:0-6:2
-chunk {404} output.js (main) 161 bytes (javascript) 3.55 KiB (runtime) >{3}< [entry] [rendered]
-    > .\example.js main
+chunk {404} output.js (main) 161 bytes (javascript) 3.65 KiB (runtime) [entry] [rendered]
+    > ./example.js main
   [54] ./node_modules/a.js 11 bytes {404} [built]
        cjs require a [275] ./example.js 1:8-20
  [215] ./node_modules/b.js 11 bytes {404} [built]
        cjs require b [275] ./example.js 2:8-20
        cjs require b [275] ./example.js 4:4-16
  [275] ./example.js 139 bytes {404} [built]
-       entry .\example.js main
+       entry ./example.js main
      + 4 hidden chunk modules
 ```

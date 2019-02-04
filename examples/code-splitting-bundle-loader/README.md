@@ -55,11 +55,16 @@ module.exports = "It works";
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -72,7 +77,7 @@ module.exports = "It works";
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
@@ -86,8 +91,8 @@ __webpack_require__(/*! bundle-loader!./file.js */ 1)(function(fileJsExports) {
 /*!******************************************************!*\
   !*** (webpack)/node_modules/bundle-loader!./file.js ***!
   \******************************************************/
-/*! no static exports found */
-/*! runtime requirements: module, __webpack_require__.e, __webpack_require__ */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module__webpack_require__.e, __webpack_require__,  */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 var cbs = [], 
@@ -132,7 +137,10 @@ __webpack_require__.e(/*! require.ensure */ 396).then((function(require) {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
+/******/ 		
+/******/ 		// This function only allows to reference on-demand chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
+/******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
 /******/ 	}();
@@ -267,7 +275,7 @@ __webpack_require__.e(/*! require.ensure */ 396).then((function(require) {
 /*!*****************!*\
   !*** ./file.js ***!
   \*****************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -284,21 +292,21 @@ module.exports = "It works";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
         Asset       Size  Chunks             Chunk Names
-396.output.js  286 bytes   {396}  [emitted]
-    output.js   7.77 KiB   {404}  [emitted]  main
+396.output.js  327 bytes   {396}  [emitted]
+    output.js   8.12 KiB   {404}  [emitted]  main
 Entrypoint main = output.js
-chunk {396} 396.output.js 28 bytes <{404}> [rendered]
+chunk {396} 396.output.js 28 bytes [rendered]
     > [1] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
  [2] ./file.js 28 bytes {396} [built]
      [used exports unknown]
      cjs require !!./file.js [1] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
-chunk {404} output.js (main) 375 bytes (javascript) 3.55 KiB (runtime) >{396}< [entry] [rendered]
-    > .\example.js main
+chunk {404} output.js (main) 375 bytes (javascript) 3.65 KiB (runtime) [entry] [rendered]
+    > ./example.js main
  [0] ./example.js 94 bytes {404} [built]
      [used exports unknown]
-     entry .\example.js main
+     entry ./example.js main
  [1] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {404} [built]
      [used exports unknown]
      cjs require bundle-loader!./file.js [0] ./example.js 1:0-34
@@ -309,20 +317,20 @@ chunk {404} output.js (main) 375 bytes (javascript) 3.55 KiB (runtime) >{396}< [
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
         Asset       Size  Chunks             Chunk Names
 396.output.js  100 bytes   {396}  [emitted]
     output.js   1.55 KiB   {404}  [emitted]  main
 Entrypoint main = output.js
-chunk {396} 396.output.js 28 bytes <{404}> [rendered]
+chunk {396} 396.output.js 28 bytes [rendered]
     > [83] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
  [396] ./file.js 28 bytes {396} [built]
        cjs require !!./file.js [83] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
-chunk {404} output.js (main) 375 bytes (javascript) 3.55 KiB (runtime) >{396}< [entry] [rendered]
-    > .\example.js main
+chunk {404} output.js (main) 375 bytes (javascript) 3.65 KiB (runtime) [entry] [rendered]
+    > ./example.js main
   [83] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {404} [built]
        cjs require bundle-loader!./file.js [275] ./example.js 1:0-34
  [275] ./example.js 94 bytes {404} [built]
-       entry .\example.js main
+       entry ./example.js main
      + 4 hidden chunk modules
 ```

@@ -644,11 +644,10 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for concat-and-sideeffects 1`] = `
-"[695] ./node_modules/pmodule/a.js + 1 modules 73 bytes {404} [built]
+"[145] ./index.js + 2 modules 119 bytes {404} [built]
       | ./node_modules/pmodule/aa.js 24 bytes [built]
       | ./node_modules/pmodule/a.js 49 bytes [built]
-[967] ./index.js 46 bytes {404} [built]
-      ModuleConcatenation bailout: Cannot concat with ./node_modules/pmodule/a.js (<- Module is referenced from different chunks by these modules: ./node_modules/pmodule/index.js)
+      | ./index.js 46 bytes [built]
 ./node_modules/pmodule/index.js 63 bytes [orphan] [built]
       ModuleConcatenation bailout: Module is not in any chunk
 ./node_modules/pmodule/b.js 49 bytes [orphan] [built]
@@ -2364,37 +2363,38 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
-"Hash: 8cc3b6a0e43cf6f6e017
+"Hash: 807b9c37a224a09b199a
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
    1.js  481 bytes     {1}  [emitted]
-main.js    9.5 KiB     {0}  [emitted]  main
+main.js   9.78 KiB     {0}  [emitted]  main
 Entrypoint main = main.js
-[0] ./main.js 144 bytes {0} [built]
+[0] ./main.js + 1 modules 231 bytes {0} [built]
+    harmony side effect evaluation ./CompB ./components/src/CompAB/index.js 2:0-43
+    harmony export imported specifier ./CompB ./components/src/CompAB/index.js 2:0-43
     entry ./main.js main
+    | ./components/src/CompAB/CompB.js 77 bytes [built]
+    |     [only some exports used: default]
+    |     harmony import specifier ./components ./main.js 4:15-20 (skipped side-effect-free modules)
+    | ./main.js 144 bytes [built]
 [1] ./components/src/CompAB/CompA.js 89 bytes {0} [built]
     [only some exports used: default]
-    harmony import specifier ./components [0] ./main.js 3:15-20 (skipped side-effect-free modules)
-    harmony import specifier ./components [4] ./foo.js 3:20-25 (skipped side-effect-free modules)
+    harmony import specifier ./components [0] ./main.js + 1 modules ./main.js 3:15-20 (skipped side-effect-free modules)
+    harmony import specifier ./components [3] ./foo.js 3:20-25 (skipped side-effect-free modules)
     harmony side effect evaluation ./CompA ./components/src/CompAB/index.js 1:0-43
     harmony export imported specifier ./CompA ./components/src/CompAB/index.js 1:0-43
 [2] ./components/src/CompAB/utils.js 97 bytes {0} [built]
+    harmony side effect evaluation ./utils [0] ./main.js + 1 modules ./components/src/CompAB/CompB.js 1:0-30
+    harmony import specifier ./utils [0] ./main.js + 1 modules ./components/src/CompAB/CompB.js 5:2-5
     harmony side effect evaluation ./utils [1] ./components/src/CompAB/CompA.js 1:0-35
     harmony import specifier ./utils [1] ./components/src/CompAB/CompA.js 5:5-12
-    harmony side effect evaluation ./utils [3] ./components/src/CompAB/CompB.js 1:0-30
-    harmony import specifier ./utils [3] ./components/src/CompAB/CompB.js 5:2-5
-[3] ./components/src/CompAB/CompB.js 77 bytes {0} [built]
-    [only some exports used: default]
-    harmony import specifier ./components [0] ./main.js 4:15-20 (skipped side-effect-free modules)
-    harmony side effect evaluation ./CompB ./components/src/CompAB/index.js 2:0-43
-    harmony export imported specifier ./CompB ./components/src/CompAB/index.js 2:0-43
-[4] ./foo.js 101 bytes {1} [built]
-    import() ./foo [0] ./main.js 6:0-15
+[3] ./foo.js 101 bytes {1} [built]
+    import() ./foo [0] ./main.js + 1 modules ./main.js 6:0-15
 ./components/src/index.js 84 bytes [orphan] [built]
     [module unused]
-    harmony side effect evaluation ./components [0] ./main.js 1:0-44
-    harmony side effect evaluation ./components [4] ./foo.js 1:0-37
+    harmony side effect evaluation ./components [0] ./main.js + 1 modules ./main.js 1:0-44
+    harmony side effect evaluation ./components [3] ./foo.js 1:0-37
 ./components/src/CompAB/index.js 87 bytes [orphan] [built]
     [module unused]
     harmony side effect evaluation ./CompAB ./components/src/index.js 1:0-40
@@ -2408,39 +2408,39 @@ Entrypoint main = main.js
     [module unused]
     harmony side effect evaluation ./CompC ./components/src/CompC/index.js 1:0-34
     harmony export imported specifier ./CompC ./components/src/CompC/index.js 1:0-34
-    + 6 hidden modules"
+    + 7 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
-"Hash: faf7e0af8ada8b2bec86
+"Hash: 0f1b4f5fe4e05acc5c5e
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset      Size  Chunks             Chunk Names
-main.js  3.52 KiB   {404}  [emitted]  main
+main.js  2.75 KiB   {404}  [emitted]  main
 Entrypoint main = main.js
-[200] ./index.js + 1 modules 135 bytes {404} [built]
+[690] ./index.js + 2 modules 158 bytes {404} [built]
+      harmony side effect evaluation ./c ./node_modules/pmodule/b.js 5:0-24
+      harmony export imported specifier ./c ./node_modules/pmodule/b.js 5:0-24
       entry ./index main
       | ./node_modules/pmodule/index.js 75 bytes [built]
       |     [only some exports used: default]
       |     harmony side effect evaluation pmodule ./index.js 1:0-33
       |     harmony import specifier pmodule ./index.js 3:12-15
+      | ./node_modules/pmodule/c.js 28 bytes [built]
+      |     [only some exports used: z]
+      |     harmony import specifier pmodule ./index.js 3:17-18 (skipped side-effect-free modules)
       | ./index.js 55 bytes [built]
-[938] ./node_modules/pmodule/c.js 28 bytes {404} [built]
-      [only some exports used: z]
-      harmony import specifier pmodule [200] ./index.js + 1 modules ./index.js 3:17-18 (skipped side-effect-free modules)
-      harmony side effect evaluation ./c ./node_modules/pmodule/b.js 5:0-24
-      harmony export imported specifier ./c ./node_modules/pmodule/b.js 5:0-24
 ./node_modules/pmodule/a.js 60 bytes [orphan] [built]
       [module unused]
-      harmony side effect evaluation ./a [200] ./index.js + 1 modules ./node_modules/pmodule/index.js 1:0-20
-      harmony export imported specifier ./a [200] ./index.js + 1 modules ./node_modules/pmodule/index.js 1:0-20
+      harmony side effect evaluation ./a [690] ./index.js + 2 modules ./node_modules/pmodule/index.js 1:0-20
+      harmony export imported specifier ./a [690] ./index.js + 2 modules ./node_modules/pmodule/index.js 1:0-20
 ./node_modules/pmodule/b.js 69 bytes [orphan] [built]
       [module unused]
-      harmony side effect evaluation ./b [200] ./index.js + 1 modules ./node_modules/pmodule/index.js 2:0-30
-      harmony export imported specifier ./b [200] ./index.js + 1 modules ./node_modules/pmodule/index.js 2:0-30
-      harmony export imported specifier ./b [200] ./index.js + 1 modules ./node_modules/pmodule/index.js 2:0-30
-      harmony export imported specifier ./b [200] ./index.js + 1 modules ./node_modules/pmodule/index.js 2:0-30
-    + 3 hidden modules"
+      harmony side effect evaluation ./b [690] ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
+      harmony export imported specifier ./b [690] ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
+      harmony export imported specifier ./b [690] ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
+      harmony export imported specifier ./b [690] ./index.js + 2 modules ./node_modules/pmodule/index.js 2:0-30
+    + 2 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for simple 1`] = `

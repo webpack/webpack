@@ -93,7 +93,7 @@ module.exports = {
 /*!*******************!*\
   !*** ./common.js ***!
   \*******************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -141,10 +141,11 @@ module.exports = "Common";
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
 /******/
+/******/
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// run modules when ready
+/******/ 	// run startup
 /******/ 	return __webpack_require__.x();
 /******/ })
 /************************************************************************/
@@ -158,8 +159,8 @@ module.exports = "Common";
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
-/*! no static exports found */
-/*! runtime requirements: __webpack_require__, __webpack_require__.e, __webpack_require__.oe */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require____webpack_require__.e, __webpack_require__.oe,  */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 1);
@@ -194,7 +195,10 @@ __webpack_require__.e(/*! AMD require */ 406).then(function() { var __WEBPACK_AM
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
+/******/ 		
+/******/ 		// This function only allows to reference on-demand chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
+/******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".js";
 /******/ 		};
 /******/ 	}();
@@ -383,10 +387,11 @@ __webpack_require__.e(/*! AMD require */ 406).then(function() { var __WEBPACK_AM
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
 /******/
+/******/
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// run modules when ready
+/******/ 	// run startup
 /******/ 	return __webpack_require__.x();
 /******/ })
 /************************************************************************/
@@ -396,8 +401,8 @@ __webpack_require__.e(/*! AMD require */ 406).then(function() { var __WEBPACK_AM
 /*!******************!*\
   !*** ./pageB.js ***!
   \******************/
-/*! no static exports found */
-/*! runtime requirements: __webpack_require__, __webpack_require__.e */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require____webpack_require__.e,  */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 1);
@@ -429,7 +434,10 @@ __webpack_require__.e(/*! require.ensure */ 406).then((function(require) {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
+/******/ 		
+/******/ 		// This function only allows to reference on-demand chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
+/******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".js";
 /******/ 		};
 /******/ 	}();
@@ -588,8 +596,8 @@ __webpack_require__.e(/*! require.ensure */ 406).then((function(require) {
 /*!*******************!*\
   !*** ./shared.js ***!
   \*******************/
-/*! no static exports found */
-/*! runtime requirements: __webpack_require__, module */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__module,  */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 var common = __webpack_require__(/*! ./common */ 1);
@@ -608,15 +616,15 @@ module.exports = function(msg) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
      Asset       Size  Chunks             Chunk Names
-    406.js  430 bytes   {406}  [emitted]
-commons.js  296 bytes   {987}  [emitted]  commons
-  pageA.js   8.49 KiB   {641}  [emitted]  pageA
-  pageB.js   8.42 KiB   {791}  [emitted]  pageB
+    406.js  471 bytes   {406}  [emitted]
+commons.js  337 bytes   {987}  [emitted]  commons
+  pageA.js   8.66 KiB   {641}  [emitted]  pageA
+  pageB.js    8.6 KiB   {791}  [emitted]  pageB
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
-chunk {406} 406.js 88 bytes <{641}> <{791}> <{987}> [rendered]
+chunk {406} 406.js 88 bytes [rendered]
     > ./shared [0] ./pageA.js 2:0-4:2
     > [2] ./pageB.js 2:0-5:2
  [3] ./shared.js 88 bytes {406} [built]
@@ -624,19 +632,19 @@ chunk {406} 406.js 88 bytes <{641}> <{791}> <{987}> [rendered]
      amd require ./shared [0] ./pageA.js 2:0-4:2
      require.ensure item ./shared [2] ./pageB.js 2:0-5:2
      cjs require ./shared [2] ./pageB.js 3:14-33
-chunk {641} pageA.js (pageA) 105 bytes (javascript) 4.5 KiB (runtime) ={987}= >{406}< [entry] [rendered]
+chunk {641} pageA.js (pageA) 105 bytes (javascript) 4.61 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
  [0] ./pageA.js 105 bytes {641} [built]
      [used exports unknown]
      entry ./pageA pageA
      + 4 hidden chunk modules
-chunk {791} pageB.js (pageB) 148 bytes (javascript) 4.5 KiB (runtime) ={987}= >{406}< [entry] [rendered]
+chunk {791} pageB.js (pageB) 148 bytes (javascript) 4.61 KiB (runtime) [entry] [rendered]
     > ./pageB pageB
  [2] ./pageB.js 148 bytes {791} [built]
      [used exports unknown]
      entry ./pageB pageB
      + 4 hidden chunk modules
-chunk {987} commons.js (commons) 26 bytes ={641}= ={791}= >{406}< [initial] [rendered] split chunk (cache group: commons) (name: commons)
+chunk {987} commons.js (commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
     > ./pageA pageA
     > ./pageB pageB
  [1] ./common.js 26 bytes {987} [built]
@@ -650,7 +658,7 @@ chunk {987} commons.js (commons) 26 bytes ={641}= ={791}= >{406}< [initial] [ren
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
      Asset       Size  Chunks             Chunk Names
     406.js  128 bytes   {406}  [emitted]
 commons.js   98 bytes   {987}  [emitted]  commons
@@ -658,24 +666,24 @@ commons.js   98 bytes   {987}  [emitted]  commons
   pageB.js   1.71 KiB   {791}  [emitted]  pageB
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
-chunk {406} 406.js 88 bytes <{641}> <{791}> <{987}> [rendered]
+chunk {406} 406.js 88 bytes [rendered]
     > ./shared [953] ./pageA.js 2:0-4:2
     > [954] ./pageB.js 2:0-5:2
  [406] ./shared.js 88 bytes {406} [built]
        amd require ./shared [953] ./pageA.js 2:0-4:2
        require.ensure item ./shared [954] ./pageB.js 2:0-5:2
        cjs require ./shared [954] ./pageB.js 3:14-33
-chunk {641} pageA.js (pageA) 105 bytes (javascript) 4.5 KiB (runtime) ={987}= >{406}< [entry] [rendered]
+chunk {641} pageA.js (pageA) 105 bytes (javascript) 4.61 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
  [953] ./pageA.js 105 bytes {641} [built]
        entry ./pageA pageA
      + 4 hidden chunk modules
-chunk {791} pageB.js (pageB) 148 bytes (javascript) 4.5 KiB (runtime) ={987}= >{406}< [entry] [rendered]
+chunk {791} pageB.js (pageB) 148 bytes (javascript) 4.61 KiB (runtime) [entry] [rendered]
     > ./pageB pageB
  [954] ./pageB.js 148 bytes {791} [built]
        entry ./pageB pageB
      + 4 hidden chunk modules
-chunk {987} commons.js (commons) 26 bytes ={641}= ={791}= >{406}< [initial] [rendered] split chunk (cache group: commons) (name: commons)
+chunk {987} commons.js (commons) 26 bytes [initial] [rendered] split chunk (cache group: commons) (name: commons)
     > ./pageA pageA
     > ./pageB pageB
  [280] ./common.js 26 bytes {987} [built]

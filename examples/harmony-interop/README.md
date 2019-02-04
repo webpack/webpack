@@ -100,11 +100,16 @@ export var named = "named";
 /******/
 /******/
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -117,8 +122,8 @@ export var named = "named";
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no exports provided */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.n, __webpack_require__.d */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__, __webpack_require__.n, __webpack_require__.d,  */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -151,7 +156,9 @@ Object(_reexport_commonjs__WEBPACK_IMPORTED_MODULE_1__["readFile"])("file");
 /*!***************!*\
   !*** ./fs.js ***!
   \***************/
-/*! no static exports found */
+/*! export default [maybe provided (runtime-defined)] [no usage info] [provision prevents renaming (no use info)] */
+/*! export readFile [maybe provided (runtime-defined)] [no usage info] [provision prevents renaming (no use info)] */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
 /***/ (function(__unusedmodule, exports) {
 
@@ -169,15 +176,16 @@ exports.readFile = function() {};
 /*!******************************!*\
   !*** ./reexport-commonjs.js ***!
   \******************************/
-/*! no static exports found */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.n, __webpack_require__.d */
+/*! export readFile [maybe provided (runtime-defined)] [no usage info] [provision prevents renaming (no use info)] */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__, __webpack_require__.n, __webpack_require__.d,  */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _fs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fs */ 1);
 /* harmony import */ var _fs__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_fs__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _fs__WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _fs__WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _fs__WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== "default") __webpack_require__.d(__webpack_exports__, __WEBPACK_IMPORT_KEY__, function(key) { return _fs__WEBPACK_IMPORTED_MODULE_0__[key]; }.bind(0, __WEBPACK_IMPORT_KEY__));
 // reexport a CommonJs module
 
 // Note that the default export doesn't reexport via export *
@@ -192,7 +200,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************!*\
   !*** ./example2.js ***!
   \*********************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
@@ -210,8 +218,10 @@ var namedExport = module.named;
 /*!********************!*\
   !*** ./harmony.js ***!
   \********************/
-/*! exports provided: default, named */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
+/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export named [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__.d, __webpack_require__,  */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -279,16 +289,16 @@ var named = "named";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
-    Asset      Size  Chunks             Chunk Names
-output.js  6.79 KiB     {0}  [emitted]  main
+Version: webpack 5.0.0-alpha.9
+    Asset     Size  Chunks             Chunk Names
+output.js  7.6 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 1.13 KiB (javascript) 888 bytes (runtime) [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 373 bytes {0} [built]
      [no exports]
      [used exports unknown]
-     entry .\example.js main
+     entry ./example.js main
  [1] ./fs.js 257 bytes {0} [built]
      [used exports unknown]
      harmony side effect evaluation ./fs [0] ./example.js 4:0-22
@@ -317,12 +327,12 @@ chunk {0} output.js (main) 1.13 KiB (javascript) 888 bytes (runtime) [entry] [re
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
     Asset      Size  Chunks             Chunk Names
 output.js  1.11 KiB   {404}  [emitted]  main
 Entrypoint main = output.js
 chunk {404} output.js (main) 1.13 KiB (javascript) 888 bytes (runtime) [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [118] ./example2.js 152 bytes {404} [built]
        [no exports used]
        harmony side effect evaluation ./example2 [275] ./example.js 16:0-20
@@ -332,7 +342,7 @@ chunk {404} output.js (main) 1.13 KiB (javascript) 888 bytes (runtime) [entry] [
        harmony import specifier ./reexport-commonjs [275] ./example.js 13:0-9
  [275] ./example.js 373 bytes {404} [built]
        [no exports]
-       entry .\example.js main
+       entry ./example.js main
  [325] ./harmony.js 75 bytes {404} [built]
        [exports: default, named]
        cjs require ./harmony [118] ./example2.js 4:13-33

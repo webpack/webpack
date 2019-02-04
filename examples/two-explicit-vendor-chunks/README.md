@@ -70,9 +70,14 @@ module.exports = {
 /******/
 /******/
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -85,7 +90,7 @@ module.exports = {
 /*!********************!*\
   !*** ./vendor1.js ***!
   \********************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -129,9 +134,14 @@ module.exports = "Vendor1";
 /******/
 /******/
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(1);
+/******/ 	};
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(1);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -139,7 +149,7 @@ module.exports = "Vendor1";
 /*!********************!*\
   !*** ./vendor1.js ***!
   \********************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -150,8 +160,8 @@ module.exports = "Vendor1";
 /*!********************!*\
   !*** ./vendor2.js ***!
   \********************/
-/*! no static exports found */
-/*! runtime requirements: module, __webpack_require__ */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module__webpack_require__,  */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 module.exports = "Vendor2";
@@ -196,9 +206,14 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /******/
 /******/
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(2);
+/******/ 	};
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(2);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -206,7 +221,7 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /*!********************!*\
   !*** ./vendor1.js ***!
   \********************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -217,8 +232,8 @@ module.exports = "Vendor1";
 /*!********************!*\
   !*** ./vendor2.js ***!
   \********************/
-/*! no static exports found */
-/*! runtime requirements: module, __webpack_require__ */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module__webpack_require__,  */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 module.exports = "Vendor2";
@@ -230,8 +245,8 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
-/*! no static exports found */
-/*! runtime requirements: module, __webpack_require__ */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module__webpack_require__,  */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 module.exports = "pageA";
@@ -249,13 +264,13 @@ __webpack_require__(/*! ./vendor2 */ 1);
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
      Asset      Size  Chunks             Chunk Names
-  pageA.js  2.01 KiB     {2}  [emitted]  pageA
-  pageB.js  1.35 KiB     {3}  [emitted]  pageB
-  pageC.js  1.35 KiB     {4}  [emitted]  pageC
-vendor1.js  1.36 KiB     {0}  [emitted]  vendor1
-vendor2.js  1.67 KiB     {1}  [emitted]  vendor2
+  pageA.js  2.26 KiB     {2}  [emitted]  pageA
+  pageB.js  1.52 KiB     {3}  [emitted]  pageB
+  pageC.js  1.52 KiB     {4}  [emitted]  pageC
+vendor1.js  1.53 KiB     {0}  [emitted]  vendor1
+vendor2.js  1.88 KiB     {1}  [emitted]  vendor2
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor2.js
 Entrypoint pageA = pageA.js
@@ -309,13 +324,13 @@ chunk {4} pageC.js (pageC) 25 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
      Asset       Size               Chunks             Chunk Names
-  pageA.js  321 bytes  {331}, {637}, {641}  [emitted]  pageA
-  pageB.js  218 bytes                {791}  [emitted]  pageB
-  pageC.js  218 bytes                 {42}  [emitted]  pageC
-vendor1.js  220 bytes                {637}  [emitted]  vendor1
-vendor2.js  268 bytes         {331}, {637}  [emitted]  vendor2
+  pageA.js  320 bytes  {331}, {637}, {641}  [emitted]  pageA
+  pageB.js  217 bytes                {791}  [emitted]  pageB
+  pageC.js  217 bytes                 {42}  [emitted]  pageC
+vendor1.js  219 bytes                {637}  [emitted]  vendor1
+vendor2.js  267 bytes         {331}, {637}  [emitted]  vendor2
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor2.js
 Entrypoint pageA = pageA.js

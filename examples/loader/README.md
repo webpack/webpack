@@ -67,9 +67,14 @@ module.exports = function(content) {
 /******/
 /******/
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -82,7 +87,7 @@ module.exports = function(content) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
@@ -99,7 +104,7 @@ console.dir(__webpack_require__(/*! css-loader!./test.css */ 2)); // manual
 /*!*****************************!*\
   !*** ./loader.js!./file.js ***!
   \*****************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
 /***/ (function(__unusedmodule, exports) {
 
@@ -111,8 +116,8 @@ exports.foo = "bar";
 /*!****************************************************!*\
   !*** (webpack)/node_modules/css-loader!./test.css ***!
   \****************************************************/
-/*! no static exports found */
-/*! runtime requirements: __webpack_exports__, module, __webpack_require__ */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_exports__module, __webpack_require__,  */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/lib/css-base.js */ 3)(false);
@@ -130,7 +135,7 @@ exports.push([module.i, ".some-class {\n\tcolor: hotpink;\n}\n", ""]);
 /*!*********************************************************!*\
   !*** (webpack)/node_modules/css-loader/lib/css-base.js ***!
   \*********************************************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -232,15 +237,15 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
     Asset      Size  Chunks             Chunk Names
-output.js  4.99 KiB     {0}  [emitted]  main
+output.js  5.28 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 2.64 KiB [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 204 bytes {0} [built]
      [used exports unknown]
-     entry .\example.js main
+     entry ./example.js main
  [1] ./loader.js!./file.js 41 bytes {0} [built]
      [used exports unknown]
      cjs require ./loader!./file [0] ./example.js 2:12-38
@@ -257,19 +262,19 @@ chunk {0} output.js (main) 2.64 KiB [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
     Asset      Size  Chunks             Chunk Names
 output.js  1.18 KiB   {404}  [emitted]  main
 Entrypoint main = output.js
 chunk {404} output.js (main) 2.64 KiB [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
   [49] (webpack)/node_modules/css-loader!./test.css 199 bytes {404} [built]
        cjs require ./test.css [275] ./example.js 5:12-33
        cjs require !css-loader!./test.css [275] ./example.js 6:12-45
  [214] (webpack)/node_modules/css-loader/lib/css-base.js 2.21 KiB {404} [built]
        cjs require ../../node_modules/css-loader/lib/css-base.js [49] (webpack)/node_modules/css-loader!./test.css 1:27-83
  [275] ./example.js 204 bytes {404} [built]
-       entry .\example.js main
+       entry ./example.js main
  [324] ./loader.js!./file.js 41 bytes {404} [built]
        cjs require ./loader!./file [275] ./example.js 2:12-38
 ```

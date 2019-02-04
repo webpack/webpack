@@ -59,9 +59,14 @@ module.exports = 42
 /******/
 /******/
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -74,7 +79,7 @@ module.exports = 42
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
@@ -85,8 +90,8 @@ console.log(__webpack_require__(/*! ./cup1 */ 1));
 /*!*********************!*\
   !*** ./cup1.coffee ***!
   \*********************/
-/*! no static exports found */
-/*! runtime requirements: module, __webpack_require__ */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module__webpack_require__,  */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 module.exports = {
@@ -102,7 +107,7 @@ module.exports = {
 /*!*********************!*\
   !*** ./cup2.coffee ***!
   \*********************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -121,15 +126,15 @@ module.exports = 42;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
     Asset      Size  Chunks             Chunk Names
-output.js  2.08 KiB     {0}  [emitted]  main
+output.js  2.33 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 206 bytes [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 31 bytes {0} [built]
      [used exports unknown]
-     entry .\example.js main
+     entry ./example.js main
  [1] ./cup1.coffee 118 bytes {0} [built]
      [used exports unknown]
      cjs require ./cup1 [0] ./example.js 1:12-29
@@ -143,14 +148,14 @@ chunk {0} output.js (main) 206 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.9
     Asset       Size  Chunks             Chunk Names
-output.js  373 bytes   {404}  [emitted]  main
+output.js  372 bytes   {404}  [emitted]  main
 Entrypoint main = output.js
 chunk {404} output.js (main) 206 bytes [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [275] ./example.js 31 bytes {404} [built]
-       entry .\example.js main
+       entry ./example.js main
  [642] ./cup1.coffee 118 bytes {404} [built]
        cjs require ./cup1 [275] ./example.js 1:12-29
  [976] ./cup2.coffee 57 bytes {404} [built]
