@@ -948,6 +948,10 @@
               "type": "string"
             },
             {
+              "instanceof": "Function",
+              "tsType": "Function"
+            },
+            {
               "type": "array",
               "items": {
                 "description": "A part of the library name",
@@ -964,6 +968,10 @@
           "anyOf": [
             {
               "type": "string"
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "Function"
             },
             {
               "$ref": "#/definitions/ArrayOfStringValues"
