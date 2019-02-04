@@ -8236,10 +8236,10 @@ w3c-hr-time@^1.0.1:
   dependencies:
     browser-process-hrtime "^0.1.2"
 
-wabt@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/wabt/-/wabt-1.0.0.tgz#f33a5c4a6405370ec80ba97e782d092f1d599ff4"
-  integrity sha512-Apt7rylKNS2VWMMYgY43aYStopVpc9wCJ16y0CznaWcJC2vs7BLVGAV6pffBqn28BfWYeYVA92zRwBstaq1zaA==
+wabt@1.0.0-nightly.20180421:
+  version "1.0.0-nightly.20180421"
+  resolved "https://registry.yarnpkg.com/wabt/-/wabt-1.0.0-nightly.20180421.tgz#db3565bff0d5023c9576270aa5369f2cec45b878"
+  integrity sha512-bsu9zk672KACjoabONcAS94IS20prRm05IbiIUGfa8eBpRLjWZv8ugocdinV/ONh0mFMfXrVWkvF1/BNtwIfUw==
 
 walker@~1.0.5:
   version "1.0.7"
@@ -8249,11 +8249,11 @@ walker@~1.0.5:
     makeerror "1.0.x"
 
 wast-loader@^1.5.5:
-  version "1.5.7"
-  resolved "https://registry.yarnpkg.com/wast-loader/-/wast-loader-1.5.7.tgz#1b165cef7225c70a7e82a50e4f8bf0bc1ec9f2fd"
-  integrity sha512-0lEkuNchI7oHLv5unScE/v4qAz4JWoxEMbKbjZ8yQyyGe/qEWDIT5mPIdr2N44XHAWGB0k3WG5OVrDSRuEn0Ug==
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/wast-loader/-/wast-loader-1.8.1.tgz#dbee812b122acaa2d51d6d281da683ac73a1df3c"
+  integrity sha512-K13oc8DAHKDzz9/o5cvZ+tbNj2q7aOrdwx9C9/LGVjLc50TVHZNq837ZtHuP69hUuGXGtXQU0WXc+eCNr51GGw==
   dependencies:
-    wabt "^1.0.0"
+    wabt "1.0.0-nightly.20180421"
 
 watch@~0.18.0:
   version "0.18.0"
