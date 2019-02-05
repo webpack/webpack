@@ -1,4 +1,4 @@
-/* globals describe, it, beforeEach */
+/* globals describe it */
 "use strict";
 
 const HarmonyExportImportedSpecifierDependency = require("../lib/dependencies/HarmonyExportImportedSpecifierDependency");
