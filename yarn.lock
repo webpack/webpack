@@ -8168,11 +8168,12 @@ uuid@^3.1.0, uuid@^3.3.2:
   integrity sha512-yXJmeNaw3DnnKAOKJE51sL/ZaYfWJRl1pK9dr19YFCu0ObS231AB1/LbqTKRAQ5kw8A90rA6fr4riOUpTZvQZA==
 
 val-loader@^1.0.2:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/val-loader/-/val-loader-1.1.0.tgz#ed91537424d62a4ded98e846ccf07367756bf506"
-  integrity sha512-8m62XF42FcfrBBl02rtDY9hQhDcDczrEcr60/aSMxlzJiXAcbAimRPvsDoDa5QcGAusOgOmVTpFtK5EbfZdDwA==
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/val-loader/-/val-loader-1.1.1.tgz#32ba8ed5c3607504134977251db2966499e15ef7"
+  integrity sha512-JLqLXJWCVLXTxbUeHhLpWkgl3+X3U8Bl0vY7rTFZgFSbLJaEtAxuD2ixy/cM8w/gzC7sS3NE5IDSzClDt332sw==
   dependencies:
     loader-utils "^1.0.0"
+    schema-utils "^0.4.5"
 
 validate-npm-package-license@^3.0.1:
   version "3.0.3"
