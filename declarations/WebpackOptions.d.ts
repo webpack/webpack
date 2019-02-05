@@ -15,7 +15,7 @@ export type Entry = EntryDynamic | EntryStatic;
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "EntryDynamic".
  */
-export type EntryDynamic = (() => EntryStatic | Promise<EntryStatic>);
+export type EntryDynamic = () => EntryStatic | Promise<EntryStatic>;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "EntryStatic".

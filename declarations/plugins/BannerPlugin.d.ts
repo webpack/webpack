@@ -11,15 +11,13 @@ export type BannerPluginArgument =
 /**
  * The banner as function, it will be wrapped in a comment
  */
-export type BannerFunction = (
-	data: {
-		hash: string;
-		chunk: import("../../lib/Chunk");
-		filename: string;
-		basename: string;
-		query: string;
-	}
-) => string;
+export type BannerFunction = (data: {
+	hash: string;
+	chunk: import("../../lib/Chunk");
+	filename: string;
+	basename: string;
+	query: string;
+}) => string;
 export type Rules = Rule[] | Rule;
 export type Rule = RegExp | string;
 
