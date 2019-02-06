@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+// @ts-ignore
 process.exitCode = 0;
 
 /**
@@ -164,5 +165,7 @@ if (installedClis.length === 0) {
 				" and "
 			)} together. To work with the "webpack" command you need only one CLI package, please remove one of them or use them directly via their binary.`
 	);
+
+	// @ts-ignore
 	process.exitCode = 1;
 }
