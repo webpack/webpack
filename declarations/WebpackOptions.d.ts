@@ -15,7 +15,7 @@ export type Entry = EntryDynamic | EntryStatic;
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "EntryDynamic".
  */
-export type EntryDynamic = (() => EntryStatic | Promise<EntryStatic>);
+export type EntryDynamic = () => EntryStatic | Promise<EntryStatic>;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "EntryStatic".
@@ -237,12 +237,12 @@ export type RuleSetRules = RuleSetRule[];
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "OptimizationSplitChunksGetCacheGroups".
  */
-export type OptimizationSplitChunksGetCacheGroups = ((
+export type OptimizationSplitChunksGetCacheGroups = (
 	module: import("../lib/Module")
 ) =>
 	| OptimizationSplitChunksCacheGroup
 	| OptimizationSplitChunksCacheGroup[]
-	| void);
+	| void;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "OptimizationSplitChunksSizes".

@@ -1,4 +1,4 @@
-/* globals describe, beforeEach, it */
+/* globals describe it */
 "use strict";
 
 const identifierUtil = require("../lib/util/identifier");

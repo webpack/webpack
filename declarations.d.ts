@@ -329,8 +329,8 @@ interface RuleSetConditionsRecursive
 	extends Array<import("./declarations/WebpackOptions").RuleSetCondition> {}
 interface RuleSetConditionsAbsoluteRecursive
 	extends Array<
-			import("./declarations/WebpackOptions").RuleSetConditionAbsolute
-		> {}
+		import("./declarations/WebpackOptions").RuleSetConditionAbsolute
+	> {}
 
 /**
  * Global variable declarations
