@@ -1094,7 +1094,7 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
   374.js  320 bytes   {374}  [emitted]
   457.js  320 bytes   {457}  [emitted]
   920.js  320 bytes   {920}  [emitted]
-entry.js    8.6 KiB   {707}  [emitted]  entry
+entry.js   8.64 KiB   {707}  [emitted]  entry
 Entrypoint entry = entry.js
 [259] ./templates lazy ^\\\\.\\\\/.*$ include: \\\\.js$ exclude: \\\\.noimport\\\\.js$ namespace object 160 bytes {707} [optional] [built]
 [374] ./templates/baz.js 38 bytes {374} [optional] [built]
