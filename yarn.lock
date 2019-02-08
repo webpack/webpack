@@ -199,9 +199,9 @@
     "@types/node" "*"
 
 "@types/node@*", "@types/node@^10.12.21", "@types/node@^10.12.6":
-  version "10.12.21"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.21.tgz#7e8a0c34cf29f4e17a36e9bd0ea72d45ba03908e"
-  integrity sha512-CBgLNk4o3XMnqMc0rhb6lc77IwShMEglz05deDcn2lQxyXEZivfwgYJu7SMha9V5XcrP6qZuevTHV/QrN2vjKQ==
+  version "10.12.22"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.22.tgz#eb2a8a1c24ee4a59cf87549cc67d60976ebaebd2"
+  integrity sha512-sozsyYqmHUD1OKzMb61UH4Es1oMLLA4g4eX6Zu1i8ZpG1sTlmZClL9ZU9GuNQQ2fHDKmaRUWlDSvzQ/aIDaIiQ==
 
 "@types/prettier@^1.13.2":
   version "1.13.2"
@@ -5964,7 +5964,7 @@ sax@^1.2.4:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
   integrity sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
 
-scheduler@^0.13.0, scheduler@^0.13.1:
+scheduler@^0.13.1:
   version "0.13.1"
   resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.13.1.tgz#1a217df1bfaabaf4f1b92a9127d5d732d85a9591"
   integrity sha512-VJKOkiKIN2/6NOoexuypwSrybx13MY7NSy9RNt8wPvZDMRT1CW6qlpF5jXRToXNHz3uWzbm2elNpZfXfGPqP9A==
