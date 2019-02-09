@@ -485,9 +485,9 @@ ajv@^5.1.0, ajv@^5.3.0:
     json-schema-traverse "^0.3.0"
 
 ajv@^6.1.0, ajv@^6.5.3:
-  version "6.8.1"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.8.1.tgz#0890b93742985ebf8973cd365c5b23920ce3cb20"
-  integrity sha512-eqxCp82P+JfqL683wwsL73XmFs1eG6qjw+RD3YHx+Jll1r0jNd4dh8QG9NYAeNGA/hnZjeEDgtTskgJULbxpWQ==
+  version "6.9.0"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.9.0.tgz#06458dbfb789366d703e308f180e0db195b7f2fa"
+  integrity sha512-VsK2jpqRno3Hn+at4NGtBRpR5q3OW7n5INrTKqENDNQJB99DXATQEVHlnoD1BA7Uo/qGO+ijGA/vgSAlxP9E4A==
   dependencies:
     fast-deep-equal "^2.0.1"
     fast-json-stable-stringify "^2.0.0"
