@@ -1111,15 +1111,81 @@ exports[`StatsTestCases should print correct stats for import-with-invalid-optio
 [5] ./chunk-d.js 27 bytes {3} [built]
 
 WARNING in ./chunk.js 4:11-77
-Compilation error while processing magic comment(-s): /* webpack Prefetch: 0, webpackChunkName: \\"notGoingToCompile-c\\" */: Unexpected identifier
+CommentCompilationWarning: Compilation error while processing magic comment(-s): /* webpack Prefetch: 0, webpackChunkName: \\"notGoingToCompile-c\\" */: Unexpected identifier
+    at parser.hooks.importCall.tap.expr (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\dependencies\\\\ImportParserPlugin.js:45:7)
+    at SyncBailHook.eval (eval at create (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\node_modules\\\\tapable\\\\lib\\\\HookCodeFactory.js:19:10), <anonymous>:7:16)
+    at Parser.walkCallExpression (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1819:39)
+    at Parser.walkExpression (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1500:10)
+    at Parser.walkExpressionStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1000:8)
+    at Parser.walkStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:946:10)
+    at Parser.walkStatements (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:864:9)
+    at Parser.walkBlockStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:996:8)
+    at Parser.walkStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:931:10)
+    at inScope (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1182:10)
+    at Parser.inScope (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1910:3)
+    at Parser.walkFunctionDeclaration (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1175:8)
+    at Parser.walkExportDefaultDeclaration (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1311:10)
+    at Parser.walkStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:940:10)
+    at Parser.walkStatements (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:864:9)
+    at Parser.parse (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:2123:9)
+    at doBuild.err (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\NormalModule.js:460:32)
+    at runLoaders (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\NormalModule.js:342:12)
+    at C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\node_modules\\\\loader-runner\\\\lib\\\\LoaderRunner.js:370:3
+    at iterateNormalLoaders (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\node_modules\\\\loader-runner\\\\lib\\\\LoaderRunner.js:211:10)
+    at C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\node_modules\\\\loader-runner\\\\lib\\\\LoaderRunner.js:202:4
+    at Array.ifs.readFile.apply.args.concat (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\test\\\\StatsTestCases.test.js:73:9)
  @ ./index.js 1:0-49
 
 WARNING in ./chunk.js 5:11-38
-Compilation error while processing magic comment(-s): /* webpackPrefetch: nope */: nope is not defined
+CommentCompilationWarning: Compilation error while processing magic comment(-s): /* webpackPrefetch: nope */: nope is not defined
+    at parser.hooks.importCall.tap.expr (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\dependencies\\\\ImportParserPlugin.js:45:7)
+    at SyncBailHook.eval (eval at create (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\node_modules\\\\tapable\\\\lib\\\\HookCodeFactory.js:19:10), <anonymous>:7:16)
+    at Parser.walkCallExpression (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1819:39)
+    at Parser.walkExpression (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1500:10)
+    at Parser.walkExpressionStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1000:8)
+    at Parser.walkStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:946:10)
+    at Parser.walkStatements (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:864:9)
+    at Parser.walkBlockStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:996:8)
+    at Parser.walkStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:931:10)
+    at inScope (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1182:10)
+    at Parser.inScope (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1910:3)
+    at Parser.walkFunctionDeclaration (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1175:8)
+    at Parser.walkExportDefaultDeclaration (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1311:10)
+    at Parser.walkStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:940:10)
+    at Parser.walkStatements (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:864:9)
+    at Parser.parse (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:2123:9)
+    at doBuild.err (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\NormalModule.js:460:32)
+    at runLoaders (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\NormalModule.js:342:12)
+    at C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\node_modules\\\\loader-runner\\\\lib\\\\LoaderRunner.js:370:3
+    at iterateNormalLoaders (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\node_modules\\\\loader-runner\\\\lib\\\\LoaderRunner.js:211:10)
+    at C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\node_modules\\\\loader-runner\\\\lib\\\\LoaderRunner.js:202:4
+    at Array.ifs.readFile.apply.args.concat (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\test\\\\StatsTestCases.test.js:73:9)
  @ ./index.js 1:0-49
 
 WARNING in ./chunk.js 2:11-84
-Compilation error while processing magic comment(-s): /* webpackPrefetch: true, webpackChunkName: notGoingToCompileChunkName */: notGoingToCompileChunkName is not defined
+CommentCompilationWarning: Compilation error while processing magic comment(-s): /* webpackPrefetch: true, webpackChunkName: notGoingToCompileChunkName */: notGoingToCompileChunkName is not defined
+    at parser.hooks.importCall.tap.expr (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\dependencies\\\\ImportParserPlugin.js:45:7)
+    at SyncBailHook.eval (eval at create (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\node_modules\\\\tapable\\\\lib\\\\HookCodeFactory.js:19:10), <anonymous>:7:16)
+    at Parser.walkCallExpression (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1819:39)
+    at Parser.walkExpression (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1500:10)
+    at Parser.walkExpressionStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1000:8)
+    at Parser.walkStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:946:10)
+    at Parser.walkStatements (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:864:9)
+    at Parser.walkBlockStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:996:8)
+    at Parser.walkStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:931:10)
+    at inScope (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1182:10)
+    at Parser.inScope (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1910:3)
+    at Parser.walkFunctionDeclaration (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1175:8)
+    at Parser.walkExportDefaultDeclaration (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:1311:10)
+    at Parser.walkStatement (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:940:10)
+    at Parser.walkStatements (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:864:9)
+    at Parser.parse (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\Parser.js:2123:9)
+    at doBuild.err (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\NormalModule.js:460:32)
+    at runLoaders (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\lib\\\\NormalModule.js:342:12)
+    at C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\node_modules\\\\loader-runner\\\\lib\\\\LoaderRunner.js:370:3
+    at iterateNormalLoaders (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\node_modules\\\\loader-runner\\\\lib\\\\LoaderRunner.js:211:10)
+    at C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\node_modules\\\\loader-runner\\\\lib\\\\LoaderRunner.js:202:4
+    at Array.ifs.readFile.apply.args.concat (C:\\\\dev\\\\workspace\\\\open-source\\\\webpack\\\\test\\\\StatsTestCases.test.js:73:9)
  @ ./index.js 1:0-49"
 `;
 

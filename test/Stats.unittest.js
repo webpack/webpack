@@ -134,8 +134,9 @@ describe(
 			});
 		});
 		describe("toJson", () => {
-			it("returns plain object representation", () => {
-				const mockStats = new Stats({
+			let fakeCompilation;
+			beforeEach(() => {
+				fakeCompilation = {
 					errors: [],
 					warnings: [],
 					assets: [],
@@ -154,8 +155,12 @@ describe(
 					compiler: {
 						context: ""
 					}
-				});
+				};
+			});
+			it("returns plain object representation", () => {
+				const mockStats = new Stats(fakeCompilation);
 				const result = mockStats.toJson();
+
 				expect(result).toEqual({
 					assets: [],
 					assetsByChunkName: {},
@@ -173,6 +178,15 @@ describe(
 					version: packageJson.version,
 					warnings: []
 				});
+			});
+
+			it("returns an error with its stack when errorDetails is true", () => {
+				const fakeError = new Error("FAKE STACK");
+				fakeCompilation.errors = [fakeError];
+				const mockStats = new Stats(fakeCompilation);
+				const result = mockStats.toJson({ errorDetails: true });
+				
+				expect(result.errors[0]).toEqual(fakeError.stack);
 			});
 		});
 		describe("Presets", () => {
