@@ -503,9 +503,9 @@ describe("Compiler", () => {
 			output: {
 				path: "/",
 				filename: "bundle.js"
-			},
+			}
 		});
-		compiler.hooks.failed.tap('CompilerTest', failedSpy);
+		compiler.hooks.failed.tap("CompilerTest", failedSpy);
 		compiler.outputFileSystem = new MemoryFs();
 		compiler.run((err, stats) => {
 			expect(err).toBeTruthy();

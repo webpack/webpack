@@ -7,9 +7,7 @@ module.exports = {
 	output: {
 		filename: "[name].js"
 	},
-	plugins: [
-		new IgnorePlugin(/intentionally-missing-module/)
-	],
+	plugins: [new IgnorePlugin(/intentionally-missing-module/)],
 	node: {
 		__dirname: false
 	}
