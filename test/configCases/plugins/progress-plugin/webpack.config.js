@@ -11,13 +11,10 @@ module.exports = {
 		{
 			apply: compiler => {
 				compiler.hooks.compilation.tap("CustomPlugin", compilation => {
-					compilation.hooks.optimize.tap(
-						"CustomPlugin",
-						() => {
-							const reportProgress = webpack.ProgressPlugin.getReporter(compiler);
-							reportProgress(0, "custom category", "custom message");
-						}
-					);
+					compilation.hooks.optimize.tap("CustomPlugin", () => {
+						const reportProgress = webpack.ProgressPlugin.getReporter(compiler);
+						reportProgress(0, "custom category", "custom message");
+					});
 				});
 			}
 		}

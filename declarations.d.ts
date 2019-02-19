@@ -192,7 +192,7 @@ declare module "@webassemblyjs/ast" {
 	export function global(globalType: string, nodes: Node[]): Global;
 	export function identifier(indentifier: string): Identifier;
 	export function funcParam(valType: string, id: Identifier): FuncParam;
-	export function instruction(inst: string, args: Node[]): Instruction;
+	export function instruction(inst: string, args?: Node[]): Instruction;
 	export function callInstruction(funcIndex: Index): CallInstruction;
 	export function objectInstruction(
 		kind: string,

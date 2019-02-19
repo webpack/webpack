@@ -279,63 +279,57 @@ describe("BenchmarkTestCases", function() {
 			describe(`${testName} create benchmarks`, function() {
 				baselines.forEach(baseline => {
 					let baselineStats = null;
-					it(
-						`should benchmark ${baseline.name} (${baseline.rev})`,
-						function(done) {
-							const outputDirectory = path.join(
-								__dirname,
-								"js",
-								"benchmark",
-								`baseline-${baseline.name}`,
-								testName
-							);
-							const config =
-								Object.create(
-									require.requireActual(
-										path.join(testDirectory, "webpack.config.js")
-									)
-								) || {};
-							config.output = Object.create(config.output || {});
-							if (!config.context) config.context = testDirectory;
-							if (!config.output.path) config.output.path = outputDirectory;
-							runBenchmark(baseline.webpack, config, (err, stats) => {
-								if (err) return done(err);
-								process.stderr.write(`        ${baseline.name} ${stats.text}`);
-								if (baseline.name === "HEAD") headStats = stats;
-								else baselineStats = stats;
-								done();
-							});
-						},
-						180000
-					);
-
-					it(
-						`should benchmark ${baseline.name} (${baseline.rev})`,
-						done => {
-							const outputDirectory = path.join(
-								__dirname,
-								"js",
-								"benchmark",
-								`baseline-${baseline.name}`,
-								testName
-							);
-							const config =
+					it(`should benchmark ${baseline.name} (${
+						baseline.rev
+					})`, function(done) {
+						const outputDirectory = path.join(
+							__dirname,
+							"js",
+							"benchmark",
+							`baseline-${baseline.name}`,
+							testName
+						);
+						const config =
+							Object.create(
 								require.requireActual(
 									path.join(testDirectory, "webpack.config.js")
-								) || {};
-							config.output = config.output || {};
-							if (!config.context) config.context = testDirectory;
-							if (!config.output.path) config.output.path = outputDirectory;
-							runBenchmark(baseline.webpack, config, (err, stats) => {
-								if (err) return done(err);
-								process.stderr.write(`        ${baseline.name} ${stats.text}`);
-								if (baseline.name === "HEAD") headStats = stats;
-								else baselineStats = stats;
-								done();
-							});
-						},
-						180000
-					);
+								)
+							) || {};
+						config.output = Object.create(config.output || {});
+						if (!config.context) config.context = testDirectory;
+						if (!config.output.path) config.output.path = outputDirectory;
+						runBenchmark(baseline.webpack, config, (err, stats) => {
+							if (err) return done(err);
+							process.stderr.write(`        ${baseline.name} ${stats.text}`);
+							if (baseline.name === "HEAD") headStats = stats;
+							else baselineStats = stats;
+							done();
+						});
+					}, 180000);
+
+					it(`should benchmark ${baseline.name} (${baseline.rev})`, done => {
+						const outputDirectory = path.join(
+							__dirname,
+							"js",
+							"benchmark",
+							`baseline-${baseline.name}`,
+							testName
+						);
+						const config =
+							require.requireActual(
+								path.join(testDirectory, "webpack.config.js")
+							) || {};
+						config.output = config.output || {};
+						if (!config.context) config.context = testDirectory;
+						if (!config.output.path) config.output.path = outputDirectory;
+						runBenchmark(baseline.webpack, config, (err, stats) => {
+							if (err) return done(err);
+							process.stderr.write(`        ${baseline.name} ${stats.text}`);
+							if (baseline.name === "HEAD") headStats = stats;
+							else baselineStats = stats;
+							done();
+						});
+					}, 180000);
 
 					if (baseline.name !== "HEAD") {
 						it(`HEAD should not be slower than ${baseline.name} (${

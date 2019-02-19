@@ -80,9 +80,7 @@ module.exports = {
 						.sort((a, b) => a[0] - b[0])
 						.map(
 							([i, m]) =>
-								`${i}: ${m.readableIdentifier(
-									compilation.requestShortener
-								)}`
+								`${i}: ${m.readableIdentifier(compilation.requestShortener)}`
 						)
 						.join(", ");
 					const indicies2 = Array.from(compilation.modules)
@@ -91,9 +89,7 @@ module.exports = {
 						.sort((a, b) => a[0] - b[0])
 						.map(
 							([i, m]) =>
-								`${i}: ${m.readableIdentifier(
-									compilation.requestShortener
-								)}`
+								`${i}: ${m.readableIdentifier(compilation.requestShortener)}`
 						)
 						.join(", ");
 					expect(indicies).toEqual(

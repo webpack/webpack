@@ -256,7 +256,9 @@ describe("ConfigTestCases", () => {
 										const bundlePath = testConfig.findBundle(i, optionsArr[i]);
 										if (bundlePath) {
 											filesCount++;
-											results.push(_require(outputDirectory, optionsArr[i], bundlePath));
+											results.push(
+												_require(outputDirectory, optionsArr[i], bundlePath)
+											);
 										}
 									}
 									// give a free pass to compilation that generated an error
@@ -269,12 +271,16 @@ describe("ConfigTestCases", () => {
 												"Should have found at least one bundle file per webpack config"
 											)
 										);
-									Promise.all(results).then(() => {
-										if (getNumberOfTests() < filesCount)
-											return done(new Error("No tests exported by test case"));
-										if (testConfig.afterExecute) testConfig.afterExecute();
-										done();
-									}).catch(done);
+									Promise.all(results)
+										.then(() => {
+											if (getNumberOfTests() < filesCount)
+												return done(
+													new Error("No tests exported by test case")
+												);
+											if (testConfig.afterExecute) testConfig.afterExecute();
+											done();
+										})
+										.catch(done);
 								});
 							})
 					);

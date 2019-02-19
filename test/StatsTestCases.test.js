@@ -129,7 +129,10 @@ describe("StatsTestCases", () => {
 						);
 				}
 				const testPath = path.join(base, testName);
-				const testPathPattern = testPath.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
+				const testPathPattern = testPath.replace(
+					/[-[\]\\/{}()*+?.^$|]/g,
+					"\\$&"
+				);
 				actual = actual
 					.replace(/\r\n?/g, "\n")
 					.replace(/[\t ]*Version:.+\n/g, "")

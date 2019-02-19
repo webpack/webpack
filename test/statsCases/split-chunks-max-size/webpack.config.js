@@ -122,5 +122,5 @@ module.exports = [
 			}
 		},
 		stats
-	},
+	}
 ];

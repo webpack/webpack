@@ -3,6 +3,6 @@ module.exports = {
 	entry: "./index",
 	stats: {
 		modules: true,
-		reasons: true,
+		reasons: true
 	}
 };

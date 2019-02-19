@@ -100,10 +100,7 @@ describe("HotModuleReplacementPlugin", () => {
 
 	it("should correct working when entry is Object and key is a number", done => {
 		const outputPath = path.join(__dirname, "js", "HotModuleReplacementPlugin");
-		const entryFile = path.join(
-			outputPath,
-			"entry.js"
-		);
+		const entryFile = path.join(outputPath, "entry.js");
 		const statsFile3 = path.join(
 			outputPath,
 			"HotModuleReplacementPlugin.test.stats3.txt"
@@ -112,10 +109,7 @@ describe("HotModuleReplacementPlugin", () => {
 			outputPath,
 			"HotModuleReplacementPlugin.test.stats4.txt"
 		);
-		const recordsFile = path.join(
-			outputPath,
-			"records.json"
-		);
+		const recordsFile = path.join(outputPath, "records.json");
 		try {
 			mkdirp.sync(outputPath);
 		} catch (e) {
@@ -156,7 +150,10 @@ describe("HotModuleReplacementPlugin", () => {
 					if (err) throw err;
 					fs.writeFileSync(statsFile3, stats.toString());
 					const result = JSON.parse(
-						fs.readFileSync(path.join(outputPath, `${hash}.hot-update.json`), "utf-8")
+						fs.readFileSync(
+							path.join(outputPath, `${hash}.hot-update.json`),
+							"utf-8"
+						)
 					)["c"];
 					expect(result).toEqual([chunkName]);
 					done();

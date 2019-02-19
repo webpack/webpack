@@ -52,44 +52,55 @@ if (process.env.ALTERNATIVE_SORT) {
 }
 
 // Setup debugging info for tests
-if(process.env.DEBUG_INFO) {
-	const addDebugInfo = (it) => {
+if (process.env.DEBUG_INFO) {
+	const addDebugInfo = it => {
 		return (name, fn, timeout) => {
-			if(fn.length === 0) {
-				it(name, () => {
-					process.stdout.write(`START1 ${name}\n`);
-					try {
-						const promise = fn();
-						if(promise && promise.then) {
-							return promise.then(r => {
+			if (fn.length === 0) {
+				it(
+					name,
+					() => {
+						process.stdout.write(`START1 ${name}\n`);
+						try {
+							const promise = fn();
+							if (promise && promise.then) {
+								return promise.then(
+									r => {
+										process.stdout.write(`DONE OK ${name}\n`);
+										return r;
+									},
+									e => {
+										process.stdout.write(`DONE FAIL ${name}\n`);
+										throw e;
+									}
+								);
+							} else {
 								process.stdout.write(`DONE OK ${name}\n`);
-								return r;
-							}, e => {
-								process.stdout.write(`DONE FAIL ${name}\n`);
-								throw e;
-							});
-						} else {
-							process.stdout.write(`DONE OK ${name}\n`);
-						}
-					} catch(e) {
-						process.stdout.write(`DONE FAIL ${name}\n`);
-						throw e;
-					}
-				}, timeout);
-			} else {
-				it(name, done => {
-					process.stdout.write(`START2 ${name}\n`);
-					return fn(err => {
-						if(err) {
+							}
+						} catch (e) {
 							process.stdout.write(`DONE FAIL ${name}\n`);
-						} else {
-							process.stdout.write(`DONE OK ${name}\n`);
+							throw e;
 						}
-						return done(err);
-					})
-				}, timeout)
+					},
+					timeout
+				);
+			} else {
+				it(
+					name,
+					done => {
+						process.stdout.write(`START2 ${name}\n`);
+						return fn(err => {
+							if (err) {
+								process.stdout.write(`DONE FAIL ${name}\n`);
+							} else {
+								process.stdout.write(`DONE OK ${name}\n`);
+							}
+							return done(err);
+						});
+					},
+					timeout
+				);
 			}
-		}
+		};
 	};
 	const env = jasmine.getEnv();
 	env.it = addDebugInfo(env.it);
@@ -101,4 +112,3 @@ if(process.env.DEBUG_INFO) {
 require("wast-loader");
 process.removeAllListeners("uncaughtException");
 process.removeAllListeners("unhandledRejection");
-

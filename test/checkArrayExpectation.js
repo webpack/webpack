@@ -3,32 +3,34 @@ const fs = require("fs");
 const path = require("path");
 
 const check = (expected, actual) => {
-	if(expected instanceof RegExp) {
+	if (expected instanceof RegExp) {
 		expected = { message: expected };
 	}
 	return Object.keys(expected).every(key => {
 		let value = actual[key];
-		if(typeof value === "object") {
+		if (typeof value === "object") {
 			value = JSON.stringify(value);
 		}
 		return expected[key].test(value);
-	})
-}
+	});
+};
 
 const explain = object => {
-	if(object instanceof RegExp) {
+	if (object instanceof RegExp) {
 		object = { message: object };
 	}
-	return Object.keys(object).map(key => {
-		let value = object[key];
-		if(typeof value === "object" && !(value instanceof RegExp)) {
-			value = JSON.stringify(value);
-		}
-		let msg = `${key} = ${value}`
-		if(msg.length > 100) msg = msg.slice(0, 97) + "...";
-		return msg;
-	}).join("; ");
-}
+	return Object.keys(object)
+		.map(key => {
+			let value = object[key];
+			if (typeof value === "object" && !(value instanceof RegExp)) {
+				value = JSON.stringify(value);
+			}
+			let msg = `${key} = ${value}`;
+			if (msg.length > 100) msg = msg.slice(0, 97) + "...";
+			return msg;
+		})
+		.join("; ");
+};
 
 module.exports = function checkArrayExpectation(
 	testDirectory,
@@ -45,7 +47,7 @@ module.exports = function checkArrayExpectation(
 	}
 	let array = object[`${kind}s`];
 	if (Array.isArray(array)) {
-		if (kind === "warning"){
+		if (kind === "warning") {
 			array = array.filter(item => !/from Terser/.test(item));
 		}
 	}
@@ -56,9 +58,9 @@ module.exports = function checkArrayExpectation(
 			return (
 				done(
 					new Error(
-						`More ${kind}s while compiling than expected:\n\n${array.map(explain).join(
-							"\n\n"
-						)}. Check expected ${kind}s: ${expectedFilename}`
+						`More ${kind}s while compiling than expected:\n\n${array
+							.map(explain)
+							.join("\n\n")}. Check expected ${kind}s: ${expectedFilename}`
 					)
 				),
 				true
@@ -67,9 +69,9 @@ module.exports = function checkArrayExpectation(
 			return (
 				done(
 					new Error(
-						`Less ${kind}s while compiling than expected:\n\n${array.map(explain).join(
-							"\n\n"
-						)}. Check expected ${kind}s: ${expectedFilename}`
+						`Less ${kind}s while compiling than expected:\n\n${array
+							.map(explain)
+							.join("\n\n")}. Check expected ${kind}s: ${expectedFilename}`
 					)
 				),
 				true
@@ -82,9 +84,9 @@ module.exports = function checkArrayExpectation(
 						return (
 							done(
 								new Error(
-									`${upperCaseKind} ${i}: ${explain(array[i])} doesn't match ${explain(expected[
-										i
-									][j])}`
+									`${upperCaseKind} ${i}: ${explain(
+										array[i]
+									)} doesn't match ${explain(expected[i][j])}`
 								)
 							),
 							true
@@ -95,9 +97,9 @@ module.exports = function checkArrayExpectation(
 				return (
 					done(
 						new Error(
-							`${upperCaseKind} ${i}: ${explain(array[i])} doesn't match ${explain(expected[
-								i
-							])}`
+							`${upperCaseKind} ${i}: ${explain(
+								array[i]
+							)} doesn't match ${explain(expected[i])}`
 						)
 					),
 					true
@@ -106,7 +108,11 @@ module.exports = function checkArrayExpectation(
 	} else if (array.length > 0) {
 		return (
 			done(
-				new Error(`${upperCaseKind}s while compiling:\n\n${array.map(explain).join("\n\n")}`)
+				new Error(
+					`${upperCaseKind}s while compiling:\n\n${array
+						.map(explain)
+						.join("\n\n")}`
+				)
 			),
 			true
 		);
