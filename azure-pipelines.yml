@@ -72,7 +72,7 @@ jobs:
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn -s run code-lint --format junit > junit.xml
-          yarn schema-lint
+          yarn jest-lint
           yarn type-lint
           yarn special-lint
         displayName: "Run linting"
@@ -205,18 +205,15 @@ jobs:
           npm install --global yarn
         displayName: "Install Yarn"
       - script: |
-          set -e
           node -v
           yarn -v
         displayName: "Print versions"
       - script: |
-          set -e
           yarn --frozen-lockfile
           yarn link --frozen-lockfile || true
           yarn link webpack --frozen-lockfile
         displayName: "Install dependencies"
       - script: |
-          set -e
           yarn cover:init && yarn cover:integration --ci --maxWorkers=2 --reporters=jest-junit
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
