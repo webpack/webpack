@@ -147,9 +147,9 @@ describe("Compiler", () => {
 	it("should compile a file with multiple chunks", done => {
 		compile("./chunks", {}, (stats, files) => {
 			expect(stats.chunks).toHaveLength(2);
-			expect(Object.keys(files)).toEqual(["/main.js", "/324.js"]);
+			expect(Object.keys(files)).toEqual(["/main.js", "/394.js"]);
 			const bundle = files["/main.js"];
-			const chunk = files["/324.js"];
+			const chunk = files["/394.js"];
 			expect(bundle).toMatch("function __webpack_require__(");
 			expect(bundle).toMatch("__webpack_require__(/*! ./b */");
 			expect(chunk).not.toMatch("__webpack_require__(/* ./b */");

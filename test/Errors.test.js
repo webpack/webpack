@@ -307,7 +307,7 @@ Object {
     Object {
       "loc": "4:0-20",
       "message": "Module not found: Error: Can't resolve './missing' in '<cwd>/test/fixtures/errors'",
-      "moduleId": 665,
+      "moduleId": 814,
       "moduleIdentifier": "<cwd>/test/fixtures/errors/missingFile.js",
       "moduleName": "./missingFile.js",
       "moduleTrace": Array [],
@@ -315,7 +315,7 @@ Object {
     Object {
       "loc": "12:9-34",
       "message": "Module not found: Error: Can't resolve './dir/missing2' in '<cwd>/test/fixtures/errors'",
-      "moduleId": 665,
+      "moduleId": 814,
       "moduleIdentifier": "<cwd>/test/fixtures/errors/missingFile.js",
       "moduleName": "./missingFile.js",
       "moduleTrace": Array [],

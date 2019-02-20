@@ -183,13 +183,25 @@ const describeCases = config => {
 							});
 							if (config.cache) {
 								it(`${testName} should pre-compile to fill disk cache (1st)`, done => {
+									const oldPath = options.output.path;
+									options.output.path = path.join(
+										options.output.path,
+										"cache1"
+									);
 									webpack(options, err => {
+										options.output.path = oldPath;
 										if (err) return done(err);
 										done();
 									});
 								});
 								it(`${testName} should pre-compile to fill disk cache (2nd)`, done => {
+									const oldPath = options.output.path;
+									options.output.path = path.join(
+										options.output.path,
+										"cache2"
+									);
 									webpack(options, err => {
+										options.output.path = oldPath;
 										if (err) return done(err);
 										done();
 									});
