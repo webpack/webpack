@@ -55,7 +55,7 @@ Please follow the approach described bellow:
 * write your test code in `statsCases/` folder by creating a separate folder for it, for example `statsCases/some-file-import-stats/index.js`
 
 ```javascript
-import(./someModule);
+import("./someModule");
 ```
 * don't forget the `webpack.config.js`
 * run the test
