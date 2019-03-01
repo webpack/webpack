@@ -986,7 +986,8 @@
             "amd-require",
             "umd",
             "umd2",
-            "jsonp"
+            "jsonp",
+            "system"
           ]
         },
         "path": {
