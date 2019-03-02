@@ -2068,9 +2068,9 @@ eslint-plugin-prettier@^3.0.0:
     prettier-linter-helpers "^1.0.0"
 
 eslint-scope@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-4.0.0.tgz#50bf3071e9338bcdc43331794a0cb533f0136172"
-  integrity sha512-1G6UTDi7Jc1ELFwnR58HV4fK9OQK4S6N985f166xqXxpjU6plxFISJa2Ba9KCQuFa8RCnj/lSFJbHo7UFDBnUA==
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-4.0.1.tgz#dc3e21b1129fe4f61509a025db075fe7ba3abdba"
+  integrity sha512-PeQeU4s1Pr0LXLZ+YF7aYaZirFDw23ssCKeahBqZqa8aM9Si9jSx7MoSKhAl3m+VM9oqnGSMdLYZ2QzB09aQnw==
   dependencies:
     esrecurse "^4.1.0"
     estraverse "^4.1.1"
