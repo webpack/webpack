@@ -199,9 +199,9 @@
     "@types/node" "*"
 
 "@types/node@*", "@types/node@^10.12.21", "@types/node@^10.12.6":
-  version "10.12.27"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.27.tgz#eb3843f15d0ba0986cc7e4d734d2ee8b50709ef8"
-  integrity sha512-e9wgeY6gaY21on3ve0xAjgBVjGDWq/xUteK0ujsE53bUoxycMkqfnkUgMt6ffZtykZ5X12Mg3T7Pw4TRCObDKg==
+  version "10.12.28"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.28.tgz#e6c0c7afded4a96686afc434dcad12dfdc7eda10"
+  integrity sha512-cxuJOAFV/eOuAFIIJxrRkmefrA6uZzFJPNjnCYcTWlM9d/WuzVtEqoG9U7UuQEiPx1Hze8VdXHrDLCyvaP1sHg==
 
 "@types/prettier@^1.13.2":
   version "1.13.2"
