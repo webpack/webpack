@@ -246,11 +246,13 @@ export type FilterItemTypes = RegExp | string | Function;
 
 export interface WebpackOptions {
 	/**
-	 * Set the value of `require.amd` and `define.amd`.
+	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
-	amd?: {
-		[k: string]: any;
-	} | false;
+	amd?:
+		| boolean
+		| {
+				[k: string]: any;
+		  };
 	/**
 	 * Report the first error as a hard error instead of tolerating it.
 	 */
