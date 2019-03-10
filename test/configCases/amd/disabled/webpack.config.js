@@ -1,3 +1,3 @@
 module.exports = {
-  amd: false
+	amd: false
 };
