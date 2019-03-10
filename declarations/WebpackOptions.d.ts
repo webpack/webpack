@@ -250,7 +250,7 @@ export interface WebpackOptions {
 	 */
 	amd?: {
 		[k: string]: any;
-	};
+	} | false;
 	/**
 	 * Report the first error as a hard error instead of tolerating it.
 	 */
