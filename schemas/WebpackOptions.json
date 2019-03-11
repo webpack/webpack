@@ -1907,7 +1907,7 @@
       "anyOf": [
         {
           "description": "You can pass `false` to disable AMD support.",
-          "type": "boolean"
+          "enum": [false]
         },
         {
           "description": "You can pass an object to set the value of `require.amd` and `define.amd`.",
