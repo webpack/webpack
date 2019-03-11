@@ -249,7 +249,7 @@ export interface WebpackOptions {
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
 	amd?:
-		| boolean
+		| false
 		| {
 				[k: string]: any;
 		  };
