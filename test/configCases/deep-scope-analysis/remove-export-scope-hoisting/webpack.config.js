@@ -15,10 +15,12 @@ module.exports = {
 						ref.module &&
 						ref.module.identifier().endsWith("reference.js") &&
 						Array.isArray(ref.importedNames) &&
-						ref.importedNames.includes("unused")
+						ref.importedNames.some(
+							names => names.length === 1 && names[0] === "unused"
+						)
 					) {
 						const newExports = ref.importedNames.filter(
-							item => item !== "unused"
+							names => names.length !== 1 || names[0] !== "unused"
 						);
 						return new DependencyReference(
 							() => ref.module,
