@@ -2045,7 +2045,7 @@ eslint-plugin-prettier@^3.0.0:
   dependencies:
     prettier-linter-helpers "^1.0.0"
 
-eslint-scope@^4.0.0:
+eslint-scope@^4.0.0, eslint-scope@^4.0.2:
   version "4.0.2"
   resolved "https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-4.0.2.tgz#5f10cd6cabb1965bf479fa65745673439e21cb0e"
   integrity sha512-5q1+B/ogmHl8+paxtOKx38Z8LtWkVGuNt3+GQNErqwLl6ViNp/gdJGMCjZNxZ8j/VYjDNZ2Fo+eQc1TAVPIzbg==
@@ -2064,9 +2064,9 @@ eslint-visitor-keys@^1.0.0:
   integrity sha512-qzm/XxIbxm/FHyH341ZrbnMUpe+5Bocte9xkmFMzPMjRaZMcXww+MpBptFvtU+79L362nqiLhekCxCxDPaUMBQ==
 
 eslint@^5.8.0:
-  version "5.14.1"
-  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.14.1.tgz#490a28906be313685c55ccd43a39e8d22efc04ba"
-  integrity sha512-CyUMbmsjxedx8B0mr79mNOqetvkbij/zrXnFeK2zc3pGRn3/tibjiNAv/3UxFEyfMDjh+ZqTrJrEGBFiGfD5Og==
+  version "5.15.1"
+  resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.15.1.tgz#8266b089fd5391e0009a047050795b1d73664524"
+  integrity sha512-NTcm6vQ+PTgN3UBsALw5BMhgO6i5EpIjQF/Xb5tIh3sk9QhrFafujUOczGz4J24JBlzWclSB9Vmx8d+9Z6bFCg==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     ajv "^6.9.1"
@@ -2074,7 +2074,7 @@ eslint@^5.8.0:
     cross-spawn "^6.0.5"
     debug "^4.0.1"
     doctrine "^3.0.0"
-    eslint-scope "^4.0.0"
+    eslint-scope "^4.0.2"
     eslint-utils "^1.3.1"
     eslint-visitor-keys "^1.0.0"
     espree "^5.0.1"
