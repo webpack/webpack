@@ -1903,7 +1903,17 @@
   "additionalProperties": false,
   "properties": {
     "amd": {
-      "description": "Set the value of `require.amd` and `define.amd`."
+      "description": "Set the value of `require.amd` and `define.amd`. Or disable AMD support.",
+      "anyOf": [
+        {
+          "description": "You can pass `false` to disable AMD support.",
+          "enum": [false]
+        },
+        {
+          "description": "You can pass an object to set the value of `require.amd` and `define.amd`.",
+          "type": "object"
+        }
+      ]
     },
     "bail": {
       "description": "Report the first error as a hard error instead of tolerating it.",
