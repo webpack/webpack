@@ -3,14 +3,14 @@
  * through correctly and are usable by the webpack bundle.
 */
 afterEach(function(done) {
-  delete global.System;
-  done()
+	delete global.System;
+	done()
 })
 
 it("should get an external from System", function() {
 	const external1 = require("external1");
 	expect(external1).toBe('the external1 value');
 
-  const external2 = require("external2");
-  expect(external2).toBe('the external2 value');
+	const external2 = require("external2");
+	expect(external2).toBe('the external2 value');
 });
