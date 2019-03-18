@@ -1,6 +1,5 @@
 export default function myFunction() {
     let iifeExecutionCount = 0;
-    console.log(iifeExecutionCount);
 
     (function someFunction (recurse, recurseFunction = someFunction) {
         iifeExecutionCount++;
