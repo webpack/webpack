@@ -1915,6 +1915,8 @@ Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/preset-errors-o
  @ ./index.js 1:0-25"
 `;
 
+exports[`StatsTestCases should print correct stats for preset-errors-warnings 1`] = `""`;
+
 exports[`StatsTestCases should print correct stats for preset-minimal 1`] = `"   6 modules"`;
 
 exports[`StatsTestCases should print correct stats for preset-minimal-simple 1`] = `"   1 module"`;
