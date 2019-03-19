@@ -369,7 +369,7 @@ export interface WebpackOptions {
 	stats?:
 		| StatsOptions
 		| boolean
-		| ("none" | "errors-only" | "minimal" | "normal" | "detailed" | "verbose");
+		| ("none" | "errors-only" | "minimal" | "normal" | "detailed" | "verbose" | "errors-warnings");
 	/**
 	 * Environment to build for
 	 */
