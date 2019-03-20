@@ -17,6 +17,7 @@
     "enhanced-resolve": "^4.1.0",
     "eslint-scope": "^4.0.0",
     "events": "^3.0.0",
+    "find-cache-dir": "^2.1.0",
     "json-parse-better-errors": "^1.0.2",
     "loader-runner": "3.0.0",
     "loader-utils": "^1.1.0",
