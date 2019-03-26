@@ -369,6 +369,29 @@ describe("RuleSet", () => {
 		expect(match(loader, "style.css")).toEqual(["style-loader", "css-loader"]);
 	});
 
+	it("should work when using a function returning an array of loaders with options", () => {
+		const loader = new RuleSet([
+			{
+				test: /\.css$/,
+				use: function(data) {
+					return [
+						"style-loader",
+						{
+							loader: "css-loader",
+							options: {
+								url: true
+							}
+						}
+					];
+				}
+			}
+		]);
+		expect(match(loader, "style.css")).toEqual([
+			"style-loader",
+			'css-loader?{"url":true}'
+		]);
+	});
+
 	it("should work when using an array of either functions or strings returning a loader", () => {
 		const loader = new RuleSet([
 			{
