@@ -1251,6 +1251,10 @@ export interface OutputOptions {
 	 */
 	umdNamedDefine?: boolean;
 	/**
+	 * The filename of URL modules as relative path inside the `output.path` directory.
+	 */
+	urlModuleFilename?: string;
+	/**
 	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
 	 */
 	webassemblyModuleFilename?: string;
