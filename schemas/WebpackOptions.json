@@ -1209,6 +1209,11 @@
           "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
           "type": "boolean"
         },
+        "urlModuleFilename": {
+          "description": "The filename of URL modules as relative path inside the `output.path` directory.",
+          "type": "string",
+          "absolutePath": false
+        },
         "webassemblyModuleFilename": {
           "description": "The filename of WebAssembly modules as relative path inside the `output.path` directory.",
           "type": "string",
