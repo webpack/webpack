@@ -691,7 +691,7 @@ module.exports = "pageC";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
                        Asset       Size  Chunks             Chunk Names
 commons~pageA~pageB~pageC.js  269 bytes       2  [emitted]  commons~pageA~pageB~pageC
       commons~pageB~pageC.js  269 bytes       4  [emitted]  commons~pageB~pageC
@@ -740,7 +740,7 @@ chunk    {5} pageC.js (pageC) 102 bytes ={2}= ={4}= [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
                        Asset       Size  Chunks             Chunk Names
 commons~pageA~pageB~pageC.js   96 bytes       0  [emitted]  commons~pageA~pageB~pageC
       commons~pageB~pageC.js   97 bytes       1  [emitted]  commons~pageB~pageC

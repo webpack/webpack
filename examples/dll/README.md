@@ -36,7 +36,7 @@ module.exports = {
 # dist/MyDll.alpha.js
 
 ``` javascript
-var alpha_ad5d55c0b9c252954023 =
+var alpha_d61ee01b5c383d26e2c0 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -183,7 +183,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ``` javascript
-{"name":"alpha_ad5d55c0b9c252954023","content":{"./alpha.js":{"id":1,"buildMeta":{"providedExports":true}},"./a.js":{"id":2,"buildMeta":{"providedExports":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"providedExports":true}}}}
+{"name":"alpha_d61ee01b5c383d26e2c0","content":{"./alpha.js":{"id":1,"buildMeta":{"providedExports":true}},"./a.js":{"id":2,"buildMeta":{"providedExports":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"providedExports":true}}}}
 ```
 
 # Info
@@ -192,7 +192,7 @@ module.exports = "module";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
          Asset      Size  Chunks             Chunk Names
 MyDll.alpha.js  4.42 KiB       0  [emitted]  alpha
  MyDll.beta.js   4.4 KiB       1  [emitted]  beta
@@ -230,7 +230,7 @@ chunk    {1} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
          Asset      Size  Chunks             Chunk Names
 MyDll.alpha.js  1.06 KiB       0  [emitted]  alpha
  MyDll.beta.js  1.05 KiB       1  [emitted]  beta

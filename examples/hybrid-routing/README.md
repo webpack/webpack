@@ -150,16 +150,16 @@ var map = {
 	]
 };
 function webpackAsyncContext(req) {
-	var ids = map[req];
-	if(!ids) {
+	if(!__webpack_require__.o(map, req)) {
 		return Promise.resolve().then(function() {
 			var e = new Error("Cannot find module '" + req + "'");
 			e.code = 'MODULE_NOT_FOUND';
 			throw e;
 		});
 	}
+
+	var ids = map[req], id = ids[0];
 	return __webpack_require__.e(ids[1]).then(function() {
-		var id = ids[0];
 		return __webpack_require__.t(id, 7);
 	});
 }
@@ -460,12 +460,12 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
                Asset       Size  Chunks             Chunk Names
       aPage.chunk.js  297 bytes       0  [emitted]  aPage
       bPage.chunk.js  291 bytes       1  [emitted]  bPage
      pageA.bundle.js   9.42 KiB       3  [emitted]  pageA
-pageA~pageB.chunk.js   2.02 KiB       2  [emitted]  pageA~pageB
+pageA~pageB.chunk.js   2.04 KiB       2  [emitted]  pageA~pageB
      pageB.bundle.js   9.42 KiB       4  [emitted]  pageB
 Entrypoint pageA = pageA~pageB.chunk.js aPage.chunk.js pageA.bundle.js
 Entrypoint pageB = pageA~pageB.chunk.js bPage.chunk.js pageB.bundle.js
@@ -513,12 +513,12 @@ chunk    {4} pageB.bundle.js (pageB) 127 bytes ={1}= ={2}= >{0}< [entry] [render
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
                Asset       Size  Chunks             Chunk Names
       aPage.chunk.js  122 bytes       0  [emitted]  aPage
       bPage.chunk.js  123 bytes       1  [emitted]  bPage
      pageA.bundle.js   2.22 KiB       3  [emitted]  pageA
-pageA~pageB.chunk.js  545 bytes       2  [emitted]  pageA~pageB
+pageA~pageB.chunk.js  559 bytes       2  [emitted]  pageA~pageB
      pageB.bundle.js   2.22 KiB       4  [emitted]  pageB
 Entrypoint pageA = pageA~pageB.chunk.js aPage.chunk.js pageA.bundle.js
 Entrypoint pageB = pageA~pageB.chunk.js bPage.chunk.js pageB.bundle.js
