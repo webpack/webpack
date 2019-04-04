@@ -1,26 +1,25 @@
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
-
 
 # dist/output.js
 
-``` javascript
-{{dist/output.js}}
+```javascript
+_{{dist/output.js}}_
 ```
 
 # dist/1.output.js
 
-``` javascript
-{{dist/1.output.js}}
+```javascript
+_{{dist/1.output.js}}_
 ```
 
 # dist/2.output.js
 
-``` javascript
-{{dist/2.output.js}}
+```javascript
+_{{dist/2.output.js}}_
 ```
 
 # Info
@@ -28,11 +27,11 @@
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```
