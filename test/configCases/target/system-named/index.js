@@ -7,7 +7,7 @@ afterEach(function(done) {
 	done()
 })
 
-it("should call System.register without a name", function() {
+it("should call System.register with a name", function() {
 	var fs = require("fs");
 	var source = fs.readFileSync(__filename, "utf-8");
 
