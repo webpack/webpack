@@ -8,7 +8,7 @@ A manifest is created which includes mappings from module names to internal ids.
 
 ### webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../../");
 
@@ -32,7 +32,7 @@ module.exports = {
 
 # example-vendor
 
-``` javascript
+```javascript
 export function square(n) {
 	return n * n;
 }
@@ -40,7 +40,7 @@ export function square(n) {
 
 # dist/vendor.js
 
-``` javascript
+```javascript
 var vendor_lib_a132d30959ef28c3f004 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
@@ -171,7 +171,7 @@ function square(n) {
 
 # dist/vendor-manifest.json
 
-``` javascript
+```javascript
 {"name":"vendor_lib_a132d30959ef28c3f004","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
 ```
 
@@ -208,4 +208,3 @@ chunk    {0} vendor.js (main) 57 bytes [entry] [rendered]
       DllPlugin
      + 1 hidden module
 ```
-

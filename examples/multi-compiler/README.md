@@ -1,7 +1,6 @@
-
 # example.js
 
-``` javascript
+```javascript
 if(ENV === "mobile") {
 	require("./mobile-stuff");
 }
@@ -10,7 +9,7 @@ console.log("Running " + ENV + " build");
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../");
 module.exports = [
@@ -50,7 +49,7 @@ module.exports = [
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -141,7 +140,7 @@ module.exports = [
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -159,7 +158,7 @@ console.log("Running " + "desktop" + " build");
 
 # dist/mobile.js
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};

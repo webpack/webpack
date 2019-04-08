@@ -8,9 +8,9 @@ All modules except `cjs` are EcmaScript modules. `cjs` is a CommonJs module.
 
 The interesting thing here is that putting all modules in single scope won't work, because of multiple reasons:
 
-* Modules `lazy`, `c`, `d` and `cjs` need to be in a separate chunk
-* Module `shared` is accessed by two chunks (different scopes)
-* Module `cjs` is a CommonJs module
+- Modules `lazy`, `c`, `d` and `cjs` need to be in a separate chunk
+- Module `shared` is accessed by two chunks (different scopes)
+- Module `cjs` is a CommonJs module
 
 ![](graph2.png)
 
@@ -22,7 +22,7 @@ While module concatenation identifiers in modules are renamed to avoid conflicts
 
 # example.js
 
-``` javascript
+```javascript
 import { a, x, y } from "a";
 import * as b from "b";
 
@@ -33,7 +33,7 @@ import("./lazy").then(function(lazy) {
 
 # lazy.js
 
-``` javascript
+```javascript
 export * from "c";
 import * as d from "d";
 export { d };
@@ -41,7 +41,7 @@ export { d };
 
 # a.js
 
-``` javascript
+```javascript
 // module a
 export var a = "a";
 export * from "shared";
@@ -49,7 +49,7 @@ export * from "shared";
 
 # b.js
 
-``` javascript
+```javascript
 // module b
 export function a() {
 	return "b";
@@ -58,7 +58,7 @@ export function a() {
 
 # c.js
 
-``` javascript
+```javascript
 // module c
 import { c as e } from "cjs";
 
@@ -69,21 +69,21 @@ export { x, y } from "shared";
 
 # d.js
 
-``` javascript
+```javascript
 // module d
 export var a = "d";
 ```
 
 # cjs.js
 
-``` javascript
+```javascript
 // module cjs (commonjs)
 exports.c = "e";
 ```
 
 # shared.js
 
-``` javascript
+```javascript
 // shared module
 export var x = "x";
 export * from "shared2";
@@ -91,16 +91,14 @@ export * from "shared2";
 
 # shared2.js
 
-``` javascript
+```javascript
 // shared2 module
 export var y = "y";
 ```
 
-
-
 # webpack.config.js
 
-``` javascript
+```javascript
 module.exports = {
 	// mode: "development" || "production",
 	optimization: {
@@ -111,14 +109,11 @@ module.exports = {
 };
 ```
 
-
-
-
 # dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -321,7 +316,7 @@ module.exports = {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************************************!*\
@@ -387,7 +382,7 @@ __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*!
 
 # dist/1.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */,
 /* 1 */,
@@ -455,7 +450,7 @@ var a = "d";
 
 Minimized
 
-``` javascript
+```javascript
 (window.webpackJsonp=window.webpackJsonp||[]).push([[1],[,,function(n,r){r.c="e"},function(n,r,t){"use strict";t.r(r);var c={};t.r(c),t.d(c,"a",function(){return e});var o=t(2),u=t(0),d=String.fromCharCode(o.c.charCodeAt(0)-2),e="d";t.d(r,"c",function(){return d}),t.d(r,"x",function(){return u.a}),t.d(r,"y",function(){return u.b}),t.d(r,"d",function(){return c})}]]);
 ```
 

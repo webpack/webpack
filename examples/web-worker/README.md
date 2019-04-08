@@ -1,7 +1,6 @@
-
 # example.js
 
-``` javascript
+```javascript
 var Worker = require("worker-loader?name=hash.worker.js!./worker");
 var worker = new Worker;
 worker.postMessage("b");
@@ -12,7 +11,7 @@ worker.onmessage = function(event) {
 
 # worker.js
 
-``` javascript
+```javascript
 onmessage = function(event) {
 	var template = event.data;
 	require(["../require.context/templates/" + event.data], function(tmpl) {
@@ -25,7 +24,7 @@ onmessage = function(event) {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -116,7 +115,7 @@ onmessage = function(event) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -151,7 +150,7 @@ module.exports = function() {
 
 # dist/[hash].worker.js
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	window["webpackChunk"] = function webpackChunkCallback(chunkIds, moreModules) {
 /******/ 		for(var moduleId in moreModules) {
@@ -286,7 +285,7 @@ onmessage = function(event) {
 
 # dist/1.[hash].worker.js
 
-``` javascript
+```javascript
 window["webpackChunk"]([1],[
 /* 0 */,
 /* 1 */

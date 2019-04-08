@@ -8,7 +8,7 @@ Providing dynamic expressions to `import` is possible. The same limits as with d
 
 # example.js
 
-``` javascript
+```javascript
 import a from "a";
 
 import("b").then(function(b) {
@@ -24,12 +24,11 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 });
 ```
 
-
 # dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -232,7 +231,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */,
 /* 1 */,
@@ -321,7 +320,6 @@ module.exports = webpackAsyncContext;
 /***/ })
 /******/ ]);
 ```
-
 
 # Info
 

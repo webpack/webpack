@@ -4,32 +4,32 @@ WebAssembly modules can be imported like other modules. Their download and compi
 
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # math.js
 
-``` javascript
-{{math.js}}
+```javascript
+_{{math.js}}_
 ```
 
 # dist/output.js
 
-``` javascript
-{{dist/output.js}}
+```javascript
+_{{dist/output.js}}_
 ```
 
 # dist/1.output.js
 
-``` javascript
-{{dist/1.output.js}}
+```javascript
+_{{dist/1.output.js}}_
 ```
 
 # dist/2.output.js
 
-``` javascript
-{{dist/2.output.js}}
+```javascript
+_{{dist/2.output.js}}_
 ```
 
 # Info
@@ -37,11 +37,11 @@ WebAssembly modules can be imported like other modules. Their download and compi
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

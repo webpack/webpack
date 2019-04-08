@@ -4,50 +4,47 @@ A very simple solution to this problem is to create another chunk which contains
 
 The configuration required for this is:
 
-* use `[chunkhash]` in `output.filename` (Note that this example doesn't do this because of the example generator infrastructure, but you should)
-* use `[chunkhash]` in `output.chunkFilename` (Note that this example doesn't do this because of the example generator infrastructure, but you should)
+- use `[chunkhash]` in `output.filename` (Note that this example doesn't do this because of the example generator infrastructure, but you should)
+- use `[chunkhash]` in `output.chunkFilename` (Note that this example doesn't do this because of the example generator infrastructure, but you should)
 
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # webpack.config.js
 
-``` javascript
-{{webpack.config.js}}
+```javascript
+_{{webpack.config.js}}_
 ```
 
 # index.html
 
-``` html
+```html
 <html>
-<head>
-</head>
-<body>
+	<head> </head>
+	<body>
+		<!-- inlined minimized file "runtime~main.[chunkhash].js" -->
+		<script>
+			_{{production:dist/runtime~main.chunkhash.js}}_
+		</script>
 
-<!-- inlined minimized file "runtime~main.[chunkhash].js" -->
-<script>
-{{production:dist/runtime~main.chunkhash.js}}
-</script>
-
-<script src="dist/main.[chunkhash].js"></script>
-
-</body>
+		<script src="dist/main.[chunkhash].js"></script>
+	</body>
 </html>
 ```
 
 # dist/runtime~main.[chunkhash].js
 
-``` javascript
-{{dist/runtime~main.chunkhash.js}}
+```javascript
+_{{dist/runtime~main.chunkhash.js}}_
 ```
 
 # dist/main.[chunkhash].js
 
-``` javascript
-{{dist/main.chunkhash.js}}
+```javascript
+_{{dist/main.chunkhash.js}}_
 ```
 
 # Info
@@ -55,11 +52,11 @@ The configuration required for this is:
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

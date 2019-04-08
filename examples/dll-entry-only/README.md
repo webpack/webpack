@@ -24,17 +24,16 @@ from the corresponding modules `a.js`, `b.js` and `cjs.js`. None of the other mo
 Also see [tree shaking](https://github.com/webpack/webpack/tree/master/examples/harmony-unused)
 and [scope hoisting example](https://github.com/webpack/webpack/tree/master/examples/scope-hoisting).
 
-
 # example.js
 
-``` javascript
+```javascript
 export { a, b } from "./a";
 export { c } from "./cjs";
 ```
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../");
 
@@ -63,7 +62,7 @@ module.exports = {
 
 # dist/dll.js
 
-``` javascript
+```javascript
 var dll_3eea518f6d09aac41ec7 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
@@ -224,7 +223,7 @@ var cjs = __webpack_require__(1);
 
 # dist/dll-manifest.json
 
-``` javascript
+```javascript
 {"name":"dll_3eea518f6d09aac41ec7","content":{"./example.js":{"id":2,"buildMeta":{"exportsType":"namespace","providedExports":["a","b","c"]}}}}
 ```
 

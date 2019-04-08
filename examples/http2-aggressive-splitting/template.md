@@ -16,8 +16,8 @@ The compression improves with bigger `maxSize`, as gzip works better for bigger 
 
 The backward compatibility (non HTTP2 client) improves with bigger `maxSize`, as the number of requests decreases.
 
-``` js
-{{webpack.config.js}}
+```js
+_{{webpack.config.js}}_
 ```
 
 # Info
@@ -25,17 +25,17 @@ The backward compatibility (non HTTP2 client) improves with bigger `maxSize`, as
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```
 
 ## Records
 
 ```
-{{dist/records.json}}
+_{{dist/records.json}}_
 ```

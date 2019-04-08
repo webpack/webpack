@@ -51,15 +51,15 @@ exports.replaceBase = (template) => {
 };
 
 exports.needResults = (template, prefix) => {
-	const regExp = prefix ? new RegExp(`\\{\\{${prefix}:`) : /\{\{/;
+	const regExp = prefix ? new RegExp(`_\\{\\{${prefix}:`) : /_\{\{/;
 	return regExp.test(template);
 };
 
 exports.replaceResults = (template, baseDir, stdout, prefix) => {
-	const regexp = new RegExp("\\{\\{" + (prefix ? prefix + ":" : "") + "([^:\\}]+)\\}\\}", "g");
+	const regexp = new RegExp("_\\{\\{" + (prefix ? prefix + ":" : "") + "([^:\\}]+)\\}\\}_", "g");
 
 	return template.replace(regexp, function(match) {
-		match = match.substr(2 + (prefix ? prefix.length + 1 : 0), match.length - 4 - (prefix ? prefix.length + 1 : 0));
+		match = match.substr(3 + (prefix ? prefix.length + 1 : 0), match.length - 6 - (prefix ? prefix.length + 1 : 0));
 		if(match === "stdout")
 			return stdout;
 		return fs.readFileSync(path.join(baseDir, match), "utf-8").replace(/[\r\n]*$/, "");

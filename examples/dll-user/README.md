@@ -6,7 +6,7 @@ This is the _user_ bundle, which uses the manifest from [dll-reference example](
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
@@ -27,7 +27,7 @@ module.exports = {
 
 # example.js
 
-``` javascript
+```javascript
 console.log(require("../dll/alpha"));
 console.log(require("../dll/a"));
 
@@ -42,7 +42,7 @@ console.log(require("module"));
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -133,7 +133,7 @@ console.log(require("module"));
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\

@@ -1,7 +1,6 @@
-
 # example.js
 
-``` javascript
+```javascript
 import { increment as inc } from './increment';
 var a = 1;
 inc(a); // 2
@@ -14,7 +13,7 @@ import("./async-loaded").then(function(asyncLoaded) {
 
 # increment.js
 
-``` javascript
+```javascript
 import { add } from './math';
 export function increment(val) {
     return add(val, 1);
@@ -25,7 +24,7 @@ export function increment(val) {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -228,7 +227,7 @@ export function increment(val) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!**********************!*\

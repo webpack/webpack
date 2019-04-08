@@ -16,7 +16,7 @@ The compression improves with bigger `maxSize`, as gzip works better for bigger 
 
 The backward compatibility (non HTTP2 client) improves with bigger `maxSize`, as the number of requests decreases.
 
-``` js
+```js
 var path = require("path");
 var webpack = require("../../");
 module.exports = {

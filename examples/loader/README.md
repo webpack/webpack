@@ -1,6 +1,6 @@
 # example.js
 
-``` javascript
+```javascript
 // use our loader
 console.dir(require("./loader!./file"));
 
@@ -11,13 +11,13 @@ console.dir(require("!css-loader!./test.css")); // manual
 
 # file.js
 
-``` javascript
+```javascript
 exports.foo = "bar";
 ```
 
 # loader.js
 
-``` javascript
+```javascript
 module.exports = function(content) {
 	return "exports.answer = 42;\n" + content;
 }
@@ -25,7 +25,7 @@ module.exports = function(content) {
 
 # test.css
 
-``` css
+```css
 .some-class {
 	color: hotpink;
 }
@@ -35,7 +35,7 @@ module.exports = function(content) {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -126,7 +126,7 @@ module.exports = function(content) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\

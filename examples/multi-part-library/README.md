@@ -14,7 +14,7 @@ Note: When your library has dependencies that should not be included in the comp
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 module.exports = {
 	// mode: "development || "production",
@@ -33,7 +33,7 @@ module.exports = {
 
 # dist/MyLibrary.alpha.js
 
-``` javascript
+```javascript
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -156,7 +156,7 @@ module.exports = "alpha";
 
 # dist/MyLibrary.beta.js
 
-``` javascript
+```javascript
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
