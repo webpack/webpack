@@ -2,7 +2,7 @@
 
 This example illustrates how to leverage the `import()` syntax to create ContextModules which are separated into separate chunks for each module in the `./templates` folder.
 
-``` javascript
+```javascript
 async function getTemplate(templateName) {
 	try {
 		let template = await import(`./templates/${templateName}`);
@@ -20,13 +20,13 @@ getTemplate("baz");
 
 # templates/
 
-* foo.js
-* baz.js
-* bar.js
+- foo.js
+- baz.js
+- bar.js
 
 All templates are of this pattern:
 
-``` javascript
+```javascript
 var foo = "foo";
 
 export default foo;
@@ -36,7 +36,7 @@ export default foo;
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -239,7 +239,7 @@ export default foo;
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */,
 /* 1 */,

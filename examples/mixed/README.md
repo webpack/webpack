@@ -4,7 +4,7 @@ You see that everything is working nicely together.
 
 # example.js
 
-``` javascript
+```javascript
 // CommonJs-style requires
 var commonjs1 = require("./commonjs");
 var amd1 = require("./amd");
@@ -23,7 +23,7 @@ require([
 
 # amd.js
 
-``` javascript
+```javascript
 // AMD Module Format
 define(
 	"app/amd", // anonym is also supported
@@ -40,7 +40,7 @@ define(
 
 # commonjs.js
 
-``` javascript
+```javascript
 // CommonJs Module Format
 module.exports = 123;
 
@@ -58,7 +58,7 @@ require(
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -261,7 +261,7 @@ require(
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!*********************!*\
@@ -346,7 +346,7 @@ __webpack_require__.e(/*! AMD require */ 1).then(function() { var __WEBPACK_AMD_
 
 # dist/1.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */,
 /* 1 */,

@@ -1,9 +1,9 @@
 # example.js
 
-This example illustrates how to filter the ContextModule results of `import()` statements. only `.js` files that don't 
+This example illustrates how to filter the ContextModule results of `import()` statements. only `.js` files that don't
 end in `.noimport.js` within the `templates` folder will be bundled.
 
-``` javascript
+```javascript
 async function getTemplate(templateName) {
 	try {
 		let template = await import(
@@ -28,16 +28,16 @@ getTemplate("baz.noimport");
 
 # templates/
 
-* foo.js
-* foo.noimport.js
-* baz.js
-* foo.noimport.js
-* bar.js
-* foo.noimport.js
+- foo.js
+- foo.noimport.js
+- baz.js
+- foo.noimport.js
+- bar.js
+- foo.noimport.js
 
 All templates are of this pattern:
 
-``` javascript
+```javascript
 var foo = "foo";
 
 export default foo;
@@ -47,7 +47,7 @@ export default foo;
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -250,7 +250,7 @@ export default foo;
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */,
 /* 1 */,

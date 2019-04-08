@@ -1,6 +1,6 @@
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../");
 module.exports = [
@@ -45,7 +45,7 @@ module.exports = [
 
 # dist/vendor.js
 
-``` javascript
+```javascript
 var vendor_d9f5eab93a0e9010218f =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
@@ -181,7 +181,7 @@ module.exports = "Vendor2";
 
 # dist/pageA.js
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};

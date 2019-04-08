@@ -8,7 +8,7 @@ You can also see the info messages webpack prints to console (for both normal an
 
 # example.js
 
-``` javascript
+```javascript
 const inc = require('./increment').increment;
 const a = 1;
 inc(a); // 2
@@ -16,7 +16,7 @@ inc(a); // 2
 
 # increment.js
 
-``` javascript
+```javascript
 const add = require('./math').add;
 exports.increment = function(val) {
     return add(val, 1);
@@ -25,7 +25,7 @@ exports.increment = function(val) {
 
 # math.js
 
-``` javascript
+```javascript
 exports.add = function() {
     var sum = 0, i = 0, args = arguments, l = args.length;
     while (i < l) {
@@ -39,7 +39,7 @@ exports.add = function() {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -130,7 +130,7 @@ exports.add = function() {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\

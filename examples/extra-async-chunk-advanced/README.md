@@ -1,8 +1,6 @@
-
-
 # example.js
 
-``` javascript
+```javascript
 require(["./a", "./b", "./c"], function(a, b, c) {});
 
 require.ensure(["./a"], function(require) {
@@ -23,7 +21,7 @@ require.ensure(["./a", "./e"], function(require) {
 
 # webpack.config.js
 
-``` javascript
+```javascript
 module.exports = {
 	// mode: "development || "production",
 	optimization: {
@@ -39,7 +37,7 @@ module.exports = {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -242,7 +240,7 @@ module.exports = {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ({
 
 /***/ 2:

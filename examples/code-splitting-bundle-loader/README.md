@@ -4,7 +4,7 @@ The bundle loader is used to create a wrapper module for `file.js` that loads th
 
 # example.js
 
-``` javascript
+```javascript
 require("bundle-loader!./file.js")(function(fileJsExports) {
 	console.log(fileJsExports);
 });
@@ -12,16 +12,15 @@ require("bundle-loader!./file.js")(function(fileJsExports) {
 
 # file.js
 
-``` javascript
+```javascript
 module.exports = "It works";
 ```
-
 
 # dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -224,7 +223,7 @@ module.exports = "It works";
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -267,7 +266,7 @@ __webpack_require__.e(/*! require.ensure */ 1).then((function(require) {
 
 # dist/1.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
 
 /***/ 2:

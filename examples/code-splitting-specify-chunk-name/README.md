@@ -2,7 +2,7 @@
 
 This example illustrates how to specify chunk name in `require.ensure()` and `import()` to separated modules into separate chunks manually.
 
-``` javascript
+```javascript
 import("./templates/foo" /* webpackChunkName: "chunk-foo" */ ).then(function(foo) {
 	console.log('foo:', foo);
 })
@@ -20,13 +20,13 @@ import("./templates/ba" + createContextVar /* webpackChunkName: "chunk-bar-baz" 
 
 # templates/
 
-* foo.js
-* baz.js
-* bar.js
+- foo.js
+- baz.js
+- bar.js
 
 All templates are of this pattern:
 
-``` javascript
+```javascript
 var foo = "foo";
 
 export default foo;
@@ -36,7 +36,7 @@ export default foo;
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -239,7 +239,7 @@ export default foo;
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */,
 /* 1 */,

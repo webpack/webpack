@@ -4,10 +4,9 @@
 
 This is the _reference_ bundle (with the manifests) for [dll user example](https://github.com/webpack/webpack/tree/master/examples/dll-user)
 
-
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
@@ -35,7 +34,7 @@ module.exports = {
 
 # dist/MyDll.alpha.js
 
-``` javascript
+```javascript
 var alpha_d61ee01b5c383d26e2c0 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
@@ -182,7 +181,7 @@ module.exports = "module";
 
 # dist/alpha-manifest.json
 
-``` javascript
+```javascript
 {"name":"alpha_d61ee01b5c383d26e2c0","content":{"./alpha.js":{"id":1,"buildMeta":{"providedExports":true}},"./a.js":{"id":2,"buildMeta":{"providedExports":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"providedExports":true}}}}
 ```
 

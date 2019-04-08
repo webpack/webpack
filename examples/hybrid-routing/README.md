@@ -1,6 +1,6 @@
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 module.exports = {
 	// mode: "development || "production",
@@ -30,7 +30,7 @@ module.exports = {
 
 # aEntry.js
 
-``` javascript
+```javascript
 // Just show the page "a"
 var render = require("./render");
 render(require("./aPage"));
@@ -40,7 +40,7 @@ render(require("./aPage"));
 
 # aPage.js
 
-``` javascript
+```javascript
 module.exports = function() {
 	return "This is page A.";
 };
@@ -50,7 +50,7 @@ module.exports = function() {
 
 # router.js
 
-``` javascript
+```javascript
 var render = require("./render");
 
 // Event when another page should be opened
@@ -73,7 +73,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 
 # pageA.html
 
-``` html
+```html
 <html>
 	<head></head>
 	<body>
@@ -86,7 +86,7 @@ window.onLinkToPage = function onLinkToPage(name) { // name is "a" or "b"
 
 # dist/pageA~pageB.chunk.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],[
 /* 0 */
 /*!*******************!*\
@@ -177,7 +177,7 @@ module.exports = webpackAsyncContext;
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -402,7 +402,7 @@ module.exports = webpackAsyncContext;
 
 </details>
 
-``` javascript
+```javascript
 /******/ ({
 
 /***/ 4:
@@ -436,7 +436,7 @@ render(__webpack_require__(/*! ./aPage */ 1));
 
 # dist/aPage.chunk.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
 /* 0 */,
 /* 1 */

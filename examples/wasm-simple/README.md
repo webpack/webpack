@@ -4,7 +4,7 @@ WebAssembly modules can be imported like other modules. Their download and compi
 
 # example.js
 
-``` javascript
+```javascript
 import("./add.wasm").then(addModule => {
 	console.log(addModule.add(22, 2200));
 	import("./math").then(math => {
@@ -35,7 +35,7 @@ function timed(name, fn) {
 
 # math.js
 
-``` javascript
+```javascript
 import { add } from "./add.wasm";
 import { factorial } from "./factorial.wasm";
 import { fibonacci } from "./fibonacci.wasm";
@@ -57,7 +57,7 @@ export function fibonacciJavascript(i) {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -323,7 +323,7 @@ export function fibonacciJavascript(i) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -366,7 +366,7 @@ function timed(name, fn) {
 
 # dist/1.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */,
 /* 1 */
@@ -472,7 +472,7 @@ wasmExports["__webpack_init__"]()
 
 # dist/2.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],[
 /* 0 */,
 /* 1 */

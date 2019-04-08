@@ -1,6 +1,6 @@
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 module.exports = {
 	// mode: "development || "production",
@@ -38,7 +38,7 @@ module.exports = {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -129,7 +129,7 @@ module.exports = {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!***********************!*\
@@ -157,7 +157,7 @@ module.exports = "Vendor1";
 
 # dist/vendor2.js
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -284,7 +284,7 @@ __webpack_require__(/*! ./vendor1 */ 1);
 
 # dist/pageA.js
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};

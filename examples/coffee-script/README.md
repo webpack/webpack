@@ -1,13 +1,12 @@
-
 # example.js
 
-``` javascript
+```javascript
 console.log(require("./cup1"));
 ```
 
 # cup1.coffee
 
-``` coffee-script
+```coffee-script
 module.exports =
 	cool: "stuff"
 	answer: 42
@@ -17,7 +16,7 @@ module.exports =
 
 # cup2.coffee
 
-``` coffee-script
+```coffee-script
 console.log "yeah coffee-script"
 
 module.exports = 42
@@ -27,7 +26,7 @@ module.exports = 42
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -118,7 +117,7 @@ module.exports = 42
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\

@@ -8,29 +8,29 @@ You can use
 
 You can see the output files:
 
-* `commons.js` contains:
-  * module `common.js` which is used in both pages
-* `pageA.js` contains: (`pageB.js` is similar)
-  * the module system
-  * chunk loading logic
-  * the entry point `pageA.js`
-  * it would contain any other module that is only used by `pageA`
-* `0.chunk.js` is an additional chunk which is used by both pages. It contains:
-  * module `shared.js`
+- `commons.js` contains:
+  - module `common.js` which is used in both pages
+- `pageA.js` contains: (`pageB.js` is similar)
+  - the module system
+  - chunk loading logic
+  - the entry point `pageA.js`
+  - it would contain any other module that is only used by `pageA`
+- `0.chunk.js` is an additional chunk which is used by both pages. It contains:
+  - module `shared.js`
 
 You can also see the info that is printed to console. It shows among others:
 
-* the generated files
-* the chunks with file, name and id
-  * see lines starting with `chunk`
-* the modules that are in the chunks
-* the reasons why the modules are included
-* the reasons why a chunk is created
-  * see lines starting with `>`
+- the generated files
+- the chunks with file, name and id
+  - see lines starting with `chunk`
+- the modules that are in the chunks
+- the reasons why the modules are included
+- the reasons why a chunk is created
+  - see lines starting with `>`
 
 # pageA.js
 
-``` javascript
+```javascript
 var common = require("./common");
 require(["./shared"], function(shared) {
 	shared("This is page A");
@@ -39,7 +39,7 @@ require(["./shared"], function(shared) {
 
 # pageB.js
 
-``` javascript
+```javascript
 var common = require("./common");
 require.ensure(["./shared"], function(require) {
 	var shared = require("./shared");
@@ -49,7 +49,7 @@ require.ensure(["./shared"], function(require) {
 
 # webpack.config.js
 
-``` javascript
+```javascript
 module.exports = {
 	// mode: "development || "production",
 	entry: {
@@ -74,7 +74,7 @@ module.exports = {
 
 # pageA.html
 
-``` html
+```html
 <html>
 	<head></head>
 	<body>
@@ -86,7 +86,7 @@ module.exports = {
 
 # dist/commons.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
 /* 0 */
 /*!*******************!*\
@@ -105,7 +105,7 @@ module.exports = "Common";
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -330,7 +330,7 @@ module.exports = "Common";
 
 </details>
 
-``` javascript
+```javascript
 /******/ ({
 
 /***/ 2:
@@ -352,7 +352,7 @@ __webpack_require__.e(/*! AMD require */ 1).then(function() { var __WEBPACK_AMD_
 
 # dist/pageB.js
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -595,7 +595,7 @@ __webpack_require__.e(/*! require.ensure */ 1).then((function(require) {
 
 # dist/1.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */,
 /* 1 */

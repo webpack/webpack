@@ -4,17 +4,16 @@ The `webpack.config.js` exports an array of all config combinations that should 
 
 The I18nPlugin replaces every occurrence of the i18n function `__(...)` with a const string. i. e. `__("Hello World")` with `"Hello World"` resp. `"Hallo Welt"`.
 
-
 # example.js
 
-``` javascript
+```javascript
 console.log(__("Hello World"));
 console.log(__("Missing Text"));
 ```
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var I18nPlugin = require("i18n-webpack-plugin");
 var languages = {
@@ -37,7 +36,7 @@ module.exports = Object.keys(languages).map(function(language) {
 
 # de.json
 
-``` javascript
+```javascript
 {
 	"Hello World": "Hallo Welt"
 }
@@ -47,7 +46,7 @@ module.exports = Object.keys(languages).map(function(language) {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -138,7 +137,7 @@ module.exports = Object.keys(languages).map(function(language) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -156,7 +155,7 @@ console.log("Missing Text");
 
 # dist/en.output.js
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};

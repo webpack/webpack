@@ -1,6 +1,6 @@
 # pageA.js
 
-``` javascript
+```javascript
 require(["./common"], function(common) {
 	common(require("./a"));
 });
@@ -8,7 +8,7 @@ require(["./common"], function(common) {
 
 # pageB.js
 
-``` javascript
+```javascript
 require(["./common"], function(common) {
 	common(require("./b"));
 });
@@ -16,7 +16,7 @@ require(["./common"], function(common) {
 
 # pageC.js
 
-``` javascript
+```javascript
 require(["./a"], function(a) {
 	console.log(a + require("./b"));
 });
@@ -28,7 +28,7 @@ a big file...
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var AggressiveMergingPlugin = require("../../lib/optimize/AggressiveMergingPlugin");
 module.exports = {
