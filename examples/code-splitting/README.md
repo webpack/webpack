@@ -1,32 +1,32 @@
 This example illustrates a very simple case of Code Splitting with `require.ensure`.
 
-* `a` and `b` are required normally via CommonJS
-* `c` is depended through the `require.ensure` array.
-  * This means: make it available, but don't execute it
-  * webpack will load it on demand
-* `b` and `d` are required via CommonJs in the `require.ensure` callback
-  * webpack detects that these are in the on-demand-callback and
-  * will load them on demand
-  * webpacks optimizer can optimize `b` away
-    * as it is already available through the parent chunks
+- `a` and `b` are required normally via CommonJS
+- `c` is depended through the `require.ensure` array.
+  - This means: make it available, but don't execute it
+  - webpack will load it on demand
+- `b` and `d` are required via CommonJs in the `require.ensure` callback
+  - webpack detects that these are in the on-demand-callback and
+  - will load them on demand
+  - webpacks optimizer can optimize `b` away
+    - as it is already available through the parent chunks
 
 You can see that webpack outputs two files/chunks:
 
-* `output.js` is the entry chunk and contains
-  * the module system
-  * chunk loading logic
-  * the entry point `example.js`
-  * module `a`
-  * module `b`
-* `1.output.js` is an additional chunk (on demand loaded) and contains
-  * module `c`
-  * module `d`
+- `output.js` is the entry chunk and contains
+  - the module system
+  - chunk loading logic
+  - the entry point `example.js`
+  - module `a`
+  - module `b`
+- `1.output.js` is an additional chunk (on demand loaded) and contains
+  - module `c`
+  - module `d`
 
 You can see that chunks are loaded via JSONP. The additional chunks are pretty small and minimize well.
 
 # example.js
 
-``` javascript
+```javascript
 var a = require("a");
 var b = require("b");
 require.ensure(["c"], function(require) {
@@ -35,12 +35,11 @@ require.ensure(["c"], function(require) {
 });
 ```
 
-
 # dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -243,7 +242,7 @@ require.ensure(["c"], function(require) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!***************************!*\
@@ -285,7 +284,7 @@ __webpack_require__.e(/*! require.ensure */ 1).then((function(require) {
 
 # dist/1.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */,
 /* 1 */,
@@ -315,7 +314,7 @@ __webpack_require__.e(/*! require.ensure */ 1).then((function(require) {
 
 Minimized
 
-``` javascript
+```javascript
 (window.webpackJsonp=window.webpackJsonp||[]).push([[1],[,,,function(n,o){},function(n,o){}]]);
 ```
 
@@ -325,7 +324,7 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
       Asset       Size  Chunks             Chunk Names
 1.output.js  490 bytes       1  [emitted]  
   output.js   8.69 KiB       0  [emitted]  main
@@ -344,7 +343,7 @@ chunk    {1} 1.output.js 22 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
       Asset      Size  Chunks             Chunk Names
 1.output.js  95 bytes       1  [emitted]  
   output.js  2.05 KiB       0  [emitted]  main

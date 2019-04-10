@@ -14,7 +14,7 @@ Note: When your library has dependencies that should not be included in the comp
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 module.exports = {
 	// mode: "development || "production",
@@ -33,7 +33,7 @@ module.exports = {
 
 # dist/MyLibrary.alpha.js
 
-``` javascript
+```javascript
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -156,7 +156,7 @@ module.exports = "alpha";
 
 # dist/MyLibrary.beta.js
 
-``` javascript
+```javascript
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -275,7 +275,7 @@ module.exports = "beta";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
              Asset      Size  Chunks             Chunk Names
 MyLibrary.alpha.js  4.12 KiB       0  [emitted]  alpha
  MyLibrary.beta.js  4.12 KiB       1  [emitted]  beta
@@ -295,7 +295,7 @@ chunk    {1} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
              Asset      Size  Chunks             Chunk Names
 MyLibrary.alpha.js  1.19 KiB       0  [emitted]  alpha
  MyLibrary.beta.js  1.19 KiB       1  [emitted]  beta

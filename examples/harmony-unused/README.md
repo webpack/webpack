@@ -1,4 +1,4 @@
-This example demonstrates how webpack tracks the using of ES6 imports and exports. Only used exports are emitted to the resulting bundle. The minimizing step then removes the declarations because they are unused. 
+This example demonstrates how webpack tracks the using of ES6 imports and exports. Only used exports are emitted to the resulting bundle. The minimizing step then removes the declarations because they are unused.
 
 Excluding unused exports from bundles is known as "[tree-shaking](http://www.2ality.com/2015/12/webpack-tree-shaking.html)".
 
@@ -8,7 +8,7 @@ In addition to that, `library.js` simulates an entry point to a big library. `li
 
 # example.js
 
-``` javascript
+```javascript
 import { add } from './math';
 import * as library from "./library";
 
@@ -18,7 +18,7 @@ library.reexportedMultiply(1, 2);
 
 # math.js
 
-``` javascript
+```javascript
 export function add() {
 	var sum = 0, i = 0, args = arguments, l = args.length;
 	while (i < l) {
@@ -42,7 +42,7 @@ export function list() {
 
 # library.js
 
-``` javascript
+```javascript
 export { a, b, c } from "./abc";
 export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 ```
@@ -51,7 +51,7 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -142,7 +142,7 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -245,7 +245,7 @@ function c() { console.log("c"); }
 
 # dist/output.js
 
-``` javascript
+```javascript
 !function(t){var e={};function n(r){if(e[r])return e[r].exports;var u=e[r]={i:r,l:!1,exports:{}};return t[r].call(u.exports,u,u.exports,n),u.l=!0,u.exports}n.m=t,n.c=e,n.d=function(t,e,r){n.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:r})},n.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},n.t=function(t,e){if(1&e&&(t=n(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var u in t)n.d(r,u,function(e){return t[e]}.bind(null,u));return r},n.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(e,"a",e),e},n.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},n.p="dist/",n(n.s=3)}([function(t,e,n){"use strict";function r(){for(var t=0,e=0,n=arguments,r=n.length;e<r;)t+=n[e++];return t}function u(){for(var t=1,e=0,n=arguments,r=n.length;e<r;)t*=n[e++];return t}n.d(e,"a",function(){return r}),n.d(e,"b",function(){return u})},function(t,e,n){"use strict"},function(t,e,n){"use strict";n(1);var r=n(0);n.d(e,"a",function(){return r.b})},function(t,e,n){"use strict";n.r(e);var r=n(0),u=n(2);Object(r.a)(1,2),u.a(1,2)}]);
 ```
 
@@ -255,7 +255,7 @@ function c() { console.log("c"); }
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
     Asset      Size  Chunks             Chunk Names
 output.js  6.87 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -287,7 +287,7 @@ chunk    {0} output.js (main) 698 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
     Asset      Size  Chunks             Chunk Names
 output.js  1.32 KiB       0  [emitted]  main
 Entrypoint main = output.js

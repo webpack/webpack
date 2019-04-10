@@ -1,6 +1,6 @@
 # pageA.js
 
-``` javascript
+```javascript
 require(["./common"], function(common) {
 	common(require("./a"));
 });
@@ -8,7 +8,7 @@ require(["./common"], function(common) {
 
 # pageB.js
 
-``` javascript
+```javascript
 require(["./common"], function(common) {
 	common(require("./b"));
 });
@@ -16,7 +16,7 @@ require(["./common"], function(common) {
 
 # pageC.js
 
-``` javascript
+```javascript
 require(["./a"], function(a) {
 	console.log(a + require("./b"));
 });
@@ -28,7 +28,7 @@ a big file...
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var AggressiveMergingPlugin = require("../../lib/optimize/AggressiveMergingPlugin");
 module.exports = {
@@ -60,7 +60,7 @@ module.exports = {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
           Asset       Size  Chunks             Chunk Names
      0.chunk.js   5.96 KiB       0  [emitted]  
      4.chunk.js  405 bytes       4  [emitted]  
@@ -108,7 +108,7 @@ chunk    {4} 4.chunk.js 42 bytes <{3}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
           Asset       Size  Chunks             Chunk Names
      0.chunk.js  173 bytes    0, 4  [emitted]  
      4.chunk.js  118 bytes       4  [emitted]  

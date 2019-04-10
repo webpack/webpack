@@ -4,7 +4,7 @@ The previously built vendor dll is used. The DllReferencePlugin reads the conten
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../../");
 
@@ -27,7 +27,7 @@ module.exports = {
 
 # example-app.js
 
-``` javascript
+```javascript
 import { square } from "example-vendor";
 
 console.log(square(7));
@@ -36,7 +36,7 @@ console.log(new square(7));
 
 # example.html
 
-``` html
+```html
 <html>
 	<head></head>
 	<body>
@@ -50,7 +50,7 @@ console.log(new square(7));
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -141,7 +141,7 @@ console.log(new square(7));
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!************************!*\
@@ -162,22 +162,22 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__["square"](7));
 /***/ }),
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_04d3460d8b3b7c5ce19f ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_a132d30959ef28c3f004 ***!
   \******************************************************************************************************/
 /*! exports provided: square */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_04d3460d8b3b7c5ce19f */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_a132d30959ef28c3f004 */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_04d3460d8b3b7c5ce19f" ***!
+  !*** external "vendor_lib_a132d30959ef28c3f004" ***!
   \**************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = vendor_lib_04d3460d8b3b7c5ce19f;
+module.exports = vendor_lib_a132d30959ef28c3f004;
 
 /***/ })
 /******/ ]);
@@ -189,7 +189,7 @@ module.exports = vendor_lib_04d3460d8b3b7c5ce19f;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
  Asset      Size  Chunks             Chunk Names
 app.js  4.86 KiB       0  [emitted]  main
 Entrypoint main = app.js
@@ -198,26 +198,26 @@ chunk    {0} app.js (main) 178 bytes [entry] [rendered]
  [0] ./example-app.js 94 bytes {0} [built]
      [no exports]
      single entry ./example-app  main
- [1] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_04d3460d8b3b7c5ce19f 42 bytes {0} [built]
+ [1] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_a132d30959ef28c3f004 42 bytes {0} [built]
      [exports: square]
      harmony side effect evaluation example-vendor [0] ./example-app.js 1:0-40
      harmony import specifier example-vendor [0] ./example-app.js 3:12-18
      harmony import specifier example-vendor [0] ./example-app.js 4:16-22
- [2] external "vendor_lib_04d3460d8b3b7c5ce19f" 42 bytes {0} [built]
-     delegated source dll-reference vendor_lib_04d3460d8b3b7c5ce19f [1] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_04d3460d8b3b7c5ce19f
+ [2] external "vendor_lib_a132d30959ef28c3f004" 42 bytes {0} [built]
+     delegated source dll-reference vendor_lib_a132d30959ef28c3f004 [1] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_a132d30959ef28c3f004
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
  Asset      Size  Chunks             Chunk Names
 app.js  1.09 KiB       0  [emitted]  main
 Entrypoint main = app.js
 chunk    {0} app.js (main) 178 bytes [entry] [rendered]
     > ./example-app main
- [0] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_04d3460d8b3b7c5ce19f 42 bytes {0} [built]
+ [0] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_a132d30959ef28c3f004 42 bytes {0} [built]
      [exports: square]
      harmony side effect evaluation example-vendor [1] ./example-app.js 1:0-40
      harmony import specifier example-vendor [1] ./example-app.js 3:12-18
@@ -225,8 +225,8 @@ chunk    {0} app.js (main) 178 bytes [entry] [rendered]
  [1] ./example-app.js 94 bytes {0} [built]
      [no exports]
      single entry ./example-app  main
- [2] external "vendor_lib_04d3460d8b3b7c5ce19f" 42 bytes {0} [built]
-     delegated source dll-reference vendor_lib_04d3460d8b3b7c5ce19f [0] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_04d3460d8b3b7c5ce19f
+ [2] external "vendor_lib_a132d30959ef28c3f004" 42 bytes {0} [built]
+     delegated source dll-reference vendor_lib_a132d30959ef28c3f004 [0] delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_a132d30959ef28c3f004
 ```
 
 <!-- @TODO:

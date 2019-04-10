@@ -1,7 +1,6 @@
-
 # example.js
 
-``` javascript
+```javascript
 // harmony module
 
 // import from CommonJs module
@@ -22,7 +21,7 @@ import "./example2";
 
 # fs.js
 
-``` javascript
+```javascript
 // an example CommonJs module
 // content is omitted for brevity
 exports.readFile = function() {};
@@ -34,7 +33,7 @@ exports.readFile = function() {};
 
 # reexport-commonjs.js
 
-``` javascript
+```javascript
 // reexport a CommonJs module
 export * from "./fs";
 // Note that the default export doesn't reexport via export *
@@ -46,7 +45,7 @@ export * from "./fs";
 
 # example2.js
 
-``` javascript
+```javascript
 // CommonJs module
 
 // require a harmony module
@@ -58,7 +57,7 @@ var namedExport = module.named;
 
 # harmony.js
 
-``` javascript
+```javascript
 // just some exports
 export default "default";
 export var named = "named";
@@ -68,7 +67,7 @@ export var named = "named";
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -159,7 +158,7 @@ export var named = "named";
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -275,7 +274,7 @@ var named = "named";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
     Asset      Size  Chunks             Chunk Names
 output.js  7.05 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -307,7 +306,7 @@ chunk    {0} output.js (main) 1.13 KiB [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
     Asset      Size  Chunks             Chunk Names
 output.js  1.35 KiB       0  [emitted]  main
 Entrypoint main = output.js

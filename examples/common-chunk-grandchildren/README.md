@@ -1,28 +1,27 @@
 This example illustrates how common modules from deep ancestors of an entry point can be split into a separate common chunk
 
-* `pageA` and `pageB` are dynamically required
-* `pageC` and `pageA` both require the `reusableComponent`
-* `pageB` dynamically requires `PageC`
+- `pageA` and `pageB` are dynamically required
+- `pageC` and `pageA` both require the `reusableComponent`
+- `pageB` dynamically requires `PageC`
 
 You can see that webpack outputs five files/chunks:
 
-* `output.js` is the entry chunk and contains
-  * the module system
-  * chunk loading logic
-  * the entry point `example.js`
-* `0.output.js` is an additional chunk
-  * module `reusableComponent`
-* `1.output.js` is an additional chunk
-  * module `pageB`
-* `2.output.js` is an additional chunk
-  * module `pageA`
-* `3.output.js` is an additional chunk
-  * module `pageC`
-
+- `output.js` is the entry chunk and contains
+  - the module system
+  - chunk loading logic
+  - the entry point `example.js`
+- `0.output.js` is an additional chunk
+  - module `reusableComponent`
+- `1.output.js` is an additional chunk
+  - module `pageB`
+- `2.output.js` is an additional chunk
+  - module `pageA`
+- `3.output.js` is an additional chunk
+  - module `pageC`
 
 # example.js
 
-``` javascript
+```javascript
 var main = function() {
 	console.log("Main class");
 	require.ensure([], () => {
@@ -40,7 +39,7 @@ main();
 
 # pageA.js
 
-``` javascript
+```javascript
 var reusableComponent = require("./reusableComponent");
 
 module.exports = function() {
@@ -51,7 +50,7 @@ module.exports = function() {
 
 # pageB.js
 
-``` javascript
+```javascript
 module.exports = function() {
 	console.log("Page B");
 	require.ensure([], ()=>{
@@ -63,7 +62,7 @@ module.exports = function() {
 
 # pageC.js
 
-``` javascript
+```javascript
 var reusableComponent = require("./reusableComponent");
 
 module.exports = function() {
@@ -74,7 +73,7 @@ module.exports = function() {
 
 # reusableComponent.js
 
-``` javascript
+```javascript
 module.exports = function() {
 	console.log("reusable Component");
 };
@@ -82,7 +81,7 @@ module.exports = function() {
 
 # webpack.config.js
 
-``` javascript
+```javascript
 "use strict";
 const path = require("path");
 
@@ -108,7 +107,7 @@ module.exports = {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -311,7 +310,7 @@ module.exports = {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!**************************!*\
@@ -352,7 +351,7 @@ main();
 
 # dist/0.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],{
 
 /***/ 4:
@@ -374,7 +373,7 @@ module.exports = function() {
 
 # dist/2.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
 
 /***/ 2:
@@ -399,7 +398,7 @@ module.exports = function() {
 
 # dist/3.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
 
 /***/ 3:
@@ -425,7 +424,7 @@ module.exports = function() {
 
 # dist/4.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[4],{
 
 /***/ 5:
@@ -454,7 +453,7 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
       Asset       Size  Chunks             Chunk Names
 0.output.js  337 bytes       0  [emitted]  
 2.output.js  408 bytes       2  [emitted]  
@@ -492,7 +491,7 @@ chunk    {4} 4.output.js 136 bytes <{3}> ={0}= [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
       Asset       Size  Chunks             Chunk Names
 0.output.js  133 bytes       0  [emitted]  
 2.output.js  138 bytes       2  [emitted]  

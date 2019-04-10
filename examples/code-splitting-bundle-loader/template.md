@@ -4,27 +4,26 @@ The bundle loader is used to create a wrapper module for `file.js` that loads th
 
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # file.js
 
-``` javascript
-{{file.js}}
+```javascript
+_{{file.js}}_
 ```
-
 
 # dist/output.js
 
-``` javascript
-{{dist/output.js}}
+```javascript
+_{{dist/output.js}}_
 ```
 
 # dist/1.output.js
 
-``` javascript
-{{dist/1.output.js}}
+```javascript
+_{{dist/1.output.js}}_
 ```
 
 # Info
@@ -32,11 +31,11 @@ The bundle loader is used to create a wrapper module for `file.js` that loads th
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

@@ -1,8 +1,6 @@
-
-
 # example.js
 
-``` javascript
+```javascript
 require(["./a", "./b", "./c"], function(a, b, c) {});
 
 require.ensure(["./a"], function(require) {
@@ -23,7 +21,7 @@ require.ensure(["./a", "./e"], function(require) {
 
 # webpack.config.js
 
-``` javascript
+```javascript
 module.exports = {
 	// mode: "development || "production",
 	optimization: {
@@ -39,7 +37,7 @@ module.exports = {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -242,7 +240,7 @@ module.exports = {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ({
 
 /***/ 2:
@@ -281,7 +279,7 @@ Promise.all(/*! require.ensure */[__webpack_require__.e(1), __webpack_require__.
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
       Asset       Size  Chunks             Chunk Names
 0.output.js  247 bytes       0  [emitted]  
 1.output.js  238 bytes       1  [emitted]  
@@ -341,7 +339,7 @@ chunk    {7} 7.output.js 21 bytes <{1}> <{5}> ={0}= [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
       Asset      Size  Chunks             Chunk Names
 0.output.js  90 bytes       0  [emitted]  
 1.output.js  89 bytes       1  [emitted]  

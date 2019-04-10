@@ -9,7 +9,7 @@ In the simple case we just need to specify a string (`"add"`). Then it's resolve
 In the complex case we specify different values for each environment:
 
 | environment        | config value             | resolved as                  |
-|--------------------|--------------------------|------------------------------|
+| ------------------ | ------------------------ | ---------------------------- |
 | CommonJs (strict)  | `["./math", "subtract"]` | `require("./math").subtract` |
 | CommonJs (node.js) | `"./subtract"`           | `require("./subtract")`      |
 | AMD                | `"subtract"`             | `define(["subtract"], ...)`  |
@@ -17,7 +17,7 @@ In the complex case we specify different values for each environment:
 
 # example.js
 
-``` javascript
+```javascript
 var add = require("add");
 var subtract = require("subtract");
 
@@ -26,7 +26,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 
 # webpack.config.js
 
-``` javascript
+```javascript
 module.exports = {
 	// mode: "development || "production",
 	output: {
@@ -48,7 +48,7 @@ module.exports = {
 
 # dist/output.js
 
-``` javascript
+```javascript
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory(require("add"), require("./subtract"));
@@ -198,7 +198,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
     Asset      Size  Chunks             Chunk Names
 output.js  5.13 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -216,7 +216,7 @@ chunk    {0} output.js (main) 194 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
     Asset     Size  Chunks             Chunk Names
 output.js  1.4 KiB       0  [emitted]  main
 Entrypoint main = output.js

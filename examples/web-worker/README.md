@@ -1,7 +1,6 @@
-
 # example.js
 
-``` javascript
+```javascript
 var Worker = require("worker-loader?name=hash.worker.js!./worker");
 var worker = new Worker;
 worker.postMessage("b");
@@ -12,7 +11,7 @@ worker.onmessage = function(event) {
 
 # worker.js
 
-``` javascript
+```javascript
 onmessage = function(event) {
 	var template = event.data;
 	require(["../require.context/templates/" + event.data], function(tmpl) {
@@ -25,7 +24,7 @@ onmessage = function(event) {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -116,7 +115,7 @@ onmessage = function(event) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -151,7 +150,7 @@ module.exports = function() {
 
 # dist/[hash].worker.js
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	window["webpackChunk"] = function webpackChunkCallback(chunkIds, moreModules) {
 /******/ 		for(var moduleId in moreModules) {
@@ -286,7 +285,7 @@ onmessage = function(event) {
 
 # dist/1.[hash].worker.js
 
-``` javascript
+```javascript
 window["webpackChunk"]([1],[
 /* 0 */,
 /* 1 */
@@ -311,13 +310,12 @@ function webpackContext(req) {
 	return __webpack_require__(id);
 }
 function webpackContextResolve(req) {
-	var id = map[req];
-	if(!(id + 1)) { // check for number or string
+	if(!__webpack_require__.o(map, req)) {
 		var e = new Error("Cannot find module '" + req + "'");
 		e.code = 'MODULE_NOT_FOUND';
 		throw e;
 	}
-	return id;
+	return map[req];
 }
 webpackContext.keys = function webpackContextKeys() {
 	return Object.keys(map);
@@ -372,9 +370,9 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
            Asset      Size  Chunks             Chunk Names
-1.hash.worker.js  1.79 KiB          [emitted]  
+1.hash.worker.js  1.77 KiB          [emitted]  
   hash.worker.js  4.98 KiB          [emitted]  
        output.js  4.42 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -386,7 +384,7 @@ chunk    {0} output.js (main) 326 bytes [entry] [rendered]
      cjs require worker-loader?name=hash.worker.js!./worker [0] ./example.js 1:13-66
 Child worker:
                Asset      Size  Chunks             Chunk Names
-    1.hash.worker.js  1.79 KiB       1  [emitted]  
+    1.hash.worker.js  1.77 KiB       1  [emitted]  
       hash.worker.js  4.98 KiB       0  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} hash.worker.js (main) 162 bytes >{1}< [entry] [rendered]
@@ -412,9 +410,9 @@ Child worker:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
            Asset       Size  Chunks             Chunk Names
-1.hash.worker.js  593 bytes          [emitted]  
+1.hash.worker.js  588 bytes          [emitted]  
   hash.worker.js   1.27 KiB          [emitted]  
        output.js   1.06 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -426,7 +424,7 @@ chunk    {0} output.js (main) 326 bytes [entry] [rendered]
      cjs require worker-loader?name=hash.worker.js!./worker [0] ./example.js 1:13-66
 Child worker:
                Asset       Size  Chunks             Chunk Names
-    1.hash.worker.js  593 bytes       1  [emitted]  
+    1.hash.worker.js  588 bytes       1  [emitted]  
       hash.worker.js   1.27 KiB       0  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} hash.worker.js (main) 162 bytes >{1}< [entry] [rendered]

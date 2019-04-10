@@ -4,12 +4,12 @@ A very simple solution to this problem is to create another chunk which contains
 
 The configuration required for this is:
 
-* use `[chunkhash]` in `output.filename` (Note that this example doesn't do this because of the example generator infrastructure, but you should)
-* use `[chunkhash]` in `output.chunkFilename` (Note that this example doesn't do this because of the example generator infrastructure, but you should)
+- use `[chunkhash]` in `output.filename` (Note that this example doesn't do this because of the example generator infrastructure, but you should)
+- use `[chunkhash]` in `output.chunkFilename` (Note that this example doesn't do this because of the example generator infrastructure, but you should)
 
 # example.js
 
-``` javascript
+```javascript
 // some module
 import("./async1");
 import("./async2");
@@ -17,7 +17,7 @@ import("./async2");
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 module.exports = {
 	// mode: "development || "production",
@@ -37,20 +37,17 @@ module.exports = {
 
 # index.html
 
-``` html
+```html
 <html>
-<head>
-</head>
-<body>
+	<head> </head>
+	<body>
+		<!-- inlined minimized file "runtime~main.[chunkhash].js" -->
+		<script>
+			!function(e){function r(r){for(var n,i,a=r[0],c=r[1],l=r[2],p=0,s=[];p<a.length;p++)i=a[p],o[i]&&s.push(o[i][0]),o[i]=0;for(n in c)Object.prototype.hasOwnProperty.call(c,n)&&(e[n]=c[n]);for(f&&f(r);s.length;)s.shift()();return u.push.apply(u,l||[]),t()}function t(){for(var e,r=0;r<u.length;r++){for(var t=u[r],n=!0,a=1;a<t.length;a++){var c=t[a];0!==o[c]&&(n=!1)}n&&(u.splice(r--,1),e=i(i.s=t[0]))}return e}var n={},o={1:0},u=[];function i(r){if(n[r])return n[r].exports;var t=n[r]={i:r,l:!1,exports:{}};return e[r].call(t.exports,t,t.exports,i),t.l=!0,t.exports}i.e=function(e){var r=[],t=o[e];if(0!==t)if(t)r.push(t[2]);else{var n=new Promise(function(r,n){t=o[e]=[r,n]});r.push(t[2]=n);var u,a=document.createElement("script");a.charset="utf-8",a.timeout=120,i.nc&&a.setAttribute("nonce",i.nc),a.src=function(e){return i.p+""+({}[e]||e)+".[chunkhash].js"}(e),u=function(r){a.onerror=a.onload=null,clearTimeout(c);var t=o[e];if(0!==t){if(t){var n=r&&("load"===r.type?"missing":r.type),u=r&&r.target&&r.target.src,i=new Error("Loading chunk "+e+" failed.\n("+n+": "+u+")");i.type=n,i.request=u,t[1](i)}o[e]=void 0}};var c=setTimeout(function(){u({type:"timeout",target:a})},12e4);a.onerror=a.onload=u,document.head.appendChild(a)}return Promise.all(r)},i.m=e,i.c=n,i.d=function(e,r,t){i.o(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:t})},i.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},i.t=function(e,r){if(1&r&&(e=i(e)),8&r)return e;if(4&r&&"object"==typeof e&&e&&e.__esModule)return e;var t=Object.create(null);if(i.r(t),Object.defineProperty(t,"default",{enumerable:!0,value:e}),2&r&&"string"!=typeof e)for(var n in e)i.d(t,n,function(r){return e[r]}.bind(null,n));return t},i.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return i.d(r,"a",r),r},i.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},i.p="dist/",i.oe=function(e){throw console.error(e),e};var a=window.webpackJsonp=window.webpackJsonp||[],c=a.push.bind(a);a.push=r,a=a.slice();for(var l=0;l<a.length;l++)r(a[l]);var f=c;t()}([]);
+		</script>
 
-<!-- inlined minimized file "runtime~main.[chunkhash].js" -->
-<script>
-!function(e){function r(r){for(var n,i,a=r[0],c=r[1],l=r[2],p=0,s=[];p<a.length;p++)i=a[p],o[i]&&s.push(o[i][0]),o[i]=0;for(n in c)Object.prototype.hasOwnProperty.call(c,n)&&(e[n]=c[n]);for(f&&f(r);s.length;)s.shift()();return u.push.apply(u,l||[]),t()}function t(){for(var e,r=0;r<u.length;r++){for(var t=u[r],n=!0,a=1;a<t.length;a++){var c=t[a];0!==o[c]&&(n=!1)}n&&(u.splice(r--,1),e=i(i.s=t[0]))}return e}var n={},o={1:0},u=[];function i(r){if(n[r])return n[r].exports;var t=n[r]={i:r,l:!1,exports:{}};return e[r].call(t.exports,t,t.exports,i),t.l=!0,t.exports}i.e=function(e){var r=[],t=o[e];if(0!==t)if(t)r.push(t[2]);else{var n=new Promise(function(r,n){t=o[e]=[r,n]});r.push(t[2]=n);var u,a=document.createElement("script");a.charset="utf-8",a.timeout=120,i.nc&&a.setAttribute("nonce",i.nc),a.src=function(e){return i.p+""+({}[e]||e)+".[chunkhash].js"}(e),u=function(r){a.onerror=a.onload=null,clearTimeout(c);var t=o[e];if(0!==t){if(t){var n=r&&("load"===r.type?"missing":r.type),u=r&&r.target&&r.target.src,i=new Error("Loading chunk "+e+" failed.\n("+n+": "+u+")");i.type=n,i.request=u,t[1](i)}o[e]=void 0}};var c=setTimeout(function(){u({type:"timeout",target:a})},12e4);a.onerror=a.onload=u,document.head.appendChild(a)}return Promise.all(r)},i.m=e,i.c=n,i.d=function(e,r,t){i.o(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:t})},i.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},i.t=function(e,r){if(1&r&&(e=i(e)),8&r)return e;if(4&r&&"object"==typeof e&&e&&e.__esModule)return e;var t=Object.create(null);if(i.r(t),Object.defineProperty(t,"default",{enumerable:!0,value:e}),2&r&&"string"!=typeof e)for(var n in e)i.d(t,n,function(r){return e[r]}.bind(null,n));return t},i.n=function(e){var r=e&&e.__esModule?function(){return e.default}:function(){return e};return i.d(r,"a",r),r},i.o=function(e,r){return Object.prototype.hasOwnProperty.call(e,r)},i.p="dist/",i.oe=function(e){throw console.error(e),e};var a=window.webpackJsonp=window.webpackJsonp||[],c=a.push.bind(a);a.push=r,a=a.slice();for(var l=0;l<a.length;l++)r(a[l]);var f=c;t()}([]);
-</script>
-
-<script src="dist/main.[chunkhash].js"></script>
-
-</body>
+		<script src="dist/main.[chunkhash].js"></script>
+	</body>
 </html>
 ```
 
@@ -58,7 +55,7 @@ module.exports = {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -281,13 +278,13 @@ module.exports = {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([]);
 ```
 
 # dist/main.[chunkhash].js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */
 /*!********************!*\
@@ -311,7 +308,7 @@ __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.t.bind(null, /
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
                     Asset       Size  Chunks             Chunk Names
            2.[chunkhash].js  269 bytes       2  [emitted]  
            3.[chunkhash].js  263 bytes       3  [emitted]  
@@ -338,7 +335,7 @@ chunk    {3} 3.[chunkhash].js 28 bytes <{0}> <{1}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
                     Asset       Size  Chunks             Chunk Names
            2.[chunkhash].js   77 bytes       2  [emitted]  
            3.[chunkhash].js   78 bytes       3  [emitted]  

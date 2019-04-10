@@ -155,13 +155,12 @@ function webpackContext(req) {
 	return __webpack_require__(id);
 }
 function webpackContextResolve(req) {
-	var id = map[req];
-	if(!(id + 1)) { // check for number or string
+	if(!__webpack_require__.o(map, req)) {
 		var e = new Error("Cannot find module '" + req + "'");
 		e.code = 'MODULE_NOT_FOUND';
 		throw e;
 	}
-	return id;
+	return map[req];
 }
 webpackContext.keys = function webpackContextKeys() {
 	return Object.keys(map);
@@ -216,9 +215,9 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
     Asset      Size  Chunks             Chunk Names
-output.js  5.41 KiB       0  [emitted]  main
+output.js  5.39 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 603 bytes [entry] [rendered]
     > ./example.js main
@@ -241,9 +240,9 @@ chunk    {0} output.js (main) 603 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
     Asset      Size  Chunks             Chunk Names
-output.js  1.54 KiB       0  [emitted]  main
+output.js  1.53 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 603 bytes [entry] [rendered]
     > ./example.js main

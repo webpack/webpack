@@ -8,7 +8,7 @@ Providing dynamic expressions to `import` is possible. The same limits as with d
 
 # example.js
 
-``` javascript
+```javascript
 import a from "a";
 
 import("b").then(function(b) {
@@ -24,12 +24,11 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 });
 ```
 
-
 # dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -232,7 +231,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */,
 /* 1 */,
@@ -299,16 +298,16 @@ var map = {
 	]
 };
 function webpackAsyncContext(req) {
-	var ids = map[req];
-	if(!ids) {
+	if(!__webpack_require__.o(map, req)) {
 		return Promise.resolve().then(function() {
 			var e = new Error("Cannot find module '" + req + "'");
 			e.code = 'MODULE_NOT_FOUND';
 			throw e;
 		});
 	}
+
+	var ids = map[req], id = ids[0];
 	return __webpack_require__.e(ids[1]).then(function() {
-		var id = ids[0];
 		return __webpack_require__.t(id, 7);
 	});
 }
@@ -322,19 +321,18 @@ module.exports = webpackAsyncContext;
 /******/ ]);
 ```
 
-
 # Info
 
 ## Unoptimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
       Asset       Size  Chunks             Chunk Names
 0.output.js  275 bytes       0  [emitted]  
 1.output.js  284 bytes       1  [emitted]  
 3.output.js  270 bytes       3  [emitted]  
-  output.js    9.7 KiB       2  [emitted]  main
+  output.js   9.72 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes <{2}> [rendered]
     > ./1 [4] ./node_modules/c lazy ^\.\/.*$ namespace object ./1
@@ -361,12 +359,12 @@ chunk    {3} 3.output.js 11 bytes <{2}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
       Asset      Size  Chunks             Chunk Names
 0.output.js  76 bytes       0  [emitted]  
 1.output.js  77 bytes       1  [emitted]  
 3.output.js  78 bytes       3  [emitted]  
-  output.js  2.52 KiB       2  [emitted]  main
+  output.js  2.53 KiB       2  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 13 bytes <{2}> [rendered]
     > ./1 [4] ./node_modules/c lazy ^\.\/.*$ namespace object ./1

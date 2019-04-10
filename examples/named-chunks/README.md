@@ -1,6 +1,6 @@
 # example.js
 
-``` javascript
+```javascript
 var a = require("a");
 
 require.ensure(["b"], function(require) {
@@ -23,12 +23,11 @@ require.ensure(["b"], function(require) {
 });
 ```
 
-
 # dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -231,7 +230,7 @@ require.ensure(["b"], function(require) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */,
 /* 1 */,
@@ -280,7 +279,7 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 
 # dist/1.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */
 /*!***************************!*\
@@ -319,7 +318,7 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 
 # dist/2.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],[
 /* 0 */
 /*!***************************!*\
@@ -350,7 +349,7 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
       Asset       Size  Chunks             Chunk Names
 1.output.js  677 bytes       1  [emitted]  my own chunk
 2.output.js  463 bytes       2  [emitted]  
@@ -375,7 +374,7 @@ chunk    {2} 2.output.js 22 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
       Asset       Size  Chunks             Chunk Names
 1.output.js  112 bytes    1, 2  [emitted]  my own chunk
 2.output.js   92 bytes       2  [emitted]  

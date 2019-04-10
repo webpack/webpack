@@ -1,6 +1,6 @@
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 module.exports = {
 	// mode: "development || "production",
@@ -16,7 +16,7 @@ module.exports = {
 
 # dist/MyLibrary.umd.js
 
-``` javascript
+```javascript
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -152,7 +152,7 @@ function increment() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
            Asset      Size  Chunks             Chunk Names
 MyLibrary.umd.js  4.52 KiB       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
@@ -167,7 +167,7 @@ chunk    {0} MyLibrary.umd.js (main) 92 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
            Asset      Size  Chunks             Chunk Names
 MyLibrary.umd.js  1.28 KiB       0  [emitted]  main
 Entrypoint main = MyLibrary.umd.js

@@ -2,39 +2,38 @@ This example shows automatically created async commons chunks.
 
 The example entry references two chunks:
 
-* entry chunk
-  * async require -> chunk X
-  * async require -> chunk Y
-* chunk X
-  * module `a`
-  * module `b`
-  * module `c`
-* chunk Y
-  * module `a`
-  * module `b`
-  * module `d`
+- entry chunk
+  - async require -> chunk X
+  - async require -> chunk Y
+- chunk X
+  - module `a`
+  - module `b`
+  - module `c`
+- chunk Y
+  - module `a`
+  - module `b`
+  - module `d`
 
 These chunks share modules `a` and `b`. The optimization extract these into chunk Z:
 
 Note: Actually the optimization compare size of chunk Z to some minimum value, but this is disabled from this example. In practice there is no configuration needed for this.
 
-* entry chunk
-  * async require -> chunk X & Z
-  * async require -> chunk Y & Z
-* chunk X
-  * module `c`
-* chunk Y
-  * module `d`
-* chunk Z
-  * module `a`
-  * module `b`
+- entry chunk
+  - async require -> chunk X & Z
+  - async require -> chunk Y & Z
+- chunk X
+  - module `c`
+- chunk Y
+  - module `d`
+- chunk Z
+  - module `a`
+  - module `b`
 
 Pretty useful for a router in a SPA.
 
-
 # example.js
 
-``` javascript
+```javascript
 // a chunks with a, b, c
 require(["./a", "./b", "./c"]);
 
@@ -49,7 +48,7 @@ require.ensure(["./a"], function(require) {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -252,7 +251,7 @@ require.ensure(["./a"], function(require) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ({
 
 /***/ 2:
@@ -279,7 +278,7 @@ Promise.all(/*! require.ensure */[__webpack_require__.e(0), __webpack_require__.
 
 # dist/0.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[0],[
 /* 0 */
 /*!**************!*\
@@ -306,7 +305,7 @@ module.exports = "b";
 
 # dist/2.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
 
 /***/ 3:
@@ -325,7 +324,7 @@ module.exports = "c";
 
 # dist/3.output.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],{
 
 /***/ 4:
@@ -348,7 +347,7 @@ module.exports = "d";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
       Asset       Size  Chunks             Chunk Names
 0.output.js  405 bytes       0  [emitted]  
 2.output.js  241 bytes       2  [emitted]  
@@ -382,7 +381,7 @@ chunk    {3} 3.output.js 21 bytes <{1}> ={0}= [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
       Asset       Size  Chunks             Chunk Names
 0.output.js  118 bytes       0  [emitted]  
 2.output.js   91 bytes       2  [emitted]  

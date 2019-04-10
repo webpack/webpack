@@ -10,12 +10,12 @@ After being built by webpack, the output bundle contains `index.js` `a.js` `b.js
 
 Advantages:
 
-* Smaller bundles
-* Faster bootup
+- Smaller bundles
+- Faster bootup
 
 # example.js
 
-``` javascript
+```javascript
 import { a as a1, b as b1 } from "big-module";
 import { a as a2, b as b2 } from "big-module-with-flag";
 
@@ -29,7 +29,7 @@ console.log(
 
 # node_modules/big-module/package.json
 
-``` javascript
+```javascript
 {
   "name": "big-module"
 }
@@ -37,7 +37,7 @@ console.log(
 
 # node_modules/big-module-with-flag/package.json
 
-``` javascript
+```javascript
 {
   "name": "big-module-with-flag",
   "sideEffects": false
@@ -46,7 +46,7 @@ console.log(
 
 # node_modules/big-module(-with-flag)/index.js
 
-``` javascript
+```javascript
 export { a } from "./a";
 export { b } from "./b";
 export { c } from "./c";
@@ -56,7 +56,7 @@ export { c } from "./c";
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -147,7 +147,7 @@ export { c } from "./c";
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -278,7 +278,7 @@ const b = "b";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
     Asset      Size  Chunks             Chunk Names
 output.js  7.51 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -294,7 +294,7 @@ chunk    {0} output.js (main) 325 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
     Asset       Size  Chunks             Chunk Names
 output.js  985 bytes       0  [emitted]  main
 Entrypoint main = output.js

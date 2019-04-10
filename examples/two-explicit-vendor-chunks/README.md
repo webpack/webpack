@@ -1,6 +1,6 @@
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 module.exports = {
 	// mode: "development || "production",
@@ -38,7 +38,7 @@ module.exports = {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -129,7 +129,7 @@ module.exports = {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!***********************!*\
@@ -157,7 +157,7 @@ module.exports = "Vendor1";
 
 # dist/vendor2.js
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -284,7 +284,7 @@ __webpack_require__(/*! ./vendor1 */ 1);
 
 # dist/pageA.js
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -418,7 +418,7 @@ __webpack_require__(/*! ./vendor2 */ 3);
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
      Asset      Size  Chunks             Chunk Names
   pageA.js  4.26 KiB       2  [emitted]  pageA
   pageB.js  3.71 KiB       3  [emitted]  pageB
@@ -474,7 +474,7 @@ chunk    {4} pageC.js (pageC) 25 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
      Asset       Size  Chunks             Chunk Names
   pageA.js   1.02 KiB       0  [emitted]  pageA
   pageB.js  954 bytes       1  [emitted]  pageB

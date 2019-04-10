@@ -1,7 +1,7 @@
 # example.js
 
 ``` javascript
-{{example.js}}
+_{{example.js}}_
 ```
 
 # templates/
@@ -21,7 +21,7 @@ module.exports = function() {
 # dist/output.js
 
 ``` javascript
-{{dist/output.js}}
+_{{dist/output.js}}_
 ```
 
 # Info
@@ -29,13 +29,13 @@ module.exports = function() {
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```
 
 # Code Splitting

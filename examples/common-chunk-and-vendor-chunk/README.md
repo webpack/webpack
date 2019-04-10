@@ -33,7 +33,7 @@ With this bundle configuration, you would load your third party libraries, then 
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 
 module.exports = {
@@ -71,7 +71,7 @@ module.exports = {
 
 # dist/vendor.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],{
 
 /***/ 1:
@@ -101,7 +101,7 @@ module.exports = "vendor2";
 
 # dist/commons~pageA~pageB~pageC.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[2],{
 
 /***/ 3:
@@ -120,7 +120,7 @@ module.exports = "utility2";
 
 # dist/commons~pageB~pageC.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[4],{
 
 /***/ 6:
@@ -141,7 +141,7 @@ module.exports = "utility3";
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -300,7 +300,7 @@ module.exports = "utility3";
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!******************!*\
@@ -333,7 +333,7 @@ module.exports = "utility1";
 
 # dist/pageB.js
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -511,7 +511,7 @@ module.exports = "pageB";
 
 # dist/pageC.js
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -691,7 +691,7 @@ module.exports = "pageC";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
                        Asset       Size  Chunks             Chunk Names
 commons~pageA~pageB~pageC.js  269 bytes       2  [emitted]  commons~pageA~pageB~pageC
       commons~pageB~pageC.js  269 bytes       4  [emitted]  commons~pageB~pageC
@@ -740,7 +740,7 @@ chunk    {5} pageC.js (pageC) 102 bytes ={2}= ={4}= [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
                        Asset       Size  Chunks             Chunk Names
 commons~pageA~pageB~pageC.js   96 bytes       0  [emitted]  commons~pageA~pageB~pageC
       commons~pageB~pageC.js   97 bytes       1  [emitted]  commons~pageB~pageC

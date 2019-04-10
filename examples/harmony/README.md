@@ -1,7 +1,6 @@
-
 # example.js
 
-``` javascript
+```javascript
 import { increment as inc } from './increment';
 var a = 1;
 inc(a); // 2
@@ -14,7 +13,7 @@ import("./async-loaded").then(function(asyncLoaded) {
 
 # increment.js
 
-``` javascript
+```javascript
 import { add } from './math';
 export function increment(val) {
     return add(val, 1);
@@ -25,7 +24,7 @@ export function increment(val) {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// install a JSONP callback for chunk loading
 /******/ 	function webpackJsonpCallback(data) {
@@ -228,7 +227,7 @@ export function increment(val) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!**********************!*\
@@ -298,7 +297,7 @@ __webpack_require__.e(/*! import() */ 1).then(__webpack_require__.bind(null, /*!
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
       Asset       Size  Chunks             Chunk Names
 1.output.js  478 bytes       1  [emitted]  
   output.js   9.48 KiB       0  [emitted]  main
@@ -327,7 +326,7 @@ chunk    {1} 1.output.js 24 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
       Asset       Size  Chunks             Chunk Names
 1.output.js  144 bytes       1  [emitted]  
   output.js    2.1 KiB       0  [emitted]  main

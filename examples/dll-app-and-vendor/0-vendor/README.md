@@ -8,7 +8,7 @@ A manifest is created which includes mappings from module names to internal ids.
 
 ### webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../../");
 
@@ -32,7 +32,7 @@ module.exports = {
 
 # example-vendor
 
-``` javascript
+```javascript
 export function square(n) {
 	return n * n;
 }
@@ -40,8 +40,8 @@ export function square(n) {
 
 # dist/vendor.js
 
-``` javascript
-var vendor_lib_04d3460d8b3b7c5ce19f =
+```javascript
+var vendor_lib_a132d30959ef28c3f004 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -171,8 +171,8 @@ function square(n) {
 
 # dist/vendor-manifest.json
 
-``` javascript
-{"name":"vendor_lib_04d3460d8b3b7c5ce19f","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
+```javascript
+{"name":"vendor_lib_a132d30959ef28c3f004","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
 ```
 
 # Info
@@ -181,7 +181,7 @@ function square(n) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
     Asset      Size  Chunks             Chunk Names
 vendor.js  4.28 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
@@ -197,7 +197,7 @@ chunk    {0} vendor.js (main) 57 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
     Asset      Size  Chunks             Chunk Names
 vendor.js  1.06 KiB       0  [emitted]  main
 Entrypoint main = vendor.js
@@ -208,4 +208,3 @@ chunk    {0} vendor.js (main) 57 bytes [entry] [rendered]
       DllPlugin
      + 1 hidden module
 ```
-

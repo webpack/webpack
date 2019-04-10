@@ -1,7 +1,6 @@
-
 # example.js
 
-``` javascript
+```javascript
 if(ENV === "mobile") {
 	require("./mobile-stuff");
 }
@@ -10,7 +9,7 @@ console.log("Running " + ENV + " build");
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../");
 module.exports = [
@@ -50,7 +49,7 @@ module.exports = [
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -141,7 +140,7 @@ module.exports = [
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -159,7 +158,7 @@ console.log("Running " + "desktop" + " build");
 
 # dist/mobile.js
 
-``` javascript
+```javascript
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -279,7 +278,7 @@ console.log("Running " + "mobile" + " build");
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset   Size  Chunks             Chunk Names
@@ -306,7 +305,7 @@ Child desktop:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.0
+Version: webpack 4.29.6
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset       Size  Chunks             Chunk Names
