@@ -174,7 +174,6 @@ describe("ConfigTestCases", () => {
 
 									function _require(currentDirectory, module) {
 										if (Array.isArray(module) || /^\.\.?\//.test(module)) {
-											let fn;
 											let content;
 											let p;
 											if (Array.isArray(module)) {
@@ -189,45 +188,47 @@ describe("ConfigTestCases", () => {
 												p = path.join(currentDirectory, module);
 												content = fs.readFileSync(p, "utf-8");
 											}
+											const m = {
+												exports: {}
+											};
+											let runInNewContext = false;
+											const moduleScope = {
+												require: _require.bind(null, path.dirname(p)),
+												module: m,
+												exports: m.exports,
+												__dirname: path.dirname(p),
+												__filename: p,
+												it: _it,
+												beforeEach: _beforeEach,
+												afterEach: _afterEach,
+												expect,
+												jest,
+												_globalAssign: { expect },
+												nsObj: m => {
+													Object.defineProperty(m, Symbol.toStringTag, {
+														value: "Module"
+													});
+													return m;
+												}
+											};
 											if (
 												options.target === "web" ||
 												options.target === "webworker"
 											) {
-												fn = vm.runInNewContext(
-													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest, window) {" +
-														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
-														content +
-														"\n})",
-													globalContext,
-													p
-												);
-											} else {
-												fn = vm.runInThisContext(
-													"(function(require, module, exports, __dirname, __filename, it, beforeEach, afterEach, expect, jest) {" +
-														"global.expect = expect; " +
-														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
-														content +
-														"\n})",
-													p
-												);
+												moduleScope.window = globalContext;
+												runInNewContext = true;
 											}
-											const m = {
-												exports: {}
-											};
-											fn.call(
-												m.exports,
-												_require.bind(null, path.dirname(p)),
-												m,
-												m.exports,
-												path.dirname(p),
-												p,
-												_it,
-												_beforeEach,
-												_afterEach,
-												expect,
-												jest,
-												globalContext
-											);
+											if (testConfig.moduleScope) {
+												testConfig.moduleScope(moduleScope);
+											}
+											const args = Object.keys(moduleScope).join(", ");
+											if (!runInNewContext)
+												content = `Object.assign(global, _globalAssign); ${content}`;
+											const code = `(function({${args}}) {${content}\n})`;
+											const fn = runInNewContext
+												? vm.runInNewContext(code, globalContext, p)
+												: vm.runInThisContext(code, p);
+											fn.call(m.exports, moduleScope);
 											return m.exports;
 										} else if (
 											testConfig.modules &&
@@ -239,6 +240,7 @@ describe("ConfigTestCases", () => {
 									let filesCount = 0;
 
 									if (testConfig.noTests) return process.nextTick(done);
+									if (testConfig.beforeExecute) testConfig.beforeExecute();
 									for (let i = 0; i < optionsArr.length; i++) {
 										const bundlePath = testConfig.findBundle(i, optionsArr[i]);
 										if (bundlePath) {
@@ -256,9 +258,9 @@ describe("ConfigTestCases", () => {
 												"Should have found at least one bundle file per webpack config"
 											)
 										);
+									if (testConfig.afterExecute) testConfig.afterExecute();
 									if (getNumberOfTests() < filesCount)
 										return done(new Error("No tests exported by test case"));
-									if (testConfig.afterExecute) testConfig.afterExecute();
 									done();
 								});
 							})
