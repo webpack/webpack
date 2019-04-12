@@ -541,7 +541,7 @@ rules:
       last_action_age: 13w # three months
     actions:
       comment:
-        identifer: inactive-warning
+        identifier: inactive-warning
         message: |-
           **This issue had no activity for at least three months.**
 
@@ -565,7 +565,7 @@ rules:
     actions:
       close: true
       comment:
-        identifer: inactive-close
+        identifier: inactive-close
         message: |-
           Issue was closed because of inactivity.
 
