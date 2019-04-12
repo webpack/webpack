@@ -64,7 +64,7 @@
       "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap used only if 'moduleFilenameTemplate' would result in a conflict",
       "oneOf": [
         {
-          "description": "Custom function generating the identifer",
+          "description": "Custom function generating the identifier",
           "instanceof": "Function",
           "tsType": "Function"
         },
@@ -147,7 +147,7 @@
       "description": "Generator string or function to create identifiers of modules for the 'sources' array in the SourceMap",
       "oneOf": [
         {
-          "description": "Custom function generating the identifer",
+          "description": "Custom function generating the identifier",
           "instanceof": "Function",
           "tsType": "Function"
         },
