@@ -1122,7 +1122,8 @@ export interface OutputOptions {
 		| "amd-require"
 		| "umd"
 		| "umd2"
-		| "jsonp";
+		| "jsonp"
+		| "system";
 	/**
 	 * The output directory as **absolute path** (required).
 	 */
