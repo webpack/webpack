@@ -1501,7 +1501,7 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for no-emit-on-errors-plugin-with-child-error 1`] = `
-"Hash: c07d925d7e60129ffc69
+"Hash: 51d6721efa0198f0e5a4
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks  Chunk Names
