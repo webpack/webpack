@@ -1501,7 +1501,7 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for no-emit-on-errors-plugin-with-child-error 1`] = `
-"Hash: c07d925d7e60129ffc69
+"Hash: 51d6721efa0198f0e5a4
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks  Chunk Names
@@ -1512,7 +1512,7 @@ Entrypoint main = bundle.js
 
 WARNING in configuration
 The 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
-You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/concepts/mode/
+You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/
 Child child:
        Asset      Size  Chunks  Chunk Names
     child.js  3.57 KiB       0  child
