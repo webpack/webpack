@@ -11,6 +11,7 @@
     "@webassemblyjs/wasm-parser": "1.8.5",
     "acorn": "^6.0.5",
     "acorn-dynamic-import": "^4.0.0",
+    "acorn-import-meta": "^1.0.0",
     "ajv": "^6.1.0",
     "ajv-keywords": "^3.1.0",
     "chrome-trace-event": "^1.0.0",
