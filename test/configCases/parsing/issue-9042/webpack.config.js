@@ -1,4 +1,7 @@
 module.exports = {
 	target: "web",
-	node: false
+	node: {
+		__filename: false,
+		__dirname: false
+	}
 };
