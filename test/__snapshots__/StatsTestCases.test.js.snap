@@ -1607,7 +1607,7 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for no-emit-on-errors-plugin-with-child-error 1`] = `
-"Hash: 7f9d32f2adc8ce1b4119
+"Hash: 181c7c6a6c7397755ac2
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks  Chunk Names
@@ -1618,7 +1618,7 @@ Entrypoint main = bundle.js
 
 WARNING in configuration
 The 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
-You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/concepts/mode/
+You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/
 
 Child child:
     Time: Xms
@@ -2041,6 +2041,8 @@ exports[`StatsTestCases should print correct stats for preset-errors-only-error 
 Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/preset-errors-only-error'
 "
 `;
+
+exports[`StatsTestCases should print correct stats for preset-errors-warnings 1`] = `""`;
 
 exports[`StatsTestCases should print correct stats for preset-minimal 1`] = `"   10 modules"`;
 
