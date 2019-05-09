@@ -1,6 +1,6 @@
 # example.js
 
-``` javascript
+```javascript
 console.log(process.env.NODE_ENV);
 
 import "react";
@@ -12,7 +12,7 @@ import "date-fns";
 
 # webpack.config.js
 
-``` javascript
+```javascript
 const path = require("path");
 module.exports = (env = "development") => ({
 	mode: env,
@@ -28,11 +28,11 @@ module.exports = (env = "development") => ({
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
     Asset      Size  Chunks             Chunk Names
-output.js  1.54 MiB     {0}  [emitted]  main
+output.js  1.78 MiB     {0}  [emitted]  main
 Entrypoint main = output.js
-chunk {0} output.js (main) 1.22 MiB (javascript) 888 bytes (runtime) [entry]
+chunk {0} output.js (main) 1.53 MiB (javascript) 1.07 KiB (runtime) [entry]
     > ./example.js main
-    686 chunk modules
+    526 chunk modules
 ```

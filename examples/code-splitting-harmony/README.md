@@ -8,7 +8,7 @@ Providing dynamic expressions to `import` is possible. The same limits as with d
 
 # example.js
 
-``` javascript
+```javascript
 import a from "a";
 
 import("b").then(function(b) {
@@ -24,12 +24,11 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 });
 ```
 
-
 # dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -79,7 +78,7 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -95,7 +94,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var a__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(a__WEBPACK_IMPORTED_MODULE_0__);
 
 
-__webpack_require__.e(/*! import() */ 215).then(__webpack_require__.t.bind(__webpack_require__, /*! b */ 3, 7)).then(function(b) {
+__webpack_require__.e(/*! import() */ 644).then(__webpack_require__.t.bind(__webpack_require__, /*! b */ 3, 7)).then(function(b) {
 	console.log("b loaded", b);
 })
 
@@ -131,32 +130,32 @@ Promise.all([loadC("1"), loadC("2")]).then(function(arr) {
 var map = {
 	"./1": [
 		4,
-		742
+		346
 	],
 	"./1.js": [
 		4,
-		742
+		346
 	],
 	"./2": [
 		5,
-		666
+		98
 	],
 	"./2.js": [
 		5,
-		666
+		98
 	]
 };
 function webpackAsyncContext(req) {
-	var ids = map[req];
-	if(!ids) {
+	if(!Object.prototype.hasOwnProperty.call(map, req)) {
 		return Promise.resolve().then(function() {
 			var e = new Error("Cannot find module '" + req + "'");
 			e.code = 'MODULE_NOT_FOUND';
 			throw e;
 		});
 	}
+
+	var ids = map[req], id = ids[0];
 	return __webpack_require__.e(ids[1]).then(function() {
-		var id = ids[0];
 		return __webpack_require__.t(id, 7);
 	});
 }
@@ -246,8 +245,7 @@ module.exports = webpackAsyncContext;
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
-/******/ 		
-/******/ 		// This function only allows to reference on-demand chunks
+/******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
@@ -262,7 +260,7 @@ module.exports = webpackAsyncContext;
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			404: 0
+/******/ 			179: 0
 /******/ 		};
 /******/ 		
 /******/ 		
@@ -375,90 +373,89 @@ module.exports = webpackAsyncContext;
 </details>
 
 
-
 # Info
 
 ## Unoptimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
         Asset       Size  Chunks             Chunk Names
-215.output.js  328 bytes   {215}  [emitted]
-666.output.js  336 bytes   {666}  [emitted]
-742.output.js  336 bytes   {742}  [emitted]
-    output.js   11.7 KiB   {404}  [emitted]  main
+346.output.js  336 bytes   {346}  [emitted]
+644.output.js  328 bytes   {644}  [emitted]
+ 98.output.js  335 bytes    {98}  [emitted]
+    output.js   11.7 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {215} 215.output.js 11 bytes [rendered]
-    > b [0] ./example.js 3:0-11
- [3] ./node_modules/b.js 11 bytes {215} [built]
-     [used exports unknown]
-     import() b [0] ./example.js 3:0-11
-chunk {404} output.js (main) 414 bytes (javascript) 5.22 KiB (runtime) [entry] [rendered]
-    > ./example.js main
- [0] ./example.js 243 bytes {404} [built]
-     [no exports]
-     [used exports unknown]
-     entry ./example.js main
- [1] ./node_modules/a.js 11 bytes {404} [built]
-     [used exports unknown]
-     harmony side effect evaluation a [0] ./example.js 1:0-18
- [2] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {404} [built]
-     [used exports unknown]
-     import() context lazy c [0] ./example.js 8:8-27
-     + 8 hidden chunk modules
-chunk {666} 666.output.js 13 bytes [rendered]
+chunk {98} 98.output.js 13 bytes [rendered]
     > ./2 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2
     > ./2.js [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2.js
- [5] ./node_modules/c/2.js 13 bytes {666} [optional] [built]
+ [5] ./node_modules/c/2.js 13 bytes {98} [optional] [built]
      [used exports unknown]
      context element ./2 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2
      context element ./2.js [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./2.js
-chunk {742} 742.output.js 13 bytes [rendered]
+chunk {179} output.js (main) 414 bytes (javascript) 5.21 KiB (runtime) [entry] [rendered]
+    > ./example.js main
+ [0] ./example.js 243 bytes {179} [built]
+     [no exports]
+     [used exports unknown]
+     entry ./example.js main
+ [1] ./node_modules/a.js 11 bytes {179} [built]
+     [used exports unknown]
+     harmony side effect evaluation a [0] ./example.js 1:0-18
+ [2] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {179} [built]
+     [used exports unknown]
+     import() context lazy c [0] ./example.js 8:8-27
+     + 8 hidden chunk modules
+chunk {346} 346.output.js 13 bytes [rendered]
     > ./1 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./1
     > ./1.js [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./1.js
- [4] ./node_modules/c/1.js 13 bytes {742} [optional] [built]
+ [4] ./node_modules/c/1.js 13 bytes {346} [optional] [built]
      [used exports unknown]
      context element ./1 [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./1
      context element ./1.js [2] ./node_modules/c lazy ^\.\/.*$ namespace object ./1.js
+chunk {644} 644.output.js 11 bytes [rendered]
+    > b [0] ./example.js 3:0-11
+ [3] ./node_modules/b.js 11 bytes {644} [built]
+     [used exports unknown]
+     import() b [0] ./example.js 3:0-11
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
         Asset      Size  Chunks             Chunk Names
-215.output.js  79 bytes   {215}  [emitted]
-666.output.js  79 bytes   {666}  [emitted]
-742.output.js  79 bytes   {742}  [emitted]
-    output.js  2.61 KiB   {404}  [emitted]  main
+346.output.js  79 bytes   {346}  [emitted]
+644.output.js  79 bytes   {644}  [emitted]
+ 98.output.js  77 bytes    {98}  [emitted]
+    output.js  2.66 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {215} 215.output.js 11 bytes [rendered]
-    > b [275] ./example.js 3:0-11
- [215] ./node_modules/b.js 11 bytes {215} [built]
-       import() b [275] ./example.js 3:0-11
-chunk {404} output.js (main) 414 bytes (javascript) 5.22 KiB (runtime) [entry] [rendered]
+chunk {98} 98.output.js 13 bytes [rendered]
+    > ./2 [616] ./node_modules/c lazy ^\.\/.*$ namespace object ./2
+    > ./2.js [616] ./node_modules/c lazy ^\.\/.*$ namespace object ./2.js
+ [98] ./node_modules/c/2.js 13 bytes {98} [optional] [built]
+      context element ./2 [616] ./node_modules/c lazy ^\.\/.*$ namespace object ./2
+      context element ./2.js [616] ./node_modules/c lazy ^\.\/.*$ namespace object ./2.js
+chunk {179} output.js (main) 414 bytes (javascript) 5.21 KiB (runtime) [entry] [rendered]
     > ./example.js main
-  [54] ./node_modules/a.js 11 bytes {404} [built]
-       [no exports used]
-       harmony side effect evaluation a [275] ./example.js 1:0-18
- [212] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {404} [built]
-       import() context lazy c [275] ./example.js 8:8-27
- [275] ./example.js 243 bytes {404} [built]
+ [144] ./example.js 243 bytes {179} [built]
        [no exports]
        entry ./example.js main
+ [213] ./node_modules/a.js 11 bytes {179} [built]
+       [no exports used]
+       harmony side effect evaluation a [144] ./example.js 1:0-18
+ [616] ./node_modules/c lazy ^\.\/.*$ namespace object 160 bytes {179} [built]
+       import() context lazy c [144] ./example.js 8:8-27
      + 8 hidden chunk modules
-chunk {666} 666.output.js 13 bytes [rendered]
-    > ./2 [212] ./node_modules/c lazy ^\.\/.*$ namespace object ./2
-    > ./2.js [212] ./node_modules/c lazy ^\.\/.*$ namespace object ./2.js
- [666] ./node_modules/c/2.js 13 bytes {666} [optional] [built]
-       context element ./2 [212] ./node_modules/c lazy ^\.\/.*$ namespace object ./2
-       context element ./2.js [212] ./node_modules/c lazy ^\.\/.*$ namespace object ./2.js
-chunk {742} 742.output.js 13 bytes [rendered]
-    > ./1 [212] ./node_modules/c lazy ^\.\/.*$ namespace object ./1
-    > ./1.js [212] ./node_modules/c lazy ^\.\/.*$ namespace object ./1.js
- [742] ./node_modules/c/1.js 13 bytes {742} [optional] [built]
-       context element ./1 [212] ./node_modules/c lazy ^\.\/.*$ namespace object ./1
-       context element ./1.js [212] ./node_modules/c lazy ^\.\/.*$ namespace object ./1.js
+chunk {346} 346.output.js 13 bytes [rendered]
+    > ./1 [616] ./node_modules/c lazy ^\.\/.*$ namespace object ./1
+    > ./1.js [616] ./node_modules/c lazy ^\.\/.*$ namespace object ./1.js
+ [346] ./node_modules/c/1.js 13 bytes {346} [optional] [built]
+       context element ./1 [616] ./node_modules/c lazy ^\.\/.*$ namespace object ./1
+       context element ./1.js [616] ./node_modules/c lazy ^\.\/.*$ namespace object ./1.js
+chunk {644} 644.output.js 11 bytes [rendered]
+    > b [144] ./example.js 3:0-11
+ [644] ./node_modules/b.js 11 bytes {644} [built]
+       import() b [144] ./example.js 3:0-11
 ```

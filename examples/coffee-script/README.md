@@ -1,13 +1,12 @@
-
 # example.js
 
-``` javascript
+```javascript
 console.log(require("./cup1"));
 ```
 
 # cup1.coffee
 
-``` coffee-script
+```coffee-script
 module.exports =
 	cool: "stuff"
 	answer: 42
@@ -17,7 +16,7 @@ module.exports =
 
 # cup2.coffee
 
-``` coffee-script
+```coffee-script
 console.log "yeah coffee-script"
 
 module.exports = 42
@@ -27,7 +26,7 @@ module.exports = 42
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -73,7 +72,7 @@ module.exports = 42
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -126,7 +125,7 @@ module.exports = 42;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
     Asset      Size  Chunks             Chunk Names
 output.js  2.33 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
@@ -148,17 +147,17 @@ chunk {0} output.js (main) 206 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
     Asset       Size  Chunks             Chunk Names
-output.js  372 bytes   {404}  [emitted]  main
+output.js  369 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 206 bytes [entry] [rendered]
+chunk {179} output.js (main) 206 bytes [entry] [rendered]
     > ./example.js main
- [275] ./example.js 31 bytes {404} [built]
+  [56] ./cup2.coffee 57 bytes {179} [built]
+       cjs require ./cup2.coffee [867] ./cup1.coffee 4:12-36
+       cjs require ./cup2 [867] ./cup1.coffee 5:9-26
+ [144] ./example.js 31 bytes {179} [built]
        entry ./example.js main
- [642] ./cup1.coffee 118 bytes {404} [built]
-       cjs require ./cup1 [275] ./example.js 1:12-29
- [976] ./cup2.coffee 57 bytes {404} [built]
-       cjs require ./cup2.coffee [642] ./cup1.coffee 4:12-36
-       cjs require ./cup2 [642] ./cup1.coffee 5:9-26
+ [867] ./cup1.coffee 118 bytes {179} [built]
+       cjs require ./cup1 [144] ./example.js 1:12-29
 ```

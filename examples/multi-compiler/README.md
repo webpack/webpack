@@ -1,7 +1,6 @@
-
 # example.js
 
-``` javascript
+```javascript
 if(ENV === "mobile") {
 	require("./mobile-stuff");
 }
@@ -10,7 +9,7 @@ console.log("Running " + ENV + " build");
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../");
 module.exports = [
@@ -50,7 +49,7 @@ module.exports = [
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -96,7 +95,7 @@ module.exports = [
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -115,7 +114,7 @@ console.log("Running " + "desktop" + " build");
 
 # dist/mobile.js
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -192,7 +191,7 @@ console.log("Running " + "mobile" + " build");
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset      Size  Chunks             Chunk Names
@@ -222,25 +221,25 @@ Child desktop:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset       Size  Chunks             Chunk Names
-    mobile.js  263 bytes   {404}  [emitted]  main
+    mobile.js  263 bytes   {179}  [emitted]  main
     Entrypoint main = mobile.js
-    chunk {404} mobile.js (main) 114 bytes [entry] [rendered]
+    chunk {179} mobile.js (main) 114 bytes [entry] [rendered]
         > ./example main
-     [273] ./mobile-stuff.js 20 bytes {404} [built]
-           cjs require ./mobile-stuff [275] ./example.js 2:1-26
-     [275] ./example.js 94 bytes {404} [built]
+     [144] ./example.js 94 bytes {179} [built]
            entry ./example main
+     [791] ./mobile-stuff.js 20 bytes {179} [built]
+           cjs require ./mobile-stuff [144] ./example.js 2:1-26
 Child desktop:
     Hash: 0a1b2c3d4e5f6a7b8c9d
          Asset       Size  Chunks             Chunk Names
-    desktop.js  235 bytes   {404}  [emitted]  main
+    desktop.js  235 bytes   {179}  [emitted]  main
     Entrypoint main = desktop.js
-    chunk {404} desktop.js (main) 94 bytes [entry] [rendered]
+    chunk {179} desktop.js (main) 94 bytes [entry] [rendered]
         > ./example main
-     [275] ./example.js 94 bytes {404} [built]
+     [144] ./example.js 94 bytes {179} [built]
            entry ./example main
 ```

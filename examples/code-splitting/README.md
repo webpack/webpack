@@ -1,32 +1,32 @@
 This example illustrates a very simple case of Code Splitting with `require.ensure`.
 
-* `a` and `b` are required normally via CommonJS
-* `c` is depended through the `require.ensure` array.
-  * This means: make it available, but don't execute it
-  * webpack will load it on demand
-* `b` and `d` are required via CommonJs in the `require.ensure` callback
-  * webpack detects that these are in the on-demand-callback and
-  * will load them on demand
-  * webpacks optimizer can optimize `b` away
-    * as it is already available through the parent chunks
+- `a` and `b` are required normally via CommonJS
+- `c` is depended through the `require.ensure` array.
+  - This means: make it available, but don't execute it
+  - webpack will load it on demand
+- `b` and `d` are required via CommonJs in the `require.ensure` callback
+  - webpack detects that these are in the on-demand-callback and
+  - will load them on demand
+  - webpacks optimizer can optimize `b` away
+    - as it is already available through the parent chunks
 
 You can see that webpack outputs two files/chunks:
 
-* `output.js` is the entry chunk and contains
-  * the module system
-  * chunk loading logic
-  * the entry point `example.js`
-  * module `a`
-  * module `b`
-* `1.output.js` is an additional chunk (on demand loaded) and contains
-  * module `c`
-  * module `d`
+- `output.js` is the entry chunk and contains
+  - the module system
+  - chunk loading logic
+  - the entry point `example.js`
+  - module `a`
+  - module `b`
+- `1.output.js` is an additional chunk (on demand loaded) and contains
+  - module `c`
+  - module `d`
 
 You can see that chunks are loaded via JSONP. The additional chunks are pretty small and minimize well.
 
 # example.js
 
-``` javascript
+```javascript
 var a = require("a");
 var b = require("b");
 require.ensure(["c"], function(require) {
@@ -35,12 +35,11 @@ require.ensure(["c"], function(require) {
 });
 ```
 
-
 # dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -90,7 +89,7 @@ require.ensure(["c"], function(require) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -102,7 +101,7 @@ require.ensure(["c"], function(require) {
 
 var a = __webpack_require__(/*! a */ 1);
 var b = __webpack_require__(/*! b */ 2);
-__webpack_require__.e(/*! require.ensure */ 3).then((function(require) {
+__webpack_require__.e(/*! require.ensure */ 796).then((function(require) {
     __webpack_require__(/*! b */ 2).xyz();
     var d = __webpack_require__(/*! d */ 4);
 }).bind(null, __webpack_require__)).catch(__webpack_require__.oe);
@@ -156,8 +155,7 @@ __webpack_require__.e(/*! require.ensure */ 3).then((function(require) {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
-/******/ 		
-/******/ 		// This function only allows to reference on-demand chunks
+/******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
@@ -172,7 +170,7 @@ __webpack_require__.e(/*! require.ensure */ 3).then((function(require) {
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			404: 0
+/******/ 			179: 0
 /******/ 		};
 /******/ 		
 /******/ 		
@@ -285,10 +283,10 @@ __webpack_require__.e(/*! require.ensure */ 3).then((function(require) {
 </details>
 
 
-# dist/3.output.js
+# dist/796.output.js
 
-``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[3],[
+```javascript
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[796],[
 /* 0 */,
 /* 1 */,
 /* 2 */,
@@ -319,8 +317,8 @@ __webpack_require__.e(/*! require.ensure */ 3).then((function(require) {
 
 Minimized
 
-``` javascript
-(window.webpackJsonp=window.webpackJsonp||[]).push([[3],{33:function(){},227:function(){}}]);
+```javascript
+(window.webpackJsonp=window.webpackJsonp||[]).push([[796],{286:function(){},882:function(){}}]);
 ```
 
 # Info
@@ -329,57 +327,57 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
-      Asset       Size  Chunks             Chunk Names
-3.output.js  602 bytes     {3}  [emitted]
-  output.js   8.03 KiB   {404}  [emitted]  main
+Version: webpack 5.0.0-alpha.11
+        Asset       Size  Chunks             Chunk Names
+796.output.js  604 bytes   {796}  [emitted]
+    output.js   8.01 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {3} 3.output.js 22 bytes [rendered]
-    > [0] ./example.js 3:0-6:2
- [3] ./node_modules/c.js 11 bytes {3} [built]
-     [used exports unknown]
-     require.ensure item c [0] ./example.js 3:0-6:2
- [4] ./node_modules/d.js 11 bytes {3} [built]
-     [used exports unknown]
-     cjs require d [0] ./example.js 5:12-24
-chunk {404} output.js (main) 161 bytes (javascript) 3.65 KiB (runtime) [entry] [rendered]
+chunk {179} output.js (main) 161 bytes (javascript) 3.64 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [0] ./example.js 139 bytes {404} [built]
+ [0] ./example.js 139 bytes {179} [built]
      [used exports unknown]
      entry ./example.js main
- [1] ./node_modules/a.js 11 bytes {404} [built]
+ [1] ./node_modules/a.js 11 bytes {179} [built]
      [used exports unknown]
      cjs require a [0] ./example.js 1:8-20
- [2] ./node_modules/b.js 11 bytes {404} [built]
+ [2] ./node_modules/b.js 11 bytes {179} [built]
      [used exports unknown]
      cjs require b [0] ./example.js 2:8-20
      cjs require b [0] ./example.js 4:4-16
      + 4 hidden chunk modules
+chunk {796} 796.output.js 22 bytes [rendered]
+    > [0] ./example.js 3:0-6:2
+ [3] ./node_modules/c.js 11 bytes {796} [built]
+     [used exports unknown]
+     require.ensure item c [0] ./example.js 3:0-6:2
+ [4] ./node_modules/d.js 11 bytes {796} [built]
+     [used exports unknown]
+     cjs require d [0] ./example.js 5:12-24
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
-      Asset      Size  Chunks             Chunk Names
-3.output.js  93 bytes     {3}  [emitted]
-  output.js  1.45 KiB   {404}  [emitted]  main
+Version: webpack 5.0.0-alpha.11
+        Asset      Size  Chunks             Chunk Names
+796.output.js  96 bytes   {796}  [emitted]
+    output.js  1.45 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {3} 3.output.js 22 bytes [rendered]
-    > [275] ./example.js 3:0-6:2
-  [33] ./node_modules/d.js 11 bytes {3} [built]
-       cjs require d [275] ./example.js 5:12-24
- [227] ./node_modules/c.js 11 bytes {3} [built]
-       require.ensure item c [275] ./example.js 3:0-6:2
-chunk {404} output.js (main) 161 bytes (javascript) 3.65 KiB (runtime) [entry] [rendered]
+chunk {179} output.js (main) 161 bytes (javascript) 3.64 KiB (runtime) [entry] [rendered]
     > ./example.js main
-  [54] ./node_modules/a.js 11 bytes {404} [built]
-       cjs require a [275] ./example.js 1:8-20
- [215] ./node_modules/b.js 11 bytes {404} [built]
-       cjs require b [275] ./example.js 2:8-20
-       cjs require b [275] ./example.js 4:4-16
- [275] ./example.js 139 bytes {404} [built]
+ [144] ./example.js 139 bytes {179} [built]
        entry ./example.js main
+ [213] ./node_modules/a.js 11 bytes {179} [built]
+       cjs require a [144] ./example.js 1:8-20
+ [644] ./node_modules/b.js 11 bytes {179} [built]
+       cjs require b [144] ./example.js 2:8-20
+       cjs require b [144] ./example.js 4:4-16
      + 4 hidden chunk modules
+chunk {796} 796.output.js 22 bytes [rendered]
+    > [144] ./example.js 3:0-6:2
+ [286] ./node_modules/c.js 11 bytes {796} [built]
+       require.ensure item c [144] ./example.js 3:0-6:2
+ [882] ./node_modules/d.js 11 bytes {796} [built]
+       cjs require d [144] ./example.js 5:12-24
 ```

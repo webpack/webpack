@@ -1,6 +1,6 @@
 # pageA.js
 
-``` javascript
+```javascript
 require(["./common"], function(common) {
 	common(require("./a"));
 });
@@ -8,7 +8,7 @@ require(["./common"], function(common) {
 
 # pageB.js
 
-``` javascript
+```javascript
 require(["./common"], function(common) {
 	common(require("./b"));
 });
@@ -16,7 +16,7 @@ require(["./common"], function(common) {
 
 # pageC.js
 
-``` javascript
+```javascript
 require(["./a"], function(a) {
 	console.log(a + require("./b"));
 });
@@ -28,7 +28,7 @@ a big file...
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var AggressiveMergingPlugin = require("../../lib/optimize/AggressiveMergingPlugin");
 module.exports = {
@@ -60,56 +60,56 @@ module.exports = {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
           Asset       Size  Chunks             Chunk Names
-   324.chunk.js  548 bytes   {324}  [emitted]
-   864.chunk.js   6.19 KiB   {864}  [emitted]
-pageA.bundle.js   7.53 KiB   {641}  [emitted]  pageA
-pageB.bundle.js   7.54 KiB   {791}  [emitted]  pageB
-pageC.bundle.js   7.53 KiB    {42}  [emitted]  pageC
+   394.chunk.js  548 bytes   {394}  [emitted]
+   456.chunk.js   6.19 KiB   {456}  [emitted]
+pageA.bundle.js   7.51 KiB   {424}  [emitted]  pageA
+pageB.bundle.js   7.52 KiB   {121}  [emitted]  pageB
+pageC.bundle.js   7.51 KiB   {178}  [emitted]  pageC
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js
-chunk {42} pageC.bundle.js (pageC) 68 bytes (javascript) 3.65 KiB (runtime) [entry] [rendered]
-    > ./pageC pageC
- [2] ./pageC.js 68 bytes {42} [built]
-     [used exports unknown]
-     entry ./pageC pageC
-     + 4 hidden chunk modules
-chunk {324} 324.chunk.js 42 bytes [rendered]
-    > ./a [2] ./pageC.js 1:0-3:2
- [4] ./a.js 21 bytes {324} {864} [built]
-     [used exports unknown]
-     cjs require ./a [0] ./pageA.js 2:8-22
-     amd require ./a [2] ./pageC.js 1:0-3:2
- [5] ./b.js 21 bytes {324} {864} [built]
-     [used exports unknown]
-     cjs require ./b [1] ./pageB.js 2:8-22
-     cjs require ./b [2] ./pageC.js 2:17-31
-chunk {641} pageA.bundle.js (pageA) 69 bytes (javascript) 3.65 KiB (runtime) [entry] [rendered]
-    > ./pageA pageA
- [0] ./pageA.js 69 bytes {641} [built]
-     [used exports unknown]
-     entry ./pageA pageA
-     + 4 hidden chunk modules
-chunk {791} pageB.bundle.js (pageB) 69 bytes (javascript) 3.65 KiB (runtime) [entry] [rendered]
+chunk {121} pageB.bundle.js (pageB) 69 bytes (javascript) 3.64 KiB (runtime) [entry] [rendered]
     > ./pageB pageB
- [1] ./pageB.js 69 bytes {791} [built]
+ [1] ./pageB.js 69 bytes {121} [built]
      [used exports unknown]
      entry ./pageB pageB
      + 4 hidden chunk modules
-chunk {864} 864.chunk.js 5.45 KiB [rendered]
-    > ./common [0] ./pageA.js 1:0-3:2
-    > ./common [1] ./pageB.js 1:0-3:2
- [3] ./common.js 5.41 KiB {864} [built]
+chunk {178} pageC.bundle.js (pageC) 68 bytes (javascript) 3.64 KiB (runtime) [entry] [rendered]
+    > ./pageC pageC
+ [2] ./pageC.js 68 bytes {178} [built]
      [used exports unknown]
-     amd require ./common [0] ./pageA.js 1:0-3:2
-     amd require ./common [1] ./pageB.js 1:0-3:2
- [4] ./a.js 21 bytes {324} {864} [built]
+     entry ./pageC pageC
+     + 4 hidden chunk modules
+chunk {394} 394.chunk.js 42 bytes [rendered]
+    > ./a [2] ./pageC.js 1:0-3:2
+ [4] ./a.js 21 bytes {394} {456} [built]
      [used exports unknown]
      cjs require ./a [0] ./pageA.js 2:8-22
      amd require ./a [2] ./pageC.js 1:0-3:2
- [5] ./b.js 21 bytes {324} {864} [built]
+ [5] ./b.js 21 bytes {394} {456} [built]
+     [used exports unknown]
+     cjs require ./b [1] ./pageB.js 2:8-22
+     cjs require ./b [2] ./pageC.js 2:17-31
+chunk {424} pageA.bundle.js (pageA) 69 bytes (javascript) 3.64 KiB (runtime) [entry] [rendered]
+    > ./pageA pageA
+ [0] ./pageA.js 69 bytes {424} [built]
+     [used exports unknown]
+     entry ./pageA pageA
+     + 4 hidden chunk modules
+chunk {456} 456.chunk.js 5.45 KiB [rendered]
+    > ./common [0] ./pageA.js 1:0-3:2
+    > ./common [1] ./pageB.js 1:0-3:2
+ [3] ./common.js 5.41 KiB {456} [built]
+     [used exports unknown]
+     amd require ./common [0] ./pageA.js 1:0-3:2
+     amd require ./common [1] ./pageB.js 1:0-3:2
+ [4] ./a.js 21 bytes {394} {456} [built]
+     [used exports unknown]
+     cjs require ./a [0] ./pageA.js 2:8-22
+     amd require ./a [2] ./pageC.js 1:0-3:2
+ [5] ./b.js 21 bytes {394} {456} [built]
      [used exports unknown]
      cjs require ./b [1] ./pageB.js 2:8-22
      cjs require ./b [2] ./pageC.js 2:17-31
@@ -119,49 +119,49 @@ chunk {864} 864.chunk.js 5.45 KiB [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
           Asset       Size        Chunks             Chunk Names
-   324.chunk.js  123 bytes         {324}  [emitted]
-   864.chunk.js  182 bytes  {324}, {864}  [emitted]
-pageA.bundle.js   1.42 KiB         {641}  [emitted]  pageA
-pageB.bundle.js   1.42 KiB         {791}  [emitted]  pageB
-pageC.bundle.js   1.43 KiB          {42}  [emitted]  pageC
+   394.chunk.js  124 bytes         {394}  [emitted]
+   456.chunk.js  183 bytes  {394}, {456}  [emitted]
+pageA.bundle.js   1.42 KiB         {424}  [emitted]  pageA
+pageB.bundle.js   1.42 KiB         {121}  [emitted]  pageB
+pageC.bundle.js   1.44 KiB         {178}  [emitted]  pageC
 Entrypoint pageA = pageA.bundle.js
 Entrypoint pageB = pageB.bundle.js
 Entrypoint pageC = pageC.bundle.js
-chunk {42} pageC.bundle.js (pageC) 68 bytes (javascript) 3.65 KiB (runtime) [entry] [rendered]
-    > ./pageC pageC
- [912] ./pageC.js 68 bytes {42} [built]
-       entry ./pageC pageC
-     + 4 hidden chunk modules
-chunk {324} 324.chunk.js 42 bytes [rendered]
-    > ./a [912] ./pageC.js 1:0-3:2
-  [21] ./b.js 21 bytes {324} {864} [built]
-       cjs require ./b [912] ./pageC.js 2:17-31
-       cjs require ./b [954] ./pageB.js 2:8-22
- [162] ./a.js 21 bytes {324} {864} [built]
-       amd require ./a [912] ./pageC.js 1:0-3:2
-       cjs require ./a [953] ./pageA.js 2:8-22
-chunk {641} pageA.bundle.js (pageA) 69 bytes (javascript) 3.65 KiB (runtime) [entry] [rendered]
-    > ./pageA pageA
- [953] ./pageA.js 69 bytes {641} [built]
-       entry ./pageA pageA
-     + 4 hidden chunk modules
-chunk {791} pageB.bundle.js (pageB) 69 bytes (javascript) 3.65 KiB (runtime) [entry] [rendered]
+chunk {121} pageB.bundle.js (pageB) 69 bytes (javascript) 3.64 KiB (runtime) [entry] [rendered]
     > ./pageB pageB
- [954] ./pageB.js 69 bytes {791} [built]
+ [588] ./pageB.js 69 bytes {121} [built]
        entry ./pageB pageB
      + 4 hidden chunk modules
-chunk {864} 864.chunk.js 5.45 KiB [rendered]
-    > ./common [953] ./pageA.js 1:0-3:2
-    > ./common [954] ./pageB.js 1:0-3:2
-  [21] ./b.js 21 bytes {324} {864} [built]
-       cjs require ./b [912] ./pageC.js 2:17-31
-       cjs require ./b [954] ./pageB.js 2:8-22
- [162] ./a.js 21 bytes {324} {864} [built]
-       amd require ./a [912] ./pageC.js 1:0-3:2
-       cjs require ./a [953] ./pageA.js 2:8-22
- [280] ./common.js 5.41 KiB {864} [built]
-       amd require ./common [953] ./pageA.js 1:0-3:2
-       amd require ./common [954] ./pageB.js 1:0-3:2
+chunk {178} pageC.bundle.js (pageC) 68 bytes (javascript) 3.64 KiB (runtime) [entry] [rendered]
+    > ./pageC pageC
+ [145] ./pageC.js 68 bytes {178} [built]
+       entry ./pageC pageC
+     + 4 hidden chunk modules
+chunk {394} 394.chunk.js 42 bytes [rendered]
+    > ./a [145] ./pageC.js 1:0-3:2
+ [847] ./a.js 21 bytes {394} {456} [built]
+       amd require ./a [145] ./pageC.js 1:0-3:2
+       cjs require ./a [366] ./pageA.js 2:8-22
+ [996] ./b.js 21 bytes {394} {456} [built]
+       cjs require ./b [145] ./pageC.js 2:17-31
+       cjs require ./b [588] ./pageB.js 2:8-22
+chunk {424} pageA.bundle.js (pageA) 69 bytes (javascript) 3.64 KiB (runtime) [entry] [rendered]
+    > ./pageA pageA
+ [366] ./pageA.js 69 bytes {424} [built]
+       entry ./pageA pageA
+     + 4 hidden chunk modules
+chunk {456} 456.chunk.js 5.45 KiB [rendered]
+    > ./common [366] ./pageA.js 1:0-3:2
+    > ./common [588] ./pageB.js 1:0-3:2
+ [543] ./common.js 5.41 KiB {456} [built]
+       amd require ./common [366] ./pageA.js 1:0-3:2
+       amd require ./common [588] ./pageB.js 1:0-3:2
+ [847] ./a.js 21 bytes {394} {456} [built]
+       amd require ./a [145] ./pageC.js 1:0-3:2
+       cjs require ./a [366] ./pageA.js 2:8-22
+ [996] ./b.js 21 bytes {394} {456} [built]
+       cjs require ./b [145] ./pageC.js 2:17-31
+       cjs require ./b [588] ./pageB.js 2:8-22
 ```

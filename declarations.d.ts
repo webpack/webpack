@@ -352,7 +352,7 @@ declare const $publicPath$;
 declare const __webpack_require__;
 declare const $hotChunkFilename$;
 declare const $hotMainFilename$;
-declare const WebAssembly;
+declare namespace WebAssembly {}
 declare const importScripts;
 declare const $crossOriginLoading$;
 declare const chunkId;

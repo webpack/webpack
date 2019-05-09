@@ -1,6 +1,6 @@
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 module.exports = {
 	// mode: "development || "production",
@@ -16,7 +16,7 @@ module.exports = {
 
 # dist/MyLibrary.umd.js
 
-``` javascript
+```javascript
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -140,7 +140,7 @@ function increment() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
            Asset      Size  Chunks             Chunk Names
 MyLibrary.umd.js  3.73 KiB     {0}  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
@@ -157,13 +157,13 @@ chunk {0} MyLibrary.umd.js (main) 92 bytes (javascript) 560 bytes (runtime) [ent
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
            Asset       Size  Chunks             Chunk Names
-MyLibrary.umd.js  892 bytes   {404}  [emitted]  main
+MyLibrary.umd.js  892 bytes   {179}  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
-chunk {404} MyLibrary.umd.js (main) 92 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
+chunk {179} MyLibrary.umd.js (main) 92 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
     > ./example main
- [275] ./example.js 92 bytes {404} [built]
+ [144] ./example.js 92 bytes {179} [built]
        [exports: default, increment, value]
        entry ./example main
      + 2 hidden chunk modules

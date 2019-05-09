@@ -1,7 +1,6 @@
-
 # example.js
 
-``` javascript
+```javascript
 // harmony module
 
 // import from CommonJs module
@@ -22,7 +21,7 @@ import "./example2";
 
 # fs.js
 
-``` javascript
+```javascript
 // an example CommonJs module
 // content is omitted for brevity
 exports.readFile = function() {};
@@ -34,7 +33,7 @@ exports.readFile = function() {};
 
 # reexport-commonjs.js
 
-``` javascript
+```javascript
 // reexport a CommonJs module
 export * from "./fs";
 // Note that the default export doesn't reexport via export *
@@ -46,7 +45,7 @@ export * from "./fs";
 
 # example2.js
 
-``` javascript
+```javascript
 // CommonJs module
 
 // require a harmony module
@@ -58,7 +57,7 @@ var namedExport = module.named;
 
 # harmony.js
 
-``` javascript
+```javascript
 // just some exports
 export default "default";
 export var named = "named";
@@ -68,7 +67,7 @@ export var named = "named";
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -116,7 +115,7 @@ export var named = "named";
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -289,7 +288,7 @@ var named = "named";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
     Asset     Size  Chunks             Chunk Names
 output.js  7.6 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
@@ -327,34 +326,34 @@ chunk {0} output.js (main) 1.13 KiB (javascript) 888 bytes (runtime) [entry] [re
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
     Asset      Size  Chunks             Chunk Names
-output.js  1.11 KiB   {404}  [emitted]  main
+output.js  1.11 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 1.13 KiB (javascript) 888 bytes (runtime) [entry] [rendered]
+chunk {179} output.js (main) 1.13 KiB (javascript) 888 bytes (runtime) [entry] [rendered]
     > ./example.js main
- [118] ./example2.js 152 bytes {404} [built]
-       [no exports used]
-       harmony side effect evaluation ./example2 [275] ./example.js 16:0-20
- [212] ./reexport-commonjs.js 301 bytes {404} [built]
-       [only some exports used: readFile]
-       harmony side effect evaluation ./reexport-commonjs [275] ./example.js 12:0-60
-       harmony import specifier ./reexport-commonjs [275] ./example.js 13:0-9
- [275] ./example.js 373 bytes {404} [built]
+ [144] ./example.js 373 bytes {179} [built]
        [no exports]
        entry ./example.js main
- [325] ./harmony.js 75 bytes {404} [built]
+ [182] ./reexport-commonjs.js 301 bytes {179} [built]
+       [only some exports used: readFile]
+       harmony side effect evaluation ./reexport-commonjs [144] ./example.js 12:0-60
+       harmony import specifier ./reexport-commonjs [144] ./example.js 13:0-9
+ [356] ./harmony.js 75 bytes {179} [built]
        [exports: default, named]
-       cjs require ./harmony [118] ./example2.js 4:13-33
- [656] ./fs.js 257 bytes {404} [built]
+       cjs require ./harmony [760] ./example2.js 4:13-33
+ [760] ./example2.js 152 bytes {179} [built]
+       [no exports used]
+       harmony side effect evaluation ./example2 [144] ./example.js 16:0-20
+ [879] ./fs.js 257 bytes {179} [built]
        [only some exports used: default, readFile]
-       harmony side effect evaluation ./fs [212] ./reexport-commonjs.js 2:0-21
-       harmony export imported specifier ./fs [212] ./reexport-commonjs.js 2:0-21
-       harmony side effect evaluation ./fs [275] ./example.js 4:0-22
-       harmony side effect evaluation ./fs [275] ./example.js 5:0-32
-       harmony side effect evaluation ./fs [275] ./example.js 6:0-28
-       harmony import specifier ./fs [275] ./example.js 7:0-2
-       harmony import specifier ./fs [275] ./example.js 8:0-8
-       harmony import specifier ./fs [275] ./example.js 9:0-12
+       harmony side effect evaluation ./fs [144] ./example.js 4:0-22
+       harmony side effect evaluation ./fs [144] ./example.js 5:0-32
+       harmony side effect evaluation ./fs [144] ./example.js 6:0-28
+       harmony import specifier ./fs [144] ./example.js 7:0-2
+       harmony import specifier ./fs [144] ./example.js 8:0-8
+       harmony import specifier ./fs [144] ./example.js 9:0-12
+       harmony side effect evaluation ./fs [182] ./reexport-commonjs.js 2:0-21
+       harmony export imported specifier ./fs [182] ./reexport-commonjs.js 2:0-21
      + 3 hidden chunk modules
 ```

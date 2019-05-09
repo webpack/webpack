@@ -14,7 +14,7 @@ Note: When your library has dependencies that should not be included in the comp
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 module.exports = {
 	// mode: "development || "production",
@@ -33,7 +33,7 @@ module.exports = {
 
 # dist/MyLibrary.alpha.js
 
-``` javascript
+```javascript
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -112,7 +112,7 @@ module.exports = "alpha";
 
 # dist/MyLibrary.beta.js
 
-``` javascript
+```javascript
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -187,7 +187,7 @@ module.exports = "beta";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
              Asset      Size  Chunks             Chunk Names
 MyLibrary.alpha.js  1.94 KiB     {0}  [emitted]  alpha
  MyLibrary.beta.js  1.94 KiB     {1}  [emitted]  beta
@@ -209,18 +209,18 @@ chunk {1} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
              Asset       Size  Chunks             Chunk Names
-MyLibrary.alpha.js  481 bytes   {963}  [emitted]  alpha
- MyLibrary.beta.js  478 bytes   {188}  [emitted]  beta
+MyLibrary.alpha.js  481 bytes   {487}  [emitted]  alpha
+ MyLibrary.beta.js  476 bytes   {904}  [emitted]  beta
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
-chunk {188} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
-    > ./beta beta
- [145] ./beta.js 24 bytes {188} [built]
-       entry ./beta beta
-chunk {963} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
+chunk {487} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
     > ./alpha alpha
- [930] ./alpha.js 25 bytes {963} [built]
+ [758] ./alpha.js 25 bytes {487} [built]
        entry ./alpha alpha
+chunk {904} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
+    > ./beta beta
+ [97] ./beta.js 24 bytes {904} [built]
+      entry ./beta beta
 ```

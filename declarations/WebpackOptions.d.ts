@@ -268,11 +268,13 @@ export type FilterItemTypes = RegExp | string | Function;
 
 export interface WebpackOptions {
 	/**
-	 * Set the value of `require.amd` and `define.amd`.
+	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
-	amd?: {
-		[k: string]: any;
-	};
+	amd?:
+		| false
+		| {
+				[k: string]: any;
+		  };
 	/**
 	 * Report the first error as a hard error instead of tolerating it.
 	 */
@@ -1176,7 +1178,8 @@ export interface OutputOptions {
 		| "amd-require"
 		| "umd"
 		| "umd2"
-		| "jsonp";
+		| "jsonp"
+		| "system";
 	/**
 	 * The output directory as **absolute path** (required).
 	 */

@@ -1,31 +1,31 @@
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # file.js
 
-``` javascript
-{{file.js}}
+```javascript
+_{{file.js}}_
 ```
 
 # loader.js
 
-``` javascript
-{{loader.js}}
+```javascript
+_{{loader.js}}_
 ```
 
 # test.css
 
-``` css
-{{test.css}}
+```css
+_{{test.css}}_
 ```
 
 # dist/output.js
 
-``` javascript
-{{dist/output.js}}
+```javascript
+_{{dist/output.js}}_
 ```
 
 # Console output
@@ -43,11 +43,11 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

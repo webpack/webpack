@@ -112,13 +112,12 @@ function webpackContext(req) {
 	return __webpack_require__(id);
 }
 function webpackContextResolve(req) {
-	var id = map[req];
-	if(!(id + 1)) { // check for number or string
+	if(!Object.prototype.hasOwnProperty.call(map, req)) {
 		var e = new Error("Cannot find module '" + req + "'");
 		e.code = 'MODULE_NOT_FOUND';
 		throw e;
 	}
-	return id;
+	return map[req];
 }
 webpackContext.keys = function webpackContextKeys() {
 	return Object.keys(map);
@@ -176,9 +175,9 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
     Asset      Size  Chunks             Chunk Names
-output.js  3.57 KiB     {0}  [emitted]  main
+output.js  3.56 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 603 bytes [entry] [rendered]
     > ./example.js main
@@ -206,25 +205,25 @@ chunk {0} output.js (main) 603 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
     Asset       Size  Chunks             Chunk Names
-output.js  868 bytes   {404}  [emitted]  main
+output.js  896 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 603 bytes [entry] [rendered]
+chunk {179} output.js (main) 603 bytes [entry] [rendered]
     > ./example.js main
- [117] ./templates/a.js 80 bytes {404} [optional] [built]
-       context element ./a [545] ./templates sync ^\.\/.*$ ./a
-       context element ./a.js [545] ./templates sync ^\.\/.*$ ./a.js
- [132] ./templates/c.js 80 bytes {404} [optional] [built]
-       context element ./c [545] ./templates sync ^\.\/.*$ ./c
-       context element ./c.js [545] ./templates sync ^\.\/.*$ ./c.js
- [139] ./templates/b.js 80 bytes {404} [optional] [built]
-       context element ./b [545] ./templates sync ^\.\/.*$ ./b
-       context element ./b.js [545] ./templates sync ^\.\/.*$ ./b.js
- [275] ./example.js 146 bytes {404} [built]
+ [144] ./example.js 146 bytes {179} [built]
        entry ./example.js main
- [545] ./templates sync ^\.\/.*$ 217 bytes {404} [built]
-       cjs require context ./templates [275] ./example.js 2:8-44
+ [385] ./templates/b.js 80 bytes {179} [optional] [built]
+       context element ./b [641] ./templates sync ^\.\/.*$ ./b
+       context element ./b.js [641] ./templates sync ^\.\/.*$ ./b.js
+ [641] ./templates sync ^\.\/.*$ 217 bytes {179} [built]
+       cjs require context ./templates [144] ./example.js 2:8-44
+ [706] ./templates/a.js 80 bytes {179} [optional] [built]
+       context element ./a [641] ./templates sync ^\.\/.*$ ./a
+       context element ./a.js [641] ./templates sync ^\.\/.*$ ./a.js
+ [965] ./templates/c.js 80 bytes {179} [optional] [built]
+       context element ./c [641] ./templates sync ^\.\/.*$ ./c
+       context element ./c.js [641] ./templates sync ^\.\/.*$ ./c.js
 ```
 
 # Code Splitting

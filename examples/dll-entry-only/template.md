@@ -24,29 +24,28 @@ from the corresponding modules `a.js`, `b.js` and `cjs.js`. None of the other mo
 Also see [tree shaking](https://github.com/webpack/webpack/tree/master/examples/harmony-unused)
 and [scope hoisting example](https://github.com/webpack/webpack/tree/master/examples/scope-hoisting).
 
-
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # webpack.config.js
 
-``` javascript
-{{webpack.config.js}}
+```javascript
+_{{webpack.config.js}}_
 ```
 
 # dist/dll.js
 
-``` javascript
-{{dist/dll.js}}
+```javascript
+_{{dist/dll.js}}_
 ```
 
 # dist/dll-manifest.json
 
-``` javascript
-{{dist/dll-manifest.json}}
+```javascript
+_{{dist/dll-manifest.json}}_
 ```
 
 # Info
@@ -54,11 +53,11 @@ and [scope hoisting example](https://github.com/webpack/webpack/tree/master/exam
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

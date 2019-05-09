@@ -33,7 +33,7 @@ With this bundle configuration, you would load your third party libraries, then 
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 
 module.exports = {
@@ -72,7 +72,7 @@ module.exports = {
 
 # dist/vendor.js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["vendor"],{
 
 /***/ 1:
@@ -146,7 +146,7 @@ module.exports = "utility3";
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -192,7 +192,7 @@ module.exports = "utility3";
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!******************!*\
@@ -328,7 +328,7 @@ module.exports = "utility1";
 
 # dist/pageB.js
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -487,7 +487,7 @@ module.exports = "pageB";
 
 # dist/pageC.js
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -648,7 +648,7 @@ module.exports = "pageC";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
                  Asset       Size                 Chunks             Chunk Names
 commons-utility2_js.js  357 bytes  {commons-utility2_js}  [emitted]
 commons-utility3_js.js  357 bytes  {commons-utility3_js}  [emitted]
@@ -711,13 +711,13 @@ chunk {vendor} vendor.js (vendor) 54 bytes [initial] [rendered] split chunk (cac
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
                  Asset       Size                 Chunks             Chunk Names
-commons-utility2_js.js  117 bytes  {commons-utility2_js}  [emitted]
+commons-utility2_js.js  118 bytes  {commons-utility2_js}  [emitted]
 commons-utility3_js.js  118 bytes  {commons-utility3_js}  [emitted]
-              pageA.js  959 bytes                {pageA}  [emitted]  pageA
-              pageB.js  943 bytes                {pageB}  [emitted]  pageB
-              pageC.js  927 bytes                {pageC}  [emitted]  pageC
+              pageA.js  960 bytes                {pageA}  [emitted]  pageA
+              pageB.js  944 bytes                {pageB}  [emitted]  pageB
+              pageC.js  928 bytes                {pageC}  [emitted]  pageC
              vendor.js  141 bytes               {vendor}  [emitted]  vendor
 Entrypoint pageA = vendor.js commons-utility2_js.js pageA.js
 Entrypoint pageB = vendor.js commons-utility2_js.js commons-utility3_js.js pageB.js
@@ -726,38 +726,38 @@ chunk {commons-utility2_js} commons-utility2_js.js 28 bytes [initial] [rendered]
     > ./pageA pageA
     > ./pageB pageB
     > ./pageC pageC
- [37] ./utility2.js 28 bytes {commons-utility2_js} [built]
-      cjs require ./utility2 [912] ./pageC.js 1:15-36
-      cjs require ./utility2 [953] ./pageA.js 3:15-36
-      cjs require ./utility2 [954] ./pageB.js 2:15-36
+ [318] ./utility2.js 28 bytes {commons-utility2_js} [built]
+       cjs require ./utility2 [145] ./pageC.js 1:15-36
+       cjs require ./utility2 [366] ./pageA.js 3:15-36
+       cjs require ./utility2 [588] ./pageB.js 2:15-36
 chunk {commons-utility3_js} commons-utility3_js.js 28 bytes [initial] [rendered] split chunk (cache group: commons)
     > ./pageB pageB
     > ./pageC pageC
- [544] ./utility3.js 28 bytes {commons-utility3_js} [built]
-       cjs require ./utility3 [912] ./pageC.js 2:15-36
-       cjs require ./utility3 [954] ./pageB.js 3:15-36
+ [685] ./utility3.js 28 bytes {commons-utility3_js} [built]
+       cjs require ./utility3 [145] ./pageC.js 2:15-36
+       cjs require ./utility3 [588] ./pageB.js 3:15-36
 chunk {pageA} pageA.js (pageA) 165 bytes (javascript) 2.28 KiB (runtime) [entry] [rendered]
     > ./pageA pageA
- [105] ./utility1.js 28 bytes {pageA} [built]
-       cjs require ./utility1 [953] ./pageA.js 2:15-36
- [953] ./pageA.js 137 bytes {pageA} [built]
+ [366] ./pageA.js 137 bytes {pageA} [built]
        entry ./pageA pageA
+ [558] ./utility1.js 28 bytes {pageA} [built]
+       cjs require ./utility1 [366] ./pageA.js 2:15-36
      + 1 hidden chunk module
 chunk {pageB} pageB.js (pageB) 137 bytes (javascript) 2.3 KiB (runtime) [entry] [rendered]
     > ./pageB pageB
- [954] ./pageB.js 137 bytes {pageB} [built]
+ [588] ./pageB.js 137 bytes {pageB} [built]
        entry ./pageB pageB
      + 1 hidden chunk module
 chunk {pageC} pageC.js (pageC) 102 bytes (javascript) 2.3 KiB (runtime) [entry] [rendered]
     > ./pageC pageC
- [912] ./pageC.js 102 bytes {pageC} [built]
+ [145] ./pageC.js 102 bytes {pageC} [built]
        entry ./pageC pageC
      + 1 hidden chunk module
 chunk {vendor} vendor.js (vendor) 54 bytes [initial] [rendered] split chunk (cache group: vendor) (name: vendor)
     > ./pageA pageA
     > ./pageB pageB
- [333] ./node_modules/vendor1.js 27 bytes {vendor} [built]
-       cjs require vendor1 [953] ./pageA.js 1:14-32
- [407] ./node_modules/vendor2.js 27 bytes {vendor} [built]
-       cjs require vendor2 [954] ./pageB.js 1:14-32
+ [815] ./node_modules/vendor2.js 27 bytes {vendor} [built]
+       cjs require vendor2 [588] ./pageB.js 1:14-32
+ [880] ./node_modules/vendor1.js 27 bytes {vendor} [built]
+       cjs require vendor1 [366] ./pageA.js 1:14-32
 ```

@@ -4,12 +4,12 @@ A very simple solution to this problem is to create another chunk which contains
 
 The configuration required for this is:
 
-* use `[chunkhash]` in `output.filename` (Note that this example doesn't do this because of the example generator infrastructure, but you should)
-* use `[chunkhash]` in `output.chunkFilename` (Note that this example doesn't do this because of the example generator infrastructure, but you should)
+- use `[chunkhash]` in `output.filename` (Note that this example doesn't do this because of the example generator infrastructure, but you should)
+- use `[chunkhash]` in `output.chunkFilename` (Note that this example doesn't do this because of the example generator infrastructure, but you should)
 
 # example.js
 
-``` javascript
+```javascript
 // some module
 import("./async1");
 import("./async2");
@@ -17,7 +17,7 @@ import("./async2");
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 module.exports = {
 	// mode: "development || "production",
@@ -37,20 +37,17 @@ module.exports = {
 
 # index.html
 
-``` html
+```html
 <html>
-<head>
-</head>
-<body>
+	<head> </head>
+	<body>
+		<!-- inlined minimized file "runtime~main.[chunkhash].js" -->
+		<script>
+			!function(e,t){"use strict";var r={};function n(t){if(r[t])return r[t].exports;var o=r[t]={i:t,l:!1,exports:{}};return e[t].call(o.exports,o,o.exports,n),o.l=!0,o.exports}n.m=e,function(e){e.f={},e.e=function(t){return Promise.all(Object.keys(e.f).reduce(function(r,n){return e.f[n](t,r),r},[]))},e.t=function(t,r){if(1&r&&(t=this(t)),8&r)return t;if(4&r&&"object"==typeof t&&t&&t.__esModule)return t;var n=Object.create(null);if(e.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:t}),2&r&&"string"!=typeof t)for(var o in t)e.d(n,o,function(e){return t[e]}.bind(null,o));return n},t=Object.prototype.hasOwnProperty,e.d=function(e,r,n){t.call(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:n})},e.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},e.p="dist/",e.u=function(e){return e+".[chunkhash].js"},function(){var t={303:0},r=[];e.f.j=function(r,n){var o=t[r];if(0!==o)if(o)n.push(o[2]);else{var u=new Promise(function(e,n){o=t[r]=[e,n]});n.push(o[2]=u);var i,a=e.p+e.u(r),c=document.createElement("script");c.charset="utf-8",c.timeout=120,e.nc&&c.setAttribute("nonce",e.nc),c.src=a,i=function(e){c.onerror=c.onload=null,clearTimeout(f);var n=function(){if(t[r])return t[r][1];0!==t[r]&&(t[r]=void 0)}();if(n){var o=e&&("load"===e.type?"missing":e.type),u=e&&e.target&&e.target.src,i=new Error("Loading chunk "+r+" failed.\n("+o+": "+u+")");i.type=o,i.request=u,n(i)}};var f=setTimeout(function(){i({type:"timeout",target:c})},12e4);c.onerror=c.onload=i,document.head.appendChild(c)}};var n=function(){};function o(){for(var n,o=0;o<r.length;o++){for(var u=r[o],i=!0,a=1;a<u.length;a++){var c=u[a];0!==t[c]&&(i=!1)}i&&(r.splice(o--,1),n=e(e.s=u[0]))}return n}function u(o){for(var u,i,a=o[0],c=o[1],l=o[2],s=o[3],p=0,d=[];p<a.length;p++)i=a[p],t[i]&&d.push(t[i][0]),t[i]=0;for(u in c)Object.prototype.hasOwnProperty.call(c,u)&&(e.m[u]=c[u]);for(s&&s(e),f&&f(o);d.length;)d.shift()();return l&&r.push.apply(r,l),n()}e.x=function(){return(n=o)()};var i=window.webpackJsonp=window.webpackJsonp||[],a=i.push.bind(i);i.push=u,i=i.slice();for(var c=0;c<i.length;c++)u(i[c]);var f=a}();var t}(n),n.x()}([]);
+		</script>
 
-<!-- inlined minimized file "runtime~main.[chunkhash].js" -->
-<script>
-!function(e,t){"use strict";var r={};function n(t){if(r[t])return r[t].exports;var o=r[t]={i:t,l:!1,exports:{}};return e[t].call(o.exports,o,o.exports,n),o.l=!0,o.exports}n.m=e,function(e){e.f={},e.e=function(t){return Promise.all(Object.keys(e.f).reduce(function(r,n){return e.f[n](t,r),r},[]))},e.t=function(t,r){if(1&r&&(t=this(t)),8&r)return t;if(4&r&&"object"==typeof t&&t&&t.__esModule)return t;var n=Object.create(null);if(e.r(n),Object.defineProperty(n,"default",{enumerable:!0,value:t}),2&r&&"string"!=typeof t)for(var o in t)e.d(n,o,function(e){return t[e]}.bind(null,o));return n},t=Object.prototype.hasOwnProperty,e.d=function(e,r,n){t.call(e,r)||Object.defineProperty(e,r,{enumerable:!0,get:n})},e.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},e.p="dist/",e.u=function(e){return e+".[chunkhash].js"},function(){var t={127:0},r=[];e.f.j=function(r,n){var o=t[r];if(0!==o)if(o)n.push(o[2]);else{var u=new Promise(function(e,n){o=t[r]=[e,n]});n.push(o[2]=u);var i,c=e.p+e.u(r),f=document.createElement("script");f.charset="utf-8",f.timeout=120,e.nc&&f.setAttribute("nonce",e.nc),f.src=c,i=function(e){f.onerror=f.onload=null,clearTimeout(a);var n=function(){if(t[r])return t[r][1];0!==t[r]&&(t[r]=void 0)}();if(n){var o=e&&("load"===e.type?"missing":e.type),u=e&&e.target&&e.target.src,i=new Error("Loading chunk "+r+" failed.\n("+o+": "+u+")");i.type=o,i.request=u,n(i)}};var a=setTimeout(function(){i({type:"timeout",target:f})},12e4);f.onerror=f.onload=i,document.head.appendChild(f)}};var n=function(){};function o(){for(var n,o=0;o<r.length;o++){for(var u=r[o],i=!0,c=1;c<u.length;c++){var f=u[c];0!==t[f]&&(i=!1)}i&&(r.splice(o--,1),n=e(e.s=u[0]))}return n}function u(o){for(var u,i,c=o[0],f=o[1],l=o[2],p=o[3],s=0,d=[];s<c.length;s++)i=c[s],t[i]&&d.push(t[i][0]),t[i]=0;for(u in f)Object.prototype.hasOwnProperty.call(f,u)&&(e.m[u]=f[u]);for(p&&p(e),a&&a(o);d.length;)d.shift()();return l&&r.push.apply(r,l),n()}e.x=function(){return(n=o)()};var i=window.webpackJsonp=window.webpackJsonp||[],c=i.push.bind(i);i.push=u,i=i.slice();for(var f=0;f<i.length;f++)u(i[f]);var a=c}();var t}(n),n.x()}([]);
-</script>
-
-<script src="dist/main.[chunkhash].js"></script>
-
-</body>
+		<script src="dist/main.[chunkhash].js"></script>
+	</body>
 </html>
 ```
 
@@ -58,7 +55,7 @@ module.exports = {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -104,7 +101,7 @@ module.exports = {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([],
 ```
 
@@ -172,8 +169,7 @@ module.exports = {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
-/******/ 		
-/******/ 		// This function only allows to reference on-demand chunks
+/******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".[chunkhash].js";
@@ -330,7 +326,7 @@ module.exports = {
 
 # dist/main.[chunkhash].js
 
-``` javascript
+```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */
 /*!********************!*\
@@ -355,14 +351,14 @@ __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.t.bind(__webpa
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
                     Asset       Size  Chunks             Chunk Names
            2.[chunkhash].js  325 bytes     {2}  [emitted]
            3.[chunkhash].js  319 bytes     {3}  [emitted]
         main.[chunkhash].js  713 bytes     {1}  [emitted]  main
-runtime~main.[chunkhash].js   9.89 KiB     {0}  [emitted]  runtime~main
+runtime~main.[chunkhash].js   9.87 KiB     {0}  [emitted]  runtime~main
 Entrypoint main = runtime~main.[chunkhash].js main.[chunkhash].js
-chunk {0} runtime~main.[chunkhash].js (runtime~main) 5.85 KiB [entry] [rendered]
+chunk {0} runtime~main.[chunkhash].js (runtime~main) 5.84 KiB [entry] [rendered]
     > ./example main
     7 chunk modules
 chunk {1} main.[chunkhash].js (main) 55 bytes [initial] [rendered]
@@ -386,26 +382,26 @@ chunk {3} 3.[chunkhash].js 28 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
                     Asset       Size  Chunks             Chunk Names
-         919.[chunkhash].js   79 bytes   {919}  [emitted]
-         991.[chunkhash].js   79 bytes   {991}  [emitted]
-        main.[chunkhash].js  161 bytes   {404}  [emitted]  main
-runtime~main.[chunkhash].js   2.19 KiB   {127}  [emitted]  runtime~main
+         114.[chunkhash].js   79 bytes   {114}  [emitted]
+         172.[chunkhash].js   79 bytes   {172}  [emitted]
+        main.[chunkhash].js  161 bytes   {179}  [emitted]  main
+runtime~main.[chunkhash].js   2.19 KiB   {303}  [emitted]  runtime~main
 Entrypoint main = runtime~main.[chunkhash].js main.[chunkhash].js
-chunk {127} runtime~main.[chunkhash].js (runtime~main) 5.85 KiB [entry] [rendered]
+chunk {114} 114.[chunkhash].js 28 bytes [rendered]
+    > ./async1 [144] ./example.js 2:0-18
+ [114] ./async1.js 28 bytes {114} [built]
+       import() ./async1 [144] ./example.js 2:0-18
+chunk {172} 172.[chunkhash].js 28 bytes [rendered]
+    > ./async2 [144] ./example.js 3:0-18
+ [172] ./async2.js 28 bytes {172} [built]
+       import() ./async2 [144] ./example.js 3:0-18
+chunk {179} main.[chunkhash].js (main) 55 bytes [initial] [rendered]
+    > ./example main
+ [144] ./example.js 55 bytes {179} [built]
+       entry ./example main
+chunk {303} runtime~main.[chunkhash].js (runtime~main) 5.84 KiB [entry] [rendered]
     > ./example main
     7 chunk modules
-chunk {404} main.[chunkhash].js (main) 55 bytes [initial] [rendered]
-    > ./example main
- [275] ./example.js 55 bytes {404} [built]
-       entry ./example main
-chunk {919} 919.[chunkhash].js 28 bytes [rendered]
-    > ./async2 [275] ./example.js 3:0-18
- [919] ./async2.js 28 bytes {919} [built]
-       import() ./async2 [275] ./example.js 3:0-18
-chunk {991} 991.[chunkhash].js 28 bytes [rendered]
-    > ./async1 [275] ./example.js 2:0-18
- [991] ./async1.js 28 bytes {991} [built]
-       import() ./async1 [275] ./example.js 2:0-18
 ```

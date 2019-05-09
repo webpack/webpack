@@ -24,17 +24,16 @@ from the corresponding modules `a.js`, `b.js` and `cjs.js`. None of the other mo
 Also see [tree shaking](https://github.com/webpack/webpack/tree/master/examples/harmony-unused)
 and [scope hoisting example](https://github.com/webpack/webpack/tree/master/examples/scope-hoisting).
 
-
 # example.js
 
-``` javascript
+```javascript
 export { a, b } from "./a";
 export { c } from "./cjs";
 ```
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../");
 
@@ -63,8 +62,8 @@ module.exports = {
 
 # dist/dll.js
 
-``` javascript
-var dll_6e9cb88568db6ca9f08a =
+```javascript
+var dll_97225ff6e4dba33e1316 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -254,8 +253,8 @@ exports.c = "c";
 
 # dist/dll-manifest.json
 
-``` javascript
-{"name":"dll_6e9cb88568db6ca9f08a","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
+```javascript
+{"name":"dll_97225ff6e4dba33e1316","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -264,7 +263,7 @@ exports.c = "c";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
  Asset      Size  Chunks             Chunk Names
 dll.js  6.07 KiB     {0}  [emitted]  dll
 Entrypoint dll = dll.js
@@ -288,20 +287,20 @@ chunk {0} dll.js (dll) 216 bytes (javascript) 1.57 KiB (runtime) [entry] [render
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
  Asset      Size  Chunks             Chunk Names
-dll.js  1.15 KiB   {144}  [emitted]  dll
+dll.js  1.15 KiB   {874}  [emitted]  dll
 Entrypoint dll = dll.js
-chunk {144} dll.js (dll) 216 bytes (javascript) 1.57 KiB (runtime) [entry] [rendered]
+chunk {874} dll.js (dll) 216 bytes (javascript) 1.57 KiB (runtime) [entry] [rendered]
     > dll
- [348] ./example.js + 2 modules 162 bytes {144} [built]
-       [exports: a, b, c]
-       entry ./example [980] dll dll dll[0]
- [480] ./cjs.js 42 bytes {144} [built]
-       [only some exports used: c]
-       harmony side effect evaluation ./cjs [348] ./example.js + 2 modules ./example.js 2:0-26
-       harmony export imported specifier ./cjs [348] ./example.js + 2 modules ./example.js 2:0-26
- [980] dll dll 12 bytes {144} [built]
+ [312] dll dll 12 bytes {874} [built]
        dll entry
+ [489] ./cjs.js 42 bytes {874} [built]
+       [only some exports used: c]
+       harmony side effect evaluation ./cjs [680] ./example.js + 2 modules ./example.js 2:0-26
+       harmony export imported specifier ./cjs [680] ./example.js + 2 modules ./example.js 2:0-26
+ [680] ./example.js + 2 modules 162 bytes {874} [built]
+       [exports: a, b, c]
+       entry ./example [312] dll dll dll[0]
      + 4 hidden chunk modules
 ```

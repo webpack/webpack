@@ -8,7 +8,7 @@ A manifest is created which includes mappings from module names to internal ids.
 
 ### webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../../");
 
@@ -32,7 +32,7 @@ module.exports = {
 
 # example-vendor
 
-``` javascript
+```javascript
 export function square(n) {
 	return n * n;
 }
@@ -40,8 +40,8 @@ export function square(n) {
 
 # dist/vendor.js
 
-``` javascript
-var vendor_lib_f9a078c3e662767ede52 =
+```javascript
+var vendor_lib_ced36e0133f6a1f67f40 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -164,8 +164,8 @@ function square(n) {
 
 # dist/vendor-manifest.json
 
-``` javascript
-{"name":"vendor_lib_f9a078c3e662767ede52","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
+```javascript
+{"name":"vendor_lib_ced36e0133f6a1f67f40","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
 ```
 
 # Info
@@ -174,7 +174,7 @@ function square(n) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
     Asset      Size  Chunks             Chunk Names
 vendor.js  3.42 KiB     {0}  [emitted]  main
 Entrypoint main = vendor.js
@@ -194,19 +194,18 @@ chunk {0} vendor.js (main) 57 bytes (javascript) 560 bytes (runtime) [entry] [re
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
     Asset       Size  Chunks             Chunk Names
-vendor.js  674 bytes   {404}  [emitted]  main
+vendor.js  674 bytes   {179}  [emitted]  main
 Entrypoint main = vendor.js
-chunk {404} vendor.js (main) 57 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
+chunk {179} vendor.js (main) 57 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
     > main
- [507] dll main 12 bytes {404} [built]
-       dll entry
-       DllPlugin
- [797] ../node_modules/example-vendor.js 45 bytes {404} [built]
+ [442] ../node_modules/example-vendor.js 45 bytes {179} [built]
        [exports: square]
-       entry example-vendor [507] dll main main[0]
+       entry example-vendor [550] dll main main[0]
+       DllPlugin
+ [550] dll main 12 bytes {179} [built]
+       dll entry
        DllPlugin
      + 2 hidden chunk modules
 ```
-

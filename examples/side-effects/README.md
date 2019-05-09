@@ -10,12 +10,12 @@ After being built by webpack, the output bundle contains `index.js` `a.js` `b.js
 
 Advantages:
 
-* Smaller bundles
-* Faster bootup
+- Smaller bundles
+- Faster bootup
 
 # example.js
 
-``` javascript
+```javascript
 import { a as a1, b as b1 } from "big-module";
 import { a as a2, b as b2 } from "big-module-with-flag";
 
@@ -29,7 +29,7 @@ console.log(
 
 # node_modules/big-module/package.json
 
-``` javascript
+```javascript
 {
   "name": "big-module"
 }
@@ -37,7 +37,7 @@ console.log(
 
 # node_modules/big-module-with-flag/package.json
 
-``` javascript
+```javascript
 {
   "name": "big-module-with-flag",
   "sideEffects": false
@@ -46,7 +46,7 @@ console.log(
 
 # node_modules/big-module(-with-flag)/index.js
 
-``` javascript
+```javascript
 export { a } from "./a";
 export { b } from "./b";
 export { c } from "./c";
@@ -56,7 +56,7 @@ export { c } from "./c";
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -104,7 +104,7 @@ export { c } from "./c";
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -280,7 +280,7 @@ const b = "b";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
     Asset      Size  Chunks             Chunk Names
 output.js  7.96 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
@@ -330,18 +330,18 @@ chunk {0} output.js (main) 325 bytes (javascript) 560 bytes (runtime) [entry] [r
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
     Asset       Size  Chunks             Chunk Names
-output.js  566 bytes   {404}  [emitted]  main
+output.js  568 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 325 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
+chunk {179} output.js (main) 325 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
     > ./example.js main
- [56] ./example.js + 6 modules 325 bytes {404} [built]
-      [no exports]
-      harmony side effect evaluation ./a ./node_modules/big-module-with-flag/index.js 1:0-24
-      harmony export imported specifier ./a ./node_modules/big-module-with-flag/index.js 1:0-24
-      harmony side effect evaluation ./b ./node_modules/big-module-with-flag/index.js 2:0-24
-      harmony export imported specifier ./b ./node_modules/big-module-with-flag/index.js 2:0-24
-      entry ./example.js main
+ [295] ./example.js + 6 modules 325 bytes {179} [built]
+       [no exports]
+       harmony side effect evaluation ./a ./node_modules/big-module-with-flag/index.js 1:0-24
+       harmony export imported specifier ./a ./node_modules/big-module-with-flag/index.js 1:0-24
+       harmony side effect evaluation ./b ./node_modules/big-module-with-flag/index.js 2:0-24
+       harmony export imported specifier ./b ./node_modules/big-module-with-flag/index.js 2:0-24
+       entry ./example.js main
      + 2 hidden chunk modules
 ```

@@ -8,7 +8,7 @@ You can also see the info messages webpack prints to console (for both normal an
 
 # example.js
 
-``` javascript
+```javascript
 const inc = require('./increment').increment;
 const a = 1;
 inc(a); // 2
@@ -16,7 +16,7 @@ inc(a); // 2
 
 # increment.js
 
-``` javascript
+```javascript
 const add = require('./math').add;
 exports.increment = function(val) {
     return add(val, 1);
@@ -25,7 +25,7 @@ exports.increment = function(val) {
 
 # math.js
 
-``` javascript
+```javascript
 exports.add = function() {
     var sum = 0, i = 0, args = arguments, l = args.length;
     while (i < l) {
@@ -39,7 +39,7 @@ exports.add = function() {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -85,7 +85,7 @@ exports.add = function() {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -142,7 +142,7 @@ exports.add = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
     Asset      Size  Chunks             Chunk Names
 output.js  2.46 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
@@ -163,16 +163,16 @@ chunk {0} output.js (main) 326 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
     Asset       Size  Chunks             Chunk Names
-output.js  406 bytes   {404}  [emitted]  main
+output.js  406 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 326 bytes [entry] [rendered]
+chunk {179} output.js (main) 326 bytes [entry] [rendered]
     > ./example.js main
- [275] ./example.js 72 bytes {404} [built]
+ [144] ./example.js 72 bytes {179} [built]
        entry ./example.js main
- [529] ./increment.js 98 bytes {404} [built]
-       cjs require ./increment [275] ./example.js 1:12-34
- [702] ./math.js 156 bytes {404} [built]
-       cjs require ./math [529] ./increment.js 1:12-29
+ [451] ./math.js 156 bytes {179} [built]
+       cjs require ./math [822] ./increment.js 1:12-29
+ [822] ./increment.js 98 bytes {179} [built]
+       cjs require ./increment [144] ./example.js 1:12-34
 ```

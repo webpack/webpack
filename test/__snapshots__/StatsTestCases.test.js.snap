@@ -297,13 +297,14 @@ Child vendors:
          + 3 hidden dependent modules
 Child multiple-vendors:
     Entrypoint main = multiple-vendors/main.js
-    Entrypoint a = multiple-vendors/282.js multiple-vendors/954.js multiple-vendors/767.js multiple-vendors/async-a.js multiple-vendors/a.js
-    Entrypoint b = multiple-vendors/282.js multiple-vendors/954.js multiple-vendors/767.js multiple-vendors/async-b.js multiple-vendors/b.js
-    Entrypoint c = multiple-vendors/282.js multiple-vendors/769.js multiple-vendors/767.js multiple-vendors/async-c.js multiple-vendors/c.js
-    chunk {128} multiple-vendors/b.js (b) 20 bytes (javascript) 2.55 KiB (runtime) [entry] [rendered]
+    Entrypoint a = multiple-vendors/282.js multiple-vendors/954.js multiple-vendors/767.js multiple-vendors/a.js
+    Entrypoint b = multiple-vendors/282.js multiple-vendors/954.js multiple-vendors/767.js multiple-vendors/b.js
+    Entrypoint c = multiple-vendors/282.js multiple-vendors/769.js multiple-vendors/767.js multiple-vendors/c.js
+    chunk {128} multiple-vendors/b.js (b) 92 bytes (javascript) 2.55 KiB (runtime) [entry] [rendered]
         > ./b b
-     [568] ./f.js 20 bytes {128} {459} {568} [built]
+     [996] ./b.js 72 bytes {128} {334} [built]
          + 2 hidden root modules
+         + 1 hidden dependent module
     chunk {137} multiple-vendors/async-g.js (async-g) 34 bytes [rendered]
         > ./g ./a.js 6:0-47
      [785] ./g.js 34 bytes {137} [built]
@@ -319,18 +320,17 @@ Child multiple-vendors:
         > ./b b
         > ./c c
      [282] ./node_modules/x.js 20 bytes {282} [built]
-    chunk {334} multiple-vendors/async-b.js (async-b) 72 bytes [initial] [rendered] reused as split chunk (cache group: default)
+    chunk {334} multiple-vendors/async-b.js (async-b) 72 bytes [rendered]
         > ./b [10] ./index.js 2:0-47
-        > ./b b
-     [996] ./b.js 72 bytes {334} [built]
-    chunk {383} multiple-vendors/async-c.js (async-c) 72 bytes [initial] [rendered] reused as split chunk (cache group: default)
+     [996] ./b.js 72 bytes {128} {334} [built]
+    chunk {383} multiple-vendors/async-c.js (async-c) 72 bytes [rendered]
         > ./c [10] ./index.js 3:0-47
+     [460] ./c.js 72 bytes {383} {459} [built]
+    chunk {459} multiple-vendors/c.js (c) 92 bytes (javascript) 2.55 KiB (runtime) [entry] [rendered]
         > ./c c
-     [460] ./c.js 72 bytes {383} [built]
-    chunk {459} multiple-vendors/c.js (c) 20 bytes (javascript) 2.55 KiB (runtime) [entry] [rendered]
-        > ./c c
-     [568] ./f.js 20 bytes {128} {459} {568} [built]
+     [460] ./c.js 72 bytes {383} {459} [built]
          + 2 hidden root modules
+         + 1 hidden dependent module
     chunk {568} multiple-vendors/568.js 20 bytes [rendered] split chunk (cache group: default)
         > ./b [10] ./index.js 2:0-47
         > ./c [10] ./index.js 3:0-47
@@ -348,13 +348,13 @@ Child multiple-vendors:
         > ./c [10] ./index.js 3:0-47
         > ./c c
      [769] ./node_modules/z.js 20 bytes {769} [built]
-    chunk {786} multiple-vendors/a.js (a) 5.52 KiB [entry] [rendered]
+    chunk {786} multiple-vendors/a.js (a) 156 bytes (javascript) 5.52 KiB (runtime) [entry] [rendered]
         > ./a a
-        7 root modules
-    chunk {794} multiple-vendors/async-a.js (async-a) 156 bytes [initial] [rendered] reused as split chunk (cache group: default)
+     [761] ./a.js + 1 modules 156 bytes {786} {794} [built]
+         + 7 hidden root modules
+    chunk {794} multiple-vendors/async-a.js (async-a) 156 bytes [rendered]
         > ./a [10] ./index.js 1:0-47
-        > ./a a
-     [761] ./a.js + 1 modules 156 bytes {794} [built]
+     [761] ./a.js + 1 modules 156 bytes {786} {794} [built]
     chunk {954} multiple-vendors/954.js 20 bytes [initial] [rendered] split chunk (cache group: vendors)
         > ./a [10] ./index.js 1:0-47
         > ./b [10] ./index.js 2:0-47
@@ -363,13 +363,14 @@ Child multiple-vendors:
      [954] ./node_modules/y.js 20 bytes {954} [built]
 Child all:
     Entrypoint main = all/main.js
-    Entrypoint a = all/282.js all/954.js all/767.js all/async-a.js all/a.js
-    Entrypoint b = all/282.js all/954.js all/767.js all/async-b.js all/b.js
-    Entrypoint c = all/282.js all/769.js all/767.js all/async-c.js all/c.js
-    chunk {128} all/b.js (b) 20 bytes (javascript) 2.55 KiB (runtime) [entry] [rendered]
+    Entrypoint a = all/282.js all/954.js all/767.js all/a.js
+    Entrypoint b = all/282.js all/954.js all/767.js all/b.js
+    Entrypoint c = all/282.js all/769.js all/767.js all/c.js
+    chunk {128} all/b.js (b) 92 bytes (javascript) 2.55 KiB (runtime) [entry] [rendered]
         > ./b b
-     [568] ./f.js 20 bytes {128} {459} {568} [built]
+     [996] ./b.js 72 bytes {128} {334} [built]
          + 2 hidden root modules
+         + 1 hidden dependent module
     chunk {137} all/async-g.js (async-g) 34 bytes [rendered]
         > ./g ./a.js 6:0-47
      [785] ./g.js 34 bytes {137} [built]
@@ -385,18 +386,17 @@ Child all:
         > ./b b
         > ./c c
      [282] ./node_modules/x.js 20 bytes {282} [built]
-    chunk {334} all/async-b.js (async-b) 72 bytes [initial] [rendered] reused as split chunk (cache group: default)
+    chunk {334} all/async-b.js (async-b) 72 bytes [rendered]
         > ./b [10] ./index.js 2:0-47
-        > ./b b
-     [996] ./b.js 72 bytes {334} [built]
-    chunk {383} all/async-c.js (async-c) 72 bytes [initial] [rendered] reused as split chunk (cache group: default)
+     [996] ./b.js 72 bytes {128} {334} [built]
+    chunk {383} all/async-c.js (async-c) 72 bytes [rendered]
         > ./c [10] ./index.js 3:0-47
+     [460] ./c.js 72 bytes {383} {459} [built]
+    chunk {459} all/c.js (c) 92 bytes (javascript) 2.55 KiB (runtime) [entry] [rendered]
         > ./c c
-     [460] ./c.js 72 bytes {383} [built]
-    chunk {459} all/c.js (c) 20 bytes (javascript) 2.55 KiB (runtime) [entry] [rendered]
-        > ./c c
-     [568] ./f.js 20 bytes {128} {459} {568} [built]
+     [460] ./c.js 72 bytes {383} {459} [built]
          + 2 hidden root modules
+         + 1 hidden dependent module
     chunk {568} all/568.js 20 bytes [rendered] split chunk (cache group: default)
         > ./b [10] ./index.js 2:0-47
         > ./c [10] ./index.js 3:0-47
@@ -414,13 +414,13 @@ Child all:
         > ./c [10] ./index.js 3:0-47
         > ./c c
      [769] ./node_modules/z.js 20 bytes {769} [built]
-    chunk {786} all/a.js (a) 5.51 KiB [entry] [rendered]
+    chunk {786} all/a.js (a) 156 bytes (javascript) 5.51 KiB (runtime) [entry] [rendered]
         > ./a a
-        7 root modules
-    chunk {794} all/async-a.js (async-a) 156 bytes [initial] [rendered] reused as split chunk (cache group: default)
+     [761] ./a.js + 1 modules 156 bytes {786} {794} [built]
+         + 7 hidden root modules
+    chunk {794} all/async-a.js (async-a) 156 bytes [rendered]
         > ./a [10] ./index.js 1:0-47
-        > ./a a
-     [761] ./a.js + 1 modules 156 bytes {794} [built]
+     [761] ./a.js + 1 modules 156 bytes {786} {794} [built]
     chunk {954} all/954.js 20 bytes [initial] [rendered] split chunk (cache group: vendors)
         > ./a [10] ./index.js 1:0-47
         > ./b [10] ./index.js 2:0-47
@@ -2527,13 +2527,14 @@ exports[`StatsTestCases should print correct stats for split-chunks 1`] = `
      [954] ./node_modules/y.js 20 bytes {128} {786} {954} [built]
 Child all-chunks:
     Entrypoint main = default/main.js
-    Entrypoint a = default/282.js default/954.js default/767.js default/async-a.js default/a.js
-    Entrypoint b = default/282.js default/954.js default/767.js default/async-b.js default/b.js
-    Entrypoint c = default/282.js default/769.js default/767.js default/async-c.js default/c.js
-    chunk {128} default/b.js (b) 20 bytes (javascript) 2.55 KiB (runtime) ={282}= ={334}= ={767}= ={954}= [entry] [rendered]
+    Entrypoint a = default/282.js default/954.js default/767.js default/a.js
+    Entrypoint b = default/282.js default/954.js default/767.js default/b.js
+    Entrypoint c = default/282.js default/769.js default/767.js default/c.js
+    chunk {128} default/b.js (b) 92 bytes (javascript) 2.55 KiB (runtime) ={282}= ={767}= ={954}= [entry] [rendered]
         > ./b b
-     [568] ./f.js 20 bytes {128} {459} {568} [built]
+     [996] ./b.js 72 bytes {128} {334} [built]
          + 2 hidden root modules
+         + 1 hidden dependent module
     chunk {137} default/async-g.js (async-g) 34 bytes <{282}> <{767}> <{786}> <{794}> <{954}> ={568}= [rendered]
         > ./g ./a.js 6:0-47
      [785] ./g.js 34 bytes {137} [built]
@@ -2549,18 +2550,17 @@ Child all-chunks:
         > ./b b
         > ./c c
      [282] ./node_modules/x.js 20 bytes {282} [built]
-    chunk {334} default/async-b.js (async-b) 72 bytes <{179}> ={128}= ={282}= ={568}= ={767}= ={954}= [initial] [rendered] reused as split chunk (cache group: default)
+    chunk {334} default/async-b.js (async-b) 72 bytes <{179}> ={282}= ={568}= ={767}= ={954}= [rendered]
         > ./b [10] ./index.js 2:0-47
-        > ./b b
-     [996] ./b.js 72 bytes {334} [built]
-    chunk {383} default/async-c.js (async-c) 72 bytes <{179}> ={282}= ={459}= ={568}= ={767}= ={769}= [initial] [rendered] reused as split chunk (cache group: default)
+     [996] ./b.js 72 bytes {128} {334} [built]
+    chunk {383} default/async-c.js (async-c) 72 bytes <{179}> ={282}= ={568}= ={767}= ={769}= [rendered]
         > ./c [10] ./index.js 3:0-47
+     [460] ./c.js 72 bytes {383} {459} [built]
+    chunk {459} default/c.js (c) 92 bytes (javascript) 2.55 KiB (runtime) ={282}= ={767}= ={769}= [entry] [rendered]
         > ./c c
-     [460] ./c.js 72 bytes {383} [built]
-    chunk {459} default/c.js (c) 20 bytes (javascript) 2.55 KiB (runtime) ={282}= ={383}= ={767}= ={769}= [entry] [rendered]
-        > ./c c
-     [568] ./f.js 20 bytes {128} {459} {568} [built]
+     [460] ./c.js 72 bytes {383} {459} [built]
          + 2 hidden root modules
+         + 1 hidden dependent module
     chunk {568} default/568.js 20 bytes <{179}> <{282}> <{767}> <{786}> <{794}> <{954}> ={137}= ={282}= ={334}= ={383}= ={767}= ={769}= ={954}= [rendered] split chunk (cache group: default)
         > ./b [10] ./index.js 2:0-47
         > ./c [10] ./index.js 3:0-47
@@ -2578,13 +2578,13 @@ Child all-chunks:
         > ./c [10] ./index.js 3:0-47
         > ./c c
      [769] ./node_modules/z.js 20 bytes {769} [built]
-    chunk {786} default/a.js (a) 5.51 KiB ={282}= ={767}= ={794}= ={954}= >{137}< >{568}< [entry] [rendered]
+    chunk {786} default/a.js (a) 156 bytes (javascript) 5.52 KiB (runtime) ={282}= ={767}= ={954}= >{137}< >{568}< [entry] [rendered]
         > ./a a
-        7 root modules
-    chunk {794} default/async-a.js (async-a) 156 bytes <{179}> ={282}= ={767}= ={786}= ={954}= >{137}< >{568}< [initial] [rendered] reused as split chunk (cache group: default)
+     [761] ./a.js + 1 modules 156 bytes {786} {794} [built]
+         + 7 hidden root modules
+    chunk {794} default/async-a.js (async-a) 156 bytes <{179}> ={282}= ={767}= ={954}= >{137}< >{568}< [rendered]
         > ./a [10] ./index.js 1:0-47
-        > ./a a
-     [761] ./a.js + 1 modules 156 bytes {794} [built]
+     [761] ./a.js + 1 modules 156 bytes {786} {794} [built]
     chunk {954} default/954.js 20 bytes <{179}> ={128}= ={282}= ={334}= ={568}= ={767}= ={786}= ={794}= >{137}< >{568}< [initial] [rendered] split chunk (cache group: defaultVendors)
         > ./a [10] ./index.js 1:0-47
         > ./b [10] ./index.js 2:0-47
@@ -2728,12 +2728,13 @@ Child name-too-long:
 Child custom-chunks-filter:
     Entrypoint main = default/main.js
     Entrypoint a = default/a.js
-    Entrypoint b = default/282.js default/954.js default/767.js default/async-b.js default/b.js
-    Entrypoint c = default/282.js default/769.js default/767.js default/async-c.js default/c.js
-    chunk {128} default/b.js (b) 20 bytes (javascript) 2.55 KiB (runtime) ={282}= ={334}= ={767}= ={954}= [entry] [rendered]
+    Entrypoint b = default/282.js default/954.js default/767.js default/b.js
+    Entrypoint c = default/282.js default/769.js default/767.js default/c.js
+    chunk {128} default/b.js (b) 92 bytes (javascript) 2.55 KiB (runtime) ={282}= ={767}= ={954}= [entry] [rendered]
         > ./b b
-     [568] ./f.js 20 bytes {128} {459} {568} [built]
+     [996] ./b.js 72 bytes {128} {334} [built]
          + 2 hidden root modules
+         + 1 hidden dependent module
     chunk {137} default/async-g.js (async-g) 34 bytes <{282}> <{767}> <{786}> <{794}> <{954}> ={568}= [rendered]
         > ./g ./a.js 6:0-47
      [785] ./g.js 34 bytes {137} [built]
@@ -2748,18 +2749,17 @@ Child custom-chunks-filter:
         > ./b b
         > ./c c
      [282] ./node_modules/x.js 20 bytes {282} {786} [built]
-    chunk {334} default/async-b.js (async-b) 72 bytes <{179}> ={128}= ={282}= ={568}= ={767}= ={954}= [initial] [rendered] reused as split chunk (cache group: default)
+    chunk {334} default/async-b.js (async-b) 72 bytes <{179}> ={282}= ={568}= ={767}= ={954}= [rendered]
         > ./b [10] ./index.js 2:0-47
-        > ./b b
-     [996] ./b.js 72 bytes {334} [built]
-    chunk {383} default/async-c.js (async-c) 72 bytes <{179}> ={282}= ={459}= ={568}= ={767}= ={769}= [initial] [rendered] reused as split chunk (cache group: default)
+     [996] ./b.js 72 bytes {128} {334} [built]
+    chunk {383} default/async-c.js (async-c) 72 bytes <{179}> ={282}= ={568}= ={767}= ={769}= [rendered]
         > ./c [10] ./index.js 3:0-47
+     [460] ./c.js 72 bytes {383} {459} [built]
+    chunk {459} default/c.js (c) 92 bytes (javascript) 2.55 KiB (runtime) ={282}= ={767}= ={769}= [entry] [rendered]
         > ./c c
-     [460] ./c.js 72 bytes {383} [built]
-    chunk {459} default/c.js (c) 20 bytes (javascript) 2.55 KiB (runtime) ={282}= ={383}= ={767}= ={769}= [entry] [rendered]
-        > ./c c
-     [568] ./f.js 20 bytes {128} {459} {568} [built]
+     [460] ./c.js 72 bytes {383} {459} [built]
          + 2 hidden root modules
+         + 1 hidden dependent module
     chunk {568} default/568.js 20 bytes <{179}> <{282}> <{767}> <{786}> <{794}> <{954}> ={137}= ={282}= ={334}= ={383}= ={767}= ={769}= ={954}= [rendered] split chunk (cache group: default)
         > ./b [10] ./index.js 2:0-47
         > ./c [10] ./index.js 3:0-47

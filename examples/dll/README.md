@@ -4,10 +4,9 @@
 
 This is the _reference_ bundle (with the manifests) for [dll user example](https://github.com/webpack/webpack/tree/master/examples/dll-user)
 
-
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../");
 module.exports = {
@@ -35,8 +34,8 @@ module.exports = {
 
 # dist/MyDll.alpha.js
 
-``` javascript
-var alpha_fa162dabf9a5b5246e96 =
+```javascript
+var alpha_5a1a523b0fc11616dffc =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -137,8 +136,8 @@ module.exports = "module";
 
 # dist/alpha-manifest.json
 
-``` javascript
-{"name":"alpha_fa162dabf9a5b5246e96","content":{"./alpha.js":{"id":1,"buildMeta":{}},"./a.js":{"id":2,"buildMeta":{}},"../node_modules/module.js":{"id":3,"buildMeta":{}}}}
+```javascript
+{"name":"alpha_5a1a523b0fc11616dffc","content":{"./alpha.js":{"id":1,"buildMeta":{}},"./a.js":{"id":2,"buildMeta":{}},"../node_modules/module.js":{"id":3,"buildMeta":{}}}}
 ```
 
 # Info
@@ -147,7 +146,7 @@ module.exports = "module";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
          Asset      Size  Chunks             Chunk Names
 MyDll.alpha.js  2.44 KiB     {0}  [emitted]  alpha
  MyDll.beta.js  2.41 KiB     {1}  [emitted]  beta
@@ -187,38 +186,38 @@ chunk {1} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
+Version: webpack 5.0.0-alpha.11
          Asset       Size  Chunks             Chunk Names
-MyDll.alpha.js  354 bytes   {963}  [emitted]  alpha
- MyDll.beta.js  348 bytes   {188}  [emitted]  beta
+MyDll.alpha.js  354 bytes   {487}  [emitted]  alpha
+ MyDll.beta.js  345 bytes   {904}  [emitted]  beta
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
-chunk {188} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
-    > beta
-  [21] ./b.js 21 bytes {188} [built]
-       entry ./b [350] dll beta beta[1]
-       DllPlugin
- [145] ./beta.js 24 bytes {188} [built]
-       entry ./beta [350] dll beta beta[0]
-       DllPlugin
- [235] ./c.jsx 23 bytes {188} [built]
-       entry ./c [350] dll beta beta[2]
-       DllPlugin
- [350] dll beta 12 bytes {188} [built]
-       dll entry
-       DllPlugin
-chunk {963} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
+chunk {487} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
     > alpha
- [162] ./a.js 21 bytes {963} [built]
-       entry ./a [673] dll alpha alpha[1]
-       DllPlugin
- [673] dll alpha 12 bytes {963} [built]
+ [258] dll alpha 12 bytes {487} [built]
        dll entry
        DllPlugin
- [683] ../node_modules/module.js 26 bytes {963} [built]
-       entry module [673] dll alpha alpha[2]
+ [443] ../node_modules/module.js 26 bytes {487} [built]
+       entry module [258] dll alpha alpha[2]
        DllPlugin
- [930] ./alpha.js 25 bytes {963} [built]
-       entry ./alpha [673] dll alpha alpha[0]
+ [758] ./alpha.js 25 bytes {487} [built]
+       entry ./alpha [258] dll alpha alpha[0]
+       DllPlugin
+ [847] ./a.js 21 bytes {487} [built]
+       entry ./a [258] dll alpha alpha[1]
+       DllPlugin
+chunk {904} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
+    > beta
+  [15] dll beta 12 bytes {904} [built]
+       dll entry
+       DllPlugin
+  [60] ./c.jsx 23 bytes {904} [built]
+       entry ./c [15] dll beta beta[2]
+       DllPlugin
+  [97] ./beta.js 24 bytes {904} [built]
+       entry ./beta [15] dll beta beta[0]
+       DllPlugin
+ [996] ./b.js 21 bytes {904} [built]
+       entry ./b [15] dll beta beta[1]
        DllPlugin
 ```

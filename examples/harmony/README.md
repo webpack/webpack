@@ -1,7 +1,6 @@
-
 # example.js
 
-``` javascript
+```javascript
 import { increment as inc } from './increment';
 var a = 1;
 inc(a); // 2
@@ -14,7 +13,7 @@ import("./async-loaded").then(function(asyncLoaded) {
 
 # increment.js
 
-``` javascript
+```javascript
 import { add } from './math';
 export function increment(val) {
     return add(val, 1);
@@ -25,7 +24,7 @@ export function increment(val) {
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -75,7 +74,7 @@ export function increment(val) {
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
@@ -93,7 +92,7 @@ var a = 1;
 Object(_increment__WEBPACK_IMPORTED_MODULE_0__["increment"])(a); // 2
 
 // async loading
-__webpack_require__.e(/*! import() */ 912).then(__webpack_require__.bind(null, /*! ./async-loaded */ 3)).then(function(asyncLoaded) {
+__webpack_require__.e(/*! import() */ 35).then(__webpack_require__.bind(null, /*! ./async-loaded */ 3)).then(function(asyncLoaded) {
 	console.log(asyncLoaded);
 });
 
@@ -189,8 +188,7 @@ function add() {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
-/******/ 		
-/******/ 		// This function only allows to reference on-demand chunks
+/******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
 /******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
@@ -205,7 +203,7 @@ function add() {
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			404: 0
+/******/ 			179: 0
 /******/ 		};
 /******/ 		
 /******/ 		
@@ -324,54 +322,54 @@ function add() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
-        Asset       Size  Chunks             Chunk Names
-912.output.js  711 bytes   {912}  [emitted]
-    output.js   10.1 KiB   {404}  [emitted]  main
+Version: webpack 5.0.0-alpha.11
+       Asset       Size  Chunks             Chunk Names
+35.output.js  710 bytes    {35}  [emitted]
+   output.js   10.1 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 400 bytes (javascript) 4.2 KiB (runtime) [entry] [rendered]
+chunk {35} 35.output.js 24 bytes [rendered]
+    > ./async-loaded [0] ./example.js 6:0-24
+ [3] ./async-loaded.js 24 bytes {35} [built]
+     [exports: answer]
+     [used exports unknown]
+     import() ./async-loaded [0] ./example.js 6:0-24
+chunk {179} output.js (main) 400 bytes (javascript) 4.19 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [0] ./example.js 175 bytes {404} [built]
+ [0] ./example.js 175 bytes {179} [built]
      [no exports]
      [used exports unknown]
      entry ./example.js main
- [1] ./increment.js 90 bytes {404} [built]
+ [1] ./increment.js 90 bytes {179} [built]
      [exports: increment]
      [used exports unknown]
      harmony side effect evaluation ./increment [0] ./example.js 1:0-47
      harmony import specifier ./increment [0] ./example.js 3:0-3
- [2] ./math.js 135 bytes {404} [built]
+ [2] ./math.js 135 bytes {179} [built]
      [exports: add]
      [used exports unknown]
      harmony side effect evaluation ./math [1] ./increment.js 1:0-29
      harmony import specifier ./math [1] ./increment.js 3:11-14
      + 6 hidden chunk modules
-chunk {912} 912.output.js 24 bytes [rendered]
-    > ./async-loaded [0] ./example.js 6:0-24
- [3] ./async-loaded.js 24 bytes {912} [built]
-     [exports: answer]
-     [used exports unknown]
-     import() ./async-loaded [0] ./example.js 6:0-24
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.9
-        Asset       Size  Chunks             Chunk Names
-912.output.js  149 bytes   {912}  [emitted]
-    output.js   1.78 KiB   {404}  [emitted]  main
+Version: webpack 5.0.0-alpha.11
+       Asset       Size  Chunks             Chunk Names
+35.output.js  147 bytes    {35}  [emitted]
+   output.js   1.78 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 400 bytes (javascript) 4.2 KiB (runtime) [entry] [rendered]
+chunk {35} 35.output.js 24 bytes [rendered]
+    > ./async-loaded ./example.js 6:0-24
+ [35] ./async-loaded.js 24 bytes {35} [built]
+      [exports: answer]
+      import() ./async-loaded [973] ./example.js + 2 modules ./example.js 6:0-24
+chunk {179} output.js (main) 400 bytes (javascript) 4.19 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [761] ./example.js + 2 modules 400 bytes {404} [built]
+ [973] ./example.js + 2 modules 400 bytes {179} [built]
        [no exports]
        entry ./example.js main
      + 6 hidden chunk modules
-chunk {912} 912.output.js 24 bytes [rendered]
-    > ./async-loaded ./example.js 6:0-24
- [912] ./async-loaded.js 24 bytes {912} [built]
-       [exports: answer]
-       import() ./async-loaded [761] ./example.js + 2 modules ./example.js 6:0-24
 ```
