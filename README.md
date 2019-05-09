@@ -90,7 +90,7 @@ or packaging just about any resource or asset.
 
 ### Get Started
 
-Check out webpack's quick [**Get Started**](https://webpack.js.org/get-started/) guide and the [other guides](https://webpack.js.org/guides/).
+Check out webpack's quick [**Get Started**](https://webpack.js.org/guides/getting-started) guide and the [other guides](https://webpack.js.org/guides/).
 
 ### Browser Compatibility
 
