@@ -283,7 +283,7 @@ Object {
   "errors": Array [],
   "warnings": Array [
     Object {
-      "message": "configuration\\nThe 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.\\nYou can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/concepts/mode/",
+      "message": "configuration\\nThe 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.\\nYou can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/",
     },
   ],
 }
