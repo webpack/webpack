@@ -2110,7 +2110,8 @@
             "minimal",
             "normal",
             "detailed",
-            "verbose"
+            "verbose",
+            "errors-warnings"
           ]
         }
       ]
