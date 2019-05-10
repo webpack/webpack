@@ -5719,10 +5719,10 @@ wast-loader@^1.5.5:
   dependencies:
     wabt "1.0.0-nightly.20180421"
 
-watchpack@2.0.0-beta.2:
-  version "2.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-2.0.0-beta.2.tgz#357ed627767dd16ed80500f49c5d4029b49248cb"
-  integrity sha512-dzFk3sOzcuIC9s+6Qek6Y0cQmk+N8VvUSY1BtB9wCEpfbcUFOQS7tlD1wRnwq2gv+orBYB/td4hO59Z4lg6ELQ==
+watchpack@2.0.0-beta.3:
+  version "2.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-2.0.0-beta.3.tgz#deec81c4244bf4898633cbf887415d5f84747bed"
+  integrity sha512-rzxJ4SY3PS9ii2YnrF0nM/N4OtGeqBoCIhWHVwg3FrHaRZ3u/wuoE/lYx+eYWH8bssnXoBVqWbRbS1vCxSBhoA==
   dependencies:
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
