@@ -86,7 +86,7 @@ if (installedClis.length === 0) {
 	const path = require("path");
 	const fs = require("fs");
 	const readLine = require("readline");
-
+	const { QUESTION_CLI } = require("./utils/constants");
 	let notify =
 		"One CLI for webpack must be installed. These are recommended choices, delivered as separate packages:";
 
@@ -109,13 +109,11 @@ if (installedClis.length === 0) {
 		)}".`
 	);
 
-	const question = `Do you want to install 'webpack-cli' (yes/no): `;
-
 	const questionInterface = readLine.createInterface({
 		input: process.stdin,
 		output: process.stderr
 	});
-	questionInterface.question(question, answer => {
+	questionInterface.question(QUESTION_CLI, answer => {
 		questionInterface.close();
 
 		const normalizedAnswer = answer.toLowerCase().startsWith("y");
