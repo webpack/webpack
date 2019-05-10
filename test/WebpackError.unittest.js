@@ -1,8 +1,5 @@
 "use strict";
 
-const path = require("path");
-const util = require("util");
-
 const WebpackError = require("../lib/WebpackError");
 
 describe("WebpackError", () => {
@@ -19,11 +16,8 @@ describe("WebpackError", () => {
 	}
 
 	it("Should provide inspect method for use by for util.inspect", () => {
-		const errorStr = util.inspect(new CustomError("Message"));
-		const errorArr = errorStr.split("\n");
-
-		expect(errorArr[0]).toBe("CustomError: CustomMessage");
-		expect(errorArr[1]).toMatch(path.basename(__filename));
-		expect(errorArr[errorArr.length - 1]).toBe("CustomDetails");
+		const error = new CustomError("Message");
+		expect(error.toString()).toContain("CustomError: CustomMessage");
+		expect(error.stack).toContain(__filename);
 	});
 });
