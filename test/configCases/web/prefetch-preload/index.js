@@ -1,22 +1,8 @@
-
-let oldNonce;
-let oldPublicPath;
-
-beforeEach(done => {
-	oldNonce = __webpack_nonce__;
-	oldPublicPath = __webpack_public_path__;
-	done();
-});
-
-afterEach(done => {
-	__webpack_nonce__ = oldNonce;
-	__webpack_public_path__ = oldPublicPath;
-	done();
-});
+// This config need to be set on initial evaluation to be effective
+__webpack_nonce__ = "nonce";
+__webpack_public_path__ = "https://example.com/public/path/";
 
 it("should prefetch and preload child chunks on chunk load", () => {
-	__webpack_nonce__ = "nonce";
-	__webpack_public_path__ = "https://example.com/public/path/";
 
 	let link, script;
 
