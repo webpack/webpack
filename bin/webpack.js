@@ -109,7 +109,7 @@ if (installedClis.length === 0) {
 		)}".`
 	);
 
-	let question = `Do you want to install 'webpack-cli' (yes/no): `;
+	const question = `Do you want to install 'webpack-cli' (yes/no): `;
 
 	const questionInterface = readLine.createInterface({
 		input: process.stdin,
