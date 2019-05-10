@@ -617,6 +617,22 @@ describe("Parser", () => {
 				});
 			});
 		});
+
+		it("should collect definitions from identifiers introduced in object patterns", () => {
+			let definitions;
+
+			const parser = new Parser();
+
+			parser.hooks.statement.tap("ParserTest", expr => {
+				definitions = parser.scope.definitions;
+				return true;
+			});
+
+			parser.parse("const { a, ...rest } = { a: 1, b: 2 };");
+
+			expect(definitions.has("a")).toBe(true);
+			expect(definitions.has("rest")).toBe(true);
+		});
 	});
 
 	describe("optional catch binding support", () => {
