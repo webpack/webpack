@@ -9,5 +9,7 @@ it("should prefetch correctly", () => {
 	expect(link.rel).toBe("prefetch");
 	expect(link.href).toBe("https://example.com/public/path/chunk1.js");
 
-	import(/* webpackChunkName: "chunk1", webpackPrefetch: true */ "./chunk1");
+	if (Math.random() < -1) {
+		import(/* webpackChunkName: "chunk1", webpackPrefetch: true */ "./chunk1");
+	}
 });
