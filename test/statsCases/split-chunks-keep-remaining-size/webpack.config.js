@@ -15,12 +15,11 @@ module.exports = {
 		main: "./"
 	},
 	output: {
-		filename: "[name].js"
+		filename: "default/[name].js"
 	},
 	optimization: {
 		splitChunks: {
-			minSize: 100,
-			minRemainingSize: 0
+			minSize: 100
 		}
 	},
 	stats

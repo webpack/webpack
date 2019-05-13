@@ -976,6 +976,10 @@ export interface OptimizationSplitChunksOptions {
 	 */
 	minChunks?: number;
 	/**
+	 * Minimal size for the chunks the stay after moving the modules to a new chunk
+	 */
+	minRemainingSize?: OptimizationSplitChunksSizes;
+	/**
 	 * Minimal size for the created chunks
 	 */
 	minSize?: OptimizationSplitChunksSizes;
@@ -1035,6 +1039,10 @@ export interface OptimizationSplitChunksCacheGroup {
 	 * Minimum number of times a module has to be duplicated until it's considered for splitting
 	 */
 	minChunks?: number;
+	/**
+	 * Minimal size for the chunks the stay after moving the modules to a new chunk
+	 */
+	minRemainingSize?: OptimizationSplitChunksSizes;
 	/**
 	 * Minimal size for the created chunk
 	 */

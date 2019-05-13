@@ -657,6 +657,14 @@
           "type": "number",
           "minimum": 1
         },
+        "minRemainingSize": {
+          "description": "Minimal size for the chunks the stay after moving the modules to a new chunk",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
+        },
         "minSize": {
           "description": "Minimal size for the created chunk",
           "oneOf": [
@@ -864,6 +872,14 @@
           "description": "Minimum number of times a module has to be duplicated until it's considered for splitting",
           "type": "number",
           "minimum": 1
+        },
+        "minRemainingSize": {
+          "description": "Minimal size for the chunks the stay after moving the modules to a new chunk",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/OptimizationSplitChunksSizes"
+            }
+          ]
         },
         "minSize": {
           "description": "Minimal size for the created chunks",
