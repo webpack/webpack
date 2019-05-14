@@ -505,6 +505,17 @@ rules:
         context: "licence/cla"
         description: "Contributor License Agreement is not needed for this user."
         state: "success"
+  
+  # merge dependabot PRs automatically
+  - filters:
+      open: true
+      pull_request:
+        author: "^dependabot\\[bot\\]$"
+        mergeable_state: clean
+        merged: false
+      label: "PR: CI-ok"
+    actions:
+      merge: true
 
   # add "Send a PR" label when somebody with write permission say it
   - filters:
