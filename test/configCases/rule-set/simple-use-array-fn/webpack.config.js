@@ -7,13 +7,14 @@ module.exports = {
 						test: {
 							and: [/a.\.js$/, /b\.js$/]
 						},
-						loader: "./loader?first"
+						loader: "./loader",
+						options: "first"
 					},
 					{
 						test: [require.resolve("./a"), require.resolve("./c")],
 						issuer: require.resolve("./b"),
 						use: data => [
-							"./loader?second-1",
+							"./loader",
 							{
 								loader: "./loader",
 								options: "second-2"
