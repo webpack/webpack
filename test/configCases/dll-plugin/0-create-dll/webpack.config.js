@@ -2,7 +2,7 @@ var path = require("path");
 var webpack = require("../../../../");
 
 module.exports = {
-	entry: ["./a", "./b", "./_d", "./_e", "./f", "./g.abc"],
+	entry: ["./a", "./b", "./_d", "./_e", "./f", "./g.abc", "./h"],
 	resolve: {
 		extensions: [".js", ".jsx"]
 	},
@@ -19,8 +19,15 @@ module.exports = {
 				options: {
 					test: 1
 				}
+			},
+			{
+				test: /0-create-dll.h/,
+				sideEffects: false
 			}
 		]
+	},
+	optimization: {
+		sideEffects: true
 	},
 	plugins: [
 		new webpack.DllPlugin({
