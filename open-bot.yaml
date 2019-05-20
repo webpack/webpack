@@ -492,6 +492,31 @@ rules:
 
           *You don't have to change it for this PR, just make sure to follow this hint the next time you submit a PR.*
 
+  # skip CLA for dependabot
+  - filters:
+      open: true
+      pull_request:
+        author: "^dependabot\\[bot\\]$"
+      status:
+        context: "licence/cla"
+        state: "pending"
+    actions:
+      status:
+        context: "licence/cla"
+        description: "Contributor License Agreement is not needed for this user."
+        state: "success"
+
+  # merge dependabot PRs automatically
+  - filters:
+      open: true
+      pull_request:
+        author: "^dependabot\\[bot\\]$"
+        mergeable_state: clean
+        merged: false
+      label: "PR: CI-ok"
+    actions:
+      merge: true
+
   # add "Send a PR" label when somebody with write permission say it
   - filters:
       open: true

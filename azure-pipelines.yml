@@ -90,8 +90,10 @@ jobs:
     pool:
       vmImage: ubuntu-16.04
     strategy:
-      maxParallel: 3
+      maxParallel: 4
       matrix:
+        node-12:
+          node_version: ^12.2.0
         node-10:
           node_version: ^10.10.0
         node-8:
@@ -137,8 +139,10 @@ jobs:
     pool:
       vmImage: "macOS 10.13"
     strategy:
-      maxParallel: 3
+      maxParallel: 4
       matrix:
+        node-12:
+          node_version: ^12.2.0
         node-10:
           node_version: ^10.10.0
         node-8:
@@ -184,8 +188,10 @@ jobs:
     pool:
       vmImage: vs2017-win2016
     strategy:
-      maxParallel: 3
+      maxParallel: 4
       matrix:
+        node-12:
+          node_version: ^12.2.0
         node-10:
           node_version: ^10.10.0
         node-8:
