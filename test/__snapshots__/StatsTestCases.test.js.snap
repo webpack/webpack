@@ -2231,16 +2231,14 @@ Entrypoint main = main.js
 [0] ./components/src/CompAB/index.js 87 bytes [built]
     [no exports used]
     harmony side effect evaluation ./CompAB [3] ./components/src/index.js 1:0-40
-    harmony export imported specifier ./CompAB [3] ./components/src/index.js 1:0-40
-    harmony export imported specifier ./CompAB [3] ./components/src/index.js 1:0-40
 [1] ./components/src/CompC/CompC.js 33 bytes [built]
     [no exports used]
     harmony side effect evaluation ./CompC [2] ./components/src/CompC/index.js 1:0-34
     harmony export imported specifier ./CompC [2] ./components/src/CompC/index.js 1:0-34
+    harmony export imported specifier ./CompC [3] ./components/src/index.js 2:0-43 (skipped side-effect-free modules)
 [2] ./components/src/CompC/index.js 34 bytes [built]
     [no exports used]
     harmony side effect evaluation ./CompC [3] ./components/src/index.js 2:0-43
-    harmony export imported specifier ./CompC [3] ./components/src/index.js 2:0-43
 [3] ./components/src/index.js 84 bytes [built]
     [no exports used]
     harmony side effect evaluation ./components [6] ./foo.js 1:0-37
@@ -2249,6 +2247,7 @@ Entrypoint main = main.js
     [only some exports used: default]
     harmony side effect evaluation ./CompA [0] ./components/src/CompAB/index.js 1:0-43
     harmony export imported specifier ./CompA [0] ./components/src/CompAB/index.js 1:0-43
+    harmony export imported specifier ./CompAB [3] ./components/src/index.js 1:0-40 (skipped side-effect-free modules)
     harmony import specifier ./components [6] ./foo.js 3:20-25 (skipped side-effect-free modules)
     harmony import specifier ./components  ./main.js 3:15-20 (skipped side-effect-free modules)
 [5] ./components/src/CompAB/utils.js 97 bytes {0} [built]
@@ -2266,11 +2265,12 @@ Entrypoint main = main.js
     |     [only some exports used: default]
     |     harmony side effect evaluation ./CompB [0] ./components/src/CompAB/index.js 2:0-43
     |     harmony export imported specifier ./CompB [0] ./components/src/CompAB/index.js 2:0-43
+    |     harmony export imported specifier ./CompAB [3] ./components/src/index.js 1:0-40 (skipped side-effect-free modules)
     |     harmony import specifier ./components  ./main.js 4:15-20 (skipped side-effect-free modules)"
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
-"Hash: 518ad50555bd6e64c28b
+"Hash: a5866e21e8cfa3ae1a89
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset     Size  Chunks             Chunk Names
