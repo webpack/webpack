@@ -178,17 +178,20 @@ export type RuleSetLoader = string;
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "RuleSetUse".
  */
-export type RuleSetUse = RuleSetUseItem | Function | RuleSetUseItem[];
+export type RuleSetUse =
+	| RuleSetUseItem
+	| ((data: object) => RuleSetUseItem[])
+	| RuleSetUseItem[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "RuleSetUseItem".
  */
 export type RuleSetUseItem =
 	| RuleSetLoader
-	| Function
+	| ((data: object) => RuleSetUseItem | RuleSetUseItem[])
 	| {
 			/**
-			 * Unique loader identifier
+			 * Unique loader options identifier
 			 */
 			ident?: string;
 			/**
@@ -198,17 +201,13 @@ export type RuleSetUseItem =
 			/**
 			 * Loader options
 			 */
-			options?: RuleSetQuery;
-			/**
-			 * Loader query
-			 */
-			query?: RuleSetQuery;
+			options?: RuleSetLoaderOptions;
 	  };
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetQuery".
+ * via the `definition` "RuleSetLoaderOptions".
  */
-export type RuleSetQuery =
+export type RuleSetLoaderOptions =
 	| {
 			[k: string]: any;
 	  }
@@ -589,17 +588,13 @@ export interface RuleSetRule {
 	 */
 	loader?: RuleSetLoader | RuleSetUse;
 	/**
-	 * Shortcut for use.loader
-	 */
-	loaders?: RuleSetUse;
-	/**
 	 * Only execute the first matching rule in this array
 	 */
 	oneOf?: RuleSetRules;
 	/**
 	 * Shortcut for use.options
 	 */
-	options?: RuleSetQuery;
+	options?: RuleSetLoaderOptions;
 	/**
 	 * Options for parsing
 	 */
@@ -607,9 +602,9 @@ export interface RuleSetRule {
 		[k: string]: any;
 	};
 	/**
-	 * Shortcut for use.query
+	 * Match the real resource path of the module
 	 */
-	query?: RuleSetQuery;
+	realResource?: RuleSetConditionOrConditionsAbsolute;
 	/**
 	 * Options for the resolver
 	 */

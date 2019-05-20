@@ -1316,19 +1316,19 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for module-assets 1`] = `
-"Hash: b29574e32203a3c6fa94
+"Hash: 01af52c8b94e43424fb5
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint main = main.js
 chunk {48} 48.js 68 bytes [rendered]
- [48] ./node_modules/a/index.js 17 bytes {48} [built]
- [63] ./node_modules/a/1.png 51 bytes {48} [built] [1 asset]
+  [48] ./node_modules/a/index.js 17 bytes {48} [built]
+ [507] ./node_modules/a/1.png 51 bytes {48} [built] [1 asset]
 chunk {179} main.js (main) 12 bytes (javascript) 4.5 KiB (runtime) [entry] [rendered]
  [10] ./index.js 12 bytes {179} [built]
      + 7 hidden chunk modules
-[10] ./index.js 12 bytes {179} [built]
-[48] ./node_modules/a/index.js 17 bytes {48} [built]
-[63] ./node_modules/a/1.png 51 bytes {48} [built] [1 asset]
+ [10] ./index.js 12 bytes {179} [built]
+ [48] ./node_modules/a/index.js 17 bytes {48} [built]
+[507] ./node_modules/a/1.png 51 bytes {48} [built] [1 asset]
     + 7 hidden modules"
 `;
 

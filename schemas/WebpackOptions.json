@@ -1542,7 +1542,7 @@
       "type": "string",
       "minLength": 1
     },
-    "RuleSetQuery": {
+    "RuleSetLoaderOptions": {
       "anyOf": [
         {
           "type": "object"
@@ -1603,14 +1603,6 @@
             }
           ]
         },
-        "loaders": {
-          "description": "Shortcut for use.loader",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/RuleSetUse"
-            }
-          ]
-        },
         "oneOf": {
           "description": "Only execute the first matching rule in this array",
           "anyOf": [
@@ -1623,7 +1615,7 @@
           "description": "Shortcut for use.options",
           "anyOf": [
             {
-              "$ref": "#/definitions/RuleSetQuery"
+              "$ref": "#/definitions/RuleSetLoaderOptions"
             }
           ]
         },
@@ -1632,11 +1624,11 @@
           "type": "object",
           "additionalProperties": true
         },
-        "query": {
-          "description": "Shortcut for use.query",
+        "realResource": {
+          "description": "Match the real resource path of the module",
           "anyOf": [
             {
-              "$ref": "#/definitions/RuleSetQuery"
+              "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
           ]
         },
@@ -1723,7 +1715,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((data: object) => RuleSetUseItem[])"
         },
         {
           "type": "array",
@@ -1745,14 +1737,14 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((data: object) => RuleSetUseItem|RuleSetUseItem[])"
         },
         {
           "type": "object",
           "additionalProperties": false,
           "properties": {
             "ident": {
-              "description": "Unique loader identifier",
+              "description": "Unique loader options identifier",
               "type": "string"
             },
             "loader": {
@@ -1767,15 +1759,7 @@
               "description": "Loader options",
               "anyOf": [
                 {
-                  "$ref": "#/definitions/RuleSetQuery"
-                }
-              ]
-            },
-            "query": {
-              "description": "Loader query",
-              "anyOf": [
-                {
-                  "$ref": "#/definitions/RuleSetQuery"
+                  "$ref": "#/definitions/RuleSetLoaderOptions"
                 }
               ]
             }
