@@ -27,3 +27,10 @@ it("should load an harmony module from dll (star export)", function() {
 it("should load a module with loader applied", function() {
 	expect(require("../0-create-dll/g.abc.js")).toBe("number");
 });
+
+it("should resolve index for directory at dll", function() {
+	expect(require("../0-create-dll/directory")).toBe("directoryModule");
+	expect(require("../0-create-dll/directory/")).toBe("directoryModule");
+	expect(require("../0-create-dll/directory/index")).toBe("directoryModule");
+	expect(require("../0-create-dll/directory/index.js")).toBe("directoryModule");
+});

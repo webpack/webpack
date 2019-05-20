@@ -32,11 +32,19 @@ it("should load a module with loader applied", function() {
 	expect(require("../0-create-dll/g.abc.js")).toBe("number");
 });
 
+it("should resolve index for directory at dll", function() {
+	expect(require("../0-create-dll/directory")).toBe("directoryModule");
+	expect(require("../0-create-dll/directory/")).toBe("directoryModule");
+	expect(require("../0-create-dll/directory/index")).toBe("directoryModule");
+	expect(require("../0-create-dll/directory/index.js")).toBe("directoryModule");
+});
+
 it("should give modules the correct ids", function() {
 	expect(Object.keys(__webpack_modules__).filter(m => !m.startsWith("../.."))).toEqual([
 		"../0-create-dll/a.js",
 		"../0-create-dll/b.js",
 		"../0-create-dll/d.js",
+		"../0-create-dll/directory/index.js",
 		"../0-create-dll/e.js",
 		"../0-create-dll/e1.js",
 		"../0-create-dll/e2.js",
