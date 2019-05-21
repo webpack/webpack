@@ -460,4 +460,18 @@ describe("Validation", () => {
       -> Function acting as plugin"
 `)
 	);
+
+	createTestCase(
+		"invalid mode",
+		{
+			mode: "protuction"
+		},
+		msg =>
+			expect(msg).toMatchInlineSnapshot(`
+"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
+ - configuration.mode should be one of these:
+   \\"development\\" | \\"production\\" | \\"none\\"
+   -> Enable production optimizations or development hints."
+`)
+	);
 });
