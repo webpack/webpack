@@ -43,18 +43,8 @@ describe("Validation", () => {
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 "Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
- - configuration.entry should be one of these:
-   function | object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]
-   -> The entry point(s) of the compilation.
-   Details:
-    * configuration.entry should be an instance of function
-      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.
-    * configuration.entry should be an object.
-      -> Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.
-    * configuration.entry should not be empty.
-      -> An entry point without name. The string is resolved to a module which is loaded upon startup.
-    * configuration.entry should be an array:
-      [non-empty string]"
+ - configuration.entry should be an non-empty string.
+   -> An entry point without name. The string is resolved to a module which is loaded upon startup."
 `)
 	);
 
@@ -68,19 +58,8 @@ describe("Validation", () => {
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 "Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
- - configuration.entry should be one of these:
-   function | object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]
-   -> The entry point(s) of the compilation.
-   Details:
-    * configuration.entry should be an instance of function
-      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.
-    * configuration.entry['bundle'] should be a string.
-      -> The string is resolved to a module which is loaded upon startup.
-    * configuration.entry['bundle'] should not be empty.
-    * configuration.entry should be a string.
-      -> An entry point without name. The string is resolved to a module which is loaded upon startup.
-    * configuration.entry should be an array:
-      [non-empty string]"
+ - configuration.entry['bundle'] should be an non-empty array.
+   -> A non-empty array of non-empty strings"
 `)
 	);
 
@@ -122,17 +101,8 @@ describe("Validation", () => {
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 "Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
- - configuration.entry should be one of these:
-   function | object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]
-   -> The entry point(s) of the compilation.
-   Details:
-    * configuration.entry should be an instance of function
-      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.
-    * configuration.entry should be an object.
-      -> Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.
-    * configuration.entry should be a string.
-      -> An entry point without name. The string is resolved to a module which is loaded upon startup.
-    * configuration.entry should not contain the item 'abc' twice."
+ - configuration.entry should not contain the item 'abc' twice.
+   -> A non-empty array of non-empty strings"
 `)
 	);
 
@@ -147,18 +117,8 @@ describe("Validation", () => {
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 "Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
- - configuration.entry should be one of these:
-   function | object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]
-   -> The entry point(s) of the compilation.
-   Details:
-    * configuration.entry should be an instance of function
-      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.
-    * configuration.entry should be an object.
-      -> Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.
-    * configuration.entry should be a string.
-      -> An entry point without name. The string is resolved to a module which is loaded upon startup.
-    * configuration.entry[0] should be a string.
-      -> A non-empty string
+ - configuration.entry[0] should be a string.
+   -> A non-empty string
  - configuration.output.filename should be one of these:
    string | function
    -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -184,18 +144,8 @@ describe("Validation", () => {
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 "Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
- - configuration[0].entry should be one of these:
-   function | object { <key>: non-empty string | [non-empty string] } | non-empty string | [non-empty string]
-   -> The entry point(s) of the compilation.
-   Details:
-    * configuration[0].entry should be an instance of function
-      -> A Function returning an entry object, an entry string, an entry array or a promise to these things.
-    * configuration[0].entry should be an object.
-      -> Multiple entry bundles are created. The key is the chunk name. The value can be a string or an array.
-    * configuration[0].entry should be a string.
-      -> An entry point without name. The string is resolved to a module which is loaded upon startup.
-    * configuration[0].entry[0] should be a string.
-      -> A non-empty string
+ - configuration[0].entry[0] should be a string.
+   -> A non-empty string
  - configuration[1].output.filename should be one of these:
    string | function
    -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
@@ -305,13 +255,8 @@ describe("Validation", () => {
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 "Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
- - configuration.output.filename should be one of these:
-   string | function
-   -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
-   Details:
-    * configuration.output.filename: A relative path is expected. However, the provided value \\"/bar\\" is an absolute path!
-      Please use output.path to specify absolute path and output.filename for the file name.
-    * configuration.output.filename should be an instance of function"
+ - configuration.output.filename: A relative path is expected. However, the provided value \\"/bar\\" is an absolute path!
+   Please use output.path to specify absolute path and output.filename for the file name."
 `)
 	);
 
@@ -347,15 +292,8 @@ describe("Validation", () => {
 					.replace(/"none" \| .+/g, '"none" | ...')
 			).toMatchInlineSnapshot(`
 "Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
- - configuration.stats should be one of these:
-   object {...} | boolean | \\"none\\" | ...
-   -> Used by the webpack CLI program to pass stats options.
-   Details:
-    * configuration.stats has an unknown property 'foobar'. These properties are valid:
-      object {...}
-    * configuration.stats should be a boolean.
-    * configuration.stats should be one of these:
-      \\"none\\" | ..."
+ - configuration.stats has an unknown property 'foobar'. These properties are valid:
+   object {...}"
 `);
 		}
 	);
@@ -449,15 +387,9 @@ describe("Validation", () => {
 		msg =>
 			expect(msg).toMatchInlineSnapshot(`
 "Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
- - configuration.plugins[0] should be one of these:
-   object { apply, … } | function
-   -> Plugin of type object or instanceof Function
-   Details:
-    * configuration.plugins[0] misses the property 'apply'.
-      function
-      -> The run point of the plugin, required method.
-    * configuration.plugins[0] should be an instance of function
-      -> Function acting as plugin"
+ - configuration.plugins[0] misses the property 'apply'.
+   function
+   -> The run point of the plugin, required method."
 `)
 	);
 

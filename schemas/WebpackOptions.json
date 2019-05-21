@@ -385,6 +385,7 @@
       }
     },
     "NonEmptyArrayOfUniqueStringValues": {
+      "description": "A non-empty array of non-empty strings",
       "type": "array",
       "items": {
         "description": "A non-empty string",
