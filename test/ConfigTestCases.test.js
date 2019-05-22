@@ -215,6 +215,7 @@ describe("ConfigTestCases", () => {
 												expect,
 												jest,
 												_globalAssign: { expect },
+												__STATS__: jsonStats,
 												nsObj: m => {
 													Object.defineProperty(m, Symbol.toStringTag, {
 														value: "Module"

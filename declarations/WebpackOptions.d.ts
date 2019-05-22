@@ -632,12 +632,7 @@ export interface RuleSetRule {
 	/**
 	 * Module type to use for the module
 	 */
-	type?:
-		| "javascript/auto"
-		| "javascript/dynamic"
-		| "javascript/esm"
-		| "json"
-		| "webassembly/experimental";
+	type?: string;
 	/**
 	 * Modifiers applied to the module when rule is matched
 	 */
