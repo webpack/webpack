@@ -1679,13 +1679,7 @@
         },
         "type": {
           "description": "Module type to use for the module",
-          "enum": [
-            "javascript/auto",
-            "javascript/dynamic",
-            "javascript/esm",
-            "json",
-            "webassembly/experimental"
-          ]
+          "type": "string"
         },
         "use": {
           "description": "Modifiers applied to the module when rule is matched",
