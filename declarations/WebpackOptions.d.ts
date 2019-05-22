@@ -405,7 +405,8 @@ export interface WebpackOptions {
 				| "async-node"
 				| "node-webkit"
 				| "electron-main"
-				| "electron-renderer")
+				| "electron-renderer"
+				| "universal")
 		| ((compiler: import("../lib/Compiler")) => void);
 	/**
 	 * Enter watch mode, which rebuilds on file change.
