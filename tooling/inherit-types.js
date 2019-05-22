@@ -18,19 +18,26 @@ const typeChecker = program.getTypeChecker();
  * @returns {Set<ts.ClassDeclaration | ts.ClassExpression>} the base class declarations
  */
 const getBaseClasses = node => {
-	/** @type {Set<ts.ClassDeclaration | ts.ClassExpression>} */
-	const decls = new Set();
-	if (node.heritageClauses) {
-		for (const clause of node.heritageClauses) {
-			for (const clauseType of clause.types) {
-				const type = typeChecker.getTypeAtLocation(clauseType);
-				const decl = type.symbol.valueDeclaration;
-				if (ts.isClassDeclaration(decl) || ts.isClassExpression(decl))
-					decls.add(decl);
+	try {
+		/** @type {Set<ts.ClassDeclaration | ts.ClassExpression>} */
+		const decls = new Set();
+		if (node.heritageClauses) {
+			for (const clause of node.heritageClauses) {
+				for (const clauseType of clause.types) {
+					const type = typeChecker.getTypeAtLocation(clauseType);
+					if (type.symbol) {
+						const decl = type.symbol.valueDeclaration;
+						if (ts.isClassDeclaration(decl) || ts.isClassExpression(decl))
+							decls.add(decl);
+					}
+				}
 			}
 		}
+		return decls;
+	} catch (e) {
+		e.message += ` while getting the base class of ${node.name}`;
+		throw e;
 	}
-	return decls;
 };
 
 /**
@@ -127,7 +134,12 @@ for (const sourceFile of program.getSourceFiles()) {
 				node.forEachChild(nodeHandler);
 			}
 		};
-		sourceFile.forEachChild(nodeHandler);
+		try {
+			sourceFile.forEachChild(nodeHandler);
+		} catch (e) {
+			e.message += ` while processing ${file}`;
+			throw e;
+		}
 
 		if (updates.length > 0) {
 			if (doWrite) {
