@@ -22,6 +22,8 @@ export type EntryDynamic = () => EntryStatic | Promise<EntryStatic>;
  */
 export type EntryStatic = EntryObject | EntryItem;
 /**
+ * A non-empty array of non-empty strings
+ *
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "NonEmptyArrayOfUniqueStringValues".
  */
