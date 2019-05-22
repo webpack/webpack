@@ -105,6 +105,10 @@ const describeCases = config => {
 								performance: {
 									hints: false
 								},
+								node: {
+									__dirname: "mock",
+									__filename: "mock"
+								},
 								cache:
 									config.cache &&
 									Object.assign(
