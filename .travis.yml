@@ -25,7 +25,7 @@ matrix:
       stage: basic
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=lint-unit
+      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=lintunit
       stage: advanced
     - os: linux
       node_js: "10"
