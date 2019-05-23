@@ -1,3 +1,107 @@
+Let's use `await` at top level in a module `db-connection.js`.
+This makes sense since the connection to the DB need to established before the module is usable.
+
+# db-connection.js
+
+```javascript
+const connectToDB = async url => {
+	await new Promise(r => setTimeout(r, 1000));
+};
+
+// This is a top-level-await
+await connectToDB("my-sql://example.com");
+
+export const dbCall = async data => {
+	// This is a normal await, because it's in an async function
+	await new Promise(r => setTimeout(r, 100));
+	return "fake data";
+};
+
+export const close = () => {
+	console.log("closes the DB connection");
+};
+```
+
+But `db-connection.js` is no longer a normal module now.
+It's an **async module** now.
+Async modules have a different evaluation semantics.
+While normal modules evaluate in a synchronous way, async modules evaluate in an asynchronous way.
+
+Async modules can't imported with a normal `import`.
+They need to be imported with `import await`.
+
+The main reason for this is to make the using module aware of the different evaluation semantics.
+
+Using `import await` in a module also makes the module an async module.
+You can see it as form of top-level-await, but it's a bit different because imports hoist, so does `import await`.
+All `import`s and `import await`s hoist and are evaluated in parallel.
+
+`import await` doesn't affect tree shaking negatively.
+Here the `close` function is never used and will be removed from the output bundle in production mode.
+
+# UserApi.js
+
+```javascript
+import await { dbCall } from "./db-connection.js";
+
+export const createUser = async name => {
+	command = `CREATE USER ${name}`;
+	// This is a normal await, because it's in an async function
+	await dbCall({ command });
+}
+```
+
+Now it looks like that this pattern will continue and will infect all using modules as async modules.
+
+Yes, this is kind of true and makes sense.
+All these modules have their evaluation semantics changed to be async.
+
+But you as developer don't want this.
+You want to break the chain at a point in your module graph where it makes sense.
+Luckily there is a nice way to break the chain.
+
+You can use `import("./UserApi.js")` to import the module instead of `import await`.
+As this returns a Promise it can be awaited to wait for module evaluation (including top-level-awaits) and handle failures.
+
+Handling failures is an important point here.
+When using top-level-await there are more ways that a module evaluation can fail now.
+In this example connecting to the DB may fail.
+
+# Actions.js
+
+```javascript
+// import() doesn't care about whether a module is an async module or not
+const UserApi = import("./UserApi.js");
+
+export const CreateUserAction = async name => {
+	// These are normal awaits, because they are in an async function
+	const { createUser } = await UserApi;
+	await createUser(name);
+};
+
+// You can place import() where you like
+// Placing it at top-level will start loading and evaluating on
+//   module evaluation.
+//   see CreateUserAction above
+//   Here: Connecting to the DB starts when the application starts
+// Placing it inside of an (async) function will start loading
+//   and evaluating when the function is called for the first time
+//   which basically makes it lazy-loaded.
+//   see AlternativeCreateUserAction below
+//   Here: Connecting to the DB starts when AlternativeCreateUserAction
+//         is called
+export const AlternativeCreateUserAction = async name => {
+	const { createUser } = await import("./UserApi.js");
+	await createUser(name);
+};
+
+// Note: Using await import() at top-level doesn't make much sense
+//       except in rare cases. It will import modules sequencially.
+```
+
+As `Actions.js` doesn't use any top-level-await nor `import await` it's not an async module.
+It's a normal module and can be used via `import`.
+
 # example.js
 
 ```javascript
@@ -8,42 +112,15 @@ import { CreateUserAction } from "./Actions.js";
 })();
 ```
 
-# Actions.js
+Note that you may `import await` from a normal module too.
+This is legal, but mostly unneeded.
+`import await` may also been seen by developers as hint that this dependency does some async actions and may delay evaluation.
 
-```javascript
-const UserApi = import("./UserApi.js");
+As guideline you should prevent your application entry point to become an async module when compiling for web targets.
+Doing async actions at application bootstrap will delay your application startup and may be negative for UX.
+Use `import()` to do async action on demand or in background and use spinners or other indicators to inform the user about background actions.
 
-export const CreateUserAction = async name => {
-	const { createUser } = await UserApi;
-	await createUser(name);
-};
-```
-
-# UserApi.js
-
-```javascript
-import await { dbCall } from "./db-connection.js";
-
-export const createUser = async name => {
-	command = `CREATE USER ${name}`;
-	await dbCall({ command });
-}
-```
-
-# db-connection.js
-
-```javascript
-const connectToDB = async url => {
-	await new Promise(r => setTimeout(r, 1000));
-}
-
-await connectToDB("my-sql://example.com");
-
-export const dbCall = async data => {
-	await new Promise(r => setTimeout(r, 100));
-	return "fake data";
-}
-```
+When compiling for other targets like node.js, electron or WebWorkers, it may be fine that your entry point becomes an async module.
 
 # dist/output.js
 
@@ -124,6 +201,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!********************!*\
   !*** ./Actions.js ***!
   \********************/
+/*! export AlternativeCreateUserAction [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export CreateUserAction [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.e, __webpack_require__ */
@@ -132,12 +210,34 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CreateUserAction", function() { return CreateUserAction; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AlternativeCreateUserAction", function() { return AlternativeCreateUserAction; });
+// import() doesn't care about whether a module is an async module or not
 const UserApi = __webpack_require__.e(/*! import() */ 497).then(__webpack_require__.bind(null, /*! ./UserApi.js */ 2));
 
 const CreateUserAction = async name => {
+	// These are normal awaits, because they are in an async function
 	const { createUser } = await UserApi;
 	await createUser(name);
 };
+
+// You can place import() where you like
+// Placing it at top-level will start loading and evaluating on
+//   module evaluation.
+//   see CreateUserAction above
+//   Here: Connecting to the DB starts when the application starts
+// Placing it inside of an (async) function will start loading
+//   and evaluating when the function is called for the first time
+//   which basically makes it lazy-loaded.
+//   see AlternativeCreateUserAction below
+//   Here: Connecting to the DB starts when AlternativeCreateUserAction
+//         is called
+const AlternativeCreateUserAction = async name => {
+	const { createUser } = await __webpack_require__.e(/*! import() */ 497).then(__webpack_require__.bind(null, /*! ./UserApi.js */ 2));
+	await createUser(name);
+};
+
+// Note: Using await import() at top-level doesn't make much sense
+//       except in rare cases. It will import modules sequencially.
 
 
 /***/ })
@@ -349,6 +449,7 @@ __webpack_module__.exports = Promise.all([_db_connection_js__WEBPACK_IMPORTED_MO
 
 const createUser = async name => {
 	command = `CREATE USER ${name}`;
+	// This is a normal await, because it's in an async function
 	await Object(_db_connection_js__WEBPACK_IMPORTED_MODULE_0__["dbCall"])({ command });
 }
 return __webpack_exports__;
@@ -360,6 +461,7 @@ return __webpack_exports__;
 /*!**************************!*\
   !*** ./db-connection.js ***!
   \**************************/
+/*! export close [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export dbCall [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__.d, __webpack_require__ */
@@ -369,22 +471,35 @@ return __webpack_exports__;
 __webpack_require__.r(__webpack_exports__);
 __webpack_module__.exports = (async function() {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dbCall", function() { return dbCall; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "close", function() { return close; });
 const connectToDB = async url => {
 	await new Promise(r => setTimeout(r, 1000));
-}
+};
 
+// This is a top-level-await
 await connectToDB("my-sql://example.com");
 
 const dbCall = async data => {
+	// This is a normal await, because it's in an async function
 	await new Promise(r => setTimeout(r, 100));
 	return "fake data";
-}
+};
+
+const close = () => {
+	console.log("closes the DB connection");
+};
 return __webpack_exports__;
 })();
 
 
 /***/ })
 ]]);
+```
+
+## in production mode:
+
+```javascript
+(window.webpackJsonp=window.webpackJsonp||[]).push([[497],{447:function(n,t,e){"use strict";n.exports=async function(){e.d(t,"d",function(){return n});await(async n=>{await new Promise(n=>setTimeout(n,1e3))})();const n=async n=>(await new Promise(n=>setTimeout(n,100)),"fake data");return t}()},497:function(n,t,e){"use strict";e.r(t);var a=e(447);n.exports=Promise.all([a]).then(async function([n]){e.d(t,"createUser",function(){return a});const a=async t=>{command=`CREATE USER ${t}`,await Object(n.d)({command:command})};return t})}}]);
 ```
 
 # Info
@@ -395,32 +510,34 @@ return __webpack_exports__;
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-alpha.13
         Asset      Size  Chunks             Chunk Names
-497.output.js  2.09 KiB   {497}  [emitted]
-    output.js  9.59 KiB   {179}  [emitted]  main
+497.output.js   2.5 KiB   {497}  [emitted]
+    output.js  10.9 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {179} output.js (main) 259 bytes (javascript) 4.42 KiB (runtime) [entry] [rendered]
+chunk {179} output.js (main) 1.19 KiB (javascript) 4.42 KiB (runtime) [entry] [rendered]
     > ./example.js main
  [0] ./example.js 103 bytes {179} [built]
      [no exports]
      [used exports unknown]
      entry ./example.js main
- [1] ./Actions.js 156 bytes {179} [built]
-     [exports: CreateUserAction]
+ [1] ./Actions.js 1.09 KiB {179} [built]
+     [exports: AlternativeCreateUserAction, CreateUserAction]
      [used exports unknown]
      harmony side effect evaluation ./Actions.js [0] ./example.js 1:0-48
      harmony import specifier ./Actions.js [0] ./example.js 4:7-23
      + 6 hidden chunk modules
-chunk {497} 497.output.js 392 bytes [rendered]
-    > ./UserApi.js [1] ./Actions.js 1:16-38
- [2] ./UserApi.js 158 bytes {497} [built]
+chunk {497} 497.output.js 622 bytes [rendered]
+    > ./UserApi.js [1] ./Actions.js 22:30-52
+    > ./UserApi.js [1] ./Actions.js 2:16-38
+ [2] ./UserApi.js 220 bytes {497} [built]
      [exports: createUser]
      [used exports unknown]
-     import() ./UserApi.js [1] ./Actions.js 1:16-38
- [3] ./db-connection.js 234 bytes {497} [built]
-     [exports: dbCall]
+     import() ./UserApi.js [1] ./Actions.js 2:16-38
+     import() ./UserApi.js [1] ./Actions.js 22:30-52
+ [3] ./db-connection.js 402 bytes {497} [built]
+     [exports: close, dbCall]
      [used exports unknown]
      harmony side effect evaluation ./db-connection.js [2] ./UserApi.js 1:0-50
-     harmony import specifier ./db-connection.js [2] ./UserApi.js 5:7-13
+     harmony import specifier ./db-connection.js [2] ./UserApi.js 6:7-13
 ```
 
 ## Production mode
@@ -432,20 +549,22 @@ Version: webpack 5.0.0-alpha.13
 497.output.js  539 bytes   {497}  [emitted]
     output.js   1.78 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {179} output.js (main) 259 bytes (javascript) 4.42 KiB (runtime) [entry] [rendered]
+chunk {179} output.js (main) 1.19 KiB (javascript) 4.42 KiB (runtime) [entry] [rendered]
     > ./example.js main
- [978] ./example.js + 1 modules 259 bytes {179} [built]
+ [978] ./example.js + 1 modules 1.19 KiB {179} [built]
        [no exports]
        entry ./example.js main
      + 6 hidden chunk modules
-chunk {497} 497.output.js 392 bytes [rendered]
-    > ./UserApi.js ./Actions.js 1:16-38
- [447] ./db-connection.js 234 bytes {497} [built]
-       [exports: dbCall]
-       [all exports used]
+chunk {497} 497.output.js 622 bytes [rendered]
+    > ./UserApi.js ./Actions.js 22:30-52
+    > ./UserApi.js ./Actions.js 2:16-38
+ [447] ./db-connection.js 402 bytes {497} [built]
+       [exports: close, dbCall]
+       [only some exports used: dbCall]
        harmony side effect evaluation ./db-connection.js [497] ./UserApi.js 1:0-50
-       harmony import specifier ./db-connection.js [497] ./UserApi.js 5:7-13
- [497] ./UserApi.js 158 bytes {497} [built]
+       harmony import specifier ./db-connection.js [497] ./UserApi.js 6:7-13
+ [497] ./UserApi.js 220 bytes {497} [built]
        [exports: createUser]
-       import() ./UserApi.js [978] ./example.js + 1 modules ./Actions.js 1:16-38
+       import() ./UserApi.js [978] ./example.js + 1 modules ./Actions.js 2:16-38
+       import() ./UserApi.js [978] ./example.js + 1 modules ./Actions.js 22:30-52
 ```
