@@ -663,6 +663,10 @@ export interface ResolveOptions {
 		[k: string]: any;
 	};
 	/**
+	 * An absolute path to limit modules search to, even if other paths are provided in 'modules' (like a chroot)
+	 */
+	jail?: string;
+	/**
 	 * Field names from the description file (package.json) which are used to find the default entry point
 	 */
 	mainFields?: ArrayOfStringOrStringArrayValues;
