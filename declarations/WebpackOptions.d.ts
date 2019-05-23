@@ -663,7 +663,7 @@ export interface ResolveOptions {
 		[k: string]: any;
 	};
 	/**
-	 * An absolute path to limit modules search to, even if other paths are provided in 'modules' (like a chroot)
+	 * An absolute path to limit modules search to, even if other paths are provided in 'modules' (like a chroot).
 	 */
 	jail?: string;
 	/**
