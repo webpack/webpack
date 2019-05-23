@@ -1145,6 +1145,10 @@
         "fileSystem": {
           "description": "Filesystem for the resolver"
         },
+        "jail": {
+          "description": "An absolute path to limit modules search to, even if other paths are provided in 'modules' (like a chroot).",
+          "type": "string"
+        },
         "mainFields": {
           "description": "Field names from the description file (package.json) which are used to find the default entry point",
           "anyOf": [
