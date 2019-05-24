@@ -119,7 +119,7 @@ export function fibonacciJavascript(i) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _add_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./add.wasm */ 1);
 /* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 2);
-module.exports = Promise.all([_add_wasm__WEBPACK_IMPORTED_MODULE_0__, _math__WEBPACK_IMPORTED_MODULE_1__]).then(async function([_add_wasm__WEBPACK_IMPORTED_MODULE_0__, _math__WEBPACK_IMPORTED_MODULE_1__]) {
+module.exports = Promise.all([_add_wasm__WEBPACK_IMPORTED_MODULE_0__, _math__WEBPACK_IMPORTED_MODULE_1__]).then(function([_add_wasm__WEBPACK_IMPORTED_MODULE_0__, _math__WEBPACK_IMPORTED_MODULE_1__]) {
 
 
 
@@ -180,7 +180,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _add_wasm__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./add.wasm */ 1);
 /* harmony import */ var _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./factorial.wasm */ 3);
 /* harmony import */ var _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./fibonacci.wasm */ 4);
-module.exports = Promise.all([_add_wasm__WEBPACK_IMPORTED_MODULE_0__, _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__, _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__]).then(async function([_add_wasm__WEBPACK_IMPORTED_MODULE_0__, _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__, _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__]) {
+module.exports = Promise.all([_add_wasm__WEBPACK_IMPORTED_MODULE_0__, _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__, _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__]).then(function([_add_wasm__WEBPACK_IMPORTED_MODULE_0__, _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__, _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__]) {
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "add", function() { return _add_wasm__WEBPACK_IMPORTED_MODULE_0__["add"]; });
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "factorial", function() { return _factorial_wasm__WEBPACK_IMPORTED_MODULE_1__["factorial"]; });
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "fibonacci", function() { return _fibonacci_wasm__WEBPACK_IMPORTED_MODULE_2__["fibonacci"]; });
@@ -299,7 +299,7 @@ Version: webpack 5.0.0-alpha.14
 216fd3b2e2c26ba17d6a.wasm  41 bytes   {179}  [emitted]  main
 ce408c5c3fbf4bafc915.wasm  62 bytes   {179}  [emitted]  main
 edf8dce07bda763a8ce8.wasm  67 bytes   {179}  [emitted]  main
-                output.js  8.92 KiB   {179}  [emitted]  main
+                output.js   8.9 KiB   {179}  [emitted]  main
 Entrypoint main = output.js 216fd3b2e2c26ba17d6a.wasm ce408c5c3fbf4bafc915.wasm edf8dce07bda763a8ce8.wasm
 chunk {179} output.js, 216fd3b2e2c26ba17d6a.wasm, ce408c5c3fbf4bafc915.wasm, edf8dce07bda763a8ce8.wasm (main) 1.3 KiB (javascript) 170 bytes (webassembly) 1.16 KiB (runtime) [entry] [rendered]
     > ./example.js main
@@ -349,7 +349,7 @@ Version: webpack 5.0.0-alpha.14
 6d518704ecb4aa16ea4e.wasm  62 bytes   {179}  [emitted]  main
 9099c5b3bb53a85154d5.wasm  41 bytes   {179}  [emitted]  main
 b7e9245ccbc6eb4c52c9.wasm  67 bytes   {179}  [emitted]  main
-                output.js  2.01 KiB   {179}  [emitted]  main
+                output.js     2 KiB   {179}  [emitted]  main
 Entrypoint main = output.js 6d518704ecb4aa16ea4e.wasm 9099c5b3bb53a85154d5.wasm b7e9245ccbc6eb4c52c9.wasm
 chunk {179} output.js, 6d518704ecb4aa16ea4e.wasm, 9099c5b3bb53a85154d5.wasm, b7e9245ccbc6eb4c52c9.wasm (main) 1.3 KiB (javascript) 170 bytes (webassembly) 1.17 KiB (runtime) [entry] [rendered]
     > ./example.js main

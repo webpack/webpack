@@ -132,7 +132,7 @@ export const memory = await getMemoryFromParentInWorker();
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _magic_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./magic.js */ 1);
-module.exports = Promise.all([_magic_js__WEBPACK_IMPORTED_MODULE_0__]).then(async function([_magic_js__WEBPACK_IMPORTED_MODULE_0__]) {
+module.exports = Promise.resolve(_magic_js__WEBPACK_IMPORTED_MODULE_0__).then(function(_magic_js__WEBPACK_IMPORTED_MODULE_0__) {
 
 
 // accessing memory
@@ -165,7 +165,7 @@ return __webpack_exports__;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _magic_wat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./magic.wat */ 2);
-module.exports = Promise.all([_magic_wat__WEBPACK_IMPORTED_MODULE_0__]).then(async function([_magic_wat__WEBPACK_IMPORTED_MODULE_0__]) {
+module.exports = Promise.resolve(_magic_wat__WEBPACK_IMPORTED_MODULE_0__).then(function(_magic_wat__WEBPACK_IMPORTED_MODULE_0__) {
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "get", function() { return _magic_wat__WEBPACK_IMPORTED_MODULE_0__["get"]; });
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "getNumber", function() { return _magic_wat__WEBPACK_IMPORTED_MODULE_0__["getNumber"]; });
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "set", function() { return _magic_wat__WEBPACK_IMPORTED_MODULE_0__["set"]; });
@@ -191,7 +191,7 @@ return __webpack_exports__;
 
 /* harmony import */ var WEBPACK_IMPORTED_MODULE_1 = __webpack_require__(/*! ./magic-number.js */ 4);
 
-module.exports = Promise.all([WEBPACK_IMPORTED_MODULE_0]).then(function([WEBPACK_IMPORTED_MODULE_0]) { return __webpack_require__.v(module.i, {
+module.exports = Promise.resolve(WEBPACK_IMPORTED_MODULE_0).then(function(WEBPACK_IMPORTED_MODULE_0) { return __webpack_require__.v(module.i, {
 	"./memory.js": {
 		"memory": WEBPACK_IMPORTED_MODULE_0["memory"]
 	},
@@ -317,7 +317,7 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-alpha.14
                            Asset       Size  Chunks             Chunk Names
 57cfbfefe1cf7dd20007.module.wasm  139 bytes   {179}  [emitted]  main
-                       output.js    8.7 KiB   {179}  [emitted]  main
+                       output.js   8.69 KiB   {179}  [emitted]  main
 Entrypoint main = output.js 57cfbfefe1cf7dd20007.module.wasm
 chunk {179} output.js, 57cfbfefe1cf7dd20007.module.wasm (main) 724 bytes (javascript) 139 bytes (webassembly) 1.12 KiB (runtime) [entry] [rendered]
     > ./example.js main
@@ -360,7 +360,7 @@ Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-alpha.14
                            Asset       Size  Chunks             Chunk Names
 9eda4b1cb2ea4cc07c20.module.wasm  139 bytes   {179}  [emitted]  main
-                       output.js   1.88 KiB   {179}  [emitted]  main
+                       output.js   1.87 KiB   {179}  [emitted]  main
 Entrypoint main = output.js 9eda4b1cb2ea4cc07c20.module.wasm
 chunk {179} output.js, 9eda4b1cb2ea4cc07c20.module.wasm (main) 724 bytes (javascript) 139 bytes (webassembly) 1.12 KiB (runtime) [entry] [rendered]
     > ./example.js main
