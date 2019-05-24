@@ -3508,47 +3508,47 @@ WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [./
 `;
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
-"Hash: 48cd6bb29a775ac0f234
+"Hash: 7693034941eee0a43725
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
                            Asset       Size  Chunks             Chunk Names
-10d1272d7cf8dafe2f3a.module.wasm  225 bytes   {780}  [emitted]
-                   230.bundle.js  430 bytes   {230}  [emitted]
-                   325.bundle.js    3.9 KiB   {325}  [emitted]
+                   230.bundle.js  211 bytes   {230}  [emitted]
+                   325.bundle.js   3.95 KiB   {325}  [emitted]
+3622e435c31cc7731064.module.wasm  154 bytes   {325}  [emitted]
+3e3d5fe8a21d1b31908d.module.wasm  531 bytes    {99}  [emitted]
                    526.bundle.js  329 bytes   {526}  [emitted]
-                   780.bundle.js  842 bytes   {780}  [emitted]
-7eee906d414e0947ebbf.module.wasm  132 bytes   {780}  [emitted]
-94b864234c573663c221.module.wasm   94 bytes   {325}  [emitted]
-                    99.bundle.js  428 bytes    {99}  [emitted]
-a160192b41d0463ac226.module.wasm  131 bytes   {230}  [emitted]
-                       bundle.js   13.5 KiB   {520}  [emitted]  main-1df31ce3
-d95036d90a8b92bc2692.module.wasm  510 bytes    {99}  [emitted]
-ff9c5233b4dbdf834f6f.module.wasm  125 bytes   {325}  [emitted]
+                   780.bundle.js  503 bytes   {780}  [emitted]
+7aead7b7c43084efa07b.module.wasm  156 bytes   {230}  [emitted]
+86f780f1d4b7ccf9001b.module.wasm  120 bytes   {325}  [emitted]
+                    99.bundle.js  209 bytes    {99}  [emitted]
+b2e68013411cb5aefaa9.module.wasm  154 bytes   {780}  [emitted]
+                       bundle.js   10.8 KiB   {520}  [emitted]  main-1df31ce3
+de81fc7e751725498c48.module.wasm  290 bytes   {780}  [emitted]
 Entrypoint main = bundle.js
-chunk {99} 99.bundle.js, d95036d90a8b92bc2692.module.wasm 100 bytes (javascript) 531 bytes (webassembly) [rendered]
- [99] ./duff.wasm 100 bytes (javascript) 531 bytes (webassembly) {99} [built]
-chunk {230} 230.bundle.js, a160192b41d0463ac226.module.wasm 100 bytes (javascript) 156 bytes (webassembly) [rendered]
- [230] ./Q_rsqrt.wasm 100 bytes (javascript) 156 bytes (webassembly) {230} [built]
-chunk {325} 325.bundle.js, 94b864234c573663c221.module.wasm, ff9c5233b4dbdf834f6f.module.wasm 1.6 KiB (javascript) 274 bytes (webassembly) [rendered]
- [287] ./popcnt.wasm 100 bytes (javascript) 120 bytes (webassembly) {325} [built]
- [325] ./tests.js 1.4 KiB {325} [built]
- [819] ./testFunction.wasm 100 bytes (javascript) 154 bytes (webassembly) {325} [built]
-chunk {520} bundle.js (main-1df31ce3) 586 bytes (javascript) 6.75 KiB (runtime) [entry] [rendered]
+chunk {99} 99.bundle.js, 3e3d5fe8a21d1b31908d.module.wasm 50 bytes (javascript) 531 bytes (webassembly) [rendered]
+ [99] ./duff.wasm 50 bytes (javascript) 531 bytes (webassembly) {99} [built]
+chunk {230} 230.bundle.js, 7aead7b7c43084efa07b.module.wasm 50 bytes (javascript) 156 bytes (webassembly) [rendered]
+ [230] ./Q_rsqrt.wasm 50 bytes (javascript) 156 bytes (webassembly) {230} [built]
+chunk {325} 325.bundle.js, 86f780f1d4b7ccf9001b.module.wasm, 3622e435c31cc7731064.module.wasm 1.54 KiB (javascript) 274 bytes (webassembly) [rendered]
+ [287] ./popcnt.wasm 50 bytes (javascript) 120 bytes (webassembly) {325} [built]
+ [325] ./tests.js 1.44 KiB {325} [built]
+ [819] ./testFunction.wasm 50 bytes (javascript) 154 bytes (webassembly) {325} [built]
+chunk {520} bundle.js (main-1df31ce3) 586 bytes (javascript) 5.09 KiB (runtime) [entry] [rendered]
  [10] ./index.js 586 bytes {520} [built]
      + 7 hidden chunk modules
 chunk {526} 526.bundle.js 34 bytes [rendered] split chunk (cache group: defaultVendors)
  [526] ./node_modules/env.js 34 bytes {526} [built]
-chunk {780} 780.bundle.js, 7eee906d414e0947ebbf.module.wasm, 10d1272d7cf8dafe2f3a.module.wasm 205 bytes (javascript) 444 bytes (webassembly) [rendered]
- [143] ./fact.wasm 100 bytes (javascript) 154 bytes (webassembly) {780} [built]
- [151] ./fast-math.wasm 105 bytes (javascript) 290 bytes (webassembly) {780} [built]
+chunk {780} 780.bundle.js, b2e68013411cb5aefaa9.module.wasm, de81fc7e751725498c48.module.wasm 110 bytes (javascript) 444 bytes (webassembly) [rendered]
+ [143] ./fact.wasm 50 bytes (javascript) 154 bytes (webassembly) {780} [built]
+ [151] ./fast-math.wasm 60 bytes (javascript) 290 bytes (webassembly) {780} [built]
  [10] ./index.js 586 bytes {520} [built]
- [99] ./duff.wasm 100 bytes (javascript) 531 bytes (webassembly) {99} [built]
-[143] ./fact.wasm 100 bytes (javascript) 154 bytes (webassembly) {780} [built]
-[151] ./fast-math.wasm 105 bytes (javascript) 290 bytes (webassembly) {780} [built]
-[230] ./Q_rsqrt.wasm 100 bytes (javascript) 156 bytes (webassembly) {230} [built]
-[287] ./popcnt.wasm 100 bytes (javascript) 120 bytes (webassembly) {325} [built]
-[325] ./tests.js 1.4 KiB {325} [built]
+ [99] ./duff.wasm 50 bytes (javascript) 531 bytes (webassembly) {99} [built]
+[143] ./fact.wasm 50 bytes (javascript) 154 bytes (webassembly) {780} [built]
+[151] ./fast-math.wasm 60 bytes (javascript) 290 bytes (webassembly) {780} [built]
+[230] ./Q_rsqrt.wasm 50 bytes (javascript) 156 bytes (webassembly) {230} [built]
+[287] ./popcnt.wasm 50 bytes (javascript) 120 bytes (webassembly) {325} [built]
+[325] ./tests.js 1.44 KiB {325} [built]
 [526] ./node_modules/env.js 34 bytes {526} [built]
-[819] ./testFunction.wasm 100 bytes (javascript) 154 bytes (webassembly) {325} [built]
+[819] ./testFunction.wasm 50 bytes (javascript) 154 bytes (webassembly) {325} [built]
     + 7 hidden modules"
 `;
