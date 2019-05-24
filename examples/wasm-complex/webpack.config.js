@@ -1,13 +1,13 @@
 module.exports = {
 	// mode: "development || "production",
 	output: {
-		webassemblyModuleFilename: "[hash].wasm",
 		publicPath: "dist/"
 	},
 	module: {
 		rules: [
 			{
-				test: /\.wasm$/,
+				test: /\.wat$/,
+				use: "wast-loader",
 				type: "webassembly/async-experimental"
 			}
 		]
