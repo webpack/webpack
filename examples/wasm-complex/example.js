@@ -1,4 +1,4 @@
-import await { get, set, getNumber } from "./magic.wat";
+import await { get, set, getNumber } from "./magic.js";
 
 // accessing memory
 console.log(get());
