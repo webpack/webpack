@@ -496,7 +496,7 @@ rules:
   - filters:
       open: true
       pull_request:
-        author: "^dependabot\\[bot\\]$"
+        author: "^dependabot(-preview)?\\[bot\\]$"
       status:
         context: "licence/cla"
         state: "pending"
@@ -510,7 +510,7 @@ rules:
   - filters:
       open: true
       pull_request:
-        author: "^dependabot\\[bot\\]$"
+        author: "^dependabot(-preview)?\\[bot\\]$"
         mergeable_state: clean
         merged: false
       label: "PR: CI-ok"
