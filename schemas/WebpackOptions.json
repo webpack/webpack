@@ -2128,7 +2128,8 @@
             "async-node",
             "node-webkit",
             "electron-main",
-            "electron-renderer"
+            "electron-renderer",
+            "electron-preload"
           ]
         },
         {
