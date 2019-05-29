@@ -1,5 +1,8 @@
 const DependencyReference = require("../../../../").dependencies
 	.DependencyReference;
+
+/** @typedef {import("../../../../lib/Compilation")} Compilation */
+
 module.exports = {
 	optimization: {
 		usedExports: true,
@@ -24,7 +27,7 @@ module.exports = {
 						);
 						return new DependencyReference(
 							() => ref.module,
-							newExports.length > 0 ? newExports : false,
+							newExports,
 							ref.weak,
 							ref.order
 						);

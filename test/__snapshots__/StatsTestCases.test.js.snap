@@ -2295,6 +2295,7 @@ Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint index = index.js
 Entrypoint entry = entry.js
  [10] ./index.js 150 bytes {826} [built]
+      ModuleConcatenation bailout: Cannot concat with ./cjs.js (<- Module is not an ECMAScript module)
       ModuleConcatenation bailout: Cannot concat with ./entry.js (<- Module is an entry point)
       ModuleConcatenation bailout: Cannot concat with ./eval.js (<- Module uses eval())
       ModuleConcatenation bailout: Cannot concat with ./module-id.js (<- Module uses module.id)
