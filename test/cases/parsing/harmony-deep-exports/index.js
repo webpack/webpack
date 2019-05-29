@@ -22,3 +22,9 @@ it("should allow to reexport namespaces 3", () => {
 	C2.CC.counter.increment();
 	expect(C2.CC.counter.counter).toBe(1);
 });
+
+import CJS from "./cjs";
+
+it("should be able to call a deep function in commonjs", () => {
+	expect(CJS.a.b.c.d()).toBe(42);
+});
