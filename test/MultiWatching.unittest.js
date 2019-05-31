@@ -7,6 +7,8 @@ const MultiWatching = require("../lib/MultiWatching");
 const createWatching = () => {
 	return {
 		invalidate: jest.fn(),
+		suspend: jest.fn(),
+		resume: jest.fn(),
 		close: jest.fn()
 	};
 };
@@ -40,6 +42,20 @@ describe("MultiWatching", () => {
 		it("invalidates each watching", () => {
 			expect(watchings[0].invalidate.mock.calls.length).toBe(1);
 			expect(watchings[1].invalidate.mock.calls.length).toBe(1);
+		});
+	});
+
+	describe("suspend", () => {
+		it("suspends each watching", () => {
+			myMultiWatching.suspend();
+			expect(watchings[0].suspend.mock.calls.length).toBe(1);
+			expect(watchings[1].suspend.mock.calls.length).toBe(1);
+		});
+
+		it("resume each watching", () => {
+			myMultiWatching.resume();
+			expect(watchings[0].resume.mock.calls.length).toBe(1);
+			expect(watchings[1].resume.mock.calls.length).toBe(1);
 		});
 	});
 
