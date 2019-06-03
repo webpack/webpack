@@ -72,6 +72,7 @@
     "rimraf": "^2.6.2",
     "script-loader": "~0.7.0",
     "simple-git": "^1.65.0",
+    "strip-ansi": "^5.2.0",
     "style-loader": "^0.23.1",
     "typescript": "^3.0.0-rc",
     "url-loader": "^1.1.2",
