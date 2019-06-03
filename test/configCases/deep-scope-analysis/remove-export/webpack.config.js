@@ -1,5 +1,8 @@
 const DependencyReference = require("../../../../").dependencies
 	.DependencyReference;
+
+/** @typedef {import("../../../../lib/Compilation")} Compilation */
+
 module.exports = {
 	optimization: {
 		usedExports: true,
@@ -15,14 +18,16 @@ module.exports = {
 						ref.module &&
 						ref.module.identifier().endsWith("reference.js") &&
 						Array.isArray(ref.importedNames) &&
-						ref.importedNames.includes("unused")
+						ref.importedNames.some(
+							names => names.length === 1 && names[0] === "unused"
+						)
 					) {
 						const newExports = ref.importedNames.filter(
-							item => item !== "unused"
+							names => names.length !== 1 || names[0] !== "unused"
 						);
 						return new DependencyReference(
 							() => ref.module,
-							newExports.length > 0 ? newExports : false,
+							newExports,
 							ref.weak,
 							ref.order
 						);
