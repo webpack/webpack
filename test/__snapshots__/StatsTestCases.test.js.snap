@@ -1573,18 +1573,17 @@ chunk    {7} main.js (main) 523 bytes >{0}< >{1}< >{2}< >{5}< [entry] [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for parse-error 1`] = `
-"  Asset     Size  Chunks  Chunk Names
-main.js  4.1 KiB       0  main
+"  Asset      Size  Chunks  Chunk Names
+main.js  4.11 KiB       0  main
 Entrypoint main = main.js
-[0] ./b.js 258 bytes {0} [built] [failed] [1 error]
+[0] ./b.js 271 bytes {0} [built] [failed] [1 error]
 [1] ./index.js + 1 modules 35 bytes {0} [built]
     | ./index.js 15 bytes [built]
     | ./a.js 15 bytes [built]
 
 ERROR in ./b.js 6:7
 Module parse failed: Unexpected token (6:7)
-You may need an appropriate loader to handle this file type.
-No Loaders configured to process this file. See https://webpack.js.org/concepts#loaders
+You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
 | includes
 | a
 > parser )

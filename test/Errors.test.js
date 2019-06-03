@@ -394,6 +394,15 @@ describe("Errors", () => {
 		);
 	});
 
+	const identityLoader = path.resolve(
+		__dirname,
+		"fixtures/errors/identity-loader.js"
+	);
+	const addCommentLoader = path.resolve(
+		__dirname,
+		"fixtures/errors/add-comment-loader.js"
+	);
+
 	it("should show loader used if it is present when module parsing fails", done => {
 		const folder = path.join(__dirname, "/fixtures");
 		getErrors(
@@ -403,18 +412,26 @@ describe("Errors", () => {
 				module: {
 					rules: [
 						{
-							test: /\.json$/,
-							use: [{ loader: "json-loader" }]
+							test: /\.html$/,
+							use: [{ loader: identityLoader }]
 						}
 					]
 				}
 			},
 			(errors, warnings) => {
-				const messages = errors[0].split("\n");
-				const loaderUsedMessage = messages.filter(message =>
-					message.includes("* json-loader.")
-				)[0];
-				expect(loaderUsedMessage).toMatch("* json-loader.");
+				expect(errors).toMatchInlineSnapshot(`
+Array [
+  "../abc.html 1:0
+Module parse failed: Unexpected token (1:0)
+File was processed with these loaders:
+ * ./identity-loader.js
+You may need an additional loader to handle the result of these loaders.
+> <!DOCTYPE html>
+|   <html>
+|     <body>",
+]
+`);
+				expect(errors[0]).toMatch("File was processed with these loaders");
 				done();
 			}
 		);
@@ -429,24 +446,27 @@ describe("Errors", () => {
 				module: {
 					rules: [
 						{
-							test: /\.json$/,
-							use: [{ loader: "json-loader" }, { loader: "coffee-loader" }]
+							test: /\.html$/,
+							use: [{ loader: identityLoader }, { loader: addCommentLoader }]
 						}
 					]
 				}
 			},
 			(errors, warnings) => {
-				const messages = errors[0].split("\n");
-				const loaderUsedMessage = messages.filter(message => {
-					return (
-						message.includes(" * json-loader") ||
-						message.includes(" * coffee-loader.")
-					);
-				});
-				expect(loaderUsedMessage).toEqual([
-					" * json-loader",
-					" * coffee-loader."
-				]);
+				expect(errors).toMatchInlineSnapshot(`
+Array [
+  "../abc.html 1:0
+Module parse failed: Unexpected token (1:0)
+File was processed with these loaders:
+ * ./identity-loader.js
+ * ./add-comment-loader.js
+You may need an additional loader to handle the result of these loaders.
+> <!DOCTYPE html>
+|   <html>
+|     <body>",
+]
+`);
+				expect(errors[0]).toMatch("File was processed with these loaders");
 				done();
 			}
 		);
@@ -460,29 +480,32 @@ describe("Errors", () => {
 				entry: path.resolve(folder, "./abc.html"),
 				module: {
 					rules: [
-						{ test: /\.json$/, use: "json-loader" },
-						{ test: /\.coffee$/, use: "coffee-loader" }
+						{ test: /\.html$/, use: identityLoader },
+						{ test: /\.html$/, use: addCommentLoader }
 					]
 				}
 			},
 			(errors, warnings) => {
-				const messages = errors[0].split("\n");
-				const loaderUsedMessage = messages.filter(message => {
-					return (
-						message.includes(" * json-loader") ||
-						message.includes(" * coffee-loader.")
-					);
-				});
-				expect(loaderUsedMessage).toEqual([
-					" * json-loader",
-					" * coffee-loader."
-				]);
+				expect(errors).toMatchInlineSnapshot(`
+Array [
+  "../abc.html 1:0
+Module parse failed: Unexpected token (1:0)
+File was processed with these loaders:
+ * ./identity-loader.js
+ * ./add-comment-loader.js
+You may need an additional loader to handle the result of these loaders.
+> <!DOCTYPE html>
+|   <html>
+|     <body>",
+]
+`);
+				expect(errors[0]).toMatch("File was processed with these loaders");
 				done();
 			}
 		);
 	});
 
-	it("should show 'No Loaders present to process this file.' if loaders are not included in config when module parsing fails", done => {
+	it("should show 'no loaders are configured to process this file' if loaders are not included in config when module parsing fails", done => {
 		const folder = path.join(__dirname, "/fixtures");
 		getErrors(
 			{
@@ -491,12 +514,18 @@ describe("Errors", () => {
 				module: {}
 			},
 			(errors, warnings) => {
-				const messages = errors[0].split("\n");
-				const loaderUsedMessage = messages.filter(message =>
-					message.includes("No Loaders configured")
-				)[0];
-				expect(loaderUsedMessage).toMatch(
-					"No Loaders configured to process this file. See https://webpack.js.org/concepts#loaders"
+				expect(errors).toMatchInlineSnapshot(`
+Array [
+  "../abc.html 1:0
+Module parse failed: Unexpected token (1:0)
+You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
+> <!DOCTYPE html>
+|   <html>
+|     <body>",
+]
+`);
+				expect(errors[0]).toMatch(
+					"no loaders are configured to process this file"
 				);
 				done();
 			}
