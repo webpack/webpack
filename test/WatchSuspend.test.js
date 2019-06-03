@@ -14,15 +14,17 @@ describe("WatchSuspend", () => {
 
 	jest.setTimeout(5000);
 
-	describe("suspend ans resume watcher", () => {
+	describe("suspend and resume watcher", () => {
 		const fixturePath = path.join(
 			__dirname,
 			"fixtures",
 			"temp-watch-" + Date.now()
 		);
 		const filePath = path.join(fixturePath, "file.js");
+		const outputPath = path.join(fixturePath, "bundle.js");
 		let compiler = null;
 		let watching = null;
+		let onChange = null;
 
 		beforeAll(() => {
 			try {
@@ -35,27 +37,6 @@ describe("WatchSuspend", () => {
 			} catch (e) {
 				// skip
 			}
-		});
-
-		afterAll(done => {
-			watching.close();
-			compiler = null;
-			setTimeout(() => {
-				try {
-					fs.unlinkSync(filePath);
-				} catch (e) {
-					// skip
-				}
-				try {
-					fs.rmdirSync(fixturePath);
-				} catch (e) {
-					// skip
-				}
-				done();
-			}, 100); // cool down a bit
-		});
-
-		it("should compile successfully", done => {
 			compiler = webpack({
 				mode: "development",
 				entry: filePath,
@@ -64,30 +45,52 @@ describe("WatchSuspend", () => {
 					filename: "bundle.js"
 				}
 			});
-			watching = compiler.watch({ aggregateTimeout: 50 }, err => {
-				expect(err).toBe(null);
-				done();
+			watching = compiler.watch({ aggregateTimeout: 50 }, () => {});
+			compiler.hooks.done.tap("WatchSuspendTest", () => {
+				if (onChange) onChange();
 			});
+		});
+
+		afterAll(() => {
+			watching.close();
+			compiler = null;
+			try {
+				fs.unlinkSync(filePath);
+			} catch (e) {
+				// skip
+			}
+			try {
+				fs.rmdirSync(fixturePath);
+			} catch (e) {
+				// skip
+			}
+		});
+
+		it("should compile successfully", done => {
+			onChange = () => {
+				expect(fs.readFileSync(outputPath, "utf-8")).toContain("'foo'");
+				onChange = null;
+				done();
+			};
 		});
 
 		it("should suspend compilation", done => {
-			const spy = jest.fn();
+			onChange = jest.fn();
 			watching.suspend();
 			fs.writeFileSync(filePath, "'bar'", "utf-8");
-			compiler.hooks.compilation.tap("WatchSuspendTest", spy);
-			// compiler.hooks.done.tap("WatchSuspendTest", spy);
 			setTimeout(() => {
-				expect(spy.mock.calls.length).toBe(0);
+				expect(onChange.mock.calls.length).toBe(0);
+				onChange = null;
 				done();
-			}, 100); // 2x aggregateTimeout
+			}, 1000);
 		});
 
 		it("should resume compilation", done => {
-			compiler.hooks.done.tap("WatchSuspendTest", () => {
-				const outputPath = path.join(fixturePath, "bundle.js");
+			onChange = () => {
 				expect(fs.readFileSync(outputPath, "utf-8")).toContain("'bar'");
+				onChange = null;
 				done();
-			});
+			};
 			watching.resume();
 		});
 	});
