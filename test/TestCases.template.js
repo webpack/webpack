@@ -182,7 +182,10 @@ const describeCases = config => {
 											);
 										});
 									});
-								})
+								}),
+								experiments: {
+									mjs: true
+								}
 							};
 							beforeAll(done => {
 								rimraf(cacheDirectory, done);

@@ -307,6 +307,10 @@ export interface WebpackOptions {
 	 */
 	entry?: Entry;
 	/**
+	 * Enables/Disables experiments (experiemental features with relax SemVer compatibility)
+	 */
+	experiments?: Experiments;
+	/**
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
 	 */
 	externals?: Externals;
@@ -485,6 +489,18 @@ export interface EntryObject {
 	 * An entry point with name
 	 */
 	[k: string]: string | NonEmptyArrayOfUniqueStringValues;
+}
+/**
+ * Enables/Disables experiments (experiemental features with relax SemVer compatibility)
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "Experiments".
+ */
+export interface Experiments {
+	/**
+	 * Support .mjs files as way to define strict ESM file (node.js)
+	 */
+	mjs?: boolean;
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
