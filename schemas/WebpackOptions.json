@@ -2120,6 +2120,10 @@
       "type": "string",
       "absolutePath": true
     },
+    "memory": {
+      "description": "Determines if webpack should output to memory instead of disk",
+      "type": "boolean"
+    },
     "dependencies": {
       "description": "References to other configurations to depend on.",
       "type": "array",
