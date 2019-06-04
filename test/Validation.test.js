@@ -193,7 +193,7 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 "Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
  - configuration has an unknown property 'postcss'. These properties are valid:
-   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry?, externals?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, serve?, stats?, target?, watch?, watchOptions? }
+   object { amd?, bail?, cache?, context?, dependencies?, devServer?, devtool?, entry?, experiments?, externals?, loader?, mode?, module?, name?, node?, optimization?, output?, parallelism?, performance?, plugins?, profile?, recordsInputPath?, recordsOutputPath?, recordsPath?, resolve?, resolveLoader?, serve?, stats?, target?, watch?, watchOptions? }
    For typos: please correct them.
    For loader options: webpack >= v2.0.0 no longer allows custom properties in configuration.
      Loaders should be updated to allow passing options via loader options in module.rules.

@@ -93,6 +93,17 @@
         }
       ]
     },
+    "Experiments": {
+      "description": "Enables/Disables experiments (experiemental features with relax SemVer compatibility)",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mjs": {
+          "description": "Support .mjs files as way to define strict ESM file (node.js)",
+          "type": "boolean"
+        }
+      }
+    },
     "ExternalItem": {
       "anyOf": [
         {
@@ -2148,6 +2159,14 @@
       "anyOf": [
         {
           "$ref": "#/definitions/Entry"
+        }
+      ]
+    },
+    "experiments": {
+      "description": "Enables/Disables experiments (experiemental features with relax SemVer compatibility)",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Experiments"
         }
       ]
     },
