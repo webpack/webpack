@@ -404,11 +404,10 @@ describe("Errors", () => {
 	);
 
 	it("should show loader used if it is present when module parsing fails", done => {
-		const folder = path.join(__dirname, "/fixtures");
 		getErrors(
 			{
 				mode: "development",
-				entry: path.resolve(folder, "./abc.html"),
+				entry: "./abc.html",
 				module: {
 					rules: [
 						{
@@ -421,14 +420,14 @@ describe("Errors", () => {
 			(errors, warnings) => {
 				expect(errors).toMatchInlineSnapshot(`
 Array [
-  "../abc.html 1:0
+  "./abc.html 1:0
 Module parse failed: Unexpected token (1:0)
 File was processed with these loaders:
  * ./identity-loader.js
 You may need an additional loader to handle the result of these loaders.
 > <!DOCTYPE html>
-|   <html>
-|     <body>",
+| <html>
+| 	<body>",
 ]
 `);
 				expect(errors[0]).toMatch("File was processed with these loaders");
@@ -438,11 +437,10 @@ You may need an additional loader to handle the result of these loaders.
 	});
 
 	it("should show all loaders used if they are in config when module parsing fails", done => {
-		const folder = path.join(__dirname, "/fixtures");
 		getErrors(
 			{
 				mode: "development",
-				entry: path.resolve(folder, "./abc.html"),
+				entry: "./abc.html",
 				module: {
 					rules: [
 						{
@@ -455,15 +453,15 @@ You may need an additional loader to handle the result of these loaders.
 			(errors, warnings) => {
 				expect(errors).toMatchInlineSnapshot(`
 Array [
-  "../abc.html 1:0
+  "./abc.html 1:0
 Module parse failed: Unexpected token (1:0)
 File was processed with these loaders:
  * ./identity-loader.js
  * ./add-comment-loader.js
 You may need an additional loader to handle the result of these loaders.
 > <!DOCTYPE html>
-|   <html>
-|     <body>",
+| <html>
+| 	<body>",
 ]
 `);
 				expect(errors[0]).toMatch("File was processed with these loaders");
@@ -473,11 +471,10 @@ You may need an additional loader to handle the result of these loaders.
 	});
 
 	it("should show all loaders used if use is a string", done => {
-		const folder = path.join(__dirname, "/fixtures");
 		getErrors(
 			{
 				mode: "development",
-				entry: path.resolve(folder, "./abc.html"),
+				entry: "./abc.html",
 				module: {
 					rules: [
 						{ test: /\.html$/, use: identityLoader },
@@ -488,15 +485,15 @@ You may need an additional loader to handle the result of these loaders.
 			(errors, warnings) => {
 				expect(errors).toMatchInlineSnapshot(`
 Array [
-  "../abc.html 1:0
+  "./abc.html 1:0
 Module parse failed: Unexpected token (1:0)
 File was processed with these loaders:
  * ./identity-loader.js
  * ./add-comment-loader.js
 You may need an additional loader to handle the result of these loaders.
 > <!DOCTYPE html>
-|   <html>
-|     <body>",
+| <html>
+| 	<body>",
 ]
 `);
 				expect(errors[0]).toMatch("File was processed with these loaders");
@@ -506,22 +503,21 @@ You may need an additional loader to handle the result of these loaders.
 	});
 
 	it("should show 'no loaders are configured to process this file' if loaders are not included in config when module parsing fails", done => {
-		const folder = path.join(__dirname, "/fixtures");
 		getErrors(
 			{
 				mode: "development",
-				entry: path.resolve(folder, "./abc.html"),
+				entry: "./abc.html",
 				module: {}
 			},
 			(errors, warnings) => {
 				expect(errors).toMatchInlineSnapshot(`
 Array [
-  "../abc.html 1:0
+  "./abc.html 1:0
 Module parse failed: Unexpected token (1:0)
 You may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders
 > <!DOCTYPE html>
-|   <html>
-|     <body>",
+| <html>
+| 	<body>",
 ]
 `);
 				expect(errors[0]).toMatch(
