@@ -12,6 +12,10 @@ module.exports = {
 			}
 		]
 	},
+	experiments: {
+		asyncWebAssembly: true,
+		importAwait: true
+	},
 	plugins: [
 		function() {
 			this.hooks.compilation.tap(

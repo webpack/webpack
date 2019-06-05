@@ -184,7 +184,10 @@ const describeCases = config => {
 									});
 								}),
 								experiments: {
-									mjs: true
+									mjs: true,
+									asyncWebAssembly: true,
+									topLevelAwait: true,
+									importAwait: true
 								}
 							};
 							beforeAll(done => {

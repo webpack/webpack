@@ -16,5 +16,9 @@ module.exports = {
 		chunks: true,
 		chunkModules: true,
 		modules: true
+	},
+	experiments: {
+		asyncWebAssembly: true,
+		importAwait: true
 	}
 };
