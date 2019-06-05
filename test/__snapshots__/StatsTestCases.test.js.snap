@@ -3508,19 +3508,19 @@ WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [./
 `;
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
-"Hash: 030e8f932f2804684388
+"Hash: 101e738bf68e8ef063d4
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
                            Asset       Size  Chunks             Chunk Names
 0303ec812ef3cb633580.module.wasm  154 bytes   {780}  [emitted]
 1d55f77c08cd19684f13.module.wasm  154 bytes   {325}  [emitted]
-                   230.bundle.js  211 bytes   {230}  [emitted]
-                   325.bundle.js   3.95 KiB   {325}  [emitted]
+                   230.bundle.js  212 bytes   {230}  [emitted]
+                   325.bundle.js   3.96 KiB   {325}  [emitted]
                    526.bundle.js  329 bytes   {526}  [emitted]
 7031b3d288670f8a932a.module.wasm  120 bytes   {325}  [emitted]
-                   780.bundle.js  503 bytes   {780}  [emitted]
-                    99.bundle.js  209 bytes    {99}  [emitted]
-                       bundle.js   10.8 KiB   {520}  [emitted]  main-1df31ce3
+                   780.bundle.js  505 bytes   {780}  [emitted]
+                    99.bundle.js  210 bytes    {99}  [emitted]
+                       bundle.js   10.9 KiB   {520}  [emitted]  main-1df31ce3
 ca33708544fa2cfb2e2e.module.wasm  290 bytes   {780}  [emitted]
 d37b3336426771c2a6e2.module.wasm  531 bytes    {99}  [emitted]
 f55b5f397ec1004a5764.module.wasm  156 bytes   {230}  [emitted]
@@ -3533,7 +3533,7 @@ chunk {325} 325.bundle.js, 7031b3d288670f8a932a.module.wasm, 1d55f77c08cd19684f1
  [287] ./popcnt.wasm 50 bytes (javascript) 120 bytes (webassembly) {325} [built]
  [325] ./tests.js 1.44 KiB {325} [built]
  [819] ./testFunction.wasm 50 bytes (javascript) 154 bytes (webassembly) {325} [built]
-chunk {520} bundle.js (main-1df31ce3) 586 bytes (javascript) 5.09 KiB (runtime) [entry] [rendered]
+chunk {520} bundle.js (main-1df31ce3) 586 bytes (javascript) 5.15 KiB (runtime) [entry] [rendered]
  [10] ./index.js 586 bytes {520} [built]
      + 7 hidden chunk modules
 chunk {526} 526.bundle.js 34 bytes [rendered] split chunk (cache group: defaultVendors)
