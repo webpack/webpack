@@ -2,17 +2,21 @@ module.exports = {
 	// mode: "development || "production",
 	output: {
 		webassemblyModuleFilename: "[hash].wasm",
-		publicPath: "js/"
+		publicPath: "dist/"
 	},
 	module: {
 		rules: [
 			{
 				test: /\.wasm$/,
-				type: "webassembly/experimental"
+				type: "webassembly/async-experimental"
 			}
 		]
 	},
 	optimization: {
 		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
+	},
+	experiments: {
+		asyncWebAssembly: true,
+		importAwait: true
 	}
 };

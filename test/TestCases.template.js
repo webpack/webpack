@@ -164,7 +164,7 @@ const describeCases = config => {
 										{
 											test: /\.wat$/i,
 											loader: "wast-loader",
-											type: "webassembly/experimental"
+											type: "webassembly/async-experimental"
 										}
 									]
 								},
@@ -184,7 +184,10 @@ const describeCases = config => {
 									});
 								}),
 								experiments: {
-									mjs: true
+									mjs: true,
+									asyncWebAssembly: true,
+									topLevelAwait: true,
+									importAwait: true
 								}
 							};
 							beforeAll(done => {

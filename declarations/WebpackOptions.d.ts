@@ -499,9 +499,29 @@ export interface EntryObject {
  */
 export interface Experiments {
 	/**
+	 * Support WebAssembly as asynchronous EcmaScript Module
+	 */
+	asyncWebAssembly?: boolean;
+	/**
+	 * Allow 'import/export' syntax to import async modules
+	 */
+	importAsync?: boolean;
+	/**
+	 * Allow 'import/export await' syntax to import async modules
+	 */
+	importAwait?: boolean;
+	/**
 	 * Support .mjs files as way to define strict ESM file (node.js)
 	 */
 	mjs?: boolean;
+	/**
+	 * Support WebAssembly as synchronous EcmaScript Module (outdated)
+	 */
+	syncWebAssembly?: boolean;
+	/**
+	 * Allow using top-level-await in EcmaScript Modules
+	 */
+	topLevelAwait?: boolean;
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema

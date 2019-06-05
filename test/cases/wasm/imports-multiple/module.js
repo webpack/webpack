@@ -1,4 +1,4 @@
-import { getResult } from "./wasm.wasm";
+import await { getResult } from "./wasm.wasm";
 
 export var result = getResult(1);
 

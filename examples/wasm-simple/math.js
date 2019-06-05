@@ -1,6 +1,6 @@
-import { add } from "./add.wasm";
-import { factorial } from "./factorial.wasm";
-import { fibonacci } from "./fibonacci.wasm";
+import await { add } from "./add.wasm";
+import await { factorial } from "./factorial.wasm";
+import await { fibonacci } from "./fibonacci.wasm";
 
 export { add, factorial, fibonacci };
 

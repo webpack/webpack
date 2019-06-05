@@ -430,7 +430,7 @@ Child all:
 `;
 
 exports[`StatsTestCases should print correct stats for chunk-module-id-range 1`] = `
-"Hash: 4b7df25b6465c464acfe
+"Hash: 9100d03e78dfafc13e43
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 PublicPath: (none)
@@ -618,26 +618,26 @@ Entrypoint entry-1 = vendor-1.js entry-1.js
 `;
 
 exports[`StatsTestCases should print correct stats for commons-plugin-issue-4980 1`] = `
-"Hash: ada681c866c95e0132eff2c9453ed201db5580c2
+"Hash: 43517dc29e8fb2f034046e46d5a8921f72e08658
 Child
-    Hash: ada681c866c95e0132ef
+    Hash: 43517dc29e8fb2f03404
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                              Asset       Size  Chunks             Chunk Names
-       app.72745ea3abc585e103e5.js   6.69 KiB   {143}  [emitted]  app
-    vendor.22698e25646290b0dcc1.js  616 bytes   {736}  [emitted]  vendor
-    Entrypoint app = vendor.22698e25646290b0dcc1.js app.72745ea3abc585e103e5.js
+       app.fadc4a6a89f7a11c1f53.js   6.69 KiB   {143}  [emitted]  app
+    vendor.44602d2bdfb280718742.js  616 bytes   {736}  [emitted]  vendor
+    Entrypoint app = vendor.44602d2bdfb280718742.js app.fadc4a6a89f7a11c1f53.js
     [117] ./entry-1.js + 2 modules 190 bytes {143} [built]
     [381] ./constants.js 87 bytes {736} [built]
         + 4 hidden modules
 Child
-    Hash: f2c9453ed201db5580c2
+    Hash: 6e46d5a8921f72e08658
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                              Asset       Size  Chunks             Chunk Names
-       app.eee68844dbd56e9ed525.js    6.7 KiB   {143}  [emitted]  app
-    vendor.22698e25646290b0dcc1.js  616 bytes   {736}  [emitted]  vendor
-    Entrypoint app = vendor.22698e25646290b0dcc1.js app.eee68844dbd56e9ed525.js
+       app.8a243650f3a4dfeedf18.js    6.7 KiB   {143}  [emitted]  app
+    vendor.44602d2bdfb280718742.js  616 bytes   {736}  [emitted]  vendor
+    Entrypoint app = vendor.44602d2bdfb280718742.js app.8a243650f3a4dfeedf18.js
     [381] ./constants.js 87 bytes {736} [built]
     [655] ./entry-2.js + 2 modules 197 bytes {143} [built]
         + 4 hidden modules"
@@ -1087,7 +1087,7 @@ chunk {trees} trees.js (trees) 71 bytes [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
-"Hash: 99ab54650501715e52b3
+"Hash: 9c0581e86fd499608326
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
    Asset       Size  Chunks             Chunk Names
@@ -1142,7 +1142,7 @@ Compilation error while processing magic comment(-s): /* webpackPrefetch: nope *
 `;
 
 exports[`StatsTestCases should print correct stats for issue-7577 1`] = `
-"Hash: ee71e92c425768e3199684bcfdac7980897a754a8474314458dd9f782a88
+"Hash: ee71e92c425768e31996f7d4f5f5ea4a4e51f90cde88673ad2161e9d116a
 Child
     Hash: ee71e92c425768e31996
     Time: Xms
@@ -1155,29 +1155,29 @@ Child
     [./a.js] 18 bytes {all-a_js} [built]
         + 1 hidden module
 Child
-    Hash: 84bcfdac7980897a754a
+    Hash: f7d4f5f5ea4a4e51f90c
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                                                        Asset       Size                            Chunks             Chunk Names
-                          b-all-b_js-37d65f4d099d877fe62e.js  502 bytes                        {all-b_js}  [emitted]
-                              b-main-3265c708803da1050efa.js  148 bytes                            {main}  [emitted]  main
+                          b-all-b_js-89c3127ba563ffa436dc.js  502 bytes                        {all-b_js}  [emitted]
+                              b-main-f043bf83e8ebac493a99.js  148 bytes                            {main}  [emitted]  main
                       b-runtime~main-eb50a4e30b9265ee856d.js   6.11 KiB                    {runtime~main}  [emitted]  runtime~main
     b-vendors-node_modules_vendor_js-a7aa3079a16cbae3f591.js  194 bytes  {vendors-node_modules_vendor_js}  [emitted]
-    Entrypoint main = b-runtime~main-eb50a4e30b9265ee856d.js b-vendors-node_modules_vendor_js-a7aa3079a16cbae3f591.js b-all-b_js-37d65f4d099d877fe62e.js b-main-3265c708803da1050efa.js
+    Entrypoint main = b-runtime~main-eb50a4e30b9265ee856d.js b-vendors-node_modules_vendor_js-a7aa3079a16cbae3f591.js b-all-b_js-89c3127ba563ffa436dc.js b-main-f043bf83e8ebac493a99.js
     [./b.js] 17 bytes {all-b_js} [built]
     [./node_modules/vendor.js] 23 bytes {vendors-node_modules_vendor_js} [built]
         + 4 hidden modules
 Child
-    Hash: 8474314458dd9f782a88
+    Hash: de88673ad2161e9d116a
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
                                                        Asset       Size                            Chunks             Chunk Names
-                          c-all-b_js-37d65f4d099d877fe62e.js  502 bytes                        {all-b_js}  [emitted]
+                          c-all-b_js-89c3127ba563ffa436dc.js  502 bytes                        {all-b_js}  [emitted]
                           c-all-c_js-936472833753792cc303.js  369 bytes                        {all-c_js}  [emitted]
                               c-main-74481bfa6b28e9e83c8f.js  164 bytes                            {main}  [emitted]  main
-                      c-runtime~main-136cbfba3e0a440f5b02.js   10.8 KiB                    {runtime~main}  [emitted]  runtime~main
+                      c-runtime~main-9eb6c987f0f9e3a06084.js   10.8 KiB                    {runtime~main}  [emitted]  runtime~main
     c-vendors-node_modules_vendor_js-a7aa3079a16cbae3f591.js  194 bytes  {vendors-node_modules_vendor_js}  [emitted]
-    Entrypoint main = c-runtime~main-136cbfba3e0a440f5b02.js c-all-c_js-936472833753792cc303.js c-main-74481bfa6b28e9e83c8f.js (prefetch: c-vendors-node_modules_vendor_js-a7aa3079a16cbae3f591.js c-all-b_js-37d65f4d099d877fe62e.js)
+    Entrypoint main = c-runtime~main-9eb6c987f0f9e3a06084.js c-all-c_js-936472833753792cc303.js c-main-74481bfa6b28e9e83c8f.js (prefetch: c-vendors-node_modules_vendor_js-a7aa3079a16cbae3f591.js c-all-b_js-89c3127ba563ffa436dc.js)
     [./b.js] 17 bytes {all-b_js} [built]
     [./c.js] 61 bytes {all-c_js} [built]
     [./node_modules/vendor.js] 23 bytes {vendors-node_modules_vendor_js} [built]
@@ -1316,7 +1316,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for module-assets 1`] = `
-"Hash: 58adf943d81dbc320c4a
+"Hash: b838419139ebdaa10ca9
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint main = main.js
@@ -1453,7 +1453,7 @@ If you don't want to include a polyfill, you can use an empty module like this:
 `;
 
 exports[`StatsTestCases should print correct stats for module-reasons 1`] = `
-"Hash: 9757fb3da1f7b8f77bbb
+"Hash: 1929067a72bea5516d56
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset      Size  Chunks             Chunk Names
@@ -2289,7 +2289,7 @@ Entrypoint e2 = runtime.js e2.js"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"Hash: b4a9cfa089ce3732efc5
+"Hash: e4fd2a856be58d136249
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
 Entrypoint index = index.js
@@ -2319,9 +2319,9 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
-"Hash: d4c3cd048bdc678bb92437745aea03a16f764c79
+"Hash: 480eedeb62f9790427830b0453c70b9973de2428
 Child
-    Hash: d4c3cd048bdc678bb924
+    Hash: 480eedeb62f979042783
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
     Entrypoint first = vendor.js first.js
@@ -2339,7 +2339,7 @@ Child
     [965] ./vendor.js 25 bytes {736} [built]
         + 10 hidden modules
 Child
-    Hash: 37745aea03a16f764c79
+    Hash: 0b0453c70b9973de2428
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
     Entrypoint first = vendor.js first.js
@@ -2366,7 +2366,7 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
-"Hash: 8871bd720c1e20111581
+"Hash: 68e1b7bc73adde79c9b2
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
@@ -2415,7 +2415,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
-"Hash: 589af6828de7c047d0c5
+"Hash: 8552e7b59b452ccb1138
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset      Size  Chunks             Chunk Names
@@ -3447,7 +3447,7 @@ chunk {794} default/async-a.js (async-a) 134 bytes <{179}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: 9f0d95b08ca5afeee1fe
+"Hash: de7fafb0f5388d3c7fbe
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset     Size  Chunks             Chunk Names
@@ -3508,47 +3508,47 @@ WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [./
 `;
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
-"Hash: 48cd6bb29a775ac0f234
+"Hash: 101e738bf68e8ef063d4
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
                            Asset       Size  Chunks             Chunk Names
-10d1272d7cf8dafe2f3a.module.wasm  225 bytes   {780}  [emitted]
-                   230.bundle.js  430 bytes   {230}  [emitted]
-                   325.bundle.js    3.9 KiB   {325}  [emitted]
+0303ec812ef3cb633580.module.wasm  154 bytes   {780}  [emitted]
+1d55f77c08cd19684f13.module.wasm  154 bytes   {325}  [emitted]
+                   230.bundle.js  212 bytes   {230}  [emitted]
+                   325.bundle.js   3.96 KiB   {325}  [emitted]
                    526.bundle.js  329 bytes   {526}  [emitted]
-                   780.bundle.js  842 bytes   {780}  [emitted]
-7eee906d414e0947ebbf.module.wasm  132 bytes   {780}  [emitted]
-94b864234c573663c221.module.wasm   94 bytes   {325}  [emitted]
-                    99.bundle.js  428 bytes    {99}  [emitted]
-a160192b41d0463ac226.module.wasm  131 bytes   {230}  [emitted]
-                       bundle.js   13.5 KiB   {520}  [emitted]  main-1df31ce3
-d95036d90a8b92bc2692.module.wasm  510 bytes    {99}  [emitted]
-ff9c5233b4dbdf834f6f.module.wasm  125 bytes   {325}  [emitted]
+7031b3d288670f8a932a.module.wasm  120 bytes   {325}  [emitted]
+                   780.bundle.js  505 bytes   {780}  [emitted]
+                    99.bundle.js  210 bytes    {99}  [emitted]
+                       bundle.js   10.9 KiB   {520}  [emitted]  main-1df31ce3
+ca33708544fa2cfb2e2e.module.wasm  290 bytes   {780}  [emitted]
+d37b3336426771c2a6e2.module.wasm  531 bytes    {99}  [emitted]
+f55b5f397ec1004a5764.module.wasm  156 bytes   {230}  [emitted]
 Entrypoint main = bundle.js
-chunk {99} 99.bundle.js, d95036d90a8b92bc2692.module.wasm 100 bytes (javascript) 531 bytes (webassembly) [rendered]
- [99] ./duff.wasm 100 bytes (javascript) 531 bytes (webassembly) {99} [built]
-chunk {230} 230.bundle.js, a160192b41d0463ac226.module.wasm 100 bytes (javascript) 156 bytes (webassembly) [rendered]
- [230] ./Q_rsqrt.wasm 100 bytes (javascript) 156 bytes (webassembly) {230} [built]
-chunk {325} 325.bundle.js, 94b864234c573663c221.module.wasm, ff9c5233b4dbdf834f6f.module.wasm 1.6 KiB (javascript) 274 bytes (webassembly) [rendered]
- [287] ./popcnt.wasm 100 bytes (javascript) 120 bytes (webassembly) {325} [built]
- [325] ./tests.js 1.4 KiB {325} [built]
- [819] ./testFunction.wasm 100 bytes (javascript) 154 bytes (webassembly) {325} [built]
-chunk {520} bundle.js (main-1df31ce3) 586 bytes (javascript) 6.75 KiB (runtime) [entry] [rendered]
+chunk {99} 99.bundle.js, d37b3336426771c2a6e2.module.wasm 50 bytes (javascript) 531 bytes (webassembly) [rendered]
+ [99] ./duff.wasm 50 bytes (javascript) 531 bytes (webassembly) {99} [built]
+chunk {230} 230.bundle.js, f55b5f397ec1004a5764.module.wasm 50 bytes (javascript) 156 bytes (webassembly) [rendered]
+ [230] ./Q_rsqrt.wasm 50 bytes (javascript) 156 bytes (webassembly) {230} [built]
+chunk {325} 325.bundle.js, 7031b3d288670f8a932a.module.wasm, 1d55f77c08cd19684f13.module.wasm 1.54 KiB (javascript) 274 bytes (webassembly) [rendered]
+ [287] ./popcnt.wasm 50 bytes (javascript) 120 bytes (webassembly) {325} [built]
+ [325] ./tests.js 1.44 KiB {325} [built]
+ [819] ./testFunction.wasm 50 bytes (javascript) 154 bytes (webassembly) {325} [built]
+chunk {520} bundle.js (main-1df31ce3) 586 bytes (javascript) 5.15 KiB (runtime) [entry] [rendered]
  [10] ./index.js 586 bytes {520} [built]
      + 7 hidden chunk modules
 chunk {526} 526.bundle.js 34 bytes [rendered] split chunk (cache group: defaultVendors)
  [526] ./node_modules/env.js 34 bytes {526} [built]
-chunk {780} 780.bundle.js, 7eee906d414e0947ebbf.module.wasm, 10d1272d7cf8dafe2f3a.module.wasm 205 bytes (javascript) 444 bytes (webassembly) [rendered]
- [143] ./fact.wasm 100 bytes (javascript) 154 bytes (webassembly) {780} [built]
- [151] ./fast-math.wasm 105 bytes (javascript) 290 bytes (webassembly) {780} [built]
+chunk {780} 780.bundle.js, 0303ec812ef3cb633580.module.wasm, ca33708544fa2cfb2e2e.module.wasm 110 bytes (javascript) 444 bytes (webassembly) [rendered]
+ [143] ./fact.wasm 50 bytes (javascript) 154 bytes (webassembly) {780} [built]
+ [151] ./fast-math.wasm 60 bytes (javascript) 290 bytes (webassembly) {780} [built]
  [10] ./index.js 586 bytes {520} [built]
- [99] ./duff.wasm 100 bytes (javascript) 531 bytes (webassembly) {99} [built]
-[143] ./fact.wasm 100 bytes (javascript) 154 bytes (webassembly) {780} [built]
-[151] ./fast-math.wasm 105 bytes (javascript) 290 bytes (webassembly) {780} [built]
-[230] ./Q_rsqrt.wasm 100 bytes (javascript) 156 bytes (webassembly) {230} [built]
-[287] ./popcnt.wasm 100 bytes (javascript) 120 bytes (webassembly) {325} [built]
-[325] ./tests.js 1.4 KiB {325} [built]
+ [99] ./duff.wasm 50 bytes (javascript) 531 bytes (webassembly) {99} [built]
+[143] ./fact.wasm 50 bytes (javascript) 154 bytes (webassembly) {780} [built]
+[151] ./fast-math.wasm 60 bytes (javascript) 290 bytes (webassembly) {780} [built]
+[230] ./Q_rsqrt.wasm 50 bytes (javascript) 156 bytes (webassembly) {230} [built]
+[287] ./popcnt.wasm 50 bytes (javascript) 120 bytes (webassembly) {325} [built]
+[325] ./tests.js 1.44 KiB {325} [built]
 [526] ./node_modules/env.js 34 bytes {526} [built]
-[819] ./testFunction.wasm 100 bytes (javascript) 154 bytes (webassembly) {325} [built]
+[819] ./testFunction.wasm 50 bytes (javascript) 154 bytes (webassembly) {325} [built]
     + 7 hidden modules"
 `;

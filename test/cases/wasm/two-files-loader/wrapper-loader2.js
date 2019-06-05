@@ -2,7 +2,7 @@ const stringifyRequest = require("loader-utils").stringifyRequest;
 
 module.exports.pitch = function(remainingRequest) {
 	return `
-	import { getString as _getString, memory } from ${stringifyRequest(
+	import await { getString as _getString, memory } from ${stringifyRequest(
 		this,
 		`${this.resourcePath}.wasm!=!wast-loader!${remainingRequest}`
 	)};

@@ -8,5 +8,9 @@ module.exports = {
 				type: "webassembly/experimental"
 			}
 		]
+	},
+	experiments: {
+		syncWebAssembly: true,
+		importAwait: true
 	}
 };

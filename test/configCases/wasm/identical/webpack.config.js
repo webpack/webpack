@@ -8,9 +8,13 @@ module.exports = {
 			{
 				test: /\.wat$/,
 				loader: "wast-loader",
-				type: "webassembly/experimental"
+				type: "webassembly/async-experimental"
 			}
 		]
+	},
+	experiments: {
+		asyncWebAssembly: true,
+		importAwait: true
 	},
 	plugins: [
 		function() {
