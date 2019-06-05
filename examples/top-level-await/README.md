@@ -182,9 +182,9 @@ When compiling for other targets like node.js, electron or WebWorkers, it may be
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! other exports [not provided] [no usage info] */
+/*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__ */
-/***/ (function(__unused__webpack_module__, __webpack_exports__, __webpack_require__) {
+/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
@@ -192,7 +192,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 (async ()=> {
-	await Object(_Actions_js__WEBPACK_IMPORTED_MODULE_0__["CreateUserAction"])("John");
+	await Object(_Actions_js__WEBPACK_IMPORTED_MODULE_0__.CreateUserAction)("John");
 })();
 
 
@@ -205,7 +205,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! export CreateUserAction [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.e, __webpack_require__ */
-/***/ (function(__unused__webpack_module__, __webpack_exports__, __webpack_require__) {
+/***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
@@ -438,23 +438,24 @@ const AlternativeCreateUserAction = async name => {
 /*! export createUser [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__, __webpack_require__.d */
-/***/ (function(__webpack_module__, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+module.exports = (async () => {
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _db_connection_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./db-connection.js */ 3);
-__webpack_module__.exports = Promise.all([_db_connection_js__WEBPACK_IMPORTED_MODULE_0__]).then(async function([_db_connection_js__WEBPACK_IMPORTED_MODULE_0__]) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createUser", function() { return createUser; });
+/* harmony import */ var _db_connection_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./db-connection.js */ 3);
+_db_connection_js__WEBPACK_IMPORTED_MODULE_0__ = await Promise.resolve(_db_connection_js__WEBPACK_IMPORTED_MODULE_0__);
 
 
 const createUser = async name => {
 	command = `CREATE USER ${name}`;
 	// This is a normal await, because it's in an async function
-	await Object(_db_connection_js__WEBPACK_IMPORTED_MODULE_0__["dbCall"])({ command });
+	await Object(_db_connection_js__WEBPACK_IMPORTED_MODULE_0__.dbCall)({ command });
 }
-return __webpack_exports__;
-});
 
+return __webpack_exports__;
+})();
 
 /***/ }),
 /* 3 */
@@ -465,11 +466,11 @@ return __webpack_exports__;
 /*! export dbCall [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, module, __webpack_require__.d, __webpack_require__ */
-/***/ (function(__webpack_module__, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+module.exports = (async () => {
 __webpack_require__.r(__webpack_exports__);
-__webpack_module__.exports = (async function() {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dbCall", function() { return dbCall; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "close", function() { return close; });
 const connectToDB = async url => {
@@ -488,9 +489,9 @@ const dbCall = async data => {
 const close = () => {
 	console.log("closes the DB connection");
 };
+
 return __webpack_exports__;
 })();
-
 
 /***/ })
 ]]);
@@ -499,7 +500,7 @@ return __webpack_exports__;
 ## in production mode:
 
 ```javascript
-(window.webpackJsonp=window.webpackJsonp||[]).push([[497],{447:function(n,t,e){"use strict";n.exports=async function(){e.d(t,"d",function(){return n});await(async n=>{await new Promise(n=>setTimeout(n,1e3))})();const n=async n=>(await new Promise(n=>setTimeout(n,100)),"fake data");return t}()},497:function(n,t,e){"use strict";e.r(t);var a=e(447);n.exports=Promise.all([a]).then(async function([n]){e.d(t,"createUser",function(){return a});const a=async t=>{command=`CREATE USER ${t}`,await Object(n.d)({command:command})};return t})}}]);
+(window.webpackJsonp=window.webpackJsonp||[]).push([[497],{447:function(n,t,e){"use strict";n.exports=(async()=>{e.d(t,"d",function(){return n});await(async n=>{await new Promise(n=>setTimeout(n,1e3))})();const n=async n=>(await new Promise(n=>setTimeout(n,100)),"fake data");return t})()},497:function(n,t,e){"use strict";n.exports=(async()=>{e.r(t),e.d(t,"createUser",function(){return a});var n=e(447);n=await Promise.resolve(n);const a=async t=>{command=`CREATE USER ${t}`,await Object(n.d)({command:command})};return t})()}}]);
 ```
 
 # Info
@@ -508,10 +509,10 @@ return __webpack_exports__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.13
+Version: webpack 5.0.0-alpha.14
         Asset      Size  Chunks             Chunk Names
-497.output.js   2.5 KiB   {497}  [emitted]
-    output.js  10.9 KiB   {179}  [emitted]  main
+497.output.js  2.45 KiB   {497}  [emitted]
+    output.js  10.8 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
 chunk {179} output.js (main) 1.19 KiB (javascript) 4.42 KiB (runtime) [entry] [rendered]
     > ./example.js main
@@ -544,9 +545,9 @@ chunk {497} 497.output.js 622 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.13
+Version: webpack 5.0.0-alpha.14
         Asset       Size  Chunks             Chunk Names
-497.output.js  539 bytes   {497}  [emitted]
+497.output.js  532 bytes   {497}  [emitted]
     output.js   1.78 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
 chunk {179} output.js (main) 1.19 KiB (javascript) 4.42 KiB (runtime) [entry] [rendered]

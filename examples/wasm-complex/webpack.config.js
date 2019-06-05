@@ -16,6 +16,8 @@ module.exports = {
 		chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
 	},
 	experiments: {
-		asyncWebAssembly: true
+		asyncWebAssembly: true,
+		topLevelAwait: true,
+		importAwait: true
 	}
 };
