@@ -3,7 +3,7 @@ import svg from "../../../fixtures/images/file.svg";
 import jpg from "../../../fixtures/images/file.jpg";
 
 it("should output various asset types", () => {
-	expect(png).toEqual("2d9ebaf470317beef59d.png");
-	expect(svg).toEqual("465a1a1888291fae20b4.svg");
-	expect(jpg).toEqual("7f0155971180b70c18c4.jpg");
+	expect(png).toEqual("990800716314551ab975.png");
+	expect(svg).toEqual("6003210f173dc7ede7a6.svg");
+	expect(jpg).toEqual("6c5cbdb49c76fee87d12.jpg");
 });

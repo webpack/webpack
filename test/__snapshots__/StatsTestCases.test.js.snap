@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`StatsTestCases should print correct stats for aggressive-splitting-entry 1`] = `
-"Hash: de949c9d9484ba4c4d9cde949c9d9484ba4c4d9c
+"Hash: 19440222585fbd3f492f19440222585fbd3f492f
 Child fitting:
-    Hash: de949c9d9484ba4c4d9c
+    Hash: 19440222585fbd3f492f
     Time: Xms
     Built at: 1970-04-20 12:42:42
     PublicPath: (none)
@@ -31,7 +31,7 @@ Child fitting:
         > ./g [10] ./index.js 7:0-13
      [785] ./g.js 916 bytes {785} [built]
 Child content-change:
-    Hash: de949c9d9484ba4c4d9c
+    Hash: 19440222585fbd3f492f
     Time: Xms
     Built at: 1970-04-20 12:42:42
     PublicPath: (none)
@@ -61,7 +61,7 @@ Child content-change:
 `;
 
 exports[`StatsTestCases should print correct stats for aggressive-splitting-on-demand 1`] = `
-"Hash: 1e4c9837ccb1a4c4032d
+"Hash: c1af2f727869376831e5
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
@@ -430,7 +430,7 @@ Child all:
 `;
 
 exports[`StatsTestCases should print correct stats for chunk-module-id-range 1`] = `
-"Hash: 9100d03e78dfafc13e43
+"Hash: 9206479f015ce3d743c6
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
@@ -458,7 +458,7 @@ chunk {1} main1.js (main1) 136 bytes (javascript) 279 bytes (runtime) [entry] [r
 `;
 
 exports[`StatsTestCases should print correct stats for chunks 1`] = `
-"Hash: 48f3c2931714a9877313
+"Hash: 57edd73f3e952cc38a91
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
@@ -498,7 +498,7 @@ chunk {996} 996.bundle.js 22 bytes <{179}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for chunks-development 1`] = `
-"Hash: c7b0c651342b76d06f43
+"Hash: d70f0af1894ff0faca43
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
@@ -582,7 +582,7 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32>main.js</CLR>
 `;
 
 exports[`StatsTestCases should print correct stats for commons-chunk-min-size-0 1`] = `
-"Hash: 29240facb9af560469c8
+"Hash: 9d2a7323300a0c4f1c52
 Time: Xms
 Built at: 1970-04-20 12:42:42
      Asset       Size  Chunks             Chunk Names
@@ -600,7 +600,7 @@ Entrypoint entry-1 = 429.js entry-1.js
 `;
 
 exports[`StatsTestCases should print correct stats for commons-chunk-min-size-Infinity 1`] = `
-"Hash: 45c887c4d62aa5573b76
+"Hash: 8c1471689d77351167ef
 Time: Xms
 Built at: 1970-04-20 12:42:42
       Asset       Size  Chunks             Chunk Names
@@ -618,9 +618,9 @@ Entrypoint entry-1 = vendor-1.js entry-1.js
 `;
 
 exports[`StatsTestCases should print correct stats for commons-plugin-issue-4980 1`] = `
-"Hash: 43517dc29e8fb2f034046e46d5a8921f72e08658
+"Hash: 4450b5ac5f9f2bc15256a2dfb85643be1cf7261f
 Child
-    Hash: 43517dc29e8fb2f03404
+    Hash: 4450b5ac5f9f2bc15256
     Time: Xms
     Built at: 1970-04-20 12:42:42
                              Asset       Size  Chunks             Chunk Names
@@ -631,7 +631,7 @@ Child
     [381] ./constants.js 87 bytes {736} [built]
         + 4 hidden modules
 Child
-    Hash: 6e46d5a8921f72e08658
+    Hash: a2dfb85643be1cf7261f
     Time: Xms
     Built at: 1970-04-20 12:42:42
                              Asset       Size  Chunks             Chunk Names
@@ -738,9 +738,9 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for filter-warnings 1`] = `
-"Hash: b0ea0f870bca684112f8b0ea0f870bca684112f8b0ea0f870bca684112f8b0ea0f870bca684112f8b0ea0f870bca684112f8b0ea0f870bca684112f8b0ea0f870bca684112f8b0ea0f870bca684112f8b0ea0f870bca684112f8b0ea0f870bca684112f8b0ea0f870bca684112f8b0ea0f870bca684112f8b0ea0f870bca684112f8
+"Hash: bf18ceb02ccb4dd42bddbf18ceb02ccb4dd42bddbf18ceb02ccb4dd42bddbf18ceb02ccb4dd42bddbf18ceb02ccb4dd42bddbf18ceb02ccb4dd42bddbf18ceb02ccb4dd42bddbf18ceb02ccb4dd42bddbf18ceb02ccb4dd42bddbf18ceb02ccb4dd42bddbf18ceb02ccb4dd42bddbf18ceb02ccb4dd42bddbf18ceb02ccb4dd42bdd
 Child undefined:
-    Hash: b0ea0f870bca684112f8
+    Hash: bf18ceb02ccb4dd42bdd
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
@@ -770,49 +770,49 @@ Child undefined:
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 
 Child Terser:
-    Hash: b0ea0f870bca684112f8
+    Hash: bf18ceb02ccb4dd42bdd
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
     bundle.js  1.32 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 Child /Terser/:
-    Hash: b0ea0f870bca684112f8
+    Hash: bf18ceb02ccb4dd42bdd
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
     bundle.js  1.32 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 Child warnings => true:
-    Hash: b0ea0f870bca684112f8
+    Hash: bf18ceb02ccb4dd42bdd
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
     bundle.js  1.32 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 Child [Terser]:
-    Hash: b0ea0f870bca684112f8
+    Hash: bf18ceb02ccb4dd42bdd
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
     bundle.js  1.32 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 Child [/Terser/]:
-    Hash: b0ea0f870bca684112f8
+    Hash: bf18ceb02ccb4dd42bdd
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
     bundle.js  1.32 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 Child [warnings => true]:
-    Hash: b0ea0f870bca684112f8
+    Hash: bf18ceb02ccb4dd42bdd
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
     bundle.js  1.32 KiB   {179}  [emitted]  main
     Entrypoint main = bundle.js
 Child should not filter:
-    Hash: b0ea0f870bca684112f8
+    Hash: bf18ceb02ccb4dd42bdd
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
@@ -842,7 +842,7 @@ Child should not filter:
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 
 Child /should not filter/:
-    Hash: b0ea0f870bca684112f8
+    Hash: bf18ceb02ccb4dd42bdd
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
@@ -872,7 +872,7 @@ Child /should not filter/:
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 
 Child warnings => false:
-    Hash: b0ea0f870bca684112f8
+    Hash: bf18ceb02ccb4dd42bdd
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
@@ -902,7 +902,7 @@ Child warnings => false:
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 
 Child [should not filter]:
-    Hash: b0ea0f870bca684112f8
+    Hash: bf18ceb02ccb4dd42bdd
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
@@ -932,7 +932,7 @@ Child [should not filter]:
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 
 Child [/should not filter/]:
-    Hash: b0ea0f870bca684112f8
+    Hash: bf18ceb02ccb4dd42bdd
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
@@ -962,7 +962,7 @@ Child [/should not filter/]:
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 
 Child [warnings => false]:
-    Hash: b0ea0f870bca684112f8
+    Hash: bf18ceb02ccb4dd42bdd
     Time: Xms
     Built at: 1970-04-20 12:42:42
         Asset      Size  Chunks             Chunk Names
@@ -1087,7 +1087,7 @@ chunk {trees} trees.js (trees) 71 bytes [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
-"Hash: 647ae626bf6eb0d68896
+"Hash: f70ad6eaf0b09a61a8e9
 Time: Xms
 Built at: 1970-04-20 12:42:42
    Asset       Size  Chunks             Chunk Names
@@ -1105,7 +1105,7 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for import-weak 1`] = `
-"Hash: 94627bb4b8c9def4b4a3
+"Hash: fcc2c65e01c397cec60c
 Time: Xms
 Built at: 1970-04-20 12:42:42
    Asset       Size  Chunks             Chunk Names
@@ -1142,9 +1142,9 @@ Compilation error while processing magic comment(-s): /* webpackPrefetch: nope *
 `;
 
 exports[`StatsTestCases should print correct stats for issue-7577 1`] = `
-"Hash: ee71e92c425768e31996f7d4f5f5ea4a4e51f90c20baa71cf13e3ee9f58d
+"Hash: ba35ce4ef2c9f164fea130fe10f68e8ad4c4866be0e3ec9427f59e1c4f43
 Child
-    Hash: ee71e92c425768e31996
+    Hash: ba35ce4ef2c9f164fea1
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                      Asset       Size          Chunks             Chunk Names
@@ -1155,7 +1155,7 @@ Child
     [./a.js] 18 bytes {all-a_js} [built]
         + 1 hidden module
 Child
-    Hash: f7d4f5f5ea4a4e51f90c
+    Hash: 30fe10f68e8ad4c4866b
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                                        Asset       Size                            Chunks             Chunk Names
@@ -1168,7 +1168,7 @@ Child
     [./node_modules/vendor.js] 23 bytes {vendors-node_modules_vendor_js} [built]
         + 4 hidden modules
 Child
-    Hash: 20baa71cf13e3ee9f58d
+    Hash: e0e3ec9427f59e1c4f43
     Time: Xms
     Built at: 1970-04-20 12:42:42
                                                        Asset       Size                            Chunks             Chunk Names
@@ -1185,7 +1185,7 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for limit-chunk-count-plugin 1`] = `
-"Hash: 750fed6497e61cba45bea521668daa9bc73cff9e7412b78028c74e60f2ef1c1357d555bededaa2ad
+"Hash: 1119f02a3724e1987ff5a75ba423a9bd7730db685b74c01e9dd5d164cfccdb30daf51739df76edec
 Child 1 chunks:
     Hash: 1119f02a3724e1987ff5
     Time: Xms
@@ -1202,7 +1202,7 @@ Child 1 chunks:
      [996] ./b.js 22 bytes {179} [built]
          + 3 hidden chunk modules
 Child 2 chunks:
-    Hash: a521668daa9bc73cff9e
+    Hash: a75ba423a9bd7730db68
     Time: Xms
     Built at: 1970-04-20 12:42:42
             Asset       Size  Chunks             Chunk Names
@@ -1219,7 +1219,7 @@ Child 2 chunks:
      [847] ./a.js 22 bytes {459} [built]
      [996] ./b.js 22 bytes {459} [built]
 Child 3 chunks:
-    Hash: 7412b78028c74e60f2ef
+    Hash: 5b74c01e9dd5d164cfcc
     Time: Xms
     Built at: 1970-04-20 12:42:42
             Asset       Size  Chunks             Chunk Names
@@ -1238,7 +1238,7 @@ Child 3 chunks:
      [390] ./e.js 22 bytes {524} [built]
      [767] ./d.js 22 bytes {524} [built]
 Child 4 chunks:
-    Hash: 1c1357d555bededaa2ad
+    Hash: db30daf51739df76edec
     Time: Xms
     Built at: 1970-04-20 12:42:42
             Asset       Size  Chunks             Chunk Names
@@ -1316,7 +1316,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for module-assets 1`] = `
-"Hash: 7f53bd765857c39e8e47
+"Hash: 1761e88308ed9915cb2c
 Time: Xms
 Built at: 1970-04-20 12:42:42
 Entrypoint main = main.js
@@ -1453,7 +1453,7 @@ If you don't want to include a polyfill, you can use an empty module like this:
 `;
 
 exports[`StatsTestCases should print correct stats for module-reasons 1`] = `
-"Hash: 1929067a72bea5516d56
+"Hash: ae70869f6ad56f8521b6
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset      Size  Chunks             Chunk Names
@@ -1577,7 +1577,7 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for named-chunks-plugin 1`] = `
-"Hash: ddd8cdb4bb7958c0f3e5
+"Hash: 9a5b03e8727db832d631
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset       Size    Chunks             Chunk Names
@@ -1592,7 +1592,7 @@ Entrypoint entry = vendor.js entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for named-chunks-plugin-async 1`] = `
-"Hash: 1a5c8a67f4efa36169a8
+"Hash: 1498cf365d3bac8da570
 Time: Xms
 Built at: 1970-04-20 12:42:42
           Asset       Size          Chunks             Chunk Names
@@ -1607,7 +1607,7 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for no-emit-on-errors-plugin-with-child-error 1`] = `
-"Hash: 181c7c6a6c7397755ac2
+"Hash: 51ae4a43054fc462f768
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset      Size  Chunks  Chunk Names
@@ -1633,7 +1633,7 @@ Child child:
 `;
 
 exports[`StatsTestCases should print correct stats for optimize-chunks 1`] = `
-"Hash: 76af1230c05d7555e704
+"Hash: 05df41fcfb87905cb796
 Time: Xms
 Built at: 1970-04-20 12:42:42
             Asset       Size        Chunks             Chunk Names
@@ -1715,7 +1715,7 @@ Child
 
     WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
     This can impact web performance.
-    Assets:
+    Assets: 
       warning.pro-web.js (294 KiB)
 
     WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1723,7 +1723,7 @@ Child
       main (294 KiB)
           warning.pro-web.js
 
-    WARNING in webpack performance recommendations:
+    WARNING in webpack performance recommendations: 
     You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
     For more info visit https://webpack.js.org/guides/code-splitting/
 
@@ -1738,7 +1738,7 @@ Child
 
     WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
     This can impact web performance.
-    Assets:
+    Assets: 
       warning.pro-webworker.js (294 KiB)
 
     WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1746,7 +1746,7 @@ Child
       main (294 KiB)
           warning.pro-webworker.js
 
-    WARNING in webpack performance recommendations:
+    WARNING in webpack performance recommendations: 
     You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
     For more info visit https://webpack.js.org/guides/code-splitting/
 
@@ -1793,7 +1793,7 @@ Child
 
     WARNING in asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
     This can impact web performance.
-    Assets:
+    Assets: 
       warning.pro-node-with-hints-set.js (294 KiB)
 
     WARNING in entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1801,7 +1801,7 @@ Child
       main (294 KiB)
           warning.pro-node-with-hints-set.js
 
-    WARNING in webpack performance recommendations:
+    WARNING in webpack performance recommendations: 
     You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
     For more info visit https://webpack.js.org/guides/code-splitting/
 "
@@ -1844,7 +1844,7 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets:
+Assets: 
   main.js (301 KiB)</CLR>
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1872,7 +1872,7 @@ Entrypoint <CLR=BOLD>sec</CLR> = <CLR=32,BOLD>sec.js</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets:
+Assets: 
   main.js (295 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -1881,7 +1881,7 @@ Entrypoints:
       main.js
 </CLR>
 
-<CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>webpack performance recommendations:
+<CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>webpack performance recommendations: 
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/</CLR>
 "
@@ -1919,7 +1919,7 @@ Entrypoint <CLR=BOLD>sec</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>sec.js</C
 
 <CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets:
+Assets: 
   main.js (294 KiB)
   sec.js (294 KiB)</CLR>
 
@@ -1931,7 +1931,7 @@ Entrypoints:
       sec.js
 </CLR>
 
-<CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>webpack performance recommendations:
+<CLR=31,BOLD>ERROR</CLR> in <CLR=BOLD>webpack performance recommendations: 
 You can limit the size of your bundles by using import() or require.ensure to lazy load some parts of your application.
 For more info visit https://webpack.js.org/guides/code-splitting/</CLR>
 "
@@ -1990,7 +1990,7 @@ chunk {851} preloaded.js (preloaded) 226 bytes (preload: {641} {746}) [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
-"Hash: e144b5c692f359fe416b
+"Hash: 49b40fe379a2561b4bbd
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
@@ -2063,7 +2063,7 @@ exports[`StatsTestCases should print correct stats for preset-none-array 1`] = `
 exports[`StatsTestCases should print correct stats for preset-none-error 1`] = `""`;
 
 exports[`StatsTestCases should print correct stats for preset-normal 1`] = `
-"Hash: e144b5c692f359fe416b
+"Hash: 49b40fe379a2561b4bbd
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset       Size  Chunks             Chunk Names
@@ -2100,7 +2100,7 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets:
+Assets: 
   main.js (301 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -2134,7 +2134,7 @@ Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js<
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>asset size limit: The following asset(s) exceed the recommended size limit (244 KiB).
 This can impact web performance.
-Assets:
+Assets: 
   main.js (301 KiB)</CLR>
 
 <CLR=33,BOLD>WARNING</CLR> in <CLR=BOLD>entrypoint size limit: The following entrypoint(s) combined asset size exceeds the recommended limit (244 KiB). This can impact web performance.
@@ -2146,7 +2146,7 @@ Entrypoints:
 `;
 
 exports[`StatsTestCases should print correct stats for preset-verbose 1`] = `
-"Hash: e144b5c692f359fe416b
+"Hash: 49b40fe379a2561b4bbd
 Time: Xms
 Built at: 1970-04-20 12:42:42
 PublicPath: (none)
@@ -2289,7 +2289,7 @@ Entrypoint e2 = runtime.js e2.js"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"Hash: 1d9ddee6d747795b5c8b
+"Hash: 078c3ce71ec877250c3e
 Time: Xms
 Built at: 1970-04-20 12:42:42
 Entrypoint index = index.js
@@ -2319,9 +2319,9 @@ Entrypoint entry = entry.js
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-multi 1`] = `
-"Hash: 6aedb7431098670b8480d69784d6d58815dc5161
+"Hash: 50b32cf5d5331191653c0cea1ddffd3160e33556
 Child
-    Hash: 6aedb7431098670b8480
+    Hash: 50b32cf5d5331191653c
     Time: Xms
     Built at: 1970-04-20 12:42:42
     Entrypoint first = vendor.js first.js
@@ -2339,7 +2339,7 @@ Child
     [965] ./vendor.js 25 bytes {736} [built]
         + 10 hidden modules
 Child
-    Hash: d69784d6d58815dc5161
+    Hash: 0cea1ddffd3160e33556
     Time: Xms
     Built at: 1970-04-20 12:42:42
     Entrypoint first = vendor.js first.js
@@ -2366,7 +2366,7 @@ Child
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-issue-7428 1`] = `
-"Hash: a9799fc9d42f147ee886
+"Hash: 8807ce579523d1309afc
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset       Size  Chunks             Chunk Names
@@ -2415,7 +2415,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
-"Hash: 8552e7b59b452ccb1138
+"Hash: 4a41850295ca734eafc9
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset      Size  Chunks             Chunk Names
@@ -3447,7 +3447,7 @@ chunk {794} default/async-a.js (async-a) 134 bytes <{179}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: de7fafb0f5388d3c7fbe
+"Hash: 5ac844b7c17d4326303c
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset     Size  Chunks             Chunk Names
@@ -3485,24 +3485,24 @@ Entrypoint main = bundle.js
 `;
 
 exports[`StatsTestCases should print correct stats for url 1`] = `
-"Hash: 887f827c4dce0dacbcef
+"Hash: 84cfe996d8c87d13c1d5
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
                    Asset       Size  Chunks             Chunk Names
 817121871a23039712ce.jpg   10.9 KiB   {179}  [emitted]  main
 83a9c5c6df0321e72e7e.svg  656 bytes   {179}  [emitted]  main
-               bundle.js   4.49 KiB   {179}  [emitted]  main
+               bundle.js   4.51 KiB   {179}  [emitted]  main
 d01becd2595e02413b53.png     26 KiB   {179}  [emitted]  main
 Entrypoint main = bundle.js d01becd2595e02413b53.png 83a9c5c6df0321e72e7e.svg 817121871a23039712ce.jpg
  [10] ./index.js 150 bytes {179} [built]
-[290] (webpack)/test/fixtures/images/file.png 26 KiB (url) 26 KiB (javascript) {179} [built]
-[341] (webpack)/test/fixtures/images/file.svg 656 bytes (url) 656 bytes (javascript) {179} [built]
-[393] (webpack)/test/fixtures/images/file.jpg 10.9 KiB (url) 10.9 KiB (javascript) {179} [built]
+[290] (webpack)/test/fixtures/images/file.png 26 KiB (url) 68 bytes (javascript) {179} [built]
+[341] (webpack)/test/fixtures/images/file.svg 656 bytes (url) 68 bytes (javascript) {179} [built]
+[393] (webpack)/test/fixtures/images/file.jpg 10.9 KiB (url) 68 bytes (javascript) {179} [built]
     + 4 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for warnings-terser 1`] = `
-"Hash: c47fdd999f1a10b40d83
+"Hash: a75463fda2684ed9ace4
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset      Size  Chunks             Chunk Names
@@ -3525,7 +3525,7 @@ WARNING in Terser Plugin: Dropping unused function someUnRemoteUsedFunction5 [./
 `;
 
 exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sync 1`] = `
-"Hash: 8c3293703d1d55ebe60f
+"Hash: 11a598181542e3230cb6
 Time: Xms
 Built at: 1970-04-20 12:42:42
                            Asset       Size  Chunks             Chunk Names

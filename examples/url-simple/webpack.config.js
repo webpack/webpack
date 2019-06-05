@@ -1,6 +1,6 @@
 module.exports = {
 	output: {
-		urlModuleFilename: "images/[hash].[ext]"
+		urlModuleFilename: "images/[hash][ext]"
 	},
 	module: {
 		rules: [

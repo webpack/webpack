@@ -2,7 +2,7 @@ module.exports = {
 	mode: "development",
 	output: {
 		publicPath: "assets/",
-		urlModuleFilename: "file.[ext]"
+		urlModuleFilename: "file[ext]"
 	},
 	module: {
 		rules: [

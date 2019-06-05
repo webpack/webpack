@@ -2,18 +2,16 @@ This very simple example shows usage of Url.
 
 Files can be imported like other modules without file-loader.
 
-<!-- prettier-ignore-start -->
-
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # js/output.js
 
-``` javascript
-{{dist/output.js}}
+```javascript
+_{{dist/output.js}}_
 ```
 
 # Info
@@ -21,7 +19,5 @@ Files can be imported like other modules without file-loader.
 ## webpack output
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
-
-<!-- prettier-ignore-end -->

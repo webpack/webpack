@@ -148,8 +148,8 @@ function createImageElement(title, src) {
   \*************************/
 /*! export default [maybe provided (runtime-defined)] [no usage info] [provision prevents renaming (no use info)] */
 /*! other exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: module__webpack_exports__, __webpack_require__, __webpack_require__.p,  */
-/***/ (function(module, exports, __webpack_require__) {
+/*! runtime requirements: module__webpack_require__.p, __webpack_require__,  */
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
 "use strict";
 module.exports = __webpack_require__.p + "images/70ec02dc99d98fcf8f72.png";
@@ -161,8 +161,8 @@ module.exports = __webpack_require__.p + "images/70ec02dc99d98fcf8f72.png";
   \*************************/
 /*! export default [maybe provided (runtime-defined)] [no usage info] [provision prevents renaming (no use info)] */
 /*! other exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: module__webpack_exports__, __webpack_require__, __webpack_require__.p,  */
-/***/ (function(module, exports, __webpack_require__) {
+/*! runtime requirements: module__webpack_require__.p, __webpack_require__,  */
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
 "use strict";
 module.exports = __webpack_require__.p + "images/e9b63ac8925810c74a43.jpg";
@@ -174,8 +174,8 @@ module.exports = __webpack_require__.p + "images/e9b63ac8925810c74a43.jpg";
   \*************************/
 /*! export default [maybe provided (runtime-defined)] [no usage info] [provision prevents renaming (no use info)] */
 /*! other exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: module__webpack_exports__, __webpack_require__, __webpack_require__.p,  */
-/***/ (function(module, exports, __webpack_require__) {
+/*! runtime requirements: module__webpack_require__.p, __webpack_require__,  */
+/***/ (function(module, __unusedexports, __webpack_require__) {
 
 "use strict";
 module.exports = __webpack_require__.p + "images/c901b8d6b02637aa9af7.svg";
@@ -247,23 +247,23 @@ Version: webpack 5.0.0-alpha.11
 images/70ec02dc99d98fcf8f72.png   14.6 KiB     {0}  [emitted]  main
 images/c901b8d6b02637aa9af7.svg  656 bytes     {0}  [emitted]  main
 images/e9b63ac8925810c74a43.jpg   5.89 KiB     {0}  [emitted]  main
-                      output.js   6.63 KiB     {0}  [emitted]  main
+                      output.js   6.59 KiB     {0}  [emitted]  main
 Entrypoint main = output.js images/70ec02dc99d98fcf8f72.png images/e9b63ac8925810c74a43.jpg images/c901b8d6b02637aa9af7.svg
-chunk {0} output.js, images/70ec02dc99d98fcf8f72.png, images/e9b63ac8925810c74a43.jpg, images/c901b8d6b02637aa9af7.svg (main) 21.8 KiB (javascript) 21.1 KiB (url) 920 bytes (runtime) [entry] [rendered]
+chunk {0} output.js, images/70ec02dc99d98fcf8f72.png, images/e9b63ac8925810c74a43.jpg, images/c901b8d6b02637aa9af7.svg (main) 967 bytes (javascript) 21.1 KiB (url) 920 bytes (runtime) [entry] [rendered]
     > ./example.js main
  [0] ./example.js 742 bytes {0} [built]
      [no exports]
      [used exports unknown]
      entry ./example.js main
- [1] ./images/file.png 14.6 KiB (url) 14.6 KiB (javascript) {0} [built]
+ [1] ./images/file.png 14.6 KiB (url) 75 bytes (javascript) {0} [built]
      [used exports unknown]
      harmony side effect evaluation ./images/file.png [0] ./example.js 1:0-36
      harmony import specifier ./images/file.png [0] ./example.js 28:1-4
- [2] ./images/file.jpg 5.89 KiB (url) 5.89 KiB (javascript) {0} [built]
+ [2] ./images/file.jpg 5.89 KiB (url) 75 bytes (javascript) {0} [built]
      [used exports unknown]
      harmony side effect evaluation ./images/file.jpg [0] ./example.js 2:0-36
      harmony import specifier ./images/file.jpg [0] ./example.js 28:6-9
- [3] ./images/file.svg 656 bytes (url) 656 bytes (javascript) {0} [built]
+ [3] ./images/file.svg 656 bytes (url) 75 bytes (javascript) {0} [built]
      [used exports unknown]
      harmony side effect evaluation ./images/file.svg [0] ./example.js 3:0-36
      harmony import specifier ./images/file.svg [0] ./example.js 28:11-14
