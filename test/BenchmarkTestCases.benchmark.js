@@ -279,9 +279,7 @@ describe("BenchmarkTestCases", function() {
 			describe(`${testName} create benchmarks`, function() {
 				baselines.forEach(baseline => {
 					let baselineStats = null;
-					it(`should benchmark ${baseline.name} (${
-						baseline.rev
-					})`, function(done) {
+					it(`should benchmark ${baseline.name} (${baseline.rev})`, function(done) {
 						const outputDirectory = path.join(
 							__dirname,
 							"js",
@@ -332,14 +330,10 @@ describe("BenchmarkTestCases", function() {
 					}, 180000);
 
 					if (baseline.name !== "HEAD") {
-						it(`HEAD should not be slower than ${baseline.name} (${
-							baseline.rev
-						})`, function() {
+						it(`HEAD should not be slower than ${baseline.name} (${baseline.rev})`, function() {
 							if (baselineStats.maxConfidence < headStats.minConfidence) {
 								throw new Error(
-									`HEAD (${headStats.text}) is slower than ${baseline.name} (${
-										baselineStats.text
-									}) (90% confidence)`
+									`HEAD (${headStats.text}) is slower than ${baseline.name} (${baselineStats.text}) (90% confidence)`
 								);
 							} else if (
 								baselineStats.minConfidence > headStats.maxConfidence
