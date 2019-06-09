@@ -505,7 +505,7 @@ rules:
         context: "licence/cla"
         description: "Contributor License Agreement is not needed for this user."
         state: "success"
-  
+
   # merge dependabot PRs automatically
   - filters:
       open: true
