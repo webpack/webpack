@@ -32,8 +32,5 @@ about: Create a report to help us improve
 <!-- "It should work" is not a helpful explanation -->
 <!-- Explain exactly how it should behave -->
 
-**Other relevant information:**
-webpack version:  
-Node.js version: 
-Operating System: 
-Additional tools:
+**Please paste the results of `$ npx webpack-cli info ` here, and mention other relevant information**
+
