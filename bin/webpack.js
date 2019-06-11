@@ -61,7 +61,7 @@ const cli = {
 
 if (!cli.installed) {
 	const path = require("path");
-	const fs = require("fs");
+	const fs = require("graceful-fs");
 	const readLine = require("readline");
 
 	const notify =

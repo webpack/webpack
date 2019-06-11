@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const asyncLib = require("neo-async");
 const Benchmark = require("benchmark");
 const { remove } = require("./helpers/remove");

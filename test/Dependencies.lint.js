@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require("graceful-fs");
 const path = require("path");
 const lockfile = require("@yarnpkg/lockfile");
 
