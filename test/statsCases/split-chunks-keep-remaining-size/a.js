@@ -1,5 +1,2 @@
-import "./shared";
+import "shared?1";
 export default "a";
-
-// content content content content content content
-// content content content content content content

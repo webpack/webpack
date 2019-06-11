@@ -3005,24 +3005,24 @@ chunk {786} a.js (a) 12 bytes (javascript) 2.54 KiB (runtime) ={282}= [entry] [r
 
 exports[`StatsTestCases should print correct stats for split-chunks-keep-remaining-size 1`] = `
 "Entrypoint main = default/main.js
-chunk {52} default/52.js 102 bytes <{179}> ={383}= ={794}= [rendered] split chunk (cache group: default)
-    > ./a [10] ./index.js 1:0-47
-    > ./c [10] ./index.js 3:0-47
- [52] ./shared.js 102 bytes {52} {334} [built]
-chunk {179} default/main.js (main) 147 bytes (javascript) 4.8 KiB (runtime) >{52}< >{334}< >{383}< >{794}< [entry] [rendered]
+chunk {179} default/main.js (main) 147 bytes (javascript) 4.8 KiB (runtime) >{334}< >{383}< >{794}< >{821}< [entry] [rendered]
     > ./ main
  [10] ./index.js 147 bytes {179} [built]
-     + 7 hidden root modules
-chunk {334} default/async-b.js (async-b) 141 bytes <{179}> [rendered]
+     + 7 hidden chunk modules
+chunk {334} default/async-b.js (async-b) 39 bytes <{179}> ={821}= [rendered]
     > ./b [10] ./index.js 2:0-47
  [996] ./b.js 39 bytes {334} [built]
-     + 1 hidden dependent module
-chunk {383} default/async-c.js (async-c) 142 bytes <{179}> ={52}= [rendered]
+chunk {383} default/async-c.js (async-c) 142 bytes <{179}> ={821}= [rendered]
     > ./c [10] ./index.js 3:0-47
  [460] ./c.js 142 bytes {383} [built]
-chunk {794} default/async-a.js (async-a) 142 bytes <{179}> ={52}= [rendered]
+chunk {794} default/async-a.js (async-a) 141 bytes <{179}> [rendered]
     > ./a [10] ./index.js 1:0-47
- [847] ./a.js 142 bytes {794} [built]"
+ [552] ./node_modules/shared.js?1 102 bytes {794} [built]
+ [847] ./a.js 39 bytes {794} [built]
+chunk {821} default/821.js 102 bytes <{179}> ={334}= ={383}= [rendered] split chunk (cache group: defaultVendors)
+    > ./b [10] ./index.js 2:0-47
+    > ./c [10] ./index.js 3:0-47
+ [821] ./node_modules/shared.js?2 102 bytes {821} [built]"
 `;
 
 exports[`StatsTestCases should print correct stats for split-chunks-max-size 1`] = `
