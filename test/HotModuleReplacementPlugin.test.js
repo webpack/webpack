@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const mkdirp = require("mkdirp");
 
 const webpack = require("..");

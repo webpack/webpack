@@ -2,7 +2,7 @@
 
 /* globals expect */
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const vm = require("vm");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");

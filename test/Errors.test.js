@@ -2,7 +2,7 @@
 
 /*globals describe it */
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const webpack = require("..");
 const prettyFormat = require("pretty-format");
 
@@ -81,8 +81,7 @@ const defaults = {
 		}
 	},
 	outputFileSystem: {
-		join: path.join.bind(path),
-		mkdirp(dir, callback) {
+		mkdir(dir, callback) {
 			callback();
 		},
 		writeFile(file, content, callback) {

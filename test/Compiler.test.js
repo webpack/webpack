@@ -22,19 +22,18 @@ describe("Compiler", () => {
 			minimize: false
 		};
 		const logs = {
-			mkdirp: [],
+			mkdir: [],
 			writeFile: []
 		};
 
 		const c = webpack(options);
 		const files = {};
 		c.outputFileSystem = {
-			join() {
-				return [].join.call(arguments, "/").replace(/\/+/g, "/");
-			},
-			mkdirp(path, callback) {
-				logs.mkdirp.push(path);
-				callback();
+			mkdir(path, callback) {
+				logs.mkdir.push(path);
+				const err = new Error();
+				err.code = "EEXIST";
+				callback(err);
 			},
 			writeFile(name, content, callback) {
 				logs.writeFile.push(name, content);
@@ -76,7 +75,7 @@ describe("Compiler", () => {
 				}
 			},
 			(stats, files) => {
-				expect(stats.logs.mkdirp).toEqual(["/what", "/what/the"]);
+				expect(stats.logs.mkdir).toEqual(["/what", "/what/the"]);
 				done();
 			}
 		);

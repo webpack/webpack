@@ -1,5 +1,5 @@
 "use strict";
-const fs = require("fs");
+const fs = require("graceful-fs");
 const path = require("path");
 
 const check = (expected, actual) => {
@@ -26,7 +26,7 @@ const explain = object => {
 				value = JSON.stringify(value);
 			}
 			let msg = `${key} = ${value}`;
-			if (msg.length > 100) msg = msg.slice(0, 97) + "...";
+			if (key !== "stack" && msg.length > 100) msg = msg.slice(0, 97) + "...";
 			return msg;
 		})
 		.join("; ");

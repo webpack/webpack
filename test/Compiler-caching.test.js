@@ -2,7 +2,7 @@
 "use strict";
 
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 
 const webpack = require("..");
@@ -24,19 +24,18 @@ describe("Compiler (caching)", () => {
 		options.output.filename = "bundle.js";
 		options.output.pathinfo = true;
 		const logs = {
-			mkdirp: [],
+			mkdir: [],
 			writeFile: []
 		};
 
 		const c = webpack(options);
 		const files = {};
 		c.outputFileSystem = {
-			join() {
-				return [].join.call(arguments, "/").replace(/\/+/g, "/");
-			},
-			mkdirp(path, callback) {
-				logs.mkdirp.push(path);
-				callback();
+			mkdir(path, callback) {
+				logs.mkdir.push(path);
+				const err = new Error();
+				err.code = "EEXIST";
+				callback(err);
 			},
 			writeFile(name, content, callback) {
 				logs.writeFile.push(name, content);
