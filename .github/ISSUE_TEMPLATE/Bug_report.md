@@ -32,5 +32,5 @@ about: Create a report to help us improve
 <!-- "It should work" is not a helpful explanation -->
 <!-- Explain exactly how it should behave -->
 
-**Please paste the results of `$ npx webpack-cli info ` here, and mention other relevant information**
+**Please paste the results of `$ npx webpack-cli info` here, and mention other relevant information**
 
