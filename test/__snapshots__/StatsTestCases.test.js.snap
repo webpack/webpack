@@ -3012,9 +3012,9 @@ chunk {179} default/main.js (main) 147 bytes (javascript) 4.8 KiB (runtime) >{33
 chunk {334} default/async-b.js (async-b) 39 bytes <{179}> ={821}= [rendered]
     > ./b [10] ./index.js 2:0-47
  [996] ./b.js 39 bytes {334} [built]
-chunk {383} default/async-c.js (async-c) 142 bytes <{179}> ={821}= [rendered]
+chunk {383} default/async-c.js (async-c) 39 bytes <{179}> ={821}= [rendered]
     > ./c [10] ./index.js 3:0-47
- [460] ./c.js 142 bytes {383} [built]
+ [460] ./c.js 39 bytes {383} [built]
 chunk {794} default/async-a.js (async-a) 141 bytes <{179}> [rendered]
     > ./a [10] ./index.js 1:0-47
  [552] ./node_modules/shared.js?1 102 bytes {794} [built]
