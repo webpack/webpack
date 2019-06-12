@@ -1,5 +1,5 @@
-import { value } from "./data.json";
+import data from "./data.json";
 
 it("should move the json module into a separate chunk", () => {
-	expect(value).toBe(42);
-})
+	expect(data.value).toBe(42);
+});
