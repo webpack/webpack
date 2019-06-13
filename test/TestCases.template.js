@@ -205,7 +205,7 @@ const describeCases = config => {
 										if (err) return done(err);
 										done();
 									});
-								});
+								}, 60000);
 								it(`${testName} should pre-compile to fill disk cache (2nd)`, done => {
 									const oldPath = options.output.path;
 									options.output.path = path.join(
@@ -217,7 +217,7 @@ const describeCases = config => {
 										if (err) return done(err);
 										done();
 									});
-								});
+								}, 10000);
 							}
 							it(
 								testName + " should compile",
@@ -276,7 +276,7 @@ const describeCases = config => {
 										run();
 									}
 								},
-								60000
+								config.cache ? 10000 : 60000
 							);
 
 							it(
