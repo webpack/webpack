@@ -10,7 +10,7 @@ const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 let fixtureCount = 0;
 
 describe("Compiler (caching)", () => {
-	jest.setTimeout(15000);
+	jest.setTimeout(25000);
 
 	function compile(entry, options, callback) {
 		options.mode = "none";
@@ -70,7 +70,10 @@ describe("Compiler (caching)", () => {
 				} else {
 					if (stats.errors.length > 0) {
 						expect(typeof stats.errors[0]).toBe("string");
-						throw new Error(stats.errors[0]);
+						throw Object.assign(
+							new Error(),
+							stats.errors[0],
+						);
 					}
 				}
 				stats.logs = logs;

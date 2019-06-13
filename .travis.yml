@@ -21,19 +21,32 @@ matrix:
   include:
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=basic
+      env:
+        - NO_WATCH_TESTS=1
+        - JEST="--maxWorkers=2 --cacheDirectory .jest-cache"
+        - JOB_PART=basic
       stage: basic
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=lintunit
+      env:
+        - NO_WATCH_TESTS=1
+        - JEST="--maxWorkers=2 --cacheDirectory .jest-cache"
+        - JOB_PART=lintunit
       stage: advanced
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
+      env:
+        - NO_WATCH_TESTS=1
+        - JEST="--maxWorkers=2 --cacheDirectory .jest-cache"
+        - JOB_PART=integration
       stage: advanced
     - os: linux
       node_js: "10"
-      env: NO_WATCH_TESTS=1 ALTERNATIVE_SORT=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
+      env:
+        - NO_WATCH_TESTS=1
+        - ALTERNATIVE_SORT=1
+        - JEST="--maxWorkers=2 --cacheDirectory .jest-cache"
+        - JOB_PART=integration
       stage: advanced
     - os: linux
       node_js: "10"
@@ -47,6 +60,9 @@ matrix:
   fast_finish: true
 
 before_install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.13.0
+  - export PATH=$HOME/.yarn/bin:$PATH
+  - yarn --version
   - |
     if [ "$NODEJS_VERSION" != "" ];
     then

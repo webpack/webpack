@@ -1,4 +1,5 @@
-var webpack = require("../../../");
+const AggressiveSplittingPlugin = require("../../../lib/optimize/AggressiveSplittingPlugin");
+
 module.exports = ["fitting", "content-change"].map(type => ({
 	name: type,
 	mode: "production",
@@ -9,7 +10,7 @@ module.exports = ["fitting", "content-change"].map(type => ({
 		chunkFilename: "[chunkhash].js"
 	},
 	plugins: [
-		new webpack.optimize.AggressiveSplittingPlugin({
+		new AggressiveSplittingPlugin({
 			chunkOverhead: 0,
 			entryChunkMultiplicator: 1,
 			minSize: 1500,
@@ -17,7 +18,6 @@ module.exports = ["fitting", "content-change"].map(type => ({
 		})
 	],
 	recordsInputPath: __dirname + `/input-records-${type}.json`,
-	//recordsOutputPath: __dirname + `/records-${type}.json`,
 	stats: {
 		chunks: true,
 		chunkModules: true,
@@ -27,3 +27,4 @@ module.exports = ["fitting", "content-change"].map(type => ({
 		publicPath: true
 	}
 }));
+

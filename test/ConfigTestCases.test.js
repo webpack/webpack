@@ -17,7 +17,7 @@ describe("ConfigTestCases", () => {
 	const casesPath = path.join(__dirname, "configCases");
 	let categories = fs.readdirSync(casesPath);
 
-	jest.setTimeout(20000);
+	// jest.setTimeout(20000);
 
 	categories = categories.map(cat => {
 		return {
@@ -53,7 +53,8 @@ describe("ConfigTestCases", () => {
 					);
 					it(
 						testName + " should compile",
-						() =>
+						() => {
+							jest.setTimeout(20000);
 							new Promise((resolve, reject) => {
 								const done = err => {
 									if (err) return reject(err);
@@ -287,6 +288,7 @@ describe("ConfigTestCases", () => {
 										.catch(done);
 								});
 							})
+						}
 					);
 
 					const {

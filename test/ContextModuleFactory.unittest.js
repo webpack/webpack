@@ -12,6 +12,7 @@ describe("ContextModuleFactory", () => {
 			memfs = new MemoryFs();
 		});
 		it("should not report an error when ENOENT errors happen", done => {
+			jest.setTimeout(15000);
 			memfs.readdir = (dir, callback) => {
 				setTimeout(() => callback(null, ["/file"]));
 			};
