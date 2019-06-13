@@ -77,7 +77,7 @@ install:
   - yarn link --frozen-lockfile $YARN_EXTRA_ARGS || true
   - yarn link webpack --frozen-lockfile $YARN_EXTRA_ARGS
 
-script: NODE_OPTIONS="--throw-deprecation --trace-warnings" yarn travis:$JOB_PART
+script: yarn travis:$JOB_PART
 
 after_success:
   - cat ./coverage/lcov.info | node_modules/.bin/coveralls --verbose
