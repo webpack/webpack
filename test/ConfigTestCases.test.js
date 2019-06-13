@@ -194,6 +194,7 @@ describe("ConfigTestCases", () => {
 											let runInNewContext = false;
 											const moduleScope = {
 												require: _require.bind(null, path.dirname(p)),
+												importScripts: _require.bind(null, path.dirname(p)),
 												module: m,
 												exports: m.exports,
 												__dirname: path.dirname(p),
@@ -216,6 +217,7 @@ describe("ConfigTestCases", () => {
 												options.target === "webworker"
 											) {
 												moduleScope.window = globalContext;
+												moduleScope.self = globalContext;
 												runInNewContext = true;
 											}
 											if (testConfig.moduleScope) {
