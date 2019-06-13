@@ -332,7 +332,7 @@ Object {
   "errors": Array [
     Object {
       "loc": "2:12",
-      "message": "Module parse failed: Unexpected token (2:12)\\nYou may need an appropriate loader to handle this file type.\\n| window.foo = {\\n>   bar: true,;\\n| };\\n| ",
+      "message": "Module parse failed: Unexpected token (2:12)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n| window.foo = {\\n>   bar: true,;\\n| };\\n| ",
       "moduleId": 0,
       "moduleIdentifier": "<cwd>/test/fixtures/errors/has-syntax-error.js",
       "moduleName": "./has-syntax-error.js",
@@ -677,6 +677,155 @@ Object {
       "moduleId": 0,
       "moduleIdentifier": "<cwd>/test/fixtures/errors/module-exports-string-loader.js!<cwd>/test/fixtures/errors/entry-point.js",
       "moduleName": "./module-exports-string-loader.js!./entry-point.js",
+      "moduleTrace": Array [],
+    },
+  ],
+  "warnings": Array [],
+}
+`);
+	});
+
+	const identityLoader = path.resolve(
+		__dirname,
+		"fixtures/errors/identity-loader.js"
+	);
+	const addCommentLoader = path.resolve(
+		__dirname,
+		"fixtures/errors/add-comment-loader.js"
+	);
+
+	it("should show loader used if it is present when module parsing fails", async () => {
+		await expect(
+			compile({
+				mode: "development",
+				entry: "./abc.html",
+				module: {
+					rules: [
+						{
+							test: /\.html$/,
+							use: [{ loader: identityLoader }]
+						}
+					]
+				}
+			})
+		).resolves.toMatchInlineSnapshot(`
+Object {
+  "errors": Array [
+    Object {
+      "loc": "1:0",
+      "message": "Module parse failed: Unexpected token (1:0)\\nFile was processed with these loaders:\\n * ./identity-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+      "moduleId": "./abc.html",
+      "moduleIdentifier": "<cwd>/test/fixtures/errors/identity-loader.js!<cwd>/test/fixtures/errors/abc.html",
+      "moduleName": "./abc.html",
+      "moduleTrace": Array [],
+    },
+  ],
+  "warnings": Array [],
+}
+`);
+	});
+
+	it("should show all loaders used if they are in config when module parsing fails", async () => {
+		await expect(
+			compile({
+				mode: "development",
+				entry: "./abc.html",
+				module: {
+					rules: [
+						{
+							test: /\.html$/,
+							use: [{ loader: identityLoader }, { loader: addCommentLoader }]
+						}
+					]
+				}
+			})
+		).resolves.toMatchInlineSnapshot(`
+Object {
+  "errors": Array [
+    Object {
+      "loc": "1:0",
+      "message": "Module parse failed: Unexpected token (1:0)\\nFile was processed with these loaders:\\n * ./identity-loader.js\\n * ./add-comment-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+      "moduleId": "./abc.html",
+      "moduleIdentifier": "<cwd>/test/fixtures/errors/identity-loader.js!<cwd>/test/fixtures/errors/add-comment-loader.js!<cwd>/test/fixtures/errors/abc.html",
+      "moduleName": "./abc.html",
+      "moduleTrace": Array [],
+    },
+  ],
+  "warnings": Array [],
+}
+`);
+	});
+
+	it("should show all loaders used if use is a string", async () => {
+		await expect(
+			compile({
+				mode: "development",
+				entry: "./abc.html",
+				module: {
+					rules: [
+						{ test: /\.html$/, use: identityLoader },
+						{ test: /\.html$/, use: addCommentLoader }
+					]
+				}
+			})
+		).resolves.toMatchInlineSnapshot(`
+Object {
+  "errors": Array [
+    Object {
+      "loc": "1:0",
+      "message": "Module parse failed: Unexpected token (1:0)\\nFile was processed with these loaders:\\n * ./identity-loader.js\\n * ./add-comment-loader.js\\nYou may need an additional loader to handle the result of these loaders.\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+      "moduleId": "./abc.html",
+      "moduleIdentifier": "<cwd>/test/fixtures/errors/identity-loader.js!<cwd>/test/fixtures/errors/add-comment-loader.js!<cwd>/test/fixtures/errors/abc.html",
+      "moduleName": "./abc.html",
+      "moduleTrace": Array [],
+    },
+  ],
+  "warnings": Array [],
+}
+`);
+	});
+
+	it("should show 'no loaders are configured to process this file' if loaders are not included in config when module parsing fails", async () => {
+		await expect(
+			compile({
+				mode: "development",
+				entry: "./abc.html",
+				module: {}
+			})
+		).resolves.toMatchInlineSnapshot(`
+Object {
+  "errors": Array [
+    Object {
+      "loc": "1:0",
+      "message": "Module parse failed: Unexpected token (1:0)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n> <!DOCTYPE html>\\n| <html>\\n| 	<body>",
+      "moduleId": "./abc.html",
+      "moduleIdentifier": "<cwd>/test/fixtures/errors/abc.html",
+      "moduleName": "./abc.html",
+      "moduleTrace": Array [],
+    },
+  ],
+  "warnings": Array [],
+}
+`);
+	});
+
+	it("should show 'source code omitted for this binary file' when module parsing fails for binary files", async () => {
+		const folder = path.join(__dirname, "/fixtures");
+		await expect(
+			compile({
+				mode: "development",
+				entry: path.resolve(folder, "./font.ttf"),
+				module: {}
+			})
+		).resolves.toMatchInlineSnapshot(`
+Object {
+  "errors": Array [
+    Object {
+      "loc": "1:0",
+      "message": "Module parse failed: Unexpected character ' ' (1:0)\\nYou may need an appropriate loader to handle this file type, currently no loaders are configured to process this file. See https://webpack.js.org/concepts#loaders\\n(Source code omitted for this binary file)",
+      "moduleId": "../font.ttf",
+      "moduleIdentifier": "<cwd>/test/fixtures/font.ttf",
+      "moduleName": "../font.ttf",
       "moduleTrace": Array [],
     },
   ],

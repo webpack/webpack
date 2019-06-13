@@ -59,7 +59,7 @@ declare module "neo-async" {
 	}
 
 	export type AsyncAutoTasks<R extends Dictionary<any>, E> = {
-		[K in keyof R]: AsyncAutoTask<R[K], R, E>
+		[K in keyof R]: AsyncAutoTask<R[K], R, E>;
 	};
 	export type AsyncAutoTask<R1, R extends Dictionary<any>, E> =
 		| AsyncAutoTaskFunctionWithoutDependencies<R1, E>
