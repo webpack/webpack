@@ -2731,9 +2731,9 @@ Child name-too-long:
 Child custom-chunks-filter:
     Entrypoint main = default/main.js
     Entrypoint a = default/a.js
-    Entrypoint b = default/282.js default/954.js default/767.js default/b.js
-    Entrypoint c = default/282.js default/769.js default/767.js default/c.js
-    chunk {128} default/b.js (b) 92 bytes (javascript) 2.57 KiB (runtime) ={282}= ={767}= ={954}= [entry] [rendered]
+    Entrypoint b = default/282.js default/954.js default/568.js default/b.js
+    Entrypoint c = default/282.js default/769.js default/568.js default/c.js
+    chunk {128} default/b.js (b) 92 bytes (javascript) 2.57 KiB (runtime) ={282}= ={568}= ={954}= [entry] [rendered]
         > ./b b
      [996] ./b.js 72 bytes {128} {334} [built]
          + 2 hidden root modules
@@ -2758,23 +2758,23 @@ Child custom-chunks-filter:
     chunk {383} default/async-c.js (async-c) 72 bytes <{179}> ={282}= ={568}= ={767}= ={769}= [rendered]
         > ./c [10] ./index.js 3:0-47
      [460] ./c.js 72 bytes {383} {459} [built]
-    chunk {459} default/c.js (c) 92 bytes (javascript) 2.57 KiB (runtime) ={282}= ={767}= ={769}= [entry] [rendered]
+    chunk {459} default/c.js (c) 92 bytes (javascript) 2.57 KiB (runtime) ={282}= ={568}= ={769}= [entry] [rendered]
         > ./c c
      [460] ./c.js 72 bytes {383} {459} [built]
          + 2 hidden root modules
          + 1 hidden dependent module
-    chunk {568} default/568.js 20 bytes <{179}> <{282}> <{767}> <{786}> <{794}> <{954}> ={137}= ={282}= ={334}= ={383}= ={767}= ={769}= ={954}= [rendered] split chunk (cache group: default)
+    chunk {568} default/568.js 20 bytes <{179}> <{282}> <{767}> <{786}> <{794}> <{954}> ={128}= ={137}= ={282}= ={334}= ={383}= ={459}= ={767}= ={769}= ={954}= [initial] [rendered] split chunk (cache group: default)
         > ./b [10] ./index.js 2:0-47
         > ./c [10] ./index.js 3:0-47
         > ./g ./a.js 6:0-47
-     [568] ./f.js 20 bytes {128} {459} {568} [built]
-    chunk {767} default/767.js 20 bytes <{179}> ={128}= ={282}= ={334}= ={383}= ={459}= ={568}= ={769}= ={794}= ={954}= >{137}< >{568}< [initial] [rendered] split chunk (cache group: default)
+        > ./b b
+        > ./c c
+     [568] ./f.js 20 bytes {568} [built]
+    chunk {767} default/767.js 20 bytes <{179}> ={282}= ={334}= ={383}= ={568}= ={769}= ={794}= ={954}= >{137}< >{568}< [rendered] split chunk (cache group: default)
         > ./a [10] ./index.js 1:0-47
         > ./b [10] ./index.js 2:0-47
         > ./c [10] ./index.js 3:0-47
-        > ./b b
-        > ./c c
-     [767] ./d.js 20 bytes {767} {786} [built]
+     [767] ./d.js 20 bytes {128} {459} {767} {786} [built]
     chunk {769} default/769.js 20 bytes <{179}> ={282}= ={383}= ={459}= ={568}= ={767}= [initial] [rendered] split chunk (cache group: defaultVendors)
         > ./c [10] ./index.js 3:0-47
         > ./c c

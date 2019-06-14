@@ -24,7 +24,7 @@
     "loader-runner": "3.0.0",
     "loader-utils": "^1.1.0",
     "memory-fs": "~0.4.1",
-    "neo-async": "^2.5.0",
+    "neo-async": "^2.6.0",
     "schema-utils": "^1.0.0",
     "tapable": "2.0.0-beta.4",
     "terser-webpack-plugin": "^1.2.1",
