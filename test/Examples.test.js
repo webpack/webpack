@@ -38,13 +38,6 @@ describe("Examples", () => {
 					options.output.publicPath = "dist/";
 					if (!options.entry) options.entry = "./example.js";
 					if (!options.plugins) options.plugins = [];
-					// To support deprecated loaders
-					// TODO remove in webpack 5
-					options.plugins.push(
-						new webpack.LoaderOptionsPlugin({
-							options: {}
-						})
-					);
 				}
 				webpack(options, (err, stats) => {
 					if (err) return done(err);
