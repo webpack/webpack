@@ -20,25 +20,25 @@ stages:
 matrix:
   include:
     - os: linux
-      node_js: "10"
+      node_js: "12"
       env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=basic
       stage: basic
     - os: linux
-      node_js: "10"
+      node_js: "12"
       env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=lintunit
       stage: advanced
     - os: linux
-      node_js: "10"
+      node_js: "12"
       env: NO_WATCH_TESTS=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
       stage: advanced
     - os: linux
-      node_js: "10"
+      node_js: "12"
       env: NO_WATCH_TESTS=1 ALTERNATIVE_SORT=1 JEST="--maxWorkers=2 --cacheDirectory .jest-cache" JOB_PART=integration
       stage: advanced
     - os: linux
       node_js: "10"
       env:
-        - NODEJS_VERSION=v12.0.0-nightly20190206686043e76e
+        - NODEJS_VERSION=v13.0.0-nightly201906148cdc1bdad6
         - YARN_EXTRA_ARGS="--ignore-engines"
         - NO_WATCH_TESTS=1
         - JEST="--maxWorkers=2 --cacheDirectory .jest-cache"
