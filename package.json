@@ -26,7 +26,7 @@
     "memory-fs": "~0.4.1",
     "neo-async": "^2.6.0",
     "schema-utils": "^1.0.0",
-    "tapable": "2.0.0-beta.4",
+    "tapable": "2.0.0-beta.5",
     "terser-webpack-plugin": "^1.2.1",
     "watchpack": "2.0.0-beta.3",
     "webpack-sources": "2.0.0-beta.1"
@@ -70,7 +70,7 @@
     "script-loader": "~0.7.0",
     "simple-git": "^1.65.0",
     "style-loader": "^0.23.1",
-    "typescript": "^3.2.2",
+    "typescript": "^3.5.2",
     "url-loader": "^1.1.2",
     "wast-loader": "^1.5.5",
     "worker-loader": "^2.0.0",
