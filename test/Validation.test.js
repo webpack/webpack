@@ -120,7 +120,7 @@ describe("Validation", () => {
  - configuration.entry[0] should be a string.
    -> A non-empty string
  - configuration.output.filename should be one of these:
-   string | function
+   non-empty string | function
    -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
    Details:
     * configuration.output.filename should be a string.
@@ -147,7 +147,7 @@ describe("Validation", () => {
  - configuration[0].entry[0] should be a string.
    -> A non-empty string
  - configuration[1].output.filename should be one of these:
-   string | function
+   non-empty string | function
    -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
    Details:
     * configuration[1].output.filename should be a string.

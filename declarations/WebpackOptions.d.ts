@@ -973,9 +973,11 @@ export interface OptimizationSplitChunksOptions {
 		minSize?: OptimizationSplitChunksSizes;
 	};
 	/**
-	 * Sets the template for the filename for created chunks (Only works for initial chunks)
+	 * Sets the template for the filename for created chunks
 	 */
-	filename?: string;
+	filename?:
+		| string
+		| ((pathData: import("../lib/Compilation").PathData) => string);
 	/**
 	 * Prevents exposing path info when creating names for parts splitted by maxSize
 	 */
@@ -1037,9 +1039,11 @@ export interface OptimizationSplitChunksCacheGroup {
 	 */
 	enforce?: boolean;
 	/**
-	 * Sets the template for the filename for created chunks (Only works for initial chunks)
+	 * Sets the template for the filename for created chunks
 	 */
-	filename?: string;
+	filename?:
+		| string
+		| ((pathData: import("../lib/Compilation").PathData) => string);
 	/**
 	 * Sets the hint for chunk id
 	 */
@@ -1156,7 +1160,9 @@ export interface OutputOptions {
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
-	filename?: string | Function;
+	filename?:
+		| string
+		| ((pathData: import("../lib/Compilation").PathData) => string);
 	/**
 	 * An expression which is used to address the global object/scope in runtime code
 	 */
