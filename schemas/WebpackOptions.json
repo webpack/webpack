@@ -642,9 +642,18 @@
           "type": "boolean"
         },
         "filename": {
-          "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
-          "type": "string",
-          "minLength": 1
+          "description": "Sets the template for the filename for created chunks",
+          "anyOf": [
+            {
+              "type": "string",
+              "absolutePath": false,
+              "minLength": 1
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((pathData: import(\"../lib/Compilation\").PathData) => string)"
+            }
+          ]
         },
         "idHint": {
           "description": "Sets the hint for chunk id",
@@ -858,9 +867,18 @@
           }
         },
         "filename": {
-          "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
-          "type": "string",
-          "minLength": 1
+          "description": "Sets the template for the filename for created chunks",
+          "anyOf": [
+            {
+              "type": "string",
+              "absolutePath": false,
+              "minLength": 1
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((pathData: import(\"../lib/Compilation\").PathData) => string)"
+            }
+          ]
         },
         "hidePathInfo": {
           "description": "Prevents exposing path info when creating names for parts splitted by maxSize",
@@ -1041,11 +1059,12 @@
           "anyOf": [
             {
               "type": "string",
-              "absolutePath": false
+              "absolutePath": false,
+              "minLength": 1
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((pathData: import(\"../lib/Compilation\").PathData) => string)"
             }
           ]
         },
