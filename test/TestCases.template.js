@@ -97,11 +97,10 @@ const describeCases = config => {
 								mode: config.mode || "none",
 								optimization: config.mode
 									? NO_EMIT_ON_ERRORS_OPTIMIZATIONS
-									: Object.assign(
-											{},
-											config.optimization,
-											DEFAULT_OPTIMIZATIONS
-									  ),
+									: {
+											...config.optimization,
+											...DEFAULT_OPTIMIZATIONS
+									  },
 								performance: {
 									hints: false
 								},
@@ -109,15 +108,11 @@ const describeCases = config => {
 									__dirname: "mock",
 									__filename: "mock"
 								},
-								cache:
-									config.cache &&
-									Object.assign(
-										{
-											loglevel: "warning",
-											cacheDirectory
-										},
-										config.cache
-									),
+								cache: config.cache && {
+									loglevel: "warning",
+									cacheDirectory,
+									...config.cache
+								},
 								output: {
 									pathinfo: true,
 									path: outputDirectory,

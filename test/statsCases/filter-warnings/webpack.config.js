@@ -46,11 +46,8 @@ module.exports = [
 	["should not filter"],
 	[/should not filter/],
 	[warnings => false]
-].map(filter =>
-	Object.assign({}, baseConfig, {
-		name: Array.isArray(filter) ? `[${filter}]` : `${filter}`,
-		stats: Object.assign({}, baseConfig.stats, {
-			warningsFilter: filter
-		})
-	})
-);
+].map(filter => ({
+	...baseConfig,
+	name: Array.isArray(filter) ? `[${filter}]` : `${filter}`,
+	stats: { ...baseConfig.stats, warningsFilter: filter }
+}));
