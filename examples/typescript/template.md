@@ -10,6 +10,12 @@ _{{example.js}}_
 _{{index.ts}}_
 ```
 
+# webpack.config.js
+
+```javascript
+_{{webpack.config.js}}_
+```
+
 # dist/output.js
 
 ```javascript

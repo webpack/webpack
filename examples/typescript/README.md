@@ -18,6 +18,27 @@ console.log(getArray("foo", "bar"));
 console.log(getArray(1, 2, 3));
 ```
 
+# webpack.config.js
+
+```javascript
+module.exports = {
+	module: {
+		rules: [
+			{
+				test: /\.tsx?$/,
+				loader: "ts-loader",
+				options: {
+					transpileOnly: true
+				}
+			}
+		]
+	},
+	resolve: {
+		extensions: [".ts", ".js", ".json"]
+	}
+};
+```
+
 # dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
@@ -113,14 +134,14 @@ console.log(getArray(1, 2, 3));
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-alpha.16
     Asset      Size  Chunks             Chunk Names
-output.js  1.99 KiB     {0}  [emitted]  main
+output.js  1.98 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
-chunk {0} output.js (main) 217 bytes [entry] [rendered]
+chunk {0} output.js (main) 209 bytes [entry] [rendered]
     > ./example.js main
  [0] ./example.js 33 bytes {0} [built]
      [used exports unknown]
      entry ./example.js main
- [1] ./index.ts 184 bytes {0} [built]
+ [1] ./index.ts 176 bytes {0} [built]
      [used exports unknown]
      cjs require ./index [0] ./example.js 1:12-30
 ```
@@ -133,10 +154,10 @@ Version: webpack 5.0.0-alpha.16
     Asset       Size  Chunks             Chunk Names
 output.js  332 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {179} output.js (main) 217 bytes [entry] [rendered]
+chunk {179} output.js (main) 209 bytes [entry] [rendered]
     > ./example.js main
  [144] ./example.js 33 bytes {179} [built]
        entry ./example.js main
- [862] ./index.ts 184 bytes {179} [built]
+ [862] ./index.ts 176 bytes {179} [built]
        cjs require ./index [144] ./example.js 1:12-30
 ```
