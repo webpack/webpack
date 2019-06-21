@@ -406,4 +406,23 @@ describe("Validation", () => {
    -> Enable production optimizations or development hints."
 `)
 	);
+
+	createTestCase(
+		"holey array",
+		// eslint-disable-next-line no-sparse-arrays
+		[
+			{
+				mode: "production"
+			},
+			,
+			{
+				mode: "development"
+			}
+		],
+		msg =>
+			expect(msg).toMatchInlineSnapshot(`
+"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
+ - configuration[1] should be an object."
+`)
+	);
 });

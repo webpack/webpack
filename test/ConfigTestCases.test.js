@@ -205,6 +205,11 @@ describe("ConfigTestCases", () => {
 											let runInNewContext = false;
 											const moduleScope = {
 												require: _require.bind(null, path.dirname(p), options),
+												importScripts: _require.bind(
+													null,
+													path.dirname(p),
+													options
+												),
 												module: m,
 												exports: m.exports,
 												__dirname: path.dirname(p),
