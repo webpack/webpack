@@ -567,6 +567,10 @@ export interface RuleSetRule {
 	 */
 	resource?: RuleSetConditionOrConditionsAbsolute;
 	/**
+	 * Match rules with custom resource name
+	 */
+	realResource?: RuleSetConditionOrConditions;
+	/**
 	 * Match the resource query of the module
 	 */
 	resourceQuery?: RuleSetConditionOrConditions;

@@ -1528,6 +1528,14 @@
             }
           ]
         },
+        "realResource": {
+          "description": "Match rules with custom resource name",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditions"
+            }
+          ]
+        },
         "resourceQuery": {
           "description": "Match the resource query of the module",
           "anyOf": [
