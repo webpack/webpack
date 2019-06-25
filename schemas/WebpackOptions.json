@@ -1511,6 +1511,14 @@
             }
           ]
         },
+        "realResource": {
+          "description": "Match rules with custom resource name",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditions"
+            }
+          ]
+        },
         "resolve": {
           "description": "Options for the resolver",
           "type": "object",
@@ -1525,14 +1533,6 @@
           "anyOf": [
             {
               "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
-            }
-          ]
-        },
-        "realResource": {
-          "description": "Match rules with custom resource name",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/RuleSetConditionOrConditions"
             }
           ]
         },
