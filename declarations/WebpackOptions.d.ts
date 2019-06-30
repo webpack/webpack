@@ -559,6 +559,10 @@ export interface RuleSetRule {
 	 */
 	query?: RuleSetQuery;
 	/**
+	 * Match rules with custom resource name
+	 */
+	realResource?: RuleSetConditionOrConditions;
+	/**
 	 * Options for the resolver
 	 */
 	resolve?: ResolveOptions;
