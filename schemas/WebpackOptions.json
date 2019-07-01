@@ -2076,7 +2076,17 @@
           "type": "number"
         },
         "ignored": {
-          "description": "Ignore some files from watching"
+          "description": "Ignore some files from watching (glob pattern)",
+          "anyOf": [
+            {
+              "description": "A single glob pattern for files that should be ignored from watching",
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "$ref": "#/definitions/ArrayOfStringValues"
+            }
+          ]
         },
         "poll": {
           "description": "Enable polling mode for watching",
