@@ -559,6 +559,10 @@ export interface RuleSetRule {
 	 */
 	query?: RuleSetQuery;
 	/**
+	 * Match rules with custom resource name
+	 */
+	realResource?: RuleSetConditionOrConditionsAbsolute;
+	/**
 	 * Options for the resolver
 	 */
 	resolve?: ResolveOptions;
@@ -871,6 +875,10 @@ export interface OptimizationSplitChunksOptions {
 	 */
 	automaticNameDelimiter?: string;
 	/**
+	 * Sets the max length for the name of a created chunk
+	 */
+	automaticNameMaxLength?: number;
+	/**
 	 * Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)
 	 */
 	cacheGroups?: {
@@ -887,6 +895,10 @@ export interface OptimizationSplitChunksOptions {
 					 * Sets the name delimiter for created chunks
 					 */
 					automaticNameDelimiter?: string;
+					/**
+					 * Sets the max length for the name of a created chunk
+					 */
+					automaticNameMaxLength?: number;
 					/**
 					 * Sets the name prefix for created chunks
 					 */

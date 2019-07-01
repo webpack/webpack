@@ -100,7 +100,28 @@ module.exports = [
 		},
 		stats
 	},
-
+	{
+		name: "name-too-long-limited",
+		mode: "production",
+		entry: {
+			main: "./",
+			aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: "./a",
+			bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb: "./b",
+			cccccccccccccccccccccccccccccc: "./c"
+		},
+		output: {
+			filename: "[name].js"
+		},
+		optimization: {
+			splitChunks: {
+				minSize: 0,
+				maxInitialRequests: Infinity,
+				chunks: "all",
+				automaticNameMaxLength: 30
+			}
+		},
+		stats
+	},
 	{
 		name: "custom-chunks-filter",
 		mode: "production",

@@ -553,6 +553,11 @@
           "type": "string",
           "minLength": 1
         },
+        "automaticNameMaxLength": {
+          "description": "Sets the max length for the name of a created chunk",
+          "type": "number",
+          "minimum": 1
+        },
         "cacheGroups": {
           "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)",
           "type": "object",
@@ -581,6 +586,11 @@
                     "description": "Sets the name delimiter for created chunks",
                     "type": "string",
                     "minLength": 1
+                  },
+                  "automaticNameMaxLength": {
+                    "description": "Sets the max length for the name of a created chunk",
+                    "type": "number",
+                    "minimum": 1
                   },
                   "automaticNamePrefix": {
                     "description": "Sets the name prefix for created chunks",
@@ -1508,6 +1518,14 @@
           "anyOf": [
             {
               "$ref": "#/definitions/RuleSetQuery"
+            }
+          ]
+        },
+        "realResource": {
+          "description": "Match rules with custom resource name",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
           ]
         },

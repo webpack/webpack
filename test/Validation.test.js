@@ -178,7 +178,7 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 "Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
  - configuration.module.rules[0].oneOf[0] has an unknown property 'passer'. These properties are valid:
-   object { compiler?, enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, query?, resolve?, resource?, resourceQuery?, rules?, sideEffects?, test?, type?, use? }
+   object { compiler?, enforce?, exclude?, include?, issuer?, loader?, loaders?, oneOf?, options?, parser?, query?, realResource?, resolve?, resource?, resourceQuery?, rules?, sideEffects?, test?, type?, use? }
    -> A rule"
 `)
 	);
@@ -404,6 +404,25 @@ describe("Validation", () => {
  - configuration.mode should be one of these:
    \\"development\\" | \\"production\\" | \\"none\\"
    -> Enable production optimizations or development hints."
+`)
+	);
+
+	createTestCase(
+		"holey array",
+		// eslint-disable-next-line no-sparse-arrays
+		[
+			{
+				mode: "production"
+			},
+			,
+			{
+				mode: "development"
+			}
+		],
+		msg =>
+			expect(msg).toMatchInlineSnapshot(`
+"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
+ - configuration should be an object."
 `)
 	);
 });
