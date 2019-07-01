@@ -1525,7 +1525,7 @@
           "description": "Match rules with custom resource name",
           "anyOf": [
             {
-              "$ref": "#/definitions/RuleSetConditionOrConditions"
+              "$ref": "#/definitions/RuleSetConditionOrConditionsAbsolute"
             }
           ]
         },

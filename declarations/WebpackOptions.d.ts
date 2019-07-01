@@ -561,7 +561,7 @@ export interface RuleSetRule {
 	/**
 	 * Match rules with custom resource name
 	 */
-	realResource?: RuleSetConditionOrConditions;
+	realResource?: RuleSetConditionOrConditionsAbsolute;
 	/**
 	 * Options for the resolver
 	 */
