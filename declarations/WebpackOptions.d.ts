@@ -1530,11 +1530,9 @@ export interface WatchOptions {
 	 */
 	aggregateTimeout?: number;
 	/**
-	 * Ignore some files from watching
+	 * Ignore some files from watching (glob pattern)
 	 */
-	ignored?: {
-		[k: string]: any;
-	};
+	ignored?: string | ArrayOfStringValues;
 	/**
 	 * Enable polling mode for watching
 	 */
