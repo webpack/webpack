@@ -4,6 +4,10 @@ module.exports = {
 			{
 				test: /c\.js$/,
 				use: ["loader2"]
+			},
+			{
+				test: /d\.js$/,
+				use: ["loader3"]
 			}
 		]
 	}
