@@ -6121,9 +6121,9 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
 simple-git@^1.65.0, simple-git@^1.85.0:
-  version "1.117.0"
-  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-1.117.0.tgz#dc12338dff8533bb28d49b51b6e6fce73071a00b"
-  integrity sha512-2hqTQFkWwU7+d6rWdxDpKnYih430Dek3LzJ3kUzimxOflpBclZUstI9b+Y4x4rSWvqKe698LyZGFAW02/Ja8kA==
+  version "1.118.0"
+  resolved "https://registry.yarnpkg.com/simple-git/-/simple-git-1.118.0.tgz#6e31d50672c58abdbdb0410fadfdb1db29bd71bd"
+  integrity sha512-0CaCfxdR7ula3EuOkrVFKBiqt7LcvMPfXgIdUhSwjC4A+OaO8yEPGjdO/kWY7ew9uYP9KEoH+dvslOOm7eVzkA==
   dependencies:
     debug "^4.0.1"
 
