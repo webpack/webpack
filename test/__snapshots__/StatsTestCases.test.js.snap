@@ -1608,7 +1608,6 @@ chunk    {7} main.js (main) 523 bytes >{0}< >{1}< >{2}< >{5}< [entry] [rendered]
  [5] ./index.js 523 bytes {7} [built]"
 `;
 
-exports[`StatsTestCases should print correct stats for optimize-chunks 2`] = `
 "Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset      Size  Chunks  Chunk Names
