@@ -654,10 +654,6 @@ export interface ResolveOptions {
 	 */
 	enforceExtension?: boolean;
 	/**
-	 * Enforce using one of the module extensions from the moduleExtensions option
-	 */
-	enforceModuleExtension?: boolean;
-	/**
 	 * Extensions added to the request when trying to find the file
 	 */
 	extensions?: ArrayOfStringValues;
@@ -675,10 +671,6 @@ export interface ResolveOptions {
 	 * Filenames used to find the default entry point if there is no description file or main field
 	 */
 	mainFiles?: ArrayOfStringValues;
-	/**
-	 * Extensions added to the module request when trying to find the module
-	 */
-	moduleExtensions?: ArrayOfStringValues;
 	/**
 	 * Folder names or directory paths where to find modules
 	 */

@@ -1140,10 +1140,6 @@
           "description": "Enforce using one of the extensions from the extensions option",
           "type": "boolean"
         },
-        "enforceModuleExtension": {
-          "description": "Enforce using one of the module extensions from the moduleExtensions option",
-          "type": "boolean"
-        },
         "extensions": {
           "description": "Extensions added to the request when trying to find the file",
           "anyOf": [
@@ -1165,14 +1161,6 @@
         },
         "mainFiles": {
           "description": "Filenames used to find the default entry point if there is no description file or main field",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ArrayOfStringValues"
-            }
-          ]
-        },
-        "moduleExtensions": {
-          "description": "Extensions added to the module request when trying to find the module",
           "anyOf": [
             {
               "$ref": "#/definitions/ArrayOfStringValues"
