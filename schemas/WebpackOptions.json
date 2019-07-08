@@ -1250,7 +1250,26 @@
               "type": "object",
               "additionalProperties": {
                 "description": "New request",
-                "type": "string"
+                "oneOf": [
+                  {
+                    "description": "New request",
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "description": "Multiple alternative requests",
+                    "type": "array",
+                    "items": {
+                      "description": "One choice of request",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  {
+                    "description": "Ignore request (replace with empty module)",
+                    "enum": [false]
+                  }
+                ]
               }
             },
             {
@@ -1262,7 +1281,26 @@
                 "properties": {
                   "alias": {
                     "description": "New request",
-                    "type": "string"
+                    "oneOf": [
+                      {
+                        "description": "New request",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "description": "Multiple alternative requests",
+                        "type": "array",
+                        "items": {
+                          "description": "One choice of request",
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      {
+                        "description": "Ignore request (replace with empty module)",
+                        "enum": [false]
+                      }
+                    ]
                   },
                   "name": {
                     "description": "Request to be redirected",

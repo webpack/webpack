@@ -690,13 +690,13 @@ export interface ResolveOptions {
 				/**
 				 * New request
 				 */
-				[k: string]: string;
+				[k: string]: string | string[] | false;
 		  }
 		| {
 				/**
 				 * New request
 				 */
-				alias?: string;
+				alias?: string | string[] | false;
 				/**
 				 * Request to be redirected
 				 */

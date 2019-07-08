@@ -1596,10 +1596,10 @@ end-of-stream@^1.0.0, end-of-stream@^1.1.0:
   dependencies:
     once "^1.4.0"
 
-enhanced-resolve@5.0.0-beta.0:
-  version "5.0.0-beta.0"
-  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.0.0-beta.0.tgz#7635594f4f38a515ba3a5a93498556828964d3ac"
-  integrity sha512-s0jFC1SvF64ZDMdJfkSATGvQPaXjOq49PJHEvodqUiY7pCMRzHjfQgTkTM+Nxpg29ym9ASjEPSiHqo1trqvVEA==
+enhanced-resolve@5.0.0-beta.1:
+  version "5.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.0.0-beta.1.tgz#600c242ec84a31f7198e165ea08143eef2cc3a04"
+  integrity sha512-dlCyQrjJDL/RJzVWzZkrO5aL8EYCGpMvqGv5IPwaVCO8yLMs+rQuuMczeOxYNj0hD2DAtOGAfvocgDkzbNCmDg==
   dependencies:
     graceful-fs "^4.2.0"
     tapable "^2.0.0-beta"
