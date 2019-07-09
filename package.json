@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "4.35.2",
+  "version": "4.35.3",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -9,8 +9,7 @@
     "@webassemblyjs/helper-module-context": "1.8.5",
     "@webassemblyjs/wasm-edit": "1.8.5",
     "@webassemblyjs/wasm-parser": "1.8.5",
-    "acorn": "^6.0.5",
-    "acorn-dynamic-import": "^4.0.0",
+    "acorn": "^6.2.0",
     "ajv": "^6.1.0",
     "ajv-keywords": "^3.1.0",
     "chrome-trace-event": "^1.0.0",
