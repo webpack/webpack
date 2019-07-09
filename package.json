@@ -44,6 +44,7 @@
     "eslint": "^5.8.0",
     "eslint-config-prettier": "^4.0.0",
     "eslint-plugin-jest": "^22.2.2",
+    "eslint-plugin-jsdoc": "^15.3.2",
     "eslint-plugin-node": "^8.0.0",
     "eslint-plugin-prettier": "^3.0.0",
     "express": "~4.16.4",
