@@ -52,11 +52,16 @@ getTemplate("b", function(b) {
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -69,12 +74,12 @@ getTemplate("b", function(b) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
-/*! runtime requirements: __webpack_require__.e, __webpack_require__.oe, __webpack_require__ */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__.e__webpack_require__.oe, __webpack_require__,  */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 function getTemplate(templateName, callback) {
-	__webpack_require__.e(/*! AMD require */ 925).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(1)("./"+templateName)]; (function(tmpl) {
+	__webpack_require__.e(/*! AMD require */ 577).then(function() { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(1)("./"+templateName)]; (function(tmpl) {
 		callback(tmpl());
 	}).apply(null, __WEBPACK_AMD_REQUIRE_ARRAY__);}).catch(__webpack_require__.oe);
 }
@@ -112,7 +117,9 @@ getTemplate("b", function(b) {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
+/******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
+/******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
 /******/ 	}();
@@ -125,7 +132,7 @@ getTemplate("b", function(b) {
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			404: 0
+/******/ 			179: 0
 /******/ 		};
 /******/ 		
 /******/ 		
@@ -238,17 +245,17 @@ getTemplate("b", function(b) {
 </details>
 
 
-# dist/925.output.js
+# dist/577.output.js
 
 ``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[925],[
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[577],[
 /* 0 */,
 /* 1 */
 /*!**************************************************!*\
   !*** ../require.context/templates sync ^\.\/.*$ ***!
   \**************************************************/
-/*! no static exports found */
-/*! runtime requirements: module, __webpack_require__ */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module__webpack_require__,  */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 var map = {
@@ -266,13 +273,12 @@ function webpackContext(req) {
 	return __webpack_require__(id);
 }
 function webpackContextResolve(req) {
-	var id = map[req];
-	if(!(id + 1)) { // check for number or string
+	if(!Object.prototype.hasOwnProperty.call(map, req)) {
 		var e = new Error("Cannot find module '" + req + "'");
 		e.code = 'MODULE_NOT_FOUND';
 		throw e;
 	}
-	return id;
+	return map[req];
 }
 webpackContext.keys = function webpackContextKeys() {
 	return Object.keys(map);
@@ -286,7 +292,7 @@ webpackContext.id = 1;
 /*!*****************************************!*\
   !*** ../require.context/templates/a.js ***!
   \*****************************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -299,7 +305,7 @@ module.exports = function() {
 /*!*****************************************!*\
   !*** ../require.context/templates/b.js ***!
   \*****************************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -312,7 +318,7 @@ module.exports = function() {
 /*!*****************************************!*\
   !*** ../require.context/templates/c.js ***!
   \*****************************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -330,31 +336,31 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.11
         Asset      Size  Chunks             Chunk Names
-925.output.js  1.98 KiB   {925}  [emitted]
-    output.js  7.36 KiB   {404}  [emitted]  main
+577.output.js  2.13 KiB   {577}  [emitted]
+    output.js  7.64 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 251 bytes (javascript) 3.55 KiB (runtime) >{925}< [entry] [rendered]
-    > .\example.js main
- [0] ./example.js 251 bytes {404} [built]
+chunk {179} output.js (main) 251 bytes (javascript) 3.64 KiB (runtime) [entry] [rendered]
+    > ./example.js main
+ [0] ./example.js 251 bytes {179} [built]
      [used exports unknown]
-     entry .\example.js main
+     entry ./example.js main
      + 4 hidden chunk modules
-chunk {925} 925.output.js 457 bytes <{404}> [rendered]
+chunk {577} 577.output.js 457 bytes [rendered]
     > [0] ./example.js 2:1-4:3
- [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {925} [built]
+ [1] ../require.context/templates sync ^\.\/.*$ 217 bytes {577} [built]
      [used exports unknown]
      amd require context ../require.context/templates [0] ./example.js 2:1-4:3
- [2] ../require.context/templates/a.js 80 bytes {925} [optional] [built]
+ [2] ../require.context/templates/a.js 80 bytes {577} [optional] [built]
      [used exports unknown]
      context element ./a [1] ../require.context/templates sync ^\.\/.*$ ./a
      context element ./a.js [1] ../require.context/templates sync ^\.\/.*$ ./a.js
- [3] ../require.context/templates/b.js 80 bytes {925} [optional] [built]
+ [3] ../require.context/templates/b.js 80 bytes {577} [optional] [built]
      [used exports unknown]
      context element ./b [1] ../require.context/templates sync ^\.\/.*$ ./b
      context element ./b.js [1] ../require.context/templates sync ^\.\/.*$ ./b.js
- [4] ../require.context/templates/c.js 80 bytes {925} [optional] [built]
+ [4] ../require.context/templates/c.js 80 bytes {577} [optional] [built]
      [used exports unknown]
      context element ./c [1] ../require.context/templates sync ^\.\/.*$ ./c
      context element ./c.js [1] ../require.context/templates sync ^\.\/.*$ ./c.js
@@ -364,27 +370,27 @@ chunk {925} 925.output.js 457 bytes <{404}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.11
         Asset       Size  Chunks             Chunk Names
-925.output.js  651 bytes   {925}  [emitted]
-    output.js   1.51 KiB   {404}  [emitted]  main
+577.output.js  676 bytes   {577}  [emitted]
+    output.js   1.51 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 251 bytes (javascript) 3.55 KiB (runtime) >{925}< [entry] [rendered]
-    > .\example.js main
- [275] ./example.js 251 bytes {404} [built]
-       entry .\example.js main
+chunk {179} output.js (main) 251 bytes (javascript) 3.64 KiB (runtime) [entry] [rendered]
+    > ./example.js main
+ [144] ./example.js 251 bytes {179} [built]
+       entry ./example.js main
      + 4 hidden chunk modules
-chunk {925} 925.output.js 457 bytes <{404}> [rendered]
-    > [275] ./example.js 2:1-4:3
- [145] ../require.context/templates/a.js 80 bytes {925} [optional] [built]
-       context element ./a [925] ../require.context/templates sync ^\.\/.*$ ./a
-       context element ./a.js [925] ../require.context/templates sync ^\.\/.*$ ./a.js
- [221] ../require.context/templates/c.js 80 bytes {925} [optional] [built]
-       context element ./c [925] ../require.context/templates sync ^\.\/.*$ ./c
-       context element ./c.js [925] ../require.context/templates sync ^\.\/.*$ ./c.js
- [641] ../require.context/templates/b.js 80 bytes {925} [optional] [built]
-       context element ./b [925] ../require.context/templates sync ^\.\/.*$ ./b
-       context element ./b.js [925] ../require.context/templates sync ^\.\/.*$ ./b.js
- [925] ../require.context/templates sync ^\.\/.*$ 217 bytes {925} [built]
-       amd require context ../require.context/templates [275] ./example.js 2:1-4:3
+chunk {577} 577.output.js 457 bytes [rendered]
+    > [144] ./example.js 2:1-4:3
+  [34] ../require.context/templates/a.js 80 bytes {577} [optional] [built]
+       context element ./a [577] ../require.context/templates sync ^\.\/.*$ ./a
+       context element ./a.js [577] ../require.context/templates sync ^\.\/.*$ ./a.js
+ [413] ../require.context/templates/c.js 80 bytes {577} [optional] [built]
+       context element ./c [577] ../require.context/templates sync ^\.\/.*$ ./c
+       context element ./c.js [577] ../require.context/templates sync ^\.\/.*$ ./c.js
+ [577] ../require.context/templates sync ^\.\/.*$ 217 bytes {577} [built]
+       amd require context ../require.context/templates [144] ./example.js 2:1-4:3
+ [631] ../require.context/templates/b.js 80 bytes {577} [optional] [built]
+       context element ./b [577] ../require.context/templates sync ^\.\/.*$ ./b
+       context element ./b.js [577] ../require.context/templates sync ^\.\/.*$ ./b.js
 ```

@@ -8,7 +8,7 @@ A manifest is created which includes mappings from module names to internal ids.
 
 ### webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../../");
 
@@ -17,13 +17,13 @@ module.exports = {
 	context: __dirname,
 	entry: ["example-vendor"],
 	output: {
-		filename: "vendor.js", // best use [hash] here too
+		filename: "vendor.js", // best use [fullhash] here too
 		path: path.resolve(__dirname, "dist"),
-		library: "vendor_lib_[hash]"
+		library: "vendor_lib_[fullhash]"
 	},
 	plugins: [
 		new webpack.DllPlugin({
-			name: "vendor_lib_[hash]",
+			name: "vendor_lib_[fullhash]",
 			path: path.resolve(__dirname, "dist/vendor-manifest.json")
 		})
 	]
@@ -32,7 +32,7 @@ module.exports = {
 
 # example-vendor
 
-``` javascript
+```javascript
 export function square(n) {
 	return n * n;
 }
@@ -40,8 +40,8 @@ export function square(n) {
 
 # dist/vendor.js
 
-``` javascript
-var vendor_lib_35e05f4ff28f09d4f9c3 =
+```javascript
+var vendor_lib_ced36e0133f6a1f67f40 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -77,11 +77,16 @@ var vendor_lib_35e05f4ff28f09d4f9c3 =
 /******/
 /******/
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -94,9 +99,8 @@ var vendor_lib_35e05f4ff28f09d4f9c3 =
 /*!****************!*\
   !*** dll main ***!
   \****************/
-/*! no static exports found */
-/*! runtime requirements: __webpack_require__, module */
-/*! all exports used */
+/*! other exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! runtime requirements: __webpack_require__module,  */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 module.exports = __webpack_require__;
@@ -106,9 +110,9 @@ module.exports = __webpack_require__;
 /*!*****************************************!*\
   !*** ../node_modules/example-vendor.js ***!
   \*****************************************/
-/*! exports provided: square */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
-/*! all exports used */
+/*! export square [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__.d, __webpack_require__,  */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -160,8 +164,8 @@ function square(n) {
 
 # dist/vendor-manifest.json
 
-``` javascript
-{"name":"vendor_lib_35e05f4ff28f09d4f9c3","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["square"]}}}}
+```javascript
+{"name":"vendor_lib_ced36e0133f6a1f67f40","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
 ```
 
 # Info
@@ -170,9 +174,9 @@ function square(n) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.11
     Asset      Size  Chunks             Chunk Names
-vendor.js  3.16 KiB     {0}  [emitted]  main
+vendor.js  3.42 KiB     {0}  [emitted]  main
 Entrypoint main = vendor.js
 chunk {0} vendor.js (main) 57 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
     > main
@@ -190,19 +194,18 @@ chunk {0} vendor.js (main) 57 bytes (javascript) 560 bytes (runtime) [entry] [re
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.11
     Asset       Size  Chunks             Chunk Names
-vendor.js  674 bytes   {404}  [emitted]  main
+vendor.js  674 bytes   {179}  [emitted]  main
 Entrypoint main = vendor.js
-chunk {404} vendor.js (main) 57 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
+chunk {179} vendor.js (main) 57 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
     > main
- [507] dll main 12 bytes {404} [built]
-       dll entry
-       DllPlugin
- [797] ../node_modules/example-vendor.js 45 bytes {404} [built]
+ [442] ../node_modules/example-vendor.js 45 bytes {179} [built]
        [exports: square]
-       entry example-vendor [507] dll main main[0]
+       entry example-vendor [550] dll main main[0]
+       DllPlugin
+ [550] dll main 12 bytes {179} [built]
+       dll entry
        DllPlugin
      + 2 hidden chunk modules
 ```
-

@@ -22,19 +22,18 @@ describe("Compiler", () => {
 			minimize: false
 		};
 		const logs = {
-			mkdirp: [],
+			mkdir: [],
 			writeFile: []
 		};
 
 		const c = webpack(options);
 		const files = {};
 		c.outputFileSystem = {
-			join() {
-				return [].join.call(arguments, "/").replace(/\/+/g, "/");
-			},
-			mkdirp(path, callback) {
-				logs.mkdirp.push(path);
-				callback();
+			mkdir(path, callback) {
+				logs.mkdir.push(path);
+				const err = new Error();
+				err.code = "EEXIST";
+				callback(err);
 			},
 			writeFile(name, content, callback) {
 				logs.writeFile.push(name, content);
@@ -76,7 +75,7 @@ describe("Compiler", () => {
 				}
 			},
 			(stats, files) => {
-				expect(stats.logs.mkdirp).toEqual(["/what", "/what/the"]);
+				expect(stats.logs.mkdir).toEqual(["/what", "/what/the"]);
 				done();
 			}
 		);
@@ -147,9 +146,9 @@ describe("Compiler", () => {
 	it("should compile a file with multiple chunks", done => {
 		compile("./chunks", {}, (stats, files) => {
 			expect(stats.chunks).toHaveLength(2);
-			expect(Object.keys(files)).toEqual(["/main.js", "/324.js"]);
+			expect(Object.keys(files)).toEqual(["/main.js", "/394.js"]);
 			const bundle = files["/main.js"];
-			const chunk = files["/324.js"];
+			const chunk = files["/394.js"];
 			expect(bundle).toMatch("function __webpack_require__(");
 			expect(bundle).toMatch("__webpack_require__(/*! ./b */");
 			expect(chunk).not.toMatch("__webpack_require__(/* ./b */");
@@ -693,9 +692,9 @@ describe("Compiler", () => {
 			output: {
 				path: "/",
 				filename: "bundle.js"
-			},
+			}
 		});
-		compiler.hooks.failed.tap('CompilerTest', failedSpy);
+		compiler.hooks.failed.tap("CompilerTest", failedSpy);
 		compiler.outputFileSystem = new MemoryFs();
 		compiler.run((err, stats) => {
 			expect(err).toBeTruthy();

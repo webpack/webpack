@@ -1,8 +1,8 @@
-/* global describe it beforeAll expect */
+/* global describe it expect */
 "use strict";
 
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");
@@ -26,6 +26,7 @@ const DEFAULT_OPTIMIZATIONS = {
 	sideEffects: true,
 	providedExports: true,
 	usedExports: true,
+	mangleExports: true,
 	noEmitOnErrors: false,
 	concatenateModules: false,
 	moduleIds: "size",
@@ -60,7 +61,9 @@ const describeCases = config => {
 						const testDirectory = path.join(casesPath, category.name, test);
 						const filterPath = path.join(testDirectory, "test.filter.js");
 						if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
-							describe.skip(test, () => it("filtered"));
+							describe.skip(test, () => {
+								it("filtered", () => {});
+							});
 							return false;
 						}
 						return true;
@@ -94,23 +97,22 @@ const describeCases = config => {
 								mode: config.mode || "none",
 								optimization: config.mode
 									? NO_EMIT_ON_ERRORS_OPTIMIZATIONS
-									: Object.assign(
-											{},
-											config.optimization,
-											DEFAULT_OPTIMIZATIONS
-									  ),
+									: {
+											...config.optimization,
+											...DEFAULT_OPTIMIZATIONS
+									  },
 								performance: {
 									hints: false
 								},
-								cache:
-									config.cache &&
-									Object.assign(
-										{
-											loglevel: "warning",
-											cacheDirectory
-										},
-										config.cache
-									),
+								node: {
+									__dirname: "mock",
+									__filename: "mock"
+								},
+								cache: config.cache && {
+									loglevel: "warning",
+									cacheDirectory,
+									...config.cache
+								},
 								output: {
 									pathinfo: true,
 									path: outputDirectory,
@@ -157,7 +159,7 @@ const describeCases = config => {
 										{
 											test: /\.wat$/i,
 											loader: "wast-loader",
-											type: "webassembly/experimental"
+											type: "webassembly/async-experimental"
 										}
 									]
 								},
@@ -175,24 +177,42 @@ const describeCases = config => {
 											);
 										});
 									});
-								})
+								}),
+								experiments: {
+									mjs: true,
+									asyncWebAssembly: true,
+									topLevelAwait: true,
+									importAwait: true
+								}
 							};
 							beforeAll(done => {
 								rimraf(cacheDirectory, done);
 							});
 							if (config.cache) {
 								it(`${testName} should pre-compile to fill disk cache (1st)`, done => {
+									const oldPath = options.output.path;
+									options.output.path = path.join(
+										options.output.path,
+										"cache1"
+									);
 									webpack(options, err => {
+										options.output.path = oldPath;
 										if (err) return done(err);
 										done();
 									});
-								});
+								}, 60000);
 								it(`${testName} should pre-compile to fill disk cache (2nd)`, done => {
+									const oldPath = options.output.path;
+									options.output.path = path.join(
+										options.output.path,
+										"cache2"
+									);
 									webpack(options, err => {
+										options.output.path = oldPath;
 										if (err) return done(err);
 										done();
 									});
-								});
+								}, 10000);
 							}
 							it(
 								testName + " should compile",
@@ -251,7 +271,7 @@ const describeCases = config => {
 										run();
 									}
 								},
-								60000
+								config.cache ? 10000 : 60000
 							);
 
 							it(

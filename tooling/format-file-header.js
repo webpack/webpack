@@ -137,9 +137,7 @@ for (const filePath of allFiles) {
 		}
 		if (match.index !== pos) {
 			console.log(
-				`${filePath}: Unexpected code at ${pos}-${match.index}, expected ${
-					current.title
-				}`
+				`${filePath}: Unexpected code at ${pos}-${match.index}, expected ${current.title}`
 			);
 			process.exitCode = 1;
 			pos = match.index;

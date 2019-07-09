@@ -2,7 +2,7 @@
 "use strict";
 
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 
 const webpack = require("..");
 
@@ -89,6 +89,16 @@ describe("StatsTestCases", () => {
 					expect(stats.hasErrors()).toBe(true);
 				} else if (stats.hasErrors()) {
 					return done(new Error(stats.toString({ all: false, errors: true })));
+				} else {
+					fs.writeFileSync(
+						path.join(outputBase, testName, "stats.txt"),
+						stats.toString({
+							preset: "verbose",
+							context: path.join(base, testName),
+							colors: false
+						}),
+						"utf-8"
+					);
 				}
 				let toStringOptions = {
 					context: path.join(base, testName),
@@ -129,7 +139,10 @@ describe("StatsTestCases", () => {
 						);
 				}
 				const testPath = path.join(base, testName);
-				const testPathPattern = testPath.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
+				const testPathPattern = testPath.replace(
+					/[-[\]\\/{}()*+?.^$|]/g,
+					"\\$&"
+				);
 				actual = actual
 					.replace(/\r\n?/g, "\n")
 					.replace(/[\t ]*Version:.+\n/g, "")

@@ -492,6 +492,31 @@ rules:
 
           *You don't have to change it for this PR, just make sure to follow this hint the next time you submit a PR.*
 
+  # skip CLA for dependabot
+  - filters:
+      open: true
+      pull_request:
+        author: "^dependabot(-preview)?\\[bot\\]$"
+      status:
+        context: "licence/cla"
+        state: "pending"
+    actions:
+      status:
+        context: "licence/cla"
+        description: "Contributor License Agreement is not needed for this user."
+        state: "success"
+
+  # merge dependabot PRs automatically
+  - filters:
+      open: true
+      pull_request:
+        author: "^dependabot(-preview)?\\[bot\\]$"
+        mergeable_state: clean
+        merged: false
+      label: "PR: CI-ok"
+    actions:
+      merge: true
+
   # add "Send a PR" label when somebody with write permission say it
   - filters:
       open: true
@@ -541,7 +566,7 @@ rules:
       last_action_age: 13w # three months
     actions:
       comment:
-        identifer: inactive-warning
+        identifier: inactive-warning
         message: |-
           **This issue had no activity for at least three months.**
 
@@ -565,7 +590,7 @@ rules:
     actions:
       close: true
       comment:
-        identifer: inactive-close
+        identifier: inactive-close
         message: |-
           Issue was closed because of inactivity.
 
@@ -585,7 +610,7 @@ rules:
         message: |-
           *For maintainers only:*
 
-          * [ ] <!-- document --> This need to be documented (issue in webpack/webpack.js.org will be filed when merged)
+          * [ ] <!-- document --> This needs to be documented (issue in webpack/webpack.js.org will be filed when merged)
 
   # When a pull request need to be documented, create an issue in webpack/webpack.js.org when merged
   - filters:

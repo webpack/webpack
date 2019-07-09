@@ -4,7 +4,7 @@
 const path = require("path");
 const MemoryFs = require("memory-fs");
 const webpack = require("..");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const rimraf = require("rimraf");
 
 const createCompiler = config => {

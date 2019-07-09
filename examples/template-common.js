@@ -21,11 +21,12 @@ const hashRegexp = /Hash: [a-f0-9]+/g;
 
 exports.replaceBase = (template) => {
 
-	let cwd = process.cwd();
+	const cwd = process.cwd();
 	let webpack = path.join(__dirname, "..");
 	let webpackParent = path.join(__dirname, "..", "..");
-	cwd = lessStrict(cwd.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
-	cwd = new RegExp(cwd, "g");
+	const cwdRegExpStr = lessStrict(cwd.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
+	const cwdRegExp = new RegExp(cwdRegExpStr, "g");
+	const cwdSlashRegExp = new RegExp(cwdRegExpStr + "[\\/\\\\]", "g");
 	webpack = lessStrict(webpack.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
 	webpack = new RegExp(webpack, "g");
 	webpackParent = lessStrict(webpackParent.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&"));
@@ -34,7 +35,8 @@ exports.replaceBase = (template) => {
 	return template
 		.replace(/\r\n/g, "\n")
 		.replace(/\r/g, "\n")
-		.replace(cwd, ".")
+		.replace(cwdSlashRegExp, "./")
+		.replace(cwdRegExp, ".")
 		.replace(webpack, "(webpack)")
 		.replace(webpackParent, "(webpack)/~")
 		.replace(timeRegexp, "")
@@ -55,15 +57,15 @@ exports.replaceBase = (template) => {
 };
 
 exports.needResults = (template, prefix) => {
-	const regExp = prefix ? new RegExp(`\\{\\{${prefix}:`) : /\{\{/;
+	const regExp = prefix ? new RegExp(`_\\{\\{${prefix}:`) : /_\{\{/;
 	return regExp.test(template);
 };
 
 exports.replaceResults = (template, baseDir, stdout, prefix) => {
-	const regexp = new RegExp("\\{\\{" + (prefix ? prefix + ":" : "") + "([^:\\}]+)\\}\\}", "g");
+	const regexp = new RegExp("_\\{\\{" + (prefix ? prefix + ":" : "") + "([^:\\}]+)\\}\\}_", "g");
 
 	return template.replace(regexp, function(match) {
-		match = match.substr(2 + (prefix ? prefix.length + 1 : 0), match.length - 4 - (prefix ? prefix.length + 1 : 0));
+		match = match.substr(3 + (prefix ? prefix.length + 1 : 0), match.length - 6 - (prefix ? prefix.length + 1 : 0));
 		if(match === "stdout")
 			return stdout;
 		return fs.readFileSync(path.join(baseDir, match), "utf-8").replace(/[\r\n]*$/, "");

@@ -1,8 +1,8 @@
 "use strict";
 
-/* globals expect fit */
+/* globals expect */
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const vm = require("vm");
 const checkArrayExpectation = require("./checkArrayExpectation");
 const createLazyTestEnv = require("./helpers/createLazyTestEnv");
@@ -48,7 +48,10 @@ const describeCases = config => {
 								const fakeUpdateLoaderOptions = {
 									updateIndex: 0
 								};
-								const configPath = path.join(testDirectory, "webpack.config.js");
+								const configPath = path.join(
+									testDirectory,
+									"webpack.config.js"
+								);
 								let options = {};
 								if (fs.existsSync(configPath)) options = require(configPath);
 								if (!options.mode) options.mode = "development";
@@ -113,13 +116,15 @@ const describeCases = config => {
 									}
 
 									const window = {
-										fetch: (url) => {
+										fetch: url => {
 											return Promise.resolve({
 												ok: true,
 												json() {
-													return Promise.resolve(require(path.resolve(outputDirectory, url)));
+													return Promise.resolve(
+														require(path.resolve(outputDirectory, url))
+													);
 												}
-											})
+											});
 										},
 										importScripts: url => {
 											_require("./" + url);
@@ -136,7 +141,7 @@ const describeCases = config => {
 											},
 											head: {
 												appendChild(element) {
-													if(element._type === "script") {
+													if (element._type === "script") {
 														// run it
 														Promise.resolve().then(() => {
 															_require("./" + element.src);
@@ -145,7 +150,7 @@ const describeCases = config => {
 												}
 											},
 											getElementsByTagName(name) {
-												if(name === "head") return [this.head];
+												if (name === "head") return [this.head];
 												throw new Error("Not supported");
 											}
 										}
@@ -189,38 +194,38 @@ const describeCases = config => {
 									function _require(module) {
 										if (module.substr(0, 2) === "./") {
 											const p = path.join(outputDirectory, module);
-											if(module.endsWith(".json")) {
+											if (module.endsWith(".json")) {
 												return JSON.parse(fs.readFileSync(p, "utf-8"));
 											} else {
-											const fn = vm.runInThisContext(
-												"(function(require, module, exports, __dirname, __filename, it, expect, self, window, fetch, document, importScripts, NEXT, STATS) {" +
-													"global.expect = expect;" +
-													'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
-													fs.readFileSync(p, "utf-8") +
-													"\n})",
-												p
-											);
-											const m = {
-												exports: {}
-											};
-											fn.call(
-												m.exports,
-												_require,
-												m,
-												m.exports,
-												outputDirectory,
-												p,
-												_it,
-												expect,
-												window,
-												window,
-												window.fetch,
-												window.document,
-												window.importScripts,
-												_next,
-												jsonStats
-											);
-											return m.exports;
+												const fn = vm.runInThisContext(
+													"(function(require, module, exports, __dirname, __filename, it, expect, self, window, fetch, document, importScripts, NEXT, STATS) {" +
+														"global.expect = expect;" +
+														'function nsObj(m) { Object.defineProperty(m, Symbol.toStringTag, { value: "Module" }); return m; }' +
+														fs.readFileSync(p, "utf-8") +
+														"\n})",
+													p
+												);
+												const m = {
+													exports: {}
+												};
+												fn.call(
+													m.exports,
+													_require,
+													m,
+													m.exports,
+													outputDirectory,
+													p,
+													_it,
+													expect,
+													window,
+													window,
+													window.fetch,
+													window.document,
+													window.importScripts,
+													_next,
+													jsonStats
+												);
+												return m.exports;
 											}
 										} else return require(module);
 									}

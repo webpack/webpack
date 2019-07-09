@@ -65,6 +65,22 @@ module.exports = [
 		]
 	},
 	{
+		resolve: {
+			alias: {
+				library: path.resolve(
+					__dirname,
+					"../../../js/config/library/0-create-library/commonjs2-split-chunks/"
+				),
+				external: path.resolve(__dirname, "node_modules/external.js")
+			}
+		},
+		plugins: [
+			new webpack.DefinePlugin({
+				NAME: JSON.stringify("commonjs2 with splitChunks")
+			})
+		]
+	},
+	{
 		entry: "./default-test.js",
 		resolve: {
 			alias: {

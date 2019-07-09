@@ -61,9 +61,14 @@ module.exports = Math.random();
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -76,8 +81,8 @@ module.exports = Math.random();
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
-/*! runtime requirements: __webpack_require__, __webpack_require__.c */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require____webpack_require__.c,  */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
 var a = __webpack_require__(/*! ./a */ 1);
@@ -99,7 +104,7 @@ if(a == a2) throw new Error("Cache clear failed :(");
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -115,15 +120,15 @@ module.exports = Math.random();
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.11
     Asset      Size  Chunks             Chunk Names
-output.js  2.03 KiB     {0}  [emitted]  main
+output.js  2.24 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 313 bytes [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 282 bytes {0} [built]
      [used exports unknown]
-     entry .\example.js main
+     entry ./example.js main
  [1] ./a.js 31 bytes {0} [built]
      [used exports unknown]
      cjs require ./a [0] ./example.js 1:8-22
@@ -135,16 +140,16 @@ chunk {0} output.js (main) 313 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.11
     Asset       Size  Chunks             Chunk Names
-output.js  333 bytes   {404}  [emitted]  main
+output.js  333 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 313 bytes [entry] [rendered]
-    > .\example.js main
- [162] ./a.js 31 bytes {404} [built]
-       cjs require ./a [275] ./example.js 1:8-22
-       require.resolve ./a.js [275] ./example.js 4:10-35
-       cjs require ./a [275] ./example.js 10:9-23
- [275] ./example.js 282 bytes {404} [built]
-       entry .\example.js main
+chunk {179} output.js (main) 313 bytes [entry] [rendered]
+    > ./example.js main
+ [144] ./example.js 282 bytes {179} [built]
+       entry ./example.js main
+ [847] ./a.js 31 bytes {179} [built]
+       cjs require ./a [144] ./example.js 1:8-22
+       require.resolve ./a.js [144] ./example.js 4:10-35
+       cjs require ./a [144] ./example.js 10:9-23
 ```

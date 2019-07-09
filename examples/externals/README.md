@@ -9,7 +9,7 @@ In the simple case we just need to specify a string (`"add"`). Then it's resolve
 In the complex case we specify different values for each environment:
 
 | environment        | config value             | resolved as                  |
-|--------------------|--------------------------|------------------------------|
+| ------------------ | ------------------------ | ---------------------------- |
 | CommonJs (strict)  | `["./math", "subtract"]` | `require("./math").subtract` |
 | CommonJs (node.js) | `"./subtract"`           | `require("./subtract")`      |
 | AMD                | `"subtract"`             | `define(["subtract"], ...)`  |
@@ -17,7 +17,7 @@ In the complex case we specify different values for each environment:
 
 # example.js
 
-``` javascript
+```javascript
 var add = require("add");
 var subtract = require("subtract");
 
@@ -26,7 +26,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 
 # webpack.config.js
 
-``` javascript
+```javascript
 module.exports = {
 	// mode: "development || "production",
 	output: {
@@ -48,7 +48,7 @@ module.exports = {
 
 # dist/output.js
 
-``` javascript
+```javascript
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory(require("add"), require("./subtract"));
@@ -94,9 +94,14 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /******/
 /******/
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -109,8 +114,8 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
-/*! runtime requirements: __webpack_require__, __webpack_exports__ */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require____webpack_exports__,  */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
 var add = __webpack_require__(/*! add */ 1);
@@ -123,7 +128,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 /*!**********************!*\
   !*** external "add" ***!
   \**********************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -134,7 +139,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 /*!***************************************************************************************************************!*\
   !*** external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} ***!
   \***************************************************************************************************************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -151,15 +156,15 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.11
     Asset      Size  Chunks             Chunk Names
-output.js  2.88 KiB     {0}  [emitted]  main
+output.js  3.13 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 194 bytes [entry] [rendered]
-    > .\example.js main
+    > ./example.js main
  [0] ./example.js 110 bytes {0} [built]
      [used exports unknown]
-     entry .\example.js main
+     entry ./example.js main
  [1] external "add" 42 bytes {0} [built]
      [used exports unknown]
      cjs require add [0] ./example.js 1:10-24
@@ -172,16 +177,16 @@ chunk {0} output.js (main) 194 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.11
     Asset       Size  Chunks             Chunk Names
-output.js  707 bytes   {404}  [emitted]  main
+output.js  708 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {404} output.js (main) 194 bytes [entry] [rendered]
-    > .\example.js main
- [275] ./example.js 110 bytes {404} [built]
-       entry .\example.js main
- [349] external "add" 42 bytes {404} [built]
-       cjs require add [275] ./example.js 1:10-24
- [795] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {404} [built]
-       cjs require subtract [275] ./example.js 2:15-34
+chunk {179} output.js (main) 194 bytes [entry] [rendered]
+    > ./example.js main
+ [144] ./example.js 110 bytes {179} [built]
+       entry ./example.js main
+ [324] external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} 42 bytes {179} [built]
+       cjs require subtract [144] ./example.js 2:15-34
+ [630] external "add" 42 bytes {179} [built]
+       cjs require add [144] ./example.js 1:10-24
 ```

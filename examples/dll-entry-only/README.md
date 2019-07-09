@@ -24,17 +24,16 @@ from the corresponding modules `a.js`, `b.js` and `cjs.js`. None of the other mo
 Also see [tree shaking](https://github.com/webpack/webpack/tree/master/examples/harmony-unused)
 and [scope hoisting example](https://github.com/webpack/webpack/tree/master/examples/scope-hoisting).
 
-
 # example.js
 
-``` javascript
+```javascript
 export { a, b } from "./a";
 export { c } from "./cjs";
 ```
 
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 var webpack = require("../../");
 
@@ -46,7 +45,7 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, "dist"),
 		filename: "[name].js",
-		library: "[name]_[hash]"
+		library: "[name]_[fullhash]"
 	},
 	optimization: {
 		concatenateModules: true // this is enabled by default in production mode
@@ -54,7 +53,7 @@ module.exports = {
 	plugins: [
 		new webpack.DllPlugin({
 			path: path.join(__dirname, "dist", "[name]-manifest.json"),
-			name: "[name]_[hash]",
+			name: "[name]_[fullhash]",
 			entryOnly: true
 		})
 	]
@@ -63,8 +62,8 @@ module.exports = {
 
 # dist/dll.js
 
-``` javascript
-var dll_fab903421b38e3c46fd9 =
+```javascript
+var dll_97225ff6e4dba33e1316 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -100,11 +99,16 @@ var dll_fab903421b38e3c46fd9 =
 /******/
 /******/
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -117,8 +121,8 @@ var dll_fab903421b38e3c46fd9 =
 /*!***************!*\
   !*** dll dll ***!
   \***************/
-/*! no static exports found */
-/*! runtime requirements: __webpack_require__, module */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__module,  */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -129,12 +133,16 @@ module.exports = __webpack_require__;
 /*!********************************!*\
   !*** ./example.js + 2 modules ***!
   \********************************/
-/*! exports provided: a, b, c */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.t, __webpack_require__.n, __webpack_require__ */
+/*! export a [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export b [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export c [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_exports____webpack_require__.r, __webpack_require__.d, __webpack_require__.t, __webpack_require__.n, __webpack_require__,  */
 /*! ModuleConcatenation bailout: Cannot concat with ./cjs.js (<- Module is not an ECMAScript module) */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+__webpack_require__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./b.js
 // module b
@@ -163,7 +171,8 @@ var cjs = __webpack_require__(2);
 /*!****************!*\
   !*** ./cjs.js ***!
   \****************/
-/*! no static exports found */
+/*! export c [maybe provided (runtime-defined)] [no usage info] [provision prevents renaming (no use info)] */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(__unusedmodule, exports) {
@@ -244,8 +253,8 @@ exports.c = "c";
 
 # dist/dll-manifest.json
 
-``` javascript
-{"name":"dll_fab903421b38e3c46fd9","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace","providedExports":["a","b","c"]}}}}
+```javascript
+{"name":"dll_97225ff6e4dba33e1316","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -254,9 +263,9 @@ exports.c = "c";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.11
  Asset      Size  Chunks             Chunk Names
-dll.js  5.45 KiB     {0}  [emitted]  dll
+dll.js  6.07 KiB     {0}  [emitted]  dll
 Entrypoint dll = dll.js
 chunk {0} dll.js (dll) 216 bytes (javascript) 1.57 KiB (runtime) [entry] [rendered]
     > dll
@@ -269,8 +278,8 @@ chunk {0} dll.js (dll) 216 bytes (javascript) 1.57 KiB (runtime) [entry] [render
      entry ./example [0] dll dll dll[0]
  [2] ./cjs.js 42 bytes {0} [built]
      [used exports unknown]
-     harmony side effect evaluation ./cjs [1] ./example.js + 2 modules 2:0-26
-     harmony export imported specifier ./cjs [1] ./example.js + 2 modules 2:0-26
+     harmony side effect evaluation ./cjs [1] ./example.js + 2 modules ./example.js 2:0-26
+     harmony export imported specifier ./cjs [1] ./example.js + 2 modules ./example.js 2:0-26
      + 4 hidden chunk modules
 ```
 
@@ -278,20 +287,20 @@ chunk {0} dll.js (dll) 216 bytes (javascript) 1.57 KiB (runtime) [entry] [render
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.11
  Asset      Size  Chunks             Chunk Names
-dll.js  1.15 KiB   {144}  [emitted]  dll
+dll.js  1.15 KiB   {874}  [emitted]  dll
 Entrypoint dll = dll.js
-chunk {144} dll.js (dll) 216 bytes (javascript) 1.57 KiB (runtime) [entry] [rendered]
+chunk {874} dll.js (dll) 216 bytes (javascript) 1.57 KiB (runtime) [entry] [rendered]
     > dll
- [348] ./example.js + 2 modules 162 bytes {144} [built]
-       [exports: a, b, c]
-       entry ./example [980] dll dll dll[0]
- [480] ./cjs.js 42 bytes {144} [built]
-       [only some exports used: c]
-       harmony side effect evaluation ./cjs [348] ./example.js + 2 modules 2:0-26
-       harmony export imported specifier ./cjs [348] ./example.js + 2 modules 2:0-26
- [980] dll dll 12 bytes {144} [built]
+ [312] dll dll 12 bytes {874} [built]
        dll entry
+ [489] ./cjs.js 42 bytes {874} [built]
+       [only some exports used: c]
+       harmony side effect evaluation ./cjs [680] ./example.js + 2 modules ./example.js 2:0-26
+       harmony export imported specifier ./cjs [680] ./example.js + 2 modules ./example.js 2:0-26
+ [680] ./example.js + 2 modules 162 bytes {874} [built]
+       [exports: a, b, c]
+       entry ./example [312] dll dll dll[0]
      + 4 hidden chunk modules
 ```

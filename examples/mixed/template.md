@@ -4,32 +4,32 @@ You see that everything is working nicely together.
 
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # amd.js
 
-``` javascript
-{{amd.js}}
+```javascript
+_{{amd.js}}_
 ```
 
 # commonjs.js
 
-``` javascript
-{{commonjs.js}}
+```javascript
+_{{commonjs.js}}_
 ```
 
 # dist/output.js
 
-``` javascript
-{{dist/output.js}}
+```javascript
+_{{dist/output.js}}_
 ```
 
-# dist/462.output.js
+# dist/635.output.js
 
-``` javascript
-{{dist/462.output.js}}
+```javascript
+_{{dist/635.output.js}}_
 ```
 
 # Info
@@ -37,11 +37,11 @@ You see that everything is working nicely together.
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

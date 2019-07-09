@@ -1,3 +1,4 @@
+const path = require("path");
 module.exports = [
 	{
 		output: {
@@ -61,5 +62,33 @@ module.exports = [
 			libraryTarget: "commonjs2"
 		},
 		externals: ["external"]
+	},
+	{
+		output: {
+			filename: "index.js",
+			path: path.resolve(
+				__dirname,
+				"../../../js/config/library/0-create-library/commonjs2-split-chunks"
+			),
+			libraryTarget: "commonjs2"
+		},
+		target: "node",
+		optimization: {
+			splitChunks: {
+				cacheGroups: {
+					test: {
+						enforce: true,
+						chunks: "all",
+						test: /a\.js$/,
+						filename: "part.js"
+					}
+				}
+			}
+		},
+		resolve: {
+			alias: {
+				external: "./non-external"
+			}
+		}
 	}
 ];

@@ -1,8 +1,9 @@
-var webpack = require("../../../../");
-var data = require("./data");
+const path = require("path");
+const webpack = require("../../../../");
+const data = require("./data");
 module.exports = {
 	externals: {
-		[__dirname + "/data"]: "commonjs " + __dirname + "/data"
+		data: "commonjs " + path.resolve(__dirname, "data.js")
 	},
 	plugins: [
 		new webpack.ProgressPlugin((value, ...messages) => {
@@ -11,13 +12,10 @@ module.exports = {
 		{
 			apply: compiler => {
 				compiler.hooks.compilation.tap("CustomPlugin", compilation => {
-					compilation.hooks.optimize.tap(
-						"CustomPlugin",
-						() => {
-							const reportProgress = webpack.ProgressPlugin.getReporter(compiler);
-							reportProgress(0, "custom category", "custom message");
-						}
-					);
+					compilation.hooks.optimize.tap("CustomPlugin", () => {
+						const reportProgress = webpack.ProgressPlugin.getReporter(compiler);
+						reportProgress(0, "custom category", "custom message");
+					});
 				});
 			}
 		}

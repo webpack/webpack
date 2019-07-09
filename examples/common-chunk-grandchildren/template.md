@@ -1,89 +1,88 @@
 This example illustrates how common modules from deep ancestors of an entry point can be split into a separate common chunk
 
-* `pageA` and `pageB` are dynamically required
-* `pageC` and `pageA` both require the `reusableComponent`
-* `pageB` dynamically requires `PageC`
+- `pageA` and `pageB` are dynamically required
+- `pageC` and `pageA` both require the `reusableComponent`
+- `pageB` dynamically requires `PageC`
 
 You can see that webpack outputs five files/chunks:
 
-* `output.js` is the entry chunk and contains
-  * the module system
-  * chunk loading logic
-  * the entry point `example.js`
-* `0.output.js` is an additional chunk
-  * module `reusableComponent`
-* `1.output.js` is an additional chunk
-  * module `pageB`
-* `2.output.js` is an additional chunk
-  * module `pageA`
-* `3.output.js` is an additional chunk
-  * module `pageC`
-
+- `output.js` is the entry chunk and contains
+  - the module system
+  - chunk loading logic
+  - the entry point `example.js`
+- `0.output.js` is an additional chunk
+  - module `reusableComponent`
+- `1.output.js` is an additional chunk
+  - module `pageB`
+- `2.output.js` is an additional chunk
+  - module `pageA`
+- `3.output.js` is an additional chunk
+  - module `pageC`
 
 # example.js
 
-``` javascript
-{{example.js}}
+```javascript
+_{{example.js}}_
 ```
 
 # pageA.js
 
-``` javascript
-{{pageA.js}}
+```javascript
+_{{pageA.js}}_
 ```
 
 # pageB.js
 
-``` javascript
-{{pageB.js}}
+```javascript
+_{{pageB.js}}_
 ```
 
 # pageC.js
 
-``` javascript
-{{pageC.js}}
+```javascript
+_{{pageC.js}}_
 ```
 
 # reusableComponent.js
 
-``` javascript
-{{reusableComponent.js}}
+```javascript
+_{{reusableComponent.js}}_
 ```
 
 # webpack.config.js
 
-``` javascript
-{{webpack.config.js}}
+```javascript
+_{{webpack.config.js}}_
 ```
 
 # dist/output.js
 
-``` javascript
-{{dist/output.js}}
+```javascript
+_{{dist/output.js}}_
 ```
 
-# dist/596.output.js
+# dist/366.output.js
 
-``` javascript
-{{dist/596.output.js}}
+```javascript
+_{{dist/366.output.js}}_
 ```
 
-# dist/912.output.js
+# dist/588.output.js
 
-``` javascript
-{{dist/912.output.js}}
+```javascript
+_{{dist/588.output.js}}_
 ```
 
-# dist/953.output.js
+# dist/145.output.js
 
-``` javascript
-{{dist/953.output.js}}
+```javascript
+_{{dist/145.output.js}}_
 ```
 
-# dist/954.output.js
+# dist/421.output.js
 
-``` javascript
-{{dist/954.output.js}}
+```javascript
+_{{dist/421.output.js}}_
 ```
 
 # Info
@@ -91,11 +90,11 @@ You can see that webpack outputs five files/chunks:
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```

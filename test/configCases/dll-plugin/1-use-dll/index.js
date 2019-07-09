@@ -1,6 +1,7 @@
 import d from "dll/d";
 import { x1, y2 } from "./e";
 import { x2, y1 } from "dll/e";
+import { B } from "dll/h";
 
 it("should load a module from dll", function() {
 	expect(require("dll/a")).toBe("a");
@@ -11,10 +12,12 @@ it("should load a module of non-default type without extension from dll", functi
 });
 
 it("should load an async module from dll", function(done) {
-	require("dll/b")().then(function(c) {
-		expect(c).toEqual(nsObj({ default: "c" }));
-		done();
-	}).catch(done);
+	require("dll/b")()
+		.then(function(c) {
+			expect(c).toEqual(nsObj({ default: "c" }));
+			done();
+		})
+		.catch(done);
 });
 
 it("should load an harmony module from dll (default export)", function() {
@@ -33,7 +36,9 @@ it("should load a module with loader applied", function() {
 });
 
 it("should give modules the correct ids", function() {
-	expect(Object.keys(__webpack_modules__).filter(m => !m.startsWith("../.."))).toEqual([
+	expect(
+		Object.keys(__webpack_modules__).filter(m => !m.startsWith("../.."))
+	).toEqual([
 		"./index.js",
 		"dll-reference ../0-create-dll/dll.js",
 		"dll/a.js",
@@ -44,5 +49,10 @@ it("should give modules the correct ids", function() {
 		"dll/e2.js",
 		"dll/f.jsx",
 		"dll/g.abc.js",
-    ]);
+		"dll/h.js"
+	]);
+});
+
+it("should not crash on side-effect-free modules", function() {
+	expect(B).toBe("B");
 });

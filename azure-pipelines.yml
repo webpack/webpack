@@ -5,7 +5,7 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: "^10.10.0"
+          versionSpec: "^12.4.0"
         displayName: "Install Node.js"
       - script: |
           curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -50,7 +50,7 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: "^10.10.0"
+          versionSpec: "^12.4.0"
         displayName: "Install Node.js"
       - script: |
           curl -o- -L https://yarnpkg.com/install.sh | bash
@@ -72,7 +72,7 @@ jobs:
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn -s run code-lint --format junit > junit.xml
-          yarn schema-lint
+          yarn jest-lint
           yarn type-lint
           yarn special-lint
         displayName: "Run linting"
@@ -90,12 +90,14 @@ jobs:
     pool:
       vmImage: ubuntu-16.04
     strategy:
-      maxParallel: 3
+      maxParallel: 4
       matrix:
+        node-12:
+          node_version: ^12.4.0
         node-10:
-          node_version: ^10.10.0
+          node_version: ^10.15.0
         node-8:
-          node_version: ^8.12.0
+          node_version: ^8.16.0
     steps:
       - task: NodeTool@0
         inputs:
@@ -120,7 +122,6 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          yarn cover:init
           yarn cover:integration --ci --maxWorkers=2 --reporters=jest-junit
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
@@ -137,12 +138,14 @@ jobs:
     pool:
       vmImage: "macOS 10.13"
     strategy:
-      maxParallel: 3
+      maxParallel: 4
       matrix:
+        node-12:
+          node_version: ^12.4.0
         node-10:
-          node_version: ^10.10.0
+          node_version: ^10.15.0
         node-8:
-          node_version: ^8.12.0
+          node_version: ^8.16.0
     steps:
       - task: NodeTool@0
         inputs:
@@ -167,7 +170,6 @@ jobs:
       - script: |
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          yarn cover:init
           yarn cover:integration --ci --reporters=jest-junit
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
@@ -184,12 +186,14 @@ jobs:
     pool:
       vmImage: vs2017-win2016
     strategy:
-      maxParallel: 3
+      maxParallel: 4
       matrix:
+        node-12:
+          node_version: ^12.4.0
         node-10:
-          node_version: ^10.10.0
+          node_version: ^10.15.0
         node-8:
-          node_version: ^8.12.0
+          node_version: ^8.16.0
     steps:
       - task: NodeTool@0
         inputs:
@@ -199,19 +203,16 @@ jobs:
           npm install --global yarn
         displayName: "Install Yarn"
       - script: |
-          set -e
           node -v
           yarn -v
         displayName: "Print versions"
       - script: |
-          set -e
           yarn --frozen-lockfile
           yarn link --frozen-lockfile || true
           yarn link webpack --frozen-lockfile
         displayName: "Install dependencies"
       - script: |
-          set -e
-          yarn cover:init && yarn cover:integration --ci --maxWorkers=2 --reporters=jest-junit
+          yarn cover:integration --ci --maxWorkers=2 --reporters=jest-junit
         displayName: "Run tests with coverage"
       - task: PublishTestResults@2
         inputs:

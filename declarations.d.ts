@@ -59,7 +59,7 @@ declare module "neo-async" {
 	}
 
 	export type AsyncAutoTasks<R extends Dictionary<any>, E> = {
-		[K in keyof R]: AsyncAutoTask<R[K], R, E>
+		[K in keyof R]: AsyncAutoTask<R[K], R, E>;
 	};
 	export type AsyncAutoTask<R1, R extends Dictionary<any>, E> =
 		| AsyncAutoTaskFunctionWithoutDependencies<R1, E>
@@ -73,6 +73,13 @@ declare module "neo-async" {
 
 	export function each<T, E>(
 		arr: IterableCollection<T>,
+		iterator: AsyncIterator<T, E>,
+		callback?: ErrorCallback<E>
+	): void;
+
+	export function eachLimit<T, E>(
+		arr: IterableCollection<T>,
+		limit: number,
 		iterator: AsyncIterator<T, E>,
 		callback?: ErrorCallback<E>
 	): void;
@@ -98,6 +105,7 @@ declare module "neo-async" {
 	): void;
 
 	export const forEach: typeof each;
+	export const forEachLimit: typeof eachLimit;
 }
 
 // There are no typings for @webassemblyjs/ast
@@ -184,7 +192,7 @@ declare module "@webassemblyjs/ast" {
 	export function global(globalType: string, nodes: Node[]): Global;
 	export function identifier(indentifier: string): Identifier;
 	export function funcParam(valType: string, id: Identifier): FuncParam;
-	export function instruction(inst: string, args: Node[]): Instruction;
+	export function instruction(inst: string, args?: Node[]): Instruction;
 	export function callInstruction(funcIndex: Index): CallInstruction;
 	export function objectInstruction(
 		kind: string,
@@ -220,14 +228,109 @@ declare module "@webassemblyjs/ast" {
 	export function isFuncImportDescr(n: Node): boolean;
 }
 
+declare module "webpack-sources" {
+	type MapOptions = { columns?: boolean; module?: boolean };
+
+	export abstract class Source {
+		size(): number;
+
+		map(options?: MapOptions): Object;
+
+		sourceAndMap(
+			options?: MapOptions
+		): {
+			source: string | Buffer;
+			map: Object;
+		};
+
+		updateHash(hash: import("./lib/util/createHash").Hash): void;
+
+		source(): string | Buffer;
+	}
+
+	export class RawSource extends Source {
+		constructor(source: string | Buffer);
+
+		// TODO remove internals
+		_value: string | Buffer;
+	}
+
+	export class OriginalSource extends Source {
+		constructor(source: string | Buffer, name: string);
+
+		// TODO remove internals
+		_value: string | Buffer;
+		_name: string;
+	}
+
+	export class ReplaceSource extends Source {
+		constructor(source: Source, name?: string);
+
+		replace(start: number, end: number, newValue: string, name?: string): void;
+		insert(pos: number, newValue: string, name?: string): void;
+
+		// TODO remove internals
+		_name: string;
+		_source: string;
+		_replacements: {
+			start: number;
+			end: number;
+			content: string;
+			insertIndex: number;
+			name: string;
+		}[];
+	}
+
+	export class SourceMapSource extends Source {
+		constructor(
+			source: string,
+			name: string,
+			sourceMap: Object | string,
+			originalSource?: string,
+			innerSourceMap?: Object
+		);
+	}
+
+	export class ConcatSource extends Source {
+		constructor(...args: (string | Source)[]);
+
+		children: (string | Source)[];
+
+		add(item: string | Source): void;
+	}
+
+	export class PrefixSource extends Source {
+		constructor(prefix: string, source: string | Source);
+
+		_source: string | Source;
+		_prefix: string;
+	}
+
+	export class CachedSource extends Source {
+		constructor(source: Source);
+
+		_source: Source;
+		_cachedSource: string | Buffer;
+		_cachedBuffer: Buffer;
+		_cachedSize: number;
+		_cachedMaps: Object;
+	}
+
+	export class SizeOnlySource extends Source {
+		constructor(size: number);
+
+		_size: number;
+	}
+}
+
 // This "hack" is needed because typescript doesn't support recursive type definitions
 // It's referenced from "ruleSet-conditions" in schemas/WebpackOptions.json
 interface RuleSetConditionsRecursive
 	extends Array<import("./declarations/WebpackOptions").RuleSetCondition> {}
 interface RuleSetConditionsAbsoluteRecursive
 	extends Array<
-			import("./declarations/WebpackOptions").RuleSetConditionAbsolute
-		> {}
+		import("./declarations/WebpackOptions").RuleSetConditionAbsolute
+	> {}
 
 /**
  * Global variable declarations
@@ -249,7 +352,7 @@ declare const $publicPath$;
 declare const __webpack_require__;
 declare const $hotChunkFilename$;
 declare const $hotMainFilename$;
-declare const WebAssembly;
+declare namespace WebAssembly {}
 declare const importScripts;
 declare const $crossOriginLoading$;
 declare const chunkId;

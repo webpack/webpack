@@ -1,6 +1,6 @@
 # webpack.config.js
 
-``` javascript
+```javascript
 var path = require("path");
 module.exports = {
 	// mode: "development || "production",
@@ -16,7 +16,7 @@ module.exports = {
 
 # dist/MyLibrary.umd.js
 
-``` javascript
+```javascript
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -62,11 +62,16 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /******/
 /******/
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
@@ -79,8 +84,11 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! exports provided: value, increment, default */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
+/*! export default [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export increment [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export value [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__.d, __webpack_require__,  */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -132,14 +140,14 @@ function increment() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.11
            Asset      Size  Chunks             Chunk Names
-MyLibrary.umd.js  3.34 KiB     {0}  [emitted]  main
+MyLibrary.umd.js  3.73 KiB     {0}  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
 chunk {0} MyLibrary.umd.js (main) 92 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
     > ./example main
  [0] ./example.js 92 bytes {0} [built]
-     [exports: value, increment, default]
+     [exports: default, increment, value]
      [used exports unknown]
      entry ./example main
      + 2 hidden chunk modules
@@ -149,14 +157,14 @@ chunk {0} MyLibrary.umd.js (main) 92 bytes (javascript) 560 bytes (runtime) [ent
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.11
            Asset       Size  Chunks             Chunk Names
-MyLibrary.umd.js  892 bytes   {404}  [emitted]  main
+MyLibrary.umd.js  892 bytes   {179}  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
-chunk {404} MyLibrary.umd.js (main) 92 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
+chunk {179} MyLibrary.umd.js (main) 92 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
     > ./example main
- [275] ./example.js 92 bytes {404} [built]
-       [exports: value, increment, default]
+ [144] ./example.js 92 bytes {179} [built]
+       [exports: default, increment, value]
        entry ./example main
      + 2 hidden chunk modules
 ```

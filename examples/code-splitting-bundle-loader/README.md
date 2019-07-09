@@ -4,7 +4,7 @@ The bundle loader is used to create a wrapper module for `file.js` that loads th
 
 # example.js
 
-``` javascript
+```javascript
 require("bundle-loader!./file.js")(function(fileJsExports) {
 	console.log(fileJsExports);
 });
@@ -12,16 +12,15 @@ require("bundle-loader!./file.js")(function(fileJsExports) {
 
 # file.js
 
-``` javascript
+```javascript
 module.exports = "It works";
 ```
-
 
 # dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -55,24 +54,29 @@ module.exports = "It works";
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
@@ -86,8 +90,8 @@ __webpack_require__(/*! bundle-loader!./file.js */ 1)(function(fileJsExports) {
 /*!******************************************************!*\
   !*** (webpack)/node_modules/bundle-loader!./file.js ***!
   \******************************************************/
-/*! no static exports found */
-/*! runtime requirements: module, __webpack_require__.e, __webpack_require__ */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module__webpack_require__.e, __webpack_require__,  */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 var cbs = [], 
@@ -96,7 +100,7 @@ module.exports = function(cb) {
 	if(cbs) cbs.push(cb);
 	else cb(data);
 }
-__webpack_require__.e(/*! require.ensure */ 396).then((function(require) {
+__webpack_require__.e(/*! require.ensure */ 929).then((function(require) {
 	data = __webpack_require__(/*! !./file.js */ 2);
 	var callbacks = cbs;
 	cbs = null;
@@ -132,7 +136,9 @@ __webpack_require__.e(/*! require.ensure */ 396).then((function(require) {
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
+/******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
+/******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
 /******/ 	}();
@@ -145,7 +151,7 @@ __webpack_require__.e(/*! require.ensure */ 396).then((function(require) {
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			404: 0
+/******/ 			179: 0
 /******/ 		};
 /******/ 		
 /******/ 		
@@ -258,16 +264,16 @@ __webpack_require__.e(/*! require.ensure */ 396).then((function(require) {
 </details>
 
 
-# dist/396.output.js
+# dist/929.output.js
 
-``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[396],{
+```javascript
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[929],{
 
 /***/ 2:
 /*!*****************!*\
   !*** ./file.js ***!
   \*****************/
-/*! no static exports found */
+/*! other exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -284,45 +290,45 @@ module.exports = "It works";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.11
         Asset       Size  Chunks             Chunk Names
-396.output.js  286 bytes   {396}  [emitted]
-    output.js   7.77 KiB   {404}  [emitted]  main
+929.output.js  327 bytes   {929}  [emitted]
+    output.js    8.1 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {396} 396.output.js 28 bytes <{404}> [rendered]
-    > [1] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
- [2] ./file.js 28 bytes {396} [built]
+chunk {179} output.js (main) 375 bytes (javascript) 3.64 KiB (runtime) [entry] [rendered]
+    > ./example.js main
+ [0] ./example.js 94 bytes {179} [built]
      [used exports unknown]
-     cjs require !!./file.js [1] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
-chunk {404} output.js (main) 375 bytes (javascript) 3.55 KiB (runtime) >{396}< [entry] [rendered]
-    > .\example.js main
- [0] ./example.js 94 bytes {404} [built]
-     [used exports unknown]
-     entry .\example.js main
- [1] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {404} [built]
+     entry ./example.js main
+ [1] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {179} [built]
      [used exports unknown]
      cjs require bundle-loader!./file.js [0] ./example.js 1:0-34
      + 4 hidden chunk modules
+chunk {929} 929.output.js 28 bytes [rendered]
+    > [1] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
+ [2] ./file.js 28 bytes {929} [built]
+     [used exports unknown]
+     cjs require !!./file.js [1] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
+Version: webpack 5.0.0-alpha.11
         Asset       Size  Chunks             Chunk Names
-396.output.js  100 bytes   {396}  [emitted]
-    output.js   1.55 KiB   {404}  [emitted]  main
+929.output.js  100 bytes   {929}  [emitted]
+    output.js   1.55 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {396} 396.output.js 28 bytes <{404}> [rendered]
-    > [83] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
- [396] ./file.js 28 bytes {396} [built]
-       cjs require !!./file.js [83] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
-chunk {404} output.js (main) 375 bytes (javascript) 3.55 KiB (runtime) >{396}< [entry] [rendered]
-    > .\example.js main
-  [83] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {404} [built]
-       cjs require bundle-loader!./file.js [275] ./example.js 1:0-34
- [275] ./example.js 94 bytes {404} [built]
-       entry .\example.js main
+chunk {179} output.js (main) 375 bytes (javascript) 3.64 KiB (runtime) [entry] [rendered]
+    > ./example.js main
+ [144] ./example.js 94 bytes {179} [built]
+       entry ./example.js main
+ [341] (webpack)/node_modules/bundle-loader!./file.js 281 bytes {179} [built]
+       cjs require bundle-loader!./file.js [144] ./example.js 1:0-34
      + 4 hidden chunk modules
+chunk {929} 929.output.js 28 bytes [rendered]
+    > [341] (webpack)/node_modules/bundle-loader!./file.js 7:0-14:2
+ [929] ./file.js 28 bytes {929} [built]
+       cjs require !!./file.js [341] (webpack)/node_modules/bundle-loader!./file.js 8:8-30
 ```

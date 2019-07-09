@@ -15,13 +15,15 @@ export type Entry = EntryDynamic | EntryStatic;
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "EntryDynamic".
  */
-export type EntryDynamic = (() => EntryStatic | Promise<EntryStatic>);
+export type EntryDynamic = () => EntryStatic | Promise<EntryStatic>;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "EntryStatic".
  */
 export type EntryStatic = EntryObject | EntryItem;
 /**
+ * A non-empty array of non-empty strings
+ *
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "NonEmptyArrayOfUniqueStringValues".
  */
@@ -178,17 +180,20 @@ export type RuleSetLoader = string;
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "RuleSetUse".
  */
-export type RuleSetUse = RuleSetUseItem | Function | RuleSetUseItem[];
+export type RuleSetUse =
+	| RuleSetUseItem
+	| ((data: object) => RuleSetUseItem[])
+	| RuleSetUseItem[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "RuleSetUseItem".
  */
 export type RuleSetUseItem =
 	| RuleSetLoader
-	| Function
+	| ((data: object) => RuleSetUseItem | RuleSetUseItem[])
 	| {
 			/**
-			 * Unique loader identifier
+			 * Unique loader options identifier
 			 */
 			ident?: string;
 			/**
@@ -198,17 +203,13 @@ export type RuleSetUseItem =
 			/**
 			 * Loader options
 			 */
-			options?: RuleSetQuery;
-			/**
-			 * Loader query
-			 */
-			query?: RuleSetQuery;
+			options?: RuleSetLoaderOptions;
 	  };
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "RuleSetQuery".
+ * via the `definition` "RuleSetLoaderOptions".
  */
-export type RuleSetQuery =
+export type RuleSetLoaderOptions =
 	| {
 			[k: string]: any;
 	  }
@@ -237,12 +238,12 @@ export type RuleSetRules = RuleSetRule[];
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "OptimizationSplitChunksGetCacheGroups".
  */
-export type OptimizationSplitChunksGetCacheGroups = ((
+export type OptimizationSplitChunksGetCacheGroups = (
 	module: import("../lib/Module")
 ) =>
 	| OptimizationSplitChunksCacheGroup
 	| OptimizationSplitChunksCacheGroup[]
-	| void);
+	| void;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "OptimizationSplitChunksSizes".
@@ -268,11 +269,13 @@ export type FilterItemTypes = RegExp | string | Function;
 
 export interface WebpackOptions {
 	/**
-	 * Set the value of `require.amd` and `define.amd`.
+	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
-	amd?: {
-		[k: string]: any;
-	};
+	amd?:
+		| false
+		| {
+				[k: string]: any;
+		  };
 	/**
 	 * Report the first error as a hard error instead of tolerating it.
 	 */
@@ -303,6 +306,10 @@ export interface WebpackOptions {
 	 * The entry point(s) of the compilation.
 	 */
 	entry?: Entry;
+	/**
+	 * Enables/Disables experiments (experiemental features with relax SemVer compatibility)
+	 */
+	experiments?: Experiments;
 	/**
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
 	 */
@@ -385,7 +392,14 @@ export interface WebpackOptions {
 	stats?:
 		| StatsOptions
 		| boolean
-		| ("none" | "errors-only" | "minimal" | "normal" | "detailed" | "verbose");
+		| (
+				| "none"
+				| "errors-only"
+				| "minimal"
+				| "normal"
+				| "detailed"
+				| "verbose"
+				| "errors-warnings");
 	/**
 	 * Environment to build for
 	 */
@@ -397,7 +411,8 @@ export interface WebpackOptions {
 				| "async-node"
 				| "node-webkit"
 				| "electron-main"
-				| "electron-renderer")
+				| "electron-renderer"
+				| "electron-preload")
 		| ((compiler: import("../lib/Compiler")) => void);
 	/**
 	 * Enter watch mode, which rebuilds on file change.
@@ -428,9 +443,21 @@ export interface FileCacheOptions {
 	 */
 	cacheDirectory?: string;
 	/**
+	 * Locations for the cache (defaults to cacheDirectory / name).
+	 */
+	cacheLocation?: string;
+	/**
 	 * Algorithm used for generation the hash (see node.js crypto package)
 	 */
 	hashAlgorithm?: string;
+	/**
+	 * Time in ms after which idle period the cache storing should happen (only for store: 'pack' or 'idle')
+	 */
+	idleTimeout?: number;
+	/**
+	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle')
+	 */
+	idleTimeoutForInitialStore?: number;
 	/**
 	 * Display log info. (debug: all access and errors with stack trace, verbose: all access, info: all write access, warning: only failed serialization)
 	 */
@@ -463,6 +490,38 @@ export interface EntryObject {
 	 * An entry point with name
 	 */
 	[k: string]: string | NonEmptyArrayOfUniqueStringValues;
+}
+/**
+ * Enables/Disables experiments (experiemental features with relax SemVer compatibility)
+ *
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "Experiments".
+ */
+export interface Experiments {
+	/**
+	 * Support WebAssembly as asynchronous EcmaScript Module
+	 */
+	asyncWebAssembly?: boolean;
+	/**
+	 * Allow 'import/export' syntax to import async modules
+	 */
+	importAsync?: boolean;
+	/**
+	 * Allow 'import/export await' syntax to import async modules
+	 */
+	importAwait?: boolean;
+	/**
+	 * Support .mjs files as way to define strict ESM file (node.js)
+	 */
+	mjs?: boolean;
+	/**
+	 * Support WebAssembly as synchronous EcmaScript Module (outdated)
+	 */
+	syncWebAssembly?: boolean;
+	/**
+	 * Allow using top-level-await in EcmaScript Modules
+	 */
+	topLevelAwait?: boolean;
 }
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
@@ -568,17 +627,13 @@ export interface RuleSetRule {
 	 */
 	loader?: RuleSetLoader | RuleSetUse;
 	/**
-	 * Shortcut for use.loader
-	 */
-	loaders?: RuleSetUse;
-	/**
 	 * Only execute the first matching rule in this array
 	 */
 	oneOf?: RuleSetRules;
 	/**
 	 * Shortcut for use.options
 	 */
-	options?: RuleSetQuery;
+	options?: RuleSetLoaderOptions;
 	/**
 	 * Options for parsing
 	 */
@@ -586,9 +641,9 @@ export interface RuleSetRule {
 		[k: string]: any;
 	};
 	/**
-	 * Shortcut for use.query
+	 * Match the real resource path of the module
 	 */
-	query?: RuleSetQuery;
+	realResource?: RuleSetConditionOrConditionsAbsolute;
 	/**
 	 * Options for the resolver
 	 */
@@ -616,12 +671,7 @@ export interface RuleSetRule {
 	/**
 	 * Module type to use for the module
 	 */
-	type?:
-		| "javascript/auto"
-		| "javascript/dynamic"
-		| "javascript/esm"
-		| "json"
-		| "webassembly/experimental";
+	type?: string;
 	/**
 	 * Modifiers applied to the module when rule is matched
 	 */
@@ -640,13 +690,13 @@ export interface ResolveOptions {
 				/**
 				 * New request
 				 */
-				[k: string]: string;
+				[k: string]: string | string[] | false;
 		  }
 		| {
 				/**
 				 * New request
 				 */
-				alias?: string;
+				alias?: string | string[] | false;
 				/**
 				 * Request to be redirected
 				 */
@@ -681,10 +731,6 @@ export interface ResolveOptions {
 	 */
 	enforceExtension?: boolean;
 	/**
-	 * Enforce using one of the module extensions from the moduleExtensions option
-	 */
-	enforceModuleExtension?: boolean;
-	/**
 	 * Extensions added to the request when trying to find the file
 	 */
 	extensions?: ArrayOfStringValues;
@@ -702,10 +748,6 @@ export interface ResolveOptions {
 	 * Filenames used to find the default entry point if there is no description file or main field
 	 */
 	mainFiles?: ArrayOfStringValues;
-	/**
-	 * Extensions added to the module request when trying to find the module
-	 */
-	moduleExtensions?: ArrayOfStringValues;
 	/**
 	 * Folder names or directory paths where to find modules
 	 */
@@ -797,6 +839,10 @@ export interface OptimizationOptions {
 	 * Also flag chunks as loaded which contain a subset of the modules
 	 */
 	flagIncludedChunks?: boolean;
+	/**
+	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports)
+	 */
+	mangleExports?: boolean;
 	/**
 	 * Reduce size of WASM by changing imports to shorter strings.
 	 */
@@ -919,9 +965,11 @@ export interface OptimizationSplitChunksOptions {
 		minSize?: OptimizationSplitChunksSizes;
 	};
 	/**
-	 * Sets the template for the filename for created chunks (Only works for initial chunks)
+	 * Sets the template for the filename for created chunks
 	 */
-	filename?: string;
+	filename?:
+		| string
+		| ((pathData: import("../lib/Compilation").PathData) => string);
 	/**
 	 * Prevents exposing path info when creating names for parts splitted by maxSize
 	 */
@@ -951,6 +999,10 @@ export interface OptimizationSplitChunksOptions {
 	 */
 	minChunks?: number;
 	/**
+	 * Minimal size for the chunks the stay after moving the modules to a new chunk
+	 */
+	minRemainingSize?: OptimizationSplitChunksSizes;
+	/**
 	 * Minimal size for the created chunks
 	 */
 	minSize?: OptimizationSplitChunksSizes;
@@ -979,9 +1031,11 @@ export interface OptimizationSplitChunksCacheGroup {
 	 */
 	enforce?: boolean;
 	/**
-	 * Sets the template for the filename for created chunks (Only works for initial chunks)
+	 * Sets the template for the filename for created chunks
 	 */
-	filename?: string;
+	filename?:
+		| string
+		| ((pathData: import("../lib/Compilation").PathData) => string);
 	/**
 	 * Sets the hint for chunk id
 	 */
@@ -1010,6 +1064,10 @@ export interface OptimizationSplitChunksCacheGroup {
 	 * Minimum number of times a module has to be duplicated until it's considered for splitting
 	 */
 	minChunks?: number;
+	/**
+	 * Minimal size for the chunks the stay after moving the modules to a new chunk
+	 */
+	minRemainingSize?: OptimizationSplitChunksSizes;
 	/**
 	 * Minimal size for the created chunk
 	 */
@@ -1094,7 +1152,9 @@ export interface OutputOptions {
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
-	filename?: string | Function;
+	filename?:
+		| string
+		| ((pathData: import("../lib/Compilation").PathData) => string);
 	/**
 	 * An expression which is used to address the global object/scope in runtime code
 	 */
@@ -1160,7 +1220,8 @@ export interface OutputOptions {
 		| "amd-require"
 		| "umd"
 		| "umd2"
-		| "jsonp";
+		| "jsonp"
+		| "system";
 	/**
 	 * The output directory as **absolute path** (required).
 	 */
@@ -1461,11 +1522,9 @@ export interface WatchOptions {
 	 */
 	aggregateTimeout?: number;
 	/**
-	 * Ignore some files from watching
+	 * Ignore some files from watching (glob pattern)
 	 */
-	ignored?: {
-		[k: string]: any;
-	};
+	ignored?: string | ArrayOfStringValues;
 	/**
 	 * Enable polling mode for watching
 	 */

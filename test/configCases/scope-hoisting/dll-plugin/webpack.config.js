@@ -8,7 +8,7 @@ module.exports = {
 				"./module": {
 					id: 1,
 					buildMeta: {
-						exportsType: "namespace",
+						exportsType: "namespace"
 					},
 					exports: ["default"]
 				}

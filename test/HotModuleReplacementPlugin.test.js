@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const mkdirp = require("mkdirp");
 
 const webpack = require("..");
@@ -99,32 +99,19 @@ describe("HotModuleReplacementPlugin", () => {
 	}, 120000);
 
 	it("should correct working when entry is Object and key is a number", done => {
-		const entryFile = path.join(
-			__dirname,
-			"js",
-			"HotModuleReplacementPlugin",
-			"entry.js"
-		);
+		const outputPath = path.join(__dirname, "js", "HotModuleReplacementPlugin");
+		const entryFile = path.join(outputPath, "entry.js");
 		const statsFile3 = path.join(
-			__dirname,
-			"js",
-			"HotModuleReplacementPlugin",
+			outputPath,
 			"HotModuleReplacementPlugin.test.stats3.txt"
 		);
 		const statsFile4 = path.join(
-			__dirname,
-			"js",
-			"HotModuleReplacementPlugin",
+			outputPath,
 			"HotModuleReplacementPlugin.test.stats4.txt"
 		);
-		const recordsFile = path.join(
-			__dirname,
-			"js",
-			"HotModuleReplacementPlugin",
-			"records.json"
-		);
+		const recordsFile = path.join(outputPath, "records.json");
 		try {
-			mkdirp.sync(path.join(__dirname, "js", "HotModuleReplacementPlugin"));
+			mkdirp.sync(outputPath);
 		} catch (e) {
 			// empty
 		}
@@ -141,7 +128,7 @@ describe("HotModuleReplacementPlugin", () => {
 			},
 			recordsPath: recordsFile,
 			output: {
-				path: path.join(__dirname, "js", "HotModuleReplacementPlugin")
+				path: outputPath
 			},
 			plugins: [new webpack.HotModuleReplacementPlugin()],
 			optimization: {
@@ -163,7 +150,10 @@ describe("HotModuleReplacementPlugin", () => {
 					if (err) throw err;
 					fs.writeFileSync(statsFile3, stats.toString());
 					const result = JSON.parse(
-						stats.compilation.assets[`${hash}.hot-update.json`].source()
+						fs.readFileSync(
+							path.join(outputPath, `${hash}.hot-update.json`),
+							"utf-8"
+						)
 					)["c"];
 					expect(result).toEqual([chunkName]);
 					done();

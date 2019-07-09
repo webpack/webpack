@@ -1,4 +1,4 @@
-/* globals describe, beforeEach, it */
+/* globals describe it */
 "use strict";
 
 const identifierUtil = require("../lib/util/identifier");
@@ -43,16 +43,11 @@ describe("util/identifier", () => {
 						"c:\\some\\\\dir\\to\\\\somewhere|some/other/dir!../more/dir",
 						"./to/somewhere|some/other/dir!../more/dir"
 					],
-					[
-						"/dir",
-						"/dir/to/somewhere??ref-123",
-						"./to/somewhere??ref-123"
-					]
+					["/dir", "/dir/to/somewhere??ref-123", "./to/somewhere??ref-123"]
 				].forEach(([context, pathConstruct, expected]) => {
-
-						expect(identifierUtil.makePathsRelative(context, pathConstruct)).toBe(
-							expected
-						);
+					expect(identifierUtil.makePathsRelative(context, pathConstruct)).toBe(
+						expected
+					);
 				});
 			});
 		});

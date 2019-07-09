@@ -8,9 +8,9 @@ All modules except `cjs` are EcmaScript modules. `cjs` is a CommonJs module.
 
 The interesting thing here is that putting all modules in single scope won't work, because of multiple reasons:
 
-* Modules `lazy`, `c`, `d` and `cjs` need to be in a separate chunk
-* Module `shared` is accessed by two chunks (different scopes)
-* Module `cjs` is a CommonJs module
+- Modules `lazy`, `c`, `d` and `cjs` need to be in a separate chunk
+- Module `shared` is accessed by two chunks (different scopes)
+- Module `cjs` is a CommonJs module
 
 ![](graph2.png)
 
@@ -22,7 +22,7 @@ While module concatenation identifiers in modules are renamed to avoid conflicts
 
 # example.js
 
-``` javascript
+```javascript
 import { a, x, y } from "a";
 import * as b from "b";
 
@@ -33,7 +33,7 @@ import("./lazy").then(function(lazy) {
 
 # lazy.js
 
-``` javascript
+```javascript
 export * from "c";
 import * as d from "d";
 export { d };
@@ -41,7 +41,7 @@ export { d };
 
 # a.js
 
-``` javascript
+```javascript
 // module a
 export var a = "a";
 export * from "shared";
@@ -49,7 +49,7 @@ export * from "shared";
 
 # b.js
 
-``` javascript
+```javascript
 // module b
 export function a() {
 	return "b";
@@ -58,7 +58,7 @@ export function a() {
 
 # c.js
 
-``` javascript
+```javascript
 // module c
 import { c as e } from "cjs";
 
@@ -69,21 +69,21 @@ export { x, y } from "shared";
 
 # d.js
 
-``` javascript
+```javascript
 // module d
 export var a = "d";
 ```
 
 # cjs.js
 
-``` javascript
+```javascript
 // module cjs (commonjs)
 exports.c = "e";
 ```
 
 # shared.js
 
-``` javascript
+```javascript
 // shared module
 export var x = "x";
 export * from "shared2";
@@ -91,16 +91,14 @@ export * from "shared2";
 
 # shared2.js
 
-``` javascript
+```javascript
 // shared2 module
 export var y = "y";
 ```
 
-
-
 # webpack.config.js
 
-``` javascript
+```javascript
 module.exports = {
 	// mode: "development" || "production",
 	optimization: {
@@ -111,14 +109,11 @@ module.exports = {
 };
 ```
 
-
-
-
 # dist/output.js
 
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
-``` javascript
+```javascript
 /******/ (function(modules, runtime) { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The module cache
@@ -152,26 +147,30 @@ module.exports = {
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
 /******/
+/******/ 	// the startup function
+/******/ 	function startup() {
+/******/ 		// Load entry module and return exports
+/******/ 		return __webpack_require__(0);
+/******/ 	};
 /******/ 	// initialize runtime
 /******/ 	runtime(__webpack_require__);
 /******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
+/******/ 	// run startup
+/******/ 	return startup();
 /******/ })
 /************************************************************************/
 ```
 
 </details>
 
-``` javascript
+```javascript
 /******/ ([
 /* 0 */
 /*!********************************!*\
   !*** ./example.js + 2 modules ***!
   \********************************/
-/*! no exports provided */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.n, __webpack_require__.e, __webpack_require__ */
-/*! all exports used */
+/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! runtime requirements: __webpack_exports____webpack_require__.r, __webpack_require__.d, __webpack_require__.n, __webpack_require__.e, __webpack_require__,  */
 /*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js (<- Module is referenced from different chunks by these modules: ./lazy.js + 2 modules) */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
@@ -196,8 +195,8 @@ function b_a() {
 
 
 
-__webpack_require__.e(/*! import() */ 78).then(__webpack_require__.bind(null, /*! ./lazy */ 2)).then(function(lazy) {
-	console.log(a, b_a(), shared["a" /* x */], shared["b" /* y */], lazy.c, lazy.d.a, lazy.x, lazy.y);
+__webpack_require__.e(/*! import() */ 262).then(__webpack_require__.bind(null, /*! ./lazy */ 2)).then(function(lazy) {
+	console.log(a, b_a(), shared["x"], shared["y"], lazy.c, lazy.d.a, lazy.x, lazy.y);
 });
 
 
@@ -206,9 +205,9 @@ __webpack_require__.e(/*! import() */ 78).then(__webpack_require__.bind(null, /*
 /*!********************************************!*\
   !*** ./node_modules/shared.js + 1 modules ***!
   \********************************************/
-/*! exports provided: x, y */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__ */
-/*! exports used: x, y */
+/*! export x [provided] [used] [can be renamed] */
+/*! export y [provided] [used] [can be renamed] */
+/*! runtime requirements: __webpack_exports____webpack_require__.r, __webpack_require__.d, __webpack_require__,  */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -218,8 +217,8 @@ __webpack_require__.e(/*! import() */ 78).then(__webpack_require__.bind(null, /*
 var y = "y";
 
 // CONCATENATED MODULE: ./node_modules/shared.js
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return x; });
-/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "b", function() { return y; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "x", function() { return x; });
+/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "y", function() { return y; });
 // shared module
 var x = "x";
 
@@ -305,7 +304,9 @@ var x = "x";
 /******/ 	
 /******/ 	/* webpack/runtime/get javascript chunk filename */
 /******/ 	!function() {
+/******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = function(chunkId) {
+/******/ 			// return url for filenames based on template
 /******/ 			return "" + chunkId + ".output.js";
 /******/ 		};
 /******/ 	}();
@@ -318,7 +319,7 @@ var x = "x";
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// Promise = chunk loading, 0 = chunk loaded
 /******/ 		var installedChunks = {
-/******/ 			404: 0
+/******/ 			179: 0
 /******/ 		};
 /******/ 		
 /******/ 		
@@ -431,19 +432,22 @@ var x = "x";
 </details>
 
 
-# dist/78.output.js
+# dist/262.output.js
 
-``` javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[78],[
+```javascript
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[262],[
 /* 0 */,
 /* 1 */,
 /* 2 */
 /*!*****************************!*\
   !*** ./lazy.js + 2 modules ***!
   \*****************************/
-/*! exports provided: d, c, x, y */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.t, __webpack_require__.n, __webpack_require__ */
-/*! all exports used */
+/*! export c [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*! export d [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*! export x [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*! export y [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*! other exports [not provided] [maybe used (runtime-defined)] */
+/*! runtime requirements: __webpack_exports____webpack_require__.r, __webpack_require__.d, __webpack_require__.t, __webpack_require__.n, __webpack_require__,  */
 /*! ModuleConcatenation bailout: Cannot concat with ./node_modules/cjs.js (<- Module is not an ECMAScript module) */
 /*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js (<- Module is referenced from different chunks by these modules: ./lazy.js + 2 modules) */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
@@ -474,8 +478,8 @@ var a = "d";
 
 // CONCATENATED MODULE: ./lazy.js
 /* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "c", function() { return c; });
-/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "x", function() { return shared["a" /* x */]; });
-/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "y", function() { return shared["b" /* y */]; });
+/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "x", function() { return shared["x"]; });
+/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "y", function() { return shared["y"]; });
 /* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "d", function() { return d_namespaceObject; });
 
 
@@ -487,9 +491,9 @@ var a = "d";
 /*!*****************************!*\
   !*** ./node_modules/cjs.js ***!
   \*****************************/
-/*! no static exports found */
+/*! export c [maybe provided (runtime-defined)] [used] [provision prevents renaming] */
+/*! other exports [maybe provided (runtime-defined)] [unused] */
 /*! runtime requirements: __webpack_exports__ */
-/*! exports used: c */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(__unusedmodule, exports) {
 
@@ -503,8 +507,8 @@ exports.c = "e";
 
 Minimized
 
-``` javascript
-(window.webpackJsonp=window.webpackJsonp||[]).push([[78],{719:function(n,r){r.c="e"},78:function(n,r,t){"use strict";t.r(r);var c={};t.r(c),t.d(c,"a",function(){return e});var o=t(719),u=t(852),d=String.fromCharCode(o.c.charCodeAt(0)-2),e="d";t.d(r,"c",function(){return d}),t.d(r,"x",function(){return u.a}),t.d(r,"y",function(){return u.b}),t.d(r,"d",function(){return c})}}]);
+```javascript
+(window.webpackJsonp=window.webpackJsonp||[]).push([[262],{75:function(n,r){r.c="e"},262:function(n,r,t){"use strict";t.r(r);var c={};t.r(c),t.d(c,"a",function(){return e});var o=t(75),u=t(350),d=String.fromCharCode(o.c.charCodeAt(0)-2),e="d";t.d(r,"c",function(){return d}),t.d(r,"x",function(){return u.x}),t.d(r,"y",function(){return u.y}),t.d(r,"d",function(){return c})}}]);
 ```
 
 # Info
@@ -513,66 +517,66 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
-       Asset      Size  Chunks             Chunk Names
-78.output.js  2.21 KiB    {78}  [emitted]
-   output.js    11 KiB   {404}  [emitted]  main
+Version: webpack 5.0.0-alpha.11
+        Asset      Size  Chunks             Chunk Names
+262.output.js  2.63 KiB   {262}  [emitted]
+    output.js  11.3 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {78} 78.output.js 273 bytes <{404}> [rendered]
-    > ./lazy ./example.js 4:0-16
- [2] ./lazy.js + 2 modules 231 bytes {78} [built]
-     [exports: d, c, x, y]
-     import() ./lazy [0] ./example.js + 2 modules 4:0-16
- [3] ./node_modules/cjs.js 42 bytes {78} [built]
-     [only some exports used: c]
-     harmony side effect evaluation cjs [2] ./lazy.js + 2 modules 2:0-29
-     harmony import specifier cjs [2] ./lazy.js + 2 modules 4:35-36
-chunk {404} output.js (main) 372 bytes (javascript) 5.12 KiB (runtime) >{78}< [entry] [rendered]
-    > .\example.js main
- [0] ./example.js + 2 modules 272 bytes {404} [built]
+chunk {179} output.js (main) 372 bytes (javascript) 5.21 KiB (runtime) [entry] [rendered]
+    > ./example.js main
+ [0] ./example.js + 2 modules 272 bytes {179} [built]
      [no exports]
-     entry .\example.js main
- [1] ./node_modules/shared.js + 1 modules 100 bytes {404} [built]
+     entry ./example.js main
+ [1] ./node_modules/shared.js + 1 modules 100 bytes {179} [built]
      [exports: x, y]
      [all exports used]
-     harmony side effect evaluation shared [0] ./example.js + 2 modules 3:0-23
-     harmony export imported specifier shared [0] ./example.js + 2 modules 3:0-23
-     harmony side effect evaluation shared [2] ./lazy.js + 2 modules 6:0-30
-     harmony export imported specifier shared [2] ./lazy.js + 2 modules 6:0-30
-     harmony export imported specifier shared [2] ./lazy.js + 2 modules 6:0-30
+     harmony side effect evaluation shared [0] ./example.js + 2 modules ./node_modules/a.js 3:0-23
+     harmony export imported specifier shared [0] ./example.js + 2 modules ./node_modules/a.js 3:0-23
+     harmony side effect evaluation shared [2] ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
+     harmony export imported specifier shared [2] ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
+     harmony export imported specifier shared [2] ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
      + 8 hidden chunk modules
+chunk {262} 262.output.js 273 bytes [rendered]
+    > ./lazy ./example.js 4:0-16
+ [2] ./lazy.js + 2 modules 231 bytes {262} [built]
+     [exports: c, d, x, y]
+     import() ./lazy [0] ./example.js + 2 modules ./example.js 4:0-16
+ [3] ./node_modules/cjs.js 42 bytes {262} [built]
+     [only some exports used: c]
+     harmony side effect evaluation cjs [2] ./lazy.js + 2 modules ./node_modules/c.js 2:0-29
+     harmony import specifier cjs [2] ./lazy.js + 2 modules ./node_modules/c.js 4:35-36
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-next
-       Asset       Size  Chunks             Chunk Names
-78.output.js  379 bytes    {78}  [emitted]
-   output.js   2.25 KiB   {404}  [emitted]  main
+Version: webpack 5.0.0-alpha.11
+        Asset       Size  Chunks             Chunk Names
+262.output.js  379 bytes   {262}  [emitted]
+    output.js   2.26 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {78} 78.output.js 273 bytes <{404}> [rendered]
-    > ./lazy ./example.js 4:0-16
-  [78] ./lazy.js + 2 modules 231 bytes {78} [built]
-       [exports: d, c, x, y]
-       import() ./lazy [258] ./example.js + 2 modules 4:0-16
- [719] ./node_modules/cjs.js 42 bytes {78} [built]
-       [only some exports used: c]
-       harmony side effect evaluation cjs [78] ./lazy.js + 2 modules 2:0-29
-       harmony import specifier cjs [78] ./lazy.js + 2 modules 4:35-36
-chunk {404} output.js (main) 372 bytes (javascript) 5.12 KiB (runtime) >{78}< [entry] [rendered]
-    > .\example.js main
- [258] ./example.js + 2 modules 272 bytes {404} [built]
-       [no exports]
-       entry .\example.js main
- [852] ./node_modules/shared.js + 1 modules 100 bytes {404} [built]
+chunk {179} output.js (main) 372 bytes (javascript) 5.21 KiB (runtime) [entry] [rendered]
+    > ./example.js main
+ [350] ./node_modules/shared.js + 1 modules 100 bytes {179} [built]
        [exports: x, y]
        [all exports used]
-       harmony side effect evaluation shared [78] ./lazy.js + 2 modules 6:0-30
-       harmony export imported specifier shared [78] ./lazy.js + 2 modules 6:0-30
-       harmony export imported specifier shared [78] ./lazy.js + 2 modules 6:0-30
-       harmony side effect evaluation shared [258] ./example.js + 2 modules 3:0-23
-       harmony export imported specifier shared [258] ./example.js + 2 modules 3:0-23
+       harmony side effect evaluation shared [262] ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
+       harmony export imported specifier shared [262] ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
+       harmony export imported specifier shared [262] ./lazy.js + 2 modules ./node_modules/c.js 6:0-30
+       harmony side effect evaluation shared [789] ./example.js + 2 modules ./node_modules/a.js 3:0-23
+       harmony export imported specifier shared [789] ./example.js + 2 modules ./node_modules/a.js 3:0-23
+ [789] ./example.js + 2 modules 272 bytes {179} [built]
+       [no exports]
+       entry ./example.js main
      + 8 hidden chunk modules
+chunk {262} 262.output.js 273 bytes [rendered]
+    > ./lazy ./example.js 4:0-16
+  [75] ./node_modules/cjs.js 42 bytes {262} [built]
+       [only some exports used: c]
+       harmony side effect evaluation cjs [262] ./lazy.js + 2 modules ./node_modules/c.js 2:0-29
+       harmony import specifier cjs [262] ./lazy.js + 2 modules ./node_modules/c.js 4:35-36
+ [262] ./lazy.js + 2 modules 231 bytes {262} [built]
+       [exports: c, d, x, y]
+       import() ./lazy [789] ./example.js + 2 modules ./example.js 4:0-16
 ```

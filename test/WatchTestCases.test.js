@@ -1,8 +1,8 @@
-/* global beforeAll expect fit */
+/* global beforeAll expect */
 "use strict";
 
 const path = require("path");
-const fs = require("fs");
+const fs = require("graceful-fs");
 const vm = require("vm");
 const mkdirp = require("mkdirp");
 const rimraf = require("rimraf");

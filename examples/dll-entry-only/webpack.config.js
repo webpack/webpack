@@ -9,7 +9,7 @@ module.exports = {
 	output: {
 		path: path.join(__dirname, "dist"),
 		filename: "[name].js",
-		library: "[name]_[hash]"
+		library: "[name]_[fullhash]"
 	},
 	optimization: {
 		concatenateModules: true // this is enabled by default in production mode
@@ -17,7 +17,7 @@ module.exports = {
 	plugins: [
 		new webpack.DllPlugin({
 			path: path.join(__dirname, "dist", "[name]-manifest.json"),
-			name: "[name]_[hash]",
+			name: "[name]_[fullhash]",
 			entryOnly: true
 		})
 	]

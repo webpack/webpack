@@ -33,44 +33,44 @@ With this bundle configuration, you would load your third party libraries, then 
 
 # webpack.config.js
 
-``` javascript
-{{webpack.config.js}}
+```javascript
+_{{webpack.config.js}}_
 ```
 
 # dist/vendor.js
 
-``` javascript
-{{dist/vendor.js}}
+```javascript
+_{{dist/vendor.js}}_
 ```
 
 # dist/commons-utility2_js.js
 
 ``` javascript
-{{dist/commons-utility2_js.js}}
+_{{dist/commons-utility2_js.js}}_
 ```
 
 # dist/commons-utility3_js.js
 
 ``` javascript
-{{dist/commons-utility3_js.js}}
+_{{dist/commons-utility3_js.js}}_
 ```
 
 # dist/pageA.js
 
-``` javascript
-{{dist/pageA.js}}
+```javascript
+_{{dist/pageA.js}}_
 ```
 
 # dist/pageB.js
 
-``` javascript
-{{dist/pageB.js}}
+```javascript
+_{{dist/pageB.js}}_
 ```
 
 # dist/pageC.js
 
-``` javascript
-{{dist/pageC.js}}
+```javascript
+_{{dist/pageC.js}}_
 ```
 
 # Info
@@ -78,11 +78,11 @@ With this bundle configuration, you would load your third party libraries, then 
 ## Unoptimized
 
 ```
-{{stdout}}
+_{{stdout}}_
 ```
 
 ## Production mode
 
 ```
-{{production:stdout}}
+_{{production:stdout}}_
 ```
