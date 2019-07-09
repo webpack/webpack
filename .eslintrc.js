@@ -58,7 +58,22 @@ module.exports = {
 		"node/no-unpublished-bin": "error",
 		"node/no-unpublished-require": "error",
 		"node/process-exit-as-throw": "error",
-		"jsdoc/require-hyphen-before-param-description": ["error", "never"]
+		"jsdoc/require-hyphen-before-param-description": ["error", "never"],
+		"jsdoc/check-tag-names": "error"
+	},
+	settings: {
+		jsdoc: {
+			// supported tags https://github.com/microsoft/TypeScript-wiki/blob/master/JSDoc-support-in-JavaScript.md
+			tagNamePreference: {
+				...(['implements', 'const', 'memberof', 'readonly', 'yields'].reduce((acc, tag) => {
+					acc[tag] = {
+						message: `@${tag} currently not supported in Typescript`
+					};
+					return acc;
+				}, {})),
+				extends: "extends"
+			}
+		}
 	},
 	overrides: [
 		{
