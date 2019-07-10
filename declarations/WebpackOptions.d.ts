@@ -690,13 +690,13 @@ export interface ResolveOptions {
 				/**
 				 * New request
 				 */
-				[k: string]: string;
+				[k: string]: string | string[] | false;
 		  }
 		| {
 				/**
 				 * New request
 				 */
-				alias?: string;
+				alias?: string | string[] | false;
 				/**
 				 * Request to be redirected
 				 */
@@ -731,10 +731,6 @@ export interface ResolveOptions {
 	 */
 	enforceExtension?: boolean;
 	/**
-	 * Enforce using one of the module extensions from the moduleExtensions option
-	 */
-	enforceModuleExtension?: boolean;
-	/**
 	 * Extensions added to the request when trying to find the file
 	 */
 	extensions?: ArrayOfStringValues;
@@ -752,10 +748,6 @@ export interface ResolveOptions {
 	 * Filenames used to find the default entry point if there is no description file or main field
 	 */
 	mainFiles?: ArrayOfStringValues;
-	/**
-	 * Extensions added to the module request when trying to find the module
-	 */
-	moduleExtensions?: ArrayOfStringValues;
 	/**
 	 * Folder names or directory paths where to find modules
 	 */
@@ -973,9 +965,11 @@ export interface OptimizationSplitChunksOptions {
 		minSize?: OptimizationSplitChunksSizes;
 	};
 	/**
-	 * Sets the template for the filename for created chunks (Only works for initial chunks)
+	 * Sets the template for the filename for created chunks
 	 */
-	filename?: string;
+	filename?:
+		| string
+		| ((pathData: import("../lib/Compilation").PathData) => string);
 	/**
 	 * Prevents exposing path info when creating names for parts splitted by maxSize
 	 */
@@ -1037,9 +1031,11 @@ export interface OptimizationSplitChunksCacheGroup {
 	 */
 	enforce?: boolean;
 	/**
-	 * Sets the template for the filename for created chunks (Only works for initial chunks)
+	 * Sets the template for the filename for created chunks
 	 */
-	filename?: string;
+	filename?:
+		| string
+		| ((pathData: import("../lib/Compilation").PathData) => string);
 	/**
 	 * Sets the hint for chunk id
 	 */
@@ -1156,7 +1152,9 @@ export interface OutputOptions {
 	/**
 	 * Specifies the name of each output file on disk. You must **not** specify an absolute path here! The `output.path` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
 	 */
-	filename?: string | Function;
+	filename?:
+		| string
+		| ((pathData: import("../lib/Compilation").PathData) => string);
 	/**
 	 * An expression which is used to address the global object/scope in runtime code
 	 */
@@ -1524,11 +1522,9 @@ export interface WatchOptions {
 	 */
 	aggregateTimeout?: number;
 	/**
-	 * Ignore some files from watching
+	 * Ignore some files from watching (glob pattern)
 	 */
-	ignored?: {
-		[k: string]: any;
-	};
+	ignored?: string | ArrayOfStringValues;
 	/**
 	 * Enable polling mode for watching
 	 */

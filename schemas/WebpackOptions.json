@@ -642,9 +642,18 @@
           "type": "boolean"
         },
         "filename": {
-          "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
-          "type": "string",
-          "minLength": 1
+          "description": "Sets the template for the filename for created chunks",
+          "anyOf": [
+            {
+              "type": "string",
+              "absolutePath": false,
+              "minLength": 1
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((pathData: import(\"../lib/Compilation\").PathData) => string)"
+            }
+          ]
         },
         "idHint": {
           "description": "Sets the hint for chunk id",
@@ -858,9 +867,18 @@
           }
         },
         "filename": {
-          "description": "Sets the template for the filename for created chunks (Only works for initial chunks)",
-          "type": "string",
-          "minLength": 1
+          "description": "Sets the template for the filename for created chunks",
+          "anyOf": [
+            {
+              "type": "string",
+              "absolutePath": false,
+              "minLength": 1
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((pathData: import(\"../lib/Compilation\").PathData) => string)"
+            }
+          ]
         },
         "hidePathInfo": {
           "description": "Prevents exposing path info when creating names for parts splitted by maxSize",
@@ -1041,11 +1059,12 @@
           "anyOf": [
             {
               "type": "string",
-              "absolutePath": false
+              "absolutePath": false,
+              "minLength": 1
             },
             {
               "instanceof": "Function",
-              "tsType": "Function"
+              "tsType": "((pathData: import(\"../lib/Compilation\").PathData) => string)"
             }
           ]
         },
@@ -1231,7 +1250,26 @@
               "type": "object",
               "additionalProperties": {
                 "description": "New request",
-                "type": "string"
+                "oneOf": [
+                  {
+                    "description": "New request",
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "description": "Multiple alternative requests",
+                    "type": "array",
+                    "items": {
+                      "description": "One choice of request",
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  {
+                    "description": "Ignore request (replace with empty module)",
+                    "enum": [false]
+                  }
+                ]
               }
             },
             {
@@ -1243,7 +1281,26 @@
                 "properties": {
                   "alias": {
                     "description": "New request",
-                    "type": "string"
+                    "oneOf": [
+                      {
+                        "description": "New request",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "description": "Multiple alternative requests",
+                        "type": "array",
+                        "items": {
+                          "description": "One choice of request",
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      {
+                        "description": "Ignore request (replace with empty module)",
+                        "enum": [false]
+                      }
+                    ]
                   },
                   "name": {
                     "description": "Request to be redirected",
@@ -1291,10 +1348,6 @@
           "description": "Enforce using one of the extensions from the extensions option",
           "type": "boolean"
         },
-        "enforceModuleExtension": {
-          "description": "Enforce using one of the module extensions from the moduleExtensions option",
-          "type": "boolean"
-        },
         "extensions": {
           "description": "Extensions added to the request when trying to find the file",
           "anyOf": [
@@ -1316,14 +1369,6 @@
         },
         "mainFiles": {
           "description": "Filenames used to find the default entry point if there is no description file or main field",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/ArrayOfStringValues"
-            }
-          ]
-        },
-        "moduleExtensions": {
-          "description": "Extensions added to the module request when trying to find the module",
           "anyOf": [
             {
               "$ref": "#/definitions/ArrayOfStringValues"
@@ -2057,7 +2102,17 @@
           "type": "number"
         },
         "ignored": {
-          "description": "Ignore some files from watching"
+          "description": "Ignore some files from watching (glob pattern)",
+          "anyOf": [
+            {
+              "description": "A single glob pattern for files that should be ignored from watching",
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "$ref": "#/definitions/ArrayOfStringValues"
+            }
+          ]
         },
         "poll": {
           "description": "Enable polling mode for watching",

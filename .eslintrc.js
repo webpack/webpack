@@ -61,7 +61,7 @@ module.exports = {
 	},
 	overrides: [
 		{
-			files: ["lib/**/*.runtime.js", "buildin/*.js", "hot/*.js"],
+			files: ["lib/**/*.runtime.js", "hot/*.js"],
 			env: {
 				es6: false,
 				browser: true

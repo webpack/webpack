@@ -1,6 +1,6 @@
 {
   "name": "webpack",
-  "version": "5.0.0-alpha.16",
+  "version": "5.0.0-alpha.18",
   "author": "Tobias Koppers @sokra",
   "description": "Packs CommonJs/AMD modules for the browser. Allows to split your codebase into multiple bundles, which can be loaded on demand. Support loaders to preprocess files, i.e. json, jsx, es7, css, less, ... and your custom stuff.",
   "license": "MIT",
@@ -9,12 +9,11 @@
     "@webassemblyjs/helper-module-context": "1.8.5",
     "@webassemblyjs/wasm-edit": "1.8.5",
     "@webassemblyjs/wasm-parser": "1.8.5",
-    "acorn": "^6.0.5",
-    "acorn-dynamic-import": "^4.0.0",
+    "acorn": "^6.2.0",
     "ajv": "^6.1.0",
     "ajv-keywords": "^3.1.0",
     "chrome-trace-event": "^1.0.0",
-    "enhanced-resolve": "^4.1.0",
+    "enhanced-resolve": "5.0.0-beta.2",
     "eslint-scope": "^4.0.0",
     "events": "^3.0.0",
     "find-cache-dir": "^2.1.0",
@@ -23,12 +22,11 @@
     "json-parse-better-errors": "^1.0.2",
     "loader-runner": "3.0.0",
     "loader-utils": "^1.1.0",
-    "memory-fs": "~0.4.1",
     "neo-async": "^2.6.0",
     "schema-utils": "^1.0.0",
-    "tapable": "2.0.0-beta.5",
+    "tapable": "2.0.0-beta.8",
     "terser-webpack-plugin": "^1.2.1",
-    "watchpack": "2.0.0-beta.3",
+    "watchpack": "2.0.0-beta.6",
     "webpack-sources": "2.0.0-beta.1"
   },
   "devDependencies": {
@@ -59,6 +57,7 @@
     "less-loader": "^4.0.3",
     "lint-staged": "^8.0.4",
     "lodash": "^4.17.4",
+    "memory-fs": "~0.4.1",
     "mkdirp": "^0.5.1",
     "prettier": "^1.14.3",
     "pretty-format": "24.0.0",
@@ -70,6 +69,7 @@
     "rimraf": "^2.6.2",
     "script-loader": "~0.7.0",
     "simple-git": "^1.65.0",
+    "strip-ansi": "^5.2.0",
     "style-loader": "^0.23.1",
     "ts-loader": "^6.0.2",
     "typescript": "^3.5.2",
@@ -114,12 +114,12 @@
     "pretest": "yarn lint",
     "prelint": "yarn setup",
     "lint": "yarn code-lint && yarn jest-lint && yarn type-lint && yarn special-lint",
-    "code-lint": "eslint --cache \"{setup,lib,bin,hot,buildin,benchmark,tooling,schemas}/**/*.js\" \"test/*.js\" \"test/{configCases,watchCases,statsCases,hotCases}/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
+    "code-lint": "eslint --cache \"{setup,lib,bin,hot,benchmark,tooling,schemas}/**/*.js\" \"test/*.js\" \"test/{configCases,watchCases,statsCases,hotCases}/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
     "type-lint": "tsc --pretty",
     "special-lint": "node tooling/inherit-types && node tooling/format-schemas && node tooling/format-file-header && node tooling/compile-to-definitions",
     "special-lint-fix": "node tooling/inherit-types --write --override && node tooling/format-schemas --write && node tooling/format-file-header --write && node tooling/compile-to-definitions --write",
     "fix": "yarn code-lint --fix && yarn special-lint-fix",
-    "pretty": "prettier --loglevel warn --write \"*.{ts,js,json,yml,yaml}\" \"{setup,lib,bin,hot,buildin,benchmark,tooling,schemas}/**/*.{js,json}\" \"test/*.js\" \"test/{configCases,watchCases,statsCases,hotCases}/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
+    "pretty": "prettier --loglevel warn --write \"*.{ts,js,json,yml,yaml}\" \"{setup,lib,bin,hot,benchmark,tooling,schemas}/**/*.{js,json}\" \"test/*.js\" \"test/{configCases,watchCases,statsCases,hotCases}/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
     "jest-lint": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.lint.js\" --no-verbose",
     "benchmark": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.benchmark.js\" --runInBand",
     "cover": "yarn cover:all && yarn cover:report",
@@ -135,7 +135,7 @@
     }
   },
   "lint-staged": {
-    "*.js|{lib,setup,bin,hot,buildin,tooling,schemas}/**/*.js|test/*.js|{test,examples}/**/webpack.config.js}": [
+    "*.js|{lib,setup,bin,hot,tooling,schemas}/**/*.js|test/*.js|{test,examples}/**/webpack.config.js}": [
       "eslint --cache"
     ]
   },

@@ -120,7 +120,7 @@ describe("Validation", () => {
  - configuration.entry[0] should be a string.
    -> A non-empty string
  - configuration.output.filename should be one of these:
-   string | function
+   non-empty string | function
    -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
    Details:
     * configuration.output.filename should be a string.
@@ -147,7 +147,7 @@ describe("Validation", () => {
  - configuration[0].entry[0] should be a string.
    -> A non-empty string
  - configuration[1].output.filename should be one of these:
-   string | function
+   non-empty string | function
    -> Specifies the name of each output file on disk. You must **not** specify an absolute path here! The \`output.path\` option determines the location on disk the files are written to, filename is used solely for naming the individual files.
    Details:
     * configuration[1].output.filename should be a string.
@@ -404,6 +404,25 @@ describe("Validation", () => {
  - configuration.mode should be one of these:
    \\"development\\" | \\"production\\" | \\"none\\"
    -> Enable production optimizations or development hints."
+`)
+	);
+
+	createTestCase(
+		"holey array",
+		// eslint-disable-next-line no-sparse-arrays
+		[
+			{
+				mode: "production"
+			},
+			,
+			{
+				mode: "development"
+			}
+		],
+		msg =>
+			expect(msg).toMatchInlineSnapshot(`
+"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
+ - configuration[1] should be an object."
 `)
 	);
 });

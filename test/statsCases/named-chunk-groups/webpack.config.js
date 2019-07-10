@@ -32,16 +32,12 @@ const config = {
 };
 
 module.exports = [
-	Object.assign(
-		{
-			stats: Object.assign({ entrypoints: false, chunkGroups: true }, stats)
-		},
-		config
-	),
-	Object.assign(
-		{
-			stats: Object.assign({ entrypoints: true, chunkGroups: true }, stats)
-		},
-		config
-	)
+	{
+		stats: { entrypoints: false, chunkGroups: true, ...stats },
+		...config
+	},
+	{
+		stats: { entrypoints: true, chunkGroups: true, ...stats },
+		...config
+	}
 ];

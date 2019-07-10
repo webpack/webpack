@@ -92,7 +92,7 @@ const defaults = {
 
 async function compile(options) {
 	const stats = await new Promise((resolve, reject) => {
-		const compiler = webpack(Object.assign({}, defaults.options, options));
+		const compiler = webpack({ ...defaults.options, ...options });
 		if (options.mode === "production") {
 			if (options.optimization) options.optimization.minimize = true;
 			else options.optimization = { minimize: true };

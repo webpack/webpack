@@ -2,13 +2,11 @@
 
 const { compareLocations } = require("../lib/util/comparators");
 const createPosition = overrides => {
-	return Object.assign(
-		{
-			line: 10,
-			column: 5
-		},
-		overrides
-	);
+	return {
+		line: 10,
+		column: 5,
+		...overrides
+	};
 };
 
 const createLocation = (start, end, index) => {
