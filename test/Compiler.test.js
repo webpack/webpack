@@ -527,7 +527,10 @@ describe("Compiler", () => {
 			}
 		});
 		compiler.outputFileSystem = new MemoryFs();
+		let once = true;
 		compiler.hooks.afterDone.tap("RunAgainTest", () => {
+			if (!once) return;
+			once = false;
 			compiler.run((err, stats) => {
 				if (err) return done(err);
 				done();
