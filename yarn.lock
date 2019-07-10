@@ -1591,13 +1591,13 @@ end-of-stream@^1.0.0, end-of-stream@^1.1.0:
   dependencies:
     once "^1.4.0"
 
-enhanced-resolve@5.0.0-beta.1:
-  version "5.0.0-beta.1"
-  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.0.0-beta.1.tgz#600c242ec84a31f7198e165ea08143eef2cc3a04"
-  integrity sha512-dlCyQrjJDL/RJzVWzZkrO5aL8EYCGpMvqGv5IPwaVCO8yLMs+rQuuMczeOxYNj0hD2DAtOGAfvocgDkzbNCmDg==
+enhanced-resolve@5.0.0-beta.2:
+  version "5.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.0.0-beta.2.tgz#9dfd00b7d73e7d6e0acab9e1f54241a557edbe8d"
+  integrity sha512-qo97XNV7JrYZR9eaFRPfKtOtiF1RBTGIx9v+j5DttaZyAhwgXnhs69YYTzEKgQpiOW8snnAiVdp5/eu+d3/55g==
   dependencies:
     graceful-fs "^4.2.0"
-    tapable "^2.0.0-beta"
+    tapable "^2.0.0-beta.8"
 
 errno@^0.1.1, errno@^0.1.3, errno@~0.1.7:
   version "0.1.7"
@@ -5336,10 +5336,10 @@ table@^5.2.3:
     slice-ansi "^2.1.0"
     string-width "^3.0.0"
 
-tapable@2.0.0-beta.5, tapable@^2.0.0-beta:
-  version "2.0.0-beta.5"
-  resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.0.0-beta.5.tgz#51def4d94c58ad8fadf00cac7661216502fe9c70"
-  integrity sha512-P4o84kC8CD66ZuCs6noh3QLU2ZuaBvMl0yCmp9rr0GXZyIfLd1sB2ZvJZjitQgfds8GDKRLmiiAcssr2bEHQ0A==
+tapable@2.0.0-beta.8, tapable@^2.0.0-beta.8:
+  version "2.0.0-beta.8"
+  resolved "https://registry.yarnpkg.com/tapable/-/tapable-2.0.0-beta.8.tgz#0a8d42f6895d43d5a895de15d9a9e3e425f72a0a"
+  integrity sha512-7qMajFcHb2O+aWufLoAvKhEehIwikXUTH1s8RP4R5gSYMIB0Tmypp+J90EtSNVbIlI7oB0Oz8ZlpJUJlZ5owxQ==
 
 terser-webpack-plugin@^1.2.1:
   version "1.3.0"
