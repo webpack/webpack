@@ -557,24 +557,27 @@ describe("Compiler", () => {
 			done();
 		});
 		compiler.run((err, stats) => {
-			if(err) return done(err);
+			if (err) return done(err);
 			runCb();
 		});
 	});
 	it("should call afterDone hook after other callbacks (instance cb)", function(done) {
 		const instanceCb = jest.fn();
-		const compiler = webpack({
-			context: __dirname,
-			mode: "production",
-			entry: "./c",
-			output: {
-				path: "/",
-				filename: "bundle.js"
+		const compiler = webpack(
+			{
+				context: __dirname,
+				mode: "production",
+				entry: "./c",
+				output: {
+					path: "/",
+					filename: "bundle.js"
+				}
+			},
+			(err, stats) => {
+				if (err) return done(err);
+				instanceCb();
 			}
-		}, (err, stats) => {
-			if(err) return done(err);
-			instanceCb();
-		});
+		);
 		compiler.outputFileSystem = new MemoryFs();
 		const doneHookCb = jest.fn();
 		compiler.hooks.done.tap("afterDoneRunTest", doneHookCb);
