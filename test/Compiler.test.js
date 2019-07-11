@@ -516,6 +516,134 @@ describe("Compiler", () => {
 			});
 		});
 	});
+	it("should run again correctly inside afterDone hook", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		let once = true;
+		compiler.hooks.afterDone.tap("RunAgainTest", () => {
+			if (!once) return;
+			once = false;
+			compiler.run((err, stats) => {
+				if (err) return done(err);
+				done();
+			});
+		});
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+		});
+	});
+	it("should call afterDone hook after other callbacks (run)", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		const runCb = jest.fn();
+		const doneHookCb = jest.fn();
+		compiler.hooks.done.tap("afterDoneRunTest", doneHookCb);
+		compiler.hooks.afterDone.tap("afterDoneRunTest", () => {
+			expect(runCb).toHaveBeenCalled();
+			expect(doneHookCb).toHaveBeenCalled();
+			done();
+		});
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+			runCb();
+		});
+	});
+	it("should call afterDone hook after other callbacks (instance cb)", function(done) {
+		const instanceCb = jest.fn();
+		const compiler = webpack(
+			{
+				context: __dirname,
+				mode: "production",
+				entry: "./c",
+				output: {
+					path: "/",
+					filename: "bundle.js"
+				}
+			},
+			(err, stats) => {
+				if (err) return done(err);
+				instanceCb();
+			}
+		);
+		compiler.outputFileSystem = new MemoryFs();
+		const doneHookCb = jest.fn();
+		compiler.hooks.done.tap("afterDoneRunTest", doneHookCb);
+		compiler.hooks.afterDone.tap("afterDoneRunTest", () => {
+			expect(instanceCb).toHaveBeenCalled();
+			expect(doneHookCb).toHaveBeenCalled();
+			done();
+		});
+	});
+	it("should call afterDone hook after other callbacks (watch)", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		const doneHookCb = jest.fn();
+		const watchCb = jest.fn();
+		const invalidateCb = jest.fn();
+		compiler.hooks.done.tap("afterDoneWatchTest", doneHookCb);
+		compiler.hooks.afterDone.tap("afterDoneWatchTest", () => {
+			expect(doneHookCb).toHaveBeenCalled();
+			expect(watchCb).toHaveBeenCalled();
+			expect(invalidateCb).toHaveBeenCalled();
+			done();
+		});
+		const watch = compiler.watch({}, (err, stats) => {
+			if (err) return done(err);
+			watchCb();
+		});
+		watch.invalidate(invalidateCb);
+	});
+	it("should call afterDone hook after other callbacks (watch close)", function(done) {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./c",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		const watchCloseCb = jest.fn();
+		const watchCloseHookCb = jest.fn();
+		const invalidateCb = jest.fn();
+		compiler.hooks.watchClose.tap("afterDoneWatchTest", watchCloseHookCb);
+		compiler.hooks.afterDone.tap("afterDoneWatchTest", () => {
+			expect(watchCloseCb).toHaveBeenCalled();
+			expect(watchCloseHookCb).toHaveBeenCalled();
+			expect(invalidateCb).toHaveBeenCalled();
+			done();
+		});
+		const watch = compiler.watch({}, (err, stats) => {
+			if (err) return done(err);
+			watch.close(watchCloseCb);
+		});
+		watch.invalidate(invalidateCb);
+	});
 	it("should flag watchMode as true in watch", function(done) {
 		const compiler = webpack({
 			context: __dirname,
