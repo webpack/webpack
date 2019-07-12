@@ -59,6 +59,7 @@
     "lodash": "^4.17.4",
     "memory-fs": "~0.4.1",
     "mkdirp": "^0.5.1",
+    "open-cli": "^5.0.0",
     "prettier": "^1.14.3",
     "pretty-format": "24.0.0",
     "pug": "^2.0.3",
@@ -111,6 +112,7 @@
     "appveyor:unit": "yarn cover:unit --ci %JEST%",
     "appveyor:benchmark": "yarn benchmark --ci",
     "build:examples": "cd examples && node buildAll.js",
+    "type-report": "rimraf coverage && yarn cover:types && yarn cover:report && open-cli coverage/lcov-report/index.html",
     "pretest": "yarn lint",
     "prelint": "yarn setup",
     "lint": "yarn code-lint && yarn jest-lint && yarn type-lint && yarn special-lint",
@@ -127,6 +129,7 @@
     "cover:basic": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/te{st/TestCasesNormal,st/StatsTestCases,st/ConfigTestCases}.test.js\" --coverage",
     "cover:integration": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.test.js\" --coverage",
     "cover:unit": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.unittest.js\" --coverage",
+    "cover:types": "node tooling/type-coverage.js",
     "cover:report": "istanbul report"
   },
   "husky": {
