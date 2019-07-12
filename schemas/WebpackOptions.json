@@ -1310,7 +1310,8 @@
                     "description": "Redirect only exact matching request",
                     "type": "boolean"
                   }
-                }
+                },
+                "required": ["alias", "name"]
               }
             }
           ]
