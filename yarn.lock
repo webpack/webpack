@@ -6055,10 +6055,10 @@ wast-loader@^1.5.5:
   dependencies:
     wabt "1.0.0-nightly.20180421"
 
-watchpack@2.0.0-beta.6:
-  version "2.0.0-beta.6"
-  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-2.0.0-beta.6.tgz#19dcb5bfebd2c580b05ed8991140b3fb46ab449c"
-  integrity sha512-CUtzBZ/aFrhsBPs1SJKWpaVG09mRC1ChCL8YZnR/uZf8IPddG7PcdUIGRnDb3yqaCYSyt23u/UxQUGKxGp0rDA==
+watchpack@2.0.0-beta.7:
+  version "2.0.0-beta.7"
+  resolved "https://registry.yarnpkg.com/watchpack/-/watchpack-2.0.0-beta.7.tgz#7233e896f679f6ad2c74034124d1962849c03a45"
+  integrity sha512-XFXX+sKAabAZxIPKczVWlSKU5ckfbA7APnULjygoCAU4E/cHFSKQyC3WMN56ePulj0ZvrkLoXsDvTNGHjAHDCw==
   dependencies:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.1.2"
