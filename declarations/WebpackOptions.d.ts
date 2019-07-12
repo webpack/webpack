@@ -696,11 +696,11 @@ export interface ResolveOptions {
 				/**
 				 * New request
 				 */
-				alias?: string | string[] | false;
+				alias: string | string[] | false;
 				/**
 				 * Request to be redirected
 				 */
-				name?: string;
+				name: string;
 				/**
 				 * Redirect only exact matching request
 				 */
