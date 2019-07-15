@@ -2,6 +2,7 @@
 /test/js
 /test/browsertest/js
 /test/fixtures/temp-cache-fixture
+/test/fixtures/temp-watch-*
 /benchmark/js
 /benchmark/fixtures
 /examples/**/dist

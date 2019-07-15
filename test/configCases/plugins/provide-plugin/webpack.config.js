@@ -11,6 +11,12 @@ module.exports = {
 			es2015_alias: ["./harmony", "alias"],
 			es2015_year: ["./harmony", "year"],
 			"this.aaa": "./aaa",
+			ooa: { module: "./ooa" },
+			oob: { module: ["./oob", "bbb"] },
+			ooc: {
+				module: "./ooc",
+				exclude: "configCases/plugins/provide-plugin/index.js"
+			},
 			esm: "fail"
 		})
 	]

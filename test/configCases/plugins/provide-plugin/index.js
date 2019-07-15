@@ -61,3 +61,17 @@ it("should not provide for mjs", function(){
 	var foo = require("./foo.mjs").default;
 	expect(foo()).toBe("undefined");
 });
+
+// Object structure
+
+it("should provide a module for a simple free var as object.module", function() {
+	expect(ooa).toBe("ooa");
+});
+
+it("should provide a module for a nested var as object.module", function() {
+	expect(oob).toBe("oob");
+});
+
+it("should exclude file from being provided", function() {
+	expect(typeof ooc).toEqual("undefined");
+});
