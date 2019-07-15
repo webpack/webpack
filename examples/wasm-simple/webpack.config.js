@@ -8,7 +8,7 @@ module.exports = {
 		rules: [
 			{
 				test: /\.wasm$/,
-				type: "webassembly/async-experimental"
+				type: "webassembly/async"
 			}
 		]
 	},

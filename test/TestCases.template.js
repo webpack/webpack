@@ -159,7 +159,7 @@ const describeCases = config => {
 										{
 											test: /\.wat$/i,
 											loader: "wast-loader",
-											type: "webassembly/async-experimental"
+											type: "webassembly/async"
 										}
 									]
 								},
