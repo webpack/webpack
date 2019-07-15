@@ -116,27 +116,26 @@ describe("StatsTestCases", () => {
 				if (Array.isArray(options) && !toStringOptions.children) {
 					toStringOptions.children = options.map(o => o.stats);
 				}
+				// mock timestamps
+				for (const s of [].concat(stats.stats || stats)) {
+					expect(s.startTime).toBeGreaterThan(0);
+					expect(s.endTime).toBeGreaterThan(0);
+					s.endTime = new Date("04/20/1970, 12:42:42 PM").getTime();
+					s.startTime = s.endTime - 1234;
+				}
 				let actual = stats.toString(toStringOptions);
 				expect(typeof actual).toBe("string");
 				if (!hasColorSetting) {
 					actual = actual
 						.replace(/\u001b\[[0-9;]*m/g, "")
-						.replace(/[0-9]+(\s?ms)/g, "X$1")
-						.replace(
-							/^(\s*Built at:) (.*)$/gm,
-							"$1 Thu Jan 01 1970 00:00:00 GMT"
-						);
+						.replace(/[0-9]+(\s?ms)/g, "X$1");
 				} else {
 					actual = actual
 						.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
 						.replace(/\u001b\[1m/g, "<CLR=BOLD>")
 						.replace(/\u001b\[39m\u001b\[22m/g, "</CLR>")
 						.replace(/\u001b\[([0-9;]*)m/g, "<CLR=$1>")
-						.replace(/[0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2")
-						.replace(
-							/^(\s*Built at:) (.*)$/gm,
-							"$1 Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT"
-						);
+						.replace(/[0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2");
 				}
 				const testPath = path.join(base, testName);
 				const testPathPattern = testPath.replace(
