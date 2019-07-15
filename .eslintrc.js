@@ -71,7 +71,8 @@ module.exports = {
 					};
 					return acc;
 				}, {})),
-				extends: "extends"
+				extends: "extends",
+				constructor: "constructor"
 			}
 		}
 	},
