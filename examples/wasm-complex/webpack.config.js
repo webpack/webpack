@@ -8,7 +8,7 @@ module.exports = {
 			{
 				test: /\.wat$/,
 				use: "wast-loader",
-				type: "webassembly/async-experimental"
+				type: "webassembly/async"
 			}
 		]
 	},
