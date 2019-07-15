@@ -1,3 +1,3 @@
-import png from "../../fixtures/images/file.png";
-import svg from "../../fixtures/images/file.svg";
-import jpg from "../../fixtures/images/file.jpg";
+import png from "./images/file.png";
+import svg from "./images/file.svg";
+import jpg from "./images/file.jpg";

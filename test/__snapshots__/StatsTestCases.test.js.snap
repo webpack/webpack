@@ -3485,19 +3485,19 @@ Entrypoint main = bundle.js
 `;
 
 exports[`StatsTestCases should print correct stats for url 1`] = `
-"Hash: 84cfe996d8c87d13c1d5
+"Hash: 8c21295417da33fefb11
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
                    Asset       Size  Chunks             Chunk Names
-817121871a23039712ce.jpg   10.9 KiB   {179}  [emitted]  main
-83a9c5c6df0321e72e7e.svg  656 bytes   {179}  [emitted]  main
-               bundle.js   4.51 KiB   {179}  [emitted]  main
-d01becd2595e02413b53.png     26 KiB   {179}  [emitted]  main
-Entrypoint main = bundle.js d01becd2595e02413b53.png 83a9c5c6df0321e72e7e.svg 817121871a23039712ce.jpg
- [10] ./index.js 150 bytes {179} [built]
-[290] (webpack)/test/fixtures/images/file.png 26 KiB (url) 68 bytes (javascript) {179} [built]
-[341] (webpack)/test/fixtures/images/file.svg 656 bytes (url) 68 bytes (javascript) {179} [built]
-[393] (webpack)/test/fixtures/images/file.jpg 10.9 KiB (url) 68 bytes (javascript) {179} [built]
+121d6649f2d3d8cda122.png     26 KiB   {179}  [emitted]  main
+44af8fe384aadccba06e.svg  656 bytes   {179}  [emitted]  main
+9209afbfd5fe9f0d1217.jpg   10.9 KiB   {179}  [emitted]  main
+               bundle.js   4.43 KiB   {179}  [emitted]  main
+Entrypoint main = bundle.js 9209afbfd5fe9f0d1217.jpg 121d6649f2d3d8cda122.png 44af8fe384aadccba06e.svg
+ [10] ./index.js 111 bytes {179} [built]
+[359] ./images/file.jpg 10.9 KiB (url) 68 bytes (javascript) {179} [built]
+[440] ./images/file.png 26 KiB (url) 68 bytes (javascript) {179} [built]
+[811] ./images/file.svg 656 bytes (url) 68 bytes (javascript) {179} [built]
     + 4 hidden modules"
 `;
 
