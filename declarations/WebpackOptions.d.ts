@@ -1094,7 +1094,7 @@ export interface OutputOptions {
 	/**
 	 * Algorithm used for generation the hash (see node.js crypto package)
 	 */
-	hashFunction?: string | (new () => import("../lib/util/createHash").Hash);
+	hashFunction?: string | import("../lib/util/createHash").HashConstructor;
 	/**
 	 * Any string which is added to the hash to salt it
 	 */
