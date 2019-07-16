@@ -141,9 +141,9 @@ Built at: 1970-04-20 12:42:42
 c9fc77a744ca46b7fe30.jpg   10.9 KiB   {179}  [emitted]  main
 Entrypoint main = bundle.js c9fc77a744ca46b7fe30.jpg 2971bea717d1ea440379.png 44af8fe384aadccba06e.svg
  [10] ./index.js 111 bytes {179} [built]
-[359] ./images/file.jpg 10.9 KiB (asset) 68 bytes (javascript) {179} [built]
-[440] ./images/file.png 25.9 KiB (asset) 68 bytes (javascript) {179} [built]
-[811] ./images/file.svg 656 bytes (asset) 68 bytes (javascript) {179} [built]
+[359] ./images/file.jpg 10.9 KiB (asset) 42 bytes (javascript) {179} [built]
+[440] ./images/file.png 25.9 KiB (asset) 42 bytes (javascript) {179} [built]
+[811] ./images/file.svg 656 bytes (asset) 42 bytes (javascript) {179} [built]
     + 4 hidden modules"
 `;
 
