@@ -33,24 +33,6 @@ module.exports = {
 		"no-loop-func": "warn",
 		indent: "off",
 		"no-console": "off",
-		"valid-jsdoc": [
-			"error",
-			{
-				prefer: {
-					return: "returns",
-					prop: "property",
-					memberof: "DONTUSE",
-					class: "DONTUSE",
-					inheritdoc: "DONTUSE",
-					description: "DONTUSE",
-					readonly: "DONTUSE"
-				},
-				preferType: {
-					"*": "any"
-				},
-				requireReturnType: true
-			}
-		],
 		"node/no-unsupported-features": "error",
 		"node/no-deprecated-api": "error",
 		"node/no-missing-import": "error",
@@ -59,7 +41,15 @@ module.exports = {
 		"node/no-unpublished-require": "error",
 		"node/process-exit-as-throw": "error",
 		"jsdoc/require-hyphen-before-param-description": ["error", "never"],
-		"jsdoc/check-tag-names": "error"
+		"jsdoc/check-tag-names": "error",
+		"jsdoc/check-param-names": "error",
+		"jsdoc/require-param-description": "error",
+		"jsdoc/require-param-name": "error",
+		"jsdoc/require-param-type": "error",
+		"jsdoc/require-param": "error",
+		"jsdoc/require-returns-description": "error",
+		"jsdoc/require-returns-type": "error",
+		"jsdoc/require-returns": "error"
 	},
 	settings: {
 		jsdoc: {
@@ -72,8 +62,17 @@ module.exports = {
 					return acc;
 				}, {})),
 				extends: "extends",
-				constructor: "constructor"
-			}
+				return: "returns",
+				constructor: "constructor",
+				prop: "property",
+				arg: "param",
+				augments: "extends",
+				description: false,
+				desc: false,
+				inheritdoc: false,
+				class: false
+			},
+			overrideReplacesDocs: false
 		}
 	},
 	overrides: [
