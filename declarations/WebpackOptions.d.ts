@@ -499,6 +499,10 @@ export interface EntryObject {
  */
 export interface Experiments {
 	/**
+	 * Allow module type 'asset' to generate assets
+	 */
+	asset?: boolean;
+	/**
 	 * Support WebAssembly as asynchronous EcmaScript Module
 	 */
 	asyncWebAssembly?: boolean;
@@ -1099,6 +1103,10 @@ export interface OptimizationSplitChunksCacheGroup {
  */
 export interface OutputOptions {
 	/**
+	 * The filename of URL modules as relative path inside the `output.path` directory.
+	 */
+	assetModuleFilename?: string;
+	/**
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?:
@@ -1250,10 +1258,6 @@ export interface OutputOptions {
 	 * If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.
 	 */
 	umdNamedDefine?: boolean;
-	/**
-	 * The filename of URL modules as relative path inside the `output.path` directory.
-	 */
-	urlModuleFilename?: string;
 	/**
 	 * The filename of WebAssembly modules as relative path inside the `output.path` directory.
 	 */

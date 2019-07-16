@@ -5,11 +5,14 @@ module.exports = {
 		rules: [
 			{
 				test: /\.(png|jpg|svg)$/,
-				type: "url/experimental"
+				type: "asset"
 			}
 		]
 	},
 	output: {
 		filename: "bundle.js"
+	},
+	experiments: {
+		asset: true
 	}
 };

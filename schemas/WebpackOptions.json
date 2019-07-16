@@ -98,6 +98,10 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "asset": {
+          "description": "Allow module type 'asset' to generate assets",
+          "type": "boolean"
+        },
         "asyncWebAssembly": {
           "description": "Support WebAssembly as asynchronous EcmaScript Module",
           "type": "boolean"
@@ -977,6 +981,11 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "assetModuleFilename": {
+          "description": "The filename of URL modules as relative path inside the `output.path` directory.",
+          "type": "string",
+          "absolutePath": false
+        },
         "auxiliaryComment": {
           "description": "Add a comment in the UMD wrapper.",
           "anyOf": [
@@ -1208,11 +1217,6 @@
         "umdNamedDefine": {
           "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
           "type": "boolean"
-        },
-        "urlModuleFilename": {
-          "description": "The filename of URL modules as relative path inside the `output.path` directory.",
-          "type": "string",
-          "absolutePath": false
         },
         "webassemblyModuleFilename": {
           "description": "The filename of WebAssembly modules as relative path inside the `output.path` directory.",

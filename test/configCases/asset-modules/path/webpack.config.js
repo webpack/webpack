@@ -1,15 +1,17 @@
 module.exports = {
 	mode: "development",
 	output: {
-		publicPath: "assets/",
-		urlModuleFilename: "file[ext]"
+		assetModuleFilename: "images/file[ext]"
 	},
 	module: {
 		rules: [
 			{
 				test: /\.png$/,
-				type: "url/experimental"
+				type: "asset"
 			}
 		]
+	},
+	experiments: {
+		asset: true
 	}
 };

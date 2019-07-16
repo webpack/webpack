@@ -1,7 +1,7 @@
 module.exports = {
 	mode: "development",
 	output: {
-		urlModuleFilename: "images/file[ext]"
+		assetModuleFilename: "images/file[ext]"
 	},
 	module: {
 		rules: [

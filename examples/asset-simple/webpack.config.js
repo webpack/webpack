@@ -1,13 +1,16 @@
 module.exports = {
 	output: {
-		urlModuleFilename: "images/[hash][ext]"
+		assetModuleFilename: "images/[hash][ext]"
 	},
 	module: {
 		rules: [
 			{
 				test: /\.(png|jpg|svg)$/,
-				type: "url/experimental"
+				type: "asset"
 			}
 		]
+	},
+	experiments: {
+		asset: true
 	}
 };
