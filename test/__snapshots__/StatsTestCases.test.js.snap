@@ -131,18 +131,18 @@ chunk {847} 49dd7266942f0ed4ae64.js 899 bytes [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for asset 1`] = `
-"Hash: f5998880810fc9b61ddc
+"Hash: 7be67d21b7b44b33be9c
 Time: Xms
 Built at: 1970-04-20 12:42:42
                    Asset       Size  Chunks             Chunk Names
-2971bea717d1ea440379.png   25.9 KiB   {179}  [emitted]  main
 44af8fe384aadccba06e.svg  656 bytes   {179}  [emitted]  main
+62787d6ac9d673cc8926.png   14.6 KiB   {179}  [emitted]  main
                bundle.js   4.43 KiB   {179}  [emitted]  main
-c9fc77a744ca46b7fe30.jpg   10.9 KiB   {179}  [emitted]  main
-Entrypoint main = bundle.js c9fc77a744ca46b7fe30.jpg 2971bea717d1ea440379.png 44af8fe384aadccba06e.svg
+c2a9ba2e6ec92fd70245.jpg   5.89 KiB   {179}  [emitted]  main
+Entrypoint main = bundle.js c2a9ba2e6ec92fd70245.jpg 62787d6ac9d673cc8926.png 44af8fe384aadccba06e.svg
  [10] ./index.js 111 bytes {179} [built]
-[359] ./images/file.jpg 10.9 KiB (asset) 42 bytes (javascript) {179} [built]
-[440] ./images/file.png 25.9 KiB (asset) 42 bytes (javascript) {179} [built]
+[359] ./images/file.jpg 5.89 KiB (asset) 42 bytes (javascript) {179} [built]
+[440] ./images/file.png 14.6 KiB (asset) 42 bytes (javascript) {179} [built]
 [811] ./images/file.svg 656 bytes (asset) 42 bytes (javascript) {179} [built]
     + 4 hidden modules"
 `;
