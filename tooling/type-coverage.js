@@ -15,17 +15,40 @@ const projectPaths = [
 	path.resolve(__dirname, "../declarations.d.ts")
 ];
 
+/**
+ * @param {string} file filename
+ * @returns {boolean} true, when file is part of the project
+ */
 const isProjectFile = file => {
 	return projectPaths.some(p =>
 		file.toLowerCase().startsWith(p.replace(/\\/g, "/").toLowerCase())
 	);
 };
 
+/**
+ * @typedef {Object} Location
+ * @property {number} line
+ * @property {number} column
+ */
+
+/**
+ * @typedef {Object} FileReport
+ * @property {string} path
+ * @property {Record<number, { start: Location, end: Location }>} statementMap
+ * @property {{}} fnMap
+ * @property {{}} branchMap
+ * @property {Record<number, number>} s
+ * @property {{}} f
+ * @property {{}} b
+ */
+
+/** @type {Record<string, FileReport>} */
 const coverageReport = Object.create(null);
 
 for (const sourceFile of program.getSourceFiles()) {
 	let file = sourceFile.fileName;
 	if (isProjectFile(file)) {
+		/** @type {FileReport} */
 		const rep = {
 			path: path.sep !== "/" ? file.replace(/\//g, path.sep) : file,
 			statementMap: {},
