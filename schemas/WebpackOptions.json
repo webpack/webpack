@@ -982,7 +982,7 @@
       "additionalProperties": false,
       "properties": {
         "assetModuleFilename": {
-          "description": "The filename of URL modules as relative path inside the `output.path` directory.",
+          "description": "The filename of asset modules as relative path inside the `output.path` directory.",
           "type": "string",
           "absolutePath": false
         },

@@ -1,4 +1,4 @@
-This very simple example shows usage of Url.
+This very simple example shows usage of the asset module type.
 
 Files can be imported like other modules without file-loader.
 
@@ -35,6 +35,27 @@ function createImageElement(title, src) {
 [png, jpg, svg].forEach(src => {
 	createImageElement(src.split(".").pop(), src);
 });
+```
+
+# webpack.config.js
+
+```javascript
+module.exports = {
+	output: {
+		assetModuleFilename: "images/[hash][ext]"
+	},
+	module: {
+		rules: [
+			{
+				test: /\.(png|jpg|svg)$/,
+				type: "asset"
+			}
+		]
+	},
+	experiments: {
+		asset: true
+	}
+};
 ```
 
 # js/output.js
@@ -149,7 +170,7 @@ function createImageElement(title, src) {
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 "use strict";
-module.exports = __webpack_require__.p + "images/75f4aafa02fb853644d1.png";
+module.exports = __webpack_require__.p + "images/24e804317f239f7906e1.png";
 
 /***/ }),
 /* 2 */
@@ -161,7 +182,7 @@ module.exports = __webpack_require__.p + "images/75f4aafa02fb853644d1.png";
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 "use strict";
-module.exports = __webpack_require__.p + "images/7b0228d7110c654c8ba5.jpg";
+module.exports = __webpack_require__.p + "images/afb284cb97b4374bd1fc.jpg";
 
 /***/ }),
 /* 3 */
@@ -173,7 +194,7 @@ module.exports = __webpack_require__.p + "images/7b0228d7110c654c8ba5.jpg";
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 "use strict";
-module.exports = __webpack_require__.p + "images/e3cb29185318970c0cbd.svg";
+module.exports = __webpack_require__.p + "images/1be7b55b29524343503e.svg";
 
 /***/ })
 /******/ ],
@@ -239,22 +260,22 @@ module.exports = __webpack_require__.p + "images/e3cb29185318970c0cbd.svg";
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 5.0.0-alpha.18
                           Asset       Size  Chunks             Chunk Names
-images/75f4aafa02fb853644d1.png   26.1 KiB     {0}  [emitted]  main
-images/7b0228d7110c654c8ba5.jpg   10.9 KiB     {0}  [emitted]  main
-images/e3cb29185318970c0cbd.svg  656 bytes     {0}  [emitted]  main
+images/1be7b55b29524343503e.svg  656 bytes   ({0})  [emitted]  (main)
+images/24e804317f239f7906e1.png   14.6 KiB   ({0})  [emitted]  (main)
+images/afb284cb97b4374bd1fc.jpg   5.89 KiB   ({0})  [emitted]  (main)
                       output.js   6.23 KiB     {0}  [emitted]  main
-Entrypoint main = output.js images/75f4aafa02fb853644d1.png images/7b0228d7110c654c8ba5.jpg images/e3cb29185318970c0cbd.svg
-chunk {0} output.js, images/75f4aafa02fb853644d1.png, images/7b0228d7110c654c8ba5.jpg, images/e3cb29185318970c0cbd.svg (main) 868 bytes (javascript) 37.6 KiB (asset) 920 bytes (runtime) [entry] [rendered]
+Entrypoint main = output.js (images/24e804317f239f7906e1.png images/afb284cb97b4374bd1fc.jpg images/1be7b55b29524343503e.svg)
+chunk {0} output.js (main) 868 bytes (javascript) 21.1 KiB (asset) 920 bytes (runtime) [entry] [rendered]
     > ./example.js main
  [0] ./example.js 742 bytes {0} [built]
      [no exports]
      [used exports unknown]
      entry ./example.js main
- [1] ./images/file.png 26.1 KiB (asset) 42 bytes (javascript) {0} [built]
+ [1] ./images/file.png 14.6 KiB (asset) 42 bytes (javascript) {0} [built]
      [used exports unknown]
      harmony side effect evaluation ./images/file.png [0] ./example.js 1:0-36
      harmony import specifier ./images/file.png [0] ./example.js 28:1-4
- [2] ./images/file.jpg 10.9 KiB (asset) 42 bytes (javascript) {0} [built]
+ [2] ./images/file.jpg 5.89 KiB (asset) 42 bytes (javascript) {0} [built]
      [used exports unknown]
      harmony side effect evaluation ./images/file.jpg [0] ./example.js 2:0-36
      harmony import specifier ./images/file.jpg [0] ./example.js 28:6-9

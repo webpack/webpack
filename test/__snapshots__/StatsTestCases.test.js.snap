@@ -134,12 +134,12 @@ exports[`StatsTestCases should print correct stats for asset 1`] = `
 "Hash: 7be67d21b7b44b33be9c
 Time: Xms
 Built at: 1970-04-20 12:42:42
-                   Asset       Size  Chunks             Chunk Names
-44af8fe384aadccba06e.svg  656 bytes   {179}  [emitted]  main
-62787d6ac9d673cc8926.png   14.6 KiB   {179}  [emitted]  main
-               bundle.js   4.43 KiB   {179}  [emitted]  main
-c2a9ba2e6ec92fd70245.jpg   5.89 KiB   {179}  [emitted]  main
-Entrypoint main = bundle.js c2a9ba2e6ec92fd70245.jpg 62787d6ac9d673cc8926.png 44af8fe384aadccba06e.svg
+                   Asset       Size   Chunks             Chunk Names
+44af8fe384aadccba06e.svg  656 bytes  ({179})  [emitted]  (main)
+62787d6ac9d673cc8926.png   14.6 KiB  ({179})  [emitted]  (main)
+               bundle.js   4.43 KiB    {179}  [emitted]  main
+c2a9ba2e6ec92fd70245.jpg   5.89 KiB  ({179})  [emitted]  (main)
+Entrypoint main = bundle.js (44af8fe384aadccba06e.svg 62787d6ac9d673cc8926.png c2a9ba2e6ec92fd70245.jpg)
  [10] ./index.js 111 bytes {179} [built]
 [359] ./images/file.jpg 5.89 KiB (asset) 42 bytes (javascript) {179} [built]
 [440] ./images/file.png 14.6 KiB (asset) 42 bytes (javascript) {179} [built]
@@ -737,7 +737,7 @@ Built at: 1970-04-20 12:42:42
     Asset      Size  Chunks             Chunk Names
 bundle.js  2.11 KiB   {179}  [emitted]  main
  + 1 hidden asset
-Entrypoint main = bundle.js
+Entrypoint main = bundle.js (5bcd36918d225eeda398ea3f372b7f16.json)
  [10] ./index.js 77 bytes {179} [built]
 [438] ./a.txt 43 bytes {179} [built]
     + 3 hidden modules"
@@ -1333,19 +1333,33 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for module-assets 1`] = `
-"Hash: 729aea76128ad95ba52a
+"Hash: f614cc3437831796faec
 Time: Xms
 Built at: 1970-04-20 12:42:42
+  Asset       Size          Chunks             Chunk Names
+  1.png     21 KiB         ({786})  [emitted]  (a)
+  2.png     21 KiB  ({128}, {786})  [emitted]  (a, b)
+   a.js  976 bytes           {786}  [emitted]  a
+   b.js  608 bytes           {128}  [emitted]  b
+main.js   8.96 KiB           {179}  [emitted]  main
 Entrypoint main = main.js
-chunk {48} 48.js 68 bytes [rendered]
-  [48] ./node_modules/a/index.js 17 bytes {48} [built]
- [461] ./node_modules/a/1.png 51 bytes {48} [built] [1 asset]
-chunk {179} main.js (main) 12 bytes (javascript) 4.76 KiB (runtime) [entry] [rendered]
- [10] ./index.js 12 bytes {179} [built]
+Chunk Group a = a.js (1.png 2.png)
+Chunk Group b = b.js (2.png)
+chunk {128} b.js (b) 69 bytes [rendered]
+ [397] ./node_modules/b/index.js 18 bytes {128} [built]
+ [912] ./node_modules/a/2.png 51 bytes {128} {786} [built] [1 asset]
+chunk {179} main.js (main) 82 bytes (javascript) 4.79 KiB (runtime) [entry] [rendered]
+ [10] ./index.js 82 bytes {179} [built]
      + 7 hidden chunk modules
- [10] ./index.js 12 bytes {179} [built]
- [48] ./node_modules/a/index.js 17 bytes {48} [built]
-[461] ./node_modules/a/1.png 51 bytes {48} [built] [1 asset]
+chunk {786} a.js (a) 138 bytes [rendered]
+  [48] ./node_modules/a/index.js 36 bytes {786} [built]
+ [461] ./node_modules/a/1.png 51 bytes {786} [built] [1 asset]
+ [912] ./node_modules/a/2.png 51 bytes {128} {786} [built] [1 asset]
+ [10] ./index.js 82 bytes {179} [built]
+ [48] ./node_modules/a/index.js 36 bytes {786} [built]
+[397] ./node_modules/b/index.js 18 bytes {128} [built]
+[461] ./node_modules/a/1.png 51 bytes {786} [built] [1 asset]
+[912] ./node_modules/a/2.png 51 bytes {128} {786} [built] [1 asset]
     + 7 hidden modules"
 `;
 
@@ -3528,25 +3542,25 @@ exports[`StatsTestCases should print correct stats for wasm-explorer-examples-sy
 "Hash: 45a1a031c66064a66e82
 Time: Xms
 Built at: 1970-04-20 12:42:42
-                           Asset       Size  Chunks             Chunk Names
-1d55f77c08cd19684f13.module.wasm  154 bytes   {325}  [emitted]
-200c03abdc3f4ae1e15c.module.wasm  290 bytes   {780}  [emitted]
-                   230.bundle.js  212 bytes   {230}  [emitted]
-256e72dd8b9a83a6e45b.module.wasm  120 bytes   {325}  [emitted]
-                   325.bundle.js   3.96 KiB   {325}  [emitted]
-                   526.bundle.js  329 bytes   {526}  [emitted]
-                   780.bundle.js  505 bytes   {780}  [emitted]
-                    99.bundle.js  210 bytes    {99}  [emitted]
-a0e9dd97d7ced35a5b2c.module.wasm  154 bytes   {780}  [emitted]
-                       bundle.js   10.9 KiB   {520}  [emitted]  main-1df31ce3
-d37b3336426771c2a6e2.module.wasm  531 bytes    {99}  [emitted]
-ebd3f263522776d85971.module.wasm  156 bytes   {230}  [emitted]
+                           Asset       Size   Chunks             Chunk Names
+1d55f77c08cd19684f13.module.wasm  154 bytes  ({325})  [emitted]
+200c03abdc3f4ae1e15c.module.wasm  290 bytes  ({780})  [emitted]
+                   230.bundle.js  212 bytes    {230}  [emitted]
+256e72dd8b9a83a6e45b.module.wasm  120 bytes  ({325})  [emitted]
+                   325.bundle.js   3.96 KiB    {325}  [emitted]
+                   526.bundle.js  329 bytes    {526}  [emitted]
+                   780.bundle.js  505 bytes    {780}  [emitted]
+                    99.bundle.js  210 bytes     {99}  [emitted]
+a0e9dd97d7ced35a5b2c.module.wasm  154 bytes  ({780})  [emitted]
+                       bundle.js   10.9 KiB    {520}  [emitted]  main-1df31ce3
+d37b3336426771c2a6e2.module.wasm  531 bytes   ({99})  [emitted]
+ebd3f263522776d85971.module.wasm  156 bytes  ({230})  [emitted]
 Entrypoint main = bundle.js
-chunk {99} 99.bundle.js, d37b3336426771c2a6e2.module.wasm 50 bytes (javascript) 531 bytes (webassembly) [rendered]
+chunk {99} 99.bundle.js 50 bytes (javascript) 531 bytes (webassembly) [rendered]
  [99] ./duff.wasm 50 bytes (javascript) 531 bytes (webassembly) {99} [built]
-chunk {230} 230.bundle.js, ebd3f263522776d85971.module.wasm 50 bytes (javascript) 156 bytes (webassembly) [rendered]
+chunk {230} 230.bundle.js 50 bytes (javascript) 156 bytes (webassembly) [rendered]
  [230] ./Q_rsqrt.wasm 50 bytes (javascript) 156 bytes (webassembly) {230} [built]
-chunk {325} 325.bundle.js, 256e72dd8b9a83a6e45b.module.wasm, 1d55f77c08cd19684f13.module.wasm 1.54 KiB (javascript) 274 bytes (webassembly) [rendered]
+chunk {325} 325.bundle.js 1.54 KiB (javascript) 274 bytes (webassembly) [rendered]
  [287] ./popcnt.wasm 50 bytes (javascript) 120 bytes (webassembly) {325} [built]
  [325] ./tests.js 1.44 KiB {325} [built]
  [819] ./testFunction.wasm 50 bytes (javascript) 154 bytes (webassembly) {325} [built]
@@ -3555,7 +3569,7 @@ chunk {520} bundle.js (main-1df31ce3) 586 bytes (javascript) 5.19 KiB (runtime) 
      + 7 hidden chunk modules
 chunk {526} 526.bundle.js 34 bytes [rendered] split chunk (cache group: defaultVendors)
  [526] ./node_modules/env.js 34 bytes {526} [built]
-chunk {780} 780.bundle.js, a0e9dd97d7ced35a5b2c.module.wasm, 200c03abdc3f4ae1e15c.module.wasm 110 bytes (javascript) 444 bytes (webassembly) [rendered]
+chunk {780} 780.bundle.js 110 bytes (javascript) 444 bytes (webassembly) [rendered]
  [143] ./fact.wasm 50 bytes (javascript) 154 bytes (webassembly) {780} [built]
  [151] ./fast-math.wasm 60 bytes (javascript) 290 bytes (webassembly) {780} [built]
  [10] ./index.js 586 bytes {520} [built]

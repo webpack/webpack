@@ -1103,7 +1103,7 @@ export interface OptimizationSplitChunksCacheGroup {
  */
 export interface OutputOptions {
 	/**
-	 * The filename of URL modules as relative path inside the `output.path` directory.
+	 * The filename of asset modules as relative path inside the `output.path` directory.
 	 */
 	assetModuleFilename?: string;
 	/**

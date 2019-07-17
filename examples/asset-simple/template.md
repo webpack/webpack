@@ -1,4 +1,4 @@
-This very simple example shows usage of Url.
+This very simple example shows usage of the asset module type.
 
 Files can be imported like other modules without file-loader.
 
@@ -6,6 +6,12 @@ Files can be imported like other modules without file-loader.
 
 ```javascript
 _{{example.js}}_
+```
+
+# webpack.config.js
+
+```javascript
+_{{webpack.config.js}}_
 ```
 
 # js/output.js
