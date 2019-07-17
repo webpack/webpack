@@ -499,6 +499,10 @@ export interface EntryObject {
  */
 export interface Experiments {
 	/**
+	 * Allow module type 'asset' to generate assets
+	 */
+	asset?: boolean;
+	/**
 	 * Support WebAssembly as asynchronous EcmaScript Module
 	 */
 	asyncWebAssembly?: boolean;
@@ -1098,6 +1102,10 @@ export interface OptimizationSplitChunksCacheGroup {
  * via the `definition` "OutputOptions".
  */
 export interface OutputOptions {
+	/**
+	 * The filename of asset modules as relative path inside the `output.path` directory.
+	 */
+	assetModuleFilename?: string;
 	/**
 	 * Add a comment in the UMD wrapper.
 	 */

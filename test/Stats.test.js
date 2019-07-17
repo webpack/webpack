@@ -82,6 +82,7 @@ Object {
       "assets": Array [
         "entryA.js",
       ],
+      "auxiliaryAssets": Array [],
       "childAssets": Object {},
       "children": Object {},
       "chunks": Array [
@@ -93,6 +94,7 @@ Object {
       "assets": Array [
         "entryB.js",
       ],
+      "auxiliaryAssets": Array [],
       "childAssets": Object {},
       "children": Object {},
       "chunks": Array [
@@ -124,6 +126,7 @@ Object {
       "assets": Array [
         "chunkB.js",
       ],
+      "auxiliaryAssets": Array [],
       "childAssets": Object {},
       "children": Object {},
       "chunks": Array [
@@ -135,6 +138,7 @@ Object {
       "assets": Array [
         "entryA.js",
       ],
+      "auxiliaryAssets": Array [],
       "childAssets": Object {},
       "children": Object {},
       "chunks": Array [
@@ -146,6 +150,7 @@ Object {
       "assets": Array [
         "entryB.js",
       ],
+      "auxiliaryAssets": Array [],
       "childAssets": Object {},
       "children": Object {},
       "chunks": Array [
@@ -174,6 +179,8 @@ Object {
 Object {
   "assets": Array [
     Object {
+      "auxiliaryChunkNames": Array [],
+      "auxiliaryChunks": Array [],
       "chunkNames": Array [
         "chunkB",
       ],
@@ -185,6 +192,8 @@ Object {
       "size": 119,
     },
     Object {
+      "auxiliaryChunkNames": Array [],
+      "auxiliaryChunks": Array [],
       "chunkNames": Array [
         "entryA",
       ],
@@ -196,6 +205,8 @@ Object {
       "size": 239,
     },
     Object {
+      "auxiliaryChunkNames": Array [],
+      "auxiliaryChunks": Array [],
       "chunkNames": Array [
         "entryB",
       ],
