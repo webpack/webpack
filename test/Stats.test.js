@@ -259,13 +259,10 @@ describe("Stats", () => {
 			      "emitted": true,
 			      "filteredRelated": undefined,
 			      "info": Object {
-			        "javascriptModule": false,
-			        "minimized": true,
-			        "size": 107,
+			        "size": 2256,
 			      },
-			      "name": "chunkB.js",
-			      "size": 107,
-			      "type": "asset",
+			      "name": "entryB.js",
+			      "size": 2256,
 			    },
 			  ],
 			  "assetsByChunkName": Object {

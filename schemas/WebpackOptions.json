@@ -2839,6 +2839,9 @@
         "strictModuleExceptionHandling": {
           "$ref": "#/definitions/StrictModuleExceptionHandling"
         },
+        "trustedTypesPolicyName": {
+          "$ref": "#/definitions/TrustedTypesPolicyName"
+        },
         "uniqueName": {
           "$ref": "#/definitions/UniqueName"
         },
@@ -4355,6 +4358,10 @@
           "minLength": 1
         }
       ]
+    },
+    "TrustedTypesPolicyName": {
+      "description": "The name of the trusted types policy created by webpack to serve bundle chunks. Defaults to 'webpack'.",
+      "type": "string"
     },
     "UmdNamedDefine": {
       "description": "If `output.libraryTarget` is set to umd and `output.library` is set, setting this to true will name the AMD module.",
