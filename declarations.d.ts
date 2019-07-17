@@ -243,7 +243,7 @@ declare module "webpack-sources" {
 			map: Object;
 		};
 
-		updateHash(hash: import("./lib/util/createHash").Hash): void;
+		updateHash(hash: import("./lib/util/Hash")): void;
 
 		source(): string | Buffer;
 	}

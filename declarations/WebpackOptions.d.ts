@@ -1170,7 +1170,7 @@ export interface OutputOptions {
 	/**
 	 * Algorithm used for generation the hash (see node.js crypto package)
 	 */
-	hashFunction?: string | (new () => import("../lib/util/createHash").Hash);
+	hashFunction?: string | typeof import("../lib/util/Hash");
 	/**
 	 * Any string which is added to the hash to salt it
 	 */

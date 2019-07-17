@@ -1091,7 +1091,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "(new () => import('../lib/util/createHash').Hash)"
+              "tsType": "typeof import('../lib/util/Hash')"
             }
           ]
         },
