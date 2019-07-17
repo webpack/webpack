@@ -259,5 +259,6 @@ declare namespace WebAssembly {}
 declare const importScripts;
 declare const $crossOriginLoading$;
 declare const chunkId;
+declare const getPolicy;
 
 type TODO = any;
