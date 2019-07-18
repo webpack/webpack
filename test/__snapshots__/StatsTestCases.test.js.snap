@@ -1235,6 +1235,40 @@ Child 4 chunks:
      [5] ./e.js 22 bytes {3} [built]"
 `;
 
+exports[`StatsTestCases should print correct stats for logging 1`] = `
+"Hash: <CLR=BOLD>aa5b75cccf66cd9b1ffa</CLR>
+Time: <CLR=BOLD>X</CLR>ms
+Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
+  <CLR=BOLD>Asset</CLR>      <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22><CLR=BOLD>Chunk Names</CLR>
+<CLR=32,BOLD>main.js</CLR>  3.57 KiB       <CLR=BOLD>0</CLR>  <CLR=32,BOLD>[emitted]</CLR>  main
+Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
+[0] <CLR=BOLD>./index.js</CLR> 0 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
+
+<CLR=BOLD>LOG from MyPlugin</CLR>
+<i> <CLR=32,BOLD>Plugin is now active</CLR>
+
+<CLR=BOLD>LOG from node_modules/custom-loader/index.js node_modules/custom-loader/index.js!index.js</CLR>
+<e> <CLR=31,BOLD>An error</CLR>
+|     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:5:9)
+<w> <CLR=33,BOLD>A warning</CLR>
+|     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:6:9)
+<g> <CLR=36,BOLD>Unimportant</CLR>
+  <i> <CLR=32,BOLD>Info message</CLR>
+  <CLR=BOLD>Just log</CLR>
+  Just debug
+  <t> <CLR=35,BOLD>Measure: Xms</CLR>
+  <g> <CLR=36,BOLD>Nested</CLR>
+    <CLR=BOLD>Just another log</CLR>
+  Trace
+  |     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:15:9)
+  <t> <CLR=35,BOLD>Measure: Xms</CLR>
+  -------
+  <CLR=BOLD>After clear</CLR>
+
+<CLR=BOLD>LOG from node_modules/custom-loader/index.js Named Logger node_modules/custom-loader/index.js!index.js</CLR>
+Message with named logger"
+`;
+
 exports[`StatsTestCases should print correct stats for max-modules 1`] = `
 "Hash: d0b29852af8ccc4949b7
 Time: Xms

@@ -1822,6 +1822,22 @@
           "description": "add the hash of the compilation",
           "type": "boolean"
         },
+        "includeDebugLogging": {
+          "description": "Include debug logging of specified modules (plugins/loaders). Filters can be Strings, RegExps or Functions",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/FilterTypes"
+            }
+          ]
+        },
+        "logging": {
+          "description": "add logging output",
+          "type": "boolean"
+        },
+        "loggingTrace": {
+          "description": "add stack traces to logging output",
+          "type": "boolean"
+        },
         "maxModules": {
           "description": "Set the maximum number of modules to be shown",
           "type": "number"

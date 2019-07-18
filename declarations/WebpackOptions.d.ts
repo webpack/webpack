@@ -1344,6 +1344,18 @@ export interface StatsOptions {
 	 */
 	hash?: boolean;
 	/**
+	 * Include debug logging of specified modules (plugins/loaders). Filters can be Strings, RegExps or Functions
+	 */
+	includeDebugLogging?: FilterTypes;
+	/**
+	 * add logging output
+	 */
+	logging?: boolean;
+	/**
+	 * add stack traces to logging output
+	 */
+	loggingTrace?: boolean;
+	/**
 	 * Set the maximum number of modules to be shown
 	 */
 	maxModules?: number;
