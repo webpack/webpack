@@ -2191,9 +2191,9 @@ eslint-plugin-es@^1.3.1:
     regexpp "^2.0.0"
 
 eslint-plugin-jest@^22.2.2:
-  version "22.9.0"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-22.9.0.tgz#2573dbcb4f1066b96a6e6d3b9aa439c80b28975a"
-  integrity sha512-V89BUiwf76FHlhj1mlNhNyvpzTy8VbWCh2RZpKYz/XDSl/pcuwFiE/LMt7r3q1sRKygzEMjbYeDob8MMuvakXg==
+  version "22.10.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-22.10.0.tgz#a22be77f4dc692808b88ead0059620bda299a97d"
+  integrity sha512-iBEWJn60Z5bctcjacymUnOQ3xN3gdvGOy3tDHpalAa99r4+jwH0CvICsIIHBNXNlJxuklkbx+wxr49tXk6M0tg==
 
 eslint-plugin-jsdoc@^15.3.2:
   version "15.5.3"
