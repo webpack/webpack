@@ -1832,7 +1832,16 @@
         },
         "logging": {
           "description": "add logging output",
-          "type": "boolean"
+          "anyOf": [
+            {
+              "description": "enable/disable logging output (true: shows normal logging output, loglevel: log)",
+              "type": "boolean"
+            },
+            {
+              "description": "specify log level of logging output",
+              "enum": ["error", "warn", "info", "log", "verbose"]
+            }
+          ]
         },
         "loggingTrace": {
           "description": "add stack traces to logging output",

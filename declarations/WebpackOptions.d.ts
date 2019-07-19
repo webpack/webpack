@@ -1350,7 +1350,7 @@ export interface StatsOptions {
 	/**
 	 * add logging output
 	 */
-	logging?: boolean;
+	logging?: boolean | ("error" | "warn" | "info" | "log" | "verbose");
 	/**
 	 * add stack traces to logging output
 	 */

@@ -1246,26 +1246,28 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 
 <CLR=BOLD>LOG from MyPlugin</CLR>
 <i> <CLR=32,BOLD>Plugin is now active</CLR>
+<+> <CLR=36,BOLD>Nested</CLR>
++ 2 hidden lines
 
-<CLR=BOLD>LOG from node_modules/custom-loader/index.js node_modules/custom-loader/index.js!index.js</CLR>
+<CLR=31,BOLD>DEBUG </CLR><CLR=BOLD>LOG from node_modules/custom-loader/index.js node_modules/custom-loader/index.js!index.js</CLR>
 <e> <CLR=31,BOLD>An error</CLR>
 |     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:5:9)
 <w> <CLR=33,BOLD>A warning</CLR>
 |     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:6:9)
-<g> <CLR=36,BOLD>Unimportant</CLR>
+<CLR=36,BOLD>Unimportant</CLR>
   <i> <CLR=32,BOLD>Info message</CLR>
   <CLR=BOLD>Just log</CLR>
   Just debug
   <t> <CLR=35,BOLD>Measure: Xms</CLR>
-  <g> <CLR=36,BOLD>Nested</CLR>
-    <CLR=BOLD>Just another log</CLR>
+  <CLR=36,BOLD>Nested</CLR>
+    <CLR=BOLD>Log inside collapsed group</CLR>
   Trace
   |     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:15:9)
   <t> <CLR=35,BOLD>Measure: Xms</CLR>
   -------
   <CLR=BOLD>After clear</CLR>
 
-<CLR=BOLD>LOG from node_modules/custom-loader/index.js Named Logger node_modules/custom-loader/index.js!index.js</CLR>
+<CLR=31,BOLD>DEBUG </CLR><CLR=BOLD>LOG from node_modules/custom-loader/index.js Named Logger node_modules/custom-loader/index.js!index.js</CLR>
 Message with named logger"
 `;
 
@@ -1937,21 +1939,47 @@ chunk    {3} 3.js 54 bytes <{0}> >{1}< [rendered]
 [4] ./d.js 22 bytes {1} [depth 2] [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
 [5] ./e.js 22 bytes {1} [depth 2] [built]
-    ModuleConcatenation bailout: Module is not an ECMAScript module"
+    ModuleConcatenation bailout: Module is not an ECMAScript module
+
+LOG from MyPlugin
+Group
+  <e> Error
+  <w> Warning
+  <i> Info
+  Log
+  <+> Collaped group
++ 3 hidden lines"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-errors-only 1`] = `""`;
 
 exports[`StatsTestCases should print correct stats for preset-errors-only-error 1`] = `
 "
+LOG from MyPlugin
+<e> Error
++ 9 hidden lines
+
 ERROR in ./index.js
 Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/preset-errors-only-error'
  @ ./index.js 1:0-25"
 `;
 
-exports[`StatsTestCases should print correct stats for preset-errors-warnings 1`] = `""`;
+exports[`StatsTestCases should print correct stats for preset-errors-warnings 1`] = `
+"
+LOG from MyPlugin
+<e> Error
+<w> Warning
++ 8 hidden lines"
+`;
 
-exports[`StatsTestCases should print correct stats for preset-minimal 1`] = `"   6 modules"`;
+exports[`StatsTestCases should print correct stats for preset-minimal 1`] = `
+"   6 modules
+
+LOG from MyPlugin
+<e> Error
+<w> Warning
++ 8 hidden lines"
+`;
 
 exports[`StatsTestCases should print correct stats for preset-minimal-simple 1`] = `"   1 module"`;
 
@@ -2088,7 +2116,17 @@ chunk    {3} 3.js 54 bytes <{0}> >{1}< [rendered]
  [3] ./c.js 54 bytes {3} [depth 1] [built]
      ModuleConcatenation bailout: Module is not an ECMAScript module
      amd require ./c [0] ./index.js 3:0-16
-     [0] Xms -> factory:Xms building:Xms = Xms"
+     [0] Xms -> factory:Xms building:Xms = Xms
+
+LOG from MyPlugin
+Group
+  <e> Error
+  <w> Warning
+  <i> Info
+  Log
+  Collaped group
+    Log inside collapsed group
++ 1 hidden lines"
 `;
 
 exports[`StatsTestCases should print correct stats for resolve-plugin-context 1`] = `
