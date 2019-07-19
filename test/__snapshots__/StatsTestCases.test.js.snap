@@ -2012,7 +2012,13 @@ Entrypoint main = main.js
 [2] ./b.js 22 bytes {2} [built]
 [3] ./c.js 54 bytes {3} [built]
 [4] ./d.js 22 bytes {1} [built]
-[5] ./e.js 22 bytes {1} [built]"
+[5] ./e.js 22 bytes {1} [built]
+
+LOG from MyPlugin
+<e> Error
+<w> Warning
+<i> Info
++ 7 hidden lines"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-normal-performance 1`] = `
