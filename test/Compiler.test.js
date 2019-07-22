@@ -514,4 +514,85 @@ describe("Compiler", () => {
 			done();
 		});
 	});
+	describe("infrastructure logging", () => {
+		const CONSOLE_METHODS = [
+			"error",
+			"warn",
+			"info",
+			"log",
+			"debug",
+			"trace",
+			"profile",
+			"profileEnd",
+			"group",
+			"groupEnd",
+			"groupCollapsed"
+		];
+		const spies = {};
+		beforeEach(() => {
+			for (const method of CONSOLE_METHODS) {
+				if (console[method]) {
+					spies[method] = jest.spyOn(console, method).mockImplementation();
+				}
+			}
+		});
+		afterEach(() => {
+			for (const method in spies) {
+				spies[method].mockRestore();
+				delete spies[method];
+			}
+		});
+		it("should log to the console", done => {
+			class MyPlugin {
+				apply(compiler) {
+					const logger = compiler.getInfrastructureLogger("MyPlugin");
+					logger.group("Group");
+					logger.error("Error");
+					logger.warn("Warning");
+					logger.info("Info");
+					logger.log("Log");
+					logger.debug("Debug");
+					logger.groupCollapsed("Collaped group");
+					logger.log("Log inside collapsed group");
+					logger.groupEnd();
+					logger.groupEnd();
+				}
+			}
+			const compiler = webpack({
+				context: path.join(__dirname, "fixtures"),
+				entry: "./a",
+				output: {
+					path: "/",
+					filename: "bundle.js"
+				},
+				infrastructureLogging: {
+					level: "verbose"
+				},
+				plugins: [new MyPlugin()]
+			});
+			compiler.outputFileSystem = new MemoryFs();
+			compiler.run((err, stats) => {
+				expect(spies.group).toHaveBeenCalledTimes(1);
+				expect(spies.group).toHaveBeenCalledWith("[MyPlugin] Group");
+				expect(spies.groupCollapsed).toHaveBeenCalledTimes(1);
+				expect(spies.groupCollapsed).toHaveBeenCalledWith(
+					"[MyPlugin] Collaped group"
+				);
+				expect(spies.error).toHaveBeenCalledTimes(1);
+				expect(spies.error).toHaveBeenCalledWith("<e> [MyPlugin] Error");
+				expect(spies.warn).toHaveBeenCalledTimes(1);
+				expect(spies.warn).toHaveBeenCalledWith("<w> [MyPlugin] Warning");
+				expect(spies.info).toHaveBeenCalledTimes(1);
+				expect(spies.info).toHaveBeenCalledWith("<i> [MyPlugin] Info");
+				expect(spies.log).toHaveBeenCalledTimes(2);
+				expect(spies.log).toHaveBeenCalledWith("[MyPlugin] Log");
+				expect(spies.log).toHaveBeenCalledWith(
+					"[MyPlugin] Log inside collapsed group"
+				);
+				expect(spies.debug).toHaveBeenCalledTimes(0);
+				expect(spies.groupEnd).toHaveBeenCalledTimes(2);
+				done();
+			});
+		});
+	});
 });
