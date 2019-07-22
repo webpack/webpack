@@ -304,7 +304,7 @@ export interface WebpackOptions {
 		/**
 		 * Log level
 		 */
-		level?: "error" | "warn" | "info" | "log" | "verbose";
+		level?: "none" | "error" | "warn" | "info" | "log" | "verbose";
 	};
 	/**
 	 * Custom values available in the loader context.
@@ -1359,7 +1359,7 @@ export interface StatsOptions {
 	/**
 	 * add logging output
 	 */
-	logging?: boolean | ("error" | "warn" | "info" | "log" | "verbose");
+	logging?: boolean | ("none" | "error" | "warn" | "info" | "log" | "verbose");
 	/**
 	 * Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions
 	 */

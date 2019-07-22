@@ -542,22 +542,24 @@ describe("Compiler", () => {
 				delete spies[method];
 			}
 		});
-		it("should log to the console", done => {
-			class MyPlugin {
-				apply(compiler) {
-					const logger = compiler.getInfrastructureLogger("MyPlugin");
-					logger.group("Group");
-					logger.error("Error");
-					logger.warn("Warning");
-					logger.info("Info");
-					logger.log("Log");
-					logger.debug("Debug");
-					logger.groupCollapsed("Collaped group");
-					logger.log("Log inside collapsed group");
-					logger.groupEnd();
-					logger.groupEnd();
-				}
+		class MyPlugin {
+			apply(compiler) {
+				const logger = compiler.getInfrastructureLogger("MyPlugin");
+				logger.time("Time");
+				logger.group("Group");
+				logger.error("Error");
+				logger.warn("Warning");
+				logger.info("Info");
+				logger.log("Log");
+				logger.debug("Debug");
+				logger.groupCollapsed("Collaped group");
+				logger.log("Log inside collapsed group");
+				logger.groupEnd();
+				logger.groupEnd();
+				logger.timeEnd("Time");
 			}
+		}
+		it("should log to the console (verbose)", done => {
 			const compiler = webpack({
 				context: path.join(__dirname, "fixtures"),
 				entry: "./a",
@@ -584,13 +586,78 @@ describe("Compiler", () => {
 				expect(spies.warn).toHaveBeenCalledWith("<w> [MyPlugin] Warning");
 				expect(spies.info).toHaveBeenCalledTimes(1);
 				expect(spies.info).toHaveBeenCalledWith("<i> [MyPlugin] Info");
-				expect(spies.log).toHaveBeenCalledTimes(2);
+				expect(spies.log).toHaveBeenCalledTimes(3);
 				expect(spies.log).toHaveBeenCalledWith("[MyPlugin] Log");
 				expect(spies.log).toHaveBeenCalledWith(
 					"[MyPlugin] Log inside collapsed group"
 				);
 				expect(spies.debug).toHaveBeenCalledTimes(0);
 				expect(spies.groupEnd).toHaveBeenCalledTimes(2);
+				done();
+			});
+		});
+		it("should log to the console (debug mode)", done => {
+			const compiler = webpack({
+				context: path.join(__dirname, "fixtures"),
+				entry: "./a",
+				output: {
+					path: "/",
+					filename: "bundle.js"
+				},
+				infrastructureLogging: {
+					level: "error",
+					debug: /MyPlugin/
+				},
+				plugins: [new MyPlugin()]
+			});
+			compiler.outputFileSystem = new MemoryFs();
+			compiler.run((err, stats) => {
+				expect(spies.group).toHaveBeenCalledTimes(1);
+				expect(spies.group).toHaveBeenCalledWith("[MyPlugin] Group");
+				expect(spies.groupCollapsed).toHaveBeenCalledTimes(1);
+				expect(spies.groupCollapsed).toHaveBeenCalledWith(
+					"[MyPlugin] Collaped group"
+				);
+				expect(spies.error).toHaveBeenCalledTimes(1);
+				expect(spies.error).toHaveBeenCalledWith("<e> [MyPlugin] Error");
+				expect(spies.warn).toHaveBeenCalledTimes(1);
+				expect(spies.warn).toHaveBeenCalledWith("<w> [MyPlugin] Warning");
+				expect(spies.info).toHaveBeenCalledTimes(1);
+				expect(spies.info).toHaveBeenCalledWith("<i> [MyPlugin] Info");
+				expect(spies.log).toHaveBeenCalledTimes(3);
+				expect(spies.log).toHaveBeenCalledWith("[MyPlugin] Log");
+				expect(spies.log).toHaveBeenCalledWith(
+					"[MyPlugin] Log inside collapsed group"
+				);
+				expect(spies.debug).toHaveBeenCalledTimes(1);
+				expect(spies.debug).toHaveBeenCalledWith("[MyPlugin] Debug");
+				expect(spies.groupEnd).toHaveBeenCalledTimes(2);
+				done();
+			});
+		});
+		it("should log to the console (none)", done => {
+			const compiler = webpack({
+				context: path.join(__dirname, "fixtures"),
+				entry: "./a",
+				output: {
+					path: "/",
+					filename: "bundle.js"
+				},
+				infrastructureLogging: {
+					level: "none"
+				},
+				plugins: [new MyPlugin()]
+			});
+			compiler.outputFileSystem = new MemoryFs();
+			compiler.run((err, stats) => {
+				expect(spies.group).toHaveBeenCalledTimes(0);
+				expect(spies.groupCollapsed).toHaveBeenCalledTimes(0);
+				expect(spies.error).toHaveBeenCalledTimes(0);
+				expect(spies.warn).toHaveBeenCalledTimes(0);
+				expect(spies.info).toHaveBeenCalledTimes(0);
+				expect(spies.log).toHaveBeenCalledTimes(0);
+				expect(spies.debug).toHaveBeenCalledTimes(0);
+				expect(spies.groupEnd).toHaveBeenCalledTimes(0);
 				done();
 			});
 		});

@@ -1831,7 +1831,7 @@
             },
             {
               "description": "specify log level of logging output",
-              "enum": ["error", "warn", "info", "log", "verbose"]
+              "enum": ["none", "error", "warn", "info", "log", "verbose"]
             }
           ]
         },
@@ -2044,7 +2044,7 @@
         },
         "level": {
           "description": "Log level",
-          "enum": ["error", "warn", "info", "log", "verbose"]
+          "enum": ["none", "error", "warn", "info", "log", "verbose"]
         }
       }
     },
