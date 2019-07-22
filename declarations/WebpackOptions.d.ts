@@ -76,6 +76,16 @@ export type ExternalItem =
  */
 export type ArrayOfStringValues = string[];
 /**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "FilterTypes".
+ */
+export type FilterTypes = FilterItemTypes | FilterItemTypes[];
+/**
+ * This interface was referenced by `WebpackOptions`'s JSON-Schema
+ * via the `definition` "FilterItemTypes".
+ */
+export type FilterItemTypes = RegExp | string | ((value: string) => boolean);
+/**
  * One or multiple rule conditions
  *
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
@@ -235,16 +245,6 @@ export type WebpackPluginFunction = (
  * via the `definition` "RuleSetRules".
  */
 export type RuleSetRules = RuleSetRule[];
-/**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "FilterTypes".
- */
-export type FilterTypes = FilterItemTypes | FilterItemTypes[];
-/**
- * This interface was referenced by `WebpackOptions`'s JSON-Schema
- * via the `definition` "FilterItemTypes".
- */
-export type FilterItemTypes = RegExp | string | Function;
 
 export interface WebpackOptions {
 	/**
@@ -293,6 +293,19 @@ export interface WebpackOptions {
 	 * Specify dependencies that shouldn't be resolved by webpack, but should become dependencies of the resulting bundle. The kind of the dependency depends on `output.libraryTarget`.
 	 */
 	externals?: Externals;
+	/**
+	 * Options for infrastructure level logging
+	 */
+	infrastructureLogging?: {
+		/**
+		 * Enable debug logging for specific loggers
+		 */
+		debug?: FilterTypes | boolean;
+		/**
+		 * Log level
+		 */
+		level?: "error" | "warn" | "info" | "log" | "verbose";
+	};
 	/**
 	 * Custom values available in the loader context.
 	 */
@@ -1344,13 +1357,13 @@ export interface StatsOptions {
 	 */
 	hash?: boolean;
 	/**
-	 * Include debug logging of specified modules (plugins/loaders). Filters can be Strings, RegExps or Functions
-	 */
-	includeDebugLogging?: FilterTypes;
-	/**
 	 * add logging output
 	 */
 	logging?: boolean | ("error" | "warn" | "info" | "log" | "verbose");
+	/**
+	 * Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions
+	 */
+	loggingDebug?: FilterTypes | boolean;
 	/**
 	 * add stack traces to logging output
 	 */

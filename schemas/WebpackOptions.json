@@ -166,7 +166,7 @@
         },
         {
           "instanceof": "Function",
-          "tsType": "Function"
+          "tsType": "((value: string) => boolean)"
         }
       ]
     },
@@ -1822,14 +1822,6 @@
           "description": "add the hash of the compilation",
           "type": "boolean"
         },
-        "includeDebugLogging": {
-          "description": "Include debug logging of specified modules (plugins/loaders). Filters can be Strings, RegExps or Functions",
-          "anyOf": [
-            {
-              "$ref": "#/definitions/FilterTypes"
-            }
-          ]
-        },
         "logging": {
           "description": "add logging output",
           "anyOf": [
@@ -1840,6 +1832,18 @@
             {
               "description": "specify log level of logging output",
               "enum": ["error", "warn", "info", "log", "verbose"]
+            }
+          ]
+        },
+        "loggingDebug": {
+          "description": "Include debug logging of specified loggers (i. e. for plugins or loaders). Filters can be Strings, RegExps or Functions",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/FilterTypes"
+            },
+            {
+              "description": "Enable/Disable debug logging for all loggers",
+              "type": "boolean"
             }
           ]
         },
@@ -2020,6 +2024,29 @@
           "$ref": "#/definitions/Externals"
         }
       ]
+    },
+    "infrastructureLogging": {
+      "description": "Options for infrastructure level logging",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "debug": {
+          "description": "Enable debug logging for specific loggers",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/FilterTypes"
+            },
+            {
+              "description": "Enable/Disable debug logging for all loggers",
+              "type": "boolean"
+            }
+          ]
+        },
+        "level": {
+          "description": "Log level",
+          "enum": ["error", "warn", "info", "log", "verbose"]
+        }
+      }
     },
     "loader": {
       "description": "Custom values available in the loader context.",

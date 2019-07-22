@@ -30,7 +30,7 @@ module.exports = {
 	stats: {
 		colors: true,
 		logging: true,
-		includeDebugLogging: "custom-loader",
+		loggingDebug: "custom-loader",
 		loggingTrace: true
 	}
 };
