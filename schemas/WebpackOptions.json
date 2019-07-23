@@ -983,8 +983,16 @@
       "properties": {
         "assetModuleFilename": {
           "description": "The filename of asset modules as relative path inside the `output.path` directory.",
-          "type": "string",
-          "absolutePath": false
+          "anyOf": [
+            {
+              "type": "string",
+              "absolutePath": false
+            },
+            {
+              "instanceof": "Function",
+              "tsType": "((pathData: import(\"../lib/Compilation\").PathData) => string)"
+            }
+          ]
         },
         "auxiliaryComment": {
           "description": "Add a comment in the UMD wrapper.",
