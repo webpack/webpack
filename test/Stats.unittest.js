@@ -11,6 +11,7 @@ describe("Stats", () => {
 				children: [],
 				errors: ["firstError"],
 				hash: "1234",
+				logging: new Map(),
 				compiler: {
 					context: ""
 				}
@@ -30,6 +31,7 @@ describe("Stats", () => {
 					children: [],
 					errors: ["firstError"],
 					hash: "1234",
+					logging: new Map(),
 					compiler: {
 						context: ""
 					}
@@ -41,6 +43,7 @@ describe("Stats", () => {
 					children: [],
 					warnings: ["firstError"],
 					hash: "1234",
+					logging: new Map(),
 					compiler: {
 						context: ""
 					}
@@ -54,6 +57,7 @@ describe("Stats", () => {
 					children: [],
 					errors: [],
 					hash: "1234",
+					logging: new Map(),
 					compiler: {
 						context: ""
 					}
@@ -65,6 +69,7 @@ describe("Stats", () => {
 					children: [],
 					warnings: [],
 					hash: "1234",
+					logging: new Map(),
 					compiler: {
 						context: ""
 					}
@@ -123,6 +128,7 @@ describe("Stats", () => {
 					},
 					getPublicPath: () => "path"
 				},
+				logging: new Map(),
 				compiler: {
 					context: ""
 				}
@@ -149,6 +155,7 @@ describe("Stats", () => {
 					},
 					getPublicPath: () => "path"
 				},
+				logging: new Map(),
 				compiler: {
 					context: ""
 				}
@@ -165,6 +172,7 @@ describe("Stats", () => {
 				filteredModules: 0,
 				errors: [],
 				hash: "1234",
+				logging: {},
 				modules: [],
 				outputPath: "/",
 				publicPath: "path",
