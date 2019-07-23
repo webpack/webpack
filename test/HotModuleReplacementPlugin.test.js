@@ -231,14 +231,14 @@ describe("HotModuleReplacementPlugin", () => {
 		});
 		fs.writeFileSync(entryFile, "1", "utf-8");
 		compiler.run((err, stats) => {
-			if (err) throw err;
+			if (err) return done(err);
 			fs.writeFileSync(statsFile3, stats.toString());
 			compiler.run((err, stats) => {
-				if (err) throw err;
+				if (err) return done(err);
 				fs.writeFileSync(statsFile4, stats.toString());
 				fs.writeFileSync(entryFile, "2", "utf-8");
 				compiler.run((err, stats) => {
-					if (err) throw err;
+					if (err) return done(err);
 					fs.writeFileSync(statsFile3, stats.toString());
 
 					let foundUpdates = false;
