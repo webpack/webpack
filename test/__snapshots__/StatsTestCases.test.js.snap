@@ -1247,7 +1247,7 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 <CLR=BOLD>LOG from MyPlugin</CLR>
 <i> <CLR=32,BOLD>Plugin is now active</CLR>
 <+> <CLR=36,BOLD>Nested</CLR>
-+ 2 hidden lines
++ 3 hidden lines
 
 <CLR=31,BOLD>DEBUG </CLR><CLR=BOLD>LOG from node_modules/custom-loader/index.js node_modules/custom-loader/index.js!index.js</CLR>
 <e> <CLR=31,BOLD>An error</CLR>
