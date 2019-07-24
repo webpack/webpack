@@ -1118,7 +1118,9 @@ export interface OutputOptions {
 	/**
 	 * The filename of asset modules as relative path inside the `output.path` directory.
 	 */
-	assetModuleFilename?: string;
+	assetModuleFilename?:
+		| string
+		| ((pathData: import("../lib/Compilation").PathData) => string);
 	/**
 	 * Add a comment in the UMD wrapper.
 	 */
