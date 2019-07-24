@@ -6,6 +6,15 @@ const fs = require("graceful-fs");
 
 const webpack = require("..");
 
+/**
+ * Escapes regular expression metacharacters
+ * @param {string} str String to quote
+ * @returns {string} Escaped string
+ */
+const quotemeta = str => {
+	return str.replace(/[-[\]\\/{}()*+?.^$|]/g, "\\$&");
+};
+
 const base = path.join(__dirname, "statsCases");
 const outputBase = path.join(__dirname, "js", "stats");
 const tests = fs
@@ -129,24 +138,21 @@ describe("StatsTestCases", () => {
 				if (!hasColorSetting) {
 					actual = actual
 						.replace(/\u001b\[[0-9;]*m/g, "")
-						.replace(/[0-9]+(\s?ms)/g, "X$1");
+						.replace(/[.0-9]+(\s?ms)/g, "X$1");
 				} else {
 					actual = actual
 						.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
 						.replace(/\u001b\[1m/g, "<CLR=BOLD>")
 						.replace(/\u001b\[39m\u001b\[22m/g, "</CLR>")
 						.replace(/\u001b\[([0-9;]*)m/g, "<CLR=$1>")
-						.replace(/[0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2");
+						.replace(/[.0-9]+(<\/CLR>)?(\s?ms)/g, "X$1$2");
 				}
 				const testPath = path.join(base, testName);
-				const testPathPattern = testPath.replace(
-					/[-[\]\\/{}()*+?.^$|]/g,
-					"\\$&"
-				);
 				actual = actual
 					.replace(/\r\n?/g, "\n")
 					.replace(/[\t ]*Version:.+\n/g, "")
-					.replace(new RegExp(testPathPattern, "g"), "Xdir/" + testName)
+					.replace(new RegExp(quotemeta(testPath), "g"), "Xdir/" + testName)
+					.replace(/(\w)\\(\w)/g, "$1/$2")
 					.replace(/, additional resolving: Xms/g, "");
 				expect(actual).toMatchSnapshot();
 				done();
