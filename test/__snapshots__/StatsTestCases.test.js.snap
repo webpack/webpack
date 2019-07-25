@@ -2313,6 +2313,12 @@ Group
   Collaped group
     Log inside collapsed group
 + 1 hidden lines
+
+LOG from webpack.SplitChunksPlugin
+<t> prepare: Xms
+<t> modules: Xms
+<t> queue: Xms
+<t> maxSize: Xms
 "
 `;
 
