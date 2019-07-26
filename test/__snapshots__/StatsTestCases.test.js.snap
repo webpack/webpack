@@ -720,8 +720,7 @@ exports[`StatsTestCases should print correct stats for dll-reference-plugin-issu
 "Hash: d5dc1aa431f0e452eeae
 Time: Xms
 Built at: 1970-04-20 12:42:42
-    Asset      Size  Chunks  Chunk Names
-bundle.js  1.35 KiB   {179}  main
+1 asset
 Entrypoint main = bundle.js
 [594] ./entry.js 29 bytes {179} [built]
 
@@ -1538,8 +1537,7 @@ Entrypoint main = main.js
 exports[`StatsTestCases should print correct stats for module-trace-disabled-in-error 1`] = `
 "Time: Xms
 Built at: 1970-04-20 12:42:42
-  Asset     Size  Chunks  Chunk Names
-main.js  2.1 KiB   {179}  main
+1 asset
 Entrypoint main = main.js
  [10] ./index.js 19 bytes {179} [built]
 [195] ./not-existing.js 26 bytes {179} [built]
@@ -1563,8 +1561,7 @@ You may need an appropriate loader to handle this file type, currently no loader
 exports[`StatsTestCases should print correct stats for module-trace-enabled-in-error 1`] = `
 "Time: Xms
 Built at: 1970-04-20 12:42:42
-  Asset     Size  Chunks  Chunk Names
-main.js  2.1 KiB   {179}  main
+1 asset
 Entrypoint main = main.js
  [10] ./index.js 19 bytes {179} [built]
 [195] ./not-existing.js 26 bytes {179} [built]
@@ -1678,9 +1675,7 @@ exports[`StatsTestCases should print correct stats for no-emit-on-errors-plugin-
 "Hash: c41f4d44aa1c39291fa6
 Time: Xms
 Built at: 1970-04-20 12:42:42
-    Asset      Size  Chunks  Chunk Names
-bundle.js  1.32 KiB   {179}  main
- child.js  1.32 KiB
+2 assets
 Entrypoint main = bundle.js
 [10] ./index.js 1 bytes {179} [built]
 
@@ -1691,8 +1686,7 @@ You can also set it to 'none' to disable any default behavior. Learn more: https
 Child child:
     Time: Xms
     Built at: 1970-04-20 12:42:42
-       Asset      Size  Chunks  Chunk Names
-    child.js  1.32 KiB   {396}  child
+    1 asset
     Entrypoint child = child.js
     [10] ./index.js 1 bytes {396} [built]
 
@@ -1750,8 +1744,7 @@ chunk {753} ac in ab.js (ac in ab) 1 bytes <{90}> >{284}< [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for parse-error 1`] = `
-"  Asset      Size  Chunks  Chunk Names
-main.js  4.44 KiB   {179}  main
+"1 asset
 Entrypoint main = main.js
 [535] ./index.js + 1 modules 35 bytes {179} [built]
 [996] ./b.js 55 bytes {179} [built] [failed] [1 error]
