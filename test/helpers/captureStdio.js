@@ -7,8 +7,6 @@ module.exports = stdio => {
 
 	stdio.write = function(str) {
 		logs.push(str);
-
-		write.apply(this, arguments);
 	};
 
 	return {

@@ -33,7 +33,9 @@ describe("ConfigTestCases", () => {
 					const testDirectory = path.join(casesPath, cat, testName);
 					const filterPath = path.join(testDirectory, "test.filter.js");
 					if (fs.existsSync(filterPath) && !require(filterPath)()) {
-						describe.skip(testName, () => it("filtered"));
+						describe.skip(testName, () => {
+							it("filtered", () => {});
+						});
 						return false;
 					}
 					return true;
