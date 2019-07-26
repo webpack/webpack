@@ -2319,6 +2319,12 @@ LOG from webpack.SplitChunksPlugin
 <t> modules: Xms
 <t> queue: Xms
 <t> maxSize: Xms
+
+LOG from webpack.Compiler
+<t> emitAssets: Xms
+<t> emitRecords: Xms
+<t> done hook: Xms
+<t> beginIdle: Xms
 "
 `;
 
