@@ -2333,8 +2333,6 @@ LOG from webpack.buildChunkGraph.visitModules
 <t> calculating available modules: Xms
 <t> merging available modules: Xms
 <t> visiting: Xms
-<t> calculating available modules: Xms
-<t> merging available modules: Xms
 
 LOG from webpack.SplitChunksPlugin
 <t> prepare: Xms
