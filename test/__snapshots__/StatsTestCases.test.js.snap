@@ -2324,15 +2324,17 @@ LOG from webpack.Compiler
 <t> done hook: Xms
 <t> beginIdle: Xms
 
-LOG from webpack.buildChunkGraph.visitModules
-<t> prepare: Xms
-<t> visiting: Xms
-<t> calculating available modules: Xms
-<t> merging available modules: Xms
-<t> visiting: Xms
-<t> calculating available modules: Xms
-<t> merging available modules: Xms
-<t> visiting: Xms
+LOG from webpack.buildChunkGraph
+<t> visitModules: prepare: Xms
+<t> visitModules: visiting: Xms
+<t> visitModules: calculating available modules: Xms
+<t> visitModules: merging available modules: Xms
+<t> visitModules: visiting: Xms
+<t> visitModules: calculating available modules: Xms
+<t> visitModules: merging available modules: Xms
+<t> visitModules: visiting: Xms
+<t> connectChunkGroups: Xms
+<t> cleanup: Xms
 
 LOG from webpack.SplitChunksPlugin
 <t> prepare: Xms
