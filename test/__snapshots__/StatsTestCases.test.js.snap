@@ -2132,7 +2132,17 @@ Group
   Log
   Collaped group
     Log inside collapsed group
-+ 1 hidden lines"
++ 1 hidden lines
+
+LOG from webpack.buildChunkGraph.visitModules
+<t> prepare: Xms
+<t> visiting: Xms
+<t> calculating available modules: Xms
+<t> merging available modules: Xms
+<t> visiting: Xms
+<t> calculating available modules: Xms
+<t> merging available modules: Xms
+<t> visiting: Xms"
 `;
 
 exports[`StatsTestCases should print correct stats for resolve-plugin-context 1`] = `
