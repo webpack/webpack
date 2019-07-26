@@ -2314,17 +2314,21 @@ Group
     Log inside collapsed group
 + 1 hidden lines
 
+LOG from webpack.Compiler
+<t> make hook: Xms
+<t> finish compilation: Xms
+<t> seal compilation: Xms
+<t> afterCompile hook: Xms
+<t> emitAssets: Xms
+<t> emitRecords: Xms
+<t> done hook: Xms
+<t> beginIdle: Xms
+
 LOG from webpack.SplitChunksPlugin
 <t> prepare: Xms
 <t> modules: Xms
 <t> queue: Xms
 <t> maxSize: Xms
-
-LOG from webpack.Compiler
-<t> emitAssets: Xms
-<t> emitRecords: Xms
-<t> done hook: Xms
-<t> beginIdle: Xms
 "
 `;
 
