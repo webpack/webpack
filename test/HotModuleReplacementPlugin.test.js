@@ -171,4 +171,90 @@ describe("HotModuleReplacementPlugin", () => {
 			});
 		});
 	});
+
+	it("should handle entryFile that contains path variable", done => {
+		const entryFile = path.join(
+			__dirname,
+			"js",
+			"HotModuleReplacementPlugin",
+			"[name]",
+			"entry.js"
+		);
+		const statsFile3 = path.join(
+			__dirname,
+			"js",
+			"HotModuleReplacementPlugin",
+			"HotModuleReplacementPlugin.test.stats3.txt"
+		);
+		const statsFile4 = path.join(
+			__dirname,
+			"js",
+			"HotModuleReplacementPlugin",
+			"HotModuleReplacementPlugin.test.stats4.txt"
+		);
+		const recordsFile = path.join(
+			__dirname,
+			"js",
+			"HotModuleReplacementPlugin",
+			"records.json"
+		);
+		try {
+			mkdirp.sync(
+				path.join(__dirname, "js", "HotModuleReplacementPlugin", "[name]")
+			);
+		} catch (e) {
+			// empty
+		}
+		try {
+			fs.unlinkSync(recordsFile);
+		} catch (e) {
+			// empty
+		}
+		const compiler = webpack({
+			mode: "development",
+			cache: false,
+			entry: {
+				"[name]/entry.js": entryFile
+			},
+			recordsPath: recordsFile,
+			output: {
+				filename: "[name]",
+				chunkFilename: "[name].js",
+				path: path.join(__dirname, "js", "HotModuleReplacementPlugin"),
+				hotUpdateChunkFilename: "static/webpack/[id].[hash].hot-update.js",
+				hotUpdateMainFilename: "static/webpack/[hash].hot-update.json"
+			},
+			plugins: [new webpack.HotModuleReplacementPlugin()],
+			optimization: {
+				namedChunks: true
+			}
+		});
+		fs.writeFileSync(entryFile, "1", "utf-8");
+		compiler.run((err, stats) => {
+			if (err) return done(err);
+			fs.writeFileSync(statsFile3, stats.toString());
+			compiler.run((err, stats) => {
+				if (err) return done(err);
+				fs.writeFileSync(statsFile4, stats.toString());
+				fs.writeFileSync(entryFile, "2", "utf-8");
+				compiler.run((err, stats) => {
+					if (err) return done(err);
+					fs.writeFileSync(statsFile3, stats.toString());
+
+					let foundUpdates = false;
+
+					Object.keys(stats.compilation.assets).forEach(key => {
+						foundUpdates =
+							foundUpdates ||
+							!!key.match(
+								/static\/webpack\/\[name\]\/entry\.js\..*?\.hot-update\.js/
+							);
+					});
+
+					expect(foundUpdates).toBe(true);
+					done();
+				});
+			});
+		});
+	});
 });
