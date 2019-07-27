@@ -1254,21 +1254,21 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 |     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:5:9)
 <w> <CLR=33,BOLD>A warning</CLR>
 |     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:6:9)
-<CLR=36,BOLD>Unimportant</CLR>
+<-> <CLR=36,BOLD>Unimportant</CLR>
   <i> <CLR=32,BOLD>Info message</CLR>
-  <CLR=BOLD>Just log</CLR>
-  Just debug
+      <CLR=BOLD>Just log</CLR>
+      Just debug
   <t> <CLR=35,BOLD>Measure: Xms</CLR>
-  <CLR=36,BOLD>Nested</CLR>
-    <CLR=BOLD>Log inside collapsed group</CLR>
-  Trace
+  <-> <CLR=36,BOLD>Nested</CLR>
+        <CLR=BOLD>Log inside collapsed group</CLR>
+      Trace
   |     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:15:9)
   <t> <CLR=35,BOLD>Measure: Xms</CLR>
   -------
-  <CLR=BOLD>After clear</CLR>
+      <CLR=BOLD>After clear</CLR>
 
 <CLR=31,BOLD>DEBUG </CLR><CLR=BOLD>LOG from node_modules/custom-loader/index.js Named Logger node_modules/custom-loader/index.js!index.js</CLR>
-Message with named logger"
+    Message with named logger"
 `;
 
 exports[`StatsTestCases should print correct stats for max-modules 1`] = `
@@ -1942,11 +1942,11 @@ chunk    {3} 3.js 54 bytes <{0}> >{1}< [rendered]
     ModuleConcatenation bailout: Module is not an ECMAScript module
 
 LOG from MyPlugin
-Group
+<-> Group
   <e> Error
   <w> Warning
   <i> Info
-  Log
+      Log
   <+> Collaped group
 + 3 hidden lines"
 `;
@@ -2125,13 +2125,13 @@ chunk    {3} 3.js 54 bytes <{0}> >{1}< [rendered]
      [0] Xms -> factory:Xms building:Xms = Xms
 
 LOG from MyPlugin
-Group
+<-> Group
   <e> Error
   <w> Warning
   <i> Info
-  Log
-  Collaped group
-    Log inside collapsed group
+      Log
+  <-> Collaped group
+        Log inside collapsed group
 + 1 hidden lines
 
 LOG from webpack.buildChunkGraph.visitModules
