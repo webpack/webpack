@@ -19,6 +19,7 @@ module.exports = class LogTestPlugin {
 			logger.groupEnd();
 			logger.log("End");
 		};
+		logSome(compiler.getInfrastructureLogger("LogTestPlugin"));
 		compiler.hooks.compilation.tap("LogTestPlugin", compilation => {
 			const logger = compilation.getLogger("LogTestPlugin");
 			logSome(logger);
