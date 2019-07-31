@@ -1,18 +1,4 @@
-class MyPlugin {
-	apply(compiler) {
-		compiler.hooks.compilation.tap("MyPlugin", compilation => {
-			const logger = compilation.getLogger("MyPlugin");
-			logger.info("Plugin is now active");
-			logger.debug("Debug message should not be visible");
-			logger.groupCollapsed("Nested");
-			logger.log("Log inside collapsed group");
-			logger.groupEnd("Nested");
-
-			const otherLogger = compilation.getLogger("MyOtherPlugin");
-			otherLogger.debug("debug message only");
-		});
-	}
-}
+const LogTestPlugin = require("../../helpers/LogTestPlugin");
 
 module.exports = {
 	mode: "production",
@@ -26,7 +12,7 @@ module.exports = {
 			}
 		]
 	},
-	plugins: [new MyPlugin()],
+	plugins: [new LogTestPlugin(true)],
 	stats: {
 		colors: true,
 		logging: true,

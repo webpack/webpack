@@ -1244,9 +1244,13 @@ Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
 Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 [0] <CLR=BOLD>./index.js</CLR> 0 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
 
-<CLR=BOLD>LOG from MyPlugin</CLR>
-<i> <CLR=32,BOLD>Plugin is now active</CLR>
-<+> <CLR=36,BOLD>Nested</CLR>
+<CLR=BOLD>LOG from LogTestPlugin</CLR>
+<-> <CLR=36,BOLD>Group</CLR>
+  <i> <CLR=32,BOLD>Info</CLR>
+      <CLR=BOLD>Log</CLR>
+  <+> <CLR=36,BOLD>Collaped group</CLR>
+      <CLR=BOLD>Log</CLR>
+    <CLR=BOLD>End</CLR>
 + 3 hidden lines
 
 <CLR=31,BOLD>DEBUG </CLR><CLR=BOLD>LOG from node_modules/custom-loader/index.js node_modules/custom-loader/index.js!index.js</CLR>
@@ -1941,13 +1945,15 @@ chunk    {3} 3.js 54 bytes <{0}> >{1}< [rendered]
 [5] ./e.js 22 bytes {1} [depth 2] [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
 
-LOG from MyPlugin
+LOG from LogTestPlugin
 <-> Group
   <e> Error
   <w> Warning
   <i> Info
       Log
   <+> Collaped group
+      Log
+    End
 + 3 hidden lines"
 `;
 
@@ -1955,9 +1961,9 @@ exports[`StatsTestCases should print correct stats for preset-errors-only 1`] = 
 
 exports[`StatsTestCases should print correct stats for preset-errors-only-error 1`] = `
 "
-LOG from MyPlugin
+LOG from LogTestPlugin
 <e> Error
-+ 9 hidden lines
++ 11 hidden lines
 
 ERROR in ./index.js
 Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/preset-errors-only-error'
@@ -1966,19 +1972,19 @@ Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/preset-errors-o
 
 exports[`StatsTestCases should print correct stats for preset-errors-warnings 1`] = `
 "
-LOG from MyPlugin
+LOG from LogTestPlugin
 <e> Error
 <w> Warning
-+ 8 hidden lines"
++ 10 hidden lines"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-minimal 1`] = `
 "   6 modules
 
-LOG from MyPlugin
+LOG from LogTestPlugin
 <e> Error
 <w> Warning
-+ 8 hidden lines"
++ 10 hidden lines"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-minimal-simple 1`] = `"   1 module"`;
@@ -2014,11 +2020,11 @@ Entrypoint main = main.js
 [4] ./d.js 22 bytes {1} [built]
 [5] ./e.js 22 bytes {1} [built]
 
-LOG from MyPlugin
+LOG from LogTestPlugin
 <e> Error
 <w> Warning
 <i> Info
-+ 7 hidden lines"
++ 9 hidden lines"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-normal-performance 1`] = `
@@ -2124,7 +2130,7 @@ chunk    {3} 3.js 54 bytes <{0}> >{1}< [rendered]
      amd require ./c [0] ./index.js 3:0-16
      [0] Xms -> factory:Xms building:Xms = Xms
 
-LOG from MyPlugin
+LOG from LogTestPlugin
 <-> Group
   <e> Error
   <w> Warning
@@ -2132,6 +2138,8 @@ LOG from MyPlugin
       Log
   <-> Collaped group
         Log inside collapsed group
+      Log
+    End
 + 1 hidden lines
 
 LOG from webpack.buildChunkGraph.visitModules
