@@ -12,6 +12,13 @@ module.exports = {
 			es2015_year: ["./harmony", "year"],
 			"this.aaa": "./aaa",
 			esm: "fail"
+		}, {
+			exclude: /ggg/
+		}),
+		new ProvidePlugin({
+			"bbb.ccc": "./bbbccc"
+		}, {
+			test: [ /ggg/ ]
 		})
 	]
 };
