@@ -3,19 +3,18 @@
 const _ = require("lodash");
 const path = require("path");
 const MemoryFs = require("memory-fs");
-const webpack = require("../");
 const captureStdio = require("./helpers/captureStdio");
 
+let webpack;
+
 describe("ProgressPlugin", function() {
-	let _env;
 	let stderr;
 
 	beforeEach(() => {
-		_env = process.env;
-		stderr = captureStdio(process.stderr);
+		stderr = captureStdio(process.stderr, true);
+		webpack = require("../");
 	});
 	afterEach(() => {
-		process.env = _env;
 		stderr && stderr.restore();
 	});
 
@@ -38,9 +37,18 @@ describe("ProgressPlugin", function() {
 			expect(logs.length).toBeGreaterThan(20);
 			logs.forEach(log => expect(log.length).toBeLessThanOrEqual(30));
 			expect(logs).toContain(
-				" 10% building ...ules ...tive",
+				"77% ...timization ...nksPlugin",
 				"trims each detail string equally"
 			);
+			expect(logs).toContain(
+				"10% building ...dules 0 active",
+				"remove empty arguments"
+			);
+			expect(logs).toContain(
+				"10% building ...dules 1 active",
+				"omit arguments when no space"
+			);
+			expect(logs).toContain("93% ...hunk asset optimization");
 		});
 	});
 
@@ -88,7 +96,7 @@ const createSimpleCompiler = () => {
 	return compiler;
 };
 
-const getLogs = logsStr => logsStr.split(/\u0008+/).filter(v => !(v === " "));
+const getLogs = logsStr => logsStr.split(/\r/).filter(v => !(v === " "));
 
 const RunCompilerAsync = compiler =>
 	new Promise((resolve, reject) => {
