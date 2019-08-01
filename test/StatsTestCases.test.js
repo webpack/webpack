@@ -4,8 +4,10 @@
 const path = require("path");
 const fs = require("fs");
 
-const webpack = require("../lib/webpack");
 const Stats = require("../lib/Stats");
+const captureStdio = require("./helpers/captureStdio");
+
+let webpack;
 
 /**
  * Escapes regular expression metacharacters
@@ -36,6 +38,14 @@ const tests = fs
 	});
 
 describe("StatsTestCases", () => {
+	let stderr;
+	beforeEach(() => {
+		stderr = captureStdio(process.stderr, true);
+		webpack = require("../lib/webpack");
+	});
+	afterEach(() => {
+		stderr.restore();
+	});
 	tests.forEach(testName => {
 		it("should print correct stats for " + testName, done => {
 			jest.setTimeout(10000);
@@ -111,6 +121,7 @@ describe("StatsTestCases", () => {
 				let actual = stats.toString(toStringOptions);
 				expect(typeof actual).toBe("string");
 				if (!hasColorSetting) {
+					actual = stderr.toString() + actual;
 					actual = actual
 						.replace(/\u001b\[[0-9;]*m/g, "")
 						.replace(/[.0-9]+(\s?ms)/g, "X$1")
@@ -119,6 +130,7 @@ describe("StatsTestCases", () => {
 							"$1 Thu Jan 01 1970 00:00:00 GMT"
 						);
 				} else {
+					actual = stderr.toStringRaw() + actual;
 					actual = actual
 						.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
 						.replace(/\u001b\[1m/g, "<CLR=BOLD>")

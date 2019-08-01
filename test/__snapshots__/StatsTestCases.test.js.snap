@@ -1236,7 +1236,8 @@ Child 4 chunks:
 `;
 
 exports[`StatsTestCases should print correct stats for logging 1`] = `
-"Hash: <CLR=BOLD>aa5b75cccf66cd9b1ffa</CLR>
+"<i> <CLR=32,BOLD>[LogTestPlugin] Info</CLR>
+Hash: <CLR=BOLD>aa5b75cccf66cd9b1ffa</CLR>
 Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
   <CLR=BOLD>Asset</CLR>      <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>  <CLR=39,BOLD><CLR=22>           <CLR=39,BOLD><CLR=22><CLR=BOLD>Chunk Names</CLR>
@@ -1244,31 +1245,35 @@ Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
 Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 [0] <CLR=BOLD>./index.js</CLR> 0 bytes {<CLR=33,BOLD>0</CLR>}<CLR=32,BOLD> [built]</CLR>
 
-<CLR=BOLD>LOG from MyPlugin</CLR>
-<i> <CLR=32,BOLD>Plugin is now active</CLR>
-<+> <CLR=36,BOLD>Nested</CLR>
-+ 3 hidden lines
+<CLR=BOLD>LOG from LogTestPlugin</CLR>
+<-> <CLR=36,BOLD>Group</CLR>
+  <i> <CLR=32,BOLD>Info</CLR>
+      <CLR=BOLD>Log</CLR>
+  <+> <CLR=36,BOLD>Collaped group</CLR>
+      <CLR=BOLD>Log</CLR>
+    <CLR=BOLD>End</CLR>
++ 6 hidden lines
 
 <CLR=31,BOLD>DEBUG </CLR><CLR=BOLD>LOG from node_modules/custom-loader/index.js node_modules/custom-loader/index.js!index.js</CLR>
 <e> <CLR=31,BOLD>An error</CLR>
 |     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:5:9)
 <w> <CLR=33,BOLD>A warning</CLR>
 |     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:6:9)
-<CLR=36,BOLD>Unimportant</CLR>
+<-> <CLR=36,BOLD>Unimportant</CLR>
   <i> <CLR=32,BOLD>Info message</CLR>
-  <CLR=BOLD>Just log</CLR>
-  Just debug
+      <CLR=BOLD>Just log</CLR>
+      Just debug
   <t> <CLR=35,BOLD>Measure: Xms</CLR>
-  <CLR=36,BOLD>Nested</CLR>
-    <CLR=BOLD>Log inside collapsed group</CLR>
-  Trace
+  <-> <CLR=36,BOLD>Nested</CLR>
+        <CLR=BOLD>Log inside collapsed group</CLR>
+      Trace
   |     at Object.<anonymous>.module.exports (Xdir/logging/node_modules/custom-loader/index.js:15:9)
   <t> <CLR=35,BOLD>Measure: Xms</CLR>
   -------
-  <CLR=BOLD>After clear</CLR>
+      <CLR=BOLD>After clear</CLR>
 
 <CLR=31,BOLD>DEBUG </CLR><CLR=BOLD>LOG from node_modules/custom-loader/index.js Named Logger node_modules/custom-loader/index.js!index.js</CLR>
-Message with named logger"
+    Message with named logger"
 `;
 
 exports[`StatsTestCases should print correct stats for max-modules 1`] = `
@@ -1911,7 +1916,15 @@ chunk    {6} preloaded3.js (preloaded3) 0 bytes <{2}> [rendered]"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
-"Hash: 2b293d5b94136dfe6d9c
+"<-> [LogTestPlugin] Group
+  <e> [LogTestPlugin] Error
+  <w> [LogTestPlugin] Warning
+  <i> [LogTestPlugin] Info
+      [LogTestPlugin] Log
+  <+> [LogTestPlugin] Collaped group
+      [LogTestPlugin] Log
+    [LogTestPlugin] End
+Hash: 2b293d5b94136dfe6d9c
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
@@ -1941,23 +1954,26 @@ chunk    {3} 3.js 54 bytes <{0}> >{1}< [rendered]
 [5] ./e.js 22 bytes {1} [depth 2] [built]
     ModuleConcatenation bailout: Module is not an ECMAScript module
 
-LOG from MyPlugin
-Group
+LOG from LogTestPlugin
+<-> Group
   <e> Error
   <w> Warning
   <i> Info
-  Log
+      Log
   <+> Collaped group
-+ 3 hidden lines"
+      Log
+    End
++ 6 hidden lines"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-errors-only 1`] = `""`;
 
 exports[`StatsTestCases should print correct stats for preset-errors-only-error 1`] = `
-"
-LOG from MyPlugin
+"<e> [LogTestPlugin] Error
+
+LOG from LogTestPlugin
 <e> Error
-+ 9 hidden lines
++ 14 hidden lines
 
 ERROR in ./index.js
 Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/preset-errors-only-error'
@@ -1965,20 +1981,24 @@ Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/preset-errors-o
 `;
 
 exports[`StatsTestCases should print correct stats for preset-errors-warnings 1`] = `
-"
-LOG from MyPlugin
+"<e> [LogTestPlugin] Error
+<w> [LogTestPlugin] Warning
+
+LOG from LogTestPlugin
 <e> Error
 <w> Warning
-+ 8 hidden lines"
++ 13 hidden lines"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-minimal 1`] = `
-"   6 modules
+"<e> [LogTestPlugin] Error
+<w> [LogTestPlugin] Warning
+   6 modules
 
-LOG from MyPlugin
+LOG from LogTestPlugin
 <e> Error
 <w> Warning
-+ 8 hidden lines"
++ 13 hidden lines"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-minimal-simple 1`] = `"   1 module"`;
@@ -1991,14 +2011,22 @@ Child verbose:
     [0] ./index.js 8 bytes {0} [built]"
 `;
 
-exports[`StatsTestCases should print correct stats for preset-none 1`] = `""`;
+exports[`StatsTestCases should print correct stats for preset-none 1`] = `
+"<e> [LogTestPlugin] Error
+<w> [LogTestPlugin] Warning
+<i> [LogTestPlugin] Info
+"
+`;
 
 exports[`StatsTestCases should print correct stats for preset-none-array 1`] = `""`;
 
 exports[`StatsTestCases should print correct stats for preset-none-error 1`] = `""`;
 
 exports[`StatsTestCases should print correct stats for preset-normal 1`] = `
-"Hash: 2b293d5b94136dfe6d9c
+"<e> [LogTestPlugin] Error
+<w> [LogTestPlugin] Warning
+<i> [LogTestPlugin] Info
+Hash: 2b293d5b94136dfe6d9c
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
@@ -2014,11 +2042,11 @@ Entrypoint main = main.js
 [4] ./d.js 22 bytes {1} [built]
 [5] ./e.js 22 bytes {1} [built]
 
-LOG from MyPlugin
+LOG from LogTestPlugin
 <e> Error
 <w> Warning
 <i> Info
-+ 7 hidden lines"
++ 12 hidden lines"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-normal-performance 1`] = `
@@ -2082,7 +2110,18 @@ Entrypoints:
 `;
 
 exports[`StatsTestCases should print correct stats for preset-verbose 1`] = `
-"Hash: 2b293d5b94136dfe6d9c
+"<-> [LogTestPlugin] Group
+  <e> [LogTestPlugin] Error
+  <w> [LogTestPlugin] Warning
+  <i> [LogTestPlugin] Info
+      [LogTestPlugin] Log
+  <-> [LogTestPlugin] Collaped group
+        [LogTestPlugin] Log inside collapsed group
+    <-> [LogTestPlugin] Inner group
+        [LogTestPlugin] Inner inner message
+      [LogTestPlugin] Log
+    [LogTestPlugin] End
+Hash: 2b293d5b94136dfe6d9c
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
   Asset       Size  Chunks             Chunk Names
@@ -2124,14 +2163,18 @@ chunk    {3} 3.js 54 bytes <{0}> >{1}< [rendered]
      amd require ./c [0] ./index.js 3:0-16
      [0] Xms -> factory:Xms building:Xms = Xms
 
-LOG from MyPlugin
-Group
+LOG from LogTestPlugin
+<-> Group
   <e> Error
   <w> Warning
   <i> Info
-  Log
-  Collaped group
-    Log inside collapsed group
+      Log
+  <-> Collaped group
+        Log inside collapsed group
+    <-> Inner group
+        Inner inner message
+      Log
+    End
 + 1 hidden lines
 
 LOG from webpack.buildChunkGraph.visitModules
