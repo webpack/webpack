@@ -4,5 +4,8 @@ module.exports = {
 	mode: "production",
 	entry: "./index",
 	stats: "errors-only",
+	infrastructureLogging: {
+		level: "error"
+	},
 	plugins: [new LogTestPlugin()]
 };

@@ -1252,7 +1252,7 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
   <+> <CLR=36,BOLD>Collaped group</CLR>
       <CLR=BOLD>Log</CLR>
     <CLR=BOLD>End</CLR>
-+ 3 hidden lines
++ 6 hidden lines
 
 <CLR=31,BOLD>DEBUG </CLR><CLR=BOLD>LOG from node_modules/custom-loader/index.js node_modules/custom-loader/index.js!index.js</CLR>
 <e> <CLR=31,BOLD>An error</CLR>
@@ -1916,9 +1916,14 @@ chunk    {6} preloaded3.js (preloaded3) 0 bytes <{2}> [rendered]"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
-"<e> [LogTestPlugin] Error
-<w> [LogTestPlugin] Warning
-<i> [LogTestPlugin] Info
+"<-> [LogTestPlugin] Group
+  <e> [LogTestPlugin] Error
+  <w> [LogTestPlugin] Warning
+  <i> [LogTestPlugin] Info
+      [LogTestPlugin] Log
+  <+> [LogTestPlugin] Collaped group
+      [LogTestPlugin] Log
+    [LogTestPlugin] End
 Hash: 2b293d5b94136dfe6d9c
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
@@ -1958,19 +1963,17 @@ LOG from LogTestPlugin
   <+> Collaped group
       Log
     End
-+ 3 hidden lines"
++ 6 hidden lines"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-errors-only 1`] = `""`;
 
 exports[`StatsTestCases should print correct stats for preset-errors-only-error 1`] = `
 "<e> [LogTestPlugin] Error
-<w> [LogTestPlugin] Warning
-<i> [LogTestPlugin] Info
 
 LOG from LogTestPlugin
 <e> Error
-+ 11 hidden lines
++ 14 hidden lines
 
 ERROR in ./index.js
 Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/preset-errors-only-error'
@@ -1980,24 +1983,22 @@ Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/preset-errors-o
 exports[`StatsTestCases should print correct stats for preset-errors-warnings 1`] = `
 "<e> [LogTestPlugin] Error
 <w> [LogTestPlugin] Warning
-<i> [LogTestPlugin] Info
 
 LOG from LogTestPlugin
 <e> Error
 <w> Warning
-+ 10 hidden lines"
++ 13 hidden lines"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-minimal 1`] = `
 "<e> [LogTestPlugin] Error
 <w> [LogTestPlugin] Warning
-<i> [LogTestPlugin] Info
    6 modules
 
 LOG from LogTestPlugin
 <e> Error
 <w> Warning
-+ 10 hidden lines"
++ 13 hidden lines"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-minimal-simple 1`] = `"   1 module"`;
@@ -2045,7 +2046,7 @@ LOG from LogTestPlugin
 <e> Error
 <w> Warning
 <i> Info
-+ 9 hidden lines"
++ 12 hidden lines"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-normal-performance 1`] = `
@@ -2109,9 +2110,17 @@ Entrypoints:
 `;
 
 exports[`StatsTestCases should print correct stats for preset-verbose 1`] = `
-"<e> [LogTestPlugin] Error
-<w> [LogTestPlugin] Warning
-<i> [LogTestPlugin] Info
+"<-> [LogTestPlugin] Group
+  <e> [LogTestPlugin] Error
+  <w> [LogTestPlugin] Warning
+  <i> [LogTestPlugin] Info
+      [LogTestPlugin] Log
+  <-> [LogTestPlugin] Collaped group
+        [LogTestPlugin] Log inside collapsed group
+    <-> [LogTestPlugin] Inner group
+        [LogTestPlugin] Inner inner message
+      [LogTestPlugin] Log
+    [LogTestPlugin] End
 Hash: 2b293d5b94136dfe6d9c
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
@@ -2162,6 +2171,8 @@ LOG from LogTestPlugin
       Log
   <-> Collaped group
         Log inside collapsed group
+    <-> Inner group
+        Inner inner message
       Log
     End
 + 1 hidden lines
