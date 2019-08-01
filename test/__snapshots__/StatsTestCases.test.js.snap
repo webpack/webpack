@@ -1608,17 +1608,6 @@ chunk    {7} main.js (main) 523 bytes >{0}< >{1}< >{2}< >{5}< [entry] [rendered]
  [5] ./index.js 523 bytes {7} [built]"
 `;
 
-"Time: Xms
-Built at: Thu Jan 01 1970 00:00:00 GMT
-  Asset      Size  Chunks  Chunk Names
-main.js  3.75 KiB       0  main
-Entrypoint main = main.js
-[0] ./index.js 25 bytes {0} [built]
-
-ERROR in ./index.js
-Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/module-trace-disabled-in-error'"
-`;
-
 exports[`StatsTestCases should print correct stats for parse-error 1`] = `
 "  Asset      Size  Chunks  Chunk Names
 main.js  4.11 KiB       0  main
@@ -1638,19 +1627,6 @@ You may need an appropriate loader to handle this file type, currently no loader
 | in
  @ ./a.js 2:0-13
  @ ./index.js"
-`;
-
-exports[`StatsTestCases should print correct stats for parse-error 2`] = `
-"Time: Xms
-Built at: Thu Jan 01 1970 00:00:00 GMT
-  Asset      Size  Chunks  Chunk Names
-main.js  3.75 KiB       0  main
-Entrypoint main = main.js
-[0] ./index.js 25 bytes {0} [built]
-
-ERROR in ./index.js
-Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/module-trace-enabled-in-error'
- @ ./index.js 1:0-25"
 `;
 
 exports[`StatsTestCases should print correct stats for performance-different-mode-and-target 1`] = `
@@ -1758,28 +1734,6 @@ Child
     For more info visit https://webpack.js.org/guides/code-splitting/"
 `;
 
-exports[`StatsTestCases should print correct stats for performance-different-mode-and-target 2`] = `
-"Hash: 51d6721efa0198f0e5a4
-Time: Xms
-Built at: Thu Jan 01 1970 00:00:00 GMT
-    Asset      Size  Chunks  Chunk Names
-bundle.js  3.57 KiB       0  main
- child.js  3.57 KiB          
-Entrypoint main = bundle.js
-[0] ./index.js 0 bytes {0} [built]
-
-WARNING in configuration
-The 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
-You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/
-Child child:
-       Asset      Size  Chunks  Chunk Names
-    child.js  3.57 KiB       0  child
-    Entrypoint child = child.js
-    [0] ./index.js 0 bytes {0} [built]
-    
-    ERROR in forced error"
-`;
-
 exports[`StatsTestCases should print correct stats for performance-disabled 1`] = `
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: Thu Jan 01 1970 <CLR=BOLD>00:00:00</CLR> GMT
@@ -1795,28 +1749,6 @@ Entrypoint <CLR=BOLD>main</CLR> = <CLR=32,BOLD>main.js</CLR>
 [3] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>3</CLR>}<CLR=32,BOLD> [built]</CLR>
 [4] <CLR=BOLD>./d.js</CLR> 22 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>
 [5] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>1</CLR>}<CLR=32,BOLD> [built]</CLR>"
-`;
-
-exports[`StatsTestCases should print correct stats for performance-disabled 2`] = `
-"Hash: 51d6721efa0198f0e5a4
-Time: Xms
-Built at: Thu Jan 01 1970 00:00:00 GMT
-    Asset      Size  Chunks  Chunk Names
-bundle.js  3.57 KiB       0  main
- child.js  3.57 KiB          
-Entrypoint main = bundle.js
-[0] ./index.js 0 bytes {0} [built]
-
-WARNING in configuration
-The 'mode' option has not been set, webpack will fallback to 'production' for this value. Set 'mode' option to 'development' or 'production' to enable defaults for each environment.
-You can also set it to 'none' to disable any default behavior. Learn more: https://webpack.js.org/configuration/mode/
-Child child:
-       Asset      Size  Chunks  Chunk Names
-    child.js  3.57 KiB       0  child
-    Entrypoint child = child.js
-    [0] ./index.js 0 bytes {0} [built]
-    
-    ERROR in forced error"
 `;
 
 exports[`StatsTestCases should print correct stats for performance-error 1`] = `
@@ -1976,31 +1908,6 @@ chunk    {3} normal.js (normal) 0 bytes <{2}> [rendered]
 chunk    {4} preloaded.js (preloaded) 226 bytes <{2}> >{0}< >{1}< (preload: {1} {0}) [rendered]
 chunk    {5} preloaded2.js (preloaded2) 0 bytes <{2}> [rendered]
 chunk    {6} preloaded3.js (preloaded3) 0 bytes <{2}> [rendered]"
-`;
-
-exports[`StatsTestCases should print correct stats for preload 2`] = `
-"Time: Xms
-Built at: Thu Jan 01 1970 00:00:00 GMT
-  Asset      Size  Chunks  Chunk Names
-main.js  3.75 KiB       0  main
-Entrypoint main = main.js
-[0] ./index.js 25 bytes {0} [built]
-
-ERROR in ./index.js
-Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/module-trace-disabled-in-error'"
-`;
-
-exports[`StatsTestCases should print correct stats for preload 3`] = `
-"Time: Xms
-Built at: Thu Jan 01 1970 00:00:00 GMT
-  Asset      Size  Chunks  Chunk Names
-main.js  3.75 KiB       0  main
-Entrypoint main = main.js
-[0] ./index.js 25 bytes {0} [built]
-
-ERROR in ./index.js
-Module not found: Error: Can't resolve 'does-not-exist' in 'Xdir/module-trace-enabled-in-error'
- @ ./index.js 1:0-25"
 `;
 
 exports[`StatsTestCases should print correct stats for preset-detailed 1`] = `
