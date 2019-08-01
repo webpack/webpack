@@ -768,9 +768,9 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for filter-warnings 1`] = `
-"Hash: 38a5b45c063508b3162538a5b45c063508b3162538a5b45c063508b3162538a5b45c063508b3162538a5b45c063508b3162538a5b45c063508b3162538a5b45c063508b3162538a5b45c063508b3162538a5b45c063508b3162538a5b45c063508b3162538a5b45c063508b3162538a5b45c063508b3162538a5b45c063508b31625
+"Hash: b706ac60cee7c13a1cc0b706ac60cee7c13a1cc0b706ac60cee7c13a1cc0b706ac60cee7c13a1cc0b706ac60cee7c13a1cc0b706ac60cee7c13a1cc0b706ac60cee7c13a1cc0b706ac60cee7c13a1cc0b706ac60cee7c13a1cc0b706ac60cee7c13a1cc0b706ac60cee7c13a1cc0b706ac60cee7c13a1cc0b706ac60cee7c13a1cc0
 Child undefined:
-    Hash: 38a5b45c063508b31625
+    Hash: b706ac60cee7c13a1cc0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -799,49 +799,49 @@ Child undefined:
     
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child Terser:
-    Hash: 38a5b45c063508b31625
+    Hash: b706ac60cee7c13a1cc0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child /Terser/:
-    Hash: 38a5b45c063508b31625
+    Hash: b706ac60cee7c13a1cc0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child warnings => true:
-    Hash: 38a5b45c063508b31625
+    Hash: b706ac60cee7c13a1cc0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child [Terser]:
-    Hash: 38a5b45c063508b31625
+    Hash: b706ac60cee7c13a1cc0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child [/Terser/]:
-    Hash: 38a5b45c063508b31625
+    Hash: b706ac60cee7c13a1cc0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child [warnings => true]:
-    Hash: 38a5b45c063508b31625
+    Hash: b706ac60cee7c13a1cc0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
     bundle.js  2.89 KiB       0  [emitted]  main
     Entrypoint main = bundle.js
 Child should not filter:
-    Hash: 38a5b45c063508b31625
+    Hash: b706ac60cee7c13a1cc0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -870,7 +870,7 @@ Child should not filter:
     
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child /should not filter/:
-    Hash: 38a5b45c063508b31625
+    Hash: b706ac60cee7c13a1cc0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -899,7 +899,7 @@ Child /should not filter/:
     
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child warnings => false:
-    Hash: 38a5b45c063508b31625
+    Hash: b706ac60cee7c13a1cc0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -928,7 +928,7 @@ Child warnings => false:
     
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child [should not filter]:
-    Hash: 38a5b45c063508b31625
+    Hash: b706ac60cee7c13a1cc0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -957,7 +957,7 @@ Child [should not filter]:
     
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child [/should not filter/]:
-    Hash: 38a5b45c063508b31625
+    Hash: b706ac60cee7c13a1cc0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -986,7 +986,7 @@ Child [/should not filter/]:
     
     WARNING in Terser Plugin: Dropping unused function someRemoteUnUsedFunction5 [./a.js:7,0]
 Child [warnings => false]:
-    Hash: 38a5b45c063508b31625
+    Hash: b706ac60cee7c13a1cc0
     Time: Xms
     Built at: Thu Jan 01 1970 00:00:00 GMT
         Asset      Size  Chunks             Chunk Names
@@ -3418,7 +3418,7 @@ Entrypoint main = bundle.js
 `;
 
 exports[`StatsTestCases should print correct stats for warnings-terser 1`] = `
-"Hash: 282776f3c58febaa8217
+"Hash: d747afbed2a2cf9a7f5d
 Time: Xms
 Built at: Thu Jan 01 1970 00:00:00 GMT
     Asset      Size  Chunks             Chunk Names
