@@ -49,6 +49,7 @@ describe("ProgressPlugin", function() {
 				"omit arguments when no space"
 			);
 			expect(logs).toContain("93% ...hunk asset optimization");
+			expect(logs).toContain("100%");
 		});
 	});
 
