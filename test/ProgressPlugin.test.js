@@ -29,7 +29,7 @@ describe("ProgressPlugin", function() {
 
 	it("should not print lines longer than stderr.columns", () => {
 		const compiler = createSimpleCompiler();
-		process.stderr.columns = 30;
+		process.stderr.columns = 31;
 
 		return RunCompilerAsync(compiler).then(() => {
 			const logs = getLogs(stderr.toString());
