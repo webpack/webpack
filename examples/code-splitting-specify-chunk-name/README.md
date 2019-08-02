@@ -49,7 +49,7 @@ export default foo;
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -141,6 +141,8 @@ export default foo;
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/
+/******/ 				// create error before stack unwound to get useful stacktrace later
+/******/ 				var error = new Error();
 /******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
@@ -150,7 +152,8 @@ export default foo;
 /******/ 						if(chunk) {
 /******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
 /******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 							error.name = 'ChunkLoadError';
 /******/ 							error.type = errorType;
 /******/ 							error.request = realSrc;
 /******/ 							chunk[1](error);
@@ -324,12 +327,12 @@ module.exports = webpackAsyncContext;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
+Version: webpack 4.39.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  442 bytes       0  [emitted]  chunk-bar-baz0
 1.output.js  436 bytes       1  [emitted]  chunk-bar-baz2
 2.output.js  433 bytes       2  [emitted]  chunk-foo
-  output.js   9.46 KiB       3  [emitted]  main
+  output.js   9.68 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (chunk-bar-baz0) 38 bytes <{3}> [rendered]
     > ./bar [4] ./templates lazy ^\.\/ba.*$ namespace object ./bar
@@ -364,12 +367,12 @@ chunk    {3} output.js (main) 565 bytes >{0}< >{1}< >{2}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
+Version: webpack 4.39.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  114 bytes       0  [emitted]  chunk-bar-baz0
 1.output.js  115 bytes       1  [emitted]  chunk-bar-baz2
 2.output.js  113 bytes       2  [emitted]  chunk-foo
-  output.js   2.51 KiB       3  [emitted]  main
+  output.js   2.59 KiB       3  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js (chunk-bar-baz0) 38 bytes <{3}> [rendered]
     > ./bar [4] ./templates lazy ^\.\/ba.*$ namespace object ./bar

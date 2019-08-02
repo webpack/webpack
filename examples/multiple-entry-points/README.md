@@ -118,7 +118,7 @@ module.exports = "Common";
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -154,6 +154,7 @@ module.exports = "Common";
 /******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
 /******/ 			}
 /******/ 		}
+/******/
 /******/ 		return result;
 /******/ 	}
 /******/
@@ -230,6 +231,8 @@ module.exports = "Common";
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/
+/******/ 				// create error before stack unwound to get useful stacktrace later
+/******/ 				var error = new Error();
 /******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
@@ -239,7 +242,8 @@ module.exports = "Common";
 /******/ 						if(chunk) {
 /******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
 /******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 							error.name = 'ChunkLoadError';
 /******/ 							error.type = errorType;
 /******/ 							error.request = realSrc;
 /******/ 							chunk[1](error);
@@ -365,7 +369,7 @@ __webpack_require__.e(/*! AMD require */ 1).then(function() { var __WEBPACK_AMD_
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -401,6 +405,7 @@ __webpack_require__.e(/*! AMD require */ 1).then(function() { var __WEBPACK_AMD_
 /******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
 /******/ 			}
 /******/ 		}
+/******/
 /******/ 		return result;
 /******/ 	}
 /******/
@@ -477,6 +482,8 @@ __webpack_require__.e(/*! AMD require */ 1).then(function() { var __WEBPACK_AMD_
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/
+/******/ 				// create error before stack unwound to get useful stacktrace later
+/******/ 				var error = new Error();
 /******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
@@ -486,7 +493,8 @@ __webpack_require__.e(/*! AMD require */ 1).then(function() { var __WEBPACK_AMD_
 /******/ 						if(chunk) {
 /******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
 /******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 							error.name = 'ChunkLoadError';
 /******/ 							error.type = errorType;
 /******/ 							error.request = realSrc;
 /******/ 							chunk[1](error);
@@ -620,12 +628,12 @@ module.exports = function(msg) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
+Version: webpack 4.39.0
      Asset       Size  Chunks             Chunk Names
       1.js  369 bytes       1  [emitted]  
 commons.js  258 bytes       0  [emitted]  commons
-  pageA.js   9.28 KiB       2  [emitted]  pageA
-  pageB.js   9.24 KiB       3  [emitted]  pageB
+  pageA.js   9.51 KiB       2  [emitted]  pageA
+  pageB.js   9.47 KiB       3  [emitted]  pageB
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 chunk    {0} commons.js (commons) 26 bytes ={2}= ={3}= >{1}< [initial] [rendered] split chunk (cache group: commons) (name: commons)
@@ -656,12 +664,12 @@ chunk    {3} pageB.js (pageB) 148 bytes ={0}= >{1}< [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
+Version: webpack 4.39.0
      Asset       Size  Chunks             Chunk Names
       1.js  121 bytes       1  [emitted]  
 commons.js   94 bytes       0  [emitted]  commons
-  pageA.js   2.26 KiB       2  [emitted]  pageA
-  pageB.js   2.23 KiB       3  [emitted]  pageB
+  pageA.js   2.34 KiB       2  [emitted]  pageA
+  pageB.js   2.31 KiB       3  [emitted]  pageB
 Entrypoint pageA = commons.js pageA.js
 Entrypoint pageB = commons.js pageB.js
 chunk    {0} commons.js (commons) 26 bytes ={2}= ={3}= >{1}< [initial] [rendered] split chunk (cache group: commons) (name: commons)

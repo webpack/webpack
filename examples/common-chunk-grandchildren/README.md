@@ -120,7 +120,7 @@ module.exports = {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -212,6 +212,8 @@ module.exports = {
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/
+/******/ 				// create error before stack unwound to get useful stacktrace later
+/******/ 				var error = new Error();
 /******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
@@ -221,7 +223,8 @@ module.exports = {
 /******/ 						if(chunk) {
 /******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
 /******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 							error.name = 'ChunkLoadError';
 /******/ 							error.type = errorType;
 /******/ 							error.request = realSrc;
 /******/ 							chunk[1](error);
@@ -453,13 +456,13 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
+Version: webpack 4.39.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  337 bytes       0  [emitted]  
 2.output.js  408 bytes       2  [emitted]  
 3.output.js  542 bytes       3  [emitted]  
 4.output.js  408 bytes       4  [emitted]  
-  output.js   8.74 KiB       1  [emitted]  main
+  output.js   8.96 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 69 bytes <{1}> <{3}> ={2}= ={4}= [rendered] split chunk (cache group: default)
     > [1] ./example.js 3:1-6:3
@@ -491,13 +494,13 @@ chunk    {4} 4.output.js 136 bytes <{3}> ={0}= [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
+Version: webpack 4.39.0
       Asset       Size  Chunks             Chunk Names
 0.output.js  133 bytes       0  [emitted]  
 2.output.js  138 bytes       2  [emitted]  
 3.output.js  198 bytes       3  [emitted]  
 4.output.js  138 bytes       4  [emitted]  
-  output.js   2.13 KiB       1  [emitted]  main
+  output.js   2.21 KiB       1  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} 0.output.js 69 bytes <{1}> <{3}> ={2}= ={4}= [rendered] split chunk (cache group: default)
     > [1] ./example.js 3:1-6:3

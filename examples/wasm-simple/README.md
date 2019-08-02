@@ -70,7 +70,7 @@ export function fibonacciJavascript(i) {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -190,6 +190,8 @@ export function fibonacciJavascript(i) {
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/
+/******/ 				// create error before stack unwound to get useful stacktrace later
+/******/ 				var error = new Error();
 /******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
@@ -199,7 +201,8 @@ export function fibonacciJavascript(i) {
 /******/ 						if(chunk) {
 /******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
 /******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 							error.name = 'ChunkLoadError';
 /******/ 							error.type = errorType;
 /******/ 							error.request = realSrc;
 /******/ 							chunk[1](error);
@@ -504,14 +507,14 @@ wasmExports["__webpack_init__"]()
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
-                    Asset          Size  Chunks             Chunk Names
-              1.output.js      3.37 KiB       1  [emitted]  
-              2.output.js     636 bytes       2  [emitted]  
-3580ad47c1ba500584ea.wasm  unknown size       1  [emitted]  
-baf012e37fe9b85e815a.wasm  unknown size       1  [emitted]  
-c50d6212832abfc3ae1e.wasm  unknown size    1, 2  [emitted]  
-                output.js      11.2 KiB       0  [emitted]  main
+Version: webpack 4.39.0
+                    Asset       Size  Chunks             Chunk Names
+              1.output.js   3.37 KiB       1  [emitted]  
+              2.output.js  636 bytes       2  [emitted]  
+3580ad47c1ba500584ea.wasm   88 bytes       1  [emitted]  
+baf012e37fe9b85e815a.wasm   93 bytes       1  [emitted]  
+c50d6212832abfc3ae1e.wasm   67 bytes    1, 2  [emitted]  
+                output.js   11.5 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 762 bytes >{1}< >{2}< [entry] [rendered]
     > ./example.js main
@@ -548,14 +551,14 @@ chunk    {2} 2.output.js, c50d6212832abfc3ae1e.wasm 41 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
-                    Asset          Size   Chunks             Chunk Names
-0a12d714e570b7fd9d8b.wasm  unknown size     1, 2  [emitted]  
-              1.output.js     681 bytes     1, 2  [emitted]  
-              2.output.js     184 bytes        2  [emitted]  
-a04390412f9500b1d7ae.wasm  unknown size     1, 2  [emitted]  
-a36cec63b02caac8e61a.wasm  unknown size  1, 2, 2  [emitted]  
-                output.js      3.29 KiB        0  [emitted]  main
+Version: webpack 4.39.0
+                    Asset       Size   Chunks             Chunk Names
+0a12d714e570b7fd9d8b.wasm   70 bytes     1, 2  [emitted]  
+              1.output.js  681 bytes     1, 2  [emitted]  
+              2.output.js  184 bytes        2  [emitted]  
+a04390412f9500b1d7ae.wasm   65 bytes     1, 2  [emitted]  
+a36cec63b02caac8e61a.wasm   67 bytes  1, 2, 2  [emitted]  
+                output.js   3.37 KiB        0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 762 bytes >{1}< >{2}< [entry] [rendered]
     > ./example.js main

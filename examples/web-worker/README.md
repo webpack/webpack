@@ -200,7 +200,7 @@ module.exports = function() {
 /******/ 		promises.push(Promise.resolve().then(function() {
 /******/ 			// "1" is the signal for "already loaded"
 /******/ 			if(!installedChunks[chunkId]) {
-/******/ 				importScripts("" + chunkId + ".hash.worker.js");
+/******/ 				importScripts(__webpack_require__.p + "" + chunkId + ".hash.worker.js");
 /******/ 			}
 /******/ 		}));
 /******/ 		return Promise.all(promises);
@@ -370,10 +370,10 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
+Version: webpack 4.39.0
            Asset      Size  Chunks             Chunk Names
 1.hash.worker.js  1.77 KiB          [emitted]  
-  hash.worker.js  4.98 KiB          [emitted]  
+  hash.worker.js     5 KiB          [emitted]  
        output.js  4.42 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
@@ -385,7 +385,7 @@ chunk    {0} output.js (main) 326 bytes [entry] [rendered]
 Child worker:
                Asset      Size  Chunks             Chunk Names
     1.hash.worker.js  1.77 KiB       1  [emitted]  
-      hash.worker.js  4.98 KiB       0  [emitted]  main
+      hash.worker.js     5 KiB       0  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} hash.worker.js (main) 162 bytes >{1}< [entry] [rendered]
         > !!./worker.js main
@@ -410,10 +410,10 @@ Child worker:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
+Version: webpack 4.39.0
            Asset       Size  Chunks             Chunk Names
 1.hash.worker.js  588 bytes          [emitted]  
-  hash.worker.js   1.27 KiB          [emitted]  
+  hash.worker.js   1.28 KiB          [emitted]  
        output.js   1.06 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
@@ -425,7 +425,7 @@ chunk    {0} output.js (main) 326 bytes [entry] [rendered]
 Child worker:
                Asset       Size  Chunks             Chunk Names
     1.hash.worker.js  588 bytes       1  [emitted]  
-      hash.worker.js   1.27 KiB       0  [emitted]  main
+      hash.worker.js   1.28 KiB       0  [emitted]  main
     Entrypoint main = hash.worker.js
     chunk    {0} hash.worker.js (main) 162 bytes >{1}< [entry] [rendered]
         > !!./worker.js main

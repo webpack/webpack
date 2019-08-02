@@ -274,7 +274,7 @@ var named = "named";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
+Version: webpack 4.39.0
     Asset      Size  Chunks             Chunk Names
 output.js  7.05 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -306,7 +306,7 @@ chunk    {0} output.js (main) 1.13 KiB [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
+Version: webpack 4.39.0
     Asset      Size  Chunks             Chunk Names
 output.js  1.35 KiB       0  [emitted]  main
 Entrypoint main = output.js

@@ -31,7 +31,7 @@ getTemplate("b", function(b) {
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -123,6 +123,8 @@ getTemplate("b", function(b) {
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/
+/******/ 				// create error before stack unwound to get useful stacktrace later
+/******/ 				var error = new Error();
 /******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
@@ -132,7 +134,8 @@ getTemplate("b", function(b) {
 /******/ 						if(chunk) {
 /******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
 /******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
+/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 							error.name = 'ChunkLoadError';
 /******/ 							error.type = errorType;
 /******/ 							error.request = realSrc;
 /******/ 							chunk[1](error);
@@ -333,10 +336,10 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
+Version: webpack 4.39.0
       Asset      Size  Chunks             Chunk Names
 1.output.js  1.81 KiB       1  [emitted]  
-  output.js  8.35 KiB       0  [emitted]  main
+  output.js  8.57 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 266 bytes >{1}< [entry] [rendered]
     > ./example.js main
@@ -361,10 +364,10 @@ chunk    {1} 1.output.js 457 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
+Version: webpack 4.39.0
       Asset       Size  Chunks             Chunk Names
 1.output.js  621 bytes       1  [emitted]  
-  output.js    2.1 KiB       0  [emitted]  main
+  output.js   2.18 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 266 bytes >{1}< [entry] [rendered]
     > ./example.js main

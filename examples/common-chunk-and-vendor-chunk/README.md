@@ -154,7 +154,7 @@ module.exports = "utility3";
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -190,6 +190,7 @@ module.exports = "utility3";
 /******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
 /******/ 			}
 /******/ 		}
+/******/
 /******/ 		return result;
 /******/ 	}
 /******/
@@ -346,7 +347,7 @@ module.exports = "utility1";
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -382,6 +383,7 @@ module.exports = "utility1";
 /******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
 /******/ 			}
 /******/ 		}
+/******/
 /******/ 		return result;
 /******/ 	}
 /******/
@@ -524,7 +526,7 @@ module.exports = "pageB";
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(installedChunks[chunkId]) {
+/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -560,6 +562,7 @@ module.exports = "pageB";
 /******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
 /******/ 			}
 /******/ 		}
+/******/
 /******/ 		return result;
 /******/ 	}
 /******/
@@ -691,13 +694,13 @@ module.exports = "pageC";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
+Version: webpack 4.39.0
                        Asset       Size  Chunks             Chunk Names
 commons~pageA~pageB~pageC.js  269 bytes       2  [emitted]  commons~pageA~pageB~pageC
       commons~pageB~pageC.js  269 bytes       4  [emitted]  commons~pageB~pageC
-                    pageA.js    6.7 KiB       0  [emitted]  pageA
-                    pageB.js    6.5 KiB       3  [emitted]  pageB
-                    pageC.js   6.45 KiB       5  [emitted]  pageC
+                    pageA.js   6.77 KiB       0  [emitted]  pageA
+                    pageB.js   6.58 KiB       3  [emitted]  pageB
+                    pageC.js   6.52 KiB       5  [emitted]  pageC
                    vendor.js  536 bytes       1  [emitted]  vendor
 Entrypoint pageA = vendor.js commons~pageA~pageB~pageC.js pageA.js
 Entrypoint pageB = vendor.js commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageB.js
@@ -740,13 +743,13 @@ chunk    {5} pageC.js (pageC) 102 bytes ={2}= ={4}= [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.29.6
+Version: webpack 4.39.0
                        Asset       Size  Chunks             Chunk Names
 commons~pageA~pageB~pageC.js   96 bytes       0  [emitted]  commons~pageA~pageB~pageC
       commons~pageB~pageC.js   97 bytes       1  [emitted]  commons~pageB~pageC
-                    pageA.js   1.52 KiB       3  [emitted]  pageA
-                    pageB.js   1.49 KiB       4  [emitted]  pageB
-                    pageC.js   1.48 KiB       5  [emitted]  pageC
+                    pageA.js   1.56 KiB       3  [emitted]  pageA
+                    pageB.js   1.53 KiB       4  [emitted]  pageB
+                    pageC.js   1.52 KiB       5  [emitted]  pageC
                    vendor.js  134 bytes       2  [emitted]  vendor
 Entrypoint pageA = vendor.js commons~pageA~pageB~pageC.js pageA.js
 Entrypoint pageB = vendor.js commons~pageA~pageB~pageC.js commons~pageB~pageC.js pageB.js
