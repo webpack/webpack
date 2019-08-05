@@ -16,7 +16,7 @@
     "enhanced-resolve": "5.0.0-beta.2",
     "eslint-scope": "^4.0.3",
     "events": "^3.0.0",
-    "find-cache-dir": "^2.1.0",
+    "find-cache-dir": "^3.0.0",
     "glob-to-regexp": "^0.4.1",
     "graceful-fs": "^4.1.15",
     "json-parse-better-errors": "^1.0.2",
