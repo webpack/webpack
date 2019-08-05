@@ -9,7 +9,9 @@
 
 [![node][node]][node-url]
 [![deps][deps]][deps-url]
-[![tests][tests]][tests-url]
+<a href="https://gatsbyjs.org/contributing/how-to-contribute/">
+    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs welcome!" />
+  </a>
 [![builds][builds]][builds-url]
 [![builds2][builds2]][builds2-url]
 [![coverage][cover]][cover-url]
