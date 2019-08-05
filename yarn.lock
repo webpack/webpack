@@ -6928,9 +6928,9 @@ webpack-log@^2.0.0:
     uuid "^3.3.2"
 
 webpack-sources@^1.4.0, webpack-sources@^1.4.1:
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-1.4.1.tgz#b91b2c5b1c4e890ff50d1d35b7fa3657040da1da"
-  integrity sha512-XSz38193PTo/1csJabKaV4b53uRVotlMgqJXm3s3eje0Bu6gQTxYDqpD38CmQfDBA+gN+QqaGjasuC8I/7eW3Q==
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-1.4.2.tgz#a688692f5ce53f9db6edef498c0beae73610c9d6"
+  integrity sha512-V/mHhu5RzLPYVY3Aa+ogcoLqdZU+XdOf0VCLuqSDLJ6oo5lk7Q1n9kG5cySidY/SzXfXwS+CASg4z00q7gIhRQ==
   dependencies:
     source-list-map "^2.0.0"
     source-map "~0.6.1"
