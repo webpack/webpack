@@ -9,7 +9,7 @@
 
 [![node][node]][node-url]
 [![deps][deps]][deps-url]
-<a href="https://gatsbyjs.org/contributing/how-to-contribute/">
+<a href="https://webpack.js.org/contribute/">
     <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PRs welcome!" />
   </a>
 [![builds][builds]][builds-url]
@@ -765,9 +765,6 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 [deps]: https://img.shields.io/david/webpack/webpack.svg
 [deps-url]: https://david-dm.org/webpack/webpack
-
-[tests]: https://img.shields.io/travis/webpack/webpack/master.svg
-[tests-url]: https://travis-ci.org/webpack/webpack
 
 [builds-url]: https://ci.appveyor.com/project/sokra/webpack/branch/master
 [builds]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
