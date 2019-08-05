@@ -3,8 +3,9 @@
 
 const path = require("path");
 const fs = require("graceful-fs");
+const captureStdio = require("./helpers/captureStdio");
 
-const webpack = require("..");
+let webpack;
 
 /**
  * Escapes regular expression metacharacters
@@ -35,6 +36,14 @@ const tests = fs
 	});
 
 describe("StatsTestCases", () => {
+	let stderr;
+	beforeEach(() => {
+		stderr = captureStdio(process.stderr, true);
+		webpack = require("..");
+	});
+	afterEach(() => {
+		stderr.restore();
+	});
 	tests.forEach(testName => {
 		it("should print correct stats for " + testName, done => {
 			jest.setTimeout(30000);
@@ -136,10 +145,12 @@ describe("StatsTestCases", () => {
 				let actual = stats.toString(toStringOptions);
 				expect(typeof actual).toBe("string");
 				if (!hasColorSetting) {
+					actual = stderr.toString() + actual;
 					actual = actual
 						.replace(/\u001b\[[0-9;]*m/g, "")
 						.replace(/[.0-9]+(\s?ms)/g, "X$1");
 				} else {
+					actual = stderr.toStringRaw() + actual;
 					actual = actual
 						.replace(/\u001b\[1m\u001b\[([0-9;]*)m/g, "<CLR=$1,BOLD>")
 						.replace(/\u001b\[1m/g, "<CLR=BOLD>")
@@ -150,6 +161,7 @@ describe("StatsTestCases", () => {
 				const testPath = path.join(base, testName);
 				actual = actual
 					.replace(/\r\n?/g, "\n")
+					.replace(/\(.+\) DeprecationWarning.+(\n\s+at .*)*\n?/g, "")
 					.replace(/[\t ]*Version:.+\n/g, "")
 					.replace(new RegExp(quotemeta(testPath), "g"), "Xdir/" + testName)
 					.replace(/(\w)\\(\w)/g, "$1/$2")

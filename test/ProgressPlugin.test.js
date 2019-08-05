@@ -3,19 +3,18 @@
 const _ = require("lodash");
 const path = require("path");
 const MemoryFs = require("memory-fs");
-const webpack = require("..");
 const captureStdio = require("./helpers/captureStdio");
 
+let webpack;
+
 describe("ProgressPlugin", function() {
-	let _env;
 	let stderr;
 
 	beforeEach(() => {
-		_env = process.env;
-		stderr = captureStdio(process.stderr);
+		stderr = captureStdio(process.stderr, true);
+		webpack = require("..");
 	});
 	afterEach(() => {
-		process.env = _env;
 		stderr && stderr.restore();
 	});
 
@@ -30,17 +29,23 @@ describe("ProgressPlugin", function() {
 
 	it("should not print lines longer than stderr.columns", () => {
 		const compiler = createSimpleCompiler();
-		process.stderr.columns = 40;
+		process.stderr.columns = 35;
 
 		return RunCompilerAsync(compiler).then(() => {
 			const logs = getLogs(stderr.toString());
 
 			expect(logs.length).toBeGreaterThan(20);
-			logs.forEach(log => expect(log.length).toBeLessThanOrEqual(40));
+			logs.forEach(log => expect(log.length).toBeLessThanOrEqual(35));
 			expect(logs).toContain(
-				" 10% building ...tries ...dules 0 active",
+				"75% ...optimization ...ChunksPlugin",
 				"trims each detail string equally"
 			);
+			expect(logs).toContain(
+				"10% ...ding ...ries ...ules ...tive",
+				"remove empty arguments and omit arguments when no space"
+			);
+			expect(logs).toContain("92% after chunk asset optimization");
+			expect(logs).toContain("100%");
 		});
 	});
 
@@ -88,7 +93,7 @@ const createSimpleCompiler = () => {
 	return compiler;
 };
 
-const getLogs = logsStr => logsStr.split(/\u0008+/).filter(v => !(v === " "));
+const getLogs = logsStr => logsStr.split(/\r/).filter(v => !(v === " "));
 
 const RunCompilerAsync = compiler =>
 	new Promise((resolve, reject) => {

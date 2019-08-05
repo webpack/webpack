@@ -7,6 +7,7 @@ const webpack = require("..");
 const Stats = require("../lib/Stats");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 const MemoryFs = require("memory-fs");
+const captureStdio = require("./helpers/captureStdio");
 
 describe("Compiler", () => {
 	jest.setTimeout(20000);
@@ -710,32 +711,12 @@ describe("Compiler", () => {
 		});
 	});
 	describe("infrastructure logging", () => {
-		const CONSOLE_METHODS = [
-			"error",
-			"warn",
-			"info",
-			"log",
-			"debug",
-			"trace",
-			"profile",
-			"profileEnd",
-			"group",
-			"groupEnd",
-			"groupCollapsed"
-		];
-		const spies = {};
+		let capture;
 		beforeEach(() => {
-			for (const method of CONSOLE_METHODS) {
-				if (console[method]) {
-					spies[method] = jest.spyOn(console, method).mockImplementation();
-				}
-			}
+			capture = captureStdio(process.stderr);
 		});
 		afterEach(() => {
-			for (const method in spies) {
-				spies[method].mockRestore();
-				delete spies[method];
-			}
+			capture.restore();
 		});
 		class MyPlugin {
 			apply(compiler) {
@@ -769,25 +750,18 @@ describe("Compiler", () => {
 			});
 			compiler.outputFileSystem = new MemoryFs();
 			compiler.run((err, stats) => {
-				expect(spies.group).toHaveBeenCalledTimes(1);
-				expect(spies.group).toHaveBeenCalledWith("[MyPlugin] Group");
-				expect(spies.groupCollapsed).toHaveBeenCalledTimes(1);
-				expect(spies.groupCollapsed).toHaveBeenCalledWith(
-					"[MyPlugin] Collaped group"
-				);
-				expect(spies.error).toHaveBeenCalledTimes(1);
-				expect(spies.error).toHaveBeenCalledWith("<e> [MyPlugin] Error");
-				expect(spies.warn).toHaveBeenCalledTimes(1);
-				expect(spies.warn).toHaveBeenCalledWith("<w> [MyPlugin] Warning");
-				expect(spies.info).toHaveBeenCalledTimes(1);
-				expect(spies.info).toHaveBeenCalledWith("<i> [MyPlugin] Info");
-				expect(spies.log).toHaveBeenCalledTimes(3);
-				expect(spies.log).toHaveBeenCalledWith("[MyPlugin] Log");
-				expect(spies.log).toHaveBeenCalledWith(
-					"[MyPlugin] Log inside collapsed group"
-				);
-				expect(spies.debug).toHaveBeenCalledTimes(0);
-				expect(spies.groupEnd).toHaveBeenCalledTimes(2);
+				expect(capture.toString().replace(/[\d.]+ms/, "Xms"))
+					.toMatchInlineSnapshot(`
+"<-> [MyPlugin] Group
+  <e> [MyPlugin] Error
+  <w> [MyPlugin] Warning
+  <i> [MyPlugin] Info
+      [MyPlugin] Log
+  <-> [MyPlugin] Collaped group
+        [MyPlugin] Log inside collapsed group
+<t> [MyPlugin] Time: Xms
+"
+`);
 				done();
 			});
 		});
@@ -807,26 +781,19 @@ describe("Compiler", () => {
 			});
 			compiler.outputFileSystem = new MemoryFs();
 			compiler.run((err, stats) => {
-				expect(spies.group).toHaveBeenCalledTimes(1);
-				expect(spies.group).toHaveBeenCalledWith("[MyPlugin] Group");
-				expect(spies.groupCollapsed).toHaveBeenCalledTimes(1);
-				expect(spies.groupCollapsed).toHaveBeenCalledWith(
-					"[MyPlugin] Collaped group"
-				);
-				expect(spies.error).toHaveBeenCalledTimes(1);
-				expect(spies.error).toHaveBeenCalledWith("<e> [MyPlugin] Error");
-				expect(spies.warn).toHaveBeenCalledTimes(1);
-				expect(spies.warn).toHaveBeenCalledWith("<w> [MyPlugin] Warning");
-				expect(spies.info).toHaveBeenCalledTimes(1);
-				expect(spies.info).toHaveBeenCalledWith("<i> [MyPlugin] Info");
-				expect(spies.log).toHaveBeenCalledTimes(3);
-				expect(spies.log).toHaveBeenCalledWith("[MyPlugin] Log");
-				expect(spies.log).toHaveBeenCalledWith(
-					"[MyPlugin] Log inside collapsed group"
-				);
-				expect(spies.debug).toHaveBeenCalledTimes(1);
-				expect(spies.debug).toHaveBeenCalledWith("[MyPlugin] Debug");
-				expect(spies.groupEnd).toHaveBeenCalledTimes(2);
+				expect(capture.toString().replace(/[\d.]+ms/, "Xms"))
+					.toMatchInlineSnapshot(`
+"<-> [MyPlugin] Group
+  <e> [MyPlugin] Error
+  <w> [MyPlugin] Warning
+  <i> [MyPlugin] Info
+      [MyPlugin] Log
+      [MyPlugin] Debug
+  <-> [MyPlugin] Collaped group
+        [MyPlugin] Log inside collapsed group
+<t> [MyPlugin] Time: Xms
+"
+`);
 				done();
 			});
 		});
@@ -845,14 +812,7 @@ describe("Compiler", () => {
 			});
 			compiler.outputFileSystem = new MemoryFs();
 			compiler.run((err, stats) => {
-				expect(spies.group).toHaveBeenCalledTimes(0);
-				expect(spies.groupCollapsed).toHaveBeenCalledTimes(0);
-				expect(spies.error).toHaveBeenCalledTimes(0);
-				expect(spies.warn).toHaveBeenCalledTimes(0);
-				expect(spies.info).toHaveBeenCalledTimes(0);
-				expect(spies.log).toHaveBeenCalledTimes(0);
-				expect(spies.debug).toHaveBeenCalledTimes(0);
-				expect(spies.groupEnd).toHaveBeenCalledTimes(0);
+				expect(capture.toString()).toMatchInlineSnapshot(`""`);
 				done();
 			});
 		});
