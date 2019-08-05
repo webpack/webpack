@@ -264,7 +264,7 @@ images/1be7b55b29524343503e.svg  656 bytes   ({0})  [emitted]  (main)
 images/24e804317f239f7906e1.png   14.6 KiB   ({0})  [emitted]  (main)
 images/afb284cb97b4374bd1fc.jpg   5.89 KiB   ({0})  [emitted]  (main)
                       output.js   6.23 KiB     {0}  [emitted]  main
-Entrypoint main = output.js (images/24e804317f239f7906e1.png images/afb284cb97b4374bd1fc.jpg images/1be7b55b29524343503e.svg)
+Entrypoint main = output.js (images/1be7b55b29524343503e.svg images/24e804317f239f7906e1.png images/afb284cb97b4374bd1fc.jpg)
 chunk {0} output.js (main) 868 bytes (javascript) 21.1 KiB (asset) 920 bytes (runtime) [entry] [rendered]
     > ./example.js main
  [0] ./example.js 742 bytes {0} [built]

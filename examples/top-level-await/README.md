@@ -315,7 +315,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 		
 /******/ 		__webpack_require__.f.j = function(chunkId, promises) {
 /******/ 			// JSONP chunk loading for javascript
-/******/ 			var installedChunkData = installedChunks[chunkId];
+/******/ 			var installedChunkData = Object.prototype.hasOwnProperty.call(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 			if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 		
 /******/ 				// a Promise means "currently loading".
@@ -331,7 +331,10 @@ const AlternativeCreateUserAction = async name => {
 /******/ 		
 /******/ 						// start chunk loading
 /******/ 						var url = __webpack_require__.p + __webpack_require__.u(chunkId);
-/******/ 						var loadingEnded = function() { if(installedChunks[chunkId]) return installedChunks[chunkId][1]; if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined; };
+/******/ 						var loadingEnded = function() {
+/******/ 							if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) return installedChunks[chunkId][1];
+/******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 						};
 /******/ 						var script = document.createElement('script');
 /******/ 						var onScriptComplete;
 /******/ 		
@@ -353,6 +356,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 								var errorType = event && (event.type === 'load' ? 'missing' : event.type);
 /******/ 								var realSrc = event && event.target && event.target.src;
 /******/ 								error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 								error.name = 'ChunkLoadError';
 /******/ 								error.type = errorType;
 /******/ 								error.request = realSrc;
 /******/ 								reportError(error);
@@ -392,7 +396,7 @@ const AlternativeCreateUserAction = async name => {
 /******/ 			var moduleId, chunkId, i = 0, resolves = [];
 /******/ 			for(;i < chunkIds.length; i++) {
 /******/ 				chunkId = chunkIds[i];
-/******/ 				if(installedChunks[chunkId]) {
+/******/ 				if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					resolves.push(installedChunks[chunkId][0]);
 /******/ 				}
 /******/ 				installedChunks[chunkId] = 0;
@@ -509,12 +513,12 @@ return __webpack_exports__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.14
+Version: webpack 5.0.0-alpha.18
         Asset      Size  Chunks             Chunk Names
 497.output.js  2.45 KiB   {497}  [emitted]
-    output.js  10.8 KiB   {179}  [emitted]  main
+    output.js  11.1 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {179} output.js (main) 1.19 KiB (javascript) 4.42 KiB (runtime) [entry] [rendered]
+chunk {179} output.js (main) 1.19 KiB (javascript) 4.67 KiB (runtime) [entry] [rendered]
     > ./example.js main
  [0] ./example.js 103 bytes {179} [built]
      [no exports]
@@ -545,12 +549,12 @@ chunk {497} 497.output.js 622 bytes [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.14
+Version: webpack 5.0.0-alpha.18
         Asset       Size  Chunks             Chunk Names
 497.output.js  532 bytes   {497}  [emitted]
-    output.js   1.78 KiB   {179}  [emitted]  main
+    output.js   1.93 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {179} output.js (main) 1.19 KiB (javascript) 4.42 KiB (runtime) [entry] [rendered]
+chunk {179} output.js (main) 1.19 KiB (javascript) 4.67 KiB (runtime) [entry] [rendered]
     > ./example.js main
  [978] ./example.js + 1 modules 1.19 KiB {179} [built]
        [no exports]

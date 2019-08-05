@@ -169,8 +169,8 @@ module.exports = {
 /*!********************************!*\
   !*** ./example.js + 2 modules ***!
   \********************************/
-/*! other exports [not provided] [maybe used (runtime-defined)] */
-/*! runtime requirements: __webpack_exports____webpack_require__.r, __webpack_require__.d, __webpack_require__.n, __webpack_require__.e, __webpack_require__,  */
+/*! exports [not provided] [maybe used (runtime-defined)] */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.n, __webpack_require__.e, __webpack_require__ */
 /*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js (<- Module is referenced from different chunks by these modules: ./lazy.js + 2 modules) */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
@@ -196,7 +196,7 @@ function b_a() {
 
 
 __webpack_require__.e(/*! import() */ 262).then(__webpack_require__.bind(null, /*! ./lazy */ 2)).then(function(lazy) {
-	console.log(a, b_a(), shared["x"], shared["y"], lazy.c, lazy.d.a, lazy.x, lazy.y);
+	console.log(a, b_a(), shared.x, shared.y, lazy.c, lazy.d.a, lazy.x, lazy.y);
 });
 
 
@@ -207,7 +207,8 @@ __webpack_require__.e(/*! import() */ 262).then(__webpack_require__.bind(null, /
   \********************************************/
 /*! export x [provided] [used] [can be renamed] */
 /*! export y [provided] [used] [can be renamed] */
-/*! runtime requirements: __webpack_exports____webpack_require__.r, __webpack_require__.d, __webpack_require__,  */
+/*! other exports [not provided] [unused] */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__ */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -274,7 +275,10 @@ var x = "x";
 /******/ 		// This file contains only the entry chunk.
 /******/ 		// The chunk loading function for additional chunks
 /******/ 		__webpack_require__.e = function requireEnsure(chunkId) {
-/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce(function(promises, key) { __webpack_require__.f[key](chunkId, promises); return promises; }, []));
+/******/ 			return Promise.all(Object.keys(__webpack_require__.f).reduce(function(promises, key) {
+/******/ 				__webpack_require__.f[key](chunkId, promises);
+/******/ 				return promises;
+/******/ 			}, []));
 /******/ 		};
 /******/ 	}();
 /******/ 	
@@ -324,53 +328,62 @@ var x = "x";
 /******/ 		
 /******/ 		
 /******/ 		
+/******/ 		
 /******/ 		__webpack_require__.f.j = function(chunkId, promises) {
 /******/ 			// JSONP chunk loading for javascript
-/******/ 			var installedChunkData = installedChunks[chunkId];
+/******/ 			var installedChunkData = Object.prototype.hasOwnProperty.call(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 			if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 		
 /******/ 				// a Promise means "currently loading".
 /******/ 				if(installedChunkData) {
 /******/ 					promises.push(installedChunkData[2]);
 /******/ 				} else {
-/******/ 					// setup Promise in chunk cache
-/******/ 					var promise = new Promise(function(resolve, reject) {
-/******/ 						installedChunkData = installedChunks[chunkId] = [resolve, reject];
-/******/ 					});
-/******/ 					promises.push(installedChunkData[2] = promise);
+/******/ 					if(true) { // all chunks have JS
+/******/ 						// setup Promise in chunk cache
+/******/ 						var promise = new Promise(function(resolve, reject) {
+/******/ 							installedChunkData = installedChunks[chunkId] = [resolve, reject];
+/******/ 						});
+/******/ 						promises.push(installedChunkData[2] = promise);
 /******/ 		
-/******/ 					// start chunk loading
-/******/ 					var url = __webpack_require__.p + __webpack_require__.u(chunkId);
-/******/ 					var loadingEnded = function() { if(installedChunks[chunkId]) return installedChunks[chunkId][1]; if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined; };
-/******/ 					var script = document.createElement('script');
-/******/ 					var onScriptComplete;
+/******/ 						// start chunk loading
+/******/ 						var url = __webpack_require__.p + __webpack_require__.u(chunkId);
+/******/ 						var loadingEnded = function() {
+/******/ 							if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) return installedChunks[chunkId][1];
+/******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
+/******/ 						};
+/******/ 						var script = document.createElement('script');
+/******/ 						var onScriptComplete;
 /******/ 		
-/******/ 					script.charset = 'utf-8';
-/******/ 					script.timeout = 120;
-/******/ 					if (__webpack_require__.nc) {
-/******/ 						script.setAttribute("nonce", __webpack_require__.nc);
-/******/ 					}
-/******/ 					script.src = url;
-/******/ 		
-/******/ 					onScriptComplete = function (event) {
-/******/ 						// avoid mem leaks in IE.
-/******/ 						script.onerror = script.onload = null;
-/******/ 						clearTimeout(timeout);
-/******/ 						var reportError = loadingEnded();
-/******/ 						if(reportError) {
-/******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
-/******/ 							error.type = errorType;
-/******/ 							error.request = realSrc;
-/******/ 							reportError(error);
+/******/ 						script.charset = 'utf-8';
+/******/ 						script.timeout = 120;
+/******/ 						if (__webpack_require__.nc) {
+/******/ 							script.setAttribute("nonce", __webpack_require__.nc);
 /******/ 						}
-/******/ 					};
-/******/ 					var timeout = setTimeout(function(){
-/******/ 						onScriptComplete({ type: 'timeout', target: script });
-/******/ 					}, 120000);
-/******/ 					script.onerror = script.onload = onScriptComplete;
-/******/ 					document.head.appendChild(script);
+/******/ 						script.src = url;
+/******/ 		
+/******/ 						// create error before stack unwound to get useful stacktrace later
+/******/ 						var error = new Error();
+/******/ 						onScriptComplete = function (event) {
+/******/ 							// avoid mem leaks in IE.
+/******/ 							script.onerror = script.onload = null;
+/******/ 							clearTimeout(timeout);
+/******/ 							var reportError = loadingEnded();
+/******/ 							if(reportError) {
+/******/ 								var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 								var realSrc = event && event.target && event.target.src;
+/******/ 								error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
+/******/ 								error.name = 'ChunkLoadError';
+/******/ 								error.type = errorType;
+/******/ 								error.request = realSrc;
+/******/ 								reportError(error);
+/******/ 							}
+/******/ 						};
+/******/ 						var timeout = setTimeout(function(){
+/******/ 							onScriptComplete({ type: 'timeout', target: script });
+/******/ 						}, 120000);
+/******/ 						script.onerror = script.onload = onScriptComplete;
+/******/ 						document.head.appendChild(script);
+/******/ 					} else installedChunks[chunkId] = 0;
 /******/ 		
 /******/ 					// no HMR
 /******/ 				}
@@ -385,7 +398,7 @@ var x = "x";
 /******/ 		
 /******/ 		// no HMR manifest
 /******/ 		
-/******/ 		// no deferred startup
+/******/ 		// no deferred startup or startup prefetching
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
 /******/ 		function webpackJsonpCallback(data) {
@@ -399,7 +412,7 @@ var x = "x";
 /******/ 			var moduleId, chunkId, i = 0, resolves = [];
 /******/ 			for(;i < chunkIds.length; i++) {
 /******/ 				chunkId = chunkIds[i];
-/******/ 				if(installedChunks[chunkId]) {
+/******/ 				if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					resolves.push(installedChunks[chunkId][0]);
 /******/ 				}
 /******/ 				installedChunks[chunkId] = 0;
@@ -444,10 +457,12 @@ var x = "x";
   \*****************************/
 /*! export c [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
 /*! export d [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*!   export a [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
+/*!   other exports [not provided] [maybe used (runtime-defined)] */
 /*! export x [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
 /*! export y [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
 /*! other exports [not provided] [maybe used (runtime-defined)] */
-/*! runtime requirements: __webpack_exports____webpack_require__.r, __webpack_require__.d, __webpack_require__.t, __webpack_require__.n, __webpack_require__,  */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.t, __webpack_require__.n, __webpack_require__ */
 /*! ModuleConcatenation bailout: Cannot concat with ./node_modules/cjs.js (<- Module is not an ECMAScript module) */
 /*! ModuleConcatenation bailout: Cannot concat with ./node_modules/shared.js (<- Module is referenced from different chunks by these modules: ./lazy.js + 2 modules) */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
@@ -468,7 +483,7 @@ var shared = __webpack_require__(1);
 // module c
 
 
-var c = String.fromCharCode(cjs["c"].charCodeAt(0) - 2);
+var c = String.fromCharCode(cjs.c.charCodeAt(0) - 2);
 
 
 
@@ -478,8 +493,8 @@ var a = "d";
 
 // CONCATENATED MODULE: ./lazy.js
 /* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "c", function() { return c; });
-/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "x", function() { return shared["x"]; });
-/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "y", function() { return shared["y"]; });
+/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "x", function() { return shared.x; });
+/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "y", function() { return shared.y; });
 /* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "d", function() { return d_namespaceObject; });
 
 
@@ -517,12 +532,12 @@ Minimized
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
         Asset      Size  Chunks             Chunk Names
-262.output.js  2.63 KiB   {262}  [emitted]
-    output.js  11.3 KiB   {179}  [emitted]  main
+262.output.js  2.77 KiB   {262}  [emitted]
+    output.js  11.9 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {179} output.js (main) 372 bytes (javascript) 5.21 KiB (runtime) [entry] [rendered]
+chunk {179} output.js (main) 372 bytes (javascript) 5.69 KiB (runtime) [entry] [rendered]
     > ./example.js main
  [0] ./example.js + 2 modules 272 bytes {179} [built]
      [no exports]
@@ -544,19 +559,19 @@ chunk {262} 262.output.js 273 bytes [rendered]
  [3] ./node_modules/cjs.js 42 bytes {262} [built]
      [only some exports used: c]
      harmony side effect evaluation cjs [2] ./lazy.js + 2 modules ./node_modules/c.js 2:0-29
-     harmony import specifier cjs [2] ./lazy.js + 2 modules ./node_modules/c.js 4:35-36
+     harmony import specifier cjs [2] ./lazy.js + 2 modules ./node_modules/c.js 4:35-47
 ```
 
 ## Production mode
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
         Asset       Size  Chunks             Chunk Names
 262.output.js  379 bytes   {262}  [emitted]
-    output.js   2.26 KiB   {179}  [emitted]  main
+    output.js   2.42 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {179} output.js (main) 372 bytes (javascript) 5.21 KiB (runtime) [entry] [rendered]
+chunk {179} output.js (main) 372 bytes (javascript) 5.69 KiB (runtime) [entry] [rendered]
     > ./example.js main
  [350] ./node_modules/shared.js + 1 modules 100 bytes {179} [built]
        [exports: x, y]
@@ -575,7 +590,7 @@ chunk {262} 262.output.js 273 bytes [rendered]
   [75] ./node_modules/cjs.js 42 bytes {262} [built]
        [only some exports used: c]
        harmony side effect evaluation cjs [262] ./lazy.js + 2 modules ./node_modules/c.js 2:0-29
-       harmony import specifier cjs [262] ./lazy.js + 2 modules ./node_modules/c.js 4:35-36
+       harmony import specifier cjs [262] ./lazy.js + 2 modules ./node_modules/c.js 4:35-47
  [262] ./lazy.js + 2 modules 231 bytes {262} [built]
        [exports: c, d, x, y]
        import() ./lazy [789] ./example.js + 2 modules ./example.js 4:0-16

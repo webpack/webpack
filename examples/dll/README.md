@@ -35,7 +35,7 @@ module.exports = {
 # dist/MyDll.alpha.js
 
 ```javascript
-var alpha_5a1a523b0fc11616dffc =
+var alpha_4536327044335af1b80a =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -91,8 +91,8 @@ var alpha_5a1a523b0fc11616dffc =
 /*!*****************!*\
   !*** dll alpha ***!
   \*****************/
-/*! other exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
-/*! runtime requirements: __webpack_require__module,  */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! runtime requirements: __webpack_require__, module */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 module.exports = __webpack_require__;
@@ -102,7 +102,7 @@ module.exports = __webpack_require__;
 /*!******************!*\
   !*** ./alpha.js ***!
   \******************/
-/*! other exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -113,7 +113,7 @@ module.exports = "alpha";
 /*!**************!*\
   !*** ./a.js ***!
   \**************/
-/*! other exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -124,7 +124,7 @@ module.exports = "a";
 /*!*********************************!*\
   !*** ../node_modules/module.js ***!
   \*********************************/
-/*! other exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -137,7 +137,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ```javascript
-{"name":"alpha_5a1a523b0fc11616dffc","content":{"./alpha.js":{"id":1,"buildMeta":{}},"./a.js":{"id":2,"buildMeta":{}},"../node_modules/module.js":{"id":3,"buildMeta":{}}}}
+{"name":"alpha_4536327044335af1b80a","content":{"./alpha.js":{"id":1,"buildMeta":{}},"./a.js":{"id":2,"buildMeta":{}},"../node_modules/module.js":{"id":3,"buildMeta":{}}}}
 ```
 
 # Info
@@ -146,10 +146,10 @@ module.exports = "module";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
          Asset      Size  Chunks             Chunk Names
-MyDll.alpha.js  2.44 KiB     {0}  [emitted]  alpha
- MyDll.beta.js  2.41 KiB     {1}  [emitted]  beta
+MyDll.alpha.js  2.42 KiB     {0}  [emitted]  alpha
+ MyDll.beta.js  2.39 KiB     {1}  [emitted]  beta
 Entrypoint alpha = MyDll.alpha.js
 Entrypoint beta = MyDll.beta.js
 chunk {0} MyDll.alpha.js (alpha) 84 bytes [entry] [rendered]
@@ -186,7 +186,7 @@ chunk {1} MyDll.beta.js (beta) 80 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
          Asset       Size  Chunks             Chunk Names
 MyDll.alpha.js  354 bytes   {487}  [emitted]  alpha
  MyDll.beta.js  345 bytes   {904}  [emitted]  beta

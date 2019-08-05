@@ -105,8 +105,8 @@ export { add as reexportedAdd, multiply as reexportedMultiply } from "./math";
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__,  */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__ */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -116,8 +116,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-Object(_math__WEBPACK_IMPORTED_MODULE_0__["add"])(1, 2);
-_library__WEBPACK_IMPORTED_MODULE_1__["reexportedMultiply"](1, 2);
+Object(_math__WEBPACK_IMPORTED_MODULE_0__.add)(1, 2);
+_library__WEBPACK_IMPORTED_MODULE_1__.reexportedMultiply(1, 2);
 
 
 /***/ }),
@@ -129,7 +129,7 @@ _library__WEBPACK_IMPORTED_MODULE_1__["reexportedMultiply"](1, 2);
 /*! export list [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export multiply [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__.d, __webpack_require__,  */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -169,16 +169,16 @@ function list() {
 /*! export reexportedAdd [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export reexportedMultiply [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__, __webpack_require__.d,  */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.d */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _abc__WEBPACK_IMPORTED_MODULE_0__["a"]; });
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _abc__WEBPACK_IMPORTED_MODULE_0__["b"]; });
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "c", function() { return _abc__WEBPACK_IMPORTED_MODULE_0__["c"]; });
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "reexportedAdd", function() { return _math__WEBPACK_IMPORTED_MODULE_1__["add"]; });
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "reexportedMultiply", function() { return _math__WEBPACK_IMPORTED_MODULE_1__["multiply"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _abc__WEBPACK_IMPORTED_MODULE_0__[["a"]]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _abc__WEBPACK_IMPORTED_MODULE_0__[["b"]]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "c", function() { return _abc__WEBPACK_IMPORTED_MODULE_0__[["c"]]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "reexportedAdd", function() { return _math__WEBPACK_IMPORTED_MODULE_1__[["add"]]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "reexportedMultiply", function() { return _math__WEBPACK_IMPORTED_MODULE_1__[["multiply"]]; });
 /* harmony import */ var _abc__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./abc */ 3);
 /* harmony import */ var _math__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./math */ 1);
 
@@ -193,7 +193,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! export b [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export c [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__.d, __webpack_require__,  */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -248,7 +248,7 @@ function c() { console.log("c"); }
 # dist/output.js
 
 ```javascript
-!function(t,e){"use strict";var r={};function n(e){if(r[e])return r[e].exports;var o=r[e]={i:e,l:!1,exports:{}};return t[e].call(o.exports,o,o.exports,n),o.l=!0,o.exports}(function(t){t.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},e=Object.prototype.hasOwnProperty,t.d=function(t,r,n){e.call(t,r)||Object.defineProperty(t,r,{enumerable:!0,get:n})};var e})(n),n(144)}({144:function(t,e,r){"use strict";r.r(e);var n=r(451),o=r(345);Object(n.k)(1,2),o.h(1,2)},169:function(){"use strict"},345:function(t,e,r){"use strict";r.d(e,"h",function(){return n.j});r(169);var n=r(451)},451:function(t,e,r){"use strict";function n(){for(var t=0,e=0,r=arguments,n=r.length;e<n;)t+=r[e++];return t}function o(){for(var t=1,e=0,r=arguments,n=r.length;e<n;)t*=r[e++];return t}r.d(e,"k",function(){return n}),r.d(e,"j",function(){return o})}});
+!function(t,e){"use strict";var r={};function n(e){if(r[e])return r[e].exports;var o=r[e]={i:e,l:!1,exports:{}};return t[e].call(o.exports,o,o.exports,n),o.l=!0,o.exports}(function(t){t.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},e=Object.prototype.hasOwnProperty,t.d=function(t,r,n){e.call(t,r)||Object.defineProperty(t,r,{enumerable:!0,get:n})};var e})(n),n(144)}({144:function(t,e,r){"use strict";r.r(e);var n=r(451),o=r(345);Object(n.k)(1,2),o.h(1,2)},169:function(){"use strict"},345:function(t,e,r){"use strict";r.d(e,"h",function(){return n[["j"]]});r(169);var n=r(451)},451:function(t,e,r){"use strict";function n(){for(var t=0,e=0,r=arguments,n=r.length;e<n;)t+=r[e++];return t}function o(){for(var t=1,e=0,r=arguments,n=r.length;e<n;)t*=r[e++];return t}r.d(e,"k",function(){return n}),r.d(e,"j",function(){return o})}});
 ```
 
 # Info
@@ -257,9 +257,9 @@ function c() { console.log("c"); }
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset      Size  Chunks             Chunk Names
-output.js  7.12 KiB     {0}  [emitted]  main
+output.js  7.11 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 698 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
     > ./example.js main
@@ -294,9 +294,9 @@ chunk {0} output.js (main) 698 bytes (javascript) 560 bytes (runtime) [entry] [r
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset       Size  Chunks             Chunk Names
-output.js  954 bytes   {179}  [emitted]  main
+output.js  959 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
 chunk {179} output.js (main) 698 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
     > ./example.js main

@@ -88,7 +88,7 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /*! export increment [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export value [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__.d, __webpack_require__,  */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -140,7 +140,7 @@ function increment() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
            Asset      Size  Chunks             Chunk Names
 MyLibrary.umd.js  3.73 KiB     {0}  [emitted]  main
 Entrypoint main = MyLibrary.umd.js
@@ -157,7 +157,7 @@ chunk {0} MyLibrary.umd.js (main) 92 bytes (javascript) 560 bytes (runtime) [ent
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
            Asset       Size  Chunks             Chunk Names
 MyLibrary.umd.js  892 bytes   {179}  [emitted]  main
 Entrypoint main = MyLibrary.umd.js

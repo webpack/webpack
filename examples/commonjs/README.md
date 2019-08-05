@@ -91,7 +91,7 @@ exports.add = function() {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
@@ -105,8 +105,8 @@ inc(a); // 2
 /*!**********************!*\
   !*** ./increment.js ***!
   \**********************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require____webpack_exports__,  */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_exports__ */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
 const add = __webpack_require__(/*! ./math */ 2).add;
@@ -120,7 +120,7 @@ exports.increment = function(val) {
 /*!*****************!*\
   !*** ./math.js ***!
   \*****************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
 /***/ (function(__unusedmodule, exports) {
 
@@ -142,9 +142,9 @@ exports.add = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset      Size  Chunks             Chunk Names
-output.js  2.46 KiB     {0}  [emitted]  main
+output.js  2.45 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 326 bytes [entry] [rendered]
     > ./example.js main
@@ -163,7 +163,7 @@ chunk {0} output.js (main) 326 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset       Size  Chunks             Chunk Names
 output.js  406 bytes   {179}  [emitted]  main
 Entrypoint main = output.js

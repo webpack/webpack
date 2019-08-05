@@ -101,7 +101,7 @@ module.exports = [
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements:  */
 /***/ (function() {
 
@@ -161,7 +161,7 @@ console.log("Running " + "desktop" + " build");
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
@@ -175,7 +175,7 @@ console.log("Running " + "mobile" + " build");
 /*!*************************!*\
   !*** ./mobile-stuff.js ***!
   \*************************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements:  */
 /***/ (function() {
 
@@ -191,11 +191,11 @@ console.log("Running " + "mobile" + " build");
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
-        Asset      Size  Chunks             Chunk Names
-    mobile.js  1.91 KiB     {0}  [emitted]  main
+        Asset     Size  Chunks             Chunk Names
+    mobile.js  1.9 KiB     {0}  [emitted]  main
     Entrypoint main = mobile.js
     chunk {0} mobile.js (main) 114 bytes [entry] [rendered]
         > ./example main
@@ -208,7 +208,7 @@ Child mobile:
 Child desktop:
     Hash: 0a1b2c3d4e5f6a7b8c9d
          Asset      Size  Chunks             Chunk Names
-    desktop.js  1.55 KiB     {0}  [emitted]  main
+    desktop.js  1.54 KiB     {0}  [emitted]  main
     Entrypoint main = desktop.js
     chunk {0} desktop.js (main) 94 bytes [entry] [rendered]
         > ./example main
@@ -221,7 +221,7 @@ Child desktop:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset       Size  Chunks             Chunk Names

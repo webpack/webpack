@@ -110,8 +110,8 @@ export { c } from "./c";
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__,  */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__ */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -123,10 +123,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 console.log(
-	big_module__WEBPACK_IMPORTED_MODULE_0__["a"],
-	big_module__WEBPACK_IMPORTED_MODULE_0__["b"],
-	big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__["a"],
-	big_module_with_flag__WEBPACK_IMPORTED_MODULE_2__["b"]
+	big_module__WEBPACK_IMPORTED_MODULE_0__.a,
+	big_module__WEBPACK_IMPORTED_MODULE_0__.b,
+	big_module_with_flag__WEBPACK_IMPORTED_MODULE_1__.a,
+	big_module_with_flag__WEBPACK_IMPORTED_MODULE_2__.b
 );
 
 
@@ -139,14 +139,14 @@ console.log(
 /*! export b [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export c [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__, __webpack_require__.d,  */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.d */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _a__WEBPACK_IMPORTED_MODULE_0__["a"]; });
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _b__WEBPACK_IMPORTED_MODULE_1__["b"]; });
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "c", function() { return _c__WEBPACK_IMPORTED_MODULE_2__["c"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "a", function() { return _a__WEBPACK_IMPORTED_MODULE_0__[["a"]]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "b", function() { return _b__WEBPACK_IMPORTED_MODULE_1__[["b"]]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "c", function() { return _c__WEBPACK_IMPORTED_MODULE_2__[["c"]]; });
 /* harmony import */ var _a__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./a */ 2);
 /* harmony import */ var _b__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./b */ 3);
 /* harmony import */ var _c__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./c */ 4);
@@ -162,7 +162,7 @@ __webpack_require__.r(__webpack_exports__);
   \**************************************/
 /*! export a [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__.d, __webpack_require__,  */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -178,7 +178,7 @@ const a = "a";
   \**************************************/
 /*! export b [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__.d, __webpack_require__,  */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -194,7 +194,7 @@ const b = "b";
   \**************************************/
 /*! export c [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__.d, __webpack_require__,  */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -210,7 +210,7 @@ const c = "c";
   \************************************************/
 /*! export a [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__.d, __webpack_require__,  */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -226,7 +226,7 @@ const a = "a";
   \************************************************/
 /*! export b [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__.d, __webpack_require__,  */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -280,9 +280,9 @@ const b = "b";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset      Size  Chunks             Chunk Names
-output.js  7.96 KiB     {0}  [emitted]  main
+output.js  7.94 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 325 bytes (javascript) 560 bytes (runtime) [entry] [rendered]
     > ./example.js main
@@ -330,7 +330,7 @@ chunk {0} output.js (main) 325 bytes (javascript) 560 bytes (runtime) [entry] [r
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset       Size  Chunks             Chunk Names
 output.js  568 bytes   {179}  [emitted]  main
 Entrypoint main = output.js

@@ -155,7 +155,7 @@ return __webpack_exports__;
 /*!******************!*\
   !*** ./add.wasm ***!
   \******************/
-/*! export add [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export add [provided] [no usage info] [provision prevents renaming (no use info)] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_exports__, __webpack_require__.v, __webpack_require__ */
 /***/ (function(module, exports, __webpack_require__) {
@@ -212,7 +212,7 @@ return __webpack_exports__;
 /*!************************!*\
   !*** ./factorial.wasm ***!
   \************************/
-/*! export factorial [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export factorial [provided] [no usage info] [provision prevents renaming (no use info)] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_exports__, __webpack_require__.v, __webpack_require__ */
 /***/ (function(module, exports, __webpack_require__) {
@@ -224,7 +224,7 @@ module.exports = __webpack_require__.v(exports, module.i)
 /*!************************!*\
   !*** ./fibonacci.wasm ***!
   \************************/
-/*! export fibonacci [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export fibonacci [provided] [no usage info] [provision prevents renaming (no use info)] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_exports__, __webpack_require__.v, __webpack_require__ */
 /***/ (function(module, exports, __webpack_require__) {
@@ -296,14 +296,14 @@ module.exports = __webpack_require__.v(exports, module.i)
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.14
-                    Asset      Size  Chunks             Chunk Names
-04913f0d8c9a5aaf9873.wasm  62 bytes   {179}  [emitted]  main
-3ee1e22348cddba39f35.wasm  41 bytes   {179}  [emitted]  main
-4877696a77609bcaa166.wasm  67 bytes   {179}  [emitted]  main
-                output.js  9.02 KiB   {179}  [emitted]  main
-Entrypoint main = output.js 3ee1e22348cddba39f35.wasm 04913f0d8c9a5aaf9873.wasm 4877696a77609bcaa166.wasm
-chunk {179} output.js, 3ee1e22348cddba39f35.wasm, 04913f0d8c9a5aaf9873.wasm, 4877696a77609bcaa166.wasm (main) 1.3 KiB (javascript) 170 bytes (webassembly) 1.22 KiB (runtime) [entry] [rendered]
+Version: webpack 5.0.0-alpha.18
+                    Asset      Size   Chunks             Chunk Names
+04913f0d8c9a5aaf9873.wasm  62 bytes  ({179})  [emitted]  (main)
+3ee1e22348cddba39f35.wasm  41 bytes  ({179})  [emitted]  (main)
+4877696a77609bcaa166.wasm  67 bytes  ({179})  [emitted]  (main)
+                output.js  9.03 KiB    {179}  [emitted]  main
+Entrypoint main = output.js (04913f0d8c9a5aaf9873.wasm 3ee1e22348cddba39f35.wasm 4877696a77609bcaa166.wasm)
+chunk {179} output.js (main) 1.3 KiB (javascript) 170 bytes (webassembly) 1.22 KiB (runtime) [entry] [rendered]
     > ./example.js main
  [0] ./example.js 761 bytes {179} [built]
      [no exports]
@@ -346,17 +346,18 @@ chunk {179} output.js, 3ee1e22348cddba39f35.wasm, 04913f0d8c9a5aaf9873.wasm, 487
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.14
-                    Asset      Size  Chunks             Chunk Names
-5ba3e3921117e9d828f5.wasm  67 bytes   {179}  [emitted]  main
-5dd947250fab86306d49.wasm  62 bytes   {179}  [emitted]  main
-6f6c0ffc52ce3a45ff7e.wasm  41 bytes   {179}  [emitted]  main
-                output.js  2.06 KiB   {179}  [emitted]  main
-Entrypoint main = output.js 5dd947250fab86306d49.wasm 6f6c0ffc52ce3a45ff7e.wasm 5ba3e3921117e9d828f5.wasm
-chunk {179} output.js, 5dd947250fab86306d49.wasm, 6f6c0ffc52ce3a45ff7e.wasm, 5ba3e3921117e9d828f5.wasm (main) 1.3 KiB (javascript) 170 bytes (webassembly) 1.22 KiB (runtime) [entry] [rendered]
+Version: webpack 5.0.0-alpha.18
+                    Asset      Size   Chunks             Chunk Names
+5ba3e3921117e9d828f5.wasm  67 bytes  ({179})  [emitted]  (main)
+5dd947250fab86306d49.wasm  62 bytes  ({179})  [emitted]  (main)
+6f6c0ffc52ce3a45ff7e.wasm  41 bytes  ({179})  [emitted]  (main)
+                output.js  2.06 KiB    {179}  [emitted]  main
+Entrypoint main = output.js (5ba3e3921117e9d828f5.wasm 5dd947250fab86306d49.wasm 6f6c0ffc52ce3a45ff7e.wasm)
+chunk {179} output.js (main) 1.3 KiB (javascript) 170 bytes (webassembly) 1.22 KiB (runtime) [entry] [rendered]
     > ./example.js main
   [78] ./factorial.wasm 50 bytes (javascript) 62 bytes (webassembly) {179} [built]
        [exports: factorial]
+       [all exports used]
        harmony side effect evaluation ./factorial.wasm [451] ./math.js 2:0-51
        harmony export imported specifier ./factorial.wasm [451] ./math.js 5:0-37
  [144] ./example.js 761 bytes {179} [built]
@@ -377,12 +378,14 @@ chunk {179} output.js, 5dd947250fab86306d49.wasm, 6f6c0ffc52ce3a45ff7e.wasm, 5ba
        harmony import specifier ./math [144] ./example.js 13:28-47
  [461] ./add.wasm 50 bytes (javascript) 41 bytes (webassembly) {179} [built]
        [exports: add]
+       [all exports used]
        harmony side effect evaluation ./add.wasm [144] ./example.js 1:0-39
        harmony import specifier ./add.wasm [144] ./example.js 4:12-15
        harmony side effect evaluation ./add.wasm [451] ./math.js 1:0-39
        harmony export imported specifier ./add.wasm [451] ./math.js 5:0-37
  [605] ./fibonacci.wasm 50 bytes (javascript) 67 bytes (webassembly) {179} [built]
        [exports: fibonacci]
+       [all exports used]
        harmony side effect evaluation ./fibonacci.wasm [451] ./math.js 3:0-51
        harmony export imported specifier ./fibonacci.wasm [451] ./math.js 5:0-37
      + 4 hidden chunk modules

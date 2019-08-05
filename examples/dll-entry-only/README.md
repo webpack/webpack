@@ -63,7 +63,7 @@ module.exports = {
 # dist/dll.js
 
 ```javascript
-var dll_97225ff6e4dba33e1316 =
+var dll_177b7487f347e5467c9c =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -121,8 +121,8 @@ var dll_97225ff6e4dba33e1316 =
 /*!***************!*\
   !*** dll dll ***!
   \***************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__module,  */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__, module */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
@@ -137,7 +137,7 @@ module.exports = __webpack_require__;
 /*! export b [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export c [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports____webpack_require__.r, __webpack_require__.d, __webpack_require__.t, __webpack_require__.n, __webpack_require__,  */
+/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.t, __webpack_require__.n, __webpack_require__ */
 /*! ModuleConcatenation bailout: Cannot concat with ./cjs.js (<- Module is not an ECMAScript module) */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
@@ -161,7 +161,7 @@ var cjs = __webpack_require__(2);
 // CONCATENATED MODULE: ./example.js
 /* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "a", function() { return a; });
 /* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "b", function() { return b; });
-/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "c", function() { return cjs["c"]; });
+/* concated harmony reexport */ __webpack_require__.d(__webpack_exports__, "c", function() { return cjs.c; });
 
 
 
@@ -171,8 +171,7 @@ var cjs = __webpack_require__(2);
 /*!****************!*\
   !*** ./cjs.js ***!
   \****************/
-/*! export c [maybe provided (runtime-defined)] [no usage info] [provision prevents renaming (no use info)] */
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
 /*! ModuleConcatenation bailout: Module is not an ECMAScript module */
 /***/ (function(__unusedmodule, exports) {
@@ -254,7 +253,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_97225ff6e4dba33e1316","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
+{"name":"dll_177b7487f347e5467c9c","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace","async":false},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -263,9 +262,9 @@ exports.c = "c";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
  Asset      Size  Chunks             Chunk Names
-dll.js  6.07 KiB     {0}  [emitted]  dll
+dll.js  5.95 KiB     {0}  [emitted]  dll
 Entrypoint dll = dll.js
 chunk {0} dll.js (dll) 216 bytes (javascript) 1.57 KiB (runtime) [entry] [rendered]
     > dll
@@ -287,7 +286,7 @@ chunk {0} dll.js (dll) 216 bytes (javascript) 1.57 KiB (runtime) [entry] [render
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
  Asset      Size  Chunks             Chunk Names
 dll.js  1.15 KiB   {874}  [emitted]  dll
 Entrypoint dll = dll.js

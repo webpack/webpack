@@ -99,7 +99,7 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /*!******************!*\
   !*** ./alpha.js ***!
   \******************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -170,7 +170,7 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /*!*****************!*\
   !*** ./beta.js ***!
   \*****************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -187,10 +187,10 @@ module.exports = "beta";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
              Asset      Size  Chunks             Chunk Names
-MyLibrary.alpha.js  1.94 KiB     {0}  [emitted]  alpha
- MyLibrary.beta.js  1.94 KiB     {1}  [emitted]  beta
+MyLibrary.alpha.js  1.93 KiB     {0}  [emitted]  alpha
+ MyLibrary.beta.js  1.93 KiB     {1}  [emitted]  beta
 Entrypoint alpha = MyLibrary.alpha.js
 Entrypoint beta = MyLibrary.beta.js
 chunk {0} MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
@@ -209,7 +209,7 @@ chunk {1} MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
              Asset       Size  Chunks             Chunk Names
 MyLibrary.alpha.js  481 bytes   {487}  [emitted]  alpha
  MyLibrary.beta.js  476 bytes   {904}  [emitted]  beta

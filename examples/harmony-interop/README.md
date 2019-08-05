@@ -121,8 +121,8 @@ export var named = "named";
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__, __webpack_require__.n, __webpack_require__.d,  */
+/*! exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.n, __webpack_require__.d */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -138,13 +138,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-_fs__WEBPACK_IMPORTED_MODULE_0___default.a.readFile("file");
-Object(_fs__WEBPACK_IMPORTED_MODULE_0__["readFile"])("file");
-_fs__WEBPACK_IMPORTED_MODULE_0__["readFile"]("file");
+_fs__WEBPACK_IMPORTED_MODULE_0___default().readFile("file");
+Object(_fs__WEBPACK_IMPORTED_MODULE_0__.readFile)("file");
+_fs__WEBPACK_IMPORTED_MODULE_0__.readFile("file");
 
 // import from harmony module
 
-Object(_reexport_commonjs__WEBPACK_IMPORTED_MODULE_1__["readFile"])("file");
+Object(_reexport_commonjs__WEBPACK_IMPORTED_MODULE_1__.readFile)("file");
 
 // import a CommonJs module for sideeffects
 
@@ -155,9 +155,7 @@ Object(_reexport_commonjs__WEBPACK_IMPORTED_MODULE_1__["readFile"])("file");
 /*!***************!*\
   !*** ./fs.js ***!
   \***************/
-/*! export default [maybe provided (runtime-defined)] [no usage info] [provision prevents renaming (no use info)] */
-/*! export readFile [maybe provided (runtime-defined)] [no usage info] [provision prevents renaming (no use info)] */
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
 /***/ (function(__unusedmodule, exports) {
 
@@ -175,9 +173,8 @@ exports.readFile = function() {};
 /*!******************************!*\
   !*** ./reexport-commonjs.js ***!
   \******************************/
-/*! export readFile [maybe provided (runtime-defined)] [no usage info] [provision prevents renaming (no use info)] */
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__, __webpack_require__.n, __webpack_require__.d,  */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__, __webpack_require__.n, __webpack_require__.d */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -199,7 +196,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************!*\
   !*** ./example2.js ***!
   \*********************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
@@ -220,7 +217,7 @@ var namedExport = module.named;
 /*! export default [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export named [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__.d, __webpack_require__,  */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -288,9 +285,9 @@ var named = "named";
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
-    Asset     Size  Chunks             Chunk Names
-output.js  7.6 KiB     {0}  [emitted]  main
+Version: webpack 5.0.0-alpha.18
+    Asset      Size  Chunks             Chunk Names
+output.js  7.23 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 1.13 KiB (javascript) 888 bytes (runtime) [entry] [rendered]
     > ./example.js main
@@ -303,7 +300,7 @@ chunk {0} output.js (main) 1.13 KiB (javascript) 888 bytes (runtime) [entry] [re
      harmony side effect evaluation ./fs [0] ./example.js 4:0-22
      harmony side effect evaluation ./fs [0] ./example.js 5:0-32
      harmony side effect evaluation ./fs [0] ./example.js 6:0-28
-     harmony import specifier ./fs [0] ./example.js 7:0-2
+     harmony import specifier ./fs [0] ./example.js 7:0-11
      harmony import specifier ./fs [0] ./example.js 8:0-8
      harmony import specifier ./fs [0] ./example.js 9:0-12
      harmony side effect evaluation ./fs [2] ./reexport-commonjs.js 2:0-21
@@ -326,9 +323,9 @@ chunk {0} output.js (main) 1.13 KiB (javascript) 888 bytes (runtime) [entry] [re
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset      Size  Chunks             Chunk Names
-output.js  1.11 KiB   {179}  [emitted]  main
+output.js  1.12 KiB   {179}  [emitted]  main
 Entrypoint main = output.js
 chunk {179} output.js (main) 1.13 KiB (javascript) 888 bytes (runtime) [entry] [rendered]
     > ./example.js main
@@ -350,7 +347,7 @@ chunk {179} output.js (main) 1.13 KiB (javascript) 888 bytes (runtime) [entry] [
        harmony side effect evaluation ./fs [144] ./example.js 4:0-22
        harmony side effect evaluation ./fs [144] ./example.js 5:0-32
        harmony side effect evaluation ./fs [144] ./example.js 6:0-28
-       harmony import specifier ./fs [144] ./example.js 7:0-2
+       harmony import specifier ./fs [144] ./example.js 7:0-11
        harmony import specifier ./fs [144] ./example.js 8:0-8
        harmony import specifier ./fs [144] ./example.js 9:0-12
        harmony side effect evaluation ./fs [182] ./reexport-commonjs.js 2:0-21

@@ -87,7 +87,7 @@ module.exports = function(content) {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
@@ -104,7 +104,7 @@ console.dir(__webpack_require__(/*! css-loader!./test.css */ 2)); // manual
 /*!*****************************!*\
   !*** ./loader.js!./file.js ***!
   \*****************************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_exports__ */
 /***/ (function(__unusedmodule, exports) {
 
@@ -116,8 +116,8 @@ exports.foo = "bar";
 /*!****************************************************************!*\
   !*** (webpack)/node_modules/css-loader/dist/cjs.js!./test.css ***!
   \****************************************************************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_exports__module, __webpack_require__,  */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_exports__, module, __webpack_require__ */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ 3)(false);
@@ -131,7 +131,7 @@ exports.push([module.i, ".some-class {\n\tcolor: hotpink;\n}\n", ""]);
 /*!*************************************************************!*\
   !*** (webpack)/node_modules/css-loader/dist/runtime/api.js ***!
   \*************************************************************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -242,9 +242,9 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset      Size  Chunks             Chunk Names
-output.js  5.45 KiB     {0}  [emitted]  main
+output.js  5.43 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 2.76 KiB [entry] [rendered]
     > ./example.js main
@@ -267,7 +267,7 @@ chunk {0} output.js (main) 2.76 KiB [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset      Size  Chunks             Chunk Names
 output.js  1.17 KiB   {179}  [emitted]  main
 Entrypoint main = output.js

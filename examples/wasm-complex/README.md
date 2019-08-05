@@ -182,9 +182,9 @@ return __webpack_exports__;
 /*!*******************!*\
   !*** ./magic.wat ***!
   \*******************/
-/*! export get [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export getNumber [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export set [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export get [provided] [no usage info] [provision prevents renaming (no use info)] */
+/*! export getNumber [provided] [no usage info] [provision prevents renaming (no use info)] */
+/*! export set [provided] [no usage info] [provision prevents renaming (no use info)] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: module, __webpack_exports__, __webpack_require__.v, __webpack_require__ */
 /***/ (function(module, exports, __webpack_require__) {
@@ -316,12 +316,12 @@ function getRandomNumber() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.14
-                           Asset       Size  Chunks             Chunk Names
-594f5a209057602bfc3f.module.wasm  139 bytes   {179}  [emitted]  main
-                       output.js   8.74 KiB   {179}  [emitted]  main
-Entrypoint main = output.js 594f5a209057602bfc3f.module.wasm
-chunk {179} output.js, 594f5a209057602bfc3f.module.wasm (main) 708 bytes (javascript) 139 bytes (webassembly) 1.17 KiB (runtime) [entry] [rendered]
+Version: webpack 5.0.0-alpha.18
+                           Asset       Size   Chunks             Chunk Names
+594f5a209057602bfc3f.module.wasm  139 bytes  ({179})  [emitted]  (main)
+                       output.js   8.75 KiB    {179}  [emitted]  main
+Entrypoint main = output.js (594f5a209057602bfc3f.module.wasm)
+chunk {179} output.js (main) 708 bytes (javascript) 139 bytes (webassembly) 1.17 KiB (runtime) [entry] [rendered]
     > ./example.js main
  [0] ./example.js 253 bytes {179} [built]
      [no exports]
@@ -359,15 +359,16 @@ chunk {179} output.js, 594f5a209057602bfc3f.module.wasm (main) 708 bytes (javasc
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.14
-                           Asset       Size  Chunks             Chunk Names
-4636ea8e62e0734a195f.module.wasm  139 bytes   {179}  [emitted]  main
-                       output.js   1.93 KiB   {179}  [emitted]  main
-Entrypoint main = output.js 4636ea8e62e0734a195f.module.wasm
-chunk {179} output.js, 4636ea8e62e0734a195f.module.wasm (main) 708 bytes (javascript) 139 bytes (webassembly) 1.17 KiB (runtime) [entry] [rendered]
+Version: webpack 5.0.0-alpha.18
+                           Asset       Size   Chunks             Chunk Names
+4636ea8e62e0734a195f.module.wasm  139 bytes  ({179})  [emitted]  (main)
+                       output.js   1.93 KiB    {179}  [emitted]  main
+Entrypoint main = output.js (4636ea8e62e0734a195f.module.wasm)
+chunk {179} output.js (main) 708 bytes (javascript) 139 bytes (webassembly) 1.17 KiB (runtime) [entry] [rendered]
     > ./example.js main
   [69] ./magic.wat 70 bytes (javascript) 139 bytes (webassembly) {179} [built]
        [exports: get, getNumber, set]
+       [all exports used]
        harmony side effect evaluation ./magic.wat [555] ./magic.js 2:0-34
        harmony export imported specifier ./magic.wat [555] ./magic.js 2:0-34
  [115] ./memory.js 211 bytes {179} [built]

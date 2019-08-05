@@ -78,7 +78,7 @@ module.exports = function() {
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: __webpack_require__ */
 /***/ (function(__unusedmodule, __unusedexports, __webpack_require__) {
 
@@ -93,8 +93,8 @@ console.log(getTemplate("b"));
 /*!*********************************!*\
   !*** ./templates sync ^\.\/.*$ ***!
   \*********************************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: module__webpack_require__,  */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module, __webpack_require__ */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 var map = {
@@ -131,7 +131,7 @@ webpackContext.id = 1;
 /*!************************!*\
   !*** ./templates/a.js ***!
   \************************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -144,7 +144,7 @@ module.exports = function() {
 /*!************************!*\
   !*** ./templates/b.js ***!
   \************************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -157,7 +157,7 @@ module.exports = function() {
 /*!************************!*\
   !*** ./templates/c.js ***!
   \************************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -175,9 +175,9 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset      Size  Chunks             Chunk Names
-output.js  3.56 KiB     {0}  [emitted]  main
+output.js  3.53 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 603 bytes [entry] [rendered]
     > ./example.js main
@@ -205,7 +205,7 @@ chunk {0} output.js (main) 603 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset       Size  Chunks             Chunk Names
 output.js  896 bytes   {179}  [emitted]  main
 Entrypoint main = output.js

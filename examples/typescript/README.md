@@ -143,16 +143,16 @@ console.log(getArray(1, 2, 3));
 Starting type checking service...
 Using 1 worker with 2048MB memory limit
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.16
+Version: webpack 5.0.0-alpha.18
     Asset      Size  Chunks             Chunk Names
-output.js  2.07 KiB     {0}  [emitted]  main
+output.js  2.08 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
-chunk {0} output.js (main) 298 bytes [entry] [rendered]
+chunk {0} output.js (main) 309 bytes [entry] [rendered]
     > ./example.js main
  [0] ./example.js 33 bytes {0} [built]
      [used exports unknown]
      entry ./example.js main
- [1] ./index.ts 265 bytes {0} [built]
+ [1] ./index.ts 276 bytes {0} [built]
      [used exports unknown]
      cjs require ./index [0] ./example.js 1:12-30
 ```
@@ -163,14 +163,14 @@ chunk {0} output.js (main) 298 bytes [entry] [rendered]
 Starting type checking service...
 Using 1 worker with 2048MB memory limit
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.16
+Version: webpack 5.0.0-alpha.18
     Asset       Size  Chunks             Chunk Names
 output.js  377 bytes   {179}  [emitted]  main
 Entrypoint main = output.js
-chunk {179} output.js (main) 298 bytes [entry] [rendered]
+chunk {179} output.js (main) 309 bytes [entry] [rendered]
     > ./example.js main
  [144] ./example.js 33 bytes {179} [built]
        entry ./example.js main
- [862] ./index.ts 265 bytes {179} [built]
+ [862] ./index.ts 276 bytes {179} [built]
        cjs require ./index [144] ./example.js 1:12-30
 ```

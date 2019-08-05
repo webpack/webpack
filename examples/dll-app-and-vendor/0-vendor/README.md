@@ -41,7 +41,7 @@ export function square(n) {
 # dist/vendor.js
 
 ```javascript
-var vendor_lib_ced36e0133f6a1f67f40 =
+var vendor_lib_1946831b6d376d7fa823 =
 ```
 <details><summary><code>/******/ (function(modules) { /* webpackBootstrap */ })</code></summary>
 
@@ -99,8 +99,8 @@ var vendor_lib_ced36e0133f6a1f67f40 =
 /*!****************!*\
   !*** dll main ***!
   \****************/
-/*! other exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
-/*! runtime requirements: __webpack_require__module,  */
+/*! exports [maybe provided (runtime-defined)] [maybe used (runtime-defined)] */
+/*! runtime requirements: __webpack_require__, module */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 module.exports = __webpack_require__;
@@ -112,7 +112,7 @@ module.exports = __webpack_require__;
   \*****************************************/
 /*! export square [provided] [maybe used (runtime-defined)] [usage prevents renaming] */
 /*! other exports [not provided] [maybe used (runtime-defined)] */
-/*! runtime requirements: __webpack_require__.r__webpack_exports__, __webpack_require__.d, __webpack_require__,  */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__ */
 /***/ (function(__unusedmodule, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -165,7 +165,7 @@ function square(n) {
 # dist/vendor-manifest.json
 
 ```javascript
-{"name":"vendor_lib_ced36e0133f6a1f67f40","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["square"]}}}
+{"name":"vendor_lib_1946831b6d376d7fa823","content":{"../node_modules/example-vendor.js":{"id":1,"buildMeta":{"exportsType":"namespace","async":false},"exports":["square"]}}}
 ```
 
 # Info
@@ -174,7 +174,7 @@ function square(n) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset      Size  Chunks             Chunk Names
 vendor.js  3.42 KiB     {0}  [emitted]  main
 Entrypoint main = vendor.js
@@ -194,7 +194,7 @@ chunk {0} vendor.js (main) 57 bytes (javascript) 560 bytes (runtime) [entry] [re
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset       Size  Chunks             Chunk Names
 vendor.js  674 bytes   {179}  [emitted]  main
 Entrypoint main = vendor.js

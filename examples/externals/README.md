@@ -114,8 +114,8 @@ return /******/ (function(modules, runtime) { // webpackBootstrap
 /*!********************!*\
   !*** ./example.js ***!
   \********************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: __webpack_require____webpack_exports__,  */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_exports__ */
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
 var add = __webpack_require__(/*! add */ 1);
@@ -128,7 +128,7 @@ exports.exampleValue = subtract(add(42, 2), 2);
 /*!**********************!*\
   !*** external "add" ***!
   \**********************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -139,7 +139,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__1__;
 /*!***************************************************************************************************************!*\
   !*** external {"root":"subtract","commonjs2":"./subtract","commonjs":["./math","subtract"],"amd":"subtract"} ***!
   \***************************************************************************************************************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -156,9 +156,9 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset      Size  Chunks             Chunk Names
-output.js  3.13 KiB     {0}  [emitted]  main
+output.js  3.11 KiB     {0}  [emitted]  main
 Entrypoint main = output.js
 chunk {0} output.js (main) 194 bytes [entry] [rendered]
     > ./example.js main
@@ -177,7 +177,7 @@ chunk {0} output.js (main) 194 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
     Asset       Size  Chunks             Chunk Names
 output.js  708 bytes   {179}  [emitted]  main
 Entrypoint main = output.js

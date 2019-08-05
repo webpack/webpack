@@ -90,7 +90,7 @@ module.exports = {
 /*!********************!*\
   !*** ./vendor1.js ***!
   \********************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -149,7 +149,7 @@ module.exports = "Vendor1";
 /*!********************!*\
   !*** ./vendor1.js ***!
   \********************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -160,8 +160,8 @@ module.exports = "Vendor1";
 /*!********************!*\
   !*** ./vendor2.js ***!
   \********************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: module__webpack_require__,  */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module, __webpack_require__ */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 module.exports = "Vendor2";
@@ -221,7 +221,7 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /*!********************!*\
   !*** ./vendor1.js ***!
   \********************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
 /*! runtime requirements: module */
 /***/ (function(module) {
 
@@ -232,8 +232,8 @@ module.exports = "Vendor1";
 /*!********************!*\
   !*** ./vendor2.js ***!
   \********************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: module__webpack_require__,  */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module, __webpack_require__ */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 module.exports = "Vendor2";
@@ -245,8 +245,8 @@ __webpack_require__(/*! ./vendor1 */ 0);
 /*!******************!*\
   !*** ./pageA.js ***!
   \******************/
-/*! other exports [maybe provided (runtime-defined)] [no usage info] */
-/*! runtime requirements: module__webpack_require__,  */
+/*! exports [maybe provided (runtime-defined)] [no usage info] */
+/*! runtime requirements: module, __webpack_require__ */
 /***/ (function(module, __unusedexports, __webpack_require__) {
 
 module.exports = "pageA";
@@ -264,13 +264,13 @@ __webpack_require__(/*! ./vendor2 */ 1);
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
      Asset      Size  Chunks             Chunk Names
-  pageA.js  2.26 KiB     {2}  [emitted]  pageA
+  pageA.js  2.25 KiB     {2}  [emitted]  pageA
   pageB.js  1.52 KiB     {3}  [emitted]  pageB
   pageC.js  1.52 KiB     {4}  [emitted]  pageC
-vendor1.js  1.53 KiB     {0}  [emitted]  vendor1
-vendor2.js  1.88 KiB     {1}  [emitted]  vendor2
+vendor1.js  1.52 KiB     {0}  [emitted]  vendor1
+vendor2.js  1.87 KiB     {1}  [emitted]  vendor2
 Entrypoint vendor1 = vendor1.js
 Entrypoint vendor2 = vendor2.js
 Entrypoint pageA = pageA.js
@@ -324,7 +324,7 @@ chunk {4} pageC.js (pageC) 25 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.11
+Version: webpack 5.0.0-alpha.18
      Asset       Size               Chunks             Chunk Names
   pageA.js  320 bytes  {374}, {424}, {971}  [emitted]  pageA
   pageB.js  217 bytes                {121}  [emitted]  pageB
