@@ -214,7 +214,7 @@ Object {
       ],
       "emitted": true,
       "name": "entryB.js",
-      "size": 2170,
+      "size": 2169,
     },
   ],
   "assetsByChunkName": Object {
