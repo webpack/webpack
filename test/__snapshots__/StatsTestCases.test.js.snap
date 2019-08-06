@@ -730,16 +730,16 @@ Unexpected end of JSON input while parsing near ''
 `;
 
 exports[`StatsTestCases should print correct stats for exclude-with-loader 1`] = `
-"Hash: 2d4ef6dbac15e272ce7a
+"Hash: b7b29831fce4b6c802a0
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset      Size  Chunks             Chunk Names
-bundle.js  2.11 KiB   {179}  [emitted]  main
+bundle.js  2.86 KiB   {179}  [emitted]  main
  + 1 hidden asset
 Entrypoint main = bundle.js (5bcd36918d225eeda398ea3f372b7f16.json)
  [10] ./index.js 77 bytes {179} [built]
-[438] ./a.txt 43 bytes {179} [built]
-    + 3 hidden modules"
+[500] ./a.txt 41 bytes {179} [built]
+    + 4 hidden modules"
 `;
 
 exports[`StatsTestCases should print correct stats for external 1`] = `
