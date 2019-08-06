@@ -45,6 +45,7 @@ jobs:
   #       displayName: "Publish unit test results"
 
   - job: lint
+    timeoutInMinutes: 5
     pool:
       vmImage: ubuntu-16.04
     steps:
@@ -72,7 +73,10 @@ jobs:
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn -s run code-lint --format junit > junit.xml
-          yarn jest-lint && echo "success" && yarn type-lint && yarn special-lint
+          yarn special-lint
+          yarn type-lint
+          echo "success"
+          yarn jest-lint
         displayName: "Run linting"
       - task: PublishTestResults@2
         inputs:
