@@ -10,11 +10,11 @@
 [![node][node]][node-url]
 [![deps][deps]][deps-url]
 [![tests][tests]][tests-url]
-[![PR's welcome][prs]][prs-url]
 [![builds][builds]][builds-url]
 [![builds2][builds2]][builds2-url]
 [![coverage][cover]][cover-url]
 [![licenses][licenses]][licenses-url]
+[![PR's welcome][prs]][prs-url]
 
   <br>
   <a href="https://dependabot.com/compatibility-score.html?dependency-name=webpack&package-manager=npm_and_yarn&new-version=latest">
