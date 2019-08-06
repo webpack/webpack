@@ -55,12 +55,15 @@ module.exports = {
 		jsdoc: {
 			// supported tags https://github.com/microsoft/TypeScript-wiki/blob/master/JSDoc-support-in-JavaScript.md
 			tagNamePreference: {
-				...(['implements', 'const', 'memberof', 'readonly', 'yields'].reduce((acc, tag) => {
-					acc[tag] = {
-						message: `@${tag} currently not supported in Typescript`
-					};
-					return acc;
-				}, {})),
+				...["implements", "const", "memberof", "readonly", "yields"].reduce(
+					(acc, tag) => {
+						acc[tag] = {
+							message: `@${tag} currently not supported in Typescript`
+						};
+						return acc;
+					},
+					{}
+				),
 				extends: "extends",
 				return: "returns",
 				constructor: "constructor",
@@ -70,7 +73,7 @@ module.exports = {
 				description: false,
 				desc: false,
 				inheritdoc: false,
-				class: false
+				class: "constructor"
 			},
 			overrideReplacesDocs: false
 		}

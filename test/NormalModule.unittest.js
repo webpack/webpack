@@ -1,4 +1,3 @@
-/* globals describe it beforeEach */
 "use strict";
 
 const NormalModule = require("../lib/NormalModule");

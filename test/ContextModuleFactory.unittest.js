@@ -1,4 +1,3 @@
-/* globals describe, it, beforeEach */
 "use strict";
 
 const MemoryFs = require("memory-fs");

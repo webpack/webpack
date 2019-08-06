@@ -1,4 +1,3 @@
-/* global beforeAll expect */
 "use strict";
 
 const path = require("path");

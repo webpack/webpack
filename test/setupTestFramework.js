@@ -1,4 +1,3 @@
-/* globals expect */
 expect.extend({
 	toBeTypeOf(received, expected) {
 		const objType = typeof received;
