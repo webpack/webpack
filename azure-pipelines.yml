@@ -45,7 +45,7 @@ jobs:
   #       displayName: "Publish unit test results"
 
   - job: lint
-    timeoutInMinutes: 5
+    timeoutInMinutes: 10
     pool:
       vmImage: ubuntu-16.04
     steps:

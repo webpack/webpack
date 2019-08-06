@@ -123,7 +123,7 @@
     "special-lint-fix": "node tooling/inherit-types --write --override && node tooling/format-schemas --write && node tooling/format-file-header --write && node tooling/compile-to-definitions --write",
     "fix": "yarn code-lint --fix && yarn special-lint-fix",
     "pretty": "prettier --loglevel warn --write \"*.{ts,js,json,yml,yaml}\" \"{setup,lib,bin,hot,benchmark,tooling,schemas}/**/*.{js,json}\" \"test/*.js\" \"test/{configCases,watchCases,statsCases,hotCases}/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
-    "jest-lint": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.lint.js\" --verbose --maxWorkers=10",
+    "jest-lint": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.lint.js\" --verbose --maxWorkers=50%",
     "benchmark": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.benchmark.js\" --runInBand",
     "cover": "yarn cover:all && yarn cover:report",
     "cover:all": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --coverage",
