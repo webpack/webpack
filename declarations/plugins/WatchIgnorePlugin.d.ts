@@ -7,4 +7,7 @@
 /**
  * A list of RegExps or absolute paths to directories or files that should be ignored
  */
-export type WatchIgnorePluginOptions = (string | RegExp)[];
+export type WatchIgnorePluginOptions = [
+	(string | RegExp),
+	...(string | RegExp)[]
+];

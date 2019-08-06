@@ -27,7 +27,7 @@ export type EntryStatic = EntryObject | EntryItem;
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "NonEmptyArrayOfUniqueStringValues".
  */
-export type NonEmptyArrayOfUniqueStringValues = string[];
+export type NonEmptyArrayOfUniqueStringValues = [string, ...(string)[]];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "EntryItem".
@@ -568,7 +568,12 @@ export interface ModuleOptions {
 	/**
 	 * Don't parse files matching. It's matched against the full resolved request.
 	 */
-	noParse?: RegExp[] | RegExp | Function | string[] | string;
+	noParse?:
+		| [RegExp, ...(RegExp)[]]
+		| RegExp
+		| Function
+		| [string, ...(string)[]]
+		| string;
 	/**
 	 * An array of rules applied for modules.
 	 */
