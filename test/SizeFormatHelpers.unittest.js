@@ -1,4 +1,3 @@
-/* globals describe it */
 "use strict";
 
 const { formatSize } = require("../lib/SizeFormatHelpers");

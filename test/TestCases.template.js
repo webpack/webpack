@@ -1,4 +1,3 @@
-/* global describe it expect */
 "use strict";
 
 const path = require("path");

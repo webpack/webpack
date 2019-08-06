@@ -1,6 +1,6 @@
 "use strict";
 
-/* globals describe it */
+/* describe it */
 const path = require("path");
 const MemoryFs = require("memory-fs");
 const webpack = require("..");
