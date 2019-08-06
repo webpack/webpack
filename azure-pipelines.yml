@@ -1,48 +1,48 @@
 jobs:
-  - job: basic
-    pool:
-      vmImage: ubuntu-16.04
-    steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: "^12.4.0"
-        displayName: "Install Node.js"
-      - script: |
-          curl -o- -L https://yarnpkg.com/install.sh | bash
-        displayName: "Install Yarn"
-      - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          node -v
-          yarn -v
-        displayName: "Print versions"
-      - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          yarn --frozen-lockfile
-          yarn link --frozen-lockfile || true
-          yarn link webpack --frozen-lockfile
-        displayName: "Install dependencies"
-      - script: |
-          set -e
-          export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-          export JEST_JUNIT_OUTPUT=./basic-junit.xml
-          yarn test:basic --ci --reporters=jest-junit
-          export JEST_JUNIT_OUTPUT=./unit-junit.xml
-          yarn test:unit --ci --reporters=jest-junit
-        displayName: "Run basic tests"
-      - task: PublishTestResults@2
-        inputs:
-          testRunTitle: "basic"
-          testResultsFiles: "**/basic-junit.xml"
-        condition: succeededOrFailed()
-        displayName: "Publish basic test results"
-      - task: PublishTestResults@2
-        inputs:
-          testRunTitle: "unit"
-          testResultsFiles: "**/unit-junit.xml"
-        condition: succeededOrFailed()
-        displayName: "Publish unit test results"
+  # - job: basic
+  #   pool:
+  #     vmImage: ubuntu-16.04
+  #   steps:
+  #     - task: NodeTool@0
+  #       inputs:
+  #         versionSpec: "^12.4.0"
+  #       displayName: "Install Node.js"
+  #     - script: |
+  #         curl -o- -L https://yarnpkg.com/install.sh | bash
+  #       displayName: "Install Yarn"
+  #     - script: |
+  #         set -e
+  #         export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+  #         node -v
+  #         yarn -v
+  #       displayName: "Print versions"
+  #     - script: |
+  #         set -e
+  #         export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+  #         yarn --frozen-lockfile
+  #         yarn link --frozen-lockfile || true
+  #         yarn link webpack --frozen-lockfile
+  #       displayName: "Install dependencies"
+  #     - script: |
+  #         set -e
+  #         export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+  #         export JEST_JUNIT_OUTPUT=./basic-junit.xml
+  #         yarn test:basic --ci --reporters=jest-junit
+  #         export JEST_JUNIT_OUTPUT=./unit-junit.xml
+  #         yarn test:unit --ci --reporters=jest-junit
+  #       displayName: "Run basic tests"
+  #     - task: PublishTestResults@2
+  #       inputs:
+  #         testRunTitle: "basic"
+  #         testResultsFiles: "**/basic-junit.xml"
+  #       condition: succeededOrFailed()
+  #       displayName: "Publish basic test results"
+  #     - task: PublishTestResults@2
+  #       inputs:
+  #         testRunTitle: "unit"
+  #         testResultsFiles: "**/unit-junit.xml"
+  #       condition: succeededOrFailed()
+  #       displayName: "Publish unit test results"
 
   - job: lint
     pool:
@@ -72,9 +72,7 @@ jobs:
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn -s run code-lint --format junit > junit.xml
-          yarn jest-lint
-          yarn type-lint
-          yarn special-lint
+          yarn jest-lint && echo "success" && yarn type-lint && yarn special-lint
         displayName: "Run linting"
       - task: PublishTestResults@2
         inputs:
