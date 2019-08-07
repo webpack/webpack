@@ -983,6 +983,13 @@ binary-extensions@^1.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-1.13.1.tgz#598afe54755b2868a5330d2aff9d4ebb53209b65"
   integrity sha512-Un7MIEDdUC5gNpcGDV97op1Ywk748MpHcFTHoYs6qnj1Z3j7I53VG3nwZhKzoBZmbdRNnb6WRdFlwl7tSDuZGw==
 
+bindings@^1.2.1:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
+  integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
+  dependencies:
+    file-uri-to-path "1.0.0"
+
 bluebird@^3.5.5:
   version "3.5.5"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.5.5.tgz#a8d0afd73251effbbd5fe384a77d73003c17a71f"
@@ -2245,6 +2252,11 @@ file-type@^11.0.0:
   version "11.1.0"
   resolved "https://registry.yarnpkg.com/file-type/-/file-type-11.1.0.tgz#93780f3fed98b599755d846b99a1617a2ad063b8"
   integrity sha512-rM0UO7Qm9K7TWTtA6AShI/t7H5BPjDeGVDaNyg9BjHAj3PysKy7+8C8D137R88jnR3rFJZQB/tFgydl5sN5m7g==
+
+file-uri-to-path@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz#553a7b8446ff6f684359c445f1e37a05dacc33dd"
+  integrity sha512-0Zt+s3L7Vf1biwWZ29aARiVYLx7iMGnEUl9x33fbB/j3jR81u/O2LbqK+Bm1CDSNDKVtJ/YjwY7TUd5SkeLQLw==
 
 fill-range@^4.0.0:
   version "4.0.0"
@@ -4251,7 +4263,7 @@ mz@^2.7.0:
     object-assign "^4.0.1"
     thenify-all "^1.0.0"
 
-nan@^2.12.1:
+nan@^2.0.5, nan@^2.12.1:
   version "2.14.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.0.tgz#7818f722027b2459a86f0295d434d1fc2336c52c"
   integrity sha512-INOFj37C7k3AfaNTtX8RhsTw7qRy7eLET14cROi9+5HAVbbHuIWUHEauBv5qT4Av2tWasiTY1Jw6puUNqRJXQg==
@@ -6366,6 +6378,14 @@ watchpack@2.0.0-beta.7:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.1.2"
     neo-async "^2.5.0"
+
+weak@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/weak/-/weak-1.0.1.tgz#ab99aab30706959aa0200cb8cf545bb9cb33b99e"
+  integrity sha1-q5mqswcGlZqgIAy4z1RbucszuZ4=
+  dependencies:
+    bindings "^1.2.1"
+    nan "^2.0.5"
 
 webidl-conversions@^4.0.2:
   version "4.0.2"

@@ -77,6 +77,7 @@
     "typescript": "^3.5.3",
     "url-loader": "^2.1.0",
     "wast-loader": "^1.5.5",
+    "weak": "1.0.1",
     "worker-loader": "^2.0.0",
     "xxhashjs": "^0.2.1"
   },
@@ -124,7 +125,7 @@
     "fix": "yarn code-lint --fix && yarn special-lint-fix",
     "pretty": "prettier --loglevel warn --write \"*.{ts,js,json,yml,yaml}\" \"{setup,lib,bin,hot,benchmark,tooling,schemas}/**/*.{js,json}\" \"test/*.js\" \"test/{configCases,watchCases,statsCases,hotCases}/**/webpack.config.js\" \"examples/**/webpack.config.js\"",
     "jest-lint": "jest --testMatch \"<rootDir>/test/*.lint.js\" --no-verbose --forceExit=false && echo $?",
-    "jest-dummy": "jest --testMatch \"<rootDir>/test/Dummy.test.js\" --verbose",
+    "jest-dummy": "jest --testMatch \"<rootDir>/test/Dummy.test.js\" --verbose --no-watchman --detectLeaks --ci --runInBand",
     "benchmark": "node --max-old-space-size=4096 --trace-deprecation node_modules/jest-cli/bin/jest --testMatch \"<rootDir>/test/*.benchmark.js\" --runInBand",
     "cover": "yarn cover:all && yarn cover:report",
     "cover:all": "node --max-old-space-size=4096 node_modules/jest-cli/bin/jest --coverage",
