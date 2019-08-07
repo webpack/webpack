@@ -108,6 +108,20 @@ if (process.env.DEBUG_INFO) {
 // Workaround for a memory leak in wabt
 // It leaks an Error object on construction
 // so it leaks the whole stack trace
+const oldUncaughtException = process._events.uncaughtException;
+const oldUnhandledRejection = process._events.unhandledRejection;
+const oldUncaughtExceptionLength = Array.isArray(oldUncaughtException)
+	? oldUncaughtException.length
+	: undefined;
+const oldUnhandledRejectionLength = Array.isArray(oldUnhandledRejection)
+	? oldUnhandledRejection.length
+	: undefined;
+
 require("wast-loader");
-process.removeAllListeners("uncaughtException");
-process.removeAllListeners("unhandledRejection");
+process._events.uncaughtException = oldUncaughtException;
+process._events.unhandledRejection = oldUnhandledRejection;
+
+if (oldUncaughtExceptionLength)
+	oldUncaughtException.length = oldUncaughtExceptionLength;
+if (oldUnhandledRejectionLength)
+	oldUnhandledRejection.length = oldUnhandledRejectionLength;
