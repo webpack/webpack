@@ -70,7 +70,7 @@ jobs:
           yarn link webpack --frozen-lockfile
         displayName: "Install dependencies"
       - script: |
-          set -e
+          # set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           # yarn -s run code-lint --format junit > junit.xml
           # yarn special-lint
