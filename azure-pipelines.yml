@@ -76,7 +76,8 @@ jobs:
           # yarn special-lint
           # yarn type-lint
           # echo "success"
-          yarn jest-lint
+          # yarn jest-lint
+          yarn jest-dummy
         displayName: "Run linting"
       - task: PublishTestResults@2
         inputs:
