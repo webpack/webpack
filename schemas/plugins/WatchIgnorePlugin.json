@@ -20,5 +20,6 @@
       },
       "minItems": 1
     }
-  }
+  },
+  "required": ["paths"]
 }

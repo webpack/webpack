@@ -8,5 +8,5 @@ export interface WatchIgnorePluginOptions {
 	/**
 	 * A list of RegExps or absolute paths to directories or files that should be ignored
 	 */
-	paths?: [(string | RegExp), ...(string | RegExp)[]];
+	paths: [(string | RegExp), ...(string | RegExp)[]];
 }
