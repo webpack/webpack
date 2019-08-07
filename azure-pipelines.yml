@@ -77,7 +77,8 @@ jobs:
           # yarn type-lint
           # echo "success"
           # yarn jest-lint
-          yarn --emoji=false jest-dummy
+          # yarn --emoji=false jest-dummy
+          ./node_modules/.bin/jest --testMatch \"<rootDir>/test/Dummy.test.js\" --verbose --no-watchman --ci --runInBand"
         displayName: "Run linting"
       - task: PublishTestResults@2
         inputs:
@@ -85,7 +86,6 @@ jobs:
           testResultsFiles: "**/junit.xml"
         condition: succeededOrFailed()
         displayName: "Publish lint results"
-
   # - job: Linux
   #   dependsOn:
   #     - basic
@@ -133,7 +133,6 @@ jobs:
   #         testResultsFiles: "**/junit.xml"
   #       condition: succeededOrFailed()
   #       displayName: "Publish test results"
-
   # - job: macOS
   #   dependsOn:
   #     - basic
@@ -181,7 +180,6 @@ jobs:
   #         testResultsFiles: "**/junit.xml"
   #       condition: succeededOrFailed()
   #       displayName: "Publish test results"
-
   # - job: Windows
   #   dependsOn:
   #     - basic
