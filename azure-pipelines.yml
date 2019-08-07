@@ -77,7 +77,7 @@ jobs:
           # yarn type-lint
           # echo "success"
           # yarn jest-lint
-          yarn jest-dummy
+          yarn --emoji=false jest-dummy
         displayName: "Run linting"
       - task: PublishTestResults@2
         inputs:
