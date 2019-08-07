@@ -78,7 +78,7 @@ jobs:
           # echo "success"
           # yarn jest-lint
           # yarn --emoji=false jest-dummy
-          ./node_modules/.bin/jest --testMatch <rootDir>/test/Dummy.test.js --verbose --no-watchman --ci --runInBand
+          ./node_modules/.bin/jest --testMatch test/Dummy.test.js --verbose --no-watchman --ci --runInBand
         displayName: "Run linting"
       - task: PublishTestResults@2
         inputs:
