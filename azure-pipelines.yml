@@ -66,8 +66,8 @@ jobs:
           set -e
           export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
           yarn --frozen-lockfile
-          yarn link --frozen-lockfile || true
-          yarn link webpack --frozen-lockfile
+          # yarn link --frozen-lockfile || true
+          # yarn link webpack --frozen-lockfile
         displayName: "Install dependencies"
       - script: |
           # set -e
