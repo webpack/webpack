@@ -194,6 +194,19 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "buildDependencies": {
+          "description": "Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack')",
+          "type": "object",
+          "additionalProperties": {
+            "description": "List of dependencies the build depends on",
+            "type": "array",
+            "items": {
+              "description": "Request to a dependency (resolved as directory relative to the context directory)",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
         "cacheDirectory": {
           "description": "Base directory for the cache (defaults to node_modules/.cache/webpack).",
           "type": "string",
@@ -785,7 +798,7 @@
           "minLength": 1
         },
         "cacheGroups": {
-          "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)",
+          "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks, default categories: 'default', 'defaultVendors')",
           "type": "object",
           "additionalProperties": {
             "description": "Configuration for a cache group",

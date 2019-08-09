@@ -452,6 +452,15 @@ export interface MemoryCacheOptions {
  */
 export interface FileCacheOptions {
 	/**
+	 * Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack')
+	 */
+	buildDependencies?: {
+		/**
+		 * List of dependencies the build depends on
+		 */
+		[k: string]: string[];
+	};
+	/**
 	 * Base directory for the cache (defaults to node_modules/.cache/webpack).
 	 */
 	cacheDirectory?: string;
@@ -940,7 +949,7 @@ export interface OptimizationSplitChunksOptions {
 	 */
 	automaticNameDelimiter?: string;
 	/**
-	 * Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)
+	 * Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks, default categories: 'default', 'defaultVendors')
 	 */
 	cacheGroups?: {
 		/**
