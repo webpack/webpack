@@ -14,6 +14,7 @@
 [![builds2][builds2]][builds2-url]
 [![coverage][cover]][cover-url]
 [![licenses][licenses]][licenses-url]
+[![PR's welcome][prs]][prs-url]
 
   <br>
   <a href="https://dependabot.com/compatibility-score.html?dependency-name=webpack&package-manager=npm_and_yarn&new-version=latest">
@@ -766,6 +767,9 @@ src="https://static.monei.net/monei-logo.svg" height="30" alt="MONEI"></a>
 
 [tests]: https://img.shields.io/travis/webpack/webpack/master.svg
 [tests-url]: https://travis-ci.org/webpack/webpack
+
+[prs]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg
+[prs-url]: https://webpack.js.org/contribute/
 
 [builds-url]: https://ci.appveyor.com/project/sokra/webpack/branch/master
 [builds]: https://ci.appveyor.com/api/projects/status/github/webpack/webpack?svg=true
