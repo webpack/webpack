@@ -108,7 +108,6 @@ const describeCases = config => {
 									__filename: "mock"
 								},
 								cache: config.cache && {
-									loglevel: "warning",
 									cacheDirectory,
 									...config.cache
 								},
