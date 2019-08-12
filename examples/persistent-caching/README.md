@@ -21,6 +21,8 @@ module.exports = (env = "development") => ({
 	},
 	cache: {
 		type: "filesystem",
+		// changing the cacheDirectory is optional,
+		// by default it will be in `node_modules/.cache`
 		cacheDirectory: path.resolve(__dirname, ".cache")
 	}
 });
