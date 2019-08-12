@@ -472,10 +472,6 @@ export interface FileCacheOptions {
 	 */
 	idleTimeoutForInitialStore?: number;
 	/**
-	 * Display log info. (debug: all access and errors with stack trace, verbose: all access, info: all write access, warning: only failed serialization)
-	 */
-	loglevel?: "debug" | "verbose" | "info" | "warning";
-	/**
 	 * Name for the cache. Different names will lead to different coexisting caches.
 	 */
 	name?: string;

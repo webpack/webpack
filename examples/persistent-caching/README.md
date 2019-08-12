@@ -16,10 +16,12 @@ import "date-fns";
 const path = require("path");
 module.exports = (env = "development") => ({
 	mode: env,
+	infrastructureLogging: {
+		level: "verbose"
+	},
 	cache: {
 		type: "filesystem",
-		cacheDirectory: path.resolve(__dirname, ".cache"),
-		loglevel: "warning"
+		cacheDirectory: path.resolve(__dirname, ".cache")
 	}
 });
 ```
@@ -28,7 +30,7 @@ module.exports = (env = "development") => ({
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 5.0.0-alpha.18
+Version: webpack 5.0.0-alpha.19
     Asset      Size  Chunks             Chunk Names
 output.js  1.78 MiB     {0}  [emitted]  main
 Entrypoint main = output.js
