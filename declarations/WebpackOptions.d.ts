@@ -442,6 +442,10 @@ export interface WebpackOptions {
  */
 export interface MemoryCacheOptions {
 	/**
+	 * List of paths that are managed by a package manager and can be trusted to not being modified otherwise
+	 */
+	managedPaths?: string[];
+	/**
 	 * In memory caching
 	 */
 	type: "memory";
@@ -480,6 +484,10 @@ export interface FileCacheOptions {
 	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle')
 	 */
 	idleTimeoutForInitialStore?: number;
+	/**
+	 * List of paths that are managed by a package manager and can be trusted to not being modified otherwise
+	 */
+	managedPaths?: string[];
 	/**
 	 * Name for the cache. Different names will lead to different coexisting caches.
 	 */

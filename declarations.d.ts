@@ -8,6 +8,12 @@ declare namespace NodeJS {
 }
 
 declare module "neo-async" {
+	interface QueueObject<T, E> {
+		push(item: T): void;
+		drain: () => void;
+		error: (err: E) => void;
+	}
+
 	export interface Dictionary<T> {
 		[key: string]: T;
 	}
@@ -103,6 +109,11 @@ declare module "neo-async" {
 		tasks: Dictionary<AsyncFunction<T, E>>,
 		callback?: AsyncResultObjectCallback<T, E>
 	): void;
+
+	export function queue<T, E>(
+		worker: AsyncFunction<T, E>,
+		concurrency?: number
+	): QueueObject<T, E>;
 
 	export const forEach: typeof each;
 	export const forEachLimit: typeof eachLimit;

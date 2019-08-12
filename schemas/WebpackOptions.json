@@ -231,6 +231,16 @@
           "type": "number",
           "minimum": 0
         },
+        "managedPaths": {
+          "description": "List of paths that are managed by a package manager and can be trusted to not being modified otherwise",
+          "type": "array",
+          "items": {
+            "description": "A path to a managed directory (usually a node_modules directory)",
+            "type": "string",
+            "absolutePath": true,
+            "minLength": 1
+          }
+        },
         "name": {
           "description": "Name for the cache. Different names will lead to different coexisting caches.",
           "type": "string"
@@ -312,6 +322,16 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "managedPaths": {
+          "description": "List of paths that are managed by a package manager and can be trusted to not being modified otherwise",
+          "type": "array",
+          "items": {
+            "description": "A path to a managed directory (usually a node_modules directory)",
+            "type": "string",
+            "absolutePath": true,
+            "minLength": 1
+          }
+        },
         "type": {
           "description": "In memory caching",
           "enum": ["memory"]
