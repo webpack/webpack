@@ -48,16 +48,24 @@ describe("BuildDependencies", () => {
 		await exec("1");
 		fs.writeFileSync(
 			path.resolve(inputDirectory, "loader-dependency.js"),
-			"module.exports = 2;"
+			"module.exports = Date.now();"
 		);
+		const now = Date.now();
 		await exec("2");
+		await exec("3");
 		// eslint-disable-next-line node/no-missing-require
 		const first = require("./js/buildDeps/1/main.js");
 		// eslint-disable-next-line node/no-missing-require
 		const second = require("./js/buildDeps/2/main.js");
+		// eslint-disable-next-line node/no-missing-require
+		const third = require("./js/buildDeps/3/main.js");
 		expect(typeof first).toBe("number");
 		expect(typeof second).toBe("number");
+		expect(typeof third).toBe("number");
 		expect(first).toBe(1);
-		expect(second).toBe(2);
+		// Should be invalidated
+		expect(second).toBeGreaterThan(now);
+		// Should stay cached
+		expect(third).toBe(second);
 	}, 30000);
 });
