@@ -194,6 +194,19 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "buildDependencies": {
+          "description": "Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack')",
+          "type": "object",
+          "additionalProperties": {
+            "description": "List of dependencies the build depends on",
+            "type": "array",
+            "items": {
+              "description": "Request to a dependency (resolved as directory relative to the context directory)",
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
         "cacheDirectory": {
           "description": "Base directory for the cache (defaults to node_modules/.cache/webpack).",
           "type": "string",
@@ -217,6 +230,16 @@
           "description": "Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle')",
           "type": "number",
           "minimum": 0
+        },
+        "managedPaths": {
+          "description": "List of paths that are managed by a package manager and can be trusted to not being modified otherwise",
+          "type": "array",
+          "items": {
+            "description": "A path to a managed directory (usually a node_modules directory)",
+            "type": "string",
+            "absolutePath": true,
+            "minLength": 1
+          }
         },
         "name": {
           "description": "Name for the cache. Different names will lead to different coexisting caches.",
@@ -299,6 +322,16 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "managedPaths": {
+          "description": "List of paths that are managed by a package manager and can be trusted to not being modified otherwise",
+          "type": "array",
+          "items": {
+            "description": "A path to a managed directory (usually a node_modules directory)",
+            "type": "string",
+            "absolutePath": true,
+            "minLength": 1
+          }
+        },
         "type": {
           "description": "In memory caching",
           "enum": ["memory"]
@@ -785,7 +818,7 @@
           "minLength": 1
         },
         "cacheGroups": {
-          "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)",
+          "description": "Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks, default categories: 'default', 'defaultVendors')",
           "type": "object",
           "additionalProperties": {
             "description": "Configuration for a cache group",

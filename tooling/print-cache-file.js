@@ -1,11 +1,12 @@
 const path = require("path");
+const fs = require("fs");
 const BinaryMiddleware = require("../lib/serialization/BinaryMiddleware");
 const FileMiddleware = require("../lib/serialization/FileMiddleware");
 const Serializer = require("../lib/serialization/Serializer");
 
 const serializer = new Serializer([
 	new BinaryMiddleware(),
-	new FileMiddleware()
+	new FileMiddleware(fs)
 ]);
 
 const ESCAPE = null;
