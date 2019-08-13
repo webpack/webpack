@@ -442,6 +442,10 @@ export interface WebpackOptions {
  */
 export interface MemoryCacheOptions {
 	/**
+	 * List of paths that are managed by a package manager and can be trusted to not being modified otherwise
+	 */
+	managedPaths?: string[];
+	/**
 	 * In memory caching
 	 */
 	type: "memory";
@@ -451,6 +455,15 @@ export interface MemoryCacheOptions {
  * via the `definition` "FileCacheOptions".
  */
 export interface FileCacheOptions {
+	/**
+	 * Dependencies the build depends on (in multiple categories, default categories: 'defaultWebpack')
+	 */
+	buildDependencies?: {
+		/**
+		 * List of dependencies the build depends on
+		 */
+		[k: string]: string[];
+	};
 	/**
 	 * Base directory for the cache (defaults to node_modules/.cache/webpack).
 	 */
@@ -471,6 +484,10 @@ export interface FileCacheOptions {
 	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle')
 	 */
 	idleTimeoutForInitialStore?: number;
+	/**
+	 * List of paths that are managed by a package manager and can be trusted to not being modified otherwise
+	 */
+	managedPaths?: string[];
 	/**
 	 * Name for the cache. Different names will lead to different coexisting caches.
 	 */
@@ -940,7 +957,7 @@ export interface OptimizationSplitChunksOptions {
 	 */
 	automaticNameDelimiter?: string;
 	/**
-	 * Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks)
+	 * Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks, default categories: 'default', 'defaultVendors')
 	 */
 	cacheGroups?: {
 		/**
