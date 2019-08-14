@@ -612,7 +612,7 @@ describe("JavascriptParser", () => {
 				parser.state.param = param.string;
 			});
 			parser.hooks.importCall.tap("JavascriptParserTest", expr => {
-				const param = parser.evaluateExpression(expr.arguments[0]);
+				const param = parser.evaluateExpression(expr.source);
 				parser.state.param = param.string;
 			});
 
