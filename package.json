@@ -9,7 +9,7 @@
     "@webassemblyjs/helper-module-context": "1.8.5",
     "@webassemblyjs/wasm-edit": "1.8.5",
     "@webassemblyjs/wasm-parser": "1.8.5",
-    "acorn": "^6.2.1",
+    "acorn": "^7.0.0",
     "chrome-trace-event": "^1.0.2",
     "enhanced-resolve": "5.0.0-beta.2",
     "eslint-scope": "^5.0.0",
