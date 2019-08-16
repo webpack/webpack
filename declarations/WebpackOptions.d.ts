@@ -442,6 +442,10 @@ export interface WebpackOptions {
  */
 export interface MemoryCacheOptions {
 	/**
+	 * List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable
+	 */
+	immutablePaths?: string[];
+	/**
 	 * List of paths that are managed by a package manager and can be trusted to not being modified otherwise
 	 */
 	managedPaths?: string[];
@@ -484,6 +488,10 @@ export interface FileCacheOptions {
 	 * Time in ms after which idle period the initial cache storing should happen (only for store: 'pack' or 'idle')
 	 */
 	idleTimeoutForInitialStore?: number;
+	/**
+	 * List of paths that are managed by a package manager and contain a version or hash in it's path so all files are immutable
+	 */
+	immutablePaths?: string[];
 	/**
 	 * List of paths that are managed by a package manager and can be trusted to not being modified otherwise
 	 */
