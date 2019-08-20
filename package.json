@@ -143,6 +143,10 @@
   "lint-staged": {
     "*.js|{lib,setup,bin,hot,buildin,tooling,schemas}/**/*.js|test/*.js|{test,examples}/**/webpack.config.js}": [
       "eslint --cache"
+    ],
+    "*.md": [
+      "prettier --write",
+      "git add"
     ]
   },
   "jest": {

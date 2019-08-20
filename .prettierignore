@@ -5,4 +5,7 @@ test/*.*
 
 # Ignore example fixtures
 examples/*.*
+examples/**/*.md
 !examples/**/webpack.config.js
+
+node_modules

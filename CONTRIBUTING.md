@@ -15,7 +15,7 @@ that include your webpack.config.js, relevant files, and the full error message 
 
 **If you have discovered a bug or have a feature suggestion, please [create an issue on GitHub](https://github.com/webpack/webpack/issues/new).**
 
-Do you want to fix an issue?  Look at the issues with a tag of [X5: work required (PR / Help Wanted)](https://github.com/webpack/webpack/labels/X5%3A%20work%20required%20%28PR%20%2F%20Help%20Wanted%29).  Each issue should be tagged with a difficulty tag -
+Do you want to fix an issue? Look at the issues with a tag of [X5: work required (PR / Help Wanted)](https://github.com/webpack/webpack/labels/X5%3A%20work%20required%20%28PR%20%2F%20Help%20Wanted%29). Each issue should be tagged with a difficulty tag -
 
 - D0: My First Commit (Contribution Difficulty)
 - D1: Easy (Contribution Difficulty)
@@ -41,9 +41,9 @@ your pull request should be accepted quickly.
 
 Something that will increase the chance that your pull request is accepted:
 
-* [Write tests](./test/README.md)
-* Follow the existing coding style
-* Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
+- [Write tests](./test/README.md)
+- Follow the existing coding style
+- Write a [good commit message](http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html)
 
 ## Documentation
 
