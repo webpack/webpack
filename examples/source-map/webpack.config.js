@@ -1,17 +1,13 @@
 var path = require("path");
 
-module.exports = [
-	"cheap-eval-source-map",
-	"cheap-module-eval-source-map",
-	"cheap-module-source-map",
-	"cheap-source-map",
-	"eval",
-	"eval-source-map",
-	"hidden-source-map",
-	"inline-source-map",
-	"nosources-source-map",
-	"source-map"
-].map(devtool => ({
+let devtool = "source-map";
+
+if (process.env.PACKAGE === "development") {
+	// cheap-eval-source-map build fast to support development
+	devtool = "cheap-eval-source-map";
+}
+
+module.exports = {
 	mode: "development",
 	entry: {
 		bundle: "coffee-loader!./example.coffee"
@@ -24,4 +20,4 @@ module.exports = [
 	optimization: {
 		runtimeChunk: true
 	}
-}));
+};
