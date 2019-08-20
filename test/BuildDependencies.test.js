@@ -37,10 +37,14 @@ describe("BuildDependencies", () => {
 	beforeEach(done => {
 		rimraf(outputDirectory, done);
 	});
+
+	beforeEach(done => {
+		rimraf(inputDirectory, done);
+	});
 	beforeEach(done => {
 		fs.mkdir(inputDirectory, { recursive: true }, done);
 	});
-	it("should capture loader dependencies", async () => {
+	it("should capture loader and config dependencies", async () => {
 		fs.writeFileSync(
 			path.resolve(inputDirectory, "loader-dependency.js"),
 			"module.exports = 1;"
