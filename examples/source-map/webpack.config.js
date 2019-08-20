@@ -1,23 +1,34 @@
 var path = require("path");
 
-let devtool = "source-map";
-
-if (process.env.PACKAGE === "development") {
-	// cheap-eval-source-map build fast to support development
-	devtool = "cheap-eval-source-map";
-}
-
-module.exports = {
-	mode: "development",
-	entry: {
-		bundle: "coffee-loader!./example.coffee"
+module.exports = [
+	{
+		mode: "development",
+		entry: {
+			bundle: "coffee-loader!./example.coffee"
+		},
+		output: {
+			path: path.join(__dirname, "dist"),
+			filename: "./[name]-cheap-eval-source-map.js"
+		},
+		// cheap-eval-source-map build fast to support development.
+		devtool: "cheap-eval-source-map",
+		optimization: {
+			runtimeChunk: true
+		}
 	},
-	output: {
-		path: path.join(__dirname, "dist"),
-		filename: `./[name]-${devtool}.js`
-	},
-	devtool,
-	optimization: {
-		runtimeChunk: true
+	{
+		mode: "production",
+		entry: {
+			bundle: "coffee-loader!./example.coffee"
+		},
+		output: {
+			path: path.join(__dirname, "dist"),
+			filename: "./[name]-source-map.js"
+		},
+		// source-map is full emitted as a separate file, but your server disallow access to the source map.
+		devtool: "source-map",
+		optimization: {
+			runtimeChunk: true
+		}
 	}
-};
+];
