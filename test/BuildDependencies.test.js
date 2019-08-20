@@ -62,7 +62,7 @@ describe("BuildDependencies", () => {
 		await exec("1");
 		await exec("2");
 		fs.writeFileSync(
-			path.resolve(inputDirectory, "config-dependency.js"),
+			path.resolve(inputDirectory, "config-dependency"),
 			"module.exports = Date.now();"
 		);
 		const now2 = Date.now();
