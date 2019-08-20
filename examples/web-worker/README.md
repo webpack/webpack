@@ -134,9 +134,9 @@ worker.onmessage = function(event) {
 
 /***/ }),
 /* 1 */
-/*!****************************************************************************************!*\
+/*!*************************************************************************************************************************!*\
   !*** (webpack)/node_modules/worker-loader/dist/cjs.js?name=hash.worker.js!./worker.js ***!
-  \****************************************************************************************/
+  \*************************************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -370,11 +370,11 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
            Asset      Size  Chunks             Chunk Names
 1.hash.worker.js  1.77 KiB          [emitted]  
   hash.worker.js     5 KiB          [emitted]  
-       output.js  4.42 KiB       0  [emitted]  main
+       output.js  4.52 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 326 bytes [entry] [rendered]
     > ./example.js main
@@ -410,7 +410,7 @@ Child worker:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
            Asset       Size  Chunks             Chunk Names
 1.hash.worker.js  588 bytes          [emitted]  
   hash.worker.js   1.28 KiB          [emitted]  

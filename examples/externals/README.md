@@ -198,7 +198,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__2__;
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
     Asset      Size  Chunks             Chunk Names
 output.js  5.13 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -216,7 +216,7 @@ chunk    {0} output.js (main) 194 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
     Asset     Size  Chunks             Chunk Names
 output.js  1.4 KiB       0  [emitted]  main
 Entrypoint main = output.js

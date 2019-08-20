@@ -278,7 +278,7 @@ console.log("Running " + "mobile" + " build");
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset   Size  Chunks             Chunk Names
@@ -305,7 +305,7 @@ Child desktop:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
 Child mobile:
     Hash: 0a1b2c3d4e5f6a7b8c9d
         Asset       Size  Chunks             Chunk Names

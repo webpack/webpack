@@ -52,7 +52,7 @@ module.exports = {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
                              Asset       Size  Chunks             Chunk Names
                           pageA.js    1.6 KiB       4  [emitted]  pageA
               pageA~pageD~pageF.js  156 bytes       1  [emitted]  pageA~pageD~pageF

@@ -507,7 +507,7 @@ wasmExports["__webpack_init__"]()
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
                     Asset       Size  Chunks             Chunk Names
               1.output.js   3.37 KiB       1  [emitted]  
               2.output.js  636 bytes       2  [emitted]  
@@ -551,7 +551,7 @@ chunk    {2} 2.output.js, c50d6212832abfc3ae1e.wasm 41 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
                     Asset       Size   Chunks             Chunk Names
 0a12d714e570b7fd9d8b.wasm   70 bytes     1, 2  [emitted]  
               1.output.js  681 bytes     1, 2  [emitted]  

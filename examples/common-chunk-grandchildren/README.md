@@ -456,7 +456,7 @@ module.exports = function() {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  337 bytes       0  [emitted]  
 2.output.js  408 bytes       2  [emitted]  
@@ -494,7 +494,7 @@ chunk    {4} 4.output.js 136 bytes <{3}> ={0}= [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
       Asset       Size  Chunks             Chunk Names
 0.output.js  133 bytes       0  [emitted]  
 2.output.js  138 bytes       2  [emitted]  

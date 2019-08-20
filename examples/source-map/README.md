@@ -55,9 +55,9 @@ module.exports = [
 ```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */
-/*!*************************************************************!*\
+/*!**********************************************************************************************!*\
   !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
-  \*************************************************************/
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -94,9 +94,9 @@ race = function(winner, ...runners) {
 ```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */
-/*!*************************************************************!*\
+/*!**********************************************************************************************!*\
   !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
-  \*************************************************************/
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -132,9 +132,9 @@ race = function(winner, ...runners) {
 ```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */
-/*!*************************************************************!*\
+/*!**********************************************************************************************!*\
   !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
-  \*************************************************************/
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -173,9 +173,9 @@ race = function(winner, ...runners) {
 ```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */
-/*!*************************************************************!*\
+/*!**********************************************************************************************!*\
   !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
-  \*************************************************************/
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -190,9 +190,9 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 ```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */
-/*!*************************************************************!*\
+/*!**********************************************************************************************!*\
   !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
-  \*************************************************************/
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -207,13 +207,13 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 ```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */
-/*!*************************************************************!*\
+/*!**********************************************************************************************!*\
   !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
-  \*************************************************************/
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2V4YW1wbGUuY29mZmVlP2MxNzAiXSwic291cmNlc0NvbnRlbnQiOlsiLy8gVGFrZW4gZnJvbSBodHRwOi8vY29mZmVlc2NyaXB0Lm9yZy9cblxuLy8gT2JqZWN0czpcbnZhciBtYXRoLCByYWNlO1xuXG5tYXRoID0ge1xuICByb290OiBNYXRoLnNxcnQsXG4gIHNxdWFyZTogc3F1YXJlLFxuICBjdWJlOiBmdW5jdGlvbih4KSB7XG4gICAgcmV0dXJuIHggKiBzcXVhcmUoeCk7XG4gIH1cbn07XG5cbi8vIFNwbGF0czpcbnJhY2UgPSBmdW5jdGlvbih3aW5uZXIsIC4uLnJ1bm5lcnMpIHtcbiAgcmV0dXJuIHByaW50KHdpbm5lciwgcnVubmVycyk7XG59O1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///0\n");
+eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2V4YW1wbGUuY29mZmVlP2Y5OTQiXSwic291cmNlc0NvbnRlbnQiOlsiLy8gVGFrZW4gZnJvbSBodHRwOi8vY29mZmVlc2NyaXB0Lm9yZy9cblxuLy8gT2JqZWN0czpcbnZhciBtYXRoLCByYWNlO1xuXG5tYXRoID0ge1xuICByb290OiBNYXRoLnNxcnQsXG4gIHNxdWFyZTogc3F1YXJlLFxuICBjdWJlOiBmdW5jdGlvbih4KSB7XG4gICAgcmV0dXJuIHggKiBzcXVhcmUoeCk7XG4gIH1cbn07XG5cbi8vIFNwbGF0czpcbnJhY2UgPSBmdW5jdGlvbih3aW5uZXIsIC4uLnJ1bm5lcnMpIHtcbiAgcmV0dXJuIHByaW50KHdpbm5lciwgcnVubmVycyk7XG59O1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///0\n");
 
 /***/ })
 ],[[0,0]]]);
@@ -224,9 +224,9 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 ```javascript
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
 /* 0 */
-/*!*************************************************************!*\
+/*!**********************************************************************************************!*\
   !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
-  \*************************************************************/
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -252,11 +252,11 @@ eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\n
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                         Asset      Size  Chunks             Chunk Names
-            ./bundle-cheap-eval-source-map.js  1.39 KiB       1  [emitted]  bundle
+            ./bundle-cheap-eval-source-map.js  1.49 KiB       1  [emitted]  bundle
     ./runtime~bundle-cheap-eval-source-map.js  6.11 KiB       0  [emitted]  runtime~bundle
     Entrypoint bundle = ./runtime~bundle-cheap-eval-source-map.js ./bundle-cheap-eval-source-map.js
     chunk    {0} ./runtime~bundle-cheap-eval-source-map.js (runtime~bundle) 0 bytes ={1}= [entry] [rendered]
@@ -268,7 +268,7 @@ Child
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                                Asset      Size  Chunks             Chunk Names
-            ./bundle-cheap-module-eval-source-map.js  1.28 KiB       1  [emitted]  bundle
+            ./bundle-cheap-module-eval-source-map.js  1.38 KiB       1  [emitted]  bundle
     ./runtime~bundle-cheap-module-eval-source-map.js  6.11 KiB       0  [emitted]  runtime~bundle
     Entrypoint bundle = ./runtime~bundle-cheap-module-eval-source-map.js ./bundle-cheap-module-eval-source-map.js
     chunk    {0} ./runtime~bundle-cheap-module-eval-source-map.js (runtime~bundle) 0 bytes ={1}= [entry] [rendered]
@@ -280,7 +280,7 @@ Child
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                               Asset       Size  Chunks             Chunk Names
-                ./bundle-cheap-module-source-map.js  681 bytes       1  [emitted]  bundle
+                ./bundle-cheap-module-source-map.js  780 bytes       1  [emitted]  bundle
             ./bundle-cheap-module-source-map.js.map  442 bytes       1  [emitted]  bundle
         ./runtime~bundle-cheap-module-source-map.js   6.18 KiB       0  [emitted]  runtime~bundle
     ./runtime~bundle-cheap-module-source-map.js.map   6.07 KiB       0  [emitted]  runtime~bundle
@@ -294,7 +294,7 @@ Child
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                        Asset       Size  Chunks             Chunk Names
-                ./bundle-cheap-source-map.js  674 bytes       1  [emitted]  bundle
+                ./bundle-cheap-source-map.js  773 bytes       1  [emitted]  bundle
             ./bundle-cheap-source-map.js.map  515 bytes       1  [emitted]  bundle
         ./runtime~bundle-cheap-source-map.js   6.17 KiB       0  [emitted]  runtime~bundle
     ./runtime~bundle-cheap-source-map.js.map   6.07 KiB       0  [emitted]  runtime~bundle
@@ -308,7 +308,7 @@ Child
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                        Asset       Size  Chunks             Chunk Names
-            ./bundle-eval.js  730 bytes       1  [emitted]  bundle
+            ./bundle-eval.js  862 bytes       1  [emitted]  bundle
     ./runtime~bundle-eval.js   6.11 KiB       0  [emitted]  runtime~bundle
     Entrypoint bundle = ./runtime~bundle-eval.js ./bundle-eval.js
     chunk    {0} ./runtime~bundle-eval.js (runtime~bundle) 0 bytes ={1}= [entry] [rendered]
@@ -320,7 +320,7 @@ Child
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                   Asset      Size  Chunks             Chunk Names
-            ./bundle-eval-source-map.js  1.43 KiB       1  [emitted]  bundle
+            ./bundle-eval-source-map.js  1.53 KiB       1  [emitted]  bundle
     ./runtime~bundle-eval-source-map.js  6.11 KiB       0  [emitted]  runtime~bundle
     Entrypoint bundle = ./runtime~bundle-eval-source-map.js ./bundle-eval-source-map.js
     chunk    {0} ./runtime~bundle-eval-source-map.js (runtime~bundle) 0 bytes ={1}= [entry] [rendered]
@@ -332,7 +332,7 @@ Child
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                         Asset       Size  Chunks             Chunk Names
-                ./bundle-hidden-source-map.js  622 bytes       1  [emitted]  bundle
+                ./bundle-hidden-source-map.js  721 bytes       1  [emitted]  bundle
             ./bundle-hidden-source-map.js.map  545 bytes       1  [emitted]  bundle
         ./runtime~bundle-hidden-source-map.js   6.11 KiB       0  [emitted]  runtime~bundle
     ./runtime~bundle-hidden-source-map.js.map   6.16 KiB       0  [emitted]  runtime~bundle
@@ -346,7 +346,7 @@ Child
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                     Asset      Size  Chunks             Chunk Names
-            ./bundle-inline-source-map.js  1.38 KiB       1  [emitted]  bundle
+            ./bundle-inline-source-map.js  1.48 KiB       1  [emitted]  bundle
     ./runtime~bundle-inline-source-map.js  14.4 KiB       0  [emitted]  runtime~bundle
     Entrypoint bundle = ./runtime~bundle-inline-source-map.js ./bundle-inline-source-map.js
     chunk    {0} ./runtime~bundle-inline-source-map.js (runtime~bundle) 0 bytes ={1}= [entry] [rendered]
@@ -358,7 +358,7 @@ Child
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                            Asset       Size  Chunks             Chunk Names
-                ./bundle-nosources-source-map.js  678 bytes       1  [emitted]  bundle
+                ./bundle-nosources-source-map.js  777 bytes       1  [emitted]  bundle
             ./bundle-nosources-source-map.js.map  325 bytes       1  [emitted]  bundle
         ./runtime~bundle-nosources-source-map.js   6.18 KiB       0  [emitted]  runtime~bundle
     ./runtime~bundle-nosources-source-map.js.map  981 bytes       0  [emitted]  runtime~bundle
@@ -372,7 +372,7 @@ Child
 Child
     Hash: 0a1b2c3d4e5f6a7b8c9d
                                  Asset       Size  Chunks             Chunk Names
-                ./bundle-source-map.js  668 bytes       1  [emitted]  bundle
+                ./bundle-source-map.js  767 bytes       1  [emitted]  bundle
             ./bundle-source-map.js.map  538 bytes       1  [emitted]  bundle
         ./runtime~bundle-source-map.js   6.17 KiB       0  [emitted]  runtime~bundle
     ./runtime~bundle-source-map.js.map   6.15 KiB       0  [emitted]  runtime~bundle

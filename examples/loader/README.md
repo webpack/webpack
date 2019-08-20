@@ -156,9 +156,9 @@ exports.foo = "bar";
 
 /***/ }),
 /* 2 */
-/*!****************************************************************!*\
+/*!*************************************************************************************************!*\
   !*** (webpack)/node_modules/css-loader/dist/cjs.js!./test.css ***!
-  \****************************************************************/
+  \*************************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -170,9 +170,9 @@ exports.push([module.i, ".some-class {\n\tcolor: hotpink;\n}\n", ""]);
 
 /***/ }),
 /* 3 */
-/*!*************************************************************!*\
+/*!**********************************************************************************************!*\
   !*** (webpack)/node_modules/css-loader/dist/runtime/api.js ***!
-  \*************************************************************/
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -283,9 +283,9 @@ Prints in node.js (`enhanced-require example.js`) and in browser:
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
     Asset      Size  Chunks             Chunk Names
-output.js  7.34 KiB       0  [emitted]  main
+output.js  7.53 KiB       0  [emitted]  main
 Entrypoint main = output.js
 chunk    {0} output.js (main) 2.76 KiB [entry] [rendered]
     > ./example.js main
@@ -303,7 +303,7 @@ chunk    {0} output.js (main) 2.76 KiB [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
     Asset      Size  Chunks             Chunk Names
 output.js  1.88 KiB       0  [emitted]  main
 Entrypoint main = output.js

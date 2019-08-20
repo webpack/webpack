@@ -352,7 +352,7 @@ __webpack_require__.e(/*! require.ensure */ 2).then((function(require) {
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
       Asset       Size  Chunks             Chunk Names
 1.output.js  677 bytes       1  [emitted]  my own chunk
 2.output.js  463 bytes       2  [emitted]  
@@ -377,7 +377,7 @@ chunk    {2} 2.output.js 22 bytes <{0}> [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
       Asset       Size  Chunks             Chunk Names
 1.output.js  112 bytes    1, 2  [emitted]  my own chunk
 2.output.js   92 bytes       2  [emitted]  

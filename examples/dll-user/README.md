@@ -242,7 +242,7 @@ module.exports = (__webpack_require__(/*! dll-reference alpha_d61ee01b5c383d26e2
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
     Asset      Size  Chunks             Chunk Names
 output.js  7.14 KiB       0  [emitted]  main
 Entrypoint main = output.js
@@ -276,7 +276,7 @@ chunk    {0} output.js (main) 541 bytes [entry] [rendered]
 
 ```
 Hash: 0a1b2c3d4e5f6a7b8c9d
-Version: webpack 4.39.0
+Version: webpack 4.39.2
     Asset      Size  Chunks             Chunk Names
 output.js  1.33 KiB       0  [emitted]  main
 Entrypoint main = output.js
