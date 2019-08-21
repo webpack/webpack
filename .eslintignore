@@ -1,0 +1,6 @@
+node_modules
+test/**
+*.d.ts
+examples/**/*.js
+!examples/*/webpack.config.js
+!.*.js

@@ -11,7 +11,10 @@ module.exports = {
 		es6: true
 	},
 	parserOptions: {
-		ecmaVersion: 2017
+		ecmaVersion: 2017,
+		ecmaFeatures: {
+			experimentalObjectRestSpread: true
+		}
 	},
 	rules: {
 		"prettier/prettier": "error",
@@ -55,12 +58,16 @@ module.exports = {
 		jsdoc: {
 			// supported tags https://github.com/microsoft/TypeScript-wiki/blob/master/JSDoc-support-in-JavaScript.md
 			tagNamePreference: {
-				...(['implements', 'const', 'memberof', 'readonly', 'yields'].reduce((acc, tag) => {
-					acc[tag] = {
-						message: `@${tag} currently not supported in Typescript`
-					};
-					return acc;
-				}, {})),
+				// eslint-disable-next-line node/no-unsupported-features,node/no-unsupported-features/es-syntax
+				...["implements", "const", "memberof", "readonly", "yields"].reduce(
+					(acc, tag) => {
+						acc[tag] = {
+							message: `@${tag} currently not supported in Typescript`
+						};
+						return acc;
+					},
+					{}
+				),
 				extends: "extends",
 				return: "returns",
 				constructor: "constructor",
