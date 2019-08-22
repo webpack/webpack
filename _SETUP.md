@@ -67,7 +67,7 @@ yarn pretty
 
 This performs linting on:
 
-* eslint (eslint script)
+* eslint (code-lint script)
 * schema + dependencies (jest-lint script)
 * types (type-lint script)
 * format + generated files (special-lint script)

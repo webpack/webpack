@@ -1,6 +1,17 @@
+# Ignore node_modules
 node_modules
-test/**
+
+# Ignore not support files
+!.*.js
+.eslintrc.js
 *.d.ts
+
+# Ignore some test files
+test/**/*.js
+!test/*.js
+!test/*Cases/**/webpack.config.js
+
+# Ignore some examples files
 examples/**/*.js
 !examples/*/webpack.config.js
-!.*.js
+
