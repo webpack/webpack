@@ -1,3 +1,6 @@
+const fs = require("fs");
+const path = require("path");
+
 module.exports.remove = function remove(src) {
 	if (!fs.existsSync(src)) return;
 	const files = fs.readdirSync(src);
@@ -10,4 +13,4 @@ module.exports.remove = function remove(src) {
 			fs.unlinkSync(srcFile);
 		}
 	});
-}
+};

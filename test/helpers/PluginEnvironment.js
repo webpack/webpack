@@ -22,27 +22,30 @@ module.exports = function PluginEnvironment() {
 			// In the meanwhile, `hooks` is a `Proxy` which creates fake hooks
 			// on demand. Instead of creating a dummy object with a few `Hook`
 			// method, a custom `Hook` class could be used.
-			hooks: new Proxy({}, {
-				get(target, hookName) {
-					let hook = hooks.get(hookName);
-					if (hook === undefined) {
-						const eventName = getEventName(hookName);
-						hook = {
-							tap(_, handler) {
-								addEvent(eventName, handler);
-							},
-							tapAsync(_, handler) {
-								addEvent(eventName, handler);
-							},
-							tapPromise(_, handler) {
-								addEvent(eventName, handler);
-							}
-						};
-						hooks.set(hookName, hook);
+			hooks: new Proxy(
+				{},
+				{
+					get(target, hookName) {
+						let hook = hooks.get(hookName);
+						if (hook === undefined) {
+							const eventName = getEventName(hookName);
+							hook = {
+								tap(_, handler) {
+									addEvent(eventName, handler);
+								},
+								tapAsync(_, handler) {
+									addEvent(eventName, handler);
+								},
+								tapPromise(_, handler) {
+									addEvent(eventName, handler);
+								}
+							};
+							hooks.set(hookName, hook);
+						}
+						return hook;
 					}
-					return hook;
 				}
-			})
+			)
 		};
 	};
 
