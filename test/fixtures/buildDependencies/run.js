@@ -1,5 +1,7 @@
 const path = require("path");
 const webpack = require("../../..");
+// eslint-disable-next-line node/no-missing-require
+const value = require("../../js/buildDepsInput/config-dependency");
 
 process.exitCode = 1;
 
@@ -12,6 +14,15 @@ webpack(
 			path: path.resolve(__dirname, "../../js/buildDeps/" + process.argv[2]),
 			libraryTarget: "commonjs2"
 		},
+		plugins: [
+			new webpack.DefinePlugin({
+				VALUE: JSON.stringify(value),
+				VALUE_UNCACHEABLE: webpack.DefinePlugin.runtimeValue(
+					() => JSON.stringify(value),
+					true
+				)
+			})
+		],
 		cache: {
 			type: "filesystem",
 			cacheDirectory: path.resolve(__dirname, "../../js/buildDepsCache"),

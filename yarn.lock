@@ -1786,10 +1786,10 @@ end-of-stream@^1.0.0, end-of-stream@^1.1.0:
   dependencies:
     once "^1.4.0"
 
-enhanced-resolve@5.0.0-beta.2:
-  version "5.0.0-beta.2"
-  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.0.0-beta.2.tgz#9dfd00b7d73e7d6e0acab9e1f54241a557edbe8d"
-  integrity sha512-qo97XNV7JrYZR9eaFRPfKtOtiF1RBTGIx9v+j5DttaZyAhwgXnhs69YYTzEKgQpiOW8snnAiVdp5/eu+d3/55g==
+enhanced-resolve@5.0.0-beta.3:
+  version "5.0.0-beta.3"
+  resolved "https://registry.yarnpkg.com/enhanced-resolve/-/enhanced-resolve-5.0.0-beta.3.tgz#1f5b24d223db90a2e86235c365e337fcbf28a68b"
+  integrity sha512-SMjrP/h0qau9mj6L+dY0I350vTnHUDNm3hjV2QRzqhfaa6UYAkDoLfuRWPqAErKDejveFPyGLiQx1A8a5uR5hQ==
   dependencies:
     graceful-fs "^4.2.0"
     tapable "^2.0.0-beta.8"
@@ -2346,15 +2346,6 @@ find-cache-dir@^2.1.0:
     commondir "^1.0.1"
     make-dir "^2.0.0"
     pkg-dir "^3.0.0"
-
-find-cache-dir@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/find-cache-dir/-/find-cache-dir-3.0.0.tgz#cd4b7dd97b7185b7e17dbfe2d6e4115ee3eeb8fc"
-  integrity sha512-t7ulV1fmbxh5G9l/492O1p5+EBbr3uwpt6odhFTMc+nWyhmbloe+ja9BZ8pIBtqFWhOmCWVjx+pTW4zDkFoclw==
-  dependencies:
-    commondir "^1.0.1"
-    make-dir "^3.0.0"
-    pkg-dir "^4.1.0"
 
 find-up@^2.0.0:
   version "2.1.0"
@@ -4920,7 +4911,7 @@ pkg-dir@^3.0.0:
   dependencies:
     find-up "^3.0.0"
 
-pkg-dir@^4.1.0, pkg-dir@^4.2.0:
+pkg-dir@^4.2.0:
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/pkg-dir/-/pkg-dir-4.2.0.tgz#f099133df7ede422e81d1d8448270eeb3e4261f3"
   integrity sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==

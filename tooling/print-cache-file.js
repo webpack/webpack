@@ -9,6 +9,28 @@ const serializer = new Serializer([
 	new FileMiddleware(fs)
 ]);
 
+const rawSerializer = new Serializer([new FileMiddleware(fs)]);
+
+const lazySizes = [];
+
+const captureSize = async data => {
+	let size = 0;
+	let lazySize = 0;
+	for (const b of data) {
+		if (Buffer.isBuffer(b)) {
+			size += b.length;
+		} else if (typeof b === "function") {
+			const i = lazySizes.length;
+			lazySizes.push(undefined);
+			const r = await captureSize(await b());
+			lazySize += r.size + r.lazySize;
+			// eslint-disable-next-line require-atomic-updates
+			lazySizes[i] = r;
+		}
+	}
+	return { size, lazySize };
+};
+
 const ESCAPE = null;
 const ESCAPE_ESCAPE_VALUE = null;
 const ESCAPE_END_OBJECT = true;
@@ -20,7 +42,11 @@ const printData = async (data, indent) => {
 		for (const b of data) {
 			if (typeof b === "function") {
 				const innerData = await b();
-				console.log(`${indent}= lazy {`);
+				const info = lazySizes.shift();
+				const sizeInfo = `${(info.size / 1048576).toFixed(2)} MiB + ${(
+					info.lazySize / 1048576
+				).toFixed(2)} lazy MiB`;
+				console.log(`${indent}= lazy ${sizeInfo} {`);
 				await printData(innerData, indent + "  ");
 				console.log(`${indent}}`);
 			} else {
@@ -29,6 +55,8 @@ const printData = async (data, indent) => {
 		}
 		return;
 	}
+	const referencedValues = new Map();
+	const referencedTypes = new Map();
 	let currentReference = 0;
 	let currentTypeReference = 0;
 	let i = 0;
@@ -51,16 +79,27 @@ const printData = async (data, indent) => {
 				indent = indent.slice(0, indent.length - 2);
 				printLine(`} = #${currentReference++}`);
 			} else if (typeof nextItem === "number" && nextItem < 0) {
-				printLine(`Reference ${nextItem} => #${currentReference + nextItem}`);
+				const ref = currentReference + nextItem;
+				const value = referencedValues.get(ref);
+				if (value) {
+					printLine(
+						`Reference ${nextItem} => ${JSON.stringify(value)} #${ref}`
+					);
+				} else {
+					printLine(`Reference ${nextItem} => #${ref}`);
+				}
 			} else {
 				const request = nextItem;
 				if (typeof request === "number") {
+					const ref = currentTypeReference - request;
 					printLine(
-						`Object (Reference ${request} => @${currentTypeReference -
-							request}) {`
+						`Object (Reference ${request} => ${referencedTypes.get(
+							ref
+						)} @${ref}) {`
 					);
 				} else {
 					const name = read();
+					referencedTypes.set(currentTypeReference, `${request} / ${name}`);
 					printLine(
 						`Object (${request} / ${name} @${currentTypeReference++}) {`
 					);
@@ -69,6 +108,7 @@ const printData = async (data, indent) => {
 			}
 		} else if (typeof item === "string") {
 			if (item !== "") {
+				referencedValues.set(currentReference, item);
 				printLine(`${JSON.stringify(item)} = #${currentReference++}`);
 			} else {
 				printLine('""');
@@ -77,7 +117,11 @@ const printData = async (data, indent) => {
 			printLine(`buffer ${item.toString("hex")} = #${currentReference++}`);
 		} else if (typeof item === "function") {
 			const innerData = await item();
-			printLine(`lazy {`);
+			const info = lazySizes.shift();
+			const sizeInfo = `${(info.size / 1048576).toFixed(2)} MiB + ${(
+				info.lazySize / 1048576
+			).toFixed(2)} lazy MiB`;
+			printLine(`lazy ${sizeInfo} {`);
 			await printData(innerData, indent + "  ");
 			printLine(`}`);
 		} else {
@@ -88,8 +132,18 @@ const printData = async (data, indent) => {
 
 const filename = process.argv[2];
 
-console.log(`Printing content of ${filename}`);
+(async () => {
+	const structure = await rawSerializer.deserialize({
+		filename: path.resolve(filename)
+	});
+	const info = await captureSize(structure);
+	const sizeInfo = `${(info.size / 1048576).toFixed(2)} MiB + ${(
+		info.lazySize / 1048576
+	).toFixed(2)} lazy MiB`;
+	console.log(`${filename} ${sizeInfo}:`);
 
-serializer
-	.deserialize({ filename: path.resolve(filename) })
-	.then(data => printData(data, ""));
+	const data = await serializer.deserialize({
+		filename: path.resolve(filename)
+	});
+	await printData(data, "");
+})();
