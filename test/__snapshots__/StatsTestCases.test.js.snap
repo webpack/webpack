@@ -641,7 +641,7 @@ Child
     Time: Xms
     Built at: 1970-04-20 12:42:42
                              Asset       Size  Chunks             Chunk Names
-       app.788996bc57d92d439eb3.js   6.75 KiB   {143}  [emitted]  app
+       app.788996bc57d92d439eb3.js   6.71 KiB   {143}  [emitted]  app
     vendor.44602d2bdfb280718742.js  616 bytes   {736}  [emitted]  vendor
     Entrypoint app = vendor.44602d2bdfb280718742.js app.788996bc57d92d439eb3.js
     [117] ./entry-1.js + 2 modules 190 bytes {143} [built]
@@ -652,7 +652,7 @@ Child
     Time: Xms
     Built at: 1970-04-20 12:42:42
                              Asset       Size  Chunks             Chunk Names
-       app.bc7f34424c7cea298329.js   6.77 KiB   {143}  [emitted]  app
+       app.bc7f34424c7cea298329.js   6.72 KiB   {143}  [emitted]  app
     vendor.44602d2bdfb280718742.js  616 bytes   {736}  [emitted]  vendor
     Entrypoint app = vendor.44602d2bdfb280718742.js app.bc7f34424c7cea298329.js
     [381] ./constants.js 87 bytes {736} [built]
