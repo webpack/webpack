@@ -75,35 +75,35 @@ describe("Stats", () => {
 					chunkGroups: true
 				})
 			).toMatchInlineSnapshot(`
-Object {
-  "namedChunkGroups": Object {
-    "entryA": Object {
-      "assets": Array [
-        "entryA.js",
-      ],
-      "auxiliaryAssets": Array [],
-      "childAssets": Object {},
-      "children": Object {},
-      "chunks": Array [
-        938,
-      ],
-      "name": "entryA",
-    },
-    "entryB": Object {
-      "assets": Array [
-        "entryB.js",
-      ],
-      "auxiliaryAssets": Array [],
-      "childAssets": Object {},
-      "children": Object {},
-      "chunks": Array [
-        513,
-      ],
-      "name": "entryB",
-    },
-  },
-}
-`);
+			Object {
+			  "namedChunkGroups": Object {
+			    "entryA": Object {
+			      "assets": Array [
+			        "entryA.js",
+			      ],
+			      "auxiliaryAssets": Array [],
+			      "childAssets": Object {},
+			      "children": Object {},
+			      "chunks": Array [
+			        938,
+			      ],
+			      "name": "entryA",
+			    },
+			    "entryB": Object {
+			      "assets": Array [
+			        "entryB.js",
+			      ],
+			      "auxiliaryAssets": Array [],
+			      "childAssets": Object {},
+			      "children": Object {},
+			      "chunks": Array [
+			        513,
+			      ],
+			      "name": "entryB",
+			    },
+			  },
+			}
+		`);
 		});
 		it("should contain additional chunks", async () => {
 			const stats = await compile({
@@ -119,47 +119,47 @@ Object {
 					chunkGroups: true
 				})
 			).toMatchInlineSnapshot(`
-Object {
-  "namedChunkGroups": Object {
-    "chunkB": Object {
-      "assets": Array [
-        "chunkB.js",
-      ],
-      "auxiliaryAssets": Array [],
-      "childAssets": Object {},
-      "children": Object {},
-      "chunks": Array [
-        336,
-      ],
-      "name": "chunkB",
-    },
-    "entryA": Object {
-      "assets": Array [
-        "entryA.js",
-      ],
-      "auxiliaryAssets": Array [],
-      "childAssets": Object {},
-      "children": Object {},
-      "chunks": Array [
-        938,
-      ],
-      "name": "entryA",
-    },
-    "entryB": Object {
-      "assets": Array [
-        "entryB.js",
-      ],
-      "auxiliaryAssets": Array [],
-      "childAssets": Object {},
-      "children": Object {},
-      "chunks": Array [
-        513,
-      ],
-      "name": "entryB",
-    },
-  },
-}
-`);
+			Object {
+			  "namedChunkGroups": Object {
+			    "chunkB": Object {
+			      "assets": Array [
+			        "chunkB.js",
+			      ],
+			      "auxiliaryAssets": Array [],
+			      "childAssets": Object {},
+			      "children": Object {},
+			      "chunks": Array [
+			        336,
+			      ],
+			      "name": "chunkB",
+			    },
+			    "entryA": Object {
+			      "assets": Array [
+			        "entryA.js",
+			      ],
+			      "auxiliaryAssets": Array [],
+			      "childAssets": Object {},
+			      "children": Object {},
+			      "chunks": Array [
+			        938,
+			      ],
+			      "name": "entryA",
+			    },
+			    "entryB": Object {
+			      "assets": Array [
+			        "entryB.js",
+			      ],
+			      "auxiliaryAssets": Array [],
+			      "childAssets": Object {},
+			      "children": Object {},
+			      "chunks": Array [
+			        513,
+			      ],
+			      "name": "entryB",
+			    },
+			  },
+			}
+		`);
 		});
 		it("should contain assets", async () => {
 			const stats = await compile({
@@ -175,62 +175,62 @@ Object {
 					assets: true
 				})
 			).toMatchInlineSnapshot(`
-Object {
-  "assets": Array [
-    Object {
-      "auxiliaryChunkNames": Array [],
-      "auxiliaryChunks": Array [],
-      "chunkNames": Array [
-        "chunkB",
-      ],
-      "chunks": Array [
-        336,
-      ],
-      "emitted": true,
-      "name": "chunkB.js",
-      "size": 119,
-    },
-    Object {
-      "auxiliaryChunkNames": Array [],
-      "auxiliaryChunks": Array [],
-      "chunkNames": Array [
-        "entryA",
-      ],
-      "chunks": Array [
-        938,
-      ],
-      "emitted": true,
-      "name": "entryA.js",
-      "size": 239,
-    },
-    Object {
-      "auxiliaryChunkNames": Array [],
-      "auxiliaryChunks": Array [],
-      "chunkNames": Array [
-        "entryB",
-      ],
-      "chunks": Array [
-        513,
-      ],
-      "emitted": true,
-      "name": "entryB.js",
-      "size": 2169,
-    },
-  ],
-  "assetsByChunkName": Object {
-    "chunkB": Array [
-      "chunkB.js",
-    ],
-    "entryA": Array [
-      "entryA.js",
-    ],
-    "entryB": Array [
-      "entryB.js",
-    ],
-  },
-  "filteredAssets": 0,
-}
-`);
+			Object {
+			  "assets": Array [
+			    Object {
+			      "auxiliaryChunkNames": Array [],
+			      "auxiliaryChunks": Array [],
+			      "chunkNames": Array [
+			        "chunkB",
+			      ],
+			      "chunks": Array [
+			        336,
+			      ],
+			      "emitted": true,
+			      "name": "chunkB.js",
+			      "size": 119,
+			    },
+			    Object {
+			      "auxiliaryChunkNames": Array [],
+			      "auxiliaryChunks": Array [],
+			      "chunkNames": Array [
+			        "entryA",
+			      ],
+			      "chunks": Array [
+			        938,
+			      ],
+			      "emitted": true,
+			      "name": "entryA.js",
+			      "size": 239,
+			    },
+			    Object {
+			      "auxiliaryChunkNames": Array [],
+			      "auxiliaryChunks": Array [],
+			      "chunkNames": Array [
+			        "entryB",
+			      ],
+			      "chunks": Array [
+			        513,
+			      ],
+			      "emitted": true,
+			      "name": "entryB.js",
+			      "size": 2214,
+			    },
+			  ],
+			  "assetsByChunkName": Object {
+			    "chunkB": Array [
+			      "chunkB.js",
+			    ],
+			    "entryA": Array [
+			      "entryA.js",
+			    ],
+			    "entryB": Array [
+			      "entryB.js",
+			    ],
+			  },
+			  "filteredAssets": 0,
+			}
+		`);
 		});
 	});
 });
