@@ -17,17 +17,17 @@ _{{webpack.config.js}}_
 ## development mode
 
 ```javascript
-_{{dist/bundle-cheap-eval-source-map.js}}_
+_{{development:dist/main.js}}_
 ```
 
 ## production mode
 
 ```javascript
-_{{dist/bundle-source-map.js}}_
+_{{production:dist/main.js}}_
 ```
 
 ```javascript
-_{{dist/bundle-source-map.js.map}}_
+_{{production:dist/main.js.map}}_
 ```
 
 # webpack output
