@@ -23,7 +23,7 @@ module.exports = function(updatedModules, renewedModules) {
 	} else {
 		log("info", "[HMR] Updated modules:");
 		renewedModules.forEach(function(moduleId) {
-			if (typeof moduleId === "string" && moduleId.indexOf("!") !== -1) {
+			if (typeof moduleId === "string" && moduleId.includes("!")) {
 				var parts = moduleId.split("!");
 				log.groupCollapsed("info", "[HMR]  - " + parts.pop());
 				log("info", "[HMR]  - " + moduleId);
