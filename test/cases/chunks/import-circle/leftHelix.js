@@ -1,4 +1,4 @@
-import leftHelixPrime, { run } from './leftHelixPrime';
+import leftHelixPrime, { run } from "./leftHelixPrime";
 
 export default {
 	leftHelixPrime,
