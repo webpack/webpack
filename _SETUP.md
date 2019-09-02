@@ -94,9 +94,9 @@ yarn type-lint --watch
 yarn build:examples
 ```
 
-### To update some example use
+### To update a specific example use
 
 ```bash
-cd examples/(some example dir)
+cd examples/<path to example>
 node build.js
 ```
