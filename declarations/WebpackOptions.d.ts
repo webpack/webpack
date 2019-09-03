@@ -883,6 +883,10 @@ export interface OptimizationOptions {
 	 */
 	flagIncludedChunks?: boolean;
 	/**
+	 * Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection
+	 */
+	innerGraph?: boolean;
+	/**
 	 * Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports)
 	 */
 	mangleExports?: boolean;

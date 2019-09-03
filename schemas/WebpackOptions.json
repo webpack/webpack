@@ -554,6 +554,10 @@
           "description": "Also flag chunks as loaded which contain a subset of the modules",
           "type": "boolean"
         },
+        "innerGraph": {
+          "description": "Creates a module-internal dependency graph for top level symbols, exports and imports, to improve unused exports detection",
+          "type": "boolean"
+        },
         "mangleExports": {
           "description": "Rename exports when possible to generate shorter code (depends on optimization.usedExports and optimization.providedExports)",
           "type": "boolean"
