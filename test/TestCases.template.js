@@ -97,8 +97,8 @@ const describeCases = config => {
 								optimization: config.mode
 									? NO_EMIT_ON_ERRORS_OPTIMIZATIONS
 									: {
-											...config.optimization,
-											...DEFAULT_OPTIMIZATIONS
+											...DEFAULT_OPTIMIZATIONS,
+											...config.optimization
 									  },
 								performance: {
 									hints: false
