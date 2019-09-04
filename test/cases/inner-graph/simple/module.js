@@ -1,4 +1,4 @@
-import { EXPORT, EXPORT2 } from "./inner";
+import { EXPORT, EXPORT2, EXPORT3 } from "./inner";
 
 export function f1() {
 	// no using EXPORT
@@ -49,6 +49,7 @@ function gb6() {
 export const pure1 = /*#__PURE__*/ EXPORT;
 export const pure2 = /*#__PURE__*/ f6();
 const pure3 = /*#__PURE__*/ g5();
+export const pureUsed = /*#__PURE__*/ EXPORT3;
 
 function x1() {
 	return EXPORT2;
