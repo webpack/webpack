@@ -6,6 +6,10 @@ describe("TestCases", () => {
 		cache: {
 			type: "filesystem",
 			store: "pack"
+		},
+		optimization: {
+			innerGraph: true,
+			usedExports: true
 		}
 	});
 });
