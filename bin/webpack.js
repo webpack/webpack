@@ -90,11 +90,9 @@ if (installedClis.length === 0) {
 	let notify =
 		"One CLI for webpack must be installed. These are recommended choices, delivered as separate packages:";
 
-	for (const item of CLIs) {
-		if (item.recommended) {
+	for (const item of CLIs) 
+		if (item.recommended) 
 			notify += `\n - ${item.name} (${item.url})\n   ${item.description}`;
-		}
-	}
 
 	console.error(notify);
 
@@ -118,9 +116,7 @@ if (installedClis.length === 0) {
 	questionInterface.question(question, answer => {
 		questionInterface.close();
 
-		const normalizedAnswer = answer.toLowerCase().startsWith("y");
-
-		if (!normalizedAnswer) {
+		if (!(answer.toLowerCase().startsWith("y")) {
 			console.error(
 				"You need to install 'webpack-cli' to use webpack via CLI.\n" +
 					"You can also install the CLI manually."
