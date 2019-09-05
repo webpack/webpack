@@ -4,6 +4,7 @@
 const path = require("path");
 const MemoryFs = require("memory-fs");
 const webpack = require("../");
+const largeCompilationMultiConfig = require("./fixtures/large-compilation/webpack-dependency/multi.webpack.config");
 
 const createMultiCompiler = () => {
 	const compiler = webpack([
@@ -155,6 +156,69 @@ describe("MultiCompiler", function() {
 				if (err) return done(err);
 				watcher.close(done);
 			});
+		});
+	});
+
+	describe("compiler.endCompilationEarly", () => {
+		it("should end a long compilation (compile)", done => {
+			const compiler = webpack(largeCompilationMultiConfig);
+			compiler.outputFileSystem = new MemoryFs();
+			setTimeout(() => {
+				compiler.endCompilationEarly();
+			}, 1000);
+			compiler.run((err, stats) => {
+				if (err) return done(err);
+				if (compiler.compilers[0].outputFileSystem.existsSync("/bundle.js"))
+					return done(
+						new Error("Bundle should not be created on killed compilation")
+					);
+				// the other bundle in this multi compilation should exist, because
+				// it is a small compilation and should finish compiling quickly
+				expect(
+					compiler.compilers[1].outputFileSystem.existsSync("/bundle2.js")
+				).toBeTruthy();
+				done();
+			});
+		});
+
+		it("should end a long compilation (watch)", done => {
+			const compiler = webpack(largeCompilationMultiConfig);
+			compiler.outputFileSystem = new MemoryFs();
+			setTimeout(() => {
+				compiler.endCompilationEarly();
+			}, 1000);
+			const watcher = compiler.watch({}, (err, stats) => {
+				watcher.close();
+
+				if (err) return done(err);
+				if (compiler.compilers[0].outputFileSystem.existsSync("/bundle.js"))
+					return done(
+						new Error("Bundle should not be created on killed compilation")
+					);
+				// the other bundle in this multi compilation should exist, because
+				// it is a small compilation and should finish compiling quickly
+				expect(
+					compiler.compilers[1].outputFileSystem.existsSync("/bundle2.js")
+				).toBeTruthy();
+				done();
+			});
+		});
+	});
+
+	describe("watcher.kill", () => {
+		it("should end a long compilation", done => {
+			const compiler = webpack(largeCompilationMultiConfig);
+			compiler.outputFileSystem = new MemoryFs();
+			const cb = jest.fn();
+			setTimeout(() => {
+				watcher.kill(() => {
+					// the watcher callback should not be called because the
+					// compilation is stopped, not completed
+					expect(cb).not.toHaveBeenCalled();
+					done();
+				});
+			}, 1000);
+			const watcher = compiler.watch({}, cb);
 		});
 	});
 });
