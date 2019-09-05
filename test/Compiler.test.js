@@ -7,6 +7,7 @@ const webpack = require("../");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 const MemoryFs = require("memory-fs");
 const captureStdio = require("./helpers/captureStdio");
+const largeCompilationConfig = require("./configCases/large-compilation/webpack-dependency/webpack.config");
 
 describe("Compiler", () => {
 	jest.setTimeout(20000);
@@ -620,6 +621,59 @@ describe("Compiler", () => {
 				expect(capture.toString()).toMatchInlineSnapshot(`""`);
 				done();
 			});
+		});
+	});
+
+	describe("compiler.endCompilationEarly", () => {
+		it("should end a long compilation (compile)", done => {
+			const compiler = webpack(largeCompilationConfig);
+			compiler.outputFileSystem = new MemoryFs();
+			setTimeout(() => {
+				compiler.endCompilationEarly();
+			}, 1000);
+			compiler.compile((err, stats) => {
+				if (err) return done(err);
+				if (compiler.outputFileSystem.existsSync("/bundle.js"))
+					return done(
+						new Error("Bundle should not be created on killed compilation")
+					);
+				done();
+			});
+		});
+
+		it("should end a long compilation (watch)", done => {
+			const compiler = webpack(largeCompilationConfig);
+			compiler.outputFileSystem = new MemoryFs();
+			setTimeout(() => {
+				compiler.endCompilationEarly();
+			}, 1000);
+			const watcher = compiler.watch({}, (err, stats) => {
+				watcher.close();
+
+				if (err) return done(err);
+				if (compiler.outputFileSystem.existsSync("/bundle.js"))
+					return done(
+						new Error("Bundle should not be created on killed compilation")
+					);
+				done();
+			});
+		});
+	});
+
+	describe("watcher.kill", () => {
+		it("should end a long compilation", done => {
+			const compiler = webpack(largeCompilationConfig);
+			compiler.outputFileSystem = new MemoryFs();
+			const cb = jest.fn();
+			setTimeout(() => {
+				watcher.kill(() => {
+					// the watcher callback should not be called because the
+					// compilation is stopped, not completed
+					expect(cb).not.toHaveBeenCalled();
+					done();
+				});
+			}, 1000);
+			const watcher = compiler.watch({}, cb);
 		});
 	});
 });
