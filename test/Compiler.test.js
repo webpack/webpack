@@ -7,7 +7,7 @@ const webpack = require("../");
 const WebpackOptionsDefaulter = require("../lib/WebpackOptionsDefaulter");
 const MemoryFs = require("memory-fs");
 const captureStdio = require("./helpers/captureStdio");
-const largeCompilationConfig = require("./configCases/large-compilation/webpack-dependency/webpack.config");
+const largeCompilationConfig = require("./fixtures/large-compilation/webpack-dependency/webpack.config");
 
 describe("Compiler", () => {
 	jest.setTimeout(20000);
