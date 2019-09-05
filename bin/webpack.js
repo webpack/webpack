@@ -116,7 +116,7 @@ if (installedClis.length === 0) {
 	questionInterface.question(question, answer => {
 		questionInterface.close();
 
-		if (!(answer.toLowerCase().startsWith("y"))) {
+		if (!answer.toLowerCase().startsWith("y")) {
 			console.error(
 				"You need to install 'webpack-cli' to use webpack via CLI.\n" +
 					"You can also install the CLI manually."
