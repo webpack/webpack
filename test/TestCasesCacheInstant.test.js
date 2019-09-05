@@ -1,3 +1,4 @@
+const path = require("path");
 const { describeCases } = require("./TestCases.template");
 
 describe("TestCases", () => {
@@ -5,7 +6,8 @@ describe("TestCases", () => {
 		name: "cache instant",
 		cache: {
 			type: "filesystem",
-			store: "instant"
+			store: "instant",
+			managedPaths: [path.resolve(__dirname, "../node_modules")]
 		}
 	});
 });
