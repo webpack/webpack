@@ -46,8 +46,8 @@ module.exports.setLogLevel = function(level) {
 };
 
 module.exports.formatError = function(err) {
-	const message = err.message;
-	const stack = err.stack;
+	/* eslint-env es6 */
+	const message = err.message, stack = err.stack;
 	if (!stack) {
 		return message;
 	} else if (stack.indexOf(message) < 0) {
