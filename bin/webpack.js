@@ -122,7 +122,6 @@ if (installedClis.length === 0) {
 					"You can also install the CLI manually."
 			);
 			process.exitCode = 1;
-		
 			return;
 		}
 
