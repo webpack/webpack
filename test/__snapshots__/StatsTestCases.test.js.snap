@@ -635,26 +635,26 @@ Entrypoint entry-1 = vendor-1.js entry-1.js
 `;
 
 exports[`StatsTestCases should print correct stats for commons-plugin-issue-4980 1`] = `
-"Hash: 4de9d58c5e07bace3a862cc016e810ab8d72814f
+"Hash: e8a1307ea3c8604531519325cea6a11512fc55f7
 Child
-    Hash: 4de9d58c5e07bace3a86
+    Hash: e8a1307ea3c860453151
     Time: Xms
     Built at: 1970-04-20 12:42:42
                              Asset       Size  Chunks             Chunk Names
        app.20e7d920f7a5dd7ba86a.js   6.72 KiB   {143}  [emitted]  app
-    vendor.44602d2bdfb280718742.js  606 bytes   {736}  [emitted]  vendor
-    Entrypoint app = vendor.44602d2bdfb280718742.js app.20e7d920f7a5dd7ba86a.js
+    vendor.3ca106870164d059e3b7.js  606 bytes   {736}  [emitted]  vendor
+    Entrypoint app = vendor.3ca106870164d059e3b7.js app.20e7d920f7a5dd7ba86a.js
     [117] ./entry-1.js + 2 modules 190 bytes {143} [built]
     [381] ./constants.js 87 bytes {736} [built]
         + 4 hidden modules
 Child
-    Hash: 2cc016e810ab8d72814f
+    Hash: 9325cea6a11512fc55f7
     Time: Xms
     Built at: 1970-04-20 12:42:42
                              Asset       Size  Chunks             Chunk Names
        app.9ff34c93a677586ea3e1.js   6.74 KiB   {143}  [emitted]  app
-    vendor.44602d2bdfb280718742.js  606 bytes   {736}  [emitted]  vendor
-    Entrypoint app = vendor.44602d2bdfb280718742.js app.9ff34c93a677586ea3e1.js
+    vendor.3ca106870164d059e3b7.js  606 bytes   {736}  [emitted]  vendor
+    Entrypoint app = vendor.3ca106870164d059e3b7.js app.9ff34c93a677586ea3e1.js
     [381] ./constants.js 87 bytes {736} [built]
     [655] ./entry-2.js + 2 modules 197 bytes {143} [built]
         + 4 hidden modules"
@@ -1103,7 +1103,7 @@ chunk {trees} trees.js (trees) 71 bytes [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for import-context-filter 1`] = `
-"Hash: ad66943c56c470a291e2
+"Hash: 10cc1554ce1aa0fa0104
 Time: Xms
 Built at: 1970-04-20 12:42:42
    Asset       Size  Chunks             Chunk Names
@@ -1525,11 +1525,11 @@ If you don't want to include a polyfill, you can use an empty module like this:
 `;
 
 exports[`StatsTestCases should print correct stats for module-reasons 1`] = `
-"Hash: d467214b226e6b223582
+"Hash: 7c9265c9403a708454f8
 Time: Xms
 Built at: 1970-04-20 12:42:42
-  Asset     Size  Chunks             Chunk Names
-main.js  2.8 KiB   {179}  [emitted]  main
+  Asset      Size  Chunks             Chunk Names
+main.js  2.89 KiB   {179}  [emitted]  main
 Entrypoint main = main.js
 [237] ./index.js + 2 modules 102 bytes {179} [built]
       entry ./index main
@@ -2467,7 +2467,7 @@ Entrypoint e2 = runtime.js e2.js"
 `;
 
 exports[`StatsTestCases should print correct stats for scope-hoisting-bailouts 1`] = `
-"Hash: 8d50ea5a3930d4e325f5
+"Hash: f517daabbf7f98de61bd
 Time: Xms
 Built at: 1970-04-20 12:42:42
 Entrypoint index = index.js
@@ -2593,7 +2593,7 @@ Entrypoint main = main.js
 `;
 
 exports[`StatsTestCases should print correct stats for side-effects-simple-unused 1`] = `
-"Hash: 0dd96a6d2b50b602067c
+"Hash: d07e55dc2ba899045482
 Time: Xms
 Built at: 1970-04-20 12:42:42
   Asset      Size  Chunks             Chunk Names
@@ -3625,11 +3625,11 @@ chunk {794} default/async-a.js (async-a) 134 bytes <{179}> [rendered]
 `;
 
 exports[`StatsTestCases should print correct stats for tree-shaking 1`] = `
-"Hash: d1c58bcd9027a12fc6a5
+"Hash: 394ab56fdb998a8398e6
 Time: Xms
 Built at: 1970-04-20 12:42:42
     Asset      Size  Chunks             Chunk Names
-bundle.js  7.78 KiB   {179}  [emitted]  main
+bundle.js  7.86 KiB   {179}  [emitted]  main
 Entrypoint main = bundle.js
  [10] ./index.js 315 bytes {179} [built]
       [no exports]
