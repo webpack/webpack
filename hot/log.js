@@ -12,9 +12,8 @@ function shouldLog(level) {
 
 function logGroup(logFn) {
 	return function(level, msg) {
-		if (shouldLog(level)) {
+		if (shouldLog(level)) 
 			logFn(msg);
-		}
 	};
 }
 
@@ -47,8 +46,8 @@ module.exports.setLogLevel = function(level) {
 };
 
 module.exports.formatError = function(err) {
-	var message = err.message;
-	var stack = err.stack;
+	const message = err.message;
+	const stack = err.stack;
 	if (!stack) {
 		return message;
 	} else if (stack.indexOf(message) < 0) {
