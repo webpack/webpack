@@ -21,11 +21,7 @@ const runCommand = (command, args) => {
 		});
 
 		executedCommand.on("exit", code => {
-			if (code === 0) {
-				resolve();
-			} else {
-				reject();
-			}
+			(code === 0) ? resolve() : reject();
 		});
 	});
 };
@@ -90,11 +86,9 @@ if (installedClis.length === 0) {
 	let notify =
 		"One CLI for webpack must be installed. These are recommended choices, delivered as separate packages:";
 
-	for (const item of CLIs) {
-		if (item.recommended) {
+	for (const item of CLIs) 
+		if (item.recommended) 
 			notify += `\n - ${item.name} (${item.url})\n   ${item.description}`;
-		}
-	}
 
 	console.error(notify);
 
