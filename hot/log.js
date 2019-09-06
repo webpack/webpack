@@ -12,8 +12,7 @@ function shouldLog(level) {
 
 function logGroup(logFn) {
 	return function(level, msg) {
-		if (shouldLog(level)) 
-			logFn(msg);
+		if (shouldLog(level)) logFn(msg);
 	};
 }
 
