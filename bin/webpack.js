@@ -21,11 +21,7 @@ const runCommand = (command, args) => {
 		});
 
 		executedCommand.on("exit", code => {
-			if (code === 0) {
-				resolve();
-			} else {
-				reject();
-			}
+			(code === 0) ? resolve() : reject();
 		});
 	});
 };
@@ -81,82 +77,83 @@ const CLIs = [
 ];
 
 const installedClis = CLIs.filter(cli => cli.installed);
-
-if (installedClis.length === 0) {
+if (installedClis.length <= 1) {
 	const path = require("path");
-	const fs = require("fs");
-	const readLine = require("readline");
+	if (installedClis.length === 0) {
+		const fs = require("fs");
+		const readLine = require("readline");
 
-	let notify =
-		"One CLI for webpack must be installed. These are recommended choices, delivered as separate packages:";
+		let notify =
+			"One CLI for webpack must be installed. These are recommended choices, delivered as separate packages:";
 
-	for (const item of CLIs) {
-		if (item.recommended) {
-			notify += `\n - ${item.name} (${item.url})\n   ${item.description}`;
-		}
-	}
-
-	console.error(notify);
-
-	const isYarn = fs.existsSync(path.resolve(process.cwd(), "yarn.lock"));
-
-	const packageManager = isYarn ? "yarn" : "npm";
-	const installOptions = [isYarn ? "add" : "install", "-D"];
-
-	console.error(
-		`We will use "${packageManager}" to install the CLI via "${packageManager} ${installOptions.join(
-			" "
-		)}".`
-	);
-
-	const question = `Do you want to install 'webpack-cli' (yes/no): `;
-
-	const questionInterface = readLine.createInterface({
-		input: process.stdin,
-		output: process.stderr
-	});
-	questionInterface.question(question, answer => {
-		questionInterface.close();
-
-		const normalizedAnswer = answer.toLowerCase().startsWith("y");
-
-		if (!normalizedAnswer) {
-			console.error(
-				"You need to install 'webpack-cli' to use webpack via CLI.\n" +
-					"You can also install the CLI manually."
-			);
-			process.exitCode = 1;
-
-			return;
+		for (const item of CLIs) {
+			if (item.recommended) {
+				notify += `\n - ${item.name} (${item.url})\n   ${item.description}`;
+			}
 		}
 
-		const packageName = "webpack-cli";
+		console.error(notify);
 
-		console.log(
-			`Installing '${packageName}' (running '${packageManager} ${installOptions.join(
+		const isYarn = fs.existsSync(path.resolve(process.cwd(), "yarn.lock"));
+
+		const packageManager = isYarn ? "yarn" : "npm";
+		const installOptions = [isYarn ? "add" : "install", "-D"];
+
+		console.error(
+			`We will use "${packageManager}" to install the CLI via "${packageManager} ${installOptions.join(
 				" "
-			)} ${packageName}')...`
+			)}".`
 		);
 
-		runCommand(packageManager, installOptions.concat(packageName))
-			.then(() => {
-				require(packageName); //eslint-disable-line
-			})
-			.catch(error => {
-				console.error(error);
+		const question = `Do you want to install 'webpack-cli' (yes/no): `;
+
+		const questionInterface = readLine.createInterface({
+			input: process.stdin,
+			output: process.stderr
+		});
+		questionInterface.question(question, answer => {
+			questionInterface.close();
+
+			const normalizedAnswer = answer.toLowerCase().startsWith("y");
+
+			if (!normalizedAnswer) {
+				console.error(
+					"You need to install 'webpack-cli' to use webpack via CLI.\n" +
+					"You can also install the CLI manually."
+				);
 				process.exitCode = 1;
-			});
-	});
-} else if (installedClis.length === 1) {
-	const path = require("path");
-	const pkgPath = require.resolve(`${installedClis[0].package}/package.json`);
-	// eslint-disable-next-line node/no-missing-require
-	const pkg = require(pkgPath);
-	// eslint-disable-next-line node/no-missing-require
-	require(path.resolve(
-		path.dirname(pkgPath),
-		pkg.bin[installedClis[0].binName]
-	));
+
+				return;
+			}
+
+			const packageName = "webpack-cli";
+
+			console.log(
+				`Installing '${packageName}' (running '${packageManager} ${installOptions.join(
+					" "
+				)} ${packageName}')...`
+			);
+
+			runCommand(packageManager, installOptions.concat(packageName))
+				.then(() => {
+					require(packageName); //eslint-disable-line
+				})
+				.catch(error => {
+					console.error(error);
+					process.exitCode = 1;
+				});
+		});
+	} else {
+		//installedClis.length = 1
+		const pkgPath = require.resolve(`${installedClis[0].package}/package.json`);
+		// eslint-disable-next-line node/no-missing-require
+		const pkg = require(pkgPath);
+		// eslint-disable-next-line node/no-missing-require
+		require(path.resolve(
+			path.dirname(pkgPath),
+			pkg.bin[installedClis[0].binName]
+		));
+	}
 } else {
 	console.warn(
 		`You have installed ${installedClis
