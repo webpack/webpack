@@ -21,7 +21,11 @@ const runCommand = (command, args) => {
 		});
 
 		executedCommand.on("exit", code => {
-			(code === 0) ? resolve() : reject();
+			if (code === 0) {
+				resolve();
+			} else {
+				reject();
+			}
 		});
 	});
 };
