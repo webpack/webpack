@@ -27,8 +27,12 @@ webpack(
 			type: "filesystem",
 			cacheDirectory: path.resolve(__dirname, "../../js/buildDepsCache"),
 			buildDependencies: {
-				config: [__filename]
-			}
+				config: [
+					__filename,
+					path.resolve(__dirname, "../../../node_modules/.yarn-integrity")
+				]
+			},
+			managedPaths: [path.resolve(__dirname, "../../../node_modules")]
 		}
 	},
 	(err, stats) => {
