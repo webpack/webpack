@@ -6,7 +6,7 @@ it("should run", function() {
 	]);
 
 	const files = require("fs").readdirSync(__dirname);
-	const hasFIle = files.includes("a~b~c.bundle.js");
+	const hasFile = files.includes("a~b~c.bundle.js");
 
 	expect(hasFile).toBe(true);
 });
