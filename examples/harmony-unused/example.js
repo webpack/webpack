@@ -1,4 +1,4 @@
-import { add } from './math';
+import { add } from "./math";
 import * as library from "./library";
 
 add(1, 2);

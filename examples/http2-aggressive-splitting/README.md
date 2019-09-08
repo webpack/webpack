@@ -49,9 +49,9 @@ module.exports = {
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 4.39.0
                   Asset       Size  Chunks             Chunk Names
-0880c00cc5a4aa58c8f1.js  755 bytes       3  [emitted]  
-3d11d709e1dd8377b73a.js   6.91 KiB       1  [emitted]  
-6528b722fc8c6f112840.js    106 KiB       2  [emitted]  
+0880c00cc5a4aa58c8f1.js  755 bytes       3  [emitted]
+3d11d709e1dd8377b73a.js   6.91 KiB       1  [emitted]
+6528b722fc8c6f112840.js    106 KiB       2  [emitted]
 9eb2d3f6ade09b3d55fe.js   18.2 KiB       0  [emitted]  main
 Entrypoint main = 9eb2d3f6ade09b3d55fe.js
 chunk    {0} 9eb2d3f6ade09b3d55fe.js (main) 8.96 KiB >{1}< >{2}< >{3}< [entry] [rendered]
@@ -75,9 +75,9 @@ chunk    {3} 0880c00cc5a4aa58c8f1.js 472 bytes <{0}> ={1}= ={2}= [rendered] [rec
 Hash: 0a1b2c3d4e5f6a7b8c9d
 Version: webpack 4.39.0
                   Asset       Size  Chunks             Chunk Names
-001ee3de6e1928c924e5.js   5.08 KiB       1  [emitted]  
-31cdf743753cc7c06844.js  207 bytes       2  [emitted]  
-c5d24deda21d05162ca8.js    104 KiB       3  [emitted]  
+001ee3de6e1928c924e5.js   5.08 KiB       1  [emitted]
+31cdf743753cc7c06844.js  207 bytes       2  [emitted]
+c5d24deda21d05162ca8.js    104 KiB       3  [emitted]
 e7b462126f5b73af7427.js   9.73 KiB       0  [emitted]  main
 Entrypoint main = e7b462126f5b73af7427.js
 chunk    {0} e7b462126f5b73af7427.js (main) 8.96 KiB >{1}< >{2}< >{3}< [entry] [rendered]

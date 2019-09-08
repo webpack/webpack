@@ -6,7 +6,7 @@ async function getTemplate(templateName) {
 			`./templates/${templateName}`
 		);
 		console.log(template);
-	} catch(err) {
+	} catch (err) {
 		console.error(err);
 		return new Error(err);
 	}
@@ -18,4 +18,3 @@ getTemplate("baz");
 getTemplate("foo.noimport");
 getTemplate("bar.noimport");
 getTemplate("baz.noimport");
-

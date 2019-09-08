@@ -53,35 +53,38 @@ module.exports = [
 ## source-map.js and source-map.js.map
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
-/* 0 */
-/*!*************************************************************!*\
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([
+	[1],
+	[
+		/* 0 */
+		/*!*************************************************************!*\
   !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
   \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+		/*! no static exports found */
+		/***/ function(module, exports) {
+			// Taken from http://coffeescript.org/
 
-// Taken from http://coffeescript.org/
+			// Objects:
+			var math, race;
 
-// Objects:
-var math, race;
+			math = {
+				root: Math.sqrt,
+				square: square,
+				cube: function(x) {
+					return x * square(x);
+				}
+			};
 
-math = {
-  root: Math.sqrt,
-  square: square,
-  cube: function(x) {
-    return x * square(x);
-  }
-};
+			// Splats:
+			race = function(winner, ...runners) {
+				return print(winner, runners);
+			};
 
-// Splats:
-race = function(winner, ...runners) {
-  return print(winner, runners);
-};
-
-
-/***/ })
-],[[0,0]]]);
+			/***/
+		}
+	],
+	[[0, 0]]
+]);
 //# sourceMappingURL=bundle-source-map.js.map
 ```
 
@@ -92,35 +95,38 @@ race = function(winner, ...runners) {
 ## hidden-source-map.js and hidden-source-map.js.map
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
-/* 0 */
-/*!*************************************************************!*\
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([
+	[1],
+	[
+		/* 0 */
+		/*!*************************************************************!*\
   !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
   \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+		/*! no static exports found */
+		/***/ function(module, exports) {
+			// Taken from http://coffeescript.org/
 
-// Taken from http://coffeescript.org/
+			// Objects:
+			var math, race;
 
-// Objects:
-var math, race;
+			math = {
+				root: Math.sqrt,
+				square: square,
+				cube: function(x) {
+					return x * square(x);
+				}
+			};
 
-math = {
-  root: Math.sqrt,
-  square: square,
-  cube: function(x) {
-    return x * square(x);
-  }
-};
+			// Splats:
+			race = function(winner, ...runners) {
+				return print(winner, runners);
+			};
 
-// Splats:
-race = function(winner, ...runners) {
-  return print(winner, runners);
-};
-
-
-/***/ })
-],[[0,0]]]);
+			/***/
+		}
+	],
+	[[0, 0]]
+]);
 ```
 
 ```javascript
@@ -130,35 +136,38 @@ race = function(winner, ...runners) {
 ## inline-source-map.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
-/* 0 */
-/*!*************************************************************!*\
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([
+	[1],
+	[
+		/* 0 */
+		/*!*************************************************************!*\
   !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
   \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+		/*! no static exports found */
+		/***/ function(module, exports) {
+			// Taken from http://coffeescript.org/
 
-// Taken from http://coffeescript.org/
+			// Objects:
+			var math, race;
 
-// Objects:
-var math, race;
+			math = {
+				root: Math.sqrt,
+				square: square,
+				cube: function(x) {
+					return x * square(x);
+				}
+			};
 
-math = {
-  root: Math.sqrt,
-  square: square,
-  cube: function(x) {
-    return x * square(x);
-  }
-};
+			// Splats:
+			race = function(winner, ...runners) {
+				return print(winner, runners);
+			};
 
-// Splats:
-race = function(winner, ...runners) {
-  return print(winner, runners);
-};
-
-
-/***/ })
-],[[0,0]]]);
+			/***/
+		}
+	],
+	[[0, 0]]
+]);
 //# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9leGFtcGxlLmNvZmZlZSJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiOzs7Ozs7OztBQUFBOzs7QUFBQTs7QUFHQSxPQUNFO0VBQUEsTUFBUSxJQUFJLENBQUMsSUFBYjtFQUNBLFFBQVEsTUFEUjtFQUVBLE1BQVEsU0FBQyxDQUFEO1dBQU8sSUFBSSxPQUFPLENBQVA7RUFBWDtBQUZSLEVBSkY7OztBQVNBLE9BQU8sU0FBQyxNQUFELEtBQVMsT0FBVDtTQUNMLE1BQU0sTUFBTixFQUFjLE9BQWQ7QUFESyIsImZpbGUiOiIuL2J1bmRsZS1pbmxpbmUtc291cmNlLW1hcC5qcyIsInNvdXJjZXNDb250ZW50IjpbIiMgVGFrZW4gZnJvbSBodHRwOi8vY29mZmVlc2NyaXB0Lm9yZy9cblxuIyBPYmplY3RzOlxubWF0aCA9XG4gIHJvb3Q6ICAgTWF0aC5zcXJ0XG4gIHNxdWFyZTogc3F1YXJlXG4gIGN1YmU6ICAgKHgpIC0+IHggKiBzcXVhcmUgeFxuXG4jIFNwbGF0czpcbnJhY2UgPSAod2lubmVyLCBydW5uZXJzLi4uKSAtPlxuICBwcmludCB3aW5uZXIsIHJ1bm5lcnNcbiJdLCJzb3VyY2VSb290IjoiIn0=
 ```
 
@@ -171,69 +180,93 @@ race = function(winner, ...runners) {
 ## eval-source-map.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
-/* 0 */
-/*!*************************************************************!*\
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([
+	[1],
+	[
+		/* 0 */
+		/*!*************************************************************!*\
   !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
   \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+		/*! no static exports found */
+		/***/ function(module, exports) {
+			eval(
+				"// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9leGFtcGxlLmNvZmZlZT8yNDE2Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7QUFBQTs7QUFHQSxPQUNFO0VBQUEsTUFBUSxJQUFJLENBQUMsSUFBYjtFQUNBLFFBQVEsTUFEUjtFQUVBLE1BQVEsU0FBQyxDQUFEO1dBQU8sSUFBSSxPQUFPLENBQVA7RUFBWDtBQUZSLEVBSkY7OztBQVNBLE9BQU8sU0FBQyxNQUFELEtBQVMsT0FBVDtTQUNMLE1BQU0sTUFBTixFQUFjLE9BQWQ7QUFESyIsImZpbGUiOiIwLmpzIiwic291cmNlc0NvbnRlbnQiOlsiIyBUYWtlbiBmcm9tIGh0dHA6Ly9jb2ZmZWVzY3JpcHQub3JnL1xuXG4jIE9iamVjdHM6XG5tYXRoID1cbiAgcm9vdDogICBNYXRoLnNxcnRcbiAgc3F1YXJlOiBzcXVhcmVcbiAgY3ViZTogICAoeCkgLT4geCAqIHNxdWFyZSB4XG5cbiMgU3BsYXRzOlxucmFjZSA9ICh3aW5uZXIsIHJ1bm5lcnMuLi4pIC0+XG4gIHByaW50IHdpbm5lciwgcnVubmVyc1xuIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///0\n"
+			);
 
-eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9leGFtcGxlLmNvZmZlZT8yNDE2Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOzs7QUFBQTs7QUFHQSxPQUNFO0VBQUEsTUFBUSxJQUFJLENBQUMsSUFBYjtFQUNBLFFBQVEsTUFEUjtFQUVBLE1BQVEsU0FBQyxDQUFEO1dBQU8sSUFBSSxPQUFPLENBQVA7RUFBWDtBQUZSLEVBSkY7OztBQVNBLE9BQU8sU0FBQyxNQUFELEtBQVMsT0FBVDtTQUNMLE1BQU0sTUFBTixFQUFjLE9BQWQ7QUFESyIsImZpbGUiOiIwLmpzIiwic291cmNlc0NvbnRlbnQiOlsiIyBUYWtlbiBmcm9tIGh0dHA6Ly9jb2ZmZWVzY3JpcHQub3JnL1xuXG4jIE9iamVjdHM6XG5tYXRoID1cbiAgcm9vdDogICBNYXRoLnNxcnRcbiAgc3F1YXJlOiBzcXVhcmVcbiAgY3ViZTogICAoeCkgLT4geCAqIHNxdWFyZSB4XG5cbiMgU3BsYXRzOlxucmFjZSA9ICh3aW5uZXIsIHJ1bm5lcnMuLi4pIC0+XG4gIHByaW50IHdpbm5lciwgcnVubmVyc1xuIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///0\n");
-
-/***/ })
-],[[0,0]]]);
+			/***/
+		}
+	],
+	[[0, 0]]
+]);
 ```
 
 ## eval.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
-/* 0 */
-/*!*************************************************************!*\
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([
+	[1],
+	[
+		/* 0 */
+		/*!*************************************************************!*\
   !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
   \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+		/*! no static exports found */
+		/***/ function(module, exports) {
+			eval(
+				"// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n\n\n//# sourceURL=webpack:///./example.coffee?(webpack)/node_modules/coffee-loader"
+			);
 
-eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n\n\n//# sourceURL=webpack:///./example.coffee?(webpack)/node_modules/coffee-loader");
-
-/***/ })
-],[[0,0]]]);
+			/***/
+		}
+	],
+	[[0, 0]]
+]);
 ```
 
 ## cheap-eval-source-map.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
-/* 0 */
-/*!*************************************************************!*\
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([
+	[1],
+	[
+		/* 0 */
+		/*!*************************************************************!*\
   !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
   \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+		/*! no static exports found */
+		/***/ function(module, exports) {
+			eval(
+				"// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2V4YW1wbGUuY29mZmVlP2MxNzAiXSwic291cmNlc0NvbnRlbnQiOlsiLy8gVGFrZW4gZnJvbSBodHRwOi8vY29mZmVlc2NyaXB0Lm9yZy9cblxuLy8gT2JqZWN0czpcbnZhciBtYXRoLCByYWNlO1xuXG5tYXRoID0ge1xuICByb290OiBNYXRoLnNxcnQsXG4gIHNxdWFyZTogc3F1YXJlLFxuICBjdWJlOiBmdW5jdGlvbih4KSB7XG4gICAgcmV0dXJuIHggKiBzcXVhcmUoeCk7XG4gIH1cbn07XG5cbi8vIFNwbGF0czpcbnJhY2UgPSBmdW5jdGlvbih3aW5uZXIsIC4uLnJ1bm5lcnMpIHtcbiAgcmV0dXJuIHByaW50KHdpbm5lciwgcnVubmVycyk7XG59O1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///0\n"
+			);
 
-eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2V4YW1wbGUuY29mZmVlP2MxNzAiXSwic291cmNlc0NvbnRlbnQiOlsiLy8gVGFrZW4gZnJvbSBodHRwOi8vY29mZmVlc2NyaXB0Lm9yZy9cblxuLy8gT2JqZWN0czpcbnZhciBtYXRoLCByYWNlO1xuXG5tYXRoID0ge1xuICByb290OiBNYXRoLnNxcnQsXG4gIHNxdWFyZTogc3F1YXJlLFxuICBjdWJlOiBmdW5jdGlvbih4KSB7XG4gICAgcmV0dXJuIHggKiBzcXVhcmUoeCk7XG4gIH1cbn07XG5cbi8vIFNwbGF0czpcbnJhY2UgPSBmdW5jdGlvbih3aW5uZXIsIC4uLnJ1bm5lcnMpIHtcbiAgcmV0dXJuIHByaW50KHdpbm5lciwgcnVubmVycyk7XG59O1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///0\n");
-
-/***/ })
-],[[0,0]]]);
+			/***/
+		}
+	],
+	[[0, 0]]
+]);
 ```
 
 ## cheap-module-eval-source-map.js
 
 ```javascript
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[1],[
-/* 0 */
-/*!*************************************************************!*\
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([
+	[1],
+	[
+		/* 0 */
+		/*!*************************************************************!*\
   !*** (webpack)/node_modules/coffee-loader!./example.coffee ***!
   \*************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
+		/*! no static exports found */
+		/***/ function(module, exports) {
+			eval(
+				"// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2V4YW1wbGUuY29mZmVlPzI0MTYiXSwic291cmNlc0NvbnRlbnQiOlsiIyBUYWtlbiBmcm9tIGh0dHA6Ly9jb2ZmZWVzY3JpcHQub3JnL1xuXG4jIE9iamVjdHM6XG5tYXRoID1cbiAgcm9vdDogICBNYXRoLnNxcnRcbiAgc3F1YXJlOiBzcXVhcmVcbiAgY3ViZTogICAoeCkgLT4geCAqIHNxdWFyZSB4XG5cbiMgU3BsYXRzOlxucmFjZSA9ICh3aW5uZXIsIHJ1bm5lcnMuLi4pIC0+XG4gIHByaW50IHdpbm5lciwgcnVubmVyc1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBOztBQURBO0FBQ0E7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUFBO0FBQUE7QUFGQTtBQUNBOztBQUlBO0FBQ0E7QUFEQTsiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///0\n"
+			);
 
-eval("// Taken from http://coffeescript.org/\n\n// Objects:\nvar math, race;\n\nmath = {\n  root: Math.sqrt,\n  square: square,\n  cube: function(x) {\n    return x * square(x);\n  }\n};\n\n// Splats:\nrace = function(winner, ...runners) {\n  return print(winner, runners);\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiMC5qcyIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL2V4YW1wbGUuY29mZmVlPzI0MTYiXSwic291cmNlc0NvbnRlbnQiOlsiIyBUYWtlbiBmcm9tIGh0dHA6Ly9jb2ZmZWVzY3JpcHQub3JnL1xuXG4jIE9iamVjdHM6XG5tYXRoID1cbiAgcm9vdDogICBNYXRoLnNxcnRcbiAgc3F1YXJlOiBzcXVhcmVcbiAgY3ViZTogICAoeCkgLT4geCAqIHNxdWFyZSB4XG5cbiMgU3BsYXRzOlxucmFjZSA9ICh3aW5uZXIsIHJ1bm5lcnMuLi4pIC0+XG4gIHByaW50IHdpbm5lciwgcnVubmVyc1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBOztBQURBO0FBQ0E7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUFBO0FBQUE7QUFGQTtBQUNBOztBQUlBO0FBQ0E7QUFEQTsiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///0\n");
-
-/***/ })
-],[[0,0]]]);
+			/***/
+		}
+	],
+	[[0, 0]]
+]);
 ```
 
 ## cheap-module-source-map.js.map
