@@ -6,7 +6,7 @@ import e from "../data/e.json";
 import f from "../data/f.json";
 
 it("should be possible to import json data", function() {
-	expect({a}).toEqual({a: null});
+	expect({ a }).toEqual({ a: null });
 	expect(b).toBe(123);
 	expect(c).toEqual([1, 2, 3, 4]);
 	expect(d).toEqual({});
@@ -17,7 +17,7 @@ it("should be possible to import json data", function() {
 	});
 	expect(f).toEqual({
 		named: "named",
-		"default": "default",
+		default: "default",
 		__esModule: true
 	});
 });

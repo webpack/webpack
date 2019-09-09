@@ -1,4 +1,4 @@
 function foo(n) {
-  return 'bar';
+	return "bar";
 }
 export default [, foo];

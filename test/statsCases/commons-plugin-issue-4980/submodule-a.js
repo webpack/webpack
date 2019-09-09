@@ -1,3 +1,3 @@
-import d, { a } from './constants';
+import d, { a } from "./constants";
 
 export default d + a;

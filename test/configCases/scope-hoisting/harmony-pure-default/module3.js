@@ -4,6 +4,6 @@ const inc = () => {
 	value++;
 };
 
-export default /*#__PURE__*/(inc());
+export default /*#__PURE__*/ inc();
 
 export { value };

@@ -1,4 +1,3 @@
-
 it("should parse template strings in amd requires", function(done) {
 	var name = "abc";
 	var suffix = "Test";
@@ -11,13 +10,13 @@ it("should parse template strings in amd requires", function(done) {
 		require([String.raw`./${name}/${name}${suffix}`], test)
 	].length;
 
-	function test (result) {
-		expect(result.default).toEqual("ok")
+	function test(result) {
+		expect(result.default).toEqual("ok");
 		if (--pending <= 0) {
-			done()
+			done();
 		}
 	}
-})
+});
 
 it("should parse .concat strings in amd requires", function(done) {
 	var name = "abc";
@@ -30,10 +29,10 @@ it("should parse .concat strings in amd requires", function(done) {
 		require(["./abc/".concat(name).concat(suffix)], test)
 	].length;
 
-	function test (result) {
-		expect(result.default).toEqual("ok")
+	function test(result) {
+		expect(result.default).toEqual("ok");
 		if (--pending <= 0) {
-			done()
+			done();
 		}
 	}
-})
+});

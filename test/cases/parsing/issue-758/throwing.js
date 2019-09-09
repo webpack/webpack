@@ -1,3 +1,3 @@
 define(function() {
-	throw new Error('message');
+	throw new Error("message");
 });

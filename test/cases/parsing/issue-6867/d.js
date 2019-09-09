@@ -1,1 +1,1 @@
-export default (function bar() {})
+export default (function bar() {});

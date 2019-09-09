@@ -10,9 +10,5 @@ it("should handle a boolean", function() {
 
 it("should handle globs", function() {
 	expect(globValueModule).toBe("def");
-	expect(globValueModuleLog).toEqual([
-		"./src/a.js",
-		"a.js",
-		"index.js",
-	]);
+	expect(globValueModuleLog).toEqual(["./src/a.js", "a.js", "index.js"]);
 });

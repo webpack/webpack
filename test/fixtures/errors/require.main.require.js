@@ -1,1 +1,1 @@
-require.main.require('./file');
+require.main.require("./file");

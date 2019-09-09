@@ -1,8 +1,6 @@
 function b() {}
 
-export {
-	b
-}
+export { b };
 
 export var c = 123;
 

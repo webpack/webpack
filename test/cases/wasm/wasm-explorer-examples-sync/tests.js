@@ -6,7 +6,7 @@ import * as fastMath from "./fast-math.wasm";
 import * as duff from "./duff.wasm";
 
 export function run_Q_rsqrt() {
-	const result = Q_rsqrt._Z7Q_rsqrtf(1/1764);
+	const result = Q_rsqrt._Z7Q_rsqrtf(1 / 1764);
 	expect(result).toBeGreaterThan(41.9);
 	expect(result).toBeLessThan(42.1);
 }
@@ -27,8 +27,8 @@ export function run_fact() {
 }
 
 export function run_popcnt() {
-	expect(popcnt.main(0xF0F)).toEqual(16);
-	expect(popcnt._Z5countj(0xF0F)).toEqual(8);
+	expect(popcnt.main(0xf0f)).toEqual(16);
+	expect(popcnt._Z5countj(0xf0f)).toEqual(8);
 }
 
 export function run_fastMath() {
@@ -42,9 +42,7 @@ export function run_fastMath() {
 export function run_duff() {
 	const view = new Uint8Array(duff.memory.buffer);
 	view[0] = 123;
-	for(let i = 1; i < 100; i++)
-		view[i] = i;
+	for (let i = 1; i < 100; i++) view[i] = i;
 	const result = duff._Z4sendPcS_m(200, 1, 100);
-	for(let i = 1; i < 100; i++)
-		expect(view[199 + i]).toEqual(i);
+	for (let i = 1; i < 100; i++) expect(view[199 + i]).toEqual(i);
 }

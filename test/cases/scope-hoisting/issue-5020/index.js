@@ -25,4 +25,4 @@ it("should export the correct values", function() {
 			})
 		})
 	);
-})
+});

@@ -1,1 +1,1 @@
-export { default } from './CompC';
+export { default } from "./CompC";

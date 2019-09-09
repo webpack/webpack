@@ -1,6 +1,6 @@
-require("./changing-file")
+require("./changing-file");
 it("should watch for changes", function() {
-	switch(WATCH_STEP) {
+	switch (WATCH_STEP) {
 		case "0":
 			expect(STATS_JSON.children).toHaveLength(2);
 			break;
@@ -8,4 +8,4 @@ it("should watch for changes", function() {
 			expect(STATS_JSON.children).toHaveLength(1);
 			break;
 	}
-})
+});

@@ -1,7 +1,7 @@
 import value1 from "./a";
 import value2 from "./b";
 
-it("should allow to hot replace modules in a ConcatenatedModule", (done) => {
+it("should allow to hot replace modules in a ConcatenatedModule", done => {
 	expect(value1).toBe(1);
 	expect(value2).toBe(10);
 	module.hot.accept("./a", () => {

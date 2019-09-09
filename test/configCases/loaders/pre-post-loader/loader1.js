@@ -1,3 +1,3 @@
 module.exports = function(source) {
-	return source + "module.exports += \" loader1\";\n";
+	return source + 'module.exports += " loader1";\n';
 };

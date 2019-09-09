@@ -1,6 +1,6 @@
 export function foo() {
 	count++;
-    return;
+	return;
 }
 
 export var count = 0;

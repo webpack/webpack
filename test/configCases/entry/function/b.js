@@ -1,3 +1,3 @@
-it("should compile", (done) => {
-	done()
+it("should compile", done => {
+	done();
 });

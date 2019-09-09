@@ -15,7 +15,7 @@ module.exports = function(source) {
 
 	// change something to test if it's really used
 	ast.body[0].expression.right.arguments[0].value = "./ok";
-	ast.body[0].expression.right.arguments[0].raw = "\"./ok\"";
+	ast.body[0].expression.right.arguments[0].raw = '"./ok"';
 
 	ast.comments = comments;
 	this.callback(null, source, null, {

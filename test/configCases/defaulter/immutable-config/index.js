@@ -1,3 +1,1 @@
-it("should compile and run the test", function() {
-
-});
+it("should compile and run the test", function() {});

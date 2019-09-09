@@ -7,4 +7,3 @@ it("should also work in a chunk", function(done) {
 		done();
 	});
 });
-

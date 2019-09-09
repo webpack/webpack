@@ -1,4 +1,4 @@
 export default class A {}
 export class B {}
 
-export const c = 'c';
+export const c = "c";

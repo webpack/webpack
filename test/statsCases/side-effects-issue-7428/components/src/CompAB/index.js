@@ -1,2 +1,2 @@
-export { default as CompA } from './CompA';
-export { default as CompB } from './CompB';
+export { default as CompA } from "./CompA";
+export { default as CompB } from "./CompB";

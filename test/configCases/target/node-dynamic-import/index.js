@@ -9,9 +9,12 @@ function testCase(load, done) {
 					expect(sync).toBe(true);
 					done();
 				});
-				Promise.resolve().then(function() {}).then(function() {}).then(function() {
-					sync = false;
-				});
+				Promise.resolve()
+					.then(function() {})
+					.then(function() {})
+					.then(function() {
+						sync = false;
+					});
 			});
 		});
 		Promise.resolve().then(function() {
@@ -22,51 +25,73 @@ function testCase(load, done) {
 
 it("should be able to use expressions in import", function(done) {
 	function load(name, expected, callback) {
-		import("./dir/" + name + '.js')
-			.then((result) => {expect(result).toEqual(nsObj({
-				default: expected
-			})); callback()})
-			.catch((err) => {done(err)});
+		import("./dir/" + name + ".js")
+			.then(result => {
+				expect(result).toEqual(
+					nsObj({
+						default: expected
+					})
+				);
+				callback();
+			})
+			.catch(err => {
+				done(err);
+			});
 	}
 	testCase(load, done);
 });
 
 it("should be able to use expressions in lazy-once import", function(done) {
 	function load(name, expected, callback) {
-		import(/* webpackMode: "lazy-once" */ "./dir/" + name + '.js')
-			.then((result) => {expect(result).toEqual(nsObj({
-				default: expected
-			})); callback()})
-			.catch((err) => {done(err)});
+		import(/* webpackMode: "lazy-once" */ "./dir/" + name + ".js")
+			.then(result => {
+				expect(result).toEqual(
+					nsObj({
+						default: expected
+					})
+				);
+				callback();
+			})
+			.catch(err => {
+				done(err);
+			});
 	}
 	testCase(load, done);
 });
 
 it("should be able to use expressions in import", function(done) {
 	function load(name, expected, callback) {
-		import("./dir2/" + name).then((result) => {
-			expect(result).toEqual(nsObj({
-				default: expected
-			}));
-			callback();
-		}).catch((err) => {
-			done(err);
-		});
+		import("./dir2/" + name)
+			.then(result => {
+				expect(result).toEqual(
+					nsObj({
+						default: expected
+					})
+				);
+				callback();
+			})
+			.catch(err => {
+				done(err);
+			});
 	}
 	testCase(load, done);
 });
 
 it("should convert to function in node", function() {
-	expect((typeof __webpack_require__.e)).toBe("function");
-})
+	expect(typeof __webpack_require__.e).toBe("function");
+});
 
 it("should be able to use import", function(done) {
-	import("./two").then((two) => {
-		expect(two).toEqual(nsObj({
-			default: 2
-		}));
-		done();
-	}).catch(function(err) {
-		done(err);
-	});
+	import("./two")
+		.then(two => {
+			expect(two).toEqual(
+				nsObj({
+					default: 2
+				})
+			);
+			done();
+		})
+		.catch(function(err) {
+			done(err);
+		});
 });

@@ -1,2 +1,2 @@
 import { named } from "./b";
-export { named }
+export { named };

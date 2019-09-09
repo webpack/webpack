@@ -1,4 +1,4 @@
-import {a, b as B} from "abc";
+import { a, b as B } from "abc";
 
 import * as abc from "abc";
 
@@ -8,7 +8,14 @@ import { one, two } from "exportKinds";
 
 import { test1, test2 } from "exportKinds";
 
-import { a as rea, b as reb, c as rec, o as reo, two as retwo, def as Thing3 } from "reexport";
+import {
+	a as rea,
+	b as reb,
+	c as rec,
+	o as reo,
+	two as retwo,
+	def as Thing3
+} from "reexport";
 import { a as rea2 } from "reexport2";
 
 import threeIsOdd, { even } from "circularEven";
@@ -23,7 +30,6 @@ import * as commonjsTrans from "commonjs-trans";
 import defaultExport from "def";
 
 import "unused";
-
 
 it("should import a default export from a module", function() {
 	expect(defaultExport).toBe("def");
@@ -40,20 +46,22 @@ it("should import a whole module", function() {
 	expect(abc.c).toBe("c");
 	expect(abc.d.c).toBe("c");
 	expect(abc.e).toBe("c");
-	var copy = (function(a) { return a; }(abc));
+	var copy = (function(a) {
+		return a;
+	})(abc);
 	expect(copy.a).toBe("a");
 	expect(copy.b).toBe("b");
 	expect(copy.c).toBe("c");
 	expect(copy.d.c).toBe("c");
 	expect(copy.e).toBe("c");
-	expect((typeof abc)).toBe("object");
+	expect(typeof abc).toBe("object");
 	expect("" + abc).toBe("[object Module]");
 });
 
 it("should export functions", function() {
 	expect(fn).toBeTypeOf("function");
 	expect(fn()).toBe("fn");
-	expect((fn === fn)).toBe(true);
+	expect(fn === fn).toBe(true);
 });
 
 it("should multiple variables with one statement", function() {
@@ -86,13 +94,15 @@ it("should support export specifier", function() {
 });
 
 it("should be able to import commonjs", function() {
-	function x() { throw new Error("should not be executed"); }
+	function x() {
+		throw new Error("should not be executed");
+	}
 	// next line doesn't end with semicolon
-	x
+	x;
 	expect(Thing).toBeTypeOf("function");
-	x
+	x;
 	expect(Thing()).toBe("thing");
-	x
+	x;
 	expect(Other).toBe("other");
 
 	expect(Thing2).toBeTypeOf("function");

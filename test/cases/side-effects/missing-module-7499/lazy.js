@@ -1,4 +1,4 @@
-import { constants } from './example'
+import { constants } from "./example";
 
 export default function getConstants() {
 	return constants;

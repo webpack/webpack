@@ -1,3 +1,3 @@
 export default function a() {
-    return 'a' + __resourceQuery
+	return "a" + __resourceQuery;
 }

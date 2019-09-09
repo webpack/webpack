@@ -1,7 +1,7 @@
 import value1 from "./a";
 
 it("should have the expected static path defined", function() {
-	expect(DEFINE_PATH).toBe('./a');
+	expect(DEFINE_PATH).toBe("./a");
 });
 
 it("should hot.accept the module located at the static file path without breaking the compiler", function() {

@@ -1,1 +1,1 @@
-export { default as myFunction } from './myFunction'
+export { default as myFunction } from "./myFunction";

@@ -12,6 +12,4 @@ function getDirectiveRequire(directive) {
 	return require;
 }
 
-it("should parse these snippets successfully", function() {
-
-});
+it("should parse these snippets successfully", function() {});

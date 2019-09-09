@@ -1,3 +1,3 @@
-import {something} from "./c1";
+import { something } from "./c1";
 
 something();

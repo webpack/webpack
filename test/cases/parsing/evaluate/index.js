@@ -1,7 +1,6 @@
 it("should evaluate null", function() {
 	var y = null ? require("fail") : require("./a");
-	if(null)
-		require("fail");
+	if (null) require("fail");
 });
 
 it("should evaluate logical expression", function() {
@@ -11,7 +10,9 @@ it("should evaluate logical expression", function() {
 	var value4 = typeof require !== "function" && require("fail");
 	var value5 = "hello" && (() => "value5")();
 	var value6 = "" || (() => "value6")();
-	var value7 = (function () { return'value7'===typeof 'value7'&&'value7'})();
+	var value7 = (function() {
+		return "value7" === typeof "value7" && "value7";
+	})();
 
 	expect(value1).toBe("hello");
 	expect(value2).toBe(true);
@@ -22,11 +23,14 @@ it("should evaluate logical expression", function() {
 	expect(value7).toBe(false);
 });
 
-if("shouldn't evaluate expression", function() {
-	var value = "";
-	var x = (value + "") ? "fail" : "ok";
-	expect(x).toBe("ok");
-});
+if (
+	("shouldn't evaluate expression",
+	function() {
+		var value = "";
+		var x = value + "" ? "fail" : "ok";
+		expect(x).toBe("ok");
+	})
+);
 
 it("should short-circuit evaluating", function() {
 	var expr;

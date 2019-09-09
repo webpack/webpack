@@ -1,3 +1,3 @@
-define((require) => {
+define(require => {
 	return require("./a");
 });

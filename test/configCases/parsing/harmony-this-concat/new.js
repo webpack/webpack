@@ -5,6 +5,4 @@ function C() {
 C.prototype.pok = true;
 
 export default C;
-export {
-	C
-};
+export { C };

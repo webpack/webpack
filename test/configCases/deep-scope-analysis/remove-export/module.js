@@ -7,4 +7,4 @@ export function test() {
 	};
 }
 
-export { unused }
+export { unused };

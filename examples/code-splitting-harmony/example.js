@@ -2,7 +2,7 @@ import a from "a";
 
 import("b").then(function(b) {
 	console.log("b loaded", b);
-})
+});
 
 function loadC(name) {
 	return import("c/" + name);

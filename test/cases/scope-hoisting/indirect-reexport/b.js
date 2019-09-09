@@ -1,2 +1,2 @@
 import named from "./a";
-export { named }
+export { named };

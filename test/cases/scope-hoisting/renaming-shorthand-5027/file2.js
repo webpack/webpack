@@ -1,2 +1,2 @@
-var [ test ] = [ "test2" ];
-export { test }
+var [test] = ["test2"];
+export { test };

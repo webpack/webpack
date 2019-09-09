@@ -1,1 +1,1 @@
-import(/* webpackChunkName: "b" */"./module-b");
+import(/* webpackChunkName: "b" */ "./module-b");

@@ -6,7 +6,7 @@ function func(x = a, y = b) {
 
 var func2 = function(x = a, y = b) {
 	return [x, y];
-}
+};
 
 it("should import into default parameters", function() {
 	expect(func()).toEqual(["a", "b"]);

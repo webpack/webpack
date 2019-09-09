@@ -1,1 +1,1 @@
-export const number = 0xFFFFFFFFFF;
+export const number = 0xffffffffff;

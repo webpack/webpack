@@ -1,5 +1,5 @@
-it("should compile and run the test", function () {});
+it("should compile and run the test", function() {});
 
-if(Math.random() < -1) {
+if (Math.random() < -1) {
 	import(/* webpackChunkName: "chunk" */ "./chunk");
 }

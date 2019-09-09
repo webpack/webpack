@@ -4,12 +4,9 @@ const inc = () => {
 	value++;
 };
 
-export
-// hello
-default
+export default // hello
 // world
 /*#__PURE__*/
-inc()
-;
+inc();
 
 export { value };

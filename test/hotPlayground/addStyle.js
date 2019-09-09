@@ -15,4 +15,4 @@ module.exports = function(cssCode) {
 	return function() {
 		head.removeChild(styleElement);
 	};
-}
+};

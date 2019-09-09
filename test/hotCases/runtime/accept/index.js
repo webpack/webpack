@@ -1,6 +1,6 @@
 var value = require("./file");
 
-it("should accept a dependencies and require a new value", (done) => {
+it("should accept a dependencies and require a new value", done => {
 	expect(value).toBe(1);
 	module.hot.accept("./file", () => {
 		value = require("./file");

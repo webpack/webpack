@@ -1,3 +1,5 @@
 module.exports = {
-	mark: function(a) { return a(); }
-}
+	mark: function(a) {
+		return a();
+	}
+};

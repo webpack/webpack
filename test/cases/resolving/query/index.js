@@ -9,4 +9,3 @@ it("should make different modules for query", function() {
 	expect(a).not.toBe(c);
 	expect(b).not.toBe(c);
 });
-

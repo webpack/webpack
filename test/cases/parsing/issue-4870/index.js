@@ -8,6 +8,6 @@ it("should allow import in array destructing", function() {
 
 it("should allow import in object destructing", function() {
 	var other;
-	({other = test} = {});
+	({ other = test } = {});
 	expect(other).toBe("test");
 });

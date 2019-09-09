@@ -1,7 +1,7 @@
 export default function myFunction() {
 	let iifeExecutionCount = 0;
 
-	(function someFunction (recurse, recurseFunction = someFunction) {
+	(function someFunction(recurse, recurseFunction = someFunction) {
 		iifeExecutionCount++;
 
 		if (recurse) {

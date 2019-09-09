@@ -4,7 +4,7 @@ import def from "./cjs.js";
 import { ns, default as def1, def as def2, data as data2 } from "./reexport.mjs";
 import * as reexport from "./reexport.mjs";
 
-it("should get correct values when importing named exports from a CommonJs module from mjs", function() {
+it("should get correct values when importing named exports from a CommonJs module from mjs", function () {
 	expect(typeof data).toBe("undefined");
 	expect({ data }).toEqual({ data: undefined });
 	expect(def).toEqual({

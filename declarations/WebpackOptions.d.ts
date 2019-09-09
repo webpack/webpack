@@ -39,18 +39,18 @@ export type EntryItem = string | NonEmptyArrayOfUniqueStringValues;
  */
 export type Externals =
 	| ((
+		context: string,
+		request: string,
+		callback: (err?: Error, result?: string) => void
+	) => void)
+	| ExternalItem
+	| (
+		| ((
 			context: string,
 			request: string,
 			callback: (err?: Error, result?: string) => void
-	  ) => void)
-	| ExternalItem
-	| (
-			| ((
-					context: string,
-					request: string,
-					callback: (err?: Error, result?: string) => void
-			  ) => void)
-			| ExternalItem)[];
+		) => void)
+		| ExternalItem)[];
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "ExternalItem".
@@ -58,17 +58,17 @@ export type Externals =
 export type ExternalItem =
 	| string
 	| {
-			/**
-			 * The dependency used for the external
-			 */
-			[k: string]:
-				| string
-				| {
-						[k: string]: any;
-				  }
-				| ArrayOfStringValues
-				| boolean;
-	  }
+		/**
+		 * The dependency used for the external
+		 */
+		[k: string]:
+		| string
+		| {
+			[k: string]: any;
+		}
+		| ArrayOfStringValues
+		| boolean;
+	}
 	| RegExp;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
@@ -102,31 +102,31 @@ export type RuleSetCondition =
 	| ((value: string) => boolean)
 	| RuleSetConditions
 	| {
-			/**
-			 * Logical AND
-			 */
-			and?: RuleSetConditions;
-			/**
-			 * Exclude all modules matching any of these conditions
-			 */
-			exclude?: RuleSetConditionOrConditions;
-			/**
-			 * Exclude all modules matching not any of these conditions
-			 */
-			include?: RuleSetConditionOrConditions;
-			/**
-			 * Logical NOT
-			 */
-			not?: RuleSetConditions;
-			/**
-			 * Logical OR
-			 */
-			or?: RuleSetConditions;
-			/**
-			 * Exclude all modules matching any of these conditions
-			 */
-			test?: RuleSetConditionOrConditions;
-	  };
+		/**
+		 * Logical AND
+		 */
+		and?: RuleSetConditions;
+		/**
+		 * Exclude all modules matching any of these conditions
+		 */
+		exclude?: RuleSetConditionOrConditions;
+		/**
+		 * Exclude all modules matching not any of these conditions
+		 */
+		include?: RuleSetConditionOrConditions;
+		/**
+		 * Logical NOT
+		 */
+		not?: RuleSetConditions;
+		/**
+		 * Logical OR
+		 */
+		or?: RuleSetConditions;
+		/**
+		 * Exclude all modules matching any of these conditions
+		 */
+		test?: RuleSetConditionOrConditions;
+	};
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "RuleSetConditions".
@@ -151,31 +151,31 @@ export type RuleSetConditionAbsolute =
 	| ((value: string) => boolean)
 	| RuleSetConditionsAbsolute
 	| {
-			/**
-			 * Logical AND
-			 */
-			and?: RuleSetConditionsAbsolute;
-			/**
-			 * Exclude all modules matching any of these conditions
-			 */
-			exclude?: RuleSetConditionOrConditionsAbsolute;
-			/**
-			 * Exclude all modules matching not any of these conditions
-			 */
-			include?: RuleSetConditionOrConditionsAbsolute;
-			/**
-			 * Logical NOT
-			 */
-			not?: RuleSetConditionsAbsolute;
-			/**
-			 * Logical OR
-			 */
-			or?: RuleSetConditionsAbsolute;
-			/**
-			 * Exclude all modules matching any of these conditions
-			 */
-			test?: RuleSetConditionOrConditionsAbsolute;
-	  };
+		/**
+		 * Logical AND
+		 */
+		and?: RuleSetConditionsAbsolute;
+		/**
+		 * Exclude all modules matching any of these conditions
+		 */
+		exclude?: RuleSetConditionOrConditionsAbsolute;
+		/**
+		 * Exclude all modules matching not any of these conditions
+		 */
+		include?: RuleSetConditionOrConditionsAbsolute;
+		/**
+		 * Logical NOT
+		 */
+		not?: RuleSetConditionsAbsolute;
+		/**
+		 * Logical OR
+		 */
+		or?: RuleSetConditionsAbsolute;
+		/**
+		 * Exclude all modules matching any of these conditions
+		 */
+		test?: RuleSetConditionOrConditionsAbsolute;
+	};
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "RuleSetConditionsAbsolute".
@@ -199,31 +199,31 @@ export type RuleSetUseItem =
 	| RuleSetLoader
 	| Function
 	| {
-			/**
-			 * Unique loader identifier
-			 */
-			ident?: string;
-			/**
-			 * Loader name
-			 */
-			loader?: RuleSetLoader;
-			/**
-			 * Loader options
-			 */
-			options?: RuleSetQuery;
-			/**
-			 * Loader query
-			 */
-			query?: RuleSetQuery;
-	  };
+		/**
+		 * Unique loader identifier
+		 */
+		ident?: string;
+		/**
+		 * Loader name
+		 */
+		loader?: RuleSetLoader;
+		/**
+		 * Loader options
+		 */
+		options?: RuleSetQuery;
+		/**
+		 * Loader query
+		 */
+		query?: RuleSetQuery;
+	};
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
  * via the `definition` "RuleSetQuery".
  */
 export type RuleSetQuery =
 	| {
-			[k: string]: any;
-	  }
+		[k: string]: any;
+	}
 	| string;
 /**
  * This interface was referenced by `WebpackOptions`'s JSON-Schema
@@ -251,10 +251,10 @@ export interface WebpackOptions {
 	 * Set the value of `require.amd` and `define.amd`. Or disable AMD support.
 	 */
 	amd?:
-		| false
-		| {
-				[k: string]: any;
-		  };
+	| false
+	| {
+		[k: string]: any;
+	};
 	/**
 	 * Report the first error as a hard error instead of tolerating it.
 	 */
@@ -263,10 +263,10 @@ export interface WebpackOptions {
 	 * Cache generated modules and chunks to improve performance for multiple incremental builds.
 	 */
 	cache?:
-		| boolean
-		| {
-				[k: string]: any;
-		  };
+	| boolean
+	| {
+		[k: string]: any;
+	};
 	/**
 	 * The base directory (absolute path!) for resolving the `entry` option. If `output.pathinfo` is set, the included pathinfo is shortened to this directory.
 	 */
@@ -382,30 +382,30 @@ export interface WebpackOptions {
 	 * Used by the webpack CLI program to pass stats options.
 	 */
 	stats?:
-		| StatsOptions
-		| boolean
-		| (
-				| "none"
-				| "errors-only"
-				| "minimal"
-				| "normal"
-				| "detailed"
-				| "verbose"
-				| "errors-warnings");
+	| StatsOptions
+	| boolean
+	| (
+		| "none"
+		| "errors-only"
+		| "minimal"
+		| "normal"
+		| "detailed"
+		| "verbose"
+		| "errors-warnings");
 	/**
 	 * Environment to build for
 	 */
 	target?:
-		| (
-				| "web"
-				| "webworker"
-				| "node"
-				| "async-node"
-				| "node-webkit"
-				| "electron-main"
-				| "electron-renderer"
-				| "electron-preload")
-		| ((compiler: import("../lib/Compiler")) => void);
+	| (
+		| "web"
+		| "webworker"
+		| "node"
+		| "async-node"
+		| "node-webkit"
+		| "electron-main"
+		| "electron-renderer"
+		| "electron-preload")
+	| ((compiler: import("../lib/Compiler")) => void);
 	/**
 	 * Enter watch mode, which rebuilds on file change.
 	 */
@@ -603,11 +603,11 @@ export interface RuleSetRule {
 	 * Module type to use for the module
 	 */
 	type?:
-		| "javascript/auto"
-		| "javascript/dynamic"
-		| "javascript/esm"
-		| "json"
-		| "webassembly/experimental";
+	| "javascript/auto"
+	| "javascript/dynamic"
+	| "javascript/esm"
+	| "json"
+	| "webassembly/experimental";
 	/**
 	 * Modifiers applied to the module when rule is matched
 	 */
@@ -622,26 +622,26 @@ export interface ResolveOptions {
 	 * Redirect module requests
 	 */
 	alias?:
-		| {
-				/**
-				 * New request
-				 */
-				[k: string]: string;
-		  }
-		| {
-				/**
-				 * New request
-				 */
-				alias?: string;
-				/**
-				 * Request to be redirected
-				 */
-				name?: string;
-				/**
-				 * Redirect only exact matching request
-				 */
-				onlyModule?: boolean;
-		  }[];
+	| {
+		/**
+		 * New request
+		 */
+		[k: string]: string;
+	}
+	| {
+		/**
+		 * New request
+		 */
+		alias?: string;
+		/**
+		 * Request to be redirected
+		 */
+		name?: string;
+		/**
+		 * Redirect only exact matching request
+		 */
+		onlyModule?: boolean;
+	}[];
 	/**
 	 * Fields in the description file (package.json) which are used to redirect requests inside the module
 	 */
@@ -714,10 +714,10 @@ export interface ResolveOptions {
 	 * Enable caching of successfully resolved requests
 	 */
 	unsafeCache?:
-		| boolean
-		| {
-				[k: string]: any;
-		  };
+	| boolean
+	| {
+		[k: string]: any;
+	};
 	/**
 	 * Use synchronous filesystem calls for the resolver
 	 */
@@ -857,14 +857,14 @@ export interface OptimizationOptions {
 	 * Create an additional chunk which contains only the webpack runtime and chunk hash maps
 	 */
 	runtimeChunk?:
-		| boolean
-		| ("single" | "multiple")
-		| {
-				/**
-				 * The name or name factory for the runtime chunks
-				 */
-				name?: string | Function;
-		  };
+	| boolean
+	| ("single" | "multiple")
+	| {
+		/**
+		 * The name or name factory for the runtime chunks
+		 */
+		name?: string | Function;
+	};
 	/**
 	 * Skip over modules which are flagged to contain no side effects when exports are not used
 	 */
@@ -899,72 +899,72 @@ export interface OptimizationSplitChunksOptions {
 		 * Configuration for a cache group
 		 */
 		[k: string]:
-			| false
-			| Function
-			| string
-			| RegExp
-			| {
-					/**
-					 * Sets the name delimiter for created chunks
-					 */
-					automaticNameDelimiter?: string;
-					/**
-					 * Sets the max length for the name of a created chunk
-					 */
-					automaticNameMaxLength?: number;
-					/**
-					 * Sets the name prefix for created chunks
-					 */
-					automaticNamePrefix?: string;
-					/**
-					 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML)
-					 */
-					chunks?: ("initial" | "async" | "all") | Function;
-					/**
-					 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group
-					 */
-					enforce?: boolean;
-					/**
-					 * Sets the template for the filename for created chunks (Only works for initial chunks)
-					 */
-					filename?: string;
-					/**
-					 * Maximum number of requests which are accepted for on-demand loading
-					 */
-					maxAsyncRequests?: number;
-					/**
-					 * Maximum number of initial chunks which are accepted for an entry point
-					 */
-					maxInitialRequests?: number;
-					/**
-					 * Maximal size hint for the created chunks
-					 */
-					maxSize?: number;
-					/**
-					 * Minimum number of times a module has to be duplicated until it's considered for splitting
-					 */
-					minChunks?: number;
-					/**
-					 * Minimal size for the created chunk
-					 */
-					minSize?: number;
-					/**
-					 * Give chunks for this cache group a name (chunks with equal name are merged)
-					 */
-					name?: boolean | Function | string;
-					/**
-					 * Priority of this cache group
-					 */
-					priority?: number;
-					/**
-					 * Try to reuse existing chunk (with name) when it has matching modules
-					 */
-					reuseExistingChunk?: boolean;
-					/**
-					 * Assign modules to a cache group
-					 */
-					test?: Function | string | RegExp;
-			  };
+		| false
+		| Function
+		| string
+		| RegExp
+		| {
+			/**
+			 * Sets the name delimiter for created chunks
+			 */
+			automaticNameDelimiter?: string;
+			/**
+			 * Sets the max length for the name of a created chunk
+			 */
+			automaticNameMaxLength?: number;
+			/**
+			 * Sets the name prefix for created chunks
+			 */
+			automaticNamePrefix?: string;
+			/**
+			 * Select chunks for determining cache group content (defaults to "initial", "initial" and "all" requires adding these chunks to the HTML)
+			 */
+			chunks?: ("initial" | "async" | "all") | Function;
+			/**
+			 * Ignore minimum size, minimum chunks and maximum requests and always create chunks for this cache group
+			 */
+			enforce?: boolean;
+			/**
+			 * Sets the template for the filename for created chunks (Only works for initial chunks)
+			 */
+			filename?: string;
+			/**
+			 * Maximum number of requests which are accepted for on-demand loading
+			 */
+			maxAsyncRequests?: number;
+			/**
+			 * Maximum number of initial chunks which are accepted for an entry point
+			 */
+			maxInitialRequests?: number;
+			/**
+			 * Maximal size hint for the created chunks
+			 */
+			maxSize?: number;
+			/**
+			 * Minimum number of times a module has to be duplicated until it's considered for splitting
+			 */
+			minChunks?: number;
+			/**
+			 * Minimal size for the created chunk
+			 */
+			minSize?: number;
+			/**
+			 * Give chunks for this cache group a name (chunks with equal name are merged)
+			 */
+			name?: boolean | Function | string;
+			/**
+			 * Priority of this cache group
+			 */
+			priority?: number;
+			/**
+			 * Try to reuse existing chunk (with name) when it has matching modules
+			 */
+			reuseExistingChunk?: boolean;
+			/**
+			 * Assign modules to a cache group
+			 */
+			test?: Function | string | RegExp;
+		};
 	};
 	/**
 	 * Select chunks for determining shared modules (defaults to "async", "initial" and "all" requires adding these chunks to the HTML)
@@ -1029,25 +1029,25 @@ export interface OutputOptions {
 	 * Add a comment in the UMD wrapper.
 	 */
 	auxiliaryComment?:
-		| string
-		| {
-				/**
-				 * Set comment for `amd` section in UMD
-				 */
-				amd?: string;
-				/**
-				 * Set comment for `commonjs` (exports) section in UMD
-				 */
-				commonjs?: string;
-				/**
-				 * Set comment for `commonjs2` (module.exports) section in UMD
-				 */
-				commonjs2?: string;
-				/**
-				 * Set comment for `root` (global variable) section in UMD
-				 */
-				root?: string;
-		  };
+	| string
+	| {
+		/**
+		 * Set comment for `amd` section in UMD
+		 */
+		amd?: string;
+		/**
+		 * Set comment for `commonjs` (exports) section in UMD
+		 */
+		commonjs?: string;
+		/**
+		 * Set comment for `commonjs2` (module.exports) section in UMD
+		 */
+		commonjs2?: string;
+		/**
+		 * Set comment for `root` (global variable) section in UMD
+		 */
+		root?: string;
+	};
 	/**
 	 * The callback function name used by webpack for loading of chunks in WebWorkers.
 	 */
@@ -1072,10 +1072,10 @@ export interface OutputOptions {
 	 * Enable line to line mapped mode for all/specified modules. Line to line mapped mode uses a simple SourceMap where each line of the generated source is mapped to the same line of the original source. It’s a performance optimization. Only use it if your performance need to be better and you are sure that input lines match which generated lines.
 	 */
 	devtoolLineToLine?:
-		| boolean
-		| {
-				[k: string]: any;
-		  };
+	| boolean
+	| {
+		[k: string]: any;
+	};
 	/**
 	 * Filename template string of function for the sources array in a generated SourceMap.
 	 */
@@ -1144,21 +1144,21 @@ export interface OutputOptions {
 	 * Type of library
 	 */
 	libraryTarget?:
-		| "var"
-		| "assign"
-		| "this"
-		| "window"
-		| "self"
-		| "global"
-		| "commonjs"
-		| "commonjs2"
-		| "commonjs-module"
-		| "amd"
-		| "amd-require"
-		| "umd"
-		| "umd2"
-		| "jsonp"
-		| "system";
+	| "var"
+	| "assign"
+	| "this"
+	| "window"
+	| "self"
+	| "global"
+	| "commonjs"
+	| "commonjs2"
+	| "commonjs-module"
+	| "amd"
+	| "amd-require"
+	| "umd"
+	| "umd2"
+	| "jsonp"
+	| "system";
 	/**
 	 * The output directory as **absolute path** (required).
 	 */
@@ -1289,33 +1289,33 @@ export interface StatsOptions {
 	 * Enables/Disables colorful output
 	 */
 	colors?:
-		| boolean
-		| {
-				/**
-				 * Custom color for bold text
-				 */
-				bold?: string;
-				/**
-				 * Custom color for cyan text
-				 */
-				cyan?: string;
-				/**
-				 * Custom color for green text
-				 */
-				green?: string;
-				/**
-				 * Custom color for magenta text
-				 */
-				magenta?: string;
-				/**
-				 * Custom color for red text
-				 */
-				red?: string;
-				/**
-				 * Custom color for yellow text
-				 */
-				yellow?: string;
-		  };
+	| boolean
+	| {
+		/**
+		 * Custom color for bold text
+		 */
+		bold?: string;
+		/**
+		 * Custom color for cyan text
+		 */
+		cyan?: string;
+		/**
+		 * Custom color for green text
+		 */
+		green?: string;
+		/**
+		 * Custom color for magenta text
+		 */
+		magenta?: string;
+		/**
+		 * Custom color for red text
+		 */
+		red?: string;
+		/**
+		 * Custom color for yellow text
+		 */
+		yellow?: string;
+	};
 	/**
 	 * context directory for request shortening
 	 */

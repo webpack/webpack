@@ -1,1 +1,1 @@
-module.exports = import('./pageC')
+module.exports = import("./pageC");

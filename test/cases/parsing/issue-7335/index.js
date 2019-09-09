@@ -3,11 +3,19 @@ import x from "./a";
 const sum1 = (x, y, total = x + y) => total;
 const id1 = (a = x) => a;
 
-function sum2(x, y, total = x + y) { return total; }
-function id2(a = x) { return a; }
+function sum2(x, y, total = x + y) {
+	return total;
+}
+function id2(a = x) {
+	return a;
+}
 
-const sum3 = function(x, y, total = x + y) { return total; }
-const id3 = function(a = x) { return a; }
+const sum3 = function(x, y, total = x + y) {
+	return total;
+};
+const id3 = function(a = x) {
+	return a;
+};
 
 it("should shadow imported bindings", () => {
 	// Arrow functions

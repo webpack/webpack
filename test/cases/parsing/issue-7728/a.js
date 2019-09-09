@@ -1,3 +1,3 @@
 export default function test() {
-  return "OK";
+	return "OK";
 }

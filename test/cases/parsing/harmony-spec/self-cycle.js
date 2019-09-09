@@ -7,4 +7,4 @@ var a = 1;
 data.push(b);
 a = 2;
 data.push(b);
-export { a, data }
+export { a, data };

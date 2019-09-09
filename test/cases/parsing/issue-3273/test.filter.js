@@ -2,5 +2,9 @@ var supportsDefaultAssignment = require("../../../helpers/supportDefaultAssignme
 var supportsObjectDestructuring = require("../../../helpers/supportsObjectDestructuring");
 
 module.exports = function(config) {
-	return !config.minimize && supportsDefaultAssignment() && supportsObjectDestructuring();
+	return (
+		!config.minimize &&
+		supportsDefaultAssignment() &&
+		supportsObjectDestructuring()
+	);
 };

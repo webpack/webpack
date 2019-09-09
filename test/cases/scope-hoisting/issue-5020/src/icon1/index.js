@@ -1,5 +1,3 @@
 import * as svg from "./svg";
 
-export {
-    svg
-};
+export { svg };

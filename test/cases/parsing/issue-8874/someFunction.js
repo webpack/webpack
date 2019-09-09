@@ -1,3 +1,3 @@
-export default function someFunction () {
+export default function someFunction() {
 	return -1;
 }

@@ -1,1 +1,1 @@
-export default { name: 'CompC' };
+export default { name: "CompC" };

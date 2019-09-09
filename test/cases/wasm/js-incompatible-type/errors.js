@@ -14,4 +14,4 @@ module.exports = [
 		/Import "n" from "\.\/env.js" with Non-JS-compatible Global Type \(i64\) can only be used for direct wasm to wasm dependencies/,
 		/index\.js/
 	]
-]
+];

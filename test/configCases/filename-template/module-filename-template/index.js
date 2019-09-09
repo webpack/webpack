@@ -6,4 +6,3 @@ it("should include test.js in SourceMap", function() {
 });
 
 require.include("./test.js");
-

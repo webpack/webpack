@@ -20,9 +20,6 @@ export default class {
 	static c() {
 		return require("./a");
 	}
-};
+}
 
-export {
-	A,
-	B
-};
+export { A, B };

@@ -4,7 +4,7 @@ export let exception;
 
 try {
 	f();
-} catch(e) {
+} catch (e) {
 	exception = e;
 }
 

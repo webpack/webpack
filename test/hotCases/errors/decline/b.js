@@ -1,1 +1,1 @@
-export { default } from "./c"
+export { default } from "./c";

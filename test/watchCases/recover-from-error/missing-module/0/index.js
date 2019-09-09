@@ -1,5 +1,5 @@
 it("should recover from missing module", function() {
-	switch(WATCH_STEP) {
+	switch (WATCH_STEP) {
 		case "0":
 			expect(function() {
 				require("some-module");

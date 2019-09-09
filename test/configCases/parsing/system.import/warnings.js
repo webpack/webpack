@@ -1,3 +1,1 @@
-module.exports = [
-	[/system_undef/, /System\.import\(\) is deprecated/]
-];
+module.exports = [[/system_undef/, /System\.import\(\) is deprecated/]];

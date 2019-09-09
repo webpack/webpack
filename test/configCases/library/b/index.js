@@ -1,6 +1,4 @@
-it("should run", function() {
-
-});
+it("should run", function() {});
 
 it("should have exported", function(done) {
 	setTimeout(function() {
@@ -11,8 +9,8 @@ it("should have exported", function(done) {
 });
 
 module.exports = {
-	object: {ok: 1},
-	second: {ok: 2}
+	object: { ok: 1 },
+	second: { ok: 2 }
 };
 
 var exported = {};

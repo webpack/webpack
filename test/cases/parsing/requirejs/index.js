@@ -1,16 +1,12 @@
 it("should ignore require.config", function() {
-	require.config({
-
-	});
-	requirejs.config({
-
-	});
+	require.config({});
+	requirejs.config({});
 });
 it("should have a require.version", function() {
 	expect(require.version).toBeTypeOf("string");
 });
 it("should have a requirejs.onError function", function() {
-	function f(){}
+	function f() {}
 	expect(requirejs.onError).toBeTypeOf("function"); // has default handler
 	var org = requirejs.onError;
 	requirejs.onError = f;

@@ -2,5 +2,9 @@ var supportsIteratorDestructuring = require("../../../helpers/supportsIteratorDe
 var supportsObjectDestructuring = require("../../../helpers/supportsObjectDestructuring");
 
 module.exports = function(config) {
-	return !config.minimize && supportsObjectDestructuring() && supportsIteratorDestructuring();
+	return (
+		!config.minimize &&
+		supportsObjectDestructuring() &&
+		supportsIteratorDestructuring()
+	);
 };

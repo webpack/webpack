@@ -21,15 +21,15 @@ it("should hide import by array pattern (nested)", function() {
 });
 
 it("should hide import by pattern in function", function() {
-	(function({test}) {
+	(function({ test }) {
 		expect(test).toBe("ok");
-	}({ test: "ok" }));
+	})({ test: "ok" });
 });
 
 it("should allow import in default (incorrect)", function() {
 	var { other = test, test } = { test: "ok" };
 	expect(test).toBe("ok");
-	expect((typeof other)).toBe("undefined");
+	expect(typeof other).toBe("undefined");
 });
 
 it("should allow import in default", function() {

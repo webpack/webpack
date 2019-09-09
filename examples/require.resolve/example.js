@@ -10,4 +10,4 @@ delete require.cache[aId];
 var a2 = require("./a");
 
 // verify it
-if(a == a2) throw new Error("Cache clear failed :(");
+if (a == a2) throw new Error("Cache clear failed :(");

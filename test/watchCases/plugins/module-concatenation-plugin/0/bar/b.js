@@ -1,1 +1,1 @@
-export default 'is only';
+export default "is only";

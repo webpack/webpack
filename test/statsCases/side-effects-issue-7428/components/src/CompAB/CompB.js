@@ -1,6 +1,6 @@
-import { fnB } from './utils';
+import { fnB } from "./utils";
 
-export default { 
-  name: 'CompB', 
-  fnB,
+export default {
+	name: "CompB",
+	fnB
 };

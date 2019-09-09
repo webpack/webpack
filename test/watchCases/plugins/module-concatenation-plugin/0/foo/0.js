@@ -1,1 +1,1 @@
-module.exports = require('../bar/abc').default + '.0';
+module.exports = require("../bar/abc").default + ".0";

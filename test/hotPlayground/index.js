@@ -3,22 +3,19 @@
 // If running in webpack-dev-server, it will do a complete reload on abort or fail.
 
 window.onload = function() {
-
-	if(module.hot) {
-
+	if (module.hot) {
 		var checkButton = document.createElement("button");
 		checkButton.innerText = "Update!";
 		checkButton.onclick = function() {
 			module.hot.check(function(err, updatedModules) {
-				if(err) {
-					if(module.hot.status() in {abort:1,fail:1})
+				if (err) {
+					if (module.hot.status() in { abort: 1, fail: 1 })
 						window.location.reload();
-					else
-						console.warn("Update failed: " + err);
+					else console.warn("Update failed: " + err);
 					return;
 				}
 
-				if(!updatedModules || updatedModules.length === 0)
+				if (!updatedModules || updatedModules.length === 0)
 					return console.log("Update is empty.");
 				console.log("Updated modules:");
 				updatedModules.forEach(function(moduleId) {
@@ -40,8 +37,7 @@ window.onload = function() {
 
 	require("./applyStyle2");
 
-	if(module.hot) {
-
+	if (module.hot) {
 		module.hot.accept("./html.js", function() {
 			console.log("Replacing 'html.js' in 'index.js'");
 			element1.innerHTML = require("./html.js");
@@ -57,6 +53,5 @@ window.onload = function() {
 		module.hot.accept("./applyStyle2", function() {
 			require("./applyStyle2");
 		});
-
 	}
 };

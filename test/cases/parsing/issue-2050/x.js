@@ -1,8 +1,3 @@
 import { xa, xb, xc, xd } from "./module";
 
-export {
-	xa,
-	xb,
-	xc as xc,
-	xd as xd
-}
+export { xa, xb, xc, xd };

@@ -1,7 +1,7 @@
 it("should not bundle context requires with asyncMode === 'weak'", function() {
 	var contextRequire = require.context(".", false, /two/, "weak");
 	expect(function() {
-		contextRequire("./two")
+		contextRequire("./two");
 	}).toThrowError(/not available/);
 });
 

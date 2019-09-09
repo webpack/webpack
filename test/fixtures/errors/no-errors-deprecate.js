@@ -1,1 +1,1 @@
-require('./file');
+require("./file");

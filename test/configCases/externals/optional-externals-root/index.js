@@ -1,7 +1,7 @@
 it("should not fail on optional externals", function() {
 	try {
 		require("external");
-	} catch(e) {
+	} catch (e) {
 		expect(e).toBeInstanceOf(Error);
 		expect(e.code).toBe("MODULE_NOT_FOUND");
 		return;

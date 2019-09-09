@@ -1,3 +1,2 @@
 it("should compile", function() {});
-if(/./.test(""))
-	require("");
+if (/./.test("")) require("");

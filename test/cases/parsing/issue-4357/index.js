@@ -12,15 +12,16 @@ it("should parse dynamic property names", function() {
 });
 
 it("should match dynamic property names", function() {
-	const {
-		[require("./a")]: aa,
-		[b]: bb
-	} = { a: "a", b: "b" };
-	const [x,, ...[{
-		[b]: {
-			[b]: cc
-		}
-	}]] = [0, 1, {b: {b: "c"}}];
+	const { [require("./a")]: aa, [b]: bb } = { a: "a", b: "b" };
+	const [
+		x,
+		,
+		...[
+			{
+				[b]: { [b]: cc }
+			}
+		]
+	] = [0, 1, { b: { b: "c" } }];
 	expect(aa).toBe("a");
 	expect(bb).toBe("b");
 	expect(cc).toBe("c");

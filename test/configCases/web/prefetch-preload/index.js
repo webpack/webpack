@@ -3,7 +3,6 @@ __webpack_nonce__ = "nonce";
 __webpack_public_path__ = "https://example.com/public/path/";
 
 it("should prefetch and preload child chunks on chunk load", () => {
-
 	let link, script;
 
 	expect(document.head._children).toHaveLength(1);
@@ -14,7 +13,9 @@ it("should prefetch and preload child chunks on chunk load", () => {
 	expect(link.rel).toBe("prefetch");
 	expect(link.href).toBe("https://example.com/public/path/chunk1.js");
 
-	const promise = import(/* webpackChunkName: "chunk1", webpackPrefetch: true */ "./chunk1");
+	const promise = import(
+		/* webpackChunkName: "chunk1", webpackPrefetch: true */ "./chunk1"
+	);
 
 	expect(document.head._children).toHaveLength(3);
 
@@ -22,7 +23,7 @@ it("should prefetch and preload child chunks on chunk load", () => {
 	script = document.head._children[1];
 	expect(script._type).toBe("script");
 	expect(script.src).toBe("https://example.com/public/path/chunk1.js");
-	expect(script.getAttribute("nonce")).toBe("nonce")
+	expect(script.getAttribute("nonce")).toBe("nonce");
 	expect(script.crossOrigin).toBe("anonymous");
 	expect(script.onload).toBeTypeOf("function");
 
@@ -57,7 +58,9 @@ it("should prefetch and preload child chunks on chunk load", () => {
 		expect(link.href).toBe("https://example.com/public/path/chunk1-a.js");
 		expect(link.crossOrigin).toBe("anonymous");
 
-		const promise2 = import(/* webpackChunkName: "chunk1", webpackPrefetch: true */ "./chunk1");
+		const promise2 = import(
+			/* webpackChunkName: "chunk1", webpackPrefetch: true */ "./chunk1"
+		);
 
 		// Loading chunk1 again should not trigger prefetch/preload
 		expect(document.head._children).toHaveLength(5);
@@ -70,7 +73,7 @@ it("should prefetch and preload child chunks on chunk load", () => {
 		script = document.head._children[5];
 		expect(script._type).toBe("script");
 		expect(script.src).toBe("https://example.com/public/path/chunk2.js");
-		expect(script.getAttribute("nonce")).toBe("nonce")
+		expect(script.getAttribute("nonce")).toBe("nonce");
 		expect(script.crossOrigin).toBe("anonymous");
 		expect(script.onload).toBeTypeOf("function");
 
@@ -84,4 +87,4 @@ it("should prefetch and preload child chunks on chunk load", () => {
 			expect(document.head._children).toHaveLength(6);
 		});
 	});
-})
+});

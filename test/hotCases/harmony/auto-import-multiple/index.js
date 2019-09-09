@@ -1,7 +1,7 @@
 import { value } from "./file";
 import value2 from "./commonjs";
 
-it("should auto-import multiple ES6 imported values on accept", (done) => {
+it("should auto-import multiple ES6 imported values on accept", done => {
 	expect(value).toBe(1);
 	expect(value2).toBe(10);
 	module.hot.accept(["./file", "./commonjs"], () => {

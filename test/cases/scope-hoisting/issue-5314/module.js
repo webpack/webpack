@@ -1,2 +1,4 @@
 import b from "./index";
-export default function() { return b; };
+export default function() {
+	return b;
+}

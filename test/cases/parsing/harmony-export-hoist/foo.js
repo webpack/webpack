@@ -1,4 +1,4 @@
-import {bar} from "./bar";
+import { bar } from "./bar";
 
 export function foo() {
 	return "ok";
@@ -7,6 +7,6 @@ export function foo() {
 function foo2() {
 	return "ok";
 }
-export { foo2 }
+export { foo2 };
 
 export { default } from "./bar";

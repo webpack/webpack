@@ -45,17 +45,20 @@ it("should define and require a local module with deps", function() {
 	expect(require("my-module4")).toBe(2345);
 });
 
-it("should define and require a local module that is relative", function () {
+it("should define and require a local module that is relative", function() {
 	define("my-dir/my-module3", function() {
 		return 1234;
 	});
 	define("my-dir/my-other-dir/my-module4", function() {
 		return 2345;
 	});
-	define("my-dir/my-other-dir/my-module5", ["./my-module4", "../my-module3"], function(myModule4, myModule3) {
+	define("my-dir/my-other-dir/my-module5", [
+		"./my-module4",
+		"../my-module3"
+	], function(myModule4, myModule3) {
 		expect(myModule3).toBe(1234);
 		expect(myModule4).toBe(2345);
 		return 3456;
 	});
 	expect(require("my-dir/my-other-dir/my-module5")).toBe(3456);
-})
+});

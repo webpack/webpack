@@ -1,5 +1,3 @@
-import * as module from "./module"
+import * as module from "./module";
 
-export {
-  module
-}
+export { module };

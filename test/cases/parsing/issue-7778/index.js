@@ -11,7 +11,7 @@ it("should detect query strings in dynamic import as a static value 1 ", functio
 		}),
 		import("./abc?query?String").then(({ default: a }) => {
 			expect(a()).toBe("abc?query?String");
-		}),
+		})
 	]);
 });
 

@@ -1,1 +1,1 @@
-it("should compile", () => {})
+it("should compile", () => {});

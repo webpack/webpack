@@ -1,6 +1,6 @@
 it("should use correct caches in compilation and child compilations", function() {
 	var x = require("./report-cache-counters-loader!./changing-file");
-	switch(WATCH_STEP) {
+	switch (WATCH_STEP) {
 		case "0":
 			expect(x).toEqual([1, 1]);
 			break;

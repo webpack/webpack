@@ -1,3 +1,1 @@
-module.exports = [
-	[/Loader error/]
-]
+module.exports = [[/Loader error/]];

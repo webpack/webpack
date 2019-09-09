@@ -17,5 +17,5 @@ it("should use star exports", function() {
 });
 
 it("should not export default via star export", function() {
-	expect((typeof defaultImport)).toBe("undefined");
+	expect(typeof defaultImport).toBe("undefined");
 });

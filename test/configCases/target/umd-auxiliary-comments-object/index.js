@@ -1,6 +1,4 @@
-it("should run", function() {
-
-});
+it("should run", function() {});
 
 it("should have auxiliary comments", function() {
 	var fs = require("fs");

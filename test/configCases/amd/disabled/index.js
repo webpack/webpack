@@ -3,6 +3,6 @@ it("should compile", function(done) {
 });
 
 it("should disable define", function(done) {
-	expect(typeof define).toBe('undefined')
-	done()
-})
+	expect(typeof define).toBe("undefined");
+	done();
+});

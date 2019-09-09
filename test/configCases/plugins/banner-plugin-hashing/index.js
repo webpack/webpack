@@ -1,6 +1,6 @@
-const parseBanner = (banner) => {
+const parseBanner = banner => {
 	return banner
-		.slice(4,-3)
+		.slice(4, -3)
 		.split(", ")
 		.map(n => n.split(":"))
 		.reduce((acc, val) => {
@@ -12,10 +12,10 @@ const parseBanner = (banner) => {
 var source = require("fs")
 	.readFileSync(__filename, "utf-8")
 	.split("\n")
-	.slice(0,1)[0];
+	.slice(0, 1)[0];
 
-const banner = parseBanner(source)
-const REGEXP_HASH = /^[A-Za-z0-9]{20}$/
+const banner = parseBanner(source);
+const REGEXP_HASH = /^[A-Za-z0-9]{20}$/;
 
 it("should interpolate file hash in chunk banner", () => {
 	expect(REGEXP_HASH.test(banner["hash"])).toBe(true);

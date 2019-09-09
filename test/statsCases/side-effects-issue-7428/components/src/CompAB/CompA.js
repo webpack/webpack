@@ -1,6 +1,6 @@
-import * as methods from './utils';
+import * as methods from "./utils";
 
-export default { 
-  name: 'CompA', 
-  ...methods,
+export default {
+	name: "CompA",
+	...methods
 };

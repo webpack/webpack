@@ -355,24 +355,45 @@
       "type": "object",
       "additionalProperties": {
         "description": "Include a polyfill for the node.js module",
-        "enum": [false, true, "mock", "empty"]
+        "enum": [
+          false,
+          true,
+          "mock",
+          "empty"
+        ]
       },
       "properties": {
         "Buffer": {
           "description": "Include a polyfill for the 'Buffer' variable",
-          "enum": [false, true, "mock"]
+          "enum": [
+            false,
+            true,
+            "mock"
+          ]
         },
         "__dirname": {
           "description": "Include a polyfill for the '__dirname' variable",
-          "enum": [false, true, "mock"]
+          "enum": [
+            false,
+            true,
+            "mock"
+          ]
         },
         "__filename": {
           "description": "Include a polyfill for the '__filename' variable",
-          "enum": [false, true, "mock"]
+          "enum": [
+            false,
+            true,
+            "mock"
+          ]
         },
         "console": {
           "description": "Include a polyfill for the 'console' variable",
-          "enum": [false, true, "mock"]
+          "enum": [
+            false,
+            true,
+            "mock"
+          ]
         },
         "global": {
           "description": "Include a polyfill for the 'global' variable",
@@ -380,7 +401,11 @@
         },
         "process": {
           "description": "Include a polyfill for the 'process' variable",
-          "enum": [false, true, "mock"]
+          "enum": [
+            false,
+            true,
+            "mock"
+          ]
         }
       }
     },
@@ -406,7 +431,13 @@
         },
         "chunkIds": {
           "description": "Define the algorithm to choose chunk ids (named: readable ids for better debugging, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)",
-          "enum": ["natural", "named", "size", "total-size", false]
+          "enum": [
+            "natural",
+            "named",
+            "size",
+            "total-size",
+            false
+          ]
         },
         "concatenateModules": {
           "description": "Concatenate modules when possible to generate less modules, more efficient code and enable more optimizations by the minimizer",
@@ -449,7 +480,14 @@
         },
         "moduleIds": {
           "description": "Define the algorithm to choose module ids (natural: numeric ids in order of usage, named: readable ids for better debugging, hashed: short hashes as ids for better long term caching, size: numeric ids focused on minimal initial download size, total-size: numeric ids focused on minimal total download size, false: no algorithm used, as custom one can be provided via plugin)",
-          "enum": ["natural", "named", "hashed", "size", "total-size", false]
+          "enum": [
+            "natural",
+            "named",
+            "hashed",
+            "size",
+            "total-size",
+            false
+          ]
         },
         "namedChunks": {
           "description": "Use readable chunk identifiers for better debugging (deprecated, used chunkIds: named instead)",
@@ -467,7 +505,9 @@
           "description": "Set process.env.NODE_ENV to a specific value",
           "anyOf": [
             {
-              "enum": [false]
+              "enum": [
+                false
+              ]
             },
             {
               "type": "string"
@@ -501,7 +541,10 @@
               "type": "boolean"
             },
             {
-              "enum": ["single", "multiple"]
+              "enum": [
+                "single",
+                "multiple"
+              ]
             },
             {
               "type": "object",
@@ -531,7 +574,9 @@
           "description": "Optimize duplication and caching by splitting chunks by shared modules and cache group",
           "oneOf": [
             {
-              "enum": [false]
+              "enum": [
+                false
+              ]
             },
             {
               "$ref": "#/definitions/OptimizationSplitChunksOptions"
@@ -565,7 +610,9 @@
             "description": "Configuration for a cache group",
             "anyOf": [
               {
-                "enum": [false]
+                "enum": [
+                  false
+                ]
               },
               {
                 "instanceof": "Function",
@@ -600,7 +647,11 @@
                     "description": "Select chunks for determining cache group content (defaults to \"initial\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
                     "oneOf": [
                       {
-                        "enum": ["initial", "async", "all"]
+                        "enum": [
+                          "initial",
+                          "async",
+                          "all"
+                        ]
                       },
                       {
                         "instanceof": "Function",
@@ -690,7 +741,11 @@
           "description": "Select chunks for determining shared modules (defaults to \"async\", \"initial\" and \"all\" requires adding these chunks to the HTML)",
           "oneOf": [
             {
-              "enum": ["initial", "async", "all"]
+              "enum": [
+                "initial",
+                "async",
+                "all"
+              ]
             },
             {
               "instanceof": "Function",
@@ -822,7 +877,11 @@
         },
         "crossOriginLoading": {
           "description": "This option enables cross-origin loading of chunks.",
-          "enum": [false, "anonymous", "use-credentials"]
+          "enum": [
+            false,
+            "anonymous",
+            "use-credentials"
+          ]
         },
         "devtoolFallbackModuleFilenameTemplate": {
           "description": "Similar to `output.devtoolModuleFilenameTemplate`, but used in the case of duplicate module identifiers.",
@@ -950,7 +1009,11 @@
         },
         "jsonpScriptType": {
           "description": "This option enables loading async chunks via a custom script type, such as script type=\"module\"",
-          "enum": [false, "text/javascript", "module"]
+          "enum": [
+            false,
+            "text/javascript",
+            "module"
+          ]
         },
         "library": {
           "description": "If set, export the bundle as library. `output.library` is the name.",
@@ -1057,7 +1120,11 @@
         },
         "hints": {
           "description": "Sets the format of the hints: warnings, errors or nothing at all",
-          "enum": [false, "warning", "error"]
+          "enum": [
+            false,
+            "warning",
+            "error"
+          ]
         },
         "maxAssetSize": {
           "description": "Filesize limit (in bytes) when exceeded, that webpack will provide performance hints",
@@ -1447,7 +1514,10 @@
         },
         "enforce": {
           "description": "Enforce this rule as pre or post step",
-          "enum": ["pre", "post"]
+          "enum": [
+            "pre",
+            "post"
+          ]
         },
         "exclude": {
           "description": "Shortcut for resource.exclude",
@@ -1831,7 +1901,14 @@
             },
             {
               "description": "specify log level of logging output",
-              "enum": ["none", "error", "warn", "info", "log", "verbose"]
+              "enum": [
+                "none",
+                "error",
+                "warn",
+                "info",
+                "log",
+                "verbose"
+              ]
             }
           ]
         },
@@ -1945,7 +2022,9 @@
           "tsType": "(compiler: import('../lib/Compiler')) => void"
         }
       },
-      "required": ["apply"]
+      "required": [
+        "apply"
+      ]
     }
   },
   "type": "object",
@@ -1956,7 +2035,9 @@
       "anyOf": [
         {
           "description": "You can pass `false` to disable AMD support.",
-          "enum": [false]
+          "enum": [
+            false
+          ]
         },
         {
           "description": "You can pass an object to set the value of `require.amd` and `define.amd`.",
@@ -2005,7 +2086,9 @@
           "type": "string"
         },
         {
-          "enum": [false]
+          "enum": [
+            false
+          ]
         }
       ]
     },
@@ -2044,7 +2127,14 @@
         },
         "level": {
           "description": "Log level",
-          "enum": ["none", "error", "warn", "info", "log", "verbose"]
+          "enum": [
+            "none",
+            "error",
+            "warn",
+            "info",
+            "log",
+            "verbose"
+          ]
         }
       }
     },
@@ -2054,7 +2144,11 @@
     },
     "mode": {
       "description": "Enable production optimizations or development hints.",
-      "enum": ["development", "production", "none"]
+      "enum": [
+        "development",
+        "production",
+        "none"
+      ]
     },
     "module": {
       "description": "Options affecting the normal modules (`NormalModuleFactory`).",
@@ -2072,7 +2166,9 @@
       "description": "Include polyfills or mocks for various node stuff.",
       "anyOf": [
         {
-          "enum": [false]
+          "enum": [
+            false
+          ]
         },
         {
           "$ref": "#/definitions/NodeOptions"
@@ -2104,7 +2200,9 @@
       "description": "Configuration for web performance recommendations.",
       "anyOf": [
         {
-          "enum": [false]
+          "enum": [
+            false
+          ]
         },
         {
           "$ref": "#/definitions/PerformanceOptions"

@@ -18,4 +18,4 @@ it("should import into object shorthand", function() {
 			default: 456
 		})
 	});
-})
+});

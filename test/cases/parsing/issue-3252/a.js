@@ -1,14 +1,14 @@
 export class V6Engine {
-  toString() {
-    return 'V6';
-  }
+	toString() {
+		return "V6";
+	}
 }
 export class V8Engine {
-  toString() {
-    return 'V8';
-  }
+	toString() {
+		return "V8";
+	}
 }
 
 export function getVersion() {
-  return '1.0';
+	return "1.0";
 }

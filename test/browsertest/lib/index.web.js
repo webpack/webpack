@@ -1,5 +1,5 @@
 function test(cond, message) {
-	if(!cond) throw new Error(message);
+	if (!cond) throw new Error(message);
 }
 
 // load tests from library1, with script loader
@@ -33,8 +33,14 @@ describe("main", function() {
 			require.ensure(["subcontent"], function(require) {
 				// Comments work!
 				exports.ok = true;
-				test(require("subcontent") === "replaced", "node_modules should be replaced with web_modules");
-				test(require("subcontent2/file.js") === "original", "node_modules should still work when web_modules exists");
+				test(
+					require("subcontent") === "replaced",
+					"node_modules should be replaced with web_modules"
+				);
+				test(
+					require("subcontent2/file.js") === "original",
+					"node_modules should still work when web_modules exists"
+				);
 				done();
 			});
 		});
@@ -79,7 +85,9 @@ describe("main", function() {
 	describe("web loaders", function() {
 		it("should handle the file loader correctly", function() {
 			expect(require("!file-loader!../img/image.png")).toMatch(/js\/.+\.png$/);
-			document.getElementById("image").src = require("file-loader?prefix=img/!../img/image.png");
+			document.getElementById(
+				"image"
+			).src = require("file-loader?prefix=img/!../img/image.png");
 		});
 	});
 
@@ -87,29 +95,40 @@ describe("main", function() {
 		it("should be able to handle chunk loading errors and try again", function(done) {
 			var old = __webpack_public_path__;
 			__webpack_public_path__ += "wrong/";
-			import("./three").then(function() {
-				done(new Error("Chunk shouldn't be loaded"));
-			}).catch(function(err) {
-				expect(err).toBeInstanceOf(Error);
-				__webpack_public_path__ = old;
-				import("./three").then(function(three) {
-					expect(three).toBe(3);
-					done();
-				}).catch(function(err) {
-					done(new Error("Shouldn't result in an chunk loading error"));
+			import("./three")
+				.then(function() {
+					done(new Error("Chunk shouldn't be loaded"));
+				})
+				.catch(function(err) {
+					expect(err).toBeInstanceOf(Error);
+					__webpack_public_path__ = old;
+					import("./three")
+						.then(function(three) {
+							expect(three).toBe(3);
+							done();
+						})
+						.catch(function(err) {
+							done(new Error("Shouldn't result in an chunk loading error"));
+						});
 				});
-			});
 		});
 	});
 
-	var testCasesContext = require.context("../../cases", true, /^\.\/[^\/_]+\/[^\/_]+\/index$/);
-	var testCasesMap = testCasesContext.keys().map(function(key) {
-		return key.substring(2, key.length - "/index".length).split("/");
-	}).reduce(function(map, x) {
-		if(!map[x[0]]) map[x[0]] = [x[1]];
-		else map[x[0]].push(x[1]);
-		return map;
-	}, {});
+	var testCasesContext = require.context(
+		"../../cases",
+		true,
+		/^\.\/[^\/_]+\/[^\/_]+\/index$/
+	);
+	var testCasesMap = testCasesContext
+		.keys()
+		.map(function(key) {
+			return key.substring(2, key.length - "/index".length).split("/");
+		})
+		.reduce(function(map, x) {
+			if (!map[x[0]]) map[x[0]] = [x[1]];
+			else map[x[0]].push(x[1]);
+			return map;
+		}, {});
 	Object.keys(testCasesMap).forEach(function(category) {
 		describe(category, function() {
 			testCasesMap[category].forEach(function(name) {
@@ -119,17 +138,16 @@ describe("main", function() {
 			});
 		});
 	});
-
 });
 
-if(module.hot) {
+if (module.hot) {
 	module.hot.accept();
 	module.hot.dispose(function() {
 		mocha.suite.suites.length = 0;
 		var stats = document.getElementById("stats");
 		stats.parentNode.removeChild(stats);
 	});
-	if(module.data) {
+	if (module.data) {
 		mocha.run();
 	}
 }

@@ -1,1 +1,1 @@
-export default 'This ';
+export default "This ";

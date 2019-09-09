@@ -1,5 +1,8 @@
 export function add() {
-	var sum = 0, i = 0, args = arguments, l = args.length;
+	var sum = 0,
+		i = 0,
+		args = arguments,
+		l = args.length;
 	while (i < l) {
 		sum += args[i++];
 	}
@@ -7,7 +10,10 @@ export function add() {
 }
 
 export function multiply() {
-	var product = 1, i = 0, args = arguments, l = args.length;
+	var product = 1,
+		i = 0,
+		args = arguments,
+		l = args.length;
 	while (i < l) {
 		product *= args[i++];
 	}

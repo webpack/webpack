@@ -9,4 +9,3 @@ it("should resolve the alias and extensions in package.json", function() {
 it("should resolve the alias in package.json", function() {
 	expect(require("thing").default).toBe("the thing");
 });
-

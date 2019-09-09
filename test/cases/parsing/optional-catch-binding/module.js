@@ -4,4 +4,4 @@ export default function() {
 	} catch {
 		return true;
 	}
-};
+}

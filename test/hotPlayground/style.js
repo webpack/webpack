@@ -5,7 +5,7 @@ var addStyle = require("./addStyle");
 
 var dispose = addStyle("body { background: green; }");
 
-if(module.hot) {
+if (module.hot) {
 	module.hot.accept();
 	module.hot.dispose(dispose);
 }

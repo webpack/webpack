@@ -1,1 +1,1 @@
-export default 'should be';
+export default "should be";

@@ -1,6 +1,6 @@
 let result = false;
 if (require) {
-  result = true;
+	result = true;
 }
 
 module.exports = result;

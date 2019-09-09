@@ -1,5 +1,5 @@
 import e from "./e";
 
-if(module.hot) {
+if (module.hot) {
 	module.hot.decline();
 }

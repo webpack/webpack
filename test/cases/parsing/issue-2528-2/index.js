@@ -1,3 +1,3 @@
 foo();
 
-import { foo } from './module';
+import { foo } from "./module";

@@ -1,3 +1,1 @@
-module.exports = [
-	[/Module parse failed/]
-]
+module.exports = [[/Module parse failed/]];

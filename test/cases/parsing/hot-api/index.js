@@ -1,4 +1,4 @@
-if(module.hot) {
+if (module.hot) {
 	it("should run module.hot.accept(…)", function() {
 		module.hot.accept("./a", function() {});
 	});
@@ -9,6 +9,5 @@ if(module.hot) {
 		module.hot.decline("./b");
 	});
 } else {
-	it("should run module.hot.* (disabled)", function() {
-	});
+	it("should run module.hot.* (disabled)", function() {});
 }

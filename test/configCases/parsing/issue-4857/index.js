@@ -2,21 +2,21 @@ it("should transpile unreachable branches", () => {
 	let count = 0;
 
 	// BlockStatement
-	if(true) {
+	if (true) {
 		count++;
 	} else {
 		import("NOT_REACHABLE");
 	}
-	if(false) {
+	if (false) {
 		import("NOT_REACHABLE");
 	} else {
 		count++;
 	}
 
 	// ExpressionStatement
-	if(true) count++;
+	if (true) count++;
 	else import("NOT_REACHABLE");
-	if(false) import("NOT_REACHABLE");
+	if (false) import("NOT_REACHABLE");
 	else count++;
 
 	// ConditionalExpression
@@ -27,22 +27,21 @@ it("should transpile unreachable branches", () => {
 });
 
 it("should not remove hoisted variable declarations", () => {
-	if(false) {
-		var a, [,,b,] = [], {c, D: d, ["E"]: e = 2} = {};
-		var [{["_"]: f}, ...g] = [];
+	if (false) {
+		var a,
+			[, , b] = [],
+			{ c, D: d, ["E"]: e = 2 } = {};
+		var [{ ["_"]: f }, ...g] = [];
 		do {
-			switch(g) {
+			switch (g) {
 				default:
 					var h;
 					break;
 			}
-			loop: for(var i;;)
-				for(var j in {})
-					for(var k of {})
-						break;
+			loop: for (var i; ; ) for (var j in {}) for (var k of {}) break;
 			try {
 				var l;
-			} catch(e) {
+			} catch (e) {
 				var m;
 			} finally {
 				var n;
@@ -50,7 +49,7 @@ it("should not remove hoisted variable declarations", () => {
 			{
 				var o;
 			}
-		} while(true);
+		} while (true);
 		with (o) {
 			var withVar;
 		}
@@ -78,7 +77,7 @@ it("should not remove hoisted variable declarations", () => {
 });
 
 it("should not remove hoisted function declarations in loose mode", () => {
-	if(false) {
+	if (false) {
 		function funcDecl() {}
 	}
 	expect(() => {
@@ -88,7 +87,7 @@ it("should not remove hoisted function declarations in loose mode", () => {
 
 it("should remove hoisted function declarations in strict mode", () => {
 	"use strict";
-	if(false) {
+	if (false) {
 		function funcDecl() {}
 	}
 	expect(() => {

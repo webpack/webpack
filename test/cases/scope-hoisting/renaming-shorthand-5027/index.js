@@ -9,17 +9,19 @@ it("should apply shorthand properties correctly when renaming", function() {
 			test4: "test4"
 		},
 		nested: {
-			array: [{
-				test: "test1",
-				test2: "test2",
-				test3: "test3",
-				test4: "test4"
-			}]
+			array: [
+				{
+					test: "test1",
+					test2: "test2",
+					test3: "test3",
+					test4: "test4"
+				}
+			]
 		},
 		test: "test1",
 		test2: "test2",
 		test3: "test3",
 		test4: "test4",
 		f: ["test2", "test2", "test3"]
-	})
+	});
 });

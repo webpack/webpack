@@ -1,6 +1,6 @@
-import someFunction from './someFunction';
+import someFunction from "./someFunction";
 
-export default (function someFunction (recurse = true) {
+export default (function someFunction(recurse = true) {
 	if (recurse) {
 		return 1 + someFunction(false);
 	}

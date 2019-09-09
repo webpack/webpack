@@ -10,7 +10,7 @@ it("should flag modules correctly", function() {
 	expect(ch).toBe("ch" + WATCH_STEP);
 	expect(require("./hh").default).toBe("hh" + WATCH_STEP);
 	expect(require("./cc")).toBe("cc" + WATCH_STEP);
-	switch(WATCH_STEP) {
+	switch (WATCH_STEP) {
 		case "0":
 			expect(require("./hc").default).toBe("hc0");
 			expect(require("./ch")).toBe("ch0");

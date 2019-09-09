@@ -1,5 +1,5 @@
 import g from "./g";
 
-if(module.hot) {
+if (module.hot) {
 	module.hot.decline("./g");
 }

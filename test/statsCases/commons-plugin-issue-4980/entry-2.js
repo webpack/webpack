@@ -1,2 +1,2 @@
-import subB from './submodule-a'
-import subC from './submodule-c';
+import subB from "./submodule-a";
+import subC from "./submodule-c";

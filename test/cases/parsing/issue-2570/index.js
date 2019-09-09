@@ -1,10 +1,10 @@
 import fn from "./fn";
 
 it("should generate valid code when calling a harmony import function with brackets", function() {
-	var a = fn((1));
+	var a = fn(1);
 	var b = fn(2);
-	var c = fn((3), (4));
-	var d = fn(5, (6));
+	var c = fn(3, 4);
+	var d = fn(5, 6);
 
 	expect(a).toEqual([1]);
 	expect(b).toEqual([2]);

@@ -1,3 +1,3 @@
-import { a } from './index';
+import { a } from "./index";
 
 export const b = a();

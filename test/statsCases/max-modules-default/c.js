@@ -1,1 +1,1 @@
-require("./b" + __resourceQuery)
+require("./b" + __resourceQuery);

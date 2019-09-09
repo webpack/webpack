@@ -1,5 +1,5 @@
-import c from "./c"
+import c from "./c";
 
-if(module.hot) {
+if (module.hot) {
 	module.hot.accept("./c");
 }

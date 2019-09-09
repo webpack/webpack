@@ -2,7 +2,7 @@ async function getTemplate(templateName) {
 	try {
 		let template = await import(`./templates/${templateName}`);
 		console.log(template);
-	} catch(err) {
+	} catch (err) {
 		console.error("template error");
 		return new Error(err);
 	}
@@ -11,5 +11,3 @@ async function getTemplate(templateName) {
 getTemplate("foo");
 getTemplate("bar");
 getTemplate("baz");
-
-

@@ -42,7 +42,7 @@ exports.replaceBase = (template) => {
 		.replace(buildAtRegexp, "")
 		.replace(hashRegexp, "Hash: 0a1b2c3d4e5f6a7b8c9d")
 		.replace(/\.chunkhash\./g, ".[chunkhash].")
-		.replace(runtimeRegexp, function(match) {
+		.replace(runtimeRegexp, function (match) {
 			match = runtimeRegexp.exec(match);
 			const prefix = match[1] ? "" : "```\n";
 			const inner = match[1] ? match[1] : "``` js\n";
@@ -58,9 +58,9 @@ exports.needResults = (template, prefix) => {
 exports.replaceResults = (template, baseDir, stdout, prefix) => {
 	const regexp = new RegExp("_\\{\\{" + (prefix ? prefix + ":" : "") + "([^:\\}]+)\\}\\}_", "g");
 
-	return template.replace(regexp, function(match) {
+	return template.replace(regexp, function (match) {
 		match = match.substr(3 + (prefix ? prefix.length + 1 : 0), match.length - 6 - (prefix ? prefix.length + 1 : 0));
-		if(match === "stdout")
+		if (match === "stdout")
 			return stdout;
 		return fs.readFileSync(path.join(baseDir, match), "utf-8").replace(/[\r\n]*$/, "");
 	});

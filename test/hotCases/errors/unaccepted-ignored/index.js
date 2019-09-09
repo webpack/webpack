@@ -3,7 +3,7 @@ import get from "./b";
 
 var options = { ignoreUnaccepted: true };
 
-it("should ignore unaccepted module updates", (done) => {
+it("should ignore unaccepted module updates", done => {
 	function waitForUpdate(fn) {
 		NEXT(require("../../update")(done, options, fn));
 	}

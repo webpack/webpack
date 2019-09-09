@@ -1,3 +1,1 @@
-module.exports = [
-  /not found/
-];
+module.exports = [/not found/];

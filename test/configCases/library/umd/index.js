@@ -1,3 +1,1 @@
-it("should run", function() {
-
-});
+it("should run", function() {});

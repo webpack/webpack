@@ -10,6 +10,6 @@ it("should not execute exports when annotated with pure comment", () => {
 	expect(v4).toBe(42);
 });
 
-var x = /*#__PURE__*/(function() {
+var x = /*#__PURE__*/ function() {
 	return x1 + x2 + x4;
-});
+};

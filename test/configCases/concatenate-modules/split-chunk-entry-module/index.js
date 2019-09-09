@@ -1,3 +1,3 @@
-import './a';
+import "./a";
 
 it("should compile and evaluate fine", () => {});

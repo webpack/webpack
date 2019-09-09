@@ -1,4 +1,6 @@
-export default function test() { return "ok"; }
+export default function test() {
+	return "ok";
+}
 
 var b = test();
 

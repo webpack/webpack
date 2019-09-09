@@ -5,6 +5,6 @@ it("should export the correct value", () => {
 });
 
 // prevent scope hoisting
-if(Math.random() < -1) {
+if (Math.random() < -1) {
 	console.log(module.id);
 }

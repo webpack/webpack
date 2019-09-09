@@ -6,7 +6,9 @@ const nsObj = m => {
 };
 
 it("should have to correct exports", () => {
-	expect(a).toEqual(nsObj({
-		[`x${WATCH_STEP}`]: WATCH_STEP
-	}));
-})
+	expect(a).toEqual(
+		nsObj({
+			[`x${WATCH_STEP}`]: WATCH_STEP
+		})
+	);
+});

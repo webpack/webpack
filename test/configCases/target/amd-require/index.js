@@ -1,6 +1,4 @@
-it("should run", function() {
-
-});
+it("should run", function() {});
 
 it("should name require", function() {
 	var fs = nodeRequire("fs");
