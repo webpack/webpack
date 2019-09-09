@@ -2238,16 +2238,16 @@ Entrypoints:
 exports[`StatsTestCases should print correct stats for preset-normal-performance-ensure-filter-sourcemaps 1`] = `
 "Time: <CLR=BOLD>X</CLR>ms
 Built at: 1970-04-20 <CLR=BOLD>12:42:42</CLR>
-      <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>  <CLR=BOLD>Chunks</CLR>                    <CLR=BOLD>Chunk Names</CLR>
-     <CLR=32,BOLD>460.js</CLR>  338 bytes   {<CLR=33,BOLD>460</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
- <CLR=32,BOLD>460.js.map</CLR>  212 bytes   {<CLR=33,BOLD>460</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
-     <CLR=32,BOLD>524.js</CLR>  242 bytes   {<CLR=33,BOLD>524</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
- <CLR=32,BOLD>524.js.map</CLR>  228 bytes   {<CLR=33,BOLD>524</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
-     <CLR=32,BOLD>996.js</CLR>  174 bytes   {<CLR=33,BOLD>996</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
- <CLR=32,BOLD>996.js.map</CLR>  163 bytes   {<CLR=33,BOLD>996</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
-    <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>   {<CLR=33,BOLD>179</CLR>}  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
-<CLR=32,BOLD>main.js.map</CLR>   1.72 MiB   {<CLR=33,BOLD>179</CLR>}  <CLR=32,BOLD>[emitted]</CLR>         main
-Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR> <CLR=32,BOLD>main.js.map</CLR>
+      <CLR=BOLD>Asset</CLR>       <CLR=BOLD>Size</CLR>   <CLR=BOLD>Chunks</CLR>                    <CLR=BOLD>Chunk Names</CLR>
+     <CLR=32,BOLD>460.js</CLR>  338 bytes    {<CLR=33,BOLD>460</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
+ <CLR=32,BOLD>460.js.map</CLR>  212 bytes  ({<CLR=33,BOLD>460</CLR>})  <CLR=32,BOLD>[emitted]</CLR>
+     <CLR=32,BOLD>524.js</CLR>  242 bytes    {<CLR=33,BOLD>524</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
+ <CLR=32,BOLD>524.js.map</CLR>  228 bytes  ({<CLR=33,BOLD>524</CLR>})  <CLR=32,BOLD>[emitted]</CLR>
+     <CLR=32,BOLD>996.js</CLR>  174 bytes    {<CLR=33,BOLD>996</CLR>}  <CLR=32,BOLD>[emitted]</CLR>
+ <CLR=32,BOLD>996.js.map</CLR>  163 bytes  ({<CLR=33,BOLD>996</CLR>})  <CLR=32,BOLD>[emitted]</CLR>
+    <CLR=33,BOLD>main.js</CLR>    <CLR=33,BOLD>301 KiB</CLR>    {<CLR=33,BOLD>179</CLR>}  <CLR=32,BOLD>[emitted]</CLR>  <CLR=33,BOLD>[big]</CLR>  main
+<CLR=32,BOLD>main.js.map</CLR>   1.72 MiB  ({<CLR=33,BOLD>179</CLR>})  <CLR=32,BOLD>[emitted]</CLR>         (main)
+Entrypoint <CLR=BOLD>main</CLR> <CLR=33,BOLD>[big]</CLR> = <CLR=32,BOLD>main.js</CLR> (<CLR=32,BOLD>main.js.map</CLR>)
  [10] <CLR=BOLD>./index.js</CLR> 52 bytes {<CLR=33,BOLD>179</CLR>} <CLR=32,BOLD>[built]</CLR>
 [390] <CLR=BOLD>./e.js</CLR> 22 bytes {<CLR=33,BOLD>524</CLR>} <CLR=32,BOLD>[built]</CLR>
 [460] <CLR=BOLD>./c.js</CLR> 54 bytes {<CLR=33,BOLD>460</CLR>} <CLR=32,BOLD>[built]</CLR>
