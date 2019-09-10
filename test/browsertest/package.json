@@ -1,4 +1,4 @@
 {
-	"name": "node-webkit-tests",
-	"main": "tests.html"
+  "name": "node-webkit-tests",
+  "main": "tests.html"
 }

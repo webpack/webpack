@@ -13,8 +13,7 @@ function findInFolder(folder, depth) {
 			const innerPath = path.join(folder, file);
 			if (fs.statSync(innerPath).isDirectory()) {
 				const innerResult = findInFolder(innerPath, depth - 1);
-				for (const item of innerResult)
-					results.push(item);
+				for (const item of innerResult) results.push(item);
 			}
 		}
 		return results;

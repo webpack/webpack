@@ -1,7 +1,7 @@
 {
-	"browser": {
-		"a": "./a.js",
-		"b": "./b.js",
-		"c": "./c.js"
-	}
+  "browser": {
+    "a": "./a.js",
+    "b": "./b.js",
+    "c": "./c.js"
+  }
 }

@@ -3,7 +3,7 @@
 const cp = require("child_process");
 const examples = require("./examples");
 
-const cmds = examples.map(function (dirname) {
+const cmds = examples.map(function(dirname) {
 	return "cd " + dirname + " && node build.js";
 });
 
@@ -19,5 +19,4 @@ for (const cmd of cmds) {
 	}
 }
 console.log("done");
-if (failed > 0)
-	console.log(`${failed} failed`);
+if (failed > 0) console.log(`${failed} failed`);
