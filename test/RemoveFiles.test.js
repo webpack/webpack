@@ -59,7 +59,6 @@ describe("RemovedFiles", () => {
 			"utf-8"
 		);
 		fs.utimesSync(tempFile2Path, fakeTime, fakeTime);
-		// Wait 1s, otherwise the newly-created files will trigger our test compilers to re-compile.
 	});
 	afterEach(() => {
 		cleanup();
@@ -73,8 +72,7 @@ describe("RemovedFiles", () => {
 			const removals = Array.from(compiler.removedFiles);
 			if (removals.length > 0) {
 				expect(removals).toContain(tempFilePath);
-				watcher.close();
-				done();
+				watcher.close(done);
 			}
 		});
 
@@ -87,11 +85,11 @@ describe("RemovedFiles", () => {
 
 	it("should not track removed files during initial watchRun", done => {
 		const compiler = createSingleCompiler();
-		let watchRunFinished;
 		let watcher;
-		compiler.hooks.watchRun.tap("RemovedFilesTest", compiler => {
-			const removals = Array.from(compiler.removedFiles);
-			watchRunFinished = new Promise(resolve => {
+
+		let watchRunFinished = new Promise(resolve => {
+			compiler.hooks.watchRun.tap("RemovedFilesTest", compiler => {
+				const removals = Array.from(compiler.removedFiles);
 				expect(removals).toHaveLength(0);
 				resolve();
 			});
@@ -99,8 +97,7 @@ describe("RemovedFiles", () => {
 		watcher = compiler.watch({ aggregateTimeout: 50 }, () => {});
 
 		watchRunFinished.then(() => {
-			watcher.close();
-			done();
+			watcher.close(done);
 		});
 	});
 
@@ -112,8 +109,7 @@ describe("RemovedFiles", () => {
 			const removals = Array.from(compiler.removedFiles);
 			if (compiler.modifiedFiles.size > 0) {
 				expect(removals).toHaveLength(0);
-				watcher.close();
-				done();
+				watcher.close(done);
 			}
 		});
 
