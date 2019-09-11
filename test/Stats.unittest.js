@@ -115,7 +115,7 @@ describe("Stats", () => {
 			const mockStats = new Stats({
 				errors: ["firstError"],
 				warnings: [],
-				assets: [],
+				getAssets: () => [],
 				entrypoints: new Map(),
 				namedChunkGroups: new Map(),
 				chunks: [],
@@ -142,7 +142,7 @@ describe("Stats", () => {
 			const mockStats = new Stats({
 				errors: [],
 				warnings: [],
-				assets: [],
+				getAssets: () => [],
 				entrypoints: new Map(),
 				chunks: [],
 				namedChunkGroups: new Map(),
