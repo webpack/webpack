@@ -4,7 +4,7 @@ describe("TestCases", () => {
 	describeCases({
 		name: "minimized-source-map",
 		mode: "production",
-		devtool: "eval-cheap-module-source-map",
+		devtool: "cheap-module-eval-source-map",
 		minimize: true
 	});
 });

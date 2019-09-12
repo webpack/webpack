@@ -220,11 +220,8 @@ describe("Validation", () => {
 			expect(msg).toMatchInlineSnapshot(`
 			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
 			 - configuration.devtool should be one of these:
-			   string | false
-			   -> A developer tool to enhance debugging.
-			   Details:
-			    * configuration.devtool should be a string.
-			    * configuration.devtool should be false."
+			   false | \\"eval\\" | \\"cheap-eval-source-map\\" | \\"cheap-module-eval-source-map\\" | \\"eval-source-map\\" | \\"cheap-source-map\\" | \\"cheap-module-source-map\\" | \\"inline-cheap-source-map\\" | \\"inline-cheap-module-source-map\\" | \\"source-map\\" | \\"inline-source-map\\" | \\"hidden-source-map\\" | \\"nosources-source-map\\"
+			   -> A developer tool to enhance debugging."
 		`)
 	);
 
@@ -545,6 +542,34 @@ describe("Validation", () => {
 			   Details:
 			    * configuration.output.ecmaVersion should be >= 5 and <= 11.
 			    * configuration.output.ecmaVersion should be >= 2015 and <= 2020."
+		`)
+	);
+
+	createTestCase(
+		"devtool sourcemap",
+		{
+			devtool: "sourcemap"
+		},
+		msg =>
+			expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
+			 - configuration.devtool should be one of these:
+			   false | \\"eval\\" | \\"cheap-eval-source-map\\" | \\"cheap-module-eval-source-map\\" | \\"eval-source-map\\" | \\"cheap-source-map\\" | \\"cheap-module-source-map\\" | \\"inline-cheap-source-map\\" | \\"inline-cheap-module-source-map\\" | \\"source-map\\" | \\"inline-source-map\\" | \\"hidden-source-map\\" | \\"nosources-source-map\\"
+			   -> A developer tool to enhance debugging."
+		`)
+	);
+
+	createTestCase(
+		"devtool source-maps",
+		{
+			devtool: "source-maps"
+		},
+		msg =>
+			expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
+			 - configuration.devtool should be one of these:
+			   false | \\"eval\\" | \\"cheap-eval-source-map\\" | \\"cheap-module-eval-source-map\\" | \\"eval-source-map\\" | \\"cheap-source-map\\" | \\"cheap-module-source-map\\" | \\"inline-cheap-source-map\\" | \\"inline-cheap-module-source-map\\" | \\"source-map\\" | \\"inline-source-map\\" | \\"hidden-source-map\\" | \\"nosources-source-map\\"
+			   -> A developer tool to enhance debugging."
 		`)
 	);
 });
