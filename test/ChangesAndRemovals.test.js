@@ -51,7 +51,7 @@ function createFiles() {
 	fs.utimesSync(tempFile2Path, fakeTime, fakeTime);
 }
 
-describe("ChangedFiles", () => {
+describe("ModifiedFiles", () => {
 	if (process.env.NO_WATCH_TESTS) {
 		it.skip("watch tests excluded", () => {});
 		return;
@@ -112,7 +112,6 @@ describe("ChangedFiles", () => {
 
 		compiler.hooks.watchRun.tap("ModifiedFilesTest", compiler => {
 			const modifications = Array.from(compiler.modifiedFiles);
-			console.log(modifications);
 			if (compiler.removedFiles.size > 0) {
 				expect(modifications).toHaveLength(1);
 				expect(modifications).toContain(tempFilePath);
