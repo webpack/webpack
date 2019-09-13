@@ -1016,7 +1016,10 @@ export interface OptimizationSplitChunksOptions {
 	 */
 	filename?:
 		| string
-		| ((pathData: import("../lib/Compilation").PathData) => string);
+		| ((
+				pathData: import("../lib/Compilation").PathData,
+				assetInfo?: import("../lib/Compilation").AssetInfo
+		  ) => string);
 	/**
 	 * Prevents exposing path info when creating names for parts splitted by maxSize
 	 */
@@ -1082,7 +1085,10 @@ export interface OptimizationSplitChunksCacheGroup {
 	 */
 	filename?:
 		| string
-		| ((pathData: import("../lib/Compilation").PathData) => string);
+		| ((
+				pathData: import("../lib/Compilation").PathData,
+				assetInfo?: import("../lib/Compilation").AssetInfo
+		  ) => string);
 	/**
 	 * Sets the hint for chunk id
 	 */
@@ -1150,7 +1156,10 @@ export interface OutputOptions {
 	 */
 	assetModuleFilename?:
 		| string
-		| ((pathData: import("../lib/Compilation").PathData) => string);
+		| ((
+				pathData: import("../lib/Compilation").PathData,
+				assetInfo?: import("../lib/Compilation").AssetInfo
+		  ) => string);
 	/**
 	 * Add a comment in the UMD wrapper.
 	 */
@@ -1211,7 +1220,10 @@ export interface OutputOptions {
 	 */
 	filename?:
 		| string
-		| ((pathData: import("../lib/Compilation").PathData) => string);
+		| ((
+				pathData: import("../lib/Compilation").PathData,
+				assetInfo?: import("../lib/Compilation").AssetInfo
+		  ) => string);
 	/**
 	 * An expression which is used to address the global object/scope in runtime code
 	 */

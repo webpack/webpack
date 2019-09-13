@@ -257,6 +257,8 @@ declare module "webpack-sources" {
 		updateHash(hash: import("./lib/util/Hash")): void;
 
 		source(): string | Buffer;
+
+		buffer(): Buffer;
 	}
 
 	export class RawSource extends Source {

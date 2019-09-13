@@ -708,7 +708,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((pathData: import(\"../lib/Compilation\").PathData) => string)"
+              "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
             }
           ]
         },
@@ -933,7 +933,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((pathData: import(\"../lib/Compilation\").PathData) => string)"
+              "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
             }
           ]
         },
@@ -1043,7 +1043,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((pathData: import(\"../lib/Compilation\").PathData) => string)"
+              "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
             }
           ]
         },
@@ -1146,7 +1146,7 @@
             },
             {
               "instanceof": "Function",
-              "tsType": "((pathData: import(\"../lib/Compilation\").PathData) => string)"
+              "tsType": "((pathData: import(\"../lib/Compilation\").PathData, assetInfo?: import(\"../lib/Compilation\").AssetInfo) => string)"
             }
           ]
         },
