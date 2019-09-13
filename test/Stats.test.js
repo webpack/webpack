@@ -187,6 +187,9 @@ describe("Stats", () => {
 			        336,
 			      ],
 			      "emitted": true,
+			      "info": Object {
+			        "size": 111,
+			      },
 			      "name": "chunkB.js",
 			      "size": 111,
 			    },
@@ -200,6 +203,9 @@ describe("Stats", () => {
 			        938,
 			      ],
 			      "emitted": true,
+			      "info": Object {
+			        "size": 211,
+			      },
 			      "name": "entryA.js",
 			      "size": 211,
 			    },
@@ -213,6 +219,9 @@ describe("Stats", () => {
 			        513,
 			      ],
 			      "emitted": true,
+			      "info": Object {
+			        "size": 2085,
+			      },
 			      "name": "entryB.js",
 			      "size": 2085,
 			    },
