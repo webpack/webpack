@@ -1790,14 +1790,7 @@ debug@2.6.9, debug@^2.1.2, debug@^2.2.0, debug@^2.3.3:
   dependencies:
     ms "2.0.0"
 
-debug@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-3.1.0.tgz#5bb5a0672628b64149566ba16819e61518c67261"
-  integrity sha512-OX8XqP7/1a9cqkxYw2yXss15f26NKWBpDXQd0/uK/KPqdQhxbPa994hnzjcE2VqQpDslf55723cKPUOGSmMY3g==
-  dependencies:
-    ms "2.0.0"
-
-debug@^3.2.6:
+debug@^3.1.0, debug@^3.2.6:
   version "3.2.6"
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.6.tgz#e83d17de16d8a7efb7717edbe5fb10135eee629b"
   integrity sha512-mel+jf7nrtEl5Pn1Qx46zARXKDpBbvzezse7p7LqINmdoIk8PYP5SySaxEmYv6TZ0JyEKA1hsCId6DIhgITtWQ==
@@ -2158,9 +2151,9 @@ eslint-plugin-jest@^22.2.2:
     "@typescript-eslint/experimental-utils" "^1.13.0"
 
 eslint-plugin-jsdoc@^15.3.2:
-  version "15.9.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-15.9.1.tgz#5cc09ddd7e4568169a710cf5748a0ac8fc1c9af5"
-  integrity sha512-EwW580YgcyZkB83QqY8WuTioGUbIEBlPY+cRI/zSGYrg62GUpmue1HeCBiZRJ40A77BE/MGdGIbAGTdVX49URQ==
+  version "15.9.2"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-jsdoc/-/eslint-plugin-jsdoc-15.9.2.tgz#fe02042ed6d2e140dc7710afd129382712c95101"
+  integrity sha512-dJjIWFJlh4ti3CegWYN0jUUdjEsWvJ8TZJ/cMQldioVLxMmU3UZeZsHzxYcCicJwSVhQ+uGm+dbUyEIm0slX3Q==
   dependencies:
     comment-parser "^0.6.2"
     debug "^4.1.1"
