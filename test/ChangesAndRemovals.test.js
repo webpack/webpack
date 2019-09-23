@@ -51,7 +51,7 @@ function createFiles() {
 	fs.utimesSync(tempFile2Path, fakeTime, fakeTime);
 }
 
-describe("ModifiedFiles", () => {
+describe("ChangesAndRemovals", () => {
 	if (process.env.NO_WATCH_TESTS) {
 		it.skip("watch tests excluded", () => {});
 		return;
@@ -125,23 +125,6 @@ describe("ModifiedFiles", () => {
 		setTimeout(() => {
 			fs.unlinkSync(tempFilePath);
 		}, 1000);
-	});
-});
-
-describe("RemovedFiles", () => {
-	if (process.env.NO_WATCH_TESTS) {
-		it.skip("watch tests excluded", () => {});
-		return;
-	}
-
-	jest.setTimeout(10000);
-
-	beforeEach(() => {
-		cleanup();
-		createFiles();
-	});
-	afterEach(() => {
-		cleanup();
 	});
 
 	it("should track removed files when they've been deleted in watchRun", done => {
