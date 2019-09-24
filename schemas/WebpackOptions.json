@@ -684,6 +684,30 @@
                 }
               }
             ]
+          },
+          "not": {
+            "description": "Using the cacheGroup shorthand syntax with a cache group named 'test' is a potential config error\nDid you intent to define a cache group with a test instead?\ncacheGroups: {\n  <name>: {\n    test: ...\n  }\n}",
+            "type": "object",
+            "additionalProperties": true,
+            "properties": {
+              "test": {
+                "description": "The test property is a cache group name, but using the test option of the cache group could be intended instead",
+                "anyOf": [
+                  {
+                    "instanceof": "Function",
+                    "tsType": "Function"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "instanceof": "RegExp",
+                    "tsType": "RegExp"
+                  }
+                ]
+              }
+            },
+            "required": ["test"]
           }
         },
         "chunks": {

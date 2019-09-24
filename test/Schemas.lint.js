@@ -50,7 +50,8 @@ describe("Schemas", () => {
 					"minItems",
 					"minProperties",
 					"instanceof",
-					"tsType"
+					"tsType",
+					"not"
 				];
 
 				const validateProperty = property => {
