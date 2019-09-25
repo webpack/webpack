@@ -2248,6 +2248,9 @@
         "ignored": {
           "description": "Ignore some files from watching"
         },
+        "skipInitialBuild": {
+          "description": "Do not emit an output for the initial build"
+        },
         "poll": {
           "description": "Enable polling mode for watching",
           "anyOf": [
