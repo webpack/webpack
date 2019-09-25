@@ -16,5 +16,6 @@
       "type": "number",
       "minimum": 1
     }
-  }
+  },
+  "required": ["maxChunks"]
 }
