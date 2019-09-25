@@ -434,6 +434,33 @@ describe("Validation", () => {
 	);
 
 	createTestCase(
+		"missing cache group name",
+		{
+			optimization: {
+				splitChunks: {
+					cacheGroups: {
+						test: /abc/
+					}
+				}
+			}
+		},
+		msg =>
+			expect(msg).toMatchInlineSnapshot(`
+			"Invalid configuration object. Webpack has been initialised using a configuration object that does not match the API schema.
+			 - configuration.optimization.splitChunks.cacheGroups should not be object { test, … }
+			   -> Using the cacheGroup shorthand syntax with a cache group named 'test' is a potential config error
+			   Did you intent to define a cache group with a test instead?
+			   cacheGroups: {
+			     <name>: {
+			       test: ...
+			     }
+			   }
+			   object { <key>: false | function | string | RegExp | object { automaticNameDelimiter?, chunks?, enforce?, filename?, idHint?, maxAsyncRequests?, maxAsyncSize?, maxInitialRequests?, maxInitialSize?, maxSize?, minChunks?, minRemainingSize?, minSize?, name?, priority?, reuseExistingChunk?, test?, type? } }
+			   -> Assign modules to a cache group (modules from different cache groups are tried to keep in separate chunks, default categories: 'default', 'defaultVendors')"
+		`)
+	);
+
+	createTestCase(
 		"holey array",
 		// eslint-disable-next-line no-sparse-arrays
 		[
