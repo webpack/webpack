@@ -21,12 +21,14 @@ module.exports = function(source) {
 		compilerCache.set(this._compiler, childCompiler);
 	}
 	const callback = this.async();
+	childCompiler.parentCompilation = this._compilation;
 	childCompiler.runAsChild((err, entries, compilation) => {
 		if (err) return callback(err);
 
 		const result = `export const assets = ${JSON.stringify(
 			compilation.getAssets().map(a => a.name)
 		)};\n${source}`;
+
 		callback(null, result);
 	});
 };
