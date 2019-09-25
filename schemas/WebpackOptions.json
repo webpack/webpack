@@ -2261,7 +2261,7 @@
             }
           ]
         },
-        "skipInitialBuild": {
+        "skipInitialEmit": {
           "description": "Do not emit an output for the initial build"
         },
         "stdin": {

@@ -431,7 +431,7 @@ export interface WebpackOptions {
 		/**
 		 * Do not emit an output for the initial build
 		 */
-		skipInitialBuild?: {
+		skipInitialEmit?: {
 			[k: string]: any;
 		};
 		/**
