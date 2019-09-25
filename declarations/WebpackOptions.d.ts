@@ -429,6 +429,12 @@ export interface WebpackOptions {
 		 */
 		poll?: boolean | number;
 		/**
+		 * Do not emit an output for the initial build
+		 */
+		skipInitialBuild?: {
+			[k: string]: any;
+		};
+		/**
 		 * Stop watching when stdin stream has ended
 		 */
 		stdin?: boolean;
