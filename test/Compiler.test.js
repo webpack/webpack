@@ -278,6 +278,44 @@ describe("Compiler", () => {
 			done();
 		});
 	});
+	it("should only emit after first pass when skipInitialEmit is enabled (watch)", done => {
+		const compiler = webpack({
+			context: __dirname,
+			mode: "production",
+			entry: "./watchCases/simple/simple/0/changing-file.js",
+			output: {
+				path: "/",
+				filename: "bundle.js"
+			}
+		});
+		compiler.outputFileSystem = new MemoryFs();
+		const getBundle = () => compiler.outputFileSystem.existsSync("/bundle.js");
+		let initialBuild = true;
+		const watching = compiler.watch({ skipInitialEmit: true }, (err, stats) => {
+			if (initialBuild === true && getBundle()) {
+				watching.close();
+				return done(
+					new Error(
+						"Bundle should not emit on first pass when skipInitialEmit is enabled"
+					)
+				);
+			}
+			if (initialBuild === false && !getBundle()) {
+				watching.close();
+				return done(
+					new Error(
+						"Bundle should emit on second pass when skipInitialEmit is enabled"
+					)
+				);
+			}
+			if (initialBuild === true) {
+				watching.invalidate();
+				initialBuild = false;
+				return;
+			}
+			done();
+		});
+	});
 	it("should not be run twice at a time (run)", function(done) {
 		const compiler = webpack({
 			context: __dirname,
