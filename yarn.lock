@@ -747,7 +747,7 @@ ajv-errors@^1.0.0:
   resolved "https://registry.yarnpkg.com/ajv-errors/-/ajv-errors-1.0.1.tgz#f35986aceb91afadec4102fbd85014950cefa64d"
   integrity sha512-DCRfO/4nQ+89p/RK43i8Ezd41EqdGIU4ld7nGF8OQ14oc/we5rEntLCUa7+jrn3nn83BosfwZA0wb4pon2o8iQ==
 
-ajv-keywords@^3.1.0:
+ajv-keywords@^3.1.0, ajv-keywords@^3.4.1:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/ajv-keywords/-/ajv-keywords-3.4.1.tgz#ef916e271c64ac12171fd8384eaae6b2345854da"
   integrity sha512-RO1ibKvd27e6FEShVFfPALuHI3WjSVNeK5FIsmme/LYRNxjKuNj+Dt7bucLa6NdSv3JcVTyMlm9kGR84z1XpaQ==
@@ -5538,13 +5538,13 @@ schema-utils@^2.0.0, schema-utils@^2.0.1:
     ajv "^6.1.0"
     ajv-keywords "^3.1.0"
 
-schema-utils@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-2.1.0.tgz#940363b6b1ec407800a22951bdcc23363c039393"
-  integrity sha512-g6SViEZAfGNrToD82ZPUjq52KUPDYc+fN5+g6Euo5mLokl/9Yx14z0Cu4RR1m55HtBXejO0sBt+qw79axN+Fiw==
+schema-utils@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/schema-utils/-/schema-utils-2.3.0.tgz#592c836507db364139a6dea7f46563d66b688a03"
+  integrity sha512-0NWOS/em29583dLzou07qWp5xoKCnvm5NiDQ+IkI/Q8xP6rm1SMvQrmHseH0RSbBe4tM+LJ7IeZTqb/dF9dTRQ==
   dependencies:
-    ajv "^6.1.0"
-    ajv-keywords "^3.1.0"
+    ajv "^6.10.2"
+    ajv-keywords "^3.4.1"
 
 script-loader@~0.7.0:
   version "0.7.2"
