@@ -1,22 +1,31 @@
 module.exports = class FakeDocument {
 	constructor() {
 		this.head = this.createElement("head");
+		this._elementsByTagName = new Map([["head", [this.head]]]);
 	}
 
 	createElement(type) {
-		return new FakeElement(type);
+		return new FakeElement(this, type);
+	}
+
+	_onElementAttached(element) {
+		const type = element._type;
+		let list = this._elementsByTagName.get(type);
+		if (list === undefined) {
+			list = [];
+			this._elementsByTagName.set(type, list);
+		}
+		list.push(element);
 	}
 
 	getElementsByTagName(name) {
-		if (name === "head") return [this.head];
-		throw new Error(
-			`FakeDocument.getElementsByTagName(${name}): not implemented`
-		);
+		return this._elementsByTagName.get(name) || [];
 	}
 };
 
 class FakeElement {
-	constructor(type) {
+	constructor(document, type) {
+		this._document = document;
 		this._type = type;
 		this._children = [];
 		this._attributes = Object.create(null);
@@ -25,6 +34,7 @@ class FakeElement {
 	}
 
 	appendChild(node) {
+		this._document._onElementAttached(node);
 		this._children.push(node);
 	}
 
